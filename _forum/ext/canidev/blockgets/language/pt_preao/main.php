@@ -2,7 +2,6 @@
 
 /**
  * @package cBB Blockgets for phpBB.
- * [English [En]]
  * @version 2.0.7 01/07/2024
  * @copyright (c) 2024 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
@@ -22,7 +21,8 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'PORTAL'        => 'Portal',
-	'READ_FULL'     => 'Read full topic',
+	'READ_FULL'     => 'Ler tópico completo',
+	'BLG_OR'        => 'ou',
 	'BLG_READ_MORE' => '%sLer mais%s',
 
 	'ADD_PAGE'                => 'Criar página',
@@ -46,28 +46,28 @@ $lang = array_merge($lang, [
 	'INSERT_HTML' => 'Inserir Código HTML',
 
 	// Login Block
-	'HIDE_ME_NOW'   => 'Hide me in this session',
+	'HIDE_ME_NOW'   => 'Ocultar-me nesta sessão',
 	'MY_BOOKMARKS'  => 'Favoritos',
 	'MY_SUBSCRIBED' => 'Subscrições',
 	'REMEMBER_ME'   => 'Lembrar-me',
 
 	// Link Us Block
-	'LINK_US_TXT' => 'Please feel free to link to <strong>%s</strong>. Use the following HTML:',
+	'LINK_US_TXT' => 'Sente-te à vontade para colocar um link para <strong>%s</strong>. Utiliza o seguinte HTML:',
 
 	// Stats Block and whos_online block
 	'GUEST_VISITS_TOTAL'     => '%d Visitantes',
 	'GUEST_VISIT_TOTAL'      => '%d Visitante',
 	'HIDDEN_VISITS_TOTAL'    => '%d ocultos, ',
 	'HIDDEN_VISIT_TOTAL'     => '%d oculto, ',
-	'LASTVISIT_VISITS_TOTAL' => 'In total there were <strong>%d</strong> users online in the last 24 hours :: ',
-	'LASTVISIT_VISIT_TOTAL'  => 'In total there is <strong>%d</strong> user online in the last 24 hours  :: ',
+	'LASTVISIT_VISITS_TOTAL' => 'No total estiveram <strong>%d</strong> utilizadores online nas últimas 24 horas :: ',
+	'LASTVISIT_VISIT_TOTAL'  => 'No total esteve <strong>%d</strong> utilizador online nas últimas 24 horas :: ',
 	'REG_VISITS_TOTAL'       => '%d Registados, ',
 	'REG_VISIT_TOTAL'        => '%d Registado, ',
 
-	'ST_ACTIVE_POSTERS'  => 'Active posters',
-	'ST_ANNS'            => 'Announcements',
+	'ST_ACTIVE_POSTERS'  => 'Autores mais activos',
+	'ST_ANNS'            => 'Anúncios',
 	'ST_ATTACHMENTS'     => 'Anexos',
-	'ST_BOARD_STARTDATE' => 'Start date',
+	'ST_BOARD_STARTDATE' => 'Data de início',
 	'ST_NEW'             => 'Novo',
 	'ST_NEWEST_USER'     => 'Último membro',
 	'ST_POSTS'           => 'Mensagens',
@@ -113,16 +113,15 @@ $lang = array_merge($lang, [
 	'LANGUAGE_CHANGE'   => 'Alterar idioma',
 	'LANGUAGE_DEFAULT'  => 'Idioma Original',
 	'LANGUAGE_SET_MINE' => 'Gravar como meu idioma',
-	'LANGUAGE_SELECT'   => 'Selecionar Idioma',
+	'LANGUAGE_SELECT'   => 'Seleccionar Idioma',
 
 	// news_block
-	'POSTED_BY'       => 'Criado por',
-	'LAST_REPLIED_BY' => 'Última resposta por',
-	'COMMENTS_PORTAL' => 'Comentários',
-	'POLL'            => 'Votação',
-	'TOPIC_VIEWS'     => 'Visto',
-	'NO_NEWS'         => 'Sem notícias disponíveis',
-	'VIEW_COMMENTS'   => 'Ver comentários',
+	'POSTED_BY'     => 'Criado por',
+	'COMMENTS'      => 'Comentários',
+	'POLL'          => 'Votação',
+	'TOPIC_VIEWS'   => 'Visualizações',
+	'NO_NEWS'       => 'Sem notícias disponíveis',
+	'VIEW_COMMENTS' => 'Ver comentários',
 
 	// recent_topics_block
 	'BLG_RECENT_ACTIVITY' => 'Actividade Recente',
@@ -130,29 +129,29 @@ $lang = array_merge($lang, [
 	'BLG_RECENT_TOPICS'   => 'Tópicos Recentes',
 
 	// paypal_block
-	'AMOUNT_MSG' => 'Amount to donate',
-	'CLICK_MSG'  => 'Proceed to donation',
-	'CODE_MSG'   => 'Currency',
+	'AMOUNT_MSG' => 'Montante a doar',
+	'CLICK_MSG'  => 'Prosseguir para a doação',
+	'CODE_MSG'   => 'Moeda',
 
 	'currencies' => [
-		'AUD' => 'Aussie',
-		'CAD' => 'Canadian Dollar',
-		'CZK' => 'Czech Koruna',
-		'DKK' => 'Danish Kroner',
-		'HKD' => 'Hong Kong Dollar',
-		'HUF' => 'Hungarian Forint',
-		'NZD' => 'New Zealand Dollar',
-		'NOK' => 'Norwegian Kroner',
-		'PLN' => 'Polish Zlotych',
-		'GBP' => 'British Pounds',
-		'SGD' => 'Singapore Dollar',
-		'SEK' => 'Swedish Kronor',
-		'CHF' => 'Swiss Francs',
-		'JPY' => 'Japanese Yen',
-		'USD' => 'Dollar',
+		'AUD' => 'Dólar Australiano',
+		'CAD' => 'Dólar Canadiano',
+		'CZK' => 'Coroa Checa',
+		'DKK' => 'Coroa Dinamarquesa',
+		'HKD' => 'Dólar de Hong Kong',
+		'HUF' => 'Forint Húngaro',
+		'NZD' => 'Dólar Neozelandês',
+		'NOK' => 'Coroa Norueguesa',
+		'PLN' => 'Zloti Polaco',
+		'GBP' => 'Libra Esterlina',
+		'SGD' => 'Dólar de Singapura',
+		'SEK' => 'Coroa Sueca',
+		'CHF' => 'Franco Suíço',
+		'JPY' => 'Iene Japonês',
+		'USD' => 'Dólar',
 		'EUR' => 'Euro',
-		'AUD' => 'Mexican Peso',
-		'ILS' => 'New Israeli Shekels'
+		'MXN' => 'Peso Mexicano',
+		'ILS' => 'Novo Shekel Israelita'
 	],
 
 	// most_poster_block
@@ -161,25 +160,25 @@ $lang = array_merge($lang, [
 	'NO_MOST_POSTER' => 'Sem utilizadores para exibir',
 
 	// contact block
-	'EMAIL_EMPTY'   => 'You must set an email.',
-	'EMAIL_INVALID' => 'The entered email is invalid.',
+	'EMAIL_EMPTY'   => 'Tens de indicar um email.',
+	'EMAIL_INVALID' => 'O email indicado é inválido.',
 
 	// counter block
-	'COUNTER_LOCAL'     => 'Visits to this page',
-	'COUNTER_TOTAL'     => 'Total visits',
-	'COUNTER_STARTDATE' => 'Counting from:<br />%s',
-	'HITS_PER_DAY'      => 'Visits per day',
-	'HITS_PER_HOUR'     => 'Visits per hour',
-	'HITS_PER_MONTH'    => 'Visits per month',
-	'HITS_PER_USER'     => 'Visits per user',
-	'HITS_PER_WEEK'     => 'Visits per week',
-	'HITS_PER_YEAR'     => 'Visits per year',
+	'COUNTER_LOCAL'     => 'Visitas a esta página',
+	'COUNTER_TOTAL'     => 'Total de visitas',
+	'COUNTER_STARTDATE' => 'A contar desde:<br />%s',
+	'HITS_PER_DAY'      => 'Visitas por dia',
+	'HITS_PER_HOUR'     => 'Visitas por hora',
+	'HITS_PER_MONTH'    => 'Visitas por mês',
+	'HITS_PER_USER'     => 'Visitas por utilizador',
+	'HITS_PER_WEEK'     => 'Visitas por semana',
+	'HITS_PER_YEAR'     => 'Visitas por ano',
 
 	// style_select_block
-	'STYLE_CHANGE'   => 'Change Style',
-	'STYLE_DEFAULT'  => 'Original style',
-	'STYLE_SET_MINE' => 'Set as my style',
-	'STYLE_SELECT'   => 'Select style',
+	'STYLE_CHANGE'   => 'Alterar estilo',
+	'STYLE_DEFAULT'  => 'Estilo original',
+	'STYLE_SET_MINE' => 'Definir como meu estilo',
+	'STYLE_SELECT'   => 'Seleccionar estilo',
 
 	// latest_bots_block
 	'NO_BOTS' => 'Nenhum bot visitou o fórum',
@@ -188,33 +187,33 @@ $lang = array_merge($lang, [
 	'NO_UNREAD' => 'Sem tópicos',
 
 	// ranks_block
-	'MIN_POSTS'    => 'Minimum Posts',
-	'SPECIAL_RANK' => 'Special Rank',
+	'MIN_POSTS'    => 'Mensagens mínimas',
+	'SPECIAL_RANK' => 'Posto especial',
 
 	// online_friends_block
-	'FRIENDS_ONLINE'     => 'Online friends',
-	'FRIENDS_OFFLINE'    => 'Offline friends',
-	'NO_FRIENDS_ONLINE'  => 'No friends online',
-	'NO_FRIENDS_OFFLINE' => 'No friends offline',
-	'NO_FRIENDS'         => 'No friends found',
+	'FRIENDS_ONLINE'     => 'Amigos online',
+	'FRIENDS_OFFLINE'    => 'Amigos offline',
+	'NO_FRIENDS_ONLINE'  => 'Nenhum amigo online',
+	'NO_FRIENDS_OFFLINE' => 'Nenhum amigo offline',
+	'NO_FRIENDS'         => 'Nenhum amigo encontrado',
 
 	// age_ranges_block
-	'RANGE'        => 'Rank',
+	'RANGE'        => 'Categoria',
 	'RANGE_USERS'  => 'Utilizadores (%)',
 	'AGE_COUNTS'   => 'Utilizadores contados',
 	'AGE_AV'       => 'Idade média',
 	'AGE_AV_COUNT' => '%.2f anos',
 
 	// search_block
-	'SH_ENGINE' => 'Search Engines',
+	'SH_ENGINE' => 'Motores de busca',
 
 	// announcements_block
 	'NO_ANNOUNCEMENTS' => 'Sem Anúncios',
 
 	//birthday_block
-	'TODAY_BIRTHDAYS'    => 'Today Birthdays',
-	'TOMORROW_BIRTHDAYS' => 'Tomorrow Birthdays',
-	'BIRTHDAYS_FOR'      => 'Birthdays for %1$s of %2$s',
+	'TODAY_BIRTHDAYS'    => 'Aniversários de hoje',
+	'TOMORROW_BIRTHDAYS' => 'Aniversários de amanhã',
+	'BIRTHDAYS_FOR'      => 'Aniversários de %1$s de %2$s',
 
 	// calendar
 	'ADD_EVENT'    => 'Adicionar evento',
@@ -222,7 +221,7 @@ $lang = array_merge($lang, [
 	'EDIT_EVENT'   => 'Editar Evento',
 	'EVENTS'       => 'Eventos',
 
-	'EMPTY_EVENT_TITLE' => 'Tem de colocar um título para o evento.',
+	'EMPTY_EVENT_TITLE' => 'Tens de colocar um título para o evento.',
 	'EVENT_ADDED'       => 'Evento adicionado com sucesso',
 	'EVENT_COLOR'       => 'Cor',
 	'EVENT_EDITED'      => 'Evento editado com sucesso',
@@ -237,11 +236,11 @@ $lang = array_merge($lang, [
 	'MUTE'             => 'Silenciar',
 	'WIN_CLOSE'        => 'Fechar janela e regressar ao bloco',
 	'WIN_OPEN'         => 'Abrir numa nova janela',
-	'WIN_OPEN_EXPLAIN' => 'Playing in Window',
-	'WIN_RETURN'       => 'Forze player in the block',
-	'PLAY'             => 'Play',
-	'PLAY_MSG'         => 'Playing',
-	'PLAYER'           => 'Player',
+	'WIN_OPEN_EXPLAIN' => 'A reproduzir na janela',
+	'WIN_RETURN'       => 'Forçar leitor no bloco',
+	'PLAY'             => 'Reproduzir',
+	'PLAY_MSG'         => 'A reproduzir',
+	'PLAYER'           => 'Leitor',
 	'STOP'             => 'Parar',
 	'STOP_MSG'         => 'Parou',
 	'VOLUME'           => 'Volume',
@@ -250,21 +249,26 @@ $lang = array_merge($lang, [
 	// rss block
 	'NO_RSS' => 'Sem Rss/Feed para mostrar.',
 
+	// steam block
+	'STEAM_IN_GAME' => 'A jogar',
+	'STEAM_ONLINE'  => 'Online',
+	'STEAM_MEMBERS' => 'Membros',
+
 	// topic index block
 	'CHAR_ALL' => 'Todos',
 
 	// youtube block
-	'YT_EMPTY' => 'Sem vídeos para mostrar',
-	'YT_VIEWS' => '%d vistos',
+	'NO_VIDEOS' => 'Sem vídeos para mostrar',
+	'YT_VIEWS'  => '%d vistos',
 ]);
 
 // General messages
 $lang = array_merge($lang, [
-	'ACTION_ERROR'     => 'No action taken',
-	'BLOCK_LOAD_ERROR' => 'Failed to load block',
-	'FORMAT_INVALID'   => 'The format is not valid',
-	'EVENT_ERROR'      => 'The selected event does not exist',
-	'NO_TRACKLIST'     => 'No avaliable tracklist.',
-	'NO_PAGE'          => 'This page no exists.',
-	'URL_INVALID'      => 'The URL is not valid.',
+	'ACTION_ERROR'     => 'Nenhuma acção realizada',
+	'BLOCK_LOAD_ERROR' => 'Falha ao carregar o bloco',
+	'FORMAT_INVALID'   => 'O formato não é válido',
+	'EVENT_ERROR'      => 'O evento seleccionado não existe',
+	'NO_TRACKLIST'     => 'Sem lista de faixas disponível.',
+	'NO_PAGE'          => 'Esta página não existe.',
+	'URL_INVALID'      => 'O URL não é válido.',
 ]);

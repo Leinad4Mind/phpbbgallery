@@ -2,7 +2,6 @@
 
 /**
  * @package language cBB Blockgets for phpBB.
- * chat_addon.php [English [En]]
  * @version v2.0.1 04/05/2018
  * @copyright (c) 2018 CaniDev
  * @license https://opensource.org/licenses/gpl-license.php GNU Public License
