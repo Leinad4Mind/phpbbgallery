@@ -39,5 +39,5 @@ if (empty($lang) || !is_array($lang))
  */
 
 $lang = array_merge($lang, [
-	'AUTO_DB_BACKUP_DROPBOX' => 'Dropbox',
+	'WEEK' => 'Semana',
 ]);

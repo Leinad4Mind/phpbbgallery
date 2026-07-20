@@ -38,7 +38,7 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'CREATE_NEW_APP'      => 'Criar uma nova aplicação na plataforma Dropbox',
-	'CREATE_NEW_APP_TEXT' => '<strong>Para criar uma nova aplicação Dropbox precisa ter uma conta Dropbox.</strong><br>Depois vá para <a href="https://www.dropbox.com/developers/apps/create">https://www.dropbox.com/developers/apps/create</a> e inicie a sessão, se necessário.<br><br>- Seleciona Dropbox API.<br>- Escolhe o tipo de acesso que precisa = App folder.<br>- Introduz um nome para a sua aplicação.<br>- Clica em "Create app".<br><br>- Vá a Oauth2 e clique em "Generate access code"<br>- <strong>Tome nota dos detalhes nesta página e insira-os no formulário acima</strong> (pode voltar a esta página em qualquer altura).',
+	'CREATE_NEW_APP_TEXT' => '<strong>Para criares uma nova aplicação Dropbox precisas de ter uma conta Dropbox.</strong><br>Depois vai para <a href="https://www.dropbox.com/developers/apps/create">https://www.dropbox.com/developers/apps/create</a> e inicia sessão, se necessário.<br><br>- Seleciona Dropbox API.<br>- Escolhe o tipo de acesso que precisas = App folder.<br>- Introduz um nome para a tua aplicação.<br>- Clica em "Create app".<br><br>- Vai a Oauth2 e clica em "Generate access code"<br>- <strong>Toma nota dos detalhes nesta página e insere-os no formulário acima</strong> (podes voltar a esta página em qualquer altura).',
 
 	'DROPBOX_UPLOAD_ENABLE'          => 'Ativar upload para o Dropbox',
 	'DROPBOX_FOLDER'                 => 'Pasta Dropbox',
@@ -53,7 +53,7 @@ $lang = array_merge($lang, [
 	'DROPBOX_SECRET_EXPLAIN'         => 'A chave secreta da aplicação Dropbox a partir da aplicação Dropbox.',
 	'DROPBOX_TOKEN'                  => 'Token de acesso Dropbox',
 	'DROPBOX_TOKEN_EXPLAIN'          => 'O token de acesso do Dropbox a partir da aplicação Dropbox.',
-	'DROPBOX_UPLOAD_EXPLAIN'         => 'Insere aqui os parâmetros necessários para permitir que ficheiros sejam carregados para a sua conta Dropbox.<br><br><strong>Nota: Esta extensão <em>NÃO</em> remove nenhuns ficheiros da conta Dropbox - isso terá de ser feito manualmente.</strong>',
+	'DROPBOX_UPLOAD_EXPLAIN'         => 'Insere aqui os parâmetros necessários para permitir que ficheiros sejam carregados para a tua conta Dropbox.<br><br><strong>Nota: Esta extensão <em>NÃO</em> remove nenhuns ficheiros da conta Dropbox - isso terá de ser feito manualmente.</strong>',
 	'DROPBOX_UPLOAD_OPTIONS'         => 'Opções de upload do Dropbox',
 
 	'dbx_folder_opts' => [

@@ -61,9 +61,9 @@ $lang = array_merge($lang, [
 	'DATE_FORMAT_ERROR' => 'O formato da data/hora do próximo backup é inválido.',
 
 	'INVALID_PHP_TIMEZONE'  => 'O fuso horário padrão no seu ficheiro php.ini é inválido.',
-	'INVALID_USER_TIMEZONE' => 'Existe um problema com a sua configuração de fuso horário no PCU.',
+	'INVALID_USER_TIMEZONE' => 'Existe um problema com a tua configuração de fuso horário no UCP.',
 
-	'NO_TIMEZONE_SET' => 'Não tem um fuso horário definido no seu PCU - por favor defina-o antes de poder continuar.',
+	'NO_TIMEZONE_SET' => 'Não tens um fuso horário definido no teu UCP - por favor define-o antes de poderes continuar.',
 
 	'FILETYPE' => [
 		'gzip'  => 'gzip',

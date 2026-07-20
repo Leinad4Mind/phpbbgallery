@@ -38,7 +38,7 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'DROPBOX_UPLOAD'        => 'Upload Dropbox',
-	'DROPBOX_UPLOAD_LOG'    => '<strong>As configurações de upload para o Dropbox foram atualizadas</strong>',
+	'DROPBOX_UPLOAD_LOG'    => '<strong>As configurações de upload para o Dropbox foram actualizadas</strong>',
 	'DROPBOX_UPLOAD_MANAGE' => 'Configurações Dropbox',
 
 	'LOG_DROPBOX_ERROR'         => '<strong>O Dropbox retornou o erro</strong><br>» %s',

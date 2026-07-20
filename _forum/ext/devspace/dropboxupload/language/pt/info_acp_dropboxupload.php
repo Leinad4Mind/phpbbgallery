@@ -39,8 +39,12 @@ if (empty($lang) || !is_array($lang))
  */
 
 $lang = array_merge($lang, [
-	'ACP_DROPBOX_UPLOAD'          => 'Carregar para Dropbox',
-	'ACP_DROPBOX_UPLOAD_SETTINGS' => 'Configurações de carregamento do Dropbox',
-	'DROPBOX_UPLOAD_REQUIREMENT'  => 'Esta extensão requer a extensão de Backup Automático da Base de Dados',
-	'LOG_DROPBOX_UPLOAD_SETTINGS' => '<strong>Configurações de carregamento do Dropbox atualizadas</strong>',
+	'DROPBOX_UPLOAD'        => 'Upload Dropbox',
+	'DROPBOX_UPLOAD_LOG'    => '<strong>As configurações de upload para o Dropbox foram atualizadas</strong>',
+	'DROPBOX_UPLOAD_MANAGE' => 'Configurações Dropbox',
+
+	'LOG_DROPBOX_ERROR'         => '<strong>O Dropbox retornou o erro</strong><br>» %s',
+	'LOG_DROPBOX_NO_FILE'       => '<strong>O ficheiro de backup para o Dropbox não pôde ser encontrado</strong>',
+	'LOG_DROPBOX_UPLOAD'        => '<strong>Ficheiro de backup carregado para o Dropbox »</strong><br>%s',
+	'LOG_DROPBOX_UPLOAD_FAILED' => '<strong>O upload para o Dropbox falhou</strong>',
 ]);
