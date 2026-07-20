@@ -18,7 +18,7 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'AVAILABLE_FORUM_IMAGE'         => '<strong>Clique numa imagem para selecionar</strong>',
+	'AVAILABLE_FORUM_IMAGE'         => '<strong>Clica numa imagem para selecionar</strong>',
 	'AVAILABLE_FORUM_IMAGE_EXPLAIN' => 'As imagens são mostradas com ~50% do tamanho real.',
 	'SELECTED_FORUM_IMAGE'          => '<strong>Imagem do fórum selecionada</strong>',
 	'CLEAR_BUTTON'                  => 'Limpar imagem do fórum',

@@ -54,4 +54,9 @@ $lang = array_merge($lang, array(
 	'ANY_TOPIC_IN_LIST'				=> 'Any topics',
 	'SELECT_A_LIST'					=> 'Select a list',
 	'OIINDEX_HEADER'				=> 'Topics List',
+	'LANGUAGE'						=> 'Language',
+	'CATEGORY'						=> 'Category',
+	'COMMENTS'						=> 'Comments',
+	'BUTTON_UPLOAD'					=> 'Share Project',
+	'BUTTON_UPLOAD_EXPLAIN'			=> 'Yes! Start sharing projects in our community!',
 ));

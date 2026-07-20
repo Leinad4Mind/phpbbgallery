@@ -33,27 +33,27 @@ if (empty($lang) || !is_array($lang))
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
 //
 // Some characters you may want to copy&paste:
-// ’ « » “ ” …
+// ’ « » “ ” …
 //
 
 $lang = array_merge($lang, [
-	'WHOVISITEDTHISTOPIC_TOPIC_SETTINGS'              => 'Enable Who Visited This Topic in topics',
-	'WHOVISITEDTHISTOPIC_TOPIC_SETTINGS_EXPLAIN'      => 'This will show the Who Visited This Topic in viewtopics.',
-	'WHOVISITEDTHISTOPIC_COUNT_SETTINGS'              => 'Enable Who Visited This Topic counter topics',
-	'WHOVISITEDTHISTOPIC_COUNT_SETTINGS_EXPLAIN'      => 'This will show the Who Visited This Topic counter in topics.',
-	'WHOVISITEDTHISTOPIC_SHOW_AVATAR'                 => 'Enable Who Visited This Topic avatars in topics',
-	'WHOVISITEDTHISTOPIC_SHOW_AVATAR_EXPLAIN'         => 'This will show the Who Visited This Topic avatars in topics.',
-	'WHOVISITEDTHISTOPIC_MEMBERPAGE_SETTINGS'         => 'Enable Who Visited This Topic in profile',
-	'WHOVISITEDTHISTOPIC_MEMBERPAGE_SETTINGS_EXPLAIN' => 'This will show the Who Visited This Topic in profile.',
-	'WHOVISITEDTHISTOPIC_SETTING'                     => 'Set value for Who Visited This Topic in topics',
-	'WHOVISITEDTHISTOPIC_SETTING_EXPLAIN'             => 'Value adjustable from 2 till 255 members. <em>Default is 10.</em>',
-	'WHOVISITEDTHISTOPIC_VISIT_SETTING'               => 'Set value for Last Topics Visited in profile',
-	'WHOVISITEDTHISTOPIC_VISIT_SETTING_EXPLAIN'       => 'Value adjustable from 2 till 255. <em>Default is 10.</em>',
-	'WHOVISITEDTHISTOPIC_DISABLED_TOPIC'              => 'Disabled set “Enable Who Visited This Topic in topics” to Yes to enter value',
-	'WHOVISITEDTHISTOPIC_DISABLED_MEMBERPAGE'         => 'Disabled set “Enable Who Visited This Topic in profile” to Yes to enter value',
-	'WHOVISITEDTHISTOPIC_SETTINGS_EXPLAIN'            => 'Go to the <em><strong>Who Visited This Topic</strong></em> tab in Group permissions section to adjust permissions for each group.',
-	'WHOVISITEDTHISTOPIC_MEMBERS'                     => 'Exclude members in viewtopic',
-	'WHOVISITEDTHISTOPIC_MEMBERS_EXPLAIN'             => 'Here you can manage the users that you want to exclude (don’t see them) or remove them from the exclude list.<br><strong>Note:</strong> Each user in a new line.',
-	'WHOVISITEDTHISTOPIC_MEMBERS_PROFILE'             => 'Exclude members in profile view',
-	'WHOVISITEDTHISTOPIC_MEMBERS_PROFILE_EXPLAIN'     => 'Here you can manage the users that you want to exclude (don’t see them) or remove them from the exclude list.<br><strong>Note:</strong> Each user in a new line.',
+	'WHOVISITEDTHISTOPIC_TOPIC_SETTINGS'              => 'Activar "Quem Visitou Este Tópico" nos tópicos',
+	'WHOVISITEDTHISTOPIC_TOPIC_SETTINGS_EXPLAIN'      => 'Isto irá mostrar "Quem Visitou Este Tópico" na visualização dos tópicos.',
+	'WHOVISITEDTHISTOPIC_COUNT_SETTINGS'              => 'Activar o contador "Quem Visitou Este Tópico" nos tópicos',
+	'WHOVISITEDTHISTOPIC_COUNT_SETTINGS_EXPLAIN'      => 'Isto irá mostrar o contador "Quem Visitou Este Tópico" nos tópicos.',
+	'WHOVISITEDTHISTOPIC_SHOW_AVATAR'                 => 'Activar avatares "Quem Visitou Este Tópico" nos tópicos',
+	'WHOVISITEDTHISTOPIC_SHOW_AVATAR_EXPLAIN'         => 'Isto irá mostrar os avatares "Quem Visitou Este Tópico" nos tópicos.',
+	'WHOVISITEDTHISTOPIC_MEMBERPAGE_SETTINGS'         => 'Activar "Quem Visitou Este Tópico" no perfil',
+	'WHOVISITEDTHISTOPIC_MEMBERPAGE_SETTINGS_EXPLAIN' => 'Isto irá mostrar "Quem Visitou Este Tópico" no perfil.',
+	'WHOVISITEDTHISTOPIC_SETTING'                     => 'Definir o valor para "Quem Visitou Este Tópico" nos tópicos',
+	'WHOVISITEDTHISTOPIC_SETTING_EXPLAIN'             => 'Valor ajustável entre 2 e 255 membros. <em>Por predefinição é 10.</em>',
+	'WHOVISITEDTHISTOPIC_VISIT_SETTING'               => 'Definir o valor para "Últimos Tópicos Visitados" no perfil',
+	'WHOVISITEDTHISTOPIC_VISIT_SETTING_EXPLAIN'       => 'Valor ajustável entre 2 e 255. <em>Por predefinição é 10.</em>',
+	'WHOVISITEDTHISTOPIC_DISABLED_TOPIC'              => 'Desactivado - define "Activar Quem Visitou Este Tópico nos tópicos" para Sim para poderes inserir um valor',
+	'WHOVISITEDTHISTOPIC_DISABLED_MEMBERPAGE'         => 'Desactivado - define "Activar Quem Visitou Este Tópico no perfil" para Sim para poderes inserir um valor',
+	'WHOVISITEDTHISTOPIC_SETTINGS_EXPLAIN'            => 'Vai ao separador <em><strong>Quem Visitou Este Tópico</strong></em> na secção de permissões de grupo para ajustar as permissões de cada grupo.',
+	'WHOVISITEDTHISTOPIC_MEMBERS'                     => 'Excluir membros na visualização do tópico',
+	'WHOVISITEDTHISTOPIC_MEMBERS_EXPLAIN'             => 'Aqui podes gerir os utilizadores que queres excluir (não os ver) ou removê-los da lista de exclusão.<br><strong>Nota:</strong> Cada utilizador numa linha nova.',
+	'WHOVISITEDTHISTOPIC_MEMBERS_PROFILE'             => 'Excluir membros na visualização do perfil',
+	'WHOVISITEDTHISTOPIC_MEMBERS_PROFILE_EXPLAIN'     => 'Aqui podes gerir os utilizadores que queres excluir (não os ver) ou removê-los da lista de exclusão.<br><strong>Nota:</strong> Cada utilizador numa linha nova.',
 ]);
