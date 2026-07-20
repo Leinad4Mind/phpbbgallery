@@ -21,8 +21,8 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, [
 	'ACP_CLEANTALK_TITLE' => 'Antispam da CleanTalk',
 
-	'ACP_CLEANTALK_SETTINGS'       => 'Configurações de proteção contra spam',
-	'ACP_CLEANTALK_SETTINGS_SAVED' => 'As configurações de proteção contra spam foram guardadas com sucesso!',
+	'ACP_CLEANTALK_SETTINGS'       => 'Configurações de protecção contra spam',
+	'ACP_CLEANTALK_SETTINGS_SAVED' => 'As configurações de protecção contra spam foram guardadas com sucesso!',
 
 	'ACP_CLEANTALK_REGS_LABEL' => 'Verificar Registos',
 	'ACP_CLEANTALK_REGS_DESCR' => 'Spam-bots serão rejeitados com uma declaração de motivos.',
@@ -34,10 +34,10 @@ $lang = array_merge($lang, [
 	'ACP_CLEANTALK_NUSERS_DESCR' => 'Mensagens e tópicos de novos utilizadores serão testados para spam. O spam será rejeitado ou enviado para aprovação.',
 
 	'ACP_CLEANTALK_CCF_LABEL' => 'Verificar formulários de contacto',
-	'ACP_CLEANTALK_CCF_DESCR' => 'Ativar teste anti-spam para formulários de contacto. Pode causar conflitos!',
+	'ACP_CLEANTALK_CCF_DESCR' => 'Activar teste anti-spam para formulários de contacto. Pode causar conflitos!',
 
 	'ACP_CLEANTALK_SFW_LABEL' => 'SpamFireWall',
-	'ACP_CLEANTALK_SFW_DESCR' => 'Ativa o SpamFireWall. Reduz a carga do servidor web e impede o acesso de bots ao site.',
+	'ACP_CLEANTALK_SFW_DESCR' => 'Activa o SpamFireWall. Reduz a carga do servidor web e impede o acesso de bots ao site.',
 
 	'ACP_CLEANTALK_APIKEY_LABEL'                     => 'Chave de acesso',
 	'ACP_CLEANTALK_APIKEY_LABEL_PLACEHOLDER'         => 'Insira a chave de acesso',
@@ -68,11 +68,11 @@ $lang = array_merge($lang, [
 	'ACP_CHECKUSERS_LASTVISIT'                       => 'Última visita',
 	'ACP_CHECKUSERS_DELETEALL'                       => 'Eliminar tudo',
 	'ACP_CHECKUSERS_DELETEALL_DESCR'                 => 'Todas as mensagens dos utilizadores eliminados serão eliminadas também.',
-	'ACP_CHECKUSERS_DELETESEL'                       => 'Eliminar selecionados',
+	'ACP_CHECKUSERS_DELETESEL'                       => 'Eliminar seleccionados',
 	'ACP_CLEANTALK_MODERATE_IP'                      => 'O serviço anti-spam é pago pelo seu provedor de alojamento. Licença #',
-	'SFW_DIE_NOTICE_IP'                              => 'O SpamFireWall está ativado para o seu IP ',
-	'SFW_DIE_MAKE_SURE_JS_ENABLED'                   => 'Para continuar a usar o site, por favor certifique-se que o JavaScript está ativado.',
-	'SFW_DIE_CLICK_TO_PASS'                          => 'Por favor, clique abaixo para passar a proteção,',
+	'SFW_DIE_NOTICE_IP'                              => 'O SpamFireWall está activado para o seu IP ',
+	'SFW_DIE_MAKE_SURE_JS_ENABLED'                   => 'Para continuar a usar o site, por favor certifique-se que o JavaScript está activado.',
+	'SFW_DIE_CLICK_TO_PASS'                          => 'Por favor, clique abaixo para passar a protecção,',
 	'SFW_DIE_YOU_WILL_BE_REDIRECTED'                 => 'Ou será redirecionado automaticamente para a página solicitada após 3 segundos.',
 
 	'CLEANTALK_ERROR_MAIL'    => 'Erro ao ligar ao serviço CleanTalk',
