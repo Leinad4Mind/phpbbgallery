@@ -17,9 +17,9 @@ namespace phpbbgallery\core\acp;
 */
 class main_module
 {
-	var $u_action;
+	public $u_action;
 
-	function main($id, $mode)
+	public function main($id, $mode)
 	{
 		global $user, $language;
 		global $request, $phpbb_container, $gallery_url;
@@ -48,7 +48,7 @@ class main_module
 		}
 	}
 
-	function overview()
+	public function overview()
 	{
 		global $auth, $config, $db, $template, $user, $table_prefix, $phpbb_root_path;
 		global $phpbb_container, $request, $gallery_url;
