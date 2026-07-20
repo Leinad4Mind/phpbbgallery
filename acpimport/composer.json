@@ -28,6 +28,12 @@
 	"require": {
 		"php": ">=7.1"
 	},
+	"require-dev": {
+		"phpunit/phpunit": "^7.5 || ^9.6"
+	},
+	"scripts": {
+		"test": "phpunit -c phpunit.xml.dist"
+	},
 	"extra": {
 		"display-name": "phpBB Gallery Add-on: ACP Import",
 		"soft-require": {
