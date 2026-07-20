@@ -23,7 +23,7 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, [
 	'ACP_CAT_QUICKQUOTE'            => 'QuickQuote',
 	'ACP_QUICKQUOTE_CONFIG'         => 'Configuração',
-	'ACP_QUICKQUOTE_CONFIG_EXPLAIN' => 'A partir daqui você pode gerir as opções principais da extensão.',
+	'ACP_QUICKQUOTE_CONFIG_EXPLAIN' => 'A partir daqui você pode gerenciar as opções principais da extensão.',
 
 	'MAIN_OPTIONS'                => 'Opções principais',
 	'QUICKQUOTE_FLOATBTN'         => 'Botão flutuante',

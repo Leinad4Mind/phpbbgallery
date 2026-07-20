@@ -23,10 +23,10 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, [
 	'ACP_CAT_QUICKMOD'            => 'QuickMod',
 	'ACP_QUICKMOD_CONFIG'         => 'Configuração Principal',
-	'ACP_QUICKMOD_CONFIG_EXPLAIN' => 'A partir daqui podes gerir as principais opções de moderação.<br />Para organizares os botões, arrasta-os para a posição correta na lista inferior. A visibilidade dos botões na página viewforum depende das permissões do utilizador e do estado do tópico.',
+	'ACP_QUICKMOD_CONFIG_EXPLAIN' => 'A partir daqui podes gerir as principais opções de moderação.<br />Para organizares os botões, arrasta-os para a posição correcta na lista inferior. A visibilidade dos botões na página viewforum depende das permissões do utilizador e do estado do tópico.',
 	'QM_MAIN_CONFIG'              => 'Configuração Principal',
 	'QM_CONFIRM'                  => 'Caixa de confirmação',
-	'QM_CONFIRM_EXPLAIN'          => 'Ativar/Desactivar a caixa de confirmação nas acções rápidas.',
+	'QM_CONFIRM_EXPLAIN'          => 'Activar/Desactivar a caixa de confirmação nas acções rápidas.',
 	'QM_BUTTON_MANAGE'            => 'Gerir Botões Rápidos',
 	'QM_LAYOUT'                   => 'Exibição da Caixa de Acções',
 	'QM_LAYOUT_EXPLAIN'           => 'Define como a caixa será exibida para a execução de acções em massa.',
@@ -38,7 +38,7 @@ $lang = array_merge($lang, [
 	'QM_TYPE_MENU'                => 'Menu de contexto',
 
 	'BUTTONS_AVAILABLE' => 'Botões disponíveis',
-	'BUTTONS_SELECTED'  => 'Botões selecionados',
+	'BUTTONS_SELECTED'  => 'Botões seleccionados',
 
 	'LOG_QUICKMOD_CONFIG' => '<strong>cBB QuickMod:</strong> Configuração Alterada',
 ]);

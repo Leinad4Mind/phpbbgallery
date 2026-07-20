@@ -27,11 +27,11 @@ $lang = array_merge($lang, [
 
 	'MAIN_OPTIONS'                => 'Opções principais',
 	'QUICKQUOTE_FLOATBTN'         => 'Botão flutuante',
-	'QUICKQUOTE_FLOATBTN_EXPLAIN' => 'Se ativado, um botão irá aparecer na parte inferior de todas as páginas permitidas, exibindo as citações guardadas.
+	'QUICKQUOTE_FLOATBTN_EXPLAIN' => 'Se activado, um botão irá aparecer na parte inferior de todas as páginas permitidas, exibindo as citações guardadas.
 		<br />Caso contrário, será exibido um botão no editor para inserir as citações.',
 	'QUICKQUOTE_GROUPS'         => 'Grupos autorizados',
 	'QUICKQUOTE_GROUPS_EXPLAIN' => 'Define os grupos que podem usar esta extensão.<br />
-		Podes selecionar vários grupos usando a tecla <em>Ctrl</em> no teu teclado.<br /><br />
+		Podes seleccionar vários grupos usando a tecla <em>Ctrl</em> no teu teclado.<br /><br />
 		<em>Além deste parâmetro, o uso da extensão será condicionado pelas permissões de publicação de mensagens.</em>',
 	'QUICKQUOTE_REPLY_OVERWRITE'         => 'Substituir o texto da resposta',
 	'QUICKQUOTE_REPLY_OVERWRITE_EXPLAIN' => 'Decide se o texto escrito na resposta rápida será substituído ao usar a função <em>Responder</em>.<br />

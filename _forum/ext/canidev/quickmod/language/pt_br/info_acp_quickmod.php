@@ -23,11 +23,11 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, [
 	'ACP_CAT_QUICKMOD'            => 'QuickMod',
 	'ACP_QUICKMOD_CONFIG'         => 'Configuração Principal',
-	'ACP_QUICKMOD_CONFIG_EXPLAIN' => 'A partir daqui você pode gerir as principais opções de moderação.<br />Para organizares os botões, arrasta-os para a posição correta na lista inferior. A visibilidade dos botões na página viewforum depende das permissões do usuário e do estado do tópico.',
+	'ACP_QUICKMOD_CONFIG_EXPLAIN' => 'A partir daqui você pode gerenciar as principais opções de moderação.<br />Para organizar os botões, arraste-os para a posição correta na lista inferior. A visibilidade dos botões na página viewforum depende das permissões do usuário e do estado do tópico.',
 	'QM_MAIN_CONFIG'              => 'Configuração Principal',
 	'QM_CONFIRM'                  => 'Caixa de confirmação',
 	'QM_CONFIRM_EXPLAIN'          => 'Habilitar/Desabilitar a caixa de confirmação nas ações rápidas.',
-	'QM_BUTTON_MANAGE'            => 'Gerir Botões Rápidos',
+	'QM_BUTTON_MANAGE'            => 'Gerenciar Botões Rápidos',
 	'QM_LAYOUT'                   => 'Exibição da Caixa de Ações',
 	'QM_LAYOUT_EXPLAIN'           => 'Define como a caixa será exibida para a execução de ações em massa.',
 	'QM_LAYOUT_DEFAULT'           => 'Predefinida',
