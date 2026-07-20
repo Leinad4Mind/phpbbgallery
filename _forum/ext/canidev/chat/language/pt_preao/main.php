@@ -42,7 +42,7 @@ $lang = array_merge($lang, [
 	'CHAT_GUEST_ROOM'         => 'Geral',
 	'CHAT_MENTION'            => 'Mencionar',
 	'CHAT_MOVE'               => 'Mover para outra sala',
-	'CHAT_MOVE_CONFIRM'       => 'Tens a certeza de que queres mover as mensagens selecionadas?',
+	'CHAT_MOVE_CONFIRM'       => 'Tens a certeza de que queres mover as mensagens seleccionadas?',
 	'CHAT_NO_INFORMATION'     => 'Nenhuma informação disponível.',
 	'CHAT_PM_EXCEED'          => 'Não podes abrir mais conversas privadas devido a um limite definido pela administração.',
 	'CHAT_PURGE'              => 'Expurgar mensagens',
@@ -51,7 +51,7 @@ $lang = array_merge($lang, [
 	'CHAT_RULES'              => 'Regras do chat',
 	'CHAT_SEND_PM'            => 'Mensagem privada',
 	'CHAT_SMILIES'            => 'Emoticons',
-	'CHAT_SOUND'              => 'Ativar/Desactivar som',
+	'CHAT_SOUND'              => 'Activar/Desactivar som',
 
 	'CHAT_ENTER_AS_GUEST'      => 'Entrar como visitante',
 	'CHAT_ENTER_AS_REGISTERED' => 'Entrar como membro',

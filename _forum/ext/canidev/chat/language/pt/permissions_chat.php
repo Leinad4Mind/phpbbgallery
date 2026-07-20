@@ -21,17 +21,18 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'ACL_U_CHAT_VIEW'   => 'Pode ver o chat',
-	'ACL_U_CHAT_POST'   => 'Pode publicar mensagens',
-	'ACL_U_CHAT_EDIT'   => 'Pode editar as próprias mensagens',
-	'ACL_U_CHAT_DELETE' => 'Pode remover as próprias mensagens',
-	'ACL_U_CHAT_IGNORE' => 'Pode ignorar Flood/limite de caracteres',
-	'ACL_U_CHAT_PM'     => 'Pode enviar mensagens privadas',
-	'ACL_U_CHAT_REPORT' => 'Pode reportar mensagens',
+	'ACL_CAT_CHAT' => 'Chat',
+
+	'ACL_U_CHAT_VIEW'        => 'Pode ver o chat',
+	'ACL_U_CHAT_POST'        => 'Pode publicar mensagens',
+	'ACL_U_CHAT_EDIT'        => 'Pode editar as próprias mensagens',
+	'ACL_U_CHAT_DELETE'      => 'Pode remover as próprias mensagens',
+	'ACL_U_CHAT_IGNOREFLOOD' => 'Pode ignorar o limite de flood',
+	'ACL_U_CHAT_SENDPM'      => 'Pode enviar mensagens privadas',
+	'ACL_U_CHAT_ARCHIVE'     => 'Pode ver o arquivo do chat',
 
 	'ACL_M_CHAT_EDIT'   => 'Pode editar mensagens',
 	'ACL_M_CHAT_DELETE' => 'Pode remover mensagens',
-	'ACL_M_CHAT_BAN'    => 'Pode gerir exclusões',
 
 	'ACL_A_CHAT' => 'Pode gerir as configurações do chat',
 ]);

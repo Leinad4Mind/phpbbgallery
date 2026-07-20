@@ -41,5 +41,5 @@ $lang = array_merge($lang, [
 		1 => '<strong>cBB Chat:</strong> 1 mensagem eliminada de <em>%1</em>',
 		2 => '<strong>cBB Chat:</strong> %2 mensagens eliminadas de <em>%1</em>',
 	],
-	'LOG_CHAT_ROOM_REMOVED' => '<strong>cBB Chat:</strong> Sala <em>%s</em> e respetivas mensagens eliminadas',
+	'LOG_CHAT_ROOM_REMOVED' => '<strong>cBB Chat:</strong> Sala <em>%s</em> e respectivas mensagens eliminadas',
 ]);
