@@ -1198,12 +1198,23 @@ class upload
 		$image_ids = $filenames = array();
 		foreach ($uploaded_ids as $row => $check)
 		{
-			if (strpos($check, '$') == false)
+			if (!is_string($check) || strpos($check, '$') === false)
 			{
 				continue;
 			}
-			list($image_id, $filename) = explode('$', $check);
-			$image_ids[] = (int) $image_id;
+			list($image_id, $filename) = explode('$', $check, 2);
+			if (!ctype_digit($image_id) || (int) $image_id <= 0 || $filename === '')
+			{
+				continue;
+			}
+
+			$image_id = (int) $image_id;
+			if (isset($filenames[$image_id]))
+			{
+				continue;
+			}
+
+			$image_ids[] = $image_id;
 			$filenames[$image_id] = $filename;
 			$this->array_id2row[$image_id] = $row;
 		}
@@ -1216,15 +1227,18 @@ class upload
 		$sql = 'SELECT *
 			FROM ' . $this->images_table . '
 			WHERE image_status = ' . (int) $this->block->get_image_status_orphan() . '
+				AND image_user_id = ' . (int) $this->user->data['user_id'] . '
+				AND image_album_id = ' . (int) $this->album_id . '
 				AND ' . $this->db->sql_in_set('image_id', $image_ids);
 		$result = $this->db->sql_query($sql);
 
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			if ($filenames[$row['image_id']] == substr($row['image_filename'], 0, 8))
+			$image_id = (int) $row['image_id'];
+			if (isset($filenames[$image_id]) && hash_equals((string) $row['image_filename'], $filenames[$image_id]))
 			{
-				$this->images[] = (int) $row['image_id'];
-				$this->image_data[(int) $row['image_id']] = $row;
+				$this->images[] = $image_id;
+				$this->image_data[$image_id] = $row;
 				$this->loaded_files++;
 			}
 		}
@@ -1279,7 +1293,7 @@ class upload
 		$checks = array();
 		foreach ($this->images as $image_id)
 		{
-			$checks[] = $image_id . '$' . substr($this->image_data[$image_id]['image_filename'], 0, 8);
+			$checks[] = $image_id . '$' . $this->image_data[$image_id]['image_filename'];
 		}
 		return $checks;
 	}
