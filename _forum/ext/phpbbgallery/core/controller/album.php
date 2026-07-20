@@ -139,7 +139,7 @@ class album
 	public function base($album_id, $page = 0)
 	{
 		$album_id = (int) $album_id;
-		$this->language->add_lang(array('gallery'), 'phpbbgallery/core');
+		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
 
 		try
 		{
@@ -181,10 +181,10 @@ class album
 			{
 				$moderators = $moderators[$album_id];
 				$l_moderator = (sizeof($moderators) == 1) ? $this->language->lang('MODERATOR') : $this->language->lang('MODERATORS');
-				$this->template->assign_vars(array(
+				$this->template->assign_vars([
 					'L_MODERATORS' => $l_moderator,
 					'MODERATORS'   => implode($this->language->lang('COMMA_SEPARATOR'), $moderators),
-				));
+				]);
 			}
 		}
 
@@ -192,7 +192,7 @@ class album
 		{
 			$this->template->assign_var('U_MCP', $this->helper->route(
 				'phpbbgallery_core_moderate_album',
-				array('album_id' => (int) $album_id)
+				['album_id' => (int) $album_id]
 			));
 		}
 
@@ -203,7 +203,7 @@ class album
 			{
 				$this->template->assign_var('U_UPLOAD_IMAGE', $this->helper->route(
 					'phpbbgallery_core_album_upload',
-					array('album_id' => (int) $album_id)
+					['album_id' => (int) $album_id]
 				));
 			}
 			else
@@ -212,22 +212,22 @@ class album
 				{
 					$this->template->assign_var('U_UPLOAD_IMAGE', $this->helper->route(
 						'phpbbgallery_core_album_upload',
-						array('album_id' => (int) $album_id)
+						['album_id' => (int) $album_id]
 					));
 				}
 			}
 		}
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'S_IS_POSTABLE' => $album_data['album_type'] != (int) \phpbbgallery\core\block::TYPE_CAT,
 			'S_IS_LOCKED'   => $album_data['album_status'] == (int) \phpbbgallery\core\block::ALBUM_LOCKED,
 
 			'U_RETURN_LINK'  => $this->helper->route('phpbbgallery_core_index'),
 			'L_RETURN_LINK'  => $this->language->lang('RETURN_TO_GALLERY'),
-			'S_ALBUM_ACTION' => $this->helper->route('phpbbgallery_core_album', array('album_id' => (int) $album_id)),
+			'S_ALBUM_ACTION' => $this->helper->route('phpbbgallery_core_album', ['album_id' => (int) $album_id]),
 			'S_IS_WATCHED'   => $this->notifications_helper->get_watched_album($album_id) ? true : false,
-			'U_WATCH_TOGGLE'  => $this->helper->route('phpbbgallery_core_album_watch', array('album_id' => (int) $album_id)),
-		));
+			'U_WATCH_TOGGLE' => $this->helper->route('phpbbgallery_core_album_watch', ['album_id' => (int) $album_id]),
+		]);
 
 		if ($album_data['album_type'] != (int) \phpbbgallery\core\block::TYPE_CAT
 			&& $album_data['album_images_real'] > 0)
@@ -266,19 +266,35 @@ class album
 		}
 		else
 		{
-			$image_status_check = " AND (image_status <> " . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . " OR image_user_id = $user_id)";
+			$image_status_check = ' AND (image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . " OR image_user_id = $user_id)";
 
 			$sql = 'SELECT COUNT(*) AS total_images
 				FROM ' . $this->table_images . '
-				WHERE image_album_id = ' . (int) $album_id . "
-					AND (image_status <> " . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . " OR image_user_id = $user_id)
+				WHERE image_album_id = ' . (int) $album_id . '
+					AND (image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . " OR image_user_id = $user_id)
 					AND image_status <> " . (int) \phpbbgallery\core\block::STATUS_ORPHAN;
 			$result = $this->db->sql_query($sql);
 			$image_counter = (int) $this->db->sql_fetchfield('total_images');
 			$this->db->sql_freeresult($result);
 		}
 
-		if (in_array($sort_key, array('r', 'ra')))
+		// album_images/album_images_real (and the per-album recount above) only ever count
+		// images placed directly in this album (see album::update_info()). That is correct
+		// for the LISTING below (still scoped to image_album_id = $album_id) and for
+		// pagination, which must stay in sync with it - so $image_counter itself is left
+		// untouched. But personal galleries routinely get sub-albums nested under them (UCP
+		// album creation defaults a new album's parent to the user's personal album), in
+		// which case the "TOTAL_IMAGES" figure shown in the album header silently excluded
+		// everything in those sub-albums. When this album has descendants, show an aggregate
+		// across the whole subtree there instead - reusing whichever visibility rule
+		// ($image_status_check) the branch above just established.
+		$total_images_display = $image_counter;
+		if ($album_data['right_id'] > $album_data['left_id'] + 1)
+		{
+			$total_images_display = $this->get_subtree_image_count($album_data, $image_status_check);
+		}
+
+		if (in_array($sort_key, ['r', 'ra']))
 		{
 			$sql_help_sort = ', image_id ' . (($sort_dir == 'd') ? 'ASC' : 'DESC');
 		}
@@ -287,19 +303,19 @@ class album
 			$sql_help_sort = ', image_id ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
 		}
 
-		$limit_days = array();
-		$sort_by_text = array(
+		$limit_days = [];
+		$sort_by_text = [
 			't'  => $this->language->lang('TIME'),
 			'n'  => $this->language->lang('IMAGE_NAME'),
 			'vc' => $this->language->lang('GALLERY_VIEWS'),
 			'u'  => $this->language->lang('SORT_USERNAME'),
-		);
-		$sort_by_sql = array(
+		];
+		$sort_by_sql = [
 			't'  => 'image_time',
 			'n'  => 'image_name_clean',
 			'vc' => 'image_view_count',
 			'u'  => 'image_username_clean',
-		);
+		];
 
 		if ($this->config['phpbb_gallery_allow_rates'])
 		{
@@ -318,9 +334,9 @@ class album
 		gen_sort_selects($limit_days, $sort_by_text, $sort_days, $sort_key, $sort_dir, $s_limit_days, $s_sort_key, $s_sort_dir, $u_sort_param);
 		$sql_sort_order = $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
 
-		$this->template->assign_block_vars('imageblock', array(
+		$this->template->assign_block_vars('imageblock', [
 			'BLOCK_NAME' => $album_data['album_name'],
-		));
+		]);
 
 		$images = [];
 		$sql = 'SELECT *
@@ -333,14 +349,14 @@ class album
 
 		// Now let's get display options
 		$show_options = (int) $this->gallery_config->get('album_display');
-		$show_ip        = ($show_options & self::ALBUM_SHOW_IP) !== 0;
-		$show_ratings   = ($show_options & self::ALBUM_SHOW_RATINGS) !== 0;
-		$show_username  = ($show_options & self::ALBUM_SHOW_USERNAME) !== 0;
-		$show_views     = ($show_options & self::ALBUM_SHOW_VIEWS) !== 0;
-		$show_time      = ($show_options & self::ALBUM_SHOW_TIME) !== 0;
+		$show_ip = ($show_options & self::ALBUM_SHOW_IP) !== 0;
+		$show_ratings = ($show_options & self::ALBUM_SHOW_RATINGS) !== 0;
+		$show_username = ($show_options & self::ALBUM_SHOW_USERNAME) !== 0;
+		$show_views = ($show_options & self::ALBUM_SHOW_VIEWS) !== 0;
+		$show_time = ($show_options & self::ALBUM_SHOW_TIME) !== 0;
 		$show_imagename = ($show_options & self::ALBUM_SHOW_IMAGENAME) !== 0;
-		$show_comments  = ($show_options & self::ALBUM_SHOW_COMMENTS) !== 0;
-		$show_album     = ($show_options & self::ALBUM_SHOW_ALBUM) !== 0;
+		$show_comments = ($show_options & self::ALBUM_SHOW_COMMENTS) !== 0;
+		$show_album = ($show_options & self::ALBUM_SHOW_ALBUM) !== 0;
 
 		if (!empty($album_data['contest_marked']) && $album_data['contest_marked'])
 		{
@@ -363,10 +379,10 @@ class album
 			switch ($this->gallery_config->get('link_thumbnail'))
 			{
 				case 'image_page':
-					$action = $this->helper->route('phpbbgallery_core_image', array('image_id' => $row['image_id']));
+					$action = $this->helper->route('phpbbgallery_core_image', ['image_id' => $row['image_id']]);
 				break;
 				case 'image':
-					$action = $this->helper->route('phpbbgallery_core_image_file_source', array('image_id' => $row['image_id']));
+					$action = $this->helper->route('phpbbgallery_core_image_file_source', ['image_id' => $row['image_id']]);
 				break;
 				default:
 					$action = false;
@@ -375,10 +391,10 @@ class album
 			switch ($this->gallery_config->get('link_image_name'))
 			{
 				case 'image_page':
-					$action_image = $this->helper->route('phpbbgallery_core_image', array('image_id' => $row['image_id']));
+					$action_image = $this->helper->route('phpbbgallery_core_image', ['image_id' => $row['image_id']]);
 				break;
 				case 'image':
-					$action_image = $this->helper->route('phpbbgallery_core_image_file_source', array('image_id' => $row['image_id']));
+					$action_image = $this->helper->route('phpbbgallery_core_image_file_source', ['image_id' => $row['image_id']]);
 				break;
 				default:
 					$action_image = false;
@@ -389,15 +405,15 @@ class album
 			$s_quick_mod = ($s_allowed_delete || $s_allowed_edit || $this->auth->acl_check('m_status', $image_data['image_album_id'], $album_user_id) || $this->auth->acl_check('m_move', $image_data['image_album_id'], $album_user_id));
 
 			$s_username_hidden = $image_data['image_contest'] && !$this->auth->acl_check('m_status', $image_data['image_album_id'], $album_user_id) && ($this->user->data['user_id'] != $image_data['image_user_id'] || $image_data['image_user_id'] == ANONYMOUS);
-			$this->template->assign_block_vars('imageblock.image', array(
-				'IMAGE_ID'            => (int) $image_data['image_id'],
-				'U_IMAGE'             => $action_image,
-				'UC_IMAGE_NAME'       => $show_imagename ? $image_data['image_name'] : false,
-				'U_ALBUM'             => $show_album ? $this->helper->route('phpbbgallery_core_album', array('album_id' => (int) $album_data['album_id'])) : false,
-				'ALBUM_NAME'          => $show_album ? $album_data['album_name'] : false,
-				'IMAGE_VIEWS'         => $show_views ? (int) $image_data['image_view_count'] : -1,
+			$this->template->assign_block_vars('imageblock.image', [
+				'IMAGE_ID'      => (int) $image_data['image_id'],
+				'U_IMAGE'       => $action_image,
+				'UC_IMAGE_NAME' => $show_imagename ? $image_data['image_name'] : false,
+				'U_ALBUM'       => $show_album ? $this->helper->route('phpbbgallery_core_album', ['album_id' => (int) $album_data['album_id']]) : false,
+				'ALBUM_NAME'    => $show_album ? $album_data['album_name'] : false,
+				'IMAGE_VIEWS'   => $show_views ? (int) $image_data['image_view_count'] : -1,
 				//'UC_THUMBNAIL'	=> 'self::generate_link('thumbnail', $phpbb_ext_gallery->config->get('link_thumbnail'), $image_data['image_id'], $image_data['image_name'], $image_data['image_album_id']),
-				'UC_THUMBNAIL'        => $this->helper->route('phpbbgallery_core_image_file_mini', array('image_id' => $image_data['image_id'])),
+				'UC_THUMBNAIL'        => $this->helper->route('phpbbgallery_core_image_file_mini', ['image_id' => $image_data['image_id']]),
 				'UC_THUMBNAIL_ACTION' => $action,
 				'S_UNAPPROVED'        => ($this->auth->acl_check('m_status', $image_data['image_album_id'], $album_user_id) && ($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_UNAPPROVED)) ? true : false,
 				'S_LOCKED'            => ($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_LOCKED) ? true : false,
@@ -406,17 +422,17 @@ class album
 				'TIME'                => $show_time ? $this->user->format_date($image_data['image_time']) : false,
 
 				'S_RATINGS'  => ($this->config['phpbb_gallery_allow_rates'] == 1 && $show_ratings) ? ($image_data['image_rates'] > 0 ? $image_data['image_rate_avg'] / 100 : $this->language->lang('NOT_RATED')) : false,
-				'U_RATINGS'  => $this->helper->route('phpbbgallery_core_image', array('image_id' => $image_data['image_id'])) . '#rating',
+				'U_RATINGS'  => $this->helper->route('phpbbgallery_core_image', ['image_id' => $image_data['image_id']]) . '#rating',
 				'L_COMMENTS' => ($image_data['image_comments'] == 1) ? $this->language->lang('COMMENT') : $this->language->lang('COMMENTS'),
 				'S_COMMENTS' => ($this->config['phpbb_gallery_allow_comments'] && $this->auth->acl_check('c_read', $image_data['image_album_id'], $album_user_id) && $show_comments) ? (($image_data['image_comments']) ? $image_data['image_comments'] : $this->language->lang('NO_COMMENTS')) : '',
-				'U_COMMENTS' => $this->helper->route('phpbbgallery_core_image', array('image_id' => $image_data['image_id'])) . '#comments',
+				'U_COMMENTS' => $this->helper->route('phpbbgallery_core_image', ['image_id' => $image_data['image_id']]) . '#comments',
 
 				'U_USER_IP'                  => $show_ip && $this->auth->acl_check('m_status', $image_data['image_album_id'], $album_user_id) ? $image_data['image_user_ip'] : false,
 				'S_IMAGE_REPORTED'           => $image_data['image_reported'],
 				'U_IMAGE_REPORTED'           => '',//($image_data['image_reported']) ? $phpbb_ext_gallery->url->append_sid('mcp', "mode=report_details&amp;album_id={$image_data['image_album_id']}&amp;option_id=" . $image_data['image_reported']) : '',
 				'S_STATUS_APPROVED'          => ($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_APPROVED) ? true : false,
 				'S_STATUS_UNAPPROVED'        => ($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_UNAPPROVED) ? true : false,
-				'S_STATUS_UNAPPROVED_ACTION' => ($this->auth->acl_check('m_status', $image_data['image_album_id'], $album_user_id) && $image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_UNAPPROVED) ? $this->helper->route('phpbbgallery_core_moderate_image_approve', array('image_id' => $image_data['image_id'])) : '',
+				'S_STATUS_UNAPPROVED_ACTION' => ($this->auth->acl_check('m_status', $image_data['image_album_id'], $album_user_id) && $image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_UNAPPROVED) ? $this->helper->route('phpbbgallery_core_moderate_image_approve', ['image_id' => $image_data['image_id']]) : '',
 				'S_STATUS_LOCKED'            => ($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_LOCKED) ? true : false,
 
 				'U_REPORT' => ($this->auth->acl_check('m_report', $image_data['image_album_id'], $album_user_id) && $image_data['image_reported']) ? '123'/*$this->url->append_sid('mcp', "mode=report_details&amp;album_id={$image_data['image_album_id']}&amp;option_id=" . $image_data['image_reported'])*/ : '',
@@ -424,28 +440,68 @@ class album
 				'L_STATUS' => ($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_UNAPPROVED) ? $this->language->lang('APPROVE_IMAGE') : (($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_APPROVED) ? $this->language->lang('CHANGE_IMAGE_STATUS') : $this->language->lang('UNLOCK_IMAGE')),
 
 				'S_CONTEST_RANK' => $image_data['image_contest_rank'],
-			));
+			]);
 		}
 		$this->db->sql_freeresult($result);
 
-		$this->pagination->generate_template_pagination(array(
-			'routes' => array(
+		$this->pagination->generate_template_pagination([
+			'routes' => [
 				'phpbbgallery_core_album',
 				'phpbbgallery_core_album_page',
-			),
-			'params' => array(
+			],
+			'params' => [
 				'album_id' => (int) $album_id,
 				'sk'       => $sort_key,
 				'sd'       => $sort_dir,
 				'st'       => $sort_days,
-			),
-		), 'pagination', 'page', $image_counter, $limit, $start);
+			],
+		], 'pagination', 'page', $image_counter, $limit, $start);
 
-		$this->template->assign_vars(array(
-			'TOTAL_IMAGES'      => $this->language->lang('VIEW_ALBUM_IMAGES', $image_counter),
+		$this->template->assign_vars([
+			'TOTAL_IMAGES'      => $this->language->lang('VIEW_ALBUM_IMAGES', $total_images_display),
 			'S_SELECT_SORT_DIR' => $s_sort_dir,
 			'S_SELECT_SORT_KEY' => $s_sort_key,
-		));
+		]);
+	}
+
+	/**
+	 * Aggregate image count across an album and all of its descendants.
+	 * Used for the header total of albums that have sub-albums (personal galleries),
+	 * where the flat album_images/album_images_real columns only reflect this album's own
+	 * direct images. Mirrors the visibility rule already established by the caller via
+	 * $image_status_check (moderators see everything, other users see their own pending
+	 * images too, everyone else only sees approved/locked images), and always excludes
+	 * orphan images, matching album::update_info(). Reuses the same nested-set branch
+	 * traversal (get_branch(..., 'children')) already used elsewhere for personal-gallery
+	 * sub-album listing, e.g. ucp/main_module.php.
+	 *
+	 * @param array  $album_data        Row of the root album (needs album_id, album_user_id)
+	 * @param string $image_status_check SQL fragment, e.g. " AND (image_status <> 0 OR image_user_id = 5)"
+	 * @return int
+	 */
+	protected function get_subtree_image_count($album_data, $image_status_check)
+	{
+		$album_ids = [];
+		foreach ($this->display->get_branch($album_data['album_user_id'], $album_data['album_id'], 'children') as $row)
+		{
+			$album_ids[] = (int) $row['album_id'];
+		}
+
+		if (empty($album_ids))
+		{
+			return 0;
+		}
+
+		$sql = 'SELECT COUNT(image_id) AS total_images
+			FROM ' . $this->table_images . '
+			WHERE ' . $this->db->sql_in_set('image_album_id', $album_ids) . "
+				$image_status_check
+				AND image_status <> " . (int) \phpbbgallery\core\block::STATUS_ORPHAN;
+		$result = $this->db->sql_query($sql);
+		$total = (int) $this->db->sql_fetchfield('total_images');
+		$this->db->sql_freeresult($result);
+
+		return $total;
 	}
 
 	/**
@@ -455,29 +511,29 @@ class album
 	public function watch($album_id)
 	{
 		$album_id = (int) $album_id;
-		$this->language->add_lang(array('gallery'), 'phpbbgallery/core');
+		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
 
 		$album_data = $this->loader->get($album_id);
 
 		$this->check_permissions($album_id, $album_data['album_user_id'], $album_data['album_auth_access']);
 		if (confirm_box(true))
 		{
-			$back_link = $this->helper->route('phpbbgallery_core_album', array('album_id' => (int) $album_id));
+			$back_link = $this->helper->route('phpbbgallery_core_album', ['album_id' => (int) $album_id]);
 			if ($this->notifications_helper->get_watched_album($album_id) == 1)
 			{
 				$this->notifications_helper->remove_albums($album_id);
-				$this->template->assign_vars(array(
+				$this->template->assign_vars([
 					'INFORMATION' => $this->language->lang('UNWATCH_ALBUM'),
-				));
+				]);
 				$this->url->meta_refresh(3, $back_link);
 				return $this->helper->render('gallery/message.html', $this->language->lang('GALLERY'));
 			}
 			else
 			{
 				$this->notifications_helper->add_albums($album_id);
-				$this->template->assign_vars(array(
+				$this->template->assign_vars([
 					'INFORMATION' => $this->language->lang('WATCH_ALBUM'),
-				));
+				]);
 				$this->url->meta_refresh(3, $back_link);
 				return $this->helper->render('gallery/message.html', $this->language->lang('GALLERY'));
 			}
