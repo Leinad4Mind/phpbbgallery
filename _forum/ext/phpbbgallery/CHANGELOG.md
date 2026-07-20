@@ -11,6 +11,8 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Replaced executable PHP state files in ACP Import with validated, size-limited JSON state tied to the administrator who created it and identified by a cryptographically random token.
 - Restricted ACP Import to enumerated direct-child image files inside the import directory, rejecting path traversal, symbolic links, unsupported formats, disguised image types, duplicate names, and destination overwrites.
 - Added migration and runtime cleanup for legacy ACP Import PHP state and error files.
+- Restricted `i_edit` and `i_delete` to images owned by the current user while preserving the corresponding moderator overrides.
+- Validated every image in batch moderation against its real source album and action-specific permission, including report closure and destination authorization for moves.
 
 ### Fixed
 
@@ -22,4 +24,5 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 - Added permanent ZIP extractor tests covering valid archives, traversal attempts, disguised files, duplicate paths, malformed metadata, resource limits, compression-ratio abuse, and cleanup behavior.
 - Added permanent ACP Import tests covering state validation, non-executable persistence, legacy-state cleanup, path containment, symbolic links, MIME validation, safe copying, language completeness, and architectural regressions.
-- Validated both security phases with PHP 7.4, 8.1, 8.2, 8.4, and 8.5.
+- Added permanent authorization tests covering image ownership, moderator overrides, route-album containment, per-image moderation permissions, destination permissions, and controller integration.
+- Validated the ZIP upload, ACP Import, and authorization security phases with PHP 7.4, 8.1, 8.2, 8.4, and 8.5.

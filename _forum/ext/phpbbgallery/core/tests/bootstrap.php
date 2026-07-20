@@ -40,4 +40,6 @@ namespace
 	}
 
 	require_once dirname(__DIR__) . '/upload.php';
+	require_once dirname(__DIR__) . '/auth/image_authorization.php';
+	require_once dirname(__DIR__) . '/controller/moderate.php';
 }

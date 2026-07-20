@@ -64,6 +64,9 @@ class image
 	/** @var \phpbbgallery\core\auth\auth */
 	protected $gallery_auth;
 
+	/** @var \phpbbgallery\core\auth\image_authorization */
+	protected $image_authorization;
+
 	/** @var \phpbbgallery\core\user */
 	protected $gallery_user;
 
@@ -151,6 +154,7 @@ class image
 	 * @param \phpbbgallery\core\album\album                            $album
 	 * @param \phpbbgallery\core\image\image                            $image
 	 * @param \phpbbgallery\core\auth\auth                              $gallery_auth
+	 * @param \phpbbgallery\core\auth\image_authorization               $image_authorization
 	 * @param \phpbbgallery\core\user                                   $gallery_user
 	 * @param \phpbbgallery\core\config                                 $gallery_config
 	 * @param \phpbbgallery\core\auth\level                             $auth_level   Gallery auth level object
@@ -179,6 +183,7 @@ class image
 		\phpbb\language\language $language, \phpbbgallery\core\album\display $display,
 		\phpbbgallery\core\album\loader $loader, \phpbbgallery\core\album\album $album,
 		\phpbbgallery\core\image\image $image, \phpbbgallery\core\auth\auth $gallery_auth,
+		\phpbbgallery\core\auth\image_authorization $image_authorization,
 		\phpbbgallery\core\user $gallery_user, \phpbbgallery\core\config $gallery_config,
 		\phpbbgallery\core\auth\level $auth_level, \phpbbgallery\core\url $url, \phpbbgallery\core\misc $misc,
 		\phpbbgallery\core\comment $comment, \phpbbgallery\core\report $report,
@@ -203,6 +208,7 @@ class image
 		$this->album = $album;
 		$this->image = $image;
 		$this->gallery_auth = $gallery_auth;
+		$this->image_authorization = $image_authorization;
 		$this->gallery_user = $gallery_user;
 		$this->gallery_config = $gallery_config;
 		$this->auth_level = $auth_level;
@@ -660,7 +666,6 @@ class image
 			{
 				$edit_info = '';
 
-
 				// Let's deploy new profile
 				$poster_id = $row['comment_user_id'];
 				$user_data = $this->users_data_array[$poster_id] ?? [];
@@ -684,7 +689,7 @@ class image
 				{
 					$cp_row = (isset($this->profile_fields_data[$poster_id])) ? $this->cpf_manager->generate_profile_fields_template_data($this->profile_fields_data[$poster_id]) : array();
 				}
-				$can_receive_pm = (
+				$can_receive_pm =
 					// They must be a "normal" user
 					$user_data['user_type'] != USER_IGNORE &&
 					// They must not be deactivated by the administrator
@@ -692,8 +697,7 @@ class image
 					// They must be able to read PMs
 					in_array($poster_id, $this->can_receive_pm_list) &&
 					// They must allow users to contact via PM
-					(($this->auth->acl_gets('a_', 'm_') || $this->auth->acl_getf_global('m_')) || $user_data['allow_pm'])
-				);
+					(($this->auth->acl_gets('a_', 'm_') || $this->auth->acl_getf_global('m_')) || $user_data['allow_pm']);
 				$u_pm = '';
 				if ($this->config['allow_privmsg'] && $this->auth->acl_get('u_sendpm') && $can_receive_pm)
 				{
@@ -826,12 +830,13 @@ class image
 		$owner_id = $image_data['image_user_id'];
 		$album_loginlink = './ucp.php?mode=login';
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
-		if (!$this->gallery_auth->acl_check('i_edit', $album_id, $album_data['album_user_id']) || ($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_ORPHAN))
+		$has_image_permission = $this->gallery_auth->acl_check('i_edit', $album_id, $album_data['album_user_id']);
+		$has_moderator_permission = $this->gallery_auth->acl_check('m_edit', $album_id, $album_data['album_user_id']);
+		$is_orphan = $image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_ORPHAN;
+		if (!$this->image_authorization->can_manage_image((int) $this->user->data['user_id'], $image_data, $has_image_permission, $has_moderator_permission, $is_orphan))
 		{
-			if (!$this->gallery_auth->acl_check('m_edit', $album_id, $album_data['album_user_id']))
-			{
-				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
-			}
+			$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
+			return;
 		}
 		if ($submit)
 		{
@@ -1068,12 +1073,13 @@ class image
 		$image_backlink = $this->helper->route('phpbbgallery_core_image', array('image_id' => $image_id));
 		$album_backlink = $this->helper->route('phpbbgallery_core_album', array('album_id' => $image_data['image_album_id']));
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
-		if (!$this->gallery_auth->acl_check('i_delete', $album_id, $album_data['album_user_id']) || ($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_ORPHAN))
+		$has_image_permission = $this->gallery_auth->acl_check('i_delete', $album_id, $album_data['album_user_id']);
+		$has_moderator_permission = $this->gallery_auth->acl_check('m_delete', $album_id, $album_data['album_user_id']);
+		$is_orphan = $image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_ORPHAN;
+		if (!$this->image_authorization->can_manage_image((int) $this->user->data['user_id'], $image_data, $has_image_permission, $has_moderator_permission, $is_orphan))
 		{
-			if (!$this->gallery_auth->acl_check('m_delete', $album_id, $album_data['album_user_id']))
-			{
-				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
-			}
+			$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
+			return;
 		}
 		$s_hidden_fields = build_hidden_fields(array(
 			'album_id' => $album_id,
@@ -1101,7 +1107,7 @@ class image
 		}
 		else
 		{
-			if (isset($_POST['cancel']))
+			if ($this->request->is_set_post('cancel'))
 			{
 				$message = $this->language->lang('DELETED_IMAGE_NOT') . '<br />';
 				$message .= '<br />' . sprintf($this->language->lang('CLICK_RETURN_IMAGE'), '<a href="' . $image_backlink . '">', '</a>');

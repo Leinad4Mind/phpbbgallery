@@ -49,6 +49,9 @@ class moderate
 	/** @var \phpbbgallery\core\auth\auth  */
 	protected $gallery_auth;
 
+	/** @var \phpbbgallery\core\auth\image_authorization */
+	protected $image_authorization;
+
 	/** @var \phpbbgallery\core\misc  */
 	protected $misc;
 
@@ -91,6 +94,7 @@ class moderate
 	 * @param \phpbbgallery\core\album\display       $display   Albums display object
 	 * @param \phpbbgallery\core\moderate            $moderate
 	 * @param \phpbbgallery\core\auth\auth           $gallery_auth
+	 * @param \phpbbgallery\core\auth\image_authorization $image_authorization
 	 * @param \phpbbgallery\core\misc                $misc
 	 * @param \phpbbgallery\core\album\album         $album
 	 * @param \phpbbgallery\core\image\image         $image
@@ -107,7 +111,8 @@ class moderate
 	public function __construct(\phpbb\config\config $config, \phpbb\request\request $request,
 		\phpbb\template\template $template, \phpbb\user $user, \phpbb\language\language $language,
 		\phpbb\controller\helper $helper, \phpbbgallery\core\album\display $display, \phpbbgallery\core\moderate $moderate,
-		\phpbbgallery\core\auth\auth $gallery_auth, \phpbbgallery\core\misc $misc, \phpbbgallery\core\album\album $album, \phpbbgallery\core\image\image $image,
+		\phpbbgallery\core\auth\auth $gallery_auth, \phpbbgallery\core\auth\image_authorization $image_authorization,
+		\phpbbgallery\core\misc $misc, \phpbbgallery\core\album\album $album, \phpbbgallery\core\image\image $image,
 		\phpbbgallery\core\notification\helper $notification_helper, \phpbbgallery\core\url $url, \phpbbgallery\core\log $gallery_log,
 		\phpbbgallery\core\report $report, \phpbb\user_loader $user_loader,
 		$root_path, $php_ext)
@@ -121,6 +126,7 @@ class moderate
 		$this->display = $display;
 		$this->moderate = $moderate;
 		$this->gallery_auth = $gallery_auth;
+		$this->image_authorization = $image_authorization;
 		$this->misc = $misc;
 		$this->album = $album;
 		$this->image = $image;
@@ -196,6 +202,7 @@ class moderate
 		$approve_ary = $this->request->variable('approval', array('' => array(0)));
 		$action_ary = $this->request->variable('action', array('' => 0));
 		$back_link = $this->request->variable('back_link', $album_id > 0 ? $this->helper->route('phpbbgallery_core_moderate_queue_approve_album', array('album_id' => $album_id)) : $this->helper->route('phpbbgallery_core_moderate_queue_approve'));
+		$action = '';
 		foreach ($action_ary as $act => $garb)
 		{
 			$action = $act;
@@ -212,6 +219,7 @@ class moderate
 			if (!$this->gallery_auth->acl_check_global('m_status'))
 			{
 				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
+				return;
 			}
 		}
 		else
@@ -220,10 +228,35 @@ class moderate
 			if (!$this->gallery_auth->acl_check('m_status', $album['album_id'], $album['album_user_id']))
 			{
 				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
+				return;
 			}
 		}
 		if (!empty($approve_ary))
 		{
+			if (count($action_ary) !== 1 || !in_array($action, array('approve', 'disapprove'), true))
+			{
+				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
+				return;
+			}
+
+			$selected_image_ids = array();
+			foreach ($approve_ary as $submitted_image_ids)
+			{
+				if (!is_array($submitted_image_ids))
+				{
+					$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
+					return;
+				}
+				$selected_image_ids = array_merge($selected_image_ids, $submitted_image_ids);
+			}
+			$authorized_action = $this->authorize_action_images($selected_image_ids, 'm_status', (int) $album_id);
+			if ($authorized_action === false)
+			{
+				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
+				return;
+			}
+			$approve_ary = $authorized_action['images_by_album'];
+
 			if (confirm_box(true))
 			{
 				if ($action == 'approve')
@@ -231,11 +264,6 @@ class moderate
 					$count = 0;
 					foreach ($approve_ary as $target_album_id => $approve_array)
 					{
-						$target_album = $this->album->get_info($target_album_id);
-						if (!$this->gallery_auth->acl_check('m_status', $target_album['album_id'], $target_album['album_user_id']))
-						{
-							continue;
-						}
 						$this->image->approve_images($approve_array, $target_album_id);
 						$this->album->update_info($target_album_id);
 						$count = $count + count($approve_array);
@@ -250,11 +278,6 @@ class moderate
 					$count = 0;
 					foreach ($approve_ary as $target_album_id => $delete_array)
 					{
-						$target_album = $this->album->get_info($target_album_id);
-						if (!$this->gallery_auth->acl_check('m_status', $target_album['album_id'], $target_album['album_user_id']))
-						{
-							continue;
-						}
 						// Let's load info for images, so we can
 						$filenames = $this->image->get_filenames($delete_array);
 						// Let's log the action
@@ -355,6 +378,7 @@ class moderate
 		$report_ary = $this->request->variable('report', array(0));
 		$action_ary = $this->request->variable('action', array('' => 0));
 		$back_link = $this->request->variable('back_link', $album_id > 0 ? $this->helper->route('phpbbgallery_core_moderate_reports_album', array('album_id' => $album_id)) : $this->helper->route('phpbbgallery_core_moderate_reports'));
+		$action = '';
 		foreach ($action_ary as $act => $garb)
 		{
 			$action = $act;
@@ -371,6 +395,7 @@ class moderate
 			if (!$this->gallery_auth->acl_check_global('m_report'))
 			{
 				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
+				return;
 			}
 		}
 		else
@@ -379,11 +404,25 @@ class moderate
 			if (!$this->gallery_auth->acl_check('m_report', $album['album_id'], $album['album_user_id']))
 			{
 				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
+				return;
 			}
 		}
 
 		if (!empty($report_ary))
 		{
+			if (count($action_ary) !== 1 || $action !== 'close')
+			{
+				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
+				return;
+			}
+			$authorized_action = $this->authorize_action_images($report_ary, 'm_report', (int) $album_id);
+			if ($authorized_action === false)
+			{
+				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
+				return;
+			}
+			$report_ary = $authorized_action['image_ids'];
+
 			if (confirm_box(true))
 			{
 				$this->report->close_reports_by_image($report_ary);
@@ -444,6 +483,7 @@ class moderate
 			if (!$this->gallery_auth->acl_check_global('m_'))
 			{
 				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
+				return;
 			}
 		}
 		else
@@ -452,6 +492,7 @@ class moderate
 			if (!$this->gallery_auth->acl_check('m_', $album['album_id'], $album['album_user_id']))
 			{
 				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
+				return;
 			}
 		}
 
@@ -467,14 +508,30 @@ class moderate
 				'move'		=> 'm_move',
 				'report'	=> 'm_report',
 			);
-			if (isset($action_permission[$action]))
+			if (!isset($action_permission[$action]))
 			{
-				$has_permission = ($album_id === 0)
-					? $this->gallery_auth->acl_check_global($action_permission[$action])
-					: $this->gallery_auth->acl_check($action_permission[$action], $album['album_id'], $album['album_user_id']);
-				if (!$has_permission)
+				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
+				return;
+			}
+
+			$authorized_action = $this->authorize_action_images($actions_array, $action_permission[$action], (int) $album_id);
+			if ($authorized_action === false)
+			{
+				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
+				return;
+			}
+			$actions_array = $authorized_action['image_ids'];
+			$actions_by_album = $authorized_action['images_by_album'];
+
+			if ($action == 'move' && $moving_target)
+			{
+				$moving_target = (int) $moving_target;
+				$target_album = $moving_target > 0 ? $this->album->get_info($moving_target) : array();
+				$has_target_permission = $moving_target > 0 && $this->gallery_auth->acl_check('m_move', $moving_target, isset($target_album['album_user_id']) ? $target_album['album_user_id'] : -1);
+				if (!$this->image_authorization->can_moderate_album($target_album, $moving_target, $has_target_permission))
 				{
 					$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
+					return;
 				}
 			}
 
@@ -494,32 +551,47 @@ class moderate
 				switch ($action)
 				{
 					case 'approve':
-						$this->image->approve_images($actions_array, $album_id);
-						$this->album->update_info($album_id);
+						foreach ($actions_by_album as $source_album_id => $source_image_ids)
+						{
+							$this->image->approve_images($source_image_ids, $source_album_id);
+							$this->album->update_info($source_album_id);
+						}
 						$message = $this->language->lang('WAITING_APPROVED_IMAGE', count($actions_array));
 					break;
 
 					case 'unapprove':
-						$this->image->unapprove_images($actions_array, $album_id);
-						$this->album->update_info($album_id);
+						foreach ($actions_by_album as $source_album_id => $source_image_ids)
+						{
+							$this->image->unapprove_images($source_image_ids, $source_album_id);
+							$this->album->update_info($source_album_id);
+						}
 						$message = $this->language->lang('WAITING_UNAPPROVED_IMAGE', count($actions_array));
 					break;
 
 					case 'lock':
-						$this->image->lock_images($actions_array, $album_id);
-						$this->album->update_info($album_id);
+						foreach ($actions_by_album as $source_album_id => $source_image_ids)
+						{
+							$this->image->lock_images($source_image_ids, $source_album_id);
+							$this->album->update_info($source_album_id);
+						}
 						$message = $this->language->lang('WAITING_LOCKED_IMAGE', count($actions_array));
 					break;
 
 					case 'delete':
 						$this->moderate->delete_images($actions_array);
-						$this->album->update_info($album_id);
+						foreach (array_keys($actions_by_album) as $source_album_id)
+						{
+							$this->album->update_info($source_album_id);
+						}
 						$message = $this->language->lang('DELETED_IMAGES', count($actions_array));
 					break;
 
 					case 'move':
 						$this->image->move_image($actions_array, $moving_target);
-						$this->album->update_info($album_id);
+						foreach (array_keys($actions_by_album) as $source_album_id)
+						{
+							$this->album->update_info($source_album_id);
+						}
 						$this->album->update_info($moving_target);
 						$message = $this->language->lang('MOVED_IMAGES', count($actions_array));
 					break;
@@ -575,6 +647,49 @@ class moderate
 		));
 		$this->moderate->album_overview($album_id, $page);
 		return $this->helper->render('gallery/moderate_album_overview.html', $this->language->lang('GALLERY'));
+	}
+
+	/**
+	 * Validate every selected image against its real album and action permission.
+	 *
+	 * @return array|false
+	 */
+	private function authorize_action_images(array $image_ids, string $permission, int $route_album_id)
+	{
+		$image_ids = $this->image_authorization->normalize_image_ids($image_ids);
+		if ($image_ids === false)
+		{
+			return false;
+		}
+
+		$images_by_album = array();
+		foreach ($image_ids as $image_id)
+		{
+			$image_data = $this->image->get_image_data($image_id);
+			if (!is_array($image_data) || !isset($image_data['image_album_id']) || (int) $image_data['image_album_id'] < 1)
+			{
+				return false;
+			}
+
+			$image_album_id = (int) $image_data['image_album_id'];
+			$album_data = $this->album->get_info($image_album_id);
+			if (!is_array($album_data) || !isset($album_data['album_id'], $album_data['album_user_id']) || (int) $album_data['album_id'] !== $image_album_id)
+			{
+				return false;
+			}
+			$has_permission = $this->gallery_auth->acl_check($permission, $image_album_id, $album_data['album_user_id']);
+			if (!$this->image_authorization->can_moderate_image($image_data, $album_data, $route_album_id, $has_permission))
+			{
+				return false;
+			}
+
+			$images_by_album[$image_album_id][] = $image_id;
+		}
+
+		return array(
+			'image_ids' => $image_ids,
+			'images_by_album' => $images_by_album,
+		);
 	}
 
 	/**
