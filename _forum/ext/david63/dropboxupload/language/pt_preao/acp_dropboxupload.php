@@ -38,13 +38,13 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'CREATE_NEW_APP'      => 'Criar uma nova aplicação na plataforma Dropbox',
-	'CREATE_NEW_APP_TEXT' => '<strong>Para criar uma nova aplicação Dropbox precisa ter uma conta Dropbox.</strong><br>Depois vá para <a href="https://www.dropbox.com/developers/apps/create">https://www.dropbox.com/developers/apps/create</a> e inicie a sessão, se necessário.<br><br>- Selecione Dropbox API.<br>- Escolha o tipo de acesso que precisa = App folder.<br>- Introduza um nome para a sua aplicação.<br>- Clique em "Create app".<br><br>- Vá a Oauth2 e clique em "Generate access code"<br>- <strong>Tome nota dos detalhes nesta página e insira-os no formulário acima</strong> (pode voltar a esta página em qualquer altura).',
+	'CREATE_NEW_APP_TEXT' => '<strong>Para criar uma nova aplicação Dropbox precisa ter uma conta Dropbox.</strong><br>Depois vá para <a href="https://www.dropbox.com/developers/apps/create">https://www.dropbox.com/developers/apps/create</a> e inicie a sessão, se necessário.<br><br>- Seleccione Dropbox API.<br>- Escolha o tipo de acesso que precisa = App folder.<br>- Introduza um nome para a sua aplicação.<br>- Clique em "Create app".<br><br>- Vá a Oauth2 e clique em "Generate access code"<br>- <strong>Tome nota dos detalhes nesta página e insira-os no formulário acima</strong> (pode voltar a esta página em qualquer altura).',
 
-	'DROPBOX_UPLOAD_ENABLE'          => 'Ativar upload para o Dropbox',
+	'DROPBOX_UPLOAD_ENABLE'          => 'Activar upload para o Dropbox',
 	'DROPBOX_FOLDER'                 => 'Pasta Dropbox',
 	'DROPBOX_FOLDER_EXPLAIN'         => 'A pasta Dropbox (dentro da pasta "Apps") para onde os backups serão carregados. Deixar isto em branco fará o upload dos backups para a pasta raiz da aplicação.<br>Qualquer pasta inserida aqui será criada automaticamente.',
 	'DROPBOX_FOLDER_OPTIONS'         => 'Opções de pasta',
-	'DROPBOX_FOLDER_OPTIONS_EXPLAIN' => 'Selecione a opção para criação "inteligente" de pastas.<br>A opção padrão usará o nome da pasta inserido acima, enquanto qualquer outra opção criará uma pasta baseada nas opções de data selecionadas.<br>Estas pastas serão criadas automaticamente.',
+	'DROPBOX_FOLDER_OPTIONS_EXPLAIN' => 'Seleccione a opção para criação "inteligente" de pastas.<br>A opção padrão usará o nome da pasta inserido acima, enquanto qualquer outra opção criará uma pasta baseada nas opções de data seleccionadas.<br>Estas pastas serão criadas automaticamente.',
 	'DROPBOX_FREQUENCY'              => 'Frequência de upload',
 	'DROPBOX_FREQUENCY_EXPLAIN'      => 'Com que frequência o backup deve ser carregado para o Dropbox.<br>Definir isto como "1" resultará em todos os backups a serem carregados para o Dropbox - qualquer outro valor significará que cada <em>enésimo</em> backup será carregado.',
 	'DROPBOX_KEY'                    => 'Chave Dropbox (App key)',

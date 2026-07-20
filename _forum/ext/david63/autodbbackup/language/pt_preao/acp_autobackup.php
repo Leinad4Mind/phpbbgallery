@@ -39,16 +39,16 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, [
 	'AUTO_DB_BACKUP_COPIES'                => 'Backups armazenados',
 	'AUTO_DB_BACKUP_COPIES_EXPLAIN'        => 'O número de backups que serão armazenados no servidor.<br>0 significa desactivado e todos os backups serão armazenados no servidor.',
-	'AUTO_DB_BACKUP_ENABLE'                => 'Ativar backup automático da base de dados',
-	'AUTO_DB_BACKUP_ENABLE_EXPLAIN'        => 'Ativar ou desactivar os backups automáticos da base de dados',
+	'AUTO_DB_BACKUP_ENABLE'                => 'Activar backup automático da base de dados',
+	'AUTO_DB_BACKUP_ENABLE_EXPLAIN'        => 'Activar ou desactivar os backups automáticos da base de dados',
 	'AUTO_DB_BACKUP_FILETYPE'              => 'Tipo de ficheiro',
-	'AUTO_DB_BACKUP_FILETYPE_EXPLAIN'      => 'Selecione o tipo de ficheiro para os backups.',
+	'AUTO_DB_BACKUP_FILETYPE_EXPLAIN'      => 'Seleccione o tipo de ficheiro para os backups.',
 	'AUTO_DB_BACKUP_FREQ'                  => 'Frequência de backup',
 	'AUTO_DB_BACKUP_FREQ_EXPLAIN'          => 'Defina a frequência de backup em horas.',
 	'AUTO_DB_BACKUP_MAINTAIN_FREQ'         => 'Manter a frequência de tempo do backup',
 	'AUTO_DB_BACKUP_MAINTAIN_FREQ_EXPLAIN' => 'Definir isto como <strong>"Sim"</strong> significa que o tempo da frequência de backup será mantido.<br>Por exemplo - se a hora for definida para as 23:15 e a frequência definida para 24 horas, o próximo backup será às 23:15 do dia seguinte. Se estiver definido como <strong>"Não"</strong>, o próximo backup será 24 horas após a execução do backup.',
-	'AUTO_DB_BACKUP_OPTIMIZE'              => 'Otimizar a base de dados antes de efetuar o backup',
-	'AUTO_DB_BACKUP_OPTIMIZE_EXPLAIN'      => 'Otimizar apenas as tabelas da base de dados não otimizadas antes de fazer o backup.',
+	'AUTO_DB_BACKUP_OPTIMIZE'              => 'Optimizar a base de dados antes de efectuar o backup',
+	'AUTO_DB_BACKUP_OPTIMIZE_EXPLAIN'      => 'Optimizar apenas as tabelas da base de dados não optimizadas antes de fazer o backup.',
 	'AUTO_DB_BACKUP_SETTINGS'              => 'Configurações de backup automático da base de dados',
 	'AUTO_DB_BACKUP_SETTINGS_CHANGED'      => 'As configurações de backup automático da base de dados foram alteradas.',
 	'AUTO_DB_BACKUP_SETTINGS_EXPLAIN'      => 'Aqui pode definir as configurações padrão para os backups automáticos da base de dados. Dependendo da configuração do seu servidor, poderá ser possível comprimir a base de dados.<br>Todos os backups serão armazenados na pasta <samp>/store/</samp>. Pode restaurar um backup através do painel de <em>Restauro</em>.',
@@ -56,7 +56,7 @@ $lang = array_merge($lang, [
 	'AUTO_DB_BACKUP_TIME_ERROR'            => 'A <strong>próxima hora de backup</strong> está incorreta. A hora tem que ser definida no futuro.',
 	'AUTO_DB_BACKUP_TIME_EXPLAIN'          => 'A hora a que deve ser feito o próximo backup da base de dados.<br><strong>Nota:</strong> A data/hora especificada deve ser no futuro.',
 
-	'CLICK_SELECT' => 'Clique na caixa de texto para selecionar a data/hora',
+	'CLICK_SELECT' => 'Clique na caixa de texto para seleccionar a data/hora',
 
 	'DATE_FORMAT_ERROR' => 'O formato da data/hora do próximo backup é inválido.',
 

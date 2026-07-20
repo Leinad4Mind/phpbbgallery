@@ -37,10 +37,10 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'ACP_AUTO_DB_BACKUP'          => 'Backup Automático da Base de Dados',
+	'ACP_AUTO_DB_BACKUP'          => 'Backup Automático do Banco de Dados',
 	'ACP_AUTO_DB_BACKUP_SETTINGS' => 'Configurações de backup automático',
 
-	'LOG_AUTO_DB_BACKUP'          => '<strong>Backup automático da base de dados concluído<br>»</strong>%1$s (%2$s)',
-	'LOG_AUTO_DB_BACKUP_SETTINGS' => '<strong>Configurações do Backup Automático da Base de Dados alteradas</strong>',
-	'LOG_AUTO_DB_BACKUP_TIMEZONE' => 'O Backup Automático da Base de Dados falhou devido a uma configuração de fuso horário inválida',
+	'LOG_AUTO_DB_BACKUP'          => '<strong>Backup automático do banco de dados concluído<br>»</strong>%1$s (%2$s)',
+	'LOG_AUTO_DB_BACKUP_SETTINGS' => '<strong>Configurações do Backup Automático do Banco de Dados alteradas</strong>',
+	'LOG_AUTO_DB_BACKUP_TIMEZONE' => 'O Backup Automático do Banco de Dados falhou devido a uma configuração de fuso horário inválida',
 ]);
