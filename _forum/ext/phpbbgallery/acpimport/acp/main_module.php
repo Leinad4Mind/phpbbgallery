@@ -14,18 +14,33 @@ namespace phpbbgallery\acpimport\acp;
 
 class main_module
 {
-	var $u_action;
+	/** @var string */
+	public $u_action;
 
-	function main($id, $mode)
+	/** @var string */
+	public $tpl_name;
+
+	/** @var string */
+	public $page_title;
+
+	/** @var import_storage */
+	private $import_storage;
+
+	/** @var array */
+	private $import_errors = [];
+
+	public function main($id, $mode): void
 	{
-		global $auth, $cache, $config, $db, $template, $user, $phpEx, $phpbb_root_path, $phpbb_container, $gallery_url, $gallery_config, $gallery_album;
+		global $auth, $cache, $config, $db, $template, $user, $phpbb_root_path, $phpbb_container, $gallery_url, $gallery_config, $gallery_album;
 
 		$gallery_url = $phpbb_container->get('phpbbgallery.core.url');
 		$gallery_config = $phpbb_container->get('phpbbgallery.core.config');
 		$gallery_album = $phpbb_container->get('phpbbgallery.core.album');
 		$gallery_url->_include('functions_display', 'phpbb');
+		$this->import_storage = new import_storage($gallery_url->path('import'));
+		$this->import_storage->remove_legacy_php_state();
 
-		$user->add_lang_ext('phpbbgallery/core', array('gallery_acp', 'gallery'));
+		$user->add_lang_ext('phpbbgallery/core', ['gallery_acp', 'gallery']);
 		$this->tpl_name = 'gallery_acpimport';
 		add_form_key('acp_gallery');
 
@@ -33,211 +48,179 @@ class main_module
 		$this->import();
 	}
 
-	function import()
+	public function import(): void
 	{
-		global $db, $template, $user, $phpbb_dispatcher, $phpbb_container, $gallery_url, $request, $table_prefix ,$gallery_config, $gallery_album, $request;
+		global $db, $template, $user, $phpbb_dispatcher, $phpbb_container, $gallery_url, $request, $table_prefix, $gallery_config, $gallery_album;
 
 		$import_schema = $request->variable('import_schema', '');
-		// import_schema is always generated as md5($start_time) (see create_import_schema()) and is
-		// used to build an include()d file path, so anything that isn't that exact shape is rejected
-		// to close off local file inclusion / path traversal via this parameter.
 		if ($import_schema && !preg_match('/^[a-f0-9]{32}$/', $import_schema))
 		{
 			$import_schema = '';
 		}
-		$images = $request->variable('images', array(''), true);
+		$images = $request->variable('images', [], true);
 
-		$submit = (isset($_POST['submit'])) ? true : ((empty($images)) ? false : true);
+		$submit = $request->is_set_post('submit');
 
 		if ($import_schema)
 		{
-			if ($gallery_url->_file_exists($import_schema, 'import', ''))
+			$state = $this->import_storage->read_state($import_schema);
+			if ($state === false || $state['creator_id'] !== (int) $user->data['user_id'])
 			{
-				include($gallery_url->_return_file($import_schema, 'import', ''));
-				// Replace the md5 with the ' again and remove the space at the end to prevent \' troubles
-				$user_data['username'] = utf8_substr(str_replace("{{$import_schema}}", "'", $user_data['username']), 0, -1);
-				$image_name = utf8_substr(str_replace("{{$import_schema}}", "'", $image_name), 0, -1);
-			}
-			else
-			{
-				global $phpEx;
-				trigger_error($user->lang('MISSING_IMPORT_SCHEMA', ($import_schema . '.' . $phpEx)), E_USER_WARNING);
+				trigger_error($user->lang('MISSING_IMPORT_SCHEMA', $import_schema), E_USER_WARNING);
+				return;
 			}
 
+			$album_id = $state['album_id'];
+			$start_time = $state['start_time'];
+			$num_offset = $state['num_offset'];
+			$done_images = $state['done_images'];
+			$todo_images = $state['todo_images'];
+			$image_name = $state['image_name'];
+			$filename = $state['filename'];
+			$user_data = $state['user_data'];
+			$images = $state['images'];
+			$this->import_errors = $state['errors'];
+
+			$allowed_extensions = $this->get_allowed_extensions();
+			$available_images = $this->import_storage->get_images($allowed_extensions);
 			$images_loop = 0;
-			foreach ($images as $image_src)
+			$successful_images = 0;
+			foreach ($images as $image_key => $image_src)
 			{
 				/**
 				* Import the images
 				*/
-
-				$image_src = str_replace("{{$import_schema}}", "'", $image_src);
-				$image_src_full = $gallery_url->path('import') . mb_convert_encoding($image_src, 'ISO-8859-1', 'UTF-8');
-				if (file_exists($image_src_full))
+				$error_occurred = false;
+				$safe_image_src = htmlspecialchars($image_src, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+				$image = isset($available_images[$image_src]) ? $available_images[$image_src] : false;
+				if ($image === false)
 				{
-					$filetype = getimagesize($image_src_full);
-					$filetype_ext = '';
-
-					$error_occurred = false;
-					switch ($filetype['mime'])
+					$this->log_import_error($user->lang('IMPORT_INVALID_IMAGE', $safe_image_src));
+					$error_occurred = true;
+				}
+				else
+				{
+					$inspection = $this->import_storage->inspect_image($image);
+					if ($inspection['error'] === 'mime_mismatch')
 					{
-						case 'image/jpeg':
-						case 'image/jpg':
-						case 'image/pjpeg':
-							$filetype_ext = '.jpg';
-							$read_function = 'imagecreatefromjpeg';
-							if ((substr(strtolower($image_src), -4) != '.jpg') && (substr(strtolower($image_src), -5) != '.jpeg'))
-							{
-								$this->log_import_error($import_schema, sprintf($user->lang['FILETYPE_MIMETYPE_MISMATCH'], $image_src, $filetype['mime']));
-								$error_occurred = true;
-							}
-						break;
-
-						case 'image/png':
-						case 'image/x-png':
-							$filetype_ext = '.png';
-							$read_function = 'imagecreatefrompng';
-							if (substr(strtolower($image_src), -4) != '.png')
-							{
-								$this->log_import_error($import_schema, sprintf($user->lang['FILETYPE_MIMETYPE_MISMATCH'], $image_src, $filetype['mime']));
-								$error_occurred = true;
-							}
-						break;
-
-						case 'image/gif':
-						case 'image/giff':
-							$filetype_ext = '.gif';
-							$read_function = 'imagecreatefromgif';
-							if (substr(strtolower($image_src), -4) != '.gif')
-							{
-								$this->log_import_error($import_schema, sprintf($user->lang['FILETYPE_MIMETYPE_MISMATCH'], $image_src, $filetype['mime']));
-								$error_occurred = true;
-							}
-						break;
-
-						case 'image/webp':
-							$filetype_ext = '.webp';
-							$read_function = 'imagecreatefromwebp';
-							if (substr(strtolower($image_src), -5) != '.webp')
-							{
-								$this->log_import_error($import_schema, sprintf($user->lang['FILETYPE_MIMETYPE_MISMATCH'], $image_src, $filetype['mime']));
-								$error_occurred = true;
-							}
-						break;
-
-						default:
-							$this->log_import_error($import_schema, $user->lang['NOT_ALLOWED_FILE_TYPE']);
-							$error_occurred = true;
-						break;
+						$this->log_import_error(sprintf($user->lang['FILETYPE_MIMETYPE_MISMATCH'], $safe_image_src, $inspection['mime']));
+						$error_occurred = true;
 					}
-					$image_filename = md5(unique_id()) . $filetype_ext;
-					$file_link = $gallery_url->path('upload') . $image_filename;
-
-					if (!$error_occurred || !@move_uploaded_file($image_src_full, $file_link))
+					else if ($inspection['error'] !== '')
 					{
-						if (!@copy($image_src_full, $file_link))
+						$this->log_import_error($user->lang['NOT_ALLOWED_FILE_TYPE']);
+						$error_occurred = true;
+					}
+					else
+					{
+						$filetype = $inspection['image_info'];
+						$image_src_full = $image['path'];
+						$image_filename = bin2hex(random_bytes(16)) . $inspection['target_extension'];
+						$file_link = $gallery_url->path('upload') . $image_filename;
+						if (!$this->import_storage->copy_image($image_src_full, $file_link))
 						{
 							$user->add_lang('posting');
-							$this->log_import_error($import_schema, sprintf($user->lang['GENERAL_UPLOAD_ERROR'], $file_link));
+							$this->log_import_error(sprintf($user->lang['GENERAL_UPLOAD_ERROR'], $file_link));
 							$error_occurred = true;
 						}
 					}
+				}
 
-					if (!$error_occurred)
+				if (!$error_occurred)
+				{
+					@chmod($file_link, 0644);
+
+					$sql_ary = [
+						'image_filename' 		=> $image_filename,
+						'image_desc'			=> '',
+						'image_desc_uid'		=> '',
+						'image_desc_bitfield'	=> '',
+						'image_user_id'			=> $user_data['user_id'],
+						'image_username'		=> $user_data['username'],
+						'image_username_clean'	=> utf8_clean_string($user_data['username']),
+						'image_user_colour'		=> $user_data['user_colour'],
+						'image_user_ip'			=> $user->ip,
+						'image_time'			=> $start_time + $done_images,
+						'image_album_id'		=> $album_id,
+						'image_status'			=> (int) \phpbbgallery\core\block::STATUS_APPROVED,
+						//'image_exif_data'		=> '',
+					];
+
+					$image_tools = $phpbb_container->get('phpbbgallery.core.file.tool');
+					$image_tools->set_image_options($gallery_config->get('max_filesize'), $gallery_config->get('max_height'), $gallery_config->get('max_width'));
+					// force_empty_image=true resets the shared file.tool's state (image/resized/rotated/watermarked)
+					// between loop iterations - without it, images after the first oversized one in a batch
+					// get the previous image's stale GD buffer written to their destination file.
+					$image_tools->set_image_data($file_link, '', 0, true);
+
+					$additional_sql_data = [];
+
+					/**
+					* Event to trigger before mass update
+					*
+					* @event phpbbgallery.acpimport.update_image_before
+					* @var	array	additional_sql_data		array of additional sql_data
+					* @var	string	file_link				String with real file link
+					* @since 1.2.0
+					*/
+					$vars = ['additional_sql_data', 'file_link'];
+					extract($phpbb_dispatcher->trigger_event('phpbbgallery.acpimport.update_image_before', compact($vars)));
+
+					if (($filetype[0] > $gallery_config->get('max_width')) || ($filetype[1] > $gallery_config->get('max_height')))
 					{
-						@chmod($file_link, 0644);
-
-						$sql_ary = array(
-							'image_filename' 		=> $image_filename,
-							'image_desc'			=> '',
-							'image_desc_uid'		=> '',
-							'image_desc_bitfield'	=> '',
-							'image_user_id'			=> $user_data['user_id'],
-							'image_username'		=> $user_data['username'],
-							'image_username_clean'	=> utf8_clean_string($user_data['username']),
-							'image_user_colour'		=> $user_data['user_colour'],
-							'image_user_ip'			=> $user->ip,
-							'image_time'			=> $start_time + $done_images,
-							'image_album_id'		=> $album_id,
-							'image_status'			=> (int) \phpbbgallery\core\block::STATUS_APPROVED,
-							//'image_exif_data'		=> '',
-						);
-
-						$image_tools = $phpbb_container->get('phpbbgallery.core.file.tool');
-						$image_tools->set_image_options($gallery_config->get('max_filesize'), $gallery_config->get('max_height'), $gallery_config->get('max_width'));
-						// force_empty_image=true resets the shared file.tool's state (image/resized/rotated/watermarked)
-						// between loop iterations - without it, images after the first oversized one in a batch
-						// get the previous image's stale GD buffer written to their destination file.
-						$image_tools->set_image_data($file_link, '', 0, true);
-
-						$additional_sql_data = [];
-
 						/**
-						* Event to trigger before mass update
-						*
-						* @event phpbbgallery.acpimport.update_image_before
-						* @var	array	additional_sql_data		array of additional sql_data
-						* @var	string	file_link				String with real file link
-						* @since 1.2.0
+						* Resize oversize images
 						*/
-						$vars = array('additional_sql_data', 'file_link');
-						extract($phpbb_dispatcher->trigger_event('phpbbgallery.acpimport.update_image_before', compact($vars)));
-
-						if (($filetype[0] > $gallery_config->get('max_width')) || ($filetype[1] > $gallery_config->get('max_height')))
+						if ($gallery_config->get('allow_resize'))
 						{
-							/**
-							* Resize oversize images
-							*/
-							if ($gallery_config->get('allow_resize'))
+							$image_tools->resize_image($gallery_config->get('max_width'), $gallery_config->get('max_height'));
+							if ($image_tools->resized)
 							{
-								$image_tools->resize_image($gallery_config->get('max_width'), $gallery_config->get('max_height'));
-								if ($image_tools->resized)
-								{
-									$image_tools->write_image($file_link, $gallery_config->get('jpg_quality'), true);
-								}
+								$image_tools->write_image($file_link, $gallery_config->get('jpg_quality'), true);
 							}
 						}
-						$file_updated = (bool) $image_tools->resized;
-
-						/**
-						* Event to trigger before mass update
-						*
-						* @event phpbbgallery.acpimport.update_image
-						* @var	array	additional_sql_data		array of additional sql_data
-						* @var	bool	file_updated			is file resized
-						* @since 1.2.0
-						*/
-						$vars = array('additional_sql_data', 'file_updated');
-						extract($phpbb_dispatcher->trigger_event('phpbbgallery.acpimport.update_image', compact($vars)));
-
-						$sql_ary = array_merge($sql_ary, $additional_sql_data);
-
-						// Try to get real filesize from temporary folder (not always working) ;)
-						$sql_ary['filesize_upload'] = (@filesize($file_link)) ? @filesize($file_link) : 0;
-
-						if ($filename || ($image_name == ''))
-						{
-							$sql_ary['image_name'] = str_replace("_", " ", utf8_substr($image_src, 0, utf8_strrpos($image_src, '.')));
-						}
-						else
-						{
-							$sql_ary['image_name'] = str_replace('{NUM}', $num_offset + $done_images, $image_name);
-						}
-						$sql_ary['image_name_clean'] = utf8_clean_string($sql_ary['image_name']);
-
-						// Put the images into the database
-						$db->sql_query('INSERT INTO ' . $table_prefix . 'gallery_images ' . $db->sql_build_array('INSERT', $sql_ary));
-						// If the source image is imported, we delete it.
-						if (file_exists($image_src_full))
-						{
-							@unlink($image_src_full);
-						}
 					}
+					$file_updated = (bool) $image_tools->resized;
+
+					/**
+					* Event to trigger before mass update
+					*
+					* @event phpbbgallery.acpimport.update_image
+					* @var	array	additional_sql_data		array of additional sql_data
+					* @var	bool	file_updated			is file resized
+					* @since 1.2.0
+					*/
+					$vars = ['additional_sql_data', 'file_updated'];
+					extract($phpbb_dispatcher->trigger_event('phpbbgallery.acpimport.update_image', compact($vars)));
+
+					$sql_ary = array_merge($sql_ary, $additional_sql_data);
+
+					// Try to get real filesize from temporary folder (not always working) ;)
+					$sql_ary['filesize_upload'] = (@filesize($file_link)) ? @filesize($file_link) : 0;
+
+					if ($filename || ($image_name == ''))
+					{
+						$sql_ary['image_name'] = str_replace('_', ' ', utf8_substr($image_src, 0, utf8_strrpos($image_src, '.')));
+					}
+					else
+					{
+						$sql_ary['image_name'] = str_replace('{NUM}', $num_offset + $done_images, $image_name);
+					}
+					$sql_ary['image_name_clean'] = utf8_clean_string($sql_ary['image_name']);
+
+					// Put the images into the database
+					$db->sql_query('INSERT INTO ' . $table_prefix . 'gallery_images ' . $db->sql_build_array('INSERT', $sql_ary));
+					// If the source image is imported, we delete it.
+					if (file_exists($image_src_full))
+					{
+						@unlink($image_src_full);
+					}
+					$successful_images++;
 					$done_images++;
 				}
 
 				// Remove the image from the list
-				unset($images[$images_loop]);
+				unset($images[$image_key]);
 				$images_loop++;
 				if ($images_loop == 10)
 				{
@@ -245,39 +228,42 @@ class main_module
 					break;
 				}
 			}
-			if ($images_loop)
+			$images = array_values($images);
+			$todo_images = count($images);
+			if ($successful_images)
 			{
 				$image_user = $phpbb_container->get('phpbbgallery.core.user');
 				$image_user->set_user_id($user_data['user_id']);
-				$image_user->update_images($images_loop);
+				$image_user->update_images($successful_images);
 
-				$gallery_config->inc('num_images', $images_loop);
-				$todo_images = $todo_images - $images_loop;
+				$gallery_config->inc('num_images', $successful_images);
 			}
 			$gallery_album->update_info($album_id);
 
 			if (!$todo_images)
 			{
-				unlink($gallery_url->_return_file($import_schema, 'import', ''));
-				$errors = @file_get_contents($gallery_url->_return_file($import_schema . '_errors', 'import', ''));
-				@unlink($gallery_url->_return_file($import_schema . '_errors', 'import', ''));
+				$this->import_storage->remove_state($import_schema);
+				$errors = $this->import_errors;
 				if (!$errors)
 				{
 					trigger_error(sprintf($user->lang['IMPORT_FINISHED'], $done_images) . adm_back_link($this->u_action));
 				}
 				else
 				{
-					$errors = explode("\n", $errors);
-					trigger_error(sprintf($user->lang['IMPORT_FINISHED_ERRORS'], $done_images - sizeof($errors)) . implode('<br />', $errors) . adm_back_link($this->u_action), E_USER_WARNING);
+					trigger_error(sprintf($user->lang['IMPORT_FINISHED_ERRORS'], $done_images) . implode('<br />', $errors) . adm_back_link($this->u_action), E_USER_WARNING);
 				}
 			}
 			else
 			{
 				// Write the new list
-				$this->create_import_schema($import_schema, $album_id, $user_data, $start_time, $num_offset, $done_images, $todo_images, $image_name, $filename, $images);
+				if (!$this->create_import_schema($import_schema, $album_id, $user_data, $start_time, $num_offset, $done_images, $todo_images, $image_name, $filename, $images))
+				{
+					trigger_error('IMPORT_SCHEMA_WRITE_FAILED', E_USER_WARNING);
+					return;
+				}
 
 				// Redirect
-				$forward_url = $this->u_action . "&amp;import_schema=$import_schema";
+				$forward_url = $this->u_action . '&amp;import_schema=' . $import_schema;
 				meta_refresh(1, $forward_url);
 				trigger_error(sprintf($user->lang['IMPORT_DEBUG_MES'], $done_images, $todo_images));
 			}
@@ -287,11 +273,28 @@ class main_module
 			if (!check_form_key('acp_gallery'))
 			{
 				trigger_error('FORM_INVALID', E_USER_WARNING);
+				return;
 			}
 			if (!$images)
 			{
 				trigger_error('NO_FILE_SELECTED', E_USER_WARNING);
+				return;
 			}
+
+			$allowed_extensions = $this->get_allowed_extensions();
+			$available_images = $this->import_storage->get_images($allowed_extensions);
+			$selected_images = [];
+			foreach ($images as $image_src)
+			{
+				if (!is_string($image_src) || !isset($available_images[$image_src]))
+				{
+					$safe_image_src = is_string($image_src) ? htmlspecialchars($image_src, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') : '';
+					trigger_error($user->lang('IMPORT_INVALID_IMAGE', $safe_image_src), E_USER_WARNING);
+					return;
+				}
+				$selected_images[$image_src] = $image_src;
+			}
+			$images = array_values($selected_images);
 
 			// Who is the uploader?
 			$username = $request->variable('username', '', true);
@@ -322,10 +325,11 @@ class main_module
 			if (!$user_row)
 			{
 				trigger_error('HACKING_ATTEMPT', E_USER_WARNING);
+				return;
 			}
 
 			$album_id = $request->variable('album_id', 0);
-			if (isset($_POST['users_pega']))
+			if ($request->is_set_post('users_pega'))
 			{
 				$image_user =  $phpbb_container->get('phpbbgallery.core.user');
 				$image_user->set_user_id($user_row['user_id']);
@@ -359,50 +363,36 @@ class main_module
 			if (!$album_row)
 			{
 				trigger_error('HACKING_ATTEMPT', E_USER_WARNING);
+				return;
 			}
 
 			$start_time = time();
-			$import_schema = md5($start_time);
+			$import_schema = $this->import_storage->create_schema_id();
 			$filename = ($request->variable('filename', '') == 'filename') ? true : false;
 			$image_name = $request->variable('image_name', '', true);
-			$num_offset = $request->variable('image_num', 0);
+			$num_offset = max(0, $request->variable('image_num', 0));
+			$this->import_errors = [];
 
-			$this->create_import_schema($import_schema, $album_row['album_id'], $user_row, $start_time, $num_offset, 0, sizeof($images), $image_name, $filename, $images);
+			if (!$this->create_import_schema($import_schema, $album_row['album_id'], $user_row, $start_time, $num_offset, 0, count($images), $image_name, $filename, $images))
+			{
+				trigger_error('IMPORT_SCHEMA_WRITE_FAILED', E_USER_WARNING);
+				return;
+			}
 
-			$forward_url = $this->u_action . "&amp;import_schema=$import_schema";
+			$forward_url = $this->u_action . '&amp;import_schema=' . $import_schema;
 			meta_refresh(2, $forward_url);
 			trigger_error('IMPORT_SCHEMA_CREATED');
 		}
 
-		$handle = opendir($gallery_url->path('import'));
-		$files = array();
-		while ($file = readdir($handle))
-		{
-			if (!is_dir($gallery_url->path('import') . $file) && (
-			((substr(strtolower($file), -5) == '.webp') && $gallery_config->get('allow_webp')) ||
-			((substr(strtolower($file), -4) == '.png') && $gallery_config->get('allow_png')) ||
-			((substr(strtolower($file), -4) == '.gif') && $gallery_config->get('allow_gif')) ||
-			((substr(strtolower($file), -4) == '.jpg') && $gallery_config->get('allow_jpg')) ||
-			((substr(strtolower($file), -5) == '.jpeg') && $gallery_config->get('allow_jpg'))
-			))
-			{
-				$files[utf8_strtolower($file)] = $file;
-			}
-		}
-		closedir($handle);
-
-		// Sort the files by name again
-		ksort($files);
+		$files = $this->import_storage->get_images($this->get_allowed_extensions());
 		foreach ($files as $file)
 		{
-			// Get file name encoding
-			$encoding = mb_detect_encoding($file, ['UTF-8', 'ISO-8859-1', 'Windows-1252'], true);
 			$template->assign_block_vars('imagerow', [
-				'FILE_NAME'	=> $encoding === 'UTF-8' ? $file : mb_convert_encoding($file, 'UTF-8', $encoding),
+				'FILE_NAME' => htmlspecialchars($file['display_name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
 			]);
 		}
 
-		$template->assign_vars(array(
+		$template->assign_vars([
 			'S_IMPORT_IMAGES'				=> true,
 			'ACP_GALLERY_TITLE'				=> $user->lang['ACP_IMPORT_ALBUMS'],
 			'ACP_GALLERY_TITLE_EXPLAIN'		=> $user->lang['ACP_IMPORT_ALBUMS_EXPLAIN'],
@@ -410,62 +400,65 @@ class main_module
 			'S_ALBUM_IMPORT_ACTION'			=> $this->u_action,
 			'S_SELECT_IMPORT' 				=> $gallery_album->get_albumbox(false, 'album_id', false, false, false, (int) \phpbbgallery\core\block::PUBLIC_ALBUM, (int) \phpbbgallery\core\block::TYPE_UPLOAD),
 			'U_FIND_USERNAME'				=> $gallery_url->append_sid('phpbb', 'memberlist', 'mode=searchuser&amp;form=acp_gallery&amp;field=username&amp;select_single=true'),
-		));
+		]);
 	}
 
-	function create_import_schema($import_schema, $album_id, $user_row, $start_time, $num_offset, $done_images, $todo_images, $image_name, $filename, $images)
+	private function create_import_schema(string $import_schema, int $album_id, array $user_row, int $start_time, int $num_offset, int $done_images, int $todo_images, string $image_name, bool $filename, array $images): bool
 	{
-		global $gallery_url;
+		global $user;
 
-		$import_file = "<?php\n\nif (!defined('IN_PHPBB'))\n{\n	exit;\n}\n\n";
-		$import_file .= "\$album_id = " . $album_id . ";\n";
-		$import_file .= "\$start_time = " . $start_time . ";\n";
-		$import_file .= "\$num_offset = " . $num_offset . ";\n";
-		$import_file .= "\$done_images = " . $done_images . ";\n";
-		$import_file .= "\$todo_images = " . $todo_images . ";\n";
-		// We add a space at the end of the name, to not get troubles with \';
-		$import_file .= "\$image_name = '" . str_replace("'", "{{$import_schema}}", $image_name) . " ';\n";
-		$import_file .= "\$filename = " . (($filename) ? 'true' : 'false') . ";\n";
-		$import_file .= "\$user_data = array(\n";
-		$import_file .= "	'user_id'		=> " . $user_row['user_id'] . ",\n";
-		// We add a space at the end of the name, to not get troubles with \',
-		$import_file .= "	'username'		=> '" . str_replace("'", "{{$import_schema}}", $user_row['username']) . " ',\n";
-		$import_file .= "	'user_colour'	=> '" . $user_row['user_colour'] . "',\n";
-		$import_file .= ");\n";
-		$import_file .= "\$images = array(\n";
+		$state = [
+			'creator_id' => (int) $user->data['user_id'],
+			'album_id' => $album_id,
+			'start_time' => $start_time,
+			'num_offset' => $num_offset,
+			'done_images' => $done_images,
+			'todo_images' => $todo_images,
+			'image_name' => $image_name,
+			'filename' => $filename,
+			'user_data' => [
+				'user_id' => (int) $user_row['user_id'],
+				'username' => (string) $user_row['username'],
+				'user_colour' => (string) $user_row['user_colour'],
+			],
+			'images' => array_values($images),
+			'errors' => array_values($this->import_errors),
+		];
 
-		// We need to replace some characters to find the image and not produce syntax errors
-		$replace_chars = array("'", "&amp;");
-		$replace_with = array("{{$import_schema}}", "&");
+		return $this->import_storage->write_state($import_schema, $state);
+	}
 
-		foreach ($images as $image_src)
+	private function log_import_error(string $error): void
+	{
+		if (count($this->import_errors) < 10000)
 		{
-			$import_file .= "	'" . str_replace($replace_chars, $replace_with, $image_src) . "',\n";
-		}
-		$import_file .= ");\n\n?" . '>'; // Done this to prevent highlighting editors getting confused!
-
-		// Write to disc
-		if (($gallery_url->_file_exists($import_schema, 'import', '') && $gallery_url->_is_writable($import_schema, 'import', '')) || $gallery_url->_is_writable('', 'import', ''))
-		{
-			$written = true;
-			if (!($fp = @fopen($gallery_url->_return_file($import_schema, 'import', ''), 'w')))
-			{
-				$written = false;
-			}
-			if (!(@fwrite($fp, $import_file)))
-			{
-				$written = false;
-			}
-			@fclose($fp);
+			$this->import_errors[] = $error;
 		}
 	}
 
-	function log_import_error($import_schema, $error)
+	private function get_allowed_extensions(): array
 	{
-		global $gallery_url;
+		global $gallery_config;
 
-		$error_file = $gallery_url->_return_file($import_schema . '_errors', 'import', '');
-		$content = @file_get_contents($error_file);
-		file_put_contents($error_file, $content .= (($content) ? "\n" : '') . $error);
+		$extensions = [];
+		if ($gallery_config->get('allow_jpg'))
+		{
+			$extensions[] = 'jpg';
+			$extensions[] = 'jpeg';
+		}
+		if ($gallery_config->get('allow_png'))
+		{
+			$extensions[] = 'png';
+		}
+		if ($gallery_config->get('allow_gif'))
+		{
+			$extensions[] = 'gif';
+		}
+		if ($gallery_config->get('allow_webp'))
+		{
+			$extensions[] = 'webp';
+		}
+
+		return $extensions;
 	}
 }
