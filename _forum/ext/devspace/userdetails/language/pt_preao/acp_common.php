@@ -38,13 +38,13 @@ if (empty($lang) || !is_array($lang))
  */
 
 $lang = array_merge($lang, [
-	'CLICK_DONATE'              => 'Clique aqui para doar',
+	'CLICK_DONATE'              => 'Clica aqui para doar',
 	'DONATE'                    => 'Doar',
 	'DONATE_EXTENSIONS'         => 'Doar para as minhas extensões',
 	'DONATE_EXTENSIONS_EXPLAIN' => 'Esta extensão, tal como todas as minhas extensões, é totalmente gratuita. Se beneficiou de a usar, por favor, considere fazer uma doação clicando no botão de doação do PayPal, ou use a imagem QR "Scan, Pay, Go", ao lado - eu agradeceria.<br><br>Eu prometo que não haverá spam nem pedidos para mais doações, embora sejam sempre bem-vindas.',
 	'NEW_VERSION'               => 'Nova Versão - %s',
 	'NEW_VERSION_EXPLAIN'       => 'A versão %1$s desta extensão está agora disponível para descarregar.<br>%2$s',
-	'NEW_VERSION_LINK'          => 'Descarregue aqui',
+	'NEW_VERSION_LINK'          => 'Transfere aqui',
 	'NO_JS'                     => 'Aparentemente tem o javascript desactivado.<br>Por favor <a href="https://enablejavascript.co/">ative</a> no seu navegador para poder tirar proveito de todas as funcionalidades desta página.',
 	'NO_VERSION_EXPLAIN'        => 'A informação de actualização da versão não está disponível.',
 	'PAYPAL_BUTTON'             => 'Botão Doar com PayPal',

@@ -38,7 +38,7 @@ if (empty($lang) || !is_array($lang))
 
 
 $lang = array_merge($lang, [
-	'CLICK_DONATE' => 'Clique aqui para doar',
+	'CLICK_DONATE' => 'Clica aqui para doar',
 
 	'DONATE'                    => 'Doar',
 	'DONATE_EXTENSIONS'         => 'Doar para as minhas extensões',
@@ -46,7 +46,7 @@ $lang = array_merge($lang, [
 
 	'NEW_VERSION'         => 'Nova Versão - %s',
 	'NEW_VERSION_EXPLAIN' => 'A versão %1$s desta extensão está agora disponível para descarregar.<br>%2$s',
-	'NEW_VERSION_LINK'    => 'Descarregue aqui',
+	'NEW_VERSION_LINK'    => 'Transfere aqui',
 	'NO_JS'               => 'Aparentemente tem o javascript desactivado.<br>Por favor <a href="https://enablejavascript.co/">ative</a> no seu navegador para poder tirar proveito de todas as funcionalidades desta página.',
 	'NO_VERSION_EXPLAIN'  => 'A informação de actualização da versão não está disponível.',
 

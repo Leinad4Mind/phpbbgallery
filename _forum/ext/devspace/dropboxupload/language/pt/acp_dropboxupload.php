@@ -40,7 +40,7 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'DROPBOX_ACCESS_TOKEN'         => 'Token de acesso do Dropbox',
-	'DROPBOX_ACCESS_TOKEN_EXPLAIN' => 'Introduza o Token de Acesso da sua Aplicação do Dropbox',
+	'DROPBOX_ACCESS_TOKEN_EXPLAIN' => 'Introduz o Token de Acesso da sua Aplicação do Dropbox',
 	'DROPBOX_ENABLE'               => 'Ativar carregamento do Dropbox',
 	'DROPBOX_SETTINGS'             => 'Configurações do Dropbox',
 ]);

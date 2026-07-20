@@ -42,9 +42,9 @@ $lang = array_merge($lang, [
 	'AUTO_DB_BACKUP_ENABLE'                => 'Activar backup automático da base de dados',
 	'AUTO_DB_BACKUP_ENABLE_EXPLAIN'        => 'Activar ou desactivar os backups automáticos da base de dados',
 	'AUTO_DB_BACKUP_FILETYPE'              => 'Tipo de ficheiro',
-	'AUTO_DB_BACKUP_FILETYPE_EXPLAIN'      => 'Seleccione o tipo de ficheiro para os backups.',
+	'AUTO_DB_BACKUP_FILETYPE_EXPLAIN'      => 'Selecciona o tipo de ficheiro para os backups.',
 	'AUTO_DB_BACKUP_FREQ'                  => 'Frequência de backup',
-	'AUTO_DB_BACKUP_FREQ_EXPLAIN'          => 'Defina a frequência de backup em horas.',
+	'AUTO_DB_BACKUP_FREQ_EXPLAIN'          => 'Define a frequência de backup em horas.',
 	'AUTO_DB_BACKUP_MAINTAIN_FREQ'         => 'Manter a frequência de tempo do backup',
 	'AUTO_DB_BACKUP_MAINTAIN_FREQ_EXPLAIN' => 'Definir isto como <strong>"Sim"</strong> significa que o tempo da frequência de backup será mantido.<br>Por exemplo - se a hora for definida para as 23:15 e a frequência definida para 24 horas, o próximo backup será às 23:15 do dia seguinte. Se estiver definido como <strong>"Não"</strong>, o próximo backup será 24 horas após a execução do backup.',
 	'AUTO_DB_BACKUP_OPTIMIZE'              => 'Optimizar a base de dados antes de efectuar o backup',
@@ -56,7 +56,7 @@ $lang = array_merge($lang, [
 	'AUTO_DB_BACKUP_TIME_ERROR'            => 'A <strong>próxima hora de backup</strong> está incorreta. A hora tem que ser definida no futuro.',
 	'AUTO_DB_BACKUP_TIME_EXPLAIN'          => 'A hora a que deve ser feito o próximo backup da base de dados.<br><strong>Nota:</strong> A data/hora especificada deve ser no futuro.',
 
-	'CLICK_SELECT' => 'Clique na caixa de texto para seleccionar a data/hora',
+	'CLICK_SELECT' => 'Clica na caixa de texto para seleccionar a data/hora',
 
 	'DATE_FORMAT_ERROR' => 'O formato da data/hora do próximo backup é inválido.',
 

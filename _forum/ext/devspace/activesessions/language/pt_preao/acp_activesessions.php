@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @package Active Sessions Extension for phpBB.
+ * @package Activa Sessions Extension for phpBB.
  * @copyright (c) 2022 devspace
  * @license GNU General Public License, version 2 (GPL-2.0)
  * @translation Leinad4Mind [Portuguese [pt_preao]] (2026)
@@ -39,7 +39,7 @@ if (empty($lang) || !is_array($lang))
  */
 
 $lang = array_merge($lang, [
-	'ACTIVE_SESSIONS_EXPLAIN' => 'Aqui está uma lista das sessões ativas actuais no fórum.<br><br>Clique em "IP da Sessão" para expandir os detalhes do IP.<br>Clique em "ID da Sessão" para expandir os detalhes da sessão.',
+	'ACTIVE_SESSIONS_EXPLAIN' => 'Aqui está uma lista das sessões ativas actuais no fórum.<br><br>Clica em "IP da Sessão" para expandir os detalhes do IP.<br>Clica em "ID da Sessão" para expandir os detalhes da sessão.',
 	'ADMIN_USER'              => 'Utilizador administrador',
 	'ALL'                     => 'Todos',
 	'AUTO_LOGIN'              => 'Login automático definido',

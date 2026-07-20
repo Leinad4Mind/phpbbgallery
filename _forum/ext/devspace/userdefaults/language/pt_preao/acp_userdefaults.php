@@ -54,5 +54,5 @@ $lang = array_merge($lang, [
 	'GLOBAL_SETTINGS'       => 'Configurações globais',
 	'NOTIFICATION'          => 'Notificação',
 	'POSTING_SETTINGS'      => 'Padrões de publicação',
-	'USER_DEFAULTS_EXPLAIN' => 'Defina aqui os valores que deseja como valores padrão para <strong>novos</strong> utilizadores.<br>Quaisquer alterações feitas através deste formulário <strong>não</strong> afetarão utilizadores já existentes.',
+	'USER_DEFAULTS_EXPLAIN' => 'Define aqui os valores que deseja como valores padrão para <strong>novos</strong> utilizadores.<br>Quaisquer alterações feitas através deste formulário <strong>não</strong> afetarão utilizadores já existentes.',
 ]);

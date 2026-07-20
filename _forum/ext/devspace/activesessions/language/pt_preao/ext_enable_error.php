@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @package Active Sessions Extension for phpBB.
+ * @package Activa Sessions Extension for phpBB.
  * @copyright (c) 2022 devspace
  * @license GNU General Public License, version 2 (GPL-2.0)
  * @translation Leinad4Mind [Portuguese [pt_preao]] (2026)

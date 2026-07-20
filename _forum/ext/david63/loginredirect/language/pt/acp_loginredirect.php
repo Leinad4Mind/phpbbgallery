@@ -52,7 +52,7 @@ $lang = array_merge($lang, [
 	'REDIRECT_ANNOUNCE_PRIORITY'         => 'Prioridade de redirecionamento de anúncio',
 	'REDIRECT_ANNOUNCE_PRIORITY_EXPLAIN' => 'Especificar qual anúncio tem prioridade',
 	'REDIRECT_ANNOUNCE_TOPIC_ID'         => 'ID do tópico de anúncio',
-	'REDIRECT_ANNOUNCE_TOPIC_ID_EXPLAIN' => 'Insira o ID do tópico de anúncio para o qual deseja redirecionar todos os utilizadores.',
+	'REDIRECT_ANNOUNCE_TOPIC_ID_EXPLAIN' => 'Insere o ID do tópico de anúncio para o qual deseja redirecionar todos os utilizadores.',
 	'REDIRECT_ANY_ANNOUNCE_EXPLAIN'      => 'Redirecionar todos os utilizadores que não fizeram login desde que o anúncio especificado foi publicado.',
 
 	'REDIRECT_ENABLE'  => 'Ativar',
@@ -68,7 +68,7 @@ $lang = array_merge($lang, [
 	'REDIRECT_GROUP_MESSAGE_EXPLAIN'  => 'Apresentar uma mensagem a informar que o utilizador está a ser redirecionado para um tópico específico.',
 	'REDIRECT_GROUP_OPTIONS'          => 'Opções de grupo',
 	'REDIRECT_GROUP_TOPIC_ID'         => 'ID do tópico de grupo',
-	'REDIRECT_GROUP_TOPIC_ID_EXPLAIN' => 'Insira o ID do tópico para o qual deseja redirecionar os membros do grupo.',
+	'REDIRECT_GROUP_TOPIC_ID_EXPLAIN' => 'Insere o ID do tópico para o qual deseja redirecionar os membros do grupo.',
 
 	'REDIRECT_LATEST_ANNOUNCE' => 'Redirecionamento para o anúncio mais recente no login',
 
@@ -82,7 +82,7 @@ $lang = array_merge($lang, [
 	'REDIRECT_WELCOME_MESSAGE_EXPLAIN'  => 'Apresentar uma mensagem a informar que o novo utilizador está a ser redirecionado para o tópico de boas-vindas.',
 	'REDIRECT_WELCOME_OPTIONS'          => 'Opções de boas-vindas',
 	'REDIRECT_WELCOME_TOPIC_ID'         => 'ID do tópico de boas-vindas',
-	'REDIRECT_WELCOME_TOPIC_ID_EXPLAIN' => 'Insira o ID do tópico de boas-vindas para o qual deseja redirecionar todos os novos utilizadores.',
+	'REDIRECT_WELCOME_TOPIC_ID_EXPLAIN' => 'Insere o ID do tópico de boas-vindas para o qual deseja redirecionar todos os novos utilizadores.',
 
 	'SELECTED' => 'Selecionado',
 ]);
