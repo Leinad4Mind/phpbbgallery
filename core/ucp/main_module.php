@@ -17,12 +17,12 @@ namespace phpbbgallery\core\ucp;
 */
 class main_module
 {
-	var $u_action;
+	public $u_action;
 	protected $language;
 	public $tpl_name;
 	public $page_title;
 
-	function main($id, $mode)
+	public function main($id, $mode)
 	{
 		global $user, $phpbb_container, $table_prefix, $phpbb_gallery_url;
 		global $phpbb_ext_gallery_core_album, $albums_table, $phpbb_ext_gallery_core_auth, $phpbb_ext_gallery_core_album_display, $images_table;
@@ -64,7 +64,7 @@ class main_module
 
 		$mode = $request->variable('mode', 'manage_albums');
 		$action = $request->variable('action', '');
-		$cancel = (isset($_POST['cancel'])) ? true : false;
+		$cancel = $request->is_set_post('cancel');
 		$phpbb_ext_gallery_core_auth->load_user_permissions($user->data['user_id']);
 		if ($cancel)
 		{
@@ -130,7 +130,7 @@ class main_module
 		}
 	}
 
-	function info()
+	public function info()
 	{
 		global $template, $user, $phpbb_ext_gallery_user, $phpbb_gallery_url, $phpbb_container;
 		$this->language = $phpbb_container->get('language');
@@ -154,10 +154,15 @@ class main_module
 		}
 	}
 
-	function initialise_album()
+	public function initialise_album()
 	{
 		global $cache, $db,  $user, $phpbb_ext_gallery_core_auth, $phpbb_ext_gallery_core_album, $phpbb_ext_gallery_config, $albums_table, $phpbb_ext_gallery_user;
 		global $request, $users_table, $phpbb_container;
+
+		if (!$this->is_valid_form_submission($request, 'submit'))
+		{
+			trigger_error('FORM_INVALID');
+		}
 
 		// we will have to initialise $phpbb_ext_gallery_user
 		$phpbb_ext_gallery_user->set_user_id($user->data['user_id']);
@@ -206,7 +211,7 @@ class main_module
 		redirect($this->u_action);
 	}
 
-	function manage_albums()
+	public function manage_albums()
 	{
 		global $cache, $db, $template, $user, $phpbb_ext_gallery_core_album, $albums_table, $phpbb_ext_gallery_core_auth, $phpbb_ext_gallery_core_album_display;
 		global $phpbb_container, $request, $phpbb_gallery_url, $phpbb_ext_gallery_user;
@@ -226,6 +231,7 @@ class main_module
 		$s_allowed_create = ($phpbb_ext_gallery_core_auth->acl_check('a_unlimited', $phpbb_ext_gallery_core_auth::OWN_ALBUM) || ($phpbb_ext_gallery_core_auth->acl_check('a_count', $phpbb_ext_gallery_core_auth::OWN_ALBUM) > $albums)) ? true : false;
 		$template->assign_vars(array(
 			'S_MANAGE_SUBALBUMS'			=> true,
+			'S_UCP_ACTION'					=> $this->u_action,
 			'U_CREATE_SUBALBUM'				=> ($s_allowed_create) ? ($this->u_action . '&amp;action=create' . (($parent_id) ? '&amp;parent_id=' . $parent_id : '')) : '',
 
 			'L_TITLE'			=> $this->language->lang('MANAGE_SUBALBUMS'),
@@ -274,10 +280,9 @@ class main_module
 			$template->assign_block_vars('album_row', array(
 				'FOLDER_IMAGE'			=> $user->img($folder_img, $album[$i]['album_name'], false, '', 'src'),
 				'U_ALBUM'				=> $this->u_action . '&amp;action=manage&amp;parent_id=' . $album[$i]['album_id'],
+				'ALBUM_ID'				=> (int) $album[$i]['album_id'],
 				'ALBUM_NAME'			=> $album[$i]['album_name'],
 				'ALBUM_DESCRIPTION'		=> generate_text_for_display($album[$i]['album_desc'], $album[$i]['album_desc_uid'], $album[$i]['album_desc_bitfield'], $album[$i]['album_desc_options']),
-				'U_MOVE_UP'				=> $this->u_action . '&amp;action=move&amp;move=move_up&amp;album_id=' . $album[$i]['album_id'],
-				'U_MOVE_DOWN'			=> $this->u_action . '&amp;action=move&amp;move=move_down&amp;album_id=' . $album[$i]['album_id'],
 				'U_EDIT'				=> $this->u_action . '&amp;action=edit&amp;album_id=' . $album[$i]['album_id'],
 				'U_DELETE'				=> $this->u_action . '&amp;action=delete&amp;album_id=' . $album[$i]['album_id'],
 			));
@@ -299,7 +304,7 @@ class main_module
 		));
 	}
 
-	function create_album()
+	public function create_album()
 	{
 		global $cache, $db, $template, $user, $phpbb_gallery_url, $phpbb_ext_gallery_core_auth, $albums_table, $phpbb_ext_gallery_core_album, $request;
 		global $phpbb_container, $phpbb_ext_gallery_user, $users_table;
@@ -324,7 +329,7 @@ class main_module
 			trigger_error('NO_MORE_SUBALBUMS_ALLOWED');
 		}
 
-		$submit = (isset($_POST['submit'])) ? true : false;
+		$submit = $request->is_set_post('submit');
 		$redirect = $request->variable('redirect', '');
 
 		if (!$submit)
@@ -448,7 +453,7 @@ class main_module
 		}
 	}
 
-	function edit_album()
+	public function edit_album()
 	{
 		global $config, $cache, $db, $template, $user, $phpbb_gallery_url, $phpbb_ext_gallery_core_album, $phpbb_ext_gallery_core_auth, $albums_table, $phpbb_ext_gallery_core_album_display;
 		global $request, $phpbb_container, $phpbb_ext_gallery_user, $users_table;
@@ -460,7 +465,7 @@ class main_module
 		$album_id = $request->variable('album_id', 0);
 		$phpbb_ext_gallery_core_album->check_user($album_id);
 
-		$submit = (isset($_POST['submit'])) ? true : false;
+		$submit = $request->is_set_post('submit');
 		$redirect = $request->variable('redirect', '');
 		if (!$submit)
 		{
@@ -697,7 +702,7 @@ class main_module
 		}
 	}
 
-	function delete_album()
+	public function delete_album()
 	{
 		global $cache, $db, $template, $user, $phpbb_gallery_url, $phpbb_ext_gallery_core_album, $albums_table, $phpbb_container;
 		global $images_table, $phpbb_gallery_image, $phpbb_ext_gallery_config, $phpbb_dispatcher, $request, $users_table;
@@ -887,21 +892,30 @@ class main_module
 		}
 	}
 
-	function move_album()
+	public function move_album()
 	{
 		global $cache, $db, $user, $phpbb_ext_gallery_core_album, $albums_table, $request, $phpbb_gallery_url, $users_table;
 
-		$album_id = $request->variable('album_id', 0);
+		if (!$this->is_valid_form_submission($request, 'move'))
+		{
+			trigger_error('FORM_INVALID');
+		}
+
+		$album_id = $request->variable('album_id', 0, false, \phpbb\request\request_interface::POST);
 		$phpbb_ext_gallery_core_album->check_user($album_id);
 
-		$move = $request->variable('move', '', true);
+		$move = $request->variable('move', '', true, \phpbb\request\request_interface::POST);
+		if (!$this->is_valid_move_direction($move))
+		{
+			trigger_error('FORM_INVALID');
+		}
 		$moving = $phpbb_ext_gallery_core_album->get_info($album_id);
 
 		$sql = 'SELECT album_id, left_id, right_id
 			FROM ' . $albums_table . "
 			WHERE parent_id = {$moving['parent_id']}
 				AND album_user_id = {$user->data['user_id']}
-				AND " . (($move == 'move_up') ? "right_id < {$moving['right_id']} ORDER BY right_id DESC" : "left_id > {$moving['left_id']} ORDER BY left_id ASC");
+				AND " . (($move === 'move_up') ? "right_id < {$moving['right_id']} ORDER BY right_id DESC" : "left_id > {$moving['left_id']} ORDER BY left_id ASC");
 		$result = $db->sql_query_limit($sql, 1);
 		$target = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
@@ -912,7 +926,7 @@ class main_module
 			return false;
 		}
 
-		if ($move == 'move_up')
+		if ($move === 'move_up')
 		{
 			$left_id = $target['left_id'];
 			$right_id = $moving['right_id'];
@@ -958,7 +972,7 @@ class main_module
 		$phpbb_gallery_url->redirect('phpbb', 'ucp', 'i=-phpbbgallery-core-ucp-main_module&amp;mode=manage_albums&amp;action=manage&amp;parent_id=' . $moving['parent_id']);
 	}
 
-	function manage_subscriptions()
+	public function manage_subscriptions()
 	{
 		global $db, $template, $user, $phpbb_container, $phpbb_ext_gallery_core_album, $phpbb_gallery_notification, $watch_table, $albums_table, $contests_table;
 		global $images_table, $comments_table, $request, $phpbb_gallery_url, $phpbb_ext_gallery_core_auth;
@@ -968,11 +982,16 @@ class main_module
 		$phpbb_gallery_notification = $phpbb_container->get('phpbbgallery.core.notification');
 		$this->language = $phpbb_container->get('language');
 
-		$action = $request->variable('action', '');
-		$image_id_ary = $request->variable('image_id_ary', array(0));
-		$album_id_ary = $request->variable('album_id_ary', array(0));
-		if (($image_id_ary || $album_id_ary) && ($action == 'unsubscribe'))
+		$action = $request->variable('action', '', true, \phpbb\request\request_interface::POST);
+		$image_id_ary = $request->variable('image_id_ary', array(0), false, \phpbb\request\request_interface::POST);
+		$album_id_ary = $request->variable('album_id_ary', array(0), false, \phpbb\request\request_interface::POST);
+		if (($image_id_ary || $album_id_ary) && ($action === 'unsubscribe'))
 		{
+			if (!$this->is_valid_form_submission($request, 'action'))
+			{
+				trigger_error('FORM_INVALID');
+			}
+
 			if ($album_id_ary)
 			{
 				$phpbb_gallery_notification->remove_albums($album_id_ary);
@@ -1104,7 +1123,7 @@ class main_module
 		));
 	}
 
-	function subscribe_pegas($album_id)
+	public function subscribe_pegas($album_id)
 	{
 		global $db, $users_table, $phpbb_container;
 		$phpbb_gallery_notification = $phpbb_container->get('phpbbgallery.core.notification');
@@ -1119,5 +1138,39 @@ class main_module
 			$phpbb_gallery_notification->add_albums($album_id, (int) $row['user_id']);
 		}
 		$db->sql_freeresult($result);
+	}
+
+	/**
+	 * Validate a state-changing UCP form submission.
+	 *
+	 * @param object    $request        phpBB request service
+	 * @param string    $field          Field that must have been submitted by POST
+	 * @param bool|null $form_key_valid Optional test override
+	 * @return bool
+	 */
+	private function is_valid_form_submission($request, string $field, ?bool $form_key_valid = null): bool
+	{
+		if (!$request->is_set_post($field))
+		{
+			return false;
+		}
+
+		if ($form_key_valid !== null)
+		{
+			return $form_key_valid;
+		}
+
+		return check_form_key('ucp_gallery');
+	}
+
+	/**
+	 * Validate an album movement direction.
+	 *
+	 * @param string $move Movement direction
+	 * @return bool
+	 */
+	private function is_valid_move_direction(string $move): bool
+	{
+		return in_array($move, ['move_up', 'move_down'], true);
 	}
 }

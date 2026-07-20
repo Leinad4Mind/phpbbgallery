@@ -14,6 +14,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Restricted `i_edit` and `i_delete` to images owned by the current user while preserving the corresponding moderator overrides.
 - Validated every image in batch moderation against its real source album and action-specific permission, including report closure and destination authorization for moves.
 - Restricted individual moderator image moves to POST requests with a valid phpBB form token and independent `m_move` authorization for the real source and destination albums.
+- Protected UCP personal-album creation, subalbum reordering, and subscription cancellation with POST-only submissions and valid phpBB form tokens.
 
 ### Fixed
 
@@ -29,7 +30,8 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added permanent authorization tests covering image ownership, moderator overrides, route-album containment, per-image moderation permissions, destination permissions, and controller integration.
 - Added permanent individual-move tests covering request methods, CSRF validation, source and destination authorization, form tokens, and mutation ordering.
 - Added permanent ACP rating-reset tests covering service resolution, non-empty and empty albums, and regression against the removed legacy class name.
-- Validated the ZIP upload, ACP Import, authorization, individual-move security, and ACP rating-reset phases with PHP 7.4, 8.1, 8.2, 8.4, and 8.5.
+- Added permanent UCP CSRF tests covering personal-album creation, subalbum reordering, subscription cancellation, POST-only inputs, move-direction validation, form tokens, and mutation ordering.
+- Validated the ZIP upload, ACP Import, authorization, individual-move security, ACP rating-reset, and UCP CSRF phases with PHP 7.4, 8.1, 8.2, 8.4, and 8.5.
 
 ## [3.4.0]
 ### Added
