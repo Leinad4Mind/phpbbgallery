@@ -21,10 +21,10 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'ERROR_MSG'   => 'Ocorreu um erro.<br />A extensão não pôde ser ativada.',
-	'EXPLAIN'     => 'Usa esta página para ativar o modo de depuração se não conseguires aceder ao Painel de Administração do teu fórum.',
-	'ENABLE'      => 'Ativar',
+	'ERROR_MSG'   => 'Ocorreu um erro.<br />A extensão não pôde ser activada.',
+	'EXPLAIN'     => 'Usa esta página para activar o modo de depuração se não conseguires aceder ao Painel de Administração do teu fórum.',
+	'ENABLE'      => 'Activar',
 	'RETURN'      => 'Voltar',
-	'SUCCESS_MSG' => 'Modo de depuração ativado com sucesso',
+	'SUCCESS_MSG' => 'Modo de depuração activado com sucesso',
 	'TITLE'       => 'Modo de Depuração',
 ]);

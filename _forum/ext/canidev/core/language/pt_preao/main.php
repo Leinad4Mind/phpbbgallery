@@ -33,11 +33,11 @@ $lang = array_merge($lang, [
 	'COPY_TO_CLIPBOARD'         => 'Copiar para a área de transferência',
 	'DOCUMENTATION_AND_SUPPORT' => 'Documentação e Suporte',
 	'EDIT'                      => 'Editar',
-	'ENABLE_DISABLE'            => 'Ativar/Desactivar',
+	'ENABLE_DISABLE'            => 'Activar/Desactivar',
 	'NO_ITEMS'                  => 'Nenhum item para mostrar',
 	'ONLY_DEFAULT_GROUPS'       => 'Considerar apenas grupo predefinido',
 	'REPORT_EXPLAIN'            => 'Lista abaixo o máximo de informação possível sobre o erro.<br /><br />
-		Além do descrito aqui, informações básicas sobre o ambiente de execução serão enviadas para a correta análise do problema.<br />
+		Além do descrito aqui, informações básicas sobre o ambiente de execução serão enviadas para a correcta análise do problema.<br />
 		<a href="https://www.canidev.com/api/report/documentation" onclick="window.open(this.href); return false;">Ver detalhes</a>',
 	'REPORT_SENDED' => 'Relatório enviado com sucesso',
 	'REPORT_TITLE'  => 'Reportar erro',

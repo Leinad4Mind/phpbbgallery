@@ -22,14 +22,14 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'ACP_DEBUGGER'         => 'Depuração',
-	'ACP_DEBUGGER_EXPLAIN' => 'A partir daqui podes ativar o modo de depuração do fórum, bem como outras opções de estatísticas.',
+	'ACP_DEBUGGER_EXPLAIN' => 'A partir daqui podes activar o modo de depuração do fórum, bem como outras opções de estatísticas.',
 
 	'DEBUG_ALLOWED_IPS'         => 'IPs Permitidos',
 	'DEBUG_ALLOWED_IPS_EXPLAIN' => 'Define os ips a partir dos quais o modo de depuração pode ser visto.<br />
 		Deixa este campo em branco para que o modo de depuração seja visível para todos.<br /><br />
 		<em>Deves separar os ips por uma vírgula ou colocar um por linha.</em>',
-	'DEBUG_ENABLE'             => 'Ativar depuração',
-	'DEBUG_ENABLE_EXPLAIN'     => 'Define se o modo de depuração está ativado para exibir erros no código do fórum e nas suas extensões.',
+	'DEBUG_ENABLE'             => 'Activar depuração',
+	'DEBUG_ENABLE_EXPLAIN'     => 'Define se o modo de depuração está activado para exibir erros no código do fórum e nas suas extensões.',
 	'DEBUG_SHOW_STATS'         => 'Mostrar estatísticas',
 	'DEBUG_SHOW_STATS_EXPLAIN' => 'Define se as estatísticas do tempo de execução e do uso de recursos serão exibidas no rodapé.',
 
