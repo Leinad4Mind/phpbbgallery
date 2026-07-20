@@ -16,7 +16,7 @@ class acp_rating_reset_test extends TestCase
 {
 	public function test_reset_uses_the_rating_service_for_every_album_image(): void
 	{
-		$rating = new rating_spy();
+		$rating = $this->rating_spy();
 		$this->reset_album_ratings($rating, array(12, 34));
 
 		$this->assertSame(array(
@@ -26,7 +26,7 @@ class acp_rating_reset_test extends TestCase
 
 	public function test_reset_skips_the_rating_service_for_an_empty_album(): void
 	{
-		$rating = new rating_spy();
+		$rating = $this->rating_spy();
 		$this->reset_album_ratings($rating, array());
 
 		$this->assertSame(array(), $rating->calls);
@@ -54,15 +54,18 @@ class acp_rating_reset_test extends TestCase
 
 		$reset($rating, $image_ids);
 	}
-}
 
-class rating_spy
-{
-	/** @var array */
-	public $calls = array();
-
-	public function delete_ratings(array $image_ids, $reset_average): void
+	private function rating_spy()
 	{
-		$this->calls[] = array($image_ids, $reset_average);
+		return new class
+		{
+			/** @var array */
+			public $calls = array();
+
+			public function delete_ratings(array $image_ids, $reset_average): void
+			{
+				$this->calls[] = array($image_ids, $reset_average);
+			}
+		};
 	}
 }
