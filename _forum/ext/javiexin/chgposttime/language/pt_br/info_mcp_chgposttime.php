@@ -14,5 +14,9 @@ if (empty($lang) || !is_array($lang))
 $lang = [];
 }
 $lang = array_merge($lang, [
-	'LOG_MCP_JX_CHANGE_POSTTIME' => '<strong>Alterou o tempo da mensagem #%4$s no tópico "%1$s"</strong><br />» de %2$s para %3$s',
+	'JX_CHANGE_POST_TIME'      => 'Alterar o horário da mensagem',
+	'JX_CHANGE_POST_TIME_DATE' => 'AAAA-MM-DD',
+	'JX_CHANGE_POST_TIME_TIME' => 'HH:MM',
+
+	'LOG_MCP_JX_CHANGE_POSTTIME' => '<strong>Alterou o horário da mensagem #%4$s no tópico "%1$s"</strong><br />» de %2$s para %3$s',
 ]);
