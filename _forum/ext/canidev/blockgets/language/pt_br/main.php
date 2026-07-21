@@ -106,7 +106,7 @@ $lang = array_merge($lang, [
 	],
 
 	'VIEW_TOPIC'     => 'Ver Tópico',
-	'DOWNLOAD'       => 'Download',
+	'DOWNLOAD'       => 'Baixar',
 	'NO_ATTACHMENTS' => 'Sem anexos disponíveis',
 
 	// language_select_block

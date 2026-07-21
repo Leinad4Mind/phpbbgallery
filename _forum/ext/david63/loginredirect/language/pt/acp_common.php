@@ -41,18 +41,18 @@ $lang = array_merge($lang, [
 
 	'DONATE'                    => 'Doar',
 	'DONATE_EXTENSIONS'         => 'Doar para as minhas extensões',
-	'DONATE_EXTENSIONS_EXPLAIN' => 'Esta extensão, tal como todas as minhas extensões, é totalmente gratuita. Se beneficiou de a usar, por favor, considere fazer uma doação clicando no botão de doação do PayPal, ou use a imagem QR "Scan, Pay, Go", ao lado - eu agradeceria.<br><br>Eu prometo que não haverá spam nem pedidos para mais doações, embora sejam sempre bem-vindas.',
+	'DONATE_EXTENSIONS_EXPLAIN' => 'Esta extensão, tal como todas as minhas extensões, é totalmente gratuita. Se beneficiaste de a usar, por favor, considera fazer uma doação clicando no botão de doação do PayPal, ou use a imagem QR "Scan, Pay, Go", ao lado - eu agradeceria.<br><br>Eu prometo que não haverá spam nem pedidos para mais doações, embora sejam sempre bem-vindas.',
 
 	'NEW_VERSION'         => 'Nova Versão - %s',
 	'NEW_VERSION_EXPLAIN' => 'A versão %1$s desta extensão está agora disponível para descarregar.<br>%2$s',
 	'NEW_VERSION_LINK'    => 'Transfere aqui',
-	'NO_JS'               => 'Aparentemente tem o javascript desativado.<br>Por favor <a href="https://enablejavascript.co/">ative</a> no seu navegador para poder tirar proveito de todas as funcionalidades desta página.',
+	'NO_JS'               => 'Aparentemente tens o javascript desativado.<br>Por favor <a href="https://enablejavascript.co/">ativa</a> no teu navegador para poderes tirar proveito de todas as funcionalidades desta página.',
 	'NO_VERSION_EXPLAIN'  => 'A informação de atualização da versão não está disponível.',
 
 	'PAYPAL_BUTTON'   => 'Botão Doar com PayPal',
 	'PAYPAL_TITLE'    => 'PayPal - A forma mais segura e fácil de pagar online!',
-	'PHP_NOT_VALID'   => 'A sua versão do PHP não é compatível com esta extensão.',
-	'PHPBB_NOT_VALID' => 'A sua versão do phpBB não é compatível com esta extensão.',
+	'PHP_NOT_VALID'   => 'A tua versão do PHP não é compatível com esta extensão.',
+	'PHPBB_NOT_VALID' => 'A tua versão do phpBB não é compatível com esta extensão.',
 
 	'SAVE'         => 'Guardar',
 	'SAVE_CHANGES' => 'Guardar alterações',

@@ -80,7 +80,7 @@ $lang = array_merge($lang, [
 	'CLEANTALK_ERROR_CURL'    => 'Erro do CURL: `%s`',
 	'CLEANTALK_ERROR_NO_CURL' => 'O suporte CURL não foi compilado',
 	'CLEANTALK_ERROR_ADDON'   => ' ou o allow_url_fopen está desativado no php.ini.',
-	'CLEANTALK_NOTIFICATION'  => 'Tem a certeza?',
+	'CLEANTALK_NOTIFICATION'  => 'Tens a certeza?',
 
 	'ACP_CLEANTALK_STATS__LAST_SPAM_REQUEST_TIME'  => 'O último pedido de verificação de spam para o servidor foi às',
 	'ACP_CLEANTALK_STATS__AVERAGE_REQUEST_TIME'    => 'Tempo médio de pedido nos últimos 7 dias (segundos)',

@@ -51,7 +51,7 @@ $lang = array_merge($lang, [
 	'AUTO_DB_BACKUP_OPTIMIZE_EXPLAIN'      => 'Optimizar apenas as tabelas da base de dados não optimizadas antes de fazer o backup.',
 	'AUTO_DB_BACKUP_SETTINGS'              => 'Configurações de backup automático da base de dados',
 	'AUTO_DB_BACKUP_SETTINGS_CHANGED'      => 'As configurações de backup automático da base de dados foram alteradas.',
-	'AUTO_DB_BACKUP_SETTINGS_EXPLAIN'      => 'Aqui pode definir as configurações padrão para os backups automáticos da base de dados. Dependendo da configuração do seu servidor, poderá ser possível comprimir a base de dados.<br>Todos os backups serão armazenados na pasta <samp>/store/</samp>. Pode restaurar um backup através do painel de <em>Restauro</em>.',
+	'AUTO_DB_BACKUP_SETTINGS_EXPLAIN'      => 'Aqui podes definir as configurações padrão para os backups automáticos da base de dados. Dependendo da configuração do teu servidor, poderá ser possível comprimir a base de dados.<br>Todos os backups serão armazenados na pasta <samp>/store/</samp>. Podes restaurar um backup através do painel de <em>Restauro</em>.',
 	'AUTO_DB_BACKUP_TIME'                  => 'Próxima hora de backup',
 	'AUTO_DB_BACKUP_TIME_ERROR'            => 'A <strong>próxima hora de backup</strong> está incorreta. A hora tem que ser definida no futuro.',
 	'AUTO_DB_BACKUP_TIME_EXPLAIN'          => 'A hora a que deve ser feito o próximo backup da base de dados.<br><strong>Nota:</strong> A data/hora especificada deve ser no futuro.',
@@ -60,7 +60,7 @@ $lang = array_merge($lang, [
 
 	'DATE_FORMAT_ERROR' => 'O formato da data/hora do próximo backup é inválido.',
 
-	'INVALID_PHP_TIMEZONE'  => 'O fuso horário padrão no seu ficheiro php.ini é inválido.',
+	'INVALID_PHP_TIMEZONE'  => 'O fuso horário padrão no teu ficheiro php.ini é inválido.',
 	'INVALID_USER_TIMEZONE' => 'Existe um problema com a tua configuração de fuso horário no UCP.',
 
 	'NO_TIMEZONE_SET' => 'Não tens um fuso horário definido no teu UCP - por favor define-o antes de poderes continuar.',

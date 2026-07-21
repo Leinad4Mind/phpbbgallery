@@ -32,5 +32,5 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, [
 	'ACL_U_USERNAMECOLOURCHANGER_USE' => 'Pode usar Alteração da cor do nome de utilizador',
 	'USER_COLOUR_TITLE'               => 'Alteração da cor do nome de utilizador',
-	'USER_COLOUR_EXPLAIN'             => 'Pode editar a cor do nome de utilizador',
+	'USER_COLOUR_EXPLAIN'             => 'Podes editar a cor do nome de utilizador',
 ]);

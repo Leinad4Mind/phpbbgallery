@@ -51,7 +51,7 @@ $lang = array_merge($lang, [
 		'solution' => 'Por favor, confirma que estás a fazer upload do verdadeiro ficheiro zip da extensão e tenta novamente.',
 	],
 	'NOT_AN_EXTENSION' => 'O ficheiro zip enviado não é uma extensão phpBB. O ficheiro não foi guardado no servidor.',
-	'EXT_ACTION_ERROR' => 'A acção pedida não pode ser executada para a extensão phpBB selecionada.<br />Nota: O “Upload de Extensões” apenas pode ser gerido através do Gestor de Extensões padrão.',
+	'EXT_ACTION_ERROR' => 'A acção pedida não pode ser executada para a extensão phpBB seleccionada.<br />Nota: O “Upload de Extensões” apenas pode ser gerido através do Gestor de Extensões padrão.',
 
 	'SOURCE'                          => 'Fonte',
 	'EXTENSION_UPDATE_NO_LINK'        => 'O link de transferência não foi fornecido.',

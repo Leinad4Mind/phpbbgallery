@@ -43,7 +43,7 @@ $help = [
 	],
 	[
 		0 => 'Como posso fazer upload de extensões validadas a partir da CDB no phpbb.com?',
-		1 => 'Na página principal do Upload de Extensões, clica no link “Mostrar extensões validadas”. Seleciona a extensão que pretendes enviar e clica no botão “Transferir” na linha dessa extensão. Nota: jogo de palavras aqui: a extensão será <em>transferida</em> do recurso remoto e <em>enviada</em> para o teu servidor.'
+		1 => 'Na página principal do Upload de Extensões, clica no link “Mostrar extensões validadas”. Selecciona a extensão que pretendes enviar e clica no botão “Transferir” na linha dessa extensão. Nota: jogo de palavras aqui: a extensão será <em>transferida</em> do recurso remoto e <em>enviada</em> para o teu servidor.'
 	],
 	[
 		0 => 'Como posso fazer um upload a partir de outros recursos remotos?',
@@ -51,7 +51,7 @@ $help = [
 	],
 	[
 		0 => 'Como posso fazer upload de uma extensão a partir do meu PC local?',
-		1 => 'Para isso, clica no botão “Procurar...” no formulário “Upload de uma extensão”, seleciona o ficheiro zip da extensão no teu computador e depois clica no botão “Upload”.'
+		1 => 'Para isso, clica no botão “Procurar...” no formulário “Upload de uma extensão”, selecciona o ficheiro zip da extensão no teu computador e depois clica no botão “Upload”.'
 	],
 	[
 		0 => 'Copiei o link do pacote zip da extensão para o campo e cliquei no botão “Upload”, mas surge um erro. O que se passa com o link?',
