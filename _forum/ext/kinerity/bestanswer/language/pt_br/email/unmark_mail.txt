@@ -1,0 +1,10 @@
+Subject: A sua mensagem deixou de ser a melhor resposta
+
+Olá,
+
+Infelizmente a sua mensagem em "{{ TOPIC_TITLE }}" no "{{ SITENAME }}" deixou de ser a melhor resposta.
+
+Para ver a sua mensagem, clique no endereço seguinte:
+{{ U_LINK_TO_TOPIC }}
+
+{{ EMAIL_SIG }}

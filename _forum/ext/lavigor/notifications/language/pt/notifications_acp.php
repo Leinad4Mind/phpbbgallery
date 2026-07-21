@@ -21,13 +21,13 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'BROWSER_NOTIFICATION_BADGE_URL'            => 'Absolute URL to the badge image for Push Notifications',
-	'BROWSER_NOTIFICATION_DROPDOWN'             => 'Integrate the toggle for browser Push Notifications into the standard dropdown for notifications',
-	'BROWSER_NOTIFICATION_DROPDOWN_EXPLAIN'     => 'The toggle for browser Push Notifications on the notification options management page will be shown regardless of this setting.',
-	'BROWSER_NOTIFICATION_INTRO'                => 'Ask user whether he/she wants to enable Push Notifications when he/she logs in with a new browser',
-	'BROWSER_NOTIFICATION_INTRO_EXPLAIN'        => 'Modal dialog will be shown only once in each browser regardless of login amount with a certain browser.',
-	'BROWSER_NOTIFICATION_MAX_BROWSERS'         => 'Maximum allowed number of browsers with enabled Push Notifications per each user',
-	'BROWSER_NOTIFICATION_MAX_BROWSERS_EXPLAIN' => 'The user will not be able to turn on Push Notification for the board in any browser if the allowed amount of browsers with enabled Push Notifications has been reached. Enter 0 to disable this setting <em>(not recommended)</em>.',
-	'BROWSER_NOTIFICATION_TTL'                  => 'Time To Live for Web Notifications',
-	'BROWSER_NOTIFICATION_TTL_EXPLAIN'          => 'Time To Live (TTL) is how long a push message is retained by the push service (e.g. Mozilla) in case the user browser is not yet accessible (e.g. is not connected). You may want to use a very long time for important notifications. The default TTL is 4 weeks. However, if you send multiple nonessential notifications, set a TTL of 0: the push notification will be delivered only if the user is currently connected. For other cases, you should use a minimum of one day if your users have multiple time zones, and if they don’t, several hours will suffice.',
+	'BROWSER_NOTIFICATION_BADGE_URL'            => 'URL absoluto para a imagem do emblema das Notificações Push',
+	'BROWSER_NOTIFICATION_DROPDOWN'             => 'Integrar o interruptor das Notificações Push do navegador no menu suspenso padrão das notificações',
+	'BROWSER_NOTIFICATION_DROPDOWN_EXPLAIN'     => 'O interruptor das Notificações Push do navegador na página de gestão das opções de notificação será mostrado independentemente desta definição.',
+	'BROWSER_NOTIFICATION_INTRO'                => 'Perguntar ao utilizador se pretende ativar as Notificações Push quando inicia sessão com um novo navegador',
+	'BROWSER_NOTIFICATION_INTRO_EXPLAIN'        => 'A janela modal será mostrada apenas uma vez em cada navegador, independentemente do número de inícios de sessão com esse navegador.',
+	'BROWSER_NOTIFICATION_MAX_BROWSERS'         => 'Número máximo permitido de navegadores com as Notificações Push ativadas por utilizador',
+	'BROWSER_NOTIFICATION_MAX_BROWSERS_EXPLAIN' => 'O utilizador não poderá ativar as Notificações Push para o fórum em nenhum navegador se o número permitido de navegadores com as Notificações Push ativadas tiver sido atingido. Insere 0 para desativar esta definição <em>(não recomendado)</em>.',
+	'BROWSER_NOTIFICATION_TTL'                  => 'Tempo de Vida das Notificações Web',
+	'BROWSER_NOTIFICATION_TTL_EXPLAIN'          => 'O Tempo de Vida (TTL) é o tempo durante o qual uma mensagem push é retida pelo serviço push (ex.: Mozilla) caso o navegador do utilizador ainda não esteja acessível (ex.: não esteja ligado). Poderás querer usar um tempo muito longo para notificações importantes. O TTL predefinido é de 4 semanas. No entanto, se enviares várias notificações não essenciais, define um TTL de 0: a notificação push só será entregue se o utilizador estiver atualmente ligado. Para outros casos, deverás usar um mínimo de um dia se os teus utilizadores tiverem vários fusos horários e, caso não tenham, bastarão algumas horas.',
 ]);

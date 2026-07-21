@@ -21,6 +21,6 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'LOG_WEB_PUSH_GENERAL_ERROR' => '<strong>Web Push error</strong><br />» %s',
-	'LOG_WEB_PUSH_SERVER_ERROR'  => '<strong>Web Push error</strong> with code <strong>%1$s</strong><br />» %2$s',
+	'LOG_WEB_PUSH_GENERAL_ERROR' => '<strong>Erro de Notificação Push</strong><br />» %s',
+	'LOG_WEB_PUSH_SERVER_ERROR'  => '<strong>Erro de Notificação Push</strong> com o código <strong>%1$s</strong><br />» %2$s',
 ]);

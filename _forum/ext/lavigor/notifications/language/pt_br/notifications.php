@@ -29,9 +29,9 @@ $lang = array_merge($lang, [
 	'BROWSER_NOTIFICATIONS_ACTION_UNSUPPORTED'          => 'Não é suportado',
 	'BROWSER_NOTIFICATIONS_ENABLE'                      => 'Habilitar notificações de navegador.',
 	'BROWSER_NOTIFICATIONS_DISABLE'                     => 'Desabilitar notificações de navegador.',
-	'BROWSER_NOTIFICATIONS_DISALLOWED'                  => 'Notificações Web não são permitidas neste navegador. Permita as notificações de navegador para esta página nas configurações do navegador, caso desejes te subscrever.',
-	'BROWSER_NOTIFICATIONS_INTRO'                       => 'Desejas permitir que o GoldTugAnime te envie notificações?',
-	'BROWSER_NOTIFICATIONS_MAX_LIMIT_REACHED'           => 'O número máximo de navegadores permitidos para as notificações de navegador (%s por usuário) foi atingido. Por favor, desliga as notificações de navegador deste fórum que tenhas ativado em qualquer outro navegador para que possas ativá-lo neste.',
+	'BROWSER_NOTIFICATIONS_DISALLOWED'                  => 'Notificações Web não são permitidas neste navegador. Permita as notificações de navegador para esta página nas configurações do navegador, caso deseje se inscrever.',
+	'BROWSER_NOTIFICATIONS_INTRO'                       => 'Deseja permitir que o GoldTugAnime lhe envie notificações?',
+	'BROWSER_NOTIFICATIONS_MAX_LIMIT_REACHED'           => 'O número máximo de navegadores permitidos para as notificações de navegador (%s por usuário) foi atingido. Por favor, desligue as notificações de navegador deste fórum que tenha ativado em qualquer outro navegador para que possa ativá-lo neste.',
 	'BROWSER_NOTIFICATIONS_UNSUPPORTED'                 => 'Notificações Web não são suportadas pelo seu navegador atual.',
-	'BROWSER_NOTIFICATIONS_UPDATE_FAILED'               => 'Ocorreu um erro (possivelmente erro de conexão ao contactar o servidor) durante a assinatura da Notificação Web. Foi desabilitada neste navegador. Por favor, verifica a sua conexão de internet e tenta novamente. Entra em contacto com o administrador do fórum se o problema persistir.',
+	'BROWSER_NOTIFICATIONS_UPDATE_FAILED'               => 'Ocorreu um erro (possivelmente erro de conexão ao contactar o servidor) durante a assinatura da Notificação Web. Foi desabilitada neste navegador. Por favor, verifique sua conexão de internet e tente novamente. Entre em contato com o administrador do fórum se o problema persistir.',
 ]);

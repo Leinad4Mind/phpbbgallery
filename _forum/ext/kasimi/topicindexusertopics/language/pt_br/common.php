@@ -34,11 +34,10 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	// On viewprofile
-	'TOPIC_INDEX_USER_TOPICS'      => 'Partilhas',
-	'TOPIC_INDEX_USER_TOPICS_VIEW' => 'Ver partilhas do usuário',
-	'TOPIC_INDEX_TOPICS_SELF'      => 'Minhas Partilhas',
+	'TOPIC_INDEX_USER_TOPICS'      => 'Índice de tópicos',
+	'TOPIC_INDEX_USER_TOPICS_VIEW' => 'Ver índice de tópicos',
 
 	// On topic index page
-	'TOPIC_INDEX_USER_TOPICS_FILTERING' => 'partilhadas por %1$s',
-	'TOPIC_INDEX_USER_TOPICS_NO_FILTER' => 'Clique para listar todos',
+	'TOPIC_INDEX_USER_TOPICS_FILTERING' => 'Tópicos iniciados por %1$s.',
+	'TOPIC_INDEX_USER_TOPICS_NO_FILTER' => 'Clique para listar todos.',
 ]);
