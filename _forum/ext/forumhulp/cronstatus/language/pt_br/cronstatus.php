@@ -33,7 +33,7 @@ if (empty($lang) || !is_array($lang))
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
 //
 // Some characters you may want to copy&paste:
-// ’ « » “ ” …
+// ’ « » “ ” …
 //
 
 $lang = array_merge($lang, [
@@ -41,36 +41,30 @@ $lang = array_merge($lang, [
 	'CRON_LOCKED'                     => 'Cron Bloqueado',
 	'CRON_TIME_LOCKED'                => 'Hora de bloqueio do Cron',
 	'ACP_CRON_STATUS_TITLE'           => 'Estado do Cron',
-	'ACP_CRON_STATUS_CONFIG_TITLE'    => 'Verificar o Estado do Cron',
-	'ACP_CRON_STATUS_EXPLAIN'         => 'O Estado do Cron é uma página do seu fórum phpBB onde pode verificar se as tarefas cron estão prontas para serem concluídas. A data "Auto" da última tarefa significa que a tarefa tem uma opção específica de controlo de tempo que não pôde ser reconhecida pela extensão de Estado do Cron. Uma tarefa marcada a vermelho significa uma tarefa que nunca começou ou que tem um problema. Um cadeado vermelho significa que a tarefa está bloqueada pelo gestor cron e bloqueia outras tarefas.',
+	'ACP_CRON_STATUS_EXPLAIN'         => 'O Estado do Cron é uma página do seu fórum phpBB onde você pode verificar se as tarefas cron estão prontas para serem concluídas. A data "Auto" da última tarefa significa que a tarefa tem uma opção específica de controle de tempo que não pôde ser reconhecida pela extensão de Estado do Cron. Uma tarefa marcada em vermelho significa uma tarefa que nunca começou ou que tem um problema. Um cadeado vermelho significa que a tarefa está em execução neste momento ou está bloqueada pelo gerenciador de cron e bloqueia outras tarefas. Reinicie o bloqueio do cron clicando no cadeado ou execute todas as tarefas cron com um clique. Execute uma tarefa pronta clicando em executar ao lado do nome da tarefa. Configure o Estado do Cron em Geral » Configuração do fórum » Configurações do fórum.',
 	'CRON_STATUS_REFRESH'             => 'Segundos para atualização',
-	'CRON_TASK_LOCKED'                => 'Tarefa cron bloqueada',
-	'CRON_STATUS_READY_TASKS'         => 'Tarefas prontas a executar',
+	'CRON_TASK_LOCKED'                => 'Tarefa cron bloqueada, desbloqueie-a!',
+	'CRON_STATUS_READY_TASKS'         => 'Tarefas prontas para executar',
 	'CRON_STATUS_NOT_READY_TASKS'     => 'Tarefas não prontas',
-	'CRON_STATUS_NO_TASKS'            => 'Sem tarefas cron disponíveis',
+	'CRON_STATUS_NEVER_STARTED_TASKS' => 'Tarefas nunca iniciadas',
+	'CRON_STATUS_NO_TASKS'            => 'Nenhuma tarefa cron disponível',
 	'CRON_STATUS_DATE_FORMAT'         => 'Formato da data para a página do Estado do Cron',
 	'CRON_STATUS_DATE_FORMAT_EXPLAIN' => 'O formato da data é o mesmo que a função PHP <code>date</code>.',
-	'CRON_STATUS_MAIN_NOTICE'         => 'Aviso na página de índice do ACP',
-	'CRON_STATUS_MAIN_NOTICE_EXPLAIN' => 'Mostra o Aviso de Estado do Cron na página de índice do ACP se o Cron estiver bloqueado.',
+	'CRON_STATUS_MAIN_NOTICE'         => 'Aviso na página inicial do ACP',
+	'CRON_STATUS_MAIN_NOTICE_EXPLAIN' => 'Exibe o Aviso de Estado do Cron na página inicial do ACP se o Cron estiver bloqueado.',
+	'CRON_STATUS_RUN_ALWAYS'          => 'Executar cron sempre',
+	'CRON_STATUS_RUN_ALWAYS_EXPLAIN'  => 'Executa também as tarefas cron acionadas por bots. Funciona bem para fóruns pouco movimentados.',
 	'CRON_TASK_NAME'                  => 'Nome da tarefa',
-	'CRON_TASK_DATE'                  => 'Data da última tarefa',
-	'CRON_NEW_DATE'                   => 'Data da nova tarefa',
+	'CRON_TASK_DATE'                  => 'Data planejada / última tarefa',
+	'CRON_NEW_DATE'                   => 'Executar / Nova data da tarefa',
 	'CRON_TASK_NEVER_STARTED'         => 'Nunca começou',
 	'CRON_TASK_AUTO'                  => 'Auto',
 	'CRON_TASK_DATE_TIME'             => 'Data & hora atuais',
 	'CRON_STATUS_ERROR'               => 'Erro na atualização',
 	'CRON_STATUS_TIMEOUT'             => 'Tempo limite na atualização',
 	'CRON_STATUS_ERROR_EXPLAIN'       => 'Ocorreu um erro durante a atualização da página.',
-	'CRON_STATUS_DEVELOPERS'          => 'Programadores',
 	'CRON_TASK_RUN'                   => 'Executar',
-	'CRON_TASK_RUNNING'               => 'A executar...',
-]);
-$lang = array_merge($lang, [
-	'CRONSTATUS_DESCRIPTION_PAGE'            => 'Página do Estado do Cron',
-	'CRONSTATUS_DESCRIPTION_PAGE_OVERVIEW'   => 'Visão geral das Tarefas Cron (com ordenação)',
-	'CRONSTATUS_DESCRIPTION_PAGE_STATUS'     => 'Mostra o estado de cada Tarefa Cron',
-	'CRONSTATUS_DESCRIPTION_PAGE_ABILITY'    => 'Pode executar qualquer tarefa pronta manualmente',
-	'CRONSTATUS_DESCRIPTION_NOTICE'          => 'Aviso do Estado do Cron (opcional)',
-	'CRONSTATUS_DESCRIPTION_NOTICE_OVERVIEW' => 'É exibido na página principal do ACP quando o cron está bloqueado',
-	'CRONSTATUS_DESCRIPTION_NOTICE_SETTINGS' => 'Pode ser desativado nas configurações do Fórum',
+	'CRON_TASK_RUNNING'               => 'Executando...',
+	'CRON_TASK_RUN_NOW'               => 'Executar agora',
+	'CRON_TASK_RUN_ALL'               => 'Executar todas',
 ]);

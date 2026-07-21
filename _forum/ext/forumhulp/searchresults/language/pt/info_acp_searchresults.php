@@ -23,7 +23,7 @@ $lang = array_merge($lang, [
 	'PRUNE_SEARCHRESULTS_EXPLAIN' => 'Máximo de registos na tabela de resultados de pesquisa antes da limpeza, 0 desativará esta função.',
 	'LOG_SR_REMOVED'              => '<strong>Limpeza de resultados de pesquisa</strong><br />» Resultados de pesquisa (%1$s), %2$s registos',
 	'LOG_SR_REMOVED_ALL'          => '<strong>Resultados de pesquisa purgados</strong>',
-	'FH_HELPER_NOTICE'            => 'A aplicação ajudante forumhulp não existe!<br />Descarregue <a href="https://github.com/ForumHulp/helper" target="_blank">forumhulp/helper</a> e copie a pasta helper para a pasta da sua extensão forumhulp.',
+	'FH_HELPER_NOTICE'            => 'A aplicação ajudante forumhulp não existe!<br />Transfere <a href="https://github.com/ForumHulp/helper" target="_blank">forumhulp/helper</a> e copia a pasta helper para a pasta da tua extensão forumhulp.',
 	'SEARCHRESULTS_NOTICE'        => '<div class="phpinfo"><p class="entry">Esta extensão reside em %1$s » %2$s » %3$s.<br>As definições de configuração estão em %4$s » %5$s » %6$s.</p></div>',
 ]);
 $lang = array_merge($lang, [

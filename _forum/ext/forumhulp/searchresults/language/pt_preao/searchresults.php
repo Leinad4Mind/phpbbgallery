@@ -20,7 +20,7 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, [
 	'ACP_SEARCHRESULTS'     => 'Resultados de pesquisa',
 	'ACP_SR_MANAGE'         => 'Resultados de pesquisa',
-	'ACP_SR_MANAGE_EXPLAIN' => 'Exibe uma lista de palavras-chave pesquisadas pelos seus visitantes.<br />Pode ordenar por palavra-chave, visitas e data da primeira e última visita. Uma tarefa eliminará registos onde a última visita for mais antiga que x dias, ajustável nas funcionalidades do Fórum.',
+	'ACP_SR_MANAGE_EXPLAIN' => 'Exibe uma lista de palavras-chave pesquisadas pelos teus visitantes.<br />Podes ordenar por palavra-chave, visitas e data da primeira e última visita. Uma tarefa eliminará registos onde a última visita for mais antiga que x dias, ajustável nas funcionalidades do Fórum.',
 	'SEARCHWORD'            => 'Palavra(s)-chave',
 	'REF_HITS'              => 'Visitas',
 	'REF_FIRST'             => 'Primeira visita',

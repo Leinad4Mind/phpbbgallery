@@ -30,7 +30,7 @@ $lang = array_merge($lang, [
 	'SYNC_USERS'              => 'Sincronizar todos os utilizadores',
 	'SYNC_USERS_EXPLAIN'      => 'Definir predefinições para todos os utilizadores, tenha cuidado pois não é reversível!',
 	'USERDEFAULT_NOTICE'      => '<div class="phpinfo"><p class="entry">As definições de configuração deste módulo estão em %1$s » %2$s » %3$s.</p></div>',
-	'FH_HELPER_NOTICE'        => 'A aplicação ajudante forumhulp não existe!<br />Descarregue <a href="https://github.com/ForumHulp/helper">forumhulp/helper</a> e copie a pasta helper para a pasta da sua extensão forumhulp.',
+	'FH_HELPER_NOTICE'        => 'A aplicação ajudante forumhulp não existe!<br />Transfere <a href="https://github.com/ForumHulp/helper">forumhulp/helper</a> e copia a pasta helper para a pasta da tua extensão forumhulp.',
 ]);
 $lang = array_merge($lang, [
 	'DESCRIPTION_PAGE'   => 'Descrição',

@@ -23,7 +23,7 @@ $lang = array_merge($lang, [
 	'LOG_STATISTICS_NO_PRUNE' => '<strong>Estatísticas do Fórum</strong><br />» Nenhum registo limpo',
 	'STAT_DELETE_SUCCESS'     => 'Tabelas de arquivo esvaziadas',
 	'STAT_DELETE_ERROR'       => 'Erro ao esvaziar tabelas de arquivo.',
-	'FH_HELPER_NOTICE'        => 'A aplicação ajudante forumhulp não existe!<br />Descarregue <a href="https://github.com/ForumHulp/helper">forumhulp/helper</a> e copie a pasta helper para a pasta da sua extensão forumhulp.',
+	'FH_HELPER_NOTICE'        => 'A aplicação ajudante forumhulp não existe!<br />Transfere <a href="https://github.com/ForumHulp/helper">forumhulp/helper</a> e copia a pasta helper para a pasta da tua extensão forumhulp.',
 	'STATISTICS_NOTICE'       => '<div class="phpinfo"><p class="entry">A configuração desta extensão está em %1$s » %2$s » %3$s.</p></div>',
 ]);
 $lang = array_merge($lang, [

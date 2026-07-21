@@ -27,8 +27,8 @@ $lang = array_merge($lang, [
 	'NO_PM_DATA'          => 'SEM dados de MP\'s',
 	'PM_BOX'              => 'Caixa de MP',
 	'PM_SPY_READ'         => 'Espião de Mensagens Privadas',
-	'PM_SPY_READ_EXPLAIN' => 'Aqui está uma lista de todas as mensagens privadas do seu fórum.',
-	'READ_MESSAGE'        => 'Clique para ler esta mensagem',
+	'PM_SPY_READ_EXPLAIN' => 'Aqui está uma lista de todas as mensagens privadas do teu fórum.',
+	'READ_MESSAGE'        => 'Clica para ler esta mensagem',
 	'TO'                  => 'Para',
 	'TOTAL_USERS'         => 'Total de utilizadores',
 	'PM_COUNT'            => 'Contagem de MP',
@@ -43,7 +43,7 @@ $lang = array_merge($lang, [
 	'SORT_BCC'            => 'BCC',
 	'SORT_PM_BOX'         => 'Caixa de MP',
 	'LOG_PM_SPY'          => '<strong>MP\'s eliminadas pelo Espião de MP</strong><br />',
-	'FH_HELPER_NOTICE'    => 'A aplicação ajudante forumhulp não existe!<br />Descarregue <a href="https://github.com/ForumHulp/helper" target="_blank">forumhulp/helper</a> e copie a pasta helper para a pasta da sua extensão forumhulp.',
+	'FH_HELPER_NOTICE'    => 'A aplicação ajudante forumhulp não existe!<br />Transfere <a href="https://github.com/ForumHulp/helper" target="_blank">forumhulp/helper</a> e copia a pasta helper para a pasta da tua extensão forumhulp.',
 	'PMSPY_NOTICE'        => '<div class="phpinfo"><p class="entry">Esta extensão reside em %1$s » %2$s » %3$s.</p></div>',
 ]);
 $lang = array_merge($lang, [

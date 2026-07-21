@@ -40,10 +40,10 @@ $lang = array_merge(
 	$lang, [
 		'UCP_IR'                    => 'Redimensionador de Imagens',
 		'IMAGE_RESIZE'              => 'Redimensionar Imagem',
-		'IMAGE_RESIZE_EXPLAIN'      => 'Recorte o seu %1$s da imagem e confirme.',
+		'IMAGE_RESIZE_EXPLAIN'      => 'Recorta o teu %1$s da imagem e confirma.',
 		'IMAGE_RESIZE_ERROR'        => 'Nenhuma aplicação ou ficheiro para enviar!',
 		'IMAGERESIZE_NOTICE'        => '<div class="phpinfo"><p class="entry">Este módulo está oculto e não tem opções de configuração. No entanto, lembramos que deve definir o upload máximo no ACP.</p></div>',
 		'ERROR_IMAGERESIZE_DISABLE' => 'Não pode desactivar o Redimensionar Imagem devido a extensões ativas<br /><div class="phpinfo">» %s</div>',
-		'FH_HELPER_NOTICE'          => 'A aplicação ajudante forumhulp não existe!<br />Descarregue <a href="https://github.com/ForumHulp/helper" target="_blank">forumhulp/helper</a> e copie a pasta helper para a pasta da sua extensão forumhulp.',
+		'FH_HELPER_NOTICE'          => 'A aplicação ajudante forumhulp não existe!<br />Transfere <a href="https://github.com/ForumHulp/helper" target="_blank">forumhulp/helper</a> e copia a pasta helper para a pasta da tua extensão forumhulp.',
 	]
 );

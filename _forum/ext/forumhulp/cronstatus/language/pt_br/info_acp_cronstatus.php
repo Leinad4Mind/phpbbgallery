@@ -33,10 +33,35 @@ if (empty($lang) || !is_array($lang))
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
 //
 // Some characters you may want to copy&paste:
-// ’ « » “ ” …
+// ’ « » “ ” …
 //
 
 $lang = array_merge($lang, [
-	'ACP_CRON_STATUS_TITLE'        => 'Estado do Cron',
-	'ACP_CRON_STATUS_CONFIG_TITLE' => 'Verificar o Estado do Cron',
+	'ACP_CRON_STATUS_TITLE' => 'Estado do Cron',
+	'LOG_CORE_INSTALLED'    => 'Arquivos alterados com sucesso',
+	'LOG_CORE_DEINSTALLED'  => 'Arquivos revertidos com sucesso',
+	'LOG_CORE_NOT_REPLACED' => 'Não foi possível substituir o(s) arquivo(s)<br />» %s',
+	'LOG_CORE_NOT_UPDATED'  => 'Não foi possível atualizar o(s) arquivo(s)<br />» %s',
+	'FH_HELPER_NOTICE'      => 'O aplicativo auxiliar forumhulp não existe!<br />Baixe <a href="https://github.com/ForumHulp/helper" target="_blank">forumhulp/helper</a> e copie a pasta helper para a pasta da sua extensão forumhulp.',
+	'CRONSTAT_NOTICE'       => '<div class="phpinfo"><p class="entry">Esta extensão está localizada em %1$s » %2$s » %3$s.</p></div>',
+]);
+
+// Description of Donations extension
+$lang = array_merge($lang, [
+	'DESCRIPTION_PAGE'   => 'Descrição',
+	'DESCRIPTION_NOTICE' => 'Nota da extensão',
+	'ext_details' => [
+		'details' => [
+			'DESCRIPTION_1' => 'Visão geral das Tarefas Cron (com ordenação)',
+			'DESCRIPTION_2' => 'Mostra o status de cada Tarefa Cron',
+			'DESCRIPTION_3' => 'Você pode executar qualquer tarefa pronta manualmente',
+			'DESCRIPTION_4' => 'Reinicie o bloqueio do cron com um simples clique',
+		],
+		'note' => [
+			'NOTICE_1' => 'Aviso de Estado do Cron na página principal do ACP',
+			'NOTICE_2' => 'Configurável nas configurações do fórum',
+			'NOTICE_3' => 'Opção "Executar cron sempre" alternável',
+			'NOTICE_4' => 'Compatível com phpBB 3.2',
+		],
+	],
 ]);

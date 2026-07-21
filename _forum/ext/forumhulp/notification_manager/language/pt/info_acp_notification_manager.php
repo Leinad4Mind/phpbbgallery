@@ -38,7 +38,7 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge(
 	$lang, [
-	'FH_HELPER_NOTICE'             => 'Forumhulp helper application does not exist!<br />Download <a href="https://github.com/ForumHulp/helper" target="_blank">forumhulp/helper</a> and copy the helper folder to your forumhulp extension folder.',
-		'NOTIFICATION_MANAGER_NOTICE' => '<div class="phpinfo"><p class="entry">This extension replaces your old notification manager in control panel.</p></div>'
+	'FH_HELPER_NOTICE'             => 'A aplicação ajudante forumhulp não existe!<br />Transfere <a href="https://github.com/ForumHulp/helper" target="_blank">forumhulp/helper</a> e copia a pasta helper para a pasta da tua extensão forumhulp.',
+		'NOTIFICATION_MANAGER_NOTICE' => '<div class="phpinfo"><p class="entry">Esta extensão substitui o teu antigo gestor de notificações no painel de controlo.</p></div>'
 	]
 );

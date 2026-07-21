@@ -19,7 +19,7 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'ACP_POSTSSTATS'               => 'Estatísticas de Mensagens',
-	'ACP_POSTSSTATS_EXPLAIN'       => 'As Estatísticas de Mensagens apresentam uma visão geral das mensagens e tópicos num período de tempo. Um gráfico é mostrado para cada página para ter uma visão fácil das suas estatísticas.',
+	'ACP_POSTSSTATS_EXPLAIN'       => 'As Estatísticas de Mensagens apresentam uma visão geral das mensagens e tópicos num período de tempo. Um gráfico é mostrado para cada página para teres uma visão fácil das tuas estatísticas.',
 	'PPO'                          => 'Visão geral de mensagens',
 	'PPU'                          => 'Mensagens por utilizador',
 	'PPT'                          => 'Mensagens por tópico',
@@ -53,5 +53,5 @@ $lang = array_merge($lang, [
 	'MAX_ONLINE'                   => 'Máx. de registos nas últimas mensagens',
 	'MAX_ONLINE_EXPLAIN'           => 'Máx. de registos por página',
 	'START_SCREEN'                 => 'Ecrã inicial',
-	'START_SCREEN_EXPLAIN'         => 'Escolha o seu ecrã inicial para as Estatísticas do Fórum e se quer mostrar o arquivo ou online.',
+	'START_SCREEN_EXPLAIN'         => 'Escolhe o teu ecrã inicial para as Estatísticas do Fórum e se queres mostrar o arquivo ou online.',
 ]);

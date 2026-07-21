@@ -19,7 +19,7 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'ACP_POSTSTATISTICS' => 'Estatísticas de Mensagens',
-	'FH_HELPER_NOTICE'   => 'A aplicação ajudante forumhulp não existe!<br />Descarregue <a href="https://github.com/ForumHulp/helper" target="_blank">forumhulp/helper</a> e copie a pasta helper para a pasta da sua extensão forumhulp.',
+	'FH_HELPER_NOTICE'   => 'A aplicação ajudante forumhulp não existe!<br />Transfere <a href="https://github.com/ForumHulp/helper" target="_blank">forumhulp/helper</a> e copia a pasta helper para a pasta da tua extensão forumhulp.',
 	'POSTSSTAT_NOTICE'   => '<div class="phpinfo"><p class="entry">Esta extensão reside em %1$s » %2$s » %3$s.<br>As definições de configuração estão dentro da aplicação.</p></div>',
 ]);
 $lang = array_merge($lang, [
