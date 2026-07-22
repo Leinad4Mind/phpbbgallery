@@ -36,5 +36,5 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'NOTIFICATION_AP_POLL_ENDED'      => '<strong>Resultados visíveis para a votação</strong>:',
-	'NOTIFICATION_TYPE_AP_POLL_ENDED' => 'Já você pode ver os resultados de uma votação em que participaste',
+	'NOTIFICATION_TYPE_AP_POLL_ENDED' => 'Você já pode ver os resultados de uma votação em que participou',
 ]);

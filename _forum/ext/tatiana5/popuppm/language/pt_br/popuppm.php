@@ -22,7 +22,7 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'POPUPPM_YOU_NEW_PM_BLINK' => [
-		1 => '<<<! Recebeste uma nova mensagem privada !>>>',
+		1 => '<<<! Recebeu uma nova mensagem privada !>>>',
 		2 => '<<<! Tem %s novas mensagens privadas !>>>',
 	],
 	'POPUPPM_YOU_NEW_PM' => [

@@ -44,13 +44,13 @@ $lang = array_merge($lang, [
 	'AP_NONE'                 => 'Ninguém',
 
 	'AP_POLL_CANT_VOTE'              => 'Não podes votar nesta votação. Razão',
-	'AP_POLL_REASON_NOT_POSTED'      => 'Não escreveu neste tema.',
+	'AP_POLL_REASON_NOT_POSTED'      => 'Não escreveste neste tópico.',
 	'AP_POLL_VOTES_ARE_VISIBLE'      => 'Tem em conta que se votares, o teu voto será visível.',
 	'AP_POLL_DONT_VOTE_SHOW_RESULTS' => 'Não quero votar, quero ver os resultados',
 	'AP_POLL_RESULTS_ARE_ORDERED'    => 'Os resultados estão ordenados por número decrescente de votos recebidos.',
 	'AP_POLL_TYPE_MISMATCH'          => 'Dados inconsistentes na votação, erro interno.',
-	'AP_VOTE_CHANGED'                => 'Não tem permissão para alterar os votos já emitidos.',
-	'AP_TOO_MANY_VOTES'              => 'Tentou adicionar demasiados votos.',
+	'AP_VOTE_CHANGED'                => 'Não tens permissão para alterar os votos já emitidos.',
+	'AP_TOO_MANY_VOTES'              => 'Tentaste adicionar demasiados votos.',
 
 	'AP_MAX_VOTES_SELECT' => [
 		1 => 'Podes enviar até <strong>%2$d</strong> votos a <strong>%1$d</strong> opção',
@@ -65,11 +65,11 @@ $lang = array_merge($lang, [
 	'AP_POLL_VOTES_HIDE'           => 'Ocultar votos',
 	'AP_POLL_VOTES_HIDE_EXPLAIN'   => 'Se estiver ativado, os votos estarão ocultos até que a votação termine. Esta opção só funciona se a votação tiver um final determinado.',
 	'AP_POLL_VOTERS_SHOW'          => 'Mostrar votantes da votação',
-	'AP_POLL_VOTERS_SHOW_EXPLAIN'  => 'Se estiver ativado, os votantes serão mostrados à quem tenha permissões. Tem em conta que os os votantes estarão ocultos caso os votos estejam ocultos.',
+	'AP_POLL_VOTERS_SHOW_EXPLAIN'  => 'Se estiver ativado, os votantes serão mostrados a quem tenha permissões. Tem em conta que os votantes estarão ocultos caso os votos estejam ocultos.',
 	'AP_POLL_VOTERS_LIMIT'         => 'Limite de votos',
 	'AP_POLL_VOTERS_LIMIT_EXPLAIN' => 'Se estiver ativado, os utilizadores habilitados só podem votar se escreveram neste tópico.',
 	'AP_POLL_SHOW_ORDERED'         => 'Ordenar resultados',
-	'AP_POLL_SHOW_ORDERED_EXPLAIN' => 'Quando se mostram os resultados, estes se ordenam por número decrescente de votos recebidos (ou mais votado primeiro). Em caso contrario, usa-se a ordem de opções na votação.',
+	'AP_POLL_SHOW_ORDERED_EXPLAIN' => 'Quando se mostram os resultados, estes se ordenam por número decrescente de votos recebidos (ou mais votado primeiro). Em caso contrário, usa-se a ordem de opções na votação.',
 	'AP_RUN_POLL'                  => 'Realizar votação',
 	'AP_RUN_POLL_FOR'              => 'durante',
 	'AP_RUN_POLL_UNTIL'            => 'até',
@@ -87,5 +87,5 @@ $lang = array_merge($lang, [
 	'AP_POLL_MAX_VALUE_EXPLAIN'     => 'Este é o número máximo de votos que um votante pode escolher numa mesma opção.',
 	'AP_POLL_TOTAL_VALUE'           => 'Votos totais',
 	'AP_POLL_TOTAL_VALUE_EXPLAIN'   => 'Este é o número total de votos que um votante pode escolher, repartidos entre as opções possíveis.',
-	'AP_VOTE_GREATER_THAN_MAXVALUE' => 'Não pode escolher um número de votos superior ao máximo permitido.',
+	'AP_VOTE_GREATER_THAN_MAXVALUE' => 'Não podes escolher um número de votos superior ao máximo permitido.',
 ]);
