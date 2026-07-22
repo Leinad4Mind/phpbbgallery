@@ -12,41 +12,18 @@ namespace phpbbgallery\acpcleanup;
 
 class cleanup
 {
-	/** @var \phpbb\db\driver\driver_interface  */
-	protected $db;
-
-	/** @var \phpbbgallery\core\file\file  */
-	protected $tool;
-
-	/** @var \phpbb\user  */
-	protected $user;
-
-	/** @var \phpbb\language\language  */
-	protected $language;
-
-	/** @var \phpbbgallery\core\block  */
-	protected $block;
-
-	/** @var \phpbbgallery\core\album\album  */
-	protected $album;
-
-	/** @var \phpbbgallery\core\comment  */
-	protected $comment;
-
-	/** @var \phpbbgallery\core\config  */
-	protected $gallery_config;
-
-	/** @var \phpbbgallery\core\log  */
-	protected $log;
-
-	/** @var \phpbbgallery\core\moderate  */
-	protected $moderate;
-
-	/** @var   */
-	protected $albums_table;
-
-	/** @var   */
-	protected $images_table;
+	protected \phpbb\db\driver\driver_interface $db;
+	protected \phpbbgallery\core\file\file $tool;
+	protected \phpbb\user $user;
+	protected \phpbb\language\language $language;
+	protected \phpbbgallery\core\block $block;
+	protected \phpbbgallery\core\album\album $album;
+	protected \phpbbgallery\core\comment $comment;
+	protected \phpbbgallery\core\config $gallery_config;
+	protected \phpbbgallery\core\log $log;
+	protected \phpbbgallery\core\moderate $moderate;
+	protected string $albums_table;
+	protected string $images_table;
 
 
 	/**
@@ -62,13 +39,13 @@ class cleanup
 	 * @param \phpbbgallery\core\config         $gallery_config
 	 * @param \phpbbgallery\core\log            $log
 	 * @param \phpbbgallery\core\moderate       $moderate
-	 * @param                                   $albums_table
-	 * @param                                   $images_table
+	 * @param string                            $albums_table
+	 * @param string                            $images_table
 	 */
 	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbbgallery\core\file\file $tool, \phpbb\user $user, \phpbb\language\language $language,
 		\phpbbgallery\core\block $block, \phpbbgallery\core\album\album $album, \phpbbgallery\core\comment $comment,
 		\phpbbgallery\core\config $gallery_config, \phpbbgallery\core\log $log, \phpbbgallery\core\moderate $moderate,
-		$albums_table, $images_table)
+		string $albums_table, string $images_table)
 	{
 		$this->db = $db;
 		$this->tool = $tool;
@@ -90,7 +67,7 @@ class cleanup
 	* @param	array	$filenames		An array of filenames
 	* @return	string	Language key for the success message.
 	*/
-	public function delete_files($filenames)
+	public function delete_files(array $filenames): string
 	{
 		foreach ($filenames as $file)
 		{
@@ -105,10 +82,10 @@ class cleanup
 	/**
 	* Delete images, where the source file is missing.
 	*
-	* @param	mixed	$image_ids		Either an array of integers or an integer.
+	* @param	array	$image_ids		Image IDs to delete.
 	* @return	string	Language key for the success message.
 	*/
-	public function delete_images($image_ids)
+	public function delete_images(array $image_ids): string
 	{
 		$this->log->add_log('admin', 'clean_deleteentries', 0, 0, array('LOG_CLEANUP_DELETE_ENTRIES', count($image_ids)));
 		$this->moderate->delete_images($image_ids, false);
@@ -119,10 +96,10 @@ class cleanup
 	/**
 	* Delete images, where the author is missing.
 	*
-	* @param	mixed	$image_ids		Either an array of integers or an integer.
+	* @param	array	$image_ids		Image IDs to delete.
 	* @return	string	Language key for the success message.
 	*/
-	public function delete_author_images($image_ids)
+	public function delete_author_images(array $image_ids): string
 	{
 		$this->log->add_log('admin', 'clean_deletenoauthors', 0, 0, array('LOG_CLEANUP_DELETE_NO_AUTHOR', count($image_ids)));
 		$this->moderate->delete_images($image_ids);
@@ -133,10 +110,10 @@ class cleanup
 	/**
 	* Delete comments, where the author is missing.
 	*
-	* @param	mixed	$comment_ids	Either an array of integers or an integer.
+	* @param	array	$comment_ids	Comment IDs to delete.
 	* @return	string	Language key for the success message.
 	*/
-	public function delete_author_comments($comment_ids)
+	public function delete_author_comments(array $comment_ids): string
 	{
 		$this->log->add_log('admin', 'clean_deletecna', 0, 0, array('LOG_CLEANUP_COMMENT_DELETE_NO_AUTHOR', count($comment_ids)));
 		$this->comment->delete_comments($comment_ids);
@@ -151,7 +128,7 @@ class cleanup
 	* @param	array	$obsolete_pegas		User IDs we want to delete the pegas.
 	* @return	array	Language keys for the success messages.
 	*/
-	public function delete_pegas($unwanted_pegas, $obsolete_pegas)
+	public function delete_pegas(array $unwanted_pegas, array $obsolete_pegas): array
 	{
 
 		$delete_pegas = array_merge($unwanted_pegas, $obsolete_pegas);
@@ -283,7 +260,7 @@ class cleanup
 	/**
 	*
 	*/
-	public function prune($pattern)
+	public function prune(array $pattern): string
 	{
 		$sql_where = '';
 		if (isset($pattern['image_album_id']))
@@ -328,7 +305,7 @@ class cleanup
 	/**
 	*
 	*/
-	public function lang_prune_pattern($pattern)
+	public function lang_prune_pattern(array $pattern): string
 	{
 		if (isset($pattern['image_album_id']))
 		{
