@@ -12,6 +12,9 @@
 			maxFileSize: '{S_QUICK_MAX_FILESIZE}', // And it appears that user side size is ignored too.
 			dataType: 'json',
 			paramName: 'files[]',
+			formData: function () {
+				return $('#postform').serializeArray();
+			},
 			uploadTemplateId: null,
 			downloadTemplateId: null,
 			uploadTemplate: function (o) {

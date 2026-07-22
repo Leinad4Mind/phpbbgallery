@@ -240,7 +240,14 @@ class orphan_upload_security_test extends TestCase
 		$this->set_upload_property($upload, 'user', new class
 		{
 			/** @var array */
-			public $data = ['user_id' => 42];
+			public $data = [
+				'user_id'       => 42,
+				'is_registered' => true,
+				'session_id'    => 'registered-test-session',
+			];
+
+			/** @var string */
+			public $session_id = 'registered-test-session';
 		});
 		$this->set_upload_property($upload, 'block', new class
 		{
