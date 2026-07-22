@@ -15,67 +15,67 @@ namespace phpbbgallery\core\image;
 class image
 {
 	/** @var \phpbb\db\driver\driver_interface  */
-	protected $db;
+	protected \phpbb\db\driver\driver_interface $db;
 
 	/** @var \phpbb\user  */
-	protected $user;
+	protected \phpbb\user $user;
 
 	/** @var \phpbb\language\language  */
-	protected $language;
+	protected \phpbb\language\language $language;
 
 	/** @var \phpbb\template\template  */
-	protected $template;
+	protected \phpbb\template\template $template;
 
 	/** @var \phpbb\event\dispatcher_interface  */
-	protected $phpbb_dispatcher;
+	protected \phpbb\event\dispatcher_interface $phpbb_dispatcher;
 
 	/** @var \phpbbgallery\core\auth\auth  */
-	protected $gallery_auth;
+	protected \phpbbgallery\core\auth\auth $gallery_auth;
 
 	/** @var \phpbbgallery\core\album\album  */
-	protected $album;
+	protected \phpbbgallery\core\album\album $album;
 
 	/** @var \phpbbgallery\core\config  */
-	protected $gallery_config;
+	protected \phpbbgallery\core\config $gallery_config;
 
 	/** @var \phpbb\controller\helper  */
-	protected $helper;
+	protected \phpbb\controller\helper $helper;
 
 	/** @var \phpbbgallery\core\url  */
-	protected $url;
+	protected \phpbbgallery\core\url $url;
 
 	/** @var \phpbbgallery\core\log  */
-	protected $gallery_log;
+	protected \phpbbgallery\core\log $gallery_log;
 
 	/** @var \phpbbgallery\core\notification\helper  */
-	protected $notification_helper;
+	protected \phpbbgallery\core\notification\helper $notification_helper;
 
 	/** @var \phpbbgallery\core\cache  */
-	protected $gallery_cache;
+	protected \phpbbgallery\core\cache $gallery_cache;
 
 	/** @var \phpbbgallery\core\report  */
-	protected $gallery_report;
+	protected \phpbbgallery\core\report $gallery_report;
 
 	/** @var \phpbbgallery\core\user  */
-	protected $gallery_user;
+	protected \phpbbgallery\core\user $gallery_user;
 
 	/** @var \phpbbgallery\core\contest  */
-	protected $contest;
+	protected \phpbbgallery\core\contest $contest;
 
 	/** @var \phpbbgallery\core\file\file  */
-	protected $file;
+	protected \phpbbgallery\core\file\file $file;
 
-	/** @var   */
-	protected $table_images;
+	/** @var string */
+	protected string $table_images;
 
-	const IMAGE_SHOW_IP = 128;
-	const IMAGE_SHOW_RATINGS = 64;
-	const IMAGE_SHOW_USERNAME = 32;
-	const IMAGE_SHOW_VIEWS = 16;
-	const IMAGE_SHOW_TIME = 8;
-	const IMAGE_SHOW_IMAGENAME = 4;
-	const IMAGE_SHOW_COMMENTS = 2;
-	const IMAGE_SHOW_ALBUM = 1;
+	public const IMAGE_SHOW_IP = 128;
+	public const IMAGE_SHOW_RATINGS = 64;
+	public const IMAGE_SHOW_USERNAME = 32;
+	public const IMAGE_SHOW_VIEWS = 16;
+	public const IMAGE_SHOW_TIME = 8;
+	public const IMAGE_SHOW_IMAGENAME = 4;
+	public const IMAGE_SHOW_COMMENTS = 2;
+	public const IMAGE_SHOW_ALBUM = 1;
 
 	/**
 	 * construct
@@ -97,7 +97,7 @@ class image
 	 * @param \phpbbgallery\core\user                $gallery_user
 	 * @param \phpbbgallery\core\contest             $contest
 	 * @param \phpbbgallery\core\file\file           $file
-	 * @param                                        $table_images
+	 * @param string                                 $table_images
 	 */
 	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\language\language $language,
 		\phpbb\template\template $template, \phpbb\event\dispatcher_interface $phpbb_dispatcher, \phpbbgallery\core\auth\auth $gallery_auth,
@@ -105,7 +105,7 @@ class image
 		\phpbbgallery\core\url $url, \phpbbgallery\core\log $gallery_log, \phpbbgallery\core\notification\helper $notification_helper,
 		\phpbbgallery\core\report $report, \phpbbgallery\core\cache $gallery_cache, \phpbbgallery\core\user $gallery_user,
 		\phpbbgallery\core\contest $contest, \phpbbgallery\core\file\file $file,
-		$table_images)
+		string $table_images)
 	{
 		$this->db = $db;
 		$this->user = $user;
@@ -127,7 +127,13 @@ class image
 		$this->table_images = $table_images;
 	}
 
-	public function get_new_author_info($username)
+	/**
+	 * Resolve the database identity of a replacement image author.
+	 *
+	 * @param string $username Requested phpBB username
+	 * @return array|false User row, or false when no user matches
+	 */
+	public function get_new_author_info(string $username): array|false
 	{
 		// Who is the new uploader?
 		if (!$username)
@@ -169,13 +175,13 @@ class image
 	 * @param    bool $skip_files If set to true, we won't try to delete the source files.
 	 * @return bool
 	 */
-	public function delete_images($images, $filenames = array(), $resync_albums = true, $skip_files = false)
+	public function delete_images(array $images, array $filenames = array(), bool $resync_albums = true, bool $skip_files = false): bool
 	{
-		$phpbb_gallery_contest = $this->contest;
 		if (empty($images))
 		{
-			return;
+			return false;
 		}
+		$phpbb_gallery_contest = $this->contest;
 		if (!$skip_files)
 		{
 			// Delete the files from the disc...
@@ -187,7 +193,7 @@ class image
 					$need_filenames[] = $image;
 				}
 			}
-			$filenames = array_merge($filenames, self::get_filenames($need_filenames));
+			$filenames = array_merge($filenames, $this->get_filenames($need_filenames));
 			$this->file->delete($filenames);
 		}
 
@@ -260,10 +266,10 @@ class image
 	/**
 	* Get the real filenames, so we can load/delete/edit the image-file.
 	*
-	* @param	mixed		$images		Array or integer with the image_id(s)
+	* @param	array|int	$images		Array or integer with the image_id(s)
 	* @return	array		Format: $image_id => $filename
 	*/
-	public function get_filenames($images)
+	public function get_filenames(array|int $images): array
 	{
 		if (empty($images))
 		{
@@ -296,9 +302,9 @@ class image
 	 * @param    bool $count shall the image-link be counted as view? (Set to false from image_page.php to deny double increment)
 	 * @param    string $additional_parameters additional parameters for the url, (starting with &amp;)
 	 * @param int $next_image
-	 * @return mixed
+	 * @return string
 	 */
-	public function generate_link($content, $mode, $image_id, $image_name, $album_id, $is_gif = false, $count = true, $additional_parameters = '', $next_image = 0)
+	public function generate_link(string $content, string $mode, int $image_id, string $image_name, int $album_id, bool $is_gif = false, bool $count = true, string $additional_parameters = '', int $next_image = 0): string
 	{
 		$image_page_url = $this->helper->route('phpbbgallery_core_image', array('image_id' => (int) $image_id));
 		//$image_page_url = $phpbb_ext_gallery_url->append_sid('image_page', "album_id=$album_id&amp;image_id=$image_id{$additional_parameters}");
@@ -398,8 +404,9 @@ class image
 	* @param	array	$image_id_ary	array with the image_ids which changed their status
 	* @param	bool	$add			are we adding or removing the images
 	* @param	bool	$readd			is it possible that there are images which aren't really changed
+	* @return	void
 	*/
-	public function handle_counter($image_id_ary, $add, $readd = false)
+	public function handle_counter(array|int $image_id_ary, bool $add, bool $readd = false): void
 	{
 		if (empty($image_id_ary))
 		{
@@ -450,11 +457,17 @@ class image
 		}
 	}
 
-	public function get_image_data($image_id)
+	/**
+	 * Load an image row.
+	 *
+	 * @param int $image_id Image identifier
+	 * @return array|false Image row, or false when it does not exist
+	 */
+	public function get_image_data(int $image_id): array|false
 	{
 		if (empty($image_id))
 		{
-			return;
+			return false;
 		}
 
 		$sql = 'SELECT * FROM ' . $this->table_images .' WHERE image_id = ' . (int) $image_id;
@@ -466,15 +479,17 @@ class image
 		{
 			return $row;
 		}
+
+		return false;
 	}
 
 	/**
 	* Approve image
-	* @param (array)	$image_id_ary	The image ID array to be approved
-	* @param (int)		$album_id	The album image is approved to (just save some queries for log)
-	* return 0 on success
+	* @param	array	$image_id_ary	The image ID array to be approved
+	* @param	int		$album_id		The album image is approved to (just save some queries for log)
+	* @return	void
 	*/
-	public function approve_images($image_id_ary, $album_id)
+	public function approve_images(array $image_id_ary, int $album_id): void
 	{
 		$sql = 'SELECT image_id, image_name, image_user_id
 			FROM ' . $this->table_images . ' 
@@ -510,12 +525,13 @@ class image
 
 	/**
 	* UnApprove image
-	* @param (array)	$image_id_ary	The image ID array to be unapproved
-	* @param (int)		$album_id	The album image is approved to (just save some queries for log)
+	* @param	array	$image_id_ary	The image ID array to be unapproved
+	* @param	int		$album_id		The album image is approved to (just save some queries for log)
+	* @return	void
 	*/
-	public function unapprove_images($image_id_ary, $album_id)
+	public function unapprove_images(array $image_id_ary, int $album_id): void
 	{
-		self::handle_counter($image_id_ary, false);
+		$this->handle_counter($image_id_ary, false);
 
 		$sql = 'UPDATE ' . $this->table_images .' 
 			SET image_status = ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . '
@@ -537,12 +553,12 @@ class image
 
 	/**
 	 * Move image
-	 * @param (int)    $image_id    The image that we want to move_uploaded_file
-	 * @param $image_id_ary
-	 * @param $album_id
+	 * @param array $image_id_ary
+	 * @param int $album_id
 	 * @internal param $ (int)    $album_id    The album we want to move image to
+	 * @return void
 	 */
-	public function move_image($image_id_ary, $album_id)
+	public function move_image(array $image_id_ary, int $album_id): void
 	{
 		$target_data = $this->album->get_info($album_id);
 
@@ -566,12 +582,13 @@ class image
 
 	/**
 	* Lock images
-	* @param (array)	$image_id_ary	Array of images we want to lock
-	* @param (int)		$album_id		Album id, so we can log the action
+	* @param	array	$image_id_ary	Array of images we want to lock
+	* @param	int		$album_id		Album id, so we can log the action
+	* @return	void
 	*/
-	public function lock_images($image_id_ary, $album_id)
+	public function lock_images(array $image_id_ary, int $album_id): void
 	{
-		self::handle_counter($image_id_ary, false);
+		$this->handle_counter($image_id_ary, false);
 
 		$sql = 'UPDATE ' . $this->table_images . ' 
 			SET image_status = ' . (int) \phpbbgallery\core\block::STATUS_LOCKED . '
@@ -592,10 +609,11 @@ class image
 	}
 
 	/**
-	* Get last image id
-	* Return (int) image_id
-	**/
-	public function get_last_image()
+	* Get the last accessible public image.
+	*
+	* @return array|false Image row, or false when no image is available
+	*/
+	public function get_last_image(): array|false
 	{
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$public = $this->album->get_public_albums();
@@ -624,7 +642,18 @@ class image
 
 		return $row;
 	}
-	public function assign_block($image_block_name, $image_data, $display_option = 0, $thumbnail_link = 'image_page', $imagename_link = 'image_page')
+
+	/**
+	 * Assign an image summary to a template block.
+	 *
+	 * @param string $image_block_name Template block name
+	 * @param array  $image_data       Image and album data
+	 * @param int    $display_option   Bitmask of IMAGE_SHOW_* options
+	 * @param string $thumbnail_link   Thumbnail destination mode
+	 * @param string $imagename_link   Image-name destination mode
+	 * @return void
+	 */
+	public function assign_block(string $image_block_name, array $image_data, int $display_option = 0, string $thumbnail_link = 'image_page', string $imagename_link = 'image_page'): void
 	{
 		// Now let's get display options
 		$show_ip         = ($display_option & self::IMAGE_SHOW_IP) !== 0;
