@@ -56,7 +56,7 @@ $lang = array_merge($lang, array(
 	'GALLERY_POPUP_HELPLINE'   => 'Ouvrir une nouvelle fenêtre, où vous pouvez sélectionner vos images récentes et charger de nouvelles images.',
 
 	// Please do not change the copyright.
-	'GALLERY_COPYRIGHT'        => 'Powered by <a href="http://www.anavaro.com/">phpBB Gallery</a> &copy; 2016 <a href="http://www.anavaro.com/">Lucifer</a>',
+	'GALLERY_COPYRIGHT'        => 'Powered by <a href="https://github.com/satanasov/phpbbgallery">phpBB Gallery</a> &copy; 2014–2026',
 
 	// A little line where you can give yourself some credits on the translation.
 	'GALLERY_TRANSLATION_INFO' => '« phpBB Gallery » - Traduction française par <a href="http://www.lestontonsfraggers.com">pokyto aka le.poke</a> (inspiré par <a href="http://www.foruminfopc.fr/">darky</a> et l’<a href="http://www.phpbb-fr.com/">équipe phpbb-fr.com</a>) & par <a href="http://www.galixte.com" title="Galixte’s Projects">Galixte</a>',

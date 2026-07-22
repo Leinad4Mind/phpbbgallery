@@ -36,7 +36,7 @@ $lang = array_merge($lang, array(
 	'GALLERY_POPUP'						=> 'Галерея',
 	'GALLERY_POPUP_HELPLINE'			=> 'Выбрать фото из галереи или загрузить новое',
 	// Please do not change the copyright.
-	'GALLERY_COPYRIGHT'	=> 'Powered by <a href="http://www.anavaro.com/">phpBB Gallery</a> &copy; 2016 <a href="http://www.anavaro.com/">Lucifer</a>',
+	'GALLERY_COPYRIGHT'	=> 'Powered by <a href="https://github.com/satanasov/phpbbgallery">phpBB Gallery</a> &copy; 2014–2026',
 
 	// A little line where you can give yourself some credits on the translation.
 	'GALLERY_TRANSLATION_INFO'			=> 'Русский перевод phpBB Gallery — <a href="http://www.phpbbguru.net/">www.phpbbguru.net</a>',
