@@ -83,4 +83,5 @@ namespace
 	require_once dirname(__DIR__) . '/album/display.php';
 	require_once dirname(__DIR__) . '/album/loader.php';
 	require_once dirname(__DIR__) . '/album/manage.php';
+	require_once dirname(__DIR__) . '/image/image.php';
 }
