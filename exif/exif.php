@@ -20,7 +20,7 @@ class exif
 	/**
 	* Default value for new users
 	*/
-	const DEFAULT_DISPLAY	= true;
+	public const DEFAULT_DISPLAY = true;
 
 	/**
 	* phpBB will treat the time from the Exif data like UTC.
@@ -29,64 +29,64 @@ class exif
 	*
 	* Offset must be set in seconds.
 	*/
-	const TIME_OFFSET	= 0;
+	public const TIME_OFFSET = 0;
 
 	/**
 	* Constants for the status of the Exif data.
 	*/
-	const UNAVAILABLE	= 0;
-	const AVAILABLE		= 1;
-	const UNKNOWN		= 2;
-	const DBSAVED		= 3;
+	public const UNAVAILABLE = 0;
+	public const AVAILABLE = 1;
+	public const UNKNOWN = 2;
+	public const DBSAVED = 3;
 
 	/**
 	* Is the function available?
 	*/
-	static public $function_exists = null;
+	public static ?bool $function_exists = null;
 
 	/**
 	* Exif data array with all allowed groups and keys.
 	*/
-	public $data		= array();
+	public array|false $data = [];
 
 	/**
 	* Filtered data array. We don't have empty or invalid values here.
 	*/
-	public $prepared_data	= array();
+	public array $prepared_data = [];
 
 	/**
 	* Does the image have exif data?
 	* Values see constant declaration at the beginning of the class.
 	*/
-	public $status		= 2;
+	public int $status = self::UNKNOWN;
 
 	/**
 	* Full data array, but serialized to a string
 	*/
-	public $serialized	= '';
+	public string $serialized = '';
 
 	/**
 	* Full link to the image-file
 	*/
-	public $file		= '';
+	public string $file = '';
 
 	/**
 	* Original status of the Exif data.
 	*/
-	public $orig_status = null;
+	public ?int $orig_status = null;
 
 	/**
 	* Image-ID, just needed to update the Exif status
 	*/
-	public $image_id	= false;
+	public int|false $image_id = false;
 
 	/**
 	* Constructor
 	*
 	* @param	string	$file		Full link to the image-file
-	* @param	mixed	$image_id	False or integer
+	* @param	int|false	$image_id	False or integer
 	*/
-	public function __construct($file, $image_id = false)
+	public function __construct(string $file, int|false $image_id = false)
 	{
 		if (self::$function_exists === null)
 		{
@@ -104,15 +104,16 @@ class exif
 	* Interpret the values from the database, and read the data if we don't have it.
 	*
 	* @param	int		$status		Value of a status constant (see beginning of the class)
-	* @param	mixed	$data		Either an empty string or the serialized array of the Exif from the database
+	* @param	string	$data		Either an empty string or the serialized array of the Exif from the database
 	*/
-	public function interpret($status, $data)
+	public function interpret(int $status, string $data): void
 	{
 		$this->orig_status = $status;
 		$this->status = $status;
 		if ($this->status == self::DBSAVED)
 		{
-			$this->data = @unserialize($data, ['allowed_classes' => false]);
+			$decoded = @unserialize($data, ['allowed_classes' => false]);
+			$this->data = is_array($decoded) ? $decoded : [];
 		}
 		else if (($this->status == self::AVAILABLE) || ($this->status == self::UNKNOWN))
 		{
@@ -123,7 +124,7 @@ class exif
 	/**
 	* Read Exif data from the image
 	*/
-	public function read()
+	public function read(): void
 	{
 		if (!self::$function_exists || !$this->file || !file_exists($this->file))
 		{
@@ -132,7 +133,7 @@ class exif
 
 		$this->data = @exif_read_data($this->file, 0, true);
 
-		if (!empty($this->data["EXIF"]))
+		if (!empty($this->data['EXIF']))
 		{
 			// Unset invalid Exif's
 			foreach ($this->data as $key => $array)
@@ -170,38 +171,38 @@ class exif
 	/**
 	* Validate and prepare the data, so we can send it into the template.
 	*/
-	private function prepare_data()
+	private function prepare_data(): void
 	{
 		global $user;
 
 		$user->add_lang_ext('phpbbgallery/exif', 'info_exif');
 
 		$this->prepared_data = array();
-		if (isset($this->data["EXIF"]["DateTimeOriginal"]))
+		if (isset($this->data['EXIF']['DateTimeOriginal']))
 		{
-			$timestamp_year = (int) substr($this->data["EXIF"]["DateTimeOriginal"], 0, 4);
-			$timestamp_month = (int) substr($this->data["EXIF"]["DateTimeOriginal"], 5, 2);
-			$timestamp_day = (int) substr($this->data["EXIF"]["DateTimeOriginal"], 8, 2);
-			$timestamp_hour = (int) substr($this->data["EXIF"]["DateTimeOriginal"], 11, 2);
-			$timestamp_minute = (int) substr($this->data["EXIF"]["DateTimeOriginal"], 14, 2);
-			$timestamp_second = (int) substr($this->data["EXIF"]["DateTimeOriginal"], 17, 2);
+			$timestamp_year = (int) substr($this->data['EXIF']['DateTimeOriginal'], 0, 4);
+			$timestamp_month = (int) substr($this->data['EXIF']['DateTimeOriginal'], 5, 2);
+			$timestamp_day = (int) substr($this->data['EXIF']['DateTimeOriginal'], 8, 2);
+			$timestamp_hour = (int) substr($this->data['EXIF']['DateTimeOriginal'], 11, 2);
+			$timestamp_minute = (int) substr($this->data['EXIF']['DateTimeOriginal'], 14, 2);
+			$timestamp_second = (int) substr($this->data['EXIF']['DateTimeOriginal'], 17, 2);
 			$timestamp = (int) @mktime($timestamp_hour, $timestamp_minute, $timestamp_second, $timestamp_month, $timestamp_day, $timestamp_year);
 			if ($timestamp)
 			{
 				$this->prepared_data['exif_date'] = $user->format_date($timestamp + self::TIME_OFFSET);
 			}
 		}
-		if (isset($this->data["EXIF"]["FocalLength"]) && !is_array($this->data["EXIF"]["FocalLength"]))
+		if (isset($this->data['EXIF']['FocalLength']) && !is_array($this->data['EXIF']['FocalLength']))
 		{
-			list($num, $den) = array_pad(explode("/", $this->data["EXIF"]["FocalLength"]), 2, 0);
+			list($num, $den) = array_pad(explode('/', $this->data['EXIF']['FocalLength']), 2, 0);
 			if (is_numeric($num) && is_numeric($den) && $den)
 			{
 				$this->prepared_data['exif_focal'] = sprintf($user->lang['EXIF_FOCAL_EXP'], ($num / $den));
 			}
 		}
-		if (isset($this->data["EXIF"]["ExposureTime"]) && !is_array($this->data["EXIF"]["ExposureTime"]))
+		if (isset($this->data['EXIF']['ExposureTime']) && !is_array($this->data['EXIF']['ExposureTime']))
 		{
-			list($num, $den) = array_pad(explode("/", $this->data["EXIF"]["ExposureTime"]), 2, 0);
+			list($num, $den) = array_pad(explode('/', $this->data['EXIF']['ExposureTime']), 2, 0);
 			$exif_exposure = '';
 			if (is_numeric($num) && is_numeric($den))
 			{
@@ -219,43 +220,43 @@ class exif
 				$this->prepared_data['exif_exposure'] = sprintf($user->lang['EXIF_EXPOSURE_EXP'], $exif_exposure);
 			}
 		}
-		if (isset($this->data["EXIF"]["FNumber"]) && !is_array($this->data["EXIF"]["FNumber"]))
+		if (isset($this->data['EXIF']['FNumber']) && !is_array($this->data['EXIF']['FNumber']))
 		{
-			list($num, $den) = array_pad(explode("/", $this->data["EXIF"]["FNumber"]), 2, 0);
+			list($num, $den) = array_pad(explode('/', $this->data['EXIF']['FNumber']), 2, 0);
 			if (is_numeric($num) && is_numeric($den) && $den)
 			{
-				$this->prepared_data['exif_aperture'] = "F/" . ($num / $den);
+				$this->prepared_data['exif_aperture'] = 'F/' . ($num / $den);
 			}
 		}
-		if (isset($this->data["EXIF"]["ISOSpeedRatings"]) && !is_array($this->data["EXIF"]["ISOSpeedRatings"]))
+		if (isset($this->data['EXIF']['ISOSpeedRatings']) && !is_array($this->data['EXIF']['ISOSpeedRatings']))
 		{
-			$this->prepared_data['exif_iso'] = $this->data["EXIF"]["ISOSpeedRatings"];
+			$this->prepared_data['exif_iso'] = $this->data['EXIF']['ISOSpeedRatings'];
 		}
-		if (isset($this->data["EXIF"]["WhiteBalance"]))
+		if (isset($this->data['EXIF']['WhiteBalance']))
 		{
-			$this->prepared_data['exif_whiteb'] = $user->lang['EXIF_WHITEB_' . (($this->data["EXIF"]["WhiteBalance"]) ? 'MANU' : 'AUTO')];
+			$this->prepared_data['exif_whiteb'] = $user->lang['EXIF_WHITEB_' . (($this->data['EXIF']['WhiteBalance']) ? 'MANU' : 'AUTO')];
 		}
-		if (isset($this->data["EXIF"]["Flash"]))
+		if (isset($this->data['EXIF']['Flash']))
 		{
-			if (isset($user->lang['EXIF_FLASH_CASE_' . $this->data["EXIF"]["Flash"]]))
+			if (isset($user->lang['EXIF_FLASH_CASE_' . $this->data['EXIF']['Flash']]))
 			{
-				$this->prepared_data['exif_flash'] = $user->lang['EXIF_FLASH_CASE_' . $this->data["EXIF"]["Flash"]];
+				$this->prepared_data['exif_flash'] = $user->lang['EXIF_FLASH_CASE_' . $this->data['EXIF']['Flash']];
 			}
 		}
-		if (isset($this->data["IFD0"]["Model"]) && !is_array($this->data["IFD0"]["Model"]))
+		if (isset($this->data['IFD0']['Model']) && !is_array($this->data['IFD0']['Model']))
 		{
-			$this->prepared_data['exif_cam_model'] = ucwords($this->data["IFD0"]["Model"]);
+			$this->prepared_data['exif_cam_model'] = ucwords($this->data['IFD0']['Model']);
 		}
-		if (isset($this->data["EXIF"]["ExposureProgram"]))
+		if (isset($this->data['EXIF']['ExposureProgram']))
 		{
-			if (isset($user->lang['EXIF_EXPOSURE_PROG_' . $this->data["EXIF"]["ExposureProgram"]]))
+			if (isset($user->lang['EXIF_EXPOSURE_PROG_' . $this->data['EXIF']['ExposureProgram']]))
 			{
-				$this->prepared_data['exif_exposure_prog'] = $user->lang['EXIF_EXPOSURE_PROG_' . $this->data["EXIF"]["ExposureProgram"]];
+				$this->prepared_data['exif_exposure_prog'] = $user->lang['EXIF_EXPOSURE_PROG_' . $this->data['EXIF']['ExposureProgram']];
 			}
 		}
-		if (isset($this->data["EXIF"]["ExposureBiasValue"]) && !is_array($this->data["EXIF"]["ExposureBiasValue"]))
+		if (isset($this->data['EXIF']['ExposureBiasValue']) && !is_array($this->data['EXIF']['ExposureBiasValue']))
 		{
-			list($num,$den) = array_pad(explode("/", $this->data["EXIF"]["ExposureBiasValue"]), 2, 0);
+			list($num,$den) = array_pad(explode('/', $this->data['EXIF']['ExposureBiasValue']), 2, 0);
 			if (is_numeric($num) && is_numeric($den) && $den)
 			{
 				if (($num / $den) == 0)
@@ -264,16 +265,16 @@ class exif
 				}
 				else
 				{
-					$exif_exposure_bias = $this->data["EXIF"]["ExposureBiasValue"];
+					$exif_exposure_bias = $this->data['EXIF']['ExposureBiasValue'];
 				}
 				$this->prepared_data['exif_exposure_bias'] = sprintf($user->lang['EXIF_EXPOSURE_BIAS_EXP'], $exif_exposure_bias);
 			}
 		}
-		if (isset($this->data["EXIF"]["MeteringMode"]))
+		if (isset($this->data['EXIF']['MeteringMode']))
 		{
-			if (isset($user->lang['EXIF_METERING_MODE_' . $this->data["EXIF"]["MeteringMode"]]))
+			if (isset($user->lang['EXIF_METERING_MODE_' . $this->data['EXIF']['MeteringMode']]))
 			{
-				$this->prepared_data['exif_metering_mode'] = $user->lang['EXIF_METERING_MODE_' . $this->data["EXIF"]["MeteringMode"]];
+				$this->prepared_data['exif_metering_mode'] = $user->lang['EXIF_METERING_MODE_' . $this->data['EXIF']['MeteringMode']];
 			}
 		}
 	}
@@ -284,7 +285,7 @@ class exif
 	* @param	bool	$expand_view	Shall we expand the Exif data on page view or collapse?
 	* @param	string	$block			Name of the template loop the Exif's are displayed in.
 	*/
-	public function send_to_template($expand_view = true, $block = 'exif_value')
+	public function send_to_template(bool $expand_view = true, string $block = 'exif_value'): void
 	{
 		$this->prepare_data();
 
@@ -308,8 +309,10 @@ class exif
 
 	/**
 	* Save the new Exif status in the database
+	*
+	* @return bool|null False when unchanged, otherwise null after persisting.
 	*/
-	public function set_status()
+	public function set_status(): ?bool
 	{
 		if (!$this->image_id || ($this->orig_status == $this->status))
 		{
@@ -329,12 +332,12 @@ class exif
 	* There are lots of possible Exif Groups and Values.
 	* But you will never heard of the missing ones. so we just allow the most common ones.
 	*/
-	static private $allowed_groups		= array(
+	private static array $allowed_groups = array(
 		'EXIF',
 		'IFD0',
 	);
 
-	static private $allowed_keys		= array(
+	private static array $allowed_keys = array(
 		'DateTimeOriginal',
 		'FocalLength',
 		'ExposureTime',

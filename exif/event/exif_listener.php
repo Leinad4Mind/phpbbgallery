@@ -19,22 +19,13 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class exif_listener implements EventSubscriberInterface
 {
-	/** @var \phpbb\user */
-	protected $user;
+	protected \phpbb\user $user;
+	protected \phpbbgallery\core\config $gallery_config;
+	protected \phpbbgallery\core\auth\auth $gallery_auth;
+	protected \phpbbgallery\core\url $gallery_url;
+	protected \phpbbgallery\core\user $gallery_user;
 
-	/** @var \phpbbgallery\core\config */
-	protected $gallery_config;
-
-	/** @var \phpbbgallery\core\auth\auth */
-	protected $gallery_auth;
-
-	/** @var \phpbbgallery\core\url */
-	protected $gallery_url;
-
-	/** @var \phpbbgallery\core\user */
-	protected $gallery_user;
-
-	static public function getSubscribedEvents()
+	public static function getSubscribedEvents(): array
 	{
 		return array(
 			'phpbbgallery.core.acp.config.get_display_vars'		=> 'acp_config_get_display_vars',
@@ -74,7 +65,7 @@ class exif_listener implements EventSubscriberInterface
 		$this->gallery_user = $gallery_user;
 	}
 
-	public function acp_config_get_display_vars($event)
+	public function acp_config_get_display_vars(\phpbb\event\data $event): void
 	{
 		if ($event['mode'] == 'main')
 		{
@@ -89,14 +80,14 @@ class exif_listener implements EventSubscriberInterface
 		}
 	}
 
-	public function config_load_config_sets($event)
+	public function config_load_config_sets(\phpbb\event\data $event): void
 	{
 		$additional_config_sets = $event['additional_config_sets'];
 		$additional_config_sets['exif'] = 'phpbb_ext_gallery_exif_config_sets_exif';
 		$event['additional_config_sets'] = $additional_config_sets;
 	}
 
-	public function massimport_update_image_before($event)
+	public function massimport_update_image_before(\phpbb\event\data $event): void
 	{
 		$additional_sql_data = $event['additional_sql_data'];
 
@@ -109,7 +100,7 @@ class exif_listener implements EventSubscriberInterface
 		unset($exif);
 	}
 
-	public function massimport_update_image($event)
+	public function massimport_update_image(\phpbb\event\data $event): void
 	{
 		if (!$event['file_updated'])
 		{
@@ -122,7 +113,7 @@ class exif_listener implements EventSubscriberInterface
 		}
 	}
 
-	public function posting_edit_before_rotate($event)
+	public function posting_edit_before_rotate(\phpbb\event\data $event): void
 	{
 		$image_data = $event['image_data'];
 
@@ -141,7 +132,7 @@ class exif_listener implements EventSubscriberInterface
 		}
 	}
 
-	public function ucp_set_settings_nosubmit()
+	public function ucp_set_settings_nosubmit(): void
 	{
 		global $template, $phpbb_ext_gallery;
 		$this->user->add_lang_ext('phpbbgallery/exif', 'info_exif');
@@ -151,7 +142,7 @@ class exif_listener implements EventSubscriberInterface
 		));
 	}
 
-	public function upload_prepare_file_before($event)
+	public function upload_prepare_file_before(\phpbb\event\data $event): void
 	{
 		if (in_array($event['file']->get('extension'), array('jpg', 'jpeg')))
 		{
@@ -174,7 +165,7 @@ class exif_listener implements EventSubscriberInterface
 		}
 	}
 
-	public function upload_update_image_before($event)
+	public function upload_update_image_before(\phpbb\event\data $event): void
 	{
 		$image_data = $event['image_data'];
 
@@ -193,7 +184,7 @@ class exif_listener implements EventSubscriberInterface
 		}
 	}
 
-	public function upload_update_image_nofilechange($event)
+	public function upload_update_image_nofilechange(\phpbb\event\data $event): void
 	{
 		$additional_sql_data = $event['additional_sql_data'];
 
@@ -203,7 +194,7 @@ class exif_listener implements EventSubscriberInterface
 		$event['additional_sql_data'] = $additional_sql_data;
 	}
 
-	public function user_get_default_values($event)
+	public function user_get_default_values(\phpbb\event\data $event): void
 	{
 		$default_values = $event['default_values'];
 		if (!in_array('user_viewexif', $default_values))
@@ -213,7 +204,7 @@ class exif_listener implements EventSubscriberInterface
 		}
 	}
 
-	public function ucp_set_settings_submit($event)
+	public function ucp_set_settings_submit(\phpbb\event\data $event): void
 	{
 		global $request;
 
@@ -225,7 +216,7 @@ class exif_listener implements EventSubscriberInterface
 		}
 	}
 
-	public function user_validate_data($event)
+	public function user_validate_data(\phpbb\event\data $event): void
 	{
 		if ($event['name'] == 'user_viewexif')
 		{
@@ -234,7 +225,7 @@ class exif_listener implements EventSubscriberInterface
 		}
 	}
 
-	public function viewimage($event)
+	public function viewimage(\phpbb\event\data $event): void
 	{
 		$this->user->add_lang_ext('phpbbgallery/exif', 'info_exif');
 
@@ -244,7 +235,7 @@ class exif_listener implements EventSubscriberInterface
 			$exif = new \phpbbgallery\exif\exif($this->gallery_url->path('upload') . $event['image_data']['image_filename'], $event['image_id']);
 			$exif->interpret($event['image_data']['image_has_exif'], $event['image_data']['image_exif_data']);
 
-			if (!empty($exif->data["EXIF"]))
+			if (!empty($exif->data['EXIF']))
 			{
 				$exif->send_to_template($this->gallery_user->get_data('user_viewexif'));
 			}
