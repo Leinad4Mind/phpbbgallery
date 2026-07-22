@@ -17,6 +17,15 @@ namespace phpbbgallery\core;
 
 class ext extends \phpbb\extension\base
 {
+	private const NOTIFICATION_TYPES = [
+		'phpbbgallery.core.notification.image_for_approval',
+		'phpbbgallery.core.notification.image_approved',
+		'phpbbgallery.core.notification.image_not_approved',
+		'phpbbgallery.core.notification.new_comment',
+		'phpbbgallery.core.notification.new_image',
+		'phpbbgallery.core.notification.new_report',
+	];
+
 	protected $sub_extensions = [
 		'phpbbgallery/acpcleanup',
 		'phpbbgallery/acpimport',
@@ -29,19 +38,12 @@ class ext extends \phpbb\extension\base
 	* @param mixed $old_state State returned by previous call of this method
 	* @return mixed Returns false after last step, otherwise temporary state
 	*/
-	function enable_step($old_state)
+	public function enable_step($old_state)
 	{
 		switch ($old_state)
 		{
 			case '': // Empty means nothing has run yet
-				// Enable board rules notifications
-				$phpbb_notifications = $this->container->get('notification_manager');
-				$phpbb_notifications->enable_notifications('phpbbgallery.core.notification.image_for_approval');
-				$phpbb_notifications->enable_notifications('phpbbgallery.core.notification.image_approved');
-				$phpbb_notifications->enable_notifications('phpbbgallery.core.notification.image_not_approved');
-				$phpbb_notifications->enable_notifications('phpbbgallery.core.notification.new_comment');
-				$phpbb_notifications->enable_notifications('phpbbgallery.core.notification.new_image');
-				$phpbb_notifications->enable_notifications('phpbbgallery.core.notification.new_report');
+				$this->update_notification_types('enable_notifications');
 				return 'notifications';
 			break;
 
@@ -58,7 +60,7 @@ class ext extends \phpbb\extension\base
 	* @param mixed $old_state State returned by previous call of this method
 	* @return mixed Returns false after last step, otherwise temporary state
 	*/
-	function disable_step($old_state)
+	public function disable_step($old_state)
 	{
 		switch ($old_state)
 		{
@@ -70,14 +72,7 @@ class ext extends \phpbb\extension\base
 					$extensions->disable($sub_ext);
 				}
 
-				// Disable board rules notifications
-				$phpbb_notifications = $this->container->get('notification_manager');
-				$phpbb_notifications->disable_notifications('phpbbgallery.core.notification.image_for_approval');
-				$phpbb_notifications->disable_notifications('phpbbgallery.core.notification.image_approved');
-				$phpbb_notifications->disable_notifications('phpbbgallery.core.notification.image_not_approve');
-				$phpbb_notifications->disable_notifications('phpbbgallery.core.notification.new_comment');
-				$phpbb_notifications->disable_notifications('phpbbgallery.core.notification.new_image');
-				$phpbb_notifications->disable_notifications('phpbbgallery.core.notification.new_report');
+				$this->update_notification_types('disable_notifications');
 				return 'notifications';
 
 			break;
@@ -94,7 +89,7 @@ class ext extends \phpbb\extension\base
 	* @param mixed $old_state State returned by previous call of this method
 	* @return mixed Returns false after last step, otherwise temporary state
 	*/
-	function purge_step($old_state)
+	public function purge_step($old_state)
 	{
 		$extensions = $this->container->get('ext.manager');
 		$configured = $extensions->all_disabled();
@@ -113,38 +108,48 @@ class ext extends \phpbb\extension\base
 		{
 			$this->container->get('user')->add_lang_ext('phpbbgallery/core', 'install_gallery');
 			$error_msg = sprintf($this->container->get('user')->lang(
-				'GALLERY_SUB_EXT_UNINSTALL', implode('<br />', $disabled_sub_exts),count($disabled_sub_exts)));
+				'GALLERY_SUB_EXT_UNINSTALL', implode('<br />', $disabled_sub_exts), count($disabled_sub_exts)));
 			trigger_error($error_msg, E_USER_WARNING);
 		}
 
 		switch ($old_state)
 		{
 			case '': // Empty means nothing has run yet
-				/**
-				* @todo Remove this try/catch condition once purge_notifications is fixed
-				* in the core to work with disabled extensions without fatal errors.
-				* https://tracker.phpbb.com/browse/PHPBB3-12435
-				*/
-				try
-				{
-					// Purge board rules notifications
-					$phpbb_notifications = $this->container->get('notification_manager');
-					$phpbb_notifications->purge_notifications('phpbbgallery.core.notification.image_for_approval');
-					$phpbb_notifications->purge_notifications('phpbbgallery.core.notification.image_approved');
-					$phpbb_notifications->purge_notifications('phpbbgallery.core.notification.new_image');
-					$phpbb_notifications->purge_notifications('phpbbgallery.core.notification.new_comment');
-					$phpbb_notifications->purge_notifications('phpbbgallery.core.notification.new_report');
-				}
-				catch (\phpbb\notification\exception $e)
-				{
-					// continue
-				}
+				$this->update_notification_types('purge_notifications', true);
 				return 'notifications';
 			break;
 			default:
 				// Run parent purge step method
 				return parent::purge_step($old_state);
 			break;
+		}
+	}
+
+	/**
+	 * Apply a notification-manager lifecycle method to every registered Gallery type.
+	 * Purging is best-effort per type because older phpBB versions may throw when a type
+	 * was registered by the extension but never persisted in the database.
+	 *
+	 * @param string $method
+	 * @param bool   $ignore_missing
+	 * @return void
+	 */
+	private function update_notification_types($method, $ignore_missing = false)
+	{
+		$notification_manager = $this->container->get('notification_manager');
+		foreach (self::NOTIFICATION_TYPES as $notification_type)
+		{
+			try
+			{
+				$notification_manager->{$method}($notification_type);
+			}
+			catch (\phpbb\notification\exception $e)
+			{
+				if (!$ignore_missing)
+				{
+					throw $e;
+				}
+			}
 		}
 	}
 }

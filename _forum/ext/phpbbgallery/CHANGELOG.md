@@ -22,6 +22,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Kept all six notification types synchronized across enable, disable, and purge, corrected the image_not_approved identifier, and made legacy purge failures isolated per type.
 - Prevented ACP Import from copying files after image validation had failed.
 - Updated gallery and user image counters only for images imported successfully.
 - Preserved ACP Import errors safely in JSON state between batches and corrected the final successful-image count.
@@ -38,7 +39,8 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added permanent orphan-upload and upload-edit tests covering user/album binding, exact tokens, malformed identifiers, POST-only fields, CSRF ordering, and tokens in all styles.
 - Added permanent resumable-upload tests covering registered users, anonymous sessions, cancellation, CSRF, AJAX, quotas, migration schema, form controls, and seven-day retention.
 - Added permanent access-boundary tests covering per-descendant ACL image counts, moderator visibility, hidden albums, orphan exclusion, strict referrer parsing, domain boundaries, empty referrers, and configured bypass behavior.
-- Validated the ZIP upload, ACP Import, authorization, individual-move security, ACP rating-reset, UCP CSRF, orphan-upload, resumable-upload, subtree-count, and hotlink phases with PHP 7.4, 8.1, 8.2, 8.4, and 8.5.
+- Added permanent notification-lifecycle tests covering exact service identifiers, enable/disable symmetry, sub-extension disabling, complete purge, and continuation after a missing legacy type.
+- Validated the ZIP upload, ACP Import, authorization, individual-move security, ACP rating-reset, UCP CSRF, orphan-upload, resumable-upload, subtree-count, hotlink, and notification-lifecycle phases with PHP 7.4, 8.1, 8.2, 8.4, and 8.5.
 
 ## [3.4.0]
 ### Added
