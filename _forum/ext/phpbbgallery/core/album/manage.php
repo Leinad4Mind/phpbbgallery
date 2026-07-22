@@ -25,77 +25,77 @@ namespace phpbbgallery\core\album;
 
 class manage
 {
-	public $user_id = 0;
+	public int $user_id = 0;
 
-	public $parent_id = 0;
+	public int $parent_id = 0;
 
-	private $u_action = '';
+	private string $u_action = '';
 
 	/** @var \phpbb\user */
-	protected $user;
+	protected \phpbb\user $user;
 
 	/** @var \phpbb\language\language */
-	protected $language;
+	protected \phpbb\language\language $language;
 
 	/** @var \phpbb\request\request */
-	protected $request;
+	protected \phpbb\request\request $request;
 
 	/** @var \phpbb\db\driver\driver_interface */
-	protected $db;
+	protected \phpbb\db\driver\driver_interface $db;
 
 	/** @var \phpbb\event\dispatcher */
-	protected $dispatcher;
+	protected \phpbb\event\dispatcher $dispatcher;
 
 	/** @var \phpbbgallery\core\auth\auth */
-	protected $gallery_auth;
+	protected \phpbbgallery\core\auth\auth $gallery_auth;
 
 	/** @var \phpbbgallery\core\album\album */
-	protected $gallery_album;
+	protected \phpbbgallery\core\album\album $gallery_album;
 
 	/** @var \phpbbgallery\core\album\display */
-	protected $gallery_display;
+	protected \phpbbgallery\core\album\display $gallery_display;
 
 	/** @var \phpbbgallery\core\image\image */
-	protected $gallery_image;
+	protected \phpbbgallery\core\image\image $gallery_image;
 
 	/** @var \phpbbgallery\core\cache */
-	protected $gallery_cache;
+	protected \phpbbgallery\core\cache $gallery_cache;
 
 	/** @var \phpbbgallery\core\user */
-	protected $gallery_user;
+	protected \phpbbgallery\core\user $gallery_user;
 
 	/** @var \phpbbgallery\core\config */
-	protected $gallery_config;
+	protected \phpbbgallery\core\config $gallery_config;
 
 	/** @var \phpbbgallery\core\contest */
-	protected $gallery_contest;
+	protected \phpbbgallery\core\contest $gallery_contest;
 
 	/** @var \phpbbgallery\core\report */
-	protected $gallery_report;
+	protected \phpbbgallery\core\report $gallery_report;
 
 	/** @var \phpbbgallery\core\log */
-	protected $gallery_log;
+	protected \phpbbgallery\core\log $gallery_log;
 
 	/** @var \phpbbgallery\core\notification */
-	protected $gallery_notification;
+	protected \phpbbgallery\core\notification $gallery_notification;
 
 	/** @var string */
-	protected $albums_table;
+	protected string $albums_table;
 
 	/** @var string */
-	protected $images_table;
+	protected string $images_table;
 
 	/** @var string */
-	protected $comments_table;
+	protected string $comments_table;
 
 	/** @var string */
-	protected $permissions_table;
+	protected string $permissions_table;
 
 	/** @var string */
-	protected $moderators_table;
+	protected string $moderators_table;
 
 	/** @var string */
-	protected $contests_table;
+	protected string $contests_table;
 
 	/**
 	 * manage constructor.
@@ -114,12 +114,12 @@ class manage
 	 * @param \phpbbgallery\core\report $gallery_report
 	 * @param \phpbbgallery\core\log $gallery_log
 	 * @param \phpbbgallery\core\notification $gallery_notification
-	 * @param $albums_table
-	 * @param $images_table
-	 * @param $comments_table
-	 * @param $permissions_table
-	 * @param $moderators_table
-	 * @param $contests_table
+	 * @param string $albums_table
+	 * @param string $images_table
+	 * @param string $comments_table
+	 * @param string $permissions_table
+	 * @param string $moderators_table
+	 * @param string $contests_table
 	 */
 	public function __construct(\phpbb\user $user, \phpbb\language\language $language,
 								\phpbb\request\request $request, \phpbb\db\driver\driver_interface $db,
@@ -130,7 +130,7 @@ class manage
 								\phpbbgallery\core\config $gallery_config,
 								\phpbbgallery\core\contest $gallery_contest, \phpbbgallery\core\report $gallery_report,
 								\phpbbgallery\core\log $gallery_log, \phpbbgallery\core\notification $gallery_notification,
-								$albums_table, $images_table, $comments_table, $permissions_table, $moderators_table, $contests_table)
+								string $albums_table, string $images_table, string $comments_table, string $permissions_table, string $moderators_table, string $contests_table)
 	{
 		$this->user = $user;
 		$this->language = $language;
@@ -156,27 +156,27 @@ class manage
 		$this->contests_table = $contests_table;
 	}
 
-	public function set_user($user_id)
+	public function set_user(int $user_id): void
 	{
 		$this->user_id = (int) $user_id;
 	}
 
-	public function set_parent($parent_id)
+	public function set_parent(int $parent_id): void
 	{
 		$this->parent_id = (int) $parent_id;
 	}
 
-	public function set_u_action($action)
+	public function set_u_action(string $action): void
 	{
 		$this->u_action = $action;
 	}
 
 	/**
 	 * Generate back link for acp pages
-	 * @param $u_action
+	 * @param string $u_action
 	 * @return string
 	 */
-	public function back_link($u_action)
+	public function back_link(string $u_action): string
 	{
 		return '<br /><br /><a href="' . $u_action . '">&laquo; ' . $this->language->lang('BACK_TO_PREV') . '</a>';
 	}
@@ -187,11 +187,11 @@ class manage
 	 * borrowed from phpBB3
 	 * @author: phpBB Group
 	 * @function: update_forum_data
-	 * @param $album_data
-	 * @param $contest_data
+	 * @param array $album_data
+	 * @param array $contest_data
 	 * @return array
 	 */
-	public function update_album_data(&$album_data, &$contest_data)
+	public function update_album_data(array &$album_data, array &$contest_data): array
 	{
 		$errors = array();
 
@@ -557,11 +557,11 @@ class manage
 	 * borrowed from phpBB3
 	 * @author: phpBB Group
 	 * @function: move_forum
-	 * @param $from_id
-	 * @param $to_id
+	 * @param int $from_id
+	 * @param int $to_id
 	 * @return array
 	 */
-	public function move_album($from_id, $to_id)
+	public function move_album(int $from_id, int $to_id): array
 	{
 		$to_data = $moved_ids = $errors = array();
 
@@ -592,8 +592,8 @@ class manage
 		$sql = 'UPDATE ' . $this->albums_table . " 
 			SET right_id = right_id - $diff, album_parents = ''
 			WHERE album_user_id = " . (int) $this->user_id . '
-				AND left_id < ' . (int) $from_data['right_id'] . "
-				AND right_id > " . (int) $from_data['right_id'];
+				AND left_id < ' . (int) $from_data['right_id'] . '
+				AND right_id > ' . (int) $from_data['right_id'];
 		$this->db->sql_query($sql);
 
 		// Resync right-hand side of tree
@@ -664,14 +664,14 @@ class manage
 	 * borrowed from phpBB3
 	 * @author: phpBB Group
 	 * @function: delete_forum
-	 * @param $album_id
+	 * @param int $album_id
 	 * @param string $action_images
 	 * @param string $action_subalbums
 	 * @param int $images_to_id
 	 * @param int $subalbums_to_id
 	 * @return array
 	 */
-	public function delete_album($album_id, $action_images = 'delete', $action_subalbums = 'delete', $images_to_id = 0, $subalbums_to_id = 0)
+	public function delete_album(int $album_id, string $action_images = 'delete', string $action_subalbums = 'delete', int $images_to_id = 0, int $subalbums_to_id = 0): array
 	{
 		$album_data = $this->gallery_album->get_info($album_id);
 		$errors = array();
@@ -871,12 +871,12 @@ class manage
 	 * borrowed from phpBB3
 	 * @author: phpBB Group
 	 * @function: move_forum_content
-	 * @param $from_id
-	 * @param $to_id
+	 * @param int $from_id
+	 * @param int $to_id
 	 * @param bool $sync
 	 * @return array
 	 */
-	public function move_album_content($from_id, $to_id, $sync = true)
+	public function move_album_content(int $from_id, int $to_id, bool $sync = true): array
 	{
 		// Lucifer TODO - Log to gallery log
 		//$sql = 'UPDATE ' . LOG_TABLE . "
@@ -937,10 +937,10 @@ class manage
 	/**
 	 * Delete album content:
 	 * Deletes all images, comments, rates, image-files, etc.
-	 * @param $album_id
+	 * @param int $album_id
 	 * @return array
 	 */
-	public function delete_album_content($album_id)
+	public function delete_album_content(int $album_id): array
 	{
 		$album_id = (int) $album_id;
 
@@ -1040,12 +1040,12 @@ class manage
 	 * borrowed from phpBB3
 	 * @author: phpBB Group
 	 * @function: move_forum_by
-	 * @param $album_row
+	 * @param array $album_row
 	 * @param string $action
 	 * @param int $steps
-	 * @return mixed
+	 * @return string|false
 	 */
-	public function move_album_by($album_row, $action = 'move_up', $steps = 1)
+	public function move_album_by(array $album_row, string $action = 'move_up', int $steps = 1): string|false
 	{
 		/**
 		* Fetch all the siblings between the module's current spot

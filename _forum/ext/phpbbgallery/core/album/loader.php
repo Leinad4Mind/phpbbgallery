@@ -15,28 +15,29 @@ namespace phpbbgallery\core\album;
 class loader
 {
 	/* @var \phpbb\db\driver\driver */
-	protected $db;
+	protected \phpbb\db\driver\driver_interface $db;
 
 	/* @var \phpbb\user */
-	protected $user;
+	protected \phpbb\user $user;
 
 	/** @var string */
-	protected $table_albums;
+	protected string $table_albums;
 
 	/** @var array */
-	protected $data;
+	protected array $data = [];
 
 	/** @var \phpbbgallery\core\contest */
-	protected $contest;
+	protected \phpbbgallery\core\contest $contest;
 
 	/**
 	 * Constructor
 	 *
 	 * @param \phpbb\db\driver\driver|\phpbb\db\driver\driver_interface $db           Database object
 	 * @param \phpbb\user                                               $user         User object
+	 * @param \phpbbgallery\core\contest                                $contest      Gallery contest object
 	 * @param string                                                    $albums_table Gallery albums table
 	 */
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbbgallery\core\contest $contest, $albums_table)
+	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbbgallery\core\contest $contest, string $albums_table)
 	{
 		$this->db = $db;
 		$this->user = $user;
@@ -51,7 +52,7 @@ class loader
 	* @return	bool	True if the album was loaded
 	* @throws	\OutOfBoundsException	if the album does not exist
 	*/
-	public function load($album_id)
+	public function load(int $album_id): bool
 	{
 		$sql_array = array(
 			'SELECT'		=> 'a.*',
@@ -84,13 +85,13 @@ class loader
 	 * Get the value of an album
 	 *
 	 * @param    int   $album_id
-	 * @param    mixed $column_name Name of the column,
+	 * @param    string|null $column_name Name of the column,
 	 *                              if null an array with all columns will be returned
 	 * @return mixed
 	 * @throws    \OutOfBoundsException    if the album does not exist
 	 * @throws    \OutOfRangeException    if $column_name does not exist
 	 */
-	public function get($album_id, $column_name = null)
+	public function get(int $album_id, string|null $column_name = null): mixed
 	{
 		$album_id = (int) $album_id;
 		if (!isset($this->data[$album_id]))
@@ -115,11 +116,11 @@ class loader
 	* Check whether the album_user is the user who wants to do something
 	*
 	* @param	int		$album_id
-	* @param	mixed	$user_id	If false the current user will be compared
+	* @param	int|false	$user_id	If false the current user will be compared
 	* @return	bool	True if the user is the owner of the album
 	* @throws	\DomainException	if the user is not the owner of the album
 	*/
-	public function validate_owner($album_id, $user_id = false)
+	public function validate_owner(int $album_id, int|false $user_id = false): bool
 	{
 		$album_id = (int) $album_id;
 		$user_id = (int) ($user_id ?: $this->user->data['user_id']);

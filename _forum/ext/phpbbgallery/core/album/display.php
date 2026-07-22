@@ -14,35 +14,51 @@ namespace phpbbgallery\core\album;
 
 class display
 {
-	protected $auth;
-	protected $config;
-	protected $db;
-	protected $helper;
-	protected $pagination;
-	protected $request;
-	protected $template;
-	protected $user;
-	protected $gallery_auth;
-	protected $gallery_user;
-	protected $misc;
-	protected $root_path;
-	protected $php_ext;
-	protected $table_albums;
-	protected $table_contests;
-	protected $table_moderators;
-	protected $table_tracking;
-	protected $language;
-	public $album_start;
-	public $album_limit;
-	public $albums_total;
-	public $album_mode;
+	protected \phpbb\auth\auth $auth;
+	protected \phpbb\config\config $config;
+	protected \phpbb\db\driver\driver_interface $db;
+	protected \phpbb\controller\helper $helper;
+	protected \phpbb\pagination $pagination;
+	protected \phpbb\request\request $request;
+	protected \phpbb\template\template $template;
+	protected \phpbb\user $user;
+	protected \phpbbgallery\core\auth\auth $gallery_auth;
+	protected \phpbbgallery\core\user $gallery_user;
+	protected \phpbbgallery\core\misc $misc;
+	protected string $root_path;
+	protected string $php_ext;
+	protected string $table_albums;
+	protected string $table_contests;
+	protected string $table_moderators;
+	protected string $table_tracking;
+	protected \phpbb\language\language $language;
+
+	/**
+	 * Pagination offset for personal albums.
+	 */
+	public int $album_start = 0;
+
+	/**
+	 * Pagination limit for personal albums.
+	 */
+	public int $album_limit = 0;
+
+	/**
+	 * Total number of visible albums from the last display operation.
+	 */
+	public int $albums_total = 0;
+
+	/**
+	 * Album listing mode selected by the controller.
+	 */
+	public string $album_mode = '';
 
 	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\controller\helper $helper,
 								\phpbb\db\driver\driver_interface $db, \phpbb\pagination $pagination,
 								\phpbb\request\request $request, \phpbb\template\template $template,
 								\phpbb\user $user, \phpbb\language\language $language, \phpbbgallery\core\auth\auth $gallery_auth,
 								\phpbbgallery\core\user $gallery_user, \phpbbgallery\core\misc $misc,
-								$root_path, $php_ext, $albums_table, $contests_table, $tracking_table, $moderators_table)
+								string $root_path, string $php_ext, string $albums_table, string $contests_table, string $tracking_table, string $moderators_table)
 	{
 		$this->auth = $auth;
 		$this->config = $config;
@@ -70,14 +86,14 @@ class display
 	 * borrowed from phpBB3
 	 * @author: phpBB Group
 	 * @function: get_forum_branch
-	 * @param $branch_user_id
-	 * @param $album_id
+	 * @param int $branch_user_id
+	 * @param int $album_id
 	 * @param string $type
 	 * @param string $order
 	 * @param bool $include_album
 	 * @return array
 	 */
-	public function get_branch($branch_user_id, $album_id, $type = 'all', $order = 'descending', $include_album = true)
+	public function get_branch(int $branch_user_id, int $album_id, string $type = 'all', string $order = 'descending', bool $include_album = true): array
 	{
 		switch ($type)
 		{
@@ -125,9 +141,9 @@ class display
 	 * borrowed from phpBB3
 	 * @author: phpBB Group
 	 * @function: generate_forum_nav
-	 * @param $album_data
+	 * @param array $album_data
 	 */
-	public function generate_navigation($album_data)
+	public function generate_navigation(array $album_data): void
 	{
 		// Add gallery menu entry
 		// TO DO !!! THIS SHOULD BE MOVED TO MENU CREATOR!!
@@ -196,10 +212,10 @@ class display
 	 * borrowed from phpBB3
 	 * @author: phpBB Group
 	 * @function: get_forum_parents
-	 * @param $album_data
-	 * @return array|mixed
+	 * @param array $album_data
+	 * @return array
 	 */
-	public function get_parents($album_data)
+	public function get_parents(array $album_data): array
 	{
 		$album_parents = [];
 
@@ -231,7 +247,8 @@ class display
 			}
 			else
 			{
-				$album_parents = @unserialize($album_data['album_parents']);
+				$stored_parents = @unserialize($album_data['album_parents'], ['allowed_classes' => false]);
+				$album_parents = is_array($stored_parents) ? $stored_parents : [];
 			}
 		}
 
@@ -245,10 +262,10 @@ class display
 	 * borrowed from phpBB3
 	 * @author: phpBB Group
 	 * @function: get_forum_moderators
-	 * @param bool $album_id
+	 * @param array|int|false $album_id
 	 * @return array
 	 */
-	public function get_moderators($album_id = false)
+	public function get_moderators(array|int|false $album_id = false): array
 	{
 		$album_id_ary = $album_moderators = array();
 
@@ -324,12 +341,12 @@ class display
 	 * borrowed from phpBB3
 	 * @author: phpBB Group
 	 * @function: display_forums
-	 * @param string $root_data
+	 * @param array|string|false $root_data
 	 * @param bool $display_moderators
 	 * @param bool $return_moderators
 	 * @return array
 	 */
-	public function display_albums($root_data = '', $display_moderators = true, $return_moderators = false)
+	public function display_albums(array|string|false $root_data = '', bool $display_moderators = true, bool $return_moderators = false): array
 	{
 		$album_rows = $subalbums = $album_ids = $album_ids_moderator = $album_moderators = $active_album_ary = array();
 		$parent_id = $visible_albums = 0;
