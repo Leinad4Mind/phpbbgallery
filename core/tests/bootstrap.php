@@ -30,8 +30,10 @@ namespace
 	{
 		function unique_id()
 		{
+			// phpcs:ignore -- PHPUnit fixture override uses the PHP superglobal.
 			if (isset($GLOBALS['phpbbgallery_test_unique_id']))
 			{
+				// phpcs:ignore -- PHPUnit fixture override uses the PHP superglobal.
 				return $GLOBALS['phpbbgallery_test_unique_id'];
 			}
 
@@ -39,8 +41,11 @@ namespace
 		}
 	}
 
+	require_once __DIR__ . '/stubs/phpbb_extension_base.php';
+	require_once __DIR__ . '/stubs/phpbb_notification_exception.php';
 	require_once dirname(__DIR__) . '/upload.php';
 	require_once dirname(__DIR__) . '/auth/image_authorization.php';
+	require_once dirname(__DIR__) . '/ext.php';
 	require_once dirname(__DIR__) . '/controller/moderate.php';
 	require_once dirname(__DIR__) . '/acp/main_module.php';
 	require_once dirname(__DIR__) . '/ucp/main_module.php';
