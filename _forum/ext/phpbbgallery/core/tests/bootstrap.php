@@ -85,4 +85,8 @@ namespace
 	require_once dirname(__DIR__) . '/album/manage.php';
 	require_once dirname(__DIR__) . '/image/image.php';
 	require_once dirname(__DIR__) . '/comment.php';
+	require_once dirname(__DIR__) . '/rating.php';
+	require_once dirname(__DIR__) . '/report.php';
+	require_once dirname(__DIR__) . '/notification.php';
+	require_once dirname(__DIR__) . '/moderate.php';
 }
