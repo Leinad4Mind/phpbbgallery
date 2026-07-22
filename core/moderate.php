@@ -16,82 +16,82 @@ class moderate
 	/**
 	 * @var \phpbb\db\driver\driver_interface
 	 */
-	protected $db;
+	protected \phpbb\db\driver\driver_interface $db;
 
 	/**
 	 * @var \phpbb\template\template
 	 */
-	protected $template;
+	protected \phpbb\template\template $template;
 
 	/**
 	 * @var \phpbb\controller\helper
 	 */
-	protected $helper;
+	protected \phpbb\controller\helper $helper;
 
 	/**
 	 * @var \phpbb\user
 	 */
-	protected $user;
+	protected \phpbb\user $user;
 
 	/**
 	 * @var \phpbb\language\language
 	 */
-	protected $lang;
+	protected \phpbb\language\language $lang;
 
 	/**
 	 * @var \phpbb\user_loader
 	 */
-	protected $user_loader;
+	protected \phpbb\user_loader $user_loader;
 
 	/**
 	 * @var \phpbbgallery\core\album\album
 	 */
-	protected $album;
+	protected \phpbbgallery\core\album\album $album;
 
 	/**
 	 * @var \phpbbgallery\core\auth\auth
 	 */
-	protected $gallery_auth;
+	protected \phpbbgallery\core\auth\auth $gallery_auth;
 
 	/**
 	 * @var \phpbb\pagination
 	 */
-	protected $pagination;
+	protected \phpbb\pagination $pagination;
 
 	/**
 	 * @var \phpbbgallery\core\comment
 	 */
-	protected $comment;
+	protected \phpbbgallery\core\comment $comment;
 
 	/**
 	 * @var \phpbbgallery\core\report
 	 */
-	protected $report;
+	protected \phpbbgallery\core\report $report;
 
 	/**
 	 * @var \phpbbgallery\core\image\image
 	 */
-	protected $image;
+	protected \phpbbgallery\core\image\image $image;
 
 	/**
 	 * @var \phpbbgallery\core\config
 	 */
-	protected $gallery_config;
+	protected \phpbbgallery\core\config $gallery_config;
 
 	/**
 	 * @var \phpbbgallery\core\notification
 	 */
-	protected $gallery_notification;
+	protected \phpbbgallery\core\notification $gallery_notification;
 
 	/**
 	 * @var \phpbbgallery\core\rating
 	 */
-	protected $gallery_rating;
+	protected \phpbbgallery\core\rating $gallery_rating;
 
 	/**
 	 * @var string
 	 */
-	protected $images_table;
+	protected string $images_table;
 
 	/**
 	 * moderate constructor.
@@ -102,23 +102,23 @@ class moderate
 	 * @param \phpbb\user                       $user
 	 * @param \phpbb\language\language          $lang
 	 * @param \phpbb\user_loader                $user_loader
-	 * @param album\album                       $album
-	 * @param auth\auth                         $gallery_auth
+	 * @param \phpbbgallery\core\album\album   $album
+	 * @param \phpbbgallery\core\auth\auth     $gallery_auth
 	 * @param \phpbb\pagination                 $pagination
-	 * @param comment                           $comment
-	 * @param report                            $report
-	 * @param image\image                       $image
-	 * @param config                            $gallery_config
-	 * @param notification                      $gallery_notification
-	 * @param rating                            $gallery_rating
-	 * @param                                   $images_table
+	 * @param \phpbbgallery\core\comment       $comment
+	 * @param \phpbbgallery\core\report        $report
+	 * @param \phpbbgallery\core\image\image   $image
+	 * @param \phpbbgallery\core\config        $gallery_config
+	 * @param \phpbbgallery\core\notification  $gallery_notification
+	 * @param \phpbbgallery\core\rating        $gallery_rating
+	 * @param string                            $images_table
 	 */
 	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\template\template $template, \phpbb\controller\helper $helper, \phpbb\user $user,
 		\phpbb\language\language $lang,
 		\phpbb\user_loader $user_loader, \phpbbgallery\core\album\album $album, \phpbbgallery\core\auth\auth $gallery_auth, \phpbb\pagination $pagination,
 		\phpbbgallery\core\comment $comment, \phpbbgallery\core\report $report, \phpbbgallery\core\image\image $image,
 		\phpbbgallery\core\config $gallery_config, \phpbbgallery\core\notification $gallery_notification, \phpbbgallery\core\rating $gallery_rating,
-		$images_table)
+		string $images_table)
 	{
 		$this->db = $db;
 		$this->template = $template;
@@ -144,8 +144,9 @@ class moderate
 	 * @param int $album    album we build queue for
 	 * @param int $page     This queue builder should return objects for MCP queues, so page?
 	 * @param int $per_page We need how many elements per page
+	 * @return void
 	 */
-	public function build_list($album, $page = 1, $per_page = 0)
+	public function build_list(int $album, int $page = 1, int $per_page = 0): void
 	{
 		// So if we are not forcing par page get it from config
 		if ($per_page == 0)
@@ -207,20 +208,20 @@ class moderate
 		// Load users
 		$this->user_loader->load_users(array_keys($users_array));
 
-		foreach ($waiting_images as $VAR)
+		foreach ($waiting_images as $image_data)
 		{
-			$album_tmp = $this->album->get_info($VAR['image_album_id']);
+			$album_tmp = $this->album->get_info($image_data['image_album_id']);
 			$this->template->assign_block_vars('image_unapproved', array(
-				'U_IMAGE_ID'           => $VAR['image_id'],
-				'U_IMAGE'              => $this->helper->route('phpbbgallery_core_image_file_mini', array('image_id' => $VAR['image_id'])),
-				'U_IMAGE_URL'          => $this->helper->route('phpbbgallery_core_image', array('image_id' => $VAR['image_id'])),
-				'U_IMAGE_MODERATE_URL' => $this->helper->route('phpbbgallery_core_moderate_image', array('image_id' => $VAR['image_id'])),
-				'U_IMAGE_NAME'         => $VAR['image_name'],
-				'IMAGE_AUTHOR'         => $this->user_loader->get_username($VAR['image_author'], 'full'),
-				'IMAGE_TIME'           => $this->user->format_date($VAR['image_time']),
+				'U_IMAGE_ID'           => $image_data['image_id'],
+				'U_IMAGE'              => $this->helper->route('phpbbgallery_core_image_file_mini', array('image_id' => $image_data['image_id'])),
+				'U_IMAGE_URL'          => $this->helper->route('phpbbgallery_core_image', array('image_id' => $image_data['image_id'])),
+				'U_IMAGE_MODERATE_URL' => $this->helper->route('phpbbgallery_core_moderate_image', array('image_id' => $image_data['image_id'])),
+				'U_IMAGE_NAME'         => $image_data['image_name'],
+				'IMAGE_AUTHOR'         => $this->user_loader->get_username($image_data['image_author'], 'full'),
+				'IMAGE_TIME'           => $this->user->format_date($image_data['image_time']),
 				'IMAGE_ALBUM'          => $album_tmp['album_name'],
-				'IMAGE_ALBUM_URL'      => $this->helper->route('phpbbgallery_core_album', array('album_id' => $VAR['image_album_id'])),
-				'IMAGE_ALBUM_ID'       => $VAR['image_album_id'],
+				'IMAGE_ALBUM_URL'      => $this->helper->route('phpbbgallery_core_album', array('album_id' => $image_data['image_album_id'])),
+				'IMAGE_ALBUM_ID'       => $image_data['image_album_id'],
 			));
 			unset($album_tmp);
 		}
@@ -265,8 +266,9 @@ class moderate
 	 * @param int $page     This queue builder should return objects for MCP queues, so page?
 	 * @param int $per_page We need how many elements per page
 	 * @internal param int $album album we build queue for
+	 * @return void
 	 */
-	public function album_overview($album_id, $page = 1, $per_page = 0)
+	public function album_overview(int $album_id, int $page = 1, int $per_page = 0): void
 	{
 		// So if we are not forcing par page get it from config
 		if ($per_page == 0)
@@ -402,8 +404,20 @@ class moderate
 		));
 	}
 
-	public function delete_images($images, $files = array())
+	/**
+	 * Delete images and all related domain data.
+	 *
+	 * @param array       $images Image identifiers
+	 * @param array|false $files  Known filenames, or false to resolve them later
+	 * @return void
+	 */
+	public function delete_images(array $images, array|false $files = []): void
 	{
+		if ($files === false)
+		{
+			$files = [];
+		}
+
 		// We are going to do some cleanup
 		$this->gallery_rating->loader(0);
 		$this->gallery_rating->delete_ratings($images);
