@@ -289,11 +289,10 @@ class file
 			$this->data['image_filemissing'] = 0;
 			$this->data['album_watermark'] = 0;
 		}
-		if (!$this->auth->acl_check('i_view', $this->data['album_id'], $this->data['album_user_id']) || (
-				!$this->auth->acl_check('m_status', $this->data['album_id'], $this->data['album_user_id'])
+		if (!$this->auth->acl_check('i_view', $this->data['album_id'], $this->data['album_user_id'])
+			|| (!$this->auth->acl_check('m_status', $this->data['album_id'], $this->data['album_user_id'])
 				&& $this->data['image_status'] == (int) \phpbbgallery\core\block::STATUS_UNAPPROVED
-				&& $this->data['image_user_id'] != $this->user->data['user_id']
-			))
+				&& $this->data['image_user_id'] != $this->user->data['user_id']))
 		{
 			// Missing permissions
 			// trigger_error('NOT_AUTHORISED');
@@ -467,36 +466,99 @@ class file
 
 	protected function check_hot_link()
 	{
-		if (!$this->config['phpbb_gallery_allow_hotlinking'])
+		if ($this->config['phpbb_gallery_allow_hotlinking'])
 		{
-			$haystack = array();
-			$haystack = explode(',', $this->config['phpbb_gallery_hotlinking_domains']);
-			//add one extra array - current phpbb domain
-			$haystack[] = $this->config['server_name'];
-			$referrer = $this->request->server('HTTP_REFERER', '');
-			$not_hl = false;
-			foreach ($haystack as $var)
+			return;
+		}
+
+		$allowed_domains = explode(',', $this->config['phpbb_gallery_hotlinking_domains']);
+		$allowed_domains[] = $this->config['server_name'];
+		$referrer = $this->request->server('HTTP_REFERER', '');
+		if ($this->is_allowed_referrer($referrer, $allowed_domains))
+		{
+			return;
+		}
+
+		$this->error = 'no_hotlinking.jpg';
+		$this->data['image_filename'] = 'no_hotlinking.jpg';
+		$this->data['image_name'] = 'Hot linking not allowed';
+		$this->data['image_user_id'] = 1;
+		$this->data['image_status'] = 2;
+		$this->data['album_id'] = 0;
+		$this->data['album_user_id'] = 1;
+		$this->data['image_filemissing'] = 0;
+		$this->data['album_watermark'] = 0;
+	}
+
+	/**
+	 * @param string $referrer
+	 * @param array  $allowed_domains
+	 * @return bool
+	 */
+	protected function is_allowed_referrer($referrer, array $allowed_domains)
+	{
+		$scheme = strtolower((string) parse_url($referrer, PHP_URL_SCHEME));
+		$referrer_host = $this->normalize_hotlink_host((string) parse_url($referrer, PHP_URL_HOST));
+		if (!in_array($scheme, ['http', 'https'], true) || $referrer_host === '')
+		{
+			return false;
+		}
+
+		foreach ($allowed_domains as $allowed_domain)
+		{
+			$allowed_host = $this->normalize_hotlink_host($allowed_domain);
+			if ($allowed_host === '')
 			{
-				if (!empty($var))
-				{
-					if (strpos($referrer, $var) > 0 || empty($referrer))
-					{
-						$not_hl = true;
-					}
-				}
+				continue;
 			}
-			if (!$not_hl)
+
+			$allow_subdomains = !filter_var($allowed_host, FILTER_VALIDATE_IP);
+			if ($referrer_host === $allowed_host || ($allow_subdomains && substr($referrer_host, -(strlen($allowed_host) + 1)) === '.' . $allowed_host))
 			{
-				$this->error = 'no_hotlinking.jpg';
-				$this->data['image_filename'] = 'no_hotlinking.jpg';
-				$this->data['image_name'] = 'Hot linking not allowed';
-				$this->data['image_user_id'] = 1;
-				$this->data['image_status'] = 2;
-				$this->data['album_id'] = 0;
-				$this->data['album_user_id'] = 1;
-				$this->data['image_filemissing'] = 0;
-				$this->data['album_watermark'] = 0;
+				return true;
 			}
 		}
+
+		return false;
+	}
+
+	/**
+	 * @param string $host
+	 * @return string
+	 */
+	protected function normalize_hotlink_host($host)
+	{
+		$host = trim($host);
+		if ($host === '')
+		{
+			return '';
+		}
+
+		if (strpos($host, '://') !== false)
+		{
+			$host = (string) parse_url($host, PHP_URL_HOST);
+		}
+		else if (strpos($host, '/') !== false || strpos($host, ':') !== false)
+		{
+			$host = (string) parse_url('http://' . $host, PHP_URL_HOST);
+		}
+
+		$host = strtolower(trim($host, " \t\n\r\0\x0B.[]"));
+		if ($host === '' || strlen($host) > 253)
+		{
+			return '';
+		}
+
+		if (filter_var($host, FILTER_VALIDATE_IP))
+		{
+			return $host;
+		}
+
+		if (!preg_match('/^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)*[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/D', $host))
+		{
+			return '';
+		}
+
+		return $host;
 	}
 }

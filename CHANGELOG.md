@@ -17,6 +17,8 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Protected UCP personal-album creation, subalbum reordering, and subscription cancellation with POST-only submissions and valid phpBB form tokens.
 - Bound orphan-upload finalization to the current user and album, required the complete server-generated filename token, and protected the upload-edit step with POST-only form-token validation.
 - Made unfinished uploads resumable before accepting new files, added tokenized cancellation with server-side ownership checks, and isolated anonymous drafts with a one-way phpBB session fingerprint.
+- Restricted aggregate subtree image counts to descendants that pass list, zebra, i_view, and per-album moderation checks, while reusing the album query already performed for the page.
+- Replaced substring-based hotlink checks with fail-closed HTTP(S) hostname validation and exact domain/subdomain boundary matching.
 
 ### Fixed
 
@@ -35,7 +37,8 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added permanent UCP CSRF tests covering personal-album creation, subalbum reordering, subscription cancellation, POST-only inputs, move-direction validation, form tokens, and mutation ordering.
 - Added permanent orphan-upload and upload-edit tests covering user/album binding, exact tokens, malformed identifiers, POST-only fields, CSRF ordering, and tokens in all styles.
 - Added permanent resumable-upload tests covering registered users, anonymous sessions, cancellation, CSRF, AJAX, quotas, migration schema, form controls, and seven-day retention.
-- Validated the ZIP upload, ACP Import, authorization, individual-move security, ACP rating-reset, UCP CSRF, orphan-upload, and resumable-upload phases with PHP 7.4, 8.1, 8.2, 8.4, and 8.5.
+- Added permanent access-boundary tests covering per-descendant ACL image counts, moderator visibility, hidden albums, orphan exclusion, strict referrer parsing, domain boundaries, empty referrers, and configured bypass behavior.
+- Validated the ZIP upload, ACP Import, authorization, individual-move security, ACP rating-reset, UCP CSRF, orphan-upload, resumable-upload, subtree-count, and hotlink phases with PHP 7.4, 8.1, 8.2, 8.4, and 8.5.
 
 ## [3.4.0]
 ### Added

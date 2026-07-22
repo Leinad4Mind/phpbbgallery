@@ -166,7 +166,7 @@ class album
 		$this->auth_level->display($album_id, $album_data['album_status'], $album_data['album_user_id']);
 
 		$this->display->generate_navigation($album_data);
-		$this->display->display_albums($album_data, $this->config['load_moderators']);
+		$album_display = $this->display->display_albums($album_data, $this->config['load_moderators']);
 
 		$page_title = $album_data['album_name'];
 		if ($page > 1)
@@ -232,7 +232,7 @@ class album
 		if ($album_data['album_type'] != (int) \phpbbgallery\core\block::TYPE_CAT
 			&& $album_data['album_images_real'] > 0)
 		{
-			$this->display_images($album_id, $album_data, ($page - 1) * (int) $this->config['phpbb_gallery_items_per_page'], (int) $this->config['phpbb_gallery_items_per_page']);
+			$this->display_images($album_id, $album_data, ($page - 1) * (int) $this->config['phpbb_gallery_items_per_page'], (int) $this->config['phpbb_gallery_items_per_page'], $album_display[0]);
 		}
 
 //		phpbb_ext_gallery_core_misc::markread('album', $album_id);
@@ -245,8 +245,9 @@ class album
 	 * @param $album_data
 	 * @param $start
 	 * @param $limit
+	 * @param array $descendant_album_ids
 	 */
-	protected function display_images($album_id, $album_data, $start, $limit)
+	protected function display_images($album_id, $album_data, $start, $limit, array $descendant_album_ids)
 	{
 		$sort_days = $this->request->variable('st', 0);
 		$sort_key = $this->request->variable('sk', ($album_data['album_sort_key']) ? $album_data['album_sort_key'] : $this->config['phpbb_gallery_default_sort_key']);
@@ -278,20 +279,13 @@ class album
 			$this->db->sql_freeresult($result);
 		}
 
-		// album_images/album_images_real (and the per-album recount above) only ever count
-		// images placed directly in this album (see album::update_info()). That is correct
-		// for the LISTING below (still scoped to image_album_id = $album_id) and for
-		// pagination, which must stay in sync with it - so $image_counter itself is left
-		// untouched. But personal galleries routinely get sub-albums nested under them (UCP
-		// album creation defaults a new album's parent to the user's personal album), in
-		// which case the "TOTAL_IMAGES" figure shown in the album header silently excluded
-		// everything in those sub-albums. When this album has descendants, show an aggregate
-		// across the whole subtree there instead - reusing whichever visibility rule
-		// ($image_status_check) the branch above just established.
+		// Keep pagination scoped to this album, but include images from individually
+		// authorized descendants in the header total. display_albums() has already loaded
+		// the branch and removed albums hidden by list/zebra rules, avoiding another tree query.
 		$total_images_display = $image_counter;
-		if ($album_data['right_id'] > $album_data['left_id'] + 1)
+		if ($album_data['right_id'] > $album_data['left_id'] + 1 && !empty($descendant_album_ids))
 		{
-			$total_images_display = $this->get_subtree_image_count($album_data, $image_status_check);
+			$total_images_display += $this->get_descendant_image_count($descendant_album_ids, $album_owner_id);
 		}
 
 		if (in_array($sort_key, ['r', 'ra']))
@@ -465,38 +459,54 @@ class album
 	}
 
 	/**
-	 * Aggregate image count across an album and all of its descendants.
-	 * Used for the header total of albums that have sub-albums (personal galleries),
-	 * where the flat album_images/album_images_real columns only reflect this album's own
-	 * direct images. Mirrors the visibility rule already established by the caller via
-	 * $image_status_check (moderators see everything, other users see their own pending
-	 * images too, everyone else only sees approved/locked images), and always excludes
-	 * orphan images, matching album::update_info(). Reuses the same nested-set branch
-	 * traversal (get_branch(..., 'children')) already used elsewhere for personal-gallery
-	 * sub-album listing, e.g. ucp/main_module.php.
+	 * Count images in descendants that the current user may view.
+	 * Moderation and view permissions are evaluated per album. Non-moderators only count
+	 * approved/locked images plus their own unapproved images. Orphans are always excluded.
 	 *
-	 * @param array  $album_data        Row of the root album (needs album_id, album_user_id)
-	 * @param string $image_status_check SQL fragment, e.g. " AND (image_status <> 0 OR image_user_id = 5)"
+	 * @param array $album_ids Descendants already filtered by list and zebra visibility
+	 * @param int   $album_owner_id
 	 * @return int
 	 */
-	protected function get_subtree_image_count($album_data, $image_status_check)
+	protected function get_descendant_image_count(array $album_ids, $album_owner_id)
 	{
-		$album_ids = [];
-		foreach ($this->display->get_branch($album_data['album_user_id'], $album_data['album_id'], 'children') as $row)
+		$viewable_album_ids = [];
+		$moderated_album_ids = [];
+		foreach (array_unique(array_map('intval', $album_ids)) as $album_id)
 		{
-			$album_ids[] = (int) $row['album_id'];
+			if ($album_id <= 0 || !$this->auth->acl_check('i_view', $album_id, $album_owner_id))
+			{
+				continue;
+			}
+
+			$viewable_album_ids[] = $album_id;
+			if ($this->auth->acl_check('m_status', $album_id, $album_owner_id))
+			{
+				$moderated_album_ids[] = $album_id;
+			}
 		}
 
-		if (empty($album_ids))
+		if (empty($viewable_album_ids))
 		{
 			return 0;
 		}
 
+		$standard_album_ids = array_values(array_diff($viewable_album_ids, $moderated_album_ids));
+		$visibility_sql = [];
+		if (!empty($standard_album_ids))
+		{
+			$visibility_sql[] = '(' . $this->db->sql_in_set('image_album_id', $standard_album_ids) . '
+				AND (image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . '
+					OR image_user_id = ' . (int) $this->user->data['user_id'] . '))';
+		}
+		if (!empty($moderated_album_ids))
+		{
+			$visibility_sql[] = $this->db->sql_in_set('image_album_id', $moderated_album_ids);
+		}
+
 		$sql = 'SELECT COUNT(image_id) AS total_images
 			FROM ' . $this->table_images . '
-			WHERE ' . $this->db->sql_in_set('image_album_id', $album_ids) . "
-				$image_status_check
-				AND image_status <> " . (int) \phpbbgallery\core\block::STATUS_ORPHAN;
+			WHERE (' . implode(' OR ', $visibility_sql) . ')
+				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN;
 		$result = $this->db->sql_query($sql);
 		$total = (int) $this->db->sql_fetchfield('total_images');
 		$this->db->sql_freeresult($result);

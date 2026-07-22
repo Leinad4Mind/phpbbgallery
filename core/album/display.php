@@ -504,6 +504,8 @@ class display
 				continue;
 			}
 
+			$active_album_ary[] = (int) $album_id;
+
 			if (false)//@todo !$this->gallery_auth->acl_check('a_list', $album_id, $row['album_user_id']))
 			{
 				// if the user does not have permissions to list this album, skip everything until next branch
