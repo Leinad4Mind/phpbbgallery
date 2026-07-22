@@ -19,6 +19,7 @@ use phpbbgallery\core\migrations\release_3_2_1_1;
 use phpbbgallery\core\migrations\release_3_3_0;
 use phpbbgallery\core\migrations\release_3_4_0;
 use phpbbgallery\core\migrations\resumable_uploads;
+use phpbbgallery\core\migrations\performance_indexes;
 use phpbbgallery\core\migrations\split_ucp_module_settings;
 
 class migration_integrity_test extends TestCase
@@ -34,6 +35,7 @@ class migration_integrity_test extends TestCase
 		release_3_3_0::class,
 		release_3_4_0::class,
 		resumable_uploads::class,
+		performance_indexes::class,
 	];
 
 	/** @var array */
@@ -75,6 +77,10 @@ class migration_integrity_test extends TestCase
 		$this->assertSame(
 			['\phpbbgallery\core\migrations\release_3_2_1_0'],
 			release_3_2_1_1::depends_on()
+		);
+		$this->assertSame(
+			['\phpbbgallery\core\migrations\resumable_uploads'],
+			performance_indexes::depends_on()
 		);
 	}
 
@@ -289,6 +295,7 @@ class migration_integrity_test extends TestCase
 			'release_3_3_0.php',
 			'release_3_4_0.php',
 			'resumable_uploads.php',
+			'performance_indexes.php',
 		] as $migration)
 		{
 			require_once dirname(__DIR__) . '/migrations/' . $migration;

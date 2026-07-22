@@ -150,14 +150,7 @@ class file
 			$this->tool->disable_browser_cache();
 		}
 
-		if (!$this->user->data['is_bot'] && !$this->error)
-		{
-			$sql = 'UPDATE ' . $this->table_images . '
-				SET image_view_count = image_view_count + 1
-				WHERE image_id = ' . (int) $image_id;
-			$this->db->sql_query($sql);
-		}
-
+		// The image-page controller owns view counting; browsers may repeat binary requests.
 		return $this->display();
 	}
 
@@ -379,6 +372,7 @@ class file
 			$this->tool->set_last_modified(@filemtime($this->config['phpbb_gallery_watermark_source']));
 			$this->tool->watermark_image($this->config['phpbb_gallery_watermark_source'], $this->config['phpbb_gallery_watermark_position'], $this->config['phpbb_gallery_watermark_height'], $this->config['phpbb_gallery_watermark_width']);
 		}
+		$this->tool->set_last_modified(@filemtime($this->tool->image_source));
 
 		// Let's check image is loaded
 		if (!$this->tool->image_content_type)
@@ -401,7 +395,6 @@ class file
 
 		$response = new \Symfony\Component\HttpFoundation\BinaryFileResponse($this->tool->image_source);
 
-		$response->headers->set('Pragma', 'public');
 		$response->headers->set('Content-Type', $this->tool->image_content_type);
 		if ($this->tool->is_ie_greater7($this->user->browser))
 		{
@@ -423,6 +416,7 @@ class file
 				$response->headers->set('X-Download-Options', 'noopen');
 			}
 		}
+		$this->tool->apply_browser_cache($response);
 
 		return $response;
 	}
