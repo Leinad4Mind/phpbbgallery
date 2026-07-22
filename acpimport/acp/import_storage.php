@@ -18,8 +18,7 @@ class import_storage
 	private const MAX_IMAGES = 10000;
 	private const MAX_ERRORS = 10000;
 
-	/** @var string */
-	private $directory;
+	private string $directory;
 
 	public function __construct(string $directory)
 	{
@@ -34,7 +33,7 @@ class import_storage
 	/**
 	 * @return string|false
 	 */
-	public function get_state_path(string $schema_id)
+	public function get_state_path(string $schema_id): string|false
 	{
 		if (!$this->is_valid_schema_id($schema_id))
 		{
@@ -71,7 +70,7 @@ class import_storage
 	/**
 	 * @return array|false
 	 */
-	public function read_state(string $schema_id)
+	public function read_state(string $schema_id): array|false
 	{
 		$state_path = $this->get_state_path($schema_id);
 		if ($state_path === false || is_link($state_path) || !is_file($state_path))
@@ -258,7 +257,7 @@ class import_storage
 	/**
 	 * @return array|false
 	 */
-	public function resolve_image(string $display_name, array $allowed_extensions)
+	public function resolve_image(string $display_name, array $allowed_extensions): array|false
 	{
 		if (!$this->is_valid_string($display_name, 4096))
 		{
@@ -409,7 +408,7 @@ class import_storage
 		return true;
 	}
 
-	private function is_valid_string($value, int $maximum_length): bool
+	private function is_valid_string(mixed $value, int $maximum_length): bool
 	{
 		return is_string($value) && strlen($value) <= $maximum_length && preg_match('//u', $value) === 1 && preg_match('/[\x00-\x1F\x7F]/', $value) !== 1;
 	}
@@ -417,7 +416,7 @@ class import_storage
 	/**
 	 * @return string|false
 	 */
-	private function filename_to_utf8(string $filename)
+	private function filename_to_utf8(string $filename): string|false
 	{
 		if (preg_match('//u', $filename) === 1)
 		{

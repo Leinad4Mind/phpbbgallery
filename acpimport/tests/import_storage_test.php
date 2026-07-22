@@ -11,17 +11,13 @@ namespace phpbbgallery\acpimport\tests;
 
 use PHPUnit\Framework\TestCase;
 use phpbbgallery\acpimport\acp\import_storage;
+use phpbbgallery\acpimport\acp\main_module;
 
 class import_storage_test extends TestCase
 {
-	/** @var string */
-	private $temporary_directory;
-
-	/** @var string */
-	private $import_directory;
-
-	/** @var import_storage */
-	private $storage;
+	private string $temporary_directory;
+	private string $import_directory;
+	private import_storage $storage;
 
 	// phpcs:ignore PhpbbCodingStandard.NamingConventions.LowercaseUnderscoredFunctions.NotAllowed -- PHPUnit lifecycle API.
 	protected function setUp(): void
@@ -46,6 +42,41 @@ class import_storage_test extends TestCase
 		$this->assertSame(1, preg_match('/^[a-f0-9]{32}$/', $first));
 		$this->assertSame(1, preg_match('/^[a-f0-9]{32}$/', $second));
 		$this->assertNotSame($first, $second);
+	}
+
+	public function test_storage_and_module_contracts_use_native_types(): void
+	{
+		$storage = new \ReflectionClass(import_storage::class);
+		$this->assertSame('string', (string) $storage->getProperty('directory')->getType());
+
+		$expected_returns = [
+			'create_schema_id' => 'string',
+			'get_state_path' => 'string|false',
+			'write_state' => 'bool',
+			'read_state' => 'array|false',
+			'remove_state' => 'bool',
+			'remove_legacy_php_state' => 'int',
+			'get_images' => 'array',
+			'resolve_image' => 'array|false',
+			'inspect_image' => 'array',
+			'copy_image' => 'bool',
+			'is_valid_schema_id' => 'bool',
+			'validate_state' => 'bool',
+			'is_valid_string' => 'bool',
+			'filename_to_utf8' => 'string|false',
+		];
+
+		foreach ($expected_returns as $method_name => $expected_type)
+		{
+			$this->assertSame($expected_type, (string) $storage->getMethod($method_name)->getReturnType(), $method_name . ' has an unexpected return type.');
+		}
+
+		$module_main = (new \ReflectionClass(main_module::class))->getMethod('main');
+		$this->assertSame('void', (string) $module_main->getReturnType());
+		foreach ($module_main->getParameters() as $parameter)
+		{
+			$this->assertSame('string', (string) $parameter->getType());
+		}
 	}
 
 	public function test_writes_and_reads_non_executable_json_state(): void
