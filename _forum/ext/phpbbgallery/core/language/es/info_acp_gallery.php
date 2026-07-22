@@ -40,7 +40,7 @@ $lang = array_merge($lang, array(
 	'GALLERY_POPUP_HELPLINE'			=> 'Abre una ventana emergente donde puedes seleccionar tus imágenes recientes y subir nuevas imágenes.',
 
 	// Please do not change the copyright.
-	'GALLERY_COPYRIGHT'        => 'Powered by <a href="http://www.anavaro.com/">phpBB Gallery</a> &copy; 2016 <a href="http://www.anavaro.com/">Lucifer</a>',
+	'GALLERY_COPYRIGHT'        => 'Powered by <a href="https://github.com/satanasov/phpbbgallery">phpBB Gallery</a> &copy; 2014–2026',
 
 	// Una pequeña línea donde puedes darte algunos créditos sobre la traducción.
 	//'GALLERY_TRANSLATION_INFO'			=> 'English “phpBB Gallery“-Translation by <a href="http://www.flying-bits.org/">nickvergessen</a>',
