@@ -113,6 +113,9 @@ class upload
 	/** Maximum archive filename length in bytes. */
 	private const ZIP_MAX_FILENAME_LENGTH = 255;
 
+	/** Keep unfinished upload drafts for seven days. */
+	private const ORPHAN_RETENTION_SECONDS = 604800;
+
 	/**
 	* Objects: phpBB Upload, 2 Files and Image-Functions
 	*/
@@ -819,6 +822,7 @@ class upload
 		$sql_ary = array(
 			'image_status'				=> ($needs_approval) ? $this->block->get_image_status_unapproved() : $this->block->get_image_status_approved(),
 			'image_contest'				=> ($is_in_contest) ? $this->block->get_in_contest() : $this->block->get_no_contest(),
+			'image_upload_session_hash'	=> '',
 			'image_desc'				=> $message_parser->message,
 			'image_desc_uid'			=> $message_parser->bbcode_uid,
 			'image_desc_bitfield'		=> $message_parser->bbcode_bitfield,
@@ -1023,6 +1027,7 @@ class upload
 			'image_username'		=> $this->username,
 			'image_username_clean'	=> utf8_clean_string($this->username),
 			'image_user_ip'			=> $this->user->ip,
+			'image_upload_session_hash'	=> $this->get_session_hash(),
 
 			'image_album_id'		=> $this->album_id,
 			'image_status'			=> $this->block->get_image_status_orphan(),
@@ -1043,13 +1048,13 @@ class upload
 	}
 
 	/**
-	 * Delete orphan uploaded files, which are older than half an hour...
+	 * Delete unfinished upload drafts which are older than seven days.
 	 *
 	 * @param int $time
 	 */
 	public function prune_orphan($time = 0)
 	{
-		$prunetime = (int) (($time) ? $time : (time() - 1800));
+		$prunetime = (int) (($time) ? $time : (time() - self::ORPHAN_RETENTION_SECONDS));
 
 		$sql = 'SELECT image_id, image_filename
 			FROM ' . $this->images_table . '
@@ -1226,9 +1231,7 @@ class upload
 
 		$sql = 'SELECT *
 			FROM ' . $this->images_table . '
-			WHERE image_status = ' . (int) $this->block->get_image_status_orphan() . '
-				AND image_user_id = ' . (int) $this->user->data['user_id'] . '
-				AND image_album_id = ' . (int) $this->album_id . '
+			WHERE ' . $this->get_pending_images_sql() . '
 				AND ' . $this->db->sql_in_set('image_id', $image_ids);
 		$result = $this->db->sql_query($sql);
 
@@ -1243,6 +1246,117 @@ class upload
 			}
 		}
 		$this->db->sql_freeresult($result);
+	}
+
+	/**
+	 * Load the unfinished upload draft for the current user and album.
+	 *
+	 * @return int Number of pending images loaded
+	 */
+	public function load_pending_images()
+	{
+		$this->images = [];
+		$this->image_data = [];
+		$this->array_id2row = [];
+		$this->loaded_files = 0;
+
+		$sql = 'SELECT *
+			FROM ' . $this->images_table . '
+			WHERE ' . $this->get_pending_images_sql() . '
+			ORDER BY image_time ASC, image_id ASC';
+		$result = $this->db->sql_query($sql);
+		$row_number = 0;
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$image_id = (int) $row['image_id'];
+			$this->images[] = $image_id;
+			$this->image_data[$image_id] = $row;
+			$this->array_id2row[$image_id] = $row_number++;
+			$this->loaded_files++;
+		}
+		$this->db->sql_freeresult($result);
+
+		return $this->loaded_files;
+	}
+
+	/**
+	 * Delete the unfinished upload draft for the current user and album.
+	 *
+	 * @return int Number of pending images deleted
+	 */
+	public function discard_pending_images()
+	{
+		$this->load_pending_images();
+		if (!$this->images)
+		{
+			return 0;
+		}
+
+		$image_ids = $this->images;
+		$filenames = [];
+		foreach ($image_ids as $image_id)
+		{
+			$filenames[$image_id] = $this->image_data[$image_id]['image_filename'];
+		}
+
+		$this->gallery_image->delete_images($image_ids, $filenames, false);
+		$this->images = [];
+		$this->image_data = [];
+		$this->array_id2row = [];
+		$this->loaded_files = 0;
+
+		return count($image_ids);
+	}
+
+	/**
+	 * Build the ownership conditions shared by draft loading and finalization.
+	 *
+	 * @return string
+	 */
+	private function get_pending_images_sql()
+	{
+		$sql = 'image_status = ' . (int) $this->block->get_image_status_orphan() . '
+				AND image_user_id = ' . (int) $this->user->data['user_id'] . '
+				AND image_album_id = ' . (int) $this->album_id;
+
+		if (empty($this->user->data['is_registered']))
+		{
+			$session_hash = $this->get_session_hash();
+			if ($session_hash === '')
+			{
+				return $sql . '
+				AND 1 = 0';
+			}
+
+			$sql .= "
+				AND image_upload_session_hash = '" . $this->db->sql_escape($session_hash) . "'";
+		}
+
+		return $sql;
+	}
+
+	/**
+	 * Get a one-way fingerprint of the current phpBB session.
+	 *
+	 * @return string
+	 */
+	private function get_session_hash()
+	{
+		if (isset($this->user->session_id))
+		{
+			$session_id = (string) $this->user->session_id;
+		}
+		else
+		{
+			$session_id = isset($this->user->data['session_id']) ? (string) $this->user->data['session_id'] : '';
+		}
+
+		if ($session_id === '')
+		{
+			return '';
+		}
+
+		return hash('sha256', $session_id);
 	}
 
 	/**

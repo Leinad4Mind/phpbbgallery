@@ -180,12 +180,52 @@ class upload
 		}
 		$submit = $this->request->is_set_post('submit');
 		$mode = $this->request->variable('mode', 'upload');
+		$is_ajax = $this->request->is_ajax();
 		$username = '';
+		$process = $this->gallery_upload;
+		$process->set_up($album_id);
+
+		if ($this->request->is_set_post('discard_pending'))
+		{
+			if (!check_form_key('gallery'))
+			{
+				trigger_error('FORM_INVALID');
+			}
+
+			$process->discard_pending_images();
+			redirect($this->helper->route('phpbbgallery_core_album_upload', ['album_id' => $album_id]));
+		}
+
+		// Resume an unfinished draft before accepting another upload for this album.
+		if (!$is_ajax && ($mode != 'upload_edit' || !$submit))
+		{
+			if ($process->load_pending_images())
+			{
+				$mode = 'upload_edit';
+				$submit = false;
+			}
+			else if ($mode == 'upload_edit')
+			{
+				$mode = 'upload';
+			}
+		}
+
 		// So let's see if we have AJAX and use jQuery shit.
 		// We are going to use ajax upload only for registered users.
 		// Anons should suffer.
-		if ($this->request->is_ajax() && $this->user->data['is_registered'])
+		if ($mode == 'upload' && $is_ajax && $this->user->data['is_registered'])
 		{
+			if (!check_form_key('gallery'))
+			{
+				return new \Symfony\Component\HttpFoundation\JsonResponse([
+					'files' => [
+						[
+							'error' => $this->language->lang('FORM_INVALID'),
+						],
+					],
+				], 400);
+			}
+
 			// So we use ajax request to upload (so we are going to copy some functions from other upload
 			// Upload Quota Check
 			// 1. Check album-configuration Quota
@@ -523,6 +563,21 @@ class upload
 				$process->set_up($album_id, $upload_files_limit);
 				$process->set_rotating($this->request->variable('rotate', [0], false, request_interface::POST));
 				$process->get_images($upload_ids);
+				if (!$process->images)
+				{
+					trigger_error('FORM_INVALID');
+				}
+
+				$pending_count = count($process->images);
+				if (!$validation_error && $this->gallery_config->get('album_images') >= 0 && ($album_data['album_images'] + $pending_count) > $this->gallery_config->get('album_images'))
+				{
+					$validation_error = $this->language->lang('ALBUM_REACHED_QUOTA');
+				}
+				if (!$validation_error && $pending_count > $upload_files_limit)
+				{
+					$validation_error = $this->language->lang('USER_REACHED_QUOTA', $upload_files_limit);
+				}
+
 				$image_names = $this->request->variable('image_name', [''], true, request_interface::POST);
 				$process->set_names($image_names);
 				$process->set_descriptions($description_array);

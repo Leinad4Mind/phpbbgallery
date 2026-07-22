@@ -296,6 +296,7 @@ head.ready(function () {
 			{S_HIDDEN_FIELDS}
 			<input type="hidden" id="mode" name="mode" value="upload_edit">
 			<button type="reset" accesskey="r" tabindex="200" value="{L_RESET}" class="btn btn-default">{L_RESET}</button>
+			<!-- IF S_UPLOAD_EDIT --><button type="submit" name="discard_pending" value="1" class="btn btn-default">{L_CANCEL}</button><!-- ENDIF -->
 			<button type="submit" accesskey="s" tabindex="201" name="submit" value="{L_SUBMIT}" class="btn btn-default" id="load" name="post" autocomplete="off" data-loading-text="loading...<i class='icon-spin icon-spinner icon-large icon-white'></i>">{L_SUBMIT}</button>
 	</fieldset>
 	{S_FORM_TOKEN}
