@@ -26,6 +26,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Replaced legacy and dynamic ACP/UCP module state with declared typed properties, preventing PHP 8.2 dynamic-property deprecations.
 - Added native property, parameter, and return types throughout the ACP Cleanup service API.
 - Added native property, parameter, union-return, and module-entry types throughout the ACP Import API.
+- Added native types throughout the EXIF model and event listener, including safe rejection of non-array serialized metadata.
 - Reduced the packaged extension from approximately 8.2 MiB to 3.1 MiB by removing generated differences reports, backup files, source maps, unused upload plugins, and duplicate per-style JavaScript bundles.
 - Consolidated shared JavaScript under the phpbbgallery_core template namespace and corrected the polaroid asset reference for prosilver, BBOOTS, and FLATBOOTS.
 - Updated the required jQuery UI Widget Factory from 1.11.4 to 1.14.2 and documented SHA-256 pins for every retained third-party upload asset.
@@ -55,6 +56,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 - Added permanent runtime-compatibility tests covering the PHP/phpBB/PHPUnit baselines, legacy `var` regression, and typed ACP/UCP module state.
 - Added standalone ACP Cleanup tests covering typed service contracts, file cleanup, database-entry cleanup, and moderation delegation.
+- Added standalone EXIF tests covering typed model/listener contracts, stored metadata handling, invalid serialization, and event registration.
 - Added permanent language-catalog tests covering PHP file and key parity, plural structures, printf placeholders, UTF-8 validity, and non-empty translations across all four Gallery components.
 - Added permanent package-hygiene tests covering generated artefacts, duplicate bundles, namespaced asset resolution, polaroid loading, current widget version, missing source-map references, and third-party checksums.
 - Added permanent ACP personal-gallery resync tests covering populated and empty databases, normalized values, and regression against indexing a missing row.
