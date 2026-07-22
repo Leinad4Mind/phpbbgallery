@@ -15,7 +15,7 @@ $lang = [];
 }
 $lang = array_merge($lang, [
 	'EXTMGRPLUS_NAV_TITLE'           => 'Extension Manager Plus',
-	'EXTMGRPLUS_NAV_CONFIG'          => 'Gerir extensões - Configurações',
+	'EXTMGRPLUS_NAV_CONFIG'          => 'Gerenciar extensões - Configurações',
 	'EXTMGRPLUS_LOG_EXT_DISABLE_ALL' => '<strong>Extension Manager Plus</strong><br>» %1$u de %2$u extensões desabilitadas',
 	'EXTMGRPLUS_LOG_EXT_ENABLE_ALL'  => '<strong>Extension Manager Plus</strong><br>» %1$u de %2$u extensões habilitadas',
 	'EXTMGRPLUS_VERSION_STRING'      => 'v%s',
