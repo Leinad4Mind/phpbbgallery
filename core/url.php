@@ -14,48 +14,43 @@ namespace phpbbgallery\core;
 
 class url
 {
-	/** @var \phpbb\template\template */
-	private $template;
-
-	/** @var \phpbb\request\request */
-	private $request;
-
-	/** @var \phpbb\config\config */
-	private $config;
+	private \phpbb\template\template $template;
+	private \phpbb\request\request $request;
+	private \phpbb\config\config $config;
 
 	/**
 	* Path from the gallery root, back to phpbb's root
 	*/
-	private $phpbb_root_path = '../';
+	private string $phpbb_root_path = '../';
 
 	/**
 	* Path from the phpbb root, into admin's root
 	*/
-	private $phpbb_admin_path = 'adm/';
+	private string $phpbb_admin_path = 'adm/';
 
 	/**
 	* Path from the phpbb root, into gallery's file root
 	*/
-	private $phpbb_gallery_file_path = 'files/phpbbgallery/';
+	private string $phpbb_gallery_file_path = 'files/phpbbgallery/';
 
 	/**
 	* Path from the phpbb root, into gallery's root
 	*/
-	private $phpbb_gallery_path = 'gallery/';
+	private string $phpbb_gallery_path = 'gallery/';
 
 	/**
 	* PHP file extension (e.g. .php)
 	*/
-	private $php_ext;
+	private string $php_ext;
 
-	const IMAGE_PATH = 'images/';
-	const UPLOAD_PATH = 'core/source/';
-	const THUMBNAIL_PATH = 'core/mini/';
-	const MEDIUM_PATH = 'core/medium/';
-	const IMPORT_PATH = 'import/';
+	public const IMAGE_PATH = 'images/';
+	public const UPLOAD_PATH = 'core/source/';
+	public const THUMBNAIL_PATH = 'core/mini/';
+	public const MEDIUM_PATH = 'core/medium/';
+	public const IMPORT_PATH = 'import/';
 
-	private $phpbb_gallery_relative = '';
-	private $phpbb_gallery_full_path = '';
+	private string $phpbb_gallery_relative = '';
+	private string $phpbb_gallery_full_path = '';
 
 	/**
 	 * Constructor
@@ -67,7 +62,7 @@ class url
 	 * @param                          $php_ext
 	 * @param string                   $phpbb_admin_path
 	 */
-	public function __construct(\phpbb\template\template $template, \phpbb\request\request $request, \phpbb\config\config $config, $phpbb_root_path, $php_ext, $phpbb_admin_path = 'adm/')
+	public function __construct(\phpbb\template\template $template, \phpbb\request\request $request, \phpbb\config\config $config, string $phpbb_root_path, string $php_ext, string $phpbb_admin_path = 'adm/')
 	{
 		$this->template = $template;
 		$this->request = $request;
@@ -80,7 +75,7 @@ class url
 		$this->phpbb_gallery_full_path = self::beautiful_path(generate_board_url() . '/' . $this->phpbb_gallery_path, true);
 	}
 
-	public function path($directory = 'gallery')
+	public function path(string $directory = 'gallery'): string|false
 	{
 		switch ($directory)
 		{
@@ -124,9 +119,8 @@ class url
 		return false;
 	}
 
-	public function append_sid()
+	public function append_sid(mixed ...$args): string
 	{
-		$args = func_get_args();
 		if (is_array($args[0]))
 		{
 			// Little problem from the duplicated call to func_get_args();
@@ -158,12 +152,12 @@ class url
 		return append_sid($params[0], $params[1], $params[2], $params[3]);
 	}
 
-	public function show_image($image_id, $size = 'medium')
+	public function show_image(int $image_id, string $size = 'medium'): string
 	{
 		return $this->phpbb_gallery_full_path . 'image/' . $image_id . '/' . $size;
 	}
 
-	public function show_album($album_id)
+	public function show_album(int $album_id): string
 	{
 		return $this->phpbb_gallery_full_path . 'album/' . $album_id;
 	}
@@ -176,7 +170,7 @@ class url
 	 * @param bool $is_amp
 	 * @return string
 	 */
-	public function create_link($path, $file, $params = false, $is_amp = true)
+	public function create_link(string $path, string $file, string|array|false $params = false, bool $is_amp = true): string
 	{
 		if ($is_amp && !is_array($params))
 		{
@@ -186,12 +180,13 @@ class url
 		return $this->append_sid($path, $file, $params, false, '');
 	}
 
-	public function redirect()
+	public function redirect(mixed ...$args): void
 	{
-		redirect($this->append_sid(func_get_args()));
+		redirect($this->append_sid($args));
 	}
 
-	public function phpEx_file($file)
+	// phpcs:ignore PhpbbCodingStandard.NamingConventions.LowercaseUnderscoredFunctions.NotAllowed -- Preserved public legacy API.
+	public function phpEx_file(string $file): string
 	{
 		if ((substr($file, -1) == '/') || (strlen($file) == 0))
 		{
@@ -208,7 +203,7 @@ class url
 		return $file . $this->php_ext;
 	}
 
-	public function _include($file, $path = 'gallery', $sub_directory = 'includes/')
+	public function _include(string|array $file, string $path = 'gallery', string $sub_directory = 'includes/'): void
 	{
 		if (!is_array($file))
 		{
@@ -223,17 +218,17 @@ class url
 		}
 	}
 
-	public function _file_exists($file, $path = 'gallery', $sub_directory = 'includes/')
+	public function _file_exists(string $file, string $path = 'gallery', string $sub_directory = 'includes/'): bool
 	{
 		return file_exists($this->path($path) . $sub_directory . $this->phpEx_file($file));
 	}
 
-	public function _is_writable($file, $path = 'gallery', $sub_directory = 'includes/')
+	public function _is_writable(string $file, string $path = 'gallery', string $sub_directory = 'includes/'): bool
 	{
 		return phpbb_is_writable($this->path($path) . $sub_directory . $this->phpEx_file($file));
 	}
 
-	public function _return_file($file, $path = 'gallery', $sub_directory = 'includes/')
+	public function _return_file(string $file, string $path = 'gallery', string $sub_directory = 'includes/'): string
 	{
 		return $this->path($path) . $sub_directory . $this->phpEx_file($file);
 	}
@@ -249,7 +244,7 @@ class url
 	* @param	bool		is it a full url, so we need to fix teh http:// at the beginning?
 	* @return	string		beautiful path e.g. "../gallery/"
 	*/
-	static public function beautiful_path($path, $is_full_url = false)
+	public static function beautiful_path(string $path, bool $is_full_url = false): string
 	{
 		// Remove any repeated slashes
 		$path = preg_replace('#/{2,}#', '/', $path);
@@ -294,7 +289,7 @@ class url
 	* @param	int		$time	Time in seconds.
 	* @param	string	$route	Route generated by $helper->route
 	*/
-	public function meta_refresh($time, $route)
+	public function meta_refresh(int $time, string $route): void
 	{
 		// For XHTML compatibility we change back & to &amp;
 		$route = str_replace('&', '&amp;', $route);
@@ -310,7 +305,7 @@ class url
 	 *                         return string URI
 	 * @return string
 	 */
-	public function get_uri($route)
+	public function get_uri(string $route): string
 	{
 		$url = $this->config['server_name'];
 		if ($this->config['force_server_vars'] == 1)

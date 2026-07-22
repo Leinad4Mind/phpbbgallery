@@ -13,20 +13,9 @@ namespace phpbbgallery\core;
 
 class config
 {
-	private $phpbb_auth;
-	private $phpbb_cache;
-	private $phpbb_config;
-	private $phpbb_db;
-	private $phpbb_template;
-	private $phpbb_user;
+	private \phpbb\config\config $config;
 
-	private $phpbb_phpEx;
-	private $phpbb_root_path;
-
-	/** @var \phpbb\config\config */
-	private $config;
-
-	private $configs_array = array(
+	private array $configs_array = array(
 		'album_display'		=> 254,
 		'album_images'		=> 2500,
 		'allow_comments'	=> true,
@@ -146,7 +135,7 @@ class config
 
 	}
 
-	public function get_all()
+	public function get_all(): array
 	{
 		$config_ary = array();
 		foreach ($this->configs_array as $option => $default)
@@ -163,7 +152,7 @@ class config
 		return $config_ary;
 	}
 
-	public function get($key)
+	public function get(string $key): mixed
 	{
 		if (isset($this->config['phpbb_gallery_' . $key]))
 		{
@@ -175,12 +164,12 @@ class config
 		}
 	}
 
-	public function set($name, $value)
+	public function set(string $name, mixed $value): void
 	{
 		$this->config->set('phpbb_gallery_' . $name, $value);
 	}
 
-	public function inc($name, $value)
+	public function inc(string $name, int $value): void
 	{
 		if (!$this->config->offsetGet('phpbb_gallery_' . $name))
 		{
@@ -188,7 +177,7 @@ class config
 		}
 		$this->config->increment('phpbb_gallery_' . $name, (int) $value);
 	}
-	public function dec($name, $value)
+	public function dec(string $name, int $value): void
 	{
 		if (!$this->config->offsetGet('phpbb_gallery_' . $name))
 		{

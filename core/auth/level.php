@@ -15,34 +15,11 @@ namespace phpbbgallery\core\auth;
 class level
 {
 
-	/**
-	* Gallery Auth Object
-	* @var \phpbbgallery\core\auth\auth
-	*/
-	protected $auth;
-
-	/**
-	* Config Object
-	* @var \phpbb\config\config
-	*/
-	protected $config;
-
-	/**
-	* Template Object
-	* @var \phpbb\template\template
-	*/
-	protected $template;
-
-	/**
-	* User Object
-	* @var \phpbb\user
-	*/
-	protected $user;
-
-	/**
-	 * @var \phpbb\language\language
-	 */
-	protected $lang;
+	protected \phpbbgallery\core\auth\auth $auth;
+	protected \phpbb\config\config $config;
+	protected \phpbb\template\template $template;
+	protected \phpbb\user $user;
+	protected \phpbb\language\language $lang;
 
 	/**
 	 * Construct
@@ -75,7 +52,7 @@ class level
 	* @author: phpBB Group
 	* @function: gen_forum_auth_level
 	*/
-	public function display($album_id, $album_status, $album_user_id = -1)
+	public function display(int $album_id, int $album_status, int $album_user_id = -1): void
 	{
 		$locked = ($album_status == ITEM_LOCKED && !$this->auth->acl_check('m_', $album_id, $album_user_id)) ? true : false;
 		$this->auth->load_user_permissions($this->user->data['user_id']);
