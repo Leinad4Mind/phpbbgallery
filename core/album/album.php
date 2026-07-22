@@ -14,62 +14,62 @@ namespace phpbbgallery\core\album;
 class album
 {
 	/** @var \phpbb\db\driver\driver_interface */
-	protected $db;
+	protected \phpbb\db\driver\driver_interface $db;
 
 	/** @var \phpbb\user */
-	protected $user;
+	protected \phpbb\user $user;
 
 	/** @var \phpbb\language\language */
-	protected $language;
+	protected \phpbb\language\language $language;
 
 	/** @var \phpbb\profilefields\manager */
-	protected $user_cpf;
+	protected \phpbb\profilefields\manager $user_cpf;
 
 	/** @var \phpbbgallery\core\auth\auth */
-	protected $gallery_auth;
+	protected \phpbbgallery\core\auth\auth $gallery_auth;
 
 	/** @var \phpbbgallery\core\cache */
-	protected $gallery_cache;
+	protected \phpbbgallery\core\cache $gallery_cache;
 
 	/** @var \phpbbgallery\core\block */
-	protected $block;
+	protected \phpbbgallery\core\block $block;
 
 	/** @var \phpbbgallery\core\config */
-	protected $gallery_config;
+	protected \phpbbgallery\core\config $gallery_config;
 
-	/** @var */
-	protected $images_table;
+	/** @var string */
+	protected string $images_table;
 
-	/** @var */
-	protected $watch_table;
+	/** @var string */
+	protected string $watch_table;
 
-	/** @var */
-	protected $contests_table;
+	/** @var string */
+	protected string $contests_table;
 
-	/** @var */
-	protected $albums_table;
+	/** @var string */
+	protected string $albums_table;
 
 	/**
 	 * album constructor.
 	 *
 	 * @param \phpbb\db\driver\driver_interface $db
 	 * @param \phpbb\user                       $user
-	 * @param language                          $language
+	 * @param \phpbb\language\language         $language
 	 * @param \phpbb\profilefields\manager      $user_cpf
 	 * @param \phpbbgallery\core\auth\auth      $gallery_auth
 	 * @param \phpbbgallery\core\cache          $gallery_cache
 	 * @param \phpbbgallery\core\block          $block
 	 * @param \phpbbgallery\core\config         $gallery_config
-	 * @param                                   $albums_table
-	 * @param                                   $images_table
-	 * @param                                   $watch_table
-	 * @param                                   $contest_table
+	 * @param string                            $albums_table
+	 * @param string                            $images_table
+	 * @param string                            $watch_table
+	 * @param string                            $contest_table
 	 */
 	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\user $user,
 		\phpbb\language\language $language, \phpbb\profilefields\manager $user_cpf,
 		\phpbbgallery\core\auth\auth $gallery_auth, \phpbbgallery\core\cache $gallery_cache, \phpbbgallery\core\block $block,
 		\phpbbgallery\core\config $gallery_config,
-		$albums_table, $images_table, $watch_table, $contest_table)
+		string $albums_table, string $images_table, string $watch_table, string $contest_table)
 	{
 		$this->db = $db;
 		$this->user = $user;
@@ -88,11 +88,11 @@ class album
 	/**
 	 * Get album information
 	 *
-	 * @param      $album_id
+	 * @param int  $album_id
 	 * @param bool $extended_info
-	 * @return mixed
+	 * @return array
 	 */
-	public function get_info($album_id, $extended_info = true)
+	public function get_info(int $album_id, bool $extended_info = true): array
 	{
 		$sql_array = array(
 			'SELECT' => 'a.*',
@@ -143,11 +143,11 @@ class album
 	/**
 	 * Check whether the album_user is the user who wants to do something
 	 *
-	 * @param      $album_id
-	 * @param bool $user_id
+	 * @param int       $album_id
+	 * @param int|false $user_id
 	 * @return bool
 	 */
-	public function check_user($album_id, $user_id = false)
+	public function check_user(int $album_id, int|false $user_id = false): bool
 	{
 		if ($user_id === false)
 		{
@@ -189,7 +189,7 @@ class album
 	 * @internal param $ (string || array)    $ignore_id                disabled albums, Exp: on moving: the album
 	 *           where the image is now
 	 */
-	public function get_albumbox($ignore_personals, $select_name, $select_id = false, $requested_permission = false, $ignore_id = false, $album_user_id = \phpbbgallery\core\block::PUBLIC_ALBUM, $requested_album_type = -1)
+	public function get_albumbox(bool $ignore_personals, string|false $select_name, array|int|false $select_id = false, string|false $requested_permission = false, array|int|false $ignore_id = false, int $album_user_id = \phpbbgallery\core\block::PUBLIC_ALBUM, int $requested_album_type = -1): string
 	{
 		// Instead of the query we use the cache
 		$album_data = $this->gallery_cache->get('albums');
@@ -334,10 +334,10 @@ class album
 	 * - album_last_image_id, _time, _name
 	 * - album_last_username, _user_colour, _user_id
 	 *
-	 * @param $album_id
-	 * @return mixed
+	 * @param int $album_id
+	 * @return array|false
 	 */
-	public function update_info($album_id)
+	public function update_info(int $album_id): array|false
 	{
 		$images_real = $images = $album_user_id = 0;
 
@@ -419,13 +419,13 @@ class album
 	/**
 	 * Generate personal album for user, when moving image into it
 	 *
-	 * @param $album_name
-	 * @param $user_id
-	 * @param $user_colour
-	 * @param $gallery_user
-	 * @return string
+	 * @param string                      $album_name
+	 * @param int                         $user_id
+	 * @param string                      $user_colour
+	 * @param \phpbbgallery\core\user    $gallery_user
+	 * @return int
 	 */
-	public function generate_personal_album($album_name, $user_id, $user_colour, $gallery_user)
+	public function generate_personal_album(string $album_name, int $user_id, string $user_colour, \phpbbgallery\core\user $gallery_user): int
 	{
 		$album_data = array(
 			'album_name'             => $this->db->sql_escape($album_name),
@@ -441,7 +441,7 @@ class album
 			'album_last_user_colour' => $user_colour,
 		);
 		$this->db->sql_query('INSERT INTO ' . $this->albums_table . ' ' . $this->db->sql_build_array('INSERT', $album_data));
-		$personal_album_id = $this->db->sql_nextid();
+		$personal_album_id = (int) $this->db->sql_nextid();
 
 		$gallery_user->update_data(array(
 			'personal_album_id' => $personal_album_id,
@@ -470,7 +470,7 @@ class album
 	/**
 	 * Create array of album IDs that are public
 	 */
-	public function get_public_albums()
+	public function get_public_albums(): array
 	{
 		$sql = 'SELECT album_id
 				FROM ' . $this->albums_table . '

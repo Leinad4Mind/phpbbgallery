@@ -28,6 +28,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added native property, parameter, union-return, and module-entry types throughout the ACP Import API.
 - Added native types throughout the EXIF model and event listener, including safe rejection of non-array serialized metadata.
 - Added native types to the core configuration, cache, URL, authorization-value, authorization-level, and constants services.
+- Added native property, parameter, and return types throughout the Core album, album-display, album-loader, and album-management services, with initialized request state and safe parent-cache deserialization.
 - Reduced the packaged extension from approximately 8.2 MiB to 3.1 MiB by removing generated differences reports, backup files, source maps, unused upload plugins, and duplicate per-style JavaScript bundles.
 - Consolidated shared JavaScript under the phpbbgallery_core template namespace and corrected the polaroid asset reference for prosilver, BBOOTS, and FLATBOOTS.
 - Updated the required jQuery UI Widget Factory from 1.11.4 to 1.14.2 and documented SHA-256 pins for every retained third-party upload asset.
@@ -60,6 +61,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added standalone ACP Cleanup tests covering typed service contracts, file cleanup, database-entry cleanup, and moderation delegation.
 - Added standalone EXIF tests covering typed model/listener contracts, stored metadata handling, invalid serialization, and event registration.
 - Added permanent core-infrastructure tests covering native contracts, configuration mutations, bitfields, constants, path normalization, partial image-cache merges, cache hits, and request-local invalidation.
+- Added permanent album-domain tests covering complete native contracts, loader state and ownership checks, manager/display defaults, and rejection of serialized objects in cached parent data.
 - Added permanent language-catalog tests covering PHP file and key parity, plural structures, printf placeholders, UTF-8 validity, and non-empty translations across all four Gallery components.
 - Added permanent package-hygiene tests covering generated artefacts, duplicate bundles, namespaced asset resolution, polaroid loading, current widget version, missing source-map references, and third-party checksums.
 - Added permanent ACP personal-gallery resync tests covering populated and empty databases, normalized values, and regression against indexing a missing row.
