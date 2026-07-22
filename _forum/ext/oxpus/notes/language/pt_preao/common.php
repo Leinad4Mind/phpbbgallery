@@ -39,7 +39,7 @@ $lang = array_merge($lang, [
 	'NOTES_MEM'			=> 'Adicionar lembrete!',
 	'NOTES_MEM_ENABLE'	=> 'Sim, lembra-me!',
 	'NOTES_MEM_TIME'	=> 'Colocar data e hora',
-	'NOTES_MEMTEXT'		=> '<strong>Introduziste notas com lembretes.</strong><br />%sClica aqui para listas essas notas.%s<br />(Clicar irá remover o lembrete)',
+	'NOTES_MEMTEXT'		=> '<strong>Introduziste notas com lembretes.</strong><br />%sClica aqui para listar essas notas.%s<br />(Clicar irá remover o lembrete)',
 	'NO_NOTES'			=> 'Não tens quaisquer notas',
 
 	'NOTES_DISCLAIMER'  		=> '**As notas que aqui vês só podem ser vistas por ti, e isso inclui moderadores e administradores. Se tiveres alguma dúvida ou preocupações, por favor, contacta a Administração.',
