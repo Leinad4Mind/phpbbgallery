@@ -15,7 +15,7 @@ use phpbb\db\migration\migration;
 
 class release_3_2_1_1 extends migration
 {
-	static public function depends_on()
+	public static function depends_on()
 	{
 		return ['\phpbbgallery\core\migrations\release_3_2_1_0'];
 	}

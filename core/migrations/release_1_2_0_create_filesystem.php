@@ -15,9 +15,9 @@ use phpbb\db\migration\migration;
 
 class release_1_2_0_create_filesystem extends migration
 {
-	static public function depends_on()
+	public static function depends_on()
 	{
-		return array('\phpbbgallery\core\migrations\release_1_2_0_add_bbcode');
+		return ['\phpbbgallery\core\migrations\release_1_2_0_add_bbcode'];
 	}
 
 	public function update_data()
@@ -30,9 +30,9 @@ class release_1_2_0_create_filesystem extends migration
 
 	public function revert_data()
 	{
-		return array(
-			array('custom', array(array(&$this, 'remove_file_system'))),
-		);
+		return [
+			['custom', [[$this, 'archive_file_system']]],
+		];
 	}
 
 	public function create_file_system()
@@ -53,21 +53,58 @@ class release_1_2_0_create_filesystem extends migration
 		}
 	}
 
-	public function remove_file_system()
+	public function archive_file_system()
 	{
 		global $phpbb_root_path;
 
-		$phpbbgallery_core_file = $phpbb_root_path . 'files/phpbbgallery/core';
-		$phpbbgallery_core_file_medium = $phpbb_root_path . 'files/phpbbgallery/core/medium';
-		$phpbbgallery_core_file_mini = $phpbb_root_path . 'files/phpbbgallery/core/mini';
-		$phpbbgallery_core_file_source = $phpbb_root_path . 'files/phpbbgallery/core/source';
+		$files_root = realpath($phpbb_root_path . 'files');
+		$gallery_root = $phpbb_root_path . 'files/phpbbgallery/core';
+		if (!file_exists($gallery_root) && !is_link($gallery_root))
+		{
+			return true;
+		}
 
-		// Clean dirs
-		$this->recursiveRemoveDirectory($phpbbgallery_core_file_mini);
-		$this->recursiveRemoveDirectory($phpbbgallery_core_file_medium);
-		$this->recursiveRemoveDirectory($phpbbgallery_core_file_source);
-		$this->recursiveRemoveDirectory($phpbbgallery_core_file);
-		$this->recursiveRemoveDirectory($phpbb_root_path . 'files/phpbbgallery');
+		if ($files_root === false || !is_dir($files_root) || is_link($gallery_root))
+		{
+			throw new \RuntimeException('Unable to preserve the phpBB Gallery files during purge.');
+		}
+
+		$source = realpath($gallery_root);
+		$expected = $files_root . DIRECTORY_SEPARATOR . 'phpbbgallery' . DIRECTORY_SEPARATOR . 'core';
+		if ($source === false || !is_dir($source) || $this->normalize_path($source) !== $this->normalize_path($expected))
+		{
+			throw new \RuntimeException('Refusing to purge an unexpected phpBB Gallery file path.');
+		}
+
+		$backup_base = dirname($source) . DIRECTORY_SEPARATOR . 'core_backup_' . gmdate('Ymd_His');
+		$backup = $backup_base;
+		$suffix = 0;
+		while (file_exists($backup) || is_link($backup))
+		{
+			$suffix++;
+			if ($suffix > 1000)
+			{
+				throw new \RuntimeException('Unable to allocate a phpBB Gallery purge backup path.');
+			}
+			$backup = $backup_base . '_' . $suffix;
+		}
+
+		if (!@rename($source, $backup))
+		{
+			throw new \RuntimeException('Unable to back up the phpBB Gallery files during purge.');
+		}
+
+		return true;
+	}
+
+	/**
+	 * Backwards-compatible entry point for a purge already queued with the old callback.
+	 *
+	 * @return bool
+	 */
+	public function remove_file_system()
+	{
+		return $this->archive_file_system();
 	}
 
 	public function copy_images()
@@ -80,19 +117,18 @@ class release_1_2_0_create_filesystem extends migration
 		copy($phpbbgallery_core_images_source . '/upload/not_authorised.jpg', $phpbbgallery_core_file_source . '/not_authorised.jpg');
 	}
 
-	function recursiveRemoveDirectory($directory)
+	/**
+	 * @param string $path
+	 * @return string
+	 */
+	private function normalize_path($path)
 	{
-		foreach (glob("{$directory}/*") as $file)
+		$path = rtrim(str_replace('\\', '/', $path), '/');
+		if (DIRECTORY_SEPARATOR === '\\')
 		{
-			if (is_dir($file))
-			{
-				$this->recursiveRemoveDirectory($file);
-			}
-			else
-			{
-				unlink($file);
-			}
+			return strtolower($path);
 		}
-		rmdir($directory);
+
+		return $path;
 	}
 }
