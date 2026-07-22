@@ -14,20 +14,11 @@ namespace phpbbgallery\acpimport\acp;
 
 class main_module
 {
-	/** @var string */
-	public $u_action;
-
-	/** @var string */
-	public $tpl_name;
-
-	/** @var string */
-	public $page_title;
-
-	/** @var import_storage */
-	private $import_storage;
-
-	/** @var array */
-	private $import_errors = [];
+	public string $u_action = '';
+	public string $tpl_name = '';
+	public string $page_title = '';
+	private import_storage $import_storage;
+	private array $import_errors = [];
 
 	public function main($id, $mode): void
 	{

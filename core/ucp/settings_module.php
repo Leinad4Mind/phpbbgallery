@@ -18,14 +18,9 @@ namespace phpbbgallery\core\ucp;
  */
 class settings_module
 {
-	/** @var string */
-	public $u_action;
-
-	/** @var string */
-	public $page_title;
-
-	/** @var string */
-	public $tpl_name;
+	public string $u_action = '';
+	public string $page_title = '';
+	public string $tpl_name = '';
 
 	/** @var \phpbb\config\config */
 	protected $config;

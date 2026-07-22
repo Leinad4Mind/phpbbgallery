@@ -15,7 +15,10 @@ namespace phpbbgallery\core\acp;
 */
 class gallery_logs_module
 {
-	var $u_action;
+	public string $u_action = '';
+	public string $tpl_name = '';
+	public string $page_title = '';
+	public \phpbb\language\language $language;
 
 	function main($id, $mode)
 	{

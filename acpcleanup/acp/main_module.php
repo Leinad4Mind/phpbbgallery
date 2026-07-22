@@ -14,7 +14,9 @@ namespace phpbbgallery\acpcleanup\acp;
 
 class main_module
 {
-	public string $u_action;
+	public string $u_action = '';
+	public string $tpl_name = '';
+	public string $page_title = '';
 
 	public function main(string $id, string $mode): void
 	{

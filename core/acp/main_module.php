@@ -17,7 +17,10 @@ namespace phpbbgallery\core\acp;
 */
 class main_module
 {
-	public $u_action;
+	public string $u_action = '';
+	public string $tpl_name = '';
+	public string $page_title = '';
+	public \phpbb\language\language $language;
 
 	public function main($id, $mode)
 	{

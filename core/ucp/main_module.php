@@ -17,10 +17,10 @@ namespace phpbbgallery\core\ucp;
 */
 class main_module
 {
-	public $u_action;
-	protected $language;
-	public $tpl_name;
-	public $page_title;
+	public string $u_action = '';
+	protected \phpbb\language\language $language;
+	public string $tpl_name = '';
+	public string $page_title = '';
 
 	public function main($id, $mode)
 	{

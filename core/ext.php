@@ -26,7 +26,7 @@ class ext extends \phpbb\extension\base
 		'phpbbgallery.core.notification.new_report',
 	];
 
-	protected $sub_extensions = [
+	protected array $sub_extensions = [
 		'phpbbgallery/acpcleanup',
 		'phpbbgallery/acpimport',
 		'phpbbgallery/exif',
@@ -38,7 +38,7 @@ class ext extends \phpbb\extension\base
 	* @param mixed $old_state State returned by previous call of this method
 	* @return mixed Returns false after last step, otherwise temporary state
 	*/
-	public function enable_step($old_state)
+	public function enable_step(mixed $old_state): mixed
 	{
 		switch ($old_state)
 		{
@@ -60,7 +60,7 @@ class ext extends \phpbb\extension\base
 	* @param mixed $old_state State returned by previous call of this method
 	* @return mixed Returns false after last step, otherwise temporary state
 	*/
-	public function disable_step($old_state)
+	public function disable_step(mixed $old_state): mixed
 	{
 		switch ($old_state)
 		{
@@ -89,7 +89,7 @@ class ext extends \phpbb\extension\base
 	* @param mixed $old_state State returned by previous call of this method
 	* @return mixed Returns false after last step, otherwise temporary state
 	*/
-	public function purge_step($old_state)
+	public function purge_step(mixed $old_state): mixed
 	{
 		$extensions = $this->container->get('ext.manager');
 		$configured = $extensions->all_disabled();
@@ -134,7 +134,7 @@ class ext extends \phpbb\extension\base
 	 * @param bool   $ignore_missing
 	 * @return void
 	 */
-	private function update_notification_types($method, $ignore_missing = false)
+	private function update_notification_types(string $method, bool $ignore_missing = false): void
 	{
 		$notification_manager = $this->container->get('notification_manager');
 		foreach (self::NOTIFICATION_TYPES as $notification_type)

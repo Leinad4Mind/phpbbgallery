@@ -18,7 +18,7 @@ class ext extends \phpbb\extension\base
 	 *
 	 * @return bool
 	 */
-	public function is_enableable()
+	public function is_enableable(): bool
 	{
 		$manager = $this->container->get('ext.manager');
 		$user = $this->container->get('user');
@@ -53,7 +53,7 @@ class ext extends \phpbb\extension\base
 	 * @param mixed $old_state State returned by previous call of this method
 	 * @return mixed Returns false after last step, otherwise temporary state
 	 */
-	public function enable_step($old_state)
+	public function enable_step(mixed $old_state): mixed
 	{
 		if (empty($old_state))
 		{

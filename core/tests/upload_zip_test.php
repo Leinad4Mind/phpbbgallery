@@ -13,11 +13,8 @@ use PHPUnit\Framework\TestCase;
 
 class upload_zip_test extends TestCase
 {
-	/** @var string */
-	private $temporary_directory;
-
-	/** @var int */
-	private $archive_number = 0;
+	private string $temporary_directory;
+	private int $archive_number = 0;
 
 	protected function setUp(): void
 	{
@@ -39,14 +36,14 @@ class upload_zip_test extends TestCase
 	/**
 	 * @dataProvider zip_path_provider
 	 */
-	public function test_validates_archive_paths(string $path, $expected): void
+	public function test_validates_archive_paths(string $path, mixed $expected): void
 	{
 		$upload = $this->new_upload();
 
 		$this->assertSame($expected, $this->invoke_upload($upload, 'validate_zip_path', [$path]));
 	}
 
-	public function zip_path_provider(): array
+	public static function zip_path_provider(): array
 	{
 		return [
 			['image.png', 'image.png'],
