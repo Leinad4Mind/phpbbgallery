@@ -147,10 +147,10 @@ class upload
 	private $file_rotating = array();
 	private $zip_file_data = [];
 
-	var $min_width = 0;
-	var $min_height = 0;
-	var $max_width = 0;
-	var $max_height = 0;
+	public int $min_width = 0;
+	public int $min_height = 0;
+	public int $max_width = 0;
+	public int $max_height = 0;
 
 	/**
 	 * Constructor

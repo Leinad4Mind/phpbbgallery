@@ -14,6 +14,12 @@ namespace phpbbgallery\core\acp;
 
 class config_module
 {
+	public string $u_action = '';
+	public string $tpl_name = '';
+	public string $page_title = '';
+	public \phpbb\language\language $language;
+	public array $new_config = [];
+
 	/**
 	* This function is called, when the main() function is called.
 	* You can use this function to add your language files, check for a valid mode, unset config options and more.
@@ -333,7 +339,7 @@ class config_module
 		return $return_ary;
 	}
 
-	protected $display_vars = array(
+	protected array $display_vars = array(
 		'main'	=> array(
 			'title'	=> 'GALLERY_CONFIG',
 			'vars'	=> array(

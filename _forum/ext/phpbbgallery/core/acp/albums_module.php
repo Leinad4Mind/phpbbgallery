@@ -24,11 +24,11 @@ namespace phpbbgallery\core\acp;
 */
 class albums_module
 {
-	var $u_action;
-	var $parent_id = 0;
-	var $language;
-	var $tpl_name;
-	var $page_title;
+	public string $u_action = '';
+	public int $parent_id = 0;
+	public \phpbb\language\language $language;
+	public string $tpl_name = '';
+	public string $page_title = '';
 
 	function main($id, $mode)
 	{

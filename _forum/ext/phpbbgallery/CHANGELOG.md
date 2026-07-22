@@ -22,6 +22,8 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Raised the minimum runtime for all Gallery components to PHP 8.1 and phpBB 3.3, and moved the standalone test dependency from PHPUnit 7/9 to PHPUnit 10.5.
+- Replaced legacy and dynamic ACP/UCP module state with declared typed properties, preventing PHP 8.2 dynamic-property deprecations.
 - Reduced the packaged extension from approximately 8.2 MiB to 3.1 MiB by removing generated differences reports, backup files, source maps, unused upload plugins, and duplicate per-style JavaScript bundles.
 - Consolidated shared JavaScript under the phpbbgallery_core template namespace and corrected the polaroid asset reference for prosilver, BBOOTS, and FLATBOOTS.
 - Updated the required jQuery UI Widget Factory from 1.11.4 to 1.14.2 and documented SHA-256 pins for every retained third-party upload asset.
@@ -49,6 +51,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Tests
 
+- Added permanent runtime-compatibility tests covering the PHP/phpBB/PHPUnit baselines, legacy `var` regression, and typed ACP/UCP module state.
 - Added permanent language-catalog tests covering PHP file and key parity, plural structures, printf placeholders, UTF-8 validity, and non-empty translations across all four Gallery components.
 - Added permanent package-hygiene tests covering generated artefacts, duplicate bundles, namespaced asset resolution, polaroid loading, current widget version, missing source-map references, and third-party checksums.
 - Added permanent ACP personal-gallery resync tests covering populated and empty databases, normalized values, and regression against indexing a missing row.

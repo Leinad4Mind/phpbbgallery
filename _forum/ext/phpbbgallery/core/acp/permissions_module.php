@@ -19,17 +19,10 @@ namespace phpbbgallery\core\acp;
 */
 class permissions_module
 {
-	/** @var  */
-	var $u_action;
-
-	/** @var */
-	var $language;
-
-	/** @var string */
-	var $tpl_name;
-
-	/** @var string */
-	var $page_title;
+	public string $u_action = '';
+	public \phpbb\language\language $language;
+	public string $tpl_name = '';
+	public string $page_title = '';
 
 	public function main($id, $mode)
 	{
