@@ -14,3 +14,4 @@ if (!defined('IN_PHPBB'))
 }
 
 require_once dirname(__DIR__) . '/acp/import_storage.php';
+require_once dirname(__DIR__) . '/acp/main_module.php';

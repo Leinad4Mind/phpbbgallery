@@ -20,7 +20,7 @@ class main_module
 	private import_storage $import_storage;
 	private array $import_errors = [];
 
-	public function main($id, $mode): void
+	public function main(string $id, string $mode): void
 	{
 		global $auth, $cache, $config, $db, $template, $user, $phpbb_root_path, $phpbb_container, $gallery_url, $gallery_config, $gallery_album;
 
