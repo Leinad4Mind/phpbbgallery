@@ -14,11 +14,29 @@ namespace phpbbgallery\core\auth;
 
 class level
 {
-
+	/**
+	 * Gallery Auth Object
+	 */
 	protected \phpbbgallery\core\auth\auth $auth;
+
+	/**
+	 * Config Object
+	 */
 	protected \phpbb\config\config $config;
+
+	/**
+	 * Template Object
+	 */
 	protected \phpbb\template\template $template;
+
+	/**
+	 * User Object
+	 */
 	protected \phpbb\user $user;
+
+	/**
+	 * Language Object
+	 */
 	protected \phpbb\language\language $lang;
 
 	/**
@@ -28,7 +46,7 @@ class level
 	 * @param \phpbb\config\config         $config   Config Object
 	 * @param \phpbb\template\template     $template Template Object
 	 * @param \phpbb\user                  $user     User Object
-	 * @param \phpbb\language\language     $language
+	 * @param \phpbb\language\language     $language Language Object
 	 */
 	public function __construct(\phpbbgallery\core\auth\auth $auth, \phpbb\config\config $config, \phpbb\template\template $template, \phpbb\user $user,
 								\phpbb\language\language $language)
