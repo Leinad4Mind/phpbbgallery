@@ -35,13 +35,13 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 
 $lang = array_merge($lang, [
-	'CANNOT_REPORT_ANONYMOUS'    => 'Não tem permissão para reportar a conta anónima.',
-	'CANNOT_REPORT_ADMINS_MODS'  => 'Não pode reportar administradores ou moderadores deste fórum.',
+	'CANNOT_REPORT_ANONYMOUS'    => 'Não tens permissão para reportar a conta anónima.',
+	'CANNOT_REPORT_ADMINS_MODS'  => 'Não podes reportar administradores ou moderadores deste fórum.',
 	'FORUM_NOT_EXIST'            => 'O fórum selecionado não existe.',
 	'INFO_NOT_FOUND'             => 'A combinação do ID do autor e o ID da publicação não existe.',
 	'POST_NOT_EXIST'             => 'A publicação solicitada não existe.',
-	'NO_SOUP_FOR_YOU'            => 'Sem sopa para si! Parece que foi sinalizado como spammer.<br>Se acha que esta decisão foi um erro %scontacte o administrador do fórum%s.',
-	'NO_SOUP_FOR_YOU_NO_CONTACT' => 'Sem sopa para si! Parece que foi sinalizado como spammer.',
+	'NO_SOUP_FOR_YOU'            => 'Sem sopa para ti! Parece que foste sinalizado como spammer.<br>Se achas que esta decisão foi um erro %scontacta o administrador do fórum%s.',
+	'NO_SOUP_FOR_YOU_NO_CONTACT' => 'Sem sopa para ti! Parece que foste sinalizado como spammer.',
 	'PM_NOT_EXIST'               => 'A MP não existe',
 	'SFS_ANONYMIZED_IP'          => 'O IP do utilizador foi anonimizado, definido para 127.0.0.1, provavelmente devido a uma extensão.',
 	'SFS_MISSING_DATA'           => 'Nem todas as informações foram fornecidas para reportar ao Stop Forum Spam.',
@@ -52,7 +52,7 @@ $lang = array_merge($lang, [
 	'SFS_IP_STOPPED'             => '<a target="_blank" title="Verificar IP no StopForumSpam.com (abre numa nova janela)" href="http://www.stopforumspam.com/ipcheck/%1$s" rel="noreferrer noopener">%1$s</a>',
 	'SFS_USERNAME_STOPPED'       => '<a target="_blank" title="Verificar Nome de Utilizador no StopForumSpam.com (abre numa nova janela)" href="http://www.stopforumspam.com/search/?q=%1$s" rel="noreferrer noopener">%1$s</a>',
 	'SFS_EMAIL_STOPPED'          => '<a target="_blank" title="Verificar E-mail no StopForumSpam.com (abre numa nova janela)" href="http://www.stopforumspam.com/search/?q=%1$s" rel="noreferrer noopener">%1$s</a>',
-	'SFS_ERROR_MESSAGE'          => 'Infelizmente não podemos processar o seu pedido agora devido a problemas com uma entidade externa. Pode tentar novamente mais tarde.',
+	'SFS_ERROR_MESSAGE'          => 'Infelizmente não podemos processar o teu pedido agora devido a problemas com uma entidade externa. Podes tentar novamente mais tarde.',
 	'SFS_BANNED'                 => [
 		1 => 'Encontrado na base de dados do Stop Forum Spam uma vez',
 		2 => 'Encontrado na base de dados do Stop Forum Spam %d vezes',
@@ -67,7 +67,7 @@ $lang = array_merge($lang, [
 	'SFS_PM_WAS_REPORTED'       => 'A MP foi reportada ao Stop Forum Spam',
 	'SFS_PM_REPORT_NOT_ALLOWED' => 'O reporte não é permitido',
 	'SFS_NEED_CURL'             => 'A extensão necessita de cURL que parece não estar instalado',
-	'EXTENSION_REQUIREMENTS'    => 'A extensão requer pelo menos a versão %1$s do phpBB. Precisa de atualizar a sua versão do phpBB para utilizar esta extensão.',
+	'EXTENSION_REQUIREMENTS'    => 'A extensão requer pelo menos a versão %1$s do phpBB. Precisas de atualizar a tua versão do phpBB para utilizar esta extensão.',
 	'CURL_REQUIREMENTS'         => 'A extensão requer que o cURL esteja instalado e compilado com um certificado SSL válido neste servidor',
 	'CURL_ERROR'                => 'Erro de cURL',
 	'INVALID_IP_ADDRESS'        => 'Endereço IP inválido',

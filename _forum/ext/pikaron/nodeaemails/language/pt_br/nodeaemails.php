@@ -33,15 +33,15 @@ if (empty($lang) || !is_array($lang))
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
 
 $lang = array_merge($lang, [
-	'NO_DEA_EMAILS_INSTALL_ERROR'      => '?oNo DEA Emails?? não pode ser instalada.<br><br>- É necessário o PhpBB 3.2.4 ou superior.',
-	'NO_DEA_EMAILS_PHP_ERROR'          => '?oNo DEA Emails?? não pode ser instalada.<br><br>- É necessário o PHP 5.6.0 ou superior.',
-	'NO_DEA_EMAILS_NO_CURL'            => '?oNo DEA Emails?? não pode ser instalada.<br><br>- É necessária a extensão ?ocurl?? carregada no PHP.',
-	'NO_DEA_EMAILS_FOUND'              => 'ERRO: O domínio de e-mail ((%s)) não é válido.<br>O nosso site NÃO suporta contas de e-mail descartáveis ou temporárias <a href="https://bit.ly/2LBsbqe" target="_blank">(DEA)</a>.<br>Se deseja continuar o registro no nosso site, tem de utilizar uma conta de e-mail não descartável.',
-	'NO_DEA_EMAILS_TITLE_FORCE_CHANGE' => 'Alteração Exigida pela Extensão ?oNo DEA Emails??',
-	'NO_DEA_EMAILS_FORCE_CHANGE'       => 'Antes de continuar a navegar no site, necessita de alterar o seu "E-mail".',
-	'NO_DEA_EMAILS_NOT_FORCE_CHANGE'   => 'Antes de continuar a navegar no site, necessita de alterar o seu "E-mail".<br>Não tem permissões para efetuar a alteração.<br>Terá de contactar a Administração do site e solicitar a atualização.',
-	'LOG_NO_DEA_EMAILS'                => 'Bloquear e-mails DEA',
-	'LOG_NO_DEA_EMAILS_SETTINGS'       => 'Gestão Cron & Domínios de e-mail DEA externos',
-	'LOG_NO_DEA_EMAILS_LOCALS'         => 'Gestão local de domínios de e-mail DEA',
-	'LOG_NO_DEA_EMAILS_USERS'          => 'Usuários com contas de e-mail DEA',
+	'NO_DEA_EMAILS_INSTALL_ERROR'      => '"No DEA Emails" não pode ser instalada.<br><br>- É necessário o phpBB 3.2.4 ou superior.',
+	'NO_DEA_EMAILS_PHP_ERROR'          => '"No DEA Emails" não pode ser instalada.<br><br>- É necessário o PHP 5.6.0 ou superior.',
+	'NO_DEA_EMAILS_NO_CURL'            => '"No DEA Emails" não pode ser instalada.<br><br>- É necessária a extensão "curl" do PHP.',
+	'NO_DEA_EMAILS_FOUND'              => 'ERRO: O domínio de e-mail ((%s)) não é válido.<br>O nosso site NÃO suporta contas de e-mail descartáveis ou temporárias <a href="https://bit.ly/2LBsbqe" target="_blank">(DEA)</a>.<br>Se você deseja continuar o registro em nosso site, deve utilizar uma conta de e-mail não descartável.',
+	'NO_DEA_EMAILS_TITLE_FORCE_CHANGE' => 'Alteração Exigida pela Extensão "No DEA Emails"',
+	'NO_DEA_EMAILS_FORCE_CHANGE'       => 'Antes de continuar navegando no site, você precisa alterar seu "E-mail".',
+	'NO_DEA_EMAILS_NOT_FORCE_CHANGE'   => 'Antes de continuar navegando no site, você precisa alterar seu "E-mail".<br>Você não tem permissão para fazer a alteração.<br>Você precisa entrar em contato com a Administração do site e solicitar a atualização.',
+	'LOG_NO_DEA_EMAILS'                => 'No DEA Emails',
+	'LOG_NO_DEA_EMAILS_SETTINGS'       => 'Gerenciamento de CRON e Domínios de E-mail DEA Externos',
+	'LOG_NO_DEA_EMAILS_LOCALS'         => 'Gerenciamento Local de Domínios de E-mail DEA',
+	'LOG_NO_DEA_EMAILS_USERS'          => 'Usuários com Contas de E-mail DEA',
 ]);

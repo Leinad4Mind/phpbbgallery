@@ -40,9 +40,9 @@ $lang = array_merge($lang, [
 	'TOPIC_APPROVAL_NOTICE' => 'Todos os novos tópicos colocados neste fórum exigem uma aprovação feita pelos moderadores',
 	//Donation
 	'PAYPAL_IMAGE_URL'      => 'https://www.paypalobjects.com/webstatic/en_US/i/btn/png/silver-pill-paypal-26px.png',
-	'PAYPAL_ALT'            => 'Doar via PayPal',
+	'PAYPAL_ALT'            => 'Doar através de PayPal',
 	'BUY_ME_A_BEER_URL'     => 'https://paypal.me/RMcGirr83',
-	'BUY_ME_A_BEER'         => 'Compre-me uma cerveja por criar esta extensão',
-	'BUY_ME_A_BEER_SHORT'   => 'Faça uma doação para esta extensão',
-	'BUY_ME_A_BEER_EXPLAIN' => 'Esta extensão é completamente livre/grátis. É um projecto a qual despendo tempo para benefício e utilização por parte da comunidade phpBB. Se aprecia e gosta desta extensão, ou se a mesma ajudou e conferiu algo de valor em benefício do seu fórum, por favor, se puder e tiver possibilidade pondere <a href="https://paypal.me/RMcGirr83" target="_blank" rel="noreferrer noopener">Pagar-me uma cerveja</a>. Ficarei muito grato pela oferta. <i class="fa fa-smile-o" style="color:green;font-size:1.5em;" aria-hidden="true"></i>',
+	'BUY_ME_A_BEER'         => 'Oferece-me uma cerveja por criar esta extensão',
+	'BUY_ME_A_BEER_SHORT'   => 'Faz um donativo para esta extensão',
+	'BUY_ME_A_BEER_EXPLAIN' => 'Esta extensão é completamente gratuita. É um projecto ao qual dedico o meu tempo, pelo gosto e para o uso da comunidade phpBB. Se gostas de usar esta extensão, ou se ela beneficiou o teu fórum, por favor considera <a href="https://paypal.me/RMcGirr83" target="_blank" rel="noreferrer noopener">oferecer-me uma cerveja</a>. Seria muito apreciado. <i class="fa fa-smile-o" style="color:green;font-size:1.5em;" aria-hidden="true"></i>',
 ]);
