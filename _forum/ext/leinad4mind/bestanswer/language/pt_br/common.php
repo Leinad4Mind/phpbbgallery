@@ -46,7 +46,7 @@ $lang = array_merge($lang, [
 	'BBPOINTS_ANSWER_EXPLAIN' => 'Coloca o número de pontos a serem creditados ao autor da mensagem quando a sua mensagem neste fórum for marcada como "Melhor Resposta"',
 
 	'ENABLE_ANSWER'         => 'Activar Melhor Resposta',
-	'ENABLE_ANSWER_EXPLAIN' => 'If enabled, the topic starter (if permitted) and moderators (where allowed) will be able to mark a topic reply as the best answer.',
+	'ENABLE_ANSWER_EXPLAIN' => 'Se ativado, o criador do tópico (se permitido) e os moderadores (onde permitido) poderão marcar uma resposta do tópico como a melhor resposta.',
 
 	'TO_POST' => '<i class="fa fa-eye"></i> Ver Mensagem',
 
@@ -57,12 +57,12 @@ $lang = array_merge($lang, [
 	'LOG_BBPOINTS_UNMARK_ANSWER' => '<strong>Removidos PontosGold ao autor pela melhor resposta</strong><br />» %1$s by %2$s',
 
 	'MARK_ANSWER'         => 'Marcar Melhor Resposta',
-	'MARK_ANSWER_CONFIRM' => 'Tem a certeza de que queres marcar esta mensagem como sendo a melhor resposta?',
+	'MARK_ANSWER_CONFIRM' => 'Tem a certeza de que deseja marcar esta mensagem como sendo a melhor resposta?',
 
 	'TOTAL_ANSWERS' => 'Respostas totais',
 
 	'UNMARK_ANSWER'         => 'Remover Melhor Resposta',
-	'UNMARK_ANSWER_CONFIRM' => 'Tem a certeza de que queres desmarcar esta mensagem como sendo a melhor resposta?',
+	'UNMARK_ANSWER_CONFIRM' => 'Tem a certeza de que deseja desmarcar esta mensagem como sendo a melhor resposta?',
 
 	'MARK_ANSWER_NOTIFICATION'        => '%1$s marcou a sua mensagem no tópico “%2$s” como sendo a melhor resposta.',
 	'UNMARK_ANSWER_NOTIFICATION'      => '%1$s desmarcou a sua mensagem no tópico “%2$s” como sendo a melhor resposta.',

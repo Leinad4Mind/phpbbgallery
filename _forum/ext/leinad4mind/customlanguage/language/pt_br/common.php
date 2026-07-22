@@ -45,5 +45,5 @@ $lang = array_merge($lang, [
 	'WROTE'                       => '',
 	'POST_STORED_MOD'             => 'Tópico criado com sucesso, embora necessite ser Aprovado e posteriormente Movido.',
 	'NOTIFICATION_TOPIC_APPROVED' => '<strong>Tópico Aprovado, será Movido brevemente</strong>:',
-	'FORCE_PASSWORD_EXPLAIN'      => 'Por motivos de Segurança. É obrigatório que alteres a sua senha.<br>Você pode ler mais aqui depois de alterares a senha: <a style="color:white" href="https://goldtuganime.com/forum/seguranca">https://goldtuganime.com/forum/seguranca</a>',
+	'FORCE_PASSWORD_EXPLAIN'      => 'Por motivos de Segurança. É obrigatório que você altere a sua senha.<br>Você pode ler mais aqui depois de alterar a senha: <a style="color:white" href="https://goldtuganime.com/forum/seguranca">https://goldtuganime.com/forum/seguranca</a>',
 ]);

@@ -38,148 +38,148 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'MODE'                     => 'Mode',
-	'ELEMENTS'                 => 'Elements',
-	'FORM_NAME'                => 'Forum Name',
-	'FORUM_ID'                 => 'Forum ID',
-	'ACP_FORM_CURRENT'         => 'Update Current Form',
-	'ACP_FORM_CREATOR'         => 'Form Creator',
-	'ACP_FORM_CREATOR_EXPLAIN' => 'With this tool you can create and manage forms for your forum.',
-	'ACP_FORM_EXT_NOTE'        => '<br><strong>Note:</strong> All actions are performed on the currently selected/displayed form, no confirm is implemented...',
+	'MODE'                     => 'Modo',
+	'ELEMENTS'                 => 'Elementos',
+	'FORM_NAME'                => 'Nome do Fórum',
+	'FORUM_ID'                 => 'ID do Fórum',
+	'ACP_FORM_CURRENT'         => 'Atualizar Formulário Atual',
+	'ACP_FORM_CREATOR'         => 'Criador de Formulários',
+	'ACP_FORM_CREATOR_EXPLAIN' => 'Com esta ferramenta você pode criar e gerenciar formulários para o seu fórum.',
+	'ACP_FORM_EXT_NOTE'        => '<br><strong>Nota:</strong> Todas as ações são realizadas no formulário atualmente selecionado/exibido, não há confirmação implementada...',
 
-	'ACP_FORM_CREATOR_FAQ' => '<strong>How to begin?</strong><br>
-									&nbsp; &bull; You just need to first select the forum where you will want to create the form.<br>
+	'ACP_FORM_CREATOR_FAQ' => '<strong>Como começar?</strong><br>
+									&nbsp; &bull; Você só precisa selecionar primeiro o fórum onde vai querer criar o formulário.<br>
 									<br>
-									<strong>How can I do that?</strong><br>
-									&nbsp; &bull; Just select a new forum from the <strong><i>Current Forum</i></strong> dropdown box...<br>
+									<strong>Como faço isso?</strong><br>
+									&nbsp; &bull; Basta selecionar um novo fórum na caixa suspensa <strong><i>Fórum Atual</i></strong>...<br>
 									<br>
-									<strong>And now what?</strong><br>
-									&nbsp; &bull; Next step would be to add new form elements<br>
+									<strong>E agora?</strong><br>
+									&nbsp; &bull; O próximo passo é adicionar novos elementos ao formulário<br>
 									<br>
-									<strong>How do I add a new form element?</strong><br> 
-									&nbsp; &bull; Use <strong><i>Add a new form element</i></strong> at the bottom.<br>
+									<strong>Como adiciono um novo elemento ao formulário?</strong><br>
+									&nbsp; &bull; Use <strong><i>Adicionar novo elemento ao formulário</i></strong> no rodapé.<br>
 									<br>
-									<strong>After adding all the form elements I want, does it save automatically?</strong><br>
-									&nbsp; &bull; Yes, when you add the form element it saves automatically on the current form, but if you make changes on the form elements on the <strong><i>Update Current Form</i></strong> then you\'ll need to click update so it can save the changes!<br>
+									<strong>Depois de adicionar todos os elementos que quero, isso salva automaticamente?</strong><br>
+									&nbsp; &bull; Sim, quando você adiciona o elemento do formulário, ele é salvo automaticamente no formulário atual, mas se você fizer alterações nos elementos do formulário em <strong><i>Atualizar Formulário Atual</i></strong>, vai precisar clicar em atualizar para que as alterações sejam salvas!<br>
 									<br>
-									<strong>Some fields don\'t make sense to my element type, will something bad happen if I fill those fields?</strong><br>
-									&nbsp; &bull; Nothing bad will happen. You\'ll just put trash on the database. All that info will be discarded. That\'s why it\'s recommended to add an empty new form element and just then update it.<br>
+									<strong>Alguns campos não fazem sentido para meu tipo de elemento, acontece algo de ruim se eu preenchê-los?</strong><br>
+									&nbsp; &bull; Não acontece nada de ruim. Você só vai colocar lixo no banco de dados. Toda essa informação será descartada. É por isso que se recomenda adicionar um novo elemento vazio e só depois atualizá-lo.<br>
 									<br>
-									<strong>How do I delete a form?</strong><br>
-									&nbsp; &bull; Simply delete all form elements...<br>
+									<strong>Como excluo um formulário?</strong><br>
+									&nbsp; &bull; Basta excluir todos os elementos do formulário...<br>
 									<br>
 									<br>
-									<strong>What is Name Before/After?</strong><br>
-									&nbsp; &bull; Those fields accept BBCode, and whatever you write there will appear before and after the Entry Name on the final post, so you can customize the Entry Name.<br>
+									<strong>O que é Nome Antes/Depois?</strong><br>
+									&nbsp; &bull; Esses campos aceitam BBCode, e o que você escrever ali vai aparecer antes e depois do Nome da Entrada no post final, para que você possa personalizar o Nome da Entrada.<br>
 									<br>
-									<strong>Can I see an example for Name Before/After fields?</strong><br>
-									&nbsp; &bull; Sure. You can add <i>[b]</i> on the Before field and <i>[/b]</i> on the After field and if the Entry Name is <i>Title</i> then the post will be parsed into: <i>[b]Title[/b]</i><br>
+									<strong>Posso ver um exemplo dos campos Nome Antes/Depois?</strong><br>
+									&nbsp; &bull; Claro. Você pode adicionar <i>[b]</i> no campo Antes e <i>[/b]</i> no campo Depois e se o Nome da Entrada for <i>Título</i>, então o post será processado como: <i>[b]Título[/b]</i><br>
 									<br>
-									<strong>What is Entry Name?</strong><br>
-									&nbsp; &bull; Really? This is the question on the form field, the text before the input field, and that text may or may not be imported to the final post.<br>
+									<strong>O que é Nome da Entrada?</strong><br>
+									&nbsp; &bull; Sério? Essa é a pergunta no campo do formulário, o texto antes do campo de entrada, e esse texto pode ou não ser importado para o post final.<br>
 									<br>
-									<strong>What is Entry Explain?</strong><br>
-									&nbsp; &bull; This is an optional field, if you fill it, it will appear below the Entry Name on the form, so you can insert a little explanation text. It supports BBCode and line break too.<br>
+									<strong>O que é Explicação da Entrada?</strong><br>
+									&nbsp; &bull; Este é um campo opcional, se você preenchê-lo, ele vai aparecer abaixo do Nome da Entrada no formulário, para que você possa inserir um pequeno texto explicativo. Suporta BBCode e quebra de linha também.<br>
 									<br>
-									<strong>What is Hint?</strong><br>
-									&nbsp; &bull; Hint is optional and is what appears inside the input fields, so you can provide an idea of what should be filled on the input box. Its good idea to use in some cases to avoid abusing the Entry Explain. For selectbox the hint will be the default first element.<br>
+									<strong>O que é Dica?</strong><br>
+									&nbsp; &bull; A Dica é opcional e é o que aparece dentro dos campos de entrada, para que você possa dar uma ideia do que deve ser preenchido na caixa de entrada. É uma boa ideia usá-la em alguns casos para evitar abusar da Explicação da Entrada. Para a caixa de seleção, a dica será o primeiro elemento padrão.<br>
 									<br>
-									<strong>What is Options?</strong><br>
-									&nbsp; &bull; It only works on some element types: selectbox, radiobuttons, checkbox and separator. With that said, it\'s a field where you\'ll insert the options for those element types.<br>
+									<strong>O que é Opções?</strong><br>
+									&nbsp; &bull; Só funciona em alguns tipos de elemento: caixa de seleção, botões de opção, caixa de seleção múltipla e separador. Dito isso, é um campo onde você vai inserir as opções para esses tipos de elemento.<br>
 									<br>
-									<strong>Can I see an example for Options fields? I am still confuse.</strong><br>
-									&nbsp; &bull; Sure. You can add for example genres as: <i>Action, Adventure, Horror, Romance, Sci-Fi</i>, and the user will be able to just select the options, instead of writing.<br>
+									<strong>Posso ver um exemplo dos campos Opções? Ainda estou confuso.</strong><br>
+									&nbsp; &bull; Claro. Você pode adicionar, por exemplo, gêneros como: <i>Ação, Aventura, Terror, Romance, Ficção Científica</i>, e o usuário poderá apenas selecionar as opções, em vez de digitá-las.<br>
 									<br>
-									<strong>That makes sense for selectbox, radiobuttons and checkbox, but separator? What is it? </strong><br>
-									&nbsp; &bull; Yes, that one is an exception. That field is only for form layout customization. A way to customize how the form itself will look like.<br>
+									<strong>Isso faz sentido para caixa de seleção, botões de opção e caixa de seleção múltipla, mas separador? O que é isso?</strong><br>
+									&nbsp; &bull; Sim, esse é uma exceção. Esse campo é apenas para personalização do layout do formulário. Uma forma de personalizar a aparência do próprio formulário.<br>
 									<br>
-									<strong>Great! And do I always need to use a Comma to separate the words?</strong><br>
-									&nbsp; &bull; You can use a comma or a line break and there is a hidden feature too. If you use "Administrator => Adm, Moderator => Mod, User => U", where the former one will appear on the form and the latter one on the post.<br>
+									<strong>Ótimo! E eu sempre preciso usar uma vírgula para separar as palavras?</strong><br>
+									&nbsp; &bull; Você pode usar uma vírgula ou uma quebra de linha e também há um recurso oculto. Se você usar "Administrador => Adm, Moderador => Mod, Usuário => U", o primeiro vai aparecer no formulário e o segundo no post.<br>
 									<br>
-									<strong>What is Min/Max?</strong><br>
-									&nbsp; &bull; This only works on Checkboxes since it\'s the only element type where you can select multiple items and with those fields you can require the user to choose between a min and max values. If you put Min: 1 and Max: 3, the user will need to choose at least one and less than 3 options.<br>
+									<strong>O que é Mín/Máx?</strong><br>
+									&nbsp; &bull; Isso só funciona em Caixas de Seleção Múltipla, já que é o único tipo de elemento onde você pode selecionar vários itens, e com esses campos você pode exigir que o usuário escolha entre um valor mínimo e máximo. Se você colocar Mín: 1 e Máx: 3, o usuário vai precisar escolher pelo menos uma e menos de 3 opções.<br>
 									<br>
-									<strong>What is Value Before/After?</strong><br>
-									&nbsp; &bull; It\'s similar to the <i>Name Before/After</i>. It accepts BBCode as well and will appear before and after the value that the user inserted.<br>
+									<strong>O que é Valor Antes/Depois?</strong><br>
+									&nbsp; &bull; É parecido com <i>Nome Antes/Depois</i>. Também aceita BBCode e vai aparecer antes e depois do valor que o usuário inseriu.<br>
 									<br>
-									<strong>Can I still see an example for Value Before/After fields?</strong><br>
-									&nbsp; &bull; Why not? You can add <i>[color=#ff0000]</i> on the Before field and <i>[/color]</i> on the After field and lets say the Entry Name is <i>Movie Title</i>. Then the user inserts on the form something as <i>Titanic</i> and when he submits, the post will be parsed into: <i>[color=#ff0000]Titanic[/color]</i><br>
+									<strong>Ainda posso ver um exemplo dos campos Valor Antes/Depois?</strong><br>
+									&nbsp; &bull; Por que não? Você pode adicionar <i>[color=#ff0000]</i> no campo Antes e <i>[/color]</i> no campo Depois e digamos que o Nome da Entrada seja <i>Título do Filme</i>. Aí o usuário insere no formulário algo como <i>Titanic</i> e quando envia, o post será processado como: <i>[color=#ff0000]Titanic[/color]</i><br>
 									<br>
-									<strong>Is there anything else that I should know?</strong><br>
-									&nbsp; &bull; I\'m glad you asked! Some fields as Entry Name, Explain, Hint and Options are translatable. This means you can insert language variables {L_LANGUAGE_VARIABLE} so the form will be multilingual.<br>
+									<strong>Tem mais alguma coisa que eu deveria saber?</strong><br>
+									&nbsp; &bull; Que bom que perguntou! Alguns campos como Nome da Entrada, Explicação, Dica e Opções são traduzíveis. Isso significa que você pode inserir variáveis de idioma {L_LANGUAGE_VARIABLE} para que o formulário seja multilíngue.<br>
 									<br>
-									<strong>WOW! Awesome! But where can I add the Language Variables?</strong><br>
-									&nbsp; &bull; Just edit the root/ext/leinad4mind/formcreator/language/COUNTRY/common.php file and add new variables, so you can use at ACP afterwards.<br>
+									<strong>UAU! Incrível! Mas onde posso adicionar as Variáveis de Idioma?</strong><br>
+									&nbsp; &bull; Basta editar o arquivo root/ext/leinad4mind/formcreator/language/COUNTRY/common.php e adicionar novas variáveis, para depois poder usá-las na ACP.<br>
 									<br>
-									<strong>&#8730;</strong> The checkmark character indicates the item is mandatory and cannot be empty, so it will force the user to fill it.<br>
-									<strong><i class="fa fa-eye" aria-hidden="true"></i></strong> The eye character indicates the entry name of that item will not be imported to the post submitted.<br>',
+									<strong>&#8730;</strong> O símbolo de visto indica que o item é obrigatório e não pode ficar vazio, o que obriga o usuário a preenchê-lo.<br>
+									<strong><i class="fa fa-eye" aria-hidden="true"></i></strong> O símbolo de olho indica que o nome da entrada desse item não será importado para o post enviado.<br>',
 
-	'CURRENT_FORUM'                   => 'Current Forum',
-	'FORM_ADD_ITEM'                   => 'Add a new form element',
-	'FORM_CHECKBOX'                   => 'Check Box',
-	'FORM_DETAILS'                    => 'All forms use a generic template file: styles/YOUR_STYLE/template/forms/form_creator.html',
-	'FORM_ELEMENT_TYPE'               => 'Element type',
-	'FORM_ELEMENT_HINT'               => 'Hint',
-	'FORM_ELEMENT_OPTIONS_SEPARATOR'  => 'Options separator',
-	'FORM_ELEMENT_NAME_VISIBLE'       => 'Display/hide the element name on the final form.',
-	'FORM_ELEMENT_NAME'               => 'Entry Name',
-	'FORM_ELEMENT_EXPLAIN'            => 'Entry Explain',
-	'FORM_ELEMENT_NAME_EXPLAIN'       => 'Entry Name/Explain',
-	'FORM_ELEMENT_OPTIONS'            => 'Options',
-	'FORM_ELEMENT_MIN_MAX'            => 'Min/Max',
-	'FORM_ELEMENT_MIN'                => 'Min',
-	'FORM_ELEMENT_MAX'                => 'Max',
-	'FORM_ELEMENT_NAME_BEFORE_AFTER'  => 'Name before/after',
-	'FORM_ELEMENT_VALUE_BEFORE_AFTER' => 'Value before/after',
+	'CURRENT_FORUM'                   => 'Fórum Atual',
+	'FORM_ADD_ITEM'                   => 'Adicionar novo elemento ao formulário',
+	'FORM_CHECKBOX'                   => 'Caixa de Seleção Múltipla',
+	'FORM_DETAILS'                    => 'Todos os formulários usam um arquivo de modelo genérico: styles/SEU_ESTILO/template/forms/form_creator.html',
+	'FORM_ELEMENT_TYPE'               => 'Tipo de elemento',
+	'FORM_ELEMENT_HINT'               => 'Dica',
+	'FORM_ELEMENT_OPTIONS_SEPARATOR'  => 'Separador de opções',
+	'FORM_ELEMENT_NAME_VISIBLE'       => 'Mostrar/ocultar o nome do elemento no formulário final.',
+	'FORM_ELEMENT_NAME'               => 'Nome da Entrada',
+	'FORM_ELEMENT_EXPLAIN'            => 'Explicação da Entrada',
+	'FORM_ELEMENT_NAME_EXPLAIN'       => 'Nome/Explicação da Entrada',
+	'FORM_ELEMENT_OPTIONS'            => 'Opções',
+	'FORM_ELEMENT_MIN_MAX'            => 'Mín/Máx',
+	'FORM_ELEMENT_MIN'                => 'Mín',
+	'FORM_ELEMENT_MAX'                => 'Máx',
+	'FORM_ELEMENT_NAME_BEFORE_AFTER'  => 'Nome antes/depois',
+	'FORM_ELEMENT_VALUE_BEFORE_AFTER' => 'Valor antes/depois',
 	'FORM_EMAILBOX'                   => 'Email',
-	'FORM_INPUTBOX'                   => 'Text',
-	'FORM_CREATOR_ACP_RETURN'         => 'Back to manage forms',
-	'FORM_MANAGE'                     => 'Manage this form',
-	'FORM_MANAGE_EXPLAIN'             => 'Here you can modify all of the current form elements, simply edit fields and press the <strong>Update</strong> button...',
+	'FORM_INPUTBOX'                   => 'Texto',
+	'FORM_CREATOR_ACP_RETURN'         => 'Voltar ao gerenciamento de formulários',
+	'FORM_MANAGE'                     => 'Gerenciar este formulário',
+	'FORM_MANAGE_EXPLAIN'             => 'Aqui você pode modificar todos os elementos do formulário atual, basta editar os campos e pressionar o botão <strong>Atualizar</strong>...',
 
-	'FORM_NEW_ITEM_EXPLAIN' => '<pre style="font-size:11px; line-height: 100%;"><strong><u>Form Elements Supported</u></strong><br>
-									<strong>Inputbox:</strong>		Up to 255 characters<br>
-									<strong>Textbox:</strong>	 	Multiple lines of text arranged as 3 rows by 76 columns.<br>
-									<strong>Checkbox:</strong>		One or more options can be selected.<br>
-									<strong>Radiobutton:</strong> 		Only one option can be selected.<br>
-									<strong>Selectbox:</strong>		One option from a dropdown list.<br>
-									<strong>Email:</strong>			Valid email address.<br>
-									<strong>Password:</strong>		For test purposes only...<br>
-									<strong>URL:</strong>			A valid URL must be entered.<br>
-									<strong>Attachment:</strong>		Add a file to the attachment system.<br>
-									<strong>Number:</strong>			Only numbers 0-9 are allowed.<br>
-									<strong>Date:</strong>			Opens a date picker.<br>
-									<strong>Time:</strong>			Opens a time picker.<br>
-									<strong>Separator:</strong>			Only for form layout customization.<br>
+	'FORM_NEW_ITEM_EXPLAIN' => '<pre style="font-size:11px; line-height: 100%;"><strong><u>Elementos de Formulário Suportados</u></strong><br>
+									<strong>Caixa de texto:</strong>		Até 255 caracteres<br>
+									<strong>Área de texto:</strong>	 	Várias linhas de texto dispostas em 3 linhas por 76 colunas.<br>
+									<strong>Caixa de seleção múltipla:</strong>		Uma ou mais opções podem ser selecionadas.<br>
+									<strong>Botão de opção:</strong> 		Apenas uma opção pode ser selecionada.<br>
+									<strong>Caixa de seleção:</strong>		Uma opção de uma lista suspensa.<br>
+									<strong>Email:</strong>			Endereço de email válido.<br>
+									<strong>Senha:</strong>		Apenas para fins de teste...<br>
+									<strong>URL:</strong>			Uma URL válida deve ser inserida.<br>
+									<strong>Anexo:</strong>		Adiciona um arquivo ao sistema de anexos.<br>
+									<strong>Número:</strong>			Apenas números de 0 a 9 são permitidos.<br>
+									<strong>Data:</strong>			Abre um seletor de data.<br>
+									<strong>Hora:</strong>			Abre um seletor de hora.<br>
+									<strong>Separador:</strong>			Apenas para personalização do layout do formulário.<br>
 									<br></pre>',
 
-	'FORM_NO_FORM'      => 'There are no forms assigned to: <strong>%s</strong>...<br>To add a new form to this forum, simply add a form element below...',
-	'FORM_RADIOBOX'     => 'Radio Buttons',
-	'FORM_PASSWORDBOX'  => 'Password',
-	'FORM_SELECTBOX'    => 'Select Box',
-	'FORM_TXTBOX'       => 'Text Box',
+	'FORM_NO_FORM'      => 'Não há formulários atribuídos a: <strong>%s</strong>...<br>Para adicionar um novo formulário a este fórum, basta adicionar um elemento de formulário abaixo...',
+	'FORM_RADIOBOX'     => 'Botões de Opção',
+	'FORM_PASSWORDBOX'  => 'Senha',
+	'FORM_SELECTBOX'    => 'Caixa de Seleção',
+	'FORM_TXTBOX'       => 'Área de Texto',
 	'FORM_URLBOX'       => 'URL',
-	'FORM_ATTACH'       => 'Attachment',
-	'FORM_NUMBER'       => 'Number',
-	'FORM_DATE'         => 'Date',
-	'FORM_TIME'         => 'Time',
-	'FORM_SEPARATOR'    => 'Separator',
-	'HIDE_FORM_INFO'    => 'Hide info',
-	'HIDE_PREVIEW'      => 'Hide Preview',
-	'HIDE_COPY'         => 'Hide copy form',
-	'HOW_TO'            => '<strong>Additional Help...</strong>',
-	'HOW_TO_MORE'       => 'More info...',
-	'HOW_TO_HIDE'       => '<strong>Hide</strong>',
+	'FORM_ATTACH'       => 'Anexo',
+	'FORM_NUMBER'       => 'Número',
+	'FORM_DATE'         => 'Data',
+	'FORM_TIME'         => 'Hora',
+	'FORM_SEPARATOR'    => 'Separador',
+	'HIDE_FORM_INFO'    => 'Ocultar informação',
+	'HIDE_PREVIEW'      => 'Ocultar Pré-visualização',
+	'HIDE_COPY'         => 'Ocultar cópia de formulário',
+	'HOW_TO'            => '<strong>Ajuda Adicional...</strong>',
+	'HOW_TO_MORE'       => 'Mais informações...',
+	'HOW_TO_HIDE'       => '<strong>Ocultar</strong>',
 	'NDX'               => 'NDX',
-	'NDX_ORDER'         => 'Index order (the order in which items appear on the form)',
-	'FORMS_MOD_SAMPLE'  => 'Rendering the current form to assist visualization only... not a working form.',
-	'SHOW_FORM_INFO'    => 'More info on Element types',
-	'SHOW_PREVIEW'      => 'Preview the form',
-	'SHOW_COPY'         => 'Copy form',
-	'COPY_FORM'         => 'Copy form to selected forums',
-	'COPY_FORM_EXPLAIN' => 'This will delete all existing form elements in the selected destination forums!',
-	'COPY_FORM_SUCCESS' => 'The form elements have been copied to all selected forums.',
+	'NDX_ORDER'         => 'Ordem do índice (a ordem em que os itens aparecem no formulário)',
+	'FORMS_MOD_SAMPLE'  => 'Renderizando o formulário atual apenas para fins de visualização... não é um formulário funcional.',
+	'SHOW_FORM_INFO'    => 'Mais informações sobre os Tipos de Elemento',
+	'SHOW_PREVIEW'      => 'Pré-visualizar o formulário',
+	'SHOW_COPY'         => 'Copiar formulário',
+	'COPY_FORM'         => 'Copiar formulário para os fóruns selecionados',
+	'COPY_FORM_EXPLAIN' => 'Isso vai excluir todos os elementos de formulário existentes nos fóruns de destino selecionados!',
+	'COPY_FORM_SUCCESS' => 'Os elementos do formulário foram copiados para todos os fóruns selecionados.',
 
-	'SHOW_FORM_DEFAULT' => 'Show form by default',
-	'FORCE_FORM'        => 'Force form',
+	'SHOW_FORM_DEFAULT' => 'Mostrar formulário por padrão',
+	'FORCE_FORM'         => 'Forçar formulário',
 ]);

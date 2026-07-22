@@ -45,8 +45,8 @@ $lang = array_merge($lang, [
 	'FORM_MOD_SUBMIT'   => 'Converte e adiciona os dados do formulário à mensagem...',
 	'OPEN_FORM_EXPLAIN' => 'Alterar para Gerador Automático...',
 	'OPEN_POST_EXPLAIN' => 'Alterar para BBCode Manual...',
-	'REFRESHING_FORM'   => 'O fórum selecionado actualmente é',
-	'REQUIRED'          => 'Não preencheste todos os campos obrigatórios!',
+	'REFRESHING_FORM'   => 'O fórum selecionado atualmente é',
+	'REQUIRED'          => 'Você não preencheu todos os campos obrigatórios!',
 	'MANDATORY'         => 'Campos marcados com asterisco são de preenchimento obrigatório.',
 
 	'ERROR_MANDATORY'        => 'O campo %s é obrigatório.',

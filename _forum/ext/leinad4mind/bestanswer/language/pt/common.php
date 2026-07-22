@@ -46,7 +46,7 @@ $lang = array_merge($lang, [
 	'BBPOINTS_ANSWER_EXPLAIN' => 'Coloca o número de pontos a serem creditados ao autor da mensagem quando a sua mensagem neste fórum for marcada como "Melhor Resposta"',
 
 	'ENABLE_ANSWER'         => 'Activar Melhor Resposta',
-	'ENABLE_ANSWER_EXPLAIN' => 'If enabled, the topic starter (if permitted) and moderators (where allowed) will be able to mark a topic reply as the best answer.',
+	'ENABLE_ANSWER_EXPLAIN' => 'Se ativado, o criador do tópico (se permitido) e os moderadores (onde permitido) poderão marcar uma resposta do tópico como a melhor resposta.',
 
 	'TO_POST' => '<i class="fa fa-eye"></i> Ver Mensagem',
 

@@ -46,5 +46,5 @@ $lang = array_merge($lang, [
 
 	'INVITE_PETITION_REQUEST' => 'O usuário %s está a solicitar %d convite(s)',
 
-	'INVITE_JOIN' => 'Obrigado por convidares o usuário %s',
+	'INVITE_JOIN' => 'Obrigado por convidar o usuário %s',
 ]);

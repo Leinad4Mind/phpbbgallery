@@ -19,13 +19,13 @@ if (!isset($lang) || !is_array($lang)) {
 }
 
 $lang = array_merge($lang, [
-   'PER_LIKES_ENABLE' => 'Enable transfer of BBPoints for likes',
-   'PER_LIKES_AMOUNT' => 'Amount of BBPoints transferred on liking the post',
-   'ACP_POINTS_PER_LIKES' => 'Points per likes',
-   'ACP_POINTS_PER_LIKES_EXPLAIN' => 'Set the default amount of points transferred on liking posts. Set to 0 to switch off.',
-   'CONTRIBUTORS_ENABLE' => 'Enable contributors',
-   'SYNC_LIKE_POINTS' => 'Sync like points',
-   'SYNC_LIKE_POINTS_EXPLAIN' => 'Calculates all the points for likes set above for all the users.<br>It can take several minutes and it depends on how many users, posts and likes your board hosts.<br>Do NOT interrput the process once started.',
-   'SYNC_LIKE_POINTS_PROCESSING' => 'Processing...',
-   'SYNC_LIKE_POINTS_TOTAL_POSTS' => 'Total posts',
+   'PER_LIKES_ENABLE' => 'Activar transferência de PontosGold por gostos',
+   'PER_LIKES_AMOUNT' => 'Quantidade de PontosGold transferidos ao gostar da mensagem',
+   'ACP_POINTS_PER_LIKES' => 'Pontos por gosto',
+   'ACP_POINTS_PER_LIKES_EXPLAIN' => 'Define a quantidade predefinida de pontos transferidos ao gostar de mensagens. Define como 0 para desactivar.',
+   'CONTRIBUTORS_ENABLE' => 'Activar colaboradores',
+   'SYNC_LIKE_POINTS' => 'Sincronizar pontos de gostos',
+   'SYNC_LIKE_POINTS_EXPLAIN' => 'Calcula todos os pontos para os gostos definidos acima para todos os utilizadores.<br>Pode demorar vários minutos e depende de quantos utilizadores, mensagens e gostos o teu fórum tem.<br>Não interrompas o processo depois de iniciado.',
+   'SYNC_LIKE_POINTS_PROCESSING' => 'A processar...',
+   'SYNC_LIKE_POINTS_TOTAL_POSTS' => 'Total de mensagens',
 ]);

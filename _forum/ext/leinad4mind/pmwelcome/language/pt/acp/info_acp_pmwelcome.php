@@ -36,7 +36,7 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
    'ACP_PMWELCOME'                 => 'Mensagem de boas-vindas',
-   'ACP_PMWELCOME_EXPLAIN'         => 'Pode especificar o texto da mensagem privada que será enviada ao utilizador após o registo.',
+   'ACP_PMWELCOME_EXPLAIN'         => 'Podes especificar o texto da mensagem privada que será enviada ao utilizador após o registo.',
    'ACP_PMWELCOME_SETTINGS'        => 'Configurações de mensagem privada de boas-vindas',
    'ACP_PMWELCOME_USER'            => 'Remetente',
    'ACP_PMWELCOME_USER_EXPLAIN'    => 'O utilizador, em nome do qual, será enviada a mensagem privada ao novo membro do fórum.',
@@ -44,7 +44,7 @@ $lang = array_merge($lang, [
    'ACP_PMWELCOME_SUBJECT_SHORT'   => 'Assunto',
    'ACP_PMWELCOME_TEXT'            => 'Texto da mensagem de boas-vindas',
    'ACP_PMWELCOME_TEXT_SHORT'      => 'Texto',
-   'ACP_PMWELCOME_TEXT_EXPLAIN'    => 'Pode usar bbcode e smilies, e as seguintes variáveis: {USERNAME} para substituir pelo nome do utilizador que recebe a mensagem privada; {USER_EMAIL} para substituir pelo email do utilizador; {SITE_NAME} e {SITE_DESC} para substituir pelo nome e descrição do fórum; {BOARD_CONTACT}, {BOARD_EMAIL} e {BOARD_SIG} para substituir pelo contacto do fórum, email e assinatura; Bem como {SENDER} para inserir o nome do remetente.',
+   'ACP_PMWELCOME_TEXT_EXPLAIN'    => 'Podes usar bbcode e smilies, e as seguintes variáveis: {USERNAME} para substituir pelo nome do utilizador que recebe a mensagem privada; {USER_EMAIL} para substituir pelo email do utilizador; {SITE_NAME} e {SITE_DESC} para substituir pelo nome e descrição do fórum; {BOARD_CONTACT}, {BOARD_EMAIL} e {BOARD_SIG} para substituir pelo contacto do fórum, email e assinatura; Bem como {SENDER} para inserir o nome do remetente.',
    'ACP_PMWELCOME_PREVIEW'         => 'Mensagem Privada de Boas-vindas - Pré-visualização',
    'ACP_PMWELCOME_NO_USER'         => '<b>O remetente solicitado não existe</b>',
    'ACP_PMWELCOME_CONFIG_SAVED'    => 'Configuração da Mensagem Privada de Boas-vindas foi guardada',

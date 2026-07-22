@@ -35,8 +35,8 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, [
 	'INVITE'                      => 'Convites',
 	'INVITE_INFO'                 => 'Informação sobre Convites',
-	'INVITE_DELETE_CONFIRM'       => 'Se quiseres apagar o convite, clica %sAQUI%s.',
-	'INVITE_DELETE_SUCCESS'       => 'O seu convite foi apagados com sucesso.',
+	'INVITE_DELETE_CONFIRM'       => 'Se você quiser apagar o convite, clique %sAQUI%s.',
+	'INVITE_DELETE_SUCCESS'       => 'O seu convite foi apagado com sucesso.',
 	'INVITE_DELETE_SUCCESSES'     => 'Os seus convites foram apagados com sucesso.',
 	'INVITE_DISABLED'             => '<span class="invitation_tred">O sistema de convite está atualmente desativado!</span>',
 	'INVITE_EMAIL_BLOCK'          => 'Bloqueado!',
@@ -46,6 +46,5 @@ $lang = array_merge($lang, [
 	'INVITE_PERSON'               => '%s pessoa(s)',
 	'INVITE_POINTS_PRESENT'       => 'A cada %s convite(s), enviamos %s %s !',
 	'INVITE_REGISTRATION'         => '<div class="invitation_error">Registro apenas por convite!</div>',
-	'INVITE_REGISTRATION_EXPLAIN' => 'De momento os registos são restritos apenas a pessoas convidadas por usuários da comunidade, caso conheças alguém que tenha conta pede um convite!',
 	'INVITE_COPYRIGHT'            => 'phpBB Invite by <a href="https://leinad4mind.top/forum">Leinad4Mind</a> &copy; 2018-2022',
 ]);

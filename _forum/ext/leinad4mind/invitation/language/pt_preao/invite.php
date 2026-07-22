@@ -46,6 +46,5 @@ $lang = array_merge($lang, [
 	'INVITE_PERSON'               => '%s pessoa(s)',
 	'INVITE_POINTS_PRESENT'       => 'A cada %s convite(s), enviamos %s %s !',
 	'INVITE_REGISTRATION'         => '<div class="invitation_error">Registo apenas por convite!</div>',
-	'INVITE_REGISTRATION_EXPLAIN' => 'De momento os registos são restritos apenas a pessoas convidadas por utilizadores da comunidade, caso conheças alguém que tenha conta pede um convite!',
 	'INVITE_COPYRIGHT'            => 'phpBB Invite by <a href="https://leinad4mind.top/forum">Leinad4Mind</a> &copy; 2018-2022',
 ]);

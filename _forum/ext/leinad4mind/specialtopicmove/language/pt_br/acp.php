@@ -34,11 +34,11 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'SPECIAL_TOPIC_MOVED_DISPLAY'         => 'Display details about moved topics',
-	'SPECIAL_TOPIC_MOVED_DISPLAY_EXPLAIN' => 'Determines where the details of a moved topic will be displayed.',
-	'SPECIAL_TOPIC_MOVED_DISPLAY_NEVER'   => 'Don’t show details about the move',
-	'SPECIAL_TOPIC_MOVED_DISPLAY_FIRST'   => 'Show on first post of the thread',
-	'SPECIAL_TOPIC_MOVED_DISPLAY_LAST'    => 'Show on last post of the thread',
-	'SPECIAL_TOPIC_MOVED_DISPLAY_MOVED'   => 'Show on last post at time of move',
-	'SPECIAL_TOPIC_MOVED_DISPLAY_SHADOW'  => 'Show with shadow link in forum list',
+	'SPECIAL_TOPIC_MOVED_DISPLAY'         => 'Exibir detalhes sobre tópicos movidos',
+	'SPECIAL_TOPIC_MOVED_DISPLAY_EXPLAIN' => 'Determina onde os detalhes de um tópico movido serão exibidos.',
+	'SPECIAL_TOPIC_MOVED_DISPLAY_NEVER'   => 'Não mostrar detalhes sobre a movimentação',
+	'SPECIAL_TOPIC_MOVED_DISPLAY_FIRST'   => 'Mostrar no primeiro post do tópico',
+	'SPECIAL_TOPIC_MOVED_DISPLAY_LAST'    => 'Mostrar no último post do tópico',
+	'SPECIAL_TOPIC_MOVED_DISPLAY_MOVED'   => 'Mostrar no último post no momento da movimentação',
+	'SPECIAL_TOPIC_MOVED_DISPLAY_SHADOW'  => 'Mostrar com link sombra na lista de fóruns',
 ]);

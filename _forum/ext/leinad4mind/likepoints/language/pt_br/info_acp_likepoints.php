@@ -21,13 +21,13 @@ if (!isset($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-   'PER_LIKES_ENABLE'             => 'Enable transfer of BBPoints for likes',
-   'PER_LIKES_AMOUNT'             => 'Amount of BBPoints transferred on liking the post',
-   'ACP_POINTS_PER_LIKES'         => 'Points per likes',
-   'ACP_POINTS_PER_LIKES_EXPLAIN' => 'Set the default amount of points transferred on liking posts. Set to 0 to switch off.',
-   'CONTRIBUTORS_ENABLE'          => 'Enable contributors',
-   'SYNC_LIKE_POINTS'             => 'Sync like points',
-   'SYNC_LIKE_POINTS_EXPLAIN'     => 'Calculates all the points for likes set above for all the users.<br>It can take several minutes and it depends on how many users, posts and likes your board hosts.<br>Do NOT interrput the process once started.',
-   'SYNC_LIKE_POINTS_PROCESSING'  => 'Processing...',
-   'SYNC_LIKE_POINTS_TOTAL_POSTS' => 'Total posts',
+   'PER_LIKES_ENABLE'             => 'Habilitar transferência de PontosGold por curtidas',
+   'PER_LIKES_AMOUNT'             => 'Quantidade de PontosGold transferidos ao curtir a mensagem',
+   'ACP_POINTS_PER_LIKES'         => 'Pontos por curtida',
+   'ACP_POINTS_PER_LIKES_EXPLAIN' => 'Defina a quantidade padrão de pontos transferidos ao curtir mensagens. Defina como 0 para desativar.',
+   'CONTRIBUTORS_ENABLE'          => 'Habilitar colaboradores',
+   'SYNC_LIKE_POINTS'             => 'Sincronizar pontos de curtidas',
+   'SYNC_LIKE_POINTS_EXPLAIN'     => 'Calcula todos os pontos para as curtidas definidas acima para todos os usuários.<br>Pode levar vários minutos e depende de quantos usuários, posts e curtidas seu fórum hospeda.<br>Não interrompa o processo depois de iniciado.',
+   'SYNC_LIKE_POINTS_PROCESSING'  => 'Processando...',
+   'SYNC_LIKE_POINTS_TOTAL_POSTS' => 'Total de posts',
 ]);

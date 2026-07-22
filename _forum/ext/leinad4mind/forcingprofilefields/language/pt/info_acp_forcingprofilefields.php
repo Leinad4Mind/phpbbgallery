@@ -34,7 +34,7 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'FORCINGPROFILEFIELDS_SKIP_METAREFRESH'         => 'Ignorar a meta-atualização ao redirecionar o utilizador para atualiza o seu perfil',
-	'FORCINGPROFILEFIELDS_SKIP_METAREFRESH_EXPLAIN' => 'Se definido como sim, o utilizador é enviado para a página de edição de perfil do PCU sem uma página de redirecionamento.',
+	'FORCINGPROFILEFIELDS_SKIP_METAREFRESH'         => 'Ignorar a meta-atualização ao redirecionar o utilizador para atualizar o seu perfil',
+	'FORCINGPROFILEFIELDS_SKIP_METAREFRESH_EXPLAIN' => 'Se definido como sim, o utilizador é enviado para a página de edição de perfil do UCP sem uma página de redirecionamento.',
 	'FORCINGPROFILEFIELDS_ENABLE_NOTICE'            => '<div style="margin:20px"><p>A configuração para esta extensão está em <strong>%1$s</strong> » <strong>%2$s</strong> » <strong>%3$s</strong>.</p></div>',
 ]);
