@@ -14,20 +14,23 @@ namespace phpbbgallery\core;
 
 class cache
 {
-	private $phpbb_cache;
-	private $phpbb_db;
-	protected $table_albums;
-	protected $table_images;
+	private \phpbb\cache\service $phpbb_cache;
+	private \phpbb\db\driver\driver_interface $phpbb_db;
+	protected string $table_albums;
+	protected string $table_images;
+	private ?array $albums = null;
+	private array $images = [];
+	private bool $images_loaded = false;
 
 	/**
 	* cache constructor.
 	* @param \phpbb\cache\service $cache
 	* @param \phpbb\db\driver\driver_interface $db
-	* @param $albums_table
-	* @param $images_table
+	* @param string $albums_table
+	* @param string $images_table
 	*/
 	public function __construct(\phpbb\cache\service $cache, \phpbb\db\driver\driver_interface $db,
-								$albums_table, $images_table)
+								string $albums_table, string $images_table)
 	{
 		$this->phpbb_cache = $cache;
 		$this->phpbb_db = $db;
@@ -35,7 +38,7 @@ class cache
 		$this->table_images = $images_table;
 	}
 
-	public function get($data = 'albums')
+	public function get(string $data = 'albums'): array|false
 	{
 		switch ($data)
 		{
@@ -46,16 +49,15 @@ class cache
 		}
 	}
 
-	public function get_albums()
+	public function get_albums(): array
 	{
-		static $albums;
-
-		if (isset($albums))
+		if ($this->albums !== null)
 		{
-			return $albums;
+			return $this->albums;
 		}
 
-		if (($albums = $this->phpbb_cache->get('_albums')) === false)
+		$albums = $this->phpbb_cache->get('_albums');
+		if (!is_array($albums))
 		{
 			$sql = 'SELECT a.album_id, a.parent_id, a.album_name, a.album_type, a.left_id, a.right_id, a.album_user_id, a.display_in_rrc, a.album_auth_access
 				FROM ' . $this->table_albums. ' a
@@ -83,7 +85,8 @@ class cache
 			$this->phpbb_cache->put('_albums', $albums);
 		}
 
-		return $albums;
+		$this->albums = $albums;
+		return $this->albums;
 	}
 
 	/**
@@ -92,16 +95,23 @@ class cache
 	 * return    (array)    $images                Array of the information we have for that images
 	 * @return array
 	 */
-	public function get_images($image_ids_array)
+	public function get_images(array $image_ids_array): array
 	{
-		static $images;
-
-		if (isset($images))
+		$image_ids = array_values(array_unique(array_map('intval', $image_ids_array)));
+		if (empty($image_ids))
 		{
-			return $images;
+			return [];
 		}
 
-		if (($albums = $this->phpbb_cache->get('_images')) === false)
+		if (!$this->images_loaded)
+		{
+			$cached_images = $this->phpbb_cache->get('_images');
+			$this->images = is_array($cached_images) ? $cached_images : [];
+			$this->images_loaded = true;
+		}
+
+		$missing_image_ids = array_values(array_diff($image_ids, array_map('intval', array_keys($this->images))));
+		if (!empty($missing_image_ids))
 		{
 			$sql_array = array(
 				'SELECT'	=> 'i.*, a.album_name',
@@ -109,15 +119,14 @@ class cache
 					$this->table_images	=> 'i',
 					$this->table_albums	=> 'a'
 				),
-				'WHERE'	=> $this->phpbb_db->sql_in_set('image_id', $image_ids_array) . ' AND i.image_album_id = a.album_id'
+				'WHERE'	=> $this->phpbb_db->sql_in_set('image_id', $missing_image_ids) . ' AND i.image_album_id = a.album_id'
 			);
 			$sql = $this->phpbb_db->sql_build_query('SELECT', $sql_array);
 			$result = $this->phpbb_db->sql_query($sql);
 
-			$images = array();
 			while ($row = $this->phpbb_db->sql_fetchrow($result))
 			{
-				$images[(int) $row['image_id']] = array(
+				$this->images[(int) $row['image_id']] = array(
 					'image_id'				=> $row['image_id'],
 					'image_filename'		=> $row['image_filename'],
 					'image_name'			=> $row['image_name'],
@@ -150,17 +159,20 @@ class cache
 				);
 			}
 			$this->phpbb_db->sql_freeresult($result);
-			$this->phpbb_cache->put('_images', $images);
+			$this->phpbb_cache->put('_images', $this->images);
 		}
-		return $images;
+
+		return array_intersect_key($this->images, array_fill_keys($image_ids, true));
 	}
 
 	/**
 	* Destroy images cache - if we had updated image information or we want other set - we will have to destroy cache
 	*/
-	public function destroy_images()
+	public function destroy_images(): void
 	{
 		$this->phpbb_cache->destroy('_images');
+		$this->images = [];
+		$this->images_loaded = false;
 	}
 
 	/**
@@ -168,9 +180,10 @@ class cache
 	* Basically some tests fail due album cache not destroyed ...
 	* So lets try it now?
 	*/
-	public function destroy_albums()
+	public function destroy_albums(): void
 	{
 		$this->phpbb_cache->destroy('_albums');
+		$this->albums = null;
 	}
 
 	/**
@@ -178,8 +191,18 @@ class cache
 	 * @param $target
 	 * @param bool $subtarget
 	 */
-	public function destroy($target, $subtarget = false)
+	public function destroy(string $target, string|false $subtarget = false): void
 	{
+		if ($target === '_images')
+		{
+			$this->images = [];
+			$this->images_loaded = false;
+		}
+		else if ($target === '_albums')
+		{
+			$this->albums = null;
+		}
+
 		if ($subtarget)
 		{
 			$this->phpbb_cache->destroy($target, $subtarget);

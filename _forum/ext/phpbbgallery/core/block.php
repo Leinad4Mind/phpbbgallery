@@ -23,29 +23,29 @@ class block
 	 *
 	 * Constants defining some album properties
 	 */
-	const PUBLIC_ALBUM		= 0;
+	public const PUBLIC_ALBUM = 0;
 
-	const TYPE_CAT			= 0;
-	const TYPE_UPLOAD		= 1;
-	const TYPE_CONTEST		= 2;
+	public const TYPE_CAT = 0;
+	public const TYPE_UPLOAD = 1;
+	public const TYPE_CONTEST = 2;
 
-	const ALBUM_OPEN		= 0;
-	const ALBUM_LOCKED		= 1;
+	public const ALBUM_OPEN = 0;
+	public const ALBUM_LOCKED = 1;
 
 	/**
 	 * Get locked
 	 */
-	public function get_album_status_locked()
+	public function get_album_status_locked(): int
 	{
 		return self::ALBUM_LOCKED;
 	}
 
-	static public function get_album_public()
+	public static function get_album_public(): int
 	{
 		return self::PUBLIC_ALBUM;
 	}
 
-	static public function get_album_type_upload()
+	public static function get_album_type_upload(): int
 	{
 		return self::TYPE_UPLOAD;
 	}
@@ -58,48 +58,48 @@ class block
 	/**
 	 * Only visible for moderators.
 	 */
-	const STATUS_UNAPPROVED	= 0;
+	public const STATUS_UNAPPROVED = 0;
 
 	/**
 	 * Visible for everyone with the i_view-permissions
 	 */
-	const STATUS_APPROVED	= 1;
+	public const STATUS_APPROVED = 1;
 
 	/**
 	 * Visible for everyone with the i_view-permissions, but only moderators can comment.
 	 */
-	const STATUS_LOCKED		= 2;
+	public const STATUS_LOCKED = 2;
 
 	/**
 	 * Orphan files are only visible for their author, because they're not yet ready uploaded.
 	 */
-	const STATUS_ORPHAN		= 3;
+	public const STATUS_ORPHAN = 3;
 
 	/**
 	 * Constants regarding the image contest relation
 	 */
-	const NO_CONTEST = 0;
+	public const NO_CONTEST = 0;
 
 	/**
 	 * The image is element of an open contest. Only moderators can see the user_name of the user.
 	 */
-	const IN_CONTEST = 1;
+	public const IN_CONTEST = 1;
 
 	/**
 	 * Functions for \phpbbgallery\core\image
 	 */
 
-	public function get_image_status_unapproved()
+	public function get_image_status_unapproved(): int
 	{
 		return self::STATUS_UNAPPROVED;
 	}
 
-	public function get_image_status_approved()
+	public function get_image_status_approved(): int
 	{
 		return self::STATUS_APPROVED;
 	}
 
-	public function get_image_status_locked()
+	public function get_image_status_locked(): int
 	{
 		return self::STATUS_LOCKED;
 	}
@@ -107,17 +107,17 @@ class block
 	/**
 	 * return int orphan status
 	 */
-	public function get_image_status_orphan()
+	public function get_image_status_orphan(): int
 	{
 		return self::STATUS_ORPHAN;
 	}
 
-	public function get_no_contest()
+	public function get_no_contest(): int
 	{
 		return self::NO_CONTEST;
 	}
 
-	public function get_in_contest()
+	public function get_in_contest(): int
 	{
 		return self::IN_CONTEST;
 	}
@@ -131,21 +131,21 @@ class block
 	 * Modes that you want to display on the block.
 	 */
 
-	const MODE_NONE = 0;
-	const MODE_RECENT = 1;
-	const MODE_RANDOM = 2;
-	const MODE_COMMENT = 4;
+	public const MODE_NONE = 0;
+	public const MODE_RECENT = 1;
+	public const MODE_RANDOM = 2;
+	public const MODE_COMMENT = 4;
 
 	/**
 	 * Options which details of the images you want to view on the block.
 	 */
-	const DISPLAY_NONE = 0;
-	const DISPLAY_ALBUMNAME = 1;
-	const DISPLAY_COMMENTS = 2;
-	const DISPLAY_IMAGENAME = 4;
-	const DISPLAY_IMAGETIME = 8;
-	const DISPLAY_IMAGEVIEWS = 16;
-	const DISPLAY_USERNAME = 32;
-	const DISPLAY_RATINGS = 64;
-	const DISPLAY_IP = 128;
+	public const DISPLAY_NONE = 0;
+	public const DISPLAY_ALBUMNAME = 1;
+	public const DISPLAY_COMMENTS = 2;
+	public const DISPLAY_IMAGENAME = 4;
+	public const DISPLAY_IMAGETIME = 8;
+	public const DISPLAY_IMAGEVIEWS = 16;
+	public const DISPLAY_USERNAME = 32;
+	public const DISPLAY_RATINGS = 64;
+	public const DISPLAY_IP = 128;
 }
