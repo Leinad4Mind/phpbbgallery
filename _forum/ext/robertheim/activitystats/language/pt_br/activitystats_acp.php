@@ -75,7 +75,7 @@ $lang = array_merge($lang, [
 
 	'ACTIVITY_STATS_SETTINGS_SAVED' => 'Configuração atualizada com sucesso.',
 	'ACTIVITY_STATS_SORT_BY'        => 'Ordenar usuários por',
-	'ACTIVITY_STATS_SORT_BY_EXP'    => 'Por que ordem devem os usuários ser apresentados?',
+	'ACTIVITY_STATS_SORT_BY_EXP'    => 'Em que ordem devem os usuários ser apresentados?',
 	'ACTIVITY_STATS_SORT_BY_0'      => 'Nome de Usuário A -> Z',
 	'ACTIVITY_STATS_SORT_BY_1'      => 'Nome de Usuário Z -> A',
 	'ACTIVITY_STATS_SORT_BY_2'      => 'Tempo de visita ascendente',
@@ -87,7 +87,7 @@ $lang = array_merge($lang, [
 	'ACTIVITY_STATS_CACHE_TIME_EXP' => 'Duração na qual os dados não são recalculados (melhora o desempenho)',
 
 	'ACTIVITY_STATS_CHECK_PERMISSIONS'     => 'Verificar permissões',
-	'ACTIVITY_STATS_CHECK_PERMISSIONS_EXP' => 'não=todos devem ver as estatísticas de atividade (ignora configurações de permissão); sim=usar permissões configuradas (ex: permitir apenas a usuários registados: ACP->permissões->permissões globais -> permissões de grupo -> usuários registados -> Permissões avançadas -> Diversos -> "Pode ver as estatísticas de atividade")',
+	'ACTIVITY_STATS_CHECK_PERMISSIONS_EXP' => 'não=todos devem ver as estatísticas de atividade (ignora configurações de permissão); sim=usar permissões configuradas (ex: permitir apenas a usuários registrados: ACP->permissões->permissões globais -> permissões de grupo -> usuários registrados -> Permissões avançadas -> Diversos -> "Pode ver as estatísticas de atividade")',
 
 	'ACTIVITY_STATS_MODE'             => 'Mostrar usuários de ...',
 	'ACTIVITY_STATS_MODE_EXP'         => 'Apresenta usuários de hoje (desde 00:00 no fuso horário do fórum), ou do período definido na próxima opção.',

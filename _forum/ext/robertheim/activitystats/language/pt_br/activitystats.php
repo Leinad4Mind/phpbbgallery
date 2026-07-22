@@ -18,29 +18,47 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'ACTIVITY_STATS_USERS_TOTAL'             => 'Um total de %1$s usuários conectados',
-	'ACTIVITY_STATS_USERS_TOTAL_GUESTS'      => ' (%1$s registados, %2$s ocultos e %3$s visitantes)',
-	'ACTIVITY_STATS_USERS_ZERO_TOTAL'        => 'Um total de 0 usuários conectados',
-	'ACTIVITY_STATS_USERS_ZERO_TOTAL_GUESTS' => ' (0 registados, 0 ocultos e 0 visitantes)',
+	'ACTIVITY_STATS'     => 'Estatísticas de Atividade',
+	'ACTIVITY_STATS_LATEST1' => 'última vez às',
+	'ACTIVITY_STATS_LATEST2' => '',
 
-	'ACTIVITY_STATS_NEW_TOPICS' => [
-		0 => '0 novos tópicos',
-		1 => '1 novo tópico',
-		2 => '%1$s novos tópicos',
+	'ACTIVITY_STATS_NEW_TOPICS' => 'Novos tópicos <strong>%d</strong>',
+	'ACTIVITY_STATS_NEW_POSTS'  => 'Novos posts <strong>%d</strong>',
+	'ACTIVITY_STATS_NEW_USERS'  => 'Novos usuários <strong>%d</strong>',
+
+	'ACTIVITY_STATS_TOTAL' => [
+		0 => 'No total, havia <strong>0</strong> usuários online :: ',
+		1 => 'No total, havia <strong>%d</strong> usuário online :: ',
+		2 => 'No total, havia <strong>%d</strong> usuários online :: ',
 	],
-	'ACTIVITY_STATS_NEW_POSTS' => [
-		0 => '0 novas publicações',
-		1 => '1 nova publicação',
-		2 => '%1$s novas publicações',
+	'ACTIVITY_STATS_REG_USERS' => [
+		0 => '0 registrados',
+		1 => '%d registrado',
+		2 => '%d registrados',
 	],
-	'ACTIVITY_STATS_NEW_USERS' => [
-		0 => '0 novos usuários',
-		1 => '1 novo usuário',
-		2 => '%1$s novos usuários',
+	'ACTIVITY_STATS_HIDDEN' => [
+		0 => '0 ocultos',
+		1 => '%d oculto',
+		2 => '%d ocultos',
+	],
+	'ACTIVITY_STATS_BOTS' => [
+		0 => '0 bots',
+		1 => '%d bot',
+		2 => '%d bots',
+	],
+	'ACTIVITY_STATS_GUESTS' => [
+		0 => '0 visitantes',
+		1 => '%d visitante',
+		2 => '%d visitantes',
 	],
 
-	'ACTIVITY_STATS_PERIOD_EXP' => 'Baseado na atividade de %s',
-
+	'ACTIVITY_STATS_WORD' => ' e',
+	'ACTIVITY_STATS_EXP'  => 'Os dados a seguir são baseados nos usuários ativos hoje',
+	'ACTIVITY_STATS_EXP_TIME' => [
+		0 => 'Os dados a seguir são baseados nos usuários ativos neste momento',
+		1 => 'Os dados a seguir são baseados nos usuários ativos em um período de ',
+		2 => 'Os dados a seguir são baseados nos usuários ativos em um período de ',
+	],
 	'ACTIVITY_STATS_DAYS' => [
 		0 => '',
 		1 => '%%s %1$s dia',

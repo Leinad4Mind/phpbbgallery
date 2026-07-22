@@ -18,5 +18,5 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'EXT_NEWS' => 'As extensões atualizadas mais recentemente',
+	'EXT_NEWS' => 'As extensões actualizadas mais recentemente',
 ]);

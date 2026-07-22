@@ -75,7 +75,7 @@ $lang = array_merge($lang, [
 
 	'ACTIVITY_STATS_SETTINGS_SAVED' => 'Configuração atualizada com sucesso.',
 	'ACTIVITY_STATS_SORT_BY'        => 'Ordenar utilizadores por',
-	'ACTIVITY_STATS_SORT_BY_EXP'    => 'Por que ordem devem os utilizadores ser apresentados?',
+	'ACTIVITY_STATS_SORT_BY_EXP'    => 'Em que ordem devem os utilizadores ser apresentados?',
 	'ACTIVITY_STATS_SORT_BY_0'      => 'Nome de Utilizador A -> Z',
 	'ACTIVITY_STATS_SORT_BY_1'      => 'Nome de Utilizador Z -> A',
 	'ACTIVITY_STATS_SORT_BY_2'      => 'Tempo de visita ascendente',

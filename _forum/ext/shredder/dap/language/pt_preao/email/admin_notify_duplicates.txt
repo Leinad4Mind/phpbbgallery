@@ -1,17 +1,17 @@
-Subject: Possible double account: {USERNAME}
+Subject: Possível conta duplicada: {USERNAME}
 
-A new user has registered on your board «{SITENAME}».
-The new user shares common IP addresses and/or common cookies with some other users. 
-Please visit his profile for detailed information.
+Um novo utilizador registou-se no teu fórum «{SITENAME}».
+O novo utilizador partilha endereços IP e/ou cookies comuns com outros utilizadores.
+Por favor visita o perfil dele para mais informações detalhadas.
 
-User details:
+Detalhes do utilizador:
 
-Username: {USERNAME}
-User IP adress: {USER_IP}
+Nome de utilizador: {USERNAME}
+Endereço IP do utilizador: {USER_IP}
 E-mail: {USER_MAIL}
-Registered on: {USER_REGDATE}
-IP Common Names: {IP_COMMON_NAMES}
-Cookie Common Names: {COOKIE_COMMON_NAMES}
+Registado em: {USER_REGDATE}
+Nomes Comuns de IP: {IP_COMMON_NAMES}
+Nomes Comuns de Cookie: {COOKIE_COMMON_NAMES}
 
 
 {EMAIL_SIG}
