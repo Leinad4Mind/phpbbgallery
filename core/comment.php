@@ -15,25 +15,25 @@ namespace phpbbgallery\core;
 class comment
 {
 	/** @var \phpbb\user */
-	protected $user;
+	protected \phpbb\user $user;
 
 	/** @var \phpbb\db\driver\driver_interface */
-	protected $db;
+	protected \phpbb\db\driver\driver_interface $db;
 
 	/** @var \phpbbgallery\core\config */
-	protected $config;
+	protected \phpbbgallery\core\config $config;
 
 	/** @var \phpbbgallery\core\auth\auth */
-	protected $auth;
+	protected \phpbbgallery\core\auth\auth $auth;
 
 	/** @var \phpbbgallery\core\block */
-	protected $block;
+	protected \phpbbgallery\core\block $block;
 
 	/** @var string */
-	protected $comments_table;
+	protected string $comments_table;
 
 	/** @var string */
-	protected $images_table;
+	protected string $images_table;
 
 	/**
 	 * Constructor
@@ -42,16 +42,16 @@ class comment
 	 * @param \phpbb\db\driver\driver_interface $db
 	 * @param \phpbbgallery\core\config         $config
 	 * @param \phpbbgallery\core\auth\auth      $auth
-	 * @param block                             $block
-	 * @param                                   $comments_table
-	 * @param                                   $images_table
+	 * @param \phpbbgallery\core\block         $block
+	 * @param string                            $comments_table
+	 * @param string                            $images_table
 	 * @internal param image\image $image
 	 * @internal param album\album $album
 	 */
 
 	public function __construct(\phpbb\user $user, \phpbb\db\driver\driver_interface $db,
 								\phpbbgallery\core\config $config, \phpbbgallery\core\auth\auth $auth, \phpbbgallery\core\block $block,
-								$comments_table, $images_table)
+								string $comments_table, string $images_table)
 	{
 		$this->user = $user;
 		$this->db = $db;
@@ -69,11 +69,11 @@ class comment
 	 *    - User is neither owner of the image nor guest.
 	 *    - Album and image are not locked.
 	 *
-	 * @param $album_data
-	 * @param $image_data
+	 * @param array $album_data
+	 * @param array $image_data
 	 * @return bool
 	 */
-	public function is_allowed($album_data, $image_data)
+	public function is_allowed(array $album_data, array $image_data): bool
 	{
 		return $this->config->get('allow_comments') && (!$this->config->get('comment_user_control') || $image_data['image_allow_comments']) &&
 			($this->auth->acl_check('m_status', $album_data['album_id'], $album_data['album_user_id']) ||
@@ -86,11 +86,11 @@ class comment
 	 *    - User must be allowed to rate
 	 *    - If the image is in a contest, it must be finished
 	 *
-	 * @param $album_data
-	 * @param $image_data
+	 * @param array $album_data
+	 * @param array $image_data
 	 * @return bool
 	 */
-	public function is_able($album_data, $image_data)
+	public function is_able(array $album_data, array $image_data): bool
 	{
 		return $this->is_allowed($album_data, $image_data); //&& phpbb_ext_gallery_core_contest::is_step('comment', $album_data);
 	}
@@ -98,15 +98,15 @@ class comment
 	/**
 	 * Add a comment
 	 *
-	 * @param        $data
+	 * @param array  $data
 	 * @param string $comment_username
-	 * @return int|void
+	 * @return int|false
 	 */
-	public function add($data, $comment_username = '')
+	public function add(array $data, string $comment_username = ''): int|false
 	{
 		if (!isset($data['comment_image_id']) || !isset($data['comment']))
 		{
-			return;
+			return false;
 		}
 
 		$data = $data + array(
@@ -132,15 +132,15 @@ class comment
 
 	/**
 	 * Edit comment
-	 * @param $comment_id
-	 * @param $data
-	 * @return bool|void
+	 * @param int   $comment_id
+	 * @param array $data
+	 * @return bool
 	 */
-	public function edit($comment_id, $data)
+	public function edit(int $comment_id, array $data): bool
 	{
 		if (!isset($data['comment']))
 		{
-			return;
+			return false;
 		}
 
 		$data = $data + array(
@@ -158,15 +158,16 @@ class comment
 
 	/**
 	 * Sync last comment information
-	 * @param bool $image_ids
+	 * @param array|int|false $image_ids
+	 * @return void
 	 */
-	public function sync_image_comments($image_ids = false)
+	public function sync_image_comments(array|int|false $image_ids = false): void
 	{
 		$sql_where = $sql_where_image = '';
 		$resync = array();
 		if ($image_ids != false)
 		{
-			$image_ids = self::cast_mixed_int2array($image_ids);
+			$image_ids = $this->cast_mixed_int2array($image_ids);
 			$sql_where = 'WHERE ' . $this->db->sql_in_set('comment_image_id', $image_ids);
 			$sql_where_image = 'WHERE ' . $this->db->sql_in_set('image_id', $image_ids);
 		}
@@ -209,9 +210,10 @@ class comment
 	/**
 	* Delete comments
 	*
-	* @param	mixed	$comment_ids	Array or integer with comment_id we delete.
+	* @param	array|int	$comment_ids	Array or integer with comment_id we delete.
+	* @return	void
 	*/
-	public function delete_comments($comment_ids)
+	public function delete_comments(array|int $comment_ids): void
 	{
 		$comment_ids = $this->cast_mixed_int2array($comment_ids);
 
@@ -242,10 +244,11 @@ class comment
 	/**
 	* Delete comments for given image_ids
 	*
-	* @param	mixed	$image_ids		Array or integer with image_id where we delete the comments.
+	* @param	array|int	$image_ids		Array or integer with image_id where we delete the comments.
 	* @param	bool	$reset_stats	Shall we also reset the statistics? We can save that query, when the images are deleted anyway.
+	* @return	void
 	*/
-	public function delete_images($image_ids, $reset_stats = false)
+	public function delete_images(array|int $image_ids, bool $reset_stats = false): void
 	{
 		$image_ids = $this->cast_mixed_int2array($image_ids);
 
@@ -256,14 +259,20 @@ class comment
 		if ($reset_stats)
 		{
 			$sql = 'UPDATE ' . $this->images_table . '
-				SET image_comments = 0
+				SET image_comments = 0,
 					image_last_comment = 0
 				WHERE ' . $this->db->sql_in_set('image_id', $image_ids);
 			$this->db->sql_query($sql);
 		}
 	}
 
-	public function cast_mixed_int2array($ids)
+	/**
+	 * Normalize one or more identifiers to integers.
+	 *
+	 * @param array|int $ids Identifiers to normalize
+	 * @return array
+	 */
+	public function cast_mixed_int2array(array|int $ids): array
 	{
 		if (is_array($ids))
 		{
