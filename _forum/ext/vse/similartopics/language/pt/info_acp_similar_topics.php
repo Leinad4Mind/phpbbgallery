@@ -38,6 +38,6 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'PST_TITLE_ACP' => 'Precise Similar Topics',
-	'PST_SETTINGS'  => 'Tópicos semelhantes configurações',
+	'PST_SETTINGS'  => 'Configurações de Tópicos Semelhantes',
 	'PST_LOG_MSG'   => '<strong>As configurações de Tópicos Semelhantes foram alteradas</strong>',
 ]);

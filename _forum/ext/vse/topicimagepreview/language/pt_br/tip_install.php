@@ -18,7 +18,7 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'TIP_INSTALL_ERROR' => 'phpBB %s or newer is required.',
+	'TIP_INSTALL_ERROR' => 'É necessário o phpBB %s ou mais recente.',
 ]);
 
 // TRANSLATORS CAN IGNORE THIS.

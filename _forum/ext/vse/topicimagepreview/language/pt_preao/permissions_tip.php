@@ -21,5 +21,5 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'ACL_F_VSE_TIP' => 'Can see topic image previews',
+	'ACL_F_VSE_TIP' => 'Pode ver pré-visualizações de imagens nos tópicos',
 ]);
