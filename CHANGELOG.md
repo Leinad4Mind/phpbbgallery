@@ -30,8 +30,15 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Preserved ACP Import errors safely in JSON state between batches and corrected the final successful-image count.
 - Fixed the fatal error when resetting album ratings in the ACP by using the registered `phpbbgallery.core.rating` service.
 
+### Performance
+
+- Added compound indexes for album image listings and report lookups by image, album, and status.
+- Removed view-counter writes from direct binary image requests, keeping session-aware page visits as the single source of view metrics.
+- Applied private Last-Modified revalidation to image responses while preventing browser storage for guests and error responses.
+
 ### Tests
 
+- Added permanent performance and browser-cache tests covering index creation and rollback, index-name portability, conditional 304 responses, stale validators, no-store responses, file timestamps, and view-counter ownership.
 - Added permanent migration and purge-safety tests covering dependency ordering, cycle detection, table prerequisites, atomic file backup, idempotency, and regression against recursive deletion.
 - Added permanent ZIP extractor tests covering valid archives, traversal attempts, disguised files, duplicate paths, malformed metadata, resource limits, compression-ratio abuse, and cleanup behavior.
 - Added permanent ACP Import tests covering state validation, non-executable persistence, legacy-state cleanup, path containment, symbolic links, MIME validation, safe copying, language completeness, and architectural regressions.
@@ -43,7 +50,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added permanent resumable-upload tests covering registered users, anonymous sessions, cancellation, CSRF, AJAX, quotas, migration schema, form controls, and seven-day retention.
 - Added permanent access-boundary tests covering per-descendant ACL image counts, moderator visibility, hidden albums, orphan exclusion, strict referrer parsing, domain boundaries, empty referrers, and configured bypass behavior.
 - Added permanent notification-lifecycle tests covering exact service identifiers, enable/disable symmetry, sub-extension disabling, complete purge, and continuation after a missing legacy type.
-- Validated the ZIP upload, ACP Import, authorization, individual-move security, ACP rating-reset, UCP CSRF, orphan-upload, resumable-upload, subtree-count, hotlink, notification-lifecycle, migration-ordering, and purge-safety phases with PHP 7.4, 8.1, 8.2, 8.4, and 8.5.
+- Validated the ZIP upload, ACP Import, authorization, individual-move security, ACP rating-reset, UCP CSRF, orphan-upload, resumable-upload, subtree-count, hotlink, notification-lifecycle, migration-ordering, purge-safety, database-index, view-counter, and browser-cache phases with PHP 7.4, 8.1, 8.2, 8.4, and 8.5.
 
 ## [3.4.0]
 ### Added

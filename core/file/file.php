@@ -17,8 +17,6 @@ namespace phpbbgallery\core\file;
 *
 * resize, rotate, watermark, crete thumbnail, write to hdd, send to browser
  *
- * @property \phpbbgallery\core\url url
- * @property \phpbb\request\request request
  */
 class file
 {
@@ -35,6 +33,12 @@ class file
 	public $errors = array();
 	private $browser_cache = true;
 	private $last_modified = 0;
+
+	/** @var \phpbb\request\request */
+	private $request;
+
+	/** @var \phpbbgallery\core\url */
+	private $url;
 
 	public $gd_version = 0;
 
@@ -287,7 +291,7 @@ class file
 		// Not many follows the RFC...
 		if (strpos($user_agent, 'MSIE') !== false || strpos($user_agent, 'Safari') !== false || strpos($user_agent, 'Konqueror') !== false)
 		{
-			return "filename=" . rawurlencode($file);
+			return 'filename=' . rawurlencode($file);
 		}
 
 		// follow the RFC for extended filename for the rest
@@ -318,6 +322,48 @@ class file
 		$this->last_modified = max($timestamp, $this->last_modified);
 	}
 
+	/**
+	 * Apply private conditional caching without exposing protected images to shared caches.
+	 *
+	 * @param object $response
+	 * @return object
+	 */
+	public function apply_browser_cache($response)
+	{
+		if (!$this->browser_cache || $this->last_modified <= 0)
+		{
+			$response->setPrivate();
+			$response->headers->set('Cache-Control', 'private, no-store, no-cache, must-revalidate');
+			$response->headers->set('Pragma', 'no-cache');
+			$response->headers->set('Expires', '0');
+
+			return $response;
+		}
+
+		$response->setPrivate();
+		$response->setMaxAge(0);
+		$response->headers->addCacheControlDirective('must-revalidate');
+		$response->headers->remove('Pragma');
+		$response->headers->remove('Expires');
+		$response->setLastModified((new \DateTime())->setTimestamp((int) $this->last_modified));
+
+		$request_method = strtoupper((string) $this->request->server('REQUEST_METHOD', 'GET'));
+		$if_modified_since = trim((string) $this->request->server('HTTP_IF_MODIFIED_SINCE', ''));
+		if (!in_array($request_method, ['GET', 'HEAD'], true) || $if_modified_since === '')
+		{
+			return $response;
+		}
+
+		$if_modified_since = preg_replace('/;.*$/', '', $if_modified_since);
+		$modified_since = strtotime($if_modified_since);
+		if ($modified_since !== false && $modified_since >= $this->last_modified)
+		{
+			$response->setNotModified();
+		}
+
+		return $response;
+	}
+
 	static public function is_ie_greater7($browser)
 	{
 		return (bool) preg_match('/msie (\d{2,3}|[89]+).[0-9.]*;/', strtolower($browser));
@@ -331,7 +377,7 @@ class file
 		if ($print_details && sizeof($image_size))
 		{
 			$dimension_font = 1;
-			$dimension_string = $image_size['width'] . "x" . $image_size['height'] . "(" . intval($image_size['file'] / 1024) . "KiB)";
+			$dimension_string = $image_size['width'] . 'x' . $image_size['height'] . '(' . intval($image_size['file'] / 1024) . 'KiB)';
 			$dimension_colour = imagecolorallocate($this->image, 255, 255, 255);
 			$dimension_height = imagefontheight($dimension_font);
 			$dimension_width = imagefontwidth($dimension_font) * strlen($dimension_string);
