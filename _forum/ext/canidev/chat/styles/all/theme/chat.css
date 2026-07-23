@@ -1,7 +1,7 @@
 /*  cBB Chat StyleSheet
     --------------------------------------------------------------
 	Style:	All
-	Copyright (c) 2024 CaniDev ( https://www.canidev.com )
+	Copyright (c) 2025 CaniDev ( https://www.canidev.com )
     --------------------------------------------------------------
 */
 
@@ -502,23 +502,21 @@ a.chat-quickmention {
 }
 
 .chat-editor-counter {
+	display: flex;
 	top: 5px;
 	position: absolute;
 	right: 5px;
 }
 
 .chat-editor-counter > svg {
-	margin-bottom: -4px;
 	overflow: visible;
 	transform: rotate(-90deg);
 }
 
 .chat-editor-counter > span {
 	color: #e0245e;
-	font-size: 9px;
+	font-size: 0.8em;
 	margin: 5px 2px 0 0;
-	display: inline-block;
-    vertical-align: top;
 }
 
 .chat-editor-counter .safe {
@@ -665,7 +663,6 @@ ul.topiclist .chat-dialog-fieldset dd {
 
 .chat-message,
 .chat-tip-message {
-	font-size: 11px;
 	margin: 5px 0;
 }
 
@@ -813,6 +810,11 @@ html.embedmode { height: auto; }
 .rtl .ic-edit-container {
 	padding-left: 45px;
 	padding-right: 5px;
+}
+
+.rtl #chat-message textarea,
+.rtl .ic-edit-container textarea {
+	border: none;
 }
 
 .rtl .chat-editor-counter,
@@ -969,10 +971,10 @@ html.embedmode { height: auto; }
 	box-shadow: 0 0 4px 0px #2e2e2e;
 }
 
-/* .medium-dark-theme #chat-content, */
-/* .medium-dark-theme #chat-content a { */
-	/* color: #000; */
-/* } */
+.medium-dark-theme #chat-content,
+.medium-dark-theme #chat-content a {
+	color: #000;
+}
 
 /* Responsive Layout
 ------------------------------- */

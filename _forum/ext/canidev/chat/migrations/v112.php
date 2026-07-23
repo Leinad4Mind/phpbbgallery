@@ -17,7 +17,7 @@ class v112 extends \phpbb\db\migration\migration
 	 */
 	public function effectively_installed()
 	{
-		return isset($this->config['chat_version']) && version_compare($this->config['chat_version'], '1.1.2', '>=');
+		return $this->db_tools->sql_column_exists($this->table_prefix . 'chat_rooms', 'room_autopurge_time');
 	}
 
 	/**
@@ -72,7 +72,7 @@ class v112 extends \phpbb\db\migration\migration
 		
 		if(!empty($this->config['chat_show_topics']))
 		{
-			set_config('chat_forum_posts', 1);
+			$this->config->set('chat_forum_posts', 1);
 		}
 	}
 }

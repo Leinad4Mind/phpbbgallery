@@ -14,7 +14,7 @@ class v110 extends \phpbb\db\migration\migration
 {
 	public function effectively_installed()
 	{
-		return isset($this->config['chat_version']) && version_compare($this->config['chat_version'], '1.1.0', '>=');
+		return $this->db_tools->sql_table_exists($this->table_prefix . 'chat_messages');
 	}
 
 	public function update_schema()

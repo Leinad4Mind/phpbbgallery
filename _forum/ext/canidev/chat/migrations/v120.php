@@ -13,7 +13,7 @@ class v120 extends \phpbb\db\migration\migration
 {
 	public function effectively_installed()
 	{
-		return isset($this->config['chat_version']) && version_compare($this->config['chat_version'], '1.2.0', '>=');
+		return $this->db_tools->sql_column_exists($this->table_prefix . 'chat_users', 'user_groups');
 	}
 
 	static public function depends_on()

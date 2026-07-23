@@ -13,7 +13,7 @@ class v121 extends \phpbb\db\migration\migration
 {
 	public function effectively_installed()
 	{
-		return isset($this->config['chat_version']) && version_compare($this->config['chat_version'], '1.2.1', '>=');
+		return $this->config->offsetExists('chat_hide_popup');
 	}
 
 	static public function depends_on()
