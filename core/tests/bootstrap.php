@@ -62,6 +62,9 @@ namespace
 		}
 	}
 
+	require_once dirname(__DIR__, 4) . '/vendor/symfony/event-dispatcher/EventSubscriberInterface.php';
+	require_once dirname(__DIR__, 4) . '/vendor/symfony/event-dispatcher/Event.php';
+	require_once dirname(__DIR__, 4) . '/phpbb/event/data.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/db/driver/driver_interface.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/request/request_interface.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/cache/service.php';
@@ -81,6 +84,7 @@ namespace
 	require_once dirname(__DIR__) . '/controller/upload.php';
 	require_once dirname(__DIR__) . '/controller/comment.php';
 	require_once dirname(__DIR__) . '/controller/image.php';
+	require_once dirname(__DIR__) . '/event/main_listener.php';
 	require_once dirname(__DIR__) . '/acp/main_module.php';
 	require_once dirname(__DIR__) . '/ucp/main_module.php';
 	require_once dirname(__DIR__) . '/config.php';

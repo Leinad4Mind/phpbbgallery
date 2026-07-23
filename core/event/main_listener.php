@@ -15,7 +15,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 */
 class main_listener implements EventSubscriberInterface
 {
-	static public function getSubscribedEvents()
+	public static function getSubscribedEvents(): array
 	{
 		return array(
 			'core.user_setup'						=> 'load_language_on_setup',
@@ -27,35 +27,37 @@ class main_listener implements EventSubscriberInterface
 		);
 	}
 	/* @var \phpbb\controller\helper */
-	protected $helper;
+	protected \phpbb\controller\helper $helper;
 	/* @var \phpbb\template\template */
-	protected $template;
+	protected \phpbb\template\template $template;
 	/* @var \phpbb\user */
-	protected $user;
+	protected \phpbb\user $user;
 
 	/** @var \phpbb\language\language  */
-	protected $language;
+	protected \phpbb\language\language $language;
 
 	/** @var \phpbbgallery\core\search  */
-	protected $gallery_search;
+	protected \phpbbgallery\core\search $gallery_search;
 
 	/** @var \phpbbgallery\core\config  */
-	protected $gallery_config;
+	protected \phpbbgallery\core\config $gallery_config;
 	/** @var \phpbb\db\driver\driver_interface  */
-	protected $db;
+	protected \phpbb\db\driver\driver_interface $db;
 
 	/** @var string */
-	protected $albums_table;
+	protected string $albums_table;
 
 	/** @var string */
-	protected $users_table;
+	protected string $users_table;
 
 	/* @var string phpEx */
-	protected $php_ext;
+	protected string $php_ext;
 
-	protected $user_ids = array();
-	protected $target = 0;
-	protected $albums = array();
+	/** @var array */
+	protected array $user_ids = [];
+
+	/** @var array */
+	protected array $albums = [];
 
 	/**
 	 * Constructor
@@ -67,14 +69,14 @@ class main_listener implements EventSubscriberInterface
 	 * @param \phpbbgallery\core\search $gallery_search
 	 * @param \phpbbgallery\core\config $gallery_config
 	 * @param \phpbb\db\driver\driver_interface $db
-	 * @param $albums_table
-	 * @param $users_table
+	 * @param string $albums_table
+	 * @param string $users_table
 	 * @param string $php_ext phpEx
 	 */
 	public function __construct(\phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\user $user,
 								\phpbb\language\language $lang, \phpbbgallery\core\search $gallery_search,
 								\phpbbgallery\core\config $gallery_config, \phpbb\db\driver\driver_interface $db,
-								$albums_table, $users_table, $php_ext)
+								string $albums_table, string $users_table, string $php_ext)
 	{
 		$this->helper = $helper;
 		$this->template = $template;
@@ -87,7 +89,7 @@ class main_listener implements EventSubscriberInterface
 		$this->albums_table = $albums_table;
 		$this->users_table = $users_table;
 	}
-	public function load_language_on_setup($event)
+	public function load_language_on_setup(\phpbb\event\data $event): void
 	{
 		$lang_set_ext = $event['lang_set_ext'];
 		$lang_set_ext[] = array(
@@ -102,7 +104,7 @@ class main_listener implements EventSubscriberInterface
 			));
 		}
 	}
-	public function add_page_header_link($event)
+	public function add_page_header_link(\phpbb\event\data $event): void
 	{
 		if ($this->gallery_config->get('disp_gallery_icon') == 1)
 		{
@@ -111,7 +113,7 @@ class main_listener implements EventSubscriberInterface
 			));
 		}
 	}
-	public function user_profile_galleries($event)
+	public function user_profile_galleries(\phpbb\event\data $event): void
 	{
 		$this->language->add_lang(array('gallery'), 'phpbbgallery/core');
 		$this->language->add_lang('search');
@@ -162,8 +164,10 @@ class main_listener implements EventSubscriberInterface
 			}
 		}
 	}
-	public function get_user_ids($event)
+	public function get_user_ids(\phpbb\event\data $event): void
 	{
+		$this->user_ids = [];
+		$this->albums = [];
 		if (count($event['user_ids']) == 1)
 		{
 			$this->user_ids = $event['user_ids'];
