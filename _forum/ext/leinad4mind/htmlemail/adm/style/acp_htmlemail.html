@@ -1,0 +1,386 @@
+{% include 'overall_header.html' %}
+
+<a id="maincontent"></a>
+
+<h1>{{ lang('ACP_HTMLEMAIL_TITLE') }}</h1>
+<p>{{ lang('ACP_HTMLEMAIL_EXPLAIN') }}</p>
+
+{% if S_OVERVIEW %}
+	<fieldset class="quick" style="float: right;">
+		<input type="text" id="email-filter" placeholder="{{ lang('ACP_HTMLEMAIL_FILTER') }}" class="inputbox autowidth" />
+	</fieldset>
+
+	<table class="table1 zebra-table" id="email-table">
+	<thead>
+	<tr>
+		<th>{{ lang('ACP_HTMLEMAIL_FILENAME') }}</th>
+		<th>{{ lang('ACP_HTMLEMAIL_ORIGIN') }}</th>
+		<th>{{ lang('ACP_HTMLEMAIL_LANGUAGE') }}</th>
+		<th>{{ lang('ACP_HTMLEMAIL_STATUS') }}</th>
+		<th>{{ lang('ACTION') }}</th>
+	</tr>
+	</thead>
+	<tbody>
+	{% for tpl in loops.templates %}
+		<tr>
+			<td><strong>{{ tpl.FILENAME }}</strong><br /><span style="color:#888; font-size:0.9em;">{{ tpl.PATH }}</span></td>
+			<td>{{ tpl.ORIGIN }}</td>
+			<td>{{ tpl.LANG }}</td>
+			<td>
+				{% if tpl.IS_HTML %}
+					<span class="badge badge-html">HTML</span>
+				{% else %}
+					<span class="badge badge-plain">Plain Text</span>
+				{% endif %}
+			</td>
+			<td style="text-align: center;">
+				<a href="{{ tpl.U_EDIT }}" class="button">{{ lang('EDIT') }}</a>
+			</td>
+		</tr>
+	{% else %}
+		<tr>
+			<td colspan="5" class="row3" style="text-align: center;">{{ lang('ACP_HTMLEMAIL_NO_TEMPLATES') }}</td>
+		</tr>
+	{% endfor %}
+	</tbody>
+	</table>
+
+	<script>
+		document.getElementById('email-filter').addEventListener('keyup', function() {
+			var filter = this.value.toLowerCase();
+			var rows = document.querySelectorAll('#email-table tbody tr');
+			rows.forEach(function(row) {
+				if (row.textContent.toLowerCase().indexOf(filter) > -1) {
+					row.style.display = '';
+				} else {
+					row.style.display = 'none';
+				}
+			});
+		});
+	</script>
+
+{% elseif S_EDIT %}
+
+	<a href="{{ U_BACK }}" class="button">&laquo; {{ lang('BACK') }}</a>
+	<br /><br />
+
+	<form id="acp_htmlemail" method="post" action="{{ U_ACTION }}">
+		<fieldset>
+			<legend>{{ lang('ACP_HTMLEMAIL_EDIT') }} - {{ FILENAME }}</legend>
+			<dl>
+				<dt><label>{{ lang('ACP_HTMLEMAIL_PATH') }}:</label></dt>
+				<dd><strong>{{ PATH }}</strong></dd>
+			</dl>
+
+			<!-- Tab bar -->
+			<div class="htmlemail-tabs" role="tablist">
+				<button type="button" id="tab-editor" class="htmlemail-tab active" role="tab" aria-selected="true" aria-controls="panel-editor">
+					&#9998; {{ lang('ACP_HTMLEMAIL_TAB_EDITOR') }}
+				</button>
+				<button type="button" id="tab-preview" class="htmlemail-tab" role="tab" aria-selected="false" aria-controls="panel-preview">
+					&#128065; {{ lang('ACP_HTMLEMAIL_TAB_PREVIEW') }}
+				</button>
+				<button type="button" id="tab-split" class="htmlemail-tab" role="tab" aria-selected="false" aria-controls="panel-split">
+					&#9638; {{ lang('ACP_HTMLEMAIL_TAB_SPLIT') }}
+				</button>
+				<button type="button" id="btn-fullscreen-preview" class="htmlemail-btn-fullscreen" title="{{ lang('ACP_HTMLEMAIL_FULLSCREEN') }}">
+					&#x26F6; {{ lang('ACP_HTMLEMAIL_FULLSCREEN') }}
+				</button>
+			</div>
+
+			<!-- Editor panel -->
+			<div id="panel-editor" class="htmlemail-panel" role="tabpanel">
+				<textarea id="template_content" name="template_content" rows="20">{{ CONTENT|e }}</textarea>
+			</div>
+
+			<!-- Preview panel -->
+			<div id="panel-preview" class="htmlemail-panel" style="display: none;" role="tabpanel">
+				<iframe id="htmlemail-preview-frame" class="htmlemail-preview-frame" sandbox="allow-same-origin"></iframe>
+			</div>
+
+			<!-- Split panel -->
+			<div id="panel-split" class="htmlemail-panel htmlemail-split-wrap" style="display: none;" role="tabpanel">
+				<div class="htmlemail-split-editor">
+					<!-- CodeMirror renders here in split mode (mirrored via JS) -->
+				</div>
+				<div class="htmlemail-split-preview">
+					<iframe id="htmlemail-split-frame" class="htmlemail-preview-frame" sandbox="allow-same-origin"></iframe>
+				</div>
+			</div>
+
+		</fieldset>
+
+		<fieldset class="submit-buttons">
+			<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />
+			{% if HAS_BACKUP %}
+				<input class="button2" type="submit" id="restore" name="restore" value="{{ lang('ACP_HTMLEMAIL_RESTORE') }}" onclick="return confirm('{{ lang('ACP_HTMLEMAIL_RESTORE_CONFIRM') }}');" />
+			{% endif %}
+			{{ S_FORM_TOKEN }}
+		</fieldset>
+	</form>
+
+	<!-- Fullscreen preview overlay -->
+	<div id="htmlemail-fullscreen" class="htmlemail-fullscreen-overlay" style="display: none;">
+		<div class="htmlemail-fullscreen-header">
+			<span>{{ lang('ACP_HTMLEMAIL_PREVIEW') }} — {{ FILENAME }}</span>
+			<button type="button" id="btn-close-fullscreen" class="htmlemail-btn-close">&times;</button>
+		</div>
+		<iframe id="htmlemail-fullscreen-frame" class="htmlemail-fullscreen-frame" sandbox="allow-same-origin"></iframe>
+	</div>
+
+	<!-- CodeMirror CDN -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/monokai.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/xml/xml.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/javascript/javascript.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/css/css.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/htmlmixed/htmlmixed.min.js"></script>
+
+	<script>
+		(function() {
+			// --- Init CodeMirror ---
+			var editor = CodeMirror.fromTextArea(document.getElementById('template_content'), {
+				mode: 'htmlmixed',
+				theme: 'monokai',
+				lineNumbers: true,
+				lineWrapping: true,
+				tabSize: 4,
+				indentWithTabs: true
+			});
+
+			// --- Preview update helpers ---
+			var previewDebounce = null;
+
+			function updatePreview(frameId) {
+				var frame = document.getElementById(frameId);
+				if (!frame) { return; }
+				var content = editor.getValue();
+				// Use srcdoc for safe, sandboxed rendering
+				frame.srcdoc = content;
+			}
+
+			function schedulePreviewUpdate() {
+				clearTimeout(previewDebounce);
+				previewDebounce = setTimeout(function() {
+					var activeTab = document.querySelector('.htmlemail-tab.active');
+					if (activeTab && activeTab.id === 'tab-preview') {
+						updatePreview('htmlemail-preview-frame');
+					}
+					if (activeTab && activeTab.id === 'tab-split') {
+						updatePreview('htmlemail-split-frame');
+					}
+					// Keep fullscreen in sync if open
+					if (document.getElementById('htmlemail-fullscreen').style.display !== 'none') {
+						updatePreview('htmlemail-fullscreen-frame');
+					}
+				}, 400);
+			}
+
+			editor.on('change', schedulePreviewUpdate);
+
+			// --- Tab switching ---
+			var tabs = document.querySelectorAll('.htmlemail-tab');
+			var panels = {
+				'tab-editor':  'panel-editor',
+				'tab-preview': 'panel-preview',
+				'tab-split':   'panel-split'
+			};
+
+			tabs.forEach(function(tab) {
+				tab.addEventListener('click', function() {
+					// Deactivate all
+					tabs.forEach(function(t) {
+						t.classList.remove('active');
+						t.setAttribute('aria-selected', 'false');
+					});
+					Object.keys(panels).forEach(function(k) {
+						document.getElementById(panels[k]).style.display = 'none';
+					});
+
+					// Activate selected
+					this.classList.add('active');
+					this.setAttribute('aria-selected', 'true');
+					var panelId = panels[this.id];
+					document.getElementById(panelId).style.display = 'flex';
+
+					// Refresh editor layout when shown (fix CodeMirror sizing)
+					editor.refresh();
+
+					// Immediately render preview when switching to preview/split tabs
+					if (this.id === 'tab-preview') {
+						updatePreview('htmlemail-preview-frame');
+					}
+					if (this.id === 'tab-split') {
+						updatePreview('htmlemail-split-frame');
+						// Move CodeMirror's DOM into split-editor column
+						var splitEditor = document.querySelector('.htmlemail-split-editor');
+						var cmWrapper = editor.getWrapperElement();
+						if (cmWrapper.parentNode !== splitEditor) {
+							splitEditor.appendChild(cmWrapper);
+						}
+					} else {
+						// Move CodeMirror back into editor panel when not in split
+						var editorPanel = document.getElementById('panel-editor');
+						var cmWrapper = editor.getWrapperElement();
+						if (cmWrapper.parentNode !== editorPanel) {
+							editorPanel.appendChild(cmWrapper);
+						}
+					}
+				});
+			});
+
+			// Make editor panel display as flex by default too
+			document.getElementById('panel-editor').style.display = 'flex';
+
+			// --- Fullscreen preview ---
+			document.getElementById('btn-fullscreen-preview').addEventListener('click', function() {
+				var overlay = document.getElementById('htmlemail-fullscreen');
+				overlay.style.display = 'flex';
+				updatePreview('htmlemail-fullscreen-frame');
+			});
+
+			document.getElementById('btn-close-fullscreen').addEventListener('click', function() {
+				document.getElementById('htmlemail-fullscreen').style.display = 'none';
+			});
+
+			// Close fullscreen on Escape key
+			document.addEventListener('keydown', function(e) {
+				if (e.key === 'Escape') {
+					document.getElementById('htmlemail-fullscreen').style.display = 'none';
+				}
+			});
+
+		}());
+	</script>
+
+{% endif %}
+
+<style>
+	/* --- Badges (overview) --- */
+	.badge { padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 11px; color: #fff; }
+	.badge-html { background-color: #28a745; }
+	.badge-plain { background-color: #ffc107; color: #333; }
+
+	/* --- Tab bar --- */
+	.htmlemail-tabs {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		margin: 12px 0 0 0;
+		border-bottom: 2px solid #ccc;
+		padding-bottom: 0;
+	}
+	.htmlemail-tab {
+		padding: 6px 16px;
+		border: 1px solid #ccc;
+		border-bottom: none;
+		border-radius: 4px 4px 0 0;
+		background: #f0f0f0;
+		cursor: pointer;
+		font-size: 13px;
+		color: #444;
+		transition: background 0.15s;
+		margin-bottom: -2px;
+	}
+	.htmlemail-tab:hover { background: #e0e0e0; }
+	.htmlemail-tab.active {
+		background: #fff;
+		border-bottom-color: #fff;
+		color: #000;
+		font-weight: bold;
+	}
+	.htmlemail-btn-fullscreen {
+		margin-left: auto;
+		padding: 5px 12px;
+		border: 1px solid #aaa;
+		border-radius: 4px;
+		background: #fff;
+		cursor: pointer;
+		font-size: 12px;
+		color: #555;
+		transition: background 0.15s;
+	}
+	.htmlemail-btn-fullscreen:hover { background: #f0f0f0; color: #000; }
+
+	/* --- Panels --- */
+	.htmlemail-panel {
+		display: none;
+		width: 100%;
+		min-height: 600px;
+		border: 1px solid #ccc;
+		border-top: none;
+		background: #fff;
+	}
+
+	/* --- CodeMirror inside panel --- */
+	.CodeMirror {
+		height: 600px;
+		width: 100%;
+		font-family: Consolas, Monaco, monospace;
+		font-size: 13px;
+		flex: 1;
+	}
+
+	/* --- Preview iframe --- */
+	.htmlemail-preview-frame {
+		width: 100%;
+		min-height: 600px;
+		border: none;
+		flex: 1;
+		background: #fff;
+	}
+
+	/* --- Split view --- */
+	.htmlemail-split-wrap {
+		flex-direction: row;
+	}
+	.htmlemail-split-editor {
+		flex: 1;
+		display: flex;
+		border-right: 3px solid #888;
+		overflow: hidden;
+	}
+	.htmlemail-split-preview {
+		flex: 1;
+		display: flex;
+		overflow: hidden;
+	}
+
+	/* --- Fullscreen overlay --- */
+	.htmlemail-fullscreen-overlay {
+		position: fixed;
+		inset: 0;
+		z-index: 9999;
+		background: rgba(0,0,0,0.85);
+		flex-direction: column;
+		display: none;
+	}
+	.htmlemail-fullscreen-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 8px 16px;
+		background: #222;
+		color: #fff;
+		font-size: 14px;
+		font-weight: bold;
+	}
+	.htmlemail-btn-close {
+		background: transparent;
+		border: none;
+		color: #fff;
+		font-size: 22px;
+		cursor: pointer;
+		line-height: 1;
+	}
+	.htmlemail-btn-close:hover { color: #f66; }
+	.htmlemail-fullscreen-frame {
+		flex: 1;
+		border: none;
+		background: #fff;
+		width: 100%;
+	}
+</style>
+
+{% include 'overall_footer.html' %}

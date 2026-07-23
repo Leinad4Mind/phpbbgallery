@@ -1,14 +1,15 @@
 <?php
 /**
-*
-* HTML email extension for the phpBB Forum Software package.
-*
-* @copyright (c) 2015 ForumHulp.com <http://forumhulp.com>
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ *
+ * HTML email extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2015 ForumHulp.com <http://forumhulp.com>
+ * @copyright (c) 2026 Leinad4Mind <https://leinad4mind.top>
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ */
 
-namespace forumhulp\htmlemail\migrations\v33x;
+namespace leinad4mind\htmlemail\migrations\v33x;
 
 use phpbb\db\migration\container_aware_migration;
 

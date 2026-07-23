@@ -1,0 +1,32 @@
+services:
+    leinad4mind.htmlemail.listener:
+        class: leinad4mind\htmlemail\event\listener
+        arguments:
+            - '@config'
+            - '@dispatcher'
+        tags:
+            - { name: event.listener }
+
+    leinad4mind.htmlemail.template_finder:
+        class: leinad4mind\htmlemail\service\template_finder
+        arguments:
+            - '%core.root_path%'
+
+    leinad4mind.htmlemail.html_detector:
+        class: leinad4mind\htmlemail\service\html_detector
+
+    leinad4mind.htmlemail.template_editor:
+        class: leinad4mind\htmlemail\service\template_editor
+        arguments:
+            - '%core.root_path%'
+
+    leinad4mind.htmlemail.admin_controller:
+        class: leinad4mind\htmlemail\controller\admin_controller
+        arguments:
+            - '@leinad4mind.htmlemail.template_finder'
+            - '@leinad4mind.htmlemail.html_detector'
+            - '@leinad4mind.htmlemail.template_editor'
+            - '@language'
+            - '@request'
+            - '@template'
+            - '@user'

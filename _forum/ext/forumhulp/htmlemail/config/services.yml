@@ -1,8 +1,0 @@
-services:
-    forumhulp.htmlemail.listener:
-        class: forumhulp\htmlemail\event\listener
-        arguments:
-            - '@config'
-            - '@dispatcher'
-        tags:
-            - { name: event.listener }

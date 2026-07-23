@@ -1,22 +1,23 @@
 <?php
 /**
-*
-* @package htmlemail
-* @copyright (c) 2014 John Peskens (http://ForumHulp.com) and Igor Lavrov (https://github.com/LavIgor)
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ *
+ * @package htmlemail
+ * @copyright (c) 2014 John Peskens (http://ForumHulp.com) and Igor Lavrov (https://github.com/LavIgor)
+ * @copyright (c) 2026 Leinad4Mind <https://leinad4mind.top>
+ * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ *
+ */
 
-namespace forumhulp\htmlemail\event;
+namespace leinad4mind\htmlemail\event;
 
 /**
-* @ignore
-*/
+ * @ignore
+ */
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
-* Event listener
-*/
+ * Event listener
+ */
 class listener implements EventSubscriberInterface
 {
 	protected $config;
