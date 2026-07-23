@@ -33,6 +33,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added native property, parameter, and return types throughout the Core comment service, with explicit invalid-mutation results and instance-safe identifier normalization.
 - Added native property, parameter, and return types throughout the Core moderation service, preserving the ACP Cleanup contract by normalizing a legacy false filename map before image deletion.
 - Added native property, parameter, and return types throughout the Core user service, with initialized nullable state and safe state resets when switching or destroying users.
+- Added native property, route-parameter, helper, and Symfony response types throughout the Gallery index controller.
 - Reduced the packaged extension from approximately 8.2 MiB to 3.1 MiB by removing generated differences reports, backup files, source maps, unused upload plugins, and duplicate per-style JavaScript bundles.
 - Consolidated shared JavaScript under the phpbbgallery_core template namespace and corrected the polaroid asset reference for prosilver, BBOOTS, and FLATBOOTS.
 - Updated the required jQuery UI Widget Factory from 1.11.4 to 1.14.2 and documented SHA-256 pins for every retained third-party upload asset.
@@ -53,6 +54,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Prevented Gallery settings from a previously loaded user being reused when switching to a user without a Gallery row.
 - Made empty bulk-user filters match no rows instead of being converted to user ID 1, while keeping the explicit all operation unchanged.
 - Released the database result after looking up a user's personal root album.
+- Normalized an empty latest-image lookup without relying on PHP's deprecated automatic conversion of false to array.
 - Updated gallery and user image counters only for images imported successfully.
 - Preserved ACP Import errors safely in JSON state between batches and corrected the final successful-image count.
 - Fixed the fatal error when resetting album ratings in the ACP by using the registered `phpbbgallery.core.rating` service.
@@ -74,6 +76,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added permanent comment-domain tests covering complete native contracts, invalid mutations, identifier normalization, and valid comment-statistics reset SQL.
 - Added permanent moderation-domain tests covering complete native contracts, deletion delegation across related services, and legacy filename-map normalization.
 - Added permanent user-domain tests covering complete native contracts, state isolation, missing rows, safe bulk filters, data normalization, personal-album lookup cleanup, and destruction.
+- Added permanent index-controller tests covering complete native contracts, response and route types, recent-content mode flags, and empty latest-image normalization.
 - Added permanent language-catalog tests covering PHP file and key parity, plural structures, printf placeholders, UTF-8 validity, and non-empty translations across all four Gallery components.
 - Added permanent package-hygiene tests covering generated artefacts, duplicate bundles, namespaced asset resolution, polaroid loading, current widget version, missing source-map references, and third-party checksums.
 - Added permanent ACP personal-gallery resync tests covering populated and empty databases, normalized values, and regression against indexing a missing row.

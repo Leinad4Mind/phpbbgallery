@@ -15,59 +15,59 @@ namespace phpbbgallery\core\controller;
 class index
 {
 	/* @var \phpbb\auth\auth */
-	protected $auth;
+	protected \phpbb\auth\auth $auth;
 
 	/* @var \phpbb\config\config */
-	protected $config;
+	protected \phpbb\config\config $config;
 
-	/* @var \phpbb\db\driver\driver */
-	protected $db;
+	/* @var \phpbb\db\driver\driver_interface */
+	protected \phpbb\db\driver\driver_interface $db;
 
 	/* @var \phpbb\request\request */
-	protected $request;
+	protected \phpbb\request\request $request;
 
 	/* @var \phpbb\template\template */
-	protected $template;
+	protected \phpbb\template\template $template;
 
 	/* @var \phpbb\user */
-	protected $user;
+	protected \phpbb\user $user;
 
 	/** @var \phpbb\language\language  */
-	protected $language;
+	protected \phpbb\language\language $language;
 
 	/* @var \phpbb\controller\helper */
-	protected $helper;
+	protected \phpbb\controller\helper $helper;
 
 	/* @var \phpbbgallery\core\album\display */
-	protected $display;
+	protected \phpbbgallery\core\album\display $display;
 
 	/** @var \phpbbgallery\core\config  */
-	protected $gallery_config;
+	protected \phpbbgallery\core\config $gallery_config;
 
 	/** @var \phpbbgallery\core\auth\auth  */
-	protected $gallery_auth;
+	protected \phpbbgallery\core\auth\auth $gallery_auth;
 
 	/** @var \phpbbgallery\core\search  */
-	protected $gallery_search;
+	protected \phpbbgallery\core\search $gallery_search;
 
 	/** @var \phpbb\pagination  */
-	protected $pagination;
+	protected \phpbb\pagination $pagination;
 
 	/** @var \phpbbgallery\core\user  */
-	protected $gallery_user;
+	protected \phpbbgallery\core\user $gallery_user;
 
 	/** @var \phpbbgallery\core\image\image  */
-	protected $image;
+	protected \phpbbgallery\core\image\image $image;
 
 	/* @var string */
-	protected $root_path;
+	protected string $root_path;
 
 	/* @var string */
-	protected $php_ext;
+	protected string $php_ext;
 
-	const RRC_MODE_RECENT_COMMENTS = 4;
-	const RRC_MODE_RANDOM_IMAGES   = 2;
-	const RRC_MODE_RECENT_IMAGES   = 1;
+	public const RRC_MODE_RECENT_COMMENTS = 4;
+	public const RRC_MODE_RANDOM_IMAGES   = 2;
+	public const RRC_MODE_RECENT_IMAGES   = 1;
 	/**
 	 * Constructor
 	 *
@@ -94,7 +94,7 @@ class index
 		\phpbb\controller\helper $helper, \phpbbgallery\core\album\display $display, \phpbbgallery\core\config $gallery_config,
 		\phpbbgallery\core\auth\auth $gallery_auth, \phpbbgallery\core\search $gallery_search, \phpbb\pagination $pagination,
 		\phpbbgallery\core\user $gallery_user, \phpbbgallery\core\image\image $image,
-		$root_path, $php_ext)
+		string $root_path, string $php_ext)
 	{
 		$this->auth = $auth;
 		$this->config = $config;
@@ -121,7 +121,7 @@ class index
 	*
 	* @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	*/
-	public function base()
+	public function base(): \Symfony\Component\HttpFoundation\Response
 	{
 		// Display login box for guests and an error for users
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
@@ -139,11 +139,7 @@ class index
 		}
 		else
 		{
-			$last_image = $this->image->get_last_image();
-			if (empty($last_image))
-			{
-				$last_image['image_id'] = 0;
-			}
+			$last_image = $this->normalize_last_image($this->image->get_last_image());
 			switch ($this->gallery_config->get('link_image_icon'))
 			{
 				case 'image_page':
@@ -239,10 +235,10 @@ class index
 	 * Personal Index Controller
 	 *    Route: gallery/users
 	 *
-	 * @param $page
+	 * @param int $page
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
-	public function personal($page)
+	public function personal(int $page): \Symfony\Component\HttpFoundation\Response
 	{
 		// Display login box for guests and an error for users
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
@@ -298,7 +294,7 @@ class index
 		return $this->helper->render('gallery/index_body.html', $this->language->lang('PERSONAL_ALBUMS'));
 	}
 
-	protected function assign_dropdown_links($base_route)
+	protected function assign_dropdown_links(string $base_route): void
 	{
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 
@@ -331,7 +327,7 @@ class index
 		));
 	}
 
-	protected function display_legend()
+	protected function display_legend(): void
 	{
 		$order_legend = ($this->config['legend_sort_groupname']) ? 'group_name' : 'group_legend';
 
@@ -381,7 +377,7 @@ class index
 		));
 	}
 
-	protected function display_birthdays()
+	protected function display_birthdays(): void
 	{
 		// Generate birthday list if required ...
 		if ($this->config['load_birthdays'] && $this->config['allow_birthdays'] && $this->config['phpbb_gallery_disp_birthdays'] && $this->auth->acl_gets('u_viewprofile', 'a_user', 'a_useradd', 'a_userdel'))
@@ -422,6 +418,22 @@ class index
 			}
 			$this->db->sql_freeresult($result);
 		}
+	}
+
+	/**
+	 * Normalize the latest-image result for an empty gallery.
+	 *
+	 * @param array|false $last_image Latest image data, or false when none exists
+	 * @return array Latest image data with a stable image identifier
+	 */
+	protected function normalize_last_image(array|false $last_image): array
+	{
+		if (empty($last_image))
+		{
+			return ['image_id' => 0];
+		}
+
+		return $last_image;
 	}
 
 }
