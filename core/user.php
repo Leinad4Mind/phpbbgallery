@@ -17,82 +17,84 @@ class user
 	/**
 	 * phpBB-user_id
 	 *
-	 * @var int
+	 * @var int|null
 	 */
-	public $user_id;
+	public int|null $user_id = null;
 
 	/**
 	 * phpBB user object
 	 *
 	 * @var \phpbb\user
 	 */
-	protected $user;
+	protected \phpbb\user $user;
 
 	/**
 	 * Custom profile fields manager
 	 *
 	 * @var \phpbb\profilefields\manager
 	 */
-	protected $user_cpf;
+	protected \phpbb\profilefields\manager $user_cpf;
 
 	/**
 	 * Config object
 	 *
 	 * @var \phpbb\config\config
 	 */
-	protected $config;
+	protected \phpbb\config\config $config;
 
 	/**
 	 * Auth object
 	 *
 	 * @var \phpbb\auth\auth
 	 */
-	protected $auth;
+	protected \phpbb\auth\auth $auth;
 
 	/**
 	 * phpBB root path
 	 *
 	 * @var string
 	 */
-	protected $root_path;
+	protected string $root_path;
 
 	/**
 	 * PHP file extension
 	 *
 	 * @var string
 	 */
-	protected $php_ext;
+	protected string $php_ext;
 
 	/**
 	 * Database object
 	 *
-	 * @var \phpbb\db\driver\driver
+	 * @var \phpbb\db\driver\driver_interface
 	 */
-	protected $db;
+	protected \phpbb\db\driver\driver_interface $db;
 
 	/**
 	 * Event dispatcher object
 	 *
 	 * @var \phpbb\event\dispatcher
 	 */
-	protected $dispatcher;
+	protected \phpbb\event\dispatcher $dispatcher;
 
 	/**
 	 * Gallery users table
 	 *
 	 * @var string
 	 */
-	protected $gallery_users_table;
+	protected string $gallery_users_table;
 
 	/**
 	 * Do we have an entry for the user in the table?
+	 *
+	 * @var bool|null
 	 */
-	public $entry_exists = null;
+	public bool|null $entry_exists = null;
 
 	/**
 	 * Users data in the table
 	 */
-	protected $data = array();
+	protected array $data = [];
 
 	/**
 	 * Constructor
@@ -104,12 +106,12 @@ class user
 	 * @param \phpbb\config\config                                      $config
 	 * @param \phpbb\auth\auth                                          $auth
 	 * @param string                                                    $table_name Gallery users table
-	 * @param                                                           $root_path
-	 * @param                                                           $php_ext
+	 * @param string                                                    $root_path
+	 * @param string                                                    $php_ext
 	 */
 	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\event\dispatcher $dispatcher, \phpbb\user $user,
 		\phpbb\profilefields\manager $user_cpf, \phpbb\config\config $config, \phpbb\auth\auth $auth,
-		$table_name, $root_path, $php_ext)
+		string $table_name, string $root_path, string $php_ext)
 	{
 		$this->db = $db;
 		$this->dispatcher = $dispatcher;
@@ -128,9 +130,12 @@ class user
 	 * @param int  $user_id
 	 * @param bool $load Shall we automatically load the users data from the database?
 	 */
-	public function set_user_id($user_id, $load = true)
+	public function set_user_id(int $user_id, bool $load = true): void
 	{
-		$this->user_id = (int) $user_id;
+		$this->user_id = $user_id;
+		$this->entry_exists = null;
+		$this->data = [];
+
 		if ($load)
 		{
 			$this->load_data();
@@ -143,7 +148,7 @@ class user
 	 * @param int $user_id
 	 * @return    bool
 	 */
-	public function is_user($user_id)
+	public function is_user(int $user_id): bool
 	{
 		return $this->user_id == $user_id;
 	}
@@ -151,9 +156,10 @@ class user
 	/**
 	 * Load the users data from the database and cast it...
 	 */
-	public function load_data()
+	public function load_data(): void
 	{
 		$this->entry_exists = false;
+		$this->data = [];
 		$sql = 'SELECT *
 			FROM ' . $this->gallery_users_table . '
 			WHERE user_id = ' . (int) $this->user_id;
@@ -170,9 +176,10 @@ class user
 	/**
 	 * Load the users data from the database and cast it...
 	 *
-	 * @param $time
+	 * @param int $time
+	 * @return void
 	 */
-	public function set_permissions_changed($time)
+	public function set_permissions_changed(int $time): void
 	{
 		if ($this->data)
 		{
@@ -184,7 +191,7 @@ class user
 	 * Some functions need the data to be loaded or at least checked.
 	 * So here we loaded if it is not loaded yet and we need it ;)
 	 */
-	public function force_load()
+	public function force_load(): void
 	{
 		if (is_null($this->entry_exists))
 		{
@@ -199,7 +206,7 @@ class user
 	 * @param bool   $default Load default value, if user has no entry
 	 * @return    mixed            Returns the value of the column, it it does not exist it returns false.
 	 */
-	public function get_data($key, $default = true)
+	public function get_data(string $key, bool $default = true): mixed
 	{
 		if (isset($this->data[$key]))
 		{
@@ -217,10 +224,10 @@ class user
 	 * Updates/Inserts the data, depending on whether the user already exists or not.
 	 *    Example: 'SET key = x'
 	 *
-	 * @param $data
+	 * @param array $data
 	 * @return bool
 	 */
-	public function update_data($data)
+	public function update_data(array $data): bool
 	{
 		$this->force_load();
 
@@ -242,10 +249,10 @@ class user
 	 * Increase/Inserts the data, depending on whether the user already exists or not.
 	 *    Example: 'SET key = key + x'
 	 *
-	 * @param $num
+	 * @param int $num
 	 * @return bool
 	 */
-	public function update_images($num)
+	public function update_images(int $num): bool
 	{
 		$suc = false;
 		if ($this->entry_exists || is_null($this->entry_exists))
@@ -271,7 +278,7 @@ class user
 	 * @param array $data Array of data we want to add/update.
 	 * @return    bool            Returns true if the columns were updated successfully
 	 */
-	private function update($data)
+	private function update(array $data): bool
 	{
 		$sql_ary = array_merge($this->validate_data($data), array(
 			'user_last_update' => time(),
@@ -294,7 +301,7 @@ class user
 	 * @param int $num Number of images to add to the counter
 	 * @return    bool            Returns true if the columns were updated successfully, else false
 	 */
-	protected function update_image_count($num)
+	protected function update_image_count(int $num): bool
 	{
 		$num = (int) $num;
 		$sql = 'UPDATE ' . $this->gallery_users_table . '
@@ -322,9 +329,9 @@ class user
 	 * @param array $data Array of data we want to insert
 	 * @return    bool            Returns true if the data was inserted successfully
 	 */
-	private function insert($data)
+	private function insert(array $data): bool
 	{
-		$sql_ary = array_merge(self::get_default_values(), $this->validate_data($data), array(
+		$sql_ary = array_merge($this->get_default_values(), $this->validate_data($data), array(
 			'user_id'          => $this->user_id,
 			'user_last_update' => time(),
 		));
@@ -347,7 +354,7 @@ class user
 	/**
 	 * Delete the user from the table.
 	 */
-	public function delete()
+	public function delete(): void
 	{
 		$sql = 'DELETE FROM ' . $this->gallery_users_table . '
 			WHERE user_id = ' . (int) $this->user_id;
@@ -357,9 +364,10 @@ class user
 	/**
 	 * Delete the user from the table.
 	 *
-	 * @param mixed $user_ids Can either be an array of IDs, one ID or the string 'all' to delete all users.
+	 * @param array|int|string $user_ids Can either be an array of IDs, one ID or the string 'all' to delete all users.
+	 * @return void
 	 */
-	public function delete_users($user_ids)
+	public function delete_users(array|int|string $user_ids): void
 	{
 
 		$sql_where = $this->sql_build_where($user_ids);
@@ -372,11 +380,11 @@ class user
 	/**
 	 * Updates the users table with new data.
 	 *
-	 * @param mixed $user_ids Can either be an array of IDs, one ID or the string 'all' to update all users.
+	 * @param array|int|string $user_ids Can either be an array of IDs, one ID or the string 'all' to update all users.
 	 * @param array $data     Array of data we want to add/update.
 	 * @return    bool                Returns true if the columns were updated successfully
 	 */
-	public function update_users($user_ids, $data)
+	public function update_users(array|int|string $user_ids, array $data): bool
 	{
 		$sql_ary = array_merge($this->validate_data($data), array(
 			'user_last_update' => time(),
@@ -396,13 +404,18 @@ class user
 	/**
 	 * Builds a valid WHERE-sql-statement, with casted integers, or empty to allow handling all users.
 	 *
-	 * @param mixed $user_ids Can either be an array of IDs, one ID or the string 'all' to update all users.
+	 * @param array|int|string $user_ids Can either be an array of IDs, one ID or the string 'all' to update all users.
 	 * @return    string                The WHERE statement with "WHERE " if needed.
 	 */
-	public function sql_build_where($user_ids)
+	public function sql_build_where(array|int|string $user_ids): string
 	{
-		if (is_array($user_ids) && !empty($user_ids))
+		if (is_array($user_ids))
 		{
+			if (empty($user_ids))
+			{
+				return 'WHERE 1 = 0';
+			}
+
 			$sql_where = 'WHERE ' . $this->db->sql_in_set('user_id', array_map('intval', $user_ids));
 		}
 		else if ($user_ids == 'all')
@@ -424,7 +437,7 @@ class user
 	 * @param bool  $inc  Are we incrementing the value
 	 * @return    array            Array with all allowed keys and their casted and selected values
 	 */
-	public function validate_data($data, $inc = false)
+	public function validate_data(array $data, bool $inc = false): array
 	{
 		$validated_data = array();
 		foreach ($data as $name => $value)
@@ -483,7 +496,7 @@ class user
 		return $validated_data;
 	}
 
-	private function get_default_value($key)
+	private function get_default_value(string $key): mixed
 	{
 		$default_values = $this->get_default_values();
 
@@ -495,7 +508,7 @@ class user
 		return null;
 	}
 
-	private function get_default_values()
+	private function get_default_values(): array
 	{
 		static $default_values;
 
@@ -522,7 +535,7 @@ class user
 	/**
 	 * Default values for new users.
 	 */
-	static protected $default_values = array(
+	protected static array $default_values = array(
 		'user_images'              => 0,
 		'personal_album_id'        => 0,
 		'user_lastmark'            => 0,
@@ -544,10 +557,11 @@ class user
 	);
 
 	/**
-	 * @param $user_cache
-	 * @param $row
+	 * @param array $user_cache
+	 * @param array $row
+	 * @return void
 	 */
-	public function add_user_to_cache(&$user_cache, $row)
+	public function add_user_to_cache(array &$user_cache, array $row): void
 	{
 		$user_id = $row['user_id'];
 		if (!function_exists('phpbb_get_user_rank'))
@@ -663,36 +677,36 @@ class user
 	/**
 	 * Get user personal album
 	 * Checks and returns users personal album
-	 * returns (int) $album_id or 0
+	 *
+	 * @return int|false Personal album ID, or false when no Gallery user row exists
 	 */
-	public function get_own_root_album()
+	public function get_own_root_album(): int|false
 	{
 		$sql = 'SELECT personal_album_id FROM ' . $this->gallery_users_table . ' WHERE user_id = ' . (int) $this->user_id;
 		$result = $this->db->sql_query($sql);
 		$row = $this->db->sql_fetchrow($result);
-		if ($row)
-		{
-			return (int) $row['personal_album_id'];
-		}
-		return false;
+		$album_id = $row ? (int) $row['personal_album_id'] : false;
+		$this->db->sql_freeresult($result);
+
+		return $album_id;
 	}
 
 	/**
 	 * Destroy user data and set this class to empty
 	 */
-	public function destroy()
+	public function destroy(): void
 	{
 		$this->user_id = null;
 		$this->entry_exists = null;
-		$this->data = array();
+		$this->data = [];
 	}
 
 	/**
-	 * @param array $user_ids Array of user IDs
+	 * @param array|int $user_ids One or more user IDs
 	 * @return int                    Count of updated Users
 	 */
 
-	public function set_personal_albums($user_ids)
+	public function set_personal_albums(array|int $user_ids): int
 	{
 		if (!is_array($user_ids))
 		{
