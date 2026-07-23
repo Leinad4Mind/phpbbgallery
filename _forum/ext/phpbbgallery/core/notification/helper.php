@@ -15,23 +15,51 @@ use Symfony\Component\DependencyInjection\Container;
 
 class helper
 {
-	protected $config;
-	protected $db;
-	protected $request;
-	protected $template;
-	protected $user;
-	protected $gallery_auth;
-	protected $album_load;
-	protected $helper;
-	protected $url;
-	protected $phpbb_container;
-	protected $root_path;
-	protected $php_ext;
-	protected $watch_table;
-	protected $image;
-	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user,
+	/** @var \phpbb\config\config phpBB configuration */
+	protected \phpbb\config\config $config;
+
+	/** @var \phpbb\db\driver\driver_interface phpBB database connection */
+	protected \phpbb\db\driver\driver_interface $db;
+
+	/** @var \phpbb\request\request_interface phpBB request service */
+	protected \phpbb\request\request_interface $request;
+
+	/** @var \phpbb\template\template phpBB template service */
+	protected \phpbb\template\template $template;
+
+	/** @var \phpbb\user Current phpBB user */
+	protected \phpbb\user $user;
+
+	/** @var \phpbbgallery\core\auth\auth Gallery authorization service */
+	protected \phpbbgallery\core\auth\auth $gallery_auth;
+
+	/** @var \phpbbgallery\core\album\loader Gallery album loader */
+	protected \phpbbgallery\core\album\loader $album_load;
+
+	/** @var \phpbb\controller\helper phpBB controller helper */
+	protected \phpbb\controller\helper $helper;
+
+	/** @var \phpbbgallery\core\url Gallery URL service */
+	protected \phpbbgallery\core\url $url;
+
+	/** @var Container phpBB service container */
+	protected Container $phpbb_container;
+
+	/** @var string phpBB root path */
+	protected string $root_path;
+
+	/** @var string phpBB file extension */
+	protected string $php_ext;
+
+	/** @var string Gallery watch table */
+	protected string $watch_table;
+
+	/** @var \phpbbgallery\core\image\image Gallery image service */
+	protected \phpbbgallery\core\image\image $image;
+
+	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user,
 	\phpbbgallery\core\auth\auth $gallery_auth, \phpbbgallery\core\album\loader $album_load, \phpbb\controller\helper $helper, \phpbbgallery\core\url $url,
-	Container $phpbb_container, $root_path, $php_ext, $watch_table)
+	Container $phpbb_container, string $root_path, string $php_ext, string $watch_table)
 	{
 		$this->config = $config;
 		$this->db = $db;
@@ -51,11 +79,11 @@ class helper
 	/**
 	 * Main notification function
 	 *
-	 * @param $type
-	 * @param $target
+	 * @param string $type   Notification operation
+	 * @param array  $target Notification data
 	 * @throws \Exception
 	 */
-	public function notify($type, $target)
+	public function notify(string $type, array $target): void
 	{
 		$phpbb_notifications = $this->phpbb_container->get('notification_manager');
 		switch ($type)
@@ -142,7 +170,7 @@ class helper
 			//break;
 		}
 	}
-	public function delete_notifications($type, $target)
+	public function delete_notifications(string $type, mixed $target): void
 	{
 		$phpbb_notifications = $this->phpbb_container->get('notification_manager');
 		switch ($type)
@@ -154,7 +182,7 @@ class helper
 	}
 
 	// Read notification (in some cases it is needed)
-	public function read($type, $target)
+	public function read(string $type, int $target): void
 	{
 		$phpbb_notifications = $this->phpbb_container->get('notification_manager');
 		switch ($type)
@@ -168,11 +196,11 @@ class helper
 	/**
 	 * Get watched for album
 	 *
-	 * @param (int) $album_id    Album we check
-	 * @param bool $user_id
-	 * @return
+	 * @param int       $album_id Album to check
+	 * @param int|false $user_id  User to check, or false for the current user
+	 * @return int
 	 */
-	public function get_watched_album($album_id, $user_id = false)
+	public function get_watched_album(int $album_id, int|false $user_id = false): int
 	{
 		if (!$user_id)
 		{
@@ -182,41 +210,43 @@ class helper
 		$result = $this->db->sql_query($sql);
 		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
-		return $row['count'];
+		return (int) $row['count'];
 	}
 
 	/**
 	 * Get album watchers
-	 * @param $album_id
+	 * @param int $album_id
 	 * @return array
 	 */
-	public function get_album_watchers($album_id)
+	public function get_album_watchers(int $album_id): array
 	{
 		$sql = 'SELECT user_id FROM ' . $this->watch_table . ' WHERE album_id = ' . (int) $album_id;
 		$result = $this->db->sql_query($sql);
 		$watchers = array();
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$watchers[] = $row['user_id'];
+			$watchers[] = (int) $row['user_id'];
 		}
+		$this->db->sql_freeresult($result);
 
 		return $watchers;
 	}
 
 	/**
 	 * Get album watchers
-	 * @param $image_id
+	 * @param int $image_id
 	 * @return array
 	 */
-	public function get_image_watchers($image_id)
+	public function get_image_watchers(int $image_id): array
 	{
 		$sql = 'SELECT user_id FROM ' . $this->watch_table . ' WHERE image_id = ' . (int) $image_id;
 		$result = $this->db->sql_query($sql);
 		$watchers = array();
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$watchers[] = $row['user_id'];
+			$watchers[] = (int) $row['user_id'];
 		}
+		$this->db->sql_freeresult($result);
 
 		return $watchers;
 	}
@@ -227,9 +257,14 @@ class helper
 	 * @param    mixed $album_ids Array or integer with album_id where we delete from the watch-list.
 	 * @param bool|int $user_id If not set, it uses the currents user_id
 	 */
-	public function add_albums($album_ids, $user_id = false)
+	public function add_albums(array|int $album_ids, int|false $user_id = false): void
 	{
 		$album_ids = $this->cast_mixed_int2array($album_ids);
+		if (!$album_ids)
+		{
+			return;
+		}
+
 		$user_id = (int) (($user_id) ? $user_id : $this->user->data['user_id']);
 
 		// First check if we are not subscribed already for some
@@ -240,6 +275,7 @@ class helper
 		{
 			$exclude[] = (int) $row['album_id'];
 		}
+		$this->db->sql_freeresult($result);
 		$album_ids = array_diff($album_ids, $exclude);
 		foreach ($album_ids as $album_id)
 		{
@@ -247,7 +283,7 @@ class helper
 				'album_id'		=> $album_id,
 				'user_id'		=> $user_id,
 			);
-			$sql = 'INSERT INTO ' . $this->watch_table . $this->db->sql_build_array('INSERT', $sql_ary);
+			$sql = 'INSERT INTO ' . $this->watch_table . ' ' . $this->db->sql_build_array('INSERT', $sql_ary);
 			$this->db->sql_query($sql);
 		}
 	}
@@ -258,10 +294,14 @@ class helper
 	* @param	mixed	$album_ids		Array or integer with album_id where we delete from the watch-list.
 	* @param	mixed	$user_ids		If not set, it uses the currents user_id
 	*/
-	public function remove_albums($album_ids, $user_ids = false)
+	public function remove_albums(array|int $album_ids, array|int|false $user_ids = false): void
 	{
 		$album_ids = $this->cast_mixed_int2array($album_ids);
 		$user_ids = $this->cast_mixed_int2array((($user_ids) ? $user_ids : $this->user->data['user_id']));
+		if (!$album_ids || !$user_ids)
+		{
+			return;
+		}
 
 		$sql = 'DELETE FROM ' . $this->watch_table . '
 			WHERE ' . $this->db->sql_in_set('user_id', $user_ids) . '
@@ -273,27 +313,25 @@ class helper
 	 *
 	 * Cast int or array to array
 	 *
-	 * @param (mixed) $ids
+	 * @param array|int $ids
 	 * @return array
 	 */
-	static public function cast_mixed_int2array($ids)
+	public static function cast_mixed_int2array(array|int $ids): array
 	{
 		if (is_array($ids))
 		{
-			return array_map('intval', $ids);
+			return array_values(array_unique(array_map('intval', $ids)));
 		}
-		else
-		{
-			return array((int) $ids);
-		}
+
+		return [(int) $ids];
 	}
 
 	/**
 	 *
 	 * New image in album
-	 * @param $data
+	 * @param array $data
 	 */
-	public function new_image($data)
+	public function new_image(array $data): void
 	{
 		$get_watchers = $this->get_album_watchers($data['album_id']);
 		// let's exclude all users that are uploading something and are approved
@@ -303,7 +341,7 @@ class helper
 		$this->notify('new_image', $data);
 	}
 
-	public function set_image(\phpbbgallery\core\image\image $image)
+	public function set_image(\phpbbgallery\core\image\image $image): void
 	{
 		$this->image = $image;
 	}
