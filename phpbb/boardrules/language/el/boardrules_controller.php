@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,10 +38,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES_HEADER'			=> 'Όροι Συμμετοχής Δ. Συζήτησης',
-	'BOARDRULES_EXPLAIN'		=> 'Οι όροι αυτοί γνωστοποιούνται για να αποσαφηνίσουν τις διάφορες ευθύνες όλων των μελών της κοινότητας του %s. Θα πρέπει να τηρούνται από όλους για να εξασφαλιστεί ότι η Δ. Συζήτηση λειτουργεί ομαλά και προσφέρει μια διασκεδαστική και παραγωγική εμπειρία για όλα τα μέλη και επισκέπτες της κοινότητας.',
-	'BOARDRULES_CATEGORIES'		=> 'Τμήματα Όρων',
-	'BOARDRULES_CATEGORY_ANCHOR'=> 'τμήμα-%s',
-	'BOARDRULES_RULE_ANCHOR'	=> 'όρος-%s',
-));
+$lang = array_merge($lang, [
+	'BOARDRULES_HEADER'          => 'Όροι Συμμετοχής Δ. Συζήτησης',
+	'BOARDRULES_EXPLAIN'         => 'Οι όροι αυτοί γνωστοποιούνται για να αποσαφηνίσουν τις διάφορες ευθύνες όλων των μελών της κοινότητας του %s. Θα πρέπει να τηρούνται από όλους για να εξασφαλιστεί ότι η Δ. Συζήτηση λειτουργεί ομαλά και προσφέρει μια διασκεδαστική και παραγωγική εμπειρία για όλα τα μέλη και επισκέπτες της κοινότητας.',
+	'BOARDRULES_CATEGORIES'      => 'Τμήματα Όρων',
+	'BOARDRULES_CATEGORY_ANCHOR' => 'τμήμα-%s',
+	'BOARDRULES_RULE_ANCHOR'     => 'όρος-%s',
+]);

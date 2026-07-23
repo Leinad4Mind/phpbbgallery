@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,10 +38,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES'				=> 'Reeglid',
-	'BOARDRULES_TITLE'			=> 'Vaata foorumi reegleid',
-	'BOARDRULES_AGREEMENT'		=> 'Sa nõustud järgima samuti foorumi reegleid, mis on ära toodud leheküljel “Reeglid”',
-	'BOARDRULES_VIEWONLINE'		=> 'Vaata foorumi reegleid',
-	'BOARDRULES_NOTIFICATION'	=> 'Foorumi reegleid on uuendatud. Vajuta siia, et neid vaadata.',
-));
+$lang = array_merge($lang, [
+	'BOARDRULES'              => 'Reeglid',
+	'BOARDRULES_TITLE'        => 'Vaata foorumi reegleid',
+	'BOARDRULES_AGREEMENT'    => 'Sa nõustud järgima samuti foorumi reegleid, mis on ära toodud leheküljel “Reeglid”',
+	'BOARDRULES_VIEWONLINE'   => 'Vaata foorumi reegleid',
+	'BOARDRULES_NOTIFICATION' => 'Foorumi reegleid on uuendatud. Vajuta siia, et neid vaadata.',
+]);

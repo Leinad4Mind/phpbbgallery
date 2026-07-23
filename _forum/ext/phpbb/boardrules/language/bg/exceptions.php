@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -47,15 +47,15 @@ if (empty($lang) || !is_array($lang))
 *
 * Translators: Feel free to not translate these language strings
 */
-$lang = array_merge($lang, array(
-	'EXCEPTION_FIELD_MISSING'		=> 'Липсва исканото поле',
-	'EXCEPTION_INVALID_ARGUMENT'	=> 'Невалиден аргумент даден за `%1$s`. Причина: %2$s',
-	'EXCEPTION_OUT_OF_BOUNDS'		=> 'Полето `%1$s` получава стойности над границата',
-	'EXCEPTION_TOO_LONG'			=> 'Въведеното в по-дълго от максимално допустимата дължина.',
-	'EXCEPTION_NOT_UNIQUE'			=> 'Въведеното не съответства.',
-	'EXCEPTION_UNEXPECTED_VALUE'	=> 'Полето `%1$s` получава неочаквани данни. Причина: %2$s',
-	'EXCEPTION_ILLEGAL_CHARACTERS'	=> 'Въведенот съдържа непозволени знаци.',
+$lang = array_merge($lang, [
+	'EXCEPTION_FIELD_MISSING'      => 'Липсва исканото поле',
+	'EXCEPTION_INVALID_ARGUMENT'   => 'Невалиден аргумент даден за `%1$s`. Причина: %2$s',
+	'EXCEPTION_OUT_OF_BOUNDS'      => 'Полето `%1$s` получава стойности над границата',
+	'EXCEPTION_TOO_LONG'           => 'Въведеното в по-дълго от максимално допустимата дължина.',
+	'EXCEPTION_NOT_UNIQUE'         => 'Въведеното не съответства.',
+	'EXCEPTION_UNEXPECTED_VALUE'   => 'Полето `%1$s` получава неочаквани данни. Причина: %2$s',
+	'EXCEPTION_ILLEGAL_CHARACTERS' => 'Въведенот съдържа непозволени знаци.',
 
 	// Translators: do not change this
-	'EXCEPTION_WRONG_DATA_LANG'		=> $lang['WRONG_DATA_LANG'],
-));
+	'EXCEPTION_WRONG_DATA_LANG' => $lang['WRONG_DATA_LANG'],
+]);

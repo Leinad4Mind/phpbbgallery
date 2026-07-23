@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,13 +38,13 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// ACP modules => AJP Laiendused
-	'ACP_BOARDRULES'				=> 'Foorumi reeglid',
-	'ACP_BOARDRULES_MANAGE'			=> 'Halda reegleid',
-	'ACP_BOARDRULES_SETTINGS'		=> 'Reeglite seaded',
+	'ACP_BOARDRULES'          => 'Foorumi reeglid',
+	'ACP_BOARDRULES_MANAGE'   => 'Halda reegleid',
+	'ACP_BOARDRULES_SETTINGS' => 'Reeglite seaded',
 
 	// ACP Logs => AJP Logid
-	'ACP_BOARDRULES_SETTINGS_LOG'	=> '<strong>Foorumi reeglite seaded on muudetud</strong>',
-	'ACP_BOARDRULES_NOTIFY_LOG'		=> '<strong>Foorumi reeglite teavitus on saadetud kõigile liikmetele</strong>',
-));
+	'ACP_BOARDRULES_SETTINGS_LOG' => '<strong>Foorumi reeglite seaded on muudetud</strong>',
+	'ACP_BOARDRULES_NOTIFY_LOG'   => '<strong>Foorumi reeglite teavitus on saadetud kõigile liikmetele</strong>',
+]);

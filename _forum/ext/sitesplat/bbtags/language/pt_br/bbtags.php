@@ -18,8 +18,10 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'BBTAGS'               => 'Tags',
-	'POSTING_TAGS'         => 'Tags do Tópico',
-	'POSTING_TAGS_EXPLAIN' => 'Insira as tags separadas por vírgula.',
-	'TAG_SEARCH_RESULTS'   => 'Resultados para a tag %s',
+	'BBTAGS'              => 'Tags',
+	'BBTAGS_AUTO_SUGGEST' => 'Sugestão Automática',
+	'BBTAGS_TAG_SPEC'     => 'caracteres: [a-z 0-9 + # - .] Separe as tags por ponto e vírgula, vírgula ou pressione enter',
+
+	'BBTAGS_ENTER_TAGS_PLACEHOLDER' => 'Digite as tags...',
+	'TOPICTIME'                     => 'Tempo de atividade do tópico',
 ]);

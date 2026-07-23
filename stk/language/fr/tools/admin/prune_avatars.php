@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,10 +38,10 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'PRUNE_AVATARS'				=> 'Vérifier les fichiers des avatars',
-	'PRUNE_AVATARS_EXPLAIN'		=> 'Cet outil vérifie l’existence de fichiers d’avatars supplémentaires (<em>les fichiers des galeries d’avatars ne sont pas vérifiées</ em>). Si ces fichiers existent, ils seront supprimés. Poursuivre ?',
-	'PRUNE_AVATARS_FINISHED'	=> 'Aucun fichier d’avatar trouvé.',
-	'PRUNE_AVATARS_PROGRESS'	=> 'Vérification des fichiers inutiles en cours. Merci de ne pas interrompre cette opération !<br />Les fichiers suivants ont été supprimés :',
-	'PRUNE_AVATARS_FAIL'		=> '<br />Les fichiers suivants ne peuvent pas être supprimés :',
-));
+$lang = array_merge($lang, [
+	'PRUNE_AVATARS'          => 'Vérifier les fichiers des avatars',
+	'PRUNE_AVATARS_EXPLAIN'  => 'Cet outil vérifie l’existence de fichiers d’avatars supplémentaires (<em>les fichiers des galeries d’avatars ne sont pas vérifiées</ em>). Si ces fichiers existent, ils seront supprimés. Poursuivre ?',
+	'PRUNE_AVATARS_FINISHED' => 'Aucun fichier d’avatar trouvé.',
+	'PRUNE_AVATARS_PROGRESS' => 'Vérification des fichiers inutiles en cours. Merci de ne pas interrompre cette opération !<br />Les fichiers suivants ont été supprimés :',
+	'PRUNE_AVATARS_FAIL'     => '<br />Les fichiers suivants ne peuvent pas être supprimés :',
+]);

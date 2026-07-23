@@ -40,6 +40,6 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	// ACP Module
-	'ACP_SPECIAL_ACTIVITY_STATS_TITLE'			=> 'Aktivitäts Statistiken',
-	'ACP_SPECIAL_ACTIVITY_STATS_SETTINGS'		=> 'Einstellungen',
+	'ACP_SPECIAL_ACTIVITY_STATS_TITLE'    => 'Aktivitäts Statistiken',
+	'ACP_SPECIAL_ACTIVITY_STATS_SETTINGS' => 'Einstellungen',
 ]);

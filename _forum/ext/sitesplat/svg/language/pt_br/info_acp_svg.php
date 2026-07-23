@@ -20,7 +20,7 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'FORUM_ICONS'              => 'Ícones do Fórum',
-	'BBSVG_NOTICE'             => '<div style="width:auto;margin:20px auto;"><p>A configuração para esta extensão encontra-se em <strong>%1$s &#187; %2$s &#187; %3$s</strong>.<br />Também pode adicionar SVGs para os ranks (níveis) de grupos. <strong>ACP &#187; Usuários e Grupos &#187; Usuários &#187; Gerir ranks</strong>.</p></div>',
+	'BBSVG_NOTICE'             => '<div style="width:auto;margin:20px auto;"><p>A configuração para esta extensão encontra-se em <strong>%1$s &#187; %2$s &#187; %3$s</strong>.<br />Também pode adicionar SVGs para os ranks (níveis) de grupos. <strong>ACP &#187; Usuários e Grupos &#187; Usuários &#187; Gerenciar ranks</strong>.</p></div>',
 	'SS_HELPER_NOTY'           => 'O SiteSplat BBcore não existe!<br />Faça o download do <a href="https://sitesplat.com" target="_blank">BBcore</a> e copie a pasta BBcore para a pasta da sua extensão sitesplat.',
 	'ACP_BBSVG_FORUMS'         => 'Administração do fórum. Selecione o fórum e edite-o para encontrar as configurações de ícones personalizados do fórum',
 	'ACP_BBSVG_FORUMS_EXPLAIN' => 'Se pretender remover o círculo cinzento padrão na lista de fóruns/tópicos, pode adicionar o seguinte código ao seu custom.css:',

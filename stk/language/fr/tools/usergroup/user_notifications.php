@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,14 +38,14 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'ALL'							=> 'Tout le monde',
-	'DEFAULT_NOTIFY_EXPLAIN'		=> 'Permet, si définie sur « Non », de supprimer aussi les informations sur les forums et les sujets surveillés.',
-	'DELETE_NOTIFICATIONS'			=> 'Supprimer les notifications',
-	'DELETE_NOTIFICATIONS_EXPLAIN'	=> 'Permet de sélectionner les types de notifications à supprimer si celles-ci sont définies comme à supprimer ou à désactiver.',
-	'NOTIFICATION_GROUP_EXT'		=> 'Notifications ajoutées par les extensions',
-	'SELECT_EXPLAIN'				=> 'Sélectionner une période d’inactivité des membres. Si l’option « Tout le monde » est sélectionnée, tous les membres du forum seront concernés.',
-	'USER_NOTIFICATIONS'			=> 'Préférences des notifications',
-	'USER_NOTIFICATIONS_EXPLAIN'	=> 'Permet de modifier les paramètres par défaut des notifications pour tous les membres ou ceux ayant été inactifs suivant la période définie. L’action de re-configurer ou désactiver les notifications ne sera pas appliquée si le membre n’a pas configuré les notifications depuis son « Panneau de l’utilisateur ». Si les paramètres sont supprimés, le membre continuera de recevoir les notifications par défaut du forum, mais aucune notifications ne sera envoyée par e-mail. Le membre devra définir ce comportement depuis son « Panneau de l’utilisateur ». Aussi, cet outil ne supprime pas les notifications non lues des membres.',
-	'USER_NORIFY_OK'				=> 'Les paramètres ont été sauvegardés avec succès !',
-));
+$lang = array_merge($lang, [
+	'ALL'                          => 'Tout le monde',
+	'DEFAULT_NOTIFY_EXPLAIN'       => 'Permet, si définie sur « Non », de supprimer aussi les informations sur les forums et les sujets surveillés.',
+	'DELETE_NOTIFICATIONS'         => 'Supprimer les notifications',
+	'DELETE_NOTIFICATIONS_EXPLAIN' => 'Permet de sélectionner les types de notifications à supprimer si celles-ci sont définies comme à supprimer ou à désactiver.',
+	'NOTIFICATION_GROUP_EXT'       => 'Notifications ajoutées par les extensions',
+	'SELECT_EXPLAIN'               => 'Sélectionner une période d’inactivité des membres. Si l’option « Tout le monde » est sélectionnée, tous les membres du forum seront concernés.',
+	'USER_NOTIFICATIONS'           => 'Préférences des notifications',
+	'USER_NOTIFICATIONS_EXPLAIN'   => 'Permet de modifier les paramètres par défaut des notifications pour tous les membres ou ceux ayant été inactifs suivant la période définie. L’action de re-configurer ou désactiver les notifications ne sera pas appliquée si le membre n’a pas configuré les notifications depuis son « Panneau de l’utilisateur ». Si les paramètres sont supprimés, le membre continuera de recevoir les notifications par défaut du forum, mais aucune notifications ne sera envoyée par e-mail. Le membre devra définir ce comportement depuis son « Panneau de l’utilisateur ». Aussi, cet outil ne supprime pas les notifications non lues des membres.',
+	'USER_NORIFY_OK'               => 'Les paramètres ont été sauvegardés avec succès !',
+]);

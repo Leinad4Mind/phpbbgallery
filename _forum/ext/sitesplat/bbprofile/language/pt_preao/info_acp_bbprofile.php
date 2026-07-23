@@ -19,26 +19,26 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'ACP_BBPROFILE'           => 'BBprofile',
-	'BBPROFILE_SETTING_SAVED' => 'BBprofile settings has been saved.',
+	'BBPROFILE_SETTING_SAVED' => 'As configurações do BBprofile foram guardadas.',
 
-	'SS_HELPER_NOTY'   => 'SiteSplat BBcore does not exist!<br />Download the <a href="http://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
-	'BBPROFILE_NOTICE' => '<div class="phpinfo"><p>The settings for this extension are under the <strong>EXTENSIONS</strong> tab.</p><br /><p>Don\'t forget to check the Group Permissions "Can see BBprofile box" under: Group Permissions &#187; Misc.</p></div>',
+	'SS_HELPER_NOTY'   => 'O SiteSplat BBcore não existe!<br />Transfere o <a href="https://sitesplat.com" target="_blank">BBcore</a> e copia a pasta BBcore para a pasta da tua extensão sitesplat.',
+	'BBPROFILE_NOTICE' => '<div class="phpinfo"><p>A configuração para esta extensão encontra-se na aba <strong>EXTENSÕES</strong>.</p><br /><p>Não te esqueças de verificar a Permissão de Grupo "Pode ver a caixa BBprofile" em: Permissões de Grupo &#187; Diversos.</p></div>',
 
-	'BBPROFILE_LABEL'         => 'When should we display BBprofile?',
-	'BBPROFILE_LABEL_EXPLAIN' => 'Choose the profile box location',
-	'UCP_ONLY'                => 'UCP only',
-	'OVEARALL_HEADER'         => 'Overall header',
+	'BBPROFILE_LABEL'         => 'Quando devemos exibir o BBprofile?',
+	'BBPROFILE_LABEL_EXPLAIN' => 'Escolhe a localização da caixa de perfil',
+	'UCP_ONLY'                => 'Apenas na UCP',
+	'OVEARALL_HEADER'         => 'Cabeçalho geral',
 
-	'BBPROFILE_ENABLED'         => 'Enabled BBprofile parts:',
-	'BBPROFILE_ENABLED_EXPLAIN' => 'Choose the profile parts that should be counted towards the 100% profile completion',
+	'BBPROFILE_ENABLED'         => 'Partes do BBprofile activadas:',
+	'BBPROFILE_ENABLED_EXPLAIN' => 'Escolhe as partes do perfil que devem contar para os 100% de conclusão do perfil',
 
-		'PREDEFINED' => 'Predefined',
-	'CPF'         => 'Custom Profile Fields',
+		'PREDEFINED' => 'Predefinido',
+	'CPF'         => 'Campos de Perfil Personalizados',
 
-	'BBPROFILE_HIDE_FOR_ADMINS'   => 'Hide BBprofile box for admins:',
-	'HIDE_FOR_ADMINS'             => 'Hide for admins',
-	'BBPROFILE_HIDE_FOR_MODS'     => 'Hide BBprofile box for global moderators',
-	'HIDE_FOR_MODS'               => 'Hide for global moderators',
-	'BBPROFILE_HIDDEN_FOR_ADMINS' => 'BBprofile box has been hidden for admins.',
-	'BBPROFILE_HIDDEN_FOR_MODS'   => 'BBprofile box has been hidden for global moderators.',
+	'BBPROFILE_HIDE_FOR_ADMINS'   => 'Ocultar a caixa BBprofile para administradores:',
+	'HIDE_FOR_ADMINS'             => 'Ocultar para administradores',
+	'BBPROFILE_HIDE_FOR_MODS'     => 'Ocultar a caixa BBprofile para moderadores globais',
+	'HIDE_FOR_MODS'               => 'Ocultar para moderadores globais',
+	'BBPROFILE_HIDDEN_FOR_ADMINS' => 'A caixa BBprofile foi ocultada para os administradores.',
+	'BBPROFILE_HIDDEN_FOR_MODS'   => 'A caixa BBprofile foi ocultada para os moderadores globais.',
 ]);

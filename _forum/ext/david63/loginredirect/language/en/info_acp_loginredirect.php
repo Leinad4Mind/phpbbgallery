@@ -8,8 +8,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -36,8 +36,8 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'LOG_LOGIN_REDIRECT'	=> '<strong>Login redirect options updated</strong>',
-	'REDIRECT'				=> 'Login redirect',
-	'REDIRECT_MANAGE'		=> 'Manage redirects',
-));
+$lang = array_merge($lang, [
+	'LOG_LOGIN_REDIRECT' => '<strong>Login redirect options updated</strong>',
+	'REDIRECT'           => 'Login redirect',
+	'REDIRECT_MANAGE'    => 'Manage redirects',
+]);

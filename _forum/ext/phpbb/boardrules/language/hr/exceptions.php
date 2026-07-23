@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -48,15 +48,15 @@ if (empty($lang) || !is_array($lang))
 *
 * Translators: Feel free to not translate these language strings
 */
-$lang = array_merge($lang, array(
-	'EXCEPTION_FIELD_MISSING'		=> 'Nedostaje traženo polje.',
-	'EXCEPTION_INVALID_ARGUMENT'	=> 'Određen je neispravan argument za `%1$s`.<br />Razlog: %2$s.',
-	'EXCEPTION_OUT_OF_BOUNDS'		=> 'U polje `%1$s` su upisani podatci van njegovih granica.',
-	'EXCEPTION_TOO_LONG'			=> 'Upis je duži od maksimalne dužine.',
-	'EXCEPTION_NOT_UNIQUE'			=> 'Upis nije jedinstven.',
-	'EXCEPTION_UNEXPECTED_VALUE'	=> 'U polje `%1$s` su upisani neočekivani podatci.<br />Razlog: %2$s.',
-	'EXCEPTION_ILLEGAL_CHARACTERS'	=> 'Upis sadrži nedopuštene znakove.',
+$lang = array_merge($lang, [
+	'EXCEPTION_FIELD_MISSING'      => 'Nedostaje traženo polje.',
+	'EXCEPTION_INVALID_ARGUMENT'   => 'Određen je neispravan argument za `%1$s`.<br />Razlog: %2$s.',
+	'EXCEPTION_OUT_OF_BOUNDS'      => 'U polje `%1$s` su upisani podatci van njegovih granica.',
+	'EXCEPTION_TOO_LONG'           => 'Upis je duži od maksimalne dužine.',
+	'EXCEPTION_NOT_UNIQUE'         => 'Upis nije jedinstven.',
+	'EXCEPTION_UNEXPECTED_VALUE'   => 'U polje `%1$s` su upisani neočekivani podatci.<br />Razlog: %2$s.',
+	'EXCEPTION_ILLEGAL_CHARACTERS' => 'Upis sadrži nedopuštene znakove.',
 
 	// Translators: do not change this
-	'EXCEPTION_WRONG_DATA_LANG'		=> $lang['WRONG_DATA_LANG'],
-));
+	'EXCEPTION_WRONG_DATA_LANG' => $lang['WRONG_DATA_LANG'],
+]);

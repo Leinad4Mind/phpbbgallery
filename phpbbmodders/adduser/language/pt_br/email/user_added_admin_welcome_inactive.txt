@@ -1,0 +1,22 @@
+Subject: Você foi adicionado a "{SITENAME}"
+
+{WELCOME_MSG}
+
+Por favor, guarde este e-mail para referência futura. As informações da sua conta são as seguintes:
+
+----------------------------
+Usuário: {USERNAME}
+
+Endereço do Fórum: {U_BOARD}
+
+Senha: {PASSWORD}
+----------------------------
+
+Sua conta está atualmente inativa e precisará ser aprovada por um administrador antes que você possa fazer login. Outro e-mail será enviado quando isso ocorrer.
+
+Sua senha foi armazenada de forma segura em nosso banco de dados e não pode ser recuperada. Caso a esqueça, você poderá redefini-la usando o endereço de e-mail associado à sua conta.
+
+Recomendamos fortemente que você altere sua senha assim que entrar no fórum.
+
+
+{EMAIL_SIG}

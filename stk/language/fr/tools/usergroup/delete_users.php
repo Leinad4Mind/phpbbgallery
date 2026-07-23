@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,11 +38,11 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'DELETE_USERS'				=> 'Suppression d’utilisateurs',
-	'DELETE_USERS_EXPLAIN'		=> 'Sur cette page il est possible de supprimer les utilisateurs n’ayant rédigé aucun message et n’ayant pas participé depuis une période sélectionnée.',
-	'INACTIVE_PERIOD'			=> 'Période d’inactivité',
-	'DELETE_USERS_SUCESS'		=> 'Les utilisateurs ont été supprimés avec succès.',
-	'DELETE_USERS_NOT_FOUND'	=> 'Les utilisateurs devant être supprimés n’ont pas été trouvés.',
-	'DELETE_USERS_CONFIRM'		=> 'Confirmer la suppression de ces utilisateurs ?<br />(<strong>Attention !</strong> Supprimer un grand nombre d’utilisateurs peut prendre un certain temps. Il est nécessaire que cette page ne soit pas fermée jusqu’à la fin du traitement.)',
-));
+$lang = array_merge($lang, [
+	'DELETE_USERS'           => 'Suppression d’utilisateurs',
+	'DELETE_USERS_EXPLAIN'   => 'Sur cette page il est possible de supprimer les utilisateurs n’ayant rédigé aucun message et n’ayant pas participé depuis une période sélectionnée.',
+	'INACTIVE_PERIOD'        => 'Période d’inactivité',
+	'DELETE_USERS_SUCESS'    => 'Les utilisateurs ont été supprimés avec succès.',
+	'DELETE_USERS_NOT_FOUND' => 'Les utilisateurs devant être supprimés n’ont pas été trouvés.',
+	'DELETE_USERS_CONFIRM'   => 'Confirmer la suppression de ces utilisateurs ?<br />(<strong>Attention !</strong> Supprimer un grand nombre d’utilisateurs peut prendre un certain temps. Il est nécessaire que cette page ne soit pas fermée jusqu’à la fin du traitement.)',
+]);

@@ -39,6 +39,6 @@ if (empty($lang) || !is_array($lang))
  */
 
 $lang = array_merge($lang, [
-	'ACP_USER_UTILS' 	=> 'User utilities',
-	'ACTIVE_SESSIONS'	=> 'Active sessions',
+	'ACP_USER_UTILS'  => 'User utilities',
+	'ACTIVE_SESSIONS' => 'Active sessions',
 ]);

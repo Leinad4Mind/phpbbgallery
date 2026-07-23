@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -33,16 +33,16 @@ if (empty($lang) || !is_array($lang))
 // equally where a string contains only two placeholders which are used to wrap text
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
 
-$lang = array_merge($lang, array(
-		'NO_DEA_EMAILS_INSTALL_ERROR'		=> '“Geen DEA e-mails” kan niet worden geïnstalleerd.<br><br>- PhpBB 3.2.4 of hoger is vereist.',
-		'NO_DEA_EMAILS_PHP_ERROR'			=> '“Geen DEA e-mails” kan niet worden geïnstalleerd.<br><br>- php 5.6.0 of hoger is vereist.',
-		'NO_DEA_EMAILS_NO_CURL'				=> '“Geen DEA e-mails” kan niet worden geïnstalleerd.<br><br>- Is benodigd: PHP "curl" extensie geladen.',
-		'NO_DEA_EMAILS_FOUND'				=> 'FOUT: Het ((%s)) E-mail DOMEIN is niet geldig.<br>Onze website ondersteunt GEEN wegwerp of tijdelijke e-mailaccounts <a href="https://bit.ly/2LBsbqe" target="_blank">(DEA)</a>.<br>Als u wilt registreren op onze website moet u een niet wegwerpbaar e-mailaccount gebruiken.',
-		'NO_DEA_EMAILS_TITLE_FORCE_CHANGE'	=> 'Wijziging vereist door extensie “Geen e-mails”',
-		'NO_DEA_EMAILS_FORCE_CHANGE'		=> 'Voordat u doorgaat met browsen op de site, moet u uw "e-mail" wijzigen.',
-		'NO_DEA_EMAILS_NOT_FORCE_CHANGE'	=> 'Voordat u doorgaat met browsen op de site, moet u uw "e-mail" wijzigen.<br>U hebt geen permissie om de wijziging aan te brengen.<br>U moet contact opnemen met de sitebeheer en uw update aanvragen.',
-		'LOG_NO_DEA_EMAILS'					=> 'Geen DEA e-mails',
-		'LOG_NO_DEA_EMAILS_SETTINGS'		=> 'Cron Beheer & externe DEA Mail Domeinen',
-		'LOG_NO_DEA_EMAILS_LOCALS'			=> 'Lokaal Beheer van DEA Mail Domeinen',
-		'LOG_NO_DEA_EMAILS_USERS'			=> 'Gebruikers met DEA Mail Accounts',
-));
+$lang = array_merge($lang, [
+		'NO_DEA_EMAILS_INSTALL_ERROR'      => '“Geen DEA e-mails” kan niet worden geïnstalleerd.<br><br>- PhpBB 3.2.4 of hoger is vereist.',
+		'NO_DEA_EMAILS_PHP_ERROR'          => '“Geen DEA e-mails” kan niet worden geïnstalleerd.<br><br>- php 5.6.0 of hoger is vereist.',
+		'NO_DEA_EMAILS_NO_CURL'            => '“Geen DEA e-mails” kan niet worden geïnstalleerd.<br><br>- Is benodigd: PHP "curl" extensie geladen.',
+		'NO_DEA_EMAILS_FOUND'              => 'FOUT: Het ((%s)) E-mail DOMEIN is niet geldig.<br>Onze website ondersteunt GEEN wegwerp of tijdelijke e-mailaccounts <a href="https://bit.ly/2LBsbqe" target="_blank">(DEA)</a>.<br>Als u wilt registreren op onze website moet u een niet wegwerpbaar e-mailaccount gebruiken.',
+		'NO_DEA_EMAILS_TITLE_FORCE_CHANGE' => 'Wijziging vereist door extensie “Geen e-mails”',
+		'NO_DEA_EMAILS_FORCE_CHANGE'       => 'Voordat u doorgaat met browsen op de site, moet u uw "e-mail" wijzigen.',
+		'NO_DEA_EMAILS_NOT_FORCE_CHANGE'   => 'Voordat u doorgaat met browsen op de site, moet u uw "e-mail" wijzigen.<br>U hebt geen permissie om de wijziging aan te brengen.<br>U moet contact opnemen met de sitebeheer en uw update aanvragen.',
+		'LOG_NO_DEA_EMAILS'                => 'Geen DEA e-mails',
+		'LOG_NO_DEA_EMAILS_SETTINGS'       => 'Cron Beheer & externe DEA Mail Domeinen',
+		'LOG_NO_DEA_EMAILS_LOCALS'         => 'Lokaal Beheer van DEA Mail Domeinen',
+		'LOG_NO_DEA_EMAILS_USERS'          => 'Gebruikers met DEA Mail Accounts',
+]);

@@ -9,8 +9,8 @@
  */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -41,26 +41,26 @@ if (empty($lang) || !is_array($lang))
 * mode: statistics
 * Info: Les clefs de langages sont préfixés avec 'INTRODUCIATOR_ST_' pour 'INTRODUCIATOR_STATISTICS_PAGES_'
 */
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// Titres
-	'INTRODUCIATOR_ST_TITLE'						=> 'Statistiques et vérifications sur les présentations des membres',
-	'INTRODUCIATOR_ST_TITLE_EXPLAIN'				=> 'Permet d’afficher les informations de la base de données :
+	'INTRODUCIATOR_ST_TITLE'         => 'Statistiques et vérifications sur les présentations des membres',
+	'INTRODUCIATOR_ST_TITLE_EXPLAIN' => 'Permet d’afficher les informations de la base de données :
 														<ul>
 														<li>Les statistiques sur les présentations.</li>
 														<li>La vérification de la base de données concernant les présentations (vérification que les utilisateurs n’ont pas postés plus d’une seule présentation).</li>
 														</ul>',
 
 	// Number of introduce's texts
-	'INTRODUCIATOR_ST_MAIN_STATISTICS_TITLE'		=> 'Statistiques générales',
-	'INTRODUCIATOR_ST_NB_INTRODUCTION_TITLE'		=> 'Nombre de présentations dans le forum :',
+	'INTRODUCIATOR_ST_MAIN_STATISTICS_TITLE' => 'Statistiques générales',
+	'INTRODUCIATOR_ST_NB_INTRODUCTION_TITLE' => 'Nombre de présentations dans le forum :',
 
 	// Textes du tableau
-	'INTRODUCIATOR_ST_ARRAY_TITLE'					=> 'Ce tableau indique toutes les présentations qui ont été postées plus d’une fois',
-	'INTRODUCIATOR_ST_ARRAY_NO_MULTIPLE_DETECTED'	=> 'Aucune présentation multiple n’a été détectée',
-	'INTRODUCIATOR_ST_ARRAY_HEADER_USER'			=> 'Utilisateur',
-	'INTRODUCIATOR_ST_ARRAY_HEADER_DATE'			=> 'Date',
-	'INTRODUCIATOR_ST_ARRAY_HEADER_INTRODUCE'		=> 'Présentations',
+	'INTRODUCIATOR_ST_ARRAY_TITLE'                => 'Ce tableau indique toutes les présentations qui ont été postées plus d’une fois',
+	'INTRODUCIATOR_ST_ARRAY_NO_MULTIPLE_DETECTED' => 'Aucune présentation multiple n’a été détectée',
+	'INTRODUCIATOR_ST_ARRAY_HEADER_USER'          => 'Utilisateur',
+	'INTRODUCIATOR_ST_ARRAY_HEADER_DATE'          => 'Date',
+	'INTRODUCIATOR_ST_ARRAY_HEADER_INTRODUCE'     => 'Présentations',
 
 	// Boutons
-	'INTRODUCIATOR_ST_CHECK'						=> 'Vérifier',
-));
+	'INTRODUCIATOR_ST_CHECK' => 'Vérifier',
+]);

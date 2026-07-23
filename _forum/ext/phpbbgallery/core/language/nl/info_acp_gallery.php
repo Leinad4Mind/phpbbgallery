@@ -23,7 +23,7 @@ if (empty($lang) || !is_array($lang))
 	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ACP_GALLERY_ALBUM_MANAGEMENT'       => 'Beheer album',
 	'ACP_GALLERY_ALBUM_PERMISSIONS'      => 'Permissies',
 	'ACP_GALLERY_ALBUM_PERMISSIONS_COPY' => 'Kopieer permissies',
@@ -33,14 +33,14 @@ $lang = array_merge($lang, array(
 	'ACP_GALLERY_MANAGE_ALBUMS'          => 'Beheer albums',
 	'ACP_GALLERY_OVERVIEW'               => 'Overzicht',
 
-	'GALLERY'                  => 'Galerij',
-	'GALLERY_EXPLAIN'          => 'Galerij afbeelding',
-	'GALLERY_HELPLINE_ALBUM'   => 'Galerij afbeelding: [album]image_id[/album], met deze BBCode kan je een afbeelding uit de galerij toevoegen aan je bericht.',
-	'GALLERY_POPUP'            => 'Galerij',
-	'GALLERY_POPUP_HELPLINE'   => 'Opent een popup-venster waarin je je eigen recente afbeeldingen kan selecteren en nieuwe afbeeldingen kan uploaden.',
+	'GALLERY'                => 'Galerij',
+	'GALLERY_EXPLAIN'        => 'Galerij afbeelding',
+	'GALLERY_HELPLINE_ALBUM' => 'Galerij afbeelding: [album]image_id[/album], met deze BBCode kan je een afbeelding uit de galerij toevoegen aan je bericht.',
+	'GALLERY_POPUP'          => 'Galerij',
+	'GALLERY_POPUP_HELPLINE' => 'Opent een popup-venster waarin je je eigen recente afbeeldingen kan selecteren en nieuwe afbeeldingen kan uploaden.',
 
 	// Please do not change the copyright.
-	'GALLERY_COPYRIGHT'        => 'Powered by <a href="https://github.com/satanasov/phpbbgallery">phpBB Gallery</a> &copy; 2014–2026',
+	'GALLERY_COPYRIGHT' => 'Powered by <a href="https://github.com/satanasov/phpbbgallery">phpBB Gallery</a> &copy; 2014–2026',
 
 	// A little line where you can give yourself some credits on the translation.
 	'GALLERY_TRANSLATION_INFO' => 'Nederlandse vertaling door <a href="https://github.com/dutch-translators">Dutch Translators</a>',
@@ -51,8 +51,8 @@ $lang = array_merge($lang, array(
 	'PERSONAL_ALBUM' => 'Persoonlijk album',
 	'PHPBB_GALLERY'  => 'phpBB Galerij',
 
-	'TOTAL_IMAGES_SPRINTF' => array(
+	'TOTAL_IMAGES_SPRINTF' => [
 		0 => 'Aantal afbeeldingen <strong>0</strong>',
 		1 => 'Aantal afbeeldingen <strong>%d</strong>',
-	),
-));
+	],
+]);

@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,10 +38,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES_HEADER'			=> 'Normas del Foro',
-	'BOARDRULES_EXPLAIN'		=> 'Estas normas se dan a conocer para aclarar las diversas responsabilidades de todos los usuarios de la comunidad aquí en %s. Serán respetadas por todo el mundo para asegurarse de que nuestro foro se ejecuta sin problemas, y proporciona una experiencia divertida y productiva para todos nuestros usuarios de la comunidad y los visitantes.',
-	'BOARDRULES_CATEGORIES'		=> 'Secciones de Normas',
-	'BOARDRULES_CATEGORY_ANCHOR'=> 'seccion-%s',
-	'BOARDRULES_RULE_ANCHOR'	=> 'norma-%s',
-));
+$lang = array_merge($lang, [
+	'BOARDRULES_HEADER'          => 'Normas del Foro',
+	'BOARDRULES_EXPLAIN'         => 'Estas normas se dan a conocer para aclarar las diversas responsabilidades de todos los usuarios de la comunidad aquí en %s. Serán respetadas por todo el mundo para asegurarse de que nuestro foro se ejecuta sin problemas, y proporciona una experiencia divertida y productiva para todos nuestros usuarios de la comunidad y los visitantes.',
+	'BOARDRULES_CATEGORIES'      => 'Secciones de Normas',
+	'BOARDRULES_CATEGORY_ANCHOR' => 'seccion-%s',
+	'BOARDRULES_RULE_ANCHOR'     => 'norma-%s',
+]);

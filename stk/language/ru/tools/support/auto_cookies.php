@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,14 +37,14 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'AUTO_COOKIES'				=> 'Изменение настроек Авто Cookies конференции',
-	'AUTO_COOKIES_EXPLAIN'		=> 'Позволяет вам сменить установки Cookies конференции. Предлагаемый вариант скопирован из настроек администраторского раздела, скорей всего он корректен.',
+$lang = array_merge($lang, [
+	'AUTO_COOKIES'         => 'Изменение настроек Авто Cookies конференции',
+	'AUTO_COOKIES_EXPLAIN' => 'Позволяет вам сменить установки Cookies конференции. Предлагаемый вариант скопирован из настроек администраторского раздела, скорей всего он корректен.',
 
-	'COOKIE_SETTINGS_UPDATED'	=> 'Настройки Cookies успешно обновлены.',
-	'COOKIE_DOMAIN'				=> 'Домен cookie',
-	'COOKIE_NAME'				=> 'Имя cookie',
-	'COOKIE_PATH'				=> 'Путь cookie',
-	'COOKIE_SECURE'				=> 'Безопасные cookie [ https ]',
-	'COOKIE_SECURE_EXPLAIN'		=> 'Если ваш сервер работает через SSL, то включите этот параметр. В противном случае оставьте отключённым. Включение этого параметра, если сервер работает не через SSL, приведёт к ошибкам при переходах по страницам конференции и при переадресации.',
-));
+	'COOKIE_SETTINGS_UPDATED' => 'Настройки Cookies успешно обновлены.',
+	'COOKIE_DOMAIN'           => 'Домен cookie',
+	'COOKIE_NAME'             => 'Имя cookie',
+	'COOKIE_PATH'             => 'Путь cookie',
+	'COOKIE_SECURE'           => 'Безопасные cookie [ https ]',
+	'COOKIE_SECURE_EXPLAIN'   => 'Если ваш сервер работает через SSL, то включите этот параметр. В противном случае оставьте отключённым. Включение этого параметра, если сервер работает не через SSL, приведёт к ошибкам при переходах по страницам конференции и при переадресации.',
+]);

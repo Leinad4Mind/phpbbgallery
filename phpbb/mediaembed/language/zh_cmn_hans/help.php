@@ -39,9 +39,9 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'HELP_EMBEDDING_MEDIA'			=> '嵌入的媒体',
-	'HELP_EMBEDDING_MEDIA_QUESTION'	=> '如何在帖子中嵌入其它网站的媒体内容',
-	'HELP_EMBEDDING_MEDIA_ANSWER'	=> '用户可以嵌入来自所允许的网站的视频和音频内容，使用
+	'HELP_EMBEDDING_MEDIA'          => '嵌入的媒体',
+	'HELP_EMBEDDING_MEDIA_QUESTION' => '如何在帖子中嵌入其它网站的媒体内容',
+	'HELP_EMBEDDING_MEDIA_ANSWER'   => '用户可以嵌入来自所允许的网站的视频和音频内容，使用
 										 <strong>[media][/media]</strong> 标签， 或者直接以文本贴入支持的网址 URL
 										 例如：<br><br>
 										<strong>[media]</strong>%1$s<strong>[/media]</strong>

@@ -8,8 +8,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -36,19 +36,19 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'OPTIMIZE_TABLES'			=> 'DB tables optimization',
-	'OPTIMIZE_TABLES_EXPLAIN'	=> 'Search the database tables that need defragmentation and optimization',
-	'GO'						=> 'Optimize',
-	'FRAGMENTED'				=> 'Fragmented',
-	'CREATE_TIME'				=> 'Created',
-	'UPDATE_TIME'				=> 'Latest update',
-	'CHECK_TIME'				=> 'Verified',
-	'NOT_FOUND' 				=> 'Tables requiring optimization is not detected',
-	'TABLE_NAME'				=> 'Table',
-	'TABLE_SIZE'				=> 'Used',
-	'ALL'						=> 'Total: ',
-	'SUCESS'					=> 'Selected tables were successfully optimized',
-	'NOTHING'					=> 'Nothing selected',
-	'OPTIMIZER_MESSAGE'			=> '<b>Caution!</b> Due to the large size of tables and strong fragmentation, the optimization process may take considerable time.<br />Please do not leave this page, do not wait until the results of the optimization.',
-));
+$lang = array_merge($lang, [
+	'OPTIMIZE_TABLES'         => 'DB tables optimization',
+	'OPTIMIZE_TABLES_EXPLAIN' => 'Search the database tables that need defragmentation and optimization',
+	'GO'                      => 'Optimize',
+	'FRAGMENTED'              => 'Fragmented',
+	'CREATE_TIME'             => 'Created',
+	'UPDATE_TIME'             => 'Latest update',
+	'CHECK_TIME'              => 'Verified',
+	'NOT_FOUND'               => 'Tables requiring optimization is not detected',
+	'TABLE_NAME'              => 'Table',
+	'TABLE_SIZE'              => 'Used',
+	'ALL'                     => 'Total: ',
+	'SUCESS'                  => 'Selected tables were successfully optimized',
+	'NOTHING'                 => 'Nothing selected',
+	'OPTIMIZER_MESSAGE'       => '<b>Caution!</b> Due to the large size of tables and strong fragmentation, the optimization process may take considerable time.<br />Please do not leave this page, do not wait until the results of the optimization.',
+]);

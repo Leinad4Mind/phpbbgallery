@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,11 +37,11 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'SET_PROSILVER'						=> 'Назначение стиля prosilver стилем по умолчанию',
-	'SET_PROSILVER_CONFIRM'				=> 'Позволяет установить стиль prosilver и назначить его стилем по умолчанию для всех пользователей.',
-	'SET_PROSILVER_ALLREADY_ASSIGNED'	=> 'Стиль prosilver уже назначен стилем по умолчанию. Никаких действий не трубуется.',
-	'SET_PROSILVER_ACTIVATED'			=> 'Стиль prosilver был успешно активирован.',
-	'SET_PROSILVER_RESET'				=> 'Стиль prosilver был назначен стилем по умолчанию.',
-	'SET_PROSILVER_DOES_NOT_EXIST'		=> 'Файлы стиля отсутсвуют на сервере. Загрузите файлы из дистрибутива <a href="https://www.phpbb.com/downloads/">3.2.1 Full Package</a>.',
-));
+$lang = array_merge($lang, [
+	'SET_PROSILVER'                   => 'Назначение стиля prosilver стилем по умолчанию',
+	'SET_PROSILVER_CONFIRM'           => 'Позволяет установить стиль prosilver и назначить его стилем по умолчанию для всех пользователей.',
+	'SET_PROSILVER_ALLREADY_ASSIGNED' => 'Стиль prosilver уже назначен стилем по умолчанию. Никаких действий не трубуется.',
+	'SET_PROSILVER_ACTIVATED'         => 'Стиль prosilver был успешно активирован.',
+	'SET_PROSILVER_RESET'             => 'Стиль prosilver был назначен стилем по умолчанию.',
+	'SET_PROSILVER_DOES_NOT_EXIST'    => 'Файлы стиля отсутсвуют на сервере. Загрузите файлы из дистрибутива <a href="https://www.phpbb.com/downloads/">3.2.1 Full Package</a>.',
+]);

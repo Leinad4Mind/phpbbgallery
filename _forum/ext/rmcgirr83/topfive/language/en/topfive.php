@@ -8,8 +8,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -32,12 +32,12 @@ if (empty($lang) || !is_array($lang))
 // equally where a string contains only two placeholders which are used to wrap text
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
 
-$lang = array_merge($lang, array(
-	'TOP_FIVE'			=> 'Top Activity',
-	'NEWEST_TOPICS'		=> 'Newest Posts',
-	'NO_TOPIC_EXIST'	=> 'No posts exist for viewing',
-	'TOP_FIVE_ACTIVE'	=> 'Top Active Users',
-	'TOP_FIVE_NEWEST'	=> 'Newest Users',
-	'IN'                => 'In',
-	'BY'                => 'by:',
-));
+$lang = array_merge($lang, [
+	'TOP_FIVE'        => 'Top Activity',
+	'NEWEST_TOPICS'   => 'Newest Posts',
+	'NO_TOPIC_EXIST'  => 'No posts exist for viewing',
+	'TOP_FIVE_ACTIVE' => 'Top Active Users',
+	'TOP_FIVE_NEWEST' => 'Newest Users',
+	'IN'              => 'In',
+	'BY'              => 'by:',
+]);

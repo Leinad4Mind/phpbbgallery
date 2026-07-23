@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,10 +38,10 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'PRUNE_ATTACHMENTS'				=> 'Vérifier les fichiers joints',
-	'PRUNE_ATTACHMENTS_EXPLAIN'		=> 'Cet outil vérifie l’existence de fichiers joints supplémentaires (<em>les sous-dossiers sont aussi vérifiés !</em>). Si ces fichiers existent, ils seront supprimés. Poursuivre ?',
-	'PRUNE_ATTACHMENTS_FINISHED'	=> 'Aucun fichier joint supplémentaire n’a été trouvé.',
-	'PRUNE_ATTACHMENTS_PROGRESS'	=> 'Vérification des fichiers inutiles en cours. Merci de ne pas interrompre cette opération !<br />Les fichiers suivants ont été supprimés :',
-	'PRUNE_ATTACHMENTS_FAIL'		=> '<br />Les fichiers suivants ne peuvent pas être supprimés :',
-));
+$lang = array_merge($lang, [
+	'PRUNE_ATTACHMENTS'          => 'Vérifier les fichiers joints',
+	'PRUNE_ATTACHMENTS_EXPLAIN'  => 'Cet outil vérifie l’existence de fichiers joints supplémentaires (<em>les sous-dossiers sont aussi vérifiés !</em>). Si ces fichiers existent, ils seront supprimés. Poursuivre ?',
+	'PRUNE_ATTACHMENTS_FINISHED' => 'Aucun fichier joint supplémentaire n’a été trouvé.',
+	'PRUNE_ATTACHMENTS_PROGRESS' => 'Vérification des fichiers inutiles en cours. Merci de ne pas interrompre cette opération !<br />Les fichiers suivants ont été supprimés :',
+	'PRUNE_ATTACHMENTS_FAIL'     => '<br />Les fichiers suivants ne peuvent pas être supprimés :',
+]);

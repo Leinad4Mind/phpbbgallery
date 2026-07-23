@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,12 +37,12 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES_SAMPLE_CATEGORY_TITLE'		=> 'Példa szabályzat kategória',
-	'BOARDRULES_SAMPLE_CATEGORY_MESSAGE'  => 'Ez egy példakategória a Fórum szabályzat telepítéséhez. A kategóriák a kapcsolódó szabályzatok csoportjait tartalmazzák. A kategóriaüzenetek nem jelennek meg a szabályok oldalon.',
-	'BOARDRULES_SAMPLE_CATEGORY_ANCHOR'		=> 'pelda-kategoria',
+$lang = array_merge($lang, [
+	'BOARDRULES_SAMPLE_CATEGORY_TITLE'   => 'Példa szabályzat kategória',
+	'BOARDRULES_SAMPLE_CATEGORY_MESSAGE' => 'Ez egy példakategória a Fórum szabályzat telepítéséhez. A kategóriák a kapcsolódó szabályzatok csoportjait tartalmazzák. A kategóriaüzenetek nem jelennek meg a szabályok oldalon.',
+	'BOARDRULES_SAMPLE_CATEGORY_ANCHOR'  => 'pelda-kategoria',
 
-	'BOARDRULES_SAMPLE_RULE_TITLE'			=> 'Példa szabályzat',
-	'BOARDRULES_SAMPLE_RULE_MESSAGE'		=> 'Ez egy példakategória a Fórum szabályzat telepítéséhez. Úgy tűnik, minden működik. Ezt a szabályzatot és kategóriát szerkesztheti vagy törölheti, és beállíthatja saját szabályzatát.',
-	'BOARDRULES_SAMPLE_RULE_ANCHOR'			=> 'pelda-szabalyzat',
-));
+	'BOARDRULES_SAMPLE_RULE_TITLE'   => 'Példa szabályzat',
+	'BOARDRULES_SAMPLE_RULE_MESSAGE' => 'Ez egy példakategória a Fórum szabályzat telepítéséhez. Úgy tűnik, minden működik. Ezt a szabályzatot és kategóriát szerkesztheti vagy törölheti, és beállíthatja saját szabályzatát.',
+	'BOARDRULES_SAMPLE_RULE_ANCHOR'  => 'pelda-szabalyzat',
+]);

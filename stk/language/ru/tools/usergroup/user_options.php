@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,24 +37,24 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'USER_OPTIONS'			=> 'Пользовательские настройки',
-	'USER_OPTIONS_EXPLAIN'	=> 'Здесь вы можете изменить пользовательские настройки установленные по умолчанию для всех или выбранных групп пользователей.<br />Более подробную информацию можно получить <a href="http://www.phpbbguru.net/kb/administration/changing-user-defaults/" target="_blank"><b>здесь</b></a>.',
-	'NOTHING'				=> 'Не изменять',
-	'USER_OPTIONS_OK'		=> 'Пользовательские настройки были успешно изменены.',
+$lang = array_merge($lang, [
+	'USER_OPTIONS'         => 'Пользовательские настройки',
+	'USER_OPTIONS_EXPLAIN' => 'Здесь вы можете изменить пользовательские настройки установленные по умолчанию для всех или выбранных групп пользователей.<br />Более подробную информацию можно получить <a href="http://www.phpbbguru.net/kb/administration/changing-user-defaults/" target="_blank"><b>здесь</b></a>.',
+	'NOTHING'              => 'Не изменять',
+	'USER_OPTIONS_OK'      => 'Пользовательские настройки были успешно изменены.',
 
-	'viewimg'				=> 'Показывать изображения в сообщениях',
-	'viewflash'				=> 'Показывать Flash-анимацию',
-	'viewsmilies'			=> 'Заменять смайлики изображениями',
-	'viewsigs'				=> 'Показывать подписи в сообщениях',
-	'viewavatars'			=> 'Показывать аватары в сообщениях',
-	'viewcensors'			=> 'Разрешить автоцензор',
-	'attachsig'				=> 'Всегда присоединять подпись',
-	'bbcode'				=> 'BBCode всегда включён',
-	'smilies'				=> 'Смайлики всегда включены',
-	'sig_bbcode'			=> 'BBCode включён в подписи',
-	'sig_smilies'			=> 'Заменять смайлики изображениями в подписи',
-	'sig_links'				=> 'Преобразовывать адреса URL в ссылки в подписи',
+	'viewimg'     => 'Показывать изображения в сообщениях',
+	'viewflash'   => 'Показывать Flash-анимацию',
+	'viewsmilies' => 'Заменять смайлики изображениями',
+	'viewsigs'    => 'Показывать подписи в сообщениях',
+	'viewavatars' => 'Показывать аватары в сообщениях',
+	'viewcensors' => 'Разрешить автоцензор',
+	'attachsig'   => 'Всегда присоединять подпись',
+	'bbcode'      => 'BBCode всегда включён',
+	'smilies'     => 'Смайлики всегда включены',
+	'sig_bbcode'  => 'BBCode включён в подписи',
+	'sig_smilies' => 'Заменять смайлики изображениями в подписи',
+	'sig_links'   => 'Преобразовывать адреса URL в ссылки в подписи',
 
-	'ALL_GROUPS'			=> 'Все группы',
-));
+	'ALL_GROUPS' => 'Все группы',
+]);

@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,21 +38,21 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'DELETE_BBCODE'						=> 'Suppression de BBCodes',
-	'DELETE_BBCODE_PROGRESS'			=> '%1$d BBCodes traités sur %2$d…',
-	'DELETE_BBCODES'					=> 'Suppression de BBCodes en cours',
-	'DELETE_BBCODE_COMPLETE'			=> 'Suppression de BBCodes terminée.',
-	'IDS_EMPTY'							=> 'Aucun mode de suppression de BBCodes n’a été sélectionné. Si vous ne savez pas quel mode choisir, merci de cocher la case « <strong>Suppression de BBCodes partout</strong> ». ',
-	'DELETE_BBCODE_POST_IDS'			=> 'Supprimer les BBCodes uniquement parmi les messages listés',
-	'DELETE_BBCODE_POST_IDS_EXPLAIN'	=> 'Permet de spécifier les ID des messages dans lesquels les BBCodes seront supprimés, séparés par une virgule, tels que par exemple : 1,2,3,5,8,13.',
-	'DELETE_BBCODE_FORUMS'				=> 'Supprimer les BBCodes uniquement parmi les forums sélectionnées',
-	'DELETE_BBCODE_FORUMS_EXPLAIN'		=> 'Permet de sélectionner plusieurs forums dans lesquels les BBCodes seront supprimés. Pour sélectionner plusieurs forums merci d’utiliser la combinaison de la touche CTRL (CMD sous macOS) & du clic gauche de la souris.',
+$lang = array_merge($lang, [
+	'DELETE_BBCODE'                  => 'Suppression de BBCodes',
+	'DELETE_BBCODE_PROGRESS'         => '%1$d BBCodes traités sur %2$d…',
+	'DELETE_BBCODES'                 => 'Suppression de BBCodes en cours',
+	'DELETE_BBCODE_COMPLETE'         => 'Suppression de BBCodes terminée.',
+	'IDS_EMPTY'                      => 'Aucun mode de suppression de BBCodes n’a été sélectionné. Si vous ne savez pas quel mode choisir, merci de cocher la case « <strong>Suppression de BBCodes partout</strong> ». ',
+	'DELETE_BBCODE_POST_IDS'         => 'Supprimer les BBCodes uniquement parmi les messages listés',
+	'DELETE_BBCODE_POST_IDS_EXPLAIN' => 'Permet de spécifier les ID des messages dans lesquels les BBCodes seront supprimés, séparés par une virgule, tels que par exemple : 1,2,3,5,8,13.',
+	'DELETE_BBCODE_FORUMS'           => 'Supprimer les BBCodes uniquement parmi les forums sélectionnées',
+	'DELETE_BBCODE_FORUMS_EXPLAIN'   => 'Permet de sélectionner plusieurs forums dans lesquels les BBCodes seront supprimés. Pour sélectionner plusieurs forums merci d’utiliser la combinaison de la touche CTRL (CMD sous macOS) & du clic gauche de la souris.',
 
-	'DELETE_BBCODE_SELECT'				=> 'Sélectionner les BBCodes concernés par la suppression',
-	'DELETE_BBCODE_ALL'					=> 'Suppression de BBCodes partout',
-	'DELETE_BBCODE_ALL_EXPLAIN'			=> 'Permet de supprimer les BBCodes partout sur le forum. Cette option sera ignorée si des messages ou forums sont spécifiés ci-dessus. Merci de noter que cet outil peut potentiellement endommager votre base de données au-delà de toute réparation ; c’est pourquoi, <strong>il est nécessaire d’effectuer une sauvegarde de la base de données du forum avant d’utiliser cet outil</strong>. Aussi, cet outil peut mettre un certain temps afin d’effectuer les tâches demandées selon la cible sélectionnée (quelques messages, forums ou le forum au complet).',
+	'DELETE_BBCODE_SELECT'      => 'Sélectionner les BBCodes concernés par la suppression',
+	'DELETE_BBCODE_ALL'         => 'Suppression de BBCodes partout',
+	'DELETE_BBCODE_ALL_EXPLAIN' => 'Permet de supprimer les BBCodes partout sur le forum. Cette option sera ignorée si des messages ou forums sont spécifiés ci-dessus. Merci de noter que cet outil peut potentiellement endommager votre base de données au-delà de toute réparation ; c’est pourquoi, <strong>il est nécessaire d’effectuer une sauvegarde de la base de données du forum avant d’utiliser cet outil</strong>. Aussi, cet outil peut mettre un certain temps afin d’effectuer les tâches demandées selon la cible sélectionnée (quelques messages, forums ou le forum au complet).',
 
 
 
-));
+]);

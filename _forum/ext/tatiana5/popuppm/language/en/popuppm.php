@@ -21,11 +21,11 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'POPUPPM_YOU_NEW_PM_BLINK'		=> [
+	'POPUPPM_YOU_NEW_PM_BLINK' => [
 		1 => '<<<! You have a new private message !>>>',
 		2 => '<<<! You have %s new private messages !>>>',
 	],
-	'POPUPPM_YOU_NEW_PM'			=> [
+	'POPUPPM_YOU_NEW_PM' => [
 		1 => 'You have a new private message',
 		2 => 'You have %s new private messages',
 	],

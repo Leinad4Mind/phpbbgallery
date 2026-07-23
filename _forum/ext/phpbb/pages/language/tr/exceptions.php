@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -48,12 +48,12 @@ if (empty($lang) || !is_array($lang))
 *
 * Translators: Feel free to not translate these language strings
 */
-$lang = array_merge($lang, array(
-	'EXCEPTION_FIELD_MISSING'		=> 'Gerekli alan eksik',
-	'EXCEPTION_INVALID_ARGUMENT'	=> '`%1$s` için geçersiz bağımsız değişken belirtildi. Sebep: %2$s',
-	'EXCEPTION_OUT_OF_BOUNDS'		=> '`%1$s` alanı sınırların üzerinde veri aldı',
-	'EXCEPTION_TOO_LONG'			=> 'Giriş, en fazla uzunluk sınırını aştı.',
-	'EXCEPTION_NOT_UNIQUE'			=> 'Giriş, özgün ve benzersiz değil.',
-	'EXCEPTION_UNEXPECTED_VALUE'	=> '`%1$s` alanı beklenmeyen veri aldı. Sebep: %2$s',
-	'EXCEPTION_ILLEGAL_CHARACTERS'	=> 'Giriş, illegal karakterler içeriyor.',
-));
+$lang = array_merge($lang, [
+	'EXCEPTION_FIELD_MISSING'      => 'Gerekli alan eksik',
+	'EXCEPTION_INVALID_ARGUMENT'   => '`%1$s` için geçersiz bağımsız değişken belirtildi. Sebep: %2$s',
+	'EXCEPTION_OUT_OF_BOUNDS'      => '`%1$s` alanı sınırların üzerinde veri aldı',
+	'EXCEPTION_TOO_LONG'           => 'Giriş, en fazla uzunluk sınırını aştı.',
+	'EXCEPTION_NOT_UNIQUE'         => 'Giriş, özgün ve benzersiz değil.',
+	'EXCEPTION_UNEXPECTED_VALUE'   => '`%1$s` alanı beklenmeyen veri aldı. Sebep: %2$s',
+	'EXCEPTION_ILLEGAL_CHARACTERS' => 'Giriş, illegal karakterler içeriyor.',
+]);

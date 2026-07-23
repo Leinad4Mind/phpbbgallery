@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,8 +38,8 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// Meldingen
-	'AUTOGROUPS_NOTIFICATION_GROUP_ADDED'	=> '<strong>Groepupdate</strong>: Je bent toegevoegd aan de groep %1$s.',
-	'AUTOGROUPS_NOTIFICATION_GROUP_REMOVED'	=> '<strong>Groepupdate</strong>: Je bent verwijderd uit de groep %1$s.',
-));
+	'AUTOGROUPS_NOTIFICATION_GROUP_ADDED'   => '<strong>Groepupdate</strong>: Je bent toegevoegd aan de groep %1$s.',
+	'AUTOGROUPS_NOTIFICATION_GROUP_REMOVED' => '<strong>Groepupdate</strong>: Je bent verwijderd uit de groep %1$s.',
+]);

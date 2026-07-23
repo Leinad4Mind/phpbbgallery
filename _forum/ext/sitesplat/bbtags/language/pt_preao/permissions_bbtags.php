@@ -8,8 +8,8 @@
  */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -37,7 +37,6 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'ACL_U_BBTAGS_CREATE' => 'Pode criar novas tags',
-	'ACL_U_BBTAGS_EDIT'   => 'Pode editar tags',
-	'ACL_M_BBTAGS_EDIT'   => 'Pode gerir/editar todas as tags',
+	'ACL_U_BBTAGS'      => 'Pode gerir BBtags',
+	'ACL_U_BBTAGS_READ' => 'Pode ver as BBtags e usar a lista de pesquisa de BBtags',
 ]);

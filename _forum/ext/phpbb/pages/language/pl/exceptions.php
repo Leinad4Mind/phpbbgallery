@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -47,12 +47,12 @@ if (empty($lang) || !is_array($lang))
 *
 * Translators: Feel free to not translate these language strings
 */
-$lang = array_merge($lang, array(
-	'EXCEPTION_FIELD_MISSING'		=> 'Uzupełnij wymagane pola.',
-	'EXCEPTION_INVALID_ARGUMENT'	=> 'Nieprawidłowy argument określony dla `%1$s`. Powód: %2$s.',
-	'EXCEPTION_OUT_OF_BOUNDS'		=> 'Pole `%1$s` jest poza granicami danych.',
-	'EXCEPTION_TOO_LONG'			=> 'Nazwa świeżki przekroczyła maksymalną długość znaków.',
-	'EXCEPTION_NOT_UNIQUE'			=> 'Taka ścieżka już istnieje.',
-	'EXCEPTION_UNEXPECTED_VALUE'	=> 'Pole `%1$s` otrzymało nieoczekiwane dane. Powód: %2$s.',
-	'EXCEPTION_ILLEGAL_CHARACTERS'	=> 'Ścieżka zawiera niedozwolone znaki.',
-));
+$lang = array_merge($lang, [
+	'EXCEPTION_FIELD_MISSING'      => 'Uzupełnij wymagane pola.',
+	'EXCEPTION_INVALID_ARGUMENT'   => 'Nieprawidłowy argument określony dla `%1$s`. Powód: %2$s.',
+	'EXCEPTION_OUT_OF_BOUNDS'      => 'Pole `%1$s` jest poza granicami danych.',
+	'EXCEPTION_TOO_LONG'           => 'Nazwa świeżki przekroczyła maksymalną długość znaków.',
+	'EXCEPTION_NOT_UNIQUE'         => 'Taka ścieżka już istnieje.',
+	'EXCEPTION_UNEXPECTED_VALUE'   => 'Pole `%1$s` otrzymało nieoczekiwane dane. Powód: %2$s.',
+	'EXCEPTION_ILLEGAL_CHARACTERS' => 'Ścieżka zawiera niedozwolone znaki.',
+]);

@@ -9,19 +9,19 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
 }
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -40,31 +40,31 @@ if (empty($lang) || !is_array($lang))
 // í ª ì î Ö
 //
 
-$lang = array_merge($lang, array(
-	'REPARSE_ALL'				=> 'Reparse all BBCodes',
-	'REPARSE_ALL_EXPLAIN'		=> 'When checked the BBCode reparse will reparse all content on the board; by default, the tool will only reparse posts/private messages/signatures that have been previously parsed by phpBB. This option will be ignored if specific posts, PMs or forums are specified above. Please note that this tool has the potential to damage your database beyond repair; therefore, <strong>be sure to backup your database before proceeding</strong>. Moreover, note that this tool may take some time to complete.',
-	'REPARSE_BBCODE'			=> 'Reparse BBCode',
-	'REPARSE_BBCODE_COMPLETE'	=> 'BBCodes have been reparsed.',
-	'REPARSE_BBCODE_PROGRESS'	=> 'Step %1$d completed. Moving on to step %2$d in a moment...',
-	'REPARSE_BBCODE_SWITCH_MODE'	=> array(
-		1	=> 'Finished reparsing the posts, moving on to private messages.',
-		2	=> 'Finished reparsing private messages, moving on to signatures.',
-	),
-	'REPARSE_BBCODE_MODE'			=> array(
-		0	=> 'Reparsing posts in progress.',
-		1	=> 'Reparsing private messages in progress.',
-		2	=> 'Reparsing signatures in progress.',
-	),
-	'REPARSE_IDS_INVALID'			=> 'The IDs you submitted were not valid; please ensure that post IDs are listed as a comma separated list (e.g. 1,2,3,5,8,13).',
-	'REPARSE_IDS_EMPTY'				=> 'You have not selected any reparsing mode. If you don\'t know how to choose a mode, check the box <strong>Reparse all BBCodes</strong>. ',
-	'REPARSE_POST_IDS'				=> 'Reparse Specific Posts',
-	'REPARSE_POST_IDS_EXPLAIN'		=> 'To reparse specific posts only, specify post IDs in a comma-separated list (e.g. 1,2,3,5,8,13).',
-	'REPARSE_PM_IDS'				=> 'Reparse Specific PMs',
-	'REPARSE_PM_IDS_EXPLAIN'		=> 'To reparse specific PMs only, specify PM IDs in a comma-separated list (e.g. 1,2,3,5,8,13).',
-	'REPARSE_FORUMS'				=> 'Reparse Posts from specific forums',
-	'REPARSE_FORUMS_EXPLAIN'		=> 'To select multiple forums some or all of the proper use for your computer and browser combination of mouse and keyboard.',
-	'REPARSE_SIG'					=> 'Reparse only user signatures',
-	'REPARSE_SIG_EXPLAIN'			=> 'if checked, BBcodes will be reparsed only in user data.',
-	'CREATE_BACKUP_TABLE'			=> 'Create Backup',
-	'CREATE_BACKUP_TABLE_EXPLAIN'	=> 'The database table will be created from which you can restore messages in case of failure or emergency shutdown.'
-));
+$lang = array_merge($lang, [
+	'REPARSE_ALL'                => 'Reparse all BBCodes',
+	'REPARSE_ALL_EXPLAIN'        => 'When checked the BBCode reparse will reparse all content on the board; by default, the tool will only reparse posts/private messages/signatures that have been previously parsed by phpBB. This option will be ignored if specific posts, PMs or forums are specified above. Please note that this tool has the potential to damage your database beyond repair; therefore, <strong>be sure to backup your database before proceeding</strong>. Moreover, note that this tool may take some time to complete.',
+	'REPARSE_BBCODE'             => 'Reparse BBCode',
+	'REPARSE_BBCODE_COMPLETE'    => 'BBCodes have been reparsed.',
+	'REPARSE_BBCODE_PROGRESS'    => 'Step %1$d completed. Moving on to step %2$d in a moment...',
+	'REPARSE_BBCODE_SWITCH_MODE' => [
+		1 => 'Finished reparsing the posts, moving on to private messages.',
+		2 => 'Finished reparsing private messages, moving on to signatures.',
+	],
+	'REPARSE_BBCODE_MODE' => [
+		0 => 'Reparsing posts in progress.',
+		1 => 'Reparsing private messages in progress.',
+		2 => 'Reparsing signatures in progress.',
+	],
+	'REPARSE_IDS_INVALID'         => 'The IDs you submitted were not valid; please ensure that post IDs are listed as a comma separated list (e.g. 1,2,3,5,8,13).',
+	'REPARSE_IDS_EMPTY'           => 'You have not selected any reparsing mode. If you don\'t know how to choose a mode, check the box <strong>Reparse all BBCodes</strong>. ',
+	'REPARSE_POST_IDS'            => 'Reparse Specific Posts',
+	'REPARSE_POST_IDS_EXPLAIN'    => 'To reparse specific posts only, specify post IDs in a comma-separated list (e.g. 1,2,3,5,8,13).',
+	'REPARSE_PM_IDS'              => 'Reparse Specific PMs',
+	'REPARSE_PM_IDS_EXPLAIN'      => 'To reparse specific PMs only, specify PM IDs in a comma-separated list (e.g. 1,2,3,5,8,13).',
+	'REPARSE_FORUMS'              => 'Reparse Posts from specific forums',
+	'REPARSE_FORUMS_EXPLAIN'      => 'To select multiple forums some or all of the proper use for your computer and browser combination of mouse and keyboard.',
+	'REPARSE_SIG'                 => 'Reparse only user signatures',
+	'REPARSE_SIG_EXPLAIN'         => 'if checked, BBcodes will be reparsed only in user data.',
+	'CREATE_BACKUP_TABLE'         => 'Create Backup',
+	'CREATE_BACKUP_TABLE_EXPLAIN' => 'The database table will be created from which you can restore messages in case of failure or emergency shutdown.'
+]);

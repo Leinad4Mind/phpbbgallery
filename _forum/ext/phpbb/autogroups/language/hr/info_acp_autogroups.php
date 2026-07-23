@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,11 +38,11 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'ACP_AUTOGROUPS_MANAGE'			=> 'Automatsko upravljanje grupom/ama',
-	'AUTOGROUPS_TYPE_NOT_EXIST'		=> 'Tip automatskog upravljanja grupom/ama `%1$s` ne postoji.',
+$lang = array_merge($lang, [
+	'ACP_AUTOGROUPS_MANAGE'     => 'Automatsko upravljanje grupom/ama',
+	'AUTOGROUPS_TYPE_NOT_EXIST' => 'Tip automatskog upravljanja grupom/ama `%1$s` ne postoji.',
 
 	// Logs
-	'ACP_AUTOGROUPS_SAVED_LOG'		=> '<strong>Postavke automatskog upravljanja grupom/ama su spremljene</strong>',
-	'ACP_AUTOGROUPS_DELETE_LOG'		=> '<strong>Postavke automatskog upravljanja grupom/ama su izbrisane</strong>',
-));
+	'ACP_AUTOGROUPS_SAVED_LOG'  => '<strong>Postavke automatskog upravljanja grupom/ama su spremljene</strong>',
+	'ACP_AUTOGROUPS_DELETE_LOG' => '<strong>Postavke automatskog upravljanja grupom/ama su izbrisane</strong>',
+]);

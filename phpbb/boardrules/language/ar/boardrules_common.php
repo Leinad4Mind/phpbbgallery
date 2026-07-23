@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,10 +38,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES'				=> 'القوانين',
-	'BOARDRULES_TITLE'			=> 'انقر هنا',
-	'BOARDRULES_AGREEMENT'		=> 'أنت موافق على الإلتزام بجميع القوانين المذكورة في قسم “القوانين” لهذا المنتدى ',
-	'BOARDRULES_VIEWONLINE'		=> 'يُشاهد قوانين المنتدى',
-	'BOARDRULES_NOTIFICATION'	=> 'تم تحديث قوانين المنتدى. انقر هنا للذهاب إلى صفحة القوانين.',
-));
+$lang = array_merge($lang, [
+	'BOARDRULES'              => 'القوانين',
+	'BOARDRULES_TITLE'        => 'انقر هنا',
+	'BOARDRULES_AGREEMENT'    => 'أنت موافق على الإلتزام بجميع القوانين المذكورة في قسم “القوانين” لهذا المنتدى ',
+	'BOARDRULES_VIEWONLINE'   => 'يُشاهد قوانين المنتدى',
+	'BOARDRULES_NOTIFICATION' => 'تم تحديث قوانين المنتدى. انقر هنا للذهاب إلى صفحة القوانين.',
+]);

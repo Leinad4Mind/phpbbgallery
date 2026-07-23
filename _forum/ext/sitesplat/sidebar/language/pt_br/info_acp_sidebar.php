@@ -20,10 +20,10 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, [
 	// ACP
 	'ACP_SIDEBAR_TITLE'  => 'Configurações da BBsidebar',
-	'AD_SIDEBAR_EXPLAIN' => 'Configure opções e blocos da BBsidebar. Existem muitas configurações possíveis e, com a utilização de blocos personalizados, não existem limites, pois suporta HTML. Também pode optar por habilitar ou desabilitar completamente os blocos para telemóveis e tablets.<br/> Tenha em atenção que, <strong>a atividade dos blocos é armazenada em cache durante 5 minutos</strong> para melhorar o desempenho do servidor. Para ver as alterações imediatamente, terá de limpar a cache do fórum a partir do ACP > Geral : Limpar a Cache.',
+	'AD_SIDEBAR_EXPLAIN' => 'Configure opções e blocos da BBsidebar. Existem muitas configurações possíveis e, com a utilização de blocos personalizados, não existem limites, pois suporta HTML. Também pode optar por habilitar ou desabilitar completamente os blocos para celulares e tablets.<br/> Tenha em atenção que, <strong>a atividade dos blocos é armazenada em cache durante 5 minutos</strong> para melhorar o desempenho do servidor. Para ver as alterações imediatamente, terá de limpar a cache do fórum a partir do ACP > Geral : Limpar a Cache.',
 
 	'ACP_SIDEBAR_HEADSUP'         => 'Atenção (Heads up)',
-	'ACP_SIDEBAR_HEADSIP_EXPLAIN' => 'O bloco de tipo <strong>Personalizado (Custom)</strong> permite a utilização de HTML. <br />O bloco de tipo <strong>Equipa (Staff) online</strong> mostrará os membros da equipa online no fórum. Crie um novo grupo de usuários designado "staff" em "Usuários e Grupos" &#187; "Gerir grupos" &#187; "Criar novo grupo" e, em seguida, introduza o nome de usuário das pessoas que gostaria de exibir como equipa (staff) online no bloco.<br />O bloco de tipo <strong>Tópicos populares</strong> segue as definições do fórum para o "tópico popular" em: "Geral" &#187; "Configuração do Fórum" &#187; "Definições de mensagens" &#187; "Limite para tópico popular"<br /><strong>Outros Blocos</strong> Outros tipos de blocos ficam disponíveis após a extensão (addon) Premium correspondente ter sido habilitada. Pode encontrar muitas extensões (addons) premium aqui: <a href="https://sitesplat.com/phpBB3/marketplace.php"><strong>Marketplace</strong></a>.',
+	'ACP_SIDEBAR_HEADSIP_EXPLAIN' => 'O bloco de tipo <strong>Personalizado (Custom)</strong> permite a utilização de HTML. <br />O bloco de tipo <strong>Equipe (Staff) online</strong> mostrará os membros da equipa online no fórum. Crie um novo grupo de usuários designado "staff" em "Usuários e Grupos" &#187; "Gerenciar grupos" &#187; "Criar novo grupo" e, em seguida, introduza o nome de usuário das pessoas que gostaria de exibir como equipa (staff) online no bloco.<br />O bloco de tipo <strong>Tópicos populares</strong> segue as definições do fórum para o "tópico popular" em: "Geral" &#187; "Configuração do Fórum" &#187; "Definições de mensagens" &#187; "Limite para tópico popular"<br /><strong>Outros Blocos</strong> Outros tipos de blocos ficam disponíveis após a extensão (addon) Premium correspondente ter sido habilitada. Pode encontrar muitas extensões (addons) premium aqui: <a href="https://sitesplat.com/phpBB3/marketplace.php"><strong>Marketplace</strong></a>.',
 
 	'ACP_SIDEBAR_CONFIG'   => 'BBsidebar',
 	'ACP_SIDEBAR_OPTIONS'  => 'Opções da BBsidebar',
@@ -67,7 +67,7 @@ $lang = array_merge($lang, [
 	'ACP_SIDEBAR_TYPE_EXPLAIN' => 'Mostrar a barra lateral à esquerda ou à direita',
 	'LEFT'                     => 'Lado esquerdo',
 	'RIGHT'                    => 'Lado direito',
-	'SHOW_MOBILE'              => 'Mostrar no telemóvel',
+	'SHOW_MOBILE'              => 'Mostrar no celular',
 	'SHOW_TABLET'              => 'Mostrar no tablet',
 	'SHOW_TYPE'                => 'Tipo de bloco',
 
@@ -97,7 +97,7 @@ $lang = array_merge($lang, [
 	'SIDEBAR_TYPE_BIRTHDAY'         => 'Aniversários',
 	'SIDEBAR_TYPE_CALENDAR'         => 'Calendário',
 	'SIDEBAR_TYPE_TOP_POSTERS'      => 'Top posters (Principais Publicadores)',
-	'SIDEBAR_TYPE_STAFF'            => 'Equipa (Staff) online',
+	'SIDEBAR_TYPE_STAFF'            => 'Equipe (Staff) online',
 	'SIDEBAR_TYPE_DONATIONS'        => 'Doações',
 	'SIDEBAR_TYPE_MEMBERSHIP'       => 'Assinaturas (Membros VIP)',
 	'SIDEBAR_TYPE_TOP_TOPICS'       => 'Últimos tópicos',
@@ -123,14 +123,14 @@ $lang = array_merge($lang, [
 	'ACP_SIDEBAR_NOTICE_CLOSE' => 'Fechar',
 
 	'ACP_SIDEBAR_VERSION' => '1.4.7',
-	'ACP_LOADING'         => 'A Carregar... Aguarde',
+	'ACP_LOADING'         => 'Carregando... Aguarde',
 
 	'FORUM_CONTENT'            => 'conteúdo do fórum',
 	'SIDEBAR_DESCRIPTION_PAGE' => 'Esta extensão adiciona um sistema flexível multi-bloco para o seu fórum. Toneladas de opções disponíveis e vem com muitos blocos modernos por predefinição',
 	'SIDEBAR_TASKS_1'          => 'Blocos Modernos',
-	'SIDEBAR_TASKS_2'          => 'Sistema de grelha Bootstrap',
+	'SIDEBAR_TASKS_2'          => 'Sistema de grade Bootstrap',
 	'SIDEBAR_TASKS_3'          => 'Regras a ignorar',
-	'SIDEBAR_TASKS_4'          => 'Opções de ajuste fino, como opções para telemóvel e tablet',
+	'SIDEBAR_TASKS_4'          => 'Opções de ajuste fino, como opções para celular e tablet',
 	'SIDEBAR_TASKS_5'          => 'Expansível com suporte para muitos addons Premium. Veja os addons premium em <a href="https://sitesplat.com/phpBB3/marketplace.php">sitesplat.com/marketplace.php</a>',
 	'SIDEBAR_TASKS_6'          => 'E muito mais..!'
 ]);

@@ -18,6 +18,15 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'BBSORT'         => 'BBSort',
-	'BBSORT_SORT_BY' => 'Ordenar tópicos por',
+	'DEMO_PAGE'  => 'Demo',
+	'DEMO_HELLO' => 'Olá, %s!',
+	'DEMO_GOODBYE' => 'Adeus, %s!',
+
+	'ACP_DEMO'               => 'Configurações',
+	'ACP_DEMO_GOODBYE'       => 'Deve dizer adeus?',
+	'ACP_DEMO_SETTING_SAVED' => 'As configurações foram salvas com sucesso!',
+
+	'ACME_DEMO_NOTIFICATION' => 'Notificação demo da Acme',
+
+	'VIEWING_ACME_DEMO' => 'Vendo a Demo da Acme',
 ]);

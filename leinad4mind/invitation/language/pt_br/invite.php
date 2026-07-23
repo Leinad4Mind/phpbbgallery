@@ -1,14 +1,12 @@
 <?php
 
 /**
- *
  * Invite. An extension for the phpBB Forum Software package.
- * Brazilian Portuguese translation by eunaumtenhoid [2019][ver 4.2.0] (https://github.com/phpBBTraducoes)
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
  * @copyright (c) 2017-2022, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
- *
+ * @translation Leinad4Mind [Brazilian Portuguese [pt_br]] (2026)
  */
 
 if (!defined('IN_PHPBB'))
@@ -18,7 +16,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -34,19 +32,19 @@ if (empty($lang) || !is_array($lang))
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
 // Some characters you may want to copy&paste: ’ « » „ “ ” …
 
-$lang = array_merge($lang, array(
-	'INVITE'								=> 'Convites',
-	'INVITE_DELETE_CONFIRM'					=> 'Se você quiser excluir o convite, clique %sAQUI%s.',
-	'INVITE_DELETE_SUCCESS'					=> 'Seu convite foi excluído com sucesso.',
-	'INVITE_DELETE_SUCCESSES'				=> 'Seus convites foram excluídos com sucesso.',
-	'INVITE_DISABLED'						=> '<span class="invitation_tred">O sistema de convite está atualmente desativado!</span>',
-	'INVITE_EMAIL_BLOCK'					=> 'Bloqueado!',
-	'INVITE_INVITED'						=> 'Convidado por',
-	'INVITE_INVITES'						=> 'Convidou',
-	'INVITE_KEY_ERROR'						=> '<div class="invitation_error">O convite não é válido!</div>',
-	'INVITE_PERSON'							=> '%s pessoa(s)',
-	'INVITE_POINTS_PRESENT'					=> 'A cada %s convite(s), enviamos %s %s !',
-	'INVITE_REGISTRATION'					=> '<div class="invitation_error">Registro somente por convite!</div>',
-	'INVITE_REGISTRATION_EXPLAIN'			=> 'No momento os registros são restritos apenas a pessoas convidadas por usuários ja cadastrados no site, caso conheça alguém que tenha cadastro no site peça seu convite!',
-	'INVITE_COPYRIGHT'						=> 'phpBB Invite by <a href="https://leinad4mind.top/forum">Leinad4Mind</a> &copy; 2018-2022',
-));
+$lang = array_merge($lang, [
+	'INVITE'                      => 'Convites',
+	'INVITE_INFO'                 => 'Informação sobre Convites',
+	'INVITE_DELETE_CONFIRM'       => 'Se você quiser apagar o convite, clique %sAQUI%s.',
+	'INVITE_DELETE_SUCCESS'       => 'O seu convite foi apagado com sucesso.',
+	'INVITE_DELETE_SUCCESSES'     => 'Os seus convites foram apagados com sucesso.',
+	'INVITE_DISABLED'             => '<span class="invitation_tred">O sistema de convite está atualmente desativado!</span>',
+	'INVITE_EMAIL_BLOCK'          => 'Bloqueado!',
+	'INVITE_INVITED'              => 'Convidado por',
+	'INVITE_INVITES'              => 'Convidou',
+	'INVITE_KEY_ERROR'            => '<div class="invitation_error">O convite não é válido!</div>',
+	'INVITE_PERSON'               => '%s pessoa(s)',
+	'INVITE_POINTS_PRESENT'       => 'A cada %s convite(s), enviamos %s %s !',
+	'INVITE_REGISTRATION'         => '<div class="invitation_error">Registro apenas por convite!</div>',
+	'INVITE_COPYRIGHT'            => 'phpBB Invite by <a href="https://leinad4mind.top/forum">Leinad4Mind</a> &copy; 2018-2022',
+]);

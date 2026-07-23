@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,13 +37,13 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// ACP modules
-	'ACP_PAGES'				=> 'Strony',
-	'ACP_PAGES_MANAGE'		=> 'Zarządzanie stronami',
+	'ACP_PAGES'        => 'Strony',
+	'ACP_PAGES_MANAGE' => 'Zarządzanie stronami',
 
 	// Logs
-	'ACP_PAGES_ADDED_LOG'	=> '<strong>Strona dodana</strong><br />» %s',
-	'ACP_PAGES_EDITED_LOG'	=> '<strong>Strona edytowana</strong><br />» %s',
-	'ACP_PAGES_DELETED_LOG'	=> '<strong>Strona usunięta</strong><br />» %s',
-));
+	'ACP_PAGES_ADDED_LOG'   => '<strong>Strona dodana</strong><br />» %s',
+	'ACP_PAGES_EDITED_LOG'  => '<strong>Strona edytowana</strong><br />» %s',
+	'ACP_PAGES_DELETED_LOG' => '<strong>Strona usunięta</strong><br />» %s',
+]);

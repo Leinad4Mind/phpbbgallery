@@ -12,8 +12,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -40,9 +40,9 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” … „ “
 
 $lang = array_merge($lang, [
-	'LIMITREPLIES_LANG_DESC'					=> 'English',
-	'LIMITREPLIES_LANG_VER'	 					=> '1.1.0',
-	'LIMITREPLIES_LANG_AUTHOR'	 				=> 'LukeWCS',
+	'LIMITREPLIES_LANG_DESC'   => 'English',
+	'LIMITREPLIES_LANG_VER'    => '1.1.0',
+	'LIMITREPLIES_LANG_AUTHOR' => 'LukeWCS',
 
-	'LIMITREPLIES_MSG_LANGUAGEPACK_OUTDATED'	=> 'Note: The language pack for the <strong>%1$s</strong> extension is no longer up to date. (available: %2$s / required: %3$s)',
+	'LIMITREPLIES_MSG_LANGUAGEPACK_OUTDATED' => 'Note: The language pack for the <strong>%1$s</strong> extension is no longer up to date. (available: %2$s / required: %3$s)',
 ]);

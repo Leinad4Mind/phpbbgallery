@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,9 +18,9 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
-	'ACL_U_SEEPRIVATEPOSTS'	=> 'Can read private posts',
-));
+$lang = array_merge($lang, [
+	'ACL_U_SEEPRIVATEPOSTS' => 'Can read private posts',
+]);

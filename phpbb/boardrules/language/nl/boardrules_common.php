@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,10 +38,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES'				=> 'Regels',
-	'BOARDRULES_TITLE'			=> 'Bekijk de regels van dit Forum',
-	'BOARDRULES_AGREEMENT'		=> 'Je gaat akkoord met de regels die zijn samengesteld door de beheerders van dit forum.',
-	'BOARDRULES_VIEWONLINE'		=> 'Bekijkt forumregels',
-	'BOARDRULES_NOTIFICATION'	=> 'De forumregels zijn bijgewerkt. Klik hier om ze te bekijken.',
-));
+$lang = array_merge($lang, [
+	'BOARDRULES'              => 'Regels',
+	'BOARDRULES_TITLE'        => 'Bekijk de regels van dit Forum',
+	'BOARDRULES_AGREEMENT'    => 'Je gaat akkoord met de regels die zijn samengesteld door de beheerders van dit forum.',
+	'BOARDRULES_VIEWONLINE'   => 'Bekijkt forumregels',
+	'BOARDRULES_NOTIFICATION' => 'De forumregels zijn bijgewerkt. Klik hier om ze te bekijken.',
+]);

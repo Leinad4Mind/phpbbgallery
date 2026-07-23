@@ -8,8 +8,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -32,19 +32,19 @@ if (empty($lang) || !is_array($lang))
 // equally where a string contains only two placeholders which are used to wrap text
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
 
-$lang = array_merge($lang, array(
-	'TFA'							=> 'Two Factor Authentication',
+$lang = array_merge($lang, [
+	'TFA' => 'Two Factor Authentication',
 	
-	'TFA_SETTING'					=> 'Two Factor Authentication setting',
-	'TFA_SETTING_EXPLAIN'			=> 'Select the Two Factor Authentication options',
+	'TFA_SETTING'         => 'Two Factor Authentication setting',
+	'TFA_SETTING_EXPLAIN' => 'Select the Two Factor Authentication options',
 
-	'TFA_DISABLED'					=> 'Two factor authentication disabled',
-	'TFA_NOT_REQUIRED'				=> 'Do not require two factor authentication',
-	'TFA_REQUIRED_FOR_ACP_LOGIN'	=> 'Require two factor authentication for the ACP login only',
-	'TFA_REQUIRED_FOR_ADMIN'		=> 'Require two factor authentication for all administrators',
-	'TFA_REQUIRED_FOR_MODERATOR'	=> 'Require two factor authentication for all moderators and administrators',
-	'TFA_REQUIRED'					=> 'Require two factor authentication for all users',
+	'TFA_DISABLED'               => 'Two factor authentication disabled',
+	'TFA_NOT_REQUIRED'           => 'Do not require two factor authentication',
+	'TFA_REQUIRED_FOR_ACP_LOGIN' => 'Require two factor authentication for the ACP login only',
+	'TFA_REQUIRED_FOR_ADMIN'     => 'Require two factor authentication for all administrators',
+	'TFA_REQUIRED_FOR_MODERATOR' => 'Require two factor authentication for all moderators and administrators',
+	'TFA_REQUIRED'               => 'Require two factor authentication for all users',
 
-    'TFA_NOTICE'		=> '<div class="phpinfo"><p>The settings for this extension are in <strong>%1$s » %2$s » %3$s</strong>.</p></div>',
-	'SS_HELPER_NOTY'	=> 'SiteSplat BBcore does not exist!<br />Download the <a href="http://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
-));
+	'TFA_NOTICE'     => '<div class="phpinfo"><p>The settings for this extension are in <strong>%1$s » %2$s » %3$s</strong>.</p></div>',
+	'SS_HELPER_NOTY' => 'SiteSplat BBcore does not exist!<br />Download the <a href="http://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
+]);

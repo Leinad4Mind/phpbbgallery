@@ -8,8 +8,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -38,10 +38,10 @@ if (empty($lang) || !is_array($lang))
  *
  */
 
-$lang = array_merge($lang, array(
-	'ACP_USER_USERNOTIFY'	=> 'Notifications',
+$lang = array_merge($lang, [
+	'ACP_USER_USERNOTIFY' => 'Notifications',
 
-	'LOG_ACP_USER_NOTIFY'	=> '<strong>Updated notification options<br></strong>» %1$s',
+	'LOG_ACP_USER_NOTIFY' => '<strong>Updated notification options<br></strong>» %1$s',
 
-	'USER_NOTIFICATIONS'	=> 'User notifications',
-));
+	'USER_NOTIFICATIONS' => 'User notifications',
+]);

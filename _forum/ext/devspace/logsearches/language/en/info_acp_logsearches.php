@@ -39,30 +39,30 @@ if (empty($lang) || !is_array($lang))
  */
 
 $lang = array_merge($lang, [
-	'DISPLAY_ENTRIES' 			=> 'Show entries for',
+	'DISPLAY_ENTRIES' => 'Show entries for',
 
-	'NO_LOG_ENTRIES_SELECTED'	=> 'No log entries selected',
+	'NO_LOG_ENTRIES_SELECTED' => 'No log entries selected',
 
-	'POSTS_SEARCH' 				=> 'Post search',
+	'POSTS_SEARCH' => 'Post search',
 
-	'SEARCH_AUTHOR' 			=> 'Author',
-	'SEARCH_DATA' 				=> 'Searched terms',
-	'SEARCH_FAIL' 				=> 'Fail',
-	'SEARCH_FORA' 				=> 'Searched fora',
-	'SEARCH_LOG' 				=> 'Search log',
-	'SEARCH_LOG_CLEAR' 			=> '<strong>Search log file cleared</strong>',
-	'SEARCH_LOG_EXPLAIN'		=> 'This lists the actions carried out by searches. This log provides you with information you are able to use for solving specific search problems. You can sort by username, date, IP or keyword. If you have appropriate permissions you can also clear individual log entries.',
-	'SEARCH_LOG_LOG' 			=> '<strong>Search log options updated</strong>',
-	'SEARCH_LOG_MANAGE' 		=> 'Manage search log',
-	'SEARCH_LOG_PRUNE_LOG' 		=> '<strong>Search log file pruned</strong>',
-	'SEARCH_LOG_OPTIONS' 		=> 'Search log options',
-	'SEARCH_STATUS' 			=> 'Status',
-	'SEARCH_SUCCESS' 			=> 'Success',
-	'SEARCH_TITLE' 				=> 'Search type',
-	'SORT_KEYWORDS' 			=> 'Keywords',
+	'SEARCH_AUTHOR'        => 'Author',
+	'SEARCH_DATA'          => 'Searched terms',
+	'SEARCH_FAIL'          => 'Fail',
+	'SEARCH_FORA'          => 'Searched fora',
+	'SEARCH_LOG'           => 'Search log',
+	'SEARCH_LOG_CLEAR'     => '<strong>Search log file cleared</strong>',
+	'SEARCH_LOG_EXPLAIN'   => 'This lists the actions carried out by searches. This log provides you with information you are able to use for solving specific search problems. You can sort by username, date, IP or keyword. If you have appropriate permissions you can also clear individual log entries.',
+	'SEARCH_LOG_LOG'       => '<strong>Search log options updated</strong>',
+	'SEARCH_LOG_MANAGE'    => 'Manage search log',
+	'SEARCH_LOG_PRUNE_LOG' => '<strong>Search log file pruned</strong>',
+	'SEARCH_LOG_OPTIONS'   => 'Search log options',
+	'SEARCH_STATUS'        => 'Status',
+	'SEARCH_SUCCESS'       => 'Success',
+	'SEARCH_TITLE'         => 'Search type',
+	'SORT_KEYWORDS'        => 'Keywords',
 
 	'SEARCH_TYPE' => [
-		'posts'		=> 'Posts',
-		'topics'	=> 'Topics',
+		'posts'  => 'Posts',
+		'topics' => 'Topics',
 	],
 ]);

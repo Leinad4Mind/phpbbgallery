@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,18 +37,18 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'SYNCHRONIZATION_TOPIC_POSTS'			=> 'Topics synchronization',
-	'SYNCHRONIZATION_TOPIC_POSTS_EXPLAIN'	=> 'This tool allows you to recover the actual number of posts in the table <em>_topics</em>.',
-	'TOPICS_NOT_SYNCHRONIZED'				=> 'Topics that require synchronization',
-	'TOPIC_ID'								=> 'Topic ID',
-	'TOPIC_TOTAL_POSTS'						=> 'Total number of posts<br />from table %s',
-	'TOPIC_TOTAL_POSTS_TITLE'				=> 'approved +  unapproved + deleted',
-	'POSTS_TOTAL'							=> 'Actual number of posts<br />from table %s',
-	'FROM_TABLE'							=> '<br />from table %s',
-	'NO_NOT_SYNCHRONIZED_TOPICS'			=> 'Not found',
-	'SYNCHRONIZING_TOPICS'					=> 'Synchronize',
-	'TOPIC_LAST_POST_ID'					=> 'Last post ID',
-	'MAX_POST_ID'							=> 'Last ID',
-	'TOPICS_SINCRONIZED'					=> '%d was synchronized successfully',
-));
+$lang = array_merge($lang, [
+	'SYNCHRONIZATION_TOPIC_POSTS'         => 'Topics synchronization',
+	'SYNCHRONIZATION_TOPIC_POSTS_EXPLAIN' => 'This tool allows you to recover the actual number of posts in the table <em>_topics</em>.',
+	'TOPICS_NOT_SYNCHRONIZED'             => 'Topics that require synchronization',
+	'TOPIC_ID'                            => 'Topic ID',
+	'TOPIC_TOTAL_POSTS'                   => 'Total number of posts<br />from table %s',
+	'TOPIC_TOTAL_POSTS_TITLE'             => 'approved +  unapproved + deleted',
+	'POSTS_TOTAL'                         => 'Actual number of posts<br />from table %s',
+	'FROM_TABLE'                          => '<br />from table %s',
+	'NO_NOT_SYNCHRONIZED_TOPICS'          => 'Not found',
+	'SYNCHRONIZING_TOPICS'                => 'Synchronize',
+	'TOPIC_LAST_POST_ID'                  => 'Last post ID',
+	'MAX_POST_ID'                         => 'Last ID',
+	'TOPICS_SINCRONIZED'                  => '%d was synchronized successfully',
+]);

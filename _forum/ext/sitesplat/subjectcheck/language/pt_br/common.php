@@ -32,8 +32,8 @@ $lang = array_merge($lang, [
 	],
 
 	// One of these two strings will be appended to the above strings, so they need a leading space or some other separator.
-	'SUBJECT_CHECK_NEW_WINDOW'  => ' (Os links abrir-se-ão numa nova janela.)',
-	'SUBJECT_CHECK_SAME_WINDOW' => ' (Os links <em>NÃO</em> abrir-se-ão numa nova janela.)',
+	'SUBJECT_CHECK_NEW_WINDOW'  => ' (Os links vão abrir em uma nova janela.)',
+	'SUBJECT_CHECK_SAME_WINDOW' => ' (Os links <em>NÃO</em> vão abrir em uma nova janela.)',
 
 	// AJAX
 	'SUBJECT_CHECK_WORKING' => 'A verificar se existem tópicos com títulos/assuntos semelhantes...',

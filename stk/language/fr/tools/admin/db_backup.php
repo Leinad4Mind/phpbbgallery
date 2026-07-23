@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,24 +38,24 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'DB_BACKUP'					=> 'Sauvegarder la base de données',
-	'DB_BACKUP_EXPLAIN'			=> 'Sur cette page il est possible de sauvegarder toutes les données de son forum phpBB. Il est possible de stocker l’archive créée dans le répertoire <samp>store/</samp>, la télécharger ou l’afficher à l’écran. Selon la configuration de son serveur il sera possible de compresser l’archive dans différents formats.',
-	'DB_BACKUP_EXPLAIN_DUMPER'	=> 'La sauvegarde est compatible avec l’outil <a href ="http://www.mysqldumper.net/" target="_blank" /><strong>MySQLDumper</strong></a>, qui prend en charge la restauration des tables de la base de données.',
+$lang = array_merge($lang, [
+	'DB_BACKUP'                => 'Sauvegarder la base de données',
+	'DB_BACKUP_EXPLAIN'        => 'Sur cette page il est possible de sauvegarder toutes les données de son forum phpBB. Il est possible de stocker l’archive créée dans le répertoire <samp>store/</samp>, la télécharger ou l’afficher à l’écran. Selon la configuration de son serveur il sera possible de compresser l’archive dans différents formats.',
+	'DB_BACKUP_EXPLAIN_DUMPER' => 'La sauvegarde est compatible avec l’outil <a href ="http://www.mysqldumper.net/" target="_blank" /><strong>MySQLDumper</strong></a>, qui prend en charge la restauration des tables de la base de données.',
 
-	'SELECT_TABLE'		=> 'Tables',
-	'MARK_ALL'			=> 'Tout sélectionner',
-	'EXPAND'			=> 'Étendre',
-	'COLLAPSE'			=> 'Réduire',
-	'UNMARK_ALL'		=> 'Tout désélectionner',
-	'GZIP'				=> 'Compression',
-	'SAVE'				=> 'Sauvegarder sur le serveur',
-	'DOWNLOAD'			=> 'Télécharger',
-	'BACKUP_SUCCESS'	=> 'La sauvegarde a été créée avec succès.',
-	'BACKUP_ACTION'		=> 'Action',
-	'BACKUP_TYPE'		=> 'Type de sauvegarde',
-	'FULL'				=> 'Complète',
-	'STRUCTURE'			=> 'Seulement la structure',
-	'DATA'				=> 'Seulement les données',
-	'SCREEN'			=> 'Afficher à l’écran'
-));
+	'SELECT_TABLE'   => 'Tables',
+	'MARK_ALL'       => 'Tout sélectionner',
+	'EXPAND'         => 'Étendre',
+	'COLLAPSE'       => 'Réduire',
+	'UNMARK_ALL'     => 'Tout désélectionner',
+	'GZIP'           => 'Compression',
+	'SAVE'           => 'Sauvegarder sur le serveur',
+	'DOWNLOAD'       => 'Télécharger',
+	'BACKUP_SUCCESS' => 'La sauvegarde a été créée avec succès.',
+	'BACKUP_ACTION'  => 'Action',
+	'BACKUP_TYPE'    => 'Type de sauvegarde',
+	'FULL'           => 'Complète',
+	'STRUCTURE'      => 'Seulement la structure',
+	'DATA'           => 'Seulement les données',
+	'SCREEN'         => 'Afficher à l’écran'
+]);

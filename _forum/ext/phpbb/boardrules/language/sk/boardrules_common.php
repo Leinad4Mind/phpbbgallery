@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,10 +37,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES'				=> 'Pravidlá',
-	'BOARDRULES_TITLE'			=> 'Zobraziť pravidlá tohto fóra',
-	'BOARDRULES_AGREEMENT'		=> 'Súhlasíte, že sa budete riadiť pravidami fóra, ktoré sú špecifikované v sekcii “Pravidlá”',
-	'BOARDRULES_VIEWONLINE'		=> 'Prezerá pravidla fóra',
-	'BOARDRULES_NOTIFICATION'	=> 'Pravidlá fóra boli upravené. Kliknite sem pre ich zobrazenie.',
-));
+$lang = array_merge($lang, [
+	'BOARDRULES'              => 'Pravidlá',
+	'BOARDRULES_TITLE'        => 'Zobraziť pravidlá tohto fóra',
+	'BOARDRULES_AGREEMENT'    => 'Súhlasíte, že sa budete riadiť pravidami fóra, ktoré sú špecifikované v sekcii “Pravidlá”',
+	'BOARDRULES_VIEWONLINE'   => 'Prezerá pravidla fóra',
+	'BOARDRULES_NOTIFICATION' => 'Pravidlá fóra boli upravené. Kliknite sem pre ich zobrazenie.',
+]);

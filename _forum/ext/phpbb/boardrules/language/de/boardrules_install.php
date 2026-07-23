@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,12 +38,12 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES_SAMPLE_CATEGORY_TITLE'		=> 'Beispiel Kategorie',
-	'BOARDRULES_SAMPLE_CATEGORY_MESSAGE'	=> 'Dies ist eine Beispielkategorie (Anmerkung) deiner Board-Regeln. Kategorien sind Regelblöcke mit ähnlichen Regeln, diese enthalten Gruppen von zusammengehörigen Regeln. Regel-Anmerkungen (wie diese) werden bei Kategorien auf der Seite der Board-Regeln <strong>nicht</strong> angezeigt.',
-	'BOARDRULES_SAMPLE_CATEGORY_ANCHOR'		=> 'beispiel-kategorie',
+$lang = array_merge($lang, [
+	'BOARDRULES_SAMPLE_CATEGORY_TITLE'   => 'Beispiel Kategorie',
+	'BOARDRULES_SAMPLE_CATEGORY_MESSAGE' => 'Dies ist eine Beispielkategorie (Anmerkung) deiner Board-Regeln. Kategorien sind Regelblöcke mit ähnlichen Regeln, diese enthalten Gruppen von zusammengehörigen Regeln. Regel-Anmerkungen (wie diese) werden bei Kategorien auf der Seite der Board-Regeln <strong>nicht</strong> angezeigt.',
+	'BOARDRULES_SAMPLE_CATEGORY_ANCHOR'  => 'beispiel-kategorie',
 
-	'BOARDRULES_SAMPLE_RULE_TITLE'			=> 'Beispiel Regel',
-	'BOARDRULES_SAMPLE_RULE_MESSAGE'		=> 'Dies ist eine Beispielregel der Board-Regeln. Alles scheint zu funktionieren. Du kannst diese Regel bearbeiten oder löschen, um eigene Regeln zu erstellen, zu bearbeiten oder hinzuzufügen.',
-	'BOARDRULES_SAMPLE_RULE_ANCHOR'			=> 'beispiel-regel',
-));
+	'BOARDRULES_SAMPLE_RULE_TITLE'   => 'Beispiel Regel',
+	'BOARDRULES_SAMPLE_RULE_MESSAGE' => 'Dies ist eine Beispielregel der Board-Regeln. Alles scheint zu funktionieren. Du kannst diese Regel bearbeiten oder löschen, um eigene Regeln zu erstellen, zu bearbeiten oder hinzuzufügen.',
+	'BOARDRULES_SAMPLE_RULE_ANCHOR'  => 'beispiel-regel',
+]);

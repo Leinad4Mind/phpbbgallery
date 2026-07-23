@@ -19,6 +19,6 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'ACP_PMNOTIFICATIONS'    => 'Notificações de MP',
-	'SS_HELPER_NOTY'         => 'SiteSplat BBcore does not exist!<br />Download the <a href="http://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
-	'PMNOTIFICATIONS_NOTICE' => '<div class="phpinfo"><p>There are no specific settings for this extension. The PM\'s will be automatically separated from the internal phpBB notification system. <br />The filter button is under PM message view.</p></div>',
+	'SS_HELPER_NOTY'         => 'O SiteSplat BBcore não existe!<br />Faça o download do <a href="http://sitesplat.com" target="_blank">BBcore</a> e copie a pasta BBcore para a pasta da sua extensão sitesplat.',
+	'PMNOTIFICATIONS_NOTICE' => '<div class="phpinfo"><p>Não existem configurações específicas para esta extensão. As MPs serão automaticamente separadas do sistema interno de notificações do phpBB. <br />O botão de filtro está na visualização das mensagens de MP.</p></div>',
 ]);

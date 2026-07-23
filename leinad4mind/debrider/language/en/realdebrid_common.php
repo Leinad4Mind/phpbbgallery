@@ -3,7 +3,7 @@
 /**
  *
  * Debrider extension for the phpBB Forum Software package.
- * 
+ *
  * @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
@@ -12,12 +12,14 @@
 /**
  * DO NOT CHANGE
  */
-if (!defined('IN_PHPBB')) {
+if (!defined('IN_PHPBB'))
+{
 	exit;
 }
 
-if (empty($lang) || !is_array($lang)) {
-	$lang = array();
+if (empty($lang) || !is_array($lang))
+{
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -36,11 +38,11 @@ if (empty($lang) || !is_array($lang)) {
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'DEBRIDER_ENABLE_OPTION' => 'Enable Debrider',
-	'DEBRIDER_GENERATE' => 'Generate premium urls',
-	'DEBRIDER_GENERATING' => 'Generating',
+	'DEBRIDER_GENERATE'      => 'Generate premium urls',
+	'DEBRIDER_GENERATING'    => 'Generating',
 
 	'DEBRIDER_NO_PERMISSION' => 'No permission',
-	'DEBRIDER_API_ERROR' => 'Failed to generate URL. Please try again.'
-));
+	'DEBRIDER_API_ERROR'     => 'Failed to generate URL. Please try again.'
+]);

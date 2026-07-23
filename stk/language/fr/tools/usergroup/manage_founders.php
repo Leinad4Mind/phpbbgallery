@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,27 +38,27 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOTH_FIELDS_FILLED'		=> 'Le champ « Nom d’utilisateur » et le champ « ID » d’utilisateur ne peuvent pas être remplis tous les deux.',
+$lang = array_merge($lang, [
+	'BOTH_FIELDS_FILLED' => 'Le champ « Nom d’utilisateur » et le champ « ID » d’utilisateur ne peuvent pas être remplis tous les deux.',
 
-	'DEMOTE_FAILED'				=> 'Impossible de supprimer le statut de fondateur de tous les utilisateurs !',
-	'DEMOTE_FOUNDERS'			=> 'Rétrograder les fondateurs',
-	'DEMOTE_SUCCESSFULL'		=> 'Le statut de fondateur a été supprimé concernant %d utilisateur(s).',
+	'DEMOTE_FAILED'      => 'Impossible de supprimer le statut de fondateur de tous les utilisateurs !',
+	'DEMOTE_FOUNDERS'    => 'Rétrograder les fondateurs',
+	'DEMOTE_SUCCESSFULL' => 'Le statut de fondateur a été supprimé concernant %d utilisateur(s).',
 
-	'FOUNDERS'					=> 'Utilisateurs ayant le statut de fondateur',
+	'FOUNDERS' => 'Utilisateurs ayant le statut de fondateur',
 
-	'MAKE_FOUNDER'				=> 'Promouvoir un utilisateur en fondateur du forum',
-	'MAKE_FOUNDER_CONFIRM'		=> 'Confirmer la promotion <a href="%1$s">%2$s</a> en fondateur du forum. Cela permettra, entre autres, à <a href="%1$s">%2$s</a> de pouvoir supprimer le compte.',
-	'MAKE_FOUNDER_FAILED'		=> 'Impossible de promouvoir cet utilisateur en fondateur',
-	'MAKE_FOUNDER_SUCCESS'		=> '<a href="%1$s">%2$s</a> a été promu en fondateur du forum.',
-	'MANAGE_FOUNDERS'			=> 'Gérer les fondateurs du forum',
+	'MAKE_FOUNDER'         => 'Promouvoir un utilisateur en fondateur du forum',
+	'MAKE_FOUNDER_CONFIRM' => 'Confirmer la promotion <a href="%1$s">%2$s</a> en fondateur du forum. Cela permettra, entre autres, à <a href="%1$s">%2$s</a> de pouvoir supprimer le compte.',
+	'MAKE_FOUNDER_FAILED'  => 'Impossible de promouvoir cet utilisateur en fondateur',
+	'MAKE_FOUNDER_SUCCESS' => '<a href="%1$s">%2$s</a> a été promu en fondateur du forum.',
+	'MANAGE_FOUNDERS'      => 'Gérer les fondateurs du forum',
 
-	'NO_FOUNDERS'				=> 'Aucun fondateur n’a été trouvé',
+	'NO_FOUNDERS' => 'Aucun fondateur n’a été trouvé',
 
-	'PROMOTE_FOUNDER'			=> 'Promouvoir en fondateur',
+	'PROMOTE_FOUNDER' => 'Promouvoir en fondateur',
 
-	'USER_NAME_TO_FOUNDER'			=> 'Nom d’utilisateur à promouvoir en fondateur',
-	'USER_NAME_TO_FOUNDER_EXPLAIN'	=> 'Saisir le nom d’utilisateur à promouvoir en fondateur.',
-	'USER_ID_TO_FOUNDER'			=> 'ID de l’utilisateur à promouvoir en fondateur',
-	'USER_ID_TO_FOUNDER_EXPLAIN'	=> 'Saisir l’ID de l’utilisateur à promouvoir en fondateur.',
-));
+	'USER_NAME_TO_FOUNDER'         => 'Nom d’utilisateur à promouvoir en fondateur',
+	'USER_NAME_TO_FOUNDER_EXPLAIN' => 'Saisir le nom d’utilisateur à promouvoir en fondateur.',
+	'USER_ID_TO_FOUNDER'           => 'ID de l’utilisateur à promouvoir en fondateur',
+	'USER_ID_TO_FOUNDER_EXPLAIN'   => 'Saisir l’ID de l’utilisateur à promouvoir en fondateur.',
+]);

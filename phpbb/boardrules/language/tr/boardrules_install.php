@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,12 +38,12 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES_SAMPLE_CATEGORY_TITLE'		=> 'Örnek Kural Kategorisi',
-	'BOARDRULES_SAMPLE_CATEGORY_MESSAGE'	=> 'Bu, Mesaj Panosu Kuralları kurulumunuz içerisindeki örnek bir kategoridir. Kategoriler, kurallar ile bağlantılı grupları içerir. Kategori mesajları (bunun gibi) kurallar sayfasında gösterilmez.',
-	'BOARDRULES_SAMPLE_CATEGORY_ANCHOR'		=> 'örnek-kategori',
+$lang = array_merge($lang, [
+	'BOARDRULES_SAMPLE_CATEGORY_TITLE'   => 'Örnek Kural Kategorisi',
+	'BOARDRULES_SAMPLE_CATEGORY_MESSAGE' => 'Bu, Mesaj Panosu Kuralları kurulumunuz içerisindeki örnek bir kategoridir. Kategoriler, kurallar ile bağlantılı grupları içerir. Kategori mesajları (bunun gibi) kurallar sayfasında gösterilmez.',
+	'BOARDRULES_SAMPLE_CATEGORY_ANCHOR'  => 'örnek-kategori',
 
-	'BOARDRULES_SAMPLE_RULE_TITLE'			=> 'Örnek Kural',
-	'BOARDRULES_SAMPLE_RULE_MESSAGE'		=> 'Bu, Mesaj Panosu Kuralları kurulumunuz içerisindeki örnek bir kuraldır. Her şey çalışıyor gibi görünüyor. Bu kuralı ve kategoriyi düzenleyebilir ya da silebilirsiniz ve kendi mesaj panosu kurallarınızı ayarlamaya devam edebilirsiniz.',
-	'BOARDRULES_SAMPLE_RULE_ANCHOR'			=> 'örnek-kural',
-));
+	'BOARDRULES_SAMPLE_RULE_TITLE'   => 'Örnek Kural',
+	'BOARDRULES_SAMPLE_RULE_MESSAGE' => 'Bu, Mesaj Panosu Kuralları kurulumunuz içerisindeki örnek bir kuraldır. Her şey çalışıyor gibi görünüyor. Bu kuralı ve kategoriyi düzenleyebilir ya da silebilirsiniz ve kendi mesaj panosu kurallarınızı ayarlamaya devam edebilirsiniz.',
+	'BOARDRULES_SAMPLE_RULE_ANCHOR'  => 'örnek-kural',
+]);

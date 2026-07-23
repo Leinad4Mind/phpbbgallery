@@ -2,7 +2,7 @@
 /**
  *
  * French translation by Galixte (http://www.galixte.com)
- * @package       Cron Status 
+ * @package       Cron Status
  * @copyright (c) 2014 - 2018 Igor Lavrov and John Peskens
  * @license       http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,7 +37,7 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ACP_CRON_STATUS_TITLE'        => 'Statut du Cron',
 	'ACP_CRON_STATUS_CONFIG_TITLE' => 'Vérifier le statut du Cron',
-));
+]);

@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,31 +37,31 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge(
-	$lang, array(
-		'TFA_NO_KEYS'				=> 'N\A',
-		'TFA_NO_KEY_FOUND'			=> 'No two factor authentication key found. Download Google Authenticator app on your mobile device and associate the account by entering a new key. <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en" target="blank"><i class="fa fa-android"></i> Android</a> &#47; <a href="https://itunes.apple.com/ca/app/google-authenticator/id388497605" target="blank"><i class="fa fa-apple"></i> Apple</a>',
-		'TFA_KEYS'					=> 'On this page you can manage your two factor authentication keys. If you loose your keys, make sure to remove the key from your Authenticator! You can reset your key with the forget password function, then you will be able to login again and create a new key.',
-		'TFA_NO_MODE'				=> 'No Mode',
-		'TFA_KEYS_DELETED'			=> 'Selected keys removed.',
-		'TFA_NEW'                   => 'Add new key',
-		'TFA_ERROR'					=> 'It seems something went wrong...',
-		'TFA_REG_FAILED'			=> 'Registration failed with error: ',
-		'TFA_REG_EXISTS'			=> 'The provided key has already been registered to your account',
-		'TFA_ADD_KEY'				=> 'Register new key',
-		'TFA_KEY_ADDED'				=> 'Your security key has been added and can be used.',
-		'TFA_INSERT_KEY'			=> 'Insert your security key, and press the button on the key',
-		'TFA_REGISTERED'			=> 'Key registered',
-		'TFA_LAST_USED'				=> 'Key last used',
-		'TFA_LOGIN_FROM'			=> 'Last login from',
-		'TFA_MODULE_NOT_FOUND'		=> 'The selected module (%s) has not been found',
-		'TFA_MODULE_NO_REGISTER'	=> 'The selected module does not accept new keys for registration',
-		'TFA_SELECT_NEW'			=> 'Add new key',
-		'TFA_ADD_NEW_OTP_KEY'		=> 'Add a new OTP key to your account',
-		'TFA_ADD_OTP_KEY_MAIN'	    => 'Scan the QR code below with Google Authenticator App for <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en" target="blank"><i class="fa fa-android"></i> Android</a> &#47; <a href="https://itunes.apple.com/ca/app/google-authenticator/id388497605" target="blank"><i class="fa fa-apple"></i> Apple</a>, or you can also use the generated key below.<br /> Once done, enter the code provided by your Authenticator app to finally associate your account.',
-		'TFA_OTP_KEY'				=> 'Generated key here then hit submit',
-		'TFA_ADD_OTP_KEY_EXPLAIN'	=> '<span>%s</span>',
-		'TFA_OTP_INVALID_KEY'		=> 'Invalid key provided.',
-		'TFA_KEYTYPE'				=> 'Key type',
-		'TFA_KEY_NOT_USED'			=> 'Not used yet',
-	)
+	$lang, [
+		'TFA_NO_KEYS'             => 'N\A',
+		'TFA_NO_KEY_FOUND'        => 'No two factor authentication key found. Download Google Authenticator app on your mobile device and associate the account by entering a new key. <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en" target="blank"><i class="fa fa-android"></i> Android</a> &#47; <a href="https://itunes.apple.com/ca/app/google-authenticator/id388497605" target="blank"><i class="fa fa-apple"></i> Apple</a>',
+		'TFA_KEYS'                => 'On this page you can manage your two factor authentication keys. If you loose your keys, make sure to remove the key from your Authenticator! You can reset your key with the forget password function, then you will be able to login again and create a new key.',
+		'TFA_NO_MODE'             => 'No Mode',
+		'TFA_KEYS_DELETED'        => 'Selected keys removed.',
+		'TFA_NEW'                 => 'Add new key',
+		'TFA_ERROR'               => 'It seems something went wrong...',
+		'TFA_REG_FAILED'          => 'Registration failed with error: ',
+		'TFA_REG_EXISTS'          => 'The provided key has already been registered to your account',
+		'TFA_ADD_KEY'             => 'Register new key',
+		'TFA_KEY_ADDED'           => 'Your security key has been added and can be used.',
+		'TFA_INSERT_KEY'          => 'Insert your security key, and press the button on the key',
+		'TFA_REGISTERED'          => 'Key registered',
+		'TFA_LAST_USED'           => 'Key last used',
+		'TFA_LOGIN_FROM'          => 'Last login from',
+		'TFA_MODULE_NOT_FOUND'    => 'The selected module (%s) has not been found',
+		'TFA_MODULE_NO_REGISTER'  => 'The selected module does not accept new keys for registration',
+		'TFA_SELECT_NEW'          => 'Add new key',
+		'TFA_ADD_NEW_OTP_KEY'     => 'Add a new OTP key to your account',
+		'TFA_ADD_OTP_KEY_MAIN'    => 'Scan the QR code below with Google Authenticator App for <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en" target="blank"><i class="fa fa-android"></i> Android</a> &#47; <a href="https://itunes.apple.com/ca/app/google-authenticator/id388497605" target="blank"><i class="fa fa-apple"></i> Apple</a>, or you can also use the generated key below.<br /> Once done, enter the code provided by your Authenticator app to finally associate your account.',
+		'TFA_OTP_KEY'             => 'Generated key here then hit submit',
+		'TFA_ADD_OTP_KEY_EXPLAIN' => '<span>%s</span>',
+		'TFA_OTP_INVALID_KEY'     => 'Invalid key provided.',
+		'TFA_KEYTYPE'             => 'Key type',
+		'TFA_KEY_NOT_USED'        => 'Not used yet',
+	]
 );

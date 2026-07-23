@@ -20,7 +20,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -39,16 +39,16 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// ACP Module
-	'ACP_DISCORD_NOTIFICATIONS'					=> 'Notifications Discord',
-	'ACP_DISCORD_NOTIFICATIONS_SETTINGS'		=> 'Paramètres',
-	'ACP_DISCORD_NOTIFICATIONS_WEBHOOKS'		=> 'Webhooks',
-	'ACP_DISCORD_NOTIFICATIONS_MAPPING'			=> 'Mapping',
+	'ACP_DISCORD_NOTIFICATIONS'          => 'Notifications Discord',
+	'ACP_DISCORD_NOTIFICATIONS_SETTINGS' => 'Paramètres',
+	'ACP_DISCORD_NOTIFICATIONS_WEBHOOKS' => 'Webhooks',
+	'ACP_DISCORD_NOTIFICATIONS_MAPPING'  => 'Mapping',
 
 	// ACP Logs
-	'ACP_DISCORD_NOTIFICATIONS_LOG_UPDATE'		=> 'Paramètres des notifications Discord modifiées',
-	'ACP_DISCORD_NOTIFICATIONS_WEBHOOK_ERROR'	=> 'Discord Webhook a renvoyé le code d‘état HTTP %d',
-	'ACP_DISCORD_NOTIFICATIONS_CURL_ERROR'		=> 'Code d‘erreur Discord Webhook cURL %d',
-	'ACP_DISCORD_NOTIFICATIONS_JSON_ERROR'		=> 'Erreur d‘encodage Discord JSON : %s',
-));
+	'ACP_DISCORD_NOTIFICATIONS_LOG_UPDATE'    => 'Paramètres des notifications Discord modifiées',
+	'ACP_DISCORD_NOTIFICATIONS_WEBHOOK_ERROR' => 'Discord Webhook a renvoyé le code d‘état HTTP %d',
+	'ACP_DISCORD_NOTIFICATIONS_CURL_ERROR'    => 'Code d‘erreur Discord Webhook cURL %d',
+	'ACP_DISCORD_NOTIFICATIONS_JSON_ERROR'    => 'Erreur d‘encodage Discord JSON : %s',
+]);

@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,12 +38,12 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'USERS_NOGROUPS'			=> 'Utilisateurs sans groupes',
-	'USERS_NOGROUPS_EXPLAIN'	=> 'Permet de consulter la liste des utilisateurs n’appartenant à aucun groupe.
+$lang = array_merge($lang, [
+	'USERS_NOGROUPS'         => 'Utilisateurs sans groupes',
+	'USERS_NOGROUPS_EXPLAIN' => 'Permet de consulter la liste des utilisateurs n’appartenant à aucun groupe.
 								Il est possible de sélectionner ces utilisateurs pour leur attribuer un groupe par défaut, ou davantage de groupes, dans lesquels ils seront placés.',
-	'LOST_GROUPS_USERS'			=> 'Utilisateurs n’appartenant à aucun groupe',
-	'NO_USERS_FOUND'			=> 'Aucun utilisateur n’est sans groupe.',
-	'NO_USERS_SELECTED'			=> 'Au moins un utilisateur doit être sélectionné.',
-	'ASSIGHN_GROUPS_SUCCESS'	=> 'Les utilisateurs sélectionnés ont été ajoutés au(x) groupe(s) avec succès !',
-));
+	'LOST_GROUPS_USERS'      => 'Utilisateurs n’appartenant à aucun groupe',
+	'NO_USERS_FOUND'         => 'Aucun utilisateur n’est sans groupe.',
+	'NO_USERS_SELECTED'      => 'Au moins un utilisateur doit être sélectionné.',
+	'ASSIGHN_GROUPS_SUCCESS' => 'Les utilisateurs sélectionnés ont été ajoutés au(x) groupe(s) avec succès !',
+]);

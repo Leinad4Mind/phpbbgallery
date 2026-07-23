@@ -39,6 +39,6 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'PHPBB_VERSION_ERROR'	=> 'Twoja witryna jest nieaktualna. Aby skorzystać z rozszerzenia, należy zaktualizować phpBB do wersji ' . \phpbb\mediaembed\ext::PHPBB_MINIMUM . ' lub nowszej.',
-	'S9E_MEDIAEMBED_ERROR'	=> 'Wykryto rozszerzenie s9e/mediaembed. Aby zaintalować rozszerzenie osadzania multimediów (phpBB Media Embed) należy wyłaczyć starszą wersję rozszerzenia. Następnie usunąć dane i skasować wszystkie pliki powiązane z s9e/mediaembed.',
+	'PHPBB_VERSION_ERROR'  => 'Twoja witryna jest nieaktualna. Aby skorzystać z rozszerzenia, należy zaktualizować phpBB do wersji ' . \phpbb\mediaembed\ext::PHPBB_MINIMUM . ' lub nowszej.',
+	'S9E_MEDIAEMBED_ERROR' => 'Wykryto rozszerzenie s9e/mediaembed. Aby zaintalować rozszerzenie osadzania multimediów (phpBB Media Embed) należy wyłaczyć starszą wersję rozszerzenia. Następnie usunąć dane i skasować wszystkie pliki powiązane z s9e/mediaembed.',
 ]);

@@ -1,17 +1,15 @@
 <?php
-/**
-*
-* Board Announcements extension for the phpBB Forum Software package.
-* Brazilian Portuguese translation by henrique.seven2011 (http://suportephpbb.com.br/) and updates by eunaumtenhoid (c) 2017 [ver 1.0.6] (https://github.com/phpBBTraducoes) and Fred Hareon
-*
-* @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
 
 /**
-* DO NOT CHANGE
-*/
+ * Board Announcements extension for the phpBB Forum Software package.
+ * @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ * @translation Leinad4Mind [Brazilian Portuguese [pt_br]] (2026)
+ */
+
+/**
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,13 +36,13 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// ACP Module
-	'ACP_BOARD_ANNOUNCEMENTS'				=> 'Board Announcements',
-	'ACP_BOARD_ANNOUNCEMENTS_SETTINGS'		=> 'Opções de anúncio',
+	'ACP_BOARD_ANNOUNCEMENTS'          => 'Board Announcements',
+	'ACP_BOARD_ANNOUNCEMENTS_SETTINGS' => 'Opções de anúncio',
 
 	// ACP Logs
-	'BOARD_ANNOUNCEMENTS_CREATED_LOG'		=> '<strong>Um anúncio foi criado</strong><br>» %s',
-	'BOARD_ANNOUNCEMENTS_UPDATED_LOG'		=> '<strong>Um anúncio foi atualizado</strong><br>» %s',
-	'BOARD_ANNOUNCEMENTS_DELETED_LOG'		=> '<strong>Um anúncio foi excluído</strong><br>» %s',
-));
+	'BOARD_ANNOUNCEMENTS_CREATED_LOG' => '<strong>Um anúncio foi criado</strong><br>» %s',
+	'BOARD_ANNOUNCEMENTS_UPDATED_LOG' => '<strong>Um anúncio foi atualizado</strong><br>» %s',
+	'BOARD_ANNOUNCEMENTS_DELETED_LOG' => '<strong>Um anúncio foi excluído</strong><br>» %s',
+]);

@@ -10,8 +10,8 @@
  */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -54,28 +54,28 @@ $lang = array_merge($lang, [
 	'PRIMEPOSTREVISIONS_EDIT_BY'     => 'Editado por',
 	'PRIMEPOSTREVISIONS_NO_SUBJECT'  => '[sem assunto]',
 	'PRIMEPOSTREVISIONS_COMPARE'     => 'Comparar',
-	'PRIMEPOSTREVISIONS_VIEW_DENIED' => 'Faltam-lhe as permissões necessárias para visualizar estas revisões de mensagens.',
+	'PRIMEPOSTREVISIONS_VIEW_DENIED' => 'Faltam-te as permissões necessárias para visualizar estas revisões de mensagens.',
 
 	// Delete a revision
 	'PRIMEPOSTREVISIONS_DELETE'         => 'Eliminar Revisão',
-	'PRIMEPOSTREVISIONS_DELETE_CONFIRM' => 'Tem a certeza de que pretende eliminar esta revisão?',
-	'PRIMEPOSTREVISIONS_DELETE_DENIED'  => 'Faltam-lhe as permissões necessárias para eliminar esta revisão.',
+	'PRIMEPOSTREVISIONS_DELETE_CONFIRM' => 'Tens a certeza de que pretendes eliminar esta revisão?',
+	'PRIMEPOSTREVISIONS_DELETE_DENIED'  => 'Faltam-te as permissões necessárias para eliminar esta revisão.',
 	'PRIMEPOSTREVISIONS_DELETE_FAILED'  => 'Ocorreu um erro ao tentar eliminar a revisão.',
 	'PRIMEPOSTREVISIONS_DELETE_SUCCESS' => 'A revisão foi removida com sucesso.',
 	'PRIMEPOSTREVISIONS_DELETE_INVALID' => 'Nenhuma revisão de mensagem foi selecionada para remoção.',
 
 	// Delete all revisions
 	'PRIMEPOSTREVISIONS_DELETES'         => 'Eliminar revisões selecionadas',
-	'PRIMEPOSTREVISIONS_DELETES_CONFIRM' => 'Tem a certeza de que pretende eliminar estas revisões?',
-	'PRIMEPOSTREVISIONS_DELETES_DENIED'  => 'Faltam-lhe as permissões necessárias para eliminar estas revisões.',
+	'PRIMEPOSTREVISIONS_DELETES_CONFIRM' => 'Tens a certeza de que pretendes eliminar estas revisões?',
+	'PRIMEPOSTREVISIONS_DELETES_DENIED'  => 'Faltam-te as permissões necessárias para eliminar estas revisões.',
 	'PRIMEPOSTREVISIONS_DELETES_FAILED'  => 'Ocorreu um erro ao tentar eliminar estas revisões.',
 	'PRIMEPOSTREVISIONS_DELETES_SUCCESS' => 'As revisões foram removidas com sucesso.',
 	'PRIMEPOSTREVISIONS_DELETES_INVALID' => 'Nenhuma revisão de mensagem foi selecionada para remoção.',
 
 	// Restore a revision
 	'PRIMEPOSTREVISIONS_RESTORE'         => 'Restaurar Revisão',
-	'PRIMEPOSTREVISIONS_RESTORE_CONFIRM' => 'Tem a certeza de que pretende restaurar esta revisão?',
-	'PRIMEPOSTREVISIONS_RESTORE_DENIED'  => 'Faltam-lhe as permissões necessárias para restaurar esta revisão.',
+	'PRIMEPOSTREVISIONS_RESTORE_CONFIRM' => 'Tens a certeza de que pretendes restaurar esta revisão?',
+	'PRIMEPOSTREVISIONS_RESTORE_DENIED'  => 'Faltam-te as permissões necessárias para restaurar esta revisão.',
 	'PRIMEPOSTREVISIONS_RESTORE_FAILED'  => 'Ocorreu um erro ao tentar restaurar a revisão.',
 	'PRIMEPOSTREVISIONS_RESTORE_SUCCESS' => 'A mensagem foi restaurada com sucesso.',
 	'PRIMEPOSTREVISIONS_RESTORE_INVALID' => 'Nenhuma revisão de mensagem foi selecionada para ser restaurada.',

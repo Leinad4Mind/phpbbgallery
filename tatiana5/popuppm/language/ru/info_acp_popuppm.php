@@ -21,10 +21,10 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'ACP_POPUPPM'                       => 'ЛС в конверте',
-	'ACP_POPUPPM_EXPLAIN'               => 'Настройки ЛС в конверте',
-	'ACP_POPUPPM_TITLE'                 => 'ЛС в конверте',
+	'ACP_POPUPPM'         => 'ЛС в конверте',
+	'ACP_POPUPPM_EXPLAIN' => 'Настройки ЛС в конверте',
+	'ACP_POPUPPM_TITLE'   => 'ЛС в конверте',
 	//
-	'ACP_POPUPPM_ENABLE_POPUP'             => 'Включить всплывающее уведомление о новых ЛС',
-	'ACP_POPUPPM_ENABLE_BLINK'             => 'Включить мигание заголовка страницы при непрочитанных ЛС',
+	'ACP_POPUPPM_ENABLE_POPUP' => 'Включить всплывающее уведомление о новых ЛС',
+	'ACP_POPUPPM_ENABLE_BLINK' => 'Включить мигание заголовка страницы при непрочитанных ЛС',
 ]);

@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,10 +37,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES'				=> 'Reguli Forum',
-	'BOARDRULES_TITLE'			=> 'Vizualizeaza reguli forum',
-	'BOARDRULES_AGREEMENT'		=> 'Sunteți de acord să respectati regulile acestui forum prevăzute în secțiunea următoare "Reguli"',
-	'BOARDRULES_VIEWONLINE'		=> 'Vizualizare regula forum',
-	'BOARDRULES_NOTIFICATION'	=> 'Regulamentul pe forum a fost reimprospatit, click pentru a vedea.',
-));
+$lang = array_merge($lang, [
+	'BOARDRULES'              => 'Reguli Forum',
+	'BOARDRULES_TITLE'        => 'Vizualizeaza reguli forum',
+	'BOARDRULES_AGREEMENT'    => 'Sunteți de acord să respectati regulile acestui forum prevăzute în secțiunea următoare "Reguli"',
+	'BOARDRULES_VIEWONLINE'   => 'Vizualizare regula forum',
+	'BOARDRULES_NOTIFICATION' => 'Regulamentul pe forum a fost reimprospatit, click pentru a vedea.',
+]);

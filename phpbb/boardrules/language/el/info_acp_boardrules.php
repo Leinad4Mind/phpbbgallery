@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,13 +38,13 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// ACP modules
-	'ACP_BOARDRULES'				=> 'Όροι συμμετοχής Δ. Συζήτησης',
-	'ACP_BOARDRULES_MANAGE'			=> 'Διαχείριση',
-	'ACP_BOARDRULES_SETTINGS'		=> 'Ρυθμίσεις',
+	'ACP_BOARDRULES'          => 'Όροι συμμετοχής Δ. Συζήτησης',
+	'ACP_BOARDRULES_MANAGE'   => 'Διαχείριση',
+	'ACP_BOARDRULES_SETTINGS' => 'Ρυθμίσεις',
 
 	// ACP Logs
-	'ACP_BOARDRULES_SETTINGS_LOG'	=> '<strong>Οι ρυθμίσεις των Όρων Συμμετοχής Δ. Συζήτησης άλλαξαν</strong>',
-	'ACP_BOARDRULES_NOTIFY_LOG'		=> '<strong>Η ειδοποίηση τροποποίησης των Όρων Συμμετοχής της Δ. Συζήτησης στάλθηκε σε όλα τα μέλη</strong>',
-));
+	'ACP_BOARDRULES_SETTINGS_LOG' => '<strong>Οι ρυθμίσεις των Όρων Συμμετοχής Δ. Συζήτησης άλλαξαν</strong>',
+	'ACP_BOARDRULES_NOTIFY_LOG'   => '<strong>Η ειδοποίηση τροποποίησης των Όρων Συμμετοχής της Δ. Συζήτησης στάλθηκε σε όλα τα μέλη</strong>',
+]);

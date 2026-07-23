@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,43 +38,43 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'PST_TITLE_ACP'		=> 'Sujets similaires précis', //Do not rename, even as in French
-	'PST_EXPLAIN'		=> 'Affiche une liste des sujets similaires au bas de la page du sujet visionné.',
-	'PST_LEGEND1'		=> 'Paramètre général',
-	'PST_ENABLE'		=> 'Afficher les sujets similaires',
-	'PST_ENABLE_EXPLAIN'=> 'Show similar topics in topic discussion threads.',
-	'PST_LEGEND2'		=> 'Paramètres principaux',
-	'PST_LIMIT'			=> 'Nombre du ou des sujets similaires à afficher',
-	'PST_LIMIT_EXPLAIN'	=> 'Ici vous pouvez sélectionner le ou les nombres de sujets similaires à afficher. La valeur par défaut est de 5 sujets.',
-	'PST_TIME'			=> 'Période de recherche',
-	'PST_TIME_EXPLAIN'	=> 'Cette option vous permet de choisir la période de recherche des sujets similaires à afficher. Par exemple, si vous choisissez une période de « 5 jours » le système affichera uniquement les sujets créés depuis 5 jours. La valeur par défaut est de 1 an.',
-	'PST_YEARS'			=> 'Année(s)',
-	'PST_MONTHS'		=> 'Mois',
-	'PST_WEEKS'			=> 'Semaine(s)',
-	'PST_DAYS'			=> 'Jour(s)',
-	'PST_CACHE'			=> 'Taille du cache des sujets similaires',
-	'PST_CACHE_EXPLAIN'	=> 'La mise en cache des sujets similaires expirera après cette période. Paramétrez sur 0 pour désactiver la mise en cache des sujets similaires.',
-	'PST_DYNAMIC'		=> 'Display dynamic similar topics',
-	'PST_DYNAMIC_EXPLAIN'=> 'Show similar topics as users type in the topic title field when creating new topics.',
-	'PST_SENSE'			=> 'Sensibilité de la recherche',
-	'PST_SENSE_EXPLAIN'	=> 'Permet de saisir une valeur comprise entre 1 et 10 concernant le degré de sensibilité de la recherche. Utiliser une valeur plus basse si aucun sujet similaire n’est affiché. Paramètres recommandées : %d',
-	'PST_LEGEND3'		=> 'Paramètres des forums',
-	'PST_NOSHOW_LIST'	=> 'Ne pas afficher dans',
-	'PST_NOSHOW_TITLE'	=> 'Ne pas afficher les sujets similaires dans le forum :',
-	'PST_IGNORE_SEARCH'	=> 'Ne pas rechercher dans',
-	'PST_IGNORE_TITLE'	=> 'Ne pas rechercher les sujets similaires dans le forum :',
-	'PST_STANDARD'		=> 'Standard',
-	'PST_ADVANCED'		=> 'Avancé',
-	'PST_ADVANCED_TITLE'=> 'Cliquez ici pour configurer les paramètres avancés du forum :',
-	'PST_ADVANCED_EXP'	=> 'Ici vous pouvez sélectionner des forums spécifiques dont les sujets similaires proviendront. Seuls les sujets similaires trouvés dans les forums sélectionnés ici seront affichés dans le forum : <strong>%s</strong>.<br><br>Ne sélectionnez aucun forum si vous souhaitez que tous les sujets similaires de tous les forums soient consultables dans ce forum.<br><br>Vous pouvez sélectionner ou désélectionner plusieurs forums en maintenant appuyée la touche <samp>CTRL</samp> (ou <samp>&#8984;CMD</samp> sur Mac) du clavier de votre ordinateur et en cliquant.',
-	'PST_ADVANCED_FORUM'=> 'Paramètres avancés du forum',
-	'PST_DESELECT_ALL'	=> 'Tout désélectionner',
-	'PST_LEGEND4'		=> 'Paramètres optionnels',
-	'PST_WORDS'			=> 'Mots spécifiques à ignorer',
-	'PST_WORDS_EXPLAIN'	=> 'Ajoutez des mots spécifiques à votre forum qui doivent être ignorés lors de la recherche des sujets similaires. (Remarque : Les mots qui sont actuellement considérés comme communs dans votre langue sont déjà ignorés par défaut.) Séparez chaque mot par un espace. Insensible à la casse.',
-	'PST_SAVED'			=> 'Les paramètres des sujets similaires ont été mis à jour',
-	'PST_FORUM_INFO'	=> '« Ne pas afficher dans » : N’affiche pas de sujets similaires dans les forums sélectionnés.<br> « Ne pas rechercher dans » : Ne recherche pas de sujets similaires dans les forums sélectionnés.<br><br>',
-	'PST_NO_COMPAT'		=> 'L’extension « Sujets similaires précis » n’est pas compatible avec votre forum. Cette extension fonctionne uniquement avec une base de données MySQL 4 ou 5 ou PostgreSQL.',
-	'PST_ERR_CONFIG'	=> 'De trop nombreux forums ont été sélectionnés dans la liste des forums. Veuillez réessayer avec une sélection plus restreinte.',
-));
+$lang = array_merge($lang, [
+	'PST_TITLE_ACP'       => 'Sujets similaires précis', //Do not rename, even as in French
+	'PST_EXPLAIN'         => 'Affiche une liste des sujets similaires au bas de la page du sujet visionné.',
+	'PST_LEGEND1'         => 'Paramètre général',
+	'PST_ENABLE'          => 'Afficher les sujets similaires',
+	'PST_ENABLE_EXPLAIN'  => 'Show similar topics in topic discussion threads.',
+	'PST_LEGEND2'         => 'Paramètres principaux',
+	'PST_LIMIT'           => 'Nombre du ou des sujets similaires à afficher',
+	'PST_LIMIT_EXPLAIN'   => 'Ici vous pouvez sélectionner le ou les nombres de sujets similaires à afficher. La valeur par défaut est de 5 sujets.',
+	'PST_TIME'            => 'Période de recherche',
+	'PST_TIME_EXPLAIN'    => 'Cette option vous permet de choisir la période de recherche des sujets similaires à afficher. Par exemple, si vous choisissez une période de « 5 jours » le système affichera uniquement les sujets créés depuis 5 jours. La valeur par défaut est de 1 an.',
+	'PST_YEARS'           => 'Année(s)',
+	'PST_MONTHS'          => 'Mois',
+	'PST_WEEKS'           => 'Semaine(s)',
+	'PST_DAYS'            => 'Jour(s)',
+	'PST_CACHE'           => 'Taille du cache des sujets similaires',
+	'PST_CACHE_EXPLAIN'   => 'La mise en cache des sujets similaires expirera après cette période. Paramétrez sur 0 pour désactiver la mise en cache des sujets similaires.',
+	'PST_DYNAMIC'         => 'Display dynamic similar topics',
+	'PST_DYNAMIC_EXPLAIN' => 'Show similar topics as users type in the topic title field when creating new topics.',
+	'PST_SENSE'           => 'Sensibilité de la recherche',
+	'PST_SENSE_EXPLAIN'   => 'Permet de saisir une valeur comprise entre 1 et 10 concernant le degré de sensibilité de la recherche. Utiliser une valeur plus basse si aucun sujet similaire n’est affiché. Paramètres recommandées : %d',
+	'PST_LEGEND3'         => 'Paramètres des forums',
+	'PST_NOSHOW_LIST'     => 'Ne pas afficher dans',
+	'PST_NOSHOW_TITLE'    => 'Ne pas afficher les sujets similaires dans le forum :',
+	'PST_IGNORE_SEARCH'   => 'Ne pas rechercher dans',
+	'PST_IGNORE_TITLE'    => 'Ne pas rechercher les sujets similaires dans le forum :',
+	'PST_STANDARD'        => 'Standard',
+	'PST_ADVANCED'        => 'Avancé',
+	'PST_ADVANCED_TITLE'  => 'Cliquez ici pour configurer les paramètres avancés du forum :',
+	'PST_ADVANCED_EXP'    => 'Ici vous pouvez sélectionner des forums spécifiques dont les sujets similaires proviendront. Seuls les sujets similaires trouvés dans les forums sélectionnés ici seront affichés dans le forum : <strong>%s</strong>.<br><br>Ne sélectionnez aucun forum si vous souhaitez que tous les sujets similaires de tous les forums soient consultables dans ce forum.<br><br>Vous pouvez sélectionner ou désélectionner plusieurs forums en maintenant appuyée la touche <samp>CTRL</samp> (ou <samp>&#8984;CMD</samp> sur Mac) du clavier de votre ordinateur et en cliquant.',
+	'PST_ADVANCED_FORUM'  => 'Paramètres avancés du forum',
+	'PST_DESELECT_ALL'    => 'Tout désélectionner',
+	'PST_LEGEND4'         => 'Paramètres optionnels',
+	'PST_WORDS'           => 'Mots spécifiques à ignorer',
+	'PST_WORDS_EXPLAIN'   => 'Ajoutez des mots spécifiques à votre forum qui doivent être ignorés lors de la recherche des sujets similaires. (Remarque : Les mots qui sont actuellement considérés comme communs dans votre langue sont déjà ignorés par défaut.) Séparez chaque mot par un espace. Insensible à la casse.',
+	'PST_SAVED'           => 'Les paramètres des sujets similaires ont été mis à jour',
+	'PST_FORUM_INFO'      => '« Ne pas afficher dans » : N’affiche pas de sujets similaires dans les forums sélectionnés.<br> « Ne pas rechercher dans » : Ne recherche pas de sujets similaires dans les forums sélectionnés.<br><br>',
+	'PST_NO_COMPAT'       => 'L’extension « Sujets similaires précis » n’est pas compatible avec votre forum. Cette extension fonctionne uniquement avec une base de données MySQL 4 ou 5 ou PostgreSQL.',
+	'PST_ERR_CONFIG'      => 'De trop nombreux forums ont été sélectionnés dans la liste des forums. Veuillez réessayer avec une sélection plus restreinte.',
+]);

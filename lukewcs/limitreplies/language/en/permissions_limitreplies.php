@@ -12,8 +12,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -40,5 +40,5 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” … „ “
 
 $lang = array_merge($lang, [
-	'ACL_U_LIMITREPLIES_BYPASS_LOCK'	=> 'Limit Multiple Replies: Can bypass waiting time',
+	'ACL_U_LIMITREPLIES_BYPASS_LOCK' => 'Limit Multiple Replies: Can bypass waiting time',
 ]);

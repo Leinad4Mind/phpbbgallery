@@ -9,19 +9,19 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
 }
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -40,10 +40,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'RECLEAN_USERNAMES'					=> 'Пересоздание очищенных имён пользователей',
-	'RECLEAN_USERNAMES_COMPLETE'		=> 'Очищенные имена пользователей пересозданы успешно.',
-	'RECLEAN_USERNAMES_CONFIRM'			=> 'Вы уверены, что хотите пересоздать очищенные имена пользователей?',
-	'RECLEAN_USERNAMES_NOT_COMPLETE'	=> 'Инструмент выполняет работу, подождите... останавливать инструмент, уходить или закрывать данную страницу до окончания работы <b>нельзя!!!</b>',
-	'USER_ALREADY_EXISTS'				=> 'Пользователь с именем <a href="%2$s" target="_blank" />%1$s</a> уже существует.<br />Пользователь с неправильным очищенным именем <a href="%4$s" target="_blank" />%3$s</a>',
-));
+$lang = array_merge($lang, [
+	'RECLEAN_USERNAMES'              => 'Пересоздание очищенных имён пользователей',
+	'RECLEAN_USERNAMES_COMPLETE'     => 'Очищенные имена пользователей пересозданы успешно.',
+	'RECLEAN_USERNAMES_CONFIRM'      => 'Вы уверены, что хотите пересоздать очищенные имена пользователей?',
+	'RECLEAN_USERNAMES_NOT_COMPLETE' => 'Инструмент выполняет работу, подождите... останавливать инструмент, уходить или закрывать данную страницу до окончания работы <b>нельзя!!!</b>',
+	'USER_ALREADY_EXISTS'            => 'Пользователь с именем <a href="%2$s" target="_blank" />%1$s</a> уже существует.<br />Пользователь с неправильным очищенным именем <a href="%4$s" target="_blank" />%3$s</a>',
+]);

@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,28 +38,28 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'ADD_USER'				=> 'Ajouter un utilisateur',
-	'ADD_USER_GROUP'		=> 'Ajouter un utilisateur aux groupes',
+$lang = array_merge($lang, [
+	'ADD_USER'       => 'Ajouter un utilisateur',
+	'ADD_USER_GROUP' => 'Ajouter un utilisateur aux groupes',
 
-	'DEFAULT_GROUP'			=> 'Groupe par défaut',
-	'DEFAULT_GROUP_EXPLAIN'	=> 'Le groupe par défaut de cet utilisateur.',
+	'DEFAULT_GROUP'         => 'Groupe par défaut',
+	'DEFAULT_GROUP_EXPLAIN' => 'Le groupe par défaut de cet utilisateur.',
 
-	'GROUP_LEADER'			=> 'Responsable du groupe',
-	'GROUP_LEADER_EXPLAIN'	=> 'Faire de cet utilisateur le responsable des groupes sélectionnés.',
+	'GROUP_LEADER'         => 'Responsable du groupe',
+	'GROUP_LEADER_EXPLAIN' => 'Faire de cet utilisateur le responsable des groupes sélectionnés.',
 
-	'USER_ADDED'			=> 'L’utilisateur a été créé.',
-	'USER_GROUPS'			=> 'Groupes d’utilisateurs',
-	'USER_GROUPS_EXPLAIN'	=> 'Faire de cet utilisateur un membre des groupes sélectionnés.',
-	'EMAIL_ADDRESS'			=> 'Adresse e-mail',
-	'LANGUAGE'				=> 'Langue',
-	'TIMEZONE'					=> 'Fuseau horaire',
-	'TOO_SHORT_USERNAME'		=> 'Le nom d’utilisateur saisi est trop court.',
-	'TOO_SHORT_NEW_PASSWORD'	=> 'Le mot de passe saisi est trop court.',
-	'TOO_SHORT_PASSWORD_CONFIRM'=> 'La confirmation du mot de passe saisi est trop courte.',
-	'TOO_SHORT_EMAIL'			=> 'L’adresse e-mail saisie est trop courte.',
-	'EMAIL_INVALID_EMAIL'		=> 'L’adresse e-mail saisie est incorrecte.',
-	'NEW_PASSWORD_ERROR'		=> 'Les mots de passe saisis ne correspondent pas.',
-	'DOMAIN_NO_MX_RECORD'	=> 'Le domaine de messagerie saisi n’a pas d’enregistrement de messagerie valide dans les DNS (enregistrement MX).',
-	'USERNAME_TAKEN'		=> 'Le nom d’utilisateur saisit est déjà utilisé, merci de saisir un autre nom.',
-));
+	'USER_ADDED'                 => 'L’utilisateur a été créé.',
+	'USER_GROUPS'                => 'Groupes d’utilisateurs',
+	'USER_GROUPS_EXPLAIN'        => 'Faire de cet utilisateur un membre des groupes sélectionnés.',
+	'EMAIL_ADDRESS'              => 'Adresse e-mail',
+	'LANGUAGE'                   => 'Langue',
+	'TIMEZONE'                   => 'Fuseau horaire',
+	'TOO_SHORT_USERNAME'         => 'Le nom d’utilisateur saisi est trop court.',
+	'TOO_SHORT_NEW_PASSWORD'     => 'Le mot de passe saisi est trop court.',
+	'TOO_SHORT_PASSWORD_CONFIRM' => 'La confirmation du mot de passe saisi est trop courte.',
+	'TOO_SHORT_EMAIL'            => 'L’adresse e-mail saisie est trop courte.',
+	'EMAIL_INVALID_EMAIL'        => 'L’adresse e-mail saisie est incorrecte.',
+	'NEW_PASSWORD_ERROR'         => 'Les mots de passe saisis ne correspondent pas.',
+	'DOMAIN_NO_MX_RECORD'        => 'Le domaine de messagerie saisi n’a pas d’enregistrement de messagerie valide dans les DNS (enregistrement MX).',
+	'USERNAME_TAKEN'             => 'Le nom d’utilisateur saisit est déjà utilisé, merci de saisir un autre nom.',
+]);

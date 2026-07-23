@@ -12,8 +12,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -40,21 +40,21 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” … „ “
 
 $lang = array_merge($lang, [
-	'LIMITREPLIES_CONFIG_TITLE'			=> 'Limit Multiple Replies',
-	'LIMITREPLIES_CONFIG_DESC'			=> 'Here you can change the settings for the extension <strong>%s</strong>.',
+	'LIMITREPLIES_CONFIG_TITLE' => 'Limit Multiple Replies',
+	'LIMITREPLIES_CONFIG_DESC'  => 'Here you can change the settings for the extension <strong>%s</strong>.',
 
-	'LIMITREPLIES_SETTINGS_TITLE'		=> 'Settings',
-	'LIMITREPLIES_ENABLE'				=> 'Enable function',
-	'LIMITREPLIES_ENABLE_EXPLAIN'		=> 'With this switch you can deactivate the functionality without having to deactivate the extension completely.',
-	'LIMITREPLIES_WAIT_TIME'			=> 'Waiting period between two posts',
-	'LIMITREPLIES_WAIT_TIME_EXPLAIN'	=> 'Here you can specify after which waiting period a new reply is allowed in the topic if the last post was made by the same user. This value is also displayed in the explanation.',
-	'LIMITREPLIES_TIME_UNIT_MINUTES'	=> 'minutes',
-	'LIMITREPLIES_TIME_UNIT_HOURS'		=> 'hours',
-	'LIMITREPLIES_TIME_UNIT_DAYS'		=> 'days',
-	'LIMITREPLIES_HINT_MODE'			=> 'Show explanation',
-	'LIMITREPLIES_HINT_MODE_EXPLAIN'	=> 'Here you can specify how the explanation should be displayed when the lock is active. The “On click” option refers to the reply and quote buttons. With the “Always” option, the explanation is displayed below the reply buttons.',
-	'LIMITREPLIES_HINT_MODE_ONCLICK'	=> 'On click (as info popup)',
-	'LIMITREPLIES_HINT_MODE_ALWAYS'		=> 'Always (as info box)',
+	'LIMITREPLIES_SETTINGS_TITLE'    => 'Settings',
+	'LIMITREPLIES_ENABLE'            => 'Enable function',
+	'LIMITREPLIES_ENABLE_EXPLAIN'    => 'With this switch you can deactivate the functionality without having to deactivate the extension completely.',
+	'LIMITREPLIES_WAIT_TIME'         => 'Waiting period between two posts',
+	'LIMITREPLIES_WAIT_TIME_EXPLAIN' => 'Here you can specify after which waiting period a new reply is allowed in the topic if the last post was made by the same user. This value is also displayed in the explanation.',
+	'LIMITREPLIES_TIME_UNIT_MINUTES' => 'minutes',
+	'LIMITREPLIES_TIME_UNIT_HOURS'   => 'hours',
+	'LIMITREPLIES_TIME_UNIT_DAYS'    => 'days',
+	'LIMITREPLIES_HINT_MODE'         => 'Show explanation',
+	'LIMITREPLIES_HINT_MODE_EXPLAIN' => 'Here you can specify how the explanation should be displayed when the lock is active. The “On click” option refers to the reply and quote buttons. With the “Always” option, the explanation is displayed below the reply buttons.',
+	'LIMITREPLIES_HINT_MODE_ONCLICK' => 'On click (as info popup)',
+	'LIMITREPLIES_HINT_MODE_ALWAYS'  => 'Always (as info box)',
 
-	'LIMITREPLIES_MSG_SETTINGS_SAVED'	=> 'Limit Multiple Replies: Settings saved successfully',
+	'LIMITREPLIES_MSG_SETTINGS_SAVED' => 'Limit Multiple Replies: Settings saved successfully',
 ]);

@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,12 +37,12 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'USERS_NOGROUPS'			=> 'Users without groups',
-	'USERS_NOGROUPS_EXPLAIN'	=> 'This is a list of users who for some reason do not belong to any of the groups established at the conference.
+$lang = array_merge($lang, [
+	'USERS_NOGROUPS'         => 'Users without groups',
+	'USERS_NOGROUPS_EXPLAIN' => 'This is a list of users who for some reason do not belong to any of the groups established at the conference.
 								You can mark any user and assign him a default group, as well as another group or groups, in which the user will enter.',
-	'LOST_GROUPS_USERS'			=> 'Users who do not belong to any groups',
-	'NO_USERS_FOUND'			=> 'No users were found belonging to any groups',
-	'NO_USERS_SELECTED'			=> 'You must select at least one user.',
-	'ASSIGHN_GROUPS_SUCCESS'	=> 'Selected users were successfully added to the group (s).',
-));
+	'LOST_GROUPS_USERS'      => 'Users who do not belong to any groups',
+	'NO_USERS_FOUND'         => 'No users were found belonging to any groups',
+	'NO_USERS_SELECTED'      => 'You must select at least one user.',
+	'ASSIGHN_GROUPS_SUCCESS' => 'Selected users were successfully added to the group (s).',
+]);

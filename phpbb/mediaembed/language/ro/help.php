@@ -38,9 +38,9 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'HELP_EMBEDDING_MEDIA'			=> 'Încorporarea media',
-	'HELP_EMBEDDING_MEDIA_QUESTION'	=> 'Cum să încorporați media de pe alte site-uri în postări',
-	'HELP_EMBEDDING_MEDIA_ANSWER'	=> 'Utilizatorii pot încorpora conținut, cum ar fi videoclipuri și audio de pe site-uri permise folosind
+	'HELP_EMBEDDING_MEDIA'          => 'Încorporarea media',
+	'HELP_EMBEDDING_MEDIA_QUESTION' => 'Cum să încorporați media de pe alte site-uri în postări',
+	'HELP_EMBEDDING_MEDIA_ANSWER'   => 'Utilizatorii pot încorpora conținut, cum ar fi videoclipuri și audio de pe site-uri permise folosind
                                         etichetele <strong>[media][/media]</strong> sau pur și simplu de la postarea unui mesaj acceptat
                                         URL în text simplu. De exemplu:<br /><br />
                                         <strong>[media]</strong>%1$s<strong>[/media]</strong>

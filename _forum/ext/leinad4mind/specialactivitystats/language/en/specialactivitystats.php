@@ -40,67 +40,67 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	// for the normal sites
-	'SPECIAL_ACTIVITY_STATS'					=> 'Activity Statistics',
-	'SPECIAL_ACTIVITY_STATS_LATEST1'			=> 'last at',
-	'SPECIAL_ACTIVITY_STATS_LATEST2'			=> '',//used for parts like o'clock in the timedisplay (last at vw:xy "o'clock")
+	'SPECIAL_ACTIVITY_STATS'         => 'Activity Statistics',
+	'SPECIAL_ACTIVITY_STATS_LATEST1' => 'last at',
+	'SPECIAL_ACTIVITY_STATS_LATEST2' => '',//used for parts like o'clock in the timedisplay (last at vw:xy "o'clock")
 
-	'SPECIAL_ACTIVITY_STATS_NEW_TOPICS'			=> 'New topics <strong>%d</strong>',
-	'SPECIAL_ACTIVITY_STATS_NEW_POSTS'			=> 'New posts <strong>%d</strong>',
-	'SPECIAL_ACTIVITY_STATS_NEW_USERS'			=> 'New users <strong>%d</strong>',
+	'SPECIAL_ACTIVITY_STATS_NEW_TOPICS' => 'New topics <strong>%d</strong>',
+	'SPECIAL_ACTIVITY_STATS_NEW_POSTS'  => 'New posts <strong>%d</strong>',
+	'SPECIAL_ACTIVITY_STATS_NEW_USERS'  => 'New users <strong>%d</strong>',
 
-	'SPECIAL_ACTIVITY_STATS_TOTAL'				=> array(
-		0		=> 'In total there were <strong>0</strong> users online :: ',
-		1		=> 'In total there was <strong>%d</strong> user online :: ',
-		2		=> 'In total there were <strong>%d</strong> users online :: ',
-	),
-	'SPECIAL_ACTIVITY_STATS_REG_USERS'			=> array(
-		0		=> '0 registered',
-		1		=> '%d registered',
-		2		=> '%d registered',
-	),
-	'SPECIAL_ACTIVITY_STATS_HIDDEN'				=> array(
-		0		=> '0 hidden',
-		1		=> '%d hidden',
-		2		=> '%d hidden',
-	),
-	'SPECIAL_ACTIVITY_STATS_BOTS'				=> array(
-		0		=> '0 bots',
-		1		=> '%d bot',
-		2		=> '%d bots',
-	),
-	'SPECIAL_ACTIVITY_STATS_GUESTS'				=> array(
-		0		=> '0 guests',
-		1		=> '%d guest',
-		2		=> '%d guests',
-	),
+	'SPECIAL_ACTIVITY_STATS_TOTAL' => [
+		0 => 'In total there were <strong>0</strong> users online :: ',
+		1 => 'In total there was <strong>%d</strong> user online :: ',
+		2 => 'In total there were <strong>%d</strong> users online :: ',
+	],
+	'SPECIAL_ACTIVITY_STATS_REG_USERS' => [
+		0 => '0 registered',
+		1 => '%d registered',
+		2 => '%d registered',
+	],
+	'SPECIAL_ACTIVITY_STATS_HIDDEN' => [
+		0 => '0 hidden',
+		1 => '%d hidden',
+		2 => '%d hidden',
+	],
+	'SPECIAL_ACTIVITY_STATS_BOTS' => [
+		0 => '0 bots',
+		1 => '%d bot',
+		2 => '%d bots',
+	],
+	'SPECIAL_ACTIVITY_STATS_GUESTS' => [
+		0 => '0 guests',
+		1 => '%d guest',
+		2 => '%d guests',
+	],
 
-	'SPECIAL_ACTIVITY_STATS_WORD'				=> ' and',
-	'SPECIAL_ACTIVITY_STATS_EXP'				=> 'The following data is based on users active today',
-	'SPECIAL_ACTIVITY_STATS_EXP_TIME'			=> array(
-		0		=> 'The following data is based on users active right now', // d=h=m=s=0
-		1		=> 'The following data is based on users active over the past ', // first non zero value is 1
-		2		=> 'The following data is based on users active over the past ', // first non zero value is >1
-	),
-	'SPECIAL_ACTIVITY_STATS_DAYS'				=> array(
-		0		=> '',
-		1		=> '%%s %1$s day',
-		2		=> '%%s %1$s days',
-	),
-	'SPECIAL_ACTIVITY_STATS_HOURS'				=> array(
-		0		=> '',
-		1		=> '%%s %1$s hour',
-		2		=> '%%s %1$s hours',
-	),
-	'SPECIAL_ACTIVITY_STATS_MINUTES'			=> array(
-		0		=> '',
-		1		=> '%%s %1$s minute',
-		2		=> '%%s %1$s minutes',
-	),
-	'SPECIAL_ACTIVITY_STATS_SECONDS'			=> array(
-		0		=> '',
-		1		=> '%%s %1$s second',
-		2		=> '%%s %1$s seconds',
-	),
-	'SPECIAL_ACTIVITY_STATS_RECORD_DAY'			=> 'Most users ever online was <strong>%1$s</strong> on %2$s',
-	'SPECIAL_ACTIVITY_STATS_RECORD_PERIOD'		=> 'Most users ever online was <strong>%1$s</strong> between %2$s and %3$s',
+	'SPECIAL_ACTIVITY_STATS_WORD'     => ' and',
+	'SPECIAL_ACTIVITY_STATS_EXP'      => 'The following data is based on users active today',
+	'SPECIAL_ACTIVITY_STATS_EXP_TIME' => [
+		0 => 'The following data is based on users active right now', // d=h=m=s=0
+		1 => 'The following data is based on users active over the past ', // first non zero value is 1
+		2 => 'The following data is based on users active over the past ', // first non zero value is >1
+	],
+	'SPECIAL_ACTIVITY_STATS_DAYS' => [
+		0 => '',
+		1 => '%%s %1$s day',
+		2 => '%%s %1$s days',
+	],
+	'SPECIAL_ACTIVITY_STATS_HOURS' => [
+		0 => '',
+		1 => '%%s %1$s hour',
+		2 => '%%s %1$s hours',
+	],
+	'SPECIAL_ACTIVITY_STATS_MINUTES' => [
+		0 => '',
+		1 => '%%s %1$s minute',
+		2 => '%%s %1$s minutes',
+	],
+	'SPECIAL_ACTIVITY_STATS_SECONDS' => [
+		0 => '',
+		1 => '%%s %1$s second',
+		2 => '%%s %1$s seconds',
+	],
+	'SPECIAL_ACTIVITY_STATS_RECORD_DAY'    => 'Most users ever online was <strong>%1$s</strong> on %2$s',
+	'SPECIAL_ACTIVITY_STATS_RECORD_PERIOD' => 'Most users ever online was <strong>%1$s</strong> between %2$s and %3$s',
 ]);

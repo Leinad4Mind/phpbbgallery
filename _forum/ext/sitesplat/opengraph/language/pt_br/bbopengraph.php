@@ -18,5 +18,5 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'SHARE_THIS' => 'Partilhar tópico',
+	'SHARE_THIS' => 'Compartilhar tópico',
 ]);

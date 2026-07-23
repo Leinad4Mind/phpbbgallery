@@ -41,5 +41,5 @@ if (empty($lang) || !is_array($lang))
 use leinad4mind\specialactivitystats\permissions;
 
 $lang = array_merge($lang, [
-	'ACL_'.utf8_strtoupper(permissions::SEE_STATS)	=> 'Kann Aktivitäts Statistiken sehen',
+	'ACL_'.utf8_strtoupper(permissions::SEE_STATS) => 'Kann Aktivitäts Statistiken sehen',
 ]);

@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,13 +37,13 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// ACP modules
-	'ACP_BOARDRULES'				=> 'Boardregler',
-	'ACP_BOARDRULES_MANAGE'			=> 'Håndter regler',
-	'ACP_BOARDRULES_SETTINGS'		=> 'Indstillinger for regler',
+	'ACP_BOARDRULES'          => 'Boardregler',
+	'ACP_BOARDRULES_MANAGE'   => 'Håndter regler',
+	'ACP_BOARDRULES_SETTINGS' => 'Indstillinger for regler',
 
 	// ACP Logs
-	'ACP_BOARDRULES_SETTINGS_LOG'	=> '<strong>Ændret indstillinger for boardregler</strong>',
-	'ACP_BOARDRULES_NOTIFY_LOG'		=> '<strong>Notifikation om boardregler blev sendt til alle brugere</strong>',
-));
+	'ACP_BOARDRULES_SETTINGS_LOG' => '<strong>Ændret indstillinger for boardregler</strong>',
+	'ACP_BOARDRULES_NOTIFY_LOG'   => '<strong>Notifikation om boardregler blev sendt til alle brugere</strong>',
+]);

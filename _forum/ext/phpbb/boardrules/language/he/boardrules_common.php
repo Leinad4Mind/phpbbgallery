@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,10 +37,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES'				=> 'חוקים',
-	'BOARDRULES_TITLE'			=> 'צפה בחוקי הפורום',
-	'BOARDRULES_AGREEMENT'		=> 'אתה מסכים להתנהג בהתאם לחוקי הפורום כפי שמפורטים בסעיף חוקי הפורום',
-	'BOARDRULES_VIEWONLINE'		=> 'צופה בחוקי הפורום',
-	'BOARDRULES_NOTIFICATION'	=> 'חוקי הפורום עודכנו, לחץ כאן בכדי לצפות בהם.',
-));
+$lang = array_merge($lang, [
+	'BOARDRULES'              => 'חוקים',
+	'BOARDRULES_TITLE'        => 'צפה בחוקי הפורום',
+	'BOARDRULES_AGREEMENT'    => 'אתה מסכים להתנהג בהתאם לחוקי הפורום כפי שמפורטים בסעיף חוקי הפורום',
+	'BOARDRULES_VIEWONLINE'   => 'צופה בחוקי הפורום',
+	'BOARDRULES_NOTIFICATION' => 'חוקי הפורום עודכנו, לחץ כאן בכדי לצפות בהם.',
+]);

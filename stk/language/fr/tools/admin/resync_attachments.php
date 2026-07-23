@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,9 +38,9 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'RESYNC_ATTACHMENTS'			=> 'Resynchroniser les fichiers joints',
-	'RESYNC_ATTACHMENTS_CONFIRM'	=> 'Cet outil vérifiera si tous les liens vers des fichiers joints stockés actuellement dans la base de données ont un fichier sur le serveur. Si un fichier est manquant, cet outil supprimera son lien dans la base de données. Poursuivre ?',
-	'RESYNC_ATTACHMENTS_FINISHED'	=> 'Les fichiers joints ont été resynchronisés.',
-	'RESYNC_ATTACHMENTS_PROGRESS'	=> 'Resynchronisation des fichiers joints en cours. Merci de ne pas interrompre cette opération.',
-));
+$lang = array_merge($lang, [
+	'RESYNC_ATTACHMENTS'          => 'Resynchroniser les fichiers joints',
+	'RESYNC_ATTACHMENTS_CONFIRM'  => 'Cet outil vérifiera si tous les liens vers des fichiers joints stockés actuellement dans la base de données ont un fichier sur le serveur. Si un fichier est manquant, cet outil supprimera son lien dans la base de données. Poursuivre ?',
+	'RESYNC_ATTACHMENTS_FINISHED' => 'Les fichiers joints ont été resynchronisés.',
+	'RESYNC_ATTACHMENTS_PROGRESS' => 'Resynchronisation des fichiers joints en cours. Merci de ne pas interrompre cette opération.',
+]);

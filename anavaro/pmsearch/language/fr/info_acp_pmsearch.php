@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,34 +38,34 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// ACP general langauge
-	'ACP_PMSEARCH_GRP'	=> 'Rechercher dans la messagerie',
-	'ACP_PRVOPT'	=> 'Paramètres',
+	'ACP_PMSEARCH_GRP' => 'Rechercher dans la messagerie',
+	'ACP_PRVOPT'       => 'Paramètres',
 
 	//ACP PM Admin Settings page
-	'PMSEARCH_ADMIN'	=> 'Rechercher dans la messagerie',
-	'PMSEARCH_ADMIN_EXPLAIN'	=> 'Sur cette page il est possible de définir certaines options en lien avec la recherche dans les messages privés des utilisateurs.',
-	'PMSEARCH_SETTINGS'	=> 'Options',
-	'PMSEARCH_PM_INDEX'	=> 'Indexation des message privés',
-	'PMSEARCH_PM_INDEX_EXPLAIN'	=> 'Permet d’autoriser l’indexation. <b>Attention ! La recherche ne fonctionnera pas sans indexation</b>.',
-	'PMSEARCH_PM_SEARCH'	=>	'Autoriser la recherche',
-	'PMSEARCH_PM_SEARCH_EXPLAIN'	=> 'Permet d’autoriser (ou de refuser) la recherche dans les messages privés à l’ensemble des utilisateurs.',
-	'DELETE_INDEX'	=> 'Effacer tous les index',
-	'CREATE_INDEX'	=> 'Créer des index',
+	'PMSEARCH_ADMIN'             => 'Rechercher dans la messagerie',
+	'PMSEARCH_ADMIN_EXPLAIN'     => 'Sur cette page il est possible de définir certaines options en lien avec la recherche dans les messages privés des utilisateurs.',
+	'PMSEARCH_SETTINGS'          => 'Options',
+	'PMSEARCH_PM_INDEX'          => 'Indexation des message privés',
+	'PMSEARCH_PM_INDEX_EXPLAIN'  => 'Permet d’autoriser l’indexation. <b>Attention ! La recherche ne fonctionnera pas sans indexation</b>.',
+	'PMSEARCH_PM_SEARCH'         => 'Autoriser la recherche',
+	'PMSEARCH_PM_SEARCH_EXPLAIN' => 'Permet d’autoriser (ou de refuser) la recherche dans les messages privés à l’ensemble des utilisateurs.',
+	'DELETE_INDEX'               => 'Effacer tous les index',
+	'CREATE_INDEX'               => 'Créer des index',
 
 	//ACP ACL
-	'ACL_U_PMSEARCH'	=> 'Peut rechercher dans ses messages privés.',
+	'ACL_U_PMSEARCH' => 'Peut rechercher dans ses messages privés.',
 
 	//Other ACP
-	'LOG_PMSEARCH_INDEX_REMOVED'	=> '<strong>L’index de recherche a été supprimé pour </strong><br />» %s',
-	'LOG_PMSEARCH_INDEX_CREATED'	=> '<strong>L’index de recherche a été créé pour </strong><br />» %s',
-	'TOTAL_WORDS'							=> 'Total des mots indexés',
-	'TOTAL_MATCHES'							=> 'Nombre total des mots en relation',
-	'SEARCH_INDEX_CREATE_REDIRECT'			=> array(
-		2	=> 'Tous les messages postés jusqu’à l’ID %2$d sont maintenant indexés. Parmi eux %1$d messages viennent nouvellement d’être indexés.<br />',
-	),
-	'SEARCH_INDEX_CREATE_REDIRECT_RATE'		=> array(
-		2	=> 'Le taux actuel de l’indexation est d’environ %1$.1f messages par seconde.<br />Indexation en cours…',
-	),
-));
+	'LOG_PMSEARCH_INDEX_REMOVED'   => '<strong>L’index de recherche a été supprimé pour </strong><br />» %s',
+	'LOG_PMSEARCH_INDEX_CREATED'   => '<strong>L’index de recherche a été créé pour </strong><br />» %s',
+	'TOTAL_WORDS'                  => 'Total des mots indexés',
+	'TOTAL_MATCHES'                => 'Nombre total des mots en relation',
+	'SEARCH_INDEX_CREATE_REDIRECT' => [
+		2 => 'Tous les messages postés jusqu’à l’ID %2$d sont maintenant indexés. Parmi eux %1$d messages viennent nouvellement d’être indexés.<br />',
+	],
+	'SEARCH_INDEX_CREATE_REDIRECT_RATE' => [
+		2 => 'Le taux actuel de l’indexation est d’environ %1$.1f messages par seconde.<br />Indexation en cours…',
+	],
+]);

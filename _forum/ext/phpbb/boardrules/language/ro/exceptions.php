@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -47,15 +47,15 @@ if (empty($lang) || !is_array($lang))
 *
 * Translators: Feel free to not translate these language strings
 */
-$lang = array_merge($lang, array(
-	'EXCEPTION_FIELD_MISSING'		=> 'Campurile necesare nu sunt completate',
-	'EXCEPTION_INVALID_ARGUMENT'	=> 'Argument invalid pentru `%1$s`. Motiv: %2$s',
-	'EXCEPTION_OUT_OF_BOUNDS'		=> 'Campul `%1$s` a primit date mai mari decat limitele sale',
-	'EXCEPTION_TOO_LONG'			=> 'Ai introdus un camp prea lung fata de maxima admisa.',
-	'EXCEPTION_NOT_UNIQUE'			=> 'Campul nu este unic.',
-	'EXCEPTION_UNEXPECTED_VALUE'	=> 'Campul `%1$s` date neasteptate primite. Motiv: %2$s',
-	'EXCEPTION_ILLEGAL_CHARACTERS'	=> 'Campurile contin caractere nepermise.',
+$lang = array_merge($lang, [
+	'EXCEPTION_FIELD_MISSING'      => 'Campurile necesare nu sunt completate',
+	'EXCEPTION_INVALID_ARGUMENT'   => 'Argument invalid pentru `%1$s`. Motiv: %2$s',
+	'EXCEPTION_OUT_OF_BOUNDS'      => 'Campul `%1$s` a primit date mai mari decat limitele sale',
+	'EXCEPTION_TOO_LONG'           => 'Ai introdus un camp prea lung fata de maxima admisa.',
+	'EXCEPTION_NOT_UNIQUE'         => 'Campul nu este unic.',
+	'EXCEPTION_UNEXPECTED_VALUE'   => 'Campul `%1$s` date neasteptate primite. Motiv: %2$s',
+	'EXCEPTION_ILLEGAL_CHARACTERS' => 'Campurile contin caractere nepermise.',
 
 	// Translators: do not change this
-	'EXCEPTION_WRONG_DATA_LANG'		=> $lang['WRONG_DATA_LANG'],
-));
+	'EXCEPTION_WRONG_DATA_LANG' => $lang['WRONG_DATA_LANG'],
+]);

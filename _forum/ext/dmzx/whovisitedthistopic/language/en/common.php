@@ -8,8 +8,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -37,6 +37,6 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'WHOVISITEDTHISTOPIC_TITLE'			=> 'Last <strong>%d</strong> Members Who Visited This Topic. Total <strong>%d</strong> visits',
-	'WHOVISITEDTHISTOPIC_VISIT_TITLE'	=> 'Last <strong>%d</strong> topics visited',
+	'WHOVISITEDTHISTOPIC_TITLE'       => 'Last <strong>%d</strong> Members Who Visited This Topic. Total <strong>%d</strong> visits',
+	'WHOVISITEDTHISTOPIC_VISIT_TITLE' => 'Last <strong>%d</strong> topics visited',
 ]);

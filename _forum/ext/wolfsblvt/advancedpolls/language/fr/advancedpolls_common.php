@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,7 +38,7 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'NOTIFICATION_AP_POLL_ENDED'		=> '<strong>Les résultats d’un sondage sont disponibles</strong> :',
-	'NOTIFICATION_TYPE_AP_POLL_ENDED'	=> 'Les résultats d’un sondage auquel vous avez participé sont disponibles',
-));
+$lang = array_merge($lang, [
+	'NOTIFICATION_AP_POLL_ENDED'      => '<strong>Les résultats d’un sondage sont disponibles</strong> :',
+	'NOTIFICATION_TYPE_AP_POLL_ENDED' => 'Les résultats d’un sondage auquel vous avez participé sont disponibles',
+]);

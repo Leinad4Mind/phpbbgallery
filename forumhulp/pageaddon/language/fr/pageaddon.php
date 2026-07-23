@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,8 +38,8 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'WYSIWYG_TEXT'			=> 'Cette page a été transformée en un éditeur HTML WYSIWYG grâce à l’add-on de <a href="http://forumhulp.com" target="_blank">ForumHulp.com</a> pour l’extension officielle « Pages ». Les BBCodes ne fonctionneront pas avec cet add-on. Vous pouvez paginer vos pages en insérant des sauts de page depuis le menu Insertion.',
-	'FH_HELPER_NOTICE'		=> 'L’extension : « Forumhulp Helper » n’est pas installée !<br />Il est nécessaire de télécharger son archive disponible sur cette page : <a href="https://github.com/ForumHulp/helper" target="_blank">Forumhulp Helper</a>, puis de l’envoyer sur son espace FTP et de l’activer.',
-	'PAGEADDON_NOTICE'		=> '<div class="phpinfo"><p class="entry">Cette extension transforme l’extension phpBB « Pages » en un éditeur de texte WYSIWYG. Pour y accéder, se rendre dans le panneau d’administration, onglet « EXTENSIONS », catégorie « Pages », rubrique « Gestion des Pages ».</p></div>',
-));
+$lang = array_merge($lang, [
+	'WYSIWYG_TEXT'     => 'Cette page a été transformée en un éditeur HTML WYSIWYG grâce à l’add-on de <a href="http://forumhulp.com" target="_blank">ForumHulp.com</a> pour l’extension officielle « Pages ». Les BBCodes ne fonctionneront pas avec cet add-on. Vous pouvez paginer vos pages en insérant des sauts de page depuis le menu Insertion.',
+	'FH_HELPER_NOTICE' => 'L’extension : « Forumhulp Helper » n’est pas installée !<br />Il est nécessaire de télécharger son archive disponible sur cette page : <a href="https://github.com/ForumHulp/helper" target="_blank">Forumhulp Helper</a>, puis de l’envoyer sur son espace FTP et de l’activer.',
+	'PAGEADDON_NOTICE' => '<div class="phpinfo"><p class="entry">Cette extension transforme l’extension phpBB « Pages » en un éditeur de texte WYSIWYG. Pour y accéder, se rendre dans le panneau d’administration, onglet « EXTENSIONS », catégorie « Pages », rubrique « Gestion des Pages ».</p></div>',
+]);

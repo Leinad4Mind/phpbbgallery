@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,11 +38,11 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'RESET_STYLES'			=> 'Réinitialiser les styles',
-	'RESET_STYLES_EXPLAIN'	=> 'Cet outil permet de modifier le style par défaut du forum.',
-	'RESET_STYLE_COMPLETE'	=> 'Le style par défaut a été modifié.',
+$lang = array_merge($lang, [
+	'RESET_STYLES'         => 'Réinitialiser les styles',
+	'RESET_STYLES_EXPLAIN' => 'Cet outil permet de modifier le style par défaut du forum.',
+	'RESET_STYLE_COMPLETE' => 'Le style par défaut a été modifié.',
 
-	'STYLE'					=> 'Style',
-	'STYLE_EXPLAIN'			=> 'Sélectionner le style à définir comme style par défaut.',
-));
+	'STYLE'         => 'Style',
+	'STYLE_EXPLAIN' => 'Sélectionner le style à définir comme style par défaut.',
+]);

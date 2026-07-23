@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,6 +37,6 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'AUTOGROUPS_NOT_ENABLEABLE'	=> 'Auto Groups konnte nicht aktiviert werden. Die Mindestanforderungen von phpBB 3.2.0 und/oder PHP 5.5.0 sind nicht erfüllt.',
-));
+$lang = array_merge($lang, [
+	'AUTOGROUPS_NOT_ENABLEABLE' => 'Auto Groups konnte nicht aktiviert werden. Die Mindestanforderungen von phpBB 3.2.0 und/oder PHP 5.5.0 sind nicht erfüllt.',
+]);

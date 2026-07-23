@@ -20,10 +20,10 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'FORUM_ICONS'              => 'Ícones do Fórum',
-	'BBSVG_NOTICE'             => '<div style="width:auto;margin:20px auto;"><p>A configuração para esta extensão encontra-se em <strong>%1$s &#187; %2$s &#187; %3$s</strong>.<br />Também pode adicionar SVGs para os ranks (níveis) de grupos. <strong>ACP &#187; Utilizadores e Grupos &#187; Utilizadores &#187; Gerir ranks</strong>.</p></div>',
-	'SS_HELPER_NOTY'           => 'O SiteSplat BBcore não existe!<br />Faça o download do <a href="https://sitesplat.com" target="_blank">BBcore</a> e copie a pasta BBcore para a pasta da sua extensão sitesplat.',
-	'ACP_BBSVG_FORUMS'         => 'Administração do fórum. Selecione o fórum e edite-o para encontrar as configurações de ícones personalizados do fórum',
-	'ACP_BBSVG_FORUMS_EXPLAIN' => 'Se pretender remover o círculo cinzento padrão na lista de fóruns/tópicos, pode adicionar o seguinte código ao seu custom.css:',
+	'BBSVG_NOTICE'             => '<div style="width:auto;margin:20px auto;"><p>A configuração para esta extensão encontra-se em <strong>%1$s &#187; %2$s &#187; %3$s</strong>.<br />Também podes adicionar SVGs para os ranks (níveis) de grupos. <strong>ACP &#187; Utilizadores e Grupos &#187; Utilizadores &#187; Gerir ranks</strong>.</p></div>',
+	'SS_HELPER_NOTY'           => 'O SiteSplat BBcore não existe!<br />Transfere o <a href="https://sitesplat.com" target="_blank">BBcore</a> e copia a pasta BBcore para a pasta da tua extensão sitesplat.',
+	'ACP_BBSVG_FORUMS'         => 'Administração do fórum. Seleciona o fórum e edita-o para encontrar as configurações de ícones personalizados do fórum',
+	'ACP_BBSVG_FORUMS_EXPLAIN' => 'Se pretenderes remover o círculo cinzento padrão na lista de fóruns/tópicos, podes adicionar o seguinte código ao teu custom.css:',
 
 	'VIEWFORUM_ICON_FOLDER_UNREAD'         => 'Ícone de viewforum com tópicos não lidos',
 	'VIEWFORUM_ICON_FOLDER_UNREAD_EXPLAIN' => 'Localização, relativa ao diretório raiz do phpBB, de um ícone de viewforum normal com tópicos não lidos para associar a este fórum.',

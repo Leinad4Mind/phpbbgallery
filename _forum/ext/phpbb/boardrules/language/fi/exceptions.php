@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -47,15 +47,15 @@ if (empty($lang) || !is_array($lang))
 *
 * Translators: Feel free to not translate these language strings
 */
-$lang = array_merge($lang, array(
-	'EXCEPTION_FIELD_MISSING'		=> 'Vaadittu kenttä puuttuu',
-	'EXCEPTION_INVALID_ARGUMENT'	=> 'Virheellinen argumentti arvolle `%1$s`. Syy: %2$s',
-	'EXCEPTION_OUT_OF_BOUNDS'		=> 'Kenttää `%1$s` ei mahdu enempää dataa.',
-	'EXCEPTION_TOO_LONG'			=> 'Syöttämäsi tieto oli pitempi kuin sallittu enimmäispituus.',
-	'EXCEPTION_NOT_UNIQUE'			=> 'Syöte ei ollut ainutlaatuinen.',
-	'EXCEPTION_UNEXPECTED_VALUE'	=> 'Kenttä `%1$s` sai odottamattomia tietoja. Syy: %2$s',
-	'EXCEPTION_ILLEGAL_CHARACTERS'	=> 'Syöte sisälsi ei-sallittuja merkkejä.',
+$lang = array_merge($lang, [
+	'EXCEPTION_FIELD_MISSING'      => 'Vaadittu kenttä puuttuu',
+	'EXCEPTION_INVALID_ARGUMENT'   => 'Virheellinen argumentti arvolle `%1$s`. Syy: %2$s',
+	'EXCEPTION_OUT_OF_BOUNDS'      => 'Kenttää `%1$s` ei mahdu enempää dataa.',
+	'EXCEPTION_TOO_LONG'           => 'Syöttämäsi tieto oli pitempi kuin sallittu enimmäispituus.',
+	'EXCEPTION_NOT_UNIQUE'         => 'Syöte ei ollut ainutlaatuinen.',
+	'EXCEPTION_UNEXPECTED_VALUE'   => 'Kenttä `%1$s` sai odottamattomia tietoja. Syy: %2$s',
+	'EXCEPTION_ILLEGAL_CHARACTERS' => 'Syöte sisälsi ei-sallittuja merkkejä.',
 
 	// Translators: do not change this
-	'EXCEPTION_WRONG_DATA_LANG'		=> $lang['WRONG_DATA_LANG'],
-));
+	'EXCEPTION_WRONG_DATA_LANG' => $lang['WRONG_DATA_LANG'],
+]);

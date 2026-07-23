@@ -9,8 +9,8 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  */
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,10 +38,10 @@ if (empty($lang) || !is_array($lang))
 //
 
 // Adding the permissions
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// User Permissions
-	'ACL_U_MUST_INTRODUCE'			=> 'Muss zuerst eine Vorstellung veröffentlichen',
+	'ACL_U_MUST_INTRODUCE' => 'Muss zuerst eine Vorstellung veröffentlichen',
 
 	// Admin Permissions
-	'ACL_A_INTRODUCIATOR_MANAGE'	=> 'Kann die Introduciator Extension verwalten',
-));
+	'ACL_A_INTRODUCIATOR_MANAGE' => 'Kann die Introduciator Extension verwalten',
+]);

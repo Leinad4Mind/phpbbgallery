@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,13 +37,13 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// ACP modules
-	'ACP_BOARDRULES'				=> 'Szabályzatok',
-	'ACP_BOARDRULES_MANAGE'			=> 'Szabályzatok kezelése',
-	'ACP_BOARDRULES_SETTINGS'		=> 'Szabályzat beállítások',
+	'ACP_BOARDRULES'          => 'Szabályzatok',
+	'ACP_BOARDRULES_MANAGE'   => 'Szabályzatok kezelése',
+	'ACP_BOARDRULES_SETTINGS' => 'Szabályzat beállítások',
 
 	// ACP Logs
-	'ACP_BOARDRULES_SETTINGS_LOG'	=> '<strong>Szabályzat beállítások mentésre kerültek</strong>',
-	'ACP_BOARDRULES_NOTIFY_LOG'		=> '<strong>Szabályzat értesítések elküldésre kerültek az összes felhasználónak</strong>',
-));
+	'ACP_BOARDRULES_SETTINGS_LOG' => '<strong>Szabályzat beállítások mentésre kerültek</strong>',
+	'ACP_BOARDRULES_NOTIFY_LOG'   => '<strong>Szabályzat értesítések elküldésre kerültek az összes felhasználónak</strong>',
+]);

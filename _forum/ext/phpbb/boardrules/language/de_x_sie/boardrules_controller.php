@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,10 +38,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES_HEADER'			=> 'Board-Regeln',
-	'BOARDRULES_EXPLAIN'		=> 'Die Regeln auf %s beschreiben die Bedingungen für den reibungslosen Ablauf, den Umgang miteinander und die Verantwortlichkeiten aller Mitglieder und Gäste.',
-	'BOARDRULES_CATEGORIES'		=> 'Regelbereiche',
-	'BOARDRULES_CATEGORY_ANCHOR'=> 'Bereich-%s',
-	'BOARDRULES_RULE_ANCHOR'	=> 'Regel-%s',
-));
+$lang = array_merge($lang, [
+	'BOARDRULES_HEADER'          => 'Board-Regeln',
+	'BOARDRULES_EXPLAIN'         => 'Die Regeln auf %s beschreiben die Bedingungen für den reibungslosen Ablauf, den Umgang miteinander und die Verantwortlichkeiten aller Mitglieder und Gäste.',
+	'BOARDRULES_CATEGORIES'      => 'Regelbereiche',
+	'BOARDRULES_CATEGORY_ANCHOR' => 'Bereich-%s',
+	'BOARDRULES_RULE_ANCHOR'     => 'Regel-%s',
+]);

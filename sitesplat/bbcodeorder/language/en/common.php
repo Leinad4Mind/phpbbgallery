@@ -29,6 +29,7 @@ $lang = array_merge($lang, array(
 	'BBCODE_ICON_EXPLAIN'		=> '<a href="https://fontawesome.io/icons/">Font Awesome icon</a> without fa- prefix.',
 	'BBCODE_GROUP'				=> 'Manage groups that can use this BBCode',
 	'BBCODE_GROUP_EXPLAIN'		=> 'If no groups are selected, then all users can use this BBCode. Use CTRL+CLICK (or CMD+CLICK on Mac) to select/deselect more than one group.',
+	'BBCODEORDER_IMGUR_UPLOAD'	=> 'Click to upload to IMGUR',
 	'BBCODEORDER_GYAZO_UPLOAD'	=> 'Click to upload to GYAZO',
 	
 	'BBCODE_B'						=> 'Bold',

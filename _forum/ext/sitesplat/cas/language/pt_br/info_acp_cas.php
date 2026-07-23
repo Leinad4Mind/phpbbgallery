@@ -18,7 +18,7 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'ACP_CAS'        => 'Cas (Anti-Spam)',
-	'SS_HELPER_NOTY' => 'O SiteSplat BBcore não existe!<br />Faça o download do <a href="http://sitesplat.com" target="_blank">BBcore</a> e copie a pasta BBcore para a pasta da sua extensão sitesplat.',
-	'CAS_NOTICE'     => '<div class="phpinfo"><p>A configuração para esta extensão encontra-se em <strong>%1$s &#187; %2$s &#187; %3$s</strong>. Escolha C.A.S nos plugins disponíveis e configure a chave da API.</p></div>',
+	'ACP_CAS'        => 'Categorize CAS',
+	'SS_HELPER_NOTY' => 'O SiteSplat BBcore não existe!<br />Baixe o <a href="https://sitesplat.com" target="_blank">BBcore</a> e copie a pasta BBcore para a pasta da sua extensão sitesplat.',
+	'CAS_NOTICE'     => '<div class="phpinfo"><p>Não existem definições específicas para esta extensão. Os anúncios globais e os tópicos fixos serão automaticamente categorizados.</p></div>',
 ]);

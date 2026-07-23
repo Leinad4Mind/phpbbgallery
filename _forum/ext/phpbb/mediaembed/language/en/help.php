@@ -38,9 +38,9 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'HELP_EMBEDDING_MEDIA'			=> 'Embedding Media',
-	'HELP_EMBEDDING_MEDIA_QUESTION'	=> 'How to embed media from other sites into posts',
-	'HELP_EMBEDDING_MEDIA_ANSWER'	=> 'Users can embed content such as videos and audio from allowed sites using
+	'HELP_EMBEDDING_MEDIA'          => 'Embedding Media',
+	'HELP_EMBEDDING_MEDIA_QUESTION' => 'How to embed media from other sites into posts',
+	'HELP_EMBEDDING_MEDIA_ANSWER'   => 'Users can embed content such as videos and audio from allowed sites using
 										the <strong>[media][/media]</strong> tags, or from simply posting a supported
 										URL in plain text. For example:<br /><br />
 										<strong>[media]</strong>%1$s<strong>[/media]</strong>
@@ -51,5 +51,5 @@ $lang = array_merge($lang, [
 										<br /><br />For complete documentation on supported sites and example URLs,
 										visit the <a href="https://s9etextformatter.readthedocs.io/Plugins/MediaEmbed/Sites/">
 										MediaEmbed Plugin Documentation</a>.',
-	'HELP_EMBEDDING_MEDIA_DEMO'		=>	'https://youtu.be/QH2-TGUlwu4',
+	'HELP_EMBEDDING_MEDIA_DEMO' => 'https://youtu.be/QH2-TGUlwu4',
 ]);

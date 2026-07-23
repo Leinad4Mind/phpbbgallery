@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,9 +37,9 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge(
-	$lang, array(
-		'UCP_TFA'			=> '2-step authentication',
-		'UCP_TFA_MANAGE'	=> 'Two factor authentication',
+	$lang, [
+		'UCP_TFA'        => '2-step authentication',
+		'UCP_TFA_MANAGE' => 'Two factor authentication',
 
-	)
+	]
 );

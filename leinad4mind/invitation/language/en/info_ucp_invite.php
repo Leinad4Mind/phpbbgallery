@@ -39,6 +39,10 @@ $lang = array_merge($lang, array(
 
 	'UCP_CAT_INVITE'						=> 'phpBB Invite',
 	'UCP_INVITE'							=> 'Invitation',
+	'UCP_INVITE_LABEL'						=> 'GoldTugAnime - Invitation',
+	'UCP_INVITE_MESSAGE'					=> 'Welcome to the most beautiful Portuguese (Portugal) Animation Community!
+
+We hope you have fun and that animation never stops being part of your life.',
 	'UCP_INVITE_DATA'						=> 'Invitation details',
 	'UCP_INVITE_BACK'						=> '<br /><br />%sBack to the user control panel%s',
 	'UCP_INVITE_DAYF'						=> 'Invitations sent today',
@@ -92,9 +96,11 @@ $lang = array_merge($lang, array(
 	'UCP_INVITE_REQUEST_SUBMIT'				=> 'Send request',
 	'UCP_INVITE_REQUEST_SUCC'				=> 'The invitation request has been successfully sent!',
 	'UCP_INVITE_REQUEST_SUCCS'				=> 'The invitation requests have been successfully sent!',
-	'UCP_INVITE_REQUEST_TITLE'				=> 'Required invitations',
-	'UCP_INVITE_REQUEST_TITLE_EXPLAIN'		=> 'Enter the number of invitations you want to request. There is a maximum of <b>(%s)</b> invitation(s) available.<br />You take full responsibility for your invited user(s) if they behave inappropriately.',
+	'UCP_INVITE_REQUEST_TITLE'				=> 'Request invitations',
+	'UCP_INVITE_REQUEST_TITLE_EXPLAIN'		=> 'Enter the number of invitations you want to request. There is a maximum of <b>(%s)</b> invitation(s) available.',
+	'UCP_INVITE_REQUEST_COST'				=> '<div class="invitation_tred alert alert-danger">Invitation price is <b>50.000 points</b>.</div>',
 	'UCP_INVITE_SEND'						=> 'Send invitation',
+	'UCP_INVITE_SEND_EXPLAIN'			=> '<div class="invitation_tred alert alert-danger">You take some responsibility for your invited user(s) if they behave inappropriately.</div>',
 	'UCP_INVITE_SEND_EMAIL_MAX'				=> 'Maximum %s e-mail addresses can be used. However you listed %s!',
 	'UCP_INVITE_SEND_MAX'					=> '<span class="invitation_tred">Currently there is no limit!</span>',
 	'UCP_INVITE_LAST_ACTIVE'				=> 'Last active',

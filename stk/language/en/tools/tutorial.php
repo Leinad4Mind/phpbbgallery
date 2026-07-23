@@ -15,19 +15,19 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
 }
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -46,7 +46,7 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'TUTORIAL'			=> 'This is a tutorial',
-	'TUTORIAL_EXPLAIN'	=> 'This is an explanation for the tutorial',
-));
+$lang = array_merge($lang, [
+	'TUTORIAL'         => 'This is a tutorial',
+	'TUTORIAL_EXPLAIN' => 'This is an explanation for the tutorial',
+]);

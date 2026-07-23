@@ -23,7 +23,7 @@ if (empty($lang) || !is_array($lang))
 	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ADD_UPLOAD_FIELD'                 => 'Weitere Felder zum Hochladen hinzufügen',
 	'ALBUM'                            => 'Album',
 	'ALBUM_DESC'                       => 'Albumbeschreibung',
@@ -41,28 +41,28 @@ $lang = array_merge($lang, array(
 	'ALL'                              => 'Alle',
 	'ALL_IMAGES'                       => 'Alle Bilder',
 	'ALLOW_COMMENTS'                   => 'Kommentare für dieses Bild erlauben.',
-	'ALLOW_COMMENTS_ARY'               => array(
+	'ALLOW_COMMENTS_ARY'               => [
 		0 => 'Kommentare für dieses Bild erlauben.',
 		2 => 'Kommentare für diese Bilder erlauben.',
-	),
-	'ALLOWED_FILETYPES'                => 'Erlaubte Dateitypen',
-	'APPROVE'                          => 'Freigeben',
-	'DISAPPROVE'                       => 'Sperren',
-	'APPROVE_IMAGE'                    => 'Bild freischalten',
+	],
+	'ALLOWED_FILETYPES' => 'Erlaubte Dateitypen',
+	'APPROVE'           => 'Freigeben',
+	'DISAPPROVE'        => 'Sperren',
+	'APPROVE_IMAGE'     => 'Bild freischalten',
 
 	//@todo
-	'ALBUM_COMMENT_CAN'                => 'Du <strong>darfst</strong> Bilder in diesem Album kommentieren',
-	'ALBUM_COMMENT_CANNOT'             => 'Du <strong>darfst keine</strong> Bilder in diesem Album kommentieren',
-	'ALBUM_DELETE_CAN'                 => 'Du <strong>darfst</strong> deine Bilder in diesem Album löschen',
-	'ALBUM_DELETE_CANNOT'              => 'Du <strong>darfst</strong> deine Bilder in diesem Album <strong>nicht</strong> löschen',
-	'ALBUM_EDIT_CAN'                   => 'Du <strong>darfst</strong> deine Bilder in diesem Album bearbeiten',
-	'ALBUM_EDIT_CANNOT'                => 'Du <strong>darfst</strong> deine Bilder in diesem Album <strong>nicht</strong> bearbeiten',
-	'ALBUM_RATE_CAN'                   => 'Du <strong>darfst</strong> Bilder in diesem Album bewerten',
-	'ALBUM_RATE_CANNOT'                => 'Du <strong>darfst keine</strong> Bilder in diesem Album bewerten',
-	'ALBUM_UPLOAD_CAN'                 => 'Du <strong>darfst</strong> neue Bilder in diesem Album hochladen',
-	'ALBUM_UPLOAD_CANNOT'              => 'Du <strong>darfst keine</strong> neuen Bilder in diesem Album hochladen',
-	'ALBUM_VIEW_CAN'                   => 'Du <strong>darfst</strong> Bilder in diesem Album ansehen',
-	'ALBUM_VIEW_CANNOT'                => 'Du <strong>darfst keine</strong> Bilder in diesem Album ansehen',
+	'ALBUM_COMMENT_CAN'    => 'Du <strong>darfst</strong> Bilder in diesem Album kommentieren',
+	'ALBUM_COMMENT_CANNOT' => 'Du <strong>darfst keine</strong> Bilder in diesem Album kommentieren',
+	'ALBUM_DELETE_CAN'     => 'Du <strong>darfst</strong> deine Bilder in diesem Album löschen',
+	'ALBUM_DELETE_CANNOT'  => 'Du <strong>darfst</strong> deine Bilder in diesem Album <strong>nicht</strong> löschen',
+	'ALBUM_EDIT_CAN'       => 'Du <strong>darfst</strong> deine Bilder in diesem Album bearbeiten',
+	'ALBUM_EDIT_CANNOT'    => 'Du <strong>darfst</strong> deine Bilder in diesem Album <strong>nicht</strong> bearbeiten',
+	'ALBUM_RATE_CAN'       => 'Du <strong>darfst</strong> Bilder in diesem Album bewerten',
+	'ALBUM_RATE_CANNOT'    => 'Du <strong>darfst keine</strong> Bilder in diesem Album bewerten',
+	'ALBUM_UPLOAD_CAN'     => 'Du <strong>darfst</strong> neue Bilder in diesem Album hochladen',
+	'ALBUM_UPLOAD_CANNOT'  => 'Du <strong>darfst keine</strong> neuen Bilder in diesem Album hochladen',
+	'ALBUM_VIEW_CAN'       => 'Du <strong>darfst</strong> Bilder in diesem Album ansehen',
+	'ALBUM_VIEW_CANNOT'    => 'Du <strong>darfst keine</strong> Bilder in diesem Album ansehen',
 
 	'BAD_UPLOAD_FILE_SIZE'  => 'Deine hochgeladene Datei ist entweder zu gross oder defekt',
 	'BBCODES'               => 'BBCodes',
@@ -117,7 +117,7 @@ $lang = array_merge($lang, array(
 	'DESCRIPTION_LENGTH'      => 'Gib deine Beschreibung hier ein. Sie darf nicht mehr als <strong>%d</strong> Zeichen enthalten.',
 	'DETAILS'                 => 'Details',
 	'DISALLOWED_EXTENSION'    => 'Diese Bilderweiterung ist nicht erlaubt',
-	'DO_NOT_RATE_IMAGE'         => 'Bild nicht bewerten',
+	'DO_NOT_RATE_IMAGE'       => 'Bild nicht bewerten',
 
 	'EDIT_COMMENT'             => 'Kommentar ändern',
 	'EDIT_IMAGE'               => 'Bearbeiten',
@@ -217,31 +217,31 @@ $lang = array_merge($lang, array(
 	'QUOTE_COMMENT' => 'Kommentar zitieren',
 	'QUICK_MOD'     => 'Schnellmoderation',
 
-	'RANDOM_IMAGES'       => 'Zufällige Bilder',
-	'RATE_IMAGE'          => 'Bild bewerten',
-	'RATES_COUNT'         => 'Anzahl der Bewertungen',
-	'RATING'              => 'Bewertung',
-	'RATING_STRINGS'      => array(
+	'RANDOM_IMAGES'  => 'Zufällige Bilder',
+	'RATE_IMAGE'     => 'Bild bewerten',
+	'RATES_COUNT'    => 'Anzahl der Bewertungen',
+	'RATING'         => 'Bewertung',
+	'RATING_STRINGS' => [
 		0 => 'Nicht bewertet',
 		1 => '%2$s (1 Bewertung)',
 		2 => '%2$s (%1$s Bewertungen)',
-	),
-	'RATING_STRINGS_USER' => array(
+	],
+	'RATING_STRINGS_USER' => [
 		1 => '%2$s (1 Bewertung, deine Bewertung: %3$s)',
 		2 => '%2$s (%1$s Bewertungen, deine Bewertung: %3$s)',
-	),
-	'RATING_SUCCESSFUL'   => 'Das Bild wurde erfolgreich bewertet.',
-	'READ_REPORT'         => 'Meldung ansehen',
-	'RECENT_COMMENTS'     => 'Neueste Kommentare',
-	'RECENT_IMAGES'       => 'Neueste Bilder',
-	'REPORT_IMAGE'        => 'Bild melden',
-	'RETURN_ALBUM'        => '%sZurück zum zuletzt besuchten Album%s',
-	'ROTATE_IMAGE'        => 'Bild drehen',
-	'ROTATE_LEFT'         => '90° links',
-	'ROTATE_NONE'         => 'nicht drehen',
-	'ROTATE_RIGHT'        => '90° rechts',
-	'ROTATE_UPSIDEDOWN'   => '180° oben nach unten',
-	'RETURN_TO_GALLERY'   => 'zurück zur Galerie',
+	],
+	'RATING_SUCCESSFUL' => 'Das Bild wurde erfolgreich bewertet.',
+	'READ_REPORT'       => 'Meldung ansehen',
+	'RECENT_COMMENTS'   => 'Neueste Kommentare',
+	'RECENT_IMAGES'     => 'Neueste Bilder',
+	'REPORT_IMAGE'      => 'Bild melden',
+	'RETURN_ALBUM'      => '%sZurück zum zuletzt besuchten Album%s',
+	'ROTATE_IMAGE'      => 'Bild drehen',
+	'ROTATE_LEFT'       => '90° links',
+	'ROTATE_NONE'       => 'nicht drehen',
+	'ROTATE_RIGHT'      => '90° rechts',
+	'ROTATE_UPSIDEDOWN' => '180° oben nach unten',
+	'RETURN_TO_GALLERY' => 'zurück zur Galerie',
 
 	'SEARCH_ALBUM'                      => 'Album durchsuchen…',
 	'SEARCH_ALBUMS'                     => 'Zu durchsuchende Alben',
@@ -274,28 +274,28 @@ $lang = array_merge($lang, array(
 	'SUBALBUMS'                         => 'Subalben',
 	'SUBALBUM'                          => 'Subalbum',
 
-	'THUMBNAIL_SIZE'            => 'Vorschaubildgrösse (Pixel)',
-	'TOTAL_COMMENTS_SPRINTF'    => array(
+	'THUMBNAIL_SIZE'         => 'Vorschaubildgrösse (Pixel)',
+	'TOTAL_COMMENTS_SPRINTF' => [
 		0 => 'Kommentare insgesamt: <strong>0</strong>',
 		1 => 'Kommentare insgesamt: <strong>%d</strong>',
 		2 => 'Kommentare insgesamt: <strong>%d</strong>',
-	),
-	'TOTAL_IMAGES'              => 'Bilder insgesamt',
-	'TOTAL_IMAGES_SPRINTF'      => array(
+	],
+	'TOTAL_IMAGES'         => 'Bilder insgesamt',
+	'TOTAL_IMAGES_SPRINTF' => [
 		0 => 'Keine Bilder',
 		1 => '%d Bild',
 		2 => '%d Bilder',
-	),
-	'TOTAL_PEGAS_SHORT_SPRINTF' => array(
+	],
+	'TOTAL_PEGAS_SHORT_SPRINTF' => [
 		0 => '0 persönliche Galerien',
 		1 => '%d persönliche Galerie',
 		2 => '%d persönliche Galerien',
-	),
-	'TOTAL_PEGAS_SPRINTF'       => array(
+	],
+	'TOTAL_PEGAS_SPRINTF' => [
 		0 => 'Persönliche Galerien insgesamt: <strong>0</strong>',
 		1 => 'Persönliche Galerien insgesamt: <strong>%d</strong>',
 		2 => 'Persönliche Galerien insgesamt: <strong>%d</strong>',
-	),
+	],
 
 	'UNLOCK_IMAGE'              => 'Bild entsperren',
 	'UNWATCH_ALBUM'             => 'Album nicht mehr beobachten',
@@ -314,30 +314,30 @@ $lang = array_merge($lang, array(
 	'UPLOADED_ON_DATE'          => 'Hochgeladen',
 	'USE_SAME_NAME'             => 'Den gleichen Namen und die gleiche Beschreibung für alle Bilder verwenden.',
 	'USE_NUM'                   => 'Für Ziffern {NUM} einfügen. Starte mit Wert:',
-	'USER_REACHED_QUOTA'        => array(
+	'USER_REACHED_QUOTA'        => [
 		0 => 'Du darfst <strong>keine</strong> Bilder hochladen.<br />Für weitere Information wende dich bitte an einen Administrator.',
 		1 => 'Du darfst nur <strong>1</strong> Bild hochladen.<br />Für weitere Information wende dich bitte an einen Administrator.',
 		2 => 'Du darfst nur <strong>%s</strong> Bilder hochladen.<br />Für weitere Information wende dich bitte an einen Administrator.',
-	),
-	'USER_REACHED_QUOTA_SHORT'  => array(
+	],
+	'USER_REACHED_QUOTA_SHORT' => [
 		0 => 'Du darfst <strong>keine</strong> Bilder hochladen.',
 		1 => 'Du darfst nur <strong>1</strong> Bild hochladen.',
 		2 => 'Du darfst nur <strong>%s</strong> Bilder hochladen.',
-	),
-	'USERNAME_BEGINS_WITH'      => 'Benutzername fängt an mit',
-	'USERS_PERSONAL_ALBUMS'     => 'Persönliche Alben der Mitglieder',
-	'VISIT_GALLERY'             => 'Benutzer-Galerie besuchen',
+	],
+	'USERNAME_BEGINS_WITH'  => 'Benutzername fängt an mit',
+	'USERS_PERSONAL_ALBUMS' => 'Persönliche Alben der Mitglieder',
+	'VISIT_GALLERY'         => 'Benutzer-Galerie besuchen',
 
-	'VIEW_ALBUM'            => 'Album ansehen',
-	'VIEW_ALBUM_IMAGES'     => array(
+	'VIEW_ALBUM'        => 'Album ansehen',
+	'VIEW_ALBUM_IMAGES' => [
 		1 => '1 Bild',
 		2 => '%s Bilder',
-	),
-	'VIEW_IMAGE'            => 'Bild ansehen',
-	'VIEW_IMAGE_COMMENTS'   => array(
+	],
+	'VIEW_IMAGE'          => 'Bild ansehen',
+	'VIEW_IMAGE_COMMENTS' => [
 		1 => '1 Kommentar',
 		2 => '%s Kommentare',
-	),
+	],
 	'VIEW_LATEST_IMAGE'     => 'Das neueste Bild ansehen',
 	'VIEW_SEARCH_RECENT'    => 'Neueste Bilder',
 	'VIEW_SEARCH_RANDOM'    => 'Zufällige Bilder',
@@ -359,15 +359,15 @@ $lang = array_merge($lang, array(
 	'YOUR_PERSONAL_ALBUM' => 'Dein persönliches Album',
 	'YOUR_RATING'         => 'Deine Bewertung',
 
-	'IMAGES_MOVED'   => array(
+	'IMAGES_MOVED' => [
 		1 => 'Bild verschoben',
 		2 => '%s Bilder verschoben',
-	),
+	],
 	'WRONG_FILESIZE' => 'Das Bild ist größer als das Limit!',
 
 	'UNREAD_IMAGES'    => 'Unbewertete Bilder',
 	'NO_UNREAD_IMAGES' => 'Es gibt keine ungeprüften Bilder',
 
 	// Versions 1.2.1 additions
-	'GALLERY_DROP'     => 'Lege Dein Bild hier rein',
-));
+	'GALLERY_DROP' => 'Lege Dein Bild hier rein',
+]);

@@ -9,8 +9,8 @@
  */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -41,17 +41,17 @@ if (empty($lang) || !is_array($lang))
 * mode: general
 * Info: Les clefs de langages sont préfixés avec 'INTRODUCIATOR_GP_' pour 'INTRODUCIATOR_GENERAL_PAGES_'
 */
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// Titres
-	'INTRODUCIATOR_GP_TITLE'							=> 'Informations générales',
-	'INTRODUCIATOR_GP_TITLE_EXPLAIN'					=> 'Donne la version courante de cette extension.',
+	'INTRODUCIATOR_GP_TITLE'         => 'Informations générales',
+	'INTRODUCIATOR_GP_TITLE_EXPLAIN' => 'Donne la version courante de cette extension.',
 
 	// Informations de l'extension
-	'INTRODUCIATOR_GP_INFOS_ARRAY_HEADER_INFORMATIONS'	=> 'Informations',
-	'INTRODUCIATOR_GP_INFOS_ARRAY_HEADER_VALUES'		=> 'Valeurs',
-	'INTRODUCIATOR_GP_INFOS'							=> 'Statistiques de l’extension Présentation forcée',
-	'INTRODUCIATOR_GP_INSTALL_DATE'						=> 'Date d’installation de l’extension <strong>Présentation forcée</strong> :',
-	'INTRODUCIATOR_GP_VERSION'							=> 'Version de l’extension <strong>Présentation forcée</strong> :',
-	'INTRODUCIATOR_GP_DETAILS'							=> 'Détails',
-	'INTRODUCIATOR_GP_URL_DETAILS'						=> 'http://www.phpbb-fr.com/customise/db/extension/introduciator_2',
-));
+	'INTRODUCIATOR_GP_INFOS_ARRAY_HEADER_INFORMATIONS' => 'Informations',
+	'INTRODUCIATOR_GP_INFOS_ARRAY_HEADER_VALUES'       => 'Valeurs',
+	'INTRODUCIATOR_GP_INFOS'                           => 'Statistiques de l’extension Présentation forcée',
+	'INTRODUCIATOR_GP_INSTALL_DATE'                    => 'Date d’installation de l’extension <strong>Présentation forcée</strong> :',
+	'INTRODUCIATOR_GP_VERSION'                         => 'Version de l’extension <strong>Présentation forcée</strong> :',
+	'INTRODUCIATOR_GP_DETAILS'                         => 'Détails',
+	'INTRODUCIATOR_GP_URL_DETAILS'                     => 'http://www.phpbb-fr.com/customise/db/extension/introduciator_2',
+]);

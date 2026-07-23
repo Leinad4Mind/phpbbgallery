@@ -11,20 +11,20 @@
 *
 */
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
 }
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 // DEVELOPERS PLEASE NOTE
 //
 // All language files should use UTF-8 as their encoding and the files must not contain a BOM.
-$lang = array_merge($lang, array(
-	'SORRY_AUTH_READ_OTHER'			=> 'Sie haben keine Berechtigung dieses Thema zu lesen.',
-	'SORRY_CLASSIFIED_INFORMATION'	=> 'Information gesperrt',
-));
+$lang = array_merge($lang, [
+	'SORRY_AUTH_READ_OTHER'        => 'Sie haben keine Berechtigung dieses Thema zu lesen.',
+	'SORRY_CLASSIFIED_INFORMATION' => 'Information gesperrt',
+]);

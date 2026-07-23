@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,19 +38,19 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'OPTIMIZE_TABLES'			=> 'Optimisation des tables de la BDD',
-	'OPTIMIZE_TABLES_EXPLAIN'	=> 'Cherche les tables de la base de données ayant besoin d’une défragmentation et une optimisation.',
-	'GO'						=> 'Optimiser',
-	'FRAGMENTED'				=> 'Fragmentés',
-	'CREATE_TIME'				=> 'Créée le',
-	'UPDATE_TIME'				=> 'Dernière mise à jour',
-	'CHECK_TIME'				=> 'Vérifiée le',
-	'NOT_FOUND' 				=> 'Aucune table ne requiert une optimisation',
-	'TABLE_NAME'				=> 'Table',
-	'TABLE_SIZE'				=> 'Utilisés',
-	'ALL'						=> 'Total : ',
-	'SUCESS'					=> 'Les tables sélectionnées ont été optimisées avec succès',
-	'NOTHING'					=> 'Aucune sélection',
-	'OPTIMIZER_MESSAGE'			=> '<b>Attention !</b> Selon la taille des tables et l’importance de la fragmentation, l’optimisation pourrait prendre un certain temps.<br />Merci de ne pas quitter cette page jusqu’à la fin de l’optimisation.',
-));
+$lang = array_merge($lang, [
+	'OPTIMIZE_TABLES'         => 'Optimisation des tables de la BDD',
+	'OPTIMIZE_TABLES_EXPLAIN' => 'Cherche les tables de la base de données ayant besoin d’une défragmentation et une optimisation.',
+	'GO'                      => 'Optimiser',
+	'FRAGMENTED'              => 'Fragmentés',
+	'CREATE_TIME'             => 'Créée le',
+	'UPDATE_TIME'             => 'Dernière mise à jour',
+	'CHECK_TIME'              => 'Vérifiée le',
+	'NOT_FOUND'               => 'Aucune table ne requiert une optimisation',
+	'TABLE_NAME'              => 'Table',
+	'TABLE_SIZE'              => 'Utilisés',
+	'ALL'                     => 'Total : ',
+	'SUCESS'                  => 'Les tables sélectionnées ont été optimisées avec succès',
+	'NOTHING'                 => 'Aucune sélection',
+	'OPTIMIZER_MESSAGE'       => '<b>Attention !</b> Selon la taille des tables et l’importance de la fragmentation, l’optimisation pourrait prendre un certain temps.<br />Merci de ne pas quitter cette page jusqu’à la fin de l’optimisation.',
+]);

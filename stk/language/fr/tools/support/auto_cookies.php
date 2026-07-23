@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,14 +38,14 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'AUTO_COOKIES'				=> 'Automatisation des cookies',
-	'AUTO_COOKIES_EXPLAIN'		=> 'Cet outil permet de modifier les réglages des cookies de son forum. Les réglages qui sont suggérés sont corrects dans la plupart des cas. Si l’exactitude des réglages n’est pas certaine, merci de rechercher de l’aide dans le forum de support avant de réaliser une mauvaise manipulation qui pourrait rendre impossible toute connexion à son forum.',
+$lang = array_merge($lang, [
+	'AUTO_COOKIES'         => 'Automatisation des cookies',
+	'AUTO_COOKIES_EXPLAIN' => 'Cet outil permet de modifier les réglages des cookies de son forum. Les réglages qui sont suggérés sont corrects dans la plupart des cas. Si l’exactitude des réglages n’est pas certaine, merci de rechercher de l’aide dans le forum de support avant de réaliser une mauvaise manipulation qui pourrait rendre impossible toute connexion à son forum.',
 
-	'COOKIE_SETTINGS_UPDATED'	=> 'Les réglages des cookies ont été mis à jour.',
-	'COOKIE_DOMAIN'				=> 'Domaine du cookie',
-	'COOKIE_NAME'				=> 'Nom du cookie',
-	'COOKIE_PATH'				=> 'Chemin du cookie',
-	'COOKIE_SECURE'				=> 'Cookie sécurisé',
-	'COOKIE_SECURE_EXPLAIN'		=> 'Si votre site Internet est accessible par l’intermédiaire du protocole SSL (https://), activez cette option sinon laissez sur « Désactivé ». Si vous activez cette option alors que votre site Internet n’est pas accessible par le protocole SSL, des erreurs se produiront lors des redirections.',
-));
+	'COOKIE_SETTINGS_UPDATED' => 'Les réglages des cookies ont été mis à jour.',
+	'COOKIE_DOMAIN'           => 'Domaine du cookie',
+	'COOKIE_NAME'             => 'Nom du cookie',
+	'COOKIE_PATH'             => 'Chemin du cookie',
+	'COOKIE_SECURE'           => 'Cookie sécurisé',
+	'COOKIE_SECURE_EXPLAIN'   => 'Si votre site Internet est accessible par l’intermédiaire du protocole SSL (https://), activez cette option sinon laissez sur « Désactivé ». Si vous activez cette option alors que votre site Internet n’est pas accessible par le protocole SSL, des erreurs se produiront lors des redirections.',
+]);

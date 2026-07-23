@@ -18,7 +18,7 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'ACP_NIGHT'      => 'Modo Noturno (Nightstalker)',
-	'SS_HELPER_NOTY' => 'O SiteSplat BBcore não existe!<br />Faça o download do <a href="https://sitesplat.com" target="_blank">BBcore</a> e copie a pasta BBcore para a pasta da sua extensão sitesplat.',
-	'NIGHT_NOTICE'   => '<div class="phpinfo"><p>Não existem definições específicas para esta extensão.<br />O Nightstalker (Modo Noturno) é ativado clicando no modo Nightstalker a partir da navegação do utilizador.</p></div>',
+	'ACP_NIGHT'      => 'Modo Nocturno (Nightstalker)',
+	'SS_HELPER_NOTY' => 'O SiteSplat BBcore não existe!<br />Transfere o <a href="https://sitesplat.com" target="_blank">BBcore</a> e copia a pasta BBcore para a pasta da tua extensão sitesplat.',
+	'NIGHT_NOTICE'   => '<div class="phpinfo"><p>Não existem definições específicas para esta extensão.<br />O Nightstalker (Modo Nocturno) é activado clicando no modo Nightstalker a partir da navegação do utilizador.</p></div>',
 ]);

@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,10 +18,10 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
-	'NIGHTSTALKER'			=> 'Nightstalker mode',
-	'NORMAL_VIEW'			=> 'Normal mode',
-));
+$lang = array_merge($lang, [
+	'NIGHTSTALKER' => 'Nightstalker mode',
+	'NORMAL_VIEW'  => 'Normal mode',
+]);

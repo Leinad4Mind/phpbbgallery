@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,13 +38,13 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// ACP Module
-	'ACP_BOARD_ANNOUNCEMENTS'				=> 'Anuncios del Foro',
-	'ACP_BOARD_ANNOUNCEMENTS_SETTINGS'		=> 'Ajustes del Anuncio',
+	'ACP_BOARD_ANNOUNCEMENTS'          => 'Anuncios del Foro',
+	'ACP_BOARD_ANNOUNCEMENTS_SETTINGS' => 'Ajustes del Anuncio',
 
 	// ACP Logs
-	'BOARD_ANNOUNCEMENTS_CREATED_LOG'		=> '<strong>Se creó un anuncio del foro.</strong><br>» %s',
-	'BOARD_ANNOUNCEMENTS_UPDATED_LOG'		=> '<strong>Ajustes del anuncio del foro alterados</strong>',
-	'BOARD_ANNOUNCEMENTS_DELETED_LOG'		=> '<strong>Se eliminó un anuncio del foro.</strong><br>» %s',
-));
+	'BOARD_ANNOUNCEMENTS_CREATED_LOG' => '<strong>Se creó un anuncio del foro.</strong><br>» %s',
+	'BOARD_ANNOUNCEMENTS_UPDATED_LOG' => '<strong>Ajustes del anuncio del foro alterados</strong>',
+	'BOARD_ANNOUNCEMENTS_DELETED_LOG' => '<strong>Se eliminó un anuncio del foro.</strong><br>» %s',
+]);

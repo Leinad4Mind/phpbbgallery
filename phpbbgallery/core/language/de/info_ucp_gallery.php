@@ -23,9 +23,9 @@ if (empty($lang) || !is_array($lang))
 	$lang = [];
 }
 
-$lang = array_merge($lang, array(
-	'UCP_GALLERY'						=> 'Galerie',
-	'UCP_GALLERY_PERSONAL_ALBUMS'		=> 'Persönliche Alben verwalten',
-	'UCP_GALLERY_SETTINGS'				=> 'Persönliche Einstellungen',
-	'UCP_GALLERY_WATCH'					=> 'Benachrichtigungen verwalten',
-));
+$lang = array_merge($lang, [
+	'UCP_GALLERY'                 => 'Galerie',
+	'UCP_GALLERY_PERSONAL_ALBUMS' => 'Persönliche Alben verwalten',
+	'UCP_GALLERY_SETTINGS'        => 'Persönliche Einstellungen',
+	'UCP_GALLERY_WATCH'           => 'Benachrichtigungen verwalten',
+]);

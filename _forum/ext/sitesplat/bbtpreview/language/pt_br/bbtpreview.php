@@ -19,5 +19,5 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'TOPICSTART' => 'Início do tópico',
-	'TOPICTIME'  => 'Tempo habilitado do tópico',
+	'TOPICTIME'  => 'Tempo ativo do tópico',
 ]);

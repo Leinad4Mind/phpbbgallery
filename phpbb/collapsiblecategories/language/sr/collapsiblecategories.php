@@ -9,8 +9,8 @@
  */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,9 +37,9 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'COLLAPSIBLE_CATEGORIES_TITLE'	=> array(
+$lang = array_merge($lang, [
+	'COLLAPSIBLE_CATEGORIES_TITLE' => [
 		0 => 'Sakrij kategoriju',
 		1 => 'Prikaži kategoriju',
-	),
-));
+	],
+]);

@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -47,12 +47,12 @@ if (empty($lang) || !is_array($lang))
 *
 * Translators: Feel free to not translate these language strings
 */
-$lang = array_merge($lang, array(
-	'EXCEPTION_FIELD_MISSING'		=> 'Obligatorisk felt mangler',
-	'EXCEPTION_INVALID_ARGUMENT'	=> 'Ugyldigt argument angivet til `%1$s`. Årsag: %2$s',
-	'EXCEPTION_OUT_OF_BOUNDS'		=> 'Feltet `%1$s` modtog data ud over sine grænser',
-	'EXCEPTION_TOO_LONG'			=> 'Inputtet var længere end den maksimale længde.',
-	'EXCEPTION_NOT_UNIQUE'			=> 'Inputtet var ikke unikt.',
-	'EXCEPTION_UNEXPECTED_VALUE'	=> 'Feltet `%1$s` modtog uventede data. Årsag: %2$s',
-	'EXCEPTION_ILLEGAL_CHARACTERS'	=> 'Inputtet indeholder tegn som ikke er tilladte.',
-));
+$lang = array_merge($lang, [
+	'EXCEPTION_FIELD_MISSING'      => 'Obligatorisk felt mangler',
+	'EXCEPTION_INVALID_ARGUMENT'   => 'Ugyldigt argument angivet til `%1$s`. Årsag: %2$s',
+	'EXCEPTION_OUT_OF_BOUNDS'      => 'Feltet `%1$s` modtog data ud over sine grænser',
+	'EXCEPTION_TOO_LONG'           => 'Inputtet var længere end den maksimale længde.',
+	'EXCEPTION_NOT_UNIQUE'         => 'Inputtet var ikke unikt.',
+	'EXCEPTION_UNEXPECTED_VALUE'   => 'Feltet `%1$s` modtog uventede data. Årsag: %2$s',
+	'EXCEPTION_ILLEGAL_CHARACTERS' => 'Inputtet indeholder tegn som ikke er tilladte.',
+]);

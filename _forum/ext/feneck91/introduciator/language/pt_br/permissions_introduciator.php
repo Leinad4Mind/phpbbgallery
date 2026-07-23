@@ -9,8 +9,8 @@
  * @translation Leinad4Mind [Brazilian Portuguese [pt_br]] (2026)
  */
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;

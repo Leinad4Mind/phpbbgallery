@@ -1,11 +1,11 @@
-Subject: New comment notification - "{IMAGE_NAME}"
+Subject: Notificação de novo comentário - "{IMAGE_NAME}"
 
-Hello {USERNAME},
+Olá, {USERNAME},
 
-You are receiving this notification because you are watching the image, "{IMAGE_NAME}" at "{SITENAME}". This image has received a new comment since your last visit. You can use the following link to read the comment.
+Estás a receber esta notificação porque estás a acompanhar a imagem "{IMAGE_NAME}" em "{SITENAME}". Esta imagem recebeu um novo comentário desde a tua última visita. Podes utilizar o seguinte link para ler o comentário:
 
 {U_IMAGE}
 
-If you no longer wish to watch this image/album you can click the "Unsubscribe image" link found in the link above.
+Se já não desejas acompanhar esta imagem/álbum, podes clicar no link "Cancelar subscrição da imagem" no link acima.
 
 {EMAIL_SIG}

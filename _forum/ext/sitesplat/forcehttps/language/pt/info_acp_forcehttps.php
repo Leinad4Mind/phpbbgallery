@@ -21,6 +21,6 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'FORCEHTTPS_NOTICE' => '<div class="phpinfo"><p>O seu fórum encontra-se a partir de agora corretamente configurado para o uso restrito sendo processado ativamente debaixo do modo base encriptado pelo HTTPS. <br /><strong>Para que isto ocorra, parte-se naturalmente do pressuposto e é claro de exigir que você tem um certificado de origem num SSL válido e que a mesma configuração do seu servidor já o havia ativado prévia e corretamente.</strong></p></div>',
-	'SS_HELPER_NOTY'    => 'O SiteSplat BBcore não existe!<br />Faça o download do <a href="http://sitesplat.com" target="_blank">BBcore</a> e copie a pasta BBcore para a pasta da sua extensão sitesplat.',
+	'FORCEHTTPS_NOTICE' => '<div class="phpinfo"><p>O teu fórum está agora corretamente configurado para funcionar em modo HTTPS. <br /><strong>Isto pressupõe que o certificado SSL e a configuração do servidor já tenham sido previamente configurados corretamente.</strong></p></div>',
+	'SS_HELPER_NOTY'    => 'O SiteSplat BBcore não existe!<br />Transfere o <a href="http://sitesplat.com" target="_blank">BBcore</a> e copia a pasta BBcore para a pasta da tua extensão sitesplat.',
 ]);

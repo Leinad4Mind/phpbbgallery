@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -38,24 +38,24 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'CLOSE_FORM'				=> 'Cancel',
-	'OPEN_FORM'					=> 'Form Mode',
-	'OPEN_POST'					=> 'Post Mode',
-	'FORM_MOD_PREVIEW'		 	=> 'Switch to preview keeping the current form data...',
-	'FORM_MOD_SUBMIT'			=> 'Add the form data to message and post...',
-	'OPEN_FORM_EXPLAIN'			=> 'Switch to Form Mode...',
-	'OPEN_POST_EXPLAIN'			=> 'Switch to Post Mode...',
-	'REFRESHING_FORM'			=> 'The current selected Forum is',
-	'REQUIRED'				 	=> 'You have not entered all the required elements!',
-	'MANDATORY'					=> 'Items marked with the asterisk are mandatory.',
+	'CLOSE_FORM'        => 'Cancel',
+	'OPEN_FORM'         => 'Form Mode',
+	'OPEN_POST'         => 'Post Mode',
+	'FORM_MOD_PREVIEW'  => 'Switch to preview keeping the current form data...',
+	'FORM_MOD_SUBMIT'   => 'Add the form data to message and post...',
+	'OPEN_FORM_EXPLAIN' => 'Switch to Form Mode...',
+	'OPEN_POST_EXPLAIN' => 'Switch to Post Mode...',
+	'REFRESHING_FORM'   => 'The current selected Forum is',
+	'REQUIRED'          => 'You have not entered all the required elements!',
+	'MANDATORY'         => 'Items marked with the asterisk are mandatory.',
 
-	'ERROR_MANDATORY'			=> 'The field %s is mandatory.',
-	'ERROR_MIN_MAX_CHECKBOX'	=> 'You need to select between %d and %d items for %s.',
-	'ERROR_MIN_CHECKBOX'		=> [
+	'ERROR_MANDATORY'        => 'The field %s is mandatory.',
+	'ERROR_MIN_MAX_CHECKBOX' => 'You need to select between %d and %d items for %s.',
+	'ERROR_MIN_CHECKBOX'     => [
 		1 => 'You need to select at least %d item for %s.',
 		2 => 'You need to select at least %d items for %s.',
 	],
-	'ERROR_MAX_CHECKBOX'		=> [
+	'ERROR_MAX_CHECKBOX' => [
 		1 => 'You can select at most %d item for %s.',
 		2 => 'You can select at most %d items for %s.',
 	],

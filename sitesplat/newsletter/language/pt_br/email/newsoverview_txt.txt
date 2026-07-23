@@ -1,0 +1,17 @@
+Subject: Últimos tópicos em "{SITENAME}"
+
+{SITENAME}
+
+Últimos Tópicos
+Olá,
+É hora de mais uma newsletter.
+Esperamos ver você novamente em {BOARD_URL}.
+
+Fórum				Tópico
+<!-- BEGIN mailrow -->
+{mailrow.U_FORUM}				{mailrow.U_TOPIC}
+<!-- END mailrow -->
+
+
+{EMAIL_SIG}
+Não quer mais receber a nossa newsletter? Clique aqui: {NEWSLETTER_OPTOUT}

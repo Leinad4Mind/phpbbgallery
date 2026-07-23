@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,19 +38,19 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'RESYNC_USER_GROUPS'			=> 'Resynchroniser les groupes d’utilisateurs',
-	'RESYNC_USER_GROUPS_EXPLAIN'	=> 'Cet outil vérifie si les utilisateurs sont bien membres des groupes par défaut <em>(« Utilisateurs enregistrés », « Utilisateurs COPPA enregistrés » et « Nouveaux utilisateurs enregistrés »)</em>.',
-	'RESYNC_USER_GROUPS_NO_RUN'		=> 'Tous les groupes semblent être à jour !',
-	'RESYNC_USER_GROUPS_SETTINGS'	=> 'Resynchroniser les réglages',
-	'RUN_BOTH_FINISHED'				=> 'Tous les groupes d’utilisateurs ont été resynchronisés !',
-	'RUN_RNR'						=> 'Resynchroniser les « Nouveaux utilisateurs enregistrés »',
-	'RUN_RNR_EXPLAIN'				=> 'Cela mettra à jour le groupe « Nouveaux utilisateurs enregistrés » afin qu’il contienne tous les utilisateurs qui correspondent aux critères définis dans le panneau d’administration.',
-	'RUN_RNR_FINISHED'				=> 'Le groupe des « Nouveaux utilisateurs enregistrés » a été resynchronisé.',
-	'RUN_RNR_NOT_FINISHED'			=> 'Le groupe des « Nouveaux utilisateurs enregistrés » est en cours de resynchronisation. Merci de ne pas interrompre cette opération.',
-	'RUN_RR'						=> 'Resynchroniser les « Utilisateurs enregistrés »',
-	'RUN_RR_EXPLAIN'				=> 'L’outil a déterminé que tous les utilisateurs du forum ne sont pas membres du groupe des « Utilisateurs <em>COPPA</em> enregistrés ». Confirmer la resynchronisation des groupes.<br /><strong>Note :</strong> Si le forum utilise les utilisateurs COPPA, les utilisateurs n’ayant pas entré une date de naissance seront placés dans le groupe des « Utilisateurs COPPA enregistrés » !',
-	'RUN_RR_FINISHED'				=> 'Les utilisateurs ont été synchronisés.',
+$lang = array_merge($lang, [
+	'RESYNC_USER_GROUPS'          => 'Resynchroniser les groupes d’utilisateurs',
+	'RESYNC_USER_GROUPS_EXPLAIN'  => 'Cet outil vérifie si les utilisateurs sont bien membres des groupes par défaut <em>(« Utilisateurs enregistrés », « Utilisateurs COPPA enregistrés » et « Nouveaux utilisateurs enregistrés »)</em>.',
+	'RESYNC_USER_GROUPS_NO_RUN'   => 'Tous les groupes semblent être à jour !',
+	'RESYNC_USER_GROUPS_SETTINGS' => 'Resynchroniser les réglages',
+	'RUN_BOTH_FINISHED'           => 'Tous les groupes d’utilisateurs ont été resynchronisés !',
+	'RUN_RNR'                     => 'Resynchroniser les « Nouveaux utilisateurs enregistrés »',
+	'RUN_RNR_EXPLAIN'             => 'Cela mettra à jour le groupe « Nouveaux utilisateurs enregistrés » afin qu’il contienne tous les utilisateurs qui correspondent aux critères définis dans le panneau d’administration.',
+	'RUN_RNR_FINISHED'            => 'Le groupe des « Nouveaux utilisateurs enregistrés » a été resynchronisé.',
+	'RUN_RNR_NOT_FINISHED'        => 'Le groupe des « Nouveaux utilisateurs enregistrés » est en cours de resynchronisation. Merci de ne pas interrompre cette opération.',
+	'RUN_RR'                      => 'Resynchroniser les « Utilisateurs enregistrés »',
+	'RUN_RR_EXPLAIN'              => 'L’outil a déterminé que tous les utilisateurs du forum ne sont pas membres du groupe des « Utilisateurs <em>COPPA</em> enregistrés ». Confirmer la resynchronisation des groupes.<br /><strong>Note :</strong> Si le forum utilise les utilisateurs COPPA, les utilisateurs n’ayant pas entré une date de naissance seront placés dans le groupe des « Utilisateurs COPPA enregistrés » !',
+	'RUN_RR_FINISHED'             => 'Les utilisateurs ont été synchronisés.',
 
-	'SELECT_RUN_GROUP'	=> 'Merci de sélectionner au moins un type de groupe qui sera resynchronisé.',
-));
+	'SELECT_RUN_GROUP' => 'Merci de sélectionner au moins un type de groupe qui sera resynchronisé.',
+]);

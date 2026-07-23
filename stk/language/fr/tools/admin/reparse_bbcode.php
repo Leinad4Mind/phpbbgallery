@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,31 +38,31 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'REPARSE_ALL'				=> 'Réanalyser tous les BBCodes',
-	'REPARSE_ALL_EXPLAIN'		=> 'Si cette option est activée, la réanalyse du BBCode vérifiera tout le contenu du forum. Par défaut, l’outil réanalysera seulement les messages, les messages privés et les signatures qui ont été précédemment analysés par phpBB. Cette option sera ignorée si des messages ou des messages privés ont été spécifiés ci-dessus.',
-	'REPARSE_BBCODE'			=> 'Réanalyser le BBCode',
-	'REPARSE_BBCODE_COMPLETE'	=> 'Les BBCodes ont été réanalysés.',
-	'REPARSE_BBCODE_PROGRESS'	=> 'Étape %1$d terminée. Début de l’étape %2$d dans un court instant…',
-	'REPARSE_BBCODE_SWITCH_MODE'	=> array(
-		1	=> 'Réanalyse des messages terminée, début de la réanalyse des messages privés.',
-		2	=> 'Réanalyse des messages privés terminée, début de la réanalyse des signatures.',
-	),
-	'REPARSE_BBCODE_MODE'			=> array(
-		0	=> 'Réanalyse des messages en cours.',
-		1	=> 'Réanalyse des messages privés en cours.',
-		2	=> 'Réanalyse des signatures en cours.',
-	),
-	'REPARSE_IDS_INVALID'			=> 'Les IDs envoyés ne sont pas valides. Merci de s’assurer que chaque ID soit séparé par une virgule (exemple : 1,2,3,5,8,13).',
-	'REPARSE_IDS_EMPTY'				=> 'Aucun mode de réanalyse n’a été sélectionné. Si choisir un mode n’est pas évident, vérifier la case <strong>Réanalyser tous les BBCodes</strong>. ',
-	'REPARSE_POST_IDS'				=> 'Réanalyser les messages spécifiques',
-	'REPARSE_POST_IDS_EXPLAIN'		=> 'Réanalyse seulement les messages spécifiques. Chaque ID doit être séparé par une virgule (exemple : 1,2,3,5,8,13).',
-	'REPARSE_PM_IDS'				=> 'Réanalyser les messages privés spécifiques',
-	'REPARSE_PM_IDS_EXPLAIN'		=> 'Réanalyse seulement les messages privés spécifiques. Chaque ID doit être séparé par une virgule (exemple : 1,2,3,5,8,13).',
-	'REPARSE_FORUMS'				=> 'Réanalyser les messages de forums spécifiques',
-	'REPARSE_FORUMS_EXPLAIN'		=> 'Sélectionner plusieurs forums tout ou partie en utilisant la combinaison de la souris et du clavier.',
-	'REPARSE_SIG'					=> 'Réanalyser uniquement les signatures des membres',
-	'REPARSE_SIG_EXPLAIN'			=> 'Permet de réanalyser uniquement les BBCodes présents dans les données utilisateur.',
-	'CREATE_BACKUP_TABLE'			=> 'Créer une sauvegarde',
-	'CREATE_BACKUP_TABLE_EXPLAIN'	=> 'Une copie de la table des BBCodes de la base de données sera créée, à partir de laquelle il sera possible de restaurer les messages en cas de panne ou d’arrêt d’urgence.'
-));
+$lang = array_merge($lang, [
+	'REPARSE_ALL'                => 'Réanalyser tous les BBCodes',
+	'REPARSE_ALL_EXPLAIN'        => 'Si cette option est activée, la réanalyse du BBCode vérifiera tout le contenu du forum. Par défaut, l’outil réanalysera seulement les messages, les messages privés et les signatures qui ont été précédemment analysés par phpBB. Cette option sera ignorée si des messages ou des messages privés ont été spécifiés ci-dessus.',
+	'REPARSE_BBCODE'             => 'Réanalyser le BBCode',
+	'REPARSE_BBCODE_COMPLETE'    => 'Les BBCodes ont été réanalysés.',
+	'REPARSE_BBCODE_PROGRESS'    => 'Étape %1$d terminée. Début de l’étape %2$d dans un court instant…',
+	'REPARSE_BBCODE_SWITCH_MODE' => [
+		1 => 'Réanalyse des messages terminée, début de la réanalyse des messages privés.',
+		2 => 'Réanalyse des messages privés terminée, début de la réanalyse des signatures.',
+	],
+	'REPARSE_BBCODE_MODE' => [
+		0 => 'Réanalyse des messages en cours.',
+		1 => 'Réanalyse des messages privés en cours.',
+		2 => 'Réanalyse des signatures en cours.',
+	],
+	'REPARSE_IDS_INVALID'         => 'Les IDs envoyés ne sont pas valides. Merci de s’assurer que chaque ID soit séparé par une virgule (exemple : 1,2,3,5,8,13).',
+	'REPARSE_IDS_EMPTY'           => 'Aucun mode de réanalyse n’a été sélectionné. Si choisir un mode n’est pas évident, vérifier la case <strong>Réanalyser tous les BBCodes</strong>. ',
+	'REPARSE_POST_IDS'            => 'Réanalyser les messages spécifiques',
+	'REPARSE_POST_IDS_EXPLAIN'    => 'Réanalyse seulement les messages spécifiques. Chaque ID doit être séparé par une virgule (exemple : 1,2,3,5,8,13).',
+	'REPARSE_PM_IDS'              => 'Réanalyser les messages privés spécifiques',
+	'REPARSE_PM_IDS_EXPLAIN'      => 'Réanalyse seulement les messages privés spécifiques. Chaque ID doit être séparé par une virgule (exemple : 1,2,3,5,8,13).',
+	'REPARSE_FORUMS'              => 'Réanalyser les messages de forums spécifiques',
+	'REPARSE_FORUMS_EXPLAIN'      => 'Sélectionner plusieurs forums tout ou partie en utilisant la combinaison de la souris et du clavier.',
+	'REPARSE_SIG'                 => 'Réanalyser uniquement les signatures des membres',
+	'REPARSE_SIG_EXPLAIN'         => 'Permet de réanalyser uniquement les BBCodes présents dans les données utilisateur.',
+	'CREATE_BACKUP_TABLE'         => 'Créer une sauvegarde',
+	'CREATE_BACKUP_TABLE_EXPLAIN' => 'Une copie de la table des BBCodes de la base de données sera créée, à partir de laquelle il sera possible de restaurer les messages en cas de panne ou d’arrêt d’urgence.'
+]);

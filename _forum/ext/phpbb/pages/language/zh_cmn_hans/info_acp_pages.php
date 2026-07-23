@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,13 +38,13 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// ACP modules
-	'ACP_PAGES'				=> '单页',
-	'ACP_PAGES_MANAGE'		=> '管理单页',
+	'ACP_PAGES'        => '单页',
+	'ACP_PAGES_MANAGE' => '管理单页',
 
 	// Logs
-	'ACP_PAGES_ADDED_LOG'	=> '<strong>增加了一个单页</strong><br />» %s',
-	'ACP_PAGES_EDITED_LOG'	=> '<strong>修改了一个单页</strong><br />» %s',
-	'ACP_PAGES_DELETED_LOG'	=> '<strong>删除了一个单页</strong><br />» %s',
-));
+	'ACP_PAGES_ADDED_LOG'   => '<strong>增加了一个单页</strong><br />» %s',
+	'ACP_PAGES_EDITED_LOG'  => '<strong>修改了一个单页</strong><br />» %s',
+	'ACP_PAGES_DELETED_LOG' => '<strong>删除了一个单页</strong><br />» %s',
+]);

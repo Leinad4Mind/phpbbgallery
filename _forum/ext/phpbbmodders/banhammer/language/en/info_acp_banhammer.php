@@ -17,11 +17,11 @@ if (!defined('IN_PHPBB'))
 }
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -35,8 +35,8 @@ if (empty($lang) || !is_array($lang))
 // You do not need this where single placeholders are used, e.g. 'Message %d' is fine
 // equally where a string contains only two placeholders which are used to wrap text
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
-$lang = array_merge($lang, array(
-	'ACP_BH_TITLE'		=> 'Ban Hammer',
-	'ACP_BH_SETTINGS'	=> 'Ban Hammer Settings',
-	'BH_SETTINGS_SUCCESS'		=> 'Ban Hammer settings were successfully updated',
-));
+$lang = array_merge($lang, [
+	'ACP_BH_TITLE'        => 'Ban Hammer',
+	'ACP_BH_SETTINGS'     => 'Ban Hammer Settings',
+	'BH_SETTINGS_SUCCESS' => 'Ban Hammer settings were successfully updated',
+]);

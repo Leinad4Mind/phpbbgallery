@@ -46,23 +46,23 @@ $lang = array_merge($lang, [
 	'BBPOINTS'         => 'BBpoints',
 	'POLL'             => 'Última votação',
 	'NEWSLETTER'       => 'Newsletter',
-	'SIGN_IN_NEWS'     => 'Inscreva-se na nossa newsletter',
+	'SIGN_IN_NEWS'     => 'Inscreve-te na nossa newsletter',
 	'SUBSCRIBE_BTN'    => 'Subscrever',
 	'DOWNLOADS'        => 'Downloads',
 	'UNREAD'           => 'não lidas',
 
 	'INFOMSG'           => 'Informação',
 	'VOTE_NOT_POSIIBLE' => 'Mudança de votos não é possível',
-	'VOTE_SAVED'        => 'O seu voto está guardado',
-	'VOTE_CHANGED'      => 'O seu voto foi alterado',
-	'NOT_FOUND'         => 'A sua votação não foi encontrada',
+	'VOTE_SAVED'        => 'O teu voto está guardado',
+	'VOTE_CHANGED'      => 'O teu voto foi alterado',
+	'NOT_FOUND'         => 'A tua votação não foi encontrada',
 
 	'STAFF'         => 'Equipa (Staff) online',
 	'STAFF_UNKNOWN' => 'N/D',
 
 	'DONATIONS'       => 'Doações',
-	'DONATE_ALSO'     => 'Pronto para doar? Incrível! Aqui tem.',
+	'DONATE_ALSO'     => 'Pronto para doar? Incrível! Aqui tens.',
 	'MEMBERSHIPS'     => 'Assinaturas (Membros VIP)',
-	'MEMBERSHIPS_CTA' => 'Já tem o seu pacote de Assinatura?',
+	'MEMBERSHIPS_CTA' => 'Já tens o teu pacote de Assinatura?',
 	'HOT_TOPICS'      => 'Tópicos populares'
 ]);

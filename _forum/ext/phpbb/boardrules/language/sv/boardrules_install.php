@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,12 +38,12 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES_SAMPLE_CATEGORY_TITLE'		=> 'Exemplarisk regelkategori',
-	'BOARDRULES_SAMPLE_CATEGORY_MESSAGE'	=> 'Detta är en exemplarisk kategori för forumreglerna. Kategorier kan innehålla grupper av liknande forumregler. Kategorimeddelanden (som detta) visas ej på regelsidan.',
-	'BOARDRULES_SAMPLE_CATEGORY_ANCHOR'		=> 'exemplarisk-kategori',
+$lang = array_merge($lang, [
+	'BOARDRULES_SAMPLE_CATEGORY_TITLE'   => 'Exemplarisk regelkategori',
+	'BOARDRULES_SAMPLE_CATEGORY_MESSAGE' => 'Detta är en exemplarisk kategori för forumreglerna. Kategorier kan innehålla grupper av liknande forumregler. Kategorimeddelanden (som detta) visas ej på regelsidan.',
+	'BOARDRULES_SAMPLE_CATEGORY_ANCHOR'  => 'exemplarisk-kategori',
 
-	'BOARDRULES_SAMPLE_RULE_TITLE'			=> 'Exemplarisk regel',
-	'BOARDRULES_SAMPLE_RULE_MESSAGE'		=> 'Detta är en exemplarisk regel för forumreglerna. Allt verkar fungera som det ska. Du kan uppdatera eller radera denna regel och kategori och sedan skapa egna forumregler.',
-	'BOARDRULES_SAMPLE_RULE_ANCHOR'			=> 'exemplarisk-regel',
-));
+	'BOARDRULES_SAMPLE_RULE_TITLE'   => 'Exemplarisk regel',
+	'BOARDRULES_SAMPLE_RULE_MESSAGE' => 'Detta är en exemplarisk regel för forumreglerna. Allt verkar fungera som det ska. Du kan uppdatera eller radera denna regel och kategori och sedan skapa egna forumregler.',
+	'BOARDRULES_SAMPLE_RULE_ANCHOR'  => 'exemplarisk-regel',
+]);

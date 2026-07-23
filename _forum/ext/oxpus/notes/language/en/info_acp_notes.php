@@ -8,8 +8,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -37,7 +37,7 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'NOTES_NOTICE'				    => '<div class="phpinfo"><p>Make sure to check the Group permission and adjust it as needed. By default the Registered user group doesn\'t have access personal notes.</p></div></p></div>',
-	'PHP_ERROR' 	=> 'This extension requires PHP 7.3.0 (or greater).',
-	'PHPBB_ERROR' 	=> 'This extension requires phpBB 3.3.0 (or greater).',
+	'NOTES_NOTICE' => '<div class="phpinfo"><p>Make sure to check the Group permission and adjust it as needed. By default the Registered user group doesn\'t have access personal notes.</p></div></p></div>',
+	'PHP_ERROR'    => 'This extension requires PHP 7.3.0 (or greater).',
+	'PHPBB_ERROR'  => 'This extension requires phpBB 3.3.0 (or greater).',
 ]);

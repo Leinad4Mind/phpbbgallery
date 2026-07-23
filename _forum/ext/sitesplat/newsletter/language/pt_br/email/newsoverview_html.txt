@@ -870,7 +870,7 @@ Subject: Últimas Novidades "{SITENAME}"
 					</div>
 
 					<div style="Margin-left: 20px;Margin-right: 20px;">
-						<p style="Margin-top: 0;Margin-bottom: 20px;text-align: center;">Enquanto estiveste fora a laurear a pevide, houve nova atividade no fórum. Vê a nova tendência. Estamos animados para te ver novamente!</p>
+						<p style="Margin-top: 0;Margin-bottom: 20px;text-align: center;">Enquanto você esteve fora, houve nova atividade no fórum. Veja o que está bombando. Estamos animados para vê-lo novamente!</p>
 					    <p style="Margin-top: 10px;Margin-bottom: 20px;text-align: center;">{EMAIL_SIG}</p>
 					</div>
 
@@ -945,7 +945,7 @@ Subject: Últimas Novidades "{SITENAME}"
               <a lang="en" href="{U_BOARD}" style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #99b0b8;" target="_blank">Preferências</a>
               &nbsp;&nbsp;|&nbsp;&nbsp;
             </span>
-              <a href="{NEWSLETTER_OPTOUT}" style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #99b0b8;" target="_blank">Cancelar Subscrição</a>
+              <a href="{NEWSLETTER_OPTOUT}" style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #99b0b8;" target="_blank">Cancelar Assinatura</a>
 						</div>
 					</div>
 				</div>

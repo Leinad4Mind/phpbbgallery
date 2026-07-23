@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -48,15 +48,15 @@ if (empty($lang) || !is_array($lang))
 *
 * Translators: Feel free to not translate these language strings
 */
-$lang = array_merge($lang, array(
-	'EXCEPTION_FIELD_MISSING'		=> 'Falta un campo requerido',
-	'EXCEPTION_INVALID_ARGUMENT'	=> 'Argumento no válido para `%1$s`. Razón: %2$s',
-	'EXCEPTION_OUT_OF_BOUNDS'		=> 'El campo `%1$s` tiene datos recibidos más allá de sus límites',
-	'EXCEPTION_TOO_LONG'			=> 'La entrada era más larga que la longitud máxima.',
-	'EXCEPTION_NOT_UNIQUE'			=> 'La entrada no es única.',
-	'EXCEPTION_UNEXPECTED_VALUE'	=> 'El campo `%1$s` ha recibido datos inesperados. Razón: %2$s',
-	'EXCEPTION_ILLEGAL_CHARACTERS'	=> 'La entrada contiene caracteres no válidos.',
+$lang = array_merge($lang, [
+	'EXCEPTION_FIELD_MISSING'      => 'Falta un campo requerido',
+	'EXCEPTION_INVALID_ARGUMENT'   => 'Argumento no válido para `%1$s`. Razón: %2$s',
+	'EXCEPTION_OUT_OF_BOUNDS'      => 'El campo `%1$s` tiene datos recibidos más allá de sus límites',
+	'EXCEPTION_TOO_LONG'           => 'La entrada era más larga que la longitud máxima.',
+	'EXCEPTION_NOT_UNIQUE'         => 'La entrada no es única.',
+	'EXCEPTION_UNEXPECTED_VALUE'   => 'El campo `%1$s` ha recibido datos inesperados. Razón: %2$s',
+	'EXCEPTION_ILLEGAL_CHARACTERS' => 'La entrada contiene caracteres no válidos.',
 
 	// Translators: do not change this
-	'EXCEPTION_WRONG_DATA_LANG'		=> $lang['WRONG_DATA_LANG'],
-));
+	'EXCEPTION_WRONG_DATA_LANG' => $lang['WRONG_DATA_LANG'],
+]);

@@ -8,8 +8,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -36,12 +36,12 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'REDIRECT_LOGIN_ANNOUNCE_TOPIC'	=> 'You have been successfully logged in. A new announcement has been posted since your last visit which you will now be redirected to.',
-	'REDIRECT_LOGIN_GROUP_TOPIC'	=> 'You have been successfully logged in. A new group message has been posted since your last visit which you will now be redirected to.',
-	'REDIRECT_LOGIN_WELCOME_TOPIC'	=> 'You have been successfully logged in. As this is your first visit you will now be redirected to our welcome topic.',
+$lang = array_merge($lang, [
+	'REDIRECT_LOGIN_ANNOUNCE_TOPIC' => 'You have been successfully logged in. A new announcement has been posted since your last visit which you will now be redirected to.',
+	'REDIRECT_LOGIN_GROUP_TOPIC'    => 'You have been successfully logged in. A new group message has been posted since your last visit which you will now be redirected to.',
+	'REDIRECT_LOGIN_WELCOME_TOPIC'  => 'You have been successfully logged in. As this is your first visit you will now be redirected to our welcome topic.',
 
-	'REDIRECT_REFRESH_ANNOUNCE'		=> '%sProceed to announcement topic%s',
-	'REDIRECT_REFRESH_GROUP' 		=> '%sProceed to group topic%s',
-	'REDIRECT_REFRESH_WELCOME'		=> '%sProceed to welcome topic%s',
-));
+	'REDIRECT_REFRESH_ANNOUNCE' => '%sProceed to announcement topic%s',
+	'REDIRECT_REFRESH_GROUP'    => '%sProceed to group topic%s',
+	'REDIRECT_REFRESH_WELCOME'  => '%sProceed to welcome topic%s',
+]);

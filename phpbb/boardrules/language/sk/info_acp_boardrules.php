@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,13 +37,13 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// ACP modules
-	'ACP_BOARDRULES'				=> 'Pravidlá fóra',
-	'ACP_BOARDRULES_MANAGE'			=> 'Spravovať pravidlá',
-	'ACP_BOARDRULES_SETTINGS'		=> 'Nastavenia pravidiel',
+	'ACP_BOARDRULES'          => 'Pravidlá fóra',
+	'ACP_BOARDRULES_MANAGE'   => 'Spravovať pravidlá',
+	'ACP_BOARDRULES_SETTINGS' => 'Nastavenia pravidiel',
 
 	// ACP Logs
-	'ACP_BOARDRULES_SETTINGS_LOG'	=> '<strong>Nastavenia pravidiel zmenené</strong>',
-	'ACP_BOARDRULES_NOTIFY_LOG'		=> '<strong>Správa o zmene pravidiel odoslaná všetkým užívateľom</strong>',
-));
+	'ACP_BOARDRULES_SETTINGS_LOG' => '<strong>Nastavenia pravidiel zmenené</strong>',
+	'ACP_BOARDRULES_NOTIFY_LOG'   => '<strong>Správa o zmene pravidiel odoslaná všetkým užívateľom</strong>',
+]);

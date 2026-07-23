@@ -8,8 +8,8 @@
  */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -38,30 +38,30 @@ if (empty($lang) || !is_array($lang))
  *
  */
 
-$lang = array_merge($lang, array(
-	'ALL'						=> 'All',
+$lang = array_merge($lang, [
+	'ALL' => 'All',
 
-	'FF_CLEAR_FILTER'			=> 'Clear filters',
-	'FILTER_BY'					=> 'Filter Username by',
-	'FOE'						=> 'Made a foe of',
-	'FRIEND'					=> 'Made friends with',
-	'FRIENDS_AND_FOES_EXPLAIN'	=> 'This gives you a list of the friends & foes of each member (where set).',
+	'FF_CLEAR_FILTER'          => 'Clear filters',
+	'FILTER_BY'                => 'Filter Username by',
+	'FOE'                      => 'Made a foe of',
+	'FRIEND'                   => 'Made friends with',
+	'FRIENDS_AND_FOES_EXPLAIN' => 'This gives you a list of the friends & foes of each member (where set).',
 
-	'NO_FF_DATA'				=> 'There are no friends and foes to display',
+	'NO_FF_DATA' => 'There are no friends and foes to display',
 
-	'OTHER'						=> 'Other',
+	'OTHER' => 'Other',
 
-	'SELECT_CHAR'				=> 'Select character',
-	'SORT_FOE'					=> 'Foes',
-	'SORT_FRIEND'				=> 'Friends',
-	'SORT_USERNAME'				=> 'Username',
+	'SELECT_CHAR'   => 'Select character',
+	'SORT_FOE'      => 'Foes',
+	'SORT_FRIEND'   => 'Friends',
+	'SORT_USERNAME' => 'Username',
 
-	'TOTAL_USERS'				=> 'Freinds & Foes count : <strong>%1$s</strong>',
+	'TOTAL_USERS' => 'Freinds & Foes count : <strong>%1$s</strong>',
 
-	'YES'						=> 'Yes',
+	'YES' => 'Yes',
 
 	// Translators - set these to whatever is most appropriate in your language
 	// These are used to populate the filter keys
-	'START_CHARACTER'		=> 'A',
-	'END_CHARACTER'			=> 'Z',
-));
+	'START_CHARACTER' => 'A',
+	'END_CHARACTER'   => 'Z',
+]);

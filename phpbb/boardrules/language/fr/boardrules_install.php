@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,12 +38,12 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES_SAMPLE_CATEGORY_TITLE'		=> 'Exemple de catégorie de règles',
-	'BOARDRULES_SAMPLE_CATEGORY_MESSAGE'	=> 'Ceci est une catégorie d’exemple lors d’installation des règles de forum. Les catégories contiennent des groupes de règles connexes. Les intitulés de catégorie (comme celui-ci) ne sont pas affichés sur la page des règles.',
-	'BOARDRULES_SAMPLE_CATEGORY_ANCHOR'		=> 'modele-categorie',
+$lang = array_merge($lang, [
+	'BOARDRULES_SAMPLE_CATEGORY_TITLE'   => 'Exemple de catégorie de règles',
+	'BOARDRULES_SAMPLE_CATEGORY_MESSAGE' => 'Ceci est une catégorie d’exemple lors d’installation des règles de forum. Les catégories contiennent des groupes de règles connexes. Les intitulés de catégorie (comme celui-ci) ne sont pas affichés sur la page des règles.',
+	'BOARDRULES_SAMPLE_CATEGORY_ANCHOR'  => 'modele-categorie',
 
-	'BOARDRULES_SAMPLE_RULE_TITLE'			=> 'Exemple de règle',
-	'BOARDRULES_SAMPLE_RULE_MESSAGE'		=> 'Ceci est un exemple de règle lors de l’installation des règles de forum. Tout semble fonctionner. Vous pouvez modifier ou supprimer cette règle et cette catégorie et continuer à configurer vos propres règles de forum.',
-	'BOARDRULES_SAMPLE_RULE_ANCHOR'			=> 'regle-modele',
-));
+	'BOARDRULES_SAMPLE_RULE_TITLE'   => 'Exemple de règle',
+	'BOARDRULES_SAMPLE_RULE_MESSAGE' => 'Ceci est un exemple de règle lors de l’installation des règles de forum. Tout semble fonctionner. Vous pouvez modifier ou supprimer cette règle et cette catégorie et continuer à configurer vos propres règles de forum.',
+	'BOARDRULES_SAMPLE_RULE_ANCHOR'  => 'regle-modele',
+]);

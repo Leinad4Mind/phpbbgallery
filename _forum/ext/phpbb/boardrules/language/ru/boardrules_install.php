@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,12 +37,12 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES_SAMPLE_CATEGORY_TITLE'		=> 'Пример категории',
-	'BOARDRULES_SAMPLE_CATEGORY_MESSAGE'	=> 'Это категория-пример. Категории содаржать группы родственных правил. Сообщения категорий, например это, не отображаются на странице правил форума.',
-	'BOARDRULES_SAMPLE_CATEGORY_ANCHOR'		=> 'example-category',
+$lang = array_merge($lang, [
+	'BOARDRULES_SAMPLE_CATEGORY_TITLE'   => 'Пример категории',
+	'BOARDRULES_SAMPLE_CATEGORY_MESSAGE' => 'Это категория-пример. Категории содаржать группы родственных правил. Сообщения категорий, например это, не отображаются на странице правил форума.',
+	'BOARDRULES_SAMPLE_CATEGORY_ANCHOR'  => 'example-category',
 
-	'BOARDRULES_SAMPLE_RULE_TITLE'			=> 'Пример правила',
-	'BOARDRULES_SAMPLE_RULE_MESSAGE'		=> 'Это правило-пример в расширении Правила Форума. Похоже, всё работает. Вы можете отредактировать или удалить это правило и категорию и установить свои Правила Форума.',
-	'BOARDRULES_SAMPLE_RULE_ANCHOR'			=> 'example-rule',
-));
+	'BOARDRULES_SAMPLE_RULE_TITLE'   => 'Пример правила',
+	'BOARDRULES_SAMPLE_RULE_MESSAGE' => 'Это правило-пример в расширении Правила Форума. Похоже, всё работает. Вы можете отредактировать или удалить это правило и категорию и установить свои Правила Форума.',
+	'BOARDRULES_SAMPLE_RULE_ANCHOR'  => 'example-rule',
+]);

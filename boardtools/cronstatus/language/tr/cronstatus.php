@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -36,7 +36,7 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'CRON'                            => 'Cron',
 	'CRON_LOCKED'                     => 'Cron Kilitli',
 	'CRON_TIME_LOCKED'                => 'Cron zamanı kilitli',
@@ -64,10 +64,10 @@ $lang = array_merge($lang, array(
 	'CRON_STATUS_DEVELOPERS'          => 'Geliştiriciler',
 	'CRON_TASK_RUN'                   => 'Çalıştır',
 	'CRON_TASK_RUNNING'               => 'Çalıştırılıyor...',
-));
+]);
 
 // Description of Cron Status extension
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'CRONSTATUS_DESCRIPTION_PAGE'            => 'Cron Durum sayfası',
 	'CRONSTATUS_DESCRIPTION_PAGE_OVERVIEW'   => 'Cron İşleri genel bakışı(sıralamalı)',
 	'CRONSTATUS_DESCRIPTION_PAGE_STATUS'     => 'Her Cron görevinin durumunu gösterir',
@@ -75,4 +75,4 @@ $lang = array_merge($lang, array(
 	'CRONSTATUS_DESCRIPTION_NOTICE'          => 'Cron Durumu Uyarısı (opsiyonel)',
 	'CRONSTATUS_DESCRIPTION_NOTICE_OVERVIEW' => 'Cron kilitlendiğinde YKP anasayfada gösterilsin mi',
 	'CRONSTATUS_DESCRIPTION_NOTICE_SETTINGS' => 'Site ayarlarında kapatılabilir',
-));
+]);

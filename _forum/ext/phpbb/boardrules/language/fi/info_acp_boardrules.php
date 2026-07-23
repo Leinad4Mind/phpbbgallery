@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,13 +37,13 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// ACP modules
-	'ACP_BOARDRULES'				=> 'Foorumin säännöt',
-	'ACP_BOARDRULES_MANAGE'			=> 'Muokkaa sääntöjä',
-	'ACP_BOARDRULES_SETTINGS'		=> 'Sääntöjen asetukset',
+	'ACP_BOARDRULES'          => 'Foorumin säännöt',
+	'ACP_BOARDRULES_MANAGE'   => 'Muokkaa sääntöjä',
+	'ACP_BOARDRULES_SETTINGS' => 'Sääntöjen asetukset',
 
 	// ACP Logs
-	'ACP_BOARDRULES_SETTINGS_LOG'	=> '<strong>Foorumin sääntöjen asetukset on muutettu.</strong>',
-	'ACP_BOARDRULES_NOTIFY_LOG'		=> '<strong>Ilmoitus foorumin säännöistä on lähetetty kaikille käyttäjille</strong>',
-));
+	'ACP_BOARDRULES_SETTINGS_LOG' => '<strong>Foorumin sääntöjen asetukset on muutettu.</strong>',
+	'ACP_BOARDRULES_NOTIFY_LOG'   => '<strong>Ilmoitus foorumin säännöistä on lähetetty kaikille käyttäjille</strong>',
+]);

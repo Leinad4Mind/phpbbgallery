@@ -15,11 +15,13 @@
 /**
  * DO NOT CHANGE
  */
-if (!defined('IN_PHPBB')) {
+if (!defined('IN_PHPBB'))
+{
 	exit;
 }
 
-if (empty($lang) || !is_array($lang)) {
+if (empty($lang) || !is_array($lang))
+{
 	$lang = [];
 }
 
@@ -36,37 +38,37 @@ if (empty($lang) || !is_array($lang)) {
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
 
 $lang = array_merge($lang, [
-	'ACTIVE_TOPICS'					=> 'Tópicos activos',
-	'ANNOUNCEMENTS'					=> 'Anúncios',
+	'ACTIVE_TOPICS' => 'Tópicos activos',
+	'ANNOUNCEMENTS' => 'Anúncios',
 
-	'FORUM_PERMISSIONS'				=> 'Permissões do Fórum',
+	'FORUM_PERMISSIONS' => 'Permissões do Fórum',
 
-	'ICON_ANNOUNCEMENT'				=> 'Anúncio',
-	'ICON_STICKY'						=> 'Fixo',
+	'ICON_ANNOUNCEMENT' => 'Anúncio',
+	'ICON_STICKY'       => 'Fixo',
 
-	'LOGIN_NOTIFY_FORUM'				=> 'Foi notificado por este Fórum, ligue-se para vê-lo.',
+	'LOGIN_NOTIFY_FORUM' => 'Foi notificado por este Fórum, ligue-se para vê-lo.',
 
-	'MARK_TOPICS_READ'				=> 'Marcar todos os Tópicos como lidos',
+	'MARK_TOPICS_READ' => 'Marcar todos os Tópicos como lidos',
 
-	'NEW_POSTS_HOT'					=> 'Novas Mensagens [ Popular ]',   // Not used anymore
-	'NEW_POSTS_LOCKED'				=> 'Novas Mensagens [ Bloqueado ]',   // Not used anymore
-	'NO_NEW_POSTS_HOT'				=> 'Sem novas Mensagens [ Popular ]',   // Not used anymore
-	'NO_NEW_POSTS_LOCKED'			=> 'Sem novas Mensagens [ Bloqueado ]',   // Not used anymore
-	'NO_READ_ACCESS'					=> 'Não tem Permissões para ver nem ler Tópicos neste Fórum.',
-	'NO_FORUMS_IN_CATEGORY' 		=> 'Esta categoria não tem fóruns.',
-	'NO_UNREAD_POSTS_HOT'			=> 'Sem mensagens por ler [ Popular ]',
-	'NO_UNREAD_POSTS_LOCKED'		=> 'Sem mensagens por ler [ Bloqueado ]',
+	'NEW_POSTS_HOT'          => 'Novas Mensagens [ Popular ]',   // Not used anymore
+	'NEW_POSTS_LOCKED'       => 'Novas Mensagens [ Bloqueado ]',   // Not used anymore
+	'NO_NEW_POSTS_HOT'       => 'Sem novas Mensagens [ Popular ]',   // Not used anymore
+	'NO_NEW_POSTS_LOCKED'    => 'Sem novas Mensagens [ Bloqueado ]',   // Not used anymore
+	'NO_READ_ACCESS'         => 'Não tem Permissões para ver nem ler Tópicos neste Fórum.',
+	'NO_FORUMS_IN_CATEGORY'  => 'Esta categoria não tem fóruns.',
+	'NO_UNREAD_POSTS_HOT'    => 'Sem mensagens por ler [ Popular ]',
+	'NO_UNREAD_POSTS_LOCKED' => 'Sem mensagens por ler [ Bloqueado ]',
 
-	'POST_FORUM_LOCKED'				=> 'Fórum bloqueado',
+	'POST_FORUM_LOCKED' => 'Fórum bloqueado',
 
-	'TOPICS_MARKED'					=> 'Todos os Tópicos foram sinalizados como lidos.',
+	'TOPICS_MARKED' => 'Todos os Tópicos foram sinalizados como lidos.',
 
-	'UNREAD_POSTS_HOT'				=> 'Mensagens por ler [ Popular ]',
-	'UNREAD_POSTS_LOCKED'			=> 'Mensagens por ler [ Bloqueado ]',
+	'UNREAD_POSTS_HOT'    => 'Mensagens por ler [ Popular ]',
+	'UNREAD_POSTS_LOCKED' => 'Mensagens por ler [ Bloqueado ]',
 
-	'VIEW_FORUM'						=> 'Ver Fórum',
-	'VIEW_FORUM_TOPICS'		=> [
-		1	=> '%d tópico',
-		2	=> '%d tópicos',
+	'VIEW_FORUM'        => 'Ver Fórum',
+	'VIEW_FORUM_TOPICS' => [
+		1 => '%d tópico',
+		2 => '%d tópicos',
 	],
 ]);

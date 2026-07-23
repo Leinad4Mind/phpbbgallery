@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,13 +38,13 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// ACP Module
-	'ACP_BOARD_ANNOUNCEMENTS'				=> 'Ανακοινώσεις Δ. Συζήτησης',
-	'ACP_BOARD_ANNOUNCEMENTS_SETTINGS'		=> 'Ρυθμίσεις Ανακοινώσεων',
+	'ACP_BOARD_ANNOUNCEMENTS'          => 'Ανακοινώσεις Δ. Συζήτησης',
+	'ACP_BOARD_ANNOUNCEMENTS_SETTINGS' => 'Ρυθμίσεις Ανακοινώσεων',
 
 	// ACP Logs
-	'BOARD_ANNOUNCEMENTS_CREATED_LOG'		=> '<strong>Μια ανακοίνωση δημιουργήθηκε</strong><br>» %s',
-	'BOARD_ANNOUNCEMENTS_UPDATED_LOG'		=> '<strong>Μια ανακοίνωση ενημερώθηκε</strong><br>» %s',
-	'BOARD_ANNOUNCEMENTS_DELETED_LOG'		=> '<strong>Μια ανακοίνωση διαγράφτηκε</strong><br>» %s',
-));
+	'BOARD_ANNOUNCEMENTS_CREATED_LOG' => '<strong>Μια ανακοίνωση δημιουργήθηκε</strong><br>» %s',
+	'BOARD_ANNOUNCEMENTS_UPDATED_LOG' => '<strong>Μια ανακοίνωση ενημερώθηκε</strong><br>» %s',
+	'BOARD_ANNOUNCEMENTS_DELETED_LOG' => '<strong>Μια ανακοίνωση διαγράφτηκε</strong><br>» %s',
+]);

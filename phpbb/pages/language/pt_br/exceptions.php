@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -48,12 +48,12 @@ if (empty($lang) || !is_array($lang))
 *
 * Translators: Feel free to not translate these language strings
 */
-$lang = array_merge($lang, array(
-	'EXCEPTION_FIELD_MISSING'		=> 'Campo obrigatório em falta',
-	'EXCEPTION_INVALID_ARGUMENT'	=> 'O argumento especificado para `%1$s` é inválido. Razão: %2$s',
-	'EXCEPTION_OUT_OF_BOUNDS'		=> 'O Campo `%1$s` recebeu dados além do limite',
-	'EXCEPTION_TOO_LONG'			=> 'A entrada foi maior do que o máximo permitido.',
-	'EXCEPTION_NOT_UNIQUE'			=> 'A entrada não é única.',
-	'EXCEPTION_UNEXPECTED_VALUE'	=> 'O campo `%1$s` recebeu dados não previstos. Razão: %2$s',
-	'EXCEPTION_ILLEGAL_CHARACTERS'	=> 'A entrada tem caracteres inválidos.',
-));
+$lang = array_merge($lang, [
+	'EXCEPTION_FIELD_MISSING'      => 'Campo obrigatório em falta',
+	'EXCEPTION_INVALID_ARGUMENT'   => 'O argumento especificado para `%1$s` é inválido. Razão: %2$s',
+	'EXCEPTION_OUT_OF_BOUNDS'      => 'O Campo `%1$s` recebeu dados além do limite',
+	'EXCEPTION_TOO_LONG'           => 'A entrada foi maior do que o máximo permitido.',
+	'EXCEPTION_NOT_UNIQUE'         => 'A entrada não é única.',
+	'EXCEPTION_UNEXPECTED_VALUE'   => 'O campo `%1$s` recebeu dados não previstos. Razão: %2$s',
+	'EXCEPTION_ILLEGAL_CHARACTERS' => 'A entrada tem caracteres inválidos.',
+]);

@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,8 +37,8 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'USER_SET_LANG'			=> 'Назначение языка по умолчанию',
-	'USER_LANG_EXPLAIN'		=> 'Здесь вы можете изменить язык по умолчанию для выбранных групп.',
-	'USER_LANG_OK'			=> 'Язык по умолчанию был успешно изменен для выбранных групп.',
-));
+$lang = array_merge($lang, [
+	'USER_SET_LANG'     => 'Назначение языка по умолчанию',
+	'USER_LANG_EXPLAIN' => 'Здесь вы можете изменить язык по умолчанию для выбранных групп.',
+	'USER_LANG_OK'      => 'Язык по умолчанию был успешно изменен для выбранных групп.',
+]);

@@ -8,8 +8,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,11 +37,11 @@ if (empty($lang) || !is_array($lang))
 //
 
 // Merge the following language entries into the lang array
-$lang = array_merge($lang, array(
-	'ACP_CAT_OINDEX'				=> 'Official Topic Index',
-	'ACP_OINDEX_CFG'				=> 'Configuration',
+$lang = array_merge($lang, [
+	'ACP_CAT_OINDEX' => 'Official Topic Index',
+	'ACP_OINDEX_CFG' => 'Configuration',
 	//Log
-	'LOG_OINDEX_ADDLIST'			=> '<strong>Added new topic list.</strong><br />%s',
-	'LOG_OINDEX_DELETELIST'			=> '<strong>Removed topic list.</strong><br />%s',
-	'LOG_OINDEX_EDITCFG'			=> '<strong>Edited the config of Official Topic Index.</strong><br />%s',
-));
+	'LOG_OINDEX_ADDLIST'    => '<strong>Added new topic list.</strong><br />%s',
+	'LOG_OINDEX_DELETELIST' => '<strong>Removed topic list.</strong><br />%s',
+	'LOG_OINDEX_EDITCFG'    => '<strong>Edited the config of Official Topic Index.</strong><br />%s',
+]);

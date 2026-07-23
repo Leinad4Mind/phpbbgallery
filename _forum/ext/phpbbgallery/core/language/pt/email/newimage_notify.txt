@@ -1,11 +1,11 @@
-Subject: New image notification - "{ALBUM_NAME}"
+Subject: Notificação de nova imagem - "{ALBUM_NAME}"
 
-Hello {USERNAME},
+Olá, {USERNAME},
 
-You are receiving this notification because you are watching the album, "{ALBUM_NAME}" at "{SITENAME}". This album has received a new image since your last visit, "{IMAGE_NAME}". You can use the following link to view album.
+Estás a receber esta notificação porque estás a acompanhar o álbum "{ALBUM_NAME}" em "{SITENAME}". Este álbum recebeu uma nova imagem desde a tua última visita, "{IMAGE_NAME}". Podes utilizar o seguinte link para ver o álbum:
 
 {U_ALBUM}
 
-If you no longer wish to watch this album you can click the "Unsubscribe album" link found in the link above.
+Se já não desejas acompanhar este álbum, podes clicar no link "Cancelar subscrição do álbum" no link acima.
 
 {EMAIL_SIG}

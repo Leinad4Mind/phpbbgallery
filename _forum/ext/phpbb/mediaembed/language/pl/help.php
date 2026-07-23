@@ -39,9 +39,9 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'HELP_EMBEDDING_MEDIA'			=> 'Osadzanie multimediów',
-	'HELP_EMBEDDING_MEDIA_QUESTION'	=> 'Jak wyświetlić multimedia z innych stron na forum',
-	'HELP_EMBEDDING_MEDIA_ANSWER'	=> 'Użytkownicy mogą wyświetlić zawartość z innych stron jak wideo lub muzyka
+	'HELP_EMBEDDING_MEDIA'          => 'Osadzanie multimediów',
+	'HELP_EMBEDDING_MEDIA_QUESTION' => 'Jak wyświetlić multimedia z innych stron na forum',
+	'HELP_EMBEDDING_MEDIA_ANSWER'   => 'Użytkownicy mogą wyświetlić zawartość z innych stron jak wideo lub muzyka
 										poprzez znacznik <strong>[media][/media]</strong>. Należy wkleić adres URL pomiędzy znacznikami.
 										<br /><br />Na przykład:
 										<strong>[media]</strong>%1$s<strong>[/media]</strong>
@@ -50,5 +50,5 @@ $lang = array_merge($lang, [
 										<br /><br />Dokumentacja wraz z wszystkimi wspieranymi stronami i przykładami adresów URL
 										znajduje się pod linkiem <a href="https://s9etextformatter.readthedocs.io/Plugins/MediaEmbed/Sites/">
 										MediaEmbed Plugin Documentation</a>.',
-	'HELP_EMBEDDING_MEDIA_DEMO'		=>	'https://youtu.be/QH2-TGUlwu4',
+	'HELP_EMBEDDING_MEDIA_DEMO' => 'https://youtu.be/QH2-TGUlwu4',
 ]);

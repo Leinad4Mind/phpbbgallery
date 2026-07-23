@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -36,7 +36,7 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'CRON'                            => 'Cron',
 	'CRON_LOCKED'                     => 'Cron Bloqueado',
 	'CRON_TIME_LOCKED'                => 'Fecha del bloqueo del Cron',
@@ -64,10 +64,10 @@ $lang = array_merge($lang, array(
 	'CRON_STATUS_DEVELOPERS'          => 'Desarrolladores',
 	'CRON_TASK_RUN'                   => 'Ejecutar',
 	'CRON_TASK_RUNNING'               => 'Ejecutando...',
-));
+]);
 
 // Description of Cron Status extension
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'CRONSTATUS_DESCRIPTION_PAGE'            => 'Página del estado del Cron',
 	'CRONSTATUS_DESCRIPTION_PAGE_OVERVIEW'   => 'Visión general de trabajos Cron (con clasificación)',
 	'CRONSTATUS_DESCRIPTION_PAGE_STATUS'     => 'Muestra el estado de cada tarea Cron',
@@ -75,4 +75,4 @@ $lang = array_merge($lang, array(
 	'CRONSTATUS_DESCRIPTION_NOTICE'          => 'Noticia de Estado Cron (opcional)',
 	'CRONSTATUS_DESCRIPTION_NOTICE_OVERVIEW' => 'Se muestra en la página principal del PCA cuando el Cron está bloqueado',
 	'CRONSTATUS_DESCRIPTION_NOTICE_SETTINGS' => 'Puede apagar esta opción en los Ajustes del Foro',
-));
+]);

@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -47,12 +47,12 @@ if (empty($lang) || !is_array($lang))
 *
 * Translators: Feel free to not translate these language strings
 */
-$lang = array_merge($lang, array(
-	'EXCEPTION_FIELD_MISSING'		=> 'Отсутствует обязательное поле',
-	'EXCEPTION_INVALID_ARGUMENT'	=> 'Неправильное значение в `%1$s`. Причина: %2$s',
-	'EXCEPTION_OUT_OF_BOUNDS'		=> 'Поле `%1$s` получило запредельные данные',
-	'EXCEPTION_TOO_LONG'			=> 'Лимит количества знаков превышен.',
-	'EXCEPTION_NOT_UNIQUE'			=> 'Данные повторяются',
-	'EXCEPTION_UNEXPECTED_VALUE'	=> 'Поле `%1$s` получило неожиданные данные. Причина: %2$s',
-	'EXCEPTION_ILLEGAL_CHARACTERS'	=> 'Введенные данные содержут недопустимые символы',
-));
+$lang = array_merge($lang, [
+	'EXCEPTION_FIELD_MISSING'      => 'Отсутствует обязательное поле',
+	'EXCEPTION_INVALID_ARGUMENT'   => 'Неправильное значение в `%1$s`. Причина: %2$s',
+	'EXCEPTION_OUT_OF_BOUNDS'      => 'Поле `%1$s` получило запредельные данные',
+	'EXCEPTION_TOO_LONG'           => 'Лимит количества знаков превышен.',
+	'EXCEPTION_NOT_UNIQUE'         => 'Данные повторяются',
+	'EXCEPTION_UNEXPECTED_VALUE'   => 'Поле `%1$s` получило неожиданные данные. Причина: %2$s',
+	'EXCEPTION_ILLEGAL_CHARACTERS' => 'Введенные данные содержут недопустимые символы',
+]);

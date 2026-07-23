@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,10 +37,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES_HEADER'			=> 'Foorumin säännöt',
-	'BOARDRULES_EXPLAIN'		=> 'Nämä säännöt on luotu tekemään selväksi kaikille foorumin käyttäjille, miten yhteisössä tulee käyttäytyä. Jokaisen odotetaan noudattavan näitä sääntöjä, jotta voimme tarjota mukavan ja turvallisen kokemuksen kaikille jäsenillemme ja vierialijoillemme.',
-	'BOARDRULES_CATEGORIES'		=> 'Sääntöjen sisällysluettelo',
-	'BOARDRULES_CATEGORY_ANCHOR'=> 'osio-%s',
-	'BOARDRULES_RULE_ANCHOR'	=> 'saanto-%s',
-));
+$lang = array_merge($lang, [
+	'BOARDRULES_HEADER'          => 'Foorumin säännöt',
+	'BOARDRULES_EXPLAIN'         => 'Nämä säännöt on luotu tekemään selväksi kaikille foorumin käyttäjille, miten yhteisössä tulee käyttäytyä. Jokaisen odotetaan noudattavan näitä sääntöjä, jotta voimme tarjota mukavan ja turvallisen kokemuksen kaikille jäsenillemme ja vierialijoillemme.',
+	'BOARDRULES_CATEGORIES'      => 'Sääntöjen sisällysluettelo',
+	'BOARDRULES_CATEGORY_ANCHOR' => 'osio-%s',
+	'BOARDRULES_RULE_ANCHOR'     => 'saanto-%s',
+]);

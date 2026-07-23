@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -48,15 +48,15 @@ if (empty($lang) || !is_array($lang))
 *
 * Translators: Feel free to not translate these language strings
 */
-$lang = array_merge($lang, array(
-	'EXCEPTION_FIELD_MISSING'		=> 'Campo obbligatorio mancante',
-	'EXCEPTION_INVALID_ARGUMENT'	=> 'Parametro specificato non valido `%1$s`. Motivo: %2$s',
-	'EXCEPTION_OUT_OF_BOUNDS'		=> 'Il campo `%1$s` ha ricevuto oltre i limiti consentiti',
-	'EXCEPTION_TOO_LONG'			=> 'La voce è più lunga del limite massimo.',
-	'EXCEPTION_NOT_UNIQUE'			=> 'La voce non era unica.',
-	'EXCEPTION_UNEXPECTED_VALUE'	=> 'Il campo `%1$s` ha ricevuto dati inaspet. Motivo: %2$s',
-	'EXCEPTION_ILLEGAL_CHARACTERS'	=> 'La voce contiene caratteri non validi.',
+$lang = array_merge($lang, [
+	'EXCEPTION_FIELD_MISSING'      => 'Campo obbligatorio mancante',
+	'EXCEPTION_INVALID_ARGUMENT'   => 'Parametro specificato non valido `%1$s`. Motivo: %2$s',
+	'EXCEPTION_OUT_OF_BOUNDS'      => 'Il campo `%1$s` ha ricevuto oltre i limiti consentiti',
+	'EXCEPTION_TOO_LONG'           => 'La voce è più lunga del limite massimo.',
+	'EXCEPTION_NOT_UNIQUE'         => 'La voce non era unica.',
+	'EXCEPTION_UNEXPECTED_VALUE'   => 'Il campo `%1$s` ha ricevuto dati inaspet. Motivo: %2$s',
+	'EXCEPTION_ILLEGAL_CHARACTERS' => 'La voce contiene caratteri non validi.',
 
 	// Translators: do not change this
-	'EXCEPTION_WRONG_DATA_LANG'		=> $lang['WRONG_DATA_LANG'],
-));
+	'EXCEPTION_WRONG_DATA_LANG' => $lang['WRONG_DATA_LANG'],
+]);

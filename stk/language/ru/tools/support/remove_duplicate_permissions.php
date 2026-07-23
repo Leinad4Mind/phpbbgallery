@@ -9,19 +9,19 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
 }
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -40,9 +40,9 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'DUPLICATES_FOUND'						=> 'Инструмент для нахождения и удаления дубликатов прав доступа',
-	'NO_DUPLICATES_FOUND'					=> 'Проверка закончена, дубликатов прав доступа не найдено.',
-	'REMOVE_DUPLICATE_PERMISSIONS'			=> 'Удаление дубликатов прав доступа',
-	'REMOVE_DUPLICATE_PERMISSIONS_CONFIRM'	=> 'Вы уверены, что желаете удалить дубликаты прав доступа?',
-));
+$lang = array_merge($lang, [
+	'DUPLICATES_FOUND'                     => 'Инструмент для нахождения и удаления дубликатов прав доступа',
+	'NO_DUPLICATES_FOUND'                  => 'Проверка закончена, дубликатов прав доступа не найдено.',
+	'REMOVE_DUPLICATE_PERMISSIONS'         => 'Удаление дубликатов прав доступа',
+	'REMOVE_DUPLICATE_PERMISSIONS_CONFIRM' => 'Вы уверены, что желаете удалить дубликаты прав доступа?',
+]);

@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -48,12 +48,12 @@ if (empty($lang) || !is_array($lang))
 *
 * Translators: Feel free to not translate these language strings
 */
-$lang = array_merge($lang, array(
-	'EXCEPTION_FIELD_MISSING'		=> '必填项缺失',
-	'EXCEPTION_INVALID_ARGUMENT'	=> '`%1$s` 参数无效。 原因： %2$s',
-	'EXCEPTION_OUT_OF_BOUNDS'		=> '`%1$s` 字段获取的数据超出范围',
-	'EXCEPTION_TOO_LONG'			=> '输入值过长。',
-	'EXCEPTION_NOT_UNIQUE'			=> '输入值不是唯一。',
-	'EXCEPTION_UNEXPECTED_VALUE'	=> '`%1$s` 字段获取的未预期的数据。原因： %2$s',
-	'EXCEPTION_ILLEGAL_CHARACTERS'	=> '输入值包含非法字符。',
-));
+$lang = array_merge($lang, [
+	'EXCEPTION_FIELD_MISSING'      => '必填项缺失',
+	'EXCEPTION_INVALID_ARGUMENT'   => '`%1$s` 参数无效。 原因： %2$s',
+	'EXCEPTION_OUT_OF_BOUNDS'      => '`%1$s` 字段获取的数据超出范围',
+	'EXCEPTION_TOO_LONG'           => '输入值过长。',
+	'EXCEPTION_NOT_UNIQUE'         => '输入值不是唯一。',
+	'EXCEPTION_UNEXPECTED_VALUE'   => '`%1$s` 字段获取的未预期的数据。原因： %2$s',
+	'EXCEPTION_ILLEGAL_CHARACTERS' => '输入值包含非法字符。',
+]);

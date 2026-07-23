@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,9 +37,9 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'READD_MODULE_MANAGEMENT'			=> 'Recreate Module Management modules',
-	'READD_MODULE_MANAGEMENT_CONFIRM'	=> 'Are you sure you want to recreate the Module Management modules in the ACP?',
-	'READD_MODULE_MANAGEMENT_SUCCESS'	=> 'The modules have been recreated successfully!',
-	'NO_NEED_READD_MODULE_MANAGEMENT'	=> 'None of the modules has been removed or damaged.',
-));
+$lang = array_merge($lang, [
+	'READD_MODULE_MANAGEMENT'         => 'Recreate Module Management modules',
+	'READD_MODULE_MANAGEMENT_CONFIRM' => 'Are you sure you want to recreate the Module Management modules in the ACP?',
+	'READD_MODULE_MANAGEMENT_SUCCESS' => 'The modules have been recreated successfully!',
+	'NO_NEED_READD_MODULE_MANAGEMENT' => 'None of the modules has been removed or damaged.',
+]);

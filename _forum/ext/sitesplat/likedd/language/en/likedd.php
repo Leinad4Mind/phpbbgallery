@@ -36,7 +36,7 @@ $lang = array_merge($lang, [
 	'FROM_YOUR'                => 'from your',
 	'TO_YOUR'                  => 'to your',
 
-	'LIKEBB_NOTIFICATION_EVENT_ADDED'  => '<strong>%1$s update</strong>:<br />A %2$s has been %3$s %4$s post by %5$s.',
+	'LIKEDD_NOTIFICATION_EVENT_ADDED'  => '<strong>%1$s</strong> %2$s by %3$s on:<br />%4$s',
 	'LIKE_USER_INFO_REMOVED'           => 'Your %s of this post has been removed.',
 	'LIKE_USER_INFO_APPRECIATE'        => '%s appreciates your liking their post!',
 	'LIKE_USER_INFO_APPRECIATE_STRONG' => '<div class="ld-ajax"><strong>%s</strong> appreciates your liking their post!</div>',
@@ -80,6 +80,7 @@ $lang = array_merge($lang, [
 	'DISLIKE_REMOVED'       => 'Dislike removed',
 	'LIKES_LIKE_IT'         => 'I like this',
 	'LIKES_LIKE'            => 'Like',
+	'LIKES_LIKED'           => 'Liked',
 	'LIKES_DISLIKE_IT'      => 'I dislike this',
 	'LIKES_DISLIKE'         => 'Dislike',
 	'LIKES_DISLIKE_REMOVED' => 'Like / Dislike removed',

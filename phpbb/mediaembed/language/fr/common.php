@@ -39,5 +39,5 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'BBCODE_MEDIA_HELP'	=> 'Médias intégrés : [media]http://adresse_du_media[/media]',
+	'BBCODE_MEDIA_HELP' => 'Médias intégrés : [media]http://adresse_du_media[/media]',
 ]);

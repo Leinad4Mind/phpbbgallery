@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,8 +38,8 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'RECACHE_MODERATORS'			=> 'Mettre de nouveau en cache les modérateurs',
-	'RECACHE_MODERATORS_COMPLETE'	=> 'Le cache des modérateurs a été reconstruit.',
-	'RECACHE_MODERATORS_CONFIRM'	=> 'Confirmer la mise en cache des modérateurs.',
-));
+$lang = array_merge($lang, [
+	'RECACHE_MODERATORS'          => 'Mettre de nouveau en cache les modérateurs',
+	'RECACHE_MODERATORS_COMPLETE' => 'Le cache des modérateurs a été reconstruit.',
+	'RECACHE_MODERATORS_CONFIRM'  => 'Confirmer la mise en cache des modérateurs.',
+]);

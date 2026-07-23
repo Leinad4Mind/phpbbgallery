@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -36,11 +36,11 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'PRUNE_STYLES'				=> 'Checking style files',
-	'PRUNE_STYLES_EXPLAIN'		=> 'This tool checks for the presence of the necessary components for all installed styles. If it finds that these components are missing, the style will be deleted. Continue?',
-	'PRUNE_STYLES_SUCCESS'		=> 'Finished.',
-	'STYLE_UNINSTALL_DEPENDENT'	=> 'Style "%s" cannot be uninstalled because it has one or more child styles.',
-	'STYLE_UNINSTALL_SUCESS'	=> 'Style "%s" uninstalled successfully.',
-	'PRUNE_STYLES_EMPTY'		=> 'No installed styles found with missing required components.',
-));
+$lang = array_merge($lang, [
+	'PRUNE_STYLES'              => 'Checking style files',
+	'PRUNE_STYLES_EXPLAIN'      => 'This tool checks for the presence of the necessary components for all installed styles. If it finds that these components are missing, the style will be deleted. Continue?',
+	'PRUNE_STYLES_SUCCESS'      => 'Finished.',
+	'STYLE_UNINSTALL_DEPENDENT' => 'Style "%s" cannot be uninstalled because it has one or more child styles.',
+	'STYLE_UNINSTALL_SUCESS'    => 'Style "%s" uninstalled successfully.',
+	'PRUNE_STYLES_EMPTY'        => 'No installed styles found with missing required components.',
+]);

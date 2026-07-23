@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,13 +38,13 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'FH_DISABLE_ALL'		=> 'Désactiver toutes les extensions',
+$lang = array_merge($lang, [
+	'FH_DISABLE_ALL' => 'Désactiver toutes les extensions',
 
-	'LOG_CORE_INSTALLED'	=> '<strong>Aide Forumhulp</strong><br />» Fichiers modifiés avec succès',
-	'LOG_CORE_DEINSTALLED'	=> '<strong>Aide Forumhulp</strong><br />» Fichiers restaurés avec succès',
-	'LOG_CORE_NOT_REPLACED'	=> '<strong>Aide Forumhulp</strong><br />» Fichier(s) n’ayant pu être remplacé(s)<br />» %s',
-	'LOG_CORE_NOT_UPDATED'	=> '<strong>Aide Forumhulp</strong><br />» Fichier(s) n’ayant pu être mis à jour<br />» %s',
+	'LOG_CORE_INSTALLED'    => '<strong>Aide Forumhulp</strong><br />» Fichiers modifiés avec succès',
+	'LOG_CORE_DEINSTALLED'  => '<strong>Aide Forumhulp</strong><br />» Fichiers restaurés avec succès',
+	'LOG_CORE_NOT_REPLACED' => '<strong>Aide Forumhulp</strong><br />» Fichier(s) n’ayant pu être remplacé(s)<br />» %s',
+	'LOG_CORE_NOT_UPDATED'  => '<strong>Aide Forumhulp</strong><br />» Fichier(s) n’ayant pu être mis à jour<br />» %s',
 
-	'ERROR_DISABLE'			=> 'Il n’est pas possible de désactiver l’extension « ForumHulp Helper » car au moins une autre extension du même auteur « ForumHulp » est active<br /><div style="margin: 0px auto; width: 50%%; text-align: left;">» %s</div>'
-));
+	'ERROR_DISABLE' => 'Il n’est pas possible de désactiver l’extension « ForumHulp Helper » car au moins une autre extension du même auteur « ForumHulp » est active<br /><div style="margin: 0px auto; width: 50%%; text-align: left;">» %s</div>'
+]);

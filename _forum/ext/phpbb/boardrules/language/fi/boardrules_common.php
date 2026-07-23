@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,10 +37,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES'				=> 'Säännöt',
-	'BOARDRULES_TITLE'			=> 'Tarkastele foorumin sääntöjä',
-	'BOARDRULES_AGREEMENT'		=> 'Suostut käyttäytymään foorumilla noudattaen sääntöjä jotka on esitelty "Säännöt" osiossa.',
-	'BOARDRULES_VIEWONLINE'		=> 'Lukee foorumin sääntöjä',
-	'BOARDRULES_NOTIFICATION'	=> 'Foorumin säännöt on päivitetty. Klikkaa tästä lukeaksesi ne.',
-));
+$lang = array_merge($lang, [
+	'BOARDRULES'              => 'Säännöt',
+	'BOARDRULES_TITLE'        => 'Tarkastele foorumin sääntöjä',
+	'BOARDRULES_AGREEMENT'    => 'Suostut käyttäytymään foorumilla noudattaen sääntöjä jotka on esitelty "Säännöt" osiossa.',
+	'BOARDRULES_VIEWONLINE'   => 'Lukee foorumin sääntöjä',
+	'BOARDRULES_NOTIFICATION' => 'Foorumin säännöt on päivitetty. Klikkaa tästä lukeaksesi ne.',
+]);

@@ -1,0 +1,8 @@
+Assunto: Palavra-chave encontrada no título de um tópico
+
+Olá,
+
+a palavra-chave "{KEYWORD}" que segues foi encontrada no título de um tópico. Clica aqui para veres:
+{U_TOPIC_LINK}
+
+{EMAIL_SIG}

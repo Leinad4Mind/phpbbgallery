@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,13 +37,13 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// ACP Module
-	'ACP_BOARD_ANNOUNCEMENTS'				=> 'Site Duyuruları',
-	'ACP_BOARD_ANNOUNCEMENTS_SETTINGS'		=> 'Duyuru ayarları',
+	'ACP_BOARD_ANNOUNCEMENTS'          => 'Site Duyuruları',
+	'ACP_BOARD_ANNOUNCEMENTS_SETTINGS' => 'Duyuru ayarları',
 
 	// ACP Logs
-	'BOARD_ANNOUNCEMENTS_CREATED_LOG'		=> '<strong>Bir site duyurusu oluşturuldu</strong><br>» %s',
-	'BOARD_ANNOUNCEMENTS_UPDATED_LOG'		=> '<strong>Bir site duyurusu güncellendi</strong><br>» %s',
-	'BOARD_ANNOUNCEMENTS_DELETED_LOG'		=> '<strong>Bir site duyurusu silindi</strong><br>» %s',
-));
+	'BOARD_ANNOUNCEMENTS_CREATED_LOG' => '<strong>Bir site duyurusu oluşturuldu</strong><br>» %s',
+	'BOARD_ANNOUNCEMENTS_UPDATED_LOG' => '<strong>Bir site duyurusu güncellendi</strong><br>» %s',
+	'BOARD_ANNOUNCEMENTS_DELETED_LOG' => '<strong>Bir site duyurusu silindi</strong><br>» %s',
+]);

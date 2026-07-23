@@ -1,16 +1,15 @@
 <?php
+
 /**
- *
  * Collapsible Categories extension for the phpBB Forum Software package.
- * Brazilian Portuguese translation by eunaumtenhoid (c) 2017 [ver 1.0.2] (https://github.com/phpBBTraducoes)
  * @copyright (c) 2015 phpBB Limited <https://www.phpbb.com>
  * @license GNU General Public License, version 2 (GPL-2.0)
- *
+ * @translation Leinad4Mind [Brazilian Portuguese [pt_br]] (2026)
  */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,9 +36,9 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'COLLAPSIBLE_CATEGORIES_TITLE'	=> array(
+$lang = array_merge($lang, [
+	'COLLAPSIBLE_CATEGORIES_TITLE' => [
 		0 => 'Alternar a visibilidade desta categoria do fórum',
 		1 => 'Alternar a visibilidade desta categoria do fórum',
-	),
-));
+	],
+]);

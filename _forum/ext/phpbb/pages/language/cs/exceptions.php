@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -48,12 +48,12 @@ if (empty($lang) || !is_array($lang))
 *
 * Translators: Feel free to not translate these language strings
 */
-$lang = array_merge($lang, array(
-	'EXCEPTION_FIELD_MISSING'		=> 'Požadované pole chybí',
-	'EXCEPTION_INVALID_ARGUMENT'	=> 'Stanoven neplatný argument pro „%1$s“. Důvod: %2$s',
-	'EXCEPTION_OUT_OF_BOUNDS'		=> 'Data v poli „%1$s“ jsou mimo jeho rozsah',
-	'EXCEPTION_TOO_LONG'			=> 'Délka vstupních údajů překračuje maximální povolenou délku.',
-	'EXCEPTION_NOT_UNIQUE'			=> 'Vstupní údaje nejsou jedinečné.',
-	'EXCEPTION_UNEXPECTED_VALUE'	=> 'Pole „%1$s“ obsahuje neočekávaná data. Důvod: %2$s',
-	'EXCEPTION_ILLEGAL_CHARACTERS'	=> 'Vstupní údaje obsahují nepovolené znaky.',
-));
+$lang = array_merge($lang, [
+	'EXCEPTION_FIELD_MISSING'      => 'Požadované pole chybí',
+	'EXCEPTION_INVALID_ARGUMENT'   => 'Stanoven neplatný argument pro „%1$s“. Důvod: %2$s',
+	'EXCEPTION_OUT_OF_BOUNDS'      => 'Data v poli „%1$s“ jsou mimo jeho rozsah',
+	'EXCEPTION_TOO_LONG'           => 'Délka vstupních údajů překračuje maximální povolenou délku.',
+	'EXCEPTION_NOT_UNIQUE'         => 'Vstupní údaje nejsou jedinečné.',
+	'EXCEPTION_UNEXPECTED_VALUE'   => 'Pole „%1$s“ obsahuje neočekávaná data. Důvod: %2$s',
+	'EXCEPTION_ILLEGAL_CHARACTERS' => 'Vstupní údaje obsahují nepovolené znaky.',
+]);

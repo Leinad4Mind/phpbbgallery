@@ -12,8 +12,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -26,8 +26,8 @@ if (empty($lang) || !is_array($lang))
 
 // Permissions
 $lang = array_merge($lang, [
-	'ACP_NOTES'		=> 'Notas',
+	'ACP_NOTES' => 'Notas',
 
-	'ACL_A_NOTES'	=> 'Pode configurar notas pessoais',
-	'ACL_U_NOTES'	=> 'Pode usar notas pessoais',
+	'ACL_A_NOTES' => 'Pode configurar notas pessoais',
+	'ACL_U_NOTES' => 'Pode usar notas pessoais',
 ]);

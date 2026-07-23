@@ -9,8 +9,8 @@
 
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,8 +37,8 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// ACP Module
-	'ACP_ACTIVITY_STATS_TITLE'			=> 'Aktivitäts Statistiken',
-	'ACP_ACTIVITY_STATS_SETTINGS'		=> 'Einstellungen',
-));
+	'ACP_ACTIVITY_STATS_TITLE'    => 'Aktivitäts Statistiken',
+	'ACP_ACTIVITY_STATS_SETTINGS' => 'Einstellungen',
+]);

@@ -12,8 +12,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -41,13 +41,13 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	// navigation
-	'EXTMGRPLUS_NAV_TITLE'				=> 'Extension Manager Plus',
-	'EXTMGRPLUS_NAV_CONFIG'				=> 'Manage extensions - Settings',
+	'EXTMGRPLUS_NAV_TITLE'  => 'Extension Manager Plus',
+	'EXTMGRPLUS_NAV_CONFIG' => 'Manage extensions - Settings',
 
 	// log
-	'EXTMGRPLUS_LOG_EXT_DISABLE_ALL'	=> '<strong>Extension Manager Plus</strong><br>» %1$u of %2$u extensions disabled',
-	'EXTMGRPLUS_LOG_EXT_ENABLE_ALL'		=> '<strong>Extension Manager Plus</strong><br>» %1$u of %2$u extensions enabled',
+	'EXTMGRPLUS_LOG_EXT_DISABLE_ALL' => '<strong>Extension Manager Plus</strong><br>» %1$u of %2$u extensions disabled',
+	'EXTMGRPLUS_LOG_EXT_ENABLE_ALL'  => '<strong>Extension Manager Plus</strong><br>» %1$u of %2$u extensions enabled',
 
 	// misc
-	'EXTMGRPLUS_VERSION_STRING'			=> 'v%s',
+	'EXTMGRPLUS_VERSION_STRING' => 'v%s',
 ]);

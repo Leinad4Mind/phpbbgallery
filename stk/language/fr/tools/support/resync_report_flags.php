@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,9 +38,9 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'RESYNC_REPORT_FLAGS'			=> 'Resynchroniser les marqueurs de rapport',
-	'RESYNC_REPORT_FLAGS_CONFIRM'	=> 'Cet outil resynchronisera les marqueurs de rapport de tous les messages, sujets et messages privés.',
-	'RESYNC_REPORT_FLAGS_FINISHED'	=> 'Tous les marqueurs de rapport ont été resynchronisés.',
-	'RESYNC_REPORT_FLAGS_NEXT'		=> 'Resynchronisation des marqueurs de rapport en cours. Merci de ne pas interrompre cette opération.',
-));
+$lang = array_merge($lang, [
+	'RESYNC_REPORT_FLAGS'          => 'Resynchroniser les marqueurs de rapport',
+	'RESYNC_REPORT_FLAGS_CONFIRM'  => 'Cet outil resynchronisera les marqueurs de rapport de tous les messages, sujets et messages privés.',
+	'RESYNC_REPORT_FLAGS_FINISHED' => 'Tous les marqueurs de rapport ont été resynchronisés.',
+	'RESYNC_REPORT_FLAGS_NEXT'     => 'Resynchronisation des marqueurs de rapport en cours. Merci de ne pas interrompre cette opération.',
+]);

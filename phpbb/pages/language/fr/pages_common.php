@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -39,5 +39,5 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'PAGES_VIEWONLINE'		=> 'Consulte la page %s',
+	'PAGES_VIEWONLINE' => 'Consulte la page %s',
 ]);

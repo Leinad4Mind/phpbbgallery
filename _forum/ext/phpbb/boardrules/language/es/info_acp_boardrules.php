@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,13 +38,13 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// ACP modules
-	'ACP_BOARDRULES'				=> 'Normas del Foro',
-	'ACP_BOARDRULES_MANAGE'			=> 'Gestionar Normas',
-	'ACP_BOARDRULES_SETTINGS'		=> 'Ajustes de Normas',
+	'ACP_BOARDRULES'          => 'Normas del Foro',
+	'ACP_BOARDRULES_MANAGE'   => 'Gestionar Normas',
+	'ACP_BOARDRULES_SETTINGS' => 'Ajustes de Normas',
 
 	// ACP Logs
-	'ACP_BOARDRULES_SETTINGS_LOG'	=> '<strong>Ajustes de Normas del Foro cambiados</strong>',
-	'ACP_BOARDRULES_NOTIFY_LOG'		=> '<strong>Notificación de Normas del Foro enviada a todos los usuarios</strong>',
-));
+	'ACP_BOARDRULES_SETTINGS_LOG' => '<strong>Ajustes de Normas del Foro cambiados</strong>',
+	'ACP_BOARDRULES_NOTIFY_LOG'   => '<strong>Notificación de Normas del Foro enviada a todos los usuarios</strong>',
+]);

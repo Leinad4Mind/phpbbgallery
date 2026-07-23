@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,13 +38,13 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// ACP modules
-	'ACP_BOARDRULES'				=> 'Forumska pravila',
-	'ACP_BOARDRULES_MANAGE'			=> 'Upravljanje pravilima',
-	'ACP_BOARDRULES_SETTINGS'		=> 'Postavke pravila',
+	'ACP_BOARDRULES'          => 'Forumska pravila',
+	'ACP_BOARDRULES_MANAGE'   => 'Upravljanje pravilima',
+	'ACP_BOARDRULES_SETTINGS' => 'Postavke pravila',
 
 	// ACP Logs
-	'ACP_BOARDRULES_SETTINGS_LOG'	=> '<strong>Izmijenjene postavke forumskih pravila</strong>',
-	'ACP_BOARDRULES_NOTIFY_LOG'		=> '<strong>Obavijest forumskih pravila poslana svim korisnicima/ama</strong>',
-));
+	'ACP_BOARDRULES_SETTINGS_LOG' => '<strong>Izmijenjene postavke forumskih pravila</strong>',
+	'ACP_BOARDRULES_NOTIFY_LOG'   => '<strong>Obavijest forumskih pravila poslana svim korisnicima/ama</strong>',
+]);

@@ -8,8 +8,8 @@
  */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 
 if (!defined('IN_PHPBB'))
 {
@@ -52,20 +52,20 @@ $lang = array_merge(
 		'ERR_ATTESTATION_VERIFICATION' => 'O certificado de atestado não pode ser validado',
 		'ERR_BAD_RANDOM'               => 'Não foi possível obter uma boa fonte de aleatoriedade',
 		'ERR_COUNTER_TOO_LOW'          => 'Contador demasiado baixo',
-		'ERR_PUBKEY_DECODE'            => 'A descodificação da chave pública falhou',
+		'ERR_PUBKEY_DECODE'            => 'A decodificação da chave pública falhou',
 		'ERR_BAD_UA_RETURNING'         => 'O User-agent (agente de usuário) devolveu um erro',
 		'ERR_OLD_OPENSSL'              => 'O OpenSSL tem de ser, pelo menos, a versão 1.0.0, esta é %s',
 		'UNKNOWN_ERROR'                => 'Aconteceu um erro desconhecido durante a validação da sua chave de segurança. Por favor, tente novamente mais tarde.',
 
 		'ERR_TFA_NO_REQUEST_FOUND_IN_SESSION' => 'Nenhum pedido encontrado na sessão atual. Submeteu através de uma página diferente?',
-		'TFA_TFA_NOT_REGISTERED'              => 'A chave de segurança utilizada não estava registada na sua conta',
+		'TFA_TFA_NOT_REGISTERED'              => 'A chave de segurança utilizada não estava registrada na sua conta',
 
 		'TFA_NO_ACCESS'                => 'Parece que não tem acesso a esta página?',
-		'TFA_UNABLE_TO_UPDATE_SESSION' => 'Não foi possível atualizar a sessão. Por favor, contacte o administrador do fórum',
+		'TFA_UNABLE_TO_UPDATE_SESSION' => 'Não foi possível atualizar a sessão. Por favor, contate o administrador do fórum',
 		'TFA_DISABLED'                 => 'A autenticação de dois fatores foi desabilitada',
 
 		'TFA_OTP_KEY_LOG'         => 'Chave gerada aqui, em seguida carregue em submeter',
-		'TFA_OTP_KEY_LOG_EXPLAIN' => 'Introduza o código de verificação gerado pela Aplicação (App) Authenticator do seu telemóvel para iniciar sessão de forma segura na sua conta.',
+		'TFA_OTP_KEY_LOG_EXPLAIN' => 'Introduza o código de verificação gerado pelo Aplicativo (App) Authenticator do seu celular para fazer login de forma segura na sua conta.',
 		'TFA_INCORRECT_KEY'       => 'A chave fornecida estava incorreta.',
 		'TFA_NO_KEY_PROVIDED'     => 'Nenhuma chave fornecida',
 		'TFA_KEY_REQUIRED'        => 'Por favor, forneça a sua chave de segurança',

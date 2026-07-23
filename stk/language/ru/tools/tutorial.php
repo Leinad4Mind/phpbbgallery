@@ -15,19 +15,19 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
 }
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -46,7 +46,7 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'TUTORIAL'			=> 'Руководство',
-	'TUTORIAL_EXPLAIN'	=> 'Описание руководства',
-));
+$lang = array_merge($lang, [
+	'TUTORIAL'         => 'Руководство',
+	'TUTORIAL_EXPLAIN' => 'Описание руководства',
+]);

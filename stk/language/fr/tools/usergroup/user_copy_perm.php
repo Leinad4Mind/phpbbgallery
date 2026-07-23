@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,14 +38,14 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'USER_COPY_PERM'					=> 'Copier les permissions des utilisateurs',
-	'USER_COPY_PERM_EXPLAIN'			=> 'Permet de copier toutes les permissions des utilisateurs : utilisateurs, modérateurs, administrateurs et locales.',
-	'COPY_USER_PERMISSIONS_EXPLAIN'		=> 'Sélectionner l’utilisateur dont les permissions seront copiées',
-	'COPY_USER_PERMISSIONS_OK'			=> 'Les permissions ont été copiées avec succès.',
-	'USERS_IDENTICAL'					=> 'Il n’est pas pas possible de transférer les permissions.',
-	'FIND_FROM_USER'					=> 'Nom d’utilisateur dont les permissions seront copiées',
-	'ID_FROM'							=> 'ID de l’utilisateur dont les permissions seront copiees',
-	'FIND_TO_USER'						=> 'Nom d’utilisateur vers qui les permissions seront transférées',
-	'ID_TO'								=> 'ID de l’utilisateur vers qui les permissions seront transférées',
-));
+$lang = array_merge($lang, [
+	'USER_COPY_PERM'                => 'Copier les permissions des utilisateurs',
+	'USER_COPY_PERM_EXPLAIN'        => 'Permet de copier toutes les permissions des utilisateurs : utilisateurs, modérateurs, administrateurs et locales.',
+	'COPY_USER_PERMISSIONS_EXPLAIN' => 'Sélectionner l’utilisateur dont les permissions seront copiées',
+	'COPY_USER_PERMISSIONS_OK'      => 'Les permissions ont été copiées avec succès.',
+	'USERS_IDENTICAL'               => 'Il n’est pas pas possible de transférer les permissions.',
+	'FIND_FROM_USER'                => 'Nom d’utilisateur dont les permissions seront copiées',
+	'ID_FROM'                       => 'ID de l’utilisateur dont les permissions seront copiees',
+	'FIND_TO_USER'                  => 'Nom d’utilisateur vers qui les permissions seront transférées',
+	'ID_TO'                         => 'ID de l’utilisateur vers qui les permissions seront transférées',
+]);

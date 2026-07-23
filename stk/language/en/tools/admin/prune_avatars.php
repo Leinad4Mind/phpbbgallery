@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -36,10 +36,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'PRUNE_AVATARS'				=> 'Checking avatar files',
-	'PRUNE_AVATARS_EXPLAIN'		=> 'This tool checks for the existence of extra avatars files (<em>files from avatars galleries are not checked</ em>). If these files exists, it will be removed. Continue?',
-	'PRUNE_AVATARS_FINISHED'	=> 'Extra avatars files not found.',
-	'PRUNE_AVATARS_PROGRESS'	=> 'Checking unnecessary files in progress. Do not interrupt the process!<br />The following files have been deleted:',
-	'PRUNE_AVATARS_FAIL'		=> '<br />The following files could not be removed:',
-));
+$lang = array_merge($lang, [
+	'PRUNE_AVATARS'          => 'Checking avatar files',
+	'PRUNE_AVATARS_EXPLAIN'  => 'This tool checks for the existence of extra avatars files (<em>files from avatars galleries are not checked</ em>). If these files exists, it will be removed. Continue?',
+	'PRUNE_AVATARS_FINISHED' => 'Extra avatars files not found.',
+	'PRUNE_AVATARS_PROGRESS' => 'Checking unnecessary files in progress. Do not interrupt the process!<br />The following files have been deleted:',
+	'PRUNE_AVATARS_FAIL'     => '<br />The following files could not be removed:',
+]);

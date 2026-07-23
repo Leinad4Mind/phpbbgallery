@@ -10,8 +10,8 @@
  */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -42,11 +42,11 @@ $lang = array_merge($lang, [
 	'AVATAR_EFFECT'         => 'Efeitos de Avatar no Tópico',
 	'MINI_PROFILE_POSITION' => 'Posição do Mini Perfil do Usuário',
 
-	'CALL_ENABLED'          => 'Ativar barra de Chamada para Ação (CtA)',
-	'CALL_ONLY_REGISTERED'  => 'Exibir a barra CtA apenas para usuários registrados',
-	'CALL_TEXT'             => 'Texto da CtA',
-	'CALL_BUTTON_TEXT'      => 'Texto do botão da CtA',
-	'CALL_LINK'             => 'URL do botão da CtA',
+	'CALL_ENABLED'         => 'Ativar barra de Chamada para Ação (CtA)',
+	'CALL_ONLY_REGISTERED' => 'Exibir a barra CtA apenas para usuários registrados',
+	'CALL_TEXT'            => 'Texto da CtA',
+	'CALL_BUTTON_TEXT'     => 'Texto do botão da CtA',
+	'CALL_LINK'            => 'URL do botão da CtA',
 
 	// Descriptions for Config page
 	'ABOUT_US_TITLE_EXPLAIN'        => 'Digite o título do bloco Sobre Nós.',
@@ -131,13 +131,13 @@ $lang = array_merge($lang, [
 	'LINK_UPDATED'              => 'Link atualizado com sucesso',
 	'LINK_ADDED'                => 'Novo link adicionado com sucesso',
 
-	'BBOOTS_STYLE_ADD_SOCIAL'    => 'Adicionar Rede Social',
-	'BBOOTS_STYLE_EDIT_SOCIAL'   => 'Editar Rede Social',
-	'MENU_SOCIAL_NAME'           => 'Nome da Rede Social',
-	'MENU_SOCIAL_NAME_EXPLAIN'   => 'Você pode usar texto simples ou uma variável de idioma, como por exemplo {L_PRIVATE_MESSAGES}',
-	'MENU_SOCIAL_URL'            => 'URL',
-	'MENU_SOCIAL_URL_EXPLAIN'    => 'Você pode usar um endereço URL, incluindo o protocolo https://, ou uma variável de template, como por exemplo {U_PRIVATEMSGS}. Você pode encontrar as variáveis de template disponíveis no arquivo includes/functions.php, por volta da linha 4545',
-	'MENU_SOCIAL_DISPLAY'        => 'Exibir a rede social',
+	'BBOOTS_STYLE_ADD_SOCIAL'     => 'Adicionar Rede Social',
+	'BBOOTS_STYLE_EDIT_SOCIAL'    => 'Editar Rede Social',
+	'MENU_SOCIAL_NAME'            => 'Nome da Rede Social',
+	'MENU_SOCIAL_NAME_EXPLAIN'    => 'Você pode usar texto simples ou uma variável de idioma, como por exemplo {L_PRIVATE_MESSAGES}',
+	'MENU_SOCIAL_URL'             => 'URL',
+	'MENU_SOCIAL_URL_EXPLAIN'     => 'Você pode usar um endereço URL, incluindo o protocolo https://, ou uma variável de template, como por exemplo {U_PRIVATEMSGS}. Você pode encontrar as variáveis de template disponíveis no arquivo includes/functions.php, por volta da linha 4545',
+	'MENU_SOCIAL_DISPLAY'         => 'Exibir a rede social',
 	'MENU_SOCIAL_ONLY_REGISTERED' => 'Exibir apenas para Usuários Registrados',
 	'MENU_SOCIAL_ONLY_GUEST'      => 'Exibir apenas para Visitantes',
 	'MENU_SOCIAL_NAV'             => 'Redes Sociais',

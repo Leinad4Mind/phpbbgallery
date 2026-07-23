@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -48,15 +48,15 @@ if (empty($lang) || !is_array($lang))
 *
 * Translators: Feel free to not translate these language strings
 */
-$lang = array_merge($lang, array(
-	'EXCEPTION_FIELD_MISSING'		=> 'Gerekli alan eksik',
-	'EXCEPTION_INVALID_ARGUMENT'	=> '`%1$s` için geçersiz değişken belirtildi. Sebep: %2$s',
-	'EXCEPTION_OUT_OF_BOUNDS'		=> '`%1$s` alanı sınırın ötesinde bir veri aldı',
-	'EXCEPTION_TOO_LONG'			=> 'Girdi, en fazla izin verilen uzunluğu aşıyordu.',
-	'EXCEPTION_NOT_UNIQUE'			=> 'Girdi benzersiz değildi.',
-	'EXCEPTION_UNEXPECTED_VALUE'	=> '`%1$s` alanı beklenmeyen veriler aldı. Sebep: %2$s',
-	'EXCEPTION_ILLEGAL_CHARACTERS'	=> 'Girdi illegal karakterler içeriyordu.',
+$lang = array_merge($lang, [
+	'EXCEPTION_FIELD_MISSING'      => 'Gerekli alan eksik',
+	'EXCEPTION_INVALID_ARGUMENT'   => '`%1$s` için geçersiz değişken belirtildi. Sebep: %2$s',
+	'EXCEPTION_OUT_OF_BOUNDS'      => '`%1$s` alanı sınırın ötesinde bir veri aldı',
+	'EXCEPTION_TOO_LONG'           => 'Girdi, en fazla izin verilen uzunluğu aşıyordu.',
+	'EXCEPTION_NOT_UNIQUE'         => 'Girdi benzersiz değildi.',
+	'EXCEPTION_UNEXPECTED_VALUE'   => '`%1$s` alanı beklenmeyen veriler aldı. Sebep: %2$s',
+	'EXCEPTION_ILLEGAL_CHARACTERS' => 'Girdi illegal karakterler içeriyordu.',
 
 	// Translators: do not change this
-	'EXCEPTION_WRONG_DATA_LANG'		=> $lang['WRONG_DATA_LANG'],
-));
+	'EXCEPTION_WRONG_DATA_LANG' => $lang['WRONG_DATA_LANG'],
+]);

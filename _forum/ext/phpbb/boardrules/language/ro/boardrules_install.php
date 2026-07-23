@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,12 +37,12 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES_SAMPLE_CATEGORY_TITLE'		=> 'Exemplu categorie regula',
-	'BOARDRULES_SAMPLE_CATEGORY_MESSAGE'	=> 'Aceasta categorie este un exemplu pentru explicarea acestei extensii.',
-	'BOARDRULES_SAMPLE_CATEGORY_ANCHOR'		=> 'examplu-categorie',
+$lang = array_merge($lang, [
+	'BOARDRULES_SAMPLE_CATEGORY_TITLE'   => 'Exemplu categorie regula',
+	'BOARDRULES_SAMPLE_CATEGORY_MESSAGE' => 'Aceasta categorie este un exemplu pentru explicarea acestei extensii.',
+	'BOARDRULES_SAMPLE_CATEGORY_ANCHOR'  => 'examplu-categorie',
 
-	'BOARDRULES_SAMPLE_RULE_TITLE'			=> 'Exemplu de regula',
-	'BOARDRULES_SAMPLE_RULE_MESSAGE'		=> 'Aceasta regula este un exemplu pentru explicarea acestei extensii.',
-	'BOARDRULES_SAMPLE_RULE_ANCHOR'			=> 'examplu-regula',
-));
+	'BOARDRULES_SAMPLE_RULE_TITLE'   => 'Exemplu de regula',
+	'BOARDRULES_SAMPLE_RULE_MESSAGE' => 'Aceasta regula este un exemplu pentru explicarea acestei extensii.',
+	'BOARDRULES_SAMPLE_RULE_ANCHOR'  => 'examplu-regula',
+]);

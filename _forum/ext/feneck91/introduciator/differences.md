@@ -7239,7 +7239,7 @@ new file mode 100644
 +- * Mode: explanation
 +- * Info: language keys are prefixed with 'INTRODUCIATOR_EP_' for 'INTRODUCIATOR_EXPLANATION_PAGES_'
 +- */
-++* mode: explanation
+++* Mode: explanation
 ++* Info: language keys are prefixed with 'INTRODUCIATOR_EP_' for 'INTRODUCIATOR_EXPLANATION_PAGES_'
 ++*/
 + $lang = array_merge($lang, array(
@@ -7598,7 +7598,7 @@ new file mode 100644
 +- * Mode: explanation
 +- * Info: language keys are prefixed with 'INTRODUCIATOR_EP_' for 'INTRODUCIATOR_EXPLANATION_PAGES_'
 +- */
-++* mode: explanation
+++* Mode: explanation
 ++* Info: language keys are prefixed with 'INTRODUCIATOR_EP_' for 'INTRODUCIATOR_EXPLANATION_PAGES_'
 ++*/
 + $lang = array_merge($lang, array(
@@ -7968,10 +7968,10 @@ new file mode 100644
 + //
 + 
 + /**
-+- * mode: explanation
++- * Mode: explanation
 +- * Info: language keys are prefixed with 'INTRODUCIATOR_EP_' for 'INTRODUCIATOR_EXPLANATION_PAGES_'
 +- */
-++* mode: explanation
+++* Mode: explanation
 ++* Info: language keys are prefixed with 'INTRODUCIATOR_EP_' for 'INTRODUCIATOR_EXPLANATION_PAGES_'
 ++*/
 + $lang = array_merge($lang, array(
@@ -8735,7 +8735,7 @@ new file mode 100644
 +- * Mode: explanation
 +- * Info: language keys are prefixed with 'INTRODUCIATOR_EP_' for 'INTRODUCIATOR_EXPLANATION_PAGES_'
 +- */
-++* mode: explanation
+++* Mode: explanation
 ++* Info: language keys are prefixed with 'INTRODUCIATOR_EP_' for 'INTRODUCIATOR_EXPLANATION_PAGES_'
 ++*/
 + $lang = array_merge($lang, array(
@@ -10681,7 +10681,7 @@ new file mode 100644
 +- * Mode: explanation
 +- * Info: language keys are prefixed with 'INTRODUCIATOR_EP_' for 'INTRODUCIATOR_EXPLANATION_PAGES_'
 +- */
-++* mode: explanation
+++* Mode: explanation
 ++* Info: language keys are prefixed with 'INTRODUCIATOR_EP_' for 'INTRODUCIATOR_EXPLANATION_PAGES_'
 ++*/
 + $lang = array_merge($lang, array(
@@ -18926,7 +18926,7 @@ new file mode 100644
 ++- * Mode: explanation
 ++- * Info: language keys are prefixed with 'INTRODUCIATOR_EP_' for 'INTRODUCIATOR_EXPLANATION_PAGES_'
 ++- */
-+++* mode: explanation
++++* Mode: explanation
 +++* Info: language keys are prefixed with 'INTRODUCIATOR_EP_' for 'INTRODUCIATOR_EXPLANATION_PAGES_'
 +++*/
 ++ $lang = array_merge($lang, array(
@@ -19285,7 +19285,7 @@ new file mode 100644
 ++- * Mode: explanation
 ++- * Info: language keys are prefixed with 'INTRODUCIATOR_EP_' for 'INTRODUCIATOR_EXPLANATION_PAGES_'
 ++- */
-+++* mode: explanation
++++* Mode: explanation
 +++* Info: language keys are prefixed with 'INTRODUCIATOR_EP_' for 'INTRODUCIATOR_EXPLANATION_PAGES_'
 +++*/
 ++ $lang = array_merge($lang, array(
@@ -19655,10 +19655,10 @@ new file mode 100644
 ++ //
 ++ 
 ++ /**
-++- * mode: explanation
+++- * Mode: explanation
 ++- * Info: language keys are prefixed with 'INTRODUCIATOR_EP_' for 'INTRODUCIATOR_EXPLANATION_PAGES_'
 ++- */
-+++* mode: explanation
++++* Mode: explanation
 +++* Info: language keys are prefixed with 'INTRODUCIATOR_EP_' for 'INTRODUCIATOR_EXPLANATION_PAGES_'
 +++*/
 ++ $lang = array_merge($lang, array(
@@ -20422,7 +20422,7 @@ new file mode 100644
 ++- * Mode: explanation
 ++- * Info: language keys are prefixed with 'INTRODUCIATOR_EP_' for 'INTRODUCIATOR_EXPLANATION_PAGES_'
 ++- */
-+++* mode: explanation
++++* Mode: explanation
 +++* Info: language keys are prefixed with 'INTRODUCIATOR_EP_' for 'INTRODUCIATOR_EXPLANATION_PAGES_'
 +++*/
 ++ $lang = array_merge($lang, array(
@@ -22368,7 +22368,7 @@ new file mode 100644
 ++- * Mode: explanation
 ++- * Info: language keys are prefixed with 'INTRODUCIATOR_EP_' for 'INTRODUCIATOR_EXPLANATION_PAGES_'
 ++- */
-+++* mode: explanation
++++* Mode: explanation
 +++* Info: language keys are prefixed with 'INTRODUCIATOR_EP_' for 'INTRODUCIATOR_EXPLANATION_PAGES_'
 +++*/
 ++ $lang = array_merge($lang, array(
@@ -24623,7 +24623,7 @@ diff --git "[ORIGINAL]/feneck91\\introduciator/language/de/acp_explanation.php" 
  
  /**
 - * Mode: explanation
-+* mode: explanation
++* Mode: explanation
  * Info: language keys are prefixed with 'INTRODUCIATOR_EP_' for 'INTRODUCIATOR_EXPLANATION_PAGES_'
  */
  $lang = array_merge($lang, array(
@@ -24851,7 +24851,7 @@ diff --git "[ORIGINAL]/feneck91\\introduciator/language/de_x_sie/acp_explanation
  
  /**
 - * Mode: explanation
-+* mode: explanation
++* Mode: explanation
  * Info: language keys are prefixed with 'INTRODUCIATOR_EP_' for 'INTRODUCIATOR_EXPLANATION_PAGES_'
  */
  $lang = array_merge($lang, array(
@@ -25590,7 +25590,7 @@ diff --git "[ORIGINAL]/feneck91\\introduciator/language/it/acp_explanation.php" 
  
  /**
 - * Mode: explanation
-+* mode: explanation
++* Mode: explanation
  * Info: language keys are prefixed with 'INTRODUCIATOR_EP_' for 'INTRODUCIATOR_EXPLANATION_PAGES_'
  */
  $lang = array_merge($lang, array(
@@ -27357,7 +27357,7 @@ diff --git "[ORIGINAL]/feneck91\\introduciator/language/zh_cmn_hans/acp_explanat
  
  /**
 - * Mode: explanation
-+* mode: explanation
++* Mode: explanation
  * Info: language keys are prefixed with 'INTRODUCIATOR_EP_' for 'INTRODUCIATOR_EXPLANATION_PAGES_'
  */
  $lang = array_merge($lang, array(

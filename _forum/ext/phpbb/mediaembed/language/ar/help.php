@@ -39,9 +39,9 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'HELP_EMBEDDING_MEDIA'			=> 'إدراج مُحتوى الوسائط',
-	'HELP_EMBEDDING_MEDIA_QUESTION'	=> 'كيف أستطيع إدراج مُحتوى الوسائط من المواقع الأخرى في المُشاركات؟',
-	'HELP_EMBEDDING_MEDIA_ANSWER'	=> 'يستطيع الأعضاء إدراج محتوى الوسائط مثل الفيديو والمقاطع الصوتية من المواقع المسموح بها بإستخدام
+	'HELP_EMBEDDING_MEDIA'          => 'إدراج مُحتوى الوسائط',
+	'HELP_EMBEDDING_MEDIA_QUESTION' => 'كيف أستطيع إدراج مُحتوى الوسائط من المواقع الأخرى في المُشاركات؟',
+	'HELP_EMBEDDING_MEDIA_ANSWER'   => 'يستطيع الأعضاء إدراج محتوى الوسائط مثل الفيديو والمقاطع الصوتية من المواقع المسموح بها بإستخدام
 										الوسم <strong>[media][/media]</strong>, أو ببساطة كتابة الرابط لأحد المواقع المدعومة
 										كما هو بدون الوسوم. مثال:<br /><br />
 										<strong>[media]</strong>%1$s<strong>[/media]</strong>
@@ -52,5 +52,5 @@ $lang = array_merge($lang, [
 										<br /><br />للمزيد من المعلومات والأمثلة للمواقع المدعومة,
 										انقر على هذا الرابط <a href="https://s9etextformatter.readthedocs.io/Plugins/MediaEmbed/Sites/">
 										معلومات إدراج مُحتوى الوسائط</a>.',
-	'HELP_EMBEDDING_MEDIA_DEMO'		=>	'https://youtu.be/QH2-TGUlwu4',
+	'HELP_EMBEDDING_MEDIA_DEMO' => 'https://youtu.be/QH2-TGUlwu4',
 ]);

@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -47,15 +47,15 @@ if (empty($lang) || !is_array($lang))
 *
 * Translators: Feel free to not translate these language strings
 */
-$lang = array_merge($lang, array(
-	'EXCEPTION_FIELD_MISSING'		=> 'Обов\'язкове поле незаповнене',
-	'EXCEPTION_INVALID_ARGUMENT'	=> 'Некоректне значення у полі `%1$s`. Причина: %2$s',
-	'EXCEPTION_OUT_OF_BOUNDS'		=> 'В полі `%1$s` знаходиться значення, що виходить за допустимі рамки',
-	'EXCEPTION_TOO_LONG'			=> 'Введений рядок довший за максимум.',
-	'EXCEPTION_NOT_UNIQUE'			=> 'Значення не унікальне.',
-	'EXCEPTION_UNEXPECTED_VALUE'	=> 'Некоректне значення у полі `%1$s`. Причина: %2$s',
-	'EXCEPTION_ILLEGAL_CHARACTERS'	=> 'Введений рядок містить некоректні символи.',
+$lang = array_merge($lang, [
+	'EXCEPTION_FIELD_MISSING'      => 'Обов\'язкове поле незаповнене',
+	'EXCEPTION_INVALID_ARGUMENT'   => 'Некоректне значення у полі `%1$s`. Причина: %2$s',
+	'EXCEPTION_OUT_OF_BOUNDS'      => 'В полі `%1$s` знаходиться значення, що виходить за допустимі рамки',
+	'EXCEPTION_TOO_LONG'           => 'Введений рядок довший за максимум.',
+	'EXCEPTION_NOT_UNIQUE'         => 'Значення не унікальне.',
+	'EXCEPTION_UNEXPECTED_VALUE'   => 'Некоректне значення у полі `%1$s`. Причина: %2$s',
+	'EXCEPTION_ILLEGAL_CHARACTERS' => 'Введений рядок містить некоректні символи.',
 
 	// Translators: do not change this
-	'EXCEPTION_WRONG_DATA_LANG'		=> $lang['WRONG_DATA_LANG'],
-));
+	'EXCEPTION_WRONG_DATA_LANG' => $lang['WRONG_DATA_LANG'],
+]);

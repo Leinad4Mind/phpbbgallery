@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,7 +37,7 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'ACL_F_HIDE_TOPIC'		    => 'Can hide (and set a price) own topic',
-	'ACL_U_BBPOINTS_OVERRIDE'	=> 'Can override BBpoints limit',
-));
+$lang = array_merge($lang, [
+	'ACL_F_HIDE_TOPIC'        => 'Can hide (and set a price) own topic',
+	'ACL_U_BBPOINTS_OVERRIDE' => 'Can override BBpoints limit',
+]);

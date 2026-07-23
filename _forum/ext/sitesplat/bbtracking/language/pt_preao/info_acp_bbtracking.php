@@ -18,11 +18,20 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
+	'ACP_BBTRACKING'          => 'BBtracking',
+	'ACP_BBTRACKING_EXPLAIN'  => 'Aqui podes adicionar utilizadores a monitorizar (ou grupos inteiros). Os utilizadores ou grupos serão então monitorizados em todo o fórum quando forem despoletadas acções específicas que possam ser úteis para compreender o comportamento do utilizador. <br />',
+	'ACP_BBTRACKING_SETTINGS' => 'Configurações do BBtracking',
+	'ACP_BBTRACKING_LOGS'     => 'Registos do BBtracking',
+	'ACP_BBTRACKING_LOGS_EXPLAIN' => 'Os movimentos monitorizados dos utilizadores ou grupos podem ser vistos abaixo.',
+
+	'USER_UNTRACKED' => 'O utilizador deixou de ser monitorizado.',
+	'TRACKED_UPDATED' => 'A lista de monitorização foi actualizada.',
+
 	'ADD_USER'               => 'Adicionar utilizador',
 	'TRACKED_USERS'          => 'Utilizadores monitorizados',
 	'TRACKED_USERS_EXPLAIN'  => 'Adicionar utilizadores individuais para serem monitorizados/rastreados',
 	'TRACKED_GROUPS'         => 'Grupos monitorizados',
-	'TRACKED_GROUPS_EXPLAIN' => 'Selecione um grupo específico para ser monitorizado/rastreado',
+	'TRACKED_GROUPS_EXPLAIN' => 'Selecciona um grupo específico para ser monitorizado/rastreado',
 
 	'TRACKING_TYPE' => 'Tipo de monitorização',
 	'ALL'           => 'Tudo',
@@ -45,14 +54,14 @@ $lang = array_merge($lang, [
 	'TRACKING_TYPE_LOGOUT_LABEL'                 => 'Terminar sessão (Logout)',
 	'TRACKING_TYPE_SEND_PM_LABEL'                => 'Envio de MP',
 
-	'SS_HELPER_NOTY'    => 'O SiteSplat BBcore não existe!<br />Faça o download do <a href="https://sitesplat.com" target="_blank">BBcore</a> e copie a pasta BBcore para a pasta da sua extensão sitesplat.',
-	'BBTRACKING_NOTICE' => '<div class="phpinfo"><p>As definições desta extensão podem ser encontradas no separador "EXTENSÕES".<br />Nota: outras opções da extensão encontram-se em: ACP > Fóruns: "selecione o seu fórum" e clique no ícone da engrenagem verde para entrar no modo de edição. Em seguida, verifique "Guardar revisões de mensagens" e "Limpar automaticamente as revisões". <br/>Além disso, não se esqueça de verificar as "Permissões de fórum de grupos" no separador de permissões "Acções".<br /> Por fim, os utilizadores (que têm permissões) podem utilizar a opção de revisão de mensagens na visualização do tópico (viewtopic), no menu suspenso de mensagem individual.</p></div>',
+	'SS_HELPER_NOTY'    => 'O SiteSplat BBcore não existe!<br />Transfere o <a href="https://sitesplat.com" target="_blank">BBcore</a> e copia a pasta BBcore para a pasta da tua extensão sitesplat.',
+	'BBTRACKING_NOTICE' => '<div class="phpinfo"><p>As definições desta extensão podem ser encontradas no separador "EXTENSÕES".<br />Nota: outras opções da extensão encontram-se em: ACP > Fóruns: "selecciona o teu fórum" e clica no ícone da engrenagem verde para entrares no modo de edição. Em seguida, verifica "Guardar revisões de mensagens" e "Limpar automaticamente as revisões". <br/>Além disso, não te esqueças de verificar as "Permissões de fórum de grupos" no separador de permissões "Acções".<br /> Por fim, os utilizadores (que têm permissões) podem utilizar a opção de revisão de mensagens na visualização do tópico (viewtopic), no menu suspenso de mensagem individual.</p></div>',
 
 	'ACP_PRIMEPOSTREVISIONS_ENABLE'         => 'Armazenar revisões de mensagens',
 	'ACP_PRIMEPOSTREVISIONS_ENABLE_EXPLAIN' => 'Manter um histórico de revisões de todas as edições de mensagens.',
 
 	'ACP_PRIMEPOSTREVISIONS_AUTOPRUNE'         => 'Limpar automaticamente (Auto-prune) as revisões',
-	'ACP_PRIMEPOSTREVISIONS_AUTOPRUNE_EXPLAIN' => 'Eliminar automaticamente revisões de mensagens mais antigas do que o número de dias fornecido. Defina como 0 para desactivar.',
+	'ACP_PRIMEPOSTREVISIONS_AUTOPRUNE_EXPLAIN' => 'Elimina automaticamente revisões de mensagens mais antigas do que o número de dias fornecido. Define como 0 para desactivar.',
 
 	'LOG_PRIMEPOSTREVISIONS_AUTOPRUNE' => '<strong>Revisões de mensagens eliminadas automaticamente</strong><br />» Revisões eliminadas: %d',
 ]);

@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -33,9 +33,9 @@ if (empty($lang) || !is_array($lang))
 // equally where a string contains only two placeholders which are used to wrap text
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
 
-$lang = array_merge($lang, array(
-	'PASSWORD_STRENGTH_TYPE'			=> 'Алгоритм сложности пароля',
-	'PASSWORD_STRENGTH_TYPE_EXPLAIN'	=> 'Выберите алгоритм для определения сложности пароля.<br><strong>Комплексный</strong> проверяет наличие и сочетание букв, цифр и другних символов, а так же длину пароля, поощряя сложные пароли.<br><strong>zxcvbn-алгоритм</strong> (от Dropbox) вычисляет сложность подбора и позволяет использовать дружественные пользователю, но при этом надёжные пароли.',
-	'PASSWORD_STRENGTH_TYPE_COMPLEX'	=> 'Комплексный',
-	'PASSWORD_STRENGTH_TYPE_ZXCVBN'		=> 'zxcvbn-алгоритм',
-));
+$lang = array_merge($lang, [
+	'PASSWORD_STRENGTH_TYPE'         => 'Алгоритм сложности пароля',
+	'PASSWORD_STRENGTH_TYPE_EXPLAIN' => 'Выберите алгоритм для определения сложности пароля.<br><strong>Комплексный</strong> проверяет наличие и сочетание букв, цифр и другних символов, а так же длину пароля, поощряя сложные пароли.<br><strong>zxcvbn-алгоритм</strong> (от Dropbox) вычисляет сложность подбора и позволяет использовать дружественные пользователю, но при этом надёжные пароли.',
+	'PASSWORD_STRENGTH_TYPE_COMPLEX' => 'Комплексный',
+	'PASSWORD_STRENGTH_TYPE_ZXCVBN'  => 'zxcvbn-алгоритм',
+]);

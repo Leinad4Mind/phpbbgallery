@@ -39,8 +39,8 @@ if (empty($lang) || !is_array($lang))
  */
 
 $lang = array_merge($lang, [
-	'ACP_USER_DETAILS' 			=> 'User details',
-	'ACP_USER_UTILS' 			=> 'User utilities',
-	'ACP_USER_DETAILS_CONFIG'	=> 'User details configuration',
-	'USER_DETAILS_MANAGE' 		=> 'Config user details',
+	'ACP_USER_DETAILS'        => 'User details',
+	'ACP_USER_UTILS'          => 'User utilities',
+	'ACP_USER_DETAILS_CONFIG' => 'User details configuration',
+	'USER_DETAILS_MANAGE'     => 'Config user details',
 ]);

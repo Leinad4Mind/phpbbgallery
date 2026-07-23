@@ -8,8 +8,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,6 +38,6 @@ if (empty($lang) || !is_array($lang))
 
 use robertheim\activitystats\permissions;
 
-$lang = array_merge($lang, array(
-	'ACL_'.utf8_strtoupper(permissions::SEE_STATS)	=> 'Can see activity stats',
-));
+$lang = array_merge($lang, [
+	'ACL_'.utf8_strtoupper(permissions::SEE_STATS) => 'Can see activity stats',
+]);

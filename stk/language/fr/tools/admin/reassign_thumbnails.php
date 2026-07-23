@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,18 +38,18 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'REASSIGN_THUMBNAILS'			=> 'Reconstruction des miniatures',
-	'REASSIGN_THUMBNAILS_CONFIRM'	=> 'Lorsque l’option suivante « Créer une miniature » est désactivée et que des fichiers joints existent, cet outil permet de créer des miniatures associées aux fichiers joints existants.<br />Poursuivre ?',
-	'REASSIGN_THUMBNAILS_PROGRESS'	=> 'Création de miniatures en cours… merci de ne pas interrompre l’opération !',
-	'REASSIGN_THUMBNAILS_FINISHED'	=> 'Création de miniatures terminée.',
-	'NO_THUMBNAILS_TO_REBUILD'		=> 'Aucun fichier nécessite des miniatures.',
-	'NEED_TO_PROCESS' 				=> 'Fichiers joints sans miniatures : ',
-	'THUMB'							=> '<strong>miniature</strong>',
-	'REBUILT'						=> 'Créer des miniatures',
-	'NO_NEED_REBUILT'				=> '<strong style="color: #aaa;">Aucun besoin de miniatures</strong> for ',
-	'SOURCE_UNAVAILABLE'			=> 'Fichier non trouvé : ',
-	'NO_EXTENSIONS'					=> 'Il n’y a aucune extension de fichier pour le groupe d’extensions « <strong>Images</ strong> ».',
-	'NO_EXTENSIONS_GROUP'			=> 'Le groupe d’extensions « <strong>Images</ strong> » n’existe pas.',
-	'IMAGES'						=> 'Images',
-));
+$lang = array_merge($lang, [
+	'REASSIGN_THUMBNAILS'          => 'Reconstruction des miniatures',
+	'REASSIGN_THUMBNAILS_CONFIRM'  => 'Lorsque l’option suivante « Créer une miniature » est désactivée et que des fichiers joints existent, cet outil permet de créer des miniatures associées aux fichiers joints existants.<br />Poursuivre ?',
+	'REASSIGN_THUMBNAILS_PROGRESS' => 'Création de miniatures en cours… merci de ne pas interrompre l’opération !',
+	'REASSIGN_THUMBNAILS_FINISHED' => 'Création de miniatures terminée.',
+	'NO_THUMBNAILS_TO_REBUILD'     => 'Aucun fichier nécessite des miniatures.',
+	'NEED_TO_PROCESS'              => 'Fichiers joints sans miniatures : ',
+	'THUMB'                        => '<strong>miniature</strong>',
+	'REBUILT'                      => 'Créer des miniatures',
+	'NO_NEED_REBUILT'              => '<strong style="color: #aaa;">Aucun besoin de miniatures</strong> for ',
+	'SOURCE_UNAVAILABLE'           => 'Fichier non trouvé : ',
+	'NO_EXTENSIONS'                => 'Il n’y a aucune extension de fichier pour le groupe d’extensions « <strong>Images</ strong> ».',
+	'NO_EXTENSIONS_GROUP'          => 'Le groupe d’extensions « <strong>Images</ strong> » n’existe pas.',
+	'IMAGES'                       => 'Images',
+]);

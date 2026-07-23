@@ -39,25 +39,25 @@ if (empty($lang) || !is_array($lang))
  */
 
 $lang = array_merge($lang, [
-	'DEFAULT_ALL_POSTS' 		=> '<strong>Default = All posts</strong>',
-	'DEFAULT_ALL_TOPICS' 		=> '<strong>Default = All topics</strong>',
-	'DEFAULT_ASC' 				=> '<strong>Default = Ascending</strong>',
-	'DEFAULT_DATE_FORMAT' 		=> '<strong>Default = %s</strong>',
-	'DEFAULT_DESC' 				=> '<strong>Default = Descending</strong>',
-	'DEFAULT_EMAIL' 			=> '<strong>Default = Email</strong>',
-	'DEFAULT_NO' 				=> '<strong>Default = No</strong>',
-	'DEFAULT_NOTIFICATION' 		=> '<strong>Default = Notification</strong>',
-	'DEFAULT_POST_TIME' 		=> '<strong>Default = Post time</strong>',
-	'DEFAULT_YES' 				=> '<strong>Default = Yes</strong>',
-	'DISPLAY_SETTINGS' 			=> 'Display options',
+	'DEFAULT_ALL_POSTS'    => '<strong>Default = All posts</strong>',
+	'DEFAULT_ALL_TOPICS'   => '<strong>Default = All topics</strong>',
+	'DEFAULT_ASC'          => '<strong>Default = Ascending</strong>',
+	'DEFAULT_DATE_FORMAT'  => '<strong>Default = %s</strong>',
+	'DEFAULT_DESC'         => '<strong>Default = Descending</strong>',
+	'DEFAULT_EMAIL'        => '<strong>Default = Email</strong>',
+	'DEFAULT_NO'           => '<strong>Default = No</strong>',
+	'DEFAULT_NOTIFICATION' => '<strong>Default = Notification</strong>',
+	'DEFAULT_POST_TIME'    => '<strong>Default = Post time</strong>',
+	'DEFAULT_YES'          => '<strong>Default = Yes</strong>',
+	'DISPLAY_SETTINGS'     => 'Display options',
 
-	'EMAIL' 					=> 'Email',
+	'EMAIL' => 'Email',
 
-	'GLOBAL_SETTINGS' 			=> 'Global settings',
+	'GLOBAL_SETTINGS' => 'Global settings',
 
-	'NOTIFICATION' 				=> 'Notification',
+	'NOTIFICATION' => 'Notification',
 
-	'POSTING_SETTINGS' 			=> 'Posting defaults',
+	'POSTING_SETTINGS' => 'Posting defaults',
 
-	'USER_DEFAULTS_EXPLAIN' 	=> 'Set here the values that you want as the default values for <strong>new</strong> users.<br>Any changes made via this form will <strong>not</strong> affect existing users.',
+	'USER_DEFAULTS_EXPLAIN' => 'Set here the values that you want as the default values for <strong>new</strong> users.<br>Any changes made via this form will <strong>not</strong> affect existing users.',
 ]);

@@ -9,8 +9,8 @@
  */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -41,17 +41,17 @@ if (empty($lang) || !is_array($lang))
 * mode: general
 * Info: language keys are prefixed with 'INTRODUCIATOR_GP_' for 'INTRODUCIATOR_GENERAL_PAGES_'
 */
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// Titles
-	'INTRODUCIATOR_GP_TITLE'							=> 'Generals informations',
-	'INTRODUCIATOR_GP_TITLE_EXPLAIN'					=> 'Get version of this extension.',
+	'INTRODUCIATOR_GP_TITLE'         => 'Generals informations',
+	'INTRODUCIATOR_GP_TITLE_EXPLAIN' => 'Get version of this extension.',
 
 	// Extension's informations
-	'INTRODUCIATOR_GP_INFOS_ARRAY_HEADER_INFORMATIONS'	=> 'Informations',
-	'INTRODUCIATOR_GP_INFOS_ARRAY_HEADER_VALUES'		=> 'Values',
-	'INTRODUCIATOR_GP_INFOS'							=> 'Introduciator infos',
-	'INTRODUCIATOR_GP_INSTALL_DATE'						=> 'Install date of <strong>Introduciator</strong> extension:',
-	'INTRODUCIATOR_GP_VERSION'							=> '<strong>Introduciator</strong> extension version:',
-	'INTRODUCIATOR_GP_DETAILS'							=> 'Details',
-	'INTRODUCIATOR_GP_URL_DETAILS'						=> 'https://www.phpbb.com/customise/db/extension/introduciator/',
-));
+	'INTRODUCIATOR_GP_INFOS_ARRAY_HEADER_INFORMATIONS' => 'Informations',
+	'INTRODUCIATOR_GP_INFOS_ARRAY_HEADER_VALUES'       => 'Values',
+	'INTRODUCIATOR_GP_INFOS'                           => 'Introduciator infos',
+	'INTRODUCIATOR_GP_INSTALL_DATE'                    => 'Install date of <strong>Introduciator</strong> extension:',
+	'INTRODUCIATOR_GP_VERSION'                         => '<strong>Introduciator</strong> extension version:',
+	'INTRODUCIATOR_GP_DETAILS'                         => 'Details',
+	'INTRODUCIATOR_GP_URL_DETAILS'                     => 'https://www.phpbb.com/customise/db/extension/introduciator/',
+]);

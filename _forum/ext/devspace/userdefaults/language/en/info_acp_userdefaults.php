@@ -39,7 +39,7 @@ if (empty($lang) || !is_array($lang))
  */
 
 $lang = array_merge($lang, [
-	'MANAGE_DEFAULTS' 	=> 'Manage settings',
-	'USER_DEFAULTS' 	=> 'User defaults',
-	'USER_DEFAULTS_LOG'	=> '<strong>User default settings updated</strong>',
+	'MANAGE_DEFAULTS'   => 'Manage settings',
+	'USER_DEFAULTS'     => 'User defaults',
+	'USER_DEFAULTS_LOG' => '<strong>User default settings updated</strong>',
 ]);

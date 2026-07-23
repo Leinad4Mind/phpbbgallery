@@ -39,9 +39,9 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'HELP_EMBEDDING_MEDIA'			=> 'Meedia manustamine',
-	'HELP_EMBEDDING_MEDIA_QUESTION'	=> 'Kuidas manustada meediat teiselt veebileheküljelt postitusse',
-	'HELP_EMBEDDING_MEDIA_ANSWER'	=> 'Kasutajatel on võimalik manustada sisu nagu näiteks videosi ja helifaile lubatud veebilehekülgedelt kasutades
+	'HELP_EMBEDDING_MEDIA'          => 'Meedia manustamine',
+	'HELP_EMBEDDING_MEDIA_QUESTION' => 'Kuidas manustada meediat teiselt veebileheküljelt postitusse',
+	'HELP_EMBEDDING_MEDIA_ANSWER'   => 'Kasutajatel on võimalik manustada sisu nagu näiteks videosi ja helifaile lubatud veebilehekülgedelt kasutades
 										<strong>[media][/media]</strong> silte või lihtsalt postitades toetatud veebiaadresse puhta tekstina. Näiteks:<br><br>
 										<strong>[media]</strong>%1$s<strong>[/media]</strong>
 										<br><br>Nii nagu eespool öeldud, siis aadressi on võimalik kasutada ka ilma

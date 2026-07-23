@@ -10,8 +10,8 @@
  */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -58,7 +58,7 @@ $lang = array_merge($lang, [
 
 	// Delete a revision
 	'PRIMEPOSTREVISIONS_DELETE'         => 'Excluir Revisão',
-	'PRIMEPOSTREVISIONS_DELETE_CONFIRM' => 'Tem a certeza de que pretende excluir esta revisão?',
+	'PRIMEPOSTREVISIONS_DELETE_CONFIRM' => 'Tem certeza de que quer excluir esta revisão?',
 	'PRIMEPOSTREVISIONS_DELETE_DENIED'  => 'Faltam-lhe as permissões necessárias para excluir esta revisão.',
 	'PRIMEPOSTREVISIONS_DELETE_FAILED'  => 'Ocorreu um erro ao tentar excluir a revisão.',
 	'PRIMEPOSTREVISIONS_DELETE_SUCCESS' => 'A revisão foi removida com sucesso.',
@@ -66,7 +66,7 @@ $lang = array_merge($lang, [
 
 	// Delete all revisions
 	'PRIMEPOSTREVISIONS_DELETES'         => 'Excluir revisões selecionadas',
-	'PRIMEPOSTREVISIONS_DELETES_CONFIRM' => 'Tem a certeza de que pretende excluir estas revisões?',
+	'PRIMEPOSTREVISIONS_DELETES_CONFIRM' => 'Tem certeza de que quer excluir estas revisões?',
 	'PRIMEPOSTREVISIONS_DELETES_DENIED'  => 'Faltam-lhe as permissões necessárias para excluir estas revisões.',
 	'PRIMEPOSTREVISIONS_DELETES_FAILED'  => 'Ocorreu um erro ao tentar excluir estas revisões.',
 	'PRIMEPOSTREVISIONS_DELETES_SUCCESS' => 'As revisões foram removidas com sucesso.',
@@ -74,7 +74,7 @@ $lang = array_merge($lang, [
 
 	// Restore a revision
 	'PRIMEPOSTREVISIONS_RESTORE'         => 'Restaurar Revisão',
-	'PRIMEPOSTREVISIONS_RESTORE_CONFIRM' => 'Tem a certeza de que pretende restaurar esta revisão?',
+	'PRIMEPOSTREVISIONS_RESTORE_CONFIRM' => 'Tem certeza de que quer restaurar esta revisão?',
 	'PRIMEPOSTREVISIONS_RESTORE_DENIED'  => 'Faltam-lhe as permissões necessárias para restaurar esta revisão.',
 	'PRIMEPOSTREVISIONS_RESTORE_FAILED'  => 'Ocorreu um erro ao tentar restaurar a revisão.',
 	'PRIMEPOSTREVISIONS_RESTORE_SUCCESS' => 'A mensagem foi restaurada com sucesso.',

@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -33,9 +33,9 @@ if (empty($lang) || !is_array($lang))
 // equally where a string contains only two placeholders which are used to wrap text
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
 
-$lang = array_merge($lang, array(
-	'PASSWORD_STRENGTH_TYPE'			=> 'Şifre zorluğu algoritması',
-	'PASSWORD_STRENGTH_TYPE_EXPLAIN'	=> 'Bir şifrenin zorluğunun belirlenmesi için bir algoritma seçin.<br><strong>Karmaşık</strong> şifre içerisindeki karakterlerin, sayıların, sembollerin ve uzunluğun karışımına bakarak şifrenin karmaşık olmasını teşvik eder.<br><strong>zxcvbn</strong> (DropBox aracılığıyla) bir şifrenin ne kadar kolay tahmin edilebileceğini hesaplar, güçlü kullanıcı dostu şifreler için olanak sağlar.',
-	'PASSWORD_STRENGTH_TYPE_COMPLEX'	=> 'Karmaşık',
-	'PASSWORD_STRENGTH_TYPE_ZXCVBN'		=> 'zxcvbn algoritması',
-));
+$lang = array_merge($lang, [
+	'PASSWORD_STRENGTH_TYPE'         => 'Şifre zorluğu algoritması',
+	'PASSWORD_STRENGTH_TYPE_EXPLAIN' => 'Bir şifrenin zorluğunun belirlenmesi için bir algoritma seçin.<br><strong>Karmaşık</strong> şifre içerisindeki karakterlerin, sayıların, sembollerin ve uzunluğun karışımına bakarak şifrenin karmaşık olmasını teşvik eder.<br><strong>zxcvbn</strong> (DropBox aracılığıyla) bir şifrenin ne kadar kolay tahmin edilebileceğini hesaplar, güçlü kullanıcı dostu şifreler için olanak sağlar.',
+	'PASSWORD_STRENGTH_TYPE_COMPLEX' => 'Karmaşık',
+	'PASSWORD_STRENGTH_TYPE_ZXCVBN'  => 'zxcvbn algoritması',
+]);

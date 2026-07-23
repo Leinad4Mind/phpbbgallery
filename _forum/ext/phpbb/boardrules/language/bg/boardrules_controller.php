@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,10 +37,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES_HEADER'			=> 'Правила на Форума',
-	'BOARDRULES_EXPLAIN'		=> 'Тези правила са дадени за разясняване на отговорностите на всички членове на %s. Те трябва да се спазват от всички, за да се подсигури, че нашият форум ще работи безпроблемно и ще бъде приятен и продуктивен за всички негови членове и посетители.',
-	'BOARDRULES_CATEGORIES'		=> 'Секция на Правиларавилата',
-	'BOARDRULES_CATEGORY_ANCHOR'=> 'секция-%s',
-	'BOARDRULES_RULE_ANCHOR'	=> 'правило-%s',
-));
+$lang = array_merge($lang, [
+	'BOARDRULES_HEADER'          => 'Правила на Форума',
+	'BOARDRULES_EXPLAIN'         => 'Тези правила са дадени за разясняване на отговорностите на всички членове на %s. Те трябва да се спазват от всички, за да се подсигури, че нашият форум ще работи безпроблемно и ще бъде приятен и продуктивен за всички негови членове и посетители.',
+	'BOARDRULES_CATEGORIES'      => 'Секция на Правиларавилата',
+	'BOARDRULES_CATEGORY_ANCHOR' => 'секция-%s',
+	'BOARDRULES_RULE_ANCHOR'     => 'правило-%s',
+]);

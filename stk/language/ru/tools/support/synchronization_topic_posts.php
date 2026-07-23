@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,18 +37,18 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'SYNCHRONIZATION_TOPIC_POSTS'			=> 'Синхронизация тем',
-	'SYNCHRONIZATION_TOPIC_POSTS_EXPLAIN'	=> 'Этот инструмент позволяет восстановить реальное количество сообщений в таблице <em>_topics</em>.',
-	'TOPICS_NOT_SYNCHRONIZED'				=> 'Темы, требующие синхронизации',
-	'TOPIC_ID'								=> 'ID темы',
-	'TOPIC_TOTAL_POSTS'						=> 'Общее кол-во сообщений<br />из таблицы %s',
-	'TOPIC_TOTAL_POSTS_TITLE'				=> 'одобренные сообщения +  ожидающие одобрения + удаленные',
-	'POSTS_TOTAL'							=> 'Реальное кол-во сообщений<br />из таблицы %s',
-	'FROM_TABLE'							=> '<br />из таблицы %s',
-	'NO_NOT_SYNCHRONIZED_TOPICS'			=> 'Тем не обнаружено',
-	'SYNCHRONIZING_TOPICS'					=> 'Синхронизировать',
-	'TOPIC_LAST_POST_ID'					=> 'ID последнего сообщения',
-	'MAX_POST_ID'							=> 'Последний ID сообщения',
-	'TOPICS_SINCRONIZED'					=> 'Было синхронизировано тем: %d',
-));
+$lang = array_merge($lang, [
+	'SYNCHRONIZATION_TOPIC_POSTS'         => 'Синхронизация тем',
+	'SYNCHRONIZATION_TOPIC_POSTS_EXPLAIN' => 'Этот инструмент позволяет восстановить реальное количество сообщений в таблице <em>_topics</em>.',
+	'TOPICS_NOT_SYNCHRONIZED'             => 'Темы, требующие синхронизации',
+	'TOPIC_ID'                            => 'ID темы',
+	'TOPIC_TOTAL_POSTS'                   => 'Общее кол-во сообщений<br />из таблицы %s',
+	'TOPIC_TOTAL_POSTS_TITLE'             => 'одобренные сообщения +  ожидающие одобрения + удаленные',
+	'POSTS_TOTAL'                         => 'Реальное кол-во сообщений<br />из таблицы %s',
+	'FROM_TABLE'                          => '<br />из таблицы %s',
+	'NO_NOT_SYNCHRONIZED_TOPICS'          => 'Тем не обнаружено',
+	'SYNCHRONIZING_TOPICS'                => 'Синхронизировать',
+	'TOPIC_LAST_POST_ID'                  => 'ID последнего сообщения',
+	'MAX_POST_ID'                         => 'Последний ID сообщения',
+	'TOPICS_SINCRONIZED'                  => 'Было синхронизировано тем: %d',
+]);

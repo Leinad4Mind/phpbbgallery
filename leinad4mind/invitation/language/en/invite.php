@@ -36,6 +36,7 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	'INVITE'								=> 'Invite',
+	'INVITE_INFO'								=> 'Invite Information',
 	'INVITE_DELETE_CONFIRM'					=> 'If you want to delete the invitation, click %sHERE%s.',
 	'INVITE_DELETE_SUCCESS'					=> 'Your invitation was successfully deleted.',
 	'INVITE_DELETE_SUCCESSES'				=> 'Your invitations were successfully deleted.',

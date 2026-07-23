@@ -41,6 +41,6 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	// ACP Module
-	'ACP_SPECIAL_ACTIVITY_STATS_TITLE'			=> 'إحصائيات اليوم',
-	'ACP_SPECIAL_ACTIVITY_STATS_SETTINGS'		=> 'الإعدادات',
+	'ACP_SPECIAL_ACTIVITY_STATS_TITLE'    => 'إحصائيات اليوم',
+	'ACP_SPECIAL_ACTIVITY_STATS_SETTINGS' => 'الإعدادات',
 ]);

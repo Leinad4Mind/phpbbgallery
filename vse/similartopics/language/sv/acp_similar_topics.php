@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,43 +38,43 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'PST_TITLE_ACP'		=> 'Precise Similar Topics',
-	'PST_EXPLAIN'		=> 'Precise Similar Topics visar en lista över liknande ämnen längst ner i det aktuella ämnet sida.',
-	'PST_LEGEND1'		=> 'Generella inställningar',
-	'PST_ENABLE'		=> 'Aktivera Similar Topics',
-	'PST_ENABLE_EXPLAIN'=> 'Show similar topics in topic discussion threads.',
-	'PST_LEGEND2'		=> 'Ladda inställningar',
-	'PST_LIMIT'			=> 'Antal liknande trådar som ska visas',
-	'PST_LIMIT_EXPLAIN'	=> 'Här anger du antalet liknande trådar som skall visas. Förinställt värde är 5 st.',
-	'PST_TIME'			=> 'Sökperiod',
-	'PST_TIME_EXPLAIN'	=> 'Det här alternativet möjliggör inställning av sökperioden. Exempel, om du anger “5 dagar” kommer systemet endast att visa liknande trådar från de 5 senaste dagarna. Det förinställda värdet är 1 år.',
-	'PST_YEARS'			=> 'År',
-	'PST_MONTHS'		=> 'Månader',
-	'PST_WEEKS'			=> 'Veckor',
-	'PST_DAYS'			=> 'Dagar',
-	'PST_CACHE'			=> 'Lagring av liknande trådar',
-	'PST_CACHE_EXPLAIN'	=> 'Lagrade trådar upphör efter denna tid, inställt i sekunder. Ange 0 om du vill stänga av lagring av liknande trådar.',
-	'PST_DYNAMIC'		=> 'Display dynamic similar topics',
-	'PST_DYNAMIC_EXPLAIN'=> 'Show similar topics as users type in the topic title field when creating new topics.',
-	'PST_SENSE'			=> 'Search sensitivity',
-	'PST_SENSE_EXPLAIN'	=> 'For MySQL or Postgres databases, you can set the search sensitivity to a value between 1 and 10. Use a lower number if you are not seeing any similar topics. Recommended setting: %d',
-	'PST_LEGEND3'		=> 'Foruminställningar',
-	'PST_NOSHOW_LIST'	=> 'Visa inte i',
-	'PST_NOSHOW_TITLE'	=> 'Visa inte liknande trådar i',
-	'PST_IGNORE_SEARCH'	=> 'Sök inte i',
-	'PST_IGNORE_TITLE'	=> 'Sök inte efter liknande trådar i',
-	'PST_STANDARD'		=> 'Standard',
-	'PST_ADVANCED'		=> 'Avancerade',
-	'PST_ADVANCED_TITLE'=> 'Klicka för att ställa in avancerade inställningar',
-	'PST_ADVANCED_EXP'	=> 'Här kan du välja specifika kategorier att hämta liknande trådar från. Endast liknande trådar från de kategorier du väljer här kommer att visas i <strong>%s</strong>.<br><br>Välj inga specifika kategorier om du vill visa liknande trådar från alla kategorier i detta forum.<br><br>Använd t.ex. kombinationen <code>CTRL</code> + musklick för att markera och välja (avvälja) fler än en kategori.',
-	'PST_ADVANCED_FORUM'=> 'Avancerade foruminställningar',
-	'PST_DESELECT_ALL'	=> 'Avmarkera alla',
-	'PST_LEGEND4'		=> 'Valfria inställningar',
-	'PST_WORDS'			=> 'Särskilda ord som ska ignoreras',
-	'PST_WORDS_EXPLAIN'	=> 'Lägg till särskilda ord på forumet som skall ignoreras vid sökningen av liknande trådar. (Obs: Ord som betraktas som vanliga ord är redan undantagna). Separera varje ord med ett mellanslag. Ingen hänsyn tas till versaler eller gemenser.',
-	'PST_SAVED'			=> 'Inställningarna har uppdaterats',
-	'PST_FORUM_INFO'	=> '“Visa inte i” :  Liknande trådar visas inte i valda kategorier.<br>“Sök inte i” :  Sökning efter liknande trådar sker inte i valda kategorier.',
-	'PST_NO_COMPAT'		=> 'Similar Topics fungerar inte på ditt forum. Similar Topics kräver MySQL 4 eller MySQL 5 eller PostgreSQL.',
-	'PST_ERR_CONFIG'	=> 'Alltför många forum märktes i listan över forum. Försök igen med ett mindre urval.',
-));
+$lang = array_merge($lang, [
+	'PST_TITLE_ACP'       => 'Precise Similar Topics',
+	'PST_EXPLAIN'         => 'Precise Similar Topics visar en lista över liknande ämnen längst ner i det aktuella ämnet sida.',
+	'PST_LEGEND1'         => 'Generella inställningar',
+	'PST_ENABLE'          => 'Aktivera Similar Topics',
+	'PST_ENABLE_EXPLAIN'  => 'Show similar topics in topic discussion threads.',
+	'PST_LEGEND2'         => 'Ladda inställningar',
+	'PST_LIMIT'           => 'Antal liknande trådar som ska visas',
+	'PST_LIMIT_EXPLAIN'   => 'Här anger du antalet liknande trådar som skall visas. Förinställt värde är 5 st.',
+	'PST_TIME'            => 'Sökperiod',
+	'PST_TIME_EXPLAIN'    => 'Det här alternativet möjliggör inställning av sökperioden. Exempel, om du anger “5 dagar” kommer systemet endast att visa liknande trådar från de 5 senaste dagarna. Det förinställda värdet är 1 år.',
+	'PST_YEARS'           => 'År',
+	'PST_MONTHS'          => 'Månader',
+	'PST_WEEKS'           => 'Veckor',
+	'PST_DAYS'            => 'Dagar',
+	'PST_CACHE'           => 'Lagring av liknande trådar',
+	'PST_CACHE_EXPLAIN'   => 'Lagrade trådar upphör efter denna tid, inställt i sekunder. Ange 0 om du vill stänga av lagring av liknande trådar.',
+	'PST_DYNAMIC'         => 'Display dynamic similar topics',
+	'PST_DYNAMIC_EXPLAIN' => 'Show similar topics as users type in the topic title field when creating new topics.',
+	'PST_SENSE'           => 'Search sensitivity',
+	'PST_SENSE_EXPLAIN'   => 'For MySQL or Postgres databases, you can set the search sensitivity to a value between 1 and 10. Use a lower number if you are not seeing any similar topics. Recommended setting: %d',
+	'PST_LEGEND3'         => 'Foruminställningar',
+	'PST_NOSHOW_LIST'     => 'Visa inte i',
+	'PST_NOSHOW_TITLE'    => 'Visa inte liknande trådar i',
+	'PST_IGNORE_SEARCH'   => 'Sök inte i',
+	'PST_IGNORE_TITLE'    => 'Sök inte efter liknande trådar i',
+	'PST_STANDARD'        => 'Standard',
+	'PST_ADVANCED'        => 'Avancerade',
+	'PST_ADVANCED_TITLE'  => 'Klicka för att ställa in avancerade inställningar',
+	'PST_ADVANCED_EXP'    => 'Här kan du välja specifika kategorier att hämta liknande trådar från. Endast liknande trådar från de kategorier du väljer här kommer att visas i <strong>%s</strong>.<br><br>Välj inga specifika kategorier om du vill visa liknande trådar från alla kategorier i detta forum.<br><br>Använd t.ex. kombinationen <code>CTRL</code> + musklick för att markera och välja (avvälja) fler än en kategori.',
+	'PST_ADVANCED_FORUM'  => 'Avancerade foruminställningar',
+	'PST_DESELECT_ALL'    => 'Avmarkera alla',
+	'PST_LEGEND4'         => 'Valfria inställningar',
+	'PST_WORDS'           => 'Särskilda ord som ska ignoreras',
+	'PST_WORDS_EXPLAIN'   => 'Lägg till särskilda ord på forumet som skall ignoreras vid sökningen av liknande trådar. (Obs: Ord som betraktas som vanliga ord är redan undantagna). Separera varje ord med ett mellanslag. Ingen hänsyn tas till versaler eller gemenser.',
+	'PST_SAVED'           => 'Inställningarna har uppdaterats',
+	'PST_FORUM_INFO'      => '“Visa inte i” :  Liknande trådar visas inte i valda kategorier.<br>“Sök inte i” :  Sökning efter liknande trådar sker inte i valda kategorier.',
+	'PST_NO_COMPAT'       => 'Similar Topics fungerar inte på ditt forum. Similar Topics kräver MySQL 4 eller MySQL 5 eller PostgreSQL.',
+	'PST_ERR_CONFIG'      => 'Alltför många forum märktes i listan över forum. Försök igen med ett mindre urval.',
+]);

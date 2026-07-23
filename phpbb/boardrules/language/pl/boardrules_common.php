@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,10 +38,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES'				=> 'Regulamin',
-	'BOARDRULES_TITLE'			=> 'Zobacz zasady obowiązujące na tej witrynie',
-	'BOARDRULES_AGREEMENT'		=> 'Użytkownik zobowiązuje się do przestrzegania zasad obowiązujących na tut. witrynie określonych w regulaminie',
-	'BOARDRULES_VIEWONLINE'		=> 'Przegląda regulamin witryny',
-	'BOARDRULES_NOTIFICATION'	=> 'Regulamin witryny został zaktualizowany. Kliknij tutaj, aby przejrzeć zmiany.',
-));
+$lang = array_merge($lang, [
+	'BOARDRULES'              => 'Regulamin',
+	'BOARDRULES_TITLE'        => 'Zobacz zasady obowiązujące na tej witrynie',
+	'BOARDRULES_AGREEMENT'    => 'Użytkownik zobowiązuje się do przestrzegania zasad obowiązujących na tut. witrynie określonych w regulaminie',
+	'BOARDRULES_VIEWONLINE'   => 'Przegląda regulamin witryny',
+	'BOARDRULES_NOTIFICATION' => 'Regulamin witryny został zaktualizowany. Kliknij tutaj, aby przejrzeć zmiany.',
+]);

@@ -38,9 +38,9 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'HELP_EMBEDDING_MEDIA'			=> 'Incorporamento dei media',
-	'HELP_EMBEDDING_MEDIA_QUESTION'	=> 'Come incorporare i contenuti multimediali da altri siti nei messaggi',
-	'HELP_EMBEDDING_MEDIA_ANSWER'	=> 'Gli utenti possono incorporare contenuti come video e audio dai siti consentiti utilizzando
+	'HELP_EMBEDDING_MEDIA'          => 'Incorporamento dei media',
+	'HELP_EMBEDDING_MEDIA_QUESTION' => 'Come incorporare i contenuti multimediali da altri siti nei messaggi',
+	'HELP_EMBEDDING_MEDIA_ANSWER'   => 'Gli utenti possono incorporare contenuti come video e audio dai siti consentiti utilizzando
 										i tags <strong>[media][/media]</strong>, o semplicemente postando in testo normale un URL
                                         che lo supporta. Per esempio:<br /><br />
 										<strong>[media]</strong>%1$s<strong>[/media]</strong>
@@ -51,5 +51,5 @@ $lang = array_merge($lang, [
 										<br /><br />Per la documentazione completa sui siti supportati e sugli URL di esempio,
 										consulta la <a href="https://s9etextformatter.readthedocs.io/Plugins/MediaEmbed/Sites/">
 										Documentazione sul plug-in multimediale incorporato</a>.',
-	'HELP_EMBEDDING_MEDIA_DEMO'		=>	'https://youtu.be/QH2-TGUlwu4',
+	'HELP_EMBEDDING_MEDIA_DEMO' => 'https://youtu.be/QH2-TGUlwu4',
 ]);

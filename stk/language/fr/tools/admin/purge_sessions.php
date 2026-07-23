@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,8 +38,8 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'PURGE_SESSIONS'			=> 'Purger les sessions',
-	'PURGE_SESSIONS_COMPLETE'	=> 'Les sessions ont été purgées.',
-	'PURGE_SESSIONS_CONFIRM'	=> 'Cet outil supprimera toutes les sessions en cours et déconnectera tous les utilisateurs. Poursuivre ?',
-));
+$lang = array_merge($lang, [
+	'PURGE_SESSIONS'          => 'Purger les sessions',
+	'PURGE_SESSIONS_COMPLETE' => 'Les sessions ont été purgées.',
+	'PURGE_SESSIONS_CONFIRM'  => 'Cet outil supprimera toutes les sessions en cours et déconnectera tous les utilisateurs. Poursuivre ?',
+]);

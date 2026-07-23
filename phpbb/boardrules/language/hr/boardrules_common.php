@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,10 +38,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES'				=> 'Pravila',
-	'BOARDRULES_TITLE'			=> 'Pogledaj forumska pravila',
-	'BOARDRULES_AGREEMENT'		=> 'Slažeš se da ćeš se pridržavati pravila navedenih u odjeljku “Pravila”.',
-	'BOARDRULES_VIEWONLINE'		=> 'Pregledava forumska pravila',
-	'BOARDRULES_NOTIFICATION'	=> 'Forumska pravila su ažurirana.<br />Klikni ovdje za prikaz (istih).',
-));
+$lang = array_merge($lang, [
+	'BOARDRULES'              => 'Pravila',
+	'BOARDRULES_TITLE'        => 'Pogledaj forumska pravila',
+	'BOARDRULES_AGREEMENT'    => 'Slažeš se da ćeš se pridržavati pravila navedenih u odjeljku “Pravila”.',
+	'BOARDRULES_VIEWONLINE'   => 'Pregledava forumska pravila',
+	'BOARDRULES_NOTIFICATION' => 'Forumska pravila su ažurirana.<br />Klikni ovdje za prikaz (istih).',
+]);

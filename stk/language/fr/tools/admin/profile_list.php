@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,22 +38,22 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'ALL'					=> 'Tous',
+$lang = array_merge($lang, [
+	'ALL' => 'Tous',
 
-	'CLICK_TO_DELETE'		=> 'Supprimer tous les utilisateurs sélectionnés en cliquant sur ce bouton. <em>Attention, cette action est irréversible !</em>',
+	'CLICK_TO_DELETE' => 'Supprimer tous les utilisateurs sélectionnés en cliquant sur ce bouton. <em>Attention, cette action est irréversible !</em>',
 
-	'FILTER'				=> 'Filtre',
+	'FILTER' => 'Filtre',
 
-	'LIMIT'					=> 'Limite',
+	'LIMIT' => 'Limite',
 
-	'ONLY_NON_EMPTY'		=> 'Remplis uniquement',
-	'ORDER_BY'				=> 'Trier par',
+	'ONLY_NON_EMPTY' => 'Remplis uniquement',
+	'ORDER_BY'       => 'Trier par',
 
-	'PROFILE_LIST'			=> 'Liste des profils',
-	'PROFILE_LIST_EXPLAIN'	=> 'Cet outil affiche les informations de profil de plusieurs utilisateurs. Il peut également être utilisé afin d’aider à l’identifier les comptes de spammeurs.',
+	'PROFILE_LIST'         => 'Liste des profils',
+	'PROFILE_LIST_EXPLAIN' => 'Cet outil affiche les informations de profil de plusieurs utilisateurs. Il peut également être utilisé afin d’aider à l’identifier les comptes de spammeurs.',
 
-	'USERS_DELETE'				=> 'Supprimer les utilisateurs sélectionnés',
-	'USERS_DELETE_CONFIRM'		=> 'Confirmer la suppression des utilisateurs sélectionnés. Cet outil supprimera également <strong>tous</strong> leurs messages !',
-	'USERS_DELETE_SUCCESSFULL'	=> 'Tous les utilisateurs sélectionnés ont été supprimés, ainsi que tous leurs messages !',
-));
+	'USERS_DELETE'             => 'Supprimer les utilisateurs sélectionnés',
+	'USERS_DELETE_CONFIRM'     => 'Confirmer la suppression des utilisateurs sélectionnés. Cet outil supprimera également <strong>tous</strong> leurs messages !',
+	'USERS_DELETE_SUCCESSFULL' => 'Tous les utilisateurs sélectionnés ont été supprimés, ainsi que tous leurs messages !',
+]);

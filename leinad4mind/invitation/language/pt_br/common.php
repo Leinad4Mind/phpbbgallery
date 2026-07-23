@@ -1,14 +1,12 @@
 <?php
 
 /**
- *
  * Invite. An extension for the phpBB Forum Software package.
- * Brazilian Portuguese translation by eunaumtenhoid [2019][ver 4.2.0] (https://github.com/phpBBTraducoes)
  * @copyright (c) 2010-2015, KillBill
  * @copyright (c) 2017, kasimi
  * @copyright (c) 2017-2022, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
- *
+ * @translation Leinad4Mind [Brazilian Portuguese [pt_br]] (2026)
  */
 
 if (!defined('IN_PHPBB'))
@@ -18,7 +16,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -34,19 +32,19 @@ if (empty($lang) || !is_array($lang))
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
 // Some characters you may want to copy&paste: ’ « » „ “ ” …
 
-$lang = array_merge($lang, array(
-	'INVITE_BIRTHDAY'						=> 'Parabéns! Você recebeu %s convite(s) para o seu aniversário.<br /><br />Desejamos-lhe um feliz aniversário!', 
+$lang = array_merge($lang, [
+	'INVITE_BIRTHDAY' => 'Parabéns! Recebeste %s convite(s) para o seu aniversário.<br /><br />Desejamos-te um feliz aniversário!',
 
-	'INVITE_GIFT_INVITED_USERS_FIRST'		=> 'Oi, esta é uma mensagem que você recebe por convidar os usuários %s para o site “%s”, por isso estamos muito gratos. Queremos que você continue a usar o sistema de convite, para que você receba %s convites adicionais.<br /><br />Desejamos a você um momento agradável.',
-	
-	'INVITE_GIFT_INVITED_USERS_FURTHER'		=> 'Oi, esta é uma mensagem que você recebe por convidar mais %s usuários para o site “%s”, por isso estamos muito gratos. Queremos que você continue a usar o sistema de convite, para que você receba %s convites adicionais.<br /><br />Desejamos a você um momento agradável.',
+	'INVITE_GIFT_INVITED_USERS_FIRST' => 'Olá, esta é uma mensagem que se recebe por convidar o usuário %s para o site “%s”, por isso estamos muito gratos. Queremos que continues a usar o sistema de convite, para que recebas %s convites adicionais.<br /><br />Desejamos-te um momento agradável.',
 
-	'INVITE_PETITION_TITLE'					=> 'Solicitação de convite',
-	'INVITE_PETITIONS_NO'					=> 'Sua solicitação não foi aprovada, portanto, os convites não serão creditados para você!',
-	'INVITE_PETITION_NO'					=> 'Sua solicitação não foi aprovada, então o convite não será creditado para você!',
-	'INVITE_PETITION_YES'					=> 'Sua solicitação foi aprovada, %s convite(s) creditado(s)!', 
+	'INVITE_GIFT_INVITED_USERS_FURTHER' => 'Olá, esta é uma mensagem que se recebe por convidar mais %s usuários para o site “%s”, por isso estamos muito gratos. Queremos que continues a usar o sistema de convite, para que recebas %s convites adicionais.<br /><br />Desejamos-te um momento agradável.',
 
-	'INVITE_PETITION_REQUEST'				=> 'O usuário %s está solicitando %d convite(s)', 
+	'INVITE_PETITION_TITLE' => 'Solicitação de convite',
+	'INVITE_PETITIONS_NO'   => 'A sua solicitação não foi aprovada, portanto, os convites não te serão creditados!',
+	'INVITE_PETITION_NO'    => 'A sua solicitação não foi aprovada, então o convite não te será creditado!',
+	'INVITE_PETITION_YES'   => 'A sua solicitação foi aprovada, %s convite(s) creditado(s)!',
 
-	'INVITE_JOIN'							=> 'Obrigado por convidar o usuário %s',
-));
+	'INVITE_PETITION_REQUEST' => 'O usuário %s está a solicitar %d convite(s)',
+
+	'INVITE_JOIN' => 'Obrigado por convidar o usuário %s',
+]);

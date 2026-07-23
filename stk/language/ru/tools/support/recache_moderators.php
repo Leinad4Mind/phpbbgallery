@@ -9,19 +9,19 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
 }
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -40,8 +40,8 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'RECACHE_MODERATORS'				=> 'Пересоздание кеша модераторов',
-	'RECACHE_MODERATORS_COMPLETE'		=> 'Новый кеш модераторов был успешно создан.',
-	'RECACHE_MODERATORS_CONFIRM'		=> '(<em>Информация о назначении модераторов на форумы и отображении их на главной странице)</em><br /><br />Вы уверены, что хотите пересоздать кеш модераторов?',
-));
+$lang = array_merge($lang, [
+	'RECACHE_MODERATORS'          => 'Пересоздание кеша модераторов',
+	'RECACHE_MODERATORS_COMPLETE' => 'Новый кеш модераторов был успешно создан.',
+	'RECACHE_MODERATORS_CONFIRM'  => '(<em>Информация о назначении модераторов на форумы и отображении их на главной странице)</em><br /><br />Вы уверены, что хотите пересоздать кеш модераторов?',
+]);

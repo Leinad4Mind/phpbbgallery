@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,12 +38,12 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES_SAMPLE_CATEGORY_TITLE'		=> 'Esempio Categoria Regole',
-	'BOARDRULES_SAMPLE_CATEGORY_MESSAGE'	=> 'Si tratta di una categoria di esempio per le Regole del Forum. Le Categorie contengono gruppi di regole relative. Messaggi Categoria (come questo) non vengono visualizzati nella pagina regole.',
-	'BOARDRULES_SAMPLE_CATEGORY_ANCHOR'		=> 'esempio-categoria',
+$lang = array_merge($lang, [
+	'BOARDRULES_SAMPLE_CATEGORY_TITLE'   => 'Esempio Categoria Regole',
+	'BOARDRULES_SAMPLE_CATEGORY_MESSAGE' => 'Si tratta di una categoria di esempio per le Regole del Forum. Le Categorie contengono gruppi di regole relative. Messaggi Categoria (come questo) non vengono visualizzati nella pagina regole.',
+	'BOARDRULES_SAMPLE_CATEGORY_ANCHOR'  => 'esempio-categoria',
 
-	'BOARDRULES_SAMPLE_RULE_TITLE'			=> 'Esempio Regola',
-	'BOARDRULES_SAMPLE_RULE_MESSAGE'		=> 'Si tratta di una regola d´esempio Regole Forum. Tutto sembra funzionare. È possibile modificare o cancellare questa regola e la categoria e continuare a impostare le proprie regole del forum.',
-	'BOARDRULES_SAMPLE_RULE_ANCHOR'			=> 'esempio-regola',
-));
+	'BOARDRULES_SAMPLE_RULE_TITLE'   => 'Esempio Regola',
+	'BOARDRULES_SAMPLE_RULE_MESSAGE' => 'Si tratta di una regola d´esempio Regole Forum. Tutto sembra funzionare. È possibile modificare o cancellare questa regola e la categoria e continuare a impostare le proprie regole del forum.',
+	'BOARDRULES_SAMPLE_RULE_ANCHOR'  => 'esempio-regola',
+]);

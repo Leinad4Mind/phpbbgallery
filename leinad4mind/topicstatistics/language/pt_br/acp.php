@@ -1,19 +1,19 @@
 <?php
 
 /**
- *
  * Topic Statistics. An extension for the phpBB Forum Software package.
- *
  * @copyright (c) 2019, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
- *
+ * @translation Leinad4Mind [Brazilian Portuguese [pt_br]] (2026)
  */
 
-if (!defined('IN_PHPBB')) {
+if (!defined('IN_PHPBB'))
+{
    exit;
 }
 
-if (empty($lang) || !is_array($lang)) {
+if (empty($lang) || !is_array($lang))
+{
    $lang = [];
 }
 
@@ -34,32 +34,32 @@ if (empty($lang) || !is_array($lang)) {
 
 $lang = array_merge($lang, [
    'TS_NAME'                             => 'Estatísticas do Tópico',
-   'TS_TOPICS_ENABLED'                   => 'Habilitar Estatísticas do Tópico',
-   'TS_USER_LIMIT_MAX'                   => 'Número máximo de usuários na lista',
-   'TS_USER_LIMIT_MAX_EXPLAIN'           => 'Limita número de usuários na lista para melhorar performance em fóruns com muitos usuários',
-   'TS_USER_PROFILE_LINK'                => 'Habilitar link no nome do usuário',
+   'TS_TOPICS_ENABLED'                   => 'Habilitar Estatísticas dos Tópicos',
+   'TS_USER_LIMIT_MAX'                   => 'Número máximo de usuários a exibir',
+   'TS_USER_LIMIT_MAX_EXPLAIN'           => 'Limita número de usuários a exibir para melhorar performance em fóruns com muitos usuários',
+   'TS_USER_PROFILE_LINK'                => 'Adicionar link no nome do usuário',
    'TS_USER_PROFILE_LINK_EXPLAIN'        => 'Adiciona link do perfil no nome do usuário',
-   'TS_TOPICS_VISIT'                     => 'Mostrar número de visitas aos tópicos',
-   'TS_TOPICS_VISIT_EXPLAIN'             => 'Mostra número de visitas que cada tópico recebeu.',
-   'TS_TOPICS_BOOKMARK'                  => 'Habilitar favoritos',
+   'TS_TOPICS_VISIT'                     => 'Mostrar número de visitas nos tópicos',
+   'TS_TOPICS_VISIT_EXPLAIN'             => 'Mostra o número de visitas que cada tópico recebeu.',
+   'TS_TOPICS_BOOKMARK'                  => 'Habilitar favoritos nos tópicos',
    'TS_TOPICS_BOOKMARK_EXPLAIN'          => 'Mostra o número de usuários que adicionaram o tópico aos favoritos.',
-   'TS_TOPICS_BOOKMARK_USERS'            => 'Mostrar favoritos',
-   'TS_TOPICS_BOOKMARK_USERS_EXPLAIN'    => 'Mostra usuários que adicionaram o tópico aos favoritos.',
-   'TS_TOPICS_BOOKMARK_AVATARS'          => 'Mostrar avatar de favoritos',
-   'TS_TOPICS_BOOKMARK_AVATARS_EXPLAIN'  => 'Mostra avatar de usuários que adicionaram o tópico aos favoritos.',
-   'TS_TOPICS_FOLLOWERS'                 => 'Habilitar seguidores',
+   'TS_TOPICS_BOOKMARK_USERS'            => 'Mostrar favoritos nos tópicos',
+   'TS_TOPICS_BOOKMARK_USERS_EXPLAIN'    => 'Mostra os usuários que adicionaram o tópico aos favoritos.',
+   'TS_TOPICS_BOOKMARK_AVATARS'          => 'Mostrar avatar de favoritos nos tópicos',
+   'TS_TOPICS_BOOKMARK_AVATARS_EXPLAIN'  => 'Mostra o avatar de usuários que adicionaram o tópico aos favoritos.',
+   'TS_TOPICS_FOLLOWERS'                 => 'Habilitar seguidores nos tópicos',
    'TS_TOPICS_FOLLOWERS_EXPLAIN'         => 'Mostra o número de usuários que seguem o tópico.',
-   'TS_TOPICS_FOLLOWERS_USERS'           => 'Mostrar seguidores',
-   'TS_TOPICS_FOLLOWERS_USERS_EXPLAIN'   => 'Mostra usuários que seguem o tópico.',
-   'TS_TOPICS_FOLLOWERS_AVATARS'         => 'Mostrar avatar de seguidores',
-   'TS_TOPICS_FOLLOWERS_AVATARS_EXPLAIN' => 'Mostra avatar dos usuários que seguem o tópico.',
-   'TS_FORUMS_ENABLED'                   => 'Habilitar Estatísticas dos Fóruns',
-   'TS_FORUMS_VISIT'                     => 'Mostrar número de visitas a fóruns',
-   'TS_FORUMS_VISIT_EXPLAIN'             => 'Mostra número de visitas que cada fórum recebeu.',
+   'TS_TOPICS_FOLLOWERS_USERS'           => 'Mostrar seguidores nos tópicos',
+   'TS_TOPICS_FOLLOWERS_USERS_EXPLAIN'   => 'Mostra os usuários que seguem o tópico.',
+   'TS_TOPICS_FOLLOWERS_AVATARS'         => 'Mostrar avatar de seguidores nos tópicos',
+   'TS_TOPICS_FOLLOWERS_AVATARS_EXPLAIN' => 'Mostra o avatar dos usuários que seguem o tópico.',
+   'TS_FORUMS_ENABLED'                   => 'Habilitar Estatísticas dos fóruns',
+   'TS_FORUMS_VISIT'                     => 'Mostrar número de visitas nos fóruns',
+   'TS_FORUMS_VISIT_EXPLAIN'             => 'Mostra o número de visitas que cada fórum recebeu.',
    'TS_FORUMS_FOLLOWERS'                 => 'Habilitar seguidores nos fóruns',
    'TS_FORUMS_FOLLOWERS_EXPLAIN'         => 'Mostra o número de usuários que seguem o fórum.',
    'TS_FORUMS_FOLLOWERS_USERS'           => 'Mostrar seguidores nos fóruns',
-   'TS_FORUMS_FOLLOWERS_USERS_EXPLAIN'   => 'Mostra usuários que seguem o fórum.',
+   'TS_FORUMS_FOLLOWERS_USERS_EXPLAIN'   => 'Mostra os usuários que seguem o fórum.',
    'TS_FORUMS_FOLLOWERS_AVATARS'         => 'Mostrar avatar de seguidores nos fóruns',
-   'TS_FORUMS_FOLLOWERS_AVATARS_EXPLAIN' => 'Mostra avatar dos usuários que seguem o fórum.',
+   'TS_FORUMS_FOLLOWERS_AVATARS_EXPLAIN' => 'Mostra o avatar dos usuários que seguem o fórum.',
 ]);

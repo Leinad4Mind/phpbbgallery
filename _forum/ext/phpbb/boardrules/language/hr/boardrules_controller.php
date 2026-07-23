@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,10 +38,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES_HEADER'			=> 'Forumska pravila',
-	'BOARDRULES_EXPLAIN'		=> 'Ova pravila objavljena su poradi pojašnjenja prava i obveza svih članova/ica zajednice (ovdje na): %s.<br />Pravila se imaju pridržavati svi/e (a) da bi se osigurao nesmetan rad foruma te pružilo zabavno i produktivno iskustvo kako svim članovima/icama tako i svim posjetitelji(ca)ma.',
-	'BOARDRULES_CATEGORIES'		=> 'Odjeljci pravila',
-	'BOARDRULES_CATEGORY_ANCHOR'=> 'odjeljak-%s',
-	'BOARDRULES_RULE_ANCHOR'	=> 'pravilo-%s',
-));
+$lang = array_merge($lang, [
+	'BOARDRULES_HEADER'          => 'Forumska pravila',
+	'BOARDRULES_EXPLAIN'         => 'Ova pravila objavljena su poradi pojašnjenja prava i obveza svih članova/ica zajednice (ovdje na): %s.<br />Pravila se imaju pridržavati svi/e (a) da bi se osigurao nesmetan rad foruma te pružilo zabavno i produktivno iskustvo kako svim članovima/icama tako i svim posjetitelji(ca)ma.',
+	'BOARDRULES_CATEGORIES'      => 'Odjeljci pravila',
+	'BOARDRULES_CATEGORY_ANCHOR' => 'odjeljak-%s',
+	'BOARDRULES_RULE_ANCHOR'     => 'pravilo-%s',
+]);

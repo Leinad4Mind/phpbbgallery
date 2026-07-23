@@ -8,8 +8,8 @@
  */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -20,6 +20,6 @@ if (empty($lang) || !is_array($lang))
 	$lang = [];
 }
 
-$lang = array_merge($lang, array(
-	'ACL_U_SEEPRIVATEPOSTS'	=> 'Can read private posts',
-));
+$lang = array_merge($lang, [
+	'ACL_U_SEEPRIVATEPOSTS' => 'Pode ler mensagens ocultas',
+]);

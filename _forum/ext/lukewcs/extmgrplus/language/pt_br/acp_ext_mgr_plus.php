@@ -10,8 +10,8 @@
  */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -43,7 +43,7 @@ $lang = array_merge($lang, [
 	'EXTMGRPLUS_COL_WITH_VERSIONCHECK'    => 'Com verificação de versão',
 	'EXTMGRPLUS_COL_LAST_VERSIONCHECK'    => 'Última verificação de versão',
 	'EXTMGRPLUS_COL_AVAILABLE_UPDATES'    => 'Atualizações disponíveis',
-	'EXTMGRPLUS_AVAILABLE_EXTENSIONS' => [
+	'EXTMGRPLUS_AVAILABLE_EXTENSIONS'     => [
 		0 => '%2$u',
 		1 => '%2$u (%1$u inválida)',
 	],
@@ -54,17 +54,17 @@ $lang = array_merge($lang, [
 	],
 
 	// link bar
-	'EXTMGRPLUS_LINK_EXT_PROPERTIES' => 'Propriedades da extensão',
+	'EXTMGRPLUS_LINK_EXT_PROPERTIES'  => 'Propriedades da extensão',
 	'EXTMGRPLUS_LINK_SAVE_CHECKBOXES' => 'Salvar',
 
 	// settings order and ignore
-	'EXTMGRPLUS_SECTION_SETTINGS' => 'Configurações (Plus)',
-	'EXTMGRPLUS_ORDER'            => '%s Ordem e Dependência',
-	'EXTMGRPLUS_ORDER_EXPLAIN'    => 'Nesta coluna, você pode definir grupos de ordem no intervalo de 0 a 99 para as ações "Habilitar selecionados" e "Desabilitar selecionados". Isso permite que extensões que dependem de outras extensões sejam habilitadas antes delas, evitando mensagens de erro. As extensões que pertencem a esse grupo são habilitadas primeiro, começando pelo grupo 0, depois o grupo 1, e assim por diante. As extensões sem grupo são habilitadas por último. Ao desabilitar, a ordem é invertida.',
+	'EXTMGRPLUS_SECTION_SETTINGS'   => 'Configurações (Plus)',
+	'EXTMGRPLUS_ORDER'              => '%s Ordem e Dependência',
+	'EXTMGRPLUS_ORDER_EXPLAIN'      => 'Nesta coluna, você pode definir grupos de ordem no intervalo de 0 a 99 para as ações "Habilitar selecionados" e "Desabilitar selecionados". Isso permite que extensões que dependem de outras extensões sejam habilitadas antes delas, evitando mensagens de erro. As extensões que pertencem a esse grupo são habilitadas primeiro, começando pelo grupo 0, depois o grupo 1, e assim por diante. As extensões sem grupo são habilitadas por último. Ao desabilitar, a ordem é invertida.',
 	'EXTMGRPLUS_DEPENDENCY'         => 'Dependência',
 	'EXTMGRPLUS_DEPENDENCY_EXPLAIN' => 'Uma extensão pode ser associada a um grupo colocando <code>+</code> antes dela. Por exemplo, se você tiver a extensão B que depende da extensão A, pode inserir <code>0</code> para A e <code>+0</code> para B. Se ambas as extensões estiverem habilitadas, selecionar A também selecionará B. Se ambas as extensões estiverem desabilitadas, selecionar B também selecionará A.',
-	'EXTMGRPLUS_IGNORE'         => '%s Ignorar',
-	'EXTMGRPLUS_IGNORE_EXPLAIN' => 'Esta coluna permite que você especifique quais extensões devem ser ignoradas durante as ações "Habilitar selecionados" e "Desabilitar selecionados". Extensões ignoradas não podem mais ser selecionadas na lista de extensões e novas migrações não serão detectadas nem exibidas para essas extensões. Se um grupo de ordem tiver sido definido para uma extensão ignorada, ele é mantido, mas deixa de ter qualquer significado.',
+	'EXTMGRPLUS_IGNORE'             => '%s Ignorar',
+	'EXTMGRPLUS_IGNORE_EXPLAIN'     => 'Esta coluna permite que você especifique quais extensões devem ser ignoradas durante as ações "Habilitar selecionados" e "Desabilitar selecionados". Extensões ignoradas não podem mais ser selecionadas na lista de extensões e novas migrações não serão detectadas nem exibidas para essas extensões. Se um grupo de ordem tiver sido definido para uma extensão ignorada, ele é mantido, mas deixa de ter qualquer significado.',
 
 	// ext manager
 	'EXTMGRPLUS_COL_CDB'                  => 'Extensão validada',
@@ -88,12 +88,12 @@ $lang = array_merge($lang, [
 	'EXTMGRPLUS_TOOLTIP_SELECT'        => 'Selecionar extensão.',
 	'EXTMGRPLUS_TOOLTIP_IS_LOCKED'     => 'A seleção desta extensão está bloqueada devido a novas migrações.',
 	// tooltips icons
-	'EXTMGRPLUS_TOOLTIP_CDB_EXT'             => 'Esta extensão foi oficialmente validada.',
-	'EXTMGRPLUS_TOOLTIP_OUTDATED'            => 'A versão instalada desta extensão está desatualizada.',
-	'EXTMGRPLUS_TOOLTIP_VERSIONCHECK_ERROR'  => 'Ocorreu um erro durante a verificação de versão. Clique em "Detalhes" para saber mais.',
-	'EXTMGRPLUS_TOOLTIP_VERSIONCHECK_EMPTY'  => 'Nenhuma verificação de versão foi realizada para esta extensão.',
-	'EXTMGRPLUS_TOOLTIP_NO_VERSIONCHECK'     => 'Esta extensão não oferece verificação de versão.',
-	'EXTMGRPLUS_TOOLTIP_IS_IGNORED'          => 'Esta extensão é ignorada pela "Extension Manager Plus".',
+	'EXTMGRPLUS_TOOLTIP_CDB_EXT'            => 'Esta extensão foi oficialmente validada.',
+	'EXTMGRPLUS_TOOLTIP_OUTDATED'           => 'A versão instalada desta extensão está desatualizada.',
+	'EXTMGRPLUS_TOOLTIP_VERSIONCHECK_ERROR' => 'Ocorreu um erro durante a verificação de versão. Clique em "Detalhes" para saber mais.',
+	'EXTMGRPLUS_TOOLTIP_VERSIONCHECK_EMPTY' => 'Nenhuma verificação de versão foi realizada para esta extensão.',
+	'EXTMGRPLUS_TOOLTIP_NO_VERSIONCHECK'    => 'Esta extensão não oferece verificação de versão.',
+	'EXTMGRPLUS_TOOLTIP_IS_IGNORED'         => 'Esta extensão é ignorada pela "Extension Manager Plus".',
 
 	// misc
 	'EXTMGRPLUS_EXTENSION_PLURAL' => [

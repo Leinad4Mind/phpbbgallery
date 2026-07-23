@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -39,5 +39,5 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'ACL_A_PAGES'		=> 'Peut gérer l’extension Pages',
+	'ACL_A_PAGES' => 'Peut gérer l’extension Pages',
 ]);

@@ -38,9 +38,9 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'HELP_EMBEDDING_MEDIA'			=> 'Indlejring af medie',
-	'HELP_EMBEDDING_MEDIA_QUESTION'	=> 'Sådan indlejres medie fra andre steder i indlæg',
-	'HELP_EMBEDDING_MEDIA_ANSWER'	=> 'Brugere kan indlejre indhold, såsom videoer og lyd fra tilladte stedet med
+	'HELP_EMBEDDING_MEDIA'          => 'Indlejring af medie',
+	'HELP_EMBEDDING_MEDIA_QUESTION' => 'Sådan indlejres medie fra andre steder i indlæg',
+	'HELP_EMBEDDING_MEDIA_ANSWER'   => 'Brugere kan indlejre indhold, såsom videoer og lyd fra tilladte stedet med
 										<strong>[media][/media]</strong>-tags, eller blot ved at skrive en understøttet
 										URL i ren tekst. F.eks.:<br><br>
 										<strong>[media]</strong>%1$s<strong>[/media]</strong>

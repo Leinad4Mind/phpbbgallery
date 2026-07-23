@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,24 +38,24 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge(
-	$lang, array(
-		'UCP_NOTIES'			=> 'Manage notifications',
-		'UCP_NOTIES_EXPLAIN'	=> 'Manage your notifications',
-		'MARK_DELETE_SINGLE'	=> 'Mark to delete',
-		'MARK_READ_SINGLE'		=> 'Mark to read',
-		'MARK_UNREAD_SINGLE'	=> 'Mark to unread',
-		'MARK_DELETE'			=> 'Select all to delete',
-		'MARK_READ'				=> 'Select all to read',
-		'MARK_UNREAD'			=> 'Select all to unread',
-		'UNMARK_DELETE'			=> 'Unselect all to delete',
-		'UNMARK_READ'			=> 'Unselect all to read',
-		'UNMARK_UNREAD'			=> 'Unselect all to unread',
-		'MARK_DELETE_SELECTED'		=> 'Delete all marked',
-		'MARK_READ_SELECTED'		=> 'Mark all as read',
-		'MARK_UNREAD_SELECTED'		=> 'Mark all as unread',
-		'UNMARK_DELETE_SELECTED'	=> 'Unmark all to delete',
-		'UNMARK_READ_SELECTED'		=> 'Unmark all as read',
-		'UNMARK_UNREAD_SELECTED'	=> 'Unmark all as unread',
-		'UCP_NOTIES_SUBMIT'			=> 'Submit Selected',
-	)
+	$lang, [
+		'UCP_NOTIES'             => 'Manage notifications',
+		'UCP_NOTIES_EXPLAIN'     => 'Manage your notifications',
+		'MARK_DELETE_SINGLE'     => 'Mark to delete',
+		'MARK_READ_SINGLE'       => 'Mark to read',
+		'MARK_UNREAD_SINGLE'     => 'Mark to unread',
+		'MARK_DELETE'            => 'Select all to delete',
+		'MARK_READ'              => 'Select all to read',
+		'MARK_UNREAD'            => 'Select all to unread',
+		'UNMARK_DELETE'          => 'Unselect all to delete',
+		'UNMARK_READ'            => 'Unselect all to read',
+		'UNMARK_UNREAD'          => 'Unselect all to unread',
+		'MARK_DELETE_SELECTED'   => 'Delete all marked',
+		'MARK_READ_SELECTED'     => 'Mark all as read',
+		'MARK_UNREAD_SELECTED'   => 'Mark all as unread',
+		'UNMARK_DELETE_SELECTED' => 'Unmark all to delete',
+		'UNMARK_READ_SELECTED'   => 'Unmark all as read',
+		'UNMARK_UNREAD_SELECTED' => 'Unmark all as unread',
+		'UCP_NOTIES_SUBMIT'      => 'Submit Selected',
+	]
 );

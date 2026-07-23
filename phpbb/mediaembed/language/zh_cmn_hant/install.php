@@ -38,6 +38,6 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'PHPBB_VERSION_ERROR'	=> '您的討論區似乎使用的是舊版本的 phpBB。phpBB ' . \phpbb\mediaembed\ext::PHPBB_MINIMUM . ' 或需要更新才能使用此擴展。',
-	'S9E_MEDIAEMBED_ERROR'	=> '我們偵測到 s9e/mediaembed 擴展。 除非您禁用、清除和刪除與 s9e/mediaembed 擴展相關的所有檔案，否則無法安裝 phpBB 的媒體嵌入外掛。',
+	'PHPBB_VERSION_ERROR'  => '您的討論區似乎使用的是舊版本的 phpBB。phpBB ' . \phpbb\mediaembed\ext::PHPBB_MINIMUM . ' 或需要更新才能使用此擴展。',
+	'S9E_MEDIAEMBED_ERROR' => '我們偵測到 s9e/mediaembed 擴展。 除非您禁用、清除和刪除與 s9e/mediaembed 擴展相關的所有檔案，否則無法安裝 phpBB 的媒體嵌入外掛。',
 ]);

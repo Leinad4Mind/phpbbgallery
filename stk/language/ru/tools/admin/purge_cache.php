@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,6 +37,6 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'PURGE_CACHE_COMPLETE'	=> 'Кешированные файлы из папки cache на сервере был успешно удалены.',
-));
+$lang = array_merge($lang, [
+	'PURGE_CACHE_COMPLETE' => 'Кешированные файлы из папки cache на сервере был успешно удалены.',
+]);

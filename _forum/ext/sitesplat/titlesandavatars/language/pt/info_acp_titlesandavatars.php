@@ -32,7 +32,7 @@ $lang = array_merge($lang, [
 	'TAT_AVATAR_FIRST' => 'Primeiro a publicar:',
 	'TAT_AVATAR_LAST'  => 'Último a publicar:',
 
-	'SS_HELPER_NOTY'   => 'O SiteSplat BBcore não existe!<br />Faça o download do <a href="https://sitesplat.com" target="_blank">BBcore</a> e copie a pasta BBcore para a pasta da sua extensão sitesplat.',
+	'SS_HELPER_NOTY'   => 'O SiteSplat BBcore não existe!<br />Transfere o <a href="https://sitesplat.com" target="_blank">BBcore</a> e copia a pasta BBcore para a pasta da tua extensão sitesplat.',
 	'BBAVATARS_NOTICE' => '<div class="phpinfo"><p>A configuração para esta extensão encontra-se em <strong>%1$s &#187; %2$s &#187; %3$s.</strong></p></div>',
 
 ]);

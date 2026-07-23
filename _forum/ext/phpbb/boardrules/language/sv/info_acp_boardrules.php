@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,13 +38,13 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// ACP modules
-	'ACP_BOARDRULES'				=> 'Forumregler',
-	'ACP_BOARDRULES_MANAGE'			=> 'Hantera regler',
-	'ACP_BOARDRULES_SETTINGS'		=> 'Regelinställningar',
+	'ACP_BOARDRULES'          => 'Forumregler',
+	'ACP_BOARDRULES_MANAGE'   => 'Hantera regler',
+	'ACP_BOARDRULES_SETTINGS' => 'Regelinställningar',
 
 	// ACP Logs
-	'ACP_BOARDRULES_SETTINGS_LOG'	=> '<strong>Inställningarna för forumreglerna ändrade</strong>',
-	'ACP_BOARDRULES_NOTIFY_LOG'		=> '<strong>Meddelande om forumregler har skickats till alla användare</strong>',
-));
+	'ACP_BOARDRULES_SETTINGS_LOG' => '<strong>Inställningarna för forumreglerna ändrade</strong>',
+	'ACP_BOARDRULES_NOTIFY_LOG'   => '<strong>Meddelande om forumregler har skickats till alla användare</strong>',
+]);

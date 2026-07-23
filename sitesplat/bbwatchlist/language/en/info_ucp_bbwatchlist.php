@@ -33,7 +33,8 @@ $lang = array_merge($lang, array(
 
 	'KEYWORD_EMPTY'		=> 'Oops! You didn\'t enter a keyword.',
 	'KEYWORD_PATTERN'	=> '3 to 50 characters',
-	'KEYWORD_TOO_LONG'	=> 'Keyword is too long. Maximum length of one keyword is 255 characters',
+	'KEYWORD_TOO_SHORT'	=> 'Keyword is too short. Minimum length of one keyword is 3 characters',
+	'KEYWORD_TOO_LONG'	=> 'Keyword is too long. Maximum length of one keyword is 50 characters',
 	'KEYWORD_EXISTS'	=> 'You already have such keyword defined.',
 	'KEYWORD_ADDED'		=> 'Keyword has been added',
 	'KEYWORD_DELETED'	=> 'Keyword has been deleted',

@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,9 +37,9 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'READD_MODULE_MANAGEMENT'			=> 'Пересоздание модуля управления модулями',
-	'READD_MODULE_MANAGEMENT_CONFIRM'	=> 'Вы уверены, что хотите пересоздать модуль управления модулями?',
-	'READD_MODULE_MANAGEMENT_SUCCESS'	=> 'Модуль управления модулями был успешно пересоздан или исправлен!',
-	'NO_NEED_READD_MODULE_MANAGEMENT'	=> 'Ни один из модулей не был удален или поврежден.',
-));
+$lang = array_merge($lang, [
+	'READD_MODULE_MANAGEMENT'         => 'Пересоздание модуля управления модулями',
+	'READD_MODULE_MANAGEMENT_CONFIRM' => 'Вы уверены, что хотите пересоздать модуль управления модулями?',
+	'READD_MODULE_MANAGEMENT_SUCCESS' => 'Модуль управления модулями был успешно пересоздан или исправлен!',
+	'NO_NEED_READD_MODULE_MANAGEMENT' => 'Ни один из модулей не был удален или поврежден.',
+]);

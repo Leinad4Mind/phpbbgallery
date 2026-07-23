@@ -1,15 +1,15 @@
 <?php
-/**
-*
-* @package phpBB Extension - Topic Index
-* @copyright (c) 2015 dmzx - https://www.dmzx-web.net
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
 
 /**
-* DO NOT CHANGE
-*/
+ * @package phpBB Extension - Topic Index for phpBB.
+ * @copyright (c) 2015 dmzx - https://www.dmzx-web.net
+ * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ * @translation Leinad4Mind [Brazilian Portuguese [pt_br]] (2026)
+ */
+
+/**
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -36,22 +36,28 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'ADD_INILIST'					=> '+Lista',
-	'REMOVE_INILIST'				=> '-Lista',
-	'OTINDEX_LINK_TITLE'			=> 'Lista de tópicos',
-	'NUM'							=> 'N°',
-	'POSTER'						=> 'Postada por',
-	'INDEX_POST_PRES'				=> 'Antes de abrir um novo tópico, por favor verifique se ele já existe na lista. Se existir, use aquele tópico para escrever suas mensagens.<br />Obrigado',
-	'NON_ACTIVE'					=> 'Inativo',
-	'DEF_ALL_TOPICS_IN'				=> 'Todos os novos tópicos automaticamente',
-	'DEF_ALL_TOPICS_OFF'			=> 'Adiciona tópicos manualmente à lista',
-	'REMOVE_FROM_LIST'				=> 'remover',
-	'TOPICINDEX_VERSION'			=> 'Versão',
-	'ALL'							=> 'Todos',
-	'09'							=> '0-9',
-	'SYMB'							=> '#&%',
-	'ANY_TOPIC_IN_LIST'				=> 'Qualquer tópico',
-	'SELECT_A_LIST'					=> 'Selecione uma lista',
-	'OIINDEX_HEADER'				=> 'Official Topic Index - Topics List',
-));
+$lang = array_merge($lang, [
+	'ADD_INILIST'           => '+Lista',
+	'REMOVE_INILIST'        => '-Lista',
+	'OTINDEX_LINK_TITLE'    => 'Lista de Tópicos',
+	'NUM'                   => 'N°',
+	'POSTER'                => 'Enviado por',
+	'INDEX_POST_PRES'       => 'Antes de abrir um novo tópico, verifique se ele já existe na lista. Se existir, use esse tópico para escrever uma mensagem.<br />Obrigado',
+	'NON_ACTIVE'            => 'Inativo',
+	'DEF_ALL_TOPICS_IN'     => 'Todos os novos tópicos automaticamente',
+	'DEF_ALL_TOPICS_OFF'    => 'Adicione tópicos manualmente à lista',
+	'REMOVE_FROM_LIST'      => 'remover',
+	'TOPICINDEX_VERSION'    => 'Versão',
+	'ALL'                   => 'Todos',
+	'09'                    => '0-9',
+	'SYMB'                  => '#&%',
+	'ANY_TOPIC_IN_LIST'     => 'Nenhum tópico enviado!',
+	'SELECT_A_LIST'         => 'Selecione uma lista',
+	'OIINDEX_HEADER'        => 'Lista de tópicos',
+	'LANGUAGE'              => 'Idioma',
+	'CATEGORY'              => 'Categoria',
+	'COMMENTS'              => 'Comentários',
+	'BUTTON_UPLOAD'         => 'Compartilhar Projeto',
+	'BUTTON_UPLOAD_EXPLAIN' => 'Sim! Comece a compartilhar projetos na nossa comunidade!',
+
+]);

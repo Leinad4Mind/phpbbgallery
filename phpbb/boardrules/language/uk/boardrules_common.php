@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,10 +37,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES'				=> 'Правила',
-	'BOARDRULES_TITLE'			=> 'Переглянути правила цього форуму',
-	'BOARDRULES_AGREEMENT'		=> 'Ви погоджуєтесь дотримуватись правил, розміщених у секції “Правила”',
-	'BOARDRULES_VIEWONLINE'		=> 'Переглядає “Правила Форуму”',
-	'BOARDRULES_NOTIFICATION'	=> 'Правила форуму оновлено. Натисніть тут, щоб переглянути їх.',
-));
+$lang = array_merge($lang, [
+	'BOARDRULES'              => 'Правила',
+	'BOARDRULES_TITLE'        => 'Переглянути правила цього форуму',
+	'BOARDRULES_AGREEMENT'    => 'Ви погоджуєтесь дотримуватись правил, розміщених у секції “Правила”',
+	'BOARDRULES_VIEWONLINE'   => 'Переглядає “Правила Форуму”',
+	'BOARDRULES_NOTIFICATION' => 'Правила форуму оновлено. Натисніть тут, щоб переглянути їх.',
+]);

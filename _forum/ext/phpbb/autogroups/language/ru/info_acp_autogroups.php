@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,11 +37,11 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'ACP_AUTOGROUPS_MANAGE'			=> 'Управление АвтоГруппами',
-	'AUTOGROUPS_TYPE_NOT_EXIST'		=> 'Тип АвтоГруппы `%1$s` не существует.',
+$lang = array_merge($lang, [
+	'ACP_AUTOGROUPS_MANAGE'     => 'Управление АвтоГруппами',
+	'AUTOGROUPS_TYPE_NOT_EXIST' => 'Тип АвтоГруппы `%1$s` не существует.',
 
 	// Logs
-	'ACP_AUTOGROUPS_SAVED_LOG'		=> '<strong>Конфигурация АвтоГруппы сохранена.</strong>',
-	'ACP_AUTOGROUPS_DELETE_LOG'		=> '<strong>Конфигурация АвтоГруппы удалена.</strong>',
-));
+	'ACP_AUTOGROUPS_SAVED_LOG'  => '<strong>Конфигурация АвтоГруппы сохранена.</strong>',
+	'ACP_AUTOGROUPS_DELETE_LOG' => '<strong>Конфигурация АвтоГруппы удалена.</strong>',
+]);

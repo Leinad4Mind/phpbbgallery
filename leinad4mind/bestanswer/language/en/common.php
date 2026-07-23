@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,36 +38,36 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'ANSWERS'		=> 'Answers',
-	'ANSWERED'		=> 'Answered',
+$lang = array_merge($lang, [
+	'ANSWERS'  => 'Answers',
+	'ANSWERED' => 'Answered',
 	
-	'BEST_ANSWER'	=> 'Best answer',
-	'BBPOINTS_ANSWER'			=> 'Amount of BBPoints for "Best Answer" post',
-	'BBPOINTS_ANSWER_EXPLAIN'	=> 'Set the number of BBPoints to be credited to post author when his post in this forum is marked as "Best Answer"',
+	'BEST_ANSWER'             => 'Best answer',
+	'BBPOINTS_ANSWER'         => 'Amount of BBPoints for "Best Answer" post',
+	'BBPOINTS_ANSWER_EXPLAIN' => 'Set the number of BBPoints to be credited to post author when his post in this forum is marked as "Best Answer"',
 
-	'ENABLE_ANSWER'			=> 'Enable best answer',
-	'ENABLE_ANSWER_EXPLAIN'	=> 'If enabled, the topic starter (if permitted) and moderators (where allowed) will be able to mark a topic reply as the best answer.',
-	'EXTENSION_NOT_ENABLED'			=> 'The Best Answer extension is not enabled on this forum.',
+	'ENABLE_ANSWER'         => 'Enable best answer',
+	'ENABLE_ANSWER_EXPLAIN' => 'If enabled, the topic starter (if permitted) and moderators (where allowed) will be able to mark a topic reply as the best answer.',
+	'EXTENSION_NOT_ENABLED' => 'The Best Answer extension is not enabled on this forum.',
 
-	'LOG_MARK_ANSWER'	=> '<strong>Marked post as best answer</strong><br />» %1$s by %2$s',
-	'LOG_UNMARK_ANSWER'	=> '<strong>Unmarked post as best answer</strong><br />» %1$s by %2$s',
+	'LOG_MARK_ANSWER'   => '<strong>Marked post as best answer</strong><br />» %1$s by %2$s',
+	'LOG_UNMARK_ANSWER' => '<strong>Unmarked post as best answer</strong><br />» %1$s by %2$s',
 
-	'LOG_BBPOINTS_MARK_ANSWER'		=> '<strong>Added BBPoints to author for best answer</strong><br />» %1$s by %2$s',
-	'LOG_BBPOINTS_UNMARK_ANSWER'	=> '<strong>Removed BBPoints of author for best answer</strong><br />» %1$s by %2$s',
+	'LOG_BBPOINTS_MARK_ANSWER'   => '<strong>Added BBPoints to author for best answer</strong><br />» %1$s by %2$s',
+	'LOG_BBPOINTS_UNMARK_ANSWER' => '<strong>Removed BBPoints of author for best answer</strong><br />» %1$s by %2$s',
 
-	'MARK_ANSWER'			=> 'Mark answer',
-	'MARK_ANSWER_CONFIRM'	=> 'Are you sure you want to mark this post as the best answer?',
+	'MARK_ANSWER'         => 'Mark answer',
+	'MARK_ANSWER_CONFIRM' => 'Are you sure you want to mark this post as the best answer?',
 
-	'TO_POST'	=> '<i class="fa fa-eye"></i> View Post',
-	'TOPIC_FIRST_POST'	=> 'You cannot mark this post as the best answer as it is the first post of the topic.',
-	'TOTAL_ANSWERS'	=> 'Total answers',
+	'TO_POST'          => '<i class="fa fa-eye"></i> View Post',
+	'TOPIC_FIRST_POST' => 'You cannot mark this post as the best answer as it is the first post of the topic.',
+	'TOTAL_ANSWERS'    => 'Total answers',
 
-	'UNMARK_ANSWER'			=> 'Unmark answer',
-	'UNMARK_ANSWER_CONFIRM'	=> 'Are you sure you want to unmark this post as the best answer?',
+	'UNMARK_ANSWER'         => 'Unmark answer',
+	'UNMARK_ANSWER_CONFIRM' => 'Are you sure you want to unmark this post as the best answer?',
 
-	'MARK_ANSWER_NOTIFICATION'			=> '%1$s marked your post in topic “%2$s” as the best answer.',
-	'UNMARK_ANSWER_NOTIFICATION'		=> '%1$s unmarked your post in topic “%2$s” as the best answer.',
-	'NOTIFICATION_TYPE_MARK_ANSWER'		=> 'Someone marks your topic reply as the best answer',
-	'NOTIFICATION_TYPE_UNMARK_ANSWER'	=> 'Someone unmarks your topic reply as the best answer',
-));
+	'MARK_ANSWER_NOTIFICATION'        => '%1$s marked your post in topic “%2$s” as the best answer.',
+	'UNMARK_ANSWER_NOTIFICATION'      => '%1$s unmarked your post in topic “%2$s” as the best answer.',
+	'NOTIFICATION_TYPE_MARK_ANSWER'   => 'Someone marks your topic reply as the best answer',
+	'NOTIFICATION_TYPE_UNMARK_ANSWER' => 'Someone unmarks your topic reply as the best answer',
+]);

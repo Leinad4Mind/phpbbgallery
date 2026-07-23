@@ -1,5 +1,5 @@
 
-The following is an e-mail sent to you from "{SITENAME}" for {FROM_USERNAME} by the contact form:
+O e-mail seguinte foi-te enviado a partir de "{SITENAME}" por parte de {FROM_USERNAME} através do formulário de contacto:
 
 ----------
 

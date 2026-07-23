@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,14 +38,14 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'TEST'				=> 'Informations générales',
-	'DATABASE_INFO'		=> 'Base de données du serveur',
-	'DBMS'				=> 'Type de la base de données',
-	'PHP_INFO'			=> 'Informations concernant PHP',
-	'PHP_VERSION'		=> 'Version de PHP',
-	'STK_VERSION'		=> 'Version de Support Tookit',
-	'MBSTRING_LOADED'	=> 'La fonctionnalité des chaînes de caractères multi-octets (module PHP <strong>mbstring</strong>) est chargée.',
-	'MBSTRING_NOT_LOADED'				=> 'La fonctionnalité des chaînes de caractères multi-octets (module PHP <strong>mbstring</strong>) n’est pas chargée.',
-	'ERROR_MBSTRING_NOT_LOADED_EXPLAIN'	=> 'Le module PHP <strong>mbstring</strong> ne fait pas partie de la liste des module chargés par défaut. Cela signifie que ce module est désactivé par défaut. Pour utiliser les fonctionnalités de ce module il est nécessaire de définir ce dernier sur « enable » dans la configuration de PHP. Si besoin, merci de consulter la documentation du <a href="http://php.net/manual/ru/mbstring.configuration.php">langage PHP</a>.',
-));
+$lang = array_merge($lang, [
+	'TEST'                              => 'Informations générales',
+	'DATABASE_INFO'                     => 'Base de données du serveur',
+	'DBMS'                              => 'Type de la base de données',
+	'PHP_INFO'                          => 'Informations concernant PHP',
+	'PHP_VERSION'                       => 'Version de PHP',
+	'STK_VERSION'                       => 'Version de Support Tookit',
+	'MBSTRING_LOADED'                   => 'La fonctionnalité des chaînes de caractères multi-octets (module PHP <strong>mbstring</strong>) est chargée.',
+	'MBSTRING_NOT_LOADED'               => 'La fonctionnalité des chaînes de caractères multi-octets (module PHP <strong>mbstring</strong>) n’est pas chargée.',
+	'ERROR_MBSTRING_NOT_LOADED_EXPLAIN' => 'Le module PHP <strong>mbstring</strong> ne fait pas partie de la liste des module chargés par défaut. Cela signifie que ce module est désactivé par défaut. Pour utiliser les fonctionnalités de ce module il est nécessaire de définir ce dernier sur « enable » dans la configuration de PHP. Si besoin, merci de consulter la documentation du <a href="http://php.net/manual/ru/mbstring.configuration.php">langage PHP</a>.',
+]);

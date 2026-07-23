@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,58 +38,58 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARD_ANNOUNCEMENTS_SETTINGS'			=> 'Postavke forumskih obavijesti',
-	'BOARD_ANNOUNCEMENTS_SETTINGS_EXPLAIN'	=> 'Ovdje možete dodavati i upravljati forumskim obavijestima (a) koje će biti prikazane na svakoj stranici foruma.',
+$lang = array_merge($lang, [
+	'BOARD_ANNOUNCEMENTS_SETTINGS'         => 'Postavke forumskih obavijesti',
+	'BOARD_ANNOUNCEMENTS_SETTINGS_EXPLAIN' => 'Ovdje možete dodavati i upravljati forumskim obavijestima (a) koje će biti prikazane na svakoj stranici foruma.',
 
-	'BOARD_ANNOUNCEMENTS_ENABLE_ALL'		=> 'Enable board announcements',
+	'BOARD_ANNOUNCEMENTS_ENABLE_ALL' => 'Enable board announcements',
 
-	'BOARD_ANNOUNCEMENTS_OPTIONS'			=> 'Announcement options',
+	'BOARD_ANNOUNCEMENTS_OPTIONS' => 'Announcement options',
 
-	'BOARD_ANNOUNCEMENTS_DESC'				=> 'Description',
-	'BOARD_ANNOUNCEMENTS_DESC_EXPLAIN'		=> 'A short description for this announcement. This will only be visible here in the ACP to help identify this announcement.',
+	'BOARD_ANNOUNCEMENTS_DESC'         => 'Description',
+	'BOARD_ANNOUNCEMENTS_DESC_EXPLAIN' => 'A short description for this announcement. This will only be visible here in the ACP to help identify this announcement.',
 
-	'BOARD_ANNOUNCEMENTS_ENABLE'			=> 'Prikažite ovu forumsku obavijest',
-	'BOARD_ANNOUNCEMENTS_USERS'				=> 'Tko može vidjeti ovu forumsku obavijest',
-	'BOARD_ANNOUNCEMENTS_DISMISS'			=> 'Omogućite korisnicima/ama zatvaranje ove forumske obavijesti',
-	'BOARD_ANNOUNCEMENTS_LOCATIONS'			=> 'Limit where this announcement should be displayed',
-	'BOARD_ANNOUNCEMENTS_LOCATIONS_EXPLAIN'	=> 'Select one or more locations to display the announcement. To display it everywhere, leave the selection empty. Use Command (Mac) or Control (Windows) click to select multiple locations.',
+	'BOARD_ANNOUNCEMENTS_ENABLE'            => 'Prikažite ovu forumsku obavijest',
+	'BOARD_ANNOUNCEMENTS_USERS'             => 'Tko može vidjeti ovu forumsku obavijest',
+	'BOARD_ANNOUNCEMENTS_DISMISS'           => 'Omogućite korisnicima/ama zatvaranje ove forumske obavijesti',
+	'BOARD_ANNOUNCEMENTS_LOCATIONS'         => 'Limit where this announcement should be displayed',
+	'BOARD_ANNOUNCEMENTS_LOCATIONS_EXPLAIN' => 'Select one or more locations to display the announcement. To display it everywhere, leave the selection empty. Use Command (Mac) or Control (Windows) click to select multiple locations.',
 
-	'BOARD_ANNOUNCEMENTS_EVERYONE'			=> 'Svi/e',
+	'BOARD_ANNOUNCEMENTS_EVERYONE' => 'Svi/e',
 
-	'BOARD_ANNOUNCEMENTS_BGCOLOR'			=> 'Pozadinska boja forumske obavijesti',
-	'BOARD_ANNOUNCEMENTS_BGCOLOR_EXPLAIN'	=> 'Pozadinsku boju forumske obavijesti možete mijenjati korištenjem hex kodova (npr.: FFFF80).<br>Za korištenje zadane boje, ostavite ovo polje praznim.',
+	'BOARD_ANNOUNCEMENTS_BGCOLOR'         => 'Pozadinska boja forumske obavijesti',
+	'BOARD_ANNOUNCEMENTS_BGCOLOR_EXPLAIN' => 'Pozadinsku boju forumske obavijesti možete mijenjati korištenjem hex kodova (npr.: FFFF80).<br>Za korištenje zadane boje, ostavite ovo polje praznim.',
 
-	'BOARD_ANNOUNCEMENTS_EXPIRY'			=> 'Datum isteka forumske obavijesti',
-	'BOARD_ANNOUNCEMENTS_EXPIRY_EXPLAIN'	=> 'Na postavljeni datum, forumska obavijest će isteći i postati onemogućena. Ukoliko ne želite da forumska obavijest istekne, ostavite ovo polje praznim.',
-	'BOARD_ANNOUNCEMENTS_EXPIRY_INVALID'	=> 'Datum isteka je neispravan ili je već prošao.',
+	'BOARD_ANNOUNCEMENTS_EXPIRY'         => 'Datum isteka forumske obavijesti',
+	'BOARD_ANNOUNCEMENTS_EXPIRY_EXPLAIN' => 'Na postavljeni datum, forumska obavijest će isteći i postati onemogućena. Ukoliko ne želite da forumska obavijest istekne, ostavite ovo polje praznim.',
+	'BOARD_ANNOUNCEMENTS_EXPIRY_INVALID' => 'Datum isteka je neispravan ili je već prošao.',
 
-	'BOARD_ANNOUNCEMENTS_TEXT_INVALID'		=> 'Board announcement contains no message',
-	'BOARD_ANNOUNCEMENTS_TEXT'				=> 'Poruka forumske obavijesti',
-	'BOARD_ANNOUNCEMENTS_PREVIEW'			=> 'Prikaz forumske obavijesti',
-	'BOARD_ANNOUNCEMENTS_UPDATED'			=> 'Forumska obavijest je ažurirana.',
+	'BOARD_ANNOUNCEMENTS_TEXT_INVALID' => 'Board announcement contains no message',
+	'BOARD_ANNOUNCEMENTS_TEXT'         => 'Poruka forumske obavijesti',
+	'BOARD_ANNOUNCEMENTS_PREVIEW'      => 'Prikaz forumske obavijesti',
+	'BOARD_ANNOUNCEMENTS_UPDATED'      => 'Forumska obavijest je ažurirana.',
 
-	'BOARD_ANNOUNCEMENTS_TH_DESCRIPTION'	=> 'Description',
-	'BOARD_ANNOUNCEMENTS_TH_SHOW_WHERE'		=> 'Location',
-	'BOARD_ANNOUNCEMENTS_TH_SHOW_TO'		=> 'Visible To',
-	'BOARD_ANNOUNCEMENTS_TH_ENABLED'		=> 'Enabled',
-	'BOARD_ANNOUNCEMENTS_TH_CREATED_DATE'	=> 'Creation Date',
-	'BOARD_ANNOUNCEMENTS_TH_EXPIRY_DATE'	=> 'Expiration Date',
-	'BOARD_ANNOUNCEMENTS_TH_EXPIRED'		=> 'Expired',
+	'BOARD_ANNOUNCEMENTS_TH_DESCRIPTION'  => 'Description',
+	'BOARD_ANNOUNCEMENTS_TH_SHOW_WHERE'   => 'Location',
+	'BOARD_ANNOUNCEMENTS_TH_SHOW_TO'      => 'Visible To',
+	'BOARD_ANNOUNCEMENTS_TH_ENABLED'      => 'Enabled',
+	'BOARD_ANNOUNCEMENTS_TH_CREATED_DATE' => 'Creation Date',
+	'BOARD_ANNOUNCEMENTS_TH_EXPIRY_DATE'  => 'Expiration Date',
+	'BOARD_ANNOUNCEMENTS_TH_EXPIRED'      => 'Expired',
 
-	'BOARD_ANNOUNCEMENTS_EVERYWHERE'		=> 'Everywhere',
-	'BOARD_ANNOUNCEMENTS_INDEX_PAGE'		=> 'Board Index',
-	'BOARD_ANNOUNCEMENTS_FORUMS'			=> 'Selected Forums',
+	'BOARD_ANNOUNCEMENTS_EVERYWHERE' => 'Everywhere',
+	'BOARD_ANNOUNCEMENTS_INDEX_PAGE' => 'Board Index',
+	'BOARD_ANNOUNCEMENTS_FORUMS'     => 'Selected Forums',
 
-	'BOARD_ANNOUNCEMENTS_EMPTY'				=> 'There are no board announcements to display',
-	'BOARD_ANNOUNCEMENTS_ADD'				=> 'Create Announcement',
+	'BOARD_ANNOUNCEMENTS_EMPTY' => 'There are no board announcements to display',
+	'BOARD_ANNOUNCEMENTS_ADD'   => 'Create Announcement',
 
-	'BOARD_ANNOUNCEMENTS_DELETE_SUCCESS'	=> 'The board announcement was deleted',
-	'BOARD_ANNOUNCEMENTS_DELETE_ERROR'		=> 'The board announcement could not be deleted',
+	'BOARD_ANNOUNCEMENTS_DELETE_SUCCESS' => 'The board announcement was deleted',
+	'BOARD_ANNOUNCEMENTS_DELETE_ERROR'   => 'The board announcement could not be deleted',
 
 	// Nested set exception messages (only appears in PHP error logging)
 	// Translating these strings is optional.
-	'BOARD_ANNOUNCEMENTS_LOCK_FAILED_ACQUIRE'	=> 'Board announcements failed to acquire the table lock. Another process may be holding the lock. Locks are forcibly released after a timeout of 1 hour.',
-	'BOARD_ANNOUNCEMENTS_INVALID_ITEM'			=> 'The requested announcement does not exist.',
-	'BOARD_ANNOUNCEMENTS_INVALID_PARENT'		=> 'The requested announcement has no parent.',
-));
+	'BOARD_ANNOUNCEMENTS_LOCK_FAILED_ACQUIRE' => 'Board announcements failed to acquire the table lock. Another process may be holding the lock. Locks are forcibly released after a timeout of 1 hour.',
+	'BOARD_ANNOUNCEMENTS_INVALID_ITEM'        => 'The requested announcement does not exist.',
+	'BOARD_ANNOUNCEMENTS_INVALID_PARENT'      => 'The requested announcement has no parent.',
+]);

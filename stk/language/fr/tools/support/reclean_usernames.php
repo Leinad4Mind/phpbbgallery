@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,10 +38,10 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'RECLEAN_USERNAMES'					=> 'Re-nettoyer les noms des utilisateurs',
-	'RECLEAN_USERNAMES_COMPLETE'		=> 'Tous les noms des utilisateurs ont été re-nettoyés.',
-	'RECLEAN_USERNAMES_CONFIRM'			=> 'Confirmer le re-nettoyage de tous les noms des utilisateurs ?',
-	'RECLEAN_USERNAMES_NOT_COMPLETE'	=> 'L’outil de re-nettoyage des noms des utilisateurs est en cours d’exécution… Merci de ne pas interrompre cette opération.',
-	'USER_ALREADY_EXISTS'				=> 'Un utilisateur ayant le nom d’utilisateur <a href="%2$s" target="_blank" />%1$s</a> existe déjà.<br />Voici l’utilisateur ayant le mauvais nom d’utilisateur nettoyé : <a href="%4$s" target="_blank" />%3$s</a>',
-));
+$lang = array_merge($lang, [
+	'RECLEAN_USERNAMES'              => 'Re-nettoyer les noms des utilisateurs',
+	'RECLEAN_USERNAMES_COMPLETE'     => 'Tous les noms des utilisateurs ont été re-nettoyés.',
+	'RECLEAN_USERNAMES_CONFIRM'      => 'Confirmer le re-nettoyage de tous les noms des utilisateurs ?',
+	'RECLEAN_USERNAMES_NOT_COMPLETE' => 'L’outil de re-nettoyage des noms des utilisateurs est en cours d’exécution… Merci de ne pas interrompre cette opération.',
+	'USER_ALREADY_EXISTS'            => 'Un utilisateur ayant le nom d’utilisateur <a href="%2$s" target="_blank" />%1$s</a> existe déjà.<br />Voici l’utilisateur ayant le mauvais nom d’utilisateur nettoyé : <a href="%4$s" target="_blank" />%3$s</a>',
+]);

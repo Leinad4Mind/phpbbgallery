@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,10 +37,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES_HEADER'			=> 'Pravidla fóra',
-	'BOARDRULES_EXPLAIN'		=> 'Tato pravidla vymezují povinnosti všech, kteří navštevují %s. Každý registrovaný uživatel by je měl ctít a respektovat v zájmu zachování kvality fóra.',
-	'BOARDRULES_CATEGORIES'		=> 'Kategorie pravidel',
-	'BOARDRULES_CATEGORY_ANCHOR'=> 'kategorie-%s',
-	'BOARDRULES_RULE_ANCHOR'	=> 'pravidlo-%s',
-));
+$lang = array_merge($lang, [
+	'BOARDRULES_HEADER'          => 'Pravidla fóra',
+	'BOARDRULES_EXPLAIN'         => 'Tato pravidla vymezují povinnosti všech, kteří navštevují %s. Každý registrovaný uživatel by je měl ctít a respektovat v zájmu zachování kvality fóra.',
+	'BOARDRULES_CATEGORIES'      => 'Kategorie pravidel',
+	'BOARDRULES_CATEGORY_ANCHOR' => 'kategorie-%s',
+	'BOARDRULES_RULE_ANCHOR'     => 'pravidlo-%s',
+]);

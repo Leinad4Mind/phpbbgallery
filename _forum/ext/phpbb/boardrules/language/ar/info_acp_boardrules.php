@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,13 +38,13 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// ACP modules
-	'ACP_BOARDRULES'				=> 'قوانين المنتدى',
-	'ACP_BOARDRULES_MANAGE'			=> 'إدارة القوانين',
-	'ACP_BOARDRULES_SETTINGS'		=> 'الإعدادات',
+	'ACP_BOARDRULES'          => 'قوانين المنتدى',
+	'ACP_BOARDRULES_MANAGE'   => 'إدارة القوانين',
+	'ACP_BOARDRULES_SETTINGS' => 'الإعدادات',
 
 	// ACP Logs
-	'ACP_BOARDRULES_SETTINGS_LOG'	=> '<strong>تم تغيير إعدادات قوانين المنتدى</strong>',
-	'ACP_BOARDRULES_NOTIFY_LOG'		=> '<strong>تم ارسال اشعار قوانين المنتدى إلى جميع الأعضاء</strong>',
-));
+	'ACP_BOARDRULES_SETTINGS_LOG' => '<strong>تم تغيير إعدادات قوانين المنتدى</strong>',
+	'ACP_BOARDRULES_NOTIFY_LOG'   => '<strong>تم ارسال اشعار قوانين المنتدى إلى جميع الأعضاء</strong>',
+]);

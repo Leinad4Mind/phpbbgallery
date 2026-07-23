@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,7 +37,7 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'ACP_CRON_STATUS_TITLE'				=> 'Stav cronu',
-	'ACP_CRON_STATUS_CONFIG_TITLE'		=> 'Kontrola stavu cronu',
-));
+$lang = array_merge($lang, [
+	'ACP_CRON_STATUS_TITLE'        => 'Stav cronu',
+	'ACP_CRON_STATUS_CONFIG_TITLE' => 'Kontrola stavu cronu',
+]);

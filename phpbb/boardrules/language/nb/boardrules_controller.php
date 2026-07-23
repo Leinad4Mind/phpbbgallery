@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,10 +38,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES_HEADER'			=> 'Forumregler',
-	'BOARDRULES_EXPLAIN'		=> 'Disse reglene er nedfelt for å klargjøre brukernes ansvar og rammer for akseptabel bruk av %s, for at forumet skal bli et trivelig og givende sted for alle brukere.',
-	'BOARDRULES_CATEGORIES'		=> 'Regelavsnitt',
-	'BOARDRULES_CATEGORY_ANCHOR'=> 'avsnitt-%s',
-	'BOARDRULES_RULE_ANCHOR'	=> 'regel-%s',
-));
+$lang = array_merge($lang, [
+	'BOARDRULES_HEADER'          => 'Forumregler',
+	'BOARDRULES_EXPLAIN'         => 'Disse reglene er nedfelt for å klargjøre brukernes ansvar og rammer for akseptabel bruk av %s, for at forumet skal bli et trivelig og givende sted for alle brukere.',
+	'BOARDRULES_CATEGORIES'      => 'Regelavsnitt',
+	'BOARDRULES_CATEGORY_ANCHOR' => 'avsnitt-%s',
+	'BOARDRULES_RULE_ANCHOR'     => 'regel-%s',
+]);

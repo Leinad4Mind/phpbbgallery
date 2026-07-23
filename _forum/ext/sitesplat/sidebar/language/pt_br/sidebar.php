@@ -47,7 +47,7 @@ $lang = array_merge($lang, [
 	'POLL'             => 'Última votação',
 	'NEWSLETTER'       => 'Newsletter',
 	'SIGN_IN_NEWS'     => 'Inscreva-se na nossa newsletter',
-	'SUBSCRIBE_BTN'    => 'Subscrever',
+	'SUBSCRIBE_BTN'    => 'Assinar',
 	'DOWNLOADS'        => 'Downloads',
 	'UNREAD'           => 'não lidas',
 
@@ -57,7 +57,7 @@ $lang = array_merge($lang, [
 	'VOTE_CHANGED'      => 'O seu voto foi alterado',
 	'NOT_FOUND'         => 'A sua votação não foi encontrada',
 
-	'STAFF'         => 'Equipa (Staff) online',
+	'STAFF'         => 'Equipe (Staff) online',
 	'STAFF_UNKNOWN' => 'N/D',
 
 	'DONATIONS'       => 'Doações',

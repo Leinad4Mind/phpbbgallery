@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,13 +37,13 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// ACP modules
-	'ACP_BOARDRULES'				=> '论坛章程',
-	'ACP_BOARDRULES_MANAGE'			=> '管理章程',
-	'ACP_BOARDRULES_SETTINGS'		=> '章程设定',
+	'ACP_BOARDRULES'          => '论坛章程',
+	'ACP_BOARDRULES_MANAGE'   => '管理章程',
+	'ACP_BOARDRULES_SETTINGS' => '章程设定',
 
 	// ACP Logs
-	'ACP_BOARDRULES_SETTINGS_LOG'	=> '<strong>论坛章程设定已改变。</strong>',
-	'ACP_BOARDRULES_NOTIFY_LOG'		=> '<strong>论坛章程通知已经发送到所有用户。</strong>',
-));
+	'ACP_BOARDRULES_SETTINGS_LOG' => '<strong>论坛章程设定已改变。</strong>',
+	'ACP_BOARDRULES_NOTIFY_LOG'   => '<strong>论坛章程通知已经发送到所有用户。</strong>',
+]);

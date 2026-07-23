@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,9 +38,9 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'REMOVE_ORPHANED_PERMISSIONS'			=> 'Supprimer les permissions orphelines',
-	'ORPHANED_PERMISSIONS_DELETED'			=> 'Les permissions orphelines ont été supprimées avec succès.',
-	'ORPHANED_PERMISSIONS_NOT_FIND'			=> 'Aucune permission orpheline n’a été trouvée.',
-	'REMOVE_ORPHANED_PERMISSIONS_CONFIRM'	=> 'Confirmer la suppression des permissions orphelines.',
-));
+$lang = array_merge($lang, [
+	'REMOVE_ORPHANED_PERMISSIONS'         => 'Supprimer les permissions orphelines',
+	'ORPHANED_PERMISSIONS_DELETED'        => 'Les permissions orphelines ont été supprimées avec succès.',
+	'ORPHANED_PERMISSIONS_NOT_FIND'       => 'Aucune permission orpheline n’a été trouvée.',
+	'REMOVE_ORPHANED_PERMISSIONS_CONFIRM' => 'Confirmer la suppression des permissions orphelines.',
+]);

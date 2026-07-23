@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,59 +38,59 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARD_ANNOUNCEMENTS_SETTINGS'			=> 'Forum aankondigings instellingen',
-	'BOARD_ANNOUNCEMENTS_SETTINGS_EXPLAIN'	=> 'Hier kan je een forum aankondiging beheren en aanmaken, die weergegeven zal worden op elke pagina van je forum.',
+$lang = array_merge($lang, [
+	'BOARD_ANNOUNCEMENTS_SETTINGS'         => 'Forum aankondigings instellingen',
+	'BOARD_ANNOUNCEMENTS_SETTINGS_EXPLAIN' => 'Hier kan je een forum aankondiging beheren en aanmaken, die weergegeven zal worden op elke pagina van je forum.',
 
-	'BOARD_ANNOUNCEMENTS_ENABLE_ALL'		=> 'Enable board announcements',
+	'BOARD_ANNOUNCEMENTS_ENABLE_ALL' => 'Enable board announcements',
 
-	'BOARD_ANNOUNCEMENTS_OPTIONS'			=> 'Announcement options',
+	'BOARD_ANNOUNCEMENTS_OPTIONS' => 'Announcement options',
 
-	'BOARD_ANNOUNCEMENTS_DESC'				=> 'Description',
-	'BOARD_ANNOUNCEMENTS_DESC_EXPLAIN'		=> 'A short description for this announcement. This will only be visible here in the ACP to help identify this announcement.',
+	'BOARD_ANNOUNCEMENTS_DESC'         => 'Description',
+	'BOARD_ANNOUNCEMENTS_DESC_EXPLAIN' => 'A short description for this announcement. This will only be visible here in the ACP to help identify this announcement.',
 
-	'BOARD_ANNOUNCEMENTS_ENABLE'			=> 'Laat deze forum aankondiging zien',
-	'BOARD_ANNOUNCEMENTS_USERS'				=> 'Wie kan deze forum aankondiging bekijken',
-	'BOARD_ANNOUNCEMENTS_DISMISS'			=> 'Sta gebruikers toe om deze forum aankondiging te sluiten',
-	'BOARD_ANNOUNCEMENTS_LOCATIONS'			=> 'Limit where this announcement should be displayed',
-	'BOARD_ANNOUNCEMENTS_LOCATIONS_EXPLAIN'	=> 'Select one or more locations to display the announcement. To display it everywhere, leave the selection empty. Use Command (Mac) or Control (Windows) click to select multiple locations.',
+	'BOARD_ANNOUNCEMENTS_ENABLE'            => 'Laat deze forum aankondiging zien',
+	'BOARD_ANNOUNCEMENTS_USERS'             => 'Wie kan deze forum aankondiging bekijken',
+	'BOARD_ANNOUNCEMENTS_DISMISS'           => 'Sta gebruikers toe om deze forum aankondiging te sluiten',
+	'BOARD_ANNOUNCEMENTS_LOCATIONS'         => 'Limit where this announcement should be displayed',
+	'BOARD_ANNOUNCEMENTS_LOCATIONS_EXPLAIN' => 'Select one or more locations to display the announcement. To display it everywhere, leave the selection empty. Use Command (Mac) or Control (Windows) click to select multiple locations.',
 
-	'BOARD_ANNOUNCEMENTS_EVERYONE'			=> 'Iedereen',
+	'BOARD_ANNOUNCEMENTS_EVERYONE' => 'Iedereen',
 
-	'BOARD_ANNOUNCEMENTS_BGCOLOR'			=> 'Forum aankondiging achtergrondkleur',
-	'BOARD_ANNOUNCEMENTS_BGCOLOR_EXPLAIN'	=> 'Je kan de achtergrondkleur van de aankondiging veranderen door gebruik te maken van een hex-code (bijv.: FFFF80). Laat dit veld leeg om de standaard kleur te gebruiken.',
+	'BOARD_ANNOUNCEMENTS_BGCOLOR'         => 'Forum aankondiging achtergrondkleur',
+	'BOARD_ANNOUNCEMENTS_BGCOLOR_EXPLAIN' => 'Je kan de achtergrondkleur van de aankondiging veranderen door gebruik te maken van een hex-code (bijv.: FFFF80). Laat dit veld leeg om de standaard kleur te gebruiken.',
 
-	'BOARD_ANNOUNCEMENTS_EXPIRY'			=> 'Vervaldatum forum aankondiging',
-	'BOARD_ANNOUNCEMENTS_EXPIRY_EXPLAIN'	=> 'Stel een datum in waarop de forum aankondiging vervalt en uitgeschakeld wordt. Laat dit veld leeg als je de forum aankondiging niet wilt laten vervallen.',
-	'BOARD_ANNOUNCEMENTS_EXPIRY_INVALID'	=> 'De vervaldatum is ongeldig of is al verlopen.',
+	'BOARD_ANNOUNCEMENTS_EXPIRY'         => 'Vervaldatum forum aankondiging',
+	'BOARD_ANNOUNCEMENTS_EXPIRY_EXPLAIN' => 'Stel een datum in waarop de forum aankondiging vervalt en uitgeschakeld wordt. Laat dit veld leeg als je de forum aankondiging niet wilt laten vervallen.',
+	'BOARD_ANNOUNCEMENTS_EXPIRY_INVALID' => 'De vervaldatum is ongeldig of is al verlopen.',
 
-	'BOARD_ANNOUNCEMENTS_TEXT_INVALID'		=> 'Board announcement contains no message',
-	'BOARD_ANNOUNCEMENTS_TEXT'				=> 'Forum aankondigings-bericht',
-	'BOARD_ANNOUNCEMENTS_PREVIEW'			=> 'Forum aankondiging - Voorbeeld',
+	'BOARD_ANNOUNCEMENTS_TEXT_INVALID' => 'Board announcement contains no message',
+	'BOARD_ANNOUNCEMENTS_TEXT'         => 'Forum aankondigings-bericht',
+	'BOARD_ANNOUNCEMENTS_PREVIEW'      => 'Forum aankondiging - Voorbeeld',
 
-	'BOARD_ANNOUNCEMENTS_UPDATED'			=> 'Forum aankondiging is bijgewerkt.',
+	'BOARD_ANNOUNCEMENTS_UPDATED' => 'Forum aankondiging is bijgewerkt.',
 
-	'BOARD_ANNOUNCEMENTS_TH_DESCRIPTION'	=> 'Description',
-	'BOARD_ANNOUNCEMENTS_TH_SHOW_WHERE'		=> 'Location',
-	'BOARD_ANNOUNCEMENTS_TH_SHOW_TO'		=> 'Visible To',
-	'BOARD_ANNOUNCEMENTS_TH_ENABLED'		=> 'Enabled',
-	'BOARD_ANNOUNCEMENTS_TH_CREATED_DATE'	=> 'Creation Date',
-	'BOARD_ANNOUNCEMENTS_TH_EXPIRY_DATE'	=> 'Expiration Date',
-	'BOARD_ANNOUNCEMENTS_TH_EXPIRED'		=> 'Expired',
+	'BOARD_ANNOUNCEMENTS_TH_DESCRIPTION'  => 'Description',
+	'BOARD_ANNOUNCEMENTS_TH_SHOW_WHERE'   => 'Location',
+	'BOARD_ANNOUNCEMENTS_TH_SHOW_TO'      => 'Visible To',
+	'BOARD_ANNOUNCEMENTS_TH_ENABLED'      => 'Enabled',
+	'BOARD_ANNOUNCEMENTS_TH_CREATED_DATE' => 'Creation Date',
+	'BOARD_ANNOUNCEMENTS_TH_EXPIRY_DATE'  => 'Expiration Date',
+	'BOARD_ANNOUNCEMENTS_TH_EXPIRED'      => 'Expired',
 
-	'BOARD_ANNOUNCEMENTS_EVERYWHERE'		=> 'Everywhere',
-	'BOARD_ANNOUNCEMENTS_INDEX_PAGE'		=> 'Board Index',
-	'BOARD_ANNOUNCEMENTS_FORUMS'			=> 'Selected Forums',
+	'BOARD_ANNOUNCEMENTS_EVERYWHERE' => 'Everywhere',
+	'BOARD_ANNOUNCEMENTS_INDEX_PAGE' => 'Board Index',
+	'BOARD_ANNOUNCEMENTS_FORUMS'     => 'Selected Forums',
 
-	'BOARD_ANNOUNCEMENTS_EMPTY'				=> 'There are no board announcements to display',
-	'BOARD_ANNOUNCEMENTS_ADD'				=> 'Create Announcement',
+	'BOARD_ANNOUNCEMENTS_EMPTY' => 'There are no board announcements to display',
+	'BOARD_ANNOUNCEMENTS_ADD'   => 'Create Announcement',
 
-	'BOARD_ANNOUNCEMENTS_DELETE_SUCCESS'	=> 'The board announcement was deleted',
-	'BOARD_ANNOUNCEMENTS_DELETE_ERROR'		=> 'The board announcement could not be deleted',
+	'BOARD_ANNOUNCEMENTS_DELETE_SUCCESS' => 'The board announcement was deleted',
+	'BOARD_ANNOUNCEMENTS_DELETE_ERROR'   => 'The board announcement could not be deleted',
 
 	// Nested set exception messages (only appears in PHP error logging)
 	// Translating these strings is optional.
-	'BOARD_ANNOUNCEMENTS_LOCK_FAILED_ACQUIRE'	=> 'Board announcements failed to acquire the table lock. Another process may be holding the lock. Locks are forcibly released after a timeout of 1 hour.',
-	'BOARD_ANNOUNCEMENTS_INVALID_ITEM'			=> 'The requested announcement does not exist.',
-	'BOARD_ANNOUNCEMENTS_INVALID_PARENT'		=> 'The requested announcement has no parent.',
-));
+	'BOARD_ANNOUNCEMENTS_LOCK_FAILED_ACQUIRE' => 'Board announcements failed to acquire the table lock. Another process may be holding the lock. Locks are forcibly released after a timeout of 1 hour.',
+	'BOARD_ANNOUNCEMENTS_INVALID_ITEM'        => 'The requested announcement does not exist.',
+	'BOARD_ANNOUNCEMENTS_INVALID_PARENT'      => 'The requested announcement has no parent.',
+]);

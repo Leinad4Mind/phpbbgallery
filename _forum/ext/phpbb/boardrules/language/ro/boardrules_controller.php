@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,10 +37,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES_HEADER'			=> 'Reguli Forum',
-	'BOARDRULES_EXPLAIN'		=> 'Aici sunt postate regurile interne pentru acest site, ele sunt valabile pentru toate categoriile de utilizatori sau chiar si vizitatori.',
-	'BOARDRULES_CATEGORIES'		=> 'Sectiune regula',
-	'BOARDRULES_CATEGORY_ANCHOR'=> 'sectiune-%s',
-	'BOARDRULES_RULE_ANCHOR'	=> 'regula-%s',
-));
+$lang = array_merge($lang, [
+	'BOARDRULES_HEADER'          => 'Reguli Forum',
+	'BOARDRULES_EXPLAIN'         => 'Aici sunt postate regurile interne pentru acest site, ele sunt valabile pentru toate categoriile de utilizatori sau chiar si vizitatori.',
+	'BOARDRULES_CATEGORIES'      => 'Sectiune regula',
+	'BOARDRULES_CATEGORY_ANCHOR' => 'sectiune-%s',
+	'BOARDRULES_RULE_ANCHOR'     => 'regula-%s',
+]);

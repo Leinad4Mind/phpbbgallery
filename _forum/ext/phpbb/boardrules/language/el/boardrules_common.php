@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,10 +38,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES'				=> 'Όροι Συμμετοχής',
-	'BOARDRULES_TITLE'			=> 'Όροι Συμμετοχής Δ. Συζήτησης',
-	'BOARDRULES_AGREEMENT'		=> 'Συμφωνείτε να τηρείτε τους Όρους Συμμετοχής της Δ. Συζήτησης που παρατίθενται στην επόμενη ενότητα "Όροι Συμμετοχής"',
-	'BOARDRULES_VIEWONLINE'		=> 'Βλέπει τους Όρους Συμμετοχής',
-	'BOARDRULES_NOTIFICATION'	=> 'Οι Όροι Συμμετοχής της Δ. Συζήτησης έχουν ανανεωθεί. Πατήστε εδώ για να τους δείτε.',
-));
+$lang = array_merge($lang, [
+	'BOARDRULES'              => 'Όροι Συμμετοχής',
+	'BOARDRULES_TITLE'        => 'Όροι Συμμετοχής Δ. Συζήτησης',
+	'BOARDRULES_AGREEMENT'    => 'Συμφωνείτε να τηρείτε τους Όρους Συμμετοχής της Δ. Συζήτησης που παρατίθενται στην επόμενη ενότητα "Όροι Συμμετοχής"',
+	'BOARDRULES_VIEWONLINE'   => 'Βλέπει τους Όρους Συμμετοχής',
+	'BOARDRULES_NOTIFICATION' => 'Οι Όροι Συμμετοχής της Δ. Συζήτησης έχουν ανανεωθεί. Πατήστε εδώ για να τους δείτε.',
+]);

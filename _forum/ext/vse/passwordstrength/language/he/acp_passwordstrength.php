@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -33,9 +33,9 @@ if (empty($lang) || !is_array($lang))
 // equally where a string contains only two placeholders which are used to wrap text
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
 
-$lang = array_merge($lang, array(
-	'PASSWORD_STRENGTH_TYPE'			=> 'אלגוריתם חוזק הסיסמה',
-	'PASSWORD_STRENGTH_TYPE_EXPLAIN'	=> 'בחר אלגוריתם לקביעת חוזק סיסמה.<br><strong>מורכבות</strong> מחפש תווים מעורבים מספרים וסמלים אורך סיסמה ומעודדת סיסמאות מורכבות.<br><strong>אלגוריתם zxcvbn</strong> (מאת DropBox) מחשב כמה קלה הסיסמה שניתנת לניחוש, ומאפשר בכך סיסמאות חזקות וידידותיות למשתמש.',
-	'PASSWORD_STRENGTH_TYPE_COMPLEX'	=> 'מורכבות',
-	'PASSWORD_STRENGTH_TYPE_ZXCVBN'		=> 'אלגוריתם zxcvbn',
-));
+$lang = array_merge($lang, [
+	'PASSWORD_STRENGTH_TYPE'         => 'אלגוריתם חוזק הסיסמה',
+	'PASSWORD_STRENGTH_TYPE_EXPLAIN' => 'בחר אלגוריתם לקביעת חוזק סיסמה.<br><strong>מורכבות</strong> מחפש תווים מעורבים מספרים וסמלים אורך סיסמה ומעודדת סיסמאות מורכבות.<br><strong>אלגוריתם zxcvbn</strong> (מאת DropBox) מחשב כמה קלה הסיסמה שניתנת לניחוש, ומאפשר בכך סיסמאות חזקות וידידותיות למשתמש.',
+	'PASSWORD_STRENGTH_TYPE_COMPLEX' => 'מורכבות',
+	'PASSWORD_STRENGTH_TYPE_ZXCVBN'  => 'אלגוריתם zxcvbn',
+]);

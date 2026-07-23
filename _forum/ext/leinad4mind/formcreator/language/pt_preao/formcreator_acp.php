@@ -9,8 +9,8 @@
  */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -181,5 +181,5 @@ $lang = array_merge($lang, [
 	'COPY_FORM_SUCCESS' => 'Os elementos do formulário foram copiados para todos os fóruns seleccionados.',
 
 	'SHOW_FORM_DEFAULT' => 'Mostrar formulário por predefinição',
-	'FORCE_FORM'         => 'Forçar formulário',
+	'FORCE_FORM'        => 'Forçar formulário',
 ]);

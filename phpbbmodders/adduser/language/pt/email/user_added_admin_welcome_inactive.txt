@@ -1,0 +1,22 @@
+Subject: Foste adicionado a "{SITENAME}"
+
+{WELCOME_MSG}
+
+Por favor, guarda este e-mail para referência futura. As informações da tua conta são as seguintes:
+
+----------------------------
+Utilizador: {USERNAME}
+
+Endereço do Fórum: {U_BOARD}
+
+Palavra-passe: {PASSWORD}
+----------------------------
+
+A tua conta está atualmente inativa e terá de ser aprovada por um administrador antes de poderes entrar. Será enviado outro e-mail quando isso acontecer.
+
+A tua palavra-passe foi armazenada de forma segura na nossa base de dados e não pode ser recuperada. Caso a esqueças, poderás redefini-la usando o endereço de e-mail associado à tua conta.
+
+Recomendamos vivamente que alteres a tua palavra-passe assim que entrares no fórum.
+
+
+{EMAIL_SIG}

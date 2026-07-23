@@ -8,8 +8,8 @@
  */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -37,29 +37,29 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'GYAZO_CLIENT_ID'         => 'Token de Acesso (Access Token) Gyazo',
-	'GYAZO_CLIENT_ID_EXPLAIN' => 'Irá ser necessário registar-se ou utilizar as suas credenciais ativas numa aplicação Gyazo para obter o seu <strong>Token de Acesso (Access Token)</strong>.<br /> Para criar uma nova aplicação vá a <a href="https://gyazo.com/api">https://gyazo.com/api</a>. Seguidamente, adicione a codificação associada ao seu Token de Acesso aqui.',
+	'GYAZO_CLIENT_ID'         => 'Token de Acesso do Gyazo',
+	'GYAZO_CLIENT_ID_EXPLAIN' => 'Precisas de registar uma aplicação Gyazo para obteres o <strong>Token de Acesso</strong>.<br /> Para criares uma nova aplicação, vai a <a href="https://gyazo.com/api">https://gyazo.com/api</a>. Depois, introduz aqui o Token de Acesso.',
 
-	'GYAZO_UPLOAD_TITLE' => 'Alojamento das respetivas Imagens (Upload)',
-	'GYAZO_UPLOAD_MAIN'  => 'Faça uso, desfrute e armazene localmente ao subir nos alojamentos com descarregamentos providenciados das imagens face à utilização em tópicos via os serviços do Gyazo. Todas as imagens passarão em antemão para depois e por si só serem automaticamente inseridas no conteúdo ou no campo da mensagem com as suas partilhas a constarem acima destas desde o mesmo momento onde a tudo for devidamente submetido, tratado e guardado',
-	'GYAZO_UPLOAD'       => 'Faça o Envio, Carregue E Ou Submeta De Imediato Para O Alojamento da(s) Imagens (Upload)',
-	'GYAZO_SELECT'       => 'Procure Ou Clique Por Aqui Adicionando Como Também Selecionando Na Base Os Ficheiros Destituídos Na Identificação De Imagens',
+	'GYAZO_UPLOAD_TITLE' => 'Fazer Upload de uma Imagem',
+	'GYAZO_UPLOAD_MAIN'  => 'Faz upload de uma imagem para usares no tópico através do serviço Gyazo. A imagem é automaticamente inserida no campo da mensagem acima assim que for submetida',
+	'GYAZO_UPLOAD'       => 'Fazer Upload da Imagem Agora',
+	'GYAZO_SELECT'       => 'Selecionar Imagem',
 	'GYAZO_COPY'         => 'Copiar',
 
-	'GYAZO_OUTPUT_LINK'         => 'O seu (URL) ou Endereço de Ligação Direto',
-	'GYAZO_OUTPUT_IMAGE'        => 'Identificação base das (Tags) provenientes do modo ou modelo de visualização ou marcação tipo (BBCode)',
-	'GYAZO_OUTPUT_IMAGE_DELETE' => 'O seu (URL) ou Endereço de Ligação Direto Relacionado Com o Modo ou Situação Em Remover/Eliminar a(s) Respetiva(s) Publicação Face Ao Que Respeite Destituído Apenas da Cópia das Sua Imagens',
-	'GYAZO_OUTPUT_MARKDOWN'     => 'Referência Exata Dos Códigos Em Alternativa Num Modelo/Modo Assente Na Exclusividade Associada Em (Markdown)',
-	'MARKDOWN_WHATIS'           => '<a href="https://themeforest.net/user/themesplat/portfolio?ref=ThemeSplat" title="para o uso e funcionalidade destituída à visualização exclusiva dos Modelos/Temas assentes numa vertente destituída e com as características unicamente ligadas com os do tipo (Premium) do respetivo (Modo Avançado/Premium extension bbMarkdown ou a vertente dos temas em base Premium da marca ThemeSplat)" target="_blank"><i class="fa fa-question-circle"></i></a>',
-	'GYAZO_OUTPUT_PLACEHOLDER'  => 'Aguarde... Encontra-se de momento em fase e num mero estado provisório a de processamento/carregamento associada na submissão com vista e ou de destino para envio final num aguardado alojamento local proveniente da sua imagem...',
+	'GYAZO_OUTPUT_LINK'         => 'Ligação direta',
+	'GYAZO_OUTPUT_IMAGE'        => 'Tag BBcode',
+	'GYAZO_OUTPUT_IMAGE_DELETE' => 'Ligação de eliminação',
+	'GYAZO_OUTPUT_MARKDOWN'     => 'Markdown',
+	'MARKDOWN_WHATIS'           => '<a href="https://themeforest.net/user/themesplat/portfolio?ref=ThemeSplat" title="para uso com a extensão Premium &#34;BBmarkdown&#34; para temas Premium do phpBB" target="_blank"><i class="fa fa-question-circle"></i></a>',
+	'GYAZO_OUTPUT_PLACEHOLDER'  => 'A aguardar o upload da imagem...',
 
-	'GYAZO_SIGNATURE' => 'Ativar a funcionalidade inerente da base da Extensão da(s) Imagem/Imagens (Gyazo Uploads) por forma também a virem ser inseridas/partilhadas ao ser exibido uma nova e inovadora área por debaixo do espaço em que se baseia a página da edição com as assinaturas.',
+	'GYAZO_SIGNATURE' => 'Permitir o uso do upload de imagens Gyazo nas assinaturas dos utilizadores',
 
-	'ALLOW_GYAZO'                 => 'Permitir/Habilitar Os (Avatares Gyazo)',
-	'AVATAR_DRIVER_GYAZO_TITLE'   => 'Avatar tipo (Gyazo)',
+	'ALLOW_GYAZO'                 => 'Permitir avatares Gyazo',
+	'AVATAR_DRIVER_GYAZO_TITLE'   => 'Avatar Gyazo',
 	'AVATAR_DRIVER_GYAZO_EXPLAIN' => '',
-	'GYAZO_AVATAR'                => 'Avatar do Gyazo',
+	'GYAZO_AVATAR'                => 'Avatar Gyazo',
 
-	'GYAZO_QUICKREPLY' => 'Permitir/Habilitar a funcionalidade inerente da base da extensão associada em pleno e exibida na vertente exclusiva destituída à Edição na Interligação dum Resposta Rápida (Snappy Smart/Quick Reply)',
+	'GYAZO_QUICKREPLY' => 'Permitir o Gyazo na Resposta Rápida Snappy',
 
 ]);

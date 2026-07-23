@@ -1,0 +1,8 @@
+Subject: Você foi excluído de «{SITENAME}»
+
+Olá, {USERNAME}
+
+O Administrador de «{SITENAME}» considerou que você se registrou duas ou mais vezes com nomes diferentes neste fórum, e esse foi o motivo para excluir sua conta "{USERNAME}". Sentimos muito por isso.
+Se você acredita que isto é um engano, pode entrar em contato com o administrador por e-mail: {BOARD_CONTACT}
+
+{EMAIL_SIG}

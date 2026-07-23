@@ -1,17 +1,17 @@
-Subject: Latest topic at "{SITENAME}"
+Subject: Últimos tópicos em "{SITENAME}"
 
 {SITENAME}
 
-Latest Topics
-Hi,
-It's time for another newsletter.
-We look forward to see you at {BOARD_URL} again.
+Últimos Tópicos
+Olá,
+É hora de mais uma newsletter.
+Esperamos ver você novamente em {BOARD_URL}.
 
-Forum				Topic
+Fórum				Tópico
 <!-- BEGIN mailrow -->
 {mailrow.U_FORUM}				{mailrow.U_TOPIC}
 <!-- END mailrow -->
 
 
 {EMAIL_SIG}
-Don't want to receive our newsletter anymore, click here {NEWSLETTER_OPTOUT}
+Não quer mais receber a nossa newsletter? Clique aqui: {NEWSLETTER_OPTOUT}

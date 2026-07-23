@@ -8,8 +8,8 @@
  */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -21,6 +21,6 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'NIGHTSTALKER' => 'Modo Noturno (Nightstalker)',
+	'NIGHTSTALKER' => 'Modo Nocturno (Nightstalker)',
 	'NORMAL_VIEW'  => 'Modo Normal',
 ]);

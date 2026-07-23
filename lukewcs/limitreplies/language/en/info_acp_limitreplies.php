@@ -12,8 +12,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -40,8 +40,8 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” … „ “
 
 $lang = array_merge($lang, [
-	'LIMITREPLIES_NAV_TITLE'		=> 'Limit Multiple Replies',
-	'LIMITREPLIES_NAV_CONFIG'		=> 'Settings',
+	'LIMITREPLIES_NAV_TITLE'  => 'Limit Multiple Replies',
+	'LIMITREPLIES_NAV_CONFIG' => 'Settings',
 
-	'LIMITREPLIES_VERSION_STRING'	=> 'v%s',
+	'LIMITREPLIES_VERSION_STRING' => 'v%s',
 ]);

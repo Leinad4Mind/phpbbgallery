@@ -21,10 +21,10 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'ACP_POPUPPM'                       => 'Popup MP',
-	'ACP_POPUPPM_EXPLAIN'               => 'Configurações Popup MP',
-	'ACP_POPUPPM_TITLE'                 => 'Popup MP',
+	'ACP_POPUPPM'         => 'Popup MP',
+	'ACP_POPUPPM_EXPLAIN' => 'Configurações Popup MP',
+	'ACP_POPUPPM_TITLE'   => 'Popup MP',
 
-	'ACP_POPUPPM_ENABLE_POPUP'             => 'Activar Popup em Novas MPs',
-	'ACP_POPUPPM_ENABLE_BLINK'             => 'Activar Título a Piscar',
+	'ACP_POPUPPM_ENABLE_POPUP' => 'Activar Popup em Novas MPs',
+	'ACP_POPUPPM_ENABLE_BLINK' => 'Activar Título a Piscar',
 ]);

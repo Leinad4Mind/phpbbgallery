@@ -1,0 +1,11 @@
+Subject: Notificação de nova imagem - "{ALBUM_NAME}"
+
+Olá, {USERNAME},
+
+Estás a receber esta notificação porque estás a acompanhar o álbum "{ALBUM_NAME}" em "{SITENAME}". Este álbum recebeu uma nova imagem desde a tua última visita, "{IMAGE_NAME}". Podes utilizar o seguinte link para ver o álbum:
+
+{U_ALBUM}
+
+Se já não desejas acompanhar este álbum, podes clicar no link "Cancelar subscrição do álbum" no link acima.
+
+{EMAIL_SIG}

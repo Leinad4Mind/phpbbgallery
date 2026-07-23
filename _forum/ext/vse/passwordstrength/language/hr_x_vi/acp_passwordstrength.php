@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -34,9 +34,9 @@ if (empty($lang) || !is_array($lang))
 // equally where a string contains only two placeholders which are used to wrap text
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
 
-$lang = array_merge($lang, array(
-	'PASSWORD_STRENGTH_TYPE'			=> 'Algoritam jačine zaporke',
-	'PASSWORD_STRENGTH_TYPE_EXPLAIN'	=> 'Ukoliko je izabrano “<strong>Složenost</strong>”, prilikom utvrđivanja <em>jačine zaporke</em>, bit će traženo miješanje znakova, brojeva, simbola i dužine zaporke uz poticanje na kompleksniju zaporku.<br>Ukoliko je izabrano “<strong>zxcvbn algoritam</strong>” (DropBox), prilikom utvrđivanja <em>jačine zaporke</em>, bit će (iz)računa(va)no koliko bi lako zaporka mogla biti pogođena uz dozvoljavanje jače korisničko-prilagođene zaporke.',
-	'PASSWORD_STRENGTH_TYPE_COMPLEX'	=> 'Složenost',
-	'PASSWORD_STRENGTH_TYPE_ZXCVBN'		=> 'zxcvbn algoritam',
-));
+$lang = array_merge($lang, [
+	'PASSWORD_STRENGTH_TYPE'         => 'Algoritam jačine zaporke',
+	'PASSWORD_STRENGTH_TYPE_EXPLAIN' => 'Ukoliko je izabrano “<strong>Složenost</strong>”, prilikom utvrđivanja <em>jačine zaporke</em>, bit će traženo miješanje znakova, brojeva, simbola i dužine zaporke uz poticanje na kompleksniju zaporku.<br>Ukoliko je izabrano “<strong>zxcvbn algoritam</strong>” (DropBox), prilikom utvrđivanja <em>jačine zaporke</em>, bit će (iz)računa(va)no koliko bi lako zaporka mogla biti pogođena uz dozvoljavanje jače korisničko-prilagođene zaporke.',
+	'PASSWORD_STRENGTH_TYPE_COMPLEX' => 'Složenost',
+	'PASSWORD_STRENGTH_TYPE_ZXCVBN'  => 'zxcvbn algoritam',
+]);

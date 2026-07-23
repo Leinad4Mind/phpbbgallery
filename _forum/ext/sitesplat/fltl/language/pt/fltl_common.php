@@ -17,9 +17,20 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
+	'FLTL'               => 'Fancy Lazy Topics loader',
+	'FLTL_EXPLAIN'       => 'Desce para veres mais tópicos',
+	'FLTL_BY'            => '&nbsp;&#45;&nbsp;Por&nbsp;',
+	'FLTL_LIMIT'         => 'Publicações a exibir',
+	'FLTL_LIMIT_EXPLAIN' => 'Define o bloco de publicações por cada linha (padrão: 4)',
+
+	'FLTL_TIME'         => 'Limite de Obtenção de Tópicos',
+	'FLTL_TIME_EXPLAIN' => 'Define a quantidade de dias até quando recuar na obtenção de tópicos da base de dados. 0 desativa o limite.',
+
+	'FLTL_TYPE'         => 'Ordem de Classificação',
+	'FLTL_TYPE_EXPLAIN' => 'Exibe a primeira ou a última publicação dos tópicos recentes',
 
 	'FLTL_EXCLUDED_FORUMS'         => 'Excluir fóruns do carregamento (Fancy Lazy Topics loader)',
-	'FLTL_EXCLUDED_FORUMS_EXPLAIN' => 'Mantenha a tecla SHIFT ou CTRL pressionada caso deseje para o efeito selecionar vários fóruns',
+	'FLTL_EXCLUDED_FORUMS_EXPLAIN' => 'Mantém pressionada a tecla SHIFT ou CTRL caso queiras selecionar vários fóruns',
 
 	'FLTL_READ_MORE'        => 'LER MAIS',
 	'FLTL_BACK_TO_START'    => 'VOLTAR AO INÍCIO',

@@ -19,9 +19,9 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
-	'LIGHTBOX_GALLERY_LABEL'		=> 'Slika %1 od %2',
-));
+$lang = array_merge($lang, [
+	'LIGHTBOX_GALLERY_LABEL' => 'Slika %1 od %2',
+]);

@@ -1,0 +1,17 @@
+Subject: Possível conta duplicada: {USERNAME}
+
+Um novo utilizador registou-se no teu fórum «{SITENAME}».
+O novo utilizador partilha endereços IP e/ou cookies comuns com outros utilizadores.
+Por favor visita o perfil dele para mais informações detalhadas.
+
+Detalhes do utilizador:
+
+Nome de utilizador: {USERNAME}
+Endereço IP do utilizador: {USER_IP}
+E-mail: {USER_MAIL}
+Registado em: {USER_REGDATE}
+Nomes Comuns de IP: {IP_COMMON_NAMES}
+Nomes Comuns de Cookie: {COOKIE_COMMON_NAMES}
+
+
+{EMAIL_SIG}

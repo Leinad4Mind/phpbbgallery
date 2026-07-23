@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,12 +38,12 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES_SAMPLE_CATEGORY_TITLE'		=> 'Regelkategori-eksempel',
-	'BOARDRULES_SAMPLE_CATEGORY_MESSAGE'	=> 'Dette er en eksempelkategori for forumreglene. Kategorier kan inneholde grupper av lignende forumregler. Kategorimeldinger (som denne) vises ikke på regelsiden.',
-	'BOARDRULES_SAMPLE_CATEGORY_ANCHOR'		=> 'eksempelkategori',
+$lang = array_merge($lang, [
+	'BOARDRULES_SAMPLE_CATEGORY_TITLE'   => 'Regelkategori-eksempel',
+	'BOARDRULES_SAMPLE_CATEGORY_MESSAGE' => 'Dette er en eksempelkategori for forumreglene. Kategorier kan inneholde grupper av lignende forumregler. Kategorimeldinger (som denne) vises ikke på regelsiden.',
+	'BOARDRULES_SAMPLE_CATEGORY_ANCHOR'  => 'eksempelkategori',
 
-	'BOARDRULES_SAMPLE_RULE_TITLE'			=> 'Regel-eksempel',
-	'BOARDRULES_SAMPLE_RULE_MESSAGE'		=> 'Dette er en eksempelregel for forumreglerna. Alt ser ut til å fungere som det skal. Du kan oppdatere eller slette denne regelen og kategorien, og i stedet opprette dine egne forumregler.',
-	'BOARDRULES_SAMPLE_RULE_ANCHOR'			=> 'eksempelregel',
-));
+	'BOARDRULES_SAMPLE_RULE_TITLE'   => 'Regel-eksempel',
+	'BOARDRULES_SAMPLE_RULE_MESSAGE' => 'Dette er en eksempelregel for forumreglerna. Alt ser ut til å fungere som det skal. Du kan oppdatere eller slette denne regelen og kategorien, og i stedet opprette dine egne forumregler.',
+	'BOARDRULES_SAMPLE_RULE_ANCHOR'  => 'eksempelregel',
+]);

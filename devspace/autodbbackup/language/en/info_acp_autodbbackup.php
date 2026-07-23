@@ -39,10 +39,10 @@ if (empty($lang) || !is_array($lang))
  */
 
 $lang = array_merge($lang, [
-	'ACP_AUTO_DB_BACKUP' 			=> 'Auto Database Backup',
-	'ACP_AUTO_DB_BACKUP_SETTINGS' 	=> 'Auto backup settings',
+	'ACP_AUTO_DB_BACKUP'          => 'Auto Database Backup',
+	'ACP_AUTO_DB_BACKUP_SETTINGS' => 'Auto backup settings',
 
-	'LOG_AUTO_DB_BACKUP' 			=> '<strong>Auto database backup complete<br>»»</strong> %1$s (%2$s)',
-	'LOG_AUTO_DB_BACKUP_SETTINGS'	=> '<strong>Altered Auto Database Backup settings</strong>',
-	'LOG_AUTO_DB_BACKUP_TIMEZONE' 	=> 'The Auto Database Backup failed due to invalid timezone setting',
+	'LOG_AUTO_DB_BACKUP'          => '<strong>Auto database backup complete<br>»»</strong> %1$s (%2$s)',
+	'LOG_AUTO_DB_BACKUP_SETTINGS' => '<strong>Altered Auto Database Backup settings</strong>',
+	'LOG_AUTO_DB_BACKUP_TIMEZONE' => 'The Auto Database Backup failed due to invalid timezone setting',
 ]);

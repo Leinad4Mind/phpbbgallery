@@ -9,8 +9,8 @@
  */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,10 +38,10 @@ if (empty($lang) || !is_array($lang))
 //
 
 // Adding the permissions
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// Permissions Utilisateurs
-	'ACL_U_MUST_INTRODUCE'			=> 'Doit se présenter',
+	'ACL_U_MUST_INTRODUCE' => 'Doit se présenter',
 
 	// Permission d'Administrateur (gestion du MOD)
-	'ACL_A_INTRODUCIATOR_MANAGE'	=> 'Peut gérer l’extension Présentation Forcée',
-));
+	'ACL_A_INTRODUCIATOR_MANAGE' => 'Peut gérer l’extension Présentation Forcée',
+]);

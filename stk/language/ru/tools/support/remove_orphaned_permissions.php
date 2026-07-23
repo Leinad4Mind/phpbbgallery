@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,9 +37,9 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'REMOVE_ORPHANED_PERMISSIONS'			=> 'Удаление потерянных прав доступа',
-	'ORPHANED_PERMISSIONS_DELETED'			=> 'Потерянные права доступа были успешно удалены.',
-	'ORPHANED_PERMISSIONS_NOT_FIND'			=> 'Потерянных прав доступа не обнаружено.',
-	'REMOVE_ORPHANED_PERMISSIONS_CONFIRM'	=> 'Вы уверены, что желаете удалить потерянные права доступа?',
-));
+$lang = array_merge($lang, [
+	'REMOVE_ORPHANED_PERMISSIONS'         => 'Удаление потерянных прав доступа',
+	'ORPHANED_PERMISSIONS_DELETED'        => 'Потерянные права доступа были успешно удалены.',
+	'ORPHANED_PERMISSIONS_NOT_FIND'       => 'Потерянных прав доступа не обнаружено.',
+	'REMOVE_ORPHANED_PERMISSIONS_CONFIRM' => 'Вы уверены, что желаете удалить потерянные права доступа?',
+]);

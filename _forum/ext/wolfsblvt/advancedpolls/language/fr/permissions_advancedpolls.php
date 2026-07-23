@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -39,7 +39,7 @@ if (empty($lang) || !is_array($lang))
 //
 
 // User Permissions
-$lang = array_merge($lang, array(
-	'ACL_F_SEEVOTERS'			=> 'Peut voir le nom des votants des sondages.',
-	'ACL_M_SEEVOTERS'			=> 'Peut voir le nom des votants des sondages.',
-));
+$lang = array_merge($lang, [
+	'ACL_F_SEEVOTERS' => 'Peut voir le nom des votants des sondages.',
+	'ACL_M_SEEVOTERS' => 'Peut voir le nom des votants des sondages.',
+]);

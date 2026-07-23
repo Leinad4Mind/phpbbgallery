@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,33 +37,33 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'CLEAR_EXTENSIONS'			=> 'Verify and manage extensions',
-	'CLEAR_EXTENSIONS_EXPLAIN'	=> 'Here you can disable/enable or remove <strong>installed</strong> extensions.',
-	'EXT_PATH'					=> 'Path relative to the folder ' . PHPBB_ROOT_PATH . 'ext/',
-	'MISSING_PATH'				=> 'Missing folder ',
-	'S_ACTIVE'					=> ' (enabled) ',
-	'S_OFF'						=> ' (disabled) ',
-	'EXT_NAME'					=> 'Extension Name',
-	'CLICK_TO_CLEAR'			=> 'Records of selected installed extensions will be deleted from the database and the extensions will be disabled, however, data related to these extensions, such as tables or configuration values, will remain.',
-	'CLICK_TO_OFF'				=> 'Selected extensions will be disabled. When the extension is disabled, its files, data and settings will remain,<br />but the functionality added by this extension is disable.',
-	'OFF_EXT'					=> 'Disable',
-	'CLEAR_EXT_SUCCESS'			=> 'Selected extensions were deleted successfully.',
-	'OFF_EXT_SUCCESS'			=> 'Selected extensions were disabled successfully.',
-	'ON_EXT_SUCCESS'			=> 'Selected extensions were enabled successfully.',
-	'NO_EXT_SELECTED'			=> 'Nothing selected!',
-	'EXT_DELETE'				=> 'Remove Extensions',
-	'EXT_OFF'					=> 'Disable Extensions',
-	'EXT_MISSING_PATH'			=> 'The “%s” extension is not valid.<br />',
-	'NO_COMPOSER'				=> 'The requested file could not be found: ' . PHPBB_ROOT_PATH . 'ext/%s/composer.json',
-	'NO_EXTENSIONS_TITLE'		=> 'Extensions',
-	'NO_EXTENSIONS_TEXT'		=> 'No installed extensions found',
-	'OFF_EXT'					=> 'Disable',
-	'ON_EXT'					=> 'Enable',
-	'CLICK_TO_ON'				=> 'Selected extensions will be included.',
-	'EMPTY_PASSWD'				=> 'You cannot login without a password',
-	'WRONG_PASSWD'				=> 'Incorrect password',
-	'DB_CONNECT_ERROR'			=> 'Connection error: %s',
-	'DB_CONNECT_PASS_ERROR'		=> 'Connection error:',
-	'TABLE_NOT_EXISTS'			=> 'The database table prefix is ​​probably incorrect or the table does not exist.',
-));
+$lang = array_merge($lang, [
+	'CLEAR_EXTENSIONS'         => 'Verify and manage extensions',
+	'CLEAR_EXTENSIONS_EXPLAIN' => 'Here you can disable/enable or remove <strong>installed</strong> extensions.',
+	'EXT_PATH'                 => 'Path relative to the folder ' . PHPBB_ROOT_PATH . 'ext/',
+	'MISSING_PATH'             => 'Missing folder ',
+	'S_ACTIVE'                 => ' (enabled) ',
+	'S_OFF'                    => ' (disabled) ',
+	'EXT_NAME'                 => 'Extension Name',
+	'CLICK_TO_CLEAR'           => 'Records of selected installed extensions will be deleted from the database and the extensions will be disabled, however, data related to these extensions, such as tables or configuration values, will remain.',
+	'CLICK_TO_OFF'             => 'Selected extensions will be disabled. When the extension is disabled, its files, data and settings will remain,<br />but the functionality added by this extension is disable.',
+	'OFF_EXT'                  => 'Disable',
+	'CLEAR_EXT_SUCCESS'        => 'Selected extensions were deleted successfully.',
+	'OFF_EXT_SUCCESS'          => 'Selected extensions were disabled successfully.',
+	'ON_EXT_SUCCESS'           => 'Selected extensions were enabled successfully.',
+	'NO_EXT_SELECTED'          => 'Nothing selected!',
+	'EXT_DELETE'               => 'Remove Extensions',
+	'EXT_OFF'                  => 'Disable Extensions',
+	'EXT_MISSING_PATH'         => 'The “%s” extension is not valid.<br />',
+	'NO_COMPOSER'              => 'The requested file could not be found: ' . PHPBB_ROOT_PATH . 'ext/%s/composer.json',
+	'NO_EXTENSIONS_TITLE'      => 'Extensions',
+	'NO_EXTENSIONS_TEXT'       => 'No installed extensions found',
+	'OFF_EXT'                  => 'Disable',
+	'ON_EXT'                   => 'Enable',
+	'CLICK_TO_ON'              => 'Selected extensions will be included.',
+	'EMPTY_PASSWD'             => 'You cannot login without a password',
+	'WRONG_PASSWD'             => 'Incorrect password',
+	'DB_CONNECT_ERROR'         => 'Connection error: %s',
+	'DB_CONNECT_PASS_ERROR'    => 'Connection error:',
+	'TABLE_NOT_EXISTS'         => 'The database table prefix is ​​probably incorrect or the table does not exist.',
+]);

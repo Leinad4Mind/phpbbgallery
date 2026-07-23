@@ -8,8 +8,8 @@
  */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -33,6 +33,6 @@ if (empty($lang) || !is_array($lang))
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
 
 $lang = array_merge($lang, [
-	'REPLYTOUNHIDE_NOTICE' => '<div class="phpinfo"><p>There are no setting for this extenion. The BBcode HIDE is available to be used in posting page.</p></div>',
-	'SS_HELPER_NOTICE'     => 'The BBcore extension does not exist!<br />Download the <a href="http://sitesplat.com">BBcore</a> and copy the folder into your sitesplat extension folder.',
+	'REPLYTOUNHIDE_NOTICE' => '<div class="phpinfo"><p>Não existem configurações para esta extensão. O BBcode HIDE está disponível para ser usado na página de postagem de mensagens.</p></div>',
+	'SS_HELPER_NOTICE'     => 'A extensão BBcore não existe!<br />Faça o download do <a href="http://sitesplat.com">BBcore</a> e copie a pasta para a pasta da sua extensão sitesplat.',
 ]);

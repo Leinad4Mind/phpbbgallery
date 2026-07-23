@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,10 +38,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES'				=> 'Regler',
-	'BOARDRULES_TITLE'			=> 'Visa forumets regler',
-	'BOARDRULES_AGREEMENT'		=> 'Du går med på att följa forumets regler som beskrivs i följande sektion “Regler”',
-	'BOARDRULES_VIEWONLINE'		=> 'Tittar på forumregler',
-	'BOARDRULES_NOTIFICATION'	=> 'Forumets regler har uppdaterats. Klicka här för att läsa dem.',
-));
+$lang = array_merge($lang, [
+	'BOARDRULES'              => 'Regler',
+	'BOARDRULES_TITLE'        => 'Visa forumets regler',
+	'BOARDRULES_AGREEMENT'    => 'Du går med på att följa forumets regler som beskrivs i följande sektion “Regler”',
+	'BOARDRULES_VIEWONLINE'   => 'Tittar på forumregler',
+	'BOARDRULES_NOTIFICATION' => 'Forumets regler har uppdaterats. Klicka här för att läsa dem.',
+]);

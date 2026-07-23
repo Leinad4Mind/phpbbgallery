@@ -8,8 +8,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 /// DEVELOPERS PLEASE NOTE
@@ -36,13 +36,13 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'DROPBOX_UPLOAD'			=> 'Dropbox Upload',
-	'DROPBOX_UPLOAD_LOG'		=> '<strong>Dropbox upload settings updated</strong>',
-	'DROPBOX_UPLOAD_MANAGE'		=> 'Dropbox settings',
+$lang = array_merge($lang, [
+	'DROPBOX_UPLOAD'        => 'Dropbox Upload',
+	'DROPBOX_UPLOAD_LOG'    => '<strong>Dropbox upload settings updated</strong>',
+	'DROPBOX_UPLOAD_MANAGE' => 'Dropbox settings',
 
-	'LOG_DROPBOX_ERROR'			=> '<strong>Dropbox returned the error</strong><br>»» %s',
-	'LOG_DROPBOX_NO_FILE'		=> '<strong>The backup file for Dropbox could not be found</strong>',
-	'LOG_DROPBOX_UPLOAD'		=> '<strong>Backup file uploaded to Dropbox »»</strong><br>%s',
-	'LOG_DROPBOX_UPLOAD_FAILED'	=> '<strong>The Dropbox upload failed</strong>',
-));
+	'LOG_DROPBOX_ERROR'         => '<strong>Dropbox returned the error</strong><br>»» %s',
+	'LOG_DROPBOX_NO_FILE'       => '<strong>The backup file for Dropbox could not be found</strong>',
+	'LOG_DROPBOX_UPLOAD'        => '<strong>Backup file uploaded to Dropbox »»</strong><br>%s',
+	'LOG_DROPBOX_UPLOAD_FAILED' => '<strong>The Dropbox upload failed</strong>',
+]);

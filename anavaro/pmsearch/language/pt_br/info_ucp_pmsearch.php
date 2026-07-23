@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,17 +37,17 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'PMSEARCH_TITLE'	=> 'Pesquise em MPs',
-	'PMSEARCH_KEYWORDS_EXPLAIN'	=>	'Coloque + na frente de uma palavra que deve ser encontrada e - na frente de uma palavra que não deve ser encontrada. Coloque uma lista de palavras separadas por | entre parênteses se apenas uma das palavras deve ser encontrada. Use * como um curinga para partidas parciais.',
-	'SEARCH_ALL_TERMS'	=>	' Procure todos os termos ou use a consulta como inserida',
-	'SEARCH_ANY_TERMS'	=>	'Procure por quaisquer termos',
-	'NO_RESULTS_FOUND'	=> 'Nenhum resultado encontrado.',
-	'SEARCH_PMS'	=> 'Pesquisar MPs',
-	'ACCESS_DENIED'	=> 'Você não tem autoridade para pesquisar em MPs',
+$lang = array_merge($lang, [
+	'PMSEARCH_TITLE'            => 'Pesquise em MPs',
+	'PMSEARCH_KEYWORDS_EXPLAIN' => 'Coloque + na frente de uma palavra que deve ser encontrada e - na frente de uma palavra que não deve ser encontrada. Coloque uma lista de palavras separadas por | entre parênteses se apenas uma das palavras deve ser encontrada. Use * como um curinga para partidas parciais.',
+	'SEARCH_ALL_TERMS'          => ' Procure todos os termos ou use a consulta como inserida',
+	'SEARCH_ANY_TERMS'          => 'Procure por quaisquer termos',
+	'NO_RESULTS_FOUND'          => 'Nenhum resultado encontrado.',
+	'SEARCH_PMS'                => 'Pesquisar MPs',
+	'ACCESS_DENIED'             => 'Você não tem autoridade para pesquisar em MPs',
 
 	// Added in version 1.0.1
-	'SEARCH_FOR_NICK'	=> 'Search with nick',
-	'SEARCH_WITH_USER'	=> 'Search',
-	'SEARCH_WITH_USER_LANG'	=> 'Show conversations with user',
-));
+	'SEARCH_FOR_NICK'       => 'Search with nick',
+	'SEARCH_WITH_USER'      => 'Search',
+	'SEARCH_WITH_USER_LANG' => 'Show conversations with user',
+]);

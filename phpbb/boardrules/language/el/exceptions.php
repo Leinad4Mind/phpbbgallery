@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -48,15 +48,15 @@ if (empty($lang) || !is_array($lang))
 *
 * Translators: Feel free to not translate these language strings
 */
-$lang = array_merge($lang, array(
-	'EXCEPTION_FIELD_MISSING'		=> 'Ένα απαιτούμενο πεδίο λείπει',
-	'EXCEPTION_INVALID_ARGUMENT'	=> 'Μη έγκυρο όρισμα καθορίστηκε για "%1$s". Λόγος: %2$s',
-	'EXCEPTION_OUT_OF_BOUNDS'		=> 'Το πεδίο "%1$s" δέχτηκε δεδομένα εκτός ορίου',
-	'EXCEPTION_TOO_LONG'			=> 'Η εισαχθείσα τιμή ήταν μεγαλύτερη από το μέγιστο μήκος.',
-	'EXCEPTION_NOT_UNIQUE'			=> 'Η εισαχθείσα τιμή δεν ήταν μοναδική.',
-	'EXCEPTION_UNEXPECTED_VALUE'	=> 'Το πεδίο "%1$s" δέχτηκε μη αναμενόμενα δεδομένα. Λόγος: %2$s',
-	'EXCEPTION_ILLEGAL_CHARACTERS'	=> 'Η εισαχθείσα τιμή περιείχε μη επιτρεπτούς χαρακτήρες.',
+$lang = array_merge($lang, [
+	'EXCEPTION_FIELD_MISSING'      => 'Ένα απαιτούμενο πεδίο λείπει',
+	'EXCEPTION_INVALID_ARGUMENT'   => 'Μη έγκυρο όρισμα καθορίστηκε για "%1$s". Λόγος: %2$s',
+	'EXCEPTION_OUT_OF_BOUNDS'      => 'Το πεδίο "%1$s" δέχτηκε δεδομένα εκτός ορίου',
+	'EXCEPTION_TOO_LONG'           => 'Η εισαχθείσα τιμή ήταν μεγαλύτερη από το μέγιστο μήκος.',
+	'EXCEPTION_NOT_UNIQUE'         => 'Η εισαχθείσα τιμή δεν ήταν μοναδική.',
+	'EXCEPTION_UNEXPECTED_VALUE'   => 'Το πεδίο "%1$s" δέχτηκε μη αναμενόμενα δεδομένα. Λόγος: %2$s',
+	'EXCEPTION_ILLEGAL_CHARACTERS' => 'Η εισαχθείσα τιμή περιείχε μη επιτρεπτούς χαρακτήρες.',
 
 	// Translators: do not change this
-	'EXCEPTION_WRONG_DATA_LANG'		=> $lang['WRONG_DATA_LANG'],
-));
+	'EXCEPTION_WRONG_DATA_LANG' => $lang['WRONG_DATA_LANG'],
+]);

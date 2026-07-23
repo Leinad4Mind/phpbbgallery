@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -36,10 +36,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'PRUNE_ATTACHMENTS'				=> 'Checking attachments files',
-	'PRUNE_ATTACHMENTS_EXPLAIN'		=> 'This tool checks for the existence of extra attachments files (<em>checked files from subfolders!</em>). If these files exists, it will be removed. Continue?',
-	'PRUNE_ATTACHMENTS_FINISHED'	=> 'Extra attachments files not found.',
-	'PRUNE_ATTACHMENTS_PROGRESS'	=> 'Checking unnecessary files in progress. Do not interrupt the process!<br />The following files have been deleted:',
-	'PRUNE_ATTACHMENTS_FAIL'		=> '<br />The following files could not be removed:',
-));
+$lang = array_merge($lang, [
+	'PRUNE_ATTACHMENTS'          => 'Checking attachments files',
+	'PRUNE_ATTACHMENTS_EXPLAIN'  => 'This tool checks for the existence of extra attachments files (<em>checked files from subfolders!</em>). If these files exists, it will be removed. Continue?',
+	'PRUNE_ATTACHMENTS_FINISHED' => 'Extra attachments files not found.',
+	'PRUNE_ATTACHMENTS_PROGRESS' => 'Checking unnecessary files in progress. Do not interrupt the process!<br />The following files have been deleted:',
+	'PRUNE_ATTACHMENTS_FAIL'     => '<br />The following files could not be removed:',
+]);

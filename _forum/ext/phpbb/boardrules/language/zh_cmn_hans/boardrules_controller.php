@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,10 +37,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES_HEADER'			=> '论坛章程',
-	'BOARDRULES_EXPLAIN'		=> '公布在这里的章程是为了让所有的会员都能够清楚了解论坛 “ %s” 的各项责任。 所有的成员都遵守这些章程，才能让论坛运行的顺遂，让所有会员和游客都得到良好的体验。',
-	'BOARDRULES_CATEGORIES'		=> '章程段落',
-	'BOARDRULES_CATEGORY_ANCHOR'=> 'section-%s',
-	'BOARDRULES_RULE_ANCHOR'	=> 'rule-%s',
-));
+$lang = array_merge($lang, [
+	'BOARDRULES_HEADER'          => '论坛章程',
+	'BOARDRULES_EXPLAIN'         => '公布在这里的章程是为了让所有的会员都能够清楚了解论坛 “ %s” 的各项责任。 所有的成员都遵守这些章程，才能让论坛运行的顺遂，让所有会员和游客都得到良好的体验。',
+	'BOARDRULES_CATEGORIES'      => '章程段落',
+	'BOARDRULES_CATEGORY_ANCHOR' => 'section-%s',
+	'BOARDRULES_RULE_ANCHOR'     => 'rule-%s',
+]);

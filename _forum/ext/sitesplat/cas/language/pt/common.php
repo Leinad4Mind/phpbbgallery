@@ -18,5 +18,6 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'CAS' => 'Anti-Spam C.A.S',
+	'GLOBAL_ANNOUNCEMENTS' => 'Anúncios Globais',
+	'STICKY'               => 'Tópicos Fixos',
 ]);

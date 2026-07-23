@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -48,15 +48,15 @@ if (empty($lang) || !is_array($lang))
 *
 * Translators: Feel free to not translate these language strings
 */
-$lang = array_merge($lang, array(
-	'EXCEPTION_FIELD_MISSING'		=> 'Nõutud väli puudub',
-	'EXCEPTION_INVALID_ARGUMENT'	=> 'Vigane argument `%1$s`. Põhjus: %2$s',
-	'EXCEPTION_OUT_OF_BOUNDS'		=> 'Väli `%1$s` sai andmed väljast poolt oma piire',
-	'EXCEPTION_TOO_LONG'			=> 'Sisend oli pikem kui maksimum pikkus.',
-	'EXCEPTION_NOT_UNIQUE'			=> 'Sisend ei olnud unikaalne.',
-	'EXCEPTION_UNEXPECTED_VALUE'	=> 'Väli `%1$s` sai ootamatud andmed. Põhjus: %2$s',
-	'EXCEPTION_ILLEGAL_CHARACTERS'	=> 'Sisend sisaldab keelatuid sümboleid.',
+$lang = array_merge($lang, [
+	'EXCEPTION_FIELD_MISSING'      => 'Nõutud väli puudub',
+	'EXCEPTION_INVALID_ARGUMENT'   => 'Vigane argument `%1$s`. Põhjus: %2$s',
+	'EXCEPTION_OUT_OF_BOUNDS'      => 'Väli `%1$s` sai andmed väljast poolt oma piire',
+	'EXCEPTION_TOO_LONG'           => 'Sisend oli pikem kui maksimum pikkus.',
+	'EXCEPTION_NOT_UNIQUE'         => 'Sisend ei olnud unikaalne.',
+	'EXCEPTION_UNEXPECTED_VALUE'   => 'Väli `%1$s` sai ootamatud andmed. Põhjus: %2$s',
+	'EXCEPTION_ILLEGAL_CHARACTERS' => 'Sisend sisaldab keelatuid sümboleid.',
 
 	// Translators: do not change this
-	'EXCEPTION_WRONG_DATA_LANG'		=> $lang['WRONG_DATA_LANG'],
-));
+	'EXCEPTION_WRONG_DATA_LANG' => $lang['WRONG_DATA_LANG'],
+]);

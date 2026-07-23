@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -47,12 +47,12 @@ if (empty($lang) || !is_array($lang))
 *
 * Translators: Feel free to not translate these language strings
 */
-$lang = array_merge($lang, array(
-	'EXCEPTION_FIELD_MISSING'		=> 'Erforderliche Eingabe fehlt',
-	'EXCEPTION_INVALID_ARGUMENT'	=> 'Unzulässiges Argument angegeben für `%1$s`. Grund: %2$s',
-	'EXCEPTION_OUT_OF_BOUNDS'		=> 'Das Feld `%1$s` enthält Daten jenseits seiner Grenzen',
-	'EXCEPTION_TOO_LONG'			=> 'Die Eingabe war länger als zulässige Größe.',
-	'EXCEPTION_NOT_UNIQUE'			=> 'Die Eingabe war nicht einmalig.',
-	'EXCEPTION_UNEXPECTED_VALUE'	=> 'Das Feld `%1$s` erhielt unerwartete Daten. Grund: %2$s',
-	'EXCEPTION_ILLEGAL_CHARACTERS'	=> 'Die Eingabe enthielt illegale Zeichen.',
-));
+$lang = array_merge($lang, [
+	'EXCEPTION_FIELD_MISSING'      => 'Erforderliche Eingabe fehlt',
+	'EXCEPTION_INVALID_ARGUMENT'   => 'Unzulässiges Argument angegeben für `%1$s`. Grund: %2$s',
+	'EXCEPTION_OUT_OF_BOUNDS'      => 'Das Feld `%1$s` enthält Daten jenseits seiner Grenzen',
+	'EXCEPTION_TOO_LONG'           => 'Die Eingabe war länger als zulässige Größe.',
+	'EXCEPTION_NOT_UNIQUE'         => 'Die Eingabe war nicht einmalig.',
+	'EXCEPTION_UNEXPECTED_VALUE'   => 'Das Feld `%1$s` erhielt unerwartete Daten. Grund: %2$s',
+	'EXCEPTION_ILLEGAL_CHARACTERS' => 'Die Eingabe enthielt illegale Zeichen.',
+]);

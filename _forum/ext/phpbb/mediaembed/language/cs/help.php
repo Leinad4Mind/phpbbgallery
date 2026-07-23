@@ -38,9 +38,9 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'HELP_EMBEDDING_MEDIA'			=> 'Vkládání médií',
-	'HELP_EMBEDDING_MEDIA_QUESTION'	=> 'Jak vkládat média z jiných stránek do příspěvků.',
-	'HELP_EMBEDDING_MEDIA_ANSWER'	=> 'Uživatelů mohou vkládat obsah jako jsou videa nebo zvukové stopy z povolených stránek používáním <strong>[media][/media]</strong> nebo jednoduše vložením povoleného URL do textu. Například:<br /><br />
+	'HELP_EMBEDDING_MEDIA'          => 'Vkládání médií',
+	'HELP_EMBEDDING_MEDIA_QUESTION' => 'Jak vkládat média z jiných stránek do příspěvků.',
+	'HELP_EMBEDDING_MEDIA_ANSWER'   => 'Uživatelů mohou vkládat obsah jako jsou videa nebo zvukové stopy z povolených stránek používáním <strong>[media][/media]</strong> nebo jednoduše vložením povoleného URL do textu. Například:<br /><br />
 										<strong>[media]</strong>%1$s<strong>[/media]</strong>
 										<br /><br />Jak bylo výše zmíněno, odkaz může být také vložen pomocí
 										<strong>[media]</strong> tagů.
@@ -48,5 +48,5 @@ $lang = array_merge($lang, [
 										<br /><br />Tyto stránky jsou podporovány:<br /><samp>%3$s.</samp>
 										<br /><br />Pro kompletní dokumentaci podporovaných tránek a příklady URL navštivte <a href="https://s9etextformatter.readthedocs.io/Plugins/MediaEmbed/Sites/">
 										MediaEmbed Plugin dokumentace</a>.',
-	'HELP_EMBEDDING_MEDIA_DEMO'		=>	'https://youtu.be/QH2-TGUlwu4',
+	'HELP_EMBEDDING_MEDIA_DEMO' => 'https://youtu.be/QH2-TGUlwu4',
 ]);

@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,12 +37,12 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES_SAMPLE_CATEGORY_TITLE'		=> 'Príklad kategórie pravidiel',
-	'BOARDRULES_SAMPLE_CATEGORY_MESSAGE'	=> 'Toto je príklad kategórie pravidiel. Kategórie obsahujú vždy aspoň jedno súvisiace pravidlo. Popis kategórie (ako je tento text) sa koncovému užívateľovi nezobrazuje.',
-	'BOARDRULES_SAMPLE_CATEGORY_ANCHOR'		=> 'priklad-kategorie',
+$lang = array_merge($lang, [
+	'BOARDRULES_SAMPLE_CATEGORY_TITLE'   => 'Príklad kategórie pravidiel',
+	'BOARDRULES_SAMPLE_CATEGORY_MESSAGE' => 'Toto je príklad kategórie pravidiel. Kategórie obsahujú vždy aspoň jedno súvisiace pravidlo. Popis kategórie (ako je tento text) sa koncovému užívateľovi nezobrazuje.',
+	'BOARDRULES_SAMPLE_CATEGORY_ANCHOR'  => 'priklad-kategorie',
 
-	'BOARDRULES_SAMPLE_RULE_TITLE'			=> 'Přrklad pravidla',
-	'BOARDRULES_SAMPLE_RULE_MESSAGE'		=> 'Toto je príklad pravidla. Zdá sa, že všetko funguje ako má. Toto pravidlo môžete upraviť, alebo zmazať a pokračovať v tvorbe vlastných pravidiel.',
-	'BOARDRULES_SAMPLE_RULE_ANCHOR'			=> 'priklad-pravidla',
-));
+	'BOARDRULES_SAMPLE_RULE_TITLE'   => 'Přrklad pravidla',
+	'BOARDRULES_SAMPLE_RULE_MESSAGE' => 'Toto je príklad pravidla. Zdá sa, že všetko funguje ako má. Toto pravidlo môžete upraviť, alebo zmazať a pokračovať v tvorbe vlastných pravidiel.',
+	'BOARDRULES_SAMPLE_RULE_ANCHOR'  => 'priklad-pravidla',
+]);

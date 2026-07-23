@@ -20,7 +20,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -39,14 +39,14 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// ACP Module
-	'ACP_DISCORD_NOTIFICATIONS'					=> 'Notifications Discord',
-	'ACP_DISCORD_NOTIFICATIONS_TITLE'			=> 'Paramètres',
+	'ACP_DISCORD_NOTIFICATIONS'       => 'Notifications Discord',
+	'ACP_DISCORD_NOTIFICATIONS_TITLE' => 'Paramètres',
 
 	// ACP Logs
-	'ACP_DISCORD_NOTIFICATIONS_LOG_UPDATE'		=> 'Paramètres des notifications Discord modifiées',
-	'ACP_DISCORD_NOTIFICATIONS_WEBHOOK_ERROR'	=> 'Discord Webhook returned HTTP status code %d',
-	'ACP_DISCORD_NOTIFICATIONS_CURL_ERROR'		=> 'Discord Webhook cURL error code %d',
-	'ACP_DISCORD_NOTIFICATIONS_JSON_ERROR'		=> 'Discord JSON encode error: %s',
-));
+	'ACP_DISCORD_NOTIFICATIONS_LOG_UPDATE'    => 'Paramètres des notifications Discord modifiées',
+	'ACP_DISCORD_NOTIFICATIONS_WEBHOOK_ERROR' => 'Discord Webhook returned HTTP status code %d',
+	'ACP_DISCORD_NOTIFICATIONS_CURL_ERROR'    => 'Discord Webhook cURL error code %d',
+	'ACP_DISCORD_NOTIFICATIONS_JSON_ERROR'    => 'Discord JSON encode error: %s',
+]);

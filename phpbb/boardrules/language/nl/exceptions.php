@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -48,15 +48,15 @@ if (empty($lang) || !is_array($lang))
 *
 * Translators: Feel free to not translate these language strings
 */
-$lang = array_merge($lang, array(
-	'EXCEPTION_FIELD_MISSING'		=> 'Vereist veld mist',
-	'EXCEPTION_INVALID_ARGUMENT'	=> 'Ongeldig argument gespecificeerd voor `%1$s`. Reden: %2$s',
-	'EXCEPTION_OUT_OF_BOUNDS'		=> 'Het veld `%1$s` ontvangt data wat buiten zijn bereik ligt',
-	'EXCEPTION_TOO_LONG'			=> 'De invoer was langer dan de maximum lengte.',
-	'EXCEPTION_NOT_UNIQUE'			=> 'De invoer is niet uniek.',
-	'EXCEPTION_UNEXPECTED_VALUE'	=> 'Het veld `%1$s` ontvangt onverwachte data. Reden: %2$s',
-	'EXCEPTION_ILLEGAL_CHARACTERS'	=> 'De invoer bevat ongeldige tekens.',
+$lang = array_merge($lang, [
+	'EXCEPTION_FIELD_MISSING'      => 'Vereist veld mist',
+	'EXCEPTION_INVALID_ARGUMENT'   => 'Ongeldig argument gespecificeerd voor `%1$s`. Reden: %2$s',
+	'EXCEPTION_OUT_OF_BOUNDS'      => 'Het veld `%1$s` ontvangt data wat buiten zijn bereik ligt',
+	'EXCEPTION_TOO_LONG'           => 'De invoer was langer dan de maximum lengte.',
+	'EXCEPTION_NOT_UNIQUE'         => 'De invoer is niet uniek.',
+	'EXCEPTION_UNEXPECTED_VALUE'   => 'Het veld `%1$s` ontvangt onverwachte data. Reden: %2$s',
+	'EXCEPTION_ILLEGAL_CHARACTERS' => 'De invoer bevat ongeldige tekens.',
 
 	// Translators: do not change this
-	'EXCEPTION_WRONG_DATA_LANG'		=> $lang['WRONG_DATA_LANG'],
-));
+	'EXCEPTION_WRONG_DATA_LANG' => $lang['WRONG_DATA_LANG'],
+]);

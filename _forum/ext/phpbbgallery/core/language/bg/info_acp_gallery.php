@@ -23,7 +23,7 @@ if (empty($lang) || !is_array($lang))
 	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ACP_GALLERY_ALBUM_MANAGEMENT'       => 'Оправление на албуми',
 	'ACP_GALLERY_ALBUM_PERMISSIONS'      => 'Права',
 	'ACP_GALLERY_ALBUM_PERMISSIONS_COPY' => 'Копиране на права',
@@ -33,14 +33,14 @@ $lang = array_merge($lang, array(
 	'ACP_GALLERY_MANAGE_ALBUMS'          => 'Оправление на албуми',
 	'ACP_GALLERY_OVERVIEW'               => 'Преглед',
 
-	'GALLERY'                  => 'Галерия',
-	'GALLERY_EXPLAIN'          => 'Галерия',
-	'GALLERY_HELPLINE_ALBUM'   => 'Изображение: [image]image_id[/image], с този BBCode можете да добавите изборажение към поста си.',
-	'GALLERY_POPUP'            => 'Галерия',
-	'GALLERY_POPUP_HELPLINE'   => 'Отвори popup където можете да изберете последните си избражения и да добавите нови.',
+	'GALLERY'                => 'Галерия',
+	'GALLERY_EXPLAIN'        => 'Галерия',
+	'GALLERY_HELPLINE_ALBUM' => 'Изображение: [image]image_id[/image], с този BBCode можете да добавите изборажение към поста си.',
+	'GALLERY_POPUP'          => 'Галерия',
+	'GALLERY_POPUP_HELPLINE' => 'Отвори popup където можете да изберете последните си избражения и да добавите нови.',
 
 	// Please do not change the copyright.
-	'GALLERY_COPYRIGHT'        => 'Powered by <a href="https://github.com/satanasov/phpbbgallery">phpBB Gallery</a> &copy; 2014–2026',
+	'GALLERY_COPYRIGHT' => 'Powered by <a href="https://github.com/satanasov/phpbbgallery">phpBB Gallery</a> &copy; 2014–2026',
 
 	// A little line where you can give yourself some credits on the translation.
 	'GALLERY_TRANSLATION_INFO' => 'Българският превод на "phpBB Gallery" е направен от <a href="http://www.anavaro.com">Lucifer</a>',
@@ -51,8 +51,8 @@ $lang = array_merge($lang, array(
 	'PERSONAL_ALBUM' => 'Личен албум',
 	'PHPBB_GALLERY'  => 'phpBB Gallery',
 
-	'TOTAL_IMAGES_SPRINTF' => array(
+	'TOTAL_IMAGES_SPRINTF' => [
 		0 => 'Общо изображения <strong>0</strong>',
 		1 => 'Общо изображения <strong>%d</strong>',
-	),
-));
+	],
+]);

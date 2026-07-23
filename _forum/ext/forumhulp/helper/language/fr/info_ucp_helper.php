@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,15 +38,15 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-		'UCP_IR'				=> 'Redimensionnement d’image',
-		'IMAGE_RESIZE'			=> 'Redimensionner l’image',
-		'IMAGE_RESIZE_EXPLAIN'	=> 'Permet de redimensionner l’image de votre avatar de %1$s, puis de confirmer.',
+$lang = array_merge($lang, [
+		'UCP_IR'               => 'Redimensionnement d’image',
+		'IMAGE_RESIZE'         => 'Redimensionner l’image',
+		'IMAGE_RESIZE_EXPLAIN' => 'Permet de redimensionner l’image de votre avatar de %1$s, puis de confirmer.',
 		// Your avatar will be saved with a height of %1$s pixels and a width of %2$s pixels.',
 
-		'IMAGE_RESIZE_ERROR'	=> 'Aucun fichier envoyé !',
-		'IMAGERESIZE_NOTICE'	=> '<div class="phpinfo"><p class="entry">Ce module est masqué et ne possède aucune option de configuration. Par ailleurs, merci de configurer l’option sur la « Taille maximale d’un avatar » depuis le panneau d’administration.</p></div>',
-		'ERROR_IMAGERESIZE_DISABLE'	=> 'Il n’est pas possible de désactiver le redimensionnement d’image car des extensions sont actives <br /><div class="phpinfo">» %s</div>',
-	'FH_HELPER_NOTICE'				=> 'L’extension « Forumhulp helper » n’est pas installée !<br />Merci de télécharger l’extension : « <a href="https://github.com/ForumHulp/helper" target="_blank">forumhulp/helper</a> », puis de l’installer.',
-	)
+		'IMAGE_RESIZE_ERROR'        => 'Aucun fichier envoyé !',
+		'IMAGERESIZE_NOTICE'        => '<div class="phpinfo"><p class="entry">Ce module est masqué et ne possède aucune option de configuration. Par ailleurs, merci de configurer l’option sur la « Taille maximale d’un avatar » depuis le panneau d’administration.</p></div>',
+		'ERROR_IMAGERESIZE_DISABLE' => 'Il n’est pas possible de désactiver le redimensionnement d’image car des extensions sont actives <br /><div class="phpinfo">» %s</div>',
+	'FH_HELPER_NOTICE'           => 'L’extension « Forumhulp helper » n’est pas installée !<br />Merci de télécharger l’extension : « <a href="https://github.com/ForumHulp/helper" target="_blank">forumhulp/helper</a> », puis de l’installer.',
+	]
 );

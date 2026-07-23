@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,10 +38,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES_HEADER'			=> 'Foorumi reeglid',
-	'BOARDRULES_EXPLAIN'		=> 'Antud reeglid on selleks, et selgitada erinevaid kohustusi, mis on järgimiseks kõigile liikmetele %s foorumis. Et kõik foorumi lugejad ja liikmed tunneksid ennast hästi, palume järgida neid reegleid.',
-	'BOARDRULES_CATEGORIES'		=> 'Reeglite sektsioon',
-	'BOARDRULES_CATEGORY_ANCHOR'=> 'sektsioon-%s',
-	'BOARDRULES_RULE_ANCHOR'	=> 'reegel-%s',
-));
+$lang = array_merge($lang, [
+	'BOARDRULES_HEADER'          => 'Foorumi reeglid',
+	'BOARDRULES_EXPLAIN'         => 'Antud reeglid on selleks, et selgitada erinevaid kohustusi, mis on järgimiseks kõigile liikmetele %s foorumis. Et kõik foorumi lugejad ja liikmed tunneksid ennast hästi, palume järgida neid reegleid.',
+	'BOARDRULES_CATEGORIES'      => 'Reeglite sektsioon',
+	'BOARDRULES_CATEGORY_ANCHOR' => 'sektsioon-%s',
+	'BOARDRULES_RULE_ANCHOR'     => 'reegel-%s',
+]);

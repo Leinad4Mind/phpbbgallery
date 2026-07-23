@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,46 +37,46 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'ACP_AUTOGROUPS_MANAGE'			=> 'Gestisci Autogruppi',
-	'ACP_AUTOGROUPS_MANAGE_EXPLAIN'	=> 'Da questo modulo è possibile aggiungere, modificare, vedere e cancellare le configurazioni di autogruppi.',
-	'ACP_AUTOGROUPS_ADD'			=> 'Aggiungi autogruppi',
-	'ACP_AUTOGROUPS_EDIT'			=> 'Modifica autogruppi',
+$lang = array_merge($lang, [
+	'ACP_AUTOGROUPS_MANAGE'         => 'Gestisci Autogruppi',
+	'ACP_AUTOGROUPS_MANAGE_EXPLAIN' => 'Da questo modulo è possibile aggiungere, modificare, vedere e cancellare le configurazioni di autogruppi.',
+	'ACP_AUTOGROUPS_ADD'            => 'Aggiungi autogruppi',
+	'ACP_AUTOGROUPS_EDIT'           => 'Modifica autogruppi',
 
-	'ACP_AUTOGROUPS_GROUP_NAME'				=> 'Gruppo',
-	'ACP_AUTOGROUPS_GROUP_NAME_EXPLAIN'		=> 'Scegli un gruppo a cui aggiungere o rimuovere automaticamente utenti.',
-	'ACP_AUTOGROUPS_CONDITION_NAME'			=> 'Tipo autogruppo',
-	'ACP_AUTOGROUPS_CONDITION_NAME_EXPLAIN'	=> 'Scegli il tipo di condizione per cui gli utenti vengono aggiunti o rimossi dal gruppo.',
-	'ACP_AUTOGROUPS_MIN_VALUE'				=> 'Valore minimo',
-	'ACP_AUTOGROUPS_MIN_VALUE_EXPLAIN'		=> 'Gli utenti verranno aggiunti a questo gruppo se supereranno il valore minimo.',
-	'ACP_AUTOGROUPS_MAX_VALUE'				=> 'Valore massimo',
-	'ACP_AUTOGROUPS_MAX_VALUE_EXPLAIN'		=> 'Gli utenti verranno rimossi da questo gruppo se supereranno il valore massimo. Impostare su 0 se non si desidera che gli utenti vengano rimossi automaticamente.',
-	'ACP_AUTOGROUPS_DEFAULT'				=> 'Imposta come gruppo predefinito',
-	'ACP_AUTOGROUPS_DEFAULT_EXPLAIN'		=> 'Rendi questo gruppo predefinito per l’utente.',
-	'ACP_AUTOGROUPS_DEFAULT_EXEMPTION'		=> 'Ciò non influirà sugli utenti il cui gruppo di utenti predefinito è uno dei seguenti: %s.',
-	'ACP_AUTOGROUPS_NOTIFY'					=> 'Notifica utenti',
-	'ACP_AUTOGROUPS_NOTIFY_EXPLAIN'			=> 'Invia una notifica agli utenti automaticamente aggiunti o rimossi dal gruppo.',
+	'ACP_AUTOGROUPS_GROUP_NAME'             => 'Gruppo',
+	'ACP_AUTOGROUPS_GROUP_NAME_EXPLAIN'     => 'Scegli un gruppo a cui aggiungere o rimuovere automaticamente utenti.',
+	'ACP_AUTOGROUPS_CONDITION_NAME'         => 'Tipo autogruppo',
+	'ACP_AUTOGROUPS_CONDITION_NAME_EXPLAIN' => 'Scegli il tipo di condizione per cui gli utenti vengono aggiunti o rimossi dal gruppo.',
+	'ACP_AUTOGROUPS_MIN_VALUE'              => 'Valore minimo',
+	'ACP_AUTOGROUPS_MIN_VALUE_EXPLAIN'      => 'Gli utenti verranno aggiunti a questo gruppo se supereranno il valore minimo.',
+	'ACP_AUTOGROUPS_MAX_VALUE'              => 'Valore massimo',
+	'ACP_AUTOGROUPS_MAX_VALUE_EXPLAIN'      => 'Gli utenti verranno rimossi da questo gruppo se supereranno il valore massimo. Impostare su 0 se non si desidera che gli utenti vengano rimossi automaticamente.',
+	'ACP_AUTOGROUPS_DEFAULT'                => 'Imposta come gruppo predefinito',
+	'ACP_AUTOGROUPS_DEFAULT_EXPLAIN'        => 'Rendi questo gruppo predefinito per l’utente.',
+	'ACP_AUTOGROUPS_DEFAULT_EXEMPTION'      => 'Ciò non influirà sugli utenti il cui gruppo di utenti predefinito è uno dei seguenti: %s.',
+	'ACP_AUTOGROUPS_NOTIFY'                 => 'Notifica utenti',
+	'ACP_AUTOGROUPS_NOTIFY_EXPLAIN'         => 'Invia una notifica agli utenti automaticamente aggiunti o rimossi dal gruppo.',
 
-	'ACP_AUTOGROUPS_EXCLUDED_GROUPS'		=> 'Excluded groups',
-	'ACP_AUTOGROUPS_EXCLUDE_GROUP'			=> 'Exclude members of these groups',
-	'ACP_AUTOGROUPS_EXCLUDE_GROUP_EXPLAIN'	=> 'Members belonging to <em>any group</em> selected in this list will be ignored. Leave this field blank if you want this Auto Group applied to <em>all members</em> of your board. Select multiple groups by holding <samp>CTRL</samp> (or <samp>&#8984;CMD</samp> on Mac) and selecting the groups.',
-	'ACP_AUTOGROUPS_INVALID_EXCLUDE_GROUPS'	=> 'An error occurred. The group for this condition can not also be selected in the excluded groups field.',
-	'ACP_AUTOGROUPS_EXEMPT_GROUP'			=> 'Imposta eccezioni per gruppo predefinito',
-	'ACP_AUTOGROUPS_EXEMPT_GROUP_EXPLAIN'	=> 'Autogruppi non cambierà il gruppo predefinito se fa parte di un gruppo selezionato in questa lista. Per selezionare più gruppi, tenere premuto <samp>CTRL</samp> (o <samp>&#8984;CMD</samp> su sistemi Mac) e selezionare i gruppi.',
+	'ACP_AUTOGROUPS_EXCLUDED_GROUPS'        => 'Excluded groups',
+	'ACP_AUTOGROUPS_EXCLUDE_GROUP'          => 'Exclude members of these groups',
+	'ACP_AUTOGROUPS_EXCLUDE_GROUP_EXPLAIN'  => 'Members belonging to <em>any group</em> selected in this list will be ignored. Leave this field blank if you want this Auto Group applied to <em>all members</em> of your board. Select multiple groups by holding <samp>CTRL</samp> (or <samp>&#8984;CMD</samp> on Mac) and selecting the groups.',
+	'ACP_AUTOGROUPS_INVALID_EXCLUDE_GROUPS' => 'An error occurred. The group for this condition can not also be selected in the excluded groups field.',
+	'ACP_AUTOGROUPS_EXEMPT_GROUP'           => 'Imposta eccezioni per gruppo predefinito',
+	'ACP_AUTOGROUPS_EXEMPT_GROUP_EXPLAIN'   => 'Autogruppi non cambierà il gruppo predefinito se fa parte di un gruppo selezionato in questa lista. Per selezionare più gruppi, tenere premuto <samp>CTRL</samp> (o <samp>&#8984;CMD</samp> su sistemi Mac) e selezionare i gruppi.',
 
-	'ACP_AUTOGROUPS_CREATE_RULE'	=> 'Crea nuovo autogruppo',
-	'ACP_AUTOGROUPS_SUBMIT_SUCCESS'	=> 'Autogruppo creato correttamente.',
-	'ACP_AUTOGROUPS_DELETE_CONFIRM'	=> 'Sicuro di voler rimuovere quest’autogruppo?',
-	'ACP_AUTOGROUPS_DELETE_SUCCESS'	=> 'Autogruppo rimosso correttamente.',
-	'ACP_AUTOGROUPS_EMPTY'			=> 'Non ci sono autogruppi.',
-	'ACP_AUTOGROUPS_NO_GROUPS'		=> 'Non ci sono gruppi a disposizione',
-	'ACP_AUTOGROUPS_INVALID_GROUPS'	=> 'Si è verificato un errore: non è stato selezionato un gruppo utente valido.<br>Autogruppi può essere usato solo con gruppi utenti, creabili nella pagina Gestisci gruppi.',
-	'ACP_AUTOGROUPS_INVALID_RANGE'	=> 'Si è verificato un errore: il valore minimo e il valore massimo non possono coincidere.',
+	'ACP_AUTOGROUPS_CREATE_RULE'    => 'Crea nuovo autogruppo',
+	'ACP_AUTOGROUPS_SUBMIT_SUCCESS' => 'Autogruppo creato correttamente.',
+	'ACP_AUTOGROUPS_DELETE_CONFIRM' => 'Sicuro di voler rimuovere quest’autogruppo?',
+	'ACP_AUTOGROUPS_DELETE_SUCCESS' => 'Autogruppo rimosso correttamente.',
+	'ACP_AUTOGROUPS_EMPTY'          => 'Non ci sono autogruppi.',
+	'ACP_AUTOGROUPS_NO_GROUPS'      => 'Non ci sono gruppi a disposizione',
+	'ACP_AUTOGROUPS_INVALID_GROUPS' => 'Si è verificato un errore: non è stato selezionato un gruppo utente valido.<br>Autogruppi può essere usato solo con gruppi utenti, creabili nella pagina Gestisci gruppi.',
+	'ACP_AUTOGROUPS_INVALID_RANGE'  => 'Si è verificato un errore: il valore minimo e il valore massimo non possono coincidere.',
 
 	// Conditions
-	'AUTOGROUPS_TYPE_BIRTHDAYS'		=> 'Età utente',
-	'AUTOGROUPS_TYPE_LASTVISIT'		=> 'Giorni dall’ultima visita',
-	'AUTOGROUPS_TYPE_MEMBERSHIP'	=> 'Giorni di appartenenza',
-	'AUTOGROUPS_TYPE_POSTS'			=> 'Messaggi',
-	'AUTOGROUPS_TYPE_WARNINGS'		=> 'Richiami',
-));
+	'AUTOGROUPS_TYPE_BIRTHDAYS'  => 'Età utente',
+	'AUTOGROUPS_TYPE_LASTVISIT'  => 'Giorni dall’ultima visita',
+	'AUTOGROUPS_TYPE_MEMBERSHIP' => 'Giorni di appartenenza',
+	'AUTOGROUPS_TYPE_POSTS'      => 'Messaggi',
+	'AUTOGROUPS_TYPE_WARNINGS'   => 'Richiami',
+]);

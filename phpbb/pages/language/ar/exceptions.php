@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -48,12 +48,12 @@ if (empty($lang) || !is_array($lang))
 *
 * Translators: Feel free to not translate these language strings
 */
-$lang = array_merge($lang, array(
-	'EXCEPTION_FIELD_MISSING'		=> 'يجب تعبئة الحقل الفارغ',
-	'EXCEPTION_INVALID_ARGUMENT'	=> 'هناك خطأ في البيانات المُحددة لـ `%1$s`. السبب : %2$s',
-	'EXCEPTION_OUT_OF_BOUNDS'		=> 'البيانات المُدخلة في الحقل `%1$s` أكبر من الحد المطلوب.',
-	'EXCEPTION_TOO_LONG'			=> 'البيانات المُدخلة أطول من الحد المطلوب.',
-	'EXCEPTION_NOT_UNIQUE'			=> 'البيانات المُدخلة موجودة مُسبقاً.',
-	'EXCEPTION_UNEXPECTED_VALUE'	=> 'هناك خطأ في البيانات المُدخلة في الحقل `%1$s`. السبب : %2$s',
-	'EXCEPTION_ILLEGAL_CHARACTERS'	=> 'البيانات التي أدخلتها تحتوي على حروف غير مقبولة.',
-));
+$lang = array_merge($lang, [
+	'EXCEPTION_FIELD_MISSING'      => 'يجب تعبئة الحقل الفارغ',
+	'EXCEPTION_INVALID_ARGUMENT'   => 'هناك خطأ في البيانات المُحددة لـ `%1$s`. السبب : %2$s',
+	'EXCEPTION_OUT_OF_BOUNDS'      => 'البيانات المُدخلة في الحقل `%1$s` أكبر من الحد المطلوب.',
+	'EXCEPTION_TOO_LONG'           => 'البيانات المُدخلة أطول من الحد المطلوب.',
+	'EXCEPTION_NOT_UNIQUE'         => 'البيانات المُدخلة موجودة مُسبقاً.',
+	'EXCEPTION_UNEXPECTED_VALUE'   => 'هناك خطأ في البيانات المُدخلة في الحقل `%1$s`. السبب : %2$s',
+	'EXCEPTION_ILLEGAL_CHARACTERS' => 'البيانات التي أدخلتها تحتوي على حروف غير مقبولة.',
+]);

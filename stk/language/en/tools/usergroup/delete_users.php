@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,11 +37,11 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'DELETE_USERS'				=> 'Removing users',
-	'DELETE_USERS_EXPLAIN'		=> 'Here you can delete users have left no message and did not attend the board for the selected period.',
-	'INACTIVE_PERIOD'			=> 'Inactivity period',
-	'DELETE_USERS_SUCESS'		=> 'Users have been successfully removed.',
-	'DELETE_USERS_NOT_FOUND'	=> 'Users who want to remove, not found.',
-	'DELETE_USERS_CONFIRM'		=> 'Are you sure you wish to delete these users?<br />(<strong>Attention!</strong>Removal of a large number of users can take a long time. Do not leave and do not close this page up until the operation is completed.)',
-));
+$lang = array_merge($lang, [
+	'DELETE_USERS'           => 'Removing users',
+	'DELETE_USERS_EXPLAIN'   => 'Here you can delete users have left no message and did not attend the board for the selected period.',
+	'INACTIVE_PERIOD'        => 'Inactivity period',
+	'DELETE_USERS_SUCESS'    => 'Users have been successfully removed.',
+	'DELETE_USERS_NOT_FOUND' => 'Users who want to remove, not found.',
+	'DELETE_USERS_CONFIRM'   => 'Are you sure you wish to delete these users?<br />(<strong>Attention!</strong>Removal of a large number of users can take a long time. Do not leave and do not close this page up until the operation is completed.)',
+]);

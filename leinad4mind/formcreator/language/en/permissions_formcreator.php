@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -37,6 +37,6 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 
 $lang = array_merge($lang, [
-	'ACL_A_FORM_CREATOR'		=> 'Can manage Form Creator',
-	'ACL_F_FORM_CREATOR'		=> 'Can use Form Creator',
+	'ACL_A_FORM_CREATOR' => 'Can manage Form Creator',
+	'ACL_F_FORM_CREATOR' => 'Can use Form Creator',
 ]);

@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -36,24 +36,24 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'DB_BACKUP'					=> 'Database backup',
-	'DB_BACKUP_EXPLAIN'			=> 'Here you can backup all your phpBB related data. You may store the resulting archive in your <samp>store/</samp> folder, download or see on screen. Depending on your server configuration you may be able to compress the file in a number of formats.',
-	'DB_BACKUP_EXPLAIN_DUMPER'	=> 'The resulting backup is compatible with the format utility <a href ="http://www.mysqldumper.net/" target="_blank" /><strong>MySQLDumper</strong></a>, which supports granular recovery of database tables.',
+$lang = array_merge($lang, [
+	'DB_BACKUP'                => 'Database backup',
+	'DB_BACKUP_EXPLAIN'        => 'Here you can backup all your phpBB related data. You may store the resulting archive in your <samp>store/</samp> folder, download or see on screen. Depending on your server configuration you may be able to compress the file in a number of formats.',
+	'DB_BACKUP_EXPLAIN_DUMPER' => 'The resulting backup is compatible with the format utility <a href ="http://www.mysqldumper.net/" target="_blank" /><strong>MySQLDumper</strong></a>, which supports granular recovery of database tables.',
 
-	'SELECT_TABLE'		=> 'Tables',
-	'MARK_ALL'			=> 'Select all',
-	'EXPAND'			=> 'Expand',
-	'COLLAPSE'			=> 'Collapse',
-	'UNMARK_ALL'		=> 'Unmark all',
-	'GZIP'				=> 'Compression',
-	'SAVE'				=> 'Save on server',
-	'DOWNLOAD'			=> 'Download',
-	'BACKUP_SUCCESS'	=> 'The backup file has been created successfully.',
-	'BACKUP_ACTION'		=> 'Action',
-	'BACKUP_TYPE'		=> 'Backup type',
-	'FULL'				=> 'Full',
-	'STRUCTURE'			=> 'Structure only',
-	'DATA'				=> 'Data only',
-	'SCREEN'			=> 'Show on screen'
-));
+	'SELECT_TABLE'   => 'Tables',
+	'MARK_ALL'       => 'Select all',
+	'EXPAND'         => 'Expand',
+	'COLLAPSE'       => 'Collapse',
+	'UNMARK_ALL'     => 'Unmark all',
+	'GZIP'           => 'Compression',
+	'SAVE'           => 'Save on server',
+	'DOWNLOAD'       => 'Download',
+	'BACKUP_SUCCESS' => 'The backup file has been created successfully.',
+	'BACKUP_ACTION'  => 'Action',
+	'BACKUP_TYPE'    => 'Backup type',
+	'FULL'           => 'Full',
+	'STRUCTURE'      => 'Structure only',
+	'DATA'           => 'Data only',
+	'SCREEN'         => 'Show on screen'
+]);

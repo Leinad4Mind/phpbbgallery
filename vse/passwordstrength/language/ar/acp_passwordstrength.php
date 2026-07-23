@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -34,9 +34,9 @@ if (empty($lang) || !is_array($lang))
 // equally where a string contains only two placeholders which are used to wrap text
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
 
-$lang = array_merge($lang, array(
-	'PASSWORD_STRENGTH_TYPE'			=> 'نظام الحساب لقوة كلمة السر ',
-	'PASSWORD_STRENGTH_TYPE_EXPLAIN'	=> 'اختار نظام الحساب لتحديد قوة كلمة السر.<br><strong>مُعقد</strong> يعني البحث عن الحروف المُشتركة , الأرقام , الرموز وطول كلمة السر , لضمان استخدام كلمات السر المُعقدة.<br><strong>الحروف المُتجاورة zxcvbn</strong> ( بواسطة الخدمة DropBox ) يعني حساب مدى سهولة كلمة السر التي يُمكن تخمينها , مما يسمح بإستخدام سهل لكلمات السر القوية.',
-	'PASSWORD_STRENGTH_TYPE_COMPLEX'	=> 'مُعقد',
-	'PASSWORD_STRENGTH_TYPE_ZXCVBN'		=> 'الحروف المُتجاورة zxcvbn',
-));
+$lang = array_merge($lang, [
+	'PASSWORD_STRENGTH_TYPE'         => 'نظام الحساب لقوة كلمة السر ',
+	'PASSWORD_STRENGTH_TYPE_EXPLAIN' => 'اختار نظام الحساب لتحديد قوة كلمة السر.<br><strong>مُعقد</strong> يعني البحث عن الحروف المُشتركة , الأرقام , الرموز وطول كلمة السر , لضمان استخدام كلمات السر المُعقدة.<br><strong>الحروف المُتجاورة zxcvbn</strong> ( بواسطة الخدمة DropBox ) يعني حساب مدى سهولة كلمة السر التي يُمكن تخمينها , مما يسمح بإستخدام سهل لكلمات السر القوية.',
+	'PASSWORD_STRENGTH_TYPE_COMPLEX' => 'مُعقد',
+	'PASSWORD_STRENGTH_TYPE_ZXCVBN'  => 'الحروف المُتجاورة zxcvbn',
+]);

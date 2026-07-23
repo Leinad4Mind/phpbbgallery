@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,9 +38,9 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'PHPBB'				=> 'Fichiers de phpBB 3.2.x',
-	'ROOT'				=> 'phpBB 3.2.x',
-	'G_TIME'			=> 'Temps de génération de l’arborescence des fichiers : %01.2fs',
-	'FILE_NOT_FOUND'	=> 'Fichier non trouvé',
-));
+$lang = array_merge($lang, [
+	'PHPBB'          => 'Fichiers de phpBB 3.2.x',
+	'ROOT'           => 'phpBB 3.2.x',
+	'G_TIME'         => 'Temps de génération de l’arborescence des fichiers : %01.2fs',
+	'FILE_NOT_FOUND' => 'Fichier non trouvé',
+]);

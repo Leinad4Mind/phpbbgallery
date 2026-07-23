@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,40 +38,40 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-   	'BASIC_STATS'	=> 'Statistiques',
-   	'DAILY'			=> 'Quotidiennes',
-   	'MONTHLY'		=> 'Mensuelles',
-   	'YEARLY'		=> 'Annuelles',
+$lang = array_merge($lang, [
+	'BASIC_STATS' => 'Statistiques',
+	'DAILY'       => 'Quotidiennes',
+	'MONTHLY'     => 'Mensuelles',
+	'YEARLY'      => 'Annuelles',
 
-	'ALL'					=> 'Tous',
-	'AS_ON'					=> 'Nous sommes le %s',	
-	'AVG_POSTS_DAY'			=> 'Moyenne quotidienne de messages',	
-	'AVG_POSTS_MONTH'		=> 'Moyenne mensuelle de messages',	
-	'AVG_POSTS_YEAR'		=> 'Moyenne annuelle de messages',	
-	'AVG_TOPICS_DAY'		=> 'Moyenne quotidienne de sujets',
-	'AVG_TOPICS_MONTH'		=> 'Moyenne mensuelle de sujets',
-	'AVG_TOPICS_YEAR'		=> 'Moyenne annuelle de sujets',
-	'AVG_USER_REGS_DAY'		=> 'Moyenne quotidienne de nouveaux membres',
-	'AVG_USER_REGS_MONTH'	=> 'Moyenne mensuelle de nouveaux membres',
-	'AVG_USER_REGS_YEAR'	=> 'Moyenne annuelle de nouveaux membres',
-	'COUNT'					=> 'Total',
-	'D_VIEW'				=> 'Statistiques journaliers',
-	'M_VIEW'				=> 'Statistiques mensuelles',
-	'NONE'					=> 'Aucun',
-	'OVERALL'				=> 'Vue d’ensemble',
-	'PERCENT'				=> 'Pourcentage',
-	'PERIODIC_DAY'			=> 'Jour',
-	'PERIODIC_MONTH'		=> 'Mois',
-	'PERIODIC_YEAR'			=> 'Année',
-	'SHOW_STATS_FOR_MONTH'	=> 'Afficher les statistiques du mois sélectionné',
-	'SHOW_STATS_FOR_YEAR'	=> 'Afficher les statistiques de l’année sélectionnée',
-	'STATS_MONTH_EXPLAIN'	=> 'Les statistiques suivantes concernent le mois de <strong>%s</strong>',
-	'STATS_YEAR_EXPLAIN'	=> 'Les statistiques suivantes concernent l’année <strong>%s</strong>',
-	'POSTS_TOTAL'			=> 'Total de messages',
-	'TOPICS_TOTAL'			=> 'Total de sujets',
-	'TOTAL_USER_REGS'		=> 'Total de nouveaux membres',
-	'USER_REGS'				=> 'Nouveaux membres',
-	'Y_VIEW'				=> 'Statistiques annuelles',
+	'ALL'                  => 'Tous',
+	'AS_ON'                => 'Nous sommes le %s',
+	'AVG_POSTS_DAY'        => 'Moyenne quotidienne de messages',
+	'AVG_POSTS_MONTH'      => 'Moyenne mensuelle de messages',
+	'AVG_POSTS_YEAR'       => 'Moyenne annuelle de messages',
+	'AVG_TOPICS_DAY'       => 'Moyenne quotidienne de sujets',
+	'AVG_TOPICS_MONTH'     => 'Moyenne mensuelle de sujets',
+	'AVG_TOPICS_YEAR'      => 'Moyenne annuelle de sujets',
+	'AVG_USER_REGS_DAY'    => 'Moyenne quotidienne de nouveaux membres',
+	'AVG_USER_REGS_MONTH'  => 'Moyenne mensuelle de nouveaux membres',
+	'AVG_USER_REGS_YEAR'   => 'Moyenne annuelle de nouveaux membres',
+	'COUNT'                => 'Total',
+	'D_VIEW'               => 'Statistiques journaliers',
+	'M_VIEW'               => 'Statistiques mensuelles',
+	'NONE'                 => 'Aucun',
+	'OVERALL'              => 'Vue d’ensemble',
+	'PERCENT'              => 'Pourcentage',
+	'PERIODIC_DAY'         => 'Jour',
+	'PERIODIC_MONTH'       => 'Mois',
+	'PERIODIC_YEAR'        => 'Année',
+	'SHOW_STATS_FOR_MONTH' => 'Afficher les statistiques du mois sélectionné',
+	'SHOW_STATS_FOR_YEAR'  => 'Afficher les statistiques de l’année sélectionnée',
+	'STATS_MONTH_EXPLAIN'  => 'Les statistiques suivantes concernent le mois de <strong>%s</strong>',
+	'STATS_YEAR_EXPLAIN'   => 'Les statistiques suivantes concernent l’année <strong>%s</strong>',
+	'POSTS_TOTAL'          => 'Total de messages',
+	'TOPICS_TOTAL'         => 'Total de sujets',
+	'TOTAL_USER_REGS'      => 'Total de nouveaux membres',
+	'USER_REGS'            => 'Nouveaux membres',
+	'Y_VIEW'               => 'Statistiques annuelles',
 
-));
+]);

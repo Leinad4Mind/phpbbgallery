@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -36,18 +36,18 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'REASSIGN_THUMBNAILS'			=> 'Пересоздание миниатюр файлов вложений',
-	'REASSIGN_THUMBNAILS_CONFIRM'	=> 'В случае, если была отключена опция &laquo;Создавать миниатюры&raquo; и вложения были созданы, вы можете создать миниатюры для таких вложений.<br />Продолжить?',
-	'REASSIGN_THUMBNAILS_PROGRESS'	=> 'Производится создание миниатюр. Не прерывайте процесс!',
-	'REASSIGN_THUMBNAILS_FINISHED'	=> 'Пересоздание миниатюр завершено.',
-	'NO_THUMBNAILS_TO_REBUILD'		=> 'Нет файлов для которых требуется создание миниатюр.',
-	'NEED_TO_PROCESS' 				=> 'Найдено файлов без миниатюр: %d',
-	'REBUILT'						=> '<strong>Создано для</strong> ',
-	'NO_NEED_REBUILT'				=> '<strong style="color: #aaa;">Не требуется</strong> создание миниатюры для файла ',
-	'THUMB'							=> '<strong>миниатюра</strong>',
-	'SOURCE_UNAVAILABLE'			=> 'Файл не найден: ',
-	'NO_EXTENSIONS'					=> 'Для группы расширений <strong>Изображения</strong> нет назначенных расширений файлов.',
-	'NO_EXTENSIONS_GROUP'			=> 'Группа расширений <strong>Изображения</strong> не существует.',
-	'IMAGES'						=> 'Изображения',
-));
+$lang = array_merge($lang, [
+	'REASSIGN_THUMBNAILS'          => 'Пересоздание миниатюр файлов вложений',
+	'REASSIGN_THUMBNAILS_CONFIRM'  => 'В случае, если была отключена опция &laquo;Создавать миниатюры&raquo; и вложения были созданы, вы можете создать миниатюры для таких вложений.<br />Продолжить?',
+	'REASSIGN_THUMBNAILS_PROGRESS' => 'Производится создание миниатюр. Не прерывайте процесс!',
+	'REASSIGN_THUMBNAILS_FINISHED' => 'Пересоздание миниатюр завершено.',
+	'NO_THUMBNAILS_TO_REBUILD'     => 'Нет файлов для которых требуется создание миниатюр.',
+	'NEED_TO_PROCESS'              => 'Найдено файлов без миниатюр: %d',
+	'REBUILT'                      => '<strong>Создано для</strong> ',
+	'NO_NEED_REBUILT'              => '<strong style="color: #aaa;">Не требуется</strong> создание миниатюры для файла ',
+	'THUMB'                        => '<strong>миниатюра</strong>',
+	'SOURCE_UNAVAILABLE'           => 'Файл не найден: ',
+	'NO_EXTENSIONS'                => 'Для группы расширений <strong>Изображения</strong> нет назначенных расширений файлов.',
+	'NO_EXTENSIONS_GROUP'          => 'Группа расширений <strong>Изображения</strong> не существует.',
+	'IMAGES'                       => 'Изображения',
+]);

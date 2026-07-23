@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,11 +38,11 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES_SAMPLE_CATEGORY_TITLE'		=> 'Primjer kategorije',
-	'BOARDRULES_SAMPLE_CATEGORY_MESSAGE'	=> 'Ovo je primjer kategorije u instalaciji forumskih pravila.<br />Kategorije sadrže grupe povezanih pravila.<br />Poruke kategorija (poput ove) nisu prikazane na stranici pravila.',
-	'BOARDRULES_SAMPLE_CATEGORY_ANCHOR'		=> 'primjer-kategorija',
-	'BOARDRULES_SAMPLE_RULE_TITLE'			=> 'Primjer pravila',
-	'BOARDRULES_SAMPLE_RULE_MESSAGE'		=> 'Ovo je primjer pravila u instalaciji forumskih pravila.<br />Čini se da sve radi.<br />Možeš urediti/izbrisati ovu kategoriju/pravilo odnosno postaviti svoje vlastite kategorije i pravila.',
-	'BOARDRULES_SAMPLE_RULE_ANCHOR'			=> 'primjer-pravilo',
-));
+$lang = array_merge($lang, [
+	'BOARDRULES_SAMPLE_CATEGORY_TITLE'   => 'Primjer kategorije',
+	'BOARDRULES_SAMPLE_CATEGORY_MESSAGE' => 'Ovo je primjer kategorije u instalaciji forumskih pravila.<br />Kategorije sadrže grupe povezanih pravila.<br />Poruke kategorija (poput ove) nisu prikazane na stranici pravila.',
+	'BOARDRULES_SAMPLE_CATEGORY_ANCHOR'  => 'primjer-kategorija',
+	'BOARDRULES_SAMPLE_RULE_TITLE'       => 'Primjer pravila',
+	'BOARDRULES_SAMPLE_RULE_MESSAGE'     => 'Ovo je primjer pravila u instalaciji forumskih pravila.<br />Čini se da sve radi.<br />Možeš urediti/izbrisati ovu kategoriju/pravilo odnosno postaviti svoje vlastite kategorije i pravila.',
+	'BOARDRULES_SAMPLE_RULE_ANCHOR'      => 'primjer-pravilo',
+]);

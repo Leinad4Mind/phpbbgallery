@@ -39,12 +39,12 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'ACP_PHPBB_MEDIA_EMBED'				=> 'Médias intégrés aux messages',
-	'ACP_PHPBB_MEDIA_EMBED_MANAGE'		=> 'Gestion des services',
-	'ACP_PHPBB_MEDIA_EMBED_SETTINGS'	=> 'Paramètres',
+	'ACP_PHPBB_MEDIA_EMBED'          => 'Médias intégrés aux messages',
+	'ACP_PHPBB_MEDIA_EMBED_MANAGE'   => 'Gestion des services',
+	'ACP_PHPBB_MEDIA_EMBED_SETTINGS' => 'Paramètres',
 
 	// Log keys
-	'LOG_PHPBB_MEDIA_EMBED_CACHE_PURGED'=> '<strong>Cache des médias intégrés vidé</strong>',
-	'LOG_PHPBB_MEDIA_EMBED_MANAGE'		=> '<strong>Services des médias intégrés mis à jour</strong>',
-	'LOG_PHPBB_MEDIA_EMBED_SETTINGS'	=> '<strong>Paramètres des médias intégrés mis à jour</strong>',
+	'LOG_PHPBB_MEDIA_EMBED_CACHE_PURGED' => '<strong>Cache des médias intégrés vidé</strong>',
+	'LOG_PHPBB_MEDIA_EMBED_MANAGE'       => '<strong>Services des médias intégrés mis à jour</strong>',
+	'LOG_PHPBB_MEDIA_EMBED_SETTINGS'     => '<strong>Paramètres des médias intégrés mis à jour</strong>',
 ]);

@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -36,10 +36,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'DELETE_STYLES'				=> 'Removing custom styles',
-	'DELETE_STYLES_EXPLAIN'		=> 'All custom styles will be deleted. The standard <em> prosilver </em> style will be install if it has not been installed or removed before, and will also be set as default style for conference and for all users.. Продолжить?',
-	'NOT_EXISTS_ PROSILVER'		=> 'There are no <em> prosilver </em> style files. You must copy the <em> prosilver </em> folder from the installation package to the <em> styles </em> folder.',
-	'STYLE_UNINSTALL_SUCESS'	=> 'Style «%s» was successfully removed from the Database.',
-	'DELETE_STYLES_EMPTY'		=> 'No installed custom styles found.',
-));
+$lang = array_merge($lang, [
+	'DELETE_STYLES'          => 'Removing custom styles',
+	'DELETE_STYLES_EXPLAIN'  => 'All custom styles will be deleted. The standard <em> prosilver </em> style will be install if it has not been installed or removed before, and will also be set as default style for conference and for all users.. Продолжить?',
+	'NOT_EXISTS_ PROSILVER'  => 'There are no <em> prosilver </em> style files. You must copy the <em> prosilver </em> folder from the installation package to the <em> styles </em> folder.',
+	'STYLE_UNINSTALL_SUCESS' => 'Style «%s» was successfully removed from the Database.',
+	'DELETE_STYLES_EMPTY'    => 'No installed custom styles found.',
+]);

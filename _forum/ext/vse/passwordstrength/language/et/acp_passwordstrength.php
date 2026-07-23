@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -34,9 +34,9 @@ if (empty($lang) || !is_array($lang))
 // equally where a string contains only two placeholders which are used to wrap text
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
 
-$lang = array_merge($lang, array(
-	'PASSWORD_STRENGTH_TYPE'			=> 'Parooli tugevuse algoritm',
-	'PASSWORD_STRENGTH_TYPE_EXPLAIN'	=> 'Valige parooli tugevuse määramiseks algoritm.<br><strong>Keerukus</strong> otsib salasõnaga kus segatud märke, numbreid, sümboleid ja pikkust.<br><strong>zxcvbn</strong> (by DropBox) arvutab, kui hõlpsalt parooli võime arvata, võimaldades tugevaid kasutajasõbralikke paroole.',
-	'PASSWORD_STRENGTH_TYPE_COMPLEX'	=> 'Keerukus',
-	'PASSWORD_STRENGTH_TYPE_ZXCVBN'		=> 'zxcvbn algoritm',
-));
+$lang = array_merge($lang, [
+	'PASSWORD_STRENGTH_TYPE'         => 'Parooli tugevuse algoritm',
+	'PASSWORD_STRENGTH_TYPE_EXPLAIN' => 'Valige parooli tugevuse määramiseks algoritm.<br><strong>Keerukus</strong> otsib salasõnaga kus segatud märke, numbreid, sümboleid ja pikkust.<br><strong>zxcvbn</strong> (by DropBox) arvutab, kui hõlpsalt parooli võime arvata, võimaldades tugevaid kasutajasõbralikke paroole.',
+	'PASSWORD_STRENGTH_TYPE_COMPLEX' => 'Keerukus',
+	'PASSWORD_STRENGTH_TYPE_ZXCVBN'  => 'zxcvbn algoritm',
+]);

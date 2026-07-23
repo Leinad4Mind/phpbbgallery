@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,10 +38,10 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'FIX_LEFT_RIGHT_IDS'			=> 'Réparer les ID de droite et de gauche',
-	'FIX_LEFT_RIGHT_IDS_CONFIRM'	=> 'Confirmer la réparation des ID de droite et de gauche.<br /><br /><strong>Merci sauvegarder la base de données avant d’exécuter cet outil !</strong>',
+$lang = array_merge($lang, [
+	'FIX_LEFT_RIGHT_IDS'         => 'Réparer les ID de droite et de gauche',
+	'FIX_LEFT_RIGHT_IDS_CONFIRM' => 'Confirmer la réparation des ID de droite et de gauche.<br /><br /><strong>Merci sauvegarder la base de données avant d’exécuter cet outil !</strong>',
 
-	'LEFT_RIGHT_IDS_FIX_SUCCESS'	=> 'Les ID de droite et de gauche ont été réparés.',
-	'LEFT_RIGHT_IDS_NO_CHANGE'		=> 'L’outil a terminé le balayage de toutes les ID de droite et de gauche et toutes les lignes sont déjà correctes. Aucune modification n’a donc été apportée.',
-));
+	'LEFT_RIGHT_IDS_FIX_SUCCESS' => 'Les ID de droite et de gauche ont été réparés.',
+	'LEFT_RIGHT_IDS_NO_CHANGE'   => 'L’outil a terminé le balayage de toutes les ID de droite et de gauche et toutes les lignes sont déjà correctes. Aucune modification n’a donc été apportée.',
+]);

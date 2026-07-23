@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,8 +38,8 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'PST_TITLE_ACP'		=> 'Precise Similar Topics',
-	'PST_SETTINGS'		=> 'Liknande trådar inställningar',
-	'PST_LOG_MSG'		=> '<strong>Ändrade inställningar</strong>',
-));
+$lang = array_merge($lang, [
+	'PST_TITLE_ACP' => 'Precise Similar Topics',
+	'PST_SETTINGS'  => 'Liknande trådar inställningar',
+	'PST_LOG_MSG'   => '<strong>Ändrade inställningar</strong>',
+]);

@@ -282,7 +282,7 @@ Subject: {SUBJECT}
         </td>
       </tr>
       <tr>
-        <td style="padding: 10px 10px; width: 100%; font-family: sans-serif; font-size: 8px; line-height: 140%; text-align: center; color: #888888;" class="x-gmail-data-detectors">Está a receber este e-mail porque está inscrito no nosso fórum. <a href="{NEWSLETTER_ONLINE}" target="_blank">Vê aqui</a> que newsletters já recebeste ou remove o seu endereço eletrónico da nossa lista através do link <a href="{NEWSLETTER_OPTOUT}" target="_blank">remover subscrição</a>, caso pretendas.
+        <td style="padding: 10px 10px; width: 100%; font-family: sans-serif; font-size: 8px; line-height: 140%; text-align: center; color: #888888;" class="x-gmail-data-detectors">Você está recebendo este email porque está inscrito no nosso fórum. <a href="{NEWSLETTER_ONLINE}" target="_blank">Veja aqui</a> quais newsletters já recebeu ou remova o seu endereço de email da nossa lista através do link <a href="{NEWSLETTER_OPTOUT}" target="_blank">remover assinatura</a>, caso deseje.
         </td>
       </tr>
     </table>

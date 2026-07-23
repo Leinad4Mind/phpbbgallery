@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,24 +38,24 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'USER_OPTIONS'			=> 'Modifier les options des utilisateurs',
-	'USER_OPTIONS_EXPLAIN'	=> 'Sur cette page il est possible de modifier les paramètres utilisateur par défaut pour tous ou certains groupes sélectionnés.<br />Des informations plus détaillées peuvent être obtenues <a href="https://www.phpbb.com/support/docs/en/3.0/kb/article/changing-user-options-defaults-and-values/" target="_blank"><b>ici</b></a>.',
-	'NOTHING'				=> 'Ne pas modifier',
-	'USER_OPTIONS_OK'		=> 'Les paramètres des utilisateurs ont été modifiés avec succès.',
+$lang = array_merge($lang, [
+	'USER_OPTIONS'         => 'Modifier les options des utilisateurs',
+	'USER_OPTIONS_EXPLAIN' => 'Sur cette page il est possible de modifier les paramètres utilisateur par défaut pour tous ou certains groupes sélectionnés.<br />Des informations plus détaillées peuvent être obtenues <a href="https://www.phpbb.com/support/docs/en/3.0/kb/article/changing-user-options-defaults-and-values/" target="_blank"><b>ici</b></a>.',
+	'NOTHING'              => 'Ne pas modifier',
+	'USER_OPTIONS_OK'      => 'Les paramètres des utilisateurs ont été modifiés avec succès.',
 
-	'viewimg'				=> 'Afficher les images dans les messages',
-	'viewflash'				=> 'Afficher les animations Flash',
-	'viewsmilies'			=> 'Afficher les smileys comme les images',
-	'viewsigs'				=> 'Afficher les signatures dans les messages',
-	'viewavatars'			=> 'Afficher les avatars dans les messages',
-	'viewcensors'			=> 'Activer la censure',
-	'attachsig'				=> 'Activer par défaut la signature',
-	'bbcode'				=> 'Autoriser par défaut les BBCodes',
-	'smilies'				=> 'Activer par défaut les smileys',
-	'sig_bbcode'			=> 'Autoriser les BBCodes dans les signatures',
-	'sig_smilies'			=> 'Afficher les smileys comme les images dans les signatures',
-	'sig_links'				=> 'Transformer les adresses URL en liens dans les signatures',
+	'viewimg'     => 'Afficher les images dans les messages',
+	'viewflash'   => 'Afficher les animations Flash',
+	'viewsmilies' => 'Afficher les smileys comme les images',
+	'viewsigs'    => 'Afficher les signatures dans les messages',
+	'viewavatars' => 'Afficher les avatars dans les messages',
+	'viewcensors' => 'Activer la censure',
+	'attachsig'   => 'Activer par défaut la signature',
+	'bbcode'      => 'Autoriser par défaut les BBCodes',
+	'smilies'     => 'Activer par défaut les smileys',
+	'sig_bbcode'  => 'Autoriser les BBCodes dans les signatures',
+	'sig_smilies' => 'Afficher les smileys comme les images dans les signatures',
+	'sig_links'   => 'Transformer les adresses URL en liens dans les signatures',
 
-	'ALL_GROUPS'			=> 'Tous les groupes',
-));
+	'ALL_GROUPS' => 'Tous les groupes',
+]);

@@ -20,7 +20,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -39,7 +39,7 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ACL_F_MARK_ANSWER' => 'Может отмечать ответы в теме как лучшие',
 	'ACL_M_MARK_ANSWER' => 'Может отмечать ответы в теме как лучшие',
-));
+]);

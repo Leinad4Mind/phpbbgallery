@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,10 +38,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'DELETE_STYLES'				=> 'Suppression des styles personnalisés',
-	'DELETE_STYLES_EXPLAIN'		=> 'Permet de supprimer tous les styles additionnels installés. Le style par défaut « <em>prosilver</em> » sera réinstallé et défini par défaut pour le forum et tous ses utilisateurs. Cliquer pour confirmer cette action.',
-	'NOT_EXISTS_ PROSILVER'		=> 'Il n’y a aucun fichiers propres au style « <em>prosilver</em> ». Il est nécessaire d’envoyer les fichiers du style « <em>prosilver</em> » dans le répertoire « <em>./styles/prosilver/</em>.',
-	'STYLE_UNINSTALL_SUCESS'	=> 'Le style « %s » a été supprimé avec succès de la base de données du forum !',
-	'DELETE_STYLES_EMPTY'		=> 'Aucun style additionnel installé sur le forum n’a été trouvé.',
-));
+$lang = array_merge($lang, [
+	'DELETE_STYLES'          => 'Suppression des styles personnalisés',
+	'DELETE_STYLES_EXPLAIN'  => 'Permet de supprimer tous les styles additionnels installés. Le style par défaut « <em>prosilver</em> » sera réinstallé et défini par défaut pour le forum et tous ses utilisateurs. Cliquer pour confirmer cette action.',
+	'NOT_EXISTS_ PROSILVER'  => 'Il n’y a aucun fichiers propres au style « <em>prosilver</em> ». Il est nécessaire d’envoyer les fichiers du style « <em>prosilver</em> » dans le répertoire « <em>./styles/prosilver/</em>.',
+	'STYLE_UNINSTALL_SUCESS' => 'Le style « %s » a été supprimé avec succès de la base de données du forum !',
+	'DELETE_STYLES_EMPTY'    => 'Aucun style additionnel installé sur le forum n’a été trouvé.',
+]);

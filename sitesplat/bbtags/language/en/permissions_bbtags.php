@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,7 +37,7 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'ACL_U_BBTAGS'		=> 'Can manage BBtags',
-	'ACL_U_BBTAGS_READ'	=> 'Can see BBtags and can use BBtags search list',
-));
+$lang = array_merge($lang, [
+	'ACL_U_BBTAGS'      => 'Can manage BBtags',
+	'ACL_U_BBTAGS_READ' => 'Can see BBtags and can use BBtags search list',
+]);

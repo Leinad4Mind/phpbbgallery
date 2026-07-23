@@ -17,10 +17,10 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'BROWSER_NOTIFICATION_BADGE_URL'            => 'Absolute URL to the badge image for Push Notifications',
 	'BROWSER_NOTIFICATION_DROPDOWN'             => 'Integrate the toggle for browser Push Notifications into the standard dropdown for notifications',
 	'BROWSER_NOTIFICATION_DROPDOWN_EXPLAIN'     => 'The toggle for browser Push Notifications on the notification options management page will be shown regardless of this setting.',
@@ -30,4 +30,4 @@ $lang = array_merge($lang, array(
 	'BROWSER_NOTIFICATION_MAX_BROWSERS_EXPLAIN' => 'The user will not be able to turn on Push Notification for the board in any browser if the allowed amount of browsers with enabled Push Notifications has been reached. Enter 0 to disable this setting <em>(not recommended)</em>.',
 	'BROWSER_NOTIFICATION_TTL'                  => 'Time To Live for Web Notifications',
 	'BROWSER_NOTIFICATION_TTL_EXPLAIN'          => 'Time To Live (TTL) is how long a push message is retained by the push service (e.g. Mozilla) in case the user browser is not yet accessible (e.g. is not connected). You may want to use a very long time for important notifications. The default TTL is 4 weeks. However, if you send multiple nonessential notifications, set a TTL of 0: the push notification will be delivered only if the user is currently connected. For other cases, you should use a minimum of one day if your users have multiple time zones, and if they don’t, several hours will suffice.',
-));
+]);

@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -47,15 +47,15 @@ if (empty($lang) || !is_array($lang))
 *
 * Translators: Feel free to not translate these language strings
 */
-$lang = array_merge($lang, array(
-	'EXCEPTION_FIELD_MISSING'		=> 'שדה נדרש חסר',
-	'EXCEPTION_INVALID_ARGUMENT'	=> 'תוכן לא רלוונטי הוגדר עבור `%1$s`. סיבה: %2$s',
-	'EXCEPTION_OUT_OF_BOUNDS'		=> 'השדה `%1$s` קיבל מידע חורג',
-	'EXCEPTION_TOO_LONG'			=> 'התוכן באורך גדול מדי.',
-	'EXCEPTION_NOT_UNIQUE'			=> 'התוכן לא היה ייחודי.',
-	'EXCEPTION_UNEXPECTED_VALUE'	=> 'השדה `%1$s` קיבל מידע לא-צפוי. סיבה: %2$s',
-	'EXCEPTION_ILLEGAL_CHARACTERS'	=> 'התוכן הכיל תווים לא חוקיים.',
+$lang = array_merge($lang, [
+	'EXCEPTION_FIELD_MISSING'      => 'שדה נדרש חסר',
+	'EXCEPTION_INVALID_ARGUMENT'   => 'תוכן לא רלוונטי הוגדר עבור `%1$s`. סיבה: %2$s',
+	'EXCEPTION_OUT_OF_BOUNDS'      => 'השדה `%1$s` קיבל מידע חורג',
+	'EXCEPTION_TOO_LONG'           => 'התוכן באורך גדול מדי.',
+	'EXCEPTION_NOT_UNIQUE'         => 'התוכן לא היה ייחודי.',
+	'EXCEPTION_UNEXPECTED_VALUE'   => 'השדה `%1$s` קיבל מידע לא-צפוי. סיבה: %2$s',
+	'EXCEPTION_ILLEGAL_CHARACTERS' => 'התוכן הכיל תווים לא חוקיים.',
 
 	// Translators: do not change this
-	'EXCEPTION_WRONG_DATA_LANG'		=> $lang['WRONG_DATA_LANG'],
-));
+	'EXCEPTION_WRONG_DATA_LANG' => $lang['WRONG_DATA_LANG'],
+]);

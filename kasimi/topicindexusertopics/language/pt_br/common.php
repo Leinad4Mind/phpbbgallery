@@ -1,12 +1,10 @@
 <?php
 
 /**
- *
  * Topic Index - User Topics. An extension for the phpBB Forum Software package.
- *
  * @copyright (c) 2018 kasimi - https://kasimi.net
  * @license GNU General Public License, version 2 (GPL-2.0)
- *
+ * @translation Leinad4Mind [Brazilian Portuguese [pt_br]] (2026)
  */
 
 if (!defined('IN_PHPBB'))
@@ -36,11 +34,10 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	// On viewprofile
-	'TOPIC_INDEX_USER_TOPICS'			=> 'Meus Uploads',
-	'TOPIC_INDEX_USER_TOPICS_VIEW'		=> 'Ver os meus uploads',
-	'TOPIC_INDEX_TOPICS_SELF'		=> 'Seus Uploads',
+	'TOPIC_INDEX_USER_TOPICS'      => 'Índice de tópicos',
+	'TOPIC_INDEX_USER_TOPICS_VIEW' => 'Ver índice de tópicos',
 
 	// On topic index page
-	'TOPIC_INDEX_USER_TOPICS_FILTERING'	=> 'de %1$s',
-	'TOPIC_INDEX_USER_TOPICS_NO_FILTER' => 'Click to list all.',
+	'TOPIC_INDEX_USER_TOPICS_FILTERING' => 'Tópicos iniciados por %1$s.',
+	'TOPIC_INDEX_USER_TOPICS_NO_FILTER' => 'Clique para listar todos.',
 ]);

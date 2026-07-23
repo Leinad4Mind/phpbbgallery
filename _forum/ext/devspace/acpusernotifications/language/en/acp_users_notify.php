@@ -8,8 +8,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -38,8 +38,8 @@ if (empty($lang) || !is_array($lang))
  *
  */
 
-$lang = array_merge($lang, array(
-	'NOTIFICATIONS_UPDATED'	=> 'Notifications updated.',
-	'NOTIFY_EDIT'			=> 'Edit notification options',
-	'NOTIFY_EDIT_EXPLAIN'	=> 'Here you can set the notification options for a user.',
-));
+$lang = array_merge($lang, [
+	'NOTIFICATIONS_UPDATED' => 'Notifications updated.',
+	'NOTIFY_EDIT'           => 'Edit notification options',
+	'NOTIFY_EDIT_EXPLAIN'   => 'Here you can set the notification options for a user.',
+]);

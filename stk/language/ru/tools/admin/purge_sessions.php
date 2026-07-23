@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,8 +37,8 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'PURGE_SESSIONS'			=> 'Очистка сессий',
-	'PURGE_SESSIONS_COMPLETE'	=> 'Сеансы сессий были успешно очищены.',
-	'PURGE_SESSIONS_CONFIRM'	=> 'Это действие удалит все текущие сесии всех пользователей. Поле этого им заново придется авторизовываться на конференции. Вы уверены, что хотите продолжить работу этого инструмента?',
-));
+$lang = array_merge($lang, [
+	'PURGE_SESSIONS'          => 'Очистка сессий',
+	'PURGE_SESSIONS_COMPLETE' => 'Сеансы сессий были успешно очищены.',
+	'PURGE_SESSIONS_CONFIRM'  => 'Это действие удалит все текущие сесии всех пользователей. Поле этого им заново придется авторизовываться на конференции. Вы уверены, что хотите продолжить работу этого инструмента?',
+]);

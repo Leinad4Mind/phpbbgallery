@@ -1,0 +1,358 @@
+<?php
+
+/**
+ * @package cBB Blockgets for phpBB.
+ * @version 2.0.7 01/07/2024
+ * @copyright (c) 2024 CaniDev
+ * @license https://creativecommons.org/licenses/by-nc/4.0/
+ * @translation Leinad4Mind [Brazilian Portuguese [pt_br]] (2026)
+ */
+
+// @ignore
+if (!defined('IN_PHPBB'))
+{
+	exit;
+}
+
+if (empty($lang) || !is_array($lang))
+{
+	$lang = [];
+}
+
+// @acp_blockgets
+$lang = array_merge($lang, [
+	'BLG_CONFIG_TITLE'     => 'Configuração geral',
+	'BLG_CONFIG_EXPLAIN'   => 'Obrigado por escolher o cBB Blockgets como complemento para o seu fórum!<br />Aqui você pode definir as principais configurações da extensão.<br />Os links laterais permitem acessar todas as opções para configurar o mod com facilidade.',
+	'BLG_IMAGES_TITLE'     => 'Imagens disponíveis',
+	'BLG_OPTIONAL_TITLE'   => 'Configuração adicional',
+	'BLG_OPTIONAL_EXPLAIN' => 'Aqui você pode definir configurações adicionais para o site.',
+
+	'BLG_ADMIN_BAR'             => 'Exibir barra de acesso rápido',
+	'BLG_ADMIN_BAR_EXPLAIN'     => 'Se ativado, uma barra será exibida no topo do fórum, permitindo acessar rapidamente as opções da página em que você está.',
+	'BLG_BLOCK_AUTOFIT'         => 'Ajuste automático dos blocos',
+	'BLG_BLOCK_AUTOFIT_EXPLAIN' => 'Se ativado, o conteúdo e a disposição dos blocos serão ajustados à coluna.',
+	'BLG_COLLAPSE'              => 'Permitir recolher blocos',
+	'BLG_COLLAPSE_EXPLAIN'      => 'Ativa/desativa globalmente a possibilidade de cada usuário recolher/expandir blocos individualmente. Esta opção substitui a configuração individual do bloco.',
+	'BLG_FULL_EDITOR'           => 'Editor completo',
+	'BLG_ON_BOARD'              => 'Blocos dentro do fórum',
+	'BLG_ON_BOARD_EXPLAIN'      => 'Define se os blocos serão exibidos nas páginas do fórum. Esta opção substitui a configuração individual da página.<br /><br />
+		<em>
+			&nbsp;&nbsp;<strong>Não exibir:</strong> Não exibe blocos em nenhuma página.<br />
+			&nbsp;&nbsp;<strong>Páginas individuais:</strong> Exibe os blocos nas páginas configuradas para isso.<br />
+			&nbsp;&nbsp;<strong>Páginas iguais:</strong> Os blocos do "Índice Geral" são exibidos em todas as páginas.
+		</em>',
+	'BLG_REDIRECTIONS'         => 'Redirecionamentos',
+	'BLG_REDIRECT_404'         => 'Página não encontrada',
+	'BLG_REDIRECT_404_EXPLAIN' => 'Define a página para a qual o usuário será direcionado ao tentar acessar um local que não existe.<br />
+		<em>Substitui a mensagem No route found for "GET" do phpBB.</em>',
+	'BLG_REDIRECT_LOGIN'          => 'Login',
+	'BLG_REDIRECT_LOGIN_EXPLAIN'  => 'Define a página para a qual o usuário será direcionado após efetuar login no fórum.',
+	'BLG_REDIRECT_LOGOUT'         => 'Logout',
+	'BLG_REDIRECT_LOGOUT_EXPLAIN' => 'Define a página para a qual o usuário será direcionado ao se desconectar.',
+
+	'DEFAULT'              => 'Por padrão',
+	'LINKS'                => 'Links',
+	'OPEN_GALLERY'         => 'Abrir galeria',
+	'SAVE_AND_ADD'         => 'Salvar e adicionar mais',
+	'TYPE_DOMAIN_HOME'     => 'Página principal do domínio',
+	'TYPE_FORUM_HOME'      => 'Página principal do fórum',
+	'TYPE_FORUM_SECONDARY' => 'Página secundária do fórum',
+
+	'BOARD_BLOCK_INDIVIDUAL' => 'Páginas individuais',
+	'BOARD_BLOCK_NONE'       => 'Não exibir',
+	'BOARD_BLOCK_SAME'       => 'Páginas iguais',
+
+	'AVATAR_RESIZE_WIDTH'         => 'Tamanho dos avatares',
+	'AVATAR_RESIZE_WIDTH_EXPLAIN' => 'Tamanho máximo permitido (em pixels) para avatares.<br />
+		<em>Defina 0 para desativar o redimensionamento de avatares</em>.',
+	'CALENDAR_ENABLED'           => 'Calendário ativado',
+	'CALENDAR_ENABLED_EXPLAIN'   => 'Define se o calendário estará disponível tanto no <em>caminho /calendar</em> quanto nos blocos.',
+	'CALENDAR_BIRTHDAYS'         => 'Exibir aniversários',
+	'CALENDAR_BIRTHDAYS_EXPLAIN' => 'Se ativado, os aniversários dos usuários serão marcados e exibidos no calendário, como se fossem eventos.',
+	'CALENDAR_LINK'              => 'Link',
+	'CALENDAR_LINK_EXPLAIN'      => 'Define em qual parte do fórum aparecerá um link para o calendário.',
+	'CALENDAR_FIRST_DAY'         => 'Primeiro dia da semana',
+	'CALENDAR_FIRST_DAY_EXPLAIN' => 'Define o primeiro dia da semana no calendário.',
+	'COUNTER'                    => 'Contador de acessos',
+	'COUNTER_RESET'              => 'Reiniciar contador de acessos',
+	'COUNTER_RESET_EXPLAIN'      => 'Define as visitas para 0 e o início da contagem para a data atual.',
+	'HOME_TYPE_DISPLAY'          => 'Comportamento da página inicial',
+	'HOME_TYPE_DISPLAY_EXPLAIN'  => 'Define como a página inicial funcionará, se estiver ativada.',
+	'IMAGE_RESIZE'               => 'Redimensionar imagens',
+	'IMAGE_RESIZE_POST'          => 'Redimensionar imagens nas mensagens',
+	'IMAGE_RESIZE_POST_EXPLAIN'  => 'Ativa/desativa o redimensionamento das imagens dentro das mensagens do fórum.',
+	'IMAGE_RESIZE_WIDTH'         => 'Tamanho máximo das imagens',
+	'IMAGE_RESIZE_WIDTH_EXPLAIN' => 'Tamanho máximo (em pixels) para imagens. O padrão é 450.<br />
+		<em>Defina 0 para desativar o redimensionamento de imagens</em>.',
+
+	'INDEX_FILE_ERROR' => 'Falha ao concluir a configuração',
+]);
+
+// @acp_blockgets_lists
+$lang = array_merge($lang, [
+	'ADD_ITEM' => 'Adicionar item',
+	'CAT'      => 'Categoria',
+
+	'LINK'                     => 'Link',
+	'LINK_DESCRIPTION'         => 'Descrição',
+	'LINK_DESCRIPTION_EXPLAIN' => 'Este texto será exibido em alguns blocos como informação adicional do link.',
+	'LINK_GROUP'               => 'Grupos',
+	'LINK_GROUP_EXPLAIN'       => 'Selecione os grupos de usuários que podem ver este link no menu.<br />Você pode selecionar vários grupos usando a tecla <em>Ctrl</em> do teclado.',
+	'LINK_IMG'                 => 'Imagem',
+	'LINK_TITLE'               => 'Título do link',
+	'LINK_TITLE_EXPLAIN'       => 'Título que identifica o link. Limite de 100 caracteres.',
+	'LINK_TYPE'                => 'Tipo de link',
+	'LINK_URL'                 => 'URL do link',
+	'LINK_URL_EXPLAIN'         => 'O endereço que abre ao clicar no link. Limite de 255 caracteres.',
+	'LINK_WINDOW'              => 'Abrir em nova janela',
+]);
+
+// @acp_blockgets_pages
+$lang = array_merge($lang, [
+	'ADD_BLOCK'               => 'Adicionar bloco',
+	'ADD_BLOCK_TIP'           => 'Arraste um bloco para a posição em que deseja adicioná-lo.',
+	'ADD_BLOCK_TITLE'         => 'Adicionar bloco :: %1$s',
+	'ADD_BLOCK_TITLE_EXPLAIN' => 'Aqui você pode adicionar um novo bloco ao seu fórum e definir sua configuração. Você também pode definir configurações adicionais, caso o bloco necessite.',
+	'ADD_GROUP'               => 'Adicionar grupo',
+	'ADD_GROUP_EXPLAIN'       => 'Arraste este botão até a posição desejada para adicionar um grupo',
+	'ADVANCED_OPTIONS'        => 'Opções avançadas',
+
+	'BLOCK_SETTINGS'           => 'Opções gerais do bloco',
+	'BLOCK_SPACE'              => 'Espaço entre blocos',
+	'BLOCK_SPACE_EXPLAIN'      => 'Valor em pixels ou porcentagem. O valor mínimo é 1.',
+	'BOTTOM_COLUMN'            => 'Coluna inferior',
+	'CENTER_COLUMN'            => 'Coluna central',
+	'CHG_GROUPS_BLOCK'         => 'Alterar permissões',
+	'CHG_GROUP_EXPLAIN'        => 'Escolha os grupos que podem ver os blocos selecionados',
+	'COLUMN_SETTINGS'          => 'Opções das colunas',
+	'COPY_BLOCK'               => 'Copiar para outra página',
+	'DELETE_BLOCK_CONFIRM'     => 'Tem certeza de que deseja excluir os blocos selecionados?',
+	'DISABLE_BLOCK'            => 'Desativar',
+	'EDIT_BLOCK_TITLE'         => 'Editar bloco :: %1$s',
+	'EDIT_BLOCK_TITLE_EXPLAIN' => 'Aqui você pode editar a configuração do bloco, assim como as configurações adicionais, caso o bloco necessite.',
+	'ENABLE_BLOCK'             => 'Ativar',
+	'EXT_ROUTES'               => 'Rotas da extensão',
+	'FILTER_TYPE_GET'          => 'Url (GET)',
+	'FILTER_TYPE_POST'         => 'Formulário (POST)',
+	'FORUM_ROUTES'             => 'Rotas do fórum',
+	'LEFT_COLUMN'              => 'Coluna esquerda',
+	'LEFT_COLUMN_EXPLAIN'      => 'Largura da coluna esquerda em pixels ou porcentagem.<br />Defina 0 para desativar a coluna.',
+	'LINK_BOTTOM'              => 'Inferior',
+	'LINK_QUICK'               => 'Links rápidos',
+	'LINK_NONE'                => 'Sem link',
+	'LINK_TOP'                 => 'Superior',
+	'MANAGE_PAGE'              => 'Gerenciar página',
+	'MOVE_BLOCK'               => 'Mover para outra página',
+	'NO_PAGES_CREATED'         => 'Nenhuma página criada.',
+	'NO_PAGE_FILTERS'          => 'Sem filtros',
+
+	'PAGE'                       => 'Página',
+	'PAGE_ADD'                   => 'Nova página',
+	'PAGE_ALIAS'                 => 'Alias da página',
+	'PAGE_ALIAS_EXPLAIN'         => 'Você pode definir um alias (letras, números e traços) para criar uma página separada.<br />Se deixar este campo em branco, será criada uma página separada e o ID será usado como alias.',
+	'PAGE_ALIAS_ERROR'           => 'O valor inserido no campo "Alias da página" contém caracteres inválidos ou um caminho inválido.',
+	'PAGE_BACKGROUND'            => 'Plano de fundo da página',
+	'PAGE_BACKGROUND_EXPLAIN'    => 'Você pode definir uma cor (ex. white, #FFFFFF) ou uma imagem (ex. http://meudominio.com/imagem.jpg). Deixe este campo em branco para usar o plano de fundo padrão.',
+	'PAGE_CUSTOM'                => 'Páginas personalizadas',
+	'PAGE_CUSTOM_EXPLAIN'        => 'Estas são páginas criadas por você ou por outro administrador deste site. Você pode adicionar, editar e gerenciar quantas páginas desejar.',
+	'PAGE_CUSTOM_ONE'            => 'Página personalizada',
+	'PAGE_DESCRIPTION'           => 'Descrição SEO',
+	'PAGE_DESCRIPTION_EXPLAIN'   => 'Define uma descrição visível para os mecanismos de busca.<br /><em>Google, bing, etc...</em>',
+	'PAGE_ENABLED'               => 'Página ativada',
+	'PAGE_ENABLED_EXPLAIN'       => 'Ativa ou desativa completamente as funções da página. Esta opção substitui todas as outras.',
+	'PAGE_FILTERS'               => 'Filtros',
+	'PAGE_FILTERS_EXPLAIN'       => 'Defina os parâmetros necessários (GET e POST) para que a página seja carregada.<br />Consulte a <strong>Documentação Online</strong> para mais informações sobre como definir esses filtros.',
+	'PAGE_FILTER_PARAM'          => 'Parâmetros',
+	'PAGE_FILTER_PARAM_EXPLAIN'  => 'Você pode definir quantos quiser, separados por ","<br />Ex: mode=mymode,style=1',
+	'PAGE_FILTER_TYPE'           => 'Tipo',
+	'PAGE_FILTER_TYPE_EXPLAIN'   => 'Selecione o tipo de parâmetros de localização.',
+	'PAGE_FORUM'                 => 'Páginas dentro do fórum',
+	'PAGE_FORUM_EXPLAIN'         => 'Estas são páginas pertencentes ao fórum às quais você pode adicionar blocos. Você pode gerenciar e editar seus parâmetros principais, assim como nas páginas personalizadas.',
+	'PAGE_GROUP'                 => 'Grupos',
+	'PAGE_GROUP_EXPLAIN'         => 'Escolha os grupos que podem ver os blocos desta página.<br />Você pode selecionar vários grupos usando a <em>tecla Ctrl</em> do teclado.',
+	'PAGE_HOME'                  => 'Página inicial',
+	'PAGE_HOME_EXPLAIN'          => 'Esta é uma página projetada para ser usada como página inicial do site, como um "Portal".',
+	'PAGE_LINK'                  => 'Link',
+	'PAGE_LINK_ICON'             => 'Ícone do link',
+	'PAGE_LINK_ICON_EXPLAIN'     => 'Define o ícone que o link para esta página terá.',
+	'PAGE_LINK_POSITION'         => 'Posição do link',
+	'PAGE_LINK_POSITION_EXPLAIN' => 'Define em qual parte do fórum aparecerá um link para esta página.',
+	'PAGE_LOGO'                  => 'Logotipo',
+	'PAGE_LOGO_EXPLAIN'          => 'Define a url da imagem a ser usada como logotipo.<br />Deixe em branco para usar o logotipo padrão.',
+	'PAGE_STYLE'                 => 'Estilo',
+	'PAGE_STYLE_EXPLAIN'         => 'Define o estilo a ser usado na página.<br /><em>Esta opção não será aplicada às páginas originais do fórum.</em>',
+	'PAGE_STYLESHEET'            => 'Tema personalizado',
+	'PAGE_STYLESHEET_EXPLAIN'    => 'Você pode definir o caminho para um ou mais arquivos *.css (um por linha) ou definir diretamente as variáveis do tema que será usado.',
+	'PAGE_THEME'                 => 'Tema',
+	'PAGE_THEME_BACKGROUND'      => 'Definir plano de fundo',
+	'PAGE_THEME_DEFAULT'         => 'Usar configuração padrão',
+	'PAGE_THEME_STYLE'           => 'Definir estilo',
+	'PAGE_THEME_STYLESHEET'      => 'Usar tema personalizado',
+	'PAGE_TITLE'                 => 'Título da página',
+	'PAGE_TITLE_EXPLAIN'         => 'O título será exibido no navegador.',
+	'PAGE_URL'                   => 'Url da página',
+
+	'PAGES_ADD_TITLE'            => 'Adicionar nova página',
+	'PAGES_ADD_TITLE_EXPLAIN'    => 'Aqui você pode adicionar uma nova página e definir a configuração e aparência personalizadas.',
+	'PAGES_BLOCKS_TITLE'         => 'Gerenciar blocos :: %s',
+	'PAGES_BLOCKS_TITLE_EXPLAIN' => 'Aqui você pode criar/editar/excluir blocos a serem exibidos nesta página.<br />
+		Os blocos podem ser divididos em cinco colunas (esquerda, centro, direita, superior e inferior). Arraste os blocos para alterar sua posição.<br />
+		Você também pode adicionar <strong>grupos</strong> que permitirão posicionar blocos em até 3 colunas de forma independente.',
+	'PAGES_EDIT_TITLE'           => 'Editar página :: %s',
+	'PAGES_EDIT_TITLE_EXPLAIN'   => 'Aqui você pode editar a configuração principal e a aparência da página.',
+	'PAGES_SELECT_TITLE_EXPLAIN' => 'Selecione a página a ser gerenciada.',
+	'PAGES_TITLE'                => 'Gerenciar páginas',
+	'PAGES_TITLE_EXPLAIN'        => 'Aqui você pode criar/editar/excluir páginas adicionais para o seu fórum. Você também pode editar a configuração e os blocos nas páginas predefinidas.',
+
+	'RIGHT_COLUMN'         => 'Coluna direita',
+	'RIGHT_COLUMN_EXPLAIN' => 'Largura da coluna direita em pixels ou porcentagem.<br />Defina 0 para desativar a coluna.',
+	'SHOW_FOOTER'          => 'Exibir rodapé',
+	'SHOW_FOOTER_EXPLAIN'  => 'Esta opção permite decidir se o rodapé do fórum será exibido nesta página.',
+	'SHOW_HEADER'          => 'Exibir cabeçalho',
+	'SHOW_HEADER_EXPLAIN'  => 'Esta opção permite decidir se o cabeçalho do fórum será exibido nesta página.',
+	'STYLE_DEFAULT'        => 'Estilo padrão',
+	'STYLE_ALTERNATIVE'    => 'Estilo alternativo',
+	'STYLE_CONTENT_FULL'   => 'Somente conteúdo (com título)',
+	'STYLE_CONTENT_SIMPLE' => 'Somente conteúdo (sem título)',
+	'SUBMIT_CHANGES'       => 'Aplicar alterações',
+	'TARGET_PAGE_EXPLAIN'  => 'Selecione a página de destino para os blocos selecionados.<br /><em>Os blocos serão posicionados em sua respectiva coluna</em>',
+	'TOP_COLUMN'           => 'Coluna superior',
+]);
+
+// @general messages
+$lang = array_merge($lang, [
+	'BLOCK_ADDED'                => 'Bloco adicionado com sucesso',
+	'BLOCK_COPIED'               => 'Bloco(s) copiado(s) com sucesso',
+	'BLOCK_NEED_REQUIREMENTS'    => 'O bloco selecionado precisará de alguns requisitos mínimos para ser usado.<br />Consulte a documentação para mais informações.',
+	'BLOCK_MOVED'                => 'Bloco(s) movido(s) com sucesso',
+	'BLOCK_NOT_ADDED'            => 'Erro ao adicionar o bloco',
+	'BLOCK_NOT_EXISTS'           => 'O bloco selecionado não existe',
+	'BLOCK_NOT_UPDATED'          => 'Erro ao atualizar o bloco',
+	'BLOCK_POSITION_UPDATED'     => 'Posição dos blocos atualizada com sucesso',
+	'BLOCK_POSITION_NOT_UPDATED' => 'Erro ao atualizar a posição dos blocos',
+	'BLOCK_REMOVED'              => 'Bloco(s) removido(s) com sucesso',
+	'BLOCK_UPDATED'              => 'Bloco atualizado com sucesso',
+	'GROUPS_CHANGED'             => 'Grupos atualizados com sucesso',
+
+	'ITEM_REMOVED'     => 'Elemento removido com sucesso',
+	'ITEM_UPDATED'     => 'Elemento atualizado com sucesso',
+	'ITEM_ADDED'       => 'Elemento adicionado com sucesso',
+	'ITEM_NOT_ADDED'   => 'Erro ao adicionar o elemento',
+	'ITEM_NOT_UPDATED' => 'Erro ao atualizar o elemento',
+
+	'PAGE_ADDED' => 'Página adicionada com sucesso',
+
+	'PAGE_REMOVED' => [
+		1 => 'A página foi removida com sucesso',
+		2 => '%d páginas excluídas com sucesso',
+	],
+
+	'PAGE_UPDATED'       => 'Configuração da página atualizada com sucesso',
+	'BLG_CONFIG_UPDATED' => 'Configuração atualizada com sucesso',
+
+	'CONFIRM_PAGE_DELETE' => 'Tem certeza de que deseja excluir esta página e todos os blocos nela?',
+]);
+
+/**
+* Blocks names and explains from block_alias
+*/
+$lang = array_merge($lang, [
+	'blocks' => [
+		'announcements_title'      => 'Anúncios',
+		'announcements_explain'    => 'Exibe um número definido de mensagens (anúncios) dos fóruns estabelecidos.',
+		'attachments_title'        => 'Anexos',
+		'attachments_explain'      => 'Exibe informações e links para os anexos especificados.',
+		'banners_title'            => 'Banners',
+		'banners_explain'          => 'Exibe a lista especificada de banners. É exibida de forma fixa ou em rolagem.',
+		'birthdays_title'          => 'Aniversários',
+		'birthdays_explain'        => 'Exibe a lista de aniversários de hoje e dos próximos dias (opcional).',
+		'empty_title'              => 'Personalizado',
+		'empty_explain'            => 'Bloco totalmente em branco que também pode incluir qualquer texto HTML, CSS, JavaScript, etc...',
+		'calendar_title'           => 'Calendário',
+		'calendar_explain'         => 'Calendário no qual você pode adicionar eventos personalizados e exibir aniversários.',
+		'clock_title'              => 'Relógio',
+		'clock_explain'            => 'Exibe um relógio em formato flash (você pode escolher vários modelos e adicionar seu próprio relógio).',
+		'cloud_tag_title'          => 'Nuvem de tags',
+		'cloud_tag_explain'        => 'Exibe amostras de rótulos em um balão em formato flash. Você pode exibir as últimas palavras pesquisadas ou os usuários com mais mensagens.',
+		'contact_title'            => 'Contato',
+		'contact_explain'          => 'Exibe um formulário de contato padrão.',
+		'countdown_title'          => 'Contagem regressiva',
+		'countdown_explain'        => 'Exibe uma contagem regressiva até a data indicada.',
+		'counter_title'            => 'Contador de acessos',
+		'counter_explain'          => 'Exibe um contador de acessos com estatísticas de visitas, visitas por dia, visitas por hora, visitas semanais, visitas por mês e visitas por ano.',
+		'dockmenu_title'           => 'Menu Dock',
+		'dockmenu_explain'         => 'Exibe um menu com estilo Mac Dock com elementos da lista especificada.',
+		'forums_title'             => 'Fóruns',
+		'forums_explain'           => 'Lista com fóruns completos ou personalizados.',
+		'frame_title'              => 'Frame',
+		'frame_explain'            => 'Exibe uma página Web, um arquivo PDF, um arquivo Flash ou um arquivo de texto dentro do bloco.',
+		'gallery_title'            => 'Galeria de fotos',
+		'gallery_explain'          => 'Galeria de fotos personalizável com imagens do fórum (anexos) ou imagens externas. As imagens se movem e cada uma vincula ao seu destino.',
+		'google_translate_title'   => 'Google tradutor',
+		'google_translate_explain' => 'Bloco que permite traduzir a página em que está instalado, abrindo uma nova janela e traduzindo-a através da tecnologia do Google.',
+		'language_select_title'    => 'Seleção de idioma',
+		'language_select_explain'  => 'Permite ao usuário visualizar o fórum em qualquer idioma instalado no fórum e defini-lo como seu idioma padrão.',
+		'latest_bots_title'        => 'Visitas de bots',
+		'latest_bots_explain'      => 'Lista simples dos últimos bots que entraram no fórum e a data de sua última visita.',
+		'latest_members_title'     => 'Membros mais recentes',
+		'latest_members_explain'   => 'Lista dos usuários mais recentes registrados no fórum e a data em que foram registrados.',
+		'leaders_title'            => 'Líderes',
+		'leaders_explain'          => 'Exibe uma lista de grupos (personalizável) com os líderes do fórum.',
+		'link_us_title'            => 'Link para nós',
+		'link_us_explain'          => 'Bloco que exibe um link selecionável pelo usuário para a página em que está instalado. Você pode definir um mini banner anexado ao link.',
+		'login_title'              => 'Login',
+		'login_explain'            => 'Permite que um usuário efetue login diretamente pelo bloco. Uma vez identificado, exibe as informações e links principais do usuário.',
+		'map_title'                => 'Mapa',
+		'map_explain'              => 'Exibe um mapa que pode conter marcações com diferentes localizações.',
+		'menu_title'               => 'Menu',
+		'menu_explain'             => 'Menu em formato de árvore que exibe itens da lista selecionada.',
+		'most_poster_title'        => 'Mais postadores',
+		'most_poster_explain'      => 'Exibe um menu suspenso com os usuários que mais postaram mensagens no fórum, e informações mais relevantes.',
+		'news_title'               => 'Notícias',
+		'news_explain'             => 'Menu suspenso exibindo as últimas mensagens dos fóruns especificados como notícias.',
+		'online_friends_title'     => 'Amigos online',
+		'online_friends_explain'   => 'Lista simples de amigos e inimigos do usuário que estão conectados ao fórum.',
+		'paypal_title'             => 'Doações',
+		'paypal_explain'           => 'Permite que os usuários doem dinheiro através do PayPal.',
+		'player_title'             => 'Player de música',
+		'player_explain'           => 'Player para reproduzir músicas em formato MP3 ou WAV. Permite criar uma lista de músicas ou usar playlists M3U, ASX ou PLS.',
+		'poll_title'               => 'Enquete',
+		'poll_explain'             => 'Exibe uma única enquete especificada em sua configuração.',
+		'poll_random_title'        => 'Enquete (aleatória)',
+		'poll_random_explain'      => 'Exibe um número selecionado de enquetes escolhidas em ordem aleatória, dentro do fórum especificado.',
+		'post_view_title'          => 'Mensagem do fórum',
+		'post_view_explain'        => 'Exibe o conteúdo de uma mensagem. Você pode exibir a última mensagem de um fórum, a primeira ou última mensagem de um tópico ou uma mensagem personalizada.',
+		'quote_of_day_title'       => 'Citação do dia',
+		'quote_of_day_explain'     => 'Exibe uma "citação" ou frase do dia, ou uma dica diferente a cada visita à página.',
+		'random_member_title'      => 'Membro aleatório',
+		'random_member_explain'    => 'Exibe informações básicas e o avatar de um usuário aleatório.',
+		'ranks_title'              => 'Classificações',
+		'ranks_explain'            => 'Exibe uma lista com as classificações do fórum.',
+		'recent_topics_title'      => 'Tópicos recentes',
+		'recent_topics_explain'    => 'Tópicos recentes do fórum. Permite selecionar os fóruns dos quais os tópicos serão lidos.',
+		'rss_title'                => 'Leitor RSS',
+		'rss_explain'              => 'Exibe os últimos artigos dos feeds RSS especificados. Os itens serão exibidos em modo de rolagem ou acordeão.',
+		'share_title'              => 'Compartilhar',
+		'share_explain'            => 'Exibe os botões das redes sociais mais populares no formato desejado.',
+		'search_title'             => 'Pesquisa',
+		'search_explain'           => 'Permite que os usuários façam pesquisas rápidas no fórum ou em um mecanismo de busca.',
+		'scroll_message_title'     => 'Letreiro',
+		'scroll_message_explain'   => 'Mensagem de texto que rola no bloco. Permite o uso de BBCode e HTML no texto.',
+		'stats_title'              => 'Estatísticas',
+		'stats_explain'            => 'Obtém as informações mais relevantes do fórum. Este bloco exibe o número de novas mensagens e tópicos, o número total de mensagens e tópicos, estatísticas de mensagens e tópicos escritos por dia, o número total de anexos e o número de usuários que permanecem ativos (postando mensagens).',
+		'steam_title'              => 'Steam',
+		'steam_explain'            => 'Exibe informações sobre o grupo do Steam.',
+		'style_select_title'       => 'Seleção de estilo',
+		'style_select_explain'     => 'Permite ao usuário visualizar o fórum com qualquer estilo instalado no fórum e defini-lo como seu estilo padrão.',
+		'top_topics_title'         => 'Melhores tópicos',
+		'top_topics_explain'       => 'Lista de tópicos personalizada que pode exibir os últimos tópicos não lidos, os tópicos mais ativos ou os tópicos mais visualizados.',
+		'topic_index_title'        => 'Índice de tópicos',
+		'topic_index_explain'      => 'Exibe uma lista ordenada com os tópicos dos fóruns selecionados. A lista pode ser ordenada por título do tópico, data do tópico ou data da última mensagem do tópico.',
+		'welcome_title'            => 'Boas-vindas',
+		'welcome_explain'          => 'Este bloco permite uma mensagem de boas-vindas diferente para visitantes e usuários registrados. O bloco decidirá qual mensagem exibir.',
+		'whos_online_title'        => 'Quem está online',
+		'whos_online_explain'      => 'Exibe a lista de usuários conectados (como é exibido por padrão no Índice do fórum) e os usuários que fizeram login nas últimas 24 horas.',
+		'youtube_title'            => 'YouTube',
+		'youtube_explain'          => 'Exibe vídeos ou canais do YouTube.',
+	]
+]);

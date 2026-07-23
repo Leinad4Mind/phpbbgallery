@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -38,14 +38,14 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'MODE'						=> 'Mode',
-	'ELEMENTS'					=> 'Elements',
-	'FORM_NAME'					=> 'Forum Name',
-	'FORUM_ID'					=> 'Forum ID',
-	'ACP_FORM_CURRENT'		 	=> 'Update Current Form',
-	'ACP_FORM_CREATOR'			=> 'Form Creator',
-	'ACP_FORM_CREATOR_EXPLAIN'	=> 'With this tool you can create and manage forms for your forum.',
-	'ACP_FORM_EXT_NOTE'			=> '<br><strong>Note:</strong> All actions are performed on the currently selected/displayed form, no confirm is implemented...',
+	'MODE'                     => 'Mode',
+	'ELEMENTS'                 => 'Elements',
+	'FORM_NAME'                => 'Forum Name',
+	'FORUM_ID'                 => 'Forum ID',
+	'ACP_FORM_CURRENT'         => 'Update Current Form',
+	'ACP_FORM_CREATOR'         => 'Form Creator',
+	'ACP_FORM_CREATOR_EXPLAIN' => 'With this tool you can create and manage forms for your forum.',
+	'ACP_FORM_EXT_NOTE'        => '<br><strong>Note:</strong> All actions are performed on the currently selected/displayed form, no confirm is implemented...',
 
 	'ACP_FORM_CREATOR_FAQ' => '<strong>How to begin?</strong><br>
 									&nbsp; &bull; You just need to first select the forum where you will want to create the form.<br>
@@ -114,30 +114,30 @@ $lang = array_merge($lang, [
 									<strong>&#8730;</strong> The checkmark character indicates the item is mandatory and cannot be empty, so it will force the user to fill it.<br>
 									<strong><i class="fa fa-eye" aria-hidden="true"></i></strong> The eye character indicates the entry name of that item will not be imported to the post submitted.<br>',
 
-	'CURRENT_FORUM'			 	=> 'Current Forum',
-	'FORM_ADD_ITEM'				=> 'Add a new form element',
-	'FORM_CHECKBOX'				=> 'Check Box',
-	'FORM_DETAILS'			 	=> 'All forms use a generic template file: styles/YOUR_STYLE/template/forms/form_creator.html',
-	'FORM_ELEMENT_TYPE'					=> 'Element type',
-	'FORM_ELEMENT_HINT'					=> 'Hint',
-	'FORM_ELEMENT_OPTIONS_SEPARATOR'	=> 'Options separator',
-	'FORM_ELEMENT_NAME_VISIBLE'			=> 'Display/hide the element name on the final form.',
-	'FORM_ELEMENT_NAME'					=> 'Entry Name',
-	'FORM_ELEMENT_EXPLAIN'				=> 'Entry Explain',
-	'FORM_ELEMENT_NAME_EXPLAIN'			=> 'Entry Name/Explain',
-	'FORM_ELEMENT_OPTIONS'				=> 'Options',
-	'FORM_ELEMENT_MIN_MAX'				=> 'Min/Max',
-	'FORM_ELEMENT_MIN'					=> 'Min',
-	'FORM_ELEMENT_MAX'					=> 'Max',
-	'FORM_ELEMENT_NAME_BEFORE_AFTER'	=> 'Name before/after',
-	'FORM_ELEMENT_VALUE_BEFORE_AFTER'	=> 'Value before/after',
-	'FORM_EMAILBOX'				=> 'Email',
-	'FORM_INPUTBOX'				=> 'Text',
-	'FORM_CREATOR_ACP_RETURN'	=> 'Back to manage forms',
-	'FORM_MANAGE'				=> 'Manage this form',
-	'FORM_MANAGE_EXPLAIN'		=> 'Here you can modify all of the current form elements, simply edit fields and press the <strong>Update</strong> button...',
+	'CURRENT_FORUM'                   => 'Current Forum',
+	'FORM_ADD_ITEM'                   => 'Add a new form element',
+	'FORM_CHECKBOX'                   => 'Check Box',
+	'FORM_DETAILS'                    => 'All forms use a generic template file: styles/YOUR_STYLE/template/forms/form_creator.html',
+	'FORM_ELEMENT_TYPE'               => 'Element type',
+	'FORM_ELEMENT_HINT'               => 'Hint',
+	'FORM_ELEMENT_OPTIONS_SEPARATOR'  => 'Options separator',
+	'FORM_ELEMENT_NAME_VISIBLE'       => 'Display/hide the element name on the final form.',
+	'FORM_ELEMENT_NAME'               => 'Entry Name',
+	'FORM_ELEMENT_EXPLAIN'            => 'Entry Explain',
+	'FORM_ELEMENT_NAME_EXPLAIN'       => 'Entry Name/Explain',
+	'FORM_ELEMENT_OPTIONS'            => 'Options',
+	'FORM_ELEMENT_MIN_MAX'            => 'Min/Max',
+	'FORM_ELEMENT_MIN'                => 'Min',
+	'FORM_ELEMENT_MAX'                => 'Max',
+	'FORM_ELEMENT_NAME_BEFORE_AFTER'  => 'Name before/after',
+	'FORM_ELEMENT_VALUE_BEFORE_AFTER' => 'Value before/after',
+	'FORM_EMAILBOX'                   => 'Email',
+	'FORM_INPUTBOX'                   => 'Text',
+	'FORM_CREATOR_ACP_RETURN'         => 'Back to manage forms',
+	'FORM_MANAGE'                     => 'Manage this form',
+	'FORM_MANAGE_EXPLAIN'             => 'Here you can modify all of the current form elements, simply edit fields and press the <strong>Update</strong> button...',
 
-	'FORM_NEW_ITEM_EXPLAIN'		=> '<pre style="font-size:11px; line-height: 100%;"><strong><u>Form Elements Supported</u></strong><br>
+	'FORM_NEW_ITEM_EXPLAIN' => '<pre style="font-size:11px; line-height: 100%;"><strong><u>Form Elements Supported</u></strong><br>
 									<strong>Inputbox:</strong>		Up to 255 characters<br>
 									<strong>Textbox:</strong>	 	Multiple lines of text arranged as 3 rows by 76 columns.<br>
 									<strong>Checkbox:</strong>		One or more options can be selected.<br>
@@ -153,33 +153,33 @@ $lang = array_merge($lang, [
 									<strong>Separator:</strong>			Only for form layout customization.<br>
 									<br></pre>',
 
-	'FORM_NO_FORM'			 	=> 'There are no forms assigned to: <strong>%s</strong>...<br>To add a new form to this forum, simply add a form element below...',
-	'FORM_RADIOBOX'				=> 'Radio Buttons',
-	'FORM_PASSWORDBOX'			=> 'Password',
-	'FORM_SELECTBOX'			=> 'Select Box',
-	'FORM_TXTBOX'				=> 'Text Box',
-	'FORM_URLBOX'				=> 'URL',
-	'FORM_ATTACH'				=> 'Attachment',
-	'FORM_NUMBER'				=> 'Number',
-	'FORM_DATE'					=> 'Date',
-	'FORM_TIME'					=> 'Time',
-	'FORM_SEPARATOR'			=> 'Separator',
-	'HIDE_FORM_INFO'			=> 'Hide info',
-	'HIDE_PREVIEW'			 	=> 'Hide Preview',
-	'HIDE_COPY'				 	=> 'Hide copy form',
-	'HOW_TO'					=> '<strong>Additional Help...</strong>',
-	'HOW_TO_MORE'				=> 'More info...',
-	'HOW_TO_HIDE'				=> '<strong>Hide</strong>',
-	'NDX'						=> 'NDX',
-	'NDX_ORDER'					=> 'Index order (the order in which items appear on the form)',
-	'FORMS_MOD_SAMPLE'		 	=> 'Rendering the current form to assist visualization only... not a working form.',
-	'SHOW_FORM_INFO'			=> 'More info on Element types',
-	'SHOW_PREVIEW'			 	=> 'Preview the form',
-	'SHOW_COPY'					=> 'Copy form',
-	'COPY_FORM'					=> 'Copy form to selected forums',
-	'COPY_FORM_EXPLAIN'			=> 'This will delete all existing form elements in the selected destination forums!',
-	'COPY_FORM_SUCCESS'			=> 'The form elements have been copied to all selected forums.',
+	'FORM_NO_FORM'      => 'There are no forms assigned to: <strong>%s</strong>...<br>To add a new form to this forum, simply add a form element below...',
+	'FORM_RADIOBOX'     => 'Radio Buttons',
+	'FORM_PASSWORDBOX'  => 'Password',
+	'FORM_SELECTBOX'    => 'Select Box',
+	'FORM_TXTBOX'       => 'Text Box',
+	'FORM_URLBOX'       => 'URL',
+	'FORM_ATTACH'       => 'Attachment',
+	'FORM_NUMBER'       => 'Number',
+	'FORM_DATE'         => 'Date',
+	'FORM_TIME'         => 'Time',
+	'FORM_SEPARATOR'    => 'Separator',
+	'HIDE_FORM_INFO'    => 'Hide info',
+	'HIDE_PREVIEW'      => 'Hide Preview',
+	'HIDE_COPY'         => 'Hide copy form',
+	'HOW_TO'            => '<strong>Additional Help...</strong>',
+	'HOW_TO_MORE'       => 'More info...',
+	'HOW_TO_HIDE'       => '<strong>Hide</strong>',
+	'NDX'               => 'NDX',
+	'NDX_ORDER'         => 'Index order (the order in which items appear on the form)',
+	'FORMS_MOD_SAMPLE'  => 'Rendering the current form to assist visualization only... not a working form.',
+	'SHOW_FORM_INFO'    => 'More info on Element types',
+	'SHOW_PREVIEW'      => 'Preview the form',
+	'SHOW_COPY'         => 'Copy form',
+	'COPY_FORM'         => 'Copy form to selected forums',
+	'COPY_FORM_EXPLAIN' => 'This will delete all existing form elements in the selected destination forums!',
+	'COPY_FORM_SUCCESS' => 'The form elements have been copied to all selected forums.',
 
-	'SHOW_FORM_DEFAULT'			=> 'Show form by default',
-	'FORCE_FORM'				=> 'Force form',
+	'SHOW_FORM_DEFAULT' => 'Show form by default',
+	'FORCE_FORM'        => 'Force form',
 ]);

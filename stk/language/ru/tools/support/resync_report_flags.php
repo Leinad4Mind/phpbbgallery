@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -36,9 +36,9 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'RESYNC_REPORT_FLAGS'			=> 'Пересоздание меток жалоб всей конференции',
-	'RESYNC_REPORT_FLAGS_CONFIRM'	=> 'Этот инструмент произведет проверку жалоб в сообщениях, темах и личных сообщениях.',
-	'RESYNC_REPORT_FLAGS_FINISHED'	=> 'Все метки жалоб в темах, сообщениях и в личных сообщениях были пересозданы!',
-	'RESYNC_REPORT_FLAGS_NEXT'		=> 'Выполняется пересоздание меток в темах, сообщениях и личных сообщениях! Не прерывайте процесс!',
-));
+$lang = array_merge($lang, [
+	'RESYNC_REPORT_FLAGS'          => 'Пересоздание меток жалоб всей конференции',
+	'RESYNC_REPORT_FLAGS_CONFIRM'  => 'Этот инструмент произведет проверку жалоб в сообщениях, темах и личных сообщениях.',
+	'RESYNC_REPORT_FLAGS_FINISHED' => 'Все метки жалоб в темах, сообщениях и в личных сообщениях были пересозданы!',
+	'RESYNC_REPORT_FLAGS_NEXT'     => 'Выполняется пересоздание меток в темах, сообщениях и личных сообщениях! Не прерывайте процесс!',
+]);

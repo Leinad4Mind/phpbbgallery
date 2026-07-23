@@ -8,8 +8,8 @@
  */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -81,10 +81,10 @@ $lang = array_merge($lang, [
 	'BBLIGHTBOX_TASKS_5'     => 'Consulta as outras extensões premium em <a href="https://sitesplat.com/phpBB3/marketplace.php">sitesplat.com/marketplace.php</a>',
 	'BBLIGHTBOX_TASKS_6'     => 'Muito mais..!',
 
-	'SITESPLAT_COM'       => 'https://sitesplat.com',
-	'SITESPLAT_COPY'      => '&#169; SiteSplat',
-	'LICENSE_INFO'        => 'Proprietário - SiteSplat Todos os direitos reservados',
-	'EXTENSION_DEVELOPER' => 'Programador',
+	'SITESPLAT_COM'               => 'https://sitesplat.com',
+	'SITESPLAT_COPY'              => '&#169; SiteSplat',
+	'LICENSE_INFO'                => 'Proprietário - SiteSplat Todos os direitos reservados',
+	'EXTENSION_DEVELOPER'         => 'Programador',
 	'ACP_BBLIGHTBOX_NOTICE_CLOSE' => 'Fechar',
 
 	'ACP_BBLIGHTBOX_VERSION' => '1.0.6',
@@ -98,14 +98,14 @@ $lang = array_merge($lang, [
 	'ACP_BBLIGHTBOX_THUMBNAILS_REMOVED' => 'Todas as miniaturas foram removidas. Todas as imagens são agora exibidas em tamanho real.',
 	'ACP_BBLIGHTBOX_THUMBS_REASSIGNED'  => 'Todas as miniaturas foram reatribuídas. Todas as imagens que cumprem as configurações de miniatura nas configurações de anexos são agora exibidas em modo de miniatura.',
 
-	'BBLIGHTBOX_OPTIONS'                 => 'Opções de Sincronização de Anexos',
-	'REMOVE_INLINE_ATTACHMENTS'          => 'Remover anexos em linha',
-	'REMOVE_INLINE_ATTACHMENTS_EXPLAIN'  => 'Remove todos os anexos em linha em todos os tópicos. Isto NÃO remove os anexos, apenas os move de volta para a caixa de anexos padrão, por baixo da publicação.',
-	'BBLIGHTBOX_PROGRESS'                => 'Progresso: %d de %d.',
-	'REMOVE_THUMBNAILS'                  => 'Remover miniaturas',
-	'REMOVE_THUMBNAILS_EXPLAIN'          => 'Remove todas as miniaturas, para que quaisquer imagens existentes deixem de estar em miniatura.',
-	'REASSIGN_THUMBNAILS'                => 'Reatribuir miniaturas (thumbnails)',
-	'REASSIGN_THUMBNAILS_EXPLAIN'        => 'Regenerar e recriar todas as miniaturas (thumbnails).',
+	'BBLIGHTBOX_OPTIONS'                => 'Opções de Sincronização de Anexos',
+	'REMOVE_INLINE_ATTACHMENTS'         => 'Remover anexos em linha',
+	'REMOVE_INLINE_ATTACHMENTS_EXPLAIN' => 'Remove todos os anexos em linha em todos os tópicos. Isto NÃO remove os anexos, apenas os move de volta para a caixa de anexos padrão, por baixo da publicação.',
+	'BBLIGHTBOX_PROGRESS'               => 'Progresso: %d de %d.',
+	'REMOVE_THUMBNAILS'                 => 'Remover miniaturas',
+	'REMOVE_THUMBNAILS_EXPLAIN'         => 'Remove todas as miniaturas, para que quaisquer imagens existentes deixem de estar em miniatura.',
+	'REASSIGN_THUMBNAILS'               => 'Reatribuir miniaturas (thumbnails)',
+	'REASSIGN_THUMBNAILS_EXPLAIN'       => 'Regenerar e recriar todas as miniaturas (thumbnails).',
 ]);
 
 // Description of Upload extension

@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,13 +37,13 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// ACP modules
-	'ACP_BOARDRULES'				=> 'Regulament forum',
-	'ACP_BOARDRULES_MANAGE'			=> 'Gestionati Reguli',
-	'ACP_BOARDRULES_SETTINGS'		=> 'Setari Reguli',
+	'ACP_BOARDRULES'          => 'Regulament forum',
+	'ACP_BOARDRULES_MANAGE'   => 'Gestionati Reguli',
+	'ACP_BOARDRULES_SETTINGS' => 'Setari Reguli',
 
 	// ACP Logs
-	'ACP_BOARDRULES_SETTINGS_LOG'	=> '<strong>Setările regulilor forumului au fost schimbate</strong>',
-	'ACP_BOARDRULES_NOTIFY_LOG'		=> '<strong>Regulament forum trimis catre toti utlizatorii</strong>',
-));
+	'ACP_BOARDRULES_SETTINGS_LOG' => '<strong>Setările regulilor forumului au fost schimbate</strong>',
+	'ACP_BOARDRULES_NOTIFY_LOG'   => '<strong>Regulament forum trimis catre toti utlizatorii</strong>',
+]);

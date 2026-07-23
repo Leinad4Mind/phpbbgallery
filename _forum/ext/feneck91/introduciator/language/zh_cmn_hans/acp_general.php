@@ -10,8 +10,8 @@
  */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -42,17 +42,17 @@ if (empty($lang) || !is_array($lang))
 * mode: general
 * Info: language keys are prefixed with 'INTRODUCIATOR_GP_' for 'INTRODUCIATOR_GENERAL_PAGES_'
 */
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// Titles
-	'INTRODUCIATOR_GP_TITLE'							=> '一般信息',
-	'INTRODUCIATOR_GP_TITLE_EXPLAIN'					=> '获取此扩展的版本信息。',
+	'INTRODUCIATOR_GP_TITLE'         => '一般信息',
+	'INTRODUCIATOR_GP_TITLE_EXPLAIN' => '获取此扩展的版本信息。',
 
 	// Extension's informations
-	'INTRODUCIATOR_GP_INFOS_ARRAY_HEADER_INFORMATIONS'	=> '信息',
-	'INTRODUCIATOR_GP_INFOS_ARRAY_HEADER_VALUES'		=> '值',
-	'INTRODUCIATOR_GP_INFOS'							=> '自我介绍扩展的情况',
-	'INTRODUCIATOR_GP_INSTALL_DATE'						=> '<strong>自我介绍</strong> 扩展的安装日期：',
-	'INTRODUCIATOR_GP_VERSION'							=> '<strong>自我介绍</strong> 扩展版本号：',
-	'INTRODUCIATOR_GP_DETAILS'							=> '细节',
-	'INTRODUCIATOR_GP_URL_DETAILS'						=> 'https://www.phpbb.com/customise/db/extension/introduciator/',
-));
+	'INTRODUCIATOR_GP_INFOS_ARRAY_HEADER_INFORMATIONS' => '信息',
+	'INTRODUCIATOR_GP_INFOS_ARRAY_HEADER_VALUES'       => '值',
+	'INTRODUCIATOR_GP_INFOS'                           => '自我介绍扩展的情况',
+	'INTRODUCIATOR_GP_INSTALL_DATE'                    => '<strong>自我介绍</strong> 扩展的安装日期：',
+	'INTRODUCIATOR_GP_VERSION'                         => '<strong>自我介绍</strong> 扩展版本号：',
+	'INTRODUCIATOR_GP_DETAILS'                         => '细节',
+	'INTRODUCIATOR_GP_URL_DETAILS'                     => 'https://www.phpbb.com/customise/db/extension/introduciator/',
+]);

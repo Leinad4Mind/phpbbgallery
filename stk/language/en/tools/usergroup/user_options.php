@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,24 +37,24 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'USER_OPTIONS'			=> 'Changing user options',
-	'USER_OPTIONS_EXPLAIN'	=> 'Here you can change the user settings by default for all or selected user groups.<br />More detailed information can be obtained <a href="https://www.phpbb.com/support/docs/en/3.0/kb/article/changing-user-options-defaults-and-values/" target="_blank"><b>here</b></a>.',
-	'NOTHING'				=> 'Do not change',
-	'USER_OPTIONS_OK'		=> 'Users settings have been successfully changed.',
+$lang = array_merge($lang, [
+	'USER_OPTIONS'         => 'Changing user options',
+	'USER_OPTIONS_EXPLAIN' => 'Here you can change the user settings by default for all or selected user groups.<br />More detailed information can be obtained <a href="https://www.phpbb.com/support/docs/en/3.0/kb/article/changing-user-options-defaults-and-values/" target="_blank"><b>here</b></a>.',
+	'NOTHING'              => 'Do not change',
+	'USER_OPTIONS_OK'      => 'Users settings have been successfully changed.',
 
-	'viewimg'				=> 'Display images within posts',
-	'viewflash'				=> 'Display Flash animations',
-	'viewsmilies'			=> 'Display smilies as images',
-	'viewsigs'				=> 'Display signatures within posts',
-	'viewavatars'			=> 'Display avatars within posts',
-	'viewcensors'			=> 'Enable word censoring',
-	'attachsig'				=> 'Attach signature by default',
-	'bbcode'				=> 'Enable BBCode by default',
-	'smilies'				=> 'Enable smilies by default',
-	'sig_bbcode'			=> 'Enable BBCode within signature',
-	'sig_smilies'			=> 'Display smilies as images within signature',
-	'sig_links'				=> 'Convert the URL to links within signature',
+	'viewimg'     => 'Display images within posts',
+	'viewflash'   => 'Display Flash animations',
+	'viewsmilies' => 'Display smilies as images',
+	'viewsigs'    => 'Display signatures within posts',
+	'viewavatars' => 'Display avatars within posts',
+	'viewcensors' => 'Enable word censoring',
+	'attachsig'   => 'Attach signature by default',
+	'bbcode'      => 'Enable BBCode by default',
+	'smilies'     => 'Enable smilies by default',
+	'sig_bbcode'  => 'Enable BBCode within signature',
+	'sig_smilies' => 'Display smilies as images within signature',
+	'sig_links'   => 'Convert the URL to links within signature',
 
-	'ALL_GROUPS'			=> 'All Groups',
-));
+	'ALL_GROUPS' => 'All Groups',
+]);

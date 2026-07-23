@@ -39,9 +39,9 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'HELP_EMBEDDING_MEDIA'			=> 'Vkladanie médií',
-	'HELP_EMBEDDING_MEDIA_QUESTION'	=> 'Ako vložiť obsah z inej stránky do príspevku',
-	'HELP_EMBEDDING_MEDIA_ANSWER'	=> 'Používatelia môžu vložiť obsah (napríklad video alebo zvuk z povolených stránok použítím
+	'HELP_EMBEDDING_MEDIA'          => 'Vkladanie médií',
+	'HELP_EMBEDDING_MEDIA_QUESTION' => 'Ako vložiť obsah z inej stránky do príspevku',
+	'HELP_EMBEDDING_MEDIA_ANSWER'   => 'Používatelia môžu vložiť obsah (napríklad video alebo zvuk z povolených stránok použítím
 										<strong>[media][/media]</strong> kódu alebo jednoducho odoslať podporovanú
 										URL v texte. Napríklad:<br /><br />
 										<strong>[media]</strong>%1$s<strong>[/media]</strong>
@@ -52,5 +52,5 @@ $lang = array_merge($lang, [
 										<br /><br />Pre kompletnú dokumentáciu ohľadom podporovaných stránok a príkladov adries
 										navštívte <a href="https://s9etextformatter.readthedocs.io/Plugins/MediaEmbed/Sites/">
 										dokumentáciu pluginu vkladania médií</a> (v Angličtine).',
-	'HELP_EMBEDDING_MEDIA_DEMO'		=>	'https://youtu.be/QH2-TGUlwu4',
+	'HELP_EMBEDDING_MEDIA_DEMO' => 'https://youtu.be/QH2-TGUlwu4',
 ]);

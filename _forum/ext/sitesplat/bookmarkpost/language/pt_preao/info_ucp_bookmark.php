@@ -20,6 +20,6 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, [
 	'UCP_POST_BOOKMARKS_TITLE' => 'Gerir mensagens guardadas',
 
-	'POST_BOOKMARKS_EXPLAIN' => 'Você pode guardar mensagens nos favoritos para referência futura. Selecione a caixa de verificação correspondente a qualquer marcador que pretenda eliminar e, em seguida, prima o botão <em>Remover favoritos marcados</em>.',
+	'POST_BOOKMARKS_EXPLAIN' => 'Podes guardar mensagens nos favoritos para referência futura. Selecciona a caixa de verificação correspondente a qualquer marcador que pretendas eliminar e, em seguida, clica no botão <em>Remover favoritos marcados</em>.',
 	'POST_BOOKMARKS'         => 'Mensagens Guardadas',
 ]);

@@ -8,8 +8,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -36,8 +36,8 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'ACP_USER_UTILS'	=> 'User utilities',
-	'ACP_PM_MONITOR'	=> 'PM monitor',
-	'LOG_PM_MONITOR'	=> '<strong>PM messages deleted</strong>',
-));
+$lang = array_merge($lang, [
+	'ACP_USER_UTILS' => 'User utilities',
+	'ACP_PM_MONITOR' => 'PM monitor',
+	'LOG_PM_MONITOR' => '<strong>PM messages deleted</strong>',
+]);

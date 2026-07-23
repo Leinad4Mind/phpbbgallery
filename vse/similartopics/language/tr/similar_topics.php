@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,7 +37,7 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'SIMILAR_TOPICS'			=> 'Benzer Konular',
-	'DISPLAY_SIMILAR_TOPICS'	=> 'Benzer Konuları göster',
-));
+$lang = array_merge($lang, [
+	'SIMILAR_TOPICS'         => 'Benzer Konular',
+	'DISPLAY_SIMILAR_TOPICS' => 'Benzer Konuları göster',
+]);

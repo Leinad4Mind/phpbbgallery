@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,10 +37,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES'				=> 'Szabályzat',
-	'BOARDRULES_TITLE'			=> 'Fórum szabályzatok megtekintése.',
-	'BOARDRULES_AGREEMENT'		=> 'Kérjük, olvassa el a Fórum "Szabályzat" részben felsorolt szabályokat. Amennyiben egyet ért, folytathatja a regisztrációt.',
-	'BOARDRULES_VIEWONLINE'		=> 'Fórum szabályzat megtenintése',
-	'BOARDRULES_NOTIFICATION'	=> 'A Fórum szabályzat frissítésre került.. Kattintson ide a megtekintéshez',
-));
+$lang = array_merge($lang, [
+	'BOARDRULES'              => 'Szabályzat',
+	'BOARDRULES_TITLE'        => 'Fórum szabályzatok megtekintése.',
+	'BOARDRULES_AGREEMENT'    => 'Kérjük, olvassa el a Fórum "Szabályzat" részben felsorolt szabályokat. Amennyiben egyet ért, folytathatja a regisztrációt.',
+	'BOARDRULES_VIEWONLINE'   => 'Fórum szabályzat megtenintése',
+	'BOARDRULES_NOTIFICATION' => 'A Fórum szabályzat frissítésre került.. Kattintson ide a megtekintéshez',
+]);

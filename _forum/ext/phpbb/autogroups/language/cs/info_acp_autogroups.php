@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,11 +37,11 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'ACP_AUTOGROUPS_MANAGE'			=> 'Správa Auto Skupiny',
-	'AUTOGROUPS_TYPE_NOT_EXIST'		=> 'Typ Auto skupiny `%1$s` neexistuje.',
+$lang = array_merge($lang, [
+	'ACP_AUTOGROUPS_MANAGE'     => 'Správa Auto Skupiny',
+	'AUTOGROUPS_TYPE_NOT_EXIST' => 'Typ Auto skupiny `%1$s` neexistuje.',
 
 	// Logs
-	'ACP_AUTOGROUPS_SAVED_LOG'		=> '<strong>Konfigurace Auto skupiny byla uložena</strong>',
-	'ACP_AUTOGROUPS_DELETE_LOG'		=> '<strong>Konfigurace Auto skupiny byla smazána</strong>',
-));
+	'ACP_AUTOGROUPS_SAVED_LOG'  => '<strong>Konfigurace Auto skupiny byla uložena</strong>',
+	'ACP_AUTOGROUPS_DELETE_LOG' => '<strong>Konfigurace Auto skupiny byla smazána</strong>',
+]);

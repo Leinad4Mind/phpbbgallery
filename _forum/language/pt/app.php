@@ -15,11 +15,13 @@
 /**
  * DO NOT CHANGE
  */
-if (!defined('IN_PHPBB')) {
+if (!defined('IN_PHPBB'))
+{
 	exit;
 }
 
-if (empty($lang) || !is_array($lang)) {
+if (empty($lang) || !is_array($lang))
+{
 	$lang = [];
 }
 
@@ -40,8 +42,8 @@ if (empty($lang) || !is_array($lang)) {
 //
 
 $lang = array_merge($lang, [
-	'CONTROLLER_ARGUMENT_VALUE_MISSING'	=> 'Falta o valor para o argumento #%1$s: <strong>%3$s</strong> na classe <strong>%2$s</strong>',
-	'CONTROLLER_NOT_SPECIFIED'			=> 'Não foi especificado nenhum controlador.',
-	'CONTROLLER_METHOD_NOT_SPECIFIED'	=> 'Não foi especificado nenhum método para o controlador.',
-	'CONTROLLER_SERVICE_UNDEFINED'		=> 'O serviço para o controlador “<strong>%s</strong>” não está definido em ./config/services.yml.',
+	'CONTROLLER_ARGUMENT_VALUE_MISSING' => 'Falta o valor para o argumento #%1$s: <strong>%3$s</strong> na classe <strong>%2$s</strong>',
+	'CONTROLLER_NOT_SPECIFIED'          => 'Não foi especificado nenhum controlador.',
+	'CONTROLLER_METHOD_NOT_SPECIFIED'   => 'Não foi especificado nenhum método para o controlador.',
+	'CONTROLLER_SERVICE_UNDEFINED'      => 'O serviço para o controlador “<strong>%s</strong>” não está definido em ./config/services.yml.',
 ]);

@@ -8,8 +8,8 @@
  */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -35,7 +35,7 @@ $lang = array_merge($lang, [
 	'DONATIONS_ERROR'          => 'Ocorreu um erro com o donativo',
 
 	'DONATIONS_THANK_YOU' => 'Obrigado por desejares contribuir para a nossa comunidade!',
-	'DONATIONS_PREMIUM'   => 'Os utilizadores que doem um montante igual ou acima de <strong>%s</strong>, são adicionados a um grupo especial que trará diversos benefícios!',
+	'DONATIONS_PREMIUM'   => 'Os utilizadores que doem um montante igual ou acima de <strong>%s</strong> são adicionados a um grupo especial com benefícios especiais no fórum.<br />Rank personalizado, cor e muito mais!',
 	'DONATIONS_MESSAGE'   => 'Vamos juntos tornar esta comunidade ainda melhor',
 	'DONATION_STEP_1'     => '1',
 	'DONATION_STEP_2'     => '2',
@@ -47,7 +47,7 @@ $lang = array_merge($lang, [
 	'DONATION_STEP_3_INNER' => 'Regressar ao fórum',
 	'DONATION_STEP_4_INNER' => 'Obrigado',
 
-	'DONATION_DEPOSIT_DISCLAIMER' => '**Paga com segurança com o PayPal',
+	'DONATION_DEPOSIT_DISCLAIMER' => '**Paga com segurança com o PayPal e <a href="https://www.coinbase.com/join/54c7b129d41344b592000006" target="_blank">CoinBase</a>',
 	'DONATION_MY_CREDITS'         => 'Donativos efetuados',
 
 	'DONATIONS_NOGUESTS'        => 'O Fórum precisa que estejas com login efetuado para proceder com o donativo',
@@ -62,9 +62,9 @@ $lang = array_merge($lang, [
 	'CONTINUE_ON_BITCOINS' => 'Bitcoin',
 	'CONNECTING_ON_PAYPAL' => 'A conectar com o PayPal',
 	'BBDONATION_COPY'      => 'Sistema de Donativos Feito com',
-	'SITESPLAT_EXT_COPY'   => '',
+	'SITESPLAT_EXT_COPY'   => 'Desenvolvimento Web Profissional e Temas Premium',
 
 	'UCP_DONATION_TITLE'          => 'Donativos - Geral',
 	'UCP_DONATIONS_EXPLAIN'       => 'Log dos teus donativos',
-	'DONATION_ACTIVITY_UCP_EMPTY' => 'Não tem donativos efetuados'
+	'DONATION_ACTIVITY_UCP_EMPTY' => 'Não tens donativos efetuados'
 ]);

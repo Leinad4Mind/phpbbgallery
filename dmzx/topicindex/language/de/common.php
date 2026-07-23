@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,22 +37,22 @@ if (empty($lang) || !is_array($lang))
 //	‚ ‘ ’ « » „ “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'ADD_INILIST'					=> '+Liste',
-	'REMOVE_INILIST'				=> '-Liste',
-	'OTINDEX_LINK_TITLE'			=> 'Themenliste',
-	'NUM'							=> 'Nr.',
-	'POSTER'						=> 'Verfasst von',
-	'INDEX_POST_PRES'				=> 'Bevor du ein neues Thema eröffnest, prüfe bitte, ob es nicht bereits in dieser Liste ist. Wenn bereits vorhanden, benutze dieses Thema, um deine Beiträge zu schreiben.<br />Danke.',
-	'NON_ACTIVE'					=> 'Inaktiv',
-	'DEF_ALL_TOPICS_IN'				=> 'Alle neuen Themen automatisch',
-	'DEF_ALL_TOPICS_OFF'			=> 'Füge Themen manuell zur Liste hinzu',
-	'REMOVE_FROM_LIST'				=> 'entfernen',
-	'TOPICINDEX_VERSION'			=> 'Version',
-	'ALL'							=> 'Alle',
-	'09'							=> '0-9',
-	'SYMB'							=> '#&%',
-	'ANY_TOPIC_IN_LIST'				=> 'Alle Themen in der Liste',
-	'SELECT_A_LIST'					=> 'Wähle eine Liste',
-	'OIINDEX_HEADER'				=> 'Official Topic Index - Themenliste',
-));
+$lang = array_merge($lang, [
+	'ADD_INILIST'        => '+Liste',
+	'REMOVE_INILIST'     => '-Liste',
+	'OTINDEX_LINK_TITLE' => 'Themenliste',
+	'NUM'                => 'Nr.',
+	'POSTER'             => 'Verfasst von',
+	'INDEX_POST_PRES'    => 'Bevor du ein neues Thema eröffnest, prüfe bitte, ob es nicht bereits in dieser Liste ist. Wenn bereits vorhanden, benutze dieses Thema, um deine Beiträge zu schreiben.<br />Danke.',
+	'NON_ACTIVE'         => 'Inaktiv',
+	'DEF_ALL_TOPICS_IN'  => 'Alle neuen Themen automatisch',
+	'DEF_ALL_TOPICS_OFF' => 'Füge Themen manuell zur Liste hinzu',
+	'REMOVE_FROM_LIST'   => 'entfernen',
+	'TOPICINDEX_VERSION' => 'Version',
+	'ALL'                => 'Alle',
+	'09'                 => '0-9',
+	'SYMB'               => '#&%',
+	'ANY_TOPIC_IN_LIST'  => 'Alle Themen in der Liste',
+	'SELECT_A_LIST'      => 'Wähle eine Liste',
+	'OIINDEX_HEADER'     => 'Official Topic Index - Themenliste',
+]);

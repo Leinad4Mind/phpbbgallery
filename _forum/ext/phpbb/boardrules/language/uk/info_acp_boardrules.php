@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,13 +37,13 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// ACP modules
-	'ACP_BOARDRULES'				=> 'Правила форуму',
-	'ACP_BOARDRULES_MANAGE'			=> 'Редагування правил',
-	'ACP_BOARDRULES_SETTINGS'		=> 'Налаштування правил',
+	'ACP_BOARDRULES'          => 'Правила форуму',
+	'ACP_BOARDRULES_MANAGE'   => 'Редагування правил',
+	'ACP_BOARDRULES_SETTINGS' => 'Налаштування правил',
 
 	// ACP Logs
-	'ACP_BOARDRULES_SETTINGS_LOG'	=> '<strong>Налаштування правил форуму оновлено</strong>',
-	'ACP_BOARDRULES_NOTIFY_LOG'		=> '<strong>Надіслано повідомлення про зміну правил форуму</strong>',
-));
+	'ACP_BOARDRULES_SETTINGS_LOG' => '<strong>Налаштування правил форуму оновлено</strong>',
+	'ACP_BOARDRULES_NOTIFY_LOG'   => '<strong>Надіслано повідомлення про зміну правил форуму</strong>',
+]);

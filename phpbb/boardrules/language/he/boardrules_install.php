@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,12 +37,12 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES_SAMPLE_CATEGORY_TITLE'		=> 'קטגורית חוק לדוגמא Rule Category',
-	'BOARDRULES_SAMPLE_CATEGORY_MESSAGE'	=> 'זוהי קטגורית חוקים לדוגמא בהתקנת חוקי הפורום שלך. קטגוריה מכילה אוסף אל חוקים מקושרים. הודעות בקטגוריה כגון זו לא מוצגות בעמוד החוקים.',
-	'BOARDRULES_SAMPLE_CATEGORY_ANCHOR'		=> 'דוגמא-קטגוריה',
+$lang = array_merge($lang, [
+	'BOARDRULES_SAMPLE_CATEGORY_TITLE'   => 'קטגורית חוק לדוגמא Rule Category',
+	'BOARDRULES_SAMPLE_CATEGORY_MESSAGE' => 'זוהי קטגורית חוקים לדוגמא בהתקנת חוקי הפורום שלך. קטגוריה מכילה אוסף אל חוקים מקושרים. הודעות בקטגוריה כגון זו לא מוצגות בעמוד החוקים.',
+	'BOARDRULES_SAMPLE_CATEGORY_ANCHOR'  => 'דוגמא-קטגוריה',
 
-	'BOARDRULES_SAMPLE_RULE_TITLE'			=> 'חוק לדוגמא',
-	'BOARDRULES_SAMPLE_RULE_MESSAGE'		=> 'זוהי דוגמא של חוק בהתקנת חוקי הפורום שלך. נראה שהכל עובד. אתה יכול לערוך או למחוק חוק זה ולכתוב את חוקי הפורום שלך.',
-	'BOARDRULES_SAMPLE_RULE_ANCHOR'			=> 'חוק-לדוגמא',
-));
+	'BOARDRULES_SAMPLE_RULE_TITLE'   => 'חוק לדוגמא',
+	'BOARDRULES_SAMPLE_RULE_MESSAGE' => 'זוהי דוגמא של חוק בהתקנת חוקי הפורום שלך. נראה שהכל עובד. אתה יכול לערוך או למחוק חוק זה ולכתוב את חוקי הפורום שלך.',
+	'BOARDRULES_SAMPLE_RULE_ANCHOR'  => 'חוק-לדוגמא',
+]);

@@ -9,19 +9,19 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
 }
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -40,10 +40,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'RECLEAN_USERNAMES'					=> 'Reclean Usernames',
-	'RECLEAN_USERNAMES_COMPLETE'		=> 'All usernames have been recleaned successfully.',
-	'RECLEAN_USERNAMES_CONFIRM'			=> 'Are you sure you want to reclean all usernames?',
-	'RECLEAN_USERNAMES_NOT_COMPLETE'	=> 'The reclean usernames tool is currently in progress... please do not interrupt this process.',
-	'USER_ALREADY_EXISTS'				=> 'User with nickname <a href="%2$s" target="_blank" />%1$s</a> already exists.<br />User with wrong clean username <a href="%4$s" target="_blank" />%3$s</a>',
-));
+$lang = array_merge($lang, [
+	'RECLEAN_USERNAMES'              => 'Reclean Usernames',
+	'RECLEAN_USERNAMES_COMPLETE'     => 'All usernames have been recleaned successfully.',
+	'RECLEAN_USERNAMES_CONFIRM'      => 'Are you sure you want to reclean all usernames?',
+	'RECLEAN_USERNAMES_NOT_COMPLETE' => 'The reclean usernames tool is currently in progress... please do not interrupt this process.',
+	'USER_ALREADY_EXISTS'            => 'User with nickname <a href="%2$s" target="_blank" />%1$s</a> already exists.<br />User with wrong clean username <a href="%4$s" target="_blank" />%3$s</a>',
+]);

@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,10 +38,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES'				=> 'Kurallar',
-	'BOARDRULES_TITLE'			=> 'Bu mesaj panosunun kurallarını görüntüle',
-	'BOARDRULES_AGREEMENT'		=> 'Aşağıdaki “Kurallar” bölümünde belirtilen forumların kurallarına uymayı kabul ediyorsunuz',
-	'BOARDRULES_VIEWONLINE'		=> 'Mesaj Panosu Kuralları görüntüleniyor',
-	'BOARDRULES_NOTIFICATION'	=> 'Mesaj Panosu Kuralları güncellendi. Buraya tıklayarak gözden geçirin.',
-));
+$lang = array_merge($lang, [
+	'BOARDRULES'              => 'Kurallar',
+	'BOARDRULES_TITLE'        => 'Bu mesaj panosunun kurallarını görüntüle',
+	'BOARDRULES_AGREEMENT'    => 'Aşağıdaki “Kurallar” bölümünde belirtilen forumların kurallarına uymayı kabul ediyorsunuz',
+	'BOARDRULES_VIEWONLINE'   => 'Mesaj Panosu Kuralları görüntüleniyor',
+	'BOARDRULES_NOTIFICATION' => 'Mesaj Panosu Kuralları güncellendi. Buraya tıklayarak gözden geçirin.',
+]);

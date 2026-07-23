@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -48,15 +48,15 @@ if (empty($lang) || !is_array($lang))
 *
 * Translators: Feel free to not translate these language strings
 */
-$lang = array_merge($lang, array(
-	'EXCEPTION_FIELD_MISSING'		=> 'Brak wymaganego pola',
-	'EXCEPTION_INVALID_ARGUMENT'	=> 'Nieprawidłowy argument określony dla `%1$s`. Powód: %2$s',
-	'EXCEPTION_OUT_OF_BOUNDS'		=> 'Pole `%1$s` odebrało dane poza jego granicami',
-	'EXCEPTION_TOO_LONG'			=> 'Wprowadzone dane były dłuższe niż maksymalna długość.',
-	'EXCEPTION_NOT_UNIQUE'			=> 'Wprowadzone dane nie były wyjątkowe.',
-	'EXCEPTION_UNEXPECTED_VALUE'	=> 'Pole `%1$s` odebrało nieoczekiwane dane. Powód: %2$s',
-	'EXCEPTION_ILLEGAL_CHARACTERS'	=> 'Wprowadzone dane zawierały niedozwolone znaki.',
+$lang = array_merge($lang, [
+	'EXCEPTION_FIELD_MISSING'      => 'Brak wymaganego pola',
+	'EXCEPTION_INVALID_ARGUMENT'   => 'Nieprawidłowy argument określony dla `%1$s`. Powód: %2$s',
+	'EXCEPTION_OUT_OF_BOUNDS'      => 'Pole `%1$s` odebrało dane poza jego granicami',
+	'EXCEPTION_TOO_LONG'           => 'Wprowadzone dane były dłuższe niż maksymalna długość.',
+	'EXCEPTION_NOT_UNIQUE'         => 'Wprowadzone dane nie były wyjątkowe.',
+	'EXCEPTION_UNEXPECTED_VALUE'   => 'Pole `%1$s` odebrało nieoczekiwane dane. Powód: %2$s',
+	'EXCEPTION_ILLEGAL_CHARACTERS' => 'Wprowadzone dane zawierały niedozwolone znaki.',
 
 	// Translators: do not change this
-	'EXCEPTION_WRONG_DATA_LANG'		=> $lang['WRONG_DATA_LANG'],
-));
+	'EXCEPTION_WRONG_DATA_LANG' => $lang['WRONG_DATA_LANG'],
+]);

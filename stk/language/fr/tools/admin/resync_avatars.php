@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,10 +38,10 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'RESYNC_AVATARS'			=> 'Resynchroniser les avatars',
-	'RESYNC_AVATARS_CONFIRM'	=> 'Cet outil vérifiera si tous les avatars utilisés sur le forum existent actuellement sur le serveur. Lorsque des fichiers manquants sont décelés, l’avatar sera supprimé du profil des utilisateurs. Poursuivre ?',
-	'RESYNC_AVATARS_FINISHED'	=> 'Les avatars ont été resynchronisés.',
-	'RESYNC_AVATARS_NEXT_MODE'	=> 'Traitement des avatars de groupe. Merci de ne pas interrompre cette opération.',
-	'RESYNC_AVATARS_PROGRESS'	=> 'Resynchronisation des avatars en cours. Merci de ne pas interrompre cette opération.',
-));
+$lang = array_merge($lang, [
+	'RESYNC_AVATARS'           => 'Resynchroniser les avatars',
+	'RESYNC_AVATARS_CONFIRM'   => 'Cet outil vérifiera si tous les avatars utilisés sur le forum existent actuellement sur le serveur. Lorsque des fichiers manquants sont décelés, l’avatar sera supprimé du profil des utilisateurs. Poursuivre ?',
+	'RESYNC_AVATARS_FINISHED'  => 'Les avatars ont été resynchronisés.',
+	'RESYNC_AVATARS_NEXT_MODE' => 'Traitement des avatars de groupe. Merci de ne pas interrompre cette opération.',
+	'RESYNC_AVATARS_PROGRESS'  => 'Resynchronisation des avatars en cours. Merci de ne pas interrompre cette opération.',
+]);

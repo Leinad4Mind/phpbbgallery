@@ -39,7 +39,7 @@ $lang = array_merge($lang, [
 	'SUBJECT_CHECK_COMMON'         => 'Verificar palavras comuns',
 	'SUBJECT_CHECK_COMMON_EXPLAIN' => 'Palavras comuns são normalmente ignoradas ao comparar assuntos/títulos.',
 	'SUBJECT_CHECK_FORUMS'         => 'Verificar todos os fóruns',
-	'SUBJECT_CHECK_FORUMS_EXPLAIN' => 'Verificar todos os fóruns em vez de apenas aquele onde se está a publicar.',
+	'SUBJECT_CHECK_FORUMS_EXPLAIN' => 'Verificar todos os fóruns em vez de apenas aquele onde se está publicando.',
 	'SUBJECT_CHECK_FNAMES'         => 'Apresentar nomes dos fóruns',
 	'SUBJECT_CHECK_FNAMES_EXPLAIN' => 'Apresenta os nomes dos fóruns antes de cada tópico que é encontrado.',
 	'SUBJECT_CHECK_LIMIT'          => 'Número máximo de tópicos a exibir',
@@ -50,7 +50,7 @@ $lang = array_merge($lang, [
 	'SUBJECT_CHECK_COUNT_EXPLAIN'  => 'Os tópicos de usuários acima desta contagem de publicações não serão verificados quanto a tópicos semelhantes. Introduza 0 para desabilitar.',
 	'SUBJECT_CHECK_BYPASS_EXACT'   => 'Se não existir correspondência exata',
 
-	'ACP_SUBJECT_CHECK_SETTING_SAVED' => 'As configurações da Verificação de Títulos/Assuntos foram guardadas.',
+	'ACP_SUBJECT_CHECK_SETTING_SAVED' => 'As configurações da Verificação de Títulos/Assuntos foram salvas.',
 
 	'ACP_SUBCHECK_SETTINGS' => 'Configurações',
 	'ACP_SUBCHECK'          => 'Verificação de Títulos/Assuntos',

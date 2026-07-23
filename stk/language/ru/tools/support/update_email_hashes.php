@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,9 +37,9 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'UPDATE_EMAIL_HASHES'				=> 'Обновление контрольных сумм email-адресов',
-	'UPDATE_EMAIL_HASHES_CONFIRM'		=> 'В версиях phpBB более ранних, чем 3.0.7, переход от 32 разрядной операционной системы к 64 разрядной нарушает хеш email.<br /><em>(<a href="http://tracker.phpbb.com/browse/PHPBB3-9072" target="_blank">Смотри сообщение об этой ошибке</a>)</em><br />Этот инструмент позволяет обновить контрольные суммы email-адресов в базе данных для корректной работы конференции.',
-	'UPDATE_EMAIL_HASHES_COMPLETE'		=> 'Все контрольные суммы email-адресов были успешно обновлены.',
-	'UPDATE_EMAIL_HASHES_NOT_COMPLETE'	=> 'Проводится обновление хеша email.',
-));
+$lang = array_merge($lang, [
+	'UPDATE_EMAIL_HASHES'              => 'Обновление контрольных сумм email-адресов',
+	'UPDATE_EMAIL_HASHES_CONFIRM'      => 'В версиях phpBB более ранних, чем 3.0.7, переход от 32 разрядной операционной системы к 64 разрядной нарушает хеш email.<br /><em>(<a href="http://tracker.phpbb.com/browse/PHPBB3-9072" target="_blank">Смотри сообщение об этой ошибке</a>)</em><br />Этот инструмент позволяет обновить контрольные суммы email-адресов в базе данных для корректной работы конференции.',
+	'UPDATE_EMAIL_HASHES_COMPLETE'     => 'Все контрольные суммы email-адресов были успешно обновлены.',
+	'UPDATE_EMAIL_HASHES_NOT_COMPLETE' => 'Проводится обновление хеша email.',
+]);

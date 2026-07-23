@@ -17,8 +17,8 @@ if (!defined('IN_PHPBB'))
 }
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (empty($lang) || !is_array($lang))
 {
 	$lang = [];

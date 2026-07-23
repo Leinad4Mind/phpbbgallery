@@ -8,19 +8,19 @@
 *
 */
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
 }
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -39,9 +39,9 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'PHPBB'				=> 'Файлы phpBB3.2x',
-	'ROOT'				=> 'phpBB3.2x',
-	'G_TIME'			=> 'Время генерации дерева файлов %01.2f сек',
-	'FILE_NOT_FOUND'	=> 'Запрашиваемый файл не найден',
-));
+$lang = array_merge($lang, [
+	'PHPBB'          => 'Файлы phpBB3.2x',
+	'ROOT'           => 'phpBB3.2x',
+	'G_TIME'         => 'Время генерации дерева файлов %01.2f сек',
+	'FILE_NOT_FOUND' => 'Запрашиваемый файл не найден',
+]);

@@ -24,8 +24,8 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'UCP_GALLERY' => 'Galeria',
+	'UCP_GALLERY'                 => 'Galeria',
 	'UCP_GALLERY_PERSONAL_ALBUMS' => 'Gerir álbuns pessoais',
-	'UCP_GALLERY_SETTINGS' => 'Configurações Pessoais',
-	'UCP_GALLERY_WATCH' => 'Gerir subscrições',
+	'UCP_GALLERY_SETTINGS'        => 'Configurações Pessoais',
+	'UCP_GALLERY_WATCH'           => 'Gerir subscrições',
 ]);

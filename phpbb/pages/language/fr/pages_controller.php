@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -39,5 +39,5 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'PAGE_NOT_AVAILABLE'		=> 'La page « %s » n’est pas disponible.',
+	'PAGE_NOT_AVAILABLE' => 'La page « %s » n’est pas disponible.',
 ]);

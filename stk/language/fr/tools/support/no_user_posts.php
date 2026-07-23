@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,12 +38,12 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'NO_USER_POSTS'					=> 'Messages sans auteur',
-	'NO_USER_POSTS_EXPLAIN'			=> 'Permet de supprimer les messages sans auteur (ce peut se produire lorsque l’utilisateur a été supprimé manuellement directement depuis la base de données du forum, sans utiliser l’outil de phpBB prévu à cet effet dans son panneau d’administration).',
-	'AUTHOR_POSTS_REASSIGNED'		=> 'Membre(s) assigné(s) comme auteur de %d message(s).',
-	'NO_NO_USER_POSTS'				=> 'Aucun message sans auteur n’a été trouvé.',
-	'NO_AUTHOR_SELECTED'			=> 'Aucun membre n’a été sélectionné.',
-	'POSTS_REASSIGNED_TO_GUEST'		=> 'L’utilisateur <b>Anonymous</b> a été assigné comme auteur de %d message(s).',
-	'REASSIGN_ANONYMOUS'			=> 'Assigner l’utilisateur « Anonymous » comme auteur des messages sélectionnés',
-));
+$lang = array_merge($lang, [
+	'NO_USER_POSTS'             => 'Messages sans auteur',
+	'NO_USER_POSTS_EXPLAIN'     => 'Permet de supprimer les messages sans auteur (ce peut se produire lorsque l’utilisateur a été supprimé manuellement directement depuis la base de données du forum, sans utiliser l’outil de phpBB prévu à cet effet dans son panneau d’administration).',
+	'AUTHOR_POSTS_REASSIGNED'   => 'Membre(s) assigné(s) comme auteur de %d message(s).',
+	'NO_NO_USER_POSTS'          => 'Aucun message sans auteur n’a été trouvé.',
+	'NO_AUTHOR_SELECTED'        => 'Aucun membre n’a été sélectionné.',
+	'POSTS_REASSIGNED_TO_GUEST' => 'L’utilisateur <b>Anonymous</b> a été assigné comme auteur de %d message(s).',
+	'REASSIGN_ANONYMOUS'        => 'Assigner l’utilisateur « Anonymous » comme auteur des messages sélectionnés',
+]);

@@ -39,8 +39,8 @@ if (empty($lang) || !is_array($lang))
  */
 
 $lang = array_merge($lang, [
-	'EXT_ENABLE_ERROR'	=> 'This extension requires a phpBB version of %1$s but less than %2$s<br>Your version of phpBB is %3$s.',
-	'EXT_PHP_ERROR'		=> 'This extension requires PHP %1$s (or greater)<br>Your PHP version is %2$s.',
+	'EXT_ENABLE_ERROR' => 'This extension requires a phpBB version of %1$s but less than %2$s<br>Your version of phpBB is %3$s.',
+	'EXT_PHP_ERROR'    => 'This extension requires PHP %1$s (or greater)<br>Your PHP version is %2$s.',
 ]);
 
 /**
@@ -49,6 +49,6 @@ $lang = array_merge($lang, [
 * Overwrite core error message keys with a more specific message.
 */
 $lang = array_merge($lang, [
-	'EXTENSION_NOT_ENABLEABLE' 		=> isset($lang['EXTENSION_NOT_ENABLEABLE']) ? $lang['EXTENSION_NOT_ENABLEABLE'] . '<br><br><strong>' . $lang['EXT_ENABLE_ERROR'] . '</strong>' : null,
-	'CLI_EXTENSION_ENABLE_FAILURE' 	=> isset($lang['CLI_EXTENSION_ENABLE_FAILURE']) ? $lang['CLI_EXTENSION_ENABLE_FAILURE'] . ' : ' . $lang['EXT_ENABLE_ERROR'] : null,
+	'EXTENSION_NOT_ENABLEABLE'     => isset($lang['EXTENSION_NOT_ENABLEABLE']) ? $lang['EXTENSION_NOT_ENABLEABLE'] . '<br><br><strong>' . $lang['EXT_ENABLE_ERROR'] . '</strong>' : null,
+	'CLI_EXTENSION_ENABLE_FAILURE' => isset($lang['CLI_EXTENSION_ENABLE_FAILURE']) ? $lang['CLI_EXTENSION_ENABLE_FAILURE'] . ' : ' . $lang['EXT_ENABLE_ERROR'] : null,
 ]);

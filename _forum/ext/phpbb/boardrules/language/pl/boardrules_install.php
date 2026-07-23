@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,12 +38,12 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES_SAMPLE_CATEGORY_TITLE'		=> 'Przykładowy rozdział regulaminu',
-	'BOARDRULES_SAMPLE_CATEGORY_MESSAGE'	=> 'To jest przykładowy rozdział dodany podczas instalacji Regulaminu witryny. Rozdział zawiera grupę powiązanych przepisów. Treść rozdziału (jak ta)) nie jest wyświetlana na stronie regulaminu.',
-	'BOARDRULES_SAMPLE_CATEGORY_ANCHOR'		=> 'przykladowy-rozdzial',
+$lang = array_merge($lang, [
+	'BOARDRULES_SAMPLE_CATEGORY_TITLE'   => 'Przykładowy rozdział regulaminu',
+	'BOARDRULES_SAMPLE_CATEGORY_MESSAGE' => 'To jest przykładowy rozdział dodany podczas instalacji Regulaminu witryny. Rozdział zawiera grupę powiązanych przepisów. Treść rozdziału (jak ta)) nie jest wyświetlana na stronie regulaminu.',
+	'BOARDRULES_SAMPLE_CATEGORY_ANCHOR'  => 'przykladowy-rozdzial',
 
-	'BOARDRULES_SAMPLE_RULE_TITLE'			=> 'Przykładowy przepis',
-	'BOARDRULES_SAMPLE_RULE_MESSAGE'		=> 'To jest przykładowy przepis dodany podczas instalacji Regulaminu witryny. Wszystko wydaje się działać. Możesz zmienić albo usunąć ten przepis i rozdział albo kontynuować ustawienie własnego regulaminu.',
-	'BOARDRULES_SAMPLE_RULE_ANCHOR'			=> 'przykladowy-przepis',
-));
+	'BOARDRULES_SAMPLE_RULE_TITLE'   => 'Przykładowy przepis',
+	'BOARDRULES_SAMPLE_RULE_MESSAGE' => 'To jest przykładowy przepis dodany podczas instalacji Regulaminu witryny. Wszystko wydaje się działać. Możesz zmienić albo usunąć ten przepis i rozdział albo kontynuować ustawienie własnego regulaminu.',
+	'BOARDRULES_SAMPLE_RULE_ANCHOR'  => 'przykladowy-przepis',
+]);

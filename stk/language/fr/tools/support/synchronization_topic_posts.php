@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,18 +38,18 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'SYNCHRONIZATION_TOPIC_POSTS'			=> 'Synchronisation des sujets',
-	'SYNCHRONIZATION_TOPIC_POSTS_EXPLAIN'	=> 'Cet outil permet de récupérer le nombre actuel de messages dans la table <em>_topics</em>.',
-	'TOPICS_NOT_SYNCHRONIZED'				=> 'Sujets nécessitant une synchronisation',
-	'TOPIC_ID'								=> 'ID du sujet',
-	'TOPIC_TOTAL_POSTS'						=> 'Nombre total de messages<br />de la table %s',
-	'TOPIC_TOTAL_POSTS_TITLE'				=> 'Approuvé(s) +  non approuvé(s) + supprimé(s)',
-	'POSTS_TOTAL'							=> 'Nombre actuel de messages<br />de la table %s',
-	'FROM_TABLE'							=> '<br />de la table %s',
-	'NO_NOT_SYNCHRONIZED_TOPICS'			=> 'Non trouvé',
-	'SYNCHRONIZING_TOPICS'					=> 'Synchronisation en cours…',
-	'TOPIC_LAST_POST_ID'					=> 'Dernier ID de message',
-	'MAX_POST_ID'							=> 'Dernier ID',
-	'TOPICS_SINCRONIZED'					=> '%d éléments ont été synchronisés',
-));
+$lang = array_merge($lang, [
+	'SYNCHRONIZATION_TOPIC_POSTS'         => 'Synchronisation des sujets',
+	'SYNCHRONIZATION_TOPIC_POSTS_EXPLAIN' => 'Cet outil permet de récupérer le nombre actuel de messages dans la table <em>_topics</em>.',
+	'TOPICS_NOT_SYNCHRONIZED'             => 'Sujets nécessitant une synchronisation',
+	'TOPIC_ID'                            => 'ID du sujet',
+	'TOPIC_TOTAL_POSTS'                   => 'Nombre total de messages<br />de la table %s',
+	'TOPIC_TOTAL_POSTS_TITLE'             => 'Approuvé(s) +  non approuvé(s) + supprimé(s)',
+	'POSTS_TOTAL'                         => 'Nombre actuel de messages<br />de la table %s',
+	'FROM_TABLE'                          => '<br />de la table %s',
+	'NO_NOT_SYNCHRONIZED_TOPICS'          => 'Non trouvé',
+	'SYNCHRONIZING_TOPICS'                => 'Synchronisation en cours…',
+	'TOPIC_LAST_POST_ID'                  => 'Dernier ID de message',
+	'MAX_POST_ID'                         => 'Dernier ID',
+	'TOPICS_SINCRONIZED'                  => '%d éléments ont été synchronisés',
+]);

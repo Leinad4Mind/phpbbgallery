@@ -19,22 +19,22 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'NEWSLETTER' => 'Newsletter',
-	'OVERVIEW'   => 'Welcome to our Newsletter! :-) On this page you will find the latest Newsletters as well as the past years archives.',
+	'OVERVIEW'   => 'Bem-vindo à nossa Newsletter! :-) Nesta página você encontrará as últimas Newsletters, bem como os arquivos dos anos anteriores.',
 
-	'SUBSCRIBE_NO'          => 'I do NOT want to receive the Newsletter anymore',
-	'SUBSCRIBE_YES'         => 'Yes I want to receive the Newsletter',
-	'SUBSCRIBE_BTN_NO'      => 'Cancel',
-	'SUBSCRIBE_BTN_YES'     => 'Subscribe',
-	'SUBSCRIBE_CONFIRM_NO'  => 'Please submit to cancel your subscription',
-	'SUBSCRIBE_CONFIRM_YES' => 'Please submit to confirm your subscription',
+	'SUBSCRIBE_NO'          => 'NÃO quero mais receber a Newsletter',
+	'SUBSCRIBE_YES'         => 'Sim, quero receber a Newsletter',
+	'SUBSCRIBE_BTN_NO'      => 'Cancelar',
+	'SUBSCRIBE_BTN_YES'     => 'Assinar',
+	'SUBSCRIBE_CONFIRM_NO'  => 'Por favor, envie para cancelar a sua assinatura',
+	'SUBSCRIBE_CONFIRM_YES' => 'Por favor, envie para confirmar a sua assinatura',
 
-	'SUBSCRIBE_Y_EMAIL' => 'Your email',
-	'SUBSCRIBE'         => 'Subscribe to',
-	'UNSUBSCRIBE'       => 'Unsubscribe from',
-	'SUBSCRIBE_INFO'    => 'Our newsletter. Unsubscribed members won\'t receive our periodic News overview anymore.',
+	'SUBSCRIBE_Y_EMAIL' => 'O seu email',
+	'SUBSCRIBE'         => 'Assinar',
+	'UNSUBSCRIBE'       => 'Cancelar assinatura de',
+	'SUBSCRIBE_INFO'    => 'A nossa newsletter. Os membros que cancelarem a assinatura deixam de receber o nosso resumo periódico de novidades.',
 
-	'OVERVIEW_ARCHIVE' => 'Archive',
-	'ARCHIVES'         => 'Archives',
-	'SUBSCRIBED'       => 'Thanks for subscribing! You will receive our newsletter from today on!',
-	'UNSUBSCRIBED'     => 'Successfully unsubscribed, you won\'t receive our newsletter any longer'
+	'OVERVIEW_ARCHIVE' => 'Arquivo',
+	'ARCHIVES'         => 'Arquivos',
+	'SUBSCRIBED'       => 'Obrigado por assinar! A partir de hoje você vai receber a nossa newsletter!',
+	'UNSUBSCRIBED'     => 'Assinatura cancelada com sucesso, você deixará de receber a nossa newsletter'
 ]);

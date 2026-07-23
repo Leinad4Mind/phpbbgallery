@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,12 +37,12 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'NO_USER_POSTS'					=> 'Posts without author',
-	'NO_USER_POSTS_EXPLAIN'			=> 'This tool allows you to delete posts of non-existent authors (this can happen if users were manually deleted directly from the database, and not using regular phpBB tools).',
-	'AUTHOR_POSTS_REASSIGNED'		=> 'Authors assigned to %d posts.',
-	'NO_NO_USER_POSTS'				=> 'No posts from non-existent authors',
-	'NO_AUTHOR_SELECTED'			=> 'No author assigned.',
-	'POSTS_REASSIGNED_TO_GUEST'		=> 'For %d posts, <b>Anonymous</b> has been assigned as author.',
-	'REASSIGN_ANONYMOUS'			=> 'Assign Anonymous as author to selected posts',
-));
+$lang = array_merge($lang, [
+	'NO_USER_POSTS'             => 'Posts without author',
+	'NO_USER_POSTS_EXPLAIN'     => 'This tool allows you to delete posts of non-existent authors (this can happen if users were manually deleted directly from the database, and not using regular phpBB tools).',
+	'AUTHOR_POSTS_REASSIGNED'   => 'Authors assigned to %d posts.',
+	'NO_NO_USER_POSTS'          => 'No posts from non-existent authors',
+	'NO_AUTHOR_SELECTED'        => 'No author assigned.',
+	'POSTS_REASSIGNED_TO_GUEST' => 'For %d posts, <b>Anonymous</b> has been assigned as author.',
+	'REASSIGN_ANONYMOUS'        => 'Assign Anonymous as author to selected posts',
+]);

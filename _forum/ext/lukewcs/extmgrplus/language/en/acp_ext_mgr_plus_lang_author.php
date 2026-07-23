@@ -12,8 +12,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -41,10 +41,10 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	// language pack author
-	'EXTMGRPLUS_LANG_DESC'					=> 'English',
-	'EXTMGRPLUS_LANG_VER' 					=> '3.0.0',
-	'EXTMGRPLUS_LANG_AUTHOR'	 			=> 'LukeWCS',
+	'EXTMGRPLUS_LANG_DESC'   => 'English',
+	'EXTMGRPLUS_LANG_VER'    => '3.0.0',
+	'EXTMGRPLUS_LANG_AUTHOR' => 'LukeWCS',
 
 	// messages
-	'EXTMGRPLUS_MSG_LANGUAGEPACK_OUTDATED'	=> 'Note: The language pack for the extension <strong>%1$s</strong> is no longer up-to-date. (installed: %2$s / needed: %3$s)',
+	'EXTMGRPLUS_MSG_LANGUAGEPACK_OUTDATED' => 'Note: The language pack for the extension <strong>%1$s</strong> is no longer up-to-date. (installed: %2$s / needed: %3$s)',
 ]);

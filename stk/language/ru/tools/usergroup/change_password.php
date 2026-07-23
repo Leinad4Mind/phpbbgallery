@@ -5,12 +5,12 @@
 * @version $Id$
 * @copyright (c) 2009 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
-* 
+*
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,18 +37,18 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'CHANGE_PASSWORD'			=> 'Смена паролей пользователей конференции',
-	'CHANGE_PASSWORD_EXPLAIN'	=> 'Сменить пароль пользователя.',
-	'CHANGE_PASSWORD_SUCCESS'	=> 'Пароль для <a href="%s">%s</a> успешно изменён.',
+$lang = array_merge($lang, [
+	'CHANGE_PASSWORD'         => 'Смена паролей пользователей конференции',
+	'CHANGE_PASSWORD_EXPLAIN' => 'Сменить пароль пользователя.',
+	'CHANGE_PASSWORD_SUCCESS' => 'Пароль для <a href="%s">%s</a> успешно изменён.',
 
-	'FIELDS_NOT_FILLED'			=> 'Заполнить достаточно одно поле.',
-	'FIELDS_BOTH_FILLED'		=> 'Только одно поле может быть заполнено.',
+	'FIELDS_NOT_FILLED'  => 'Заполнить достаточно одно поле.',
+	'FIELDS_BOTH_FILLED' => 'Только одно поле может быть заполнено.',
 
-	'PASSWORD_CONFIRM'			=> 'Повторный ввод пароля',
+	'PASSWORD_CONFIRM' => 'Повторный ввод пароля',
 	
-	'USERNAME_NAME'				=> 'Имя',
-	'USERNAME_NAME_EXPLAIN'		=> 'Введите сюда имя пользователя, пароль которого вы хотите изменить.',
-	'USERNAMEID'				=> 'ID пользователя',
-	'USERNAMEID_EXPLAIN'		=> 'Вместо имени сюда можно ввести его ID.',
-));
+	'USERNAME_NAME'         => 'Имя',
+	'USERNAME_NAME_EXPLAIN' => 'Введите сюда имя пользователя, пароль которого вы хотите изменить.',
+	'USERNAMEID'            => 'ID пользователя',
+	'USERNAMEID_EXPLAIN'    => 'Вместо имени сюда можно ввести его ID.',
+]);

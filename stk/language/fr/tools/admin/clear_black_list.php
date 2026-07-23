@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,7 +38,7 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'CLEAR_BLACK_LIST'				=> 'Bannissement d’IP',
-	'NO_BAN_CELL'					=> 'Aucune adresse IP n’est exclue'
-));
+$lang = array_merge($lang, [
+	'CLEAR_BLACK_LIST' => 'Bannissement d’IP',
+	'NO_BAN_CELL'      => 'Aucune adresse IP n’est exclue'
+]);

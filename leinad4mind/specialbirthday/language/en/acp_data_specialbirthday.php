@@ -8,8 +8,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -36,33 +36,33 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'AGE' 						=> 'Age',
-	'ALL'						=> 'All',
+$lang = array_merge($lang, [
+	'AGE' => 'Age',
+	'ALL' => 'All',
 
-	'CLEAR_FILTER'				=> 'Clear filter',
+	'CLEAR_FILTER' => 'Clear filter',
 
-	'DATE_OF_BIRTH' 			=> 'Date of birth',
+	'DATE_OF_BIRTH' => 'Date of birth',
 
-	'FILTER_BY'					=> 'Filter Username by',
-	'FILTER_USERNAME'			=> 'Username',
+	'FILTER_BY'       => 'Filter Username by',
+	'FILTER_USERNAME' => 'Username',
 
-	'OTHER'						=> 'Other',
+	'OTHER' => 'Other',
 
-	'REG_AGE_SORT'				=> 'Sort',
+	'REG_AGE_SORT' => 'Sort',
 
-	'SORT_PROFILE'				=> 'Date of Birth',
-	'SORT_USERNAME'				=> 'Username',
-	'SORT_AGE'					=> 'Age',
-	'STATUS' 					=> 'Status',
+	'SORT_PROFILE'  => 'Date of Birth',
+	'SORT_USERNAME' => 'Username',
+	'SORT_AGE'      => 'Age',
+	'STATUS'        => 'Status',
 
-	'TOTAL_USERS'				=> 'User count : <strong>%1$s</strong>',
+	'TOTAL_USERS' => 'User count : <strong>%1$s</strong>',
 
-	'VERSION'					=> 'Version',
+	'VERSION' => 'Version',
 
 
 	// Translators - set these to whatever is most appropriate in your language
 	// These are used to populate the filter keys
-	'START_CHARACTER'		=> 'A',
-	'END_CHARACTER'			=> 'Z',
-));
+	'START_CHARACTER' => 'A',
+	'END_CHARACTER'   => 'Z',
+]);

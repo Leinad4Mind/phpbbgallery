@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,10 +37,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES'				=> 'Rules',
-	'BOARDRULES_TITLE'			=> 'View the Rules of this Board',
-	'BOARDRULES_AGREEMENT'		=> 'You agree to abide by the rules of these forums set forth in the following “Rules” section',
-	'BOARDRULES_VIEWONLINE'		=> 'Viewing Board Rules',
-	'BOARDRULES_NOTIFICATION'	=> 'The Board Rules have been updated. Click here to review them.',
-));
+$lang = array_merge($lang, [
+	'BOARDRULES'              => 'Rules',
+	'BOARDRULES_TITLE'        => 'View the Rules of this Board',
+	'BOARDRULES_AGREEMENT'    => 'You agree to abide by the rules of these forums set forth in the following “Rules” section',
+	'BOARDRULES_VIEWONLINE'   => 'Viewing Board Rules',
+	'BOARDRULES_NOTIFICATION' => 'The Board Rules have been updated. Click here to review them.',
+]);

@@ -38,9 +38,9 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'HELP_EMBEDDING_MEDIA'			=> 'Vkládání médií',
-	'HELP_EMBEDDING_MEDIA_QUESTION'	=> 'Jak vkládat média z jiných stránek do příspěvků.',
-	'HELP_EMBEDDING_MEDIA_ANSWER'	=> 'Uživatelů mohou vkládat obsah jako jsou videa nebo zvukové stopy z povolených stránek používáním <strong>[media][/media]</strong> nebo jednoduše vložením povoleného URL do textu. Například:<br><br>
+	'HELP_EMBEDDING_MEDIA'          => 'Vkládání médií',
+	'HELP_EMBEDDING_MEDIA_QUESTION' => 'Jak vkládat média z jiných stránek do příspěvků.',
+	'HELP_EMBEDDING_MEDIA_ANSWER'   => 'Uživatelů mohou vkládat obsah jako jsou videa nebo zvukové stopy z povolených stránek používáním <strong>[media][/media]</strong> nebo jednoduše vložením povoleného URL do textu. Například:<br><br>
 										<strong>[media]</strong>%1$s<strong>[/media]</strong>
 										<br><br>Jak bylo výše zmíněno, odkaz může být také vložen pomocí
 										<strong>[media]</strong> tagů.

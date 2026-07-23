@@ -20,7 +20,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -44,39 +44,39 @@ if (empty($lang) || !is_array($lang))
 // %s string argument should represent (typically this is a hyperlink with text describing a user, topic, post, or forum).
 // Note that the order of what gets populated in the %s arguments is unfortunately fixed, meaning that this could make good
 // translations into other difficult.
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// Post Notifications
-	'CREATE_POST'				=> '%s %s a publié un %s dans le sujet « %s » du forum « %s ».', // %s == emoji, user, post, topic, forum
-	'UPDATE_POST_SELF'			=> '%s %s a modifié son « %s dans le sujet « %s » du forum « %s ».', // %s == emoji, user, post, topic, forum
-	'UPDATE_POST_OTHER'			=> '%s %s a modifié le message « %s » publié par « %s » dans le sujet « %s » du forum « %s ».', // %s == emoji, edit user, post, user, topic, forum
-	'DELETE_POST'				=> '%s Message supprimé de l’auteur « %s » dans le sujet « %s » du forum « %s ».', // %s == emoji, user, topic, forum
-	'LOCK_POST'					=> '%s Le message « %s » publié par le membre « %s » dans le sujet intitulé « %s » du forum « %s » a été verrouillé.', // %s == emoji, post, user, topic, forum
-	'UNLOCK_POST'				=> '%s Le message « %s » publié par le membre « %s » dans le sujet intitulé « %s » du forum « %s » a été déverrouillé.', // %s == emoji, post, user, topic, forum
-	'APPROVE_POST'				=> '%s Le message « %s » publié par le membre « %s » dans le sujet intitulé « %s » du forum « %s » a été approuvé', // %s == emoji, post, user, topic, forum
+	'CREATE_POST'       => '%s %s a publié un %s dans le sujet « %s » du forum « %s ».', // %s == emoji, user, post, topic, forum
+	'UPDATE_POST_SELF'  => '%s %s a modifié son « %s dans le sujet « %s » du forum « %s ».', // %s == emoji, user, post, topic, forum
+	'UPDATE_POST_OTHER' => '%s %s a modifié le message « %s » publié par « %s » dans le sujet « %s » du forum « %s ».', // %s == emoji, edit user, post, user, topic, forum
+	'DELETE_POST'       => '%s Message supprimé de l’auteur « %s » dans le sujet « %s » du forum « %s ».', // %s == emoji, user, topic, forum
+	'LOCK_POST'         => '%s Le message « %s » publié par le membre « %s » dans le sujet intitulé « %s » du forum « %s » a été verrouillé.', // %s == emoji, post, user, topic, forum
+	'UNLOCK_POST'       => '%s Le message « %s » publié par le membre « %s » dans le sujet intitulé « %s » du forum « %s » a été déverrouillé.', // %s == emoji, post, user, topic, forum
+	'APPROVE_POST'      => '%s Le message « %s » publié par le membre « %s » dans le sujet intitulé « %s » du forum « %s » a été approuvé', // %s == emoji, post, user, topic, forum
 
 	// Topic Notifications
-	'CREATE_TOPIC'				=> '%s %s a publié un nouveau sujet intitulé « %s » dans le forum « %s ».', // %s == emoji, user, topic, forum
-	'UPDATE_TOPIC_SELF'			=> '%s %s a modifié son sujet « %s » dans le forum « %s ».', // %s == emoji, user, topic, forum
-	'UPDATE_TOPIC_OTHER'		=> '%s %s a modifié le sujet « %s », dont l’auteur est « %s » dans le forum « %s ».', // %s == emoji, edit user, topic, user, forum
-	'DELETE_TOPIC'				=> '%s Sujet supprimé de l’auteur « %s », intitulé « %s », contenant %d messages dans le forum « %s ».', // %s/d == emoji, user, topic title, post count, forum
-	'LOCK_TOPIC'				=> '%s Le sujet intitulé « %s » dans le forum « %s » et dont l’auteur est « %s » a été verrouillé.', // %s == emoji, topic, forum, user
-	'UNLOCK_TOPIC'				=> '%s Le sujet intitulé « %s » dans le forum « %s » et dont l’auteur est « %s » a été déverrouillé.', // %s == emoji, topic, forum, user
-	'APPROVE_TOPIC'				=> '%s Le sujet intitulé « %s » dans le forum « %s » et dont l’auteur est « %s » a été approuvé', // %s == emoji, topic, forum, user
+	'CREATE_TOPIC'       => '%s %s a publié un nouveau sujet intitulé « %s » dans le forum « %s ».', // %s == emoji, user, topic, forum
+	'UPDATE_TOPIC_SELF'  => '%s %s a modifié son sujet « %s » dans le forum « %s ».', // %s == emoji, user, topic, forum
+	'UPDATE_TOPIC_OTHER' => '%s %s a modifié le sujet « %s », dont l’auteur est « %s » dans le forum « %s ».', // %s == emoji, edit user, topic, user, forum
+	'DELETE_TOPIC'       => '%s Sujet supprimé de l’auteur « %s », intitulé « %s », contenant %d messages dans le forum « %s ».', // %s/d == emoji, user, topic title, post count, forum
+	'LOCK_TOPIC'         => '%s Le sujet intitulé « %s » dans le forum « %s » et dont l’auteur est « %s » a été verrouillé.', // %s == emoji, topic, forum, user
+	'UNLOCK_TOPIC'       => '%s Le sujet intitulé « %s » dans le forum « %s » et dont l’auteur est « %s » a été déverrouillé.', // %s == emoji, topic, forum, user
+	'APPROVE_TOPIC'      => '%s Le sujet intitulé « %s » dans le forum « %s » et dont l’auteur est « %s » a été approuvé', // %s == emoji, topic, forum, user
 
 	// User Notifications
-	'CREATE_USER'				=> '%s Nouveau compte utilisateur créé pour le membre « %s ».', // %s == emoji, user
-	'DELETE_USER'				=> '%s Compte utilisateur supprimé pour le membre « %s ».', // %s == emoji, user
-	'DELETE_MULTI_USER'			=> '%s Comptes utilisateurs supprimés pour les membres : « %s ».', // %s == emoji, list of users
+	'CREATE_USER'       => '%s Nouveau compte utilisateur créé pour le membre « %s ».', // %s == emoji, user
+	'DELETE_USER'       => '%s Compte utilisateur supprimé pour le membre « %s ».', // %s == emoji, user
+	'DELETE_MULTI_USER' => '%s Comptes utilisateurs supprimés pour les membres : « %s ».', // %s == emoji, list of users
 
 	// Additional Text
-	'PREVIEW'					=> 'Aperçu : ',
-	'REASON'					=> 'Raison : ',
-	'POST'						=> 'message',
-	'AND'						=> 'et',
-	'CONJ'						=> ',', // short for "conjunction character"
-	'OTHER'						=> 'autre',
-	'OTHERS'					=> 'autres',
-	'UNKNOWN_USER'				=> '{user}',
-	'UNKNOWN_FORUM'				=> '{forum}',
-	'UNKNOWN_TOPIC'				=> '{topic}',
-));
+	'PREVIEW'       => 'Aperçu : ',
+	'REASON'        => 'Raison : ',
+	'POST'          => 'message',
+	'AND'           => 'et',
+	'CONJ'          => ',', // short for "conjunction character"
+	'OTHER'         => 'autre',
+	'OTHERS'        => 'autres',
+	'UNKNOWN_USER'  => '{user}',
+	'UNKNOWN_FORUM' => '{forum}',
+	'UNKNOWN_TOPIC' => '{topic}',
+]);

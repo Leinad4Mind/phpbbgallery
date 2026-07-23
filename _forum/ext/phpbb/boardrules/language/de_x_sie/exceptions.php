@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -48,15 +48,15 @@ if (empty($lang) || !is_array($lang))
 *
 * Translators: Feel free to not translate these language strings
 */
-$lang = array_merge($lang, array(
-	'EXCEPTION_FIELD_MISSING'		=> 'Erforderliches Feld fehlt',
-	'EXCEPTION_INVALID_ARGUMENT'	=> 'Ungültige Eingabe in `%1$s`. Grund: %2$s',
-	'EXCEPTION_OUT_OF_BOUNDS'		=> 'Das Feld `%1$s` enthält unzulässige Zeichen',
-	'EXCEPTION_TOO_LONG'			=> 'Die Eingabe ist länger als maximal zulässig.',
-	'EXCEPTION_NOT_UNIQUE'			=> 'Uneindeutige Eingabe (Bezeichnung gegebenenfalls bereits vergeben).',
-	'EXCEPTION_UNEXPECTED_VALUE'	=> 'Unerwartete Zeichen in Feld `%1$s`. Grund: %2$s',
-	'EXCEPTION_ILLEGAL_CHARACTERS'	=> 'Die Eingabe enthält für dieses Feld nicht zulässige Zeichen.',
+$lang = array_merge($lang, [
+	'EXCEPTION_FIELD_MISSING'      => 'Erforderliches Feld fehlt',
+	'EXCEPTION_INVALID_ARGUMENT'   => 'Ungültige Eingabe in `%1$s`. Grund: %2$s',
+	'EXCEPTION_OUT_OF_BOUNDS'      => 'Das Feld `%1$s` enthält unzulässige Zeichen',
+	'EXCEPTION_TOO_LONG'           => 'Die Eingabe ist länger als maximal zulässig.',
+	'EXCEPTION_NOT_UNIQUE'         => 'Uneindeutige Eingabe (Bezeichnung gegebenenfalls bereits vergeben).',
+	'EXCEPTION_UNEXPECTED_VALUE'   => 'Unerwartete Zeichen in Feld `%1$s`. Grund: %2$s',
+	'EXCEPTION_ILLEGAL_CHARACTERS' => 'Die Eingabe enthält für dieses Feld nicht zulässige Zeichen.',
 
 	// Translators: do not change this
-	'EXCEPTION_WRONG_DATA_LANG'		=> $lang['WRONG_DATA_LANG'],
-));
+	'EXCEPTION_WRONG_DATA_LANG' => $lang['WRONG_DATA_LANG'],
+]);

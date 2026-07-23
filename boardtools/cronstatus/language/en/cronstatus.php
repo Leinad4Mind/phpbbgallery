@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -36,7 +36,7 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'CRON'                            => 'Cron',
 	'CRON_LOCKED'                     => 'Cron Locked',
 	'CRON_TIME_LOCKED'                => 'Cron time locked',
@@ -64,10 +64,10 @@ $lang = array_merge($lang, array(
 	'CRON_STATUS_DEVELOPERS'          => 'Developers',
 	'CRON_TASK_RUN'                   => 'Run',
 	'CRON_TASK_RUNNING'               => 'Running...',
-));
+]);
 
 // Description of Cron Status extension
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'CRONSTATUS_DESCRIPTION_PAGE'            => 'Cron Status page',
 	'CRONSTATUS_DESCRIPTION_PAGE_OVERVIEW'   => 'Overview of Cron Jobs (with sorting)',
 	'CRONSTATUS_DESCRIPTION_PAGE_STATUS'     => 'Displays the status of each Cron Task',
@@ -75,4 +75,4 @@ $lang = array_merge($lang, array(
 	'CRONSTATUS_DESCRIPTION_NOTICE'          => 'Cron Status Notice (optional)',
 	'CRONSTATUS_DESCRIPTION_NOTICE_OVERVIEW' => 'Is displayed on the main page of the ACP when cron is locked',
 	'CRONSTATUS_DESCRIPTION_NOTICE_SETTINGS' => 'Can be switched off in Board settings',
-));
+]);

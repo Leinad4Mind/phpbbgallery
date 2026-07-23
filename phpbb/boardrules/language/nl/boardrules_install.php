@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,12 +38,12 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES_SAMPLE_CATEGORY_TITLE'		=> 'Voorbeeld Regelcategorie',
-	'BOARDRULES_SAMPLE_CATEGORY_MESSAGE'	=> 'Dit is een voorbeeldcategorie in je Forumregels-installatie. Categorieën bevatten gerelateerde regels. Categorieberichten (zoals deze) in categorieën met onderliggende regels worden niet weergegeven op de regelspagina.',
-	'BOARDRULES_SAMPLE_CATEGORY_ANCHOR'		=> 'voorbeeld-categorie',
+$lang = array_merge($lang, [
+	'BOARDRULES_SAMPLE_CATEGORY_TITLE'   => 'Voorbeeld Regelcategorie',
+	'BOARDRULES_SAMPLE_CATEGORY_MESSAGE' => 'Dit is een voorbeeldcategorie in je Forumregels-installatie. Categorieën bevatten gerelateerde regels. Categorieberichten (zoals deze) in categorieën met onderliggende regels worden niet weergegeven op de regelspagina.',
+	'BOARDRULES_SAMPLE_CATEGORY_ANCHOR'  => 'voorbeeld-categorie',
 
-	'BOARDRULES_SAMPLE_RULE_TITLE'			=> 'Voorbeeld regel',
-	'BOARDRULES_SAMPLE_RULE_MESSAGE'		=> 'Dit is een voorbeeld regel in je Forumregels-installatie. Alles lijkt te werken. Je mag deze regel en categorie wijzigen of verwijderen en doorgaan met het opstellen van je eigen forumregels.',
-	'BOARDRULES_SAMPLE_RULE_ANCHOR'			=> 'voorbeeld-regel',
-));
+	'BOARDRULES_SAMPLE_RULE_TITLE'   => 'Voorbeeld regel',
+	'BOARDRULES_SAMPLE_RULE_MESSAGE' => 'Dit is een voorbeeld regel in je Forumregels-installatie. Alles lijkt te werken. Je mag deze regel en categorie wijzigen of verwijderen en doorgaan met het opstellen van je eigen forumregels.',
+	'BOARDRULES_SAMPLE_RULE_ANCHOR'  => 'voorbeeld-regel',
+]);

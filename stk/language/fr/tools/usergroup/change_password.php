@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,18 +38,18 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'CHANGE_PASSWORD'			=> 'Modifier le mot de passe',
-	'CHANGE_PASSWORD_EXPLAIN'	=> 'Modifier le mot de passe d’un utilisateur.<br /><strong>Il est possible de saisir le nom d’utilisateur ou son ID, mais pas les deux.</strong>',
-	'CHANGE_PASSWORD_SUCCESS'	=> 'Le mot de passe de <a href="%s">%s</a> a été modifié.',
+$lang = array_merge($lang, [
+	'CHANGE_PASSWORD'         => 'Modifier le mot de passe',
+	'CHANGE_PASSWORD_EXPLAIN' => 'Modifier le mot de passe d’un utilisateur.<br /><strong>Il est possible de saisir le nom d’utilisateur ou son ID, mais pas les deux.</strong>',
+	'CHANGE_PASSWORD_SUCCESS' => 'Le mot de passe de <a href="%s">%s</a> a été modifié.',
 
-	'FIELDS_NOT_FILLED'			=> 'Un champ doit être rempli.',
-	'FIELDS_BOTH_FILLED'		=> 'Un seul champ peut être rempli.',
+	'FIELDS_NOT_FILLED'  => 'Un champ doit être rempli.',
+	'FIELDS_BOTH_FILLED' => 'Un seul champ peut être rempli.',
 
-	'PASSWORD_CONFIRM'			=> 'Saisir de nouveau le mot de passe',
+	'PASSWORD_CONFIRM' => 'Saisir de nouveau le mot de passe',
 
-	'USERNAME_NAME'				=> 'Nom de l’utilisateur',
-	'USERNAME_NAME_EXPLAIN'		=> 'Saisir le nom de l’utilisateur dont le mot de passe doit être modifié.',
-	'USERNAMEID'				=> 'ID de l’utilisateur',
-	'USERNAMEID_EXPLAIN'		=> 'Saisir l’ID de l’utilisateur dont le mot de passe doit être modifié.',
-));
+	'USERNAME_NAME'         => 'Nom de l’utilisateur',
+	'USERNAME_NAME_EXPLAIN' => 'Saisir le nom de l’utilisateur dont le mot de passe doit être modifié.',
+	'USERNAMEID'            => 'ID de l’utilisateur',
+	'USERNAMEID_EXPLAIN'    => 'Saisir l’ID de l’utilisateur dont le mot de passe doit être modifié.',
+]);

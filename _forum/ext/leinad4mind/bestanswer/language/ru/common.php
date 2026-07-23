@@ -20,7 +20,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -39,35 +39,35 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'ANSWERS'		=> 'Ответы',
-	'ANSWERED'		=> 'Ответил',
+$lang = array_merge($lang, [
+	'ANSWERS'  => 'Ответы',
+	'ANSWERED' => 'Ответил',
 	
-	'BEST_ANSWER'	=> 'Лучший ответ',
-	'BBPOINTS_ANSWER'			=> 'Количество баллов за сообщение "Лучший ответ"',
-	'BBPOINTS_ANSWER_EXPLAIN'	=> 'Установите количество баллов, которые будут начислены автору сообщения, если его сообщение на этом форуме помечено как «Лучший ответ»',
+	'BEST_ANSWER'             => 'Лучший ответ',
+	'BBPOINTS_ANSWER'         => 'Количество баллов за сообщение "Лучший ответ"',
+	'BBPOINTS_ANSWER_EXPLAIN' => 'Установите количество баллов, которые будут начислены автору сообщения, если его сообщение на этом форуме помечено как «Лучший ответ»',
 
-	'ENABLE_ANSWER'			=> 'Включить лучший ответ',
-	'ENABLE_ANSWER_EXPLAIN'	=> 'Если включено, автор темы (если разрешено) и модераторы разделов (где разрешено) будут способны отмечать ответ как лучший.',
+	'ENABLE_ANSWER'         => 'Включить лучший ответ',
+	'ENABLE_ANSWER_EXPLAIN' => 'Если включено, автор темы (если разрешено) и модераторы разделов (где разрешено) будут способны отмечать ответ как лучший.',
 
-	'TO_POST'	=> '<i class="fa fa-eye"></i> Перейти к полному ответу',
+	'TO_POST' => '<i class="fa fa-eye"></i> Перейти к полному ответу',
 
-	'LOG_MARK_ANSWER'	=> '<strong>Отмечено лучшим ответом</strong><br />» %1$s пользователем %2$s',
-	'LOG_UNMARK_ANSWER'	=> '<strong>Снята отметка лучшего ответа</strong><br />» %1$s пользователем %2$s',
+	'LOG_MARK_ANSWER'   => '<strong>Отмечено лучшим ответом</strong><br />» %1$s пользователем %2$s',
+	'LOG_UNMARK_ANSWER' => '<strong>Снята отметка лучшего ответа</strong><br />» %1$s пользователем %2$s',
 
-	'LOG_BBPOINTS_MARK_ANSWER'		=> '<strong>Добавлены баллы автору за лучший ответ</strong><br />» %1$s от %2$s',
-	'LOG_BBPOINTS_UNMARK_ANSWER'	=> '<strong>Удалите баллы автора для лучшего ответа</strong><br />» %1$s от %2$s',
+	'LOG_BBPOINTS_MARK_ANSWER'   => '<strong>Добавлены баллы автору за лучший ответ</strong><br />» %1$s от %2$s',
+	'LOG_BBPOINTS_UNMARK_ANSWER' => '<strong>Удалите баллы автора для лучшего ответа</strong><br />» %1$s от %2$s',
 
-	'MARK_ANSWER'			=> 'Отметить ответ',
-	'MARK_ANSWER_CONFIRM'	=> 'Вы уверены, что хотите отметить этот ответ как лучший?',
+	'MARK_ANSWER'         => 'Отметить ответ',
+	'MARK_ANSWER_CONFIRM' => 'Вы уверены, что хотите отметить этот ответ как лучший?',
 
-	'TOTAL_ANSWERS'	=> 'Всего ответов',
+	'TOTAL_ANSWERS' => 'Всего ответов',
 
-	'UNMARK_ANSWER'			=> 'Снять отметку',
-	'UNMARK_ANSWER_CONFIRM'	=> 'Вы уверены, что хотите снять отметку лучшего с этого ответа?',
+	'UNMARK_ANSWER'         => 'Снять отметку',
+	'UNMARK_ANSWER_CONFIRM' => 'Вы уверены, что хотите снять отметку лучшего с этого ответа?',
 
-	'MARK_ANSWER_NOTIFICATION'			=> '%1$s отметил Ваш ответ в теме “%2$s” как лучший ответ.',
-	'UNMARK_ANSWER_NOTIFICATION'		=> '%1$s снял отметку лучшего с вашего поста в теме “%2$s”.',
-	'NOTIFICATION_TYPE_MARK_ANSWER'		=> 'Кто-то отметил ваш ответ в качестве лучшего.',
-	'NOTIFICATION_TYPE_UNMARK_ANSWER'	=> 'Кто-то снял отметку лучшего с вашего ответа.',
-));
+	'MARK_ANSWER_NOTIFICATION'        => '%1$s отметил Ваш ответ в теме “%2$s” как лучший ответ.',
+	'UNMARK_ANSWER_NOTIFICATION'      => '%1$s снял отметку лучшего с вашего поста в теме “%2$s”.',
+	'NOTIFICATION_TYPE_MARK_ANSWER'   => 'Кто-то отметил ваш ответ в качестве лучшего.',
+	'NOTIFICATION_TYPE_UNMARK_ANSWER' => 'Кто-то снял отметку лучшего с вашего ответа.',
+]);

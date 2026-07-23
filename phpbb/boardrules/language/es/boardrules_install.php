@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,12 +38,12 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES_SAMPLE_CATEGORY_TITLE'		=> 'Categoría de ejemplo',
-	'BOARDRULES_SAMPLE_CATEGORY_MESSAGE'	=> 'Esta es una categoría de ejemplo en su instalación de Normas del Foro. Las categorías contienen grupos de normas relacionadas. Los mensajes de categoría (como éste) no se muestran en la página de Normas.',
-	'BOARDRULES_SAMPLE_CATEGORY_ANCHOR'		=> 'ejemplo-categoria',
+$lang = array_merge($lang, [
+	'BOARDRULES_SAMPLE_CATEGORY_TITLE'   => 'Categoría de ejemplo',
+	'BOARDRULES_SAMPLE_CATEGORY_MESSAGE' => 'Esta es una categoría de ejemplo en su instalación de Normas del Foro. Las categorías contienen grupos de normas relacionadas. Los mensajes de categoría (como éste) no se muestran en la página de Normas.',
+	'BOARDRULES_SAMPLE_CATEGORY_ANCHOR'  => 'ejemplo-categoria',
 
-	'BOARDRULES_SAMPLE_RULE_TITLE'			=> 'Norma de ejemplo',
-	'BOARDRULES_SAMPLE_RULE_MESSAGE'		=> 'Esta es una norma de ejemplo en su instalación de Normas del Foro. Todo parece estar funcionando. Usted puede editar o borrar esta norma y categoría, y seguir para configurar sus propias reglas del foro.',
-	'BOARDRULES_SAMPLE_RULE_ANCHOR'			=> 'ejemplo-norma',
-));
+	'BOARDRULES_SAMPLE_RULE_TITLE'   => 'Norma de ejemplo',
+	'BOARDRULES_SAMPLE_RULE_MESSAGE' => 'Esta es una norma de ejemplo en su instalación de Normas del Foro. Todo parece estar funcionando. Usted puede editar o borrar esta norma y categoría, y seguir para configurar sus propias reglas del foro.',
+	'BOARDRULES_SAMPLE_RULE_ANCHOR'  => 'ejemplo-norma',
+]);

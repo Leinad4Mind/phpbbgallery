@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -36,18 +36,18 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'REASSIGN_THUMBNAILS'			=> 'Rebuild thumbnails',
-	'REASSIGN_THUMBNAILS_CONFIRM'	=> 'In case the option &laquo;Create thumbnails&nbsp; was disabled but attachments have been created, you can create thumbnails for such attachments.<br />Continue?',
-	'REASSIGN_THUMBNAILS_PROGRESS'	=> 'Creatig thumbnails in progress. Do not interrupt the process!',
-	'REASSIGN_THUMBNAILS_FINISHED'	=> 'Thumbnail creation complete.',
-	'NO_THUMBNAILS_TO_REBUILD'		=> 'No files for which you need to create thumbnails.',
-	'NEED_TO_PROCESS' 				=> 'Files without thumbnails: ',
-	'THUMB'							=> '<strong>thumbnail</strong>',
-	'REBUILT'						=> 'Create Thumbnails',
-	'NO_NEED_REBUILT'				=> '<strong style="color: #aaa;">No need thumbnal</strong> for ',
-	'SOURCE_UNAVAILABLE'			=> 'File not found: ',
-	'NO_EXTENSIONS'					=> 'There are no file extensions for group extensions <strong>Images</ strong> .',
-	'NO_EXTENSIONS_GROUP'			=> 'Еxtension group <strong>Images</ strong> does not exist.',
-	'IMAGES'						=> 'Images',
-));
+$lang = array_merge($lang, [
+	'REASSIGN_THUMBNAILS'          => 'Rebuild thumbnails',
+	'REASSIGN_THUMBNAILS_CONFIRM'  => 'In case the option &laquo;Create thumbnails&nbsp; was disabled but attachments have been created, you can create thumbnails for such attachments.<br />Continue?',
+	'REASSIGN_THUMBNAILS_PROGRESS' => 'Creatig thumbnails in progress. Do not interrupt the process!',
+	'REASSIGN_THUMBNAILS_FINISHED' => 'Thumbnail creation complete.',
+	'NO_THUMBNAILS_TO_REBUILD'     => 'No files for which you need to create thumbnails.',
+	'NEED_TO_PROCESS'              => 'Files without thumbnails: ',
+	'THUMB'                        => '<strong>thumbnail</strong>',
+	'REBUILT'                      => 'Create Thumbnails',
+	'NO_NEED_REBUILT'              => '<strong style="color: #aaa;">No need thumbnal</strong> for ',
+	'SOURCE_UNAVAILABLE'           => 'File not found: ',
+	'NO_EXTENSIONS'                => 'There are no file extensions for group extensions <strong>Images</ strong> .',
+	'NO_EXTENSIONS_GROUP'          => 'Еxtension group <strong>Images</ strong> does not exist.',
+	'IMAGES'                       => 'Images',
+]);

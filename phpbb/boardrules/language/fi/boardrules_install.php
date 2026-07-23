@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,12 +37,12 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES_SAMPLE_CATEGORY_TITLE'		=> 'Esimerkki Sääntö kategoria',
-	'BOARDRULES_SAMPLE_CATEGORY_MESSAGE'	=> 'Tämä on esimerkkikategoria lisäosan asennuksessa. Kategoriat sisältävät ryhmän siihen liittyviä sääntöjä. Kategoria kuvaukset (kuten tämä) eivät näy Säännöt-sivulla.',
-	'BOARDRULES_SAMPLE_CATEGORY_ANCHOR'		=> 'esimerkki-kategoria',
+$lang = array_merge($lang, [
+	'BOARDRULES_SAMPLE_CATEGORY_TITLE'   => 'Esimerkki Sääntö kategoria',
+	'BOARDRULES_SAMPLE_CATEGORY_MESSAGE' => 'Tämä on esimerkkikategoria lisäosan asennuksessa. Kategoriat sisältävät ryhmän siihen liittyviä sääntöjä. Kategoria kuvaukset (kuten tämä) eivät näy Säännöt-sivulla.',
+	'BOARDRULES_SAMPLE_CATEGORY_ANCHOR'  => 'esimerkki-kategoria',
 
-	'BOARDRULES_SAMPLE_RULE_TITLE'			=> 'Esimerkki Sääntö',
-	'BOARDRULES_SAMPLE_RULE_MESSAGE'		=> 'Tämä on esimerkkisääntö lisäosan asennuksessa. Kaikki näyttää toimivan. Voit editoita tai poistaa tämän säännön ja ryhtyä asettamaan foorumisi sääntöjä näkyviin.',
-	'BOARDRULES_SAMPLE_RULE_ANCHOR'			=> 'esimerkki-saanto',
-));
+	'BOARDRULES_SAMPLE_RULE_TITLE'   => 'Esimerkki Sääntö',
+	'BOARDRULES_SAMPLE_RULE_MESSAGE' => 'Tämä on esimerkkisääntö lisäosan asennuksessa. Kaikki näyttää toimivan. Voit editoita tai poistaa tämän säännön ja ryhtyä asettamaan foorumisi sääntöjä näkyviin.',
+	'BOARDRULES_SAMPLE_RULE_ANCHOR'  => 'esimerkki-saanto',
+]);

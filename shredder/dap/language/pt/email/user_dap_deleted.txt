@@ -1,0 +1,8 @@
+Subject: Foste eliminado de «{SITENAME}»
+
+Olá, {USERNAME}
+
+O Administrador de «{SITENAME}» considerou que te registaste duas ou mais vezes com nomes diferentes neste fórum, e essa foi a razão para eliminar a tua conta "{USERNAME}". Lamentamos o sucedido.
+Se acreditas que isto é um engano, podes contactar o administrador por e-mail: {BOARD_CONTACT}
+
+{EMAIL_SIG}

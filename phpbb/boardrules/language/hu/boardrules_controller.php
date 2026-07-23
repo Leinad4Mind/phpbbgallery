@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,10 +37,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES_HEADER'			=> 'Szabályzat',
-	'BOARDRULES_EXPLAIN'		=> '%s létrehozza a Fórum Szabályzatot, hogy világossá tegye a közösség minden tagjának a Fórum házirendjét. Mindenkinek ragaszkodnia kell ahhoz, hogy fórum zökkenőmentesen működjön, szórakoztató és produktív élményt nyújtson minden közösségi tag és látogató számára.',
-	'BOARDRULES_CATEGORIES'		=> 'Kategória',
-	'BOARDRULES_CATEGORY_ANCHOR'=> '%s-kategoria',
-	'BOARDRULES_RULE_ANCHOR'	=> '%s-szabalyzat',
-));
+$lang = array_merge($lang, [
+	'BOARDRULES_HEADER'          => 'Szabályzat',
+	'BOARDRULES_EXPLAIN'         => '%s létrehozza a Fórum Szabályzatot, hogy világossá tegye a közösség minden tagjának a Fórum házirendjét. Mindenkinek ragaszkodnia kell ahhoz, hogy fórum zökkenőmentesen működjön, szórakoztató és produktív élményt nyújtson minden közösségi tag és látogató számára.',
+	'BOARDRULES_CATEGORIES'      => 'Kategória',
+	'BOARDRULES_CATEGORY_ANCHOR' => '%s-kategoria',
+	'BOARDRULES_RULE_ANCHOR'     => '%s-szabalyzat',
+]);

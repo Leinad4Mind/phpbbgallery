@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,18 +38,18 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'ERROR_QUERY'					=> 'Requête contenant l’erreur',
+$lang = array_merge($lang, [
+	'ERROR_QUERY' => 'Requête contenant l’erreur',
 
-	'NO_RESULTS'					=> 'Aucun résultat',
-	'NO_SQL_QUERY'					=> 'Saisir une requête à exécuter.',
+	'NO_RESULTS'   => 'Aucun résultat',
+	'NO_SQL_QUERY' => 'Saisir une requête à exécuter.',
 
-	'QUERY_RESULT'					=> 'Résultats de la requête',
+	'QUERY_RESULT' => 'Résultats de la requête',
 
-	'SHOW_RESULTS'					=> 'Afficher les résultats',
-	'SQL_QUERY'						=> 'Exécuter une requête SQL',
-	'SQL_QUERY_EXPLAIN'				=> 'Permet de saisir la requête SQL à exécuter. L’outil remplacera « phpbb_ » par le préfixe de table utilisé.<br />Si l’option « Afficher les résultats » est cochée, l’outil affichera les résultats de la requête <em>(s’il y en a)</em>.',
+	'SHOW_RESULTS'      => 'Afficher les résultats',
+	'SQL_QUERY'         => 'Exécuter une requête SQL',
+	'SQL_QUERY_EXPLAIN' => 'Permet de saisir la requête SQL à exécuter. L’outil remplacera « phpbb_ » par le préfixe de table utilisé.<br />Si l’option « Afficher les résultats » est cochée, l’outil affichera les résultats de la requête <em>(s’il y en a)</em>.',
 
-	'SQL_QUERY_LEGEND'				=> 'Requête SQL',
-	'SQL_QUERY_SUCCESS'				=> 'La requête SQL a été exécutée.',
-));
+	'SQL_QUERY_LEGEND'  => 'Requête SQL',
+	'SQL_QUERY_SUCCESS' => 'La requête SQL a été exécutée.',
+]);

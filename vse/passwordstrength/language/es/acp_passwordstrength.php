@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -33,9 +33,9 @@ if (empty($lang) || !is_array($lang))
 // equally where a string contains only two placeholders which are used to wrap text
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
 
-$lang = array_merge($lang, array(
-	'PASSWORD_STRENGTH_TYPE'			=> 'Algoritmo de seguridad de la contraseña',
-	'PASSWORD_STRENGTH_TYPE_EXPLAIN'	=> 'Elija un algoritmo para determinar la fuerza de una contraseña.<br><strong>Complejidad</strong> busca caracteres mixtos, números, símbolos y la longitud de una contraseña, contraseñas complejas.<br><strong>zxcvbn</strong> (por DropBox) calcula la facilidad con que una contraseña se puede adivinar, lo que permite contraseñas fáciles de usar.',
-	'PASSWORD_STRENGTH_TYPE_COMPLEX'	=> 'Complejidad',
-	'PASSWORD_STRENGTH_TYPE_ZXCVBN'		=> 'Algoritmo zxcvbn',
-));
+$lang = array_merge($lang, [
+	'PASSWORD_STRENGTH_TYPE'         => 'Algoritmo de seguridad de la contraseña',
+	'PASSWORD_STRENGTH_TYPE_EXPLAIN' => 'Elija un algoritmo para determinar la fuerza de una contraseña.<br><strong>Complejidad</strong> busca caracteres mixtos, números, símbolos y la longitud de una contraseña, contraseñas complejas.<br><strong>zxcvbn</strong> (por DropBox) calcula la facilidad con que una contraseña se puede adivinar, lo que permite contraseñas fáciles de usar.',
+	'PASSWORD_STRENGTH_TYPE_COMPLEX' => 'Complejidad',
+	'PASSWORD_STRENGTH_TYPE_ZXCVBN'  => 'Algoritmo zxcvbn',
+]);

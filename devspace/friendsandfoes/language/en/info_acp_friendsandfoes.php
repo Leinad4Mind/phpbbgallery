@@ -8,8 +8,8 @@
  */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -38,7 +38,7 @@ if (empty($lang) || !is_array($lang))
  *
  */
 
-$lang = array_merge($lang, array(
-	'ACP_USER_UTILS'	=> 'User utilities',
-	'FRIENDS_AND_FOES'	=> 'Friends & foes',
-));
+$lang = array_merge($lang, [
+	'ACP_USER_UTILS'   => 'User utilities',
+	'FRIENDS_AND_FOES' => 'Friends & foes',
+]);

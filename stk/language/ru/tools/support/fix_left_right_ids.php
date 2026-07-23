@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,10 +37,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'FIX_LEFT_RIGHT_IDS'			=> 'Исправление границ значений ID всей конференции',
-	'FIX_LEFT_RIGHT_IDS_CONFIRM'	=> 'Вы уверены, что хотите исправить границы ID?<br /><br /><strong>Сделайте резервную копию базы данных перед использованием данного инструмента!</strong>',
+$lang = array_merge($lang, [
+	'FIX_LEFT_RIGHT_IDS'         => 'Исправление границ значений ID всей конференции',
+	'FIX_LEFT_RIGHT_IDS_CONFIRM' => 'Вы уверены, что хотите исправить границы ID?<br /><br /><strong>Сделайте резервную копию базы данных перед использованием данного инструмента!</strong>',
 
-	'LEFT_RIGHT_IDS_FIX_SUCCESS'	=> 'Границы ID были успешно обновлены.',
-	'LEFT_RIGHT_IDS_NO_CHANGE'		=> 'Инструмент успешно проверил все значения начальных и конечных границ ID, и теперь все записи корректны.',
-));
+	'LEFT_RIGHT_IDS_FIX_SUCCESS' => 'Границы ID были успешно обновлены.',
+	'LEFT_RIGHT_IDS_NO_CHANGE'   => 'Инструмент успешно проверил все значения начальных и конечных границ ID, и теперь все записи корректны.',
+]);

@@ -8,8 +8,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -36,18 +36,18 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BAN_REASON'						=> 'Under age',
+$lang = array_merge($lang, [
+	'BAN_REASON' => 'Under age',
 
-	'ENTER_BIRTHDATE' 					=> 'Enter your birthdate',
+	'ENTER_BIRTHDATE' => 'Enter your birthdate',
 
-	'REGISTRATION_AGE_ERROR'			=> 'The age entered is %1$s. The minimum age on this board is %2$s.',
-	'REGISTRATION_AGE_MISSING'			=> 'Invalid birthdate data entered.',
+	'REGISTRATION_AGE_ERROR'   => 'The age entered is %1$s. The minimum age on this board is %2$s.',
+	'REGISTRATION_AGE_MISSING' => 'Invalid birthdate data entered.',
 
-	'REGISTRATION_AGE_REQUIRED'			=> 'You must enter your birthday.',
-	'REGISTRATION_AGE_CANNOT_CHANGE'	=> 'You cannot change your birthday.',
-	'REGISTRATION_AGE_PROFILE'			=> 'Who can see my age',
-	'REGISTRATION_AGE_EVERYBODY'		=> 'Everybody',
-	'REGISTRATION_AGE_NOBODY'			=> 'Nobody',
-	'REGISTRATION_AGE_FRIENDS'			=> 'Only my friends',
-));
+	'REGISTRATION_AGE_REQUIRED'      => 'You must enter your birthday.',
+	'REGISTRATION_AGE_CANNOT_CHANGE' => 'You cannot change your birthday.',
+	'REGISTRATION_AGE_PROFILE'       => 'Who can see my age',
+	'REGISTRATION_AGE_EVERYBODY'     => 'Everybody',
+	'REGISTRATION_AGE_NOBODY'        => 'Nobody',
+	'REGISTRATION_AGE_FRIENDS'       => 'Only my friends',
+]);

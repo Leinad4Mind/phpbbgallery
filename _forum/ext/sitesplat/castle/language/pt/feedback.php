@@ -8,8 +8,8 @@
  */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -21,6 +21,6 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'THANKS_FOR_CONFIRMING' => 'Obrigado por confirmar que foi você! Tudo normal então.',
-	'ACCOUNT_DISABLED'      => 'Obrigado pela informação. A sua conta foi desativada temporariamente, por conseguinte encontra-se protegida. Verifique o seu email para mais informações sobre a sua conta.',
+	'THANKS_FOR_CONFIRMING' => 'Obrigado por confirmares que foste tu! Tudo normal então.',
+	'ACCOUNT_DISABLED'      => 'Obrigado pela informação. A tua conta foi desativada temporariamente, por conseguinte encontra-se protegida. Verifica o teu email para mais informações sobre a tua conta.',
 ]);

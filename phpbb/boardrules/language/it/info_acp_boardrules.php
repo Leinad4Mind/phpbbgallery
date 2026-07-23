@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,13 +38,13 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// ACP modules
-	'ACP_BOARDRULES'				=> 'Regole Forum',
-	'ACP_BOARDRULES_MANAGE'			=> 'Gestisci regole',
-	'ACP_BOARDRULES_SETTINGS'		=> 'Impostazioni Regole',
+	'ACP_BOARDRULES'          => 'Regole Forum',
+	'ACP_BOARDRULES_MANAGE'   => 'Gestisci regole',
+	'ACP_BOARDRULES_SETTINGS' => 'Impostazioni Regole',
 
 	// ACP Logs
-	'ACP_BOARDRULES_SETTINGS_LOG'	=> '<strong>Le impostazioni delle regole del forum sono state cambiate</strong>',
-	'ACP_BOARDRULES_NOTIFY_LOG'		=> '<strong>La notifica delle regole del forum sono state inviate a tutti gli utenti</strong>',
-));
+	'ACP_BOARDRULES_SETTINGS_LOG' => '<strong>Le impostazioni delle regole del forum sono state cambiate</strong>',
+	'ACP_BOARDRULES_NOTIFY_LOG'   => '<strong>La notifica delle regole del forum sono state inviate a tutti gli utenti</strong>',
+]);

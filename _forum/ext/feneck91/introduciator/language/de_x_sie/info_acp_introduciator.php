@@ -10,8 +10,8 @@
  */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -41,14 +41,14 @@ if (empty($lang) || !is_array($lang))
 /**
 * mode: main : the name of the extension
 */
-$lang = array_merge($lang, array(
-	'ACP_INTRODUCIATOR_EXTENSION'					=> 'Introduciator',
+$lang = array_merge($lang, [
+	'ACP_INTRODUCIATOR_EXTENSION' => 'Introduciator',
 
 /**
 * Titles present on the left side of Extensions ACP's tab under Introduciator item
 */
-	'INTRODUCIATOR_GENERAL'							=> 'Allgemein',
-	'INTRODUCIATOR_CONFIGURATION'					=> 'Konfiguration',
-	'INTRODUCIATOR_EXPLANATION'						=> 'Erklärungen',
-	'INTRODUCIATOR_STATISCICS'						=> 'Statistiken',
-));
+	'INTRODUCIATOR_GENERAL'       => 'Allgemein',
+	'INTRODUCIATOR_CONFIGURATION' => 'Konfiguration',
+	'INTRODUCIATOR_EXPLANATION'   => 'Erklärungen',
+	'INTRODUCIATOR_STATISCICS'    => 'Statistiken',
+]);

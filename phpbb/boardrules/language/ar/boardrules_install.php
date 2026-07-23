@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,12 +38,12 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES_SAMPLE_CATEGORY_TITLE'		=> 'قسم تجريبي',
-	'BOARDRULES_SAMPLE_CATEGORY_MESSAGE'	=> 'هذا قسم تجريبي ( مثال ) لقوانين منتداك. الأقسام تحتوي على مجموعة قوانين ذات صلة. محتويات القسم هذا لا يظهر في صفحة القوانين.',
-	'BOARDRULES_SAMPLE_CATEGORY_ANCHOR'		=> 'قسم-تجريبي',
+$lang = array_merge($lang, [
+	'BOARDRULES_SAMPLE_CATEGORY_TITLE'   => 'قسم تجريبي',
+	'BOARDRULES_SAMPLE_CATEGORY_MESSAGE' => 'هذا قسم تجريبي ( مثال ) لقوانين منتداك. الأقسام تحتوي على مجموعة قوانين ذات صلة. محتويات القسم هذا لا يظهر في صفحة القوانين.',
+	'BOARDRULES_SAMPLE_CATEGORY_ANCHOR'  => 'قسم-تجريبي',
 
-	'BOARDRULES_SAMPLE_RULE_TITLE'			=> 'قانون تجريبي',
-	'BOARDRULES_SAMPLE_RULE_MESSAGE'		=> 'هذا قانون تجريبي ( مثال ) لقوانين منتداك. يبدوا أن كل شئ يعمل بشكل جيد. تستطيع تعديل أو حذف هذا القانون وكذلك القسم. تستطيع الآن انشاء القوانين التي تريدها لمنتداك.',
-	'BOARDRULES_SAMPLE_RULE_ANCHOR'			=> 'قانون-تجريبي',
-));
+	'BOARDRULES_SAMPLE_RULE_TITLE'   => 'قانون تجريبي',
+	'BOARDRULES_SAMPLE_RULE_MESSAGE' => 'هذا قانون تجريبي ( مثال ) لقوانين منتداك. يبدوا أن كل شئ يعمل بشكل جيد. تستطيع تعديل أو حذف هذا القانون وكذلك القسم. تستطيع الآن انشاء القوانين التي تريدها لمنتداك.',
+	'BOARDRULES_SAMPLE_RULE_ANCHOR'  => 'قانون-تجريبي',
+]);

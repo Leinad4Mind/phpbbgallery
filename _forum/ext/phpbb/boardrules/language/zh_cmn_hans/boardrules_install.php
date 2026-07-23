@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,12 +37,12 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES_SAMPLE_CATEGORY_TITLE'		=> '章程分类样例',
-	'BOARDRULES_SAMPLE_CATEGORY_MESSAGE'	=> '这是一个论坛章程的预装分类样例。分类包含相关的规则。分类消息（只显示在这里）不会显示在章程页面。 ',
-	'BOARDRULES_SAMPLE_CATEGORY_ANCHOR'		=> 'example-category',
+$lang = array_merge($lang, [
+	'BOARDRULES_SAMPLE_CATEGORY_TITLE'   => '章程分类样例',
+	'BOARDRULES_SAMPLE_CATEGORY_MESSAGE' => '这是一个论坛章程的预装分类样例。分类包含相关的规则。分类消息（只显示在这里）不会显示在章程页面。 ',
+	'BOARDRULES_SAMPLE_CATEGORY_ANCHOR'  => 'example-category',
 
-	'BOARDRULES_SAMPLE_RULE_TITLE'			=> '章程样例',
-	'BOARDRULES_SAMPLE_RULE_MESSAGE'		=> '这是一条章程样例。你可以编辑或者删除这条章程。',
-	'BOARDRULES_SAMPLE_RULE_ANCHOR'			=> 'example-rule',
-));
+	'BOARDRULES_SAMPLE_RULE_TITLE'   => '章程样例',
+	'BOARDRULES_SAMPLE_RULE_MESSAGE' => '这是一条章程样例。你可以编辑或者删除这条章程。',
+	'BOARDRULES_SAMPLE_RULE_ANCHOR'  => 'example-rule',
+]);

@@ -18,8 +18,8 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'SUBJECT_KEYWORD_NOTIFICATION_TITLE'   => 'Uma palavra-chave que segues foi encontrada no título de um tópico',
+	'SUBJECT_KEYWORD_NOTIFICATION_TITLE'   => 'Uma palavra-chave que segue foi encontrada no título de um tópico',
 	'SUBJECT_KEYWORD_NOTIFICATION_CONTENT' => 'A palavra-chave "%s" surgiu no título de um novo tópico.',
-	'CONTENT_KEYWORD_NOTIFICATION_TITLE'   => 'Uma palavra-chave que segues foi encontrada no conteúdo de uma mensagem',
+	'CONTENT_KEYWORD_NOTIFICATION_TITLE'   => 'Uma palavra-chave que segue foi encontrada no conteúdo de uma mensagem',
 	'CONTENT_KEYWORD_NOTIFICATION_CONTENT' => 'A palavra-chave "%s" surgiu no conteúdo de uma nova mensagem.',
 ]);

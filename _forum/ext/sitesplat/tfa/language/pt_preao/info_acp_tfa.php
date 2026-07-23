@@ -8,8 +8,8 @@
  */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -36,15 +36,15 @@ $lang = array_merge($lang, [
 	'TFA' => 'Autenticação de Dois Fatores (Two Factor Authentication)',
 
 	'TFA_SETTING'         => 'Configuração da Autenticação de Dois Fatores',
-	'TFA_SETTING_EXPLAIN' => 'Selecione as opções de Autenticação de Dois Fatores',
+	'TFA_SETTING_EXPLAIN' => 'Selecciona as opções de Autenticação de Dois Factores',
 
-	'TFA_DISABLED'               => 'Autenticação de dois fatores desativada',
-	'TFA_NOT_REQUIRED'           => 'Não exigir autenticação de dois fatores',
-	'TFA_REQUIRED_FOR_ACP_LOGIN' => 'Exigir autenticação de dois fatores apenas para o início de sessão (login) no ACP',
-	'TFA_REQUIRED_FOR_ADMIN'     => 'Exigir autenticação de dois fatores para todos os administradores',
-	'TFA_REQUIRED_FOR_MODERATOR' => 'Exigir autenticação de dois fatores para todos os moderadores e administradores',
-	'TFA_REQUIRED'               => 'Exigir autenticação de dois fatores para todos os utilizadores',
+	'TFA_DISABLED'               => 'Autenticação de dois factores desativada',
+	'TFA_NOT_REQUIRED'           => 'Não exigir autenticação de dois factores',
+	'TFA_REQUIRED_FOR_ACP_LOGIN' => 'Exigir autenticação de dois factores apenas para o início de sessão (login) no ACP',
+	'TFA_REQUIRED_FOR_ADMIN'     => 'Exigir autenticação de dois factores para todos os administradores',
+	'TFA_REQUIRED_FOR_MODERATOR' => 'Exigir autenticação de dois factores para todos os moderadores e administradores',
+	'TFA_REQUIRED'               => 'Exigir autenticação de dois factores para todos os utilizadores',
 
 	'TFA_NOTICE'     => '<div class="phpinfo"><p>As configurações desta extensão encontram-se em <strong>%1$s » %2$s » %3$s</strong>.</p></div>',
-	'SS_HELPER_NOTY' => 'O SiteSplat BBcore não existe!<br />Faça o download do <a href="http://sitesplat.com" target="_blank">BBcore</a> e copie a pasta BBcore para a pasta da sua extensão sitesplat.',
+	'SS_HELPER_NOTY' => 'O SiteSplat BBcore não existe!<br />Transfere o <a href="http://sitesplat.com" target="_blank">BBcore</a> e copia a pasta BBcore para a pasta da tua extensão sitesplat.',
 ]);

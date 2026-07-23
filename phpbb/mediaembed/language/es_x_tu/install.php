@@ -38,6 +38,6 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'PHPBB_VERSION_ERROR'	=> 'Tu foro parece estar usando una versión anterior de phpBB. Se requiere phpBB ' . \phpbb\mediaembed\ext::PHPBB_MINIMUM . ' o posterior para usar esta extensión.',
-	'S9E_MEDIAEMBED_ERROR'	=> 'Detectamos la extensión s9e/mediaembed. El complemento Media Embed de phpBB no se puede instalar hasta que deshabilites, purgues y elimines todos los archivos relacionados con la extensión s9e/mediaembed.',
+	'PHPBB_VERSION_ERROR'  => 'Tu foro parece estar usando una versión anterior de phpBB. Se requiere phpBB ' . \phpbb\mediaembed\ext::PHPBB_MINIMUM . ' o posterior para usar esta extensión.',
+	'S9E_MEDIAEMBED_ERROR' => 'Detectamos la extensión s9e/mediaembed. El complemento Media Embed de phpBB no se puede instalar hasta que deshabilites, purgues y elimines todos los archivos relacionados con la extensión s9e/mediaembed.',
 ]);

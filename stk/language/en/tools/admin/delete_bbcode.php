@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -36,21 +36,21 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'DELETE_BBCODE'						=> 'Removing bb-codes',
-	'DELETE_BBCODE_PROGRESS'			=> 'Processed %1$d from %2$d ...',
-	'DELETE_BBCODES'					=> 'Removing bb-codes in progress',
-	'DELETE_BBCODE_COMPLETE'			=> 'Removing bb-codes completed.',
-	'IDS_EMPTY'							=> 'You have not selected any bb-codes clearing mode. If you don\'t know how to choose a mode, check the box <strong>Cleaning BBCode everywhere</strong>. ',
-	'DELETE_BBCODE_POST_IDS'			=> 'Perform removing bb-codes only among the listed messages',
-	'DELETE_BBCODE_POST_IDS_EXPLAIN'	=> 'Specify post IDs in a comma-separated list (e.g. 1,2,3,5,8,13).',
-	'DELETE_BBCODE_FORUMS'				=> 'Perform removing bb-codes only in selected forums',
-	'DELETE_BBCODE_FORUMS_EXPLAIN'		=> 'To select multiple forums some or all of the proper use for your computer and browser combination of mouse and keyboard.',
+$lang = array_merge($lang, [
+	'DELETE_BBCODE'                  => 'Removing bb-codes',
+	'DELETE_BBCODE_PROGRESS'         => 'Processed %1$d from %2$d ...',
+	'DELETE_BBCODES'                 => 'Removing bb-codes in progress',
+	'DELETE_BBCODE_COMPLETE'         => 'Removing bb-codes completed.',
+	'IDS_EMPTY'                      => 'You have not selected any bb-codes clearing mode. If you don\'t know how to choose a mode, check the box <strong>Cleaning BBCode everywhere</strong>. ',
+	'DELETE_BBCODE_POST_IDS'         => 'Perform removing bb-codes only among the listed messages',
+	'DELETE_BBCODE_POST_IDS_EXPLAIN' => 'Specify post IDs in a comma-separated list (e.g. 1,2,3,5,8,13).',
+	'DELETE_BBCODE_FORUMS'           => 'Perform removing bb-codes only in selected forums',
+	'DELETE_BBCODE_FORUMS_EXPLAIN'   => 'To select multiple forums some or all of the proper use for your computer and browser combination of mouse and keyboard.',
 
-	'DELETE_BBCODE_SELECT'				=> 'Select the desired bb-code',
-	'DELETE_BBCODE_ALL'					=> 'Cleaning BBCode everywhere',
-	'DELETE_BBCODE_ALL_EXPLAIN'			=> 'If checked, removal of BBCode will be done everywhere. This option will be ignored if specific posts or forums are specified above. Please note that this tool has the potential to damage your database beyond repair; therefore, <strong>be sure to backup your database before proceeding</strong>. Moreover, note that this tool may take some time to complete.',
+	'DELETE_BBCODE_SELECT'      => 'Select the desired bb-code',
+	'DELETE_BBCODE_ALL'         => 'Cleaning BBCode everywhere',
+	'DELETE_BBCODE_ALL_EXPLAIN' => 'If checked, removal of BBCode will be done everywhere. This option will be ignored if specific posts or forums are specified above. Please note that this tool has the potential to damage your database beyond repair; therefore, <strong>be sure to backup your database before proceeding</strong>. Moreover, note that this tool may take some time to complete.',
 
 
 
-));
+]);

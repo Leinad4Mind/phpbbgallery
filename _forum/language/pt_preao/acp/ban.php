@@ -15,11 +15,13 @@
 /**
  * DO NOT CHANGE
  */
-if (!defined('IN_PHPBB')) {
+if (!defined('IN_PHPBB'))
+{
 	exit;
 }
 
-if (empty($lang) || !is_array($lang)) {
+if (empty($lang) || !is_array($lang))
+{
 	$lang = [];
 }
 
@@ -37,47 +39,47 @@ if (empty($lang) || !is_array($lang)) {
 
 // Banning
 $lang = array_merge($lang, [
-	'1_HOUR'							=> '1 Hora',
-	'30_MINS'						=> '30 Minutos',
-	'6_HOURS'						=> '6 Horas',
+	'1_HOUR'  => '1 Hora',
+	'30_MINS' => '30 Minutos',
+	'6_HOURS' => '6 Horas',
 
-	'ACP_BAN_EXPLAIN'				=> 'Aqui pode fazer a Gestão dos Utilizadores expulsos por nome, endereço de IP, ou endereço de email. A expulsão impede o Utilizador de entrar no Fórum. Se desejar pode explicar o motivo da expulsão (3.000 caracteres). O motivo da expulsão será mostrado no registo do Administrador. A duração da expulsão também pode ser especificada. Se quiser que a expulsão termine numa data específica depois de outra especificação de tempo seleccione <span style="text-decoration: underline;">Até -&gt;</span> para a longevidade da expulsão e introduza uma data no formato <kbd>YYYY-MM-DD</kbd>.',
+	'ACP_BAN_EXPLAIN' => 'Aqui pode fazer a Gestão dos Utilizadores expulsos por nome, endereço de IP, ou endereço de email. A expulsão impede o Utilizador de entrar no Fórum. Se desejar pode explicar o motivo da expulsão (3.000 caracteres). O motivo da expulsão será mostrado no registo do Administrador. A duração da expulsão também pode ser especificada. Se quiser que a expulsão termine numa data específica depois de outra especificação de tempo seleccione <span style="text-decoration: underline;">Até -&gt;</span> para a longevidade da expulsão e introduza uma data no formato <kbd>YYYY-MM-DD</kbd>.',
 
-	'BAN_EXCLUDE'					=> 'Apagar Expulsão',
-	'BAN_LENGTH'					=> 'Duração da Expulsão',
-	'BAN_REASON'					=> 'Razão da Expulsão',
-	'BAN_GIVE_REASON'				=> 'Descrição do motivo da expulsão',
-	'BAN_UPDATE_SUCCESSFUL'		=> 'A Lista de Expulsões foi actualizada com sucesso.',
-	'BANNED_UNTIL_DATE'			=> 'até %s', // Exemplo: "até Seg 13.Jul.2009, 14:44"
-	'BANNED_UNTIL_DURATION'		=> '%1$s (até %2$s)', // Exemplo: "7 dias (até Ter 14.Jul.2009, 14:44)"
+	'BAN_EXCLUDE'           => 'Apagar Expulsão',
+	'BAN_LENGTH'            => 'Duração da Expulsão',
+	'BAN_REASON'            => 'Razão da Expulsão',
+	'BAN_GIVE_REASON'       => 'Descrição do motivo da expulsão',
+	'BAN_UPDATE_SUCCESSFUL' => 'A Lista de Expulsões foi actualizada com sucesso.',
+	'BANNED_UNTIL_DATE'     => 'até %s', // Exemplo: "até Seg 13.Jul.2009, 14:44"
+	'BANNED_UNTIL_DURATION' => '%1$s (até %2$s)', // Exemplo: "7 dias (até Ter 14.Jul.2009, 14:44)"
 
-	'EMAIL_BAN'							=> 'Expulsar um ou mais endereços de email',
-	'EMAIL_BAN_EXCLUDE_EXPLAIN'	=> 'Active esta opção para excluir emails da expulsão.',
-	'EMAIL_BAN_EXPLAIN'				=> 'Quando utilizar mais do que um endereço de email, separe-os por linha. Para seleccionar endereços de email parciais, utilize asteriscos (*), como por exemplo, <samp>*@hotmail.com</samp>, <samp>*@*.domain.tld</samp>, etc.',
-	'EMAIL_NO_BANNED'					=> 'Não há emails expulsos',
-	'EMAIL_UNBAN'						=> 'Desbloquear um ou mais endereços de email',
-	'EMAIL_UNBAN_EXPLAIN'			=> 'Pode desbloquear múltiplos emails de uma só vez, usando a combinação apropriada do rato e teclado do seu computador. Emails excluídos têm uma marcação no fundo.',
+	'EMAIL_BAN'                 => 'Expulsar um ou mais endereços de email',
+	'EMAIL_BAN_EXCLUDE_EXPLAIN' => 'Active esta opção para excluir emails da expulsão.',
+	'EMAIL_BAN_EXPLAIN'         => 'Quando utilizar mais do que um endereço de email, separe-os por linha. Para seleccionar endereços de email parciais, utilize asteriscos (*), como por exemplo, <samp>*@hotmail.com</samp>, <samp>*@*.domain.tld</samp>, etc.',
+	'EMAIL_NO_BANNED'           => 'Não há emails expulsos',
+	'EMAIL_UNBAN'               => 'Desbloquear um ou mais endereços de email',
+	'EMAIL_UNBAN_EXPLAIN'       => 'Pode desbloquear múltiplos emails de uma só vez, usando a combinação apropriada do rato e teclado do seu computador. Emails excluídos têm uma marcação no fundo.',
 
-	'IP_BAN'							=> 'Expulsar um ou mais IPs',
-	'IP_BAN_EXCLUDE_EXPLAIN'	=> 'Active esta opção para excluir IPs da expulsão.',
-	'IP_BAN_EXPLAIN'				=> 'Para especificar diferentes IPs ou hostnames digite cada um numa nova linha. Para especificar uma range de endereços de IP separe o início e o fim com um hífen (-), para especificar uma wildcard use asterisco *.',
-	'IP_HOSTNAME'					=> 'Endereços IP ou hostnames',
-	'IP_NO_BANNED'					=> 'Não há endereços de IP expulsos',
-	'IP_UNBAN'						=> 'Desbloquear um ou mais endereços de IP',
-	'IP_UNBAN_EXPLAIN'			=> 'Pode desbloquear (ou retirar a expulsão) múltiplos IPs apenas de uma só vez usando a combinação apropriada do rato e teclado do seu computador. IPs excluídos têm uma marcação no fundo.',
+	'IP_BAN'                 => 'Expulsar um ou mais IPs',
+	'IP_BAN_EXCLUDE_EXPLAIN' => 'Active esta opção para excluir IPs da expulsão.',
+	'IP_BAN_EXPLAIN'         => 'Para especificar diferentes IPs ou hostnames digite cada um numa nova linha. Para especificar uma range de endereços de IP separe o início e o fim com um hífen (-), para especificar uma wildcard use asterisco *.',
+	'IP_HOSTNAME'            => 'Endereços IP ou hostnames',
+	'IP_NO_BANNED'           => 'Não há endereços de IP expulsos',
+	'IP_UNBAN'               => 'Desbloquear um ou mais endereços de IP',
+	'IP_UNBAN_EXPLAIN'       => 'Pode desbloquear (ou retirar a expulsão) múltiplos IPs apenas de uma só vez usando a combinação apropriada do rato e teclado do seu computador. IPs excluídos têm uma marcação no fundo.',
 
-	'LENGTH_BAN_INVALID'			=> 'O formato da data deve ser <kbd>DD-MM-YYYY</kbd>.',
+	'LENGTH_BAN_INVALID' => 'O formato da data deve ser <kbd>DD-MM-YYYY</kbd>.',
 
-	'OPTIONS_BANNED'				=> 'Banido',
-	'OPTIONS_EXCLUDED'			=> 'Excluído',
+	'OPTIONS_BANNED'   => 'Banido',
+	'OPTIONS_EXCLUDED' => 'Excluído',
 
-	'PERMANENT'						=> 'Permanente',
+	'PERMANENT' => 'Permanente',
 
-	'UNTIL'							=> 'Até',
-	'USER_BAN'						=> 'Expulsar um ou mais utilizadores por nome de utilizador',
-	'USER_BAN_EXCLUDE_EXPLAIN'	=> 'Active esta opção para excluir Utilizadores da expulsão.',
-	'USER_BAN_EXPLAIN'			=> 'Pode expulsar múltiplos Utilizadores de uma só vez, escrevendo um nome por linha. Use <span style="text-decoration: underline;">Procurar Utilizador</span> para adicionar automaticamente um ou mais Utilizadores.',
-	'USER_NO_BANNED'				=> 'Não há utilizadores expulsos',
-	'USER_UNBAN'					=> 'Retirar a expulsão a um ou mais utilizadores por nome de utilizador',
-	'USER_UNBAN_EXPLAIN'			=> 'Pode desbloquear (ou retirar a expulsão) múltiplos IPs apenas de uma só vez usando a combinação apropriada do rato e teclado do seu computador. IPs expulsos têm uma marcação no fundo.',
+	'UNTIL'                    => 'Até',
+	'USER_BAN'                 => 'Expulsar um ou mais utilizadores por nome de utilizador',
+	'USER_BAN_EXCLUDE_EXPLAIN' => 'Active esta opção para excluir Utilizadores da expulsão.',
+	'USER_BAN_EXPLAIN'         => 'Pode expulsar múltiplos Utilizadores de uma só vez, escrevendo um nome por linha. Use <span style="text-decoration: underline;">Procurar Utilizador</span> para adicionar automaticamente um ou mais Utilizadores.',
+	'USER_NO_BANNED'           => 'Não há utilizadores expulsos',
+	'USER_UNBAN'               => 'Retirar a expulsão a um ou mais utilizadores por nome de utilizador',
+	'USER_UNBAN_EXPLAIN'       => 'Pode desbloquear (ou retirar a expulsão) múltiplos IPs apenas de uma só vez usando a combinação apropriada do rato e teclado do seu computador. IPs expulsos têm uma marcação no fundo.',
 ]);

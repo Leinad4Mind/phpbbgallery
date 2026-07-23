@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -48,15 +48,15 @@ if (empty($lang) || !is_array($lang))
 *
 * Translators: Feel free to not translate these language strings
 */
-$lang = array_merge($lang, array(
-	'EXCEPTION_FIELD_MISSING'		=> 'Obligatorisk felt mangler',
-	'EXCEPTION_INVALID_ARGUMENT'	=> 'Ugylding innhold angitt for `%1$s`. Årsak: %2$s',
-	'EXCEPTION_OUT_OF_BOUNDS'		=> 'Feltet `%1$s` har data utover feltets begrensninger',
-	'EXCEPTION_TOO_LONG'			=> 'Inndata var lengre enn den maksimalt tillate lengden.',
-	'EXCEPTION_NOT_UNIQUE'			=> 'Inndata var ikke unike.',
-	'EXCEPTION_UNEXPECTED_VALUE'	=> 'Uventede data mottatt i feltet `%1$s`. Årsak: %2$s',
-	'EXCEPTION_ILLEGAL_CHARACTERS'	=> 'Inndata inneholdt tegn som ikke er tillatt.',
+$lang = array_merge($lang, [
+	'EXCEPTION_FIELD_MISSING'      => 'Obligatorisk felt mangler',
+	'EXCEPTION_INVALID_ARGUMENT'   => 'Ugylding innhold angitt for `%1$s`. Årsak: %2$s',
+	'EXCEPTION_OUT_OF_BOUNDS'      => 'Feltet `%1$s` har data utover feltets begrensninger',
+	'EXCEPTION_TOO_LONG'           => 'Inndata var lengre enn den maksimalt tillate lengden.',
+	'EXCEPTION_NOT_UNIQUE'         => 'Inndata var ikke unike.',
+	'EXCEPTION_UNEXPECTED_VALUE'   => 'Uventede data mottatt i feltet `%1$s`. Årsak: %2$s',
+	'EXCEPTION_ILLEGAL_CHARACTERS' => 'Inndata inneholdt tegn som ikke er tillatt.',
 
 	// Translators: do not change this
-	'EXCEPTION_WRONG_DATA_LANG'		=> $lang['WRONG_DATA_LANG'],
-));
+	'EXCEPTION_WRONG_DATA_LANG' => $lang['WRONG_DATA_LANG'],
+]);

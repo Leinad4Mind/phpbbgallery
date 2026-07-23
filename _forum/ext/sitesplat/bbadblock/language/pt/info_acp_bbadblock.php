@@ -8,8 +8,8 @@
  */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -28,7 +28,7 @@ $lang = array_merge($lang, [
 	'ACP_BBADBLOCK_BBMEMBERSHIP_EXPLAIN' => '<br />Se o BBmembership estiver ativado, podes usar um dos grupos de membros para desativar o bloqueador de anúncios. O grupo de utilizador deve então ser o predefinido para o membro.',
 
 	'BBADBLOCK_NOTICE' => '<div class="phpinfo"><p>As definições desta extensão encontram-se em <strong>%1$s &#187; %2$s &#187; %3$s</strong>.</p></div>',
-	'SS_HELPER_NOTY'    => 'O SiteSplat BBcore não existe!<br />Transfere o <a href="http://sitesplat.com" target="_blank">BBcore</a> e copia a pasta BBcore para a pasta da tua extensão sitesplat.',
+	'SS_HELPER_NOTY'   => 'O SiteSplat BBcore não existe!<br />Transfere o <a href="http://sitesplat.com" target="_blank">BBcore</a> e copia a pasta BBcore para a pasta da tua extensão sitesplat.',
 
 	'BBADBLOCK_CLASSNAME'                   => 'Nome da Classe',
 	'BBADBLOCK_CLASSNAME_EXPLAIN'           => 'Nome da classe div onde estão os teus anúncios. <br /> Não deves alterar isto a menos que saibas o que estás a fazer. <br /> Envolve os teus anúncios em blocos DIV com a classe aqui inserida. <br />Por predefinição, os anúncios de teste encontram-se em: <br /><strong class="small">- /ext/sitesplat/bbadblock/styles/FLATBOOTS/template/event/overall_footer_content_after.html</strong> <br /><strong class="small">- /ext/sitesplat/bbadblock/styles/FLATBOOTS/template/event/viewtopic_body_postrow_post_after.html</strong>',
@@ -52,8 +52,8 @@ $lang = array_merge($lang, [
 	'NOTICE_BBMEMBERSHIP'                   => 'A extensão <a href="http://www.sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=31"><strong>BBmembership</strong></a> não está instalada, não podes usar as opções de redirecionamento automático e de grupo de utilizador.',
 	'ACP_NOTICE_CLOSE'                      => 'Fechar',
 
-	'NOTICE_BBADBLOCK'         => 'A extensão <a href="http://www.sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=31"><strong>BBmembership</strong></a> não está instalada, não podes usar as opções de redirecionamento automático e de grupo de utilizador.',
-	'NOTICE_BBADBLOCK_MINICMS' => 'A extensão <a href="http://www.sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=18"><strong>Mini CMS</strong></a> não está instalada, não podes criar posições dinâmicas de anúncios',
+	'NOTICE_BBADBLOCK'             => 'A extensão <a href="http://www.sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=31"><strong>BBmembership</strong></a> não está instalada, não podes usar as opções de redirecionamento automático e de grupo de utilizador.',
+	'NOTICE_BBADBLOCK_MINICMS'     => 'A extensão <a href="http://www.sitesplat.com/phpBB3/marketplace.php?mode=view&item_id=18"><strong>Mini CMS</strong></a> não está instalada, não podes criar posições dinâmicas de anúncios',
 	'ACP_BBADBLOCK_MANAGE'         => 'Gerir BBadblock',
 	'ACP_BBADBLOCK_MANAGE_EXPLAIN' => 'Usando este formulário podes adicionar, editar, ver e eliminar configurações do BBadblock.',
 
@@ -73,14 +73,14 @@ $lang = array_merge($lang, [
 	'ACP_BBADBLOCK_NOTICE_CLOSE' => 'Fechar',
 
 	'ACP_BBADBLOCK_VERSION' => '1.0.5',
-	'ACP_LOADING'            => 'Aguarda. A Carregar...',
+	'ACP_LOADING'           => 'Aguarda. A Carregar...',
 ]);
 
 // Update check stuff
 $lang = array_merge($lang, [
 	'DESCRIPTION_PAGE'   => 'Descrição',
 	'DESCRIPTION_NOTICE' => 'Nota da extensão',
-	'ext_details' => [
+	'ext_details'        => [
 		'details' => [
 			'DESCRIPTION_1' => 'Vista geral dos utilizadores a usar bloqueador de anúncios',
 			'DESCRIPTION_2' => 'Alerta de utilização de bloqueador de anúncios',

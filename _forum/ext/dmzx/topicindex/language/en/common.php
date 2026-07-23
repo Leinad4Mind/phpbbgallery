@@ -8,8 +8,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -36,27 +36,27 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'ADD_INILIST'					=> '+List',
-	'REMOVE_INILIST'				=> '-List',
-	'OTINDEX_LINK_TITLE'			=> 'Topics list',
-	'NUM'							=> 'N°',
-	'POSTER'						=> 'Posted by',
-	'INDEX_POST_PRES'				=> 'Before to opening a new topic, please check if is not already in this list. If there is use that topic to write your posts.<br />Thanks',
-	'NON_ACTIVE'					=> 'Inactive',
-	'DEF_ALL_TOPICS_IN'				=> 'All new topic automatically',
-	'DEF_ALL_TOPICS_OFF'			=> 'Add manually topics to the list',
-	'REMOVE_FROM_LIST'				=> 'remove',
-	'TOPICINDEX_VERSION'			=> 'Version',
-	'ALL'							=> 'All',
-	'09'							=> '0-9',
-	'SYMB'							=> '#&%',
-	'ANY_TOPIC_IN_LIST'				=> 'Any topics',
-	'SELECT_A_LIST'					=> 'Select a list',
-	'OIINDEX_HEADER'				=> 'Topics List',
-	'LANGUAGE'						=> 'Language',
-	'CATEGORY'						=> 'Category',
-	'COMMENTS'						=> 'Comments',
-	'BUTTON_UPLOAD'					=> 'Share Project',
-	'BUTTON_UPLOAD_EXPLAIN'			=> 'Yes! Start sharing projects in our community!',
-));
+$lang = array_merge($lang, [
+	'ADD_INILIST'           => '+List',
+	'REMOVE_INILIST'        => '-List',
+	'OTINDEX_LINK_TITLE'    => 'Topics list',
+	'NUM'                   => 'N°',
+	'POSTER'                => 'Posted by',
+	'INDEX_POST_PRES'       => 'Before to opening a new topic, please check if is not already in this list. If there is use that topic to write your posts.<br />Thanks',
+	'NON_ACTIVE'            => 'Inactive',
+	'DEF_ALL_TOPICS_IN'     => 'All new topic automatically',
+	'DEF_ALL_TOPICS_OFF'    => 'Add manually topics to the list',
+	'REMOVE_FROM_LIST'      => 'remove',
+	'TOPICINDEX_VERSION'    => 'Version',
+	'ALL'                   => 'All',
+	'09'                    => '0-9',
+	'SYMB'                  => '#&%',
+	'ANY_TOPIC_IN_LIST'     => 'Any topics',
+	'SELECT_A_LIST'         => 'Select a list',
+	'OIINDEX_HEADER'        => 'Topics List',
+	'LANGUAGE'              => 'Language',
+	'CATEGORY'              => 'Category',
+	'COMMENTS'              => 'Comments',
+	'BUTTON_UPLOAD'         => 'Share Project',
+	'BUTTON_UPLOAD_EXPLAIN' => 'Yes! Start sharing projects in our community!',
+]);

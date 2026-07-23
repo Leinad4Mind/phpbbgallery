@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,9 +38,9 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'READD_MODULE_MANAGEMENT'			=> 'Recréer les modules de la « Gestion de modules »',
-	'READD_MODULE_MANAGEMENT_CONFIRM'	=> 'Confirmer la recréation des modules de la « Gestion de modules » du « Panneau d’administration ».',
-	'READD_MODULE_MANAGEMENT_SUCCESS'	=> 'Les modules ont été recréés.',
-	'NO_NEED_READD_MODULE_MANAGEMENT'	=> 'Aucun des ces modules n’a été supprimé ou endommagé.',
-));
+$lang = array_merge($lang, [
+	'READD_MODULE_MANAGEMENT'         => 'Recréer les modules de la « Gestion de modules »',
+	'READD_MODULE_MANAGEMENT_CONFIRM' => 'Confirmer la recréation des modules de la « Gestion de modules » du « Panneau d’administration ».',
+	'READD_MODULE_MANAGEMENT_SUCCESS' => 'Les modules ont été recréés.',
+	'NO_NEED_READD_MODULE_MANAGEMENT' => 'Aucun des ces modules n’a été supprimé ou endommagé.',
+]);

@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,9 +38,9 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'FH_HELPER_NOTICE'		=> 'L’extension : « Forumhulp Helper » n’est pas installée !<br />Il est nécessaire de télécharger son archive disponible sur cette page : <a href="https://github.com/ForumHulp/helper" target="_blank">Forumhulp Helper</a>, puis de l’envoyer sur son espace FTP et de l’activer.',
-	'HTML_EMAIL_NOTICE'		=> '<div class="phpinfo"><p class="entry">Aucun paramètre n’est disponible pour cette extension.<br />Cette extension est utile pour l’extension « E-mail on birthday » en activant l’option : « E-mail d’anniversaire en HTML », dans l’onglet « GÉNÉRAL », rubrique « Fonctionnalités du forum ». Pour utiliser le language HTML dans d’autres e-mails, la fonction « messenger » doit envoyer les e-mails en HTML via la fonction « $messenger->set_mail_html(true) », aussi voir <a href="https://github.com/ForumHulp/htmlemail/issues/11">cette page</a>. Enfin, saisir le contenu en langage HTML de son fichier e-mail (*.txt) par ce que l’on souhaite.</p></div>',
-	'DELETE_DATA_NOTICE'	=> '<div style="width:80%;margin:20px auto;"><p style="text-align:left;">Tous les fichiers n’ont pas été remplacés ! Merci de remplacer les fichiers mentionnés dans le « Journal d’administration ».</p></div>',
-	'ENABLE_DATA_NOTICE'	=> '<div style="width:80%;margin:20px auto;"><p style="text-align:left;"><br />Cependant, toutes les mises à jour n’ont pas été correctement exécutées en raison des permissions sur les fichiers ou en raison de fichiers manquants. Pour davantage d’informations merci de consulter le « Journal d’administration ».<br /><br />Merci de mettre à jour les fichiers manuellement pour accéder à toutes les fonctionnalités !</p></div>'
-));
+$lang = array_merge($lang, [
+	'FH_HELPER_NOTICE'   => 'L’extension : « Forumhulp Helper » n’est pas installée !<br />Il est nécessaire de télécharger son archive disponible sur cette page : <a href="https://github.com/ForumHulp/helper" target="_blank">Forumhulp Helper</a>, puis de l’envoyer sur son espace FTP et de l’activer.',
+	'HTML_EMAIL_NOTICE'  => '<div class="phpinfo"><p class="entry">Aucun paramètre n’est disponible pour cette extension.<br />Cette extension est utile pour l’extension « E-mail on birthday » en activant l’option : « E-mail d’anniversaire en HTML », dans l’onglet « GÉNÉRAL », rubrique « Fonctionnalités du forum ». Pour utiliser le language HTML dans d’autres e-mails, la fonction « messenger » doit envoyer les e-mails en HTML via la fonction « $messenger->set_mail_html(true) », aussi voir <a href="https://github.com/ForumHulp/htmlemail/issues/11">cette page</a>. Enfin, saisir le contenu en langage HTML de son fichier e-mail (*.txt) par ce que l’on souhaite.</p></div>',
+	'DELETE_DATA_NOTICE' => '<div style="width:80%;margin:20px auto;"><p style="text-align:left;">Tous les fichiers n’ont pas été remplacés ! Merci de remplacer les fichiers mentionnés dans le « Journal d’administration ».</p></div>',
+	'ENABLE_DATA_NOTICE' => '<div style="width:80%;margin:20px auto;"><p style="text-align:left;"><br />Cependant, toutes les mises à jour n’ont pas été correctement exécutées en raison des permissions sur les fichiers ou en raison de fichiers manquants. Pour davantage d’informations merci de consulter le « Journal d’administration ».<br /><br />Merci de mettre à jour les fichiers manuellement pour accéder à toutes les fonctionnalités !</p></div>'
+]);

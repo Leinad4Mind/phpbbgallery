@@ -10,8 +10,8 @@
  */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -42,26 +42,26 @@ if (empty($lang) || !is_array($lang))
 * mode: statistics
 * Info: language keys are prefixed with 'INTRODUCIATOR_ST_' for 'INTRODUCIATOR_STATISTICS_PAGES_'
 */
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// Titles
-	'INTRODUCIATOR_ST_TITLE'						=> 'Statistiken und Überprüfungen über die Vorstellung der Benutzer',
-	'INTRODUCIATOR_ST_TITLE_EXPLAIN'				=> 'Wird zur Anzeige von Datenbankinformationen verwendet:
+	'INTRODUCIATOR_ST_TITLE'         => 'Statistiken und Überprüfungen über die Vorstellung der Benutzer',
+	'INTRODUCIATOR_ST_TITLE_EXPLAIN' => 'Wird zur Anzeige von Datenbankinformationen verwendet:
 														<ul>
 														<li>Die Statistik über Vorstellungen.</li>
 														<li>Die Überprüfung der Konsistenz der Datenbank über die Vorstellung des Benutzers (Überprüfung, ob Benutzer mehr als eine Vorstellung veröffentlicht haben).</li>
 														</ul>',
 
 	// Number of introduce's texts
-	'INTRODUCIATOR_ST_MAIN_STATISTICS_TITLE'		=> 'Allgemeine Statistik',
-	'INTRODUCIATOR_ST_NB_INTRODUCTION_TITLE'		=> 'Anzahl der Vorstellung im Forum:',
+	'INTRODUCIATOR_ST_MAIN_STATISTICS_TITLE' => 'Allgemeine Statistik',
+	'INTRODUCIATOR_ST_NB_INTRODUCTION_TITLE' => 'Anzahl der Vorstellung im Forum:',
 
 	// Array's texts
-	'INTRODUCIATOR_ST_ARRAY_TITLE'					=> 'Diese Tabelle zeigt alle Vorstellungen an, die mehr als einmal veröffentlicht wurden.',
-	'INTRODUCIATOR_ST_ARRAY_NO_MULTIPLE_DETECTED'	=> 'Keine mehrfachen Vorstellungen erkannt',
-	'INTRODUCIATOR_ST_ARRAY_HEADER_USER'			=> 'Benutzer',
-	'INTRODUCIATOR_ST_ARRAY_HEADER_DATE'			=> 'Datum',
-	'INTRODUCIATOR_ST_ARRAY_HEADER_INTRODUCE'		=> 'Vorstellungen',
+	'INTRODUCIATOR_ST_ARRAY_TITLE'                => 'Diese Tabelle zeigt alle Vorstellungen an, die mehr als einmal veröffentlicht wurden.',
+	'INTRODUCIATOR_ST_ARRAY_NO_MULTIPLE_DETECTED' => 'Keine mehrfachen Vorstellungen erkannt',
+	'INTRODUCIATOR_ST_ARRAY_HEADER_USER'          => 'Benutzer',
+	'INTRODUCIATOR_ST_ARRAY_HEADER_DATE'          => 'Datum',
+	'INTRODUCIATOR_ST_ARRAY_HEADER_INTRODUCE'     => 'Vorstellungen',
 
 	// Buttons
-	'INTRODUCIATOR_ST_CHECK'						=> 'Überprüfen',
-));
+	'INTRODUCIATOR_ST_CHECK' => 'Überprüfen',
+]);

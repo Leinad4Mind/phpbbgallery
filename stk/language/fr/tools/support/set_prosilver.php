@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,11 +38,11 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'SET_PROSILVER'						=> 'Définir « prosilver » par défaut',
-	'SET_PROSILVER_CONFIRM'				=> 'Permet de définir le style « prosilver » par défaut pour tous les utilisateurs du forum.',
-	'SET_PROSILVER_ALLREADY_ASSIGNED'	=> 'Le style « prosilver » est déjà le style par défaut du forum. Aucune action n’est nécessaire.',
-	'SET_PROSILVER_ACTIVATED'			=> 'Le style « prosilver » a été activé avec succès !',
-	'SET_PROSILVER_RESET'				=> 'Le style « prosilver » a été féfini comme le style par défaut pour tous les utilisateurs du forum.',
-	'SET_PROSILVER_DOES_NOT_EXIST'		=> 'Le style « prosilver » n’existe pas. Merci d’envoyer une copie des fichiers depuis l’archive originale disponible sur : <a href="https://www.phpbb.com/downloads/">phpBB.com</a> (Archive originale de phpBB 3.2.1) ou <a href="http://www.phpbb-fr.com/telechargements/">phpBB-fr.com</a> (Archive originale française de phpBB 3.2.1).',
-));
+$lang = array_merge($lang, [
+	'SET_PROSILVER'                   => 'Définir « prosilver » par défaut',
+	'SET_PROSILVER_CONFIRM'           => 'Permet de définir le style « prosilver » par défaut pour tous les utilisateurs du forum.',
+	'SET_PROSILVER_ALLREADY_ASSIGNED' => 'Le style « prosilver » est déjà le style par défaut du forum. Aucune action n’est nécessaire.',
+	'SET_PROSILVER_ACTIVATED'         => 'Le style « prosilver » a été activé avec succès !',
+	'SET_PROSILVER_RESET'             => 'Le style « prosilver » a été féfini comme le style par défaut pour tous les utilisateurs du forum.',
+	'SET_PROSILVER_DOES_NOT_EXIST'    => 'Le style « prosilver » n’existe pas. Merci d’envoyer une copie des fichiers depuis l’archive originale disponible sur : <a href="https://www.phpbb.com/downloads/">phpBB.com</a> (Archive originale de phpBB 3.2.1) ou <a href="http://www.phpbb-fr.com/telechargements/">phpBB-fr.com</a> (Archive originale française de phpBB 3.2.1).',
+]);

@@ -39,6 +39,6 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'PHPBB_VERSION_ERROR'	=> 'Mesaj panonuz phpBB’nin eski bir sürümünü kullanıyor gibi görünüyor. Bu eklentiyi kullanmak için phpBB ' . \phpbb\mediaembed\ext::PHPBB_MINIMUM . ' ya da daha yeni bir sürüm gereklidir.',
-	'S9E_MEDIAEMBED_ERROR'	=> 's9e/mediaembed eklentisi tespit edildi. phpBB’nin Media (Ortam) yerleştirme eklentisi, s9e/mediaembed eklentisi ile alakalı tüm dosyalar silinip temizlenmedikçe kurulmayacaktır.',
+	'PHPBB_VERSION_ERROR'  => 'Mesaj panonuz phpBB’nin eski bir sürümünü kullanıyor gibi görünüyor. Bu eklentiyi kullanmak için phpBB ' . \phpbb\mediaembed\ext::PHPBB_MINIMUM . ' ya da daha yeni bir sürüm gereklidir.',
+	'S9E_MEDIAEMBED_ERROR' => 's9e/mediaembed eklentisi tespit edildi. phpBB’nin Media (Ortam) yerleştirme eklentisi, s9e/mediaembed eklentisi ile alakalı tüm dosyalar silinip temizlenmedikçe kurulmayacaktır.',
 ]);

@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,17 +37,17 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'PMSEARCH_TITLE'	=> 'Търсене в личните съощения',
-	'PMSEARCH_KEYWORDS_EXPLAIN'	=>	'Сложете + пред думата която трябва да е съдържа и - пред думата която не трябва. Сложете лист от думи разделение с | в скоби ако само една от тези думи трябва се намери. Използвай * за wildcard за частични съвпадения.',
-	'SEARCH_ALL_TERMS'	=>	'Търси за всички въведени термини',
-	'SEARCH_ANY_TERMS'	=>	'Търси за всеки от въведените термини',
-	'NO_RESULTS_FOUND'	=> 'Няма намерени резултати',
-	'SEARCH_PMS'	=> 'Търси в личните съощения',
-	'ACCESS_DENIED'	=> 'Нямате право да търсите в личните съобщения',
+$lang = array_merge($lang, [
+	'PMSEARCH_TITLE'            => 'Търсене в личните съощения',
+	'PMSEARCH_KEYWORDS_EXPLAIN' => 'Сложете + пред думата която трябва да е съдържа и - пред думата която не трябва. Сложете лист от думи разделение с | в скоби ако само една от тези думи трябва се намери. Използвай * за wildcard за частични съвпадения.',
+	'SEARCH_ALL_TERMS'          => 'Търси за всички въведени термини',
+	'SEARCH_ANY_TERMS'          => 'Търси за всеки от въведените термини',
+	'NO_RESULTS_FOUND'          => 'Няма намерени резултати',
+	'SEARCH_PMS'                => 'Търси в личните съощения',
+	'ACCESS_DENIED'             => 'Нямате право да търсите в личните съобщения',
 
 	// Added in version 1.0.1
-	'SEARCH_FOR_NICK'	=> 'Търси за ник',
-	'SEARCH_WITH_USER'	=> 'Търси',
-	'SEARCH_WITH_USER_LANG'	=> 'Покажи кореспонденция с потребителя',
-));
+	'SEARCH_FOR_NICK'       => 'Търси за ник',
+	'SEARCH_WITH_USER'      => 'Търси',
+	'SEARCH_WITH_USER_LANG' => 'Покажи кореспонденция с потребителя',
+]);

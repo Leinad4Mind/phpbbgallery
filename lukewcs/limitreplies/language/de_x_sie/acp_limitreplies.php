@@ -12,8 +12,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -40,21 +40,21 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” … „ “
 
 $lang = array_merge($lang, [
-	'LIMITREPLIES_CONFIG_TITLE'			=> 'Mehrfachantworten begrenzen',
-	'LIMITREPLIES_CONFIG_DESC'			=> 'Hier können Sie die Einstellungen für die Erweiterung <strong>%s</strong> ändern.',
+	'LIMITREPLIES_CONFIG_TITLE' => 'Mehrfachantworten begrenzen',
+	'LIMITREPLIES_CONFIG_DESC'  => 'Hier können Sie die Einstellungen für die Erweiterung <strong>%s</strong> ändern.',
 
-	'LIMITREPLIES_SETTINGS_TITLE'		=> 'Einstellungen',
-	'LIMITREPLIES_ENABLE'				=> 'Funktion aktivieren',
-	'LIMITREPLIES_ENABLE_EXPLAIN'		=> 'Mit diesem Schalter können Sie die Funktionalität deaktivieren, ohne die Erweiterung komplett deaktivieren zu müssen.',
-	'LIMITREPLIES_WAIT_TIME'			=> 'Wartezeit zwischen zwei Beiträgen',
-	'LIMITREPLIES_WAIT_TIME_EXPLAIN'	=> 'Hier können Sie festlegen, nach welcher Wartezeit eine erneute Antwort im Thema erlaubt ist, wenn der letzte Beitrag vom selben Benutzer stammt. Dieser Wert wird auch in der Erklärung angezeigt.',
-	'LIMITREPLIES_TIME_UNIT_MINUTES'	=> 'Minuten',
-	'LIMITREPLIES_TIME_UNIT_HOURS'		=> 'Stunden',
-	'LIMITREPLIES_TIME_UNIT_DAYS'		=> 'Tage',
-	'LIMITREPLIES_HINT_MODE'			=> 'Erklärung anzeigen',
-	'LIMITREPLIES_HINT_MODE_EXPLAIN'	=> 'Hier kann festgelegt werden, auf welche Weise die Erklärung bei aktiver Sperre angezeigt werden soll. Die Option „Bei Klick“ bezieht sich auf die Antworten- und Zitat-Buttons. Bei der Option „Immer“ wird die Erklärung unterhalb der Antworten-Buttons angezeigt.',
-	'LIMITREPLIES_HINT_MODE_ONCLICK'	=> 'Bei Klick (als Info-Popup)',
-	'LIMITREPLIES_HINT_MODE_ALWAYS'		=> 'Immer (als Info-Kasten)',
+	'LIMITREPLIES_SETTINGS_TITLE'    => 'Einstellungen',
+	'LIMITREPLIES_ENABLE'            => 'Funktion aktivieren',
+	'LIMITREPLIES_ENABLE_EXPLAIN'    => 'Mit diesem Schalter können Sie die Funktionalität deaktivieren, ohne die Erweiterung komplett deaktivieren zu müssen.',
+	'LIMITREPLIES_WAIT_TIME'         => 'Wartezeit zwischen zwei Beiträgen',
+	'LIMITREPLIES_WAIT_TIME_EXPLAIN' => 'Hier können Sie festlegen, nach welcher Wartezeit eine erneute Antwort im Thema erlaubt ist, wenn der letzte Beitrag vom selben Benutzer stammt. Dieser Wert wird auch in der Erklärung angezeigt.',
+	'LIMITREPLIES_TIME_UNIT_MINUTES' => 'Minuten',
+	'LIMITREPLIES_TIME_UNIT_HOURS'   => 'Stunden',
+	'LIMITREPLIES_TIME_UNIT_DAYS'    => 'Tage',
+	'LIMITREPLIES_HINT_MODE'         => 'Erklärung anzeigen',
+	'LIMITREPLIES_HINT_MODE_EXPLAIN' => 'Hier kann festgelegt werden, auf welche Weise die Erklärung bei aktiver Sperre angezeigt werden soll. Die Option „Bei Klick“ bezieht sich auf die Antworten- und Zitat-Buttons. Bei der Option „Immer“ wird die Erklärung unterhalb der Antworten-Buttons angezeigt.',
+	'LIMITREPLIES_HINT_MODE_ONCLICK' => 'Bei Klick (als Info-Popup)',
+	'LIMITREPLIES_HINT_MODE_ALWAYS'  => 'Immer (als Info-Kasten)',
 
-	'LIMITREPLIES_MSG_SETTINGS_SAVED'	=> 'Mehrfachantworten begrenzen: Einstellungen erfolgreich gespeichert',
+	'LIMITREPLIES_MSG_SETTINGS_SAVED' => 'Mehrfachantworten begrenzen: Einstellungen erfolgreich gespeichert',
 ]);

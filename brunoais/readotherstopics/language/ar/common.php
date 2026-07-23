@@ -13,8 +13,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -22,14 +22,14 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
 //
 // All language files should use UTF-8 as their encoding and the files must not contain a BOM.
 
-$lang = array_merge($lang, array(
-	'SORRY_AUTH_READ_OTHER'			=> 'ليس لديك الصلاحية لقراءة هذا الموضوع.',
-	'SORRY_CLASSIFIED_INFORMATION'	=> 'معلومات خاصة',
-));
+$lang = array_merge($lang, [
+	'SORRY_AUTH_READ_OTHER'        => 'ليس لديك الصلاحية لقراءة هذا الموضوع.',
+	'SORRY_CLASSIFIED_INFORMATION' => 'معلومات خاصة',
+]);

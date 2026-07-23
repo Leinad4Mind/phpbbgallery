@@ -40,6 +40,6 @@ $lang = array_merge($lang, [
 
 	// Notifications
 	'NOTIFICATION_GROUP_BBWATCHLIST'    => 'Watchlist',
-	'NOTIFICATION_TYPE_SUBJECT_KEYWORD' => 'Uma das tuas palavra-chave que segues foi detectada no título do tópico',
-	'NOTIFICATION_TYPE_CONTENT_KEYWORD' => 'Uma das tuas palavra-chave que segues foi detectada no conteúdo de uma mensagem',
+	'NOTIFICATION_TYPE_SUBJECT_KEYWORD' => 'Uma das tuas palavras-chave que segues foi detectada no título do tópico',
+	'NOTIFICATION_TYPE_CONTENT_KEYWORD' => 'Uma das tuas palavras-chave que segues foi detectada no conteúdo de uma mensagem',
 ]);

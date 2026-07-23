@@ -1,0 +1,65 @@
+<?php
+
+/**
+ * @package Log Searches Extension for phpBB.
+ * @copyright (c) 2022 devspace
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ * @translation Leinad4Mind [Portuguese [pt_preao]] (2026)
+ */
+
+/**
+ * DO NOT CHANGE
+ */
+if (!defined('IN_PHPBB'))
+{
+	exit;
+}
+
+if (empty($lang) || !is_array($lang))
+{
+	$lang = [];
+}
+
+/**
+ * DEVELOPERS PLEASE NOTE
+ *
+ * All language files should use UTF-8 as their encoding and the files must not contain a BOM.
+ *
+ * Placeholders can now contain order information, e.g. instead of
+ * 'Page %s of %s' you can (and should) write 'Page %1$s of %2$s', this allows
+ * translators to re-order the output of data while ensuring it remains correct
+ *
+ * You do not need this where single placeholders are used, e.g. 'Message %d' is fine
+ * equally where a string contains only two placeholders which are used to wrap text
+ * in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
+ *
+ * Some characters you may want to copy&paste:
+ * ’ » “ ” …
+ *
+ */
+
+$lang = array_merge($lang, [
+	'DISPLAY_ENTRIES'         => 'Mostrar entradas para',
+	'NO_LOG_ENTRIES_SELECTED' => 'Nenhuma entrada de registo selecionada',
+	'POSTS_SEARCH'            => 'Pesquisa de mensagens',
+	'SEARCH_AUTHOR'           => 'Autor',
+	'SEARCH_DATA'             => 'Termos pesquisados',
+	'SEARCH_FAIL'             => 'Falhou',
+	'SEARCH_FORA'             => 'Fóruns pesquisados',
+	'SEARCH_LOG'              => 'Registo de pesquisa',
+	'SEARCH_LOG_CLEAR'        => '<strong>Ficheiro de registo de pesquisa limpo</strong>',
+	'SEARCH_LOG_EXPLAIN'      => 'Isto lista as acções levadas a cabo por pesquisas. Este registo fornece-te informações que podes utilizar para resolver problemas específicos de pesquisa. Podes ordenar por nome de utilizador, data, IP ou palavra-chave. Se tiveres permissões adequadas, podes também limpar entradas de registo individuais.',
+	'SEARCH_LOG_LOG'          => '<strong>Opções do registo de pesquisa atualizadas</strong>',
+	'SEARCH_LOG_MANAGE'       => 'Gerir registo de pesquisa',
+	'SEARCH_LOG_PRUNE_LOG'    => '<strong>Ficheiro de registo de pesquisa limpo de entradas antigas</strong>',
+	'SEARCH_LOG_OPTIONS'      => 'Opções do registo de pesquisa',
+	'SEARCH_STATUS'           => 'Estado',
+	'SEARCH_SUCCESS'          => 'Sucesso',
+	'SEARCH_TITLE'            => 'Tipo de pesquisa',
+	'SORT_KEYWORDS'           => 'Palavras-chave',
+
+	'SEARCH_TYPE' => [
+		'posts'  => 'Mensagens',
+		'topics' => 'Tópicos',
+	],
+]);

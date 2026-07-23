@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,11 +37,11 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'ACP_AUTOGROUPS_MANAGE'			=> '管理自動分組',
-	'AUTOGROUPS_TYPE_NOT_EXIST'		=> '這個自動分組類型 `%1$s` 並不存在。',
+$lang = array_merge($lang, [
+	'ACP_AUTOGROUPS_MANAGE'     => '管理自動分組',
+	'AUTOGROUPS_TYPE_NOT_EXIST' => '這個自動分組類型 `%1$s` 並不存在。',
 
 	// Logs
-	'ACP_AUTOGROUPS_SAVED_LOG'		=> '<strong>已保存一個自動分組設置</strong>',
-	'ACP_AUTOGROUPS_DELETE_LOG'		=> '<strong>已移除一個自動分組設置</strong>',
-));
+	'ACP_AUTOGROUPS_SAVED_LOG'  => '<strong>已保存一個自動分組設置</strong>',
+	'ACP_AUTOGROUPS_DELETE_LOG' => '<strong>已移除一個自動分組設置</strong>',
+]);

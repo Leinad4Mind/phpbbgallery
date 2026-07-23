@@ -18,5 +18,5 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'BBTPREVIEW_NOTICE' => '<div style="width:auto;margin:20px auto;"><p>Não existem definições específicas para esta extensão. Passe o rato sobre a lista de tópicos para descobrir o botão de lupa para a pré-visualização do tópico. Divirta-se!</p></div>',
+	'BBTPREVIEW_NOTICE' => '<div style="width:auto;margin:20px auto;"><p>Não existem definições específicas para esta extensão. Passa o rato sobre a lista de tópicos para descobrires o botão de lupa para a pré-visualização do tópico. Diverte-te!</p></div>',
 ]);

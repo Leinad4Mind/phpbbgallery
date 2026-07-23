@@ -1,12 +1,10 @@
 <?php
 
 /**
- *
  * Forcing Profile Fields. An extension for the phpBB Forum Software package.
- *
  * @copyright (c) 2017, leinad4mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
- *
+ * @translation Leinad4Mind [Portuguese [pt]] (2026)
  */
 
 if (!defined('IN_PHPBB'))
@@ -36,5 +34,5 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'UCP_PROFILE_UPDATE' => 'Por favor, atualiza os teus campos de perfil.',
+	'UCP_PROFILE_UPDATE' => 'Por favor, atualiza os campos do teu perfil.',
 ]);

@@ -23,9 +23,9 @@ if (empty($lang) || !is_array($lang))
 	$lang = [];
 }
 
-$lang = array_merge($lang, array(
-	'UCP_GALLERY'						=> 'Галерия',
-	'UCP_GALLERY_PERSONAL_ALBUMS'		=> 'Управелние на лични албуми',
-	'UCP_GALLERY_SETTINGS'				=> 'Лични настройки',
-	'UCP_GALLERY_WATCH'					=> 'Контрол на абонаментите',
-));
+$lang = array_merge($lang, [
+	'UCP_GALLERY'                 => 'Галерия',
+	'UCP_GALLERY_PERSONAL_ALBUMS' => 'Управелние на лични албуми',
+	'UCP_GALLERY_SETTINGS'        => 'Лични настройки',
+	'UCP_GALLERY_WATCH'           => 'Контрол на абонаментите',
+]);

@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -48,12 +48,12 @@ if (empty($lang) || !is_array($lang))
 *
 * Translators: Feel free to not translate these language strings
 */
-$lang = array_merge($lang, array(
-	'EXCEPTION_FIELD_MISSING'		=> 'Erforderligt fält saknas',
-	'EXCEPTION_INVALID_ARGUMENT'	=> 'Ogiltigt argument angivet för `%1$s`. Orsak: %2$s',
-	'EXCEPTION_OUT_OF_BOUNDS'		=> 'Fältet `%1$s` har mottagit data utöver fältets begränsningar',
-	'EXCEPTION_TOO_LONG'			=> 'Inmatningen var längre än den maximalt tillåta längden.',
-	'EXCEPTION_NOT_UNIQUE'			=> 'Inmatningen var ej unik.',
-	'EXCEPTION_UNEXPECTED_VALUE'	=> 'Fältet `%1$s` har mottagit oväntad data. Orsak: %2$s',
-	'EXCEPTION_ILLEGAL_CHARACTERS'	=> 'Inmatningen innehöll otillåtna tecken.',
-));
+$lang = array_merge($lang, [
+	'EXCEPTION_FIELD_MISSING'      => 'Erforderligt fält saknas',
+	'EXCEPTION_INVALID_ARGUMENT'   => 'Ogiltigt argument angivet för `%1$s`. Orsak: %2$s',
+	'EXCEPTION_OUT_OF_BOUNDS'      => 'Fältet `%1$s` har mottagit data utöver fältets begränsningar',
+	'EXCEPTION_TOO_LONG'           => 'Inmatningen var längre än den maximalt tillåta längden.',
+	'EXCEPTION_NOT_UNIQUE'         => 'Inmatningen var ej unik.',
+	'EXCEPTION_UNEXPECTED_VALUE'   => 'Fältet `%1$s` har mottagit oväntad data. Orsak: %2$s',
+	'EXCEPTION_ILLEGAL_CHARACTERS' => 'Inmatningen innehöll otillåtna tecken.',
+]);

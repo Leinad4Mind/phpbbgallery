@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -36,7 +36,7 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'CRON'                            => 'Cron',
 	'CRON_LOCKED'                     => 'Taak geblokkeerd',
 	'CRON_TIME_LOCKED'                => 'Taak tijd geblokkeerd',
@@ -64,10 +64,10 @@ $lang = array_merge($lang, array(
 	'CRON_STATUS_DEVELOPERS'          => 'Ontwikkelaars',
 	'CRON_TASK_RUN'                   => 'Run',
 	'CRON_TASK_RUNNING'               => 'Running...',
-));
+]);
 
 // Description of Cron Status extension
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'CRONSTATUS_DESCRIPTION_PAGE'            => 'Cron Status pagina',
 	'CRONSTATUS_DESCRIPTION_PAGE_OVERVIEW'   => 'Overzicht van taken (met sortering)',
 	'CRONSTATUS_DESCRIPTION_PAGE_STATUS'     => 'Toon de status van iedere taak',
@@ -75,4 +75,4 @@ $lang = array_merge($lang, array(
 	'CRONSTATUS_DESCRIPTION_NOTICE'          => 'Cron Status Melding (optioneel)',
 	'CRONSTATUS_DESCRIPTION_NOTICE_OVERVIEW' => 'Melding op hoofdpagina ACP als taak is geblokkeerd',
 	'CRONSTATUS_DESCRIPTION_NOTICE_SETTINGS' => 'Kan uitgeschakeld worden in Forum instellingen',
-));
+]);

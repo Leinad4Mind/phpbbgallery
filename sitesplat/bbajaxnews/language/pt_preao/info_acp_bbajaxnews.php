@@ -1,0 +1,94 @@
+<?php
+
+/**
+ * @package BBajaxnews for phpBB.
+ * @copyright (c) 2018 SiteSplat All rights reserved
+ * @license Proprietary
+ * @translation Leinad4Mind [Portuguese [pt_preao]] (2026)
+ */
+
+if (!defined('IN_PHPBB'))
+{
+	exit;
+}
+
+if (empty($lang) || !is_array($lang))
+{
+	$lang = [];
+}
+
+$lang = array_merge($lang, [
+	'BBAJAXNEWS' => 'BBAjaxNews',
+
+	'ACP_BBAJAXNEWS_TITLE'         => 'BBajaxnews',
+	'ACP_BBAJAXNEWS_TITLE_EXPLAIN' => 'O BBajaxnews é uma extensão poderosa e revolucionária que permite ao teu fórum phpBB, com os produtos premium da SiteSplat, ter notificações reais em tempo real para os teus utilizadores!<br/>Ajusta as tuas preferências abaixo e não te esqueças de limpar a cache do fórum sempre que alterares alguma definição aqui.',
+	'ACP_BBAJAXNEWS_SETTING_SAVED' => 'As configurações do BBajaxnews foram guardadas.',
+
+	'SPECIAL'         => 'Notícias Especiais',
+	'CASUAL'          => 'Notícias Casuais',
+	'SPECIAL_EXPLAIN' => 'Os eventos de notícias especiais são acionados quando um critério específico é satisfeito. EX: registo de utilizador, novo tópico, Novo anúncio, etc. (Veja abaixo as notícias incluídas).',
+	'CASUAL_EXPLAIN'  => 'Os eventos de notícias casuais são acionados após um utilizador não receber nenhuma outra notícia ao vivo por um período especificado de tempo (configurável abaixo).',
+
+	'SITESPLAT_BBAJAXNEWS_DRIVER'         => 'Driver',
+	'SITESPLAT_BBAJAXNEWS_DRIVER_EXPLAIN' => 'Selecciona na lista de fornecedores qual driver pretendes utilizar. Diferentes fornecedores têm preços diferentes, mas também disponibilidade, suporte diferente, etc.',
+	'DRIVER_PUSHER'                       => 'Pusher',
+	'DRIVER_PUBNUB'                       => 'PubNub',
+
+	'SITESPLAT_BBAJAXNEWS_PUBNUB_PUB'         => 'Chave de Publicação PubNub',
+	'SITESPLAT_BBAJAXNEWS_PUBNUB_PUB_EXPLAIN' => 'Podes encontrar a tua Chave de Publicação PubNub na <a href="https://admin.pubnub.com/" target="_blank">Administração PubNub</a>.',
+	'SITESPLAT_BBAJAXNEWS_PUBNUB_SUB'         => 'Chave de Subscrição PubNub',
+	'SITESPLAT_BBAJAXNEWS_PUBNUB_SUB_EXPLAIN' => 'Podes encontrar a tua Chave de Subscrição PubNub na <a href="https://admin.pubnub.com/" target="_blank">Administração PubNub</a>.',
+
+	'SITESPLAT_BBAJAXNEWS_PUSHER_APP_KEY'             => 'Chave da App Pusher',
+	'SITESPLAT_BBAJAXNEWS_PUSHER_APP_KEY_EXPLAIN'     => 'Podes encontrar a tua Chave da App Pusher no <a href="https://dashboard.pusher.com/" target="_blank">Painel do Pusher</a>.',
+	'SITESPLAT_BBAJAXNEWS_PUSHER_APP_SEC'             => 'Segredo da App Pusher',
+	'SITESPLAT_BBAJAXNEWS_PUSHER_APP_SEC_EXPLAIN'     => 'Podes encontrar o Segredo da App Pusher no <a href="https://dashboard.pusher.com/" target="_blank">Painel do Pusher</a>.',
+	'SITESPLAT_BBAJAXNEWS_PUSHER_APP_ID'              => 'ID da App Pusher',
+	'SITESPLAT_BBAJAXNEWS_PUSHER_APP_ID_EXPLAIN'      => 'Podes encontrar o ID da App Pusher no <a href="https://dashboard.pusher.com/" target="_blank">Painel do Pusher</a>.',
+	'SITESPLAT_BBAJAXNEWS_PUSHER_APP_CLUSTER'         => 'Cluster Pusher',
+	'SITESPLAT_BBAJAXNEWS_PUSHER_APP_CLUSTER_EXPLAIN' => 'Podes encontrar o teu Cluster Pusher no <a href="https://dashboard.pusher.com/" target="_blank">Painel do Pusher</a>.',
+
+	'SITESPLAT_BBAJAXNEWS_INTERVAL'                        => 'Intervalo entre notícias casuais ao vivo',
+	'SITESPLAT_BBAJAXNEWS_INTERVAL_EXPLAIN'                => 'Quando não é apresentada nenhuma notícia ao utilizador por um determinado número de minutos, uma das notícias casuais ser-lhe-á apresentada. Introduz 0 para desactivar notícias casuais.',
+	'SITESPLAT_BBAJAXNEWS_NOTY_VISIBILITY_CONTROL'         => 'Controlo de visibilidade',
+	'SITESPLAT_BBAJAXNEWS_NOTY_VISIBILITY_CONTROL_EXPLAIN' => 'Isto irá mostrar/acionar a BBnews apenas quando o utilizador estiver ativamente a navegar no fórum. Nota: isto é uma funcionalidade API do navegador (<a href="https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API" target="_blank">Page Visibility API</a>).',
+	'SITESPLAT_BBAJAXNEWS_NOTY_TIMEOUT'                    => 'Atraso de encerramento',
+	'SITESPLAT_BBAJAXNEWS_NOTY_TIMEOUT_EXPLAIN'            => 'Define os milissegundos após os quais a notícia será fechada. EX: 5000 significa que a notícia será fechada após 5 segundos. Define como 0 para notícias permanentes (apenas fechará por acção do utilizador).',
+	'SITESPLAT_BBAJAXNEWS_NOTY_PROGRESS_BAR'               => 'Exibir uma barra de progresso',
+	'SITESPLAT_BBAJAXNEWS_NOTY_PROGRESS_BAR_EXPLAIN'       => 'Define como Sim para apresentar uma barra de progresso indicando o tempo que falta para a notícia encerrar. <br/>Nota: uma barra de progresso apenas estará disponível se a opção de "Atraso de encerramento" estiver em uso.',
+	'SITESPLAT_BBAJAXNEWS_NOTY_LAYOUT'                     => 'Posição da Notificação',
+	'SITESPLAT_BBAJAXNEWS_NOTY_LAYOUT_EXPLAIN'             => 'Selecciona a posição da notificação',
+	'SITESPLAT_BBAJAXNEWS_NOTY_MO'                         => 'Utilizar animação mo.js',
+	'SITESPLAT_BBAJAXNEWS_NOTY_MO_EXPLAIN'                 => 'Isto usará uma animação extravagante via JavaScript, mas requer o carregamento de um ficheiro JS adicional. <br/>(Aprox: 35.4kB Minified + Gzipped) Ele já se encontra incluído no BBajaxNews e podes usá-lo imediatamente se optares por ativar a animação.',
+	'LAYOUT_TOP'                                           => 'Topo',
+	'LAYOUT_TOPLEFT'                                       => 'Topo Esquerda',
+	'LAYOUT_TOPCENTER'                                     => 'Topo Centro',
+	'LAYOUT_TOPRIGHT'                                      => 'Topo Direita',
+	'LAYOUT_CENTER'                                        => 'Centro',
+	'LAYOUT_CENTERLEFT'                                    => 'Centro Esquerda',
+	'LAYOUT_CENTERRIGHT'                                   => 'Centro Direita',
+	'LAYOUT_BOTTOM'                                        => 'Fundo',
+	'LAYOUT_BOTTOMLEFT'                                    => 'Fundo Esquerda',
+	'LAYOUT_BOTTOMCENTER'                                  => 'Fundo Centro',
+	'LAYOUT_BOTTOMRIGHT'                                   => 'Fundo Direita',
+
+	'SITESPLAT_BBAJAXNEWS_BBDONATION'        => 'Ativar notícias ao vivo quando um utilizador fizer uma doação (requer extensão BBdonation)',
+	'SITESPLAT_BBAJAXNEWS_BBMEMBERSHIP'      => 'Ativar notícias ao vivo quando um utilizador adquirir uma associação (requer extensão BBmembership)',
+	'SITESPLAT_BBAJAXNEWS_BBVOTE'            => 'Ativar notícias ao vivo quando for marcada a melhor resposta (requer extensão BBvote)',
+	'SITESPLAT_BBAJAXNEWS_FRIEND_LOGGED_IN'  => 'Ativar notícias ao vivo quando o amigo de um utilizador efectuar o login',
+	'SITESPLAT_BBAJAXNEWS_NEW_ANNOUNCEMENT'  => 'Ativar notícias ao vivo quando um tópico for definido como anúncio (global)',
+	'SITESPLAT_BBAJAXNEWS_NEW_STICKY'        => 'Ativar notícias ao vivo quando um tópico for definido como fixo',
+	'SITESPLAT_BBAJAXNEWS_NEW_TOPIC'         => 'Ativar notícias ao vivo quando um novo tópico for criado',
+	'SITESPLAT_BBAJAXNEWS_USER_JOINED_BOARD' => 'Ativar notícias ao vivo quando um novo utilizador se juntar ao fórum',
+	'SITESPLAT_BBAJAXNEWS_USER_JOINED_GROUP' => 'Ativar notícias ao vivo quando os utilizadores forem adicionados ao grupo especial',
+
+	'SITESPLAT_BBAJAXNEWS_NEW_POSTS_TODAY'  => 'Ativar notícias ao vivo informando sobre o número de publicações postadas hoje até ao momento',
+	'SITESPLAT_BBAJAXNEWS_RANDOM_POLL'      => 'Ativar notícias ao vivo encorajando o utilizador a participar numa votação aleatória em que ainda não votou',
+	'SITESPLAT_BBAJAXNEWS_USERS_ONLINE_24H' => 'Ativar notícias ao vivo informando o número de utilizadores conectados nas últimas 24h',
+	'SITESPLAT_BBAJAXNEWS_USERS_ONLINE'     => 'Ativar notícias ao vivo informando o número de utilizadores conectados',
+
+	'LOG_BBAJAXNEWS_PUBLISH_FAIL' => '<strong>Publicação BBAjaxNews do tipo »%s« falhou</strong><br />» %s',
+
+	'SS_HELPER_NOTY'    => 'O SiteSplat BBcore não existe!<br />Transfere o <a href="https://sitesplat.com" target="_blank">BBcore</a> e copia a pasta BBcore para a pasta da tua extensão sitesplat.',
+	'BBAJAXNEWS_NOTICE' => '<div class="phpinfo"><p>As definições desta extensão encontram-se sob a aba "Extensões".</p></div>',
+]);

@@ -1,6 +1,6 @@
 Subject: Denúncia de mensagem privada fechada - "{SUBJECT}"
 
-Olá {USERNAME},
+Olá, {USERNAME},
 
 A sua Denúncia sobre a mensagem privada "{SUBJECT}" por "{AUTHOR_NAME}" em {SITENAME} foi vista e tratada por um moderador ou por um administrador. A denúncia foi posteriormente fechada. Se tiver mais perguntas entre em contacto {CLOSER_NAME} com uma mensagem privada.
 

@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,13 +38,13 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	// ACP modules
-	'ACP_PAGES'				=> 'Páginas',
-	'ACP_PAGES_MANAGE'		=> 'Gestionar páginas',
+	'ACP_PAGES'        => 'Páginas',
+	'ACP_PAGES_MANAGE' => 'Gestionar páginas',
 
 	// Logs
-	'ACP_PAGES_ADDED_LOG'	=> '<strong>Página añadida</strong><br />» %s',
-	'ACP_PAGES_EDITED_LOG'	=> '<strong>Página editada</strong><br />» %s',
-	'ACP_PAGES_DELETED_LOG'	=> '<strong>Página borrada</strong><br />» %s',
-));
+	'ACP_PAGES_ADDED_LOG'   => '<strong>Página añadida</strong><br />» %s',
+	'ACP_PAGES_EDITED_LOG'  => '<strong>Página editada</strong><br />» %s',
+	'ACP_PAGES_DELETED_LOG' => '<strong>Página borrada</strong><br />» %s',
+]);

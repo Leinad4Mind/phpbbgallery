@@ -18,13 +18,22 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'ADD_USER'               => 'Adicionar usuário',
-	'TRACKED_USERS'          => 'Usuários monitorizados',
-	'TRACKED_USERS_EXPLAIN'  => 'Adicionar usuários individuais para serem monitorizados/rastreados',
-	'TRACKED_GROUPS'         => 'Grupos monitorizados',
-	'TRACKED_GROUPS_EXPLAIN' => 'Selecione um grupo específico para ser monitorizado/rastreado',
+	'ACP_BBTRACKING'          => 'BBtracking',
+	'ACP_BBTRACKING_EXPLAIN'  => 'Aqui você pode adicionar usuários a monitorar (ou grupos inteiros). Os usuários ou grupos serão então monitorados em todo o fórum quando forem disparadas ações específicas que possam ser úteis para compreender o comportamento do usuário. <br />',
+	'ACP_BBTRACKING_SETTINGS' => 'Configurações do BBtracking',
+	'ACP_BBTRACKING_LOGS'     => 'Registros do BBtracking',
+	'ACP_BBTRACKING_LOGS_EXPLAIN' => 'Os movimentos monitorados dos usuários ou grupos podem ser vistos abaixo.',
 
-	'TRACKING_TYPE' => 'Tipo de monitorização',
+	'USER_UNTRACKED' => 'O usuário deixou de ser monitorado.',
+	'TRACKED_UPDATED' => 'A lista de monitoramento foi atualizada.',
+
+	'ADD_USER'               => 'Adicionar usuário',
+	'TRACKED_USERS'          => 'Usuários monitorados',
+	'TRACKED_USERS_EXPLAIN'  => 'Adicionar usuários individuais para serem monitorados/rastreados',
+	'TRACKED_GROUPS'         => 'Grupos monitorados',
+	'TRACKED_GROUPS_EXPLAIN' => 'Selecione um grupo específico para ser monitorado/rastreado',
+
+	'TRACKING_TYPE' => 'Tipo de monitoramento',
 	'ALL'           => 'Tudo',
 
 	'TRACKING_TYPE_ACCOUNT_SETTINGS'       => '<b>Definições da conta alteradas.</b><br>» Novo nome de usuário: %s. Novo email: %s. Nome de usuário alterado: %s. Email alterado: %s. Senha alterada: %s.',
@@ -45,7 +54,7 @@ $lang = array_merge($lang, [
 	'TRACKING_TYPE_LOGOUT_LABEL'                 => 'Terminar sessão (Logout)',
 	'TRACKING_TYPE_SEND_PM_LABEL'                => 'Envio de MP',
 
-	'SS_HELPER_NOTY'    => 'O SiteSplat BBcore não existe!<br />Faça o download do <a href="https://sitesplat.com" target="_blank">BBcore</a> e copie a pasta BBcore para a pasta da sua extensão sitesplat.',
+	'SS_HELPER_NOTY'    => 'O SiteSplat BBcore não existe!<br />Baixe o <a href="https://sitesplat.com" target="_blank">BBcore</a> e copie a pasta BBcore para a pasta da sua extensão sitesplat.',
 	'BBTRACKING_NOTICE' => '<div class="phpinfo"><p>As definições desta extensão podem ser encontradas no separador "EXTENSÕES".<br />Nota: outras opções da extensão encontram-se em: ACP > Fóruns: "selecione o seu fórum" e clique no ícone da engrenagem verde para entrar no modo de edição. Em seguida, verifique "Guardar revisões de mensagens" e "Limpar automaticamente as revisões". <br/>Além disso, não se esqueça de verificar as "Permissões de fórum de grupos" no separador de permissões "Ações".<br /> Por fim, os usuários (que têm permissões) podem utilizar a opção de revisão de mensagens na visualização do tópico (viewtopic), no menu suspenso de mensagem individual.</p></div>',
 
 	'ACP_PRIMEPOSTREVISIONS_ENABLE'         => 'Armazenar revisões de mensagens',

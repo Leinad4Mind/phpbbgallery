@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,10 +37,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES'				=> 'Regler',
-	'BOARDRULES_TITLE'			=> 'Vis reglerne for boardet',
-	'BOARDRULES_AGREEMENT'		=> 'Du accepterer at følge reglerne for disse fora, som fremsat i følgende “Regler”-sektion',
-	'BOARDRULES_VIEWONLINE'		=> 'Viser boardregler',
-	'BOARDRULES_NOTIFICATION'	=> 'Boardreglerne er blevet opdateret. Klik her for at gennemgå dem.',
-));
+$lang = array_merge($lang, [
+	'BOARDRULES'              => 'Regler',
+	'BOARDRULES_TITLE'        => 'Vis reglerne for boardet',
+	'BOARDRULES_AGREEMENT'    => 'Du accepterer at følge reglerne for disse fora, som fremsat i følgende “Regler”-sektion',
+	'BOARDRULES_VIEWONLINE'   => 'Viser boardregler',
+	'BOARDRULES_NOTIFICATION' => 'Boardreglerne er blevet opdateret. Klik her for at gennemgå dem.',
+]);

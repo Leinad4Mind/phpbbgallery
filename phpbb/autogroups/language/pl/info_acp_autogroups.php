@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,11 +38,11 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'ACP_AUTOGROUPS_MANAGE'			=> 'Zarządzanie automatycznymi grupami',
-	'AUTOGROUPS_TYPE_NOT_EXIST'		=> 'Warunek przydzielenia do automatycznej grupy `%1$s` nie istnieje.',
+$lang = array_merge($lang, [
+	'ACP_AUTOGROUPS_MANAGE'     => 'Zarządzanie automatycznymi grupami',
+	'AUTOGROUPS_TYPE_NOT_EXIST' => 'Warunek przydzielenia do automatycznej grupy `%1$s` nie istnieje.',
 
 	// Logs
-	'ACP_AUTOGROUPS_SAVED_LOG'		=> '<strong>Zmieniono ustawienia automatycznej grupy</strong>',
-	'ACP_AUTOGROUPS_DELETE_LOG'		=> '<strong>Usunięto automatyczną grupę</strong>',
-));
+	'ACP_AUTOGROUPS_SAVED_LOG'  => '<strong>Zmieniono ustawienia automatycznej grupy</strong>',
+	'ACP_AUTOGROUPS_DELETE_LOG' => '<strong>Usunięto automatyczną grupę</strong>',
+]);

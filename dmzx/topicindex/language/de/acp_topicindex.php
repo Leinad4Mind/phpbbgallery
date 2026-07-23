@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,25 +38,25 @@ if (empty($lang) || !is_array($lang))
 //
 
 // Merge the following language entries into the lang array
-$lang = array_merge($lang, array(
-	'OFFICIAL_TOPIC_INDEX'			=> 'Verwalte Official Topic Index Extension',
-	'ADD_NEW_TOPICS_LIST'			=> 'Neue Liste hinzufügen',
-	'LIST_NAME'						=> 'Listenname',
-	'OINDEX_CFG_SETUP'				=> 'Konfiguriere Official Topic Index',
-	'OVERFLOW_IN_TOPIC'				=> 'Erlaube Laufleiste auf der internen Themenliste',
-	'NAME_FORUM_LIST_EMPTY'			=> 'Der Listenname darf nicht leer sein.',
-	'SELECT_FORUM_LIST_EMPTY'		=> 'Mindestens ein Forum muss ausgewählt werden.',
-	'OINDEX_ADDED_LIST'				=> 'Liste erfolgreich gespeichert.',
-	'OINDEX_DELETED_LIST'			=> 'Liste erfolgreich gelöscht.',
-	'OINDEX_EDIT_CFG'				=> 'Konfiguration von Official Topic Index erfolgreich geändert.',
-	'OINDEX_FORUMS'					=> 'Foren',
-	'OINDEX_SELECT_FORUM'			=> 'Wähle ein Forum',
-	'OTINDEX_LIST_ALONE_DSC'		=> 'Erstelle eine externe Liste von allen Themen eines einzelnen Forums, oder aus einer Auswahl mehrerer Foren zusammen. Im Gegensatz zu einer Liste in einem Thema, muss die externe nicht direkt in dem Forum aktiviert werden. Aber in dem Fall werden alle Themen aufgelistet, ohne eine Auswahlmöglichkeit.',
-	'OTINDEX_LIST_INTOPIC_DSC'		=> 'Erstelle eine organisierte Themenliste, welche innerhalb eines ausgewählten Themas erscheinen wird. Sobald du diese Funktion aktiviert hast, erscheinen in jedem ersten Beitrag jedes Themas neue Icons zum Einfügen oder Entfernen des Themas aus der Liste.',
-	'ACTIVE_TOPIC_INDEX'			=> 'Aktiviere, und wähle das Thema für die Liste',
-	'TOPIC_INDEX_DEFAULT'			=> 'Wähle aus, welche Themen standardmäßig hinzuzufügen sind.',
-	'ACTIVE_TOPIC_INDEX_EXPLAIN'	=> 'Wähle ein Thema aus den <strong>Wichtigen Themen oder Ankündigungsthemen</strong>, dieses Thema wird die Themenliste werden. Du musst deshalb mindestens ein Thema in diesem Forum haben.',
-	'TOPIC_INDEX_DEFAULT_EXPLAIN'	=> 'Wähle das System, nach welchem die Themen in der Liste eingebunden werden sollen',
-	'ACTIVE_INDEX_FILTER'			=> 'Aktiviere Tag-Filter',
-	'ACTIVE_INDEX_FILTER_EXPLAIN'	=> 'Du musst dies aktivieren, wenn du Themen mit gemeinsamem TAG im Titel hasts. Wir unterstützen Tags mit diesem Format, einzeln oder doppelt: <strong>[]</strong>,<strong>{}</strong>,<strong>()</strong>.',
-));
+$lang = array_merge($lang, [
+	'OFFICIAL_TOPIC_INDEX'        => 'Verwalte Official Topic Index Extension',
+	'ADD_NEW_TOPICS_LIST'         => 'Neue Liste hinzufügen',
+	'LIST_NAME'                   => 'Listenname',
+	'OINDEX_CFG_SETUP'            => 'Konfiguriere Official Topic Index',
+	'OVERFLOW_IN_TOPIC'           => 'Erlaube Laufleiste auf der internen Themenliste',
+	'NAME_FORUM_LIST_EMPTY'       => 'Der Listenname darf nicht leer sein.',
+	'SELECT_FORUM_LIST_EMPTY'     => 'Mindestens ein Forum muss ausgewählt werden.',
+	'OINDEX_ADDED_LIST'           => 'Liste erfolgreich gespeichert.',
+	'OINDEX_DELETED_LIST'         => 'Liste erfolgreich gelöscht.',
+	'OINDEX_EDIT_CFG'             => 'Konfiguration von Official Topic Index erfolgreich geändert.',
+	'OINDEX_FORUMS'               => 'Foren',
+	'OINDEX_SELECT_FORUM'         => 'Wähle ein Forum',
+	'OTINDEX_LIST_ALONE_DSC'      => 'Erstelle eine externe Liste von allen Themen eines einzelnen Forums, oder aus einer Auswahl mehrerer Foren zusammen. Im Gegensatz zu einer Liste in einem Thema, muss die externe nicht direkt in dem Forum aktiviert werden. Aber in dem Fall werden alle Themen aufgelistet, ohne eine Auswahlmöglichkeit.',
+	'OTINDEX_LIST_INTOPIC_DSC'    => 'Erstelle eine organisierte Themenliste, welche innerhalb eines ausgewählten Themas erscheinen wird. Sobald du diese Funktion aktiviert hast, erscheinen in jedem ersten Beitrag jedes Themas neue Icons zum Einfügen oder Entfernen des Themas aus der Liste.',
+	'ACTIVE_TOPIC_INDEX'          => 'Aktiviere, und wähle das Thema für die Liste',
+	'TOPIC_INDEX_DEFAULT'         => 'Wähle aus, welche Themen standardmäßig hinzuzufügen sind.',
+	'ACTIVE_TOPIC_INDEX_EXPLAIN'  => 'Wähle ein Thema aus den <strong>Wichtigen Themen oder Ankündigungsthemen</strong>, dieses Thema wird die Themenliste werden. Du musst deshalb mindestens ein Thema in diesem Forum haben.',
+	'TOPIC_INDEX_DEFAULT_EXPLAIN' => 'Wähle das System, nach welchem die Themen in der Liste eingebunden werden sollen',
+	'ACTIVE_INDEX_FILTER'         => 'Aktiviere Tag-Filter',
+	'ACTIVE_INDEX_FILTER_EXPLAIN' => 'Du musst dies aktivieren, wenn du Themen mit gemeinsamem TAG im Titel hasts. Wir unterstützen Tags mit diesem Format, einzeln oder doppelt: <strong>[]</strong>,<strong>{}</strong>,<strong>()</strong>.',
+]);

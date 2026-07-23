@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,10 +37,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'BOARDRULES'				=> '章程',
-	'BOARDRULES_TITLE'			=> '查看论坛章程',
-	'BOARDRULES_AGREEMENT'		=> '您同意遵守论坛版块的章程，请查看 “论坛章程” ',
-	'BOARDRULES_VIEWONLINE'		=> '查看论坛章程',
-	'BOARDRULES_NOTIFICATION'	=> '论坛章程已更新，点击查看。',
-));
+$lang = array_merge($lang, [
+	'BOARDRULES'              => '章程',
+	'BOARDRULES_TITLE'        => '查看论坛章程',
+	'BOARDRULES_AGREEMENT'    => '您同意遵守论坛版块的章程，请查看 “论坛章程” ',
+	'BOARDRULES_VIEWONLINE'   => '查看论坛章程',
+	'BOARDRULES_NOTIFICATION' => '论坛章程已更新，点击查看。',
+]);

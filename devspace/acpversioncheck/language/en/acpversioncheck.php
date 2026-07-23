@@ -39,34 +39,34 @@ if (empty($lang) || !is_array($lang))
  */
 
 $lang = array_merge($lang, [
-	'CONSTANT_VERSION' 		=> 'phpBB version in “includes/constants.php”',
+	'CONSTANT_VERSION' => 'phpBB version in “includes/constants.php”',
 
-	'DATABASE_VERSION' 		=> 'phpBB version reported by the database',
+	'DATABASE_VERSION' => 'phpBB version reported by the database',
 
-	'HIDE' 					=> '«« hide details ««',
+	'HIDE' => '«« hide details ««',
 
-	'LANG_NAME' 			=> 'Languages',
-	'LANG_VERSION' 			=> 'Language version',
+	'LANG_NAME'    => 'Languages',
+	'LANG_VERSION' => 'Language version',
 
-	'MISSING'				=> '«« Data missing »»',
+	'MISSING' => '«« Data missing »»',
 
-	'NOT_VALID_LANG'		=> 'Not a valid phpBB4 language pack',
-	'NOT_VALID_STYLE'		=> 'Not a valid phpBB4 style',
+	'NOT_VALID_LANG'  => 'Not a valid phpBB4 language pack',
+	'NOT_VALID_STYLE' => 'Not a valid phpBB4 style',
 
-	'PHPBB'					=> 'phpBB',
-	'PHPBB_VERSION' 		=> 'phpBB Version',
+	'PHPBB'         => 'phpBB',
+	'PHPBB_VERSION' => 'phpBB Version',
 
-	'STYLE_NAME' 			=> 'Styles',
-	'STYLE_VERSION' 		=> 'Style version',
-	'SYMFONY_VERSION' 		=> 'Symfony version',
+	'STYLE_NAME'      => 'Styles',
+	'STYLE_VERSION'   => 'Style version',
+	'SYMFONY_VERSION' => 'Symfony version',
 
-	'TWIG_VERSION' 			=> 'Twig version',
+	'TWIG_VERSION' => 'Twig version',
 
-	'VENDOR'				=> 'Vendor',
-	'VENDOR_VERSION' 		=> 'Vendor Version',
-	'VERSION' 				=> 'Version',
-	'VERSION_INFO' 			=> 'Version information',
-	'VERSIONS_CORRECT' 		=> 'All phpBB versions on this board are consistent.',
-	'VERSIONS_INCORRECT'	=> 'There are inconsistencies with the phpBB versions on this board',
-	'VIEW' 					=> '»» view details »»',
+	'VENDOR'             => 'Vendor',
+	'VENDOR_VERSION'     => 'Vendor Version',
+	'VERSION'            => 'Version',
+	'VERSION_INFO'       => 'Version information',
+	'VERSIONS_CORRECT'   => 'All phpBB versions on this board are consistent.',
+	'VERSIONS_INCORRECT' => 'There are inconsistencies with the phpBB versions on this board',
+	'VIEW'               => '»» view details »»',
 ]);

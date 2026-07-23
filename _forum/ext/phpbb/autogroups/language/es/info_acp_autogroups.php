@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,11 +38,11 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'ACP_AUTOGROUPS_MANAGE'			=> 'Gestionar Auto Grupos',
-	'AUTOGROUPS_TYPE_NOT_EXIST'		=> 'El tipo de Auto Grupo `%1$s` no existe.',
+$lang = array_merge($lang, [
+	'ACP_AUTOGROUPS_MANAGE'     => 'Gestionar Auto Grupos',
+	'AUTOGROUPS_TYPE_NOT_EXIST' => 'El tipo de Auto Grupo `%1$s` no existe.',
 
 	// Logs
-	'ACP_AUTOGROUPS_SAVED_LOG'		=> '<strong>Una configuración de Auto Grupo ha sido guardada</strong>',
-	'ACP_AUTOGROUPS_DELETE_LOG'		=> '<strong>Una configuración de Auto Grupo ha sido borrada</strong>',
-));
+	'ACP_AUTOGROUPS_SAVED_LOG'  => '<strong>Una configuración de Auto Grupo ha sido guardada</strong>',
+	'ACP_AUTOGROUPS_DELETE_LOG' => '<strong>Una configuración de Auto Grupo ha sido borrada</strong>',
+]);

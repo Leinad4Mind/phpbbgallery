@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,11 +38,11 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'DUPLICATES_FOUND'						=> 'L’outil a trouvé et supprimé toutes les permissions dupliquées.',
+$lang = array_merge($lang, [
+	'DUPLICATES_FOUND' => 'L’outil a trouvé et supprimé toutes les permissions dupliquées.',
 
-	'NO_DUPLICATES_FOUND'					=> 'L’outil a terminé la vérification des permissions dupliquées et n’en a pas trouvée.',
+	'NO_DUPLICATES_FOUND' => 'L’outil a terminé la vérification des permissions dupliquées et n’en a pas trouvée.',
 
-	'REMOVE_DUPLICATE_PERMISSIONS'			=> 'Supprimer les permissions dupliquées',
-	'REMOVE_DUPLICATE_PERMISSIONS_CONFIRM'	=> 'Confirmer la suppression des permissions dupliquées.',
-));
+	'REMOVE_DUPLICATE_PERMISSIONS'         => 'Supprimer les permissions dupliquées',
+	'REMOVE_DUPLICATE_PERMISSIONS_CONFIRM' => 'Confirmer la suppression des permissions dupliquées.',
+]);

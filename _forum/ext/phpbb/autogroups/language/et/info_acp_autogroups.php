@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,11 +38,11 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'ACP_AUTOGROUPS_MANAGE'			=> 'Halda automaatseid gruppe',
-	'AUTOGROUPS_TYPE_NOT_EXIST'		=> 'Automaatse grupi tüüpi `%1$s` ei eksisteeri.',
+$lang = array_merge($lang, [
+	'ACP_AUTOGROUPS_MANAGE'     => 'Halda automaatseid gruppe',
+	'AUTOGROUPS_TYPE_NOT_EXIST' => 'Automaatse grupi tüüpi `%1$s` ei eksisteeri.',
 
 	// Logs
-	'ACP_AUTOGROUPS_SAVED_LOG'		=> '<strong>Automaatse grupi konfiguratsioon on salvestatud</strong>',
-	'ACP_AUTOGROUPS_DELETE_LOG'		=> '<strong>Automaatse grupi konfiguratsioon on kustutatud</strong>',
-));
+	'ACP_AUTOGROUPS_SAVED_LOG'  => '<strong>Automaatse grupi konfiguratsioon on salvestatud</strong>',
+	'ACP_AUTOGROUPS_DELETE_LOG' => '<strong>Automaatse grupi konfiguratsioon on kustutatud</strong>',
+]);

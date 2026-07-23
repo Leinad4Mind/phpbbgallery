@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,10 +18,9 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
-    'BBOAUTH_LOGIN_VIA'					=> 'logged-in via:',
-));
-
+$lang = array_merge($lang, [
+	'BBOAUTH_LOGIN_VIA' => 'logged-in via:',
+]);

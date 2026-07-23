@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -38,11 +38,11 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'ACP_AUTOGROUPS_MANAGE'			=> 'Gerenciar Autogrupos',
-	'AUTOGROUPS_TYPE_NOT_EXIST'		=> 'O tipo de Autogrupo `%1$s` não existe.',
+$lang = array_merge($lang, [
+	'ACP_AUTOGROUPS_MANAGE'     => 'Gerenciar Autogrupos',
+	'AUTOGROUPS_TYPE_NOT_EXIST' => 'O tipo de Autogrupo `%1$s` não existe.',
 
 	// Logs
-	'ACP_AUTOGROUPS_SAVED_LOG'		=> '<strong>Uma configuração de Autogrupo foi salva</strong>',
-	'ACP_AUTOGROUPS_DELETE_LOG'		=> '<strong>Uma configuração de Autogrupo foi deletada</strong>',
-));
+	'ACP_AUTOGROUPS_SAVED_LOG'  => '<strong>Uma configuração de Autogrupo foi salva</strong>',
+	'ACP_AUTOGROUPS_DELETE_LOG' => '<strong>Uma configuração de Autogrupo foi deletada</strong>',
+]);

@@ -12,8 +12,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -40,9 +40,9 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” … „ “
 
 $lang = array_merge($lang, [
-	'LIMITREPLIES_MSG_REPLY_DENIED'	=> 'As long as the last post in this topic was from you and is newer than <strong>%1$s</strong>, you can only reply again from <strong>%2$s</strong>.',
-	'LIMITREPLIES_MINUTES_PLURAL' 	=> [
-		1							=> '1 minute',
-		2							=> '%u minutes',
+	'LIMITREPLIES_MSG_REPLY_DENIED' => 'As long as the last post in this topic was from you and is newer than <strong>%1$s</strong>, you can only reply again from <strong>%2$s</strong>.',
+	'LIMITREPLIES_MINUTES_PLURAL'   => [
+		1 => '1 minute',
+		2 => '%u minutes',
 	],
 ]);

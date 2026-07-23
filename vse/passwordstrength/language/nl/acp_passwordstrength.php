@@ -10,8 +10,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -19,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -34,9 +34,9 @@ if (empty($lang) || !is_array($lang))
 // equally where a string contains only two placeholders which are used to wrap text
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
 
-$lang = array_merge($lang, array(
-	'PASSWORD_STRENGTH_TYPE'			=> 'Wachtwoordsterkte-algoritme',
-	'PASSWORD_STRENGTH_TYPE_EXPLAIN'	=> 'Kies een algoritme voor het bepalen van de sterkte van een wachtwoord.<br><strong>Complexiteit</strong> kijkt naar een mix van karakters, nummers, symbolen en de lengte van een wachtwoord, moedigt het gebruik van complexe wachtwoorden aan.<br><strong>zxcvbn</strong> (van DropBox) test hoe gemakkelijk een wachtwoord kan worden geraden, waardoor sterke en gebruikersvriendelijke wachtwoorden mogelijk zijn.',
-	'PASSWORD_STRENGTH_TYPE_COMPLEX'	=> 'Complexiteit',
-	'PASSWORD_STRENGTH_TYPE_ZXCVBN'		=> 'zxcvbn algoritme',
-));
+$lang = array_merge($lang, [
+	'PASSWORD_STRENGTH_TYPE'         => 'Wachtwoordsterkte-algoritme',
+	'PASSWORD_STRENGTH_TYPE_EXPLAIN' => 'Kies een algoritme voor het bepalen van de sterkte van een wachtwoord.<br><strong>Complexiteit</strong> kijkt naar een mix van karakters, nummers, symbolen en de lengte van een wachtwoord, moedigt het gebruik van complexe wachtwoorden aan.<br><strong>zxcvbn</strong> (van DropBox) test hoe gemakkelijk een wachtwoord kan worden geraden, waardoor sterke en gebruikersvriendelijke wachtwoorden mogelijk zijn.',
+	'PASSWORD_STRENGTH_TYPE_COMPLEX' => 'Complexiteit',
+	'PASSWORD_STRENGTH_TYPE_ZXCVBN'  => 'zxcvbn algoritme',
+]);

@@ -8,8 +8,8 @@
  */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -37,5 +37,5 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'ACL_U_FUTUREPOST' => 'Pode gerir as Mensagens relativas ao Futuro',
+	'ACL_U_FUTUREPOST' => 'Pode gerenciar as postagens futuras',
 ]);

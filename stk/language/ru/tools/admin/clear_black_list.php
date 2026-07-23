@@ -9,8 +9,8 @@
 */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,7 +37,7 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'CLEAR_BLACK_LIST'		=> 'Черный список IP-адресов',
-	'NO_BAN_CELL'			=> 'Черный список IP-адресов пуст'
-));
+$lang = array_merge($lang, [
+	'CLEAR_BLACK_LIST' => 'Черный список IP-адресов',
+	'NO_BAN_CELL'      => 'Черный список IP-адресов пуст'
+]);
