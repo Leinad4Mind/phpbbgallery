@@ -67,6 +67,8 @@ namespace
 	require_once dirname(__DIR__, 4) . '/phpbb/event/data.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/db/driver/driver_interface.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/request/request_interface.php';
+	require_once dirname(__DIR__, 4) . '/phpbb/notification/type/type_interface.php';
+	require_once dirname(__DIR__, 4) . '/phpbb/notification/type/base.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/cache/service.php';
 	require_once __DIR__ . '/stubs/phpbb_extension_base.php';
 	require_once __DIR__ . '/stubs/phpbb_notification_exception.php';
@@ -103,6 +105,12 @@ namespace
 	require_once dirname(__DIR__) . '/report.php';
 	require_once dirname(__DIR__) . '/notification.php';
 	require_once dirname(__DIR__) . '/notification/helper.php';
+	require_once dirname(__DIR__) . '/notification/events/phpbbgallery_image_approved.php';
+	require_once dirname(__DIR__) . '/notification/events/phpbbgallery_image_for_approval.php';
+	require_once dirname(__DIR__) . '/notification/events/phpbbgallery_image_not_approved.php';
+	require_once dirname(__DIR__) . '/notification/events/phpbbgallery_new_comment.php';
+	require_once dirname(__DIR__) . '/notification/events/phpbbgallery_new_image.php';
+	require_once dirname(__DIR__) . '/notification/events/phpbbgallery_new_report.php';
 	require_once dirname(__DIR__) . '/moderate.php';
 	require_once dirname(__DIR__) . '/user.php';
 }

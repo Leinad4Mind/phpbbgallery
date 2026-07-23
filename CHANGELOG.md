@@ -43,6 +43,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added native dependency, request-state, route, display-helper, and response types throughout the Gallery image controller.
 - Added native dependency, event-payload, subscriber-map, and callback return types throughout the Core event listener.
 - Added native dependency, identifier-list, watcher-query, and operation return types throughout the Core notification services.
+- Added native service-property and presentation return types to all six Gallery notification event classes while preserving compatibility with phpBB's untyped notification interface.
 - Reduced the packaged extension from approximately 8.2 MiB to 3.1 MiB by removing generated differences reports, backup files, source maps, unused upload plugins, and duplicate per-style JavaScript bundles.
 - Consolidated shared JavaScript under the phpbbgallery_core template namespace and corrected the polaroid asset reference for prosilver, BBOOTS, and FLATBOOTS.
 - Updated the required jQuery UI Widget Factory from 1.11.4 to 1.14.2 and documented SHA-256 pins for every retained third-party upload asset.
@@ -72,6 +73,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Reset request-local image/user caches before rendering, rejected unsupported image sort keys, and removed a duplicated image-ID sort suffix while preserving page-owned view counting.
 - Reset profile-event user and album state between emissions, preventing stale listener data in multi-profile requests.
 - Normalized duplicate notification watch identifiers, skipped empty watch operations, returned integer watcher IDs, released their SQL results, and repaired album-watch insertion SQL.
+- Normalized empty notification avatars and references to strings and guaranteed string fallback URLs for template rendering.
 - Updated gallery and user image counters only for images imported successfully.
 - Preserved ACP Import errors safely in JSON state between batches and corrected the final successful-image count.
 - Fixed the fatal error when resetting album ratings in the ACP by using the registered `phpbbgallery.core.rating` service.
@@ -103,6 +105,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added permanent image-controller tests covering complete native contracts, route defaults, nullable authorization exits, request-state reset, sort normalization, query ordering, and view-counter ownership.
 - Added permanent Core event-listener tests covering complete native contracts, subscribed events, and profile-state isolation.
 - Added permanent notification-service tests covering complete native contracts, identifier normalization, empty operations, and watcher-query cleanup.
+- Added permanent notification-event tests covering phpBB inheritance compatibility, native contracts, identifiers, serialized payloads, and presentation values.
 - Added permanent language-catalog tests covering PHP file and key parity, plural structures, printf placeholders, UTF-8 validity, and non-empty translations across all four Gallery components.
 - Added permanent package-hygiene tests covering generated artefacts, duplicate bundles, namespaced asset resolution, polaroid loading, current widget version, missing source-map references, and third-party checksums.
 - Added permanent ACP personal-gallery resync tests covering populated and empty databases, normalized values, and regression against indexing a missing row.
