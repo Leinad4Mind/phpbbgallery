@@ -24,7 +24,7 @@ class ext extends \phpbb\extension\base
 	{
 		if (!class_exists('forumhulp\helper\helper'))
 		{
-			$this->container->get('user')->add_lang_ext('forumhulp/cronstatus', 'info_acp_cronstatus');
+			$this->container->get('user')->add_lang_ext('forumhulp/htmlemail', 'info_acp_htmlemail');
 			trigger_error($this->container->get('user')->lang['FH_HELPER_NOTICE'], E_USER_WARNING);
 		}
 
