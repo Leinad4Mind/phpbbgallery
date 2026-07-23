@@ -14,67 +14,67 @@ namespace phpbbgallery\core\controller;
 class search
 {
 	/* @var \phpbb\auth\auth */
-	protected $auth;
+	protected \phpbb\auth\auth $auth;
 
 	/* @var \phpbb\config\config */
-	protected $config;
+	protected \phpbb\config\config $config;
 
-	/* @var \phpbb\db\driver\driver */
-	protected $db;
+	/* @var \phpbb\db\driver\driver_interface */
+	protected \phpbb\db\driver\driver_interface $db;
 
 	/** @var \phpbb\pagination  */
-	protected $pagination;
+	protected \phpbb\pagination $pagination;
 
-	/* @var \phpbb\request\request */
-	protected $request;
+	/* @var \phpbb\request\request_interface */
+	protected \phpbb\request\request_interface $request;
 
 	/* @var \phpbb\template\template */
-	protected $template;
+	protected \phpbb\template\template $template;
 
 	/* @var \phpbb\user */
-	protected $user;
+	protected \phpbb\user $user;
 
 	/** @var \phpbb\language\language  */
-	protected $language;
+	protected \phpbb\language\language $language;
 
 	/* @var \phpbb\controller\helper */
-	protected $helper;
+	protected \phpbb\controller\helper $helper;
 
 	/* @var \phpbbgallery\core\album\display */
-	protected $display;
+	protected \phpbbgallery\core\album\display $display;
 
 	/** @var \phpbbgallery\core\config  */
-	protected $gallery_config;
+	protected \phpbbgallery\core\config $gallery_config;
 
 	/** @var \phpbbgallery\core\auth\auth  */
-	protected $gallery_auth;
+	protected \phpbbgallery\core\auth\auth $gallery_auth;
 
 	/** @var \phpbbgallery\core\album\album  */
-	protected $album;
+	protected \phpbbgallery\core\album\album $album;
 
 	/** @var \phpbbgallery\core\image\image  */
-	protected $image;
+	protected \phpbbgallery\core\image\image $image;
 
 	/** @var \phpbbgallery\core\url  */
-	protected $url;
+	protected \phpbbgallery\core\url $url;
 
 	/** @var \phpbbgallery\core\search  */
-	protected $gallery_search;
+	protected \phpbbgallery\core\search $gallery_search;
 
-	/** @var   */
-	protected $images_table;
+	/** @var string */
+	protected string $images_table;
 
-	/** @var   */
-	protected $albums_table;
+	/** @var string */
+	protected string $albums_table;
 
-	/** @var   */
-	protected $comments_table;
-
-	/* @var string */
-	protected $root_path;
+	/** @var string */
+	protected string $comments_table;
 
 	/* @var string */
-	protected $php_ext;
+	protected string $root_path;
+
+	/* @var string */
+	protected string $php_ext;
 
 	/**
 	 * Constructor
@@ -83,7 +83,7 @@ class search
 	 * @param \phpbb\config\config                                      $config    Config object
 	 * @param \phpbb\db\driver\driver|\phpbb\db\driver\driver_interface $db        Database object
 	 * @param \phpbb\pagination                                         $pagination
-	 * @param \phpbb\request\request                                    $request   Request object
+	 * @param \phpbb\request\request_interface                          $request   Request object
 	 * @param \phpbb\template\template                                  $template  Template object
 	 * @param \phpbb\user                                               $user      User object
 	 * @param \phpbb\language\language                                  $language
@@ -95,19 +95,19 @@ class search
 	 * @param \phpbbgallery\core\image\image                            $image
 	 * @param \phpbbgallery\core\url                                    $url
 	 * @param \phpbbgallery\core\search                                 $gallery_search
-	 * @param                                                           $images_table
-	 * @param                                                           $albums_table
-	 * @param                                                           $comments_table
+	 * @param string                                                    $images_table
+	 * @param string                                                    $albums_table
+	 * @param string                                                    $comments_table
 	 * @param string                                                    $root_path Root path
 	 * @param string                                                    $php_ext   php file extension
 	 */
 	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\db\driver\driver_interface $db,
-		\phpbb\pagination $pagination, \phpbb\request\request $request,
+		\phpbb\pagination $pagination, \phpbb\request\request_interface $request,
 		\phpbb\template\template $template, \phpbb\user $user, \phpbb\language\language $language, \phpbb\controller\helper $helper,
 		\phpbbgallery\core\album\display $display, \phpbbgallery\core\config $gallery_config,
 		\phpbbgallery\core\auth\auth $gallery_auth, \phpbbgallery\core\album\album $album, \phpbbgallery\core\image\image $image,
 		\phpbbgallery\core\url $url, \phpbbgallery\core\search $gallery_search,
-		$images_table, $albums_table, $comments_table, $root_path, $php_ext)
+		string $images_table, string $albums_table, string $comments_table, string $root_path, string $php_ext)
 	{
 		$this->auth = $auth;
 		$this->config = $config;
@@ -140,18 +140,18 @@ class search
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
 
-	public function base($page = 1)
+	public function base(int $page = 1): \Symfony\Component\HttpFoundation\Response
 	{
+		$page = $this->normalize_page($page);
 		$search_id		= $this->request->variable('search_id', '');
-		$image_id		= $this->request->variable('image_id', 0);
 
 		$submit			= $this->request->variable('submit', false);
 		$keywords		= utf8_normalize_nfc($this->request->variable('keywords', '', true));
 		$add_keywords	= utf8_normalize_nfc($this->request->variable('add_keywords', '', true));
 		$username		= $this->request->variable('username', '', true);
-		$user_id			= $this->request->variable('user_id', array(0));
+		$user_id			= $this->normalize_id_filter($this->request->variable('user_id', array(0)));
 		$search_terms	= $this->request->variable('terms', 'all');
-		$search_album	= $this->request->variable('aid', array(0));
+		$search_album	= $this->normalize_id_filter($this->request->variable('aid', array(0)));
 		$search_child	= $this->request->variable('sc', true);
 		$search_fields	= $this->request->variable('sf', 'all');
 		$sort_days		= $this->request->variable('st', 0);
@@ -291,7 +291,7 @@ class search
 			$sql = $this->db->sql_build_query('SELECT', $sql_array);
 			$result = $this->db->sql_query($sql);
 			$row = $this->db->sql_fetchrow($result);
-			$search_count = $row['count'];
+			$search_count = (int) ($row['count'] ?? 0);
 			//var_dump($sql);
 			$this->db->sql_freeresult($result);
 			if ($search_count == 0)
@@ -328,7 +328,6 @@ class search
 			{
 				$this->image->assign_block('imageblock.image', $row, $show_options, $thumbnail_link, $imagename_link);
 			}
-			$current_page = $page*$this->gallery_config->get('items_per_page');
 			$this->pagination->generate_template_pagination(array(
 				'routes' => array(
 					'phpbbgallery_core_search',
@@ -347,7 +346,7 @@ class search
 					'sd'			=> $sort_dir,
 					'filtered'	=> true
 				),
-			), 'pagination', 'page', $search_count, $this->gallery_config->get('items_per_page'), $current_page - 1);
+			), 'pagination', 'page', $search_count, $this->gallery_config->get('items_per_page'), $start);
 
 			$this->template->assign_vars(array(
 				'SEARCH_MATCHES'	=> $this->language->lang('FOUND_SEARCH_MATCHES', $search_count),
@@ -385,7 +384,7 @@ class search
 	*
 	* @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	*/
-	public function random()
+	public function random(): \Symfony\Component\HttpFoundation\Response
 	{
 		$this->language->add_lang(array('gallery'), 'phpbbgallery/core');
 		$this->language->add_lang('search');
@@ -419,11 +418,12 @@ class search
 	 * Index Controller
 	 *    Route: gallery/search/recent/{page}
 	 *
-	 * @param $page
+	 * @param int $page
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
-	public function recent($page)
+	public function recent(int $page): \Symfony\Component\HttpFoundation\Response
 	{
+		$page = $this->normalize_page($page);
 		$this->language->add_lang(array('gallery'), 'phpbbgallery/core');
 		$this->language->add_lang('search');
 
@@ -450,8 +450,6 @@ class search
 
 		$limit = $this->gallery_config->get('items_per_page');
 		$start = ($page - 1) * $limit;
-		$image_counter = $this->gallery_search->recent_count();
-
 		$this->gallery_search->recent($limit, $start);
 
 		return $this->helper->render('gallery/search_recent.html', $this->language->lang('GALLERY'));
@@ -461,11 +459,12 @@ class search
 	 * Index Controller
 	 *    Route: gallery/search/commented/{page}
 	 *
-	 * @param $page
+	 * @param int $page
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
-	public function recent_comments($page)
+	public function recent_comments(int $page): \Symfony\Component\HttpFoundation\Response
 	{
+		$page = $this->normalize_page($page);
 		$this->language->add_lang(array('gallery'), 'phpbbgallery/core');
 		$this->language->add_lang('search');
 
@@ -502,11 +501,12 @@ class search
 	 * Index Controller
 	 *    Route: gallery/search/self/{page}
 	 *
-	 * @param $page
+	 * @param int $page
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
-	public function ego_search($page)
+	public function ego_search(int $page): \Symfony\Component\HttpFoundation\Response
 	{
+		$page = $this->normalize_page($page);
 		$this->language->add_lang(array('gallery'), 'phpbbgallery/core');
 		$this->language->add_lang('search');
 
@@ -543,11 +543,12 @@ class search
 	 * Index Controller
 	 *    Route: gallery/search/toprated/{page}
 	 *
-	 * @param $page
+	 * @param int $page
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
-	public function toprated($page)
+	public function toprated(int $page): \Symfony\Component\HttpFoundation\Response
 	{
+		$page = $this->normalize_page($page);
 		$this->language->add_lang(array('gallery'), 'phpbbgallery/core');
 		$this->language->add_lang('search');
 
@@ -569,7 +570,7 @@ class search
 		));
 		$this->template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $this->language->lang('SEARCH_TOPRATED'),
-			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_core_search_egosearch'),
+			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_core_search_toprated'),
 		));
 
 		$limit = $this->gallery_config->get('items_per_page');
@@ -578,5 +579,30 @@ class search
 		$this->gallery_search->rating($limit, $start);
 
 		return $this->helper->render('gallery/search_results.html', $this->language->lang('GALLERY'));
+	}
+
+	/**
+	 * Keep routed page numbers inside the valid pagination range.
+	 *
+	 * @param int $page Requested page number
+	 * @return int Normalized page number
+	 */
+	protected function normalize_page(int $page): int
+	{
+		return max(1, $page);
+	}
+
+	/**
+	 * Normalize an optional request filter to unique positive identifiers.
+	 *
+	 * @param array $ids Submitted identifiers
+	 * @return array Positive integer identifiers
+	 */
+	protected function normalize_id_filter(array $ids): array
+	{
+		$ids = array_map('intval', $ids);
+		$ids = array_filter($ids, static fn (int $id): bool => $id > 0);
+
+		return array_values(array_unique($ids));
 	}
 }
