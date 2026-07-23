@@ -18,7 +18,7 @@ class phpbbgallery_new_comment extends \phpbb\notification\type\base
 	*
 	* @return string
 	*/
-	public function get_type()
+	public function get_type(): string
 	{
 		return 'phpbbgallery.core.notification.new_comment';
 	}
@@ -27,23 +27,24 @@ class phpbbgallery_new_comment extends \phpbb\notification\type\base
 	*
 	* @var bool|array False if the service should use it's default data
 	* 					Array of data (including keys 'id', 'lang', and 'group')
+	* This property remains untyped because phpBB's base property is untyped.
 	*/
 	public static $notification_option = array(
 		'lang'	=> 'NOTIFICATION_TYPE_PHPBBGALLERY_NEW_COMMENT',
 	);
 
 	/** @var \phpbb\user_loader */
-	protected $user_loader;
+	protected \phpbb\user_loader $user_loader;
 
 	/** @var \phpbb\config\config */
-	protected $config;
+	protected \phpbb\config\config $config;
 
-	public function set_config(\phpbb\config\config $config)
+	public function set_config(\phpbb\config\config $config): void
 	{
 		$this->config = $config;
 	}
 
-	public function set_user_loader(\phpbb\user_loader $user_loader)
+	public function set_user_loader(\phpbb\user_loader $user_loader): void
 	{
 		$this->user_loader = $user_loader;
 	}
@@ -53,7 +54,7 @@ class phpbbgallery_new_comment extends \phpbb\notification\type\base
 	*
 	* @return bool True/False whether or not this is available to the user
 	*/
-	public function is_available()
+	public function is_available(): bool
 	{
 		return true;
 	}
@@ -62,9 +63,9 @@ class phpbbgallery_new_comment extends \phpbb\notification\type\base
 	 * Get the id of the rule
 	 *
 	 * @param array $data The data for the updated rules
-	 * @return mixed
+	 * @return int
 	 */
-	public static function get_item_id($data)
+	public static function get_item_id(mixed $data): int
 	{
 		return (int) $data['comment_id'];
 	}
@@ -73,11 +74,11 @@ class phpbbgallery_new_comment extends \phpbb\notification\type\base
 	 * Get the id of the parent
 	 *
 	 * @param array $data The data for the updated rules
-	 * @return mixed
+	 * @return int
 	 */
-	public static function get_item_parent_id($data)
+	public static function get_item_parent_id(mixed $data): int
 	{
-		// No parent
+		// The image is the parent notification item.
 		return (int) $data['image_id'];
 	}
 
@@ -89,7 +90,7 @@ class phpbbgallery_new_comment extends \phpbb\notification\type\base
 	 * @param array $options
 	 * @return array
 	 */
-	public function find_users_for_notification($data, $options = array())
+	public function find_users_for_notification(mixed $data, mixed $options = []): array
 	{
 		$this->user_loader->load_users($data['user_ids']);
 		return $this->check_user_notification_options($data['user_ids'], $options);
@@ -98,11 +99,11 @@ class phpbbgallery_new_comment extends \phpbb\notification\type\base
 	/**
 	 * Get the user's avatar
 	 */
-	public function get_avatar()
+	public function get_avatar(): string
 	{
-		$users = array($this->get_data('poster_id'));
+		$users = [$this->get_data('poster_id')];
 		$this->user_loader->load_users($users);
-		return $this->user_loader->get_avatar($this->get_data('poster_id'));
+		return (string) $this->user_loader->get_avatar($this->get_data('poster_id'));
 	}
 
 	/**
@@ -110,9 +111,9 @@ class phpbbgallery_new_comment extends \phpbb\notification\type\base
 	 *
 	 * @return string
 	 */
-	public function get_title()
+	public function get_title(): string
 	{
-		$users = array($this->get_data('poster_id'));
+		$users = [$this->get_data('poster_id')];
 		$this->user_loader->load_users($users);
 		$username = $this->user_loader->get_username($this->get_data('poster_id'), 'no_profile');
 		return $this->language->lang('NOTIFICATION_PHPBBGALLERY_NEW_COMMENT', $username);
@@ -123,10 +124,9 @@ class phpbbgallery_new_comment extends \phpbb\notification\type\base
 	 *
 	 * @return string
 	 */
-	public function get_reference()
+	public function get_reference(): string
 	{
-		//return true;
-		//return censor_text($this->get_data('album_name'));
+		return '';
 	}
 
 	/**
@@ -134,7 +134,7 @@ class phpbbgallery_new_comment extends \phpbb\notification\type\base
 	 *
 	 * @return string|bool
 	 */
-	public function get_email_template()
+	public function get_email_template(): bool
 	{
 		return false;
 	}
@@ -143,9 +143,9 @@ class phpbbgallery_new_comment extends \phpbb\notification\type\base
 	 *
 	 * @return array
 	 */
-	public function get_email_template_variables()
+	public function get_email_template_variables(): array
 	{
-		return array();
+		return [];
 	}
 
 	/**
@@ -153,9 +153,9 @@ class phpbbgallery_new_comment extends \phpbb\notification\type\base
 	 *
 	 * @return string URL
 	 */
-	public function get_url()
+	public function get_url(): string
 	{
-		return $this->get_data('image_id') ? append_sid($this->phpbb_root_path . 'gallery/image/' . $this->get_data('image_id')) : $this->get_data('url');
+		return (string) ($this->get_data('image_id') ? append_sid($this->phpbb_root_path . 'gallery/image/' . $this->get_data('image_id')) : $this->get_data('url'));
 	}
 
 	/**
@@ -163,9 +163,9 @@ class phpbbgallery_new_comment extends \phpbb\notification\type\base
 	*
 	* @return array Array of user_ids
 	*/
-	public function users_to_query()
+	public function users_to_query(): array
 	{
-		return array();
+		return [];
 	}
 
 	/**
@@ -175,9 +175,9 @@ class phpbbgallery_new_comment extends \phpbb\notification\type\base
 	* @param array $data The data for the updated rules
 	* @param array $pre_create_data Data from pre_create_insert_array()
 	*
-	* @return array Array of data ready to be inserted into the database
+	 * @return void
 	*/
-	public function create_insert_array($data, $pre_create_data = array())
+	public function create_insert_array(mixed $data, mixed $pre_create_data = []): void
 	{
 		$this->set_data('image_id', $data['image_id']);
 		$this->set_data('comment_id', $data['comment_id']);
