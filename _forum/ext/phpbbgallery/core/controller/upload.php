@@ -17,79 +17,79 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class upload
 {
-	/** @var \phpbb\request\request  */
-	protected $request;
+	/** @var request_interface */
+	protected request_interface $request;
 
 	/** @var \phpbb\db\driver\driver_interface  */
-	protected $db;
+	protected \phpbb\db\driver\driver_interface $db;
 
 	/* @var \phpbb\user */
-	protected $user;
+	protected \phpbb\user $user;
 
 	/** @var \phpbb\language\language  */
-	protected $language;
+	protected \phpbb\language\language $language;
 
 	/** @var \phpbb\template\template  */
-	protected $template;
+	protected \phpbb\template\template $template;
 
 	/** @var \phpbb\config\config  */
-	protected $config;
+	protected \phpbb\config\config $config;
 
 	/** @var ContainerInterface  */
-	protected $phpbb_container;
+	protected ContainerInterface $phpbb_container;
 
 	/* @var \phpbbgallery\core\misc */
-	protected $misc;
+	protected \phpbbgallery\core\misc $misc;
 
 	/** @var \phpbbgallery\core\auth\auth  */
-	protected $auth;
+	protected \phpbbgallery\core\auth\auth $auth;
 
 	/* @var \phpbbgallery\core\album\album */
-	protected $album;
+	protected \phpbbgallery\core\album\album $album;
 
-	/* @var \phpbbgallery\core\album\album */
-	protected $display;
+	/* @var \phpbbgallery\core\album\display */
+	protected \phpbbgallery\core\album\display $display;
 
 	/** @var \phpbb\controller\helper  */
-	protected $helper;
+	protected \phpbb\controller\helper $helper;
 
 	/** @var \phpbbgallery\core\config  */
-	protected $gallery_config;
+	protected \phpbbgallery\core\config $gallery_config;
 
 	/** @var \phpbbgallery\core\user  */
-	protected $gallery_user;
+	protected \phpbbgallery\core\user $gallery_user;
 
 	/** @var \phpbbgallery\core\image\image  */
-	protected $image;
+	protected \phpbbgallery\core\image\image $image;
 
 	/** @var \phpbbgallery\core\url  */
-	protected $url;
+	protected \phpbbgallery\core\url $url;
 
 	/** @var \phpbbgallery\core\upload  */
-	protected $gallery_upload;
+	protected \phpbbgallery\core\upload $gallery_upload;
 
 	/** @var \phpbbgallery\core\notification  */
-	protected $gallery_notification;
+	protected \phpbbgallery\core\notification $gallery_notification;
 
 	/** @var \phpbbgallery\core\notification\helper  */
-	protected $notification_helper;
+	protected \phpbbgallery\core\notification\helper $notification_helper;
 
 	/** @var \phpbbgallery\core\block  */
-	protected $block;
+	protected \phpbbgallery\core\block $block;
 
 	/** @var \phpbbgallery\core\contest */
-	protected $contest;
+	protected \phpbbgallery\core\contest $contest;
 
-	/** @var   */
-	protected $images_table;
+	/** @var string */
+	protected string $images_table;
 
-	/** @var   */
-	protected $phpbb_root_path;
+	/** @var string */
+	protected string $phpbb_root_path;
 
 	/**
 	 * Constructor
 	 *
-	 * @param \phpbb\request\request                 $request
+	 * @param request_interface                       $request
 	 * @param \phpbb\db\driver\driver_interface      $db
 	 * @param \phpbb\user                            $user    User object
 	 * @param \phpbb\language\language               $language
@@ -109,18 +109,18 @@ class upload
 	 * @param \phpbbgallery\core\url                 $url
 	 * @param \phpbbgallery\core\upload              $gallery_upload
 	 * @param \phpbbgallery\core\block               $block
-	 * @param                                        $images_table
-	 * @param                                        $phpbb_root_path
+	 * @param string                                 $images_table
+	 * @param string                                 $phpbb_root_path
 	 */
 
-	public function __construct(\phpbb\request\request $request, \phpbb\db\driver\driver_interface $db, \phpbb\user $user,
+	public function __construct(request_interface $request, \phpbb\db\driver\driver_interface $db, \phpbb\user $user,
 		\phpbb\language\language $language, \phpbb\template\template $template, \phpbb\config\config $config, ContainerInterface $phpbb_container,
 		\phpbbgallery\core\album\album $album, \phpbbgallery\core\misc $misc, \phpbbgallery\core\auth\auth $auth, \phpbbgallery\core\album\display $display,
 		\phpbb\controller\helper $helper, \phpbbgallery\core\config $gallery_config, \phpbbgallery\core\user $gallery_user,
 		\phpbbgallery\core\image\image $image, \phpbbgallery\core\notification $gallery_notification,
 		\phpbbgallery\core\notification\helper $notification_helper, \phpbbgallery\core\url $url,
 		\phpbbgallery\core\upload $gallery_upload, \phpbbgallery\core\block $block, \phpbbgallery\core\contest $contest,
-		$images_table, $phpbb_root_path)
+		string $images_table, string $phpbb_root_path)
 	{
 		$this->request = $request;
 		$this->db = $db;
@@ -147,7 +147,7 @@ class upload
 		$this->phpbb_root_path = $phpbb_root_path;
 	}
 
-	public function main($album_id)
+	public function main(int $album_id): \Symfony\Component\HttpFoundation\Response
 	{
 		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
 		$album_data = $this->album->get_info($album_id);
@@ -272,9 +272,9 @@ class upload
 			$checks = $process->generate_hidden_fields();
 			$process->get_images($checks);
 			$image_names = [];
-			foreach ($process->images as $ID)
+			foreach ($process->images as $image_id)
 			{
-				$image_names[] = $process->image_data[$ID]['image_name'];
+				$image_names[] = $process->image_data[$image_id]['image_name'];
 			}
 			$process->set_names($image_names);
 
@@ -314,14 +314,14 @@ class upload
 
 			// So if all is fine let's prepare response
 			$response = [];
-			foreach ($process->images as $ID)
+			foreach ($process->images as $image_id)
 			{
 				$response[] = [
-					'url'       => $this->helper->route('phpbbgallery_core_image', ['image_id' => $ID]),
-					'thumbnail' => $this->helper->route('phpbbgallery_core_image_file_mini', ['image_id' => $ID]),
-					'name'      => $process->image_data[$ID]['image_name'],
+					'url'       => $this->helper->route('phpbbgallery_core_image', ['image_id' => $image_id]),
+					'thumbnail' => $this->helper->route('phpbbgallery_core_image_file_mini', ['image_id' => $image_id]),
+					'name'      => $process->image_data[$image_id]['image_name'],
 					//	'type'	=> $process->image_data[$process->images[0]]['image_name'],
-					'size' => $process->image_data[$ID]['filesize_upload'],
+					'size' => $process->image_data[$image_id]['filesize_upload'],
 					//	'delete_url'	=> '',
 					//	'delete_type'	=> ''
 				];
@@ -456,24 +456,23 @@ class upload
 					'L_ALLOW_COMMENTS'    => $this->language->lang('ALLOW_COMMENTS_ARY', $upload_files_limit),
 				]);
 
-				// The quick upload will work only for registered users!
-				// So fuck you bots and anons
+				// Quick upload is restricted to registered users.
 				if ($this->user->data['is_registered'])
 				{
 					$filetypes = [];
-					foreach ($process->get_allowed_types(true) as $VAR)
+					foreach ($process->get_allowed_types(true) as $filetype)
 					{
-						if ($VAR == 'jpg')
+						if ($filetype == 'jpg')
 						{
 							$filetypes[] = 'jpe?g';
 						}
-						if ($VAR == 'zip')
+						if ($filetype == 'zip')
 						{
 							continue;
 						}
 						else
 						{
-							$filetypes[] = $VAR;
+							$filetypes[] = $filetype;
 						}
 					}
 					$this->template->assign_vars([
@@ -671,7 +670,7 @@ class upload
 		return $this->helper->render('gallery/posting_body.html', $page_title);
 	}
 
-	private function check_fs()
+	private function check_fs(): bool
 	{
 
 		$phpbbgallery_core_file = $this->phpbb_root_path . 'files/phpbbgallery/core';
@@ -679,13 +678,9 @@ class upload
 		$phpbbgallery_core_file_mini = $this->phpbb_root_path . 'files/phpbbgallery/core/mini';
 		$phpbbgallery_core_file_source = $this->phpbb_root_path . 'files/phpbbgallery/core/source';
 
-		if (file_exists($phpbbgallery_core_file) && is_writable($phpbbgallery_core_file) && file_exists($phpbbgallery_core_file_source) && is_writable($phpbbgallery_core_file_source) && file_exists($phpbbgallery_core_file_medium) && is_writable($phpbbgallery_core_file_medium) && file_exists($phpbbgallery_core_file_mini) && is_writable($phpbbgallery_core_file_mini))
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return file_exists($phpbbgallery_core_file) && is_writable($phpbbgallery_core_file)
+			&& file_exists($phpbbgallery_core_file_source) && is_writable($phpbbgallery_core_file_source)
+			&& file_exists($phpbbgallery_core_file_medium) && is_writable($phpbbgallery_core_file_medium)
+			&& file_exists($phpbbgallery_core_file_mini) && is_writable($phpbbgallery_core_file_mini);
 	}
 }

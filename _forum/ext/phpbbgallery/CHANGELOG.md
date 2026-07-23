@@ -37,6 +37,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added native state, dependency, route, helper, and binary-response types throughout the Gallery file controller.
 - Added native dependency, route, pagination-helper, and Symfony response types throughout the Gallery search controller.
 - Added native dependency, route, display-helper, and nullable confirmation-response types throughout the Gallery album controller.
+- Added native dependency, route, filesystem-helper, and Symfony response types throughout the resumable upload controller.
 - Reduced the packaged extension from approximately 8.2 MiB to 3.1 MiB by removing generated differences reports, backup files, source maps, unused upload plugins, and duplicate per-style JavaScript bundles.
 - Consolidated shared JavaScript under the phpbbgallery_core template namespace and corrected the polaroid asset reference for prosilver, BBOOTS, and FLATBOOTS.
 - Updated the required jQuery UI Widget Factory from 1.11.4 to 1.14.2 and documented SHA-256 pins for every retained third-party upload asset.
@@ -86,6 +87,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added permanent file-controller tests covering complete native contracts, binary routes, state reset, and missing database rows.
 - Added permanent search-controller tests covering complete native contracts, route responses, page and filter normalization, result offsets, and breadcrumb targets.
 - Added permanent album-controller tests covering complete native contracts, route defaults, nullable confirmation responses, sort-key normalization, and display flags.
+- Added permanent upload-controller tests covering complete native contracts, route types, and required writable upload directories.
 - Added permanent language-catalog tests covering PHP file and key parity, plural structures, printf placeholders, UTF-8 validity, and non-empty translations across all four Gallery components.
 - Added permanent package-hygiene tests covering generated artefacts, duplicate bundles, namespaced asset resolution, polaroid loading, current widget version, missing source-map references, and third-party checksums.
 - Added permanent ACP personal-gallery resync tests covering populated and empty databases, normalized values, and regression against indexing a missing row.
