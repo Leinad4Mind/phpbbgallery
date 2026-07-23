@@ -15,58 +15,58 @@ namespace phpbbgallery\core\controller;
 class file
 {
 	/* @var \phpbb\config\config */
-	protected $config;
+	protected \phpbb\config\config $config;
 
-	/* @var \phpbb\db\driver\driver */
-	protected $db;
+	/* @var \phpbb\db\driver\driver_interface */
+	protected \phpbb\db\driver\driver_interface $db;
 
 	/* @var \phpbb\user */
-	protected $user;
+	protected \phpbb\user $user;
 
 	/* @var \phpbbgallery\core\auth\auth */
-	protected $auth;
+	protected \phpbbgallery\core\auth\auth $auth;
 
 	/* @var \phpbbgallery\core\user */
-	protected $gallery_user;
+	protected \phpbbgallery\core\user $gallery_user;
 
 	/* @var string */
-	protected $path_source;
+	protected string $path_source;
 
 	/* @var string */
-	protected $path_medium;
+	protected string $path_medium;
 
 	/* @var string */
-	protected $path_mini;
+	protected string $path_mini;
 
 	/* @var string */
-	protected $path_watermark;
+	protected string $path_watermark;
 
 	/* @var \phpbbgallery\core\file\file */
-	protected $tool;
+	protected \phpbbgallery\core\file\file $tool;
 
-	/* @var \phpbb\request\request */
-	protected $request;
-
-	/* @var string */
-	protected $table_albums;
+	/* @var \phpbb\request\request_interface */
+	protected \phpbb\request\request_interface $request;
 
 	/* @var string */
-	protected $table_images;
+	protected string $table_albums;
 
 	/* @var string */
-	protected $path;
+	protected string $table_images;
+
+	/* @var string */
+	protected string $path = '';
 
 	/* @var array */
-	protected $data;
+	protected array $data = [];
 
 	/* @var string */
-	protected $error;
+	protected string $error = '';
 
 	/* @var string */
-	protected $image_src;
+	protected string $image_src = '';
 
 	/* @var boolean */
-	protected $use_watermark = false;
+	protected bool $use_watermark = false;
 
 	/**
 	 * Constructor
@@ -77,18 +77,18 @@ class file
 	 * @param \phpbbgallery\core\auth\auth $gallery_auth Gallery auth object
 	 * @param \phpbbgallery\core\user $gallery_user Gallery user object
 	 * @param \phpbbgallery\core\file\file $tool
-	 * @param \phpbb\request\request $request
-	 * @param $source_path
-	 * @param $medium_path
-	 * @param $mini_path
-	 * @param $watermark_file
-	 * @param $albums_table
-	 * @param $images_table
+	 * @param \phpbb\request\request_interface $request
+	 * @param string $source_path
+	 * @param string $medium_path
+	 * @param string $mini_path
+	 * @param string $watermark_file
+	 * @param string $albums_table
+	 * @param string $images_table
 	 * @internal param \phpbbgallery\core\album\display $display Albums display object
 	 */
 	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbbgallery\core\auth\auth $gallery_auth,
-	\phpbbgallery\core\user $gallery_user, \phpbbgallery\core\file\file $tool, \phpbb\request\request $request,
-	$source_path, $medium_path, $mini_path, $watermark_file, $albums_table, $images_table)
+	\phpbbgallery\core\user $gallery_user, \phpbbgallery\core\file\file $tool, \phpbb\request\request_interface $request,
+	string $source_path, string $medium_path, string $mini_path, string $watermark_file, string $albums_table, string $images_table)
 	{
 		$this->config = $config;
 		$this->db = $db;
@@ -112,7 +112,7 @@ class file
 	* @param	int		$image_id
 	* @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	*/
-	public function source($image_id)
+	public function source(int $image_id): \Symfony\Component\HttpFoundation\BinaryFileResponse
 	{
 		$this->auth->load_user_permissions($this->user->data['user_id']);
 		$this->path = $this->path_source;
@@ -127,15 +127,7 @@ class file
 			$this->db->sql_query($sql);
 
 			// trigger_error('IMAGE_NOT_EXIST');
-			$this->error = 'image_not_exist.jpg';
-			$this->data['image_filename'] = 'image_not_exist.jpg';
-			$this->data['image_name'] = 'Image is missing!';
-			$this->data['image_user_id'] = 1;
-			$this->data['image_status'] = 2;
-			$this->data['album_id'] = 0;
-			$this->data['album_user_id'] = 1;
-			$this->data['image_filemissing'] = 0;
-			$this->data['album_watermark'] = 0;
+			$this->set_error_image('image_not_exist.jpg', 'Image is missing!');
 		}
 
 		$this->generate_image_src();
@@ -161,7 +153,7 @@ class file
 	* @param	int		$image_id
 	* @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	*/
-	public function medium($image_id)
+	public function medium(int $image_id): \Symfony\Component\HttpFoundation\BinaryFileResponse
 	{
 
 		$this->path = $this->path_medium;
@@ -196,7 +188,7 @@ class file
 	* @param	int		$image_id
 	* @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	*/
-	public function mini($image_id)
+	public function mini(int $image_id): \Symfony\Component\HttpFoundation\BinaryFileResponse
 	{
 		$this->path = $this->path_mini;
 		$this->load_data($image_id);
@@ -220,19 +212,16 @@ class file
 		return $this->display();
 	}
 
-	public function load_data($image_id)
+	public function load_data(int $image_id): void
 	{
+		$this->data = [];
+		$this->error = '';
+		$this->image_src = '';
+		$this->use_watermark = false;
+
 		if ($image_id == 0)
 		{
-			$this->error = 'image_not_exist.jpg';
-			$this->data['image_filename'] = 'image_not_exist.jpg';
-			$this->data['image_name'] = 'Image is missing!';
-			$this->data['image_user_id'] = 1;
-			$this->data['image_status'] = 2;
-			$this->data['album_id'] = 0;
-			$this->data['album_user_id'] = 1;
-			$this->data['image_filemissing'] = 0;
-			$this->data['album_watermark'] = 0;
+			$this->set_error_image('image_not_exist.jpg', 'Image is missing!');
 		}
 		else
 		{
@@ -242,28 +231,21 @@ class file
 					ON (i.image_album_id = a.album_id)
 				WHERE i.image_id = ' . (int) $image_id;
 			$result = $this->db->sql_query($sql);
-			$this->data = $this->db->sql_fetchrow($result);
+			$image_data = $this->db->sql_fetchrow($result);
+			$this->data = is_array($image_data) ? $image_data : [];
 			$this->db->sql_freeresult($result);
 
 			if (!$this->data || !$this->data['album_id'])
 			{
 				// Image or album does not exist
 				// trigger_error('INVALID_IMAGE');
-				$this->error = 'not_authorised.jpg';
-				$this->data['image_filename'] = 'not_authorised.jpg';
-				$this->data['image_name'] = 'You are not authorized!';
-				$this->data['image_user_id'] = 1;
-				$this->data['image_status'] = 2;
-				$this->data['album_id'] = 0;
-				$this->data['album_user_id'] = 1;
-				$this->data['image_filemissing'] = 0;
-				$this->data['album_watermark'] = 0;
+				$this->set_error_image('not_authorised.jpg', 'You are not authorized!');
 
 			}
 		}
 	}
 
-	public function check_auth()
+	public function check_auth(): void
 	{
 		$this->auth->load_user_permissions($this->user->data['user_id']);
 		$zebra_array = $this->auth->get_user_zebra($this->user->data['user_id']);
@@ -272,15 +254,7 @@ class file
 		{
 			// The image is currently being uploaded
 			// trigger_error('NOT_AUTHORISED');
-			$this->error = 'not_authorised.jpg';
-			$this->data['image_filename'] = 'not_authorised.jpg';
-			$this->data['image_name'] = 'You are not authorized!';
-			$this->data['image_user_id'] = 1;
-			$this->data['image_status'] = 2;
-			$this->data['album_id'] = 0;
-			$this->data['album_user_id'] = 1;
-			$this->data['image_filemissing'] = 0;
-			$this->data['album_watermark'] = 0;
+			$this->set_error_image('not_authorised.jpg', 'You are not authorized!');
 		}
 		if (!$this->auth->acl_check('i_view', $this->data['album_id'], $this->data['album_user_id'])
 			|| (!$this->auth->acl_check('m_status', $this->data['album_id'], $this->data['album_user_id'])
@@ -289,33 +263,17 @@ class file
 		{
 			// Missing permissions
 			// trigger_error('NOT_AUTHORISED');
-			$this->error = 'not_authorised.jpg';
-			$this->data['image_filename'] = 'not_authorised.jpg';
-			$this->data['image_name'] = 'You are not authorized!';
-			$this->data['image_user_id'] = 1;
-			$this->data['image_status'] = 2;
-			$this->data['album_id'] = 0;
-			$this->data['album_user_id'] = 1;
-			$this->data['image_filemissing'] = 0;
-			$this->data['album_watermark'] = 0;
+			$this->set_error_image('not_authorised.jpg', 'You are not authorized!');
 		}
 		if (($this->auth->get_zebra_state($zebra_array, (int) $this->data['album_user_id'], $this->data['album_id']) < (int) $this->data['album_auth_access'] && !$this->error))
 		{
 			// Zebra parameters not met
 			// trigger_error('NOT_AUTHORISED');
-			$this->error = 'not_authorised.jpg';
-			$this->data['image_filename'] = 'not_authorised.jpg';
-			$this->data['image_name'] = 'You are not authorized!';
-			$this->data['image_user_id'] = 1;
-			$this->data['image_status'] = 2;
-			$this->data['album_id'] = 0;
-			$this->data['album_user_id'] = 1;
-			$this->data['image_filemissing'] = 0;
-			$this->data['album_watermark'] = 0;
+			$this->set_error_image('not_authorised.jpg', 'You are not authorized!');
 		}
 	}
 
-	public function generate_image_src()
+	public function generate_image_src(): void
 	{
 		$this->image_src = $this->path  . $this->data['image_filename'];
 
@@ -327,15 +285,7 @@ class file
 			$this->db->sql_query($sql);
 
 			// trigger_error('IMAGE_NOT_EXIST');
-			$this->error = 'image_not_exist.jpg';
-			$this->data['image_filename'] = 'image_not_exist.jpg';
-			$this->data['image_name'] = 'Image is missing!';
-			$this->data['image_user_id'] = 1;
-			$this->data['image_status'] = 2;
-			$this->data['album_id'] = 0;
-			$this->data['album_user_id'] = 1;
-			$this->data['image_filemissing'] = 0;
-			$this->data['album_watermark'] = 0;
+			$this->set_error_image('image_not_exist.jpg', 'Image is missing!');
 		}
 
 		$this->check_hot_link();
@@ -357,9 +307,9 @@ class file
 	* Image File Controller
 	*	Route: gallery/image/{image_id}/x
 	*
-	* @return \Symfony\Component\HttpFoundation\BinaryFileResponseResponse A Symfony Response object
+	* @return \Symfony\Component\HttpFoundation\BinaryFileResponse A Symfony Response object
 	*/
-	public function display()
+	public function display(): \Symfony\Component\HttpFoundation\BinaryFileResponse
 	{
 		$this->tool->set_last_modified($this->gallery_user->get_data('user_permissions_changed'));
 		$this->tool->set_last_modified($this->config['phpbb_gallery_watermark_changed']);
@@ -421,16 +371,18 @@ class file
 		return $response;
 	}
 
-	protected function resize($image_id, $resize_width, $resize_height, $store_filesize = '', $put_details = false)
+	protected function resize(int $image_id, int $resize_width, int $resize_height, string $store_filesize = '', bool $put_details = false): void
 	{
 		if (!file_exists($this->image_src))
 		{
 			$this->tool->set_image_data($this->path_source . $this->data['image_filename']);
 			$this->tool->read_image(true);
 
-			$image_size['file'] = $this->tool->image_size['file'];
-			$image_size['width'] = $this->tool->image_size['width'];
-			$image_size['height'] = $this->tool->image_size['height'];
+			$image_size = [
+				'file' => $this->tool->image_size['file'],
+				'width' => $this->tool->image_size['width'],
+				'height' => $this->tool->image_size['height'],
+			];
 
 			$this->tool->set_image_data($this->image_src);
 
@@ -458,7 +410,7 @@ class file
 		}
 	}
 
-	protected function check_hot_link()
+	protected function check_hot_link(): void
 	{
 		if ($this->config['phpbb_gallery_allow_hotlinking'])
 		{
@@ -473,15 +425,31 @@ class file
 			return;
 		}
 
-		$this->error = 'no_hotlinking.jpg';
-		$this->data['image_filename'] = 'no_hotlinking.jpg';
-		$this->data['image_name'] = 'Hot linking not allowed';
-		$this->data['image_user_id'] = 1;
-		$this->data['image_status'] = 2;
-		$this->data['album_id'] = 0;
-		$this->data['album_user_id'] = 1;
-		$this->data['image_filemissing'] = 0;
-		$this->data['album_watermark'] = 0;
+		$this->set_error_image('no_hotlinking.jpg', 'Hot linking not allowed');
+	}
+
+	/**
+	 * Replace the current image with a complete, safe error-image state.
+	 *
+	 * @param string $filename Error-image filename
+	 * @param string $name     Error-image display name
+	 * @return void
+	 */
+	protected function set_error_image(string $filename, string $name): void
+	{
+		$this->error = $filename;
+		$this->data = array_merge($this->data, [
+			'image_id' => (int) ($this->data['image_id'] ?? 0),
+			'image_filename' => $filename,
+			'image_name' => $name,
+			'image_user_id' => 1,
+			'image_status' => 2,
+			'album_id' => 0,
+			'album_user_id' => 1,
+			'album_auth_access' => 0,
+			'image_filemissing' => 0,
+			'album_watermark' => 0,
+		]);
 	}
 
 	/**
@@ -489,7 +457,7 @@ class file
 	 * @param array  $allowed_domains
 	 * @return bool
 	 */
-	protected function is_allowed_referrer($referrer, array $allowed_domains)
+	protected function is_allowed_referrer(string $referrer, array $allowed_domains): bool
 	{
 		$scheme = strtolower((string) parse_url($referrer, PHP_URL_SCHEME));
 		$referrer_host = $this->normalize_hotlink_host((string) parse_url($referrer, PHP_URL_HOST));
@@ -520,7 +488,7 @@ class file
 	 * @param string $host
 	 * @return string
 	 */
-	protected function normalize_hotlink_host($host)
+	protected function normalize_hotlink_host(string $host): string
 	{
 		$host = trim($host);
 		if ($host === '')

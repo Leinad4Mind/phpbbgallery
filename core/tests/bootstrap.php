@@ -63,6 +63,7 @@ namespace
 	}
 
 	require_once dirname(__DIR__, 4) . '/phpbb/db/driver/driver_interface.php';
+	require_once dirname(__DIR__, 4) . '/phpbb/request/request_interface.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/cache/service.php';
 	require_once __DIR__ . '/stubs/phpbb_extension_base.php';
 	require_once __DIR__ . '/stubs/phpbb_notification_exception.php';
@@ -72,6 +73,7 @@ namespace
 	require_once dirname(__DIR__) . '/ext.php';
 	require_once dirname(__DIR__) . '/controller/moderate.php';
 	require_once dirname(__DIR__) . '/controller/index.php';
+	require_once dirname(__DIR__) . '/controller/file.php';
 	require_once dirname(__DIR__) . '/acp/main_module.php';
 	require_once dirname(__DIR__) . '/ucp/main_module.php';
 	require_once dirname(__DIR__) . '/config.php';
