@@ -41,7 +41,7 @@ $lang = array_merge($lang, [
 
 	'TRANSFER_TO'                => 'Podes transferir/oferecer pontos teus a outro utilizador - Esta acção é irreversível!',
 	'TRANSFER_SUCCESS'           => 'A transferência de pontos foi feita com sucesso.',
-	'TRANSFER_TO_HIDDEN_TOPIC'   => 'Para poderes aceder a este tópico terás de efectuar uma troca de <span class="label label-primary">%1$s pontos</span><br />Estes pontos serão transferidos uma única vez para a conta do Autor do Tópico<br />Vejam aqui como podem ganhar pontos: <a href="https://goldtuganime.com/forum/viewtopic.php?f=29&t=10711">Sistema de Pontos GoldTugAnime</a>',
+	'TRANSFER_TO_HIDDEN_TOPIC'   => 'Para poderes aceder a este tópico terás de efectuar uma troca de <span class="label label-primary">%1$s pontos</span><br />Estes pontos serão transferidos uma única vez para a conta do Autor do Tópico<br />Vê aqui como podes ganhar pontos: <a href="https://goldtuganime.com/forum/viewtopic.php?f=29&t=10711">Sistema de Pontos GoldTugAnime</a>',
 	'NO_USER_SELECTED'           => 'Não seleccionaste nenhum utilizador',
 	'NO_AMOUNT_SELECTED'         => 'Não seleccionaste nenhum montante ou o montante é menor do que 5',
 	'TRANSFER_NOT_ENOUGH_POINTS' => 'Não tens pontos suficientes para oferecer.',
@@ -69,7 +69,7 @@ $lang = array_merge($lang, [
 	'TRANSFER_POINTS'             => 'Transferir %s',
 	'TRANSFER_AMOUNT'             => 'Montante',
 	'TRANSFER_COMMENT'            => 'Comentário',
-	'BBPOINT_LOG'                 => 'Log de Transferências',
+	'BBPOINTS_LOG'                => 'Log de Transferências',
 
 
 	'CHANGE_NO_USER_SELECTED' => 'Nenhum utilizador seleccionado',

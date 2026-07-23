@@ -40,7 +40,7 @@ $lang = array_merge(
 	$lang, [
 		'AVATAR_RESIZE'         => 'Redimensionamento de Avatar',
 		'AVATAR_RESIZE_EXPLAIN' => 'Clique no botão com um lápis para cortar o seu %1$s e de seguida envie. O seu %1$s será guardado com uma altura de %2$s pixels e uma largura de %3$s pixels.',
-		'BBAVATARRSIZE_NOTICE'  => '<div class="phpinfo"><p>Não existem definições específicas para esta extensão. Depois de o usuário enviar o avatar via PCU (Painel de Controlo do Usuário), a opção de corte ficará disponível.<br />Verifique o ACP &#62; Configurações de avatar: "Tamanho máximo do arquivo do avatar" em "0" ou "2mb" (ou superior) para uma experiência de utilização ideal e mais adequada.</p></div>',
+		'BBAVATARRSIZE_NOTICE'  => '<div class="phpinfo"><p>Não existem definições específicas para esta extensão. Depois de o usuário enviar o avatar via UCP (Painel de Controle do Usuário), a opção de corte ficará disponível.<br />Verifique o ACP &#62; Configurações de avatar: "Tamanho máximo do arquivo do avatar" em "0" ou "2mb" (ou superior) para uma experiência de utilização ideal e mais adequada.</p></div>',
 		'SS_HELPER_NOTY'        => 'O SiteSplat BBcore não existe!<br />Faça o download do <a href="https://sitesplat.com" target="_blank">BBcore</a> e copie a pasta BBcore para a pasta da sua extensão sitesplat.',
 	]
 );

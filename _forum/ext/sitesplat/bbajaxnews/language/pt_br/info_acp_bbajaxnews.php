@@ -21,7 +21,7 @@ $lang = array_merge($lang, [
 	'BBAJAXNEWS' => 'BBAjaxNews',
 
 	'ACP_BBAJAXNEWS_TITLE'         => 'BBajaxnews',
-	'ACP_BBAJAXNEWS_TITLE_EXPLAIN' => 'Aqui pode configurar tudo sobre a extensão BBAjaxNews.',
+	'ACP_BBAJAXNEWS_TITLE_EXPLAIN' => 'O BBajaxnews é uma extensão poderosa e revolucionária que permite ao seu fórum phpBB, com os produtos premium da SiteSplat, ter notificações reais em tempo real para seus usuários!<br/>Ajuste suas preferências abaixo e não se esqueça de limpar o cache do fórum sempre que alterar qualquer configuração aqui.',
 	'ACP_BBAJAXNEWS_SETTING_SAVED' => 'As configurações do BBajaxnews foram guardadas.',
 
 	'SPECIAL'         => 'Notícias Especiais',
@@ -83,7 +83,7 @@ $lang = array_merge($lang, [
 	'SITESPLAT_BBAJAXNEWS_USER_JOINED_GROUP' => 'Habilitar notícias ao vivo quando os usuários forem adicionados ao grupo especial',
 
 	'SITESPLAT_BBAJAXNEWS_NEW_POSTS_TODAY'  => 'Habilitar notícias ao vivo informando sobre o número de publicações postadas hoje até ao momento',
-	'SITESPLAT_BBAJAXNEWS_RANDOM_POLL'      => 'Habilitar notícias ao vivo encorajando o usuário a participar numa sondagem aleatória onde ainda não votou',
+	'SITESPLAT_BBAJAXNEWS_RANDOM_POLL'      => 'Habilitar notícias ao vivo encorajando o usuário a participar de uma votação aleatória em que ainda não votou',
 	'SITESPLAT_BBAJAXNEWS_USERS_ONLINE_24H' => 'Habilitar notícias ao vivo informando o número de usuários conectados nas últimas 24h',
 	'SITESPLAT_BBAJAXNEWS_USERS_ONLINE'     => 'Habilitar notícias ao vivo informando o número de usuários conectados',
 

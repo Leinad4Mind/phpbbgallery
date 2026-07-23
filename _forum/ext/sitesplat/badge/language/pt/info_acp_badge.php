@@ -41,7 +41,7 @@ $lang = array_merge($lang, [
 	'BADGE_TYPE_NOT_EXIST' => 'O tipo de Medalha `%1$s` não existe.',
 	'BADGE_NOTICE'         => '<div class="phpinfo"><p>As configurações desta extensão encontram-se em <strong>%1$s &#187; %2$s &#187; %3$s</strong>.<br /><strong>Nota:</strong> Donativos PayPal, Sistema de Gostos (LikeBB) e muitos outros suportados. Regras da Extensão Premium <strong>apenas</strong> estarão disponíveis se essas extensões estiveram ativas!</p></div>',
 	'SS_HELPER_NOTY'       => 'O Sistema Core SiteSplat (BBcore) não se encontra instalado!<br /> Transfere o <a href="https://sitesplat.com" target="_blank">BBCore</a> e copia a pasta BBcore para dentro da pasta de extensões sitesplat.',
-	'ERROR_BADGE_DISABLE'  => 'Não podes desactivar o Sistema de Medalhas por teres outras extensões com dependências:<br /><div class="phpinfo">» %s</div>',
+	'ERROR_BADGE_DISABLE'  => 'Não podes desativar o Sistema de Medalhas por teres outras extensões com dependências:<br /><div class="phpinfo">» %s</div>',
 
 	// Logs
 	'ACP_BADGE_SAVED_LOG'      => '<strong>Configuração de Medalhas foi guardada com sucesso</strong>',

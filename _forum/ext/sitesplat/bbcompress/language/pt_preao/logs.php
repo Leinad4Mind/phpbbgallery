@@ -23,8 +23,8 @@ $lang = array_merge($lang, [
 	'LOG_TINIFY_ACCOUNT_PROBLEM'      => '<strong>Erro na conta TinyPNG</strong><br />» %s',
 	'LOG_TINIFY_SOURCE_IMAGE_PROBLEM' => '<strong>Erro na imagem fonte Tinify</strong><br />» %s',
 
-	'LOG_PHP_JPEG_PROBLEM' => '<strong>Erro na otimização PHP de JPEG</strong><br />» %s',
-	'LOG_PHP_PNG_PROBLEM'  => '<strong>Erro na otimização PHP de PNG</strong><br />» %s',
+	'LOG_PHP_JPEG_PROBLEM' => '<strong>Erro na optimização PHP de JPEG</strong><br />» %s',
+	'LOG_PHP_PNG_PROBLEM'  => '<strong>Erro na optimização PHP de PNG</strong><br />» %s',
 
 	'LOG_IMAGEOPTIM_ARGUMENT_PROBLEM'  => '<strong>Erro no argumento ImageOptim</strong><br />» %s',
 	'LOG_IMAGEOPTIM_NETWORK_PROBLEM'   => '<strong>Erro de rede ImageOptim</strong><br />» %s',

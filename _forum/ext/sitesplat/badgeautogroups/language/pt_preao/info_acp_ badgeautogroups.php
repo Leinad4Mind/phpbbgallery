@@ -30,5 +30,5 @@ $lang = array_merge($lang, array(
 	'BADGEAUTO_TYPE_ZEBRA_FOES'		=> 'Prémio Emblema de Inimigos',
 	'BADGEAUTO_TYPE_ZEBRA_FRIENDS'	=> 'Prémio Emblema de Amigos',
 
-	'BADGE_AUTOGROUPS_NOTICE'		=> '<div class="phpinfo"><p>A Configuração para esta extensão encontra-se em <strong>%1$s » %2$s » %3$s</strong>.<br />Por favor note, os Tipos de Regras de Emblemas são adicionados em conjunto! Extensões como LikeBB, Donation etc não funcionarão se não estiverem instaladas.</p></div>'
+	'BADGE_AUTOGROUPS_NOTICE'		=> '<div class="phpinfo"><p>A Configuração para esta extensão encontra-se em <strong>%1$s » %2$s » %3$s</strong>.<br />Por favor nota, os Tipos de Regras de Emblemas são adicionados em conjunto! Extensões como LikeBB, Donation etc não funcionarão se não estiverem instaladas.</p></div>'
 ));

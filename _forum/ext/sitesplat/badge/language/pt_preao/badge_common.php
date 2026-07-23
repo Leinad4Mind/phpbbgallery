@@ -53,7 +53,7 @@ $lang = array_merge($lang, [
 	// Conditions
 	'BADGE_TYPE_AVATAR'        => 'Avatar',
 	'BADGE_TYPE_BADGES'        => 'Medalhas Ganhas',
-	'BADGE_TYPE_BIRTHDAYS'     => 'Idade do Utilizdor',
+	'BADGE_TYPE_BIRTHDAYS'     => 'Idade do Utilizador',
 	'BADGE_TYPE_CUSTOM'        => 'Especial',
 	'BADGE_TYPE_DONATIONS'     => 'Donativos',
 	'BADGE_TYPE_LIKEDD'        => 'Gostos',

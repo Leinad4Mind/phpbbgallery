@@ -32,7 +32,7 @@ $lang = array_merge($lang, [
 	'TOPIC_HIDDEN'                => 'O acesso antecipado a este projecto requer uma troca de PontosGold para com o seu autor.',
 	'WAS_HIDDEN'                  => 'Já obtiveste este tópico à troca de PontosGold',
 	'BBPOINTS_HIDE_TOPIC'         => 'Pontos Mín.',
-	'BBPOINTS_HIDE_TOPIC_EXPLAIN' => 'Introduza o montante mínimo de PontosGold necessários para acederem a este tópico. <br />(Os pontos serão transferidos para a tua conta)',
+	'BBPOINTS_HIDE_TOPIC_EXPLAIN' => 'Introduz o montante mínimo de PontosGold necessários para acederem a este tópico. <br />(Os pontos serão transferidos para a tua conta)',
 	'TRANSFER_NOTI'               => 'Recebeste %1$s PontosGold da parte de %2$s %3$s',
 
 	'NOTIFICATION_TYPE_SITESPLAT.BBPOINTS.NOTIFICATION.TYPE.TRANSFER' => 'Foram-te transferidos PontosGold.',

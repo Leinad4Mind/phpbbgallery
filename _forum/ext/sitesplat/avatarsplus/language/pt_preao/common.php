@@ -20,7 +20,7 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, [
 	'ALLOW_MATERIAL'                 => 'Ativar avatares Material',
 	'AVATAR_DRIVER_MATERIAL_TITLE'   => 'Avatar Material',
-	'AVATAR_DRIVER_MATERIAL_EXPLAIN' => 'Cria um avatar tipo Gmail com o seu nome de utilizador.',
+	'AVATAR_DRIVER_MATERIAL_EXPLAIN' => 'Cria um avatar tipo Gmail com o teu nome de utilizador.',
 	'MATERIAL_SHAPE'                 => 'Forma do avatar',
 	'MATERIAL_RANDOM'                => 'Aleatório',
 	'MATERIAL_CIRCLE'                => 'Círculo',
@@ -31,7 +31,7 @@ $lang = array_merge($lang, [
 
 	'ALLOW_GENERATOR'                 => 'Ativar Gerador de Avatares',
 	'AVATAR_DRIVER_GENERATOR_TITLE'   => 'Gerador de Avatares',
-	'AVATAR_DRIVER_GENERATOR_EXPLAIN' => 'Crie o seu próprio avatar.',
+	'AVATAR_DRIVER_GENERATOR_EXPLAIN' => 'Cria o teu próprio avatar.',
 
 	'AVATARSPLUS_SHARE_TITLE'  => 'Ei sou euuu!',
 	'AVATARSPLUS_SHARE_DESC'   => 'Acabei de criar este avatar super fixe com um incrível plugin do phpBB desenvolvido pelo SiteSplat! Vejam pessoal! https://themeforest.net/user/themesplat/portfolio?ref=ThemeSplat',

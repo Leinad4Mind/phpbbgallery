@@ -19,7 +19,7 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'ACP_BBAVATARPLUS'    => 'BBavatar+',
-	'UCP_UCP'             => 'Painel de Controlo do Usuário',
+	'UCP_UCP'             => 'Painel de Controle do Usuário',
 	'SS_HELPER_NOTY'      => 'O SiteSplat BBcore não existe!<br />Faça o download do <a href="http://sitesplat.com" target="_blank">BBcore</a> e copie a pasta BBcore para a pasta da sua extensão sitesplat.',
 	'BBAVATARPLUS_NOTICE' => '<div class="phpinfo"><p>As configurações desta extensão encontram-se em <strong>%1$s » %2$s » %3$s</strong> selecione o driver <strong>"Avatar Material"</strong> ou <strong>"Gerador de Avatares"</strong>.<br />Para melhores resultados é fortemente recomendado aumentar o tamanho máximo do avatar para 400x400 em <strong>ACP > Configurações de avatar > Dimensões máximas do avatar</strong>. </p></div>',
 ]);

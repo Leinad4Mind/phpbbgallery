@@ -18,6 +18,6 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'AGREE_AND_REGISTER'  => 'Concordo com os termos e pretendo registar-me associando o meu %s',
-	'OAUTH_ACCOUNT_ADDED' => 'Obrigado por se registar, a sua conta foi criada através dos meios e plataforma da rede social ou canal de comunicação online que possuí e indicou ou selecionou com agrado perante as nossas opções e sendo assim não temos mais nada a acrescentar a não ser os parabéns a informá-lo que foi de pronto e com enorme sucesso efetuada a conexão e também devidamente associada, validada e conetada em modo e modelo automático pelo sistema!',
+	'AGREE_AND_REGISTER'  => 'Concordo com os termos e pretendo me registrar associando o meu %s',
+	'OAUTH_ACCOUNT_ADDED' => 'Obrigado por se registrar, a sua conta foi criada através dos meios e plataforma da rede social ou canal de comunicação online que você escolheu e selecionou com agrado entre as nossas opções e, sendo assim, não temos mais nada a acrescentar a não ser os parabéns e informá-lo(a) de que foi imediatamente e com grande sucesso efetuada a conexão, tendo sido também devidamente associada, validada e conectada em modo e modelo automático pelo sistema!',
 ]);

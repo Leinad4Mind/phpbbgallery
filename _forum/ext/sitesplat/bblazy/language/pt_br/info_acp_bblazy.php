@@ -20,5 +20,5 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, [
 	'ACP_BBLAZY'     => 'BBlazy',
 	'SS_HELPER_NOTY' => 'O SiteSplat BBcore não existe!<br />Faça o download do <a href="https://sitesplat.com" target="_blank">BBcore</a> e copie a pasta BBcore para a pasta da sua extensão sitesplat.',
-	'BBLAZY_NOTICE'  => '<div class="phpinfo"><p>Não existem definições específicas para esta extensão.</p></div>',
+	'BBLAZY_NOTICE'  => '<div class="phpinfo"><p>Não existem definições específicas para esta extensão. Todas as imagens do fórum serão carregadas de forma lenta (lazy loading) para melhorar o desempenho. Divirta-se!</p></div>',
 ]);

@@ -19,7 +19,7 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'ACCOUNTSWITCH'            => 'Troca de Conta',
-	'ACCOUNTSWITCH_EXPLAIN'    => 'Crie contas e use o mesmo endereço de e-mail, as suas contas serão listadas aqui e poderá alternar de uma conta para outra.',
+	'ACCOUNTSWITCH_EXPLAIN'    => 'Cria contas e usa o mesmo endereço de e-mail; as tuas contas serão listadas aqui e poderás alternar de uma conta para outra.',
 	'ACCOUNTSWITCH_NO_RECORDS' => 'Não existem contas conhecidas',
 	'SWITCH_TO'                => 'Trocar para',
 	'SWITCH_ALT'               => 'Alternar',

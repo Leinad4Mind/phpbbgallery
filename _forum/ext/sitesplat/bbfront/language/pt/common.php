@@ -18,7 +18,17 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'BBFRONT'   => 'Página Inicial',
-	'FRONTPAGE' => 'Página inicial',
-	'SLIDE_NOW' => 'Saiba Mais',
+	'BBFRONT_PAGE'               => 'Página Inicial',
+	'ACP_BBFRONT_SETTING_SAVED'  => 'As configurações foram guardadas com sucesso!',
+	'BBFRONT_SHOW'               => 'Publicar na página inicial',
+	'BBFRONT_MORE'               => 'Continuar a Ler',
+	'BBFRONT_HIDE'               => 'Remover da página inicial',
+	'NO_POSTS_SELECTED'          => 'Ainda Não Existem Tópicos Publicados Ou Fórum Selecionado',
+	'NO_POSTS_EOC'               => 'Fim do Conteúdo',
+	'NO_POSTS_NMPTL'             => 'Não Há Mais Cartões Para Carregar',
+	'BBFRONT_LOAD_MORE'          => 'CARREGAR MAIS CARTÕES',
+	'REPLIES_ARY'                => [
+		1	=> '%1$d resposta',
+		2	=> '%1$d respostas',
+	],
 ]);

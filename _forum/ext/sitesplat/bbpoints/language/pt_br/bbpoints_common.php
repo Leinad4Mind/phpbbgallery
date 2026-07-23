@@ -23,18 +23,18 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, [
 	'BBPOINTS'                    => 'PontosGold', // This is the forum point name. You can edit it to reflect your own point name.
 	'BBPOINTS_SHORT'              => 'Pontos',
-	'YOUR_BBPOINTS'               => 'Os Teus PontosGold',
-	'BB_AMOUNT'                   => 'Montante',
 	'BB_PAID_UP'                  => 'PontosGold',
+	'YOUR_BBPOINTS'               => 'Seus PontosGold',
+	'BB_AMOUNT'                   => 'Valor',
 	'BB_PAID'                     => 'Obtido',
 	'BB_PERSONAL'                 => 'Autor',
-	'BB_PERSONAL_EXPLAIN'         => 'Tem acesso ao tópico por seres o autor do mesmo',
-	'TOPIC_HIDDEN'                => 'O acesso antecipado a este projecto requer uma troca de PontosGold para com o seu autor.',
-	'WAS_HIDDEN'                  => 'Já obtiveste este tópico à troca de PontosGold',
+	'BB_PERSONAL_EXPLAIN'         => 'Você tem acesso ao tópico por ser o autor dele',
+	'TOPIC_HIDDEN'                => 'O acesso antecipado a este projeto requer uma troca de PontosGold com o seu autor.',
+	'WAS_HIDDEN'                  => 'Você já obteve este tópico em troca de PontosGold',
 	'BBPOINTS_HIDE_TOPIC'         => 'Pontos Mín.',
-	'BBPOINTS_HIDE_TOPIC_EXPLAIN' => 'Introduza o montante mínimo de PontosGold necessários para acederem a este tópico. <br />(Os pontos serão transferidos para a sua conta)',
-	'TRANSFER_NOTI'               => 'Recebeste %1$s PontosGold da parte de %2$s %3$s',
+	'BBPOINTS_HIDE_TOPIC_EXPLAIN' => 'Digite o valor mínimo de PontosGold necessário para acessar este tópico. <br />(Os pontos serão transferidos para a sua conta)',
+	'TRANSFER_NOTI'               => 'Você recebeu %1$s PontosGold de %2$s %3$s',
 
-	'NOTIFICATION_TYPE_SITESPLAT.BBPOINTS.NOTIFICATION.TYPE.TRANSFER' => 'Foram-te transferidos PontosGold.',
-	'NOTIFICATION_TYPE_BBPOINTS_TRANSFER'                             => 'Foram-te transferidos PontosGold',
+	'NOTIFICATION_TYPE_SITESPLAT.BBPOINTS.NOTIFICATION.TYPE.TRANSFER' => 'Transferiram PontosGold para você.',
+	'NOTIFICATION_TYPE_BBPOINTS_TRANSFER'                             => 'Transferiram PontosGold para você',
 ]);

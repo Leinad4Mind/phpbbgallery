@@ -18,8 +18,8 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'BBLINKS_MODAL_TITLE' => 'Detetado URL Externo',
-	'BBLINKS_PROCEED'     => 'A ligação em que clicou é um URL externo. Tem a certeza e quer mesmo ser reencaminhado e avançar para o dito URL externo?',
+	'BBLINKS_MODAL_TITLE' => 'Detectado URL Externo',
+	'BBLINKS_PROCEED'     => 'A ligação em que clicaste é um URL externo. Tens a certeza de que queres mesmo ser reencaminhado e avançar para o dito URL externo?',
 	'BBLINKS_PROCEED_NO'  => 'Não',
 	'BBLINKS_PROCEED_YES' => 'Sim',
 ]);

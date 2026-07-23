@@ -37,16 +37,16 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'ACP_BADGE_MANAGE'     => 'Gerir Sistema de Medalhas',
+	'ACP_BADGE_MANAGE'     => 'Gerenciar Sistema de Medalhas',
 	'BADGE_TYPE_NOT_EXIST' => 'O tipo de Medalha `%1$s` não existe.',
-	'BADGE_NOTICE'         => '<div class="phpinfo"><p>As configurações desta extensão encontram-se em <strong>%1$s &#187; %2$s &#187; %3$s</strong>.<br /><strong>Nota:</strong> Donativos PayPal, Sistema de Gostos (LikeBB) e muitos outros suportados. Regras da Extensão Premium <strong>apenas</strong> estarão disponíveis se essas extensões estiveram ativas!</p></div>',
-	'SS_HELPER_NOTY'       => 'O Sistema Core SiteSplat (BBcore) não se encontra instalado!<br /> Transfere o <a href="https://sitesplat.com" target="_blank">BBCore</a> e copia a pasta BBcore para dentro da pasta de extensões sitesplat.',
-	'ERROR_BADGE_DISABLE'  => 'Não você pode desactivar o Sistema de Medalhas por teres outras extensões com dependências:<br /><div class="phpinfo">» %s</div>',
+	'BADGE_NOTICE'         => '<div class="phpinfo"><p>As configurações desta extensão encontram-se em <strong>%1$s &#187; %2$s &#187; %3$s</strong>.<br /><strong>Nota:</strong> Doações PayPal, Sistema de Gostos (LikeBB) e muitas outras regras de Extensões Premium suportadas <strong>somente</strong> estarão disponíveis se essas extensões estiverem ativas!</p></div>',
+	'SS_HELPER_NOTY'       => 'O Sistema Core SiteSplat (BBcore) não está instalado!<br /> Baixe o <a href="https://sitesplat.com" target="_blank">BBCore</a> e copie a pasta BBcore para dentro da pasta de extensões sitesplat.',
+	'ERROR_BADGE_DISABLE'  => 'Você não pode desativar o Sistema de Medalhas porque tem outras extensões com dependências:<br /><div class="phpinfo">» %s</div>',
 
 	// Logs
-	'ACP_BADGE_SAVED_LOG'      => '<strong>Configuração de Medalhas foi guardada com sucesso</strong>',
+	'ACP_BADGE_SAVED_LOG'      => '<strong>Configuração de Medalhas foi salva com sucesso</strong>',
 	'ACP_BADGE_ADD_LOG'        => '<strong>Configuração de Medalhas Adicionada</strong>',
-	'ACP_BADGE_DELETE_LOG'     => '<strong>Configuração de Medalhas apagada com sucesso</strong>',
+	'ACP_BADGE_DELETE_LOG'     => '<strong>Configuração de Medalhas excluída com sucesso</strong>',
 	'ACP_BADGE_IMG_DELETE_LOG' => '<strong>A imagem da Medalha foi removida</strong>',
 	'ACP_BADGE_IMG_UPLOAD_LOG' => '<strong>Foi submetida uma nova Medalha</strong>',
 ]);

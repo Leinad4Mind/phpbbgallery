@@ -22,5 +22,5 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'NOTIFICATION_BBMENTION'      => 'Foi <strong>Mencionado</strong> por %1$s em:',
-	'NOTIFICATION_TYPE_BBMENTION' => 'Alguém menciona o seu nome (ou um grupo que você lidera) numa publicação',
+	'NOTIFICATION_TYPE_BBMENTION' => 'Alguém menciona o teu nome (ou um grupo que lideras) numa publicação',
 ]);

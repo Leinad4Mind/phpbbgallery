@@ -53,7 +53,7 @@ $lang = array_merge($lang, [
 	'EXCEPTION_TOO_LONG'           => 'O input foi maior que o tamanho máximo.',
 	'EXCEPTION_NOT_UNIQUE'         => 'O input não foi único.',
 	'EXCEPTION_UNEXPECTED_VALUE'   => 'O campo `%1$s` recebeu dados inesperados. Motivo: %2$s',
-	'EXCEPTION_ILLEGAL_CHARACTERS' => 'o input contém caracteres proibidos.',
+	'EXCEPTION_ILLEGAL_CHARACTERS' => 'O input contém caracteres proibidos.',
 
 	'BADGE_TYPE_NOT_EXIST' => 'O `%1$s` não existe',
 ]);

@@ -18,35 +18,33 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'BBAJAXNEWS_TITLE_MEMBER_DONATION'   => 'Doação de %s',
-	'BBAJAXNEWS_TITLE_MEMBER_MEMBERSHIP' => '%s agora é',
-	'BBAJAXNEWS_TITLE_MEMBER_VOTE'       => '%s votou na melhor resposta',
-	'BBAJAXNEWS_TITLE_FRIEND_LOGGED_IN'  => '%s conectou-se',
-	'BBAJAXNEWS_TITLE_NEW_ANNOUNCEMENT'  => 'Novo anúncio!',
-	'BBAJAXNEWS_TITLE_NEW_STICKY'        => 'Novo tópico fixo!',
-	'BBAJAXNEWS_TITLE_NEW_TOPIC'         => 'Novo tópico de %s',
-	'BBAJAXNEWS_TITLE_USER_JOINED_BOARD' => 'Novo usuário juntou-se a nós',
-	'BBAJAXNEWS_TITLE_USER_JOINED_GROUP' => 'Juntou-se recentemente',
+	// special
+	'SITESPLAT_BBAJAXNEWS_AJAXNEWS_TYPE_BBDONATION'        => '%s acabou de fazer uma doação.',
+	'SITESPLAT_BBAJAXNEWS_AJAXNEWS_TYPE_BBMEMBERSHIP'      => '%s comprou a assinatura LV%s.',
+	'SITESPLAT_BBAJAXNEWS_AJAXNEWS_TYPE_BBVOTE'            => 'A melhor resposta foi marcada em "%s".',
+	'SITESPLAT_BBAJAXNEWS_AJAXNEWS_TYPE_FRIEND_LOGGED_IN'  => 'Seu amigo %s acabou de fazer login.',
+	'SITESPLAT_BBAJAXNEWS_AJAXNEWS_TYPE_NEW_ANNOUNCEMENT'  => '%s acabou de publicar um novo anúncio "%s" em "%s".',
+	'SITESPLAT_BBAJAXNEWS_AJAXNEWS_TYPE_NEW_STICKY'        => '%s acabou de fixar o tópico "%s" em "%s".',
+	'SITESPLAT_BBAJAXNEWS_AJAXNEWS_TYPE_NEW_TOPIC'         => '%s acabou de postar o novo tópico "%s" em "%s".',
+	'SITESPLAT_BBAJAXNEWS_AJAXNEWS_TYPE_USER_JOINED_BOARD' => '%s acabou de entrar no fórum.',
+	'SITESPLAT_BBAJAXNEWS_AJAXNEWS_TYPE_USER_JOINED_GROUP' => '%s acabou de entrar no grupo especial %s.',
 
-	'BBAJAXNEWS_TITLE_NEW_POSTS_TODAY'  => 'Notícia diária',
-	'BBAJAXNEWS_TITLE_RANDOM_POLL'      => 'A sua opinião é importante',
-	'BBAJAXNEWS_TITLE_USERS_ONLINE_24H' => 'Estatísticas Ativas',
-	'BBAJAXNEWS_TITLE_USERS_ONLINE'     => 'Estatísticas Online',
-
-	'BBAJAXNEWS_MEMBER_DONATION'   => '%2$s%1$s doou o valor de <strong>%3$s</strong> para o nosso fórum. Obrigado!',
-	'BBAJAXNEWS_MEMBER_MEMBERSHIP' => '%2$s%1$s tem agora uma nova associação <strong>%3$s</strong>.',
-	'BBAJAXNEWS_MEMBER_VOTE'       => 'Obrigado %2$s%1$s por ajudar a nossa comunidade',
-	'BBAJAXNEWS_FRIEND_LOGGED_IN'  => 'Diga olá a %2$s%1$s :-)',
-	'BBAJAXNEWS_NEW_ANNOUNCEMENT'  => 'Acabou de ser colocado. Verifique em %2$s%1$s',
-	'BBAJAXNEWS_NEW_STICKY'        => 'Tópico fixo! Leia %2$s%1$s',
-	'BBAJAXNEWS_NEW_TOPIC'         => 'Verifique-o! Leia %2$s%1$s',
-	'BBAJAXNEWS_USER_JOINED_BOARD' => 'Dê as boas-vindas a %2$s%1$s!',
-	'BBAJAXNEWS_USER_JOINED_GROUP' => '%2$s%1$s juntou-se a: %3$s',
-
-	'BBAJAXNEWS_NEW_POSTS_TODAY'  => 'Os nossos usuários escreveram <strong>%1$s</strong> novas publicações hoje.',
-	'BBAJAXNEWS_RANDOM_POLL'      => 'Vote em %2$s%1$s',
-	'BBAJAXNEWS_USERS_ONLINE_24H' => 'Foram encontrados %1$s usuários conectados nas últimas 24h',
-	'BBAJAXNEWS_USERS_ONLINE'     => 'Há um total de %1$s usuários atualmente conectados',
-
-	'MINUTES' => 'Minutos',
+	// casual
+	'SITESPLAT_BBAJAXNEWS_AJAXNEWS_TYPE_NEW_POSTS_TODAY' => [
+		0 => 'Ainda não foi postado nenhum post hoje.',
+		1 => 'Foi postado 1 post até agora hoje.',
+		2 => 'Foram postados %d posts até agora hoje.',
+	],
+	'SITESPLAT_BBAJAXNEWS_AJAXNEWS_TYPE_USERS_ONLINE_24H' => [
+		0 => 'Nenhum usuário esteve online nas últimas %dh.',
+		1 => 'Um usuário esteve online na última %2$dh.',
+		2 => '%d usuários estiveram online nas últimas %dh.',
+	],
+	'SITESPLAT_BBAJAXNEWS_AJAXNEWS_TYPE_USERS_ONLINE' => [
+		0 => 'Não há ninguém online neste momento.',
+		1 => 'Há atualmente 1 usuário online neste momento.',
+		2 => 'Há atualmente %d usuários online neste momento.',
+	],
+	'SITESPLAT_BBAJAXNEWS_AJAXNEWS_TYPE_RANDOM_POLL_NONE' => 'Você já votou em todas as votações disponíveis. Legal!',
+	'SITESPLAT_BBAJAXNEWS_AJAXNEWS_TYPE_RANDOM_POLL'      => 'Há uma votação "%s" esperando sua resposta.',
 ]);

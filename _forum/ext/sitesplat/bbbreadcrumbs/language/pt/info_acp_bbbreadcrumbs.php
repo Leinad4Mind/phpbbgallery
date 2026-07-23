@@ -19,6 +19,6 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'ACP_BREADCRUMBS'    => 'BBbreadcrumbs',
-	'SS_HELPER_NOTY'     => 'O SiteSplat BBcore não existe!<br />Faça o download do <a href="http://sitesplat.com" target="_blank">BBcore</a> e copie a pasta BBcore para a pasta da sua extensão sitesplat.',
+	'SS_HELPER_NOTY'     => 'O SiteSplat BBcore não existe!<br />Transfere o <a href="http://sitesplat.com" target="_blank">BBcore</a> e copia a pasta BBcore para a pasta da tua extensão sitesplat.',
 	'BREADCRUMBS_NOTICE' => '<div class="phpinfo"><p>Não existem definições específicas para esta extensão. O breadcrumb está ativo e agora funcionará automaticamente em todas as páginas do fórum.</p></div>',
 ]);

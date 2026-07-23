@@ -22,7 +22,7 @@ $lang = array_merge($lang, [
 	'BBINFINITEPAGINATION_FX'         => 'Efeito da BBinfinitepagination',
 	'BBINFINITEPAGINATION_VIEWTOPIC'  => 'Permitir que a BBinfinitepagination carregue mais publicações na leitura de tópicos (viewtopic)',
 	'BBINFINITEPAGINATION_MEMBERLIST' => 'Permitir que a BBinfinitepagination carregue mais membros na lista de membros (memberlist)',
-	'BBINFINITEPAGINATION_VIEWONLINE' => 'Permitir que a BBinfinitepagination carregue mais utilizadores nos membros ativos online (viewonline)',
+	'BBINFINITEPAGINATION_VIEWONLINE' => 'Permitir que a BBinfinitepagination carregue mais utilizadores nos membros activos online (viewonline)',
 	'BBINFINITEPAGINATION_SEARCH'     => 'Permitir que a BBinfinitepagination carregue mais publicações/tópicos nos resultados de pesquisa (search)',
 	'BBINFINITEPAGINATION_VIEWFORUM'  => 'Permitir que a BBinfinitepagination carregue mais tópicos nos subfóruns (viewforum)',
 ]);

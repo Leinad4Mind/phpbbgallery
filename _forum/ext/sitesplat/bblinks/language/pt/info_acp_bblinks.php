@@ -20,6 +20,6 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, [
 	'ACP_BBLINKS'       => 'BBlinks',
 	'ACP_BBLINKS_TITLE' => 'BBlinks',
-	'SS_HELPER_NOTY'    => 'O SiteSplat BBcore não existe!<br />Faça o download do <a href="https://sitesplat.com" target="_blank">BBcore</a> e copie a pasta BBcore para a pasta da sua extensão sitesplat.',
+	'SS_HELPER_NOTY'    => 'O SiteSplat BBcore não existe!<br />Transfere o <a href="https://sitesplat.com" target="_blank">BBcore</a> e copia a pasta BBcore para a pasta da tua extensão sitesplat.',
 	'BBLINKS_NOTICE'    => '<div class="phpinfo"><p>As definições para esta extensão encontram-se na aba das <strong>EXTENSÕES</strong>.</p></div>',
 ]);

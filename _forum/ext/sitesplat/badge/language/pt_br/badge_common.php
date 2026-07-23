@@ -42,8 +42,8 @@ $lang = array_merge($lang, [
 	'BADGE_RECENT'            => 'Prémios Recentes',
 	'BADGE_USER'              => 'Medalhas do Usuário',
 	'BADGE_INTRO_TITLE'       => 'Toca a ganhar medalhas, pá!',
-	'BADGE_INTRO_TEASER_BODY' => 'Seja por teres ganho um passatempo, jogo, ajudado a comunidade, ou por apenas teres participado, estamos felizes por celebrar a sua contribuição para com a nossa comunidade.',
-	'BADGE_INTRO'             => 'Seja por teres ganho um passatempo, jogo, ajudado a comunidade, ou por apenas teres participado, estamos felizes por celebrar a sua contribuição para com a nossa comunidade.',
+	'BADGE_INTRO_TEASER_BODY' => 'Seja porque você ganhou um passatempo, jogo, ajudou a comunidade, ou porque apenas participou, estamos felizes por celebrar sua contribuição para com a nossa comunidade.',
+	'BADGE_INTRO'             => 'Seja porque você ganhou um passatempo, jogo, ajudou a comunidade, ou porque apenas participou, estamos felizes por celebrar sua contribuição para com a nossa comunidade.',
 	'BADGE_AWARDS_TOPIC'      => 'Prémio',
 	'BADGE_WALL_TITLE'        => 'O meu mural de medalhas',
 
@@ -53,7 +53,7 @@ $lang = array_merge($lang, [
 	// Conditions
 	'BADGE_TYPE_AVATAR'        => 'Avatar',
 	'BADGE_TYPE_BADGES'        => 'Medalhas Ganhas',
-	'BADGE_TYPE_BIRTHDAYS'     => 'Idade do Utilizdor',
+	'BADGE_TYPE_BIRTHDAYS'     => 'Idade do Usuário',
 	'BADGE_TYPE_CUSTOM'        => 'Especial',
 	'BADGE_TYPE_DONATIONS'     => 'Donativos',
 	'BADGE_TYPE_LIKEDD'        => 'Gostos',
@@ -73,9 +73,9 @@ $lang = array_merge($lang, [
 	'MORE_BADGES'   => '<a class="badge-more" href="%1$s"><span class="hidden-xs">&#43;%2$s mais</span><i class="visible-xs-inline-block fa fa-plus-circle"></i></a>',
 
 	// Notifications
-	'BADGE_NOTIFICATION_EVENT_ADDED'   => '<strong>Ganhaste uma nova medalha!</strong><br />Uma nova medalha %1$s foi adicionada ao seu mural.',
-	'BADGE_NOTIFICATION_EVENT_REMOVED' => '<strong>Perdeste uma medalha</strong>:<br />Uma medalha %1$s foi removida do seu mural.',
-	'BADGE_WHOHOO'                     => 'Yatta!!! Ganhaste uma nova medalha, parabéns!<hr><strong>Desbloqueaste uma nova medalha</strong>, vai à <a href="%1$s">sua página de medalhas</a> para veres todas as que tem!',
+	'BADGE_NOTIFICATION_EVENT_ADDED'   => '<strong>Você ganhou uma nova medalha!</strong><br />Uma nova medalha %1$s foi adicionada ao seu mural.',
+	'BADGE_NOTIFICATION_EVENT_REMOVED' => '<strong>Você perdeu uma medalha</strong>:<br />Uma medalha %1$s foi removida do seu mural.',
+	'BADGE_WHOHOO'                     => 'Eba!!! Você ganhou uma nova medalha, parabéns!<hr><strong>Você acabou de desbloquear uma nova medalha</strong>, vá até a <a href="%1$s">sua página de medalhas</a> para ver todas as que tem!',
 
 	'NOTIFICATION_TYPE_AWARD_ADDED'   => 'Quando uma Medalha é adicionada',
 	'NOTIFICATION_TYPE_AWARD_REMOVED' => 'Quando uma Medalha é removida',
