@@ -16,129 +16,133 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class image
 {
-	/** @var \phpbb\request\request */
-	protected $request;
+	/** @var \phpbb\request\request_interface */
+	protected \phpbb\request\request_interface $request;
 
 	/** @var \phpbb\auth\auth */
-	protected $auth;
+	protected \phpbb\auth\auth $auth;
 
 	/** @var \phpbb\config\config */
-	protected $config;
+	protected \phpbb\config\config $config;
 
 	/** @var \phpbb\controller\helper */
-	protected $helper;
+	protected \phpbb\controller\helper $helper;
 
-	/** @var \phpbb\db\driver\driver|\phpbb\db\driver\driver_interface */
-	protected $db;
+	/** @var \phpbb\db\driver\driver_interface */
+	protected \phpbb\db\driver\driver_interface $db;
 
 	/** @var \phpbb\event\dispatcher */
-	protected $dispatcher;
+	protected \phpbb\event\dispatcher $dispatcher;
 
 	/** @var \phpbb\pagination */
-	protected $pagination;
+	protected \phpbb\pagination $pagination;
 
 	/** @var \phpbb\template\template */
-	protected $template;
+	protected \phpbb\template\template $template;
 
 	/** @var \phpbb\user */
-	protected $user;
+	protected \phpbb\user $user;
 
 	/** @var \phpbb\profilefields\manager */
-	protected $cpf_manager;
+	protected \phpbb\profilefields\manager $cpf_manager;
 
 	/** @var \phpbb\language\language */
-	protected $language;
+	protected \phpbb\language\language $language;
 
 	/** @var \phpbbgallery\core\album\display */
-	protected $display;
+	protected \phpbbgallery\core\album\display $display;
 
 	/** @var \phpbbgallery\core\album\loader */
-	protected $loader;
+	protected \phpbbgallery\core\album\loader $loader;
 
 	/** @var \phpbbgallery\core\album\album */
-	protected $album;
+	protected \phpbbgallery\core\album\album $album;
 
 	/** @var \phpbbgallery\core\image\image */
-	protected $image;
+	protected \phpbbgallery\core\image\image $image;
 
 	/** @var \phpbbgallery\core\auth\auth */
-	protected $gallery_auth;
+	protected \phpbbgallery\core\auth\auth $gallery_auth;
 
 	/** @var \phpbbgallery\core\auth\image_authorization */
-	protected $image_authorization;
+	protected \phpbbgallery\core\auth\image_authorization $image_authorization;
 
 	/** @var \phpbbgallery\core\user */
-	protected $gallery_user;
+	protected \phpbbgallery\core\user $gallery_user;
 
 	/** @var \phpbbgallery\core\config */
-	protected $gallery_config;
+	protected \phpbbgallery\core\config $gallery_config;
 
 	/** @var \phpbbgallery\core\auth\level */
-	protected $auth_level;
+	protected \phpbbgallery\core\auth\level $auth_level;
 
 	/** @var \phpbbgallery\core\url */
-	protected $url;
+	protected \phpbbgallery\core\url $url;
 
 	/** @var \phpbbgallery\core\misc */
-	protected $misc;
+	protected \phpbbgallery\core\misc $misc;
 
 	/** @var \phpbbgallery\core\comment */
-	protected $comment;
+	protected \phpbbgallery\core\comment $comment;
 
 	/** @var \phpbbgallery\core\report */
-	protected $report;
+	protected \phpbbgallery\core\report $report;
 
 	/** @var \phpbbgallery\core\notification\helper */
-	protected $notification_helper;
+	protected \phpbbgallery\core\notification\helper $notification_helper;
 
 	/** @var \phpbbgallery\core\log */
-	protected $gallery_log;
+	protected \phpbbgallery\core\log $gallery_log;
 
 	/** @var \phpbbgallery\core\moderate */
-	protected $moderate;
+	protected \phpbbgallery\core\moderate $moderate;
 
 	/** @var \phpbbgallery\core\rating */
-	protected $gallery_rating;
+	protected \phpbbgallery\core\rating $gallery_rating;
 
 	/** @var \phpbbgallery\core\block */
-	protected $block;
+	protected \phpbbgallery\core\block $block;
 
 	/** @var ContainerInterface */
-	protected $phpbb_container;
+	protected ContainerInterface $phpbb_container;
 
-	/** @var */
-	protected $albums_table;
+	/** @var string */
+	protected string $table_comments;
 
-	/** @var */
-	protected $images_table;
+	/** @var string */
+	protected string $phpbb_root_path;
 
-	/** @var */
-	protected $users_table;
+	/** @var string */
+	protected string $php_ext;
 
-	/** @var */
-	protected $table_comments;
+	/* @var array */
+	protected array $data = [];
 
-	/** @var */
-	protected $phpbb_root_path;
+	/** @var array */
+	protected array $users_id_array = [];
 
-	/** @var */
-	protected $php_ext;
+	/** @var array */
+	protected array $users_data_array = [];
 
-	/* @var $data * */
-	protected $data;
+	/** @var array */
+	protected array $profile_fields_data = [];
 
-	protected $users_id_array;
-	protected $users_data_array;
-	protected $profile_fields_data;
-	protected $can_receive_pm_list;
-	protected $table_albums;
-	protected $table_images;
-	protected $table_users;
+	/** @var array */
+	protected array $can_receive_pm_list = [];
+
+	/** @var string */
+	protected string $table_albums;
+
+	/** @var string */
+	protected string $table_images;
+
+	/** @var string */
+	protected string $table_users;
 
 	/**
 	 * Constructor
 	 *
-	 * @param \phpbb\request\request                                    $request
+	 * @param \phpbb\request\request_interface                          $request
 	 * @param \phpbb\auth\auth                                          $auth         Gallery auth object
 	 * @param \phpbb\config\config                                      $config       Config object
 	 * @param \phpbb\controller\helper                                  $helper       Controller helper object
@@ -171,12 +175,12 @@ class image
 	 * @param string                                                    $albums_table Gallery albums table
 	 * @param string                                                    $images_table Gallery images table
 	 * @param string                                                    $users_table  Gallery users table
-	 * @param                                                           $table_comments
-	 * @param                                                           $phpbb_root_path
-	 * @param                                                           $php_ext
+	 * @param string                                                    $table_comments
+	 * @param string                                                    $phpbb_root_path
+	 * @param string                                                    $php_ext
 	 * @internal param \phpbbgallery\core\comment $gallery_comment Gallery comment class
 	 */
-	public function __construct(\phpbb\request\request $request, \phpbb\auth\auth $auth, \phpbb\config\config $config,
+	public function __construct(\phpbb\request\request_interface $request, \phpbb\auth\auth $auth, \phpbb\config\config $config,
 		\phpbb\controller\helper $helper, \phpbb\db\driver\driver_interface $db,
 		\phpbb\event\dispatcher $dispatcher, \phpbb\pagination $pagination,
 		\phpbb\template\template $template, \phpbb\user $user, \phpbb\profilefields\manager $cpf_manager,
@@ -190,7 +194,7 @@ class image
 		\phpbbgallery\core\notification\helper $notification_helper, \phpbbgallery\core\log $gallery_log,
 		\phpbbgallery\core\moderate $moderate, \phpbbgallery\core\rating $gallery_rating,
 		\phpbbgallery\core\block $block, ContainerInterface $phpbb_container,
-		$albums_table, $images_table, $users_table, $table_comments, $phpbb_root_path, $php_ext)
+		string $albums_table, string $images_table, string $users_table, string $table_comments, string $phpbb_root_path, string $php_ext)
 	{
 		$this->request = $request;
 		$this->auth = $auth;
@@ -238,9 +242,10 @@ class image
 	 * @param int $page
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
-	public function base($image_id, $page = 0)
+	public function base(int $image_id, int $page = 1): \Symfony\Component\HttpFoundation\Response
 	{
-
+		$this->reset_request_state();
+		$page = max(1, $page);
 		$this->language->add_lang(array('gallery'), 'phpbbgallery/core');
 
 		try
@@ -249,14 +254,15 @@ class image
 			FROM ' . $this->table_images . '
 			WHERE image_id = ' . (int) $image_id;
 			$result = $this->db->sql_query($sql);
-			$this->data = $this->db->sql_fetchrow($result);
+			$image_data = $this->db->sql_fetchrow($result);
 			$this->db->sql_freeresult($result);
 
-			if (!$this->data)
+			if (!is_array($image_data))
 			{
 				// Image does not exist
 				throw new \OutOfBoundsException('INVALID_IMAGE');
 			}
+			$this->data = $image_data;
 
 			$this->loader->load($this->data['image_album_id']);
 		}
@@ -366,6 +372,7 @@ class image
 			$sort_by_text['lc'] = $this->language->lang('NEW_COMMENT');
 			$sort_by_sql['lc'] = 'image_last_comment';
 		}
+		$sort_key = $this->normalize_sort_key($sort_key, $sort_by_sql);
 		gen_sort_selects($limit_days, $sort_by_text, $sort_days, $sort_key, $sort_dir, $s_limit_days, $s_sort_key, $s_sort_dir, $u_sort_param);
 		$sql_sort_order = $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
 		$sql_sort_order .= $sql_help_sort;
@@ -376,7 +383,7 @@ class image
 			WHERE image_album_id = ' . (int) $album_id . '
 				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
 				' . $image_status_check . '
-			ORDER BY ' . $sql_sort_order . $sql_help_sort;
+			ORDER BY ' . $sql_sort_order;
 
 		$result = $this->db->sql_query($sql);
 		$images_array = [];
@@ -624,7 +631,7 @@ class image
 		}
 		return $this->helper->render('gallery/viewimage_body.html', $page_title);
 	}
-	protected function display_comments($image_id, $image_data, $album_id, $album_data, $start, $limit)
+	protected function display_comments(int $image_id, array $image_data, int $album_id, array $album_data, int $start, int $limit): void
 	{
 		$sort_order = ($this->request->variable('sort_order', 'ASC') == 'ASC') ? 'ASC' : 'DESC';
 		$this->template->assign_vars(array(
@@ -814,7 +821,7 @@ class image
 	}
 
 	// Edit image
-	public function edit($image_id)
+	public function edit(int $image_id): \Symfony\Component\HttpFoundation\Response|null
 	{
 		//we cheat a little but we will make good later
 		$image_data = $this->image->get_image_data($image_id);
@@ -836,7 +843,7 @@ class image
 		if (!$this->image_authorization->can_manage_image((int) $this->user->data['user_id'], $image_data, $has_image_permission, $has_moderator_permission, $is_orphan))
 		{
 			$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
-			return;
+			return null;
 		}
 		if ($submit)
 		{
@@ -1063,7 +1070,7 @@ class image
 	}
 
 	// Delete image
-	public function delete($image_id)
+	public function delete(int $image_id): \Symfony\Component\HttpFoundation\Response|null
 	{
 		$image_data = $this->image->get_image_data($image_id);
 		$album_id = $image_data['image_album_id'];
@@ -1079,7 +1086,7 @@ class image
 		if (!$this->image_authorization->can_manage_image((int) $this->user->data['user_id'], $image_data, $has_image_permission, $has_moderator_permission, $is_orphan))
 		{
 			$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
-			return;
+			return null;
 		}
 		$s_hidden_fields = build_hidden_fields(array(
 			'album_id' => $album_id,
@@ -1119,9 +1126,11 @@ class image
 				confirm_box(false, 'DELETE_IMAGE2', $s_hidden_fields);
 			}
 		}
+
+		return null;
 	}
 	// Report image
-	public function report($image_id)
+	public function report(int $image_id): \Symfony\Component\HttpFoundation\Response
 	{
 		$image_data = $this->image->get_image_data($image_id);
 		$album_id = $image_data['image_album_id'];
@@ -1197,12 +1206,14 @@ class image
 
 	/**
 	 * @param int $album_id
-	 * @param     $owner_id
-	 * @param     $image_status
-	 * @param     $album_auth_level
+	 * @param int $owner_id
+	 * @param int $image_status
+	 * @param int $album_auth_level
+	 * @param array $user_data
 	 * @internal param array $album_data
+	 * @return void
 	 */
-	protected function check_permissions($album_id, $owner_id, $image_status, $album_auth_level, $user_data)
+	protected function check_permissions(int $album_id, int $owner_id, int $image_status, int $album_auth_level, array $user_data): void
 	{
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$zebra_array = $this->gallery_auth->get_user_zebra($this->user->data['user_id']);
@@ -1233,7 +1244,7 @@ class image
 		}
 	}
 
-	protected function load_users_data()
+	protected function load_users_data(): void
 	{
 
 		$sql = $this->db->sql_build_query('SELECT', array(
@@ -1296,5 +1307,31 @@ class image
 			}
 			$this->db->sql_freeresult($result);
 		}
+	}
+
+	/**
+	 * Reset request-local image and user caches before rendering an image.
+	 *
+	 * @return void
+	 */
+	protected function reset_request_state(): void
+	{
+		$this->data = [];
+		$this->users_id_array = [];
+		$this->users_data_array = [];
+		$this->profile_fields_data = [];
+		$this->can_receive_pm_list = [];
+	}
+
+	/**
+	 * Fall back to chronological sorting for unsupported request values.
+	 *
+	 * @param string $sort_key    Requested sort key
+	 * @param array  $sort_by_sql Supported sort columns
+	 * @return string Valid sort key
+	 */
+	protected function normalize_sort_key(string $sort_key, array $sort_by_sql): string
+	{
+		return isset($sort_by_sql[$sort_key]) ? $sort_key : 't';
 	}
 }
