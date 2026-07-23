@@ -74,6 +74,7 @@ namespace
 	require_once dirname(__DIR__) . '/controller/moderate.php';
 	require_once dirname(__DIR__) . '/controller/index.php';
 	require_once dirname(__DIR__) . '/controller/file.php';
+	require_once dirname(__DIR__) . '/controller/search.php';
 	require_once dirname(__DIR__) . '/acp/main_module.php';
 	require_once dirname(__DIR__) . '/ucp/main_module.php';
 	require_once dirname(__DIR__) . '/config.php';
