@@ -16,77 +16,71 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class moderate
 {
-	/* @var \phpbb\auth\auth */
-	protected $auth;
-
 	/* @var \phpbb\config\config */
-	protected $config;
+	protected \phpbb\config\config $config;
 
-	/* @var \phpbb\db\driver\driver */
-	protected $db;
-
-	/* @var \phpbb\request\request */
-	protected $request;
+	/* @var \phpbb\request\request_interface */
+	protected \phpbb\request\request_interface $request;
 
 	/* @var \phpbb\template\template */
-	protected $template;
+	protected \phpbb\template\template $template;
 
 	/* @var \phpbb\user */
-	protected $user;
+	protected \phpbb\user $user;
 
 	/** @var \phpbb\language\language  */
-	protected $language;
+	protected \phpbb\language\language $language;
 
 	/* @var \phpbb\controller\helper */
-	protected $helper;
+	protected \phpbb\controller\helper $helper;
 
 	/* @var \phpbbgallery\core\album\display */
-	protected $display;
+	protected \phpbbgallery\core\album\display $display;
 
 	/** @var \phpbbgallery\core\moderate  */
-	protected $moderate;
+	protected \phpbbgallery\core\moderate $moderate;
 
 	/** @var \phpbbgallery\core\auth\auth  */
-	protected $gallery_auth;
+	protected \phpbbgallery\core\auth\auth $gallery_auth;
 
 	/** @var \phpbbgallery\core\auth\image_authorization */
-	protected $image_authorization;
+	protected \phpbbgallery\core\auth\image_authorization $image_authorization;
 
 	/** @var \phpbbgallery\core\misc  */
-	protected $misc;
+	protected \phpbbgallery\core\misc $misc;
 
 	/** @var \phpbbgallery\core\album\album  */
-	protected $album;
+	protected \phpbbgallery\core\album\album $album;
 
 	/** @var \phpbbgallery\core\image\image  */
-	protected $image;
+	protected \phpbbgallery\core\image\image $image;
 
 	/** @var \phpbbgallery\core\notification\helper  */
-	protected $notification_helper;
+	protected \phpbbgallery\core\notification\helper $notification_helper;
 
 	/** @var \phpbbgallery\core\url  */
-	protected $url;
+	protected \phpbbgallery\core\url $url;
 
 	/** @var \phpbbgallery\core\log  */
-	protected $gallery_log;
+	protected \phpbbgallery\core\log $gallery_log;
 
 	/** @var \phpbbgallery\core\report  */
-	protected $report;
+	protected \phpbbgallery\core\report $report;
 
 	/** @var \phpbb\user_loader  */
-	protected $user_loader;
+	protected \phpbb\user_loader $user_loader;
 
 	/* @var string */
-	protected $root_path;
+	protected string $root_path;
 
 	/* @var string */
-	protected $php_ext;
+	protected string $php_ext;
 
 	/**
 	 * Constructor
 	 *
 	 * @param \phpbb\config\config                   $config    Config object
-	 * @param \phpbb\request\request                 $request   Request object
+	 * @param \phpbb\request\request_interface       $request   Request object
 	 * @param \phpbb\template\template               $template  Template object
 	 * @param \phpbb\user                            $user      User object
 	 * @param \phpbb\language\language               $language
@@ -108,14 +102,14 @@ class moderate
 	 * @internal param \phpbb\auth\auth $auth Auth object
 	 * @internal param \phpbb\db\driver\driver|\phpbb\db\driver\driver_interface $db Database object
 	 */
-	public function __construct(\phpbb\config\config $config, \phpbb\request\request $request,
+	public function __construct(\phpbb\config\config $config, \phpbb\request\request_interface $request,
 		\phpbb\template\template $template, \phpbb\user $user, \phpbb\language\language $language,
 		\phpbb\controller\helper $helper, \phpbbgallery\core\album\display $display, \phpbbgallery\core\moderate $moderate,
 		\phpbbgallery\core\auth\auth $gallery_auth, \phpbbgallery\core\auth\image_authorization $image_authorization,
 		\phpbbgallery\core\misc $misc, \phpbbgallery\core\album\album $album, \phpbbgallery\core\image\image $image,
 		\phpbbgallery\core\notification\helper $notification_helper, \phpbbgallery\core\url $url, \phpbbgallery\core\log $gallery_log,
 		\phpbbgallery\core\report $report, \phpbb\user_loader $user_loader,
-		$root_path, $php_ext)
+		string $root_path, string $php_ext)
 	{
 		$this->config = $config;
 		$this->request = $request;
@@ -146,7 +140,7 @@ class moderate
 	 * @param int $album_id
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
-	public function base($album_id = 0)
+	public function base(int $album_id = 0): \Symfony\Component\HttpFoundation\Response
 	{
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$album_backlink = $album_id === 0 ? $this->helper->route('phpbbgallery_core_moderate') : $this->helper->route('phpbbgallery_core_moderate_album', array('album_id'	=> $album_id));
@@ -193,12 +187,13 @@ class moderate
 	 * Index Controller
 	 *    Route: gallery/moderate/approve
 	 *
-	 * @param $page
-	 * @param $album_id
+	 * @param int $page
+	 * @param int $album_id
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
-	public function queue_approve($page, $album_id)
+	public function queue_approve(int $page, int $album_id): \Symfony\Component\HttpFoundation\Response|null
 	{
+		$page = $this->normalize_page($page);
 		$approve_ary = $this->request->variable('approval', array('' => array(0)));
 		$action_ary = $this->request->variable('action', array('' => 0));
 		$back_link = $this->request->variable('back_link', $album_id > 0 ? $this->helper->route('phpbbgallery_core_moderate_queue_approve_album', array('album_id' => $album_id)) : $this->helper->route('phpbbgallery_core_moderate_queue_approve'));
@@ -219,7 +214,7 @@ class moderate
 			if (!$this->gallery_auth->acl_check_global('m_status'))
 			{
 				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
-				return;
+				return null;
 			}
 		}
 		else
@@ -228,7 +223,7 @@ class moderate
 			if (!$this->gallery_auth->acl_check('m_status', $album['album_id'], $album['album_user_id']))
 			{
 				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
-				return;
+				return null;
 			}
 		}
 		if (!empty($approve_ary))
@@ -236,7 +231,7 @@ class moderate
 			if (count($action_ary) !== 1 || !in_array($action, array('approve', 'disapprove'), true))
 			{
 				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
-				return;
+				return null;
 			}
 
 			$selected_image_ids = array();
@@ -245,7 +240,7 @@ class moderate
 				if (!is_array($submitted_image_ids))
 				{
 					$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
-					return;
+					return null;
 				}
 				$selected_image_ids = array_merge($selected_image_ids, $submitted_image_ids);
 			}
@@ -253,7 +248,7 @@ class moderate
 			if ($authorized_action === false)
 			{
 				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
-				return;
+				return null;
 			}
 			$approve_ary = $authorized_action['images_by_album'];
 
@@ -324,12 +319,13 @@ class moderate
 	 * Index Controller
 	 *    Route: gallery/moderate/actions
 	 *
-	 * @param $page
-	 * @param $album_id
+	 * @param int $page
+	 * @param int $album_id
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
-	public function action_log($page, $album_id)
+	public function action_log(int $page, int $album_id): \Symfony\Component\HttpFoundation\Response
 	{
+		$page = $this->normalize_page($page);
 		$this->language->add_lang(array('gallery_mcp', 'gallery'), 'phpbbgallery/core');
 		$this->language->add_lang('mcp');
 
@@ -368,13 +364,14 @@ class moderate
 	 * Index Controller
 	 *    Route: gallery/moderate/reports
 	 *
-	 * @param $page
-	 * @param $album_id
-	 * @param $status
+	 * @param int $page
+	 * @param int $album_id
+	 * @param int $status
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
-	public function reports($page, $album_id, $status)
+	public function reports(int $page, int $album_id, int $status): \Symfony\Component\HttpFoundation\Response|null
 	{
+		$page = $this->normalize_page($page);
 		$report_ary = $this->request->variable('report', array(0));
 		$action_ary = $this->request->variable('action', array('' => 0));
 		$back_link = $this->request->variable('back_link', $album_id > 0 ? $this->helper->route('phpbbgallery_core_moderate_reports_album', array('album_id' => $album_id)) : $this->helper->route('phpbbgallery_core_moderate_reports'));
@@ -395,7 +392,7 @@ class moderate
 			if (!$this->gallery_auth->acl_check_global('m_report'))
 			{
 				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
-				return;
+				return null;
 			}
 		}
 		else
@@ -404,7 +401,7 @@ class moderate
 			if (!$this->gallery_auth->acl_check('m_report', $album['album_id'], $album['album_user_id']))
 			{
 				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
-				return;
+				return null;
 			}
 		}
 
@@ -413,13 +410,13 @@ class moderate
 			if (count($action_ary) !== 1 || $action !== 'close')
 			{
 				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
-				return;
+				return null;
 			}
 			$authorized_action = $this->authorize_action_images($report_ary, 'm_report', (int) $album_id);
 			if ($authorized_action === false)
 			{
 				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
-				return;
+				return null;
 			}
 			$report_ary = $authorized_action['image_ids'];
 
@@ -461,12 +458,13 @@ class moderate
 	 * Moderate Controller
 	 *    Route: gallery/moderate/{album_id}/list
 	 *
-	 * @param $album_id
-	 * @param $page
+	 * @param int $album_id
+	 * @param int $page
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
-	public function album_overview($album_id, $page)
+	public function album_overview(int $album_id, int $page): \Symfony\Component\HttpFoundation\Response|null
 	{
+		$page = $this->normalize_page($page);
 		$this->language->add_lang(array('gallery_mcp', 'gallery'), 'phpbbgallery/core');
 		$this->language->add_lang('mcp');
 
@@ -483,7 +481,7 @@ class moderate
 			if (!$this->gallery_auth->acl_check_global('m_'))
 			{
 				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
-				return;
+				return null;
 			}
 		}
 		else
@@ -492,7 +490,7 @@ class moderate
 			if (!$this->gallery_auth->acl_check('m_', $album['album_id'], $album['album_user_id']))
 			{
 				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
-				return;
+				return null;
 			}
 		}
 
@@ -511,14 +509,14 @@ class moderate
 			if (!isset($action_permission[$action]))
 			{
 				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
-				return;
+				return null;
 			}
 
 			$authorized_action = $this->authorize_action_images($actions_array, $action_permission[$action], (int) $album_id);
 			if ($authorized_action === false)
 			{
 				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
-				return;
+				return null;
 			}
 			$actions_array = $authorized_action['image_ids'];
 			$actions_by_album = $authorized_action['images_by_album'];
@@ -531,7 +529,7 @@ class moderate
 				if (!$this->image_authorization->can_moderate_album($target_album, $moving_target, $has_target_permission))
 				{
 					$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
-					return;
+					return null;
 				}
 			}
 
@@ -654,7 +652,7 @@ class moderate
 	 *
 	 * @return array|false
 	 */
-	private function authorize_action_images(array $image_ids, string $permission, int $route_album_id)
+	private function authorize_action_images(array $image_ids, string $permission, int $route_album_id): array|false
 	{
 		$image_ids = $this->image_authorization->normalize_image_ids($image_ids);
 		if ($image_ids === false)
@@ -696,10 +694,10 @@ class moderate
 	 * Index Controller
 	 *    Route: gallery/moderate/image/{image_id}
 	 *
-	 * @param $image_id
+	 * @param int $image_id
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
-	public function image($image_id)
+	public function image(int $image_id): \Symfony\Component\HttpFoundation\Response
 	{
 		$this->language->add_lang(array('gallery_mcp', 'gallery'), 'phpbbgallery/core');
 		$this->language->add_lang('mcp');
@@ -710,34 +708,22 @@ class moderate
 		{
 			case 'images_move':
 				$route = $this->helper->route('phpbbgallery_core_moderate_image_move', array('image_id'	=> $image_id));
-				$redirect = new RedirectResponse($route);
-				$redirect->send();
-			break;
+				return new RedirectResponse($route);
 			case 'image_edit':
 				$route = $this->helper->route('phpbbgallery_core_image_edit', array('image_id'	=> $image_id));
-				$redirect = new RedirectResponse($route);
-				$redirect->send();
-			break;
+				return new RedirectResponse($route);
 			case 'images_unapprove':
 				$route = $this->helper->route('phpbbgallery_core_moderate_image_unapprove', array('image_id'	=> $image_id));
-				$redirect = new RedirectResponse($route);
-				$redirect->send();
-			break;
+				return new RedirectResponse($route);
 			case 'images_approve':
 				$route = $this->helper->route('phpbbgallery_core_moderate_image_approve', array('image_id'	=> $image_id));
-				$redirect = new RedirectResponse($route);
-				$redirect->send();
-			break;
+				return new RedirectResponse($route);
 			case 'images_lock':
 				$route = $this->helper->route('phpbbgallery_core_moderate_image_lock', array('image_id'	=> $image_id));
-				$redirect = new RedirectResponse($route);
-				$redirect->send();
-			break;
+				return new RedirectResponse($route);
 			case 'images_delete':
 				$route = $this->helper->route('phpbbgallery_core_image_delete', array('image_id'	=> $image_id));
-				$redirect = new RedirectResponse($route);
-				$redirect->send();
-			break;
+				return new RedirectResponse($route);
 			case 'reports_close':
 				$reports_close_image_data = $this->image->get_image_data($image_id);
 				$reports_close_album_data = $this->album->get_info($reports_close_image_data['image_album_id']);
@@ -764,9 +750,7 @@ class moderate
 			break;
 			case 'reports_open':
 				$route = $this->helper->route('phpbbgallery_core_image_report', array('image_id'	=> $image_id));
-				$redirect = new RedirectResponse($route);
-				$redirect->send();
-			break;
+				return new RedirectResponse($route);
 		}
 		$image_data = $this->image->get_image_data($image_id);
 		$album_data = $this->album->get_info($image_data['image_album_id']);
@@ -856,10 +840,10 @@ class moderate
 	 * Index Controller
 	 *    Route: gallery/moderate/image/{image_id}/approve
 	 *
-	 * @param $image_id
+	 * @param int $image_id
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
-	public function approve($image_id)
+	public function approve(int $image_id): \Symfony\Component\HttpFoundation\Response
 	{
 		$image_data = $this->image->get_image_data($image_id);
 		$album_data = $this->album->get_info($image_data['image_album_id']);
@@ -878,8 +862,7 @@ class moderate
 
 		if ($action === 'disapprove')
 		{
-			$redirect = new RedirectResponse($this->helper->route('phpbbgallery_core_image_delete', ['image_id' => $image_id]));
-			$redirect->send();
+			return new RedirectResponse($this->helper->route('phpbbgallery_core_image_delete', ['image_id' => $image_id]));
 		}
 		$show_notify = true;
 		$this->language->add_lang(array('gallery_mcp', 'gallery'), 'phpbbgallery/core');
@@ -918,10 +901,10 @@ class moderate
 	 * Index Controller
 	 *    Route: gallery/moderate/image/{image_id}/unapprove
 	 *
-	 * @param $image_id
+	 * @param int $image_id
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
-	public function unapprove($image_id)
+	public function unapprove(int $image_id): \Symfony\Component\HttpFoundation\Response
 	{
 		$image_data = $this->image->get_image_data($image_id);
 		$album_data = $this->album->get_info($image_data['image_album_id']);
@@ -952,18 +935,19 @@ class moderate
 			$s_hidden_fields = '';
 			confirm_box(false, 'QUEUE_A_UNAPPROVE2', $s_hidden_fields);
 		}
+
+		return $this->helper->render('gallery/moderate_overview.html', $this->language->lang('GALLERY'));
 	}
 
 	/**
 	 * Index Controller
 	 *    Route: gallery/moderate/image/{image_id}/move
 	 *
-	 * @param $image_id
+	 * @param int $image_id
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
-	public function move($image_id): \Symfony\Component\HttpFoundation\Response
+	public function move(int $image_id): \Symfony\Component\HttpFoundation\Response
 	{
-		$image_id = (int) $image_id;
 		$image_data = $this->image->get_image_data($image_id);
 		$image_backlink = $this->helper->route('phpbbgallery_core_image', array('image_id' => $image_id));
 		$album_loginlink = append_sid($this->root_path . 'ucp.' . $this->php_ext . '?mode=login');
@@ -1030,10 +1014,10 @@ class moderate
 	 * Index Controller
 	 *    Route: gallery/moderate/image/{image_id}/lock
 	 *
-	 * @param $image_id
+	 * @param int $image_id
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
-	public function lock($image_id)
+	public function lock(int $image_id): \Symfony\Component\HttpFoundation\Response
 	{
 		$image_data = $this->image->get_image_data($image_id);
 		$album_id = $image_data['image_album_id'];
@@ -1063,5 +1047,18 @@ class moderate
 			$s_hidden_fields = '';
 			confirm_box(false, 'QUEUE_A_LOCK2', $s_hidden_fields);
 		}
+
+		return $this->helper->render('gallery/moderate_overview.html', $this->language->lang('GALLERY'));
+	}
+
+	/**
+	 * Keep routed page numbers inside the valid pagination range.
+	 *
+	 * @param int $page Requested page number
+	 * @return int Normalized page number
+	 */
+	private function normalize_page(int $page): int
+	{
+		return max(1, $page);
 	}
 }
