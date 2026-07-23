@@ -24,46 +24,29 @@ class access_boundary_test extends TestCase
 	public function test_descendant_count_applies_view_and_moderator_permissions_per_album(): void
 	{
 		$controller = (new \ReflectionClass(album_controller::class))->newInstanceWithoutConstructor();
-		$db = new class {
-			/** @var string */
-			public $query = '';
+		$query = '';
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->method('sql_in_set')->willReturnCallback(static fn (string $field, array $values): string => $field . ' IN (' . implode(', ', array_map('intval', $values)) . ')');
+		$db->expects($this->once())->method('sql_query')->willReturnCallback(static function (string $sql) use (&$query): bool
+		{
+			$query = $sql;
 
-			public function sql_in_set($field, $values)
+			return true;
+		});
+		$db->expects($this->once())->method('sql_fetchfield')->with('total_images')->willReturn(7);
+		$db->expects($this->once())->method('sql_freeresult')->with(true);
+		$auth = $this->createMock(\phpbbgallery\core\auth\auth::class);
+		$auth->method('acl_check')->willReturnCallback(static function (string $permission, int $album_id, int $album_owner_id): bool
+		{
+			if ($permission === 'i_view')
 			{
-				return $field . ' IN (' . implode(', ', array_map('intval', $values)) . ')';
+				return in_array($album_id, [10, 11], true);
 			}
 
-			public function sql_query($sql)
-			{
-				$this->query = $sql;
-
-				return true;
-			}
-
-			public function sql_fetchfield($field)
-			{
-				return 7;
-			}
-
-			public function sql_freeresult($result): void
-			{
-			}
-		};
-		$auth = new class {
-			public function acl_check($permission, $album_id, $album_owner_id)
-			{
-				if ($permission === 'i_view')
-				{
-					return in_array($album_id, [10, 11], true);
-				}
-
-				return $permission === 'm_status' && $album_id === 11;
-			}
-		};
-		$user = new class {
-			/** @var array */
-			public $data = ['user_id' => 99];
-		};
+			return $permission === 'm_status' && $album_id === 11;
+		});
+		$user = $this->createMock(\phpbb\user::class);
+		$user->data = ['user_id' => 99];
 
 		$set_dependencies = \Closure::bind(function ($db, $auth, $user): void
 		{
@@ -80,31 +63,20 @@ class access_boundary_test extends TestCase
 		}, $controller, album_controller::class);
 
 		$this->assertSame(7, $count([10, 11, 12, 10, 0]));
-		$this->assertStringContainsString('image_album_id IN (10)', $db->query);
-		$this->assertStringContainsString('image_album_id IN (11)', $db->query);
-		$this->assertStringNotContainsString('12', $db->query);
-		$this->assertStringContainsString('OR image_user_id = 99', $db->query);
-		$this->assertStringContainsString('AND image_status <> ' . \phpbbgallery\core\block::STATUS_ORPHAN, $db->query);
+		$this->assertStringContainsString('image_album_id IN (10)', $query);
+		$this->assertStringContainsString('image_album_id IN (11)', $query);
+		$this->assertStringNotContainsString('12', $query);
+		$this->assertStringContainsString('OR image_user_id = 99', $query);
+		$this->assertStringContainsString('AND image_status <> ' . \phpbbgallery\core\block::STATUS_ORPHAN, $query);
 	}
 
 	public function test_descendant_count_skips_database_when_no_album_is_viewable(): void
 	{
 		$controller = (new \ReflectionClass(album_controller::class))->newInstanceWithoutConstructor();
-		$db = new class {
-			/** @var bool */
-			public $queried = false;
-
-			public function sql_query($sql): void
-			{
-				$this->queried = true;
-			}
-		};
-		$auth = new class {
-			public function acl_check($permission, $album_id, $album_owner_id)
-			{
-				return false;
-			}
-		};
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->never())->method('sql_query');
+		$auth = $this->createMock(\phpbbgallery\core\auth\auth::class);
+		$auth->method('acl_check')->willReturn(false);
 
 		$set_dependencies = \Closure::bind(function ($db, $auth): void
 		{
@@ -119,7 +91,6 @@ class access_boundary_test extends TestCase
 		}, $controller, album_controller::class);
 
 		$this->assertSame(0, $count());
-		$this->assertFalse($db->queried);
 	}
 
 	public function test_hotlink_referrer_requires_http_host_boundary(): void

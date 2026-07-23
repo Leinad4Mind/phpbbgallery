@@ -15,67 +15,67 @@ namespace phpbbgallery\core\controller;
 class album
 {
 	/* @var \phpbb\config\config */
-	protected $config;
+	protected \phpbb\config\config $config;
 
 	/* @var \phpbb\controller\helper */
-	protected $helper;
+	protected \phpbb\controller\helper $helper;
 
-	/* @var \phpbb\db\driver\driver */
-	protected $db;
+	/* @var \phpbb\db\driver\driver_interface */
+	protected \phpbb\db\driver\driver_interface $db;
 
 	/* @var \phpbb\pagination */
-	protected $pagination;
+	protected \phpbb\pagination $pagination;
 
 	/* @var \phpbb\template\template */
-	protected $template;
+	protected \phpbb\template\template $template;
 
 	/* @var \phpbb\user */
-	protected $user;
+	protected \phpbb\user $user;
 
 	/** @var \phpbb\language\language */
-	protected $language;
+	protected \phpbb\language\language $language;
 
 	/* @var \phpbbgallery\core\album\display */
-	protected $display;
+	protected \phpbbgallery\core\album\display $display;
 
 	/* @var \phpbbgallery\core\album\loader */
-	protected $loader;
+	protected \phpbbgallery\core\album\loader $loader;
 
 	/* @var \phpbbgallery\core\auth\auth */
-	protected $auth;
+	protected \phpbbgallery\core\auth\auth $auth;
 
 	/* @var \phpbbgallery\core\auth\level */
-	protected $auth_level;
+	protected \phpbbgallery\core\auth\level $auth_level;
 
 	/** @var \phpbbgallery\core\notification\helper */
-	protected $notifications_helper;
+	protected \phpbbgallery\core\notification\helper $notifications_helper;
 
 	/** @var \phpbbgallery\core\url */
-	protected $url;
+	protected \phpbbgallery\core\url $url;
 
 	/** @var \phpbbgallery\core\image\image */
-	protected $image;
+	protected \phpbbgallery\core\image\image $image;
 
 	/** @var \phpbbgallery\core\config */
-	protected $gallery_config;
+	protected \phpbbgallery\core\config $gallery_config;
 
-	/** @var \phpbb\request\request */
-	protected $request;
+	/** @var \phpbb\request\request_interface */
+	protected \phpbb\request\request_interface $request;
 
 	/** @var \phpbbgallery\core\contest */
-	protected $contest;
+	protected \phpbbgallery\core\contest $contest;
 
 	/* @var string */
-	protected $table_images;
+	protected string $table_images;
 
-	const ALBUM_SHOW_IP = 128;
-	const ALBUM_SHOW_RATINGS = 64;
-	const ALBUM_SHOW_USERNAME = 32;
-	const ALBUM_SHOW_VIEWS = 16;
-	const ALBUM_SHOW_TIME = 8;
-	const ALBUM_SHOW_IMAGENAME = 4;
-	const ALBUM_SHOW_COMMENTS = 2;
-	const ALBUM_SHOW_ALBUM = 1;
+	public const ALBUM_SHOW_IP = 128;
+	public const ALBUM_SHOW_RATINGS = 64;
+	public const ALBUM_SHOW_USERNAME = 32;
+	public const ALBUM_SHOW_VIEWS = 16;
+	public const ALBUM_SHOW_TIME = 8;
+	public const ALBUM_SHOW_IMAGENAME = 4;
+	public const ALBUM_SHOW_COMMENTS = 2;
+	public const ALBUM_SHOW_ALBUM = 1;
 
 	/**
 	 * Constructor
@@ -95,7 +95,7 @@ class album
 	 * @param \phpbbgallery\core\notification\helper                    $notifications_helper
 	 * @param \phpbbgallery\core\url                                    $url
 	 * @param \phpbbgallery\core\image\image                            $image
-	 * @param \phpbb\request\request                                    $request
+	 * @param \phpbb\request\request_interface                          $request
 	 * @param string                                                    $images_table Gallery image table
 	 */
 	public function __construct(\phpbb\config\config $config, \phpbb\controller\helper $helper,
@@ -104,9 +104,9 @@ class album
 		\phpbbgallery\core\album\display $display, \phpbbgallery\core\album\loader $loader,
 		\phpbbgallery\core\auth\auth $auth, \phpbbgallery\core\auth\level $auth_level,
 		\phpbbgallery\core\config $gallery_config, \phpbbgallery\core\notification\helper $notifications_helper,
-		\phpbbgallery\core\url $url, \phpbbgallery\core\image\image $image, \phpbb\request\request $request,
+		\phpbbgallery\core\url $url, \phpbbgallery\core\image\image $image, \phpbb\request\request_interface $request,
 		\phpbbgallery\core\contest $contest,
-		$images_table)
+		string $images_table)
 	{
 		$this->config = $config;
 		$this->helper = $helper;
@@ -136,9 +136,9 @@ class album
 	 * @param int $page
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
-	public function base($album_id, $page = 0)
+	public function base(int $album_id, int $page = 1): \Symfony\Component\HttpFoundation\Response
 	{
-		$album_id = (int) $album_id;
+		$page = max(1, $page);
 		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
 
 		try
@@ -241,13 +241,14 @@ class album
 	}
 
 	/**
-	 * @param $album_id
-	 * @param $album_data
-	 * @param $start
-	 * @param $limit
+	 * @param int   $album_id
+	 * @param array $album_data
+	 * @param int   $start
+	 * @param int   $limit
 	 * @param array $descendant_album_ids
+	 * @return void
 	 */
-	protected function display_images($album_id, $album_data, $start, $limit, array $descendant_album_ids)
+	protected function display_images(int $album_id, array $album_data, int $start, int $limit, array $descendant_album_ids): void
 	{
 		$sort_days = $this->request->variable('st', 0);
 		$sort_key = $this->request->variable('sk', ($album_data['album_sort_key']) ? $album_data['album_sort_key'] : $this->config['phpbb_gallery_default_sort_key']);
@@ -325,6 +326,7 @@ class album
 			$sort_by_text['lc'] = $this->language->lang('NEW_COMMENT');
 			$sort_by_sql['lc'] = 'image_last_comment';
 		}
+		$sort_key = $this->normalize_sort_key($sort_key, $sort_by_sql);
 		gen_sort_selects($limit_days, $sort_by_text, $sort_days, $sort_key, $sort_dir, $s_limit_days, $s_sort_key, $s_sort_dir, $u_sort_param);
 		$sql_sort_order = $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
 
@@ -467,7 +469,7 @@ class album
 	 * @param int   $album_owner_id
 	 * @return int
 	 */
-	protected function get_descendant_image_count(array $album_ids, $album_owner_id)
+	protected function get_descendant_image_count(array $album_ids, int $album_owner_id): int
 	{
 		$viewable_album_ids = [];
 		$moderated_album_ids = [];
@@ -515,12 +517,11 @@ class album
 	}
 
 	/**
-	 * @param $album_id
-	 * @return \Symfony\Component\HttpFoundation\Response
+	 * @param int $album_id
+	 * @return \Symfony\Component\HttpFoundation\Response|null
 	 */
-	public function watch($album_id)
+	public function watch(int $album_id): \Symfony\Component\HttpFoundation\Response|null
 	{
-		$album_id = (int) $album_id;
 		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
 
 		$album_data = $this->loader->get($album_id);
@@ -566,11 +567,12 @@ class album
 
 	/**
 	 * @param int $album_id
-	 * @param     $owner_id
-	 * @param     $album_auth_level
+	 * @param int $owner_id
+	 * @param int $album_auth_level
 	 * @internal param array $album_data
+	 * @return void
 	 */
-	protected function check_permissions($album_id, $owner_id, $album_auth_level)
+	protected function check_permissions(int $album_id, int $owner_id, int $album_auth_level): void
 	{
 		$this->auth->load_user_permissions($this->user->data['user_id']);
 		$zebra_array = $this->auth->get_user_zebra($this->user->data['user_id']);
@@ -593,5 +595,17 @@ class album
 				trigger_error($this->language->lang('NOT_AUTHORISED'));
 			}
 		}
+	}
+
+	/**
+	 * Fall back to chronological sorting for unsupported request values.
+	 *
+	 * @param string $sort_key    Requested sort key
+	 * @param array  $sort_by_sql Supported sort columns
+	 * @return string Valid sort key
+	 */
+	protected function normalize_sort_key(string $sort_key, array $sort_by_sql): string
+	{
+		return isset($sort_by_sql[$sort_key]) ? $sort_key : 't';
 	}
 }
