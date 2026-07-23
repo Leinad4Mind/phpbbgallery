@@ -1,9 +1,9 @@
 <?php
 /**
  * @package cBB Quickquote
- * @version 1.0.4 01/06/2024
+ * @version 1.0.5 08/04/2025
  *
- * @copyright (c) 2024 CaniDev
+ * @copyright (c) 2025 CaniDev
  * @license https://creativecommons.org/licenses/by-nc/4.0/
  */
 
@@ -68,7 +68,7 @@ class admin_controller_config extends \canidev\core\controller\acp
 		if($submit)
 		{
 			$cfg_array = $this->request->variable('config', ['' => '']);
-			$cfg_array['quickquote_groups'] = ($this->request->is_set_post('all_groups_quickquote_groups')) ? 'all' : $this->request->variable('quickquote_groups', [0]);
+			$cfg_array['quickquote_groups'] = $this->tools->groups_select_submit('quickquote_groups');
 
 			// We validate the complete config if whished
 			validate_config_vars($display_vars, $cfg_array, $error);
@@ -92,7 +92,7 @@ class admin_controller_config extends \canidev\core\controller\acp
 		$this->new_config = $cfg_array;
 
 		// Do not write values if there is an error
-		if(sizeof($error))
+		if(count($error))
 		{
 			$submit = false;
 		}
@@ -107,8 +107,7 @@ class admin_controller_config extends \canidev\core\controller\acp
 
 			if($submit)
 			{
-				$value = is_array($this->new_config[$config_name]) ? implode(',', $this->new_config[$config_name]) : $this->new_config[$config_name];
-				$this->config->set($config_name, $value);
+				$this->config->set($config_name, $this->new_config[$config_name]);
 			}
 		}
 
@@ -118,8 +117,7 @@ class admin_controller_config extends \canidev\core\controller\acp
 		}
 		
 		$this->template->assign_vars([
-			'QUICKQUOTE_IN_ADMIN'	=> true,
-			'S_ERROR'				=> (sizeof($error)) ? true : false,
+			'S_ERROR'				=> count($error) > 0,
 			'ERROR_MSG'				=> implode('<br />', $error),
 		]);
 

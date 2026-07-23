@@ -1,7 +1,7 @@
 /*  cBB QuickQuote StyleSheet
     --------------------------------------------------------------
 	Style:	All
-	Copyright (c) 2024 CaniDev ( https://www.canidev.com )
+	Copyright (c) 2025 CaniDev ( https://www.canidev.com )
     --------------------------------------------------------------
 */
 
@@ -139,6 +139,11 @@
 
 /* RTL
 ------------------------- */
+.rtl .quickquote-tooltip a > i {
+	margin-left: 5px;
+	margin-right: unset;
+}
+
 .rtl .quickquote-floatbtn {
 	left: 60px;
 	padding: 10px 10px 10px 30px;
