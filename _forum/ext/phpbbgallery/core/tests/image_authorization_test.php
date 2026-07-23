@@ -128,48 +128,12 @@ class image_authorization_test extends TestCase
 	private function authorize_batch(array $image_ids, int $route_album_id, array $images, array $albums, array $permissions)
 	{
 		$controller = (new \ReflectionClass(moderate_controller::class))->newInstanceWithoutConstructor();
-		$image_loader = new class($images) {
-			/** @var array */
-			private $images;
-
-			public function __construct(array $images)
-			{
-				$this->images = $images;
-			}
-
-			public function get_image_data($image_id)
-			{
-				return isset($this->images[$image_id]) ? $this->images[$image_id] : false;
-			}
-		};
-		$album_loader = new class($albums) {
-			/** @var array */
-			private $albums;
-
-			public function __construct(array $albums)
-			{
-				$this->albums = $albums;
-			}
-
-			public function get_info($album_id)
-			{
-				return isset($this->albums[$album_id]) ? $this->albums[$album_id] : false;
-			}
-		};
-		$gallery_auth = new class($permissions) {
-			/** @var array */
-			private $permissions;
-
-			public function __construct(array $permissions)
-			{
-				$this->permissions = $permissions;
-			}
-
-			public function acl_check($permission, $album_id, $album_user_id)
-			{
-				return $permission === 'm_delete' && isset($this->permissions[$album_id]) && $this->permissions[$album_id];
-			}
-		};
+		$image_loader = $this->createMock(\phpbbgallery\core\image\image::class);
+		$image_loader->method('get_image_data')->willReturnCallback(static fn (int $image_id): array|false => $images[$image_id] ?? false);
+		$album_loader = $this->createMock(\phpbbgallery\core\album\album::class);
+		$album_loader->method('get_info')->willReturnCallback(static fn (int $album_id): array => $albums[$album_id] ?? []);
+		$gallery_auth = $this->createMock(\phpbbgallery\core\auth\auth::class);
+		$gallery_auth->method('acl_check')->willReturnCallback(static fn (string $permission, int $album_id, int $album_user_id): bool => $permission === 'm_delete' && !empty($permissions[$album_id]));
 
 		$set_dependencies = \Closure::bind(function ($image_loader, $album_loader, $gallery_auth): void
 		{
