@@ -89,4 +89,5 @@ namespace
 	require_once dirname(__DIR__) . '/report.php';
 	require_once dirname(__DIR__) . '/notification.php';
 	require_once dirname(__DIR__) . '/moderate.php';
+	require_once dirname(__DIR__) . '/user.php';
 }
