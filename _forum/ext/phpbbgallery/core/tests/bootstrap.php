@@ -68,13 +68,16 @@ namespace
 	require_once __DIR__ . '/stubs/phpbb_extension_base.php';
 	require_once __DIR__ . '/stubs/phpbb_notification_exception.php';
 	require_once __DIR__ . '/stubs/phpbb_config.php';
+	require_once __DIR__ . '/stubs/phpbb_user.php';
 	require_once dirname(__DIR__) . '/upload.php';
 	require_once dirname(__DIR__) . '/auth/image_authorization.php';
+	require_once dirname(__DIR__) . '/auth/auth.php';
 	require_once dirname(__DIR__) . '/ext.php';
 	require_once dirname(__DIR__) . '/controller/moderate.php';
 	require_once dirname(__DIR__) . '/controller/index.php';
 	require_once dirname(__DIR__) . '/controller/file.php';
 	require_once dirname(__DIR__) . '/controller/search.php';
+	require_once dirname(__DIR__) . '/controller/album.php';
 	require_once dirname(__DIR__) . '/acp/main_module.php';
 	require_once dirname(__DIR__) . '/ucp/main_module.php';
 	require_once dirname(__DIR__) . '/config.php';
