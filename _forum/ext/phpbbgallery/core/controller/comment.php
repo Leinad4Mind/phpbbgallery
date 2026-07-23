@@ -16,66 +16,83 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class comment
 {
 	/** @var \phpbb\db\driver\driver_interface  */
-	protected $db;
+	protected \phpbb\db\driver\driver_interface $db;
 
 
 	/** @var \phpbb\user  */
-	protected $user;
+	protected \phpbb\user $user;
 
-	protected $language;
+	/** @var \phpbb\language\language */
+	protected \phpbb\language\language $language;
 
-	protected $auth;
+	/** @var \phpbb\auth\auth */
+	protected \phpbb\auth\auth $auth;
 
-	protected $config;
+	/** @var \phpbb\config\config */
+	protected \phpbb\config\config $config;
 
-	protected $template;
+	/** @var \phpbb\template\template */
+	protected \phpbb\template\template $template;
 
-	/* @var \phpbb\request\request */
-	protected $request;
+	/* @var \phpbb\request\request_interface */
+	protected \phpbb\request\request_interface $request;
 
 	/* @var \phpbb\controller\helper */
-	protected $helper;
+	protected \phpbb\controller\helper $helper;
 
 	/* @var \phpbbgallery\core\image\image */
-	protected $image;
+	protected \phpbbgallery\core\image\image $image;
 
 	/* @var \phpbbgallery\core\album\loader */
-	protected $loader;
+	protected \phpbbgallery\core\album\loader $loader;
 
 	/* @var \phpbbgallery\core\album\album */
-	protected $album;
+	protected \phpbbgallery\core\album\album $album;
 
 	/* @var \phpbbgallery\core\album\display */
-	protected $display;
+	protected \phpbbgallery\core\album\display $display;
 
 	/* @var \phpbbgallery\core\url */
-	protected $url;
+	protected \phpbbgallery\core\url $url;
 
-	protected $gallery_auth;
+	/** @var \phpbbgallery\core\auth\auth */
+	protected \phpbbgallery\core\auth\auth $gallery_auth;
 
-	protected $gallery_config;
+	/** @var \phpbbgallery\core\config */
+	protected \phpbbgallery\core\config $gallery_config;
 
-	protected $misc;
+	/** @var \phpbbgallery\core\misc */
+	protected \phpbbgallery\core\misc $misc;
 
-	protected $comment;
+	/** @var \phpbbgallery\core\comment */
+	protected \phpbbgallery\core\comment $comment;
 
-	protected $gallery_user;
+	/** @var \phpbbgallery\core\user */
+	protected \phpbbgallery\core\user $gallery_user;
 
-	protected $gallery_log;
+	/** @var \phpbbgallery\core\log */
+	protected \phpbbgallery\core\log $gallery_log;
 
-	protected $notification_helper;
+	/** @var \phpbbgallery\core\notification\helper */
+	protected \phpbbgallery\core\notification\helper $notification_helper;
 
-	protected $gallery_notification;
+	/** @var \phpbbgallery\core\notification */
+	protected \phpbbgallery\core\notification $gallery_notification;
 
-	protected $gallery_rating;
+	/** @var \phpbbgallery\core\rating */
+	protected \phpbbgallery\core\rating $gallery_rating;
 
-	protected $phpbb_container;
+	/** @var ContainerInterface */
+	protected ContainerInterface $phpbb_container;
 
-	protected $table_comments;
+	/** @var string */
+	protected string $table_comments;
 
-	protected $phpbb_root_path;
+	/** @var string */
+	protected string $phpbb_root_path;
 
-	protected $php_ext;
+	/** @var string */
+	protected string $php_ext;
 
 	/**
 	 * Constructor
@@ -86,7 +103,7 @@ class comment
 	 * @param \phpbb\auth\auth                       $auth
 	 * @param \phpbb\config\config                   $config
 	 * @param \phpbb\template\template               $template
-	 * @param \phpbb\request\request                 $request phpBB request class
+	 * @param \phpbb\request\request_interface       $request phpBB request class
 	 * @param \phpbb\controller\helper               $helper  Controller helper object
 	 * @param \phpbbgallery\core\image\image         $image   phpBB Gallery Core image object
 	 * @param \phpbbgallery\core\album\loader        $loader  phpBB Gallery Core album loader
@@ -103,20 +120,20 @@ class comment
 	 * @param \phpbbgallery\core\notification        $gallery_notification
 	 * @param \phpbbgallery\core\rating              $gallery_rating
 	 * @param ContainerInterface                     $phpbb_container
-	 * @param                                        $table_comments
-	 * @param                                        $phpbb_root_path
-	 * @param                                        $php_ext
+	 * @param string                                 $table_comments
+	 * @param string                                 $phpbb_root_path
+	 * @param string                                 $php_ext
 	 */
 	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\language\language $language,
 								\phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\template\template $template,
-								\phpbb\request\request $request, \phpbb\controller\helper $helper, \phpbbgallery\core\image\image $image,
+								\phpbb\request\request_interface $request, \phpbb\controller\helper $helper, \phpbbgallery\core\image\image $image,
 								\phpbbgallery\core\album\loader $loader, \phpbbgallery\core\album\album $album,
 								\phpbbgallery\core\album\display $display, \phpbbgallery\core\url $url, \phpbbgallery\core\auth\auth $gallery_auth,
 								\phpbbgallery\core\config $gallery_config, \phpbbgallery\core\misc $misc, \phpbbgallery\core\comment $comment,
 								\phpbbgallery\core\user $gallery_user, \phpbbgallery\core\log $gallery_log,
 								\phpbbgallery\core\notification\helper $notification_helper, \phpbbgallery\core\notification $gallery_notification,
 								\phpbbgallery\core\rating $gallery_rating, ContainerInterface $phpbb_container,
-								$table_comments, $phpbb_root_path, $php_ext)
+								string $table_comments, string $phpbb_root_path, string $php_ext)
 	{
 		$this->db = $db;
 		$this->user = $user;
@@ -151,10 +168,10 @@ class comment
 	 *    Route: gallery/comment/{image_id}/add
 	 *
 	 * @param int $image_id Image ID
-	 * @param $comment_id
+	 * @param int $comment_id
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
-	public function add($image_id, $comment_id)
+	public function add(int $image_id, int $comment_id): \Symfony\Component\HttpFoundation\Response
 	{
 		$this->language->add_lang(array('gallery'), 'phpbbgallery/core');
 		if ($comment_id != 0)
@@ -318,7 +335,7 @@ class comment
 				'comment'				=> $message_parser->message,
 				'comment_uid'			=> $message_parser->bbcode_uid,
 				'comment_bitfield'		=> $message_parser->bbcode_bitfield,
-				'comment_signature'		=> ($this->auth->acl_get('u_sig') && isset($_POST['attach_sig'])),
+				'comment_signature'		=> ($this->auth->acl_get('u_sig') && $this->request->is_set_post('attach_sig')),
 			);
 			if ((!$error) && ($sql_ary['comment'] != ''))
 			{
@@ -345,7 +362,7 @@ class comment
 			{
 				$s_captcha_hidden_fields = ($captcha->is_solved()) ? build_hidden_fields($captcha->get_hidden_fields()) : '';
 			}
-			$sig_checked = ($this->auth->acl_get('u_sig') && isset($_POST['attach_sig']));
+			$sig_checked = ($this->auth->acl_get('u_sig') && $this->request->is_set_post('attach_sig'));
 		}
 		else
 		{
@@ -411,10 +428,10 @@ class comment
 	 *    Route: gallery/comment/{image_id}/edit/{comment_id}
 	 *
 	 * @param int $image_id Image ID
-	 * @param $comment_id
+	 * @param int $comment_id
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
-	public function edit($image_id, $comment_id)
+	public function edit(int $image_id, int $comment_id): \Symfony\Component\HttpFoundation\Response
 	{
 		$this->language->add_lang(array('gallery'), 'phpbbgallery/core');
 		add_form_key('gallery');
@@ -575,7 +592,7 @@ class comment
 				'comment_uid'			=> $message_parser->bbcode_uid,
 				'comment_bitfield'		=> $message_parser->bbcode_bitfield,
 				'comment_edit_count'	=> $comment_data['comment_edit_count'] + 1,
-				'comment_signature'		=> ($this->auth->acl_get('u_sig') && isset($_POST['attach_sig'])),
+				'comment_signature'		=> ($this->auth->acl_get('u_sig') && $this->request->is_set_post('attach_sig')),
 			));
 
 			if (!$error)
@@ -632,10 +649,10 @@ class comment
 	 *    Route: gallery/comment/{image_id}/delete/{comment_id}
 	 *
 	 * @param int $image_id Image ID
-	 * @param $comment_id
+	 * @param int $comment_id
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
-	public function delete($image_id, $comment_id)
+	public function delete(int $image_id, int $comment_id): \Symfony\Component\HttpFoundation\Response
 	{
 		$this->language->add_lang(array('gallery'), 'phpbbgallery/core');
 		add_form_key('gallery');
@@ -752,7 +769,7 @@ class comment
 		}
 		else
 		{
-			if (isset($_POST['cancel']))
+			if ($this->request->is_set_post('cancel'))
 			{
 				$message = $this->language->lang('DELETED_COMMENT_NOT') . '<br />';
 				$submit = true;
@@ -792,7 +809,7 @@ class comment
 		return $this->helper->render('gallery/comment_body.html', $page_title);
 	}
 
-	public function rate($image_id)
+	public function rate(int $image_id): \Symfony\Component\HttpFoundation\Response
 	{
 		$this->language->add_lang(array('gallery'), 'phpbbgallery/core');
 		add_form_key('gallery');

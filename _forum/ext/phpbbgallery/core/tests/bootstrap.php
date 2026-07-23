@@ -79,6 +79,7 @@ namespace
 	require_once dirname(__DIR__) . '/controller/search.php';
 	require_once dirname(__DIR__) . '/controller/album.php';
 	require_once dirname(__DIR__) . '/controller/upload.php';
+	require_once dirname(__DIR__) . '/controller/comment.php';
 	require_once dirname(__DIR__) . '/acp/main_module.php';
 	require_once dirname(__DIR__) . '/ucp/main_module.php';
 	require_once dirname(__DIR__) . '/config.php';
