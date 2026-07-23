@@ -166,11 +166,11 @@ class access_boundary_test extends TestCase
 		$this->assertSame('no_hotlinking.jpg', $spoofed['error']);
 
 		$allowed = $this->run_hotlink_guard(false, 'https://gallery.example.com/image');
-		$this->assertNull($allowed['error']);
+		$this->assertSame('', $allowed['error']);
 		$this->assertSame('original.jpg', $allowed['data']['image_filename']);
 
 		$protection_disabled = $this->run_hotlink_guard(true, '');
-		$this->assertNull($protection_disabled['error']);
+		$this->assertSame('', $protection_disabled['error']);
 		$this->assertSame('original.jpg', $protection_disabled['data']['image_filename']);
 	}
 
@@ -200,7 +200,7 @@ class access_boundary_test extends TestCase
 	 * @param array  $allowed_domains
 	 * @return bool
 	 */
-	private function is_allowed_referrer($referrer, array $allowed_domains)
+	private function is_allowed_referrer(string $referrer, array $allowed_domains): bool
 	{
 		$controller = (new \ReflectionClass(file_controller::class))->newInstanceWithoutConstructor();
 		$check = \Closure::bind(function ($referrer, array $allowed_domains)
@@ -216,34 +216,22 @@ class access_boundary_test extends TestCase
 	 * @param string $referrer
 	 * @return array
 	 */
-	private function run_hotlink_guard($allow_hotlinking, $referrer)
+	private function run_hotlink_guard(bool $allow_hotlinking, string $referrer): array
 	{
 		$controller = (new \ReflectionClass(file_controller::class))->newInstanceWithoutConstructor();
-		$request = new class($referrer) {
-			/** @var string */
-			private $referrer;
-
-			public function __construct($referrer)
-			{
-				$this->referrer = $referrer;
-			}
-
-			public function server($name, $default)
-			{
-				return $name === 'HTTP_REFERER' ? $this->referrer : $default;
-			}
-		};
+		$request = $this->createMock(\phpbb\request\request_interface::class);
+		$request->method('server')->willReturnCallback(static fn (string $name, mixed $default): mixed => $name === 'HTTP_REFERER' ? $referrer : $default);
 
 		$run = \Closure::bind(function ($allow_hotlinking, $request): array
 		{
-			$this->config = [
+			$this->config = new \phpbb\config\config([
 				'phpbb_gallery_allow_hotlinking' => $allow_hotlinking,
 				'phpbb_gallery_hotlinking_domains' => '',
 				'server_name' => 'gallery.example.com',
-			];
+			]);
 			$this->request = $request;
 			$this->data = ['image_filename' => 'original.jpg'];
-			$this->error = null;
+			$this->error = '';
 			$this->check_hot_link();
 
 			return ['error' => $this->error, 'data' => $this->data];
