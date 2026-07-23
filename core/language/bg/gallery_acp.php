@@ -23,16 +23,16 @@ if (empty($lang) || !is_array($lang))
 	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ACP_GALLERY_OVERVIEW'         => 'phpBB Gallery',
 	'ACP_GALLERY_OVERVIEW_EXPLAIN' => 'Тук се намират някои от статистиките за вашата галерия.',
 
 	// File dirs states
-	'ACP_FILES_DIR_STATE'          => '<strong>./files/</strong> state',
-	'ACP_CORE_DIR_STATE'           => '<strong>./files/phpbbgallery/core/</strong> state',
-	'ACP_SOURCE_DIR_STATE'         => '<strong>./files/phpbbgallery/core/source/</strong> state',
-	'ACP_MEDIUM_DIR_STATE'         => '<strong>./files/phpbbgallery/core/medium/</strong> state',
-	'ACP_MINI_DIR_STATE'           => '<strong>./files/phpbbgallery/core/mini/</strong> state',
+	'ACP_FILES_DIR_STATE'  => '<strong>./files/</strong> state',
+	'ACP_CORE_DIR_STATE'   => '<strong>./files/phpbbgallery/core/</strong> state',
+	'ACP_SOURCE_DIR_STATE' => '<strong>./files/phpbbgallery/core/source/</strong> state',
+	'ACP_MEDIUM_DIR_STATE' => '<strong>./files/phpbbgallery/core/medium/</strong> state',
+	'ACP_MINI_DIR_STATE'   => '<strong>./files/phpbbgallery/core/mini/</strong> state',
 
 	'ADD_ALBUM_ON_TOP'                  => 'Добави албума от горе',
 	'ADD_PERMISSIONS'                   => 'Добави права',
@@ -155,7 +155,7 @@ $lang = array_merge($lang, array(
 	'GALLERY_INDEX'                        => 'Gallery-Index',
 	'GALLERY_PURGE_CACHE_EXPLAIN'          => 'Ако зиползвате Thumbnail Cache опцията, ще се наложи да изчистите thumbnail кеша след промяна на настройките на thumbnail-ите в "Настройки на галерията за да ги накрате да се презаредят.',
 	'GALLERY_RESYNC_ALBUMS_TO_CPF'         => 'Ресинхронизирай личните албуми към профилни полета',
-	'GALLERY_RESYNC_ALBUMS_TO_CPF_EXPLAIN'  => 'Това действие ще въведе на ново всички top level лични албуми като полета за контакт в профила. <br> Внимание! Ако имате прекалено много top level лични албуми, това действие може да отнеме малко повече време!',
+	'GALLERY_RESYNC_ALBUMS_TO_CPF_EXPLAIN' => 'Това действие ще въведе на ново всички top level лични албуми като полета за контакт в профила. <br> Внимание! Ако имате прекалено много top level лични албуми, това действие може да отнеме малко повече време!',
 	'GALLERY_RESYNC_ALBUMS_TO_CPF_CONFIRM' => 'Сигурни ли сте, че желаете да ресинхронизирате top level личните албуми към контактни полета на профила?',
 	'GALLERY_STATS'                        => 'Статистики на галерията',
 	'GALLERY_VERSION'                      => 'Весия',
@@ -284,7 +284,7 @@ $lang = array_merge($lang, array(
 	'RECENT_ON_INDEX_COUNT'    => 'Брой последни изображения',
 	'PHPBB_INTEGRATION'        => 'Интеграция в phpBB',
 	'PNG_ALLOWED'              => 'Разрешено качването на PNG файлове',
-	'WEBP_ALLOWED'              => 'Разрешено качването на WEBP файлове',
+	'WEBP_ALLOWED'             => 'Разрешено качването на WEBP файлове',
 	'PURGED_CACHE'             => 'Кешът е прочистен',
 
 	'RATE_SCALE'                 => 'Скала за оценяване',
@@ -406,12 +406,12 @@ $lang = array_merge($lang, array(
 	'NO_WRITE_ACCESS' => 'Няма права за запис',
 	'WRITE_ACCESS'    => 'OK',
 	'DIR_CREATED'     => 'Директорията е създадена',
-));
+]);
 
 /**
  * A copy of Handyman` s MOD version check, to view it on the gallery overview
  */
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ANNOUNCEMENT_TOPIC'   => 'Release Announcement',
 	'CURRENT_VERSION'      => 'Current Version',
 	'DOWNLOAD_LATEST'      => 'Download Latest Version',
@@ -421,4 +421,4 @@ $lang = array_merge($lang, array(
 	'RELEASE_ANNOUNCEMENT' => 'Annoucement Topic',
 	'UP_TO_DATE'           => '%s is up to date',
 	'VERSION_CHECK'        => 'MOD Version Check',
-));
+]);

@@ -40,7 +40,7 @@ if (empty($lang) || !is_array($lang))
 //
 
 // Adding the permissions
-$lang = array_merge($lang, array(
-	'ACL_A_GALLERY_MANAGE'		=> 'Peut gérer les paramètres de la galerie photos.',
-	'ACL_A_GALLERY_ALBUMS'		=> 'Peut gérer (ajouter, modifier & supprimer) les albums et les permissions.',
-));
+$lang = array_merge($lang, [
+	'ACL_A_GALLERY_MANAGE' => 'Peut gérer les paramètres de la galerie photos.',
+	'ACL_A_GALLERY_ALBUMS' => 'Peut gérer (ajouter, modifier & supprimer) les albums et les permissions.',
+]);

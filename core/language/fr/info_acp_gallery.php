@@ -39,7 +39,7 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ACP_GALLERY_ALBUM_MANAGEMENT'       => 'Gestion des albums',
 	'ACP_GALLERY_ALBUM_PERMISSIONS'      => 'Permissions',
 	'ACP_GALLERY_ALBUM_PERMISSIONS_COPY' => 'Copier les permissions',
@@ -49,14 +49,14 @@ $lang = array_merge($lang, array(
 	'ACP_GALLERY_MANAGE_ALBUMS'          => 'Gérer les albums',
 	'ACP_GALLERY_OVERVIEW'               => 'Vue d’ensemble',
 
-	'GALLERY'                  => 'Galerie',
-	'GALLERY_EXPLAIN'          => 'Images de la Galerie',
-	'GALLERY_HELPLINE_ALBUM'   => 'Images de la Galerie : au moyen de ce BBCode [image]image_id[/image], ajoutez dans votre message une image de la galerie.',
-	'GALLERY_POPUP'            => 'Galerie',
-	'GALLERY_POPUP_HELPLINE'   => 'Ouvrir une nouvelle fenêtre, où vous pouvez sélectionner vos images récentes et charger de nouvelles images.',
+	'GALLERY'                => 'Galerie',
+	'GALLERY_EXPLAIN'        => 'Images de la Galerie',
+	'GALLERY_HELPLINE_ALBUM' => 'Images de la Galerie : au moyen de ce BBCode [image]image_id[/image], ajoutez dans votre message une image de la galerie.',
+	'GALLERY_POPUP'          => 'Galerie',
+	'GALLERY_POPUP_HELPLINE' => 'Ouvrir une nouvelle fenêtre, où vous pouvez sélectionner vos images récentes et charger de nouvelles images.',
 
 	// Please do not change the copyright.
-	'GALLERY_COPYRIGHT'        => 'Powered by <a href="https://github.com/satanasov/phpbbgallery">phpBB Gallery</a> &copy; 2014–2026',
+	'GALLERY_COPYRIGHT' => 'Powered by <a href="https://github.com/satanasov/phpbbgallery">phpBB Gallery</a> &copy; 2014–2026',
 
 	// A little line where you can give yourself some credits on the translation.
 	'GALLERY_TRANSLATION_INFO' => '« phpBB Gallery » - Traduction française par <a href="http://www.lestontonsfraggers.com">pokyto aka le.poke</a> (inspiré par <a href="http://www.foruminfopc.fr/">darky</a> et l’<a href="http://www.phpbb-fr.com/">équipe phpbb-fr.com</a>) & par <a href="http://www.galixte.com" title="Galixte’s Projects">Galixte</a>',
@@ -67,8 +67,8 @@ $lang = array_merge($lang, array(
 	'PERSONAL_ALBUM' => 'Album personnel',
 	'PHPBB_GALLERY'  => 'Galerie phpBB',
 
-	'TOTAL_IMAGES_SPRINTF' => array(
+	'TOTAL_IMAGES_SPRINTF' => [
 		0 => '<strong>0</strong> images',
 		1 => '<strong>%d</strong> images',
-	),
-));
+	],
+]);

@@ -23,16 +23,16 @@ if (empty($lang) || !is_array($lang))
 	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ACP_GALLERY_OVERVIEW'         => 'phpBB Galerij',
 	'ACP_GALLERY_OVERVIEW_EXPLAIN' => 'Hier zijn een aantal statistieken van je gelerij.',
 
 	// File dirs states
-	'ACP_FILES_DIR_STATE'          => '<strong>./files/</strong> state',
-	'ACP_CORE_DIR_STATE'           => '<strong>./files/phpbbgallery/core/</strong> state',
-	'ACP_SOURCE_DIR_STATE'         => '<strong>./files/phpbbgallery/core/source/</strong> state',
-	'ACP_MEDIUM_DIR_STATE'         => '<strong>./files/phpbbgallery/core/medium/</strong> state',
-	'ACP_MINI_DIR_STATE'           => '<strong>./files/phpbbgallery/core/mini/</strong> state',
+	'ACP_FILES_DIR_STATE'  => '<strong>./files/</strong> state',
+	'ACP_CORE_DIR_STATE'   => '<strong>./files/phpbbgallery/core/</strong> state',
+	'ACP_SOURCE_DIR_STATE' => '<strong>./files/phpbbgallery/core/source/</strong> state',
+	'ACP_MEDIUM_DIR_STATE' => '<strong>./files/phpbbgallery/core/medium/</strong> state',
+	'ACP_MINI_DIR_STATE'   => '<strong>./files/phpbbgallery/core/mini/</strong> state',
 
 	'ADD_ALBUM_ON_TOP'                  => 'Album bovenaan toevoegen',
 	'ADD_PERMISSIONS'                   => 'Voeg permissies toe',
@@ -155,7 +155,7 @@ $lang = array_merge($lang, array(
 	'GALLERY_INDEX'                        => 'Galerij-index',
 	'GALLERY_PURGE_CACHE_EXPLAIN'          => 'Als je gebruikt maakt van de Miniatuur Buffer mogelijkheid moet je de Miniatuur Buffer legen na het wijzigen van de miniatuur-instellingen in “Album Instellingen“ om ze opnieuw aan te laten maken.',
 	'GALLERY_RESYNC_ALBUMS_TO_CPF'         => 'Resync personal albums to profile fields',
-	'GALLERY_RESYNC_ALBUMS_TO_CPF_EXPLAIN'  => 'This action will resync all top level personal albums as contact based custom profile field. <br> WARNING! If you have too many top level personal albums this could take some time!',
+	'GALLERY_RESYNC_ALBUMS_TO_CPF_EXPLAIN' => 'This action will resync all top level personal albums as contact based custom profile field. <br> WARNING! If you have too many top level personal albums this could take some time!',
 	'GALLERY_RESYNC_ALBUMS_TO_CPF_CONFIRM' => 'Are you sure that you want to resync all top level personal albums as contact CPFs?',
 	'GALLERY_STATS'                        => 'Galerijstatistieken',
 	'GALLERY_VERSION'                      => 'Galerijversie',
@@ -406,12 +406,12 @@ $lang = array_merge($lang, array(
 	'NO_WRITE_ACCESS' => 'Geen schijf rechten',
 	'WRITE_ACCESS'    => 'OK',
 	'DIR_CREATED'     => 'Map aangemaakt',
-));
+]);
 
 /**
  * A copy of Handyman` s MOD version check, to view it on the gallery overview
  */
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ANNOUNCEMENT_TOPIC'   => 'Release Aankondiging',
 	'CURRENT_VERSION'      => 'Huidige versie',
 	'DOWNLOAD_LATEST'      => 'Download Laatste versie',
@@ -421,4 +421,4 @@ $lang = array_merge($lang, array(
 	'RELEASE_ANNOUNCEMENT' => 'Aankondigings onderwerp',
 	'UP_TO_DATE'           => '%s is up-to-date',
 	'VERSION_CHECK'        => 'EXT Versie Controle',
-));
+]);

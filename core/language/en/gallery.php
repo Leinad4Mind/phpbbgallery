@@ -22,7 +22,7 @@ if (empty($lang) || !is_array($lang))
 	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ADD_UPLOAD_FIELD'                 => 'Add more upload fields',
 	'ALBUM'                            => 'Album',
 	'ALBUM_DESC'                       => 'Album description',
@@ -40,28 +40,28 @@ $lang = array_merge($lang, array(
 	'ALL'                              => 'All',
 	'ALL_IMAGES'                       => 'All image',
 	'ALLOW_COMMENTS'                   => 'Allow comments for this image.',
-	'ALLOW_COMMENTS_ARY'               => array(
+	'ALLOW_COMMENTS_ARY'               => [
 		0 => 'Allow comments for this image.',
 		2 => 'Allow comments for these images.',
-	),
-	'ALLOWED_FILETYPES'                => 'Allowed filetypes',
-	'APPROVE'                          => 'Approve',
-	'DISAPPROVE'                       => 'Disapprove',
-	'APPROVE_IMAGE'                    => 'Approve image',
+	],
+	'ALLOWED_FILETYPES' => 'Allowed filetypes',
+	'APPROVE'           => 'Approve',
+	'DISAPPROVE'        => 'Disapprove',
+	'APPROVE_IMAGE'     => 'Approve image',
 
 	//@todo
-	'ALBUM_COMMENT_CAN'                => 'You <strong>can</strong> post comments to images in this album',
-	'ALBUM_COMMENT_CANNOT'             => 'You <strong>cannot</strong> post comments to images in this album',
-	'ALBUM_DELETE_CAN'                 => 'You <strong>can</strong> delete your images in this album',
-	'ALBUM_DELETE_CANNOT'              => 'You <strong>cannot</strong> delete your images in this album',
-	'ALBUM_EDIT_CAN'                   => 'You <strong>can</strong> edit your images in this album',
-	'ALBUM_EDIT_CANNOT'                => 'You <strong>cannot</strong> edit your images in this album',
-	'ALBUM_RATE_CAN'                   => 'You <strong>can</strong> rate images in this album',
-	'ALBUM_RATE_CANNOT'                => 'You <strong>cannot</strong> rate images in this album',
-	'ALBUM_UPLOAD_CAN'                 => 'You <strong>can</strong> upload new images in this album',
-	'ALBUM_UPLOAD_CANNOT'              => 'You <strong>cannot</strong> upload new images in this album',
-	'ALBUM_VIEW_CAN'                   => 'You <strong>can</strong> view images in this album',
-	'ALBUM_VIEW_CANNOT'                => 'You <strong>cannot</strong> view images in this album',
+	'ALBUM_COMMENT_CAN'    => 'You <strong>can</strong> post comments to images in this album',
+	'ALBUM_COMMENT_CANNOT' => 'You <strong>cannot</strong> post comments to images in this album',
+	'ALBUM_DELETE_CAN'     => 'You <strong>can</strong> delete your images in this album',
+	'ALBUM_DELETE_CANNOT'  => 'You <strong>cannot</strong> delete your images in this album',
+	'ALBUM_EDIT_CAN'       => 'You <strong>can</strong> edit your images in this album',
+	'ALBUM_EDIT_CANNOT'    => 'You <strong>cannot</strong> edit your images in this album',
+	'ALBUM_RATE_CAN'       => 'You <strong>can</strong> rate images in this album',
+	'ALBUM_RATE_CANNOT'    => 'You <strong>cannot</strong> rate images in this album',
+	'ALBUM_UPLOAD_CAN'     => 'You <strong>can</strong> upload new images in this album',
+	'ALBUM_UPLOAD_CANNOT'  => 'You <strong>cannot</strong> upload new images in this album',
+	'ALBUM_VIEW_CAN'       => 'You <strong>can</strong> view images in this album',
+	'ALBUM_VIEW_CANNOT'    => 'You <strong>cannot</strong> view images in this album',
 
 	'BAD_UPLOAD_FILE_SIZE'  => 'Your uploaded file is too large',
 	'BBCODES'               => 'BBCodes',
@@ -116,7 +116,7 @@ $lang = array_merge($lang, array(
 	'DESCRIPTION_LENGTH'      => 'Enter your descriptions here, it may contain no more than <strong>%d</strong> characters.',
 	'DETAILS'                 => 'Details',
 	'DISALLOWED_EXTENSION'    => 'This image extension is not allowed',
-	'DO_NOT_RATE_IMAGE'         => 'Don’t rate image',
+	'DO_NOT_RATE_IMAGE'       => 'Don’t rate image',
 
 	'EDIT_COMMENT'             => 'Edit comment',
 	'EDIT_IMAGE'               => 'Edit',
@@ -215,31 +215,31 @@ $lang = array_merge($lang, array(
 	'QUOTA_REACHED' => 'The number of images you are allowed to upload has been reached.',
 	'QUOTE_COMMENT' => 'Quote comment',
 
-	'RANDOM_IMAGES'       => 'Random images',
-	'RATE_IMAGE'          => 'Rate the image',
-	'RATES_COUNT'         => 'Number of ratings',
-	'RATING'              => 'Rating',
-	'RATING_STRINGS'      => array(
+	'RANDOM_IMAGES'  => 'Random images',
+	'RATE_IMAGE'     => 'Rate the image',
+	'RATES_COUNT'    => 'Number of ratings',
+	'RATING'         => 'Rating',
+	'RATING_STRINGS' => [
 		0 => 'not rated',
 		1 => '%2$s (1 rating)',
 		2 => '%2$s (%1$s ratings)',
-	),
-	'RATING_STRINGS_USER' => array(
+	],
+	'RATING_STRINGS_USER' => [
 		1 => '%2$s (1 rating, your rating: %3$s)',
 		2 => '%2$s (%1$s ratings, your rating: %3$s)',
-	),
-	'RATING_SUCCESSFUL'   => 'The image has been rated successfully.',
-	'READ_REPORT'         => 'Read report',
-	'RECENT_COMMENTS'     => 'Recent comments',
-	'RECENT_IMAGES'       => 'Recent Images',
-	'REPORT_IMAGE'        => 'Report image',
-	'RETURN_ALBUM'        => '%sReturn to the album last visited%s',
-	'ROTATE_IMAGE'        => 'Rotate image',
-	'ROTATE_LEFT'         => '90° left',
-	'ROTATE_NONE'         => 'none',
-	'ROTATE_RIGHT'        => '90° right',
-	'ROTATE_UPSIDEDOWN'   => '180° upside-down',
-	'RETURN_TO_GALLERY'   => 'Return to Gallery',
+	],
+	'RATING_SUCCESSFUL' => 'The image has been rated successfully.',
+	'READ_REPORT'       => 'Read report',
+	'RECENT_COMMENTS'   => 'Recent comments',
+	'RECENT_IMAGES'     => 'Recent Images',
+	'REPORT_IMAGE'      => 'Report image',
+	'RETURN_ALBUM'      => '%sReturn to the album last visited%s',
+	'ROTATE_IMAGE'      => 'Rotate image',
+	'ROTATE_LEFT'       => '90° left',
+	'ROTATE_NONE'       => 'none',
+	'ROTATE_RIGHT'      => '90° right',
+	'ROTATE_UPSIDEDOWN' => '180° upside-down',
+	'RETURN_TO_GALLERY' => 'Return to Gallery',
 
 	'SEARCH_ALBUM'                      => 'Search this album…',
 	'SEARCH_ALBUMS'                     => 'Search in albums',
@@ -272,28 +272,28 @@ $lang = array_merge($lang, array(
 	'SUBALBUMS'                         => 'Subalbums',
 	'SUBALBUM'                          => 'Subalbum',
 
-	'THUMBNAIL_SIZE'            => 'Thumbnail size (pixels)',
-	'TOTAL_COMMENTS_SPRINTF'    => array(
+	'THUMBNAIL_SIZE'         => 'Thumbnail size (pixels)',
+	'TOTAL_COMMENTS_SPRINTF' => [
 		0 => 'Total comments: <strong>0</strong>',
 		1 => 'Total comments: <strong>%d</strong>',
 		2 => 'Total comments: <strong>%d</strong>',
-	),
-	'TOTAL_IMAGES'              => 'Total images',
-	'TOTAL_IMAGES_SPRINTF'      => array(
+	],
+	'TOTAL_IMAGES'         => 'Total images',
+	'TOTAL_IMAGES_SPRINTF' => [
 		0 => 'No images',
 		1 => '%d image',
 		2 => '%d images',
-	),
-	'TOTAL_PEGAS_SHORT_SPRINTF' => array(
+	],
+	'TOTAL_PEGAS_SHORT_SPRINTF' => [
 		0 => '0 personal galleries',
 		1 => '%d personal gallery',
 		2 => '%d personal galleries',
-	),
-	'TOTAL_PEGAS_SPRINTF'       => array(
+	],
+	'TOTAL_PEGAS_SPRINTF' => [
 		0 => 'Total personal galleries: <strong>0</strong>',
 		1 => 'Total personal galleries: <strong>%d</strong>',
 		2 => 'Total personal galleries: <strong>%d</strong>',
-	),
+	],
 
 	'UNLOCK_IMAGE'              => 'Unlock image',
 	'UNWATCH_ALBUM'             => 'Unsubscribe album',
@@ -312,31 +312,31 @@ $lang = array_merge($lang, array(
 	'UPLOADED_ON_DATE'          => 'Uploaded on',
 	'USE_SAME_NAME'             => 'Use the same image name and description for all images.',
 	'USE_NUM'                   => 'Add {NUM} for numbers. Start counting at:',
-	'USER_REACHED_QUOTA'        => array(
+	'USER_REACHED_QUOTA'        => [
 		0 => 'You are not allowed to upload <strong>any</strong> images.<br />Please contact the administrator for more information.',
 		1 => 'You are not allowed to upload more than <strong>1</strong> image.<br />Please contact the administrator for more information.',
 		2 => 'You are not allowed to upload more than <strong>%s</strong> images.<br />Please contact the administrator for more information.',
-	),
-	'USER_REACHED_QUOTA_SHORT'  => array(
+	],
+	'USER_REACHED_QUOTA_SHORT' => [
 		0 => 'You are not allowed to upload <strong>any</strong> images.',
 		1 => 'You are not allowed to upload more than <strong>1</strong> image.',
 		2 => 'You are not allowed to upload more than <strong>%s</strong> images.',
-	),
-	'USERNAME_BEGINS_WITH'      => 'Username begins with',
-	'USERS_PERSONAL_ALBUMS'     => 'Users Personal Albums',
+	],
+	'USERNAME_BEGINS_WITH'  => 'Username begins with',
+	'USERS_PERSONAL_ALBUMS' => 'Users Personal Albums',
 
 	'VISIT_GALLERY' => 'Visit user gallery',
 
-	'VIEW_ALBUM'            => 'View album',
-	'VIEW_ALBUM_IMAGES'     => array(
+	'VIEW_ALBUM'        => 'View album',
+	'VIEW_ALBUM_IMAGES' => [
 		1 => '1 image',
 		2 => '%s images',
-	),
-	'VIEW_IMAGE'            => 'View image',
-	'VIEW_IMAGE_COMMENTS'   => array(
+	],
+	'VIEW_IMAGE'          => 'View image',
+	'VIEW_IMAGE_COMMENTS' => [
 		1 => '1 comment',
 		2 => '%s comments',
-	),
+	],
 	'VIEW_LATEST_IMAGE'     => 'View the latest image',
 	'VIEW_SEARCH_RECENT'    => 'View recent images',
 	'VIEW_SEARCH_RANDOM'    => 'View random images',
@@ -358,10 +358,10 @@ $lang = array_merge($lang, array(
 	'YOUR_PERSONAL_ALBUM' => 'Your Personal Album',
 	'YOUR_RATING'         => 'Your rating',
 
-	'IMAGES_MOVED' => array(
+	'IMAGES_MOVED' => [
 		1 => 'Image moved',
 		2 => '%s images moved',
-	),
+	],
 
 	'QUICK_MOD'        => 'Select moderator action',
 	'WRONG_FILESIZE'   => 'Image is bigger then the limit!',
@@ -369,5 +369,5 @@ $lang = array_merge($lang, array(
 	'NO_UNREAD_IMAGES' => 'No unviewed images',
 
 	// Versions 1.2.1 additions
-	'GALLERY_DROP'     => 'Drop your images here',
-));
+	'GALLERY_DROP' => 'Drop your images here',
+]);

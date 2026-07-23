@@ -22,16 +22,16 @@ if (empty($lang) || !is_array($lang))
 	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ACP_GALLERY_OVERVIEW'         => 'phpBB Gallery',
 	'ACP_GALLERY_OVERVIEW_EXPLAIN' => 'Here are some statistics about your gallery.',
 
 	// File dirs states
-	'ACP_FILES_DIR_STATE'          => '<strong>./files/</strong> state',
-	'ACP_CORE_DIR_STATE'           => '<strong>./files/phpbbgallery/core/</strong> state',
-	'ACP_SOURCE_DIR_STATE'         => '<strong>./files/phpbbgallery/core/source/</strong> state',
-	'ACP_MEDIUM_DIR_STATE'         => '<strong>./files/phpbbgallery/core/medium/</strong> state',
-	'ACP_MINI_DIR_STATE'           => '<strong>./files/phpbbgallery/core/mini/</strong> state',
+	'ACP_FILES_DIR_STATE'  => '<strong>./files/</strong> state',
+	'ACP_CORE_DIR_STATE'   => '<strong>./files/phpbbgallery/core/</strong> state',
+	'ACP_SOURCE_DIR_STATE' => '<strong>./files/phpbbgallery/core/source/</strong> state',
+	'ACP_MEDIUM_DIR_STATE' => '<strong>./files/phpbbgallery/core/medium/</strong> state',
+	'ACP_MINI_DIR_STATE'   => '<strong>./files/phpbbgallery/core/mini/</strong> state',
 
 	'ADD_ALBUM_ON_TOP'                  => 'Add album at the top',
 	'ADD_PERMISSIONS'                   => 'Add Permissions',
@@ -154,7 +154,7 @@ $lang = array_merge($lang, array(
 	'GALLERY_INDEX'                        => 'Gallery-Index',
 	'GALLERY_PURGE_CACHE_EXPLAIN'          => 'If you use the Thumbnail Cache feature you must clear your thumbnail cache after changing your thumbnail settings in “Gallery configuration“ to make them regenerated.',
 	'GALLERY_RESYNC_ALBUMS_TO_CPF'         => 'Resync personal albums to profile fields',
-	'GALLERY_RESYNC_ALBUMS_TO_CPF_EXPLAIN'  => 'This action will resync all top level personal albums as contact based custom profile field. <br> WARNING! If you have too many top level personal albums this could take some time!',
+	'GALLERY_RESYNC_ALBUMS_TO_CPF_EXPLAIN' => 'This action will resync all top level personal albums as contact based custom profile field. <br> WARNING! If you have too many top level personal albums this could take some time!',
 	'GALLERY_RESYNC_ALBUMS_TO_CPF_CONFIRM' => 'Are you sure that you want to resync all top level personal albums as contact CPFs?',
 	'GALLERY_STATS'                        => 'Gallery statistics',
 	'GALLERY_VERSION'                      => 'Gallery version',
@@ -405,12 +405,12 @@ $lang = array_merge($lang, array(
 	'NO_WRITE_ACCESS' => 'No write access',
 	'WRITE_ACCESS'    => 'OK',
 	'DIR_CREATED'     => 'Directory created',
-));
+]);
 
 /**
  * A copy of Handyman` s MOD version check, to view it on the gallery overview
  */
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ANNOUNCEMENT_TOPIC'   => 'Release Announcement',
 	'CURRENT_VERSION'      => 'Current Version',
 	'DOWNLOAD_LATEST'      => 'Download Latest Version',
@@ -420,4 +420,4 @@ $lang = array_merge($lang, array(
 	'RELEASE_ANNOUNCEMENT' => 'Announcement Topic',
 	'UP_TO_DATE'           => '%s is up to date',
 	'VERSION_CHECK'        => 'MOD Version Check',
-));
+]);

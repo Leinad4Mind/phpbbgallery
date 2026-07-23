@@ -22,7 +22,7 @@ if (empty($lang) || !is_array($lang))
 	$lang = [];
 }
 // Adding the permissions
-$lang = array_merge($lang, array(
-	'ACL_A_GALLERY_MANAGE'		=> 'Может настраивать галерею',
-	'ACL_A_GALLERY_ALBUMS'		=> 'Может добавлять/редактировать альбомы и права доступа',
-));
+$lang = array_merge($lang, [
+	'ACL_A_GALLERY_MANAGE' => 'Может настраивать галерею',
+	'ACL_A_GALLERY_ALBUMS' => 'Может добавлять/редактировать альбомы и права доступа',
+]);

@@ -23,7 +23,7 @@ if (empty($lang) || !is_array($lang))
 	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ADD_UPLOAD_FIELD'                 => 'Добавете още файлове за качване',
 	'ALBUM'                            => 'Албум',
 	'ALBUM_DESC'                       => 'Описание на албума',
@@ -41,28 +41,28 @@ $lang = array_merge($lang, array(
 	'ALL'                              => 'Всички',
 	'ALL_IMAGES'                       => 'Всички изображения',
 	'ALLOW_COMMENTS'                   => 'Позволи коментарите за това изображение.',
-	'ALLOW_COMMENTS_ARY'               => array(
+	'ALLOW_COMMENTS_ARY'               => [
 		0 => 'Позволи коментарите за това изображение.',
 		2 => 'Позволи коментарите за тези изображения.',
-	),
-	'ALLOWED_FILETYPES'                => 'Позволени типове',
-	'APPROVE'                          => 'Одобри',
-	'DISAPPROVE'                       => 'Отхвърли',
-	'APPROVE_IMAGE'                    => 'Одобри изображение',
+	],
+	'ALLOWED_FILETYPES' => 'Позволени типове',
+	'APPROVE'           => 'Одобри',
+	'DISAPPROVE'        => 'Отхвърли',
+	'APPROVE_IMAGE'     => 'Одобри изображение',
 
 	//@todo
-	'ALBUM_COMMENT_CAN'                => '<strong>Можете</strong> да поствате коментари на изображенията в този албум',
-	'ALBUM_COMMENT_CANNOT'             => '<strong>Не можете</strong> да поствате коментари на изображенията в този албум',
-	'ALBUM_DELETE_CAN'                 => '<strong>Можете</strong> да триете собствените си изображения от този албум',
-	'ALBUM_DELETE_CANNOT'              => '<strong>Не можете</strong> да триете собствените си изображения от този албум',
-	'ALBUM_EDIT_CAN'                   => '<strong>Можете</strong> да променяте собствените си изборажения в този албум',
-	'ALBUM_EDIT_CANNOT'                => '<strong>Не можете</strong> да променяте собствените си изборажения в този албум',
-	'ALBUM_RATE_CAN'                   => '<strong>Можете</strong> да оценявате изображения в този албум',
-	'ALBUM_RATE_CANNOT'                => '<strong>Не можете</strong> да оценявате изображения в този албум',
-	'ALBUM_UPLOAD_CAN'                 => '<strong>Можете</strong> да качвате нови изборажения в този албум',
-	'ALBUM_UPLOAD_CANNOT'              => '<strong>Не можете</strong> да качвате нови изборажения в този албум',
-	'ALBUM_VIEW_CAN'                   => '<strong>Можете</strong> да виждате изображенията в този албум',
-	'ALBUM_VIEW_CANNOT'                => '<strong>Не можете</strong> да виждате изображенията в този албум',
+	'ALBUM_COMMENT_CAN'    => '<strong>Можете</strong> да поствате коментари на изображенията в този албум',
+	'ALBUM_COMMENT_CANNOT' => '<strong>Не можете</strong> да поствате коментари на изображенията в този албум',
+	'ALBUM_DELETE_CAN'     => '<strong>Можете</strong> да триете собствените си изображения от този албум',
+	'ALBUM_DELETE_CANNOT'  => '<strong>Не можете</strong> да триете собствените си изображения от този албум',
+	'ALBUM_EDIT_CAN'       => '<strong>Можете</strong> да променяте собствените си изборажения в този албум',
+	'ALBUM_EDIT_CANNOT'    => '<strong>Не можете</strong> да променяте собствените си изборажения в този албум',
+	'ALBUM_RATE_CAN'       => '<strong>Можете</strong> да оценявате изображения в този албум',
+	'ALBUM_RATE_CANNOT'    => '<strong>Не можете</strong> да оценявате изображения в този албум',
+	'ALBUM_UPLOAD_CAN'     => '<strong>Можете</strong> да качвате нови изборажения в този албум',
+	'ALBUM_UPLOAD_CANNOT'  => '<strong>Не можете</strong> да качвате нови изборажения в този албум',
+	'ALBUM_VIEW_CAN'       => '<strong>Можете</strong> да виждате изображенията в този албум',
+	'ALBUM_VIEW_CANNOT'    => '<strong>Не можете</strong> да виждате изображенията в този албум',
 
 	'BAD_UPLOAD_FILE_SIZE'  => 'Качения от вас фаил е твърде голям',
 	'BBCODES'               => 'BBCodes',
@@ -117,7 +117,7 @@ $lang = array_merge($lang, array(
 	'DESCRIPTION_LENGTH'      => 'Enter your descriptions here, it may contain no more than <strong>%d</strong> characters.',
 	'DETAILS'                 => 'Details',
 	'DISALLOWED_EXTENSION'    => 'Не разрешено разширение на изборажението',
-	'DO_NOT_RATE_IMAGE'         => 'Don’t rate image',
+	'DO_NOT_RATE_IMAGE'       => 'Don’t rate image',
 
 	'EDIT_COMMENT'             => 'Edit comment',
 	'EDIT_IMAGE'               => 'Edit',
@@ -216,31 +216,31 @@ $lang = array_merge($lang, array(
 	'QUOTA_REACHED' => 'Достигнахте броя изображения, които ви е позволено да качвате.',
 	'QUOTE_COMMENT' => 'Цитирай коментара',
 
-	'RANDOM_IMAGES'       => 'Случайни изображения',
-	'RATE_IMAGE'          => 'Оцени изображението',
-	'RATES_COUNT'         => 'Брой оценки',
-	'RATING'              => 'Оценка',
-	'RATING_STRINGS'      => array(
+	'RANDOM_IMAGES'  => 'Случайни изображения',
+	'RATE_IMAGE'     => 'Оцени изображението',
+	'RATES_COUNT'    => 'Брой оценки',
+	'RATING'         => 'Оценка',
+	'RATING_STRINGS' => [
 		0 => 'няма оценки',
 		1 => '%2$s (1 оценка)',
 		2 => '%2$s (%1$s оценки)',
-	),
-	'RATING_STRINGS_USER' => array(
+	],
+	'RATING_STRINGS_USER' => [
 		1 => '%2$s (1 оценка, вашата оценка: %3$s)',
 		2 => '%2$s (%1$s оценки, вашата оценка: %3$s)',
-	),
-	'RATING_SUCCESSFUL'   => 'Изображението беше успешно оценено.',
-	'READ_REPORT'         => 'Прегледай доклада',
-	'RECENT_COMMENTS'     => 'Скорошни коментари',
-	'RECENT_IMAGES'       => 'Скорошни изображения',
-	'REPORT_IMAGE'        => 'Докладвай изображение',
-	'RETURN_ALBUM'        => '%sВърни се в последно поетения албум%s',
-	'ROTATE_IMAGE'        => 'Завърти изображението',
-	'ROTATE_LEFT'         => '90° ляво',
-	'ROTATE_NONE'         => 'без',
-	'ROTATE_RIGHT'        => '90° дясно',
-	'ROTATE_UPSIDEDOWN'   => '180° на обратно',
-	'RETURN_TO_GALLERY'   => 'Обратно към Галерията',
+	],
+	'RATING_SUCCESSFUL' => 'Изображението беше успешно оценено.',
+	'READ_REPORT'       => 'Прегледай доклада',
+	'RECENT_COMMENTS'   => 'Скорошни коментари',
+	'RECENT_IMAGES'     => 'Скорошни изображения',
+	'REPORT_IMAGE'      => 'Докладвай изображение',
+	'RETURN_ALBUM'      => '%sВърни се в последно поетения албум%s',
+	'ROTATE_IMAGE'      => 'Завърти изображението',
+	'ROTATE_LEFT'       => '90° ляво',
+	'ROTATE_NONE'       => 'без',
+	'ROTATE_RIGHT'      => '90° дясно',
+	'ROTATE_UPSIDEDOWN' => '180° на обратно',
+	'RETURN_TO_GALLERY' => 'Обратно към Галерията',
 
 	'SEARCH_ALBUM'                      => 'Търси в този албум ...',
 	'SEARCH_ALBUMS'                     => 'Търси в албуми',
@@ -273,28 +273,28 @@ $lang = array_merge($lang, array(
 	'SUBALBUMS'                         => 'Подалбуми',
 	'SUBALBUM'                          => 'Подалбум',
 
-	'THUMBNAIL_SIZE'            => 'Thumbnail size (pixels)',
-	'TOTAL_COMMENTS_SPRINTF'    => array(
+	'THUMBNAIL_SIZE'         => 'Thumbnail size (pixels)',
+	'TOTAL_COMMENTS_SPRINTF' => [
 		0 => '<strong>Няма</strong> коментари',
 		1 => 'Общо <strong>%d</strong> коментар',
 		2 => 'Общо <strong>%d</strong> коментара',
-	),
-	'TOTAL_IMAGES'              => 'Общо изображения',
-	'TOTAL_IMAGES_SPRINTF'      => array(
+	],
+	'TOTAL_IMAGES'         => 'Общо изображения',
+	'TOTAL_IMAGES_SPRINTF' => [
 		0 => 'Няма изображения',
 		1 => '%d изображение',
 		2 => '%d изображения',
-	),
-	'TOTAL_PEGAS_SHORT_SPRINTF' => array(
+	],
+	'TOTAL_PEGAS_SHORT_SPRINTF' => [
 		0 => '0 лични галерии',
 		1 => '%d лична галерия',
 		2 => '%d лични галерии',
-	),
-	'TOTAL_PEGAS_SPRINTF'       => array(
+	],
+	'TOTAL_PEGAS_SPRINTF' => [
 		0 => '<strong>Няма</strong> лични галерии',
 		1 => 'Общо <strong>%d</strong> лична галерия',
 		2 => 'Общо <strong>%d</strong> лични галерии',
-	),
+	],
 
 	'UNLOCK_IMAGE'              => 'Отключи изображение',
 	'UNWATCH_ALBUM'             => 'Махни абонамента за албум',
@@ -313,29 +313,29 @@ $lang = array_merge($lang, array(
 	'UPLOADED_ON_DATE'          => 'Качена на',
 	'USE_SAME_NAME'             => 'Използвай същото име и описание за всички изображения.',
 	'USE_NUM'                   => 'Добавете {NUM} за номера. Започни броенето от:',
-	'USER_REACHED_QUOTA'        => array(
+	'USER_REACHED_QUOTA'        => [
 		0 => 'Не ви е позволено да качвате <strong>никакви</strong> изображения.<br />Моля свържете се с администратор за повече информация.',
 		1 => 'Не ви е позволено да качвате повече от <strong>1</strong> изображения.<br />Моля свържете се с администратор за повече информация.',
 		2 => 'Не ви е позволено да качвате повече от <strong>%s</strong> изображения.<br />Моля свържете се с администратор за повече информация.',
-	),
-	'USER_REACHED_QUOTA_SHORT'  => array(
+	],
+	'USER_REACHED_QUOTA_SHORT' => [
 		0 => 'Не ви е позволено да качвате <strong>никакви</strong> изображения.',
 		1 => 'Не ви е позволено да качвате повече от <strong>1</strong> изображения.',
 		2 => 'Не ви е позволено да качвате повече от <strong>%s</strong> изображения.',
-	),
-	'USERNAME_BEGINS_WITH'      => 'Потребителското име започва с ',
-	'USERS_PERSONAL_ALBUMS'     => 'Лични потребителски албуми',
+	],
+	'USERNAME_BEGINS_WITH'  => 'Потребителското име започва с ',
+	'USERS_PERSONAL_ALBUMS' => 'Лични потребителски албуми',
 
-	'VIEW_ALBUM'            => 'Виж албум',
-	'VIEW_ALBUM_IMAGES'     => array(
+	'VIEW_ALBUM'        => 'Виж албум',
+	'VIEW_ALBUM_IMAGES' => [
 		1 => '1 изображения',
 		2 => '%s изображения',
-	),
-	'VIEW_IMAGE'            => 'Виж изображение',
-	'VIEW_IMAGE_COMMENTS'   => array(
+	],
+	'VIEW_IMAGE'          => 'Виж изображение',
+	'VIEW_IMAGE_COMMENTS' => [
 		1 => '1 коментар',
 		2 => '%s коментара',
-	),
+	],
 	'VIEW_LATEST_IMAGE'     => 'Виж най-новото изображение',
 	'VIEW_SEARCH_RECENT'    => 'Виж скорошни изображения',
 	'VIEW_SEARCH_RANDOM'    => 'Виж случайни изображения',
@@ -359,10 +359,10 @@ $lang = array_merge($lang, array(
 	'YOUR_PERSONAL_ALBUM' => 'Вашият личен албум',
 	'YOUR_RATING'         => 'Вашата оценка',
 
-	'IMAGES_MOVED' => array(
+	'IMAGES_MOVED' => [
 		1 => 'Изображението е преместено',
 		2 => '%s изображения са преместени',
-	),
+	],
 
 	'QUICK_MOD'        => 'Изберете модераторско действие',
 	'WRONG_FILESIZE'   => 'Изображението е по-голямо от лимита!',
@@ -370,5 +370,5 @@ $lang = array_merge($lang, array(
 	'NO_UNREAD_IMAGES' => 'Няма непрегледани изображения',
 
 	// Versions 1.2.1 additions
-	'GALLERY_DROP'     => 'Пуснете изображенията си тук',
-));
+	'GALLERY_DROP' => 'Пуснете изображенията си тук',
+]);

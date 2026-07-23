@@ -39,22 +39,22 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'NOTIFICATION_PHPBBGALLERY_IMAGE_FOR_APPROVAL'	=> '%2$s images chargées sont en attente d’approbation dans l’album <strong>%1$s</strong>',
-	'NOTIFICATION_TYPE_PHPBBGALLERY_IMAGE_FOR_APPROVE'	=> 'Images en attente d’approbation',
+$lang = array_merge($lang, [
+	'NOTIFICATION_PHPBBGALLERY_IMAGE_FOR_APPROVAL'     => '%2$s images chargées sont en attente d’approbation dans l’album <strong>%1$s</strong>',
+	'NOTIFICATION_TYPE_PHPBBGALLERY_IMAGE_FOR_APPROVE' => 'Images en attente d’approbation',
 
-	'NOTIFICATION_TYPE_PHPBBGALLERY_IMAGE_APPROVED'	=> 'Images approuvées',
-	'NOTIFICATION_PHPBBGALLERY_IMAGE_APPROVED'		=> 'Les images de l’album <strong>%1$s</strong> ont été approuvées',
+	'NOTIFICATION_TYPE_PHPBBGALLERY_IMAGE_APPROVED' => 'Images approuvées',
+	'NOTIFICATION_PHPBBGALLERY_IMAGE_APPROVED'      => 'Les images de l’album <strong>%1$s</strong> ont été approuvées',
 
-	'NOTIFICATION_TYPE_PHPBBGALLERY_IMAGE_NOT_APPROVED'	=> 'Images non approuvées',
-	'NOTIFICATION_PHPBBGALLERY_IMAGE_NOT_APPROVED'		=> 'Les images de l’album <strong>%1$s</strong> n’ont pas été approuvées',
+	'NOTIFICATION_TYPE_PHPBBGALLERY_IMAGE_NOT_APPROVED' => 'Images non approuvées',
+	'NOTIFICATION_PHPBBGALLERY_IMAGE_NOT_APPROVED'      => 'Les images de l’album <strong>%1$s</strong> n’ont pas été approuvées',
 
-	'NOTIFICATION_TYPE_PHPBBGALLERY_NEW_IMAGE'	=> 'Nouvelles images',
-	'NOTIFICATION_PHPBBGALLERY_NEW_IMAGE'		=> 'De nouvelles images ont été chargées dans l’album <strong>%1$s</strong>',
+	'NOTIFICATION_TYPE_PHPBBGALLERY_NEW_IMAGE' => 'Nouvelles images',
+	'NOTIFICATION_PHPBBGALLERY_NEW_IMAGE'      => 'De nouvelles images ont été chargées dans l’album <strong>%1$s</strong>',
 
-	'NOTIFICATION_TYPE_PHPBBGALLERY_NEW_COMMENT'	=> 'Nouveaux commentaires',
-	'NOTIFICATION_PHPBBGALLERY_NEW_COMMENT'			=> '<strong>%1$s</strong> a commenté une image que vous suivez',
+	'NOTIFICATION_TYPE_PHPBBGALLERY_NEW_COMMENT' => 'Nouveaux commentaires',
+	'NOTIFICATION_PHPBBGALLERY_NEW_COMMENT'      => '<strong>%1$s</strong> a commenté une image que vous suivez',
 
-	'NOTIFICATION_TYPE_PHPBBGALLERY_NEW_REPORT'	=> 'Nouvelle image rapportée',
-	'NOTIFICATION_PHPBBGALLERY_NEW_REPORT'			=> 'L’image <strong>%1$s</strong> a été rapportée',
-));
+	'NOTIFICATION_TYPE_PHPBBGALLERY_NEW_REPORT' => 'Nouvelle image rapportée',
+	'NOTIFICATION_PHPBBGALLERY_NEW_REPORT'      => 'L’image <strong>%1$s</strong> a été rapportée',
+]);

@@ -23,7 +23,7 @@ if (empty($lang) || !is_array($lang))
 	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ADD_UPLOAD_FIELD'                 => 'Voeg meer upload velden toe',
 	'ALBUM'                            => 'Album',
 	'ALBUM_DESC'                       => 'Albumbeschrijving',
@@ -41,28 +41,28 @@ $lang = array_merge($lang, array(
 	'ALL'                              => 'Alle',
 	'ALL_IMAGES'                       => 'Alle afbeeldingen',
 	'ALLOW_COMMENTS'                   => 'Reacties op deze afbeelding toestaan.',
-	'ALLOW_COMMENTS_ARY'               => array(
+	'ALLOW_COMMENTS_ARY'               => [
 		0 => 'Reacties op deze afbeelding toestaan.',
 		2 => 'Reacties op deze afbeeldingen toestaan.',
-	),
-	'ALLOWED_FILETYPES'                => 'Toegestane bestandsformaten',
-	'APPROVE'                          => 'Goedkeuren',
-	'DISAPPROVE'                       => 'Afkeuren',
-	'APPROVE_IMAGE'                    => 'Afbeelding goedkeuren',
+	],
+	'ALLOWED_FILETYPES' => 'Toegestane bestandsformaten',
+	'APPROVE'           => 'Goedkeuren',
+	'DISAPPROVE'        => 'Afkeuren',
+	'APPROVE_IMAGE'     => 'Afbeelding goedkeuren',
 
 	//@todo
-	'ALBUM_COMMENT_CAN'                => 'Je <strong>kan</strong> reageren op afbeeldingen in dit album',
-	'ALBUM_COMMENT_CANNOT'             => 'Je <strong>kan niet</strong> reageren op afbeeldingen in dit album',
-	'ALBUM_DELETE_CAN'                 => 'Je <strong>kan</strong> je eigen afbeeldingen uit dit album verwijderen',
-	'ALBUM_DELETE_CANNOT'              => 'Je kan je eigen afbeeldingen uit dit album <strong>niet</strong> verwijderen',
-	'ALBUM_EDIT_CAN'                   => 'Je <strong>kan</strong> je eigen afbeeldingen uit dit album wijzigen',
-	'ALBUM_EDIT_CANNOT'                => 'Je kan je eigen afbeeldingen uit dit album <strong>niet</strong> wijzigen',
-	'ALBUM_RATE_CAN'                   => 'Je <strong>kan</strong> afbeeldingen uit dit album beoordelen',
-	'ALBUM_RATE_CANNOT'                => 'Je kan afbeeldingen uit dit album <strong>niet</strong> beoordelen',
-	'ALBUM_UPLOAD_CAN'                 => 'Je <strong>kan</strong> niewe afbeeldingen uploaden naar dit album',
-	'ALBUM_UPLOAD_CANNOT'              => 'Je <strong>kan geen</strong> niewe afbeeldingen uploaden naar dit album',
-	'ALBUM_VIEW_CAN'                   => 'Je <strong>kan</strong> afbeeldingen uit dit album zien',
-	'ALBUM_VIEW_CANNOT'                => 'Je kan de afbeeldingen uit dit album <strong>niet</strong> zien',
+	'ALBUM_COMMENT_CAN'    => 'Je <strong>kan</strong> reageren op afbeeldingen in dit album',
+	'ALBUM_COMMENT_CANNOT' => 'Je <strong>kan niet</strong> reageren op afbeeldingen in dit album',
+	'ALBUM_DELETE_CAN'     => 'Je <strong>kan</strong> je eigen afbeeldingen uit dit album verwijderen',
+	'ALBUM_DELETE_CANNOT'  => 'Je kan je eigen afbeeldingen uit dit album <strong>niet</strong> verwijderen',
+	'ALBUM_EDIT_CAN'       => 'Je <strong>kan</strong> je eigen afbeeldingen uit dit album wijzigen',
+	'ALBUM_EDIT_CANNOT'    => 'Je kan je eigen afbeeldingen uit dit album <strong>niet</strong> wijzigen',
+	'ALBUM_RATE_CAN'       => 'Je <strong>kan</strong> afbeeldingen uit dit album beoordelen',
+	'ALBUM_RATE_CANNOT'    => 'Je kan afbeeldingen uit dit album <strong>niet</strong> beoordelen',
+	'ALBUM_UPLOAD_CAN'     => 'Je <strong>kan</strong> niewe afbeeldingen uploaden naar dit album',
+	'ALBUM_UPLOAD_CANNOT'  => 'Je <strong>kan geen</strong> niewe afbeeldingen uploaden naar dit album',
+	'ALBUM_VIEW_CAN'       => 'Je <strong>kan</strong> afbeeldingen uit dit album zien',
+	'ALBUM_VIEW_CANNOT'    => 'Je kan de afbeeldingen uit dit album <strong>niet</strong> zien',
 
 	'BAD_UPLOAD_FILE_SIZE'  => 'Je geüploade bestand is te groot',
 	'BBCODES'               => 'BBCodes',
@@ -117,7 +117,7 @@ $lang = array_merge($lang, array(
 	'DESCRIPTION_LENGTH'      => 'Je kan hier een omschrijving invoeren, deze mag niet meer dan <strong>%d</strong> karakters bevatten.',
 	'DETAILS'                 => 'Details',
 	'DISALLOWED_EXTENSION'    => 'De afbeeldingsextensie is niet toegestaan',
-	'DO_NOT_RATE_IMAGE'         => 'Beoordeel afbeeldingen niet',
+	'DO_NOT_RATE_IMAGE'       => 'Beoordeel afbeeldingen niet',
 
 	'EDIT_COMMENT'             => 'Wijzig reactie',
 	'EDIT_IMAGE'               => 'Wijzig',
@@ -216,31 +216,31 @@ $lang = array_merge($lang, array(
 	'QUOTA_REACHED' => 'Het aantal afbeeldingen dat je kan uploaden is bereikt.',
 	'QUOTE_COMMENT' => 'Quote reactie',
 
-	'RANDOM_IMAGES'       => 'Willekeurige afbeeldingen',
-	'RATE_IMAGE'          => 'Beoordeel de afbeelding',
-	'RATES_COUNT'         => 'Aantal beoordelingen',
-	'RATING'              => 'Beoordeling',
-	'RATING_STRINGS'      => array(
+	'RANDOM_IMAGES'  => 'Willekeurige afbeeldingen',
+	'RATE_IMAGE'     => 'Beoordeel de afbeelding',
+	'RATES_COUNT'    => 'Aantal beoordelingen',
+	'RATING'         => 'Beoordeling',
+	'RATING_STRINGS' => [
 		0 => 'niet beoordeeld',
 		1 => '%2$s (1 beoordeling)',
 		2 => '%2$s (%1$s beoordelingen)',
-	),
-	'RATING_STRINGS_USER' => array(
+	],
+	'RATING_STRINGS_USER' => [
 		1 => '%2$s (1 beoordeling, je eigen beoordeling: %3$s)',
 		2 => '%2$s (%1$s beoordelingen, je eigen beoordeling: %3$s)',
-	),
-	'RATING_SUCCESSFUL'   => 'De afbeelding is succesvol beoordeeld.',
-	'READ_REPORT'         => 'Melding lezen',
-	'RECENT_COMMENTS'     => 'Recente reacties',
-	'RECENT_IMAGES'       => 'Recente afbeeldingen',
-	'REPORT_IMAGE'        => 'Meld deze afbeelding',
-	'RETURN_ALBUM'        => '%sGa terug naar het laatst bezochte album%s',
-	'ROTATE_IMAGE'        => 'Afbeelding draaien',
-	'ROTATE_LEFT'         => '90° links',
-	'ROTATE_NONE'         => 'geen',
-	'ROTATE_RIGHT'        => '90° rechts',
-	'ROTATE_UPSIDEDOWN'   => '180° ondersteboven ',
-	'RETURN_TO_GALLERY'   => 'Ga terug naar de galerij',
+	],
+	'RATING_SUCCESSFUL' => 'De afbeelding is succesvol beoordeeld.',
+	'READ_REPORT'       => 'Melding lezen',
+	'RECENT_COMMENTS'   => 'Recente reacties',
+	'RECENT_IMAGES'     => 'Recente afbeeldingen',
+	'REPORT_IMAGE'      => 'Meld deze afbeelding',
+	'RETURN_ALBUM'      => '%sGa terug naar het laatst bezochte album%s',
+	'ROTATE_IMAGE'      => 'Afbeelding draaien',
+	'ROTATE_LEFT'       => '90° links',
+	'ROTATE_NONE'       => 'geen',
+	'ROTATE_RIGHT'      => '90° rechts',
+	'ROTATE_UPSIDEDOWN' => '180° ondersteboven ',
+	'RETURN_TO_GALLERY' => 'Ga terug naar de galerij',
 
 	'SEARCH_ALBUM'                      => 'Zoeken in dit album…',
 	'SEARCH_ALBUMS'                     => 'Zoeken in albums',
@@ -273,28 +273,28 @@ $lang = array_merge($lang, array(
 	'SUBALBUMS'                         => 'Subalbums',
 	'SUBALBUM'                          => 'Subalbum',
 
-	'THUMBNAIL_SIZE'            => 'Miniatuurformaat (pixels)',
-	'TOTAL_COMMENTS_SPRINTF'    => array(
+	'THUMBNAIL_SIZE'         => 'Miniatuurformaat (pixels)',
+	'TOTAL_COMMENTS_SPRINTF' => [
 		0 => 'Aantal reacties <strong>0</strong>',
 		1 => 'Aantal reacties <strong>%d</strong>',
 		2 => 'Aantal reacties <strong>%d</strong>',
-	),
-	'TOTAL_IMAGES'              => 'Aantal afbeeldingen',
-	'TOTAL_IMAGES_SPRINTF'      => array(
+	],
+	'TOTAL_IMAGES'         => 'Aantal afbeeldingen',
+	'TOTAL_IMAGES_SPRINTF' => [
 		0 => 'Geen afbeeldingen',
 		1 => '%d afbeelding',
 		2 => '%d afbeeldingen',
-	),
-	'TOTAL_PEGAS_SHORT_SPRINTF' => array(
+	],
+	'TOTAL_PEGAS_SHORT_SPRINTF' => [
 		0 => '0 Persoonlijke galerijen',
 		1 => '%d Persoonlijke galerij',
 		2 => '%d Persoonlijke galerijen',
-	),
-	'TOTAL_PEGAS_SPRINTF'       => array(
+	],
+	'TOTAL_PEGAS_SPRINTF' => [
 		0 => 'Aantal persoonlijke galerijen <strong>0</strong>',
 		1 => 'Aantal persoonlijke galerijen <strong>%d</strong>',
 		2 => 'Aantal persoonlijke galerijen <strong>%d</strong>',
-	),
+	],
 
 	'UNLOCK_IMAGE'              => 'Afbeelding heropenen',
 	'UNWATCH_ALBUM'             => 'Uitschrijven album',
@@ -313,31 +313,31 @@ $lang = array_merge($lang, array(
 	'UPLOADED_ON_DATE'          => 'Geüpload op',
 	'USE_SAME_NAME'             => 'Gebruik de zelfde afbeeldingsnaam en omschrijving voor de andere afbeeldingen.',
 	'USE_NUM'                   => 'Voeg {NUM} toe voor nummers. Start het tellen bij:',
-	'USER_REACHED_QUOTA'        => array(
+	'USER_REACHED_QUOTA'        => [
 		0 => 'Je mag <strong>geen</strong> afbeeldingen uploaden.<br />Neem contact op met de beheerder voor meer informatie.',
 		1 => 'Je mag niet meer dan <strong>1</strong> afbeelding uploaden.<br />Neem contact op met de beheerder voor meer informatie.',
 		2 => 'Je mag niet meer dan <strong>%s</strong> afbeeldingen uploaden.<br />Neem contact op met de beheerder voor meer informatie.',
-	),
-	'USER_REACHED_QUOTA_SHORT'  => array(
+	],
+	'USER_REACHED_QUOTA_SHORT' => [
 		0 => 'Je mag <strong>geen</strong> afbeeldingen uploaden.',
 		1 => 'Je mag niet meer dan <strong>1</strong> afbeelding uploaden.',
 		2 => 'Je mag niet meer dan <strong>%s</strong> afbeeldingen uploaden.',
-	),
-	'USERNAME_BEGINS_WITH'      => 'Gebruikersnaam begint met',
-	'USERS_PERSONAL_ALBUMS'     => 'Persoonlijke albums van leden',
+	],
+	'USERNAME_BEGINS_WITH'  => 'Gebruikersnaam begint met',
+	'USERS_PERSONAL_ALBUMS' => 'Persoonlijke albums van leden',
 
 	'VISIT_GALLERY' => 'Bezoek gebruikers galerij',
 
-	'VIEW_ALBUM'            => 'Bekijk album',
-	'VIEW_ALBUM_IMAGES'     => array(
+	'VIEW_ALBUM'        => 'Bekijk album',
+	'VIEW_ALBUM_IMAGES' => [
 		1 => '1 afbeelding',
 		2 => '%s afbeeldingen',
-	),
-	'VIEW_IMAGE'            => 'Bekijk afbeelding',
-	'VIEW_IMAGE_COMMENTS'   => array(
+	],
+	'VIEW_IMAGE'          => 'Bekijk afbeelding',
+	'VIEW_IMAGE_COMMENTS' => [
 		1 => '1 reactie',
 		2 => '%s reacties',
-	),
+	],
 	'VIEW_LATEST_IMAGE'     => 'Bekijk de laatste afbeeldingen',
 	'VIEW_SEARCH_RECENT'    => 'Recente afbeeldingen',
 	'VIEW_SEARCH_RANDOM'    => 'Willikeurige afbeeldingen',
@@ -359,10 +359,10 @@ $lang = array_merge($lang, array(
 	'YOUR_PERSONAL_ALBUM' => 'Je persoonlijke album',
 	'YOUR_RATING'         => 'Je beoordeling',
 
-	'IMAGES_MOVED' => array(
+	'IMAGES_MOVED' => [
 		1 => 'Afbeelding verplaatst',
 		2 => '%s afbeeldingen verplaatst',
-	),
+	],
 
 	'QUICK_MOD'      => 'Selecteer moderator actie',
 	'WRONG_FILESIZE' => 'De afbeeldingsgrootte is groter dan toegestaan!',
@@ -371,5 +371,5 @@ $lang = array_merge($lang, array(
 	'NO_UNREAD_IMAGES' => 'No unviewed images',
 
 	// Versions 1.2.1 additions
-	'GALLERY_DROP'     => 'Plaats je afbeeldingen hier',
-));
+	'GALLERY_DROP' => 'Plaats je afbeeldingen hier',
+]);

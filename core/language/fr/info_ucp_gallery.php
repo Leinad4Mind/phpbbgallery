@@ -39,9 +39,9 @@ if (empty($lang) || !is_array($lang))
 // ’ « » “ ” …
 //
 
-$lang = array_merge($lang, array(
-	'UCP_GALLERY'						=> 'Galerie d’images',
-	'UCP_GALLERY_PERSONAL_ALBUMS'		=> 'Gérer les albums personnels',
-	'UCP_GALLERY_SETTINGS'				=> 'Paramètres personnels',
-	'UCP_GALLERY_WATCH'					=> 'Gérer les abonnements',
-));
+$lang = array_merge($lang, [
+	'UCP_GALLERY'                 => 'Galerie d’images',
+	'UCP_GALLERY_PERSONAL_ALBUMS' => 'Gérer les albums personnels',
+	'UCP_GALLERY_SETTINGS'        => 'Paramètres personnels',
+	'UCP_GALLERY_WATCH'           => 'Gérer les abonnements',
+]);

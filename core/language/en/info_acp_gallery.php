@@ -22,7 +22,7 @@ if (empty($lang) || !is_array($lang))
 	$lang = [];
 }
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ACP_GALLERY_ALBUM_MANAGEMENT'       => 'Album management',
 	'ACP_GALLERY_ALBUM_PERMISSIONS'      => 'Permissions',
 	'ACP_GALLERY_ALBUM_PERMISSIONS_COPY' => 'Copy permissions',
@@ -32,14 +32,14 @@ $lang = array_merge($lang, array(
 	'ACP_GALLERY_MANAGE_ALBUMS'          => 'Manage albums',
 	'ACP_GALLERY_OVERVIEW'               => 'Overview',
 
-	'GALLERY'                  => 'Gallery',
-	'GALLERY_EXPLAIN'          => 'Image Gallery',
-	'GALLERY_HELPLINE_ALBUM'   => 'Gallery image: [image]image_id[/image], with this BBCode you can add an image from the gallery into your post.',
-	'GALLERY_POPUP'            => 'Gallery',
-	'GALLERY_POPUP_HELPLINE'   => 'Open a popup where you can select your recent images and upload new images.',
+	'GALLERY'                => 'Gallery',
+	'GALLERY_EXPLAIN'        => 'Image Gallery',
+	'GALLERY_HELPLINE_ALBUM' => 'Gallery image: [image]image_id[/image], with this BBCode you can add an image from the gallery into your post.',
+	'GALLERY_POPUP'          => 'Gallery',
+	'GALLERY_POPUP_HELPLINE' => 'Open a popup where you can select your recent images and upload new images.',
 
 	// Please do not change the copyright.
-	'GALLERY_COPYRIGHT'        => 'Powered by <a href="https://github.com/satanasov/phpbbgallery">phpBB Gallery</a> &copy; 2014–2026',
+	'GALLERY_COPYRIGHT' => 'Powered by <a href="https://github.com/satanasov/phpbbgallery">phpBB Gallery</a> &copy; 2014–2026',
 
 	// A little line where you can give yourself some credits on the translation.
 	//'GALLERY_TRANSLATION_INFO'			=> 'English “phpBB Gallery“-Translation by <a href="http://www.flying-bits.org/">nickvergessen</a>',
@@ -51,8 +51,8 @@ $lang = array_merge($lang, array(
 	'PERSONAL_ALBUM' => 'Personal album',
 	'PHPBB_GALLERY'  => 'phpBB Gallery',
 
-	'TOTAL_IMAGES_SPRINTF' => array(
+	'TOTAL_IMAGES_SPRINTF' => [
 		0 => 'Total images <strong>0</strong>',
 		1 => 'Total images <strong>%d</strong>',
-	),
-));
+	],
+]);
