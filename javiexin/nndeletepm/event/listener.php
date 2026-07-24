@@ -20,11 +20,11 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class listener implements EventSubscriberInterface
 {
-	static public function getSubscribedEvents()
+	public static function getSubscribedEvents(): array
 	{
-		return array(
+		return [
 			'core.delete_pm_before'	=> 'delete_pm_before',
-		);
+		];
 	}
 
 	/** @var \phpbb\db\driver\driver_interface */
@@ -45,7 +45,7 @@ class listener implements EventSubscriberInterface
 	 *
 	 * @param \phpbb\event\data	$event	Event object
 	 */
-	public function delete_pm_before($event)
+	public function delete_pm_before(\phpbb\event\data $event): void
 	{
 		$user_id = (int) $event['user_id'];
 		$msg_ids = array_map('intval', $event['msg_ids']);
@@ -65,7 +65,7 @@ class listener implements EventSubscriberInterface
 				AND user_id = $user_id";
 		$result = $this->db->sql_query($sql);
 
-		$delete_rows = array();
+		$delete_rows = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$delete_rows[(int) $row['msg_id']] = 1;
@@ -73,7 +73,7 @@ class listener implements EventSubscriberInterface
 		$this->db->sql_freeresult($result);
 
 		// Nothing left to do, so exit
-		if (!sizeof($delete_rows))
+		if (!count($delete_rows))
 		{
 			return;
 		}

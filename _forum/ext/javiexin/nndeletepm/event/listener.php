@@ -3,7 +3,7 @@
  *
  * No notice on unread deleted PMs. An extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2016, javiexin
+ * @copyright (c) 2016, javiexin | 2025, Leinad4Mind
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -20,11 +20,11 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class listener implements EventSubscriberInterface
 {
-	static public function getSubscribedEvents()
+	public static function getSubscribedEvents(): array
 	{
-		return array(
+		return [
 			'core.delete_pm_before'	=> 'delete_pm_before',
-		);
+		];
 	}
 
 	/** @var \phpbb\db\driver\driver_interface */
@@ -45,11 +45,11 @@ class listener implements EventSubscriberInterface
 	 *
 	 * @param \phpbb\event\data	$event	Event object
 	 */
-	public function delete_pm_before($event)
+	public function delete_pm_before(\phpbb\event\data $event): void
 	{
-		$user_id = $event['user_id'];
-		$msg_ids = $event['msg_ids'];
-		$folder_id = $event['folder_id'];
+		$user_id = (int) $event['user_id'];
+		$msg_ids = array_map('intval', $event['msg_ids']);
+		$folder_id = (int) $event['folder_id'];
 
 		// Only applies to messages deleted from the outbox
 		if ($folder_id !== PRIVMSGS_OUTBOX)
@@ -60,20 +60,20 @@ class listener implements EventSubscriberInterface
 		// Validate that the messages are still pending to be deleted
 		$sql = 'SELECT msg_id
 			FROM ' . PRIVMSGS_TO_TABLE . '
-			WHERE ' . $this->db->sql_in_set('msg_id', array_map('intval', $msg_ids)) . "
+			WHERE ' . $this->db->sql_in_set('msg_id', $msg_ids) . "
 				AND folder_id = $folder_id
 				AND user_id = $user_id";
 		$result = $this->db->sql_query($sql);
 
-		$delete_rows = array();
+		$delete_rows = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$delete_rows[$row['msg_id']] = 1;
+			$delete_rows[(int) $row['msg_id']] = 1;
 		}
 		$this->db->sql_freeresult($result);
 
 		// Nothing left to do, so exit
-		if (!sizeof($delete_rows))
+		if (!count($delete_rows))
 		{
 			return;
 		}
@@ -81,7 +81,8 @@ class listener implements EventSubscriberInterface
 		$this->db->sql_transaction('begin');
 
 		// Delete the private message recipients that are pending, but not the sender
-		$sql = 'SELECT user_id FROM ' . PRIVMSGS_TO_TABLE . '
+		$sql = 'SELECT user_id
+			FROM ' . PRIVMSGS_TO_TABLE . '
 			WHERE author_id = ' . $user_id . '
 			AND user_id <> ' . $user_id . '
 			AND ' . $this->db->sql_in_set('msg_id', array_keys($delete_rows));
@@ -92,7 +93,7 @@ class listener implements EventSubscriberInterface
 		{
 			$sql = 'UPDATE ' . USERS_TABLE . '
 				SET user_new_privmsg = user_new_privmsg - 1, user_unread_privmsg = user_unread_privmsg - 1
-				WHERE user_id = ' . $row['user_id'];
+				WHERE user_id = ' . (int) $row['user_id'];
 			$this->db->sql_query($sql);
 		}
 
@@ -103,7 +104,5 @@ class listener implements EventSubscriberInterface
 		$this->db->sql_query($sql);
 
 		$this->db->sql_transaction('commit');
-
-		return;
 	}
 }
