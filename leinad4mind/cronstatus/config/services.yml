@@ -1,0 +1,13 @@
+services:
+    leinad4mind.cronstatus.listener:
+        class: leinad4mind\cronstatus\event\listener
+        arguments:
+            - '@config'
+            - '@controller.helper'
+            - '@user'
+            - '@template'
+            - '@dbal.conn'
+            - '@cron.manager'
+            - '@dispatcher'
+        tags:
+            - { name: event.listener }
