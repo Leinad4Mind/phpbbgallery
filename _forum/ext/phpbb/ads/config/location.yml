@@ -105,12 +105,7 @@ services:
 
     phpbb.ads.location.type.pop_up:
         class: phpbb\ads\location\type\pop_up
-        arguments:
-            - '@user'
-            - '@language'
-            - '@request'
-            - '@config'
-            - '@template'
+        parent: phpbb.ads.location.type.base
         tags:
             - { name: phpbb.ads.location.type }
 

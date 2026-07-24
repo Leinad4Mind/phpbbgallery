@@ -1,6 +1,6 @@
 <div class="text-center">
 <button type="button" class="btn btn-default btn-md" id="myBtn"><i class="fa fa-chevron-down fa-fw" title="{{ lang('HIDE_AD') }}"></i></button>
-</div> 
+</div>
   <!-- Modal -->
   <div id="myModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
@@ -12,17 +12,18 @@
         <h4 class="modal-title">Slide Up</h4>
       </div>
       <div class="modal-body">
-        <p>{% include '@phpbb_ads/phpbb_ads_default.html' %}</p>
+        {% import '@phpbb_ads/phpbb_ads_macro.html' as ad %}
+        <p>{{ ad.renderAds(AD_SLIDE_UP, AD_SLIDE_UP_ID, AD_SLIDE_UP_CENTER, 'margin: 0;') }}</p>
       </div>
-      
+
     </div>
 
   </div>
 </div>
-  
- 
+
+
 </div>
- 
+
 <script>
 head.ready(function () {
 $(document).ready(function(){

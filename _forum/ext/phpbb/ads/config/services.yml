@@ -9,6 +9,7 @@ services:
         arguments:
             - '@dbal.conn'
             - '@config'
+            - '@user'
             - '%phpbb.ads.tables.ads%'
             - '%phpbb.ads.tables.ad_locations%'
             - '%phpbb.ads.tables.ad_group%'
@@ -47,8 +48,8 @@ services:
     phpbb.ads.listener:
         class: phpbb\ads\event\main_listener
         arguments:
+            - '@language'
             - '@template'
-            - '@template_context'
             - '@user'
             - '@config'
             - '@phpbb.ads.ad.manager'

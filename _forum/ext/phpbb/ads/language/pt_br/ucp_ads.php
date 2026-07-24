@@ -24,4 +24,12 @@ $lang = array_merge($lang, [
 	'ACTIVE_ADS'    => 'Anúncios ativos',
 	'EXPIRED_ADS'   => 'Anúncios expirados',
 	'NO_ADS'        => '<strong>Não tem nenhum anúncio a ser exibido neste fórum.</strong>',
+
+	'PHPBB_ADS_PRIVACY_POLICY' => '
+		<br><br>
+		<h3>Publicidade</h3>
+		O “%1$s” pode exibir publicidade fornecida por redes ou serviços de terceiros. Esses anúncios podem usar cookies, pixels de rastreamento ou tecnologias semelhantes para coletar informações sobre suas atividades de navegação neste site e, em alguns casos, em outros sites. Essas informações podem ser usadas para exibir anúncios relevantes, medir a eficácia de campanhas publicitárias e personalizar o conteúdo de acordo com seus interesses.
+		<br><br>
+		Quaisquer dados coletados por meio desses serviços de publicidade de terceiros estão sujeitos às políticas de privacidade e cookies dos respectivos provedores. O “%1$s” não controla os cookies nem as práticas de coleta de dados desses terceiros. Recomendamos que você consulte as políticas dos provedores de publicidade relevantes para mais detalhes sobre como suas informações são processadas.
+	',
 ]);
