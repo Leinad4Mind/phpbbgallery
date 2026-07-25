@@ -19,58 +19,48 @@ class contest
 	/**
 	 * @var \phpbb\db\driver\driver_interface
 	 */
-	private $db;
+	private \phpbb\db\driver\driver_interface $db;
 
 	/**
 	 * @var \phpbbgallery\core\config
 	 */
-	private $gallery_config;
+	private \phpbbgallery\core\config $gallery_config;
 
 	/**
 	 * @var string
 	 */
-	private $images_table;
+	private string $images_table;
 
 	/**
 	 * @var string
 	 */
-	private $contest_table;
+	private string $contest_table;
 
 	/**
-	 * I will have to see where is contest used except here and make it work
-	 * but for the time being - redefine contest constants here as private
+	 * Contest state written to images and contest rows after tabulation.
 	 */
-	/**
-	 * Variables regarding the image contest relation
-	 */
-	private $NO_CONTEST = 0;
+	private const NO_CONTEST = 0;
 
-	/**
-	 * The image is element of an open contest. Only moderators can see the user_name of the user.
-	 */
-	private $IN_CONTEST = 1;
-
-
-	const NUM_IMAGES = 3;
+	public const NUM_IMAGES = 3;
 
 	/**
 	* There are different modes to calculate who won the contest.
 	* This value should be one of the constant-names below.
 	*/
-	static public $mode = self::MODE_AVERAGE;
+	public static int $mode = self::MODE_AVERAGE;
 
 	/**
 	* The image with the highest average wins.
 	*/
-	const MODE_AVERAGE = 1;
+	public const MODE_AVERAGE = 1;
 	/**
 	* The image with the highest number of total points wins.
 	*/
-	const MODE_SUM = 2;
+	public const MODE_SUM = 2;
 
 	public function __construct(\phpbb\db\driver\driver_interface $db,
 								\phpbbgallery\core\config $gallery_config,
-								$images_table, $contests_table)
+								string $images_table, string $contests_table)
 	{
 		$this->db = $db;
 		$this->gallery_config = $gallery_config;
@@ -85,9 +75,9 @@ class contest
 	* @param	string	$mode			contest or album ID to get the contest.
 	* @param	bool	$throw_error	Shall we throw an error if the contest was not found?
 	*
-	* @return	mixed	Either the array or boolean false if contest does not exist
+	* @return	array|false	Either the contest row or false if the contest does not exist
 	*/
-	public function get_contest($id, $mode = 'contest', $throw_error = true)
+	public function get_contest(int $id, string $mode = 'contest', bool $throw_error = true): array|false
 	{
 		$sql = 'SELECT *
 			FROM ' . $this->contest_table . '
@@ -104,36 +94,32 @@ class contest
 		return (!$row) ? false : $row;
 	}
 
-	private function get_tabulation()
+	private function get_tabulation(): string
 	{
-		switch (self::$mode)
-		{
-			case self::MODE_AVERAGE:
-				return 'image_rate_avg DESC, image_rate_points DESC, image_id ASC';
-			case self::MODE_SUM:
-				return 'image_rate_points DESC, image_rate_avg DESC, image_id ASC';
-		}
+		return self::$mode === self::MODE_SUM
+			? 'image_rate_points DESC, image_rate_avg DESC, image_id ASC'
+			: 'image_rate_avg DESC, image_rate_points DESC, image_id ASC';
 	}
 
-	public function is_step($mode, $album_data)
+	public function is_step(string $mode, array $album_data): bool
 	{
-		switch ($mode)
+		$current_time = time();
+
+		return match ($mode)
 		{
-			case 'upload':
-				return (!$album_data['contest_id'] || ((($album_data['contest_start']) < time()) &&
-					(time() < ($album_data['contest_start'] + $album_data['contest_rating']))));
-			case 'rate':
-				return (!$album_data['contest_id'] || ((($album_data['contest_start'] + $album_data['contest_rating']) < time()) &&
-					(time() < ($album_data['contest_start'] + $album_data['contest_end']))));
-			case 'comment':
-				return (!$album_data['contest_id'] || (time() > ($album_data['contest_start'] + $album_data['contest_end'])));
-		}
+			'upload' => !$album_data['contest_id'] || ($album_data['contest_start'] < $current_time &&
+				$current_time < $album_data['contest_start'] + $album_data['contest_rating']),
+			'rate' => !$album_data['contest_id'] || ($album_data['contest_start'] + $album_data['contest_rating'] < $current_time &&
+				$current_time < $album_data['contest_start'] + $album_data['contest_end']),
+			'comment' => !$album_data['contest_id'] || $current_time > $album_data['contest_start'] + $album_data['contest_end'],
+			default => false,
+		};
 	}
 
-	public function end($album_id, $contest_id, $end_time)
+	public function end(int $album_id, int $contest_id, int $end_time): void
 	{
 		$sql = 'UPDATE ' . $this->images_table . '
-			SET image_contest = ' . $this->NO_CONTEST . '
+			SET image_contest = ' . self::NO_CONTEST . '
 			WHERE image_album_id = ' . (int) $album_id;
 		$this->db->sql_query($sql);
 
@@ -152,7 +138,7 @@ class contest
 		$third = (int) $third;
 
 		$sql = 'UPDATE ' . $this->contest_table . '
-			SET contest_marked = ' . $this->NO_CONTEST . ",
+			SET contest_marked = ' . self::NO_CONTEST . ",
 				contest_first = $first,
 				contest_second = $second,
 				contest_third = $third
@@ -180,7 +166,7 @@ class contest
 		$this->gallery_config->inc('contests_ended', 1);
 	}
 
-	public function resync_albums($album_ids)
+	public function resync_albums(array|int $album_ids): void
 	{
 		if (is_array($album_ids))
 		{
@@ -196,10 +182,10 @@ class contest
 		}
 	}
 
-	public function resync($album_id)
+	public function resync(int $album_id): void
 	{
 		$sql = 'UPDATE ' . $this->images_table . '
-			SET image_contest = ' . $this->NO_CONTEST . '
+			SET image_contest = ' . self::NO_CONTEST . '
 			WHERE image_album_id = ' . (int) $album_id;
 		$this->db->sql_query($sql);
 
