@@ -117,6 +117,7 @@ namespace
 	require_once dirname(__DIR__) . '/acp/config_module.php';
 	require_once dirname(__DIR__) . '/acp/permissions_module.php';
 	require_once dirname(__DIR__) . '/acp/albums_module.php';
+	require_once dirname(__DIR__) . '/acp/gallery_logs_module.php';
 	require_once dirname(__DIR__) . '/ucp/main_module.php';
 	require_once dirname(__DIR__) . '/config.php';
 	require_once dirname(__DIR__) . '/cache.php';
