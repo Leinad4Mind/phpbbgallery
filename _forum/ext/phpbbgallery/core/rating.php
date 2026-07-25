@@ -17,79 +17,79 @@ class rating
 	/**
 	* @var \phpbb\db\driver\driver_interface
 	*/
-	protected $db;
+	protected \phpbb\db\driver\driver_interface $db;
 
 	/**
 	* @var \phpbb\template\template
 	*/
-	protected $template;
+	protected \phpbb\template\template $template;
 
 	/**
 	* @var \phpbb\user
 	*/
-	protected $user;
+	protected \phpbb\user $user;
 
 	/**
 	* @var \phpbb\language\language
 	*/
-	protected $language;
+	protected \phpbb\language\language $language;
 
 	/**
 	* @var \phpbb\request\request
 	*/
-	protected $request;
+	protected \phpbb\request\request $request;
 
 	/**
 	* @var \phpbbgallery\core\config
 	*/
-	protected $gallery_config;
+	protected \phpbbgallery\core\config $gallery_config;
 
 	/**
 	* @var \phpbbgallery\core\auth\auth
 	*/
-	protected $gallery_auth;
+	protected \phpbbgallery\core\auth\auth $gallery_auth;
 
 	/**
 	* @var string
 	*/
-	protected $images_table;
+	protected string $images_table;
 
 	/**
 	* @var string
 	*/
-	protected $albums_table;
+	protected string $albums_table;
 
 	/**
 	* @var string
 	*/
-	protected $rates_table;
+	protected string $rates_table;
 
 	/**
 	* The image ID we want to rate
 	*/
-	public $image_id = 0;
+	public int $image_id = 0;
 
 	/**
 	* Private objects with the values for the image/album from the database
 	*/
-	private $image_data = null;
-	private $album_data = null;
+	private ?array $image_data = null;
+	private ?array $album_data = null;
 
 	/**
 	* Rating the user gave the image.
 	*/
-	public $user_rating = null;
+	public array $user_rating = [];
 
 	/**
 	* Is rating currently possible?
 	* Might be blocked because of contest-settings.
 	*/
-	public $rating_enabled = false;
+	public bool $rating_enabled = false;
 
 	/**
 	* Classic-rating box with a dropdown.
 	*/
-	const MODE_SELECT = 1;
+	public const MODE_SELECT = 1;
 
 	/**
 	* Rating with stars, like the old-system from youtube.
@@ -118,7 +118,7 @@ class rating
 	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\template\template $template, \phpbb\user $user,
 		\phpbb\language\language $language, \phpbb\request\request $request, \phpbbgallery\core\config $gallery_config,
 		\phpbbgallery\core\auth\auth $gallery_auth,
-		$images_table, $albums_table, $rates_table)
+		string $images_table, string $albums_table, string $rates_table)
 	{
 		$this->db = $db;
 		$this->template = $template;
@@ -139,17 +139,13 @@ class rating
 	 * @param array|bool $image_data Array with values from the image-table of the image
 	 * @param array|bool $album_data Array with values from the album-table of the image's album
 	 */
-	public function loader($image_id, $image_data = false, $album_data = false)
+	public function loader(int $image_id, array|false $image_data = false, array|false $album_data = false): void
 	{
-		$this->image_id = (int) $image_id;
-		if ($image_data)
-		{
-			$this->image_data = $image_data;
-		}
-		if ($album_data)
-		{
-			$this->album_data = $album_data;
-		}
+		$this->image_id = $image_id;
+		$this->image_data = $image_data ?: null;
+		$this->album_data = $album_data ?: null;
+		$this->user_rating = [];
+		$this->rating_enabled = false;
 	}
 
 	/**
@@ -158,21 +154,24 @@ class rating
 	 * @param $key
 	 * @return
 	 */
-	private function image_data($key)
+	private function image_data(string $key): mixed
 	{
-		if ($this->image_data == null)
+		if ($this->image_data === null)
 		{
 			$sql = 'SELECT *
 				FROM ' . $this->images_table . '
 				WHERE image_id = ' . (int) $this->image_id;
 			$result = $this->db->sql_query($sql);
-			$this->image_data = $this->db->sql_fetchrow($result);
+			$image_data = $this->db->sql_fetchrow($result);
 			$this->db->sql_freeresult($result);
 
-			if ($this->image_data == false)
+			if (!is_array($image_data))
 			{
 				trigger_error('IMAGE_NOT_EXIST');
+				return null;
 			}
+
+			$this->image_data = $image_data;
 		}
 
 		return $this->image_data[$key];
@@ -185,21 +184,24 @@ class rating
 	 * @param    $key    string    The value of the album data, if true it returns the hole array.
 	 * @return mixed|null
 	 */
-	private function album_data($key)
+	private function album_data(string|bool $key): mixed
 	{
-		if ($this->album_data == null)
+		if ($this->album_data === null)
 		{
 			$sql = 'SELECT *
 				FROM ' . $this->albums_table . '
 				WHERE album_id = ' . (int) $this->image_data('album_id');
 			$result = $this->db->sql_query($sql);
-			$this->album_data = $this->db->sql_fetchrow($result);
+			$album_data = $this->db->sql_fetchrow($result);
 			$this->db->sql_freeresult($result);
 
-			if ($this->album_data == false)
+			if (!is_array($album_data))
 			{
 				trigger_error('ALBUM_NOT_EXIST');
+				return null;
 			}
+
+			$this->album_data = $album_data;
 		}
 
 		return ($key === true) ? $this->album_data : $this->album_data[$key];
@@ -208,7 +210,7 @@ class rating
 	/**
 	* Displays the box where the user can rate the image.
 	*/
-	public function display_box()
+	public function display_box(): void
 	{
 		$this->template->assign_var('GALLERY_RATING', self::MODE_SELECT);//@todo: phpbb_ext_gallery_core_config::get('rating_mode'));
 
@@ -251,7 +253,7 @@ class rating
 	 * @param bool|Shall $display_contest_end Shall we display the end-time of the contest? This requires the album-data to be filled.
 	 * @return string Returns a string containing the information how the image was rated in average and how often.
 	 */
-	public function get_image_rating($user_rating = false, $display_contest_end = true)
+	public function get_image_rating(int|false $user_rating = false, bool $display_contest_end = true): string
 	{
 		$this->template->assign_var('GALLERY_RATING', self::MODE_SELECT);//@todo: phpbb_ext_gallery_core_config::get('rating_mode'));
 
@@ -284,7 +286,7 @@ class rating
 	/**
 	* Get rated value for a image
 	*/
-	private function get_image_rating_value()
+	private function get_image_rating_value(): float
 	{
 		/*if (phpbb_ext_gallery_core_contest::$mode == phpbb_ext_gallery_core_contest::MODE_SUM)
 		{
@@ -292,7 +294,7 @@ class rating
 		}
 		else
 		{*/
-			return ($this->image_data('image_rate_avg') / 100);
+			return ((float) $this->image_data('image_rate_avg') / 100);
 		//}
 	}
 
@@ -305,7 +307,7 @@ class rating
 	*
 	* @return	bool
 	*/
-	public function is_allowed()
+	public function is_allowed(): bool
 	{
 		return $this->gallery_auth->acl_check('i_rate', $this->album_data('album_id'), $this->album_data('album_user_id')) &&
 			($this->user->data['user_id'] != $this->image_data('image_user_id')) && ($this->user->data['user_id'] != ANONYMOUS) &&
@@ -320,7 +322,7 @@ class rating
 	*
 	* @return	bool
 	*/
-	public function is_able()
+	public function is_able(): bool
 	{
 		return $this->is_allowed(); //&& phpbb_ext_gallery_core_contest::is_step('rate', $this->album_data(true));
 	}
@@ -332,7 +334,7 @@ class rating
 	*
 	* @return	mixed	False if the user did not rate or is guest, otherwise int the points.
 	*/
-	public function get_user_rating($user_id)
+	public function get_user_rating(int $user_id): int|false
 	{
 		if (isset($this->user_rating[$user_id]))
 		{
@@ -363,7 +365,7 @@ class rating
 	 * @param bool|string $user_ip Can be empty, function falls back to $user->ip
 	 * @return bool
 	 */
-	public function submit_rating($user_id = false, $points = false, $user_ip = false)
+	public function submit_rating(int|false $user_id = false, int|false $points = false, string|false $user_ip = false): bool
 	{
 		switch (self::MODE_SELECT)//@todo: phpbb_ext_gallery_core_config::get('rating_mode'))
 		{
@@ -371,9 +373,9 @@ class rating
 			//@todo: self::MODE_STARS:
 			case self::MODE_SELECT:
 			default:
-				$user_id = ($user_id) ? $user_id : $this->user->data['user_id'];
-				$points = ($points) ? $points : $this->request->variable('rating', 0);
-				$points = max(1, min($points, $this->gallery_config->get('max_rating')));
+				$user_id = ($user_id) ? $user_id : (int) $this->user->data['user_id'];
+				$points = ($points) ? $points : (int) $this->request->variable('rating', 0);
+				$points = max(1, min($points, (int) $this->gallery_config->get('max_rating')));
 			break;
 		}
 
@@ -386,6 +388,8 @@ class rating
 
 		$this->recalc_image_rating($this->image_id);
 		$this->user_rating[$user_id] = $points;
+
+		return true;
 	}
 
 	/**
@@ -395,7 +399,7 @@ class rating
 	 * @param    int $points
 	 * @param bool|string $user_ip Can be empty, function falls back to $user->ip
 	 */
-	private function insert_rating($user_id, $points, $user_ip = false)
+	private function insert_rating(int $user_id, int $points, string|false $user_ip = false): void
 	{
 		$sql_ary = array(
 			'rate_image_id'	=> $this->image_id,
@@ -411,7 +415,7 @@ class rating
 	*
 	* @param	mixed	$image_ids	Array or integer with image_id where we recalculate the rating.
 	*/
-	public function recalc_image_rating($image_ids)
+	public function recalc_image_rating(array|int $image_ids): void
 	{
 		if (is_array($image_ids))
 		{
@@ -446,7 +450,7 @@ class rating
 	* @param	mixed	$image_ids		Array or integer with image_id where we delete the rating.
 	* @param	bool	$reset_average	Shall we also reset the average? We can save that query, when the images are deleted anyway.
 	*/
-	public function delete_ratings($image_ids, $reset_average = false)
+	public function delete_ratings(array|int $image_ids, bool $reset_average = false): void
 	{
 		if (is_array($image_ids))
 		{
@@ -459,7 +463,7 @@ class rating
 
 		$sql = 'DELETE FROM ' . $this->rates_table . '
 			WHERE ' . $this->db->sql_in_set('rate_image_id', $image_ids, false, true);
-		$result = $this->db->sql_query($sql);
+		$this->db->sql_query($sql);
 
 		if ($reset_average)
 		{
