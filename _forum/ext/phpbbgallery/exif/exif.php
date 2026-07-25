@@ -177,7 +177,7 @@ class exif
 
 		$user->add_lang_ext('phpbbgallery/exif', 'info_exif');
 
-		$this->prepared_data = array();
+		$this->prepared_data = [];
 		if (isset($this->data['EXIF']['DateTimeOriginal']))
 		{
 			$timestamp_year = (int) substr($this->data['EXIF']['DateTimeOriginal'], 0, 4);
@@ -295,15 +295,15 @@ class exif
 
 			foreach ($this->prepared_data as $exif => $value)
 			{
-				$template->assign_block_vars($block, array(
+				$template->assign_block_vars($block, [
 					'EXIF_NAME'			=> $user->lang[strtoupper($exif)],
 					'EXIF_VALUE'		=> htmlspecialchars($value),
-				));
+				]);
 			}
-			$template->assign_vars(array(
+			$template->assign_vars([
 				'S_EXIF_DATA'	=> true,
 				'S_VIEWEXIF'	=> $expand_view,
-			));
+			]);
 		}
 	}
 
@@ -332,12 +332,12 @@ class exif
 	* There are lots of possible Exif Groups and Values.
 	* But you will never heard of the missing ones. so we just allow the most common ones.
 	*/
-	private static array $allowed_groups = array(
+	private static array $allowed_groups = [
 		'EXIF',
 		'IFD0',
-	);
+	];
 
-	private static array $allowed_keys = array(
+	private static array $allowed_keys = [
 		'DateTimeOriginal',
 		'FocalLength',
 		'ExposureTime',
@@ -349,5 +349,5 @@ class exif
 		'ExposureProgram',
 		'ExposureBiasValue',
 		'MeteringMode',
-	);
+	];
 }

@@ -27,7 +27,7 @@ class exif_listener implements EventSubscriberInterface
 
 	public static function getSubscribedEvents(): array
 	{
-		return array(
+		return [
 			'phpbbgallery.core.acp.config.get_display_vars'		=> 'acp_config_get_display_vars',
 			'phpbbgallery.core.config.load_config_sets'			=> 'config_load_config_sets',
 			'phpbbgallery.acpimport.update_image_before'	=> 'massimport_update_image_before',
@@ -41,7 +41,7 @@ class exif_listener implements EventSubscriberInterface
 			'phpbbgallery.core.user.get_default_values'			=> 'user_get_default_values',
 			'phpbbgallery.core.user.validate_data'				=> 'user_validate_data',
 			'phpbbgallery.core.viewimage'						=> 'viewimage',
-		);
+		];
 	}
 
 	/**
@@ -74,7 +74,7 @@ class exif_listener implements EventSubscriberInterface
 			{
 				$this->user->add_lang_ext('phpbbgallery/exif', 'info_exif');
 
-				$return_ary['vars']['IMAGE_SETTINGS']['disp_exifdata'] = array('lang' => 'DISP_EXIF_DATA',		'validate' => 'bool',	'type' => 'radio:yes_no');
+				$return_ary['vars']['IMAGE_SETTINGS']['disp_exifdata'] = ['lang' => 'DISP_EXIF_DATA',		'validate' => 'bool',	'type' => 'radio:yes_no'];
 				$event['return_ary'] = $return_ary;
 			}
 		}
@@ -137,14 +137,14 @@ class exif_listener implements EventSubscriberInterface
 		global $template, $phpbb_ext_gallery;
 		$this->user->add_lang_ext('phpbbgallery/exif', 'info_exif');
 
-		$template->assign_vars(array(
+		$template->assign_vars([
 			'S_VIEWEXIFS'		=> $this->gallery_user->get_data('user_viewexif'),
-		));
+		]);
 	}
 
 	public function upload_prepare_file_before(\phpbb\event\data $event): void
 	{
-		if (in_array($event['file']->get('extension'), array('jpg', 'jpeg')))
+		if (in_array($event['file']->get('extension'), ['jpg', 'jpeg']))
 		{
 			$additional_sql_data = $event['additional_sql_data'];
 
