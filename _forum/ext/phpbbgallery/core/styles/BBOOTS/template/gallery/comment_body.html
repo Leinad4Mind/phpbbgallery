@@ -1,81 +1,81 @@
-<!-- INCLUDE gallery/gallery_header.html -->
+{% include 'gallery/gallery_header.html' %}
 
-<div class="side-segment"><h3><a href="{U_VIEW_IMAGE}">{IMAGE_NAME}</a></h3></div>
+<div class="side-segment"><h3><a href="{{ U_VIEW_IMAGE }}">{{ IMAGE_NAME }}</a></h3></div>
 
-<!-- IF U_IMAGE -->
+{% if U_IMAGE %}
 <div class="well text-center">
-	<a href="{U_IMAGE}"<!-- IF S_GP_HIGHSLIDE --> class="highslide" onclick="return hs.expand(this)"<!-- ELSEIF S_GP_LYTEBOX --> rel="lytebox" class="image-resize"<!-- ENDIF -->><img src="{U_IMAGE}" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" style="max-height: {IMAGE_RSZ_HEIGHT}px; max-width: {IMAGE_RSZ_WIDTH}px;" /></a>
+	<a href="{{ U_IMAGE }}"{% if S_GP_HIGHSLIDE %} class="highslide" onclick="return hs.expand(this)"{% elseif S_GP_LYTEBOX %} rel="lytebox" class="image-resize"{% endif %}><img src="{{ U_IMAGE }}" alt="{{ IMAGE_NAME }}" title="{{ IMAGE_NAME }}" style="max-height: {{ IMAGE_RSZ_HEIGHT }}px; max-width: {{ IMAGE_RSZ_WIDTH }}px;" /></a>
 </div>
-<!-- ENDIF -->
+{% endif %}
 
-<form id="postform" action="{S_ALBUM_ACTION}" method="post" enctype="multipart/form-data">
+<form id="postform" action="{{ S_ALBUM_ACTION }}" method="post" enctype="multipart/form-data">
 <div class="well well-small" id="postingbox">
 	<div class="clearfix">
-		<div class="side-segment"><h3>{L_POST_COMMENT}</h3></div>
+		<div class="side-segment"><h3>{{ lang('POST_COMMENT') }}</h3></div>
 		<fieldset>
-			<!-- IF ERROR --><p class="error">{ERROR}</p><!-- ENDIF -->
+			{% if ERROR %}<p class="error">{{ ERROR }}</p>{% endif %}
 
-			<!-- IF not S_USER_LOGGED_IN -->
-				<label for="username">{L_USERNAME}{L_COLON}</label>
-				<input class="form-control" type="text" tabindex="1" name="username" value="{USERNAME}" size="60" maxlength="32" />
-			<!-- ENDIF -->
-			
-			<!-- IF S_ALLOWED_TO_RATE -->
-					<label>{L_YOUR_RATING}{L_COLON}</label>
-					<!-- IF .rate_scale -->
+			{% if not S_USER_LOGGED_IN %}
+				<label for="username">{{ lang('USERNAME') }}{{ lang('COLON') }}</label>
+				<input class="form-control" type="text" tabindex="1" name="username" value="{{ USERNAME }}" size="60" maxlength="32" />
+			{% endif %}
+
+			{% if S_ALLOWED_TO_RATE %}
+					<label>{{ lang('YOUR_RATING') }}{{ lang('COLON') }}</label>
+					{% if rate_scale|length %}
 						<select class="selectpicker show-tick" data-container="body" data-width="86px" data-style="btn btn-sm btn-default" name="rating">
-						<!-- BEGIN rate_scale -->
-							<!-- IF rate_scale.RATE_POINT == 1 --><option value="0">{L_DONT_RATE_IMAGE}</option><!-- ENDIF -->
-							<option value="{rate_scale.RATE_POINT}">{rate_scale.RATE_POINT}</option>
-						<!-- END rate_scale -->
+						{% for rate_scale in rate_scale %}
+							{% if rate_scale.RATE_POINT == 1 %}<option value="0">{{ lang('DONT_RATE_IMAGE') }}</option>{% endif %}
+							<option value="{{ rate_scale.RATE_POINT }}">{{ rate_scale.RATE_POINT }}</option>
+						{% endfor %}
 						</select>
-					<!-- ELSE -->
-						{CONTEST_RATING}
-					<!-- ENDIF -->
-			<!-- ENDIF -->
+					{% else %}
+						{{ CONTEST_RATING }}
+					{% endif %}
+			{% endif %}
 
-			<!-- IF CAPTCHA_TEMPLATE -->
-				<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
-			<!-- ENDIF -->
+			{% if CAPTCHA_TEMPLATE %}
+				{% include ''~ CAPTCHA_TEMPLATE ~'' %}
+			{% endif %}
 
-			<label for="message">{L_YOUR_COMMENT}{L_COLON}</label>
+			<label for="message">{{ lang('YOUR_COMMENT') }}{{ lang('COLON') }}</label>
 
-			<!-- INCLUDE posting_buttons.html -->
+			{% include 'posting_buttons.html' %}
 
 			<div class="space10"></div>
-				
+
 			<div class="row">
-				<div class="col-md-8"> 
+				<div class="col-md-8">
 				<div id="message-box">
-				 <textarea class="form-control" name="message" id="message" rows="10" tabindex="3" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);">{MESSAGE}</textarea>
+				 <textarea class="form-control" name="message" id="message" rows="10" tabindex="3" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);">{{ MESSAGE }}</textarea>
 
-				<small class="pull-right">{L_COMMENT_LENGTH}</small>
+				<small class="pull-right">{{ lang('COMMENT_LENGTH') }}</small>
 				</div>
 				</div>
-				
+
 				<div class="col-md-4">
-					<!-- IF S_SMILIES_ALLOWED and .smiley -->
-						<strong>{L_SMILIES}</strong><br />
-						<!-- BEGIN smiley -->
-							<a href="#" onclick="insert_text('{smiley.A_SMILEY_CODE}', true); return false;"><img src="{smiley.SMILEY_IMG}" width="{smiley.SMILEY_WIDTH}" height="{smiley.SMILEY_HEIGHT}" alt="{smiley.SMILEY_CODE}" title="{smiley.SMILEY_DESC}" /></a>
-						<!-- END smiley -->
-					<!-- ENDIF -->
-					<!-- IF S_SHOW_SMILEY_LINK and S_SMILIES_ALLOWED-->
-						<br /><a href="{U_MORE_SMILIES}" onclick="popup(this.href, 300, 350, '_phpbbsmilies'); return false;">{L_MORE_SMILIES}</a>
-					<!-- ENDIF -->
+					{% if S_SMILIES_ALLOWED and smiley|length %}
+						<strong>{{ lang('SMILIES') }}</strong><br />
+						{% for smiley in smiley %}
+							<a href="#" onclick="insert_text('{{ smiley.A_SMILEY_CODE }}', true); return false;"><img src="{{ smiley.SMILEY_IMG }}" width="{{ smiley.SMILEY_WIDTH }}" height="{{ smiley.SMILEY_HEIGHT }}" alt="{{ smiley.SMILEY_CODE }}" title="{{ smiley.SMILEY_DESC }}" /></a>
+						{% endfor %}
+					{% endif %}
+					{% if S_SHOW_SMILEY_LINK and S_SMILIES_ALLOWED %}
+						<br /><a href="{{ U_MORE_SMILIES }}" onclick="popup(this.href, 300, 350, '_phpbbsmilies'); return false;">{{ lang('MORE_SMILIES') }}</a>
+					{% endif %}
 
-					<!-- IF BBCODE_STATUS -->
-					<!-- IF .smiley --><hr /><!-- ENDIF -->
-					{BBCODE_STATUS}&#44;
-					<!-- IF S_BBCODE_ALLOWED -->
-						{IMG_STATUS}&#44;
-						{FLASH_STATUS}&#44;
-						{URL_STATUS}&#44;
-					<!-- ENDIF -->
-					{SMILIES_STATUS}
-					<!-- ENDIF -->
+					{% if BBCODE_STATUS %}
+					{% if smiley|length %}<hr />{% endif %}
+					{{ BBCODE_STATUS }}&#44;
+					{% if S_BBCODE_ALLOWED %}
+						{{ IMG_STATUS }}&#44;
+						{{ FLASH_STATUS }}&#44;
+						{{ URL_STATUS }}&#44;
+					{% endif %}
+					{{ SMILIES_STATUS }}
+					{% endif %}
 					<hr />
-				 <input type="checkbox" name="attach_sig" id="attach_sig" {S_SIGNATURE_CHECKED}><label for="attach_sig">{L_ATTACH_SIG}</label>
+				 <input type="checkbox" name="attach_sig" id="attach_sig" {{ S_SIGNATURE_CHECKED }}><label for="attach_sig">{{ lang('ATTACH_SIG') }}</label>
 				</div>
 			</div>
 
@@ -84,11 +84,11 @@
 </div>
 
 	<fieldset class="form-actions">
-		{S_HIDDEN_FIELDS}{S_CAPTCHA_HIDDEN_FIELDS}
-		<button type="reset" accesskey="r" tabindex="200" value="{L_RESET}" class="btn btn-default">{L_RESET}</button>
-		<button type="submit" accesskey="s" tabindex="201" class="btn btn-default start" data-loading-text="Loading...<i class='icon-spin icon-spinner icon-large icon-white'></i>" value="{L_SUBMIT}" name="submit">{L_SUBMIT}</button>
+		{{ S_HIDDEN_FIELDS }}{{ S_CAPTCHA_HIDDEN_FIELDS }}
+		<button type="reset" accesskey="r" tabindex="200" value="{{ lang('RESET') }}" class="btn btn-default">{{ lang('RESET') }}</button>
+		<button type="submit" accesskey="s" tabindex="201" class="btn btn-default start" data-loading-text="Loading...<i class='icon-spin icon-spinner icon-large icon-white'></i>" value="{{ lang('SUBMIT') }}" name="submit">{{ lang('SUBMIT') }}</button>
 	</fieldset>
-	{S_FORM_TOKEN}
+	{{ S_FORM_TOKEN }}
 </form>
 
-<!-- INCLUDE gallery/gallery_footer.html -->
+{% include 'gallery/gallery_footer.html' %}

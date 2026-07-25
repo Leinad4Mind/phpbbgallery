@@ -1,87 +1,87 @@
-<!-- INCLUDE gallery/gallery_header.html -->
+{% include 'gallery/gallery_header.html' %}
 <div class="clearfix">
-<div class="side-segment"><h3>{L_SEARCH}</h3></div>
+<div class="side-segment"><h3>{{ lang('SEARCH') }}</h3></div>
 
-<form method="get" action="{S_SEARCH_ACTION}">
+<form method="get" action="{{ S_SEARCH_ACTION }}">
 
 <div class="well">
-	<h3>{L_SEARCH_QUERY}</h3>
+	<h3>{{ lang('SEARCH_QUERY') }}</h3>
   <fieldset>
-	<div class="control-group"> 
-	   <label class="control-label" for="keywords">{L_SEARCH_KEYWORDS}{L_COLON}</label><!-- IF S_IMPLEMENTED --><span class="help-block">{L_SEARCH_KEYWORDS_EXPLAIN}</span><!-- ENDIF -->
-	<div class="controls controls-row"> 
+	<div class="control-group">
+	   <label class="control-label" for="keywords">{{ lang('SEARCH_KEYWORDS') }}{{ lang('COLON') }}</label>{% if S_IMPLEMENTED %}<span class="help-block">{{ lang('SEARCH_KEYWORDS_EXPLAIN') }}</span>{% endif %}
+	<div class="controls controls-row">
        <div class="input-icon left">
 	    <i class="icon-search"></i>
-	   <input type="text" class="form-control" placeholder="Ex: Cover" name="keywords" id="keywords" title="{L_SEARCH_KEYWORDS}">
-	  </div> 
-	<div class="radio"><input type="radio" checked="checked" name="terms" id="terms1" value="all"><label for="terms1">{L_SEARCH_ALL_TERMS}</label></div>
-	<div class="radio"><input type="radio" name="terms" id="terms2" value="any"><label for="terms2">{L_SEARCH_ANY_TERMS}</label></div>
-	</div> 
+	   <input type="text" class="form-control" placeholder="Ex: Cover" name="keywords" id="keywords" title="{{ lang('SEARCH_KEYWORDS') }}">
+	  </div>
+	<div class="radio"><input type="radio" checked="checked" name="terms" id="terms1" value="all"><label for="terms1">{{ lang('SEARCH_ALL_TERMS') }}</label></div>
+	<div class="radio"><input type="radio" name="terms" id="terms2" value="any"><label for="terms2">{{ lang('SEARCH_ANY_TERMS') }}</label></div>
 	</div>
-	
-	<div class="control-group"> 
-	   <label class="control-label" for="author">{L_SEARCH_AUTHOR}{L_COLON}</label><span class="help-block">{L_SEARCH_AUTHOR_EXPLAIN}</span>
-	<div class="controls controls-row"> 
+	</div>
+
+	<div class="control-group">
+	   <label class="control-label" for="author">{{ lang('SEARCH_AUTHOR') }}{{ lang('COLON') }}</label><span class="help-block">{{ lang('SEARCH_AUTHOR_EXPLAIN') }}</span>
+	<div class="controls controls-row">
 	<div class="input-icon left">
 	    <i class="icon-user"></i>
-       <input type="text" class="form-control" placeholder="Ex: Leinad4Mind" name="author" id="author" title="{L_SEARCH_AUTHOR}">
-	</div> 
-	</div> 
+       <input type="text" class="form-control" placeholder="Ex: Leinad4Mind" name="author" id="author" title="{{ lang('SEARCH_AUTHOR') }}">
+	</div>
+	</div>
 	</div>
   </fieldset>
 </div>
 
 
 <div class="well">
-	<h3>{L_SEARCH_OPTIONS}</h3>
+	<h3>{{ lang('SEARCH_OPTIONS') }}</h3>
 
 	<fieldset>
-	<div class="control-group"> 
-	   <label class="control-label" for="search_album">{L_SEARCH_ALBUMS}{L_COLON}</label><!-- IF S_IMPLEMENTED --><span class="help-block">{L_SEARCH_ALBUMS_EXPLAIN}</span><!-- ENDIF -->
-	<div class="controls controls-row"> 
-       <div class="selector"><select class="selectpicker" data-container="body" data-selected-text-format="count" name="aid[]" id="search_album" multiple="multiple" size="8" title="{L_SEARCH_ALBUMS}">{S_ALBUM_OPTIONS}</select></div>
-	</div> 
+	<div class="control-group">
+	   <label class="control-label" for="search_album">{{ lang('SEARCH_ALBUMS') }}{{ lang('COLON') }}</label>{% if S_IMPLEMENTED %}<span class="help-block">{{ lang('SEARCH_ALBUMS_EXPLAIN') }}</span>{% endif %}
+	<div class="controls controls-row">
+       <div class="selector"><select class="selectpicker" data-container="body" data-selected-text-format="count" name="aid[]" id="search_album" multiple="multiple" size="8" title="{{ lang('SEARCH_ALBUMS') }}">{{ S_ALBUM_OPTIONS }}</select></div>
 	</div>
-	<!-- IF S_IMPLEMENTED -->
-	<div class="control-group"> 
-	   <label class="control-label" for="search_child1">{L_SEARCH_SUBALBUMS}{L_COLON}</label>
-	<div class="controls controls-row"> 
-      <div class="radio"><input type="radio" checked="checked" name="sc" id="search_child1" value="1"><label for="search_child1">{L_YES}</label></div>
-	  <div class="radio"><input type="radio" name="sc" id="search_child2" value="0"><label for="search_child2">{L_NO}</label></div>
-	</div> 
 	</div>
-	<!-- ENDIF -->
-	<!-- IF S_IMPLEMENTED -->
-	<div class="control-group"> 
-	   <label class="control-label" for="sf1">{L_SEARCH_WITHIN}{L_COLON}</label>
-	<div class="controls controls-row"> 
-     <div class="radio"><input type="radio" checked="checked" name="sf" id="sf1" value="all"><label for="sf1">{L_SEARCH_IMAGE_COMMENTS}</label></div>
-	 <div class="radio"><input type="radio" name="sf" id="sf2" value="msgonly"><label for="sf2">{L_SEARCH_IMAGE_VALUES}</label></div>
-	 <div class="radio"><input type="radio" name="sf" id="sf3" value="titleonly"><label for="sf3">{L_SEARCH_IMAGENAME}</label></div>
-	 <div class="radio"><input type="radio" name="sf" id="sf4" value="firstpost"><label for="sf4">{L_SEARCH_COMMENTS}</label></div>
-	</div> 
+	{% if S_IMPLEMENTED %}
+	<div class="control-group">
+	   <label class="control-label" for="search_child1">{{ lang('SEARCH_SUBALBUMS') }}{{ lang('COLON') }}</label>
+	<div class="controls controls-row">
+      <div class="radio"><input type="radio" checked="checked" name="sc" id="search_child1" value="1"><label for="search_child1">{{ lang('YES') }}</label></div>
+	  <div class="radio"><input type="radio" name="sc" id="search_child2" value="0"><label for="search_child2">{{ lang('NO') }}</label></div>
 	</div>
-	<!-- ENDIF -->
-	
-	<div class="control-group"> 
-	   <label class="control-label" for="sd">{L_RESULT_SORT}{L_COLON}</label>
-	<div class="controls controls-row"> 
-	<div class="selector">{S_SELECT_SORT_KEY}</div> 
-      <div class="radio"><input type="radio" name="sa" id="sa" value="a"><label for="sa">{L_SORT_ASCENDING}</label></div>
-	<div class="radio"><input type="radio" name="sd" id="sd" value="d" checked="checked"><label for="sd">{L_SORT_DESCENDING}</label></div>
-	</div> 
 	</div>
-	
+	{% endif %}
+	{% if S_IMPLEMENTED %}
+	<div class="control-group">
+	   <label class="control-label" for="sf1">{{ lang('SEARCH_WITHIN') }}{{ lang('COLON') }}</label>
+	<div class="controls controls-row">
+     <div class="radio"><input type="radio" checked="checked" name="sf" id="sf1" value="all"><label for="sf1">{{ lang('SEARCH_IMAGE_COMMENTS') }}</label></div>
+	 <div class="radio"><input type="radio" name="sf" id="sf2" value="msgonly"><label for="sf2">{{ lang('SEARCH_IMAGE_VALUES') }}</label></div>
+	 <div class="radio"><input type="radio" name="sf" id="sf3" value="titleonly"><label for="sf3">{{ lang('SEARCH_IMAGENAME') }}</label></div>
+	 <div class="radio"><input type="radio" name="sf" id="sf4" value="firstpost"><label for="sf4">{{ lang('SEARCH_COMMENTS') }}</label></div>
+	</div>
+	</div>
+	{% endif %}
+
+	<div class="control-group">
+	   <label class="control-label" for="sd">{{ lang('RESULT_SORT') }}{{ lang('COLON') }}</label>
+	<div class="controls controls-row">
+	<div class="selector">{{ S_SELECT_SORT_KEY }}</div>
+      <div class="radio"><input type="radio" name="sa" id="sa" value="a"><label for="sa">{{ lang('SORT_ASCENDING') }}</label></div>
+	<div class="radio"><input type="radio" name="sd" id="sd" value="d" checked="checked"><label for="sd">{{ lang('SORT_DESCENDING') }}</label></div>
+	</div>
+	</div>
+
   </fieldset>
 
 </div>
 
 	<fieldset class="form-actions">
-		{S_HIDDEN_FIELDS}
-		<button type="reset" value="{L_RESET}" name="reset" class="btn btn-default">{L_RESET}</button>
-		<button type="submit" name="submit" value="{L_SEARCH}" class="btn btn-default" autocomplete="off" data-loading-text="Searching...<i class='icon-spin icon-spinner icon-large icon-white'></i>">{L_SEARCH}</button>
+		{{ S_HIDDEN_FIELDS }}
+		<button type="reset" value="{{ lang('RESET') }}" name="reset" class="btn btn-default">{{ lang('RESET') }}</button>
+		<button type="submit" name="submit" value="{{ lang('SEARCH') }}" class="btn btn-default" autocomplete="off" data-loading-text="Searching...<i class='icon-spin icon-spinner icon-large icon-white'></i>">{{ lang('SEARCH') }}</button>
 	</fieldset>
 
 </form>
 </div>
-<!-- INCLUDE gallery/gallery_footer.html -->
+{% include 'gallery/gallery_footer.html' %}

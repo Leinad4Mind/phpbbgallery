@@ -1,60 +1,60 @@
-<!-- INCLUDE gallery/gallery_header.html -->
+{% include 'gallery/gallery_header.html' %}
 <div class="panel-content">
 	<div>
-	<h2><a href="{U_VIEW_ALBUM}">{L_ALBUM}{L_COLON} {ALBUM_NAME}</a></h2>
+	<h2><a href="{{ U_VIEW_ALBUM }}">{{ lang('ALBUM') }}{{ lang('COLON') }} {{ ALBUM_NAME }}</a></h2>
 		<div class="panel">
 			<div class="panel-body"><span class="corners-top"><span></span></span>
 
 			<div class="postbody" style="width: 100%;">
 				<ul class="post-buttons">
-					<li><a href="{U_EDIT_IMAGE}" title="{L_EDIT_IMAGE}" class="button icon-button edit-icon"><span>{L_EDIT_IMAGE}</span></a></li>
-					<li><a href="{U_DELETE_IMAGE}" title="{L_DELETE_IMAGE}" class="button icon-button delete-icon"><span>{L_DELETE_IMAGE}</span></a></li>
+					<li><a href="{{ U_EDIT_IMAGE }}" title="{{ lang('EDIT_IMAGE') }}" class="button icon-button edit-icon"><span>{{ lang('EDIT_IMAGE') }}</span></a></li>
+					<li><a href="{{ U_DELETE_IMAGE }}" title="{{ lang('DELETE_IMAGE') }}" class="button icon-button delete-icon"><span>{{ lang('DELETE_IMAGE') }}</span></a></li>
 				</ul>
-				<h3>{IMAGE_NAME}</h3>
+				<h3>{{ IMAGE_NAME }}</h3>
 				<p class="author">
-					{L_POST_BY_AUTHOR} {UPLOADER}<br />
-					{IMAGE_TIME}<br />
-					{L_ALBUM}{L_COLON} <a href="{U_VIEW_ALBUM}" style="font-weight: bold;">{ALBUM_NAME}</a><!-- IF U_MOVE_IMAGE --> &raquo; <a href="{U_MOVE_IMAGE}" style="font-weight: bold;">{L_MOVE}</a><!-- ENDIF --><br />
-					{L_STATUS}{L_COLON} <span style="font-weight: bold;">{STATUS}</span>
+					{{ lang('POST_BY_AUTHOR') }} {{ UPLOADER }}<br />
+					{{ IMAGE_TIME }}<br />
+					{{ lang('ALBUM') }}{{ lang('COLON') }} <a href="{{ U_VIEW_ALBUM }}" style="font-weight: bold;">{{ ALBUM_NAME }}</a>{% if U_MOVE_IMAGE %} &raquo; <a href="{{ U_MOVE_IMAGE }}" style="font-weight: bold;">{{ lang('MOVE') }}</a>{% endif %}<br />
+					{{ lang('STATUS') }}{{ lang('COLON') }} <span style="font-weight: bold;">{{ STATUS }}</span>
 				</p>
 
 				<div class="content">
-					<div style="text-align: center;">{UC_IMAGE}</div>
-					<!-- IF IMAGE_DESC -->
+					<div style="text-align: center;">{{ UC_IMAGE }}</div>
+					{% if IMAGE_DESC %}
 						<hr />
-						<span style="font-weight: bold;">{L_IMAGE_DESC}{L_COLON}</span><br />
-						{IMAGE_DESC}
-					<!-- ENDIF -->
+						<span style="font-weight: bold;">{{ lang('IMAGE_DESC') }}{{ lang('COLON') }}</span><br />
+						{{ IMAGE_DESC }}
+					{% endif %}
 				</div>
 			</div>
 
 			<span class="corners-bottom"><span></span></span></div>
 		</div>
 
-		<!-- IF .reports -->
+		{% if reports|length %}
 			<div id="report" class="panel">
 				<div class="panel-body"><span class="corners-top"><span></span></span>
-				<!-- BEGIN reports -->
-				<div class="postbody <!-- IF reports.STATUS == 1 --> reported<!-- ENDIF -->" style="width: 100%">
-					<p class="author">{L_REPORT_BY} {reports.REPORTER} &raquo; {reports.REPORT_TIME}</p>
-					<div class="content">{reports.REPORT_NOTE}</div>
-					<!-- IF reports.STATUS == 0 -->
-					<p class="author">{L_CLOSED_BY} {reports.MANAGER} </p>
+				{% for reports in reports %}
+				<div class="postbody {% if reports.STATUS == 1 %} reported{% endif %}" style="width: 100%">
+					<p class="author">{{ lang('REPORT_BY') }} {{ reports.REPORTER }} &raquo; {{ reports.REPORT_TIME }}</p>
+					<div class="content">{{ reports.REPORT_NOTE }}</div>
+					{% if reports.STATUS == 0 %}
+					<p class="author">{{ lang('CLOSED_BY') }} {{ reports.MANAGER }} </p>
 					<hr>
-					<!-- ENDIF -->
+					{% endif %}
 				</div>
-				<!-- END reports -->
+				{% endfor %}
 				<span class="corners-bottom"><span></span></span></div>
 			</div>
-		<!-- ENDIF -->
+		{% endif %}
 
-		<form method="post" action="{S_MCP_ACTION}">
+		<form method="post" action="{{ S_MCP_ACTION }}">
 			<fieldset class="submit-buttons">
 				<select name="action">
-					{U_SELECT}
+					{{ U_SELECT }}
 				</select>
-				<input class="button2" type="submit" value="{L_SUBMIT}" />
-				<input type="hidden" value="{REPORT_ID}" name="image_id_ary[{REPORT_ID}]" />
+				<input class="button2" type="submit" value="{{ lang('SUBMIT') }}" />
+				<input type="hidden" value="{{ REPORT_ID }}" name="image_id_ary[{{ REPORT_ID }}]" />
 			</fieldset>
 		</form>
 		</div>

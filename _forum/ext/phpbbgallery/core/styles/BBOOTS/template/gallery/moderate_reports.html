@@ -1,56 +1,56 @@
-<!-- INCLUDE gallery/gallery_header.html -->
+{% include 'gallery/gallery_header.html' %}
 
-<h2>{L_MCP}<!-- IF U_ALBUM_NAME --> - {U_ALBUM_NAME}<!-- ENDIF --></h2>
-<!-- IF .pagination -->
+<h2>{{ lang('MCP') }}{% if U_ALBUM_NAME %} - {{ U_ALBUM_NAME }}{% endif %}</h2>
+{% if pagination|length %}
 	<div class="topic-actions">
 		<div class="pagination">
-			{TOTAL_PAGES} &bull; 
-			<!-- IF .pagination -->
-				<!-- INCLUDE pagination.html -->
-			<!-- ELSE -->
-				<li><a>{PAGE_NUMBER}</a></li>
-			<!-- ENDIF -->
+			{{ TOTAL_PAGES }} &bull;
+			{% if pagination|length %}
+				{% include 'pagination.html' %}
+			{% else %}
+				<li><a>{{ PAGE_NUMBER }}</a></li>
+			{% endif %}
 		</div>
 	</div>
-<!-- ENDIF -->
+{% endif %}
 <div id="tabs" class="panel has-nav-tabs no-border">
 	<ul class="nav nav-tabs">
-		<li class="tab"><a href="{U_GALLERY_MODERATE_OVERVIEW}">{L_GALLERY_MCP_MAIN}</a></li>
-		<!-- IF U_ALBUM_OVERVIEW --><li class="tab"><a href="{U_ALBUM_OVERVIEW}">{L_GALLERY_MCP_ALBUM_OVERVIEW}</a></li><!-- ENDIF -->
-		<li class="tab"><a href="{U_GALLERY_MODERATE_APPROVE}">{L_GALLERY_MCP_QUEUE}</a></li>
-		<li class="tab activetab"><a href="{U_GALLERY_MODERATE_REPORT}">{L_GALLERY_MCP_REPORTED}</a></li>
-		<li class="tab"><a href="{U_GALLERY_MCP_LOGS}">{L_MCP_LOGS}</a></li>
+		<li class="tab"><a href="{{ U_GALLERY_MODERATE_OVERVIEW }}">{{ lang('GALLERY_MCP_MAIN') }}</a></li>
+		{% if U_ALBUM_OVERVIEW %}<li class="tab"><a href="{{ U_ALBUM_OVERVIEW }}">{{ lang('GALLERY_MCP_ALBUM_OVERVIEW') }}</a></li>{% endif %}
+		<li class="tab"><a href="{{ U_GALLERY_MODERATE_APPROVE }}">{{ lang('GALLERY_MCP_QUEUE') }}</a></li>
+		<li class="tab activetab"><a href="{{ U_GALLERY_MODERATE_REPORT }}">{{ lang('GALLERY_MCP_REPORTED') }}</a></li>
+		<li class="tab"><a href="{{ U_GALLERY_MCP_LOGS }}">{{ lang('MCP_LOGS') }}</a></li>
 	</ul>
 	<div class="panel-content">
 		<div class="panel-body">
 			<div class="row">
 			<div id="cp-menu" class="col-md-3">
 				<div class="list-group">
-					<a class="list-group-item<!-- IF U_STATUS --> active<!-- ENDIF -->" href="{U_GALLERY_MODERATE_REPORT}"><span>{L_GALLERY_MCP_REPO_OPEN}</span></a>
-					<a class="list-group-item<!-- IF !U_STATUS --> active<!-- ENDIF -->" href="{U_GALLERY_MODERATE_REPORT_CLOSED}"><span>{L_GALLERY_MCP_REPO_DONE}</span></a>
+					<a class="list-group-item{% if U_STATUS %} active{% endif %}" href="{{ U_GALLERY_MODERATE_REPORT }}"><span>{{ lang('GALLERY_MCP_REPO_OPEN') }}</span></a>
+					<a class="list-group-item{% if not U_STATUS %} active{% endif %}" href="{{ U_GALLERY_MODERATE_REPORT_CLOSED }}"><span>{{ lang('GALLERY_MCP_REPO_DONE') }}</span></a>
 				</div>
 			</div>
 			<div id="cp-main" class="col-md-9">
-				<h2><!-- IF U_STATUS -->{L_GALLERY_MCP_REPO_OPEN}<!-- ELSE -->{L_GALLERY_MCP_REPO_DONE}<!-- ENDIF --></h2>
-				<!-- INCLUDE gallery/moderate_report_queue.html -->
+				<h2>{% if U_STATUS %}{{ lang('GALLERY_MCP_REPO_OPEN') }}{% else %}{{ lang('GALLERY_MCP_REPO_DONE') }}{% endif %}</h2>
+				{% include 'gallery/moderate_report_queue.html' %}
 			</div>
 		</div>
 	</div>
 </div>
 </div>
 
-<!-- IF .pagination -->
+{% if pagination|length %}
 	<div class="topic-actions">
 		<div class="pagination">
-			{TOTAL_PAGES} &bull; 
-			<!-- IF .pagination -->
-				<!-- INCLUDE pagination.html -->
-			<!-- ELSE -->
-				<li><a>{PAGE_NUMBER}</a></li>
-			<!-- ENDIF -->
+			{{ TOTAL_PAGES }} &bull;
+			{% if pagination|length %}
+				{% include 'pagination.html' %}
+			{% else %}
+				<li><a>{{ PAGE_NUMBER }}</a></li>
+			{% endif %}
 		</div>
 	</div>
 	<br>
-<!-- ENDIF -->
+{% endif %}
 <br>
-<!-- INCLUDE gallery/gallery_footer.html -->
+{% include 'gallery/gallery_footer.html' %}

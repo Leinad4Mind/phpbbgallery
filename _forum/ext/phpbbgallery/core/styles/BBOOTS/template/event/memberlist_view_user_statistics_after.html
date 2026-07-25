@@ -1,5 +1,5 @@
-<!-- IF U_GALLERY_IMAGES_ALLOW -->
+{% if U_GALLERY_IMAGES_ALLOW %}
 <li>
-	{L_GALLERY_IMAGES}{L_COLON} {U_GALLERY_IMAGES}
+	{{ lang('GALLERY_IMAGES') }}{{ lang('COLON') }} {{ U_GALLERY_IMAGES }}
 </li>
-<!-- ENDIF -->
+{% endif %}

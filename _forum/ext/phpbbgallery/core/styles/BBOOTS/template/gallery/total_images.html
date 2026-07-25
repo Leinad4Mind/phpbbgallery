@@ -1,16 +1,16 @@
-<!-- IF .pagination or TOTAL_IMAGES -->
+{% if pagination|length or TOTAL_IMAGES %}
 	<div class="pull-right">
 		<div class="pagination pagination-sm">
 			<li class="active">
-				<a>{TOTAL_IMAGES}</a>
+				<a>{{ TOTAL_IMAGES }}</a>
 			</li>
-			<!-- IF .pagination -->
-				 <!-- INCLUDE pagination.html -->
-			<!-- ELSE -->
+			{% if pagination|length %}
+				 {% include 'pagination.html' %}
+			{% else %}
 			<li class="active">
-				<a>{PAGE_NUMBER}</a>
+				<a>{{ PAGE_NUMBER }}</a>
 			</li>
-			<!-- ENDIF -->
+			{% endif %}
 		</div>
 	</div>
-<!-- ENDIF -->
+{% endif %}

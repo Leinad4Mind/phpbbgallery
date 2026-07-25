@@ -21,21 +21,21 @@ function change_read_write()
 	same_name = document.getElementById('same_name').checked;
 	if (!same_name)
 	{
-		<!-- BEGIN image -->
-			<!-- IF not image.S_FIRST_ROW -->
-		make_writable('{image.S_ROW_COUNT}')
-			<!-- ENDIF -->
-		<!-- END image -->
+		{% for image in image %}
+			{% if not image.S_FIRST_ROW %}
+		make_writable('{{ image.S_ROW_COUNT }}')
+			{% endif %}
+		{% endfor %}
 	}
 	else
 	{
 		update_all('message');
 		update_all('image_name');
-		<!-- BEGIN image -->
-			<!-- IF not image.S_FIRST_ROW -->
-		make_readonly('{image.S_ROW_COUNT}');
-			<!-- ENDIF -->
-		<!-- END image -->
+		{% for image in image %}
+			{% if not image.S_FIRST_ROW %}
+		make_readonly('{{ image.S_ROW_COUNT }}');
+			{% endif %}
+		{% endfor %}
 		set_text_field(0);
 	}
 }
@@ -86,11 +86,11 @@ function update_all(what)
 		{
 			count = parseInt(document.getElementById('image_num').value);
 		}
-		<!-- BEGIN image -->
-			<!-- IF not image.S_FIRST_ROW -->
-		document.getElementById(what + '_{image.S_ROW_COUNT}').value = content.split('{' + 'NUM' + '}').join(({image.S_ROW_COUNT} + count));
-			<!-- ENDIF -->
-		<!-- END image -->
+		{% for image in image %}
+			{% if not image.S_FIRST_ROW %}
+		document.getElementById(what + '_{{ image.S_ROW_COUNT }}').value = content.split('{' + 'NUM' + '}').join(({{ image.S_ROW_COUNT }} + count));
+			{% endif %}
+		{% endfor %}
 	}
 }
 
