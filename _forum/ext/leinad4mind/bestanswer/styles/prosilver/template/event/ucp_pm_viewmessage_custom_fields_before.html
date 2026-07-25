@@ -1,5 +1,8 @@
-{% if AUTHOR_ANSWERS != '' %}
+{% if AUTHOR_ANSWERS %}
+{% if not INCLUDED_JXTOOLSJS %}
 {% INCLUDEJS '@leinad4mind_bestanswer/jxtools.js' %}
+{% DEFINE INCLUDED_JXTOOLSJS = true %}
+{% endif %}
 
 <dd id="list_inner_hidden_container_{{ MESSAGE_ID }}" jxdom-closest="dl.postprofile" jxdom-find="dd.profile-joined" jxdom-action="before" >
 <div class="profile-answers"><strong>{{ lang('ANSWERS') ~ lang('COLON') }}</strong> {{ AUTHOR_ANSWERS }}</div>

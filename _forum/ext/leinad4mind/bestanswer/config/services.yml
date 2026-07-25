@@ -9,7 +9,8 @@ services:
             - '@request'
             - '@user'
             - '@notification_manager'
-            - '%sitesplat.bbpoints.table%'
+            - '@ext.manager'
+            - '%core.table_prefix%'
             - '%core.root_path%'
             - '%core.php_ext%'
 
@@ -25,7 +26,8 @@ services:
             - '@template'
             - '@user'
             - '@log'
-            - '%sitesplat.bbpoints.table%'
+            - '@ext.manager'
+            - '%core.table_prefix%'
             - '%core.root_path%'
             - '%core.php_ext%'
         tags:
@@ -36,7 +38,6 @@ services:
         shared: false
         parent: notification.type.base
         calls:
-            - [set_config, ['@config']]
             - [set_user_loader, ['@user_loader']]
         tags:
             - { name: notification.type }
@@ -46,7 +47,6 @@ services:
         shared: false
         parent: notification.type.base
         calls:
-            - [set_config, ['@config']]
             - [set_user_loader, ['@user_loader']]
         tags:
             - { name: notification.type }

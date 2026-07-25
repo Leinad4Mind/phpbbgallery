@@ -13,6 +13,7 @@ namespace leinad4mind\bestanswer\controller;
 
 use phpbb\auth\auth;
 use phpbb\db\driver\driver_interface;
+use phpbb\extension\manager as ext_manager;
 use phpbb\language\language;
 use phpbb\notification\manager;
 use phpbb\log\log;
@@ -45,13 +46,16 @@ class main_controller
 	/* @var \phpbb\notification\manager */
 	private $notification_manager;
 
+	/* @var \phpbb\extension\manager */
+	protected $ext_manager;
+
 	/* @var string */
 	protected $root_path;
 
 	/* @var string */
 	protected $php_ext;
 
-	/* @var string  */
+	/* @var string */
 	protected $bbpoints_table;
 	/**
 	 * Constructor
@@ -62,8 +66,9 @@ class main_controller
 	 * @param \phpbb\log\log                      $log
 	 * @param \phpbb\request\request              $request
 	 * @param \phpbb\user                         $user
-	 * @param string                              $bbpoints_table
 	 * @param \phpbb\notification\manager         $notification_manager
+	 * @param \phpbb\extension\manager            $ext_manager
+	 * @param string                              $table_prefix   Core table prefix, used to derive the optional BBPoints table name
 	 * @param string                              $root_path
 	 * @param string                              $php_ext
 	 */
@@ -75,7 +80,8 @@ class main_controller
 		request $request,
 		user $user,
 		manager $notification_manager,
-		$bbpoints_table,
+		ext_manager $ext_manager,
+		$table_prefix,
 		$root_path,
 		$php_ext
 	)
@@ -87,7 +93,10 @@ class main_controller
 		$this->request = $request;
 		$this->user = $user;
 		$this->notification_manager = $notification_manager;
-		$this->bbpoints_table = $bbpoints_table;
+		$this->ext_manager = $ext_manager;
+		// Best Answer's BBPoints integration is optional: derive the table name
+		// instead of requiring sitesplat/bbpoints' container parameter to exist.
+		$this->bbpoints_table = $table_prefix . 'bbpoints';
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
 	}
@@ -123,9 +132,14 @@ class main_controller
 		$this->db->sql_freeresult($result);
 
 		// Error checking
-		if (!$topic_data['enable_answer']) 
-		{ 
-			throw new \phpbb\exception\http_exception(404, $this->lang->lang('EXTENSION_NOT_ENABLED')); 
+		if (empty($topic_data))
+		{
+			throw new \phpbb\exception\http_exception(404, $this->lang->lang('NO_TOPIC'));
+		}
+
+		if (!$topic_data['enable_answer'])
+		{
+			throw new \phpbb\exception\http_exception(404, $this->lang->lang('EXTENSION_NOT_ENABLED'));
 		}
 
 		if ((int) $topic_data['topic_first_post_id'] == (int) $post_id)
@@ -160,19 +174,23 @@ class main_controller
 
 				$sql = 'UPDATE ' . USERS_TABLE . '
 					SET user_answers = user_answers - 1
-					WHERE user_id = ' . (int) $topic_data['user_id'];
+					WHERE user_id = ' . (int) $topic_data['user_id'] . '
+						AND user_answers > 0';
 				$this->db->sql_query($sql);
 
 				$post_author = get_username_string('full', (int) $topic_data['user_id'], $topic_data['username'], $topic_data['user_colour']);
 				$this->log->add($log_var, (int) $this->user->data['user_id'], $this->user->data['user_ip'], 'LOG_UNMARK_ANSWER', time(), array($topic_data['post_subject'], $post_author));
-				
-				// Remove BBPoints
-				$reason = $this->db->sql_escape('bestanswer-' . (int) $post_id);
-				$sql = 'DELETE FROM ' . $this->bbpoints_table . '
-					WHERE to_id = ' . (int) $topic_data['user_id'] . '
-					AND reason = "' . $reason . '"';
-				$this->db->sql_query($sql);
-				$this->log->add($log_var, (int) $topic_data['user_id'], $this->user->data['user_ip'], 'LOG_BBPOINTS_UNMARK_ANSWER', time(), array($topic_data['post_subject'], $post_author));
+
+				if ($this->ext_manager->is_enabled('sitesplat/bbpoints'))
+				{
+					// Remove BBPoints
+					$reason = $this->db->sql_escape('bestanswer-' . (int) $post_id);
+					$sql = 'DELETE FROM ' . $this->bbpoints_table . '
+						WHERE to_id = ' . (int) $topic_data['user_id'] . '
+						AND reason = \'' . $reason . '\'';
+					$this->db->sql_query($sql);
+					$this->log->add($log_var, (int) $topic_data['user_id'], $this->user->data['user_ip'], 'LOG_BBPOINTS_UNMARK_ANSWER', time(), array($topic_data['post_subject'], $post_author));
+				}
 
 				$this->notification_manager->delete_notifications('leinad4mind.bestanswer.notification.type.unmarkanswer', $post_id, $post_id, $topic_data['user_id']);
 				$this->notification_manager->add_notifications('leinad4mind.bestanswer.notification.type.unmarkanswer', [
@@ -206,7 +224,8 @@ class main_controller
 
 					$sql = 'UPDATE ' . USERS_TABLE . '
 						SET user_answers = user_answers - 1
-						WHERE user_id = ' . (int) $row['poster_id'];
+						WHERE user_id = ' . (int) $row['poster_id'] . '
+							AND user_answers > 0';
 					$this->db->sql_query($sql);
 
 					$post_author = get_username_string('full', (int) $row['poster_id'], $row['username'], $row['user_colour']);
@@ -231,12 +250,18 @@ class main_controller
 				$this->log->add($log_var, (int) $this->user->data['user_id'], $this->user->data['user_ip'], 'LOG_MARK_ANSWER', time(), array($topic_data['post_subject'], $post_author));
 
 				// Add BBPoints
-				if ((int) $topic_data['bbpoints_answer'] > 0) {
-					$reason = $this->db->sql_escape('bestanswer-' . (int) $post_id);
-					$sql = 'INSERT INTO ' . $this->bbpoints_table . ' (from_id, to_id, bbpoints, reason, timestamp) 
-						VALUES (0, ' . (int) $topic_data['user_id'] . ', ' . (int) $topic_data['bbpoints_answer'] . ', "' . $reason . '", ' . time() . ')';
+				if ($this->ext_manager->is_enabled('sitesplat/bbpoints') && (int) $topic_data['bbpoints_answer'] > 0)
+				{
+					$sql_arr = array(
+						'from_id'	=> 0,
+						'to_id'		=> (int) $topic_data['user_id'],
+						'bbpoints'	=> (int) $topic_data['bbpoints_answer'],
+						'reason'	=> 'bestanswer-' . (int) $post_id,
+						'timestamp'	=> time(),
+					);
+					$sql = 'INSERT INTO ' . $this->bbpoints_table . ' ' . $this->db->sql_build_array('INSERT', $sql_arr);
 					$this->db->sql_query($sql);
-					$this->log->add($log_var, (int) $topic_data['user_id'], $this->user->data['user_ip'], 'LOG_BBPOINTS_MARK_ANSWER', time(), array($topic_data['post_subject'], $post_author));				
+					$this->log->add($log_var, (int) $topic_data['user_id'], $this->user->data['user_ip'], 'LOG_BBPOINTS_MARK_ANSWER', time(), array($topic_data['post_subject'], $post_author));
 				}
 
 				$this->notification_manager->delete_notifications('leinad4mind.bestanswer.notification.type.markanswer', $post_id, $post_id, $topic_data['user_id']);
@@ -263,7 +288,6 @@ class main_controller
 
 		// Redirect back to the post
 		$url = append_sid("{$this->root_path}viewtopic.{$this->php_ext}", 'p=' . (int) $post_id . '#p' . (int) $post_id);
-		$response = new \Symfony\Component\HttpFoundation\RedirectResponse($url, 302);
-		$response->send();
+		return new \Symfony\Component\HttpFoundation\RedirectResponse($url, 302);
 	}
 }

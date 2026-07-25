@@ -7,6 +7,6 @@
 <dl>
 	<dt><label for="bbpoints_answer">{{ lang('BBPOINTS_ANSWER') ~ lang('COLON') }}</label><br /><span>{{ lang('BBPOINTS_ANSWER_EXPLAIN') }}</span></dt>
 	<dd>
-		<label><input type="number" name="bbpoints_answer" value="{S_BBPOINTS_ANSWER}"/></label>
+		<label><input type="number" name="bbpoints_answer" value="{{ S_BBPOINTS_ANSWER }}" min="0"/></label>
 	</dd>
 </dl>

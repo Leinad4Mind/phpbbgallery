@@ -1,37 +1,44 @@
 {
-    "name": "leinad4mind/bestanswer",
-    "type": "phpbb-extension",
-    "description": "An extension for phpBB that allows users to mark a post as the 'Best Answer'.",
-    "homepage": "https://leinad4mind.top/forum",
-    "version": "2.1.0",
-    "time": "2025-08-16",
-    "keywords": [ "phpbb", "extension", "best", "answer", "leinad4mind", "special" ],
-    "license": "GPL-2.0-only",
-    "authors": [
-        {
-            "name": "Leinad4Mind",
-            "homepage": "https://leinad4mind.top/forum",
-            "role": "Developer"
-        },
-        {
-            "name": "kinerity",
-            "role": "Original Developer"
-        }
-    ],
-    "require": {
-        "php": ">=5.4.7",
-        "phpbb/phpbb": ">=3.2.0,<4.0.0",
-        "composer/installers": "~1.0.0"
-    },
-    "extra": {
-        "display-name": "Best Answer Special Edition",
-        "soft-require": {
-            "phpbb/phpbb": ">=3.2.0,<4.0.0"
-        },
-        "version-check": {
-            "host": "leinad4mind.top",
-            "directory": "/phpbb/bestanswer_special",
-            "filename": "version_check"
-        }
-    }
+	"name": "leinad4mind/bestanswer",
+	"type": "phpbb-extension",
+	"description": "An extension for phpBB that allows users to mark a post as the 'Best Answer'.",
+	"homepage": "https://leinad4mind.top/forum",
+	"version": "2.3.0",
+	"time": "2026-07-25",
+	"keywords": [
+		"phpbb",
+		"extension",
+		"best",
+		"answer",
+		"leinad4mind",
+		"special"
+	],
+	"license": "GPL-2.0-only",
+	"authors": [
+		{
+			"name": "Leinad4Mind",
+			"homepage": "https://leinad4mind.top/forum",
+			"role": "Developer"
+		},
+		{
+			"name": "kinerity",
+			"role": "Original Developer"
+		}
+	],
+	"require": {
+		"php": ">=7.1.3",
+		"phpbb/phpbb": ">=3.3.0,<4.0.0",
+		"composer/installers": "~1.0.0"
+	},
+	"extra": {
+		"display-name": "Best Answer Special Edition",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.3.0,<4.0.0"
+		},
+		"version-check": {
+			"host": "leinad4mind.top",
+			"directory": "/phpbb/bestanswer_special",
+			"filename": "version_check"
+		}
+	}
 }

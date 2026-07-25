@@ -3,3 +3,7 @@
 <div class="content">{{ postrow.ANSWER_POST_TEXT }}</div>
 <a href="{{ postrow.U_ANSWER }}">{{ lang('TO_POST') }}</a></div>
 {% endif %}
+{# TODO: switch to a dedicated `mcp_topic_postrow_post_after` event once it exists in phpBB core (propose via PR) — this event is a workaround because MCP has no post-content exit point today #}
+{% if postrow.POST_ID == postrow.ANSWER_POST_ID %}
+	</div>
+{% endif %}

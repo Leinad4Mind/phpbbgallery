@@ -15,6 +15,7 @@ use phpbb\config\config;
 use phpbb\auth\auth;
 use phpbb\db\driver\driver_interface;
 use phpbb\controller\helper;
+use phpbb\extension\manager;
 use phpbb\language\language;
 use phpbb\request\request;
 use phpbb\template\template;
@@ -58,7 +59,10 @@ class main_listener implements EventSubscriberInterface
 	/* @var \phpbb\log\log */
 	protected $log;
 
-	/* @var int bbpoints */
+	/* @var \phpbb\extension\manager */
+	protected $ext_manager;
+
+	/* @var string */
 	protected $bbpoints_table;
 
 	/* @var string */
@@ -82,21 +86,23 @@ class main_listener implements EventSubscriberInterface
 	 * @param template				$template		Template object
 	 * @param user					$user			User object
 	 * @param log					$log			Log object
-	 * @param int					$bbpoints_table
+	 * @param manager				$ext_manager	Extension manager object
+	 * @param string				$table_prefix	Core table prefix, used to derive the optional BBPoints table name
 	 * @param string				$root_path
 	 * @param string				$php_ext
 	 */
 	public function __construct(
 		config $config,
 		auth $auth,
-		driver_interface $db, 
+		driver_interface $db,
 		helper $helper,
 		language $lang,
 		request $request,
 		template $template,
 		user $user,
 		log $log,
-		$bbpoints_table,
+		manager $ext_manager,
+		$table_prefix,
 		$root_path,
 		$php_ext
 	)
@@ -110,7 +116,10 @@ class main_listener implements EventSubscriberInterface
 		$this->template = $template;
 		$this->user = $user;
 		$this->log = $log;
-		$this->bbpoints_table = $bbpoints_table;
+		$this->ext_manager = $ext_manager;
+		// Best Answer's BBPoints integration is optional: derive the table name
+		// instead of requiring sitesplat/bbpoints' container parameter to exist.
+		$this->bbpoints_table = $table_prefix . 'bbpoints';
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
 	}
@@ -203,11 +212,13 @@ class main_listener implements EventSubscriberInterface
 
 		if (!empty($answer_post_ids))
 		{
-			// Remove BBPoints
-			$sql = 'DELETE FROM ' . $this->bbpoints_table . ' WHERE
-			' . $this->db->sql_in_set('to_id', $answer_user_ids) . ' AND '.$this->db->sql_in_set('reason', $answer_bbpoints_ids);
-			$this->db->sql_query($sql);
-			$this->log->add($log_var, (int) $topic_data['user_id'], $this->user->data['user_ip'], 'LOG_BBPOINTS_MARK_ANSWERS', time(), array(implode(",",$answer_user_ids), implode(",",$answer_post_ids)));
+			if ($this->ext_manager->is_enabled('sitesplat/bbpoints'))
+			{
+				// Remove BBPoints
+				$sql = 'DELETE FROM ' . $this->bbpoints_table . ' WHERE
+				' . $this->db->sql_in_set('to_id', $answer_user_ids) . ' AND '.$this->db->sql_in_set('reason', $answer_bbpoints_ids);
+				$this->db->sql_query($sql);
+			}
 
 			$sql = 'UPDATE ' . TOPICS_TABLE . ' SET ' . $this->db->sql_build_array('UPDATE', $data) . ' WHERE ' . $this->db->sql_in_set('answer_post_id', $answer_post_ids);
 			$this->db->sql_query($sql);
@@ -215,10 +226,15 @@ class main_listener implements EventSubscriberInterface
 
 		if (!empty($answer_user_ids))
 		{
-			$sql = 'UPDATE ' . USERS_TABLE . '
-				SET user_answers = user_answers - 1
-				WHERE ' . $this->db->sql_in_set('user_id', $answer_user_ids, false, true);
-			$this->db->sql_query($sql);
+			// A user may lose more than one best answer in the same batch
+			foreach (array_count_values($answer_user_ids) as $user_id => $count)
+			{
+				$sql = 'UPDATE ' . USERS_TABLE . '
+					SET user_answers = user_answers - ' . (int) $count . '
+					WHERE user_id = ' . (int) $user_id . '
+						AND user_answers >= ' . (int) $count;
+				$this->db->sql_query($sql);
+			}
 		}
 	}
 
@@ -229,7 +245,8 @@ class main_listener implements EventSubscriberInterface
 
 		$sql = 'SELECT answer_user_id
 			FROM ' . TOPICS_TABLE . '
-			WHERE ' . $this->db->sql_in_set('topic_id', $topic_ids);
+			WHERE ' . $this->db->sql_in_set('topic_id', $topic_ids) . '
+				AND answer_user_id <> 0';
 		$result = $this->db->sql_query($sql);
 		while ($row = $this->db->sql_fetchrow($result))
 		{
@@ -239,10 +256,15 @@ class main_listener implements EventSubscriberInterface
 
 		if (!empty($answer_user_ids))
 		{
-			$sql = 'UPDATE ' . USERS_TABLE . '
-				SET user_answers = user_answers - 1
-				WHERE ' . $this->db->sql_in_set('user_id', $answer_user_ids, false, true);
-			$this->db->sql_query($sql);
+			// A user may lose more than one best answer in the same batch
+			foreach (array_count_values($answer_user_ids) as $user_id => $count)
+			{
+				$sql = 'UPDATE ' . USERS_TABLE . '
+					SET user_answers = user_answers - ' . (int) $count . '
+					WHERE user_id = ' . (int) $user_id . '
+						AND user_answers >= ' . (int) $count;
+				$this->db->sql_query($sql);
+			}
 		}
 	}
 
@@ -253,15 +275,11 @@ class main_listener implements EventSubscriberInterface
 		$row = $event['row'];
 
 		// Suggested by the core, equal post times should never happen. Check it just in case.
+		// The subforum holding the newest post always wins, even when it has no answer (0),
+		// so a stale tick is cleared from the parent row.
 		if ($row['forum_last_post_time'] >= $forum_rows[$parent_id]['forum_last_post_time'])
 		{
 			$forum_rows[$parent_id]['answer_post_id'] = $row['answer_post_id'];
-
-			// Is the extension enabled on the forum and related answer_post_id not null?
-			if ($row['enable_answer'] && $forum_rows[$parent_id]['answer_post_id'] !== false)
-			{
-				$forum_rows[$parent_id]['answer_post_id'] = $row['answer_post_id'];
-			}
 		}
 
 		$event['forum_rows'] = $forum_rows;
@@ -316,7 +334,8 @@ class main_listener implements EventSubscriberInterface
 		{
 			$sql = 'UPDATE ' . USERS_TABLE . '
 				SET user_answers = user_answers - 1
-				WHERE user_id = ' . (int) $post_info['user_id'];
+				WHERE user_id = ' . (int) $post_info['user_id'] . '
+					AND user_answers > 0';
 			$this->db->sql_query($sql);
 
 			$sql = 'UPDATE ' . USERS_TABLE . '
@@ -444,8 +463,21 @@ class main_listener implements EventSubscriberInterface
 			$row = $this->db->sql_fetchrow($result);
 			$this->db->sql_freeresult($result);
 
-			if ((is_array($post_id) && in_array((int) $row['answer_post_id'], $post_id)) || (int) $row['answer_post_id'] = $post_id)
+			$answer_post_id = !empty($row['answer_post_id']) ? (int) $row['answer_post_id'] : 0;
+			$deleted_post_ids = is_array($post_id) ? array_map('intval', $post_id) : array((int) $post_id);
+
+			if ($answer_post_id && in_array($answer_post_id, $deleted_post_ids, true))
 			{
+				if ($this->ext_manager->is_enabled('sitesplat/bbpoints'))
+				{
+					// Remove BBPoints
+					$reason = $this->db->sql_escape('bestanswer-' . $answer_post_id);
+					$sql = 'DELETE FROM ' . $this->bbpoints_table . '
+						WHERE to_id = ' . (int) $row['answer_user_id'] . '
+						AND reason = \'' . $reason . '\'';
+					$this->db->sql_query($sql);
+				}
+
 				$data = array(
 					'answer_post_id'	=> 0,
 					'answer_user_id'	=> 0,
@@ -456,7 +488,8 @@ class main_listener implements EventSubscriberInterface
 
 				$sql = 'UPDATE ' . USERS_TABLE . '
 					SET user_answers = user_answers - 1
-					WHERE user_id = ' . (int) $row['answer_user_id'];
+					WHERE user_id = ' . (int) $row['answer_user_id'] . '
+						AND user_answers > 0';
 				$this->db->sql_query($sql);
 			}
 		}
@@ -489,7 +522,8 @@ class main_listener implements EventSubscriberInterface
 
 				$sql = 'UPDATE ' . USERS_TABLE . '
 					SET user_answers = user_answers - 1
-					WHERE user_id = ' . (int) $answer_user_id;
+					WHERE user_id = ' . (int) $answer_user_id . '
+						AND user_answers > 0';
 				$this->db->sql_query($sql);
 			}
 		}

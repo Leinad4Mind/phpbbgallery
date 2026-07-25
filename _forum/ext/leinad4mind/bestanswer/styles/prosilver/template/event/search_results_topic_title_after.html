@@ -3,7 +3,7 @@
 		{% INCLUDEJS '@leinad4mind_bestanswer/jxtools.js' %}
 		{% DEFINE INCLUDED_JXTOOLSJS = true %}
 	{% endif %}
-<div id="list_inner_hidden_container_1" jxdom-closest="dl.postprofile" jxdom-find="dd:nth-of-type(3)" jxdom-action="replace" >
+<div id="list_inner_hidden_container_{{ searchresults.S_ROW_COUNT }}" jxdom-closest="dl.postprofile" jxdom-find="dd:nth-of-type(3)" jxdom-action="replace" >
 <dd>{{ lang('TOPIC') ~ lang('COLON') }} <i class="icon fa-check fa-fw icon-green" aria-hidden="true"></i> <a href="{{ searchresults.U_VIEW_TOPIC }}">{{ searchresults.TOPIC_TITLE }}</a></dd>
 </div>
 {% endif %}

@@ -11,7 +11,6 @@
 
 namespace leinad4mind\bestanswer\notification\type;
 
-use phpbb\config\config;
 use phpbb\notification\type\base;
 
 /**
@@ -20,25 +19,9 @@ use phpbb\notification\type\base;
 class unmarkanswer extends base
 {
 	/**
-	 * @var config
-	 */
-	private $config;
-
-	/**
 	 * @var \phpbb\user_loader
 	 */
 	protected $user_loader;
-
-	/**
-	 * Set the config class
-	 *
-	 * @param config $config
-	 *
-	 */
-	public function set_config(config $config)
-	{
-		$this->config = $config;
-	}
 
 	public function set_user_loader(\phpbb\user_loader $user_loader)
 	{
@@ -152,7 +135,7 @@ class unmarkanswer extends base
 	 */
 	public function get_email_template()
 	{
-		return '@leinad4mind_bestanswer\unmark_mail';
+		return '@leinad4mind_bestanswer/unmark_mail';
 	}
 
 	/**
@@ -197,6 +180,6 @@ class unmarkanswer extends base
 		$this->set_data('topic_id', (int) $data['topic_id']);
 		$this->set_data('topic_title', $data['topic_title']);
 
-		parent::create_insert_array($data, $pre_create_data);
+		return parent::create_insert_array($data, $pre_create_data);
 	}
 }
