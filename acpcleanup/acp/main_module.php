@@ -20,7 +20,7 @@ class main_module
 
 	public function main(string $id, string $mode): void
 	{
-		global $auth, $cache, $config, $db, $template, $request, $user, $phpEx, $phpbb_root_path, $phpbb_ext_gallery;
+		global $auth, $cache, $config, $db, $template, $request, $user, $phpbb_root_path, $phpbb_ext_gallery;
 
 		$user->add_lang_ext('phpbbgallery/core', array('gallery_acp', 'gallery'));
 		$this->tpl_name = 'gallery_cleanup';
@@ -52,6 +52,13 @@ class main_module
 
 		$delete = $request->is_set_post('delete');
 		$prune = $request->is_set_post('prune');
+		$cancel = $request->is_set_post('cancel');
+		$prune_username_check = $request->is_set_post('prune_username_check');
+		$prune_anonymous = $request->is_set_post('prune_anonymous');
+		$prune_time_check = $request->is_set_post('prune_time_check');
+		$prune_comments_check = $request->is_set_post('prune_comments_check');
+		$prune_ratings_check = $request->is_set_post('prune_ratings_check');
+		$prune_rating_avg_check = $request->is_set_post('prune_rating_avg_check');
 
 		$missing_sources = $request->variable('source', array(0));
 		// basename() strips any directory traversal (../) so these can only ever
@@ -82,7 +89,7 @@ class main_module
 		if ($prune && empty($prune_pattern))
 		{
 			$prune_pattern['image_album_id'] = implode(',', $request->variable('prune_album_ids', array(0)));
-			if (isset($_POST['prune_username_check']))
+			if ($prune_username_check)
 			{
 				$usernames = $request->variable('prune_usernames', '', true);
 				$usernames = explode("\n", $usernames);
@@ -96,13 +103,13 @@ class main_module
 					user_get_id_name($user_ids, $usernames);
 					$prune_pattern['image_user_id'] = $user_ids;
 				}
-				if (isset($_POST['prune_anonymous']))
+				if ($prune_anonymous)
 				{
 					$prune_pattern['image_user_id'][] = ANONYMOUS;
 				}
 				$prune_pattern['image_user_id'] = implode(',', $prune_pattern['image_user_id']);
 			}
-			if (isset($_POST['prune_time_check']))
+			if ($prune_time_check)
 			{
 				$prune_time = explode('-', $request->variable('prune_time', ''));
 
@@ -111,15 +118,15 @@ class main_module
 					$prune_pattern['image_time'] = @gmmktime(0, 0, 0, (int) $prune_time[1], (int) $prune_time[2], (int) $prune_time[0]);
 				}
 			}
-			if (isset($_POST['prune_comments_check']))
+			if ($prune_comments_check)
 			{
 				$prune_pattern['image_comments'] = $request->variable('prune_comments', 0);
 			}
-			if (isset($_POST['prune_ratings_check']))
+			if ($prune_ratings_check)
 			{
 				$prune_pattern['image_rates'] = $request->variable('prune_ratings', 0);
 			}
-			if (isset($_POST['prune_rating_avg_check']))
+			if ($prune_rating_avg_check)
 			{
 				$prune_pattern['image_rate_avg'] = (int) ($request->variable('prune_rating_avg', 0.0) * 100);
 			}
@@ -245,9 +252,9 @@ class main_module
 
 			trigger_error($message_string . adm_back_link($this->u_action));
 		}
-		else if ($delete || $prune || (isset($_POST['cancel'])))
+		else if ($delete || $prune || $cancel)
 		{
-			if (isset($_POST['cancel']))
+			if ($cancel)
 			{
 				trigger_error($user->lang['CLEAN_GALLERY_ABORT'] . adm_back_link($this->u_action), E_USER_WARNING);
 			}
@@ -272,6 +279,8 @@ class main_module
 				}
 				if ($personals_bad || $missing_personals)
 				{
+					$personals_bad_names = array();
+					$missing_personals_names = array();
 					$sql = 'SELECT album_name, album_user_id
 						FROM ' . $table_prefix . 'gallery_albums
 						WHERE ' . $db->sql_in_set('album_user_id', array_merge($missing_personals, $personals_bad));
@@ -367,9 +376,9 @@ class main_module
 
 			if ($source_missing)
 			{
-				$sql = 'UPDATE ' . $table_prefix . "gallery_images
+				$sql = 'UPDATE ' . $table_prefix . 'gallery_images
 					SET image_filemissing = 1
-					WHERE " . $db->sql_in_set('image_id', $source_missing);
+					WHERE ' . $db->sql_in_set('image_id', $source_missing);
 				$db->sql_query($sql);
 			}
 		}
@@ -377,8 +386,8 @@ class main_module
 		if ($check_mode == 'entry')
 		{
 			$directory = $gallery_url->path('upload');
-			$handle = opendir($directory);
-			while ($file = readdir($handle))
+			$handle = @opendir($directory);
+			while ($handle !== false && ($file = readdir($handle)) !== false)
 			{
 				if (!is_dir($directory . $file) &&
 				 ((substr(strtolower($file), '-5') == '.webp') || (substr(strtolower($file), '-4') == '.png') || (substr(strtolower($file), '-4') == '.gif') || (substr(strtolower($file), '-4') == '.jpg') || (substr(strtolower($file), '-5') == '.jpeg')) &&
@@ -393,11 +402,14 @@ class main_module
 
 					$encoding = mb_detect_encoding($file, ['UTF-8', 'ISO-8859-1', 'Windows-1252'], true);
 					$template->assign_block_vars('entryrow', array(
-						'FILE_NAME'				=> $encoding === 'UTF-8' ? $file : mb_convert_encoding($file, 'UTF-8', $encoding),
+						'FILE_NAME'				=> $encoding === 'UTF-8' ? $file : mb_convert_encoding($file, 'UTF-8', $encoding ?: 'Windows-1252'),
 					));
 				}
 			}
-			closedir($handle);
+			if ($handle !== false)
+			{
+				closedir($handle);
+			}
 		}
 
 		$sql_array = array(

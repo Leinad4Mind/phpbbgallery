@@ -97,6 +97,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Applied personal-album access levels during ACL construction and corrected moderator checks to pass album and owner identifiers in the correct order.
 - Made ACL recipient resolution reject unsupported permissions and missing albums, handle empty roles and groups safely, and release foe-query results.
 - Routed ACP album update detection through phpBB's request service instead of reading the POST superglobal directly.
+- Routed ACP Cleanup pruning and cancellation flags through phpBB's request service, guarded failed upload-directory handles, initialized confirmation labels, and provided a deterministic filename-encoding fallback.
 
 ### Performance
 
@@ -107,7 +108,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 ### Tests
 
 - Added permanent runtime-compatibility tests covering the PHP/phpBB/PHPUnit baselines, legacy `var` regression, and typed ACP/UCP module state.
-- Added standalone ACP Cleanup tests covering typed service contracts, file cleanup, database-entry cleanup, and moderation delegation.
+- Added standalone ACP Cleanup tests covering typed service/module contracts, centralized form input, safe directory scanning, file cleanup, database-entry cleanup, and moderation delegation.
 - Added standalone ACP Cleanup migration tests covering native contracts, dependency ordering, permission installation, and module registration.
 - Added standalone EXIF tests covering typed model/listener contracts, stored metadata handling, invalid serialization, and event registration.
 - Added permanent core-infrastructure tests covering native contracts, configuration mutations, bitfields, constants, path normalization, partial image-cache merges, cache hits, and request-local invalidation.
