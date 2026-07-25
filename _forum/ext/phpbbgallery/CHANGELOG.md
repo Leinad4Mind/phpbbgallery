@@ -44,6 +44,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added native dependency, event-payload, subscriber-map, and callback return types throughout the Core event listener.
 - Added native dependency, identifier-list, watcher-query, and operation return types throughout the Core notification services.
 - Added native service-property and presentation return types to all six Gallery notification event classes while preserving compatibility with phpBB's untyped notification interface.
+- Converted the Gallery ACP, ACP Cleanup, ACP Import, and EXIF templates from deprecated phpBB comment tags to native Twig syntax.
 - Reduced the packaged extension from approximately 8.2 MiB to 3.1 MiB by removing generated differences reports, backup files, source maps, unused upload plugins, and duplicate per-style JavaScript bundles.
 - Consolidated shared JavaScript under the phpbbgallery_core template namespace and corrected the polaroid asset reference for prosilver, BBOOTS, and FLATBOOTS.
 - Updated the required jQuery UI Widget Factory from 1.11.4 to 1.14.2 and documented SHA-256 pins for every retained third-party upload asset.
@@ -106,6 +107,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added permanent Core event-listener tests covering complete native contracts, subscribed events, and profile-state isolation.
 - Added permanent notification-service tests covering complete native contracts, identifier normalization, empty operations, and watcher-query cleanup.
 - Added permanent notification-event tests covering phpBB inheritance compatibility, native contracts, identifiers, serialized payloads, and presentation values.
+- Added permanent native-Twig tests covering deprecated-token removal and parsing with the packaged Twig version.
 - Added permanent language-catalog tests covering PHP file and key parity, plural structures, printf placeholders, UTF-8 validity, and non-empty translations across all four Gallery components.
 - Added permanent package-hygiene tests covering generated artefacts, duplicate bundles, namespaced asset resolution, polaroid loading, current widget version, missing source-map references, and third-party checksums.
 - Added permanent ACP personal-gallery resync tests covering populated and empty databases, normalized values, and regression against indexing a missing row.

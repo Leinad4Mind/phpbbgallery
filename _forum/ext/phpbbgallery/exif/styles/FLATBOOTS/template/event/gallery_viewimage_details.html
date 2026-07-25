@@ -1,12 +1,12 @@
-<!-- IF .exif_value -->
-	<h3 class="anti-postbody">{L_EXIF_DATA}</h3>
+{% if exif_value|length %}
+	<h3 class="anti-postbody">{{ lang('EXIF_DATA') }}</h3>
 	<br /> <hr />
 	<fieldset class="fields1 anti-postbody" id="exif_data_fieldset">
-	<!-- BEGIN exif_value -->
-		<dl class="<!-- IF exif_value.S_ROW_COUNT is even -->column1<!-- ELSE -->column2<!-- ENDIF -->">
-			<dt><label>{exif_value.EXIF_NAME}{L_COLON}</label></dt>
-			<dd>{exif_value.EXIF_VALUE}</dd>
+	{% for exif_value in exif_value %}
+		<dl class="{% if exif_value.S_ROW_COUNT is even %}column1{% else %}column2{% endif %}">
+			<dt><label>{{ exif_value.EXIF_NAME }}{{ lang('COLON') }}</label></dt>
+			<dd>{{ exif_value.EXIF_VALUE }}</dd>
 		</dl>
-	<!-- END exif_value -->
+	{% endfor %}
 	</fieldset>
-<!-- ENDIF -->
+{% endif %}

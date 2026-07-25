@@ -26,6 +26,25 @@ namespace
 		define('IN_PHPBB', true);
 	}
 
+	// Load only packaged Twig classes so isolated tests do not initialize unrelated Composer file autoloaders.
+	spl_autoload_register(static function (string $class_name): void
+	{
+		$twig_prefix = 'Twig\\';
+		if (strpos($class_name, $twig_prefix) !== 0)
+		{
+			return;
+		}
+
+		$twig_file = dirname(__DIR__, 4) . '/vendor/twig/twig/src/' . str_replace('\\', '/', substr($class_name, strlen($twig_prefix))) . '.php';
+		if (is_file($twig_file))
+		{
+			$error_level = error_reporting();
+			error_reporting($error_level & ~E_DEPRECATED);
+			require_once $twig_file;
+			error_reporting($error_level);
+		}
+	});
+
 	if (!function_exists('unique_id'))
 	{
 		function unique_id()
@@ -74,6 +93,7 @@ namespace
 	require_once __DIR__ . '/stubs/phpbb_notification_exception.php';
 	require_once __DIR__ . '/stubs/phpbb_config.php';
 	require_once __DIR__ . '/stubs/phpbb_user.php';
+	require_once __DIR__ . '/stubs/template_noop_token_parser.php';
 	require_once dirname(__DIR__) . '/upload.php';
 	require_once dirname(__DIR__) . '/auth/image_authorization.php';
 	require_once dirname(__DIR__) . '/auth/auth.php';
