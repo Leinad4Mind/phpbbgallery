@@ -419,18 +419,18 @@ class display
 			$start = $this->album_start;
 			//$limit = $this->config['phpbb_gallery_pegas_per_page'];
 			$limit = $this->album_limit;
-			/*$this->template->assign_vars(array(
-				'PAGINATION'				=> $this->pagination->generate_template_pagination(array(
+			/*$this->template->assign_vars([
+				'PAGINATION'				=> $this->pagination->generate_template_pagination([
 						//todo 'mode=' . $mode . (($first_char) ? '&amp;first_char=' . $first_char : '')
-					), 'pagination', 'page', $num_pegas, $limit, $start),
+					], 'pagination', 'page', $num_pegas, $limit, $start),
 				'TOTAL_PGALLERIES_SHORT'	=> $this->user->lang('TOTAL_PEGAS_SHORT_SPRINTF', $num_pegas),
 				'PAGE_NUMBER'				=> $this->pagination->on_page($num_pegas, $limit, $start),
-			));
-			$this->pagination->generate_template_pagination(array(
-				'routes' => array(
+			]);
+			$this->pagination->generate_template_pagination([
+				'routes' => [
 					'phpbbgallery_core_search_recent',
-					'phpbbgallery_core_search_recent_page',),
-					'params' => array()), 'pagination', 'page', $num_pegas, $limit, $start
+					'phpbbgallery_core_search_recent_page',],
+					'params' => []], 'pagination', 'page', $num_pegas, $limit, $start
 			);*/
 		}
 		else

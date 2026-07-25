@@ -77,7 +77,7 @@ class permissions_module
 			'misc'	=> ['a_list', 'i_count', 'i_unlimited', 'a_count', 'a_unlimited', 'a_restrict'],
 		];
 		$permissions->p_masks[$gallery_auth::OWN_ALBUM] = array_merge($permissions->cats[$gallery_auth::OWN_ALBUM]['i'], $permissions->cats[$gallery_auth::OWN_ALBUM]['c'], $permissions->cats[$gallery_auth::OWN_ALBUM]['m'], $permissions->cats[$gallery_auth::OWN_ALBUM]['misc']);
-		$permissions->p_masks_anti[$gallery_auth::OWN_ALBUM] = [];// Note: we set i_view to 1 as default, so it's not needed on anti array('i_view');
+		$permissions->p_masks_anti[$gallery_auth::OWN_ALBUM] = [];// Note: we set i_view to 1 as default, so it is not needed in the anti list ['i_view'].
 
 		// Permissions for personal albums of other users
 		// Note: Do !NOT! hide the i_upload. It's used for the moving-permissions
@@ -710,7 +710,7 @@ class permissions_module
 			* includes/acp/acp_permissions.php says:
 			* The nested setting array is read through the phpBB request abstraction.
 			*/
-			//		$auth_settings = request_var('setting', array(0 => array(0 => array('' => 0))));
+			//		$auth_settings = request_var('setting', [0 => [0 => ['' => 0]]]);
 			$requests = $request->variable('setting', [0 => [0 => ['' => 0]]]);
 			$p_mask_count = 0;
 			$auth_settings = $p_mask_storage = $c_mask_storage = $v_mask_storage = [];

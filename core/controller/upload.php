@@ -380,7 +380,7 @@ class upload
 				{
 					trigger_error('FORM_INVALID');
 				}
-				//$process->set_rotating($this->request->variable('rotate', array(0)));
+				//$process->set_rotating($this->request->variable('rotate', [0]));
 				$process->set_allow_comments($this->request->variable('allow_comments', false, false, request_interface::POST));
 
 				if ($this->misc->display_captcha('upload'))
@@ -485,14 +485,14 @@ class upload
 				{
 					if (!$submit || !$captcha->is_solved())
 					{
-						$template->assign_vars(array(
+						$template->assign_vars([
 							'S_CONFIRM_CODE'			=> true,
 							'CAPTCHA_TEMPLATE'			=> $captcha->get_template(),
-						));
+						]);
 					}
-					$template->assign_vars(array(
+					$template->assign_vars([
 						'S_CAPTCHA_HIDDEN_FIELDS'	=> $s_captcha_hidden_fields,
-					));
+					]);
 				}*/
 			}
 		}

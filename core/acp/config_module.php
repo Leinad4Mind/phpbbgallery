@@ -391,7 +391,7 @@ class config_module
 					'allow_resize'			=> ['lang' => 'RESIZE_IMAGES',			'validate' => 'bool',	'type' => 'radio:yes_no'],
 					'allow_rotate'			=> ['lang' => 'ROTATE_IMAGES',			'validate' => 'bool',	'type' => 'radio:yes_no'],
 					'jpg_quality'			=> ['lang' => 'JPG_QUALITY',			'validate' => 'int',	'type' => 'text:7:5',		'explain' => true],
-					//'medium_cache'			=> array('lang' => 'MEDIUM_CACHE',			'validate' => 'bool',	'type' => 'radio:yes_no'),
+					//'medium_cache'			=> ['lang' => 'MEDIUM_CACHE',			'validate' => 'bool',	'type' => 'radio:yes_no'],
 					'medium_width'			=> ['lang' => 'RSZ_WIDTH',				'validate' => 'int',	'type' => 'text:7:4',		'append' => 'PIXELS'],
 					'medium_height'			=> ['lang' => 'RSZ_HEIGHT',			'validate' => 'int',	'type' => 'text:7:4',		'append' => 'PIXELS'],
 					'allow_gif'				=> ['lang' => 'GIF_ALLOWED',			'validate' => 'bool',	'type' => 'radio:yes_no'],
@@ -405,12 +405,12 @@ class config_module
 				],
 
 				'THUMBNAIL_SETTINGS'	=> [
-					//'thumbnail_cache'		=> array('lang' => 'THUMBNAIL_CACHE',		'validate' => 'bool',	'type' => 'radio:yes_no'),
+					//'thumbnail_cache'		=> ['lang' => 'THUMBNAIL_CACHE',		'validate' => 'bool',	'type' => 'radio:yes_no'],
 					'gdlib_version'			=> ['lang' => 'GD_VERSION',			'validate' => 'int',	'type' => 'custom',			'method' => 'gd_radio'],
 					'thumbnail_width'		=> ['lang' => 'THUMBNAIL_WIDTH',		'validate' => 'int',	'type' => 'text:7:3',		'append' => 'PIXELS'],
 					'thumbnail_height'		=> ['lang' => 'THUMBNAIL_HEIGHT',		'validate' => 'int',	'type' => 'text:7:3',		'append' => 'PIXELS'],
 					'thumbnail_quality'		=> ['lang' => 'THUMBNAIL_QUALITY',		'validate' => 'int',	'type' => 'text:7:3',		'explain' => true,	'append' => 'PERCENT'],
-					//'thumbnail_infoline'	=> array('lang' => 'INFO_LINE',				'validate' => 'bool',	'type' => 'radio:yes_no'),
+					//'thumbnail_infoline'	=> ['lang' => 'INFO_LINE',				'validate' => 'bool',	'type' => 'radio:yes_no'],
 				],
 
 				'WATERMARK_OPTIONS'	=> [
@@ -431,7 +431,7 @@ class config_module
 				'RRC_GINDEX'	=> [
 					'rrc_gindex_mode'		=> ['lang' => 'RRC_GINDEX_MODE',		'validate' => 'int',	'type' => 'custom',			'explain' => true,	'method' => 'rrc_modes'],
 					'rrc_gindex_comments'	=> ['lang' => 'RRC_GINDEX_COMMENTS',	'validate' => 'bool',	'type' => 'radio:yes_no'],
-					//'rrc_gindex_contests'	=> array('lang' => 'RRC_GINDEX_CONTESTS',	'validate' => 'int',	'type' => 'text:7:3'),
+					//'rrc_gindex_contests'	=> ['lang' => 'RRC_GINDEX_CONTESTS',	'validate' => 'int',	'type' => 'text:7:3'],
 					'rrc_gindex_display'	=> ['lang' => 'RRC_DISPLAY_OPTIONS',	'validate' => '',		'type' => 'custom',			'method' => 'rrc_display'],
 					'rrc_gindex_pegas'		=> ['lang' => 'RRC_GINDEX_PGALLERIES',	'validate' => 'bool',	'type' => 'radio:yes_no'],
 				],
@@ -444,17 +444,17 @@ class config_module
 					'rrc_profile_mode'			=> ['lang' => 'RRC_PROFILE_MODE',				'validate' => 'int',	'type' => 'custom',			'explain' => true,	'method' => 'rrc_modes'],
 					'rrc_profile_items'			=> ['lang' => 'RRC_PROFILE_ITEMS',				'validate' => 'int',	'type' => 'text:7:3'],
 					'rrc_profile_display'		=> ['lang' => 'RRC_DISPLAY_OPTIONS',			'validate' => 'int',	'type' => 'custom',			'method' => 'rrc_display'],
-					//'rrc_profile_pegas'			=> array('lang' => 'RRC_GINDEX_PGALLERIES',			'validate' => 'bool',	'type' => 'radio:yes_no'),
-					//'viewtopic_icon'			=> array('lang' => 'DISP_VIEWTOPIC_ICON',			'validate' => 'bool',	'type' => 'radio:yes_no'),
-					//'viewtopic_images'			=> array('lang' => 'DISP_VIEWTOPIC_IMAGES',			'validate' => 'bool',	'type' => 'radio:yes_no'),
-					//'viewtopic_link'			=> array('lang' => 'DISP_VIEWTOPIC_LINK',			'validate' => 'bool',	'type' => 'radio:yes_no'),
+					//'rrc_profile_pegas'			=> ['lang' => 'RRC_GINDEX_PGALLERIES',			'validate' => 'bool',	'type' => 'radio:yes_no'],
+					//'viewtopic_icon'			=> ['lang' => 'DISP_VIEWTOPIC_ICON',			'validate' => 'bool',	'type' => 'radio:yes_no'],
+					//'viewtopic_images'			=> ['lang' => 'DISP_VIEWTOPIC_IMAGES',			'validate' => 'bool',	'type' => 'radio:yes_no'],
+					//'viewtopic_link'			=> ['lang' => 'DISP_VIEWTOPIC_LINK',			'validate' => 'bool',	'type' => 'radio:yes_no'],
 				],
 
 				'INDEX_SETTINGS'	=> [
 					'pegas_index_album'		=> ['lang' => 'PERSONAL_ALBUM_INDEX',	'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
-					//'pegas_index_random'	=> array('lang'	=> 'RANDOM_ON_INDEX',		'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true),
+					//'pegas_index_random'	=> ['lang'	=> 'RANDOM_ON_INDEX',		'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 					'pegas_index_rnd_count'	=> ['lang'	=> 'RANDOM_ON_INDEX_COUNT',	'validate' => 'int',	'type' => 'text:7:3'],
-					//'pegas_index_recent'	=> array('lang'	=> 'RECENT_ON_INDEX',		'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true),
+					//'pegas_index_recent'	=> ['lang'	=> 'RECENT_ON_INDEX',		'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 					'pegas_index_rct_count'	=> ['lang'	=> 'RECENT_ON_INDEX_COUNT',	'validate' => 'int',	'type' => 'text:7:3'],
 					'disp_login'			=> ['lang' => 'DISP_LOGIN',			'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 					'disp_whoisonline'		=> ['lang' => 'DISP_WHOISONLINE',		'validate' => 'bool',	'type' => 'radio:yes_no'],
