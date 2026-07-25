@@ -45,6 +45,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added native dependency, identifier-list, watcher-query, and operation return types throughout the Core notification services.
 - Added native service-property and presentation return types to all six Gallery notification event classes while preserving compatibility with phpBB's untyped notification interface.
 - Added native property, parameter, union-return, and operation types throughout the Core contest service, with deterministic handling for unknown steps and invalid tabulation modes.
+- Added native property, parameter, cached-value, and operation types throughout the Core rating service, with explicit submission results and request-local state reset whenever a new image is loaded.
 - Converted the Gallery ACP, ACP Cleanup, ACP Import, and EXIF templates from deprecated phpBB comment tags to native Twig syntax.
 - Converted the shared and prosilver Gallery templates from deprecated phpBB comment tags and template variables to native Twig syntax.
 - Converted the BBOOTS Gallery templates from deprecated phpBB comment tags and template variables to native Twig syntax.
