@@ -16,6 +16,7 @@ use phpbb\auth\auth;
 use phpbb\cache\service as cache_interface;
 use phpbb\config\config;
 use phpbb\controller\helper;
+use phpbb\datetime;
 use phpbb\db\driver\driver_interface;
 use phpbb\exception\http_exception;
 use phpbb\language\language;
@@ -53,8 +54,19 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  *   setting too (see group_by_day/month/year - they bucket by
  *   FLOOR(unix_ts / 86400), a pure integer operation with no timezone
  *   conversion involved, and roll the buckets up to calendar labels in PHP).
- *   Only user-facing display labels go through $this->user->format_date(),
- *   which intentionally applies the viewing user's configured timezone.
+ * - Calendar-bucket display labels (day/month/year row headings, month-picker
+ *   options, "Statistics for <month>" headings) go through the private
+ *   format_date_utc() helper below, NOT $this->user->format_date(). The
+ *   latter always shifts to the viewing user's configured timezone before
+ *   formatting (see \phpbb\user::format_date()/\phpbb\datetime), which would
+ *   make the label disagree with the UTC bucket boundary the row's data
+ *   actually came from for any viewer not on UTC - the same class of bug the
+ *   FLOOR()-based SQL bucketing above exists to avoid, just relocated to the
+ *   label. format_date_utc() reuses phpBB's locale-aware month/day-name
+ *   translation but keeps the timestamp pinned to UTC throughout.
+ * - The one exception is AS_ON ("Generated <time>"), which is not a bucket
+ *   label but a live "as of now" stamp - that one correctly uses
+ *   $this->user->format_date() so it reads in the viewer's own local time.
  */
 final class main
 {
@@ -135,6 +147,22 @@ final class main
 	protected function format_peak_hour(?int $hour): string
 	{
 		return $hour === null ? $this->language->lang('NONE') : sprintf('%02d:00', $hour);
+	}
+
+	/**
+	 * Format a UTC timestamp for display, using phpBB's locale-aware month/day
+	 * name translation but WITHOUT applying the viewing user's timezone
+	 * offset - unlike $this->user->format_date(), which always shifts to the
+	 * viewer's configured timezone first (see \phpbb\user::format_date()).
+	 * Every timestamp this controller displays as a row/heading/option label
+	 * is a fixed UTC calendar bucket boundary (built via gmmktime()), so a
+	 * per-viewer timezone shift here would make the label disagree with the
+	 * boundary the underlying SQL query actually used.
+	 */
+	protected function format_date_utc(int $timestamp, string $format): string
+	{
+		$utc_date = new datetime($this->user, '@' . $timestamp, new \DateTimeZone('UTC'));
+		return $utc_date->format($format);
 	}
 
 	public function handle(string $view = ''): Response
@@ -252,7 +280,7 @@ final class main
 						$bar = ($max['topics'] > 0.0) ? ($cnt * 100.0 / $max['topics']) : 0.0;
 
 						$this->template->assign_block_vars('periodic_topics_row', [
-							'TIME_ELEMENT' => $this->user->format_date(gmmktime(0, 0, 0, $sel_mon, (int) $day, $sel_year), 'd F Y'),
+							'TIME_ELEMENT' => $this->format_date_utc(gmmktime(0, 0, 0, $sel_mon, (int) $day, $sel_year), 'd F Y'),
 							'COUNT'        => $this->format_number($cnt),
 							'PCT'          => $this->format_number($pct),
 							'BARWIDTH'     => sprintf('%.1f', $bar),
@@ -271,7 +299,7 @@ final class main
 						$bar = ($max['posts'] > 0.0) ? ($cnt * 100.0 / $max['posts']) : 0.0;
 
 						$this->template->assign_block_vars('periodic_posts_row', [
-							'TIME_ELEMENT' => $this->user->format_date(gmmktime(0, 0, 0, $sel_mon, (int) $day, $sel_year), 'd F Y'),
+							'TIME_ELEMENT' => $this->format_date_utc(gmmktime(0, 0, 0, $sel_mon, (int) $day, $sel_year), 'd F Y'),
 							'COUNT'        => $this->format_number($cnt),
 							'PCT'          => $this->format_number($pct),
 							'BARWIDTH'     => sprintf('%.1f', $bar),
@@ -290,7 +318,7 @@ final class main
 						$bar = ($max['user_reg'] > 0.0) ? ($cnt * 100.0 / $max['user_reg']) : 0.0;
 
 						$this->template->assign_block_vars('periodic_user_regs_row', [
-							'TIME_ELEMENT' => $this->user->format_date(gmmktime(0, 0, 0, $sel_mon, (int) $day, $sel_year), 'd F Y'),
+							'TIME_ELEMENT' => $this->format_date_utc(gmmktime(0, 0, 0, $sel_mon, (int) $day, $sel_year), 'd F Y'),
 							'COUNT'        => $this->format_number($cnt),
 							'PCT'          => $this->format_number($pct),
 							'BARWIDTH'     => sprintf('%.1f', $bar),
@@ -313,7 +341,7 @@ final class main
 				while (($temp_epoch = gmmktime(0, 0, 0, $temp_month, 1, (int) $board_starttime['year'])) <= $current_time[0])
 				{
 					$value = gmdate('n-Y', $temp_epoch);
-					$label = $this->user->format_date($temp_epoch, 'F Y');
+					$label = $this->format_date_utc($temp_epoch, 'F Y');
 					$month_options[$value] = $label;
 					$temp_month++;
 				}
@@ -345,7 +373,7 @@ final class main
 					'PEAK_HOUR_TOPICS'    => $this->format_peak_hour($peak_hour_topics),
 					'PEAK_HOUR_POSTS'     => $this->format_peak_hour($peak_hour_posts),
 					'PEAK_HOUR_USER_REGS' => $this->format_peak_hour($peak_hour_user_reg),
-					'STATS_MONTH_EXPLAIN' => sprintf($this->language->lang('BS_STATS_MONTH_EXPLAIN'), $this->user->format_date($start_ts, 'F Y')),
+					'STATS_MONTH_EXPLAIN' => sprintf($this->language->lang('BS_STATS_MONTH_EXPLAIN'), $this->format_date_utc($start_ts, 'F Y')),
 					'U_BS_ACTION'         => $u_bs_action,
 					'BS_PREV_URL'         => $prev_url,
 					'BS_NEXT_URL'         => $next_url,
@@ -389,7 +417,7 @@ final class main
 				while ($offset < $end_info[0])
 				{
 					$key = gmdate('Y-m', $offset);
-					$label = $this->user->format_date($offset, 'F Y');
+					$label = $this->format_date_utc($offset, 'F Y');
 					$months[$key] = ['label' => $label, 'topics' => 0, 'posts' => 0, 'user_reg' => 0];
 
 					$counted_months++;
@@ -749,7 +777,7 @@ final class main
 				}
 
 				$month_label_fn = function (int $m): string {
-					return $this->user->format_date(gmmktime(0, 0, 0, $m, 1, 2000), 'F');
+					return $this->format_date_utc(gmmktime(0, 0, 0, $m, 1, 2000), 'F');
 				};
 				$day_label_fn = static function (int $d): string {
 					return (string) $d;

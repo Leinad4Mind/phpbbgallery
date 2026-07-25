@@ -3,7 +3,7 @@
 	"type": "phpbb-extension",
 	"description": "Board Statistics for your forum",
 	"homepage": "https://phpbb3bbcodes.com",
-	"version": "1.1.9",
+	"version": "1.2.0",
 	"time": "2026-07-25",
 	"license": "GPL-2.0-only",
 	"authors": [
