@@ -29,6 +29,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added native types throughout the EXIF model and event listener, including safe rejection of non-array serialized metadata.
 - Added native types to the core configuration, cache, URL, authorization-value, authorization-level, and constants services.
 - Added native property, parameter, union-return, and operation types throughout the Core ACL service, with explicit public constants and fail-closed permission contracts.
+- Added an explicit array-or-false normalization contract to the image-authorization helper.
 - Added native module-entry and progress-rendering types to the ACP album manager.
 - Added native module-entry types to the ACP Gallery log viewer.
 - Added public array contracts to all Core ACP and UCP module metadata providers.
@@ -131,7 +132,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added permanent migration and purge-safety tests covering dependency ordering, cycle detection, table prerequisites, atomic file backup, idempotency, and regression against recursive deletion.
 - Added permanent ZIP extractor tests covering valid archives, traversal attempts, disguised files, duplicate paths, malformed metadata, resource limits, compression-ratio abuse, and cleanup behavior.
 - Added permanent ACP Import tests covering native type contracts, state validation, non-executable persistence, legacy-state cleanup, path containment, symbolic links, MIME validation, safe copying, language completeness, and architectural regressions.
-- Added permanent authorization tests covering image ownership, moderator overrides, route-album containment, per-image moderation permissions, destination permissions, and controller integration.
+- Added permanent authorization tests covering native helper contracts, image ownership, moderator overrides, route-album containment, per-image moderation permissions, destination permissions, and controller integration.
 - Added permanent individual-move tests covering request methods, CSRF validation, source and destination authorization, form tokens, and mutation ordering.
 - Added permanent ACP rating-reset tests covering service resolution, non-empty and empty albums, and regression against the removed legacy class name.
 - Added permanent UCP CSRF tests covering personal-album creation, subalbum reordering, subscription cancellation, POST-only inputs, move-direction validation, form tokens, and mutation ordering.
