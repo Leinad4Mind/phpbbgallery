@@ -62,7 +62,7 @@ class settings_module
 		$this->gallery_user->force_load();
 		$this->language = $phpbb_container->get('language');
 		$this->language->add_lang('posting');
-		$this->language->add_lang(array('gallery', 'gallery_acp', 'gallery_mcp', 'gallery_ucp'), 'phpbbgallery/core');
+		$this->language->add_lang(['gallery', 'gallery_acp', 'gallery_mcp', 'gallery_ucp'], 'phpbbgallery/core');
 		$this->tpl_name = 'gallery/ucp_gallery';
 		add_form_key('ucp_gallery');
 
@@ -85,13 +85,13 @@ class settings_module
 				trigger_error('FORM_INVALID');
 			}
 
-			$gallery_settings = array(
+			$gallery_settings = [
 				'watch_own'				=> $this->request->variable('watch_own', false),
 				'watch_com'				=> $this->request->variable('watch_com', false),
 				'user_allow_comments'	=> $this->request->variable('allow_comments', false),
 				'rrc_zebra'				=> $this->request->variable('rrc_zebra', false),
-			);
-			$additional_settings = array();
+			];
+			$additional_settings = [];
 
 			/**
 			* Event set personal settings
@@ -100,7 +100,7 @@ class settings_module
 			* @var	array	additional_settings		array of additional settings
 			* @since 1.2.0
 			*/
-			$vars = array('additional_settings');
+			$vars = ['additional_settings'];
 			extract($this->dispatcher->trigger_event('phpbbgallery.core.ucp.set_settings_submit', compact($vars)));
 
 			$gallery_settings = array_merge($gallery_settings, $additional_settings);
@@ -127,7 +127,7 @@ class settings_module
 		*/
 		$this->dispatcher->dispatch('phpbbgallery.core.ucp.set_settings_nosubmit');
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'S_PERSONAL_SETTINGS'	=> true,
 			'S_UCP_ACTION'			=> $this->u_action,
 
@@ -139,6 +139,6 @@ class settings_module
 			'S_ALLOW_COMMENTS'	=> $this->gallery_user->get_data('user_allow_comments'),
 			'S_RRC_ZEBRA'		=> $this->gallery_user->get_data('rrc_zebra'),
 			'S_COMMENTS_ENABLED'=> $this->config['phpbb_gallery_allow_comments'] && $this->config['phpbb_gallery_comment_user_control'],
-		));
+		]);
 	}
 }

@@ -17,14 +17,14 @@ class main_listener implements EventSubscriberInterface
 {
 	public static function getSubscribedEvents(): array
 	{
-		return array(
+		return [
 			'core.user_setup'						=> 'load_language_on_setup',
 			'core.page_header'						=> 'add_page_header_link',
 			'core.memberlist_view_profile'	       => 'user_profile_galleries',
 			//'core.generate_profile_fields_template_data_before'	       => 'profile_fields',
 			'core.grab_profile_fields_data'	       => 'get_user_ids',
 			//'core.viewonline_overwrite_location'	=> 'add_newspage_viewonline',
-		);
+		];
 	}
 	/* @var \phpbb\controller\helper */
 	protected \phpbb\controller\helper $helper;
@@ -92,30 +92,30 @@ class main_listener implements EventSubscriberInterface
 	public function load_language_on_setup(\phpbb\event\data $event): void
 	{
 		$lang_set_ext = $event['lang_set_ext'];
-		$lang_set_ext[] = array(
+		$lang_set_ext[] = [
 			'ext_name'	=> 'phpbbgallery/core',
-			'lang_set'	=> array('info_acp_gallery', 'gallery', 'gallery_notifications'/*, 'permissions_gallery'*/),
-		);
+			'lang_set'	=> ['info_acp_gallery', 'gallery', 'gallery_notifications'/*, 'permissions_gallery'*/],
+		];
 		$event['lang_set_ext'] = $lang_set_ext;
 		if ($this->gallery_config->get('disp_total_images') == 1)
 		{
-			$this->template->assign_vars(array(
+			$this->template->assign_vars([
 				'PHPBBGALLERY_INDEX_STATS'	=> $this->gallery_config->get('num_images'),
-			));
+			]);
 		}
 	}
 	public function add_page_header_link(\phpbb\event\data $event): void
 	{
 		if ($this->gallery_config->get('disp_gallery_icon') == 1)
 		{
-			$this->template->assign_vars(array(
+			$this->template->assign_vars([
 				'U_GALLERY'	=> $this->helper->route('phpbbgallery_core_index'),
-			));
+			]);
 		}
 	}
 	public function user_profile_galleries(\phpbb\event\data $event): void
 	{
-		$this->language->add_lang(array('gallery'), 'phpbbgallery/core');
+		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
 		$this->language->add_lang('search');
 		$random = $recent = false;
 		$show_parts = $this->gallery_config->get('rrc_profile_mode');
@@ -150,17 +150,17 @@ class main_listener implements EventSubscriberInterface
 			$this->db->sql_freeresult($result);
 			if ($user_info)
 			{
-				$this->template->assign_vars(array(
+				$this->template->assign_vars([
 					'U_GALLERY_IMAGES_ALLOW'	=> true,
 					'U_GALLERY_IMAGES'	=> $user_info['user_images'],
-				));
+				]);
 			}
 			else
 			{
-				$this->template->assign_vars(array(
+				$this->template->assign_vars([
 					'U_GALLERY_IMAGES_ALLOW'	=> true,
 					'U_GALLERY_IMAGES'	=> 0,
-				));
+				]);
 			}
 		}
 	}

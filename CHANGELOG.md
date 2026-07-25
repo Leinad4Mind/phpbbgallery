@@ -35,6 +35,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added public array contracts to all Core ACP and UCP module metadata providers.
 - Added native dependency, schema, data, callback, and static configuration types throughout the Core migration chain while preserving phpBB profile-field property compatibility.
 - Added native dependency and data-step contracts to the ACP Cleanup migration.
+- Converted all remaining production PHP arrays across Core, ACP Cleanup, and EXIF to short-array syntax, with token-aware regression coverage.
 - Added native property, parameter, and return types throughout the Core album, album-display, album-loader, and album-management services, with initialized request state and safe parent-cache deserialization.
 - Added native property, parameter, and return types throughout the Core image service, including stable no-op and missing-image results and instance-safe counter/filename calls.
 - Added native property, parameter, and return types throughout the Core comment service, with explicit invalid-mutation results and instance-safe identifier normalization.

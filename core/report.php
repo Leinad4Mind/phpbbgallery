@@ -96,11 +96,11 @@ class report
 		{
 			return;
 		}
-		$data = $data + array(
+		$data = $data + [
 			'reporter_id'				=> $this->user->data['user_id'],
 			'report_time'				=> time(),
 			'report_status'				=> self::OPEN,
-		);
+		];
 		$sql = 'INSERT INTO ' . $this->reports_table . ' ' . $this->db->sql_build_array('INSERT', $data);
 		$this->db->sql_query($sql);
 
@@ -111,13 +111,13 @@ class report
 			WHERE image_id = ' . (int) $data['report_image_id'];
 		$this->db->sql_query($sql);
 
-		$this->gallery_log->add_log('moderator', 'reportopen', $data['report_album_id'], $data['report_image_id'], array('LOG_GALLERY_REPORT_OPENED', $data['report_note']));
-		$data = array(
+		$this->gallery_log->add_log('moderator', 'reportopen', $data['report_album_id'], $data['report_image_id'], ['LOG_GALLERY_REPORT_OPENED', $data['report_note']]);
+		$data = [
 			'report_id'	=> $report_id,
 			'reporter_id'	=> $this->user->data['user_id'],
 			'reported_image_id'	=> $data['report_image_id'],
 			'reported_album_id'	=> $data['report_album_id']
-		);
+		];
 		// Always notify: $data only ever has 'reported_album_id', never 'report_album_id',
 		// so a check against the latter would be dead code.
 		$this->notification_helper->notify('new_report', $data);
@@ -130,10 +130,10 @@ class report
 	 */
 	public function close_reports_by_image(array|int $report_ids, int|false $user_id = false): void
 	{
-		$sql_ary = array(
+		$sql_ary = [
 			'report_manager'		=> (int) (($user_id) ? $user_id : $this->user->data['user_id']),
 			'report_status'			=> 0,
-		);
+		];
 		$sql = 'UPDATE ' . $this->reports_table . ' SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
 			WHERE ' . $this->db->sql_in_set('report_image_id', $report_ids);
 		$this->db->sql_query($sql);
@@ -142,7 +142,7 @@ class report
 		$result = $this->db->sql_query($sql);
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$this->gallery_log->add_log('moderator', 'reportclosed', (int) $row['image_album_id'], (int) $row['image_id'], array('LOG_GALLERY_REPORT_CLOSED', 'Closed'));
+			$this->gallery_log->add_log('moderator', 'reportclosed', (int) $row['image_album_id'], (int) $row['image_id'], ['LOG_GALLERY_REPORT_CLOSED', 'Closed']);
 		}
 		$this->db->sql_freeresult($result);
 		$sql = 'UPDATE ' . $this->images_table . ' SET image_reported = 0 WHERE ' . $this->db->sql_in_set('image_id', $report_ids);
@@ -216,7 +216,7 @@ class report
 		$sql = 'SELECT report_id FROM ' . $this->reports_table . '
 			WHERE ' . $this->db->sql_in_set('report_image_id', $image_ids);
 		$result = $this->db->sql_query($sql);
-		$reports = array();
+		$reports = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$reports[] = $row['report_id'];
@@ -247,7 +247,7 @@ class report
 		$sql = 'SELECT report_id FROM ' . $this->reports_table . '
 			WHERE ' . $this->db->sql_in_set('report_album_id', $album_ids);
 		$result = $this->db->sql_query($sql);
-		$reports = array();
+		$reports = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$reports[] = $row['report_id'];
@@ -282,7 +282,7 @@ class report
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 
 		// Get albums we can approve in
-		$mod_array = array();
+		$mod_array = [];
 		if ($album === 0)
 		{
 			$mod_array = $this->gallery_auth->acl_album_ids('m_report');
@@ -293,17 +293,17 @@ class report
 		}
 		else
 		{
-			$mod_array = array($album);
+			$mod_array = [$album];
 		}
 
-		$sql_array = array(
-			'FROM'	=> array(
+		$sql_array = [
+			'FROM'	=> [
 				$this->images_table => 'i',
 				$this->reports_table	=> 'r',
-			),
+			],
 			'WHERE'	=> 'i.image_id = r.report_image_id and r.report_status = ' . (int) $status . ' and ' . $this->db->sql_in_set('i.image_album_id', $mod_array),
 			'ORDER_BY'	=> 'r.report_id DESC'
-		);
+		];
 		// Get Count
 		$sql_array['SELECT'] = 'COUNT(r.report_id) as count';
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
@@ -321,7 +321,7 @@ class report
 		$users_array = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$reported_images[] = array(
+			$reported_images[] = [
 				'image_id'	=> $row['image_id'],
 				'image_name'	=> $row['image_name'],
 				'image_username'	=> $row['image_username'],
@@ -332,9 +332,9 @@ class report
 				'report_id'	=> $row['report_id'],
 				'reporter_id'	=> $row['reporter_id'],
 				'report_time'	=> $row['report_time'],
-			);
-			$users_array[$row['reporter_id']] = array('');
-			$users_array[$row['image_user_id']] = array('');
+			];
+			$users_array[$row['reporter_id']] = [''];
+			$users_array[$row['image_user_id']] = [''];
 		}
 		$this->db->sql_freeresult($result);
 
@@ -350,54 +350,54 @@ class report
 		foreach ($reported_images as $reported_image)
 		{
 			$album_tmp = $this->album->get_info($reported_image['image_album_id']);
-			$this->template->assign_block_vars('report_image_open', array(
+			$this->template->assign_block_vars('report_image_open', [
 				'U_IMAGE_ID'	=> $reported_image['image_id'],
-				'U_IMAGE'	=> $this->helper->route('phpbbgallery_core_image_file_mini', array('image_id' => $reported_image['image_id'])),
-				'U_IMAGE_URL'	=> $this->helper->route('phpbbgallery_core_image', array('image_id'	=> $reported_image['image_id'])),
+				'U_IMAGE'	=> $this->helper->route('phpbbgallery_core_image_file_mini', ['image_id' => $reported_image['image_id']]),
+				'U_IMAGE_URL'	=> $this->helper->route('phpbbgallery_core_image', ['image_id'	=> $reported_image['image_id']]),
 				'U_IMAGE_NAME'	=> $reported_image['image_name'],
 				'IMAGE_AUTHOR'	=> $this->user_loader->get_username($reported_image['image_user_id'], 'full'),
 				'IMAGE_TIME'	=> $this->user->format_date($reported_image['image_time']),
 				'IMAGE_ALBUM'	=> $album_tmp['album_name'],
-				'IMAGE_ALBUM_URL'	=> $this->helper->route('phpbbgallery_core_album', array('album_id' => $reported_image['image_album_id'])),
-				'REPORT_URL'	=> $this->helper->route('phpbbgallery_core_moderate_image', array('image_id' => $reported_image['image_id'])),
+				'IMAGE_ALBUM_URL'	=> $this->helper->route('phpbbgallery_core_album', ['album_id' => $reported_image['image_album_id']]),
+				'REPORT_URL'	=> $this->helper->route('phpbbgallery_core_moderate_image', ['image_id' => $reported_image['image_id']]),
 				'REPORT_AUTHOR'	=> $this->user_loader->get_username($reported_image['reporter_id'], 'full'),
 				'REPORT_TIME'	=> $this->user->format_date($reported_image['report_time']),
-			));
+			]);
 			unset($album_tmp);
 			$reported_images_count ++;
 		}
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'TOTAL_IMAGES_REPORTED' => $status == 1 ? $this->language->lang('WAITING_REPORTED_IMAGE', (int) $count) : $this->language->lang('WAITING_REPORTED_DONE', (int) $count),
-			'S_GALLERY_REPORT_ACTION'	=> $status == 1 ? ($album > 0 ? $this->helper->route('phpbbgallery_core_moderate_reports_album', array('album_id' => $album)) : $this->helper->route('phpbbgallery_core_moderate_reports')) : false,
-		));
+			'S_GALLERY_REPORT_ACTION'	=> $status == 1 ? ($album > 0 ? $this->helper->route('phpbbgallery_core_moderate_reports_album', ['album_id' => $album]) : $this->helper->route('phpbbgallery_core_moderate_reports')) : false,
+		]);
 		if ($album === 0)
 		{
-			$this->pagination->generate_template_pagination(array(
-				'routes' => array(
+			$this->pagination->generate_template_pagination([
+				'routes' => [
 					$status == 1 ? 'phpbbgallery_core_moderate_reports' : 'phpbbgallery_core_moderate_reports_closed',
 					$status == 1 ? 'phpbbgallery_core_moderate_reports_page' : 'phpbbgallery_core_moderate_reports_closed_page',
-				),
-				'params' => array(
-				),
-			), 'pagination', 'page', $count, $per_page, $page * $per_page);
-			$this->template->assign_vars(array(
+				],
+				'params' => [
+				],
+			], 'pagination', 'page', $count, $per_page, $page * $per_page);
+			$this->template->assign_vars([
 				'TOTAL_PAGES'				=> $this->language->lang('PAGE_TITLE_NUMBER', $page + 1),
-			));
+			]);
 		}
 		else
 		{
-			$this->pagination->generate_template_pagination(array(
-				'routes' => array(
+			$this->pagination->generate_template_pagination([
+				'routes' => [
 					$status == 1 ? 'phpbbgallery_core_moderate_reports_album' : 'phpbbgallery_core_moderate_reports_closed_album',
 					$status == 1 ? 'phpbbgallery_core_moderate_reports_album_page' : 'phpbbgallery_core_moderate_reports_closed_album_page',
-				),
-				'params' => array(
+				],
+				'params' => [
 					'album_id'	=> $album,
-				),
-			), 'pagination', 'page', $count, $per_page, $page * $per_page);
-			$this->template->assign_vars(array(
+				],
+			], 'pagination', 'page', $count, $per_page, $page * $per_page);
+			$this->template->assign_vars([
 				'TOTAL_PAGES'				=> $this->language->lang('PAGE_TITLE_NUMBER', $page + 1),
-			));
+			]);
 		}
 	}
 
@@ -417,10 +417,10 @@ class report
 
 		$sql = 'SELECT * FROM ' . $this->reports_table . ' WHERE report_image_id = ' . (int) $image_id;
 		$result = $this->db->sql_query($sql);
-		$report_data = array();
+		$report_data = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$report_data[$row['report_id']] = array(
+			$report_data[$row['report_id']] = [
 				'report_id'			=> $row['report_id'],
 				'report_album_id'	=> $row['report_album_id'],
 				'reporter_id'		=> $row['reporter_id'],
@@ -428,7 +428,7 @@ class report
 				'report_note'		=> $row['report_note'],
 				'report_time'		=> $row['report_time'],
 				'report_status'		=> $row['report_status'],
-			);
+			];
 		}
 		$this->db->sql_freeresult($result);
 
@@ -442,7 +442,7 @@ class report
 		}
 		else
 		{
-			return array((int) $ids);
+			return [(int) $ids];
 		}
 	}
 }

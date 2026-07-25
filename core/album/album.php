@@ -94,26 +94,26 @@ class album
 	 */
 	public function get_info(int $album_id, bool $extended_info = true): array
 	{
-		$sql_array = array(
+		$sql_array = [
 			'SELECT' => 'a.*',
-			'FROM'   => array($this->albums_table => 'a'),
+			'FROM'   => [$this->albums_table => 'a'],
 
 			'WHERE' => 'a.album_id = ' . (int) $album_id,
-		);
+		];
 
 		if ($extended_info)
 		{
 			$sql_array['SELECT'] .= ', c.*, w.watch_id';
-			$sql_array['LEFT_JOIN'] = array(
-				array(
-					'FROM' => array($this->watch_table => 'w'),
+			$sql_array['LEFT_JOIN'] = [
+				[
+					'FROM' => [$this->watch_table => 'w'],
 					'ON'   => 'a.album_id = w.album_id AND w.user_id = ' . (int) $this->user->data['user_id'],
-				),
-				array(
-					'FROM' => array($this->contests_table => 'c'),
+				],
+				[
+					'FROM' => [$this->contests_table => 'c'],
 					'ON'   => 'a.album_id = c.contest_album_id',
-				),
-			);
+				],
+			];
 		}
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
 
@@ -197,7 +197,7 @@ class album
 		$right = $last_a_u_id = 0;
 		$access_own = $access_personal = $requested_own = $requested_personal = false;
 		$c_access_own = $c_access_personal = false;
-		$padding_store = array('0' => '');
+		$padding_store = ['0' => ''];
 		$padding = $album_list = '';
 		$check_album_type = ($requested_album_type >= 0) ? true : false;
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
@@ -378,7 +378,7 @@ class album
 		$result = $this->db->sql_query($sql);
 		if ($row = $this->db->sql_fetchrow($result))
 		{
-			$sql_ary = array(
+			$sql_ary = [
 				'album_images_real'      => $images_real,
 				'album_images'           => $images,
 				'album_last_image_id'    => $row['image_id'],
@@ -387,12 +387,12 @@ class album
 				'album_last_username'    => $row['image_username'],
 				'album_last_user_colour' => $row['image_user_colour'],
 				'album_last_user_id'     => $row['image_user_id'],
-			);
+			];
 		}
 		else
 		{
 			// No approved image, so we clear the columns
-			$sql_ary = array(
+			$sql_ary = [
 				'album_images_real'      => $images_real,
 				'album_images'           => $images,
 				'album_last_image_id'    => 0,
@@ -401,7 +401,7 @@ class album
 				'album_last_username'    => '',
 				'album_last_user_colour' => '',
 				'album_last_user_id'     => 0,
-			);
+			];
 			if ($album_user_id)
 			{
 				unset($sql_ary['album_last_user_colour']);
@@ -427,7 +427,7 @@ class album
 	 */
 	public function generate_personal_album(string $album_name, int $user_id, string $user_colour, \phpbbgallery\core\user $gallery_user): int
 	{
-		$album_data = array(
+		$album_data = [
 			'album_name'             => $this->db->sql_escape($album_name),
 			'parent_id'              => 0,
 			//left_id and right_id default by db
@@ -439,18 +439,18 @@ class album
 			'album_user_id'          => (int) $user_id,
 			'album_last_username'    => '',
 			'album_last_user_colour' => $user_colour,
-		);
+		];
 		$this->db->sql_query('INSERT INTO ' . $this->albums_table . ' ' . $this->db->sql_build_array('INSERT', $album_data));
 		$personal_album_id = (int) $this->db->sql_nextid();
 
-		$gallery_user->update_data(array(
+		$gallery_user->update_data([
 			'personal_album_id' => $personal_album_id,
-		));
+		]);
 
 		// Fill album CPF.
-		$cpf_vars = array(
+		$cpf_vars = [
 			'pf_gallery_palbum' => (int) $personal_album_id,
-		);
+		];
 		$this->user_cpf->update_profile_field_data((int) $user_id, $cpf_vars);
 
 		$this->gallery_config->inc('num_pegas', 1);
@@ -476,7 +476,7 @@ class album
 				FROM ' . $this->albums_table . '
 				WHERE album_user_id = ' . (int) \phpbbgallery\core\block::PUBLIC_ALBUM;
 		$result = $this->db->sql_query($sql);
-		$id_ary = array();
+		$id_ary = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$id_ary[] = (int) $row['album_id'];

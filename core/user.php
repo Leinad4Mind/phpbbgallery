@@ -260,13 +260,13 @@ class user
 			$suc = $this->update_image_count($num);
 			if ($suc === false)
 			{
-				$suc = $this->update(array('user_images' => max(0, $num)));
+				$suc = $this->update(['user_images' => max(0, $num)]);
 			}
 		}
 
 		if ($suc === false)
 		{
-			$suc = $this->insert(array('user_images' => max(0, $num)));
+			$suc = $this->insert(['user_images' => max(0, $num)]);
 		}
 
 		return $suc;
@@ -280,9 +280,9 @@ class user
 	 */
 	private function update(array $data): bool
 	{
-		$sql_ary = array_merge($this->validate_data($data), array(
+		$sql_ary = array_merge($this->validate_data($data), [
 			'user_last_update' => time(),
-		));
+		]);
 		unset($sql_ary['user_id']);
 
 		$sql = 'UPDATE ' . $this->gallery_users_table . '
@@ -331,10 +331,10 @@ class user
 	 */
 	private function insert(array $data): bool
 	{
-		$sql_ary = array_merge($this->get_default_values(), $this->validate_data($data), array(
+		$sql_ary = array_merge($this->get_default_values(), $this->validate_data($data), [
 			'user_id'          => $this->user_id,
 			'user_last_update' => time(),
-		));
+		]);
 
 		$this->db->sql_return_on_error(true);
 
@@ -386,9 +386,9 @@ class user
 	 */
 	public function update_users(array|int|string $user_ids, array $data): bool
 	{
-		$sql_ary = array_merge($this->validate_data($data), array(
+		$sql_ary = array_merge($this->validate_data($data), [
 			'user_last_update' => time(),
-		));
+		]);
 		unset($sql_ary['user_id']);
 
 		$sql_where = $this->sql_build_where($user_ids);
@@ -439,7 +439,7 @@ class user
 	 */
 	public function validate_data(array $data, bool $inc = false): array
 	{
-		$validated_data = array();
+		$validated_data = [];
 		foreach ($data as $name => $value)
 		{
 			switch ($name)
@@ -483,7 +483,7 @@ class user
 					 * @var    mixed    value            value of the value
 					 * @since 1.2.0
 					 */
-					$vars = array('is_validated', 'name', 'value');
+					$vars = ['is_validated', 'name', 'value'];
 					extract($this->dispatcher->trigger_event('phpbbgallery.core.user.validate_data', compact($vars)));
 
 					if ($is_validated)
@@ -526,7 +526,7 @@ class user
 		 * @var    array    default_values    the default values array
 		 * @since 1.2.0
 		 */
-		$vars = array('default_values');
+		$vars = ['default_values'];
 		extract($this->dispatcher->trigger_event('phpbbgallery.core.user.get_default_values', compact($vars)));
 
 		return $default_values;
@@ -535,7 +535,7 @@ class user
 	/**
 	 * Default values for new users.
 	 */
-	protected static array $default_values = array(
+	protected static array $default_values = [
 		'user_images'              => 0,
 		'personal_album_id'        => 0,
 		'user_lastmark'            => 0,
@@ -554,7 +554,7 @@ class user
 		'subscribe_pegas'     => false,
 		// Should we hide Foes from RRC
 		'rrc_zebra'           => false,
-	);
+	];
 
 	/**
 	 * @param array $user_cache
@@ -578,7 +578,7 @@ class user
 		{
 			if ($user_id == ANONYMOUS)
 			{
-				$user_cache_data = array(
+				$user_cache_data = [
 					'user_type'           => USER_IGNORE,
 					'joined'              => '',
 					'posts'               => '',
@@ -600,7 +600,7 @@ class user
 					'contact_user'        => '',
 					'warnings'            => 0,
 					'allow_pm'            => 0,
-				);
+				];
 			}
 			else
 			{
@@ -610,7 +610,7 @@ class user
 				{
 					$user_sig = $row['user_sig'];
 				}
-				$user_cache_data = array(
+				$user_cache_data = [
 					'user_type'            => $row['user_type'],
 					'user_inactive_reason' => $row['user_inactive_reason'],
 					'joined'               => $this->user->format_date($row['user_regdate']),
@@ -636,7 +636,7 @@ class user
 					'author_colour'        => get_username_string('colour', $user_id, $row['username'], $row['user_colour']),
 					'author_username'      => get_username_string('username', $user_id, $row['username'], $row['user_colour']),
 					'author_profile'       => get_username_string('profile', $user_id, $row['username'], $row['user_colour']),
-				);
+				];
 
 				$user_cache[$user_id] = $user_cache_data;
 
@@ -710,11 +710,11 @@ class user
 	{
 		if (!is_array($user_ids))
 		{
-			$user_ids = array($user_ids);
+			$user_ids = [$user_ids];
 		}
 		$sql = 'SELECT user_id, personal_album_id FROM ' . $this->gallery_users_table . ' WHERE ' . $this->db->sql_in_set('user_id', $user_ids);
 		$result = $this->db->sql_query($sql);
-		$set_array = array();
+		$set_array = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			if ($row['personal_album_id'] > 0)
@@ -729,9 +729,9 @@ class user
 			foreach ($set_array as $uid => $album_id)
 			{
 				// Fill album CPF.
-				$cpf_vars = array(
+				$cpf_vars = [
 					'pf_gallery_palbum' => (int) $album_id,
-				);
+				];
 				$this->user_cpf->update_profile_field_data((int) $uid, $cpf_vars);
 
 				$updated_rows++;

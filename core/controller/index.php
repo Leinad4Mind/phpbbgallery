@@ -130,7 +130,7 @@ class index
 		{
 			login_box();
 		}
-		$this->language->add_lang(array('gallery'), 'phpbbgallery/core');
+		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
 		$this->display->display_albums(false, $this->config['load_moderators']);
 
 		if ($this->gallery_config->get('pegas_index_album'))
@@ -143,10 +143,10 @@ class index
 			switch ($this->gallery_config->get('link_image_icon'))
 			{
 				case 'image_page':
-					$action_image = $this->helper->route('phpbbgallery_core_image', array('image_id' => $last_image['image_id']));
+					$action_image = $this->helper->route('phpbbgallery_core_image', ['image_id' => $last_image['image_id']]);
 				break;
 				case 'image':
-					$action_image = $this->helper->route('phpbbgallery_core_image_file_source', array('image_id' => $last_image['image_id']));
+					$action_image = $this->helper->route('phpbbgallery_core_image_file_source', ['image_id' => $last_image['image_id']]);
 				break;
 				default:
 					$action_image = false;
@@ -161,28 +161,28 @@ class index
 			}
 			$alpha_links[] = '<a href="' . append_sid($this->helper->route('phpbbgallery_core_personal'), 'first_char=other') . '">#</a>';
 
-			$this->template->assign_vars(array(
+			$this->template->assign_vars([
 				'S_USERS_PERSONAL_GALLERIES'	=> true,
 				'U_USERS_PERSONAL_GALLERIES' => $this->helper->route('phpbbgallery_core_personal'),
 				'U_PERSONAL_GALLERIES_IMAGES'	=> $this->gallery_config->get('num_images'),
-				'U_PERSONAL_GALLERIES_LAST_IMAGE'	=> $this->helper->route('phpbbgallery_core_image_file_mini', array('image_id' => $last_image['image_id'])),
+				'U_PERSONAL_GALLERIES_LAST_IMAGE'	=> $this->helper->route('phpbbgallery_core_image_file_mini', ['image_id' => $last_image['image_id']]),
 				'U_IMAGENAME'	=> ($last_image['image_id'] > 0) ? $last_image['image_name'] : false,
 				'U_IMAGE_ACTION'	=> $action_image,
-				'U_IMAGENAME_ACTION'	=> $this->helper->route('phpbbgallery_core_image', array('image_id' => $last_image['image_id'])),
+				'U_IMAGENAME_ACTION'	=> $this->helper->route('phpbbgallery_core_image', ['image_id' => $last_image['image_id']]),
 				'U_TIME'	=> ($last_image['image_id'] > 0) ?  $this->user->format_date($last_image['image_time']) : false,
 				'U_UPLOADER'	=> ($last_image['image_id'] > 0) ? get_username_string('full', $last_image['image_user_id'], $last_image['image_username'], $last_image['image_user_colour']) : false,
 				'ALPHABET_NAVIGATION' => implode('&nbsp;', $alpha_links),
-			));
+			]);
 			$this->gallery_user->set_user_id($this->user->data['user_id']);
 			$personal_album = $this->gallery_user->get_own_root_album();
 			if ($personal_album > 0)
 			{
-				$this->template->assign_vars(array(
+				$this->template->assign_vars([
 					'S_PERSONAL_ALBUM'	=> true,
-					'U_PERSONAL_ALBUM'	=> $this->helper->route('phpbbgallery_core_album', array('album_id' => $personal_album)),
+					'U_PERSONAL_ALBUM'	=> $this->helper->route('phpbbgallery_core_album', ['album_id' => $personal_album]),
 					'U_PERSONAL_ALBUM_USER'	=> $this->user->data['username'],
 					'U_PERSONAL_ALBUM_COLOR'	=> $this->user->data['user_colour'],
-				));
+				]);
 			}
 		}
 
@@ -197,25 +197,25 @@ class index
 			// Now before build random and recent ... let's check if we have images that can build it
 			if ($recent_images)
 			{
-				$this->template->assign_vars(array(
+				$this->template->assign_vars([
 					'U_RECENT'	=> true,
-				));
+				]);
 				$this->gallery_search->recent($this->gallery_config->get('pegas_index_rct_count'), -1);
 			}
 			if ($random_images)
 			{
-				$this->template->assign_vars(array(
+				$this->template->assign_vars([
 					'U_RANDOM'	=> true,
-				));
+				]);
 				$this->gallery_search->random($this->gallery_config->get('pegas_index_rnd_count'));
 			}
 			if ($recent_comments)
 			{
-				$this->template->assign_vars(array(
+				$this->template->assign_vars([
 					'U_RECENT_COMMENTS'	=> true,
 					'S_RECENT_COMMENTS' => $this->helper->route('phpbbgallery_core_search_commented'),
 					'COMMENTS_EXPAND'	=> $this->gallery_config->get('rrc_gindex_comments') ? true : false,
-				));
+				]);
 				$this->gallery_search->recent_comments($this->gallery_config->get('items_per_page'), 0, false);
 			}
 		}
@@ -223,10 +223,10 @@ class index
 		$this->display_birthdays();
 		$this->assign_dropdown_links('phpbbgallery_core_index');
 
-		$this->template->assign_block_vars('navlinks', array(
+		$this->template->assign_block_vars('navlinks', [
 			'FORUM_NAME'	=> $this->language->lang('GALLERY'),
 			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_core_index'),
-		));
+		]);
 
 		return $this->helper->render('gallery/index_body.html', $this->language->lang('GALLERY'), 200, $this->gallery_config->get('disp_whoisonline'));
 	}
@@ -247,22 +247,22 @@ class index
 		{
 			login_box();
 		}
-		$this->language->add_lang(array('gallery'), 'phpbbgallery/core');
+		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
 		$this->display->album_start = ($page - 1) * $this->gallery_config->get('items_per_page');
 		$this->display->album_limit = $this->gallery_config->get('items_per_page');
 		$this->display->album_mode = 'personal';
 		$this->display->display_albums('personal', $this->config['load_moderators']);
 
-		$this->pagination->generate_template_pagination(array(
-			'routes' => array(
+		$this->pagination->generate_template_pagination([
+			'routes' => [
 				'phpbbgallery_core_personal',
-				'phpbbgallery_core_personal_page',),
-				'params' => array()), 'pagination', 'page', $this->display->albums_total, $this->display->album_limit, $this->display->album_start
+				'phpbbgallery_core_personal_page',],
+				'params' => []], 'pagination', 'page', $this->display->albums_total, $this->display->album_limit, $this->display->album_start
 		);
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'TOTAL_ALBUMS'	=> $this->language->lang('TOTAL_PEGAS_SHORT_SPRINTF', $this->display->albums_total),
-		));
+		]);
 
 		if (!$this->gallery_config->get('pegas_index_album'))
 		{
@@ -278,18 +278,18 @@ class index
 		}
 		$s_char_options .= '<option value="other"' . (($first_char == 'other') ? ' selected="selected"' : '') . '>#</option>';
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'S_CHAR_OPTIONS'				=> $s_char_options,
-		));
+		]);
 
-		$this->template->assign_block_vars('navlinks', array(
+		$this->template->assign_block_vars('navlinks', [
 			'FORUM_NAME'	=> $this->language->lang('GALLERY'),
 			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_core_index'),
-		));
-		$this->template->assign_block_vars('navlinks', array(
+		]);
+		$this->template->assign_block_vars('navlinks', [
 			'FORUM_NAME'	=> $this->language->lang('PERSONAL_ALBUMS'),
 			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_core_personal'),
-		));
+		]);
 
 		return $this->helper->render('gallery/index_body.html', $this->language->lang('PERSONAL_ALBUMS'));
 	}
@@ -305,16 +305,16 @@ class index
 		$show_random   = (bool) ($show_options & self::RRC_MODE_RANDOM_IMAGES);
 		$show_recent   = (bool) ($show_options & self::RRC_MODE_RECENT_IMAGES);
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'TOTAL_IMAGES'		=> ($this->gallery_config->get('disp_statistic')) ? $this->language->lang('TOTAL_IMAGES_SPRINTF', $this->gallery_config->get('num_images')) : '',
 			'TOTAL_COMMENTS'	=> ($this->gallery_config->get('allow_comments')) ? $this->language->lang('TOTAL_COMMENTS_SPRINTF', $this->gallery_config->get('num_comments')) : '',
 			'TOTAL_PGALLERIES'	=> ($this->gallery_auth->acl_check('a_list', \phpbbgallery\core\auth\auth::PERSONAL_ALBUM)) ? $this->language->lang('TOTAL_PEGAS_SPRINTF', $this->gallery_config->get('num_pegas')) : '',
-			'NEWEST_PGALLERIES'	=> ($this->gallery_config->get('num_pegas')) ? sprintf($this->language->lang('NEWEST_PGALLERY'), '<a href="' . $this->helper->route('phpbbgallery_core_album', array('album_id' => $this->gallery_config->get('newest_pega_album_id'))) . '" '. ($this->gallery_config->get('newest_pega_user_colour') ? 'class="username-coloured" style="color: #' . $this->gallery_config->get('newest_pega_user_colour') . ';"' : 'class="username"') . '>' . $this->gallery_config->get('newest_pega_username') . '</a>') : '',
-		));
+			'NEWEST_PGALLERIES'	=> ($this->gallery_config->get('num_pegas')) ? sprintf($this->language->lang('NEWEST_PGALLERY'), '<a href="' . $this->helper->route('phpbbgallery_core_album', ['album_id' => $this->gallery_config->get('newest_pega_album_id')]) . '" '. ($this->gallery_config->get('newest_pega_user_colour') ? 'class="username-coloured" style="color: #' . $this->gallery_config->get('newest_pega_user_colour') . ';"' : 'class="username"') . '>' . $this->gallery_config->get('newest_pega_username') . '</a>') : '',
+		]);
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'U_MCP'		=> ($this->gallery_auth->acl_check_global('m_')) ? $this->helper->route('phpbbgallery_core_moderate') : '',
-			'U_MARK_ALBUMS'					=> ($this->user->data['is_registered']) ? $this->helper->route($base_route, array('hash' => generate_link_hash('global'), 'mark' => 'albums')) : '',
+			'U_MARK_ALBUMS'					=> ($this->user->data['is_registered']) ? $this->helper->route($base_route, ['hash' => generate_link_hash('global'), 'mark' => 'albums']) : '',
 			'S_LOGIN_ACTION'			=> append_sid($this->root_path . 'ucp.' . $this->php_ext, 'mode=login&amp;redirect=' . urlencode($this->helper->route($base_route))),
 
 			'U_GALLERY_SEARCH'				=> $this->helper->route('phpbbgallery_core_search'),
@@ -324,7 +324,7 @@ class index
 			'U_G_SEARCH_RANDOM'				=> $show_random ? $this->helper->route('phpbbgallery_core_search_random') : false,
 			'U_G_SEARCH_SELF'				=> $this->helper->route('phpbbgallery_core_search_egosearch'),
 			'U_G_SEARCH_TOPRATED'			=> $this->config['phpbb_gallery_allow_rates'] ? $this->helper->route('phpbbgallery_core_search_toprated') : '',
-		));
+		]);
 	}
 
 	protected function display_legend(): void
@@ -355,7 +355,7 @@ class index
 		}
 		$result = $this->db->sql_query($sql);
 
-		$legend = array();
+		$legend = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$colour_text = ($row['group_colour']) ? ' style="color:#' . $row['group_colour'] . '"' : '';
@@ -372,9 +372,9 @@ class index
 		}
 		$this->db->sql_freeresult($result);
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'LEGEND'	=> implode($this->language->lang('COMMA_SEPARATOR'), $legend),
-		));
+		]);
 	}
 
 	protected function display_birthdays(): void
@@ -382,9 +382,9 @@ class index
 		// Generate birthday list if required ...
 		if ($this->config['load_birthdays'] && $this->config['allow_birthdays'] && $this->config['phpbb_gallery_disp_birthdays'] && $this->auth->acl_gets('u_viewprofile', 'a_user', 'a_useradd', 'a_userdel'))
 		{
-			$this->template->assign_vars(array(
+			$this->template->assign_vars([
 				'S_DISPLAY_BIRTHDAY_LIST'	=> true,
-			));
+			]);
 
 			$time = $this->user->create_datetime();
 			$now = phpbb_gmgetdate($time->getTimestamp() + $time->getOffset());
@@ -411,10 +411,10 @@ class index
 				$birthday_year		= (int) substr($row['user_birthday'], -4);
 				$birthday_age		= ($birthday_year) ? max(0, $now['year'] - $birthday_year) : '';
 
-				$this->template->assign_block_vars('birthdays', array(
+				$this->template->assign_block_vars('birthdays', [
 					'USERNAME'	=> $birthday_username,
 					'AGE'		=> $birthday_age,
-				));
+				]);
 			}
 			$this->db->sql_freeresult($result);
 		}

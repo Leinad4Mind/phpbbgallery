@@ -193,7 +193,7 @@ class manage
 	 */
 	public function update_album_data(array &$album_data, array &$contest_data): array
 	{
-		$errors = array();
+		$errors = [];
 
 		if (!$album_data['album_name'])
 		{
@@ -404,7 +404,7 @@ class manage
 					WHERE album_id = ' . (int) $album_data['album_id'];
 				$this->db->sql_query($sql);
 			}
-			$this->gallery_log->add_log('admin', 'add', $album_data['album_id'], 0, array('LOG_ALBUM_ADD', $album_data['album_name']));
+			$this->gallery_log->add_log('admin', 'add', $album_data['album_id'], 0, ['LOG_ALBUM_ADD', $album_data['album_name']]);
 		}
 		else
 		{
@@ -446,7 +446,7 @@ class manage
 					}
 					else
 					{
-						return array($this->language->lang('NO_DESTINATION_ALBUM'));
+						return [$this->language->lang('NO_DESTINATION_ALBUM')];
 					}
 				}
 				else if ($album_data_sql['type_action'] == 'delete')
@@ -455,7 +455,7 @@ class manage
 				}
 				else
 				{
-					return array($this->language->lang('NO_ALBUM_ACTION'));
+					return [$this->language->lang('NO_ALBUM_ACTION')];
 				}
 			}
 			else if ($row['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST && $album_data_sql['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST)
@@ -545,7 +545,7 @@ class manage
 			// Add it back
 			$album_data['album_id'] = $album_id;
 
-			$this->gallery_log->add_log('admin', 'edit', $album_id, 0, array('LOG_ALBUM_EDIT', $album_data['album_name']));
+			$this->gallery_log->add_log('admin', 'edit', $album_id, 0, ['LOG_ALBUM_EDIT', $album_data['album_name']]);
 		}
 
 		return $errors;
@@ -563,7 +563,7 @@ class manage
 	 */
 	public function move_album(int $from_id, int $to_id): array
 	{
-		$to_data = $moved_ids = $errors = array();
+		$to_data = $moved_ids = $errors = [];
 
 		// Get the parent data
 		if ($to_id > 0)
@@ -577,13 +577,13 @@ class manage
 
 		$diff = sizeof($moved_albums) * 2;
 
-		$moved_ids = array();
+		$moved_ids = [];
 		for ($i = 0, $end = sizeof($moved_albums); $i < $end; ++$i)
 		{
 			// Can not select child as parent
 			if ($moved_albums[$i]['album_id'] == $to_id)
 			{
-				return array($this->language->lang('ALBUM_PARENT_INVALID'));
+				return [$this->language->lang('ALBUM_PARENT_INVALID')];
 			}
 			$moved_ids[] = $moved_albums[$i]['album_id'];
 		}
@@ -674,9 +674,9 @@ class manage
 	public function delete_album(int $album_id, string $action_images = 'delete', string $action_subalbums = 'delete', int $images_to_id = 0, int $subalbums_to_id = 0): array
 	{
 		$album_data = $this->gallery_album->get_info($album_id);
-		$errors = array();
+		$errors = [];
 		$log_action_images = $log_action_albums = $images_to_name = $subalbums_to_name = '';
-		$album_ids = array($album_id);
+		$album_ids = [$album_id];
 
 		if ($action_images == 'delete')
 		{
@@ -817,7 +817,7 @@ class manage
 				AND album_user_id = ' . (int) $this->user_id;
 		$this->db->sql_query($sql);
 
-		$log_action = implode('_', array($log_action_images, $log_action_albums));
+		$log_action = implode('_', [$log_action_images, $log_action_albums]);
 
 		/**
 		* Log what we did
@@ -825,39 +825,39 @@ class manage
 		switch ($log_action)
 		{
 			case 'MOVE_IMAGES_MOVE_ALBUMS':
-				$this->gallery_log->add_log('admin', 'del', 0, 0, array('LOG_ALBUM_DEL_MOVE_IMAGES_MOVE_ALBUMS', $images_to_name, $subalbums_to_name, $album_data['album_name']));
+				$this->gallery_log->add_log('admin', 'del', 0, 0, ['LOG_ALBUM_DEL_MOVE_IMAGES_MOVE_ALBUMS', $images_to_name, $subalbums_to_name, $album_data['album_name']]);
 			break;
 
 			case 'MOVE_IMAGES_ALBUMS':
-				$this->gallery_log->add_log('admin', 'del', $images_to_id, 0, array('LOG_ALBUM_DEL_MOVE_IMAGES_ALBUMS', $images_to_name, $album_data['album_name']));
+				$this->gallery_log->add_log('admin', 'del', $images_to_id, 0, ['LOG_ALBUM_DEL_MOVE_IMAGES_ALBUMS', $images_to_name, $album_data['album_name']]);
 			break;
 
 			case 'IMAGES_MOVE_ALBUMS':
-				$this->gallery_log->add_log('admin', 'del', $subalbums_to_id, 0, array('LOG_ALBUM_DEL_IMAGES_MOVE_ALBUMS', $subalbums_to_name, $album_data['album_name']));
+				$this->gallery_log->add_log('admin', 'del', $subalbums_to_id, 0, ['LOG_ALBUM_DEL_IMAGES_MOVE_ALBUMS', $subalbums_to_name, $album_data['album_name']]);
 			break;
 
 			case '_MOVE_ALBUMS':
-				$this->gallery_log->add_log('admin', 'del', $subalbums_to_id, 0, array('LOG_ALBUM_DEL_MOVE_ALBUMS', $subalbums_to_name, $album_data['album_name']));
+				$this->gallery_log->add_log('admin', 'del', $subalbums_to_id, 0, ['LOG_ALBUM_DEL_MOVE_ALBUMS', $subalbums_to_name, $album_data['album_name']]);
 			break;
 
 			case 'MOVE_IMAGES_':
-				$this->gallery_log->add_log('admin', 'del', $images_to_id, 0, array('LOG_ALBUM_DEL_MOVE_IMAGES', $images_to_name, $album_data['album_name']));
+				$this->gallery_log->add_log('admin', 'del', $images_to_id, 0, ['LOG_ALBUM_DEL_MOVE_IMAGES', $images_to_name, $album_data['album_name']]);
 			break;
 
 			case 'IMAGES_ALBUMS':
-				$this->gallery_log->add_log('admin', 'del', 0, 0, array('LOG_ALBUM_DEL_IMAGES_ALBUMS', $album_data['album_name']));
+				$this->gallery_log->add_log('admin', 'del', 0, 0, ['LOG_ALBUM_DEL_IMAGES_ALBUMS', $album_data['album_name']]);
 			break;
 
 			case '_ALBUMS':
-				$this->gallery_log->add_log('admin', 'del', 0, 0, array('LOG_ALBUM_DEL_ALBUMS', $album_data['album_name']));
+				$this->gallery_log->add_log('admin', 'del', 0, 0, ['LOG_ALBUM_DEL_ALBUMS', $album_data['album_name']]);
 			break;
 
 			case 'IMAGES_':
-				$this->gallery_log->add_log('admin', 'del', 0, 0, array('LOG_ALBUM_DEL_IMAGES', $album_data['album_name']));
+				$this->gallery_log->add_log('admin', 'del', 0, 0, ['LOG_ALBUM_DEL_IMAGES', $album_data['album_name']]);
 			break;
 
 			default:
-				$this->gallery_log->add_log('admin', 'del', 0, 0, array('LOG_ALBUM_DEL_ALBUM', $album_data['album_name']));
+				$this->gallery_log->add_log('admin', 'del', 0, 0, ['LOG_ALBUM_DEL_ALBUM', $album_data['album_name']]);
 			break;
 		}
 
@@ -919,7 +919,7 @@ class manage
 		* @var	bool	sync	Should we sync the albums data
 		* @since 1.2.0
 		*/
-		$vars = array('from_id', 'to_id', 'sync');
+		$vars = ['from_id', 'to_id', 'sync'];
 		extract($this->dispatcher->trigger_event('phpbbgallery.core.album.manage.move_album_content', compact($vars)));
 
 		$this->gallery_cache->destroy_albums();
@@ -931,7 +931,7 @@ class manage
 			$this->gallery_album->update_info($to_id);
 		}
 
-		return array();
+		return [];
 	}
 
 	/**
@@ -952,7 +952,7 @@ class manage
 				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN;
 		$result = $this->db->sql_query($sql);
 
-		$image_counts = array();
+		$image_counts = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$image_counts[$row['image_user_id']] = (!empty($image_counts[$row['image_user_id']])) ? $image_counts[$row['image_user_id']] + 1 : 1;
@@ -964,7 +964,7 @@ class manage
 			WHERE image_album_id = ' . (int) $album_id;
 		$result = $this->db->sql_query($sql);
 
-		$filenames = $deleted_images = array();
+		$filenames = $deleted_images = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$deleted_images[] = $row['image_id'];
@@ -1026,12 +1026,12 @@ class manage
 		* @var	int	album_id		Album we are deleting
 		* @since 1.2.0
 		*/
-		$vars = array('album_id');
+		$vars = ['album_id'];
 		extract($this->dispatcher->trigger_event('phpbbgallery.core.album.manage.delete_album_content', compact($vars)));
 
 		$this->gallery_cache->destroy_albums();
 
-		return array();
+		return [];
 	}
 
 	/**
@@ -1060,7 +1060,7 @@ class manage
 				AND ' . (($action == 'move_up') ? 'right_id < ' . $album_row['right_id'] . ' ORDER BY right_id DESC' : 'left_id > ' . $album_row['left_id'] . ' ORDER BY left_id ASC');
 		$result = $this->db->sql_query_limit($sql, $steps);
 
-		$target = array();
+		$target = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$target = $row;

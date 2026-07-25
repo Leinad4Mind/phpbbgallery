@@ -25,9 +25,9 @@ class phpbbgallery_image_not_approved extends \phpbb\notification\type\base
 	* 					Array of data (including keys 'id', 'lang', and 'group')
 	* This property remains untyped because phpBB's base property is untyped.
 	*/
-	public static $notification_option = array(
+	public static $notification_option = [
 		'lang'	=> 'NOTIFICATION_TYPE_PHPBBGALLERY_IMAGE_NOT_APPROVED',
-	);
+	];
 
 	/** @var \phpbb\user_loader */
 	protected \phpbb\user_loader $user_loader;

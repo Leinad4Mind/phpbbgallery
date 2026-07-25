@@ -14,21 +14,21 @@ class permissions_info
 {
 	public function module(): array
 	{
-		return array(
+		return [
 			'title'		=> 'PHPBB_GALLERY',
 			'version'	=> '1.0.0',
-			'modes'		=> array(
-				'manage'	=> array(
+			'modes'		=> [
+				'manage'	=> [
 					'title' => 'ACP_GALLERY_ALBUM_PERMISSIONS',
 					'auth' => 'ext_phpbbgallery/core && acl_a_gallery_albums',
-					'cat' => array('PHPBB_GALLERY')
-				),
-				'copy'		=> array(
+					'cat' => ['PHPBB_GALLERY']
+				],
+				'copy'		=> [
 					'title' => 'ACP_GALLERY_ALBUM_PERMISSIONS_COPY',
 					'auth' => 'ext_phpbbgallery/core && acl_a_gallery_albums',
-					'cat' => array('PHPBB_GALLERY')
-				),
-			),
-		);
+					'cat' => ['PHPBB_GALLERY']
+				],
+			],
+		];
 	}
 }

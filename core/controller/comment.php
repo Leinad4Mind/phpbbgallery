@@ -173,7 +173,7 @@ class comment
 	 */
 	public function add(int $image_id, int $comment_id): \Symfony\Component\HttpFoundation\Response
 	{
-		$this->language->add_lang(array('gallery'), 'phpbbgallery/core');
+		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
 		if ($comment_id != 0)
 		{
 			$sql = 'SELECT *
@@ -195,8 +195,8 @@ class comment
 		$this->display->generate_navigation($album_data);
 		$page_title = $image_data['image_name'];
 
-		$image_backlink = $this->helper->route('phpbbgallery_core_image', array('image_id' => $image_id));
-		$album_backlink = $this->helper->route('phpbbgallery_core_album', array('album_id' => $album_id));
+		$image_backlink = $this->helper->route('phpbbgallery_core_image', ['image_id' => $image_id]);
+		$album_backlink = $this->helper->route('phpbbgallery_core_album', ['album_id' => $album_id]);
 		$album_loginlink = append_sid($this->phpbb_root_path . 'ucp.' . $this->php_ext . '?mode=login');
 
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
@@ -238,7 +238,7 @@ class comment
 			$s_hide_comment_input = false;
 		}
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'BBCODE_STATUS'			=> ($bbcode_status) ? sprintf($this->language->lang('BBCODE_IS_ON'), '<a href="' . $this->url->append_sid('phpbb', 'faq', 'mode=bbcode') . '">', '</a>') : sprintf($this->language->lang('BBCODE_IS_OFF'), '<a href="' . $this->url->append_sid('phpbb', 'faq', 'mode=bbcode') . '">', '</a>'),
 			'IMG_STATUS'			=> ($img_status) ? $this->language->lang('IMAGES_ARE_ON') : $this->language->lang('IMAGES_ARE_OFF'),
 			'FLASH_STATUS'			=> ($flash_status) ? $this->language->lang('FLASH_IS_ON') : $this->language->lang('FLASH_IS_OFF'),
@@ -252,17 +252,17 @@ class comment
 			'S_BBCODE_URL'			=> $url_status,
 			'S_BBCODE_FLASH'		=> $flash_status,
 			'S_BBCODE_QUOTE'		=> $quote_status,
-		));
+		]);
 
 		if ($this->misc->display_captcha('comment'))
 		{
 			$captcha = $this->phpbb_container->get('captcha.factory')->get_instance($this->config['captcha_plugin']);
 			$captcha->init(CONFIRM_POST);
 			$s_captcha_hidden_fields = '';
-			$this->template->assign_vars(array(
+			$this->template->assign_vars([
 				'S_CONFIRM_CODE'		=> true,
 				'CAPTCHA_TEMPLATE'		=> $captcha->get_template(),
-			));
+			]);
 
 		}
 
@@ -330,13 +330,13 @@ class comment
 				$message_parser->parse(true, true, true, true, false, true, true, true);
 			}
 
-			$sql_ary = array(
+			$sql_ary = [
 				'comment_image_id'		=> (int) $image_id,
 				'comment'				=> $message_parser->message,
 				'comment_uid'			=> $message_parser->bbcode_uid,
 				'comment_bitfield'		=> $message_parser->bbcode_bitfield,
 				'comment_signature'		=> ($this->auth->acl_get('u_sig') && $this->request->is_set_post('attach_sig')),
-			);
+			];
 			if ((!$error) && ($sql_ary['comment'] != ''))
 			{
 				if ($this->misc->display_captcha('comment'))
@@ -349,11 +349,11 @@ class comment
 				{
 					$this->gallery_notification->add($image_id);
 				}
-				$data = array(
+				$data = [
 					'image_id'	=> (int) $image_id,
 					'comment_id'	=> $comment_post_id,
 					'poster_id'		=> $this->user->data['user_id'],
-				);
+				];
 				$this->notification_helper->notify('new_comment', $data);
 				//$phpbb_gallery_notification->send_notification('image', $image_id, $image_data['image_name']);
 				$message .= $this->language->lang('COMMENT_STORED') . '<br />';
@@ -384,16 +384,16 @@ class comment
 		{
 			if (!$submit || !$captcha->is_solved())
 			{
-				$this->template->assign_vars(array(
+				$this->template->assign_vars([
 					'S_CONFIRM_CODE'			=> true,
 					'CAPTCHA_TEMPLATE'			=> $captcha->get_template(),
-				));
+				]);
 			}
-			$this->template->assign_vars(array(
+			$this->template->assign_vars([
 				'S_CAPTCHA_HIDDEN_FIELDS'	=> $s_captcha_hidden_fields,
-			));
+			]);
 		}
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'ERROR'					=> $error,
 			'MESSAGE'				=> (isset($comment_plain)) ? $comment_plain : '',
 			'USERNAME'				=> (isset($comment_username)) ? $comment_username : '',
@@ -407,9 +407,9 @@ class comment
 			'IMAGE_NAME'			=> $image_data['image_name'],
 
 			'S_SIGNATURE_CHECKED'	=> (isset($sig_checked) && $sig_checked) ? ' checked="checked"' : '',
-			'S_ALBUM_ACTION'		=> $this->helper->route('phpbbgallery_core_comment_add', array('image_id' => (int) $image_id, 'comment_id' => 0)),
+			'S_ALBUM_ACTION'		=> $this->helper->route('phpbbgallery_core_comment_add', ['image_id' => (int) $image_id, 'comment_id' => 0]),
 			//'S_ALBUM_ACTION'		=> append_sid($this->url->path('full') . 'comment/' . $image_id . '/add/0'),
-		));
+		]);
 
 		if ($submit && !$error)
 		{
@@ -433,13 +433,13 @@ class comment
 	 */
 	public function edit(int $image_id, int $comment_id): \Symfony\Component\HttpFoundation\Response
 	{
-		$this->language->add_lang(array('gallery'), 'phpbbgallery/core');
+		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
 		add_form_key('gallery');
 
 		$submit = $this->request->variable('submit', false);
 		$error = $message = '';
 
-		$comment_data = array();
+		$comment_data = [];
 		if ($comment_id != 0)
 		{
 			$sql = 'SELECT *
@@ -462,8 +462,8 @@ class comment
 		$this->display->generate_navigation($album_data);
 		$page_title = $image_data['image_name'];
 
-		$image_backlink = $this->helper->route('phpbbgallery_core_image', array('image_id' => $image_id));
-		$album_backlink = $this->helper->route('phpbbgallery_core_album', array('album_id' => $album_id));
+		$image_backlink = $this->helper->route('phpbbgallery_core_image', ['image_id' => $image_id]);
+		$album_backlink = $this->helper->route('phpbbgallery_core_album', ['album_id' => $album_id]);
 		$image_loginlink = $this->url->append_sid('relative', 'image_page', "album_id=$album_id&amp;image_id=$image_id");
 		$album_loginlink = append_sid($this->phpbb_root_path . 'ucp.' . $this->php_ext . '?mode=login');
 		if ($comment_id == 0 || empty($comment_data))
@@ -517,7 +517,7 @@ class comment
 			$s_hide_comment_input = false;
 		}
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'BBCODE_STATUS'			=> ($bbcode_status) ? sprintf($this->language->lang('BBCODE_IS_ON'), '<a href="' . $this->url->append_sid('phpbb', 'faq', 'mode=bbcode') . '">', '</a>') : sprintf($this->language->lang('BBCODE_IS_OFF'), '<a href="' . $this->url->append_sid('phpbb', 'faq', 'mode=bbcode') . '">', '</a>'),
 			'IMG_STATUS'			=> ($img_status) ? $this->language->lang('IMAGES_ARE_ON') : $this->language->lang('IMAGES_ARE_OFF'),
 			'FLASH_STATUS'			=> ($flash_status) ? $this->language->lang('FLASH_IS_ON') : $this->language->lang('FLASH_IS_OFF'),
@@ -531,7 +531,7 @@ class comment
 			'S_BBCODE_URL'			=> $url_status,
 			'S_BBCODE_FLASH'		=> $flash_status,
 			'S_BBCODE_QUOTE'		=> $quote_status,
-		));
+		]);
 
 		$comment_username_req = ($comment_data['comment_user_id'] == ANONYMOUS) ? true : false;
 
@@ -542,7 +542,7 @@ class comment
 				trigger_error('FORM_INVALID');
 			}
 
-			$sql_ary = array();
+			$sql_ary = [];
 			$comment_plain = $this->request->variable('message', '', true);
 
 			if ($comment_username_req)
@@ -559,9 +559,9 @@ class comment
 					$comment_username = '';
 				}
 
-				$sql_ary = array(
+				$sql_ary = [
 					'comment_username'	=> $comment_username,
-				);
+				];
 			}
 
 			if ($comment_plain == '')
@@ -587,13 +587,13 @@ class comment
 				$message_parser->parse(true, true, true, true, false, true, true, true);
 			}
 
-			$sql_ary = array_merge($sql_ary, array(
+			$sql_ary = array_merge($sql_ary, [
 				'comment'				=> $message_parser->message,
 				'comment_uid'			=> $message_parser->bbcode_uid,
 				'comment_bitfield'		=> $message_parser->bbcode_bitfield,
 				'comment_edit_count'	=> $comment_data['comment_edit_count'] + 1,
 				'comment_signature'		=> ($this->auth->acl_get('u_sig') && $this->request->is_set_post('attach_sig')),
-			));
+			]);
 
 			if (!$error)
 			{
@@ -601,7 +601,7 @@ class comment
 				$message .= $this->language->lang('COMMENT_STORED') . '<br />';
 				if ($this->user->data['user_id'] != $comment_data['comment_user_id'])
 				{
-					$this->gallery_log->add_log('moderator', 'c_edit', $image_data['image_album_id'], $image_data['image_id'], array('LOG_GALLERY_COMMENT_EDITED', $image_data['image_name']));
+					$this->gallery_log->add_log('moderator', 'c_edit', $image_data['image_album_id'], $image_data['image_id'], ['LOG_GALLERY_COMMENT_EDITED', $image_data['image_name']]);
 				}
 			}
 		}
@@ -614,7 +614,7 @@ class comment
 			$comment_username = $comment_data['comment_username'];
 		}
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'ERROR'					=> $error,
 			'MESSAGE'				=> (isset($comment_plain)) ? $comment_plain : '',
 			'USERNAME'				=> (isset($comment_username)) ? $comment_username : '',
@@ -628,9 +628,9 @@ class comment
 			'IMAGE_NAME'			=> $image_data['image_name'],
 
 			'S_SIGNATURE_CHECKED'	=> (isset($sig_checked) && $sig_checked) ? ' checked="checked"' : '',
-			'S_ALBUM_ACTION'		=> $this->helper->route('phpbbgallery_core_comment_edit', array('image_id' => (int) $image_id, 'comment_id' => (int) $comment_id)),
+			'S_ALBUM_ACTION'		=> $this->helper->route('phpbbgallery_core_comment_edit', ['image_id' => (int) $image_id, 'comment_id' => (int) $comment_id]),
 			//'S_ALBUM_ACTION'		=> append_sid($this->url->path('full') . 'comment/' . $image_id . '/edit/'. $comment_id),
-		));
+		]);
 
 		if ($submit && !$error)
 		{
@@ -654,13 +654,13 @@ class comment
 	 */
 	public function delete(int $image_id, int $comment_id): \Symfony\Component\HttpFoundation\Response
 	{
-		$this->language->add_lang(array('gallery'), 'phpbbgallery/core');
+		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
 		add_form_key('gallery');
 
 		$submit = $this->request->variable('submit', false);
 		$error = $message = '';
 
-		$comment_data = array();
+		$comment_data = [];
 		if ($comment_id != 0)
 		{
 			$sql = 'SELECT *
@@ -683,8 +683,8 @@ class comment
 		$this->display->generate_navigation($album_data);
 		$page_title = $image_data['image_name'];
 
-		$image_backlink = $this->helper->route('phpbbgallery_core_image', array('image_id' => $image_id));
-		$album_backlink = $this->helper->route('phpbbgallery_core_album', array('album_id' => $album_id));
+		$image_backlink = $this->helper->route('phpbbgallery_core_image', ['image_id' => $image_id]);
+		$album_backlink = $this->helper->route('phpbbgallery_core_album', ['album_id' => $album_id]);
 		$image_loginlink = $this->url->append_sid('relative', 'image_page', "album_id=$album_id&amp;image_id=$image_id");
 		$album_loginlink = append_sid($this->phpbb_root_path . 'ucp.' . $this->php_ext . '?mode=login');
 		if ($comment_id == 0 || empty($comment_data))
@@ -733,7 +733,7 @@ class comment
 		$contest_end = $album_data['contest_end'] ?? 0;
 		$s_hide_comment_input = (time() < ($contest_start + $contest_end)) ? true : false;
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'BBCODE_STATUS'			=> ($bbcode_status) ? sprintf($this->language->lang('BBCODE_IS_ON'), '<a href="' . $this->url->append_sid('phpbb', 'faq', 'mode=bbcode') . '">', '</a>') : sprintf($this->language->lang('BBCODE_IS_OFF'), '<a href="' . $this->url->append_sid('phpbb', 'faq', 'mode=bbcode') . '">', '</a>'),
 			'IMG_STATUS'			=> ($img_status) ? $this->language->lang('IMAGES_ARE_ON') : $this->language->lang('IMAGES_ARE_OFF'),
 			'FLASH_STATUS'			=> ($flash_status) ? $this->language->lang('FLASH_IS_ON') : $this->language->lang('FLASH_IS_OFF'),
@@ -747,21 +747,21 @@ class comment
 			'S_BBCODE_URL'			=> $url_status,
 			'S_BBCODE_FLASH'		=> $flash_status,
 			'S_BBCODE_QUOTE'		=> $quote_status,
-		));
+		]);
 
-		$s_hidden_fields = build_hidden_fields(array(
+		$s_hidden_fields = build_hidden_fields([
 			'album_id'		=> $album_id,
 			'image_id'		=> $image_id,
 			'comment_id'	=> $comment_id,
 			'mode'			=> 'delete',
-		));
+		]);
 
 		if (confirm_box(true))
 		{
 			$this->comment->delete_comments($comment_id);
 			if ($this->user->data['user_id'] != $comment_data['comment_user_id'])
 			{
-				$this->gallery_log->add_log('moderator', 'c_delete', $image_data['image_album_id'], $image_data['image_id'], array('LOG_GALLERY_COMMENT_DELETED', $image_data['image_name']));
+				$this->gallery_log->add_log('moderator', 'c_delete', $image_data['image_album_id'], $image_data['image_id'], ['LOG_GALLERY_COMMENT_DELETED', $image_data['image_name']]);
 			}
 
 			$message = $this->language->lang('DELETED_COMMENT') . '<br />';
@@ -780,7 +780,7 @@ class comment
 			}
 		}
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'ERROR'					=> $error,
 			'MESSAGE'				=> (isset($comment_plain)) ? $comment_plain : '',
 			'USERNAME'				=> (isset($comment_username)) ? $comment_username : '',
@@ -795,7 +795,7 @@ class comment
 
 			'S_SIGNATURE_CHECKED'	=> (isset($sig_checked) && $sig_checked) ? ' checked="checked"' : '',
 			'S_ALBUM_ACTION'		=> append_sid($this->url->path('full') . 'comment/' . (int) $image_id . '/edit/'. (int) $comment_id),
-		));
+		]);
 
 		if ($submit && !$error)
 		{
@@ -811,7 +811,7 @@ class comment
 
 	public function rate(int $image_id): \Symfony\Component\HttpFoundation\Response
 	{
-		$this->language->add_lang(array('gallery'), 'phpbbgallery/core');
+		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
 		add_form_key('gallery');
 
 		$submit = $this->request->variable('submit', false);
@@ -823,8 +823,8 @@ class comment
 		$this->display->generate_navigation($album_data);
 		$page_title = $image_data['image_name'];
 
-		$image_backlink = $this->helper->route('phpbbgallery_core_image', array('image_id' => $image_id));
-		$album_backlink = $this->helper->route('phpbbgallery_core_album', array('album_id' => $album_id));
+		$image_backlink = $this->helper->route('phpbbgallery_core_image', ['image_id' => $image_id]);
+		$album_backlink = $this->helper->route('phpbbgallery_core_album', ['album_id' => $album_id]);
 		$image_loginlink = $this->url->append_sid('relative', 'image_page', "album_id=$album_id&amp;image_id=$image_id");
 
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
@@ -885,9 +885,9 @@ class comment
 
 					$message .= $this->language->lang('RATING_SUCCESSFUL') . '<br />';
 				}
-				$this->template->assign_vars(array(
+				$this->template->assign_vars([
 					'S_ALLOWED_TO_RATE'			=> $rating->is_allowed(),
-				));
+				]);
 			}
 
 		}

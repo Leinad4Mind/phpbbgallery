@@ -19,22 +19,22 @@ class main_info
 {
 	public function module(): array
 	{
-		return array(
+		return [
 			'filename'	=> '\phpbbgallery\core\ucp\main_module',
 			'title'		=> 'PHPBB_GALLERY',
 			'version'	=> '1.0.0',
-			'modes'		=> array(
-				'manage_albums'			=> array(
+			'modes'		=> [
+				'manage_albums'			=> [
 					'title' => 'UCP_GALLERY_PERSONAL_ALBUMS',
 					'auth' => 'ext_phpbbgallery/core',
-					'cat' => array('PHPBB_GALLERY')
-				),
-				'manage_subscriptions'	=> array(
+					'cat' => ['PHPBB_GALLERY']
+				],
+				'manage_subscriptions'	=> [
 					'title' => 'UCP_GALLERY_WATCH',
 					'auth' => 'ext_phpbbgallery/core',
-					'cat' => array('PHPBB_GALLERY')
-				),
-			),
-		);
+					'cat' => ['PHPBB_GALLERY']
+				],
+			],
+		];
 	}
 }

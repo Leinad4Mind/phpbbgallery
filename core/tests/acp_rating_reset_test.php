@@ -17,19 +17,19 @@ class acp_rating_reset_test extends TestCase
 	public function test_reset_uses_the_rating_service_for_every_album_image(): void
 	{
 		$rating = $this->rating_spy();
-		$this->reset_album_ratings($rating, array(12, 34));
+		$this->reset_album_ratings($rating, [12, 34]);
 
-		$this->assertSame(array(
-			array(array(12, 34), true),
-		), $rating->calls);
+		$this->assertSame([
+			[[12, 34], true],
+		], $rating->calls);
 	}
 
 	public function test_reset_skips_the_rating_service_for_an_empty_album(): void
 	{
 		$rating = $this->rating_spy();
-		$this->reset_album_ratings($rating, array());
+		$this->reset_album_ratings($rating, []);
 
-		$this->assertSame(array(), $rating->calls);
+		$this->assertSame([], $rating->calls);
 	}
 
 	public function test_acp_resolves_the_registered_service_without_the_removed_legacy_class(): void
@@ -60,11 +60,11 @@ class acp_rating_reset_test extends TestCase
 		return new class
 		{
 			/** @var array */
-			public $calls = array();
+			public $calls = [];
 
 			public function delete_ratings(array $image_ids, $reset_average): void
 			{
-				$this->calls[] = array($image_ids, $reset_average);
+				$this->calls[] = [$image_ids, $reset_average];
 			}
 		};
 	}

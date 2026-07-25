@@ -40,7 +40,7 @@ class config_module
 
 		$phpbb_gallery_url = $phpbb_container->get('phpbbgallery.core.url');
 		$this->language = $phpbb_container->get('language');
-		$this->language->add_lang(array('gallery', 'gallery_acp'), 'phpbbgallery/core');
+		$this->language->add_lang(['gallery', 'gallery_acp'], 'phpbbgallery/core');
 
 		$submit = $request->is_set_post('submit');
 		$form_key = 'acp_time';
@@ -55,8 +55,8 @@ class config_module
 		// Init gallery configs class
 		$phpbb_gallery_configs = new \phpbbgallery\core\config($config);
 		$this->new_config = $phpbb_gallery_configs->get_all();
-		$cfg_array = ($request->is_set('config', \phpbb\request\request_interface::REQUEST)) ? utf8_normalize_nfc($request->variable('config', array('' => ''), true)) : $this->new_config;
-		$error = array();
+		$cfg_array = ($request->is_set('config', \phpbb\request\request_interface::REQUEST)) ? utf8_normalize_nfc($request->variable('config', ['' => ''], true)) : $this->new_config;
+		$error = [];
 
 		// We validate the complete config if whished
 		validate_config_vars($vars['vars'], $cfg_array, $error);
@@ -85,7 +85,7 @@ class config_module
 				if (isset($null['method']) && (($null['method'] == 'rrc_display') || ($null['method'] == 'rrc_modes')))
 				{
 					// Changing the value, casted by int to not mess up anything
-					$config_value = (int) array_sum($request->variable($config_name, array(0)));
+					$config_value = (int) array_sum($request->variable($config_name, [0]));
 				}
 				// Recalculate the Watermark-position
 				if (isset($null['method']) && ($null['method'] == 'watermark_position'))
@@ -108,12 +108,12 @@ class config_module
 						$bbcode_tpl = $this->bbcode_tpl($config_value);
 
 						$sql_ary = $acp_bbcodes->build_regexp($bbcode_match, $bbcode_tpl);
-						$sql_ary = array_merge($sql_ary, array(
+						$sql_ary = array_merge($sql_ary, [
 							'bbcode_match'			=> $bbcode_match,
 							'bbcode_tpl'			=> $bbcode_tpl,
 							'display_on_posting'	=> true,
 							'bbcode_helpline'		=> 'GALLERY_HELPLINE_ALBUM',
-						));
+						]);
 						$sql = 'UPDATE ' . BBCODES_TABLE . '
 							SET ' . $db->sql_build_array('UPDATE', $sql_ary) . "
 							WHERE bbcode_tag = '" . $db->sql_escape($sql_ary['bbcode_tag']) . "'";
@@ -216,14 +216,14 @@ class config_module
 		$this->tpl_name = 'acp_board';
 		$this->page_title = $vars['title'];
 
-		$template->assign_vars(array(
+		$template->assign_vars([
 			'L_TITLE'			=> $this->language->lang($vars['title']),
 			'L_TITLE_EXPLAIN'	=> $this->language->lang($vars['title'] . '_EXPLAIN'),
 
 			'S_ERROR'			=> (sizeof($error)) ? true : false,
 			'ERROR_MSG'			=> implode('<br />', $error),
 
-			'U_ACTION'			=> $this->u_action)
+			'U_ACTION'			=> $this->u_action]
 		);
 
 		// Output relevant page
@@ -240,10 +240,10 @@ class config_module
 
 				if (!empty($legend_text))
 				{
-					$template->assign_block_vars('options', array(
+					$template->assign_block_vars('options', [
 						'S_LEGEND' => true,
 						'LEGEND'   => $legend_text
-					));
+					]);
 				}
 
 				continue;
@@ -279,13 +279,13 @@ class config_module
 				continue;
 			}
 
-			$template->assign_block_vars('options', array(
+			$template->assign_block_vars('options', [
 				'KEY'			=> $config_key,
 				'TITLE'			=> $this->language->lang($vars['lang']) ? $this->language->lang($vars['lang']) : $vars['lang'],
 				'S_EXPLAIN'		=> (isset($vars['explain']) ? $vars['explain'] : ''),
 				'TITLE_EXPLAIN'	=> $l_explain,
 				'CONTENT'		=> $content,
-			));
+			]);
 
 			unset($this->display_vars['vars'][$config_key]);
 		}
@@ -332,10 +332,10 @@ class config_module
 		* @var	array	return_ary	Array we are sending back
 		* @since 1.2.0
 		*/
-		$vars = array('mode', 'return_ary');
+		$vars = ['mode', 'return_ary'];
 		extract($phpbb_dispatcher->trigger_event('phpbbgallery.core.acp.config.get_display_vars', compact($vars)));
 
-		$vars = array();
+		$vars = [];
 		$legend_count = 1;
 		foreach ($return_ary['vars'] as $legend_name => $configs)
 		{
@@ -354,116 +354,116 @@ class config_module
 		return $return_ary;
 	}
 
-	protected array $display_vars = array(
-		'main'	=> array(
+	protected array $display_vars = [
+		'main'	=> [
 			'title'	=> 'GALLERY_CONFIG',
-			'vars'	=> array(
-				'' => array(),
-				'GALLERY_CONFIG'	=> array(
-					'items_per_page'		=> array('lang' => 'ITEMS_PER_PAGE',		'validate' => 'int',	'type' => 'text:7:3',		'explain' => true),
-					'allow_comments'		=> array('lang' => 'COMMENT_SYSTEM',		'validate' => 'bool',	'type' => 'radio:yes_no'),
-					'comment_user_control'	=> array('lang' => 'COMMENT_USER_CONTROL',	'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true),
-					'comment_length'		=> array('lang' => 'COMMENT_MAX_LENGTH',	'validate' => 'int',	'type' => 'text:7:5',		'append' => 'CHARACTERS'),
-					'allow_rates'			=> array('lang' => 'RATE_SYSTEM',			'validate' => 'bool',	'type' => 'radio:yes_no'),
-					'max_rating'			=> array('lang' => 'RATE_SCALE',			'validate' => 'int',	'type' => 'text:7:2'),
-					'allow_hotlinking'		=> array('lang' => 'HOTLINK_PREVENT',		'validate' => 'bool',	'type' => 'radio:yes_no'),
-					'hotlinking_domains'	=> array('lang' => 'HOTLINK_ALLOWED',		'validate' => 'string',	'type' => 'text:40:255',	'explain' => true),
-				),
+			'vars'	=> [
+				'' => [],
+				'GALLERY_CONFIG'	=> [
+					'items_per_page'		=> ['lang' => 'ITEMS_PER_PAGE',		'validate' => 'int',	'type' => 'text:7:3',		'explain' => true],
+					'allow_comments'		=> ['lang' => 'COMMENT_SYSTEM',		'validate' => 'bool',	'type' => 'radio:yes_no'],
+					'comment_user_control'	=> ['lang' => 'COMMENT_USER_CONTROL',	'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
+					'comment_length'		=> ['lang' => 'COMMENT_MAX_LENGTH',	'validate' => 'int',	'type' => 'text:7:5',		'append' => 'CHARACTERS'],
+					'allow_rates'			=> ['lang' => 'RATE_SYSTEM',			'validate' => 'bool',	'type' => 'radio:yes_no'],
+					'max_rating'			=> ['lang' => 'RATE_SCALE',			'validate' => 'int',	'type' => 'text:7:2'],
+					'allow_hotlinking'		=> ['lang' => 'HOTLINK_PREVENT',		'validate' => 'bool',	'type' => 'radio:yes_no'],
+					'hotlinking_domains'	=> ['lang' => 'HOTLINK_ALLOWED',		'validate' => 'string',	'type' => 'text:40:255',	'explain' => true],
+				],
 
-				'ALBUM_SETTINGS'	=> array(
-					'album_display'			=> array('lang' => 'RRC_DISPLAY_OPTIONS',	'validate' => 'int',	'type' => 'custom',			'method' => 'rrc_display'),
-					'default_sort_key'		=> array('lang' => 'DEFAULT_SORT_METHOD',	'validate' => 'string',	'type' => 'custom',			'method' => 'sort_method_select'),
-					'default_sort_dir'		=> array('lang' => 'DEFAULT_SORT_ORDER',	'validate' => 'string',	'type' => 'custom',			'method' => 'sort_order_select'),
-					'album_images'			=> array('lang' => 'MAX_IMAGES_PER_ALBUM',	'validate' => 'int',	'type' => 'text:7:7',		'explain' => true),
-					'mini_thumbnail_disp'	=> array('lang' => 'DISP_FAKE_THUMB',		'validate' => 'bool',	'type' => 'radio:yes_no'),
-					'mini_thumbnail_size'	=> array('lang' => 'FAKE_THUMB_SIZE',		'validate' => 'int',	'type' => 'text:7:4',		'explain' => true,	'append' => 'PIXELS'),
-				),
+				'ALBUM_SETTINGS'	=> [
+					'album_display'			=> ['lang' => 'RRC_DISPLAY_OPTIONS',	'validate' => 'int',	'type' => 'custom',			'method' => 'rrc_display'],
+					'default_sort_key'		=> ['lang' => 'DEFAULT_SORT_METHOD',	'validate' => 'string',	'type' => 'custom',			'method' => 'sort_method_select'],
+					'default_sort_dir'		=> ['lang' => 'DEFAULT_SORT_ORDER',	'validate' => 'string',	'type' => 'custom',			'method' => 'sort_order_select'],
+					'album_images'			=> ['lang' => 'MAX_IMAGES_PER_ALBUM',	'validate' => 'int',	'type' => 'text:7:7',		'explain' => true],
+					'mini_thumbnail_disp'	=> ['lang' => 'DISP_FAKE_THUMB',		'validate' => 'bool',	'type' => 'radio:yes_no'],
+					'mini_thumbnail_size'	=> ['lang' => 'FAKE_THUMB_SIZE',		'validate' => 'int',	'type' => 'text:7:4',		'explain' => true,	'append' => 'PIXELS'],
+				],
 
-				'SEARCH_SETTINGS'	=> array(
-					'search_display'		=> array('lang' => 'RRC_DISPLAY_OPTIONS',	'validate' => 'int',	'type' => 'custom',			'method' => 'rrc_display'),
-				),
+				'SEARCH_SETTINGS'	=> [
+					'search_display'		=> ['lang' => 'RRC_DISPLAY_OPTIONS',	'validate' => 'int',	'type' => 'custom',			'method' => 'rrc_display'],
+				],
 
-				'IMAGE_SETTINGS'	=> array(
-					'num_uploads'			=> array('lang' => 'UPLOAD_IMAGES',			'validate' => 'int',	'type' => 'text:7:2'),
-					'max_filesize'			=> array('lang' => 'MAX_FILE_SIZE',			'validate' => 'int',	'type' => 'text:12:9',		'append' => 'BYTES'),
-					'max_width'				=> array('lang' => 'MAX_WIDTH',				'validate' => 'int',	'type' => 'text:7:5',		'append' => 'PIXELS'),
-					'max_height'			=> array('lang' => 'MAX_HEIGHT',			'validate' => 'int',	'type' => 'text:7:5',		'append' => 'PIXELS'),
-					'allow_resize'			=> array('lang' => 'RESIZE_IMAGES',			'validate' => 'bool',	'type' => 'radio:yes_no'),
-					'allow_rotate'			=> array('lang' => 'ROTATE_IMAGES',			'validate' => 'bool',	'type' => 'radio:yes_no'),
-					'jpg_quality'			=> array('lang' => 'JPG_QUALITY',			'validate' => 'int',	'type' => 'text:7:5',		'explain' => true),
+				'IMAGE_SETTINGS'	=> [
+					'num_uploads'			=> ['lang' => 'UPLOAD_IMAGES',			'validate' => 'int',	'type' => 'text:7:2'],
+					'max_filesize'			=> ['lang' => 'MAX_FILE_SIZE',			'validate' => 'int',	'type' => 'text:12:9',		'append' => 'BYTES'],
+					'max_width'				=> ['lang' => 'MAX_WIDTH',				'validate' => 'int',	'type' => 'text:7:5',		'append' => 'PIXELS'],
+					'max_height'			=> ['lang' => 'MAX_HEIGHT',			'validate' => 'int',	'type' => 'text:7:5',		'append' => 'PIXELS'],
+					'allow_resize'			=> ['lang' => 'RESIZE_IMAGES',			'validate' => 'bool',	'type' => 'radio:yes_no'],
+					'allow_rotate'			=> ['lang' => 'ROTATE_IMAGES',			'validate' => 'bool',	'type' => 'radio:yes_no'],
+					'jpg_quality'			=> ['lang' => 'JPG_QUALITY',			'validate' => 'int',	'type' => 'text:7:5',		'explain' => true],
 					//'medium_cache'			=> array('lang' => 'MEDIUM_CACHE',			'validate' => 'bool',	'type' => 'radio:yes_no'),
-					'medium_width'			=> array('lang' => 'RSZ_WIDTH',				'validate' => 'int',	'type' => 'text:7:4',		'append' => 'PIXELS'),
-					'medium_height'			=> array('lang' => 'RSZ_HEIGHT',			'validate' => 'int',	'type' => 'text:7:4',		'append' => 'PIXELS'),
-					'allow_gif'				=> array('lang' => 'GIF_ALLOWED',			'validate' => 'bool',	'type' => 'radio:yes_no'),
-					'allow_jpg'				=> array('lang' => 'JPG_ALLOWED',			'validate' => 'bool',	'type' => 'radio:yes_no'),
-					'allow_png'				=> array('lang' => 'PNG_ALLOWED',			'validate' => 'bool',	'type' => 'radio:yes_no'),
-					'allow_webp'			=> array('lang' => 'WEBP_ALLOWED',			'validate' => 'bool',	'type' => 'radio:yes_no'),
-					'allow_zip'				=> array('lang' => 'ZIP_ALLOWED',			'validate' => 'bool',	'type' => 'radio:yes_no'),
-					'description_length'	=> array('lang' => 'IMAGE_DESC_MAX_LENGTH',	'validate' => 'int',	'type' => 'text:7:5',		'append' => 'CHARACTERS'),
-					'disp_nextprev_thumbnail'	=> array('lang' => 'DISP_NEXTPREV_THUMB','validate' => 'bool',	'type' => 'radio:yes_no'),
-					'disp_image_url'		=> array('lang' => 'VIEW_IMAGE_URL',		'validate' => 'bool',	'type' => 'radio:yes_no'),
-				),
+					'medium_width'			=> ['lang' => 'RSZ_WIDTH',				'validate' => 'int',	'type' => 'text:7:4',		'append' => 'PIXELS'],
+					'medium_height'			=> ['lang' => 'RSZ_HEIGHT',			'validate' => 'int',	'type' => 'text:7:4',		'append' => 'PIXELS'],
+					'allow_gif'				=> ['lang' => 'GIF_ALLOWED',			'validate' => 'bool',	'type' => 'radio:yes_no'],
+					'allow_jpg'				=> ['lang' => 'JPG_ALLOWED',			'validate' => 'bool',	'type' => 'radio:yes_no'],
+					'allow_png'				=> ['lang' => 'PNG_ALLOWED',			'validate' => 'bool',	'type' => 'radio:yes_no'],
+					'allow_webp'			=> ['lang' => 'WEBP_ALLOWED',			'validate' => 'bool',	'type' => 'radio:yes_no'],
+					'allow_zip'				=> ['lang' => 'ZIP_ALLOWED',			'validate' => 'bool',	'type' => 'radio:yes_no'],
+					'description_length'	=> ['lang' => 'IMAGE_DESC_MAX_LENGTH',	'validate' => 'int',	'type' => 'text:7:5',		'append' => 'CHARACTERS'],
+					'disp_nextprev_thumbnail'	=> ['lang' => 'DISP_NEXTPREV_THUMB','validate' => 'bool',	'type' => 'radio:yes_no'],
+					'disp_image_url'		=> ['lang' => 'VIEW_IMAGE_URL',		'validate' => 'bool',	'type' => 'radio:yes_no'],
+				],
 
-				'THUMBNAIL_SETTINGS'	=> array(
+				'THUMBNAIL_SETTINGS'	=> [
 					//'thumbnail_cache'		=> array('lang' => 'THUMBNAIL_CACHE',		'validate' => 'bool',	'type' => 'radio:yes_no'),
-					'gdlib_version'			=> array('lang' => 'GD_VERSION',			'validate' => 'int',	'type' => 'custom',			'method' => 'gd_radio'),
-					'thumbnail_width'		=> array('lang' => 'THUMBNAIL_WIDTH',		'validate' => 'int',	'type' => 'text:7:3',		'append' => 'PIXELS'),
-					'thumbnail_height'		=> array('lang' => 'THUMBNAIL_HEIGHT',		'validate' => 'int',	'type' => 'text:7:3',		'append' => 'PIXELS'),
-					'thumbnail_quality'		=> array('lang' => 'THUMBNAIL_QUALITY',		'validate' => 'int',	'type' => 'text:7:3',		'explain' => true,	'append' => 'PERCENT'),
+					'gdlib_version'			=> ['lang' => 'GD_VERSION',			'validate' => 'int',	'type' => 'custom',			'method' => 'gd_radio'],
+					'thumbnail_width'		=> ['lang' => 'THUMBNAIL_WIDTH',		'validate' => 'int',	'type' => 'text:7:3',		'append' => 'PIXELS'],
+					'thumbnail_height'		=> ['lang' => 'THUMBNAIL_HEIGHT',		'validate' => 'int',	'type' => 'text:7:3',		'append' => 'PIXELS'],
+					'thumbnail_quality'		=> ['lang' => 'THUMBNAIL_QUALITY',		'validate' => 'int',	'type' => 'text:7:3',		'explain' => true,	'append' => 'PERCENT'],
 					//'thumbnail_infoline'	=> array('lang' => 'INFO_LINE',				'validate' => 'bool',	'type' => 'radio:yes_no'),
-				),
+				],
 
-				'WATERMARK_OPTIONS'	=> array(
-					'watermark_enabled'		=> array('lang' => 'WATERMARK_IMAGES',		'validate' => 'bool',	'type' => 'radio:yes_no'),
-					'watermark_source'		=> array('lang' => 'WATERMARK_SOURCE',		'validate' => 'string',	'type' => 'custom',			'explain' => true,	'method' => 'watermark_source'),
-					'watermark_height'		=> array('lang' => 'WATERMARK_HEIGHT',		'validate' => 'int',	'type' => 'text:7:4',		'explain' => true,	'append' => 'PIXELS'),
-					'watermark_width'		=> array('lang' => 'WATERMARK_WIDTH',		'validate' => 'int',	'type' => 'text:7:4',		'explain' => true,	'append' => 'PIXELS'),
-					'watermark_position'	=> array('lang' => 'WATERMARK_POSITION',	'validate' => '',		'type' => 'custom',			'method' => 'watermark_position'),
-				),
+				'WATERMARK_OPTIONS'	=> [
+					'watermark_enabled'		=> ['lang' => 'WATERMARK_IMAGES',		'validate' => 'bool',	'type' => 'radio:yes_no'],
+					'watermark_source'		=> ['lang' => 'WATERMARK_SOURCE',		'validate' => 'string',	'type' => 'custom',			'explain' => true,	'method' => 'watermark_source'],
+					'watermark_height'		=> ['lang' => 'WATERMARK_HEIGHT',		'validate' => 'int',	'type' => 'text:7:4',		'explain' => true,	'append' => 'PIXELS'],
+					'watermark_width'		=> ['lang' => 'WATERMARK_WIDTH',		'validate' => 'int',	'type' => 'text:7:4',		'explain' => true,	'append' => 'PIXELS'],
+					'watermark_position'	=> ['lang' => 'WATERMARK_POSITION',	'validate' => '',		'type' => 'custom',			'method' => 'watermark_position'],
+				],
 
-				'UC_LINK_CONFIG'	=> array(
-					'link_thumbnail'		=> array('lang' => 'UC_THUMBNAIL',			'validate' => 'string',	'type' => 'custom',			'explain' => true,	'method' => 'uc_select'),
-					'link_imagepage'		=> array('lang' => 'UC_IMAGEPAGE',			'validate' => 'string',	'type' => 'custom',			'explain' => true,	'method' => 'uc_select'),
-					'link_image_name'		=> array('lang' => 'UC_IMAGE_NAME',			'validate' => 'string',	'type' => 'custom',			'method' => 'uc_select'),
-					'link_image_icon'		=> array('lang' => 'UC_IMAGE_ICON',			'validate' => 'string',	'type' => 'custom',			'method' => 'uc_select'),
-				),
+				'UC_LINK_CONFIG'	=> [
+					'link_thumbnail'		=> ['lang' => 'UC_THUMBNAIL',			'validate' => 'string',	'type' => 'custom',			'explain' => true,	'method' => 'uc_select'],
+					'link_imagepage'		=> ['lang' => 'UC_IMAGEPAGE',			'validate' => 'string',	'type' => 'custom',			'explain' => true,	'method' => 'uc_select'],
+					'link_image_name'		=> ['lang' => 'UC_IMAGE_NAME',			'validate' => 'string',	'type' => 'custom',			'method' => 'uc_select'],
+					'link_image_icon'		=> ['lang' => 'UC_IMAGE_ICON',			'validate' => 'string',	'type' => 'custom',			'method' => 'uc_select'],
+				],
 
-				'RRC_GINDEX'	=> array(
-					'rrc_gindex_mode'		=> array('lang' => 'RRC_GINDEX_MODE',		'validate' => 'int',	'type' => 'custom',			'explain' => true,	'method' => 'rrc_modes'),
-					'rrc_gindex_comments'	=> array('lang' => 'RRC_GINDEX_COMMENTS',	'validate' => 'bool',	'type' => 'radio:yes_no'),
+				'RRC_GINDEX'	=> [
+					'rrc_gindex_mode'		=> ['lang' => 'RRC_GINDEX_MODE',		'validate' => 'int',	'type' => 'custom',			'explain' => true,	'method' => 'rrc_modes'],
+					'rrc_gindex_comments'	=> ['lang' => 'RRC_GINDEX_COMMENTS',	'validate' => 'bool',	'type' => 'radio:yes_no'],
 					//'rrc_gindex_contests'	=> array('lang' => 'RRC_GINDEX_CONTESTS',	'validate' => 'int',	'type' => 'text:7:3'),
-					'rrc_gindex_display'	=> array('lang' => 'RRC_DISPLAY_OPTIONS',	'validate' => '',		'type' => 'custom',			'method' => 'rrc_display'),
-					'rrc_gindex_pegas'		=> array('lang' => 'RRC_GINDEX_PGALLERIES',	'validate' => 'bool',	'type' => 'radio:yes_no'),
-				),
+					'rrc_gindex_display'	=> ['lang' => 'RRC_DISPLAY_OPTIONS',	'validate' => '',		'type' => 'custom',			'method' => 'rrc_display'],
+					'rrc_gindex_pegas'		=> ['lang' => 'RRC_GINDEX_PGALLERIES',	'validate' => 'bool',	'type' => 'radio:yes_no'],
+				],
 
-				'PHPBB_INTEGRATION'	=> array(
-					'disp_gallery_icon'			=> array('lang' => 'DISP_GALLERY_ICON',				'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true),
-					'disp_total_images'			=> array('lang' => 'DISP_TOTAL_IMAGES',				'validate' => 'bool',	'type' => 'radio:yes_no'),
-					'profile_user_images'		=> array('lang' => 'DISP_USER_IMAGES_PROFILE',		'validate' => 'bool',	'type' => 'radio:yes_no'),
-					'profile_pega'				=> array('lang' => 'DISP_PERSONAL_ALBUM_PROFILE',	'validate' => 'bool',	'type' => 'radio:yes_no'),
-					'rrc_profile_mode'			=> array('lang' => 'RRC_PROFILE_MODE',				'validate' => 'int',	'type' => 'custom',			'explain' => true,	'method' => 'rrc_modes'),
-					'rrc_profile_items'			=> array('lang' => 'RRC_PROFILE_ITEMS',				'validate' => 'int',	'type' => 'text:7:3'),
-					'rrc_profile_display'		=> array('lang' => 'RRC_DISPLAY_OPTIONS',			'validate' => 'int',	'type' => 'custom',			'method' => 'rrc_display'),
+				'PHPBB_INTEGRATION'	=> [
+					'disp_gallery_icon'			=> ['lang' => 'DISP_GALLERY_ICON',				'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
+					'disp_total_images'			=> ['lang' => 'DISP_TOTAL_IMAGES',				'validate' => 'bool',	'type' => 'radio:yes_no'],
+					'profile_user_images'		=> ['lang' => 'DISP_USER_IMAGES_PROFILE',		'validate' => 'bool',	'type' => 'radio:yes_no'],
+					'profile_pega'				=> ['lang' => 'DISP_PERSONAL_ALBUM_PROFILE',	'validate' => 'bool',	'type' => 'radio:yes_no'],
+					'rrc_profile_mode'			=> ['lang' => 'RRC_PROFILE_MODE',				'validate' => 'int',	'type' => 'custom',			'explain' => true,	'method' => 'rrc_modes'],
+					'rrc_profile_items'			=> ['lang' => 'RRC_PROFILE_ITEMS',				'validate' => 'int',	'type' => 'text:7:3'],
+					'rrc_profile_display'		=> ['lang' => 'RRC_DISPLAY_OPTIONS',			'validate' => 'int',	'type' => 'custom',			'method' => 'rrc_display'],
 					//'rrc_profile_pegas'			=> array('lang' => 'RRC_GINDEX_PGALLERIES',			'validate' => 'bool',	'type' => 'radio:yes_no'),
 					//'viewtopic_icon'			=> array('lang' => 'DISP_VIEWTOPIC_ICON',			'validate' => 'bool',	'type' => 'radio:yes_no'),
 					//'viewtopic_images'			=> array('lang' => 'DISP_VIEWTOPIC_IMAGES',			'validate' => 'bool',	'type' => 'radio:yes_no'),
 					//'viewtopic_link'			=> array('lang' => 'DISP_VIEWTOPIC_LINK',			'validate' => 'bool',	'type' => 'radio:yes_no'),
-				),
+				],
 
-				'INDEX_SETTINGS'	=> array(
-					'pegas_index_album'		=> array('lang' => 'PERSONAL_ALBUM_INDEX',	'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true),
+				'INDEX_SETTINGS'	=> [
+					'pegas_index_album'		=> ['lang' => 'PERSONAL_ALBUM_INDEX',	'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 					//'pegas_index_random'	=> array('lang'	=> 'RANDOM_ON_INDEX',		'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true),
-					'pegas_index_rnd_count'	=> array('lang'	=> 'RANDOM_ON_INDEX_COUNT',	'validate' => 'int',	'type' => 'text:7:3'),
+					'pegas_index_rnd_count'	=> ['lang'	=> 'RANDOM_ON_INDEX_COUNT',	'validate' => 'int',	'type' => 'text:7:3'],
 					//'pegas_index_recent'	=> array('lang'	=> 'RECENT_ON_INDEX',		'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true),
-					'pegas_index_rct_count'	=> array('lang'	=> 'RECENT_ON_INDEX_COUNT',	'validate' => 'int',	'type' => 'text:7:3'),
-					'disp_login'			=> array('lang' => 'DISP_LOGIN',			'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true),
-					'disp_whoisonline'		=> array('lang' => 'DISP_WHOISONLINE',		'validate' => 'bool',	'type' => 'radio:yes_no'),
-					'disp_birthdays'		=> array('lang' => 'DISP_BIRTHDAYS',		'validate' => 'bool',	'type' => 'radio:yes_no'),
-					'disp_statistic'		=> array('lang' => 'DISP_STATISTIC',		'validate' => 'bool',	'type' => 'radio:yes_no'),
-				),
-			),
-		),
-	);
+					'pegas_index_rct_count'	=> ['lang'	=> 'RECENT_ON_INDEX_COUNT',	'validate' => 'int',	'type' => 'text:7:3'],
+					'disp_login'			=> ['lang' => 'DISP_LOGIN',			'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
+					'disp_whoisonline'		=> ['lang' => 'DISP_WHOISONLINE',		'validate' => 'bool',	'type' => 'radio:yes_no'],
+					'disp_birthdays'		=> ['lang' => 'DISP_BIRTHDAYS',		'validate' => 'bool',	'type' => 'radio:yes_no'],
+					'disp_statistic'		=> ['lang' => 'DISP_STATISTIC',		'validate' => 'bool',	'type' => 'radio:yes_no'],
+				],
+			],
+		],
+	];
 
 	/**
 	 * Disabled Radio Buttons

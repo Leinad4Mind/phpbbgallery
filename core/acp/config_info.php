@@ -13,16 +13,16 @@ class config_info
 {
 	public function module(): array
 	{
-		return array(
+		return [
 			'title'		=> 'PHPBB_GALLERY',
 			'version'	=> '1.0.0',
-			'modes'		=> array(
-				'main'	=> array(
+			'modes'		=> [
+				'main'	=> [
 					'title'		=> 'ACP_GALLERY_CONFIGURE_GALLERY',
 					'auth'		=> 'ext_phpbbgallery/core && acl_a_gallery_manage',
-					'cat'		=> array('PHPBB_GALLERY'),
-				),
-			),
-		);
+					'cat'		=> ['PHPBB_GALLERY'],
+				],
+			],
+		];
 	}
 }

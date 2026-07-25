@@ -155,9 +155,9 @@ class misc
 					WHERE user_id = ' . (int) $this->user->data['user_id'];
 				$this->db->sql_query($sql);
 
-				$this->gallery_user->update_data(array(
+				$this->gallery_user->update_data([
 						'user_lastmark'		=> time(),
-				));
+				]);
 			}
 
 			return;
@@ -167,7 +167,7 @@ class misc
 			// Mark album read
 			if (!is_array($album_id))
 			{
-				$album_id = array($album_id);
+				$album_id = [$album_id];
 			}
 
 			$sql = 'SELECT album_id
@@ -176,7 +176,7 @@ class misc
 					AND ' . $this->db->sql_in_set('album_id', $album_id);
 			$result = $this->db->sql_query($sql);
 
-			$sql_update = array();
+			$sql_update = [];
 			while ($row = $this->db->sql_fetchrow($result))
 			{
 				$sql_update[] = $row['album_id'];
@@ -194,14 +194,14 @@ class misc
 
 			if ($sql_insert = array_diff($album_id, $sql_update))
 			{
-				$sql_ary = array();
+				$sql_ary = [];
 				foreach ($sql_insert as $a_id)
 				{
-					$sql_ary[] = array(
+					$sql_ary[] = [
 						'user_id'	=> (int) $this->user->data['user_id'],
 						'album_id'	=> (int) $a_id,
 						'mark_time'	=> time()
-					);
+					];
 				}
 
 				$this->db->sql_multi_insert($this->track_table, $sql_ary);
@@ -226,11 +226,11 @@ class misc
 			{
 				$this->db->sql_return_on_error(true);
 
-				$sql_ary = array(
+				$sql_ary = [
 					'user_id'		=> (int) $this->user->data['user_id'],
 					'album_id'		=> (int) $album_id,
 					'mark_time'		=> time(),
-				);
+				];
 
 				$this->db->sql_query('INSERT INTO ' . $this->track_table . ' ' . $this->db->sql_build_array('INSERT', $sql_ary));
 

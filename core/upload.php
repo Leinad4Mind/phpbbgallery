@@ -130,10 +130,10 @@ class upload
 	*/
 	public int $loaded_files = 0;
 	public int $uploaded_files = 0;
-	public array $errors = array();
-	public array $images = array();
-	public array $image_data = array();
-	public array $array_id2row = array();
+	public array $errors = [];
+	public array $images = [];
+	public array $image_data = [];
+	public array $array_id2row = [];
 	public string $error_prefix = '';
 	public int $max_filesize = 0;
 	private int $file_limit = 0;
@@ -143,9 +143,9 @@ class upload
 	private bool $allow_comments = false;
 	private bool $sent_quota_error = false;
 	private string $username = '';
-	private array $file_descriptions = array();
-	private array $file_names = array();
-	private array $file_rotating = array();
+	private array $file_descriptions = [];
+	private array $file_names = [];
+	private array $file_rotating = [];
 	private array $zip_file_data = [];
 
 	public int $min_width = 0;
@@ -829,7 +829,7 @@ class upload
 			$message_parser->parse(true, true, true, true, false, true, true, true);
 		}
 
-		$sql_ary = array(
+		$sql_ary = [
 			'image_status'				=> ($needs_approval) ? $this->block->get_image_status_unapproved() : $this->block->get_image_status_approved(),
 			'image_contest'				=> ($is_in_contest) ? $this->block->get_in_contest() : $this->block->get_no_contest(),
 			'image_upload_session_hash'	=> '',
@@ -837,17 +837,17 @@ class upload
 			'image_desc_uid'			=> $message_parser->bbcode_uid,
 			'image_desc_bitfield'		=> $message_parser->bbcode_bitfield,
 			'image_time'				=> time() + $this->file_count,
-		);
+		];
 		$new_image_name = $this->get_name();
 		if (($new_image_name != '') && ($new_image_name != $this->image_data[$image_id]['image_name']))
 		{
-			$sql_ary = array_merge($sql_ary, array(
+			$sql_ary = array_merge($sql_ary, [
 				'image_name'		=> $new_image_name,
 				'image_name_clean'	=> utf8_clean_string($new_image_name),
-			));
+			]);
 		}
 
-		$additional_sql_data = array();
+		$additional_sql_data = [];
 		$image_data = $this->image_data[$image_id];
 		$file_link = $this->gallery_url->path('upload') . $this->image_data[$image_id]['image_filename'];
 
@@ -860,7 +860,7 @@ class upload
 		* @var	string	file_link				link to file
 		* @since 1.2.0
 		*/
-		$vars = array('additional_sql_data', 'image_data', 'file_link');
+		$vars = ['additional_sql_data', 'image_data', 'file_link'];
 		extract($this->phpbb_dispatcher->trigger_event('phpbbgallery.core.upload.update_image_before', compact($vars)));
 
 		// Rotate image
@@ -873,7 +873,7 @@ class upload
 			* @var	array	additional_sql_data		array of additional settings
 			* @since 1.2.0
 			*/
-			$vars = array('additional_sql_data');
+			$vars = ['additional_sql_data'];
 			extract($this->phpbb_dispatcher->trigger_event('phpbbgallery.core.upload.update_image_nofilechange', compact($vars)));
 		}
 
@@ -915,7 +915,7 @@ class upload
 			return false;
 		}
 		@chmod($this->file->get('destination_file'), 0644);
-		$additional_sql_data = array();
+		$additional_sql_data = [];
 		$file = $this->file;
 
 		/**
@@ -926,7 +926,7 @@ class upload
 		* @var	array	file					File object
 		* @since 1.2.0
 		*/
-		$vars = array('additional_sql_data', 'file');
+		$vars = ['additional_sql_data', 'file'];
 		extract($this->phpbb_dispatcher->trigger_event('phpbbgallery.core.upload.prepare_file_before', compact($vars)));
 
 		$this->tools->set_image_options($this->max_filesize, $this->gallery_config->get('max_height'), $this->gallery_config->get('max_width'));
@@ -1025,7 +1025,7 @@ class upload
 	{
 		$image_name = utf8_substr($this->file->get('uploadname'), 0, utf8_strrpos($this->file->get('uploadname'), '.'));
 
-		$sql_ary = array_merge(array(
+		$sql_ary = array_merge([
 			'image_name'			=> $image_name,
 			'image_name_clean'		=> utf8_clean_string($image_name),
 			'image_filename' 		=> $this->file->get('realname'),
@@ -1046,7 +1046,7 @@ class upload
 			'image_desc'			=> '',
 			'image_desc_uid'		=> '',
 			'image_desc_bitfield'	=> '',
-		), $additional_sql_ary);
+		], $additional_sql_ary);
 
 		$sql = 'INSERT INTO ' . $this->images_table . ' ' . $this->db->sql_build_array('INSERT', $sql_ary);
 		$this->db->sql_query($sql);
@@ -1071,7 +1071,7 @@ class upload
 			WHERE image_status = ' . (int) $this->block->get_image_status_orphan() . '
 				AND image_time < ' . (int) $prunetime;
 		$result = $this->db->sql_query($sql);
-		$images = $filenames = array();
+		$images = $filenames = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$images[] = (int) $row['image_id'];
@@ -1216,7 +1216,7 @@ class upload
 
 	public function get_images(array $uploaded_ids): void
 	{
-		$image_ids = $filenames = array();
+		$image_ids = $filenames = [];
 		foreach ($uploaded_ids as $row => $check)
 		{
 			if (!is_string($check) || strpos($check, '$') === false)
@@ -1384,7 +1384,7 @@ class upload
 	 */
 	public function get_allowed_types(bool $get_types = false, bool $ignore_zip = false): array
 	{
-		$extensions = $types = array();
+		$extensions = $types = [];
 		if ($this->gallery_config->get('allow_jpg'))
 		{
 			$types[] = $this->language->lang('FILETYPES_JPG');
@@ -1420,7 +1420,7 @@ class upload
 	*/
 	public function generate_hidden_fields(): array
 	{
-		$checks = array();
+		$checks = [];
 		foreach ($this->images as $image_id)
 		{
 			$checks[] = $image_id . '$' . $this->image_data[$image_id]['image_filename'];

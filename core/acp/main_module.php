@@ -31,7 +31,7 @@ class main_module
 
 		$gallery_url = $phpbb_container->get('phpbbgallery.core.url');
 
-		$this->language->add_lang(array('gallery_acp', 'gallery'), 'phpbbgallery/core');
+		$this->language->add_lang(['gallery_acp', 'gallery'], 'phpbbgallery/core');
 		$this->tpl_name = 'gallery_main';
 		add_form_key('acp_gallery');
 		$submode = $request->variable('submode', '');
@@ -91,7 +91,7 @@ class main_module
 		// before we start let's check if directory structure is OK
 		if (!is_writable($phpbb_root_path . 'files'))
 		{
-			$template->assign_vars(array(
+			$template->assign_vars([
 				'U_FILE_DIR_STATE'	=> $this->language->lang('NO_WRITE_ACCESS'),
 				'U_FILE_DIR_STATE_ERROR'	=> 1,
 				'U_CORE_DIR_STATE'	=>  $this->language->lang('NO_WRITE_ACCESS'),
@@ -102,101 +102,101 @@ class main_module
 				'U_MINI_DIR_STATE_ERROR'	=> 1,
 				'U_SOURCE_DIR_STATE'	=>  $this->language->lang('NO_WRITE_ACCESS'),
 				'U_SOURCE_DIR_STATE_ERROR'	=> 1,
-			));
+			]);
 		}
 		else
 		{
-			$template->assign_vars(array(
+			$template->assign_vars([
 				'U_FILE_DIR_STATE'	=>  $this->language->lang('WRITE_ACCESS'),
 				'U_FILE_DIR_STATE_ERROR'	=> 0,
-			));
+			]);
 			if (!file_exists($phpbbgallery_core_file))
 			{
 				mkdir($phpbbgallery_core_file, 0755, true);
-				$template->assign_vars(array(
+				$template->assign_vars([
 					'U_CORE_DIR_STATE'	=>  $this->language->lang('DIR_CREATED'),
 					'U_CORE_DIR_STATE_ERROR'	=> 0,
-				));
+				]);
 			}
 			else if (is_writable($phpbbgallery_core_file))
 			{
-				$template->assign_vars(array(
+				$template->assign_vars([
 					'U_CORE_DIR_STATE'	=>  $this->language->lang('WRITE_ACCESS'),
 					'U_CORE_DIR_STATE_ERROR'	=> 0,
-				));
+				]);
 			}
 			else
 			{
-				$template->assign_vars(array(
+				$template->assign_vars([
 					'U_CORE_DIR_STATE'	=>  $this->language->lang('NO_WRITE_ACCESS'),
 					'U_CORE_DIR_STATE_ERROR'	=> 1,
-				));
+				]);
 			}
 			if (!file_exists($phpbbgallery_core_file_medium))
 			{
 				mkdir($phpbbgallery_core_file_medium, 0755, true);
-				$template->assign_vars(array(
+				$template->assign_vars([
 					'U_MEDIUM_DIR_STATE'	=>  $this->language->lang('DIR_CREATED'),
 					'U_MEDIUM_DIR_STATE_ERROR'	=> 0,
-				));
+				]);
 			}
 			else if (is_writable($phpbbgallery_core_file_medium))
 			{
-				$template->assign_vars(array(
+				$template->assign_vars([
 					'U_MEDIUM_DIR_STATE'	=>  $this->language->lang('WRITE_ACCESS'),
 					'U_MEDIUM_DIR_STATE_ERROR'	=> 0,
-				));
+				]);
 			}
 			else
 			{
-				$template->assign_vars(array(
+				$template->assign_vars([
 					'U_MEDIUM_DIR_STATE'	=>  $this->language->lang('NO_WRITE_ACCESS'),
 					'U_MEDIUM_DIR_STATE_ERROR'	=> 1,
-				));
+				]);
 			}
 			if (!file_exists($phpbbgallery_core_file_mini))
 			{
 				mkdir($phpbbgallery_core_file_mini, 0755, true);
-				$template->assign_vars(array(
+				$template->assign_vars([
 					'U_MINI_DIR_STATE'	=>  $this->language->lang('DIR_CREATED'),
 					'U_MINI_DIR_STATE_ERROR'	=> 0,
-				));
+				]);
 			}
 			else if (is_writable($phpbbgallery_core_file_mini))
 			{
-				$template->assign_vars(array(
+				$template->assign_vars([
 					'U_MINI_DIR_STATE'	=>  $this->language->lang('WRITE_ACCESS'),
 					'U_MINI_DIR_STATE_ERROR'	=> 0,
-				));
+				]);
 			}
 			else
 			{
-				$template->assign_vars(array(
+				$template->assign_vars([
 					'U_MINI_DIR_STATE'	=>  $this->language->lang('NO_WRITE_ACCESS'),
 					'U_MINI_DIR_STATE_ERROR'	=> 1,
-				));
+				]);
 			}
 			if (!file_exists($phpbbgallery_core_file_source))
 			{
 				mkdir($phpbbgallery_core_file_source, 0755, true);
-				$template->assign_vars(array(
+				$template->assign_vars([
 					'U_SOURCE_DIR_STATE'	=>  $this->language->lang('DIR_CREATED'),
 					'U_SOURCE_DIR_STATE_ERROR'	=> 0,
-				));
+				]);
 			}
 			else if (is_writable($phpbbgallery_core_file_source))
 			{
-				$template->assign_vars(array(
+				$template->assign_vars([
 					'U_SOURCE_DIR_STATE'	=>  $this->language->lang('WRITE_ACCESS'),
 					'U_SOURCE_DIR_STATE_ERROR'	=> 0,
-				));
+				]);
 			}
 			else
 			{
-				$template->assign_vars(array(
+				$template->assign_vars([
 					'U_SOURCE_DIR_STATE'	=>  $this->language->lang('NO_WRITE_ACCESS'),
 					'U_SOURCE_DIR_STATE_ERROR'	=> 1,
-				));
+				]);
 			}
 		}
 		if (!confirm_box(true))
@@ -287,12 +287,12 @@ class main_module
 
 			if ($confirm)
 			{
-				confirm_box(false, (($album_id) ? $confirm_lang : $this->language->lang($confirm_lang)), build_hidden_fields(array(
+				confirm_box(false, (($album_id) ? $confirm_lang : $this->language->lang($confirm_lang)), build_hidden_fields([
 					'i'			=> $id,
 					'mode'		=> $mode,
 					'action'	=> $action,
 					'reset_album_id'	=> $album_id,
-				)));
+				]));
 			}
 		}
 		else
@@ -306,7 +306,7 @@ class main_module
 					}
 
 					$total_images = $total_comments = 0;
-					$phpbb_gallery_user->update_users('all', array('user_images' => 0));
+					$phpbb_gallery_user->update_users('all', ['user_images' => 0]);
 
 					$sql = 'SELECT COUNT(image_id) AS num_images, image_user_id AS user_id, SUM(image_comments) AS num_comments
 						FROM ' . $images_table . '
@@ -322,9 +322,9 @@ class main_module
 
 						$image_user = $phpbb_container->get('phpbbgallery.core.user');
 						$image_user->set_user_id($row['user_id'], false);
-						$image_user->update_data(array(
+						$image_user->update_data([
 							'user_images'		=> $row['num_images'],
-						));
+						]);
 					}
 					$db->sql_freeresult($result);
 
@@ -339,7 +339,7 @@ class main_module
 						trigger_error($this->language->lang('NO_AUTH_OPERATION') . adm_back_link($this->u_action), E_USER_WARNING);
 					}
 
-					$phpbb_gallery_user->update_users('all', array('personal_album_id' => 0));
+					$phpbb_gallery_user->update_users('all', ['personal_album_id' => 0]);
 
 					$sql = 'SELECT album_id, album_user_id
 						FROM ' . $albums_table . '
@@ -352,29 +352,29 @@ class main_module
 					while ($row = $db->sql_fetchrow($result))
 					{
 						$image_user = $phpbb_gallery_user->set_user_id($row['album_user_id'], false);
-						$phpbb_gallery_user->update_data(array(
+						$phpbb_gallery_user->update_data([
 							'personal_album_id'		=> $row['album_id'],
-						));
+						]);
 						$number_of_personals++;
 					}
 					$db->sql_freeresult($result);
 					$phpbb_ext_gallery_config->set('num_pegas', $number_of_personals);
 
 					// Update the config for the statistic on the index
-					$sql_array = array(
+					$sql_array = [
 						'SELECT'		=> 'a.album_id, u.user_id, u.username, u.user_colour',
-						'FROM'			=> array($albums_table => 'a'),
+						'FROM'			=> [$albums_table => 'a'],
 
-						'LEFT_JOIN'		=> array(
-							array(
-								'FROM'		=> array(USERS_TABLE => 'u'),
+						'LEFT_JOIN'		=> [
+							[
+								'FROM'		=> [USERS_TABLE => 'u'],
 								'ON'		=> 'u.user_id = a.album_user_id',
-							),
-						),
+							],
+						],
 
 						'WHERE'			=> 'a.album_user_id <> ' . (int) \phpbbgallery\core\block::PUBLIC_ALBUM . ' AND a.parent_id = 0',
 						'ORDER_BY'		=> 'a.album_id DESC',
-					);
+					];
 					$sql = $db->sql_build_query('SELECT', $sql_array);
 
 					$result = $db->sql_query_limit($sql, 1);
@@ -399,11 +399,11 @@ class main_module
 					$result = $db->sql_query($sql);
 					while ($row = $db->sql_fetchrow($result))
 					{
-						$sql_ary = array(
+						$sql_ary = [
 							'filesize_upload'		=> @filesize($gallery_url->path('upload') . $row['image_filename']),
 							'filesize_medium'		=> @filesize($gallery_url->path('medium') . $row['image_filename']),
 							'filesize_cache'		=> @filesize($gallery_url->path('thumbnail') . $row['image_filename']),
-						);
+						];
 						$sql = 'UPDATE ' . $images_table . '
 							SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
 							WHERE ' . $db->sql_in_set('image_id', $row['image_id']);
@@ -431,7 +431,7 @@ class main_module
 				case 'reset_rating':
 					$album_id = $request->variable('reset_album_id', 0);
 
-					$image_ids = array();
+					$image_ids = [];
 					$sql = 'SELECT image_id
 						FROM ' . $images_table . '
 						WHERE image_album_id = ' . (int) $album_id;
@@ -532,10 +532,10 @@ class main_module
 						}
 					}
 
-					$sql_ary = array(
+					$sql_ary = [
 						'filesize_medium'		=> 0,
 						'filesize_cache'		=> 0,
-					);
+					];
 					$sql = 'UPDATE ' . $images_table . '
 						SET ' . $db->sql_build_array('UPDATE', $sql_ary);
 					$db->sql_query($sql);
@@ -584,7 +584,7 @@ class main_module
 		$dir_sizes = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
-		$template->assign_vars(array(
+		$template->assign_vars([
 			'S_GALLERY_OVERVIEW'			=> true,
 			'ACP_GALLERY_TITLE'				=> $this->language->lang('ACP_GALLERY_OVERVIEW'),
 			'ACP_GALLERY_TITLE_EXPLAIN'		=> $this->language->lang('ACP_GALLERY_OVERVIEW_EXPLAIN'),
@@ -602,7 +602,7 @@ class main_module
 
 			'S_FOUNDER'				=> ($user->data['user_type'] == USER_FOUNDER) ? true : false,
 			'U_ACTION'				=> $this->u_action,
-		));
+		]);
 	}
 
 	/**

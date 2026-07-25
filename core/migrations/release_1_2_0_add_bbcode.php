@@ -23,16 +23,16 @@ class release_1_2_0_add_bbcode extends migration
 
 	public function update_data(): array
 	{
-		return array(
-			array('custom', array(array(&$this, 'install_bbcode'))),
-		);
+		return [
+			['custom', [[&$this, 'install_bbcode']]],
+		];
 	}
 
 	public function revert_data(): array
 	{
-		return array(
-			array('custom', array(array(&$this, 'remove_bbcode'))),
-		);
+		return [
+			['custom', [[&$this, 'remove_bbcode']]],
+		];
 	}
 
 	public function install_bbcode(): void
@@ -77,7 +77,7 @@ class release_1_2_0_add_bbcode extends migration
 			{
 				$this->db->sql_query('INSERT INTO ' . $this->table_prefix . 'bbcodes ' . $this->db->sql_build_array(
 					'INSERT',
-					array(
+					[
 						'bbcode_tag'			=> 'image',
 						'bbcode_id'				=> (int) $bbcode_id,
 						'bbcode_helpline'		=> 'GALLERY_HELPLINE_ALBUM',
@@ -88,7 +88,7 @@ class release_1_2_0_add_bbcode extends migration
 						'first_pass_replace'	=> '[image:$uid]${1}[/image:$uid]',
 						'second_pass_match'		=> '!\[image:$uid\]([0-9]+)\[/image:$uid\]!s',
 						'second_pass_replace'	=> '<a href="' . $url . '${1}"><img src="' . $url . '${1}/mini" alt="${1}" /></a>'
-					)
+					]
 				));
 			}
 		}
