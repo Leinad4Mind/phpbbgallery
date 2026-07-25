@@ -127,6 +127,7 @@ class main_listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
+			'core.acp_board_config_edit_add'			=> 'acp_board_config_edit_add',
 			'core.acp_manage_forums_display_form'		=> 'acp_manage_forums_display_form',
 			'core.acp_manage_forums_initialise_data'	=> 'acp_manage_forums_initialise_data',
 			'core.acp_manage_forums_request_data'		=> 'acp_manage_forums_request_data',
@@ -158,6 +159,18 @@ class main_listener implements EventSubscriberInterface
 			'core.viewtopic_get_post_data'					=> 'viewtopic_get_post_data',
 			'core.viewtopic_modify_post_row'				=> 'viewtopic_modify_post_row',
 		);
+	}
+
+	public function acp_board_config_edit_add($event)
+	{
+		if ($event['mode'] == 'features')
+		{
+			$display_vars = $event['display_vars'];
+			$display_vars['vars'] = phpbb_insert_config_array($display_vars['vars'], array(
+				'bestanswer_lock_on_answer'	=> array('lang' => 'LOCK_ON_ANSWER', 'validate' => 'bool', 'type' => 'radio:yes_no', 'explain' => true),
+			), array('after' => 'allow_topic_notify'));
+			$event['display_vars'] = $display_vars;
+		}
 	}
 
 	public function acp_manage_forums_display_form($event)

@@ -3,6 +3,7 @@ services:
         class: leinad4mind\bestanswer\controller\main_controller
         arguments:
             - '@auth'
+            - '@config'
             - '@dbal.conn'
             - '@language'
             - '@log'

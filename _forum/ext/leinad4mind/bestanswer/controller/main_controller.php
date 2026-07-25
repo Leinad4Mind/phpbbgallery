@@ -12,6 +12,7 @@
 namespace leinad4mind\bestanswer\controller;
 
 use phpbb\auth\auth;
+use phpbb\config\config;
 use phpbb\db\driver\driver_interface;
 use phpbb\extension\manager as ext_manager;
 use phpbb\language\language;
@@ -27,6 +28,9 @@ class main_controller
 {
 	/* @var \phpbb\auth\auth */
 	protected $auth;
+
+	/* @var \phpbb\config\config */
+	protected $config;
 
 	/* @var \phpbb\db\driver\driver_interface */
 	protected $db;
@@ -61,6 +65,7 @@ class main_controller
 	 * Constructor
 	 *
 	 * @param \phpbb\auth\auth                    $auth
+	 * @param \phpbb\config\config                $config
 	 * @param \phpbb\db\driver\driver_interface   $db
 	 * @param \phpbb\language\language            $lang
 	 * @param \phpbb\log\log                      $log
@@ -74,6 +79,7 @@ class main_controller
 	 */
 	public function __construct(
 		auth $auth,
+		config $config,
 		driver_interface $db,
 		language $lang,
 		log $log,
@@ -87,6 +93,7 @@ class main_controller
 	)
 	{
 		$this->auth = $auth;
+		$this->config = $config;
 		$this->db = $db;
 		$this->lang = $lang;
 		$this->log = $log;
@@ -262,6 +269,21 @@ class main_controller
 					$sql = 'INSERT INTO ' . $this->bbpoints_table . ' ' . $this->db->sql_build_array('INSERT', $sql_arr);
 					$this->db->sql_query($sql);
 					$this->log->add($log_var, (int) $topic_data['user_id'], $this->user->data['user_ip'], 'LOG_BBPOINTS_MARK_ANSWER', time(), array($topic_data['post_subject'], $post_author));
+				}
+
+				// Lock the topic, if configured to do so board-wide
+				if ($this->config['bestanswer_lock_on_answer'])
+				{
+					$sql = 'UPDATE ' . TOPICS_TABLE . '
+						SET topic_status = ' . ITEM_LOCKED . '
+						WHERE topic_id = ' . (int) $topic_data['topic_id'];
+					$this->db->sql_query($sql);
+
+					$this->log->add($log_var, (int) $this->user->data['user_id'], $this->user->data['user_ip'], 'LOG_LOCK', time(), array(
+						'forum_id'	=> $topic_data['forum_id'],
+						'topic_id'	=> $topic_data['topic_id'],
+						$topic_data['topic_title'],
+					));
 				}
 
 				$this->notification_manager->delete_notifications('leinad4mind.bestanswer.notification.type.markanswer', $post_id, $post_id, $topic_data['user_id']);

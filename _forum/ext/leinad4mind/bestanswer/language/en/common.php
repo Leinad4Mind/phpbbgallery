@@ -39,7 +39,7 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'ANSWERS'  => 'Answers',
+	'ANSWERS'  => 'Solved topics',
 	'ANSWERED' => 'Answered',
 	
 	'BEST_ANSWER'             => 'Best answer',
@@ -61,7 +61,7 @@ $lang = array_merge($lang, [
 
 	'TO_POST'          => '<i class="fa fa-eye"></i> View Post',
 	'TOPIC_FIRST_POST' => 'You cannot mark this post as the best answer as it is the first post of the topic.',
-	'TOTAL_ANSWERS'    => 'Total answers',
+	'TOTAL_ANSWERS'    => 'Total solved topics',
 
 	'UNMARK_ANSWER'         => 'Unmark answer',
 	'UNMARK_ANSWER_CONFIRM' => 'Are you sure you want to unmark this post as the best answer?',

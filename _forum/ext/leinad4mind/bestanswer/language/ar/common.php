@@ -40,7 +40,7 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'ANSWERS'  => 'الإجابات',
+	'ANSWERS'  => 'المواضيع المحلولة',
 	'ANSWERED' => 'أجاب',
 	
 	'BEST_ANSWER'             => 'افضل جواب',
@@ -62,7 +62,7 @@ $lang = array_merge($lang, [
 
 	'TO_POST'          => '<i class="fa fa-eye"></i> الذهاب إلى المشاركة',
 	'TOPIC_FIRST_POST' => 'لا يمكنك وضع علامة على هذا المنشور كأفضل إجابة لأنه المنشور الأول في الموضوع.',
-	'TOTAL_ANSWERS'    => 'إجمالي الإجابات',
+	'TOTAL_ANSWERS'    => 'إجمالي المواضيع المحلولة',
 
 	'UNMARK_ANSWER'         => 'إلغاء تحديد الإجابة الأفضل',
 	'UNMARK_ANSWER_CONFIRM' => 'متأكد أنك تريد إلغاء تحديد هذه المشاركة كأفضل إجابة؟',

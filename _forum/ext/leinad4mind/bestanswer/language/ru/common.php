@@ -40,7 +40,7 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'ANSWERS'  => 'Ответы',
+	'ANSWERS'  => 'Решённые темы',
 	'ANSWERED' => 'Ответил',
 	
 	'BEST_ANSWER'             => 'Лучший ответ',
@@ -62,7 +62,7 @@ $lang = array_merge($lang, [
 	
 	'TO_POST'          => '<i class="fa fa-eye"></i> Перейти к полному ответу',
 	'TOPIC_FIRST_POST' => 'Вы не можете отметить этот пост как лучший ответ, так как он является первым постом в теме.',
-	'TOTAL_ANSWERS'    => 'Всего ответов',
+	'TOTAL_ANSWERS'    => 'Всего решённых тем',
 
 	'UNMARK_ANSWER'         => 'Снять отметку',
 	'UNMARK_ANSWER_CONFIRM' => 'Вы уверены, что хотите снять отметку лучшего с этого ответа?',

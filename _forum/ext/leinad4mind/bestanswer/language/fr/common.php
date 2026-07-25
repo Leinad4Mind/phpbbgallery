@@ -40,7 +40,7 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'ANSWERS'  => 'Réponses',
+	'ANSWERS'  => 'Sujets résolus',
 	'ANSWERED' => 'Répondue',
 	
 	'BEST_ANSWER'             => 'Meilleure réponse',
@@ -62,7 +62,7 @@ $lang = array_merge($lang, [
 
 	'TO_POST'          => '<i class="fa fa-eye"></i> Se rendre au message',
 	'TOPIC_FIRST_POST' => 'Vous ne pouvez pas marquer cette réponse comme meilleure réponse, car il s’agit de la première réponse du sujet.',
-	'TOTAL_ANSWERS'    => 'Réponses pertinentes',
+	'TOTAL_ANSWERS'    => 'Total des sujets résolus',
 
 	'UNMARK_ANSWER'         => 'Annuler la mise en avant de ce message comme réponse la plus pertinente',
 	'UNMARK_ANSWER_CONFIRM' => 'Confirmer le retrait de la mise en avant de ce message en tant que réponse la plus pertinente de son sujet.',

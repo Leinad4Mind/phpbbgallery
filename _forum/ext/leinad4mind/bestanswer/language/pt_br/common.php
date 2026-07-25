@@ -40,7 +40,7 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'ANSWERS'  => 'Respostas',
+	'ANSWERS'  => 'Tópicos Resolvidos',
 	'ANSWERED' => 'Respondidas',
 	
 	'BEST_ANSWER'             => 'Melhor resposta',
@@ -62,7 +62,7 @@ $lang = array_merge($lang, [
 
 	'TO_POST'          => '<i class="fa fa-eye"></i> Ver postagem',
 	'TOPIC_FIRST_POST' => 'Você não pode marcar esta postagem como a melhor resposta, pois é a primeira postagem do tópico.',
-	'TOTAL_ANSWERS'    => 'Total de respostas',
+	'TOTAL_ANSWERS'    => 'Total de Tópicos Resolvidos',
 
 	'UNMARK_ANSWER'         => 'Desmarcar resposta',
 	'UNMARK_ANSWER_CONFIRM' => 'Tem certeza de que deseja desmarcar esta postagem como a melhor resposta?',
