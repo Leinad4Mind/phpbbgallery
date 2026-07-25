@@ -145,6 +145,8 @@ namespace
 	require_once dirname(__DIR__) . '/notification/events/phpbbgallery_new_report.php';
 	require_once dirname(__DIR__) . '/moderate.php';
 	require_once dirname(__DIR__) . '/user.php';
+	require_once dirname(__DIR__) . '/log.php';
+	require_once dirname(__DIR__) . '/misc.php';
 	require_once dirname(__DIR__) . '/cron/cron_cleaner.php';
 	require_once dirname(__DIR__) . '/ucp/settings_module.php';
 }

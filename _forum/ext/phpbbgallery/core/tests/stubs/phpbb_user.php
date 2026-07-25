@@ -14,4 +14,6 @@ class user
 	public array $data = [];
 
 	public string $browser = '';
+
+	public string $ip = '';
 }
