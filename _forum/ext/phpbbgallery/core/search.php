@@ -147,7 +147,7 @@ class search
 		{
 			$sql .= ' and image_user_id = ' . (int) $user;
 		}
-		$exclude_albums = array();
+		$exclude_albums = [];
 		if (!$this->gallery_config->get('rrc_gindex_pegas'))
 		{
 			$sql_no_user = 'SELECT album_id FROM ' . $this->albums_table . ' WHERE album_user_id > 0';
@@ -172,7 +172,7 @@ class search
 		{
 			$result = $this->db->sql_query_limit($sql, $sql_limit);
 		}
-		$id_ary = array();
+		$id_ary = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$id_ary[] = $row['image_id'];
@@ -181,17 +181,17 @@ class search
 
 		$total_match_count = sizeof($id_ary);
 
-		$this->template->assign_block_vars('imageblock', array(
+		$this->template->assign_block_vars('imageblock', [
 			'BLOCK_NAME'	=> $block_name ? $block_name : $this->language->lang('RANDOM_IMAGES'),
 			'U_BLOCK'	=> $u_block ? $u_block : $this->helper->route('phpbbgallery_core_search_random'),
-		));
+		]);
 
 		// For some searches we need to print out the "no results" page directly to allow re-sorting/refining the search options.
 		if (!sizeof($id_ary))
 		{
-			$this->template->assign_block_vars('imageblock', array(
+			$this->template->assign_block_vars('imageblock', [
 				'ERROR'	=> $this->language->lang('NO_SEARCH_RESULTS_RANDOM'),
-			));
+			]);
 			return;
 		}
 
@@ -199,21 +199,21 @@ class search
 
 		$sql_where = $this->db->sql_in_set('i.image_id', $id_ary);
 
-		$sql_array = array(
+		$sql_array = [
 			'SELECT'		=> 'i.*, a.album_name, a.album_status, a.album_user_id, album_id',
-			'FROM'			=> array($this->images_table => 'i'),
+			'FROM'			=> [$this->images_table => 'i'],
 
-			'LEFT_JOIN'		=> array(
-				array(
-					'FROM'		=> array($this->albums_table => 'a'),
+			'LEFT_JOIN'		=> [
+				[
+					'FROM'		=> [$this->albums_table => 'a'],
 					'ON'		=> 'a.album_id = i.image_album_id',
-				),
-			),
+				],
+			],
 
 			'WHERE'			=> 'i.image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . ' AND ' . $sql_where,
 			'GROUP_BY'	=> 'i.image_id, a.album_name, a.album_status, a.album_user_id, a.album_id',
 			'ORDER_BY'		=> $sql_order,
-		);
+		];
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
 		$result = $this->db->sql_query($sql);
 
@@ -301,7 +301,7 @@ class search
 	{
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$sql_limit = $limit;
-		$exclude_albums = array();
+		$exclude_albums = [];
 		if (!$this->gallery_config->get('rrc_gindex_pegas'))
 		{
 			$sql_no_user = 'SELECT album_id FROM ' . $this->albums_table . ' WHERE album_user_id > 0';
@@ -313,15 +313,15 @@ class search
 			$this->db->sql_freeresult($result);
 		}
 		$exclude_albums = array_merge($exclude_albums, $this->gallery_auth->get_exclude_zebra());
-		$sql_array = array(
-			'FROM' => array(
+		$sql_array = [
+			'FROM' => [
 				$this->images_table => 'i',
 				$this->comments_table => 'c',
-			),
+			],
 			'WHERE'	=> 'i.image_id = c.comment_image_id and ' . $this->db->sql_in_set('image_album_id', $this->gallery_auth->acl_album_ids('c_read'), false, true),
 			'GROUP_BY'	=> 'c.comment_id, c.comment_time, i.image_id',
 			'ORDER_BY'	=> 'comment_time DESC'
-		);
+		];
 		$sql_array['WHERE'] .= ' AND ((' . $this->db->sql_in_set('image_album_id', array_diff($this->gallery_auth->acl_album_ids('i_view'), $exclude_albums), false, true) . ' AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . ')
 					OR ' . $this->db->sql_in_set('image_album_id', array_diff($this->gallery_auth->acl_album_ids('m_status'), $exclude_albums), false, true) . ')';
 
@@ -344,15 +344,15 @@ class search
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$rowset[] = $row;
-			$users_array[$row['comment_user_id']] = array('');
-			$users_array[$row['image_user_id']] = array('');
+			$users_array[$row['comment_user_id']] = [''];
+			$users_array[$row['image_user_id']] = [''];
 		}
 		$this->db->sql_freeresult($result);
 		if (empty($rowset))
 		{
-			$this->template->assign_vars(array(
+			$this->template->assign_vars([
 				'ERROR'	=> $this->language->lang('NO_SEARCH_RESULTS_RECENT_COMMENTS'),
-			));
+			]);
 			return;
 		}
 
@@ -360,21 +360,21 @@ class search
 		foreach ($rowset as $var)
 		{
 			$album_tmp = $this->album->get_info($var['image_album_id']);
-			$this->template->assign_block_vars('commentrow', array(
+			$this->template->assign_block_vars('commentrow', [
 				'COMMENT_ID'	=> (int) $var['comment_id'],
-				'U_DELETE'	=> ($this->gallery_auth->acl_check('m_comments', $album_tmp['album_id'], $album_tmp['album_user_id']) || ($this->gallery_auth->acl_check('c_delete', $album_tmp['album_id'], $album_tmp['album_user_id']) && ($var['comment_user_id'] == $this->user->data['user_id']) && $this->user->data['is_registered'])) ? $this->helper->route('phpbbgallery_core_comment_delete', array('image_id' => $var['comment_image_id'], 'comment_id' => $var['comment_id'])) : false,
-				'U_EDIT'	=> $this->gallery_auth->acl_check('c_edit', $album_tmp['album_id'], $album_tmp['album_user_id'])? $this->helper->route('phpbbgallery_core_comment_edit', array('image_id'	=> $var['comment_image_id'], 'comment_id'	=> $var['comment_id'])) : false,
-				'U_QUOTE'	=> ($this->gallery_auth->acl_check('c_post', $album_tmp['album_id'], $album_tmp['album_user_id'])) ? $this->helper->route('phpbbgallery_core_comment_add', array('image_id'	=> $var['comment_image_id'], 'comment_id'	=> $var['comment_id'])) : false,
-				'U_COMMENT'	=> $this->helper->route('phpbbgallery_core_image', array('image_id' => $var['comment_image_id'])) . '#comment_' . $var['comment_id'],
+				'U_DELETE'	=> ($this->gallery_auth->acl_check('m_comments', $album_tmp['album_id'], $album_tmp['album_user_id']) || ($this->gallery_auth->acl_check('c_delete', $album_tmp['album_id'], $album_tmp['album_user_id']) && ($var['comment_user_id'] == $this->user->data['user_id']) && $this->user->data['is_registered'])) ? $this->helper->route('phpbbgallery_core_comment_delete', ['image_id' => $var['comment_image_id'], 'comment_id' => $var['comment_id']]) : false,
+				'U_EDIT'	=> $this->gallery_auth->acl_check('c_edit', $album_tmp['album_id'], $album_tmp['album_user_id'])? $this->helper->route('phpbbgallery_core_comment_edit', ['image_id'	=> $var['comment_image_id'], 'comment_id'	=> $var['comment_id']]) : false,
+				'U_QUOTE'	=> ($this->gallery_auth->acl_check('c_post', $album_tmp['album_id'], $album_tmp['album_user_id'])) ? $this->helper->route('phpbbgallery_core_comment_add', ['image_id'	=> $var['comment_image_id'], 'comment_id'	=> $var['comment_id']]) : false,
+				'U_COMMENT'	=> $this->helper->route('phpbbgallery_core_image', ['image_id' => $var['comment_image_id']]) . '#comment_' . $var['comment_id'],
 				'POST_AUTHOR_FULL'	=> (string) $this->user_loader->get_username($var['comment_user_id'], 'full'),
 				'TIME'	=> $this->user->format_date($var['comment_time']),
 				'TEXT'	=> generate_text_for_display($var['comment'], $var['comment_uid'], $var['comment_bitfield'], 7),
-				'UC_IMAGE_NAME'	=> '<a href="' . $this->helper->route('phpbbgallery_core_image', array('image_id' => $var['comment_image_id'])) . '">' . $var['image_name'] . '</a>',
+				'UC_IMAGE_NAME'	=> '<a href="' . $this->helper->route('phpbbgallery_core_image', ['image_id' => $var['comment_image_id']]) . '">' . $var['image_name'] . '</a>',
 				// 'UC_THUMBNAIL'		=> $this->helper->route('phpbbgallery_core_image_file_mini', array('image_id' => $var['image_id'])),
 				'UC_THUMBNAIL'		=> $this->image->generate_link('thumbnail', $this->gallery_config->get('link_thumbnail'), $var['comment_image_id'], $var['image_name'], $var['image_album_id']),
 				'IMAGE_AUTHOR'		=> $this->user_loader->get_username((int) $var['image_user_id'], 'full'),
 				'IMAGE_TIME'		=> $this->user->format_date($var['image_time']),
-			));
+			]);
 		}
 		$this->template->assign_vars([
 			'SEARCH_MATCHES'	=> $this->language->lang('TOTAL_COMMENTS_SPRINTF', $count),
@@ -453,7 +453,7 @@ class search
 		}
 		$sql_order = $sql_order . ($this->gallery_config->get('default_sort_dir') == 'd' ? ' DESC' : ' ASC');
 		$sql_limit = $limit;
-		$exclude_albums = array();
+		$exclude_albums = [];
 		if (!$this->gallery_config->get('rrc_gindex_pegas'))
 		{
 			$sql_no_user = 'SELECT album_id FROM ' . $this->albums_table . ' WHERE album_user_id > 0';
@@ -465,12 +465,12 @@ class search
 			$this->db->sql_freeresult($result);
 		}
 		$exclude_albums = array_merge($exclude_albums, $this->gallery_auth->get_exclude_zebra());
-		$sql_ary = array(
-			'FROM'	=>	array(
+		$sql_ary = [
+			'FROM'	=>	[
 				$this->images_table	=> 'i'
-			),
+			],
 			'WHERE'	=> 'image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN
-		);
+		];
 		if ($user > 0)
 		{
 			$sql_ary['WHERE'] .= ' and image_user_id = ' . (int) $user;
@@ -502,25 +502,25 @@ class search
 
 		if ($user > 0)
 		{
-			$this->template->assign_block_vars('imageblock', array(
+			$this->template->assign_block_vars('imageblock', [
 				'BLOCK_NAME'	=> $block_name ? $block_name : '' ,
 				'U_BLOCK'	=> $u_block ? $u_block : $this->helper->route('phpbbgallery_core_search_egosearch'),
-			));
+			]);
 		}
 		else
 		{
-			$this->template->assign_block_vars('imageblock', array(
+			$this->template->assign_block_vars('imageblock', [
 				'BLOCK_NAME'	=>  $block_name ? $block_name : $this->language->lang('RECENT_IMAGES'),
 				'U_BLOCK'	=> $u_block ? $u_block : $this->helper->route('phpbbgallery_core_search_recent'),
-			));
+			]);
 		}
 
 		// For some searches we need to print out the "no results" page directly to allow re-sorting/refining the search options.
 		if (!sizeof($id_ary))
 		{
-			$this->template->assign_block_vars('imageblock', array(
+			$this->template->assign_block_vars('imageblock', [
 				'ERROR'	=> $this->language->lang('NO_SEARCH_RESULTS_RECENT')
-			));
+			]);
 			return;
 		}
 
@@ -528,20 +528,20 @@ class search
 
 		$sql_where = $this->db->sql_in_set('i.image_id', $id_ary);
 
-		$sql_array = array(
+		$sql_array = [
 			'SELECT'		=> 'i.*, a.album_name, a.album_status, a.album_user_id, a.album_id',
-			'FROM'			=> array($this->images_table => 'i'),
+			'FROM'			=> [$this->images_table => 'i'],
 
-			'LEFT_JOIN'		=> array(
-				array(
-					'FROM'		=> array($this->albums_table => 'a'),
+			'LEFT_JOIN'		=> [
+				[
+					'FROM'		=> [$this->albums_table => 'a'],
 					'ON'		=> 'a.album_id = i.image_album_id',
-				),
-			),
+				],
+			],
 
 			'WHERE'			=> 'i.image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . ' AND ' . $sql_where,
 			'ORDER_BY'		=> $sql_order,
-		);
+		];
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
 		$result = $this->db->sql_query($sql);
 
@@ -557,29 +557,29 @@ class search
 
 		if ($user > 0)
 		{
-			$this->template->assign_vars(array(
+			$this->template->assign_vars([
 				'SEARCH_MATCHES'	=> $this->language->lang('TOTAL_IMAGES_SPRINTF', $count),
 				'SEARCH_TITLE'		=> $this->language->lang('SEARCH_USER_IMAGES_OF', $this->user->data['username']),
-			));
-			$this->pagination->generate_template_pagination(array(
-				'routes' => array(
+			]);
+			$this->pagination->generate_template_pagination([
+				'routes' => [
 					'phpbbgallery_core_search_egosearch',
-					'phpbbgallery_core_search_egosearch_page',),
-					'params' => array()), 'pagination', 'page', $count, $limit, $start
+					'phpbbgallery_core_search_egosearch_page',],
+					'params' => []], 'pagination', 'page', $count, $limit, $start
 			);
 		}
 		else
 		{
-			$this->template->assign_vars(array(
+			$this->template->assign_vars([
 				'TOTAL_IMAGES'				=> $this->language->lang('VIEW_ALBUM_IMAGES', $count),
-			));
+			]);
 			if ($pagination)
 			{
-				$this->pagination->generate_template_pagination(array(
-					'routes' => array(
+				$this->pagination->generate_template_pagination([
+					'routes' => [
 						'phpbbgallery_core_search_recent',
-						'phpbbgallery_core_search_recent_page',),
-						'params' => array()), 'pagination', 'page', $count, $limit, $start
+						'phpbbgallery_core_search_recent_page',],
+						'params' => []], 'pagination', 'page', $count, $limit, $start
 				);
 			}
 		}
@@ -593,10 +593,10 @@ class search
 	public function rating(int $limit, int $start = 0): void
 	{
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
-		$sql_array = array();
-		$sql_array['FROM'] = array(
+		$sql_array = [];
+		$sql_array['FROM'] = [
 			$this->images_table	=> 'i'
-		);
+		];
 		$sql_array['WHERE'] = $this->db->sql_in_set('image_album_id', $this->gallery_auth->acl_album_ids('i_view'), false, true) . ' and image_rate_avg <> 0';
 		$sql_array['SELECT'] = 'COUNT(image_id) as count';
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
@@ -605,12 +605,12 @@ class search
 		$this->db->sql_freeresult($result);
 		$count = is_array($row) ? (int) $row['count'] : 0;
 		$sql_array['SELECT'] = '* , a.album_name, a.album_status, a.album_user_id, a.album_id';
-		$sql_array['LEFT_JOIN']	= array(
-			array(
-				'FROM'		=> array($this->albums_table => 'a'),
+		$sql_array['LEFT_JOIN']	= [
+			[
+				'FROM'		=> [$this->albums_table => 'a'],
 				'ON'		=> 'a.album_id = i.image_album_id',
-			)
-		);
+			]
+		];
 		$sql_array['ORDER_BY'] = 'image_rate_avg DESC, image_rates DESC';
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
 		$result = $this->db->sql_query_limit($sql, $limit, $start);
@@ -620,7 +620,7 @@ class search
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$rowset[] = $row;
-			$users_array[$row['image_user_id']] = array('');
+			$users_array[$row['image_user_id']] = [''];
 		}
 		$this->db->sql_freeresult($result);
 		if (empty($rowset))
@@ -630,10 +630,10 @@ class search
 			return;
 		}
 
-		$this->template->assign_block_vars('imageblock', array(
+		$this->template->assign_block_vars('imageblock', [
 			'BLOCK_NAME'	=> $this->language->lang('SEARCH_TOPRATED'),
 			'U_BLOCK'	=> $this->helper->route('phpbbgallery_core_search_toprated'),
-		));
+		]);
 		$this->user_loader->load_users(array_keys($users_array));
 		// Now let's get display options
 		$show_options = $this->gallery_config->get('rrc_gindex_display');
@@ -644,15 +644,15 @@ class search
 			$this->image->assign_block('imageblock.image', $row, $show_options, $thumbnail_link, $imagename_link);
 		}
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'SEARCH_MATCHES'	=> $this->language->lang('TOTAL_IMAGES_SPRINTF', $count),
 			'SEARCH_TITLE'		=> $this->language->lang('SEARCH_TOPRATED'),
-		));
-		$this->pagination->generate_template_pagination(array(
-			'routes' => array(
+		]);
+		$this->pagination->generate_template_pagination([
+			'routes' => [
 				'phpbbgallery_core_search_toprated',
-				'phpbbgallery_core_search_toprated_page',),
-				'params' => array()), 'pagination', 'page', $count, $limit, $start
+				'phpbbgallery_core_search_toprated_page',],
+				'params' => []], 'pagination', 'page', $count, $limit, $start
 		);
 	}
 }

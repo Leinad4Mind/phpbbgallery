@@ -22,12 +22,12 @@ class release_3_2_1_0 extends profilefield_base_migration
 
 	public function update_data(): array
 	{
-		return array(
-			array('custom', array(array(&$this, 'install_config'))),
-			array('custom', array(array($this, 'create_custom_field'))),
-			array('custom', array(array(&$this, 'add_base_url'))),
-			array('custom', array(array(&$this, 'fix_gallery_lang'))),
-		);
+		return [
+			['custom', [[&$this, 'install_config']]],
+			['custom', [[$this, 'create_custom_field']]],
+			['custom', [[&$this, 'add_base_url']]],
+			['custom', [[&$this, 'fix_gallery_lang']]],
+		];
 	}
 
 	public function install_config(): bool
@@ -58,19 +58,19 @@ class release_3_2_1_0 extends profilefield_base_migration
 		$this->db->sql_query($sql);
 	}
 
-	public static array $configs = array(
+	public static array $configs = [
 		'version'					=> '3.2.1',
 		'disp_gallery_icon'			=> true,
-	);
+	];
 
 	/** @var string Must remain untyped to match phpBB's profilefield base class. */
 	protected $profilefield_name = 'gallery_palbum';
 
 	/** @var array Must remain untyped to match phpBB's profilefield base class. */
-	protected $profilefield_database_type = array('VCHAR', '');
+	protected $profilefield_database_type = ['VCHAR', ''];
 
 	/** @var array Must remain untyped to match phpBB's profilefield base class. */
-	protected $profilefield_data = array(
+	protected $profilefield_data = [
 		'field_name'	=> 'gallery_palbum',
 		'field_type'	=> 'profilefields.type.string',
 		'field_ident'	=> 'gallery_palbum',
@@ -93,5 +93,5 @@ class release_3_2_1_0 extends profilefield_base_migration
 		'field_is_contact'	=> 1,
 		'field_contact_desc'	=> 'USERS_PERSONAL_ALBUMS',
 		'field_contact_url'	=> ''
-	);
+	];
 }

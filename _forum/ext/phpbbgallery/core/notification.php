@@ -70,7 +70,7 @@ class notification
 		// First check if we are not subscribed already for some
 		$sql = 'SELECT * FROM ' . $this->watch_table . '  WHERE user_id = ' . (int) $user_id . ' AND ' . $this->db->sql_in_set('image_id', $image_ids);
 		$result = $this->db->sql_query($sql);
-		$exclude = array();
+		$exclude = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$exclude[] = (int) $row['image_id'];
@@ -80,10 +80,10 @@ class notification
 
 		foreach ($image_ids as $image_id)
 		{
-			$sql_ary = array(
+			$sql_ary = [
 				'image_id'		=> (int) $image_id,
 				'user_id'		=> (int) $user_id,
-			);
+			];
 			$sql = 'INSERT INTO ' . $this->watch_table . ' ' . $this->db->sql_build_array('INSERT', $sql_ary);
 			$this->db->sql_query($sql);
 		}
@@ -108,7 +108,7 @@ class notification
 		// First check if we are not subscribed already for some
 		$sql = 'SELECT * FROM ' . $this->watch_table . '  WHERE user_id = ' . (int) $user_id . ' AND ' . $this->db->sql_in_set('album_id', $album_ids);
 		$result = $this->db->sql_query($sql);
-		$exclude = array();
+		$exclude = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$exclude[] = (int) $row['album_id'];
@@ -118,10 +118,10 @@ class notification
 
 		foreach ($album_ids as $album_id)
 		{
-			$sql_ary = array(
+			$sql_ary = [
 				'album_id'		=> (int) $album_id,
 				'user_id'		=> (int) $user_id,
-			);
+			];
 			$sql = 'INSERT INTO ' . $this->watch_table . ' ' . $this->db->sql_build_array('INSERT', $sql_ary);
 			$this->db->sql_query($sql);
 		}

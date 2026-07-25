@@ -149,9 +149,9 @@ class search
 		$keywords		= utf8_normalize_nfc($this->request->variable('keywords', '', true));
 		$add_keywords	= utf8_normalize_nfc($this->request->variable('add_keywords', '', true));
 		$username		= $this->request->variable('username', '', true);
-		$user_id			= $this->normalize_id_filter($this->request->variable('user_id', array(0)));
+		$user_id			= $this->normalize_id_filter($this->request->variable('user_id', [0]));
 		$search_terms	= $this->request->variable('terms', 'all');
-		$search_album	= $this->normalize_id_filter($this->request->variable('aid', array(0)));
+		$search_album	= $this->normalize_id_filter($this->request->variable('aid', [0]));
 		$search_child	= $this->request->variable('sc', true);
 		$search_fields	= $this->request->variable('sf', 'all');
 		$sort_days		= $this->request->variable('st', 0);
@@ -164,14 +164,14 @@ class search
 		{
 			$submit = true;
 		}
-		$this->language->add_lang(array('gallery'), 'phpbbgallery/core');
+		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
 		$this->language->add_lang('search');
 		/**
 		* Build the sort options
 		*/
-		$limit_days = array(0 => $this->language->lang('ALL_IMAGES'), 1 => $this->language->lang('1_DAY'), 7 => $this->language->lang('7_DAYS'), 14 => $this->language->lang('2_WEEKS'), 30 => $this->language->lang('1_MONTH'), 90 => $this->language->lang('3_MONTHS'), 180 => $this->language->lang('6_MONTHS'), 365 => $this->language->lang('1_YEAR'));
-		$sort_by_text = array('t' => $this->language->lang('TIME'), 'n' => $this->language->lang('IMAGE_NAME'), 'u' => $this->language->lang('SORT_USERNAME'), 'vc' => $this->language->lang('GALLERY_VIEWS'));
-		$sort_by_sql = array('t' => 'image_time', 'n' => 'image_name_clean', 'u' => 'image_username_clean', 'vc' => 'image_view_count');
+		$limit_days = [0 => $this->language->lang('ALL_IMAGES'), 1 => $this->language->lang('1_DAY'), 7 => $this->language->lang('7_DAYS'), 14 => $this->language->lang('2_WEEKS'), 30 => $this->language->lang('1_MONTH'), 90 => $this->language->lang('3_MONTHS'), 180 => $this->language->lang('6_MONTHS'), 365 => $this->language->lang('1_YEAR')];
+		$sort_by_text = ['t' => $this->language->lang('TIME'), 'n' => $this->language->lang('IMAGE_NAME'), 'u' => $this->language->lang('SORT_USERNAME'), 'vc' => $this->language->lang('GALLERY_VIEWS')];
+		$sort_by_sql = ['t' => 'image_time', 'n' => 'image_name_clean', 'u' => 'image_username_clean', 'vc' => 'image_view_count'];
 
 		if ($this->gallery_config->get('allow_rates'))
 		{
@@ -198,17 +198,17 @@ class search
 		$sql_order = $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
 
 		// We will build SQL array and then build query (easily change count with rq)
-		$sql_array = $sql_where = array();
-		$sql_array['FROM'] = array(
+		$sql_array = $sql_where = [];
+		$sql_array['FROM'] = [
 			$this->images_table => 'i',
-		);
+		];
 		if ($keywords || $username || $user_id || $search_id || $submit)
 		{
-			$user_id_ary = array();
+			$user_id_ary = [];
 			// Let's resolve username to user id ... or array of them.
 			if ($username)
 			{
-				if ((strpos($username, '*') !== false) && (utf8_strlen(str_replace(array('*', '%'), '', $username)) < $this->config['min_search_author_chars']))
+				if ((strpos($username, '*') !== false) && (utf8_strlen(str_replace(['*', '%'], '', $username)) < $this->config['min_search_author_chars']))
 				{
 					trigger_error(sprintf($this->language->lang('TOO_FEW_AUTHOR_CHARS'), $this->config['min_search_author_chars']));
 				}
@@ -248,7 +248,7 @@ class search
 					$keywords = preg_replace('#\s+#u', ' |', $keywords) . ' ' .$add_keywords;
 				}
 			}
-			$keywords_ary = ($keywords) ? explode(' ', $keywords) : array();
+			$keywords_ary = ($keywords) ? explode(' ', $keywords) : [];
 
 			// pre-made searches
 			$sql = $field = $l_search_title = $search_results = '';
@@ -257,13 +257,13 @@ class search
 			$sql_limit = 0;
 
 			$search_query = '';
-			$matches = array('i.image_name', 'i.image_desc');
+			$matches = ['i.image_name', 'i.image_desc'];
 
 			if (is_array($keywords_ary) && !sizeof($keywords_ary) && is_array($user_id_ary) && !sizeof($user_id_ary))
 			{
 				trigger_error('NO_SEARCH_RESULTS');
 			}
-			$matches = array('i.image_name', 'i.image_desc');
+			$matches = ['i.image_name', 'i.image_desc'];
 
 			foreach ($keywords_ary as $word)
 			{
@@ -299,27 +299,27 @@ class search
 				trigger_error('NO_SEARCH_RESULTS');
 			}
 			$sql_array['SELECT'] = '*, a.album_name, a.album_status, a.album_user_id, a.album_id';
-			$sql_array['LEFT_JOIN']	= array(
-				array(
-					'FROM'		=> array($this->albums_table => 'a'),
+			$sql_array['LEFT_JOIN']	= [
+				[
+					'FROM'		=> [$this->albums_table => 'a'],
 					'ON'		=> 'a.album_id = i.image_album_id',
-				)
-			);
+				]
+			];
 			$sql_array['ORDER_BY'] = $sql_order;
 			$sql_array['GROUP_BY'] = $sort_by_sql[$sort_key] . ', i.image_id, a.album_id';
 
 			$sql = $this->db->sql_build_query('SELECT', $sql_array);
 			$result = $this->db->sql_query_limit($sql, $this->gallery_config->get('items_per_page'), $start);
-			$rowset = array();
+			$rowset = [];
 			while ($row = $this->db->sql_fetchrow($result))
 			{
 				$rowset[] = $row;
 			}
 			$this->db->sql_freeresult($result);
-			$this->template->assign_block_vars('imageblock', array(
+			$this->template->assign_block_vars('imageblock', [
 				'BLOCK_NAME'	=> '',
 				'U_BLOCK'	=> $this->helper->route('phpbbgallery_core_search'),
-			));
+			]);
 
 			$show_options = $this->gallery_config->get('search_display');
 			$thumbnail_link = $this->gallery_config->get('link_thumbnail');
@@ -328,12 +328,12 @@ class search
 			{
 				$this->image->assign_block('imageblock.image', $row, $show_options, $thumbnail_link, $imagename_link);
 			}
-			$this->pagination->generate_template_pagination(array(
-				'routes' => array(
+			$this->pagination->generate_template_pagination([
+				'routes' => [
 					'phpbbgallery_core_search',
 					'phpbbgallery_core_search_page',
-				),
-				'params' => array(
+				],
+				'params' => [
 					'keywords'	=> $keywords,
 					'username'	=> $username,
 					'user_id'	=> $user_id,
@@ -345,12 +345,12 @@ class search
 					'sk'			=> $sort_key,
 					'sd'			=> $sort_dir,
 					'filtered'	=> true
-				),
-			), 'pagination', 'page', $search_count, $this->gallery_config->get('items_per_page'), $start);
+				],
+			], 'pagination', 'page', $search_count, $this->gallery_config->get('items_per_page'), $start);
 
-			$this->template->assign_vars(array(
+			$this->template->assign_vars([
 				'SEARCH_MATCHES'	=> $this->language->lang('FOUND_SEARCH_MATCHES', $search_count),
-			));
+			]);
 			return $this->helper->render('gallery/search_results.html', $this->language->lang('GALLERY'));
 		}
 		// Is user able to search? Has search been disabled?
@@ -359,14 +359,14 @@ class search
 			$this->template->assign_var('S_NO_SEARCH', true);
 			trigger_error('NO_SEARCH');
 		}
-		$this->template->assign_block_vars('navlinks', array(
+		$this->template->assign_block_vars('navlinks', [
 			'FORUM_NAME'	=> $this->language->lang('SEARCH'),
 			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_core_search'),
-		));
+		]);
 
 		$s_albums = $this->album->get_albumbox(false, false, false, 'i_view' /*'a_search'*/);
-		$s_hidden_fields = array();
-		$this->template->assign_vars(array(
+		$s_hidden_fields = [];
+		$this->template->assign_vars([
 			'S_SEARCH_ACTION'		=> $this->helper->route('phpbbgallery_core_search'), // We force no ?sid= appending by using 0
 			'S_HIDDEN_FIELDS'		=> build_hidden_fields($s_hidden_fields),
 			'S_ALBUM_OPTIONS'		=> $s_albums,
@@ -374,7 +374,7 @@ class search
 			'S_SELECT_SORT_KEY'		=> $s_sort_key,
 			'S_SELECT_SORT_DAYS'	=> $s_limit_days,
 			'S_IN_SEARCH'			=> true,
-		));
+		]);
 		return $this->helper->render('gallery/search_body.html', $this->language->lang('GALLERY'));
 	}
 
@@ -386,7 +386,7 @@ class search
 	*/
 	public function random(): \Symfony\Component\HttpFoundation\Response
 	{
-		$this->language->add_lang(array('gallery'), 'phpbbgallery/core');
+		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
 		$this->language->add_lang('search');
 
 		// Is user able to search? Has search been disabled?
@@ -396,18 +396,18 @@ class search
 			trigger_error('NO_SEARCH');
 		}
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
-		$this->template->assign_block_vars('navlinks', array(
+		$this->template->assign_block_vars('navlinks', [
 			'FORUM_NAME'	=> $this->language->lang('GALLERY'),
 			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_core_index'),
-		));
-		$this->template->assign_block_vars('navlinks', array(
+		]);
+		$this->template->assign_block_vars('navlinks', [
 			'FORUM_NAME'	=> $this->language->lang('SEARCH'),
 			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_core_search'),
-		));
-		$this->template->assign_block_vars('navlinks', array(
+		]);
+		$this->template->assign_block_vars('navlinks', [
 			'FORUM_NAME'	=> $this->language->lang('SEARCH_RANDOM'),
 			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_core_search_random'),
-		));
+		]);
 
 		$this->gallery_search->random($this->gallery_config->get('items_per_page'));
 
@@ -424,7 +424,7 @@ class search
 	public function recent(int $page): \Symfony\Component\HttpFoundation\Response
 	{
 		$page = $this->normalize_page($page);
-		$this->language->add_lang(array('gallery'), 'phpbbgallery/core');
+		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
 		$this->language->add_lang('search');
 
 		// Is user able to search? Has search been disabled?
@@ -435,18 +435,18 @@ class search
 		}
 
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
-		$this->template->assign_block_vars('navlinks', array(
+		$this->template->assign_block_vars('navlinks', [
 			'FORUM_NAME'	=> $this->language->lang('GALLERY'),
 			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_core_index'),
-		));
-		$this->template->assign_block_vars('navlinks', array(
+		]);
+		$this->template->assign_block_vars('navlinks', [
 			'FORUM_NAME'	=> $this->language->lang('SEARCH'),
 			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_core_search'),
-		));
-		$this->template->assign_block_vars('navlinks', array(
+		]);
+		$this->template->assign_block_vars('navlinks', [
 			'FORUM_NAME'	=> $this->language->lang('SEARCH_RECENT'),
 			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_core_search_recent'),
-		));
+		]);
 
 		$limit = $this->gallery_config->get('items_per_page');
 		$start = ($page - 1) * $limit;
@@ -465,7 +465,7 @@ class search
 	public function recent_comments(int $page): \Symfony\Component\HttpFoundation\Response
 	{
 		$page = $this->normalize_page($page);
-		$this->language->add_lang(array('gallery'), 'phpbbgallery/core');
+		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
 		$this->language->add_lang('search');
 
 		// Is user able to search? Has search been disabled?
@@ -476,18 +476,18 @@ class search
 		}
 
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
-		$this->template->assign_block_vars('navlinks', array(
+		$this->template->assign_block_vars('navlinks', [
 			'FORUM_NAME'	=> $this->language->lang('GALLERY'),
 			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_core_index'),
-		));
-		$this->template->assign_block_vars('navlinks', array(
+		]);
+		$this->template->assign_block_vars('navlinks', [
 			'FORUM_NAME'	=> $this->language->lang('SEARCH'),
 			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_core_search'),
-		));
-		$this->template->assign_block_vars('navlinks', array(
+		]);
+		$this->template->assign_block_vars('navlinks', [
 			'FORUM_NAME'	=> $this->language->lang('SEARCH_RECENT_COMMENTS'),
 			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_core_search_commented'),
-		));
+		]);
 
 		$limit = $this->gallery_config->get('items_per_page');
 		$start = ($page - 1) * $limit;
@@ -507,7 +507,7 @@ class search
 	public function ego_search(int $page): \Symfony\Component\HttpFoundation\Response
 	{
 		$page = $this->normalize_page($page);
-		$this->language->add_lang(array('gallery'), 'phpbbgallery/core');
+		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
 		$this->language->add_lang('search');
 
 		// Is user able to search? Has search been disabled?
@@ -518,18 +518,18 @@ class search
 		}
 
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
-		$this->template->assign_block_vars('navlinks', array(
+		$this->template->assign_block_vars('navlinks', [
 			'FORUM_NAME'	=> $this->language->lang('GALLERY'),
 			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_core_index'),
-		));
-		$this->template->assign_block_vars('navlinks', array(
+		]);
+		$this->template->assign_block_vars('navlinks', [
 			'FORUM_NAME'	=> $this->language->lang('SEARCH'),
 			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_core_search'),
-		));
-		$this->template->assign_block_vars('navlinks', array(
+		]);
+		$this->template->assign_block_vars('navlinks', [
 			'FORUM_NAME'	=> $this->language->lang('SEARCH_USER_IMAGES_OF', $this->user->data['username']),
 			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_core_search_egosearch'),
-		));
+		]);
 
 		$limit = $this->gallery_config->get('items_per_page');
 		$start = ($page - 1) * $limit;
@@ -549,7 +549,7 @@ class search
 	public function toprated(int $page): \Symfony\Component\HttpFoundation\Response
 	{
 		$page = $this->normalize_page($page);
-		$this->language->add_lang(array('gallery'), 'phpbbgallery/core');
+		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
 		$this->language->add_lang('search');
 
 		// Is user able to search? Has search been disabled?
@@ -560,18 +560,18 @@ class search
 		}
 
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
-		$this->template->assign_block_vars('navlinks', array(
+		$this->template->assign_block_vars('navlinks', [
 			'FORUM_NAME'	=> $this->language->lang('GALLERY'),
 			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_core_index'),
-		));
-		$this->template->assign_block_vars('navlinks', array(
+		]);
+		$this->template->assign_block_vars('navlinks', [
 			'FORUM_NAME'	=> $this->language->lang('SEARCH'),
 			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_core_search'),
-		));
-		$this->template->assign_block_vars('navlinks', array(
+		]);
+		$this->template->assign_block_vars('navlinks', [
 			'FORUM_NAME'	=> $this->language->lang('SEARCH_TOPRATED'),
 			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_core_search_toprated'),
-		));
+		]);
 
 		$limit = $this->gallery_config->get('items_per_page');
 		$start = ($page - 1) * $limit;

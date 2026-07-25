@@ -127,7 +127,7 @@ class url
 			$args = $args[0];
 		}
 
-		if (in_array($args[0], array('phpbb', 'admin', 'relative', 'full', 'board', 'ext')))
+		if (in_array($args[0], ['phpbb', 'admin', 'relative', 'full', 'board', 'ext']))
 		{
 			$mode = array_shift($args);
 			$args[0] = $this->path($mode) . $this->phpEx_file($args[0]);
@@ -142,12 +142,12 @@ class url
 			$args[1] .= '';//@todo: phpbb_gallery::$display_popup;
 		}
 
-		$params = $args + array(
+		$params = $args + [
 			0	=> '',
 			1	=> '',//@todo: phpbb_gallery::$display_popup,
 			2	=> true,
 			3	=> false,
-		);
+		];
 
 		return append_sid($params[0], $params[1], $params[2], $params[3]);
 	}
@@ -293,8 +293,8 @@ class url
 	{
 		// For XHTML compatibility we change back & to &amp;
 		$route = str_replace('&', '&amp;', $route);
-		$this->template->assign_vars(array(
-			'META' => '<meta http-equiv="refresh" content="' . $time . '; url=' . $route . '" />')
+		$this->template->assign_vars([
+			'META' => '<meta http-equiv="refresh" content="' . $time . '; url=' . $route . '" />']
 		);
 	}
 

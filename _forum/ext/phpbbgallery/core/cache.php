@@ -66,10 +66,10 @@ class cache
 				ORDER BY u.username_clean, a.album_user_id, a.left_id ASC';
 			$result = $this->phpbb_db->sql_query($sql);
 
-			$albums = array();
+			$albums = [];
 			while ($row = $this->phpbb_db->sql_fetchrow($result))
 			{
-				$albums[(int) $row['album_id']] = array(
+				$albums[(int) $row['album_id']] = [
 					'album_id'			=> (int) $row['album_id'],
 					'parent_id'			=> (int) $row['parent_id'],
 					'album_name'		=> $row['album_name'],
@@ -79,7 +79,7 @@ class cache
 					'album_user_id'		=> (int) $row['album_user_id'],
 					'display_in_rrc'	=> (bool) $row['display_in_rrc'],
 					'album_auth_access'	=> (int) $row['album_auth_access'],
-				);
+				];
 			}
 			$this->phpbb_db->sql_freeresult($result);
 			$this->phpbb_cache->put('_albums', $albums);
@@ -113,20 +113,20 @@ class cache
 		$missing_image_ids = array_values(array_diff($image_ids, array_map('intval', array_keys($this->images))));
 		if (!empty($missing_image_ids))
 		{
-			$sql_array = array(
+			$sql_array = [
 				'SELECT'	=> 'i.*, a.album_name',
-				'FROM'	=> array(
+				'FROM'	=> [
 					$this->table_images	=> 'i',
 					$this->table_albums	=> 'a'
-				),
+				],
 				'WHERE'	=> $this->phpbb_db->sql_in_set('image_id', $missing_image_ids) . ' AND i.image_album_id = a.album_id'
-			);
+			];
 			$sql = $this->phpbb_db->sql_build_query('SELECT', $sql_array);
 			$result = $this->phpbb_db->sql_query($sql);
 
 			while ($row = $this->phpbb_db->sql_fetchrow($result))
 			{
-				$this->images[(int) $row['image_id']] = array(
+				$this->images[(int) $row['image_id']] = [
 					'image_id'				=> $row['image_id'],
 					'image_filename'		=> $row['image_filename'],
 					'image_name'			=> $row['image_name'],
@@ -156,7 +156,7 @@ class cache
 					'filesize_medium'		=> $row['filesize_medium'],
 					'filesize_cache'		=> $row['filesize_cache'],
 					'album_name'			=> $row['album_name'],
-				);
+				];
 			}
 			$this->phpbb_db->sql_freeresult($result);
 			$this->phpbb_cache->put('_images', $this->images);

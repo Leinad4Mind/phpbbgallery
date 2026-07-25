@@ -30,7 +30,7 @@ class file
 
 	public int $chmod = 0644;
 
-	public array $errors = array();
+	public array $errors = [];
 	private bool $browser_cache = true;
 	private int $last_modified = 0;
 
@@ -50,7 +50,7 @@ class file
 	public string $image_content_type = '';
 	public string $image_name = '';
 	public int $image_quality = 100;
-	public array $image_size = array();
+	public array $image_size = [];
 	public string $image_source = '';
 	public string $image_type = '';
 
@@ -66,7 +66,7 @@ class file
 
 	/** @var resource|\GdImage|false|null */
 	public mixed $watermark = null;
-	public array $watermark_size = array();
+	public array $watermark_size = [];
 	public string $watermark_source = '';
 	public bool $watermarked = false;
 
@@ -373,7 +373,7 @@ class file
 		return (bool) preg_match('/msie (\d{2,3}|[89]+).[0-9.]*;/', strtolower($browser));
 	}
 
-	public function create_thumbnail(int $max_width, int $max_height, bool $print_details = false, int $additional_height = 0, array $image_size = array()): void
+	public function create_thumbnail(int $max_width, int $max_height, bool $print_details = false, int $additional_height = 0, array $image_size = []): void
 	{
 		$this->resize_image($max_width, $max_height, (($print_details) ? $additional_height : 0));
 
@@ -454,12 +454,12 @@ class file
 	{
 		if (!function_exists('imagerotate'))
 		{
-			$this->errors[] = array('ROTATE_IMAGE_FUNCTION', $angle);
+			$this->errors[] = ['ROTATE_IMAGE_FUNCTION', $angle];
 			return;
 		}
 		if (($angle <= 0) || (($angle % 90) != 0))
 		{
-			$this->errors[] = array('ROTATE_IMAGE_ANGLE', $angle);
+			$this->errors[] = ['ROTATE_IMAGE_ANGLE', $angle];
 			return;
 		}
 
@@ -479,11 +479,11 @@ class file
 				// image would be to wide/high
 				if ($this->image_size['height'] > $this->max_width)
 				{
-					$this->errors[] = array('ROTATE_IMAGE_WIDTH');
+					$this->errors[] = ['ROTATE_IMAGE_WIDTH'];
 				}
 				if ($this->image_size['width'] > $this->max_height)
 				{
-					$this->errors[] = array('ROTATE_IMAGE_HEIGHT');
+					$this->errors[] = ['ROTATE_IMAGE_HEIGHT'];
 				}
 				return;
 			}
@@ -509,7 +509,7 @@ class file
 		$this->watermark_source = $watermark_source;
 		if (!$this->watermark_source || !file_exists($this->watermark_source))
 		{
-			$this->errors[] = array('WATERMARK_IMAGE_SOURCE');
+			$this->errors[] = ['WATERMARK_IMAGE_SOURCE'];
 			return;
 		}
 
@@ -543,7 +543,7 @@ class file
 			$watermark_size = getimagesize($this->watermark_source);
 			if ($watermark_size === false)
 			{
-				$this->errors[] = array('WATERMARK_IMAGE_IMAGECREATE');
+				$this->errors[] = ['WATERMARK_IMAGE_IMAGECREATE'];
 				return;
 			}
 			$this->watermark_size = $watermark_size;
@@ -566,7 +566,7 @@ class file
 			// Get the watermark as resource.
 			if (($this->watermark = $imagecreate($this->watermark_source)) === false)
 			{
-				$this->errors[] = array('WATERMARK_IMAGE_IMAGECREATE');
+				$this->errors[] = ['WATERMARK_IMAGE_IMAGECREATE'];
 			}
 
 			$phpbb_gallery_constants = new \phpbbgallery\core\constants();
@@ -609,11 +609,11 @@ class file
 	*									Array-Format: $image_id => $filename
 	* @param	array		$locations	Array of valid url::path()s where the image should be deleted from
 	*/
-	public function delete(array|string $files, array $locations = array('thumbnail', 'medium', 'upload')): void
+	public function delete(array|string $files, array $locations = ['thumbnail', 'medium', 'upload']): void
 	{
 		if (!is_array($files))
 		{
-			$files = array(1 => $files);
+			$files = [1 => $files];
 		}
 		// Let's delete watermarked
 		$this->delete_wm($files);
@@ -630,11 +630,11 @@ class file
 	 * @param $files
 	 * @param array $locations
 	 */
-	public function delete_cache(array|string $files, array $locations = array('thumbnail', 'medium')): void
+	public function delete_cache(array|string $files, array $locations = ['thumbnail', 'medium']): void
 	{
 		if (!is_array($files))
 		{
-			$files = array(1 => $files);
+			$files = [1 => $files];
 		}
 		$this->delete_wm($files);
 		foreach ($files as $image_id => $file)
@@ -651,10 +651,10 @@ class file
 	 */
 	public function delete_wm(array|string $files): void
 	{
-		$locations = array('upload', 'medium');
+		$locations = ['upload', 'medium'];
 		if (!is_array($files))
 		{
-			$files = array(1 => $files);
+			$files = [1 => $files];
 		}
 		foreach ($files as $image_id => $file)
 		{

@@ -91,60 +91,60 @@ class helper
 			case 'approval':
 				$targets = $this->gallery_auth->acl_users_ids('m_status', $target['album_id']);
 				$album_data = $this->album_load->get($target['album_id']);
-				$notification_data = array(
+				$notification_data = [
 					'user_ids' => $targets,
 					'album_id' => $target['album_id'],
 					'album_name' => $album_data['album_name'],
 					'last_image_id'	=> $target['last_image'],
 					'uploader'	=> $target['uploader'],
-					'album_url'	=> $this->url->get_uri($this->helper->route('phpbbgallery_core_album', array('album_id' => $target['album_id']))),
-				);
+					'album_url'	=> $this->url->get_uri($this->helper->route('phpbbgallery_core_album', ['album_id' => $target['album_id']])),
+				];
 				$phpbb_notifications->add_notifications('phpbbgallery.core.notification.image_for_approval', $notification_data);
 			break;
 			case 'approved':
 				$targets = $target['targets'];
 				$album_data = $this->album_load->get($target['album_id']);
-				$notification_data = array(
+				$notification_data = [
 					'user_ids' => $targets,
 					'album_id' => $target['album_id'],
 					'album_name' => $album_data['album_name'],
 					'last_image_id'	=> $target['last_image'],
-					'album_url'	=> $this->url->get_uri($this->helper->route('phpbbgallery_core_album', array('album_id' => $target['album_id']))),
-				);
+					'album_url'	=> $this->url->get_uri($this->helper->route('phpbbgallery_core_album', ['album_id' => $target['album_id']])),
+				];
 				$phpbb_notifications->add_notifications('phpbbgallery.core.notification.image_approved', $notification_data);
 			break;
 			case 'not_approved':
 				$targets = $target['targets'];
 				$album_data = $this->album_load->get($target['album_id']);
-				$notification_data = array(
+				$notification_data = [
 					'user_ids' => $targets,
 					'album_id' => $target['album_id'],
 					'album_name' => $album_data['album_name'],
 					'last_image_id'	=> $target['last_image'],
-					'album_url'	=> $this->url->get_uri($this->helper->route('phpbbgallery_core_album', array('album_id' => $target['album_id']))),
-				);
+					'album_url'	=> $this->url->get_uri($this->helper->route('phpbbgallery_core_album', ['album_id' => $target['album_id']])),
+				];
 				$phpbb_notifications->add_notifications('phpbbgallery.core.notification.image_not_approved', $notification_data);
 			break;
 			case 'new_image':
 				$targets = $target['targets'];
 				$album_data = $this->album_load->get($target['album_id']);
-				$notification_data = array(
+				$notification_data = [
 					'user_ids' => $targets,
 					'album_id' => $target['album_id'],
 					'album_name' => $album_data['album_name'],
 					'last_image_id'	=> $target['last_image'],
-					'album_url'	=> $this->url->get_uri($this->helper->route('phpbbgallery_core_album', array('album_id' => $target['album_id']))),
-				);
+					'album_url'	=> $this->url->get_uri($this->helper->route('phpbbgallery_core_album', ['album_id' => $target['album_id']])),
+				];
 				$phpbb_notifications->add_notifications('phpbbgallery.core.notification.new_image', $notification_data);
 			break;
 			case 'new_comment':
-				$notification_data = array(
-					'user_ids'	=> array_diff($this->get_image_watchers($target['image_id']), array($target['poster_id'])),
+				$notification_data = [
+					'user_ids'	=> array_diff($this->get_image_watchers($target['image_id']), [$target['poster_id']]),
 					'image_id'	=> $target['image_id'],
 					'comment_id'	=> $target['comment_id'],
 					'poster'	=> $target['poster_id'],
-					'url'		=> $this->url->get_uri($this->helper->route('phpbbgallery_core_image', array('image_id' => $target['image_id']))),
-				);
+					'url'		=> $this->url->get_uri($this->helper->route('phpbbgallery_core_image', ['image_id' => $target['image_id']])),
+				];
 				$phpbb_notifications->add_notifications('phpbbgallery.core.notification.new_comment', $notification_data);
 			break;
 			case 'new_report':
@@ -153,13 +153,13 @@ class helper
 					$image_data = $this->image->get_image_data($target['reported_image_id']);
 					$target['reported_album_id'] = $image_data['image_album_id'];
 				}
-				$notification_data = array(
-					'user_ids'	=> array_diff($this->gallery_auth->acl_users_ids('m_report', $target['reported_album_id']), array($target['reporter_id'])),
+				$notification_data = [
+					'user_ids'	=> array_diff($this->gallery_auth->acl_users_ids('m_report', $target['reported_album_id']), [$target['reporter_id']]),
 					'item_id'	=> $target['report_id'],
 					'reporter'	=> $target['reporter_id'],
 					'reported_image_id' => $target['reported_image_id'],
-					'url'		=> $this->url->get_uri($this->helper->route('phpbbgallery_core_moderate_image', array('image_id' => $target['reported_image_id']))),
-				);
+					'url'		=> $this->url->get_uri($this->helper->route('phpbbgallery_core_moderate_image', ['image_id' => $target['reported_image_id']])),
+				];
 				$phpbb_notifications->add_notifications('phpbbgallery.core.notification.new_report', $notification_data);
 			break;
 			///case 'add':
@@ -222,7 +222,7 @@ class helper
 	{
 		$sql = 'SELECT user_id FROM ' . $this->watch_table . ' WHERE album_id = ' . (int) $album_id;
 		$result = $this->db->sql_query($sql);
-		$watchers = array();
+		$watchers = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$watchers[] = (int) $row['user_id'];
@@ -241,7 +241,7 @@ class helper
 	{
 		$sql = 'SELECT user_id FROM ' . $this->watch_table . ' WHERE image_id = ' . (int) $image_id;
 		$result = $this->db->sql_query($sql);
-		$watchers = array();
+		$watchers = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$watchers[] = (int) $row['user_id'];
@@ -270,7 +270,7 @@ class helper
 		// First check if we are not subscribed already for some
 		$sql = 'SELECT * FROM ' . $this->watch_table . ' WHERE user_id = ' . $user_id . ' and ' . $this->db->sql_in_set('album_id', $album_ids);
 		$result = $this->db->sql_query($sql);
-		$exclude = array();
+		$exclude = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$exclude[] = (int) $row['album_id'];
@@ -279,10 +279,10 @@ class helper
 		$album_ids = array_diff($album_ids, $exclude);
 		foreach ($album_ids as $album_id)
 		{
-			$sql_ary = array(
+			$sql_ary = [
 				'album_id'		=> $album_id,
 				'user_id'		=> $user_id,
-			);
+			];
 			$sql = 'INSERT INTO ' . $this->watch_table . ' ' . $this->db->sql_build_array('INSERT', $sql_ary);
 			$this->db->sql_query($sql);
 		}

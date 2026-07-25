@@ -29,24 +29,24 @@ class release_3_2_1_1 extends migration
 
 	public function update_schema(): array
 	{
-		return array(
-			'add_columns'	=> array(
-				$this->table_prefix . 'gallery_users'	=> array(
-					'rrc_zebra'		=> array('UINT:1', 0),
-				),
-			)
-		);
+		return [
+			'add_columns'	=> [
+				$this->table_prefix . 'gallery_users'	=> [
+					'rrc_zebra'		=> ['UINT:1', 0],
+				],
+			]
+		];
 	}
 
 	public function revert_schema(): array
 	{
-		return array(
-			'drop_columns' => array(
-				$this->table_prefix . 'gallery_users' => array(
+		return [
+			'drop_columns' => [
+				$this->table_prefix . 'gallery_users' => [
 					'rrc_zebra',
-				),
-			),
-		);
+				],
+			],
+		];
 	}
 
 }

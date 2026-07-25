@@ -43,7 +43,7 @@ class albums_module
 		$contests_table = $table_prefix . 'gallery_contests';
 		$tracking_table = $table_prefix . 'gallery_albums_tracking';
 		// Init ext gallery
-		$this->language->add_lang(array('gallery_acp', 'gallery'), 'phpbbgallery/core');
+		$this->language->add_lang(['gallery_acp', 'gallery'], 'phpbbgallery/core');
 
 		$gallery_user = $phpbb_container->get('phpbbgallery.core.user');
 		$phpbb_ext_gallery_core_auth = $phpbb_container->get('phpbbgallery.core.auth');
@@ -74,7 +74,7 @@ class albums_module
 		$album_id	= $request->variable('a', 0);
 
 		$this->parent_id	= $request->variable('parent_id', 0);
-		$album_data = $errors = array();
+		$album_data = $errors = [];
 		if ($update && !check_form_key($form_key))
 		{
 			$update = false;
@@ -107,15 +107,15 @@ class albums_module
 
 				/** @noinspection PhpMissingBreakStatementInspection */
 				case 'edit':
-					$album_data = array(
+					$album_data = [
 						'album_id'		=>	$album_id
-					);
+					];
 
 				// No break; here
 
 				case 'add':
 
-					$album_data += array(
+					$album_data += [
 						'parent_id'				=> $request->variable('album_parent_id', $this->parent_id),
 						'album_type'			=> $request->variable('album_type', (int) \phpbbgallery\core\block::TYPE_UPLOAD),
 						'type_action'			=> $request->variable('type_action', ''),
@@ -138,7 +138,7 @@ class albums_module
 						'album_password_confirm'=> $request->variable('album_password_confirm', '', true),
 						'album_password_unset'	=> $request->variable('album_password_unset', false),
 						*/
-					);
+					];
 
 					/**
 					* Event to send requested data
@@ -148,7 +148,7 @@ class albums_module
 					* @var	array	album_data	Album data for the album
 					* @since 1.2.0
 					*/
-					$vars = array('action', 'album_id', 'album_data');
+					$vars = ['action', 'album_id', 'album_data'];
 					extract($phpbb_dispatcher->trigger_event('phpbbgallery.core.acp.albums.request_data', compact($vars)));
 
 					// Categories are not able to be locked...
@@ -158,11 +158,11 @@ class albums_module
 					}
 
 					// Contests need contest_data, freaky... :-O
-					$contest_data = array(
+					$contest_data = [
 						'contest_start'			=> $request->variable('contest_start', ''),
 						'contest_rating'		=> $request->variable('contest_rating', ''),
 						'contest_end'			=> $request->variable('contest_end', ''),
-					);
+					];
 
 					// Get data for album description if specified
 					if ($album_data['album_desc'])
@@ -195,33 +195,33 @@ class albums_module
 								FROM ' . $table_prefix . 'gallery_permissions
 								WHERE perm_album_id = ' . (int) $album_perm_from;
 							$result = $db->sql_query($sql);
-							$perm_data = array();
+							$perm_data = [];
 							while ($row = $db->sql_fetchrow($result))
 							{
-								$perm_data[] = array(
+								$perm_data[] = [
 									'perm_role_id'					=> $row['perm_role_id'],
 									'perm_album_id'					=> $album_data['album_id'],
 									'perm_user_id'					=> $row['perm_user_id'],
 									'perm_group_id'					=> $row['perm_group_id'],
 									'perm_system'					=> $row['perm_system'],
-								);
+								];
 							}
 							$db->sql_freeresult($result);
 
-							$modscache_ary = array();
+							$modscache_ary = [];
 							$sql = 'SELECT * FROM ' . $table_prefix . 'gallery_modscache
 								WHERE album_id = ' . (int) $album_perm_from;
 							$result = $db->sql_query($sql);
 							while ($row = $db->sql_fetchrow($result))
 							{
-								$modscache_ary[] = array(
+								$modscache_ary[] = [
 									'album_id'			=> $album_data['album_id'],
 									'user_id'			=> $row['user_id'],
 									'username'			=> $row['username'],
 									'group_id'			=> $row['group_id'],
 									'group_name'		=> $row['group_name'],
 									'display_on_index'	=> $row['display_on_index'],
-								);
+								];
 							}
 							$db->sql_freeresult($result);
 
@@ -265,11 +265,11 @@ class albums_module
 
 				if (!confirm_box(true))
 				{
-					confirm_box(false, $this->language->lang('CONFIRM_OPERATION'), build_hidden_fields(array(
+					confirm_box(false, $this->language->lang('CONFIRM_OPERATION'), build_hidden_fields([
 						'a'			=> $album_id,
 						'action'	=> $action,
 						'parent_id'	=> $this->parent_id,
-					)));
+					]));
 				}
 
 				$sql = 'SELECT *
@@ -289,7 +289,7 @@ class albums_module
 				if ($move_album_name !== false)
 				{
 					$log = $phpbb_container->get('phpbbgallery.core.log');
-					$log->add_log('admin', 'move', $row['album_id'], 0, array('LOG_ALBUM_' . strtoupper($action), $row['album_name'], $move_album_name));
+					$log->add_log('admin', 'move', $row['album_id'], 0, ['LOG_ALBUM_' . strtoupper($action), $row['album_name'], $move_album_name]);
 					$cache->destroy('sql', $table_prefix . 'gallery_albums');
 				}
 
@@ -304,11 +304,11 @@ class albums_module
 
 				if (!confirm_box(true))
 				{
-					confirm_box(false, $this->language->lang('CONFIRM_OPERATION'), build_hidden_fields(array(
+					confirm_box(false, $this->language->lang('CONFIRM_OPERATION'), build_hidden_fields([
 						'a'			=> $album_id,
 						'action'	=> $action,
 						'parent_id'	=> $this->parent_id,
-					)));
+					]));
 				}
 
 				$sql = 'SELECT album_name, album_type
@@ -326,7 +326,7 @@ class albums_module
 				$phpbb_ext_gallery_core_album->update_info($album_id);
 
 				$log = $phpbb_container->get('phpbbgallery.core.log');
-				$log->add_log('admin', 'resync', $album_id, 0, array('LOG_ALBUM_SYNC', $row['album_name']));
+				$log->add_log('admin', 'resync', $album_id, 0, ['LOG_ALBUM_SYNC', $row['album_name']]);
 
 				$template->assign_var('L_ALBUM_RESYNCED', sprintf($this->language->lang('ALBUM_RESYNCED'), $row['album_name']));
 
@@ -358,15 +358,15 @@ class albums_module
 					else
 					{
 						// Default values, 3 days later rate and 7 for the end of the contest
-						$contest_data = array(
+						$contest_data = [
 							'contest_start'			=> time(),
 							'contest_rating'		=> 3 * 86400,
 							'contest_end'			=> 7 * 86400,
-						);
+						];
 					}
 
 					// Make sure no direct child albums are able to be selected as parents.
-					$exclude_albums = array();
+					$exclude_albums = [];
 					foreach ($phpbb_ext_gallery_core_album_display->get_branch((int) \phpbbgallery\core\block::PUBLIC_ALBUM, $album_id, 'children') as $row)
 					{
 						$exclude_albums[] = $row['album_id'];
@@ -388,7 +388,7 @@ class albums_module
 					// Fill album data with default values
 					if (!$update)
 					{
-						$album_data = array(
+						$album_data = [
 							'parent_id'				=> $this->parent_id,
 							'album_type'			=> (int) \phpbbgallery\core\block::TYPE_UPLOAD,
 							'album_status'			=> (int) \phpbbgallery\core\block::ALBUM_OPEN,
@@ -405,7 +405,7 @@ class albums_module
 							'album_password'		=> '',
 							'album_password_confirm'=> '',
 							*/
-						);
+						];
 
 						/**
 						* Event to send default data
@@ -415,24 +415,24 @@ class albums_module
 						* @var	array	album_data	Album data array
 						* @since 1.2.0
 						*/
-						$vars = array('action', 'album_data');
+						$vars = ['action', 'album_data'];
 						extract($phpbb_dispatcher->trigger_event('phpbbgallery.core.acp.albums.default_data', compact($vars)));
 
 						// Default values, 3 days later rate and 7 for the end of the contest
-						$contest_data = array(
+						$contest_data = [
 							'contest_start'			=> time(),
 							'contest_rating'		=> 3 * 86400,
 							'contest_end'			=> 7 * 86400,
-						);
+						];
 					}
 				}
 
-				$album_desc_data = array(
+				$album_desc_data = [
 					'text'			=> $album_data['album_desc'],
 					'allow_bbcode'	=> true,
 					'allow_smilies'	=> true,
 					'allow_urls'	=> true
-				);
+				];
 
 				// Parse description if specified
 				if ($album_data['album_desc'])
@@ -452,7 +452,7 @@ class albums_module
 				}
 
 				$album_type_options = '';
-				$album_type_ary = array((int) \phpbbgallery\core\block::TYPE_CAT => 'CAT', (int) \phpbbgallery\core\block::TYPE_UPLOAD => 'UPLOAD', (int) \phpbbgallery\core\block::TYPE_CONTEST => 'CONTEST');
+				$album_type_ary = [(int) \phpbbgallery\core\block::TYPE_CAT => 'CAT', (int) \phpbbgallery\core\block::TYPE_UPLOAD => 'UPLOAD', (int) \phpbbgallery\core\block::TYPE_CONTEST => 'CONTEST'];
 
 				foreach ($album_type_ary as $value => $lang)
 				{
@@ -460,7 +460,7 @@ class albums_module
 				}
 
 				$album_sort_key_options = '';
-				$album_sort_key_options .= '<option' . ((!in_array($album_data['album_sort_key'], array('t', 'n', 'vc', 'u', 'ra', 'r', 'c', 'lc'))) ? ' selected="selected"' : '') . " value=''>" . $this->language->lang('SORT_DEFAULT') . '</option>';
+				$album_sort_key_options .= '<option' . ((!in_array($album_data['album_sort_key'], ['t', 'n', 'vc', 'u', 'ra', 'r', 'c', 'lc'])) ? ' selected="selected"' : '') . " value=''>" . $this->language->lang('SORT_DEFAULT') . '</option>';
 				$album_sort_key_options .= '<option' . (($album_data['album_sort_key'] == 't') ? ' selected="selected"' : '') . " value='t'>" . $this->language->lang('TIME') . '</option>';
 				$album_sort_key_options .= '<option' . (($album_data['album_sort_key'] == 'n') ? ' selected="selected"' : '') . " value='n'>" . $this->language->lang('IMAGE_NAME') . '</option>';
 				$album_sort_key_options .= '<option' . (($album_data['album_sort_key'] == 'vc') ? ' selected="selected"' : '') . " value='vc'>" . $this->language->lang('GALLERY_VIEWS') . '</option>';
@@ -492,9 +492,9 @@ class albums_module
 				$db->sql_freeresult($result);
 
 				// Subalbum move options
-				if ($action == 'edit' && in_array($album_data['album_type'], array((int) \phpbbgallery\core\block::TYPE_UPLOAD, (int) \phpbbgallery\core\block::TYPE_CONTEST)))
+				if ($action == 'edit' && in_array($album_data['album_type'], [(int) \phpbbgallery\core\block::TYPE_UPLOAD, (int) \phpbbgallery\core\block::TYPE_CONTEST]))
 				{
-					$subalbums_id = array();
+					$subalbums_id = [];
 					$subalbums = $phpbb_ext_gallery_core_album_display->get_branch((int) \phpbbgallery\core\block::PUBLIC_ALBUM, $album_id, 'children');
 
 					foreach ($subalbums as $row)
@@ -506,21 +506,21 @@ class albums_module
 
 					if ($uploadable_album_exists)
 					{
-						$template->assign_vars(array(
+						$template->assign_vars([
 							'S_MOVE_ALBUM_OPTIONS'		=> $phpbb_ext_gallery_core_album->get_albumbox(true, '', $album_data['parent_id'], false, $subalbums_id, (int) \phpbbgallery\core\block::PUBLIC_ALBUM, (int) \phpbbgallery\core\block::TYPE_UPLOAD),
-						));
+						]);
 					}
 
-					$template->assign_vars(array(
+					$template->assign_vars([
 						'S_HAS_SUBALBUMS'		=> ($album_data['right_id'] - $album_data['left_id'] > 1) ? true : false,
 						'S_ALBUMS_LIST'			=> $albums_list,
-					));
+					]);
 				}
 				else if ($uploadable_album_exists)
 				{
-					$template->assign_vars(array(
+					$template->assign_vars([
 						'S_MOVE_ALBUM_OPTIONS'		=> $phpbb_ext_gallery_core_album->get_albumbox(true, '', $album_data['parent_id'], false, $album_id, 0, (int) \phpbbgallery\core\block::TYPE_UPLOAD),
-					));
+					]);
 				}
 
 				/*
@@ -530,7 +530,7 @@ class albums_module
 				}
 				*/
 
-				$template->assign_vars(array(
+				$template->assign_vars([
 					'S_EDIT_ALBUM'		=> true,
 					'S_ERROR'			=> (sizeof($errors)) ? true : false,
 					'S_PARENT_ID'		=> $this->parent_id,
@@ -582,7 +582,7 @@ class albums_module
 					'S_CONTEST_START'			=> $user->format_date($contest_data['contest_start'], 'Y-m-d H:i'),
 					'CONTEST_RATING'			=> $user->format_date($contest_data['contest_start'] + $contest_data['contest_rating'], 'Y-m-d H:i'),
 					'CONTEST_END'				=> $user->format_date($contest_data['contest_start'] + $contest_data['contest_end'], 'Y-m-d H:i'),
-				));
+				]);
 
 				/**
 				* Event after assigning data to template
@@ -592,7 +592,7 @@ class albums_module
 				* @var	array	album_data	Album data array
 				* @since 1.2.0
 				*/
-				$vars = array('action', 'album_data');
+				$vars = ['action', 'album_data'];
 				extract($phpbb_dispatcher->trigger_event('phpbbgallery.core.acp.albums.send_to_template', compact($vars)));
 
 				return;
@@ -608,7 +608,7 @@ class albums_module
 
 				$album_data = $phpbb_ext_gallery_core_album->get_info($album_id);
 
-				$subalbums_id = array();
+				$subalbums_id = [];
 				$subalbums = $phpbb_ext_gallery_core_album_display->get_branch((int) \phpbbgallery\core\block::PUBLIC_ALBUM, $album_id, 'children');
 
 				foreach ($subalbums as $row)
@@ -627,26 +627,26 @@ class albums_module
 
 				if ($db->sql_fetchrow($result))
 				{
-					$template->assign_vars(array(
+					$template->assign_vars([
 						'S_MOVE_ALBUM_OPTIONS'		=> $phpbb_ext_gallery_core_album->get_albumbox(true, '', $album_data['parent_id'], false, $subalbums_id, (int) \phpbbgallery\core\block::PUBLIC_ALBUM, (int) \phpbbgallery\core\block::TYPE_UPLOAD),
-					));
+					]);
 				}
 				$db->sql_freeresult($result);
 
 				$parent_id = ($this->parent_id == $album_id) ? 0 : $this->parent_id;
-				$template->assign_vars(array(
+				$template->assign_vars([
 					'S_DELETE_ALBUM'		=> true,
 					'U_ACTION'				=> $this->u_action . "&amp;parent_id={$parent_id}&amp;action=delete&amp;a=" . $album_id,
 					'U_BACK'				=> $this->u_action . '&amp;parent_id=' . $this->parent_id,
 
 					'ALBUM_NAME'			=> $album_data['album_name'],
-					'S_ALBUM_POST'			=> (in_array($album_data['album_type'], array((int) \phpbbgallery\core\block::TYPE_UPLOAD, (int) \phpbbgallery\core\block::TYPE_CONTEST))) ? true : false,
+					'S_ALBUM_POST'			=> (in_array($album_data['album_type'], [(int) \phpbbgallery\core\block::TYPE_UPLOAD, (int) \phpbbgallery\core\block::TYPE_CONTEST])) ? true : false,
 					'S_HAS_SUBALBUMS'		=> ($album_data['right_id'] - $album_data['left_id'] > 1) ? true : false,
 					'S_ALBUMS_LIST'			=> $albums_list,
 
 					'S_ERROR'				=> (sizeof($errors)) ? true : false,
 					'ERROR_MSG'				=> (sizeof($errors)) ? implode('<br />', $errors) : '',
-				));
+				]);
 
 				return;
 			break;
@@ -707,7 +707,7 @@ class albums_module
 
 				$url = $this->u_action . "&amp;parent_id=$this->parent_id&amp;a={$row['album_id']}";
 
-				$template->assign_block_vars('albums', array(
+				$template->assign_block_vars('albums', [
 					'FOLDER_IMAGE'		=> $folder_image,
 					'ALBUM_IMAGE'		=> ($row['album_image']) ? '<img src="' . $phpbb_ext_gallery_core_url->path('phpbb') . $row['album_image'] . '" alt="" />' : '',
 					'ALBUM_IMAGE_SRC'	=> ($row['album_image']) ? $phpbb_ext_gallery_core_url->path('phpbb') . $row['album_image'] : '',
@@ -722,7 +722,7 @@ class albums_module
 					'U_MOVE_DOWN'		=> $url . '&amp;action=move_down',
 					'U_EDIT'			=> $url . '&amp;action=edit',
 					'U_DELETE'			=> $url . '&amp;action=delete',
-					'U_SYNC'			=> $url . '&amp;action=sync')
+					'U_SYNC'			=> $url . '&amp;action=sync']
 				);
 			}
 			while ($row = $db->sql_fetchrow($result));
@@ -733,17 +733,17 @@ class albums_module
 
 			$url = $this->u_action . '&amp;parent_id=' . $this->parent_id . '&amp;a=' . $row['album_id'];
 
-			$template->assign_vars(array(
+			$template->assign_vars([
 				'S_NO_ALBUMS'		=> true,
 
 				'U_EDIT'			=> $url . '&amp;action=edit',
 				'U_DELETE'			=> $url . '&amp;action=delete',
 				'U_SYNC'			=> $url . '&amp;action=sync',
-			));
+			]);
 		}
 		$db->sql_freeresult($result);
 
-		$template->assign_vars(array(
+		$template->assign_vars([
 			'ERROR_MSG'		=> (sizeof($errors)) ? implode('<br />', $errors) : '',
 			'NAVIGATION'	=> $navigation,
 			'ALBUM_BOX'		=> $album_box,
@@ -751,7 +751,7 @@ class albums_module
 			'U_ACTION'		=> $this->u_action . '&amp;parent_id=' . $this->parent_id,
 
 			'U_PROGRESS_BAR'	=> $this->u_action . '&amp;action=progress_bar',
-		));
+		]);
 	}
 
 	/**
@@ -769,13 +769,13 @@ class albums_module
 
 		adm_page_header($user->lang['SYNC_IN_PROGRESS']);
 
-		$template->set_filenames(array(
+		$template->set_filenames([
 			'body'	=> 'progress_bar.html',
-		));
+		]);
 
-		$template->assign_vars(array(
+		$template->assign_vars([
 			'L_PROGRESS'			=> $user->lang['SYNC_IN_PROGRESS'],
-			'L_PROGRESS_EXPLAIN'	=> ($start && $total) ? sprintf($user->lang['SYNC_IN_PROGRESS_EXPLAIN'], $start, $total) : $user->lang['SYNC_IN_PROGRESS'])
+			'L_PROGRESS_EXPLAIN'	=> ($start && $total) ? sprintf($user->lang['SYNC_IN_PROGRESS_EXPLAIN'], $start, $total) : $user->lang['SYNC_IN_PROGRESS']]
 		);
 
 		adm_page_footer();

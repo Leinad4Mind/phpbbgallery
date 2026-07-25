@@ -68,28 +68,28 @@ class multiform extends \phpbb\files\types\base
 	protected function form_upload(string $form_name): array
 	{
 
-		$uploads = ($this->request->variable($form_name, array('name'=> array('' => ''), 'type' => array('' => ''), 'tmp_name' => array('' => ''), 'error' =>  array('' => ''), 'size' => array('' => '')), true, $this->request::FILES));
-		$upload_ready = array();
+		$uploads = ($this->request->variable($form_name, ['name'=> ['' => ''], 'type' => ['' => ''], 'tmp_name' => ['' => ''], 'error' =>  ['' => ''], 'size' => ['' => '']], true, $this->request::FILES));
+		$upload_ready = [];
 		for ($i = 0; $i < count($uploads['name']); $i++)
 		{
-			$upload_ready[$i] = array(
+			$upload_ready[$i] = [
 				'name' => $uploads['name'][$i],
 				'type' => $uploads['type'][$i],
 				'tmp_name' => $uploads['tmp_name'][$i],
 				'error'	=> ($uploads['error'][$i] ? $uploads['error'][$i] : null),
 				'size'	=> $uploads['size'][$i]
-			);
+			];
 		}
-		$files = array();
+		$files = [];
 		foreach ($upload_ready as $id => $upload_data)
 		{
-			$upload = array(
+			$upload = [
 				'name' => $upload_data['name'],
 				'type' => $upload_data['type'],
 				'tmp_name' => $upload_data['tmp_name'],
 				'error'	=> $upload_data['error'],
 				'size'	=> $upload_data['size']
-			);
+			];
 
 			$file = $this->factory->get('filespec')
 				->set_upload_ary($upload)

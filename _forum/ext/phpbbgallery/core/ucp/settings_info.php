@@ -20,13 +20,13 @@ class settings_info
 {
 	public function module(): array
 	{
-		return array(
+		return [
 			'filename'	=> '\phpbbgallery\core\ucp\settings_module',
 			'title'		=> 'PHPBB_GALLERY',
 			'version'	=> '1.0.0',
-			'modes'		=> array(
-				'manage'		=> array('title' => 'UCP_GALLERY_SETTINGS', 'auth' => 'ext_phpbbgallery/core', 'cat' => array('PHPBB_GALLERY')),
-			),
-		);
+			'modes'		=> [
+				'manage'		=> ['title' => 'UCP_GALLERY_SETTINGS', 'auth' => 'ext_phpbbgallery/core', 'cat' => ['PHPBB_GALLERY']],
+			],
+		];
 	}
 }

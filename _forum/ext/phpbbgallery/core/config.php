@@ -15,7 +15,7 @@ class config
 {
 	private \phpbb\config\config $config;
 
-	private array $configs_array = array(
+	private array $configs_array = [
 		'album_display'		=> 254,
 		'album_images'		=> 2500,
 		'allow_comments'	=> true,
@@ -123,7 +123,7 @@ class config
 		'watermark_width'		=> 200,
 
 		'version'				=> '',
-	);
+	];
 
 	/**
 	 * Constructor
@@ -137,7 +137,7 @@ class config
 
 	public function get_all(): array
 	{
-		$config_ary = array();
+		$config_ary = [];
 		foreach ($this->configs_array as $option => $default)
 		{
 			if (isset($this->config['phpbb_gallery_' . $option]))

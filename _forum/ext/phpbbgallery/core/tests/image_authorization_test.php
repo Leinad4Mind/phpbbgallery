@@ -45,7 +45,7 @@ class image_authorization_test extends TestCase
 
 	public function test_image_permissions_only_apply_to_the_owner(): void
 	{
-		$image = array('image_user_id' => 10);
+		$image = ['image_user_id' => 10];
 
 		$this->assertTrue($this->authorization->can_manage_image(10, $image, true, false, false));
 		$this->assertFalse($this->authorization->can_manage_image(11, $image, true, false, false));
@@ -55,7 +55,7 @@ class image_authorization_test extends TestCase
 
 	public function test_moderator_permission_can_manage_any_image_including_orphans(): void
 	{
-		$image = array('image_user_id' => 10);
+		$image = ['image_user_id' => 10];
 
 		$this->assertTrue($this->authorization->can_manage_image(11, $image, false, true, false));
 		$this->assertTrue($this->authorization->can_manage_image(11, $image, false, true, true));
@@ -63,9 +63,9 @@ class image_authorization_test extends TestCase
 
 	public function test_normalizes_unique_positive_integer_image_ids(): void
 	{
-		$this->assertSame(array(3, 7), $this->authorization->normalize_image_ids(array(3, 7, 3)));
+		$this->assertSame([3, 7], $this->authorization->normalize_image_ids([3, 7, 3]));
 
-		foreach (array(array(), array(0), array(-1), array('3'), array(3.0), array(array(3))) as $invalid_ids)
+		foreach ([[], [0], [-1], ['3'], [3.0], [[3]]] as $invalid_ids)
 		{
 			$this->assertFalse($this->authorization->normalize_image_ids($invalid_ids));
 		}
@@ -73,47 +73,47 @@ class image_authorization_test extends TestCase
 
 	public function test_moderation_requires_the_real_image_album_and_permission(): void
 	{
-		$image = array('image_album_id' => 5);
-		$album = array('album_id' => 5);
+		$image = ['image_album_id' => 5];
+		$album = ['album_id' => 5];
 
 		$this->assertTrue($this->authorization->can_moderate_image($image, $album, 5, true));
 		$this->assertTrue($this->authorization->can_moderate_image($image, $album, 0, true));
 		$this->assertFalse($this->authorization->can_moderate_image($image, $album, 6, true));
-		$this->assertFalse($this->authorization->can_moderate_image($image, array('album_id' => 6), 0, true));
+		$this->assertFalse($this->authorization->can_moderate_image($image, ['album_id' => 6], 0, true));
 		$this->assertFalse($this->authorization->can_moderate_image($image, $album, 5, false));
-		$this->assertFalse($this->authorization->can_moderate_image(array(), $album, 5, true));
+		$this->assertFalse($this->authorization->can_moderate_image([], $album, 5, true));
 	}
 
 	public function test_destination_album_requires_its_own_permission(): void
 	{
-		$album = array('album_id' => 8);
+		$album = ['album_id' => 8];
 
 		$this->assertTrue($this->authorization->can_moderate_album($album, 8, true));
 		$this->assertFalse($this->authorization->can_moderate_album($album, 8, false));
 		$this->assertFalse($this->authorization->can_moderate_album($album, 9, true));
-		$this->assertFalse($this->authorization->can_moderate_album(array(), 8, true));
+		$this->assertFalse($this->authorization->can_moderate_album([], 8, true));
 	}
 
 	public function test_batch_validation_loads_groups_and_authorizes_every_image(): void
 	{
-		$images = array(
-			11 => array('image_album_id' => 5),
-			22 => array('image_album_id' => 6),
-			44 => array('image_album_id' => 7),
-		);
-		$albums = array(
-			5 => array('album_id' => 5, 'album_user_id' => 0),
-			6 => array('album_id' => 6, 'album_user_id' => 0),
-		);
+		$images = [
+			11 => ['image_album_id' => 5],
+			22 => ['image_album_id' => 6],
+			44 => ['image_album_id' => 7],
+		];
+		$albums = [
+			5 => ['album_id' => 5, 'album_user_id' => 0],
+			6 => ['album_id' => 6, 'album_user_id' => 0],
+		];
 
-		$authorized = $this->authorize_batch(array(11, 22, 11), 0, $images, $albums, array(5 => true, 6 => true));
-		$this->assertSame(array(11, 22), $authorized['image_ids']);
-		$this->assertSame(array(5 => array(11), 6 => array(22)), $authorized['images_by_album']);
+		$authorized = $this->authorize_batch([11, 22, 11], 0, $images, $albums, [5 => true, 6 => true]);
+		$this->assertSame([11, 22], $authorized['image_ids']);
+		$this->assertSame([5 => [11], 6 => [22]], $authorized['images_by_album']);
 
-		$this->assertFalse($this->authorize_batch(array(11, 22), 5, $images, $albums, array(5 => true, 6 => true)));
-		$this->assertFalse($this->authorize_batch(array(11, 22), 0, $images, $albums, array(5 => true, 6 => false)));
-		$this->assertFalse($this->authorize_batch(array(11, 33), 0, $images, $albums, array(5 => true, 6 => true)));
-		$this->assertFalse($this->authorize_batch(array(11, 44), 0, $images, $albums, array(5 => true, 6 => true)));
+		$this->assertFalse($this->authorize_batch([11, 22], 5, $images, $albums, [5 => true, 6 => true]));
+		$this->assertFalse($this->authorize_batch([11, 22], 0, $images, $albums, [5 => true, 6 => false]));
+		$this->assertFalse($this->authorize_batch([11, 33], 0, $images, $albums, [5 => true, 6 => true]));
+		$this->assertFalse($this->authorize_batch([11, 44], 0, $images, $albums, [5 => true, 6 => true]));
 	}
 
 	public function test_controllers_use_the_authorization_guard_at_every_mutation_boundary(): void

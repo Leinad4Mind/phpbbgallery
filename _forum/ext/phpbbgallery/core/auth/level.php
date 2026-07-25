@@ -74,12 +74,12 @@ class level
 	{
 		$locked = ($album_status == ITEM_LOCKED && !$this->auth->acl_check('m_', $album_id, $album_user_id)) ? true : false;
 		$this->auth->load_user_permissions($this->user->data['user_id']);
-		$rules = array(
+		$rules = [
 			($this->auth->acl_check('i_view', $album_id, $album_user_id) && !$locked) ? $this->lang->lang('ALBUM_VIEW_CAN') : $this->lang->lang('ALBUM_VIEW_CANNOT'),
 			($this->auth->acl_check('i_upload', $album_id, $album_user_id) && !$locked) ? $this->lang->lang('ALBUM_UPLOAD_CAN') : $this->lang->lang('ALBUM_UPLOAD_CANNOT'),
 			($this->auth->acl_check('i_edit', $album_id, $album_user_id) && !$locked) ? $this->lang->lang('ALBUM_EDIT_CAN') : $this->lang->lang('ALBUM_EDIT_CANNOT'),
 			($this->auth->acl_check('i_delete', $album_id, $album_user_id) && !$locked) ? $this->lang->lang('ALBUM_DELETE_CAN') : $this->lang->lang('ALBUM_DELETE_CANNOT'),
-		);
+		];
 		if ($this->config['phpbb_gallery_allow_comments'] && $this->auth->acl_check('c_read', $album_id, $album_user_id))
 		{
 			$rules[] = ($this->auth->acl_check('c_post', $album_id, $album_user_id) && !$locked) ? $this->lang->lang('ALBUM_COMMENT_CAN') : $this->lang->lang('ALBUM_COMMENT_CANNOT');
@@ -91,7 +91,7 @@ class level
 
 		foreach ($rules as $rule)
 		{
-			$this->template->assign_block_vars('rules', array('RULE' => $rule));
+			$this->template->assign_block_vars('rules', ['RULE' => $rule]);
 		}
 	}
 }

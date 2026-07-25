@@ -14,16 +14,16 @@ class albums_info
 {
 	public function module(): array
 	{
-		return array(
+		return [
 			'title'		=> 'PHPBB_GALLERY',
 			'version'	=> '1.0.0',
-			'modes'		=> array(
-				'manage'	=> array(
+			'modes'		=> [
+				'manage'	=> [
 					'title' => 'ACP_GALLERY_MANAGE_ALBUMS',
 					'auth' => 'ext_phpbbgallery/core && acl_a_gallery_albums',
-					'cat' => array('PHPBB_GALLERY')
-				),
-			),
-		);
+					'cat' => ['PHPBB_GALLERY']
+				],
+			],
+		];
 	}
 }

@@ -18,17 +18,17 @@ class split_ucp_module_settings extends \phpbb\db\migration\migration
 
 	public function update_data(): array
 	{
-		return array(
-			array('if', array(
-				array('module.exists', array('ucp', 'UCP_GALLERY', 'UCP_GALLERY_SETTINGS')),
-				array('module.remove', array('ucp', 'UCP_GALLERY', 'UCP_GALLERY_SETTINGS')),
-			)),
-			array('module.add', array('ucp', 'UCP_GALLERY', array(
+		return [
+			['if', [
+				['module.exists', ['ucp', 'UCP_GALLERY', 'UCP_GALLERY_SETTINGS']],
+				['module.remove', ['ucp', 'UCP_GALLERY', 'UCP_GALLERY_SETTINGS']],
+			]],
+			['module.add', ['ucp', 'UCP_GALLERY', [
 				'module_basename'	=> '\phpbbgallery\core\ucp\settings_module',
 				'module_langname'	=> 'UCP_GALLERY_SETTINGS',
 				'module_mode'		=> 'manage',
 				'module_auth'		=> 'ext_phpbbgallery/core',
-			))),
-		);
+			]]],
+		];
 	}
 }

@@ -54,11 +54,11 @@ class loader
 	*/
 	public function load(int $album_id): bool
 	{
-		$sql_array = array(
+		$sql_array = [
 			'SELECT'		=> 'a.*',
-			'FROM'			=> array($this->table_albums => 'a'),
+			'FROM'			=> [$this->table_albums => 'a'],
 			'WHERE'			=> 'a.album_id = ' . (int) $album_id,
-		);
+		];
 
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
 

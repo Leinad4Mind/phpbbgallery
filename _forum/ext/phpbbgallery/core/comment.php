@@ -109,13 +109,13 @@ class comment
 			return false;
 		}
 
-		$data = $data + array(
+		$data = $data + [
 			'comment_user_id'		=> $this->user->data['user_id'],
 			'comment_username'		=> ($this->user->data['user_id'] != ANONYMOUS) ? $this->user->data['username'] : $comment_username,
 			'comment_user_colour'	=> $this->user->data['user_colour'],
 			'comment_user_ip'		=> $this->user->ip,
 			'comment_time'			=> time(),
-		);
+		];
 
 		$this->db->sql_query('INSERT INTO ' .$this->comments_table .' ' . $this->db->sql_build_array('INSERT', $data));
 		$newest_comment_id = (int) $this->db->sql_nextid();
@@ -143,10 +143,10 @@ class comment
 			return false;
 		}
 
-		$data = $data + array(
+		$data = $data + [
 			'comment_edit_time'		=> time(),
 			'comment_edit_user_id'	=> $this->user->data['user_id'],
-		);
+		];
 
 		$sql = 'UPDATE ' . $this->comments_table . '
 			SET ' . $this->db->sql_build_array('UPDATE', $data) . '
@@ -164,7 +164,7 @@ class comment
 	public function sync_image_comments(array|int|false $image_ids = false): void
 	{
 		$sql_where = $sql_where_image = '';
-		$resync = array();
+		$resync = [];
 		if ($image_ids != false)
 		{
 			$image_ids = $this->cast_mixed_int2array($image_ids);
@@ -181,10 +181,10 @@ class comment
 
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$resync[$row['comment_image_id']] = array(
+			$resync[$row['comment_image_id']] = [
 				'last_comment'	=> $row['last_comment'],
 				'num_comments'	=> $row['num_comments'],
-			);
+			];
 		}
 		$this->db->sql_freeresult($result);
 
@@ -223,7 +223,7 @@ class comment
 			GROUP BY comment_image_id';
 		$result = $this->db->sql_query($sql);
 
-		$image_ids = array();
+		$image_ids = [];
 		$total_comments = 0;
 		while ($row = $this->db->sql_fetchrow($result))
 		{
@@ -280,7 +280,7 @@ class comment
 		}
 		else
 		{
-			return array((int) $ids);
+			return [(int) $ids];
 		}
 	}
 }

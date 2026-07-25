@@ -30,17 +30,17 @@ class auth
 	public const ACL_YES		= 1;
 	public const ACL_NEVER		= 2;
 
-	protected static array $_permission_i = array('i_view', 'i_watermark', 'i_upload', 'i_approve', 'i_edit', 'i_delete', 'i_report', 'i_rate');
-	protected static array $_permission_c = array('c_read', 'c_post', 'c_edit', 'c_delete');
-	protected static array $_permission_m = array('m_comments', 'm_delete', 'm_edit', 'm_move', 'm_report', 'm_status');
-	protected static array $_permission_misc = array('a_list', 'i_count', 'i_unlimited', 'a_count', 'a_unlimited', 'a_restrict');
-	protected static array $_permissions = array();
-	protected static array $_permissions_flipped = array();
+	protected static array $_permission_i = ['i_view', 'i_watermark', 'i_upload', 'i_approve', 'i_edit', 'i_delete', 'i_report', 'i_rate'];
+	protected static array $_permission_c = ['c_read', 'c_post', 'c_edit', 'c_delete'];
+	protected static array $_permission_m = ['m_comments', 'm_delete', 'm_edit', 'm_move', 'm_report', 'm_status'];
+	protected static array $_permission_misc = ['a_list', 'i_count', 'i_unlimited', 'a_count', 'a_unlimited', 'a_restrict'];
+	protected static array $_permissions = [];
+	protected static array $_permissions_flipped = [];
 
-	protected array $_auth_data = array();
-	protected array $_auth_data_never = array();
+	protected array $_auth_data = [];
+	protected array $_auth_data_never = [];
 
-	protected array $acl_cache = array();
+	protected array $acl_cache = [];
 
 	/**
 	* Cache object
@@ -123,7 +123,7 @@ class auth
 		$this->table_albums = $albums_table;
 
 		self::$_permissions = array_merge(self::$_permission_i, self::$_permission_c, self::$_permission_m, self::$_permission_misc);
-		self::$_permissions_flipped = array_flip(array_merge(self::$_permissions, array('m_')));
+		self::$_permissions_flipped = array_flip(array_merge(self::$_permissions, ['m_']));
 		self::$_permissions_flipped['i_count'] = 'i_count';
 		self::$_permissions_flipped['a_count'] = 'a_count';
 	}
@@ -145,9 +145,9 @@ class auth
 
 	public function load_user_permissions(int $user_id, int|false $album_id = false): void
 	{
-		$this->_auth_data = array();
-		$this->_auth_data_never = array();
-		$this->acl_cache = array();
+		$this->_auth_data = [];
+		$this->_auth_data_never = [];
+		$this->acl_cache = [];
 
 		$cached_permissions = $this->user->get_data('user_permissions');
 		if (($user_id == $this->user->user_id) && !empty($cached_permissions))
@@ -204,21 +204,21 @@ class auth
 			}
 		}
 
-		$sql_array = array(
+		$sql_array = [
 			'SELECT'		=> "p.perm_album_id, $sql_select p.perm_system",
-			'FROM'			=> array($this->table_permissions => 'p'),
+			'FROM'			=> [$this->table_permissions => 'p'],
 
-			'LEFT_JOIN'		=> array(
-				array(
-					'FROM'		=> array($this->table_roles => 'pr'),
+			'LEFT_JOIN'		=> [
+				[
+					'FROM'		=> [$this->table_roles => 'pr'],
 					'ON'		=> 'p.perm_role_id = pr.role_id',
-				),
-			),
+				],
+			],
 
 			'WHERE'			=> 'p.perm_user_id = ' . $user_id . ' OR ' . $this->db->sql_in_set('p.perm_group_id', $user_groups_ary, false, true),
 			'GROUP_BY'		=> 'p.perm_system, p.perm_album_id',
 			'ORDER_BY'		=> 'p.perm_system DESC, p.perm_album_id ASC',
-		);
+		];
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
 
 		$this->db->sql_return_on_error(true);
@@ -268,7 +268,7 @@ class auth
 	 */
 	protected function serialize_auth_data(array $auth_data): string
 	{
-		$acl_array = array();
+		$acl_array = [];
 
 		foreach ($auth_data as $a_id => $obj)
 		{
@@ -464,7 +464,7 @@ class auth
 	public function get_user_zebra(int $user_id): array
 	{
 
-		$zebra = array('foe' => array(), 'friend' => array(), 'bff' => array());
+		$zebra = ['foe' => [], 'friend' => [], 'bff' => []];
 		$sql = 'SELECT *
 			FROM ' . ZEBRA_TABLE . '
 			WHERE zebra_id = ' . (int) $user_id;
@@ -499,7 +499,7 @@ class auth
 	}
 	public function get_user_foes(int $user_id): array
 	{
-		$foes = array();
+		$foes = [];
 		$sql = 'SELECT * 
 		FROM ' . ZEBRA_TABLE . '
 		WHERE user_id = ' . (int) $user_id . '
@@ -558,7 +558,7 @@ class auth
 	 */
 	public function get_usergroups(int $user_id): array
 	{
-		$groups_ary = array();
+		$groups_ary = [];
 
 		$sql = 'SELECT ug.group_id
 			FROM ' . USER_GROUP_TABLE . ' ug
@@ -744,18 +744,18 @@ class auth
 	{
 		if (!array_key_exists($acl, self::$_permissions_flipped))
 		{
-			return ($return === 'bool') ? false : (($return === 'array') ? array() : '');
+			return ($return === 'bool') ? false : (($return === 'array') ? [] : '');
 		}
 
 		$bit = self::$_permissions_flipped[$acl];
 		if (!is_int($bit))
 		{
 			// No support for *_count permissions.
-			return ($return == 'array') ? array() : '';
+			return ($return == 'array') ? [] : '';
 		}
 
 		$album_list = '';
-		$album_array = array();
+		$album_array = [];
 		$albums = $this->cache->get_albums();
 		foreach ($albums as $album)
 		{
@@ -803,7 +803,7 @@ class auth
 	{
 		if (!in_array($acl, self::$_permissions, true) || str_contains($acl, '_count'))
 		{
-			return array();
+			return [];
 		}
 
 		// Let's load album data
@@ -813,7 +813,7 @@ class auth
 		$this->db->sql_freeresult($result);
 		if (!$album_data)
 		{
-			return array();
+			return [];
 		}
 
 		// Let's request roles
@@ -821,7 +821,7 @@ class auth
 		// So we need to request all roles for perm_system -2(own) and -3(user)
 		if ($album_data['album_user_id'] != 0)
 		{
-			$sql = 'SELECT * FROM ' . $this->table_permissions . ' WHERE ' . $this->db->sql_in_set('perm_system', array(-2, -3));
+			$sql = 'SELECT * FROM ' . $this->table_permissions . ' WHERE ' . $this->db->sql_in_set('perm_system', [-2, -3]);
 		}
 		else
 		{
@@ -829,7 +829,7 @@ class auth
 		}
 
 		$result = $this->db->sql_query($sql);
-		$roles_id = array('roles' => array());
+		$roles_id = ['roles' => []];
 		// Now we build the array to test
 		while ($row = $this->db->sql_fetchrow($result))
 		{
@@ -842,13 +842,13 @@ class auth
 		$roles_id['roles'] = array_values(array_unique($roles_id['roles']));
 		if (empty($roles_id['roles']))
 		{
-			return array();
+			return [];
 		}
 
 		// Now we will select the roles that have the set ACL
 		$sql = 'SELECT role_id FROM ' . $this->table_roles . ' WHERE ' . $acl . ' = 1 AND ' . $this->db->sql_in_set('role_id', $roles_id['roles'], false, true);
 		$result = $this->db->sql_query($sql);
-		$roles = array();
+		$roles = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$roles[] = (int) $row['role_id'];
@@ -856,11 +856,11 @@ class auth
 		$this->db->sql_freeresult($result);
 
 		// Let's cycle trough roles and build user_ids with user_ids from roles
-		$user_ids = array();
+		$user_ids = [];
 		foreach ($roles as $id)
 		{
-			$user_ids = array_merge($user_ids, $roles_id[$id]['user_id'] ?? array());
-			$group_ids = array_values(array_filter($roles_id[$id]['group_id'] ?? array()));
+			$user_ids = array_merge($user_ids, $roles_id[$id]['user_id'] ?? []);
+			$group_ids = array_values(array_filter($roles_id[$id]['group_id'] ?? []));
 			if (empty($group_ids))
 			{
 				continue;
@@ -880,7 +880,7 @@ class auth
 		}
 
 		// Now we cycle the $user_ids to remove 0 and make ids unique
-		$returning_value = array();
+		$returning_value = [];
 		foreach ($user_ids as $id)
 		{
 			if ($id != 0)
@@ -899,13 +899,13 @@ class auth
 	public function get_exclude_zebra(): array
 	{
 		$zebra_array = $this->get_user_zebra($this->phpbb_user->data['user_id']);
-		$foes = array();
+		$foes = [];
 		if ($this->user->get_data('rrc_zebra'))
 		{
 			$foes = $this->get_user_foes($this->phpbb_user->data['user_id']);
 		}
 		$albums = $this->cache->get_albums();
-		$exclude = array();
+		$exclude = [];
 		foreach ($albums as $album)
 		{
 			// There is zebra only for users

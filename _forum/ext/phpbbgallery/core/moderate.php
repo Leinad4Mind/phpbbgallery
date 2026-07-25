@@ -157,7 +157,7 @@ class moderate
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 
 		// Get albums we can approve in
-		$mod_array = array();
+		$mod_array = [];
 		if ($album === 0)
 		{
 			$mod_array = $this->gallery_auth->acl_album_ids('m_status');
@@ -168,7 +168,7 @@ class moderate
 		}
 		else
 		{
-			$mod_array = array($album);
+			$mod_array = [$album];
 		}
 		// Let's get count of unapproved
 		$sql = 'SELECT COUNT(DISTINCT image_id) as count 
@@ -186,17 +186,17 @@ class moderate
 		$page = $page - 1;
 		$result = $this->db->sql_query_limit($sql, $per_page, $page * $per_page);
 
-		$waiting_images = $users_array = array();
+		$waiting_images = $users_array = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$waiting_images[] = array(
+			$waiting_images[] = [
 				'image_id'       => $row['image_id'],
 				'image_name'     => $row['image_name'],
 				'image_author'   => (int) $row['image_user_id'],
 				'image_time'     => $row['image_time'],
 				'image_album_id' => $row['image_album_id'],
-			);
-			$users_array[$row['image_user_id']] = array('');
+			];
+			$users_array[$row['image_user_id']] = [''];
 		}
 		$this->db->sql_freeresult($result);
 
@@ -211,51 +211,51 @@ class moderate
 		foreach ($waiting_images as $image_data)
 		{
 			$album_tmp = $this->album->get_info($image_data['image_album_id']);
-			$this->template->assign_block_vars('image_unapproved', array(
+			$this->template->assign_block_vars('image_unapproved', [
 				'U_IMAGE_ID'           => $image_data['image_id'],
-				'U_IMAGE'              => $this->helper->route('phpbbgallery_core_image_file_mini', array('image_id' => $image_data['image_id'])),
-				'U_IMAGE_URL'          => $this->helper->route('phpbbgallery_core_image', array('image_id' => $image_data['image_id'])),
-				'U_IMAGE_MODERATE_URL' => $this->helper->route('phpbbgallery_core_moderate_image', array('image_id' => $image_data['image_id'])),
+				'U_IMAGE'              => $this->helper->route('phpbbgallery_core_image_file_mini', ['image_id' => $image_data['image_id']]),
+				'U_IMAGE_URL'          => $this->helper->route('phpbbgallery_core_image', ['image_id' => $image_data['image_id']]),
+				'U_IMAGE_MODERATE_URL' => $this->helper->route('phpbbgallery_core_moderate_image', ['image_id' => $image_data['image_id']]),
 				'U_IMAGE_NAME'         => $image_data['image_name'],
 				'IMAGE_AUTHOR'         => $this->user_loader->get_username($image_data['image_author'], 'full'),
 				'IMAGE_TIME'           => $this->user->format_date($image_data['image_time']),
 				'IMAGE_ALBUM'          => $album_tmp['album_name'],
-				'IMAGE_ALBUM_URL'      => $this->helper->route('phpbbgallery_core_album', array('album_id' => $image_data['image_album_id'])),
+				'IMAGE_ALBUM_URL'      => $this->helper->route('phpbbgallery_core_album', ['album_id' => $image_data['image_album_id']]),
 				'IMAGE_ALBUM_ID'       => $image_data['image_album_id'],
-			));
+			]);
 			unset($album_tmp);
 		}
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'TOTAL_IMAGES_WAITING'     => $this->lang->lang('WAITING_UNAPPROVED_IMAGE', (int) $count),
-			'S_GALLERY_APPROVE_ACTION' => $album > 0 ? $this->helper->route('phpbbgallery_core_moderate_queue_approve_album', array('album_id' => $album)) : $this->helper->route('phpbbgallery_core_moderate_queue_approve'),
-		));
+			'S_GALLERY_APPROVE_ACTION' => $album > 0 ? $this->helper->route('phpbbgallery_core_moderate_queue_approve_album', ['album_id' => $album]) : $this->helper->route('phpbbgallery_core_moderate_queue_approve'),
+		]);
 		if ($album === 0)
 		{
-			$this->pagination->generate_template_pagination(array(
-				'routes' => array(
+			$this->pagination->generate_template_pagination([
+				'routes' => [
 					'phpbbgallery_core_moderate_queue_approve',
 					'phpbbgallery_core_moderate_queue_approve_page',
-				),
-				'params' => array(),
-			), 'pagination', 'page', $count, $per_page, $page * $per_page);
-			$this->template->assign_vars(array(
+				],
+				'params' => [],
+			], 'pagination', 'page', $count, $per_page, $page * $per_page);
+			$this->template->assign_vars([
 				'TOTAL_PAGES' => $this->lang->lang('PAGE_TITLE_NUMBER', $page + 1),
-			));
+			]);
 		}
 		else
 		{
-			$this->pagination->generate_template_pagination(array(
-				'routes' => array(
+			$this->pagination->generate_template_pagination([
+				'routes' => [
 					'phpbbgallery_core_moderate_queue_approve_album',
 					'phpbbgallery_core_moderate_queue_approve_album_page',
-				),
-				'params' => array(
+				],
+				'params' => [
 					'album_id' => $album,
-				),
-			), 'pagination', 'page', $count, $per_page, $page * $per_page);
-			$this->template->assign_vars(array(
+				],
+			], 'pagination', 'page', $count, $per_page, $page * $per_page);
+			$this->template->assign_vars([
 				'TOTAL_PAGES' => $this->lang->lang('PAGE_TITLE_NUMBER', $page + 1),
-			));
+			]);
 		}
 	}
 
@@ -286,7 +286,7 @@ class moderate
 		}
 		// Let's see what the user can do?
 		$status[] = 1;
-		$actions = array();
+		$actions = [];
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$album = $this->album->get_info($album_id);
 		if ($this->gallery_auth->acl_check('m_status', $album['album_id'], $album['album_user_id']))
@@ -317,11 +317,11 @@ class moderate
 		$sql = 'SELECT * FROM ' . $this->images_table . ' WHERE ' . $this->db->sql_in_set('image_status', $status) . ' AND image_album_id = ' . (int) $album_id . ' ORDER BY image_id DESC';
 
 		$result = $this->db->sql_query_limit($sql, $per_page, ($page - 1) * $per_page);
-		$users_array = array();
-		$images = array();
+		$users_array = [];
+		$images = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$images[] = array(
+			$images[] = [
 				'image_id'             => $row['image_id'],
 				'image_filename'       => $row['image_filename'],
 				'image_name'           => $row['image_name'],
@@ -350,8 +350,8 @@ class moderate
 				'filesize_upload'      => $row['filesize_upload'],
 				'filesize_medium'      => $row['filesize_medium'],
 				'filesize_cache'       => $row['filesize_cache'],
-			);
-			$users_array[$row['image_user_id']] = array('');
+			];
+			$users_array[$row['image_user_id']] = [''];
 		}
 		$this->db->sql_freeresult($result);
 
@@ -364,32 +364,32 @@ class moderate
 		$this->user_loader->load_users(array_keys($users_array));
 		foreach ($images as $var)
 		{
-			$this->template->assign_block_vars('overview', array(
+			$this->template->assign_block_vars('overview', [
 				'U_IMAGE_ID'           => $var['image_id'],
-				'U_IMAGE'              => $this->helper->route('phpbbgallery_core_image_file_mini', array('image_id' => $var['image_id'])),
-				'U_IMAGE_URL'          => $this->helper->route('phpbbgallery_core_image', array('image_id' => $var['image_id'])),
-				'U_IMAGE_MODERATE_URL' => $this->helper->route('phpbbgallery_core_moderate_image', array('image_id' => $var['image_id'])),
+				'U_IMAGE'              => $this->helper->route('phpbbgallery_core_image_file_mini', ['image_id' => $var['image_id']]),
+				'U_IMAGE_URL'          => $this->helper->route('phpbbgallery_core_image', ['image_id' => $var['image_id']]),
+				'U_IMAGE_MODERATE_URL' => $this->helper->route('phpbbgallery_core_moderate_image', ['image_id' => $var['image_id']]),
 				'U_IMAGE_NAME'         => $var['image_name'],
 				'IMAGE_AUTHOR'         => $this->user_loader->get_username($var['image_user_id'], 'full'),
 				'IMAGE_TIME'           => $this->user->format_date($var['image_time']),
 				'IMAGE_ALBUM'          => $album['album_name'],
-				'IMAGE_ALBUM_URL'      => $this->helper->route('phpbbgallery_core_album', array('album_id' => $var['image_album_id'])),
+				'IMAGE_ALBUM_URL'      => $this->helper->route('phpbbgallery_core_album', ['album_id' => $var['image_album_id']]),
 				'IMAGE_ALBUM_ID'       => $var['image_album_id'],
 				'U_IS_REPORTED'        => $this->gallery_auth->acl_check('m_report', $album['album_id'], $album['album_user_id']) && $var['image_reported'] > 0 ? true : false,
 				'U_IS_UNAPPROVED'      => $var['image_status'] == 0 ? true : false,
 				'U_IS_LOCKED'          => $var['image_status'] == 2 ? true : false,
-			));
+			]);
 		}
 
-		$this->pagination->generate_template_pagination(array(
-			'routes' => array(
+		$this->pagination->generate_template_pagination([
+			'routes' => [
 				'phpbbgallery_core_moderate_view',
 				'phpbbgallery_core_moderate_view_page',
-			),
-			'params' => array(
+			],
+			'params' => [
 				'album_id' => $album_id,
-			),
-		), 'pagination', 'page', $count, $per_page, ($page - 1) * $per_page);
+			],
+		], 'pagination', 'page', $count, $per_page, ($page - 1) * $per_page);
 
 		$select = '<select name="select_action">';
 		foreach ($actions as $id => $var)
@@ -397,11 +397,11 @@ class moderate
 			$select .= '<option value="' . $id . '">' . $this->lang->lang($var) . '</option>';
 		}
 		$select .= '</select>';
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'TOTAL_PAGES'                        => $this->lang->lang('PAGE_TITLE_NUMBER', $page),
-			'S_GALLERY_MODERATE_OVERVIEW_ACTION' => $this->helper->route('phpbbgallery_core_moderate_view', array('album_id' => $album_id)),
+			'S_GALLERY_MODERATE_OVERVIEW_ACTION' => $this->helper->route('phpbbgallery_core_moderate_view', ['album_id' => $album_id]),
 			'U_ACTION_SELECT'                    => $select,
-		));
+		]);
 	}
 
 	/**

@@ -87,12 +87,12 @@ class log
 	 * @param   int				$image       Image we are logging for (can be 0)
 	 * @param	array|string 	$description Description string
 	 */
-	public function add_log(string $log_type, string $log_action, int $album = 0, int $image = 0, array|string $description = array()): void
+	public function add_log(string $log_type, string $log_action, int $album = 0, int $image = 0, array|string $description = []): void
 	{
 		$user = (int) $this->user->data['user_id'];
 		$time = (int) time();
 
-		$sql_array = array(
+		$sql_array = [
 			'log_time'		=> (int) $time,
 			'log_type'		=> $this->db->sql_escape($log_type),
 			'log_action'	=> $this->db->sql_escape($log_action),
@@ -101,7 +101,7 @@ class log
 			'album'			=> (int) $album,
 			'image'			=> (int) $image,
 			'description'	=> $this->db->sql_escape(json_encode($description))
-		);
+		];
 		$sql = 'INSERT INTO ' . $this->log_table . ' ' . $this->db->sql_build_array('INSERT', $sql_array);
 		$this->db->sql_query($sql);
 	}
@@ -114,7 +114,7 @@ class log
 	{
 		$sql = 'DELETE FROM ' . $this->log_table . ' WHERE ' . $this->db->sql_in_set('log_id', $mark);
 		$this->db->sql_query($sql);
-		$this->add_log('admin', 'log', 0, 0, array('LOG_CLEAR_GALLERY'));
+		$this->add_log('admin', 'log', 0, 0, ['LOG_CLEAR_GALLERY']);
 	}
 
 	/**
@@ -143,17 +143,17 @@ class log
 		$this->language->add_lang(['info_acp_gallery_logs'], 'phpbbgallery/core');
 
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
-		$sql_array = array(
-			'FROM'	=> array(
+		$sql_array = [
+			'FROM'	=> [
 				$this->log_table	=> 'l'
-			),
-			'LEFT_JOIN' => array(
-				array(
-					'FROM'	=> array($this->images_table => 'i'),
+			],
+			'LEFT_JOIN' => [
+				[
+					'FROM'	=> [$this->images_table => 'i'],
 					'ON'	=> 'l.image = i.image_id'
-				)
-			)
-		);
+				]
+			]
+		];
 		$sql_where = [];
 		if ($type != 'all')
 		{
@@ -250,10 +250,10 @@ class log
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
 		$result = $this->db->sql_query_limit($sql, $limit, ($page - 1) * $limit);
 
-		$logoutput = $users_array = array();
+		$logoutput = $users_array = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$logoutput[] = array(
+			$logoutput[] = [
 				'id'	=> $row['log_id'],
 				'type'	=> $row['log_type'],
 				'action'	=> $row['log_action'],
@@ -263,8 +263,8 @@ class log
 				'album'	=> $row['album'],
 				'image'	=> $row['image'],
 				'description'	=> json_decode(stripslashes($row['description']))
-			);
-			$users_array[$row['log_user']] = array('');
+			];
+			$users_array[$row['log_user']] = [''];
 		}
 		$this->db->sql_freeresult($result);
 
@@ -275,41 +275,41 @@ class log
 		{
 			foreach ($logoutput as $var)
 			{
-				$this->template->assign_block_vars('log', array(
+				$this->template->assign_block_vars('log', [
 					'U_LOG_ID'		=> $var['id'],
 					'U_LOG_USER'	=> $this->user_loader->get_username($var['user'], 'full'),
 					'U_TYPE'		=> $var['type'],
 					'U_LOG_IP'		=> $var['ip'],
-					'U_ALBUM_LINK'	=> $var['album'] != 0 ? $this->helper->route('phpbbgallery_core_album', array('album_id'	=> $var['album'])) : false,
-					'U_IMAGE_LINK'	=> $var['image'] != 0 ? $this->helper->route('phpbbgallery_core_image', array('image_id'	=> $var['image'])) : false,
+					'U_ALBUM_LINK'	=> $var['album'] != 0 ? $this->helper->route('phpbbgallery_core_album', ['album_id'	=> $var['album']]) : false,
+					'U_IMAGE_LINK'	=> $var['image'] != 0 ? $this->helper->route('phpbbgallery_core_image', ['image_id'	=> $var['image']]) : false,
 					'U_LOG_ACTION' => isset($var['description']) && is_array($var['description']) ? $this->language->lang($var['description'][0], $var['description'][1] ?? false, $var['description'][2] ?? false, $var['description'][3] ?? false) : '',
 					'U_TIME'		=> $this->user->format_date($var['time']),
-				));
+				]);
 			}
 		}
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'S_HAS_LOGS' => $count > 0 ? true : false,
 			'TOTAL_PAGES'	=> $this->language->lang('PAGE_TITLE_NUMBER', $page),
-		));
+		]);
 		// Here we do some routes magic
 		if ($album == 0)
 		{
-			$this->pagination->generate_template_pagination(array(
-				'routes' => array(
+			$this->pagination->generate_template_pagination([
+				'routes' => [
 					'phpbbgallery_core_moderate_action_log',
 					'phpbbgallery_core_moderate_action_log_page',
-				),
-				'params' => array(
-				),
-			), 'pagination', 'page', $count, $limit, ($page-1) * $limit);
+				],
+				'params' => [
+				],
+			], 'pagination', 'page', $count, $limit, ($page-1) * $limit);
 		}
 		else if ($album == -1)
 		{
-			$url_array = array(
+			$url_array = [
 				'i' => '-phpbbgallery-core-acp-gallery_logs_module',
 				'mode' => 'main',
 				'lf' => $type
-			);
+			];
 			if (isset($additional['sort_days']))
 			{
 				$url_array['st'] = $additional['sort_days'];
@@ -328,15 +328,15 @@ class log
 		}
 		else
 		{
-			$this->pagination->generate_template_pagination(array(
-				'routes' => array(
+			$this->pagination->generate_template_pagination([
+				'routes' => [
 					'phpbbgallery_core_moderate_action_log_album',
 					'phpbbgallery_core_moderate_action_log_album_page',
-				),
-				'params' => array(
+				],
+				'params' => [
 					'album_id'	=> $album,
-				),
-			), 'pagination', 'page', $count, $limit, ($page-1) * $limit);
+				],
+			], 'pagination', 'page', $count, $limit, ($page-1) * $limit);
 		}
 	}
 }

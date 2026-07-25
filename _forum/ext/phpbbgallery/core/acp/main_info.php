@@ -14,16 +14,16 @@ class main_info
 {
 	public function module(): array
 	{
-		return array(
+		return [
 			'title'		=> 'PHPBB_GALLERY',
 			'version'	=> '1.0.0',
-			'modes'		=> array(
-				'overview'			=> array(
+			'modes'		=> [
+				'overview'			=> [
 					'title' => 'ACP_GALLERY_OVERVIEW',
 					'auth' => 'ext_phpbbgallery/core && acl_a_gallery_manage',
-					'cat' => array('PHPBB_GALLERY')
-				),
-			),
-		);
+					'cat' => ['PHPBB_GALLERY']
+				],
+			],
+		];
 	}
 }

@@ -22,10 +22,10 @@ class release_1_2_0_create_filesystem extends migration
 
 	public function update_data(): array
 	{
-		return array(
-			array('custom', array(array(&$this, 'create_file_system'))),
-			array('custom', array(array(&$this, 'copy_images'))),
-		);
+		return [
+			['custom', [[&$this, 'create_file_system']]],
+			['custom', [[&$this, 'copy_images']]],
+		];
 	}
 
 	public function revert_data(): array

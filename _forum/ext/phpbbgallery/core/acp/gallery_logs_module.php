@@ -126,13 +126,13 @@ class gallery_logs_module
 				$s_limit_days = $s_sort_key = $s_sort_dir = $u_sort_param = '';
 				gen_sort_selects($limit_days, $sort_by_text, $sort_days, $sort_key, $sort_dir, $s_limit_days, $s_sort_key, $s_sort_dir, $u_sort_param);
 
-				$template->assign_vars(array(
+				$template->assign_vars([
 					'S_LIMIT_DAYS'	=> $s_limit_days,
 					'S_SORT_KEY'	=> $s_sort_key,
 					'S_SORT_DIR'	=> $s_sort_dir,
 					'S_CLEARLOGS'	=> $auth->acl_get('a_clearlogs'),
 					'U_ACTION'		=> $this->u_action . "&amp;$u_sort_param&amp;page=$page",
-				));
+				]);
 				$this->page_title = $this->language->lang($title);
 
 				// Build additional filters

@@ -399,9 +399,9 @@ class file
 			{
 				$this->data[$store_filesize] = @filesize($this->image_src);
 				$sql = 'UPDATE ' . $this->table_images . '
-					SET ' . $this->db->sql_build_array('UPDATE', array(
+					SET ' . $this->db->sql_build_array('UPDATE', [
 						$store_filesize => $this->data[$store_filesize],
-					)) . '
+					]) . '
 					WHERE ' . $this->db->sql_in_set('image_id', $image_id);
 				$this->db->sql_query($sql);
 			}

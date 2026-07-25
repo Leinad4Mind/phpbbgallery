@@ -236,9 +236,9 @@ class rating
 				}*/
 				for ($i = 1; $i <= $this->gallery_config->get('max_rating'); $i++)
 				{
-					$this->template->assign_block_vars('rate_scale', array(
+					$this->template->assign_block_vars('rate_scale', [
 						'RATE_POINT'	=> $i,
-					));
+					]);
 				}
 			break;
 		}
@@ -401,12 +401,12 @@ class rating
 	 */
 	private function insert_rating(int $user_id, int $points, string|false $user_ip = false): void
 	{
-		$sql_ary = array(
+		$sql_ary = [
 			'rate_image_id'	=> $this->image_id,
 			'rate_user_id'	=> $user_id,
 			'rate_user_ip'	=> ($user_ip) ? $user_ip : $this->user->ip,
 			'rate_point'	=> $points,
-		);
+		];
 		$this->db->sql_query('INSERT INTO ' . $this->rates_table . ' ' . $this->db->sql_build_array('INSERT', $sql_ary));
 	}
 

@@ -16,19 +16,19 @@ class set
 {
 	protected int $bits = 0;
 
-	protected array $counts = array(
+	protected array $counts = [
 		'i_count'	=> 0,
 		'a_count'	=> 0,
-	);
+	];
 
 	public function __construct(int $bits = 0, int $i_count = 0, int $a_count = 0)
 	{
 		$this->bits = $bits;
 
-		$this->counts = array(
+		$this->counts = [
 			'i_count'	=> $i_count,
 			'a_count'	=> $a_count,
-		);
+		];
 	}
 
 	public function set_bit(int $bit, bool $set): void

@@ -56,6 +56,48 @@ final class php_runtime_compatibility_test extends TestCase
 		}
 	}
 
+	public function test_production_code_uses_short_array_syntax(): void
+	{
+		$extension_root = dirname(__DIR__, 2);
+		$files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($extension_root, \FilesystemIterator::SKIP_DOTS));
+
+		foreach ($files as $file)
+		{
+			$path = str_replace('\\', '/', $file->getPathname());
+			if ($file->getExtension() !== 'php' || str_contains($path, '/tests/'))
+			{
+				continue;
+			}
+
+			$tokens = token_get_all((string) file_get_contents($path));
+			$uses_legacy_array = false;
+			foreach ($tokens as $index => $token)
+			{
+				if (!is_array($token) || $token[0] !== T_ARRAY)
+				{
+					continue;
+				}
+
+				for ($next = $index + 1, $token_count = count($tokens); $next < $token_count; $next++)
+				{
+					if (is_array($tokens[$next]) && in_array($tokens[$next][0], [T_WHITESPACE, T_COMMENT, T_DOC_COMMENT], true))
+					{
+						continue;
+					}
+
+					$uses_legacy_array = $tokens[$next] === '(';
+					break;
+				}
+
+				if ($uses_legacy_array)
+				{
+					break;
+				}
+			}
+			$this->assertFalse($uses_legacy_array, $path . ' contains legacy array() syntax.');
+		}
+	}
+
 	public function test_module_runtime_state_uses_declared_typed_properties(): void
 	{
 		$extension_root = dirname(__DIR__, 2);

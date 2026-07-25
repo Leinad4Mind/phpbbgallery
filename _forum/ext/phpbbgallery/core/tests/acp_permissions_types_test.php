@@ -98,7 +98,7 @@ final class acp_permissions_types_test extends TestCase
 		$source = (string) file_get_contents(dirname(__DIR__) . '/acp/permissions_module.php');
 
 		$this->assertStringNotContainsString('$' . '_POST', $source);
-		$this->assertStringContainsString('$converted_victims = array();', $source);
+		$this->assertStringContainsString('$converted_victims = [];', $source);
 		$this->assertSame(6, substr_count($source, 'is_set_post('));
 	}
 }
