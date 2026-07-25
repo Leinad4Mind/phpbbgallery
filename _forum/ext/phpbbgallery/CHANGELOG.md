@@ -72,6 +72,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Corrected image-cache hits that were assigned to the album variable, merged only missing image IDs into the shared cache, returned only requested rows, and reset request-local data during invalidation.
 - Synchronized the Portuguese, Brazilian Portuguese, and pre-orthographic-agreement catalogs with the English source, translating 99 previously unavailable messages and removing obsolete keys.
 - Corrected plural forms and printf placeholders in Portuguese catalog entries, plus the malformed Spanish plugin-class placeholder.
+- Removed obsolete PHP-extension suffixes that were rendered inside Spanish and Italian ACP labels.
 - Replaced the obsolete Gallery credit in every language with a 2014–2026 link to the official phpBB Gallery repository.
 - Prevented the ACP personal-gallery resync from indexing a missing newest row, clearing the related statistics when no personal albums exist.
 - Serialized the migration graph so Gallery tables are created before dependent schema changes and purge reverses in a deterministic order.
