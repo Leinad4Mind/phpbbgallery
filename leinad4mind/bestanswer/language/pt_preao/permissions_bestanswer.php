@@ -5,6 +5,7 @@
  *
  * @copyright (c) 2018, kinerity, https://www.layer-3.org/
  * @copyright (c) 2019-2025, Leinad4Mind, https://leinad4mind.top/forum
+ * @translation Leinad4Mind [Portuguese [pt_preao]] (2026)
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */

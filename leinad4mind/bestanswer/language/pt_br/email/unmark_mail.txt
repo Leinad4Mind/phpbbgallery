@@ -1,10 +1,10 @@
-Subject: A tua mensagem deixou de ser a melhor resposta
+Subject: A sua mensagem deixou de ser a melhor resposta
 
 Olá,
 
-Infelizmente a tua mensagem em "{{ TOPIC_TITLE }}" no "{{ SITENAME }}" deixou de ser a melhor resposta.
+Infelizmente a sua mensagem em "{{ TOPIC_TITLE }}" no "{{ SITENAME }}" deixou de ser a melhor resposta.
 
-Para veres a tua mensagem clica no endereço seguinte:
+Para veres a sua mensagem clica no endereço seguinte:
 {{ U_LINK_TO_TOPIC }}
 
 {{ EMAIL_SIG }}
