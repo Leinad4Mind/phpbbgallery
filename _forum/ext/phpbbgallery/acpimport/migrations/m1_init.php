@@ -34,7 +34,7 @@ class m1_init extends migration
 	public function revert_data(): array
 	{
 		return [
-				['custom', [[&$this, 'remove_file_system']]],
+				['custom', [[$this, 'archive_file_system']]],
 		];
 	}
 
@@ -82,48 +82,76 @@ class m1_init extends migration
 	}
 
 	/**
-	 * Remove import directory
+	 * Preserve the import directory during purge
 	 *
-	 * @return void
+	 * @return bool
 	 */
-	public function remove_file_system(): void
+	public function archive_file_system(): bool
 	{
 		global $phpbb_root_path;
 
-		$phpbbgallery_import_file = $phpbb_root_path . 'files/phpbbgallery/import';
-
-		// Clean dirs
-		if (is_dir($phpbbgallery_import_file))
+		$files_root = realpath($phpbb_root_path . 'files');
+		$import_root = $phpbb_root_path . 'files/phpbbgallery/import';
+		if (!file_exists($import_root) && !is_link($import_root))
 		{
-			$this->recursiveRemoveDirectory($phpbbgallery_import_file);
+			return true;
 		}
+
+		if ($files_root === false || !is_dir($files_root) || is_link($import_root))
+		{
+			throw new \RuntimeException('Unable to preserve the phpBB Gallery import files during purge.');
+		}
+
+		$source = realpath($import_root);
+		$expected = $files_root . DIRECTORY_SEPARATOR . 'phpbbgallery' . DIRECTORY_SEPARATOR . 'import';
+		if ($source === false || !is_dir($source) || $this->normalize_path($source) !== $this->normalize_path($expected))
+		{
+			throw new \RuntimeException('Refusing to purge an unexpected phpBB Gallery import path.');
+		}
+
+		$backup_base = dirname($source) . DIRECTORY_SEPARATOR . 'import_backup_' . gmdate('Ymd_His');
+		$backup = $backup_base;
+		$suffix = 0;
+		while (file_exists($backup) || is_link($backup))
+		{
+			$suffix++;
+			if ($suffix > 1000)
+			{
+				throw new \RuntimeException('Unable to allocate a phpBB Gallery import backup path.');
+			}
+			$backup = $backup_base . '_' . $suffix;
+		}
+
+		if (!@rename($source, $backup))
+		{
+			throw new \RuntimeException('Unable to back up the phpBB Gallery import files during purge.');
+		}
+
+		return true;
 	}
 
 	/**
-	 * Recursively remove a directory
+	 * Backwards-compatible entry point for a purge queued with the old callback.
 	 *
-	 * @param string $directory Directory path
-	 * @return void
+	 * @return bool
 	 */
-	private function recursiveRemoveDirectory(string $directory): void
+	public function remove_file_system(): bool
 	{
-		if (!is_dir($directory))
+		return $this->archive_file_system();
+	}
+
+	/**
+	 * @param string $path
+	 * @return string
+	 */
+	private function normalize_path(string $path): string
+	{
+		$path = rtrim(str_replace('\\', '/', $path), '/');
+		if (DIRECTORY_SEPARATOR === '\\')
 		{
-				return;
+			return strtolower($path);
 		}
 
-		$files = new \FilesystemIterator($directory);
-		foreach ($files as $file)
-		{
-				if ($file->isDir())
-				{
-					$this->recursiveRemoveDirectory($file->getPathname());
-				}
-				else
-				{
-					@unlink($file->getPathname());
-				}
-		}
-		@rmdir($directory);
+		return $path;
 	}
 }
