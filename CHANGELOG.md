@@ -29,6 +29,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added native types throughout the EXIF model and event listener, including safe rejection of non-array serialized metadata.
 - Added native types to the core configuration, cache, URL, authorization-value, authorization-level, and constants services.
 - Added native property, parameter, union-return, and operation types throughout the Core ACL service, with explicit public constants and fail-closed permission contracts.
+- Added native module-entry and progress-rendering types to the ACP album manager.
 - Added native property, parameter, and return types throughout the Core album, album-display, album-loader, and album-management services, with initialized request state and safe parent-cache deserialization.
 - Added native property, parameter, and return types throughout the Core image service, including stable no-op and missing-image results and instance-safe counter/filename calls.
 - Added native property, parameter, and return types throughout the Core comment service, with explicit invalid-mutation results and instance-safe identifier normalization.
@@ -90,6 +91,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Prevented ACL data and memoized decisions from leaking when the same service changes users, while safely ignoring malformed cached permission rows.
 - Applied personal-album access levels during ACL construction and corrected moderator checks to pass album and owner identifiers in the correct order.
 - Made ACL recipient resolution reject unsupported permissions and missing albums, handle empty roles and groups safely, and release foe-query results.
+- Routed ACP album update detection through phpBB's request service instead of reading the POST superglobal directly.
 
 ### Performance
 
@@ -136,6 +138,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added permanent access-boundary tests covering per-descendant ACL image counts, moderator visibility, hidden albums, orphan exclusion, strict referrer parsing, domain boundaries, empty referrers, and configured bypass behavior.
 - Added permanent notification-lifecycle tests covering exact service identifiers, enable/disable symmetry, sub-extension disabling, complete purge, and continuation after a missing legacy type.
 - Added permanent ACL-domain tests covering native contracts, cache isolation and deserialization, moderator argument order, personal-album restrictions, unsupported permissions, and missing albums.
+- Added permanent ACP album-manager tests covering complete native contracts and centralized update input.
 - Validated the ZIP upload, ACP Import, authorization, individual-move security, ACP rating-reset, ACP personal-resync, UCP CSRF, orphan-upload, resumable-upload, subtree-count, hotlink, notification-lifecycle, migration-ordering, purge-safety, database-index, view-counter, browser-cache, package-hygiene, JavaScript-asset, and language-catalog phases with PHP 7.4, 8.1, 8.2, 8.4, and 8.5.
 
 ## [3.4.0]

@@ -30,10 +30,10 @@ class albums_module
 	public string $tpl_name = '';
 	public string $page_title = '';
 
-	function main($id, $mode)
+	public function main(string $id, string $mode): void
 	{
-		global $auth, $cache, $config, $db, $template, $user, $phpEx, $phpbb_root_path, $phpbb_ext_gallery, $request;
-		global $phpbb_dispatcher, $table_prefix, $table_name, $phpbb_container, $request, $moderators_table, $permissions_table, $roles_table, $users_table;
+		global $auth, $cache, $config, $db, $template, $user, $phpbb_root_path, $phpbb_ext_gallery, $request;
+		global $phpbb_dispatcher, $table_prefix, $table_name, $phpbb_container, $moderators_table, $permissions_table, $roles_table, $users_table;
 		$helper = $phpbb_container->get('controller.helper');
 		$pagination = $phpbb_container->get('pagination');
 		$this->language = $phpbb_container->get('language');
@@ -70,7 +70,7 @@ class albums_module
 		add_form_key($form_key);
 
 		$action		= $request->variable('action', '');
-		$update		= (isset($_POST['update'])) ? true : false;
+		$update		= $request->is_set_post('update');
 		$album_id	= $request->variable('a', 0);
 
 		$this->parent_id	= $request->variable('parent_id', 0);
@@ -763,7 +763,7 @@ class albums_module
 	 * @param $start
 	 * @param $total
 	 */
-	function display_progress_bar($start, $total)
+	public function display_progress_bar(int $start, int $total): void
 	{
 		global $template, $user;
 
