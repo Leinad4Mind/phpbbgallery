@@ -115,6 +115,7 @@ namespace
 	require_once dirname(__DIR__) . '/auth/set.php';
 	require_once dirname(__DIR__) . '/auth/level.php';
 	require_once dirname(__DIR__) . '/block.php';
+	require_once dirname(__DIR__) . '/contest.php';
 	require_once dirname(__DIR__) . '/album/album.php';
 	require_once dirname(__DIR__) . '/album/display.php';
 	require_once dirname(__DIR__) . '/album/loader.php';
