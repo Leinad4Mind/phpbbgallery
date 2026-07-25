@@ -4,7 +4,7 @@
  * Best Answer extension for the phpBB Forum Software package.
  *
  * @copyright (c) 2018, kinerity, https://www.layer-3.org/
- * @copyright (c) 2019-2021, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2019-2025, Leinad4Mind, https://leinad4mind.top/forum
  * @translation (c) 2019 Galixte (http://www.galixte.com)
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
@@ -44,24 +44,25 @@ $lang = array_merge($lang, [
 	'ANSWERED' => 'Répondue',
 	
 	'BEST_ANSWER'             => 'Meilleure réponse',
-	'BBPOINTS_ANSWER'         => 'Nombre de BBpoints pour le message "Meilleure réponse"',
-	'BBPOINTS_ANSWER_EXPLAIN' => 'Définissez le nombre de BBpoints à créditer à l\'auteur du message lorsque son message dans ce forum est marqué comme "Meilleure réponse"',
+	'BBPOINTS_ANSWER'         => 'Nombre de BBPoints pour le message "Meilleure réponse"',
+	'BBPOINTS_ANSWER_EXPLAIN' => 'Définissez le nombre de BBpoints à créditer à l’auteur du message lorsque son message dans ce forum est marqué comme "Meilleure réponse"',
 
 	'ENABLE_ANSWER'         => 'Activer les réponses les plus pertinentes',
 	'ENABLE_ANSWER_EXPLAIN' => 'Permet aux auteurs de sujets et aux modérateurs de mettre en avant un message comme étant la réponse la plus pertinente de son sujet.',
-
-	'TO_POST' => '<i class="fa fa-eye"></i> Se rendre au message',
+	'EXTENSION_NOT_ENABLED' => 'L’extension « Meilleure réponse » n’est pas activée sur ce forum.',
 
 	'LOG_MARK_ANSWER'   => '<strong>Mise en avant effectuée d’un message, comme étant la réponse la plus pertinente de son sujet</strong><br />» %1$s par %2$s',
 	'LOG_UNMARK_ANSWER' => '<strong>Mise en avant annulée d’un message, comme étant la réponse la plus pertinente de son sujet</strong><br />» %1$s par %2$s',
 
-	'LOG_BBPOINTS_MARK_ANSWER'   => '<strong>Ajout de bbpoints à l\'auteur pour la réponse la plus pertinente</strong><br />» %1$s par %2$s',
-	'LOG_BBPOINTS_UNMARK_ANSWER' => '<strong>Suppression des bbpoints de l\'auteur pour la réponse la plus pertinente</strong><br />» %1$s par %2$s',
+	'LOG_BBPOINTS_MARK_ANSWER'   => '<strong>Ajout de BBPoints à l\'auteur pour la réponse la plus pertinente</strong><br />» %1$s par %2$s',
+	'LOG_BBPOINTS_UNMARK_ANSWER' => '<strong>Suppression des BBPoints de l\'auteur pour la réponse la plus pertinente</strong><br />» %1$s par %2$s',
 
 	'MARK_ANSWER'         => 'Mettre en avant ce message comme réponse la plus pertinente',
 	'MARK_ANSWER_CONFIRM' => 'Confirmer la mise en avant de ce message en tant que réponse la plus pertinente de son sujet.',
 
-	'TOTAL_ANSWERS' => 'Réponses pertinentes',
+	'TO_POST'          => '<i class="fa fa-eye"></i> Se rendre au message',
+	'TOPIC_FIRST_POST' => 'Vous ne pouvez pas marquer cette réponse comme meilleure réponse, car il s’agit de la première réponse du sujet.',
+	'TOTAL_ANSWERS'    => 'Réponses pertinentes',
 
 	'UNMARK_ANSWER'         => 'Annuler la mise en avant de ce message comme réponse la plus pertinente',
 	'UNMARK_ANSWER_CONFIRM' => 'Confirmer le retrait de la mise en avant de ce message en tant que réponse la plus pertinente de son sujet.',

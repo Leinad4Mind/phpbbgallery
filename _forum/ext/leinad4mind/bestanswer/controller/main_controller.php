@@ -4,7 +4,7 @@
  * Best Answer extension for the phpBB Forum Software package.
  *
  * @copyright (c) 2018, kinerity, https://www.layer-3.org/
- * @copyright (c) 2019-2021, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2019-2025, Leinad4Mind, https://leinad4mind.top/forum
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -51,7 +51,7 @@ class main_controller
 	/* @var string */
 	protected $php_ext;
 
-	/* @var int bbpoints_table */
+	/* @var string  */
 	protected $bbpoints_table;
 	/**
 	 * Constructor
@@ -62,7 +62,7 @@ class main_controller
 	 * @param \phpbb\log\log                      $log
 	 * @param \phpbb\request\request              $request
 	 * @param \phpbb\user                         $user
-	 * @param int								  $bbpoints_table
+	 * @param string                              $bbpoints_table
 	 * @param \phpbb\notification\manager         $notification_manager
 	 * @param string                              $root_path
 	 * @param string                              $php_ext
@@ -99,9 +99,13 @@ class main_controller
 	{
 		$post_id = $this->request->variable('p', 0);
 
-		// Query necessary topic data
+		// Grab all the data necessary for error checking
 		$sql_arr = array(
-			'SELECT'	=> 'f.forum_id, f.enable_answer, p.post_id, p.topic_id, p.poster_id, p.post_subject, t.topic_id, t.forum_id, t.topic_title, t.topic_poster, t.topic_status, t.topic_first_post_id, t.answer_post_id, t.answer_user_id, u.user_id, u.username, u.user_colour',
+			'SELECT'	=> 'f.forum_id, f.enable_answer, f.bbpoints_answer,
+						p.post_id, p.topic_id, p.poster_id, p.post_subject,
+						t.topic_id, t.forum_id, t.topic_title, t.topic_poster, t.topic_status,
+						t.topic_first_post_id, t.answer_post_id, t.answer_user_id,
+						u.user_id, u.username, u.user_colour',
 
 			'FROM'		=> array(
 				FORUMS_TABLE	=> 'f',
@@ -119,19 +123,19 @@ class main_controller
 		$this->db->sql_freeresult($result);
 
 		// Error checking
-		if (!$topic_data['enable_answer'])
+		if (!$topic_data['enable_answer']) 
+		{ 
+			throw new \phpbb\exception\http_exception(404, $this->lang->lang('EXTENSION_NOT_ENABLED')); 
+		}
+
+		if ((int) $topic_data['topic_first_post_id'] == (int) $post_id)
 		{
-			throw new \phpbb\exception\http_exception(403, $this->lang->lang('NOT_AUTHORISED'));
+			throw new \phpbb\exception\http_exception(404, $this->lang->lang('TOPIC_FIRST_POST'));
 		}
 
 		if (!$this->auth->acl_get('m_mark_answer', (int) $topic_data['forum_id']) && (!$this->auth->acl_get('f_mark_answer', (int) $topic_data['forum_id']) && $topic_data['topic_poster'] != (int) $this->user->data['user_id']))
 		{
 			throw new \phpbb\exception\http_exception(403, $this->lang->lang('NOT_AUTHORISED'));
-		}
-
-		if ((int) $topic_data['topic_first_post_id'] == (int) $post_id)
-		{
-			throw new \phpbb\exception\http_exception(404, $this->lang->lang('NOT_AUTHORISED'));
 		}
 
 		if ((int) $topic_data['topic_status'] == ITEM_LOCKED && !$this->auth->acl_get('m_mark_answer', (int) $topic_data['forum_id']))
@@ -162,11 +166,13 @@ class main_controller
 				$post_author = get_username_string('full', (int) $topic_data['user_id'], $topic_data['username'], $topic_data['user_colour']);
 				$this->log->add($log_var, (int) $this->user->data['user_id'], $this->user->data['user_ip'], 'LOG_UNMARK_ANSWER', time(), array($topic_data['post_subject'], $post_author));
 				
-				// remove bbpoints
-				$sql = 'DELETE FROM ' . $this->bbpoints_table . ' WHERE
-				to_id=' . (int) $topic_data['user_id'] . ' AND reason="bestanswer-'.$post_id.'"';
+				// Remove BBPoints
+				$reason = $this->db->sql_escape('bestanswer-' . (int) $post_id);
+				$sql = 'DELETE FROM ' . $this->bbpoints_table . '
+					WHERE to_id = ' . (int) $topic_data['user_id'] . '
+					AND reason = "' . $reason . '"';
 				$this->db->sql_query($sql);
-				$this->log->add($log_var, (int) $topic_data['user_id'], (int) $this->user->data['user_ip'], 'LOG_BBPOINTS_UNMARK_ANSWER', time(), array($topic_data['post_subject'], $post_author));
+				$this->log->add($log_var, (int) $topic_data['user_id'], $this->user->data['user_ip'], 'LOG_BBPOINTS_UNMARK_ANSWER', time(), array($topic_data['post_subject'], $post_author));
 
 				$this->notification_manager->delete_notifications('leinad4mind.bestanswer.notification.type.unmarkanswer', $post_id, $post_id, $topic_data['user_id']);
 				$this->notification_manager->add_notifications('leinad4mind.bestanswer.notification.type.unmarkanswer', [
@@ -224,12 +230,13 @@ class main_controller
 				$post_author = get_username_string('full', (int) $topic_data['user_id'], $topic_data['username'], $topic_data['user_colour']);
 				$this->log->add($log_var, (int) $this->user->data['user_id'], $this->user->data['user_ip'], 'LOG_MARK_ANSWER', time(), array($topic_data['post_subject'], $post_author));
 
-				// add bbpoints
-				if ($topic_data['bbpoints_answer'] > 0) {
+				// Add BBPoints
+				if ((int) $topic_data['bbpoints_answer'] > 0) {
+					$reason = $this->db->sql_escape('bestanswer-' . (int) $post_id);
 					$sql = 'INSERT INTO ' . $this->bbpoints_table . ' (from_id, to_id, bbpoints, reason, timestamp) 
-						VALUES(0, ' . (int) $topic_data['user_id'] . ', ' . $topic_data['bbpoints_answer'] . ', "bestanswer-'.$post_id.'", ' . time() . ')';
+						VALUES (0, ' . (int) $topic_data['user_id'] . ', ' . (int) $topic_data['bbpoints_answer'] . ', "' . $reason . '", ' . time() . ')';
 					$this->db->sql_query($sql);
-					$this->log->add($log_var, (int) $topic_data['user_id'], (int) $this->user->data['user_ip'], 'LOG_BBPOINTS_MARK_ANSWER', time(), array($topic_data['post_subject'], $post_author));				
+					$this->log->add($log_var, (int) $topic_data['user_id'], $this->user->data['user_ip'], 'LOG_BBPOINTS_MARK_ANSWER', time(), array($topic_data['post_subject'], $post_author));				
 				}
 
 				$this->notification_manager->delete_notifications('leinad4mind.bestanswer.notification.type.markanswer', $post_id, $post_id, $topic_data['user_id']);

@@ -3,7 +3,7 @@
 	background-color: #EAF8E2;
 }
 
-.post_answer {
+.post_answer, .post_answer-dark {
 	background-color: #EAF8E2 !important;
 	padding: 10px;
 	border-radius: 7px;
@@ -17,6 +17,14 @@
 
 .profile-answers a {
 	font-weight: normal;
+}
+
+.answer-post .panel {
+	background-color: #eff9e9 !important;
+}
+
+.post_answer-dark, .answer-post-dark .panel {
+	background-color: #1a3509 !important;
 }
 
 @media (max-width: 700px) {

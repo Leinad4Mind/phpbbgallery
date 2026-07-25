@@ -4,7 +4,7 @@
  * Best Answer extension for the phpBB Forum Software package.
  *
  * @copyright (c) 2018, kinerity, https://www.layer-3.org/
- * @copyright (c) 2019-2021, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2019-2025, Leinad4Mind, https://leinad4mind.top/forum
  * @translation (c) 2019 naoiphoenix
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
@@ -49,19 +49,20 @@ $lang = array_merge($lang, [
 
 	'ENABLE_ANSWER'         => 'Включить лучший ответ',
 	'ENABLE_ANSWER_EXPLAIN' => 'Если включено, автор темы (если разрешено) и модераторы разделов (где разрешено) будут способны отмечать ответ как лучший.',
-
-	'TO_POST' => '<i class="fa fa-eye"></i> Перейти к полному ответу',
+	'EXTENSION_NOT_ENABLED' => 'Расширение «Лучший ответ» не включено на этом форуме.',
 
 	'LOG_MARK_ANSWER'   => '<strong>Отмечено лучшим ответом</strong><br />» %1$s пользователем %2$s',
 	'LOG_UNMARK_ANSWER' => '<strong>Снята отметка лучшего ответа</strong><br />» %1$s пользователем %2$s',
-
+	
 	'LOG_BBPOINTS_MARK_ANSWER'   => '<strong>Добавлены баллы автору за лучший ответ</strong><br />» %1$s от %2$s',
 	'LOG_BBPOINTS_UNMARK_ANSWER' => '<strong>Удалите баллы автора для лучшего ответа</strong><br />» %1$s от %2$s',
-
+	
 	'MARK_ANSWER'         => 'Отметить ответ',
 	'MARK_ANSWER_CONFIRM' => 'Вы уверены, что хотите отметить этот ответ как лучший?',
-
-	'TOTAL_ANSWERS' => 'Всего ответов',
+	
+	'TO_POST'          => '<i class="fa fa-eye"></i> Перейти к полному ответу',
+	'TOPIC_FIRST_POST' => 'Вы не можете отметить этот пост как лучший ответ, так как он является первым постом в теме.',
+	'TOTAL_ANSWERS'    => 'Всего ответов',
 
 	'UNMARK_ANSWER'         => 'Снять отметку',
 	'UNMARK_ANSWER_CONFIRM' => 'Вы уверены, что хотите снять отметку лучшего с этого ответа?',

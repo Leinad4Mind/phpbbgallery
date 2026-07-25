@@ -4,7 +4,7 @@
  * Best Answer extension for the phpBB Forum Software package.
  *
  * @copyright (c) 2018, kinerity, https://www.layer-3.org/
- * @copyright (c) 2019-2021, Leinad4Mind, https://leinad4mind.top/forum
+ * @copyright (c) 2019-2025, Leinad4Mind, https://leinad4mind.top/forum
  * @translation (c) 2019 Bassel Taha Alhitary, http://www.alhitary.net
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
@@ -49,8 +49,7 @@ $lang = array_merge($lang, [
 
 	'ENABLE_ANSWER'         => 'تفعيل “أفضل إجابة”',
 	'ENABLE_ANSWER_EXPLAIN' => 'عند اختيارك “نعم”, كاتب الموضوع (إذا لديه الترخيص) والمشرفين (بالمنتديات المسموح بها) يستطيعون إضافة علامة “أفضل إجابة” إلى أحد ردود الموضوع',
-
-	'TO_POST' => '<i class="fa fa-eye"></i> الذهاب إلى المشاركة',
+	'EXTENSION_NOT_ENABLED' => 'ملحق ”أفضل إجابة“ غير ممكّن في هذا المنتدى.',
 
 	'LOG_MARK_ANSWER'   => '<strong>تحديد المشاركة كـ “أفضل إجابة”</strong><br />» %1$s بواسطة %2$s',
 	'LOG_UNMARK_ANSWER' => '<strong>إلغاء تحديد المشاركة كـ “أفضل إجابة”</strong><br />» %1$s بواسطة %2$s',
@@ -61,7 +60,9 @@ $lang = array_merge($lang, [
 	'MARK_ANSWER'         => 'تحديد الإجابة الأفضل',
 	'MARK_ANSWER_CONFIRM' => 'متأكد أنك تريد تحديد هذه المشاركة كأفضل إجابة؟',
 
-	'TOTAL_ANSWERS' => 'إجمالي الإجابات',
+	'TO_POST'          => '<i class="fa fa-eye"></i> الذهاب إلى المشاركة',
+	'TOPIC_FIRST_POST' => 'لا يمكنك وضع علامة على هذا المنشور كأفضل إجابة لأنه المنشور الأول في الموضوع.',
+	'TOTAL_ANSWERS'    => 'إجمالي الإجابات',
 
 	'UNMARK_ANSWER'         => 'إلغاء تحديد الإجابة الأفضل',
 	'UNMARK_ANSWER_CONFIRM' => 'متأكد أنك تريد إلغاء تحديد هذه المشاركة كأفضل إجابة؟',

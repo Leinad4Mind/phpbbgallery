@@ -1,11 +1,13 @@
 <?php
-
 /**
+ *
  * Best Answer extension for the phpBB Forum Software package.
+ *
  * @copyright (c) 2018, kinerity, https://www.layer-3.org/
- * @copyright (c) 2019-2021, Leinad4Mind, https://leinad4mind.top/forum
- * @license GNU General Public License, version 2 (GPL-2.0)
+ * @copyright (c) 2019-2025, Leinad4Mind, https://leinad4mind.top/forum
  * @translation Leinad4Mind [Portuguese [pt_preao]] (2026)
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
  */
 
 /**
@@ -40,15 +42,14 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, [
 	'ANSWERS'  => 'Respostas',
 	'ANSWERED' => 'Respondido',
-
+	
 	'BEST_ANSWER'             => 'Melhor Resposta',
 	'BBPOINTS_ANSWER'         => 'Montante de PontosGold para mensagem com "Melhor Resposta"',
 	'BBPOINTS_ANSWER_EXPLAIN' => 'Coloca o número de pontos a serem creditados ao autor da mensagem quando a sua mensagem neste fórum for marcada como "Melhor Resposta"',
 
 	'ENABLE_ANSWER'         => 'Activar Melhor Resposta',
-	'ENABLE_ANSWER_EXPLAIN' => 'Se activado, o criador do tópico (se permitido) e os moderadores (onde permitido) poderão marcar uma resposta do tópico como a melhor resposta.',
-
-	'TO_POST' => '<i class="fa fa-eye"></i> Ver Mensagem',
+	'ENABLE_ANSWER_EXPLAIN' => 'If enabled, the topic starter (if permitted) and moderators (where allowed) will be able to mark a topic reply as the best answer.',
+	'EXTENSION_NOT_ENABLED' => 'A extensão "Melhor Resposta" não está activada neste fórum.',
 
 	'LOG_MARK_ANSWER'   => '<strong>Mensagem marcada como Melhor Resposta</strong><br />» %1$s by %2$s',
 	'LOG_UNMARK_ANSWER' => '<strong>Mensagem deixou de ser a Melhor Resposta</strong><br />» %1$s by %2$s',
@@ -59,7 +60,9 @@ $lang = array_merge($lang, [
 	'MARK_ANSWER'         => 'Marcar Melhor Resposta',
 	'MARK_ANSWER_CONFIRM' => 'Tens a certeza de que queres marcar esta mensagem como sendo a melhor resposta?',
 
-	'TOTAL_ANSWERS' => 'Respostas totais',
+	'TO_POST'          => '<i class="fa fa-eye"></i> Ver Mensagem',
+	'TOPIC_FIRST_POST' => 'Não é possível marcar esta mensagem como a melhor resposta, pois é a primeira mensagem do tópico.',
+	'TOTAL_ANSWERS'    => 'Respostas totais',
 
 	'UNMARK_ANSWER'         => 'Remover Melhor Resposta',
 	'UNMARK_ANSWER_CONFIRM' => 'Tens a certeza de que queres desmarcar esta mensagem como sendo a melhor resposta?',
