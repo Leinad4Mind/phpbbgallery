@@ -1,13 +1,14 @@
 <?php
+
 /**
-*
-* Auto Groups extension for the phpBB Forum Software package.
-* @简体中文语言　David Yin <http://www.g2soft.net/>
-*
-* @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ *
+ * Auto Groups extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ * @translation David Yin <http://www.g2soft.net/> [Simplified Chinese [zh_cmn_hans]]
+ *
+ */
 
 /**
  * DO NOT CHANGE

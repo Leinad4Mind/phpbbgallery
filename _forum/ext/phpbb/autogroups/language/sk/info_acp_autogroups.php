@@ -1,13 +1,14 @@
 <?php
+
 /**
-*
-* Auto Groups extension for the phpBB Forum Software package.
-* Slovak translation by Senky (https://github.com/senky)
-*
-* @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ *
+ * Auto Groups extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ * @translation Senky (https://github.com/senky) [Slovak [sk]]
+ *
+ */
 
 /**
  * DO NOT CHANGE

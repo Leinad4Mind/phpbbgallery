@@ -1,12 +1,13 @@
 <?php
+
 /**
-*
-* Auto Groups extension for the phpBB Forum Software package.
-*
-* @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ *
+ * Auto Groups extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ */
 
 /**
  * DO NOT CHANGE
@@ -70,7 +71,7 @@ $lang = array_merge($lang, [
 	'ACP_AUTOGROUPS_DELETE_SUCCESS' => 'АвтоГруппа успешно удалена.',
 	'ACP_AUTOGROUPS_EMPTY'          => 'Нет АвтоГрупп.',
 	'ACP_AUTOGROUPS_NO_GROUPS'      => 'Нет доступных групп',
-	'ACP_AUTOGROUPS_INVALID_GROUPS' => 'Произошла ошибка. Не выбрана действующая группа пользователей.<br />АвтоГруппы могут использоваться только с определенными группами пользователей, создать которые можно на странице управления группами.',
+	'ACP_AUTOGROUPS_INVALID_GROUPS' => 'Произошла ошибка. Не выбрана действующая группа пользователей.<br>АвтоГруппы могут использоваться только с определенными группами пользователей, создать которые можно на странице управления группами.',
 	'ACP_AUTOGROUPS_INVALID_RANGE'  => 'Произошла ошибка. Минимальное и максимальное значения не могут быть установлены на одно и то же значение.',
 
 	// Conditions

@@ -1,12 +1,14 @@
 <?php
+
 /**
-*
-* Auto Groups extension for the phpBB Forum Software package.
-*
-* @copyright (c) 2019 phpBB Limited <https://www.phpbb.com>
-* @license GNU General Public License, version 2 (GPL-2.0)
-* @Italian translation By alex75 https://www.phpbb-store.it
-*/
+ *
+ * Auto Groups extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2019 phpBB Limited <https://www.phpbb.com>
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ * @translation alex75 (https://www.phpbb-store.it) [Italian [it]]
+ *
+ */
 
 /**
  * DO NOT CHANGE

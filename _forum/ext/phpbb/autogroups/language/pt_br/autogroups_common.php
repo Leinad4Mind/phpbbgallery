@@ -1,10 +1,13 @@
 <?php
 
 /**
+ *
  * Auto Groups extension for the phpBB Forum Software package.
+ *
  * @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
  * @license GNU General Public License, version 2 (GPL-2.0)
- * @translation Leinad4Mind [Brazilian Portuguese [pt_br]] (2026)
+ * @translation MarcosFPo & Leinad4Mind [Portuguese [pt_br]] (2026)
+ *
  */
 
 /**

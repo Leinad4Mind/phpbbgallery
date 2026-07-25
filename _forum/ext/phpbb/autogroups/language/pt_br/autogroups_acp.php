@@ -1,10 +1,13 @@
 <?php
 
 /**
+ *
  * Auto Groups extension for the phpBB Forum Software package.
+ *
  * @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
  * @license GNU General Public License, version 2 (GPL-2.0)
- * @translation Leinad4Mind [Brazilian Portuguese [pt_br]] (2026)
+ * @translation MarcosFPo & eunaumtenhoid & Leinad4Mind [Portuguese [pt_br]] (2026)
+ *
  */
 
 /**
@@ -49,17 +52,17 @@ $lang = array_merge($lang, [
 	'ACP_AUTOGROUPS_MIN_VALUE'              => 'Valor mínimo',
 	'ACP_AUTOGROUPS_MIN_VALUE_EXPLAIN'      => 'Usuários serão adicionados para este grupo, se eles excederam ao valor mínimo.',
 	'ACP_AUTOGROUPS_MAX_VALUE'              => 'Valor máximo',
-	'ACP_AUTOGROUPS_MAX_VALUE_EXPLAIN'      => 'Usuários serão removidos deste grupo, se eles excederam ao valor máximo. Deixe vazio, se não deseja que os usuários sejam removidos do grupo.',
+	'ACP_AUTOGROUPS_MAX_VALUE_EXPLAIN'      => 'Usuários serão removidos deste grupo, se eles excederam ao valor máximo. Defina como 0 se não deseja que os usuários sejam removidos do grupo.',
 	'ACP_AUTOGROUPS_DEFAULT'                => 'Configure o grupo padrão',
 	'ACP_AUTOGROUPS_DEFAULT_EXPLAIN'        => 'Transforme o grupo em novo grupo padrão do usuário.',
 	'ACP_AUTOGROUPS_DEFAULT_EXEMPTION'      => 'Isso não afetará os usuários cujo grupo de usuários padrão é um dos seguintes: %s.',
 	'ACP_AUTOGROUPS_NOTIFY'                 => 'Notificar o usuário',
 	'ACP_AUTOGROUPS_NOTIFY_EXPLAIN'         => 'Enviar uma notificação para usuários depois que foram automaticamente adicionados ou removidos deste grupo.',
 
-	'ACP_AUTOGROUPS_EXCLUDED_GROUPS'        => 'Excluded groups',
-	'ACP_AUTOGROUPS_EXCLUDE_GROUP'          => 'Exclude members of these groups',
-	'ACP_AUTOGROUPS_EXCLUDE_GROUP_EXPLAIN'  => 'Members belonging to <em>any group</em> selected in this list will be ignored. Leave this field blank if you want this Auto Group applied to <em>all members</em> of your board. Select multiple groups by holding <samp>CTRL</samp> (or <samp>&#8984;CMD</samp> on Mac) and selecting the groups.',
-	'ACP_AUTOGROUPS_INVALID_EXCLUDE_GROUPS' => 'An error occurred. The group for this condition can not also be selected in the excluded groups field.',
+	'ACP_AUTOGROUPS_EXCLUDED_GROUPS'        => 'Grupos excluídos',
+	'ACP_AUTOGROUPS_EXCLUDE_GROUP'          => 'Excluir membros destes grupos',
+	'ACP_AUTOGROUPS_EXCLUDE_GROUP_EXPLAIN'  => 'Os membros pertencentes a <em>qualquer grupo</em> selecionado nesta lista serão ignorados. Deixe este campo em branco se você quiser que este Autogrupo seja aplicado a <em>todos os membros</em> do seu fórum. Selecione vários grupos segurando <samp>CTRL</samp> (ou <samp>&#8984;CMD</samp> no Mac) e clicando nos grupos.',
+	'ACP_AUTOGROUPS_INVALID_EXCLUDE_GROUPS' => 'Um erro ocorreu. O grupo desta condição também não pode ser selecionado no campo de grupos excluídos.',
 	'ACP_AUTOGROUPS_EXEMPT_GROUP'           => 'Configure as exceções para o grupo padrão',
 	'ACP_AUTOGROUPS_EXEMPT_GROUP_EXPLAIN'   => 'O grupo padrão do usuário não será automaticamente alterado se estiver selecionado nesta lista. Selecione diversos grupos segurando <samp>CTRL</samp> (ou <samp>&#8984;CMD</samp> no Mac) e clicando sobre o grupo.',
 
@@ -69,13 +72,13 @@ $lang = array_merge($lang, [
 	'ACP_AUTOGROUPS_DELETE_SUCCESS' => 'Autogrupo excluído com sucesso.',
 	'ACP_AUTOGROUPS_EMPTY'          => 'Não existem Autogrupos.',
 	'ACP_AUTOGROUPS_NO_GROUPS'      => 'Não existem grupos disponíveis',
-	'ACP_AUTOGROUPS_INVALID_GROUPS' => 'Um erro ocorreu. Um grupo de usuários válido não estava selecionado. <br /> Autogrupos somente pode ser usado com grupos definidos de usuários, que podem ser criados em na página "Gerenciar grupos".',
+	'ACP_AUTOGROUPS_INVALID_GROUPS' => 'Um erro ocorreu. Um grupo de usuários válido não estava selecionado. <br> Autogrupos somente pode ser usado com grupos definidos de usuários, que podem ser criados na página "Gerenciar grupos".',
 	'ACP_AUTOGROUPS_INVALID_RANGE'  => 'Um erro ocorreu. Os valores mínimos e máximos não podem ser configurados para o mesmo valor.',
 
 	// Conditions
 	'AUTOGROUPS_TYPE_BIRTHDAYS'  => 'Idade do usuário',
 	'AUTOGROUPS_TYPE_LASTVISIT'  => 'Dias desde a última visita',
 	'AUTOGROUPS_TYPE_MEMBERSHIP' => 'Dias que o usuário é membro',
-	'AUTOGROUPS_TYPE_POSTS'      => 'Posts',
+	'AUTOGROUPS_TYPE_POSTS'      => 'Postagens',
 	'AUTOGROUPS_TYPE_WARNINGS'   => 'Advertência',
 ]);

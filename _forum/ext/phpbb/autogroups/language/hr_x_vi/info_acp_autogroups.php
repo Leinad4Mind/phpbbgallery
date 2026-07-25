@@ -1,13 +1,14 @@
 <?php
+
 /**
-*
-* Auto Groups extension for the phpBB Forum Software package.
-*
-* @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
-* @license GNU General Public License, version 2 (GPL-2.0)
-* Croatian translation by Ančica Sečan Matijaščić (http://ancica.sunceko.net)
-*
-*/
+ *
+ * Auto Groups extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ * @translation Ančica Sečan Matijaščić (http://ancica.sunceko.net) [Croatian [hr_x_vi]]
+ *
+ */
 
 /**
  * DO NOT CHANGE

@@ -1,13 +1,14 @@
 <?php
+
 /**
-*
-* Auto Groups extension for the phpBB Forum Software package.
-*
-* @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-* @Polska wersja językowa Auto Groups 2.0.0 - 04.08.2018, Mateusz Dutko (vader) www.rnavspotters.pl
-*/
+ *
+ * Auto Groups extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ * @translation Mateusz Dutko (vader) (www.rnavspotters.pl) [Polish [pl]] (2018-08-04)
+ *
+ */
 
 /**
  * DO NOT CHANGE
@@ -71,7 +72,7 @@ $lang = array_merge($lang, [
 	'ACP_AUTOGROUPS_DELETE_SUCCESS' => 'Usunięto automatyczną grupę.',
 	'ACP_AUTOGROUPS_EMPTY'          => 'Brak automatycznych grup.',
 	'ACP_AUTOGROUPS_NO_GROUPS'      => 'Brak grup',
-	'ACP_AUTOGROUPS_INVALID_GROUPS' => 'Nie wybrano żadnej grupy.<br /><br />Automatyczne grupy muszą być połączone z istniejącymi grupami, które można utworzyć na stronie zarządzania grupami.',
+	'ACP_AUTOGROUPS_INVALID_GROUPS' => 'Nie wybrano żadnej grupy.<br><br>Automatyczne grupy muszą być połączone z istniejącymi grupami, które można utworzyć na stronie zarządzania grupami.',
 	'ACP_AUTOGROUPS_INVALID_RANGE'  => 'Minimalna i maksymalna wartość nie może być taka sama.',
 
 	// Conditions

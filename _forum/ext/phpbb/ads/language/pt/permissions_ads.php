@@ -1,10 +1,13 @@
 <?php
 
 /**
+ *
  * Advertisement management. An extension for the phpBB Forum Software package.
+ *
  * @copyright (c) 2017 phpBB Limited <https://www.phpbb.com>
  * @license GNU General Public License, version 2 (GPL-2.0)
  * @translation Leinad4Mind [Portuguese [pt]] (2026)
+ *
  */
 
 if (!defined('IN_PHPBB'))

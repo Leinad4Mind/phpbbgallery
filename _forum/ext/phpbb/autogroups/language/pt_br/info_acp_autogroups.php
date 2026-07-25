@@ -1,10 +1,13 @@
 <?php
 
 /**
+ *
  * Auto Groups extension for the phpBB Forum Software package.
+ *
  * @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
  * @license GNU General Public License, version 2 (GPL-2.0)
- * @translation Leinad4Mind [Brazilian Portuguese [pt_br]] (2026)
+ * @translation MarcosFPo & eunaumtenhoid & Leinad4Mind [Portuguese [pt_br]] (2026)
+ *
  */
 
 /**
@@ -42,5 +45,5 @@ $lang = array_merge($lang, [
 
 	// Logs
 	'ACP_AUTOGROUPS_SAVED_LOG'  => '<strong>Uma configuração de Autogrupo foi salva</strong>',
-	'ACP_AUTOGROUPS_DELETE_LOG' => '<strong>Uma configuração de Autogrupo foi deletada</strong>',
+	'ACP_AUTOGROUPS_DELETE_LOG' => '<strong>Uma configuração de Autogrupo foi excluída</strong>',
 ]);

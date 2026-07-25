@@ -1,13 +1,14 @@
 <?php
+
 /**
-*
-* Auto Groups extension for the phpBB Forum Software package.
-* Spanish translation by ThE KuKa (www.phpbb-es.com)
-*
-* @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ *
+ * Auto Groups extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ * @translation ThE KuKa (www.phpbb-es.com) [Spanish [es]]
+ *
+ */
 
 /**
  * DO NOT CHANGE
@@ -71,7 +72,7 @@ $lang = array_merge($lang, [
 	'ACP_AUTOGROUPS_DELETE_SUCCESS' => 'Auto Grupo borrado correctamente.',
 	'ACP_AUTOGROUPS_EMPTY'          => 'No hay Auto Grupos.',
 	'ACP_AUTOGROUPS_NO_GROUPS'      => 'No hay grupos disponibles',
-	'ACP_AUTOGROUPS_INVALID_GROUPS' => 'Ocurrio un error. Un grupo de usuario válido no fue seleccionado.<br />Auto Grupos sólo se puede utilizar con los grupos definidos por el usuario, estos se pueden crear en la página Administrar grupos.',
+	'ACP_AUTOGROUPS_INVALID_GROUPS' => 'Ocurrio un error. Un grupo de usuario válido no fue seleccionado.<br>Auto Grupos sólo se puede utilizar con los grupos definidos por el usuario, estos se pueden crear en la página Administrar grupos.',
 	'ACP_AUTOGROUPS_INVALID_RANGE'  => 'Ocurrio un error. Los valores mínimos y máximos no se pueden establecer con el mismo valor.',
 
 	// Conditions

@@ -1,13 +1,14 @@
 <?php
+
 /**
-*
-* Auto Groups extension for the phpBB Forum Software package.
-* Estonian translation by phpBBeesti.ee [Exabot]
-*
-* @copyright (c) 2019 phpBB Limited <https://www.phpbb.com>
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ *
+ * Auto Groups extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2019 phpBB Limited <https://www.phpbb.com>
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ * @translation phpBBeesti.ee (Exabot) [Estonian [et]]
+ *
+ */
 
 /**
  * DO NOT CHANGE

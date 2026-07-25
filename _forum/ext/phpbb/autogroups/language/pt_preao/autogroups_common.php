@@ -1,10 +1,13 @@
 <?php
 
 /**
+ *
  * Auto Groups extension for the phpBB Forum Software package.
+ *
  * @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
  * @license GNU General Public License, version 2 (GPL-2.0)
  * @translation Leinad4Mind [Portuguese [pt_preao]] (2026)
+ *
  */
 
 /**
@@ -38,6 +41,6 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	// Notifications
-	'AUTOGROUPS_NOTIFICATION_GROUP_ADDED'   => '<strong>Grupo actualizado</strong>: Foi adicionado no grupo %1$s.',
-	'AUTOGROUPS_NOTIFICATION_GROUP_REMOVED' => '<strong>Grupo actualizado</strong>: Foi removido do grupo %1$s.',
+	'AUTOGROUPS_NOTIFICATION_GROUP_ADDED'   => '<strong>Actualização de grupo</strong>: Foi adicionado ao grupo %1$s.',
+	'AUTOGROUPS_NOTIFICATION_GROUP_REMOVED' => '<strong>Actualização de grupo</strong>: Foi removido do grupo %1$s.',
 ]);

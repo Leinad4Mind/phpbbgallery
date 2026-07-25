@@ -1,13 +1,14 @@
 <?php
+
 /**
-*
-* Auto Groups extension for the phpBB Forum Software package.
-*
-* @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-* @Polska wersja językowa Auto Groups 2.0.0 - 04.08.2018, Mateusz Dutko (vader) www.rnavspotters.pl
-*/
+ *
+ * Auto Groups extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ * @translation Mateusz Dutko (vader) (www.rnavspotters.pl) [Polish [pl]] (2018-08-04)
+ *
+ */
 
 /**
  * DO NOT CHANGE

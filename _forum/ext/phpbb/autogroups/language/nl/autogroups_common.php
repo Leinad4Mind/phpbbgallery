@@ -1,13 +1,14 @@
 <?php
+
 /**
-*
-* Auto Groups extension for the phpBB Forum Software package.
-* Dutch translation by Nadleeh (www.heralder.net)
-*
-* @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ *
+ * Auto Groups extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ * @translation Nadleeh (www.heralder.net) [Dutch [nl]]
+ *
+ */
 
 /**
  * DO NOT CHANGE
@@ -39,7 +40,7 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	// Notifications
-	'AUTOGROUPS_NOTIFICATION_GROUP_ADDED'   => '<strong>Groepen bijgewerkt</strong>: Je bent toegevoegd aan de groep %1$s.',
-	'AUTOGROUPS_NOTIFICATION_GROUP_REMOVED' => '<strong>Groepen bijgewerkt</strong>: Je bent verwijderd van de groep %1$s.',
+	// Meldingen
+	'AUTOGROUPS_NOTIFICATION_GROUP_ADDED'   => '<strong>Groepupdate</strong>: Je bent toegevoegd aan de groep %1$s.',
+	'AUTOGROUPS_NOTIFICATION_GROUP_REMOVED' => '<strong>Groepupdate</strong>: Je bent verwijderd uit de groep %1$s.',
 ]);

@@ -1,13 +1,14 @@
 <?php
+
 /**
-*
-* Auto Groups extension for the phpBB Forum Software package.
-* Translated By : Bassel Taha Alhitary - www.alhitary.net
-*
-* @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ *
+ * Auto Groups extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ * @translation Bassel Taha Alhitary - www.alhitary.net [Arabic [ar]]
+ *
+ */
 
 /**
  * DO NOT CHANGE
@@ -71,7 +72,7 @@ $lang = array_merge($lang, [
 	'ACP_AUTOGROUPS_DELETE_SUCCESS' => 'تم حذف المجموعة التلقائية بنجاح.',
 	'ACP_AUTOGROUPS_EMPTY'          => 'لا توجد مجموعات تلقائية.',
 	'ACP_AUTOGROUPS_NO_GROUPS'      => 'لا توجد مجموعات',
-	'ACP_AUTOGROUPS_INVALID_GROUPS' => 'هناك خطأ. لم يتم تحديد مجموعة عضو.<br />يمكن استخدام المجموعات التلقائية فقط مع مجموعات العضو المعروفة , والتي يمكن انشائها بواسطة صفحة إدارة المجموعات.',
+	'ACP_AUTOGROUPS_INVALID_GROUPS' => 'هناك خطأ. لم يتم تحديد مجموعة عضو.<br>يمكن استخدام المجموعات التلقائية فقط مع مجموعات العضو المعروفة , والتي يمكن انشائها بواسطة صفحة إدارة المجموعات.',
 	'ACP_AUTOGROUPS_INVALID_RANGE'  => 'هناك خطأ. لا تستطيع ضبط نفس القيمة في الحد الأعلى و الحد الأدني.',
 
 	// Conditions

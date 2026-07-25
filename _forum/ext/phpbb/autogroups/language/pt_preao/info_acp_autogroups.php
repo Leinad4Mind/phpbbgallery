@@ -1,10 +1,13 @@
 <?php
 
 /**
+ *
  * Auto Groups extension for the phpBB Forum Software package.
+ *
  * @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
  * @license GNU General Public License, version 2 (GPL-2.0)
  * @translation Leinad4Mind [Portuguese [pt_preao]] (2026)
+ *
  */
 
 /**
@@ -37,10 +40,10 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'ACP_AUTOGROUPS_MANAGE'     => 'Gerenciar Autogrupos',
+	'ACP_AUTOGROUPS_MANAGE'     => 'Gerir Autogrupos',
 	'AUTOGROUPS_TYPE_NOT_EXIST' => 'O tipo de Autogrupo `%1$s` não existe.',
 
 	// Logs
-	'ACP_AUTOGROUPS_SAVED_LOG'  => '<strong>Uma configuração de Autogrupo foi salva</strong>',
-	'ACP_AUTOGROUPS_DELETE_LOG' => '<strong>Uma configuração de Autogrupo foi deletada</strong>',
+	'ACP_AUTOGROUPS_SAVED_LOG'  => '<strong>Uma configuração de Autogrupo foi guardada</strong>',
+	'ACP_AUTOGROUPS_DELETE_LOG' => '<strong>Uma configuração de Autogrupo foi eliminada</strong>',
 ]);

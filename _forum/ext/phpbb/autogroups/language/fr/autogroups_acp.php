@@ -1,13 +1,14 @@
 <?php
+
 /**
-*
-* Auto Groups extension for the phpBB Forum Software package.
-* French translation by Galixte (http://www.galixte.com)
-*
-* @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ *
+ * Auto Groups extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2014 phpBB Limited <https://www.phpbb.com>
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ * @translation Galixte (http://www.galixte.com) [French [fr]]
+ *
+ */
 
 /**
  * DO NOT CHANGE
@@ -71,7 +72,7 @@ $lang = array_merge($lang, [
 	'ACP_AUTOGROUPS_DELETE_SUCCESS' => 'Le groupe automatique a été supprimé avec succès.',
 	'ACP_AUTOGROUPS_EMPTY'          => 'Il n’y a aucun groupe automatique.',
 	'ACP_AUTOGROUPS_NO_GROUPS'      => 'Aucun groupe disponible',
-	'ACP_AUTOGROUPS_INVALID_GROUPS' => 'Une erreur est survenue. Aucun groupe d’utilisateur valide n’a été sélectionné.<br />L’extension Auto Groups fonctionne uniquement avec des groupes d’utilisateurs définis, pouvant être créés depuis la page « Gérer les groupes ».',
+	'ACP_AUTOGROUPS_INVALID_GROUPS' => 'Une erreur est survenue. Aucun groupe d’utilisateur valide n’a été sélectionné.<br>L’extension Auto Groups fonctionne uniquement avec des groupes d’utilisateurs définis, pouvant être créés depuis la page « Gérer les groupes ».',
 	'ACP_AUTOGROUPS_INVALID_RANGE'  => 'Une erreur est survenue. La valeur minimale et la valeur maximale ne peuvent être identiques.',
 
 	// Conditions

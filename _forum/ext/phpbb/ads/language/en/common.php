@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * Advertisement management. An extension for the phpBB Forum Software package.
