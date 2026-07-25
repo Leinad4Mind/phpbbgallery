@@ -1,0 +1,68 @@
+<?php
+/**
+ * phpBB Gallery - UCP main module type tests
+ *
+ * @package   phpbbgallery/core
+ * @copyright 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
+
+namespace phpbbgallery\core\tests;
+
+use phpbbgallery\core\ucp\main_module;
+use PHPUnit\Framework\TestCase;
+
+final class ucp_main_types_test extends TestCase
+{
+	public function test_properties_parameters_and_returns_are_fully_typed(): void
+	{
+		$reflection = new \ReflectionClass(main_module::class);
+
+		foreach ($reflection->getProperties() as $property)
+		{
+			if ($property->getDeclaringClass()->getName() === main_module::class)
+			{
+				$this->assertNotNull($property->getType(), main_module::class . '::$' . $property->getName());
+			}
+		}
+
+		foreach ($reflection->getMethods() as $method)
+		{
+			if ($method->getDeclaringClass()->getName() !== main_module::class)
+			{
+				continue;
+			}
+
+			foreach ($method->getParameters() as $parameter)
+			{
+				$this->assertNotNull($parameter->getType(), main_module::class . '::' . $method->getName() . '($' . $parameter->getName() . ')');
+			}
+
+			$this->assertNotNull($method->getReturnType(), main_module::class . '::' . $method->getName() . '()');
+		}
+	}
+
+	public function test_ucp_actions_are_explicit_commands(): void
+	{
+		$actions = [
+			'main',
+			'info',
+			'initialise_album',
+			'manage_albums',
+			'create_album',
+			'edit_album',
+			'delete_album',
+			'manage_subscriptions',
+			'subscribe_pegas',
+		];
+
+		foreach ($actions as $action)
+		{
+			$this->assertSame('void', (string) (new \ReflectionMethod(main_module::class, $action))->getReturnType(), $action);
+		}
+
+		$album_parameter = (new \ReflectionMethod(main_module::class, 'subscribe_pegas'))->getParameters()[0];
+		$this->assertSame('int', (string) $album_parameter->getType());
+		$this->assertSame('bool', (string) (new \ReflectionMethod(main_module::class, 'move_album'))->getReturnType());
+	}
+}

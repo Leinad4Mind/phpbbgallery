@@ -22,7 +22,7 @@ class main_module
 	public string $tpl_name = '';
 	public string $page_title = '';
 
-	public function main($id, $mode)
+	public function main(string $id, string $mode): void
 	{
 		global $user, $phpbb_container, $table_prefix, $phpbb_gallery_url;
 		global $phpbb_ext_gallery_core_album, $albums_table, $phpbb_ext_gallery_core_auth, $phpbb_ext_gallery_core_album_display, $images_table;
@@ -130,7 +130,7 @@ class main_module
 		}
 	}
 
-	public function info()
+	public function info(): void
 	{
 		global $template, $user, $phpbb_ext_gallery_user, $phpbb_gallery_url, $phpbb_container;
 		$this->language = $phpbb_container->get('language');
@@ -154,7 +154,7 @@ class main_module
 		}
 	}
 
-	public function initialise_album()
+	public function initialise_album(): void
 	{
 		global $cache, $db,  $user, $phpbb_ext_gallery_core_auth, $phpbb_ext_gallery_core_album, $phpbb_ext_gallery_config, $albums_table, $phpbb_ext_gallery_user;
 		global $request, $users_table, $phpbb_container;
@@ -211,7 +211,7 @@ class main_module
 		redirect($this->u_action);
 	}
 
-	public function manage_albums()
+	public function manage_albums(): void
 	{
 		global $cache, $db, $template, $user, $phpbb_ext_gallery_core_album, $albums_table, $phpbb_ext_gallery_core_auth, $phpbb_ext_gallery_core_album_display;
 		global $phpbb_container, $request, $phpbb_gallery_url, $phpbb_ext_gallery_user;
@@ -304,7 +304,7 @@ class main_module
 		));
 	}
 
-	public function create_album()
+	public function create_album(): void
 	{
 		global $cache, $db, $template, $user, $phpbb_gallery_url, $phpbb_ext_gallery_core_auth, $albums_table, $phpbb_ext_gallery_core_album, $request;
 		global $phpbb_container, $phpbb_ext_gallery_user, $users_table;
@@ -453,7 +453,7 @@ class main_module
 		}
 	}
 
-	public function edit_album()
+	public function edit_album(): void
 	{
 		global $config, $cache, $db, $template, $user, $phpbb_gallery_url, $phpbb_ext_gallery_core_album, $phpbb_ext_gallery_core_auth, $albums_table, $phpbb_ext_gallery_core_album_display;
 		global $request, $phpbb_container, $phpbb_ext_gallery_user, $users_table;
@@ -702,7 +702,7 @@ class main_module
 		}
 	}
 
-	public function delete_album()
+	public function delete_album(): void
 	{
 		global $cache, $db, $template, $user, $phpbb_gallery_url, $phpbb_ext_gallery_core_album, $albums_table, $phpbb_container;
 		global $images_table, $phpbb_gallery_image, $phpbb_ext_gallery_config, $phpbb_dispatcher, $request, $users_table;
@@ -892,7 +892,7 @@ class main_module
 		}
 	}
 
-	public function move_album()
+	public function move_album(): bool
 	{
 		global $cache, $db, $user, $phpbb_ext_gallery_core_album, $albums_table, $request, $phpbb_gallery_url, $users_table;
 
@@ -970,9 +970,11 @@ class main_module
 		$cache->destroy('sql', $users_table);
 		$cache->destroy('_albums');
 		$phpbb_gallery_url->redirect('phpbb', 'ucp', 'i=-phpbbgallery-core-ucp-main_module&amp;mode=manage_albums&amp;action=manage&amp;parent_id=' . $moving['parent_id']);
+
+		return true;
 	}
 
-	public function manage_subscriptions()
+	public function manage_subscriptions(): void
 	{
 		global $db, $template, $user, $phpbb_container, $phpbb_ext_gallery_core_album, $phpbb_gallery_notification, $watch_table, $albums_table, $contests_table;
 		global $images_table, $comments_table, $request, $phpbb_gallery_url, $phpbb_ext_gallery_core_auth;
@@ -1123,7 +1125,7 @@ class main_module
 		));
 	}
 
-	public function subscribe_pegas($album_id)
+	public function subscribe_pegas(int $album_id): void
 	{
 		global $db, $users_table, $phpbb_container;
 		$phpbb_gallery_notification = $phpbb_container->get('phpbbgallery.core.notification');
@@ -1148,7 +1150,7 @@ class main_module
 	 * @param bool|null $form_key_valid Optional test override
 	 * @return bool
 	 */
-	private function is_valid_form_submission($request, string $field, ?bool $form_key_valid = null): bool
+	private function is_valid_form_submission(object $request, string $field, ?bool $form_key_valid = null): bool
 	{
 		if (!$request->is_set_post($field))
 		{
