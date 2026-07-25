@@ -24,7 +24,7 @@ class permissions_module
 	public string $tpl_name = '';
 	public string $page_title = '';
 
-	public function main($id, $mode)
+	public function main(string $id, string $mode): void
 	{
 		global $user, $permissions, $phpbb_container, $gallery_url, $gallery_auth, $gallery_cache, $gallery_user;
 		global $request;
@@ -40,7 +40,7 @@ class permissions_module
 		$this->tpl_name = 'gallery_permissions';
 		$this->page_title = $this->language->lang('ALBUM_AUTH_TITLE');
 		add_form_key('acp_gallery');
-		$submit = (isset($_POST['submit_edit_options'])) ? true : ((isset($_POST['submit_add_options'])) ? true : false);
+		$submit = $request->is_set_post('submit_edit_options') || $request->is_set_post('submit_add_options');
 		$action = $request->variable('action', '');
 
 		/**
@@ -126,7 +126,7 @@ class permissions_module
 		}
 	}
 
-	function permissions_c_mask()
+	public function permissions_c_mask(): void
 	{
 		global $template, $phpbb_container, $gallery_auth;
 		// Init album
@@ -145,7 +145,7 @@ class permissions_module
 		));
 	}
 
-	private function permissions_v_mask()
+	private function permissions_v_mask(): void
 	{
 		global $cache, $db, $template, $user, $table_prefix, $phpbb_container;
 		global $request, $gallery_auth, $gallery_url;
@@ -155,8 +155,8 @@ class permissions_module
 
 		$this->language->add_lang('acp/permissions');
 
-		$submit = (isset($_POST['submit'])) ? true : false;
-		$delete = (isset($_POST['delete'])) ? true : false;
+		$submit = $request->is_set_post('submit');
+		$delete = $request->is_set_post('delete');
 		$album_id = $request->variable('album_id', array(0));
 		$group_id = $request->variable('group_id', array(0));
 		$user_id = $request->variable('user_id', array(0));
@@ -396,7 +396,7 @@ class permissions_module
 		));
 	}
 
-	private function permissions_p_mask()
+	private function permissions_p_mask(): void
 	{
 		global $db, $permissions, $template, $user, $phpbb_ext_gallery, $phpbb_dispatcher, $table_prefix, $table_name, $users_table, $phpbb_container;
 		global $request, $gallery_cache, $gallery_url;
@@ -661,7 +661,7 @@ class permissions_module
 		));
 	}
 
-	private function permissions_set()
+	private function permissions_set(): void
 	{
 		global $cache, $db, $permissions, $template, $user, $phpbb_ext_gallery, $phpbb_dispatcher, $table_prefix, $table_name, $phpbb_container;
 		global $request;
@@ -675,7 +675,7 @@ class permissions_module
 		$phpbb_ext_gallery_core_auth = $phpbb_container->get('phpbbgallery.core.auth');
 
 		// Send constants to the template
-		$submit = (isset($_POST['submit'])) ? true : false;
+		$submit = $request->is_set_post('submit');
 		$album_id = $request->variable('album_id', array(0));
 		$group_id = $request->variable('group_id', array(0));
 		$user_id = $request->variable('user_id', array(0));
@@ -708,8 +708,7 @@ class permissions_module
 			* Grab the permissions
 			*
 			* includes/acp/acp_permissions.php says:
-			* // We obtain and check $_POST['setting'][$ug_id][$forum_id] directly and not using request_var() because request_var()
-			* // currently does not support the amount of dimensions required. ;)
+			* The nested setting array is read through the phpBB request abstraction.
 			*/
 			//		$auth_settings = request_var('setting', array(0 => array(0 => array('' => 0))));
 			$requests = $request->variable('setting', array(0 => array(0 => array('' => 0))));
@@ -802,7 +801,7 @@ class permissions_module
 					{
 						// Inherit permissions of one [c_mask][v_mask]
 						$v_mask = (int) $v_mask;
-						list($ci_mask, $vi_mask) = explode("_", $i_mask);
+						list($ci_mask, $vi_mask) = explode('_', $i_mask);
 						$ci_mask = (int) $ci_mask;
 						$vi_mask = (int) $vi_mask;
 						if (isset($auth_settings[$ci_mask][$vi_mask]))
@@ -997,7 +996,7 @@ class permissions_module
 	/**
 	* Handles copying permissions from one album to others
 	*/
-	private function copy_album_permissions()
+	private function copy_album_permissions(): void
 	{
 		global $cache, $db, $template, $user, $table_prefix, $phpbb_dispatcher, $table_name, $users_table, $phpbb_container;
 		global $request;
@@ -1014,7 +1013,7 @@ class permissions_module
 		$phpbb_ext_gallery_core_album = $phpbb_container->get('phpbbgallery.core.album');
 		$this->language = $phpbb_container->get('language');
 
-		$submit = isset($_POST['submit']) ? true : false;
+		$submit = $request->is_set_post('submit');
 
 		if ($submit)
 		{
@@ -1125,7 +1124,7 @@ class permissions_module
 	 * @param int $check_inherit_album
 	 * @return bool|string
 	 */
-	private function inherit_albums($cache_obtain_album_list, $allowed_albums, $album_id, $check_inherit_album = 0)
+	private function inherit_albums(array $cache_obtain_album_list, array $allowed_albums, int $album_id, int $check_inherit_album = 0): bool|string
 	{
 		global $user, $phpbb_container;
 
@@ -1181,7 +1180,7 @@ class permissions_module
 	 * @param int $check_inherit_victim
 	 * @return bool|string
 	 */
-	private function inherit_victims($cache_obtain_album_list, $allowed_albums, $allowed_victims, $album_id, $victim_id, $check_inherit_album = 0, $check_inherit_victim = 0)
+	private function inherit_victims(array $cache_obtain_album_list, array $allowed_albums, array $allowed_victims, int $album_id, int $victim_id, int $check_inherit_album = 0, int $check_inherit_victim = 0): bool|string
 	{
 		global $user;
 
@@ -1251,7 +1250,7 @@ class permissions_module
 	 * @param int $check_inherit_victim
 	 * @return bool|string
 	 */
-	private function p_system_inherit_victims($p_system, $allowed_victims, $victim_id, $check_inherit_victim = 0)
+	private function p_system_inherit_victims(int $p_system, array $allowed_victims, int $victim_id, int $check_inherit_victim = 0): bool|string
 	{
 		global $user, $phpbb_container;
 
@@ -1261,7 +1260,7 @@ class permissions_module
 		// We submit a "wrong" array on the check (to make it more easy) so we convert it here
 		if ($check_inherit_victim)
 		{
-			$converted_groups = array();
+			$converted_victims = array();
 			foreach ($allowed_victims as $victim)
 			{
 				$converted_victims[] = array(
