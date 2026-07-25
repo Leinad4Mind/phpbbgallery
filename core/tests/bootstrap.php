@@ -86,6 +86,8 @@ namespace
 	require_once dirname(__DIR__, 4) . '/phpbb/event/data.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/db/driver/driver_interface.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/request/request_interface.php';
+	require_once dirname(__DIR__, 4) . '/phpbb/files/types/type_interface.php';
+	require_once dirname(__DIR__, 4) . '/phpbb/files/types/base.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/notification/type/type_interface.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/notification/type/base.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/cache/service.php';
@@ -116,6 +118,8 @@ namespace
 	require_once dirname(__DIR__) . '/auth/level.php';
 	require_once dirname(__DIR__) . '/block.php';
 	require_once dirname(__DIR__) . '/contest.php';
+	require_once dirname(__DIR__) . '/file/file.php';
+	require_once dirname(__DIR__) . '/file/types/multiform.php';
 	require_once dirname(__DIR__) . '/album/album.php';
 	require_once dirname(__DIR__) . '/album/display.php';
 	require_once dirname(__DIR__) . '/album/loader.php';

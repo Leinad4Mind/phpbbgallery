@@ -22,17 +22,11 @@ use phpbb\request\request_interface;
 class multiform extends \phpbb\files\types\base
 {
 	/** @var factory Files factory */
-	protected $factory;
-	/** @var language */
-	protected $language;
-	/** @var IniGetWrapper */
-	protected $php_ini;
+	protected factory $factory;
 	/** @var plupload */
-	protected $plupload;
+	protected plupload $plupload;
 	/** @var request_interface */
-	protected $request;
-	/** @var \phpbb\files\upload */
-	protected $upload;
+	protected request_interface $request;
 	/**
 	 * Construct a form upload type
 	 *
@@ -53,9 +47,13 @@ class multiform extends \phpbb\files\types\base
 	/**
 	 * {@inheritdoc}
 	 */
-	public function upload()
+	public function upload(): array
 	{
 		$args = func_get_args();
+		if (!isset($args[0]))
+		{
+			return [];
+		}
 		return $this->form_upload($args[0]);
 	}
 	/**
@@ -67,7 +65,7 @@ class multiform extends \phpbb\files\types\base
 	 * @return filespec $file Object "filespec" is returned, all further operations can be done with this object
 	 * @access public
 	 */
-	protected function form_upload($form_name)
+	protected function form_upload(string $form_name): array
 	{
 
 		$uploads = ($this->request->variable($form_name, array('name'=> array('' => ''), 'type' => array('' => ''), 'tmp_name' => array('' => ''), 'error' =>  array('' => ''), 'size' => array('' => '')), true, $this->request::FILES));
@@ -83,14 +81,14 @@ class multiform extends \phpbb\files\types\base
 			);
 		}
 		$files = array();
-		foreach ($upload_ready as $ID => $VAR)
+		foreach ($upload_ready as $id => $upload_data)
 		{
 			$upload = array(
-				'name' => $VAR['name'],
-				'type' => $VAR['type'],
-				'tmp_name' => $VAR['tmp_name'],
-				'error'	=> $VAR['error'],
-				'size'	=> $VAR['size']
+				'name' => $upload_data['name'],
+				'type' => $upload_data['type'],
+				'tmp_name' => $upload_data['tmp_name'],
+				'error'	=> $upload_data['error'],
+				'size'	=> $upload_data['size']
 			);
 
 			$file = $this->factory->get('filespec')
@@ -100,7 +98,7 @@ class multiform extends \phpbb\files\types\base
 			if ($file->init_error())
 			{
 				$file->error[] = '';
-				$files[$ID] = $file;
+				$files[$id] = $file;
 				continue;
 			}
 			// Error array filled?
@@ -111,7 +109,7 @@ class multiform extends \phpbb\files\types\base
 				if ($error !== false)
 				{
 					$file->error[] = $error;
-					$files[$ID] = $file;
+					$files[$id] = $file;
 					continue;
 				}
 			}
@@ -120,7 +118,7 @@ class multiform extends \phpbb\files\types\base
 			if (isset($upload['size']) && $upload['size'] == 0)
 			{
 				$file->error[] = $this->language->lang($this->upload->error_prefix . 'EMPTY_FILEUPLOAD');
-				$files[$ID] = $file;
+				$files[$id] = $file;
 				continue;
 			}
 
@@ -128,7 +126,7 @@ class multiform extends \phpbb\files\types\base
 			$file = $this->check_upload_size($file);
 			if (sizeof($file->error))
 			{
-				$files[$ID] = $file;
+				$files[$id] = $file;
 				continue;
 			}
 
@@ -136,11 +134,11 @@ class multiform extends \phpbb\files\types\base
 			if (!$file->is_uploaded())
 			{
 				$file->error[] = $this->language->lang($this->upload->error_prefix . 'NOT_UPLOADED');
-				$files[$ID] = $file;
+				$files[$id] = $file;
 				continue;
 			}
 			$this->upload->common_checks($file);
-			$files[$ID] = $file;
+			$files[$id] = $file;
 			continue;
 		}
 

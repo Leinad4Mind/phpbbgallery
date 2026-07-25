@@ -20,63 +20,65 @@ namespace phpbbgallery\core\file;
  */
 class file
 {
-	const THUMBNAIL_INFO_HEIGHT = 16;
-	const GDLIB1 = 1;
-	const GDLIB2 = 2;
+	public const THUMBNAIL_INFO_HEIGHT = 16;
+	public const GDLIB1 = 1;
+	public const GDLIB2 = 2;
 	// Decompression-bomb guard: GD must allocate the full pixel buffer before it can resize
 	// anything down, so a file whose declared dimensions exceed this is rejected before decode,
 	// regardless of the configured max_width/max_height (which only bound the *output* size).
-	const MAX_DECODE_PIXELS = 40000000;
+	public const MAX_DECODE_PIXELS = 40000000;
 
-	public $chmod = 0644;
+	public int $chmod = 0644;
 
-	public $errors = array();
-	private $browser_cache = true;
-	private $last_modified = 0;
+	public array $errors = array();
+	private bool $browser_cache = true;
+	private int $last_modified = 0;
 
-	/** @var \phpbb\request\request */
-	private $request;
+	/** @var \phpbb\request\request_interface */
+	private \phpbb\request\request_interface $request;
 
 	/** @var \phpbbgallery\core\url */
-	private $url;
+	private \phpbbgallery\core\url $url;
 
-	public $gd_version = 0;
+	public int $gd_version = 0;
 
 	/** @var \phpbbgallery\core\config */
-	public $gallery_config;
+	public \phpbbgallery\core\config $gallery_config;
 
-	public $image;
-	public $image_content_type;
-	public $image_name = '';
-	public $image_quality = 100;
-	public $image_size = array();
-	public $image_source = '';
-	public $image_type;
+	/** @var resource|\GdImage|false|null */
+	public mixed $image = null;
+	public string $image_content_type = '';
+	public string $image_name = '';
+	public int $image_quality = 100;
+	public array $image_size = array();
+	public string $image_source = '';
+	public string $image_type = '';
 
-	public $max_file_size = 0;
-	public $max_height = 0;
-	public $max_width = 0;
+	public int $max_file_size = 0;
+	public int $max_height = 0;
+	public int $max_width = 0;
 
-	public $resized = false;
-	public $rotated = false;
+	public bool $resized = false;
+	public bool $rotated = false;
 
-	public $thumb_height = 0;
-	public $thumb_width = 0;
+	public int $thumb_height = 0;
+	public int $thumb_width = 0;
 
-	public $watermark;
-	public $watermark_size = array();
-	public $watermark_source = '';
-	public $watermarked = false;
+	/** @var resource|\GdImage|false|null */
+	public mixed $watermark = null;
+	public array $watermark_size = array();
+	public string $watermark_source = '';
+	public bool $watermarked = false;
 
 	/**
 	 * Constructor - init some basic stuff
 	 *
-	 * @param \phpbb\request\request $request
+	 * @param \phpbb\request\request_interface $request
 	 * @param \phpbbgallery\core\url $url
 	 * @param \phpbbgallery\core\config $gallery_config
 	 * @param int $gd_version
 	 */
-	public function __construct(\phpbb\request\request $request, \phpbbgallery\core\url $url, \phpbbgallery\core\config $gallery_config, $gd_version)
+	public function __construct(\phpbb\request\request_interface $request, \phpbbgallery\core\url $url, \phpbbgallery\core\config $gallery_config, int $gd_version)
 	{
 		$this->request = $request;
 		$this->url = $url;
@@ -84,14 +86,14 @@ class file
 		$this->gd_version = $gd_version;
 	}
 
-	public function set_image_options($max_file_size, $max_height, $max_width)
+	public function set_image_options(int $max_file_size, int $max_height, int $max_width): void
 	{
 		$this->max_file_size = $max_file_size;
 		$this->max_height = $max_height;
 		$this->max_width = $max_width;
 	}
 
-	public function set_image_data($source = '', $name = '', $size = 0, $force_empty_image = false)
+	public function set_image_data(string $source = '', string $name = '', int $size = 0, bool $force_empty_image = false): void
 	{
 		if ($source)
 		{
@@ -121,9 +123,9 @@ class file
 	 * @param $filename
 	 * @return string
 	 */
-	static public function mimetype_by_filename($filename)
+	public static function mimetype_by_filename(string $filename): string
 	{
-		switch (utf8_substr(strtolower($filename), -4))
+		switch (substr(strtolower($filename), -4))
 		{
 			case '.png':
 				return 'image/png';
@@ -143,9 +145,9 @@ class file
 		return '';
 	}
 
-	static public function extension_by_filename($filename)
+	public static function extension_by_filename(string $filename): string
 	{
-		switch (utf8_substr(strtolower($filename), -4))
+		switch (substr(strtolower($filename), -4))
 		{
 			case '.png':
 				return 'png';
@@ -170,7 +172,7 @@ class file
 	 * @param bool $force_filesize
 	 * @return bool
 	 */
-	public function read_image($force_filesize = false)
+	public function read_image(bool $force_filesize = false): bool
 	{
 		if (!file_exists($this->image_source))
 		{
@@ -239,6 +241,8 @@ class file
 			imagealphablending($this->image, true); // Set alpha blending on ...
 			imagesavealpha($this->image, true); // ... and save alpha blending!
 		}
+
+		return true;
 	}
 
 	/**
@@ -247,11 +251,11 @@ class file
 	 * @param int $quality
 	 * @param bool $destroy_image
 	 */
-	public function write_image($destination, $quality = -1, $destroy_image = false)
+	public function write_image(string $destination, int $quality = -1, bool $destroy_image = false): void
 	{
 		if ($quality == -1)
 		{
-			$quality = $this->gallery_config->get('jpg_quality');
+			$quality = (int) $this->gallery_config->get('jpg_quality');
 		}
 		switch ($this->image_type)
 		{
@@ -282,9 +286,9 @@ class file
 	 * @param $file
 	 * @return string
 	 */
-	public function header_filename($file)
+	public function header_filename(string $file): string
 	{
-		$raw = $this->request->server('HTTP_USER_AGENT');
+		$raw = (string) $this->request->server('HTTP_USER_AGENT');
 		$user_agent = htmlspecialchars($raw);
 
 		// There be dragons here.
@@ -302,7 +306,7 @@ class file
 	* We need to disable the "last-modified" caching for guests and in cases of image-errors,
 	* so that they can view them, if they logged in or the error was fixed.
 	*/
-	public function disable_browser_cache()
+	public function disable_browser_cache(): void
 	{
 		$this->browser_cache = false;
 	}
@@ -317,7 +321,7 @@ class file
 	 *    - Last change of watermark file
 	 * @param $timestamp
 	 */
-	public function set_last_modified($timestamp)
+	public function set_last_modified(int $timestamp): void
 	{
 		$this->last_modified = max($timestamp, $this->last_modified);
 	}
@@ -328,7 +332,7 @@ class file
 	 * @param object $response
 	 * @return object
 	 */
-	public function apply_browser_cache($response)
+	public function apply_browser_cache(object $response): object
 	{
 		if (!$this->browser_cache || $this->last_modified <= 0)
 		{
@@ -364,12 +368,12 @@ class file
 		return $response;
 	}
 
-	static public function is_ie_greater7($browser)
+	public static function is_ie_greater7(string $browser): bool
 	{
 		return (bool) preg_match('/msie (\d{2,3}|[89]+).[0-9.]*;/', strtolower($browser));
 	}
 
-	public function create_thumbnail($max_width, $max_height, $print_details = false, $additional_height = 0, $image_size = array())
+	public function create_thumbnail(int $max_width, int $max_height, bool $print_details = false, int $additional_height = 0, array $image_size = array()): void
 	{
 		$this->resize_image($max_width, $max_height, (($print_details) ? $additional_height : 0));
 
@@ -389,7 +393,7 @@ class file
 		}
 	}
 
-	public function resize_image($max_width, $max_height, $additional_height = 0)
+	public function resize_image(int $max_width, int $max_height, int $additional_height = 0): void
 	{
 		if (!$this->image)
 		{
@@ -409,11 +413,11 @@ class file
 		if (($this->image_size['height'] / $max_height) > ($this->image_size['width'] / $max_width))
 		{
 			$this->thumb_height	= $max_height;
-			$this->thumb_width	= round($max_width * (($this->image_size['width'] / $max_width) / ($this->image_size['height'] / $max_height)));
+			$this->thumb_width	= (int) round($max_width * (($this->image_size['width'] / $max_width) / ($this->image_size['height'] / $max_height)));
 		}
 		else
 		{
-			$this->thumb_height	= round($max_height * (($this->image_size['height'] / $max_height) / ($this->image_size['width'] / $max_width)));
+			$this->thumb_height	= (int) round($max_height * (($this->image_size['height'] / $max_height) / ($this->image_size['width'] / $max_width)));
 			$this->thumb_width	= $max_width;
 		}
 
@@ -446,7 +450,7 @@ class file
 	 * @param $angle
 	 * @param $ignore_dimensions
 	 */
-	public function rotate_image($angle, $ignore_dimensions)
+	public function rotate_image(int $angle, bool $ignore_dimensions): void
 	{
 		if (!function_exists('imagerotate'))
 		{
@@ -500,7 +504,7 @@ class file
 	 * @param int $min_height
 	 * @param int $min_width
 	 */
-	public function watermark_image($watermark_source, $watermark_position = 20, $min_height = 0, $min_width = 0)
+	public function watermark_image(string $watermark_source, int $watermark_position = 20, int $min_height = 0, int $min_width = 0): void
 	{
 		$this->watermark_source = $watermark_source;
 		if (!$this->watermark_source || !file_exists($this->watermark_source))
@@ -536,7 +540,13 @@ class file
 		}
 		else
 		{
-			$this->watermark_size = getimagesize($this->watermark_source);
+			$watermark_size = getimagesize($this->watermark_source);
+			if ($watermark_size === false)
+			{
+				$this->errors[] = array('WATERMARK_IMAGE_IMAGECREATE');
+				return;
+			}
+			$this->watermark_size = $watermark_size;
 			switch ($this->watermark_size['mime'])
 			{
 				case 'image/png':
@@ -599,7 +609,7 @@ class file
 	*									Array-Format: $image_id => $filename
 	* @param	array		$locations	Array of valid url::path()s where the image should be deleted from
 	*/
-	public function delete($files, $locations = array('thumbnail', 'medium', 'upload'))
+	public function delete(array|string $files, array $locations = array('thumbnail', 'medium', 'upload')): void
 	{
 		if (!is_array($files))
 		{
@@ -620,7 +630,7 @@ class file
 	 * @param $files
 	 * @param array $locations
 	 */
-	public function delete_cache($files, $locations = array('thumbnail', 'medium'))
+	public function delete_cache(array|string $files, array $locations = array('thumbnail', 'medium')): void
 	{
 		if (!is_array($files))
 		{
@@ -639,7 +649,7 @@ class file
 	/**
 	 * @param $files
 	 */
-	public function delete_wm($files)
+	public function delete_wm(array|string $files): void
 	{
 		$locations = array('upload', 'medium');
 		if (!is_array($files))

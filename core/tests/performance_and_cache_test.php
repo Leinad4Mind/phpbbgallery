@@ -10,6 +10,7 @@
 namespace phpbbgallery\core\tests;
 
 use PHPUnit\Framework\TestCase;
+use phpbb\request\request_interface;
 use phpbbgallery\core\file\file as file_tool;
 use phpbbgallery\core\migrations\performance_indexes;
 
@@ -142,25 +143,11 @@ class performance_and_cache_test extends TestCase
 	private function create_file_tool(array $server)
 	{
 		$tool = (new \ReflectionClass(file_tool::class))->newInstanceWithoutConstructor();
-		$request = new class($server) {
-			/** @var array */
-			private $server;
-
-			public function __construct(array $server)
-			{
-				$this->server = $server;
-			}
-
-			public function server($name, $default = '')
-			{
-				return array_key_exists($name, $this->server) ? $this->server[$name] : $default;
-			}
-		};
-		$set_request = \Closure::bind(function ($request): void
-		{
-			$this->request = $request;
-		}, $tool, file_tool::class);
-		$set_request($request);
+		$request = $this->createStub(request_interface::class);
+		$request->method('server')->willReturnCallback(
+			static fn (string $name, mixed $default = ''): mixed => $server[$name] ?? $default
+		);
+		(new \ReflectionProperty(file_tool::class, 'request'))->setValue($tool, $request);
 
 		return $tool;
 	}
