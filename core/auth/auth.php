@@ -14,87 +14,87 @@ namespace phpbbgallery\core\auth;
 
 class auth
 {
-	const SETTING_PERMISSIONS	= -39839;
-	const PERSONAL_ALBUM		= -3;
-	const OWN_ALBUM				= -2;
-	const PUBLIC_ALBUM			= 0;
+	public const SETTING_PERMISSIONS	= -39839;
+	public const PERSONAL_ALBUM		= -3;
+	public const OWN_ALBUM				= -2;
+	public const PUBLIC_ALBUM			= 0;
 
-	const ACCESS_ALL			= 0;
-	const ACCESS_REGISTERED		= 1;
-	const ACCESS_NOT_FOES		= 2;
-	const ACCESS_FRIENDS		= 3;
-	const ACCESS_SPECIAL_FRIENDS	= 4;
+	public const ACCESS_ALL			= 0;
+	public const ACCESS_REGISTERED		= 1;
+	public const ACCESS_NOT_FOES		= 2;
+	public const ACCESS_FRIENDS		= 3;
+	public const ACCESS_SPECIAL_FRIENDS	= 4;
 
 	// ACL - slightly different
-	const ACL_NO		= 0;
-	const ACL_YES		= 1;
-	const ACL_NEVER		= 2;
+	public const ACL_NO		= 0;
+	public const ACL_YES		= 1;
+	public const ACL_NEVER		= 2;
 
-	static protected $_permission_i = array('i_view', 'i_watermark', 'i_upload', 'i_approve', 'i_edit', 'i_delete', 'i_report', 'i_rate');
-	static protected $_permission_c = array('c_read', 'c_post', 'c_edit', 'c_delete');
-	static protected $_permission_m = array('m_comments', 'm_delete', 'm_edit', 'm_move', 'm_report', 'm_status');
-	static protected $_permission_misc = array('a_list', 'i_count', 'i_unlimited', 'a_count', 'a_unlimited', 'a_restrict');
-	static protected $_permissions = array();
-	static protected $_permissions_flipped = array();
+	protected static array $_permission_i = array('i_view', 'i_watermark', 'i_upload', 'i_approve', 'i_edit', 'i_delete', 'i_report', 'i_rate');
+	protected static array $_permission_c = array('c_read', 'c_post', 'c_edit', 'c_delete');
+	protected static array $_permission_m = array('m_comments', 'm_delete', 'm_edit', 'm_move', 'm_report', 'm_status');
+	protected static array $_permission_misc = array('a_list', 'i_count', 'i_unlimited', 'a_count', 'a_unlimited', 'a_restrict');
+	protected static array $_permissions = array();
+	protected static array $_permissions_flipped = array();
 
-	protected $_auth_data = array();
-	protected $_auth_data_never = array();
+	protected array $_auth_data = array();
+	protected array $_auth_data_never = array();
 
-	protected $acl_cache = array();
+	protected array $acl_cache = array();
 
 	/**
 	* Cache object
 	* @var \phpbbgallery\core\cache
 	*/
-	protected $cache;
+	protected \phpbbgallery\core\cache $cache;
 
 	/**
 	* Database object
 	* @var \phpbb\db\driver\driver
 	*/
-	protected $db;
+	protected \phpbb\db\driver\driver_interface $db;
 
 	/**
 	* Gallery user object
 	* @var \phpbbgallery\core\user
 	*/
-	protected $user;
+	protected \phpbbgallery\core\user $user;
 
 	/**
 	* phpBB user object
 	* @var \phpbb\user
 	*/
-	protected $phpbb_user;
+	protected \phpbb\user $phpbb_user;
 
 	/**
 	* phpBB auth object
 	* @var \phpbb\auth\auth
 	*/
-	protected $auth;
+	protected \phpbb\auth\auth $auth;
 
 	/**
 	* Gallery permissions table
 	* @var string
 	*/
-	protected $table_permissions;
+	protected string $table_permissions;
 
 	/**
 	* Gallery permission roles table
 	* @var string
 	*/
-	protected $table_roles;
+	protected string $table_roles;
 
 	/**
 	* Gallery users table
 	* @var string
 	*/
-	protected $table_users;
+	protected string $table_users;
 
 	/**
 	* Gallery albums table
 	* @var string
 	*/
-	protected $table_albums;
+	protected string $table_albums;
 
 	/**
 	 * Construct
@@ -110,7 +110,7 @@ class auth
 	 * @param $albums_table
 	 */
 	public function __construct(\phpbbgallery\core\cache $cache, \phpbb\db\driver\driver_interface $db, \phpbbgallery\core\user $user, \phpbb\user $phpbb_user, \phpbb\auth\auth $auth,
-	$permissions_table, $roles_table, $users_table, $albums_table)
+	string $permissions_table, string $roles_table, string $users_table, string $albums_table)
 	{
 		$this->cache = $cache;
 		$this->db = $db;
@@ -128,23 +128,27 @@ class auth
 		self::$_permissions_flipped['a_count'] = 'a_count';
 	}
 
-	public function get_setting_permissions()
+	public function get_setting_permissions(): int
 	{
 		return self::SETTING_PERMISSIONS;
 	}
 
-	public function get_personal_album()
+	public function get_personal_album(): int
 	{
 		return self::PERSONAL_ALBUM;
 	}
 
-	public function get_own_album()
+	public function get_own_album(): int
 	{
 		return self::OWN_ALBUM;
 	}
 
-	public function load_user_permissions($user_id, $album_id = false)
+	public function load_user_permissions(int $user_id, int|false $album_id = false): void
 	{
+		$this->_auth_data = array();
+		$this->_auth_data_never = array();
+		$this->acl_cache = array();
+
 		$cached_permissions = $this->user->get_data('user_permissions');
 		if (($user_id == $this->user->user_id) && !empty($cached_permissions))
 		{
@@ -175,11 +179,10 @@ class auth
 	 * Query the permissions for a given user and store them in the database.
 	 * @param $user_id
 	 */
-	protected function query_auth_data($user_id)
+	protected function query_auth_data(int $user_id): void
 	{
-		//$albums = array();//@todo $this->cache->obtain_album_list();
-		$albums = $this->cache->get('albums');
-		$user_groups_ary = self::get_usergroups($user_id);
+		$albums = $this->cache->get_albums();
+		$user_groups_ary = $this->get_usergroups($user_id);
 
 		$sql_select = '';
 		foreach (self::$_permissions as $permission)
@@ -263,7 +266,7 @@ class auth
 	 * @param $auth_data
 	 * @return string
 	 */
-	protected function serialize_auth_data($auth_data)
+	protected function serialize_auth_data(array $auth_data): string
 	{
 		$acl_array = array();
 
@@ -287,18 +290,40 @@ class auth
 	 * Unserialize the stored auth-data
 	 * @param $serialized_data
 	 */
-	protected function unserialize_auth_data($serialized_data)
+	protected function unserialize_auth_data(string $serialized_data): void
 	{
+		if ($serialized_data === '')
+		{
+			return;
+		}
+
 		$acl_array = explode("\n", $serialized_data);
 
 		foreach ($acl_array as $acl_row)
 		{
-			list ($acls, $a_ids) = explode('::', $acl_row);
-			list ($bits, $i_count, $a_count) = explode(':', $acls);
-
-			foreach (explode(':', $a_ids) as $a_id)
+			$sections = explode('::', $acl_row, 2);
+			if (count($sections) !== 2)
 			{
-				$this->_auth_data[$a_id] = new \phpbbgallery\core\auth\set($bits, $i_count, $a_count);
+				continue;
+			}
+
+			$counts = explode(':', $sections[0]);
+			if (count($counts) !== 3)
+			{
+				continue;
+			}
+
+			[$bits, $i_count, $a_count] = array_map('intval', $counts);
+
+			foreach (explode(':', $sections[1]) as $a_id)
+			{
+				$a_id = trim($a_id);
+				if (!preg_match('/^-?\d+$/D', $a_id))
+				{
+					continue;
+				}
+
+				$this->_auth_data[(int) $a_id] = new \phpbbgallery\core\auth\set($bits, $i_count, $a_count);
 			}
 		}
 	}
@@ -308,7 +333,7 @@ class auth
 	 * @param $album_id
 	 * @param $data
 	 */
-	protected function store_acl_row($album_id, $data)
+	protected function store_acl_row(int $album_id, array $data): void
 	{
 		if (!isset($this->_auth_data[$album_id]))
 		{
@@ -343,7 +368,7 @@ class auth
 	/**
 	* Merge the NEVER-options into the YES-options by removing the YES, if it is set.
 	*/
-	protected function merge_acl_row()
+	protected function merge_acl_row(): void
 	{
 		foreach ($this->_auth_data as $album_id => $obj)
 		{
@@ -366,9 +391,9 @@ class auth
 	 * Restrict the access to personal galleries, if the user is not a moderator.
 	 * @param $user_id
 	 */
-	protected function restrict_pegas($user_id)
+	protected function restrict_pegas(int $user_id): void
 	{
-		if (($user_id != ANONYMOUS) && $this->_auth_data[self::PERSONAL_ALBUM]->get_bit(self::$_permissions_flipped['m_']))
+		if (($user_id != ANONYMOUS) && ($this->_auth_data[self::PERSONAL_ALBUM]->get_bit(self::$_permissions_flipped['m_']) || $this->auth->acl_get('a_user')))
 		{
 			// No restrictions for moderators.
 			return;
@@ -376,7 +401,7 @@ class auth
 
 		$zebra = null;
 
-		$albums = array();//@todo $this->cache->obtain_album_list();
+		$albums = $this->cache->get_albums();
 		foreach ($albums as $album)
 		{
 			if (!$album['album_auth_access'] || ($album['album_user_id'] == self::PUBLIC_ALBUM))# || ($album['album_user_id'] == $user_id))
@@ -393,7 +418,7 @@ class auth
 			{
 				if ($zebra == null)
 				{
-					$zebra = self::get_user_zebra($user_id);
+					$zebra = $this->get_user_zebra($user_id);
 				}
 				if (in_array($album['album_user_id'], $zebra['foe']))
 				{
@@ -406,7 +431,7 @@ class auth
 			{
 				if ($zebra == null)
 				{
-					$zebra = self::get_user_zebra($user_id);
+					$zebra = $this->get_user_zebra($user_id);
 				}
 				if (!in_array($album['album_user_id'], $zebra['bff']))
 				{
@@ -419,7 +444,7 @@ class auth
 			{
 				if ($zebra == null)
 				{
-					$zebra = self::get_user_zebra($user_id);
+					$zebra = $this->get_user_zebra($user_id);
 				}
 				if (!in_array($album['album_user_id'], $zebra['friend']))
 				{
@@ -436,7 +461,7 @@ class auth
 	 * @param $user_id
 	 * @return array
 	 */
-	public function get_user_zebra($user_id)
+	public function get_user_zebra(int $user_id): array
 	{
 
 		$zebra = array('foe' => array(), 'friend' => array(), 'bff' => array());
@@ -472,7 +497,7 @@ class auth
 		$this->db->sql_freeresult($result);
 		return $zebra;
 	}
-	public function get_user_foes($user_id)
+	public function get_user_foes(int $user_id): array
 	{
 		$foes = array();
 		$sql = 'SELECT * 
@@ -484,6 +509,7 @@ class auth
 		{
 			$foes[] = (int) $row['zebra_id'];
 		}
+		$this->db->sql_freeresult($result);
 		return $foes;
 	}
 
@@ -494,11 +520,11 @@ class auth
 	 * @param $album_id
 	 * @return int
 	 */
-	public function get_zebra_state($zebra_array, $album_author, $album_id)
+	public function get_zebra_state(array $zebra_array, int $album_author, int $album_id): int
 	{
 		$state = 0;
 		// if we check for ourselves or user is mod or admin - make biggest possible step
-		if ($this->phpbb_user->data['user_id'] == $album_author || $this->acl_check('m_', $album_author, $album_id) || $this->auth->acl_get('a_user'))
+		if ($this->phpbb_user->data['user_id'] == $album_author || $this->acl_check('m_', $album_id, $album_author) || $this->auth->acl_get('a_user'))
 		{
 			$state = 5;
 		}
@@ -530,7 +556,7 @@ class auth
 	 * @param $user_id
 	 * @return array
 	 */
-	public function get_usergroups($user_id)
+	public function get_usergroups(int $user_id): array
 	{
 		$groups_ary = array();
 
@@ -557,7 +583,7 @@ class auth
 	 * @param $user_ids
 	 * @param bool $permissions
 	 */
-	public function set_user_permissions($user_ids, $permissions = false)
+	public function set_user_permissions(array|int|string $user_ids, array|string|false $permissions = false): void
 	{
 		$sql_set = (is_array($permissions)) ? $this->db->sql_escape($this->serialize_auth_data($permissions)) : '';
 		$sql_where = '';
@@ -574,7 +600,7 @@ class auth
 			$sql_where = 'WHERE user_id = ' . (int) $user_ids;
 		}
 
-		if ($this->user->is_user($user_ids))
+		if (!is_array($user_ids) && $user_ids !== 'all' && $this->user->is_user((int) $user_ids))
 		{
 			$this->user->set_permissions_changed(time());
 		}
@@ -595,8 +621,13 @@ class auth
 	*
 	* @return	bool			Is the user allowed to do the $acl?
 	*/
-	public function acl_check($acl, $a_id, $u_id = -1)
+	public function acl_check(string $acl, int $a_id, int $u_id = -1): bool|int
 	{
+		if (!array_key_exists($acl, self::$_permissions_flipped))
+		{
+			return false;
+		}
+
 		$bit = self::$_permissions_flipped[$acl];
 
 		if ($bit < 0)
@@ -663,8 +694,13 @@ class auth
 	*
 	* @return	bool			Is the user allowed to do the $acl?
 	*/
-	public function acl_check_global($acl)
+	public function acl_check_global(string $acl): bool
 	{
+		if (!array_key_exists($acl, self::$_permissions_flipped))
+		{
+			return false;
+		}
+
 		$bit = self::$_permissions_flipped[$acl];
 		if (!is_int($bit))
 		{
@@ -672,11 +708,11 @@ class auth
 			return false;
 		}
 
-		if ($this->_auth_data[self::OWN_ALBUM]->get_bit($bit))
+		if (isset($this->_auth_data[self::OWN_ALBUM]) && $this->_auth_data[self::OWN_ALBUM]->get_bit($bit))
 		{
 			return true;
 		}
-		if ($this->_auth_data[self::PERSONAL_ALBUM]->get_bit($bit))
+		if (isset($this->_auth_data[self::PERSONAL_ALBUM]) && $this->_auth_data[self::PERSONAL_ALBUM]->get_bit($bit))
 		{
 			return true;
 		}
@@ -684,7 +720,7 @@ class auth
 		$albums = $this->cache->get_albums();
 		foreach ($albums as $album)
 		{
-			if (!$album['album_user_id'] && $this->_auth_data[$album['album_id']]->get_bit($bit))
+			if (!$album['album_user_id'] && isset($this->_auth_data[$album['album_id']]) && $this->_auth_data[$album['album_id']]->get_bit($bit))
 			{
 				return true;
 			}
@@ -704,8 +740,13 @@ class auth
 	*
 	* @return	mixed					$album_ids, either as list or array.
 	*/
-	public function acl_album_ids($acl, $return = 'array', $display_in_rrc = false, $display_pegas = true)
+	public function acl_album_ids(string $acl, string $return = 'array', bool $display_in_rrc = false, bool $display_pegas = true): array|string|bool
 	{
+		if (!array_key_exists($acl, self::$_permissions_flipped))
+		{
+			return ($return === 'bool') ? false : (($return === 'array') ? array() : '');
+		}
+
 		$bit = self::$_permissions_flipped[$acl];
 		if (!is_int($bit))
 		{
@@ -730,7 +771,7 @@ class auth
 			{
 				$a_id = $album['album_id'];
 			}
-			if ($this->_auth_data[$a_id]->get_bit($bit) && (!$display_in_rrc || ($display_in_rrc && $album['display_in_rrc'])) && ($display_pegas || ($album['album_user_id'] == self::PUBLIC_ALBUM)))
+			if (isset($this->_auth_data[$a_id]) && $this->_auth_data[$a_id]->get_bit($bit) && (!$display_in_rrc || ($display_in_rrc && $album['display_in_rrc'])) && ($display_pegas || ($album['album_user_id'] == self::PUBLIC_ALBUM)))
 			{
 				if ($return == 'bool')
 				{
@@ -758,17 +799,22 @@ class auth
 	 * return    array    $user_ids    Return user IDs as array
 	 * @return array
 	 */
-	public function acl_users_ids($acl, $album_id)
+	public function acl_users_ids(string $acl, int $album_id): array
 	{
-		if (strstr($acl, '_count') != 0)
+		if (!in_array($acl, self::$_permissions, true) || str_contains($acl, '_count'))
 		{
 			return array();
 		}
+
 		// Let's load album data
 		$sql = 'SELECT * FROM ' . $this->table_albums . ' WHERE album_id = ' . (int) $album_id;
 		$result = $this->db->sql_query($sql);
 		$album_data = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
+		if (!$album_data)
+		{
+			return array();
+		}
 
 		// Let's request roles
 		// If album user_id is different then 0 then this is user album.
@@ -783,18 +829,24 @@ class auth
 		}
 
 		$result = $this->db->sql_query($sql);
-		$roles_id = array();
+		$roles_id = array('roles' => array());
 		// Now we build the array to test
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$roles_id['roles'][] = (int) $row['perm_role_id'];
-			$roles_id[$row['perm_role_id']]['user_id'][] = (int) $row['perm_user_id'];
-			$roles_id[$row['perm_role_id']]['group_id'][] = (int) $row['perm_group_id'];
+			$role_id = (int) $row['perm_role_id'];
+			$roles_id['roles'][] = $role_id;
+			$roles_id[$role_id]['user_id'][] = (int) $row['perm_user_id'];
+			$roles_id[$role_id]['group_id'][] = (int) $row['perm_group_id'];
 		}
 		$this->db->sql_freeresult($result);
+		$roles_id['roles'] = array_values(array_unique($roles_id['roles']));
+		if (empty($roles_id['roles']))
+		{
+			return array();
+		}
 
 		// Now we will select the roles that have the set ACL
-		$sql = 'SELECT role_id FROM ' . $this->table_roles . ' WHERE ' . $acl . ' = 1 and ' . $this->db->sql_in_set('role_id', $roles_id['roles'], false, true);
+		$sql = 'SELECT role_id FROM ' . $this->table_roles . ' WHERE ' . $acl . ' = 1 AND ' . $this->db->sql_in_set('role_id', $roles_id['roles'], false, true);
 		$result = $this->db->sql_query($sql);
 		$roles = array();
 		while ($row = $this->db->sql_fetchrow($result))
@@ -807,15 +859,21 @@ class auth
 		$user_ids = array();
 		foreach ($roles as $id)
 		{
-			$user_ids = array_merge($user_ids, $roles_id[$id]['user_id']);
+			$user_ids = array_merge($user_ids, $roles_id[$id]['user_id'] ?? array());
+			$group_ids = array_values(array_filter($roles_id[$id]['group_id'] ?? array()));
+			if (empty($group_ids))
+			{
+				continue;
+			}
+
 			// Let's query groups
-			$sql = 'SELECT * FROM ' . USER_GROUP_TABLE . ' WHERE ' . $this->db->sql_in_set('group_id', $roles_id[$id]['group_id'], false, true);
+			$sql = 'SELECT * FROM ' . USER_GROUP_TABLE . ' WHERE ' . $this->db->sql_in_set('group_id', $group_ids, false, true);
 			$result = $this->db->sql_query($sql);
 			while ($row = $this->db->sql_fetchrow($result))
 			{
 				if ($row['user_pending'] == 0)
 				{
-					$user_ids[] = $row['user_id'];
+					$user_ids[] = (int) $row['user_id'];
 				}
 			}
 			$this->db->sql_freeresult($result);
@@ -831,19 +889,14 @@ class auth
 			}
 		}
 
-		$user_ids = array();
-		foreach ($returning_value as $id)
-		{
-			$user_ids[] = (int) $id;
-		}
-		return $user_ids;
+		return array_values($returning_value);
 	}
 
 	/*
 	* Get all albums that user has no access
 	* return array	$exclude All albums we have no access due to zebra restrictions
 	*/
-	public function get_exclude_zebra()
+	public function get_exclude_zebra(): array
 	{
 		$zebra_array = $this->get_user_zebra($this->phpbb_user->data['user_id']);
 		$foes = array();
