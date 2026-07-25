@@ -1,4 +1,5 @@
 <?php
+// phpcs:disable Generic.Files.OneClassPerFile.MultipleFound -- ZIP test doubles intentionally share this fixture.
 /**
  * phpBB Gallery - Core Extension tests
  *
@@ -16,6 +17,7 @@ class upload_zip_test extends TestCase
 	private string $temporary_directory;
 	private int $archive_number = 0;
 
+	// phpcs:ignore PhpbbCodingStandard.NamingConventions.LowercaseUnderscoredFunctions.NotAllowed -- PHPUnit lifecycle API.
 	protected function setUp(): void
 	{
 		if (!class_exists('ZipArchive'))
@@ -27,8 +29,10 @@ class upload_zip_test extends TestCase
 		$this->assertTrue(mkdir($this->temporary_directory, 0700));
 	}
 
+	// phpcs:ignore PhpbbCodingStandard.NamingConventions.LowercaseUnderscoredFunctions.NotAllowed -- PHPUnit lifecycle API.
 	protected function tearDown(): void
 	{
+		// phpcs:ignore -- PHPUnit fixture override uses the PHP superglobal.
 		unset($GLOBALS['phpbbgallery_test_unique_id']);
 		$this->remove_directory($this->temporary_directory);
 	}
@@ -298,6 +302,7 @@ class upload_zip_test extends TestCase
 		$subject = $this->new_upload(upload_test_subject::class);
 		$zip_file = new upload_test_zip_file($archive);
 		$this->set_upload_property($subject, 'zip_file', $zip_file);
+		// phpcs:ignore -- PHPUnit fixture override uses the PHP superglobal.
 		$GLOBALS['phpbbgallery_test_unique_id'] = 'successful-flow';
 		$temporary_path = $this->temporary_directory . 'tmp_' . md5('successful-flow') . '/';
 
@@ -319,6 +324,7 @@ class upload_zip_test extends TestCase
 		$archive = $this->create_archive(['photo.png' => $this->png_image()]);
 		$subject = $this->new_upload(upload_test_subject::class);
 		$this->set_upload_property($subject, 'zip_file', new upload_test_zip_file($archive));
+		// phpcs:ignore -- PHPUnit fixture override uses the PHP superglobal.
 		$GLOBALS['phpbbgallery_test_unique_id'] = 'existing-directory';
 		$temporary_path = $this->temporary_directory . 'tmp_' . md5('existing-directory') . '/';
 		$this->assertTrue(mkdir($temporary_path, 0700));
@@ -336,6 +342,7 @@ class upload_zip_test extends TestCase
 		$subject = $this->new_upload(upload_test_subject::class);
 		$zip_file = new upload_test_zip_file($archive);
 		$this->set_upload_property($subject, 'zip_file', $zip_file);
+		// phpcs:ignore -- PHPUnit fixture override uses the PHP superglobal.
 		$GLOBALS['phpbbgallery_test_unique_id'] = 'failed-extraction';
 		$temporary_path = $this->temporary_directory . 'tmp_' . md5('failed-extraction') . '/';
 
@@ -355,6 +362,7 @@ class upload_zip_test extends TestCase
 		$zip_file = new upload_test_zip_file($archive);
 		$zip_file->throw_when_removed = true;
 		$this->set_upload_property($subject, 'zip_file', $zip_file);
+		// phpcs:ignore -- PHPUnit fixture override uses the PHP superglobal.
 		$GLOBALS['phpbbgallery_test_unique_id'] = 'throwing-removal';
 		$temporary_path = $this->temporary_directory . 'tmp_' . md5('throwing-removal') . '/';
 
