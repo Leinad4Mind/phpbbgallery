@@ -88,6 +88,8 @@ namespace
 	require_once dirname(__DIR__, 4) . '/phpbb/cron/task/task.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/cron/task/base.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/request/request_interface.php';
+	require_once dirname(__DIR__, 4) . '/phpbb/template/template.php';
+	require_once dirname(__DIR__, 4) . '/phpbb/language/language.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/files/types/type_interface.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/files/types/base.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/notification/type/type_interface.php';
@@ -142,4 +144,5 @@ namespace
 	require_once dirname(__DIR__) . '/moderate.php';
 	require_once dirname(__DIR__) . '/user.php';
 	require_once dirname(__DIR__) . '/cron/cron_cleaner.php';
+	require_once dirname(__DIR__) . '/ucp/settings_module.php';
 }

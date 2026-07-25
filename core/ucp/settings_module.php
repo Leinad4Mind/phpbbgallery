@@ -23,30 +23,30 @@ class settings_module
 	public string $tpl_name = '';
 
 	/** @var \phpbb\config\config */
-	protected $config;
+	protected \phpbb\config\config $config;
 
-	/** @var \phpbb\db\driver\driver */
-	protected $db;
+	/** @var \phpbb\db\driver\driver_interface */
+	protected \phpbb\db\driver\driver_interface $db;
 
-	/** @var \phpbb\event\dispatcher */
-	protected $dispatcher;
+	/** @var \phpbb\event\dispatcher_interface */
+	protected object $dispatcher;
 
 	/** @var \phpbb\template\template */
-	protected $template;
+	protected \phpbb\template\template $template;
 
 	/** @var \phpbb\user */
-	protected $user;
+	protected \phpbb\user $user;
 
-	/** @var \phpbb\request\request */
-	protected $request;
+	/** @var \phpbb\request\request_interface */
+	protected \phpbb\request\request_interface $request;
 
 	/** @var \phpbbgallery\core\user */
-	protected $gallery_user;
+	protected \phpbbgallery\core\user $gallery_user;
 
 	/** @var \phpbb\language\language */
-	protected $language;
+	protected \phpbb\language\language $language;
 
-	public function main($id, $mode)
+	public function main(string $id, string $mode): void
 	{
 		global $config, $db, $template, $user, $request, $phpbb_dispatcher, $phpbb_container;
 
@@ -76,11 +76,8 @@ class settings_module
 		}
 	}
 
-	protected function set_personal_settings()
+	protected function set_personal_settings(): void
 	{
-		global $phpbb_container;
-
-		$this->language = $phpbb_container->get('language');
 		if ($this->request->is_set_post('submit'))
 		{
 			if (!check_form_key('ucp_gallery'))
