@@ -1,418 +1,418 @@
-<!-- INCLUDE gallery/gallery_header.html -->
-<h2>{L_IMAGE_NAME}{L_COLON}<a href="{S_ALBUM_ACTION}" style="display: inline;"> {IMAGE_NAME}</a></h2>
+{% include 'gallery/gallery_header.html' %}
+<h2>{{ lang('IMAGE_NAME') }}{{ lang('COLON') }}<a href="{{ S_ALBUM_ACTION }}" style="display: inline;"> {{ IMAGE_NAME }}</a></h2>
 
-<!-- IF S_STATUS_UNAPPROVED -->
+{% if S_STATUS_UNAPPROVED %}
 <div class="post">
 	<div class="inner">
 		<div class="unapproved">
-			{L_IMAGE_NOT_APPROVED}
+			{{ lang('IMAGE_NOT_APPROVED') }}
 		</div>
 	</div>
 </div>
-<!-- ENDIF -->
+{% endif %}
 
-<div class="post bg2<!-- IF S_IMAGE_REPORTED --> reported<!-- ENDIF -->">
+<div class="post bg2{% if S_IMAGE_REPORTED %} reported{% endif %}">
 	<div class="inner">
 		<div class="postbody_album" id="image">
-			<!-- IF UC_IMAGE_ACTION --><a href="{UC_IMAGE_ACTION}"><!-- ENDIF --><img src="{UC_IMAGE}" alt="{IMAGE_NAME}" class="postimage"/><!-- IF UC_IMAGE_ACTION --></a><!-- ENDIF -->
-			<!-- IF S_IMAGE_REPORTED --><br /><br /><a href="{U_IMAGE_REPORTED}"><span class="error">{L_IMAGE_REPORTED}</span></a><!-- ENDIF -->
+			{% if UC_IMAGE_ACTION %}<a href="{{ UC_IMAGE_ACTION }}">{% endif %}<img src="{{ UC_IMAGE }}" alt="{{ IMAGE_NAME }}" class="postimage"/>{% if UC_IMAGE_ACTION %}</a>{% endif %}
+			{% if S_IMAGE_REPORTED %}<br /><br /><a href="{{ U_IMAGE_REPORTED }}"><span class="error">{{ lang('IMAGE_REPORTED') }}</span></a>{% endif %}
 		</div>
 	</div>
 </div>
 
-<!-- IF IMAGE_DESC -->
+{% if IMAGE_DESC %}
 	<div id="description" class="panel">
 		<div class="inner" style="text-align: center;">
-			<h3>{L_IMAGE_DESC}</h3>
+			<h3>{{ lang('IMAGE_DESC') }}</h3>
 			<div style="width: 100%; font-size: 1.3em;">
-				{IMAGE_DESC}
+				{{ IMAGE_DESC }}
 			</div>
 		</div>
 	</div>
-<!-- ENDIF -->
+{% endif %}
 
-<!-- IF UC_PREV_IMAGE or UC_NEXT_IMAGE -->
+{% if UC_PREV_IMAGE or UC_NEXT_IMAGE %}
 <div class="post bg2">
 	<div class="inner">
 		<div style="text-align: center;">
 			<div style="vertical-align: middle; display: table-cell; width: 1%;">
-			<!-- IF UC_PREV_IMAGE --><div class="image_prev_image" title="{L_VIEW_IMAGE}">{UC_PREV_IMAGE}</div><!-- ENDIF -->
+			{% if UC_PREV_IMAGE %}<div class="image_prev_image" title="{{ lang('VIEW_IMAGE') }}">{{ UC_PREV_IMAGE }}</div>{% endif %}
 			</div>
 			<div style="vertical-align: middle; display: table-cell; width: 1%;">
-			<!-- IF UC_NEXT_IMAGE --><div class="image_next_image" title="{L_VIEW_IMAGE}">{UC_NEXT_IMAGE}</div><!-- ENDIF -->
+			{% if UC_NEXT_IMAGE %}<div class="image_next_image" title="{{ lang('VIEW_IMAGE') }}">{{ UC_NEXT_IMAGE }}</div>{% endif %}
 			</div>
 		</div>
 	</div>
 </div>
-<!-- ENDIF -->
+{% endif %}
 
 <div id="details" class="panel post">
 	<div class="inner">
-		<dl class="postprofile<!-- IF S_POSTER_ONLINE --> online<!-- ENDIF -->" id="profile_poster">
-			<dt class="<!-- IF POSTER_AVATAR -->has-avatar<!-- ELSE -->no-avatar<!-- ENDIF -->">
+		<dl class="postprofile{% if S_POSTER_ONLINE %} online{% endif %}" id="profile_poster">
+			<dt class="{% if POSTER_AVATAR %}has-avatar{% else %}no-avatar{% endif %}">
 				<div class="avatar-container">
-					<!-- EVENT viewtopic_body_avatar_before -->
-					<!-- IF POSTER_AVATAR -->
-						<!-- IF U_POSTER --><a href="{U_POSTER}" class="avatar">{POSTER_AVATAR}</a><!-- ELSE --><span class="avatar">{POSTER_AVATAR}</span><!-- ENDIF -->
-					<!-- ENDIF -->
-					<!-- EVENT viewtopic_body_avatar_after -->
+					{% EVENT viewtopic_body_avatar_before %}
+					{% if POSTER_AVATAR %}
+						{% if U_POSTER %}<a href="{{ U_POSTER }}" class="avatar">{{ POSTER_AVATAR }}</a>{% else %}<span class="avatar">{{ POSTER_AVATAR }}</span>{% endif %}
+					{% endif %}
+					{% EVENT viewtopic_body_avatar_after %}
 				</div>
-				<!-- EVENT viewtopic_body_post_author_before -->
-				<!-- IF not U_POSTER --><strong>{POSTER_FULL}</strong><!-- ELSE -->{POSTER_FULL}<!-- ENDIF -->
-				<!-- EVENT viewtopic_body_post_author_after -->
+				{% EVENT viewtopic_body_post_author_before %}
+				{% if not U_POSTER %}<strong>{{ POSTER_FULL }}</strong>{% else %}{{ POSTER_FULL }}{% endif %}
+				{% EVENT viewtopic_body_post_author_after %}
 			</dt>
 
-			<!-- EVENT viewtopic_body_postrow_rank_before -->
-			<!-- IF POSTER_RANK_TITLE or POSTER_RANK_IMG --><dd class="profile-rank">{POSTER_RANK_TITLE}<!-- IF POSTER_RANK_TITLE and POSTER_RANK_IMG --><br /><!-- ENDIF -->{POSTER_RANK_IMG}</dd><!-- ENDIF -->
-			<!-- EVENT viewtopic_body_postrow_rank_after -->
+			{% EVENT viewtopic_body_postrow_rank_before %}
+			{% if POSTER_RANK_TITLE or POSTER_RANK_IMG %}<dd class="profile-rank">{{ POSTER_RANK_TITLE }}{% if POSTER_RANK_TITLE and POSTER_RANK_IMG %}<br />{% endif %}{{ POSTER_RANK_IMG }}</dd>{% endif %}
+			{% EVENT viewtopic_body_postrow_rank_after %}
 
-			<!-- IF POSTER_POSTS != '' --><dd class="profile-posts"><strong>{L_POSTS}{L_COLON}</strong> {POSTER_POSTS}</dd><!-- ENDIF -->
-			<!-- IF POSTER_GALLERY_IMAGES != '' --><dd><strong>{L_IMAGES}{L_COLON}</strong> <!-- IF U_POSTER_GALLERY_SEARCH --><a href="{U_POSTER_GALLERY_SEARCH}">{POSTER_GALLERY_IMAGES}</a><!-- ELSE -->{POSTER_GALLERY_IMAGES}<!-- ENDIF --></dd><!-- ENDIF -->
-			<!-- IF POSTER_JOINED --><dd class="profile-joined"><strong>{L_JOINED}{L_COLON} </strong><span style="white-space: nowrap;"> {POSTER_JOINED}</span></dd><!-- ENDIF -->
-			<!-- IF POSTER_WARNINGS --><dd class="profile-warnings"><strong>{L_WARNINGS}{L_COLON}</strong> {POSTER_WARNINGS}</dd><!-- ENDIF -->
-			<!-- IF U_ACP and POSTER_IP --><dd><strong>{L_IP}{L_COLON}</strong> {POSTER_IP} <!-- [ <a href="{U_POSTER_WHOIS}" onclick="popup(this.href, 750, 500); return false;">{L_WHOIS}</a> ]--></dd><!-- ENDIF -->
+			{% if POSTER_POSTS != '' %}<dd class="profile-posts"><strong>{{ lang('POSTS') }}{{ lang('COLON') }}</strong> {{ POSTER_POSTS }}</dd>{% endif %}
+			{% if POSTER_GALLERY_IMAGES != '' %}<dd><strong>{{ lang('IMAGES') }}{{ lang('COLON') }}</strong> {% if U_POSTER_GALLERY_SEARCH %}<a href="{{ U_POSTER_GALLERY_SEARCH }}">{{ POSTER_GALLERY_IMAGES }}</a>{% else %}{{ POSTER_GALLERY_IMAGES }}{% endif %}</dd>{% endif %}
+			{% if POSTER_JOINED %}<dd class="profile-joined"><strong>{{ lang('JOINED') }}{{ lang('COLON') }} </strong><span style="white-space: nowrap;"> {{ POSTER_JOINED }}</span></dd>{% endif %}
+			{% if POSTER_WARNINGS %}<dd class="profile-warnings"><strong>{{ lang('WARNINGS') }}{{ lang('COLON') }}</strong> {{ POSTER_WARNINGS }}</dd>{% endif %}
+			{% if U_ACP and POSTER_IP %}<dd><strong>{{ lang('IP') }}{{ lang('COLON') }}</strong> {{ POSTER_IP }} <!-- [ <a href="{{ U_POSTER_WHOIS }}" onclick="popup(this.href, 750, 500); return false;">{{ lang('WHOIS') }}</a> ]--></dd>{% endif %}
 
-			<!-- IF S_PROFILE_FIELD1 -->
+			{% if S_PROFILE_FIELD1 %}
 				<!-- Use a construct like this to include admin defined profile fields. Replace FIELD1 with the name of your field. -->
-				<dd><strong>{PROFILE_FIELD1_NAME}{L_COLON}</strong> {PROFILE_FIELD1_VALUE}</dd>
-			<!-- ENDIF -->
+				<dd><strong>{{ PROFILE_FIELD1_NAME }}{{ lang('COLON') }}</strong> {{ PROFILE_FIELD1_VALUE }}</dd>
+			{% endif %}
 
-			<!-- EVENT viewtopic_body_postrow_custom_fields_before -->
-			<!-- BEGIN custom_fields -->
-				<dd class="profile-custom-field profile-{custom_fields.PROFILE_FIELD_IDENT}"><strong>{custom_fields.PROFILE_FIELD_NAME}{L_COLON}</strong> {custom_fields.PROFILE_FIELD_VALUE}</dd>
-			<!-- END custom_fields -->
-			<!-- EVENT viewtopic_body_postrow_custom_fields_after -->
+			{% EVENT viewtopic_body_postrow_custom_fields_before %}
+			{% for custom_fields in custom_fields %}
+				<dd class="profile-custom-field profile-{{ custom_fields.PROFILE_FIELD_IDENT }}"><strong>{{ custom_fields.PROFILE_FIELD_NAME }}{{ lang('COLON') }}</strong> {{ custom_fields.PROFILE_FIELD_VALUE }}</dd>
+			{% endfor %}
+			{% EVENT viewtopic_body_postrow_custom_fields_after %}
 
-			<!-- EVENT viewtopic_body_contact_fields_before -->
-			<!-- IF not S_IS_BOT and .contact -->
+			{% EVENT viewtopic_body_contact_fields_before %}
+			{% if not S_IS_BOT and contact|length %}
 				<dd class="profile-contact">
-					<strong>{L_CONTACT}{L_COLON}</strong>
+					<strong>{{ lang('CONTACT') }}{{ lang('COLON') }}</strong>
 					<div class="dropdown-container dropdown-left">
-						<a href="#" class="dropdown-trigger" title="{POSTER_USERNAME}">
+						<a href="#" class="dropdown-trigger" title="{{ POSTER_USERNAME }}">
 							<i class="icon fa-commenting-o fa-fw icon-lg" aria-hidden="true"></i><span class="sr-only">POSTER_USERNAME}</span>
 						</a>
 						<div class="dropdown">
 							<div class="pointer"><div class="pointer-inner"></div></div>
 							<div class="dropdown-contents contact-icons">
-								<!-- BEGIN contact -->
+								{% for contact in contact %}
 									{% set REMAINDER = contact.S_ROW_COUNT % 4 %}
-									<!-- DEFINE $S_LAST_CELL = ((REMAINDER eq 3) or (contact.S_LAST_ROW and contact.S_NUM_ROWS < 4)) -->
-									<!-- IF REMAINDER eq 0 -->
+									{% set S_LAST_CELL = ((REMAINDER == 3) or (contact.S_LAST_ROW and contact.S_NUM_ROWS < 4)) %}
+									{% if REMAINDER == 0 %}
 									<div>
-										<!-- ENDIF -->
-										<a href="<!-- IF contact.U_CONTACT -->{contact.U_CONTACT}<!-- ELSE -->{U_POST_AUTHOR}<!-- ENDIF -->" title="{contact.NAME}"<!-- IF $S_LAST_CELL --> class="last-cell"<!-- ENDIF --><!-- IF contact.ID eq 'jabber' --> onclick="popup(this.href, 750, 320); return false;"<!-- ENDIF -->>
-										<span class="contact-icon {contact.ID}-icon">{contact.NAME}</span>
+										{% endif %}
+										<a href="{% if contact.U_CONTACT %}{{ contact.U_CONTACT }}{% else %}{{ U_POST_AUTHOR }}{% endif %}" title="{{ contact.NAME }}"{% if S_LAST_CELL %} class="last-cell"{% endif %}{% if contact.ID == 'jabber' %} onclick="popup(this.href, 750, 320); return false;"{% endif %}>
+										<span class="contact-icon {{ contact.ID }}-icon">{{ contact.NAME }}</span>
 										</a>
-										<!-- IF REMAINDER eq 3 or contact.S_LAST_ROW -->
+										{% if REMAINDER == 3 or contact.S_LAST_ROW %}
 									</div>
-									<!-- ENDIF -->
-								<!-- END contact -->
+									{% endif %}
+								{% endfor %}
 							</div>
 						</div>
 					</div>
 				</dd>
-			<!-- ENDIF -->
-			<!-- EVENT viewtopic_body_contact_fields_after -->
+			{% endif %}
+			{% EVENT viewtopic_body_contact_fields_after %}
 		</dl>
 		<div class="postbody">
 			<ul class="post-buttons">
-				<!-- EVENT gallery_viewimage_actions -->
-				<!--<li><a href="{U_EDIT}" title="{L_EDIT_IMAGE}" class="button icon-button icon-notification"><span>{L_EDIT_IMAGE}</span></a></li>-->
-				<!-- IF U_EDIT --><li><a href="{U_EDIT}" title="{L_EDIT_IMAGE}" class="button button-icon-only"><i class="icon fa-pencil fa-fw" aria-hidden="true"></i><span class="sr-only">{L_EDIT_IMAGE}</span></a></li><!-- ENDIF -->
-				<!-- IF U_DELETE --><li><a href="{U_DELETE}" title="{L_DELETE_IMAGE}" class="button button-icon-only"><i class="icon fa-times fa-fw" aria-hidden="true"></i><span class="sr-only">{L_DELETE_IMAGE}</span></a></li><!-- ENDIF -->
-				<!-- IF U_REPORT --><li><a href="{U_REPORT}" title="{L_REPORT_IMAGE}" class="button button-icon-only"><i class="icon fa-exclamation fa-fw" aria-hidden="true"></i><span class="sr-only">{L_REPORT_IMAGE}</span></a></li><!-- ENDIF -->
+				{% EVENT gallery_viewimage_actions %}
+				<!--<li><a href="{{ U_EDIT }}" title="{{ lang('EDIT_IMAGE') }}" class="button icon-button icon-notification"><span>{{ lang('EDIT_IMAGE') }}</span></a></li>-->
+				{% if U_EDIT %}<li><a href="{{ U_EDIT }}" title="{{ lang('EDIT_IMAGE') }}" class="button button-icon-only"><i class="icon fa-pencil fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('EDIT_IMAGE') }}</span></a></li>{% endif %}
+				{% if U_DELETE %}<li><a href="{{ U_DELETE }}" title="{{ lang('DELETE_IMAGE') }}" class="button button-icon-only"><i class="icon fa-times fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('DELETE_IMAGE') }}</span></a></li>{% endif %}
+				{% if U_REPORT %}<li><a href="{{ U_REPORT }}" title="{{ lang('REPORT_IMAGE') }}" class="button button-icon-only"><i class="icon fa-exclamation fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('REPORT_IMAGE') }}</span></a></li>{% endif %}
 			</ul>
-			<h2 style= "font-size: 1.5em; font-weight: bold;">{L_IMAGE_NAME}{L_COLON}<a href="{S_ALBUM_ACTION}" style="display: inline; line-height: 1.2em; font-weight: bold;"> {IMAGE_NAME}</a></h2>
+			<h2 style= "font-size: 1.5em; font-weight: bold;">{{ lang('IMAGE_NAME') }}{{ lang('COLON') }}<a href="{{ S_ALBUM_ACTION }}" style="display: inline; line-height: 1.2em; font-weight: bold;"> {{ IMAGE_NAME }}</a></h2>
 			<fieldset class="fields1 anti-postbody">
-				<!-- IF CONTEST_RANK -->
+				{% if CONTEST_RANK %}
 				<dl>
-					<dt><label>{L_CONTEST_RESULT}{L_COLON}</label></dt>
-					<dd>{CONTEST_RANK}</dd>
+					<dt><label>{{ lang('CONTEST_RESULT') }}{{ lang('COLON') }}</label></dt>
+					<dd>{{ CONTEST_RANK }}</dd>
 				</dl>
-				<!-- ENDIF -->
+				{% endif %}
 				<dl>
-					<dt><label>{L_UPLOADED_ON_DATE}{L_COLON}</label></dt>
-					<dd>{IMAGE_TIME}</dd>
+					<dt><label>{{ lang('UPLOADED_ON_DATE') }}{{ lang('COLON') }}</label></dt>
+					<dd>{{ IMAGE_TIME }}</dd>
 				</dl>
-				<!-- IF IMAGE_URL -->
+				{% if IMAGE_URL %}
 				<dl>
-					<dt><label>{L_IMAGE_URL}{L_COLON}</label></dt>
-					<dd><input type="text" size="28" value="{IMAGE_URL}" class="inputbox" onclick="this.focus();this.select();" /></dd>
+					<dt><label>{{ lang('IMAGE_URL') }}{{ lang('COLON') }}</label></dt>
+					<dd><input type="text" size="28" value="{{ IMAGE_URL }}" class="inputbox" onclick="this.focus();this.select();" /></dd>
 				</dl>
-				<!-- ENDIF -->
+				{% endif %}
 				<dl>
-					<dt><label>{L_GALLERY_VIEWS}{L_COLON}</label></dt>
-					<dd>{IMAGE_VIEW}</dd>
+					<dt><label>{{ lang('GALLERY_VIEWS') }}{{ lang('COLON') }}</label></dt>
+					<dd>{{ IMAGE_VIEW }}</dd>
 				</dl>
-				<!-- IF IMAGE_BBCODE -->
+				{% if IMAGE_BBCODE %}
 				<dl>
-					<dt><label>{L_IMAGE_BBCODE}{L_COLON}</label></dt>
-					<dd><input type="text" size="28" value="{IMAGE_BBCODE}" class="inputbox" onclick="this.focus();this.select();" /></dd>
-					<!-- IF IMAGE_IMGURL_BBCODE -->
-						<dd><input type="text" size="28" value="{IMAGE_IMGURL_BBCODE}" class="inputbox" onclick="this.focus();this.select();" /></dd>
-					<!-- ENDIF -->
+					<dt><label>{{ lang('IMAGE_BBCODE') }}{{ lang('COLON') }}</label></dt>
+					<dd><input type="text" size="28" value="{{ IMAGE_BBCODE }}" class="inputbox" onclick="this.focus();this.select();" /></dd>
+					{% if IMAGE_IMGURL_BBCODE %}
+						<dd><input type="text" size="28" value="{{ IMAGE_IMGURL_BBCODE }}" class="inputbox" onclick="this.focus();this.select();" /></dd>
+					{% endif %}
 				</dl>
-				<!-- ENDIF -->
-				<!-- IF S_VIEW_RATE -->
+				{% endif %}
+				{% if S_VIEW_RATE %}
 				<dl>
-					<dt><label>{L_RATING}{L_COLON}</label></dt>
-					<dd><!-- IF CONTEST_RESULT_HIDDEN -->{CONTEST_RESULT_HIDDEN}<!-- ELSE -->{IMAGE_RATING}<!-- ENDIF --><!-- IF S_YOUR_RATING --> ({L_YOUR_RATING}{L_COLON} {S_YOUR_RATING})<!-- ENDIF --></dd>
+					<dt><label>{{ lang('RATING') }}{{ lang('COLON') }}</label></dt>
+					<dd>{% if CONTEST_RESULT_HIDDEN %}{{ CONTEST_RESULT_HIDDEN }}{% else %}{{ IMAGE_RATING }}{% endif %}{% if S_YOUR_RATING %} ({{ lang('YOUR_RATING') }}{{ lang('COLON') }} {{ S_YOUR_RATING }}){% endif %}</dd>
 				</dl>
-				<!-- ENDIF -->
-				<!-- IF S_ALLOWED_TO_RATE -->
-				<form id="postform" action="{S_RATE_ACTION}" method="post">
+				{% endif %}
+				{% if S_ALLOWED_TO_RATE %}
+				<form id="postform" action="{{ S_RATE_ACTION }}" method="post">
 				<dl>
-					<dt><label>{L_YOUR_RATING}{L_COLON}</label></dt>
+					<dt><label>{{ lang('YOUR_RATING') }}{{ lang('COLON') }}</label></dt>
 					<dd>
-						<!-- IF .rate_scale -->
+						{% if rate_scale|length %}
 							<select name="rating" onchange="this.form.submit();">
-							<!-- BEGIN rate_scale -->
-								<!-- IF rate_scale.RATE_POINT == 1 --><option value="0">{L_DO_NOT_RATE_IMAGE}</option><!-- ENDIF -->
-								<option value="{rate_scale.RATE_POINT}">{rate_scale.RATE_POINT}</option>
-							<!-- END rate_scale -->
+							{% for rate_scale in rate_scale %}
+								{% if rate_scale.RATE_POINT == 1 %}<option value="0">{{ lang('DO_NOT_RATE_IMAGE') }}</option>{% endif %}
+								<option value="{{ rate_scale.RATE_POINT }}">{{ rate_scale.RATE_POINT }}</option>
+							{% endfor %}
 							</select>
-						<!-- ELSE -->
-							{CONTEST_RATING}
-						<!-- ENDIF -->
+						{% else %}
+							{{ CONTEST_RATING }}
+						{% endif %}
 					</dd>
 				</dl>
-				{S_FORM_TOKEN}
+				{{ S_FORM_TOKEN }}
 				</form>
-				<!-- ENDIF -->
+				{% endif %}
 			</fieldset>
-			<!-- EVENT gallery_viewimage_details -->
+			{% EVENT gallery_viewimage_details %}
 		</div>
 	</div>
-	<!-- IF S_QUICK_MOD -->
-	<form method="post" action="{S_MOD_ACTION}">
+	{% if S_QUICK_MOD %}
+	<form method="post" action="{{ S_MOD_ACTION }}">
 	<fieldset class="quickmod" style="float: none; width: 100%;">
-		<label for="quick-mod-select">{L_QUICK_MOD}{L_COLON}</label>
+		<label for="quick-mod-select">{{ lang('QUICK_MOD') }}{{ lang('COLON') }}</label>
 		<select name="action" id="quick-mod-select">
-			<!-- IF S_QM_MOVE --><option value="images_move">{L_QUEUE_A_MOVE}</option><!-- ENDIF -->
-			<!-- IF S_QM_EDIT --><option value="image_edit">{L_EDIT_IMAGE}</option><!-- ENDIF -->
-			<!-- IF S_QM_STATUS -->
-				<!-- IF not S_STATUS_UNAPPROVED --><option value="images_unapprove">{L_QUEUE_A_UNAPPROVE}</option><!-- ENDIF -->
-				<!-- IF not S_STATUS_APPROVED --><option value="images_approve">{L_QUEUE_A_APPROVE}</option><!-- ENDIF -->
-				<!-- IF not S_STATUS_LOCKED --><option value="images_lock">{L_QUEUE_A_LOCK}</option><!-- ENDIF -->
-			<!-- ENDIF -->
-			<!-- IF S_QM_DELETE --><option value="images_delete">{L_QUEUE_A_DELETE}</option><!-- ENDIF -->
-			<!-- IF S_QM_REPORT and S_IMAGE_REPORTED --><option value="report_details">{L_READ_REPORT}</option><!-- ENDIF -->
+			{% if S_QM_MOVE %}<option value="images_move">{{ lang('QUEUE_A_MOVE') }}</option>{% endif %}
+			{% if S_QM_EDIT %}<option value="image_edit">{{ lang('EDIT_IMAGE') }}</option>{% endif %}
+			{% if S_QM_STATUS %}
+				{% if not S_STATUS_UNAPPROVED %}<option value="images_unapprove">{{ lang('QUEUE_A_UNAPPROVE') }}</option>{% endif %}
+				{% if not S_STATUS_APPROVED %}<option value="images_approve">{{ lang('QUEUE_A_APPROVE') }}</option>{% endif %}
+				{% if not S_STATUS_LOCKED %}<option value="images_lock">{{ lang('QUEUE_A_LOCK') }}</option>{% endif %}
+			{% endif %}
+			{% if S_QM_DELETE %}<option value="images_delete">{{ lang('QUEUE_A_DELETE') }}</option>{% endif %}
+			{% if S_QM_REPORT and S_IMAGE_REPORTED %}<option value="report_details">{{ lang('READ_REPORT') }}</option>{% endif %}
 		</select>
-		<input type="submit" value="{L_GO}" class="button2" />
-		{S_FORM_TOKEN}
+		<input type="submit" value="{{ lang('GO') }}" class="button2" />
+		{{ S_FORM_TOKEN }}
 	</fieldset>
 	</form>
-	<!-- ENDIF -->
+	{% endif %}
 </div>
 
-<!-- IF S_ALLOWED_READ_COMMENTS -->
+{% if S_ALLOWED_READ_COMMENTS %}
 
-<!-- IF not .commentrow or S_COMMENTS_DISABLED -->
+{% if not commentrow|length or S_COMMENTS_DISABLED %}
 	<div id="comments" class="panel bg2">
 		<div class="inner" style="text-align: center;">
-			<strong><!-- IF S_COMMENTS_DISABLED -->{L_IMAGE_COMMENTS_DISABLED}<!-- ELSE -->{L_NO_COMMENTS}<!-- ENDIF --></strong>
+			<strong>{% if S_COMMENTS_DISABLED %}{{ lang('IMAGE_COMMENTS_DISABLED') }}{% else %}{{ lang('NO_COMMENTS') }}{% endif %}</strong>
 		</div>
 	</div>
-<!-- ENDIF -->
+{% endif %}
 
-<!-- IF .commentrow -->
-	<a id="comment_{commentrow.COMMENT_ID}" class="anchor"></a>
+{% if commentrow|length %}
+	<a id="comment_{{ commentrow.COMMENT_ID }}" class="anchor"></a>
 
-	<!-- IF .pagination or TOTAL_COMMENTS -->
+	{% if pagination|length or TOTAL_COMMENTS %}
 	<div class="topic-actions" style="margin-bottom: 4em;">
 		<div class="pagination">
-			{TOTAL_COMMENTS}
-			<!-- IF .pagination -->
-				<!-- INCLUDE pagination.html -->
-			<!-- ELSE -->
-				&bull; {PAGE_NUMBER}
-			<!-- ENDIF -->
+			{{ TOTAL_COMMENTS }}
+			{% if pagination|length %}
+				{% include 'pagination.html' %}
+			{% else %}
+				&bull; {{ PAGE_NUMBER }}
+			{% endif %}
 		</div>
 	</div>
-	<!-- ENDIF -->
+	{% endif %}
 
-	<!-- BEGIN commentrow -->
-	<div class="post has-profile <!-- IF commentrow.S_ROW_COUNT is odd -->bg1<!-- ELSE -->bg2<!-- ENDIF --><!-- IF commentrow.S_ONLINE --> online<!-- ENDIF -->">
-	<a id="comment_{commentrow.COMMENT_ID}" class="anchor"></a>
+	{% for commentrow in commentrow %}
+	<div class="post has-profile {% if commentrow.S_ROW_COUNT is odd %}bg1{% else %}bg2{% endif %}{% if commentrow.S_ONLINE %} online{% endif %}">
+	<a id="comment_{{ commentrow.COMMENT_ID }}" class="anchor"></a>
 		<div class="inner">
-			<dl class="postprofile<!-- IF commentrow.S_POSTER_ONLINE --> online<!-- ENDIF -->" id="profile_poster">
-				<dt class="<!-- IF commentrow.POSTER_AVATAR -->has-avatar<!-- ELSE -->no-avatar<!-- ENDIF -->">
+			<dl class="postprofile{% if commentrow.S_POSTER_ONLINE %} online{% endif %}" id="profile_poster">
+				<dt class="{% if commentrow.POSTER_AVATAR %}has-avatar{% else %}no-avatar{% endif %}">
 					<div class="avatar-container">
-						<!-- EVENT viewtopic_body_avatar_before -->
-						<!-- IF commentrow.POSTER_AVATAR -->
-							<!-- IF commentrow.U_POSTER --><a href="{commentrow.U_POSTER}" class="avatar">{commentrow.POSTER_AVATAR}</a><!-- ELSE --><span class="avatar">{commentrow.POSTER_AVATAR}</span><!-- ENDIF -->
-						<!-- ENDIF -->
-						<!-- EVENT viewtopic_body_avatar_after -->
+						{% EVENT viewtopic_body_avatar_before %}
+						{% if commentrow.POSTER_AVATAR %}
+							{% if commentrow.U_POSTER %}<a href="{{ commentrow.U_POSTER }}" class="avatar">{{ commentrow.POSTER_AVATAR }}</a>{% else %}<span class="avatar">{{ commentrow.POSTER_AVATAR }}</span>{% endif %}
+						{% endif %}
+						{% EVENT viewtopic_body_avatar_after %}
 					</div>
-					<!-- EVENT viewtopic_body_post_author_before -->
-					<!-- IF not commentrow.U_POSTER --><strong>{commentrow.POSTER_FULL}</strong><!-- ELSE -->{commentrow.POSTER_FULL}<!-- ENDIF -->
-					<!-- EVENT viewtopic_body_post_author_after -->
+					{% EVENT viewtopic_body_post_author_before %}
+					{% if not commentrow.U_POSTER %}<strong>{{ commentrow.POSTER_FULL }}</strong>{% else %}{{ commentrow.POSTER_FULL }}{% endif %}
+					{% EVENT viewtopic_body_post_author_after %}
 				</dt>
 
-				<!-- EVENT viewtopic_body_postrow_rank_before -->
-				<!-- IF commentrow.POSTER_RANK_TITLE or commentrow.POSTER_RANK_IMG --><dd class="profile-rank">{commentrow.POSTER_RANK_TITLE}<!-- IF commentrow.POSTER_RANK_TITLE and commentrow.POSTER_RANK_IMG --><br /><!-- ENDIF -->{commentrow.POSTER_RANK_IMG}</dd><!-- ENDIF -->
-				<!-- EVENT viewtopic_body_postrow_rank_after -->
+				{% EVENT viewtopic_body_postrow_rank_before %}
+				{% if commentrow.POSTER_RANK_TITLE or commentrow.POSTER_RANK_IMG %}<dd class="profile-rank">{{ commentrow.POSTER_RANK_TITLE }}{% if commentrow.POSTER_RANK_TITLE and commentrow.POSTER_RANK_IMG %}<br />{% endif %}{{ commentrow.POSTER_RANK_IMG }}</dd>{% endif %}
+				{% EVENT viewtopic_body_postrow_rank_after %}
 
-				<!-- IF commentrow.POSTER_POSTS != '' --><dd class="profile-posts"><strong>{L_POSTS}{L_COLON}</strong> {commentrow.POSTER_POSTS}</dd><!-- ENDIF -->
-				<!-- IF commentrow.POSTER_GALLERY_IMAGES != '' --><dd><strong>{L_IMAGES}{L_COLON}</strong> <!-- IF commentrow.U_POSTER_GALLERY_SEARCH --><a href="{commentrow.U_POSTER_GALLERY_SEARCH}">{POSTER_GALLERY_IMAGES}</a><!-- ELSE -->{POSTER_GALLERY_IMAGES}<!-- ENDIF --></dd><!-- ENDIF -->
-				<!-- IF commentrow.POSTER_JOINED --><dd class="profile-joined"><strong>{L_JOINED}{L_COLON} </strong><span style="white-space: nowrap;"> {commentrow.POSTER_JOINED}</span></dd><!-- ENDIF -->
-				<!-- IF commentrow.POSTER_WARNINGS --><dd class="profile-warnings"><strong>{L_WARNINGS}{L_COLON}</strong> {commentrow.POSTER_WARNINGS}</dd><!-- ENDIF -->
-				<!-- IF U_ACP and commentrow.POSTER_IP --><dd><strong>{L_IP}{L_COLON}</strong> {commentrow.POSTER_IP} <!-- [ <a href="{U_POSTER_WHOIS}" onclick="popup(this.href, 750, 500); return false;">{L_WHOIS}</a> ]--></dd><!-- ENDIF -->
+				{% if commentrow.POSTER_POSTS != '' %}<dd class="profile-posts"><strong>{{ lang('POSTS') }}{{ lang('COLON') }}</strong> {{ commentrow.POSTER_POSTS }}</dd>{% endif %}
+				{% if commentrow.POSTER_GALLERY_IMAGES != '' %}<dd><strong>{{ lang('IMAGES') }}{{ lang('COLON') }}</strong> {% if commentrow.U_POSTER_GALLERY_SEARCH %}<a href="{{ commentrow.U_POSTER_GALLERY_SEARCH }}">{{ POSTER_GALLERY_IMAGES }}</a>{% else %}{{ POSTER_GALLERY_IMAGES }}{% endif %}</dd>{% endif %}
+				{% if commentrow.POSTER_JOINED %}<dd class="profile-joined"><strong>{{ lang('JOINED') }}{{ lang('COLON') }} </strong><span style="white-space: nowrap;"> {{ commentrow.POSTER_JOINED }}</span></dd>{% endif %}
+				{% if commentrow.POSTER_WARNINGS %}<dd class="profile-warnings"><strong>{{ lang('WARNINGS') }}{{ lang('COLON') }}</strong> {{ commentrow.POSTER_WARNINGS }}</dd>{% endif %}
+				{% if U_ACP and commentrow.POSTER_IP %}<dd><strong>{{ lang('IP') }}{{ lang('COLON') }}</strong> {{ commentrow.POSTER_IP }} <!-- [ <a href="{{ U_POSTER_WHOIS }}" onclick="popup(this.href, 750, 500); return false;">{{ lang('WHOIS') }}</a> ]--></dd>{% endif %}
 
-				<!-- IF commentrow.S_PROFILE_FIELD1 -->
+				{% if commentrow.S_PROFILE_FIELD1 %}
 				<!-- Use a construct like this to include admin defined profile fields. Replace FIELD1 with the name of your field. -->
-				<dd><strong>{commentrow.PROFILE_FIELD1_NAME}{L_COLON}</strong> {commentrow.PROFILE_FIELD1_VALUE}</dd>
-				<!-- ENDIF -->
+				<dd><strong>{{ commentrow.PROFILE_FIELD1_NAME }}{{ lang('COLON') }}</strong> {{ commentrow.PROFILE_FIELD1_VALUE }}</dd>
+				{% endif %}
 
-				<!-- EVENT viewtopic_body_postrow_custom_fields_before -->
-				<!-- BEGIN commentrow.custom_fields -->
-					<dd class="profile-custom-field profile-{commentrow.custom_fields.PROFILE_FIELD_IDENT}"><strong>{commentrow.custom_fields.PROFILE_FIELD_NAME}{L_COLON}</strong> {commentrow.custom_fields.PROFILE_FIELD_VALUE}</dd>
-				<!-- END commentrow.custom_fields -->
-				<!-- EVENT viewtopic_body_postrow_custom_fields_after -->
+				{% EVENT viewtopic_body_postrow_custom_fields_before %}
+				{% for custom_fields in commentrow.custom_fields %}
+					<dd class="profile-custom-field profile-{{ custom_fields.PROFILE_FIELD_IDENT }}"><strong>{{ custom_fields.PROFILE_FIELD_NAME }}{{ lang('COLON') }}</strong> {{ custom_fields.PROFILE_FIELD_VALUE }}</dd>
+				{% endfor %}
+				{% EVENT viewtopic_body_postrow_custom_fields_after %}
 
-				<!-- EVENT viewtopic_body_contact_fields_before -->
-				<!-- IF not S_IS_BOT and .commentrow.contact -->
+				{% EVENT viewtopic_body_contact_fields_before %}
+				{% if not S_IS_BOT and commentrow.contact|length %}
 				<dd class="profile-contact">
-					<strong>{L_CONTACT}{L_COLON}</strong>
+					<strong>{{ lang('CONTACT') }}{{ lang('COLON') }}</strong>
 					<div class="dropdown-container dropdown-left">
-						<a href="#" class="dropdown-trigger" title="{commentrow.POSTER_USERNAME}">
-							<i class="icon fa-commenting-o fa-fw icon-lg" aria-hidden="true"></i><span class="sr-only">{commentrow.POSTER_USERNAME}</span>
+						<a href="#" class="dropdown-trigger" title="{{ commentrow.POSTER_USERNAME }}">
+							<i class="icon fa-commenting-o fa-fw icon-lg" aria-hidden="true"></i><span class="sr-only">{{ commentrow.POSTER_USERNAME }}</span>
 						</a>
 						<div class="dropdown">
 							<div class="pointer"><div class="pointer-inner"></div></div>
 							<div class="dropdown-contents contact-icons">
-								<!-- BEGIN commentrow.contact -->
+								{% for contact in commentrow.contact %}
 								{% set REMAINDER = contact.S_ROW_COUNT % 4 %}
-								<!-- DEFINE $S_LAST_CELL = ((REMAINDER eq 3) or (commentrow.contact.S_LAST_ROW and commentrow.contact.S_NUM_ROWS < 4)) -->
-								<!-- IF REMAINDER eq 0 -->
+								{% set S_LAST_CELL = ((REMAINDER == 3) or (contact.S_LAST_ROW and contact.S_NUM_ROWS < 4)) %}
+								{% if REMAINDER == 0 %}
 								<div>
-									<!-- ENDIF -->
-									<a href="<!-- IF commentrow.contact.U_CONTACT -->{commentrow.contact.U_CONTACT}<!-- ELSE -->{commentrow.U_POST_AUTHOR}<!-- ENDIF -->" title="{commentrow.contact.NAME}"<!-- IF $S_LAST_CELL --> class="last-cell"<!-- ENDIF --><!-- IF contact.ID eq 'jabber' --> onclick="popup(this.href, 750, 320); return false;"<!-- ENDIF -->>
-									<span class="contact-icon {commentrow.contact.ID}-icon">{commentrow.contact.NAME}</span>
+									{% endif %}
+									<a href="{% if contact.U_CONTACT %}{{ contact.U_CONTACT }}{% else %}{{ commentrow.U_POST_AUTHOR }}{% endif %}" title="{{ contact.NAME }}"{% if S_LAST_CELL %} class="last-cell"{% endif %}{% if contact.ID == 'jabber' %} onclick="popup(this.href, 750, 320); return false;"{% endif %}>
+									<span class="contact-icon {{ contact.ID }}-icon">{{ contact.NAME }}</span>
 									</a>
-									<!-- IF REMAINDER eq 3 or commentrow.contact.S_LAST_ROW -->
+									{% if REMAINDER == 3 or contact.S_LAST_ROW %}
 								</div>
-								<!-- ENDIF -->
-								<!-- END commentrow.contact -->
+								{% endif %}
+								{% endfor %}
 							</div>
 						</div>
 					</div>
 				</dd>
-				<!-- ENDIF -->
-				<!-- EVENT viewtopic_body_contact_fields_after -->
+				{% endif %}
+				{% EVENT viewtopic_body_contact_fields_after %}
 			</dl>
-			<div class="postbody" id="post_content{commentrow.COMMENT_ID}">
-				<!-- IF commentrow.U_DELETE or commentrow.U_EDIT or commentrow.U_WHOIS or commentrow.U_QUOTE -->
+			<div class="postbody" id="post_content{{ commentrow.COMMENT_ID }}">
+				{% if commentrow.U_DELETE or commentrow.U_EDIT or commentrow.U_WHOIS or commentrow.U_QUOTE %}
 					<br />
 					<ul class="post-buttons">
-						<!-- IF commentrow.U_EDIT --><li><a href="{commentrow.U_EDIT}" title="{L_EDIT_COMMENT}" class="button button-icon-only"><i class="icon fa-pencil fa-fw" aria-hidden="true"></i><span class="sr-only">{L_EDIT_COMMENT}</span></a></li><!-- ENDIF -->
-						<!-- IF commentrow.U_DELETE --><li><a href="{commentrow.U_DELETE}" title="{L_DELETE_COMMENT}" class="button button-icon-only"><i class="icon fa-times fa-fw" aria-hidden="true"></i><span class="sr-only">{L_DELETE_COMMENT}</span></a></li><!-- ENDIF -->
-						<!-- IF commentrow.U_WHOIS --><li><a href="{commentrow.U_WHOIS}" title="{L_IP}" onclick="popup(this.href, 750, 500); return false;" class="button button-icon-only"><i class="icon fa-info fa-fw" aria-hidden="true"></i><span class="sr-only">{L_IP}</span></a></li><!-- ENDIF -->
-						<!-- IF commentrow.U_QUOTE --><li><a href="{commentrow.U_QUOTE}" title="{L_QUOTE_COMMENT}" class="button button-icon-only"><i class="icon fa-quote-left fa-fw" aria-hidden="true"></i><span class="sr-only">{L_QUOTE_COMMENT}</span></a></li><!-- ENDIF -->
+						{% if commentrow.U_EDIT %}<li><a href="{{ commentrow.U_EDIT }}" title="{{ lang('EDIT_COMMENT') }}" class="button button-icon-only"><i class="icon fa-pencil fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('EDIT_COMMENT') }}</span></a></li>{% endif %}
+						{% if commentrow.U_DELETE %}<li><a href="{{ commentrow.U_DELETE }}" title="{{ lang('DELETE_COMMENT') }}" class="button button-icon-only"><i class="icon fa-times fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('DELETE_COMMENT') }}</span></a></li>{% endif %}
+						{% if commentrow.U_WHOIS %}<li><a href="{{ commentrow.U_WHOIS }}" title="{{ lang('IP') }}" onclick="popup(this.href, 750, 500); return false;" class="button button-icon-only"><i class="icon fa-info fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('IP') }}</span></a></li>{% endif %}
+						{% if commentrow.U_QUOTE %}<li><a href="{{ commentrow.U_QUOTE }}" title="{{ lang('QUOTE_COMMENT') }}" class="button button-icon-only"><i class="icon fa-quote-left fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('QUOTE_COMMENT') }}</span></a></li>{% endif %}
 					</ul>
-				<!-- ENDIF -->
-				<p class="author"><!-- IF S_IS_BOT --><i class="icon fa-file fa-fw icon-lightgray icon-md" aria-hidden="true"></i>{L_COMMENT}&nbsp;<span class="sr-only">{commentrow.MINI_POST}</span><!-- ELSE --><a href="{commentrow.U_COMMENT}" title="{L_COMMENT}"><i class="icon fa-file fa-fw icon-lightgray icon-md" aria-hidden="true"></i>{L_COMMENT}&nbsp;<span class="sr-only">{commentrow.MINI_POST}</span></a><!-- ENDIF --><span style="white-space: nowrap;">{L_POST_BY_AUTHOR}&nbsp;{commentrow.POSTER_FULL}</span> &raquo;<span style="white-space: nowrap;"> {commentrow.TIME}</span></p>
-				<div class="content">{commentrow.TEXT}</div>
-				<!-- IF commentrow.EDIT_INFO --><div class="notice">{commentrow.EDIT_INFO}</div><!-- ENDIF -->
-				<!-- IF commentrow.SIGNATURE --><div id="sig{commentrow.COMMENT_ID}" class="signature">{commentrow.SIGNATURE}</div><!-- ENDIF -->
+				{% endif %}
+				<p class="author">{% if S_IS_BOT %}<i class="icon fa-file fa-fw icon-lightgray icon-md" aria-hidden="true"></i>{{ lang('COMMENT') }}&nbsp;<span class="sr-only">{{ commentrow.MINI_POST }}</span>{% else %}<a href="{{ commentrow.U_COMMENT }}" title="{{ lang('COMMENT') }}"><i class="icon fa-file fa-fw icon-lightgray icon-md" aria-hidden="true"></i>{{ lang('COMMENT') }}&nbsp;<span class="sr-only">{{ commentrow.MINI_POST }}</span></a>{% endif %}<span style="white-space: nowrap;">{{ lang('POST_BY_AUTHOR') }}&nbsp;{{ commentrow.POSTER_FULL }}</span> &raquo;<span style="white-space: nowrap;"> {{ commentrow.TIME }}</span></p>
+				<div class="content">{{ commentrow.TEXT }}</div>
+				{% if commentrow.EDIT_INFO %}<div class="notice">{{ commentrow.EDIT_INFO }}</div>{% endif %}
+				{% if commentrow.SIGNATURE %}<div id="sig{{ commentrow.COMMENT_ID }}" class="signature">{{ commentrow.SIGNATURE }}</div>{% endif %}
 			</div>
-			<!-- EVENT viewtopic_body_postrow_back2top_before -->
+			{% EVENT viewtopic_body_postrow_back2top_before %}
 				<div class="back2top">
-					<!-- EVENT viewtopic_body_postrow_back2top_prepend -->
-						<a href="#top" class="top" title="{L_BACK_TO_TOP}">
+					{% EVENT viewtopic_body_postrow_back2top_prepend %}
+						<a href="#top" class="top" title="{{ lang('BACK_TO_TOP') }}">
 							<i class="icon fa-chevron-circle-up fa-fw icon-gray" aria-hidden="true"></i>
-							<span class="sr-only">{L_BACK_TO_TOP}</span>
+							<span class="sr-only">{{ lang('BACK_TO_TOP') }}</span>
 						</a>
-					<!-- EVENT viewtopic_body_postrow_back2top_append -->
+					{% EVENT viewtopic_body_postrow_back2top_append %}
 				</div>
-			<!-- EVENT viewtopic_body_postrow_back2top_after -->
+			{% EVENT viewtopic_body_postrow_back2top_after %}
 		</div>
 	</div>
-	<!-- END commentrow -->
-	<form action="{S_ALBUM_ACTION}" method="post">
+	{% endfor %}
+	<form action="{{ S_ALBUM_ACTION }}" method="post">
 	<fieldset class="display-options" style="margin-top: 0; ">
-		<label>{L_ORDER}{L_COLON} <select name="sort_order"><option value="ASC"<!-- IF SORT_ASC --> selected="selected"<!-- ENDIF -->>{L_SORT_ASCENDING}</option><option value="DESC"<!-- IF not SORT_ASC --> selected="selected"<!-- ENDIF -->>{L_SORT_DESCENDING}</option></select>&nbsp;<input type="submit" name="submit" value="{L_GO}" class="button2" /></label>
+		<label>{{ lang('ORDER') }}{{ lang('COLON') }} <select name="sort_order"><option value="ASC"{% if SORT_ASC %} selected="selected"{% endif %}>{{ lang('SORT_ASCENDING') }}</option><option value="DESC"{% if not SORT_ASC %} selected="selected"{% endif %}>{{ lang('SORT_DESCENDING') }}</option></select>&nbsp;<input type="submit" name="submit" value="{{ lang('GO') }}" class="button2" /></label>
 	</fieldset>
 	</form>
 <hr />
 
-	<!-- IF .pagination or TOTAL_COMMENTS -->
+	{% if pagination|length or TOTAL_COMMENTS %}
 	<div class="topic-actions" style="margin-bottom: 4em;">
 		<div class="pagination">
-			{TOTAL_COMMENTS}
-			<!-- IF .pagination -->
-				<!-- INCLUDE pagination.html -->
-			<!-- ELSE -->
-				&bull; {PAGE_NUMBER}
-			<!-- ENDIF -->
+			{{ TOTAL_COMMENTS }}
+			{% if pagination|length %}
+				{% include 'pagination.html' %}
+			{% else %}
+				&bull; {{ PAGE_NUMBER }}
+			{% endif %}
 		</div>
 	</div>
-	<!-- ENDIF -->
+	{% endif %}
 
-<!-- ENDIF -->
+{% endif %}
 
-<!-- IF not S_IS_BOT and S_ALLOWED_TO_COMMENT -->
-	<!-- IF S_ALLOWED_TO_COMMENT and not S_HIDE_COMMENT_INPUT -->
-		<form method="post" action="{S_COMMENT_ACTION}" id="qr_postform">
-		<!-- EVENT quickreply_editor_panel_before -->
+{% if not S_IS_BOT and S_ALLOWED_TO_COMMENT %}
+	{% if S_ALLOWED_TO_COMMENT and not S_HIDE_COMMENT_INPUT %}
+		<form method="post" action="{{ S_COMMENT_ACTION }}" id="qr_postform">
+		{% EVENT quickreply_editor_panel_before %}
 			<div class="panel">
 				<div class="inner">
-					<h2 class="quickreply-title">{L_POST_COMMENT}</h2>
+					<h2 class="quickreply-title">{{ lang('POST_COMMENT') }}</h2>
 					<fieldset class="fields1">
-						{L_COMMENT_LENGTH}
-						<!-- IF not S_USER_LOGGED_IN -->
+						{{ lang('COMMENT_LENGTH') }}
+						{% if not S_USER_LOGGED_IN %}
 							<dl>
-								<dt><label>{L_USERNAME}{L_COLON}</label></dt>
+								<dt><label>{{ lang('USERNAME') }}{{ lang('COLON') }}</label></dt>
 								<dd><input class="inputbox autowidth" type="text" name="username" maxlength="32" /></dd>
 							</dl>
-						<!-- ENDIF -->
-						<!-- IF CAPTCHA_TEMPLATE -->
-							<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
-						<!-- ENDIF -->
-						<!-- EVENT quickreply_editor_message_before -->
+						{% endif %}
+						{% if CAPTCHA_TEMPLATE %}
+							{% include ''~ CAPTCHA_TEMPLATE ~'' %}
+						{% endif %}
+						{% EVENT quickreply_editor_message_before %}
 						<div id="message-box" class="message-box">
 							<textarea style="height: 9em;" name="message" rows="7" cols="76" tabindex="3" class="inputbox" name="message" id="message"></textarea>
 						</div>
-						<div><label for="attach_sig"><input type="checkbox" name="attach_sig" id="attach_sig"{S_SIGNATURE_CHECKED} /> {L_ATTACH_SIG}</label></div>
-						<!-- EVENT quickreply_editor_message_after -->
+						<div><label for="attach_sig"><input type="checkbox" name="attach_sig" id="attach_sig"{{ S_SIGNATURE_CHECKED }} /> {{ lang('ATTACH_SIG') }}</label></div>
+						{% EVENT quickreply_editor_message_after %}
 					</fieldset>
-					<!-- EVENT viewtopic_body_postrow_back2top_before -->
+					{% EVENT viewtopic_body_postrow_back2top_before %}
 						<div class="back2top">
-							<!-- EVENT viewtopic_body_postrow_back2top_prepend -->
-								<a href="#top" class="top" title="{L_BACK_TO_TOP}" style="margin-top: 15px;">
+							{% EVENT viewtopic_body_postrow_back2top_prepend %}
+								<a href="#top" class="top" title="{{ lang('BACK_TO_TOP') }}" style="margin-top: 15px;">
 									<i class="icon fa-chevron-circle-up fa-fw icon-gray" aria-hidden="true"></i>
-									<span class="sr-only">{L_BACK_TO_TOP}</span>
+									<span class="sr-only">{{ lang('BACK_TO_TOP') }}</span>
 								</a>
-							<!-- EVENT viewtopic_body_postrow_back2top_append -->
+							{% EVENT viewtopic_body_postrow_back2top_append %}
 						</div>
-					<!-- EVENT viewtopic_body_postrow_back2top_after -->
+					{% EVENT viewtopic_body_postrow_back2top_after %}
 					<fieldset class="submit-buttons">
-							{S_FORM_TOKEN}
-							{QR_HIDDEN_FIELDS}
-							<input type="submit" accesskey="f" tabindex="6" name="preview" value="{L_FULL_EDITOR_GALLERY}" class="button2" id="qr_full_editor" />&nbsp;
-							<input type="submit" accesskey="s" tabindex="7" name="submit" value="{L_SUBMIT}" class="button1" />&nbsp;
+							{{ S_FORM_TOKEN }}
+							{{ QR_HIDDEN_FIELDS }}
+							<input type="submit" accesskey="f" tabindex="6" name="preview" value="{{ lang('FULL_EDITOR_GALLERY') }}" class="button2" id="qr_full_editor" />&nbsp;
+							<input type="submit" accesskey="s" tabindex="7" name="submit" value="{{ lang('SUBMIT') }}" class="button1" />&nbsp;
 					</fieldset>
 				</div>
 			</div>
-		<!-- EVENT quickreply_editor_panel_after -->
+		{% EVENT quickreply_editor_panel_after %}
 		</form>
-	<!-- ENDIF -->
-<!-- ENDIF -->
-<!-- ENDIF -->
+	{% endif %}
+{% endif %}
+{% endif %}
 
-<p class="jumpbox-return"><a href="{U_RETURN_LINK}" class="left-box arrow-{S_CONTENT_FLOW_BEGIN}" accesskey="r"><i class="icon fa-angle-left fa-fw icon-black" aria-hidden="true"></i> {S_RETURN_LINK} {L_ALBUM}</a> </p>
-<!-- IF ALBUM_JUMPBOX -->
-<form method="post" id="jumpbox" action="{S_JUMPBOX_ACTION}" onsubmit="if(document.jumpbox.album_id.value == -1){return false;}">
+<p class="jumpbox-return"><a href="{{ U_RETURN_LINK }}" class="left-box arrow-{{ S_CONTENT_FLOW_BEGIN }}" accesskey="r"><i class="icon fa-angle-left fa-fw icon-black" aria-hidden="true"></i> {{ S_RETURN_LINK }} {{ lang('ALBUM') }}</a> </p>
+{% if ALBUM_JUMPBOX %}
+<form method="post" id="jumpbox" action="{{ S_JUMPBOX_ACTION }}" onsubmit="if(document.jumpbox.album_id.value == -1){return false;}">
 	<fieldset class="jumpbox">
-		<label for="album_id" accesskey="album_id">{L_JUMP_TO}{L_COLON}</label>
+		<label for="album_id" accesskey="album_id">{{ lang('JUMP_TO') }}{{ lang('COLON') }}</label>
 		<select name="album_id" id="album_id" onchange="if(this.options[this.selectedIndex].value != -1){ document.forms['jumpbox'].submit() }">
-			{ALBUM_JUMPBOX}
+			{{ ALBUM_JUMPBOX }}
 		</select>
-		<input type="submit" value="{L_GO}" class="button2" />
+		<input type="submit" value="{{ lang('GO') }}" class="button2" />
 	</fieldset>
 </form>
-<!-- ELSE -->
+{% else %}
 <br /><br />
-<!-- ENDIF -->
+{% endif %}
 <br />
-<!-- INCLUDE gallery/gallery_footer.html -->
+{% include 'gallery/gallery_footer.html' %}

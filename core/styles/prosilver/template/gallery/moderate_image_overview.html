@@ -1,24 +1,24 @@
-<!-- INCLUDE gallery/gallery_header.html -->
+{% include 'gallery/gallery_header.html' %}
 
-<h2>{L_ALBUM_NAME}{L_COLON}<a href="{U_VIEW_ALBUM}" style="display: inline;"> {ALBUM_NAME}</a></h2>
+<h2>{{ lang('ALBUM_NAME') }}{{ lang('COLON') }}<a href="{{ U_VIEW_ALBUM }}" style="display: inline;"> {{ ALBUM_NAME }}</a></h2>
 
 <div class="panel">
 			<div class="inner">
 				<div class="postbody" style="width: 100%;">
 					<ul class="post-buttons">
-				<a href="{U_EDIT_IMAGE}" title="{L_EDIT_IMAGE}" class="button button-icon-only">
-					<i class="icon fa-pencil fa-fw" aria-hidden="true"></i><span class="sr-only">{L_EDIT_IMAGE}</span>
+				<a href="{{ U_EDIT_IMAGE }}" title="{{ lang('EDIT_IMAGE') }}" class="button button-icon-only">
+					<i class="icon fa-pencil fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('EDIT_IMAGE') }}</span>
 				</a>
-				<a href="{U_DELETE_IMAGE}" title="{L_DELETE_IMAGE}" class="button button-icon-only">
-					<i class="icon fa-times fa-fw" aria-hidden="true"></i><span class="sr-only">{L_DELETE_IMAGE}</span>
+				<a href="{{ U_DELETE_IMAGE }}" title="{{ lang('DELETE_IMAGE') }}" class="button button-icon-only">
+					<i class="icon fa-times fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('DELETE_IMAGE') }}</span>
 				</a>
 					</ul>
-			<h2>{L_IMAGE_NAME}{L_COLON}<a href="{U_VIEW_ALBUM}" style="display: inline; line-height: 1.2em;"> {IMAGE_NAME}</a></h2>
+			<h2>{{ lang('IMAGE_NAME') }}{{ lang('COLON') }}<a href="{{ U_VIEW_ALBUM }}" style="display: inline; line-height: 1.2em;"> {{ IMAGE_NAME }}</a></h2>
 					<p class="author">
-				{L_UPLOADED_BY_USER}{L_COLON} {UPLOADER}<br />
-				 &raquo; {IMAGE_TIME}<br />
-				{L_ALBUM}{L_COLON} <a href="{U_VIEW_ALBUM}" style="font-weight: bold; display: inline;">{ALBUM_NAME}</a><!-- IF U_MOVE_IMAGE --> &raquo; <a href="{U_MOVE_IMAGE}" style="font-weight: bold;">{L_MOVE}</a><!-- ENDIF --><br />
-						{L_STATUS}{L_COLON} <span style="font-weight: bold;">{STATUS}</span>
+				{{ lang('UPLOADED_BY_USER') }}{{ lang('COLON') }} {{ UPLOADER }}<br />
+				 &raquo; {{ IMAGE_TIME }}<br />
+				{{ lang('ALBUM') }}{{ lang('COLON') }} <a href="{{ U_VIEW_ALBUM }}" style="font-weight: bold; display: inline;">{{ ALBUM_NAME }}</a>{% if U_MOVE_IMAGE %} &raquo; <a href="{{ U_MOVE_IMAGE }}" style="font-weight: bold;">{{ lang('MOVE') }}</a>{% endif %}<br />
+						{{ lang('STATUS') }}{{ lang('COLON') }} <span style="font-weight: bold;">{{ STATUS }}</span>
 					</p>
 		</div>
 	</div>
@@ -28,52 +28,52 @@
 	<div class="inner">
 		<div class="postbody" style="width: 100%;">
 					<div class="content">
-						<div style="text-align: center;">{UC_IMAGE}</div>
+						<div style="text-align: center;">{{ UC_IMAGE }}</div>
 			</div>
 		</div>
 	</div>
 </div>
 
-<!-- IF IMAGE_DESC -->
+{% if IMAGE_DESC %}
 	<div id="description" class="panel">
 		<div class="inner" style="text-align: center;">
-			<h3>{L_IMAGE_DESC}</h3>
+			<h3>{{ lang('IMAGE_DESC') }}</h3>
 			<div style="width: 100%; font-size: 1.3em;">
-							{IMAGE_DESC}
+							{{ IMAGE_DESC }}
 				</div>
 			</div>
 		</div>
-<!-- ENDIF -->
+{% endif %}
 
-<!-- IF .reports -->
+{% if reports|length %}
 			<div id="report" class="panel">
 				<div class="inner">
-				<!-- BEGIN reports -->
-				<div class="postbody <!-- IF reports.STATUS == 1 --> reported<!-- ENDIF -->" style="width: 100%">
-					<p class="author">{L_REPORT_BY} {reports.REPORTER} &raquo; {reports.REPORT_TIME}</p>
-					<div class="content">{reports.REPORT_NOTE}</div>
-					<!-- IF reports.STATUS == 0 -->
-					<p class="author">{L_REPORT_CLOSED_BY} {reports.MANAGER} </p>
+				{% for reports in reports %}
+				<div class="postbody {% if reports.STATUS == 1 %} reported{% endif %}" style="width: 100%">
+					<p class="author">{{ lang('REPORT_BY') }} {{ reports.REPORTER }} &raquo; {{ reports.REPORT_TIME }}</p>
+					<div class="content">{{ reports.REPORT_NOTE }}</div>
+					{% if reports.STATUS == 0 %}
+					<p class="author">{{ lang('REPORT_CLOSED_BY') }} {{ reports.MANAGER }} </p>
 					<hr>
-					<!-- ENDIF -->
+					{% endif %}
 				</div>
-				<!-- END reports -->
+				{% endfor %}
 				</div>
 			</div>
-<!-- ENDIF -->
+{% endif %}
 
 <div class="panel bg2">
 	<div class="inner">
-		<form method="post" action="{S_MCP_ACTION}">
+		<form method="post" action="{{ S_MCP_ACTION }}">
 			<fieldset class="submit-buttons">
 				<select name="action">
-					{U_SELECT}
+					{{ U_SELECT }}
 				</select>
-				<input class="button2" type="submit" value="{L_SUBMIT}" />
-				<input type="hidden" value="{REPORT_ID}" name="image_id_ary[{REPORT_ID}]" />
+				<input class="button2" type="submit" value="{{ lang('SUBMIT') }}" />
+				<input type="hidden" value="{{ REPORT_ID }}" name="image_id_ary[{{ REPORT_ID }}]" />
 			</fieldset>
 		</form>
 		</div>
 </div>
 
-<!-- INCLUDE gallery/gallery_footer.html -->
+{% include 'gallery/gallery_footer.html' %}

@@ -170,15 +170,18 @@ class resumable_upload_test extends TestCase
 		foreach ($this->posting_templates() as $template_path)
 		{
 			$template = file_get_contents($template_path);
-			$form_start = strpos($template, '<form id="postform" action="{S_ALBUM_ACTION}" method="post">');
+			$album_action = str_contains($template, '{{ S_ALBUM_ACTION }}') ? '{{ S_ALBUM_ACTION }}' : '{S_ALBUM_ACTION}';
+			$cancel = str_contains($template, "{{ lang('CANCEL') }}") ? "{{ lang('CANCEL') }}" : '{L_CANCEL}';
+			$form_token = str_contains($template, '{{ S_FORM_TOKEN }}') ? '{{ S_FORM_TOKEN }}' : '{S_FORM_TOKEN}';
+			$form_start = strpos($template, '<form id="postform" action="' . $album_action . '" method="post">');
 			$this->assertNotFalse($form_start, $template_path);
 			$form_end = strpos($template, '</form>', $form_start);
 			$this->assertNotFalse($form_end, $template_path);
 			$form = substr($template, $form_start, $form_end - $form_start);
 
 			$this->assertStringContainsString('name="discard_pending"', $form, $template_path);
-			$this->assertStringContainsString('{L_CANCEL}', $form, $template_path);
-			$this->assertStringContainsString('{S_FORM_TOKEN}', $form, $template_path);
+			$this->assertStringContainsString($cancel, $form, $template_path);
+			$this->assertStringContainsString($form_token, $form, $template_path);
 		}
 	}
 

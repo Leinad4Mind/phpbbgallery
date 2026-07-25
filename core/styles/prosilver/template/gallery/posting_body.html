@@ -1,25 +1,25 @@
-<!-- INCLUDE gallery/gallery_header.html -->
+{% include 'gallery/gallery_header.html' %}
 
-<!-- IF S_ALBUM_SELECT -->
+{% if S_ALBUM_SELECT %}
 <br />
-<form method="post" id="mcp" action="{S_ALBUM_ACTION}">
+<form method="post" id="mcp" action="{{ S_ALBUM_ACTION }}">
 <div class="panel" id="message">
 	<div class="inner">
-		<h3>{L_UPLOAD_IMAGE}</h3>
+		<h3>{{ lang('UPLOAD_IMAGE') }}</h3>
 
 		<p>
-			{L_SELECT_ALBUM}{L_COLON} <select name="album_id">{S_ALBUM_SELECT}</select>
-			<input class="button2" type="submit" name="move" value="{L_SUBMIT}" />
-			{S_FORM_TOKEN}{S_HIDDEN_FIELDS}
+			{{ lang('SELECT_ALBUM') }}{{ lang('COLON') }} <select name="album_id">{{ S_ALBUM_SELECT }}</select>
+			<input class="button2" type="submit" name="move" value="{{ lang('SUBMIT') }}" />
+			{{ S_FORM_TOKEN }}{{ S_HIDDEN_FIELDS }}
 		</p>
 	</div>
 </div>
 </form>
-<!-- ELSEIF S_UPLOAD -->
+{% elseif S_UPLOAD %}
 <script type="text/javascript">
 //<![CDATA[
 	var num_displayed_fields = 1;
-	var limit_fields = {S_UPLOAD_LIMIT};
+	var limit_fields = {{ S_UPLOAD_LIMIT }};
 	function add_field()
 	{
 		if (num_displayed_fields < limit_fields)
@@ -35,66 +35,66 @@
 //]]>
 </script>
 
-<h2>{L_ALBUM_NAME}{L_COLON}<a href="{U_VIEW_ALBUM}" style="display: inline;"> {ALBUM_NAME}</a></h2>
+<h2>{{ lang('ALBUM_NAME') }}{{ lang('COLON') }}<a href="{{ U_VIEW_ALBUM }}" style="display: inline;"> {{ ALBUM_NAME }}</a></h2>
 
-<form id="postform" action="{S_ALBUM_ACTION}" method="post" enctype="multipart/form-data" data-url="{S_ALBUM_ACTION}">
+<form id="postform" action="{{ S_ALBUM_ACTION }}" method="post" enctype="multipart/form-data" data-url="{{ S_ALBUM_ACTION }}">
 <div class="panel" id="postingbox" style="position: relative;">
-<div id="covverall" data-url="{S_ALBUM_ACTION}">
+<div id="covverall" data-url="{{ S_ALBUM_ACTION }}">
 	<div class="dropzone">
-		<span>{L_GALLERY_DROP}</span>
+		<span>{{ lang('GALLERY_DROP') }}</span>
 	</div>
 </div>
 <div>
 	<div class="inner">
-		<h3>{L_UPLOAD_IMAGE}</h3>
+		<h3>{{ lang('UPLOAD_IMAGE') }}</h3>
 		<fieldset class="fields1">
-			<!-- IF ERROR --><p class="error">{ERROR}</p><!-- ENDIF -->
+			{% if ERROR %}<p class="error">{{ ERROR }}</p>{% endif %}
 
-			<!-- IF CAPTCHA_TEMPLATE -->
-				<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
-			<!-- ENDIF -->
+			{% if CAPTCHA_TEMPLATE %}
+				{% include ''~ CAPTCHA_TEMPLATE ~'' %}
+			{% endif %}
 
-			<!-- IF not S_USER_LOGGED_IN -->
+			{% if not S_USER_LOGGED_IN %}
 			<dl>
-				<dt><label for="username">{L_USERNAME}{L_COLON}</label></dt>
-				<dd id="username"><input class="inputbox" type="text" tabindex="1" name="username" value="{USERNAME}" size="60" maxlength="32" /></dd>
+				<dt><label for="username">{{ lang('USERNAME') }}{{ lang('COLON') }}</label></dt>
+				<dd id="username"><input class="inputbox" type="text" tabindex="1" name="username" value="{{ USERNAME }}" size="60" maxlength="32" /></dd>
 			</dl>
-			<!-- ENDIF -->
-			<!-- IF S_COMMENTS_ENABLED -->
+			{% endif %}
+			{% if S_COMMENTS_ENABLED %}
 				<dl>
-					<dt><label for="allow_comments">{L_COMMENTS}{L_COLON}</label></dt>
-					<dd><input type="checkbox" class="checkbox" name="allow_comments" id="allow_comments"<!-- IF S_ALLOW_COMMENTS --> checked="checked"<!-- ENDIF --> value="1" /> <label for="allow_comments">{L_ALLOW_COMMENTS}</label></dd>
+					<dt><label for="allow_comments">{{ lang('COMMENTS') }}{{ lang('COLON') }}</label></dt>
+					<dd><input type="checkbox" class="checkbox" name="allow_comments" id="allow_comments"{% if S_ALLOW_COMMENTS %} checked="checked"{% endif %} value="1" /> <label for="allow_comments">{{ lang('ALLOW_COMMENTS') }}</label></dd>
 				</dl>
-			<!-- ENDIF -->
-			<!-- IF CAPTCHA_TEMPLATE or not S_USER_LOGGED_IN or S_COMMENTS_ENABLED --><hr /><!-- ENDIF -->
+			{% endif %}
+			{% if CAPTCHA_TEMPLATE or not S_USER_LOGGED_IN or S_COMMENTS_ENABLED %}<hr />{% endif %}
 			<dl>
-				<dt><label>{L_MAX_DIMENSIONS}{L_COLON}</label></dt>
-				<dd>{L_FILE_SIZE}{L_COLON} {S_MAX_FILESIZE}</dd>
-				<dd>{L_IMAGE_WIDTH}{L_COLON} {S_MAX_WIDTH}</dd>
-				<dd>{L_IMAGE_HEIGHT}{L_COLON} {S_MAX_HEIGHT}</dd>
+				<dt><label>{{ lang('MAX_DIMENSIONS') }}{{ lang('COLON') }}</label></dt>
+				<dd>{{ lang('FILE_SIZE') }}{{ lang('COLON') }} {{ S_MAX_FILESIZE }}</dd>
+				<dd>{{ lang('IMAGE_WIDTH') }}{{ lang('COLON') }} {{ S_MAX_WIDTH }}</dd>
+				<dd>{{ lang('IMAGE_HEIGHT') }}{{ lang('COLON') }} {{ S_MAX_HEIGHT }}</dd>
 			</dl>
 			<dl>
-				<dt><label>{L_ALLOWED_FILETYPES}{L_COLON}</label></dt>
-				<dd>{S_ALLOWED_FILETYPES}</dd>
+				<dt><label>{{ lang('ALLOWED_FILETYPES') }}{{ lang('COLON') }}</label></dt>
+				<dd>{{ S_ALLOWED_FILETYPES }}</dd>
 			</dl>
 			<hr />
 			<dl id="upload_field">
-				<dt><label for="image_file">{L_IMAGES}{L_COLON}</label></dt>
+				<dt><label for="image_file">{{ lang('IMAGES') }}{{ lang('COLON') }}</label></dt>
 				<dd><input class="inputbox autowidth dz-hidden-input" type="file" name="files[]" id="files" size="52" multiple accept="image/jpeg,image/png,image/gif,image/webp,application/zip"/></dd>
 
 			</dl>
-			<!-- BEGIN upload_image -->
-				<dl id="upload_field_{upload_image.S_ROW_COUNT}">
-					<dt><label for="image_file_{upload_image.S_ROW_COUNT}">{L_FILE}{L_COLON}</label></dt>
-					<dd><input class="inputbox" type="file" onchange="add_field();" tabindex="1{upload_image.S_ROW_COUNT}" id="image_file_{upload_image.S_ROW_COUNT}" name="image_file_{upload_image.S_ROW_COUNT}" size="52" /></dd>
-					<!-- IF S_ALLOW_ROTATE -->
-						<dd><input type="radio" name="rotate[{upload_image.S_ROW_COUNT}]" id="rotate_{upload_image.S_ROW_COUNT}_0" value="0" checked="checked" /> <label for="rotate_{upload_image.S_ROW_COUNT}_0">{L_ROTATE_NONE}</label> &nbsp;
-							<input type="radio" name="rotate[{upload_image.S_ROW_COUNT}]" id="rotate_{upload_image.S_ROW_COUNT}_270" value="270" /> <label for="rotate_{upload_image.S_ROW_COUNT}_270">{L_ROTATE_RIGHT}</label> &nbsp;
-						<input type="radio" name="rotate[{upload_image.S_ROW_COUNT}]" id="rotate_{upload_image.S_ROW_COUNT}_180" value="180" /> <label for="rotate_{upload_image.S_ROW_COUNT}_180">{L_ROTATE_UPSIDEDOWN}</label> &nbsp;
-							<input type="radio" name="rotate[{upload_image.S_ROW_COUNT}]" id="rotate_{upload_image.S_ROW_COUNT}_90" value="90" /> <label for="rotate_{upload_image.S_ROW_COUNT}_90">{L_ROTATE_LEFT}</label></dd>
-					<!-- ENDIF -->
+			{% for upload_image in upload_image %}
+				<dl id="upload_field_{{ upload_image.S_ROW_COUNT }}">
+					<dt><label for="image_file_{{ upload_image.S_ROW_COUNT }}">{{ lang('FILE') }}{{ lang('COLON') }}</label></dt>
+					<dd><input class="inputbox" type="file" onchange="add_field();" tabindex="1{{ upload_image.S_ROW_COUNT }}" id="image_file_{{ upload_image.S_ROW_COUNT }}" name="image_file_{{ upload_image.S_ROW_COUNT }}" size="52" /></dd>
+					{% if S_ALLOW_ROTATE %}
+						<dd><input type="radio" name="rotate[{{ upload_image.S_ROW_COUNT }}]" id="rotate_{{ upload_image.S_ROW_COUNT }}_0" value="0" checked="checked" /> <label for="rotate_{{ upload_image.S_ROW_COUNT }}_0">{{ lang('ROTATE_NONE') }}</label> &nbsp;
+							<input type="radio" name="rotate[{{ upload_image.S_ROW_COUNT }}]" id="rotate_{{ upload_image.S_ROW_COUNT }}_270" value="270" /> <label for="rotate_{{ upload_image.S_ROW_COUNT }}_270">{{ lang('ROTATE_RIGHT') }}</label> &nbsp;
+						<input type="radio" name="rotate[{{ upload_image.S_ROW_COUNT }}]" id="rotate_{{ upload_image.S_ROW_COUNT }}_180" value="180" /> <label for="rotate_{{ upload_image.S_ROW_COUNT }}_180">{{ lang('ROTATE_UPSIDEDOWN') }}</label> &nbsp;
+							<input type="radio" name="rotate[{{ upload_image.S_ROW_COUNT }}]" id="rotate_{{ upload_image.S_ROW_COUNT }}_90" value="90" /> <label for="rotate_{{ upload_image.S_ROW_COUNT }}_90">{{ lang('ROTATE_LEFT') }}</label></dd>
+					{% endif %}
 				</dl>
-			<!-- END upload_image -->
+			{% endfor %}
 		</fieldset>
 	</div>
 </div>
@@ -102,12 +102,12 @@
 <div class="panel bg2">
 	<div class="inner">
 		<fieldset class="submit-buttons">
-			{S_HIDDEN_FIELDS}{S_CAPTCHA_HIDDEN_FIELDS}
+			{{ S_HIDDEN_FIELDS }}{{ S_CAPTCHA_HIDDEN_FIELDS }}
 			<input type="hidden" id="mode" name="mode" value="upload">
-			<input type="reset" accesskey="r" tabindex="200" value="{L_RESET}" class="button2" />&nbsp;
-			<input type="submit" accesskey="s" tabindex="201" name="submit" value="{L_CONTINUE}" class="button1" />&nbsp;
+			<input type="reset" accesskey="r" tabindex="200" value="{{ lang('RESET') }}" class="button2" />&nbsp;
+			<input type="submit" accesskey="s" tabindex="201" name="submit" value="{{ lang('CONTINUE') }}" class="button1" />&nbsp;
 		</fieldset>
-		{S_FORM_TOKEN}
+		{{ S_FORM_TOKEN }}
 	</div>
 </div>
 </div>
@@ -122,106 +122,106 @@
 		</div>
 </div>
 
-<!-- ELSE -->
+{% else %}
 
-<!-- INCLUDE gallery/posting_javascript.html -->
+{% include 'gallery/posting_javascript.html' %}
 
-<!-- IF U_VIEW_IMAGE --><h2>{L_IMAGE_NAME}{L_COLON}<a href="{U_VIEW_IMAGE}" style="display: inline;"> {IMAGE_NAME}</a></h2><!-- ELSE --><h2>{L_ALBUM_NAME}{L_COLON}<a href="{U_VIEW_ALBUM}" style="display: inline;"> {ALBUM_NAME}</a></h2><!-- ENDIF -->
+{% if U_VIEW_IMAGE %}<h2>{{ lang('IMAGE_NAME') }}{{ lang('COLON') }}<a href="{{ U_VIEW_IMAGE }}" style="display: inline;"> {{ IMAGE_NAME }}</a></h2>{% else %}<h2>{{ lang('ALBUM_NAME') }}{{ lang('COLON') }}<a href="{{ U_VIEW_ALBUM }}" style="display: inline;"> {{ ALBUM_NAME }}</a></h2>{% endif %}
 
-<form id="postform" action="{S_ALBUM_ACTION}" method="post">
+<form id="postform" action="{{ S_ALBUM_ACTION }}" method="post">
 
 <div class="panel" id="postingbox">
 	<div class="inner">
-		<h3><!-- IF S_UPLOAD_EDIT -->{L_UPLOAD_IMAGE}<!-- ELSEIF S_EDIT -->{L_EDIT_IMAGE}<!-- ELSEIF S_REPORT -->{L_REPORT_IMAGE}<!-- ENDIF --></h3>
+		<h3>{% if S_UPLOAD_EDIT %}{{ lang('UPLOAD_IMAGE') }}{% elseif S_EDIT %}{{ lang('EDIT_IMAGE') }}{% elseif S_REPORT %}{{ lang('REPORT_IMAGE') }}{% endif %}</h3>
 		<fieldset class="fields1 gallery">
-			<!-- IF ERROR --><p class="error">{ERROR}</p><!-- ENDIF -->
+			{% if ERROR %}<p class="error">{{ ERROR }}</p>{% endif %}
 
-			<!-- IF not S_USER_LOGGED_IN -->
+			{% if not S_USER_LOGGED_IN %}
 				<dl>
-					<dt><label for="username">{L_USERNAME}{L_COLON}</label></dt>
-					<dd id="username"><input class="inputbox" type="text" tabindex="1" name="username" value="{S_USERNAME}" size="60" maxlength="32" /></dd>
+					<dt><label for="username">{{ lang('USERNAME') }}{{ lang('COLON') }}</label></dt>
+					<dd id="username"><input class="inputbox" type="text" tabindex="1" name="username" value="{{ S_USERNAME }}" size="60" maxlength="32" /></dd>
 				</dl>
-			<!-- ENDIF -->
-			<!-- IF BBCODE_STATUS -->
+			{% endif %}
+			{% if BBCODE_STATUS %}
 			<dl>
-				<dt><label>{L_BBCODES}{L_COLON}</label></dt>
-				<!-- IF S_BBCODE_ALLOWED --><dd><!-- INCLUDE posting_buttons.html --></dd><!-- ENDIF -->
-				<dd>{BBCODE_STATUS}<!-- IF S_BBCODE_ALLOWED -->; {IMG_STATUS} {FLASH_STATUS}; {URL_STATUS}; {SMILIES_STATUS}<!-- ENDIF --></dd>
+				<dt><label>{{ lang('BBCODES') }}{{ lang('COLON') }}</label></dt>
+				{% if S_BBCODE_ALLOWED %}<dd>{% include 'posting_buttons.html' %}</dd>{% endif %}
+				<dd>{{ BBCODE_STATUS }}{% if S_BBCODE_ALLOWED %}; {{ IMG_STATUS }} {{ FLASH_STATUS }}; {{ URL_STATUS }}; {{ SMILIES_STATUS }}{% endif %}</dd>
 			</dl>
-			<!-- ENDIF -->
-			<!-- IF S_SMILIES_ALLOWED and .smiley -->
+			{% endif %}
+			{% if S_SMILIES_ALLOWED and smiley|length %}
 				<dl>
-					<dt><label>{L_SMILIES}{L_COLON}</label></dt>
-					<dd><!-- BEGIN smiley --><a href="#" onclick="insert_text('{smiley.A_SMILEY_CODE}', true); return false;"><img src="{smiley.SMILEY_IMG}" width="{smiley.SMILEY_WIDTH}" height="{smiley.SMILEY_HEIGHT}" alt="{smiley.SMILEY_CODE}" title="{smiley.SMILEY_DESC}" /></a> <!-- END smiley --></dd>
-					<!-- IF S_SHOW_SMILEY_LINK and S_SMILIES_ALLOWED--><dd><a href="{U_MORE_SMILIES}" onclick="gallery_popup(this.href, 300, 350, '_phpbbsmilies'); return false;">{L_MORE_SMILIES}</a></dd><!-- ENDIF -->
+					<dt><label>{{ lang('SMILIES') }}{{ lang('COLON') }}</label></dt>
+					<dd>{% for smiley in smiley %}<a href="#" onclick="insert_text('{{ smiley.A_SMILEY_CODE }}', true); return false;"><img src="{{ smiley.SMILEY_IMG }}" width="{{ smiley.SMILEY_WIDTH }}" height="{{ smiley.SMILEY_HEIGHT }}" alt="{{ smiley.SMILEY_CODE }}" title="{{ smiley.SMILEY_DESC }}" /></a> {% endfor %}</dd>
+					{% if S_SHOW_SMILEY_LINK and S_SMILIES_ALLOWED %}<dd><a href="{{ U_MORE_SMILIES }}" onclick="gallery_popup(this.href, 300, 350, '_phpbbsmilies'); return false;">{{ lang('MORE_SMILIES') }}</a></dd>{% endif %}
 				</dl>
-			<!-- ENDIF -->
+			{% endif %}
 		</fieldset>
 		<fieldset class="fields1">
-			<!-- BEGIN image -->
+			{% for image in image %}
 				<dl>
-					<dt<!-- IF image.S_FIRST_ROW and (NUM_IMAGES > 1) --> class="first"<!-- ENDIF -->><a href="{U_IMAGE_ACTION}" style="max-width: 95%; max-height: 95%">{image.U_IMAGE}</a></dt>
+					<dt{% if image.S_FIRST_ROW and (NUM_IMAGES > 1) %} class="first"{% endif %}><a href="{{ U_IMAGE_ACTION }}" style="max-width: 95%; max-height: 95%">{{ image.U_IMAGE }}</a></dt>
 					<dd>
 						<dl>
-							<dt><label for="image_name_{image.S_ROW_COUNT}">{L_IMAGE_NAME}{L_COLON}</label></dt>
-							<!-- IF image.S_FIRST_ROW and (NUM_IMAGES > 1) -->
-							<dd><input type="checkbox" name="same_name" id="same_name" value="1" onchange="change_read_write();" /> <label for="same_name">{L_USE_SAME_NAME}</label></dd>
-							<dd>{L_USE_NUM} <input class="inputbox" type="text" id="image_num" name="image_num" size="5" onchange="update_all('image_name'); update_all('message');" onkeyup="update_all('image_name'); update_all('message');" value="1" /></dd>
-							<!-- ENDIF -->
-							<dd><input class="inputbox" type="text" tabindex="1{image.S_ROW_COUNT}" id="image_name_{image.S_ROW_COUNT}" name="image_name[{image.S_ROW_COUNT}]" value="{image.IMAGE_NAME}"<!-- IF image.S_FIRST_ROW --> onchange="update_all('image_name');" onselect="update_all('image_name');" onclick="update_all('image_name');" onkeyup="update_all('image_name');"<!-- ENDIF --> size="60"/></dd>
+							<dt><label for="image_name_{{ image.S_ROW_COUNT }}">{{ lang('IMAGE_NAME') }}{{ lang('COLON') }}</label></dt>
+							{% if image.S_FIRST_ROW and (NUM_IMAGES > 1) %}
+							<dd><input type="checkbox" name="same_name" id="same_name" value="1" onchange="change_read_write();" /> <label for="same_name">{{ lang('USE_SAME_NAME') }}</label></dd>
+							<dd>{{ lang('USE_NUM') }} <input class="inputbox" type="text" id="image_num" name="image_num" size="5" onchange="update_all('image_name'); update_all('message');" onkeyup="update_all('image_name'); update_all('message');" value="1" /></dd>
+							{% endif %}
+							<dd><input class="inputbox" type="text" tabindex="1{{ image.S_ROW_COUNT }}" id="image_name_{{ image.S_ROW_COUNT }}" name="image_name[{{ image.S_ROW_COUNT }}]" value="{{ image.IMAGE_NAME }}"{% if image.S_FIRST_ROW %} onchange="update_all('image_name');" onselect="update_all('image_name');" onclick="update_all('image_name');" onkeyup="update_all('image_name');"{% endif %} size="60"/></dd>
 						</dl>
 						<dl>
-							<dt><label for="message_{image.S_ROW_COUNT}">{L_IMAGE_DESC}{L_COLON}</label></dt>
-							<dd id="desc_length_{image.S_ROW_COUNT}">{L_DESCRIPTION_LENGTH}</dd>
-							<dd><textarea name="message[{image.S_ROW_COUNT}]" id="message_{image.S_ROW_COUNT}" rows="4" cols="76" tabindex="3" onchange="set_text_field({image.S_ROW_COUNT});<!-- IF image.S_FIRST_ROW --> update_all('message');<!-- ENDIF -->" onselect="set_text_field({image.S_ROW_COUNT});<!-- IF image.S_FIRST_ROW --> update_all('message');<!-- ENDIF --> storeCaret(this);" onclick="set_text_field({image.S_ROW_COUNT});<!-- IF image.S_FIRST_ROW --> update_all('message');<!-- ENDIF --> storeCaret(this);" onkeyup="set_text_field({image.S_ROW_COUNT});<!-- IF image.S_FIRST_ROW --> update_all('message');<!-- ENDIF --> storeCaret(this);" class="inputbox">{image.IMAGE_DESC}</textarea></dd>
+							<dt><label for="message_{{ image.S_ROW_COUNT }}">{{ lang('IMAGE_DESC') }}{{ lang('COLON') }}</label></dt>
+							<dd id="desc_length_{{ image.S_ROW_COUNT }}">{{ lang('DESCRIPTION_LENGTH') }}</dd>
+							<dd><textarea name="message[{{ image.S_ROW_COUNT }}]" id="message_{{ image.S_ROW_COUNT }}" rows="4" cols="76" tabindex="3" onchange="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %}" onselect="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %} storeCaret(this);" onclick="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %} storeCaret(this);" onkeyup="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %} storeCaret(this);" class="inputbox">{{ image.IMAGE_DESC }}</textarea></dd>
 						</dl>
 						<dl>
-							<!-- IF S_ALLOW_ROTATE -->
-							<dt><label for="rotate_{image.S_ROW_COUNT}_0">{L_ROTATE_IMAGE}{L_COLON}</label></dt>
-							<dd><input type="radio" name="rotate[{image.S_ROW_COUNT}]" id="rotate_{image.S_ROW_COUNT}_0" value="0" checked="checked" /> <label for="rotate_{image.S_ROW_COUNT}_0">{L_ROTATE_NONE}</label> &nbsp;
-								<input type="radio" name="rotate[{image.S_ROW_COUNT}]" id="rotate_{image.S_ROW_COUNT}_270" value="270" /> <label for="rotate_{image.S_ROW_COUNT}_270">{L_ROTATE_RIGHT}</label> &nbsp;
-								<input type="radio" name="rotate[{image.S_ROW_COUNT}]" id="rotate_{image.S_ROW_COUNT}_180" value="180" /> <label for="rotate_{image.S_ROW_COUNT}_180">{L_ROTATE_UPSIDEDOWN}</label> &nbsp;
-								<input type="radio" name="rotate[{image.S_ROW_COUNT}]" id="rotate_{image.S_ROW_COUNT}_90" value="90" /> <label for="rotate_{image.S_ROW_COUNT}_90">{L_ROTATE_LEFT}</label>
+							{% if S_ALLOW_ROTATE %}
+							<dt><label for="rotate_{{ image.S_ROW_COUNT }}_0">{{ lang('ROTATE_IMAGE') }}{{ lang('COLON') }}</label></dt>
+							<dd><input type="radio" name="rotate[{{ image.S_ROW_COUNT }}]" id="rotate_{{ image.S_ROW_COUNT }}_0" value="0" checked="checked" /> <label for="rotate_{{ image.S_ROW_COUNT }}_0">{{ lang('ROTATE_NONE') }}</label> &nbsp;
+								<input type="radio" name="rotate[{{ image.S_ROW_COUNT }}]" id="rotate_{{ image.S_ROW_COUNT }}_270" value="270" /> <label for="rotate_{{ image.S_ROW_COUNT }}_270">{{ lang('ROTATE_RIGHT') }}</label> &nbsp;
+								<input type="radio" name="rotate[{{ image.S_ROW_COUNT }}]" id="rotate_{{ image.S_ROW_COUNT }}_180" value="180" /> <label for="rotate_{{ image.S_ROW_COUNT }}_180">{{ lang('ROTATE_UPSIDEDOWN') }}</label> &nbsp;
+								<input type="radio" name="rotate[{{ image.S_ROW_COUNT }}]" id="rotate_{{ image.S_ROW_COUNT }}_90" value="90" /> <label for="rotate_{{ image.S_ROW_COUNT }}_90">{{ lang('ROTATE_LEFT') }}</label>
 							</dd>
-							<!-- ENDIF -->
+							{% endif %}
 						</dl>
 					</dd>
 				</dl>
-			<!-- END image -->
-			<!-- EVENT gallery_edit_addfields -->
+			{% endfor %}
+			{% EVENT gallery_edit_addfields %}
 		</fieldset>
-			<!-- IF S_REPORT -->
+			{% if S_REPORT %}
 				<div><textarea name="message" id="message" rows="4" cols="76" tabindex="3" class="inputbox"></textarea></dd></div>
-			<!-- ENDIF -->
+			{% endif %}
 	</div>
 </div>
 
-<!-- IF S_MOVE_PERSONAL or S_COMMENTS_ENABLED or S_CHANGE_AUTHOR -->
+{% if S_MOVE_PERSONAL or S_COMMENTS_ENABLED or S_CHANGE_AUTHOR %}
 <div class="panel">
 	<div class="inner">
 		<fieldset class="fields1">
-			<!-- IF S_MOVE_PERSONAL -->
+			{% if S_MOVE_PERSONAL %}
 				<dl>
-					<dt><label for="move_to_personal">{L_MOVE_TO_PERSONAL}{L_COLON}</label></dt>
-					<dd><input type="checkbox" class="checkbox" name="move_to_personal" id="move_to_personal" value="1" /> <!-- IF S_MOVE_MODERATOR -->{L_MOVE_TO_PERSONAL_MOD}<!-- ELSE -->{L_MOVE_TO_PERSONAL_EXPLAIN}<!-- ENDIF --></dd>
+					<dt><label for="move_to_personal">{{ lang('MOVE_TO_PERSONAL') }}{{ lang('COLON') }}</label></dt>
+					<dd><input type="checkbox" class="checkbox" name="move_to_personal" id="move_to_personal" value="1" /> {% if S_MOVE_MODERATOR %}{{ lang('MOVE_TO_PERSONAL_MOD') }}{% else %}{{ lang('MOVE_TO_PERSONAL_EXPLAIN') }}{% endif %}</dd>
 				</dl>
-			<!-- ENDIF -->
-			<!-- IF S_COMMENTS_ENABLED -->
+			{% endif %}
+			{% if S_COMMENTS_ENABLED %}
 				<dl>
-					<dt><label for="allow_comments">{L_COMMENTS}{L_COLON}</label></dt>
-					<dd><input type="checkbox" class="checkbox" name="allow_comments" id="allow_comments"<!-- IF S_ALLOW_COMMENTS --> checked="checked"<!-- ENDIF --> value="1" /> <label for="allow_comments">{L_ALLOW_COMMENTS}</label></dd>
+					<dt><label for="allow_comments">{{ lang('COMMENTS') }}{{ lang('COLON') }}</label></dt>
+					<dd><input type="checkbox" class="checkbox" name="allow_comments" id="allow_comments"{% if S_ALLOW_COMMENTS %} checked="checked"{% endif %} value="1" /> <label for="allow_comments">{{ lang('ALLOW_COMMENTS') }}</label></dd>
 				</dl>
-			<!-- ENDIF -->
-			<!-- IF S_CHANGE_AUTHOR and U_FIND_USERNAME -->
+			{% endif %}
+			{% if S_CHANGE_AUTHOR and U_FIND_USERNAME %}
 				<dl>
-					<dt><label for="change_author">{L_CHANGE_AUTHOR}{L_COLON}</label></dt>
-					<dd><input type="text" class="inputbox" name="change_author" id="change_author" value="" size="32" /><a href="{U_FIND_USERNAME}" onclick="find_username(this.href); return false;">[ {L_FIND_USERNAME} ]</a></dd>
+					<dt><label for="change_author">{{ lang('CHANGE_AUTHOR') }}{{ lang('COLON') }}</label></dt>
+					<dd><input type="text" class="inputbox" name="change_author" id="change_author" value="" size="32" /><a href="{{ U_FIND_USERNAME }}" onclick="find_username(this.href); return false;">[ {{ lang('FIND_USERNAME') }} ]</a></dd>
 				</dl>
-			<!-- ENDIF -->
+			{% endif %}
 		</fieldset>
 	</div>
 </div>
-<!-- ENDIF -->
+{% endif %}
 
 <script type="text/javascript">
 //<![CDATA[
@@ -232,16 +232,16 @@
 <div class="panel bg2">
 	<div class="inner">
 		<fieldset class="submit-buttons">
-			{S_HIDDEN_FIELDS}
+			{{ S_HIDDEN_FIELDS }}
 			<input type="hidden" id="mode" name="mode" value="upload_edit">
-			<input type="reset" accesskey="r" tabindex="200" value="{L_RESET}" class="button2" />&nbsp;
-			<!-- IF S_UPLOAD_EDIT --><input type="submit" name="discard_pending" value="{L_CANCEL}" class="button2" />&nbsp;<!-- ENDIF -->
-			<input type="submit" accesskey="s" tabindex="201" name="submit" value="{L_SUBMIT}" class="button1" />&nbsp;
+			<input type="reset" accesskey="r" tabindex="200" value="{{ lang('RESET') }}" class="button2" />&nbsp;
+			{% if S_UPLOAD_EDIT %}<input type="submit" name="discard_pending" value="{{ lang('CANCEL') }}" class="button2" />&nbsp;{% endif %}
+			<input type="submit" accesskey="s" tabindex="201" name="submit" value="{{ lang('SUBMIT') }}" class="button1" />&nbsp;
 		</fieldset>
-		{S_FORM_TOKEN}
+		{{ S_FORM_TOKEN }}
 	</div>
 </div>
 </form>
-<!-- ENDIF -->
+{% endif %}
 
-<!-- INCLUDE gallery/gallery_footer.html -->
+{% include 'gallery/gallery_footer.html' %}

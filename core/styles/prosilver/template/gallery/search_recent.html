@@ -1,31 +1,31 @@
-<!-- INCLUDE gallery/gallery_header.html -->
+{% include 'gallery/gallery_header.html' %}
 
-<!-- IF .pagination or TOTAL_IMAGES -->
+{% if pagination|length or TOTAL_IMAGES %}
 	<div class="pagination">
-		{TOTAL_IMAGES}
-		<!-- IF .pagination -->
-			 <!-- INCLUDE pagination.html -->
-		<!-- ELSE -->
-			 &bull; {PAGE_NUMBER}
-		<!-- ENDIF -->
+		{{ TOTAL_IMAGES }}
+		{% if pagination|length %}
+			 {% include 'pagination.html' %}
+		{% else %}
+			 &bull; {{ PAGE_NUMBER }}
+		{% endif %}
 	</div>
-<!-- ENDIF -->
+{% endif %}
 
 
-<!-- INCLUDE gallery/imageblock_polaroid.html -->
+{% include 'gallery/imageblock_polaroid.html' %}
 <hr />
-<!-- IF .pagination or TOTAL_IMAGES -->
+{% if pagination|length or TOTAL_IMAGES %}
 	<div style="margin: 10px 0 5px 0;">
 		<div class="pagination" style="margin-bottom: 1em;">
-		{TOTAL_IMAGES}
-		<!-- IF .pagination -->
-				<!-- INCLUDE pagination.html -->
-		<!-- ELSE -->
-			 &bull; {PAGE_NUMBER}
-		<!-- ENDIF -->
+		{{ TOTAL_IMAGES }}
+		{% if pagination|length %}
+				{% include 'pagination.html' %}
+		{% else %}
+			 &bull; {{ PAGE_NUMBER }}
+		{% endif %}
 	</div>
 	</div>
-<!-- ENDIF -->
+{% endif %}
 
 
-<!-- INCLUDE gallery/gallery_footer.html -->
+{% include 'gallery/gallery_footer.html' %}

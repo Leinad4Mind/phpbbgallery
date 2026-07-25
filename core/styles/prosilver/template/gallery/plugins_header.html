@@ -1,11 +1,11 @@
-<!-- IF S_GALLERY_FEEDS --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_GALLERY}" href="{U_GALLERY_FEED}" /><!-- ENDIF -->
-<!-- IF S_GALLERY_FEEDS and S_ENABLE_FEEDS_ALBUM and ALBUM_ID --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_ALBUM} - {ALBUM_NAME}" href="{U_GALLERY_FEED}?album_id={ALBUM_ID}" /><!-- ENDIF -->
+{% if S_GALLERY_FEEDS %}<link rel="alternate" type="application/atom+xml" title="{{ lang('FEED') }} - {{ lang('GALLERY') }}" href="{{ U_GALLERY_FEED }}" />{% endif %}
+{% if S_GALLERY_FEEDS and S_ENABLE_FEEDS_ALBUM and ALBUM_ID %}<link rel="alternate" type="application/atom+xml" title="{{ lang('FEED') }} - {{ lang('ALBUM') }} - {{ ALBUM_NAME }}" href="{{ U_GALLERY_FEED }}?album_id={{ ALBUM_ID }}" />{% endif %}
 
-<!-- IF S_GP_HIGHSLIDE -->
-	<script type="text/javascript" src="{S_GP_HIGHSLIDE}highslide-full.js"></script>
-	<link rel="stylesheet" type="text/css" href="{S_GP_HIGHSLIDE}highslide.css" />
+{% if S_GP_HIGHSLIDE %}
+	<script type="text/javascript" src="{{ S_GP_HIGHSLIDE }}highslide-full.js"></script>
+	<link rel="stylesheet" type="text/css" href="{{ S_GP_HIGHSLIDE }}highslide.css" />
 	<script type="text/javascript">
-		hs.graphicsDir = '{S_GP_HIGHSLIDE}graphics/';
+		hs.graphicsDir = '{{ S_GP_HIGHSLIDE }}graphics/';
 		hs.align = 'center';
 		hs.transitions = ['expand', 'crossfade'];
 		hs.fadeInOut = true;
@@ -28,10 +28,10 @@
 			}
 		});
 	</script>
-<!-- ENDIF -->
-<!-- IF S_GP_LYTEBOX -->
-	<script type="text/javascript" src="{S_GP_LYTEBOX}lytebox.js"></script>
-	<link rel="stylesheet" type="text/css" href="{S_GP_LYTEBOX}lytebox.css" />
+{% endif %}
+{% if S_GP_LYTEBOX %}
+	<script type="text/javascript" src="{{ S_GP_LYTEBOX }}lytebox.js"></script>
+	<link rel="stylesheet" type="text/css" href="{{ S_GP_LYTEBOX }}lytebox.css" />
 	<script type="text/javascript">
 		if (window.addEventListener) {
 			window.addEventListener("load",initLytebox,false);
@@ -46,11 +46,11 @@
 			myLytebox = new LyteBox(imgMaxWidth, imgWarning);
 		}
 	</script>
-<!-- ENDIF -->
-<!-- IF S_GP_SHADOWBOX -->
-	<script type="text/javascript" src="{S_GP_SHADOWBOX}shadowbox.js"></script>
-	<link rel="stylesheet" type="text/css" href="{S_GP_SHADOWBOX}shadowbox.css" />
+{% endif %}
+{% if S_GP_SHADOWBOX %}
+	<script type="text/javascript" src="{{ S_GP_SHADOWBOX }}shadowbox.js"></script>
+	<link rel="stylesheet" type="text/css" href="{{ S_GP_SHADOWBOX }}shadowbox.css" />
 	<script type="text/javascript">
 		Shadowbox.init();
 	</script>
-<!-- ENDIF -->
+{% endif %}

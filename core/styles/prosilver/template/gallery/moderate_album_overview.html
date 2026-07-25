@@ -1,26 +1,26 @@
-<!-- INCLUDE gallery/gallery_header.html -->
+{% include 'gallery/gallery_header.html' %}
 
-<h2>{L_MCP}<!-- IF U_ALBUM_NAME --> - {U_ALBUM_NAME}<!-- ENDIF --></h2>
-<!-- IF .pagination -->
+<h2>{{ lang('MCP') }}{% if U_ALBUM_NAME %} - {{ U_ALBUM_NAME }}{% endif %}</h2>
+{% if pagination|length %}
 	<div class="topic-actions">
 		<div class="pagination">
-			{TOTAL_PAGES}
-			<!-- IF .pagination -->
-				<!-- INCLUDE pagination.html -->
-			<!-- ELSE -->
-				&bull; {PAGE_NUMBER}
-			<!-- ENDIF -->
+			{{ TOTAL_PAGES }}
+			{% if pagination|length %}
+				{% include 'pagination.html' %}
+			{% else %}
+				&bull; {{ PAGE_NUMBER }}
+			{% endif %}
 		</div>
 	</div>
-<!-- ENDIF -->
+{% endif %}
 <br />
 <div id="tabs" class="tabs">
 	<ul>
-		<li class="tab"><a href="{U_GALLERY_MODERATE_OVERVIEW}">{L_GALLERY_MCP_MAIN}</a></li>
-		<li class="tab activetab"><a href="{U_ALBUM_OVERVIEW}">{L_GALLERY_MCP_ALBUM_OVERVIEW}</a></li>
-		<li class="tab"><a href="{U_GALLERY_MODERATE_APPROVE}">{L_GALLERY_MCP_QUEUE}</a></li>
-		<li class="tab"><a href="{U_GALLERY_MODERATE_REPORT}">{L_GALLERY_MCP_REPORTED}</a></li>
-		<li class="tab"><a href="{U_GALLERY_MCP_LOGS}">{L_MCP_LOGS}</a></li>
+		<li class="tab"><a href="{{ U_GALLERY_MODERATE_OVERVIEW }}">{{ lang('GALLERY_MCP_MAIN') }}</a></li>
+		<li class="tab activetab"><a href="{{ U_ALBUM_OVERVIEW }}">{{ lang('GALLERY_MCP_ALBUM_OVERVIEW') }}</a></li>
+		<li class="tab"><a href="{{ U_GALLERY_MODERATE_APPROVE }}">{{ lang('GALLERY_MCP_QUEUE') }}</a></li>
+		<li class="tab"><a href="{{ U_GALLERY_MODERATE_REPORT }}">{{ lang('GALLERY_MCP_REPORTED') }}</a></li>
+		<li class="tab"><a href="{{ U_GALLERY_MCP_LOGS }}">{{ lang('MCP_LOGS') }}</a></li>
 	</ul>
 </div>
 <div class="panel bg3">
@@ -29,87 +29,87 @@
 			<div id="cp-menu" class="cp-menu">
 				<div class="navigation responsive-hide" id="navigation" role="navigation">
 					<ul>
-						<li id="active-subsection" class="active-subsection"><a href=""><span>{L_GALLERY_MCP_VIEWALBUM}</span></a></li>
+						<li id="active-subsection" class="active-subsection"><a href=""><span>{{ lang('GALLERY_MCP_VIEWALBUM') }}</span></a></li>
 					</ul>
 				</div>
 			</div>
 			<div id="cp-main" class="cp-main mcp-main panel-container">
-				<h2>{L_GALLERY_MCP_VIEWALBUM}</h2>
-				
-				<form id="overview_action" method="post" action="{S_GALLERY_MODERATE_OVERVIEW_ACTION}">
+				<h2>{{ lang('GALLERY_MCP_VIEWALBUM') }}</h2>
+
+				<form id="overview_action" method="post" action="{{ S_GALLERY_MODERATE_OVERVIEW_ACTION }}">
 	<div class="panel">
 		<div class="inner">
-			<!-- IF .overview -->
+			{% if overview|length %}
 				<ul class="topiclist two-long-columns">
 					<li class="header">
 						<dl class="row-item">
-							<dt>{L_GALLERY_MCP_QUEUE_DETAIL}</dt>
-							<dd class="lastpost" style="margin-left: -95px;">{L_ALBUM}</dd>
-							<dd class="mark">{L_MARK}</dd>
+							<dt>{{ lang('GALLERY_MCP_QUEUE_DETAIL') }}</dt>
+							<dd class="lastpost" style="margin-left: -95px;">{{ lang('ALBUM') }}</dd>
+							<dd class="mark">{{ lang('MARK') }}</dd>
 						</dl>
 					</li>
 				</ul>
 				<ul class="topiclist cplist missing-column responsive-show-all">
-					<!-- BEGIN overview -->
-					<li class="row<!-- IF overview.S_ROW_COUNT is odd --> bg1<!-- ELSE --> bg2<!-- ENDIF -->">
+					{% for overview in overview %}
+					<li class="row{% if overview.S_ROW_COUNT is odd %} bg1{% else %} bg2{% endif %}">
 						<dl>
 							<dt>
 								<div style="float: left; padding: 5px; width: 70px;" align="middle">
-									<a href="{overview.U_IMAGE_MODERATE_URL}" align="middle"><img style="max-width: 70px; max-height: 70px;" src="{overview.U_IMAGE}" alt="{overview.U_IMAGE_NAME}"></a>
+									<a href="{{ overview.U_IMAGE_MODERATE_URL }}" align="middle"><img style="max-width: 70px; max-height: 70px;" src="{{ overview.U_IMAGE }}" alt="{{ overview.U_IMAGE_NAME }}"></a>
 								</div>
 								<div class="list-inner" style="margin-bottom: -12px; white-space: normal; overflow: hidden;">
-									{L_IMAGE_NAME}{L_COLON}
-									<a href="{overview.U_IMAGE_MODERATE_URL}" class="topictitle" style="font-weight: bold;">
-										<!-- IF overview.U_IS_REPORTED --><span class="image_reported" title="{L_REPORTED_IMAGES}">{L_REPORTED_IMAGES}</span><!-- ENDIF -->
-										<!-- IF overview.U_IS_UNAPPROVED --><span class="image_unapproved" title="{L_QUEUE_STATUS_0}">&nbsp;</span><!-- ENDIF -->
-										<!-- IF overview.U_IS_LOCKED --><span class="image_locked" title="{L_QUEUE_STATUS_2}">{L_QUEUE_STATUS_2}</span><!-- ENDIF -->
-										{overview.U_IMAGE_NAME}
+									{{ lang('IMAGE_NAME') }}{{ lang('COLON') }}
+									<a href="{{ overview.U_IMAGE_MODERATE_URL }}" class="topictitle" style="font-weight: bold;">
+										{% if overview.U_IS_REPORTED %}<span class="image_reported" title="{{ lang('REPORTED_IMAGES') }}">{{ lang('REPORTED_IMAGES') }}</span>{% endif %}
+										{% if overview.U_IS_UNAPPROVED %}<span class="image_unapproved" title="{{ lang('QUEUE_STATUS_0') }}">&nbsp;</span>{% endif %}
+										{% if overview.U_IS_LOCKED %}<span class="image_locked" title="{{ lang('QUEUE_STATUS_2') }}">{{ lang('QUEUE_STATUS_2') }}</span>{% endif %}
+										{{ overview.U_IMAGE_NAME }}
 									</a><br />
-									{L_UPLOADED_BY_USER}{L_COLON} {overview.IMAGE_AUTHOR}<br />
-									&raquo; {overview.IMAGE_TIME}<br /><br />
+									{{ lang('UPLOADED_BY_USER') }}{{ lang('COLON') }} {{ overview.IMAGE_AUTHOR }}<br />
+									&raquo; {{ overview.IMAGE_TIME }}<br /><br />
 								</div> <br />
 							</dt>
 							<dd class="lastpost">
 								<span>
-									{L_ALBUM_NAME}{L_COLON} <a href="{overview.IMAGE_ALBUM_URL}" style="display: inline;">{overview.IMAGE_ALBUM}</a>
+									{{ lang('ALBUM_NAME') }}{{ lang('COLON') }} <a href="{{ overview.IMAGE_ALBUM_URL }}" style="display: inline;">{{ overview.IMAGE_ALBUM }}</a>
 								</span>
 							</dd>
 							<dd class="mark" style="padding-left: 8px;">
-								<input name="action[]" value="{overview.U_IMAGE_ID}" type="checkbox" />
+								<input name="action[]" value="{{ overview.U_IMAGE_ID }}" type="checkbox" />
 							</dd>
 						</dl>
 					</li>
-					<!-- END overview -->
+					{% endfor %}
 				</ul>
-			<!-- ELSE -->
-				<p> {L_NO_WAITING_UNAPPROVED_IMAGE}</p>
-			<!-- ENDIF -->
+			{% else %}
+				<p> {{ lang('NO_WAITING_UNAPPROVED_IMAGE') }}</p>
+			{% endif %}
 			</div>
 		</div>
-		<!-- IF .overview -->
+		{% if overview|length %}
 		<fieldset class="display-actions">
-			{U_ACTION_SELECT} &nbsp; <input class="button1" name="submit" value="{L_GO}" type="submit" />
-			<div><a href="#" onclick="marklist('overview_action', 'action', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('overview_action', 'action', false); return false;">{L_UNMARK_ALL}</a></div>
+			{{ U_ACTION_SELECT }} &nbsp; <input class="button1" name="submit" value="{{ lang('GO') }}" type="submit" />
+			<div><a href="#" onclick="marklist('overview_action', 'action', true); return false;">{{ lang('MARK_ALL') }}</a> :: <a href="#" onclick="marklist('overview_action', 'action', false); return false;">{{ lang('UNMARK_ALL') }}</a></div>
 		</fieldset>
-		<!-- ENDIF -->
+		{% endif %}
 	</form>
-	
+
 			</div>
 		</div>
 	</div>
 </div>
-<!-- IF .pagination -->
+{% if pagination|length %}
 	<div class="topic-actions">
 		<div class="pagination">
-			{TOTAL_PAGES}
-			<!-- IF .pagination -->
-				<!-- INCLUDE pagination.html -->
-			<!-- ELSE -->
-				&bull; {PAGE_NUMBER}
-			<!-- ENDIF -->
+			{{ TOTAL_PAGES }}
+			{% if pagination|length %}
+				{% include 'pagination.html' %}
+			{% else %}
+				&bull; {{ PAGE_NUMBER }}
+			{% endif %}
 		</div>
 	</div>
 	<br />
-<!-- ENDIF -->
+{% endif %}
 <br />
-<!-- INCLUDE gallery/gallery_footer.html -->
+{% include 'gallery/gallery_footer.html' %}

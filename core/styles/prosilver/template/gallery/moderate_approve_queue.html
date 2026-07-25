@@ -1,57 +1,57 @@
-<form id="gallery_approve" method="post" action="{S_GALLERY_APPROVE_ACTION}">
+<form id="gallery_approve" method="post" action="{{ S_GALLERY_APPROVE_ACTION }}">
 	<div class="panel">
 		<div class="inner">
-			<!-- IF U_OVERVIEW -->
-			<h3>{L_LATEST_IMAGES_UNAPPROVED}</h3>
-			<!-- ELSE -->
-			<p> {TOTAL_IMAGES_WAITING} </p>
-			<!-- ENDIF -->
-			<!-- IF .image_unapproved -->
+			{% if U_OVERVIEW %}
+			<h3>{{ lang('LATEST_IMAGES_UNAPPROVED') }}</h3>
+			{% else %}
+			<p> {{ TOTAL_IMAGES_WAITING }} </p>
+			{% endif %}
+			{% if image_unapproved|length %}
 				<ul class="topiclist two-long-columns">
 					<li class="header">
 						<dl class="row-item">
-							<dt>{L_GALLERY_MCP_QUEUE_DETAIL}</dt>
-							<dd class="lastpost" style="margin-left: -95px;">{L_ALBUM}</dd>
-							<dd class="mark">{L_MARK}</dd>
+							<dt>{{ lang('GALLERY_MCP_QUEUE_DETAIL') }}</dt>
+							<dd class="lastpost" style="margin-left: -95px;">{{ lang('ALBUM') }}</dd>
+							<dd class="mark">{{ lang('MARK') }}</dd>
 						</dl>
 					</li>
 				</ul>
 				<ul class="topiclist cplist missing-column responsive-show-all">
-					<!-- BEGIN image_unapproved -->
-					<li class="row<!-- IF image_unapproved.S_ROW_COUNT is odd --> bg1<!-- ELSE --> bg2<!-- ENDIF -->">
+					{% for image_unapproved in image_unapproved %}
+					<li class="row{% if image_unapproved.S_ROW_COUNT is odd %} bg1{% else %} bg2{% endif %}">
 						<dl>
 							<dt>
 								<div style="float: left; padding: 5px; width: 70px;" align="middle">
-									<a href="{image_unapproved.U_IMAGE_MODERATE_URL}"><img style="max-width: 70px; max-height: 70px;" src="{image_unapproved.U_IMAGE}" alt="{image_unapproved.U_IMAGE_NAME}"></a>
+									<a href="{{ image_unapproved.U_IMAGE_MODERATE_URL }}"><img style="max-width: 70px; max-height: 70px;" src="{{ image_unapproved.U_IMAGE }}" alt="{{ image_unapproved.U_IMAGE_NAME }}"></a>
 								</div>
 								<div class="list-inner" style="margin-bottom: -12px; white-space: normal; overflow: hidden;">
-									{L_IMAGE_NAME}{L_COLON} <a href="{image_unapproved.U_IMAGE_MODERATE_URL}" class="topictitle">{image_unapproved.U_IMAGE_NAME}</a><br />
-									{L_UPLOADED_BY_USER}{L_COLON} {image_unapproved.IMAGE_AUTHOR}<br />
-									&raquo; {image_unapproved.IMAGE_TIME}<br /><br />
+									{{ lang('IMAGE_NAME') }}{{ lang('COLON') }} <a href="{{ image_unapproved.U_IMAGE_MODERATE_URL }}" class="topictitle">{{ image_unapproved.U_IMAGE_NAME }}</a><br />
+									{{ lang('UPLOADED_BY_USER') }}{{ lang('COLON') }} {{ image_unapproved.IMAGE_AUTHOR }}<br />
+									&raquo; {{ image_unapproved.IMAGE_TIME }}<br /><br />
 								</div><br />
 							</dt>
 							<dd class="lastpost">
 								<span>
-									{L_ALBUM_NAME}{L_COLON} <a href="{image_unapproved.IMAGE_ALBUM_URL}">{image_unapproved.IMAGE_ALBUM}</a>
+									{{ lang('ALBUM_NAME') }}{{ lang('COLON') }} <a href="{{ image_unapproved.IMAGE_ALBUM_URL }}">{{ image_unapproved.IMAGE_ALBUM }}</a>
 								</span>
 							</dd>
 							<dd class="mark" style="padding-left: 8px;">
-								<input name="approval[{image_unapproved.IMAGE_ALBUM_ID}][]" value="{image_unapproved.U_IMAGE_ID}" type="checkbox" />
+								<input name="approval[{{ image_unapproved.IMAGE_ALBUM_ID }}][]" value="{{ image_unapproved.U_IMAGE_ID }}" type="checkbox" />
 							</dd>
 						</dl>
 					</li>
-					<!-- END image_unapproved -->
+					{% endfor %}
 				</ul>
-			<!-- ELSE -->
-				<p>{L_NO_WAITING_UNAPPROVED_IMAGE}</p>
-			<!-- ENDIF -->
+			{% else %}
+				<p>{{ lang('NO_WAITING_UNAPPROVED_IMAGE') }}</p>
+			{% endif %}
 			</div>
-		<!-- IF .image_unapproved -->
+		{% if image_unapproved|length %}
 		<fieldset class="display-actions">
-			<input class="button2" name="action[disapprove]" value="{L_DISAPPROVE}" type="submit" />&nbsp;
-			<input class="button1" name="action[approve]" value="{L_APPROVE}" type="submit" />
-			<div><a href="#" onclick="marklist('gallery_approve', 'approval', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('gallery_approve', 'approval', false); return false;">{L_UNMARK_ALL}</a></div>
+			<input class="button2" name="action[disapprove]" value="{{ lang('DISAPPROVE') }}" type="submit" />&nbsp;
+			<input class="button1" name="action[approve]" value="{{ lang('APPROVE') }}" type="submit" />
+			<div><a href="#" onclick="marklist('gallery_approve', 'approval', true); return false;">{{ lang('MARK_ALL') }}</a> :: <a href="#" onclick="marklist('gallery_approve', 'approval', false); return false;">{{ lang('UNMARK_ALL') }}</a></div>
 		</fieldset>
-		<!-- ENDIF -->
+		{% endif %}
 	</div>
 </form>

@@ -1,6 +1,6 @@
-<!-- IF S_IN_GALLERY_POPUP -->
-	<a href="#" onclick="window.close(); return false;">{L_CLOSE_WINDOW}</a>
-	<!-- INCLUDE simple_footer.html -->
-<!-- ELSE -->
-	<!-- INCLUDE overall_footer.html -->
-<!-- ENDIF -->
+{% if S_IN_GALLERY_POPUP %}
+	<a href="#" onclick="window.close(); return false;">{{ lang('CLOSE_WINDOW') }}</a>
+	{% include 'simple_footer.html' %}
+{% else %}
+	{% include 'overall_footer.html' %}
+{% endif %}

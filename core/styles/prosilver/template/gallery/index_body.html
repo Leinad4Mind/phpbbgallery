@@ -1,4 +1,4 @@
-<!-- INCLUDE gallery/gallery_header.html -->
+{% include 'gallery/gallery_header.html' %}
 <script type="text/javascript">
 function getElement(iElementId)
 {
@@ -24,11 +24,11 @@ function toggleElement(oElement)
 	}
 }
 </script>
-<p class="{S_CONTENT_FLOW_END} responsive-center time<!-- IF S_USER_LOGGED_IN --> rightside<!-- ENDIF -->"><!-- IF S_USER_LOGGED_IN -->{LAST_VISIT_DATE}<!-- ELSE -->{CURRENT_TIME}<!-- ENDIF --></p>
-<!-- IF S_USER_LOGGED_IN --><p class="responsive-center time">{CURRENT_TIME}</p><!-- ENDIF -->
+<p class="{{ S_CONTENT_FLOW_END }} responsive-center time{% if S_USER_LOGGED_IN %} rightside{% endif %}">{% if S_USER_LOGGED_IN %}{{ LAST_VISIT_DATE }}{% else %}{{ CURRENT_TIME }}{% endif %}</p>
+{% if S_USER_LOGGED_IN %}<p class="responsive-center time">{{ CURRENT_TIME }}</p>{% endif %}
 
 
-<!-- IF S_USER_LOGGED_IN and not S_IS_BOT -->
+{% if S_USER_LOGGED_IN and not S_IS_BOT %}
 <ul class="linklist right responsive-center rightside">
 	<li class="rightside">
 		<div class="dropdown-container dropdown-button-control topic-tools">
@@ -39,124 +39,124 @@ function toggleElement(oElement)
 			<div class="dropdown">
 				<div class="pointer"><div class="pointer-inner"></div></div>
 				<ul class="dropdown-contents">
-					<!-- IF not S_IS_BOT and U_MARK_ALBUMS -->
+					{% if not S_IS_BOT and U_MARK_ALBUMS %}
 					<li>
-						<a href="{U_MARK_ALBUMS}" accesskey="m">
+						<a href="{{ U_MARK_ALBUMS }}" accesskey="m">
 							<i class="icon fa-eye fa-fw icon-blue" aria-hidden="true"></i>
-							<span>{L_MARK_ALBUMS_READ}</span>
+							<span>{{ lang('MARK_ALBUMS_READ') }}</span>
 						</a>
 					</li>
-					<!-- ENDIF -->
+					{% endif %}
 					<li>
-						<a href="{U_GALLERY_SEARCH}">
+						<a href="{{ U_GALLERY_SEARCH }}">
 							<i class="icon fa-search fa-fw icon-blue" aria-hidden="true"></i>
-							<span>{L_SEARCH}</span>
+							<span>{{ lang('SEARCH') }}</span>
 						</a>
 					</li>
-					<!-- IF U_G_SEARCH_RECENT -->
+					{% if U_G_SEARCH_RECENT %}
 					<li>
-						<a href="{U_G_SEARCH_RECENT}">
+						<a href="{{ U_G_SEARCH_RECENT }}">
 							<i class="icon fa-camera fa-fw icon-blue" aria-hidden="true"></i>
-							<span>{L_VIEW_SEARCH_RECENT}</span>
+							<span>{{ lang('VIEW_SEARCH_RECENT') }}</span>
 						</a>
 					</li>
-					<!-- ENDIF -->
-					<!-- IF U_G_SEARCH_RANDOM -->
+					{% endif %}
+					{% if U_G_SEARCH_RANDOM %}
 					<li>
-						<a href="{U_G_SEARCH_RANDOM}">
+						<a href="{{ U_G_SEARCH_RANDOM }}">
 							<i class="icon fa-random fa-fw icon-blue" aria-hidden="true"></i>
-							<span>{L_VIEW_SEARCH_RANDOM}</span>
+							<span>{{ lang('VIEW_SEARCH_RANDOM') }}</span>
 						</a>
 					</li>
-					<!-- ENDIF -->
-					<!-- IF U_G_SEARCH_COMMENTED -->
+					{% endif %}
+					{% if U_G_SEARCH_COMMENTED %}
 					<li>
-						<a href="{U_G_SEARCH_COMMENTED}">
+						<a href="{{ U_G_SEARCH_COMMENTED }}">
 							<i class="icon fa-comments fa-fw icon-blue" aria-hidden="true"></i>
-							<span>{L_VIEW_SEARCH_COMMENTED}</span>
+							<span>{{ lang('VIEW_SEARCH_COMMENTED') }}</span>
 						</a>
 					</li>
-					<!-- ENDIF -->
-					<!-- IF U_G_SEARCH_TOPRATED -->
+					{% endif %}
+					{% if U_G_SEARCH_TOPRATED %}
 					<li>
-						<a href="{U_G_SEARCH_TOPRATED}">
+						<a href="{{ U_G_SEARCH_TOPRATED }}">
 							<i class="icon fa-star-half-o fa-fw icon-blue" aria-hidden="true"></i>
-							<span>{L_VIEW_SEARCH_TOPRATED}</span>
+							<span>{{ lang('VIEW_SEARCH_TOPRATED') }}</span>
 						</a>
 					</li>
-					<!-- ENDIF -->
-					<!-- IF U_G_SEARCH_CONTESTS -->
+					{% endif %}
+					{% if U_G_SEARCH_CONTESTS %}
 					<li>
-						<a href="{U_G_SEARCH_CONTESTS}">
-							<span>{L_VIEW_SEARCH_CONTESTS}</span>
+						<a href="{{ U_G_SEARCH_CONTESTS }}">
+							<span>{{ lang('VIEW_SEARCH_CONTESTS') }}</span>
 						</a>
 					</li>
-					<!-- ENDIF -->
-					<!-- IF S_USER_LOGGED_IN -->
+					{% endif %}
+					{% if S_USER_LOGGED_IN %}
 					<li>
-						<a href="{U_G_SEARCH_SELF}">
+						<a href="{{ U_G_SEARCH_SELF }}">
 							<i class="icon fa-user fa-fw icon-blue" aria-hidden="true"></i>
-							<span>{L_VIEW_SEARCH_SELF}</span>
+							<span>{{ lang('VIEW_SEARCH_SELF') }}</span>
 						</a>
 					</li>
-					<!-- ENDIF -->
+					{% endif %}
 				</ul>
 			</div>
 		</div>
 	</li>
 </ul>
-<!-- ENDIF -->
+{% endif %}
 <br />
 <br />
 <br />
-<!-- IF S_PERSONAL_GALLERY and U_USERS_PERSONAL_GALLERIES -->
+{% if S_PERSONAL_GALLERY and U_USERS_PERSONAL_GALLERIES %}
 	<div class="panel">
 		<div class="inner">
 
 		<ul class="linklist">
 			<li>
 				<strong style="font-size: 0.95em;">
-				<!-- IF U_YOUR_PERSONAL_GALLERY --><a href="{U_YOUR_PERSONAL_GALLERY}">{L_YOUR_PERSONAL_ALBUM}</a>&nbsp;&laquo;&nbsp;<!-- ENDIF -->
-				<a href="{U_USERS_PERSONAL_GALLERIES}">{L_ALL}</a>&nbsp;
-				{ALPHABET_NAVIGATION}
+				{% if U_YOUR_PERSONAL_GALLERY %}<a href="{{ U_YOUR_PERSONAL_GALLERY }}">{{ lang('YOUR_PERSONAL_ALBUM') }}</a>&nbsp;&laquo;&nbsp;{% endif %}
+				<a href="{{ U_USERS_PERSONAL_GALLERIES }}">{{ lang('ALL') }}</a>&nbsp;
+				{{ ALPHABET_NAVIGATION }}
 			</li>
 		</ul>
 		</div>
 	</div>
-<!-- ENDIF -->
+{% endif %}
 
-<!-- IF .pagination or TOTAL_ALBUMS -->
+{% if pagination|length or TOTAL_ALBUMS %}
 	<div class="pagination">
-		{TOTAL_ALBUMS}
-		<!-- IF .pagination -->
-			<!-- INCLUDE pagination.html -->
-		<!-- ELSE -->
-			 &bull; {PAGE_NUMBER}
-		<!-- ENDIF -->
+		{{ TOTAL_ALBUMS }}
+		{% if pagination|length %}
+			{% include 'pagination.html' %}
+		{% else %}
+			 &bull; {{ PAGE_NUMBER }}
+		{% endif %}
 	</div>
-<!-- ENDIF -->
+{% endif %}
 
-<!-- INCLUDE gallery/albumlist_polaroid.html -->
+{% include 'gallery/albumlist_polaroid.html' %}
 
 
-<!-- IF .pagination or TOTAL_ALBUMS -->
+{% if pagination|length or TOTAL_ALBUMS %}
 	<div class="pagination">
-		{TOTAL_ALBUMS}
-		<!-- IF .pagination -->
-			<!-- INCLUDE pagination.html -->
-		<!-- ELSE -->
-			 &bull; {PAGE_NUMBER}
-		<!-- ENDIF -->
+		{{ TOTAL_ALBUMS }}
+		{% if pagination|length %}
+			{% include 'pagination.html' %}
+		{% else %}
+			 &bull; {{ PAGE_NUMBER }}
+		{% endif %}
 	</div>
-<!-- ENDIF -->
+{% endif %}
 <br />
-<!-- IF S_PERSONAL_GALLERY -->
+{% if S_PERSONAL_GALLERY %}
 	<div class="topic-actions">
-		<div class="pagination">{TOTAL_PGALLERIES_SHORT}<!-- IF PAGINATION --> &bull; <a href="#" onclick="jumpto(); return false;" title="{L_JUMP_TO_PAGE}">{PAGE_NUMBER}</a> &bull; <span>{PAGINATION}</span><!-- ENDIF --></div>
+		<div class="pagination">{{ TOTAL_PGALLERIES_SHORT }}{% if PAGINATION %} &bull; <a href="#" onclick="jumpto(); return false;" title="{{ lang('JUMP_TO_PAGE') }}">{{ PAGE_NUMBER }}</a> &bull; <span>{{ PAGINATION }}</span>{% endif %}</div>
 	</div>
-<!-- ENDIF -->
+{% endif %}
 
-<!-- IF S_USERS_PERSONAL_GALLERIES and TOTAL_PGALLERIES -->
+{% if S_USERS_PERSONAL_GALLERIES and TOTAL_PGALLERIES %}
 	<div class="forabg">
 		<div class="inner">
 			<ul class="topiclist">
@@ -165,15 +165,15 @@ function toggleElement(oElement)
 						<dt>
 							<div class="list-inner">
 								<li>
-									<a href="{U_USERS_PERSONAL_GALLERIES}" title="{L_USERS_PERSONAL_ALBUMS}"><i class="icon fa-camera fa-fw" aria-hidden="true"></i> {L_PERSONAL_ALBUMS}</a>
+									<a href="{{ U_USERS_PERSONAL_GALLERIES }}" title="{{ lang('USERS_PERSONAL_ALBUMS') }}"><i class="icon fa-camera fa-fw" aria-hidden="true"></i> {{ lang('PERSONAL_ALBUMS') }}</a>
 								</li>
 							</div>
 						</dt>
 						<dd class="topics">
-							<a href="{U_G_SEARCH_RECENT}" title="{L_GALLERY} {L_GALLERY_IMAGES}">{L_GALLERY_IMAGES}</a>
+							<a href="{{ U_G_SEARCH_RECENT }}" title="{{ lang('GALLERY') }} {{ lang('GALLERY_IMAGES') }}">{{ lang('GALLERY_IMAGES') }}</a>
 						</dd>
 						<dd class="lastpost" style="width: 330px;">
-							<a href="{U_IMAGE_ACTION}" style="padding-left: 5px;" title="{L_VIEW_LATEST_IMAGE}&colon; {U_IMAGENAME}">{L_LAST_IMAGE}</a>
+							<a href="{{ U_IMAGE_ACTION }}" style="padding-left: 5px;" title="{{ lang('VIEW_LATEST_IMAGE') }}&colon; {{ U_IMAGENAME }}">{{ lang('LAST_IMAGE') }}</a>
 						</dd>
 					</dl>
 				</li>
@@ -183,44 +183,44 @@ function toggleElement(oElement)
 					<dl class="row-item forum_unread">
 						<dt>
 							<div class="list-inner">
-								<a class="forumtitle" href="{U_USERS_PERSONAL_GALLERIES}" title="{L_USERS_PERSONAL_ALBUMS}"><!-- IF TOTAL_PGALLERIES -->{TOTAL_PGALLERIES}<!-- ENDIF --></a><br />
-								<!-- IF NEWEST_PGALLERIES -->
-									{NEWEST_PGALLERIES}
-								<!-- ENDIF -->
+								<a class="forumtitle" href="{{ U_USERS_PERSONAL_GALLERIES }}" title="{{ lang('USERS_PERSONAL_ALBUMS') }}">{% if TOTAL_PGALLERIES %}{{ TOTAL_PGALLERIES }}{% endif %}</a><br />
+								{% if NEWEST_PGALLERIES %}
+									{{ NEWEST_PGALLERIES }}
+								{% endif %}
 								<br />
-								<!-- IF S_PERSONAL_ALBUM -->
-									{L_YOUR_PERSONAL_ALBUM}{L_COLON} <a href="{U_PERSONAL_ALBUM}" title="{L_YOUR_PERSONAL_ALBUM}" <!-- IF !U_PERSONAL_ALBUM_COLOR -->class="username"<!-- ELSE -->class="username-coloured" style="color: #{U_PERSONAL_ALBUM_COLOR};"<!-- ENDIF -->>{U_PERSONAL_ALBUM_USER}</a>
-								<!-- ENDIF -->
+								{% if S_PERSONAL_ALBUM %}
+									{{ lang('YOUR_PERSONAL_ALBUM') }}{{ lang('COLON') }} <a href="{{ U_PERSONAL_ALBUM }}" title="{{ lang('YOUR_PERSONAL_ALBUM') }}" {% if not U_PERSONAL_ALBUM_COLOR %}class="username"{% else %}class="username-coloured" style="color: #{{ U_PERSONAL_ALBUM_COLOR }};"{% endif %}>{{ U_PERSONAL_ALBUM_USER }}</a>
+								{% endif %}
 								<div class="responsive-show" style="display: none;">
-									{L_GALLERY} {L_GALLERY_IMAGES}{L_COLON} <strong><a href="{U_G_SEARCH_RECENT}" title="{L_GALLERY} {L_GALLERY_IMAGES}">{U_PERSONAL_GALLERIES_IMAGES}</a></strong><br />
+									{{ lang('GALLERY') }} {{ lang('GALLERY_IMAGES') }}{{ lang('COLON') }} <strong><a href="{{ U_G_SEARCH_RECENT }}" title="{{ lang('GALLERY') }} {{ lang('GALLERY_IMAGES') }}">{{ U_PERSONAL_GALLERIES_IMAGES }}</a></strong><br />
 									<div style="float: left;">
-										<dfn>{L_LAST_IMAGES}</dfn>
-										<a href="{U_IMAGE_ACTION}"><img src="{U_PERSONAL_GALLERIES_LAST_IMAGE}" title="{L_VIEW_LATEST_IMAGE}&colon; {U_IMAGENAME}"<!-- IF U_IMAGENAME --> alt="{U_IMAGENAME}"<!-- ENDIF --> style="max-width: 50px; max-height: 50px; padding: 5px;"></a>
+										<dfn>{{ lang('LAST_IMAGES') }}</dfn>
+										<a href="{{ U_IMAGE_ACTION }}"><img src="{{ U_PERSONAL_GALLERIES_LAST_IMAGE }}" title="{{ lang('VIEW_LATEST_IMAGE') }}&colon; {{ U_IMAGENAME }}"{% if U_IMAGENAME %} alt="{{ U_IMAGENAME }}"{% endif %} style="max-width: 50px; max-height: 50px; padding: 5px;"></a>
 									</div>
 									<div style="margin-bottom: -12px; white-space: normal; overflow: hidden;">
-										<!-- IF U_IMAGENAME -->{L_LAST_IMAGE}{L_COLON} <a href="{U_IMAGENAME_ACTION}" style="font-weight: bold;" title="{L_VIEW_LATEST_IMAGE}&colon; {U_IMAGENAME}">{U_IMAGENAME}</a><br />
-											{L_UPLOADED_BY_USER}{L_COLON} {U_UPLOADER}<br />
-											&raquo; {U_TIME}
-										<!-- ENDIF -->
+										{% if U_IMAGENAME %}{{ lang('LAST_IMAGE') }}{{ lang('COLON') }} <a href="{{ U_IMAGENAME_ACTION }}" style="font-weight: bold;" title="{{ lang('VIEW_LATEST_IMAGE') }}&colon; {{ U_IMAGENAME }}">{{ U_IMAGENAME }}</a><br />
+											{{ lang('UPLOADED_BY_USER') }}{{ lang('COLON') }} {{ U_UPLOADER }}<br />
+											&raquo; {{ U_TIME }}
+										{% endif %}
 									</div>
 									<br />
 								</div>
 							</div>
 						</dt>
 						<dd class="topics">
-							<dfn>{L_GALLERY_IMAGES}</dfn>
-							<strong><a href="{U_G_SEARCH_RECENT}" title="{L_GALLERY} {L_GALLERY_IMAGES}">{U_PERSONAL_GALLERIES_IMAGES}</a></strong>
+							<dfn>{{ lang('GALLERY_IMAGES') }}</dfn>
+							<strong><a href="{{ U_G_SEARCH_RECENT }}" title="{{ lang('GALLERY') }} {{ lang('GALLERY_IMAGES') }}">{{ U_PERSONAL_GALLERIES_IMAGES }}</a></strong>
 						</dd>
 						<dd class="lastpost" style="width: 330px;">
 							<div style="float: left;">
-									<dfn>{L_LAST_IMAGES}</dfn>
-								<a href="{U_IMAGE_ACTION}"><img src="{U_PERSONAL_GALLERIES_LAST_IMAGE}" title="{L_VIEW_LATEST_IMAGE}&colon; {U_IMAGENAME}"<!-- IF U_IMAGENAME --> alt="{U_IMAGENAME}"<!-- ENDIF --> style="max-width: 50px; max-height: 50px; padding-left: 5px;"></a>
+									<dfn>{{ lang('LAST_IMAGES') }}</dfn>
+								<a href="{{ U_IMAGE_ACTION }}"><img src="{{ U_PERSONAL_GALLERIES_LAST_IMAGE }}" title="{{ lang('VIEW_LATEST_IMAGE') }}&colon; {{ U_IMAGENAME }}"{% if U_IMAGENAME %} alt="{{ U_IMAGENAME }}"{% endif %} style="max-width: 50px; max-height: 50px; padding-left: 5px;"></a>
 							</div>
 							<div style="padding-left: 5px; margin-bottom: -12px; white-space: normal; overflow: hidden;">
-								<!-- IF U_IMAGENAME --><a href="{U_IMAGENAME_ACTION}" style="font-weight: bold;" title="{L_VIEW_LATEST_IMAGE}&colon; {U_IMAGENAME}">{U_IMAGENAME}</a><br />
-									{L_UPLOADED_BY_USER}{L_COLON} {U_UPLOADER}<br />
-									&raquo; {U_TIME}
-								<!-- ENDIF -->
+								{% if U_IMAGENAME %}<a href="{{ U_IMAGENAME_ACTION }}" style="font-weight: bold;" title="{{ lang('VIEW_LATEST_IMAGE') }}&colon; {{ U_IMAGENAME }}">{{ U_IMAGENAME }}</a><br />
+									{{ lang('UPLOADED_BY_USER') }}{{ lang('COLON') }} {{ U_UPLOADER }}<br />
+									&raquo; {{ U_TIME }}
+								{% endif %}
 							</div>
 							<br />
 						</dd>
@@ -229,87 +229,87 @@ function toggleElement(oElement)
 			</ul>
 		</div>
 	</div>
-<!-- ENDIF -->
+{% endif %}
 
-<!-- IF U_RECENT or U_RANDOM-->
-	<!-- INCLUDE gallery/imageblock_polaroid.html -->
-<!-- ENDIF -->
-<!-- IF U_RECENT_COMMENTS -->
-	<h2><a href="javascript: toggleElement( getElement('recent-comments'));">{L_SEARCH_RECENT_COMMENTS}</a> </h2>
-	<!-- IF ERROR --><h2>{ERROR}</h2>
-	<!-- ELSE -->
-	<div id="recent-comments" <!-- IF COMMENTS_EXPAND --><!-- ELSE -->style="display: none;"<!-- ENDIF -->>
+{% if U_RECENT or U_RANDOM %}
+	{% include 'gallery/imageblock_polaroid.html' %}
+{% endif %}
+{% if U_RECENT_COMMENTS %}
+	<h2><a href="javascript: toggleElement( getElement('recent-comments'));">{{ lang('SEARCH_RECENT_COMMENTS') }}</a> </h2>
+	{% if ERROR %}<h2>{{ ERROR }}</h2>
+	{% else %}
+	<div id="recent-comments" {% if COMMENTS_EXPAND %}{% else %}style="display: none;"{% endif %}>
 		<br />
-		<!-- BEGIN commentrow -->
-		<div class="post <!-- IF commentrow.S_ROW_COUNT is odd -->bg1<!-- ELSE -->bg2<!-- ENDIF -->">
-			<a id="comment{commentrow.COMMENT_ID}" class="anchor"></a>
+		{% for commentrow in commentrow %}
+		<div class="post {% if commentrow.S_ROW_COUNT is odd %}bg1{% else %}bg2{% endif %}">
+			<a id="comment{{ commentrow.COMMENT_ID }}" class="anchor"></a>
 			<div class="inner">
-				<dl class="postprofile" id="profile{commentrow.COMMENT_ID}">
+				<dl class="postprofile" id="profile{{ commentrow.COMMENT_ID }}">
 					<dt>
-						{L_COMMENT_ON} {L_IMAGE}{L_COLON}
-						{commentrow.UC_IMAGE_NAME}<br /><br />
-						{commentrow.UC_THUMBNAIL}<br /><br />
-						{L_UPLOADED_BY_USER}&nbsp;{commentrow.IMAGE_AUTHOR}<br />
-						&raquo; {commentrow.IMAGE_TIME}
+						{{ lang('COMMENT_ON') }} {{ lang('IMAGE') }}{{ lang('COLON') }}
+						{{ commentrow.UC_IMAGE_NAME }}<br /><br />
+						{{ commentrow.UC_THUMBNAIL }}<br /><br />
+						{{ lang('UPLOADED_BY_USER') }}&nbsp;{{ commentrow.IMAGE_AUTHOR }}<br />
+						&raquo; {{ commentrow.IMAGE_TIME }}
 					</dt>
 				</dl>
 				<div class="postbody">
-					<!-- IF commentrow.U_EDIT or commentrow.U_DELETE or commentrow.U_QUOTE -->
+					{% if commentrow.U_EDIT or commentrow.U_DELETE or commentrow.U_QUOTE %}
 						<ul class="post-buttons">
-							<!-- IF commentrow.U_EDIT --><li><a href="{commentrow.U_EDIT}" title="{L_EDIT_COMMENT}" class="button button-icon-only"><i class="icon fa-pencil fa-fw" aria-hidden="true"></i><span class="sr-only">{L_EDIT_COMMENT}</span></a></li><!-- ENDIF -->
-							<!-- IF commentrow.U_DELETE --><li><a href="{commentrow.U_DELETE}" title="{L_DELETE_COMMENT}" class="button button-icon-only"><i class="icon fa-times fa-fw" aria-hidden="true"></i><span class="sr-only">{L_DELETE_COMMENT}</span></a></li><!-- ENDIF -->
-							<!-- IF commentrow.U_QUOTE --><li><a href="{commentrow.U_QUOTE}" title="{L_QUOTE_COMMENT}" class="button button-icon-only"><i class="icon fa-quote-left fa-fw" aria-hidden="true"></i><span class="sr-only">{L_QUOTE_COMMENT}</span></a></li><!-- ENDIF -->
+							{% if commentrow.U_EDIT %}<li><a href="{{ commentrow.U_EDIT }}" title="{{ lang('EDIT_COMMENT') }}" class="button button-icon-only"><i class="icon fa-pencil fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('EDIT_COMMENT') }}</span></a></li>{% endif %}
+							{% if commentrow.U_DELETE %}<li><a href="{{ commentrow.U_DELETE }}" title="{{ lang('DELETE_COMMENT') }}" class="button button-icon-only"><i class="icon fa-times fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('DELETE_COMMENT') }}</span></a></li>{% endif %}
+							{% if commentrow.U_QUOTE %}<li><a href="{{ commentrow.U_QUOTE }}" title="{{ lang('QUOTE_COMMENT') }}" class="button button-icon-only"><i class="icon fa-quote-left fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('QUOTE_COMMENT') }}</span></a></li>{% endif %}
 						</ul>
-					<!-- ENDIF -->
-					<p class="author" style="clear: inherit; margin-top: 1.5em;"><!-- IF S_IS_BOT --><i class="icon fa-file fa-fw icon-lightgray icon-md" aria-hidden="true"></i>{L_COMMENT}<span class="sr-only">{commentrow.MINI_POST}</span><!-- ELSE --><a href="{commentrow.U_COMMENT}" title="{L_COMMENT}"><i class="icon fa-file fa-fw icon-lightgray icon-md" aria-hidden="true"></i>{L_COMMENT}&nbsp;<span class="sr-only">{commentrow.MINI_POST}</span></a><!-- ENDIF --><span style="white-space: nowrap;">{L_POST_BY_AUTHOR}&nbsp;{commentrow.POST_AUTHOR_FULL} </span>&raquo;<span style="white-space: nowrap;"> {commentrow.TIME}</span></p>
-					<div class="content">{commentrow.TEXT}</div>
+					{% endif %}
+					<p class="author" style="clear: inherit; margin-top: 1.5em;">{% if S_IS_BOT %}<i class="icon fa-file fa-fw icon-lightgray icon-md" aria-hidden="true"></i>{{ lang('COMMENT') }}<span class="sr-only">{{ commentrow.MINI_POST }}</span>{% else %}<a href="{{ commentrow.U_COMMENT }}" title="{{ lang('COMMENT') }}"><i class="icon fa-file fa-fw icon-lightgray icon-md" aria-hidden="true"></i>{{ lang('COMMENT') }}&nbsp;<span class="sr-only">{{ commentrow.MINI_POST }}</span></a>{% endif %}<span style="white-space: nowrap;">{{ lang('POST_BY_AUTHOR') }}&nbsp;{{ commentrow.POST_AUTHOR_FULL }} </span>&raquo;<span style="white-space: nowrap;"> {{ commentrow.TIME }}</span></p>
+					<div class="content">{{ commentrow.TEXT }}</div>
 				</div>
-				<!-- EVENT viewtopic_body_postrow_back2top_before -->
+				{% EVENT viewtopic_body_postrow_back2top_before %}
 					<div class="back2top">
-						<!-- EVENT viewtopic_body_postrow_back2top_prepend -->
-							<a href="#top" class="top" title="{L_BACK_TO_TOP}">
+						{% EVENT viewtopic_body_postrow_back2top_prepend %}
+							<a href="#top" class="top" title="{{ lang('BACK_TO_TOP') }}">
 								<i class="icon fa-chevron-circle-up fa-fw icon-gray" aria-hidden="true"></i>
-								<span class="sr-only">{L_BACK_TO_TOP}</span>
+								<span class="sr-only">{{ lang('BACK_TO_TOP') }}</span>
 							</a>
-						<!-- EVENT viewtopic_body_postrow_back2top_append -->
+						{% EVENT viewtopic_body_postrow_back2top_append %}
 					</div>
-				<!-- EVENT viewtopic_body_postrow_back2top_after -->
+				{% EVENT viewtopic_body_postrow_back2top_after %}
 			</div>
 		</div>
-		<!-- END commentrow -->
+		{% endfor %}
 	</div>
-	<!-- ENDIF -->
-<!-- ENDIF -->
+	{% endif %}
+{% endif %}
 
 
-<!-- IF not S_USER_LOGGED_IN and not S_IS_BOT and S_DISP_LOGIN -->
-	<form method="post" action="{S_LOGIN_ACTION}" class="headerspace">
-	<h3><a href="{U_LOGIN_LOGOUT}">{L_LOGIN_LOGOUT}</a><!-- IF S_REGISTER_ENABLED -->&nbsp; &bull; &nbsp;<a href="{U_REGISTER}">{L_REGISTER}</a><!-- ENDIF --></h3>
+{% if not S_USER_LOGGED_IN and not S_IS_BOT and S_DISP_LOGIN %}
+	<form method="post" action="{{ S_LOGIN_ACTION }}" class="headerspace">
+	<h3><a href="{{ U_LOGIN_LOGOUT }}">{{ lang('LOGIN_LOGOUT') }}</a>{% if S_REGISTER_ENABLED %}&nbsp; &bull; &nbsp;<a href="{{ U_REGISTER }}">{{ lang('REGISTER') }}</a>{% endif %}</h3>
 		<fieldset class="quick-login">
-			<label for="username">{L_USERNAME}{L_COLON}</label>&nbsp;<input type="text" name="username" id="username" size="10" class="inputbox" title="{L_USERNAME}" />
-			<label for="password">{L_PASSWORD}{L_COLON}</label>&nbsp;<input type="password" name="password" id="password" size="10" class="inputbox" title="{L_PASSWORD}" />
-			<!-- IF S_AUTOLOGIN_ENABLED -->
-				| <label for="autologin">{L_LOG_ME_IN} <input type="checkbox" name="autologin" id="autologin" /></label>
-			<!-- ENDIF -->
-			<input type="submit" name="login" value="{L_LOGIN}" class="button2" />
+			<label for="username">{{ lang('USERNAME') }}{{ lang('COLON') }}</label>&nbsp;<input type="text" name="username" id="username" size="10" class="inputbox" title="{{ lang('USERNAME') }}" />
+			<label for="password">{{ lang('PASSWORD') }}{{ lang('COLON') }}</label>&nbsp;<input type="password" name="password" id="password" size="10" class="inputbox" title="{{ lang('PASSWORD') }}" />
+			{% if S_AUTOLOGIN_ENABLED %}
+				| <label for="autologin">{{ lang('LOG_ME_IN') }} <input type="checkbox" name="autologin" id="autologin" /></label>
+			{% endif %}
+			<input type="submit" name="login" value="{{ lang('LOGIN') }}" class="button2" />
 		</fieldset>
 	</form>
-<!-- ENDIF -->
+{% endif %}
 
-<!-- IF S_DISPLAY_ONLINE_LIST -->
-	<!-- IF U_VIEWONLINE --><h3><a href="{U_VIEWONLINE}">{L_WHO_IS_ONLINE}</a></h3><!-- ELSE --><h3>{L_WHO_IS_ONLINE}</h3><!-- ENDIF -->
-	<p>{TOTAL_USERS_ONLINE} ({L_ONLINE_EXPLAIN})<br />{RECORD_USERS}<br /> <br />{LOGGED_IN_USER_LIST}
-	<!-- IF LEGEND --><br /><em>{L_LEGEND}{L_COLON} {LEGEND}</em><!-- ENDIF --></p>
-<!-- ENDIF -->
+{% if S_DISPLAY_ONLINE_LIST %}
+	{% if U_VIEWONLINE %}<h3><a href="{{ U_VIEWONLINE }}">{{ lang('WHO_IS_ONLINE') }}</a></h3>{% else %}<h3>{{ lang('WHO_IS_ONLINE') }}</h3>{% endif %}
+	<p>{{ TOTAL_USERS_ONLINE }} ({{ lang('ONLINE_EXPLAIN') }})<br />{{ RECORD_USERS }}<br /> <br />{{ LOGGED_IN_USER_LIST }}
+	{% if LEGEND %}<br /><em>{{ lang('LEGEND') }}{{ lang('COLON') }} {{ LEGEND }}</em>{% endif %}</p>
+{% endif %}
 
-<!-- IF S_DISPLAY_BIRTHDAY_LIST -->
-	<h3>{L_BIRTHDAYS}</h3>
-	<p><!-- IF .birthdays -->{L_CONGRATULATIONS}{L_COLON} <strong><!-- BEGIN birthdays -->{birthdays.USERNAME}<!-- IF birthdays.AGE !== '' --> ({birthdays.AGE})<!-- ENDIF --><!-- IF not birthdays.S_LAST_ROW -->, <!-- ENDIF --><!-- END birthdays --></strong><!-- ELSE -->{L_NO_BIRTHDAYS}<!-- ENDIF --></p>
-<!-- ENDIF -->
+{% if S_DISPLAY_BIRTHDAY_LIST %}
+	<h3>{{ lang('BIRTHDAYS') }}</h3>
+	<p>{% if birthdays|length %}{{ lang('CONGRATULATIONS') }}{{ lang('COLON') }} <strong>{% for birthdays in birthdays %}{{ birthdays.USERNAME }}{% if birthdays.AGE is not same as('') %} ({{ birthdays.AGE }}){% endif %}{% if not birthdays.S_LAST_ROW %}, {% endif %}{% endfor %}</strong>{% else %}{{ lang('NO_BIRTHDAYS') }}{% endif %}</p>
+{% endif %}
 
-<!-- IF TOTAL_IMAGES -->
-	<h3>{L_STATISTICS}</h3>
-	<p>{TOTAL_IMAGES}<!-- IF TOTAL_COMMENTS --> &bull; {TOTAL_COMMENTS}<!-- ENDIF --><!-- IF TOTAL_PGALLERIES --> &bull; {TOTAL_PGALLERIES}<!-- IF NEWEST_PGALLERIES --> &bull; {NEWEST_PGALLERIES}<!-- ENDIF --><!-- ENDIF --></p>
-<!-- ENDIF -->
+{% if TOTAL_IMAGES %}
+	<h3>{{ lang('STATISTICS') }}</h3>
+	<p>{{ TOTAL_IMAGES }}{% if TOTAL_COMMENTS %} &bull; {{ TOTAL_COMMENTS }}{% endif %}{% if TOTAL_PGALLERIES %} &bull; {{ TOTAL_PGALLERIES }}{% if NEWEST_PGALLERIES %} &bull; {{ NEWEST_PGALLERIES }}{% endif %}{% endif %}</p>
+{% endif %}
 
-<!-- INCLUDE gallery/gallery_footer.html -->
+{% include 'gallery/gallery_footer.html' %}
