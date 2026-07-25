@@ -11,59 +11,47 @@ namespace phpbbgallery\core;
 
 class search
 {
-	/* @var \phpbb\db\driver\driver */
-	protected $db;
-
-	/* @var \phpbb\request\request */
-	protected $request;
+	/* @var \phpbb\db\driver\driver_interface */
+	protected \phpbb\db\driver\driver_interface $db;
 
 	/* @var \phpbb\template\template */
-	protected $template;
+	protected \phpbb\template\template $template;
 
 	/* @var \phpbb\user */
-	protected $user;
+	protected \phpbb\user $user;
 
 	/* @var \phpbb\language\language */
-	protected $language;
+	protected \phpbb\language\language $language;
 
 	/* @var \phpbb\controller\helper */
-	protected $helper;
+	protected \phpbb\controller\helper $helper;
 
 	/* @var \phpbbgallery\core\config */
-	protected $gallery_config;
+	protected \phpbbgallery\core\config $gallery_config;
 
 	/* @var \phpbbgallery\core\auth\auth */
-	protected $gallery_auth;
+	protected \phpbbgallery\core\auth\auth $gallery_auth;
 
 	/* @var \phpbbgallery\core\album\album */
-	protected $album;
+	protected \phpbbgallery\core\album\album $album;
 
 	/* @var \phpbbgallery\core\image\image */
-	protected $image;
+	protected \phpbbgallery\core\image\image $image;
 
 	/* @var \phpbb\pagination */
-	protected $pagination;
+	protected \phpbb\pagination $pagination;
 
 	/* @var \phpbb\user_loader */
-	protected $user_loader;
+	protected \phpbb\user_loader $user_loader;
 
 	/* @var string */
-	protected $images_table;
+	protected string $images_table;
 
 	/* @var string */
-	protected $albums_table;
+	protected string $albums_table;
 
 	/* @var string */
-	protected $comments_table;
-
-	/* @var \phpbbgallery\core\album\display */
-	protected $display;
-
-	/* @var string */
-	protected $root_path;
-
-	/* @var string */
-	protected $php_ext;
+	protected string $comments_table;
 
 	/**
 	 * Constructor
@@ -93,7 +81,7 @@ class search
 		\phpbb\language\language $language, \phpbb\controller\helper $helper, \phpbbgallery\core\config $gallery_config,
 		\phpbbgallery\core\auth\auth $gallery_auth, \phpbbgallery\core\album\album $album, \phpbbgallery\core\image\image $image,
 		\phpbb\pagination $pagination, \phpbb\user_loader $user_loader,
-		$images_table, $albums_table, $comments_table)
+		string $images_table, string $albums_table, string $comments_table)
 	{
 		$this->db = $db;
 		$this->template = $template;
@@ -119,7 +107,7 @@ class search
 	 * @param bool $block_name
 	 * @param bool $u_block
 	 */
-	public function random($limit, $user = 0, $fields = 'rrc_gindex_display', $block_name = false, $u_block = false)
+	public function random(int $limit, int $user = 0, string $fields = 'rrc_gindex_display', string|false $block_name = false, string|false $u_block = false): void
 	{
 		// We will do small escape for not devising by 0
 		if ($limit == 0)
@@ -193,8 +181,6 @@ class search
 
 		$total_match_count = sizeof($id_ary);
 
-		$l_search_matches = $this->language->lang('FOUND_SEARCH_MATCHES', $total_match_count);
-
 		$this->template->assign_block_vars('imageblock', array(
 			'BLOCK_NAME'	=> $block_name ? $block_name : $this->language->lang('RANDOM_IMAGES'),
 			'U_BLOCK'	=> $u_block ? $u_block : $this->helper->route('phpbbgallery_core_search_random'),
@@ -247,7 +233,7 @@ class search
 	* Get all recent images the user has access to
 	* return (int) $images_count
 	*/
-	public function recent_count()
+	public function recent_count(): int
 	{
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 
@@ -301,7 +287,7 @@ class search
 		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
 
-		return (int) $row['count'];
+		return is_array($row) ? (int) $row['count'] : 0;
 	}
 
 
@@ -311,7 +297,7 @@ class search
 	 * @param (int)    $limit How many images to query
 	 * @param int $start
 	 */
-	public function recent_comments($limit, $start = 0, $pagination = true)
+	public function recent_comments(int $limit, int $start = 0, bool $pagination = true): void
 	{
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$sql_limit = $limit;
@@ -416,7 +402,7 @@ class search
 	 * @param bool $block_name
 	 * @param bool $u_block
 	 */
-	public function recent($limit, $start = 0, $user = 0, $fields = 'rrc_gindex_display', $block_name = false, $u_block = false)
+	public function recent(int $limit, int $start = 0, int $user = 0, string $fields = 'rrc_gindex_display', string|false $block_name = false, string|false $u_block = false): void
 	{
 		// We will do small escape for not devising by 0
 		if ($limit == 0)
@@ -461,6 +447,9 @@ class search
 			case 'lc':
 				$sql_order = 'image_last_comment';
 				break;
+			default:
+				$sql_order = 'image_time';
+				break;
 		}
 		$sql_order = $sql_order . ($this->gallery_config->get('default_sort_dir') == 'd' ? ' DESC' : ' ASC');
 		$sql_limit = $limit;
@@ -486,7 +475,7 @@ class search
 		{
 			$sql_ary['WHERE'] .= ' and image_user_id = ' . (int) $user;
 		}
-		$user_id = $this->user->data['user_id'];
+		$user_id = (int) $this->user->data['user_id'];
 		$sql_ary['WHERE'] .= ' AND ((' . $this->db->sql_in_set('image_album_id', array_diff($this->gallery_auth->acl_album_ids('i_view'), $exclude_albums), false, true) . ' AND (image_status <> ' . \phpbbgallery\core\block::STATUS_UNAPPROVED . ' OR image_user_id = ' . $user_id . '))
 					OR ' . $this->db->sql_in_set('image_album_id', array_diff($this->gallery_auth->acl_album_ids('m_status'), $exclude_albums), false, true) . ')';
 
@@ -495,7 +484,7 @@ class search
 		$result = $this->db->sql_query($sql);
 		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
-		$count = $row['count'];
+		$count = is_array($row) ? (int) $row['count'] : 0;
 
 		$sql_ary['SELECT'] = 'image_id';
 		$sql_ary['ORDER_BY'] = $sql_order;
@@ -510,8 +499,6 @@ class search
 		$this->db->sql_freeresult($result);
 
 		$total_match_count = sizeof($id_ary);
-
-		$l_search_matches = $this->language->lang('FOUND_SEARCH_MATCHES', $total_match_count);
 
 		if ($user > 0)
 		{
@@ -603,7 +590,7 @@ class search
 	 * @param $limit
 	 * @param int $start
 	 */
-	public function rating($limit, $start = 0)
+	public function rating(int $limit, int $start = 0): void
 	{
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$sql_array = array();
@@ -616,7 +603,7 @@ class search
 		$result = $this->db->sql_query($sql);
 		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
-		$count = $row['count'];
+		$count = is_array($row) ? (int) $row['count'] : 0;
 		$sql_array['SELECT'] = '* , a.album_name, a.album_status, a.album_user_id, a.album_id';
 		$sql_array['LEFT_JOIN']	= array(
 			array(
@@ -628,6 +615,7 @@ class search
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
 		$result = $this->db->sql_query_limit($sql, $limit, $start);
 		$rowset = [];
+		$users_array = [];
 
 		while ($row = $this->db->sql_fetchrow($result))
 		{
@@ -639,6 +627,7 @@ class search
 		{
 			$this->template->assign_var('S_NO_SEARCH', true);
 			trigger_error('NO_SEARCH');
+			return;
 		}
 
 		$this->template->assign_block_vars('imageblock', array(

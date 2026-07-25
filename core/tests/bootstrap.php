@@ -124,6 +124,7 @@ namespace
 	require_once dirname(__DIR__) . '/comment.php';
 	require_once dirname(__DIR__) . '/rating.php';
 	require_once dirname(__DIR__) . '/report.php';
+	require_once dirname(__DIR__) . '/search.php';
 	require_once dirname(__DIR__) . '/notification.php';
 	require_once dirname(__DIR__) . '/notification/helper.php';
 	require_once dirname(__DIR__) . '/notification/events/phpbbgallery_image_approved.php';
