@@ -20,6 +20,13 @@ h2.bs {
 	text-transform: none;
 	color: #4d4d4d;
 }
+.bs h4 {
+	margin: .5rem 0 .5rem;
+	font-size: 1rem;
+	font-weight: 600;
+	text-transform: none;
+	color: #4d4d4d;
+}
 p.bs-subtle {
 	font-size: 1.5rem;
 	text-align: center;
@@ -33,13 +40,17 @@ p.bs-subtle {
 .bs-metrics .bs-metric:nth-child(4) { grid-area: tAvg; }
 .bs-metrics .bs-metric:nth-child(5) { grid-area: pAvg; }
 .bs-metrics .bs-metric:nth-child(6) { grid-area: uAvg; }
+.bs-metrics .bs-metric:nth-child(7) { grid-area: tPeak; }
+.bs-metrics .bs-metric:nth-child(8) { grid-area: pPeak; }
+.bs-metrics .bs-metric:nth-child(9) { grid-area: uPeak; }
 .bs-metrics {
 	display: grid;
 	grid-template-columns: repeat(3, minmax(0,1fr));
 	gap: .5rem 1rem;
 	grid-template-areas:
 		"tTotal pTotal uTotal"
-		"tAvg   pAvg   uAvg";
+		"tAvg   pAvg   uAvg"
+		"tPeak  pPeak  uPeak";
 }
 .bs-metric {
 	display: grid;
@@ -239,8 +250,11 @@ p.bs-footer-note {
 		grid-template-columns: repeat(2, minmax(0,1fr));
 		grid-template-areas:
 			"tTotal tAvg"
+			"tPeak  tPeak"
 			"pTotal pAvg"
-			"uTotal uAvg";
+			"pPeak  pPeak"
+			"uTotal uAvg"
+			"uPeak  uPeak";
 	}
 	.bs { font-size: 0.9rem; }
 }
@@ -250,10 +264,13 @@ p.bs-footer-note {
 		grid-template-areas:
 			"tTotal"
 			"tAvg"
+			"tPeak"
 			"pTotal"
 			"pAvg"
+			"pPeak"
 			"uTotal"
-			"uAvg";
+			"uAvg"
+			"uPeak";
 	}
 	.bs-row-head,
 	.bs-row {
@@ -314,7 +331,8 @@ html.phpbb-dark-mode .bs-section, html.phpbb-dark-mode .bs-modebar {
 }
 html.phpbb-dark-mode .bs         { color: #e5e7eb; }
 html.phpbb-dark-mode h2.bs,
-html.phpbb-dark-mode .bs h3      { color: #f3f4f6; }
+html.phpbb-dark-mode .bs h3,
+html.phpbb-dark-mode .bs h4      { color: #f3f4f6; }
 html.phpbb-dark-mode p.bs-subtle { color: #cbd5e1; opacity: .9; }
 
 html.phpbb-dark-mode .bs-metric {

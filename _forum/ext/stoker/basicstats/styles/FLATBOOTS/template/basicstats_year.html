@@ -34,6 +34,9 @@
 			<div class="col-xs-6 col-sm-4"><div class="bs-metric"><span class="bs-metric-label">{{ lang('BS_AVG_TOPICS_YEAR') }}</span><span class="bs-metric-value">{{ AVG_TOPICS }}</span></div></div>
 			<div class="col-xs-6 col-sm-4"><div class="bs-metric"><span class="bs-metric-label">{{ lang('BS_AVG_POSTS_YEAR') }}</span><span class="bs-metric-value">{{ AVG_POSTS }}</span></div></div>
 			<div class="col-xs-6 col-sm-4"><div class="bs-metric"><span class="bs-metric-label">{{ lang('BS_AVG_USER_REGS_YEAR') }}</span><span class="bs-metric-value">{{ AVG_USER_REGS }}</span></div></div>
+			<div class="col-xs-6 col-sm-4"><div class="bs-metric"><span class="bs-metric-label">{{ lang('BS_PEAK_HOUR_TOPICS') }}</span><span class="bs-metric-value">{{ PEAK_HOUR_TOPICS }}</span></div></div>
+			<div class="col-xs-6 col-sm-4"><div class="bs-metric"><span class="bs-metric-label">{{ lang('BS_PEAK_HOUR_POSTS') }}</span><span class="bs-metric-value">{{ PEAK_HOUR_POSTS }}</span></div></div>
+			<div class="col-xs-6 col-sm-4"><div class="bs-metric"><span class="bs-metric-label">{{ lang('BS_PEAK_HOUR_USER_REGS') }}</span><span class="bs-metric-value">{{ PEAK_HOUR_USER_REGS }}</span></div></div>
 		</div>
 
 		<h3 class="bs-section-title">{{ lang('BS_TOPIC_STATS') }}</h3>
@@ -111,6 +114,178 @@
 								<td class="bs-cell-bar"><div class="progress"><div class="progress-bar bs-progress-bar" role="progressbar" aria-valuenow="{{ row.PCT }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ row.BARWIDTH }}%"></div></div></td>
 								<td class="text-right">{{ row.COUNT }}</td>
 								<td class="text-right">{{ row.PCT }}</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		{% else %}
+			<p class="text-muted bs-subtle">{{ lang('NONE') }}</p>
+		{% endif %}
+
+		<h3 class="bs-section-title">{{ lang('BS_MONTH_OF_YEAR_BREAKDOWN') }}</h3>
+
+		<h4 class="bs-section-title">{{ lang('BS_TOPIC_STATS') }}</h4>
+		{% if S_MOY_TOPICS %}
+			<div class="table-responsive">
+				<table class="table table-condensed table-striped bs-table">
+					<thead>
+						<tr>
+							<th>{{ lang('BS_PERIODIC_MONTH') }}</th>
+							<th class="bs-th-bar"></th>
+							<th class="text-right"><span class="bs-label-full">{{ lang('BS_AVERAGE') }}</span><span class="bs-label-short">{{ lang('BS_AVERAGE_SHORT') }}</span></th>
+							<th class="text-right"><span class="bs-label-full">{{ lang('BS_COUNT') }}</span><span class="bs-label-short">{{ lang('BS_COUNT_SHORT') }}</span></th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for row in loops.moy_topics_row %}
+							<tr class="{{ row.IS_MAX ? 'bs-is-max' : '' }}">
+								<td class="bs-cell-day text-capitalize">{{ row.TIME_ELEMENT }}</td>
+								<td class="bs-cell-bar"><div class="progress"><div class="progress-bar bs-progress-bar" role="progressbar" style="width: {{ row.BARWIDTH }}%"></div></div></td>
+								<td class="text-right">{{ row.AVERAGE }}</td>
+								<td class="text-right">{{ row.TOTAL }}</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		{% else %}
+			<p class="text-muted bs-subtle">{{ lang('NONE') }}</p>
+		{% endif %}
+
+		<h4 class="bs-section-title">{{ lang('BS_POST_STATS') }}</h4>
+		{% if S_MOY_POSTS %}
+			<div class="table-responsive">
+				<table class="table table-condensed table-striped bs-table">
+					<thead>
+						<tr>
+							<th>{{ lang('BS_PERIODIC_MONTH') }}</th>
+							<th class="bs-th-bar"></th>
+							<th class="text-right"><span class="bs-label-full">{{ lang('BS_AVERAGE') }}</span><span class="bs-label-short">{{ lang('BS_AVERAGE_SHORT') }}</span></th>
+							<th class="text-right"><span class="bs-label-full">{{ lang('BS_COUNT') }}</span><span class="bs-label-short">{{ lang('BS_COUNT_SHORT') }}</span></th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for row in loops.moy_posts_row %}
+							<tr class="{{ row.IS_MAX ? 'bs-is-max' : '' }}">
+								<td class="bs-cell-day text-capitalize">{{ row.TIME_ELEMENT }}</td>
+								<td class="bs-cell-bar"><div class="progress"><div class="progress-bar bs-progress-bar" role="progressbar" style="width: {{ row.BARWIDTH }}%"></div></div></td>
+								<td class="text-right">{{ row.AVERAGE }}</td>
+								<td class="text-right">{{ row.TOTAL }}</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		{% else %}
+			<p class="text-muted bs-subtle">{{ lang('NONE') }}</p>
+		{% endif %}
+
+		<h4 class="bs-section-title">{{ lang('BS_USER_REG_STATS') }}</h4>
+		{% if S_MOY_USER_REGS %}
+			<div class="table-responsive">
+				<table class="table table-condensed table-striped bs-table">
+					<thead>
+						<tr>
+							<th>{{ lang('BS_PERIODIC_MONTH') }}</th>
+							<th class="bs-th-bar"></th>
+							<th class="text-right"><span class="bs-label-full">{{ lang('BS_AVERAGE') }}</span><span class="bs-label-short">{{ lang('BS_AVERAGE_SHORT') }}</span></th>
+							<th class="text-right"><span class="bs-label-full">{{ lang('BS_COUNT') }}</span><span class="bs-label-short">{{ lang('BS_COUNT_SHORT') }}</span></th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for row in loops.moy_user_regs_row %}
+							<tr class="{{ row.IS_MAX ? 'bs-is-max' : '' }}">
+								<td class="bs-cell-day text-capitalize">{{ row.TIME_ELEMENT }}</td>
+								<td class="bs-cell-bar"><div class="progress"><div class="progress-bar bs-progress-bar" role="progressbar" style="width: {{ row.BARWIDTH }}%"></div></div></td>
+								<td class="text-right">{{ row.AVERAGE }}</td>
+								<td class="text-right">{{ row.TOTAL }}</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		{% else %}
+			<p class="text-muted bs-subtle">{{ lang('NONE') }}</p>
+		{% endif %}
+
+		<h3 class="bs-section-title">{{ lang('BS_DAY_OF_MONTH_BREAKDOWN') }}</h3>
+
+		<h4 class="bs-section-title">{{ lang('BS_TOPIC_STATS') }}</h4>
+		{% if S_DOM_TOPICS %}
+			<div class="table-responsive">
+				<table class="table table-condensed table-striped bs-table">
+					<thead>
+						<tr>
+							<th>{{ lang('BS_PERIODIC_DAY') }}</th>
+							<th class="bs-th-bar"></th>
+							<th class="text-right"><span class="bs-label-full">{{ lang('BS_AVERAGE') }}</span><span class="bs-label-short">{{ lang('BS_AVERAGE_SHORT') }}</span></th>
+							<th class="text-right"><span class="bs-label-full">{{ lang('BS_COUNT') }}</span><span class="bs-label-short">{{ lang('BS_COUNT_SHORT') }}</span></th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for row in loops.dom_topics_row %}
+							<tr class="{{ row.IS_MAX ? 'bs-is-max' : '' }}">
+								<td class="bs-cell-day">{{ row.TIME_ELEMENT }}</td>
+								<td class="bs-cell-bar"><div class="progress"><div class="progress-bar bs-progress-bar" role="progressbar" style="width: {{ row.BARWIDTH }}%"></div></div></td>
+								<td class="text-right">{{ row.AVERAGE }}</td>
+								<td class="text-right">{{ row.TOTAL }}</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		{% else %}
+			<p class="text-muted bs-subtle">{{ lang('NONE') }}</p>
+		{% endif %}
+
+		<h4 class="bs-section-title">{{ lang('BS_POST_STATS') }}</h4>
+		{% if S_DOM_POSTS %}
+			<div class="table-responsive">
+				<table class="table table-condensed table-striped bs-table">
+					<thead>
+						<tr>
+							<th>{{ lang('BS_PERIODIC_DAY') }}</th>
+							<th class="bs-th-bar"></th>
+							<th class="text-right"><span class="bs-label-full">{{ lang('BS_AVERAGE') }}</span><span class="bs-label-short">{{ lang('BS_AVERAGE_SHORT') }}</span></th>
+							<th class="text-right"><span class="bs-label-full">{{ lang('BS_COUNT') }}</span><span class="bs-label-short">{{ lang('BS_COUNT_SHORT') }}</span></th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for row in loops.dom_posts_row %}
+							<tr class="{{ row.IS_MAX ? 'bs-is-max' : '' }}">
+								<td class="bs-cell-day">{{ row.TIME_ELEMENT }}</td>
+								<td class="bs-cell-bar"><div class="progress"><div class="progress-bar bs-progress-bar" role="progressbar" style="width: {{ row.BARWIDTH }}%"></div></div></td>
+								<td class="text-right">{{ row.AVERAGE }}</td>
+								<td class="text-right">{{ row.TOTAL }}</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		{% else %}
+			<p class="text-muted bs-subtle">{{ lang('NONE') }}</p>
+		{% endif %}
+
+		<h4 class="bs-section-title">{{ lang('BS_USER_REG_STATS') }}</h4>
+		{% if S_DOM_USER_REGS %}
+			<div class="table-responsive">
+				<table class="table table-condensed table-striped bs-table">
+					<thead>
+						<tr>
+							<th>{{ lang('BS_PERIODIC_DAY') }}</th>
+							<th class="bs-th-bar"></th>
+							<th class="text-right"><span class="bs-label-full">{{ lang('BS_AVERAGE') }}</span><span class="bs-label-short">{{ lang('BS_AVERAGE_SHORT') }}</span></th>
+							<th class="text-right"><span class="bs-label-full">{{ lang('BS_COUNT') }}</span><span class="bs-label-short">{{ lang('BS_COUNT_SHORT') }}</span></th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for row in loops.dom_user_regs_row %}
+							<tr class="{{ row.IS_MAX ? 'bs-is-max' : '' }}">
+								<td class="bs-cell-day">{{ row.TIME_ELEMENT }}</td>
+								<td class="bs-cell-bar"><div class="progress"><div class="progress-bar bs-progress-bar" role="progressbar" style="width: {{ row.BARWIDTH }}%"></div></div></td>
+								<td class="text-right">{{ row.AVERAGE }}</td>
+								<td class="text-right">{{ row.TOTAL }}</td>
 							</tr>
 						{% endfor %}
 					</tbody>

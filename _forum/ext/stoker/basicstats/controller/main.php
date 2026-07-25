@@ -128,6 +128,15 @@ final class main
 		return number_format($value, $decimals, $decimal_separator, $thousands_separator);
 	}
 
+	/**
+	 * Format a peak hour (0..23, UTC) as "HH:00", or the core NONE string
+	 * when there is no data (null).
+	 */
+	protected function format_peak_hour(?int $hour): string
+	{
+		return $hour === null ? $this->language->lang('NONE') : sprintf('%02d:00', $hour);
+	}
+
 	public function handle(string $view = ''): Response
 	{
 		$mode = $this->request->variable('mode', 'm');
@@ -190,13 +199,24 @@ final class main
 					$regs_where = $this->db->sql_in_set('user_type', [USER_NORMAL, USER_FOUNDER]);
 					$regs_by_day = $this->group_by_day(USERS_TABLE, 'user_regdate', $regs_where, $start_ts, $end_ts);
 
+					$topics_by_hour = $this->group_by_hour(TOPICS_TABLE, 'topic_time', 'topic_visibility = ' . ITEM_APPROVED, $start_ts, $end_ts);
+					$posts_by_hour = $this->group_by_hour(POSTS_TABLE, 'post_time', 'post_visibility = ' . ITEM_APPROVED, $start_ts, $end_ts);
+					$regs_by_hour = $this->group_by_hour(USERS_TABLE, 'user_regdate', $regs_where, $start_ts, $end_ts);
+
 					$pack = [
-						'topics'   => $topics_by_day,
-						'posts'    => $posts_by_day,
-						'user_reg' => $regs_by_day,
+						'topics'       => $topics_by_day,
+						'posts'        => $posts_by_day,
+						'user_reg'     => $regs_by_day,
+						'topics_hour'  => $topics_by_hour,
+						'posts_hour'   => $posts_by_hour,
+						'user_reg_hour' => $regs_by_hour,
 					];
 					$this->cache_put($ckey, $pack, $is_current_month ? self::TTL_D_CURRENT : 0);
 				}
+
+				$peak_hour_topics = $this->peak_hour($pack['topics_hour']);
+				$peak_hour_posts = $this->peak_hour($pack['posts_hour']);
+				$peak_hour_user_reg = $this->peak_hour($pack['user_reg_hour']);
 
 				$daily_data = [];
 				for ($d = $first_day; $d <= $last_day; $d++)
@@ -279,6 +299,15 @@ final class main
 					}
 				}
 
+				$hour_label_fn = static function (int $h): string {
+					return sprintf('%02d:00', $h);
+				};
+				$hour_occurrences = array_fill(0, 24, max(1, $counted_days));
+
+				$this->render_bucket_table($pack['topics_hour'], 0, 23, $hour_label_fn, $hour_occurrences, (float) $totals['topics'], 'S_HOUR_TOPICS', 'hourly_topics_row');
+				$this->render_bucket_table($pack['posts_hour'], 0, 23, $hour_label_fn, $hour_occurrences, (float) $totals['posts'], 'S_HOUR_POSTS', 'hourly_posts_row');
+				$this->render_bucket_table($pack['user_reg_hour'], 0, 23, $hour_label_fn, $hour_occurrences, (float) $totals['user_reg'], 'S_HOUR_USER_REGS', 'hourly_user_regs_row');
+
 				$month_options = [];
 				$temp_month = (int) $board_starttime['mon'];
 				while (($temp_epoch = gmmktime(0, 0, 0, $temp_month, 1, (int) $board_starttime['year'])) <= $current_time[0])
@@ -313,6 +342,9 @@ final class main
 					'AVG_TOPICS'          => $this->format_number($totals['topics'] / max(1, $counted_days)),
 					'AVG_POSTS'           => $this->format_number($totals['posts'] / max(1, $counted_days)),
 					'AVG_USER_REGS'       => $this->format_number($totals['user_reg'] / max(1, $counted_days)),
+					'PEAK_HOUR_TOPICS'    => $this->format_peak_hour($peak_hour_topics),
+					'PEAK_HOUR_POSTS'     => $this->format_peak_hour($peak_hour_posts),
+					'PEAK_HOUR_USER_REGS' => $this->format_peak_hour($peak_hour_user_reg),
 					'STATS_MONTH_EXPLAIN' => sprintf($this->language->lang('BS_STATS_MONTH_EXPLAIN'), $this->user->format_date($start_ts, 'F Y')),
 					'U_BS_ACTION'         => $u_bs_action,
 					'BS_PREV_URL'         => $prev_url,
@@ -374,10 +406,17 @@ final class main
 					$regs_where = $this->db->sql_in_set('user_type', [USER_NORMAL, USER_FOUNDER]);
 					$regs_by_month = $this->group_by_month(USERS_TABLE, 'user_regdate', $regs_where, $show_all ? null : $start_ts, $show_all ? null : $end_ts);
 
+					$topics_by_hour = $this->group_by_hour(TOPICS_TABLE, 'topic_time', 'topic_visibility = ' . ITEM_APPROVED, $show_all ? null : $start_ts, $show_all ? null : $end_ts);
+					$posts_by_hour = $this->group_by_hour(POSTS_TABLE, 'post_time', 'post_visibility = ' . ITEM_APPROVED, $show_all ? null : $start_ts, $show_all ? null : $end_ts);
+					$regs_by_hour = $this->group_by_hour(USERS_TABLE, 'user_regdate', $regs_where, $show_all ? null : $start_ts, $show_all ? null : $end_ts);
+
 					$pack = [
-						'topics'   => $topics_by_month,
-						'posts'    => $posts_by_month,
-						'user_reg' => $regs_by_month,
+						'topics'        => $topics_by_month,
+						'posts'         => $posts_by_month,
+						'user_reg'      => $regs_by_month,
+						'topics_hour'   => $topics_by_hour,
+						'posts_hour'    => $posts_by_hour,
+						'user_reg_hour' => $regs_by_hour,
 					];
 
 					if ($show_all)
@@ -390,6 +429,10 @@ final class main
 						$this->cache_put($ckey, $pack, $is_current_year ? self::TTL_M_CURRENT : 0);
 					}
 				}
+
+				$peak_hour_topics = $this->peak_hour($pack['topics_hour']);
+				$peak_hour_posts = $this->peak_hour($pack['posts_hour']);
+				$peak_hour_user_reg = $this->peak_hour($pack['user_reg_hour']);
 
 				foreach ($pack['topics'] as $ym => $cnt)
 				{
@@ -484,6 +527,19 @@ final class main
 					}
 				}
 
+				$hour_start = $show_all ? $board_starttime[0] : $start_ts;
+				$hour_end = $show_all ? $current_time[0] : $end_ts;
+				$hour_days_in_scope = max(1, (int) round(($hour_end - $hour_start) / 86400));
+
+				$hour_label_fn = static function (int $h): string {
+					return sprintf('%02d:00', $h);
+				};
+				$hour_occurrences = array_fill(0, 24, $hour_days_in_scope);
+
+				$this->render_bucket_table($pack['topics_hour'], 0, 23, $hour_label_fn, $hour_occurrences, (float) $totals['topics'], 'S_HOUR_TOPICS', 'hourly_topics_row');
+				$this->render_bucket_table($pack['posts_hour'], 0, 23, $hour_label_fn, $hour_occurrences, (float) $totals['posts'], 'S_HOUR_POSTS', 'hourly_posts_row');
+				$this->render_bucket_table($pack['user_reg_hour'], 0, 23, $hour_label_fn, $hour_occurrences, (float) $totals['user_reg'], 'S_HOUR_USER_REGS', 'hourly_user_regs_row');
+
 				$year_options = [];
 				$temp_year = (int) $board_starttime['year'];
 				while ($temp_year <= (int) $current_time['year'])
@@ -520,9 +576,12 @@ final class main
 				}
 
 				$this->template->assign_vars([
-					'AVG_TOPICS'         => $this->format_number($totals['topics'] / max(1, $counted_months)),
-					'AVG_POSTS'          => $this->format_number($totals['posts'] / max(1, $counted_months)),
-					'AVG_USER_REGS'      => $this->format_number($totals['user_reg'] / max(1, $counted_months)),
+					'AVG_TOPICS'          => $this->format_number($totals['topics'] / max(1, $counted_months)),
+					'AVG_POSTS'           => $this->format_number($totals['posts'] / max(1, $counted_months)),
+					'AVG_USER_REGS'       => $this->format_number($totals['user_reg'] / max(1, $counted_months)),
+					'PEAK_HOUR_TOPICS'    => $this->format_peak_hour($peak_hour_topics),
+					'PEAK_HOUR_POSTS'     => $this->format_peak_hour($peak_hour_posts),
+					'PEAK_HOUR_USER_REGS' => $this->format_peak_hour($peak_hour_user_reg),
 					'STATS_YEAR_EXPLAIN' => sprintf($this->language->lang('BS_STATS_YEAR_EXPLAIN'), ($start_info['year'] != $current_time['year']) ? ($show_all ? $start_info['year'] . ' - ' . $current_time['year'] : $start_info['year']) : $current_time['year']),
 					'U_BS_ACTION'        => $u_bs_action,
 					'BS_PREV_URL'        => $prev_url,
@@ -560,13 +619,41 @@ final class main
 					$regs_where = $this->db->sql_in_set('user_type', [USER_NORMAL, USER_FOUNDER]);
 					$regs_by_year = $this->group_by_year(USERS_TABLE, 'user_regdate', $regs_where);
 
+					$topics_by_hour = $this->group_by_hour(TOPICS_TABLE, 'topic_time', 'topic_visibility = ' . ITEM_APPROVED, null, null);
+					$posts_by_hour = $this->group_by_hour(POSTS_TABLE, 'post_time', 'post_visibility = ' . ITEM_APPROVED, null, null);
+					$regs_by_hour = $this->group_by_hour(USERS_TABLE, 'user_regdate', $regs_where, null, null);
+
+					$topics_by_moy = $this->group_by_month_of_year(TOPICS_TABLE, 'topic_time', 'topic_visibility = ' . ITEM_APPROVED, null, null);
+					$posts_by_moy = $this->group_by_month_of_year(POSTS_TABLE, 'post_time', 'post_visibility = ' . ITEM_APPROVED, null, null);
+					$regs_by_moy = $this->group_by_month_of_year(USERS_TABLE, 'user_regdate', $regs_where, null, null);
+
+					$topics_by_dom = $this->group_by_day(TOPICS_TABLE, 'topic_time', 'topic_visibility = ' . ITEM_APPROVED, null, null);
+					$posts_by_dom = $this->group_by_day(POSTS_TABLE, 'post_time', 'post_visibility = ' . ITEM_APPROVED, null, null);
+					$regs_by_dom = $this->group_by_day(USERS_TABLE, 'user_regdate', $regs_where, null, null);
+
 					$pack = [
-						'topics'   => $topics_by_year,
-						'posts'    => $posts_by_year,
-						'user_reg' => $regs_by_year,
+						'topics'        => $topics_by_year,
+						'posts'         => $posts_by_year,
+						'user_reg'      => $regs_by_year,
+						'topics_hour'   => $topics_by_hour,
+						'posts_hour'    => $posts_by_hour,
+						'user_reg_hour' => $regs_by_hour,
+						'topics_moy'    => $topics_by_moy,
+						'posts_moy'     => $posts_by_moy,
+						'user_reg_moy'  => $regs_by_moy,
+						'topics_dom'    => $topics_by_dom,
+						'posts_dom'     => $posts_by_dom,
+						'user_reg_dom'  => $regs_by_dom,
 					];
 					$this->cache_put($ckey, $pack, self::TTL_Y_ALL);
 				}
+
+				$peak_hour_topics = $this->peak_hour($pack['topics_hour']);
+				$peak_hour_posts = $this->peak_hour($pack['posts_hour']);
+				$peak_hour_user_reg = $this->peak_hour($pack['user_reg_hour']);
+
+				$moy_occurrences = $this->month_of_year_occurrences($board_starttime[0], $current_time[0]);
+				$dom_occurrences = $this->day_of_month_occurrences($board_starttime[0], $current_time[0]);
 
 				foreach ($pack['topics'] as $ykey => $cnt)
 				{
@@ -661,10 +748,28 @@ final class main
 					}
 				}
 
+				$month_label_fn = function (int $m): string {
+					return $this->user->format_date(gmmktime(0, 0, 0, $m, 1, 2000), 'F');
+				};
+				$day_label_fn = static function (int $d): string {
+					return (string) $d;
+				};
+
+				$this->render_bucket_table($pack['topics_moy'], 1, 12, $month_label_fn, $moy_occurrences, (float) $totals['topics'], 'S_MOY_TOPICS', 'moy_topics_row');
+				$this->render_bucket_table($pack['posts_moy'], 1, 12, $month_label_fn, $moy_occurrences, (float) $totals['posts'], 'S_MOY_POSTS', 'moy_posts_row');
+				$this->render_bucket_table($pack['user_reg_moy'], 1, 12, $month_label_fn, $moy_occurrences, (float) $totals['user_reg'], 'S_MOY_USER_REGS', 'moy_user_regs_row');
+
+				$this->render_bucket_table($pack['topics_dom'], 1, 31, $day_label_fn, $dom_occurrences, (float) $totals['topics'], 'S_DOM_TOPICS', 'dom_topics_row');
+				$this->render_bucket_table($pack['posts_dom'], 1, 31, $day_label_fn, $dom_occurrences, (float) $totals['posts'], 'S_DOM_POSTS', 'dom_posts_row');
+				$this->render_bucket_table($pack['user_reg_dom'], 1, 31, $day_label_fn, $dom_occurrences, (float) $totals['user_reg'], 'S_DOM_USER_REGS', 'dom_user_regs_row');
+
 				$this->template->assign_vars([
-					'AVG_TOPICS'         => $this->format_number($totals['topics'] / max(1, $counted_years)),
-					'AVG_POSTS'          => $this->format_number($totals['posts'] / max(1, $counted_years)),
-					'AVG_USER_REGS'      => $this->format_number($totals['user_reg'] / max(1, $counted_years)),
+					'AVG_TOPICS'          => $this->format_number($totals['topics'] / max(1, $counted_years)),
+					'AVG_POSTS'           => $this->format_number($totals['posts'] / max(1, $counted_years)),
+					'AVG_USER_REGS'       => $this->format_number($totals['user_reg'] / max(1, $counted_years)),
+					'PEAK_HOUR_TOPICS'    => $this->format_peak_hour($peak_hour_topics),
+					'PEAK_HOUR_POSTS'     => $this->format_peak_hour($peak_hour_posts),
+					'PEAK_HOUR_USER_REGS' => $this->format_peak_hour($peak_hour_user_reg),
 					'STATS_YEAR_EXPLAIN' => sprintf($this->language->lang('BS_STATS_YEAR_EXPLAIN'), $start_info['year'] . ' - ' . $current_time['year']),
 				]);
 			break;
@@ -706,7 +811,12 @@ final class main
 	}
 
 	/**
-	 * Group counts by day-of-month (1..31) for a given UTC time window.
+	 * Group counts by day-of-month (1..31) for an optional UTC time window.
+	 *
+	 * With $start/$end left null, buckets collapse across every month/year in
+	 * range - i.e. "day 1 of any month" rather than a specific month's
+	 * calendar days - which is how the yearly view's day-of-month breakdown
+	 * table uses this method (see handle(), case 'y').
 	 *
 	 * MySQL path buckets by FLOOR(unix_ts / 86400) - a pure integer division,
 	 * with no timezone conversion involved - then resolves each bucket back
@@ -715,7 +825,7 @@ final class main
 	 * session's time_zone and could otherwise disagree with the UTC-based
 	 * $start/$end window boundaries computed above.
 	 */
-	private function group_by_day(string $table, string $timeCol, string $where, int $start, int $end): array
+	private function group_by_day(string $table, string $timeCol, string $where, ?int $start, ?int $end): array
 	{
 		$this->validate_table($table);
 		$out = [];
@@ -724,10 +834,17 @@ final class main
 		{
 			$sql = "SELECT FLOOR($timeCol / 86400) AS bucket, COUNT(*) AS c
 				FROM $table
-				WHERE $where
-					AND $timeCol >= " . (int) $start . "
-					AND $timeCol < " . (int) $end . '
-				GROUP BY bucket';
+				WHERE $where";
+			if ($start !== null)
+			{
+			$sql .= ' AND ' . $timeCol . ' >= ' . (int) $start;
+			}
+			if ($end !== null)
+			{
+			$sql .= ' AND ' . $timeCol . ' < ' . (int) $end;
+			}
+			$sql .= ' GROUP BY bucket';
+
 			$result = $this->db->sql_query($sql);
 			while ($row = $this->db->sql_fetchrow($result))
 			{
@@ -740,9 +857,16 @@ final class main
 
 		$sql = "SELECT $timeCol AS t
 			FROM $table
-			WHERE $where
-				AND $timeCol >= " . (int) $start . "
-				AND $timeCol < " . (int) $end;
+			WHERE $where";
+		if ($start !== null)
+		{
+		$sql .= ' AND ' . $timeCol . ' >= ' . (int) $start;
+		}
+		if ($end !== null)
+		{
+		$sql .= ' AND ' . $timeCol . ' < ' . (int) $end;
+		}
+
 		$result = $this->db->sql_query($sql);
 		while ($row = $this->db->sql_fetchrow($result))
 		{
@@ -851,6 +975,282 @@ final class main
 		}
 		$this->db->sql_freeresult($result);
 		return $out;
+	}
+
+	/**
+	 * Group counts by hour of day (0..23, UTC) for an optional UTC time window.
+	 *
+	 * MySQL path buckets by FLOOR(($timeCol % 86400) / 3600) - a pure integer
+	 * op that yields 0..23 directly, with no timezone conversion involved and
+	 * no roll-up needed (unlike group_by_day/month/year, whose buckets need a
+	 * gmdate() call to become a calendar label). Deliberately avoids
+	 * HOUR(FROM_UNIXTIME($timeCol)), whose result depends on the MySQL
+	 * session's time_zone - see group_by_day() docblock for the same
+	 * reasoning applied to day-of-month bucketing.
+	 */
+	private function group_by_hour(string $table, string $timeCol, string $where, ?int $start, ?int $end): array
+	{
+		$this->validate_table($table);
+		$out = [];
+
+		if ($this->is_mysql())
+		{
+			$sql = "SELECT FLOOR(($timeCol % 86400) / 3600) AS bucket, COUNT(*) AS c
+				FROM $table
+				WHERE $where";
+			if ($start !== null)
+			{
+			$sql .= ' AND ' . $timeCol . ' >= ' . (int) $start;
+			}
+			if ($end !== null)
+			{
+			$sql .= ' AND ' . $timeCol . ' < ' . (int) $end;
+			}
+			$sql .= ' GROUP BY bucket';
+
+			$result = $this->db->sql_query($sql);
+			while ($row = $this->db->sql_fetchrow($result))
+			{
+				$h = (int) $row['bucket'];
+				$out[$h] = ($out[$h] ?? 0) + (int) $row['c'];
+			}
+			$this->db->sql_freeresult($result);
+			return $out;
+		}
+
+		$sql = "SELECT $timeCol AS t
+			FROM $table
+			WHERE $where";
+		if ($start !== null)
+		{
+		$sql .= ' AND ' . $timeCol . ' >= ' . (int) $start;
+		}
+		if ($end !== null)
+		{
+		$sql .= ' AND ' . $timeCol . ' < ' . (int) $end;
+		}
+
+		$result = $this->db->sql_query($sql);
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$h = (int) gmdate('G', (int) $row['t']);
+			$out[$h] = ($out[$h] ?? 0) + 1;
+		}
+		$this->db->sql_freeresult($result);
+		return $out;
+	}
+
+	/**
+	 * Group counts by month-of-year (1..12) for an optional UTC time window.
+	 *
+	 * Buckets collapse across every year in range - i.e. "every January"
+	 * rather than a specific year's calendar months (see group_by_month() for
+	 * that) - used by the yearly view's month-of-year breakdown table.
+	 *
+	 * Same FLOOR(unix_ts / 86400) day-bucket trick as group_by_day(), rolled
+	 * up with gmdate('n', ...) (month number only, no year) - see
+	 * group_by_day() docblock for why this avoids
+	 * FROM_UNIXTIME()/DATE_FORMAT().
+	 */
+	private function group_by_month_of_year(string $table, string $timeCol, string $where, ?int $start, ?int $end): array
+	{
+		$this->validate_table($table);
+		$out = [];
+
+		if ($this->is_mysql())
+		{
+			$sql = "SELECT FLOOR($timeCol / 86400) AS bucket, COUNT(*) AS c
+				FROM $table
+				WHERE $where";
+			if ($start !== null)
+			{
+			$sql .= ' AND ' . $timeCol . ' >= ' . (int) $start;
+			}
+			if ($end !== null)
+			{
+			$sql .= ' AND ' . $timeCol . ' < ' . (int) $end;
+			}
+			$sql .= ' GROUP BY bucket';
+
+			$result = $this->db->sql_query($sql);
+			while ($row = $this->db->sql_fetchrow($result))
+			{
+				$m = (int) gmdate('n', ((int) $row['bucket']) * 86400);
+				$out[$m] = ($out[$m] ?? 0) + (int) $row['c'];
+			}
+			$this->db->sql_freeresult($result);
+			return $out;
+		}
+
+		$sql = "SELECT $timeCol AS t
+			FROM $table
+			WHERE $where";
+		if ($start !== null)
+		{
+		$sql .= ' AND ' . $timeCol . ' >= ' . (int) $start;
+		}
+		if ($end !== null)
+		{
+		$sql .= ' AND ' . $timeCol . ' < ' . (int) $end;
+		}
+
+		$result = $this->db->sql_query($sql);
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$m = (int) gmdate('n', (int) $row['t']);
+			$out[$m] = ($out[$m] ?? 0) + 1;
+		}
+		$this->db->sql_freeresult($result);
+		return $out;
+	}
+
+	/**
+	 * How many times each day-of-month (1..31) has occurred between
+	 * $board_start and $now, counting the current in-progress month only up
+	 * to today. Used as the average divisor for the yearly view's
+	 * day-of-month breakdown table - day 31 occurs in fewer months than day
+	 * 1..28, so a raw total would understate how "busy" day 31 typically is
+	 * relative to more common days.
+	 */
+	private function day_of_month_occurrences(int $board_start, int $now): array
+	{
+		$out = array_fill(1, 31, 0);
+
+		$y = (int) gmdate('Y', $board_start);
+		$m = (int) gmdate('n', $board_start);
+		$now_y = (int) gmdate('Y', $now);
+		$now_m = (int) gmdate('n', $now);
+		$now_d = (int) gmdate('j', $now);
+
+		while ($y < $now_y || ($y === $now_y && $m <= $now_m))
+		{
+			$days_in_month = (int) gmdate('t', gmmktime(0, 0, 0, $m, 1, $y));
+			$cap = ($y === $now_y && $m === $now_m) ? $now_d : $days_in_month;
+
+			for ($d = 1; $d <= $cap; $d++)
+			{
+				$out[$d]++;
+			}
+
+			$m++;
+			if ($m > 12)
+			{
+				$m = 1;
+				$y++;
+			}
+		}
+
+		return $out;
+	}
+
+	/**
+	 * How many times each month-of-year (1..12) has occurred between
+	 * $board_start and $now (the current in-progress month still counts as
+	 * one occurrence). Used as the average divisor for the yearly view's
+	 * month-of-year breakdown table.
+	 */
+	private function month_of_year_occurrences(int $board_start, int $now): array
+	{
+		$out = array_fill(1, 12, 0);
+
+		$y = (int) gmdate('Y', $board_start);
+		$m = (int) gmdate('n', $board_start);
+		$now_y = (int) gmdate('Y', $now);
+		$now_m = (int) gmdate('n', $now);
+
+		while ($y < $now_y || ($y === $now_y && $m <= $now_m))
+		{
+			$out[$m]++;
+
+			$m++;
+			if ($m > 12)
+			{
+				$m = 1;
+				$y++;
+			}
+		}
+
+		return $out;
+	}
+
+	/**
+	 * Render a bucket breakdown table (hour-of-day, day-of-month, or
+	 * month-of-year) into template block vars, gated by a boolean state flag.
+	 * Shared by the hourly breakdown (day/month views) and the month-of-year
+	 * / day-of-month breakdowns (year view) so the per-row average/total/bar
+	 * math and the "which row is busiest" logic live in exactly one place.
+	 *
+	 * @param array<int,int>          $bucketCounts [bucket => count], sparse
+	 * @param int                     $bucketFrom   first bucket key (inclusive)
+	 * @param int                     $bucketTo     last bucket key (inclusive)
+	 * @param callable(int): string   $labelFn      TIME_ELEMENT label for a bucket
+	 * @param array<int,int>          $occurrences  [bucket => times this bucket occurred in scope], average divisor
+	 * @param float                   $hasDataTotal any-positive check gating $stateVar (mirrors the $totals['...'] guard the periodic tables use)
+	 */
+	private function render_bucket_table(array $bucketCounts, int $bucketFrom, int $bucketTo, callable $labelFn, array $occurrences, float $hasDataTotal, string $stateVar, string $blockName): void
+	{
+		if ($hasDataTotal <= 0.0)
+		{
+			return;
+		}
+
+		$rows = [];
+		$max_avg = 0.0;
+		$max_bucket = null;
+
+		for ($b = $bucketFrom; $b <= $bucketTo; $b++)
+		{
+			$total = (int) ($bucketCounts[$b] ?? 0);
+			$occ = max(1, (int) ($occurrences[$b] ?? 1));
+			$avg = $total / $occ;
+
+			if ($avg > $max_avg)
+			{
+				$max_avg = $avg;
+				$max_bucket = $b;
+			}
+
+			$rows[] = ['bucket' => $b, 'total' => $total, 'avg' => $avg];
+		}
+
+		$this->template->assign_var($stateVar, true);
+
+		foreach ($rows as $row)
+		{
+			$bar = ($max_avg > 0.0) ? ($row['avg'] * 100.0 / $max_avg) : 0.0;
+
+			$this->template->assign_block_vars($blockName, [
+				'TIME_ELEMENT' => $labelFn($row['bucket']),
+				'AVERAGE'      => $this->format_number($row['avg']),
+				'TOTAL'        => $this->format_number((float) $row['total']),
+				'BARWIDTH'     => sprintf('%.1f', $bar),
+				'IS_MAX'       => ($row['bucket'] === $max_bucket),
+			]);
+		}
+	}
+
+	/**
+	 * Pick the hour (0..23) with the highest count from a group_by_hour()
+	 * result. Ties resolve to the lowest hour (strict > comparison, fixed
+	 * 0..23 scan) since $hourCounts is a sparse array with no guaranteed
+	 * order. Returns null when there is no data at all.
+	 */
+	private function peak_hour(array $hourCounts): ?int
+	{
+		$best_hour = null;
+		$best_count = 0;
+
+		for ($h = 0; $h < 24; $h++)
+		{
+			$c = (int) ($hourCounts[$h] ?? 0);
+			if ($c > $best_count)
+			{
+				$best_count = $c;
+				$best_hour = $h;
+			}
+		}
+
+		return $best_hour;
 	}
 
 	private function is_mysql(): bool

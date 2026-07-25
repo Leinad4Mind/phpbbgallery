@@ -62,6 +62,18 @@
 				<span class="label">{{ lang('BS_AVG_USER_REGS_MONTH') }}</span>
 				<span class="value">{{ AVG_USER_REGS }}</span>
 			</div>
+			<div class="bs-metric">
+				<span class="label">{{ lang('BS_PEAK_HOUR_TOPICS') }}</span>
+				<span class="value">{{ PEAK_HOUR_TOPICS }}</span>
+			</div>
+			<div class="bs-metric">
+				<span class="label">{{ lang('BS_PEAK_HOUR_POSTS') }}</span>
+				<span class="value">{{ PEAK_HOUR_POSTS }}</span>
+			</div>
+			<div class="bs-metric">
+				<span class="label">{{ lang('BS_PEAK_HOUR_USER_REGS') }}</span>
+				<span class="value">{{ PEAK_HOUR_USER_REGS }}</span>
+			</div>
 		</div>
 
 		<h3>{{ lang('BS_TOPIC_STATS') }}</h3>
@@ -150,6 +162,101 @@
 						</div>
 						<div class="cell count align-right">{{ row.COUNT }}</div>
 						<div class="cell pct align-right">{{ row.PCT }}</div>
+					</div>
+				{% endfor %}
+			</div>
+		{% else %}
+			<p class="bs-subtle">{{ lang('NONE') }}</p>
+		{% endif %}
+
+		<h3>{{ lang('BS_HOURLY_BREAKDOWN') }}</h3>
+
+		<h4>{{ lang('BS_TOPIC_STATS') }}</h4>
+		{% if S_HOUR_TOPICS %}
+			<div class="bs-rows" role="table" aria-label="{{ lang('TOPICS') }}">
+				<div class="bs-row bs-row-head" role="row">
+					<div class="cell">{{ lang('BS_PERIODIC_HOUR') }}</div>
+					<div class="cell"></div>
+					<div class="cell align-right">
+						<span class="bs-label-full">{{ lang('BS_AVERAGE') }}</span>
+						<span class="bs-label-short">{{ lang('BS_AVERAGE_SHORT') }}</span>
+					</div>
+					<div class="cell align-right">
+						<span class="bs-label-full">{{ lang('BS_COUNT') }}</span>
+						<span class="bs-label-short">{{ lang('BS_COUNT_SHORT') }}</span>
+					</div>
+				</div>
+
+				{% for row in loops.hourly_topics_row %}
+					<div class="bs-row {{ row.IS_MAX ? 'is-max' : '' }}" role="row">
+						<div class="cell day grow">{{ row.TIME_ELEMENT }}</div>
+						<div class="cell bar">
+							<div class="bar" aria-hidden="true"><span style="width: {{ row.BARWIDTH }}%"></span></div>
+						</div>
+						<div class="cell count align-right">{{ row.AVERAGE }}</div>
+						<div class="cell pct align-right">{{ row.TOTAL }}</div>
+					</div>
+				{% endfor %}
+			</div>
+		{% else %}
+			<p class="bs-subtle">{{ lang('NONE') }}</p>
+		{% endif %}
+
+		<h4>{{ lang('BS_POST_STATS') }}</h4>
+		{% if S_HOUR_POSTS %}
+			<div class="bs-rows" role="table" aria-label="{{ lang('POSTS') }}">
+				<div class="bs-row bs-row-head" role="row">
+					<div class="cell">{{ lang('BS_PERIODIC_HOUR') }}</div>
+					<div class="cell"></div>
+					<div class="cell align-right">
+						<span class="bs-label-full">{{ lang('BS_AVERAGE') }}</span>
+						<span class="bs-label-short">{{ lang('BS_AVERAGE_SHORT') }}</span>
+					</div>
+					<div class="cell align-right">
+						<span class="bs-label-full">{{ lang('BS_COUNT') }}</span>
+						<span class="bs-label-short">{{ lang('BS_COUNT_SHORT') }}</span>
+					</div>
+				</div>
+
+				{% for row in loops.hourly_posts_row %}
+					<div class="bs-row {{ row.IS_MAX ? 'is-max' : '' }}" role="row">
+						<div class="cell day grow">{{ row.TIME_ELEMENT }}</div>
+						<div class="cell bar">
+							<div class="bar" aria-hidden="true"><span style="width: {{ row.BARWIDTH }}%"></span></div>
+						</div>
+						<div class="cell count align-right">{{ row.AVERAGE }}</div>
+						<div class="cell pct align-right">{{ row.TOTAL }}</div>
+					</div>
+				{% endfor %}
+			</div>
+		{% else %}
+			<p class="bs-subtle">{{ lang('NONE') }}</p>
+		{% endif %}
+
+		<h4>{{ lang('BS_USER_REG_STATS') }}</h4>
+		{% if S_HOUR_USER_REGS %}
+			<div class="bs-rows" role="table" aria-label="{{ lang('BS_USER_REGS') }}">
+				<div class="bs-row bs-row-head" role="row">
+					<div class="cell">{{ lang('BS_PERIODIC_HOUR') }}</div>
+					<div class="cell"></div>
+					<div class="cell align-right">
+						<span class="bs-label-full">{{ lang('BS_AVERAGE') }}</span>
+						<span class="bs-label-short">{{ lang('BS_AVERAGE_SHORT') }}</span>
+					</div>
+					<div class="cell align-right">
+						<span class="bs-label-full">{{ lang('BS_COUNT') }}</span>
+						<span class="bs-label-short">{{ lang('BS_COUNT_SHORT') }}</span>
+					</div>
+				</div>
+
+				{% for row in loops.hourly_user_regs_row %}
+					<div class="bs-row {{ row.IS_MAX ? 'is-max' : '' }}" role="row">
+						<div class="cell day grow">{{ row.TIME_ELEMENT }}</div>
+						<div class="cell bar">
+							<div class="bar" aria-hidden="true"><span style="width: {{ row.BARWIDTH }}%"></span></div>
+						</div>
+						<div class="cell count align-right">{{ row.AVERAGE }}</div>
+						<div class="cell pct align-right">{{ row.TOTAL }}</div>
 					</div>
 				{% endfor %}
 			</div>
