@@ -1,11 +1,11 @@
-<!-- INCLUDE ucp_header.html -->
+{% include 'ucp_header.html' %}
 
-<!-- INCLUDE gallery/ucp_gallery_personal_settings.html -->
-<!-- INCLUDE gallery/ucp_gallery_manage_subalbuns.html -->
+{% include 'gallery/ucp_gallery_personal_settings.html' %}
+{% include 'gallery/ucp_gallery_manage_subalbuns.html' %}
 
-<!-- IF S_MANAGE_SUBSCRIPTIONS -->
-<!-- INCLUDE gallery/ucp_gallery_manage_subscriptions.html -->
-<!-- ENDIF -->
+{% if S_MANAGE_SUBSCRIPTIONS %}
+{% include 'gallery/ucp_gallery_manage_subscriptions.html' %}
+{% endif %}
 
 <div class="space10"></div>
 <!--
@@ -18,4 +18,4 @@
 
 	phpBB Gallery, nickvergessen : 2009
 //-->
-<!-- INCLUDE ucp_footer.html -->
+{% include 'ucp_footer.html' %}

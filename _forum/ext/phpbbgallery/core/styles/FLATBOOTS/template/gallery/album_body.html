@@ -1,120 +1,120 @@
-<!-- INCLUDE gallery/gallery_header.html -->
+{% include 'gallery/gallery_header.html' %}
 
 <div class="side-segment">
-	<h3><a href="{U_VIEW_ALBUM}">{ALBUM_NAME}</a></h3>
-	<!-- IF ALBUM_DESC --><h4><i class="fa fa-caret-right"></i> {ALBUM_DESC} </h4><!-- ENDIF -->
+	<h3><a href="{{ U_VIEW_ALBUM }}">{{ ALBUM_NAME }}</a></h3>
+	{% if ALBUM_DESC %}<h4><i class="fa fa-caret-right"></i> {{ ALBUM_DESC }} </h4>{% endif %}
 </div>
 <div class="space10"></div>
 <div class="clearfix">
-<!-- IF not S_IN_GALLERY_POPUP -->
+{% if not S_IN_GALLERY_POPUP %}
 	<div class="pull-left">
 		<div class="btn-group">
 		    <div class="dropdown">
 		       <a title="" data-original-title="" class="btn btn-small btn-default" data-toggle="dropdown" href="#"><i class="fa fa-folder"></i> Manage <span class="caret"></span></a>
 		            <ul class="dropdown-menu">
-			           <!-- IF U_EDIT_ALBUM --><li><a href="{U_EDIT_ALBUM}">{L_EDIT_ALBUM}</a></li><!-- ENDIF -->
-			           <!-- IF U_CREATE_ALBUM --><li><a href="{U_CREATE_ALBUM}">{L_CREATE_SUBALBUM}</a></li><!-- ENDIF -->
-					   <!-- IF not S_IN_GALLERY_POPUP and U_UPLOAD_IMAGE and not S_IS_BOT -->
-						<li><a href="<!-- IF S_IS_LOCKED --> <!-- ELSE -->{U_UPLOAD_IMAGE}<!-- ENDIF -->" title="<!-- IF S_IS_LOCKED -->{L_ALBUM_LOCKED}<!-- ELSE -->{L_UPLOAD_IMAGE}<!-- ENDIF -->"><i class="<!-- IF S_IS_LOCKED -->fa fa-lock<!-- ELSE -->fa fa-upload<!-- ENDIF -->"></i> <!-- IF S_IS_LOCKED -->{L_ALBUM_LOCKED}<!-- ELSE -->{L_UPLOAD_IMAGE}<!-- ENDIF --></a></li>
-						<!-- IF S_REGISTERED_USER --><li><a href="{U_WATCH_TOGLE}" title="<!-- IF S_IS_WATCHED -->{L_UNWATCH_ALBUM}<!-- ELSE -->{L_WATCH_ALBUM}<!-- ENDIF -->"><i class="<!-- IF S_IS_WATCHED -->fa fa-square-o<!-- ELSE -->fa fa-check-square-o<!-- ENDIF -->" aria-hidden="true"></i> <!-- IF S_IS_WATCHED --><span>{L_UNWATCH_ALBUM}</span><!-- ELSE --><span>{L_WATCH_ALBUM}</span><!-- ENDIF --></a></li><!-- ENDIF -->
-		            <!-- ENDIF -->
-					<!-- IF not S_IN_GALLERY_POPUP and U_MCP --><li><a href="{U_MCP}"><i class="fa fa-legal"></i>{L_MCP}</a></li><!-- ENDIF -->
+			           {% if U_EDIT_ALBUM %}<li><a href="{{ U_EDIT_ALBUM }}">{{ lang('EDIT_ALBUM') }}</a></li>{% endif %}
+			           {% if U_CREATE_ALBUM %}<li><a href="{{ U_CREATE_ALBUM }}">{{ lang('CREATE_SUBALBUM') }}</a></li>{% endif %}
+					   {% if not S_IN_GALLERY_POPUP and U_UPLOAD_IMAGE and not S_IS_BOT %}
+						<li><a href="{% if S_IS_LOCKED %} {% else %}{{ U_UPLOAD_IMAGE }}{% endif %}" title="{% if S_IS_LOCKED %}{{ lang('ALBUM_LOCKED') }}{% else %}{{ lang('UPLOAD_IMAGE') }}{% endif %}"><i class="{% if S_IS_LOCKED %}fa fa-lock{% else %}fa fa-upload{% endif %}"></i> {% if S_IS_LOCKED %}{{ lang('ALBUM_LOCKED') }}{% else %}{{ lang('UPLOAD_IMAGE') }}{% endif %}</a></li>
+						{% if S_REGISTERED_USER %}<li><a href="{{ U_WATCH_TOGLE }}" title="{% if S_IS_WATCHED %}{{ lang('UNWATCH_ALBUM') }}{% else %}{{ lang('WATCH_ALBUM') }}{% endif %}"><i class="{% if S_IS_WATCHED %}fa fa-square-o{% else %}fa fa-check-square-o{% endif %}" aria-hidden="true"></i> {% if S_IS_WATCHED %}<span>{{ lang('UNWATCH_ALBUM') }}</span>{% else %}<span>{{ lang('WATCH_ALBUM') }}</span>{% endif %}</a></li>{% endif %}
+		            {% endif %}
+					{% if not S_IN_GALLERY_POPUP and U_MCP %}<li><a href="{{ U_MCP }}"><i class="fa fa-legal"></i>{{ lang('MCP') }}</a></li>{% endif %}
 				  </ul>
 		    </div>
 		</div>
 	</div>
 
-	<!-- IF .imageblock -->
-		<!-- INCLUDE gallery/total_images.html -->
-	<!-- ENDIF -->
-<!-- ENDIF -->
+	{% if imageblock|length %}
+		{% include 'gallery/total_images.html' %}
+	{% endif %}
+{% endif %}
 
-<!-- IF .albumrow -->
-	<!-- IF not S_IS_BOT and U_MARK_ALBUMS -->
+{% if albumrow|length %}
+	{% if not S_IS_BOT and U_MARK_ALBUMS %}
       <ul class="pagination pagination-sm pull-right">
-	    <li><a href="{U_MARK_ALBUMS}">{L_MARK_ALBUMS_READ}</a></li>
-		<!-- IF MODERATORS or ALBUM_CONTEST_START or ALBUM_CONTEST_RATING or ALBUM_CONTEST_END -->
+	    <li><a href="{{ U_MARK_ALBUMS }}">{{ lang('MARK_ALBUMS_READ') }}</a></li>
+		{% if MODERATORS or ALBUM_CONTEST_START or ALBUM_CONTEST_RATING or ALBUM_CONTEST_END %}
 			<li class="dropdown">
-				<a title="" data-original-title="" class="btn btn-small btn-default" data-toggle="dropdown" href="#"> {L_MODERATORS} </a>
+				<a title="" data-original-title="" class="btn btn-small btn-default" data-toggle="dropdown" href="#"> {{ lang('MODERATORS') }} </a>
 				 <ul class="dropdown-menu">
-					<!-- IF ALBUM_CONTEST_START --><li>{ALBUM_CONTEST_START}</li><!-- ENDIF -->
-					<!-- IF ALBUM_CONTEST_RATING --><li>{ALBUM_CONTEST_RATING}</li><!-- ENDIF -->
-					<!-- IF ALBUM_CONTEST_END --><li>{ALBUM_CONTEST_END}</li><!-- ENDIF -->
-					<!-- IF MODERATORS --><li>{MODERATORS}</li><!-- ENDIF -->
+					{% if ALBUM_CONTEST_START %}<li>{{ ALBUM_CONTEST_START }}</li>{% endif %}
+					{% if ALBUM_CONTEST_RATING %}<li>{{ ALBUM_CONTEST_RATING }}</li>{% endif %}
+					{% if ALBUM_CONTEST_END %}<li>{{ ALBUM_CONTEST_END }}</li>{% endif %}
+					{% if MODERATORS %}<li>{{ MODERATORS }}</li>{% endif %}
 				</ul>
 			</li>
-		<!-- ENDIF -->
-      </ul> 
-	<div class="space10"></div> 
-	<!-- ENDIF -->
-	<!-- INCLUDE gallery/albumlist_body.html -->
-<!-- ENDIF -->
+		{% endif %}
+      </ul>
+	<div class="space10"></div>
+	{% endif %}
+	{% include 'gallery/albumlist_body.html' %}
+{% endif %}
 </div>
 
 
-<!-- IF S_IS_POSTABLE and (U_UPLOAD_IMAGE or PAGINATION or TOTAL_IMAGES or (U_SLIDE_SHOW and not S_IS_BOT)) -->
+{% if S_IS_POSTABLE and (U_UPLOAD_IMAGE or PAGINATION or TOTAL_IMAGES or (U_SLIDE_SHOW and not S_IS_BOT)) %}
 	<div class="clearfix">
-      <div class="space10"></div> 
-	<!-- IF not S_IN_GALLERY_POPUP and S_DISPLAY_SEARCHBOX -->
+      <div class="space10"></div>
+	{% if not S_IN_GALLERY_POPUP and S_DISPLAY_SEARCHBOX %}
 	<div class="pull-left">
-	<form method="post" id="album-search" action="{S_SEARCHBOX_ACTION}">
+	<form method="post" id="album-search" action="{{ S_SEARCHBOX_ACTION }}">
      <fieldset class="hidden-xs">
-		<div class="input-group">  
-		    <input type="text" class="form-control" size="25" name="keywords" id="search_keywords" placeholder="{L_SEARCH_ALBUM}">
-		    <input type="hidden" value="{ALBUM_ID}" name="aid[]">
+		<div class="input-group">
+		    <input type="text" class="form-control" size="25" name="keywords" id="search_keywords" placeholder="{{ lang('SEARCH_ALBUM') }}">
+		    <input type="hidden" value="{{ ALBUM_ID }}" name="aid[]">
 		   <span class="input-group-btn">
-		    <button type="submit" class="btn btn-default">{L_SEARCH}</button>
+		    <button type="submit" class="btn btn-default">{{ lang('SEARCH') }}</button>
 		   </span>
 		</div>
 	 </fieldset>
-		
-    <div class="input-group visible-xs">  
-         <input type="text" class="form-control" size="9" name="keywords" id="search_keywords" placeholder="{L_SEARCH_FORUM}">
-	  <span class="input-group-btn">	 
-		 <button type="submit" class="btn btn-default">{L_SEARCH}</button>
-      </span>   
+
+    <div class="input-group visible-xs">
+         <input type="text" class="form-control" size="9" name="keywords" id="search_keywords" placeholder="{{ lang('SEARCH_FORUM') }}">
+	  <span class="input-group-btn">
+		 <button type="submit" class="btn btn-default">{{ lang('SEARCH') }}</button>
+      </span>
    </div>
     </form>
-	 <div class="space10"></div> 
+	 <div class="space10"></div>
 	</div>
-	<!-- ENDIF -->
+	{% endif %}
 
-	<!-- IF not S_IN_GALLERY_POPUP and S_IS_POSTABLE and U_SLIDE_SHOW and not S_IS_BOT -->
-		<div class="pull-right"><a class="btn btn-default" href="{U_SLIDE_SHOW}">{L_SLIDE_SHOW}</a></div>
-	<!-- ENDIF -->
+	{% if not S_IN_GALLERY_POPUP and S_IS_POSTABLE and U_SLIDE_SHOW and not S_IS_BOT %}
+		<div class="pull-right"><a class="btn btn-default" href="{{ U_SLIDE_SHOW }}">{{ lang('SLIDE_SHOW') }}</a></div>
+	{% endif %}
 
 	</div>
-<!-- ENDIF -->
+{% endif %}
 
-<!-- IF .imageblock -->
-	<!-- IF S_IN_GALLERY_POPUP -->
-		<!-- INCLUDE gallery/imageblock_popup.html -->
-	<!-- ELSE -->
-		<!-- INCLUDE gallery/imageblock_polaroid.html -->
-	<!-- ENDIF -->
-<!-- ELSE -->
-	<!-- IF S_IS_POSTABLE -->
+{% if imageblock|length %}
+	{% if S_IN_GALLERY_POPUP %}
+		{% include 'gallery/imageblock_popup.html' %}
+	{% else %}
+		{% include 'gallery/imageblock_polaroid.html' %}
+	{% endif %}
+{% else %}
+	{% if S_IS_POSTABLE %}
 	<div class="well">
-		<strong>{L_NO_IMAGES_LONG}</strong>
+		<strong>{{ lang('NO_IMAGES_LONG') }}</strong>
 	</div>
-	<!-- ENDIF -->
-<!-- ENDIF -->
+	{% endif %}
+{% endif %}
 
-<!-- IF .imageblock -->
+{% if imageblock|length %}
 <div class="clearfix">
-		<!-- INCLUDE gallery/total_images.html -->
+		{% include 'gallery/total_images.html' %}
 </div>
-<!-- ENDIF -->
+{% endif %}
 
-<!-- IF S_IS_POSTABLE -->
+{% if S_IS_POSTABLE %}
 <div class="clearfix">
-<div class="pull-left"><a class="btn btn-small btn-default" href="{U_RETURN_LINK}" class="left-box {S_CONTENT_FLOW_BEGIN}" accesskey="r">{L_RETURN_LINK}</a></div>
-<!-- IF .imageblock -->
+<div class="pull-left"><a class="btn btn-small btn-default" href="{{ U_RETURN_LINK }}" class="left-box {{ S_CONTENT_FLOW_BEGIN }}" accesskey="r">{{ lang('RETURN_LINK') }}</a></div>
+{% if imageblock|length %}
 <div class="pull-right"><a class="btn btn-small btn-default" title="" data-original-title="" href="javascript:void(0);" data-target=".sorting" data-toggle="collapse">Options</a></div>
-<!-- ENDIF -->
+{% endif %}
 </div>
-<div class="space10"></div> 
-	<form action="{S_ALBUM_ACTION}" method="post">
+<div class="space10"></div>
+	<form action="{{ S_ALBUM_ACTION }}" method="post">
 		<fieldset>
 	                <div class="row hidden-xs">
                         <!-- // Column -->
@@ -123,64 +123,64 @@
                                  <div class="sorting panel collapse">
                                     <div class="panel-body">
 									 <div class="controls controls-row">
-										<div class="col-md-6"> 
-                                           <label class="control-label" for="bday_day">{L_SORT_BY} </label>
+										<div class="col-md-6">
+                                           <label class="control-label" for="bday_day">{{ lang('SORT_BY') }} </label>
                                            <div class="controls">
-                                            <div class="selector">{S_SELECT_SORT_KEY}</div> 
+                                            <div class="selector">{{ S_SELECT_SORT_KEY }}</div>
                                            </div>
 										</div>
-											
-										<div class="col-md-6"> 
-                                           <label class="control-label" for="bday_day">{L_SORT_BY}</label>
+
+										<div class="col-md-6">
+                                           <label class="control-label" for="bday_day">{{ lang('SORT_BY') }}</label>
                                           <div class="controls">
 										   <div class="input-group">
-                                            {S_SELECT_SORT_DIR}
+                                            {{ S_SELECT_SORT_DIR }}
                                            <span class="input-group-btn">
-										    <button class="btn btn-default" name="sort" type="submit">{L_GO}</button>
+										    <button class="btn btn-default" name="sort" type="submit">{{ lang('GO') }}</button>
 										   </span>
 										   </div>
 										 </div>
 										</div>
-										 
-									 </div> 
+
+									 </div>
 									</div>
                                  </div>
                                 </div>
                             </div>
-                            <!-- // Widget --> 
+                            <!-- // Widget -->
                         </div>
-                        <!-- // Column --><!-- // Column -->        
+                        <!-- // Column --><!-- // Column -->
 			</fieldset>
 	</form>
-	
-<!-- ENDIF -->
 
-<!-- IF ALBUM_JUMPBOX -->
+{% endif %}
+
+{% if ALBUM_JUMPBOX %}
   <div class="space10"></div>
-	<form method="post" id="jumpbox" action="{S_JUMPBOX_ACTION}" onsubmit="if(this.album_id.value == -1){return false;}">
+	<form method="post" id="jumpbox" action="{{ S_JUMPBOX_ACTION }}" onsubmit="if(this.album_id.value == -1){return false;}">
 		<fieldset>
-			<label for="album_id" accesskey="album_id">{L_JUMP_TO}{L_COLON}</label>
+			<label for="album_id" accesskey="album_id">{{ lang('JUMP_TO') }}{{ lang('COLON') }}</label>
 		<div class="input-group">
 			<select class="selectpicker" name="album_id" id="album_id" onchange="if(this.options[this.selectedIndex].value != -1){ document.forms['jumpbox'].submit() }">
-				{ALBUM_JUMPBOX}
+				{{ ALBUM_JUMPBOX }}
 			</select>
 		 <span class="input-group-btn">
-			<button type="submit" value="{L_GO}" class="btn btn-default">{L_GO}</button>
-		  </span>	
+			<button type="submit" value="{{ lang('GO') }}" class="btn btn-default">{{ lang('GO') }}</button>
+		  </span>
 		</div>
 		</fieldset>
 	</form>
 	 <div class="space10"></div>
-<!-- ENDIF -->
+{% endif %}
 
-<!-- IF not S_IN_GALLERY_POPUP and S_DISPLAY_ONLINE_LIST -->
-	<div class="side-segment"><h3><a href="{U_VIEWONLINE}">{L_WHO_IS_ONLINE}</a></h3></div>
-	<p>{LOGGED_IN_USER_LIST}</p>
-<!-- ENDIF -->
+{% if not S_IN_GALLERY_POPUP and S_DISPLAY_ONLINE_LIST %}
+	<div class="side-segment"><h3><a href="{{ U_VIEWONLINE }}">{{ lang('WHO_IS_ONLINE') }}</a></h3></div>
+	<p>{{ LOGGED_IN_USER_LIST }}</p>
+{% endif %}
 
-<!-- IF not S_IN_GALLERY_POPUP and S_IS_POSTABLE -->
-	<div class="side-segment"><h3>{L_ALBUM_PERMISSIONS}</h3></div>
-	<p><!-- BEGIN rules -->{rules.RULE}<br /><!-- END rules --></p>
-<!-- ENDIF -->
+{% if not S_IN_GALLERY_POPUP and S_IS_POSTABLE %}
+	<div class="side-segment"><h3>{{ lang('ALBUM_PERMISSIONS') }}</h3></div>
+	<p>{% for rules in rules %}{{ rules.RULE }}<br />{% endfor %}</p>
+{% endif %}
 
-<!-- INCLUDE gallery/gallery_footer.html -->
+{% include 'gallery/gallery_footer.html' %}

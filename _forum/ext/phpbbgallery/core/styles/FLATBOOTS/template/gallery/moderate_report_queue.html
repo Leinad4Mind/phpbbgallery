@@ -1,80 +1,80 @@
-<form id="gallery_report" method="post" action="{S_GALLERY_REPORT_ACTION}">
+<form id="gallery_report" method="post" action="{{ S_GALLERY_REPORT_ACTION }}">
 	<div class="panel">
 		<div class="panel-body">
-			<!-- IF U_OVERVIEW -->
+			{% if U_OVERVIEW %}
 			<div class="alert alert-info fade in">
 				<button data-dismiss="alert" class="close" type="button" aria-hidden="true"><i class="awe-remove-circle"></i></button>
-				<i class="fa fa-warning"></i>&nbsp;<strong>{L_LATEST_IMAGES_REPORTED}</strong>
+				<i class="fa fa-warning"></i>&nbsp;<strong>{{ lang('LATEST_IMAGES_REPORTED') }}</strong>
 			</div>
-			<!-- ELSE -->
-				<!-- IF TOTAL_IMAGES_REPORTED -->
+			{% else %}
+				{% if TOTAL_IMAGES_REPORTED %}
 				<div class="alert alert-info fade in">
 					<button data-dismiss="alert" class="close" type="button" aria-hidden="true"><i class="awe-remove-circle"></i></button>
-					<i class="fa fa-warning"></i>&nbsp;<strong>{TOTAL_IMAGES_REPORTED}</strong>
+					<i class="fa fa-warning"></i>&nbsp;<strong>{{ TOTAL_IMAGES_REPORTED }}</strong>
 				</div>
-				<!-- ENDIF -->
-			<!-- ENDIF -->
-			<!-- IF .report_image_open -->
+				{% endif %}
+			{% endif %}
+			{% if report_image_open|length %}
 				<div class="topiclist cplist missing-column responsive-show-all">
 					<table class="footable table table-striped table-primary table-hover footable-loaded tablet">
 						<thead>
 							<tr>
-								<th data-class="expand" class="footable-visible footable-first-column">{L_GALLERY_MCP_QUEUE_DETAIL}</th>
-								<th data-hide="phone" class="footable-visible">Tópico&nbsp;{L_GALLERY_MCP_REPO_DETAIL}</th>
-								<!-- IF U_STATUS -->
+								<th data-class="expand" class="footable-visible footable-first-column">{{ lang('GALLERY_MCP_QUEUE_DETAIL') }}</th>
+								<th data-hide="phone" class="footable-visible">Tópico&nbsp;{{ lang('GALLERY_MCP_REPO_DETAIL') }}</th>
+								{% if U_STATUS %}
 									<th data-hide="phone" class="footable-visible footable-last-column">Marcar</th>
-								<!-- ENDIF -->
+								{% endif %}
 							</tr>
 						</thead>
 						<tbody>
-							<!-- BEGIN report_image_open -->
+							{% for report_image_open in report_image_open %}
 							<tr>
 								<td class="expand footable-visible footable-first-column">
 									<div class="list-inner">
 										<span style="display: inline; float: left;">
-											<a href="{report_image_open.U_IMAGE_URL}"><img class="img-responsive" style="max-width: 70px; max-height: 70px;" src="{report_image_open.U_IMAGE}" alt="{report_image_open.U_IMAGE_NAME}"></a>
+											<a href="{{ report_image_open.U_IMAGE_URL }}"><img class="img-responsive" style="max-width: 70px; max-height: 70px;" src="{{ report_image_open.U_IMAGE }}" alt="{{ report_image_open.U_IMAGE_NAME }}"></a>
 										</span>
 										<span style="margin-left: 10px;">
-											<a href="{report_image_open.REPORT_URL}" class="topictitle">{report_image_open.U_IMAGE_NAME}</a><br />
-											<span style="margin-left: 10px; vertical-align: middle;">{L_UPLOADED_BY_USER}{L_COLON} {report_image_open.IMAGE_AUTHOR}</span> <br />
-											<span style="margin-left: 10px; vertical-align: middle;"> &raquo; {report_image_open.IMAGE_TIME}</span> <br />
-											<span style="margin-left: 10px; vertical-align: middle;">{L_ALBUM}{L_COLON} <a href="{report_image_open.IMAGE_ALBUM_URL}">{report_image_open.IMAGE_ALBUM}</a></span>
+											<a href="{{ report_image_open.REPORT_URL }}" class="topictitle">{{ report_image_open.U_IMAGE_NAME }}</a><br />
+											<span style="margin-left: 10px; vertical-align: middle;">{{ lang('UPLOADED_BY_USER') }}{{ lang('COLON') }} {{ report_image_open.IMAGE_AUTHOR }}</span> <br />
+											<span style="margin-left: 10px; vertical-align: middle;"> &raquo; {{ report_image_open.IMAGE_TIME }}</span> <br />
+											<span style="margin-left: 10px; vertical-align: middle;">{{ lang('ALBUM') }}{{ lang('COLON') }} <a href="{{ report_image_open.IMAGE_ALBUM_URL }}">{{ report_image_open.IMAGE_ALBUM }}</a></span>
 										</span>
 									</div>
 								</td>
 								<td class="footable-visible">
 									<div class="moderation">
 										<span>
-											{L_REPORT_BY}{L_COLON} {report_image_open.REPORT_AUTHOR} &raquo; {report_image_open.REPORT_TIME}
+											{{ lang('REPORT_BY') }}{{ lang('COLON') }} {{ report_image_open.REPORT_AUTHOR }} &raquo; {{ report_image_open.REPORT_TIME }}
 										</span>
 									</div>
 								</td>
-								<!-- IF U_STATUS -->
+								{% if U_STATUS %}
 									<td class="footable-visible footable-last-column">
 										<dd class="mark">
-											<input name="report[]" value="{report_image_open.U_IMAGE_ID}" type="checkbox">
+											<input name="report[]" value="{{ report_image_open.U_IMAGE_ID }}" type="checkbox">
 										</dd>
 									</td>
-								<!-- ENDIF -->
-							<!-- END report_image_open -->
+								{% endif %}
+							{% endfor %}
 							</tr>
 						</tbody>
 					</table>
 				</div>
-		<!-- ELSE -->
+		{% else %}
 		<div class="alert alert-info fade in">
 			<button data-dismiss="alert" class="close" type="button" aria-hidden="true"><i class="awe-remove-circle"></i></button>
-			<i class="fa fa-warning"></i>&nbsp;<strong>{L_REPORT_NOT_FOUND}</strong>
+			<i class="fa fa-warning"></i>&nbsp;<strong>{{ lang('REPORT_NOT_FOUND') }}</strong>
 		</div>
-		<!-- ENDIF -->
+		{% endif %}
 	</div>
 </div>
-<!-- IF U_STATUS -->
-<!-- IF .report_image_open -->
+{% if U_STATUS %}
+{% if report_image_open|length %}
 <fieldset class="display-actions">
-	<input class="button1 btn btn-default" type="submit" name="action[close]" value="{L_CLOSE_REPORTS}" />
-	<div><a href="#" onclick="marklist('gallery_report', 'report', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('gallery_report', 'report', false); return false;">{L_UNMARK_ALL}</a></div>
+	<input class="button1 btn btn-default" type="submit" name="action[close]" value="{{ lang('CLOSE_REPORTS') }}" />
+	<div><a href="#" onclick="marklist('gallery_report', 'report', true); return false;">{{ lang('MARK_ALL') }}</a> :: <a href="#" onclick="marklist('gallery_report', 'report', false); return false;">{{ lang('UNMARK_ALL') }}</a></div>
 </fieldset>
-<!-- ENDIF -->
-<!-- ENDIF -->
+{% endif %}
+{% endif %}
 </form>

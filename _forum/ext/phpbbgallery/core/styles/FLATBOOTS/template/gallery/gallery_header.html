@@ -1,10 +1,10 @@
-<!-- IF S_IN_GALLERY_POPUP -->
-	<!-- INCLUDE simple_header.html -->
+{% if S_IN_GALLERY_POPUP %}
+	{% include 'simple_header.html' %}
 
 	<div class="well">
-		<a href="{U_POPUP_OWN}">{L_OWN_IMAGES}</a> &#47;
-		<a href="{U_POPUP_RECENT}">{L_RECENT_IMAGES}</a> &#47;
-		<!-- IF U_POPUP_UPLOAD --> <a href="{U_POPUP_UPLOAD}">{L_UPLOAD_IMAGE}</a><!-- ENDIF -->
+		<a href="{{ U_POPUP_OWN }}">{{ lang('OWN_IMAGES') }}</a> &#47;
+		<a href="{{ U_POPUP_RECENT }}">{{ lang('RECENT_IMAGES') }}</a> &#47;
+		{% if U_POPUP_UPLOAD %} <a href="{{ U_POPUP_UPLOAD }}">{{ lang('UPLOAD_IMAGE') }}</a>{% endif %}
 	</div>
 
 <script>
@@ -17,12 +17,12 @@ head.ready(function () {
 });
 </script>
 
-<!-- ELSE -->
-	<!-- INCLUDE overall_header.html -->
+{% else %}
+	{% include 'overall_header.html' %}
 
-	<!-- IF GALLERY_VERSION_CHECK and U_ACP --> 
+	{% if GALLERY_VERSION_CHECK and U_ACP %}
 	<div id="gallery_version_check" class="well">
-			<strong>{L_INFORMATION}{L_COLON}</strong> {GALLERY_VERSION_CHECK}<!-- IF U_MVC_IGNORE --> [ <a href="{U_MVC_IGNORE}">{L_IGNORE_NOTUPTODATE_MESSAGE}</a> ]<!-- ENDIF -->
+			<strong>{{ lang('INFORMATION') }}{{ lang('COLON') }}</strong> {{ GALLERY_VERSION_CHECK }}{% if U_MVC_IGNORE %} [ <a href="{{ U_MVC_IGNORE }}">{{ lang('IGNORE_NOTUPTODATE_MESSAGE') }}</a> ]{% endif %}
 	</div>
-	<!-- ENDIF -->
-<!-- ENDIF -->
+	{% endif %}
+{% endif %}

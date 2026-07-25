@@ -1,7 +1,7 @@
-<!-- IF U_GALLERY_IMAGES_ALLOW -->
+{% if U_GALLERY_IMAGES_ALLOW %}
 <li>
 	<span class="fa fa-image"></span>
-	<label>{L_GALLERY_IMAGES}</label>
-	<strong>{U_GALLERY_IMAGES}</strong>
+	<label>{{ lang('GALLERY_IMAGES') }}</label>
+	<strong>{{ U_GALLERY_IMAGES }}</strong>
 </li>
-<!-- ENDIF -->
+{% endif %}
