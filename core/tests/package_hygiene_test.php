@@ -37,7 +37,7 @@ class package_hygiene_test extends TestCase
 		{
 			$name = $file->getFilename();
 			$extension = strtolower($file->getExtension());
-			if ($name === 'differences.md' || in_array($extension, ['bak', 'map'], true))
+			if ($name === 'differences.md' || in_array($extension, ['bak', 'bkp', 'map'], true))
 			{
 				$artifacts[] = $file->getPathname();
 			}
