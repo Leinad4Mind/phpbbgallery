@@ -14,37 +14,37 @@ namespace phpbbgallery\core;
 class log
 {
 	/** @var \phpbb\db\driver\driver_interface  */
-	protected $db;
+	protected \phpbb\db\driver\driver_interface $db;
 
 	/** @var \phpbb\user  */
-	protected $user;
+	protected \phpbb\user $user;
 
 	/** @var \phpbb\language\language  */
-	protected $language;
+	protected \phpbb\language\language $language;
 
 	/** @var \phpbb\user_loader  */
-	protected $user_loader;
+	protected \phpbb\user_loader $user_loader;
 
 	/** @var \phpbb\template\template  */
-	protected $template;
+	protected \phpbb\template\template $template;
 
 	/** @var \phpbb\controller\helper  */
-	protected $helper;
+	protected \phpbb\controller\helper $helper;
 
 	/** @var \phpbb\pagination  */
-	protected $pagination;
+	protected \phpbb\pagination $pagination;
 
 	/** @var \phpbbgallery\core\auth\auth  */
-	protected $gallery_auth;
+	protected \phpbbgallery\core\auth\auth $gallery_auth;
 
 	/** @var \phpbbgallery\core\config  */
-	protected $gallery_config;
+	protected \phpbbgallery\core\config $gallery_config;
 
-	/** @var   */
-	protected $log_table;
+	/** @var string */
+	protected string $log_table;
 
-	/** @var   */
-	protected $images_table;
+	/** @var string */
+	protected string $images_table;
 
 	/**
 	 * log constructor.
@@ -63,7 +63,7 @@ class log
 	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\language\language $language,
 		\phpbb\user_loader $user_loader, \phpbb\template\template $template, \phpbb\controller\helper $helper, \phpbb\pagination $pagination,
 		\phpbbgallery\core\auth\auth $gallery_auth, \phpbbgallery\core\config $gallery_config,
-		$log_table, $images_table)
+		string $log_table, string $images_table)
 	{
 		$this->db = $db;
 		$this->user = $user;
@@ -87,7 +87,7 @@ class log
 	 * @param   int				$image       Image we are logging for (can be 0)
 	 * @param	array|string 	$description Description string
 	 */
-	public function add_log($log_type, $log_action, $album = 0, $image = 0, $description = array())
+	public function add_log(string $log_type, string $log_action, int $album = 0, int $image = 0, array|string $description = array()): void
 	{
 		$user = (int) $this->user->data['user_id'];
 		$time = (int) time();
@@ -110,7 +110,7 @@ class log
 	* Delete logs
 	* @param	array	$mark	Logs selected for deletion
 	**/
-	public function delete_logs($mark)
+	public function delete_logs(array $mark): void
 	{
 		$sql = 'DELETE FROM ' . $this->log_table . ' WHERE ' . $this->db->sql_in_set('log_id', $mark);
 		$this->db->sql_query($sql);
@@ -128,17 +128,18 @@ class log
 	 * @param		array		$additional
 	 * @internal	param int	$start start count used to build paging
 	 */
-	public function build_list($type, $limit = 0, $page = 1, $album = 0, $image = 0, $additional = [])
+	public function build_list(string $type, int $limit = 0, int $page = 1, int $album = 0, int $image = 0, array $additional = []): void
 	{
 		if ($limit == 0)
 		{
-			$limit = $this->gallery_config->get('items_per_page');
+			$limit = max(1, (int) $this->gallery_config->get('items_per_page'));
 			// If its called from ACP album is -1, if from MCP then is not
 			if ($album == -1)
 			{
 				$page = (int) ($page / $limit) + 1;
 			}
 		}
+		$page = max(1, $page);
 		$this->language->add_lang(['info_acp_gallery_logs'], 'phpbbgallery/core');
 
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
@@ -160,7 +161,7 @@ class log
 		}
 		// If album is -1 we are calling it from ACP so ... priority!
 		// If album is 0 we are calling it from moderator log, so we need album we can access
-		$mod_array = $this->gallery_auth->acl_album_ids('m_status');
+		$mod_array = (array) $this->gallery_auth->acl_album_ids('m_status');
 		// Patch for missing album
 		$mod_array[] = 0;
 		if ($album === 0)
@@ -193,27 +194,28 @@ class log
 		// And additional check for "active" logs (DB admin can review logs in DB)
 		$sql_where[] = 'l.deleted = 0';
 		$sql_array['WHERE'] = implode(' and ', $sql_where);
+		$sort_direction = (($additional['sort_dir'] ?? 'd') === 'a') ? 'ASC' : 'DESC';
 		if (isset($additional['sort_key']))
 		{
 			switch ($additional['sort_key'])
 			{
 				case 'u':
-					$sql_array['ORDER_BY'] = 'l.log_user ' . (isset($additional['sort_dir']) ? 'ASC' : 'DESC');
+					$sql_array['ORDER_BY'] = 'l.log_user ' . $sort_direction;
 					$sql_array['GROUP_BY'] = 'l.log_user, l.log_id, i.image_id, i.image_album_id';
 				break;
 				case 'i':
-					$sql_array['ORDER_BY'] = 'l.log_ip ' . (isset($additional['sort_dir']) ? 'ASC' : 'DESC');
+					$sql_array['ORDER_BY'] = 'l.log_ip ' . $sort_direction;
 					$sql_array['GROUP_BY'] = 'l.log_ip, l.log_id, i.image_id, i.image_album_id';
 				break;
 				case 'o':
-					$sql_array['ORDER_BY'] = 'l.description ' . (isset($additional['sort_dir']) ? 'ASC' : 'DESC');
+					$sql_array['ORDER_BY'] = 'l.description ' . $sort_direction;
 					$sql_array['GROUP_BY'] = 'l.description, l.log_id, i.image_id, i.image_album_id';
 				break;
 			}
 		}
 		else
 		{
-			$sql_array['ORDER_BY'] = 'l.log_time ' . (isset($additional['sort_dir']) ? 'ASC' : 'DESC');
+			$sql_array['ORDER_BY'] = 'l.log_time ' . $sort_direction;
 			$sql_array['GROUP_BY'] = 'l.log_time, l.log_id, i.image_id, i.image_album_id';
 		}
 		// So we need count - so define SELECT

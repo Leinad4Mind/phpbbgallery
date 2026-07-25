@@ -15,42 +15,42 @@ class misc
 	/**
 	 * @var \phpbb\db\driver\driver_interface
 	 */
-	protected $db;
+	protected \phpbb\db\driver\driver_interface $db;
 
 	/**
 	 * @var \phpbb\user
 	 */
-	protected $user;
+	protected \phpbb\user $user;
 
 	/**
 	 * @var \phpbb\language\language
 	 */
-	protected $language;
+	protected \phpbb\language\language $language;
 
 	/**
 	 * @var \phpbb\config\config
 	 */
-	protected $config;
+	protected \phpbb\config\config $config;
 
 	/**
 	 * @var \phpbbgallery\core\config
 	 */
-	protected $gallery_config;
+	protected \phpbbgallery\core\config $gallery_config;
 
 	/**
 	 * @var \phpbbgallery\core\user
 	 */
-	protected $gallery_user;
+	protected \phpbbgallery\core\user $gallery_user;
 
 	/**
 	 * @var \phpbbgallery\core\url
 	 */
-	protected $url;
+	protected \phpbbgallery\core\url $url;
 
 	/**
 	 * @var string
 	 */
-	protected $track_table;
+	protected string $track_table;
 
 	/**
 	 * misc constructor.
@@ -66,7 +66,7 @@ class misc
 	 */
 	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\language\language $language, \phpbb\config\config $config,
 								   \phpbbgallery\core\config $gallery_config, \phpbbgallery\core\user $gallery_user, \phpbbgallery\core\url $url,
-								   $track_table)
+								   string $track_table)
 	{
 		$this->db = $db;
 		$this->user = $user;
@@ -84,16 +84,16 @@ class misc
 	 * @param $mode
 	 * @return mixed
 	 */
-	public function display_captcha($mode)
+	public function display_captcha(string $mode): bool
 	{
-		static $gallery_display_captcha;
+		static $gallery_display_captcha = [];
 
 		if (isset($gallery_display_captcha[$mode]))
 		{
 			return $gallery_display_captcha[$mode];
 		}
 
-		$gallery_display_captcha[$mode] = ($this->user->data['user_id'] == ANONYMOUS) && $this->gallery_config->get('captcha_' . $mode);
+		$gallery_display_captcha[$mode] = ($this->user->data['user_id'] == ANONYMOUS) && (bool) $this->gallery_config->get('captcha_' . $mode);
 
 		return $gallery_display_captcha[$mode];
 	}
@@ -105,7 +105,7 @@ class misc
 	 * @param string $loginlink
 	 * @param string $login_explain
 	 */
-	public function not_authorised($backlink, $loginlink = '', $login_explain = '')
+	public function not_authorised(string $backlink, string $loginlink = '', string $login_explain = ''): void
 	{
 		if (!$this->user->data['is_registered'] && $loginlink)
 		{
@@ -136,7 +136,7 @@ class misc
 	 * @param      $mode
 	 * @param bool $album_id
 	 */
-	public function markread($mode, $album_id = false)
+	public function markread(string $mode, array|int|false $album_id = false): void
 	{
 		$this->gallery_user->set_user_id($this->user->data['user_id']);
 
@@ -148,7 +148,7 @@ class misc
 
 		if ($mode == 'all')
 		{
-			if ($album_id === false || !sizeof($album_id))
+			if ($album_id === false || $album_id === [])
 			{
 				// Mark all albums read (index page)
 				$sql = 'DELETE FROM ' . $this->track_table . '
