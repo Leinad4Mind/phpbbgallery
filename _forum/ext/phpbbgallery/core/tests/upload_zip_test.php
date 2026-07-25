@@ -507,7 +507,7 @@ class upload_test_subject extends \phpbbgallery\core\upload
 	/** @var array */
 	public $read_files = [];
 
-	public function read_zip_folder($current_dir)
+	public function read_zip_folder(string $current_dir): void
 	{
 		$this->read_directory_existed = is_dir($current_dir);
 		$this->read_files = array_values(array_diff(scandir($current_dir), ['.', '..']));

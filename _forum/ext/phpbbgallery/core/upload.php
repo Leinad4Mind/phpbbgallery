@@ -17,72 +17,72 @@ class upload
 	/**
 	* @var \phpbb\user
 	*/
-	protected $user;
+	protected object $user;
 
 	/**
 	* @var \phpbb\language\language
 	*/
-	protected $language;
+	protected object $language;
 
 	/**
 	* @var \phpbb\db\driver\driver_interface
 	*/
-	protected $db;
+	protected object $db;
 
 	/**
 	* @var \phpbb\event\dispatcher_interface
 	*/
-	protected $phpbb_dispatcher;
+	protected \phpbb\event\dispatcher_interface $phpbb_dispatcher;
 
 	/**
 	* @var \phpbb\request\request
 	*/
-	protected $request;
+	protected \phpbb\request\request $request;
 
 	/**
 	* @var \phpbb\files\upload
 	*/
-	protected $file_upload;
+	protected object $file_upload;
 
 	/**
 	* @var \phpbbgallery\core\image\image
 	*/
-	protected $gallery_image;
+	protected object $gallery_image;
 
 	/**
 	* @var \phpbbgallery\core\config
 	*/
-	protected $gallery_config;
+	protected object $gallery_config;
 
 	/**
 	* @var \phpbbgallery\core\url
 	*/
-	protected $gallery_url;
+	protected object $gallery_url;
 
 	/**
 	* @var \phpbbgallery\core\block
 	*/
-	protected $block;
+	protected object $block;
 
 	/**
 	* @var \phpbbgallery\core\file\file
 	*/
-	protected $tools;
+	protected \phpbbgallery\core\file\file $tools;
 
 	/**
 	* @var string
 	*/
-	protected $images_table;
+	protected string $images_table;
 
 	/**
 	* @var string
 	*/
-	protected $root_path;
+	protected string $root_path;
 
 	/**
 	* @var string
 	*/
-	protected $php_ext;
+	protected string $php_ext;
 
 	/**
 	* Number of Files per Directory
@@ -90,7 +90,7 @@ class upload
 	* If this constant is set to a value >0 the gallery will create a new directory,
 	* when the current directory has more files in it than set here.
 	*/
-	const NUM_FILES_PER_DIR = 0;
+	public const NUM_FILES_PER_DIR = 0;
 
 	/** Maximum number of entries inspected in a ZIP archive. */
 	private const ZIP_MAX_ENTRIES = 1000;
@@ -119,33 +119,34 @@ class upload
 	/**
 	* Objects: phpBB Upload, 2 Files and Image-Functions
 	*/
-	private $upload = null;
-	private $file = null;
-	private $zip_file = null;
-	//private $tools = null;
+	/** @var \phpbb\files\filespec|null Current image upload file. */
+	private ?object $file = null;
+
+	/** @var \phpbb\files\filespec|null Current ZIP upload file. */
+	private ?object $zip_file = null;
 
 	/**
 	* Basic variables...
 	*/
-	public $loaded_files = 0;
-	public $uploaded_files = 0;
-	public $errors = array();
-	public $images = array();
-	public $image_data = array();
-	public $array_id2row = array();
-	public $error_prefix = '';
-	public $max_filesize = 0;
-	private $file_limit = 0;
-	private $album_id = 0;
-	private $file_count = 0;
-	private $image_num = 0;
-	private $allow_comments = false;
-	private $sent_quota_error = false;
-	private $username = '';
-	private $file_descriptions = array();
-	private $file_names = array();
-	private $file_rotating = array();
-	private $zip_file_data = [];
+	public int $loaded_files = 0;
+	public int $uploaded_files = 0;
+	public array $errors = array();
+	public array $images = array();
+	public array $image_data = array();
+	public array $array_id2row = array();
+	public string $error_prefix = '';
+	public int $max_filesize = 0;
+	private int $file_limit = 0;
+	private int $album_id = 0;
+	private int $file_count = 0;
+	private int $image_num = 0;
+	private bool $allow_comments = false;
+	private bool $sent_quota_error = false;
+	private string $username = '';
+	private array $file_descriptions = array();
+	private array $file_names = array();
+	private array $file_rotating = array();
+	private array $zip_file_data = [];
 
 	public int $min_width = 0;
 	public int $min_height = 0;
@@ -174,7 +175,7 @@ class upload
 		\phpbb\event\dispatcher_interface $phpbb_dispatcher, \phpbb\request\request $request, \phpbb\files\upload $file_upload,
 		\phpbbgallery\core\image\image $gallery_image, \phpbbgallery\core\config $gallery_config, \phpbbgallery\core\url $gallery_url,
 		\phpbbgallery\core\block $block, \phpbbgallery\core\file\file $gallery_file,
-		$images_table, $root_path, $php_ext)
+		string $images_table, string $root_path, string $php_ext)
 	{
 		$this->user = $user;
 		$this->language = $language;
@@ -198,7 +199,7 @@ class upload
 	 * @param     $album_id 	Album ID we are uploading to
 	 * @param int $num_files	Number of files we upload
 	 */
-	public function set_up($album_id, $num_files = 0)
+	public function set_up(int $album_id, int $num_files = 0): void
 	{
 		//$this->upload = new \fileupload();
 		//$this->upload->fileupload('', $this->get_allowed_types(), (4 * $this->gallery_config->get('max_filesize')));
@@ -217,7 +218,7 @@ class upload
 	 * @param $file_count
 	 * @return bool
 	 */
-	public function upload_file($file_count)
+	public function upload_file(int $file_count): bool
 	{
 		if ($this->file_limit && ($this->uploaded_files >= $this->file_limit))
 		{
@@ -252,6 +253,8 @@ class upload
 				}
 			}
 		}
+
+		return true;
 	}
 
 	/**
@@ -619,7 +622,7 @@ class upload
 	 * @param string $path
 	 * @return string|false
 	 */
-	private function validate_zip_path(string $path)
+	private function validate_zip_path(string $path): string|false
 	{
 		if ($path === '' || strlen($path) > self::ZIP_MAX_PATH_LENGTH || preg_match('//u', $path) !== 1 || preg_match('#[\x00-\x1F\x7F]#', $path))
 		{
@@ -663,7 +666,7 @@ class upload
 	 * @param string      $extension
 	 * @return bool
 	 */
-	private function is_allowed_zip_image($image_info, string $extension): bool
+	private function is_allowed_zip_image(array|false $image_info, string $extension): bool
 	{
 		if ($image_info === false || !isset($image_info[2], $image_info['mime']))
 		{
@@ -729,14 +732,21 @@ class upload
 	/**
 	 * Read a folder from the zip, "upload" the images and remove the rest.
 	 *
-	 * @param $current_dir
+	 * @param string $current_dir
+	 * @return void
 	 */
-	public function read_zip_folder($current_dir)
+	public function read_zip_folder(string $current_dir): void
 	{
-		$handle = opendir($current_dir);
-		while ($file = readdir($handle))
+		$handle = @opendir($current_dir);
+		if ($handle === false)
 		{
-			if ($file == '.' || $file == '..')
+			$this->new_error($this->language->lang('ZIP_EXTRACTION_FAILED'));
+			return;
+		}
+
+		while (($file = readdir($handle)) !== false)
+		{
+			if ($file === '.' || $file === '..')
 			{
 				continue;
 			}
@@ -744,14 +754,14 @@ class upload
 			{
 				$this->read_zip_folder($current_dir . $file . '/');
 			}
-			else if (in_array(utf8_substr(strtolower($file), utf8_strrpos($file, '.') + 1), self::get_allowed_types(false, true)))
+			else if (in_array(utf8_substr(strtolower($file), utf8_strrpos($file, '.') + 1), $this->get_allowed_types(false, true), true))
 			{
 				if (!$this->file_limit || ($this->uploaded_files < $this->file_limit))
 				{
 					$path = $current_dir . $file;
 					$file_info = (isset($this->zip_file_data[$path])) ? $this->zip_file_data[$path] : [
 						'type' => $this->tools->mimetype_by_filename($file),
-						'size' => filesize($path),
+						'size' => (int) filesize($path),
 						'realname' => $file,
 					];
 					$this->file = $this->file_upload->handle_upload('files.types.local', $path, $file_info);
@@ -798,7 +808,7 @@ class upload
 	 * @param bool $is_in_contest
 	 * @return bool
 	 */
-	public function update_image($image_id, $needs_approval = false, $is_in_contest = false)
+	public function update_image(int $image_id, bool $needs_approval = false, bool $is_in_contest = false): bool
 	{
 		if ($this->file_limit && ($this->uploaded_files > $this->file_limit))
 		{
@@ -880,7 +890,7 @@ class upload
 	/**
 	* Prepare file on upload: rotate and resize
 	*/
-	public function prepare_file()
+	public function prepare_file(): int|false
 	{
 		$upload_dir = $this->get_current_upload_dir();
 
@@ -983,10 +993,10 @@ class upload
 	 * Prepare file on second upload step.
 	 * You can still rotate the image there.
 	 *
-	 * @param $image_id
-	 * @return mixed
+	 * @param int $image_id
+	 * @return bool
 	 */
-	public function prepare_file_update($image_id)
+	public function prepare_file_update(int $image_id): bool
 	{
 		$this->tools->set_image_options($this->max_filesize, $this->gallery_config->get('max_height'), $this->gallery_config->get('max_width'));
 		$this->tools->set_image_data($this->gallery_url->path('upload') . $this->image_data[$image_id]['image_filename'], '', 0, true);
@@ -1002,18 +1012,18 @@ class upload
 				@unlink($this->gallery_url->path('medium') . $this->image_data[$image_id]['image_filename']);
 			}
 		}
-		return $this->tools->rotated;
+		return (bool) $this->tools->rotated;
 	}
 
 	/**
 	 * Insert the file into the database
 	 *
-	 * @param $additional_sql_ary
+	 * @param array $additional_sql_ary
 	 * @return int
 	 */
-	public function file_to_database($additional_sql_ary)
+	public function file_to_database(array $additional_sql_ary): int
 	{
-		$image_name = str_replace("_", "_", utf8_substr($this->file->get('uploadname'), 0, utf8_strrpos($this->file->get('uploadname'), '.')));
+		$image_name = utf8_substr($this->file->get('uploadname'), 0, utf8_strrpos($this->file->get('uploadname'), '.'));
 
 		$sql_ary = array_merge(array(
 			'image_name'			=> $image_name,
@@ -1052,7 +1062,7 @@ class upload
 	 *
 	 * @param int $time
 	 */
-	public function prune_orphan($time = 0)
+	public function prune_orphan(int $time = 0): void
 	{
 		$prunetime = (int) (($time) ? $time : (time() - self::ORPHAN_RETENTION_SECONDS));
 
@@ -1077,9 +1087,9 @@ class upload
 
 	/**
 	 * Get the current upload dir (doh!)
-	 * @return int|mixed|string
+	 * @return int|string
 	 */
-	private function get_current_upload_dir()
+	private function get_current_upload_dir(): int|string
 	{
 		if (self::NUM_FILES_PER_DIR <= 0)
 		{
@@ -1102,10 +1112,11 @@ class upload
 			@copy($this->gallery_url->path('upload') . '.htaccess', $this->gallery_url->path('medium') . $this->gallery_config->get('current_upload_dir') . '/.htaccess');
 			@copy($this->gallery_url->path('upload') . '.htaccess', $this->gallery_url->path('thumbnail') . $this->gallery_config->get('current_upload_dir') . '/.htaccess');
 		}
-		return $this->gallery_config->get('current_upload_dir');
+		$current_upload_dir = $this->gallery_config->get('current_upload_dir');
+		return is_int($current_upload_dir) ? $current_upload_dir : (string) $current_upload_dir;
 	}
 
-	public function quota_error()
+	public function quota_error(): void
 	{
 		if ($this->sent_quota_error)
 		{
@@ -1115,52 +1126,52 @@ class upload
 		$this->sent_quota_error = true;
 	}
 
-	public function new_error($error_msg)
+	public function new_error(string $error_msg): void
 	{
 		$this->errors[] = $error_msg;
 	}
 
-	public function set_file_limit($num_files)
+	public function set_file_limit(int $num_files): void
 	{
 		$this->file_limit = (int) $num_files;
 	}
 
-	public function set_username($username)
+	public function set_username(string $username): void
 	{
 		$this->username = $username;
 	}
 
-	public function set_rotating($data)
+	public function set_rotating(array $data): void
 	{
 		$this->file_rotating = array_map('intval', $data);
 	}
 
-	public function set_allow_comments($value)
+	public function set_allow_comments(bool $value): void
 	{
 		$this->allow_comments = $value;
 	}
 
-	public function set_descriptions($descs)
+	public function set_descriptions(array $descs): void
 	{
 		$this->file_descriptions = $descs;
 	}
 
-	public function set_names($names)
+	public function set_names(array $names): void
 	{
 		$this->file_names = $names;
 	}
 
-	public function set_image_num($num)
+	public function set_image_num(int $num): void
 	{
 		$this->image_num = (int) $num;
 	}
 
-	public function use_same_name($use_same_name)
+	public function use_same_name(bool $use_same_name): void
 	{
-		if ($use_same_name)
+		if ($use_same_name && isset($this->file_names[0]))
 		{
 			$image_name = $this->file_names[0];
-			$image_desc = $this->file_descriptions[0];
+			$image_desc = $this->file_descriptions[0] ?? '';
 			for ($i = 0; $i < sizeof($this->file_names); $i++)
 			{
 				$this->file_names[$i] = str_replace('{NUM}', ($this->image_num + $i), $image_name);
@@ -1169,7 +1180,7 @@ class upload
 		}
 	}
 
-	public function get_rotating()
+	public function get_rotating(): int
 	{
 		if (!isset($this->file_rotating[$this->file_count]))
 		{
@@ -1183,12 +1194,17 @@ class upload
 		return $this->file_rotating[$this->file_count];
 	}
 
-	public function get_name()
+	public function get_name(): string
 	{
+		if (!isset($this->file_names[$this->file_count]))
+		{
+			return '';
+		}
+
 		return utf8_normalize_nfc($this->file_names[$this->file_count]);
 	}
 
-	public function get_description()
+	public function get_description(): string
 	{
 		if (!isset($this->file_descriptions[$this->file_count]))
 		{
@@ -1198,7 +1214,7 @@ class upload
 		return utf8_normalize_nfc($this->file_descriptions[$this->file_count]);
 	}
 
-	public function get_images($uploaded_ids)
+	public function get_images(array $uploaded_ids): void
 	{
 		$image_ids = $filenames = array();
 		foreach ($uploaded_ids as $row => $check)
@@ -1253,7 +1269,7 @@ class upload
 	 *
 	 * @return int Number of pending images loaded
 	 */
-	public function load_pending_images()
+	public function load_pending_images(): int
 	{
 		$this->images = [];
 		$this->image_data = [];
@@ -1284,7 +1300,7 @@ class upload
 	 *
 	 * @return int Number of pending images deleted
 	 */
-	public function discard_pending_images()
+	public function discard_pending_images(): int
 	{
 		$this->load_pending_images();
 		if (!$this->images)
@@ -1313,7 +1329,7 @@ class upload
 	 *
 	 * @return string
 	 */
-	private function get_pending_images_sql()
+	private function get_pending_images_sql(): string
 	{
 		$sql = 'image_status = ' . (int) $this->block->get_image_status_orphan() . '
 				AND image_user_id = ' . (int) $this->user->data['user_id'] . '
@@ -1340,7 +1356,7 @@ class upload
 	 *
 	 * @return string
 	 */
-	private function get_session_hash()
+	private function get_session_hash(): string
 	{
 		if (isset($this->user->session_id))
 		{
@@ -1366,7 +1382,7 @@ class upload
 	 * @param bool $ignore_zip
 	 * @return array
 	 */
-	public function get_allowed_types($get_types = false, $ignore_zip = false)
+	public function get_allowed_types(bool $get_types = false, bool $ignore_zip = false): array
 	{
 		$extensions = $types = array();
 		if ($this->gallery_config->get('allow_jpg'))
@@ -1402,7 +1418,7 @@ class upload
 	/**
 	* Generate some kind of check so users only complete the upload for their images
 	*/
-	public function generate_hidden_fields()
+	public function generate_hidden_fields(): array
 	{
 		$checks = array();
 		foreach ($this->images as $image_id)
