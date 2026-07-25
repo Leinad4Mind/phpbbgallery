@@ -32,9 +32,9 @@ File | SHA-256
 --- | ---
 jquery.ui.widget.js | d50b39d3a03aed723335188a428bca4a783b211368e8b13ae024fea22cad34f3
 load-image.all.min.js | 1f9a171543305bc03d542822165a94ffad55580cc137634da12877736b04bbe9
-jquery.iframe-transport.js | 5de5c447928d2b0ef87ba9f51a6e238cf841d12c90f2ca0e2fa5e2c835dec54f
-jquery.fileupload.js | d81a55f26e15da852b28364fe8446fe4d6caea7aa1d68fa9ee25171407749f1f
-jquery.fileupload-process.js | 9bc8036cf1e2028623f3ccf5e4b265b7a52a925428f00184e351ff9e1f6404e3
-jquery.fileupload-image.js | 361eaa379b6e61f8ff280c5f203b3a3a62340d96595ab34691e47e7ef09291e8
-jquery.fileupload-validate.js | da84967f1eecd4cc3474fc2027ad3a9cfe94a1c26fdc6ad1c49075888119a1e6
+jquery.iframe-transport.js | be43036704c70db0148f4970326f6dd36bad7b34eed8e5f76719269ef70cb8cd
+jquery.fileupload.js | 071e66375d2207b30024197a4b566c5fd70c6f72ab394f1375f2521d36cc3dac
+jquery.fileupload-process.js | a7f04469af255c4c547e8961ead78e4894718337f7a79df44df892d0067cf2b8
+jquery.fileupload-image.js | bed7dd16807fe0e8d477a396d1103d0d609c4e4c9933fa2cc0f459d53a4b30a1
+jquery.fileupload-validate.js | 8e899b2766035a6d318c7c50cbd258b78eb29c8108a171afeef6bbee2ffe2446
 jquery.fileupload-ui.js | 3c3b4e896fe9763c331a2ce9dfa40779c0bf11a8d839a6e5ddca917ce6ff743c
