@@ -1,14 +1,14 @@
-<!-- INCLUDE gallery/gallery_header.html -->
+{% include 'gallery/gallery_header.html' %}
 
-<h2>{L_MCP}<!-- IF U_ALBUM_NAME --> - {U_ALBUM_NAME}<!-- ENDIF --></h2>
+<h2>{{ lang('MCP') }}{% if U_ALBUM_NAME %} - {{ U_ALBUM_NAME }}{% endif %}</h2>
 <br />
 <div id="tabs" class="tabs">
 	<ul>
-		<li class="tab activetab"><a href="{U_GALLERY_MODERATE_OVERVIEW}">{L_GALLERY_MCP_MAIN}</a></li>
-		<!-- IF U_ALBUM_OVERVIEW --><li class="tab"><a href="{U_ALBUM_OVERVIEW}">{L_GALLERY_MCP_ALBUM_OVERVIEW}</a></li><!-- ENDIF -->
-		<li class="tab"><a href="{U_GALLERY_MODERATE_APPROVE}">{L_GALLERY_MCP_QUEUE}</a></li>
-		<li class="tab"><a href="{U_GALLERY_MODERATE_REPORT}">{L_GALLERY_MCP_REPORTED}</a></li>
-		<li class="tab"><a href="{U_GALLERY_MCP_LOGS}">{L_MCP_LOGS}</a></li>
+		<li class="tab activetab"><a href="{{ U_GALLERY_MODERATE_OVERVIEW }}">{{ lang('GALLERY_MCP_MAIN') }}</a></li>
+		{% if U_ALBUM_OVERVIEW %}<li class="tab"><a href="{{ U_ALBUM_OVERVIEW }}">{{ lang('GALLERY_MCP_ALBUM_OVERVIEW') }}</a></li>{% endif %}
+		<li class="tab"><a href="{{ U_GALLERY_MODERATE_APPROVE }}">{{ lang('GALLERY_MCP_QUEUE') }}</a></li>
+		<li class="tab"><a href="{{ U_GALLERY_MODERATE_REPORT }}">{{ lang('GALLERY_MCP_REPORTED') }}</a></li>
+		<li class="tab"><a href="{{ U_GALLERY_MCP_LOGS }}">{{ lang('MCP_LOGS') }}</a></li>
 	</ul>
 </div>
 <div class="panel bg3">
@@ -17,17 +17,17 @@
 			<div id="cp-menu" class="cp-menu">
 				<div class="navigation responsive-hide" id="navigation" role="navigation">
 					<ul>
-						<li id="active-subsection" class="active-subsection"><a href=""><span>{L_GALLERY_MCP_OVERVIEW}</span></a></li>
+						<li id="active-subsection" class="active-subsection"><a href=""><span>{{ lang('GALLERY_MCP_OVERVIEW') }}</span></a></li>
 					</ul>
 				</div>
 			</div>
 			<div id="cp-main" class="cp-main mcp-main panel-container">
-				<h2>{L_GALLERY_MCP_MAIN}</h2>
-				<!-- INCLUDE gallery/moderate_approve_queue.html -->
-				<!-- INCLUDE gallery/moderate_report_queue.html -->
-				<!-- INCLUDE gallery/moderate_actions_queue.html -->
+				<h2>{{ lang('GALLERY_MCP_MAIN') }}</h2>
+				{% include 'gallery/moderate_approve_queue.html' %}
+				{% include 'gallery/moderate_report_queue.html' %}
+				{% include 'gallery/moderate_actions_queue.html' %}
 			</div>
 		</div>
 	</div>
 </div>
-<!-- INCLUDE gallery/gallery_footer.html -->
+{% include 'gallery/gallery_footer.html' %}

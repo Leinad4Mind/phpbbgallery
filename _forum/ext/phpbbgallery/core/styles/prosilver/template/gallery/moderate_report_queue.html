@@ -1,62 +1,62 @@
-<form id="gallery_report" method="post" action="{S_GALLERY_REPORT_ACTION}">
+<form id="gallery_report" method="post" action="{{ S_GALLERY_REPORT_ACTION }}">
 	<div class="panel">
 		<div class="inner">
-			<!-- IF U_OVERVIEW -->
-			<h3>{L_LATEST_IMAGES_REPORTED}</h3>
-			<!-- ELSE -->
-				<p>{TOTAL_IMAGES_REPORTED}</p>
-			<!-- ENDIF -->
-			<!-- IF .report_image_open -->
+			{% if U_OVERVIEW %}
+			<h3>{{ lang('LATEST_IMAGES_REPORTED') }}</h3>
+			{% else %}
+				<p>{{ TOTAL_IMAGES_REPORTED }}</p>
+			{% endif %}
+			{% if report_image_open|length %}
 				<ul class="topiclist two-long-columns">
 					<li class="header">
 						<dl class="row-item">
-							<dt>{L_GALLERY_MCP_QUEUE_DETAIL}</dt>
-							<dd class="lastpost" style="margin-left: -95px;">{L_GALLERY_MCP_REPO_DETAIL}</dd>
-							<dd class="mark"><dfn>{L_MARK}</dfn></dd>
+							<dt>{{ lang('GALLERY_MCP_QUEUE_DETAIL') }}</dt>
+							<dd class="lastpost" style="margin-left: -95px;">{{ lang('GALLERY_MCP_REPO_DETAIL') }}</dd>
+							<dd class="mark"><dfn>{{ lang('MARK') }}</dfn></dd>
 						</dl>
 					</li>
 				</ul>
 				<ul class="topiclist cplist missing-column responsive-show-all">
-					<!-- BEGIN report_image_open -->
-					<li class="row<!-- IF report_image_open.S_ROW_COUNT is odd --> bg1<!-- ELSE --> bg2<!-- ENDIF -->">
+					{% for report_image_open in report_image_open %}
+					<li class="row{% if report_image_open.S_ROW_COUNT is odd %} bg1{% else %} bg2{% endif %}">
 						<dl>
 							<dt>
 								<div style="float: left; padding: 5px; width: 70px;" align="middle">
-									<a href="{report_image_open.U_IMAGE_URL}" align="middle"><img style="max-width: 70px; max-height: 70px;" src="{report_image_open.U_IMAGE}" alt="{report_image_open.U_IMAGE_NAME}"></a>
+									<a href="{{ report_image_open.U_IMAGE_URL }}" align="middle"><img style="max-width: 70px; max-height: 70px;" src="{{ report_image_open.U_IMAGE }}" alt="{{ report_image_open.U_IMAGE_NAME }}"></a>
 							</div>
 								<div class="list-inner" style="margin-bottom: -12px; white-space: normal; overflow: hidden;">
-									{L_IMAGE_NAME}{L_COLON} <a href="{report_image_open.REPORT_URL}" class="topictitle" style="font-weight: bold;">{report_image_open.U_IMAGE_NAME}</a><br />
-									{L_UPLOADED_BY_USER}{L_COLON} {report_image_open.IMAGE_AUTHOR}<br />
-									&raquo; {report_image_open.IMAGE_TIME}<br />
-									{L_ALBUM_NAME}{L_COLON} <a href="{report_image_open.IMAGE_ALBUM_URL}">{report_image_open.IMAGE_ALBUM}</a><br /><br />
+									{{ lang('IMAGE_NAME') }}{{ lang('COLON') }} <a href="{{ report_image_open.REPORT_URL }}" class="topictitle" style="font-weight: bold;">{{ report_image_open.U_IMAGE_NAME }}</a><br />
+									{{ lang('UPLOADED_BY_USER') }}{{ lang('COLON') }} {{ report_image_open.IMAGE_AUTHOR }}<br />
+									&raquo; {{ report_image_open.IMAGE_TIME }}<br />
+									{{ lang('ALBUM_NAME') }}{{ lang('COLON') }} <a href="{{ report_image_open.IMAGE_ALBUM_URL }}">{{ report_image_open.IMAGE_ALBUM }}</a><br /><br />
 								</div><br />
 						</dt>
 							<dd class="lastpost">
 							<span>
-									{L_REPORT_BY}{L_COLON} {report_image_open.REPORT_AUTHOR}<br />
-									&raquo; {report_image_open.REPORT_TIME}
+									{{ lang('REPORT_BY') }}{{ lang('COLON') }} {{ report_image_open.REPORT_AUTHOR }}<br />
+									&raquo; {{ report_image_open.REPORT_TIME }}
 							</span>
 						</dd>
-						<!-- IF U_STATUS -->
-							<dd class="mark" style="padding-left: 8px;" title="{L_MARK}">
-								<input name="report[]" value="{report_image_open.U_IMAGE_ID}" type="checkbox" />
+						{% if U_STATUS %}
+							<dd class="mark" style="padding-left: 8px;" title="{{ lang('MARK') }}">
+								<input name="report[]" value="{{ report_image_open.U_IMAGE_ID }}" type="checkbox" />
 						</dd>
-						<!-- ENDIF -->
+						{% endif %}
 					</dl>
 				</li>
-			<!-- END report_image_open -->
+			{% endfor %}
 		</ul>
-		<!-- ELSE -->
-		<p>{L_REPORT_NOT_FOUND}</p>
-		<!-- ENDIF -->
+		{% else %}
+		<p>{{ lang('REPORT_NOT_FOUND') }}</p>
+		{% endif %}
 	</div>
 	</div>
-	<!-- IF U_STATUS -->
-		<!-- IF .report_image_open -->
+	{% if U_STATUS %}
+		{% if report_image_open|length %}
 			<fieldset class="display-actions">
-	<input class="button1" type="submit" name="action[close]" value="{L_CLOSE_REPORTS}" />
-	<div><a href="#" onclick="marklist('gallery_report', 'report', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('gallery_report', 'report', false); return false;">{L_UNMARK_ALL}</a></div>
+	<input class="button1" type="submit" name="action[close]" value="{{ lang('CLOSE_REPORTS') }}" />
+	<div><a href="#" onclick="marklist('gallery_report', 'report', true); return false;">{{ lang('MARK_ALL') }}</a> :: <a href="#" onclick="marklist('gallery_report', 'report', false); return false;">{{ lang('UNMARK_ALL') }}</a></div>
 			</fieldset>
-		<!-- ENDIF -->
-	<!-- ENDIF -->
+		{% endif %}
+	{% endif %}
 </form>

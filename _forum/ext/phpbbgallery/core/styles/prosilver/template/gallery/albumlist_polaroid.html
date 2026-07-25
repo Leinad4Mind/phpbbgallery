@@ -1,79 +1,79 @@
-<!-- BEGIN albumrow -->
-	<!-- IF (albumrow.S_IS_CAT and not albumrow.S_FIRST_ROW) or albumrow.S_NO_CAT -->
+{% for albumrow in albumrow %}
+	{% if (albumrow.S_IS_CAT and not albumrow.S_FIRST_ROW) or albumrow.S_NO_CAT %}
 		<span class="clear"></span>
-	<!-- ENDIF -->
+	{% endif %}
 
-	<!-- IF albumrow.S_IS_CAT or albumrow.S_FIRST_ROW or albumrow.S_NO_CAT  -->
+	{% if albumrow.S_IS_CAT or albumrow.S_FIRST_ROW or albumrow.S_NO_CAT %}
 		<span class="clear"></span>
 		<br />
-		<h2<!-- IF albumrow.S_FIRST_ROW --> class="invade-linklist"<!-- ENDIF -->><!-- IF albumrow.S_IS_CAT --><a href="{albumrow.U_VIEWALBUM}">{albumrow.ALBUM_NAME}</a><!-- ELSE -->{L_ALBUM}<!-- ENDIF --></h2>
-	<!-- ENDIF -->
+		<h2{% if albumrow.S_FIRST_ROW %} class="invade-linklist"{% endif %}>{% if albumrow.S_IS_CAT %}<a href="{{ albumrow.U_VIEWALBUM }}">{{ albumrow.ALBUM_NAME }}</a>{% else %}{{ lang('ALBUM') }}{% endif %}</h2>
+	{% endif %}
 
-	<!-- IF not albumrow.S_IS_CAT -->
+	{% if not albumrow.S_IS_CAT %}
 		<div class="polaroid">
 			<p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-				<a href="{albumrow.U_VIEWALBUM}" style="font-weight: bold; font-size: 1.2em; display: inline;<!-- IF S_PERSONAL_GALLERY and albumrow.ALBUM_COLOUR --> color: {albumrow.ALBUM_COLOUR};<!-- ENDIF -->">{albumrow.ALBUM_NAME}</a>
+				<a href="{{ albumrow.U_VIEWALBUM }}" style="font-weight: bold; font-size: 1.2em; display: inline;{% if S_PERSONAL_GALLERY and albumrow.ALBUM_COLOUR %} color: {{ albumrow.ALBUM_COLOUR }};{% endif %}">{{ albumrow.ALBUM_NAME }}</a>
 			</p>
 			<hr />
-			<!-- IF albumrow.UC_THUMBNAIL -->
-			<a href="{albumrow.U_VIEWALBUM}" class="polaroid_img_container"><img src="{albumrow.UC_THUMBNAIL}" alt="{albumrow.UC_IMAGE_NAME}" title="{L_VIEW_ALBUM}{albumrow.UC_IMAGE_NAME}" /></a>
-			<!-- ENDIF -->
+			{% if albumrow.UC_THUMBNAIL %}
+			<a href="{{ albumrow.U_VIEWALBUM }}" class="polaroid_img_container"><img src="{{ albumrow.UC_THUMBNAIL }}" alt="{{ albumrow.UC_IMAGE_NAME }}" title="{{ lang('VIEW_ALBUM') }}{{ albumrow.UC_IMAGE_NAME }}" /></a>
+			{% endif %}
 			<hr />
-			{L_IMAGES}{L_COLON} <strong>{albumrow.IMAGES} <!-- IF albumrow.UNAPPROVED_IMAGES --> + <span class="reported-images-number">{albumrow.UNAPPROVED_IMAGES}</span><!-- ENDIF --></strong><br />
+			{{ lang('IMAGES') }}{{ lang('COLON') }} <strong>{{ albumrow.IMAGES }} {% if albumrow.UNAPPROVED_IMAGES %} + <span class="reported-images-number">{{ albumrow.UNAPPROVED_IMAGES }}</span>{% endif %}</strong><br />
 
-			<!-- IF albumrow.LAST_IMAGE_TIME -->
+			{% if albumrow.LAST_IMAGE_TIME %}
 				<span>
 					<div style="height: 23px; padding-top: 2px;">
-						<!-- IF albumrow.UC_IMAGE_NAME -->{albumrow.UC_IMAGE_NAME}<br /><!-- ENDIF -->
-						<p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px;">{L_LAST_IMAGE_BY}{L_COLON} {albumrow.LAST_USER_FULL} {albumrow.UC_LASTIMAGE_ICON}</p>
-						<p>&raquo; {albumrow.LAST_IMAGE_TIME}</p>
+						{% if albumrow.UC_IMAGE_NAME %}{{ albumrow.UC_IMAGE_NAME }}<br />{% endif %}
+						<p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px;">{{ lang('LAST_IMAGE_BY') }}{{ lang('COLON') }} {{ albumrow.LAST_USER_FULL }} {{ albumrow.UC_LASTIMAGE_ICON }}</p>
+						<p>&raquo; {{ albumrow.LAST_IMAGE_TIME }}</p>
 					</div>
 				</span>
-			<!-- ELSE -->
+			{% else %}
 			<span><div style="height: 23px; padding-top: 2px;"></div></span>
-			<!-- ENDIF -->
+			{% endif %}
 
-			<!-- IF EXTENDED_POLAROID and albumrow.MODERATORS -->
+			{% if EXTENDED_POLAROID and albumrow.MODERATORS %}
 				<hr />
-				<strong>{albumrow.L_MODERATOR_STR}{L_COLON}</strong> {albumrow.MODERATORS}
+				<strong>{{ albumrow.L_MODERATOR_STR }}{{ lang('COLON') }}</strong> {{ albumrow.MODERATORS }}
 				<br />
-			<!-- ELSE -->
+			{% else %}
 				<br />
-			<!-- ENDIF -->
+			{% endif %}
 
-			<!-- IF .albumrow.subalbum and albumrow.S_LIST_SUBALBUMS -->
+			{% if albumrow.subalbum|length and albumrow.S_LIST_SUBALBUMS %}
 				<div class="dropdown-container"><i class="icon fa-sitemap fa-fw icon-md" aria-hidden="true"></i>
-					<a href="#" class="responsive-menu-link dropdown-trigger">{albumrow.L_SUBALBUM_STR}</a>
+					<a href="#" class="responsive-menu-link dropdown-trigger">{{ albumrow.L_SUBALBUM_STR }}</a>
 					<div class="dropdown" style="display: none;">
 						<div class="pointer"><div class="pointer-inner"></div></div>
 						<div class="dropdown-contents">
-							<!-- BEGIN subalbum -->
+							{% for subalbum in albumrow.subalbum %}
 							<li>
-								<a href="{albumrow.subalbum.U_SUBALBUM}" class="subforum<!-- IF albumrow.subalbum.S_UNREAD --> unread<!-- ELSE --> read<!-- ENDIF -->" title="<!-- IF albumrow.subalbum.UNREAD -->{L_UNREAD_IMAGES}<!-- ELSE -->{L_NO_UNREAD_IMAGES}<!-- ENDIF -->"><i class="icon fa-image fa-fw icon-md" aria-hidden="true"></i> {albumrow.subalbum.SUBALBUM_NAME}</a><!-- IF not albumrow.subalbum.S_LAST_ROW --><!-- ENDIF -->
+								<a href="{{ subalbum.U_SUBALBUM }}" class="subforum{% if subalbum.S_UNREAD %} unread{% else %} read{% endif %}" title="{% if subalbum.UNREAD %}{{ lang('UNREAD_IMAGES') }}{% else %}{{ lang('NO_UNREAD_IMAGES') }}{% endif %}"><i class="icon fa-image fa-fw icon-md" aria-hidden="true"></i> {{ subalbum.SUBALBUM_NAME }}</a>{% if not subalbum.S_LAST_ROW %}{% endif %}
 							</li>
-						<!-- END subalbum -->
+						{% endfor %}
 						</div>
 					</div>
 				</div>
-			<!-- ELSE -->
+			{% else %}
 			<br />
-			<!-- ENDIF -->
+			{% endif %}
 		</div>
-	<!-- ENDIF -->
+	{% endif %}
 
-	<!-- IF albumrow.S_LAST_ROW -->
+	{% if albumrow.S_LAST_ROW %}
 		<span class="clear"></span>
-	<!-- ENDIF -->
+	{% endif %}
 
-<!-- BEGINELSE -->
+{% else %}
 <br />
 	<div class="panel">
 		<div class="inner" style="text-align: center;">
-			<strong>{L_NO_ALBUMS}</strong>
+			<strong>{{ lang('NO_ALBUMS') }}</strong>
 		</div>
 	</div>
-<!-- END albumrow -->
+{% endfor %}
 
-<!-- IF .albumrow -->
-	<!-- INCLUDEJS @phpbbgallery_core/js/gallery_polaroid.js -->
-<!-- ENDIF -->
+{% if albumrow|length %}
+	{% INCLUDEJS '@phpbbgallery_core/js/gallery_polaroid.js' %}
+{% endif %}

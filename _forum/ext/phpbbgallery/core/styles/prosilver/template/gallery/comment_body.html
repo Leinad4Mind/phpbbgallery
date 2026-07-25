@@ -1,99 +1,99 @@
-<!-- INCLUDE gallery/gallery_header.html -->
+{% include 'gallery/gallery_header.html' %}
 
-<h2>{L_IMAGE_NAME}{L_COLON}<a href="{U_VIEW_IMAGE}" style="display: inline;"> {IMAGE_NAME}</a></h2>
+<h2>{{ lang('IMAGE_NAME') }}{{ lang('COLON') }}<a href="{{ U_VIEW_IMAGE }}" style="display: inline;"> {{ IMAGE_NAME }}</a></h2>
 
-<!-- IF U_IMAGE -->
+{% if U_IMAGE %}
 <div class="post bg2">
 	<div class="inner">
 		<div class="postbody_album" id="image">
-			<a href="{U_IMAGE}" style="display: inline;"><img src="{U_IMAGE}" alt="{IMAGE_NAME}" title="{IMAGE_NAME}" class="postimage" /></a>
+			<a href="{{ U_IMAGE }}" style="display: inline;"><img src="{{ U_IMAGE }}" alt="{{ IMAGE_NAME }}" title="{{ IMAGE_NAME }}" class="postimage" /></a>
 		</div>
 	</div>
 </div>
-<!-- ENDIF -->
+{% endif %}
 
-<form id="postform" action="{S_ALBUM_ACTION}" method="post" enctype="multipart/form-data">
+<form id="postform" action="{{ S_ALBUM_ACTION }}" method="post" enctype="multipart/form-data">
 
 <div class="panel" id="postingbox">
 	<div class="inner">
-		<h3>{L_POST_COMMENT}</h3>
+		<h3>{{ lang('POST_COMMENT') }}</h3>
 		<fieldset class="fields1">
-			<!-- IF ERROR --><p class="error">{ERROR}</p><!-- ENDIF -->
+			{% if ERROR %}<p class="error">{{ ERROR }}</p>{% endif %}
 
-			<!-- IF not S_USER_LOGGED_IN -->
+			{% if not S_USER_LOGGED_IN %}
 			<dl>
-				<dt><label for="username">{L_USERNAME}{L_COLON}</label></dt>
-				<dd id="username"><input class="inputbox autowidth" type="text" tabindex="1" name="username" value="{USERNAME}" size="60" maxlength="32" /></dd>
+				<dt><label for="username">{{ lang('USERNAME') }}{{ lang('COLON') }}</label></dt>
+				<dd id="username"><input class="inputbox autowidth" type="text" tabindex="1" name="username" value="{{ USERNAME }}" size="60" maxlength="32" /></dd>
 			</dl>
-			<!-- ENDIF -->
-			<!-- IF S_ALLOWED_TO_RATE -->
+			{% endif %}
+			{% if S_ALLOWED_TO_RATE %}
 				<dl>
-					<dt><label>{L_YOUR_RATING}{L_COLON}</label></dt>
+					<dt><label>{{ lang('YOUR_RATING') }}{{ lang('COLON') }}</label></dt>
 					<dd>
-					<!-- IF .rate_scale -->
+					{% if rate_scale|length %}
 						<select name="rating">
-						<!-- BEGIN rate_scale -->
-							<!-- IF rate_scale.RATE_POINT == 1 --><option value="0">{L_DO_NOT_RATE_IMAGE}</option><!-- ENDIF -->
-							<option value="{rate_scale.RATE_POINT}">{rate_scale.RATE_POINT}</option>
-						<!-- END rate_scale -->
+						{% for rate_scale in rate_scale %}
+							{% if rate_scale.RATE_POINT == 1 %}<option value="0">{{ lang('DO_NOT_RATE_IMAGE') }}</option>{% endif %}
+							<option value="{{ rate_scale.RATE_POINT }}">{{ rate_scale.RATE_POINT }}</option>
+						{% endfor %}
 						</select>
-					<!-- ELSE -->
-						{CONTEST_RATING}
-					<!-- ENDIF -->
+					{% else %}
+						{{ CONTEST_RATING }}
+					{% endif %}
 					</dd>
 				</dl>
-			<!-- ENDIF -->
+			{% endif %}
 
-			<!-- IF CAPTCHA_TEMPLATE -->
-				<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
-			<!-- ENDIF -->
+			{% if CAPTCHA_TEMPLATE %}
+				{% include ''~ CAPTCHA_TEMPLATE ~'' %}
+			{% endif %}
 
-			<!-- INCLUDE posting_buttons.html -->
+			{% include 'posting_buttons.html' %}
 
 			<div id="smiley-box" class="smiley-box">
-			<!-- EVENT posting_editor_smilies_before -->
-				<!-- IF S_SMILIES_ALLOWED and .smiley -->
-					<strong>{L_SMILIES}</strong><br />
-					<!-- BEGIN smiley -->
-						<a href="#" onclick="insert_text('{smiley.A_SMILEY_CODE}', true); return false;"><img src="{smiley.SMILEY_IMG}" width="{smiley.SMILEY_WIDTH}" height="{smiley.SMILEY_HEIGHT}" alt="{smiley.SMILEY_CODE}" title="{smiley.SMILEY_DESC}" /></a>
-					<!-- END smiley -->
-				<!-- ENDIF -->
-				<!-- EVENT posting_editor_smilies_after -->
+			{% EVENT posting_editor_smilies_before %}
+				{% if S_SMILIES_ALLOWED and smiley|length %}
+					<strong>{{ lang('SMILIES') }}</strong><br />
+					{% for smiley in smiley %}
+						<a href="#" onclick="insert_text('{{ smiley.A_SMILEY_CODE }}', true); return false;"><img src="{{ smiley.SMILEY_IMG }}" width="{{ smiley.SMILEY_WIDTH }}" height="{{ smiley.SMILEY_HEIGHT }}" alt="{{ smiley.SMILEY_CODE }}" title="{{ smiley.SMILEY_DESC }}" /></a>
+					{% endfor %}
+				{% endif %}
+				{% EVENT posting_editor_smilies_after %}
 				<div>
 					<div class="inner">
 						<fieldset class="submit-buttons">
-							<!-- IF S_SHOW_SMILEY_LINK and S_SMILIES_ALLOWED -->
-								<a href="{U_MORE_SMILIES}" class="button2" onclick="popup(this.href, 750, 350, '_phpbbsmilies'); return false;">{L_MORE_SMILIES}</a>
-				<!-- ENDIF -->
+							{% if S_SHOW_SMILEY_LINK and S_SMILIES_ALLOWED %}
+								<a href="{{ U_MORE_SMILIES }}" class="button2" onclick="popup(this.href, 750, 350, '_phpbbsmilies'); return false;">{{ lang('MORE_SMILIES') }}</a>
+				{% endif %}
 						</fieldset>
 					</div>
 				</div>
-				<!-- IF BBCODE_STATUS -->
+				{% if BBCODE_STATUS %}
 					<div class="bbcode-status">
-					<!-- IF .smiley --><hr /><!-- ENDIF -->
-					{BBCODE_STATUS}<br />
-					<!-- IF S_BBCODE_ALLOWED -->
-						{IMG_STATUS}<br />
-						<!-- IF S_BBCODE_FLASH -->
-						{FLASH_STATUS}<br />
-						<!-- ENDIF -->
-						{URL_STATUS}<br />
-					<!-- ENDIF -->
-						{SMILIES_STATUS}
+					{% if smiley|length %}<hr />{% endif %}
+					{{ BBCODE_STATUS }}<br />
+					{% if S_BBCODE_ALLOWED %}
+						{{ IMG_STATUS }}<br />
+						{% if S_BBCODE_FLASH %}
+						{{ FLASH_STATUS }}<br />
+						{% endif %}
+						{{ URL_STATUS }}<br />
+					{% endif %}
+						{{ SMILIES_STATUS }}
 					</div>
-				<!-- ENDIF -->
-				<!-- EVENT posting_editor_bbcode_status_after -->
-				<!-- IF S_EDIT_DRAFT || S_DISPLAY_REVIEW -->
-				<!-- IF S_DISPLAY_REVIEW --><hr /><!-- ENDIF -->
-				<!-- IF S_EDIT_DRAFT --><strong><a href="{S_UCP_ACTION}">{L_BACK_TO_DRAFTS}</a></strong><!-- ENDIF -->
-				<!-- IF S_DISPLAY_REVIEW --><strong><a href="#review">{L_TOPIC_REVIEW}</a></strong><!-- ENDIF -->
-			<!-- ENDIF -->
+				{% endif %}
+				{% EVENT posting_editor_bbcode_status_after %}
+				{% if S_EDIT_DRAFT or S_DISPLAY_REVIEW %}
+				{% if S_DISPLAY_REVIEW %}<hr />{% endif %}
+				{% if S_EDIT_DRAFT %}<strong><a href="{{ S_UCP_ACTION }}">{{ lang('BACK_TO_DRAFTS') }}</a></strong>{% endif %}
+				{% if S_DISPLAY_REVIEW %}<strong><a href="#review">{{ lang('TOPIC_REVIEW') }}</a></strong>{% endif %}
+			{% endif %}
 			</div>
-				{L_COMMENT_LENGTH}
+				{{ lang('COMMENT_LENGTH') }}
 			<div id="message-box" class="message-box">
-				<textarea <!-- IF S_UCP_ACTION and not S_PRIVMSGS and not S_EDIT_DRAFT -->name="signature" id="signature" style="height: 9em;"<!-- ELSE -->name="message" id="message"<!-- ENDIF --> rows="15" cols="76" tabindex="4" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onfocus="initInsertions();" class="inputbox">{MESSAGE}{DRAFT_MESSAGE}{SIGNATURE}</textarea>
+				<textarea {% if S_UCP_ACTION and not S_PRIVMSGS and not S_EDIT_DRAFT %}name="signature" id="signature" style="height: 9em;"{% else %}name="message" id="message"{% endif %} rows="15" cols="76" tabindex="4" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onfocus="initInsertions();" class="inputbox">{{ MESSAGE }}{{ DRAFT_MESSAGE }}{{ SIGNATURE }}</textarea>
 			</div>
-			<div><label for="attach_sig"><input type="checkbox" name="attach_sig" id="attach_sig"{S_SIGNATURE_CHECKED} /> {L_ATTACH_SIG}</label></div>
+			<div><label for="attach_sig"><input type="checkbox" name="attach_sig" id="attach_sig"{{ S_SIGNATURE_CHECKED }} /> {{ lang('ATTACH_SIG') }}</label></div>
 
 		</fieldset>
 	</div>
@@ -101,24 +101,24 @@
 
 <div class="panel bg2">
 	<div class="inner">
-		<!-- EVENT viewtopic_body_postrow_back2top_before -->
+		{% EVENT viewtopic_body_postrow_back2top_before %}
 			<div class="back2top">
-				<!-- EVENT viewtopic_body_postrow_back2top_prepend -->
-					<a href="#top" class="top" title="{L_BACK_TO_TOP}" style="margin-top: 10px;">
+				{% EVENT viewtopic_body_postrow_back2top_prepend %}
+					<a href="#top" class="top" title="{{ lang('BACK_TO_TOP') }}" style="margin-top: 10px;">
 						<i class="icon fa-chevron-circle-up fa-fw icon-gray" aria-hidden="true"></i>
-						<span class="sr-only">{L_BACK_TO_TOP}</span>
+						<span class="sr-only">{{ lang('BACK_TO_TOP') }}</span>
 					</a>
-				<!-- EVENT viewtopic_body_postrow_back2top_append -->
+				{% EVENT viewtopic_body_postrow_back2top_append %}
 			</div>
-		<!-- EVENT viewtopic_body_postrow_back2top_after -->
+		{% EVENT viewtopic_body_postrow_back2top_after %}
 		<fieldset class="submit-buttons">
-			{S_HIDDEN_FIELDS}{S_CAPTCHA_HIDDEN_FIELDS}
-			<input type="reset" accesskey="r" tabindex="200" value="{L_RESET}" class="button2" />&nbsp;
-			<input type="submit" accesskey="s" tabindex="201" name="submit" value="{L_SUBMIT}" class="button1" />&nbsp;
+			{{ S_HIDDEN_FIELDS }}{{ S_CAPTCHA_HIDDEN_FIELDS }}
+			<input type="reset" accesskey="r" tabindex="200" value="{{ lang('RESET') }}" class="button2" />&nbsp;
+			<input type="submit" accesskey="s" tabindex="201" name="submit" value="{{ lang('SUBMIT') }}" class="button1" />&nbsp;
 		</fieldset>
-		{S_FORM_TOKEN}
+		{{ S_FORM_TOKEN }}
 	</div>
 </div>
 </form>
 
-<!-- INCLUDE gallery/gallery_footer.html -->
+{% include 'gallery/gallery_footer.html' %}

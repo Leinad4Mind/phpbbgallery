@@ -89,18 +89,22 @@ class ucp_csrf_security_test extends TestCase
 		foreach ($this->reorder_templates() as $template_path)
 		{
 			$template = file_get_contents($template_path);
-			$form_start = strpos($template, '<form method="post" action="{S_UCP_ACTION}"');
+			$ucp_action = str_contains($template, '{{ S_UCP_ACTION }}') ? '{{ S_UCP_ACTION }}' : '{S_UCP_ACTION}';
+			$album_id = str_contains($template, '{{ album_row.ALBUM_ID }}') ? '{{ album_row.ALBUM_ID }}' : '{album_row.ALBUM_ID}';
+			$form_token = str_contains($template, '{{ S_FORM_TOKEN }}') ? '{{ S_FORM_TOKEN }}' : '{S_FORM_TOKEN}';
+			$form_start = strpos($template, '<form method="post" action="' . $ucp_action . '"');
 			$this->assertNotFalse($form_start, $template_path);
 			$form_end = strpos($template, '</form>', $form_start);
 			$this->assertNotFalse($form_end, $template_path);
 			$form = substr($template, $form_start, $form_end - $form_start);
 
 			$this->assertStringContainsString('name="action" value="move"', $form, $template_path);
-			$this->assertStringContainsString('name="album_id" value="{album_row.ALBUM_ID}"', $form, $template_path);
+			$this->assertStringContainsString('name="album_id" value="' . $album_id . '"', $form, $template_path);
 			$this->assertStringContainsString('name="move" value="move_up"', $form, $template_path);
 			$this->assertStringContainsString('name="move" value="move_down"', $form, $template_path);
-			$this->assertStringContainsString('{S_FORM_TOKEN}', $form, $template_path);
+			$this->assertStringContainsString($form_token, $form, $template_path);
 			$this->assertStringNotContainsString('href="{album_row.U_MOVE_', $template, $template_path);
+			$this->assertStringNotContainsString('href="{{ album_row.U_MOVE_', $template, $template_path);
 		}
 	}
 
@@ -109,14 +113,16 @@ class ucp_csrf_security_test extends TestCase
 		foreach ($this->reorder_templates() as $template_path)
 		{
 			$template = file_get_contents($template_path);
-			$form_start = strpos($template, '<form id="ucp" method="post" action="{S_UCP_ACTION}"');
+			$ucp_action = str_contains($template, '{{ S_UCP_ACTION }}') ? '{{ S_UCP_ACTION }}' : '{S_UCP_ACTION}';
+			$form_token = str_contains($template, '{{ S_FORM_TOKEN }}') ? '{{ S_FORM_TOKEN }}' : '{S_FORM_TOKEN}';
+			$form_start = strpos($template, '<form id="ucp" method="post" action="' . $ucp_action . '"');
 			$this->assertNotFalse($form_start, $template_path);
 			$form_end = strpos($template, '</form>', $form_start);
 			$this->assertNotFalse($form_end, $template_path);
 			$form = substr($template, $form_start, $form_end - $form_start);
 
 			$this->assertStringContainsString('name="submit"', $form, $template_path);
-			$this->assertStringContainsString('{S_FORM_TOKEN}', $form, $template_path);
+			$this->assertStringContainsString($form_token, $form, $template_path);
 		}
 	}
 
@@ -125,13 +131,15 @@ class ucp_csrf_security_test extends TestCase
 		foreach ($this->subscription_templates() as $template_path)
 		{
 			$template = file_get_contents($template_path);
-			$form_start = strrpos($template, '<form id="ucp_gallery" method="post" action="{S_UCP_ACTION}">');
+			$ucp_action = str_contains($template, '{{ S_UCP_ACTION }}') ? '{{ S_UCP_ACTION }}' : '{S_UCP_ACTION}';
+			$form_token = str_contains($template, '{{ S_FORM_TOKEN }}') ? '{{ S_FORM_TOKEN }}' : '{S_FORM_TOKEN}';
+			$form_start = strrpos($template, '<form id="ucp_gallery" method="post" action="' . $ucp_action . '">');
 			$this->assertNotFalse($form_start, $template_path);
 			$form_end = strpos($template, '</form>', $form_start);
 			$this->assertNotFalse($form_end, $template_path);
 			$form = substr($template, $form_start, $form_end - $form_start);
 
-			$this->assertStringContainsString('{S_FORM_TOKEN}', $form, $template_path);
+			$this->assertStringContainsString($form_token, $form, $template_path);
 		}
 	}
 

@@ -1,67 +1,67 @@
-<!-- BEGIN albumrow -->
+{% for albumrow in albumrow %}
 
-	<!-- IF (albumrow.S_IS_CAT and not albumrow.S_FIRST_ROW) or albumrow.S_NO_CAT -->
+	{% if (albumrow.S_IS_CAT and not albumrow.S_FIRST_ROW) or albumrow.S_NO_CAT %}
 			</ul>
 
 			</div>
 		</div>
-	<!-- ENDIF -->
+	{% endif %}
 
-	<!-- IF albumrow.S_IS_CAT or albumrow.S_FIRST_ROW or albumrow.S_NO_CAT  -->
+	{% if albumrow.S_IS_CAT or albumrow.S_FIRST_ROW or albumrow.S_NO_CAT %}
 		<div class="forabg">
 			<div class="inner">
 			<ul class="topiclist">
 				<li class="header">
 					<dl class="row-item">
-						<dt><!-- IF albumrow.S_IS_CAT --><a href="{albumrow.U_VIEWALBUM}">{albumrow.ALBUM_NAME}</a><!-- ELSE -->{L_ALBUM}<!-- ENDIF --></dt>
-						<dd class="posts">{L_IMAGES}</dd>
-						<dd class="g_lastimage" style="padding-left: 5px;"><span>{L_LAST_IMAGE}</span></dd>
+						<dt>{% if albumrow.S_IS_CAT %}<a href="{{ albumrow.U_VIEWALBUM }}">{{ albumrow.ALBUM_NAME }}</a>{% else %}{{ lang('ALBUM') }}{% endif %}</dt>
+						<dd class="posts">{{ lang('IMAGES') }}</dd>
+						<dd class="g_lastimage" style="padding-left: 5px;"><span>{{ lang('LAST_IMAGE') }}</span></dd>
 					</dl>
 				</li>
 			</ul>
 			<ul class="topiclist forums">
-	<!-- ENDIF -->
+	{% endif %}
 
-	<!-- IF not albumrow.S_IS_CAT -->
-		<li class="row">{albumrow.ALBUM_FOLDER_IMG_SRC}
-			<dl class="row-item {albumrow.ALBUM_IMG_STYLE}">
-				<dt title="{albumrow.ALBUM_FOLDER_IMG_ALT}">
-					<!-- IF albumrow.ALBUM_IMAGE --><span class="forum-image"><img src="{T_IMAGES_PATH}{albumrow.ALBUM_IMAGE}" alt="{albumrow.ALBUM_NAME}" /></span><!-- ENDIF -->
+	{% if not albumrow.S_IS_CAT %}
+		<li class="row">{{ albumrow.ALBUM_FOLDER_IMG_SRC }}
+			<dl class="row-item {{ albumrow.ALBUM_IMG_STYLE }}">
+				<dt title="{{ albumrow.ALBUM_FOLDER_IMG_ALT }}">
+					{% if albumrow.ALBUM_IMAGE %}<span class="forum-image"><img src="{{ T_IMAGES_PATH }}{{ albumrow.ALBUM_IMAGE }}" alt="{{ albumrow.ALBUM_NAME }}" /></span>{% endif %}
 					<div class="list-inner">
-						<a href="{albumrow.U_VIEWALBUM}" class="forumtitle"<!-- IF S_PERSONAL_GALLERY and albumrow.ALBUM_COLOUR --> style="color: {albumrow.ALBUM_COLOUR};"<!-- ENDIF -->>{albumrow.ALBUM_NAME}</a><br />
-						{albumrow.ALBUM_DESC}
-						<!-- IF albumrow.MODERATORS --><br /><strong>{albumrow.L_MODERATOR_STR}{L_COLON}</strong> {albumrow.MODERATORS}<!-- ENDIF -->
-						<!-- IF albumrow.SUBALBUMS and albumrow.S_LIST_SUBALBUMS --><br /><strong>{albumrow.L_SUBALBUM_STR}</strong> {albumrow.SUBALBUMS}<!-- ENDIF -->
+						<a href="{{ albumrow.U_VIEWALBUM }}" class="forumtitle"{% if S_PERSONAL_GALLERY and albumrow.ALBUM_COLOUR %} style="color: {{ albumrow.ALBUM_COLOUR }};"{% endif %}>{{ albumrow.ALBUM_NAME }}</a><br />
+						{{ albumrow.ALBUM_DESC }}
+						{% if albumrow.MODERATORS %}<br /><strong>{{ albumrow.L_MODERATOR_STR }}{{ lang('COLON') }}</strong> {{ albumrow.MODERATORS }}{% endif %}
+						{% if albumrow.SUBALBUMS and albumrow.S_LIST_SUBALBUMS %}<br /><strong>{{ albumrow.L_SUBALBUM_STR }}</strong> {{ albumrow.SUBALBUMS }}{% endif %}
 					</div>
 				</dt>
-				<dd class="posts">{albumrow.IMAGES} <!-- IF albumrow.UNAPPROVED_IMAGES --> + <span class="reported-images-number">{albumrow.UNAPPROVED_IMAGES}</span><!-- ENDIF --> <dfn>{L_IMAGES}</dfn></dd>
+				<dd class="posts">{{ albumrow.IMAGES }} {% if albumrow.UNAPPROVED_IMAGES %} + <span class="reported-images-number">{{ albumrow.UNAPPROVED_IMAGES }}</span>{% endif %} <dfn>{{ lang('IMAGES') }}</dfn></dd>
 				<dd class="lastpost g_lastimage" style="padding-left: 5px;">
 					<span style="float: left; margin-right: 15px;">
-						<!-- IF albumrow.LAST_IMAGE_TIME -->
-						<!-- IF albumrow.UC_FAKE_THUMBNAIL -->
-						<dfn>{L_LAST_IMAGE}</dfn> {albumrow.UC_IMAGE_NAME}<br />
-						<img src="{albumrow.UC_THUMBNAIL}" alt="{albumrow.UC_IMAGE_NAME}" title="{albumrow.UC_IMAGE_NAME}" style="max-width: 50px; max-height: 50px;" />
-					</span><!-- ENDIF -->
+						{% if albumrow.LAST_IMAGE_TIME %}
+						{% if albumrow.UC_FAKE_THUMBNAIL %}
+						<dfn>{{ lang('LAST_IMAGE') }}</dfn> {{ albumrow.UC_IMAGE_NAME }}<br />
+						<img src="{{ albumrow.UC_THUMBNAIL }}" alt="{{ albumrow.UC_IMAGE_NAME }}" title="{{ albumrow.UC_IMAGE_NAME }}" style="max-width: 50px; max-height: 50px;" />
+					</span>{% endif %}
 					<span style="width: 150px;">
-						{L_POST_BY_AUTHOR} {albumrow.LAST_USER_FULL} {albumrow.UC_LASTIMAGE_ICON}<br />
-						{albumrow.LAST_IMAGE_TIME}<!-- ELSE -->{L_NO_IMAGES}<!-- ENDIF -->
+						{{ lang('POST_BY_AUTHOR') }} {{ albumrow.LAST_USER_FULL }} {{ albumrow.UC_LASTIMAGE_ICON }}<br />
+						{{ albumrow.LAST_IMAGE_TIME }}{% else %}{{ lang('NO_IMAGES') }}{% endif %}
 					</span>
 				</dd>
 			</dl>
 		</li>
-	<!-- ENDIF -->
+	{% endif %}
 
-	<!-- IF albumrow.S_LAST_ROW -->
+	{% if albumrow.S_LAST_ROW %}
 			</ul>
 
 			</div>
 		</div>
-	<!-- ENDIF -->
+	{% endif %}
 
-<!-- BEGINELSE -->
+{% else %}
 	<div class="panel">
 		<div class="inner">
-		<strong>{L_NO_ALBUMS}</strong>
+		<strong>{{ lang('NO_ALBUMS') }}</strong>
 		</div>
 	</div>
-<!-- END albumrow -->
+{% endfor %}

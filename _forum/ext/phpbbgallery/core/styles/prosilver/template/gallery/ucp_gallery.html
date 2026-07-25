@@ -1,122 +1,122 @@
-<!-- INCLUDE ucp_header.html -->
-<!-- IF S_PERSONAL_SETTINGS -->
-<form id="ucp_gallery" method="post" action="{S_UCP_ACTION}">
-<h2>{L_TITLE}</h2>
+{% include 'ucp_header.html' %}
+{% if S_PERSONAL_SETTINGS %}
+<form id="ucp_gallery" method="post" action="{{ S_UCP_ACTION }}">
+<h2>{{ lang('TITLE') }}</h2>
 <div class="panel">
 	<div class="inner">
-		<p>{L_TITLE_EXPLAIN}</p>
+		<p>{{ lang('TITLE_EXPLAIN') }}</p>
 		<fieldset>
 		<dl>
-			<dt><label for="watch_own1">{L_WATCH_OWN}{L_COLON}</label></dt>
+			<dt><label for="watch_own1">{{ lang('WATCH_OWN') }}{{ lang('COLON') }}</label></dt>
 			<dd>
-				<label for="watch_own1"><input type="radio" name="watch_own" id="watch_own1" value="1"<!-- IF S_WATCH_OWN --> checked="checked"<!-- ENDIF --> /> {L_YES}</label> 
-				<label for="watch_own0"><input type="radio" name="watch_own" id="watch_own0" value="0"<!-- IF not S_WATCH_OWN --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+				<label for="watch_own1"><input type="radio" name="watch_own" id="watch_own1" value="1"{% if S_WATCH_OWN %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+				<label for="watch_own0"><input type="radio" name="watch_own" id="watch_own0" value="0"{% if not S_WATCH_OWN %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
 			</dd>
 		</dl>
 		<dl>
-			<dt><label for="watch_com1">{L_WATCH_COM}{L_COLON}</label></dt>
+			<dt><label for="watch_com1">{{ lang('WATCH_COM') }}{{ lang('COLON') }}</label></dt>
 			<dd>
-				<label for="watch_com1"><input type="radio" name="watch_com" id="watch_com1" value="1"<!-- IF S_WATCH_COM --> checked="checked"<!-- ENDIF --> /> {L_YES}</label> 
-				<label for="watch_com0"><input type="radio" name="watch_com" id="watch_com0" value="0"<!-- IF not S_WATCH_COM --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+				<label for="watch_com1"><input type="radio" name="watch_com" id="watch_com1" value="1"{% if S_WATCH_COM %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+				<label for="watch_com0"><input type="radio" name="watch_com" id="watch_com0" value="0"{% if not S_WATCH_COM %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
 			</dd>
 		</dl>
-		<!-- EVENT gallery_ucp_settings_watch -->
+		{% EVENT gallery_ucp_settings_watch %}
 		<hr />
-		<!-- IF S_COMMENTS_ENABLED -->
+		{% if S_COMMENTS_ENABLED %}
 		<dl>
-			<dt><label for="allow_comments1">{L_USER_ALLOW_COMMENTS}{L_COLON}</label></dt>
+			<dt><label for="allow_comments1">{{ lang('USER_ALLOW_COMMENTS') }}{{ lang('COLON') }}</label></dt>
 			<dd>
-				<label for="allow_comments1"><input type="radio" name="allow_comments" id="allow_comments1" value="1"<!-- IF S_ALLOW_COMMENTS --> checked="checked"<!-- ENDIF --> /> {L_YES}</label> 
-				<label for="allow_comments0"><input type="radio" name="allow_comments" id="allow_comments0" value="0"<!-- IF not S_ALLOW_COMMENTS --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+				<label for="allow_comments1"><input type="radio" name="allow_comments" id="allow_comments1" value="1"{% if S_ALLOW_COMMENTS %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+				<label for="allow_comments0"><input type="radio" name="allow_comments" id="allow_comments0" value="0"{% if not S_ALLOW_COMMENTS %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
 			</dd>
 		</dl>
-		<!-- ENDIF -->
+		{% endif %}
 		<hr />
 		<dl>
-			<dt><label for="rrc_zebra">{L_RRC_ZEBRA}{L_COLON}</label><br /><span>{L_RRC_ZEBRA_EXPLAIN}</span></dt>
+			<dt><label for="rrc_zebra">{{ lang('RRC_ZEBRA') }}{{ lang('COLON') }}</label><br /><span>{{ lang('RRC_ZEBRA_EXPLAIN') }}</span></dt>
 			<dd>
-				<label for="rrc_zebra1"><input type="radio" name="rrc_zebra" id="rrc_zebra1" value="1" <!-- IF S_RRC_ZEBRA --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
-				<label for="rrc_zebra0"><input type="radio" name="rrc_zebra" id="rrc_zebra0" value="0" <!-- IF not S_RRC_ZEBRA --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+				<label for="rrc_zebra1"><input type="radio" name="rrc_zebra" id="rrc_zebra1" value="1" {% if S_RRC_ZEBRA %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+				<label for="rrc_zebra0"><input type="radio" name="rrc_zebra" id="rrc_zebra0" value="0" {% if not S_RRC_ZEBRA %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
 			</dd>
 		</dl>
-		<!-- EVENT gallery_ucp_settings_fieldset -->
+		{% EVENT gallery_ucp_settings_fieldset %}
 		</fieldset>
 
 	</div>
 </div>
 
-<!-- EVENT gallery_ucp_settings_form -->
+{% EVENT gallery_ucp_settings_form %}
 
 	<fieldset class="submit-buttons">
-		<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />&nbsp;
-		<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />
-		{S_FORM_TOKEN}
+		<input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}" />&nbsp;
+		<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />
+		{{ S_FORM_TOKEN }}
 	</fieldset>
 </form>
-<!-- ENDIF -->
+{% endif %}
 
-<!-- IF S_INFO_CREATE -->
-<h2>{L_TITLE}</h2>
+{% if S_INFO_CREATE %}
+<h2>{{ lang('TITLE') }}</h2>
 <div class="panel">
 	<div class="inner">
-	<p>{L_TITLE_EXPLAIN}</p>
-	<form id="ucp" method="post" action="{S_UCP_ACTION}"{S_FORM_ENCTYPE}>
+	<p>{{ lang('TITLE_EXPLAIN') }}</p>
+	<form id="ucp" method="post" action="{{ S_UCP_ACTION }}"{{ S_FORM_ENCTYPE }}>
 		<fieldset class="submit-buttons">
-			{S_HIDDEN_FIELDS}
-			<input type="submit" name="submit" value="{L_CREATE_PERSONAL_ALBUM}" class="button1" />
-			{S_FORM_TOKEN}
+			{{ S_HIDDEN_FIELDS }}
+			<input type="submit" name="submit" value="{{ lang('CREATE_PERSONAL_ALBUM') }}" class="button1" />
+			{{ S_FORM_TOKEN }}
 		</fieldset>
 	</form>
 	</div>
 </div>
-<!-- ENDIF -->
+{% endif %}
 
-<!-- IF S_CREATE_SUBALBUM || S_EDIT_SUBALBUM -->
-<form id="acp_gallery" method="post" action="{U_ACTION}">
-	<h2>{L_TITLE}</h2>
+{% if S_CREATE_SUBALBUM or S_EDIT_SUBALBUM %}
+<form id="acp_gallery" method="post" action="{{ U_ACTION }}">
+	<h2>{{ lang('TITLE') }}</h2>
 	<div class="panel">
 		<div class="inner">
-			<p>{L_TITLE_EXPLAIN}</p>
+			<p>{{ lang('TITLE_EXPLAIN') }}</p>
 			<fieldset>
-			<!-- IF not S_PERSONAL_ALBUM -->
+			{% if not S_PERSONAL_ALBUM %}
 				<dl>
-					<dt><label for="parent_id">{L_ALBUM_PARENT}{L_COLON}</label></dt>
-					<dd><select id="parent_id" name="parent_id">{S_PARENT_OPTIONS}</select></dd>
+					<dt><label for="parent_id">{{ lang('ALBUM_PARENT') }}{{ lang('COLON') }}</label></dt>
+					<dd><select id="parent_id" name="parent_id">{{ S_PARENT_OPTIONS }}</select></dd>
 				</dl>
 				<dl>
-					<dt><label for="album_name">{L_ALBUM_NAME}{L_COLON}</label></dt>
-					<dd><input class="inputbox" type="text" id="album_name" name="album_name" value="{ALBUM_NAME}" maxlength="255" /></dd>
+					<dt><label for="album_name">{{ lang('ALBUM_NAME') }}{{ lang('COLON') }}</label></dt>
+					<dd><input class="inputbox" type="text" id="album_name" name="album_name" value="{{ ALBUM_NAME }}" maxlength="255" /></dd>
 				</dl>
-			<!-- ENDIF -->
-			<!-- IF S_AUTH_ACCESS_OPTIONS -->
+			{% endif %}
+			{% if S_AUTH_ACCESS_OPTIONS %}
 				<dl>
-					<dt><label for="album_auth_access">{L_ALBUM_ACCESS}{L_COLON}</label><br /><span>{L_ALBUM_ACCESS_EXPLAIN}</span></dt>
-					<dd><select id="album_auth_access" name="album_auth_access">{S_AUTH_ACCESS_OPTIONS}</select></dd>
+					<dt><label for="album_auth_access">{{ lang('ALBUM_ACCESS') }}{{ lang('COLON') }}</label><br /><span>{{ lang('ALBUM_ACCESS_EXPLAIN') }}</span></dt>
+					<dd><select id="album_auth_access" name="album_auth_access">{{ S_AUTH_ACCESS_OPTIONS }}</select></dd>
 				</dl>
-			<!-- ENDIF -->
+			{% endif %}
 			<dl>
-				<dt><label for="album_desc">{L_ALBUM_DESC}{L_COLON}</label></dt>
-				<dd><textarea class="inputbox" id="album_desc" name="album_desc" rows="5" cols="45">{ALBUM_DESC}</textarea></dd>
-				<dd><label><input type="checkbox" class="radio" name="desc_parse_bbcode"<!-- IF S_DESC_BBCODE_CHECKED --> checked="checked"<!-- ENDIF --> /> {L_PARSE_BBCODE}</label>
-					<label><input type="checkbox" class="radio" name="desc_parse_smilies"<!-- IF S_DESC_SMILIES_CHECKED --> checked="checked"<!-- ENDIF --> /> {L_PARSE_SMILIES}</label>
-					<label><input type="checkbox" class="radio" name="desc_parse_urls"<!-- IF S_DESC_URLS_CHECKED --> checked="checked"<!-- ENDIF --> /> {L_PARSE_URLS}</label></dd>
+				<dt><label for="album_desc">{{ lang('ALBUM_DESC') }}{{ lang('COLON') }}</label></dt>
+				<dd><textarea class="inputbox" id="album_desc" name="album_desc" rows="5" cols="45">{{ ALBUM_DESC }}</textarea></dd>
+				<dd><label><input type="checkbox" class="radio" name="desc_parse_bbcode"{% if S_DESC_BBCODE_CHECKED %} checked="checked"{% endif %} /> {{ lang('PARSE_BBCODE') }}</label>
+					<label><input type="checkbox" class="radio" name="desc_parse_smilies"{% if S_DESC_SMILIES_CHECKED %} checked="checked"{% endif %} /> {{ lang('PARSE_SMILIES') }}</label>
+					<label><input type="checkbox" class="radio" name="desc_parse_urls"{% if S_DESC_URLS_CHECKED %} checked="checked"{% endif %} /> {{ lang('PARSE_URLS') }}</label></dd>
 			</dl>
 			</fieldset>
 		</div>
 	</div>
 	<fieldset class="submit-buttons">
-		<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />&nbsp;
-		<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />
-		{S_FORM_TOKEN}
+		<input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}" />&nbsp;
+		<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />
+		{{ S_FORM_TOKEN }}
 	</fieldset>
 </form>
-<!-- ENDIF -->
+{% endif %}
 
-<!-- IF S_MANAGE_SUBALBUMS -->
-<h2>{L_TITLE}</h2>
+{% if S_MANAGE_SUBALBUMS %}
+<h2>{{ lang('TITLE') }}</h2>
 <div class="panel">
 	<div class="inner">
-	<p><strong>{NAVIGATION}<!-- IF S_ALBUM --> [<a href="{U_EDIT}">{L_EDIT}</a> | <a href="{U_DELETE}">{L_DELETE}</a> | <a href="{U_GOTO}">{L_GOTO}</a> | <a href="{U_UPLOAD}">{L_UPLOAD_IMAGE}</a>]<!-- ENDIF --></strong></p>
+	<p><strong>{{ NAVIGATION }}{% if S_ALBUM %} [<a href="{{ U_EDIT }}">{{ lang('EDIT') }}</a> | <a href="{{ U_DELETE }}">{{ lang('DELETE') }}</a> | <a href="{{ U_GOTO }}">{{ lang('GOTO') }}</a> | <a href="{{ U_UPLOAD }}">{{ lang('UPLOAD_IMAGE') }}</a>]{% endif %}</strong></p>
 	<div>
 		<div class="inner">
 			<ul class="topiclist two-long-columns">
@@ -124,206 +124,206 @@
 					<dl class="row-item">
 						<dt>
 							<div class="list-inner">
-								<!-- IF .album_row -->{L_ATTACHED_SUBALBUMS}<!-- ELSEIF U_CREATE_SUBALBUM -->{L_NO_SUBALBUMS}<!-- ENDIF -->
+								{% if album_row|length %}{{ lang('ATTACHED_SUBALBUMS') }}{% elseif U_CREATE_SUBALBUM %}{{ lang('NO_SUBALBUMS') }}{% endif %}
 							</div>
 						</dt>
 						<dd>&nbsp;</dd>
 					</dl>
 				</li>
 			</ul>
-			<!-- IF .album_row -->
+			{% if album_row|length %}
 			<ul class="topiclist cplist missing-column responsive-show-all">
-				<!-- BEGIN album_row -->
-				<li class="row<!-- IF album_row.S_ROW_COUNT is odd --> bg1<!-- ELSE --> bg2<!-- ENDIF -->">
-					<dl class="row-item<!-- IF album_row.FORUM_IMAGE --><!-- ELSE --> topic_read_mine<!-- ENDIF -->">
-						<dt title="{album_row.ALBUM_NAME}">
+				{% for album_row in album_row %}
+				<li class="row{% if album_row.S_ROW_COUNT is odd %} bg1{% else %} bg2{% endif %}">
+					<dl class="row-item{% if album_row.FORUM_IMAGE %}{% else %} topic_read_mine{% endif %}">
+						<dt title="{{ album_row.ALBUM_NAME }}">
 							<div class="list-inner" style="text-align: right; margin-right: 0;">
-							<form method="post" action="{S_UCP_ACTION}" style="display: inline;">
+							<form method="post" action="{{ S_UCP_ACTION }}" style="display: inline;">
 							<input type="hidden" name="action" value="move" />
-							<input type="hidden" name="album_id" value="{album_row.ALBUM_ID}" />
-							<!-- IF album_row.S_FIRST_ROW && not album_row.S_LAST_ROW -->
-							<button class="button2" type="button" disabled="disabled">{ICON_MOVE_UP_DISABLED}</button>
-							<button class="button2" type="submit" name="move" value="move_down">{ICON_MOVE_DOWN}</button>
-							<!-- ELSEIF not album_row.S_FIRST_ROW && not album_row.S_LAST_ROW-->
-							<button class="button2" type="submit" name="move" value="move_up">{ICON_MOVE_UP}</button>
-							<button class="button2" type="submit" name="move" value="move_down">{ICON_MOVE_DOWN}</button>
-							<!-- ELSEIF album_row.S_LAST_ROW && not album_row.S_FIRST_ROW -->
-							<button class="button2" type="submit" name="move" value="move_up">{ICON_MOVE_UP}</button>
-							<button class="button2" type="button" disabled="disabled">{ICON_MOVE_DOWN_DISABLED}</button>
-							<!-- ELSE -->
-							<button class="button2" type="button" disabled="disabled">{ICON_MOVE_UP_DISABLED}</button>
-							<button class="button2" type="button" disabled="disabled">{ICON_MOVE_DOWN_DISABLED}</button>
-							<!-- ENDIF -->
-							{S_FORM_TOKEN}
+							<input type="hidden" name="album_id" value="{{ album_row.ALBUM_ID }}" />
+							{% if album_row.S_FIRST_ROW and not album_row.S_LAST_ROW %}
+							<button class="button2" type="button" disabled="disabled">{{ ICON_MOVE_UP_DISABLED }}</button>
+							<button class="button2" type="submit" name="move" value="move_down">{{ ICON_MOVE_DOWN }}</button>
+							{% elseif not album_row.S_FIRST_ROW and not album_row.S_LAST_ROW %}
+							<button class="button2" type="submit" name="move" value="move_up">{{ ICON_MOVE_UP }}</button>
+							<button class="button2" type="submit" name="move" value="move_down">{{ ICON_MOVE_DOWN }}</button>
+							{% elseif album_row.S_LAST_ROW and not album_row.S_FIRST_ROW %}
+							<button class="button2" type="submit" name="move" value="move_up">{{ ICON_MOVE_UP }}</button>
+							<button class="button2" type="button" disabled="disabled">{{ ICON_MOVE_DOWN_DISABLED }}</button>
+							{% else %}
+							<button class="button2" type="button" disabled="disabled">{{ ICON_MOVE_UP_DISABLED }}</button>
+							<button class="button2" type="button" disabled="disabled">{{ ICON_MOVE_DOWN_DISABLED }}</button>
+							{% endif %}
+							{{ S_FORM_TOKEN }}
 							</form>
-							<a href="{album_row.U_EDIT}">{ICON_EDIT}</a>
-							<a href="{album_row.U_DELETE}">{ICON_DELETE}</a>
+							<a href="{{ album_row.U_EDIT }}">{{ ICON_EDIT }}</a>
+							<a href="{{ album_row.U_DELETE }}">{{ ICON_DELETE }}</a>
 							</div>
 							<div class="list-inner" style="margin-right: 0;">
-								<!-- IF album_row.FORUM_IMAGE --><div style="float: {S_CONTENT_FLOW_BEGIN}; margin-right: 5px;">{album_row.FORUM_IMAGE}</div><!-- ENDIF -->
-								{L_SUBALBUM}{L_COLON} <a href="{album_row.U_ALBUM}" class="topictitle">{album_row.ALBUM_NAME}</a>
-								<!-- IF album_row.ALBUM_DESCRIPTION --><br /><label for="album_desc">{L_ALBUM_DESC}{L_COLON}</label>{album_row.ALBUM_DESCRIPTION}<!-- ENDIF -->
+								{% if album_row.FORUM_IMAGE %}<div style="float: {{ S_CONTENT_FLOW_BEGIN }}; margin-right: 5px;">{{ album_row.FORUM_IMAGE }}</div>{% endif %}
+								{{ lang('SUBALBUM') }}{{ lang('COLON') }} <a href="{{ album_row.U_ALBUM }}" class="topictitle">{{ album_row.ALBUM_NAME }}</a>
+								{% if album_row.ALBUM_DESCRIPTION %}<br /><label for="album_desc">{{ lang('ALBUM_DESC') }}{{ lang('COLON') }}</label>{{ album_row.ALBUM_DESCRIPTION }}{% endif %}
 							</div>
 						</dt>
 					</dl>
 				</li>
-				<!-- END album_row -->
+				{% endfor %}
 			</ul>
-			<!-- ENDIF -->
+			{% endif %}
 		</div>
 	</div>
 	</div>
 </div>
-	<!-- IF U_CREATE_SUBALBUM -->
-		<form id="albums" method="post" action="{U_CREATE_SUBALBUM}" style="text-align: center;">
+	{% if U_CREATE_SUBALBUM %}
+		<form id="albums" method="post" action="{{ U_CREATE_SUBALBUM }}" style="text-align: center;">
 			<fieldset class="quick">
 				<!--input type="hidden" name="action" value="add" /-->
-				<input class="button2" name="addforum" type="submit" value="{L_CREATE_SUBALBUM}" />
-				{S_FORM_TOKEN}
+				<input class="button2" name="addforum" type="submit" value="{{ lang('CREATE_SUBALBUM') }}" />
+				{{ S_FORM_TOKEN }}
 			</fieldset>
 		</form>
-	<!-- ENDIF -->
-<!-- ENDIF -->
+	{% endif %}
+{% endif %}
 
-<!-- IF S_MANAGE_SUBSCRIPTIONS -->
-<h2>{L_TITLE}</h2>
+{% if S_MANAGE_SUBSCRIPTIONS %}
+<h2>{{ lang('TITLE') }}</h2>
 <div class="panel">
 	<div class="inner">
-	<h3>{L_TITLE_EXPLAIN}</h3>
-	<form id="ucp_gallery" method="post" action="{S_UCP_ACTION}">
-				<!-- IF .album_row -->
+	<h3>{{ lang('TITLE_EXPLAIN') }}</h3>
+	<form id="ucp_gallery" method="post" action="{{ S_UCP_ACTION }}">
+				{% if album_row|length %}
 					<ul class="topiclist missing-column">
 						<li class="header">
 							<dl>
-								<dt>{L_ALBUMS}</dt>
-								<dd class="lastpost"><span>{L_LAST_IMAGE}</span></dd>
-								<dd class="mark">{L_MARK}</dd>
+								<dt>{{ lang('ALBUMS') }}</dt>
+								<dd class="lastpost"><span>{{ lang('LAST_IMAGE') }}</span></dd>
+								<dd class="mark">{{ lang('MARK') }}</dd>
 							</dl>
 						</li>
 					</ul>
 
 					<ul class="topiclist cplist missing-column responsive-show-all">
-					<!-- BEGIN album_row -->
-						<li class="row<!-- IF album_row.S_ROW_COUNT is odd --> bg1<!-- ELSE --> bg2<!-- ENDIF --><!-- IF album_row.S_REPORTED --> reported<!-- ENDIF -->">
+					{% for album_row in album_row %}
+						<li class="row{% if album_row.S_ROW_COUNT is odd %} bg1{% else %} bg2{% endif %}{% if album_row.S_REPORTED %} reported{% endif %}">
 							<dl>
 								<dt>
 									<div class="list-inner">
-										<p style="overflow: hidden;">{L_RRC_DISPLAY_ALBUMNAME}{L_COLON} <a href="{album_row.U_VIEW_ALBUM}" class="topictitle" style="font-size: 1.1em; display: inline;">{album_row.ALBUM_NAME}</a><br />
-										<span><label for="album_desc">{L_ALBUM_DESC}{L_COLON}</label>{album_row.ALBUM_DESC}</span></p>
+										<p style="overflow: hidden;">{{ lang('RRC_DISPLAY_ALBUMNAME') }}{{ lang('COLON') }} <a href="{{ album_row.U_VIEW_ALBUM }}" class="topictitle" style="font-size: 1.1em; display: inline;">{{ album_row.ALBUM_NAME }}</a><br />
+										<span><label for="album_desc">{{ lang('ALBUM_DESC') }}{{ lang('COLON') }}</label>{{ album_row.ALBUM_DESC }}</span></p>
 									</div>
 								</dt>
 									<dd class="lastpost">
 										<p style="margin-bottom: -12px; overflow: hidden; text-overflow: ellipsis; line-height: normal; font-size: 1em; text-align: center;">
-								<!-- IF album_row.LAST_IMAGE -->
-												<!-- IF album_row.UC_FAKE_THUMBNAIL -->
-													<a style="float: left; width: {FAKE_THUMB_SIZE}px;">{album_row.UC_FAKE_THUMBNAIL}</a>
-												<!-- ENDIF --><br /><br />
-												{L_LAST_IMAGE}{L_COLON} {album_row.UC_IMAGE_NAME}<br />
-												{L_UPLOADED_BY_USER}{L_COLON} {album_row.UPLOADER}<br />
-												&raquo; {album_row.LAST_IMAGE_TIME}<br />
-											<!-- ELSE -->
-												{L_NO_IMAGES_LONG}
-											<!-- ENDIF -->
+								{% if album_row.LAST_IMAGE %}
+												{% if album_row.UC_FAKE_THUMBNAIL %}
+													<a style="float: left; width: {{ FAKE_THUMB_SIZE }}px;">{{ album_row.UC_FAKE_THUMBNAIL }}</a>
+												{% endif %}<br /><br />
+												{{ lang('LAST_IMAGE') }}{{ lang('COLON') }} {{ album_row.UC_IMAGE_NAME }}<br />
+												{{ lang('UPLOADED_BY_USER') }}{{ lang('COLON') }} {{ album_row.UPLOADER }}<br />
+												&raquo; {{ album_row.LAST_IMAGE_TIME }}<br />
+											{% else %}
+												{{ lang('NO_IMAGES_LONG') }}
+											{% endif %}
 										</p>
 										<br />
 									</dd>
 								<dd class="mark" style="padding-left: 8px;">
-									<input type="checkbox" name="album_id_ary[]" value="{album_row.ALBUM_ID}" />
+									<input type="checkbox" name="album_id_ary[]" value="{{ album_row.ALBUM_ID }}" />
 									</dd>
 							</dl>
 						</li>
-					<!-- END album_row -->
+					{% endfor %}
 					</ul>
 					<div class="rightside pagination">
-						<a href="#" onclick="marklist('ucp_gallery', 'album_id_ary', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('ucp_gallery', 'album_id_ary', false); return false;">{L_UNMARK_ALL}</a>
+						<a href="#" onclick="marklist('ucp_gallery', 'album_id_ary', true); return false;">{{ lang('MARK_ALL') }}</a> :: <a href="#" onclick="marklist('ucp_gallery', 'album_id_ary', false); return false;">{{ lang('UNMARK_ALL') }}</a>
 					</div>
 					<br />
 					<br />
-				<!-- ELSE -->
-				<ul class="topiclist">{L_ALBUMS}
-					<li><p class="notopics">{L_NO_SUBSCRIPTIONS_ALBUM}</p></li>
+				{% else %}
+				<ul class="topiclist">{{ lang('ALBUMS') }}
+					<li><p class="notopics">{{ lang('NO_SUBSCRIPTIONS_ALBUM') }}</p></li>
 				</ul>
-				<!-- ENDIF -->
+				{% endif %}
 			<hr>
-			<!-- IF .image_row -->
+			{% if image_row|length %}
 				<ul class="topiclist missing-column">
 					<li class="header">
 						<dl class="row-item">
-							<dt>{L_IMAGES}</dt>
-							<dd class="lastpost"><span>{L_LAST_COMMENT}</span></dd>
-							<dd class="mark">{L_MARK}</dd>
+							<dt>{{ lang('IMAGES') }}</dt>
+							<dd class="lastpost"><span>{{ lang('LAST_COMMENT') }}</span></dd>
+							<dd class="mark">{{ lang('MARK') }}</dd>
 						</dl>
 					</li>
 				</ul>
 
 				<ul class="topiclist cplist missing-column responsive-show-all">
-				<!-- BEGIN image_row -->
-					<li class="row<!-- IF image_row.S_ROW_COUNT is odd --> bg1<!-- ELSE --> bg2<!-- ENDIF --><!-- IF image_row.S_REPORTED --> reported<!-- ENDIF -->">
+				{% for image_row in image_row %}
+					<li class="row{% if image_row.S_ROW_COUNT is odd %} bg1{% else %} bg2{% endif %}{% if image_row.S_REPORTED %} reported{% endif %}">
 						<dl>
 							<dt>
 								<div class="list-inner" style="text-align: center;">
 									<p style="margin-bottom: -12px; overflow: hidden; line-height: normal; font-size: 1em; text-align: center;">
-										<!-- IF image_row.UC_FAKE_THUMBNAIL -->
-											<a style="float: left; width: {FAKE_THUMB_SIZE}px;">{image_row.UC_FAKE_THUMBNAIL}</a>
-										<!-- ENDIF --><br /><br />
-										{L_IMAGE_NAME}{L_COLON} <dfn>{L_LAST_IMAGE}</dfn> {image_row.UC_IMAGE_NAME}<br />
-										{L_UPLOADED_BY_USER}{L_COLON} {image_row.UPLOADER}<br />
-										&raquo; {image_row.IMAGE_TIME}<br />
-										{L_RRC_DISPLAY_ALBUMNAME}{L_COLON} <a href="{image_row.U_VIEW_ALBUM}" style="font-weight: bold; display: inline;">{image_row.ALBUM_NAME}</a><br />
+										{% if image_row.UC_FAKE_THUMBNAIL %}
+											<a style="float: left; width: {{ FAKE_THUMB_SIZE }}px;">{{ image_row.UC_FAKE_THUMBNAIL }}</a>
+										{% endif %}<br /><br />
+										{{ lang('IMAGE_NAME') }}{{ lang('COLON') }} <dfn>{{ lang('LAST_IMAGE') }}</dfn> {{ image_row.UC_IMAGE_NAME }}<br />
+										{{ lang('UPLOADED_BY_USER') }}{{ lang('COLON') }} {{ image_row.UPLOADER }}<br />
+										&raquo; {{ image_row.IMAGE_TIME }}<br />
+										{{ lang('RRC_DISPLAY_ALBUMNAME') }}{{ lang('COLON') }} <a href="{{ image_row.U_VIEW_ALBUM }}" style="font-weight: bold; display: inline;">{{ image_row.ALBUM_NAME }}</a><br />
 									</p>
 									<br />
 								</div>
 							</dt>
 								<dd class="lastpost">
 									<p style="margin-bottom: -12px; overflow: hidden; text-overflow: ellipsis; line-height: normal; font-size: 1em; text-align: center;">
-									<!-- IF image_row.COMMENT -->
-											{L_LAST_COMMENT} {L_POST_BY_AUTHOR}{L_COLON} {image_row.LAST_COMMENT_BY}<br />
-											&raquo; {image_row.LAST_COMMENT_TIME}
-										<!-- ELSE -->
-											{L_NO_COMMENTS}
-										<!-- ENDIF -->
+									{% if image_row.COMMENT %}
+											{{ lang('LAST_COMMENT') }} {{ lang('POST_BY_AUTHOR') }}{{ lang('COLON') }} {{ image_row.LAST_COMMENT_BY }}<br />
+											&raquo; {{ image_row.LAST_COMMENT_TIME }}
+										{% else %}
+											{{ lang('NO_COMMENTS') }}
+										{% endif %}
 									</p>
 									<br />
 								</dd>
 							<dd class="mark" style="padding-left: 8px;">
-								<input type="checkbox" name="image_id_ary[]" value="{image_row.IMAGE_ID}" />
+								<input type="checkbox" name="image_id_ary[]" value="{{ image_row.IMAGE_ID }}" />
 								</dd>
 						</dl>
 					</li>
-				<!-- END image_row -->
+				{% endfor %}
 				</ul>
 				<div class="rightside pagination">
-					<a href="#" onclick="marklist('ucp_gallery', 'image_id_ary', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('ucp_gallery', 'image_id_ary', false); return false;">{L_UNMARK_ALL}</a>
+					<a href="#" onclick="marklist('ucp_gallery', 'image_id_ary', true); return false;">{{ lang('MARK_ALL') }}</a> :: <a href="#" onclick="marklist('ucp_gallery', 'image_id_ary', false); return false;">{{ lang('UNMARK_ALL') }}</a>
 				</div>
 				<br />
 				<br />
-			<!-- ELSE -->
-				<ul class="topiclist">{L_IMAGES}
-					<li><p class="notopics">{L_NO_SUBSCRIPTIONS}</p></li>
+			{% else %}
+				<ul class="topiclist">{{ lang('IMAGES') }}
+					<li><p class="notopics">{{ lang('NO_SUBSCRIPTIONS') }}</p></li>
 				</ul>
-			<!-- ENDIF -->
+			{% endif %}
 			<hr>
-			<!-- IF PAGINATION or TOTAL_IMAGES -->
+			{% if PAGINATION or TOTAL_IMAGES %}
 				<ul class="linklist">
 					<li class="rightside pagination">
-						<!-- IF TOTAL_IMAGES --> {TOTAL_IMAGES}<!-- ENDIF -->
-						<!-- IF PAGE_NUMBER --><!-- IF PAGINATION --> &bull; <a href="#" onclick="jumpto(); return false;" title="{L_JUMP_TO_PAGE}">{PAGE_NUMBER}</a> &bull; <span>{PAGINATION}</span><!-- ELSE --> &bull; {PAGE_NUMBER}<!-- ENDIF --><!-- ENDIF -->
+						{% if TOTAL_IMAGES %} {{ TOTAL_IMAGES }}{% endif %}
+						{% if PAGE_NUMBER %}{% if PAGINATION %} &bull; <a href="#" onclick="jumpto(); return false;" title="{{ lang('JUMP_TO_PAGE') }}">{{ PAGE_NUMBER }}</a> &bull; <span>{{ PAGINATION }}</span>{% else %} &bull; {{ PAGE_NUMBER }}{% endif %}{% endif %}
 					</li>
 				</ul>
-			<!-- ENDIF -->
+			{% endif %}
 
 		<fieldset class="display-actions">
 			<select name="action">
-				<option value="" selected="selected">{L_CHOOSE_ACTION}</option>
-				<option value="unsubscribe">{L_UNSUBSCRIBE}</option>
+				<option value="" selected="selected">{{ lang('CHOOSE_ACTION') }}</option>
+				<option value="unsubscribe">{{ lang('UNSUBSCRIBE') }}</option>
 			</select>
-			<input class="button2" type="submit" value="{L_SUBMIT}" />
+			<input class="button2" type="submit" value="{{ lang('SUBMIT') }}" />
 		</fieldset>
-		{S_FORM_TOKEN}
+		{{ S_FORM_TOKEN }}
 	</form>
 	</div>
 </div>
-<!-- ENDIF -->
+{% endif %}
 
 <!--
 	I request you retain the full copyright notice below including the link to www.flying-bits.org.
@@ -336,8 +336,8 @@
 	phpBB Gallery, nickvergessen : 2009
 //-->
 <div class="copyright">
-	{L_GALLERY_COPYRIGHT}
+	{{ lang('GALLERY_COPYRIGHT') }}
 	<br />
-	{L_GALLERY_TRANSLATION_INFO}
+	{{ lang('GALLERY_TRANSLATION_INFO') }}
 </div>
-<!-- INCLUDE ucp_footer.html -->
+{% include 'ucp_footer.html' %}

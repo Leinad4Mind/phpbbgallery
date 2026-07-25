@@ -114,7 +114,7 @@ class package_hygiene_test extends TestCase
 				$this->core_root . '/styles/' . $style . '/template/gallery/albumlist_polaroid.html'
 			);
 			$this->assertStringContainsString(
-				'INCLUDEJS @phpbbgallery_core/js/gallery_polaroid.js',
+				'@phpbbgallery_core/js/gallery_polaroid.js',
 				$template
 			);
 			$this->assertFileDoesNotExist(

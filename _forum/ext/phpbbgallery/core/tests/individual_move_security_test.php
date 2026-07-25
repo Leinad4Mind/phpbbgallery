@@ -59,13 +59,15 @@ class individual_move_security_test extends TestCase
 		foreach ($templates as $template_path)
 		{
 			$template = file_get_contents($template_path);
-			$form_start = strrpos($template, '<form method="post" id="mcp" action="{S_MCP_ACTION}">');
+			$mcp_action = str_contains($template, '{{ S_MCP_ACTION }}') ? '{{ S_MCP_ACTION }}' : '{S_MCP_ACTION}';
+			$form_token = str_contains($template, '{{ S_FORM_TOKEN }}') ? '{{ S_FORM_TOKEN }}' : '{S_FORM_TOKEN}';
+			$form_start = strrpos($template, '<form method="post" id="mcp" action="' . $mcp_action . '">');
 			$this->assertNotFalse($form_start);
 			$form_end = strpos($template, '</form>', $form_start);
 			$this->assertNotFalse($form_end);
 			$form = substr($template, $form_start, $form_end - $form_start);
 
-			$this->assertStringContainsString('{S_FORM_TOKEN}', $form, $template_path);
+			$this->assertStringContainsString($form_token, $form, $template_path);
 		}
 	}
 

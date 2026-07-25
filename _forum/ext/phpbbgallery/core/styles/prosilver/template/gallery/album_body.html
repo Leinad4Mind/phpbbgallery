@@ -1,138 +1,138 @@
-<!-- INCLUDE gallery/gallery_header.html -->
+{% include 'gallery/gallery_header.html' %}
 
-<h2>{L_ALBUM_NAME}{L_COLON}<a href="{U_VIEW_ALBUM}" style="display: inline;"> {ALBUM_NAME}</a></h2>
+<h2>{{ lang('ALBUM_NAME') }}{{ lang('COLON') }}<a href="{{ U_VIEW_ALBUM }}" style="display: inline;"> {{ ALBUM_NAME }}</a></h2>
 
-<!-- IF not S_IN_GALLERY_POPUP and ALBUM_DESC or MODERATORS or U_MCP -->
+{% if not S_IN_GALLERY_POPUP and ALBUM_DESC or MODERATORS or U_MCP %}
 <div>
- 	<!-- IF ALBUM_DESC --><div id="description" class="panel" style="font-size: 1.2em;"><h3>{L_ALBUM_DESC}</h3>{ALBUM_DESC}<br /></div><!-- ENDIF -->
-	<!-- IF ALBUM_CONTEST_START --><span>{ALBUM_CONTEST_START}<br /></span><!-- ENDIF -->
-	<!-- IF ALBUM_CONTEST_RATING --><span>{ALBUM_CONTEST_RATING}<br /></span><!-- ENDIF -->
-	<!-- IF ALBUM_CONTEST_END --><span>{ALBUM_CONTEST_END}<br /><br /></span><!-- ENDIF -->
-	<!-- IF MODERATORS --><strong>{L_MODERATORS}{L_COLON}</strong> {MODERATORS}<br /><!-- ENDIF -->
-	<!-- IF U_EDIT_ALBUM --><br /><strong><a href="{U_EDIT_ALBUM}">{L_EDIT_ALBUM}</a></strong><!-- ENDIF -->
-	<!-- IF U_CREATE_ALBUM --><br /><strong><a href="{U_CREATE_ALBUM}">{L_CREATE_SUBALBUM}</a></strong><!-- ENDIF -->
+	{% if ALBUM_DESC %}<div id="description" class="panel" style="font-size: 1.2em;"><h3>{{ lang('ALBUM_DESC') }}</h3>{{ ALBUM_DESC }}<br /></div>{% endif %}
+	{% if ALBUM_CONTEST_START %}<span>{{ ALBUM_CONTEST_START }}<br /></span>{% endif %}
+	{% if ALBUM_CONTEST_RATING %}<span>{{ ALBUM_CONTEST_RATING }}<br /></span>{% endif %}
+	{% if ALBUM_CONTEST_END %}<span>{{ ALBUM_CONTEST_END }}<br /><br /></span>{% endif %}
+	{% if MODERATORS %}<strong>{{ lang('MODERATORS') }}{{ lang('COLON') }}</strong> {{ MODERATORS }}<br />{% endif %}
+	{% if U_EDIT_ALBUM %}<br /><strong><a href="{{ U_EDIT_ALBUM }}">{{ lang('EDIT_ALBUM') }}</a></strong>{% endif %}
+	{% if U_CREATE_ALBUM %}<br /><strong><a href="{{ U_CREATE_ALBUM }}">{{ lang('CREATE_SUBALBUM') }}</a></strong>{% endif %}
 </div>
-<!-- ENDIF -->
+{% endif %}
 
-<!-- IF .albumrow -->
-	<!-- IF not S_IS_BOT and U_MARK_ALBUMS -->
+{% if albumrow|length %}
+	{% if not S_IS_BOT and U_MARK_ALBUMS %}
 	<ul class="linklist">
-		<li class="rightside"><a href="{U_MARK_ALBUMS}">{L_MARK_ALBUMS_READ}</a></li>
+		<li class="rightside"><a href="{{ U_MARK_ALBUMS }}">{{ lang('MARK_ALBUMS_READ') }}</a></li>
 	</ul>
-	<!-- ENDIF -->
-	<!-- INCLUDE gallery/albumlist_polaroid.html -->
-<!-- ENDIF -->
+	{% endif %}
+	{% include 'gallery/albumlist_polaroid.html' %}
+{% endif %}
 
-<!-- IF S_IS_POSTABLE and (U_UPLOAD_IMAGE or PAGINATION or TOTAL_IMAGES or (U_SLIDE_SHOW and not S_IS_BOT)) -->
-	<div class="action-bar bar-top" <!-- IF S_HAS_SUBALBUM -->style="margin-top: 2em;"<!-- ENDIF -->><br />
+{% if S_IS_POSTABLE and (U_UPLOAD_IMAGE or PAGINATION or TOTAL_IMAGES or (U_SLIDE_SHOW and not S_IS_BOT)) %}
+	<div class="action-bar bar-top" {% if S_HAS_SUBALBUM %}style="margin-top: 2em;"{% endif %}><br />
 
-	<!-- IF not S_IN_GALLERY_POPUP and U_UPLOAD_IMAGE and not S_IS_BOT -->
-		<a href="<!-- IF S_IS_LOCKED --> <!-- ELSE -->{U_UPLOAD_IMAGE}<!-- ENDIF -->" title="<!-- IF S_IS_LOCKED -->{L_ALBUM_LOCKED}<!-- ELSE -->{L_UPLOAD_IMAGE}<!-- ENDIF -->" class="button"><!-- IF S_IS_LOCKED --><i class="icon fa-lock fa-fw" aria-hidden="true"></i> <span>{L_ALBUM_LOCKED}</span><!-- ELSE --><i class="icon fa-upload fa-fw" aria-hidden="true"></i> <span>{L_UPLOAD_IMAGE}</span><!-- ENDIF --></a>
-			<!-- IF S_REGISTERED_USER --><a href="{U_WATCH_TOGGLE}" title="<!-- IF S_IS_WATCHED -->{L_UNWATCH_ALBUM}<!-- ELSE -->{L_WATCH_ALBUM}<!-- ENDIF -->" class="button"><i class="icon <!-- IF S_IS_WATCHED -->fa-square-o<!-- ELSE -->fa-check-square-o<!-- ENDIF --> fa-fw" aria-hidden="true"></i> <!-- IF S_IS_WATCHED --><span>{L_UNWATCH_ALBUM}</span><!-- ELSE --><span>{L_WATCH_ALBUM}</span><!-- ENDIF --></a><!-- ENDIF -->
-	<!-- ENDIF -->
+	{% if not S_IN_GALLERY_POPUP and U_UPLOAD_IMAGE and not S_IS_BOT %}
+		<a href="{% if S_IS_LOCKED %} {% else %}{{ U_UPLOAD_IMAGE }}{% endif %}" title="{% if S_IS_LOCKED %}{{ lang('ALBUM_LOCKED') }}{% else %}{{ lang('UPLOAD_IMAGE') }}{% endif %}" class="button">{% if S_IS_LOCKED %}<i class="icon fa-lock fa-fw" aria-hidden="true"></i> <span>{{ lang('ALBUM_LOCKED') }}</span>{% else %}<i class="icon fa-upload fa-fw" aria-hidden="true"></i> <span>{{ lang('UPLOAD_IMAGE') }}</span>{% endif %}</a>
+			{% if S_REGISTERED_USER %}<a href="{{ U_WATCH_TOGGLE }}" title="{% if S_IS_WATCHED %}{{ lang('UNWATCH_ALBUM') }}{% else %}{{ lang('WATCH_ALBUM') }}{% endif %}" class="button"><i class="icon {% if S_IS_WATCHED %}fa-square-o{% else %}fa-check-square-o{% endif %} fa-fw" aria-hidden="true"></i> {% if S_IS_WATCHED %}<span>{{ lang('UNWATCH_ALBUM') }}</span>{% else %}<span>{{ lang('WATCH_ALBUM') }}</span>{% endif %}</a>{% endif %}
+	{% endif %}
 
-	<!-- IF not S_IN_GALLERY_POPUP and S_DISPLAY_SEARCHBOX -->
+	{% if not S_IN_GALLERY_POPUP and S_DISPLAY_SEARCHBOX %}
 		<div class="search-box">
-			<form method="post" id="album-search" action="{S_SEARCHBOX_ACTION}">
+			<form method="post" id="album-search" action="{{ S_SEARCHBOX_ACTION }}">
 			<fieldset>
-				<input class="inputbox search tiny" type="text" name="keywords" id="search_keywords" size="20" value="{L_SEARCH_ALBUM}" onclick="if (this.value == '{LA_SEARCH_ALBUM}') this.value = '';" onblur="if (this.value == '') this.value = '{LA_SEARCH_ALBUM}';" />
-				<input class="button2" type="submit" value="{L_SEARCH}" />
-				<input type="hidden" value="{ALBUM_ID}" name="aid[]" />
+				<input class="inputbox search tiny" type="text" name="keywords" id="search_keywords" size="20" value="{{ lang('SEARCH_ALBUM') }}" onclick="if (this.value == '{{ lang_js('SEARCH_ALBUM') }}') this.value = '';" onblur="if (this.value == '') this.value = '{{ lang_js('SEARCH_ALBUM') }}';" />
+				<input class="button2" type="submit" value="{{ lang('SEARCH') }}" />
+				<input type="hidden" value="{{ ALBUM_ID }}" name="aid[]" />
 			</fieldset>
 			</form>
 		</div>
-	<!-- ENDIF -->
+	{% endif %}
 
-	<!-- IF .pagination or TOTAL_IMAGES -->
+	{% if pagination|length or TOTAL_IMAGES %}
 		<div class="pagination">
-			{TOTAL_IMAGES}
-			<!-- IF .pagination -->
-				<!-- INCLUDE pagination.html -->
-			<!-- ELSE -->
-				 &bull; {PAGE_NUMBER}
-			<!-- ENDIF -->
+			{{ TOTAL_IMAGES }}
+			{% if pagination|length %}
+				{% include 'pagination.html' %}
+			{% else %}
+				 &bull; {{ PAGE_NUMBER }}
+			{% endif %}
 		</div>
-	<!-- ENDIF -->
+	{% endif %}
 
-	<!-- IF not S_IN_GALLERY_POPUP and S_IS_POSTABLE and U_SLIDE_SHOW and not S_IS_BOT -->
-		<div class="pagination"><a href="{U_SLIDE_SHOW}">{L_SLIDE_SHOW}</a><!-- IF PAGINATION or TOTAL_IMAGES or U_SLIDE_SHOW --> &bull;&nbsp;<!-- ENDIF --></div>
-	<!-- ENDIF -->
+	{% if not S_IN_GALLERY_POPUP and S_IS_POSTABLE and U_SLIDE_SHOW and not S_IS_BOT %}
+		<div class="pagination"><a href="{{ U_SLIDE_SHOW }}">{{ lang('SLIDE_SHOW') }}</a>{% if PAGINATION or TOTAL_IMAGES or U_SLIDE_SHOW %} &bull;&nbsp;{% endif %}</div>
+	{% endif %}
 
 	</div>
-<!-- ENDIF -->
+{% endif %}
 
-<!-- IF .imageblock -->
-	<!-- IF S_IN_GALLERY_POPUP -->
-		<!-- INCLUDE gallery/imageblock_popup.html -->
-	<!-- ELSE -->
-		<!-- INCLUDE gallery/imageblock_polaroid.html -->
-	<!-- ENDIF -->
-<!-- ELSE -->
-	<!-- IF S_IS_POSTABLE -->
+{% if imageblock|length %}
+	{% if S_IN_GALLERY_POPUP %}
+		{% include 'gallery/imageblock_popup.html' %}
+	{% else %}
+		{% include 'gallery/imageblock_polaroid.html' %}
+	{% endif %}
+{% else %}
+	{% if S_IS_POSTABLE %}
 	<div class="panel" style="margin-top: 20px;">
-		<strong>{L_NO_IMAGES_LONG}</strong>
+		<strong>{{ lang('NO_IMAGES_LONG') }}</strong>
 	</div>
-	<!-- ENDIF -->
-<!-- ENDIF -->
+	{% endif %}
+{% endif %}
 
-<!-- IF S_IS_POSTABLE -->
-	<!-- IF S_SELECT_SORT_KEY or PREVIOUS_PAGE or NEXT_PAGE -->
-	<form action="{S_ALBUM_ACTION}" method="post">
+{% if S_IS_POSTABLE %}
+	{% if S_SELECT_SORT_KEY or PREVIOUS_PAGE or NEXT_PAGE %}
+	<form action="{{ S_ALBUM_ACTION }}" method="post">
 	<fieldset class="display-options">
-		<!-- IF PREVIOUS_PAGE --><a href="{PREVIOUS_PAGE}" class="left-box {S_CONTENT_FLOW_BEGIN}">{L_PREVIOUS}</a><!-- ENDIF -->
-		<!-- IF NEXT_PAGE --><a href="{NEXT_PAGE}" class="right-box {S_CONTENT_FLOW_END}">{L_NEXT}</a><!-- ENDIF -->
-		<!-- IF S_SELECT_SORT_KEY -->
-			<label>{L_SORT_BY} {S_SELECT_SORT_KEY}</label>
-			<label>{S_SELECT_SORT_DIR} <input type="submit" name="sort" value="{L_GO}" class="button2" /></label>
-		<!-- ENDIF -->
+		{% if PREVIOUS_PAGE %}<a href="{{ PREVIOUS_PAGE }}" class="left-box {{ S_CONTENT_FLOW_BEGIN }}">{{ lang('PREVIOUS') }}</a>{% endif %}
+		{% if NEXT_PAGE %}<a href="{{ NEXT_PAGE }}" class="right-box {{ S_CONTENT_FLOW_END }}">{{ lang('NEXT') }}</a>{% endif %}
+		{% if S_SELECT_SORT_KEY %}
+			<label>{{ lang('SORT_BY') }} {{ S_SELECT_SORT_KEY }}</label>
+			<label>{{ S_SELECT_SORT_DIR }} <input type="submit" name="sort" value="{{ lang('GO') }}" class="button2" /></label>
+		{% endif %}
 	</fieldset>
 	</form>
 	<hr />
-	<!-- ENDIF -->
-	<!-- IF .imageblock -->
+	{% endif %}
+	{% if imageblock|length %}
 	<div class="action-bar bar-bottom">
-		<!-- IF U_UPLOAD_IMAGE and not S_IS_BOT -->
-			<a href="<!-- IF S_IS_LOCKED --> <!-- ELSE -->{U_UPLOAD_IMAGE}<!-- ENDIF -->" title="<!-- IF S_IS_LOCKED -->{L_ALBUM_LOCKED}<!-- ELSE -->{L_UPLOAD_IMAGE}<!-- ENDIF -->" class="button"><!-- IF S_IS_LOCKED --><i class="icon fa-lock fa-fw" aria-hidden="true"></i> <span>{L_ALBUM_LOCKED}</span><!-- ELSE --><i class="icon fa-upload fa-fw" aria-hidden="true"></i> <span>{L_UPLOAD_IMAGE}</span><!-- ENDIF --></a>
-		<!-- ENDIF -->
+		{% if U_UPLOAD_IMAGE and not S_IS_BOT %}
+			<a href="{% if S_IS_LOCKED %} {% else %}{{ U_UPLOAD_IMAGE }}{% endif %}" title="{% if S_IS_LOCKED %}{{ lang('ALBUM_LOCKED') }}{% else %}{{ lang('UPLOAD_IMAGE') }}{% endif %}" class="button">{% if S_IS_LOCKED %}<i class="icon fa-lock fa-fw" aria-hidden="true"></i> <span>{{ lang('ALBUM_LOCKED') }}</span>{% else %}<i class="icon fa-upload fa-fw" aria-hidden="true"></i> <span>{{ lang('UPLOAD_IMAGE') }}</span>{% endif %}</a>
+		{% endif %}
 
-		<!-- IF .pagination or TOTAL_IMAGES -->
+		{% if pagination|length or TOTAL_IMAGES %}
 		<div class="pagination">
-			{TOTAL_IMAGES}
-			<!-- IF .pagination -->
-				 <!-- INCLUDE pagination.html -->
-			<!-- ELSE -->
-				 &bull; {PAGE_NUMBER}
-			<!-- ENDIF -->
+			{{ TOTAL_IMAGES }}
+			{% if pagination|length %}
+				 {% include 'pagination.html' %}
+			{% else %}
+				 &bull; {{ PAGE_NUMBER }}
+			{% endif %}
 		</div>
-		<!-- ENDIF -->
+		{% endif %}
 	</div>
-	<!-- ENDIF -->
-<!-- ENDIF -->
+	{% endif %}
+{% endif %}
 
-<p class="jumpbox-return"><a href="{U_RETURN_LINK}" class="left-box arrow-{S_CONTENT_FLOW_BEGIN}" accesskey="r"><i class="icon fa-angle-left fa-fw icon-black" aria-hidden="true"></i>{L_RETURN_LINK}</a></p>
+<p class="jumpbox-return"><a href="{{ U_RETURN_LINK }}" class="left-box arrow-{{ S_CONTENT_FLOW_BEGIN }}" accesskey="r"><i class="icon fa-angle-left fa-fw icon-black" aria-hidden="true"></i>{{ lang('RETURN_LINK') }}</a></p>
 
-<!-- IF ALBUM_JUMPBOX -->
-	<form method="post" id="jumpbox" action="{S_JUMPBOX_ACTION}" onsubmit="if(this.album_id.value == -1){return false;}">
+{% if ALBUM_JUMPBOX %}
+	<form method="post" id="jumpbox" action="{{ S_JUMPBOX_ACTION }}" onsubmit="if(this.album_id.value == -1){return false;}">
 		<fieldset class="jumpbox">
-			<label for="album_id" accesskey="album_id">{L_JUMP_TO}{L_COLON}</label>
+			<label for="album_id" accesskey="album_id">{{ lang('JUMP_TO') }}{{ lang('COLON') }}</label>
 			<select name="album_id" id="album_id" onchange="if(this.options[this.selectedIndex].value != -1){ document.forms['jumpbox'].submit() }">
-				{ALBUM_JUMPBOX}
+				{{ ALBUM_JUMPBOX }}
 			</select>
-			<input type="submit" value="{L_GO}" class="button2" />
+			<input type="submit" value="{{ lang('GO') }}" class="button2" />
 		</fieldset>
 	</form>
-<!-- ELSE -->
+{% else %}
 	<br /><br />
-<!-- ENDIF -->
+{% endif %}
 
-<!-- IF not S_IN_GALLERY_POPUP and S_DISPLAY_ONLINE_LIST -->
-	<h3><a href="{U_VIEWONLINE}">{L_WHO_IS_ONLINE}</a></h3>
-	<p>{LOGGED_IN_USER_LIST}</p>
-<!-- ENDIF -->
+{% if not S_IN_GALLERY_POPUP and S_DISPLAY_ONLINE_LIST %}
+	<h3><a href="{{ U_VIEWONLINE }}">{{ lang('WHO_IS_ONLINE') }}</a></h3>
+	<p>{{ LOGGED_IN_USER_LIST }}</p>
+{% endif %}
 
-<!-- IF not S_IN_GALLERY_POPUP and S_IS_POSTABLE -->
-	<h3>{L_ALBUM_PERMISSIONS}</h3>
-	<p><!-- BEGIN rules -->{rules.RULE}<br /><!-- END rules --></p>
-<!-- ENDIF -->
+{% if not S_IN_GALLERY_POPUP and S_IS_POSTABLE %}
+	<h3>{{ lang('ALBUM_PERMISSIONS') }}</h3>
+	<p>{% for rules in rules %}{{ rules.RULE }}<br />{% endfor %}</p>
+{% endif %}
 
-<!-- INCLUDE gallery/gallery_footer.html -->
+{% include 'gallery/gallery_footer.html' %}

@@ -22,7 +22,7 @@ final class template_syntax_test extends TestCase
 	public function test_modernized_templates_use_only_native_twig_syntax(): void
 	{
 		$template_paths = $this->template_paths();
-		$this->assertCount(10, $template_paths);
+		$this->assertCount(52, $template_paths);
 
 		foreach ($template_paths as $template_path)
 		{
@@ -38,7 +38,7 @@ final class template_syntax_test extends TestCase
 				$template_path
 			);
 			$this->assertDoesNotMatchRegularExpression(
-				'/\{%\s*(?:if|elseif)\b[^%]*(?:&&|\|\||\beq\b|\bneq\b|\bmod\b)/',
+				'/\{%[^%]*(?:!==|===|&&|\|\||!(?!=)|\beq\b|\bneq\b|\bmod\b)[^%]*%\}/',
 				$source,
 				$template_path
 			);
@@ -82,6 +82,8 @@ final class template_syntax_test extends TestCase
 		$gallery_root = dirname($core_root);
 		$directories = [
 			$core_root . '/adm/style',
+			$core_root . '/styles/all',
+			$core_root . '/styles/prosilver',
 			$gallery_root . '/acpcleanup/adm/style',
 			$gallery_root . '/acpimport/adm/style',
 			$gallery_root . '/exif/styles',

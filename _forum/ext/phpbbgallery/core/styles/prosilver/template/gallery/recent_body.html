@@ -1,41 +1,41 @@
-<!-- INCLUDE gallery/imageblock_body.html -->
+{% include 'gallery/imageblock_body.html' %}
 
-<!-- IF .commentrow -->
-	<h4><!-- IF not COLLAPSE_COMMENTS --><!-- IF U_G_SEARCH_COMMENTED --><a href="{U_G_SEARCH_COMMENTED}">{L_RECENT_COMMENTS}</a><!-- ELSE -->{L_RECENT_COMMENTS}<!-- ENDIF --><!-- ELSE -->{L_RECENT_COMMENTS}<!-- ENDIF --></h4>
-	<div id="recent-comments"<!-- IF COLLAPSE_COMMENTS --> style="display: none;"<!-- ENDIF -->>
-	<!-- BEGIN commentrow -->
-	<a id="comment_{commentrow.COMMENT_ID}"></a>
-	<div class="post <!-- IF commentrow.S_ROW_COUNT is odd -->bg1<!-- ELSE -->bg2<!-- ENDIF -->">
+{% if commentrow|length %}
+	<h4>{% if not COLLAPSE_COMMENTS %}{% if U_G_SEARCH_COMMENTED %}<a href="{{ U_G_SEARCH_COMMENTED }}">{{ lang('RECENT_COMMENTS') }}</a>{% else %}{{ lang('RECENT_COMMENTS') }}{% endif %}{% else %}{{ lang('RECENT_COMMENTS') }}{% endif %}</h4>
+	<div id="recent-comments"{% if COLLAPSE_COMMENTS %} style="display: none;"{% endif %}>
+	{% for commentrow in commentrow %}
+	<a id="comment_{{ commentrow.COMMENT_ID }}"></a>
+	<div class="post {% if commentrow.S_ROW_COUNT is odd %}bg1{% else %}bg2{% endif %}">
 		<div class="inner">
-			<dl class="postprofile" id="profile{commentrow.COMMENT_ID}">
+			<dl class="postprofile" id="profile{{ commentrow.COMMENT_ID }}">
 				<dt>
-					{L_COMMENT_ON} {L_IMAGE}{L_COLON}
-					{commentrow.UC_IMAGE_NAME}<br /><br />
-					{commentrow.UC_THUMBNAIL}<br /><br />
-					{L_IMAGE} {L_UPLOADED_BY_USER} {commentrow.IMAGE_AUTHOR}<br />
-					&raquo; {commentrow.IMAGE_TIME}
+					{{ lang('COMMENT_ON') }} {{ lang('IMAGE') }}{{ lang('COLON') }}
+					{{ commentrow.UC_IMAGE_NAME }}<br /><br />
+					{{ commentrow.UC_THUMBNAIL }}<br /><br />
+					{{ lang('IMAGE') }} {{ lang('UPLOADED_BY_USER') }} {{ commentrow.IMAGE_AUTHOR }}<br />
+					&raquo; {{ commentrow.IMAGE_TIME }}
 				</dt>
 			</dl>
 			<div class="postbody">
-				<!-- IF commentrow.U_DELETE or commentrow.U_EDIT or commentrow.U_WHOIS or commentrow.U_QUOTE -->
+				{% if commentrow.U_DELETE or commentrow.U_EDIT or commentrow.U_WHOIS or commentrow.U_QUOTE %}
 					<ul class="profile-icons">
-						<!-- IF commentrow.U_EDIT --><li class="edit-icon"><a href="{commentrow.U_EDIT}" title="{L_EDIT_COMMENT}"><span>{L_EDIT_COMMENT}</span></a></li><!-- ENDIF -->
-						<!-- IF commentrow.U_DELETE --><li class="delete-icon"><a href="{commentrow.U_DELETE}" title="{L_DELETE_COMMENT}"><span>{L_DELETE_COMMENT}</span></a></li><!-- ENDIF -->
-						<!-- IF commentrow.U_WHOIS --><li class="info-icon"><a href="{commentrow.U_WHOIS}" title="{L_IP}" onclick="popup(this.href, 750, 500); return false;"><span>{L_IP}</span></a></li><!-- ENDIF -->
-						<!-- IF commentrow.U_QUOTE --><li class="quote-icon"><a href="{commentrow.U_QUOTE}" title="{L_QUOTE_COMMENT}"><span>{L_QUOTE_COMMENT}</span></a></li><!-- ENDIF -->
+						{% if commentrow.U_EDIT %}<li class="edit-icon"><a href="{{ commentrow.U_EDIT }}" title="{{ lang('EDIT_COMMENT') }}"><span>{{ lang('EDIT_COMMENT') }}</span></a></li>{% endif %}
+						{% if commentrow.U_DELETE %}<li class="delete-icon"><a href="{{ commentrow.U_DELETE }}" title="{{ lang('DELETE_COMMENT') }}"><span>{{ lang('DELETE_COMMENT') }}</span></a></li>{% endif %}
+						{% if commentrow.U_WHOIS %}<li class="info-icon"><a href="{{ commentrow.U_WHOIS }}" title="{{ lang('IP') }}" onclick="popup(this.href, 750, 500); return false;"><span>{{ lang('IP') }}</span></a></li>{% endif %}
+						{% if commentrow.U_QUOTE %}<li class="quote-icon"><a href="{{ commentrow.U_QUOTE }}" title="{{ lang('QUOTE_COMMENT') }}"><span>{{ lang('QUOTE_COMMENT') }}</span></a></li>{% endif %}
 					</ul>
-				<!-- ENDIF -->
-				<p class="author"><a href="{commentrow.U_COMMENT}" title="{L_COMMENT}">{L_COMMENT}&nbsp;</a><span style="white-space: nowrap;">{L_POST_BY_AUTHOR}&nbsp;{commentrow.POST_AUTHOR_FULL}</span> &raquo;<span style="white-space: nowrap;"> {commentrow.TIME}</span></p>
-				<div class="content">{commentrow.TEXT}</div>
+				{% endif %}
+				<p class="author"><a href="{{ commentrow.U_COMMENT }}" title="{{ lang('COMMENT') }}">{{ lang('COMMENT') }}&nbsp;</a><span style="white-space: nowrap;">{{ lang('POST_BY_AUTHOR') }}&nbsp;{{ commentrow.POST_AUTHOR_FULL }}</span> &raquo;<span style="white-space: nowrap;"> {{ commentrow.TIME }}</span></p>
+				<div class="content">{{ commentrow.TEXT }}</div>
 			</div>
 
 		</div>
 	</div>
-	<!-- END commentrow -->
+	{% endfor %}
 	</div>
-<!-- ENDIF -->
+{% endif %}
 
-<!-- IF (.recent or .random or .contest or .commentrow) and not S_IN_GALLERY -->
+{% if (recent|length or random|length or contest|length or commentrow|length) and not S_IN_GALLERY %}
 <!--
 	I request you retain the full copyright notice below including the link to www.anavaro.com.
 	This not only gives respect to the large amount of time given freely by the developer
@@ -47,8 +47,8 @@
 	phpBB Gallery, Lucifer : 2016
 //-->
 <div class="copyright">
-	{L_GALLERY_COPYRIGHT}
-	<br />{L_GALLERY_TRANSLATION_INFO}
+	{{ lang('GALLERY_COPYRIGHT') }}
+	<br />{{ lang('GALLERY_TRANSLATION_INFO') }}
 </div>
 <br />
-<!-- ENDIF -->
+{% endif %}
