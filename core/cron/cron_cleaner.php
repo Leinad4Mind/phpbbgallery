@@ -18,11 +18,14 @@ namespace phpbbgallery\core\cron;
  */
 class cron_cleaner extends \phpbb\cron\task\base
 {
-	/** @var \phpbbgallery\core\config  */
-	protected $gallery_config;
+	/** Run the orphan-upload safety cleanup at most once per day. */
+	private const PRUNE_INTERVAL = 86400;
 
-	/** @var \phpbbgallery\core\upload  */
-	protected $gallery_upload;
+	/** @var \phpbbgallery\core\config Gallery configuration object. */
+	protected \phpbbgallery\core\config $gallery_config;
+
+	/** @var \phpbbgallery\core\upload Gallery upload service. */
+	protected \phpbbgallery\core\upload $gallery_upload;
 
 	/**
 	 * Constructor
@@ -40,7 +43,7 @@ class cron_cleaner extends \phpbb\cron\task\base
 	/**
 	 * {@inheritDoc}
 	 */
-	public function run()
+	public function run(): void
 	{
 		$this->gallery_upload->prune_orphan();
 		$this->gallery_config->set('prune_orphan_time', time());
@@ -49,15 +52,15 @@ class cron_cleaner extends \phpbb\cron\task\base
 	/**
 	 * {@inheritDoc}
 	 */
-	public function should_run()
+	public function should_run(): bool
 	{
-		return $this->gallery_config->get('prune_orphan_time') < strtotime('24 hours ago');
+		return (int) $this->gallery_config->get('prune_orphan_time') < (time() - self::PRUNE_INTERVAL);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function is_runnable()
+	public function is_runnable(): bool
 	{
 		return true;
 	}

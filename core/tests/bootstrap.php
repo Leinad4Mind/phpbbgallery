@@ -85,6 +85,8 @@ namespace
 	require_once dirname(__DIR__, 4) . '/vendor/symfony/event-dispatcher/Event.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/event/data.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/db/driver/driver_interface.php';
+	require_once dirname(__DIR__, 4) . '/phpbb/cron/task/task.php';
+	require_once dirname(__DIR__, 4) . '/phpbb/cron/task/base.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/request/request_interface.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/files/types/type_interface.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/files/types/base.php';
@@ -139,4 +141,5 @@ namespace
 	require_once dirname(__DIR__) . '/notification/events/phpbbgallery_new_report.php';
 	require_once dirname(__DIR__) . '/moderate.php';
 	require_once dirname(__DIR__) . '/user.php';
+	require_once dirname(__DIR__) . '/cron/cron_cleaner.php';
 }
