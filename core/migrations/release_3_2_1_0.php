@@ -15,12 +15,12 @@ use phpbb\db\migration\profilefield_base_migration;
 
 class release_3_2_1_0 extends profilefield_base_migration
 {
-	public static function depends_on()
+	public static function depends_on(): array
 	{
 		return ['\phpbbgallery\core\migrations\split_ucp_module_settings'];
 	}
 
-	public function update_data()
+	public function update_data(): array
 	{
 		return array(
 			array('custom', array(array(&$this, 'install_config'))),
@@ -30,7 +30,7 @@ class release_3_2_1_0 extends profilefield_base_migration
 		);
 	}
 
-	public function install_config()
+	public function install_config(): bool
 	{
 		global $config;
 
@@ -42,7 +42,7 @@ class release_3_2_1_0 extends profilefield_base_migration
 		return true;
 	}
 
-	public function add_base_url()
+	public function add_base_url(): void
 	{
 		global $config;
 		$base_uri = generate_board_url();
@@ -52,19 +52,24 @@ class release_3_2_1_0 extends profilefield_base_migration
 		$this->db->sql_query($sql);
 	}
 
-	public function fix_gallery_lang()
+	public function fix_gallery_lang(): void
 	{
 		$sql = 'UPDATE ' . PROFILE_LANG_TABLE . ' SET lang_name = \'GALLERY\' WHERE lang_name = \'GALLERY_PALBUM\'';
 		$this->db->sql_query($sql);
 	}
 
-	static public $configs = array(
+	public static array $configs = array(
 		'version'					=> '3.2.1',
 		'disp_gallery_icon'			=> true,
 	);
 
+	/** @var string Must remain untyped to match phpBB's profilefield base class. */
 	protected $profilefield_name = 'gallery_palbum';
+
+	/** @var array Must remain untyped to match phpBB's profilefield base class. */
 	protected $profilefield_database_type = array('VCHAR', '');
+
+	/** @var array Must remain untyped to match phpBB's profilefield base class. */
 	protected $profilefield_data = array(
 		'field_name'	=> 'gallery_palbum',
 		'field_type'	=> 'profilefields.type.string',

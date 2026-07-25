@@ -13,5 +13,10 @@ if (!class_exists('phpbb\db\migration\profilefield_base_migration'))
 {
 	abstract class profilefield_base_migration extends migration
 	{
+		protected $profilefield_name;
+
+		protected $profilefield_database_type;
+
+		protected $profilefield_data;
 	}
 }

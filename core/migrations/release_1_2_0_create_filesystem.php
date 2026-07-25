@@ -15,12 +15,12 @@ use phpbb\db\migration\migration;
 
 class release_1_2_0_create_filesystem extends migration
 {
-	public static function depends_on()
+	public static function depends_on(): array
 	{
 		return ['\phpbbgallery\core\migrations\release_1_2_0_add_bbcode'];
 	}
 
-	public function update_data()
+	public function update_data(): array
 	{
 		return array(
 			array('custom', array(array(&$this, 'create_file_system'))),
@@ -28,14 +28,14 @@ class release_1_2_0_create_filesystem extends migration
 		);
 	}
 
-	public function revert_data()
+	public function revert_data(): array
 	{
 		return [
 			['custom', [[$this, 'archive_file_system']]],
 		];
 	}
 
-	public function create_file_system()
+	public function create_file_system(): void
 	{
 		global $phpbb_root_path;
 
@@ -53,7 +53,7 @@ class release_1_2_0_create_filesystem extends migration
 		}
 	}
 
-	public function archive_file_system()
+	public function archive_file_system(): bool
 	{
 		global $phpbb_root_path;
 
@@ -102,12 +102,12 @@ class release_1_2_0_create_filesystem extends migration
 	 *
 	 * @return bool
 	 */
-	public function remove_file_system()
+	public function remove_file_system(): bool
 	{
 		return $this->archive_file_system();
 	}
 
-	public function copy_images()
+	public function copy_images(): void
 	{
 		global $phpbb_root_path;
 		$phpbbgallery_core_file_source = $phpbb_root_path . 'files/phpbbgallery/core/source';
@@ -121,7 +121,7 @@ class release_1_2_0_create_filesystem extends migration
 	 * @param string $path
 	 * @return string
 	 */
-	private function normalize_path($path)
+	private function normalize_path(string $path): string
 	{
 		$path = rtrim(str_replace('\\', '/', $path), '/');
 		if (DIRECTORY_SEPARATOR === '\\')

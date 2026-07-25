@@ -16,12 +16,12 @@ use phpbb\db\migration\migration;
 
 class release_1_2_0_db_create extends migration
 {
-	static public function depends_on()
+	public static function depends_on(): array
 	{
 		return array('\phpbbgallery\core\migrations\release_1_2_0');
 	}
 
-	public function update_schema()
+	public function update_schema(): array
 	{
 		return array(
 			'add_tables'		=> array(
@@ -293,7 +293,7 @@ class release_1_2_0_db_create extends migration
 		);
 	}
 
-	public function revert_schema()
+	public function revert_schema(): array
 	{
 		return array(
 			'drop_tables'		=> array(

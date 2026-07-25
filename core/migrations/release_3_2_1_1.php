@@ -15,19 +15,19 @@ use phpbb\db\migration\migration;
 
 class release_3_2_1_1 extends migration
 {
-	public static function depends_on()
+	public static function depends_on(): array
 	{
 		return ['\phpbbgallery\core\migrations\release_3_2_1_0'];
 	}
 
-	public function update_data()
+	public function update_data(): array
 	{
 		return [
 			['config.update', ['phpbb_gallery_version', '3.2.2']]
 		];
 	}
 
-	public function update_schema()
+	public function update_schema(): array
 	{
 		return array(
 			'add_columns'	=> array(
@@ -38,7 +38,7 @@ class release_3_2_1_1 extends migration
 		);
 	}
 
-	public function revert_schema()
+	public function revert_schema(): array
 	{
 		return array(
 			'drop_columns' => array(

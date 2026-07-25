@@ -14,12 +14,12 @@ use phpbb\db\migration\migration;
 
 class release_3_4_0 extends migration
 {
-	static public function depends_on()
+	public static function depends_on(): array
 	{
 		return ['\phpbbgallery\core\migrations\release_3_3_0'];
 	}
 
-	public function update_data()
+	public function update_data(): array
 	{
 		return [
 			['config.update', ['phpbb_gallery_version', '3.4.0']]

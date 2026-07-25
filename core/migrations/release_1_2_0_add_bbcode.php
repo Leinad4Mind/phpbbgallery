@@ -16,26 +16,26 @@ use phpbb\db\migration\migration;
 
 class release_1_2_0_add_bbcode extends migration
 {
-	public static function depends_on()
+	public static function depends_on(): array
 	{
 		return ['\phpbbgallery\core\migrations\release_1_2_0_db_create'];
 	}
 
-	public function update_data()
+	public function update_data(): array
 	{
 		return array(
 			array('custom', array(array(&$this, 'install_bbcode'))),
 		);
 	}
 
-	public function revert_data()
+	public function revert_data(): array
 	{
 		return array(
 			array('custom', array(array(&$this, 'remove_bbcode'))),
 		);
 	}
 
-	public function install_bbcode()
+	public function install_bbcode(): void
 	{
 		$sql = 'SELECT bbcode_id FROM ' . $this->table_prefix . 'bbcodes WHERE LOWER(bbcode_tag) = \'image\'';
 		$result = $this->db->sql_query($sql);
@@ -93,7 +93,7 @@ class release_1_2_0_add_bbcode extends migration
 			}
 		}
 	}
-	public function remove_bbcode()
+	public function remove_bbcode(): void
 	{
 		$sql = 'DELETE FROM ' . BBCODES_TABLE . ' WHERE bbcode_tag = \'image\'';
 		$this->db->sql_query($sql);

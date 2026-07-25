@@ -16,12 +16,12 @@ use phpbb\db\migration\migration;
 
 class release_1_2_0 extends migration
 {
-	static public function depends_on()
+	public static function depends_on(): array
 	{
 		return array('\phpbb\db\migration\data\v310\gold');
 	}
 
-	public function update_data()
+	public function update_data(): array
 	{
 		return array(
 			array('permission.add', array('a_gallery_manage', true, 'a_board')),
@@ -101,7 +101,7 @@ class release_1_2_0 extends migration
 		);
 	}
 
-	public function revert_data()
+	public function revert_data(): array
 	{
 		return array(
 			// Remove permissions added
@@ -114,7 +114,7 @@ class release_1_2_0 extends migration
 		);
 	}
 
-	public function install_config()
+	public function install_config(): bool
 	{
 		global $config;
 
@@ -133,7 +133,7 @@ class release_1_2_0 extends migration
 		return true;
 	}
 
-	public function uninstall_config()
+	public function uninstall_config(): bool
 	{
 		global $config;
 
@@ -145,7 +145,7 @@ class release_1_2_0 extends migration
 		return true;
 	}
 
-	static public $is_dynamic = array(
+	public static array $is_dynamic = array(
 		'mvc_time',
 		'mvc_version',
 
@@ -156,7 +156,7 @@ class release_1_2_0 extends migration
 		'current_upload_dir_size',
 	);
 
-	static public $configs = array(
+	public static array $configs = array(
 		'album_display'		=> 254,
 		'album_images'		=> 2500,
 		'allow_comments'	=> true,

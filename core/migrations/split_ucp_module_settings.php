@@ -11,12 +11,12 @@ namespace phpbbgallery\core\migrations;
 
 class split_ucp_module_settings extends \phpbb\db\migration\migration
 {
-	public static function depends_on()
+	public static function depends_on(): array
 	{
 		return ['\phpbbgallery\core\migrations\release_1_2_0_create_filesystem'];
 	}
 
-	public function update_data()
+	public function update_data(): array
 	{
 		return array(
 			array('if', array(
