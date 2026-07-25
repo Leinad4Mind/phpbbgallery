@@ -24,11 +24,11 @@ class config_module
 	* This function is called, when the main() function is called.
 	* You can use this function to add your language files, check for a valid mode, unset config options and more.
 	*
-	* @param	int		$id		The ID of the module
+	* @param	string	$id		The ID of the module
 	* @param	string	$mode	The name of the mode we want to display
 	* @return	void
 	*/
-	public function main($id, $mode)
+	public function main(string $id, string $mode): void
 	{
 		// Check whether the mode is allowed.
 		if (!isset($this->display_vars[$mode]))
@@ -36,14 +36,13 @@ class config_module
 			trigger_error('NO_MODE', E_USER_ERROR);
 		}
 
-		global $config, $db, $user, $template, $cache, $phpbb_container, $phpbb_root_path, $phpEx, $phpbb_gallery_url;
-		global $request, $config;
+		global $config, $db, $user, $template, $cache, $phpbb_container, $phpbb_gallery_url, $request;
 
 		$phpbb_gallery_url = $phpbb_container->get('phpbbgallery.core.url');
 		$this->language = $phpbb_container->get('language');
 		$this->language->add_lang(array('gallery', 'gallery_acp'), 'phpbbgallery/core');
 
-		$submit = (isset($_POST['submit'])) ? true : false;
+		$submit = $request->is_set_post('submit');
 		$form_key = 'acp_time';
 		add_form_key($form_key);
 
@@ -53,12 +52,10 @@ class config_module
 				$vars = $this->get_display_vars('main');
 			break;
 		}
-		// Init gallery block class
-		$phpbb_ext_gallery_core_constants = $phpbb_container->get('phpbbgallery.core.block');
 		// Init gallery configs class
 		$phpbb_gallery_configs = new \phpbbgallery\core\config($config);
 		$this->new_config = $phpbb_gallery_configs->get_all();
-		$cfg_array = (isset($_REQUEST['config'])) ? utf8_normalize_nfc($request->variable('config', array('' => ''), true)) : $this->new_config;
+		$cfg_array = ($request->is_set('config', \phpbb\request\request_interface::REQUEST)) ? utf8_normalize_nfc($request->variable('config', array('' => ''), true)) : $this->new_config;
 		$error = array();
 
 		// We validate the complete config if whished
@@ -129,64 +126,82 @@ class config_module
 					$phpbb_gallery_configs->set('watermark_changed', time());
 					// OK .. let's try and destroy watermarked images
 					$cache_dir = @opendir($phpbb_gallery_url->path('thumbnail'));
-					while ($cache_file = @readdir($cache_dir))
+					while ($cache_dir !== false && ($cache_file = readdir($cache_dir)) !== false)
 					{
 						if (preg_match('/(\_wm.webp$|\_wm.gif$|\_wm.png$|\_wm.jpg|\_wm.jpeg)$/is', $cache_file))
 						{
 							@unlink($phpbb_gallery_url->path('thumbnail') . $cache_file);
 						}
 					}
-					@closedir($cache_dir);
+					if ($cache_dir !== false)
+					{
+						closedir($cache_dir);
+					}
 
 					$medium_dir = @opendir($phpbb_gallery_url->path('medium'));
-					while ($medium_file = @readdir($medium_dir))
+					while ($medium_dir !== false && ($medium_file = readdir($medium_dir)) !== false)
 					{
 						if (preg_match('/(\_wm.webp$|\_wm.gif$|\_wm.png$|\_wm.jpg|\_wm.jpeg)$/is', $medium_file))
 						{
 							@unlink($phpbb_gallery_url->path('medium') . $medium_file);
 						}
 					}
-					@closedir($medium_dir);
+					if ($medium_dir !== false)
+					{
+						closedir($medium_dir);
+					}
 					$upload_dir = @opendir($phpbb_gallery_url->path('upload'));
-					while ($upload_file = @readdir($upload_dir))
+					while ($upload_dir !== false && ($upload_file = readdir($upload_dir)) !== false)
 					{
 						if (preg_match('/(\_wm.webp$|\_wm.gif$|\_wm.png$|\_wm.jpg|\_wm.jpeg)$/is', $upload_file))
 						{
 							@unlink($phpbb_gallery_url->path('upload') . $upload_file);
 						}
 					}
-					@closedir($upload_dir);
+					if ($upload_dir !== false)
+					{
+						closedir($upload_dir);
+					}
 
 					for ($i = 1; $i <= $phpbb_gallery_configs->get('current_upload_dir'); $i++)
 					{
 						$cache_dir = @opendir($phpbb_gallery_url->path('thumbnail') . $i . '/');
-						while ($cache_file = @readdir($cache_dir))
+						while ($cache_dir !== false && ($cache_file = readdir($cache_dir)) !== false)
 						{
 							if (preg_match('/(\_wm.webp$|\_wm.gif$|\_wm.png$|\_wm.jpg|\_wm.jpeg)$/is', $cache_file))
 							{
 								@unlink($phpbb_gallery_url->path('thumbnail') . $i . '/' . $cache_file);
 							}
 						}
-						@closedir($cache_dir);
+						if ($cache_dir !== false)
+						{
+							closedir($cache_dir);
+						}
 
 						$medium_dir = @opendir($phpbb_gallery_url->path('medium') . $i . '/');
-						while ($medium_file = @readdir($medium_dir))
+						while ($medium_dir !== false && ($medium_file = readdir($medium_dir)) !== false)
 						{
 							if (preg_match('/(\_wm.webp$|\_wm.gif$|\_wm.png$|\_wm.jpg|\_wm.jpeg)$/is', $medium_file))
 							{
 								@unlink($phpbb_gallery_url->path('medium') . $i . '/' . $medium_file);
 							}
 						}
-						@closedir($medium_dir);
+						if ($medium_dir !== false)
+						{
+							closedir($medium_dir);
+						}
 						$upload_dir = @opendir($phpbb_gallery_url->path('upload') . $i . '/');
-						while ($upload_file = @readdir($upload_dir))
+						while ($upload_dir !== false && ($upload_file = readdir($upload_dir)) !== false)
 						{
 							if (preg_match('/(\_wm.webp$|\_wm.gif$|\_wm.png$|\_wm.jpg|\_wm.jpeg)$/is', $upload_file))
 							{
 								@unlink($phpbb_gallery_url->path('upload') . $upload_file);
 							}
 						}
-						@closedir($upload_dir);
+						if ($upload_dir !== false)
+						{
+							closedir($upload_dir);
+						}
 					}
 				}
 				$phpbb_gallery_configs->set($config_name, $config_value);
@@ -304,7 +319,7 @@ class config_module
 	* @param	string	$mode	The name of the mode we want to display
 	* @return	array		See description above
 	*/
-	public function get_display_vars($mode)
+	public function get_display_vars(string $mode): array
 	{
 		global $phpbb_dispatcher;
 
@@ -456,7 +471,7 @@ class config_module
 	 * @param $key
 	 * @return string
 	 */
-	function disabled_boolean($value, $key)
+	public function disabled_boolean(mixed $value, string $key): string
 	{
 		global $phpbb_container;
 		$this->language = $phpbb_container->get('language');
@@ -475,7 +490,7 @@ class config_module
 	 * @param $key
 	 * @return string
 	 */
-	function sort_method_select($value, $key)
+	public function sort_method_select(string $value, string $key): string
 	{
 		global $phpbb_container;
 		$this->language = $phpbb_container->get('language');
@@ -500,7 +515,7 @@ class config_module
 	 * @param $key
 	 * @return string
 	 */
-	function sort_order_select($value, $key)
+	public function sort_order_select(string $value, string $key): string
 	{
 		global $phpbb_container;
 		$this->language = $phpbb_container->get('language');
@@ -519,7 +534,7 @@ class config_module
 	 * @param $key
 	 * @return string
 	 */
-	function gd_radio($value, $key)
+	public function gd_radio(int $value, string $key): string
 	{
 		global $phpbb_container;
 		$phpbb_ext_gallery_core_file = $phpbb_container->get('phpbbgallery.core.file.tool');
@@ -540,14 +555,14 @@ class config_module
 	 * @param $key
 	 * @return string
 	 */
-	function watermark_source($value, $key)
+	public function watermark_source(string $value, string $key): string
 	{
 		global $phpbb_container;
 		$this->language = $phpbb_container->get('language');
 
 		$value = htmlspecialchars($value, ENT_QUOTES);
 
-		return generate_board_url() . "<br /><input type=\"text\" name=\"config[$key]\" id=\"$key\" value=\"$value\" size =\"40\" maxlength=\"125\" /><br /><img src=\"" . generate_board_url() . "/$value\" alt=\"" . $this->language->lang('WATERMARK') . "\" />";
+		return generate_board_url() . "<br /><input type=\"text\" name=\"config[$key]\" id=\"$key\" value=\"$value\" size =\"40\" maxlength=\"125\" /><br /><img src=\"" . generate_board_url() . "/$value\" alt=\"" . $this->language->lang('WATERMARK') . '" />';
 	}
 
 	/**
@@ -556,7 +571,7 @@ class config_module
 	 * @param $key
 	 * @return string
 	 */
-	function watermark_position($value, $key)
+	public function watermark_position(int $value, string $key): string
 	{
 		global $phpbb_container;
 
@@ -584,7 +599,7 @@ class config_module
 	 * @param $key
 	 * @return string
 	 */
-	function uc_select($value, $key)
+	public function uc_select(string $value, string $key): string
 	{
 		global $phpbb_container;
 		$this->language = $phpbb_container->get('language');
@@ -612,7 +627,7 @@ class config_module
 	 * @param $key
 	 * @return string
 	 */
-	function rrc_modes($value, $key)
+	public function rrc_modes(int $value, string $key): string
 	{
 		global $phpbb_container;
 
@@ -639,7 +654,7 @@ class config_module
 	 * @param $key
 	 * @return string
 	 */
-	function rrc_display($value, $key)
+	public function rrc_display(int $value, string $key): string
 	{
 		global $phpbb_container;
 		// Init gallery block class
@@ -667,7 +682,7 @@ class config_module
 	 * @param $value
 	 * @return string
 	 */
-	function bbcode_tpl($value)
+	public function bbcode_tpl(string $value): string
 	{
 		global $phpbb_gallery_url;
 		$gallery_url = $phpbb_gallery_url->path('full');
