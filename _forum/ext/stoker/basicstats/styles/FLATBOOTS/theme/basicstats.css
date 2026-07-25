@@ -1,0 +1,191 @@
+/* Basic Stats - FLATBOOTS (flat Bootstrap) skin */
+
+.bs .panel,
+.bs-modebar .panel {
+	border-radius: 2px;
+	box-shadow: none;
+}
+
+.bs-modebar .panel-body {
+	padding: 10px;
+}
+.bs-modebar .btn-group .btn {
+	margin: 2px;
+	border-radius: 2px;
+}
+.bs-modebar .btn.active {
+	background-color: #daa520;
+	border-color: #daa520;
+	color: #fff;
+	font-weight: 600;
+	box-shadow: none;
+}
+
+.bs .panel-heading {
+	background: #daa520;
+	border-color: #daa520;
+	color: #fff;
+}
+.bs .panel-title,
+.bs .panel-title i {
+	color: #fff;
+}
+.bs .panel-title i {
+	margin-right: 4px;
+}
+
+p.bs-subtle {
+	font-size: 1.4rem;
+	opacity: .85;
+	margin-bottom: 1.25rem;
+}
+
+.bs-section-title {
+	margin: 1.25rem 0 .75rem;
+	font-size: 1.1rem;
+	font-weight: 600;
+	color: #4d4d4d;
+	border-bottom: 2px solid #daa520;
+	padding-bottom: .35rem;
+}
+
+.bs-metrics {
+	margin-bottom: .5rem;
+}
+.bs-metric {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: .5rem;
+	background: #fafafa;
+	border: 0;
+	border-left: 3px solid #daa520;
+	border-radius: 0;
+	padding: .5rem .75rem;
+	margin-bottom: 10px;
+	box-shadow: none;
+}
+.bs-metric-label {
+	opacity: .75;
+	font-size: .9em;
+}
+.bs-metric-value {
+	font-weight: 700;
+	font-size: 1.05em;
+	color: #8a6d3b;
+}
+
+.bs-month-picker-bar {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	flex-wrap: wrap;
+	margin-bottom: 1rem;
+}
+.bs-month-picker-bar .btn,
+.bs-month-picker-bar .form-control {
+	border-radius: 2px;
+}
+.bs-month-picker-bar .form-control {
+	display: inline-block;
+	width: auto;
+	vertical-align: middle;
+}
+.bs-month-picker {
+	display: inline-block;
+}
+.bs-month-picker-bar[disabled],
+.bs-month-picker-bar .disabled {
+	opacity: .55;
+}
+
+.bs-table {
+	margin-bottom: 0;
+}
+.bs-table th.bs-th-bar {
+	width: 34%;
+}
+.bs-table td.bs-cell-day {
+	white-space: nowrap;
+	vertical-align: middle;
+}
+.bs-table td.bs-cell-bar {
+	vertical-align: middle;
+	min-width: 120px;
+}
+.bs-table td {
+	vertical-align: middle;
+}
+tr.bs-is-max td {
+	font-weight: 700;
+}
+tr.bs-is-max {
+	background-color: #fbf0d7 !important;
+}
+
+.progress {
+	margin-bottom: 0;
+	height: 16px;
+	border-radius: 2px;
+	box-shadow: none;
+	background-color: #eee;
+}
+.progress-bar.bs-progress-bar {
+	background-color: #daa520;
+	background-image: none;
+	box-shadow: none;
+}
+
+.bs-label-short { display: none; }
+
+p.bs-footer-note {
+	margin: .75rem 0 0;
+	opacity: .7;
+}
+
+@media (max-width: 767px) {
+	.bs-label-full { display: none; }
+	.bs-label-short { display: inline; }
+	.bs-table th.bs-th-bar { width: 28%; }
+}
+
+/* Dark mode */
+html.phpbb-dark-mode .bs .panel,
+html.phpbb-dark-mode .bs-modebar .panel {
+	background: #0f141a;
+	border-color: #2a3240;
+	color: #e5e7eb;
+}
+html.phpbb-dark-mode .bs .panel-heading {
+	background: #8a6d1a;
+	border-color: #8a6d1a;
+}
+html.phpbb-dark-mode .bs-section-title {
+	color: #f3f4f6;
+	border-bottom-color: #daa520;
+}
+html.phpbb-dark-mode .bs-metric {
+	background: #111827;
+	border-left-color: #daa520;
+}
+html.phpbb-dark-mode .bs-metric-value { color: #f0c869; }
+html.phpbb-dark-mode .bs-table { color: #e5e7eb; }
+html.phpbb-dark-mode .bs-table > tbody > tr:nth-of-type(odd) {
+	background-color: #111827;
+}
+html.phpbb-dark-mode tr.bs-is-max {
+	background-color: #3b3213 !important;
+}
+html.phpbb-dark-mode .progress {
+	background-color: #1f2937;
+}
+html.phpbb-dark-mode .btn-default {
+	color: #e5e7eb;
+	background-color: #111827;
+	border-color: #334155;
+	border-radius: 2px;
+}
+html.phpbb-dark-mode .btn-default:hover {
+	background-color: #1f2937;
+}

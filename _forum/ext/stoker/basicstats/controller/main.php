@@ -678,7 +678,6 @@ final class main
 			'TOTAL_TOPICSBS'    => $this->format_number((float) $totals['topics']),
 			'TOTAL_POSTSBS'     => $this->format_number((float) $totals['posts']),
 			'TOTAL_USER_REGSBS' => $this->format_number((float) $totals['user_reg']),
-			'BASICSTATS_CREDIT' => '<a href="https://phpbb3bbcodes.com">' . $this->language->lang('BS_BASICSTATS_COPY') . '</a>',
 			'BS_MODE'           => $mode,
 			'U_D_MODE'          => $this->u_action . '?mode=d',
 			'U_M_MODE'          => $this->u_action . '?mode=m',

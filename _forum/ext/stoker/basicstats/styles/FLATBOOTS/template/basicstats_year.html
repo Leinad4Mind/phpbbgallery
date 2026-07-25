@@ -1,0 +1,128 @@
+{% include 'overall_header.html' %}
+
+<div class="panel panel-default bs-modebar">
+	<div class="panel-body text-center">
+		<div class="btn-group" role="group" aria-label="{{ lang('STATISTICS') }}">
+			<a href="{{ U_D_MODE }}" class="btn btn-default{{ BS_MODE == 'd' ? ' active' : '' }}"><i class="icon fa fa-calendar-o fa-fw" aria-hidden="true"></i> {{ lang('BS_DAILY') }}</a>
+			<a href="{{ U_M_MODE }}" class="btn btn-default{{ BS_MODE == 'm' ? ' active' : '' }}"><i class="icon fa fa-calendar fa-fw" aria-hidden="true"></i> {{ lang('BS_MONTHLY') }}</a>
+			<a href="{{ U_Y_MODE }}" class="btn btn-default{{ BS_MODE == 'y' ? ' active' : '' }}"><i class="icon fa fa-line-chart fa-fw" aria-hidden="true"></i> {{ lang('BS_YEARLY') }}</a>
+		</div>
+	</div>
+</div>
+
+<div class="panel panel-default bs">
+	<div class="panel-heading">
+		<h2 class="panel-title"><i class="icon fa fa-area-chart fa-fw" aria-hidden="true"></i> {{ lang('BS_BASIC_STATS') }}</h2>
+	</div>
+	<div class="panel-body">
+
+		<p class="text-center bs-subtle">{{ lang('BS_STATS_YEARLY_EXPLAIN') }}</p>
+
+		<fieldset class="bs-month-picker-bar text-center" disabled aria-hidden="true">
+			<span class="btn btn-default disabled"><i class="icon fa fa-angle-double-left fa-fw" aria-hidden="true"></i><span class="hidden-xs"> {{ lang('PREVIOUS') }}</span></span>
+			<select class="form-control" disabled>
+				<option value="all" selected>{{ lang('BS_ALL_YEARS') }}</option>
+			</select>
+			<span class="btn btn-default disabled"><span class="hidden-xs">{{ lang('NEXT') }} </span><i class="icon fa fa-angle-double-right fa-fw" aria-hidden="true"></i></span>
+		</fieldset>
+
+		<h3 class="bs-section-title">{{ lang('BS_OVERALL') }}</h3>
+		<div class="row bs-metrics">
+			<div class="col-xs-6 col-sm-4"><div class="bs-metric"><span class="bs-metric-label">{{ lang('BS_TOTAL_TOPICS') }}</span><span class="bs-metric-value">{{ TOTAL_TOPICSBS }}</span></div></div>
+			<div class="col-xs-6 col-sm-4"><div class="bs-metric"><span class="bs-metric-label">{{ lang('BS_TOTAL_POSTS') }}</span><span class="bs-metric-value">{{ TOTAL_POSTSBS }}</span></div></div>
+			<div class="col-xs-6 col-sm-4"><div class="bs-metric"><span class="bs-metric-label">{{ lang('BS_TOTAL_USER_REGS') }}</span><span class="bs-metric-value">{{ TOTAL_USER_REGSBS }}</span></div></div>
+			<div class="col-xs-6 col-sm-4"><div class="bs-metric"><span class="bs-metric-label">{{ lang('BS_AVG_TOPICS_YEAR') }}</span><span class="bs-metric-value">{{ AVG_TOPICS }}</span></div></div>
+			<div class="col-xs-6 col-sm-4"><div class="bs-metric"><span class="bs-metric-label">{{ lang('BS_AVG_POSTS_YEAR') }}</span><span class="bs-metric-value">{{ AVG_POSTS }}</span></div></div>
+			<div class="col-xs-6 col-sm-4"><div class="bs-metric"><span class="bs-metric-label">{{ lang('BS_AVG_USER_REGS_YEAR') }}</span><span class="bs-metric-value">{{ AVG_USER_REGS }}</span></div></div>
+		</div>
+
+		<h3 class="bs-section-title">{{ lang('BS_TOPIC_STATS') }}</h3>
+		{% if S_YEARLY_TOPICS %}
+			<div class="table-responsive">
+				<table class="table table-condensed table-striped bs-table">
+					<thead>
+						<tr>
+							<th>{{ lang('BS_PERIODIC_YEAR') }}</th>
+							<th class="bs-th-bar"></th>
+							<th class="text-right"><span class="bs-label-full">{{ lang('BS_COUNT') }}</span><span class="bs-label-short">{{ lang('BS_COUNT_SHORT') }}</span></th>
+							<th class="text-right"><span class="bs-label-full">{{ lang('BS_PERCENT') }}</span><span class="bs-label-short">{{ lang('BS_PERCENT_SHORT') }}</span></th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for row in loops.periodic_topics_row %}
+							<tr class="{{ row.IS_MAX ? 'bs-is-max' : '' }}">
+								<td class="bs-cell-day">{{ row.TIME_ELEMENT }}</td>
+								<td class="bs-cell-bar"><div class="progress"><div class="progress-bar bs-progress-bar" role="progressbar" aria-valuenow="{{ row.PCT }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ row.BARWIDTH }}%"></div></div></td>
+								<td class="text-right">{{ row.COUNT }}</td>
+								<td class="text-right">{{ row.PCT }}</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		{% else %}
+			<p class="text-muted bs-subtle">{{ lang('NONE') }}</p>
+		{% endif %}
+
+		<h3 class="bs-section-title">{{ lang('BS_POST_STATS') }}</h3>
+		{% if S_YEARLY_POSTS %}
+			<div class="table-responsive">
+				<table class="table table-condensed table-striped bs-table">
+					<thead>
+						<tr>
+							<th>{{ lang('BS_PERIODIC_YEAR') }}</th>
+							<th class="bs-th-bar"></th>
+							<th class="text-right"><span class="bs-label-full">{{ lang('BS_COUNT') }}</span><span class="bs-label-short">{{ lang('BS_COUNT_SHORT') }}</span></th>
+							<th class="text-right"><span class="bs-label-full">{{ lang('BS_PERCENT') }}</span><span class="bs-label-short">{{ lang('BS_PERCENT_SHORT') }}</span></th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for row in loops.periodic_posts_row %}
+							<tr class="{{ row.IS_MAX ? 'bs-is-max' : '' }}">
+								<td class="bs-cell-day">{{ row.TIME_ELEMENT }}</td>
+								<td class="bs-cell-bar"><div class="progress"><div class="progress-bar bs-progress-bar" role="progressbar" aria-valuenow="{{ row.PCT }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ row.BARWIDTH }}%"></div></div></td>
+								<td class="text-right">{{ row.COUNT }}</td>
+								<td class="text-right">{{ row.PCT }}</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		{% else %}
+			<p class="text-muted bs-subtle">{{ lang('NONE') }}</p>
+		{% endif %}
+
+		<h3 class="bs-section-title">{{ lang('BS_USER_REG_STATS') }}</h3>
+		{% if S_YEARLY_USER_REGS %}
+			<div class="table-responsive">
+				<table class="table table-condensed table-striped bs-table">
+					<thead>
+						<tr>
+							<th>{{ lang('BS_PERIODIC_YEAR') }}</th>
+							<th class="bs-th-bar"></th>
+							<th class="text-right"><span class="bs-label-full">{{ lang('BS_COUNT') }}</span><span class="bs-label-short">{{ lang('BS_COUNT_SHORT') }}</span></th>
+							<th class="text-right"><span class="bs-label-full">{{ lang('BS_PERCENT') }}</span><span class="bs-label-short">{{ lang('BS_PERCENT_SHORT') }}</span></th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for row in loops.periodic_user_regs_row %}
+							<tr class="{{ row.IS_MAX ? 'bs-is-max' : '' }}">
+								<td class="bs-cell-day">{{ row.TIME_ELEMENT }}</td>
+								<td class="bs-cell-bar"><div class="progress"><div class="progress-bar bs-progress-bar" role="progressbar" aria-valuenow="{{ row.PCT }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ row.BARWIDTH }}%"></div></div></td>
+								<td class="text-right">{{ row.COUNT }}</td>
+								<td class="text-right">{{ row.PCT }}</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		{% else %}
+			<p class="text-muted bs-subtle">{{ lang('NONE') }}</p>
+		{% endif %}
+
+		<p class="text-right bs-footer-note"><small><em>{{ AS_ON }}</em></small></p>
+
+	</div>
+</div>
+
+{% include 'overall_footer.html' %}

@@ -1,0 +1,164 @@
+/* Basic Stats - BBOOTS (Bootstrap) skin */
+
+.bs-modebar .panel-body {
+	padding: 10px;
+}
+.bs-modebar .btn-group .btn {
+	margin: 2px;
+}
+.bs-modebar .btn.active {
+	background-color: #337ab7;
+	border-color: #2e6da4;
+	color: #fff;
+	font-weight: 600;
+	box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
+}
+
+.bs .panel-title i {
+	margin-right: 4px;
+}
+
+p.bs-subtle {
+	font-size: 1.4rem;
+	opacity: .85;
+	margin-bottom: 1.25rem;
+}
+
+.bs-section-title {
+	margin: 1.25rem 0 .75rem;
+	font-size: 1.1rem;
+	font-weight: 600;
+	color: #4d4d4d;
+	border-bottom: 1px solid #eee;
+	padding-bottom: .35rem;
+}
+
+.bs-metrics {
+	margin-bottom: .5rem;
+}
+.bs-metric {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: .5rem;
+	background: #f9f9f9;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	padding: .5rem .75rem;
+	margin-bottom: 10px;
+	box-shadow: 0 1px 1px rgba(0,0,0,.05);
+}
+.bs-metric-label {
+	opacity: .75;
+	font-size: .9em;
+}
+.bs-metric-value {
+	font-weight: 700;
+	font-size: 1.05em;
+}
+
+.bs-month-picker-bar {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	flex-wrap: wrap;
+	margin-bottom: 1rem;
+}
+.bs-month-picker-bar .form-control {
+	display: inline-block;
+	width: auto;
+	vertical-align: middle;
+}
+.bs-month-picker {
+	display: inline-block;
+}
+.bs-month-picker-bar[disabled],
+.bs-month-picker-bar .disabled {
+	opacity: .55;
+}
+
+.bs-table {
+	margin-bottom: 0;
+}
+.bs-table th.bs-th-bar {
+	width: 34%;
+}
+.bs-table td.bs-cell-day {
+	white-space: nowrap;
+	vertical-align: middle;
+}
+.bs-table td.bs-cell-bar {
+	vertical-align: middle;
+	min-width: 120px;
+}
+.bs-table td {
+	vertical-align: middle;
+}
+tr.bs-is-max td {
+	font-weight: 700;
+}
+tr.bs-is-max {
+	background-color: #fbf3d9 !important;
+}
+
+.progress {
+	margin-bottom: 0;
+	height: 18px;
+}
+.progress-bar.bs-progress-bar {
+	background-color: #337ab7;
+	background-image: linear-gradient(to bottom, #5b9bd1, #337ab7 60%, #2e6da4);
+}
+
+.bs-label-short { display: none; }
+
+p.bs-footer-note {
+	margin: .75rem 0 0;
+	opacity: .7;
+}
+
+@media (max-width: 767px) {
+	.bs-label-full { display: none; }
+	.bs-label-short { display: inline; }
+	.bs-table th.bs-th-bar { width: 28%; }
+}
+
+/* Dark mode */
+html.phpbb-dark-mode .bs .panel,
+html.phpbb-dark-mode .bs-modebar .panel {
+	background: #0f141a;
+	border-color: #2a3240;
+	color: #e5e7eb;
+}
+html.phpbb-dark-mode .bs .panel-heading {
+	background: #111827;
+	border-color: #2a3240;
+}
+html.phpbb-dark-mode .bs-section-title {
+	color: #f3f4f6;
+	border-bottom-color: #253040;
+}
+html.phpbb-dark-mode .bs-metric {
+	background: #111827;
+	border-color: #334155;
+}
+html.phpbb-dark-mode .bs-metric-value { color: #e5e7eb; }
+html.phpbb-dark-mode .bs-table { color: #e5e7eb; }
+html.phpbb-dark-mode .bs-table > tbody > tr:nth-of-type(odd) {
+	background-color: #111827;
+}
+html.phpbb-dark-mode tr.bs-is-max {
+	background-color: #3b3213 !important;
+}
+html.phpbb-dark-mode .progress {
+	background-color: #1f2937;
+}
+html.phpbb-dark-mode .btn-default {
+	color: #e5e7eb;
+	background-color: #111827;
+	border-color: #334155;
+}
+html.phpbb-dark-mode .btn-default:hover {
+	background-color: #1f2937;
+}
