@@ -22,7 +22,7 @@ class main_module
 	public string $page_title = '';
 	public \phpbb\language\language $language;
 
-	public function main($id, $mode)
+	public function main(string $id, string $mode): void
 	{
 		global $user, $language;
 		global $request, $phpbb_container, $gallery_url;
@@ -51,7 +51,7 @@ class main_module
 		}
 	}
 
-	public function overview()
+	public function overview(): void
 	{
 		global $auth, $config, $db, $template, $user, $table_prefix, $phpbb_root_path;
 		global $phpbb_container, $request, $gallery_url;
@@ -454,64 +454,82 @@ class main_module
 					}
 
 					$cache_dir = @opendir($gallery_url->path('thumbnail'));
-					while ($cache_file = @readdir($cache_dir))
+					while ($cache_dir !== false && ($cache_file = readdir($cache_dir)) !== false)
 					{
 						if (preg_match('/(\.webp$|\.gif$|\.png$|\.jpg|\.jpeg)$/is', $cache_file))
 						{
 							@unlink($gallery_url->path('thumbnail') . $cache_file);
 						}
 					}
-					@closedir($cache_dir);
+					if ($cache_dir !== false)
+					{
+						closedir($cache_dir);
+					}
 
 					$medium_dir = @opendir($gallery_url->path('medium'));
-					while ($medium_file = @readdir($medium_dir))
+					while ($medium_dir !== false && ($medium_file = readdir($medium_dir)) !== false)
 					{
 						if (preg_match('/(\.webp$|\.gif$|\.png$|\.jpg|\.jpeg)$/is', $medium_file))
 						{
 							@unlink($gallery_url->path('medium') . $medium_file);
 						}
 					}
-					@closedir($medium_dir);
+					if ($medium_dir !== false)
+					{
+						closedir($medium_dir);
+					}
 					$upload_dir = @opendir($gallery_url->path('upload'));
-					while ($upload_file = @readdir($upload_dir))
+					while ($upload_dir !== false && ($upload_file = readdir($upload_dir)) !== false)
 					{
 						if (preg_match('/(\_wm.webp$|\_wm.gif$|\_wm.png$|\_wm.jpg|\_wm.jpeg)$/is', $upload_file))
 						{
 							@unlink($gallery_url->path('upload') . $upload_file);
 						}
 					}
-					@closedir($upload_dir);
+					if ($upload_dir !== false)
+					{
+						closedir($upload_dir);
+					}
 
 					for ($i = 1; $i <= $phpbb_ext_gallery_config->get('current_upload_dir'); $i++)
 					{
 						$cache_dir = @opendir($gallery_url->path('thumbnail') . $i . '/');
-						while ($cache_file = @readdir($cache_dir))
+						while ($cache_dir !== false && ($cache_file = readdir($cache_dir)) !== false)
 						{
 							if (preg_match('/(\.webp$|\.gif$|\.png$|\.jpg|\.jpeg)$/is', $cache_file))
 							{
 								@unlink($gallery_url->path('thumbnail') . $i . '/' . $cache_file);
 							}
 						}
-						@closedir($cache_dir);
+						if ($cache_dir !== false)
+						{
+							closedir($cache_dir);
+						}
 
 						$medium_dir = @opendir($gallery_url->path('medium') . $i . '/');
-						while ($medium_file = @readdir($medium_dir))
+						while ($medium_dir !== false && ($medium_file = readdir($medium_dir)) !== false)
 						{
 							if (preg_match('/(\.webp$|\.gif$|\.png$|\.jpg|\.jpeg)$/is', $medium_file))
 							{
 								@unlink($gallery_url->path('medium') . $i . '/' . $medium_file);
 							}
 						}
-						@closedir($medium_dir);
+						if ($medium_dir !== false)
+						{
+							closedir($medium_dir);
+						}
 						$upload_dir = @opendir($gallery_url->path('upload') . $i . '/');
-						while ($upload_file = @readdir($upload_dir))
+						while ($upload_dir !== false && ($upload_file = readdir($upload_dir)) !== false)
 						{
 							if (preg_match('/(\_wm.webp$|\_wm.gif$|\_wm.png$|\_wm.jpg|\_wm.jpeg)$/is', $upload_file))
 							{
-								@unlink($gallery_url->path('upload') . $upload_file);
+								@unlink($gallery_url->path('upload') . $i . '/' . $upload_file);
 							}
 						}
-						@closedir($upload_dir);
+						if ($upload_dir !== false)
+						{
+							closedir($upload_dir);
+						}
 					}
 
 					$sql_ary = array(
@@ -593,7 +611,7 @@ class main_module
 	 * @param object $gallery_config Gallery configuration service
 	 * @param array  $gallery        Newest personal-gallery row
 	 */
-	private function update_newest_personal_gallery_config($gallery_config, array $gallery): void
+	private function update_newest_personal_gallery_config(object $gallery_config, array $gallery): void
 	{
 		$gallery_config->set('newest_pega_user_id', (int) ($gallery['user_id'] ?? 0));
 		$gallery_config->set('newest_pega_username', (string) ($gallery['username'] ?? ''));
@@ -607,7 +625,7 @@ class main_module
 	 * @param object $rating    Gallery rating service
 	 * @param array  $image_ids Image identifiers
 	 */
-	private function reset_album_ratings($rating, array $image_ids): void
+	private function reset_album_ratings(object $rating, array $image_ids): void
 	{
 		if (!empty($image_ids))
 		{
