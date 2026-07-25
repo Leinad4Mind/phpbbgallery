@@ -16,12 +16,12 @@ use phpbb\db\migration\migration;
 
 class m1_init extends migration
 {
-	static public function depends_on()
+	public static function depends_on(): array
 	{
 		return ['\phpbbgallery\core\migrations\release_1_2_0'];
 	}
 
-	public function update_data()
+	public function update_data(): array
 	{
 		return [
 				['permission.add', ['a_gallery_cleanup', true, 'a_board']],

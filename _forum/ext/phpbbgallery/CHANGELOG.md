@@ -34,6 +34,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added native module-entry types to the ACP Gallery log viewer.
 - Added public array contracts to all Core ACP and UCP module metadata providers.
 - Added native dependency, schema, data, callback, and static configuration types throughout the Core migration chain while preserving phpBB profile-field property compatibility.
+- Added native dependency and data-step contracts to the ACP Cleanup migration.
 - Added native property, parameter, and return types throughout the Core album, album-display, album-loader, and album-management services, with initialized request state and safe parent-cache deserialization.
 - Added native property, parameter, and return types throughout the Core image service, including stable no-op and missing-image results and instance-safe counter/filename calls.
 - Added native property, parameter, and return types throughout the Core comment service, with explicit invalid-mutation results and instance-safe identifier normalization.
@@ -107,6 +108,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 - Added permanent runtime-compatibility tests covering the PHP/phpBB/PHPUnit baselines, legacy `var` regression, and typed ACP/UCP module state.
 - Added standalone ACP Cleanup tests covering typed service contracts, file cleanup, database-entry cleanup, and moderation delegation.
+- Added standalone ACP Cleanup migration tests covering native contracts, dependency ordering, permission installation, and module registration.
 - Added standalone EXIF tests covering typed model/listener contracts, stored metadata handling, invalid serialization, and event registration.
 - Added permanent core-infrastructure tests covering native contracts, configuration mutations, bitfields, constants, path normalization, partial image-cache merges, cache hits, and request-local invalidation.
 - Added permanent album-domain tests covering complete native contracts, loader state and ownership checks, manager/display defaults, and rejection of serialized objects in cached parent data.

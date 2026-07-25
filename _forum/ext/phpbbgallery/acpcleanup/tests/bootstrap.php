@@ -16,6 +16,13 @@ namespace phpbb\db\driver
 	}
 }
 
+namespace phpbb\db\migration
+{
+	abstract class migration
+	{
+	}
+}
+
 namespace phpbb
 {
 	class user
@@ -133,4 +140,5 @@ namespace phpbbgallery\core
 namespace
 {
 	require_once dirname(__DIR__) . '/cleanup.php';
+	require_once dirname(__DIR__) . '/migrations/m1_init.php';
 }
