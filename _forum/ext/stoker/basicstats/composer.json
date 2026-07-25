@@ -1,0 +1,40 @@
+{
+    "name": "stoker/basicstats",
+    "type": "phpbb-extension",
+    "description": "Board Statistics for your forum",
+    "homepage": "https://phpbb3bbcodes.com",
+    "version": "1.0.8",
+    "time": "2025-08-23",
+    "license": "GPL-2.0-only",
+    "authors": [
+        {
+            "name": "Stoker",
+            "homepage": "https://phpbb3bbcodes.com",
+            "role": "Developer"
+        },
+        {
+            "name": "Karsten Ude",
+            "username": "oxpus",
+            "email": "karsten.ude@oxpus.net",
+            "homepage": "http://www.oxpus.net",
+            "role": "Original Author"
+        }
+    ],
+    "require": {
+        "php": ">=7.4.0",
+        "phpbb/phpbb": ">=3.3.0, <4.0.0@dev",
+        "composer/installers": "~1.0"
+    },
+    "extra": {
+        "display-name": "Board Stats",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.3.0,<4.0.0@dev"
+        },
+        "version-check": {
+            "host": "www.phpbb.com",
+            "directory": "/customise/db/extension/board_stats",
+            "filename": "version_check",
+            "ssl": true
+        }
+    }
+}

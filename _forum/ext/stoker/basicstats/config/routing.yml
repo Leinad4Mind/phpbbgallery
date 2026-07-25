@@ -1,0 +1,8 @@
+stoker_basicstats:
+    path: /board-stats
+    defaults:
+        _controller: 'stoker.basicstats.controller:handle'
+stoker_basicstats2:
+    path: /board-stats.php
+    defaults:
+        _controller: 'stoker.basicstats.controller:redirect'

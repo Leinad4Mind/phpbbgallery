@@ -1,0 +1,26 @@
+services:
+    stoker.basicstats.listener:
+        class: stoker\basicstats\event\main_listener
+        arguments:
+            - '%core.php_ext%'
+            - '@controller.helper'
+            - '@template'
+            - '@user'
+            - '@auth'
+            - '@language'
+        tags:
+            - { name: event.listener }
+
+    stoker.basicstats.controller:
+        class: stoker\basicstats\controller\main
+        arguments:
+            - '@dbal.conn'
+            - '@controller.helper'
+            - '@language'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '@config'
+            - '@auth'
+            - '@cache'
+        public: true

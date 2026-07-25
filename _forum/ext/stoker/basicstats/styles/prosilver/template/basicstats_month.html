@@ -1,0 +1,165 @@
+{% include 'overall_header.html' %}
+
+<div class="bs-modebar" role="navigation" aria-label="{{ lang('STATISTICS') }}">
+	<div class="bs-modebar__group">
+		<a href="{{ U_D_MODE }}" class="bs-btn{{ BS_MODE == 'd' ? ' is-active' : '' }}">{{ lang('BS_DAILY') }}</a>
+		<a href="{{ U_M_MODE }}" class="bs-btn{{ BS_MODE == 'm' ? ' is-active' : '' }}">{{ lang('BS_MONTHLY') }}</a>
+		<a href="{{ U_Y_MODE }}" class="bs-btn{{ BS_MODE == 'y' ? ' is-active' : '' }}">{{ lang('BS_YEARLY') }}</a>
+	</div>
+</div>
+
+<div class="bs-section">
+	<div class="bs">
+
+		<p class="bs-subtle">{{ STATS_YEAR_EXPLAIN }}</p>
+		
+		<div class="bs-month-picker-bar">
+			{% if BS_PREV_URL %}
+				<a class="bs-month-nav prev" href="{{ BS_PREV_URL }}" title="{{ lang('PREVIOUS') }}" aria-label="{{ lang('PREVIOUS') }}"><i class="fa fa-angle-double-left" aria-hidden="true"></i><span class="responsive-hide"> {{ lang('PREVIOUS') }}</span></a>
+			{% else %}
+				<span class="bs-month-nav prev disabled" aria-disabled="true"><i class="fa fa-angle-double-left" aria-hidden="true"></i><span class="responsive-hide"> {{ lang('PREVIOUS') }}</span></span>
+			{% endif %}
+			<form method="get" action="{{ U_BS_ACTION }}" class="bs-month-picker">
+				<input type="hidden" name="mode" value="m">
+				<label for="bs-year" class="sr-only">{{ lang('SELECT_YEAR') }}</label>
+				<select id="bs-year" name="s_year" class="bs-month-select" onchange="this.form.submit()">
+					{% for y in loops.bs_year_options %}
+						<option value="{{ y.VALUE }}"{% if y.SELECTED %} selected{% endif %}>{{ y.LABEL }}</option>
+					{% endfor %}
+				</select>
+				<noscript><button type="submit">{{ lang('GO') }}</button></noscript>
+			</form>
+			{% if BS_NEXT_URL %}
+				<a class="bs-month-nav next" href="{{ BS_NEXT_URL }}" title="{{ lang('NEXT') }}" aria-label="{{ lang('NEXT') }}"><span class="responsive-hide">{{ lang('NEXT') }} </span><i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+			{% else %}
+				<span class="bs-month-nav next disabled" aria-disabled="true"><span class="responsive-hide">{{ lang('NEXT') }} </span><i class="fa fa-angle-double-right" aria-hidden="true"></i></span>
+			{% endif %}
+		</div>
+
+		<h3>{{ lang('BS_OVERALL') }}</h3>
+		<div class="bs-metrics">
+			<div class="bs-metric">
+				<span class="label">{{ lang('BS_TOTAL_TOPICS') }}</span>
+				<span class="value">{{ TOTAL_TOPICSBS }}</span>
+			</div>
+			<div class="bs-metric">
+				<span class="label">{{ lang('BS_TOTAL_POSTS') }}</span>
+				<span class="value">{{ TOTAL_POSTSBS }}</span>
+			</div>
+			<div class="bs-metric">
+				<span class="label">{{ lang('BS_TOTAL_USER_REGS') }}</span>
+				<span class="value">{{ TOTAL_USER_REGSBS }}</span>
+			</div>
+			<div class="bs-metric">
+				<span class="label">{{ lang('BS_AVG_TOPICS_MONTH') }}</span>
+				<span class="value">{{ AVG_TOPICS }}</span>
+			</div>
+			<div class="bs-metric">
+				<span class="label">{{ lang('BS_AVG_POSTS_MONTH') }}</span>
+				<span class="value">{{ AVG_POSTS }}</span>
+			</div>
+			<div class="bs-metric">
+				<span class="label">{{ lang('BS_AVG_USER_REGS_MONTH') }}</span>
+				<span class="value">{{ AVG_USER_REGS }}</span>
+			</div>
+		</div>
+
+		<h3>{{ lang('BS_TOPIC_STATS') }}</h3>
+		{% if S_MONTHLY_TOPICS %}
+			<div class="bs-rows" role="table" aria-label="{{ lang('TOPICS') }}">
+				<div class="bs-row bs-row-head" role="row">
+					<div class="cell">{{ lang('BS_PERIODIC_MONTH') }}</div>
+					<div class="cell"></div>
+					<div class="cell align-right">
+						<span class="bs-label-full">{{ lang('BS_COUNT') }}</span>
+						<span class="bs-label-short">{{ lang('BS_COUNT_SHORT') }}</span>
+					</div>
+					<div class="cell align-right">
+						<span class="bs-label-full">{{ lang('BS_PERCENT') }}</span>
+						<span class="bs-label-short">{{ lang('BS_PERCENT_SHORT') }}</span>
+					</div>
+				</div>
+
+				{% for row in loops.periodic_topics_row %}
+					<div class="bs-row {{ row.IS_MAX ? 'is-max' : '' }}" role="row">
+						<div class="cell day grow cap">{{ row.TIME_ELEMENT }}</div>
+						<div class="cell bar">
+							<div class="bar" aria-hidden="true"><span style="width: {{ row.BARWIDTH }}%"></span></div>
+						</div>
+						<div class="cell count align-right">{{ row.COUNT }}</div>
+						<div class="cell pct align-right">{{ row.PCT }}</div>
+					</div>
+				{% endfor %}
+			</div>
+		{% else %}
+			<p class="bs-subtle">{{ lang('NONE') }}</p>
+		{% endif %}
+
+		<h3>{{ lang('BS_POST_STATS') }}</h3>
+		{% if S_MONTHLY_POSTS %}
+			<div class="bs-rows" role="table" aria-label="{{ lang('POSTS') }}">
+				<div class="bs-row bs-row-head" role="row">
+					<div class="cell">{{ lang('BS_PERIODIC_MONTH') }}</div>
+					<div class="cell"></div>
+					<div class="cell align-right">
+						<span class="bs-label-full">{{ lang('BS_COUNT') }}</span>
+						<span class="bs-label-short">{{ lang('BS_COUNT_SHORT') }}</span>
+					</div>
+					<div class="cell align-right">
+						<span class="bs-label-full">{{ lang('BS_PERCENT') }}</span>
+						<span class="bs-label-short">{{ lang('BS_PERCENT_SHORT') }}</span>
+					</div>
+				</div>
+
+				{% for row in loops.periodic_posts_row %}
+					<div class="bs-row {{ row.IS_MAX ? 'is-max' : '' }}" role="row">
+						<div class="cell day grow cap">{{ row.TIME_ELEMENT }}</div>
+						<div class="cell bar">
+							<div class="bar" aria-hidden="true"><span style="width: {{ row.BARWIDTH }}%"></span></div>
+						</div>
+						<div class="cell count align-right">{{ row.COUNT }}</div>
+						<div class="cell pct align-right">{{ row.PCT }}</div>
+					</div>
+				{% endfor %}
+			</div>
+		{% else %}
+			<p class="bs-subtle">{{ lang('NONE') }}</p>
+		{% endif %}
+
+		<h3>{{ lang('BS_USER_REG_STATS') }}</h3>
+		{% if S_MONTHLY_USER_REGS %}
+			<div class="bs-rows" role="table" aria-label="{{ lang('BS_USER_REGS') }}">
+				<div class="bs-row bs-row-head" role="row">
+					<div class="cell">{{ lang('BS_PERIODIC_MONTH') }}</div>
+					<div class="cell"></div>
+					<div class="cell align-right">
+						<span class="bs-label-full">{{ lang('BS_COUNT') }}</span>
+						<span class="bs-label-short">{{ lang('BS_COUNT_SHORT') }}</span>
+					</div>
+					<div class="cell align-right">
+						<span class="bs-label-full">{{ lang('BS_PERCENT') }}</span>
+						<span class="bs-label-short">{{ lang('BS_PERCENT_SHORT') }}</span>
+					</div>
+				</div>
+
+				{% for row in loops.periodic_user_regs_row %}
+					<div class="bs-row {{ row.IS_MAX ? 'is-max' : '' }}" role="row">
+						<div class="cell day grow cap">{{ row.TIME_ELEMENT }}</div>
+						<div class="cell bar">
+							<div class="bar" aria-hidden="true"><span style="width: {{ row.BARWIDTH }}%"></span></div>
+						</div>
+						<div class="cell count align-right">{{ row.COUNT }}</div>
+						<div class="cell pct align-right">{{ row.PCT }}</div>
+					</div>
+				{% endfor %}
+			</div>
+		{% else %}
+			<p class="bs-subtle">{{ lang('NONE') }}</p>
+		{% endif %}
+
+		<p class="bs-footer-note">{{ AS_ON }}</p>
+
+	</div>
+</div>
+
+{% include 'overall_footer.html' %}
