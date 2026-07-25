@@ -1,166 +1,166 @@
-<!-- INCLUDE overall_header.html -->
+{% include 'overall_header.html' %}
 
 <a name="maincontent"></a>
 
-<h1>{ACP_GALLERY_TITLE}</h1>
-<p>{ACP_GALLERY_TITLE_EXPLAIN}</p>
+<h1>{{ ACP_GALLERY_TITLE }}</h1>
+<p>{{ ACP_GALLERY_TITLE_EXPLAIN }}</p>
 
 
-<!-- BEGIN mods -->
+{% for mods in mods %}
 	<fieldset>
-		<legend>{L_VERSION_CHECK}</legend>
-		<p style="font-weight: bold; color: <!-- IF mods.S_UP_TO_DATE -->#228822<!-- ELSE -->#BC2A4D<!-- ENDIF -->;">{mods.UP_TO_DATE}</p>
+		<legend>{{ lang('VERSION_CHECK') }}</legend>
+		<p style="font-weight: bold; color: {% if mods.S_UP_TO_DATE %}#228822{% else %}#BC2A4D{% endif %};">{{ mods.UP_TO_DATE }}</p>
 		<dl>
-			<dt><label>{L_CURRENT_VERSION}</label></dt>
-			<dd><strong>{mods.CURRENT_VERSION}</strong></dd>
+			<dt><label>{{ lang('CURRENT_VERSION') }}</label></dt>
+			<dd><strong>{{ mods.CURRENT_VERSION }}</strong></dd>
 		</dl>
 		<dl>
-			<dt><label>{L_LATEST_VERSION}</label></dt>
-			<dd><strong>{mods.LATEST_VERSION}</strong></dd>
+			<dt><label>{{ lang('LATEST_VERSION') }}</label></dt>
+			<dd><strong>{{ mods.LATEST_VERSION }}</strong></dd>
 		</dl>
-		<!-- IF not mods.S_UP_TO_DATE -->
+		{% if not mods.S_UP_TO_DATE %}
 			<dl>
-				<dt><label>{L_DOWNLOAD_LATEST}</label></dt>
-				<dd><strong><a href="{mods.DOWNLOAD}">{L_DOWNLOAD} {mods.TITLE} {mods.LATEST_VERSION}</a></strong></dd>
+				<dt><label>{{ lang('DOWNLOAD_LATEST') }}</label></dt>
+				<dd><strong><a href="{{ mods.DOWNLOAD }}">{{ lang('DOWNLOAD') }} {{ mods.TITLE }} {{ mods.LATEST_VERSION }}</a></strong></dd>
 			</dl>
 			<dl>
-				<dt><label>{L_ANNOUNCEMENT_TOPIC}</label></dt>
-				<dd><strong><a href="{mods.ANNOUNCEMENT}">{L_RELEASE_ANNOUNCEMENT}</a></strong></dd>
+				<dt><label>{{ lang('ANNOUNCEMENT_TOPIC') }}</label></dt>
+				<dd><strong><a href="{{ mods.ANNOUNCEMENT }}">{{ lang('RELEASE_ANNOUNCEMENT') }}</a></strong></dd>
 			</dl>
-		<!-- ENDIF -->
+		{% endif %}
 	</fieldset>
-<!-- END mods -->
+{% endfor %}
 
-<!-- IF S_GALLERY_OVERVIEW -->
+{% if S_GALLERY_OVERVIEW %}
 	<table cellspacing="1">
-		<caption>{L_GALLERY_STATS}</caption>
+		<caption>{{ lang('GALLERY_STATS') }}</caption>
 		<col class="col1" /><col class="col2" /><col class="col1" /><col class="col2" />
 	<thead>
 	<tr>
-		<th>{L_STATISTIC}</th>
-		<th>{L_VALUE}</th>
-		<th>{L_STATISTIC}</th>
-		<th>{L_VALUE}</th>
+		<th>{{ lang('STATISTIC') }}</th>
+		<th>{{ lang('VALUE') }}</th>
+		<th>{{ lang('STATISTIC') }}</th>
+		<th>{{ lang('VALUE') }}</th>
 	</tr>
 	</thead>
 	<tbody>
 	<tr>
-		<td>{L_ACP_FILES_DIR_STATE}</td>
-		<td style="color: <!-- IF U_FILE_DIR_STATE_ERROR -->#CC0000;<!-- ELSE -->#009900;<!-- ENDIF -->"><strong>{U_FILE_DIR_STATE}</strong></td>
-		<td>{L_ACP_CORE_DIR_STATE}</td>
-		<td style="color: <!-- IF U_CORE_DIR_STATE_ERROR -->#CC0000;<!-- ELSE -->#009900;<!-- ENDIF -->"><strong>{U_CORE_DIR_STATE}</strong></td>
+		<td>{{ lang('ACP_FILES_DIR_STATE') }}</td>
+		<td style="color: {% if U_FILE_DIR_STATE_ERROR %}#CC0000;{% else %}#009900;{% endif %}"><strong>{{ U_FILE_DIR_STATE }}</strong></td>
+		<td>{{ lang('ACP_CORE_DIR_STATE') }}</td>
+		<td style="color: {% if U_CORE_DIR_STATE_ERROR %}#CC0000;{% else %}#009900;{% endif %}"><strong>{{ U_CORE_DIR_STATE }}</strong></td>
 	</tr>
 	<tr>
-		<td>{L_ACP_SOURCE_DIR_STATE}</td>
-		<td style="color: <!-- IF U_SOURCE_DIR_STATE_ERROR -->#CC0000;<!-- ELSE -->#009900;<!-- ENDIF -->"><strong>{U_SOURCE_DIR_STATE}</strong></td>
-		<td>{L_ACP_MEDIUM_DIR_STATE}</td>
-		<td style="color: <!-- IF U_MEDIUM_DIR_STATE_ERROR -->#CC0000;<!-- ELSE -->#009900;<!-- ENDIF -->"><strong>{U_MEDIUM_DIR_STATE}</strong></td>
+		<td>{{ lang('ACP_SOURCE_DIR_STATE') }}</td>
+		<td style="color: {% if U_SOURCE_DIR_STATE_ERROR %}#CC0000;{% else %}#009900;{% endif %}"><strong>{{ U_SOURCE_DIR_STATE }}</strong></td>
+		<td>{{ lang('ACP_MEDIUM_DIR_STATE') }}</td>
+		<td style="color: {% if U_MEDIUM_DIR_STATE_ERROR %}#CC0000;{% else %}#009900;{% endif %}"><strong>{{ U_MEDIUM_DIR_STATE }}</strong></td>
 	</tr>
 	<tr>
-		<td>{L_ACP_MINI_DIR_STATE}</td>
-		<td style="color: <!-- IF U_MINI_DIR_STATE_ERROR -->#CC0000;<!-- ELSE -->#009900;<!-- ENDIF -->"><strong>{U_MINI_DIR_STATE}</strong></td>
+		<td>{{ lang('ACP_MINI_DIR_STATE') }}</td>
+		<td style="color: {% if U_MINI_DIR_STATE_ERROR %}#CC0000;{% else %}#009900;{% endif %}"><strong>{{ U_MINI_DIR_STATE }}</strong></td>
 	</tr>
 	<tr>
-		<td>{L_NUMBER_IMAGES}{L_COLON}</td>
-		<td><strong>{TOTAL_IMAGES}</strong></td>
-		<td>{L_IMAGES_PER_DAY}{L_COLON}</td>
-		<td><strong>{IMAGES_PER_DAY}</strong></td>
+		<td>{{ lang('NUMBER_IMAGES') }}{{ lang('COLON') }}</td>
+		<td><strong>{{ TOTAL_IMAGES }}</strong></td>
+		<td>{{ lang('IMAGES_PER_DAY') }}{{ lang('COLON') }}</td>
+		<td><strong>{{ IMAGES_PER_DAY }}</strong></td>
 	</tr>
 	<tr>
-		<td>{L_NUMBER_ALBUMS}{L_COLON}</td>
-		<td><strong>{TOTAL_ALBUMS}</strong></td>
-		<td>{L_NUMBER_PERSONALS}{L_COLON}</td>
-		<td><strong>{TOTAL_PERSONALS}</strong></td>
+		<td>{{ lang('NUMBER_ALBUMS') }}{{ lang('COLON') }}</td>
+		<td><strong>{{ TOTAL_ALBUMS }}</strong></td>
+		<td>{{ lang('NUMBER_PERSONALS') }}{{ lang('COLON') }}</td>
+		<td><strong>{{ TOTAL_PERSONALS }}</strong></td>
 	</tr>
 	<tr>
-		<td>{L_GUPLOAD_DIR_SIZE}{L_COLON}</td>
-		<td><strong>{GUPLOAD_DIR_SIZE}</strong></td>
-		<td>{L_MEDIUM_DIR_SIZE}{L_COLON}</td>
-		<td><strong>{MEDIUM_DIR_SIZE}</strong></td>
+		<td>{{ lang('GUPLOAD_DIR_SIZE') }}{{ lang('COLON') }}</td>
+		<td><strong>{{ GUPLOAD_DIR_SIZE }}</strong></td>
+		<td>{{ lang('MEDIUM_DIR_SIZE') }}{{ lang('COLON') }}</td>
+		<td><strong>{{ MEDIUM_DIR_SIZE }}</strong></td>
 	</tr>
 	<tr>
-		<td>{L_CACHE_DIR_SIZE}{L_COLON}</td>
-		<td><strong>{CACHE_DIR_SIZE}</strong></td>
-		<td>{L_GALLERY_VERSION}{L_COLON}</td>
-		<td><strong>{GALLERY_VERSION}</strong></td>
+		<td>{{ lang('CACHE_DIR_SIZE') }}{{ lang('COLON') }}</td>
+		<td><strong>{{ CACHE_DIR_SIZE }}</strong></td>
+		<td>{{ lang('GALLERY_VERSION') }}{{ lang('COLON') }}</td>
+		<td><strong>{{ GALLERY_VERSION }}</strong></td>
 	</tr>
 	</tbody>
 	</table>
 
 	<fieldset>
-		<form id="action_images_form" method="post" action="{U_ACTION}">
+		<form id="action_images_form" method="post" action="{{ U_ACTION }}">
 			<dl>
-				<dt><label for="action_images">{L_RESYNC_IMAGECOUNTS}</label>
-					<br /><span>{L_RESYNC_IMAGECOUNTS_EXPLAIN}</span></dt>
-				<dd><input type="hidden" name="action" value="images" /><input class="button2" type="submit" id="action_images" name="action_images" value="{L_RUN}" /></dd>
+				<dt><label for="action_images">{{ lang('RESYNC_IMAGECOUNTS') }}</label>
+					<br /><span>{{ lang('RESYNC_IMAGECOUNTS_EXPLAIN') }}</span></dt>
+				<dd><input type="hidden" name="action" value="images" /><input class="button2" type="submit" id="action_images" name="action_images" value="{{ lang('RUN') }}" /></dd>
 			</dl>
 		</form>
 
-		<form id="action_personals_form" method="post" action="{U_ACTION}">
+		<form id="action_personals_form" method="post" action="{{ U_ACTION }}">
 			<dl>
-				<dt><label for="action_personals">{L_RESYNC_PERSONALS}</label></dt>
-				<dd><input type="hidden" name="action" value="personals" /><input class="button2" type="submit" id="action_personals" name="action_personals" value="{L_RUN}" /></dd>
+				<dt><label for="action_personals">{{ lang('RESYNC_PERSONALS') }}</label></dt>
+				<dd><input type="hidden" name="action" value="personals" /><input class="button2" type="submit" id="action_personals" name="action_personals" value="{{ lang('RUN') }}" /></dd>
 			</dl>
 		</form>
 
-		<form id="action_stats_form" method="post" action="{U_ACTION}">
+		<form id="action_stats_form" method="post" action="{{ U_ACTION }}">
 			<dl>
-				<dt><label for="action_stats">{L_RESYNC_STATS}</label></dt>
-				<dd><input type="hidden" name="action" value="stats" /><input class="button2" type="submit" id="action_stats" name="action_stats" value="{L_RUN}" /></dd>
+				<dt><label for="action_stats">{{ lang('RESYNC_STATS') }}</label></dt>
+				<dd><input type="hidden" name="action" value="stats" /><input class="button2" type="submit" id="action_stats" name="action_stats" value="{{ lang('RUN') }}" /></dd>
 			</dl>
 		</form>
 
-		<form id="action_last_images_form" method="post" action="{U_ACTION}">
+		<form id="action_last_images_form" method="post" action="{{ U_ACTION }}">
 			<dl>
-				<dt><label for="action_last_images">{L_RESYNC_LAST_IMAGES}</label></dt>
-				<dd><input type="hidden" name="action" value="last_images" /><input class="button2" type="submit" id="action_last_images" name="action_last_images" value="{L_RUN}" /></dd>
+				<dt><label for="action_last_images">{{ lang('RESYNC_LAST_IMAGES') }}</label></dt>
+				<dd><input type="hidden" name="action" value="last_images" /><input class="button2" type="submit" id="action_last_images" name="action_last_images" value="{{ lang('RUN') }}" /></dd>
 			</dl>
 		</form>
 
-		<!-- IF S_FOUNDER -->
-		<form id="action_purge_cache_form" method="post" action="{U_ACTION}">
+		{% if S_FOUNDER %}
+		<form id="action_purge_cache_form" method="post" action="{{ U_ACTION }}">
 			<dl>
-				<dt><label for="action_purge_cache">{L_PURGE_CACHE}</label>
-					<br /><span>{L_GALLERY_PURGE_CACHE_EXPLAIN}</span></dt>
-				<dd><input type="hidden" name="action" value="purge_cache" /><input class="button2" type="submit" id="action_purge_cache" name="action_purge_cache" value="{L_RUN}" /></dd>
+				<dt><label for="action_purge_cache">{{ lang('PURGE_CACHE') }}</label>
+					<br /><span>{{ lang('GALLERY_PURGE_CACHE_EXPLAIN') }}</span></dt>
+				<dd><input type="hidden" name="action" value="purge_cache" /><input class="button2" type="submit" id="action_purge_cache" name="action_purge_cache" value="{{ lang('RUN') }}" /></dd>
 			</dl>
 		</form>
-		<form id="action_resync_albums_to_cpf_form" method="post" action="{U_ACTION}">
+		<form id="action_resync_albums_to_cpf_form" method="post" action="{{ U_ACTION }}">
 			<dl>
 				<dt>
-					<label for="action_resync_albums_to_cpf">{L_GALLERY_RESYNC_ALBUMS_TO_CPF}</label>
+					<label for="action_resync_albums_to_cpf">{{ lang('GALLERY_RESYNC_ALBUMS_TO_CPF') }}</label>
 					<br/>
-					<span>{L_GALLERY_RESYNC_ALBUMS_TO_CPF_EXPLAIN}</span>
+					<span>{{ lang('GALLERY_RESYNC_ALBUMS_TO_CPF_EXPLAIN') }}</span>
 				</dt>
 				<dd>
 					<input type="hidden" name="action" value="resync_albums_to_cpf" />
-					<input class="button2" type="submit" id="action_resync_albums_to_cpf" name="action_resync_albums_to_cpf" value="{L_RUN}" />
+					<input class="button2" type="submit" id="action_resync_albums_to_cpf" name="action_resync_albums_to_cpf" value="{{ lang('RUN') }}" />
 				</dd>
 			</dl>
 		</form>
-		<!-- ENDIF -->
+		{% endif %}
 	</fieldset>
 
 	<fieldset>
-		<form id="action_reset_rating_form" method="post" action="{U_ACTION}">
+		<form id="action_reset_rating_form" method="post" action="{{ U_ACTION }}">
 			<dl>
-				<dt><label for="reset_album_id">{L_RESET_RATING}</label>
-					<br /><span>{L_RESET_RATING_EXPLAIN}</span></dt>
-				<dd>{S_SELECT_ALBUM}
-					<input type="hidden" name="action" value="reset_rating" /><input class="button2" type="submit" id="action_reset_rating" name="action_reset_rating" value="{L_RUN}" /></dd>
+				<dt><label for="reset_album_id">{{ lang('RESET_RATING') }}</label>
+					<br /><span>{{ lang('RESET_RATING_EXPLAIN') }}</span></dt>
+				<dd>{{ S_SELECT_ALBUM }}
+					<input type="hidden" name="action" value="reset_rating" /><input class="button2" type="submit" id="action_reset_rating" name="action_reset_rating" value="{{ lang('RUN') }}" /></dd>
 			</dl>
 		</form>
 
-		<form id="action_create_pega_form" method="post" action="{U_ACTION}">
+		<form id="action_create_pega_form" method="post" action="{{ U_ACTION }}">
 			<dl>
-				<dt><label for="username">{L_CREATE_USERS_PEGA}</label></dt>
+				<dt><label for="username">{{ lang('CREATE_USERS_PEGA') }}</label></dt>
 				<dd><input class="inputbox autowidth" type="text" id="username" name="username" size="15" value="" />
-					<input type="hidden" name="action" value="create_pega" /><input class="button2" type="submit" id="action_create_pega" name="action_create_pega" value="{L_CREATE}" /></dd>
-				<dd>[ <a href="{U_FIND_USERNAME}" onclick="find_username(this.href); return false;">{L_FIND_USERNAME}</a> ]</dd>
+					<input type="hidden" name="action" value="create_pega" /><input class="button2" type="submit" id="action_create_pega" name="action_create_pega" value="{{ lang('CREATE') }}" /></dd>
+				<dd>[ <a href="{{ U_FIND_USERNAME }}" onclick="find_username(this.href); return false;">{{ lang('FIND_USERNAME') }}</a> ]</dd>
 			</dl>
-			{S_HIDDEN_FIELDS}{S_FORM_TOKEN}
+			{{ S_HIDDEN_FIELDS }}{{ S_FORM_TOKEN }}
 		</form>
 	</fieldset>
-<!-- ENDIF -->
+{% endif %}
 
-<!-- INCLUDE overall_footer.html -->
+{% include 'overall_footer.html' %}

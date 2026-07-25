@@ -1,156 +1,156 @@
-<!-- INCLUDE overall_header.html -->
+{% include 'overall_header.html' %}
 
 <a name="maincontent"></a>
 
-<h1>{ACP_GALLERY_TITLE}</h1>
-<p>{ACP_GALLERY_TITLE_EXPLAIN}</p>
+<h1>{{ ACP_GALLERY_TITLE }}</h1>
+<p>{{ ACP_GALLERY_TITLE_EXPLAIN }}</p>
 
-<form id="acp_gallery" method="post" action="{U_ACTION}">
+<form id="acp_gallery" method="post" action="{{ U_ACTION }}">
 	<fieldset>
-		<legend>{L_MANAGE_CRASHED_IMAGES}</legend>
+		<legend>{{ lang('MANAGE_CRASHED_IMAGES') }}</legend>
 		<dl>
-			<dt><label<!-- IF .sourcerow --> for="source"<!-- ENDIF -->>{L_MISSING_SOURCE}{L_COLON}</label>
-				<br /><span><a href="{CHECK_SOURCE}">{L_CHECK}</a></span></dt>
-			<dd><!-- IF not .sourcerow -->
-				{L_CHECK_SOURCE_EXPLAIN}
-			<!-- ELSE -->
+			<dt><label{% if sourcerow|length %} for="source"{% endif %}>{{ lang('MISSING_SOURCE') }}{{ lang('COLON') }}</label>
+				<br /><span><a href="{{ CHECK_SOURCE }}">{{ lang('CHECK') }}</a></span></dt>
+			<dd>{% if not sourcerow|length %}
+				{{ lang('CHECK_SOURCE_EXPLAIN') }}
+			{% else %}
 				<select id="source" name="source[]" multiple="multiple" size="10">
-					<!-- BEGIN sourcerow --><option value="{sourcerow.IMAGE_ID}">{L_IMAGE_ID}{L_COLON} {sourcerow.IMAGE_ID} - {sourcerow.IMAGE_NAME}</option><!-- END sourcerow -->
+					{% for sourcerow in sourcerow %}<option value="{{ sourcerow.IMAGE_ID }}">{{ lang('IMAGE_ID') }}{{ lang('COLON') }} {{ sourcerow.IMAGE_ID }} - {{ sourcerow.IMAGE_NAME }}</option>{% endfor %}
 				</select>
-			<!-- ENDIF --></dd>
+			{% endif %}</dd>
 		</dl>
 		<dl>
-			<dt><label<!-- IF .entryrow --> for="entry"<!-- ENDIF -->>{L_MISSING_ENTRY}{L_COLON}</label>
-				<br /><span><a href="{CHECK_ENTRY}">{L_CHECK}</a></span></dt>
-			<dd><!-- IF not .entryrow -->
-				{L_CHECK_ENTRY_EXPLAIN}
-			<!-- ELSE -->
+			<dt><label{% if entryrow|length %} for="entry"{% endif %}>{{ lang('MISSING_ENTRY') }}{{ lang('COLON') }}</label>
+				<br /><span><a href="{{ CHECK_ENTRY }}">{{ lang('CHECK') }}</a></span></dt>
+			<dd>{% if not entryrow|length %}
+				{{ lang('CHECK_ENTRY_EXPLAIN') }}
+			{% else %}
 				<select id="entry" name="entry[]" multiple="multiple" size="10">
-					<!-- BEGIN entryrow --><option value="{entryrow.FILE_NAME}">{entryrow.FILE_NAME}</option><!-- END entryrow -->
+					{% for entryrow in entryrow %}<option value="{{ entryrow.FILE_NAME }}">{{ entryrow.FILE_NAME }}</option>{% endfor %}
 				</select>
-				<!-- IF ACP_IMPORT_INSTALLED -->
-				<dd><input name="move_to_import" class="radio" type="checkbox" id="move_to_import" value="1"><label for="move_to_import">{L_MOVE_TO_IMPORT}</label>
-				<!-- ENDIF -->
-			<!-- ENDIF --></dd>
+				{% if ACP_IMPORT_INSTALLED %}
+				<dd><input name="move_to_import" class="radio" type="checkbox" id="move_to_import" value="1"><label for="move_to_import">{{ lang('MOVE_TO_IMPORT') }}</label>
+				{% endif %}
+			{% endif %}</dd>
 		</dl>
 
-		<!-- IF .entryrow or .sourcerow -->
+		{% if entryrow|length or sourcerow|length %}
 		<p class="submit-buttons">
-			<input class="button1" type="submit" name="delete" value="{L_DELETE}" />
+			<input class="button1" type="submit" name="delete" value="{{ lang('DELETE') }}" />
 		</p>
-		<!-- ENDIF -->
+		{% endif %}
 	</fieldset>
 
 	<fieldset>
-		<legend>{L_MANAGE_CRASHED_ENTRIES}</legend>
+		<legend>{{ lang('MANAGE_CRASHED_ENTRIES') }}</legend>
 		<dl>
-			<dt><label<!-- IF .authorrow --> for="author"<!-- ENDIF -->>{L_MISSING_AUTHOR}{L_COLON}</label></dt>
-			<dd><!-- IF not .authorrow -->
-				{L_CHECK_AUTHOR_EXPLAIN}
-			<!-- ELSE -->
+			<dt><label{% if authorrow|length %} for="author"{% endif %}>{{ lang('MISSING_AUTHOR') }}{{ lang('COLON') }}</label></dt>
+			<dd>{% if not authorrow|length %}
+				{{ lang('CHECK_AUTHOR_EXPLAIN') }}
+			{% else %}
 				<select id="author" name="author[]" multiple="multiple" size="10">
-					<!-- BEGIN authorrow --><option value="{authorrow.IMAGE_ID}">{L_IMAGE_ID}{L_COLON} {authorrow.IMAGE_ID} - {L_AUTHOR}{L_COLON} {authorrow.AUTHOR_NAME}</option><!-- END authorrow -->
+					{% for authorrow in authorrow %}<option value="{{ authorrow.IMAGE_ID }}">{{ lang('IMAGE_ID') }}{{ lang('COLON') }} {{ authorrow.IMAGE_ID }} - {{ lang('AUTHOR') }}{{ lang('COLON') }} {{ authorrow.AUTHOR_NAME }}</option>{% endfor %}
 				</select>
-			<!-- ENDIF --></dd>
+			{% endif %}</dd>
 		</dl>
 		<dl>
-			<dt><label<!-- IF .commentrow --> for="comment"<!-- ENDIF -->>{L_MISSING_AUTHOR_C}{L_COLON}</label></dt>
-			<dd><!-- IF not .commentrow -->
-				{L_CHECK_COMMENT_EXPLAIN}
-			<!-- ELSE -->
+			<dt><label{% if commentrow|length %} for="comment"{% endif %}>{{ lang('MISSING_AUTHOR_C') }}{{ lang('COLON') }}</label></dt>
+			<dd>{% if not commentrow|length %}
+				{{ lang('CHECK_COMMENT_EXPLAIN') }}
+			{% else %}
 				<select id="comment" name="comment[]" multiple="multiple" size="10">
-					<!-- BEGIN commentrow --><option value="{commentrow.COMMENT_ID}">{L_COMMENT_ID}{L_COLON} {commentrow.COMMENT_ID} - {L_IMAGE_ID}{L_COLON} {commentrow.IMAGE_ID} - {L_AUTHOR}{L_COLON} {commentrow.AUTHOR_NAME}</option><!-- END commentrow -->
+					{% for commentrow in commentrow %}<option value="{{ commentrow.COMMENT_ID }}">{{ lang('COMMENT_ID') }}{{ lang('COLON') }} {{ commentrow.COMMENT_ID }} - {{ lang('IMAGE_ID') }}{{ lang('COLON') }} {{ commentrow.IMAGE_ID }} - {{ lang('AUTHOR') }}{{ lang('COLON') }} {{ commentrow.AUTHOR_NAME }}</option>{% endfor %}
 				</select>
-			<!-- ENDIF --></dd>
+			{% endif %}</dd>
 		</dl>
-		<!-- IF .commentrow or .authorrow -->
+		{% if commentrow|length or authorrow|length %}
 		<dl>
-			<dt><label for="prune_rating_avg_check">{L_MOVE_TO_USER}{L_COLON}</label>
-				<br /><span>{L_MOVE_TO_USER_EXP}</span></dt>
+			<dt><label for="prune_rating_avg_check">{{ lang('MOVE_TO_USER') }}{{ lang('COLON') }}</label>
+				<br /><span>{{ lang('MOVE_TO_USER_EXP') }}</span></dt>
 			<dd><input class="inputbox autowidth" type="text" name="new_author" size="15" value="" /></dd>
 		</dl>
 		<p class="submit-buttons">
-			<input class="button1" type="submit" name="submit" value="{L_CHANGE_AUTHOR_TO_GUEST}" />
-			<input class="button1" type="submit" name="delete" value="{L_DELETE}" />
+			<input class="button1" type="submit" name="submit" value="{{ lang('CHANGE_AUTHOR_TO_GUEST') }}" />
+			<input class="button1" type="submit" name="delete" value="{{ lang('DELETE') }}" />
 		</p>
-		<!-- ENDIF -->
+		{% endif %}
 	</fieldset>
 
 	<fieldset>
-		<legend>{L_MANAGE_PERSONALS}</legend>
+		<legend>{{ lang('MANAGE_PERSONALS') }}</legend>
 		<dl>
-			<dt><label<!-- IF .personalrow --> for="personal_missing"<!-- ENDIF -->>{L_MISSING_OWNER}{L_COLON}</label>
-				<br /><span>{L_MISSING_OWNER_EXP}</span></dt>
-			<dd><!-- IF not .personalrow -->
-				{L_CHECK_PERSONALS_EXPLAIN}
-			<!-- ELSE -->
+			<dt><label{% if personalrow|length %} for="personal_missing"{% endif %}>{{ lang('MISSING_OWNER') }}{{ lang('COLON') }}</label>
+				<br /><span>{{ lang('MISSING_OWNER_EXP') }}</span></dt>
+			<dd>{% if not personalrow|length %}
+				{{ lang('CHECK_PERSONALS_EXPLAIN') }}
+			{% else %}
 				<select id="personal_missing" name="personal[]" multiple="multiple" size="10">
-					<!-- BEGIN personalrow --><option value="{personalrow.USER_ID}">{L_ALBUM_ID}{L_COLON} {personalrow.ALBUM_ID} - {L_AUTHOR}{L_COLON} {personalrow.AUTHOR_NAME}</option><!-- END personalrow -->
+					{% for personalrow in personalrow %}<option value="{{ personalrow.USER_ID }}">{{ lang('ALBUM_ID') }}{{ lang('COLON') }} {{ personalrow.ALBUM_ID }} - {{ lang('AUTHOR') }}{{ lang('COLON') }} {{ personalrow.AUTHOR_NAME }}</option>{% endfor %}
 				</select>
-			<!-- ENDIF --></dd>
+			{% endif %}</dd>
 		</dl>
 		<dl>
-			<dt><label<!-- IF .personal_bad_row --> for="personal_bad"<!-- ENDIF -->>{L_PERSONAL_ALBUMS}{L_COLON}</label>
-				<br /><span>{L_MISSING_OWNER_EXP}</span></dt>
-			<dd><!-- IF not .personal_bad_row -->
-				{L_CHECK_PERSONALS_BAD_EXPLAIN}
-			<!-- ELSE -->
+			<dt><label{% if personal_bad_row|length %} for="personal_bad"{% endif %}>{{ lang('PERSONAL_ALBUMS') }}{{ lang('COLON') }}</label>
+				<br /><span>{{ lang('MISSING_OWNER_EXP') }}</span></dt>
+			<dd>{% if not personal_bad_row|length %}
+				{{ lang('CHECK_PERSONALS_BAD_EXPLAIN') }}
+			{% else %}
 				<select id="personal_bad" name="personal_bad[]" multiple="multiple" size="10">
-					<!-- BEGIN personal_bad_row --><option value="{personal_bad_row.USER_ID}">{L_ALBUM_ID}{L_COLON} {personal_bad_row.ALBUM_ID} - {L_AUTHOR}{L_COLON} {personal_bad_row.AUTHOR_NAME} - {L_IMAGES}{L_COLON} {personal_bad_row.IMAGES}</option><!-- END personal_bad_row -->
+					{% for personal_bad_row in personal_bad_row %}<option value="{{ personal_bad_row.USER_ID }}">{{ lang('ALBUM_ID') }}{{ lang('COLON') }} {{ personal_bad_row.ALBUM_ID }} - {{ lang('AUTHOR') }}{{ lang('COLON') }} {{ personal_bad_row.AUTHOR_NAME }} - {{ lang('IMAGES') }}{{ lang('COLON') }} {{ personal_bad_row.IMAGES }}</option>{% endfor %}
 				</select>
-			<!-- ENDIF --></dd>
+			{% endif %}</dd>
 		</dl>
 
-		<!-- IF .personalrow or .personal_bad_row -->
+		{% if personalrow|length or personal_bad_row|length %}
 		<p class="submit-buttons">
-			<input class="button1" type="submit" name="delete" value="{L_DELETE}" />
+			<input class="button1" type="submit" name="delete" value="{{ lang('DELETE') }}" />
 		</p>
-		<!-- ENDIF -->
+		{% endif %}
 	</fieldset>
 
-	<!-- IF S_SELECT_ALBUM -->
+	{% if S_SELECT_ALBUM %}
 	<fieldset>
-		<legend>{L_PRUNE_ALBUMS}</legend>
+		<legend>{{ lang('PRUNE_ALBUMS') }}</legend>
 		<dl>
-			<dt><label for="prune_album_ids">{L_SELECT_ALBUMS}{L_COLON}</label></dt>
-			<dd><select id="prune_album_ids" name="prune_album_ids[]" multiple="multiple" size="10">{S_SELECT_ALBUM}</select></dd>
+			<dt><label for="prune_album_ids">{{ lang('SELECT_ALBUMS') }}{{ lang('COLON') }}</label></dt>
+			<dd><select id="prune_album_ids" name="prune_album_ids[]" multiple="multiple" size="10">{{ S_SELECT_ALBUM }}</select></dd>
 		</dl>
 		<dl>
-			<dt><label for="prune_username_check">{L_PRUNE_USERNAME}{L_COLON}</label>
-				<br /><span>{L_PRUNE_USERNAME_EXP}</span></dt>
-			<dd><input class="radio" type="checkbox" id="prune_username_check" name="prune_username_check" value="1" /> <label for="prune_username_check">{L_PRUNE_CHECK_OPTION}</label></dd>
+			<dt><label for="prune_username_check">{{ lang('PRUNE_USERNAME') }}{{ lang('COLON') }}</label>
+				<br /><span>{{ lang('PRUNE_USERNAME_EXP') }}</span></dt>
+			<dd><input class="radio" type="checkbox" id="prune_username_check" name="prune_username_check" value="1" /> <label for="prune_username_check">{{ lang('PRUNE_CHECK_OPTION') }}</label></dd>
 			<dd><textarea id="prune_usernames" name="prune_usernames" rows="5" cols="5"></textarea></dd>
-			<dd><div style="float:{S_CONTENT_FLOW_END};">[ <a href="{U_FIND_USERNAME}" onclick="find_username(this.href); return false;">{L_FIND_USERNAME}</a> ]</div><label><input type="checkbox" class="radio" id="anonymous" name="prune_anonymous" value="{ANONYMOUS_USER_ID}" /> {L_SELECT_ANONYMOUS}</label></dd>
+			<dd><div style="float:{{ S_CONTENT_FLOW_END }};">[ <a href="{{ U_FIND_USERNAME }}" onclick="find_username(this.href); return false;">{{ lang('FIND_USERNAME') }}</a> ]</div><label><input type="checkbox" class="radio" id="anonymous" name="prune_anonymous" value="{{ ANONYMOUS_USER_ID }}" /> {{ lang('SELECT_ANONYMOUS') }}</label></dd>
 		</dl>
 		<dl>
-			<dt><label for="prune_time_check">{L_PRUNE_TIME}{L_COLON}</label>
-				<br /><span>{L_PRUNE_TIME_EXP}</span></dt>
-			<dd><input class="radio" type="checkbox" id="prune_time_check" name="prune_time_check" value="1" /> <label for="prune_time_check">{L_PRUNE_CHECK_OPTION}</label></dd>
+			<dt><label for="prune_time_check">{{ lang('PRUNE_TIME') }}{{ lang('COLON') }}</label>
+				<br /><span>{{ lang('PRUNE_TIME_EXP') }}</span></dt>
+			<dd><input class="radio" type="checkbox" id="prune_time_check" name="prune_time_check" value="1" /> <label for="prune_time_check">{{ lang('PRUNE_CHECK_OPTION') }}</label></dd>
 			<dd><input class="inputbox autowidth" type="text" name="prune_time" size="15" value="" /></dd>
 		</dl>
 		<dl>
-			<dt><label for="prune_comments_check">{L_PRUNE_COMMENTS}{L_COLON}</label></dt>
-			<dd><input class="radio" type="checkbox" id="prune_comments_check" name="prune_comments_check" value="1" /> <label for="prune_comments_check">{L_PRUNE_CHECK_OPTION}</label></dd>
+			<dt><label for="prune_comments_check">{{ lang('PRUNE_COMMENTS') }}{{ lang('COLON') }}</label></dt>
+			<dd><input class="radio" type="checkbox" id="prune_comments_check" name="prune_comments_check" value="1" /> <label for="prune_comments_check">{{ lang('PRUNE_CHECK_OPTION') }}</label></dd>
 			<dd><input class="inputbox autowidth" type="text" name="prune_comments" size="15" value="" /></dd>
 		</dl>
 		<dl>
-			<dt><label for="prune_ratings_check">{L_PRUNE_RATINGS}{L_COLON}</label></dt>
-			<dd><input class="radio" type="checkbox" id="prune_ratings_check" name="prune_ratings_check" value="1" /> <label for="prune_ratings_check">{L_PRUNE_CHECK_OPTION}</label></dd>
+			<dt><label for="prune_ratings_check">{{ lang('PRUNE_RATINGS') }}{{ lang('COLON') }}</label></dt>
+			<dd><input class="radio" type="checkbox" id="prune_ratings_check" name="prune_ratings_check" value="1" /> <label for="prune_ratings_check">{{ lang('PRUNE_CHECK_OPTION') }}</label></dd>
 			<dd><input class="inputbox autowidth" type="text" name="prune_ratings" size="15" value="" /></dd>
 		</dl>
 		<dl>
-			<dt><label for="prune_rating_avg_check">{L_PRUNE_RATING_AVG}{L_COLON}</label>
-				<br /><span>{L_PRUNE_RATING_AVG_EXP}</span></dt>
-			<dd><input class="radio" type="checkbox" id="prune_rating_avg_check" name="prune_rating_avg_check" value="1" /> <label for="prune_rating_avg_check">{L_PRUNE_CHECK_OPTION}</label></dd>
+			<dt><label for="prune_rating_avg_check">{{ lang('PRUNE_RATING_AVG') }}{{ lang('COLON') }}</label>
+				<br /><span>{{ lang('PRUNE_RATING_AVG_EXP') }}</span></dt>
+			<dd><input class="radio" type="checkbox" id="prune_rating_avg_check" name="prune_rating_avg_check" value="1" /> <label for="prune_rating_avg_check">{{ lang('PRUNE_CHECK_OPTION') }}</label></dd>
 			<dd><input class="inputbox autowidth" type="text" name="prune_rating_avg" size="15" value="" /></dd>
 		</dl>
 
 		<p class="submit-buttons">
-			<input class="button1" type="submit" name="prune" value="{L_PRUNE}" />
-			{S_FORM_TOKEN}
+			<input class="button1" type="submit" name="prune" value="{{ lang('PRUNE') }}" />
+			{{ S_FORM_TOKEN }}
 		</p>
 	</fieldset>
-	<!-- ENDIF -->
+	{% endif %}
 </form>
 
-<!-- INCLUDE overall_footer.html -->
+{% include 'overall_footer.html' %}

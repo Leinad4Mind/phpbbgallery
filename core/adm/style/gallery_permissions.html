@@ -1,13 +1,13 @@
-<!-- INCLUDE overall_header.html -->
+{% include 'overall_header.html' %}
 <script type="text/javascript">
 function toggle_permissions_panel(c_mask, v_mask, cat)
 {
-	<!-- BEGIN c_rows -->
-		var block = document.getElementById('options' + c_mask + v_mask + {c_rows.S_ROW_COUNT});
+	{% for c_rows in c_rows %}
+		var block = document.getElementById('options' + c_mask + v_mask + {{ c_rows.S_ROW_COUNT }});
 		block.style.display = "none";
-		var old_tab = document.getElementById('tab' + c_mask + v_mask + {c_rows.S_ROW_COUNT});
+		var old_tab = document.getElementById('tab' + c_mask + v_mask + {{ c_rows.S_ROW_COUNT }});
 		old_tab.className = old_tab.className.replace(/\ activetab/g, '');
-	<!-- END c_rows -->
+	{% endfor %}
 
 	var block = document.getElementById('options' + c_mask + v_mask + cat);
 	block.style.display = "";
@@ -75,158 +75,158 @@ function gallery_init_colours(block_id, quick)
 </script>
 <script type="text/javascript" src="style/permissions.js"></script>
 <a name="maincontent"></a>
-<!-- IF not S_COPY_PERMISSIONS -->
-	<h1>{L_PERMISSIONS}</h1>
-	<p>{L_PERMISSIONS_EXPLAIN}</p>
-<!-- ELSE -->
-	<h1>{L_PERMISSIONS_COPY}</h1>
-	<p>{L_PERMISSIONS_COPY_EXPLAIN}</p>
-<!-- ENDIF -->
+{% if not S_COPY_PERMISSIONS %}
+	<h1>{{ lang('PERMISSIONS') }}</h1>
+	<p>{{ lang('PERMISSIONS_EXPLAIN') }}</p>
+{% else %}
+	<h1>{{ lang('PERMISSIONS_COPY') }}</h1>
+	<p>{{ lang('PERMISSIONS_COPY_EXPLAIN') }}</p>
+{% endif %}
 
-<!-- IF S_PERMISSION_C_MASK -->
-	<form action="{U_ACTION}" method="post" id="gallery_acp">
+{% if S_PERMISSION_C_MASK %}
+	<form action="{{ U_ACTION }}" method="post" id="gallery_acp">
 		<fieldset>
-			<legend>{L_SELECT_PERM_SYS}</legend>
-				<dl><dt><input id="p_system_0" name="p_system" class="radio" type="radio" checked="checked" value="0" /><label for="p_system_0">&nbsp;{L_SELECTED_ALBUMS}</label></dt>
-					<dd><select id="target" name="album_id[]" multiple="multiple">{ALBUM_LIST}</select></dd>
+			<legend>{{ lang('SELECT_PERM_SYS') }}</legend>
+				<dl><dt><input id="p_system_0" name="p_system" class="radio" type="radio" checked="checked" value="0" /><label for="p_system_0">&nbsp;{{ lang('SELECTED_ALBUMS') }}</label></dt>
+					<dd><select id="target" name="album_id[]" multiple="multiple">{{ ALBUM_LIST }}</select></dd>
 				</dl>
-				<dl><dt><input id="p_system_2" name="p_system" class="radio" type="radio" value="{C_OWN_PERSONAL_ALBUMS}" /><label for="p_system_2">&nbsp;{L_OWN_PERSONAL_ALBUMS}</label><br /><span>{L_OWN_PERSONAL_ALBUMS_EXPLAIN}</span></dt></dl>
-				<dl><dt><input id="p_system_3" name="p_system" class="radio" type="radio" value="{C_PERSONAL_ALBUMS}" /><label for="p_system_3">&nbsp;{L_PERSONAL_ALBUMS}</label><br /><span>{L_PERSONAL_ALBUMS_EXPLAIN}</span></dt></dl>
+				<dl><dt><input id="p_system_2" name="p_system" class="radio" type="radio" value="{{ C_OWN_PERSONAL_ALBUMS }}" /><label for="p_system_2">&nbsp;{{ lang('OWN_PERSONAL_ALBUMS') }}</label><br /><span>{{ lang('OWN_PERSONAL_ALBUMS_EXPLAIN') }}</span></dt></dl>
+				<dl><dt><input id="p_system_3" name="p_system" class="radio" type="radio" value="{{ C_PERSONAL_ALBUMS }}" /><label for="p_system_3">&nbsp;{{ lang('PERSONAL_ALBUMS') }}</label><br /><span>{{ lang('PERSONAL_ALBUMS_EXPLAIN') }}</span></dt></dl>
 		</fieldset>
 		<fieldset class="submit-buttons">
-			<legend>{L_SUBMIT}</legend>
-			{S_FORM_TOKEN}{S_HIDDEN_FIELDS}
-			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />
+			<legend>{{ lang('SUBMIT') }}</legend>
+			{{ S_FORM_TOKEN }}{{ S_HIDDEN_FIELDS }}
+			<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />
 		</fieldset>
 	</form>
 
-<!-- ELSEIF S_PERMISSION_V_MASK -->
+{% elseif S_PERMISSION_V_MASK %}
 
-	<!-- IF C_MASKS_NAMES -->
-		<p><strong>{L_C_MASKS}{L_COLON}</strong> {C_MASKS_NAMES}</p>
-	<!-- ENDIF -->
+	{% if C_MASKS_NAMES %}
+		<p><strong>{{ lang('C_MASKS') }}{{ lang('COLON') }}</strong> {{ C_MASKS_NAMES }}</p>
+	{% endif %}
 
-	<div style="float: {S_CONTENT_FLOW_BEGIN}; width: 48%;">
-	<!-- IF S_CAN_SELECT_USER -->
-		<h1>{L_USERS}</h1>
+	<div style="float: {{ S_CONTENT_FLOW_BEGIN }}; width: 48%;">
+	{% if S_CAN_SELECT_USER %}
+		<h1>{{ lang('USERS') }}</h1>
 
-		<form id="users" method="post" action="{U_ACTION}">
+		<form id="users" method="post" action="{{ U_ACTION }}">
 			<fieldset>
-				<legend>{L_MANAGE_USERS}</legend>
+				<legend>{{ lang('MANAGE_USERS') }}</legend>
 				<dl>
-					<dd class="full"><select style="width: 100%;" name="user_id[]" multiple="multiple" size="5">{S_DEFINED_USER_OPTIONS}</select></dd>
-					<!--dd class="full" style="text-align: right;"><label><input type="checkbox" class="radio" name="all_users" value="1" /> {L_ALL_USERS}</label></dd-->
+					<dd class="full"><select style="width: 100%;" name="user_id[]" multiple="multiple" size="5">{{ S_DEFINED_USER_OPTIONS }}</select></dd>
+					<!--dd class="full" style="text-align: right;"><label><input type="checkbox" class="radio" name="all_users" value="1" /> {{ lang('ALL_USERS') }}</label></dd-->
 				</dl>
 			</fieldset>
 
 			<fieldset class="quick">
-				{S_HIDDEN_FIELDS}
-				{S_FORM_TOKEN}
-				<input type="submit" class="button2" name="delete" value="{L_REMOVE_PERMISSIONS}" style="width: 46% !important;" /> &nbsp; <input class="button1" type="submit" name="submit_edit_options" value="{L_EDIT_PERMISSIONS}" style="width: 46% !important;" />
+				{{ S_HIDDEN_FIELDS }}
+				{{ S_FORM_TOKEN }}
+				<input type="submit" class="button2" name="delete" value="{{ lang('REMOVE_PERMISSIONS') }}" style="width: 46% !important;" /> &nbsp; <input class="button1" type="submit" name="submit_edit_options" value="{{ lang('EDIT_PERMISSIONS') }}" style="width: 46% !important;" />
 			</fieldset>
 		</form>
 
-		<form id="add_user" method="post" action="{U_ACTION}">
+		<form id="add_user" method="post" action="{{ U_ACTION }}">
 
 			<fieldset>
-				<legend>{L_ADD_USERS}</legend>
-				<p>{L_USERNAMES_EXPLAIN}</p>
+				<legend>{{ lang('ADD_USERS') }}</legend>
+				<p>{{ lang('USERNAMES_EXPLAIN') }}</p>
 				<dl>
 					<dd class="full"><textarea id="username" name="usernames" rows="5" cols="5" style="width: 100%; height: 60px;"></textarea></dd>
-					<dd class="full" style="text-align: left;"><div style="float: {S_CONTENT_FLOW_END};">[ <a href="{U_FIND_USERNAME}" onclick="find_username(this.href); return false;">{L_FIND_USERNAME}</a> ]</div><label><input type="checkbox" class="radio" id="anonymous" name="user_id[]" value="{ANONYMOUS_USER_ID}" /> {L_SELECT_ANONYMOUS}</label></dd>
+					<dd class="full" style="text-align: left;"><div style="float: {{ S_CONTENT_FLOW_END }};">[ <a href="{{ U_FIND_USERNAME }}" onclick="find_username(this.href); return false;">{{ lang('FIND_USERNAME') }}</a> ]</div><label><input type="checkbox" class="radio" id="anonymous" name="user_id[]" value="{{ ANONYMOUS_USER_ID }}" /> {{ lang('SELECT_ANONYMOUS') }}</label></dd>
 				</dl>
 			</fieldset>
 
 			<fieldset class="quick">
-				{S_HIDDEN_FIELDS}
-				{S_FORM_TOKEN}
-				<input class="button1" type="submit" name="submit_add_options" value="{L_ADD_PERMISSIONS}" />
+				{{ S_HIDDEN_FIELDS }}
+				{{ S_FORM_TOKEN }}
+				<input class="button1" type="submit" name="submit_add_options" value="{{ lang('ADD_PERMISSIONS') }}" />
 			</fieldset>
 		</form>
-	<!-- ENDIF -->
+	{% endif %}
 	</div>
-	<div style="float: {S_CONTENT_FLOW_END}; width: 48%">
-	<!-- IF S_CAN_SELECT_GROUP -->
-		<h1>{L_USERGROUPS}</h1>
+	<div style="float: {{ S_CONTENT_FLOW_END }}; width: 48%">
+	{% if S_CAN_SELECT_GROUP %}
+		<h1>{{ lang('USERGROUPS') }}</h1>
 
-		<form id="groups" method="post" action="{U_ACTION}">
+		<form id="groups" method="post" action="{{ U_ACTION }}">
 			<fieldset>
-				<legend>{L_MANAGE_GROUPS}</legend>
+				<legend>{{ lang('MANAGE_GROUPS') }}</legend>
 				<dl>
-					<dd class="full"><select style="width: 100%;" name="group_id[]" multiple="multiple" size="5">{S_DEFINED_GROUP_OPTIONS}</select></dd>
-					<!--dd class="full" style="text-align: right;"><label><input type="checkbox" class="radio" name="all_groups" value="1" /> {L_ALL_GROUPS}</label></dd-->
+					<dd class="full"><select style="width: 100%;" name="group_id[]" multiple="multiple" size="5">{{ S_DEFINED_GROUP_OPTIONS }}</select></dd>
+					<!--dd class="full" style="text-align: right;"><label><input type="checkbox" class="radio" name="all_groups" value="1" /> {{ lang('ALL_GROUPS') }}</label></dd-->
 				</dl>
 			</fieldset>
 
 			<fieldset class="quick">
-				{S_HIDDEN_FIELDS}
-				{S_FORM_TOKEN}
-				<input class="button2" type="submit" name="delete" value="{L_REMOVE_PERMISSIONS}" style="width: 46% !important;" /> &nbsp; <input class="button1" type="submit" name="submit_edit_options" value="{L_EDIT_PERMISSIONS}" style="width: 46% !important;" />
+				{{ S_HIDDEN_FIELDS }}
+				{{ S_FORM_TOKEN }}
+				<input class="button2" type="submit" name="delete" value="{{ lang('REMOVE_PERMISSIONS') }}" style="width: 46% !important;" /> &nbsp; <input class="button1" type="submit" name="submit_edit_options" value="{{ lang('EDIT_PERMISSIONS') }}" style="width: 46% !important;" />
 			</fieldset>
 		</form>
 
-		<form id="add_groups" method="post" action="{U_ACTION}">
+		<form id="add_groups" method="post" action="{{ U_ACTION }}">
 			<fieldset>
-				<legend>{L_ADD_GROUPS}</legend>
+				<legend>{{ lang('ADD_GROUPS') }}</legend>
 				<dl>
-					<dd class="full"><select name="group_id[]" style="width: 100%; height: 107px;" multiple="multiple">{S_ADD_GROUP_OPTIONS}</select></dd>
+					<dd class="full"><select name="group_id[]" style="width: 100%; height: 107px;" multiple="multiple">{{ S_ADD_GROUP_OPTIONS }}</select></dd>
 				</dl>
 			</fieldset>
 
 			<fieldset class="quick">
-				{S_HIDDEN_FIELDS}
-				{S_FORM_TOKEN}
-				<input type="submit" class="button1" name="submit_add_options" value="{L_ADD_PERMISSIONS}" />
+				{{ S_HIDDEN_FIELDS }}
+				{{ S_FORM_TOKEN }}
+				<input type="submit" class="button1" name="submit_add_options" value="{{ lang('ADD_PERMISSIONS') }}" />
 			</fieldset>
 		</form>
-	<!-- ENDIF -->
+	{% endif %}
 	</div>
 
-<!-- ELSEIF S_PERMISSION_P_MASK -->
+{% elseif S_PERMISSION_P_MASK %}
 
-<form action="{U_ACTION}" method="post" id="gallery_acp">
+<form action="{{ U_ACTION }}" method="post" id="gallery_acp">
 
-<!-- BEGIN c_mask -->
-	<h3>{c_mask.C_MASK_NAME}</h3>
-	<!-- IF c_mask.INHERIT_C_MASKS --><p>{L_INHERIT_PERMISSIONS_ALBUM}{L_COLON} <select name="inherit[{c_mask.C_MASK_ID}][full]" id="inherit[{c_mask.C_MASK_ID}][full]" onchange="inherit_album({c_mask.S_ROW_COUNT}, this.options[this.selectedIndex].value);">{c_mask.INHERIT_C_MASKS}</select></p><!-- ENDIF -->
+{% for c_mask in c_mask %}
+	<h3>{{ c_mask.C_MASK_NAME }}</h3>
+	{% if c_mask.INHERIT_C_MASKS %}<p>{{ lang('INHERIT_PERMISSIONS_ALBUM') }}{{ lang('COLON') }} <select name="inherit[{{ c_mask.C_MASK_ID }}][full]" id="inherit[{{ c_mask.C_MASK_ID }}][full]" onchange="inherit_album({{ c_mask.S_ROW_COUNT }}, this.options[this.selectedIndex].value);">{{ c_mask.INHERIT_C_MASKS }}</select></p>{% endif %}
 
-	<div id="c_mask{c_mask.S_ROW_COUNT}">
-	<!-- BEGIN v_mask -->
-	<fieldset class="permissions" id="perm{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}">
-		<legend>{c_mask.v_mask.VICTIM_NAME}</legend>
+	<div id="c_mask{{ c_mask.S_ROW_COUNT }}">
+	{% for v_mask in c_mask.v_mask %}
+	<fieldset class="permissions" id="perm{{ c_mask.S_ROW_COUNT }}{{ v_mask.S_ROW_COUNT }}">
+		<legend>{{ v_mask.VICTIM_NAME }}</legend>
 		<div class="permissions-switch">
 			<div class="permissions-reset">
-				<a href="#" onclick="mark_options('perm{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}', 'y'); gallery_init_colours('{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}', 'yes'); return false;">{L_ALL_YES}</a>
-				&middot; <a href="#" onclick="mark_options('perm{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}', 'u'); gallery_init_colours('{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}', 'no'); return false;">{L_ALL_NO}</a>
-				&middot; <a href="#" onclick="mark_options('perm{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}', 'n'); gallery_init_colours('{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}', 'never'); return false;">{L_ALL_NEVER}</a>
+				<a href="#" onclick="mark_options('perm{{ c_mask.S_ROW_COUNT }}{{ v_mask.S_ROW_COUNT }}', 'y'); gallery_init_colours('{{ c_mask.S_ROW_COUNT }}{{ v_mask.S_ROW_COUNT }}', 'yes'); return false;">{{ lang('ALL_YES') }}</a>
+				&middot; <a href="#" onclick="mark_options('perm{{ c_mask.S_ROW_COUNT }}{{ v_mask.S_ROW_COUNT }}', 'u'); gallery_init_colours('{{ c_mask.S_ROW_COUNT }}{{ v_mask.S_ROW_COUNT }}', 'no'); return false;">{{ lang('ALL_NO') }}</a>
+				&middot; <a href="#" onclick="mark_options('perm{{ c_mask.S_ROW_COUNT }}{{ v_mask.S_ROW_COUNT }}', 'n'); gallery_init_colours('{{ c_mask.S_ROW_COUNT }}{{ v_mask.S_ROW_COUNT }}', 'never'); return false;">{{ lang('ALL_NEVER') }}</a>
 			</div>
 		</div>
 		<dl class="permissions-simple">
-			<dt style="width: 20%"><label for="inherit[{c_mask.C_MASK_ID}][{c_mask.v_mask.VICTIM_ID}]">{L_INHERIT_PERMISSIONS_VICTIM}{L_COLON}</label></dt>
-			<dd><select name="inherit[{c_mask.C_MASK_ID}][{c_mask.v_mask.VICTIM_ID}]" id="inherit[{c_mask.C_MASK_ID}][{c_mask.v_mask.VICTIM_ID}]" onchange="inherit_victim({c_mask.S_ROW_COUNT}, {c_mask.v_mask.S_ROW_COUNT}, this.options[this.selectedIndex].value);">{c_mask.v_mask.INHERIT_VICTIMS}</select></dd>
+			<dt style="width: 20%"><label for="inherit[{{ c_mask.C_MASK_ID }}][{{ v_mask.VICTIM_ID }}]">{{ lang('INHERIT_PERMISSIONS_VICTIM') }}{{ lang('COLON') }}</label></dt>
+			<dd><select name="inherit[{{ c_mask.C_MASK_ID }}][{{ v_mask.VICTIM_ID }}]" id="inherit[{{ c_mask.C_MASK_ID }}][{{ v_mask.VICTIM_ID }}]" onchange="inherit_victim({{ c_mask.S_ROW_COUNT }}, {{ v_mask.S_ROW_COUNT }}, this.options[this.selectedIndex].value);">{{ v_mask.INHERIT_VICTIMS }}</select></dd>
 		</dl>
-		<div class="permissions-advanced" id="advanced{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}">
+		<div class="permissions-advanced" id="advanced{{ c_mask.S_ROW_COUNT }}{{ v_mask.S_ROW_COUNT }}">
 		<div class="permissions-category">
 			<ul>
-			<!-- BEGIN category -->
-				<!-- IF c_mask.v_mask.category.S_YES -->
-					<li class="permissions-preset-yes<!-- IF c_mask.v_mask.category.S_FIRST_ROW --> activetab<!-- ENDIF -->" id="tab{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}">
-				<!-- ELSEIF c_mask.v_mask.category.S_NEVER -->
-					<li class="permissions-preset-never<!-- IF c_mask.v_mask.category.S_FIRST_ROW --> activetab<!-- ENDIF -->" id="tab{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}">
-				<!-- ELSEIF c_mask.v_mask.category.S_NO -->
-					<li class="permissions-preset-no<!-- IF c_mask.v_mask.category.S_FIRST_ROW --> activetab<!-- ENDIF -->" id="tab{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}">
-				<!-- ELSE -->
-					<li class="permissions-preset-custom<!-- IF c_mask.v_mask.category.S_FIRST_ROW --> activetab<!-- ENDIF -->" id="tab{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}">
-				<!-- ENDIF -->
-				<a href="#" onclick="toggle_permissions_panel({c_mask.S_ROW_COUNT}, {c_mask.v_mask.S_ROW_COUNT}, {c_mask.v_mask.category.S_ROW_COUNT}); return false;"><span class="tabbg"><span class="colour"></span>{c_mask.v_mask.category.CAT_NAME}</span></a></li>
-			<!-- END category -->
+			{% for category in v_mask.category %}
+				{% if category.S_YES %}
+					<li class="permissions-preset-yes{% if category.S_FIRST_ROW %} activetab{% endif %}" id="tab{{ c_mask.S_ROW_COUNT }}{{ v_mask.S_ROW_COUNT }}{{ category.S_ROW_COUNT }}">
+				{% elseif category.S_NEVER %}
+					<li class="permissions-preset-never{% if category.S_FIRST_ROW %} activetab{% endif %}" id="tab{{ c_mask.S_ROW_COUNT }}{{ v_mask.S_ROW_COUNT }}{{ category.S_ROW_COUNT }}">
+				{% elseif category.S_NO %}
+					<li class="permissions-preset-no{% if category.S_FIRST_ROW %} activetab{% endif %}" id="tab{{ c_mask.S_ROW_COUNT }}{{ v_mask.S_ROW_COUNT }}{{ category.S_ROW_COUNT }}">
+				{% else %}
+					<li class="permissions-preset-custom{% if category.S_FIRST_ROW %} activetab{% endif %}" id="tab{{ c_mask.S_ROW_COUNT }}{{ v_mask.S_ROW_COUNT }}{{ category.S_ROW_COUNT }}">
+				{% endif %}
+				<a href="#" onclick="toggle_permissions_panel({{ c_mask.S_ROW_COUNT }}, {{ v_mask.S_ROW_COUNT }}, {{ category.S_ROW_COUNT }}); return false;"><span class="tabbg"><span class="colour"></span>{{ category.CAT_NAME }}</span></a></li>
+			{% endfor %}
 			</ul>
 		</div>
 
-	<!-- BEGIN category -->
-		<div class="permissions-panel" id="options{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}" <!-- IF not c_mask.v_mask.category.S_FIRST_ROW --> style="display: none;"<!-- ENDIF -->>
+	{% for category in v_mask.category %}
+		<div class="permissions-panel" id="options{{ c_mask.S_ROW_COUNT }}{{ v_mask.S_ROW_COUNT }}{{ category.S_ROW_COUNT }}" {% if not category.S_FIRST_ROW %} style="display: none;"{% endif %}>
 			<div class="tablewrap">
-				<table id="table{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}" cellspacing="1">
+				<table id="table{{ c_mask.S_ROW_COUNT }}{{ v_mask.S_ROW_COUNT }}{{ category.S_ROW_COUNT }}" cellspacing="1">
 				<colgroup>
 					<col class="permissions-name" />
 					<col class="permissions-yes" />
@@ -235,77 +235,77 @@ function gallery_init_colours(block_id, quick)
 				</colgroup>
 				<thead>
 				<tr>
-					<th class="name" scope="col"><strong>{L_PERMISSION_SETTING}</strong></th>
-					<th class="value permissions-yes" scope="col" style="width: 10%;" ><a href="#" onclick="mark_options('options{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}', 'y');  reset_role('role{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}'); set_colours('{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}', false, 'yes'); return false;">{L_PERMISSION_YES}</a></th>
-					<th class="value permissions-no" scope="col" style="width: 10%;"><a href="#" onclick="mark_options('options{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}', 'u'); reset_role('role{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}'); set_colours('{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}', false, 'no'); return false;">{L_PERMISSION_NO}</a></th>
-					<th class="value permissions-never" scope="col" style="width: 10%;"><a href="#" onclick="mark_options('options{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}', 'n'); reset_role('role{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}'); set_colours('{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}', false, 'never'); return false;">{L_PERMISSION_NEVER}</a></th>
+					<th class="name" scope="col"><strong>{{ lang('PERMISSION_SETTING') }}</strong></th>
+					<th class="value permissions-yes" scope="col" style="width: 10%;" ><a href="#" onclick="mark_options('options{{ c_mask.S_ROW_COUNT }}{{ v_mask.S_ROW_COUNT }}{{ category.S_ROW_COUNT }}', 'y');  reset_role('role{{ c_mask.S_ROW_COUNT }}{{ v_mask.S_ROW_COUNT }}'); set_colours('{{ c_mask.S_ROW_COUNT }}{{ v_mask.S_ROW_COUNT }}{{ category.S_ROW_COUNT }}', false, 'yes'); return false;">{{ lang('PERMISSION_YES') }}</a></th>
+					<th class="value permissions-no" scope="col" style="width: 10%;"><a href="#" onclick="mark_options('options{{ c_mask.S_ROW_COUNT }}{{ v_mask.S_ROW_COUNT }}{{ category.S_ROW_COUNT }}', 'u'); reset_role('role{{ c_mask.S_ROW_COUNT }}{{ v_mask.S_ROW_COUNT }}'); set_colours('{{ c_mask.S_ROW_COUNT }}{{ v_mask.S_ROW_COUNT }}{{ category.S_ROW_COUNT }}', false, 'no'); return false;">{{ lang('PERMISSION_NO') }}</a></th>
+					<th class="value permissions-never" scope="col" style="width: 10%;"><a href="#" onclick="mark_options('options{{ c_mask.S_ROW_COUNT }}{{ v_mask.S_ROW_COUNT }}{{ category.S_ROW_COUNT }}', 'n'); reset_role('role{{ c_mask.S_ROW_COUNT }}{{ v_mask.S_ROW_COUNT }}'); set_colours('{{ c_mask.S_ROW_COUNT }}{{ v_mask.S_ROW_COUNT }}{{ category.S_ROW_COUNT }}', false, 'never'); return false;">{{ lang('PERMISSION_NEVER') }}</a></th>
 				</tr>
 				</thead>
 				<tbody>
-				<!-- BEGIN mask -->
-					<!-- IF c_mask.v_mask.category.mask.S_ROW_COUNT is even --><tr class="row4"><!-- ELSE --><tr class="row3"><!-- ENDIF -->
-					<th class="permissions-name<!-- IF c_mask.v_mask.category.mask.S_ROW_COUNT is even --> row4<!-- ELSE --> row3<!-- ENDIF -->">{c_mask.v_mask.category.mask.PERMISSION}<!-- IF c_mask.v_mask.category.mask.PERMISSION_EXPLAIN --><br />&nbsp;<em>{c_mask.v_mask.category.mask.PERMISSION_EXPLAIN}</em><!-- ENDIF --></th>
-						<!-- IF not c_mask.v_mask.category.mask.S_COUNT_FIELD -->
-							<td class="value permissions-yes"><label for="{c_mask.v_mask.category.mask.S_FIELD_NAME}_y"><input onclick="reset_role('role{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}'); set_colours('{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}', false)" id="{c_mask.v_mask.category.mask.S_FIELD_NAME}_y" name="{c_mask.v_mask.category.mask.S_FIELD_NAME}" class="radio" type="radio"<!-- IF c_mask.v_mask.category.mask.S_YES --> checked="checked"<!-- ENDIF --> value="1" /></label></td>
-							<td class="value permissions-no"><label for="{c_mask.v_mask.category.mask.S_FIELD_NAME}_u"><input onclick="reset_role('role{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}'); set_colours('{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}', false)" id="{c_mask.v_mask.category.mask.S_FIELD_NAME}_u" name="{c_mask.v_mask.category.mask.S_FIELD_NAME}" class="radio" type="radio"<!-- IF not c_mask.v_mask.category.mask.S_YES and not c_mask.v_mask.category.mask.S_NEVER --> checked="checked"<!-- ENDIF --> value="-1" /></label></td>
-							<td class="value permissions-never"><label for="{c_mask.v_mask.category.mask.S_FIELD_NAME}_n"><input onclick="reset_role('role{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}'); set_colours('{c_mask.S_ROW_COUNT}{c_mask.v_mask.S_ROW_COUNT}{c_mask.v_mask.category.S_ROW_COUNT}', false)" id="{c_mask.v_mask.category.mask.S_FIELD_NAME}_n" name="{c_mask.v_mask.category.mask.S_FIELD_NAME}" class="radio" type="radio"<!-- IF c_mask.v_mask.category.mask.S_NEVER --> checked="checked"<!-- ENDIF --> value="0" /></label></td>
-						<!-- ELSE -->
-							<td class="permissions" colspan="3"><input class="text medium" type="text" id="{c_mask.v_mask.category.mask.S_FIELD_NAME}" name="{c_mask.v_mask.category.mask.S_FIELD_NAME}" value="{c_mask.v_mask.category.mask.S_VALUE}" maxlength="7" /></td>
-						<!-- ENDIF -->
+				{% for mask in category.mask %}
+					{% if mask.S_ROW_COUNT is even %}<tr class="row4">{% else %}<tr class="row3">{% endif %}
+					<th class="permissions-name{% if mask.S_ROW_COUNT is even %} row4{% else %} row3{% endif %}">{{ mask.PERMISSION }}{% if mask.PERMISSION_EXPLAIN %}<br />&nbsp;<em>{{ mask.PERMISSION_EXPLAIN }}</em>{% endif %}</th>
+						{% if not mask.S_COUNT_FIELD %}
+							<td class="value permissions-yes"><label for="{{ mask.S_FIELD_NAME }}_y"><input onclick="reset_role('role{{ c_mask.S_ROW_COUNT }}{{ v_mask.S_ROW_COUNT }}'); set_colours('{{ c_mask.S_ROW_COUNT }}{{ v_mask.S_ROW_COUNT }}{{ category.S_ROW_COUNT }}', false)" id="{{ mask.S_FIELD_NAME }}_y" name="{{ mask.S_FIELD_NAME }}" class="radio" type="radio"{% if mask.S_YES %} checked="checked"{% endif %} value="1" /></label></td>
+							<td class="value permissions-no"><label for="{{ mask.S_FIELD_NAME }}_u"><input onclick="reset_role('role{{ c_mask.S_ROW_COUNT }}{{ v_mask.S_ROW_COUNT }}'); set_colours('{{ c_mask.S_ROW_COUNT }}{{ v_mask.S_ROW_COUNT }}{{ category.S_ROW_COUNT }}', false)" id="{{ mask.S_FIELD_NAME }}_u" name="{{ mask.S_FIELD_NAME }}" class="radio" type="radio"{% if not mask.S_YES and not mask.S_NEVER %} checked="checked"{% endif %} value="-1" /></label></td>
+							<td class="value permissions-never"><label for="{{ mask.S_FIELD_NAME }}_n"><input onclick="reset_role('role{{ c_mask.S_ROW_COUNT }}{{ v_mask.S_ROW_COUNT }}'); set_colours('{{ c_mask.S_ROW_COUNT }}{{ v_mask.S_ROW_COUNT }}{{ category.S_ROW_COUNT }}', false)" id="{{ mask.S_FIELD_NAME }}_n" name="{{ mask.S_FIELD_NAME }}" class="radio" type="radio"{% if mask.S_NEVER %} checked="checked"{% endif %} value="0" /></label></td>
+						{% else %}
+							<td class="permissions" colspan="3"><input class="text medium" type="text" id="{{ mask.S_FIELD_NAME }}" name="{{ mask.S_FIELD_NAME }}" value="{{ mask.S_VALUE }}" maxlength="7" /></td>
+						{% endif %}
 				</tr>
-				<!-- END mask -->
+				{% endfor %}
 				</tbody>
 				</table>
 			</div>
 		</div>
-	<!-- END category -->
+	{% endfor %}
 	</div>
 			<div class="clearfix"></div>
 	</fieldset>
-	<!-- END v_mask -->
+	{% endfor %}
 	</div>
-<!-- END c_mask -->
+{% endfor %}
 	<fieldset class="submit-buttons">
-		<legend>{L_SUBMIT}</legend>
-		{S_FORM_TOKEN}{S_HIDDEN_FIELDS}
-		<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
-		<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+		<legend>{{ lang('SUBMIT') }}</legend>
+		{{ S_FORM_TOKEN }}{{ S_HIDDEN_FIELDS }}
+		<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />&nbsp;
+		<input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}" />
 	</fieldset>
 </form>
 
-<!-- ELSEIF S_COPY_PERMISSIONS -->
+{% elseif S_COPY_PERMISSIONS %}
 
-	<form action="{U_ACTION}" method="post" id="gallery_acp">
+	<form action="{{ U_ACTION }}" method="post" id="gallery_acp">
 
 	<fieldset>
-		<legend>{L_LOOK_UP_ALBUM}</legend>
+		<legend>{{ lang('LOOK_UP_ALBUM') }}</legend>
 
 		<dl>
-			<dt><label for="src_album">{L_COPY_PERMISSIONS_FROM}{L_COLON}</label><br /><span>{L_COPY_PERMISSIONS_ALBUM_FROM_EXPLAIN}</span></dt>
-			<dd><select id="src_album" name="src_album_id"><option value="0">{L_SELECT_ALBUM}</option><option value="-1">------------------</option>{S_ALBUM_OPTIONS}</select></dd>
+			<dt><label for="src_album">{{ lang('COPY_PERMISSIONS_FROM') }}{{ lang('COLON') }}</label><br /><span>{{ lang('COPY_PERMISSIONS_ALBUM_FROM_EXPLAIN') }}</span></dt>
+			<dd><select id="src_album" name="src_album_id"><option value="0">{{ lang('SELECT_ALBUM') }}</option><option value="-1">------------------</option>{{ S_ALBUM_OPTIONS }}</select></dd>
 		</dl>
 	</fieldset>
 
 	<fieldset>
-		<legend>{L_LOOK_UP_ALBUM}</legend>
-		<p>{L_LOOK_UP_ALBUMS_EXPLAIN}</p>
+		<legend>{{ lang('LOOK_UP_ALBUM') }}</legend>
+		<p>{{ lang('LOOK_UP_ALBUMS_EXPLAIN') }}</p>
 
 		<dl>
-			<dt><label for="dest_albums">{L_COPY_PERMISSIONS_TO}{L_COLON}</label><br /><span>{L_COPY_PERMISSIONS_ALBUM_TO_EXPLAIN}</span></dt>
-			<dd><select id="dest_albums" name="dest_album_ids[]" multiple="multiple" size="10">{S_ALBUM_OPTIONS}</select></dd>
+			<dt><label for="dest_albums">{{ lang('COPY_PERMISSIONS_TO') }}{{ lang('COLON') }}</label><br /><span>{{ lang('COPY_PERMISSIONS_ALBUM_TO_EXPLAIN') }}</span></dt>
+			<dd><select id="dest_albums" name="dest_album_ids[]" multiple="multiple" size="10">{{ S_ALBUM_OPTIONS }}</select></dd>
 		</dl>
 	</fieldset>
 
 	<fieldset class="submit-buttons">
-		<legend>{L_SUBMIT}</legend>
-		<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
-		<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
-		{S_HIDDEN_FIELDS}
-		{S_FORM_TOKEN}
+		<legend>{{ lang('SUBMIT') }}</legend>
+		<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />&nbsp;
+		<input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}" />
+		{{ S_HIDDEN_FIELDS }}
+		{{ S_FORM_TOKEN }}
 	</fieldset>
 
 	</form>
 
-<!-- ENDIF -->
+{% endif %}
 
-<!-- INCLUDE overall_footer.html -->
+{% include 'overall_footer.html' %}
