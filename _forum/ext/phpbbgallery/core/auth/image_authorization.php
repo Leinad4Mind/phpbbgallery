@@ -25,7 +25,7 @@ class image_authorization
 	/**
 	 * @return array|false
 	 */
-	public function normalize_image_ids(array $image_ids)
+	public function normalize_image_ids(array $image_ids): array|false
 	{
 		$normalized_ids = [];
 		foreach ($image_ids as $image_id)

@@ -15,13 +15,32 @@ use phpbbgallery\core\controller\moderate as moderate_controller;
 
 class image_authorization_test extends TestCase
 {
-	/** @var image_authorization */
-	private $authorization;
+	private image_authorization $authorization;
 
 	// phpcs:ignore PhpbbCodingStandard.NamingConventions.LowercaseUnderscoredFunctions.NotAllowed -- PHPUnit lifecycle API.
 	protected function setUp(): void
 	{
 		$this->authorization = new image_authorization();
+	}
+
+	public function test_helper_contract_is_fully_typed(): void
+	{
+		$reflection = new \ReflectionClass(image_authorization::class);
+
+		foreach ($reflection->getMethods() as $method)
+		{
+			if ($method->getDeclaringClass()->getName() !== image_authorization::class)
+			{
+				continue;
+			}
+
+			foreach ($method->getParameters() as $parameter)
+			{
+				$this->assertNotNull($parameter->getType(), $method->getName() . '($' . $parameter->getName() . ')');
+			}
+
+			$this->assertNotNull($method->getReturnType(), $method->getName() . '()');
+		}
 	}
 
 	public function test_image_permissions_only_apply_to_the_owner(): void
@@ -125,7 +144,7 @@ class image_authorization_test extends TestCase
 	/**
 	 * @return array|false
 	 */
-	private function authorize_batch(array $image_ids, int $route_album_id, array $images, array $albums, array $permissions)
+	private function authorize_batch(array $image_ids, int $route_album_id, array $images, array $albums, array $permissions): array|false
 	{
 		$controller = (new \ReflectionClass(moderate_controller::class))->newInstanceWithoutConstructor();
 		$image_loader = $this->createMock(\phpbbgallery\core\image\image::class);
@@ -135,7 +154,7 @@ class image_authorization_test extends TestCase
 		$gallery_auth = $this->createMock(\phpbbgallery\core\auth\auth::class);
 		$gallery_auth->method('acl_check')->willReturnCallback(static fn (string $permission, int $album_id, int $album_user_id): bool => $permission === 'm_delete' && !empty($permissions[$album_id]));
 
-		$set_dependencies = \Closure::bind(function ($image_loader, $album_loader, $gallery_auth): void
+		$set_dependencies = \Closure::bind(function (object $image_loader, object $album_loader, object $gallery_auth): void
 		{
 			$this->image = $image_loader;
 			$this->album = $album_loader;
@@ -144,7 +163,7 @@ class image_authorization_test extends TestCase
 		}, $controller, moderate_controller::class);
 		$set_dependencies($image_loader, $album_loader, $gallery_auth);
 
-		$authorize = \Closure::bind(function (array $image_ids, int $route_album_id)
+		$authorize = \Closure::bind(function (array $image_ids, int $route_album_id): array|false
 		{
 			return $this->authorize_action_images($image_ids, 'm_delete', $route_album_id);
 		}, $controller, moderate_controller::class);
