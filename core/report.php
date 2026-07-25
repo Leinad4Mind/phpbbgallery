@@ -17,57 +17,57 @@ namespace phpbbgallery\core;
 
 class report
 {
-	const UNREPORTED = 0;
-	const OPEN = 1;
-	const LOCKED = 2;
+	public const UNREPORTED = 0;
+	public const OPEN = 1;
+	public const LOCKED = 2;
 
 	/** @var \phpbbgallery\core\log */
-	protected $gallery_log;
+	protected \phpbbgallery\core\log $gallery_log;
 
 	/** @var \phpbbgallery\core\auth\auth */
-	protected $gallery_auth;
+	protected \phpbbgallery\core\auth\auth $gallery_auth;
 
 	/** @var \phpbb\user */
-	protected $user;
+	protected \phpbb\user $user;
 
 	/** @var \phpbb\language\language */
-	protected $language;
+	protected \phpbb\language\language $language;
 
 	/** @var \phpbb\db\driver\driver_interface */
-	protected $db;
+	protected \phpbb\db\driver\driver_interface $db;
 
 	/** @var \phpbb\user_loader */
-	protected $user_loader;
+	protected \phpbb\user_loader $user_loader;
 
 	/** @var \phpbbgallery\core\album\album */
-	protected $album;
+	protected \phpbbgallery\core\album\album $album;
 
 	/** @var \phpbb\template\template */
-	protected $template;
+	protected \phpbb\template\template $template;
 
 	/** @var \phpbb\controller\helper */
-	protected $helper;
+	protected \phpbb\controller\helper $helper;
 
 	/** @var \phpbbgallery\core\config */
-	protected $gallery_config;
+	protected \phpbbgallery\core\config $gallery_config;
 
 	/** @var \phpbb\pagination */
-	protected $pagination;
+	protected \phpbb\pagination $pagination;
 
 	/** @var \phpbbgallery\core\notification\helper */
-	protected $notification_helper;
+	protected \phpbbgallery\core\notification\helper $notification_helper;
 
 	/** @var string */
-	protected $images_table;
+	protected string $images_table;
 
 	/** @var string */
-	protected $reports_table;
+	protected string $reports_table;
 
 	public function __construct(\phpbbgallery\core\log $gallery_log, \phpbbgallery\core\auth\auth $gallery_auth, \phpbb\user $user,
 		\phpbb\language\language $language, \phpbb\db\driver\driver_interface $db,	\phpbb\user_loader $user_loader,
 		\phpbbgallery\core\album\album $album, \phpbb\template\template $template, \phpbb\controller\helper $helper,
 		\phpbbgallery\core\config $gallery_config, \phpbb\pagination $pagination, \phpbbgallery\core\notification\helper $notification_helper,
-		$images_table, $reports_table)
+		string $images_table, string $reports_table)
 	{
 		$this->gallery_log = $gallery_log;
 		$this->gallery_auth = $gallery_auth;
@@ -88,9 +88,9 @@ class report
 	/**
 	 * Report an image
 	 *
-	 * @param $data
+	 * @param array $data Report data
 	 */
-	public function add($data)
+	public function add(array $data): void
 	{
 		if (!isset($data['report_album_id']) || !isset($data['report_image_id']) || !isset($data['report_note']))
 		{
@@ -128,7 +128,7 @@ class report
 	 * @param    array $report_ids array of report_ids to closedir
 	 * @param bool|int $user_id User Id, if not set - use current user idate
 	 */
-	public function close_reports_by_image($report_ids, $user_id = false)
+	public function close_reports_by_image(array|int $report_ids, int|false $user_id = false): void
 	{
 		$sql_ary = array(
 			'report_manager'		=> (int) (($user_id) ? $user_id : $this->user->data['user_id']),
@@ -155,7 +155,7 @@ class report
 	 * @param    mixed $image_ids Array or integer with image_id.
 	 * @param $move_to
 	 */
-	public function move_images($image_ids, $move_to)
+	public function move_images(array|int $image_ids, int $move_to): void
 	{
 		$image_ids = self::cast_mixed_int2array($image_ids);
 
@@ -172,7 +172,7 @@ class report
 	 * @param $move_to
 	 * @internal param mixed $image_ids Array or integer with image_id.
 	 */
-	public function move_album_content($move_from, $move_to)
+	public function move_album_content(int $move_from, int $move_to): void
 	{
 		$sql = 'UPDATE ' . $this->reports_table . '
 			SET report_album_id = ' . (int) $move_to . '
@@ -185,7 +185,7 @@ class report
 	*
 	* @param	mixed	$report_ids		Array or integer with report_id.
 	*/
-	public function delete($report_ids)
+	public function delete(array|int $report_ids): void
 	{
 		$report_ids = self::cast_mixed_int2array($report_ids);
 
@@ -208,7 +208,7 @@ class report
 	*
 	* @param	mixed	$image_ids		Array or integer with image_id.
 	*/
-	public function delete_images($image_ids)
+	public function delete_images(array|int $image_ids): void
 	{
 		$image_ids = self::cast_mixed_int2array($image_ids);
 
@@ -239,7 +239,7 @@ class report
 	*
 	* @param	mixed	$album_ids		Array or integer with album_id.
 	*/
-	public function delete_albums($album_ids)
+	public function delete_albums(array|int $album_ids): void
 	{
 		$album_ids = self::cast_mixed_int2array($album_ids);
 
@@ -271,12 +271,12 @@ class report
 	 * @param int $per_page
 	 * @param int $status
 	 */
-	public function build_list($album, $page = 1, $per_page = 0, $status = 1)
+	public function build_list(int $album, int $page = 1, int $per_page = 0, int $status = 1): void
 	{
 		// So if we are not forcing par page get it from config
 		if ($per_page == 0)
 		{
-			$per_page = $this->gallery_config->get('items_per_page');
+			$per_page = (int) $this->gallery_config->get('items_per_page');
 		}
 		// Let's get albums that user can moderate
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
@@ -310,13 +310,15 @@ class report
 		$result = $this->db->sql_query($sql);
 		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
-		$count = $row['count'];
+		$count = is_array($row) ? (int) $row['count'] : 0;
 		// Request reports
 		$sql_array['SELECT'] = 'i.image_id, i.image_name, i.image_user_id, i.image_username, i.image_user_colour, i.image_time, i.image_album_id, r.report_id, r.reporter_id, r.report_time';
-		$page = $page - 1;
+		$page = max(1, $page) - 1;
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
 		$result = $this->db->sql_query_limit($sql, $per_page, $page * $per_page);
 		// Build few arrays
+		$reported_images = [];
+		$users_array = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$reported_images[] = array(
@@ -345,21 +347,21 @@ class report
 		$this->user_loader->load_users(array_keys($users_array));
 
 		$reported_images_count = 0;
-		foreach ($reported_images as $VAR)
+		foreach ($reported_images as $reported_image)
 		{
-			$album_tmp = $this->album->get_info($VAR['image_album_id']);
+			$album_tmp = $this->album->get_info($reported_image['image_album_id']);
 			$this->template->assign_block_vars('report_image_open', array(
-				'U_IMAGE_ID'	=> $VAR['image_id'],
-				'U_IMAGE'	=> $this->helper->route('phpbbgallery_core_image_file_mini', array('image_id' => $VAR['image_id'])),
-				'U_IMAGE_URL'	=> $this->helper->route('phpbbgallery_core_image', array('image_id'	=> $VAR['image_id'])),
-				'U_IMAGE_NAME'	=> $VAR['image_name'],
-				'IMAGE_AUTHOR'	=> $this->user_loader->get_username($VAR['image_user_id'], 'full'),
-				'IMAGE_TIME'	=> $this->user->format_date($VAR['image_time']),
+				'U_IMAGE_ID'	=> $reported_image['image_id'],
+				'U_IMAGE'	=> $this->helper->route('phpbbgallery_core_image_file_mini', array('image_id' => $reported_image['image_id'])),
+				'U_IMAGE_URL'	=> $this->helper->route('phpbbgallery_core_image', array('image_id'	=> $reported_image['image_id'])),
+				'U_IMAGE_NAME'	=> $reported_image['image_name'],
+				'IMAGE_AUTHOR'	=> $this->user_loader->get_username($reported_image['image_user_id'], 'full'),
+				'IMAGE_TIME'	=> $this->user->format_date($reported_image['image_time']),
 				'IMAGE_ALBUM'	=> $album_tmp['album_name'],
-				'IMAGE_ALBUM_URL'	=> $this->helper->route('phpbbgallery_core_album', array('album_id' => $VAR['image_album_id'])),
-				'REPORT_URL'	=> $this->helper->route('phpbbgallery_core_moderate_image', array('image_id' => $VAR['image_id'])),
-				'REPORT_AUTHOR'	=> $this->user_loader->get_username($VAR['reporter_id'], 'full'),
-				'REPORT_TIME'	=> $this->user->format_date($VAR['report_time']),
+				'IMAGE_ALBUM_URL'	=> $this->helper->route('phpbbgallery_core_album', array('album_id' => $reported_image['image_album_id'])),
+				'REPORT_URL'	=> $this->helper->route('phpbbgallery_core_moderate_image', array('image_id' => $reported_image['image_id'])),
+				'REPORT_AUTHOR'	=> $this->user_loader->get_username($reported_image['reporter_id'], 'full'),
+				'REPORT_TIME'	=> $this->user->format_date($reported_image['report_time']),
 			));
 			unset($album_tmp);
 			$reported_images_count ++;
@@ -404,13 +406,13 @@ class report
 	 *
 	 * @param    (int)    $image_id    Image id for which we will get info about
 	 * return    array    $report_data    array with all report info\
-	 * @return array|void
+	 * @return array Report data indexed by report ID
 	 */
-	public function get_data_by_image($image_id)
+	public function get_data_by_image(int $image_id): array
 	{
 		if (empty($image_id))
 		{
-			return;
+			return [];
 		}
 
 		$sql = 'SELECT * FROM ' . $this->reports_table . ' WHERE report_image_id = ' . (int) $image_id;
@@ -432,7 +434,7 @@ class report
 
 		return $report_data;
 	}
-	static public function cast_mixed_int2array($ids)
+	public static function cast_mixed_int2array(array|int $ids): array
 	{
 		if (is_array($ids))
 		{
