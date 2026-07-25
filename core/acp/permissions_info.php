@@ -12,7 +12,7 @@ namespace phpbbgallery\core\acp;
 
 class permissions_info
 {
-	function module()
+	public function module(): array
 	{
 		return array(
 			'title'		=> 'PHPBB_GALLERY',

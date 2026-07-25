@@ -18,7 +18,7 @@ namespace phpbbgallery\core\ucp;
  */
 class settings_info
 {
-	function module()
+	public function module(): array
 	{
 		return array(
 			'filename'	=> '\phpbbgallery\core\ucp\settings_module',

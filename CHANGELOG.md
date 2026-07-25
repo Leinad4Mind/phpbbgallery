@@ -31,6 +31,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added native property, parameter, union-return, and operation types throughout the Core ACL service, with explicit public constants and fail-closed permission contracts.
 - Added native module-entry and progress-rendering types to the ACP album manager.
 - Added native module-entry types to the ACP Gallery log viewer.
+- Added public array contracts to all Core ACP and UCP module metadata providers.
 - Added native property, parameter, and return types throughout the Core album, album-display, album-loader, and album-management services, with initialized request state and safe parent-cache deserialization.
 - Added native property, parameter, and return types throughout the Core image service, including stable no-op and missing-image results and instance-safe counter/filename calls.
 - Added native property, parameter, and return types throughout the Core comment service, with explicit invalid-mutation results and instance-safe identifier normalization.
@@ -141,6 +142,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added permanent ACL-domain tests covering native contracts, cache isolation and deserialization, moderator argument order, personal-album restrictions, unsupported permissions, and missing albums.
 - Added permanent ACP album-manager tests covering complete native contracts and centralized update input.
 - Added permanent ACP Gallery-log tests covering complete native contracts and mutation request/CSRF ordering.
+- Added permanent ACP/UCP module-metadata tests covering public contracts, expected modes, authorization guards, and categories.
 - Validated the ZIP upload, ACP Import, authorization, individual-move security, ACP rating-reset, ACP personal-resync, UCP CSRF, orphan-upload, resumable-upload, subtree-count, hotlink, notification-lifecycle, migration-ordering, purge-safety, database-index, view-counter, browser-cache, package-hygiene, JavaScript-asset, and language-catalog phases with PHP 7.4, 8.1, 8.2, 8.4, and 8.5.
 
 ## [3.4.0]

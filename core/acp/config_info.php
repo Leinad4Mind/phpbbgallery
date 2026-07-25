@@ -11,7 +11,7 @@ namespace phpbbgallery\core\acp;
 
 class config_info
 {
-	function module()
+	public function module(): array
 	{
 		return array(
 			'title'		=> 'PHPBB_GALLERY',
