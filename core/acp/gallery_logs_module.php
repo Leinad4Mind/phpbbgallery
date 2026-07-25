@@ -20,7 +20,7 @@ class gallery_logs_module
 	public string $page_title = '';
 	public \phpbb\language\language $language;
 
-	function main($id, $mode)
+	public function main(string $id, string $mode): void
 	{
 		global $auth, $template, $user, $request;
 		global $phpbb_container;
