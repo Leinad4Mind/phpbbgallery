@@ -111,6 +111,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Tests
 
+- Added GitHub Actions coverage for all four Gallery components on PHP 8.1, 8.2, 8.4, and 8.5, plus manifest validation, PHP linting, and production PHPCS checks.
 - Added permanent runtime-compatibility tests covering the PHP/phpBB/PHPUnit baselines, legacy `var` regression, and typed ACP/UCP module state.
 - Added standalone ACP Cleanup tests covering typed service/module contracts, centralized form input, safe directory scanning, file cleanup, database-entry cleanup, and moderation delegation.
 - Added standalone ACP Cleanup migration tests covering native contracts, dependency ordering, permission installation, and module registration.
