@@ -38,8 +38,7 @@ class migration_integrity_test extends TestCase
 		performance_indexes::class,
 	];
 
-	/** @var array */
-	private $temp_directories = [];
+	private array $temp_directories = [];
 
 	// phpcs:ignore PhpbbCodingStandard.NamingConventions.LowercaseUnderscoredFunctions.NotAllowed -- PHPUnit lifecycle API.
 	protected function setUp(): void
@@ -82,6 +81,46 @@ class migration_integrity_test extends TestCase
 			['\phpbbgallery\core\migrations\resumable_uploads'],
 			performance_indexes::depends_on()
 		);
+	}
+
+	public function test_migration_owned_contracts_are_typed_with_profilefield_exceptions(): void
+	{
+		$profilefield_properties = ['profilefield_name', 'profilefield_database_type', 'profilefield_data'];
+
+		foreach (self::MIGRATIONS as $class_name)
+		{
+			$reflection = new \ReflectionClass($class_name);
+			foreach ($reflection->getMethods() as $method)
+			{
+				if ($method->getDeclaringClass()->getName() !== $class_name)
+				{
+					continue;
+				}
+
+				foreach ($method->getParameters() as $parameter)
+				{
+					$this->assertNotNull($parameter->getType(), $class_name . '::' . $method->getName() . '($' . $parameter->getName() . ')');
+				}
+
+				$this->assertNotNull($method->getReturnType(), $class_name . '::' . $method->getName() . '()');
+			}
+
+			foreach ($reflection->getProperties() as $property)
+			{
+				if ($property->getDeclaringClass()->getName() !== $class_name)
+				{
+					continue;
+				}
+
+				if ($class_name === release_3_2_1_0::class && in_array($property->getName(), $profilefield_properties, true))
+				{
+					$this->assertNull($property->getType(), $class_name . '::$' . $property->getName() . ' must match phpBB\'s untyped parent property.');
+					continue;
+				}
+
+				$this->assertNotNull($property->getType(), $class_name . '::$' . $property->getName());
+			}
+		}
 	}
 
 	public function test_every_later_migration_depends_transitively_on_table_creation(): void
@@ -185,13 +224,13 @@ class migration_integrity_test extends TestCase
 	/**
 	 * @return array
 	 */
-	private function migration_graph()
+	private function migration_graph(): array
 	{
 		$known = array_fill_keys(self::MIGRATIONS, true);
 		$graph = [];
 		foreach (self::MIGRATIONS as $migration)
 		{
-			$dependencies = array_map(function ($dependency)
+			$dependencies = array_map(function (string $dependency): string
 			{
 				return ltrim($dependency, '\\');
 			}, $migration::depends_on());
@@ -201,7 +240,7 @@ class migration_integrity_test extends TestCase
 		return $graph;
 	}
 
-	private function depends_on($migration, $target, array $graph): bool
+	private function depends_on(string $migration, string $target, array $graph): bool
 	{
 		if ($migration === $target)
 		{
@@ -241,7 +280,7 @@ class migration_integrity_test extends TestCase
 		return $directory;
 	}
 
-	private function remove_temp_directory($directory): void
+	private function remove_temp_directory(string $directory): void
 	{
 		$real_directory = realpath($directory);
 		$temp_root = realpath(sys_get_temp_dir());

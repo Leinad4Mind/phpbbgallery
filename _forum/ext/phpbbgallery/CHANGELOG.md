@@ -33,6 +33,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added native module-entry and progress-rendering types to the ACP album manager.
 - Added native module-entry types to the ACP Gallery log viewer.
 - Added public array contracts to all Core ACP and UCP module metadata providers.
+- Added native dependency, schema, data, callback, and static configuration types throughout the Core migration chain while preserving phpBB profile-field property compatibility.
 - Added native property, parameter, and return types throughout the Core album, album-display, album-loader, and album-management services, with initialized request state and safe parent-cache deserialization.
 - Added native property, parameter, and return types throughout the Core image service, including stable no-op and missing-image results and instance-safe counter/filename calls.
 - Added native property, parameter, and return types throughout the Core comment service, with explicit invalid-mutation results and instance-safe identifier normalization.
@@ -129,7 +130,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added permanent package-hygiene tests covering generated artefacts, duplicate bundles, namespaced asset resolution, polaroid loading, current widget version, missing source-map references, and third-party checksums.
 - Added permanent ACP personal-gallery resync tests covering populated and empty databases, normalized values, and regression against indexing a missing row.
 - Added permanent performance and browser-cache tests covering index creation and rollback, index-name portability, conditional 304 responses, stale validators, no-store responses, file timestamps, and view-counter ownership.
-- Added permanent migration and purge-safety tests covering dependency ordering, cycle detection, table prerequisites, atomic file backup, idempotency, and regression against recursive deletion.
+- Added permanent migration and purge-safety tests covering native contracts, profile-field compatibility, dependency ordering, cycle detection, table prerequisites, atomic file backup, idempotency, and regression against recursive deletion.
 - Added permanent ZIP extractor tests covering valid archives, traversal attempts, disguised files, duplicate paths, malformed metadata, resource limits, compression-ratio abuse, and cleanup behavior.
 - Added permanent ACP Import tests covering native type contracts, state validation, non-executable persistence, legacy-state cleanup, path containment, symbolic links, MIME validation, safe copying, language completeness, and architectural regressions.
 - Added permanent authorization tests covering native helper contracts, image ownership, moderator overrides, route-album containment, per-image moderation permissions, destination permissions, and controller integration.
