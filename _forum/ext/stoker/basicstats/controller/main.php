@@ -1196,19 +1196,13 @@ final class main
 
 		$rows = [];
 		$max_avg = 0.0;
-		$max_bucket = null;
 
 		for ($b = $bucketFrom; $b <= $bucketTo; $b++)
 		{
 			$total = (int) ($bucketCounts[$b] ?? 0);
 			$occ = max(1, (int) ($occurrences[$b] ?? 1));
 			$avg = $total / $occ;
-
-			if ($avg > $max_avg)
-			{
-				$max_avg = $avg;
-				$max_bucket = $b;
-			}
+			$max_avg = max($max_avg, $avg);
 
 			$rows[] = ['bucket' => $b, 'total' => $total, 'avg' => $avg];
 		}
@@ -1224,7 +1218,7 @@ final class main
 				'AVERAGE'      => $this->format_number($row['avg']),
 				'TOTAL'        => $this->format_number((float) $row['total']),
 				'BARWIDTH'     => sprintf('%.1f', $bar),
-				'IS_MAX'       => ($row['bucket'] === $max_bucket),
+				'IS_MAX'       => ($max_avg > 0.0 && abs($row['avg'] - $max_avg) < 1e-9),
 			]);
 		}
 	}
