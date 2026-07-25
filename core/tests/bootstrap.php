@@ -114,6 +114,7 @@ namespace
 	require_once dirname(__DIR__) . '/controller/image.php';
 	require_once dirname(__DIR__) . '/event/main_listener.php';
 	require_once dirname(__DIR__) . '/acp/main_module.php';
+	require_once dirname(__DIR__) . '/acp/config_module.php';
 	require_once dirname(__DIR__) . '/ucp/main_module.php';
 	require_once dirname(__DIR__) . '/config.php';
 	require_once dirname(__DIR__) . '/cache.php';
