@@ -1,4 +1,14 @@
 services:
+    oxpus.basicstats.listener:
+        class: oxpus\basicstats\event\main_listener
+        arguments:
+            - '%core.php_ext%'
+            - '@controller.helper'
+            - '@template'
+            - '@user'
+        tags:
+            - { name: event.listener }
+
     oxpus.basicstats.controller:
         class: oxpus\basicstats\controller\main
         arguments:
@@ -9,12 +19,3 @@ services:
             - '@user'
             - '@config'
             - '@language'
-    oxpus.basicstats.listener:
-        class: oxpus\basicstats\event\main_listener
-        arguments:
-            - '%core.php_ext%'
-            - '@controller.helper'
-            - '@template'
-            - '@user'
-        tags:
-            - { name: event.listener }

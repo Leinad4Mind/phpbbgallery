@@ -23,9 +23,10 @@ class stoker_basicstats_migrations extends \phpbb\db\migration\migration
 	{
 		return [
 			['permission.add', ['u_basicstats_view']],
+			['permission.permission_set', ['ADMINISTRATORS', 'u_basicstats_view', 'group']],
 		];
 	}
-	
+
 	public function revert_data()
 	{
 		return [

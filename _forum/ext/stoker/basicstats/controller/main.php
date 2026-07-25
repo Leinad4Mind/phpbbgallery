@@ -41,6 +41,20 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  * - Yearly view : one "all years" key
  * - Only current periods use short TTL; past periods cache forever.
  * - Payloads are numbers-only (language-agnostic).
+ *
+ * Timezone note:
+ * - phpBB stores all timestamps as UTC unix epochs. All internal period
+ *   boundary/bucket math in this controller uses gmdate()/gmmktime() and the
+ *   private gmgetdate() helper below (PHP has no native "gm" counterpart for
+ *   getdate(), unlike date()/mktime()) so that "day 15", "month 8", "year
+ *   2025" always mean the UTC calendar
+ *   day/month/year - independent of the PHP server's default timezone and,
+ *   for the MySQL fast path, independent of the MySQL session's time_zone
+ *   setting too (see group_by_day/month/year - they bucket by
+ *   FLOOR(unix_ts / 86400), a pure integer operation with no timezone
+ *   conversion involved, and roll the buckets up to calendar labels in PHP).
+ *   Only user-facing display labels go through $this->user->format_date(),
+ *   which intentionally applies the viewing user's configured timezone.
  */
 final class main
 {
@@ -97,8 +111,14 @@ final class main
 		$decimal_separator = (string) $this->language->lang('DECIMAL_SEPARATOR_BS');
 		$thousands_separator = (string) $this->language->lang('THOUSANDS_SEPARATOR_BS');
 
-		if ($decimals < 0) { $decimals = 0; }
-		if ($decimals > 6) { $decimals = 6; }
+		if ($decimals < 0)
+		{
+			$decimals = 0;
+		}
+		if ($decimals > 6)
+		{
+			$decimals = 6;
+		}
 
 		if ($decimals === 0 || round($value, $decimals) === floor($value))
 		{
@@ -124,17 +144,17 @@ final class main
 		}
 		$s_year = trim($this->request->variable('s_year', ''));
 		$now = time();
-		$now_info = getdate($now);
+		$now_info = $this->gmgetdate($now);
 
 		switch ($mode)
 		{
 			case 'd':
 				$current_time = $now_info;
-				$board_starttime = getdate((int) $this->config['board_startdate']);
+				$board_starttime = $this->gmgetdate((int) $this->config['board_startdate']);
 
 				if ($s_month === '')
 				{
-					$s_month = date('n-Y', $current_time[0]);
+					$s_month = gmdate('n-Y', $current_time[0]);
 				}
 
 				[$sel_mon, $sel_year] = array_map('intval', explode('-', $s_month, 2));
@@ -143,19 +163,19 @@ final class main
 				{
 					$start_ts = ($board_starttime['mon'] === $current_time['mon'] && $board_starttime['year'] === $current_time['year'])
 						? $board_starttime[0]
-						: mktime(0, 0, 0, $current_time['mon'], 1, $current_time['year']);
+						: gmmktime(0, 0, 0, $current_time['mon'], 1, $current_time['year']);
 					$end_ts = $current_time[0];
 				}
 				else
 				{
-					$start_ts = ($sel_mon === (int) $board_starttime['mon'] && $sel_year === (int) $board_starttime['year']) ? $board_starttime[0] : mktime(0, 0, 0, $sel_mon, 1, $sel_year);
-					$end_ts = mktime(0, 0, 0, $sel_mon + 1, 1, $sel_year);
+					$start_ts = ($sel_mon === (int) $board_starttime['mon'] && $sel_year === (int) $board_starttime['year']) ? $board_starttime[0] : gmmktime(0, 0, 0, $sel_mon, 1, $sel_year);
+					$end_ts = gmmktime(0, 0, 0, $sel_mon + 1, 1, $sel_year);
 				}
 
-				$start_info = getdate($start_ts);
-				$end_info = getdate($end_ts);
+				$start_info = $this->gmgetdate($start_ts);
+				$end_info = $this->gmgetdate($end_ts);
 				$first_day = (int) $start_info['mday'];
-				$last_day = (int) date('j', $end_info[0] - 1);
+				$last_day = (int) gmdate('j', $end_info[0] - 1);
 				$counted_days = max(0, $last_day - $first_day + 1);
 
 				$is_current_month = ($sel_year === (int) $current_time['year'] && $sel_mon === (int) $current_time['mon']);
@@ -171,9 +191,9 @@ final class main
 					$regs_by_day = $this->group_by_day(USERS_TABLE, 'user_regdate', $regs_where, $start_ts, $end_ts);
 
 					$pack = [
-						'topics'	=> $topics_by_day,
-						'posts'		=> $posts_by_day,
-						'user_reg'	=> $regs_by_day,
+						'topics'   => $topics_by_day,
+						'posts'    => $posts_by_day,
+						'user_reg' => $regs_by_day,
 					];
 					$this->cache_put($ckey, $pack, $is_current_month ? self::TTL_D_CURRENT : 0);
 				}
@@ -182,9 +202,9 @@ final class main
 				for ($d = $first_day; $d <= $last_day; $d++)
 				{
 					$daily_data[$d] = [
-						'topics'	=> (int) ($pack['topics'][$d] ?? 0),
-						'posts'		=> (int) ($pack['posts'][$d] ?? 0),
-						'user_reg'	=> (int) ($pack['user_reg'][$d] ?? 0),
+						'topics'   => (int) ($pack['topics'][$d] ?? 0),
+						'posts'    => (int) ($pack['posts'][$d] ?? 0),
+						'user_reg' => (int) ($pack['user_reg'][$d] ?? 0),
 					];
 				}
 
@@ -212,11 +232,11 @@ final class main
 						$bar = ($max['topics'] > 0.0) ? ($cnt * 100.0 / $max['topics']) : 0.0;
 
 						$this->template->assign_block_vars('periodic_topics_row', [
-							'TIME_ELEMENT'	=> $this->user->format_date(mktime(0, 0, 0, $sel_mon, (int) $day, $sel_year), 'd F Y'),
-							'COUNT'			=> $this->format_number($cnt),
-							'PCT'			=> $this->format_number($pct),
-							'BARWIDTH'		=> sprintf('%.1f', $bar),
-							'IS_MAX'		=> ($data['topics'] == $max['topics']),
+							'TIME_ELEMENT' => $this->user->format_date(gmmktime(0, 0, 0, $sel_mon, (int) $day, $sel_year), 'd F Y'),
+							'COUNT'        => $this->format_number($cnt),
+							'PCT'          => $this->format_number($pct),
+							'BARWIDTH'     => sprintf('%.1f', $bar),
+							'IS_MAX'       => ($data['topics'] == $max['topics']),
 						]);
 					}
 				}
@@ -231,11 +251,11 @@ final class main
 						$bar = ($max['posts'] > 0.0) ? ($cnt * 100.0 / $max['posts']) : 0.0;
 
 						$this->template->assign_block_vars('periodic_posts_row', [
-							'TIME_ELEMENT'	=> $this->user->format_date(mktime(0, 0, 0, $sel_mon, (int) $day, $sel_year), 'd F Y'),
-							'COUNT'			=> $this->format_number($cnt),
-							'PCT'			=> $this->format_number($pct),
-							'BARWIDTH'		=> sprintf('%.1f', $bar),
-							'IS_MAX'		=> ($data['posts'] == $max['posts']),
+							'TIME_ELEMENT' => $this->user->format_date(gmmktime(0, 0, 0, $sel_mon, (int) $day, $sel_year), 'd F Y'),
+							'COUNT'        => $this->format_number($cnt),
+							'PCT'          => $this->format_number($pct),
+							'BARWIDTH'     => sprintf('%.1f', $bar),
+							'IS_MAX'       => ($data['posts'] == $max['posts']),
 						]);
 					}
 				}
@@ -250,20 +270,20 @@ final class main
 						$bar = ($max['user_reg'] > 0.0) ? ($cnt * 100.0 / $max['user_reg']) : 0.0;
 
 						$this->template->assign_block_vars('periodic_user_regs_row', [
-							'TIME_ELEMENT'	=> $this->user->format_date(mktime(0, 0, 0, $sel_mon, (int) $day, $sel_year), 'd F Y'),
-							'COUNT'			=> $this->format_number($cnt),
-							'PCT'			=> $this->format_number($pct),
-							'BARWIDTH'		=> sprintf('%.1f', $bar),
-							'IS_MAX'		=> ($data['user_reg'] == $max['user_reg']),
+							'TIME_ELEMENT' => $this->user->format_date(gmmktime(0, 0, 0, $sel_mon, (int) $day, $sel_year), 'd F Y'),
+							'COUNT'        => $this->format_number($cnt),
+							'PCT'          => $this->format_number($pct),
+							'BARWIDTH'     => sprintf('%.1f', $bar),
+							'IS_MAX'       => ($data['user_reg'] == $max['user_reg']),
 						]);
 					}
 				}
 
 				$month_options = [];
 				$temp_month = (int) $board_starttime['mon'];
-				while (($temp_epoch = mktime(0, 0, 0, $temp_month, 1, (int) $board_starttime['year'])) <= $current_time[0])
+				while (($temp_epoch = gmmktime(0, 0, 0, $temp_month, 1, (int) $board_starttime['year'])) <= $current_time[0])
 				{
-					$value = date('n-Y', $temp_epoch);
+					$value = gmdate('n-Y', $temp_epoch);
 					$label = $this->user->format_date($temp_epoch, 'F Y');
 					$month_options[$value] = $label;
 					$temp_month++;
@@ -273,37 +293,37 @@ final class main
 				foreach ($month_options as $value => $label)
 				{
 					$this->template->assign_block_vars('bs_month_options', [
-						'VALUE'		=> $value,
-						'LABEL'		=> $label,
-						'SELECTED'	=> ($value === $selected_month),
+						'VALUE'    => $value,
+						'LABEL'    => $label,
+						'SELECTED' => ($value === $selected_month),
 					]);
 				}
 
 				$u_bs_action = $this->u_action . '?mode=d';
-				$board_min_ts = mktime(0, 0, 0, (int) $board_starttime['mon'], 1, (int) $board_starttime['year']);
-				$current_month_ts = mktime(0, 0, 0, (int) $current_time['mon'], 1, (int) $current_time['year']);
-				$sel_ts = mktime(0, 0, 0, $sel_mon, 1, $sel_year);
-				$prev_ts = mktime(0, 0, 0, $sel_mon - 1, 1, $sel_year);
-				$next_ts = mktime(0, 0, 0, $sel_mon + 1, 1, $sel_year);
+				$board_min_ts = gmmktime(0, 0, 0, (int) $board_starttime['mon'], 1, (int) $board_starttime['year']);
+				$current_month_ts = gmmktime(0, 0, 0, (int) $current_time['mon'], 1, (int) $current_time['year']);
+				$sel_ts = gmmktime(0, 0, 0, $sel_mon, 1, $sel_year);
+				$prev_ts = gmmktime(0, 0, 0, $sel_mon - 1, 1, $sel_year);
+				$next_ts = gmmktime(0, 0, 0, $sel_mon + 1, 1, $sel_year);
 
-				$prev_url = ($prev_ts >= $board_min_ts) ? $this->u_action . '?mode=d&s_month=' . date('n-Y', $prev_ts) : '';
-				$next_url = ($next_ts <= $current_month_ts) ? $this->u_action . '?mode=d&s_month=' . date('n-Y', $next_ts) : '';
+				$prev_url = ($prev_ts >= $board_min_ts) ? $this->u_action . '?mode=d&s_month=' . gmdate('n-Y', $prev_ts) : '';
+				$next_url = ($next_ts <= $current_month_ts) ? $this->u_action . '?mode=d&s_month=' . gmdate('n-Y', $next_ts) : '';
 
 				$this->template->assign_vars([
-					'AVG_TOPICS'			=> $this->format_number($totals['topics'] / max(1, $counted_days)),
-					'AVG_POSTS'				=> $this->format_number($totals['posts'] / max(1, $counted_days)),
-					'AVG_USER_REGS'			=> $this->format_number($totals['user_reg'] / max(1, $counted_days)),
-					'STATS_MONTH_EXPLAIN'	=> sprintf($this->language->lang('BS_STATS_MONTH_EXPLAIN'), $this->user->format_date($start_ts, 'F Y')),
-					'U_BS_ACTION'			=> $u_bs_action,
-					'BS_PREV_URL'			=> $prev_url,
-					'BS_NEXT_URL'			=> $next_url,
+					'AVG_TOPICS'          => $this->format_number($totals['topics'] / max(1, $counted_days)),
+					'AVG_POSTS'           => $this->format_number($totals['posts'] / max(1, $counted_days)),
+					'AVG_USER_REGS'       => $this->format_number($totals['user_reg'] / max(1, $counted_days)),
+					'STATS_MONTH_EXPLAIN' => sprintf($this->language->lang('BS_STATS_MONTH_EXPLAIN'), $this->user->format_date($start_ts, 'F Y')),
+					'U_BS_ACTION'         => $u_bs_action,
+					'BS_PREV_URL'         => $prev_url,
+					'BS_NEXT_URL'         => $next_url,
 				]);
 			break;
 
 			case 'm':
 				$show_all = false;
 				$current_time = $now_info;
-				$board_starttime = getdate((int) $this->config['board_startdate']);
+				$board_starttime = $this->gmgetdate((int) $this->config['board_startdate']);
 
 				if ($s_year === '')
 				{
@@ -323,12 +343,12 @@ final class main
 				else
 				{
 					$sy = (int) $s_year;
-					$start_ts = ($sy === (int) $board_starttime['year']) ? $board_starttime[0] : mktime(0, 0, 0, 1, 1, $sy);
-					$end_ts = ($sy === (int) $current_time['year']) ? $current_time[0] : mktime(0, 0, 0, 1, 1, $sy + 1);
+					$start_ts = ($sy === (int) $board_starttime['year']) ? $board_starttime[0] : gmmktime(0, 0, 0, 1, 1, $sy);
+					$end_ts = ($sy === (int) $current_time['year']) ? $current_time[0] : gmmktime(0, 0, 0, 1, 1, $sy + 1);
 				}
 
-				$start_info = getdate($start_ts);
-				$end_info = getdate($end_ts);
+				$start_info = $this->gmgetdate($start_ts);
+				$end_info = $this->gmgetdate($end_ts);
 
 				$months = [];
 				$counted_months = 0;
@@ -336,12 +356,12 @@ final class main
 
 				while ($offset < $end_info[0])
 				{
-					$key = date('Y-m', $offset);
+					$key = gmdate('Y-m', $offset);
 					$label = $this->user->format_date($offset, 'F Y');
 					$months[$key] = ['label' => $label, 'topics' => 0, 'posts' => 0, 'user_reg' => 0];
 
 					$counted_months++;
-					$offset = mktime(0, 0, 0, $start_info['mon'] + $counted_months, 1, $start_info['year']);
+					$offset = gmmktime(0, 0, 0, $start_info['mon'] + $counted_months, 1, $start_info['year']);
 				}
 
 				$ckey = $show_all ? $this->key_m_all() : $this->key_m_year((int) $s_year);
@@ -355,9 +375,9 @@ final class main
 					$regs_by_month = $this->group_by_month(USERS_TABLE, 'user_regdate', $regs_where, $show_all ? null : $start_ts, $show_all ? null : $end_ts);
 
 					$pack = [
-						'topics'	=> $topics_by_month,
-						'posts'		=> $posts_by_month,
-						'user_reg'	=> $regs_by_month,
+						'topics'   => $topics_by_month,
+						'posts'    => $posts_by_month,
+						'user_reg' => $regs_by_month,
 					];
 
 					if ($show_all)
@@ -373,15 +393,24 @@ final class main
 
 				foreach ($pack['topics'] as $ym => $cnt)
 				{
-					if (isset($months[$ym])) { $months[$ym]['topics'] = (int) $cnt; }
+					if (isset($months[$ym]))
+					{
+					$months[$ym]['topics'] = (int) $cnt;
+					}
 				}
 				foreach ($pack['posts'] as $ym => $cnt)
 				{
-					if (isset($months[$ym])) { $months[$ym]['posts'] = (int) $cnt; }
+					if (isset($months[$ym]))
+					{
+					$months[$ym]['posts'] = (int) $cnt;
+					}
 				}
 				foreach ($pack['user_reg'] as $ym => $cnt)
 				{
-					if (isset($months[$ym])) { $months[$ym]['user_reg'] = (int) $cnt; }
+					if (isset($months[$ym]))
+					{
+					$months[$ym]['user_reg'] = (int) $cnt;
+					}
 				}
 
 				$totals = ['topics' => 0, 'posts' => 0, 'user_reg' => 0];
@@ -408,11 +437,11 @@ final class main
 						$bar = ($max['topics'] > 0.0) ? ($cnt * 100.0 / $max['topics']) : 0.0;
 
 						$this->template->assign_block_vars('periodic_topics_row', [
-							'TIME_ELEMENT'	=> $mdata['label'],
-							'COUNT'			=> $this->format_number($cnt),
-							'PCT'			=> $this->format_number($pct),
-							'BARWIDTH'		=> sprintf('%.1f', $bar),
-							'IS_MAX'		=> ($mdata['topics'] == $max['topics']),
+							'TIME_ELEMENT' => $mdata['label'],
+							'COUNT'        => $this->format_number($cnt),
+							'PCT'          => $this->format_number($pct),
+							'BARWIDTH'     => sprintf('%.1f', $bar),
+							'IS_MAX'       => ($mdata['topics'] == $max['topics']),
 						]);
 					}
 				}
@@ -427,11 +456,11 @@ final class main
 						$bar = ($max['posts'] > 0.0) ? ($cnt * 100.0 / $max['posts']) : 0.0;
 
 						$this->template->assign_block_vars('periodic_posts_row', [
-							'TIME_ELEMENT'	=> $mdata['label'],
-							'COUNT'			=> $this->format_number($cnt),
-							'PCT'			=> $this->format_number($pct),
-							'BARWIDTH'		=> sprintf('%.1f', $bar),
-							'IS_MAX'		=> ($mdata['posts'] == $max['posts']),
+							'TIME_ELEMENT' => $mdata['label'],
+							'COUNT'        => $this->format_number($cnt),
+							'PCT'          => $this->format_number($pct),
+							'BARWIDTH'     => sprintf('%.1f', $bar),
+							'IS_MAX'       => ($mdata['posts'] == $max['posts']),
 						]);
 					}
 				}
@@ -446,11 +475,11 @@ final class main
 						$bar = ($max['user_reg'] > 0.0) ? ($cnt * 100.0 / $max['user_reg']) : 0.0;
 
 						$this->template->assign_block_vars('periodic_user_regs_row', [
-							'TIME_ELEMENT'	=> $mdata['label'],
-							'COUNT'			=> $this->format_number($cnt),
-							'PCT'			=> $this->format_number($pct),
-							'BARWIDTH'		=> sprintf('%.1f', $bar),
-							'IS_MAX'		=> ($mdata['user_reg'] == $max['user_reg']),
+							'TIME_ELEMENT' => $mdata['label'],
+							'COUNT'        => $this->format_number($cnt),
+							'PCT'          => $this->format_number($pct),
+							'BARWIDTH'     => sprintf('%.1f', $bar),
+							'IS_MAX'       => ($mdata['user_reg'] == $max['user_reg']),
 						]);
 					}
 				}
@@ -467,12 +496,12 @@ final class main
 				foreach ($year_options as $value => $label)
 				{
 					$this->template->assign_block_vars('bs_year_options', [
-						'VALUE'		=> (string) $value,
-						'LABEL'		=> $label,
-						'SELECTED'	=> ((string) $value === (string) $selected_year) ? 1 : 0,
+						'VALUE'    => (string) $value,
+						'LABEL'    => $label,
+						'SELECTED' => ((string) $value === (string) $selected_year) ? 1 : 0,
 					]);
 				}
-				
+
 				$u_bs_action = $this->u_action . '?mode=m';
 
 				$board_year = (int) $board_starttime['year'];
@@ -491,21 +520,21 @@ final class main
 				}
 
 				$this->template->assign_vars([
-					'AVG_TOPICS'			=> $this->format_number($totals['topics'] / max(1, $counted_months)),
-					'AVG_POSTS'				=> $this->format_number($totals['posts'] / max(1, $counted_months)),
-					'AVG_USER_REGS'			=> $this->format_number($totals['user_reg'] / max(1, $counted_months)),
-					'STATS_YEAR_EXPLAIN'	=> sprintf($this->language->lang('BS_STATS_YEAR_EXPLAIN'), ($start_info['year'] != $current_time['year']) ? ($show_all ? $start_info['year'] . ' - ' . $current_time['year'] : $start_info['year']) : $current_time['year']),
-					'U_BS_ACTION'			=> $u_bs_action,
-					'BS_PREV_URL'			=> $prev_url,
-					'BS_NEXT_URL'			=> $next_url,
+					'AVG_TOPICS'         => $this->format_number($totals['topics'] / max(1, $counted_months)),
+					'AVG_POSTS'          => $this->format_number($totals['posts'] / max(1, $counted_months)),
+					'AVG_USER_REGS'      => $this->format_number($totals['user_reg'] / max(1, $counted_months)),
+					'STATS_YEAR_EXPLAIN' => sprintf($this->language->lang('BS_STATS_YEAR_EXPLAIN'), ($start_info['year'] != $current_time['year']) ? ($show_all ? $start_info['year'] . ' - ' . $current_time['year'] : $start_info['year']) : $current_time['year']),
+					'U_BS_ACTION'        => $u_bs_action,
+					'BS_PREV_URL'        => $prev_url,
+					'BS_NEXT_URL'        => $next_url,
 				]);
 			break;
 
 			case 'y':
 				$current_time = $now_info;
-				$board_starttime = getdate((int) $this->config['board_startdate']);
+				$board_starttime = $this->gmgetdate((int) $this->config['board_startdate']);
 
-				$start_info = getdate($board_starttime[0]);
+				$start_info = $this->gmgetdate($board_starttime[0]);
 				$end_info = $current_time;
 
 				$years = [];
@@ -514,11 +543,11 @@ final class main
 
 				while ($offset < $end_info[0])
 				{
-					$label = date('Y', $offset);
+					$label = gmdate('Y', $offset);
 					$years[$label] = ['topics' => 0, 'posts' => 0, 'user_reg' => 0];
 
 					$counted_years++;
-					$offset = mktime(0, 0, 0, 1, 1, (int) $start_info['year'] + $counted_years);
+					$offset = gmmktime(0, 0, 0, 1, 1, (int) $start_info['year'] + $counted_years);
 				}
 
 				$ckey = $this->key_y_all();
@@ -532,24 +561,33 @@ final class main
 					$regs_by_year = $this->group_by_year(USERS_TABLE, 'user_regdate', $regs_where);
 
 					$pack = [
-						'topics'	=> $topics_by_year,
-						'posts'		=> $posts_by_year,
-						'user_reg'	=> $regs_by_year,
+						'topics'   => $topics_by_year,
+						'posts'    => $posts_by_year,
+						'user_reg' => $regs_by_year,
 					];
 					$this->cache_put($ckey, $pack, self::TTL_Y_ALL);
 				}
 
 				foreach ($pack['topics'] as $ykey => $cnt)
 				{
-					if (isset($years[$ykey])) { $years[$ykey]['topics'] = (int) $cnt; }
+					if (isset($years[$ykey]))
+					{
+					$years[$ykey]['topics'] = (int) $cnt;
+					}
 				}
 				foreach ($pack['posts'] as $ykey => $cnt)
 				{
-					if (isset($years[$ykey])) { $years[$ykey]['posts'] = (int) $cnt; }
+					if (isset($years[$ykey]))
+					{
+					$years[$ykey]['posts'] = (int) $cnt;
+					}
 				}
 				foreach ($pack['user_reg'] as $ykey => $cnt)
 				{
-					if (isset($years[$ykey])) { $years[$ykey]['user_reg'] = (int) $cnt; }
+					if (isset($years[$ykey]))
+					{
+					$years[$ykey]['user_reg'] = (int) $cnt;
+					}
 				}
 
 				$totals = ['topics' => 0, 'posts' => 0, 'user_reg' => 0];
@@ -576,11 +614,11 @@ final class main
 						$bar = ($max['topics'] > 0.0) ? ($cnt * 100.0 / $max['topics']) : 0.0;
 
 						$this->template->assign_block_vars('periodic_topics_row', [
-							'TIME_ELEMENT'	=> $year,
-							'COUNT'			=> $this->format_number($cnt),
-							'PCT'			=> $this->format_number($pct),
-							'BARWIDTH'		=> sprintf('%.1f', $bar),
-							'IS_MAX'		=> ($data['topics'] == $max['topics']),
+							'TIME_ELEMENT' => $year,
+							'COUNT'        => $this->format_number($cnt),
+							'PCT'          => $this->format_number($pct),
+							'BARWIDTH'     => sprintf('%.1f', $bar),
+							'IS_MAX'       => ($data['topics'] == $max['topics']),
 						]);
 					}
 				}
@@ -595,11 +633,11 @@ final class main
 						$bar = ($max['posts'] > 0.0) ? ($cnt * 100.0 / $max['posts']) : 0.0;
 
 						$this->template->assign_block_vars('periodic_posts_row', [
-							'TIME_ELEMENT'	=> $year,
-							'COUNT'			=> $this->format_number($cnt),
-							'PCT'			=> $this->format_number($pct),
-							'BARWIDTH'		=> sprintf('%.1f', $bar),
-							'IS_MAX'		=> ($data['posts'] == $max['posts']),
+							'TIME_ELEMENT' => $year,
+							'COUNT'        => $this->format_number($cnt),
+							'PCT'          => $this->format_number($pct),
+							'BARWIDTH'     => sprintf('%.1f', $bar),
+							'IS_MAX'       => ($data['posts'] == $max['posts']),
 						]);
 					}
 				}
@@ -614,20 +652,20 @@ final class main
 						$bar = ($max['user_reg'] > 0.0) ? ($cnt * 100.0 / $max['user_reg']) : 0.0;
 
 						$this->template->assign_block_vars('periodic_user_regs_row', [
-							'TIME_ELEMENT'	=> $year,
-							'COUNT'			=> $this->format_number($cnt),
-							'PCT'			=> $this->format_number($pct),
-							'BARWIDTH'		=> sprintf('%.1f', $bar),
-							'IS_MAX'		=> ($data['user_reg'] == $max['user_reg']),
+							'TIME_ELEMENT' => $year,
+							'COUNT'        => $this->format_number($cnt),
+							'PCT'          => $this->format_number($pct),
+							'BARWIDTH'     => sprintf('%.1f', $bar),
+							'IS_MAX'       => ($data['user_reg'] == $max['user_reg']),
 						]);
 					}
 				}
 
 				$this->template->assign_vars([
-					'AVG_TOPICS'			=> $this->format_number($totals['topics'] / max(1, $counted_years)),
-					'AVG_POSTS'				=> $this->format_number($totals['posts'] / max(1, $counted_years)),
-					'AVG_USER_REGS'			=> $this->format_number($totals['user_reg'] / max(1, $counted_years)),
-					'STATS_YEAR_EXPLAIN'	=> sprintf($this->language->lang('BS_STATS_YEAR_EXPLAIN'), $start_info['year'] . ' - ' . $current_time['year']),
+					'AVG_TOPICS'         => $this->format_number($totals['topics'] / max(1, $counted_years)),
+					'AVG_POSTS'          => $this->format_number($totals['posts'] / max(1, $counted_years)),
+					'AVG_USER_REGS'      => $this->format_number($totals['user_reg'] / max(1, $counted_years)),
+					'STATS_YEAR_EXPLAIN' => sprintf($this->language->lang('BS_STATS_YEAR_EXPLAIN'), $start_info['year'] . ' - ' . $current_time['year']),
 				]);
 			break;
 		}
@@ -635,29 +673,29 @@ final class main
 		$page_title = $this->language->lang(strtoupper($mode . '_view_bs'));
 
 		$this->template->assign_vars([
-			'L_TITLE'			=> $this->language->lang('BS_BASIC_STATS'),
-			'S_IN_BASICSTATS'	=> true,
-			'TOTAL_TOPICSBS'	=> $this->format_number((float) $totals['topics']),
-			'TOTAL_POSTSBS'		=> $this->format_number((float) $totals['posts']),
-			'TOTAL_USER_REGSBS'	=> $this->format_number((float) $totals['user_reg']),
-			'BASICSTATS_CREDIT'	=> '<a href="https://phpbb3bbcodes.com">' . $this->language->lang('BS_BASICSTATS_COPY') . '</a>',
-			'BS_MODE'			=> $mode,
-			'U_D_MODE'			=> $this->u_action . '?mode=d',
-			'U_M_MODE'			=> $this->u_action . '?mode=m',
-			'U_Y_MODE'			=> $this->u_action . '?mode=y',
-			'S_FORM_ACTION'		=> $this->u_action . '?mode=' . $mode,
-			'AS_ON'				=> sprintf($this->language->lang('BS_AS_ON'), $this->user->format_date(time())),
+			'L_TITLE'           => $this->language->lang('BS_BASIC_STATS'),
+			'S_IN_BASICSTATS'   => true,
+			'TOTAL_TOPICSBS'    => $this->format_number((float) $totals['topics']),
+			'TOTAL_POSTSBS'     => $this->format_number((float) $totals['posts']),
+			'TOTAL_USER_REGSBS' => $this->format_number((float) $totals['user_reg']),
+			'BASICSTATS_CREDIT' => '<a href="https://phpbb3bbcodes.com">' . $this->language->lang('BS_BASICSTATS_COPY') . '</a>',
+			'BS_MODE'           => $mode,
+			'U_D_MODE'          => $this->u_action . '?mode=d',
+			'U_M_MODE'          => $this->u_action . '?mode=m',
+			'U_Y_MODE'          => $this->u_action . '?mode=y',
+			'S_FORM_ACTION'     => $this->u_action . '?mode=' . $mode,
+			'AS_ON'             => sprintf($this->language->lang('BS_AS_ON'), $this->user->format_date(time())),
 		]);
 
 		$this->template->assign_block_vars('navlinks', [
-			'FORUM_NAME'	=> $this->language->lang('BS_BASIC_STATS'),
-			'U_VIEW_FORUM'	=> $this->helper->route('stoker_basicstats'),
+			'FORUM_NAME'   => $this->language->lang('BS_BASIC_STATS'),
+			'U_VIEW_FORUM' => $this->helper->route('stoker_basicstats'),
 		]);
 
 		$tpl_map = [
-			'd'	=> '@stoker_basicstats/basicstats_day.html',
-			'm'	=> '@stoker_basicstats/basicstats_month.html',
-			'y'	=> '@stoker_basicstats/basicstats_year.html',
+			'd' => '@stoker_basicstats/basicstats_day.html',
+			'm' => '@stoker_basicstats/basicstats_month.html',
+			'y' => '@stoker_basicstats/basicstats_year.html',
 		];
 
 		return $this->helper->render($tpl_map[$mode], $page_title);
@@ -669,27 +707,33 @@ final class main
 	}
 
 	/**
-	 * Group counts by day (1..31) for a given time window.
-	 * Uses MySQL DATE_FORMAT when available; falls back to PHP grouping.
+	 * Group counts by day-of-month (1..31) for a given UTC time window.
+	 *
+	 * MySQL path buckets by FLOOR(unix_ts / 86400) - a pure integer division,
+	 * with no timezone conversion involved - then resolves each bucket back
+	 * to a day-of-month using gmdate() in PHP. This intentionally avoids
+	 * FROM_UNIXTIME()/DATE_FORMAT(), whose output depends on the MySQL
+	 * session's time_zone and could otherwise disagree with the UTC-based
+	 * $start/$end window boundaries computed above.
 	 */
 	private function group_by_day(string $table, string $timeCol, string $where, int $start, int $end): array
 	{
 		$this->validate_table($table);
-		$is_mysql = $this->is_mysql();
 		$out = [];
 
-		if ($is_mysql)
+		if ($this->is_mysql())
 		{
-			$sql = "SELECT DATE_FORMAT(FROM_UNIXTIME($timeCol), '%e') AS d, COUNT(*) AS c
+			$sql = "SELECT FLOOR($timeCol / 86400) AS bucket, COUNT(*) AS c
 				FROM $table
 				WHERE $where
 					AND $timeCol >= " . (int) $start . "
-					AND $timeCol < " . (int) $end . "
-				GROUP BY d";
+					AND $timeCol < " . (int) $end . '
+				GROUP BY bucket';
 			$result = $this->db->sql_query($sql);
 			while ($row = $this->db->sql_fetchrow($result))
 			{
-				$out[(int) $row['d']] = (int) $row['c'];
+				$d = (int) gmdate('j', ((int) $row['bucket']) * 86400);
+				$out[$d] = ($out[$d] ?? 0) + (int) $row['c'];
 			}
 			$this->db->sql_freeresult($result);
 			return $out;
@@ -703,7 +747,7 @@ final class main
 		$result = $this->db->sql_query($sql);
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$d = (int) date('j', (int) $row['t']);
+			$d = (int) gmdate('j', (int) $row['t']);
 			$out[$d] = ($out[$d] ?? 0) + 1;
 		}
 		$this->db->sql_freeresult($result);
@@ -711,28 +755,37 @@ final class main
 	}
 
 	/**
-	 * Group counts by month (YYYY-mm) for an optional time window.
-	 * Uses MySQL DATE_FORMAT when available; falls back to PHP grouping.
+	 * Group counts by month (YYYY-mm) for an optional UTC time window.
+	 *
+	 * Same FLOOR(unix_ts / 86400) day-bucket trick as group_by_day(), rolled
+	 * up to a Y-m label with gmdate() in PHP - see group_by_day() docblock
+	 * for why this avoids FROM_UNIXTIME()/DATE_FORMAT().
 	 */
 	private function group_by_month(string $table, string $timeCol, string $where, ?int $start, ?int $end): array
 	{
 		$this->validate_table($table);
-		$is_mysql = $this->is_mysql();
 		$out = [];
 
-		if ($is_mysql)
+		if ($this->is_mysql())
 		{
-			$sql = "SELECT DATE_FORMAT(FROM_UNIXTIME($timeCol), '%Y-%m') AS ym, COUNT(*) AS c
+			$sql = "SELECT FLOOR($timeCol / 86400) AS bucket, COUNT(*) AS c
 				FROM $table
 				WHERE $where";
-			if ($start !== null) { $sql .= ' AND ' . $timeCol . ' >= ' . (int) $start; }
-			if ($end !== null) { $sql .= ' AND ' . $timeCol . ' < ' . (int) $end; }
-			$sql .= ' GROUP BY ym';
+			if ($start !== null)
+			{
+			$sql .= ' AND ' . $timeCol . ' >= ' . (int) $start;
+			}
+			if ($end !== null)
+			{
+			$sql .= ' AND ' . $timeCol . ' < ' . (int) $end;
+			}
+			$sql .= ' GROUP BY bucket';
 
 			$result = $this->db->sql_query($sql);
 			while ($row = $this->db->sql_fetchrow($result))
 			{
-				$out[(string) $row['ym']] = (int) $row['c'];
+				$ym = gmdate('Y-m', ((int) $row['bucket']) * 86400);
+				$out[$ym] = ($out[$ym] ?? 0) + (int) $row['c'];
 			}
 			$this->db->sql_freeresult($result);
 			return $out;
@@ -741,13 +794,19 @@ final class main
 		$sql = "SELECT $timeCol AS t
 			FROM $table
 			WHERE $where";
-		if ($start !== null) { $sql .= ' AND ' . $timeCol . ' >= ' . (int) $start; }
-		if ($end !== null) { $sql .= ' AND ' . $timeCol . ' < ' . (int) $end; }
+		if ($start !== null)
+		{
+		$sql .= ' AND ' . $timeCol . ' >= ' . (int) $start;
+		}
+		if ($end !== null)
+		{
+		$sql .= ' AND ' . $timeCol . ' < ' . (int) $end;
+		}
 
 		$result = $this->db->sql_query($sql);
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$ym = date('Y-m', (int) $row['t']);
+			$ym = gmdate('Y-m', (int) $row['t']);
 			$out[$ym] = ($out[$ym] ?? 0) + 1;
 		}
 		$this->db->sql_freeresult($result);
@@ -756,24 +815,27 @@ final class main
 
 	/**
 	 * Group counts by year (YYYY).
-	 * Uses MySQL DATE_FORMAT when available; falls back to PHP grouping.
+	 *
+	 * Same FLOOR(unix_ts / 86400) day-bucket trick as group_by_day(), rolled
+	 * up to a Y label with gmdate() in PHP - see group_by_day() docblock for
+	 * why this avoids FROM_UNIXTIME()/DATE_FORMAT().
 	 */
 	private function group_by_year(string $table, string $timeCol, string $where): array
 	{
 		$this->validate_table($table);
-		$is_mysql = $this->is_mysql();
 		$out = [];
 
-		if ($is_mysql)
+		if ($this->is_mysql())
 		{
-			$sql = "SELECT DATE_FORMAT(FROM_UNIXTIME($timeCol), '%Y') AS y, COUNT(*) AS c
+			$sql = "SELECT FLOOR($timeCol / 86400) AS bucket, COUNT(*) AS c
 				FROM $table
 				WHERE $where
-				GROUP BY y";
+				GROUP BY bucket";
 			$result = $this->db->sql_query($sql);
 			while ($row = $this->db->sql_fetchrow($result))
 			{
-				$out[(string) $row['y']] = (int) $row['c'];
+				$y = gmdate('Y', ((int) $row['bucket']) * 86400);
+				$out[$y] = ($out[$y] ?? 0) + (int) $row['c'];
 			}
 			$this->db->sql_freeresult($result);
 			return $out;
@@ -785,7 +847,7 @@ final class main
 		$result = $this->db->sql_query($sql);
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$y = date('Y', (int) $row['t']);
+			$y = gmdate('Y', (int) $row['t']);
 			$out[$y] = ($out[$y] ?? 0) + 1;
 		}
 		$this->db->sql_freeresult($result);
@@ -840,5 +902,28 @@ final class main
 	{
 		$ttl = ($ttl === 0) ? self::TTL_PERMANENT : $ttl;
 		$this->cache->put($key, $data, $ttl);
+	}
+
+	/**
+	 * Get date/time information in UTC (GMT).
+	 *
+	 * @param int $timestamp
+	 * @return array
+	 */
+	private function gmgetdate(int $timestamp): array
+	{
+		return [
+			'seconds' => (int) gmdate('s', $timestamp),
+			'minutes' => (int) gmdate('i', $timestamp),
+			'hours'   => (int) gmdate('G', $timestamp),
+			'mday'    => (int) gmdate('j', $timestamp),
+			'wday'    => (int) gmdate('w', $timestamp),
+			'mon'     => (int) gmdate('n', $timestamp),
+			'year'    => (int) gmdate('Y', $timestamp),
+			'yday'    => (int) gmdate('z', $timestamp),
+			'weekday' => gmdate('l', $timestamp),
+			'month'   => gmdate('F', $timestamp),
+			0         => $timestamp,
+		];
 	}
 }
