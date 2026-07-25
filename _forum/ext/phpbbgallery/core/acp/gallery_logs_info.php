@@ -12,7 +12,7 @@ namespace phpbbgallery\core\acp;
 
 class gallery_logs_info
 {
-	function module()
+	public function module(): array
 	{
 		return array(
 			'title'		=> 'ACP_GALLERY_LOGS',

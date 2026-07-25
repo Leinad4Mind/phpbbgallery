@@ -17,7 +17,7 @@ namespace phpbbgallery\core\ucp;
 */
 class main_info
 {
-	function module()
+	public function module(): array
 	{
 		return array(
 			'filename'	=> '\phpbbgallery\core\ucp\main_module',

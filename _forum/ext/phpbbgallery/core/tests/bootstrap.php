@@ -118,7 +118,13 @@ namespace
 	require_once dirname(__DIR__) . '/acp/permissions_module.php';
 	require_once dirname(__DIR__) . '/acp/albums_module.php';
 	require_once dirname(__DIR__) . '/acp/gallery_logs_module.php';
+	require_once dirname(__DIR__) . '/acp/albums_info.php';
+	require_once dirname(__DIR__) . '/acp/config_info.php';
+	require_once dirname(__DIR__) . '/acp/gallery_logs_info.php';
+	require_once dirname(__DIR__) . '/acp/main_info.php';
+	require_once dirname(__DIR__) . '/acp/permissions_info.php';
 	require_once dirname(__DIR__) . '/ucp/main_module.php';
+	require_once dirname(__DIR__) . '/ucp/main_info.php';
 	require_once dirname(__DIR__) . '/config.php';
 	require_once dirname(__DIR__) . '/cache.php';
 	require_once dirname(__DIR__) . '/url.php';
@@ -151,4 +157,5 @@ namespace
 	require_once dirname(__DIR__) . '/misc.php';
 	require_once dirname(__DIR__) . '/cron/cron_cleaner.php';
 	require_once dirname(__DIR__) . '/ucp/settings_module.php';
+	require_once dirname(__DIR__) . '/ucp/settings_info.php';
 }
