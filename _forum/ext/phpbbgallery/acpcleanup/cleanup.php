@@ -242,7 +242,7 @@ class cleanup
 			$uploader = new \phpbbgallery\core\user($this->db, $user_id, false);
 			$uploader->update_images((0 - $images));
 		}
-		\phpbbgallery\core\user::update_users($delete_pegas, array('personal_album_id' => 0));
+		\phpbbgallery\core\user::update_users($delete_pegas, ['personal_album_id' => 0]);
 */
 		$return = [];
 		if ($obsolete_pegas)

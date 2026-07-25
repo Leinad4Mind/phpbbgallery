@@ -525,7 +525,7 @@ class file
 		if (($min_height && ($this->image_size['height'] < $min_height)) || ($min_width && ($this->image_size['width'] < $min_width)))
 		{
 			return;
-			//$this->errors[] = array('WATERMARK_IMAGE_DIMENSION');
+			//$this->errors[] = ['WATERMARK_IMAGE_DIMENSION'];
 		}
 		$get_dot = strrpos($this->image_source, '.');
 		$get_wm_name = substr_replace($this->image_source, '_wm', $get_dot, 0);
