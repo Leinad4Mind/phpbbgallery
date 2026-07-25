@@ -75,7 +75,7 @@ class cleanup
 			$this->tool->delete($file);
 			$this->tool->delete_cache($file);
 		}
-		$this->log->add_log('admin', 'clean_deletefiles', 0, 0, array('LOG_CLEANUP_DELETE_FILES', count($filenames)));
+		$this->log->add_log('admin', 'clean_deletefiles', 0, 0, ['LOG_CLEANUP_DELETE_FILES', count($filenames)]);
 		return 'CLEAN_ENTRIES_DONE';
 	}
 
@@ -87,7 +87,7 @@ class cleanup
 	*/
 	public function delete_images(array $image_ids): string
 	{
-		$this->log->add_log('admin', 'clean_deleteentries', 0, 0, array('LOG_CLEANUP_DELETE_ENTRIES', count($image_ids)));
+		$this->log->add_log('admin', 'clean_deleteentries', 0, 0, ['LOG_CLEANUP_DELETE_ENTRIES', count($image_ids)]);
 		$this->moderate->delete_images($image_ids, false);
 
 		return 'CLEAN_SOURCES_DONE';
@@ -101,7 +101,7 @@ class cleanup
 	*/
 	public function delete_author_images(array $image_ids): string
 	{
-		$this->log->add_log('admin', 'clean_deletenoauthors', 0, 0, array('LOG_CLEANUP_DELETE_NO_AUTHOR', count($image_ids)));
+		$this->log->add_log('admin', 'clean_deletenoauthors', 0, 0, ['LOG_CLEANUP_DELETE_NO_AUTHOR', count($image_ids)]);
 		$this->moderate->delete_images($image_ids);
 
 		return 'CLEAN_AUTHORS_DONE';
@@ -115,7 +115,7 @@ class cleanup
 	*/
 	public function delete_author_comments(array $comment_ids): string
 	{
-		$this->log->add_log('admin', 'clean_deletecna', 0, 0, array('LOG_CLEANUP_COMMENT_DELETE_NO_AUTHOR', count($comment_ids)));
+		$this->log->add_log('admin', 'clean_deletecna', 0, 0, ['LOG_CLEANUP_COMMENT_DELETE_NO_AUTHOR', count($comment_ids)]);
 		$this->comment->delete_comments($comment_ids);
 
 		return 'CLEAN_COMMENTS_DONE';
@@ -133,7 +133,7 @@ class cleanup
 
 		$delete_pegas = array_merge($unwanted_pegas, $obsolete_pegas);
 
-		$delete_images = $delete_albums = $user_image_count = array();
+		$delete_images = $delete_albums = $user_image_count = [];
 		$num_pegas = 0;
 
 		$sql = 'SELECT album_id, parent_id
@@ -155,7 +155,7 @@ class cleanup
 			WHERE ' . $this->db->sql_in_set('image_album_id', $delete_albums, false, true);
 		$result = $this->db->sql_query($sql);
 
-		$filenames = array();
+		$filenames = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$delete_images[] = (int) $row['image_id'];
@@ -193,20 +193,20 @@ class cleanup
 			// Update the config for the statistic on the index
 			if ($this->gallery_config->get('num_pegas') > 0)
 			{
-				$sql_array = array(
+				$sql_array = [
 					'SELECT'		=> 'a.album_id, u.user_id, u.username, u.user_colour',
-					'FROM'			=> array($this->albums_table => 'a'),
+					'FROM'			=> [$this->albums_table => 'a'],
 
-					'LEFT_JOIN'		=> array(
-						array(
-							'FROM'		=> array(USERS_TABLE => 'u'),
+					'LEFT_JOIN'		=> [
+						[
+							'FROM'		=> [USERS_TABLE => 'u'],
 							'ON'		=> 'u.user_id = a.album_user_id',
-						),
-					),
+						],
+					],
 
 					'WHERE'			=> 'a.album_user_id <> ' . (int) $this->album->get_public() . ' AND a.parent_id = 0',
 					'ORDER_BY'		=> 'a.album_id DESC',
-				);
+				];
 				$sql = $this->db->sql_build_query('SELECT', $sql_array);
 
 				$result = $this->db->sql_query_limit($sql, 1);
@@ -244,7 +244,7 @@ class cleanup
 		}
 		\phpbbgallery\core\user::update_users($delete_pegas, array('personal_album_id' => 0));
 */
-		$return = array();
+		$return = [];
 		if ($obsolete_pegas)
 		{
 			$return[] = 'CLEAN_PERSONALS_DONE';
@@ -286,7 +286,7 @@ class cleanup
 			' . $sql_where;
 
 		$result = $this->db->sql_query($sql);
-		$image_ids = $filenames = $update_albums = array();
+		$image_ids = $filenames = $update_albums = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$image_ids[] = (int) $row['image_id'];

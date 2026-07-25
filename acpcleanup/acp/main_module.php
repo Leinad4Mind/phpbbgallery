@@ -22,7 +22,7 @@ class main_module
 	{
 		global $auth, $cache, $config, $db, $template, $request, $user, $phpbb_root_path, $phpbb_ext_gallery;
 
-		$user->add_lang_ext('phpbbgallery/core', array('gallery_acp', 'gallery'));
+		$user->add_lang_ext('phpbbgallery/core', ['gallery_acp', 'gallery']);
 		$this->tpl_name = 'gallery_cleanup';
 
 		add_form_key('acp_gallery');
@@ -60,15 +60,15 @@ class main_module
 		$prune_ratings_check = $request->is_set_post('prune_ratings_check');
 		$prune_rating_avg_check = $request->is_set_post('prune_rating_avg_check');
 
-		$missing_sources = $request->variable('source', array(0));
+		$missing_sources = $request->variable('source', [0]);
 		// basename() strips any directory traversal (../) so these can only ever
 		// refer to a bare file inside the gallery upload/import directories below.
-		$missing_entries = array_map('basename', $request->variable('entry', array(''), true));
-		$missing_authors = $request->variable('author', array(0), true);
-		$missing_comments = $request->variable('comment', array(0), true);
-		$missing_personals = $request->variable('personal', array(0), true);
-		$personals_bad = $request->variable('personal_bad', array(0), true);
-		$prune_pattern = $request->variable('prune_pattern', array('' => ''), true);
+		$missing_entries = array_map('basename', $request->variable('entry', [''], true));
+		$missing_authors = $request->variable('author', [0], true);
+		$missing_comments = $request->variable('comment', [0], true);
+		$missing_personals = $request->variable('personal', [0], true);
+		$personals_bad = $request->variable('personal_bad', [0], true);
+		$prune_pattern = $request->variable('prune_pattern', ['' => ''], true);
 
 		$move_to_import = $request->variable('move_to_import', 0);
 		$new_author = $request->variable('new_author', '');
@@ -88,12 +88,12 @@ class main_module
 		}
 		if ($prune && empty($prune_pattern))
 		{
-			$prune_pattern['image_album_id'] = implode(',', $request->variable('prune_album_ids', array(0)));
+			$prune_pattern['image_album_id'] = implode(',', $request->variable('prune_album_ids', [0]));
 			if ($prune_username_check)
 			{
 				$usernames = $request->variable('prune_usernames', '', true);
 				$usernames = explode("\n", $usernames);
-				$prune_pattern['image_user_id'] = array();
+				$prune_pattern['image_user_id'] = [];
 				if (!empty($usernames))
 				{
 					if (!function_exists('user_get_id_name'))
@@ -132,7 +132,7 @@ class main_module
 			}
 		}
 
-		$s_hidden_fields = build_hidden_fields(array(
+		$s_hidden_fields = build_hidden_fields([
 			'source'		=> $missing_sources,
 			'entry'			=> $missing_entries,
 			'author'		=> $missing_authors,
@@ -141,7 +141,7 @@ class main_module
 			'personal_bad'	=> $personals_bad,
 			'prune_pattern'	=> $prune_pattern,
 			'move_to_import'	=> $move_to_import,
-		));
+		]);
 
 		if ($submit)
 		{
@@ -184,7 +184,7 @@ class main_module
 
 		if (confirm_box(true))
 		{
-			$message = array();
+			$message = [];
 			if ($missing_entries)
 			{
 				if ($acp_import_installed && $move_to_import)
@@ -279,8 +279,8 @@ class main_module
 				}
 				if ($personals_bad || $missing_personals)
 				{
-					$personals_bad_names = array();
-					$missing_personals_names = array();
+					$personals_bad_names = [];
+					$missing_personals_names = [];
 					$sql = 'SELECT album_name, album_user_id
 						FROM ' . $table_prefix . 'gallery_albums
 						WHERE ' . $db->sql_in_set('album_user_id', array_merge($missing_personals, $personals_bad));
@@ -318,35 +318,35 @@ class main_module
 			}
 		}
 
-		$requested_source = array();
-		$sql_array = array(
+		$requested_source = [];
+		$sql_array = [
 			'SELECT'		=> 'i.image_id, i.image_name, i.image_filemissing, i.image_filename, i.image_username, u.user_id',
-			'FROM'			=> array($table_prefix . 'gallery_images' => 'i'),
+			'FROM'			=> [$table_prefix . 'gallery_images' => 'i'],
 
-			'LEFT_JOIN'		=> array(
-				array(
-					'FROM'		=> array(USERS_TABLE => 'u'),
+			'LEFT_JOIN'		=> [
+				[
+					'FROM'		=> [USERS_TABLE => 'u'],
 					'ON'		=> 'u.user_id = i.image_user_id',
-				),
-			),
-		);
+				],
+			],
+		];
 		$sql = $db->sql_build_query('SELECT', $sql_array);
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result))
 		{
 			if ($row['image_filemissing'])
 			{
-				$template->assign_block_vars('sourcerow', array(
+				$template->assign_block_vars('sourcerow', [
 					'IMAGE_ID'		=> $row['image_id'],
 					'IMAGE_NAME'	=> $row['image_name'],
-				));
+				]);
 			}
 			if (!$row['user_id'])
 			{
-				$template->assign_block_vars('authorrow', array(
+				$template->assign_block_vars('authorrow', [
 					'IMAGE_ID'		=> $row['image_id'],
 					'AUTHOR_NAME'	=> $row['image_username'],
-				));
+				]);
 			}
 			$requested_source[] = $row['image_filename'];
 		}
@@ -355,7 +355,7 @@ class main_module
 		$check_mode = $request->variable('check_mode', '');
 		if ($check_mode == 'source')
 		{
-			$source_missing = array();
+			$source_missing = [];
 
 			// Reset the status: a image might have been viewed without file but the file is back
 			$sql = 'UPDATE ' . $table_prefix . 'gallery_images
@@ -401,9 +401,9 @@ class main_module
 					}
 
 					$encoding = mb_detect_encoding($file, ['UTF-8', 'ISO-8859-1', 'Windows-1252'], true);
-					$template->assign_block_vars('entryrow', array(
+					$template->assign_block_vars('entryrow', [
 						'FILE_NAME'				=> $encoding === 'UTF-8' ? $file : mb_convert_encoding($file, 'UTF-8', $encoding ?: 'Windows-1252'),
-					));
+					]);
 				}
 			}
 			if ($handle !== false)
@@ -412,56 +412,56 @@ class main_module
 			}
 		}
 
-		$sql_array = array(
+		$sql_array = [
 			'SELECT'		=> 'c.comment_id, c.comment_image_id, c.comment_username, u.user_id',
-			'FROM'			=> array($table_prefix . 'gallery_comments' => 'c'),
+			'FROM'			=> [$table_prefix . 'gallery_comments' => 'c'],
 
-			'LEFT_JOIN'		=> array(
-				array(
-					'FROM'		=> array(USERS_TABLE => 'u'),
+			'LEFT_JOIN'		=> [
+				[
+					'FROM'		=> [USERS_TABLE => 'u'],
 					'ON'		=> 'u.user_id = c.comment_user_id',
-				),
-			),
-		);
+				],
+			],
+		];
 		$sql = $db->sql_build_query('SELECT', $sql_array);
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result))
 		{
 			if (!$row['user_id'])
 			{
-				$template->assign_block_vars('commentrow', array(
+				$template->assign_block_vars('commentrow', [
 					'COMMENT_ID'	=> $row['comment_id'],
 					'IMAGE_ID'		=> $row['comment_image_id'],
 					'AUTHOR_NAME'	=> $row['comment_username'],
-				));
+				]);
 			}
 		}
 		$db->sql_freeresult($result);
 
-		$sql_array = array(
+		$sql_array = [
 			'SELECT'		=> 'a.album_id, a.album_user_id, a.album_name, u.user_id, a.album_images_real',
-			'FROM'			=> array($table_prefix . 'gallery_albums' => 'a'),
+			'FROM'			=> [$table_prefix . 'gallery_albums' => 'a'],
 
-			'LEFT_JOIN'		=> array(
-				array(
-					'FROM'		=> array(USERS_TABLE => 'u'),
+			'LEFT_JOIN'		=> [
+				[
+					'FROM'		=> [USERS_TABLE => 'u'],
 					'ON'		=> 'u.user_id = a.album_user_id',
-				),
-			),
+				],
+			],
 
 			'WHERE'			=> 'a.album_user_id <> ' . (int) \phpbbgallery\core\block::PUBLIC_ALBUM . ' AND a.parent_id = 0',
-		);
+		];
 		$sql = $db->sql_build_query('SELECT', $sql_array);
 		$result = $db->sql_query($sql);
-		$personalrow = $personal_bad_row = array();
+		$personalrow = $personal_bad_row = [];
 		while ($row = $db->sql_fetchrow($result))
 		{
-			$album = array(
+			$album = [
 				'user_id'		=> $row['album_user_id'],
 				'album_id'		=> $row['album_id'],
 				'album_name'	=> $row['album_name'],
 				'images'		=> $row['album_images_real'],
-			);
+			];
 			if (!$row['user_id'])
 			{
 				$personalrow[$row['album_user_id']] = $album;
@@ -487,23 +487,23 @@ class main_module
 
 		foreach ($personalrow as $key => $row)
 		{
-			$template->assign_block_vars('personalrow', array(
+			$template->assign_block_vars('personalrow', [
 				'USER_ID'		=> $row['user_id'],
 				'ALBUM_ID'		=> $row['album_id'],
 				'AUTHOR_NAME'	=> $row['album_name'],
-			));
+			]);
 		}
 		foreach ($personal_bad_row as $key => $row)
 		{
-			$template->assign_block_vars('personal_bad_row', array(
+			$template->assign_block_vars('personal_bad_row', [
 				'USER_ID'		=> $row['user_id'],
 				'ALBUM_ID'		=> $row['album_id'],
 				'AUTHOR_NAME'	=> $row['album_name'],
 				'IMAGES'		=> $row['images'],
-			));
+			]);
 		}
 
-		$template->assign_vars(array(
+		$template->assign_vars([
 			'S_GALLERY_MANAGE_RESTS'		=> true,
 			'ACP_GALLERY_TITLE'				=> $user->lang['ACP_GALLERY_CLEANUP'],
 			'ACP_GALLERY_TITLE_EXPLAIN'		=> $user->lang['ACP_GALLERY_CLEANUP_EXPLAIN'],
@@ -515,6 +515,6 @@ class main_module
 			'S_SELECT_ALBUM'		=> $gallery_album->get_albumbox(false, '', false, false, false, (int) \phpbbgallery\core\block::PUBLIC_ALBUM, (int) \phpbbgallery\core\block::TYPE_UPLOAD),
 
 			'S_FOUNDER'				=> ($user->data['user_type'] == USER_FOUNDER) ? true : false,
-		));
+		]);
 	}
 }
