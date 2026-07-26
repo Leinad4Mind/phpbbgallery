@@ -192,8 +192,10 @@ class access_boundary_test extends TestCase
 		$controller = (new \ReflectionClass(file_controller::class))->newInstanceWithoutConstructor();
 		$request = $this->createMock(\phpbb\request\request_interface::class);
 		$request->method('server')->willReturnCallback(static fn (string $name, mixed $default): mixed => $name === 'HTTP_REFERER' ? $referrer : $default);
+		$language = $this->createMock(\phpbb\language\language::class);
+		$language->method('lang')->willReturnCallback(static fn (string $key): string => $key);
 
-		$run = \Closure::bind(function ($allow_hotlinking, $request): array
+		$run = \Closure::bind(function ($allow_hotlinking, $request, $language): array
 		{
 			$this->config = new \phpbb\config\config([
 				'phpbb_gallery_allow_hotlinking' => $allow_hotlinking,
@@ -201,6 +203,7 @@ class access_boundary_test extends TestCase
 				'server_name' => 'gallery.example.com',
 			]);
 			$this->request = $request;
+			$this->language = $language;
 			$this->data = ['image_filename' => 'original.jpg'];
 			$this->error = '';
 			$this->check_hot_link();
@@ -208,6 +211,6 @@ class access_boundary_test extends TestCase
 			return ['error' => $this->error, 'data' => $this->data];
 		}, $controller, file_controller::class);
 
-		return $run($allow_hotlinking, $request);
+		return $run($allow_hotlinking, $request, $language);
 	}
 }

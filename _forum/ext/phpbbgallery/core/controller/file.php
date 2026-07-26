@@ -23,6 +23,9 @@ class file
 	/* @var \phpbb\user */
 	protected \phpbb\user $user;
 
+	/** @var \phpbb\language\language Gallery language service */
+	protected \phpbb\language\language $language;
+
 	/* @var \phpbbgallery\core\auth\auth */
 	protected \phpbbgallery\core\auth\auth $auth;
 
@@ -74,6 +77,7 @@ class file
 	 * @param \phpbb\config\config $config Config object
 	 * @param \phpbb\db\driver\driver|\phpbb\db\driver\driver_interface $db Database object
 	 * @param \phpbb\user $user User object
+	 * @param \phpbb\language\language $language Language service
 	 * @param \phpbbgallery\core\auth\auth $gallery_auth Gallery auth object
 	 * @param \phpbbgallery\core\user $gallery_user Gallery user object
 	 * @param \phpbbgallery\core\file\file $tool
@@ -86,13 +90,14 @@ class file
 	 * @param string $images_table
 	 * @internal param \phpbbgallery\core\album\display $display Albums display object
 	 */
-	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbbgallery\core\auth\auth $gallery_auth,
+	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\language\language $language, \phpbbgallery\core\auth\auth $gallery_auth,
 	\phpbbgallery\core\user $gallery_user, \phpbbgallery\core\file\file $tool, \phpbb\request\request_interface $request,
 	string $source_path, string $medium_path, string $mini_path, string $watermark_file, string $albums_table, string $images_table)
 	{
 		$this->config = $config;
 		$this->db = $db;
 		$this->user = $user;
+		$this->language = $language;
 		$this->auth = $gallery_auth;
 		$this->gallery_user = $gallery_user;
 		$this->tool = $tool;
@@ -127,7 +132,7 @@ class file
 			$this->db->sql_query($sql);
 
 			// trigger_error('IMAGE_NOT_EXIST');
-			$this->set_error_image('image_not_exist.jpg', 'Image is missing!');
+			$this->set_error_image('image_not_exist.jpg', $this->language->lang('IMAGE_NOT_EXIST'));
 		}
 
 		$this->generate_image_src();
@@ -221,7 +226,7 @@ class file
 
 		if ($image_id == 0)
 		{
-			$this->set_error_image('image_not_exist.jpg', 'Image is missing!');
+			$this->set_error_image('image_not_exist.jpg', $this->language->lang('IMAGE_NOT_EXIST'));
 		}
 		else
 		{
@@ -239,7 +244,7 @@ class file
 			{
 				// Image or album does not exist
 				// trigger_error('INVALID_IMAGE');
-				$this->set_error_image('not_authorised.jpg', 'You are not authorized!');
+				$this->set_error_image('not_authorised.jpg', $this->language->lang('NOT_AUTHORISED'));
 
 			}
 		}
@@ -254,7 +259,7 @@ class file
 		{
 			// The image is currently being uploaded
 			// trigger_error('NOT_AUTHORISED');
-			$this->set_error_image('not_authorised.jpg', 'You are not authorized!');
+			$this->set_error_image('not_authorised.jpg', $this->language->lang('NOT_AUTHORISED'));
 		}
 		if (!$this->auth->acl_check('i_view', $this->data['album_id'], $this->data['album_user_id'])
 			|| (!$this->auth->acl_check('m_status', $this->data['album_id'], $this->data['album_user_id'])
@@ -263,13 +268,13 @@ class file
 		{
 			// Missing permissions
 			// trigger_error('NOT_AUTHORISED');
-			$this->set_error_image('not_authorised.jpg', 'You are not authorized!');
+			$this->set_error_image('not_authorised.jpg', $this->language->lang('NOT_AUTHORISED'));
 		}
 		if (($this->auth->get_zebra_state($zebra_array, (int) $this->data['album_user_id'], $this->data['album_id']) < (int) $this->data['album_auth_access'] && !$this->error))
 		{
 			// Zebra parameters not met
 			// trigger_error('NOT_AUTHORISED');
-			$this->set_error_image('not_authorised.jpg', 'You are not authorized!');
+			$this->set_error_image('not_authorised.jpg', $this->language->lang('NOT_AUTHORISED'));
 		}
 	}
 
@@ -285,7 +290,7 @@ class file
 			$this->db->sql_query($sql);
 
 			// trigger_error('IMAGE_NOT_EXIST');
-			$this->set_error_image('image_not_exist.jpg', 'Image is missing!');
+			$this->set_error_image('image_not_exist.jpg', $this->language->lang('IMAGE_NOT_EXIST'));
 		}
 
 		$this->check_hot_link();
@@ -425,7 +430,7 @@ class file
 			return;
 		}
 
-		$this->set_error_image('no_hotlinking.jpg', 'Hot linking not allowed');
+		$this->set_error_image('no_hotlinking.jpg', $this->language->lang('HOTLINK_NOT_ALLOWED'));
 	}
 
 	/**

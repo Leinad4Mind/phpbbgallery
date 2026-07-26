@@ -65,6 +65,7 @@ final class controller_file_types_test extends TestCase
 		$reflection->getProperty('error')->setValue($controller, 'old-error.jpg');
 		$reflection->getProperty('image_src')->setValue($controller, 'old-source.jpg');
 		$reflection->getProperty('use_watermark')->setValue($controller, true);
+		$this->set_language($reflection, $controller);
 
 		$controller->load_data(0);
 
@@ -76,6 +77,7 @@ final class controller_file_types_test extends TestCase
 		$this->assertSame(0, $data['album_id']);
 		$this->assertSame(0, $data['album_auth_access']);
 		$this->assertSame('image_not_exist.jpg', $data['image_filename']);
+		$this->assertSame('IMAGE_NOT_EXIST', $data['image_name']);
 	}
 
 	public function test_missing_database_row_is_normalized_before_error_state_is_built(): void
@@ -89,6 +91,7 @@ final class controller_file_types_test extends TestCase
 		$reflection->getProperty('db')->setValue($controller, $db);
 		$reflection->getProperty('table_images')->setValue($controller, 'gallery_images');
 		$reflection->getProperty('table_albums')->setValue($controller, 'gallery_albums');
+		$this->set_language($reflection, $controller);
 
 		$controller->load_data(27);
 
@@ -96,5 +99,13 @@ final class controller_file_types_test extends TestCase
 		$this->assertSame('not_authorised.jpg', $reflection->getProperty('error')->getValue($controller));
 		$this->assertSame(0, $data['image_id']);
 		$this->assertSame(0, $data['album_auth_access']);
+		$this->assertSame('NOT_AUTHORISED', $data['image_name']);
+	}
+
+	private function set_language(\ReflectionClass $reflection, file $controller): void
+	{
+		$language = $this->createMock(\phpbb\language\language::class);
+		$language->method('lang')->willReturnCallback(static fn (string $key): string => $key);
+		$reflection->getProperty('language')->setValue($controller, $language);
 	}
 }

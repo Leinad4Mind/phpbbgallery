@@ -55,6 +55,7 @@ services:
             - '@config'
             - '@dbal.conn'
             - '@user'
+            - '@language'
             - '@phpbbgallery.core.auth'
             - '@phpbbgallery.core.user'
             - '@phpbbgallery.core.file.tool'

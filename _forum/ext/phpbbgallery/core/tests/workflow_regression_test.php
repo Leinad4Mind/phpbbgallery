@@ -63,4 +63,18 @@ final class workflow_regression_test extends TestCase
 		$this->assertStringContainsString('$this->url->append_sid(\'phpbb\', \'ucp\'', $image);
 		$this->assertStringContainsString('$this->url->append_sid(\'phpbb\', \'ucp\'', $upload);
 	}
+
+	public function test_user_visible_controller_text_uses_language_catalogues(): void
+	{
+		$gallery_root = dirname(__DIR__);
+		$file = (string) file_get_contents($gallery_root . '/controller/file.php');
+		$upload = (string) file_get_contents($gallery_root . '/controller/upload.php');
+		$report = (string) file_get_contents($gallery_root . '/report.php');
+
+		$this->assertStringNotContainsString('Image is missing!', $file);
+		$this->assertStringNotContainsString('You are not authorized!', $file);
+		$this->assertStringNotContainsString('Hot linking not allowed', $file);
+		$this->assertStringNotContainsString('Upload to', $upload);
+		$this->assertStringNotContainsString('Closed', $report);
+	}
 }

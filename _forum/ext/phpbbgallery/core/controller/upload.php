@@ -171,7 +171,7 @@ class upload
 				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
 			}
 		}
-		$page_title = 'Upload to "' . $album_data['album_name'] . '"';
+		$page_title = $this->language->lang('UPLOAD_IMAGE') . ' - ' . $album_data['album_name'];
 
 		// Before all
 		if (!$this->check_fs())
