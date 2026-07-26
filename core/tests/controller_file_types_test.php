@@ -102,6 +102,86 @@ final class controller_file_types_test extends TestCase
 		$this->assertSame('NOT_AUTHORISED', $data['image_name']);
 	}
 
+	public function test_gallery_storage_paths_are_anchored_to_the_phpbb_root(): void
+	{
+		$reflection = new \ReflectionClass(file::class);
+		$controller = $reflection->newInstanceWithoutConstructor();
+		$resolver = $reflection->getMethod('resolve_gallery_path');
+		$expected_root = str_replace('\\', '/', dirname(__DIR__, 4));
+
+		$this->assertSame(
+			$expected_root . '/files/phpbbgallery/core/source/',
+			$resolver->invoke($controller, './../files/phpbbgallery/core/source/')
+		);
+		$this->assertSame(
+			$expected_root . '/ext/phpbbgallery/core/images/watermark.png',
+			$resolver->invoke($controller, './../ext/phpbbgallery/core/images/watermark.png')
+		);
+	}
+
+	public function test_existing_source_clears_a_stale_filemissing_flag(): void
+	{
+		$source_file = tempnam(sys_get_temp_dir(), 'gallery-source-');
+		$this->assertNotFalse($source_file);
+		file_put_contents($source_file, 'image');
+
+		try
+		{
+			$reflection = new \ReflectionClass(file::class);
+			$controller = $reflection->newInstanceWithoutConstructor();
+			$filename = basename($source_file);
+			$source_path = str_replace('\\', '/', dirname($source_file)) . '/';
+			$reflection->getProperty('path_source')->setValue($controller, $source_path);
+			$reflection->getProperty('path')->setValue($controller, $source_path);
+			$reflection->getProperty('data')->setValue($controller, [
+				'image_id' => 27,
+				'image_filename' => $filename,
+				'image_filemissing' => 1,
+			]);
+			$reflection->getProperty('error')->setValue($controller, '');
+			$reflection->getProperty('table_images')->setValue($controller, 'gallery_images');
+
+			$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+			$db->expects($this->once())->method('sql_query')->with($this->callback(static function (string $sql): bool
+			{
+				return strpos($sql, 'SET image_filemissing = 0') !== false && strpos($sql, 'image_id = 27') !== false;
+			}));
+			$reflection->getProperty('db')->setValue($controller, $db);
+
+			$config = new \phpbb\config\config(['phpbb_gallery_allow_hotlinking' => 1]);
+			$reflection->getProperty('config')->setValue($controller, $config);
+
+			$controller->generate_image_src();
+
+			$data = $reflection->getProperty('data')->getValue($controller);
+			$this->assertSame(0, $data['image_filemissing']);
+			$this->assertSame($source_path . $filename, $reflection->getProperty('image_src')->getValue($controller));
+		}
+		finally
+		{
+			@unlink($source_file);
+		}
+	}
+
+	public function test_error_images_are_loaded_from_the_packaged_error_directory(): void
+	{
+		$reflection = new \ReflectionClass(file::class);
+		$controller = $reflection->newInstanceWithoutConstructor();
+		$error_path = str_replace('\\', '/', dirname(__DIR__)) . '/images/upload/';
+		$reflection->getProperty('path_error')->setValue($controller, $error_path);
+		$reflection->getProperty('error')->setValue($controller, 'image_not_exist.jpg');
+		$reflection->getProperty('data')->setValue($controller, ['image_filename' => 'image_not_exist.jpg']);
+		$user = new \phpbb\user();
+		$user->data['user_lang'] = 'en';
+		$reflection->getProperty('user')->setValue($controller, $user);
+
+		$controller->generate_image_src();
+
+		$image_src = $reflection->getProperty('image_src')->getValue($controller);
+		$this->assertSame($error_path . 'image_not_exist.jpg', $image_src);
+		$this->assertFileExists($image_src);
+	}
+
 	private function set_language(\ReflectionClass $reflection, file $controller): void
 	{
 		$language = $this->createMock(\phpbb\language\language::class);

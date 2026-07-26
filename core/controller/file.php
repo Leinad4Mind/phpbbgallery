@@ -44,6 +44,9 @@ class file
 	/* @var string */
 	protected string $path_watermark;
 
+	/** @var string Gallery error-image directory */
+	protected string $path_error;
+
 	/* @var \phpbbgallery\core\file\file */
 	protected \phpbbgallery\core\file\file $tool;
 
@@ -102,10 +105,11 @@ class file
 		$this->gallery_user = $gallery_user;
 		$this->tool = $tool;
 		$this->request = $request;
-		$this->path_source = $source_path;
-		$this->path_medium = $medium_path;
-		$this->path_mini = $mini_path;
-		$this->path_watermark = $watermark_file;
+		$this->path_source = $this->resolve_gallery_path($source_path);
+		$this->path_medium = $this->resolve_gallery_path($medium_path);
+		$this->path_mini = $this->resolve_gallery_path($mini_path);
+		$this->path_watermark = $this->resolve_gallery_path($watermark_file);
+		$this->path_error = str_replace('\\', '/', dirname($this->path_watermark)) . '/upload/';
 		$this->table_albums = $albums_table;
 		$this->table_images = $images_table;
 	}
@@ -123,17 +127,6 @@ class file
 		$this->path = $this->path_source;
 		$this->load_data($image_id);
 		$this->check_auth();
-
-		if (!file_exists($this->path_source . $this->data['image_filename']))
-		{
-			$sql = 'UPDATE ' . $this->table_images . '
-				SET image_filemissing = 1
-				WHERE image_id = ' . (int) $image_id;
-			$this->db->sql_query($sql);
-
-			// trigger_error('IMAGE_NOT_EXIST');
-			$this->set_error_image('image_not_exist.jpg', $this->language->lang('IMAGE_NOT_EXIST'));
-		}
 
 		$this->generate_image_src();
 		// @todo Enable watermark
@@ -280,17 +273,38 @@ class file
 
 	public function generate_image_src(): void
 	{
-		$this->image_src = $this->path  . $this->data['image_filename'];
+		if ($this->error !== '')
+		{
+			$this->image_src = $this->get_error_image_src();
+			return;
+		}
 
-		if ($this->data['image_filemissing'] || !file_exists($this->path_source . $this->data['image_filename']))
+		$source_file = $this->path_source . $this->data['image_filename'];
+		$this->image_src = $this->path . $this->data['image_filename'];
+
+		if (!file_exists($source_file))
+		{
+			if (empty($this->data['image_filemissing']))
+			{
+				$sql = 'UPDATE ' . $this->table_images . '
+					SET image_filemissing = 1
+					WHERE image_id = ' . (int) $this->data['image_id'];
+				$this->db->sql_query($sql);
+			}
+
+			$this->set_error_image('image_not_exist.jpg', $this->language->lang('IMAGE_NOT_EXIST'));
+			$this->image_src = $this->get_error_image_src();
+			return;
+		}
+
+		// A transient path-resolution failure must not leave a valid image permanently missing.
+		if (!empty($this->data['image_filemissing']))
 		{
 			$sql = 'UPDATE ' . $this->table_images . '
-				SET image_filemissing = 1
+				SET image_filemissing = 0
 				WHERE image_id = ' . (int) $this->data['image_id'];
 			$this->db->sql_query($sql);
-
-			// trigger_error('IMAGE_NOT_EXIST');
-			$this->set_error_image('image_not_exist.jpg', $this->language->lang('IMAGE_NOT_EXIST'));
+			$this->data['image_filemissing'] = 0;
 		}
 
 		$this->check_hot_link();
@@ -298,12 +312,7 @@ class file
 		// There was a reason to not display the image, so we send an error-image
 		if ($this->error)
 		{
-			$this->data['image_filename'] = $this->user->data['user_lang'] . '_' . $this->error;
-			if (!file_exists($this->path . $this->data['image_filename']))
-			{
-				$this->data['image_filename'] = $this->error;
-			}
-			$this->image_src = $this->path . $this->data['image_filename'];
+			$this->image_src = $this->get_error_image_src();
 			$this->use_watermark = false;
 		}
 	}
@@ -380,8 +389,13 @@ class file
 	{
 		if (!file_exists($this->image_src))
 		{
-			$this->tool->set_image_data($this->path_source . $this->data['image_filename']);
-			$this->tool->read_image(true);
+			$this->tool->set_image_data($this->path_source . $this->data['image_filename'], '', 0, true);
+			if (!$this->tool->read_image(true))
+			{
+				$this->set_error_image('image_not_exist.jpg', $this->language->lang('IMAGE_NOT_EXIST'));
+				$this->generate_image_src();
+				return;
+			}
 
 			$image_size = [
 				'file' => $this->tool->image_size['file'],
@@ -399,6 +413,12 @@ class file
 //			if ($phpbb_ext_gallery->config->get($mode . '_cache'))
 //			{
 			$this->tool->write_image($this->image_src, $this->config['phpbb_gallery_jpg_quality'], false);
+			if (!file_exists($this->image_src))
+			{
+				$this->set_error_image('image_not_exist.jpg', $this->language->lang('IMAGE_NOT_EXIST'));
+				$this->generate_image_src();
+				return;
+			}
 
 			if ($store_filesize)
 			{
@@ -413,6 +433,50 @@ class file
 
 //			}
 		}
+	}
+
+	/**
+	 * Resolve Gallery paths independently of the web server process working directory.
+	 *
+	 * @param string $path Configured path
+	 * @return string
+	 */
+	private function resolve_gallery_path(string $path): string
+	{
+		$path = str_replace('\\', '/', $path);
+		if (preg_match('#^(?:[a-z]:/|/)#i', $path))
+		{
+			return $path;
+		}
+
+		foreach (['files/phpbbgallery/', 'ext/phpbbgallery/'] as $root_marker)
+		{
+			$offset = strpos($path, $root_marker);
+			if ($offset !== false)
+			{
+				return str_replace('\\', '/', dirname(__DIR__, 4)) . '/' . substr($path, $offset);
+			}
+		}
+
+		return $path;
+	}
+
+	/**
+	 * Get the localized error image when available, otherwise the generic image.
+	 *
+	 * @return string
+	 */
+	private function get_error_image_src(): string
+	{
+		$localized_filename = $this->user->data['user_lang'] . '_' . $this->error;
+		if (file_exists($this->path_error . $localized_filename))
+		{
+			$this->data['image_filename'] = $localized_filename;
+			return $this->path_error . $localized_filename;
+		}
+
+		$this->data['image_filename'] = $this->error;
+		return $this->path_error . $this->error;
 	}
 
 	protected function check_hot_link(): void
