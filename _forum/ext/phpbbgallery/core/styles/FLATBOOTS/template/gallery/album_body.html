@@ -14,10 +14,10 @@
 		            <ul class="dropdown-menu">
 			           {% if U_EDIT_ALBUM %}<li><a href="{{ U_EDIT_ALBUM }}">{{ lang('EDIT_ALBUM') }}</a></li>{% endif %}
 			           {% if U_CREATE_ALBUM %}<li><a href="{{ U_CREATE_ALBUM }}">{{ lang('CREATE_SUBALBUM') }}</a></li>{% endif %}
-					   {% if not S_IN_GALLERY_POPUP and U_UPLOAD_IMAGE and not S_IS_BOT %}
+				           {% if not S_IN_GALLERY_POPUP and U_UPLOAD_IMAGE and not S_IS_BOT %}
 						<li><a href="{% if S_IS_LOCKED %} {% else %}{{ U_UPLOAD_IMAGE }}{% endif %}" title="{% if S_IS_LOCKED %}{{ lang('ALBUM_LOCKED') }}{% else %}{{ lang('UPLOAD_IMAGE') }}{% endif %}"><i class="{% if S_IS_LOCKED %}fa fa-lock{% else %}fa fa-upload{% endif %}"></i> {% if S_IS_LOCKED %}{{ lang('ALBUM_LOCKED') }}{% else %}{{ lang('UPLOAD_IMAGE') }}{% endif %}</a></li>
-						{% if S_REGISTERED_USER %}<li><a href="{{ U_WATCH_TOGLE }}" title="{% if S_IS_WATCHED %}{{ lang('UNWATCH_ALBUM') }}{% else %}{{ lang('WATCH_ALBUM') }}{% endif %}"><i class="{% if S_IS_WATCHED %}fa fa-square-o{% else %}fa fa-check-square-o{% endif %}" aria-hidden="true"></i> {% if S_IS_WATCHED %}<span>{{ lang('UNWATCH_ALBUM') }}</span>{% else %}<span>{{ lang('WATCH_ALBUM') }}</span>{% endif %}</a></li>{% endif %}
-		            {% endif %}
+				            {% endif %}
+						{% if not S_IN_GALLERY_POPUP and U_WATCH_TOGGLE %}<li><a href="{{ U_WATCH_TOGGLE }}" title="{% if S_IS_WATCHED %}{{ lang('UNWATCH_ALBUM') }}{% else %}{{ lang('WATCH_ALBUM') }}{% endif %}"><i class="{% if S_IS_WATCHED %}fa fa-square-o{% else %}fa fa-check-square-o{% endif %}" aria-hidden="true"></i> {% if S_IS_WATCHED %}<span>{{ lang('UNWATCH_ALBUM') }}</span>{% else %}<span>{{ lang('WATCH_ALBUM') }}</span>{% endif %}</a></li>{% endif %}
 					{% if not S_IN_GALLERY_POPUP and U_MCP %}<li><a href="{{ U_MCP }}"><i class="fa fa-legal"></i>{{ lang('MCP') }}</a></li>{% endif %}
 				  </ul>
 		    </div>

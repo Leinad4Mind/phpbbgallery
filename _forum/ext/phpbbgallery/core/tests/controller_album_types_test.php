@@ -104,4 +104,30 @@ final class controller_album_types_test extends TestCase
 		$this->assertSame(2, album::ALBUM_SHOW_COMMENTS);
 		$this->assertSame(1, album::ALBUM_SHOW_ALBUM);
 	}
+
+	public function test_only_registered_non_bot_users_can_watch_albums(): void
+	{
+		$reflection = new \ReflectionClass(album::class);
+		$controller = $reflection->newInstanceWithoutConstructor();
+		$user = new \phpbb\user();
+		$reflection->getProperty('user')->setValue($controller, $user);
+		$can_watch = $reflection->getMethod('can_watch_album');
+
+		$user->data = ['is_registered' => true, 'is_bot' => false];
+		$this->assertTrue($can_watch->invoke($controller));
+		$user->data = ['is_registered' => false, 'is_bot' => false];
+		$this->assertFalse($can_watch->invoke($controller));
+		$user->data = ['is_registered' => true, 'is_bot' => true];
+		$this->assertFalse($can_watch->invoke($controller));
+	}
+
+	public function test_watch_action_is_not_coupled_to_upload_permission_in_any_style(): void
+	{
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$template = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/album_body.html');
+			$this->assertStringContainsString('{% if not S_IN_GALLERY_POPUP and U_WATCH_TOGGLE %}', $template, $style);
+			$this->assertStringNotContainsString('U_WATCH_TOGLE', $template, $style);
+		}
+	}
 }

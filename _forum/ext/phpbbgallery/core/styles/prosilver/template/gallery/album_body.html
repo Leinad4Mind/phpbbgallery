@@ -23,13 +23,13 @@
 	{% include 'gallery/albumlist_polaroid.html' %}
 {% endif %}
 
-{% if S_IS_POSTABLE and (U_UPLOAD_IMAGE or PAGINATION or TOTAL_IMAGES or (U_SLIDE_SHOW and not S_IS_BOT)) %}
+{% if S_IS_POSTABLE and (U_UPLOAD_IMAGE or U_WATCH_TOGGLE or PAGINATION or TOTAL_IMAGES or (U_SLIDE_SHOW and not S_IS_BOT)) %}
 	<div class="action-bar bar-top" {% if S_HAS_SUBALBUM %}style="margin-top: 2em;"{% endif %}><br />
 
 	{% if not S_IN_GALLERY_POPUP and U_UPLOAD_IMAGE and not S_IS_BOT %}
 		<a href="{% if S_IS_LOCKED %} {% else %}{{ U_UPLOAD_IMAGE }}{% endif %}" title="{% if S_IS_LOCKED %}{{ lang('ALBUM_LOCKED') }}{% else %}{{ lang('UPLOAD_IMAGE') }}{% endif %}" class="button">{% if S_IS_LOCKED %}<i class="icon fa-lock fa-fw" aria-hidden="true"></i> <span>{{ lang('ALBUM_LOCKED') }}</span>{% else %}<i class="icon fa-upload fa-fw" aria-hidden="true"></i> <span>{{ lang('UPLOAD_IMAGE') }}</span>{% endif %}</a>
-			{% if S_REGISTERED_USER %}<a href="{{ U_WATCH_TOGGLE }}" title="{% if S_IS_WATCHED %}{{ lang('UNWATCH_ALBUM') }}{% else %}{{ lang('WATCH_ALBUM') }}{% endif %}" class="button"><i class="icon {% if S_IS_WATCHED %}fa-square-o{% else %}fa-check-square-o{% endif %} fa-fw" aria-hidden="true"></i> {% if S_IS_WATCHED %}<span>{{ lang('UNWATCH_ALBUM') }}</span>{% else %}<span>{{ lang('WATCH_ALBUM') }}</span>{% endif %}</a>{% endif %}
 	{% endif %}
+	{% if not S_IN_GALLERY_POPUP and U_WATCH_TOGGLE %}<a href="{{ U_WATCH_TOGGLE }}" title="{% if S_IS_WATCHED %}{{ lang('UNWATCH_ALBUM') }}{% else %}{{ lang('WATCH_ALBUM') }}{% endif %}" class="button"><i class="icon {% if S_IS_WATCHED %}fa-square-o{% else %}fa-check-square-o{% endif %} fa-fw" aria-hidden="true"></i> {% if S_IS_WATCHED %}<span>{{ lang('UNWATCH_ALBUM') }}</span>{% else %}<span>{{ lang('WATCH_ALBUM') }}</span>{% endif %}</a>{% endif %}
 
 	{% if not S_IN_GALLERY_POPUP and S_DISPLAY_SEARCHBOX %}
 		<div class="search-box">
