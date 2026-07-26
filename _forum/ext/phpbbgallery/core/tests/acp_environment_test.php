@@ -76,6 +76,12 @@ final class acp_environment_test extends TestCase
 		$this->assertNotFalse($statistics);
 		$this->assertLessThan($addons, $status);
 		$this->assertLessThan($statistics, $addons);
+		$system_table = substr($template, $status, $addons - $status);
+		$this->assertStringNotContainsString("<th>{{ lang('STATISTIC') }}</th>", $system_table);
+		$this->assertStringContainsString(
+			"<th>{{ lang('GALLERY_RUNTIME') }}</th> <th>{{ lang('VALUE') }}</th> <th>{{ lang('GALLERY_REQUIREMENT') }}</th>",
+			preg_replace('/\\s+/', ' ', $system_table)
+		);
 		$this->assertStringContainsString('mods|default([])', $template);
 	}
 }
