@@ -54,6 +54,30 @@ class ucp_csrf_security_test extends TestCase
 		$this->assertLessThan($mutation, $guard);
 	}
 
+	public function test_personal_album_root_cannot_be_attached_to_a_submitted_parent(): void
+	{
+		$method = $this->method('initialise_album', 'manage_albums');
+
+		$this->assertStringContainsString("'parent_id'\t\t\t\t\t\t=> 0", $method);
+		$this->assertStringNotContainsString("\$request->variable('parent_id'", $method);
+	}
+
+	public function test_confirmed_album_deletion_revalidates_posted_ownership(): void
+	{
+		$method = $this->method('delete_album', 'move_album');
+		$confirmed = strpos($method, 'if (confirm_box(true))');
+		$post_read = strpos($method, "variable('album_id', 0, false, \\phpbb\\request\\request_interface::POST)", $confirmed);
+		$ownership_check = strpos($method, 'check_user($album_id)', $post_read);
+		$album_query = strpos($method, "'SELECT album_id, left_id, right_id, parent_id", $post_read);
+
+		$this->assertNotFalse($confirmed);
+		$this->assertNotFalse($post_read);
+		$this->assertNotFalse($ownership_check);
+		$this->assertNotFalse($album_query);
+		$this->assertLessThan($ownership_check, $post_read);
+		$this->assertLessThan($album_query, $ownership_check);
+	}
+
 	public function test_album_reordering_reads_post_and_checks_csrf_before_updating(): void
 	{
 		$method = $this->method('move_album', 'manage_subscriptions');

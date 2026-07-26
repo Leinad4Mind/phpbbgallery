@@ -176,7 +176,7 @@ class main_module
 
 			$album_data = [
 				'album_name'					=> $user->data['username'],
-				'parent_id'						=> $request->variable('parent_id', 0),
+				'parent_id'						=> 0,
 				//left_id and right_id default by db
 				'album_desc_options'			=> 7,
 				'album_desc'					=> utf8_normalize_nfc($request->variable('album_desc', '', true)),
@@ -716,10 +716,12 @@ class main_module
 
 		if (confirm_box(true))
 		{
-			$album_id = $request->variable('album_id', 0);
+			$album_id = $request->variable('album_id', 0, false, \phpbb\request\request_interface::POST);
+			$phpbb_ext_gallery_core_album->check_user($album_id);
 			$left_id = $right_id = 0;
+			$parent_id = 0;
 			$deleted_images_na = '';
-			$deleted_albums = [];
+			$album = $deleted_albums = [];
 
 			// Check for owner
 			$sql = 'SELECT album_id, left_id, right_id, parent_id
