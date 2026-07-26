@@ -824,7 +824,7 @@ class image
 	public function edit(int $image_id): \Symfony\Component\HttpFoundation\Response|null
 	{
 		//we cheat a little but we will make good later
-		$image_data = $this->image->get_image_data($image_id);
+		$image_data = $this->image->get_image_data_or_fail($image_id);
 		$album_id = $image_data['image_album_id'];
 		$album_data = $this->album->get_info($album_id);
 		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
@@ -1072,7 +1072,7 @@ class image
 	// Delete image
 	public function delete(int $image_id): \Symfony\Component\HttpFoundation\Response|null
 	{
-		$image_data = $this->image->get_image_data($image_id);
+		$image_data = $this->image->get_image_data_or_fail($image_id);
 		$album_id = $image_data['image_album_id'];
 		$album_data = $this->album->get_info($album_id);
 		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
@@ -1132,7 +1132,7 @@ class image
 	// Report image
 	public function report(int $image_id): \Symfony\Component\HttpFoundation\Response
 	{
-		$image_data = $this->image->get_image_data($image_id);
+		$image_data = $this->image->get_image_data_or_fail($image_id);
 		$album_id = $image_data['image_album_id'];
 		$album_data = $this->album->get_info($album_id);
 		$this->language->add_lang(['gallery'], 'phpbbgallery/core');

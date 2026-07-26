@@ -484,6 +484,24 @@ class image
 	}
 
 	/**
+	 * Load an image row or stop the current request with a 404 response.
+	 *
+	 * @param int $image_id Image identifier
+	 * @return array Image row
+	 * @throws \phpbb\exception\http_exception When the image does not exist
+	 */
+	public function get_image_data_or_fail(int $image_id): array
+	{
+		$image_data = $this->get_image_data($image_id);
+		if ($image_data === false)
+		{
+			throw new \phpbb\exception\http_exception(404, 'IMAGE_NOT_EXIST');
+		}
+
+		return $image_data;
+	}
+
+	/**
 	* Approve image
 	* @param	array	$image_id_ary	The image ID array to be approved
 	* @param	int		$album_id		The album image is approved to (just save some queries for log)

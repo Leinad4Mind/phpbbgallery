@@ -189,7 +189,7 @@ class comment
 		$error = $message = '';
 		$s_user_rated = false;
 		// load Image Data
-		$image_data = $this->image->get_image_data($image_id);
+		$image_data = $this->image->get_image_data_or_fail($image_id);
 		$album_id = (int) $image_data['image_album_id'];
 		$album_data = $this->loader->get($album_id);
 		$this->display->generate_navigation($album_data);
@@ -456,7 +456,7 @@ class comment
 		}
 
 		// load Image Data (based on the comment's real image, so the ACL check below can't be pointed at a different album)
-		$image_data = $this->image->get_image_data($image_id);
+		$image_data = $this->image->get_image_data_or_fail($image_id);
 		$album_id = (int) $image_data['image_album_id'];
 		$album_data = $this->loader->get($album_id);
 		$this->display->generate_navigation($album_data);
@@ -677,7 +677,7 @@ class comment
 		}
 
 		// load Image Data (based on the comment's real image, so the ACL check below can't be pointed at a different album)
-		$image_data = $this->image->get_image_data($image_id);
+		$image_data = $this->image->get_image_data_or_fail($image_id);
 		$album_id = (int) $image_data['image_album_id'];
 		$album_data = $this->loader->get($album_id);
 		$this->display->generate_navigation($album_data);
@@ -817,7 +817,7 @@ class comment
 		$submit = $this->request->variable('submit', false);
 		$error = $message = '';
 		// load Image Data
-		$image_data = $this->image->get_image_data($image_id);
+		$image_data = $this->image->get_image_data_or_fail($image_id);
 		$album_id = (int) $image_data['image_album_id'];
 		$album_data = $this->loader->get($album_id);
 		$this->display->generate_navigation($album_data);
