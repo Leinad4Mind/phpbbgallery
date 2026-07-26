@@ -52,8 +52,7 @@ final class domain_auxiliary_types_test extends TestCase
 	public function test_add_log_builds_an_insert_for_the_current_user(): void
 	{
 		$database = $this->createMock(\phpbb\db\driver\driver_interface::class);
-		$database->method('sql_escape')
-			->willReturnCallback(static fn (string $value): string => $value);
+		$database->expects($this->never())->method('sql_escape');
 		$database->expects($this->once())
 			->method('sql_build_array')
 			->with('INSERT', $this->callback(static function (array $row): bool
@@ -63,7 +62,8 @@ final class domain_auxiliary_types_test extends TestCase
 					$row['log_user'] === 42 &&
 					$row['log_ip'] === '127.0.0.1' &&
 					$row['album'] === 7 &&
-					$row['image'] === 9;
+					$row['image'] === 9 &&
+					json_decode($row['description'], true, 512, JSON_THROW_ON_ERROR) === ['DONE', 'C:\\photos\\summer'];
 			}))
 			->willReturn('VALUES (...)');
 		$database->expects($this->once())
@@ -77,7 +77,19 @@ final class domain_auxiliary_types_test extends TestCase
 		$this->set_property($service, 'user', $user);
 		$this->set_property($service, 'log_table', 'gallery_log');
 
-		$service->add_log('admin', 'resync', 7, 9, ['DONE']);
+		$service->add_log('admin', 'resync', 7, 9, ['DONE', 'C:\\photos\\summer']);
+	}
+
+	public function test_log_description_decoder_preserves_slashes_and_supports_legacy_rows(): void
+	{
+		$service = (new \ReflectionClass(log::class))->newInstanceWithoutConstructor();
+		$decode = new \ReflectionMethod(log::class, 'decode_log_description');
+		$description = ['LOG_IMAGE_EDITED', 'C:\\photos\\summer'];
+		$current_json = json_encode($description, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+
+		$this->assertSame($description, $decode->invoke($service, $current_json));
+		$this->assertSame($description, $decode->invoke($service, addslashes($current_json)));
+		$this->assertNull($decode->invoke($service, '{invalid json'));
 	}
 
 	public function test_captcha_result_is_boolean_and_cached_per_mode(): void
