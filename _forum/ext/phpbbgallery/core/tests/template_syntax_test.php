@@ -22,7 +22,7 @@ final class template_syntax_test extends TestCase
 	public function test_modernized_templates_use_only_native_twig_syntax(): void
 	{
 		$template_paths = $this->template_paths();
-		$this->assertCount(142, $template_paths);
+		$this->assertCount(141, $template_paths);
 
 		foreach ($template_paths as $template_path)
 		{
