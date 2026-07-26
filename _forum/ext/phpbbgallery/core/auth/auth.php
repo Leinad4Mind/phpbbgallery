@@ -36,7 +36,8 @@ class auth
 	protected static array $_permission_misc = ['a_list', 'i_count', 'i_unlimited', 'a_count', 'a_unlimited', 'a_restrict'];
 
 	/**
-	 * Permissions contributed by add-ons, always merged last.
+	 * Permissions contributed by add-ons, always merged last when their owner
+	 * is enabled.
 	 *
 	 * A permission's bit number is its position in the merged list, and those
 	 * numbers are already stored in every board's roles and cached user
@@ -118,10 +119,11 @@ class auth
 	 * @param    string $permissions_table Gallery permissions table
 	 * @param    string $roles_table Gallery permission roles table
 	 * @param    string $users_table Gallery users table
-	 * @param $albums_table
+	 * @param string                     $albums_table      Gallery albums table
+	 * @param \phpbb\extension\manager $extension_manager phpBB extension manager
 	 */
 	public function __construct(\phpbbgallery\core\cache $cache, \phpbb\db\driver\driver_interface $db, \phpbbgallery\core\user $user, \phpbb\user $phpbb_user, \phpbb\auth\auth $auth,
-	string $permissions_table, string $roles_table, string $users_table, string $albums_table)
+	string $permissions_table, string $roles_table, string $users_table, string $albums_table, \phpbb\extension\manager $extension_manager)
 	{
 		$this->cache = $cache;
 		$this->db = $db;
@@ -133,10 +135,22 @@ class auth
 		$this->table_users = $users_table;
 		$this->table_albums = $albums_table;
 
-		self::$_permissions = array_merge(self::$_permission_i, self::$_permission_c, self::$_permission_m, self::$_permission_misc, self::$_permission_addon);
+		$addon_permissions = $extension_manager->is_enabled('phpbbgallery/favorite') ? self::$_permission_addon : [];
+		self::$_permissions = array_merge(self::$_permission_i, self::$_permission_c, self::$_permission_m, self::$_permission_misc, $addon_permissions);
 		self::$_permissions_flipped = array_flip(array_merge(self::$_permissions, ['m_']));
 		self::$_permissions_flipped['i_count'] = 'i_count';
 		self::$_permissions_flipped['a_count'] = 'a_count';
+	}
+
+	/**
+	 * Whether a permission is currently provided by the Core or an enabled add-on.
+	 *
+	 * @param string $permission Permission name
+	 * @return bool
+	 */
+	public function has_permission(string $permission): bool
+	{
+		return array_key_exists($permission, self::$_permissions_flipped);
 	}
 
 	public function get_setting_permissions(): int

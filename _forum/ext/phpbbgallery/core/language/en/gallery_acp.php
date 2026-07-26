@@ -426,6 +426,8 @@ $lang = array_merge($lang, [
 	'GALLERY_ADDON_CLEANUP_EXPLAIN'             => 'Finds and safely removes inconsistent image files and database records.',
 	'GALLERY_ADDON_IMPORT_EXPLAIN'              => 'Imports a controlled batch of server-side images into an album.',
 	'GALLERY_ADDON_EXIF_EXPLAIN'                => 'Displays photographic metadata stored in uploaded images.',
+	'GALLERY_ADDON_FAVORITE_EXPLAIN'            => 'Lets members bookmark images and find them again from their User Control Panel.',
+	'GALLERY_ADDON_FEED_EXPLAIN'                => 'Publishes the newest images as an ATOM feed readers can subscribe to.',
 ]);
 
 /**
