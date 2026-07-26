@@ -126,12 +126,16 @@ final class controller_image_types_test extends TestCase
 		}
 	}
 
-	public function test_bootstrap_image_templates_keep_the_image_inside_a_list_item_without_a_link(): void
+	public function test_bootstrap_image_templates_keep_the_current_image_centred_at_navigation_edges(): void
 	{
 		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
 		{
 			$template = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/viewimage_body.html');
-			$this->assertStringContainsString('<li>{% if UC_IMAGE_ACTION %}<a', $template, $style);
+			$this->assertStringContainsString('<ul class="gallery-image-navigation">', $template, $style);
+			$this->assertStringContainsString('gallery-image-navigation-previous">{% if UC_PREV_IMAGE %}', $template, $style);
+			$this->assertStringContainsString('gallery-image-navigation-current">{% if UC_IMAGE_ACTION %}<a', $template, $style);
+			$this->assertStringContainsString('gallery-image-navigation-next">{% if UC_NEXT_IMAGE %}', $template, $style);
+			$this->assertSame(2, substr_count($template, 'gallery-image-navigation-placeholder'), $style);
 			$this->assertStringContainsString('{% if UC_IMAGE_ACTION %}</a>{% endif %}</li>', $template, $style);
 		}
 	}
