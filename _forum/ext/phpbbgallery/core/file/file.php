@@ -473,7 +473,8 @@ class file
 				return;
 			}
 		}
-		if ((($angle / 90) % 2) == 1)
+		$swap_dimensions = (($angle / 90) % 2) == 1;
+		if ($swap_dimensions)
 		{
 			// Left or Right, we need to switch the height and width
 			if (!$ignore_dimensions && (($this->image_size['height'] > $this->max_width) || ($this->image_size['width'] > $this->max_height)))
@@ -489,11 +490,41 @@ class file
 				}
 				return;
 			}
+		}
+
+		$preserve_alpha = in_array($this->image_type, ['png', 'webp'], true);
+		$background_colour = 0;
+		if ($preserve_alpha)
+		{
+			// Prevent GD from replacing transparent pixels with an opaque black background.
+			imagealphablending($this->image, false);
+			imagesavealpha($this->image, true);
+			$background_colour = imagecolorallocatealpha($this->image, 0, 0, 0, 127);
+		}
+
+		$source_image = $this->image;
+		$rotated_image = imagerotate($source_image, $angle, $background_colour);
+		if ($rotated_image === false)
+		{
+			$this->errors[] = ['ROTATE_IMAGE_FUNCTION', $angle];
+			return;
+		}
+
+		if ($preserve_alpha)
+		{
+			imagealphablending($rotated_image, false);
+			imagesavealpha($rotated_image, true);
+		}
+
+		$this->image = $rotated_image;
+		imagedestroy($source_image);
+
+		if ($swap_dimensions)
+		{
 			$new_width = $this->image_size['height'];
 			$this->image_size['height'] = $this->image_size['width'];
 			$this->image_size['width'] = $new_width;
 		}
-		$this->image = imagerotate($this->image, $angle, 0);
 
 		$this->rotated = true;
 	}

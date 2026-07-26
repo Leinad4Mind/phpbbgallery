@@ -65,6 +65,66 @@ final class domain_file_types_test extends TestCase
 		$this->assertSame([], $multiform->upload());
 	}
 
+	public function test_rotating_png_preserves_transparency_when_written(): void
+	{
+		if (!function_exists('imagecreatetruecolor') || !function_exists('imagerotate'))
+		{
+			$this->markTestSkipped('The GD extension with rotation support is required.');
+		}
+
+		$image = imagecreatetruecolor(3, 2);
+		imagealphablending($image, false);
+		imagesavealpha($image, true);
+		$transparent = imagecolorallocatealpha($image, 0, 0, 0, 127);
+		imagefill($image, 0, 0, $transparent);
+		$opaque_red = imagecolorallocatealpha($image, 255, 0, 0, 0);
+		imagesetpixel($image, 0, 0, $opaque_red);
+
+		$file = (new \ReflectionClass(file::class))->newInstanceWithoutConstructor();
+		$file->image = $image;
+		$file->image_type = 'png';
+		$file->image_size = ['width' => 3, 'height' => 2];
+		$destination = tempnam(sys_get_temp_dir(), 'gallery-rotate-');
+		$written_image = false;
+
+		try
+		{
+			$file->rotate_image(90, true);
+			$this->assertTrue($file->rotated);
+			$this->assertSame(['width' => 2, 'height' => 3], $file->image_size);
+			$this->assertTrue(imagepng($file->image, $destination));
+
+			$written_image = imagecreatefrompng($destination);
+			$this->assertNotFalse($written_image);
+			$alpha_values = [];
+			for ($y = 0; $y < imagesy($written_image); $y++)
+			{
+				for ($x = 0; $x < imagesx($written_image); $x++)
+				{
+					$alpha_values[] = (imagecolorat($written_image, $x, $y) >> 24) & 0x7f;
+				}
+			}
+
+			$this->assertContains(0, $alpha_values, 'The opaque pixel must remain opaque.');
+			$this->assertContains(127, $alpha_values, 'Transparent pixels must remain fully transparent.');
+		}
+		finally
+		{
+			if ($written_image !== false)
+			{
+				imagedestroy($written_image);
+			}
+			if ($file->image)
+			{
+				imagedestroy($file->image);
+			}
+			if ($destination !== false && file_exists($destination))
+			{
+				unlink($destination);
+			}
+		}
+	}
+
 	private function assert_class_types(string $class_name): void
 	{
 		$reflection = new \ReflectionClass($class_name);
