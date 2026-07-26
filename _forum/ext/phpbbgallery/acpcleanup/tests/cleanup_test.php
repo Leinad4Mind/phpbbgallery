@@ -103,6 +103,14 @@ final class cleanup_test extends TestCase
 		$this->assertStringContainsString("if (isset(\$personal_bad_row[\$row['album_user_id']]))", $source);
 	}
 
+	public function test_cleanup_form_always_contains_the_form_token(): void
+	{
+		$template = (string) file_get_contents(dirname(__DIR__) . '/adm/style/gallery_cleanup.html');
+
+		$this->assertSame(1, substr_count($template, '{{ S_FORM_TOKEN }}'));
+		$this->assertMatchesRegularExpression('/\{% endif %\}\s*\{\{ S_FORM_TOKEN \}\}\s*<\/form>/', $template);
+	}
+
 	public function test_database_cleanup_delegates_to_the_domain_services(): void
 	{
 		$dependencies = $this->create_service();
