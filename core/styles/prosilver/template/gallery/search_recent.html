@@ -1,29 +1,13 @@
 {% include 'gallery/gallery_header.html' %}
 
-{% if pagination|length or TOTAL_IMAGES %}
-	<div class="pagination">
-		{{ TOTAL_IMAGES }}
-		{% if pagination|length %}
-			 {% include 'pagination.html' %}
-		{% else %}
-			 &bull; {{ PAGE_NUMBER }}
-		{% endif %}
-	</div>
-{% endif %}
+{% include 'gallery/total_images.html' %}
 
 
 {% include 'gallery/imageblock_polaroid.html' %}
 <hr />
 {% if pagination|length or TOTAL_IMAGES %}
 	<div style="margin: 10px 0 5px 0;">
-		<div class="pagination" style="margin-bottom: 1em;">
-		{{ TOTAL_IMAGES }}
-		{% if pagination|length %}
-				{% include 'pagination.html' %}
-		{% else %}
-			 &bull; {{ PAGE_NUMBER }}
-		{% endif %}
-	</div>
+		{% include 'gallery/total_images.html' %}
 	</div>
 {% endif %}
 

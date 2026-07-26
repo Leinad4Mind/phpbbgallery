@@ -1,0 +1,55 @@
+{% if S_PERSONAL_SETTINGS %}
+<form id="ucp_gallery" method="post" action="{{ S_UCP_ACTION }}">
+<h2>{{ lang('TITLE') }}</h2>
+<div class="panel">
+	<div class="inner">
+		<p>{{ lang('TITLE_EXPLAIN') }}</p>
+		<fieldset>
+		<dl>
+			<dt><label for="watch_own1">{{ lang('WATCH_OWN') }}{{ lang('COLON') }}</label></dt>
+			<dd>
+				<label for="watch_own1"><input type="radio" name="watch_own" id="watch_own1" value="1"{% if S_WATCH_OWN %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+				<label for="watch_own0"><input type="radio" name="watch_own" id="watch_own0" value="0"{% if not S_WATCH_OWN %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
+			</dd>
+		</dl>
+		<dl>
+			<dt><label for="watch_com1">{{ lang('WATCH_COM') }}{{ lang('COLON') }}</label></dt>
+			<dd>
+				<label for="watch_com1"><input type="radio" name="watch_com" id="watch_com1" value="1"{% if S_WATCH_COM %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+				<label for="watch_com0"><input type="radio" name="watch_com" id="watch_com0" value="0"{% if not S_WATCH_COM %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
+			</dd>
+		</dl>
+		{% EVENT phpbbgallery_core_ucp_settings_watch %}
+		<hr />
+		{% if S_COMMENTS_ENABLED %}
+		<dl>
+			<dt><label for="allow_comments1">{{ lang('USER_ALLOW_COMMENTS') }}{{ lang('COLON') }}</label></dt>
+			<dd>
+				<label for="allow_comments1"><input type="radio" name="allow_comments" id="allow_comments1" value="1"{% if S_ALLOW_COMMENTS %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+				<label for="allow_comments0"><input type="radio" name="allow_comments" id="allow_comments0" value="0"{% if not S_ALLOW_COMMENTS %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
+			</dd>
+		</dl>
+		{% endif %}
+		<hr />
+		<dl>
+			<dt><label for="rrc_zebra">{{ lang('RRC_ZEBRA') }}{{ lang('COLON') }}</label><br /><span>{{ lang('RRC_ZEBRA_EXPLAIN') }}</span></dt>
+			<dd>
+				<label for="rrc_zebra1"><input type="radio" name="rrc_zebra" id="rrc_zebra1" value="1" {% if S_RRC_ZEBRA %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+				<label for="rrc_zebra0"><input type="radio" name="rrc_zebra" id="rrc_zebra0" value="0" {% if not S_RRC_ZEBRA %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
+			</dd>
+		</dl>
+		{% EVENT phpbbgallery_core_ucp_settings_fieldset %}
+		</fieldset>
+
+	</div>
+</div>
+
+{% EVENT phpbbgallery_core_ucp_settings_form %}
+
+	<fieldset class="submit-buttons">
+		<input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}" />&nbsp;
+		<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />
+		{{ S_FORM_TOKEN }}
+	</fieldset>
+</form>
+{% endif %}
