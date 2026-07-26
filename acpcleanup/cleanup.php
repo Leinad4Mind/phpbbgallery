@@ -12,6 +12,9 @@ namespace phpbbgallery\acpcleanup;
 
 class cleanup
 {
+	private const PRUNE_SET_FIELDS = ['image_album_id', 'image_user_id'];
+	private const PRUNE_THRESHOLD_FIELDS = ['image_time', 'image_comments', 'image_rates', 'image_rate_avg'];
+
 	protected \phpbb\db\driver\driver_interface $db;
 	protected \phpbbgallery\core\file\file $tool;
 	protected \phpbb\user $user;
@@ -262,15 +265,13 @@ class cleanup
 	*/
 	public function prune(array $pattern): string
 	{
+		$pattern = $this->normalize_prune_pattern($pattern);
+		if (!$pattern)
+		{
+			throw new \InvalidArgumentException('The prune pattern does not contain a supported filter.');
+		}
+
 		$sql_where = '';
-		if (isset($pattern['image_album_id']))
-		{
-			$pattern['image_album_id'] = array_map('intval', explode(',', $pattern['image_album_id']));
-		}
-		if (isset($pattern['image_user_id']))
-		{
-			$pattern['image_user_id'] = array_map('intval', explode(',', $pattern['image_user_id']));
-		}
 		foreach ($pattern as $field => $value)
 		{
 			if (is_array($value))
@@ -307,13 +308,10 @@ class cleanup
 	*/
 	public function lang_prune_pattern(array $pattern): string
 	{
-		if (isset($pattern['image_album_id']))
+		$pattern = $this->normalize_prune_pattern($pattern);
+		if (!$pattern)
 		{
-			$pattern['image_album_id'] = array_map('intval', explode(',', $pattern['image_album_id']));
-		}
-		if (isset($pattern['image_user_id']))
-		{
-			$pattern['image_user_id'] = array_map('intval', explode(',', $pattern['image_user_id']));
+			throw new \InvalidArgumentException('The prune pattern does not contain a supported filter.');
 		}
 
 		$lang_pattern = '';
@@ -363,5 +361,39 @@ class cleanup
 		}
 
 		return $lang_pattern;
+	}
+
+	/**
+	 * Keep only supported prune columns and normalize all values to integers.
+	 *
+	 * @param array $pattern Submitted prune pattern
+	 * @return array Safe DBAL prune pattern
+	 */
+	protected function normalize_prune_pattern(array $pattern): array
+	{
+		$normalized = [];
+
+		foreach ($pattern as $field => $value)
+		{
+			if (in_array($field, self::PRUNE_SET_FIELDS, true))
+			{
+				$values = is_array($value) ? $value : explode(',', (string) $value);
+				$values = array_map('intval', $values);
+				$values = array_filter($values, static fn (int $id): bool => $id > 0);
+				$values = array_values(array_unique($values));
+				if ($values)
+				{
+					$normalized[$field] = $values;
+				}
+				continue;
+			}
+
+			if (in_array($field, self::PRUNE_THRESHOLD_FIELDS, true) && !is_array($value))
+			{
+				$normalized[$field] = max(0, (int) $value);
+			}
+		}
+
+		return $normalized;
 	}
 }
