@@ -258,6 +258,29 @@ final class template_syntax_test extends TestCase
 		}
 	}
 
+	public function test_bootstrap_gallery_form_labels_target_controls(): void
+	{
+		$core_root = dirname(__DIR__);
+		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$root = $core_root . '/styles/' . $style . '/template/gallery/';
+			$album = (string) file_get_contents($root . 'album_body.html');
+			$comment = (string) file_get_contents($root . 'comment_body.html');
+			$posting = (string) file_get_contents($root . 'posting_body.html');
+			$results = (string) file_get_contents($root . 'search_results.html');
+			$settings = (string) file_get_contents($root . 'ucp_gallery_personal_settings.html');
+			$view_image = (string) file_get_contents($root . 'viewimage_body.html');
+
+			$this->assertStringNotContainsString('for="bday_day"', $album . $results, $style);
+			$this->assertStringContainsString('name="username" id="username"', $comment . $posting, $style);
+			$this->assertStringContainsString('name="album_id" id="album_id"', $posting, $style);
+			$this->assertStringContainsString('for="files"', $posting, $style);
+			$this->assertStringContainsString('for="rrc_zebra1"', $settings, $style);
+			$this->assertStringContainsString('name="rating" id="rating"', $view_image, $style);
+			$this->assertStringNotContainsString('alert-error', $posting . $view_image, $style);
+		}
+	}
+
 	#[IgnoreDeprecations]
 	public function test_modernized_templates_parse_with_packaged_twig(): void
 	{
