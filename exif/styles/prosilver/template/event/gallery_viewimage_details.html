@@ -1,7 +1,10 @@
 {% if exif_value|length %}
-	<h3 class="anti-postbody">{{ lang('EXIF_DATA') }}</h3>
+	<h3 class="anti-postbody">
+		{{ lang('EXIF_DATA') }}
+		{% if not S_VIEWEXIF %}- <a href="#exif_data_fieldset" onclick="dE('exif_data_fieldset'); return false;">{{ lang('SHOW_EXIF') }}</a>{% endif %}
+	</h3>
 	<br /> <hr />
-	<fieldset class="fields1 anti-postbody" id="exif_data_fieldset">
+	<fieldset class="fields1 anti-postbody" id="exif_data_fieldset"{% if not S_VIEWEXIF %} style="display: none;"{% endif %}>
 	{% for exif_value in exif_value %}
 		<dl class="{% if exif_value.S_ROW_COUNT is even %}column1{% else %}column2{% endif %}">
 			<dt><label>{{ exif_value.EXIF_NAME }}{{ lang('COLON') }}</label></dt>

@@ -48,7 +48,7 @@ class main_module
 		{
 			$import_schema = '';
 		}
-		$images = $request->variable('images', [], true);
+		$images = $request->variable('images', [''], true);
 
 		$submit = $request->is_set_post('submit');
 

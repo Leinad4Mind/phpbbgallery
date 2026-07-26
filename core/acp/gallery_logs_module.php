@@ -37,7 +37,7 @@ class gallery_logs_module
 		$sort_key		= $request->variable('sk', 't');
 		$sort_dir		= $request->variable('sd', 'd');
 		$deletemark		= $request->is_set_post('delmarked');
-		$marked			= $request->variable('mark', []);
+		$marked			= $request->variable('mark', [0]);
 
 		$log = $phpbb_container->get('phpbbgallery.core.log');
 
