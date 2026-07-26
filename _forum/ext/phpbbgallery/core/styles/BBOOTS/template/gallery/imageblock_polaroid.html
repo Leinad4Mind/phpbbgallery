@@ -16,7 +16,7 @@
 	<div class="clearfix row">
 		{% for image in imageblock.image %}
 		<div class="col-xs-12 col-sm-6 col-md-3">
-			<div class="well well-sm">
+			<div class="well well-sm{% if image.S_STATUS_UNAPPROVED %} image_unapproved{% endif %}"{% if image.S_STATUS_UNAPPROVED %} style="border-color: #daa520;"{% endif %}>
 				{% if image.S_CONTEST_RANK > 0 %}
 				<div class="trophy-container">
 					<i class="trophy-icon fa-trophy fa-stack-2x trophy-color-{{ image.S_CONTEST_RANK }}"></i>
@@ -31,6 +31,9 @@
 					<div style="display:table-cell;vertical-align:middle;text-align:center;" id="thumbnail">
 						{% if image.UC_THUMBNAIL_ACTION %}<a href="{{ image.UC_THUMBNAIL_ACTION }}">{% endif %}<img class="img-responsive center-block" src="{{ image.UC_THUMBNAIL }}" alt="{{ image.UC_IMAGE_NAME }}" title="{{ image.UC_IMAGE_NAME }}" />{% if image.UC_THUMBNAIL_ACTION %}</a>{% endif %}
 					</div>
+					{% if image.S_STATUS_UNAPPROVED %}
+						<span style="position:absolute;background:#daa520;color:#fff;bottom:20px;right:15px;font-family:'Asap Condensed';border-radius:5px 0;padding:6px;">{{ lang('IMAGE_NOT_APPROVED') }}</span>
+					{% endif %}
 				</div>
 				<hr />
 				{% if image.U_ALBUM %}{{ lang('ALBUM_NAME') }}{{ lang('COLON') }} <a href="{{ image.U_ALBUM }}" style="font-weight: bold;" title="{{ image.ALBUM_NAME }}">{{ image.ALBUM_NAME }}</a><br />{% endif %}
@@ -40,12 +43,12 @@
 				{% if image.S_RATINGS %}{{ lang('RATING') }}{{ lang('COLON') }} <a href="{{ image.U_RATINGS }}">{{ image.S_RATINGS }}</a><br />{% endif %}
 				{% if image.S_COMMENTS %}{{ image.L_COMMENTS }}{{ lang('COLON') }} <a href="{{ image.U_COMMENTS }}">{{ image.S_COMMENTS }}</a><br />{% endif %}
 				{% if image.U_USER_IP %}{{ lang('IP') }}{{ lang('COLON') }}{{ image.U_USER_IP }}<br />{% endif %}
-				{% if image.S_STATUS_UNAPPROVED %}
+				{% if image.S_STATUS_UNAPPROVED_ACTION %}
 				<br />
 				<form method="post" class="mcp_approve" action="{{ image.S_STATUS_UNAPPROVED_ACTION }}">
 					<p class="post-notice unapproved">
-						<input class="button2" type="submit" value="{{ lang('DISAPPROVE') }}" name="action[disapprove]">
-						<input class="button1" type="submit" value="{{ lang('APPROVE') }}" name="action[approve]">
+						<input class="button2 btn btn-danger" type="submit" value="{{ lang('DISAPPROVE') }}" name="action[disapprove]">
+						<input class="button1 btn btn-success" type="submit" value="{{ lang('APPROVE') }}" name="action[approve]">
 					</p>
 				</form>
 				{% endif %}

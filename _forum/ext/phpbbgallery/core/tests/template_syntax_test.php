@@ -309,6 +309,20 @@ final class template_syntax_test extends TestCase
 		}
 	}
 
+	public function test_bootstrap_unapproved_image_actions_require_an_authorized_url(): void
+	{
+		$core_root = dirname(__DIR__);
+		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			foreach (['imageblock_body.html', 'imageblock_polaroid.html'] as $template)
+			{
+				$source = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/' . $template);
+				$this->assertStringContainsString('{% if image.S_STATUS_UNAPPROVED_ACTION %}', $source, $style . '/' . $template);
+				$this->assertStringContainsString('action="{{ image.S_STATUS_UNAPPROVED_ACTION }}"', $source, $style . '/' . $template);
+			}
+		}
+	}
+
 	#[IgnoreDeprecations]
 	public function test_modernized_templates_parse_with_packaged_twig(): void
 	{
