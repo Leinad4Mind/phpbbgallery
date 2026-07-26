@@ -89,4 +89,12 @@ final class controller_upload_types_test extends TestCase
 			rmdir($base);
 		}
 	}
+
+	public function test_guest_username_validation_uses_the_upload_error_collector(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/upload.php');
+
+		$this->assertStringContainsString('$process->new_error($this->language->lang($result . \'_USERNAME\'))', $source);
+		$this->assertStringNotContainsString('$error_array', $source);
+	}
 }

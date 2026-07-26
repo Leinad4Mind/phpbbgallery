@@ -402,7 +402,7 @@ class upload
 					if ($result = validate_username($username))
 					{
 						$this->language->add_lang('ucp');
-						$error_array[] = $this->language->lang($result . '_USERNAME');
+						$process->new_error($this->language->lang($result . '_USERNAME'));
 					}
 					else
 					{
