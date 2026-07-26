@@ -367,6 +367,24 @@ final class template_syntax_test extends TestCase
 		}
 	}
 
+	public function test_bootstrap_subalbum_manager_uses_responsive_controls_and_empty_state(): void
+	{
+		$core_root = dirname(__DIR__);
+		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$source = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/ucp_gallery_manage_subalbuns.html');
+			$this->assertStringContainsString('class="form-control" type="text" id="album_name"', $source, $style);
+			$this->assertStringContainsString('class="form-control" rows="5" id="album_desc"', $source, $style);
+			$this->assertSame(2, substr_count($source, 'class="form-control selectpicker"'), $style);
+			$this->assertSame(3, substr_count($source, 'class="col-xs-12 col-sm-4"'), $style);
+			$this->assertStringContainsString('{% if album_row|length %}', $source, $style);
+			$this->assertStringContainsString('class="alert alert-info fade in" role="alert"', $source, $style);
+			$this->assertStringNotContainsString('span12', $source, $style);
+			$this->assertStringNotContainsString('>Tools<', $source, $style);
+			$this->assertStringNotContainsString('placeholder="', $source, $style);
+		}
+	}
+
 	#[IgnoreDeprecations]
 	public function test_modernized_templates_parse_with_packaged_twig(): void
 	{
