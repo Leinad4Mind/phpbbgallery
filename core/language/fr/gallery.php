@@ -166,6 +166,7 @@ $lang = array_merge($lang, [
 	'IMAGE_LOCKED'                 => 'Désolé, cette image est verrouillée. Vous ne pouvez pas publier de commentaires sur cette image.',
 	'IMAGE_NAME'                   => 'Nom de l’image',
 	'IMAGE_NOT_EXIST'              => 'Cette image n’existe pas.',
+	'HOTLINK_NOT_ALLOWED'          => 'Les liens directs vers les images ne sont pas autorisés.',
 	'IMAGE_NOT_APPROVED'           => 'Pour approbation',
 	'IMAGE_PCT'                    => '%.2f%% de toutes les images',
 	'IMAGE_STATUS'                 => 'Statut',

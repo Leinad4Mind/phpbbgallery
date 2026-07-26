@@ -150,6 +150,7 @@ $lang = array_merge($lang, [
 	'IMAGE_LOCKED'                 => 'Spiacente, quest’immagine è bloccata. Non si può più commentare quest’immagine.',
 	'IMAGE_NAME'                   => 'Nome immagine',
 	'IMAGE_NOT_EXIST'              => 'Quest’immagine non esiste.',
+	'HOTLINK_NOT_ALLOWED'          => 'I collegamenti diretti alle immagini non sono consentiti.',
 	'IMAGE_NOT_APPROVED'           => 'Per approvazione',
 	'IMAGE_PCT'                    => '%.2f%% di tutte le immagini',
 	'IMAGE_STATUS'                 => 'Stato',

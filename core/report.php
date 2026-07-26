@@ -142,7 +142,7 @@ class report
 		$result = $this->db->sql_query($sql);
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$this->gallery_log->add_log('moderator', 'reportclosed', (int) $row['image_album_id'], (int) $row['image_id'], ['LOG_GALLERY_REPORT_CLOSED', 'Closed']);
+			$this->gallery_log->add_log('moderator', 'reportclosed', (int) $row['image_album_id'], (int) $row['image_id'], ['LOG_GALLERY_REPORT_CLOSED', $this->language->lang('REPORT_STATUS_2')]);
 		}
 		$this->db->sql_freeresult($result);
 		$sql = 'UPDATE ' . $this->images_table . ' SET image_reported = 0 WHERE ' . $this->db->sql_in_set('image_id', $report_ids);
