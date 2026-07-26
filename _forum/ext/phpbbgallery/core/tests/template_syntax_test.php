@@ -135,6 +135,17 @@ final class template_syntax_test extends TestCase
 		}
 	}
 
+	public function test_bootstrap_approval_queue_checkboxes_have_associated_labels(): void
+	{
+		$core_root = dirname(__DIR__);
+		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$source = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/moderate_approve_queue.html');
+			$this->assertStringContainsString('id="approval_{{ image_unapproved.U_IMAGE_ID }}"', $source, $style);
+			$this->assertStringContainsString('for="approval_{{ image_unapproved.U_IMAGE_ID }}"', $source, $style);
+		}
+	}
+
 	public function test_bootstrap_moderation_lists_use_responsive_tables(): void
 	{
 		$core_root = dirname(__DIR__);

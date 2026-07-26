@@ -44,7 +44,7 @@
 									</div>
 								</td>
 								<td class="footable-visible footable-last-column">
-									<input name="approval[{{ image_unapproved.IMAGE_ALBUM_ID }}][]" value="{{ image_unapproved.U_IMAGE_ID }}" type="checkbox">
+									<input id="approval_{{ image_unapproved.U_IMAGE_ID }}" name="approval[{{ image_unapproved.IMAGE_ALBUM_ID }}][]" value="{{ image_unapproved.U_IMAGE_ID }}" type="checkbox"><label for="approval_{{ image_unapproved.U_IMAGE_ID }}"></label>
 								</td>
 							</tr>
 							{% endfor %}
