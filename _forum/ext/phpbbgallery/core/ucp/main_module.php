@@ -63,6 +63,7 @@ class main_module
 		add_form_key('ucp_gallery');
 
 		$mode = $request->variable('mode', 'manage_albums');
+		$this->u_action = $this->build_ucp_action($phpbb_gallery_url, $id, $mode);
 		$action = $request->variable('action', '');
 		$cancel = $request->is_set_post('cancel');
 		$phpbb_ext_gallery_core_auth->load_user_permissions($user->data['user_id']);
@@ -1163,6 +1164,19 @@ class main_module
 			$phpbb_gallery_notification->add_albums($album_id, (int) $row['user_id']);
 		}
 		$db->sql_freeresult($result);
+	}
+
+	/**
+	 * Build the Gallery UCP action independently from the current request path.
+	 *
+	 * @param \phpbbgallery\core\url $url  Gallery URL service
+	 * @param string                 $id   UCP module identifier
+	 * @param string                 $mode UCP module mode
+	 * @return string
+	 */
+	private function build_ucp_action(\phpbbgallery\core\url $url, string $id, string $mode): string
+	{
+		return $url->append_sid('phpbb', 'ucp', 'i=' . rawurlencode($id) . '&mode=' . rawurlencode($mode));
 	}
 
 	/**

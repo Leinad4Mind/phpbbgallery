@@ -43,6 +43,30 @@ class ucp_csrf_security_test extends TestCase
 		$this->assertFalse($validate('delete'));
 	}
 
+	public function test_gallery_ucp_action_is_built_from_the_board_root(): void
+	{
+		$module = new ucp_main_module();
+		$build = \Closure::bind(function ($url, string $module_id): string
+		{
+			return $this->build_ucp_action($url, $module_id, 'manage_albums');
+		}, $module, ucp_main_module::class);
+		$module_ids = [
+			'-phpbbgallery-core-ucp-main_module',
+			'\\phpbbgallery\\core\\ucp\\main_module',
+		];
+		foreach ($module_ids as $module_id)
+		{
+			$encoded_id = rawurlencode($module_id);
+			$url = $this->createMock(\phpbbgallery\core\url::class);
+			$url->expects($this->once())
+				->method('append_sid')
+				->with('phpbb', 'ucp', 'i=' . $encoded_id . '&mode=manage_albums')
+				->willReturn('./ucp.php?i=' . $encoded_id . '&amp;mode=manage_albums');
+
+			$this->assertSame('./ucp.php?i=' . $encoded_id . '&amp;mode=manage_albums', $build($url, $module_id));
+		}
+	}
+
 	public function test_personal_album_creation_checks_csrf_before_inserting(): void
 	{
 		$method = $this->method('initialise_album', 'manage_albums');
