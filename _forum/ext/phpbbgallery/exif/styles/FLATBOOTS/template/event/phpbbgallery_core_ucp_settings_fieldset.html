@@ -1,7 +1,7 @@
-<dl>
-	<dt><label for="viewexifs1">{{ lang('VIEWEXIFS_DEFAULT') }}{{ lang('COLON') }}</label></dt>
-	<dd>
-		<label for="viewexifs1"><input type="radio" name="viewexifs" id="viewexifs1" value="1"{% if S_VIEWEXIFS %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
-		<label for="viewexifs0"><input type="radio" name="viewexifs" id="viewexifs0" value="0"{% if not S_VIEWEXIFS %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
-	</dd>
-</dl>
+<div class="control-group">
+	<label class="control-label" for="viewexifs1">{{ lang('VIEWEXIFS_DEFAULT') }}{{ lang('COLON') }}</label>
+	<div class="controls controls-row">
+		<div class="radio"><input type="radio" name="viewexifs" id="viewexifs1" value="1"{% if S_VIEWEXIFS %} checked="checked"{% endif %}><label for="viewexifs1">{{ lang('YES') }}</label></div>
+		<div class="radio"><input type="radio" name="viewexifs" id="viewexifs0" value="0"{% if not S_VIEWEXIFS %} checked="checked"{% endif %}><label for="viewexifs0">{{ lang('NO') }}</label></div>
+	</div>
+</div>

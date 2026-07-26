@@ -150,6 +150,21 @@ final class exif_test extends TestCase
 		}
 	}
 
+	public function test_bootstrap_template_events_use_theme_markup(): void
+	{
+		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$root = dirname(__DIR__) . '/styles/' . $style . '/template/event/';
+			$settings = (string) file_get_contents($root . 'phpbbgallery_core_ucp_settings_fieldset.html');
+			$details = (string) file_get_contents($root . 'phpbbgallery_core_viewimage_details.html');
+
+			$this->assertStringContainsString('class="control-group"', $settings, $style);
+			$this->assertStringContainsString('class="table-responsive"', $details, $style);
+			$this->assertStringContainsString('<th scope="row">', $details, $style);
+			$this->assertDoesNotMatchRegularExpression('/<\/?(?:dl|dt|dd)\b/i', $settings . $details, $style);
+		}
+	}
+
 	public function test_exif_output_uses_phpbb_utf8_escaping(): void
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/exif.php');
