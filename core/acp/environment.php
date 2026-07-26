@@ -23,7 +23,6 @@ final class environment
 		'mbstring' => [true, 'GALLERY_REQUIREMENT_REQUIRED'],
 		'zip' => [false, 'GALLERY_REQUIREMENT_OPTIONAL_ZIP'],
 		'exif' => [false, 'GALLERY_REQUIREMENT_OPTIONAL_EXIF'],
-		'imagick' => [false, 'GALLERY_REQUIREMENT_UNUSED_IMAGEMAGICK'],
 	];
 
 	private const ADDONS = [
@@ -54,12 +53,6 @@ final class environment
 			$extensions['gd']['version'] = (string) ($gd_info['GD Version'] ?? $extensions['gd']['version']);
 		}
 
-		if ($extensions['imagick']['available'] && class_exists(\Imagick::class))
-		{
-			$imagick_info = \Imagick::getVersion();
-			$extensions['imagick']['version'] = (string) ($imagick_info['versionString'] ?? $extensions['imagick']['version']);
-		}
-
 		return $this->build_runtime_checks(PHP_VERSION_ID, PHP_VERSION, $extensions);
 	}
 
@@ -84,7 +77,7 @@ final class environment
 		foreach (self::EXTENSIONS as $extension => [$required, $requirement])
 		{
 			$checks[] = [
-				'name' => $extension === 'imagick' ? 'ImageMagick (Imagick)' : $extension,
+				'name' => $extension,
 				'version' => (string) ($extensions[$extension]['version'] ?? ''),
 				'available' => (bool) ($extensions[$extension]['available'] ?? false),
 				'required' => $required,

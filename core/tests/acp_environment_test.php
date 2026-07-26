@@ -22,18 +22,15 @@ final class acp_environment_test extends TestCase
 			'mbstring' => ['available' => true, 'version' => '8.0.30'],
 			'zip' => ['available' => false, 'version' => ''],
 			'exif' => ['available' => true, 'version' => '8.0.30'],
-			'imagick' => ['available' => true, 'version' => 'ImageMagick 7.1.1'],
 		]);
 
-		$this->assertCount(6, $checks);
-		$this->assertSame(['PHP', 'gd', 'mbstring', 'zip', 'exif', 'ImageMagick (Imagick)'], array_column($checks, 'name'));
+		$this->assertCount(5, $checks);
+		$this->assertSame(['PHP', 'gd', 'mbstring', 'zip', 'exif'], array_column($checks, 'name'));
 		$this->assertFalse($checks[0]['available']);
 		$this->assertTrue($checks[0]['required']);
 		$this->assertFalse($checks[1]['available']);
 		$this->assertTrue($checks[1]['required']);
 		$this->assertFalse($checks[3]['required']);
-		$this->assertSame('ImageMagick 7.1.1', $checks[5]['version']);
-		$this->assertSame('GALLERY_REQUIREMENT_UNUSED_IMAGEMAGICK', $checks[5]['requirement']);
 	}
 
 	public function test_addon_checks_report_enabled_disabled_and_not_installed_states(): void

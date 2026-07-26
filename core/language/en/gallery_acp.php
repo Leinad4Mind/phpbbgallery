@@ -414,7 +414,6 @@ $lang = array_merge($lang, [
 	'GALLERY_REQUIREMENT_PHP'                   => 'PHP %s or later is required',
 	'GALLERY_REQUIREMENT_OPTIONAL_ZIP'          => 'Optional; enables ZIP archive uploads',
 	'GALLERY_REQUIREMENT_OPTIONAL_EXIF'         => 'Optional; enables the EXIF metadata add-on',
-	'GALLERY_REQUIREMENT_UNUSED_IMAGEMAGICK'    => 'Not used by phpBB Gallery; image processing uses GD',
 	'GALLERY_STATUS_NOT_AVAILABLE'              => 'Not available',
 	'GALLERY_ADDONS'                            => 'Gallery add-ons',
 	'GALLERY_ADDON_BENEFIT'                     => 'Benefit',

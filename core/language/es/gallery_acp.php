@@ -32,7 +32,6 @@ $lang = array_merge($lang, [
 	'GALLERY_REQUIREMENT_PHP'                => 'Se requiere PHP %s o posterior',
 	'GALLERY_REQUIREMENT_OPTIONAL_ZIP'       => 'Opcional; permite subir archivos ZIP',
 	'GALLERY_REQUIREMENT_OPTIONAL_EXIF'      => 'Opcional; activa el complemento de metadatos EXIF',
-	'GALLERY_REQUIREMENT_UNUSED_IMAGEMAGICK' => 'phpBB Gallery no lo utiliza; el procesamiento de imágenes usa GD',
 	'GALLERY_STATUS_NOT_AVAILABLE'           => 'No disponible',
 	'GALLERY_ADDONS'                         => 'Complementos de la Galería',
 	'GALLERY_ADDON_BENEFIT'                  => 'Beneficio',
