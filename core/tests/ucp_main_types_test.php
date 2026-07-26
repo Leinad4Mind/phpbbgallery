@@ -99,4 +99,12 @@ final class ucp_main_types_test extends TestCase
 		$this->assertStringContainsString('$user_id = (int) $user->data[\'user_id\'];', $source);
 		$this->assertStringNotContainsString('sizeof($target)', $source);
 	}
+
+	public function test_subscription_rows_render_the_last_comment_body(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/ucp/main_module.php');
+
+		$this->assertStringContainsString("'LAST_COMMENT'", $source);
+		$this->assertStringContainsString("generate_text_for_display(\$row['comment'], \$row['comment_uid'], \$row['comment_bitfield'], 7)", $source);
+	}
 }

@@ -349,6 +349,24 @@ final class template_syntax_test extends TestCase
 		}
 	}
 
+	public function test_bootstrap_subscription_items_use_a_responsive_media_grid(): void
+	{
+		$core_root = dirname(__DIR__);
+		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$source = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/ucp_gallery_manage_subscriptions.html');
+			$this->assertStringContainsString('class="row gallery-subscription-media"', $source, $style);
+			$this->assertStringContainsString('class="row gallery-subscription-details"', $source, $style);
+			$this->assertSame(7, substr_count($source, 'col-xs-12 col-sm-6'), $style);
+			$this->assertStringContainsString('class="gallery-subscription-comment"', $source, $style);
+			$this->assertStringContainsString('{{ image_row.LAST_COMMENT }}', $source, $style);
+			$this->assertStringContainsString("marklist('ucp_gallery', 'album_id_ary', true)", $source, $style);
+			$this->assertStringContainsString('for="album_subscription_{{ album_row.ALBUM_ID }}"', $source, $style);
+			$this->assertStringContainsString('for="image_subscription_{{ image_row.IMAGE_ID }}"', $source, $style);
+			$this->assertSame(1, substr_count($source, 'name="action"'), $style);
+		}
+	}
+
 	#[IgnoreDeprecations]
 	public function test_modernized_templates_parse_with_packaged_twig(): void
 	{
