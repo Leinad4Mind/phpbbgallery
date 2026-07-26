@@ -417,6 +417,61 @@ class album
 	}
 
 	/**
+	 * Refresh image counts and last-image data for multiple albums.
+	 *
+	 * @param array $album_ids Album identifiers
+	 */
+	public function update_infos(array $album_ids): void
+	{
+		$this->update_image_counts($album_ids);
+		$this->update_last_images($album_ids);
+	}
+
+	/**
+	 * Refresh image counters for multiple albums in bounded batches.
+	 *
+	 * @param array $album_ids Album identifiers
+	 */
+	private function update_image_counts(array $album_ids): void
+	{
+		$album_ids = array_values(array_unique(array_filter(array_map('intval', $album_ids))));
+
+		foreach (array_chunk($album_ids, 250) as $batch_ids)
+		{
+			$album_data = [];
+			foreach ($batch_ids as $album_id)
+			{
+				$album_data[$album_id] = [
+					'album_images_real' => 0,
+					'album_images'      => 0,
+				];
+			}
+
+			$sql = 'SELECT image_album_id, COUNT(image_id) AS album_images_real,
+					SUM(CASE
+						WHEN image_status <> ' . (int) $this->block->get_image_status_unapproved() . ' THEN 1
+						ELSE 0
+					END) AS album_images
+				FROM ' . $this->images_table . '
+				WHERE image_status <> ' . (int) $this->block->get_image_status_orphan() . '
+					AND ' . $this->db->sql_in_set('image_album_id', $batch_ids) . '
+				GROUP BY image_album_id';
+			$result = $this->db->sql_query($sql);
+			while ($row = $this->db->sql_fetchrow($result))
+			{
+				$album_id = (int) $row['image_album_id'];
+				$album_data[$album_id] = [
+					'album_images_real' => (int) $row['album_images_real'],
+					'album_images'      => (int) $row['album_images'],
+				];
+			}
+			$this->db->sql_freeresult($result);
+
+			$this->update_album_rows($album_data, ['album_images_real', 'album_images']);
+		}
+	}
+
+	/**
 	 * Refresh the last-image columns for multiple albums in bounded batches.
 	 *
 	 * Empty personal albums retain their owner colour, matching update_info().
@@ -483,22 +538,22 @@ class album
 			}
 			$this->db->sql_freeresult($result);
 
-			$this->update_last_image_rows($album_data);
+			$this->update_album_rows($album_data, [
+				'album_last_image_id',
+				'album_last_image_time',
+				'album_last_user_id',
+			]);
 		}
 	}
 
 	/**
-	 * Persist last-image data with one conditional update.
+	 * Persist album data with one conditional update.
 	 *
-	 * @param array $album_data Last-image data indexed by album ID
+	 * @param array $album_data      Album data indexed by album ID
+	 * @param array $integer_columns Columns that contain integers
 	 */
-	private function update_last_image_rows(array $album_data): void
+	private function update_album_rows(array $album_data, array $integer_columns): void
 	{
-		$integer_columns = [
-			'album_last_image_id',
-			'album_last_image_time',
-			'album_last_user_id',
-		];
 		$assignments = [];
 
 		foreach (array_keys(reset($album_data)) as $column)

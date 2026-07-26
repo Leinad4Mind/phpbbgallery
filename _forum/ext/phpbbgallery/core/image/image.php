@@ -254,10 +254,7 @@ class image
 		$phpbb_gallery_contest->resync_albums($resync_contests);
 		if ($resync_albums)
 		{
-			foreach ($resync_album_ids as $album_id)
-			{
-				$this->album->update_info($album_id);
-			}
+			$this->album->update_infos($resync_album_ids);
 		}
 
 		return true;
