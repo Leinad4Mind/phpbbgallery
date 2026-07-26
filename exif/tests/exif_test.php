@@ -109,7 +109,6 @@ final class exif_test extends TestCase
 	{
 		$this->assertSame([
 			'phpbbgallery.core.acp.config.get_display_vars' => 'acp_config_get_display_vars',
-			'phpbbgallery.core.config.load_config_sets' => 'config_load_config_sets',
 			'phpbbgallery.acpimport.update_image_before' => 'massimport_update_image_before',
 			'phpbbgallery.acpimport.update_image' => 'massimport_update_image',
 			'phpbbgallery.core.posting.edit_before_rotate' => 'posting_edit_before_rotate',
