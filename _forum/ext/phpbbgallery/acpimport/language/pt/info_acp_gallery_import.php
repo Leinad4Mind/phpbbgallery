@@ -38,6 +38,7 @@ $lang = array_merge($lang, [
 	'IMPORT_INVALID_IMAGE'       => 'O ficheiro selecionado «%s» não é uma imagem permitida da pasta de importação.',
 	'IMPORT_SCHEMA_WRITE_FAILED' => 'Não foi possível guardar o estado da importação em segurança.',
 	'IMPORT_TOO_MANY_IMAGES'     => 'Pode importar, no máximo, %d imagens de cada vez.',
+	'IMPORT_UNREADABLE_FILES'    => 'Foram ignorados %d ficheiros com nomes ilegíveis.',
 	'IMPORT_USER'                => 'Enviadas por',
 	'IMPORT_USER_EXP'            => 'Pode atribuir as imagens a outro utilizador aqui.',
 	'IMPORT_USERS_PEGA'          => 'Enviar para a galeria pessoal dos utilizadores.',

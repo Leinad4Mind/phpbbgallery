@@ -29,6 +29,7 @@ class language_test extends TestCase
 		'IMPORT_SCHEMA_WRITE_FAILED',
 		'IMPORT_SELECT',
 		'IMPORT_TOO_MANY_IMAGES',
+		'IMPORT_UNREADABLE_FILES',
 		'IMPORT_USER',
 		'IMPORT_USERS_PEGA',
 		'IMPORT_USER_EXP',
@@ -77,6 +78,7 @@ class language_test extends TestCase
 			'IMPORT_FINISHED_ERRORS' => ['%1$s'],
 			'IMPORT_INVALID_IMAGE' => ['%s'],
 			'IMPORT_TOO_MANY_IMAGES' => ['%d'],
+			'IMPORT_UNREADABLE_FILES' => ['%d'],
 			'MISSING_IMPORT_SCHEMA' => ['%s'],
 		];
 

@@ -363,6 +363,7 @@ class main_module
 		}
 
 		$files = $this->import_storage->get_images($this->get_allowed_extensions());
+		$ignored_unreadable_files = $this->import_storage->get_ignored_unreadable_files();
 		foreach ($files as $file)
 		{
 			$template->assign_block_vars('imagerow', [
@@ -375,6 +376,7 @@ class main_module
 			'ACP_GALLERY_TITLE'				=> $user->lang['ACP_IMPORT_ALBUMS'],
 			'ACP_GALLERY_TITLE_EXPLAIN'		=> $user->lang['ACP_IMPORT_ALBUMS_EXPLAIN'],
 			'L_IMPORT_DIR_EMPTY'			=> sprintf($user->lang['IMPORT_DIR_EMPTY'], $gallery_url->path('import')),
+			'L_IMPORT_UNREADABLE_FILES'	=> $ignored_unreadable_files ? $user->lang('IMPORT_UNREADABLE_FILES', $ignored_unreadable_files) : '',
 			'S_ALBUM_IMPORT_ACTION'			=> $this->u_action,
 			'S_SELECT_IMPORT' 				=> $gallery_album->get_albumbox(false, 'album_id', false, false, false, (int) \phpbbgallery\core\block::PUBLIC_ALBUM, (int) \phpbbgallery\core\block::TYPE_UPLOAD),
 			'U_FIND_USERNAME'				=> $gallery_url->append_sid('phpbb', 'memberlist', 'mode=searchuser&amp;form=acp_gallery&amp;field=username&amp;select_single=true'),

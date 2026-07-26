@@ -39,6 +39,7 @@ $lang = array_merge($lang, [
 	'IMPORT_INVALID_IMAGE'       => 'Le fichier sélectionné « %s » n’est pas une image autorisée du dossier d’importation.',
 	'IMPORT_SCHEMA_WRITE_FAILED' => 'L’état de l’importation n’a pas pu être enregistré de manière sécurisée.',
 	'IMPORT_TOO_MANY_IMAGES'     => 'Vous pouvez importer au maximum %d images à la fois.',
+	'IMPORT_UNREADABLE_FILES'    => '%d fichiers dont le nom est illisible ont été ignorés.',
 	'IMPORT_USER'                => 'Chargées par',
 	'IMPORT_USER_EXP'            => 'Vous pouvez charger des images d’un autre utilisateur.',
 	'IMPORT_USERS_PEGA'          => 'Charger pour les utilisateurs de la galerie personnelle.',

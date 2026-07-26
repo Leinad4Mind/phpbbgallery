@@ -48,6 +48,7 @@ class import_storage_test extends TestCase
 	{
 		$storage = new \ReflectionClass(import_storage::class);
 		$this->assertSame('string', (string) $storage->getProperty('directory')->getType());
+		$this->assertSame('int', (string) $storage->getProperty('ignored_unreadable_files')->getType());
 
 		$expected_returns = [
 			'create_schema_id' => 'string',
@@ -57,6 +58,7 @@ class import_storage_test extends TestCase
 			'remove_state' => 'bool',
 			'remove_legacy_php_state' => 'int',
 			'get_images' => 'array',
+			'get_ignored_unreadable_files' => 'int',
 			'resolve_image' => 'array|false',
 			'inspect_image' => 'array',
 			'copy_image' => 'bool',
@@ -64,6 +66,7 @@ class import_storage_test extends TestCase
 			'validate_state' => 'bool',
 			'is_valid_string' => 'bool',
 			'filename_to_utf8' => 'string|false',
+			'get_readable_filename' => 'string|false',
 		];
 
 		foreach ($expected_returns as $method_name => $expected_type)
@@ -216,6 +219,20 @@ class import_storage_test extends TestCase
 		$this->assertSame(realpath($this->import_directory . 'photo.png'), $images['photo.png']['path']);
 		$this->assertArrayNotHasKey('ignored.gif', $images);
 		$this->assertArrayNotHasKey('hidden.png', $images);
+	}
+
+	public function test_counts_filenames_that_cannot_be_displayed_safely(): void
+	{
+		$get_readable_filename = new \ReflectionMethod(import_storage::class, 'get_readable_filename');
+
+		$this->assertFalse($get_readable_filename->invoke($this->storage, "bad\nname.png"));
+		$this->assertSame(1, $this->storage->get_ignored_unreadable_files());
+
+		$this->assertSame('valid.png', $get_readable_filename->invoke($this->storage, 'valid.png'));
+		$this->assertSame(1, $this->storage->get_ignored_unreadable_files());
+
+		$template = (string) file_get_contents(dirname(__DIR__) . '/adm/style/gallery_acpimport.html');
+		$this->assertStringContainsString('L_IMPORT_UNREADABLE_FILES', $template);
 	}
 
 	public function test_resolves_only_an_enumerated_filename(): void
