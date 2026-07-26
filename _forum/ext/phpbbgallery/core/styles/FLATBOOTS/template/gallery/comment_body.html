@@ -86,7 +86,7 @@
 	<fieldset class="form-actions">
 		{{ S_HIDDEN_FIELDS }}{{ S_CAPTCHA_HIDDEN_FIELDS }}
 		<button type="reset" accesskey="r" tabindex="200" value="{{ lang('RESET') }}" class="btn btn-default">{{ lang('RESET') }}</button>
-		<button type="submit" accesskey="s" tabindex="201" class="btn btn-default start" data-loading-text="Loading...<i class='icon-spin icon-spinner icon-large icon-white'></i>" value="{{ lang('SUBMIT') }}" name="submit">{{ lang('SUBMIT') }}</button>
+		<button type="submit" accesskey="s" tabindex="201" class="btn btn-default start" data-loading-text="{{ lang('LOADING') }}<i class='icon-spin icon-spinner icon-large icon-white'></i>" value="{{ lang('SUBMIT') }}" name="submit">{{ lang('SUBMIT') }}</button>
 	</fieldset>
 	{{ S_FORM_TOKEN }}
 </form>

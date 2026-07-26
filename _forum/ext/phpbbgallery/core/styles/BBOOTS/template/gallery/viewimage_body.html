@@ -64,7 +64,7 @@
 			<fieldset>
 			{% if IMAGE_URL %}
 			<div class="control-group">
-				<label class="control-label" for="imageurl">Full URL{{ lang('COLON') }}</label>
+				<label class="control-label" for="imageurl">{{ lang('IMAGE_URL') }}{{ lang('COLON') }}</label>
 			<div class="controls controls-row">
 				<input type="text" class="form-control" value="{{ IMAGE_URL }}" id="imageurl" name="imageurl" onclick="this.focus();this.select();">
 			</div>
@@ -81,7 +81,7 @@
 			</div>
 				{% if IMAGE_IMGURL_BBCODE %}
 				<div class="control-group">
-					<label class="control-label" for="imageshort">Image URL for posts{{ lang('COLON') }}</label>
+					<label class="control-label" for="imageshort">{{ lang('IMAGE_URL') }} (BBCode){{ lang('COLON') }}</label>
 				<div class="controls controls-row">
 					<input type="text" class="form-control" value="{{ IMAGE_IMGURL_BBCODE }}" id="imageshort" name="imageshort" onclick="this.focus();this.select();">
 				</div>
@@ -304,7 +304,7 @@
 				<textarea class="form-control" name="message" id="message" rows="7" tabindex="3" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);"></textarea>
 
 				<div class="space10"></div>
-				<button type="submit" class="btn btn-default start" data-loading-text="Loading...<i class='icon-spin icon-spinner fa-lg icon-white'></i>" value="{{ lang('SUBMIT') }}" name="submit">{{ lang('SUBMIT') }}</button>
+				<button type="submit" class="btn btn-default start" data-loading-text="{{ lang('LOADING') }}<i class='icon-spin icon-spinner fa-lg icon-white'></i>" value="{{ lang('SUBMIT') }}" name="submit">{{ lang('SUBMIT') }}</button>
 
 				<small class="pull-right">{{ lang('COMMENT_LENGTH') }}</small>
 				</div>

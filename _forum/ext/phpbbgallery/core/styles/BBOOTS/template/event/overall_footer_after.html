@@ -32,7 +32,7 @@ head.ready(function () {
 						'<td>' +
 						(!index && !o.options.autoUpload ?
 							'<button class="start" disabled>Start</button>' : '') +
-						(!index ? '<button class="cancel">Cancel</button>' : '') +
+						(!index ? '<button class="cancel">{{ lang_js('CANCEL') }}</button>' : '') +
 						'</td>' +
 						'</tr>');
 					row.find('.name').text(file.name);
