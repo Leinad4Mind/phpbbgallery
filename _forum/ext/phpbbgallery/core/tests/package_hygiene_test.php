@@ -259,4 +259,16 @@ class package_hygiene_test extends TestCase
 			$this->assertStringContainsString('phpbbgallery_core_moderate_image', $source, $relative_path);
 		}
 	}
+
+	public function test_development_files_are_excluded_from_release_archives(): void
+	{
+		$attributes = (string) file_get_contents($this->extension_root . '/.gitattributes');
+
+		foreach (['core', 'acpcleanup', 'acpimport', 'exif'] as $extension)
+		{
+			$this->assertStringContainsString('/' . $extension . '/phpunit.xml.dist export-ignore', $attributes);
+			$this->assertStringContainsString('/' . $extension . '/tests export-ignore', $attributes);
+			$this->assertStringContainsString('/' . $extension . '/tests/** export-ignore', $attributes);
+		}
+	}
 }
