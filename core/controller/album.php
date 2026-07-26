@@ -158,8 +158,6 @@ class album
 			{
 				$contest_end_time = $album_data['contest_start'] + $album_data['contest_end'];
 				$this->contest->end($album_id, $album_data['contest_id'], $contest_end_time);
-
-				$album_contest_data['contest_marked'] = (int) \phpbbgallery\core\block::NO_CONTEST;
 			}
 		}
 		$this->check_permissions($album_id, $album_data['album_user_id'], $album_data['album_auth_access']);

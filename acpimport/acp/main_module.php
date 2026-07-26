@@ -324,23 +324,11 @@ class main_module
 			{
 				$image_user =  $phpbb_container->get('phpbbgallery.core.user');
 				$image_user->set_user_id($user_row['user_id']);
-				if ($user->data['user_id'] != $user_row['user_id'])
+				$album_id = $image_user->get_data('personal_album_id');
+				if (!$album_id)
 				{
-					$album_id = $image_user->get_data('personal_album_id');
-					if (!$album_id)
-					{
-						// The User has no personal album
-						$album_id = $gallery_album->generate_personal_album($user_row['username'], $user_row['user_id'], $user_row['user_colour'], $image_user);
-					}
-					unset($image_user);
-				}
-				else
-				{
-					$album_id = $image_user->get_data('personal_album_id');
-					if (!$album_id)
-					{
-						$album_id = $gallery_album->generate_personal_album($user_row['username'], $user_row['user_id'], $user_row['user_colour'], $image_user);
-					}
+					// The user has no personal album
+					$album_id = $gallery_album->generate_personal_album($user_row['username'], $user_row['user_id'], $user_row['user_colour'], $image_user);
 				}
 			}
 
