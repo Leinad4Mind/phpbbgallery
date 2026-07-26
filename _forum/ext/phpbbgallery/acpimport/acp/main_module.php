@@ -274,18 +274,13 @@ class main_module
 
 			$allowed_extensions = $this->get_allowed_extensions();
 			$available_images = $this->import_storage->get_images($allowed_extensions);
-			$selected_images = [];
-			foreach ($images as $image_src)
+			$this->import_errors = [];
+			$images = $this->filter_selected_images($images, $available_images);
+			if (!$images)
 			{
-				if (!is_string($image_src) || !isset($available_images[$image_src]))
-				{
-					$safe_image_src = is_string($image_src) ? utf8_htmlspecialchars($image_src) : '';
-					trigger_error($user->lang('IMPORT_INVALID_IMAGE', $safe_image_src), E_USER_WARNING);
-					return;
-				}
-				$selected_images[$image_src] = $image_src;
+				trigger_error(implode('<br />', $this->import_errors) . adm_back_link($this->u_action), E_USER_WARNING);
+				return;
 			}
-			$images = array_values($selected_images);
 
 			// Who is the uploader?
 			$username = $request->variable('username', '', true);
@@ -350,7 +345,6 @@ class main_module
 			$filename = ($request->variable('filename', '') == 'filename') ? true : false;
 			$image_name = $request->variable('image_name', '', true);
 			$num_offset = max(0, $request->variable('image_num', 0));
-			$this->import_errors = [];
 
 			if (!$this->create_import_schema($import_schema, $album_row['album_id'], $user_row, $start_time, $num_offset, 0, count($images), $image_name, $filename, $images))
 			{
@@ -380,6 +374,25 @@ class main_module
 			'S_SELECT_IMPORT' 				=> $gallery_album->get_albumbox(false, 'album_id', false, false, false, (int) \phpbbgallery\core\block::PUBLIC_ALBUM, (int) \phpbbgallery\core\block::TYPE_UPLOAD),
 			'U_FIND_USERNAME'				=> $gallery_url->append_sid('phpbb', 'memberlist', 'mode=searchuser&amp;form=acp_gallery&amp;field=username&amp;select_single=true'),
 		]);
+	}
+
+	private function filter_selected_images(array $images, array $available_images): array
+	{
+		global $user;
+
+		$selected_images = [];
+		foreach ($images as $image_src)
+		{
+			if (!is_string($image_src) || !isset($available_images[$image_src]))
+			{
+				$safe_image_src = is_string($image_src) ? utf8_htmlspecialchars($image_src) : '';
+				$this->log_import_error($user->lang('IMPORT_INVALID_IMAGE', $safe_image_src));
+				continue;
+			}
+			$selected_images[$image_src] = $image_src;
+		}
+
+		return array_values($selected_images);
 	}
 
 	private function create_import_schema(string $import_schema, int $album_id, array $user_row, int $start_time, int $num_offset, int $done_images, int $todo_images, string $image_name, bool $filename, array $images): bool
