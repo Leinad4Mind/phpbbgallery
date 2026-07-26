@@ -169,6 +169,66 @@ final class domain_auth_types_test extends TestCase
 		}
 	}
 
+	public function test_acl_users_resolves_all_role_groups_in_one_query(): void
+	{
+		if (!defined('USER_GROUP_TABLE'))
+		{
+			define('USER_GROUP_TABLE', 'phpbb_user_group');
+		}
+
+		$queries = [];
+		$rows = [
+			'album_result' => [['album_user_id' => 0]],
+			'permission_result' => [
+				['perm_role_id' => 1, 'perm_user_id' => 11, 'perm_group_id' => 2],
+				['perm_role_id' => 2, 'perm_user_id' => 0, 'perm_group_id' => 3],
+			],
+			'role_result' => [['role_id' => 1], ['role_id' => 2]],
+			'group_result' => [
+				['user_id' => 21, 'user_pending' => 0],
+				['user_id' => 31, 'user_pending' => 0],
+				['user_id' => 32, 'user_pending' => 1],
+			],
+		];
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->exactly(2))
+			->method('sql_in_set')
+			->willReturnCallback(static fn (string $field, array $ids): string => $field . ' IN (' . implode(', ', $ids) . ')');
+		$db->expects($this->exactly(4))
+			->method('sql_query')
+			->willReturnCallback(static function (string $sql) use (&$queries): string
+			{
+				$queries[] = $sql;
+				return ['album_result', 'permission_result', 'role_result', 'group_result'][count($queries) - 1];
+			});
+		$db->expects($this->exactly(11))
+			->method('sql_fetchrow')
+			->willReturnCallback(static function (string $result) use (&$rows): array|false
+			{
+				return array_shift($rows[$result]) ?: false;
+			});
+		$db->expects($this->exactly(4))->method('sql_freeresult');
+
+		$permissions = new \ReflectionProperty(auth::class, '_permissions');
+		$original_permissions = $permissions->getValue();
+		$permissions->setValue(null, ['m_status']);
+		try
+		{
+			$service = $this->new_auth();
+			$this->set_property($service, 'db', $db);
+			$this->set_property($service, 'table_albums', 'gallery_albums');
+			$this->set_property($service, 'table_permissions', 'gallery_permissions');
+			$this->set_property($service, 'table_roles', 'gallery_roles');
+
+			$this->assertSame([11, 21, 31], $service->acl_users_ids('m_status', 77));
+			$this->assertCount(1, array_filter($queries, static fn (string $sql): bool => str_contains($sql, USER_GROUP_TABLE)));
+		}
+		finally
+		{
+			$permissions->setValue(null, $original_permissions);
+		}
+	}
+
 	private function new_auth(): auth
 	{
 		return (new \ReflectionClass(auth::class))->newInstanceWithoutConstructor();

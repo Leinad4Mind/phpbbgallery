@@ -855,18 +855,19 @@ class auth
 		}
 		$this->db->sql_freeresult($result);
 
-		// Let's cycle trough roles and build user_ids with user_ids from roles
+		// Build the direct-user and group assignments for all matching roles
 		$user_ids = [];
+		$group_ids = [];
 		foreach ($roles as $id)
 		{
 			$user_ids = array_merge($user_ids, $roles_id[$id]['user_id'] ?? []);
-			$group_ids = array_values(array_filter($roles_id[$id]['group_id'] ?? []));
-			if (empty($group_ids))
-			{
-				continue;
-			}
+			$group_ids = array_merge($group_ids, $roles_id[$id]['group_id'] ?? []);
+		}
+		$group_ids = array_values(array_unique(array_filter(array_map('intval', $group_ids))));
 
-			// Let's query groups
+		if ($group_ids)
+		{
+			// Resolve all matching group memberships in one query
 			$sql = 'SELECT * FROM ' . USER_GROUP_TABLE . ' WHERE ' . $this->db->sql_in_set('group_id', $group_ids, false, true);
 			$result = $this->db->sql_query($sql);
 			while ($row = $this->db->sql_fetchrow($result))
