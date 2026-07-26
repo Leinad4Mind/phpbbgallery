@@ -563,44 +563,83 @@ class manage
 	 */
 	public function move_album(int $from_id, int $to_id): array
 	{
-		$to_data = $moved_ids = $errors = [];
+		$moved_albums = $this->gallery_display->get_branch($this->user_id, $from_id, 'children', 'descending');
+		if (!$moved_albums)
+		{
+			return [$this->language->lang('NO_ALBUM')];
+		}
 
-		// Get the parent data
+		$from_data = $moved_albums[0];
+
+		return $this->move_album_nodes(
+			$moved_albums,
+			$to_id,
+			(int) $from_data['left_id'],
+			(int) $from_data['right_id']
+		);
+	}
+
+	/**
+	 * Move every descendant of an album as one contiguous nested-set interval.
+	 */
+	private function move_album_children(int $from_id, int $to_id): array
+	{
+		if ($from_id === $to_id)
+		{
+			return [$this->language->lang('ALBUM_PARENT_INVALID')];
+		}
+
+		$album_branch = $this->gallery_display->get_branch($this->user_id, $from_id, 'children', 'descending');
+		if (sizeof($album_branch) <= 1)
+		{
+			return [];
+		}
+
+		$from_data = array_shift($album_branch);
+
+		return $this->move_album_nodes(
+			$album_branch,
+			$to_id,
+			(int) $from_data['left_id'] + 1,
+			(int) $from_data['right_id'] - 1
+		);
+	}
+
+	/**
+	 * Move one or more complete branches which occupy one contiguous interval.
+	 */
+	private function move_album_nodes(array $moved_albums, int $to_id, int $from_left_id, int $from_right_id): array
+	{
+		$to_data = [];
 		if ($to_id > 0)
 		{
 			$to_data = $this->gallery_album->get_info($to_id);
 		}
 
-		$moved_albums = $this->gallery_display->get_branch($this->user_id, $from_id, 'children', 'descending');
-	//	var_dump($moved_albums);
-		$from_data = $moved_albums[0];
-
-		$diff = sizeof($moved_albums) * 2;
-
-		$moved_ids = [];
-		for ($i = 0, $end = sizeof($moved_albums); $i < $end; ++$i)
+		$moved_ids = array_map(
+			static fn(array $album): int => (int) $album['album_id'],
+			$moved_albums
+		);
+		if (in_array($to_id, $moved_ids, true))
 		{
-			// Can not select child as parent
-			if ($moved_albums[$i]['album_id'] == $to_id)
-			{
-				return [$this->language->lang('ALBUM_PARENT_INVALID')];
-			}
-			$moved_ids[] = $moved_albums[$i]['album_id'];
+			return [$this->language->lang('ALBUM_PARENT_INVALID')];
 		}
+
+		$interval_size = sizeof($moved_albums) * 2;
 
 		// Resync parents
 		$sql = 'UPDATE ' . $this->albums_table . " 
-			SET right_id = right_id - $diff, album_parents = ''
+			SET right_id = right_id - $interval_size, album_parents = ''
 			WHERE album_user_id = " . (int) $this->user_id . '
-				AND left_id < ' . (int) $from_data['right_id'] . '
-				AND right_id > ' . (int) $from_data['right_id'];
+				AND left_id < ' . $from_right_id . '
+				AND right_id > ' . $from_right_id;
 		$this->db->sql_query($sql);
 
 		// Resync right-hand side of tree
 		$sql = 'UPDATE ' . $this->albums_table . " 
-			SET left_id = left_id - $diff, right_id = right_id - $diff, album_parents = ''
+			SET left_id = left_id - $interval_size, right_id = right_id - $interval_size, album_parents = ''
 			WHERE album_user_id = " . (int) $this->user_id . '
-				AND left_id > ' . (int) $from_data['right_id'];
+				AND left_id > ' . $from_right_id;
 		$this->db->sql_query($sql);
 
 		if ($to_id > 0)
@@ -610,7 +649,7 @@ class manage
 
 			// Resync new parents
 			$sql = 'UPDATE ' . $this->albums_table . " 
-				SET right_id = right_id + $diff, album_parents = ''
+				SET right_id = right_id + $interval_size, album_parents = ''
 				WHERE album_user_id = " . (int) $this->user_id . '
 					AND ' . (int) $to_data['right_id'] . ' BETWEEN left_id AND right_id
 					AND ' . $this->db->sql_in_set('album_id', $moved_ids, true);
@@ -618,23 +657,13 @@ class manage
 
 			// Resync the right-hand side of the tree
 			$sql = 'UPDATE ' . $this->albums_table . ' 
-				SET left_id = left_id + ' . (int) $diff . ', right_id = right_id + ' . (int) $diff . ', album_parents = \'\'
+				SET left_id = left_id + ' . $interval_size . ', right_id = right_id + ' . $interval_size . ', album_parents = \'\'
 				WHERE album_user_id = ' . (int) $this->user_id . '
 					AND left_id > ' . (int) $to_data['right_id'] . '
 					AND ' . $this->db->sql_in_set('album_id', $moved_ids, true);
 			$this->db->sql_query($sql);
 
-			// Resync moved branch
-			$to_data['right_id'] += $diff;
-
-			if ($to_data['right_id'] > $from_data['right_id'])
-			{
-				$diff = '+ ' . ($to_data['right_id'] - $from_data['right_id'] - 1);
-			}
-			else
-			{
-				$diff = '- ' . abs($to_data['right_id'] - $from_data['right_id'] - 1);
-			}
+			$move_by = (int) $to_data['right_id'] - $from_left_id;
 		}
 		else
 		{
@@ -646,16 +675,17 @@ class manage
 			$row = $this->db->sql_fetchrow($result);
 			$this->db->sql_freeresult($result);
 
-			$diff = '+ ' . ($row['right_id'] - $from_data['left_id'] + 1);
+			$move_by = (int) $row['right_id'] - $from_left_id + 1;
 		}
 
+		$move_operator = $move_by >= 0 ? '+ ' . $move_by : '- ' . abs($move_by);
 		$sql = 'UPDATE ' . $this->albums_table . " 
-			SET left_id = left_id $diff, right_id = right_id $diff, album_parents = ''
+			SET left_id = left_id $move_operator, right_id = right_id $move_operator, album_parents = ''
 			WHERE album_user_id = " . (int) $this->user_id . '
 				AND ' . $this->db->sql_in_set('album_id', $moved_ids);
 		$this->db->sql_query($sql);
 
-		return $errors;
+		return [];
 	}
 
 	/**
@@ -764,30 +794,23 @@ class manage
 				{
 					$subalbums_to_name = $row['album_name'];
 
-					$sql = 'SELECT album_id
-						FROM ' . $this->albums_table . ' 
-						WHERE parent_id = ' . (int) $album_id;
-					$result = $this->db->sql_query($sql);
-
-					while ($row = $this->db->sql_fetchrow($result))
+					$errors = array_merge($errors, $this->move_album_children($album_id, $subalbums_to_id));
+					if (!$errors)
 					{
-						$this->move_album($row['album_id'], $subalbums_to_id);
+						// Grab new album data for correct tree updating later
+						$album_data = $this->gallery_album->get_info($album_id);
+
+						$sql = 'UPDATE ' . $this->albums_table . '
+							SET parent_id = ' . (int) $subalbums_to_id .'
+							WHERE parent_id = ' . (int) $album_id . '
+								AND album_user_id = ' . (int) $this->user_id;
+						$this->db->sql_query($sql);
+
+						$diff = 2;
+						$sql = 'DELETE FROM ' . $this->albums_table . '
+							WHERE album_id = ' . (int) $album_id;
+						$this->db->sql_query($sql);
 					}
-					$this->db->sql_freeresult($result);
-
-					// Grab new album data for correct tree updating later
-					$album_data = $this->gallery_album->get_info($album_id);
-
-					$sql = 'UPDATE ' . $this->albums_table . ' 
-						SET parent_id = ' . (int) $subalbums_to_id .'
-						WHERE parent_id = ' . (int) $album_id . '
-							AND album_user_id = ' . (int) $this->user_id;
-					$this->db->sql_query($sql);
-
-					$diff = 2;
-					$sql = 'DELETE FROM ' . $this->albums_table . ' 
-						WHERE album_id = ' . (int) $album_id;
-					$this->db->sql_query($sql);
 				}
 			}
 
