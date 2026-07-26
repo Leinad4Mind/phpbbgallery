@@ -3,6 +3,7 @@
 	<testsuites>
 		<testsuite name="phpBB Gallery Core">
 			<directory suffix="_test.php">tests</directory>
+			<exclude>tests/functional</exclude>
 		</testsuite>
 	</testsuites>
 </phpunit>

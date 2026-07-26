@@ -2,7 +2,7 @@
 	"name": "phpbbgallery/feed",
 	"type": "phpbb-extension",
 	"description": "This phpBB Gallery Add-on publishes an ATOM feed of the Gallery images",
-	"homepage": "https://github.com/Leinad4Mind/gold-phpbb-ext",
+	"homepage": "https://github.com/satanasov/phpbbgallery",
 	"version": "1.0.0",
 	"time": "2026-07-26",
 	"license": "GPL-2.0-only",
@@ -30,7 +30,7 @@
 	},
 	"version-check": {
 		"host": "raw.githubusercontent.com",
-		"directory": "/Leinad4Mind/gold-phpbb-ext/master/",
+		"directory": "/satanasov/phpbbgallery/master/",
 		"filename": "gallery-feed.json",
 		"ssl": true
 	}
