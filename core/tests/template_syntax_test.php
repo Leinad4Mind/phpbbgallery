@@ -281,6 +281,18 @@ final class template_syntax_test extends TestCase
 		}
 	}
 
+	public function test_bootstrap_upload_preview_uses_packaged_placeholder(): void
+	{
+		$core_root = dirname(__DIR__);
+		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$posting = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/posting_body.html');
+			$this->assertStringContainsString('{{ T_THEME_PATH }}/images/missing.png', $posting, $style);
+			$this->assertStringNotContainsString('placehold.it', $posting, $style);
+			$this->assertStringNotContainsString('http://', $posting, $style);
+		}
+	}
+
 	#[IgnoreDeprecations]
 	public function test_modernized_templates_parse_with_packaged_twig(): void
 	{
