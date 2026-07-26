@@ -76,7 +76,9 @@
 									{% endfor %}
 								</ul>
 							{% else %}
-								<p> {{ lang('NO_WAITING_UNAPPROVED_IMAGE') }}
+								<div class="alert alert-info fade in" role="alert">
+									<i class="fa fa-warning" aria-hidden="true"></i>&nbsp;{{ lang('NO_WAITING_UNAPPROVED_IMAGE') }}
+								</div>
 							{% endif %}
 						</div>
 					</div>
