@@ -20,7 +20,7 @@
 				<label for="watch_com0"><input type="radio" name="watch_com" id="watch_com0" value="0"{% if not S_WATCH_COM %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
 			</dd>
 		</dl>
-		{% EVENT gallery_ucp_settings_watch %}
+		{% EVENT phpbbgallery_core_ucp_settings_watch %}
 		<hr />
 		{% if S_COMMENTS_ENABLED %}
 		<dl>
@@ -39,13 +39,13 @@
 				<label for="rrc_zebra0"><input type="radio" name="rrc_zebra" id="rrc_zebra0" value="0" {% if not S_RRC_ZEBRA %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
 			</dd>
 		</dl>
-		{% EVENT gallery_ucp_settings_fieldset %}
+		{% EVENT phpbbgallery_core_ucp_settings_fieldset %}
 		</fieldset>
 
 	</div>
 </div>
 
-{% EVENT gallery_ucp_settings_form %}
+{% EVENT phpbbgallery_core_ucp_settings_form %}
 
 	<fieldset class="submit-buttons">
 		<input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}" />&nbsp;

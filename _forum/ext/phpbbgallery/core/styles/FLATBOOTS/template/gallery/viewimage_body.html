@@ -144,7 +144,7 @@
 			</div>
 				{% if U_EDIT or U_DELETE or U_REPORT %}
 				<ul class="pull-right list-inline">
-				{% EVENT gallery_viewimage_actions %}
+				{% EVENT phpbbgallery_core_viewimage_actions %}
 				{% if U_WATCH_TOPIC %}<li><a class="btn btn-xs btn-default" href="{{ U_WATCH_TOPIC }}" title="{{ lang('WATCH_TOPIC') }}"><i {% if S_WATCHING_TOPIC %}class="fa fa-times"{% else %}class="fa fa-bookmark"{% endif %}></i></a></li>{% endif %}
 				{% if U_BOOKMARK_TOPIC %}<li><a class="btn btn-xs btn-default" href="{{ U_BOOKMARK_TOPIC }}" title="{{ lang('BOOKMARK_TOPIC') }}"><i class="fa fa-heart"></i></a></li>{% endif %}
 				{% if U_EDIT %}<li><a class="btn btn-xs btn-default" href="{{ U_EDIT }}" title="{{ lang('EDIT_IMAGE') }}"><i class="fa fa-pencil"></i></a></li>{% endif %}
@@ -186,7 +186,7 @@
 			{% endif %}
 			</fieldset>
 
-			{% EVENT gallery_viewimage_details %}
+			{% EVENT phpbbgallery_core_viewimage_details %}
 			</div>
 
 		</div>

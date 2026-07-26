@@ -29,7 +29,7 @@
 		</div>
 		</div>
 
-		{% EVENT gallery_ucp_settings_watch %}
+		{% EVENT phpbbgallery_core_ucp_settings_watch %}
 
 		{% if S_COMMENTS_ENABLED %}
 		<div class="control-group">
@@ -48,13 +48,13 @@
 			<div class="radio"><input type="radio" name="rrc_zebra" id="rrc_zebra0" value="0"{% if not S_RRC_ZEBRA %} checked="checked"{% endif %} /><label for="rrc_zebra0">{{ lang('NO') }}</label></div>
 		</div>
 		</div>
-		{% EVENT gallery_ucp_settings_fieldset %}
+		{% EVENT phpbbgallery_core_ucp_settings_fieldset %}
 
 	</fieldset>
 
 	<div class="space10"></div>
 
-	{% EVENT gallery_ucp_settings_form %}
+	{% EVENT phpbbgallery_core_ucp_settings_form %}
 
 	<div class="form-actions">
 		<button type="reset" value="{{ lang('RESET') }}" name="reset" id="reset" class="btn btn-default">{{ lang('RESET') }}</button>
