@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" xml:lang="{{ FEED_LANG }}">
+	<link rel="self" type="application/atom+xml" href="{{ SELF_LINK }}" />
+
+	{% if not FEED_TITLE is empty %}<title><![CDATA[{{ FEED_TITLE }}]]></title>{% endif %}
+
+	{% if not FEED_SUBTITLE is empty %}<subtitle><![CDATA[{{ FEED_SUBTITLE }}]]></subtitle>{% endif %}
+
+	{% if not FEED_LINK is empty %}<link href="{{ FEED_LINK }}" />{% endif %}
+
+	<updated>{{ FEED_UPDATED }}</updated>
+
+	<author><name><![CDATA[{{ FEED_AUTHOR }}]]></name></author>
+	<id>{{ SELF_LINK }}</id>
+
+	{% for row in FEED_ROWS %}
+	<entry>
+		<author><name><![CDATA[{{ row.author }}]]></name></author>
+
+		<updated>{{ row.updated }}</updated>
+		<published>{{ row.updated }}</published>
+
+		<id>{{ row.link }}</id>
+		<link href="{{ row.link }}" />
+		<link rel="enclosure" href="{{ row.medium }}" />
+		<title type="html"><![CDATA[{{ row.album_name }} &#8226; {{ row.title }}]]></title>
+
+		{% if not row.album_name is empty %}<category term="{{ row.album_name }}" scheme="{{ row.album_link }}" label="{{ row.album_name }}" />{% endif %}
+
+		<media:thumbnail url="{{ row.thumbnail }}" />
+		<media:content url="{{ row.medium }}" medium="image" />
+
+		<content type="html" xml:base="{{ row.link }}"><![CDATA[
+<a href="{{ row.link }}"><img src="{{ row.thumbnail }}" alt="{{ row.title }}" /></a>
+{{ row.description }}
+]]></content>
+	</entry>
+	{% endfor %}
+</feed>

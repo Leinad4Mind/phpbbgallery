@@ -1,0 +1,5 @@
+<dl>
+	<dt><label for="album_feed_yes">{{ lang('ALBUM_FEED') }}{{ lang('COLON') }}</label><br /><span>{{ lang('ALBUM_FEED_EXPLAIN') }}</span></dt>
+	<dd><label for="album_feed_yes"><input type="radio" class="radio" id="album_feed_yes" name="album_feed" value="1"{% if S_ALBUM_FEED %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+		<label for="album_feed_no"><input type="radio" class="radio" id="album_feed_no" name="album_feed" value="0"{% if not S_ALBUM_FEED %} checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
+</dl>
