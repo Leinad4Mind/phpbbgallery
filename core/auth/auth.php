@@ -143,30 +143,46 @@ class auth
 		return self::OWN_ALBUM;
 	}
 
+	/**
+	 * Load Gallery permissions for the active or phpBB-impersonated user.
+	 *
+	 * @param int       $user_id  Requested user identifier
+	 * @param int|false $album_id Legacy album scope, retained for API compatibility
+	 * @return void
+	 */
 	public function load_user_permissions(int $user_id, int|false $album_id = false): void
 	{
 		$this->_auth_data = [];
 		$this->_auth_data_never = [];
 		$this->acl_cache = [];
+		$user_id = $this->get_effective_user_id($user_id);
+
+		if ($user_id != $this->user->user_id)
+		{
+			$this->user->set_user_id($user_id);
+		}
 
 		$cached_permissions = $this->user->get_data('user_permissions');
-		if (($user_id == $this->user->user_id) && !empty($cached_permissions))
+		if (!empty($cached_permissions))
 		{
 			$this->unserialize_auth_data($cached_permissions);
 			return;
 		}
-
-		else if ($user_id != $this->user->user_id)
-		{
-			$this->user->set_user_id($user_id);
-			$cached_permissions = $this->user->get_data('user_permissions');
-			if (!empty($cached_permissions))
-			{
-				$this->unserialize_auth_data($cached_permissions);
-				return;
-			}
-		}
 		$this->query_auth_data($user_id);
+	}
+
+	/**
+	 * Resolve phpBB's temporary permission-test identity without affecting explicit lookups.
+	 *
+	 * @param int $user_id Requested user identifier
+	 * @return int Effective Gallery permission owner
+	 */
+	protected function get_effective_user_id(int $user_id): int
+	{
+		$current_user_id = (int) ($this->phpbb_user->data['user_id'] ?? 0);
+		$permission_user_id = (int) ($this->phpbb_user->data['user_perm_from'] ?? 0);
+
+		return $user_id === $current_user_id && $permission_user_id > 0 ? $permission_user_id : $user_id;
 	}
 
 	/**

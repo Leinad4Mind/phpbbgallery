@@ -492,12 +492,6 @@ class display
 				}
 			}
 
-			// Category with no members
-			if (!$row['album_type'] && ($row['left_id'] + 1 == $row['right_id']))
-			{
-				continue;
-			}
-
 			// Skip branch
 			if (isset($right_id))
 			{
