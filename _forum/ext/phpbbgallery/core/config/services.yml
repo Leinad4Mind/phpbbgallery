@@ -319,9 +319,7 @@ services:
             - '@phpbbgallery.core.search'
             - '@phpbbgallery.core.config'
             - '@dbal.conn'
-            - '%phpbbgallery.tables.gallery_albums%'
             - '%phpbbgallery.tables.gallery_users%'
-            - '%core.php_ext%'
         tags:
             - { name: event.listener }
 # ----- Cron tasks -----

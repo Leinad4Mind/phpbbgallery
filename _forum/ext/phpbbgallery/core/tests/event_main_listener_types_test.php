@@ -51,21 +51,6 @@ final class event_main_listener_types_test extends TestCase
 			'core.user_setup' => 'load_language_on_setup',
 			'core.page_header' => 'add_page_header_link',
 			'core.memberlist_view_profile' => 'user_profile_galleries',
-			'core.grab_profile_fields_data' => 'get_user_ids',
 		], main_listener::getSubscribedEvents());
-	}
-
-	public function test_profile_event_state_is_reset_for_multi_user_events(): void
-	{
-		$reflection = new \ReflectionClass(main_listener::class);
-		$listener = $reflection->newInstanceWithoutConstructor();
-		$reflection->getProperty('user_ids')->setValue($listener, [7]);
-		$reflection->getProperty('albums')->setValue($listener, [7 => 17]);
-		$event = new \phpbb\event\data(['user_ids' => [7, 8]]);
-
-		$listener->get_user_ids($event);
-
-		$this->assertSame([], $reflection->getProperty('user_ids')->getValue($listener));
-		$this->assertSame([], $reflection->getProperty('albums')->getValue($listener));
 	}
 }

@@ -22,7 +22,6 @@ class main_listener implements EventSubscriberInterface
 			'core.page_header'						=> 'add_page_header_link',
 			'core.memberlist_view_profile'	       => 'user_profile_galleries',
 			//'core.generate_profile_fields_template_data_before'	       => 'profile_fields',
-			'core.grab_profile_fields_data'	       => 'get_user_ids',
 			//'core.viewonline_overwrite_location'	=> 'add_newspage_viewonline',
 		];
 	}
@@ -45,19 +44,7 @@ class main_listener implements EventSubscriberInterface
 	protected \phpbb\db\driver\driver_interface $db;
 
 	/** @var string */
-	protected string $albums_table;
-
-	/** @var string */
 	protected string $users_table;
-
-	/* @var string phpEx */
-	protected string $php_ext;
-
-	/** @var array */
-	protected array $user_ids = [];
-
-	/** @var array */
-	protected array $albums = [];
 
 	/**
 	 * Constructor
@@ -69,14 +56,12 @@ class main_listener implements EventSubscriberInterface
 	 * @param \phpbbgallery\core\search $gallery_search
 	 * @param \phpbbgallery\core\config $gallery_config
 	 * @param \phpbb\db\driver\driver_interface $db
-	 * @param string $albums_table
 	 * @param string $users_table
-	 * @param string $php_ext phpEx
 	 */
 	public function __construct(\phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\user $user,
 								\phpbb\language\language $lang, \phpbbgallery\core\search $gallery_search,
 								\phpbbgallery\core\config $gallery_config, \phpbb\db\driver\driver_interface $db,
-								string $albums_table, string $users_table, string $php_ext)
+								string $users_table)
 	{
 		$this->helper = $helper;
 		$this->template = $template;
@@ -85,8 +70,6 @@ class main_listener implements EventSubscriberInterface
 		$this->gallery_search = $gallery_search;
 		$this->gallery_config = $gallery_config;
 		$this->db = $db;
-		$this->php_ext = $php_ext;
-		$this->albums_table = $albums_table;
 		$this->users_table = $users_table;
 	}
 	public function load_language_on_setup(\phpbb\event\data $event): void
@@ -161,25 +144,6 @@ class main_listener implements EventSubscriberInterface
 					'U_GALLERY_IMAGES_ALLOW'	=> true,
 					'U_GALLERY_IMAGES'	=> 0,
 				]);
-			}
-		}
-	}
-	public function get_user_ids(\phpbb\event\data $event): void
-	{
-		$this->user_ids = [];
-		$this->albums = [];
-		if (count($event['user_ids']) == 1)
-		{
-			$this->user_ids = $event['user_ids'];
-			if ($this->gallery_config->get('profile_pega'))
-			{
-				$sql = 'SELECT album_id, album_user_id FROM ' . $this->albums_table . ' WHERE parent_id = 0 and ' . $this->db->sql_in_set('album_user_id', $this->user_ids);
-				$result = $this->db->sql_query($sql);
-				while ($row = $this->db->sql_fetchrow($result))
-				{
-					$this->albums[$row['album_user_id']] = (int) $row['album_id'];
-				}
-				$this->db->sql_freeresult($result);
 			}
 		}
 	}
