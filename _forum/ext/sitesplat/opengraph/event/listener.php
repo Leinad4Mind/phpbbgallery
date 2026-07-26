@@ -281,18 +281,25 @@ class listener implements EventSubscriberInterface
 		}
 	}
 
-	public function file_excist($event) 
- 	{ 
-		$path = $event['cfg_array']['opengraph_imagepath'];
-		if (($event['config_definition']['validate'] == 'file_excist') && ($path !== '')) 
-		{ 
-			$error = $event['error']; 
-			$path = $this->root_path . $path;
-			if (!file_exists($path))
-			{ 
-				$error[] = $this->user->lang('DIRECTORY_DOES_NOT_EXIST', $path); 
-			} 
-			$event['error'] = $error; 
+	public function file_excist($event)
+	{
+		if (($event['config_definition']['validate'] ?? '') !== 'file_excist')
+		{
+			return;
 		}
- 	} 
+
+		$path = (string) ($event['cfg_array']['opengraph_imagepath'] ?? '');
+		if ($path === '')
+		{
+			return;
+		}
+
+		$error = $event['error'] ?? [];
+		$path = $this->root_path . $path;
+		if (!file_exists($path))
+		{
+			$error[] = $this->user->lang('DIRECTORY_DOES_NOT_EXIST', $path);
+		}
+		$event['error'] = $error;
+	}
 }
