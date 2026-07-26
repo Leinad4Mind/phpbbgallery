@@ -91,6 +91,44 @@ final class domain_rating_types_test extends TestCase
 		$this->assertSame(27, $reflection->getMethod('album_data')->invoke($rating, 'album_id'));
 	}
 
+	public function test_rating_statistics_are_updated_in_one_query(): void
+	{
+		$reflection = new \ReflectionClass(rating::class);
+		$rating = $reflection->newInstanceWithoutConstructor();
+		$queries = [];
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->exactly(2))
+			->method('sql_in_set')
+			->willReturnCallback(static fn (string $field, array|int $ids): string => $field . ' IN (' . implode(', ', (array) $ids) . ')');
+		$db->expects($this->exactly(2))
+			->method('sql_query')
+			->willReturnCallback(static function (string $sql) use (&$queries): string|bool
+			{
+				$queries[] = $sql;
+				return count($queries) === 1 ? 'rating_result' : true;
+			});
+		$db->expects($this->exactly(3))
+			->method('sql_fetchrow')
+			->with('rating_result')
+			->willReturnOnConsecutiveCalls(
+				['rate_image_id' => 4, 'image_rates' => 2, 'image_rate_points' => 9, 'image_rate_avg' => 4.5],
+				['rate_image_id' => 7, 'image_rates' => 3, 'image_rate_points' => 11, 'image_rate_avg' => 3.666],
+				false
+			);
+		$db->expects($this->once())->method('sql_freeresult')->with('rating_result');
+
+		$reflection->getProperty('db')->setValue($rating, $db);
+		$reflection->getProperty('rates_table')->setValue($rating, 'gallery_rates');
+		$reflection->getProperty('images_table')->setValue($rating, 'gallery_images');
+
+		$rating->recalc_image_rating([4, 7]);
+
+		$this->assertCount(2, $queries);
+		$this->assertStringContainsString('image_rates = CASE image_id WHEN 4 THEN 2 WHEN 7 THEN 3 END', $queries[1]);
+		$this->assertStringContainsString('image_rate_points = CASE image_id WHEN 4 THEN 9 WHEN 7 THEN 11 END', $queries[1]);
+		$this->assertStringContainsString('image_rate_avg = CASE image_id WHEN 4 THEN 450 WHEN 7 THEN 367 END', $queries[1]);
+	}
+
 	public function test_submit_rating_contract_reports_success_and_rejection_explicitly(): void
 	{
 		$method = new \ReflectionMethod(rating::class, 'submit_rating');

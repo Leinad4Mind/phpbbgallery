@@ -188,23 +188,30 @@ class comment
 		}
 		$this->db->sql_freeresult($result);
 
-		$sql = 'UPDATE ' . $this->images_table . ' 
-			SET image_last_comment = 0,
-				image_comments = 0
+		if (empty($resync))
+		{
+			$sql = 'UPDATE ' . $this->images_table . '
+				SET image_last_comment = 0,
+					image_comments = 0
+				' . $sql_where_image;
+			$this->db->sql_query($sql);
+			return;
+		}
+
+		$last_comment_case = $comment_count_case = 'CASE image_id';
+		foreach ($resync as $image_id => $data)
+		{
+			$last_comment_case .= ' WHEN ' . (int) $image_id . ' THEN ' . (int) $data['last_comment'];
+			$comment_count_case .= ' WHEN ' . (int) $image_id . ' THEN ' . (int) $data['num_comments'];
+		}
+		$last_comment_case .= ' ELSE 0 END';
+		$comment_count_case .= ' ELSE 0 END';
+
+		$sql = 'UPDATE ' . $this->images_table . '
+			SET image_last_comment = ' . $last_comment_case . ',
+				image_comments = ' . $comment_count_case . '
 			' . $sql_where_image;
 		$this->db->sql_query($sql);
-
-		if (!empty($resync))
-		{
-			foreach ($resync as $image_id => $data)
-			{
-				$sql = 'UPDATE ' . $this->images_table . ' 
-					SET image_last_comment = ' . (int) $data['last_comment'] . ',
-						image_comments = ' . (int) $data['num_comments'] . '
-					WHERE image_id = ' . (int) $image_id;
-				$this->db->sql_query($sql);
-			}
-		}
 	}
 
 	/**
