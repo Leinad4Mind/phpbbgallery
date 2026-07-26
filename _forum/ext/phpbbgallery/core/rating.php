@@ -92,16 +92,6 @@ class rating
 	public const MODE_SELECT = 1;
 
 	/**
-	* Rating with stars, like the old-system from youtube.
-	//@todo: const MODE_STARS = 2;
-	*/
-
-	/**
-	* Simple thumbs up or down.
-	//@todo: const MODE_THUMB = 3;
-	*/
-
-	/**
 	 * Constructor
 	 *
 	 * @param \phpbb\db\driver\driver_interface $db
@@ -212,35 +202,13 @@ class rating
 	*/
 	public function display_box(): void
 	{
-		$this->template->assign_var('GALLERY_RATING', self::MODE_SELECT);//@todo: phpbb_ext_gallery_core_config::get('rating_mode'));
+		$this->template->assign_var('GALLERY_RATING', self::MODE_SELECT);
 
-		switch (self::MODE_SELECT)//@todo: phpbb_ext_gallery_core_config::get('rating_mode'))
+		for ($i = 1; $i <= $this->gallery_config->get('max_rating'); $i++)
 		{
-			//@todo: self::MODE_THUMB:
-			//@todo: self::MODE_STARS:
-			case self::MODE_SELECT:
-			default:
-				// @TODO We do not have contests for now
-				/*if ($this->album_data('contest_id'))
-				{
-					if (time() < ($this->album_data('contest_start') + $this->album_data('contest_rating')))
-					{
-						$template->assign_var('GALLERY_NO_RATING_MESSAGE', $user->lang('CONTEST_RATING_STARTS', $user->format_date(($this->album_data('contest_start') + $this->album_data('contest_rating')), false, true)));
-						return;
-					}
-					if (($this->album_data('contest_start') + $this->album_data('contest_end')) < time())
-					{
-						$template->assign_var('GALLERY_NO_RATING_MESSAGE', $user->lang('CONTEST_RATING_ENDED', $user->format_date(($this->album_data('contest_start') + $this->album_data('contest_end')), false, true)));
-						return;
-					}
-				}*/
-				for ($i = 1; $i <= $this->gallery_config->get('max_rating'); $i++)
-				{
-					$this->template->assign_block_vars('rate_scale', [
-						'RATE_POINT'	=> $i,
-					]);
-				}
-			break;
+			$this->template->assign_block_vars('rate_scale', [
+				'RATE_POINT'	=> $i,
+			]);
 		}
 
 		$this->rating_enabled = true;
@@ -255,32 +223,22 @@ class rating
 	 */
 	public function get_image_rating(int|false $user_rating = false, bool $display_contest_end = true): string
 	{
-		$this->template->assign_var('GALLERY_RATING', self::MODE_SELECT);//@todo: phpbb_ext_gallery_core_config::get('rating_mode'));
+		$this->template->assign_var('GALLERY_RATING', self::MODE_SELECT);
 
-		switch (self::MODE_SELECT)//@todo: phpbb_ext_gallery_core_config::get('rating_mode'))
+		if ($this->image_data('image_contest'))
 		{
-			//@todo: self::MODE_THUMB:
-			//@todo: self::MODE_STARS:
-			case self::MODE_SELECT:
-			default:
-				if ($this->image_data('image_contest'))
-				{
-					if (!$display_contest_end)
-					{
-						return $this->language->lang('CONTEST_RATING_HIDDEN');
-					}
-					return $this->language->lang('CONTEST_RESULT_HIDDEN', $this->user->format_date(($this->album_data('contest_start') + $this->album_data('contest_end')), false, true));
-				}
-				else
-				{
-					if ($user_rating)
-					{
-						return $this->language->lang('RATING_STRINGS_USER', (int) $this->image_data('image_rates'), $this->get_image_rating_value(), $user_rating);
-					}
-					return $this->language->lang('RATING_STRINGS', (int) $this->image_data('image_rates'), $this->get_image_rating_value());
-				}
-			break;
+			if (!$display_contest_end)
+			{
+				return $this->language->lang('CONTEST_RATING_HIDDEN');
+			}
+			return $this->language->lang('CONTEST_RESULT_HIDDEN', $this->user->format_date(($this->album_data('contest_start') + $this->album_data('contest_end')), false, true));
 		}
+
+		if ($user_rating)
+		{
+			return $this->language->lang('RATING_STRINGS_USER', (int) $this->image_data('image_rates'), $this->get_image_rating_value(), $user_rating);
+		}
+		return $this->language->lang('RATING_STRINGS', (int) $this->image_data('image_rates'), $this->get_image_rating_value());
 	}
 
 	/**
@@ -288,14 +246,7 @@ class rating
 	*/
 	private function get_image_rating_value(): float
 	{
-		/*if (phpbb_ext_gallery_core_contest::$mode == phpbb_ext_gallery_core_contest::MODE_SUM)
-		{
-			return $this->image_data('image_rate_points');
-		}
-		else
-		{*/
-			return ((float) $this->image_data('image_rate_avg') / 100);
-		//}
+		return ((float) $this->image_data('image_rate_avg') / 100);
 	}
 
 	/**
@@ -367,17 +318,9 @@ class rating
 	 */
 	public function submit_rating(int|false $user_id = false, int|false $points = false, string|false $user_ip = false): bool
 	{
-		switch (self::MODE_SELECT)//@todo: phpbb_ext_gallery_core_config::get('rating_mode'))
-		{
-			//@todo: self::MODE_THUMB:
-			//@todo: self::MODE_STARS:
-			case self::MODE_SELECT:
-			default:
-				$user_id = ($user_id) ? $user_id : (int) $this->user->data['user_id'];
-				$points = ($points) ? $points : (int) $this->request->variable('rating', 0);
-				$points = max(1, min($points, (int) $this->gallery_config->get('max_rating')));
-			break;
-		}
+		$user_id = ($user_id) ? $user_id : (int) $this->user->data['user_id'];
+		$points = ($points) ? $points : (int) $this->request->variable('rating', 0);
+		$points = max(1, min($points, (int) $this->gallery_config->get('max_rating')));
 
 		if (($user_id == ANONYMOUS) || $this->get_user_rating($user_id))
 		{

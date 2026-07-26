@@ -793,8 +793,6 @@ class main_module
 			$num_images = sizeof($deleted_images);
 			if ($num_images)
 			{
-				// TODO
-				//$phpbb_gallery_hookup->add_image($user->data['user_id'], 0 - $num_images);
 				$phpbb_ext_gallery_user->update_images((0 - $num_images));
 			}
 

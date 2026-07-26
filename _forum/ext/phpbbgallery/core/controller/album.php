@@ -364,9 +364,7 @@ class album
 			$album_status = $image_data['album_status'];
 			$album_user_id = $image_data['album_user_id'];
 
-			//@todo: $rating = new phpbb_gallery_image_rating($image_data['image_id'], $image_data, $image_data);
-			$image_data['rating'] = '0';//@todo: $rating->get_image_rating(false, false);
-			//@todo: unset($rating);
+			$image_data['rating'] = '0';
 
 			$s_user_allowed = (($image_data['image_user_id'] == $this->user->data['user_id']) && ($album_status != (int) \phpbbgallery\core\block::ALBUM_LOCKED));
 
@@ -423,14 +421,14 @@ class album
 
 				'U_USER_IP'                  => $show_ip && $this->auth->acl_check('m_status', $image_data['image_album_id'], $album_user_id) ? $image_data['image_user_ip'] : false,
 				'S_IMAGE_REPORTED'           => $image_data['image_reported'],
-				'U_IMAGE_REPORTED'           => '',//($image_data['image_reported']) ? $phpbb_ext_gallery->url->append_sid('mcp', "mode=report_details&amp;album_id={$image_data['image_album_id']}&amp;option_id=" . $image_data['image_reported']) : '',
+				'U_IMAGE_REPORTED'           => ($image_data['image_reported'] && $this->auth->acl_check('m_report', $image_data['image_album_id'], $album_user_id)) ? $this->helper->route('phpbbgallery_core_moderate_image', ['image_id' => (int) $image_data['image_id']]) : '',
 				'S_STATUS_APPROVED'          => ($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_APPROVED) ? true : false,
 				'S_STATUS_UNAPPROVED'        => ($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_UNAPPROVED) ? true : false,
 				'S_STATUS_UNAPPROVED_ACTION' => ($this->auth->acl_check('m_status', $image_data['image_album_id'], $album_user_id) && $image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_UNAPPROVED) ? $this->helper->route('phpbbgallery_core_moderate_image_approve', ['image_id' => $image_data['image_id']]) : '',
 				'S_STATUS_LOCKED'            => ($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_LOCKED) ? true : false,
 
-				'U_REPORT' => ($this->auth->acl_check('m_report', $image_data['image_album_id'], $album_user_id) && $image_data['image_reported']) ? '123'/*$this->url->append_sid('mcp', "mode=report_details&amp;album_id={$image_data['image_album_id']}&amp;option_id=" . $image_data['image_reported'])*/ : '',
-				'U_STATUS' => '',//($this->auth->acl_check('m_status', $image_data['image_album_id'], $album_user_id)) ? $phpbb_ext_gallery->url->append_sid('mcp', "mode=queue_details&amp;album_id={$image_data['image_album_id']}&amp;option_id=" . $image_data['image_id']) : '',
+				'U_REPORT' => ($this->auth->acl_check('m_report', $image_data['image_album_id'], $album_user_id) && $image_data['image_reported']) ? $this->helper->route('phpbbgallery_core_moderate_image', ['image_id' => (int) $image_data['image_id']]) : '',
+				'U_STATUS' => $this->auth->acl_check('m_status', $image_data['image_album_id'], $album_user_id) ? $this->helper->route('phpbbgallery_core_moderate_image', ['image_id' => (int) $image_data['image_id']]) : '',
 				'L_STATUS' => ($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_UNAPPROVED) ? $this->language->lang('APPROVE_IMAGE') : (($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_APPROVED) ? $this->language->lang('CHANGE_IMAGE_STATUS') : $this->language->lang('UNLOCK_IMAGE')),
 
 				'S_CONTEST_RANK' => $image_data['image_contest_rank'],
@@ -560,7 +558,6 @@ class album
 			$s_hidden_fields = '';
 			confirm_box(false, $lang, $s_hidden_fields);
 		}
-		//return $this->helper->render('gallery/moderate_approve.html', $this->language->lang('GALLERY'));
 	}
 
 	/**
@@ -589,7 +586,6 @@ class album
 			}
 			else
 			{
-				//return $this->error('NOT_AUTHORISED', 403);
 				trigger_error($this->language->lang('NOT_AUTHORISED'));
 			}
 		}

@@ -604,7 +604,6 @@ class image
 			// Different link, when we rate and don't comment
 			if (!$s_hide_comment_input)
 			{
-				//$this->template->assign_var('S_COMMENT_ACTION', append_sid($this->url->path('full') . 'comment/' . $image_id . '/add/0'));
 				$this->template->assign_var('S_COMMENT_ACTION', $this->helper->route('phpbbgallery_core_comment_add', ['image_id' => $image_id, 'comment_id' => 0]));
 			}
 		}
@@ -616,7 +615,7 @@ class image
 		/**
 		 * Listing comment
 		 */
-		if (($this->gallery_config->get('allow_comments') && $this->gallery_auth->acl_check('c_read', $album_id, $album_data['album_user_id'])) /*&& (time() > ($album_data['contest_start'] + $album_data['contest_end']))*/)
+		if ($this->gallery_config->get('allow_comments') && $this->gallery_auth->acl_check('c_read', $album_id, $album_data['album_user_id']))
 		{
 			$this->display_comments($image_id, $this->data, $album_id, $album_data, ($page - 1) * $this->gallery_config->get('items_per_page'), $this->gallery_config->get('items_per_page'));
 		}
@@ -852,8 +851,6 @@ class image
 				}
 
 			}
-			//$this->db->sql_freeresult($result);
-
 			$this->pagination->generate_template_pagination([
 				'routes' => [
 					'phpbbgallery_core_image',
@@ -1308,13 +1305,11 @@ class image
 			}
 			else
 			{
-				//return $this->error('NOT_AUTHORISED', 403);
 				redirect('gallery/album/' . $album_id);
 			}
 		}
 		if (!$this->gallery_auth->acl_check('m_status', $album_id, $owner_id) && $user_data['image_user_id'] != $this->user->data['user_id'] && ($image_status == (int) \phpbbgallery\core\block::STATUS_UNAPPROVED))
 		{
-			//return $this->error('NOT_AUTHORISED', 403);
 			redirect('gallery/album/' . $album_id);
 		}
 	}

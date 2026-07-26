@@ -164,7 +164,6 @@ class album
 
 		if ($row === false)
 		{
-			// return false;
 			throw new \phpbb\exception\http_exception(403, 'NO_ALBUM_STEALING');
 		}
 

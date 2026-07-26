@@ -166,12 +166,6 @@ class helper
 				];
 				$phpbb_notifications->add_notifications('phpbbgallery.core.notification.new_report', $notification_data);
 			break;
-			///case 'add':
-			//	$phpbb_notifications->add_notifications('notification.type.zebraadd', $notification_data);
-			//break;
-			//case 'confirm':
-			//	$phpbb_notifications->add_notifications('notification.type.zebraconfirm', $notification_data);
-			//break;
 		}
 	}
 	public function delete_notifications(string $type, mixed $target): void

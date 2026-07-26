@@ -1027,7 +1027,6 @@ class moderate
 	{
 		$image_data = $this->image->get_image_data_or_fail($image_id);
 		$album_id = $image_data['image_album_id'];
-		//$user_id = $image_data['image_user_id'];
 		$album_data =  $this->album->get_info($album_id);
 		$album_backlink = $this->helper->route('phpbbgallery_core_album', ['album_id' => $album_id]);
 		$image_backlink = $this->helper->route('phpbbgallery_core_image', ['image_id' => $image_id]);

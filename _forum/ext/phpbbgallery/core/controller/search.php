@@ -182,7 +182,7 @@ class search
 		if ($this->gallery_config->get('allow_rates'))
 		{
 			$sort_by_text['ra'] = $this->language->lang('RATING');
-			$sort_by_sql['ra'] = 'image_rate_points';//@todo: (phpbb_gallery_contest::$mode == phpbb_gallery_contest::MODE_SUM) ? 'image_rate_points' : 'image_rate_avg';
+			$sort_by_sql['ra'] = 'image_rate_points';
 			$sort_by_text['r'] = $this->language->lang('RATES_COUNT');
 			$sort_by_sql['r'] = 'image_rates';
 		}
@@ -293,7 +293,6 @@ class search
 			$result = $this->db->sql_query($sql);
 			$row = $this->db->sql_fetchrow($result);
 			$search_count = (int) ($row['count'] ?? 0);
-			//var_dump($sql);
 			$this->db->sql_freeresult($result);
 			if ($search_count == 0)
 			{
@@ -359,7 +358,7 @@ class search
 			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_core_search'),
 		]);
 
-		$s_albums = $this->album->get_albumbox(false, false, false, 'i_view' /*'a_search'*/);
+		$s_albums = $this->album->get_albumbox(false, false, false, 'i_view');
 		$s_hidden_fields = [];
 		$this->template->assign_vars([
 			'S_SEARCH_ACTION'		=> $this->helper->route('phpbbgallery_core_search'), // We force no ?sid= appending by using 0

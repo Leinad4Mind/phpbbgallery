@@ -358,7 +358,6 @@ class display
 	{
 		$album_rows = $subalbums = $album_ids = $album_ids_moderator = $album_moderators = $active_album_ary = [];
 		$parent_id = $visible_albums = 0;
-		//$mode = $this->request->variable('mode', '');
 		$mode = $this->album_mode;
 		// Mark albums read?
 		$mark_read = $this->request->variable('mark', '');
@@ -425,21 +424,7 @@ class display
 
 			$mode_personal = true;
 			$start = $this->album_start;
-			//$limit = $this->config['phpbb_gallery_pegas_per_page'];
 			$limit = $this->album_limit;
-			/*$this->template->assign_vars([
-				'PAGINATION'				=> $this->pagination->generate_template_pagination([
-						//todo 'mode=' . $mode . (($first_char) ? '&amp;first_char=' . $first_char : '')
-					], 'pagination', 'page', $num_pegas, $limit, $start),
-				'TOTAL_PGALLERIES_SHORT'	=> $this->user->lang('TOTAL_PEGAS_SHORT_SPRINTF', $num_pegas),
-				'PAGE_NUMBER'				=> $this->pagination->on_page($num_pegas, $limit, $start),
-			]);
-			$this->pagination->generate_template_pagination([
-				'routes' => [
-					'phpbbgallery_core_search_recent',
-					'phpbbgallery_core_search_recent_page',],
-					'params' => []], 'pagination', 'page', $num_pegas, $limit, $start
-			);*/
 		}
 		else
 		{
@@ -530,13 +515,6 @@ class display
 			}
 
 			$active_album_ary[] = (int) $album_id;
-
-			if (false)//@todo !$this->gallery_auth->acl_check('a_list', $album_id, $row['album_user_id']))
-			{
-				// if the user does not have permissions to list this album, skip everything until next branch
-				$right_id = $row['right_id'];
-				continue;
-			}
 
 			$album_tracking_info[$album_id] = (!empty($row['mark_time'])) ? $row['mark_time'] : $this->gallery_user->get_data('user_lastmark');
 
@@ -721,15 +699,11 @@ class display
 				$lastimage_time = $this->user->format_date($row['album_last_image_time']);
 				$lastimage_album_type = $row['album_type_last_image'];
 				$lastimage_contest_marked = $row['album_contest_marked'];
-				// phpbb_ext_gallery_core_image::generate_link('fake_thumbnail', $phpbb_ext_gallery->config->get('link_thumbnail'), $lastimage_image_id, $lastimage_name, $lastimage_album_id);
 				$lastimage_uc_fake_thumbnail = $row['album_image'] ? generate_board_url() . '/' . $row['album_image'] : $this->helper->route('phpbbgallery_core_image_file_mini', ['image_id' => $row['album_last_image_id']]);
 				$lastimage_uc_fake_thumbnail_url = $row['album_image'] ? generate_board_url() . '/' . $row['album_image'] : $this->helper->route('phpbbgallery_core_image', ['image_id' => $row['album_last_image_id']]);
-				// phpbb_ext_gallery_core_image::generate_link('thumbnail', $phpbb_ext_gallery->config->get('link_thumbnail'), $lastimage_image_id, $lastimage_name, $lastimage_album_id);
 				$lastimage_uc_thumbnail = $row['album_image'] ? generate_board_url() . '/' . $row['album_image'] : $this->helper->route('phpbbgallery_core_image_file_mini', ['image_id' => $row['album_last_image_id']]);
-				// phpbb_ext_gallery_core_image::generate_link('image_name', $phpbb_ext_gallery->config->get('link_image_name'), $lastimage_image_id, $lastimage_name, $lastimage_album_id);
-				$lastimage_uc_name = '';//@todo phpbb_ext_gallery_core_image::generate_link('image_name', $phpbb_ext_gallery->config->get('link_image_name'), $lastimage_image_id, $lastimage_name, $lastimage_album_id);
-				// phpbb_ext_gallery_core_image::generate_link('lastimage_icon', $phpbb_ext_gallery->config->get('link_image_icon'), $lastimage_image_id, $lastimage_name, $lastimage_album_id);
-				$lastimage_uc_icon = '';//@todo phpbb_ext_gallery_core_image::generate_link('lastimage_icon', $phpbb_ext_gallery->config->get('link_image_icon'), $lastimage_image_id, $lastimage_name, $lastimage_album_id);
+				$lastimage_uc_name = '';
+				$lastimage_uc_icon = '';
 			}
 			else
 			{

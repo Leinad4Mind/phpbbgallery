@@ -205,14 +205,6 @@ class manage
 			$errors[] = $this->language->lang('ALBUM_DESC_TOO_LONG');
 		}
 
-		/*if ($album_data['album_password'] || $album_data['album_password_confirm'])
-		{
-			if ($album_data['album_password'] != $album_data['album_password_confirm'])
-			{
-				$album_data['album_password'] = $album_data['album_password_confirm'] = '';
-				$errors[] = $user->lang['ALBUM_PASSWORD_MISMATCH'];
-			}
-		}*/
 		// Validate the contest timestamps:
 		if ($album_data['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST)
 		{
@@ -224,7 +216,6 @@ class manage
 			{
 				$timezone = $this->user->data['user_timezone'];
 			}
-			//$timezone = ($this->user->data['user_timezone'] == '' ? $this->user->data['user_timezone'] : 'UTC');
 			$time = $this->user->create_datetime();
 
 			$start_date_error = $date_error = false;
@@ -517,31 +508,6 @@ class manage
 				WHERE album_id = ' . (int) $album_id;
 			$this->db->sql_query($sql);
 
-/*			if ($album_data_sql['album_type'] == $phpbb_ext_gallery_core_album::TYPE_CONTEST)
-			{
-				// Setting the contest id to the contest id is not really received well by some dbs. ;)
-				$contest_id = $contest_data['contest_id'];
-				unset($contest_data['contest_id']);
-
-				$sql = 'UPDATE ' . $this->contests_table . '
-					SET ' . $db->sql_build_array('UPDATE', $contest_data) . '
-					WHERE contest_id = ' . (int) $contest_id;
-				$db->sql_query($sql);
-				if ($reset_marked_images)
-				{
-					// If the old contest is finished, but the new one isn't, we need to remark the images!
-					$sql = 'UPDATE ' . $this->images_table . '
-						SET image_contest_rank = 0,
-							image_contest_end = 0,
-							image_contest = ' . phpbb_ext_gallery_core_image::IN_CONTEST . '
-						WHERE image_album_id = ' . (int) $album_id;
-					$db->sql_query($sql);
-				}
-
-				// Add it back
-				$contest_data['contest_id'] = $contest_id;
-			}
-*/
 			// Add it back
 			$album_data['album_id'] = $album_id;
 
@@ -901,13 +867,6 @@ class manage
 	 */
 	public function move_album_content(int $from_id, int $to_id, bool $sync = true): array
 	{
-		// Lucifer TODO - Log to gallery log
-		//$sql = 'UPDATE ' . LOG_TABLE . "
-		//	SET album_id = $to_id
-		//	WHERE album_id = $from_id
-		//		AND log_type = " . LOG_GALLERY;
-		//$db->sql_query($sql);
-
 		// Reset contest-information for safety.
 		$sql = 'UPDATE ' . $this->images_table . ' 
 			SET image_album_id = ' . (int) $to_id . ',
@@ -999,12 +958,6 @@ class manage
 		{
 			$this->gallery_image->delete_images($deleted_images, $filenames);
 		}
-
-		// Lucifer TODO: Log Gallery deletion from log
-		//$sql = 'DELETE FROM ' . LOG_TABLE . "
-		//	WHERE album_id = $album_id
-		//		AND log_type = " . LOG_GALLERY;
-		//$db->sql_query($sql);
 
 		//@todo: merge queries into loop
 		$sql = 'DELETE FROM ' . $this->permissions_table . ' 
