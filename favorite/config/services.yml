@@ -5,3 +5,31 @@ services:
             - '@dbal.conn'
             - '%phpbbgallery.tables.gallery_favorites%'
             - '%phpbbgallery.tables.gallery_images%'
+
+    phpbbgallery.favorite.controller:
+        class: phpbbgallery\favorite\controller\main
+        arguments:
+            - '@controller.helper'
+            - '@language'
+            - '@request'
+            - '@user'
+            - '@phpbbgallery.core.auth'
+            - '@phpbbgallery.core.image'
+            - '@phpbbgallery.core.album'
+            - '@phpbbgallery.core.notification'
+            - '@phpbbgallery.core.user'
+            - '@phpbbgallery.favorite'
+
+    phpbbgallery.favorite.listener:
+        class: phpbbgallery\favorite\event\favorite_listener
+        arguments:
+            - '@controller.helper'
+            - '@language'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '@phpbbgallery.core.auth'
+            - '@phpbbgallery.core.user'
+            - '@phpbbgallery.favorite'
+        tags:
+            - { name: event.listener }
