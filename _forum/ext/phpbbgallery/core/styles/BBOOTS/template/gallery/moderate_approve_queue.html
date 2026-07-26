@@ -6,7 +6,7 @@
 			{% elseif TOTAL_IMAGES_WAITING %}
 			<p> {{ TOTAL_IMAGES_WAITING }} </p>
 			{% endif %}
-			{% if unaproved|length %}
+			{% if image_unapproved|length %}
 				<div class="table-responsive">
 					<table class="footable table table-striped table-bordered table-white table-primary table-hover">
 						<thead>
@@ -17,21 +17,21 @@
 							</tr>
 						</thead>
 						<tbody>
-					{% for unaproved in unaproved %}
+					{% for image_unapproved in image_unapproved %}
 							<tr>
 								<td>
 								<div class="list-inner">
 									<span style="display: inline; float: left;">
-										<a href="{{ unaproved.U_IMAGE_MODERATE_URL }}"><img class="img-responsive" style="max-width: 70px; max-height: 70px;" src="{{ unaproved.U_IMAGE }}" alt="{{ unaproved.U_IMAGE_NAME }}"></a>
+										<a href="{{ image_unapproved.U_IMAGE_MODERATE_URL }}"><img class="img-responsive" style="max-width: 70px; max-height: 70px;" src="{{ image_unapproved.U_IMAGE }}" alt="{{ image_unapproved.U_IMAGE_NAME }}"></a>
 									</span>
 									<span style="margin-left: 10px;">
-										<a href="{{ unaproved.U_IMAGE_MODERATE_URL }}" class="topictitle">{{ unaproved.U_IMAGE_NAME }}</a><br />
-										<span style="margin-left: 10px; vertical-align: middle;">{{ lang('UPLOADED_BY_USER') }}{{ lang('COLON') }} {{ unaproved.IMAGE_AUTHOR }} &raquo; {{ unaproved.IMAGE_TIME }}</span>
+										<a href="{{ image_unapproved.U_IMAGE_MODERATE_URL }}" class="topictitle">{{ image_unapproved.U_IMAGE_NAME }}</a><br />
+										<span style="margin-left: 10px; vertical-align: middle;">{{ lang('UPLOADED_BY_USER') }}{{ lang('COLON') }} {{ image_unapproved.IMAGE_AUTHOR }} &raquo; {{ image_unapproved.IMAGE_TIME }}</span>
 									</span>
 								</div>
 								</td>
-								<td>{{ lang('ALBUM') }}{{ lang('COLON') }} <a href="{{ unaproved.IMAGE_ALBUM_URL }}">{{ unaproved.IMAGE_ALBUM }}</a></td>
-								<td class="table-check text-center"><input id="approval_{{ unaproved.U_IMAGE_ID }}" name="approval[{{ unaproved.IMAGE_ALBUM_ID }}][]" value="{{ unaproved.U_IMAGE_ID }}" type="checkbox"><label for="approval_{{ unaproved.U_IMAGE_ID }}"></label></td>
+								<td>{{ lang('ALBUM') }}{{ lang('COLON') }} <a href="{{ image_unapproved.IMAGE_ALBUM_URL }}">{{ image_unapproved.IMAGE_ALBUM }}</a></td>
+								<td class="table-check text-center"><input id="approval_{{ image_unapproved.U_IMAGE_ID }}" name="approval[{{ image_unapproved.IMAGE_ALBUM_ID }}][]" value="{{ image_unapproved.U_IMAGE_ID }}" type="checkbox"><label for="approval_{{ image_unapproved.U_IMAGE_ID }}"></label></td>
 							</tr>
 					{% endfor %}
 						</tbody>
@@ -44,7 +44,7 @@
 			{% endif %}
 			</div>
 		</div>
-		{% if unaproved|length %}
+		{% if image_unapproved|length %}
 		<fieldset class="display-actions">
 			<div class="btn-group">
 				<button class="btn btn-default" name="action[disapprove]" value="{{ lang('DISAPPROVE') }}" type="submit" title="{{ lang('DISAPPROVE') }}"><i class="fa fa-thumbs-down" aria-hidden="true"></i></button>
