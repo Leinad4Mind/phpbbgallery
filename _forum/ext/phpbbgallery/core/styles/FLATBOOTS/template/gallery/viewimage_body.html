@@ -92,7 +92,7 @@
 				</li>
 				{% endif %}
 
-				{% for custom_fields in custom_fields %}
+				{% for custom_fields in custom_fields|default([]) %}
 				<li>
 					<i class="fa fa-star"></i>&nbsp;<strong>{{ custom_fields.PROFILE_FIELD_NAME }}{{ lang('COLON') }}</strong> {{ custom_fields.PROFILE_FIELD_VALUE }}
 				</li>
@@ -450,7 +450,7 @@
 				</div>
 				{% endif %}
 
-				{% for custom_fields in commentrow.custom_fields %}
+				{% for custom_fields in commentrow.custom_fields|default([]) %}
 				<div class="user-profile-row">
 							<div class="user-profile-tag">{{ custom_fields.PROFILE_FIELD_NAME }}</div>
 						<div class="user-profile-output">

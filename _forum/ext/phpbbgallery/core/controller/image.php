@@ -474,6 +474,7 @@ class image
 		$user_id = $this->data['image_user_id'];
 		$this->users_data_array[$user_id]['username'] = ($this->data['image_username']) ? $this->data['image_username'] : $this->language->lang('GUEST');
 		$user_data = $this->users_data_array[$user_id] ?? [];
+		$this->assign_image_poster_profile_fields((int) $user_id);
 		$this->template->assign_vars([
 			'POSTER_FULL'     => get_username_string('full', $user_id, $user_data['username'] ?? '', $user_data['user_colour'] ?? ''),
 			'POSTER_COLOUR'   => get_username_string('colour', $user_id, $user_data['username'] ?? '', $user_data['user_colour'] ?? ''),
@@ -620,6 +621,39 @@ class image
 			$this->display_comments($image_id, $this->data, $album_id, $album_data, ($page - 1) * $this->gallery_config->get('items_per_page'), $this->gallery_config->get('items_per_page'));
 		}
 		return $this->helper->render('gallery/viewimage_body.html', $page_title);
+	}
+
+	/**
+	 * Assign the image poster's custom profile fields to root template blocks.
+	 */
+	private function assign_image_poster_profile_fields(int $poster_id): void
+	{
+		if (!$this->config['load_cpf_viewtopic'] || empty($this->profile_fields_data[$poster_id]))
+		{
+			return;
+		}
+
+		$profile_fields = $this->cpf_manager->generate_profile_fields_template_data($this->profile_fields_data[$poster_id]);
+		if (!empty($profile_fields['row']))
+		{
+			$this->template->assign_vars($profile_fields['row']);
+		}
+
+		foreach ($profile_fields['blockrow'] ?? [] as $field_data)
+		{
+			if ($field_data['S_PROFILE_CONTACT'])
+			{
+				$this->template->assign_block_vars('contact', [
+					'ID'        => $field_data['PROFILE_FIELD_IDENT'],
+					'NAME'      => $field_data['PROFILE_FIELD_NAME'],
+					'U_CONTACT' => $field_data['PROFILE_FIELD_CONTACT'],
+				]);
+			}
+			else
+			{
+				$this->template->assign_block_vars('custom_fields', $field_data);
+			}
+		}
 	}
 
 	/**

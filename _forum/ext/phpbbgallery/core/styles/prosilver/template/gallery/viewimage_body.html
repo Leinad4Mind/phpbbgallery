@@ -78,7 +78,7 @@
 			{% endif %}
 
 			{% EVENT viewtopic_body_postrow_custom_fields_before %}
-			{% for custom_fields in custom_fields %}
+			{% for custom_fields in custom_fields|default([]) %}
 				<dd class="profile-custom-field profile-{{ custom_fields.PROFILE_FIELD_IDENT }}"><strong>{{ custom_fields.PROFILE_FIELD_NAME }}{{ lang('COLON') }}</strong> {{ custom_fields.PROFILE_FIELD_VALUE }}</dd>
 			{% endfor %}
 			{% EVENT viewtopic_body_postrow_custom_fields_after %}
@@ -265,7 +265,7 @@
 				{% endif %}
 
 				{% EVENT viewtopic_body_postrow_custom_fields_before %}
-				{% for custom_fields in commentrow.custom_fields %}
+				{% for custom_fields in commentrow.custom_fields|default([]) %}
 					<dd class="profile-custom-field profile-{{ custom_fields.PROFILE_FIELD_IDENT }}"><strong>{{ custom_fields.PROFILE_FIELD_NAME }}{{ lang('COLON') }}</strong> {{ custom_fields.PROFILE_FIELD_VALUE }}</dd>
 				{% endfor %}
 				{% EVENT viewtopic_body_postrow_custom_fields_after %}
