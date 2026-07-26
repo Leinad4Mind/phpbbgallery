@@ -13,8 +13,6 @@
  * @author: phpBB Group
  * @location: includes/acp/acp_forums.php
  *
- * Note: There are several code parts commented out, for example the album/forum_password.
- *       I didn't remove them, to have it easier when I implement this feature one day. I hope it's okay.
  */
 
 /**
@@ -208,46 +206,28 @@ class manage
 		// Validate the contest timestamps:
 		if ($album_data['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST)
 		{
-			if ($this->user->data['user_timezone'] == '')
-			{
-				$timezone = 'UTC';
-			}
-			else
-			{
-				$timezone = $this->user->data['user_timezone'];
-			}
-			$time = $this->user->create_datetime();
-
-			$start_date_error = $date_error = false;
-			if (!preg_match('#(\\d{4})-(\\d{1,2})-(\\d{1,2}) (\\d{1,2}):(\\d{2})#', $contest_data['contest_start'], $m))
+			$contest_start = $this->parse_contest_date((string) $contest_data['contest_start']);
+			$contest_rating = $this->parse_contest_date((string) $contest_data['contest_rating']);
+			$contest_end = $this->parse_contest_date((string) $contest_data['contest_end']);
+			if ($contest_start === false)
 			{
 				$errors[] = sprintf($this->language->lang('CONTEST_START_INVALID'), $contest_data['contest_start']);
-				$start_date_error = true;
 			}
-			else
-			{
-				$contest_data['contest_start'] = gmmktime((int) $m[4], (int) $m[5], 0, (int) $m[2], (int) $m[3], (int) $m[1]) - $time->getOffset();// - $offset;
-			}
-			if (!preg_match('#(\\d{4})-(\\d{1,2})-(\\d{1,2}) (\\d{1,2}):(\\d{2})#', $contest_data['contest_rating'], $m))
+			if ($contest_rating === false)
 			{
 				$errors[] = sprintf($this->language->lang('CONTEST_RATING_INVALID'), $contest_data['contest_rating']);
-				$date_error = true;
 			}
-			else if (!$start_date_error)
-			{
-				$contest_data['contest_rating'] = gmmktime($m[4], $m[5], 0, $m[2], $m[3], $m[1]) - $contest_data['contest_start'] - $time->getOffset();//- $offset;
-			}
-			if (!preg_match('#(\\d{4})-(\\d{1,2})-(\\d{1,2}) (\\d{1,2}):(\\d{2})#', $contest_data['contest_end'], $m))
+			if ($contest_end === false)
 			{
 				$errors[] = sprintf($this->language->lang('CONTEST_END_INVALID'), $contest_data['contest_end']);
-				$date_error = true;
 			}
-			else if (!$start_date_error)
+
+			if ($contest_start !== false && $contest_rating !== false && $contest_end !== false)
 			{
-				$contest_data['contest_end'] = gmmktime($m[4], $m[5], 0, $m[2], $m[3], $m[1]) - $contest_data['contest_start'] - $time->getOffset();//- $offset;
-			}
-			if (!$start_date_error && !$date_error)
-			{
+				$contest_data['contest_start'] = $contest_start;
+				$contest_data['contest_rating'] = $contest_rating - $contest_start;
+				$contest_data['contest_end'] = $contest_end - $contest_start;
+
 				if ($contest_data['contest_end'] < $contest_data['contest_rating'])
 				{
 					$errors[] = $this->language->lang('CONTEST_END_BEFORE_RATING');
@@ -265,9 +245,6 @@ class manage
 
 		// Unset data that are not database fields
 		$album_data_sql = $album_data;
-		/*
-		unset($album_data_sql['album_password_confirm']);
-		*/
 
 		// What are we going to do tonight Brain? The same thing we do every night,
 		// try to take over the world ... or decide whether to continue update
@@ -276,23 +253,6 @@ class manage
 		{
 			return $errors;
 		}
-
-		/*
-		// As we don't know the old password, it's kinda tricky to detect changes
-		if ($album_data_sql['album_password_unset'])
-		{
-			$albumdata_sql['album_password'] = '';
-		}
-		else if (empty($album_data_sql['album_password']))
-		{
-			unset($album_data_sql['album_password']);
-		}
-		else
-		{
-			$album_data_sql['album_password'] = phpbb_hash($album_data_sql['album_password']);
-		}
-		unset($album_data_sql['album_password_unset']);
-		*/
 
 		if (!isset($album_data_sql['album_id']))
 		{
@@ -459,7 +419,7 @@ class manage
 				{
 					// If the old contest is finished, but the new one isn't, we need to remark the images!
 					// If we change it the other way round, the album.php will do the end on the first visit!
-					if (($row_contest['contest_start'] + $row_contest['contest_end']) > time())
+					if ($this->should_reopen_contest($row_contest, $contest_data, time()))
 					{
 						$contest_data['contest_marked'] = (int) \phpbbgallery\core\block::IN_CONTEST;
 						$reset_marked_images = true;
@@ -508,6 +468,11 @@ class manage
 				WHERE album_id = ' . (int) $album_id;
 			$this->db->sql_query($sql);
 
+			if ($album_data_sql['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST)
+			{
+				$this->update_contest_data($album_id, $contest_data, $reset_marked_images);
+			}
+
 			// Add it back
 			$album_data['album_id'] = $album_id;
 
@@ -515,6 +480,89 @@ class manage
 		}
 
 		return $errors;
+	}
+
+	/**
+	 * Parse an ACP contest date in the current user's timezone.
+	 *
+	 * @param string $value Date in YYYY-MM-DD HH:MM format
+	 * @return int|false UTC timestamp, or false for an invalid date
+	 */
+	protected function parse_contest_date(string $value): int|false
+	{
+		if (!preg_match('#\A\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{2}\z#', $value))
+		{
+			return false;
+		}
+
+		try
+		{
+			$timezone = new \DateTimeZone($this->user->data['user_timezone'] ?: 'UTC');
+		}
+		catch (\Exception)
+		{
+			$timezone = new \DateTimeZone('UTC');
+		}
+
+		$date = \DateTimeImmutable::createFromFormat('!Y-n-j G:i', $value, $timezone);
+		$date_errors = \DateTimeImmutable::getLastErrors();
+		if ($date === false || ($date_errors !== false && ($date_errors['warning_count'] || $date_errors['error_count'])))
+		{
+			return false;
+		}
+
+		return $date->getTimestamp();
+	}
+
+	/**
+	 * Determine whether extending a completed contest makes it active again.
+	 *
+	 * @param array $existing Existing contest row
+	 * @param array $updated  Validated contest data
+	 * @param int   $now      Current timestamp
+	 * @return bool
+	 */
+	protected function should_reopen_contest(array $existing, array $updated, int $now): bool
+	{
+		return (int) $existing['contest_marked'] === (int) \phpbbgallery\core\block::NO_CONTEST
+			&& (int) $updated['contest_start'] + (int) $updated['contest_end'] > $now;
+	}
+
+	/**
+	 * Persist edited contest dates and restore image contest state when reopened.
+	 *
+	 * @param int   $album_id           Contest album identifier
+	 * @param array $contest_data        Validated contest data
+	 * @param bool  $reset_marked_images Whether completed images must re-enter the contest
+	 * @return void
+	 */
+	protected function update_contest_data(int $album_id, array $contest_data, bool $reset_marked_images): void
+	{
+		$contest_id = (int) $contest_data['contest_id'];
+		$contest_data_sql = [
+			'contest_start' => (int) $contest_data['contest_start'],
+			'contest_rating' => (int) $contest_data['contest_rating'],
+			'contest_end' => (int) $contest_data['contest_end'],
+		];
+		if (array_key_exists('contest_marked', $contest_data))
+		{
+			$contest_data_sql['contest_marked'] = (int) $contest_data['contest_marked'];
+		}
+
+		$sql = 'UPDATE ' . $this->contests_table . '
+			SET ' . $this->db->sql_build_array('UPDATE', $contest_data_sql) . '
+			WHERE contest_id = ' . $contest_id;
+		$this->db->sql_query($sql);
+
+		if ($reset_marked_images)
+		{
+			$sql = 'UPDATE ' . $this->images_table . '
+				SET image_contest_rank = 0,
+					image_contest_end = 0,
+					image_contest = ' . (int) \phpbbgallery\core\block::IN_CONTEST . '
+				WHERE image_album_id = ' . $album_id;
+			$this->db->sql_query($sql);
+		}
 	}
 
 	/**
