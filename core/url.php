@@ -268,7 +268,7 @@ class url
 		// Lets get looping, run over and resolve any .. (up directory)
 		for ($i = 0, $max = sizeof($bits); $i < $max; $i++)
 		{
-			if ($bits[$i] == '..' && isset($bits[$i - 1]) && $bits[$i - 1][0] != '.')
+			if ($bits[$i] == '..' && isset($bits[$i - 1]) && $bits[$i - 1] !== '' && $bits[$i - 1][0] != '.')
 			{
 				// We found a .. and we are able to traverse upwards ...
 				unset($bits[$i]);

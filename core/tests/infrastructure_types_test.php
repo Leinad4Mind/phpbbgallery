@@ -133,6 +133,7 @@ final class infrastructure_types_test extends TestCase
 
 		$this->assertSame('../gallery/', url::beautiful_path('../community/../gallery/'));
 		$this->assertSame('https://example.com/gallery/', url::beautiful_path('https://example.com/community/../gallery/', true));
+		$this->assertSame('/../gallery/', url::beautiful_path('/../gallery/'));
 		$this->assertSame('string|false', (string) (new \ReflectionMethod(url::class, 'path'))->getReturnType());
 		$this->assertSame('void', (string) (new \ReflectionMethod(\phpbbgallery\core\auth\level::class, 'display'))->getReturnType());
 	}
