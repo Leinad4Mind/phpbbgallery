@@ -65,6 +65,17 @@ final class controller_index_types_test extends TestCase
 		$this->assertSame(['image_id' => 17, 'image_name' => 'Example'], $normalizer->invoke($controller, ['image_id' => 17, 'image_name' => 'Example']));
 	}
 
+	public function test_personal_gallery_pages_are_clamped_to_the_first_page(): void
+	{
+		$reflection = new \ReflectionClass(index::class);
+		$controller = $reflection->newInstanceWithoutConstructor();
+		$normalizer = $reflection->getMethod('normalize_page');
+
+		$this->assertSame(1, $normalizer->invoke($controller, -3));
+		$this->assertSame(1, $normalizer->invoke($controller, 0));
+		$this->assertSame(4, $normalizer->invoke($controller, 4));
+	}
+
 	public function test_rrc_mode_flags_remain_stable(): void
 	{
 		$this->assertSame(4, index::RRC_MODE_RECENT_COMMENTS);

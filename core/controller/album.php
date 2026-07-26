@@ -138,7 +138,7 @@ class album
 	 */
 	public function base(int $album_id, int $page = 1): \Symfony\Component\HttpFoundation\Response
 	{
-		$page = max(1, $page);
+		$page = $this->normalize_page($page);
 		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
 
 		try
@@ -607,5 +607,16 @@ class album
 	protected function normalize_sort_key(string $sort_key, array $sort_by_sql): string
 	{
 		return isset($sort_by_sql[$sort_key]) ? $sort_key : 't';
+	}
+
+	/**
+	 * Keep pagination offsets within the valid range.
+	 *
+	 * @param int $page Requested page number
+	 * @return int Page number starting at one
+	 */
+	protected function normalize_page(int $page): int
+	{
+		return max(1, $page);
 	}
 }

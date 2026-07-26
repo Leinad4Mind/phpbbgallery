@@ -70,6 +70,17 @@ final class controller_album_types_test extends TestCase
 		$this->assertSame('n', $normalizer->invoke($controller, 'n', $sort_columns));
 	}
 
+	public function test_album_pages_are_clamped_to_the_first_page(): void
+	{
+		$reflection = new \ReflectionClass(album::class);
+		$controller = $reflection->newInstanceWithoutConstructor();
+		$normalizer = $reflection->getMethod('normalize_page');
+
+		$this->assertSame(1, $normalizer->invoke($controller, -3));
+		$this->assertSame(1, $normalizer->invoke($controller, 0));
+		$this->assertSame(4, $normalizer->invoke($controller, 4));
+	}
+
 	public function test_album_display_flags_remain_stable(): void
 	{
 		$this->assertSame(128, album::ALBUM_SHOW_IP);

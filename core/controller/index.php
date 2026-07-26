@@ -240,6 +240,8 @@ class index
 	 */
 	public function personal(int $page): \Symfony\Component\HttpFoundation\Response
 	{
+		$page = $this->normalize_page($page);
+
 		// Display login box for guests and an error for users
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$get_albums = $this->gallery_auth->acl_album_ids('a_list');
@@ -434,6 +436,17 @@ class index
 		}
 
 		return $last_image;
+	}
+
+	/**
+	 * Keep pagination offsets within the valid range.
+	 *
+	 * @param int $page Requested page number
+	 * @return int Page number starting at one
+	 */
+	protected function normalize_page(int $page): int
+	{
+		return max(1, $page);
 	}
 
 }
