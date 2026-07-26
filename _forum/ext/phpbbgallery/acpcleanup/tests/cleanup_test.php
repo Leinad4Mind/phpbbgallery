@@ -98,6 +98,51 @@ final class cleanup_test extends TestCase
 		$this->assertSame([[[5, 8], [5 => 'five.jpg', 8 => 'eight.png']]], $dependencies['moderate']->deleted);
 	}
 
+	public function test_prune_ignores_unknown_columns_and_casts_thresholds(): void
+	{
+		$db = new fake_db();
+		$dependencies = $this->create_service($db);
+
+		$dependencies['service']->prune([
+			'image_time' => '123 OR 1=1',
+			'image_status = 0 OR 1' => '1',
+		]);
+
+		$this->assertStringContainsString('image_time < 123', $db->queries[0]);
+		$this->assertStringNotContainsString('OR 1', $db->queries[0]);
+		$this->assertStringNotContainsString('image_status', $db->queries[0]);
+	}
+
+	public function test_prune_normalizes_identifier_lists_before_using_dbal(): void
+	{
+		$db = new fake_db();
+		$dependencies = $this->create_service($db);
+
+		$dependencies['service']->prune([
+			'image_album_id' => '4,7 OR 1=1,-2,0,4',
+			'image_user_id' => ['9', 'invalid', 9],
+		]);
+
+		$this->assertStringContainsString('image_album_id IN (4,7)', $db->queries[0]);
+		$this->assertStringContainsString('image_user_id IN (9)', $db->queries[0]);
+	}
+
+	public function test_prune_rejects_a_pattern_without_supported_filters(): void
+	{
+		$db = new fake_db();
+		$dependencies = $this->create_service($db);
+
+		try
+		{
+			$dependencies['service']->prune(['image_time < 1 OR 1=1' => 1]);
+			$this->fail('An unsupported prune pattern was accepted.');
+		}
+		catch (\InvalidArgumentException)
+		{
+			$this->assertSame([], $db->queries);
+		}
+	}
+
 	private function create_service(?fake_db $db = null): array
 	{
 		$db ??= new fake_db();
