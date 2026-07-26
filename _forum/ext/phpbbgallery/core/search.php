@@ -195,9 +195,7 @@ class search
 			return;
 		}
 
-		$id_ary = array_map('intval', $id_ary);
-
-		$sql_where = $this->db->sql_in_set('i.image_id', $id_ary);
+		$sql_where = $this->get_image_result_where($id_ary);
 
 		$sql_array = [
 			'SELECT'		=> 'i.*, a.album_name, a.album_status, a.album_user_id, album_id',
@@ -210,7 +208,7 @@ class search
 				],
 			],
 
-			'WHERE'			=> 'i.image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . ' AND ' . $sql_where,
+			'WHERE'			=> $sql_where,
 			'GROUP_BY'	=> 'i.image_id, a.album_name, a.album_status, a.album_user_id, a.album_id',
 			'ORDER_BY'		=> $sql_order,
 		];
@@ -524,9 +522,7 @@ class search
 			return;
 		}
 
-		$id_ary = array_map('intval', $id_ary);
-
-		$sql_where = $this->db->sql_in_set('i.image_id', $id_ary);
+		$sql_where = $this->get_image_result_where($id_ary);
 
 		$sql_array = [
 			'SELECT'		=> 'i.*, a.album_name, a.album_status, a.album_user_id, a.album_id',
@@ -539,7 +535,7 @@ class search
 				],
 			],
 
-			'WHERE'			=> 'i.image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . ' AND ' . $sql_where,
+			'WHERE'			=> $sql_where,
 			'ORDER_BY'		=> $sql_order,
 		];
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
@@ -583,6 +579,20 @@ class search
 				);
 			}
 		}
+	}
+
+	/**
+	 * Build the common filter for a normalized image result set.
+	 *
+	 * @param array $image_ids Image identifiers returned by the database
+	 * @return string Safe SQL condition
+	 */
+	private function get_image_result_where(array $image_ids): string
+	{
+		return implode(' AND ', [
+			'i.image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN,
+			$this->db->sql_in_set('i.image_id', array_map('intval', $image_ids)),
+		]);
 	}
 
 	/**

@@ -63,4 +63,21 @@ final class domain_search_types_test extends TestCase
 			$this->assertSame('void', (string) (new \ReflectionMethod(search::class, $method_name))->getReturnType());
 		}
 	}
+
+	public function test_image_result_filter_normalizes_ids_and_excludes_orphans(): void
+	{
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->once())
+			->method('sql_in_set')
+			->with('i.image_id', [3, 7])
+			->willReturn('i.image_id IN (3, 7)');
+		$reflection = new \ReflectionClass(search::class);
+		$search = $reflection->newInstanceWithoutConstructor();
+		$reflection->getProperty('db')->setValue($search, $db);
+
+		$this->assertSame(
+			'i.image_status <> ' . \phpbbgallery\core\block::STATUS_ORPHAN . ' AND i.image_id IN (3, 7)',
+			$reflection->getMethod('get_image_result_where')->invoke($search, ['3', 7])
+		);
+	}
 }
