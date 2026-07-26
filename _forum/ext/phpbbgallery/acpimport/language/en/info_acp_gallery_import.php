@@ -37,6 +37,7 @@ $lang = array_merge($lang, [
 	'IMPORT_SCHEMA_CREATED'      => 'The import-schema was successfully created, please wait while the images get imported.',
 	'IMPORT_INVALID_IMAGE'       => 'The selected file “%s” is not a permitted image from the import folder.',
 	'IMPORT_SCHEMA_WRITE_FAILED' => 'The import state could not be stored safely.',
+	'IMPORT_TOO_MANY_IMAGES'     => 'You can import at most %d images at a time.',
 	'IMPORT_USER'                => 'Uploaded by',
 	'IMPORT_USER_EXP'            => 'You can add the images to another user here.',
 	'IMPORT_USERS_PEGA'          => 'Upload to users personal gallery.',

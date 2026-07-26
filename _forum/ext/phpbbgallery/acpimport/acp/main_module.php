@@ -281,6 +281,11 @@ class main_module
 				trigger_error(implode('<br />', $this->import_errors) . adm_back_link($this->u_action), E_USER_WARNING);
 				return;
 			}
+			if (count($images) > import_storage::MAX_IMAGES)
+			{
+				trigger_error($user->lang('IMPORT_TOO_MANY_IMAGES', import_storage::MAX_IMAGES), E_USER_WARNING);
+				return;
+			}
 
 			// Who is the uploader?
 			$username = $request->variable('username', '', true);

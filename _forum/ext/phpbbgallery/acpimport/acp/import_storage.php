@@ -15,7 +15,7 @@ class import_storage
 	private const STATE_PREFIX = '.phpbbgallery_import_';
 	private const STATE_SUFFIX = '.json';
 	private const MAX_STATE_SIZE = 8388608;
-	private const MAX_IMAGES = 10000;
+	public const MAX_IMAGES = 10000;
 	private const MAX_ERRORS = 10000;
 
 	private string $directory;

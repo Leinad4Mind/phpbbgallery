@@ -136,6 +136,17 @@ class import_storage_test extends TestCase
 		$this->assertFalse($this->storage->write_state($schema_id, $extra_key));
 	}
 
+	public function test_rejects_more_images_than_the_public_import_limit(): void
+	{
+		$this->assertSame(10000, import_storage::MAX_IMAGES);
+		$images = array_fill(0, import_storage::MAX_IMAGES + 1, 'image.png');
+
+		$this->assertFalse($this->storage->write_state($this->storage->create_schema_id(), $this->valid_state($images)));
+
+		$source = (string) file_get_contents(dirname(__DIR__) . '/acp/main_module.php');
+		$this->assertStringContainsString("lang('IMPORT_TOO_MANY_IMAGES', import_storage::MAX_IMAGES)", $source);
+	}
+
 	public function test_rejects_corrupt_json_state(): void
 	{
 		$schema_id = $this->storage->create_schema_id();
