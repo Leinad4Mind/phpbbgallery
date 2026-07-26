@@ -64,7 +64,7 @@ class language_test extends TestCase
 		}
 
 		sort($tested_languages);
-		$this->assertSame(['bg', 'de', 'en', 'fr', 'it', 'pt', 'pt_br', 'pt_preao', 'ru'], $tested_languages);
+		$this->assertSame(['bg', 'de', 'en', 'es', 'fr', 'it', 'nl', 'pt', 'pt_br', 'pt_preao', 'ru'], $tested_languages);
 	}
 
 	private function expected_placeholders(string $key): array

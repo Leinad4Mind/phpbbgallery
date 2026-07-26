@@ -1,0 +1,100 @@
+<?php
+/**
+ * phpBB Gallery - ACP Exif Extension [Spanish Translation]
+ *
+ * @package   phpbbgallery/exif
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2007-2012 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
+
+/**
+ * @ignore
+ */
+if (!defined('IN_PHPBB'))
+{
+	exit;
+}
+
+if (empty($lang) || !is_array($lang))
+{
+	$lang = [];
+}
+
+/**
+ * Language for Exif data
+ */
+$lang = array_merge($lang, [
+	'EXIF_DATA'                  => 'Datos EXIF',
+	'EXIF_APERTURE'              => 'Número f',
+	'EXIF_CAM_MODEL'             => 'Modelo de cámara',
+	'EXIF_DATE'                  => 'Fecha de captura',
+	'EXIF_EXPOSURE'              => 'Tiempo de exposición',
+	'EXIF_EXPOSURE_EXP'          => '%s s',
+	'EXIF_EXPOSURE_BIAS'         => 'Compensación de exposición',
+	'EXIF_EXPOSURE_BIAS_EXP'     => '%s EV',
+	'EXIF_EXPOSURE_PROG'         => 'Programa de exposición',
+	'EXIF_EXPOSURE_PROG_0'       => 'No definido',
+	'EXIF_EXPOSURE_PROG_1'       => 'Manual',
+	'EXIF_EXPOSURE_PROG_2'       => 'Programa normal',
+	'EXIF_EXPOSURE_PROG_3'       => 'Prioridad de apertura',
+	'EXIF_EXPOSURE_PROG_4'       => 'Prioridad de obturación',
+	'EXIF_EXPOSURE_PROG_5'       => 'Programa creativo (prioriza la profundidad de campo)',
+	'EXIF_EXPOSURE_PROG_6'       => 'Programa de acción (prioriza una velocidad de obturación rápida)',
+	'EXIF_EXPOSURE_PROG_7'       => 'Modo retrato (para primeros planos con el fondo desenfocado)',
+	'EXIF_EXPOSURE_PROG_8'       => 'Modo paisaje (para paisajes con el fondo enfocado)',
+	'EXIF_FLASH'                  => 'Flash',
+	'EXIF_FLASH_CASE_0'           => 'El flash no se disparó',
+	'EXIF_FLASH_CASE_1'           => 'El flash se disparó',
+	'EXIF_FLASH_CASE_5'           => 'No se detectó luz de retorno',
+	'EXIF_FLASH_CASE_7'           => 'Se detectó luz de retorno',
+	'EXIF_FLASH_CASE_8'           => 'Activado, el flash no se disparó',
+	'EXIF_FLASH_CASE_9'           => 'El flash se disparó en modo obligatorio',
+	'EXIF_FLASH_CASE_13'          => 'El flash se disparó en modo obligatorio; no se detectó luz de retorno',
+	'EXIF_FLASH_CASE_15'          => 'El flash se disparó en modo obligatorio; se detectó luz de retorno',
+	'EXIF_FLASH_CASE_16'          => 'El flash no se disparó en modo obligatorio',
+	'EXIF_FLASH_CASE_20'          => 'Desactivado, el flash no se disparó y no se detectó luz de retorno',
+	'EXIF_FLASH_CASE_24'          => 'El flash no se disparó en modo automático',
+	'EXIF_FLASH_CASE_25'          => 'El flash se disparó en modo automático',
+	'EXIF_FLASH_CASE_29'          => 'El flash se disparó en modo automático; no se detectó luz de retorno',
+	'EXIF_FLASH_CASE_31'          => 'El flash se disparó en modo automático; se detectó luz de retorno',
+	'EXIF_FLASH_CASE_32'          => 'Sin función de flash',
+	'EXIF_FLASH_CASE_48'          => 'Desactivado, sin función de flash',
+	'EXIF_FLASH_CASE_65'          => 'El flash se disparó con reducción de ojos rojos',
+	'EXIF_FLASH_CASE_69'          => 'El flash se disparó con reducción de ojos rojos; no se detectó luz de retorno',
+	'EXIF_FLASH_CASE_71'          => 'El flash se disparó con reducción de ojos rojos; se detectó luz de retorno',
+	'EXIF_FLASH_CASE_73'          => 'El flash se disparó en modo obligatorio con reducción de ojos rojos',
+	'EXIF_FLASH_CASE_77'          => 'El flash se disparó en modo obligatorio con reducción de ojos rojos; no se detectó luz de retorno',
+	'EXIF_FLASH_CASE_79'          => 'El flash se disparó en modo obligatorio con reducción de ojos rojos; se detectó luz de retorno',
+	'EXIF_FLASH_CASE_80'          => 'Desactivado, reducción de ojos rojos',
+	'EXIF_FLASH_CASE_88'          => 'Automático, no se disparó, reducción de ojos rojos',
+	'EXIF_FLASH_CASE_89'          => 'El flash se disparó en modo automático con reducción de ojos rojos',
+	'EXIF_FLASH_CASE_93'          => 'El flash se disparó en modo automático con reducción de ojos rojos; no se detectó luz de retorno',
+	'EXIF_FLASH_CASE_95'          => 'El flash se disparó en modo automático con reducción de ojos rojos; se detectó luz de retorno',
+	'EXIF_FOCAL'                  => 'Distancia focal',
+	'EXIF_FOCAL_EXP'              => '%s mm',
+	'EXIF_ISO'                    => 'Sensibilidad ISO',
+	'EXIF_METERING_MODE'          => 'Modo de medición',
+	'EXIF_METERING_MODE_0'        => 'Desconocido',
+	'EXIF_METERING_MODE_1'        => 'Promedio',
+	'EXIF_METERING_MODE_2'        => 'Promedio ponderado al centro',
+	'EXIF_METERING_MODE_3'        => 'Puntual',
+	'EXIF_METERING_MODE_4'        => 'Multipunto',
+	'EXIF_METERING_MODE_5'        => 'Patrón',
+	'EXIF_METERING_MODE_6'        => 'Parcial',
+	'EXIF_METERING_MODE_255'      => 'Otro',
+	'EXIF_NOT_AVAILABLE'          => 'no disponible',
+	'EXIF_WHITEB'                 => 'Balance de blancos',
+	'EXIF_WHITEB_AUTO'            => 'Automático',
+	'EXIF_WHITEB_MANU'            => 'Manual',
+
+	'DISP_EXIF_DATA'              => 'Mostrar datos EXIF',
+	'DISP_EXIF_DATA_EXP'          => 'Esta función no está disponible porque la instalación de PHP no incluye la función “exif_read_data”.',
+	'SHOW_EXIF'                   => 'mostrar/ocultar',
+	'VIEWEXIFS_DEFAULT'           => 'Mostrar los datos EXIF de forma predeterminada',
+
+	'GALLERY_CORE_NOT_FOUND'      => 'Primero debe instalar y activar la extensión principal phpBB Gallery.',
+	'EXTENSION_ENABLE_SUCCESS'    => 'La extensión se activó correctamente.',
+]);
