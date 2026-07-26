@@ -108,7 +108,7 @@ final class domain_album_types_test extends TestCase
 		$loader->validate_owner(8, 10);
 	}
 
-	public function test_parent_cache_accepts_arrays_without_instantiating_objects(): void
+	public function test_parent_cache_reads_json_arrays(): void
 	{
 		$display = (new \ReflectionClass(display::class))->newInstanceWithoutConstructor();
 		$parents = [
@@ -117,15 +117,48 @@ final class domain_album_types_test extends TestCase
 
 		$this->assertSame($parents, $display->get_parents([
 			'parent_id' => 3,
-			'album_parents' => serialize($parents),
+			'album_parents' => json_encode($parents, JSON_THROW_ON_ERROR),
 		]));
+	}
 
-		domain_album_unserialize_probe::$wakeups = 0;
-		$this->assertSame([], $display->get_parents([
+	public function test_legacy_parent_cache_is_rebuilt_without_deserialization(): void
+	{
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$queries = [];
+		$db->expects($this->exactly(2))
+			->method('sql_query')
+			->willReturnCallback(function (string $sql) use (&$queries): int
+			{
+				$queries[] = $sql;
+
+				return count($queries);
+			});
+		$db->expects($this->exactly(2))
+			->method('sql_fetchrow')
+			->with(1)
+			->willReturnOnConsecutiveCalls(
+				['album_id' => 3, 'album_name' => 'Parent album', 'album_type' => 1],
+				false
+			);
+		$db->expects($this->once())->method('sql_freeresult')->with(1);
+		$db->method('sql_escape')->willReturnArgument(0);
+
+		$reflection = new \ReflectionClass(display::class);
+		$display = $reflection->newInstanceWithoutConstructor();
+		$reflection->getProperty('db')->setValue($display, $db);
+		$reflection->getProperty('table_albums')->setValue($display, 'gallery_albums');
+		$parents = $display->get_parents([
 			'parent_id' => 3,
-			'album_parents' => serialize(new domain_album_unserialize_probe()),
-		]));
-		$this->assertSame(0, domain_album_unserialize_probe::$wakeups);
+			'left_id' => 4,
+			'right_id' => 7,
+			'album_user_id' => 0,
+			'album_parents' => 'a:1:{i:3;a:2:{i:0;s:12:"Parent album";i:1;i:1;}}',
+		]);
+
+		$this->assertSame([3 => ['Parent album', 1]], $parents);
+		$this->assertStringContainsString('SELECT album_id, album_name, album_type', $queries[0]);
+		$this->assertStringContainsString('{"3":["Parent album",1]}', $queries[1]);
+		$this->assertSame(0, preg_match('/(?<![a-zA-Z0-9_])unserialize\s*\(/', (string) file_get_contents(dirname(__DIR__) . '/album/display.php')));
 	}
 
 	public function test_album_display_and_manager_state_has_safe_defaults(): void
@@ -145,16 +178,5 @@ final class domain_album_types_test extends TestCase
 		$this->assertSame(21, $manager->user_id);
 		$this->assertSame(5, $manager->parent_id);
 		$this->assertSame('adm/index.php', $manage_reflection->getProperty('u_action')->getValue($manager));
-	}
-}
-
-// phpcs:disable Generic.Files.OneClassPerFile.MultipleFound -- Serialization probe belongs to this isolated test.
-final class domain_album_unserialize_probe
-{
-	public static int $wakeups = 0;
-
-	public function __wakeup(): void
-	{
-		self::$wakeups++;
 	}
 }

@@ -61,7 +61,7 @@ class exif
 	public int $status = self::UNKNOWN;
 
 	/**
-	* Full data array, but serialized to a string
+	* Full data array encoded as JSON.
 	*/
 	public string $serialized = '';
 
@@ -104,7 +104,7 @@ class exif
 	* Interpret the values from the database, and read the data if we don't have it.
 	*
 	* @param	int		$status		Value of a status constant (see beginning of the class)
-	* @param	string	$data		Either an empty string or the serialized array of the Exif from the database
+	* @param	string	$data		Either an empty string or the JSON-encoded Exif array from the database
 	*/
 	public function interpret(int $status, string $data): void
 	{
@@ -112,8 +112,23 @@ class exif
 		$this->status = $status;
 		if ($this->status == self::DBSAVED)
 		{
-			$decoded = @unserialize($data, ['allowed_classes' => false]);
-			$this->data = is_array($decoded) ? $decoded : [];
+			try
+			{
+				$decoded = json_decode($data, true, 512, JSON_THROW_ON_ERROR);
+				if (!is_array($decoded))
+				{
+					throw new \JsonException('EXIF data must decode to an array.');
+				}
+				$this->data = $decoded;
+				$this->serialized = $data;
+			}
+			catch (\JsonException)
+			{
+				// EXIF is derived data, so legacy serialized caches can be rebuilt safely.
+				$this->orig_status = null;
+				$this->status = self::UNKNOWN;
+				$this->read();
+			}
 		}
 		else if (($this->status == self::AVAILABLE) || ($this->status == self::UNKNOWN))
 		{
@@ -154,8 +169,20 @@ class exif
 				}
 			}
 
-			$this->serialized = serialize($this->data);
-			$this->status = self::DBSAVED;
+			try
+			{
+				$this->serialized = json_encode(
+					$this->data,
+					JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE | JSON_THROW_ON_ERROR
+				);
+				$this->status = self::DBSAVED;
+			}
+			catch (\JsonException)
+			{
+				$this->data = [];
+				$this->serialized = '';
+				$this->status = self::UNAVAILABLE;
+			}
 		}
 		else
 		{
