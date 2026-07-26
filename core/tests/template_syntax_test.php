@@ -113,6 +113,16 @@ final class template_syntax_test extends TestCase
 		}
 	}
 
+	public function test_bootstrap_approval_queue_hides_an_empty_summary_alert(): void
+	{
+		$core_root = dirname(__DIR__);
+		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$source = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/moderate_approve_queue.html');
+			$this->assertStringContainsString('{% elseif TOTAL_IMAGES_WAITING %}', $source, $style);
+		}
+	}
+
 	#[IgnoreDeprecations]
 	public function test_modernized_templates_parse_with_packaged_twig(): void
 	{
