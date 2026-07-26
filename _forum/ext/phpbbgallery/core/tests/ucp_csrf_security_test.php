@@ -102,6 +102,17 @@ class ucp_csrf_security_test extends TestCase
 		$this->assertLessThan($album_query, $ownership_check);
 	}
 
+	public function test_album_delete_confirmation_posts_to_the_canonical_ucp_action(): void
+	{
+		$method = $this->method('delete_album', 'move_album');
+
+		$this->assertStringContainsString(
+			"confirm_box(false, 'DELETE_ALBUM', \$s_hidden_fields, 'confirm_body.html', \$this->u_action . '&amp;action=delete')",
+			$method
+		);
+		$this->assertStringNotContainsString("confirm_box(false, 'DELETE_ALBUM', \$s_hidden_fields);", $method);
+	}
+
 	public function test_album_reordering_reads_post_and_checks_csrf_before_updating(): void
 	{
 		$method = $this->method('move_album', 'manage_subscriptions');

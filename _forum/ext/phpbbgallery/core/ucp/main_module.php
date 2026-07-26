@@ -881,7 +881,7 @@ class main_module
 		{
 			$album_id = $request->variable('album_id', 0);
 			$phpbb_ext_gallery_core_album->check_user($album_id);
-			confirm_box(false, 'DELETE_ALBUM', $s_hidden_fields);
+			confirm_box(false, 'DELETE_ALBUM', $s_hidden_fields, 'confirm_body.html', $this->u_action . '&amp;action=delete');
 		}
 	}
 
