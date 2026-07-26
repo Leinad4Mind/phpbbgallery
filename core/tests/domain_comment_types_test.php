@@ -73,6 +73,43 @@ final class domain_comment_types_test extends TestCase
 		$this->assertSame([4, 9, 0], $comment->cast_mixed_int2array(['4', 9, 'invalid']));
 	}
 
+	public function test_comment_statistics_are_updated_in_one_query(): void
+	{
+		$reflection = new \ReflectionClass(comment::class);
+		$comment = $reflection->newInstanceWithoutConstructor();
+		$queries = [];
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->exactly(2))
+			->method('sql_in_set')
+			->willReturnCallback(static fn (string $field, array $ids): string => $field . ' IN (' . implode(', ', $ids) . ')');
+		$db->expects($this->exactly(2))
+			->method('sql_query')
+			->willReturnCallback(static function (string $sql) use (&$queries): string|bool
+			{
+				$queries[] = $sql;
+				return count($queries) === 1 ? 'comment_result' : true;
+			});
+		$db->expects($this->exactly(3))
+			->method('sql_fetchrow')
+			->with('comment_result')
+			->willReturnOnConsecutiveCalls(
+				['comment_image_id' => 4, 'num_comments' => 2, 'last_comment' => 12],
+				['comment_image_id' => 7, 'num_comments' => 1, 'last_comment' => 19],
+				false
+			);
+		$db->expects($this->once())->method('sql_freeresult')->with('comment_result');
+
+		$reflection->getProperty('db')->setValue($comment, $db);
+		$reflection->getProperty('comments_table')->setValue($comment, 'gallery_comments');
+		$reflection->getProperty('images_table')->setValue($comment, 'gallery_images');
+
+		$comment->sync_image_comments([4, 7]);
+
+		$this->assertCount(2, $queries);
+		$this->assertStringContainsString('image_last_comment = CASE image_id WHEN 4 THEN 12 WHEN 7 THEN 19 ELSE 0 END', $queries[1]);
+		$this->assertStringContainsString('image_comments = CASE image_id WHEN 4 THEN 2 WHEN 7 THEN 1 ELSE 0 END', $queries[1]);
+	}
+
 	public function test_deleting_image_comments_resets_both_statistics_with_valid_sql(): void
 	{
 		$reflection = new \ReflectionClass(comment::class);

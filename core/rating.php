@@ -432,16 +432,39 @@ class rating
 			GROUP BY rate_image_id';
 		$result = $this->db->sql_query($sql);
 
+		$resync = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$sql = 'UPDATE ' . $this->images_table . '
-				SET image_rates = ' . (int) $row['image_rates'] . ',
-					image_rate_points = ' . (int) $row['image_rate_points'] . ',
-					image_rate_avg = ' . round($row['image_rate_avg'], 2) * 100 . '
-				WHERE image_id = ' . (int) $row['rate_image_id'];
-			$this->db->sql_query($sql);
+			$resync[(int) $row['rate_image_id']] = [
+				'image_rates' => (int) $row['image_rates'],
+				'image_rate_points' => (int) $row['image_rate_points'],
+				'image_rate_avg' => (int) (round((float) $row['image_rate_avg'], 2) * 100),
+			];
 		}
 		$this->db->sql_freeresult($result);
+
+		if (!$resync)
+		{
+			return;
+		}
+
+		$rates_case = $points_case = $average_case = 'CASE image_id';
+		foreach ($resync as $image_id => $data)
+		{
+			$rates_case .= ' WHEN ' . $image_id . ' THEN ' . $data['image_rates'];
+			$points_case .= ' WHEN ' . $image_id . ' THEN ' . $data['image_rate_points'];
+			$average_case .= ' WHEN ' . $image_id . ' THEN ' . $data['image_rate_avg'];
+		}
+		$rates_case .= ' END';
+		$points_case .= ' END';
+		$average_case .= ' END';
+
+		$sql = 'UPDATE ' . $this->images_table . '
+			SET image_rates = ' . $rates_case . ',
+				image_rate_points = ' . $points_case . ',
+				image_rate_avg = ' . $average_case . '
+			WHERE ' . $this->db->sql_in_set('image_id', array_keys($resync));
+		$this->db->sql_query($sql);
 	}
 
 	/**
