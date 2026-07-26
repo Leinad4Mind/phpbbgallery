@@ -212,6 +212,7 @@ services:
             - '@phpbbgallery.core.notification'
             - '@phpbbgallery.core.rating'
             - '%phpbbgallery.tables.gallery_images%'
+            - '%phpbbgallery.tables.gallery_albums%'
     phpbbgallery.core.search:
         class: phpbbgallery\core\search
         arguments:

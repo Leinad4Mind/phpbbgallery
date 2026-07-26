@@ -99,4 +99,13 @@ final class domain_moderate_types_test extends TestCase
 
 		$moderate->delete_images($images, false);
 	}
+
+	public function test_waiting_queue_loads_album_names_in_the_listing_query(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/moderate.php');
+
+		$this->assertStringContainsString("INNER JOIN ' . \$this->albums_table . ' a", $source);
+		$this->assertStringContainsString("'album_name'     => \$row['album_name']", $source);
+		$this->assertStringNotContainsString("get_info(\$image_data['image_album_id'])", $source);
+	}
 }
