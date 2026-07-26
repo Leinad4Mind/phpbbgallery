@@ -417,12 +417,13 @@ class main_module
 						FROM ' . $albums_table;
 					$result = $db->sql_query($sql);
 
+					$album_ids = [];
 					while ($row = $db->sql_fetchrow($result))
 					{
-						// 5 sql's per album, but you don't run this daily ;)
-						$phpbb_ext_gallery_core_album->update_info($row['album_id']);
+						$album_ids[] = (int) $row['album_id'];
 					}
 					$db->sql_freeresult($result);
+					$phpbb_ext_gallery_core_album->update_last_images($album_ids);
 					trigger_error($this->language->lang('RESYNCED_LAST_IMAGES') . adm_back_link($this->u_action));
 				break;
 
