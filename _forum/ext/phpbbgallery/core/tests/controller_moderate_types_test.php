@@ -89,4 +89,41 @@ final class controller_moderate_types_test extends TestCase
 		$this->assertStringNotContainsString('->send()', $source);
 		$this->assertGreaterThanOrEqual(5, substr_count($source, 'return new RedirectResponse('));
 	}
+
+	public function test_album_moderation_reuses_the_complete_album_navigation(): void
+	{
+		$album_data = [
+			'album_id' => 12,
+			'album_name' => 'Test album',
+		];
+		$display = new class extends \phpbbgallery\core\album\display
+		{
+			public array $navigation = [];
+
+			public function __construct()
+			{
+			}
+
+			public function generate_navigation(array $album_data): void
+			{
+				$this->navigation[] = $album_data;
+			}
+		};
+
+		$reflection = new \ReflectionClass(moderate::class);
+		$controller = $reflection->newInstanceWithoutConstructor();
+		$reflection->getProperty('display')->setValue($controller, $display);
+		$reflection->getMethod('assign_navigation')->invoke($controller, $album_data);
+
+		$this->assertSame([$album_data], $display->navigation);
+	}
+
+	public function test_all_rendered_moderation_pages_assign_gallery_navigation(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/moderate.php');
+
+		$this->assertGreaterThanOrEqual(6, substr_count($source, '$this->assign_navigation('));
+		$this->assertStringContainsString("'phpbbgallery_core_index'", $source);
+		$this->assertStringContainsString("assign_block_vars('navlinks'", $source);
+	}
 }

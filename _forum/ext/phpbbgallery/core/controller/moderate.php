@@ -169,6 +169,7 @@ class moderate
 		$this->report->build_list($album_id, 1, 5);
 		$this->moderate->build_list($album_id, 1, 5);
 		$this->gallery_log->build_list('moderator', 5, 1, $album_id);
+		$this->assign_navigation($album_id > 0 ? $album : null);
 
 		$this->template->assign_vars([
 			'U_GALLERY_MODERATE_OVERVIEW'	=> $album_id > 0 ? $this->helper->route('phpbbgallery_core_moderate_album', ['album_id' => $album_id]) : $this->helper->route('phpbbgallery_core_moderate'),
@@ -303,6 +304,7 @@ class moderate
 			}
 		}
 
+		$this->assign_navigation($album_id > 0 ? $album : null);
 		$this->template->assign_vars([
 			'U_GALLERY_MODERATE_OVERVIEW'	=> $album_id > 0 ? $this->helper->route('phpbbgallery_core_moderate_album', ['album_id' => $album_id]) : $this->helper->route('phpbbgallery_core_moderate'),
 			'U_GALLERY_MODERATE_APPROVE'	=> $album_id > 0 ? $this->helper->route('phpbbgallery_core_moderate_queue_approve_album', ['album_id' => $album_id]) : $this->helper->route('phpbbgallery_core_moderate_queue_approve'),
@@ -347,6 +349,7 @@ class moderate
 				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
 			}
 		}
+		$this->assign_navigation($album_id > 0 ? $album : null);
 		$this->template->assign_vars([
 			'U_GALLERY_MODERATE_OVERVIEW'	=> $album_id > 0 ? $this->helper->route('phpbbgallery_core_moderate_album', ['album_id' => $album_id]) : $this->helper->route('phpbbgallery_core_moderate'),
 			'U_GALLERY_MODERATE_APPROVE'	=> $album_id > 0 ? $this->helper->route('phpbbgallery_core_moderate_queue_approve_album', ['album_id' => $album_id]) : $this->helper->route('phpbbgallery_core_moderate_queue_approve'),
@@ -439,6 +442,7 @@ class moderate
 			}
 		}
 
+		$this->assign_navigation($album_id > 0 ? $album : null);
 		$this->template->assign_vars([
 			'U_GALLERY_MODERATE_OVERVIEW'	=> $album_id > 0 ? $this->helper->route('phpbbgallery_core_moderate_album', ['album_id' => $album_id]) : $this->helper->route('phpbbgallery_core_moderate'),
 			'U_GALLERY_MODERATE_APPROVE'	=> $album_id > 0 ? $this->helper->route('phpbbgallery_core_moderate_queue_approve_album', ['album_id' => $album_id]) : $this->helper->route('phpbbgallery_core_moderate_queue_approve'),
@@ -493,6 +497,7 @@ class moderate
 				return null;
 			}
 		}
+		$this->assign_navigation($album_id > 0 ? $album : null);
 
 		if (!empty($actions_array))
 		{
@@ -808,6 +813,7 @@ class moderate
 				$select_select .= '<option value="reports_open">' . $this->language->lang('REPORT_A_OPEN') . '</option>';
 			}
 		}
+		$this->assign_navigation($album_data);
 		$this->template->assign_vars([
 			'ALBUM_NAME'		=> $album_data['album_name'],
 			'U_VIEW_ALBUM'		=> $this->helper->route('phpbbgallery_core_moderate_album', ['album_id' => $image_data['image_album_id']]),
@@ -1060,5 +1066,25 @@ class moderate
 	private function normalize_page(int $page): int
 	{
 		return max(1, $page);
+	}
+
+	/**
+	 * Add the Gallery and album hierarchy to moderation breadcrumbs.
+	 *
+	 * @param array|null $album_data Current album data, or null for global moderation
+	 * @return void
+	 */
+	private function assign_navigation(array|null $album_data): void
+	{
+		if ($album_data !== null)
+		{
+			$this->display->generate_navigation($album_data);
+			return;
+		}
+
+		$this->template->assign_block_vars('navlinks', [
+			'FORUM_NAME' => $this->language->lang('GALLERY'),
+			'U_VIEW_FORUM' => $this->helper->route('phpbbgallery_core_index'),
+		]);
 	}
 }
