@@ -29,6 +29,8 @@ final class environment
 		'phpbbgallery/acpcleanup' => ['ACP Cleanup', 'GALLERY_ADDON_CLEANUP_EXPLAIN'],
 		'phpbbgallery/acpimport' => ['ACP Import', 'GALLERY_ADDON_IMPORT_EXPLAIN'],
 		'phpbbgallery/exif' => ['EXIF', 'GALLERY_ADDON_EXIF_EXPLAIN'],
+		'phpbbgallery/favorite' => ['Favorite', 'GALLERY_ADDON_FAVORITE_EXPLAIN'],
+		'phpbbgallery/feed' => ['Feed', 'GALLERY_ADDON_FEED_EXPLAIN'],
 	];
 
 	/**

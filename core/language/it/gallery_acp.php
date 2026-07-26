@@ -42,6 +42,8 @@ $lang = array_merge($lang, [
 	'GALLERY_ADDON_CLEANUP_EXPLAIN'          => 'Trova e rimuove in sicurezza file immagine e record del database incoerenti.',
 	'GALLERY_ADDON_IMPORT_EXPLAIN'           => 'Importa in un album un gruppo controllato di immagini presenti sul server.',
 	'GALLERY_ADDON_EXIF_EXPLAIN'             => 'Mostra i metadati fotografici memorizzati nelle immagini caricate.',
+	'GALLERY_ADDON_FAVORITE_EXPLAIN'         => 'Consente ai membri di salvare le immagini tra i preferiti e ritrovarle dal Pannello di Controllo Utente.',
+	'GALLERY_ADDON_FEED_EXPLAIN'             => 'Pubblica le immagini più recenti in un feed ATOM a cui è possibile iscriversi.',
 	'ACP_GALLERY_OVERVIEW'         => 'phpBB Gallery',
 	'ACP_GALLERY_OVERVIEW_EXPLAIN' => 'Qui trovi alcune statistiche sulla tua galleria.',
 

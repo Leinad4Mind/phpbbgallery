@@ -97,6 +97,7 @@ services:
             - '%phpbbgallery.tables.gallery_roles%'
             - '%phpbbgallery.tables.gallery_users%'
             - '%phpbbgallery.tables.gallery_albums%'
+            - '@ext.manager'
     phpbbgallery.core.auth.image_authorization:
         class: phpbbgallery\core\auth\image_authorization
     phpbbgallery.core.auth.level:

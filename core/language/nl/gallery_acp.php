@@ -42,6 +42,8 @@ $lang = array_merge($lang, [
 	'GALLERY_ADDON_CLEANUP_EXPLAIN'          => 'Vindt en verwijdert inconsistente afbeeldingsbestanden en databaserecords veilig.',
 	'GALLERY_ADDON_IMPORT_EXPLAIN'           => 'Importeert een gecontroleerde groep serverafbeeldingen in een album.',
 	'GALLERY_ADDON_EXIF_EXPLAIN'             => 'Toont fotografische metagegevens die in geüploade afbeeldingen zijn opgeslagen.',
+	'GALLERY_ADDON_FAVORITE_EXPLAIN'         => 'Laat leden afbeeldingen als favoriet opslaan en ze terugvinden via het Persoonlijke Instellingen paneel.',
+	'GALLERY_ADDON_FEED_EXPLAIN'             => 'Publiceert de nieuwste afbeeldingen als een ATOM-feed waarop men zich kan abonneren.',
 	'ACP_GALLERY_OVERVIEW'         => 'phpBB Galerij',
 	'ACP_GALLERY_OVERVIEW_EXPLAIN' => 'Hier zijn een aantal statistieken van je gelerij.',
 

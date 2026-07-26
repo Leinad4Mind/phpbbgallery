@@ -42,6 +42,8 @@ $lang = array_merge($lang, [
 	'GALLERY_ADDON_CLEANUP_EXPLAIN'          => 'Находит и безопасно удаляет несогласованные файлы изображений и записи базы данных.',
 	'GALLERY_ADDON_IMPORT_EXPLAIN'           => 'Импортирует контролируемый набор серверных изображений в альбом.',
 	'GALLERY_ADDON_EXIF_EXPLAIN'             => 'Показывает фотографические метаданные, сохранённые в загруженных изображениях.',
+	'GALLERY_ADDON_FAVORITE_EXPLAIN'         => 'Позволяет пользователям добавлять изображения в избранное и находить их в Личном разделе.',
+	'GALLERY_ADDON_FEED_EXPLAIN'             => 'Публикует новейшие изображения в виде ATOM-ленты, на которую можно подписаться.',
 	'ACP_GALLERY_OVERVIEW'         => 'Обзор',
 	'ACP_GALLERY_OVERVIEW_EXPLAIN' => 'Here are some statistics about your gallery.',
 
