@@ -13,7 +13,7 @@
 	<div class="panel thumbnail center-block vertical-center">
 		<ul class="pager" style="display:table-row;">
 		{% if UC_PREV_IMAGE %}<li class="previous" style="display: table-cell;vertical-align: middle;">{{ UC_PREV_IMAGE }}</li>{% endif %}
-		{% if UC_IMAGE_ACTION %}<li><a style="padding: 5px 5px;border-radius: 5px;max-width: 85%;" href="{{ UC_IMAGE_ACTION }}">{% endif %}<img src="{{ UC_IMAGE }}" alt="{{ IMAGE_NAME }}" class="postimage"/>{% if UC_IMAGE_ACTION %}</a></li>{% endif %}
+		<li>{% if UC_IMAGE_ACTION %}<a style="padding: 5px 5px;border-radius: 5px;max-width: 85%;" href="{{ UC_IMAGE_ACTION }}">{% endif %}<img src="{{ UC_IMAGE }}" alt="{{ IMAGE_NAME }}" class="postimage"/>{% if UC_IMAGE_ACTION %}</a>{% endif %}</li>
 		{% if UC_NEXT_IMAGE %}<li class="next vertical-center"  style="display: table-cell;vertical-align: middle;">{{ UC_NEXT_IMAGE }}</li>{% endif %}
 		</ul>
 		{% if IMAGE_DESC %}

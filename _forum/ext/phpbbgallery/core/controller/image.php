@@ -411,7 +411,7 @@ class image
 			'UC_PREV_IMAGE' => ($prev ? ($this->gallery_config->get('disp_nextprev_thumbnail') ? '<a href="' . $this->helper->route('phpbbgallery_core_image', ['image_id' => $prev['image_id']]) . '"><img src="' . $this->helper->route('phpbbgallery_core_image_file_mini', ['image_id' => $prev['image_id']]) . '" alt="' . $prev['image_name'] . '"></a>' : '<a href="' . $this->helper->route('phpbbgallery_core_image', ['image_id' => $prev['image_id']]) . '">&laquo;&laquo;&nbsp;' . $prev['image_name'] . '</a>') : ''),
 			'U_VIEW_ALBUM'  => $this->helper->route('phpbbgallery_core_album', ['album_id' => $album_id]),
 			'UC_IMAGE'      => $this->helper->route('phpbbgallery_core_image_file_medium', ['image_id' => (int) $image_id]),
-			//'UC_IMAGE_ACTION'	=> $this->gallery_config->get('link_imagepage') == 'none' ? '' : $this->gallery_config->get('link_imagepage') == 'image' ? $this->helper->route('phpbbgallery_core_image_file_source', ['image_id' => $image_id]) : $next && $this->gallery_config->get('link_imagepage') == 'next' ? $this->helper->route('phpbbgallery_core_image', ['image_id' => $next['image_id']]) : '',
+			'UC_IMAGE_ACTION' => $this->get_image_action((int) $image_id, $next),
 
 			'U_DELETE' => ($s_allowed_delete) ? $this->helper->route('phpbbgallery_core_image_delete', ['image_id' => $image_id]) : '',
 			'U_EDIT'   => ($s_allowed_edit) ? $this->helper->route('phpbbgallery_core_image_edit', ['image_id' => $image_id]) : '',
@@ -434,22 +434,6 @@ class image
 			'S_RETURN_LINK' => $this->language->lang('RETURN_TO', $album_data['album_name']),
 		]);
 
-		switch ($this->gallery_config->get('link_imagepage'))
-		{
-			case 'image':
-				$this->template->assign_vars([
-					'UC_IMAGE_ACTION' => $this->helper->route('phpbbgallery_core_image_file_source', ['image_id' => $image_id]),
-				]);
-			break;
-			case 'next':
-				if ($next)
-				{
-					$this->template->assign_vars([
-						'UC_IMAGE_ACTION' => $this->helper->route('phpbbgallery_core_image', ['image_id' => $next['image_id']]),
-					]);
-				}
-			break;
-		}
 		$image_data = $this->data;
 
 		/**
@@ -620,6 +604,34 @@ class image
 			$this->display_comments($image_id, $this->data, $album_id, $album_data, ($page - 1) * $this->gallery_config->get('items_per_page'), $this->gallery_config->get('items_per_page'));
 		}
 		return $this->helper->render('gallery/viewimage_body.html', $page_title);
+	}
+
+	/**
+	 * Resolve the configured action when the displayed image is clicked.
+	 *
+	 * Legacy popup modes fall back to the original image because their optional
+	 * JavaScript integrations may no longer be installed.
+	 *
+	 * @param int         $image_id Current image identifier
+	 * @param array|false $next     Next visible image, when one exists
+	 * @return string Click destination, or an empty string when no link is wanted
+	 */
+	protected function get_image_action(int $image_id, array|false $next): string
+	{
+		switch ($this->gallery_config->get('link_imagepage'))
+		{
+			case 'none':
+				return '';
+
+			case 'next':
+				return $next
+					? $this->helper->route('phpbbgallery_core_image', ['image_id' => (int) $next['image_id']])
+					: '';
+
+			case 'image':
+			default:
+				return $this->helper->route('phpbbgallery_core_image_file_source', ['image_id' => $image_id]);
+		}
 	}
 
 	/**
