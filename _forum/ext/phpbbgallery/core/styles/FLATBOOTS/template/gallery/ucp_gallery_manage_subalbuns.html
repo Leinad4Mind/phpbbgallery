@@ -23,14 +23,14 @@
 			<div class="control-group">
 				<label class="control-label" for="parent_id">{{ lang('ALBUM_PARENT') }}{{ lang('COLON') }}</label>
 				<div class="controls controls-row">
-					<div class="selector"><select class="selectpicker" data-container="body" id="parent_id" name="parent_id">{{ S_PARENT_OPTIONS }}</select></div>
+					<select class="form-control selectpicker" data-container="body" id="parent_id" name="parent_id">{{ S_PARENT_OPTIONS }}</select>
 				</div>
-			 </div>
+			</div>
 
 			<div class="control-group">
 				<label class="control-label" for="album_name">{{ lang('ALBUM_NAME') }}{{ lang('COLON') }}</label>
 				<div class="controls controls-row">
-					<input class="span12"  type="text" placeholder="Ex:My Album" id="album_name" name="album_name" value="{{ ALBUM_NAME }}" maxlength="255">
+					<input class="form-control" type="text" id="album_name" name="album_name" value="{{ ALBUM_NAME }}" maxlength="255">
 				</div>
 			</div>
 			{% endif %}
@@ -39,7 +39,7 @@
 			<div class="control-group">
 				<label class="control-label" for="album_auth_access">{{ lang('ALBUM_ACCESS') }}{{ lang('COLON') }}</label><span class="help-block">{{ lang('ALBUM_ACCESS_EXPLAIN') }}</span>
 				<div class="controls controls-row">
-					<div class="selector"><select class="selectpicker" data-container="body" id="album_auth_access" name="album_auth_access">{{ S_AUTH_ACCESS_OPTIONS }}</select></div>
+					<select class="form-control selectpicker" data-container="body" id="album_auth_access" name="album_auth_access">{{ S_AUTH_ACCESS_OPTIONS }}</select>
 				</div>
 			</div>
 			{% endif %}
@@ -47,17 +47,19 @@
 			<div class="control-group">
 				<label class="control-label" for="album_desc">{{ lang('ALBUM_DESC') }}{{ lang('COLON') }}</label>
 				<div class="controls controls-row">
-					<textarea class="span12" placeholder="My School Album" rows="2" id="album_desc" name="album_desc">{{ ALBUM_DESC }}</textarea>
-					<div class="radio"><input type="checkbox" id="desc_parse_bbcode2" name="desc_parse_bbcode"{% if S_DESC_BBCODE_CHECKED %} checked="checked"{% endif %} /><label for="desc_parse_bbcode2">{{ lang('PARSE_BBCODE') }}</label></div>
-					<div class="radio"><input  type="checkbox" id="desc_parse_smilies1" name="desc_parse_smilies"{% if S_DESC_SMILIES_CHECKED %} checked="checked"{% endif %} /><label for="desc_parse_smilies1">{{ lang('PARSE_SMILIES') }}</label></div>
-					<div class="radio"><input  type="checkbox" id="desc_parse_urls0" name="desc_parse_urls"{% if S_DESC_URLS_CHECKED %} checked="checked"{% endif %} /><label for="desc_parse_urls0">{{ lang('PARSE_URLS') }}</label></div>
+					<textarea class="form-control" rows="5" id="album_desc" name="album_desc">{{ ALBUM_DESC }}</textarea>
+					<div class="row">
+						<div class="col-xs-12 col-sm-4"><div class="checkbox"><input type="checkbox" id="desc_parse_bbcode2" name="desc_parse_bbcode"{% if S_DESC_BBCODE_CHECKED %} checked="checked"{% endif %}><label for="desc_parse_bbcode2">{{ lang('PARSE_BBCODE') }}</label></div></div>
+						<div class="col-xs-12 col-sm-4"><div class="checkbox"><input type="checkbox" id="desc_parse_smilies1" name="desc_parse_smilies"{% if S_DESC_SMILIES_CHECKED %} checked="checked"{% endif %}><label for="desc_parse_smilies1">{{ lang('PARSE_SMILIES') }}</label></div></div>
+						<div class="col-xs-12 col-sm-4"><div class="checkbox"><input type="checkbox" id="desc_parse_urls0" name="desc_parse_urls"{% if S_DESC_URLS_CHECKED %} checked="checked"{% endif %}><label for="desc_parse_urls0">{{ lang('PARSE_URLS') }}</label></div></div>
+					</div>
 				</div>
 			</div>
 		</fieldset>
 
 		<div class="form-actions">
 			<button type="reset" value="{{ lang('RESET') }}" name="reset" class="btn btn-default" >{{ lang('RESET') }}</button>
-			<button type="submit" name="submit" value="{{ lang('SUBMIT') }}" class="btn btn-default" autocomplete="off" data-loading-text="{{ lang('LOADING') }}<i class='icon-spin icon-spinner icon-large icon-white'></i>">{{ lang('SUBMIT') }}</button>
+			<button type="submit" name="submit" value="{{ lang('SUBMIT') }}" class="btn btn-primary" autocomplete="off" data-loading-text="{{ lang('LOADING') }}<i class='icon-spin icon-spinner icon-large icon-white'></i>">{{ lang('SUBMIT') }}</button>
 			{{ S_FORM_TOKEN }}
 		</div>
 
@@ -72,19 +74,19 @@
 
 	<p><strong>{{ NAVIGATION }} <i class="icon-long-arrow-right"></i></strong> {% if S_ALBUM %} <a class="btn btn-xs" href="{{ U_EDIT }}" title="{{ lang('EDIT') }}"><i class="icon-pencil"></i></a> <a class="btn btn-default btn-xs" href="{{ U_DELETE }}" title="{{ lang('DELETE') }}"><i class="fa fa-times" aria-hidden="true"></i></a>  <a class="btn btn-default btn-xs" href="{{ U_GOTO }}" title="{{ lang('GOTO') }}"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a> <a class="btn btn-default btn-xs" href="{{ U_UPLOAD }}" title="{{ lang('UPLOAD_IMAGE') }}"><i class="fa fa-upload" aria-hidden="true"></i></a> {% endif %}</p>
 
+	{% if album_row|length %}
 	<table class="footable table table-striped table-bordered table-white table-primary table-hover">
 		<thead>
 			<tr>
-				<th class="large80" data-class="expand"><i class="fa fa-bar-chart"></i> {% if album_row|length %}{{ lang('ATTACHED_SUBALBUMS') }}{% elseif U_CREATE_SUBALBUM %}{{ lang('NO_SUBALBUMS') }}{% endif %}</th>
-				<th class="large20" data-hide="phone"><i class="fa fa-cogs"></i> Tools</th>
+				<th class="large80" data-class="expand"><i class="fa fa-folder-open" aria-hidden="true"></i> {{ lang('ATTACHED_SUBALBUMS') }}</th>
+				<th class="large20" data-hide="phone"><i class="fa fa-cogs" aria-hidden="true"></i> {{ lang('OPTIONS') }}</th>
 			</tr>
 		</thead>
 		<tbody>
-		{% if album_row|length %}
 			{% for album_row in album_row %}
 			<tr>
 				<td title="{{ album_row.ALBUM_NAME }}">
-				     <i class="icon-moon-default {% if albumrow.S_IS_LINK %} icon-moon-link2{% endif %} {% if albumrow.S_UNREAD_ALBUM %} text-info{% else %} text-muted{% endif %}" title="{{ albumrow.ALBUM_FOLDER_IMG_ALT }}"></i>
+					<i class="fa fa-folder-o text-muted" aria-hidden="true"></i>
 					{% if album_row.FORUM_IMAGE %}<span class="forum-image">{{ album_row.FORUM_IMAGE }}</span>{% endif %}
 					<a href="{{ album_row.U_ALBUM }}" class="topictitle">{{ album_row.ALBUM_NAME }}</a><br />
 					{% if album_row.ALBUM_DESCRIPTION %}<small>{{ album_row.ALBUM_DESCRIPTION }}</small>{% endif %}
@@ -114,15 +116,19 @@
 				</td>
 			</tr>
 		{% endfor %}
-		{% endif %}
 		</tbody>
 	</table>
+	{% else %}
+	<div class="alert alert-info fade in" role="alert">
+		<i class="fa fa-info-circle" aria-hidden="true"></i>&nbsp;{{ lang('NO_SUBALBUMS') }}
+	</div>
+	{% endif %}
 
 	{% if U_CREATE_SUBALBUM %}
 		<form id="albums" method="post" action="{{ U_CREATE_SUBALBUM }}">
 			<fieldset>
 				<!--input type="hidden" name="action" value="add" /-->
-				<button class="btn" name="addforum" type="submit" value="{{ lang('CREATE_SUBALBUM') }}">{{ lang('CREATE_SUBALBUM') }}</button>
+				<button class="btn btn-primary" name="addforum" type="submit" value="{{ lang('CREATE_SUBALBUM') }}">{{ lang('CREATE_SUBALBUM') }}</button>
 				{{ S_FORM_TOKEN }}
 			</fieldset>
 		</form>
