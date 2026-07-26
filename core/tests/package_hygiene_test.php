@@ -206,4 +206,57 @@ class package_hygiene_test extends TestCase
 		$this->assertStringContainsString('jQuery UI Widget 1.14.2', $widget);
 		$this->assertStringNotContainsString('sourceMappingURL=', $loader);
 	}
+
+	public function test_php_sources_do_not_keep_executable_code_in_comments(): void
+	{
+		$offenders = [];
+		$patterns = [
+			'#^//\s*(?:\$this->|\$[A-Za-z_][A-Za-z0-9_]*->|\$[A-Za-z_][A-Za-z0-9_]*\s*=|return\s+\$|var_dump\()#',
+			'#^//\s*(?:if|foreach|while)\s*\(#',
+			'#^/\*\s*(?:if\s*\(|else\s*\{|\$[A-Za-z_])#s',
+			'#/\*\s*&&#',
+		];
+		$iterator = new \RecursiveIteratorIterator(
+			new \RecursiveDirectoryIterator($this->core_root, \FilesystemIterator::SKIP_DOTS)
+		);
+
+		foreach ($iterator as $file)
+		{
+			if ($file->getExtension() !== 'php')
+			{
+				continue;
+			}
+
+			foreach (token_get_all((string) file_get_contents($file->getPathname())) as $token)
+			{
+				if (!is_array($token) || $token[0] !== T_COMMENT)
+				{
+					continue;
+				}
+
+				$comment = trim($token[1]);
+				foreach ($patterns as $pattern)
+				{
+					if (preg_match($pattern, $comment))
+					{
+						$offenders[] = $file->getPathname() . ':' . $token[2];
+						break;
+					}
+				}
+			}
+		}
+
+		$this->assertSame([], $offenders);
+	}
+
+	public function test_album_image_actions_use_current_moderation_routes(): void
+	{
+		foreach (['/controller/album.php', '/image/image.php'] as $relative_path)
+		{
+			$source = (string) file_get_contents($this->core_root . $relative_path);
+
+			$this->assertStringNotContainsString('123', $source, $relative_path);
+			$this->assertStringContainsString('phpbbgallery_core_moderate_image', $source, $relative_path);
+		}
+	}
 }

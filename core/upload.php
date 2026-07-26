@@ -201,8 +201,6 @@ class upload
 	 */
 	public function set_up(int $album_id, int $num_files = 0): void
 	{
-		//$this->upload = new \fileupload();
-		//$this->upload->fileupload('', $this->get_allowed_types(), (4 * $this->gallery_config->get('max_filesize')));
 		$this->file_upload->set_allowed_extensions($this->get_allowed_types());
 
 		$this->album_id = (int) $album_id;
@@ -227,7 +225,6 @@ class upload
 		}
 		$this->file_count = (int) $file_count;
 
-		//$this->files = $this->form_upload('files');
 		$files = $this->file_upload->handle_upload('phpbbgallery.core.files.types.multiform', 'files');
 
 		foreach ($files as $var)
@@ -968,11 +965,6 @@ class upload
 			if ($this->gallery_config->get('allow_resize'))
 			{
 				$this->tools->resize_image($this->gallery_config->get('max_width'), $this->gallery_config->get('max_height'));
-				if ($this->tools->resized)
-				{
-					//$this->file->height = $this->tools->image_size['height'];
-					//$this->file->width = $this->tools->image_size['width'];
-				}
 			}
 			else
 			{

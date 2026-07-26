@@ -236,7 +236,6 @@ class file
 			if (!$this->data || !$this->data['album_id'])
 			{
 				// Image or album does not exist
-				// trigger_error('INVALID_IMAGE');
 				$this->set_error_image('not_authorised.jpg', $this->language->lang('NOT_AUTHORISED'));
 
 			}
@@ -251,7 +250,6 @@ class file
 		if (($this->data['image_user_id'] != $this->user->data['user_id']) && ($this->data['image_status'] == (int) \phpbbgallery\core\block::STATUS_ORPHAN))
 		{
 			// The image is currently being uploaded
-			// trigger_error('NOT_AUTHORISED');
 			$this->set_error_image('not_authorised.jpg', $this->language->lang('NOT_AUTHORISED'));
 		}
 		if (!$this->auth->acl_check('i_view', $this->data['album_id'], $this->data['album_user_id'])
@@ -260,13 +258,11 @@ class file
 				&& $this->data['image_user_id'] != $this->user->data['user_id']))
 		{
 			// Missing permissions
-			// trigger_error('NOT_AUTHORISED');
 			$this->set_error_image('not_authorised.jpg', $this->language->lang('NOT_AUTHORISED'));
 		}
 		if (($this->auth->get_zebra_state($zebra_array, (int) $this->data['album_user_id'], $this->data['album_id']) < (int) $this->data['album_auth_access'] && !$this->error))
 		{
 			// Zebra parameters not met
-			// trigger_error('NOT_AUTHORISED');
 			$this->set_error_image('not_authorised.jpg', $this->language->lang('NOT_AUTHORISED'));
 		}
 	}
@@ -331,8 +327,6 @@ class file
 		// Watermark
 		if ($this->use_watermark)
 		{
-			//$this->tool->set_last_modified(@filemtime($this->path_watermark));
-			//$this->tool->watermark_image($this->path_watermark, $this->config['phpbb_gallery_watermark_position'], $this->config['phpbb_gallery_watermark_height'], $this->config['phpbb_gallery_watermark_width']);
 			$this->tool->set_last_modified(@filemtime($this->config['phpbb_gallery_watermark_source']));
 			$this->tool->watermark_image($this->config['phpbb_gallery_watermark_source'], $this->config['phpbb_gallery_watermark_position'], $this->config['phpbb_gallery_watermark_height'], $this->config['phpbb_gallery_watermark_width']);
 		}
@@ -410,8 +404,6 @@ class file
 				$this->tool->create_thumbnail($resize_width, $resize_height, $put_details, \phpbbgallery\core\file\file::THUMBNAIL_INFO_HEIGHT, $image_size);
 			}
 
-//			if ($phpbb_ext_gallery->config->get($mode . '_cache'))
-//			{
 			$this->tool->write_image($this->image_src, $this->config['phpbb_gallery_jpg_quality'], false);
 			if (!file_exists($this->image_src))
 			{

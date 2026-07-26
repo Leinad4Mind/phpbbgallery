@@ -137,14 +137,9 @@ class url
 			$args[0] = $this->path() . $this->phpEx_file($args[0]);
 		}
 
-		if (isset($args[1]))
-		{
-			$args[1] .= '';//@todo: phpbb_gallery::$display_popup;
-		}
-
 		$params = $args + [
 			0	=> '',
-			1	=> '',//@todo: phpbb_gallery::$display_popup,
+			1	=> '',
 			2	=> true,
 			3	=> false,
 		];
@@ -193,12 +188,6 @@ class url
 			// it's no file, so no .php here.
 			return $file;
 		}
-
-		/*if ($file == 'image_page')
-		{
-			//@todo
-			$file = 'viewimage';
-		}*/
 
 		return $file . $this->php_ext;
 	}

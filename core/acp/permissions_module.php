@@ -710,7 +710,6 @@ class permissions_module
 			* includes/acp/acp_permissions.php says:
 			* The nested setting array is read through the phpBB request abstraction.
 			*/
-			//		$auth_settings = request_var('setting', [0 => [0 => ['' => 0]]]);
 			$requests = $request->variable('setting', [0 => [0 => ['' => 0]]]);
 			$p_mask_count = 0;
 			$auth_settings = $p_mask_storage = $c_mask_storage = $v_mask_storage = [];

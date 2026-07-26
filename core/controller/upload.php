@@ -290,7 +290,6 @@ class upload
 
 			if ($this->auth->acl_check('i_approve', $album_id, $album_data['album_user_id']))
 			{
-				//$this->notification_helper->notify_album($album_id, $this->user->data['user_id']);
 				$data = [
 					'targets'    => [$this->user->data['user_id']],
 					'album_id'   => $album_id,
@@ -307,8 +306,6 @@ class upload
 				];
 				$this->notification_helper->notify('approval', $target);
 			}
-			// ToDo - notifications!!!
-			//$phpbb_gallery_notification->send_notification('album', $album_id, $image_names[0]);
 			$this->image->handle_counter($process->images, true);
 			$this->album->update_info($album_id);
 
@@ -380,7 +377,6 @@ class upload
 				{
 					trigger_error('FORM_INVALID');
 				}
-				//$process->set_rotating($this->request->variable('rotate', [0]));
 				$process->set_allow_comments($this->request->variable('allow_comments', false, false, request_interface::POST));
 
 				if ($this->misc->display_captcha('upload'))
@@ -433,10 +429,6 @@ class upload
 
 				$error = implode('<br />', $process->errors);
 
-				/*if (phpbb_gallery_misc::display_captcha('upload'))
-				{
-					$captcha->reset();
-				}*/
 			}
 
 			if ($mode == 'upload')
@@ -481,19 +473,6 @@ class upload
 						'S_QUICK_FILE_TYPES'     => '/(\.|\/)(' . implode('|', $filetypes) . ')$/i',
 					]);
 				}
-				/*if (phpbb_gallery_misc::display_captcha('upload'))
-				{
-					if (!$submit || !$captcha->is_solved())
-					{
-						$template->assign_vars([
-							'S_CONFIRM_CODE'			=> true,
-							'CAPTCHA_TEMPLATE'			=> $captcha->get_template(),
-						]);
-					}
-					$template->assign_vars([
-						'S_CAPTCHA_HIDDEN_FIELDS'	=> $s_captcha_hidden_fields,
-					]);
-				}*/
 			}
 		}
 		if ($mode == 'upload_edit')
@@ -605,7 +584,6 @@ class upload
 					{
 						$message .= (!$error) ? $this->language->lang('ALBUM_UPLOAD_SUCCESSFUL') : $this->language->lang('ALBUM_UPLOAD_SUCCESSFUL_ERROR', $error);
 						$meta_refresh_time = ($success) ? 3 : 20;
-						//$this->notification_helper->notify_album($album_id, $this->user->data['user_id']);
 						$data = [
 							'targets'    => [$this->user->data['user_id']],
 							'album_id'   => (int) $album_id,
@@ -625,9 +603,6 @@ class upload
 						$meta_refresh_time = 20;
 					}
 					$message .= '<br /><br />' . sprintf($this->language->lang('CLICK_RETURN_ALBUM'), '<a href="' . $album_backlink . '">', '</a>');
-
-					// ToDo - notifications!!!
-					//$phpbb_gallery_notification->send_notification('album', $album_id, $image_names[0]);
 
 					$this->image->handle_counter($process->images, true);
 					$this->album->update_info($album_id);

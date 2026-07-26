@@ -304,12 +304,9 @@ class image
 	public function generate_link(string $content, string $mode, int $image_id, string $image_name, int $album_id, bool $is_gif = false, bool $count = true, string $additional_parameters = '', int $next_image = 0): string
 	{
 		$image_page_url = $this->helper->route('phpbbgallery_core_image', ['image_id' => (int) $image_id]);
-		//$image_page_url = $phpbb_ext_gallery_url->append_sid('image_page', "album_id=$album_id&amp;image_id=$image_id{$additional_parameters}");
-		//$image_url = $phpbb_ext_gallery_url->append_sid('image', "album_id=$album_id&amp;image_id=$image_id{$additional_parameters}" . ((!$count) ? '&amp;view=no_count' : ''));
 		$image_url = $this->url->show_image($image_id, 'medium');
 		$thumb_url = $this->url->show_image($image_id, 'mini');
 		$medium_url = $this->url->show_image($image_id, 'medium');
-		//$medium_url = $phpbb_ext_gallery_url->append_sid('image', "mode=medium&amp;album_id=$album_id&amp;image_id=$image_id{$additional_parameters}");
 		switch ($content)
 		{
 			case 'image_name':
@@ -433,8 +430,6 @@ class image
 				'user_id'				=> (int) $row['image_user_id'],
 				'user_images'			=> (int) $row['images'],
 			];
-			//@todo: phpbb_gallery_hookup::add_image($row['image_user_id'], (($add) ? $row['images'] : 0 - $row['images']));
-
 			$num_images = $num_images + $row['images'];
 
 			$this->gallery_user->set_user_id((int) $row['image_user_id'], false);
@@ -730,14 +725,14 @@ class image
 			'U_USER_IP'		=> $show_ip && $this->gallery_auth->acl_check('m_status', $image_data['image_album_id'], $image_data['album_user_id']) ? $image_data['image_user_ip'] : false,
 
 			'S_IMAGE_REPORTED'		=> $image_data['image_reported'],
-			'U_IMAGE_REPORTED'		=> '',//($image_data['image_reported']) ? $phpbb_ext_gallery->url->append_sid('mcp', "mode=report_details&amp;album_id={$image_data['image_album_id']}&amp;option_id=" . $image_data['image_reported']) : '',
+			'U_IMAGE_REPORTED'		=> ($image_data['image_reported'] && $this->gallery_auth->acl_check('m_report', $image_data['image_album_id'], $image_data['album_user_id'])) ? $this->helper->route('phpbbgallery_core_moderate_image', ['image_id' => (int) $image_data['image_id']]) : '',
 			'S_STATUS_APPROVED'		=> ($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_APPROVED) ? true : false,
 			'S_STATUS_UNAPPROVED'	=> ($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_UNAPPROVED) ? true : false,
 			'S_STATUS_UNAPPROVED_ACTION'	=> ($this->gallery_auth->acl_check('m_status', $image_data['image_album_id'], $image_data['album_user_id']) && $image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_UNAPPROVED) ? $this->helper->route('phpbbgallery_core_moderate_image_approve', ['image_id' => (int) $image_data['image_id']]) : '',
 			'S_STATUS_LOCKED'		=> ($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_LOCKED) ? true : false,
 
-			'U_REPORT'	=> ($this->gallery_auth->acl_check('m_report', $image_data['image_album_id'], $image_data['album_user_id']) && $image_data['image_reported']) ? '123'/*$this->url->append_sid('mcp', "mode=report_details&amp;album_id={$image_data['image_album_id']}&amp;option_id=" . $image_data['image_reported'])*/ : '',
-			'U_STATUS'	=> '',//($this->auth->acl_check('m_status', $image_data['image_album_id'], $album_user_id)) ? $phpbb_ext_gallery->url->append_sid('mcp', "mode=queue_details&amp;album_id={$image_data['image_album_id']}&amp;option_id=" . $image_data['image_id']) : '',
+			'U_REPORT'	=> ($this->gallery_auth->acl_check('m_report', $image_data['image_album_id'], $image_data['album_user_id']) && $image_data['image_reported']) ? $this->helper->route('phpbbgallery_core_moderate_image', ['image_id' => (int) $image_data['image_id']]) : '',
+			'U_STATUS'	=> $this->gallery_auth->acl_check('m_status', $image_data['image_album_id'], $image_data['album_user_id']) ? $this->helper->route('phpbbgallery_core_moderate_image', ['image_id' => (int) $image_data['image_id']]) : '',
 			'L_STATUS'	=> ($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_UNAPPROVED) ? $this->language->lang('APPROVE_IMAGE') : (($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_APPROVED) ? $this->language->lang('CHANGE_IMAGE_STATUS') : $this->language->lang('UNLOCK_IMAGE')),
 		]);
 	}

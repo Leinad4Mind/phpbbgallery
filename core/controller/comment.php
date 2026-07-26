@@ -355,7 +355,6 @@ class comment
 					'poster_id'		=> $this->user->data['user_id'],
 				];
 				$this->notification_helper->notify('new_comment', $data);
-				//$phpbb_gallery_notification->send_notification('image', $image_id, $image_data['image_name']);
 				$message .= $this->language->lang('COMMENT_STORED') . '<br />';
 			}
 			else if ($this->misc->display_captcha('comment'))
@@ -471,7 +470,7 @@ class comment
 			$this->misc->not_authorised($image_backlink, $image_loginlink);
 		}
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
-		if (!$this->gallery_auth->acl_check('c_edit', $album_id, $album_data['album_user_id']) /*&& $mode == 'add'*/)
+		if (!$this->gallery_auth->acl_check('c_edit', $album_id, $album_data['album_user_id']))
 		{
 			if (!$this->gallery_auth->acl_check('m_comments', $album_id, $album_data['album_user_id']))
 			{
@@ -692,7 +691,7 @@ class comment
 			$this->misc->not_authorised($image_backlink, $image_loginlink);
 		}
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
-		if (!$this->gallery_auth->acl_check('c_edit', $album_id, $album_data['album_user_id']) /*&& $mode == 'add'*/)
+		if (!$this->gallery_auth->acl_check('c_edit', $album_id, $album_data['album_user_id']))
 		{
 			if (!$this->gallery_auth->acl_check('m_comments', $album_id, $album_data['album_user_id']))
 			{
