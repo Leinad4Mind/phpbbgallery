@@ -356,7 +356,7 @@ class log
 		{
 			try
 			{
-				$decoded = json_decode(stripslashes($description), true, 512, JSON_THROW_ON_ERROR);
+				$decoded = json_decode($this->decode_legacy_escaped_description($description), true, 512, JSON_THROW_ON_ERROR);
 			}
 			catch (\JsonException)
 			{
@@ -365,5 +365,20 @@ class log
 		}
 
 		return is_array($decoded) || is_string($decoded) ? $decoded : null;
+	}
+
+	/**
+	 * Remove one legacy addslashes-style escaping layer.
+	 *
+	 * @param string $description Stored log description
+	 * @return string Unescaped log description
+	 */
+	private function decode_legacy_escaped_description(string $description): string
+	{
+		return preg_replace_callback(
+			'/\\\\(.)/s',
+			static fn(array $match): string => $match[1] === '0' ? "\0" : $match[1],
+			$description
+		) ?? $description;
 	}
 }
