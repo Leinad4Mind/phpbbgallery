@@ -70,7 +70,8 @@ class multiform extends \phpbb\files\types\base
 
 		$uploads = ($this->request->variable($form_name, ['name'=> ['' => ''], 'type' => ['' => ''], 'tmp_name' => ['' => ''], 'error' =>  ['' => ''], 'size' => ['' => '']], true, $this->request::FILES));
 		$upload_ready = [];
-		for ($i = 0; $i < count($uploads['name']); $i++)
+		$upload_count = count($uploads['name']);
+		for ($i = 0; $i < $upload_count; $i++)
 		{
 			$upload_ready[$i] = [
 				'name' => $uploads['name'][$i],
