@@ -277,15 +277,7 @@ class image
 
 		$this->display->generate_navigation($album_data);
 
-		if ($this->gallery_auth->acl_check('m_status', $album_id, $album_data['album_user_id']))
-		{
-			$image_status_check = '';
-		}
-		else
-		{
-			$user_id = (int) $this->user->data['user_id'];
-			$image_status_check = ' AND (image_status = ' . (int) \phpbbgallery\core\block::STATUS_APPROVED . ' OR image_user_id = ' . $user_id . ')';
-		}
+		$image_visibility_conditions = $this->get_image_visibility_conditions($album_id, (int) $album_data['album_user_id']);
 
 		if (!$this->user->data['is_bot'] && isset($this->user->data['session_page']) && (strpos($this->user->data['session_page'], '&image_id=' . $image_id) === false || isset($this->user->data['session_created'])))
 		{
@@ -380,9 +372,7 @@ class image
 		// Let's see if there is previous image
 		$sql = 'SELECT *
 			FROM ' . $this->table_images . '
-			WHERE image_album_id = ' . (int) $album_id . '
-				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
-				' . $image_status_check . '
+			WHERE ' . implode(' AND ', $image_visibility_conditions) . '
 			ORDER BY ' . $sql_sort_order;
 
 		$result = $this->db->sql_query($sql);
@@ -631,6 +621,28 @@ class image
 		}
 		return $this->helper->render('gallery/viewimage_body.html', $page_title);
 	}
+
+	/**
+	 * Build the visibility boundary used by previous/next image navigation.
+	 *
+	 * @return string[] SQL conditions containing only cast values and fixed identifiers
+	 */
+	private function get_image_visibility_conditions(int $album_id, int $album_user_id): array
+	{
+		$conditions = [
+			'image_album_id = ' . (int) $album_id,
+			'image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN,
+		];
+
+		if (!$this->gallery_auth->acl_check('m_status', $album_id, $album_user_id))
+		{
+			$conditions[] = '(image_status = ' . (int) \phpbbgallery\core\block::STATUS_APPROVED .
+				' OR image_user_id = ' . (int) $this->user->data['user_id'] . ')';
+		}
+
+		return $conditions;
+	}
+
 	protected function display_comments(int $image_id, array $image_data, int $album_id, array $album_data, int $start, int $limit): void
 	{
 		$sort_order = ($this->request->variable('sort_order', 'ASC') == 'ASC') ? 'ASC' : 'DESC';

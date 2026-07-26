@@ -95,6 +95,32 @@ final class controller_image_types_test extends TestCase
 		$this->assertSame('n', $normalizer->invoke($controller, 'n', $sort_columns));
 	}
 
+	public function test_navigation_visibility_conditions_respect_moderation_access(): void
+	{
+		$reflection = new \ReflectionClass(image::class);
+		$controller = $reflection->newInstanceWithoutConstructor();
+		$gallery_auth = $this->createMock(\phpbbgallery\core\auth\auth::class);
+		$gallery_auth->expects($this->exactly(2))
+			->method('acl_check')
+			->with('m_status', 7, 0)
+			->willReturnOnConsecutiveCalls(true, false);
+		$user = new \phpbb\user();
+		$user->data = ['user_id' => 42];
+		$reflection->getProperty('gallery_auth')->setValue($controller, $gallery_auth);
+		$reflection->getProperty('user')->setValue($controller, $user);
+		$conditions = $reflection->getMethod('get_image_visibility_conditions');
+
+		$this->assertSame([
+			'image_album_id = 7',
+			'image_status <> ' . \phpbbgallery\core\block::STATUS_ORPHAN,
+		], $conditions->invoke($controller, 7, 0));
+		$this->assertSame([
+			'image_album_id = 7',
+			'image_status <> ' . \phpbbgallery\core\block::STATUS_ORPHAN,
+			'(image_status = ' . \phpbbgallery\core\block::STATUS_APPROVED . ' OR image_user_id = 42)',
+		], $conditions->invoke($controller, 7, 0));
+	}
+
 	public function test_view_counter_remains_page_owned_and_sort_order_has_no_duplicate_suffix(): void
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/image.php');
