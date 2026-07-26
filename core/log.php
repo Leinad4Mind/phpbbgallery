@@ -94,13 +94,13 @@ class log
 
 		$sql_array = [
 			'log_time'		=> (int) $time,
-			'log_type'		=> $this->db->sql_escape($log_type),
-			'log_action'	=> $this->db->sql_escape($log_action),
+			'log_type'		=> $log_type,
+			'log_action'	=> $log_action,
 			'log_user'		=> (int) $user,
-			'log_ip'		=> $this->db->sql_escape($this->user->ip),
+			'log_ip'		=> $this->user->ip,
 			'album'			=> (int) $album,
 			'image'			=> (int) $image,
-			'description'	=> $this->db->sql_escape(json_encode($description))
+			'description'	=> json_encode($description, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR),
 		];
 		$sql = 'INSERT INTO ' . $this->log_table . ' ' . $this->db->sql_build_array('INSERT', $sql_array);
 		$this->db->sql_query($sql);
@@ -262,7 +262,7 @@ class log
 				'ip'	=> $row['log_ip'],
 				'album'	=> $row['album'],
 				'image'	=> $row['image'],
-				'description'	=> json_decode(stripslashes($row['description']))
+				'description'	=> $this->decode_log_description($row['description'])
 			];
 			$users_array[$row['log_user']] = [''];
 		}
@@ -338,5 +338,33 @@ class log
 				],
 			], 'pagination', 'page', $count, $limit, ($page-1) * $limit);
 		}
+	}
+
+	/**
+	 * Decode current JSON logs while retaining compatibility with legacy
+	 * descriptions that were escaped before being handed to the DBAL.
+	 *
+	 * @param string $description Stored log description
+	 * @return array|string|null Decoded log description
+	 */
+	protected function decode_log_description(string $description): array|string|null
+	{
+		try
+		{
+			$decoded = json_decode($description, true, 512, JSON_THROW_ON_ERROR);
+		}
+		catch (\JsonException)
+		{
+			try
+			{
+				$decoded = json_decode(stripslashes($description), true, 512, JSON_THROW_ON_ERROR);
+			}
+			catch (\JsonException)
+			{
+				return null;
+			}
+		}
+
+		return is_array($decoded) || is_string($decoded) ? $decoded : null;
 	}
 }
