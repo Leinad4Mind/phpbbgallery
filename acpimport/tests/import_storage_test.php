@@ -293,6 +293,7 @@ class import_storage_test extends TestCase
 
 		$this->assertSame(0, preg_match('/(?<!_)\binclude\s*\(/', $source));
 		$this->assertStringNotContainsString('$_POST', $source);
+		$this->assertSame(0, preg_match('/(?<![a-zA-Z0-9_])htmlspecialchars\s*\(/', $source));
 		$this->assertStringNotContainsString('move_uploaded_file', $source);
 		$this->assertStringNotContainsString('!$error_occurred ||', $source);
 		$this->assertStringNotContainsString('_return_file', $source);

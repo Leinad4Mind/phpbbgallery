@@ -144,4 +144,12 @@ final class exif_test extends TestCase
 			}
 		}
 	}
+
+	public function test_exif_output_uses_phpbb_utf8_escaping(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/exif.php');
+
+		$this->assertStringContainsString('utf8_htmlspecialchars($value)', $source);
+		$this->assertSame(0, preg_match('/(?<![a-zA-Z0-9_])htmlspecialchars\s*\(/', $source));
+	}
 }

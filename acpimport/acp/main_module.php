@@ -82,7 +82,7 @@ class main_module
 				* Import the images
 				*/
 				$error_occurred = false;
-				$safe_image_src = htmlspecialchars($image_src, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+				$safe_image_src = utf8_htmlspecialchars($image_src);
 				$image = isset($available_images[$image_src]) ? $available_images[$image_src] : false;
 				if ($image === false)
 				{
@@ -279,7 +279,7 @@ class main_module
 			{
 				if (!is_string($image_src) || !isset($available_images[$image_src]))
 				{
-					$safe_image_src = is_string($image_src) ? htmlspecialchars($image_src, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') : '';
+					$safe_image_src = is_string($image_src) ? utf8_htmlspecialchars($image_src) : '';
 					trigger_error($user->lang('IMPORT_INVALID_IMAGE', $safe_image_src), E_USER_WARNING);
 					return;
 				}
@@ -367,7 +367,7 @@ class main_module
 		foreach ($files as $file)
 		{
 			$template->assign_block_vars('imagerow', [
-				'FILE_NAME' => htmlspecialchars($file['display_name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
+				'FILE_NAME' => utf8_htmlspecialchars($file['display_name']),
 			]);
 		}
 
