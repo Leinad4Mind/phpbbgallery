@@ -150,19 +150,19 @@ class contest
 		$sql = 'UPDATE ' . $this->images_table . '
 			SET image_contest_end = ' . (int) $end_time . ',
 				image_contest_rank = 1
-			WHERE image_id = ' . $first;
+			WHERE image_id = ' . (int) $first;
 		$this->db->sql_query($sql);
 
 		$sql = 'UPDATE ' . $this->images_table . '
 			SET image_contest_end = ' . (int) $end_time . ',
 				image_contest_rank = 2
-			WHERE image_id = ' . $second;
+			WHERE image_id = ' . (int) $second;
 		$this->db->sql_query($sql);
 
 		$sql = 'UPDATE ' . $this->images_table . '
 			SET image_contest_end = ' . (int) $end_time . ',
 				image_contest_rank = 3
-			WHERE image_id = ' . $third;
+			WHERE image_id = ' . (int) $third;
 		$this->db->sql_query($sql);
 
 		$this->gallery_config->inc('contests_ended', 1);
@@ -184,14 +184,20 @@ class contest
 				WHERE ' . $this->db->sql_in_set('image_album_id', $album_batch);
 			$this->db->sql_query($sql);
 
-			$sql = 'SELECT ranked.image_album_id, ranked.image_id
+			$sql = sprintf(
+				'SELECT ranked.image_album_id, ranked.image_id
 				FROM ' . $this->images_table . ' ranked
-				WHERE ' . $this->db->sql_in_set('ranked.image_album_id', $album_batch) . '
+				WHERE %s
 					AND (SELECT COUNT(better.image_id)
 						FROM ' . $this->images_table . ' better
 						WHERE better.image_album_id = ranked.image_album_id
-							AND (' . $this->get_better_image_condition('better', 'ranked') . ')) < ' . self::NUM_IMAGES . '
-				ORDER BY ranked.image_album_id ASC, ' . $this->get_tabulation('ranked');
+							AND (%s)) < %d
+				ORDER BY ranked.image_album_id ASC, %s',
+				$this->db->sql_in_set('ranked.image_album_id', $album_batch),
+				$this->get_better_image_condition(),
+				self::NUM_IMAGES,
+				$this->get_tabulation('ranked')
+			);
 			$result = $this->db->sql_query($sql);
 			$winners = [];
 			while ($row = $this->db->sql_fetchrow($result))
@@ -252,16 +258,16 @@ class contest
 		$this->resync_albums([$album_id]);
 	}
 
-	private function get_better_image_condition(string $better_alias, string $ranked_alias): string
+	private function get_better_image_condition(): string
 	{
 		$first_column = self::$mode === self::MODE_SUM ? 'image_rate_points' : 'image_rate_avg';
 		$second_column = self::$mode === self::MODE_SUM ? 'image_rate_avg' : 'image_rate_points';
 
-		return $better_alias . '.' . $first_column . ' > ' . $ranked_alias . '.' . $first_column . '
-			OR (' . $better_alias . '.' . $first_column . ' = ' . $ranked_alias . '.' . $first_column . '
-				AND ' . $better_alias . '.' . $second_column . ' > ' . $ranked_alias . '.' . $second_column . ')
-			OR (' . $better_alias . '.' . $first_column . ' = ' . $ranked_alias . '.' . $first_column . '
-				AND ' . $better_alias . '.' . $second_column . ' = ' . $ranked_alias . '.' . $second_column . '
-				AND ' . $better_alias . '.image_id < ' . $ranked_alias . '.image_id)';
+		return 'better.' . $first_column . ' > ranked.' . $first_column . '
+			OR (better.' . $first_column . ' = ranked.' . $first_column . '
+				AND better.' . $second_column . ' > ranked.' . $second_column . ')
+			OR (better.' . $first_column . ' = ranked.' . $first_column . '
+				AND better.' . $second_column . ' = ranked.' . $second_column . '
+				AND better.image_id < ranked.image_id)';
 	}
 }
