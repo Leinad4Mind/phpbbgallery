@@ -1090,7 +1090,7 @@ class main_module
 			'WHERE'			=> 'w.image_id <> 0 AND w.user_id = ' . (int) $user->data['user_id'],
 		];
 		$sql = $db->sql_build_query('SELECT', $sql_array);
-		$result = $db->sql_query($sql, $images_per_page, $start);
+		$result = $db->sql_query_limit($sql, $images_per_page, $start);
 		while ($row = $db->sql_fetchrow($result))
 		{
 			$template->assign_block_vars('image_row', [
