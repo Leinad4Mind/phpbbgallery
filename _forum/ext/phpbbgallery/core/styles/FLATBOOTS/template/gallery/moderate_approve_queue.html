@@ -6,7 +6,7 @@
 				<button data-dismiss="alert" class="close" type="button" aria-hidden="true"><i class="awe-remove-circle"></i></button>
 				<i class="fa fa-warning"></i>&nbsp;<strong>{{ lang('LATEST_IMAGES_UNAPPROVED') }}</strong>
 			</div>
-			{% else %}
+			{% elseif TOTAL_IMAGES_WAITING %}
 			<div class="alert alert-info fade in">
 				<button data-dismiss="alert" class="close" type="button" aria-hidden="true"><i class="awe-remove-circle"></i></button>
 				<i class="fa fa-warning"></i>&nbsp;<strong>{{ TOTAL_IMAGES_WAITING }}</strong>

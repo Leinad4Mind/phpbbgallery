@@ -3,7 +3,7 @@
 		<div class="panel-body">
 			{% if U_OVERVIEW %}
 			<h3>{{ lang('LATEST_IMAGES_UNAPPROVED') }}</h3>
-			{% else %}
+			{% elseif TOTAL_IMAGES_WAITING %}
 			<p> {{ TOTAL_IMAGES_WAITING }} </p>
 			{% endif %}
 			{% if unaproved|length %}
