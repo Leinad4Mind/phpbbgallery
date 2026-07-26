@@ -1,0 +1,84 @@
+<?php
+/**
+ * phpBB Gallery - ACP CleanUp Extension [Spanish Translation]
+ *
+ * @package   phpbbgallery/acpcleanup
+ * @author    nickvergessen
+ * @author    satanasov
+ * @author    Leinad4Mind
+ * @copyright 2007-2012 nickvergessen, 2014- satanasov, 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
+
+/**
+ * DO NOT CHANGE
+ */
+if (!defined('IN_PHPBB'))
+{
+	exit;
+}
+
+if (empty($lang) || !is_array($lang))
+{
+	$lang = [];
+}
+
+$lang = array_merge($lang, [
+	'ACP_GALLERY_CLEANUP' => 'Limpiar galería',
+
+	'ACP_GALLERY_CLEANUP_EXPLAIN' => 'Aquí puede eliminar datos y archivos residuales.',
+
+	'CLEAN_AUTHORS_DONE'       => 'Se eliminaron las imágenes sin autor válido.',
+	'CLEAN_CHANGED'            => 'El autor se cambió a “Invitado”.',
+	'CLEAN_COMMENTS_DONE'      => 'Se eliminaron los comentarios sin autor válido.',
+	'CLEAN_ENTRIES_DONE'       => 'Se eliminaron los archivos sin entrada en la base de datos.',
+	'CLEAN_GALLERY'            => 'Limpiar galería',
+	'CLEAN_GALLERY_ABORT'      => 'Se canceló la limpieza.',
+	'CLEAN_NO_ACTION'          => 'No se completó ninguna acción. Se produjo un error.',
+	'CLEAN_PERSONALS_DONE'     => 'Se eliminaron los álbumes personales sin propietario válido.',
+	'CLEAN_PERSONALS_BAD_DONE' => 'Se eliminaron los álbumes personales de los usuarios seleccionados.',
+	'CLEAN_PRUNE_DONE'         => 'Las imágenes se purgaron correctamente.',
+	'CLEAN_PRUNE_NO_PATTERN'   => 'No se especificó ningún criterio de búsqueda.',
+	'CLEAN_SOURCES_DONE'       => 'Se eliminaron las imágenes sin archivo.',
+
+	'CONFIRM_CLEAN'               => 'Este paso no se puede deshacer.',
+	'CONFIRM_CLEAN_AUTHORS'       => '¿Eliminar las imágenes sin autor válido?',
+	'CONFIRM_CLEAN_COMMENTS'      => '¿Eliminar los comentarios sin autor válido?',
+	'CONFIRM_CLEAN_ENTRIES'       => '¿Eliminar los archivos sin entrada en la base de datos?',
+	'CONFIRM_CLEAN_PERSONALS'     => '¿Eliminar los álbumes personales sin propietario válido?<br /><strong>» %s</strong>',
+	'CONFIRM_CLEAN_PERSONALS_BAD' => '¿Eliminar los álbumes personales de los usuarios seleccionados?<br /><strong>» %s</strong>',
+	'CONFIRM_CLEAN_SOURCES'       => '¿Eliminar las imágenes sin archivo?',
+	'CONFIRM_PRUNE'               => '¿Eliminar todas las imágenes que cumplen las condiciones siguientes?<br /><br />%s<br />',
+
+	'PRUNE'                  => 'Purgar',
+	'PRUNE_ALBUMS'           => 'Purgar álbumes',
+	'PRUNE_CHECK_OPTION'     => 'Comprobar esta opción al purgar imágenes.',
+	'PRUNE_COMMENTS'         => 'Menos de x comentarios',
+	'PRUNE_PATTERN_ALBUM_ID' => 'La imagen está en uno de los álbumes siguientes:<br />&raquo; <strong>%s</strong>',
+	'PRUNE_PATTERN_COMMENTS' => 'La imagen tiene menos de <strong>%d</strong> comentarios.',
+	'PRUNE_PATTERN_RATES'    => 'La imagen tiene menos de <strong>%d</strong> valoraciones.',
+	'PRUNE_PATTERN_RATE_AVG' => 'La imagen tiene una valoración media inferior a <strong>%s</strong>.',
+	'PRUNE_PATTERN_TIME'     => 'La imagen se subió antes del “<strong>%s</strong>”.',
+	'PRUNE_PATTERN_USER_ID'  => 'La imagen fue subida por uno de los usuarios siguientes:<br />&raquo; <strong>%s</strong>',
+	'PRUNE_RATINGS'          => 'Menos de x valoraciones',
+	'PRUNE_RATING_AVG'       => 'Valoración media inferior a',
+	'PRUNE_RATING_AVG_EXP'   => 'Purgar solo las imágenes con una valoración media inferior a “<samp>x.yz</samp>”.',
+	'PRUNE_TIME'             => 'Subidas antes de',
+	'PRUNE_TIME_EXP'         => 'Purgar solo las imágenes subidas antes de “<samp>AAAA-MM-DD</samp>”.',
+	'PRUNE_USERNAME'         => 'Subidas por',
+	'PRUNE_USERNAME_EXP'     => 'Purgar solo las imágenes de determinados usuarios. Para incluir las imágenes de invitados, marque la casilla situada junto al campo de nombre de usuario.',
+
+	// Log
+	'LOG_CLEANUP_DELETE_FILES'             => 'Se eliminaron %s imágenes sin entradas en la base de datos.',
+	'LOG_CLEANUP_DELETE_ENTRIES'           => 'Se eliminaron %s imágenes sin archivos.',
+	'LOG_CLEANUP_DELETE_NO_AUTHOR'         => 'Se eliminaron %s imágenes sin autor válido.',
+	'LOG_CLEANUP_COMMENT_DELETE_NO_AUTHOR' => 'Se eliminaron %s comentarios sin autor válido.',
+
+	'MOVE_TO_IMPORT'       => 'Mover imágenes al directorio de importación',
+	'MOVE_TO_USER'         => 'Mover al usuario',
+	'MOVE_TO_USER_EXP'     => 'Las imágenes y los comentarios se asignarán al usuario indicado. Si no selecciona ninguno, se usará el usuario anónimo.',
+	'CLEAN_USER_NOT_FOUND' => 'El usuario seleccionado no existe.',
+
+	'GALLERY_CORE_NOT_FOUND'   => 'Primero debe instalar y activar la extensión principal phpBB Gallery.',
+	'EXTENSION_ENABLE_SUCCESS' => 'La extensión se activó correctamente.',
+]);
