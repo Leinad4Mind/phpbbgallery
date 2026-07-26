@@ -417,6 +417,119 @@ class album
 	}
 
 	/**
+	 * Refresh the last-image columns for multiple albums in bounded batches.
+	 *
+	 * Empty personal albums retain their owner colour, matching update_info().
+	 *
+	 * @param array $album_ids Album identifiers
+	 */
+	public function update_last_images(array $album_ids): void
+	{
+		$album_ids = array_values(array_unique(array_filter(array_map('intval', $album_ids))));
+
+		foreach (array_chunk($album_ids, 250) as $batch_ids)
+		{
+			$album_data = [];
+			$sql = 'SELECT album_id, album_user_id
+				FROM ' . $this->albums_table . '
+				WHERE ' . $this->db->sql_in_set('album_id', $batch_ids);
+			$result = $this->db->sql_query($sql);
+			while ($row = $this->db->sql_fetchrow($result))
+			{
+				$album_id = (int) $row['album_id'];
+				$album_data[$album_id] = [
+					'album_last_image_id'    => 0,
+					'album_last_image_time'  => 0,
+					'album_last_image_name'  => '',
+					'album_last_username'    => '',
+					'album_last_user_colour' => ((int) $row['album_user_id'] === (int) \phpbbgallery\core\block::PUBLIC_ALBUM) ? '' : null,
+					'album_last_user_id'     => 0,
+				];
+			}
+			$this->db->sql_freeresult($result);
+
+			if (empty($album_data))
+			{
+				continue;
+			}
+
+			$sql = 'SELECT i.image_id, i.image_album_id, i.image_time, i.image_name,
+					i.image_username, i.image_user_colour, i.image_user_id
+				FROM ' . $this->images_table . ' i
+				WHERE i.image_status <> ' . (int) $this->block->get_image_status_unapproved() . '
+					AND i.image_status <> ' . (int) $this->block->get_image_status_orphan() . '
+					AND ' . $this->db->sql_in_set('i.image_album_id', array_keys($album_data)) . '
+					AND NOT EXISTS (
+						SELECT 1
+						FROM ' . $this->images_table . ' newer
+						WHERE newer.image_album_id = i.image_album_id
+							AND newer.image_status <> ' . (int) $this->block->get_image_status_unapproved() . '
+							AND newer.image_status <> ' . (int) $this->block->get_image_status_orphan() . '
+							AND (newer.image_time > i.image_time
+								OR (newer.image_time = i.image_time AND newer.image_id > i.image_id))
+					)';
+			$result = $this->db->sql_query($sql);
+			while ($row = $this->db->sql_fetchrow($result))
+			{
+				$album_id = (int) $row['image_album_id'];
+				$album_data[$album_id] = [
+					'album_last_image_id'    => (int) $row['image_id'],
+					'album_last_image_time'  => (int) $row['image_time'],
+					'album_last_image_name'  => (string) $row['image_name'],
+					'album_last_username'    => (string) $row['image_username'],
+					'album_last_user_colour' => (string) $row['image_user_colour'],
+					'album_last_user_id'     => (int) $row['image_user_id'],
+				];
+			}
+			$this->db->sql_freeresult($result);
+
+			$this->update_last_image_rows($album_data);
+		}
+	}
+
+	/**
+	 * Persist last-image data with one conditional update.
+	 *
+	 * @param array $album_data Last-image data indexed by album ID
+	 */
+	private function update_last_image_rows(array $album_data): void
+	{
+		$integer_columns = [
+			'album_last_image_id',
+			'album_last_image_time',
+			'album_last_user_id',
+		];
+		$assignments = [];
+
+		foreach (array_keys(reset($album_data)) as $column)
+		{
+			$cases = [];
+			foreach ($album_data as $album_id => $data)
+			{
+				if ($data[$column] === null)
+				{
+					continue;
+				}
+
+				$value = in_array($column, $integer_columns, true)
+					? (string) (int) $data[$column]
+					: "'" . $this->db->sql_escape((string) $data[$column]) . "'";
+				$cases[] = 'WHEN ' . (int) $album_id . ' THEN ' . $value;
+			}
+
+			if (!empty($cases))
+			{
+				$assignments[] = $column . ' = CASE album_id ' . implode(' ', $cases) . ' ELSE ' . $column . ' END';
+			}
+		}
+
+		$sql = 'UPDATE ' . $this->albums_table . '
+			SET ' . implode(', ', $assignments) . '
+			WHERE ' . $this->db->sql_in_set('album_id', array_keys($album_data));
+		$this->db->sql_query($sql);
+	}
+
+	/**
 	 * Generate personal album for user, when moving image into it
 	 *
 	 * @param string                      $album_name
