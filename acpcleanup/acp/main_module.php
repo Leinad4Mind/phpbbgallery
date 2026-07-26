@@ -481,7 +481,10 @@ class main_module
 			{
 				$personalrow[$row['album_user_id']]['images'] = $personalrow[$row['album_user_id']]['images'] + $row['album_images_real'];
 			}
-			$personal_bad_row[$row['album_user_id']]['images'] = $personal_bad_row[$row['album_user_id']]['images'] + $row['album_images_real'];
+			if (isset($personal_bad_row[$row['album_user_id']]))
+			{
+				$personal_bad_row[$row['album_user_id']]['images'] += $row['album_images_real'];
+			}
 		}
 		$db->sql_freeresult($result);
 

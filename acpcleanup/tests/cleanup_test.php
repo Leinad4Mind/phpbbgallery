@@ -62,12 +62,45 @@ final class cleanup_test extends TestCase
 	public function test_delete_files_removes_sources_and_caches(): void
 	{
 		$dependencies = $this->create_service();
-		$message = $dependencies['service']->delete_files(['first.jpg', 'second.png']);
+		$message = $dependencies['service']->delete_files(['férias.jpg', '日本.png']);
 
 		$this->assertSame('CLEAN_ENTRIES_DONE', $message);
-		$this->assertSame(['first.jpg', 'second.png'], $dependencies['tool']->deleted);
-		$this->assertSame(['first.jpg', 'second.png'], $dependencies['tool']->deleted_cache);
+		$this->assertSame(['férias.jpg', '日本.png'], $dependencies['tool']->deleted);
+		$this->assertSame(['férias.jpg', '日本.png'], $dependencies['tool']->deleted_cache);
 		$this->assertSame(['admin', 'clean_deletefiles', 0, 0, ['LOG_CLEANUP_DELETE_FILES', 2]], $dependencies['log']->entries[0]);
+	}
+
+	public function test_newest_personal_gallery_config_uses_only_a_real_database_row(): void
+	{
+		$dependencies = $this->create_service();
+		$update = new \ReflectionMethod(cleanup::class, 'update_newest_personal_gallery_config');
+		$update->invoke($dependencies['service'], [
+			'user_id' => 7,
+			'username' => 'Alice',
+			'user_colour' => 'abcdef',
+			'album_id' => 12,
+		]);
+
+		$this->assertSame([
+			'newest_pega_user_id' => 7,
+			'newest_pega_username' => 'Alice',
+			'newest_pega_user_colour' => 'abcdef',
+			'newest_pega_album_id' => 12,
+		], $dependencies['config']->values);
+
+		$update->invoke($dependencies['service'], false);
+		$this->assertSame(0, $dependencies['config']->values['newest_pega_user_id']);
+		$this->assertSame('', $dependencies['config']->values['newest_pega_username']);
+		$this->assertSame('', $dependencies['config']->values['newest_pega_user_colour']);
+		$this->assertSame(0, $dependencies['config']->values['newest_pega_album_id']);
+		$this->assertSame(0, $dependencies['config']->values['num_pegas']);
+	}
+
+	public function test_subalbums_without_a_personal_root_are_ignored(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/acp/main_module.php');
+
+		$this->assertStringContainsString("if (isset(\$personal_bad_row[\$row['album_user_id']]))", $source);
 	}
 
 	public function test_database_cleanup_delegates_to_the_domain_services(): void
@@ -160,6 +193,7 @@ final class cleanup_test extends TestCase
 			'service' => new cleanup($db, $tool, $user, $language, $block, $album, $comment, $config, $log, $moderate, 'gallery_albums', 'gallery_images'),
 			'tool' => $tool,
 			'comment' => $comment,
+			'config' => $config,
 			'log' => $log,
 			'moderate' => $moderate,
 		];
