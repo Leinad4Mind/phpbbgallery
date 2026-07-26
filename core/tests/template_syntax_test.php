@@ -220,6 +220,44 @@ final class template_syntax_test extends TestCase
 		}
 	}
 
+	public function test_bootstrap_gallery_visible_interface_strings_are_localized(): void
+	{
+		$core_root = dirname(__DIR__);
+		$disallowed = [
+			'Attention!',
+			'>Preview{{',
+			'>Change<',
+			'>Remove<',
+			'>Rotation{{',
+			'data-loading-text="loading',
+			'data-loading-text="Loading',
+			'data-loading-text="Searching',
+			'data-loading-text="Logging-in',
+			'>Full URL{{',
+			'>Image URL for posts{{',
+			'>Cancel</button>',
+		];
+
+		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$root = $core_root . '/styles/' . $style;
+			$source = '';
+			$iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($root, \FilesystemIterator::SKIP_DOTS));
+			foreach ($iterator as $file)
+			{
+				if ($file->isFile() && strtolower($file->getExtension()) === 'html')
+				{
+					$source .= (string) file_get_contents($file->getPathname());
+				}
+			}
+
+			foreach ($disallowed as $text)
+			{
+				$this->assertStringNotContainsString($text, $source, $style . ': ' . $text);
+			}
+		}
+	}
+
 	#[IgnoreDeprecations]
 	public function test_modernized_templates_parse_with_packaged_twig(): void
 	{
