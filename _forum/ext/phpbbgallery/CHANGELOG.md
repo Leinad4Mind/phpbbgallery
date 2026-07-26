@@ -79,6 +79,10 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Completed the Portuguese AO90/pre-AO90 separation, rewrote the Brazilian Portuguese catalogs for Brazilian usage, and added Spanish and Dutch translations to ACP Cleanup, ACP Import, and EXIF.
 - Reduced the legacy installation catalogs to the sole runtime uninstall message, removing obsolete `Gallery-MOD`, phpBB2 table-prefix, and converter-era text.
 - Made album nested-set boundaries, contest ranking, image-navigation visibility, and search-result filters explicit at their DBAL interpolation points, eliminating false-positive SQL-injection findings from the official validator.
+- Modernized all BBOOTS and FLATBOOTS Gallery and EXIF definition-list layouts with native Bootstrap tables, form controls, responsive grids, and accessible labels.
+- Reused the canonical Gallery posting form for legacy image editing instead of maintaining divergent per-style copies.
+- Redesigned the Bootstrap UCP subscription manager with media previews, responsive two-column metadata, inline last-comment content, and a single bulk action control.
+- Modernized Bootstrap personal-subalbum management with full-width controls, responsive parsing options, and a dedicated empty state instead of an empty table header.
 
 ### Fixed
 
@@ -126,6 +130,14 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Normalized database-derived identifiers before DBAL interpolation and used `sql_build_array()` for the profile-field migration update.
 - Built Gallery entrypoints from the configured phpBB root and PHP extension, and moved controller-visible fallback text into the language catalogs.
 - Removed unreachable import, album, multipart upload, and profile-listener branches left by the legacy implementation.
+- Resolved stored-image paths against the configured phpBB root so upload previews and generated image variants work consistently on Windows and Unix hosts.
+- Removed phpBB session identifiers from copyable full-image and BBCode share URLs.
+- Corrected Bootstrap moderation empty states, the approval-queue block name, accessible selection controls, and authorization-gated approve/disapprove actions.
+- Restored Bootstrap comment authors, profile links, ranks, online state, edit information, signatures, and contact fields by aligning the templates with the image-controller contract.
+- Corrected Bootstrap Gallery search field names and sort-direction controls to match the controller request parameters.
+- Restored WebP labels and selection in Bootstrap upload controls and replaced the remote upload-preview placeholder with the packaged fallback image.
+- Built Gallery UCP form actions from the board root, preventing personal-album and subalbum operations from posting to duplicated paths such as `/ucp.php/ucp.php`.
+- Corrected album bulk-selection controls in the UCP subscription manager and rendered the actual last-comment body with its author and timestamp.
 
 ### Performance
 
@@ -187,7 +199,8 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Validated the ZIP upload, ACP Import, authorization, individual-move security, ACP rating-reset, ACP personal-resync, UCP CSRF, orphan-upload, resumable-upload, subtree-count, hotlink, notification-lifecycle, migration-ordering, purge-safety, database-index, view-counter, browser-cache, package-hygiene, JavaScript-asset, and language-catalog phases with PHP 7.4, 8.1, 8.2, 8.4, and 8.5.
 - Completed isolated phpBB 3.3.12 and SQLite lifecycle smoke tests on PHP 8.1 covering clean installation, enable, disable, purge, reinstall, preserved ACP Import backups, and upgrade from the previous Gallery snapshot with all migrations applied.
 - Added regression tests for restored workflows, search authorization, personal-album ownership, cleanup filters/state, missing images, log compatibility, guest uploads, deleted commenters, pagination, path handling, and JPEG EXIF files.
-- Added query-shape and behavior tests for notification, statistics, role, filesize, last-image, deletion, contest, nested-set batching, visibility, search filters, legacy logs, JSON caches, and random upload paths; the Core suite now contains 320 tests and 6298 assertions.
+- Added permanent Bootstrap template regressions covering responsive layouts, Twig parsing, localization, labels, upload previews, moderation authorization, comment profiles, subscription controls, and UCP album actions.
+- Added query-shape and behavior tests for notification, statistics, role, filesize, last-image, deletion, contest, nested-set batching, visibility, search filters, legacy logs, JSON caches, and random upload paths; the Core suite now contains 347 tests and 6622 assertions.
 - Validated correctly packaged Core, ACP Cleanup, ACP Import, and EXIF components with the official Extension Pre-Validator: no code errors or notices remain; its sole warning is the validator's unrecognized standard `phpunit.xml.dist` suffix.
 
 ## [3.3.0]
