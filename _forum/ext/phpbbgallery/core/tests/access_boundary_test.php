@@ -166,6 +166,20 @@ class access_boundary_test extends TestCase
 		$this->assertStringNotContainsString('strpos($referrer, $var)', $file_controller);
 	}
 
+	public function test_empty_categories_remain_visible_in_every_album_style(): void
+	{
+		$album_display = (string) file_get_contents(dirname(__DIR__) . '/album/display.php');
+		$this->assertStringNotContainsString("left_id'] + 1 == \$row['right_id']", $album_display);
+		$this->assertStringContainsString("'S_IS_CAT'", $album_display);
+
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$template = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/albumlist_body.html');
+			$this->assertStringContainsString('albumrow.S_IS_CAT', $template, $style);
+			$this->assertStringContainsString('albumrow.U_VIEWALBUM', $template, $style);
+		}
+	}
+
 	/**
 	 * @param string $referrer
 	 * @param array  $allowed_domains

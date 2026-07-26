@@ -53,6 +53,11 @@ final class domain_auth_types_test extends TestCase
 
 	public function test_cached_permissions_replace_stale_acl_state(): void
 	{
+		$phpbb_user = new \phpbb\user();
+		$phpbb_user->data = [
+			'user_id' => 7,
+			'user_perm_from' => 0,
+		];
 		$gallery_user = $this->createMock(\phpbbgallery\core\user::class);
 		$gallery_user->user_id = 7;
 		$gallery_user->expects($this->once())
@@ -60,6 +65,7 @@ final class domain_auth_types_test extends TestCase
 			->with('user_permissions')
 			->willReturn('0:0:0::-3');
 		$service = $this->new_auth();
+		$this->set_property($service, 'phpbb_user', $phpbb_user);
 		$this->set_property($service, 'user', $gallery_user);
 		$this->set_property($service, '_auth_data', [99 => new set()]);
 		$this->set_property($service, '_auth_data_never', [99 => new set()]);
@@ -70,6 +76,44 @@ final class domain_auth_types_test extends TestCase
 		$this->assertSame([-3], array_keys($this->get_property($service, '_auth_data')));
 		$this->assertSame([], $this->get_property($service, '_auth_data_never'));
 		$this->assertSame([], $this->get_property($service, 'acl_cache'));
+	}
+
+	public function test_phpbb_permission_switch_loads_the_impersonated_gallery_user(): void
+	{
+		$phpbb_user = new \phpbb\user();
+		$phpbb_user->data = [
+			'user_id' => 2,
+			'user_perm_from' => 42,
+		];
+		$gallery_user = $this->createMock(\phpbbgallery\core\user::class);
+		$gallery_user->user_id = 2;
+		$gallery_user->expects($this->once())
+			->method('set_user_id')
+			->with(42);
+		$gallery_user->expects($this->once())
+			->method('get_data')
+			->with('user_permissions')
+			->willReturn('0:0:0::-3');
+		$service = $this->new_auth();
+		$this->set_property($service, 'phpbb_user', $phpbb_user);
+		$this->set_property($service, 'user', $gallery_user);
+
+		$service->load_user_permissions(2);
+
+		$this->assertSame([-3], array_keys($this->get_property($service, '_auth_data')));
+	}
+
+	public function test_permission_switch_does_not_override_explicit_user_lookups(): void
+	{
+		$phpbb_user = new \phpbb\user();
+		$phpbb_user->data = [
+			'user_id' => 2,
+			'user_perm_from' => 42,
+		];
+		$service = $this->new_auth();
+		$this->set_property($service, 'phpbb_user', $phpbb_user);
+
+		$this->assertSame(77, $this->invoke_method($service, 'get_effective_user_id', [77]));
 	}
 
 	public function test_cached_acl_round_trip_ignores_malformed_rows(): void
