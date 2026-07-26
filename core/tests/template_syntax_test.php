@@ -295,6 +295,20 @@ final class template_syntax_test extends TestCase
 		}
 	}
 
+	public function test_bootstrap_search_controls_match_controller_parameters(): void
+	{
+		$core_root = dirname(__DIR__);
+		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$search = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/search_body.html');
+			$this->assertStringContainsString('name="username" id="username"', $search, $style);
+			$this->assertStringNotContainsString('name="author"', $search, $style);
+			$this->assertStringContainsString('name="sd" id="sa" value="a"', $search, $style);
+			$this->assertStringContainsString('name="sd" id="sd" value="d"', $search, $style);
+			$this->assertStringNotContainsString('Leinad4Mind', $search, $style);
+		}
+	}
+
 	#[IgnoreDeprecations]
 	public function test_modernized_templates_parse_with_packaged_twig(): void
 	{
