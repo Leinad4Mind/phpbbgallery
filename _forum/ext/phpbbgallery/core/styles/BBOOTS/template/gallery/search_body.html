@@ -20,11 +20,11 @@
 	</div>
 
 	<div class="control-group">
-	   <label class="control-label" for="author">{{ lang('SEARCH_AUTHOR') }}{{ lang('COLON') }}</label><span class="help-block">{{ lang('SEARCH_AUTHOR_EXPLAIN') }}</span>
+	   <label class="control-label" for="username">{{ lang('SEARCH_AUTHOR') }}{{ lang('COLON') }}</label><span class="help-block">{{ lang('SEARCH_AUTHOR_EXPLAIN') }}</span>
 	<div class="controls controls-row">
 	<div class="input-icon left">
 	    <i class="icon-user"></i>
-       <input type="text" class="form-control" placeholder="Ex: Leinad4Mind" name="author" id="author" title="{{ lang('SEARCH_AUTHOR') }}">
+       <input type="search" class="form-control" placeholder="{{ lang('SEARCH_AUTHOR') }}" name="username" id="username" title="{{ lang('SEARCH_AUTHOR') }}">
 	</div>
 	</div>
 	</div>
@@ -67,7 +67,7 @@
 	   <label class="control-label" for="sd">{{ lang('RESULT_SORT') }}{{ lang('COLON') }}</label>
 	<div class="controls controls-row">
 	<div class="selector">{{ S_SELECT_SORT_KEY }}</div>
-      <div class="radio"><input type="radio" name="sa" id="sa" value="a"><label for="sa">{{ lang('SORT_ASCENDING') }}</label></div>
+      <div class="radio"><input type="radio" name="sd" id="sa" value="a"><label for="sa">{{ lang('SORT_ASCENDING') }}</label></div>
 	<div class="radio"><input type="radio" name="sd" id="sd" value="d" checked="checked"><label for="sd">{{ lang('SORT_DESCENDING') }}</label></div>
 	</div>
 	</div>
