@@ -509,7 +509,7 @@ class main_module
 				'L_TITLE'					=> $this->language->lang('EDIT_SUBALBUM'),
 				'L_TITLE_EXPLAIN'			=> $this->language->lang('EDIT_SUBALBUM_EXP'),
 
-				'S_ALBUM_ACTION' 			=> $this->u_action . '&amp;action=edit&amp;album_id=' . $album_id . (($redirect != '') ? '&amp;redirect=album' : ''),
+				'S_UCP_ACTION' 				=> $this->u_action . '&amp;action=edit&amp;album_id=' . $album_id . (($redirect != '') ? '&amp;redirect=album' : ''),
 				'S_PARENT_OPTIONS'			=> '<option value="' . $phpbb_ext_gallery_user->get_data('personal_album_id') . '">' . $this->language->lang('NO_PARENT_ALBUM') . '</option>' . $parents_list,
 
 				'ALBUM_NAME' 				=> $album_data['album_name'],
