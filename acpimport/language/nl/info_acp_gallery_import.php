@@ -37,6 +37,7 @@ $lang = array_merge($lang, [
 	'IMPORT_SCHEMA_CREATED'      => 'De importstatus is aangemaakt. Wacht terwijl de afbeeldingen worden geïmporteerd.',
 	'IMPORT_INVALID_IMAGE'       => 'Het geselecteerde bestand “%s” is geen toegestane afbeelding uit de importmap.',
 	'IMPORT_SCHEMA_WRITE_FAILED' => 'De importstatus kon niet veilig worden opgeslagen.',
+	'IMPORT_TOO_MANY_IMAGES'     => 'Je kunt maximaal %d afbeeldingen tegelijk importeren.',
 	'IMPORT_USER'                => 'Geüpload door',
 	'IMPORT_USER_EXP'            => 'Hier kun je de afbeeldingen aan een andere gebruiker toewijzen.',
 	'IMPORT_USERS_PEGA'          => 'Uploaden naar de persoonlijke galerij van gebruikers.',
