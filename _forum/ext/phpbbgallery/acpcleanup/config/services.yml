@@ -3,6 +3,11 @@ parameters:
     phpbbgallery.tables.gallery_images: '%core.table_prefix%gallery_images'
 
 services:
+    phpbbgallery.acpcleanup.listener:
+        class: phpbbgallery\acpcleanup\event\main_listener
+        tags:
+            - { name: event.listener }
+
     phpbbgallery.acpcleanup.cleanup:
         class: phpbbgallery\acpcleanup\cleanup
         arguments:

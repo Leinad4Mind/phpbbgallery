@@ -48,11 +48,30 @@ final class event_main_listener_types_test extends TestCase
 	public function test_subscribed_event_map_remains_stable(): void
 	{
 		$this->assertSame([
+			'core.permissions' => 'add_permissions',
 			'core.user_setup' => 'load_language_on_setup',
 			'core.page_header' => 'add_page_header_link',
 			'core.memberlist_view_profile' => 'user_profile_galleries',
 			'core.ucp_profile_info_modify_sql_ary' => 'preserve_personal_album_profile_field',
 		], main_listener::getSubscribedEvents());
+	}
+
+	public function test_gallery_administrator_permissions_are_registered(): void
+	{
+		$event = new \phpbb\event\data(['permissions' => []]);
+
+		$this->listener($this->createStub(\phpbb\db\driver\driver_interface::class))->add_permissions($event);
+
+		$this->assertSame([
+			'a_gallery_manage' => [
+				'lang' => 'ACL_A_GALLERY_MANAGE',
+				'cat' => 'settings',
+			],
+			'a_gallery_albums' => [
+				'lang' => 'ACL_A_GALLERY_ALBUMS',
+				'cat' => 'permissions',
+			],
+		], $event['permissions']);
 	}
 
 	public function test_profile_update_preserves_the_managed_personal_album(): void

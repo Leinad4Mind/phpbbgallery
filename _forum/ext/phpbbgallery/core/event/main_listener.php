@@ -18,6 +18,7 @@ class main_listener implements EventSubscriberInterface
 	public static function getSubscribedEvents(): array
 	{
 		return [
+			'core.permissions'                      => 'add_permissions',
 			'core.user_setup'						=> 'load_language_on_setup',
 			'core.page_header'						=> 'add_page_header_link',
 			'core.memberlist_view_profile'	       => 'user_profile_galleries',
@@ -73,6 +74,27 @@ class main_listener implements EventSubscriberInterface
 		$this->db = $db;
 		$this->users_table = $users_table;
 	}
+	/**
+	 * Register the Gallery administrator permissions in phpBB's permission UI.
+	 *
+	 * The database auth options use their a_* identifiers. The acl_* prefix is
+	 * reserved for module_auth expressions and must not be registered here.
+	 *
+	 * @param \phpbb\event\data $event phpBB permissions event
+	 * @return void
+	 */
+	public function add_permissions(\phpbb\event\data $event): void
+	{
+		$event->update_subarray('permissions', 'a_gallery_manage', [
+			'lang' => 'ACL_A_GALLERY_MANAGE',
+			'cat'  => 'settings',
+		]);
+		$event->update_subarray('permissions', 'a_gallery_albums', [
+			'lang' => 'ACL_A_GALLERY_ALBUMS',
+			'cat'  => 'permissions',
+		]);
+	}
+
 	public function load_language_on_setup(\phpbb\event\data $event): void
 	{
 		$lang_set_ext = $event['lang_set_ext'];

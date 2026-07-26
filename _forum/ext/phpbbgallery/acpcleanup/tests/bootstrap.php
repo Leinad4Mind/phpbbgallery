@@ -166,6 +166,15 @@ namespace phpbbgallery\core
 
 namespace
 {
+	if (!defined('IN_PHPBB'))
+	{
+		define('IN_PHPBB', true);
+	}
+
+	require_once dirname(__DIR__, 4) . '/vendor/symfony/event-dispatcher/EventSubscriberInterface.php';
+	require_once dirname(__DIR__, 4) . '/vendor/symfony/event-dispatcher/Event.php';
+	require_once dirname(__DIR__, 4) . '/phpbb/event/data.php';
+	require_once dirname(__DIR__) . '/event/main_listener.php';
 	require_once dirname(__DIR__) . '/cleanup.php';
 	require_once dirname(__DIR__) . '/acp/main_module.php';
 	require_once dirname(__DIR__) . '/migrations/m1_init.php';
