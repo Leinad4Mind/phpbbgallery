@@ -782,7 +782,7 @@ class image
 					'U_POSTER'        => get_username_string('profile', $display_poster_id, $poster_username, $poster_colour),
 					'POSTER_IP'       => ($this->auth->acl_get('a_')) ? $row['comment_user_ip'] : '',
 
-					'POSTER_SIGNATURE'       => ($row['comment_signature'] && !$user_deleted) ? ($user_data['sig'] ?? '') : '',
+					'SIGNATURE'              => ($row['comment_signature'] && !$user_deleted) ? ($user_data['sig'] ?? '') : '',
 					'POSTER_RANK_TITLE'      => $user_deleted ? '' : $user_data['rank_title'],
 					'POSTER_RANK_IMG'        => $user_deleted ? '' : $user_data['rank_image'],
 					'POSTER_RANK_IMG_SRC'    => $user_deleted ? '' : $user_data['rank_image_src'],

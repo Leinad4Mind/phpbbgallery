@@ -218,4 +218,15 @@ final class controller_image_types_test extends TestCase
 		$this->assertStringContainsString('$can_receive_pm = !$user_deleted &&', $source);
 		$this->assertStringContainsString('$user_data[\'email\'] ?? \'\'', $source);
 	}
+
+	public function test_comment_rows_expose_the_signature_expected_by_all_styles(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/image.php');
+		$start = strpos($source, '$comment_row = [');
+		$end = strpos($source, '];', $start);
+		$comment_row = substr($source, $start, $end - $start);
+
+		$this->assertStringContainsString("'SIGNATURE'", $comment_row);
+		$this->assertStringNotContainsString("'POSTER_SIGNATURE'", $comment_row);
+	}
 }
