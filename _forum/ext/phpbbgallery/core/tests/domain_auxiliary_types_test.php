@@ -84,12 +84,13 @@ final class domain_auxiliary_types_test extends TestCase
 	{
 		$service = (new \ReflectionClass(log::class))->newInstanceWithoutConstructor();
 		$decode = new \ReflectionMethod(log::class, 'decode_log_description');
-		$description = ['LOG_IMAGE_EDITED', 'C:\\photos\\summer'];
+		$description = ['LOG_IMAGE_EDITED', 'C:\\photos\\summer', "O'Brien", "null\0byte"];
 		$current_json = json_encode($description, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
 
 		$this->assertSame($description, $decode->invoke($service, $current_json));
 		$this->assertSame($description, $decode->invoke($service, addslashes($current_json)));
 		$this->assertNull($decode->invoke($service, '{invalid json'));
+		$this->assertSame(0, preg_match('/(?<![a-zA-Z0-9_])stripslashes\s*\(/', (string) file_get_contents(dirname(__DIR__) . '/log.php')));
 	}
 
 	public function test_captcha_result_is_boolean_and_cached_per_mode(): void
