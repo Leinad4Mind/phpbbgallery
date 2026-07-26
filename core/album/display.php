@@ -415,7 +415,7 @@ class display
 						],
 					],
 
-					'WHERE'			=> 'a.parent_id = 0 AND ' . $sql_where,
+					'WHERE'			=> implode(' AND ', ['a.parent_id = 0', $sql_where]),
 				];
 				$sql = $this->db->sql_build_query('SELECT', $sql_array);
 				$result = $this->db->sql_query($sql);

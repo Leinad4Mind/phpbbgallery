@@ -631,15 +631,15 @@ class manage
 		$sql = 'UPDATE ' . $this->albums_table . " 
 			SET right_id = right_id - $interval_size, album_parents = ''
 			WHERE album_user_id = " . (int) $this->user_id . '
-				AND left_id < ' . $from_right_id . '
-				AND right_id > ' . $from_right_id;
+				AND left_id < ' . (int) $from_right_id . '
+				AND right_id > ' . (int) $from_right_id;
 		$this->db->sql_query($sql);
 
 		// Resync right-hand side of tree
 		$sql = 'UPDATE ' . $this->albums_table . " 
 			SET left_id = left_id - $interval_size, right_id = right_id - $interval_size, album_parents = ''
 			WHERE album_user_id = " . (int) $this->user_id . '
-				AND left_id > ' . $from_right_id;
+				AND left_id > ' . (int) $from_right_id;
 		$this->db->sql_query($sql);
 
 		if ($to_id > 0)
