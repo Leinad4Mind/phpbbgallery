@@ -134,6 +134,46 @@ final class exif_test extends TestCase
 		$this->assertFalse($is_jpeg_filename->invoke($listener, 'image.png'));
 	}
 
+	public function test_contest_exif_is_limited_to_moderators(): void
+	{
+		$gallery_auth = new class extends \phpbbgallery\core\auth\auth
+		{
+			public bool $allowed = false;
+			public array $checks = [];
+
+			public function __construct()
+			{
+			}
+
+			public function acl_check(string $acl, int $a_id, int $u_id = -1): bool|int
+			{
+				$this->checks[] = [$acl, $a_id, $u_id];
+				return $this->allowed;
+			}
+		};
+
+		$reflection = new \ReflectionClass(exif_listener::class);
+		$listener = $reflection->newInstanceWithoutConstructor();
+		$reflection->getProperty('gallery_auth')->setValue($listener, $gallery_auth);
+		$can_view = $reflection->getMethod('can_view_contest_exif');
+		$image_data = [
+			'image_contest' => \phpbbgallery\core\block::IN_CONTEST,
+			'image_album_id' => 31,
+		];
+		$album_data = ['album_user_id' => 7];
+
+		$this->assertFalse($can_view->invoke($listener, $image_data, $album_data));
+		$this->assertSame([['m_status', 31, 7]], $gallery_auth->checks);
+
+		$gallery_auth->allowed = true;
+		$this->assertTrue($can_view->invoke($listener, $image_data, $album_data));
+
+		$image_data['image_contest'] = 0;
+		$gallery_auth->checks = [];
+		$this->assertTrue($can_view->invoke($listener, $image_data, $album_data));
+		$this->assertSame([], $gallery_auth->checks);
+	}
+
 	public function test_template_events_cover_every_supported_style(): void
 	{
 		$events = [

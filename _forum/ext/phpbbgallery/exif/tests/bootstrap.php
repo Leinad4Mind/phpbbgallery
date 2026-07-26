@@ -17,6 +17,8 @@ namespace Symfony\Component\EventDispatcher
 
 namespace
 {
+	require_once dirname(__DIR__, 2) . '/core/auth/auth.php';
+	require_once dirname(__DIR__, 2) . '/core/block.php';
 	require_once dirname(__DIR__) . '/exif.php';
 	require_once dirname(__DIR__) . '/event/exif_listener.php';
 }
