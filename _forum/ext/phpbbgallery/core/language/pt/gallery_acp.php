@@ -32,7 +32,6 @@ $lang = array_merge($lang, [
 	'GALLERY_REQUIREMENT_PHP'                => 'É necessário o PHP %s ou posterior',
 	'GALLERY_REQUIREMENT_OPTIONAL_ZIP'       => 'Opcional; permite fazer upload de ficheiros ZIP',
 	'GALLERY_REQUIREMENT_OPTIONAL_EXIF'      => 'Opcional; ativa o add-on de metadados EXIF',
-	'GALLERY_REQUIREMENT_UNUSED_IMAGEMAGICK' => 'Não é usado pela phpBB Gallery; o processamento de imagens utiliza GD',
 	'GALLERY_STATUS_NOT_AVAILABLE'           => 'Não disponível',
 	'GALLERY_ADDONS'                         => 'Add-ons da Galeria',
 	'GALLERY_ADDON_BENEFIT'                  => 'Benefício',

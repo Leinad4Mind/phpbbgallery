@@ -32,7 +32,6 @@ $lang = array_merge($lang, [
 	'GALLERY_REQUIREMENT_PHP'                => 'Требуется PHP %s или новее',
 	'GALLERY_REQUIREMENT_OPTIONAL_ZIP'       => 'Необязательно; разрешает загрузку архивов ZIP',
 	'GALLERY_REQUIREMENT_OPTIONAL_EXIF'      => 'Необязательно; включает дополнение метаданных EXIF',
-	'GALLERY_REQUIREMENT_UNUSED_IMAGEMAGICK' => 'Не используется phpBB Gallery; обработка изображений выполняется GD',
 	'GALLERY_STATUS_NOT_AVAILABLE'           => 'Недоступно',
 	'GALLERY_ADDONS'                         => 'Дополнения Галереи',
 	'GALLERY_ADDON_BENEFIT'                  => 'Преимущество',
