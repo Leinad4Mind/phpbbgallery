@@ -1,0 +1,7 @@
+services:
+    phpbbgallery.favorite:
+        class: phpbbgallery\favorite\favorite
+        arguments:
+            - '@dbal.conn'
+            - '%phpbbgallery.tables.gallery_favorites%'
+            - '%phpbbgallery.tables.gallery_images%'
