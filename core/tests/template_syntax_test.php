@@ -42,6 +42,11 @@ final class template_syntax_test extends TestCase
 				$source,
 				$template_path
 			);
+			$this->assertStringNotContainsString(
+				'{% EVENT gallery_',
+				$source,
+				$template_path . ' uses an unprefixed custom event'
+			);
 		}
 	}
 
