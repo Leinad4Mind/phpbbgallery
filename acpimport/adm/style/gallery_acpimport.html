@@ -5,6 +5,12 @@
 <h1>{{ ACP_GALLERY_TITLE }}</h1>
 <p>{{ ACP_GALLERY_TITLE_EXPLAIN }}</p>
 
+{% if L_IMPORT_UNREADABLE_FILES %}
+<div class="errorbox notice">
+	<p>{{ L_IMPORT_UNREADABLE_FILES }}</p>
+</div>
+{% endif %}
+
 <form id="acp_gallery" method="post" action="{{ U_ACTION }}">
 	<fieldset class="field1">
 		<legend>{{ lang('ALBUM_SETTINGS') }}</legend>

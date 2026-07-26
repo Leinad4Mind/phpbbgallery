@@ -19,6 +19,7 @@ class import_storage
 	private const MAX_ERRORS = 10000;
 
 	private string $directory;
+	private int $ignored_unreadable_files = 0;
 
 	public function __construct(string $directory)
 	{
@@ -181,6 +182,7 @@ class import_storage
 	 */
 	public function get_images(array $allowed_extensions): array
 	{
+		$this->ignored_unreadable_files = 0;
 		$root_path = realpath($this->directory);
 		if ($root_path === false || !is_dir($root_path))
 		{
@@ -230,8 +232,12 @@ class import_storage
 				continue;
 			}
 
-			$display_name = $this->filename_to_utf8($file);
-			if ($display_name === false || !$this->is_valid_string($display_name, 4096) || isset($duplicate_names[$display_name]))
+			$display_name = $this->get_readable_filename($file);
+			if ($display_name === false)
+			{
+				continue;
+			}
+			if (isset($duplicate_names[$display_name]))
 			{
 				continue;
 			}
@@ -252,6 +258,11 @@ class import_storage
 
 		uksort($images, 'strnatcasecmp');
 		return $images;
+	}
+
+	public function get_ignored_unreadable_files(): int
+	{
+		return $this->ignored_unreadable_files;
 	}
 
 	/**
@@ -431,5 +442,17 @@ class import_storage
 
 		$converted = mb_convert_encoding($filename, 'UTF-8', $encoding);
 		return preg_match('//u', $converted) === 1 ? $converted : false;
+	}
+
+	private function get_readable_filename(string $filename): string|false
+	{
+		$display_name = $this->filename_to_utf8($filename);
+		if ($display_name === false || !$this->is_valid_string($display_name, 4096))
+		{
+			$this->ignored_unreadable_files++;
+			return false;
+		}
+
+		return $display_name;
 	}
 }
