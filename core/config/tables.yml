@@ -6,6 +6,7 @@ parameters:
 
     phpbbgallery.tables.gallery_albums: '%core.table_prefix%gallery_albums'
     phpbbgallery.tables.gallery_contests: '%core.table_prefix%gallery_contests'
+    phpbbgallery.tables.gallery_favorites: '%core.table_prefix%gallery_favorites'
     phpbbgallery.tables.gallery_images: '%core.table_prefix%gallery_images'
     phpbbgallery.tables.gallery_moderators: '%core.table_prefix%gallery_modscache'
     phpbbgallery.tables.gallery_permissions: '%core.table_prefix%gallery_permissions'
