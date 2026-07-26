@@ -24,6 +24,8 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
+	'GALLERY_CORE_ENABLE_SUCCESS' => 'A phpBB Gallery Core foi habilitada. Também estão disponíveis os complementos opcionais ACP Cleanup, ACP Import e EXIF.',
+	'GALLERY_REQUIREMENTS_MISSING' => 'Não é possível habilitar a phpBB Gallery. Faltam componentes obrigatórios: %s.',
 	'GALLERY_SUB_EXT_UNINSTALL'      => [
 		1 => 'Você deve desinstalar a extensão: <br /><strong>%s</strong><br /> antes de desinstalar a extensão principal.',
 		2 => 'Você deve desinstalar as extensões: <br /><strong>%s</strong><br /> antes de desinstalar a extensão principal.',

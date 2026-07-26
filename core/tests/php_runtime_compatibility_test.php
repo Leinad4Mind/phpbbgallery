@@ -31,6 +31,11 @@ final class php_runtime_compatibility_test extends TestCase
 
 			$this->assertSame('>=8.1', $composer['require']['php'], $component . ' has an unexpected PHP requirement.');
 			$this->assertSame('>=3.3.0,<4.0.0@dev', $composer['extra']['soft-require']['phpbb/phpbb'], $component . ' has an unexpected phpBB requirement.');
+			if ($component === 'core')
+			{
+				$this->assertSame('*', $composer['require']['ext-gd']);
+				$this->assertSame('*', $composer['require']['ext-mbstring']);
+			}
 
 			if (isset($composer['require-dev']['phpunit/phpunit']))
 			{

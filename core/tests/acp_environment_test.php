@@ -31,6 +31,7 @@ final class acp_environment_test extends TestCase
 		$this->assertFalse($checks[1]['available']);
 		$this->assertTrue($checks[1]['required']);
 		$this->assertFalse($checks[3]['required']);
+		$this->assertSame(['PHP', 'gd'], $diagnostics->missing_required_components($checks));
 	}
 
 	public function test_addon_checks_report_enabled_disabled_and_not_installed_states(): void

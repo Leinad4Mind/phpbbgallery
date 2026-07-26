@@ -24,6 +24,8 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
+	'GALLERY_CORE_ENABLE_SUCCESS' => 'phpBB Gallery Core wurde aktiviert. Die optionalen Add-ons ACP Cleanup, ACP Import und EXIF sind ebenfalls verfügbar.',
+	'GALLERY_REQUIREMENTS_MISSING' => 'phpBB Gallery kann nicht aktiviert werden. Erforderliche Komponenten fehlen: %s.',
 	'GALLERY_SUB_EXT_UNINSTALL' => [
 		1 => 'Sie müssen die Erweiterung deinstallieren: <br /><strong>%s</strong><br /> bevor Sie die Kern-Erweiterung deinstallieren können.',
 		2 => 'Sie müssen die Erweiterungen deinstallieren: <br /><strong>%s</strong><br /> bevor Sie die Kern-Erweiterung deinstallieren können.',

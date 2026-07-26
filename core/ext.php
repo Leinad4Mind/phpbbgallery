@@ -33,6 +33,31 @@ class ext extends \phpbb\extension\base
 	];
 
 	/**
+	 * Check the extension metadata and required PHP runtime components.
+	 *
+	 * @return bool
+	 */
+	public function is_enableable(): bool
+	{
+		if (!parent::is_enableable())
+		{
+			return false;
+		}
+
+		$environment = new \phpbbgallery\core\acp\environment();
+		$missing = $environment->missing_required_components($environment->runtime_checks());
+		if (!empty($missing))
+		{
+			$user = $this->container->get('user');
+			$user->add_lang_ext('phpbbgallery/core', 'install_gallery');
+			trigger_error($user->lang('GALLERY_REQUIREMENTS_MISSING', implode(', ', $missing)), E_USER_WARNING);
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	* Single enable step that installs any included migrations
 	*
 	* @param mixed $old_state State returned by previous call of this method
@@ -43,6 +68,12 @@ class ext extends \phpbb\extension\base
 		switch ($old_state)
 		{
 			case '': // Empty means nothing has run yet
+				$user = $this->container->get('user');
+				$user->add_lang_ext('phpbbgallery/core', 'install_gallery');
+				$this->container->get('template')->assign_var(
+					'L_EXTENSION_ENABLE_SUCCESS',
+					$user->lang('GALLERY_CORE_ENABLE_SUCCESS')
+				);
 				$this->update_notification_types('enable_notifications');
 				return 'notifications';
 			break;

@@ -32,6 +32,17 @@ class notification_lifecycle_test extends TestCase
 		$this->assertSame(self::TYPES, $manager->enabled);
 	}
 
+	public function test_enable_advertises_the_optional_addons(): void
+	{
+		$manager = $this->create_notification_manager();
+		$extension = $this->create_extension($manager);
+
+		$extension->enable_step('');
+
+		$this->assertSame([['phpbbgallery/core', 'install_gallery']], $manager->languages);
+		$this->assertSame('GALLERY_CORE_ENABLE_SUCCESS', $manager->success_message);
+	}
+
 	public function test_disable_uses_the_same_types_and_disables_sub_extensions(): void
 	{
 		$manager = $this->create_notification_manager();
@@ -119,6 +130,45 @@ class notification_lifecycle_test extends TestCase
 					return $this->extension_manager;
 				}
 
+				if ($service === 'user')
+				{
+					return new class($this->notification_manager) {
+						private object $manager;
+
+						public function __construct(object $manager)
+						{
+							$this->manager = $manager;
+						}
+
+						public function add_lang_ext(string $extension, string $file): void
+						{
+							$this->manager->languages[] = [$extension, $file];
+						}
+
+						public function lang(string $key): string
+						{
+							return $key;
+						}
+					};
+				}
+
+				if ($service === 'template')
+				{
+					return new class($this->notification_manager) {
+						private object $manager;
+
+						public function __construct(object $manager)
+						{
+							$this->manager = $manager;
+						}
+
+						public function assign_var(string $name, string $value): void
+						{
+							$this->manager->success_message = $value;
+						}
+					};
+				}
+
 				throw new \RuntimeException('Unexpected service: ' . $service);
 			}
 		};
@@ -151,6 +201,12 @@ class notification_lifecycle_test extends TestCase
 
 			/** @var string */
 			private $fail_purge_type;
+
+			/** @var array */
+			public $languages = [];
+
+			/** @var string */
+			public $success_message = '';
 
 			public function __construct($fail_purge_type)
 			{

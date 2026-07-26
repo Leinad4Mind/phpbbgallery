@@ -23,6 +23,8 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
+	'GALLERY_CORE_ENABLE_SUCCESS' => 'phpBB Gallery Core has been enabled. Optional ACP Cleanup, ACP Import and EXIF add-ons are also available.',
+	'GALLERY_REQUIREMENTS_MISSING' => 'phpBB Gallery cannot be enabled. Required components are missing: %s.',
 	'GALLERY_SUB_EXT_UNINSTALL' => [
 		1 => 'You must uninstall the extension: <br /><strong>%s</strong><br /> before uninstalling the core extension.',
 		2 => 'You must uninstall the extensions: <br /><strong>%s</strong><br /> before uninstalling the core extension.',
