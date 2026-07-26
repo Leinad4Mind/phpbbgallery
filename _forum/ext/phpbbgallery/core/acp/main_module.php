@@ -397,19 +397,17 @@ class main_module
 						FROM ' . $images_table . '
 						WHERE filesize_upload = 0';
 					$result = $db->sql_query($sql);
+					$image_filesizes = [];
 					while ($row = $db->sql_fetchrow($result))
 					{
-						$sql_ary = [
-							'filesize_upload'		=> @filesize($gallery_url->path('upload') . $row['image_filename']),
-							'filesize_medium'		=> @filesize($gallery_url->path('medium') . $row['image_filename']),
-							'filesize_cache'		=> @filesize($gallery_url->path('thumbnail') . $row['image_filename']),
+						$image_filesizes[(int) $row['image_id']] = [
+							'filesize_upload' => (int) @filesize($gallery_url->path('upload') . $row['image_filename']),
+							'filesize_medium' => (int) @filesize($gallery_url->path('medium') . $row['image_filename']),
+							'filesize_cache'  => (int) @filesize($gallery_url->path('thumbnail') . $row['image_filename']),
 						];
-						$sql = 'UPDATE ' . $images_table . '
-							SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
-							WHERE ' . $db->sql_in_set('image_id', $row['image_id']);
-						$db->sql_query($sql);
 					}
 					$db->sql_freeresult($result);
+					$this->update_image_filesizes($db, $images_table, $image_filesizes);
 
 					redirect($this->u_action);
 				break;
@@ -618,6 +616,40 @@ class main_module
 		$gallery_config->set('newest_pega_username', (string) ($gallery['username'] ?? ''));
 		$gallery_config->set('newest_pega_user_colour', (string) ($gallery['user_colour'] ?? ''));
 		$gallery_config->set('newest_pega_album_id', (int) ($gallery['album_id'] ?? 0));
+	}
+
+	/**
+	 * Update cached image file sizes in bounded batches.
+	 *
+	 * @param \phpbb\db\driver\driver_interface $db
+	 * @param string                                $images_table
+	 * @param array                                 $image_filesizes File sizes indexed by image ID
+	 */
+	private function update_image_filesizes(
+		\phpbb\db\driver\driver_interface $db,
+		string $images_table,
+		array $image_filesizes
+	): void
+	{
+		foreach (array_chunk($image_filesizes, 250, true) as $batch)
+		{
+			$assignments = [];
+			foreach (['filesize_upload', 'filesize_medium', 'filesize_cache'] as $column)
+			{
+				$cases = [];
+				foreach ($batch as $image_id => $filesizes)
+				{
+					$cases[] = 'WHEN ' . (int) $image_id . ' THEN ' . (int) ($filesizes[$column] ?? 0);
+				}
+
+				$assignments[] = $column . ' = CASE image_id ' . implode(' ', $cases) . ' ELSE ' . $column . ' END';
+			}
+
+			$sql = 'UPDATE ' . $images_table . '
+				SET ' . implode(', ', $assignments) . '
+				WHERE ' . $db->sql_in_set('image_id', array_keys($batch));
+			$db->sql_query($sql);
+		}
 	}
 
 	/**
