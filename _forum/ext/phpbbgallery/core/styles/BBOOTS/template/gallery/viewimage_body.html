@@ -11,10 +11,10 @@
 	{% endif %}
 
 	<div class="panel thumbnail center-block vertical-center">
-		<ul class="pager" style="display:table-row;">
-		{% if UC_PREV_IMAGE %}<li class="previous" style="display: table-cell;vertical-align: middle;">{{ UC_PREV_IMAGE }}</li>{% endif %}
-		<li>{% if UC_IMAGE_ACTION %}<a style="padding: 5px 5px;border-radius: 5px;max-width: 85%;" href="{{ UC_IMAGE_ACTION }}">{% endif %}<img src="{{ UC_IMAGE }}" alt="{{ IMAGE_NAME }}" class="postimage"/>{% if UC_IMAGE_ACTION %}</a>{% endif %}</li>
-		{% if UC_NEXT_IMAGE %}<li class="next vertical-center"  style="display: table-cell;vertical-align: middle;">{{ UC_NEXT_IMAGE }}</li>{% endif %}
+		<ul class="gallery-image-navigation">
+			<li class="gallery-image-navigation-side gallery-image-navigation-previous">{% if UC_PREV_IMAGE %}{{ UC_PREV_IMAGE }}{% else %}<span class="gallery-image-navigation-placeholder" aria-hidden="true"></span>{% endif %}</li>
+			<li class="gallery-image-navigation-current">{% if UC_IMAGE_ACTION %}<a href="{{ UC_IMAGE_ACTION }}">{% endif %}<img src="{{ UC_IMAGE }}" alt="{{ IMAGE_NAME }}" class="postimage"/>{% if UC_IMAGE_ACTION %}</a>{% endif %}</li>
+			<li class="gallery-image-navigation-side gallery-image-navigation-next">{% if UC_NEXT_IMAGE %}{{ UC_NEXT_IMAGE }}{% else %}<span class="gallery-image-navigation-placeholder" aria-hidden="true"></span>{% endif %}</li>
 		</ul>
 		{% if IMAGE_DESC %}
 		<div class="space10"></div>
