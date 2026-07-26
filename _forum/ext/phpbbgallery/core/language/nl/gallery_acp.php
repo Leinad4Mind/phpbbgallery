@@ -24,6 +24,25 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
+	'GALLERY_SYSTEM_STATUS'                  => 'Systeem- en opslagstatus',
+	'GALLERY_STORAGE'                        => 'Opslagmappen',
+	'GALLERY_RUNTIME'                        => 'PHP-omgeving en extensies',
+	'GALLERY_REQUIREMENT'                    => 'Vereiste',
+	'GALLERY_REQUIREMENT_REQUIRED'           => 'Vereist',
+	'GALLERY_REQUIREMENT_PHP'                => 'PHP %s of nieuwer is vereist',
+	'GALLERY_REQUIREMENT_OPTIONAL_ZIP'       => 'Optioneel; maakt het uploaden van ZIP-archieven mogelijk',
+	'GALLERY_REQUIREMENT_OPTIONAL_EXIF'      => 'Optioneel; activeert de add-on voor EXIF-metagegevens',
+	'GALLERY_REQUIREMENT_UNUSED_IMAGEMAGICK' => 'Niet gebruikt door phpBB Gallery; beeldverwerking gebruikt GD',
+	'GALLERY_STATUS_NOT_AVAILABLE'           => 'Niet beschikbaar',
+	'GALLERY_ADDONS'                         => 'Galerij-add-ons',
+	'GALLERY_ADDON_BENEFIT'                  => 'Voordeel',
+	'GALLERY_ADDON_ENABLED'                  => 'Ingeschakeld',
+	'GALLERY_ADDON_DISABLED'                 => 'Uitgeschakeld',
+	'GALLERY_ADDON_NOT_INSTALLED'            => 'Niet geïnstalleerd',
+	'GALLERY_ADDON_NOT_AVAILABLE'            => 'Bestanden niet beschikbaar',
+	'GALLERY_ADDON_CLEANUP_EXPLAIN'          => 'Vindt en verwijdert inconsistente afbeeldingsbestanden en databaserecords veilig.',
+	'GALLERY_ADDON_IMPORT_EXPLAIN'           => 'Importeert een gecontroleerde groep serverafbeeldingen in een album.',
+	'GALLERY_ADDON_EXIF_EXPLAIN'             => 'Toont fotografische metagegevens die in geüploade afbeeldingen zijn opgeslagen.',
 	'ACP_GALLERY_OVERVIEW'         => 'phpBB Galerij',
 	'ACP_GALLERY_OVERVIEW_EXPLAIN' => 'Hier zijn een aantal statistieken van je gelerij.',
 

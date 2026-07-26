@@ -6,7 +6,7 @@
 <p>{{ ACP_GALLERY_TITLE_EXPLAIN }}</p>
 
 
-{% for mods in mods %}
+{% for mods in mods|default([]) %}
 	<fieldset>
 		<legend>{{ lang('VERSION_CHECK') }}</legend>
 		<p style="font-weight: bold; color: {% if mods.S_UP_TO_DATE %}#228822{% else %}#BC2A4D{% endif %};">{{ mods.UP_TO_DATE }}</p>
@@ -33,6 +33,79 @@
 
 {% if S_GALLERY_OVERVIEW %}
 	<table cellspacing="1">
+		<caption>{{ lang('GALLERY_SYSTEM_STATUS') }}</caption>
+		<col class="col1" /><col class="col2" /><col class="col1" />
+	<thead>
+	<tr>
+		<th>{{ lang('STATISTIC') }}</th>
+		<th>{{ lang('VALUE') }}</th>
+		<th>{{ lang('GALLERY_REQUIREMENT') }}</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<th colspan="3">{{ lang('GALLERY_STORAGE') }}</th>
+	</tr>
+	<tr>
+		<td>{{ lang('ACP_FILES_DIR_STATE') }}</td>
+		<td style="color: {% if U_FILE_DIR_STATE_ERROR %}#CC0000;{% else %}#009900;{% endif %}"><strong>{{ U_FILE_DIR_STATE }}</strong></td>
+		<td>{{ lang('GALLERY_REQUIREMENT_REQUIRED') }}</td>
+	</tr>
+	<tr>
+		<td>{{ lang('ACP_CORE_DIR_STATE') }}</td>
+		<td style="color: {% if U_CORE_DIR_STATE_ERROR %}#CC0000;{% else %}#009900;{% endif %}"><strong>{{ U_CORE_DIR_STATE }}</strong></td>
+		<td>{{ lang('GALLERY_REQUIREMENT_REQUIRED') }}</td>
+	</tr>
+	<tr>
+		<td>{{ lang('ACP_SOURCE_DIR_STATE') }}</td>
+		<td style="color: {% if U_SOURCE_DIR_STATE_ERROR %}#CC0000;{% else %}#009900;{% endif %}"><strong>{{ U_SOURCE_DIR_STATE }}</strong></td>
+		<td>{{ lang('GALLERY_REQUIREMENT_REQUIRED') }}</td>
+	</tr>
+	<tr>
+		<td>{{ lang('ACP_MEDIUM_DIR_STATE') }}</td>
+		<td style="color: {% if U_MEDIUM_DIR_STATE_ERROR %}#CC0000;{% else %}#009900;{% endif %}"><strong>{{ U_MEDIUM_DIR_STATE }}</strong></td>
+		<td>{{ lang('GALLERY_REQUIREMENT_REQUIRED') }}</td>
+	</tr>
+	<tr>
+		<td>{{ lang('ACP_MINI_DIR_STATE') }}</td>
+		<td style="color: {% if U_MINI_DIR_STATE_ERROR %}#CC0000;{% else %}#009900;{% endif %}"><strong>{{ U_MINI_DIR_STATE }}</strong></td>
+		<td>{{ lang('GALLERY_REQUIREMENT_REQUIRED') }}</td>
+	</tr>
+	<tr>
+		<th colspan="3">{{ lang('GALLERY_RUNTIME') }}</th>
+	</tr>
+	{% for check in runtime_checks|default([]) %}
+	<tr>
+		<td><strong>{{ check.NAME }}</strong></td>
+		<td style="color: {% if check.S_ERROR %}#CC0000;{% elseif check.S_AVAILABLE %}#009900;{% else %}#666666;{% endif %}">{{ check.VERSION }}</td>
+		<td>{{ check.REQUIREMENT }}</td>
+	</tr>
+	{% endfor %}
+	</tbody>
+	</table>
+
+	<table cellspacing="1">
+		<caption>{{ lang('GALLERY_ADDONS') }}</caption>
+		<col class="col1" /><col class="col2" /><col class="col1" />
+	<thead>
+	<tr>
+		<th>{{ lang('EXTENSION') }}</th>
+		<th>{{ lang('GALLERY_ADDON_BENEFIT') }}</th>
+		<th>{{ lang('VALUE') }}</th>
+	</tr>
+	</thead>
+	<tbody>
+	{% for addon in addon_checks|default([]) %}
+	<tr>
+		<td><strong>{{ addon.NAME }}</strong><br /><small>{{ addon.EXTENSION }}</small></td>
+		<td>{{ addon.DESCRIPTION }}</td>
+		<td style="color: {% if addon.S_ENABLED %}#009900;{% elseif addon.S_MISSING %}#CC0000;{% else %}#BC8A00;{% endif %}"><strong>{{ addon.STATUS }}</strong></td>
+	</tr>
+	{% endfor %}
+	</tbody>
+	</table>
+
+	<table cellspacing="1">
 		<caption>{{ lang('GALLERY_STATS') }}</caption>
 		<col class="col1" /><col class="col2" /><col class="col1" /><col class="col2" />
 	<thead>
@@ -44,22 +117,6 @@
 	</tr>
 	</thead>
 	<tbody>
-	<tr>
-		<td>{{ lang('ACP_FILES_DIR_STATE') }}</td>
-		<td style="color: {% if U_FILE_DIR_STATE_ERROR %}#CC0000;{% else %}#009900;{% endif %}"><strong>{{ U_FILE_DIR_STATE }}</strong></td>
-		<td>{{ lang('ACP_CORE_DIR_STATE') }}</td>
-		<td style="color: {% if U_CORE_DIR_STATE_ERROR %}#CC0000;{% else %}#009900;{% endif %}"><strong>{{ U_CORE_DIR_STATE }}</strong></td>
-	</tr>
-	<tr>
-		<td>{{ lang('ACP_SOURCE_DIR_STATE') }}</td>
-		<td style="color: {% if U_SOURCE_DIR_STATE_ERROR %}#CC0000;{% else %}#009900;{% endif %}"><strong>{{ U_SOURCE_DIR_STATE }}</strong></td>
-		<td>{{ lang('ACP_MEDIUM_DIR_STATE') }}</td>
-		<td style="color: {% if U_MEDIUM_DIR_STATE_ERROR %}#CC0000;{% else %}#009900;{% endif %}"><strong>{{ U_MEDIUM_DIR_STATE }}</strong></td>
-	</tr>
-	<tr>
-		<td>{{ lang('ACP_MINI_DIR_STATE') }}</td>
-		<td style="color: {% if U_MINI_DIR_STATE_ERROR %}#CC0000;{% else %}#009900;{% endif %}"><strong>{{ U_MINI_DIR_STATE }}</strong></td>
-	</tr>
 	<tr>
 		<td>{{ lang('NUMBER_IMAGES') }}{{ lang('COLON') }}</td>
 		<td><strong>{{ TOTAL_IMAGES }}</strong></td>

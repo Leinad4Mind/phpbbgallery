@@ -199,6 +199,7 @@ class main_module
 				]);
 			}
 		}
+		$this->assign_environment_status($template, $phpbb_container->get('ext.manager'));
 		if (!confirm_box(true))
 		{
 			$confirm = false;
@@ -664,6 +665,45 @@ class main_module
 		if (!empty($image_ids))
 		{
 			$rating->delete_ratings($image_ids, true);
+		}
+	}
+
+	/**
+	 * Assign PHP runtime and Gallery add-on diagnostics to the overview.
+	 *
+	 * @param \phpbb\template\template $template
+	 * @param object                     $extension_manager phpBB extension manager
+	 */
+	private function assign_environment_status(\phpbb\template\template $template, object $extension_manager): void
+	{
+		$environment = new environment();
+		foreach ($environment->runtime_checks() as $check)
+		{
+			$template->assign_block_vars('runtime_checks', [
+				'NAME' => $check['name'],
+				'VERSION' => $check['version'] !== '' ? $check['version'] : $this->language->lang('GALLERY_STATUS_NOT_AVAILABLE'),
+				'S_AVAILABLE' => $check['available'],
+				'S_ERROR' => $check['required'] && !$check['available'],
+				'REQUIREMENT' => $this->language->lang($check['requirement'], environment::MINIMUM_PHP_VERSION),
+			]);
+		}
+
+		$status_keys = [
+			'enabled' => 'GALLERY_ADDON_ENABLED',
+			'disabled' => 'GALLERY_ADDON_DISABLED',
+			'not_installed' => 'GALLERY_ADDON_NOT_INSTALLED',
+			'not_available' => 'GALLERY_ADDON_NOT_AVAILABLE',
+		];
+		foreach ($environment->addon_checks($extension_manager) as $addon)
+		{
+			$template->assign_block_vars('addon_checks', [
+				'NAME' => $addon['name'],
+				'EXTENSION' => $addon['extension'],
+				'DESCRIPTION' => $this->language->lang($addon['description']),
+				'S_ENABLED' => $addon['status'] === 'enabled',
+				'S_MISSING' => $addon['status'] === 'not_available',
+				'STATUS' => $this->language->lang($status_keys[$addon['status']]),
+			]);
 		}
 	}
 }

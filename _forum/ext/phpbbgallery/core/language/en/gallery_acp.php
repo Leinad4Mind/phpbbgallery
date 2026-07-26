@@ -405,6 +405,26 @@ $lang = array_merge($lang, [
 	'NO_WRITE_ACCESS' => 'No write access',
 	'WRITE_ACCESS'    => 'OK',
 	'DIR_CREATED'     => 'Directory created',
+
+	'GALLERY_SYSTEM_STATUS'                     => 'System and storage status',
+	'GALLERY_STORAGE'                           => 'Storage directories',
+	'GALLERY_RUNTIME'                           => 'PHP runtime and extensions',
+	'GALLERY_REQUIREMENT'                       => 'Requirement',
+	'GALLERY_REQUIREMENT_REQUIRED'              => 'Required',
+	'GALLERY_REQUIREMENT_PHP'                   => 'PHP %s or later is required',
+	'GALLERY_REQUIREMENT_OPTIONAL_ZIP'          => 'Optional; enables ZIP archive uploads',
+	'GALLERY_REQUIREMENT_OPTIONAL_EXIF'         => 'Optional; enables the EXIF metadata add-on',
+	'GALLERY_REQUIREMENT_UNUSED_IMAGEMAGICK'    => 'Not used by phpBB Gallery; image processing uses GD',
+	'GALLERY_STATUS_NOT_AVAILABLE'              => 'Not available',
+	'GALLERY_ADDONS'                            => 'Gallery add-ons',
+	'GALLERY_ADDON_BENEFIT'                     => 'Benefit',
+	'GALLERY_ADDON_ENABLED'                     => 'Enabled',
+	'GALLERY_ADDON_DISABLED'                    => 'Disabled',
+	'GALLERY_ADDON_NOT_INSTALLED'               => 'Not installed',
+	'GALLERY_ADDON_NOT_AVAILABLE'               => 'Files not available',
+	'GALLERY_ADDON_CLEANUP_EXPLAIN'             => 'Finds and safely removes inconsistent image files and database records.',
+	'GALLERY_ADDON_IMPORT_EXPLAIN'              => 'Imports a controlled batch of server-side images into an album.',
+	'GALLERY_ADDON_EXIF_EXPLAIN'                => 'Displays photographic metadata stored in uploaded images.',
 ]);
 
 /**

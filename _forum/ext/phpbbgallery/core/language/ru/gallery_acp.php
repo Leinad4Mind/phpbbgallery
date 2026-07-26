@@ -24,6 +24,25 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
+	'GALLERY_SYSTEM_STATUS'                  => 'Состояние системы и хранилища',
+	'GALLERY_STORAGE'                        => 'Каталоги хранилища',
+	'GALLERY_RUNTIME'                        => 'Среда PHP и расширения',
+	'GALLERY_REQUIREMENT'                    => 'Требование',
+	'GALLERY_REQUIREMENT_REQUIRED'           => 'Обязательно',
+	'GALLERY_REQUIREMENT_PHP'                => 'Требуется PHP %s или новее',
+	'GALLERY_REQUIREMENT_OPTIONAL_ZIP'       => 'Необязательно; разрешает загрузку архивов ZIP',
+	'GALLERY_REQUIREMENT_OPTIONAL_EXIF'      => 'Необязательно; включает дополнение метаданных EXIF',
+	'GALLERY_REQUIREMENT_UNUSED_IMAGEMAGICK' => 'Не используется phpBB Gallery; обработка изображений выполняется GD',
+	'GALLERY_STATUS_NOT_AVAILABLE'           => 'Недоступно',
+	'GALLERY_ADDONS'                         => 'Дополнения Галереи',
+	'GALLERY_ADDON_BENEFIT'                  => 'Преимущество',
+	'GALLERY_ADDON_ENABLED'                  => 'Включено',
+	'GALLERY_ADDON_DISABLED'                 => 'Отключено',
+	'GALLERY_ADDON_NOT_INSTALLED'            => 'Не установлено',
+	'GALLERY_ADDON_NOT_AVAILABLE'            => 'Файлы недоступны',
+	'GALLERY_ADDON_CLEANUP_EXPLAIN'          => 'Находит и безопасно удаляет несогласованные файлы изображений и записи базы данных.',
+	'GALLERY_ADDON_IMPORT_EXPLAIN'           => 'Импортирует контролируемый набор серверных изображений в альбом.',
+	'GALLERY_ADDON_EXIF_EXPLAIN'             => 'Показывает фотографические метаданные, сохранённые в загруженных изображениях.',
 	'ACP_GALLERY_OVERVIEW'         => 'Обзор',
 	'ACP_GALLERY_OVERVIEW_EXPLAIN' => 'Here are some statistics about your gallery.',
 
