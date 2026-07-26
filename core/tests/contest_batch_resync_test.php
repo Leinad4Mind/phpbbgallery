@@ -52,6 +52,7 @@ final class contest_batch_resync_test extends TestCase
 		$this->assertStringContainsString('image_album_id IN (10, 11)', $queries[0]);
 		$this->assertStringContainsString('image_contest_rank = 0', $queries[0]);
 		$this->assertStringContainsString('SELECT COUNT(better.image_id)', $queries[1]);
+		$this->assertStringContainsString('better.image_rate_avg > ranked.image_rate_avg', $queries[1]);
 		$this->assertStringContainsString('ranked.image_rate_avg DESC', $queries[1]);
 		$this->assertStringContainsString('contest_first = CASE contest_album_id WHEN 10 THEN 7 WHEN 11 THEN 9', $queries[2]);
 		$this->assertStringContainsString('contest_second = CASE contest_album_id WHEN 10 THEN 8 WHEN 11 THEN 0', $queries[2]);
