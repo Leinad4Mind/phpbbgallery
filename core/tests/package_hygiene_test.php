@@ -131,6 +131,38 @@ class package_hygiene_test extends TestCase
 		}
 	}
 
+	public function test_shared_stylesheet_and_image_references_resolve(): void
+	{
+		$header_event = file_get_contents(
+			$this->core_root . '/styles/all/template/event/overall_header_head_append.html'
+		);
+		$this->assertStringContainsString('@phpbbgallery_core/gallery.css', $header_event);
+		$this->assertStringContainsString('@phpbbgallery_core/default.css', $header_event);
+		$this->assertLessThan(
+			strpos($header_event, '@phpbbgallery_core/default.css'),
+			strpos($header_event, '@phpbbgallery_core/gallery.css')
+		);
+
+		$theme_directory = $this->core_root . '/styles/all/theme';
+		$stylesheet = file_get_contents($theme_directory . '/gallery.css');
+		preg_match_all(
+			'#url\([^./]*\./images/([A-Za-z0-9._-]+)#',
+			$stylesheet,
+			$matches
+		);
+		$this->assertCount(6, $matches[1]);
+		foreach ($matches[1] as $image)
+		{
+			$this->assertFileExists($theme_directory . '/images/' . $image);
+		}
+
+		$this->assertFileDoesNotExist($this->core_root . '/styles/prosilver/theme/gallery.css');
+		$this->assertFileDoesNotExist($this->core_root . '/styles/prosilver/theme/gallery-color.css');
+		$this->assertFileDoesNotExist(
+			$this->core_root . '/styles/prosilver/template/event/overall_header_head_append.html'
+		);
+	}
+
 	public function test_polaroid_layout_uses_the_shared_asset_in_every_style(): void
 	{
 		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
