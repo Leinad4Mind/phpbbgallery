@@ -78,14 +78,17 @@ class notification
 		$this->db->sql_freeresult($result);
 		$image_ids = array_diff($image_ids, $exclude);
 
+		$sql_ary = [];
 		foreach ($image_ids as $image_id)
 		{
-			$sql_ary = [
+			$sql_ary[] = [
 				'image_id'		=> (int) $image_id,
 				'user_id'		=> (int) $user_id,
 			];
-			$sql = 'INSERT INTO ' . $this->watch_table . ' ' . $this->db->sql_build_array('INSERT', $sql_ary);
-			$this->db->sql_query($sql);
+		}
+		if ($sql_ary)
+		{
+			$this->db->sql_multi_insert($this->watch_table, $sql_ary);
 		}
 	}
 
@@ -116,14 +119,17 @@ class notification
 		$this->db->sql_freeresult($result);
 		$album_ids = array_diff($album_ids, $exclude);
 
+		$sql_ary = [];
 		foreach ($album_ids as $album_id)
 		{
-			$sql_ary = [
+			$sql_ary[] = [
 				'album_id'		=> (int) $album_id,
 				'user_id'		=> (int) $user_id,
 			];
-			$sql = 'INSERT INTO ' . $this->watch_table . ' ' . $this->db->sql_build_array('INSERT', $sql_ary);
-			$this->db->sql_query($sql);
+		}
+		if ($sql_ary)
+		{
+			$this->db->sql_multi_insert($this->watch_table, $sql_ary);
 		}
 	}
 
