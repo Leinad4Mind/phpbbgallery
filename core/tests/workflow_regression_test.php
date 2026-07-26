@@ -36,6 +36,7 @@ final class workflow_regression_test extends TestCase
 		$gallery_root = dirname(__DIR__, 2);
 		$templates = [
 			$gallery_root . '/exif/styles/prosilver/template/event/phpbbgallery_core_viewimage_details.html',
+			$gallery_root . '/exif/styles/BBOOTS/template/event/phpbbgallery_core_viewimage_details.html',
 			$gallery_root . '/exif/styles/FLATBOOTS/template/event/phpbbgallery_core_viewimage_details.html',
 		];
 
