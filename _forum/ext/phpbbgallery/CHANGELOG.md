@@ -155,6 +155,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added permanent ACP Gallery-log tests covering complete native contracts and mutation request/CSRF ordering.
 - Added permanent ACP/UCP module-metadata tests covering public contracts, expected modes, authorization guards, and categories.
 - Validated the ZIP upload, ACP Import, authorization, individual-move security, ACP rating-reset, ACP personal-resync, UCP CSRF, orphan-upload, resumable-upload, subtree-count, hotlink, notification-lifecycle, migration-ordering, purge-safety, database-index, view-counter, browser-cache, package-hygiene, JavaScript-asset, and language-catalog phases with PHP 7.4, 8.1, 8.2, 8.4, and 8.5.
+- Completed isolated phpBB 3.3.12 and SQLite lifecycle smoke tests on PHP 8.1 covering clean installation, enable, disable, purge, reinstall, preserved ACP Import backups, and upgrade from the previous Gallery snapshot with all migrations applied.
 
 ## [3.4.0]
 ### Added
