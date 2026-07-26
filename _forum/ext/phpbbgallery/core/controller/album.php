@@ -256,8 +256,8 @@ class album
 
 		$image_counter = $album_data['album_images'];
 
-		$user_id = $this->user->data['user_id'];
-		$album_owner_id = $album_data['album_user_id'];
+		$user_id = (int) $this->user->data['user_id'];
+		$album_owner_id = (int) $album_data['album_user_id'];
 
 		if ($this->auth->acl_check('m_status', $album_id, $album_owner_id))
 		{

@@ -83,6 +83,14 @@ class migration_integrity_test extends TestCase
 		);
 	}
 
+	public function test_profile_contact_url_update_uses_dbal_escaping(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/migrations/release_3_2_1_0.php');
+
+		$this->assertStringContainsString('sql_build_array(\'UPDATE\', $sql_ary)', $source);
+		$this->assertStringContainsString('sql_escape(\'gallery_palbum\')', $source);
+	}
+
 	public function test_migration_owned_contracts_are_typed_with_profilefield_exceptions(): void
 	{
 		$profilefield_properties = ['profilefield_name', 'profilefield_database_type', 'profilefield_data'];
