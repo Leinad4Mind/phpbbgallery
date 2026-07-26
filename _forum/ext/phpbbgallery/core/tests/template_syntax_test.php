@@ -159,6 +159,17 @@ final class template_syntax_test extends TestCase
 		}
 	}
 
+	public function test_bootstrap_legacy_image_edit_uses_canonical_form(): void
+	{
+		$core_root = dirname(__DIR__);
+		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$source = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/image_edit_body.html');
+			$this->assertStringContainsString("{% include 'gallery/posting_body.html' %}", $source, $style);
+			$this->assertDoesNotMatchRegularExpression('/<\/?(?:dl|dt|dd)\b/i', $source, $style);
+		}
+	}
+
 	#[IgnoreDeprecations]
 	public function test_modernized_templates_parse_with_packaged_twig(): void
 	{
