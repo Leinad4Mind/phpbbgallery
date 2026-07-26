@@ -21,14 +21,6 @@
 		</div>
 		</div>
 
-		<div class="control-group">
-		<label class="control-label" for="watch_favo1">{{ lang('WATCH_FAVO') }}{{ lang('COLON') }}</label>
-		<div class="controls controls-row">
-			<div class="radio"><input type="radio" name="watch_favo" id="watch_favo1" value="1"{% if S_WATCH_FAVO %} checked="checked"{% endif %} /><label for="watch_favo1">{{ lang('YES') }}</label></div>
-			<div class="radio"><input type="radio" name="watch_favo" id="watch_favo0" value="0"{% if not S_WATCH_FAVO %} checked="checked"{% endif %} /><label for="watch_favo0">{{ lang('NO') }}</label></div>
-		</div>
-		</div>
-
 		{% EVENT phpbbgallery_core_ucp_settings_watch %}
 
 		{% if S_COMMENTS_ENABLED %}
@@ -42,7 +34,7 @@
 		{% endif %}
 
 		<div class="control-group">
-		<label class="control-label" for="rrc_zebra1">{{ lang('RRC_ZEBRA') }}{{ lang('COLON') }}</label>
+		<label class="control-label" for="rrc_zebra1">{{ lang('RRC_ZEBRA') }}{{ lang('COLON') }}</label><span class="help-block">{{ lang('RRC_ZEBRA_EXPLAIN') }}</span>
 		<div class="controls controls-row">
 			<div class="radio"><input type="radio" name="rrc_zebra" id="rrc_zebra1" value="1"{% if S_RRC_ZEBRA %} checked="checked"{% endif %} /><label for="rrc_zebra1">{{ lang('YES') }}</label></div>
 			<div class="radio"><input type="radio" name="rrc_zebra" id="rrc_zebra0" value="0"{% if not S_RRC_ZEBRA %} checked="checked"{% endif %} /><label for="rrc_zebra0">{{ lang('NO') }}</label></div>

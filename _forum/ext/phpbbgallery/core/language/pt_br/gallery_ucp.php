@@ -71,6 +71,6 @@ $lang = array_merge($lang, [
 	'WATCH_COM'                      => 'Acompanhar por padrão as imagens que você comentar',
 	'WATCH_NOTE'                     => 'Esta opção apenas afeta novas imagens.',
 	'WATCH_OWN'                      => 'Acompanhar por padrão suas próprias imagens',
-	'RRC_ZEBRA'                      => 'Ocultar de ignorados no RRC',
-	'RRC_ZEBRA_EXPLAIN'              => 'Oculta imagens de álbuns dos ignorados na parte de Recentes e Aleatórios. Atenção: Não oculta imagens em álbuns públicos.'
+	'RRC_ZEBRA'                      => 'Ocultar imagens de ignorados em Recentes/Aleatórias/Comentários',
+	'RRC_ZEBRA_EXPLAIN'              => 'Oculta as imagens de álbuns de usuários ignorados nas seções de Imagens Recentes, Aleatórias e Comentários Recentes da página principal da galeria.<br /><strong>Atenção:</strong> Não oculta imagens em álbuns públicos/compartilhados, mesmo que pertençam a alguém que você ignorou.'
 ]);
