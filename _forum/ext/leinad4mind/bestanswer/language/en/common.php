@@ -53,6 +53,8 @@ $lang = array_merge($lang, [
 	'LOCK_ON_ANSWER'         => 'Lock topic on best answer',
 	'LOCK_ON_ANSWER_EXPLAIN' => 'If enabled, the topic will automatically be locked when a post is marked as the best answer.',
 
+	'BESTANSWER_ENABLE_NOTICE' => '<br /><br /><div class="phpinfo"><p>A new option was added under <strong>%1$s » %2$s » %3$s</strong>: <em>“Lock topic on best answer”</em>.</p><p>Two new permissions were also added — <strong>%8$s</strong> and <strong>%9$s</strong> — already granted by default to the standard forum and moderator roles. Review or adjust them per forum in <strong>%4$s » %5$s » %6$s</strong> (members) and <strong>%4$s » %5$s » %7$s</strong> (moderators).</p></div>',
+
 	'LOG_MARK_ANSWER'   => '<strong>Marked post as best answer</strong><br />» %1$s by %2$s',
 	'LOG_UNMARK_ANSWER' => '<strong>Unmarked post as best answer</strong><br />» %1$s by %2$s',
 

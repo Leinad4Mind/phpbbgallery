@@ -54,6 +54,8 @@ $lang = array_merge($lang, [
 	'LOCK_ON_ANSWER'         => 'Bloquear tópico ao marcar melhor resposta',
 	'LOCK_ON_ANSWER_EXPLAIN' => 'Se ativado, o tópico será bloqueado automaticamente quando uma postagem for marcada como a melhor resposta.',
 
+	'BESTANSWER_ENABLE_NOTICE' => '<br /><br /><div class="phpinfo"><p>Foi adicionada uma nova opção em <strong>%1$s » %2$s » %3$s</strong>: <em>"Bloquear tópico ao marcar melhor resposta"</em>.</p><p>Também foram adicionadas duas novas permissões — <strong>%8$s</strong> e <strong>%9$s</strong> — já concedidas por padrão às funções padrão de fórum e moderação. Você pode revisá-las ou ajustá-las por fórum em <strong>%4$s » %5$s » %6$s</strong> (membros) e <strong>%4$s » %5$s » %7$s</strong> (moderadores).</p></div>',
+
 	'LOG_MARK_ANSWER'   => '<strong>Postagem marcada como melhor resposta</strong><br />» %1$s by %2$s',
 	'LOG_UNMARK_ANSWER' => '<strong>Postagem desmarcada como melhor resposta</strong><br />» %1$s by %2$s',
 

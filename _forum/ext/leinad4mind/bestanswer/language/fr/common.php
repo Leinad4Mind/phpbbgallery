@@ -54,6 +54,8 @@ $lang = array_merge($lang, [
 	'LOCK_ON_ANSWER'         => 'Verrouiller le sujet à la meilleure réponse',
 	'LOCK_ON_ANSWER_EXPLAIN' => 'Si activé, le sujet sera automatiquement verrouillé lorsqu’un message est marqué comme la réponse la plus pertinente.',
 
+	'BESTANSWER_ENABLE_NOTICE' => '<br /><br /><div class="phpinfo"><p>Une nouvelle option a été ajoutée dans <strong>%1$s » %2$s » %3$s</strong> : <em>« Verrouiller le sujet à la meilleure réponse »</em>.</p><p>Deux nouvelles permissions ont également été ajoutées — <strong>%8$s</strong> et <strong>%9$s</strong> — déjà accordées par défaut aux rôles standards de forum et de modération. Vous pouvez les revoir ou les ajuster par forum dans <strong>%4$s » %5$s » %6$s</strong> (membres) et <strong>%4$s » %5$s » %7$s</strong> (modérateurs).</p></div>',
+
 	'LOG_MARK_ANSWER'   => '<strong>Mise en avant effectuée d’un message, comme étant la réponse la plus pertinente de son sujet</strong><br />» %1$s par %2$s',
 	'LOG_UNMARK_ANSWER' => '<strong>Mise en avant annulée d’un message, comme étant la réponse la plus pertinente de son sujet</strong><br />» %1$s par %2$s',
 

@@ -50,6 +50,8 @@ class ext extends \phpbb\extension\base
 		{
 			case '': // Empty means nothing has run yet
 
+				$this->append_enable_notice();
+
 				// Enable notifications
 				$phpbb_notifications = $this->container->get('notification_manager');
 				$phpbb_notifications->enable_notifications('leinad4mind.bestanswer.notification.type.markanswer');
@@ -127,5 +129,47 @@ class ext extends \phpbb\extension\base
 
 			break;
 		}
+	}
+
+	/**
+	 * Append a notice to the ACP "extension enabled" message pointing the
+	 * admin at the new board-features option and the permissions it added.
+	 *
+	 * The acp_ext_enable.html template only outputs lang('EXTENSION_ENABLE_SUCCESS')
+	 * with no template variable or event to hook into, so the language string
+	 * itself is extended here via reflection, since \phpbb\language\language
+	 * exposes no public setter for an already-loaded key.
+	 *
+	 * @return void
+	 * @access protected
+	 */
+	protected function append_enable_notice()
+	{
+		$language = $this->container->get('language');
+
+		$language->add_lang(array('common', 'permissions_bestanswer'), 'leinad4mind/bestanswer');
+
+		if (!$language->is_set('BESTANSWER_ENABLE_NOTICE') || !$language->is_set('EXTENSION_ENABLE_SUCCESS'))
+		{
+			return;
+		}
+
+		$notice = $language->lang('BESTANSWER_ENABLE_NOTICE',
+			$language->lang('ACP_CAT_GENERAL'),
+			$language->lang('ACP_BOARD_CONFIGURATION'),
+			$language->lang('ACP_BOARD_FEATURES'),
+			$language->lang('ACP_CAT_PERMISSIONS'),
+			$language->lang('ACP_FORUM_BASED_PERMISSIONS'),
+			$language->lang('ACP_FORUM_PERMISSIONS'),
+			$language->lang('ACP_FORUM_MODERATORS'),
+			$language->lang('ACL_F_MARK_ANSWER'),
+			$language->lang('ACL_M_MARK_ANSWER')
+		);
+
+		$reflection = new \ReflectionProperty($language, 'lang');
+		$reflection->setAccessible(true);
+		$lang_array = $reflection->getValue($language);
+		$lang_array['EXTENSION_ENABLE_SUCCESS'] .= $notice;
+		$reflection->setValue($language, $lang_array);
 	}
 }

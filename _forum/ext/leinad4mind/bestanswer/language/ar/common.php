@@ -54,6 +54,8 @@ $lang = array_merge($lang, [
 	'LOCK_ON_ANSWER'         => 'قفل الموضوع عند تحديد أفضل إجابة',
 	'LOCK_ON_ANSWER_EXPLAIN' => 'عند التفعيل، سيتم قفل الموضوع تلقائيًا عند تحديد إحدى المشاركات كأفضل إجابة.',
 
+	'BESTANSWER_ENABLE_NOTICE' => '<br /><br /><div class="phpinfo"><p>تمت إضافة خيار جديد في <strong>%1$s « %2$s « %3$s</strong>: <em>"قفل الموضوع عند تحديد أفضل إجابة"</em>.</p><p>كما تمت إضافة صلاحيتين جديدتين — <strong>%8$s</strong> و<strong>%9$s</strong> — ممنوحتان افتراضيًا للأدوار القياسية للمنتدى والإشراف. يمكنك مراجعتهما أو تعديلهما لكل منتدى من <strong>%4$s « %5$s « %6$s</strong> (للأعضاء) و<strong>%4$s « %5$s « %7$s</strong> (للمشرفين).</p></div>',
+
 	'LOG_MARK_ANSWER'   => '<strong>تحديد المشاركة كـ “أفضل إجابة”</strong><br />» %1$s بواسطة %2$s',
 	'LOG_UNMARK_ANSWER' => '<strong>إلغاء تحديد المشاركة كـ “أفضل إجابة”</strong><br />» %1$s بواسطة %2$s',
 
