@@ -29,7 +29,6 @@ class exif_listener implements EventSubscriberInterface
 	{
 		return [
 			'phpbbgallery.core.acp.config.get_display_vars'		=> 'acp_config_get_display_vars',
-			'phpbbgallery.core.config.load_config_sets'			=> 'config_load_config_sets',
 			'phpbbgallery.acpimport.update_image_before'	=> 'massimport_update_image_before',
 			'phpbbgallery.acpimport.update_image'			=> 'massimport_update_image',
 			'phpbbgallery.core.posting.edit_before_rotate'		=> 'posting_edit_before_rotate',
@@ -78,13 +77,6 @@ class exif_listener implements EventSubscriberInterface
 				$event['return_ary'] = $return_ary;
 			}
 		}
-	}
-
-	public function config_load_config_sets(\phpbb\event\data $event): void
-	{
-		$additional_config_sets = $event['additional_config_sets'];
-		$additional_config_sets['exif'] = 'phpbb_ext_gallery_exif_config_sets_exif';
-		$event['additional_config_sets'] = $additional_config_sets;
 	}
 
 	public function massimport_update_image_before(\phpbb\event\data $event): void
