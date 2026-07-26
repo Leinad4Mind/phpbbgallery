@@ -74,7 +74,6 @@ class cleanup
 	{
 		foreach ($filenames as $file)
 		{
-			$file = mb_convert_encoding($file, 'ISO-8859-1', 'UTF-8');
 			$this->tool->delete($file);
 			$this->tool->delete_cache($file);
 		}
@@ -194,6 +193,7 @@ class cleanup
 		if (in_array($this->gallery_config->get('newest_pega_album_id'), $delete_albums))
 		{
 			// Update the config for the statistic on the index
+			$newest_pega = false;
 			if ($this->gallery_config->get('num_pegas') > 0)
 			{
 				$sql_array = [
@@ -217,25 +217,7 @@ class cleanup
 				$this->db->sql_freeresult($result);
 			}
 
-			if (($this->gallery_config->get('num_pegas') > 0) && isset($newest_pega))
-			{
-				$this->gallery_config->set('newest_pega_user_id', $newest_pega['user_id']);
-				$this->gallery_config->set('newest_pega_username', $newest_pega['username']);
-				$this->gallery_config->set('newest_pega_user_colour', $newest_pega['user_colour']);
-				$this->gallery_config->set('newest_pega_album_id', $newest_pega['album_id']);
-			}
-			else
-			{
-				$this->gallery_config->set('newest_pega_user_id', 0);
-				$this->gallery_config->set('newest_pega_username', '');
-				$this->gallery_config->set('newest_pega_user_colour', '');
-				$this->gallery_config->set('newest_pega_album_id', 0);
-
-				if (isset($newest_pega))
-				{
-					$this->gallery_config->set('num_pegas', 0);
-				}
-			}
+			$this->update_newest_personal_gallery_config($newest_pega);
 		}
 /*
 		foreach ($user_image_count as $user_id => $images)
@@ -361,6 +343,30 @@ class cleanup
 		}
 
 		return $lang_pattern;
+	}
+
+	/**
+	 * Store the newest valid personal gallery or reset stale statistics.
+	 *
+	 * @param array|false $newest_pega Newest personal gallery row
+	 * @return void
+	 */
+	protected function update_newest_personal_gallery_config(array|false $newest_pega): void
+	{
+		if ($newest_pega !== false)
+		{
+			$this->gallery_config->set('newest_pega_user_id', $newest_pega['user_id']);
+			$this->gallery_config->set('newest_pega_username', $newest_pega['username']);
+			$this->gallery_config->set('newest_pega_user_colour', $newest_pega['user_colour']);
+			$this->gallery_config->set('newest_pega_album_id', $newest_pega['album_id']);
+			return;
+		}
+
+		$this->gallery_config->set('newest_pega_user_id', 0);
+		$this->gallery_config->set('newest_pega_username', '');
+		$this->gallery_config->set('newest_pega_user_colour', '');
+		$this->gallery_config->set('newest_pega_album_id', 0);
+		$this->gallery_config->set('num_pegas', 0);
 	}
 
 	/**

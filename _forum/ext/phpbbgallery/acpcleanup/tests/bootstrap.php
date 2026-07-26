@@ -102,13 +102,16 @@ namespace phpbbgallery\core
 
 	class config
 	{
+		public array $values = [];
+
 		public function get(string $key): int|string
 		{
-			return 0;
+			return $this->values[$key] ?? 0;
 		}
 
 		public function set(string $key, int|string $value): void
 		{
+			$this->values[$key] = $value;
 		}
 
 		public function dec(string $key, int $value): void
