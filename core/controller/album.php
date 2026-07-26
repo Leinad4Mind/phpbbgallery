@@ -216,6 +216,9 @@ class album
 			}
 		}
 
+		$watch_url = $this->can_watch_album()
+			? $this->helper->route('phpbbgallery_core_album_watch', ['album_id' => (int) $album_id])
+			: '';
 		$this->template->assign_vars([
 			'S_IS_POSTABLE' => $album_data['album_type'] != (int) \phpbbgallery\core\block::TYPE_CAT,
 			'S_IS_LOCKED'   => $album_data['album_status'] == (int) \phpbbgallery\core\block::ALBUM_LOCKED,
@@ -224,7 +227,7 @@ class album
 			'L_RETURN_LINK'  => $this->language->lang('RETURN_TO_GALLERY'),
 			'S_ALBUM_ACTION' => $this->helper->route('phpbbgallery_core_album', ['album_id' => (int) $album_id]),
 			'S_IS_WATCHED'   => $this->notifications_helper->get_watched_album($album_id) ? true : false,
-			'U_WATCH_TOGGLE' => $this->helper->route('phpbbgallery_core_album_watch', ['album_id' => (int) $album_id]),
+			'U_WATCH_TOGGLE' => $watch_url,
 		]);
 
 		if ($album_data['album_type'] != (int) \phpbbgallery\core\block::TYPE_CAT
@@ -516,6 +519,10 @@ class album
 	public function watch(int $album_id): \Symfony\Component\HttpFoundation\Response|null
 	{
 		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
+		if (!$this->can_watch_album())
+		{
+			trigger_error($this->language->lang('NOT_AUTHORISED'));
+		}
 
 		$album_data = $this->loader->get($album_id);
 
@@ -555,6 +562,16 @@ class album
 			$s_hidden_fields = '';
 			confirm_box(false, $lang, $s_hidden_fields);
 		}
+	}
+
+	/**
+	 * Check whether the current identity may create Gallery subscriptions.
+	 *
+	 * @return bool
+	 */
+	protected function can_watch_album(): bool
+	{
+		return !empty($this->user->data['is_registered']) && empty($this->user->data['is_bot']);
 	}
 
 	/**
