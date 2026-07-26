@@ -264,7 +264,7 @@ class upload
 	{
 		$this->language->add_lang('gallery_zip', 'phpbbgallery/core');
 
-		$tmp_dir = $this->gallery_url->path('import') . 'tmp_' . md5(unique_id()) . '/';
+		$tmp_dir = $this->create_zip_temp_directory_path();
 
 		$this->zip_file->clean_filename('unique_ext');
 		$this->zip_file->move_file(
@@ -324,6 +324,16 @@ class upload
 				$this->file_upload->set_allowed_extensions($this->get_allowed_types());
 			}
 		}
+	}
+
+	/**
+	 * Generate an unpredictable extraction directory for a ZIP upload.
+	 *
+	 * @return string Absolute temporary directory path
+	 */
+	protected function create_zip_temp_directory_path(): string
+	{
+		return $this->gallery_url->path('import') . 'tmp_' . bin2hex(random_bytes(16)) . '/';
 	}
 
 	/**
