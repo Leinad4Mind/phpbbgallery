@@ -36,19 +36,19 @@
 	<div class="panel">
 		<div class="panel-body">
 			{% if overview|length %}
-				<ul class="topiclist two-long-columns">
-					<li class="header">
-						<dl>
-							<dt><div class="list-inner">{{ lang('GALLERY_MCP_QUEUE_DETAIL') }}</div></dt>
-							<dd class="moderation"><span>{{ lang('ALBUM') }}</span></dd>
-						</dl>
-					</li>
-				</ul>
-				<ul class="topiclist cplist missing-column responsive-show-all">
+				<div class="table-responsive">
+					<table class="footable table table-striped table-bordered table-white table-primary table-hover">
+						<thead>
+							<tr>
+								<th data-class="expand">{{ lang('GALLERY_MCP_QUEUE_DETAIL') }}</th>
+								<th data-hide="phone">{{ lang('ALBUM') }}</th>
+								<th class="table-check">{{ lang('MARK') }}</th>
+							</tr>
+						</thead>
+						<tbody>
 					{% for overview in overview %}
-					<li class="row{% if overview.S_ROW_COUNT is odd %} bg1{% else %} bg2{% endif %}">
-						<dl>
-							<dt>
+							<tr>
+								<td>
 								<div class="list-inner">
 									<span style="display: inline; float: left;">
 										<a href="{{ overview.U_IMAGE_MODERATE_URL }}"><img class="img-responsive" style="max-width: 70px; max-height: 70px;" src="{{ overview.U_IMAGE }}" alt="{{ overview.U_IMAGE_NAME }}"></a>
@@ -58,19 +58,14 @@
 										<span style="margin-left: 10px; vertical-align: middle;">{{ lang('UPLOADED_BY_USER') }}{{ lang('COLON') }} {{ overview.IMAGE_AUTHOR }} &raquo; {{ overview.IMAGE_TIME }}</span>
 									</span>
 								</div>
-							</dt>
-							<dd class="moderation">
-								<span>
-									{{ lang('ALBUM') }}{{ lang('COLON') }} <a href="{{ overview.IMAGE_ALBUM_URL }}">{{ overview.IMAGE_ALBUM }}</a>
-								</span>
-							</dd>
-							<dd class="mark">
-								<input name="action[]" value="{{ overview.U_IMAGE_ID }}" type="checkbox">
-							</dd>
-						</dl>
-					</li>
+								</td>
+								<td>{{ lang('ALBUM') }}{{ lang('COLON') }} <a href="{{ overview.IMAGE_ALBUM_URL }}">{{ overview.IMAGE_ALBUM }}</a></td>
+								<td class="table-check text-center"><input id="overview_{{ overview.U_IMAGE_ID }}" name="action[]" value="{{ overview.U_IMAGE_ID }}" type="checkbox"><label for="overview_{{ overview.U_IMAGE_ID }}"></label></td>
+							</tr>
 					{% endfor %}
-				</ul>
+						</tbody>
+					</table>
+				</div>
 			{% else %}
 				<div class="alert alert-info fade in" role="alert">
 					<i class="fa fa-warning" aria-hidden="true"></i>&nbsp;{{ lang('NO_WAITING_UNAPPROVED_IMAGE') }}
@@ -80,8 +75,8 @@
 		</div>
 		{% if overview|length %}
 		<fieldset class="display-actions">
-			{{ U_ACTION_SELECT }} &nbsp; <input class="button1" name="submit" value="{{ lang('GO') }}" type="submit">
-			<div><a href="#" onclick="marklist('overview_action', 'action', true); return false;">Mark all</a> :: <a href="#" onclick="marklist('overview_action', 'action', false); return false;">Unmark all</a></div>
+			{{ U_ACTION_SELECT }} &nbsp; <input class="button1 btn btn-default" name="submit" value="{{ lang('GO') }}" type="submit">
+			<div><a href="#" onclick="marklist('overview_action', 'action', true); return false;">{{ lang('MARK_ALL') }}</a> :: <a href="#" onclick="marklist('overview_action', 'action', false); return false;">{{ lang('UNMARK_ALL') }}</a></div>
 		</fieldset>
 		{% endif %}
 	</form>

@@ -20,9 +20,9 @@
 						<thead>
 							<tr>
 								<th data-class="expand" class="footable-visible footable-first-column">{{ lang('GALLERY_MCP_QUEUE_DETAIL') }}</th>
-								<th data-hide="phone" class="footable-visible">Tópico&nbsp;{{ lang('GALLERY_MCP_REPO_DETAIL') }}</th>
+								<th data-hide="phone" class="footable-visible">{{ lang('GALLERY_MCP_REPO_DETAIL') }}</th>
 								{% if U_STATUS %}
-									<th data-hide="phone" class="footable-visible footable-last-column">Marcar</th>
+									<th data-hide="phone" class="footable-visible footable-last-column">{{ lang('MARK') }}</th>
 								{% endif %}
 							</tr>
 						</thead>
@@ -50,14 +50,10 @@
 									</div>
 								</td>
 								{% if U_STATUS %}
-									<td class="footable-visible footable-last-column">
-										<dd class="mark">
-											<input name="report[]" value="{{ report_image_open.U_IMAGE_ID }}" type="checkbox">
-										</dd>
-									</td>
+									<td class="table-check footable-visible footable-last-column text-center"><input id="report_{{ report_image_open.U_IMAGE_ID }}" name="report[]" value="{{ report_image_open.U_IMAGE_ID }}" type="checkbox"><label for="report_{{ report_image_open.U_IMAGE_ID }}"></label></td>
 								{% endif %}
-							{% endfor %}
 							</tr>
+							{% endfor %}
 						</tbody>
 					</table>
 				</div>

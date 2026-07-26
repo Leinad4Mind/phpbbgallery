@@ -7,19 +7,19 @@
 			<p> {{ TOTAL_IMAGES_WAITING }} </p>
 			{% endif %}
 			{% if unaproved|length %}
-				<ul class="topiclist two-long-columns">
-					<li class="header">
-						<dl>
-							<dt><div class="list-inner">{{ lang('GALLERY_MCP_QUEUE_DETAIL') }}</div></dt>
-							<dd class="moderation"><span>{{ lang('ALBUM') }}</span></dd>
-						</dl>
-					</li>
-				</ul>
-				<ul class="topiclist cplist missing-column responsive-show-all">
+				<div class="table-responsive">
+					<table class="footable table table-striped table-bordered table-white table-primary table-hover">
+						<thead>
+							<tr>
+								<th data-class="expand">{{ lang('GALLERY_MCP_QUEUE_DETAIL') }}</th>
+								<th data-hide="phone">{{ lang('ALBUM') }}</th>
+								<th class="table-check">{{ lang('MARK') }}</th>
+							</tr>
+						</thead>
+						<tbody>
 					{% for unaproved in unaproved %}
-					<li class="row{% if unaproved.S_ROW_COUNT is odd %} bg1{% else %} bg2{% endif %}">
-						<dl>
-							<dt>
+							<tr>
+								<td>
 								<div class="list-inner">
 									<span style="display: inline; float: left;">
 										<a href="{{ unaproved.U_IMAGE_MODERATE_URL }}"><img class="img-responsive" style="max-width: 70px; max-height: 70px;" src="{{ unaproved.U_IMAGE }}" alt="{{ unaproved.U_IMAGE_NAME }}"></a>
@@ -29,19 +29,14 @@
 										<span style="margin-left: 10px; vertical-align: middle;">{{ lang('UPLOADED_BY_USER') }}{{ lang('COLON') }} {{ unaproved.IMAGE_AUTHOR }} &raquo; {{ unaproved.IMAGE_TIME }}</span>
 									</span>
 								</div>
-							</dt>
-							<dd class="moderation">
-								<span>
-									{{ lang('ALBUM') }}{{ lang('COLON') }} <a href="{{ unaproved.IMAGE_ALBUM_URL }}">{{ unaproved.IMAGE_ALBUM }}</a>
-								</span>
-							</dd>
-							<dd class="mark">
-								<input name="approval[{{ unaproved.IMAGE_ALBUM_ID }}][]" value="{{ unaproved.U_IMAGE_ID }}" type="checkbox">
-							</dd>
-						</dl>
-					</li>
+								</td>
+								<td>{{ lang('ALBUM') }}{{ lang('COLON') }} <a href="{{ unaproved.IMAGE_ALBUM_URL }}">{{ unaproved.IMAGE_ALBUM }}</a></td>
+								<td class="table-check text-center"><input id="approval_{{ unaproved.U_IMAGE_ID }}" name="approval[{{ unaproved.IMAGE_ALBUM_ID }}][]" value="{{ unaproved.U_IMAGE_ID }}" type="checkbox"><label for="approval_{{ unaproved.U_IMAGE_ID }}"></label></td>
+							</tr>
 					{% endfor %}
-				</ul>
+						</tbody>
+					</table>
+				</div>
 			{% else %}
 				<div class="alert alert-info fade in" role="alert">
 					<i class="fa fa-warning" aria-hidden="true"></i>&nbsp;{{ lang('NO_WAITING_UNAPPROVED_IMAGE') }}
@@ -51,9 +46,14 @@
 		</div>
 		{% if unaproved|length %}
 		<fieldset class="display-actions">
-			<input class="button2" name="action[disapprove]" value="{{ lang('DISAPPROVE') }}" type="submit">&nbsp;
-			<input class="button1" name="action[approve]" value="{{ lang('APPROVE') }}" type="submit">
-			<div><a href="#" onclick="marklist('gallery_approve', 'approval', true); return false;">Mark all</a> :: <a href="#" onclick="marklist('gallery_approve', 'approval', false); return false;">Unmark all</a></div>
+			<div class="btn-group">
+				<button class="btn btn-default" name="action[disapprove]" value="{{ lang('DISAPPROVE') }}" type="submit" title="{{ lang('DISAPPROVE') }}"><i class="fa fa-thumbs-down" aria-hidden="true"></i></button>
+				<button class="btn btn-default" name="action[approve]" value="{{ lang('APPROVE') }}" type="submit" title="{{ lang('APPROVE') }}"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>
+			</div>
+			<div class="btn-group">
+				<a href="javascript:void(0);" onclick="marklist('gallery_approve', 'approval', true); return false;" class="btn btn-default" title="{{ lang('MARK_ALL') }}"><i class="fa fa-check-square-o" aria-hidden="true"></i></a>
+				<a href="javascript:void(0);" onclick="marklist('gallery_approve', 'approval', false); return false;" class="btn btn-default" title="{{ lang('UNMARK_ALL') }}"><i class="fa fa-square-o" aria-hidden="true"></i></a>
+			</div>
 		</fieldset>
 		{% endif %}
 	</form>
