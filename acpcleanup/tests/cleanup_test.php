@@ -28,6 +28,7 @@ final class cleanup_test extends TestCase
 			'gallery_config' => 'phpbbgallery\\core\\config',
 			'log' => 'phpbbgallery\\core\\log',
 			'moderate' => 'phpbbgallery\\core\\moderate',
+			'gallery_user' => 'phpbbgallery\\core\\user',
 			'albums_table' => 'string',
 			'images_table' => 'string',
 		];
@@ -126,6 +127,27 @@ final class cleanup_test extends TestCase
 		$this->assertSame([30, 31], $dependencies['comment']->deleted[0]);
 	}
 
+	public function test_personal_gallery_cleanup_updates_image_counts_and_album_links(): void
+	{
+		$db = new fake_db([
+			[
+				['album_id' => 41, 'parent_id' => 0],
+				['album_id' => 42, 'parent_id' => 41],
+			],
+			[
+				['image_id' => 10, 'image_filename' => 'ten.jpg', 'image_status' => 1, 'image_user_id' => 7],
+				['image_id' => 11, 'image_filename' => 'eleven.jpg', 'image_status' => 1, 'image_user_id' => 7],
+				['image_id' => 12, 'image_filename' => 'twelve.jpg', 'image_status' => 0, 'image_user_id' => 8],
+			],
+		]);
+		$dependencies = $this->create_service($db);
+
+		$this->assertSame(['CLEAN_PERSONALS_DONE', 'CLEAN_PERSONALS_BAD_DONE'], $dependencies['service']->delete_pegas([7], [8]));
+		$this->assertSame([[[10, 11, 12], [10 => 'ten.jpg', 11 => 'eleven.jpg', 12 => 'twelve.jpg']]], $dependencies['moderate']->deleted);
+		$this->assertSame([[7, -2]], $dependencies['gallery_user']->image_updates);
+		$this->assertSame([[[7, 8], ['personal_album_id' => 0]]], $dependencies['gallery_user']->user_updates);
+	}
+
 	public function test_prune_deletes_the_selected_rows_and_files(): void
 	{
 		$db = new fake_db([
@@ -196,14 +218,16 @@ final class cleanup_test extends TestCase
 		$config = new \phpbbgallery\core\config();
 		$log = new \phpbbgallery\core\log();
 		$moderate = new \phpbbgallery\core\moderate();
+		$gallery_user = new \phpbbgallery\core\user();
 
 		return [
-			'service' => new cleanup($db, $tool, $user, $language, $block, $album, $comment, $config, $log, $moderate, 'gallery_albums', 'gallery_images'),
+			'service' => new cleanup($db, $tool, $user, $language, $block, $album, $comment, $config, $log, $moderate, $gallery_user, 'gallery_albums', 'gallery_images'),
 			'tool' => $tool,
 			'comment' => $comment,
 			'config' => $config,
 			'log' => $log,
 			'moderate' => $moderate,
+			'gallery_user' => $gallery_user,
 		];
 	}
 }
@@ -212,22 +236,22 @@ final class cleanup_test extends TestCase
 final class fake_db implements \phpbb\db\driver\driver_interface
 {
 	public array $queries = [];
-	private array $rows;
+	private array $row_sets;
 
 	public function __construct(array $rows = [])
 	{
-		$this->rows = $rows;
+		$this->row_sets = isset($rows[0]) && array_is_list($rows[0]) ? $rows : [$rows];
 	}
 
 	public function sql_query(string $sql): object
 	{
 		$this->queries[] = $sql;
-		return new \stdClass();
+		return (object) ['rows' => array_shift($this->row_sets) ?? []];
 	}
 
 	public function sql_fetchrow(object $result): array|false
 	{
-		return array_shift($this->rows) ?? false;
+		return array_shift($result->rows) ?? false;
 	}
 
 	public function sql_freeresult(object $result): void
