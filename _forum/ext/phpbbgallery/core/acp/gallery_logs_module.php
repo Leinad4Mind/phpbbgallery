@@ -149,6 +149,7 @@ class gallery_logs_module
 				{
 					$additional['sort_dir'] = $sort_dir;
 				}
+				$additional['base_url'] = $this->u_action;
 
 				// Build list
 				$log->build_list($filter_log, 0, $page, -1, 0, $additional);

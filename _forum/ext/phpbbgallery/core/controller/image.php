@@ -505,7 +505,7 @@ class image
 
 			//'U_POSTER_PROFILE'		=> $user_data['profile'] ?? '',
 			'U_POSTER_SEARCH'   => $user_data['search'] ?? '',
-			'U_POSTER_PM'       => ($user_id != ANONYMOUS && $this->config['allow_privmsg'] && $this->auth->acl_get('u_sendpm') && (($user_data['allow_pm'] ?? false) || $this->auth->acl_gets('a_', 'm_'))) ? append_sid('./ucp.php', 'i=pm&amp;mode=compose&amp;u=' . $user_id) : '',
+			'U_POSTER_PM'       => ($user_id != ANONYMOUS && $this->config['allow_privmsg'] && $this->auth->acl_get('u_sendpm') && (($user_data['allow_pm'] ?? false) || $this->auth->acl_gets('a_', 'm_'))) ? $this->url->append_sid('phpbb', 'ucp', 'i=pm&amp;mode=compose&amp;u=' . $user_id) : '',
 			'U_POSTER_EMAIL'    => ($this->auth->acl_gets('a_') || !$this->config['board_hide_emails']) ? ($user_data['email'] ?? false) : false,
 			'U_POSTER_JABBER'   => $user_data['jabber'] ?? '',
 
@@ -841,7 +841,7 @@ class image
 		$album_backlink = $this->helper->route('phpbbgallery_core_album', ['album_id' => $image_data['image_album_id']]);
 		$disp_image_data = $image_data;
 		$owner_id = $image_data['image_user_id'];
-		$album_loginlink = './ucp.php?mode=login';
+		$album_loginlink = $this->url->append_sid('phpbb', 'ucp', 'mode=login');
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$has_image_permission = $this->gallery_auth->acl_check('i_edit', $album_id, $album_data['album_user_id']);
 		$has_moderator_permission = $this->gallery_auth->acl_check('m_edit', $album_id, $album_data['album_user_id']);
@@ -1082,7 +1082,7 @@ class image
 		$album_id = $image_data['image_album_id'];
 		$album_data = $this->album->get_info($album_id);
 		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
-		$album_loginlink = './ucp.php?mode=login';
+		$album_loginlink = $this->url->append_sid('phpbb', 'ucp', 'mode=login');
 		$image_backlink = $this->helper->route('phpbbgallery_core_image', ['image_id' => $image_id]);
 		$album_backlink = $this->helper->route('phpbbgallery_core_album', ['album_id' => $image_data['image_album_id']]);
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
@@ -1142,7 +1142,7 @@ class image
 		$album_id = $image_data['image_album_id'];
 		$album_data = $this->album->get_info($album_id);
 		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
-		$album_loginlink = './ucp.php?mode=login';
+		$album_loginlink = $this->url->append_sid('phpbb', 'ucp', 'mode=login');
 		$image_backlink = $this->helper->route('phpbbgallery_core_image', ['image_id' => $image_id]);
 		$album_backlink = $this->helper->route('phpbbgallery_core_album', ['album_id' => $image_data['image_album_id']]);
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);

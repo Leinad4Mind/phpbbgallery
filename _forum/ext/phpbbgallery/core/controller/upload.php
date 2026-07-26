@@ -154,7 +154,7 @@ class upload
 		$this->display->generate_navigation($album_data);
 		add_form_key('gallery');
 		$album_backlink = $this->helper->route('phpbbgallery_core_album', ['album_id' => $album_id]);
-		$album_loginlink = 'ucp.php?mode=login';
+		$album_loginlink = $this->url->append_sid('phpbb', 'ucp', 'mode=login');
 		$error = '';
 		//Let's get authorisation
 		$this->auth->load_user_permissions($this->user->data['user_id']);

@@ -306,8 +306,6 @@ class log
 		else if ($album == -1)
 		{
 			$url_array = [
-				'i' => '-phpbbgallery-core-acp-gallery_logs_module',
-				'mode' => 'main',
 				'lf' => $type
 			];
 			if (isset($additional['sort_days']))
@@ -322,9 +320,10 @@ class log
 			{
 				$url_array['sd'] = $additional['sort_dir'];
 			}
-			$url = http_build_query($url_array,'','&');
+			$url = (string) ($additional['base_url'] ?? '');
+			$url .= '&amp;' . http_build_query($url_array, '', '&amp;');
 
-			$this->pagination->generate_template_pagination(append_sid('index.php?' . $url), 'pagination', 'page', $count, $limit, ($page-1) * $limit);
+			$this->pagination->generate_template_pagination($url, 'pagination', 'page', $count, $limit, ($page-1) * $limit);
 		}
 		else
 		{
