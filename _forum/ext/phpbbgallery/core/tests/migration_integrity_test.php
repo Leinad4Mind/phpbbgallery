@@ -20,6 +20,7 @@ use phpbbgallery\core\migrations\release_3_3_0;
 use phpbbgallery\core\migrations\release_3_4_0;
 use phpbbgallery\core\migrations\resumable_uploads;
 use phpbbgallery\core\migrations\performance_indexes;
+use phpbbgallery\core\migrations\protect_personal_album_profile_field;
 use phpbbgallery\core\migrations\split_ucp_module_settings;
 
 class migration_integrity_test extends TestCase
@@ -36,6 +37,7 @@ class migration_integrity_test extends TestCase
 		release_3_4_0::class,
 		resumable_uploads::class,
 		performance_indexes::class,
+		protect_personal_album_profile_field::class,
 	];
 
 	private array $temp_directories = [];
@@ -81,6 +83,26 @@ class migration_integrity_test extends TestCase
 			['\phpbbgallery\core\migrations\resumable_uploads'],
 			performance_indexes::depends_on()
 		);
+		$this->assertSame(
+			['\phpbbgallery\core\migrations\performance_indexes'],
+			protect_personal_album_profile_field::depends_on()
+		);
+	}
+
+	public function test_personal_album_profile_field_is_not_user_editable(): void
+	{
+		$legacy_migration = (string) file_get_contents(dirname(__DIR__) . '/migrations/release_3_2_1_0.php');
+		$new_migration = (string) file_get_contents(dirname(__DIR__) . '/migrations/protect_personal_album_profile_field.php');
+
+		$this->assertStringContainsString("'field_show_profile'\t=> 0", $legacy_migration);
+		$this->assertStringContainsString('SET field_show_profile = 0', $new_migration);
+		$this->assertStringContainsString("sql_escape('gallery_palbum')", $new_migration);
+
+		foreach (['all', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$template = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/event/overall_footer_after.html');
+			$this->assertStringNotContainsString("prop('disabled', true)", $template, $style);
+		}
 	}
 
 	public function test_profile_contact_url_update_uses_dbal_escaping(): void
@@ -343,6 +365,7 @@ class migration_integrity_test extends TestCase
 			'release_3_4_0.php',
 			'resumable_uploads.php',
 			'performance_indexes.php',
+			'protect_personal_album_profile_field.php',
 		] as $migration)
 		{
 			require_once dirname(__DIR__) . '/migrations/' . $migration;

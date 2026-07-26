@@ -86,7 +86,7 @@ class release_3_2_1_0 extends profilefield_base_migration
 		'field_show_on_reg'	=> 0,
 		'field_show_on_pm'	=> 1,
 		'field_show_on_vt'	=> 1,
-		'field_show_profile'	=> 1,
+		'field_show_profile'	=> 0,
 		'field_show_on_ml'	=> 0,
 		'field_hide'	=> 0,
 		'field_no_view'	=> 0,

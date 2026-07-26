@@ -51,6 +51,62 @@ final class event_main_listener_types_test extends TestCase
 			'core.user_setup' => 'load_language_on_setup',
 			'core.page_header' => 'add_page_header_link',
 			'core.memberlist_view_profile' => 'user_profile_galleries',
+			'core.ucp_profile_info_modify_sql_ary' => 'preserve_personal_album_profile_field',
 		], main_listener::getSubscribedEvents());
+	}
+
+	public function test_profile_update_preserves_the_managed_personal_album(): void
+	{
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->once())
+			->method('sql_query')
+			->with($this->stringContains('WHERE user_id = 9'))
+			->willReturn('result');
+		$db->expects($this->once())
+			->method('sql_fetchrow')
+			->with('result')
+			->willReturn(['personal_album_id' => 31]);
+		$db->expects($this->once())
+			->method('sql_freeresult')
+			->with('result');
+		$user = new \phpbb\user();
+		$user->data = ['user_id' => 9];
+		$listener = $this->listener($db, $user);
+		$event = new \phpbb\event\data([
+			'cp_data' => ['pf_gallery_palbum' => '999'],
+		]);
+
+		$listener->preserve_personal_album_profile_field($event);
+
+		$this->assertSame(31, $event['cp_data']['pf_gallery_palbum']);
+	}
+
+	public function test_profile_update_without_the_managed_field_avoids_a_query(): void
+	{
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->never())->method('sql_query');
+		$event = new \phpbb\event\data(['cp_data' => ['pf_location' => 'Lisbon']]);
+
+		$this->listener($db)->preserve_personal_album_profile_field($event);
+
+		$this->assertSame(['pf_location' => 'Lisbon'], $event['cp_data']);
+	}
+
+	private function listener(\phpbb\db\driver\driver_interface $db, ?\phpbb\user $user = null): main_listener
+	{
+		$user ??= new \phpbb\user();
+		$reflection = new \ReflectionClass(main_listener::class);
+		$listener = $reflection->newInstanceWithoutConstructor();
+		$this->set_property($listener, 'user', $user);
+		$this->set_property($listener, 'db', $db);
+		$this->set_property($listener, 'users_table', 'phpbb_gallery_users');
+
+		return $listener;
+	}
+
+	private function set_property(object $object, string $property, mixed $value): void
+	{
+		$reflection = new \ReflectionProperty($object, $property);
+		$reflection->setValue($object, $value);
 	}
 }

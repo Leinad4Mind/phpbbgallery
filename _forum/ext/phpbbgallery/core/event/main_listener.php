@@ -21,6 +21,7 @@ class main_listener implements EventSubscriberInterface
 			'core.user_setup'						=> 'load_language_on_setup',
 			'core.page_header'						=> 'add_page_header_link',
 			'core.memberlist_view_profile'	       => 'user_profile_galleries',
+			'core.ucp_profile_info_modify_sql_ary' => 'preserve_personal_album_profile_field',
 			//'core.generate_profile_fields_template_data_before'	       => 'profile_fields',
 			//'core.viewonline_overwrite_location'	=> 'add_newspage_viewonline',
 		];
@@ -95,6 +96,33 @@ class main_listener implements EventSubscriberInterface
 				'U_GALLERY'	=> $this->helper->route('phpbbgallery_core_index'),
 			]);
 		}
+	}
+
+	/**
+	 * Prevent UCP profile updates from changing the Gallery-managed album identifier.
+	 *
+	 * @param \phpbb\event\data $event phpBB profile update event
+	 * @return void
+	 */
+	public function preserve_personal_album_profile_field(\phpbb\event\data $event): void
+	{
+		$cp_data = $event['cp_data'];
+		if (!array_key_exists('pf_gallery_palbum', $cp_data))
+		{
+			return;
+		}
+
+		$sql = 'SELECT personal_album_id
+			FROM ' . $this->users_table . '
+			WHERE user_id = ' . (int) $this->user->data['user_id'];
+		$result = $this->db->sql_query($sql);
+		$row = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+
+		$cp_data['pf_gallery_palbum'] = $row && (int) $row['personal_album_id'] > 0
+			? (int) $row['personal_album_id']
+			: '';
+		$event['cp_data'] = $cp_data;
 	}
 	public function user_profile_galleries(\phpbb\event\data $event): void
 	{

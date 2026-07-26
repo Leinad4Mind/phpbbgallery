@@ -150,12 +150,3 @@ head.ready(function () {
 {% INCLUDEJS '@phpbbgallery_core/js/jquery.fileupload-validate.js' %}
 {% INCLUDEJS '@phpbbgallery_core/js/jquery.fileupload-ui.js' %}
 {% endif %}
-
-<!--// Let's destroy all gallery stuff -->
-<script>
-head.ready(function () {
-	(function($) {  // Avoid conflicts with other libraries
-		$('#pf_gallery_palbum').prop('disabled', true);
-	})(jQuery); // Avoid conflicts with other libraries
-});
-</script>
