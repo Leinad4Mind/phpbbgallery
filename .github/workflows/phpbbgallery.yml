@@ -50,6 +50,58 @@ jobs:
       - name: Run PHPUnit
         run: phpunit --configuration '_forum/ext/phpbbgallery/${{ matrix.component }}/phpunit.xml.dist'
 
+  epv:
+    name: 'EPV / ${{ matrix.component }}'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        component: [core, acpcleanup, acpimport, exif]
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Check out phpBB EPV
+        uses: actions/checkout@v6
+        with:
+          repository: phpbb/epv
+          ref: cc230d4a0253d7f6dc0d0c526c2db84ccd831f35
+          path: .epv
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          coverage: none
+          tools: composer:v2
+        env:
+          fail-fast: true
+
+      - name: Install EPV dependencies
+        run: composer install --working-dir=.epv --no-interaction --no-progress --prefer-dist
+
+      - name: Build release package
+        shell: bash
+        run: |
+          release_root="${RUNNER_TEMP}/phpbbgallery-release"
+          package_root="${RUNNER_TEMP}/phpbbgallery-${{ matrix.component }}"
+          mkdir -p "${release_root}" "${package_root}/phpbbgallery"
+          git archive --format=tar HEAD:_forum/ext/phpbbgallery | tar -xf - -C "${release_root}"
+          cp -R "${release_root}/${{ matrix.component }}" "${package_root}/phpbbgallery/${{ matrix.component }}"
+          echo "EPV_PACKAGE_ROOT=${package_root}" >> "${GITHUB_ENV}"
+
+      - name: Run Extension Pre Validator
+        shell: bash
+        run: |
+          epv_output="${RUNNER_TEMP}/epv-${{ matrix.component }}.log"
+          php .epv/src/EPV.php --no-ansi run --dir="${EPV_PACKAGE_ROOT}" | tee "${epv_output}"
+          if grep -q 'Validation: FAILED' "${epv_output}"; then
+            exit 1
+          fi
+          grep -q 'No issues found' "${epv_output}"
+
   quality:
     name: Lint and coding standard
     runs-on: ubuntu-latest

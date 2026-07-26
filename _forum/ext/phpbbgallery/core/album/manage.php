@@ -551,7 +551,7 @@ class manage
 
 		$sql = 'UPDATE ' . $this->contests_table . '
 			SET ' . $this->db->sql_build_array('UPDATE', $contest_data_sql) . '
-			WHERE contest_id = ' . $contest_id;
+			WHERE contest_id = ' . (int) $contest_id;
 		$this->db->sql_query($sql);
 
 		if ($reset_marked_images)
@@ -560,7 +560,7 @@ class manage
 				SET image_contest_rank = 0,
 					image_contest_end = 0,
 					image_contest = ' . (int) \phpbbgallery\core\block::IN_CONTEST . '
-				WHERE image_album_id = ' . $album_id;
+				WHERE image_album_id = ' . (int) $album_id;
 			$this->db->sql_query($sql);
 		}
 	}
