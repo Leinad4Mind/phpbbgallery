@@ -373,21 +373,21 @@
 	<div class="space10"></div>
 	{% for commentrow in commentrow %}
 <a id="comment_{{ commentrow.COMMENT_ID }}"></a>
-	<div class="well well-small {% if commentrow.S_ONLINE %}mobile-online{% endif %}">
+	<div class="well well-small {% if commentrow.S_POSTER_ONLINE %}mobile-online{% endif %}">
 			<div class="row">
 		<div class="postbody col-md-9">
 			<div class="clearfix">
 				<div class="pull-left timepost">
 						<ul class="list-unstyled">
-				<li><a href="{{ commentrow.U_COMMENT }}"><i class="fa fa-file"></i></a> <i class="fa fa-user"></i> {{ lang('POST_BY_AUTHOR') }} <strong>{{ commentrow.POST_AUTHOR_FULL }}</strong></li>
+				<li><a href="{{ commentrow.U_COMMENT }}"><i class="fa fa-file"></i></a> <i class="fa fa-user"></i> {{ lang('POST_BY_AUTHOR') }} <strong>{{ commentrow.POSTER_FULL }}</strong></li>
 				<li><i class="fa fa-clock-o"></i> {{ commentrow.TIME }}</li>
 					</ul>
 			</div>
-		{% if commentrow.U_DELETE or commentrow.U_EDIT or commentrow.U_INFO or commentrow.U_QUOTE %}
+		{% if commentrow.U_DELETE or commentrow.U_EDIT or commentrow.U_WHOIS or commentrow.U_QUOTE %}
 				<ul class="list-inline pull-right hidden-xs">
 						{% if commentrow.U_EDIT %}<li><a class="btn btn-xs btn-default" href="{{ commentrow.U_EDIT }}" title="{{ lang('EDIT_COMMENT') }}"><i class="fa fa-pencil"></i></a></li>{% endif %}
 					{% if commentrow.U_DELETE %}<li><a class="btn btn-xs btn-default" href="{{ commentrow.U_DELETE }}" title="{{ lang('DELETE_COMMENT') }}"><i class="fa fa-times"></i></a></li>{% endif %}
-					{% if commentrow.U_INFO %}<li><a class="btn btn-xs btn-default" href="{{ commentrow.U_INFO }}" title="{{ lang('IP') }}" onclick="popup(this.href, 750, 500); return false;"><i class="icon-moon-ipcontrol"></i></a></li>{% endif %}
+					{% if commentrow.U_WHOIS %}<li><a class="btn btn-xs btn-default" href="{{ commentrow.U_WHOIS }}" title="{{ lang('IP') }}" onclick="popup(this.href, 750, 500); return false;"><i class="icon-moon-ipcontrol"></i></a></li>{% endif %}
 					{% if commentrow.U_QUOTE %}<li><a class="btn btn-xs btn-default" href="{{ commentrow.U_QUOTE }}" title="{{ lang('QUOTE_COMMENT') }}"><i class="fa fa-comment"></i></a></li>{% endif %}
 				</ul>
 					</div>
@@ -395,32 +395,34 @@
 			<div class="space10"></div>
 			<div class="space10"></div>
 			<div class="content">{{ commentrow.TEXT }}</div>
+			{% if commentrow.EDIT_INFO %}<div class="notice">{{ commentrow.EDIT_INFO }}</div>{% endif %}
+			{% if commentrow.SIGNATURE %}<div id="sig{{ commentrow.COMMENT_ID }}" class="signature">{{ commentrow.SIGNATURE }}</div>{% endif %}
 		</div>
 
-		<div class="col-md-3 hidden-phone" id="profile_poster">
+		<div class="col-md-3 hidden-xs" id="profile{{ commentrow.COMMENT_ID }}">
 	<div class="user-profile-tab">
 	<div class="user-profile-avatar">
 		<div class="imageframe imageframe-glow avatar-frame">
 		{% if commentrow.POSTER_AVATAR %}
-			{% if commentrow.U_POST_AUTHOR %}<a href="{{ commentrow.U_POST_AUTHOR }}">{{ commentrow.POSTER_AVATAR }}</a>{% else %}{{ commentrow.POSTER_AVATAR }}{% endif %}
+			{% if commentrow.U_POSTER %}<a href="{{ commentrow.U_POSTER }}">{{ commentrow.POSTER_AVATAR }}</a>{% else %}{{ commentrow.POSTER_AVATAR }}{% endif %}
 		{% endif %}
 		</div>
-			{% if commentrow.RANK_TITLE and commentrow.RANK_IMG %}{{ commentrow.RANK_IMG }}{% endif %}
+			{% if commentrow.POSTER_RANK_IMG %}{{ commentrow.POSTER_RANK_IMG }}{% endif %}
 	</div>
 
 				<div class="user-profile-row">
-							<div class="user-profile-tag">User</div>
+							<div class="user-profile-tag">{{ lang('USERNAME') }}</div>
 						<div class="user-profile-output">
-						{% if not commentrow.U_POST_AUTHOR %}<strong>{{ commentrow.POST_AUTHOR_FULL }}</strong>{% else %}{{ commentrow.POST_AUTHOR_FULL }}{% endif %}
+						{% if not commentrow.U_POSTER %}<strong>{{ commentrow.POSTER_FULL }}</strong>{% else %}{{ commentrow.POSTER_FULL }}{% endif %}
 					</div>
 				</div>
 
 
-				{% if commentrow.RANK_TITLE or commentrow.RANK_IMG %}
+				{% if commentrow.POSTER_RANK_TITLE or commentrow.POSTER_RANK_IMG %}
 				<div class="user-profile-row">
-							<div class="user-profile-tag">Rank</div>
+							<div class="user-profile-tag">{{ lang('RANK') }}</div>
 						<div class="user-profile-output">
-						{{ commentrow.RANK_TITLE }}
+						{{ commentrow.POSTER_RANK_TITLE }}
 					</div>
 				</div>
 				{% endif %}
@@ -453,15 +455,6 @@
 				</div>
 				{% endif %}
 
-				{% if commentrow.GALLERY_IMAGES != '' %}
-				<div class="user-profile-row">
-							<div class="user-profile-tag">{{ lang('IMAGES') }}</div>
-						<div class="user-profile-output">
-						{% if commentrow.U_GALLERY_SEARCH %}<a href="{{ commentrow.U_GALLERY_SEARCH }}">{{ commentrow.GALLERY_IMAGES }}</a>{% else %}{{ commentrow.GALLERY_IMAGES }}{% endif %}
-					</div>
-				</div>
-				{% endif %}
-
 				{% if commentrow.S_PROFILE_FIELD1 %}
 					<!-- Use a construct like this to include admin defined profile fields. Replace FIELD1 with the name of your field. -->
 				<div class="user-profile-row">
@@ -481,36 +474,25 @@
 				</div>
 				{% endfor %}
 
-	{% if not S_IS_BOT %}
-				{% if commentrow.U_PM or commentrow.U_EMAIL or commentrow.U_WWW or commentrow.U_MSN or commentrow.U_ICQ or commentrow.U_YIM or commentrow.U_AIM or commentrow.U_JABBER %}
+	{% if not S_IS_BOT and commentrow.contact|length %}
 		<div class="user-profile-row">
-			<div class="user-profile-tag">Contacts</div>
+			<div class="user-profile-tag">{{ lang('CONTACT') }}</div>
 			<div class="user-profile-output-contact">
 
 				<ul class="list-inline">
-					{% if commentrow.U_PM %}<li><a class="btn btn-xs btn-default" href="{{ commentrow.U_PM }}" title="{{ lang('PRIVATE_MESSAGE') }}"><i class="fa fa-comment"></i></a></li>{% endif %}
-					{% if commentrow.U_EMAIL %}<li><a class="btn btn-xs btn-default" href="{{ commentrow.U_EMAIL }}" title="{{ lang('EMAIL') }}"><i class="fa fa-envelope"></i></a></li>{% endif %}
-					{% if commentrow.U_WWW %}<li><a class="btn btn-xs btn-default" href="{{ commentrow.U_WWW }}" title="{{ lang('VISIT_WEBSITE') }}: {{ postrow.U_WWW }}"><i class="fa fa-globe"></i></a></li>{% endif %}
-					{% if commentrow.U_MSN %}<li><a class="btn btn-xs btn-default" href="{{ commentrow.U_MSN }}" onclick="popup(this.href, 550, 320); return false;" title="{{ lang('MSNM') }}"><i class="fa fa-windows"></i> </a></li>{% endif %}
-					{% if commentrow.U_GALLERY %}<li><a class="btn btn-xs btn-default" href="{{ commentrow.U_GALLERY }}" title="{{ lang('PERSONAL_ALBUM') }}"><i class="fa fa-picture-o"></i></a></li>{% endif %}
-
-							<!-- remove style="display:none;" to make these set visible. All these are obsolete and should be replaced with Twitter,google+, facebook from the phpbb team	-->
-					{% if commentrow.U_ICQ %}<li><a style="display:none;" class="btn btn-xs" href="{{ commentrow.U_ICQ }}" onclick="popup(this.href, 550, 320); return false;" title="{{ lang('ICQ') }}"><i class="fa fa-comment"></i> ICQ</a></li>{% endif %}
-					{% if commentrow.U_YIM %}<li><a style="display:none;" class="btn btn-xs" href="{{ commentrow.U_YIM }}" onclick="popup(this.href, 780, 550); return false;" title="{{ lang('YIM') }}"><i class="fa fa-comment"></i> YIM</a></li>{% endif %}
-					{% if commentrow.U_AIM %}<li><a style="display:none;" class="btn btn-xs" href="{{ commentrow.U_AIM }}" onclick="popup(this.href, 550, 320); return false;" title="{{ lang('AIM') }}"><i class="fa fa-comment"></i> AIM</a></li>{% endif %}
-					{% if commentrow.U_JABBER %}<li><a style="display:none;" class="btn btn-xs" href="{{ commentrow.U_JABBER }}" onclick="popup(this.href, 550, 320); return false;" title="{{ lang('JABBER') }}"><i class="fa fa-comment"></i> Jabber</a></li>{% endif %}
-							<!-- remove style="display:none;" to make these set visible. All these are obsolete and should be replaced with Twitter,google+, facebook from the phpbb team	-->
+					{% for contact in commentrow.contact %}
+					<li><a class="btn btn-xs btn-default" href="{% if contact.U_CONTACT %}{{ contact.U_CONTACT }}{% else %}{{ commentrow.U_POSTER }}{% endif %}" title="{{ contact.NAME }}"{% if contact.ID == 'jabber' %} onclick="popup(this.href, 750, 320); return false;"{% endif %}><i class="icon-moon-{{ contact.ID }}"></i></a></li>
+					{% endfor %}
 				</ul>
 
 			</div>
 		</div>
-			{% endif %}
 		{% endif %}
 
 	</div>
  </div>
 			</div>
-		{% if commentrow.S_ONLINE %}
+		{% if commentrow.S_POSTER_ONLINE %}
 		<div class="ribbon-wrapper small hidden-xs"><div class="ribbon on-line">{{ lang('ONLINE') }}</div></div>
 		{% endif %}
 	</div>

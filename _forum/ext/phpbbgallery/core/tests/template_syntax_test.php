@@ -334,6 +334,21 @@ final class template_syntax_test extends TestCase
 		}
 	}
 
+	public function test_bootstrap_comment_profiles_use_the_image_controller_contract(): void
+	{
+		$core_root = dirname(__DIR__);
+		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$source = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/viewimage_body.html');
+			foreach (['POSTER_FULL', 'U_POSTER', 'POSTER_RANK_TITLE', 'POSTER_RANK_IMG', 'S_POSTER_ONLINE', 'EDIT_INFO', 'SIGNATURE', 'contact'] as $variable)
+			{
+				$this->assertStringContainsString('commentrow.' . $variable, $source, $style . ': ' . $variable);
+			}
+			$this->assertDoesNotMatchRegularExpression('/commentrow\.(?:POST_AUTHOR_FULL|U_POST_AUTHOR|RANK_TITLE|RANK_IMG|S_ONLINE|GALLERY_IMAGES|U_(?:PM|EMAIL|WWW|MSN|ICQ|YIM|AIM|JABBER))\b/', $source, $style);
+			$this->assertStringNotContainsString('<p class="author">', $source, $style);
+		}
+	}
+
 	#[IgnoreDeprecations]
 	public function test_modernized_templates_parse_with_packaged_twig(): void
 	{
