@@ -435,7 +435,7 @@ class display
 		}
 		else
 		{
-			$sql_where = 'a.left_id > ' . $root_data['left_id'] . ' AND a.left_id < ' . $root_data['right_id'] . ' AND a.album_user_id = ' . $root_data['album_user_id'];
+			$sql_where = 'a.left_id > ' . (int) $root_data['left_id'] . ' AND a.left_id < ' . (int) $root_data['right_id'] . ' AND a.album_user_id = ' . (int) $root_data['album_user_id'];
 		}
 
 		$sql_array = [
@@ -445,7 +445,7 @@ class display
 			'LEFT_JOIN'	=> [
 				[
 					'FROM'	=> [$this->table_tracking => 'at'],
-					'ON'	=> 'at.user_id = ' . $this->user->data['user_id'] . ' AND a.album_id = at.album_id'
+					'ON'	=> 'at.user_id = ' . (int) $this->user->data['user_id'] . ' AND a.album_id = at.album_id'
 				]
 			],
 

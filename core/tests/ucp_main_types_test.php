@@ -89,4 +89,14 @@ final class ucp_main_types_test extends TestCase
 			'num_pegas' => 0,
 		], $sets);
 	}
+
+	public function test_album_tree_queries_use_normalized_integer_boundaries(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/ucp/main_module.php');
+
+		$this->assertStringContainsString('$moving_parent_id = (int) $moving[\'parent_id\'];', $source);
+		$this->assertStringContainsString('$target_left_id = (int) $target[\'left_id\'];', $source);
+		$this->assertStringContainsString('$user_id = (int) $user->data[\'user_id\'];', $source);
+		$this->assertStringNotContainsString('sizeof($target)', $source);
+	}
 }

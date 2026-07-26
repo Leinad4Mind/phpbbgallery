@@ -431,8 +431,8 @@ class main_module
 
 				$sql = 'UPDATE ' . $albums_table . '
 					SET right_id = right_id + 2
-					WHERE ' . $row['left_id'] . ' BETWEEN left_id AND right_id
-						AND album_user_id = ' . $album_data['album_user_id'];
+					WHERE ' . (int) $row['left_id'] . ' BETWEEN left_id AND right_id
+						AND album_user_id = ' . (int) $album_data['album_user_id'];
 				$db->sql_query($sql);
 
 				$album_data['left_id'] = $row['right_id'];
@@ -735,9 +735,9 @@ class main_module
 				$album[] = $row;
 				if ($row['album_id'] == $album_id)
 				{
-					$left_id = $row['left_id'];
-					$right_id = $row['right_id'];
-					$parent_id = $row['parent_id'];
+					$left_id = (int) $row['left_id'];
+					$right_id = (int) $row['right_id'];
+					$parent_id = (int) $row['parent_id'];
 				}
 			}
 			$db->sql_freeresult($result);
@@ -927,43 +927,49 @@ class main_module
 			trigger_error('FORM_INVALID');
 		}
 		$moving = $phpbb_ext_gallery_core_album->get_info($album_id);
+		$moving_parent_id = (int) $moving['parent_id'];
+		$moving_left_id = (int) $moving['left_id'];
+		$moving_right_id = (int) $moving['right_id'];
+		$user_id = (int) $user->data['user_id'];
 
 		$sql = 'SELECT album_id, left_id, right_id
 			FROM ' . $albums_table . "
-			WHERE parent_id = {$moving['parent_id']}
-				AND album_user_id = {$user->data['user_id']}
-				AND " . (($move === 'move_up') ? "right_id < {$moving['right_id']} ORDER BY right_id DESC" : "left_id > {$moving['left_id']} ORDER BY left_id ASC");
+			WHERE parent_id = $moving_parent_id
+				AND album_user_id = $user_id
+				AND " . (($move === 'move_up') ? "right_id < $moving_right_id ORDER BY right_id DESC" : "left_id > $moving_left_id ORDER BY left_id ASC");
 		$result = $db->sql_query_limit($sql, 1);
 		$target = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
-		if (!sizeof($target))
+		if (!$target)
 		{
 			// The album is already on top or bottom
 			return false;
 		}
+		$target_left_id = (int) $target['left_id'];
+		$target_right_id = (int) $target['right_id'];
 
 		if ($move === 'move_up')
 		{
-			$left_id = $target['left_id'];
-			$right_id = $moving['right_id'];
+			$left_id = $target_left_id;
+			$right_id = $moving_right_id;
 
-			$diff_up = $moving['left_id'] - $target['left_id'];
-			$diff_down = $moving['right_id'] + 1 - $moving['left_id'];
+			$diff_up = $moving_left_id - $target_left_id;
+			$diff_down = $moving_right_id + 1 - $moving_left_id;
 
-			$move_up_left = $moving['left_id'];
-			$move_up_right = $moving['right_id'];
+			$move_up_left = $moving_left_id;
+			$move_up_right = $moving_right_id;
 		}
 		else
 		{
-			$left_id = $moving['left_id'];
-			$right_id = $target['right_id'];
+			$left_id = $moving_left_id;
+			$right_id = $target_right_id;
 
-			$diff_up = $moving['right_id'] + 1 - $moving['left_id'];
-			$diff_down = $target['right_id'] - $moving['right_id'];
+			$diff_up = $moving_right_id + 1 - $moving_left_id;
+			$diff_down = $target_right_id - $moving_right_id;
 
-			$move_up_left = $moving['right_id'] + 1;
-			$move_up_right = $target['right_id'];
+			$move_up_left = $moving_right_id + 1;
+			$move_up_right = $target_right_id;
 		}
 
 		// Now do the dirty job
@@ -980,13 +986,13 @@ class main_module
 			WHERE
 				left_id BETWEEN {$left_id} AND {$right_id}
 				AND right_id BETWEEN {$left_id} AND {$right_id}
-				AND album_user_id = {$user->data['user_id']}";
+				AND album_user_id = $user_id";
 		$db->sql_query($sql);
 
 		$cache->destroy('sql', $albums_table);
 		$cache->destroy('sql', $users_table);
 		$cache->destroy('_albums');
-		$phpbb_gallery_url->redirect('phpbb', 'ucp', 'i=-phpbbgallery-core-ucp-main_module&amp;mode=manage_albums&amp;action=manage&amp;parent_id=' . $moving['parent_id']);
+		$phpbb_gallery_url->redirect('phpbb', 'ucp', 'i=-phpbbgallery-core-ucp-main_module&amp;mode=manage_albums&amp;action=manage&amp;parent_id=' . $moving_parent_id);
 
 		return true;
 	}

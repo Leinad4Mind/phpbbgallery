@@ -48,7 +48,8 @@ class release_3_2_1_0 extends profilefield_base_migration
 		$base_uri = generate_board_url();
 		$base_uri .= ($config['enable_mod_rewrite'] == 0 ? '/app.php' : '');
 		$base_uri .= '/gallery/album/%s';
-		$sql = 'UPDATE ' . PROFILE_FIELDS_TABLE . ' SET field_contact_url = \'' . $base_uri . '\' WHERE field_name = \'gallery_palbum\'';
+		$sql_ary = ['field_contact_url' => $base_uri];
+		$sql = 'UPDATE ' . PROFILE_FIELDS_TABLE . ' SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . ' WHERE field_name = \'' . $this->db->sql_escape('gallery_palbum') . '\'';
 		$this->db->sql_query($sql);
 	}
 
