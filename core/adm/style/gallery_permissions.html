@@ -2,7 +2,7 @@
 <script type="text/javascript">
 function toggle_permissions_panel(c_mask, v_mask, cat)
 {
-	{% for c_rows in c_rows %}
+	{% for c_rows in c_rows|default([]) %}
 		var block = document.getElementById('options' + c_mask + v_mask + {{ c_rows.S_ROW_COUNT }});
 		block.style.display = "none";
 		var old_tab = document.getElementById('tab' + c_mask + v_mask + {{ c_rows.S_ROW_COUNT }});
