@@ -49,4 +49,18 @@ final class workflow_regression_test extends TestCase
 			$this->assertStringContainsString('display: none;', $template, $template_path);
 		}
 	}
+
+	public function test_phpbb_entrypoints_use_configured_url_helpers(): void
+	{
+		$gallery_root = dirname(__DIR__);
+		$image = (string) file_get_contents($gallery_root . '/controller/image.php');
+		$upload = (string) file_get_contents($gallery_root . '/controller/upload.php');
+		$log = (string) file_get_contents($gallery_root . '/log.php');
+
+		$this->assertStringNotContainsString('./ucp.php', $image);
+		$this->assertStringNotContainsString('ucp.php?mode=login', $upload);
+		$this->assertStringNotContainsString('append_sid(\'index.php?', $log);
+		$this->assertStringContainsString('$this->url->append_sid(\'phpbb\', \'ucp\'', $image);
+		$this->assertStringContainsString('$this->url->append_sid(\'phpbb\', \'ucp\'', $upload);
+	}
 }
