@@ -20,6 +20,9 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Made unfinished uploads resumable before accepting new files, added tokenized cancellation with server-side ownership checks, and isolated anonymous drafts with a one-way phpBB session fingerprint.
 - Restricted aggregate subtree image counts to descendants that pass list, zebra, i_view, and per-album moderation checks, while reusing the album query already performed for the page.
 - Replaced substring-based hotlink checks with fail-closed HTTP(S) hostname validation and exact domain/subdomain boundary matching.
+- Enforced the Gallery search permission gate before executing submitted searches, intersected requested album filters with `i_view`, and excluded unapproved and orphaned images from public results.
+- Revalidated personal-album ownership when selecting parents and deleting albums, preventing crafted UCP identifiers from reaching another album or the personal root.
+- Restricted ACP Cleanup pruning to explicitly supported columns and normalized every filter value before constructing DBAL queries.
 
 ### Changed
 
@@ -67,6 +70,11 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Consolidated shared JavaScript under the phpbbgallery_core template namespace and corrected the polaroid asset reference for prosilver, BBOOTS, and FLATBOOTS.
 - Updated the required jQuery UI Widget Factory from 1.11.4 to 1.14.2 and documented SHA-256 pins for every retained third-party upload asset.
 - Reduced the legacy Blueimp upload snapshot to the image-only runtime modules used by Gallery.
+- Prefixed every Gallery-owned template event with `phpbbgallery_` and updated the EXIF listeners in all supported styles.
+- Added the missing prosilver template counterparts, split its monolithic UCP template into reusable partials, and retained the independent BBOOTS and FLATBOOTS layouts.
+- Moved Gallery theme assets into the shared `all` style, loaded them for every style, removed the unused `gallery-color.css`, and added native EXIF event coverage for BBOOTS.
+- Completed the Portuguese AO90/pre-AO90 separation, rewrote the Brazilian Portuguese catalogs for Brazilian usage, and added Spanish and Dutch translations to ACP Cleanup, ACP Import, and EXIF.
+- Reduced the legacy installation catalogs to the sole runtime uninstall message, removing obsolete `Gallery-MOD`, phpBB2 table-prefix, and converter-era text.
 
 ### Fixed
 
@@ -102,12 +110,30 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Made ACL recipient resolution reject unsupported permissions and missing albums, handle empty roles and groups safely, and release foe-query results.
 - Routed ACP album update detection through phpBB's request service instead of reading the POST superglobal directly.
 - Routed ACP Cleanup pruning and cancellation flags through phpBB's request service, guarded failed upload-directory handles, initialized confirmation labels, and provided a deterministic filename-encoding fallback.
+- Restored ACP Import selections, ACP Gallery log deletion, paginated UCP subscriptions, and the user-controlled EXIF details toggle after their PHP/Twig modernization regressions.
+- Returned controlled not-found responses for missing image rows throughout image, comment, moderation, deletion, and notification paths.
+- Preserved Unicode filenames during ACP Cleanup, guarded missing personal-gallery rows, and reset stale newest-gallery statistics without indexing `false` results.
+- Removed double escaping from new Gallery log records while retaining a compatibility decoder for previously stored descriptions and preserving legitimate backslashes.
+- Corrected rating album discovery to use `image_album_id` and surfaced invalid guest upload names through the active error collection.
+- Rendered comments from deleted users without undefined offsets and removed the dead secondary user cache branch.
+- Initialized ACP/UCP maintenance state, guarded failed album lookups, and prevented partial personal-album rows from being offered for deletion.
+- Clamped album, index, report, and UCP page values before calculating offsets and made empty Gallery URL paths resolve safely.
+- Recognized both `.jpg` and `.jpeg` files in EXIF processing and watermark cleanup.
+- Normalized database-derived identifiers before DBAL interpolation and used `sql_build_array()` for the profile-field migration update.
+- Built Gallery entrypoints from the configured phpBB root and PHP extension, and moved controller-visible fallback text into the language catalogs.
+- Removed unreachable import, album, multipart upload, and profile-listener branches left by the legacy implementation.
 
 ### Performance
 
 - Added compound indexes for album image listings and report lookups by image, album, and status.
 - Removed view-counter writes from direct binary image requests, keeping session-aware page visits as the single source of view metrics.
 - Applied private Last-Modified revalidation to image responses while preventing browser storage for guests and error responses.
+- Replaced per-album notification watch inserts with DBAL multi-inserts and grouped duplicate identifiers before writing.
+- Batched comment and rating statistic changes by image, preloaded moderation album names, and inserted ACL role memberships in sets.
+- Batched ACP filesystem-size repairs, cached last-image repairs, and image-count resynchronization instead of issuing updates per image or album.
+- Recalculated contest winners for up to 100 albums per query set with deterministic tie-breaking and explicit stale-rank cleanup.
+- Moved all descendants of a deleted album as one contiguous nested-set interval, preserving their hierarchy and rejecting invalid destinations before tree mutation.
+- Removed the unused custom-profile-field query and its service dependencies from the profile event listener.
 
 ### Tests
 
@@ -156,6 +182,8 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added permanent ACP/UCP module-metadata tests covering public contracts, expected modes, authorization guards, and categories.
 - Validated the ZIP upload, ACP Import, authorization, individual-move security, ACP rating-reset, ACP personal-resync, UCP CSRF, orphan-upload, resumable-upload, subtree-count, hotlink, notification-lifecycle, migration-ordering, purge-safety, database-index, view-counter, browser-cache, package-hygiene, JavaScript-asset, and language-catalog phases with PHP 7.4, 8.1, 8.2, 8.4, and 8.5.
 - Completed isolated phpBB 3.3.12 and SQLite lifecycle smoke tests on PHP 8.1 covering clean installation, enable, disable, purge, reinstall, preserved ACP Import backups, and upgrade from the previous Gallery snapshot with all migrations applied.
+- Added regression tests for restored workflows, search authorization, personal-album ownership, cleanup filters/state, missing images, log compatibility, guest uploads, deleted commenters, pagination, path handling, and JPEG EXIF files.
+- Added query-shape and behavior tests for notification, statistics, role, filesize, last-image, deletion, contest, and nested-set batching; the Core suite now contains 315 tests and 6275 assertions.
 
 ## [3.3.0]
 ### Added
