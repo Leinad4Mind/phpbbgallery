@@ -98,6 +98,16 @@ final class template_syntax_test extends TestCase
 		}
 	}
 
+	public function test_every_upload_selector_accepts_webp(): void
+	{
+		$core_root = dirname(__DIR__);
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$posting = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/posting_body.html');
+			$this->assertMatchesRegularExpression('/<input[^>]+id="files"[^>]+accept="[^"]*image\/webp[^"]*"/', $posting, $style);
+		}
+	}
+
 	public function test_bootstrap_moderation_empty_states_use_theme_alerts(): void
 	{
 		$core_root = dirname(__DIR__);

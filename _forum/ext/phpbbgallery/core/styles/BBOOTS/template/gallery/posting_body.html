@@ -84,7 +84,7 @@ head.ready(function () {
 				{% endif %}
 				<div>
 					<label class="label label-warning" for="image_file">{{ lang('IMAGES') }}</label>
-					<input class="btn btn-sm btn-default inputbox autowidth dz-hidden-input" type="file" name="files[]" id="files" size="52" multiple accept="image/jpeg,image/png,image/gif,application/zip" style="display: unset;"/>
+					<input class="btn btn-sm btn-default inputbox autowidth dz-hidden-input" type="file" name="files[]" id="files" size="52" multiple accept="image/jpeg,image/png,image/gif,image/webp,application/zip" style="display: unset;"/>
 				</div>
 				{% for upload_image in upload_image|default([]) %}
 					<div id="upload_field_{{ upload_image.S_ROW_COUNT }}">
