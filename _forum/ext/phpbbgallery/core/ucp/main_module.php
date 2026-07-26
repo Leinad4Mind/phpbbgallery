@@ -1121,6 +1121,7 @@ class main_module
 				'UPLOADER'			=> ($row['image_contest'] && !$phpbb_ext_gallery_core_auth->acl_check('m_status', $row['image_album_id'])) ? $this->language->lang('CONTEST_USERNAME') : get_username_string('full', $row['image_user_id'], $row['image_username'], $row['image_user_colour']),
 				'LAST_COMMENT_BY'	=> get_username_string('full', $row['comment_user_id'], $row['comment_username'], $row['comment_user_colour']),
 				'COMMENT'			=> $row['image_comments'],
+				'LAST_COMMENT'		=> $row['image_comments'] ? generate_text_for_display($row['comment'], $row['comment_uid'], $row['comment_bitfield'], 7) : '',
 				'LAST_COMMENT_TIME'	=> $user->format_date($row['comment_time']),
 				'IMAGE_TIME'		=> $user->format_date($row['image_time']),
 				'UC_IMAGE_NAME'		=> $phpbb_ext_gallery_core_image->generate_link('image_name', $phpbb_ext_gallery_config->get('link_image_name'), $row['image_id'], $row['image_name'], $row['album_id']),
