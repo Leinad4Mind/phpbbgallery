@@ -105,6 +105,20 @@ class migration_integrity_test extends TestCase
 		}
 	}
 
+	public function test_core_migration_only_creates_core_administrator_permissions(): void
+	{
+		$migration = (new \ReflectionClass(release_1_2_0::class))->newInstanceWithoutConstructor();
+		$permissions = array_values(array_filter($migration->update_data(), static function (array $step): bool
+		{
+			return $step[0] === 'permission.add';
+		}));
+
+		$this->assertSame([
+			['permission.add', ['a_gallery_manage', true, 'a_board']],
+			['permission.add', ['a_gallery_albums', true, 'a_board']],
+		], $permissions);
+	}
+
 	public function test_profile_contact_url_update_uses_dbal_escaping(): void
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/migrations/release_3_2_1_0.php');

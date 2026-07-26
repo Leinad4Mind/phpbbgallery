@@ -63,6 +63,18 @@ namespace phpbbgallery\acpimport\tests
 			$this->assertSame('pending image', file_get_contents($backups[0] . '/pending.jpg'));
 		}
 
+		public function test_migration_installs_the_import_permission_and_protected_module(): void
+		{
+			$migration = (new \ReflectionClass(m1_init::class))->newInstanceWithoutConstructor();
+			$steps = $migration->update_data();
+
+			$this->assertSame(['\phpbbgallery\core\migrations\release_1_2_0'], m1_init::depends_on());
+			$this->assertSame(['permission.add', ['a_gallery_import', true, 'a_board']], $steps[0]);
+			$this->assertSame('module.add', $steps[1][0]);
+			$this->assertSame('\phpbbgallery\acpimport\acp\main_module', $steps[1][1][2]['module_basename']);
+			$this->assertSame('ext_phpbbgallery/acpimport && acl_a_gallery_import', $steps[1][1][2]['module_auth']);
+		}
+
 		public function test_archive_is_idempotent_without_a_live_import_directory(): void
 		{
 			$root = $this->create_temporary_directory();

@@ -23,3 +23,7 @@ if (!function_exists('utf8_htmlspecialchars'))
 
 require_once dirname(__DIR__) . '/acp/import_storage.php';
 require_once dirname(__DIR__) . '/acp/main_module.php';
+require_once dirname(__DIR__, 4) . '/vendor/symfony/event-dispatcher/EventSubscriberInterface.php';
+require_once dirname(__DIR__, 4) . '/vendor/symfony/event-dispatcher/Event.php';
+require_once dirname(__DIR__, 4) . '/phpbb/event/data.php';
+require_once dirname(__DIR__) . '/event/main_listener.php';

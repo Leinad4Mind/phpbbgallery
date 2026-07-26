@@ -26,7 +26,6 @@ class release_1_2_0 extends migration
 		return [
 			['permission.add', ['a_gallery_manage', true, 'a_board']],
 			['permission.add', ['a_gallery_albums', true, 'a_board']],
-			['permission.add', ['a_gallery_cleanup', true, 'a_board']],
 
 			// ACP
 			['module.add', ['acp', 'ACP_CAT_DOT_MODS', 'PHPBB_GALLERY']],
@@ -107,6 +106,8 @@ class release_1_2_0 extends migration
 			// Remove permissions added
 			['permission.remove', ['a_gallery_manage']],
 			['permission.remove', ['a_gallery_albums']],
+			// Older Core releases created this add-on permission. Remove that legacy
+			// option when Core is purged, after dependent add-ons have been removed.
 			['permission.remove', ['a_gallery_cleanup']],
 
 			// Remove config keys you installed
