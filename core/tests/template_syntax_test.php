@@ -98,6 +98,21 @@ final class template_syntax_test extends TestCase
 		}
 	}
 
+	public function test_bootstrap_moderation_empty_states_use_theme_alerts(): void
+	{
+		$core_root = dirname(__DIR__);
+		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			foreach (['moderate_approve_queue.html', 'moderate_album_overview.html'] as $template)
+			{
+				$source = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/' . $template);
+				$this->assertStringContainsString('class="alert alert-info fade in"', $source, $style . '/' . $template);
+				$this->assertStringContainsString("lang('NO_WAITING_UNAPPROVED_IMAGE')", $source, $style . '/' . $template);
+				$this->assertStringNotContainsString("<p> {{ lang('NO_WAITING_UNAPPROVED_IMAGE') }}", $source, $style . '/' . $template);
+			}
+		}
+	}
+
 	#[IgnoreDeprecations]
 	public function test_modernized_templates_parse_with_packaged_twig(): void
 	{
