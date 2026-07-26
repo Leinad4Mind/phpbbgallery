@@ -34,6 +34,40 @@ class gallery_lifecycle_test extends \phpbb_functional_test_case
 	}
 
 	/**
+	 * Enable a component while accepting the Gallery's translated success message.
+	 *
+	 * The phpBB helper requires the generic EXTENSION_ENABLE_SUCCESS text, but
+	 * Gallery components intentionally replace that text with component-specific
+	 * guidance. All activation requests and continuation steps remain identical
+	 * to the core functional helper.
+	 *
+	 * @param string $extension
+	 */
+	public function install_ext($extension): void
+	{
+		$this->add_lang('acp/extensions');
+		$this->login();
+		$this->admin_login();
+
+		$ext_path = str_replace('/', '%2F', $extension);
+		$crawler = self::request('GET', 'adm/index.php?i=acp_extensions&mode=main&action=enable_pre&ext_name=' . $ext_path . '&sid=' . $this->sid);
+		$this->assertGreaterThan(1, $crawler->filter('div.main fieldset.submit-buttons input')->count());
+
+		$form = $crawler->selectButton($this->lang('EXTENSION_ENABLE'))->form();
+		$crawler = self::submit($form);
+		$meta_refresh = $crawler->filter('meta[http-equiv="refresh"]');
+		while ($meta_refresh->count())
+		{
+			preg_match('#url=.+/(adm.+)#', $meta_refresh->attr('content'), $matches);
+			$crawler = self::request('POST', $matches[1]);
+			$meta_refresh = $crawler->filter('meta[http-equiv="refresh"]');
+		}
+
+		$this->assertNotSame('', trim($crawler->filter('div.successbox')->text()));
+		$this->logout();
+	}
+
+	/**
 	 * Test install, permissions, import, resumable upload, update and purge.
 	 */
 	public function test_gallery_end_to_end_lifecycle(): void
@@ -73,12 +107,12 @@ class gallery_lifecycle_test extends \phpbb_functional_test_case
 	private function assert_components_are_installed(): void
 	{
 		$db = $this->get_db();
-		$sql = 'SELECT COUNT(ext_name)
+		$sql = 'SELECT COUNT(ext_name) AS total
 			FROM ' . EXT_TABLE . '
 			WHERE ' . $db->sql_in_set('ext_name', self::COMPONENTS) . '
 				AND ext_active = 1';
 		$result = $db->sql_query($sql);
-		$this->assertSame(count(self::COMPONENTS), (int) $db->sql_fetchfield(''));
+		$this->assertSame(count(self::COMPONENTS), (int) $db->sql_fetchfield('total'));
 		$db->sql_freeresult($result);
 
 		$this->assertSame('3.4.0', $this->config_value('phpbb_gallery_version'));
@@ -225,11 +259,11 @@ class gallery_lifecycle_test extends \phpbb_functional_test_case
 		$form = $crawler->selectButton($this->lang('CANCEL'))->form();
 		self::submit($form);
 
-		$sql = 'SELECT COUNT(image_id)
+		$sql = 'SELECT COUNT(image_id) AS total
 			FROM phpbb_gallery_images
 			WHERE image_id = ' . $image_id;
 		$result = $db->sql_query($sql);
-		$this->assertSame(0, (int) $db->sql_fetchfield(''));
+		$this->assertSame(0, (int) $db->sql_fetchfield('total'));
 		$db->sql_freeresult($result);
 		$this->assertFileDoesNotExist($file_path);
 	}
@@ -260,11 +294,11 @@ class gallery_lifecycle_test extends \phpbb_functional_test_case
 		$this->install_ext('phpbbgallery/core');
 		$this->assertSame('3.4.0', $this->config_value('phpbb_gallery_version'));
 
-		$sql = "SELECT COUNT(migration_name)
+		$sql = "SELECT COUNT(migration_name) AS total
 			FROM phpbb_migrations
 			WHERE migration_name = '" . $db->sql_escape($migration) . "'";
 		$result = $db->sql_query($sql);
-		$this->assertSame(1, (int) $db->sql_fetchfield(''));
+		$this->assertSame(1, (int) $db->sql_fetchfield('total'));
 		$db->sql_freeresult($result);
 	}
 
@@ -274,19 +308,19 @@ class gallery_lifecycle_test extends \phpbb_functional_test_case
 	private function assert_gallery_is_purged(string $phpbb_root_path): void
 	{
 		$db = $this->get_db();
-		$sql = "SELECT COUNT(config_name)
+		$sql = "SELECT COUNT(config_name) AS total
 			FROM " . CONFIG_TABLE . "
 			WHERE config_name LIKE 'phpbb_gallery_%'";
 		$result = $db->sql_query($sql);
-		$this->assertSame(0, (int) $db->sql_fetchfield(''));
+		$this->assertSame(0, (int) $db->sql_fetchfield('total'));
 		$db->sql_freeresult($result);
 
-		$sql = "SELECT COUNT(name)
+		$sql = "SELECT COUNT(name) AS total
 			FROM sqlite_master
 			WHERE type = 'table'
 				AND name LIKE 'phpbb_gallery_%'";
 		$result = $db->sql_query($sql);
-		$this->assertSame(0, (int) $db->sql_fetchfield(''));
+		$this->assertSame(0, (int) $db->sql_fetchfield('total'));
 		$db->sql_freeresult($result);
 
 		$this->assertSame(0, $this->acl_option_count('a_gallery_manage'));
@@ -332,11 +366,11 @@ class gallery_lifecycle_test extends \phpbb_functional_test_case
 	private function acl_option_count(string $permission): int
 	{
 		$db = $this->get_db();
-		$sql = "SELECT COUNT(auth_option_id)
+		$sql = "SELECT COUNT(auth_option_id) AS total
 			FROM " . ACL_OPTIONS_TABLE . "
 			WHERE auth_option = '" . $db->sql_escape($permission) . "'";
 		$result = $db->sql_query($sql);
-		$count = (int) $db->sql_fetchfield('');
+		$count = (int) $db->sql_fetchfield('total');
 		$db->sql_freeresult($result);
 
 		return $count;
