@@ -199,7 +199,7 @@ class ucp_csrf_security_test extends TestCase
 	private function reorder_templates(): array
 	{
 		return [
-			dirname(__DIR__) . '/styles/prosilver/template/gallery/ucp_gallery.html',
+			dirname(__DIR__) . '/styles/prosilver/template/gallery/ucp_gallery_manage_subalbuns.html',
 			dirname(__DIR__) . '/styles/BBOOTS/template/gallery/ucp_gallery_manage_subalbuns.html',
 			dirname(__DIR__) . '/styles/FLATBOOTS/template/gallery/ucp_gallery_manage_subalbuns.html',
 		];
@@ -208,7 +208,7 @@ class ucp_csrf_security_test extends TestCase
 	private function subscription_templates(): array
 	{
 		return [
-			dirname(__DIR__) . '/styles/prosilver/template/gallery/ucp_gallery.html',
+			dirname(__DIR__) . '/styles/prosilver/template/gallery/ucp_gallery_manage_subscriptions.html',
 			dirname(__DIR__) . '/styles/BBOOTS/template/gallery/ucp_gallery_manage_subscriptions.html',
 			dirname(__DIR__) . '/styles/FLATBOOTS/template/gallery/ucp_gallery_manage_subscriptions.html',
 		];

@@ -22,7 +22,7 @@ final class template_syntax_test extends TestCase
 	public function test_modernized_templates_use_only_native_twig_syntax(): void
 	{
 		$template_paths = $this->template_paths();
-		$this->assertCount(138, $template_paths);
+		$this->assertCount(142, $template_paths);
 
 		foreach ($template_paths as $template_path)
 		{
@@ -47,6 +47,40 @@ final class template_syntax_test extends TestCase
 				$source,
 				$template_path . ' uses an unprefixed custom event'
 			);
+		}
+	}
+
+	public function test_style_specific_templates_have_base_counterparts(): void
+	{
+		$core_root = dirname(__DIR__);
+		$base_directories = [
+			$core_root . '/styles/prosilver/template',
+			$core_root . '/styles/all/template',
+		];
+
+		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$style_root = $core_root . '/styles/' . $style . '/template';
+			$iterator = new \RecursiveIteratorIterator(
+				new \RecursiveDirectoryIterator($style_root, \FilesystemIterator::SKIP_DOTS)
+			);
+
+			foreach ($iterator as $file)
+			{
+				if (!$file->isFile())
+				{
+					continue;
+				}
+
+				$relative_path = substr($file->getPathname(), strlen($style_root) + 1);
+				$has_counterpart = false;
+				foreach ($base_directories as $base_directory)
+				{
+					$has_counterpart = $has_counterpart || is_file($base_directory . '/' . $relative_path);
+				}
+
+				$this->assertTrue($has_counterpart, $style . '/' . $relative_path . ' has no base template counterpart');
+			}
 		}
 	}
 

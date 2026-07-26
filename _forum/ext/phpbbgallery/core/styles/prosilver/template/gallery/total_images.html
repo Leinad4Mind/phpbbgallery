@@ -1,0 +1,10 @@
+{% if pagination|length or TOTAL_IMAGES %}
+	<div class="pagination">
+		{{ TOTAL_IMAGES }}
+		{% if pagination|length %}
+			{% include 'pagination.html' %}
+		{% else %}
+			 &bull; {{ PAGE_NUMBER }}
+		{% endif %}
+	</div>
+{% endif %}
