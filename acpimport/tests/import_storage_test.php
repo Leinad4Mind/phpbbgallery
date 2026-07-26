@@ -306,6 +306,50 @@ class import_storage_test extends TestCase
 		$this->assertStringContainsString('$state[\'creator_id\']', $source);
 	}
 
+	public function test_missing_selected_images_are_reported_without_discarding_valid_ones(): void
+	{
+		global $user;
+		$user = new class
+		{
+			public function lang(string $key, string $filename): string
+			{
+				return $key . ':' . $filename;
+			}
+		};
+		$module = new main_module();
+		$filter = new \ReflectionMethod(main_module::class, 'filter_selected_images');
+		$available_images = [
+			'valid.png' => ['display_name' => 'valid.png'],
+			'other.jpg' => ['display_name' => 'other.jpg'],
+		];
+
+		$this->assertSame(
+			['valid.png', 'other.jpg'],
+			$filter->invoke($module, ['valid.png', 'missing.png', 'other.jpg', 'valid.png'], $available_images)
+		);
+
+		$errors = (new \ReflectionProperty(main_module::class, 'import_errors'))->getValue($module);
+		$this->assertSame(['IMPORT_INVALID_IMAGE:missing.png'], $errors);
+	}
+
+	public function test_selected_image_filter_returns_empty_when_every_file_disappeared(): void
+	{
+		global $user;
+		$user = new class
+		{
+			public function lang(string $key, string $filename): string
+			{
+				return $key . ':' . $filename;
+			}
+		};
+		$module = new main_module();
+		$filter = new \ReflectionMethod(main_module::class, 'filter_selected_images');
+
+		$this->assertSame([], $filter->invoke($module, ['gone.jpg'], []));
+		$errors = (new \ReflectionProperty(main_module::class, 'import_errors'))->getValue($module);
+		$this->assertSame(['IMPORT_INVALID_IMAGE:gone.jpg'], $errors);
+	}
+
 	private function valid_state(array $images = ['image.png']): array
 	{
 		return [
