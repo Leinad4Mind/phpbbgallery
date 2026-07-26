@@ -269,7 +269,16 @@ class config_module
 			$l_explain = '';
 			if (isset($vars['explain']))
 			{
-				$l_explain = $this->language->lang($vars['lang'] . '_EXP') ? $this->language->lang($vars['lang'] . '_EXP') : '';
+				// lang() echoes the key back when it is missing, so ask before
+				// translating, otherwise a raw key ends up on the settings page.
+				foreach ([$vars['lang'] . '_EXPLAIN', $vars['lang'] . '_EXP'] as $explain_key)
+				{
+					if ($this->language->is_set($explain_key))
+					{
+						$l_explain = $this->language->lang($explain_key);
+						break;
+					}
+				}
 			}
 
 			$content = build_cfg_template($type, $config_key, $this->new_config, $config_key, $vars);
