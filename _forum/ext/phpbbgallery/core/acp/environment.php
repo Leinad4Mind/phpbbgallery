@@ -89,6 +89,26 @@ final class environment
 	}
 
 	/**
+	 * Return required runtime components that are not available.
+	 *
+	 * @param array $checks Runtime checks
+	 * @return array Component names
+	 */
+	public function missing_required_components(array $checks): array
+	{
+		$missing = [];
+		foreach ($checks as $check)
+		{
+			if ($check['required'] && !$check['available'])
+			{
+				$missing[] = $check['name'];
+			}
+		}
+
+		return $missing;
+	}
+
+	/**
 	 * Determine whether each packaged Gallery add-on is enabled or installable.
 	 *
 	 * @param object $extension_manager phpBB extension manager

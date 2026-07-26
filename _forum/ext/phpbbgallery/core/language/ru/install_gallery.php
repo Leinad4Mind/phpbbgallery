@@ -22,6 +22,8 @@ if (empty($lang) || !is_array($lang))
 	$lang = [];
 }
 $lang = array_merge($lang, [
+	'GALLERY_CORE_ENABLE_SUCCESS' => 'phpBB Gallery Core включено. Также доступны необязательные дополнения ACP Cleanup, ACP Import и EXIF.',
+	'GALLERY_REQUIREMENTS_MISSING' => 'phpBB Gallery невозможно включить. Отсутствуют обязательные компоненты: %s.',
 	'GALLERY_SUB_EXT_UNINSTALL' => [
 		1 => 'Вы должны удалить расширение: <br /><strong>%s</strong><br /> перед удалением основного расширения.',
 		2 => 'Вы должны удалить расширения: <br /><strong>%s</strong><br /> перед удалением основного расширения.',

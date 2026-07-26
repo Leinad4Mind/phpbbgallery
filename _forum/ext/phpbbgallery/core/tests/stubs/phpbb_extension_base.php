@@ -14,6 +14,11 @@ class base
 	/** @var object */
 	protected $container;
 
+	public function is_enableable()
+	{
+		return true;
+	}
+
 	public function enable_step($old_state)
 	{
 		return false;
