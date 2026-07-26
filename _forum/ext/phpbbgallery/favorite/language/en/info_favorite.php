@@ -45,6 +45,7 @@ $lang = array_merge($lang, [
 	],
 
 	'FAVORITE_NOT_AUTHORISED'	=> 'You are not allowed to favorite this image.',
+	'LOGIN_EXPLAIN_FAVORITE'	=> 'You must be registered and logged in to add images to your favorites.',
 
 	'WATCH_FAVO'				=> 'Subscribe to images I favorite',
 	'WATCH_FAVO_EXPLAIN'		=> 'If enabled, adding an image to your favorites also subscribes you to its new comments.',

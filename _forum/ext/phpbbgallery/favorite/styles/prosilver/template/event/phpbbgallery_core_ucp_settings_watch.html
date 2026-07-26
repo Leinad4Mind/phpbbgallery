@@ -1,0 +1,7 @@
+<dl>
+	<dt><label for="watch_favo1">{{ lang('WATCH_FAVO') }}{{ lang('COLON') }}</label><br /><span>{{ lang('WATCH_FAVO_EXPLAIN') }}</span></dt>
+	<dd>
+		<label for="watch_favo1"><input type="radio" name="watch_favo" id="watch_favo1" value="1"{% if S_WATCH_FAVO %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+		<label for="watch_favo0"><input type="radio" name="watch_favo" id="watch_favo0" value="0"{% if not S_WATCH_FAVO %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
+	</dd>
+</dl>

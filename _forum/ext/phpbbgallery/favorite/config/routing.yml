@@ -1,0 +1,13 @@
+###################################
+#### Gallery favourite routes #####
+###################################
+phpbbgallery_favorite_add:
+    path: /gallery/image/{image_id}/favorite
+    defaults: { _controller: phpbbgallery.favorite.controller:add }
+    requirements:
+        image_id: \d+
+phpbbgallery_favorite_remove:
+    path: /gallery/image/{image_id}/unfavorite
+    defaults: { _controller: phpbbgallery.favorite.controller:remove }
+    requirements:
+        image_id: \d+
