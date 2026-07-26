@@ -80,24 +80,29 @@ final class exif_test extends TestCase
 	{
 		$metadata = ['EXIF' => ['FNumber' => '28/10']];
 		$handler = new exif('/missing/image.jpg', 42);
-		$handler->interpret(exif::DBSAVED, serialize($metadata));
+		$stored = json_encode($metadata, JSON_THROW_ON_ERROR);
+		$handler->interpret(exif::DBSAVED, $stored);
 
 		$this->assertSame($metadata, $handler->data);
+		$this->assertSame($stored, $handler->serialized);
 		$this->assertSame(exif::DBSAVED, $handler->status);
 		$this->assertSame(exif::DBSAVED, $handler->orig_status);
 		$this->assertSame(42, $handler->image_id);
 	}
 
-	public function test_interpret_rejects_invalid_or_object_serialization(): void
+	public function test_interpret_rejects_invalid_or_legacy_serialization(): void
 	{
 		$handler = new exif('/missing/image.jpg');
 
-		$handler->interpret(exif::DBSAVED, 'not serialized data');
+		$handler->interpret(exif::DBSAVED, 'not JSON data');
 		$this->assertSame([], $handler->data);
+		$this->assertSame(exif::UNKNOWN, $handler->status);
 
-		$handler->interpret(exif::DBSAVED, serialize(new \stdClass()));
+		$handler->interpret(exif::DBSAVED, 'a:1:{s:4:"EXIF";a:0:{}}');
 		$this->assertSame([], $handler->data);
+		$this->assertSame(exif::UNKNOWN, $handler->status);
 		$this->assertFalse($handler->set_status());
+		$this->assertSame(0, preg_match('/(?<![a-zA-Z0-9_])unserialize\s*\(/', (string) file_get_contents(dirname(__DIR__) . '/exif.php')));
 	}
 
 	public function test_listener_registers_the_complete_event_map(): void

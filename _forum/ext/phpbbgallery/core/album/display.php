@@ -219,38 +219,46 @@ class display
 	{
 		$album_parents = [];
 
-		if ($album_data['parent_id'] > 0)
+		if ($album_data['parent_id'] <= 0)
 		{
-			if ($album_data['album_parents'] == '')
+			return $album_parents;
+		}
+
+		if ($album_data['album_parents'] !== '')
+		{
+			try
 			{
-				$sql = 'SELECT album_id, album_name, album_type
-					FROM ' . $this->table_albums . '
-					WHERE left_id < ' . (int) $album_data['left_id'] . '
-						AND right_id > ' . (int) $album_data['right_id'] . '
-						AND album_user_id = ' . (int) $album_data['album_user_id'] . '
-					ORDER BY left_id ASC';
-
-				$result = $this->db->sql_query($sql);
-
-				while ($row = $this->db->sql_fetchrow($result))
+				$stored_parents = json_decode($album_data['album_parents'], true, 512, JSON_THROW_ON_ERROR);
+				if (is_array($stored_parents))
 				{
-					$album_parents[$row['album_id']] = [$row['album_name'], (int) $row['album_type']];
+					return $stored_parents;
 				}
-				$this->db->sql_freeresult($result);
-
-				$album_data['album_parents'] = serialize($album_parents);
-
-				$sql = 'UPDATE ' . $this->table_albums . "
-					SET album_parents = '" . $this->db->sql_escape($album_data['album_parents']) . "'
-					WHERE parent_id = " . (int) $album_data['parent_id'];
-				$this->db->sql_query($sql);
 			}
-			else
+			catch (\JsonException)
 			{
-				$stored_parents = @unserialize($album_data['album_parents'], ['allowed_classes' => false]);
-				$album_parents = is_array($stored_parents) ? $stored_parents : [];
+				// Legacy serialized or malformed cache values are rebuilt below.
 			}
 		}
+
+		$sql = 'SELECT album_id, album_name, album_type
+			FROM ' . $this->table_albums . '
+			WHERE left_id < ' . (int) $album_data['left_id'] . '
+				AND right_id > ' . (int) $album_data['right_id'] . '
+				AND album_user_id = ' . (int) $album_data['album_user_id'] . '
+			ORDER BY left_id ASC';
+
+		$result = $this->db->sql_query($sql);
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$album_parents[$row['album_id']] = [$row['album_name'], (int) $row['album_type']];
+		}
+		$this->db->sql_freeresult($result);
+
+		$parent_cache = json_encode($album_parents, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+		$sql = 'UPDATE ' . $this->table_albums . "
+			SET album_parents = '" . $this->db->sql_escape($parent_cache) . "'
+			WHERE parent_id = " . (int) $album_data['parent_id'];
+		$this->db->sql_query($sql);
 
 		return $album_parents;
 	}
