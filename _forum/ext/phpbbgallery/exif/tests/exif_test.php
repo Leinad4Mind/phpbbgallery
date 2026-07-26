@@ -117,4 +117,15 @@ final class exif_test extends TestCase
 			'phpbbgallery.core.viewimage' => 'viewimage',
 		], exif_listener::getSubscribedEvents());
 	}
+
+	public function test_listener_accepts_both_jpeg_filename_extensions(): void
+	{
+		$reflection = new \ReflectionClass(exif_listener::class);
+		$listener = $reflection->newInstanceWithoutConstructor();
+		$is_jpeg_filename = $reflection->getMethod('is_jpeg_filename');
+
+		$this->assertTrue($is_jpeg_filename->invoke($listener, 'image.jpg'));
+		$this->assertTrue($is_jpeg_filename->invoke($listener, 'image.JPEG'));
+		$this->assertFalse($is_jpeg_filename->invoke($listener, 'image.png'));
+	}
 }
