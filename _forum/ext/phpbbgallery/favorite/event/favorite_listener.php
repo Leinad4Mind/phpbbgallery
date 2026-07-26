@@ -75,6 +75,7 @@ class favorite_listener implements EventSubscriberInterface
 	{
 		return [
 			'core.delete_user_after'							=> 'delete_user_after',
+			'phpbbgallery.acpcleanup.cleanup_finished'			=> 'cleanup_finished',
 			'phpbbgallery.core.image.delete_images'				=> 'image_delete_images',
 			'phpbbgallery.core.viewimage'						=> 'viewimage',
 			'phpbbgallery.core.ucp.set_settings_nosubmit'		=> 'ucp_set_settings_nosubmit',
@@ -121,6 +122,16 @@ class favorite_listener implements EventSubscriberInterface
 			'U_FAVORITE_IMAGE'		=> $this->favorite_route($image_id, !$favorited),
 			'U_FAVORITE_IMAGE_TOGGLE'=> $this->favorite_route($image_id, $favorited),
 		]);
+	}
+
+	/**
+	 * Rebuild the favourite counters after the gallery has been cleaned up.
+	 *
+	 * @return void
+	 */
+	public function cleanup_finished(): void
+	{
+		$this->favorite->resync_counters();
 	}
 
 	/**

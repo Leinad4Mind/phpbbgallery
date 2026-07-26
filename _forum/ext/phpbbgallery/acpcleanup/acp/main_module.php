@@ -237,6 +237,17 @@ class main_module
 			$gallery_config->set('num_images', $row['num_images']);
 			$gallery_config->set('num_comments', (int) $row['num_comments']);
 
+			/**
+			* Event to let add-ons repair their own counters once the gallery
+			* has been cleaned up
+			*
+			* @event phpbbgallery.acpcleanup.cleanup_finished
+			* @var	array	message		Language keys describing what was cleaned
+			* @since 1.3.0
+			*/
+			$vars = ['message'];
+			extract($phpbb_container->get('dispatcher')->trigger_event('phpbbgallery.acpcleanup.cleanup_finished', compact($vars)));
+
 			$cache->destroy('sql', $table_prefix . 'gallery_albums');
 			$cache->destroy('sql', $table_prefix . 'gallery_comments');
 			$cache->destroy('sql', $table_prefix . 'gallery_images');
