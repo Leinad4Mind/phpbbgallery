@@ -288,8 +288,7 @@ class file
 	 */
 	public function header_filename(string $file): string
 	{
-		$raw = (string) $this->request->server('HTTP_USER_AGENT');
-		$user_agent = htmlspecialchars($raw);
+		$user_agent = (string) $this->request->server('HTTP_USER_AGENT');
 
 		// There be dragons here.
 		// Not many follows the RFC...

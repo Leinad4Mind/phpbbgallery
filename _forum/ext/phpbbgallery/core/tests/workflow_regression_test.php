@@ -78,4 +78,17 @@ final class workflow_regression_test extends TestCase
 		$this->assertStringNotContainsString('Upload to', $upload);
 		$this->assertStringNotContainsString('Closed', $report);
 	}
+
+	public function test_core_does_not_call_native_htmlspecialchars_directly(): void
+	{
+		foreach ([
+			dirname(__DIR__) . '/acp/config_module.php',
+			dirname(__DIR__) . '/file/file.php',
+		] as $path)
+		{
+			$source = (string) file_get_contents($path);
+
+			$this->assertSame(0, preg_match('/(?<![a-zA-Z0-9_])htmlspecialchars\s*\(/', $source), $path);
+		}
+	}
 }
