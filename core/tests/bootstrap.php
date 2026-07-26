@@ -75,6 +75,7 @@ namespace
 	require_once dirname(__DIR__, 4) . '/phpbb/request/request_interface.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/template/template.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/language/language.php';
+	require_once dirname(__DIR__, 4) . '/phpbb/profilefields/manager.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/files/types/type_interface.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/files/types/base.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/notification/type/type_interface.php';

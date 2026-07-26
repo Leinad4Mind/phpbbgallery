@@ -83,7 +83,7 @@
 				<dd><input class="inputbox autowidth dz-hidden-input" type="file" name="files[]" id="files" size="52" multiple accept="image/jpeg,image/png,image/gif,image/webp,application/zip"/></dd>
 
 			</dl>
-			{% for upload_image in upload_image %}
+			{% for upload_image in upload_image|default([]) %}
 				<dl id="upload_field_{{ upload_image.S_ROW_COUNT }}">
 					<dt><label for="image_file_{{ upload_image.S_ROW_COUNT }}">{{ lang('FILE') }}{{ lang('COLON') }}</label></dt>
 					<dd><input class="inputbox" type="file" onchange="add_field();" tabindex="1{{ upload_image.S_ROW_COUNT }}" id="image_file_{{ upload_image.S_ROW_COUNT }}" name="image_file_{{ upload_image.S_ROW_COUNT }}" size="52" /></dd>

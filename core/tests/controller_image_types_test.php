@@ -121,6 +121,55 @@ final class controller_image_types_test extends TestCase
 		], $conditions->invoke($controller, 7, 0));
 	}
 
+	public function test_image_poster_profile_fields_are_assigned_to_safe_root_blocks(): void
+	{
+		$reflection = new \ReflectionClass(image::class);
+		$controller = $reflection->newInstanceWithoutConstructor();
+		$profile_data = ['favourite_camera' => ['value' => 'Camera']];
+		$profile_manager = $this->createMock(\phpbb\profilefields\manager::class);
+		$profile_manager->expects($this->once())
+			->method('generate_profile_fields_template_data')
+			->with($profile_data)
+			->willReturn([
+				'row' => ['PROFILE_CAMERA_VALUE' => 'Camera'],
+				'blockrow' => [
+					[
+						'S_PROFILE_CONTACT' => false,
+						'PROFILE_FIELD_IDENT' => 'camera',
+						'PROFILE_FIELD_NAME' => 'Camera',
+						'PROFILE_FIELD_VALUE' => 'Camera',
+					],
+					[
+						'S_PROFILE_CONTACT' => true,
+						'PROFILE_FIELD_IDENT' => 'website',
+						'PROFILE_FIELD_NAME' => 'Website',
+						'PROFILE_FIELD_CONTACT' => 'https://example.test',
+					],
+				],
+			]);
+		$assigned_vars = [];
+		$assigned_blocks = [];
+		$template = $this->createMock(\phpbb\template\template::class);
+		$template->method('assign_vars')->willReturnCallback(function (array $vars) use (&$assigned_vars): void
+		{
+			$assigned_vars = $vars;
+		});
+		$template->method('assign_block_vars')->willReturnCallback(function (string $block, array $vars) use (&$assigned_blocks): void
+		{
+			$assigned_blocks[$block][] = $vars;
+		});
+		$reflection->getProperty('config')->setValue($controller, new \phpbb\config\config(['load_cpf_viewtopic' => true]));
+		$reflection->getProperty('cpf_manager')->setValue($controller, $profile_manager);
+		$reflection->getProperty('template')->setValue($controller, $template);
+		$reflection->getProperty('profile_fields_data')->setValue($controller, [42 => $profile_data]);
+
+		$reflection->getMethod('assign_image_poster_profile_fields')->invoke($controller, 42);
+
+		$this->assertSame(['PROFILE_CAMERA_VALUE' => 'Camera'], $assigned_vars);
+		$this->assertSame('camera', $assigned_blocks['custom_fields'][0]['PROFILE_FIELD_IDENT']);
+		$this->assertSame('https://example.test', $assigned_blocks['contact'][0]['U_CONTACT']);
+	}
+
 	public function test_view_counter_remains_page_owned_and_sort_order_has_no_duplicate_suffix(): void
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/image.php');

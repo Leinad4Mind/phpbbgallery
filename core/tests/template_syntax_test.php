@@ -84,6 +84,20 @@ final class template_syntax_test extends TestCase
 		}
 	}
 
+	public function test_optional_profile_and_upload_blocks_default_to_empty_arrays(): void
+	{
+		$core_root = dirname(__DIR__);
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$view_image = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/viewimage_body.html');
+			$posting = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/posting_body.html');
+
+			$this->assertStringContainsString('custom_fields|default([])', $view_image, $style);
+			$this->assertStringContainsString('commentrow.custom_fields|default([])', $view_image, $style);
+			$this->assertStringContainsString('upload_image|default([])', $posting, $style);
+		}
+	}
+
 	#[IgnoreDeprecations]
 	public function test_modernized_templates_parse_with_packaged_twig(): void
 	{
