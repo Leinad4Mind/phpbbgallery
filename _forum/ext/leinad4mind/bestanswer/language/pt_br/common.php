@@ -51,6 +51,9 @@ $lang = array_merge($lang, [
 	'ENABLE_ANSWER_EXPLAIN' => 'Se ativado, o autor do tópico (se permitido) e os moderadores (onde permitido) poderão marcar uma resposta ao tópico como a melhor resposta.',
 	'EXTENSION_NOT_ENABLED' => 'A extensão Melhor resposta não está ativada neste fórum.',
 
+	'LOCK_ON_ANSWER'         => 'Bloquear tópico ao marcar melhor resposta',
+	'LOCK_ON_ANSWER_EXPLAIN' => 'Se ativado, o tópico será bloqueado automaticamente quando uma postagem for marcada como a melhor resposta.',
+
 	'LOG_MARK_ANSWER'   => '<strong>Postagem marcada como melhor resposta</strong><br />» %1$s by %2$s',
 	'LOG_UNMARK_ANSWER' => '<strong>Postagem desmarcada como melhor resposta</strong><br />» %1$s by %2$s',
 

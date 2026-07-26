@@ -48,8 +48,11 @@ $lang = array_merge($lang, [
 	'BBPOINTS_ANSWER_EXPLAIN' => 'Coloca o número de pontos a serem creditados ao autor da mensagem quando a sua mensagem neste fórum for marcada como "Melhor Resposta"',
 
 	'ENABLE_ANSWER'         => 'Activar Melhor Resposta',
-	'ENABLE_ANSWER_EXPLAIN' => 'If enabled, the topic starter (if permitted) and moderators (where allowed) will be able to mark a topic reply as the best answer.',
+	'ENABLE_ANSWER_EXPLAIN' => 'Se activado, o autor do tópico (caso tenha permissão) e os moderadores (onde permitido) poderão marcar uma resposta do tópico como a melhor resposta.',
 	'EXTENSION_NOT_ENABLED' => 'A extensão "Melhor Resposta" não está activada neste fórum.',
+
+	'LOCK_ON_ANSWER'         => 'Bloquear tópico ao marcar melhor resposta',
+	'LOCK_ON_ANSWER_EXPLAIN' => 'Se activado, o tópico é bloqueado automaticamente quando uma mensagem é marcada como a melhor resposta.',
 
 	'LOG_MARK_ANSWER'   => '<strong>Mensagem marcada como Melhor Resposta</strong><br />» %1$s by %2$s',
 	'LOG_UNMARK_ANSWER' => '<strong>Mensagem deixou de ser a Melhor Resposta</strong><br />» %1$s by %2$s',

@@ -51,6 +51,9 @@ $lang = array_merge($lang, [
 	'ENABLE_ANSWER_EXPLAIN' => 'Permet aux auteurs de sujets et aux modérateurs de mettre en avant un message comme étant la réponse la plus pertinente de son sujet.',
 	'EXTENSION_NOT_ENABLED' => 'L’extension « Meilleure réponse » n’est pas activée sur ce forum.',
 
+	'LOCK_ON_ANSWER'         => 'Verrouiller le sujet à la meilleure réponse',
+	'LOCK_ON_ANSWER_EXPLAIN' => 'Si activé, le sujet sera automatiquement verrouillé lorsqu’un message est marqué comme la réponse la plus pertinente.',
+
 	'LOG_MARK_ANSWER'   => '<strong>Mise en avant effectuée d’un message, comme étant la réponse la plus pertinente de son sujet</strong><br />» %1$s par %2$s',
 	'LOG_UNMARK_ANSWER' => '<strong>Mise en avant annulée d’un message, comme étant la réponse la plus pertinente de son sujet</strong><br />» %1$s par %2$s',
 

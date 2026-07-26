@@ -50,6 +50,9 @@ $lang = array_merge($lang, [
 	'ENABLE_ANSWER_EXPLAIN' => 'If enabled, the topic starter (if permitted) and moderators (where allowed) will be able to mark a topic reply as the best answer.',
 	'EXTENSION_NOT_ENABLED' => 'The Best Answer extension is not enabled on this forum.',
 
+	'LOCK_ON_ANSWER'         => 'Lock topic on best answer',
+	'LOCK_ON_ANSWER_EXPLAIN' => 'If enabled, the topic will automatically be locked when a post is marked as the best answer.',
+
 	'LOG_MARK_ANSWER'   => '<strong>Marked post as best answer</strong><br />» %1$s by %2$s',
 	'LOG_UNMARK_ANSWER' => '<strong>Unmarked post as best answer</strong><br />» %1$s by %2$s',
 
