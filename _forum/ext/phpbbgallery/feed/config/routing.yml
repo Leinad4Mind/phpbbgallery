@@ -1,0 +1,11 @@
+##############################
+#### Gallery feed routes #####
+##############################
+phpbbgallery_feed:
+    path: /gallery/feed
+    defaults: { _controller: phpbbgallery.feed.controller:base }
+phpbbgallery_feed_album:
+    path: /gallery/feed/album/{album_id}
+    defaults: { _controller: phpbbgallery.feed.controller:album }
+    requirements:
+        album_id: \d+

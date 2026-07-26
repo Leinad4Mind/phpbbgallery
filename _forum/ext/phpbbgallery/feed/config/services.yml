@@ -1,0 +1,32 @@
+services:
+    phpbbgallery.feed:
+        class: phpbbgallery\feed\feed
+        arguments:
+            - '@dbal.conn'
+            - '@phpbbgallery.core.auth'
+            - '@phpbbgallery.core.config'
+            - '@phpbbgallery.core.album'
+            - '%phpbbgallery.tables.gallery_albums%'
+            - '%phpbbgallery.tables.gallery_images%'
+
+    phpbbgallery.feed.controller:
+        class: phpbbgallery\feed\controller\main
+        arguments:
+            - '@config'
+            - '@controller.helper'
+            - '@language'
+            - '@template.twig.environment'
+            - '@user'
+            - '@phpbbgallery.core.auth'
+            - '@phpbbgallery.feed'
+
+    phpbbgallery.feed.listener:
+        class: phpbbgallery\feed\event\feed_listener
+        arguments:
+            - '@controller.helper'
+            - '@language'
+            - '@request'
+            - '@template'
+            - '@phpbbgallery.core.config'
+        tags:
+            - { name: event.listener }
