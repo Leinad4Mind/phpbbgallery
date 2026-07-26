@@ -157,6 +157,66 @@ class language_catalog_test extends TestCase
 		$this->assertSame([], $failures, implode(chr(10), $failures));
 	}
 
+	public function test_brazilian_portuguese_catalog_uses_brazilian_vocabulary_and_register(): void
+	{
+		$patterns = [
+			'/(?<!\p{L})(?:aceder|contacte|contactado|directoria|descarregar|equipa|ficheiro|gerir|pixeis|secção|utilizador)(?!\p{L})/iu',
+			'/(?<!\p{L})(?:acções|activar|apagar|eliminar|hiperligação|registado|registados|subscrito|subscritos)(?!\p{L})/iu',
+			'/(?<!\p{L})(?:até ao|base de dados|já não|palavra-passe|por baixo|tem a certeza)(?!\p{L})/iu',
+			'/(?<!\p{L})(?:a aguardar|a carregar|a observar|está a|estão a)(?!\p{L})/iu',
+			'/(?<!\p{L})Pode usar as suas(?!\p{L})/iu',
+		];
+		$failures = [];
+		$language_root = $this->extension_root . '/core/language/pt_br';
+
+		foreach ($this->php_files($language_root) as $file)
+		{
+			foreach ($this->load_language($language_root . '/' . $file) as $key => $value)
+			{
+				foreach ($this->string_values($value) as $text)
+				{
+					foreach ($patterns as $pattern)
+					{
+						if (preg_match($pattern, $text, $match) === 1)
+						{
+							$failures[] = 'pt_br/' . $file . ':' . $key . ': ' . $match[0];
+						}
+					}
+				}
+			}
+		}
+
+		$this->assertSame([], $failures, implode(chr(10), $failures));
+	}
+
+	public function test_catalogs_do_not_use_the_obsolete_gallery_mod_name(): void
+	{
+		$failures = [];
+
+		foreach ($this->components() as $component)
+		{
+			$language_root = $this->extension_root . '/' . $component . '/language';
+			foreach ($this->language_directories($language_root) as $directory)
+			{
+				foreach ($this->php_files($directory) as $file)
+				{
+					foreach ($this->load_language($directory . '/' . $file) as $key => $value)
+					{
+						foreach ($this->string_values($value) as $text)
+						{
+							if (stripos($text, 'Gallery-MOD') !== false)
+							{
+								$failures[] = $component . '/' . basename($directory) . '/' . $file . ':' . $key;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		$this->assertSame([], $failures, implode(chr(10), $failures));
+	}
+
 	private function components(): array
 	{
 		return ['core', 'acpcleanup', 'acpimport', 'exif'];

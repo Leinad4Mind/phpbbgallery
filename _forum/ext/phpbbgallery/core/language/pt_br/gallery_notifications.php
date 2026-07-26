@@ -24,16 +24,16 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'NOTIFICATION_PHPBBGALLERY_IMAGE_FOR_APPROVAL'      => '%2$s carregou imagens para aprovação no álbum <strong>%1$s</strong>',
-	'NOTIFICATION_TYPE_PHPBBGALLERY_IMAGE_FOR_APPROVE'  => 'Imagens a aguardar aprovação',
+	'NOTIFICATION_PHPBBGALLERY_IMAGE_FOR_APPROVAL'      => '%2$s enviou imagens para aprovação no álbum <strong>%1$s</strong>',
+	'NOTIFICATION_TYPE_PHPBBGALLERY_IMAGE_FOR_APPROVE'  => 'Imagens aguardando aprovação',
 	'NOTIFICATION_TYPE_PHPBBGALLERY_IMAGE_APPROVED'     => 'Imagens aprovadas',
 	'NOTIFICATION_PHPBBGALLERY_IMAGE_APPROVED'          => 'Imagens no álbum <strong>%1$s</strong> foram aprovadas',
 	'NOTIFICATION_TYPE_PHPBBGALLERY_IMAGE_NOT_APPROVED' => 'Imagens não aprovadas',
 	'NOTIFICATION_PHPBBGALLERY_IMAGE_NOT_APPROVED'      => 'Imagens no álbum <strong>%1$s</strong> não foram aprovadas',
 	'NOTIFICATION_TYPE_PHPBBGALLERY_NEW_IMAGE'          => 'Novas imagens',
-	'NOTIFICATION_PHPBBGALLERY_NEW_IMAGE'               => 'Novas imagens foram carregadas no álbum <strong>%1$s</strong>',
+	'NOTIFICATION_PHPBBGALLERY_NEW_IMAGE'               => 'Novas imagens foram enviadas no álbum <strong>%1$s</strong>',
 	'NOTIFICATION_TYPE_PHPBBGALLERY_NEW_COMMENT'        => 'Novos comentários',
-	'NOTIFICATION_PHPBBGALLERY_NEW_COMMENT'             => '<strong>%1$s</strong> comentou a imagem que está a observar',
-	'NOTIFICATION_TYPE_PHPBBGALLERY_NEW_REPORT'         => 'Novo reporte de imagem',
+	'NOTIFICATION_PHPBBGALLERY_NEW_COMMENT'             => '<strong>%1$s</strong> comentou a imagem que você acompanha',
+	'NOTIFICATION_TYPE_PHPBBGALLERY_NEW_REPORT'         => 'Nova denúncia de imagem',
 	'NOTIFICATION_PHPBBGALLERY_NEW_REPORT'              => '<strong>%1$s</strong> reportou imagem',
 ]);
