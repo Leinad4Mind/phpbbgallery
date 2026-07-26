@@ -34,6 +34,17 @@ class auth
 	protected static array $_permission_c = ['c_read', 'c_post', 'c_edit', 'c_delete'];
 	protected static array $_permission_m = ['m_comments', 'm_delete', 'm_edit', 'm_move', 'm_report', 'm_status'];
 	protected static array $_permission_misc = ['a_list', 'i_count', 'i_unlimited', 'a_count', 'a_unlimited', 'a_restrict'];
+
+	/**
+	 * Permissions contributed by add-ons, always merged last.
+	 *
+	 * A permission's bit number is its position in the merged list, and those
+	 * numbers are already stored in every board's roles and cached user
+	 * permissions. Appending here keeps the existing numbering intact; moving
+	 * any of these names into one of the lists above would shift every later
+	 * bit and silently hand out the wrong permissions.
+	 */
+	protected static array $_permission_addon = ['i_favorite'];
 	protected static array $_permissions = [];
 	protected static array $_permissions_flipped = [];
 
@@ -122,7 +133,7 @@ class auth
 		$this->table_users = $users_table;
 		$this->table_albums = $albums_table;
 
-		self::$_permissions = array_merge(self::$_permission_i, self::$_permission_c, self::$_permission_m, self::$_permission_misc);
+		self::$_permissions = array_merge(self::$_permission_i, self::$_permission_c, self::$_permission_m, self::$_permission_misc, self::$_permission_addon);
 		self::$_permissions_flipped = array_flip(array_merge(self::$_permissions, ['m_']));
 		self::$_permissions_flipped['i_count'] = 'i_count';
 		self::$_permissions_flipped['a_count'] = 'a_count';
