@@ -145,6 +145,8 @@ class package_hygiene_test extends TestCase
 
 		$theme_directory = $this->core_root . '/styles/all/theme';
 		$stylesheet = file_get_contents($theme_directory . '/gallery.css');
+		$this->assertStringNotContainsString('clip-path: url(#left_arrow)', $stylesheet);
+		$this->assertStringNotContainsString('clip-path: url(#right_arrow)', $stylesheet);
 		preg_match_all(
 			'#url\([^./]*\./images/([A-Za-z0-9._-]+)#',
 			$stylesheet,
@@ -213,6 +215,7 @@ class package_hygiene_test extends TestCase
 		$patterns = [
 			'#^//\s*(?:\$this->|\$[A-Za-z_][A-Za-z0-9_]*->|\$[A-Za-z_][A-Za-z0-9_]*\s*=|return\s+\$|var_dump\()#',
 			'#^//\s*(?:if|foreach|while)\s*\(#',
+			'#^//\s*[A-Za-z_][A-Za-z0-9_]*::[A-Za-z_][A-Za-z0-9_]*\(#',
 			'#^/\*\s*(?:if\s*\(|else\s*\{|\$[A-Za-z_])#s',
 			'#/\*\s*&&#',
 		];

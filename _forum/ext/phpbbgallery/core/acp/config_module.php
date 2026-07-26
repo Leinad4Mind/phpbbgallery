@@ -604,7 +604,7 @@ class config_module
 		global $phpbb_container;
 		$this->language = $phpbb_container->get('language');
 
-		$sort_order_options = '';//phpbb_gallery_plugins::uc_select($value, $key);
+		$sort_order_options = '';
 
 		if ($key != 'link_imagepage')
 		{

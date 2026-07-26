@@ -67,6 +67,7 @@ final class controller_album_types_test extends TestCase
 		$sort_columns = ['t' => 'image_time', 'n' => 'image_name_clean'];
 
 		$this->assertSame('t', $normalizer->invoke($controller, 'invalid', $sort_columns));
+		$this->assertSame('t', $normalizer->invoke($controller, 't../../../../../../windows/system32/config/sam', $sort_columns));
 		$this->assertSame('n', $normalizer->invoke($controller, 'n', $sort_columns));
 	}
 
@@ -79,6 +80,17 @@ final class controller_album_types_test extends TestCase
 		$this->assertSame(1, $normalizer->invoke($controller, -3));
 		$this->assertSame(1, $normalizer->invoke($controller, 0));
 		$this->assertSame(4, $normalizer->invoke($controller, 4));
+	}
+
+	public function test_invalid_sort_directions_fall_back_to_descending(): void
+	{
+		$reflection = new \ReflectionClass(album::class);
+		$controller = $reflection->newInstanceWithoutConstructor();
+		$normalizer = $reflection->getMethod('normalize_sort_direction');
+
+		$this->assertSame('a', $normalizer->invoke($controller, 'a'));
+		$this->assertSame('d', $normalizer->invoke($controller, 'd'));
+		$this->assertSame('d', $normalizer->invoke($controller, 'd../../../../tmp'));
 	}
 
 	public function test_album_display_flags_remain_stable(): void

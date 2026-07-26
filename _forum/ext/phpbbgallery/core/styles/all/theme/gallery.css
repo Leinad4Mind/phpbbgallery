@@ -173,14 +173,12 @@ input.autowidth-gallery {
 {
 	float: left; 
 	text-align: left; 
-	clip-path: url(#left_arrow);
 }
 
 .image_next_image
 {
 	float: right; 
 	text-align: right; 
-	clip-path: url(#right_arrow);
 }
 
 .postbody_album {
