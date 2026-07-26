@@ -678,16 +678,23 @@ class image
 				$user_data = $this->users_data_array[$poster_id] ?? [];
 				if ($row['comment_edit_count'] > 0)
 				{
+					$editor_data = $this->users_data_array[$row['comment_edit_user_id']] ?? [];
+					$editor_id = $editor_data ? (int) $row['comment_edit_user_id'] : (int) ANONYMOUS;
 					$edit_info = ($row['comment_edit_count'] == 1) ? $this->language->lang('IMAGE_EDITED_TIME_TOTAL') : $this->language->lang('IMAGE_EDITED_TIMES_TOTAL');
-					$edit_info = sprintf($edit_info, get_username_string('full', $row['comment_edit_user_id'], $this->users_data_array[$row['comment_edit_user_id']]['username'], $this->users_data_array[$row['comment_edit_user_id']]['user_colour']), $this->user->format_date($row['comment_edit_time'], false, true), $row['comment_edit_count']);
+					$edit_info = sprintf($edit_info, get_username_string('full', $editor_id, $editor_data['username'] ?? $this->language->lang('GUEST'), $editor_data['user_colour'] ?? ''), $this->user->format_date($row['comment_edit_time'], false, true), $row['comment_edit_count']);
 				}
-				$user_deleted = empty($user_data);
+				$poster_data = $this->prepare_comment_poster($row, $user_data);
+				$user_deleted = $poster_data['user_deleted'];
+				$display_poster_id = $poster_data['poster_id'];
+				$poster_username = $poster_data['username'];
+				$poster_colour = $poster_data['user_colour'];
 				// End signature parsing, only if needed
-				if ($user_data['sig'] && empty($user_data['sig_parsed']))
+				if (($user_data['sig'] ?? '') !== '' && empty($user_data['sig_parsed']))
 				{
-					$parse_flags = ($user_data['sig_bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
-					$user_cache[$poster_id]['sig'] = generate_text_for_display($user_data['sig'], $user_data['sig_bbcode_uid'], $user_data['sig_bbcode_bitfield'], $parse_flags, true);
-					$user_cache[$poster_id]['sig_parsed'] = true;
+					$parse_flags = (!empty($user_data['sig_bbcode_bitfield']) ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
+					$user_data['sig'] = generate_text_for_display($user_data['sig'], $user_data['sig_bbcode_uid'] ?? '', $user_data['sig_bbcode_bitfield'] ?? '', $parse_flags, true);
+					$user_data['sig_parsed'] = true;
+					$this->users_data_array[$poster_id] = $user_data;
 				}
 
 				$cp_row = [];
@@ -696,7 +703,7 @@ class image
 				{
 					$cp_row = (isset($this->profile_fields_data[$poster_id])) ? $this->cpf_manager->generate_profile_fields_template_data($this->profile_fields_data[$poster_id]) : [];
 				}
-				$can_receive_pm =
+				$can_receive_pm = !$user_deleted &&
 					// They must be a "normal" user
 					$user_data['user_type'] != USER_IGNORE &&
 					// They must not be deactivated by the administrator
@@ -711,7 +718,6 @@ class image
 					$u_pm = append_sid("{$this->phpbb_root_path}ucp.$this->php_ext", 'i=pm&amp;mode=compose');
 				}
 
-				$user_data = $this->users_data_array[$poster_id] ?? [];
 				$comment_row = [
 					'U_COMMENT'  => $this->helper->route('phpbbgallery_core_image', ['image_id' => $image_id]) . '#comment_' . $row['comment_id'],
 					'COMMENT_ID' => $row['comment_id'],
@@ -724,13 +730,13 @@ class image
 					// TODO Whois link
 					// 'U_WHOIS'     => ($this->auth->acl_get('a_')) ? $this->url->append_sid('mcp', 'mode=whois&amp;ip=' . $row['comment_user_ip']) : '',
 
-					'POSTER_FULL'     => get_username_string('full', $poster_id, $user_data['username'], $user_data['user_colour']),
-					'POSTER_COLOUR'   => get_username_string('colour', $poster_id, $user_data['username'], $user_data['user_colour']),
-					'POSTER_USERNAME' => get_username_string('username', $poster_id, $user_data['username'], $user_data['user_colour']),
-					'U_POSTER'        => get_username_string('profile', $poster_id, $user_data['username'], $user_data['user_colour']),
+					'POSTER_FULL'     => get_username_string('full', $display_poster_id, $poster_username, $poster_colour),
+					'POSTER_COLOUR'   => get_username_string('colour', $display_poster_id, $poster_username, $poster_colour),
+					'POSTER_USERNAME' => get_username_string('username', $display_poster_id, $poster_username, $poster_colour),
+					'U_POSTER'        => get_username_string('profile', $display_poster_id, $poster_username, $poster_colour),
 					'POSTER_IP'       => ($this->auth->acl_get('a_')) ? $row['comment_user_ip'] : '',
 
-					'POSTER_SIGNATURE'       => ($row['comment_signature'] && !$user_deleted) ? generate_text_for_display($user_data['sig'], $row['comment_uid'], $row['comment_bitfield'], 7) : '',
+					'POSTER_SIGNATURE'       => ($row['comment_signature'] && !$user_deleted) ? ($user_data['sig'] ?? '') : '',
 					'POSTER_RANK_TITLE'      => $user_deleted ? '' : $user_data['rank_title'],
 					'POSTER_RANK_IMG'        => $user_deleted ? '' : $user_data['rank_image'],
 					'POSTER_RANK_IMG_SRC'    => $user_deleted ? '' : $user_data['rank_image_src'],
@@ -763,12 +769,12 @@ class image
 					[
 						'ID'        => 'email',
 						'NAME'      => $this->language->lang('SEND_EMAIL'),
-						'U_CONTACT' => $user_data['email'],
+						'U_CONTACT' => $user_data['email'] ?? '',
 					],
 					[
 						'ID'        => 'jabber',
 						'NAME'      => $this->language->lang('JABBER'),
-						'U_CONTACT' => $user_data['jabber'],
+						'U_CONTACT' => $user_data['jabber'] ?? '',
 					],
 				];
 
@@ -1202,6 +1208,29 @@ class image
 		$page_title = $this->language->lang('REPORT_IMAGE');
 
 		return $this->helper->render('gallery/posting_body.html', $page_title);
+	}
+
+	/**
+	 * Build safe identity data for an image comment author.
+	 *
+	 * Deleted users retain the username stored with the comment, but are rendered
+	 * as guests so no invalid profile link is generated.
+	 *
+	 * @param array $comment Comment database row
+	 * @param array $user_data Current phpBB user row, or an empty array
+	 * @return array Display identity
+	 */
+	protected function prepare_comment_poster(array $comment, array $user_data): array
+	{
+		$user_deleted = !$user_data;
+		$stored_username = $comment['comment_username'] ?? '';
+
+		return [
+			'user_deleted' => $user_deleted,
+			'poster_id' => $user_deleted ? (int) ANONYMOUS : (int) $comment['comment_user_id'],
+			'username' => $user_data['username'] ?? ($stored_username !== '' ? $stored_username : $this->language->lang('GUEST')),
+			'user_colour' => $user_data['user_colour'] ?? ($comment['comment_user_colour'] ?? ''),
+		];
 	}
 
 	/**

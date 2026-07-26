@@ -103,4 +103,44 @@ final class controller_image_types_test extends TestCase
 		$this->assertStringContainsString("ORDER BY ' . \$sql_sort_order;", $source);
 		$this->assertStringNotContainsString("ORDER BY ' . \$sql_sort_order . \$sql_help_sort", $source);
 	}
+
+	public function test_deleted_comment_users_keep_their_stored_identity_without_a_profile_link(): void
+	{
+		if (!defined('ANONYMOUS'))
+		{
+			define('ANONYMOUS', 1);
+		}
+
+		$reflection = new \ReflectionClass(image::class);
+		$controller = $reflection->newInstanceWithoutConstructor();
+		$prepare = $reflection->getMethod('prepare_comment_poster');
+		$comment = [
+			'comment_user_id' => 55,
+			'comment_username' => 'Former member',
+			'comment_user_colour' => 'abcdef',
+		];
+
+		$this->assertSame([
+			'user_deleted' => true,
+			'poster_id' => ANONYMOUS,
+			'username' => 'Former member',
+			'user_colour' => 'abcdef',
+		], $prepare->invoke($controller, $comment, []));
+
+		$this->assertSame([
+			'user_deleted' => false,
+			'poster_id' => 55,
+			'username' => 'Current member',
+			'user_colour' => '123456',
+		], $prepare->invoke($controller, $comment, ['username' => 'Current member', 'user_colour' => '123456']));
+	}
+
+	public function test_comment_display_does_not_use_an_undefined_user_cache(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/image.php');
+
+		$this->assertStringNotContainsString('$user_cache', $source);
+		$this->assertStringContainsString('$can_receive_pm = !$user_deleted &&', $source);
+		$this->assertStringContainsString('$user_data[\'email\'] ?? \'\'', $source);
+	}
 }
