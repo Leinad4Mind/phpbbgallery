@@ -95,6 +95,47 @@ final class controller_image_types_test extends TestCase
 		$this->assertSame('n', $normalizer->invoke($controller, 'n', $sort_columns));
 	}
 
+	public function test_image_click_action_is_deterministic_for_every_configuration(): void
+	{
+		require_once dirname(__DIR__, 4) . '/vendor/symfony/routing/RequestContextAwareInterface.php';
+		require_once dirname(__DIR__, 4) . '/vendor/symfony/routing/Generator/UrlGeneratorInterface.php';
+		require_once dirname(__DIR__, 4) . '/phpbb/controller/helper.php';
+		$cases = [
+			['none', ['image_id' => 88], ''],
+			['image', ['image_id' => 88], 'phpbbgallery_core_image_file_source:77'],
+			['next', ['image_id' => 88], 'phpbbgallery_core_image:88'],
+			['next', false, ''],
+			['highslide', ['image_id' => 88], 'phpbbgallery_core_image_file_source:77'],
+		];
+
+		foreach ($cases as [$mode, $next, $expected])
+		{
+			$reflection = new \ReflectionClass(image::class);
+			$controller = $reflection->newInstanceWithoutConstructor();
+			$gallery_config = $this->createStub(\phpbbgallery\core\config::class);
+			$gallery_config->method('get')->with('link_imagepage')->willReturn($mode);
+			$helper = $this->createStub(\phpbb\controller\helper::class);
+			$helper->method('route')->willReturnCallback(static function (string $route, array $parameters): string
+			{
+				return $route . ':' . $parameters['image_id'];
+			});
+			$reflection->getProperty('gallery_config')->setValue($controller, $gallery_config);
+			$reflection->getProperty('helper')->setValue($controller, $helper);
+
+			$this->assertSame($expected, $reflection->getMethod('get_image_action')->invoke($controller, 77, $next), $mode);
+		}
+	}
+
+	public function test_bootstrap_image_templates_keep_the_image_inside_a_list_item_without_a_link(): void
+	{
+		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$template = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/viewimage_body.html');
+			$this->assertStringContainsString('<li>{% if UC_IMAGE_ACTION %}<a', $template, $style);
+			$this->assertStringContainsString('{% if UC_IMAGE_ACTION %}</a>{% endif %}</li>', $template, $style);
+		}
+	}
+
 	public function test_navigation_visibility_conditions_respect_moderation_access(): void
 	{
 		$reflection = new \ReflectionClass(image::class);
