@@ -72,6 +72,25 @@ final class domain_rating_types_test extends TestCase
 		$this->assertSame(4, $rating->get_user_rating(12));
 	}
 
+	public function test_album_loader_uses_the_image_album_identifier(): void
+	{
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->once())
+			->method('sql_query')
+			->with($this->callback(static fn (string $sql): bool => str_contains($sql, 'FROM gallery_albums') && str_contains($sql, 'WHERE album_id = 27')))
+			->willReturn('result');
+		$db->expects($this->once())->method('sql_fetchrow')->with('result')->willReturn(['album_id' => 27]);
+		$db->expects($this->once())->method('sql_freeresult')->with('result');
+
+		$reflection = new \ReflectionClass(rating::class);
+		$rating = $reflection->newInstanceWithoutConstructor();
+		$reflection->getProperty('db')->setValue($rating, $db);
+		$reflection->getProperty('albums_table')->setValue($rating, 'gallery_albums');
+		$rating->loader(4, ['image_album_id' => 27]);
+
+		$this->assertSame(27, $reflection->getMethod('album_data')->invoke($rating, 'album_id'));
+	}
+
 	public function test_submit_rating_contract_reports_success_and_rejection_explicitly(): void
 	{
 		$method = new \ReflectionMethod(rating::class, 'submit_rating');

@@ -190,7 +190,7 @@ class rating
 		{
 			$sql = 'SELECT *
 				FROM ' . $this->albums_table . '
-				WHERE album_id = ' . (int) $this->image_data('album_id');
+				WHERE album_id = ' . (int) $this->image_data('image_album_id');
 			$result = $this->db->sql_query($sql);
 			$album_data = $this->db->sql_fetchrow($result);
 			$this->db->sql_freeresult($result);
