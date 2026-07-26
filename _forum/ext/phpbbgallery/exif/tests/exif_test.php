@@ -128,4 +128,20 @@ final class exif_test extends TestCase
 		$this->assertTrue($is_jpeg_filename->invoke($listener, 'image.JPEG'));
 		$this->assertFalse($is_jpeg_filename->invoke($listener, 'image.png'));
 	}
+
+	public function test_template_events_cover_every_supported_style(): void
+	{
+		$events = [
+			'phpbbgallery_core_ucp_settings_fieldset.html',
+			'phpbbgallery_core_viewimage_details.html',
+		];
+
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			foreach ($events as $event)
+			{
+				$this->assertFileExists(dirname(__DIR__) . '/styles/' . $style . '/template/event/' . $event);
+			}
+		}
+	}
 }
