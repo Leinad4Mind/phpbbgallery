@@ -32,8 +32,6 @@ class upload_zip_test extends TestCase
 	// phpcs:ignore PhpbbCodingStandard.NamingConventions.LowercaseUnderscoredFunctions.NotAllowed -- PHPUnit lifecycle API.
 	protected function tearDown(): void
 	{
-		// phpcs:ignore -- PHPUnit fixture override uses the PHP superglobal.
-		unset($GLOBALS['phpbbgallery_test_unique_id']);
 		$this->remove_directory($this->temporary_directory);
 	}
 
@@ -302,9 +300,8 @@ class upload_zip_test extends TestCase
 		$subject = $this->new_upload(upload_test_subject::class);
 		$zip_file = new upload_test_zip_file($archive);
 		$this->set_upload_property($subject, 'zip_file', $zip_file);
-		// phpcs:ignore -- PHPUnit fixture override uses the PHP superglobal.
-		$GLOBALS['phpbbgallery_test_unique_id'] = 'successful-flow';
-		$temporary_path = $this->temporary_directory . 'tmp_' . md5('successful-flow') . '/';
+		$temporary_path = $this->temporary_directory . 'tmp_successful-flow/';
+		$subject->temporary_directory_path = $temporary_path;
 
 		$this->assertTrue($subject->upload_zip());
 		$this->assertTrue($subject->read_directory_existed);
@@ -324,9 +321,8 @@ class upload_zip_test extends TestCase
 		$archive = $this->create_archive(['photo.png' => $this->png_image()]);
 		$subject = $this->new_upload(upload_test_subject::class);
 		$this->set_upload_property($subject, 'zip_file', new upload_test_zip_file($archive));
-		// phpcs:ignore -- PHPUnit fixture override uses the PHP superglobal.
-		$GLOBALS['phpbbgallery_test_unique_id'] = 'existing-directory';
-		$temporary_path = $this->temporary_directory . 'tmp_' . md5('existing-directory') . '/';
+		$temporary_path = $this->temporary_directory . 'tmp_existing-directory/';
+		$subject->temporary_directory_path = $temporary_path;
 		$this->assertTrue(mkdir($temporary_path, 0700));
 		file_put_contents($temporary_path . 'marker.txt', 'keep');
 
@@ -342,9 +338,8 @@ class upload_zip_test extends TestCase
 		$subject = $this->new_upload(upload_test_subject::class);
 		$zip_file = new upload_test_zip_file($archive);
 		$this->set_upload_property($subject, 'zip_file', $zip_file);
-		// phpcs:ignore -- PHPUnit fixture override uses the PHP superglobal.
-		$GLOBALS['phpbbgallery_test_unique_id'] = 'failed-extraction';
-		$temporary_path = $this->temporary_directory . 'tmp_' . md5('failed-extraction') . '/';
+		$temporary_path = $this->temporary_directory . 'tmp_failed-extraction/';
+		$subject->temporary_directory_path = $temporary_path;
 
 		$this->assertFalse($subject->upload_zip());
 		$this->assertFalse(file_exists($temporary_path));
@@ -362,9 +357,8 @@ class upload_zip_test extends TestCase
 		$zip_file = new upload_test_zip_file($archive);
 		$zip_file->throw_when_removed = true;
 		$this->set_upload_property($subject, 'zip_file', $zip_file);
-		// phpcs:ignore -- PHPUnit fixture override uses the PHP superglobal.
-		$GLOBALS['phpbbgallery_test_unique_id'] = 'throwing-removal';
-		$temporary_path = $this->temporary_directory . 'tmp_' . md5('throwing-removal') . '/';
+		$temporary_path = $this->temporary_directory . 'tmp_throwing-removal/';
+		$subject->temporary_directory_path = $temporary_path;
 
 		$exception = null;
 		try
@@ -380,6 +374,18 @@ class upload_zip_test extends TestCase
 		$this->assertFalse(file_exists($temporary_path));
 		$this->assert_extensions_were_restored($subject);
 		$this->assertSame([], $this->get_upload_property($subject, 'zip_file_data'));
+	}
+
+	public function test_temporary_directory_names_use_random_tokens(): void
+	{
+		$upload = $this->new_upload();
+		$first = $this->invoke_upload($upload, 'create_zip_temp_directory_path');
+		$second = $this->invoke_upload($upload, 'create_zip_temp_directory_path');
+
+		$this->assertMatchesRegularExpression('/\/tmp_[0-9a-f]{32}\/$/', $first);
+		$this->assertMatchesRegularExpression('/\/tmp_[0-9a-f]{32}\/$/', $second);
+		$this->assertNotSame($first, $second);
+		$this->assertSame(0, preg_match('/(?<![a-zA-Z0-9_])md5\s*\(/', (string) file_get_contents(dirname(__DIR__) . '/upload.php')));
 	}
 
 	private function new_upload(string $class = \phpbbgallery\core\upload::class)
@@ -514,6 +520,14 @@ class upload_test_subject extends \phpbbgallery\core\upload
 
 	/** @var array */
 	public $read_files = [];
+
+	/** @var string */
+	public $temporary_directory_path = '';
+
+	protected function create_zip_temp_directory_path(): string
+	{
+		return $this->temporary_directory_path;
+	}
 
 	public function read_zip_folder(string $current_dir): void
 	{

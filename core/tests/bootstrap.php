@@ -45,21 +45,6 @@ namespace
 		}
 	});
 
-	if (!function_exists('unique_id'))
-	{
-		function unique_id()
-		{
-			// phpcs:ignore -- PHPUnit fixture override uses the PHP superglobal.
-			if (isset($GLOBALS['phpbbgallery_test_unique_id']))
-			{
-				// phpcs:ignore -- PHPUnit fixture override uses the PHP superglobal.
-				return $GLOBALS['phpbbgallery_test_unique_id'];
-			}
-
-			return uniqid('', true);
-		}
-	}
-
 	if (!function_exists('phpbb_optionget'))
 	{
 		function phpbb_optionget(int $bit, int $data): bool
