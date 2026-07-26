@@ -97,6 +97,7 @@ namespace
 	require_once dirname(__DIR__, 4) . '/phpbb/cache/service.php';
 	require_once __DIR__ . '/stubs/phpbb_extension_base.php';
 	require_once __DIR__ . '/stubs/phpbb_notification_exception.php';
+	require_once __DIR__ . '/stubs/phpbb_http_exception.php';
 	require_once __DIR__ . '/stubs/phpbb_config.php';
 	require_once __DIR__ . '/stubs/phpbb_user.php';
 	require_once __DIR__ . '/stubs/template_noop_token_parser.php';

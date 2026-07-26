@@ -725,7 +725,7 @@ class moderate
 				$route = $this->helper->route('phpbbgallery_core_image_delete', ['image_id'	=> $image_id]);
 				return new RedirectResponse($route);
 			case 'reports_close':
-				$reports_close_image_data = $this->image->get_image_data($image_id);
+				$reports_close_image_data = $this->image->get_image_data_or_fail($image_id);
 				$reports_close_album_data = $this->album->get_info($reports_close_image_data['image_album_id']);
 				$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 				if (!$this->gallery_auth->acl_check('m_report', $reports_close_album_data['album_id'], $reports_close_album_data['album_user_id']))
@@ -752,7 +752,7 @@ class moderate
 				$route = $this->helper->route('phpbbgallery_core_image_report', ['image_id'	=> $image_id]);
 				return new RedirectResponse($route);
 		}
-		$image_data = $this->image->get_image_data($image_id);
+		$image_data = $this->image->get_image_data_or_fail($image_id);
 		$album_data = $this->album->get_info($image_data['image_album_id']);
 		$users_array = $report_data = [];
 		$open_report = false;
@@ -845,7 +845,7 @@ class moderate
 	 */
 	public function approve(int $image_id): \Symfony\Component\HttpFoundation\Response
 	{
-		$image_data = $this->image->get_image_data($image_id);
+		$image_data = $this->image->get_image_data_or_fail($image_id);
 		$album_data = $this->album->get_info($image_data['image_album_id']);
 
 		$album_backlink = $this->helper->route('phpbbgallery_core_album', ['album_id' => $image_data['image_album_id']]);
@@ -906,7 +906,7 @@ class moderate
 	 */
 	public function unapprove(int $image_id): \Symfony\Component\HttpFoundation\Response
 	{
-		$image_data = $this->image->get_image_data($image_id);
+		$image_data = $this->image->get_image_data_or_fail($image_id);
 		$album_data = $this->album->get_info($image_data['image_album_id']);
 
 		$album_backlink = $this->helper->route('phpbbgallery_core_index');
@@ -948,7 +948,7 @@ class moderate
 	 */
 	public function move(int $image_id): \Symfony\Component\HttpFoundation\Response
 	{
-		$image_data = $this->image->get_image_data($image_id);
+		$image_data = $this->image->get_image_data_or_fail($image_id);
 		$image_backlink = $this->helper->route('phpbbgallery_core_image', ['image_id' => $image_id]);
 		$album_loginlink = append_sid($this->root_path . 'ucp.' . $this->php_ext . '?mode=login');
 		$meta_refresh_time = 2;
@@ -1019,7 +1019,7 @@ class moderate
 	 */
 	public function lock(int $image_id): \Symfony\Component\HttpFoundation\Response
 	{
-		$image_data = $this->image->get_image_data($image_id);
+		$image_data = $this->image->get_image_data_or_fail($image_id);
 		$album_id = $image_data['image_album_id'];
 		//$user_id = $image_data['image_user_id'];
 		$album_data =  $this->album->get_info($album_id);

@@ -53,6 +53,7 @@ final class domain_image_types_test extends TestCase
 		$this->assertSame('string', (string) (new \ReflectionMethod(image::class, 'generate_link'))->getReturnType());
 		$this->assertSame('void', (string) (new \ReflectionMethod(image::class, 'handle_counter'))->getReturnType());
 		$this->assertSame('array|false', (string) (new \ReflectionMethod(image::class, 'get_image_data'))->getReturnType());
+		$this->assertSame('array', (string) (new \ReflectionMethod(image::class, 'get_image_data_or_fail'))->getReturnType());
 		$this->assertSame('array|false', (string) (new \ReflectionMethod(image::class, 'get_last_image'))->getReturnType());
 		$this->assertSame('void', (string) (new \ReflectionMethod(image::class, 'assign_block'))->getReturnType());
 	}
@@ -89,6 +90,71 @@ final class domain_image_types_test extends TestCase
 		$reflection->getProperty('table_images')->setValue($image, 'gallery_images');
 
 		$this->assertFalse($image->get_image_data(99));
+	}
+
+	public function test_required_image_data_returns_the_loaded_row(): void
+	{
+		$image = $this->getMockBuilder(image::class)
+			->disableOriginalConstructor()
+			->onlyMethods(['get_image_data'])
+			->getMock();
+		$image->method('get_image_data')->with(8)->willReturn(['image_id' => 8]);
+
+		$this->assertSame(['image_id' => 8], $image->get_image_data_or_fail(8));
+	}
+
+	public function test_required_image_data_throws_a_404_for_a_missing_row(): void
+	{
+		$image = $this->getMockBuilder(image::class)
+			->disableOriginalConstructor()
+			->onlyMethods(['get_image_data'])
+			->getMock();
+		$image->method('get_image_data')->with(404)->willReturn(false);
+
+		try
+		{
+			$image->get_image_data_or_fail(404);
+			$this->fail('A missing image row was accepted.');
+		}
+		catch (\phpbb\exception\http_exception $exception)
+		{
+			$this->assertSame(404, $exception->getStatusCode());
+			$this->assertSame('IMAGE_NOT_EXIST', $exception->getMessage());
+		}
+	}
+
+	public function test_routed_image_consumers_require_an_existing_row(): void
+	{
+		$controller_root = dirname(__DIR__) . '/controller/';
+		$expected_guards = [
+			'image.php' => 3,
+			'comment.php' => 4,
+			'moderate.php' => 6,
+		];
+
+		foreach ($expected_guards as $controller_file => $expected_count)
+		{
+			$source = (string) file_get_contents($controller_root . $controller_file);
+			$this->assertSame($expected_count, substr_count($source, '->get_image_data_or_fail('), $controller_file);
+		}
+
+		$this->assertSame(0, substr_count((string) file_get_contents($controller_root . 'image.php'), '->get_image_data('));
+		$this->assertSame(0, substr_count((string) file_get_contents($controller_root . 'comment.php'), '->get_image_data('));
+		$this->assertSame(1, substr_count((string) file_get_contents($controller_root . 'moderate.php'), '->get_image_data('));
+	}
+
+	public function test_report_notification_handles_an_image_deleted_during_dispatch(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/notification/helper.php');
+		$lookup = strpos($source, 'get_image_data($target[\'reported_image_id\'])');
+		$missing_guard = strpos($source, 'if ($image_data === false)', $lookup);
+		$album_access = strpos($source, '$image_data[\'image_album_id\']', $lookup);
+
+		$this->assertNotFalse($lookup);
+		$this->assertNotFalse($missing_guard);
+		$this->assertNotFalse($album_access);
+		$this->assertLessThan($missing_guard, $lookup);
+		$this->assertLessThan($album_access, $missing_guard);
 	}
 
 	public function test_image_display_bitmask_values_remain_stable(): void
