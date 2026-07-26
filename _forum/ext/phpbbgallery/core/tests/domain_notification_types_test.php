@@ -93,6 +93,12 @@ final class domain_notification_types_test extends TestCase
 		$this->assertSame([4, 9], $helper->get_album_watchers(11));
 	}
 
+	public function test_notification_watch_additions_use_multi_insert(): void
+	{
+		$this->assert_notification_watch_additions_are_batched('add', 'image_id');
+		$this->assert_notification_watch_additions_are_batched('add_albums', 'album_id');
+	}
+
 	public function test_adding_album_watches_uses_valid_sql_and_unique_ids(): void
 	{
 		$queries = [];
@@ -101,18 +107,21 @@ final class domain_notification_types_test extends TestCase
 			->method('sql_in_set')
 			->with('album_id', [3, 4])
 			->willReturn('album_id IN (3, 4)');
-		$db->expects($this->exactly(3))
+		$db->expects($this->once())
 			->method('sql_query')
 			->willReturnCallback(static function (string $sql) use (&$queries): string
 			{
 				$queries[] = $sql;
-				return count($queries) === 1 ? 'select_result' : 'insert_result';
+				return 'select_result';
 			});
 		$db->expects($this->once())->method('sql_fetchrow')->with('select_result')->willReturn(false);
 		$db->expects($this->once())->method('sql_freeresult')->with('select_result');
-		$db->expects($this->exactly(2))
-			->method('sql_build_array')
-			->willReturnCallback(static fn (string $operation, array $data): string => 'VALUES (' . $data['album_id'] . ', ' . $data['user_id'] . ')');
+		$db->expects($this->once())
+			->method('sql_multi_insert')
+			->with('gallery_watch', [
+				['album_id' => 3, 'user_id' => 5],
+				['album_id' => 4, 'user_id' => 5],
+			]);
 
 		$user = new \phpbb\user();
 		$user->data['user_id'] = 5;
@@ -126,8 +135,29 @@ final class domain_notification_types_test extends TestCase
 
 		$this->assertSame([
 			'SELECT * FROM gallery_watch WHERE user_id = 5 and album_id IN (3, 4)',
-			'INSERT INTO gallery_watch VALUES (3, 5)',
-			'INSERT INTO gallery_watch VALUES (4, 5)',
 		], $queries);
+	}
+
+	private function assert_notification_watch_additions_are_batched(string $method, string $id_column): void
+	{
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->once())
+			->method('sql_in_set')
+			->with($id_column, [3, 4])
+			->willReturn($id_column . ' IN (3, 4)');
+		$db->expects($this->once())->method('sql_query')->willReturn('select_result');
+		$db->expects($this->once())->method('sql_fetchrow')->with('select_result')->willReturn(false);
+		$db->expects($this->once())->method('sql_freeresult')->with('select_result');
+		$db->expects($this->once())
+			->method('sql_multi_insert')
+			->with('gallery_watch', [
+				[$id_column => 3, 'user_id' => 5],
+				[$id_column => 4, 'user_id' => 5],
+			]);
+
+		$user = new \phpbb\user();
+		$user->data['user_id'] = 5;
+		$watch = new notification($db, $user, 'gallery_watch');
+		$watch->{$method}([3, '4', 3]);
 	}
 }

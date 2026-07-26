@@ -281,14 +281,17 @@ class helper
 		}
 		$this->db->sql_freeresult($result);
 		$album_ids = array_diff($album_ids, $exclude);
+		$sql_ary = [];
 		foreach ($album_ids as $album_id)
 		{
-			$sql_ary = [
-				'album_id'		=> $album_id,
+			$sql_ary[] = [
+				'album_id'		=> (int) $album_id,
 				'user_id'		=> $user_id,
 			];
-			$sql = 'INSERT INTO ' . $this->watch_table . ' ' . $this->db->sql_build_array('INSERT', $sql_ary);
-			$this->db->sql_query($sql);
+		}
+		if ($sql_ary)
+		{
+			$this->db->sql_multi_insert($this->watch_table, $sql_ary);
 		}
 	}
 
