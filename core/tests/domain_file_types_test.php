@@ -110,14 +110,36 @@ final class domain_file_types_test extends TestCase
 		}
 		finally
 		{
-			if ($written_image !== false)
+			$written_image = null;
+			$file->image = null;
+			if ($destination !== false && file_exists($destination))
 			{
-				imagedestroy($written_image);
+				unlink($destination);
 			}
-			if ($file->image)
-			{
-				imagedestroy($file->image);
-			}
+		}
+	}
+
+	public function test_write_image_releases_gd_reference_when_requested(): void
+	{
+		if (!function_exists('imagecreatetruecolor'))
+		{
+			$this->markTestSkipped('The GD extension is required.');
+		}
+
+		$file = (new \ReflectionClass(file::class))->newInstanceWithoutConstructor();
+		$file->image = imagecreatetruecolor(1, 1);
+		$file->image_type = 'png';
+		$destination = tempnam(sys_get_temp_dir(), 'gallery-write-');
+
+		try
+		{
+			$file->write_image($destination, 90, true);
+			$this->assertNull($file->image);
+			$this->assertGreaterThan(0, filesize($destination));
+		}
+		finally
+		{
+			$file->image = null;
 			if ($destination !== false && file_exists($destination))
 			{
 				unlink($destination);

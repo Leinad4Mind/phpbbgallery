@@ -250,9 +250,9 @@ class file
 
 	/**
 	 * Write image to disk
-	 * @param $destination
-	 * @param int $quality
-	 * @param bool $destroy_image
+	 * @param string $destination Destination path
+	 * @param int $quality JPEG quality
+	 * @param bool $destroy_image Whether to release the in-memory image after writing
 	 */
 	public function write_image(string $destination, int $quality = -1, bool $destroy_image = false): void
 	{
@@ -279,7 +279,7 @@ class file
 
 		if ($destroy_image)
 		{
-			imagedestroy($this->image);
+			$this->image = null;
 		}
 	}
 
@@ -517,7 +517,7 @@ class file
 		}
 
 		$this->image = $rotated_image;
-		imagedestroy($source_image);
+		unset($source_image);
 
 		if ($swap_dimensions)
 		{
@@ -622,7 +622,7 @@ class file
 				$dst_y = (($this->image_size['height'] * 0.5) - ($this->watermark_size[1] * 0.5));
 			}
 			imagecopy($this->image, $this->watermark, $dst_x, $dst_y, 0, 0, $this->watermark_size[0], $this->watermark_size[1]);
-			imagedestroy($this->watermark);
+			$this->watermark = null;
 			$this->write_image($get_wm_name);
 			$this->image_source = $get_wm_name;
 			$this->read_image();
