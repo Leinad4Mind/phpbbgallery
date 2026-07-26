@@ -147,6 +147,18 @@ final class template_syntax_test extends TestCase
 		}
 	}
 
+	public function test_bootstrap_moderation_confirmation_uses_theme_form_controls(): void
+	{
+		$core_root = dirname(__DIR__);
+		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$source = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/mcp_approve.html');
+			$this->assertStringContainsString('class="control-group"', $source, $style);
+			$this->assertStringContainsString('class="form-control"', $source, $style);
+			$this->assertDoesNotMatchRegularExpression('/<\/?(?:dl|dt|dd)\b/i', $source, $style);
+		}
+	}
+
 	#[IgnoreDeprecations]
 	public function test_modernized_templates_parse_with_packaged_twig(): void
 	{
