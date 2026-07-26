@@ -130,6 +130,8 @@ final class template_syntax_test extends TestCase
 		{
 			$source = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/moderate_approve_queue.html');
 			$this->assertStringContainsString('{% elseif TOTAL_IMAGES_WAITING %}', $source, $style);
+			$this->assertStringContainsString('image_unapproved|length', $source, $style);
+			$this->assertStringNotContainsString('unaproved', $source, $style);
 		}
 	}
 
