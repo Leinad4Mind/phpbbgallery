@@ -94,6 +94,11 @@ class moderate
 	protected string $images_table;
 
 	/**
+	 * @var string
+	 */
+	protected string $albums_table;
+
+	/**
 	 * moderate constructor.
 	 *
 	 * @param \phpbb\db\driver\driver_interface $db
@@ -112,13 +117,14 @@ class moderate
 	 * @param \phpbbgallery\core\notification  $gallery_notification
 	 * @param \phpbbgallery\core\rating        $gallery_rating
 	 * @param string                            $images_table
+	 * @param string                            $albums_table
 	 */
 	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\template\template $template, \phpbb\controller\helper $helper, \phpbb\user $user,
 		\phpbb\language\language $lang,
 		\phpbb\user_loader $user_loader, \phpbbgallery\core\album\album $album, \phpbbgallery\core\auth\auth $gallery_auth, \phpbb\pagination $pagination,
 		\phpbbgallery\core\comment $comment, \phpbbgallery\core\report $report, \phpbbgallery\core\image\image $image,
 		\phpbbgallery\core\config $gallery_config, \phpbbgallery\core\notification $gallery_notification, \phpbbgallery\core\rating $gallery_rating,
-		string $images_table)
+		string $images_table, string $albums_table)
 	{
 		$this->db = $db;
 		$this->template = $template;
@@ -136,6 +142,7 @@ class moderate
 		$this->gallery_notification = $gallery_notification;
 		$this->gallery_rating = $gallery_rating;
 		$this->images_table = $images_table;
+		$this->albums_table = $albums_table;
 	}
 
 	/**
@@ -179,10 +186,12 @@ class moderate
 		$this->db->sql_freeresult($result);
 		$count = $row['count'];
 		// If user has no albums to have e return him
-		$sql = 'SELECT * 
-			FROM ' . $this->images_table . ' 
-			WHERE image_status = ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . ' AND ' . $this->db->sql_in_set('image_album_id', $mod_array) . '
-			ORDER BY image_id DESC';
+		$sql = 'SELECT i.*, a.album_name
+			FROM ' . $this->images_table . ' i
+			INNER JOIN ' . $this->albums_table . ' a
+				ON a.album_id = i.image_album_id
+			WHERE i.image_status = ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . ' AND ' . $this->db->sql_in_set('i.image_album_id', $mod_array) . '
+			ORDER BY i.image_id DESC';
 		$page = $page - 1;
 		$result = $this->db->sql_query_limit($sql, $per_page, $page * $per_page);
 
@@ -195,6 +204,7 @@ class moderate
 				'image_author'   => (int) $row['image_user_id'],
 				'image_time'     => $row['image_time'],
 				'image_album_id' => $row['image_album_id'],
+				'album_name'     => $row['album_name'],
 			];
 			$users_array[$row['image_user_id']] = [''];
 		}
@@ -210,7 +220,6 @@ class moderate
 
 		foreach ($waiting_images as $image_data)
 		{
-			$album_tmp = $this->album->get_info($image_data['image_album_id']);
 			$this->template->assign_block_vars('image_unapproved', [
 				'U_IMAGE_ID'           => $image_data['image_id'],
 				'U_IMAGE'              => $this->helper->route('phpbbgallery_core_image_file_mini', ['image_id' => $image_data['image_id']]),
@@ -219,11 +228,10 @@ class moderate
 				'U_IMAGE_NAME'         => $image_data['image_name'],
 				'IMAGE_AUTHOR'         => $this->user_loader->get_username($image_data['image_author'], 'full'),
 				'IMAGE_TIME'           => $this->user->format_date($image_data['image_time']),
-				'IMAGE_ALBUM'          => $album_tmp['album_name'],
+				'IMAGE_ALBUM'          => $image_data['album_name'],
 				'IMAGE_ALBUM_URL'      => $this->helper->route('phpbbgallery_core_album', ['album_id' => $image_data['image_album_id']]),
 				'IMAGE_ALBUM_ID'       => $image_data['image_album_id'],
 			]);
-			unset($album_tmp);
 		}
 		$this->template->assign_vars([
 			'TOTAL_IMAGES_WAITING'     => $this->lang->lang('WAITING_UNAPPROVED_IMAGE', (int) $count),
