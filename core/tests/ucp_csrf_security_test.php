@@ -150,6 +150,22 @@ class ucp_csrf_security_test extends TestCase
 		}
 	}
 
+	public function test_every_album_editor_posts_to_the_gallery_ucp_action(): void
+	{
+		foreach ($this->reorder_templates() as $template_path)
+		{
+			$template = (string) file_get_contents($template_path);
+			$this->assertStringContainsString('<form id="acp_gallery" method="post" action="{{ S_UCP_ACTION }}">', $template, $template_path);
+			$this->assertStringNotContainsString('action="{{ U_ACTION }}"', $template, $template_path);
+		}
+
+		$create = $this->method('create_album', 'edit_album');
+		$edit = $this->method('edit_album', 'delete_album');
+		$this->assertStringContainsString("'S_UCP_ACTION'", $create);
+		$this->assertStringContainsString("'S_UCP_ACTION'", $edit);
+		$this->assertStringNotContainsString("'S_ALBUM_ACTION'", $edit);
+	}
+
 	public function test_every_subscription_form_submits_a_phpbb_form_token(): void
 	{
 		foreach ($this->subscription_templates() as $template_path)
