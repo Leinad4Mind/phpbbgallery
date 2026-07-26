@@ -24,6 +24,25 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
+	'GALLERY_SYSTEM_STATUS'                  => 'Estado del sistema y del almacenamiento',
+	'GALLERY_STORAGE'                        => 'Directorios de almacenamiento',
+	'GALLERY_RUNTIME'                        => 'Entorno PHP y extensiones',
+	'GALLERY_REQUIREMENT'                    => 'Requisito',
+	'GALLERY_REQUIREMENT_REQUIRED'           => 'Obligatorio',
+	'GALLERY_REQUIREMENT_PHP'                => 'Se requiere PHP %s o posterior',
+	'GALLERY_REQUIREMENT_OPTIONAL_ZIP'       => 'Opcional; permite subir archivos ZIP',
+	'GALLERY_REQUIREMENT_OPTIONAL_EXIF'      => 'Opcional; activa el complemento de metadatos EXIF',
+	'GALLERY_REQUIREMENT_UNUSED_IMAGEMAGICK' => 'phpBB Gallery no lo utiliza; el procesamiento de imágenes usa GD',
+	'GALLERY_STATUS_NOT_AVAILABLE'           => 'No disponible',
+	'GALLERY_ADDONS'                         => 'Complementos de la Galería',
+	'GALLERY_ADDON_BENEFIT'                  => 'Beneficio',
+	'GALLERY_ADDON_ENABLED'                  => 'Activado',
+	'GALLERY_ADDON_DISABLED'                 => 'Desactivado',
+	'GALLERY_ADDON_NOT_INSTALLED'            => 'No instalado',
+	'GALLERY_ADDON_NOT_AVAILABLE'            => 'Archivos no disponibles',
+	'GALLERY_ADDON_CLEANUP_EXPLAIN'          => 'Encuentra y elimina de forma segura archivos de imagen y registros de base de datos inconsistentes.',
+	'GALLERY_ADDON_IMPORT_EXPLAIN'           => 'Importa en un álbum un lote controlado de imágenes existentes en el servidor.',
+	'GALLERY_ADDON_EXIF_EXPLAIN'             => 'Muestra los metadatos fotográficos guardados en las imágenes subidas.',
 	'ACP_GALLERY_OVERVIEW'         => 'Galería phpBB',
 	'ACP_GALLERY_OVERVIEW_EXPLAIN' => 'Aquí hay algunas estadísticas sobre tu galería.',
 

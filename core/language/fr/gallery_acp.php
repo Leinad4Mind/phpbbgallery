@@ -40,6 +40,25 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
+	'GALLERY_SYSTEM_STATUS'                  => 'État du système et du stockage',
+	'GALLERY_STORAGE'                        => 'Répertoires de stockage',
+	'GALLERY_RUNTIME'                        => 'Environnement PHP et extensions',
+	'GALLERY_REQUIREMENT'                    => 'Prérequis',
+	'GALLERY_REQUIREMENT_REQUIRED'           => 'Obligatoire',
+	'GALLERY_REQUIREMENT_PHP'                => 'PHP %s ou une version ultérieure est requis',
+	'GALLERY_REQUIREMENT_OPTIONAL_ZIP'       => 'Facultatif ; permet le téléversement d’archives ZIP',
+	'GALLERY_REQUIREMENT_OPTIONAL_EXIF'      => 'Facultatif ; active le module de métadonnées EXIF',
+	'GALLERY_REQUIREMENT_UNUSED_IMAGEMAGICK' => 'Non utilisé par phpBB Gallery ; le traitement des images utilise GD',
+	'GALLERY_STATUS_NOT_AVAILABLE'           => 'Non disponible',
+	'GALLERY_ADDONS'                         => 'Modules complémentaires de la Galerie',
+	'GALLERY_ADDON_BENEFIT'                  => 'Avantage',
+	'GALLERY_ADDON_ENABLED'                  => 'Activé',
+	'GALLERY_ADDON_DISABLED'                 => 'Désactivé',
+	'GALLERY_ADDON_NOT_INSTALLED'            => 'Non installé',
+	'GALLERY_ADDON_NOT_AVAILABLE'            => 'Fichiers non disponibles',
+	'GALLERY_ADDON_CLEANUP_EXPLAIN'          => 'Recherche et supprime en toute sécurité les fichiers d’image et les enregistrements de base de données incohérents.',
+	'GALLERY_ADDON_IMPORT_EXPLAIN'           => 'Importe dans un album un lot contrôlé d’images présentes sur le serveur.',
+	'GALLERY_ADDON_EXIF_EXPLAIN'             => 'Affiche les métadonnées photographiques stockées dans les images téléversées.',
 	'ACP_GALLERY_OVERVIEW'         => 'Galerie phpBB',
 	'ACP_GALLERY_OVERVIEW_EXPLAIN' => 'Voici quelques statistiques sur votre galerie.',
 

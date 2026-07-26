@@ -24,6 +24,25 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
+	'GALLERY_SYSTEM_STATUS'                  => 'Състояние на системата и хранилището',
+	'GALLERY_STORAGE'                        => 'Директории за съхранение',
+	'GALLERY_RUNTIME'                        => 'PHP среда и разширения',
+	'GALLERY_REQUIREMENT'                    => 'Изискване',
+	'GALLERY_REQUIREMENT_REQUIRED'           => 'Задължително',
+	'GALLERY_REQUIREMENT_PHP'                => 'Изисква се PHP %s или по-нова версия',
+	'GALLERY_REQUIREMENT_OPTIONAL_ZIP'       => 'Незадължително; позволява качване на ZIP архиви',
+	'GALLERY_REQUIREMENT_OPTIONAL_EXIF'      => 'Незадължително; активира добавката за EXIF метаданни',
+	'GALLERY_REQUIREMENT_UNUSED_IMAGEMAGICK' => 'Не се използва от phpBB Gallery; обработката на изображения използва GD',
+	'GALLERY_STATUS_NOT_AVAILABLE'           => 'Не е налично',
+	'GALLERY_ADDONS'                         => 'Добавки за Галерията',
+	'GALLERY_ADDON_BENEFIT'                  => 'Полза',
+	'GALLERY_ADDON_ENABLED'                  => 'Активирано',
+	'GALLERY_ADDON_DISABLED'                 => 'Деактивирано',
+	'GALLERY_ADDON_NOT_INSTALLED'            => 'Не е инсталирано',
+	'GALLERY_ADDON_NOT_AVAILABLE'            => 'Файловете не са налични',
+	'GALLERY_ADDON_CLEANUP_EXPLAIN'          => 'Намира и премахва безопасно несъответстващи файлове с изображения и записи в базата данни.',
+	'GALLERY_ADDON_IMPORT_EXPLAIN'           => 'Импортира контролиран набор от изображения на сървъра в албум.',
+	'GALLERY_ADDON_EXIF_EXPLAIN'             => 'Показва фотографските метаданни, записани в качените изображения.',
 	'ACP_GALLERY_OVERVIEW'         => 'phpBB Gallery',
 	'ACP_GALLERY_OVERVIEW_EXPLAIN' => 'Тук се намират някои от статистиките за вашата галерия.',
 
