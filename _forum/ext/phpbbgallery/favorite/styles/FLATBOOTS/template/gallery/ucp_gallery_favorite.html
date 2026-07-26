@@ -1,0 +1,57 @@
+{% if S_MANAGE_FAVORITES %}
+<form id="ucp_gallery" method="post" action="{{ S_UCP_ACTION }}">
+	<div class="tab-pane active">
+		<fieldset class="framed-ucp">
+			<legend>{{ L_TITLE }}</legend>
+			<p>{{ L_TITLE_EXPLAIN }}</p>
+
+			{% if image_row|length %}
+			<h4><i class="fa fa-star" aria-hidden="true"></i> {{ TOTAL_IMAGES }}</h4>
+			{% for image_row in image_row %}
+			<div class="well well-sm gallery-subscription-item">
+				<div class="pull-right">
+					<input id="image_favorite_{{ image_row.IMAGE_ID }}" name="image_id_ary[]" value="{{ image_row.IMAGE_ID }}" type="checkbox" class="uniform"><label for="image_favorite_{{ image_row.IMAGE_ID }}"></label>
+				</div>
+				<div class="row gallery-subscription-media">
+					{% if image_row.UC_FAKE_THUMBNAIL %}
+					<div class="col-xs-12 col-sm-3 text-center">
+						<span class="fake-thumb thumbnail">{{ image_row.UC_FAKE_THUMBNAIL }}</span>
+					</div>
+					{% endif %}
+					<div class="{% if image_row.UC_FAKE_THUMBNAIL %}col-xs-12 col-sm-9{% else %}col-xs-12{% endif %}">
+						<div class="row gallery-subscription-details">
+							<div class="col-xs-12 col-sm-6"><i class="fa fa-picture-o" aria-hidden="true"></i> {{ lang('IMAGE_NAME') }}{{ lang('COLON') }} {{ image_row.UC_IMAGE_NAME }}</div>
+							<div class="col-xs-12 col-sm-6"><i class="fa fa-upload" aria-hidden="true"></i> {{ lang('UPLOADED_BY_USER') }}{{ lang('COLON') }} {{ image_row.UPLOADER }}</div>
+							<div class="col-xs-12 col-sm-6"><i class="fa fa-clock-o" aria-hidden="true"></i> {{ image_row.IMAGE_TIME }}</div>
+							<div class="col-xs-12 col-sm-6"><i class="fa fa-folder" aria-hidden="true"></i> {{ lang('ALBUM') }}{{ lang('COLON') }} <a href="{{ image_row.U_VIEW_ALBUM }}"><strong>{{ image_row.ALBUM_NAME }}</strong></a></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			{% endfor %}
+			<div class="btn-group">
+				<a class="btn btn-sm btn-default" href="#" onclick="marklist('ucp_gallery', 'image_id_ary', true); return false;">{{ lang('MARK_ALL') }}</a>
+				<a class="btn btn-sm btn-default" href="#" onclick="marklist('ucp_gallery', 'image_id_ary', false); return false;">{{ lang('UNMARK_ALL') }}</a>
+			</div>
+			{% else %}
+			<div class="alert alert-info">
+				<i class="fa fa-warning" aria-hidden="true"></i>&nbsp;<strong>{{ lang('INFO_BOX') }}</strong>&nbsp;{{ lang('NO_FAVORITES') }}
+			</div>
+			{% endif %}
+		</fieldset>
+
+		{% if image_row|length %}
+		{% include 'pagination.html' %}
+
+		<div class="form-actions">
+			<select name="action" class="form-control input-sm">
+				<option value="" selected="selected">{{ lang('FAVORITE_CHOOSE_ACTION') }}</option>
+				<option value="remove_favorite">{{ lang('REMOVE_FROM_FAVORITES') }}</option>
+			</select>
+			<button type="submit" class="btn btn-default">{{ lang('SUBMIT') }}</button>
+			{{ S_FORM_TOKEN }}
+		</div>
+		{% endif %}
+	</div>
+</form>
+{% endif %}

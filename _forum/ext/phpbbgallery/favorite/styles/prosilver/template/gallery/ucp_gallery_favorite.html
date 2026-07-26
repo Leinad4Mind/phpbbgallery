@@ -1,0 +1,46 @@
+{% if S_MANAGE_FAVORITES %}
+<form id="ucp_gallery" method="post" action="{{ S_UCP_ACTION }}">
+<h2>{{ L_TITLE }}</h2>
+<div class="panel">
+	<div class="inner">
+		<p>{{ L_TITLE_EXPLAIN }}</p>
+
+		{% if image_row is not empty %}
+		<ul class="topiclist cplist">
+			{% for image_row in image_row %}
+			<li class="row{% if loop.index is odd %} bg1{% else %} bg2{% endif %}">
+				<dl>
+					<dt>
+						{% if image_row.UC_FAKE_THUMBNAIL %}<span style="float: left; text-align: center; width: {{ FAKE_THUMB_SIZE }}px; padding-right: 5px;">{{ image_row.UC_FAKE_THUMBNAIL }}</span>{% endif %}
+						<dfn>{{ lang('IMAGE_NAME') }}</dfn> {{ image_row.UC_IMAGE_NAME }}<br />
+						{{ lang('UPLOADED_BY_USER') }} {{ image_row.UPLOADER }}<br />
+						{{ image_row.IMAGE_TIME }}<br />
+						{{ lang('ALBUM') }}{{ lang('COLON') }} <a href="{{ image_row.U_VIEW_ALBUM }}" style="font-weight: bold;">{{ image_row.ALBUM_NAME }}</a>
+					</dt>
+					<dd class="mark"><input type="checkbox" name="image_id_ary[]" value="{{ image_row.IMAGE_ID }}" /></dd>
+				</dl>
+			</li>
+			{% endfor %}
+		</ul>
+
+		<div><a href="#" onclick="marklist('ucp_gallery', 'image_id_ary', true); return false;">{{ lang('MARK_ALL') }}</a> :: <a href="#" onclick="marklist('ucp_gallery', 'image_id_ary', false); return false;">{{ lang('UNMARK_ALL') }}</a></div>
+		{% else %}
+		<p class="notopics"><strong>{{ lang('NO_FAVORITES') }}</strong></p>
+		{% endif %}
+	</div>
+</div>
+
+{% if image_row is not empty %}
+	{% include 'pagination.html' %}
+
+	<fieldset class="display-actions">
+		<select name="action">
+			<option value="" selected="selected">{{ lang('FAVORITE_CHOOSE_ACTION') }}</option>
+			<option value="remove_favorite">{{ lang('REMOVE_FROM_FAVORITES') }}</option>
+		</select>
+		<input class="button2" type="submit" value="{{ lang('SUBMIT') }}" />
+		{{ S_FORM_TOKEN }}
+	</fieldset>
+{% endif %}
+</form>
+{% endif %}
