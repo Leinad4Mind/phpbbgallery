@@ -123,6 +123,40 @@ class language_catalog_test extends TestCase
 		}
 	}
 
+	public function test_portuguese_catalogs_use_the_declared_orthography_and_tu_register(): void
+	{
+		$forbidden_patterns = [
+			'pt' => [
+				'/(?<!\p{L})Você(?!\p{L})/u',
+				'/\b(?:respectiv|acç(?:ão|ões)|activ|actual|direct|efect|excepto|seleccion|correct)/iu',
+			],
+			'pt_preao' => [
+				'/(?<!\p{L})Você(?!\p{L})/u',
+				'/(?<!\p{L})(?:ação|ações)(?!\p{L})/iu',
+				'/\b(?:respetiv|(?:des)?ativ(?:ada|adas|ado|ados|ar|as)|(?:des)?atual|diretório|efetue|efetuados|exceto|selecion|(?:in)?corret|relactiv|tentactiv)/iu',
+			],
+		];
+		$failures = [];
+		$language_root = $this->extension_root . '/core/language';
+
+		foreach ($forbidden_patterns as $locale => $patterns)
+		{
+			foreach ($this->php_files($language_root . '/' . $locale) as $file)
+			{
+				$source = file_get_contents($language_root . '/' . $locale . '/' . $file);
+				foreach ($patterns as $pattern)
+				{
+					if (preg_match($pattern, $source, $match) === 1)
+					{
+						$failures[] = $locale . '/' . $file . ': ' . $match[0];
+					}
+				}
+			}
+		}
+
+		$this->assertSame([], $failures, implode(chr(10), $failures));
+	}
+
 	private function components(): array
 	{
 		return ['core', 'acpcleanup', 'acpimport', 'exif'];
