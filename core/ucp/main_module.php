@@ -809,6 +809,7 @@ class main_module
 				if ($phpbb_ext_gallery_config->get('newest_pega_album_id') == $phpbb_ext_gallery_user->get_data('personal_album_id'))
 				{
 					// Update the config for the statistic on the index
+					$newest_pgallery = false;
 					if ($phpbb_ext_gallery_config->get('num_pegas') > 0)
 					{
 						$sql_array = [
@@ -829,19 +830,8 @@ class main_module
 						$result = $db->sql_query_limit($sql, 1);
 						$newest_pgallery = $db->sql_fetchrow($result);
 						$db->sql_freeresult($result);
-
-						$phpbb_ext_gallery_config->set('newest_pega_user_id', $newest_pgallery['user_id']);
-						$phpbb_ext_gallery_config->set('newest_pega_username', $newest_pgallery['username']);
-						$phpbb_ext_gallery_config->set('newest_pega_user_colour', $newest_pgallery['user_colour']);
-						$phpbb_ext_gallery_config->set('newest_pega_album_id', $newest_pgallery['album_id']);
 					}
-					else
-					{
-						$phpbb_ext_gallery_config->set('newest_pega_user_id', 0);
-						$phpbb_ext_gallery_config->set('newest_pega_username', '');
-						$phpbb_ext_gallery_config->set('newest_pega_user_colour', '');
-						$phpbb_ext_gallery_config->set('newest_pega_album_id', 0);
-					}
+					$this->update_newest_personal_gallery_config($phpbb_ext_gallery_config, $newest_pgallery);
 				}
 			}
 			else
@@ -892,6 +882,31 @@ class main_module
 			$phpbb_ext_gallery_core_album->check_user($album_id);
 			confirm_box(false, 'DELETE_ALBUM', $s_hidden_fields);
 		}
+	}
+
+	/**
+	 * Store the newest personal gallery or reset stale statistics.
+	 *
+	 * @param \phpbbgallery\core\config $gallery_config Gallery configuration
+	 * @param array|false $gallery Newest personal gallery row
+	 * @return void
+	 */
+	protected function update_newest_personal_gallery_config(\phpbbgallery\core\config $gallery_config, array|false $gallery): void
+	{
+		if ($gallery !== false)
+		{
+			$gallery_config->set('newest_pega_user_id', (int) $gallery['user_id']);
+			$gallery_config->set('newest_pega_username', (string) $gallery['username']);
+			$gallery_config->set('newest_pega_user_colour', (string) $gallery['user_colour']);
+			$gallery_config->set('newest_pega_album_id', (int) $gallery['album_id']);
+			return;
+		}
+
+		$gallery_config->set('newest_pega_user_id', 0);
+		$gallery_config->set('newest_pega_username', '');
+		$gallery_config->set('newest_pega_user_colour', '');
+		$gallery_config->set('newest_pega_album_id', 0);
+		$gallery_config->set('num_pegas', 0);
 	}
 
 	public function move_album(): bool
