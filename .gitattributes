@@ -1,1 +1,15 @@
 * text=auto eol=lf
+
+# Development-only test suites stay in source control but not in release archives.
+/core/phpunit.xml.dist export-ignore
+/core/tests export-ignore
+/core/tests/** export-ignore
+/acpcleanup/phpunit.xml.dist export-ignore
+/acpcleanup/tests export-ignore
+/acpcleanup/tests/** export-ignore
+/acpimport/phpunit.xml.dist export-ignore
+/acpimport/tests export-ignore
+/acpimport/tests/** export-ignore
+/exif/phpunit.xml.dist export-ignore
+/exif/tests export-ignore
+/exif/tests/** export-ignore
