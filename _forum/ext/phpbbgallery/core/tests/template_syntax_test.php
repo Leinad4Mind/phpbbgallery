@@ -98,6 +98,16 @@ final class template_syntax_test extends TestCase
 		}
 	}
 
+	public function test_optional_acp_blocks_default_to_empty_arrays(): void
+	{
+		$core_root = dirname(__DIR__);
+		$overview = (string) file_get_contents($core_root . '/adm/style/gallery_main.html');
+		$permissions = (string) file_get_contents($core_root . '/adm/style/gallery_permissions.html');
+
+		$this->assertStringContainsString('mods|default([])', $overview);
+		$this->assertStringContainsString('c_rows|default([])', $permissions);
+	}
+
 	public function test_every_upload_selector_accepts_webp(): void
 	{
 		$core_root = dirname(__DIR__);
