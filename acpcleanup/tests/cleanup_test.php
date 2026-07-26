@@ -60,6 +60,20 @@ final class cleanup_test extends TestCase
 		}
 	}
 
+	public function test_service_definition_injects_gallery_user_before_table_names(): void
+	{
+		$definition = (string) file_get_contents(dirname(__DIR__) . '/config/services.yml');
+		$gallery_user = strpos($definition, "'@phpbbgallery.core.user'");
+		$albums_table = strpos($definition, "'%phpbbgallery.tables.gallery_albums%'");
+		$images_table = strpos($definition, "'%phpbbgallery.tables.gallery_images%'");
+
+		$this->assertNotFalse($gallery_user);
+		$this->assertNotFalse($albums_table);
+		$this->assertNotFalse($images_table);
+		$this->assertLessThan($albums_table, $gallery_user);
+		$this->assertLessThan($images_table, $albums_table);
+	}
+
 	public function test_delete_files_removes_sources_and_caches(): void
 	{
 		$dependencies = $this->create_service();
