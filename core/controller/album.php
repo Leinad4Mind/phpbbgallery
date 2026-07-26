@@ -233,8 +233,6 @@ class album
 			$this->display_images($album_id, $album_data, ($page - 1) * (int) $this->config['phpbb_gallery_items_per_page'], (int) $this->config['phpbb_gallery_items_per_page'], $album_display[0]);
 		}
 
-//		phpbb_ext_gallery_core_misc::markread('album', $album_id);
-
 		return $this->helper->render('gallery/album_body.html', $page_title);
 	}
 
@@ -250,7 +248,7 @@ class album
 	{
 		$sort_days = $this->request->variable('st', 0);
 		$sort_key = $this->request->variable('sk', ($album_data['album_sort_key']) ? $album_data['album_sort_key'] : $this->config['phpbb_gallery_default_sort_key']);
-		$sort_dir = $this->request->variable('sd', ($album_data['album_sort_dir']) ? $album_data['album_sort_dir'] : $this->config['phpbb_gallery_default_sort_dir']);
+		$sort_dir = $this->normalize_sort_direction($this->request->variable('sd', ($album_data['album_sort_dir']) ? $album_data['album_sort_dir'] : $this->config['phpbb_gallery_default_sort_dir']));
 
 		$image_status_check = ' AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED;
 
@@ -287,15 +285,6 @@ class album
 			$total_images_display += $this->get_descendant_image_count($descendant_album_ids, $album_owner_id);
 		}
 
-		if (in_array($sort_key, ['r', 'ra']))
-		{
-			$sql_help_sort = ', image_id ' . (($sort_dir == 'd') ? 'ASC' : 'DESC');
-		}
-		else
-		{
-			$sql_help_sort = ', image_id ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
-		}
-
 		$limit_days = [];
 		$sort_by_text = [
 			't'  => $this->language->lang('TIME'),
@@ -325,6 +314,14 @@ class album
 			$sort_by_sql['lc'] = 'image_last_comment';
 		}
 		$sort_key = $this->normalize_sort_key($sort_key, $sort_by_sql);
+		if (in_array($sort_key, ['r', 'ra'], true))
+		{
+			$sql_help_sort = ', image_id ' . (($sort_dir == 'd') ? 'ASC' : 'DESC');
+		}
+		else
+		{
+			$sql_help_sort = ', image_id ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
+		}
 		gen_sort_selects($limit_days, $sort_by_text, $sort_days, $sort_key, $sort_dir, $s_limit_days, $s_sort_key, $s_sort_dir, $u_sort_param);
 		$sql_sort_order = $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
 
@@ -601,6 +598,17 @@ class album
 	protected function normalize_sort_key(string $sort_key, array $sort_by_sql): string
 	{
 		return isset($sort_by_sql[$sort_key]) ? $sort_key : 't';
+	}
+
+	/**
+	 * Restrict the requested sort direction to phpBB's supported values.
+	 *
+	 * @param string $sort_direction Requested sort direction
+	 * @return string Safe sort direction
+	 */
+	protected function normalize_sort_direction(string $sort_direction): string
+	{
+		return $sort_direction === 'a' ? 'a' : 'd';
 	}
 
 	/**
