@@ -166,6 +166,12 @@ class search
 		}
 		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
 		$this->language->add_lang('search');
+		// Is user able to search? Has search been disabled?
+		if (!$this->auth->acl_get('u_search') || !$this->config['load_search'])
+		{
+			$this->template->assign_var('S_NO_SEARCH', true);
+			trigger_error('NO_SEARCH');
+		}
 		/**
 		* Build the sort options
 		*/
@@ -212,7 +218,7 @@ class search
 				{
 					trigger_error(sprintf($this->language->lang('TOO_FEW_AUTHOR_CHARS'), $this->config['min_search_author_chars']));
 				}
-				$username_parsed = (strpos($username, '*') !== false) ? ' username_clean ' . $this->db->sql_like_expression(str_replace('*', $this->db->get_any_char(), utf8_clean_string($this->db->sql_escape($username)))) : ' username_clean = \'' . $this->db->sql_escape(utf8_clean_string($username)) .'\'';
+				$username_parsed = (strpos($username, '*') !== false) ? ' username_clean ' . $this->db->sql_like_expression(str_replace('*', $this->db->get_any_char(), utf8_clean_string($username))) : ' username_clean = \'' . $this->db->sql_escape(utf8_clean_string($username)) .'\'';
 				$sql = 'SELECT user_id
 					FROM ' . USERS_TABLE . '
 					WHERE ' . $username_parsed . '
@@ -277,14 +283,9 @@ class search
 			}
 			$sql_where[] = $search_query;
 
-			if (empty($search_album))
-			{
-				$sql_where[] = $this->db->sql_in_set('i.image_album_id', $this->gallery_auth->acl_album_ids('i_view'));
-			}
-			else
-			{
-				$sql_where[] = $this->db->sql_in_set('i.image_album_id', $search_album);
-			}
+			$search_album = $this->get_search_album_ids($search_album);
+			$sql_where[] = $this->db->sql_in_set('i.image_album_id', $search_album);
+			$sql_where[] = $this->get_image_visibility_sql();
 			$sql_array['WHERE'] = implode(' and ', array_filter($sql_where));
 			$sql_array['SELECT'] = 'COUNT(i.image_id) as count';
 
@@ -352,12 +353,6 @@ class search
 				'SEARCH_MATCHES'	=> $this->language->lang('FOUND_SEARCH_MATCHES', $search_count),
 			]);
 			return $this->helper->render('gallery/search_results.html', $this->language->lang('GALLERY'));
-		}
-		// Is user able to search? Has search been disabled?
-		if (!$this->auth->acl_get('u_search') || !$this->config['load_search'])
-		{
-			$this->template->assign_var('S_NO_SEARCH', true);
-			trigger_error('NO_SEARCH');
 		}
 		$this->template->assign_block_vars('navlinks', [
 			'FORUM_NAME'	=> $this->language->lang('SEARCH'),
@@ -604,5 +599,52 @@ class search
 		$ids = array_filter($ids, static fn (int $id): bool => $id > 0);
 
 		return array_values(array_unique($ids));
+	}
+
+	/**
+	 * Restrict a submitted album filter to albums the current user can view.
+	 *
+	 * @param array $requested_album_ids Submitted album identifiers
+	 * @return array Allowed album identifiers
+	 */
+	protected function get_search_album_ids(array $requested_album_ids): array
+	{
+		$viewable_album_ids = $this->normalize_id_filter((array) $this->gallery_auth->acl_album_ids('i_view'));
+
+		if (!$requested_album_ids)
+		{
+			return $viewable_album_ids;
+		}
+
+		return array_values(array_intersect($requested_album_ids, $viewable_album_ids));
+	}
+
+	/**
+	 * Build the image-status boundary for an interactive search.
+	 *
+	 * Orphan uploads are never searchable. Unapproved images remain visible only
+	 * to their registered uploader or to moderators of the containing album.
+	 *
+	 * @return string Portable DBAL SQL condition
+	 */
+	protected function get_image_visibility_sql(): string
+	{
+		$visibility = [
+			'i.image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED,
+		];
+
+		if (!empty($this->user->data['is_registered']))
+		{
+			$visibility[] = 'i.image_user_id = ' . (int) $this->user->data['user_id'];
+		}
+
+		$moderated_album_ids = $this->normalize_id_filter((array) $this->gallery_auth->acl_album_ids('m_status'));
+		if ($moderated_album_ids)
+		{
+			$visibility[] = $this->db->sql_in_set('i.image_album_id', $moderated_album_ids);
+		}
+
+		return 'i.image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN .
+			' AND (' . implode(' OR ', $visibility) . ')';
 	}
 }
