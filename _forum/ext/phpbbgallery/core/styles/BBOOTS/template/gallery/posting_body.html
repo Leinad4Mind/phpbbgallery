@@ -109,7 +109,7 @@ head.ready(function () {
 
 					{% if S_ALLOW_ROTATE %}
 					<div class="control-group">
-					<label class="control-label" for="allow_comments">Rotation{{ lang('COLON') }}</label>
+					<label class="control-label" for="rotate_{{ upload_image.S_ROW_COUNT }}_0">Rotation{{ lang('COLON') }}</label>
 					<div class="controls controls-row">
 						<div class="radio"><input type="radio" name="rotate[{{ upload_image.S_ROW_COUNT }}]" id="rotate_{{ upload_image.S_ROW_COUNT }}_0" value="0" checked="checked"> <label for="rotate_{{ upload_image.S_ROW_COUNT }}_0">{{ lang('ROTATE_NONE') }}</label></div>
 						<div class="radio"><input type="radio" name="rotate[{{ upload_image.S_ROW_COUNT }}]" id="rotate_{{ upload_image.S_ROW_COUNT }}_270" value="270"> <label for="rotate_{{ upload_image.S_ROW_COUNT }}_270">{{ lang('ROTATE_RIGHT') }}</label></div>
@@ -144,7 +144,7 @@ head.ready(function () {
 		<fieldset class="form-actions">
 			{{ S_HIDDEN_FIELDS }}{{ S_CAPTCHA_HIDDEN_FIELDS }}
 			<button type="reset" accesskey="r" tabindex="200" value="{{ lang('RESET') }}" class="btn btn-default">{{ lang('RESET') }}</button>
-			<button type="submit" accesskey="s" tabindex="201" name="submit" value="{{ lang('CONTINUE') }}" class="btn btn-default" id="load" name="post" autocomplete="off" data-loading-text="loading...<i class='icon-spin icon-spinner icon-large icon-white'></i>">{{ lang('CONTINUE') }}</button>
+			<button type="submit" accesskey="s" tabindex="201" name="submit" value="{{ lang('CONTINUE') }}" class="btn btn-default" id="load" autocomplete="off" data-loading-text="loading...<i class='icon-spin icon-spinner icon-large icon-white'></i>">{{ lang('CONTINUE') }}</button>
 		</fieldset>
 		{{ S_FORM_TOKEN }}
 </div>
@@ -226,11 +226,11 @@ head.ready(function () {
 		<div class="row">
 			<div class="col-md-8">
 			   <label class="control-label" for="message_{{ image.S_ROW_COUNT }}">{{ lang('IMAGE_DESC') }}{{ lang('COLON') }}</label>
-			   <textarea class="form-control" name="message[{{ image.S_ROW_COUNT }}]" id="message_{{ image.S_ROW_COUNT }}" rows="7" tabindex="3" onchange="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %}" onselect="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %} storeCaret(this);" onclick="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %} storeCaret(this);" onkeyup="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %} storeCaret(this);" class="inputbox">{{ image.IMAGE_DESC }}</textarea>
+			   <textarea class="form-control" name="message[{{ image.S_ROW_COUNT }}]" id="message_{{ image.S_ROW_COUNT }}" rows="7" tabindex="3" onchange="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %}" onselect="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %} storeCaret(this);" onclick="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %} storeCaret(this);" onkeyup="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %} storeCaret(this);">{{ image.IMAGE_DESC }}</textarea>
 			    {{ lang('DESCRIPTION_LENGTH') }}
 			</div>
             <div class="col-md-4">
-             <label class="control-label" for="">Preview{{ lang('COLON') }}</label>
+             <span class="control-label">Preview{{ lang('COLON') }}</span>
 			   <div class="img-polaroid text-center">{{ image.U_IMAGE }}</div>
 		    </div>
 		</div>
@@ -297,7 +297,7 @@ head.ready(function () {
 			<input type="hidden" id="mode" name="mode" value="upload_edit">
 			<button type="reset" accesskey="r" tabindex="200" value="{{ lang('RESET') }}" class="btn btn-default">{{ lang('RESET') }}</button>
 			{% if S_UPLOAD_EDIT %}<button type="submit" name="discard_pending" value="1" class="btn btn-default">{{ lang('CANCEL') }}</button>{% endif %}
-			<button type="submit" accesskey="s" tabindex="201" name="submit" value="{{ lang('SUBMIT') }}" class="btn btn-default" id="load" name="post" autocomplete="off" data-loading-text="loading...<i class='icon-spin icon-spinner icon-large icon-white'></i>">{{ lang('SUBMIT') }}</button>
+			<button type="submit" accesskey="s" tabindex="201" name="submit" value="{{ lang('SUBMIT') }}" class="btn btn-default" id="load" autocomplete="off" data-loading-text="loading...<i class='icon-spin icon-spinner icon-large icon-white'></i>">{{ lang('SUBMIT') }}</button>
 	</fieldset>
 	{{ S_FORM_TOKEN }}
 </form>
