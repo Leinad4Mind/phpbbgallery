@@ -65,4 +65,28 @@ final class ucp_main_types_test extends TestCase
 		$this->assertSame('int', (string) $album_parameter->getType());
 		$this->assertSame('bool', (string) (new \ReflectionMethod(main_module::class, 'move_album'))->getReturnType());
 	}
+
+	public function test_missing_newest_personal_gallery_resets_stale_config(): void
+	{
+		$sets = [];
+		$config = $this->createMock(\phpbbgallery\core\config::class);
+		$config->expects($this->exactly(5))
+			->method('set')
+			->willReturnCallback(static function (string $key, mixed $value) use (&$sets): void
+			{
+				$sets[$key] = $value;
+			});
+
+		$module = new main_module();
+		$update = new \ReflectionMethod(main_module::class, 'update_newest_personal_gallery_config');
+		$update->invoke($module, $config, false);
+
+		$this->assertSame([
+			'newest_pega_user_id' => 0,
+			'newest_pega_username' => '',
+			'newest_pega_user_colour' => '',
+			'newest_pega_album_id' => 0,
+			'num_pegas' => 0,
+		], $sets);
+	}
 }

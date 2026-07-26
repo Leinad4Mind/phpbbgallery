@@ -57,4 +57,18 @@ final class acp_main_types_test extends TestCase
 		$this->assertSame(6, substr_count($source, '!== false && ('));
 		$this->assertStringContainsString('@unlink($gallery_url->path(\'upload\') . $i . \'/\' . $upload_file);', $source);
 	}
+
+	public function test_empty_user_resync_still_passes_an_initialized_list(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/acp/main_module.php');
+		$initialization = strpos($source, '$sync_users = [];');
+		$query = strpos($source, 'SELECT user_id FROM ', $initialization);
+		$sync = strpos($source, 'set_personal_albums($sync_users)', $query);
+
+		$this->assertNotFalse($initialization);
+		$this->assertNotFalse($query);
+		$this->assertNotFalse($sync);
+		$this->assertLessThan($query, $initialization);
+		$this->assertLessThan($sync, $query);
+	}
 }

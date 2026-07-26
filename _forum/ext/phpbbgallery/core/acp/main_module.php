@@ -558,6 +558,7 @@ class main_module
 		{
 			// We will loop a resync
 			// Let's gather some info
+			$sync_users = [];
 			$sql = 'SELECT user_id FROM ' . $users_table . ' ORDER BY user_id ASC';
 			$result = $db->sql_query($sql);
 			while ($row = $db->sql_fetchrow($result))
