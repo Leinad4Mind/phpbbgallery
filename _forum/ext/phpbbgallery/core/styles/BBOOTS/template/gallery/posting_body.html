@@ -12,7 +12,7 @@ head.load("{{ T_THEME_PATH }}/vendors/jupload.min.js");
 		 <label class="control-label" for="album_id">{{ lang('SELECT_ALBUM') }}{{ lang('COLON') }}</label>
 		 <div class="controls controls-row">
 		  <div class="input-group">
-		  <select class="selectpicker" data-container="body" name="album_id">{{ S_ALBUM_SELECT }}</select>
+		  <select class="selectpicker" data-container="body" name="album_id" id="album_id">{{ S_ALBUM_SELECT }}</select>
 		 <span class="input-group-btn">
 		   <button class="btn btn-default" type="submit" name="move" value="{{ lang('SUBMIT') }}">{{ lang('SUBMIT') }}</button>
 		 </span>
@@ -56,7 +56,7 @@ head.ready(function () {
 		<h3>{{ lang('UPLOAD_IMAGE') }}</h3>
 		<fieldset class="fields1">
 			{% if ERROR %}
-			<div class="alert alert-error fade in">
+			<div class="alert alert-danger fade in">
 				<button data-dismiss="alert" class="close"><span class="awe-remove-circle"></span></button>
 				<strong>{{ lang('ERROR') }}{{ lang('COLON') }}</strong> {{ ERROR }}
 			</div>
@@ -75,7 +75,7 @@ head.ready(function () {
 
 				{% if not S_USER_LOGGED_IN %}
 					<label for="username">{{ lang('USERNAME') }}{{ lang('COLON') }}</label>
-					<input class="inputbox autowidth" type="text" tabindex="1" name="username" value="{{ USERNAME }}" size="60" maxlength="32" />
+					<input class="inputbox autowidth" type="text" tabindex="1" name="username" id="username" value="{{ USERNAME }}" size="60" maxlength="32" />
 				{% endif %}
 
 				{% if S_COMMENTS_ENABLED %}
@@ -83,7 +83,7 @@ head.ready(function () {
 					<input type="checkbox" class="checkbox" name="allow_comments" id="allow_comments"{% if S_ALLOW_COMMENTS %} checked="checked"{% endif %} value="1" /> <label for="allow_comments">{{ lang('ALLOW_COMMENTS') }}</label>
 				{% endif %}
 				<div>
-					<label class="label label-warning" for="image_file">{{ lang('IMAGES') }}</label>
+					<label class="label label-warning" for="files">{{ lang('IMAGES') }}</label>
 					<input class="btn btn-sm btn-default inputbox autowidth dz-hidden-input" type="file" name="files[]" id="files" size="52" multiple accept="image/jpeg,image/png,image/gif,image/webp,application/zip" style="display: unset;"/>
 				</div>
 				{% for upload_image in upload_image|default([]) %}
@@ -97,7 +97,7 @@ head.ready(function () {
 										   <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px; line-height: 20px;"></div>
 
 										   <div>
-											  <span class="btn btn-default btn-file btn-sm"><span class="fileinput-new">Browse</span>
+											  <span class="btn btn-default btn-file btn-sm"><span class="fileinput-new">{{ lang('SELECT') }}</span>
 											  <span class="fileinput-exists">{{ lang('CHANGE') }}</span>
 												 <input type="file" tabindex="1{{ upload_image.S_ROW_COUNT }}" id="image_file_{{ upload_image.S_ROW_COUNT }}" name="image_file_{{ upload_image.S_ROW_COUNT }}" size="52" />
 											  </span>
@@ -170,7 +170,7 @@ head.ready(function () {
 	<div class="clearfix">
 		<fieldset>
 	   {% if ERROR %}
-        <div class="alert alert-error fade in">
+		<div class="alert alert-danger fade in">
 			<button data-dismiss="alert" class="close"><span class="awe-remove-circle"></span></button>
 			<strong>{{ lang('ERROR') }}{{ lang('COLON') }}</strong> {{ ERROR }}
 		</div>
@@ -178,7 +178,7 @@ head.ready(function () {
 
 			{% if not S_USER_LOGGED_IN %}
 				<label for="username">{{ lang('USERNAME') }}{{ lang('COLON') }}</label>
-				<input class="inputbox autowidth" type="text" tabindex="1" name="username" value="{{ S_USERNAME }}" size="60" maxlength="32" />
+				<input class="inputbox autowidth" type="text" tabindex="1" name="username" id="username" value="{{ S_USERNAME }}" size="60" maxlength="32" />
 			{% endif %}
 
 		{% if BBCODE_STATUS %}

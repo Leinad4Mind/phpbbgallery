@@ -123,7 +123,8 @@ function toggleElement(oElement)
 	  <form method="post" action="{{ S_SEARCH_ACTION }}">
 	  <fieldset>
 		<div class="controls-row">
-        <label class="control-label" for="bday_day">{{ lang('SORT_BY') }}{{ lang('COLON') }}</label>
+        <label class="control-label" for="sk">{{ lang('SORT_BY') }}{{ lang('COLON') }}</label>
+		<label class="sr-only" for="sd">{{ lang('SORT_DIRECTION') }}</label>
          <div class="input-group">
 		 {{ S_SELECT_SORT_KEY }}
 		 <span class="input-group-btn">

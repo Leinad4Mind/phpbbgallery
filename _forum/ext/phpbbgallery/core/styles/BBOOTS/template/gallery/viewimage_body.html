@@ -3,7 +3,7 @@
 
 <div class="clearfix">
 	{% if S_IMAGE_REPORTED %}
-		<div class="alert alert-error fade in">
+		<div class="alert alert-danger fade in">
 			<button data-dismiss="alert" class="close"><span class="awe-remove-circle"></span></button>
 			<i class="icon-warning-sign"></i>
 			<a href="{{ U_IMAGE_REPORTED }}">{{ lang('IMAGE_REPORTED') }}</a>
@@ -263,7 +263,7 @@
 			<div class="controls controls-row">
 				<div class="selector">
 						{% if rate_scale|length %}
-							<select class="selectpicker show-tick" data-container="body" data-style="btn-sm btn btn-default" name="rating">
+							<select class="selectpicker show-tick" data-container="body" data-style="btn-sm btn btn-default" name="rating" id="rating">
 							{% for rate_scale in rate_scale %}
 								{% if rate_scale.RATE_POINT == 1 %}<option value="0">{{ lang('DONT_RATE_IMAGE') }}</option>{% endif %}
 								<option value="{{ rate_scale.RATE_POINT }}">{{ rate_scale.RATE_POINT }}</option>

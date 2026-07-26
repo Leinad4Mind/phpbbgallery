@@ -17,7 +17,7 @@
 
 			{% if not S_USER_LOGGED_IN %}
 				<label for="username">{{ lang('USERNAME') }}{{ lang('COLON') }}</label>
-				<input class="form-control" type="text" tabindex="1" name="username" value="{{ USERNAME }}" size="60" maxlength="32" />
+				<input class="form-control" type="text" tabindex="1" name="username" id="username" value="{{ USERNAME }}" size="60" maxlength="32" />
 			{% endif %}
 
 			{% if S_ALLOWED_TO_RATE %}
