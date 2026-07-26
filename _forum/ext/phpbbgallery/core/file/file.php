@@ -95,6 +95,16 @@ class file
 
 	public function set_image_data(string $source = '', string $name = '', int $size = 0, bool $force_empty_image = false): void
 	{
+		if ($force_empty_image)
+		{
+			$this->image = null;
+			$this->image_content_type = '';
+			$this->image_size = [];
+			$this->image_type = '';
+			$this->watermarked = false;
+			$this->rotated = false;
+			$this->resized = false;
+		}
 		if ($source)
 		{
 			$this->image_source = $source;
@@ -106,13 +116,6 @@ class file
 		if ($size)
 		{
 			$this->image_size['file'] = $size;
-		}
-		if ($force_empty_image)
-		{
-			$this->image = null;
-			$this->watermarked = false;
-			$this->rotated = false;
-			$this->resized = false;
 		}
 	}
 

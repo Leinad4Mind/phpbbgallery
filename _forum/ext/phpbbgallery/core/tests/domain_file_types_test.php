@@ -39,6 +39,9 @@ final class domain_file_types_test extends TestCase
 		$reflection = new \ReflectionClass(file::class);
 		$file = $reflection->newInstanceWithoutConstructor();
 		$file->image = 'legacy-handle';
+		$file->image_content_type = 'image/png';
+		$file->image_size = ['file' => 99, 'width' => 10, 'height' => 10];
+		$file->image_type = 'png';
 		$file->resized = true;
 		$file->rotated = true;
 		$file->watermarked = true;
@@ -46,6 +49,9 @@ final class domain_file_types_test extends TestCase
 		$file->set_image_data('missing.jpg', 'Missing', 12, true);
 
 		$this->assertNull($file->image);
+		$this->assertSame('', $file->image_content_type);
+		$this->assertSame(['file' => 12], $file->image_size);
+		$this->assertSame('', $file->image_type);
 		$this->assertFalse($file->resized);
 		$this->assertFalse($file->rotated);
 		$this->assertFalse($file->watermarked);
