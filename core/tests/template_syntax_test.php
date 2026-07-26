@@ -170,6 +170,56 @@ final class template_syntax_test extends TestCase
 		}
 	}
 
+	public function test_all_bootstrap_gallery_templates_avoid_prosilver_definition_list_layout(): void
+	{
+		$core_root = dirname(__DIR__);
+		$gallery_root = dirname($core_root);
+		$directories = [
+			$core_root . '/styles/BBOOTS',
+			$core_root . '/styles/FLATBOOTS',
+			$gallery_root . '/exif/styles/BBOOTS',
+			$gallery_root . '/exif/styles/FLATBOOTS',
+		];
+		$templates = [];
+
+		foreach ($directories as $directory)
+		{
+			$iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($directory, \FilesystemIterator::SKIP_DOTS));
+			foreach ($iterator as $file)
+			{
+				if ($file->isFile() && strtolower($file->getExtension()) === 'html')
+				{
+					$templates[] = $file->getPathname();
+				}
+			}
+		}
+
+		$this->assertCount(90, $templates);
+		foreach ($templates as $template)
+		{
+			$source = (string) file_get_contents($template);
+			$this->assertDoesNotMatchRegularExpression('/<\/?(?:dl|dt|dd)\b/i', $source, $template);
+		}
+	}
+
+	public function test_bootstrap_gallery_forms_do_not_repeat_literal_attributes(): void
+	{
+		$core_root = dirname(__DIR__);
+		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$root = $core_root . '/styles/' . $style . '/template/gallery/';
+			$posting = (string) file_get_contents($root . 'posting_body.html');
+			$album = (string) file_get_contents($root . 'album_body.html');
+			$view_image = (string) file_get_contents($root . 'viewimage_body.html');
+
+			$this->assertDoesNotMatchRegularExpression('/<textarea\b[^>]*\bclass="[^"]*"[^>]*\bclass="/i', $posting . $view_image, $style);
+			$this->assertDoesNotMatchRegularExpression('/<button\b[^>]*\bname="[^"]*"[^>]*\bname="/i', $posting, $style);
+			$this->assertStringNotContainsString('href="{{ U_RETURN_LINK }}" class=', $album . $view_image, $style);
+			$this->assertStringNotContainsString('for=""', $posting, $style);
+			$this->assertStringNotContainsString('for="allow_comments">Rotation', $posting, $style);
+		}
+	}
+
 	#[IgnoreDeprecations]
 	public function test_modernized_templates_parse_with_packaged_twig(): void
 	{
