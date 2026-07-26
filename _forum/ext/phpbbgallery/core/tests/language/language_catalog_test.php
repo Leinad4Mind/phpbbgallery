@@ -217,6 +217,17 @@ class language_catalog_test extends TestCase
 		$this->assertSame([], $failures, implode(chr(10), $failures));
 	}
 
+	public function test_install_catalog_only_contains_the_runtime_uninstall_message(): void
+	{
+		$language_root = $this->extension_root . '/core/language';
+
+		foreach ($this->language_directories($language_root) as $directory)
+		{
+			$language = $this->load_language($directory . '/install_gallery.php');
+			$this->assertSame(['GALLERY_SUB_EXT_UNINSTALL'], array_keys($language), basename($directory));
+		}
+	}
+
 	private function components(): array
 	{
 		return ['core', 'acpcleanup', 'acpimport', 'exif'];
