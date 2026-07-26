@@ -24,7 +24,7 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'CHOOSE_ACTION'                => 'Selecionar acção pretendida',
+	'CHOOSE_ACTION'                => 'Seleccionar acção pretendida',
 	'GALLERY_MCP_MAIN'             => 'Principal',
 	'GALLERY_MCP_OVERVIEW'         => 'Visão Geral',
 	'GALLERY_MCP_QUEUE'            => 'Fila de Imagens',
@@ -115,7 +115,7 @@ $lang = array_merge($lang, [
 		'No Total estão Bloqueadas, em processo de Moderação, ou Reprovadas <strong>%s Imagens</strong>.',
 	],
 	'WAITING_REPORTED_DONE' => [
-		'Sem Reportes efetuados a serem Revistos.',
+		'Sem Reportes efectuados a serem Revistos.',
 		'Temos a totalidade em estatística já de <strong>1 Reporte Totalmente Revisto</strong>.',
 		'A totalidade dos Reportes e revisões que até ao momento foram resolvidos foi de <strong>%s</strong>.',
 	],

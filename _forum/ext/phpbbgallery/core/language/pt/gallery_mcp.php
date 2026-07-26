@@ -137,7 +137,7 @@ $lang = array_merge($lang, [
 	'MOVED_IMAGES' => [
 		'Nenhum ficheiro foi de momento movido.',
 		'A Equipa moveu na Totalidade das estatísticas relativas a Imagens o Correspondente a <strong>1 Imagem e Ficheiro Original</strong>.',
-		'As acções da equipa indicam que se moveram dos seus locais correspondentes até hoje um total de <strong>%s Imagens</strong>.',
+		'As ações da equipa indicam que se moveram dos seus locais correspondentes até hoje um total de <strong>%s Imagens</strong>.',
 	],
 	'NO_WAITING_UNAPPROVED_IMAGE' => 'Não existem imagens em lista para verificação e não há nada aguardar.',
 ]);

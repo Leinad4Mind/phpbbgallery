@@ -26,7 +26,7 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, [
 	'ACCESS_CONTROL_ALL'             => 'Todos',
 	'ACCESS_CONTROL_REGISTERED'      => 'Utilizadores registados',
-	'ACCESS_CONTROL_NOT_FOES'        => 'Utilizadores registados, exceto ignorados',
+	'ACCESS_CONTROL_NOT_FOES'        => 'Utilizadores registados, excepto ignorados',
 	'ACCESS_CONTROL_FRIENDS'         => 'Apenas amigos',
 	'ACCESS_CONTROL_SPECIAL_FRIENDS' => 'Apenas amigos especiais',
 	'ALBUMS'                         => 'Álbuns',
