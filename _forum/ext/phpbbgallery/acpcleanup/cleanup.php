@@ -25,6 +25,7 @@ class cleanup
 	protected \phpbbgallery\core\config $gallery_config;
 	protected \phpbbgallery\core\log $log;
 	protected \phpbbgallery\core\moderate $moderate;
+	protected \phpbbgallery\core\user $gallery_user;
 	protected string $albums_table;
 	protected string $images_table;
 
@@ -42,13 +43,14 @@ class cleanup
 	 * @param \phpbbgallery\core\config         $gallery_config
 	 * @param \phpbbgallery\core\log            $log
 	 * @param \phpbbgallery\core\moderate       $moderate
+	 * @param \phpbbgallery\core\user           $gallery_user
 	 * @param string                            $albums_table
 	 * @param string                            $images_table
 	 */
 	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbbgallery\core\file\file $tool, \phpbb\user $user, \phpbb\language\language $language,
 		\phpbbgallery\core\block $block, \phpbbgallery\core\album\album $album, \phpbbgallery\core\comment $comment,
 		\phpbbgallery\core\config $gallery_config, \phpbbgallery\core\log $log, \phpbbgallery\core\moderate $moderate,
-		string $albums_table, string $images_table)
+		\phpbbgallery\core\user $gallery_user, string $albums_table, string $images_table)
 	{
 		$this->db = $db;
 		$this->tool = $tool;
@@ -60,6 +62,7 @@ class cleanup
 		$this->gallery_config = $gallery_config;
 		$this->log = $log;
 		$this->moderate = $moderate;
+		$this->gallery_user = $gallery_user;
 		$this->albums_table = $albums_table;
 		$this->images_table = $images_table;
 	}
@@ -219,16 +222,13 @@ class cleanup
 
 			$this->update_newest_personal_gallery_config($newest_pega);
 		}
-/*
 		foreach ($user_image_count as $user_id => $images)
 		{
-			//phpbb_gallery_hookup::add_image($user_id, (0 - $images));
-
-			$uploader = new \phpbbgallery\core\user($this->db, $user_id, false);
-			$uploader->update_images((0 - $images));
+			$this->gallery_user->set_user_id($user_id, false);
+			$this->gallery_user->update_images(-$images);
 		}
-		\phpbbgallery\core\user::update_users($delete_pegas, ['personal_album_id' => 0]);
-*/
+		$this->gallery_user->update_users($delete_pegas, ['personal_album_id' => 0]);
+
 		$return = [];
 		if ($obsolete_pegas)
 		{

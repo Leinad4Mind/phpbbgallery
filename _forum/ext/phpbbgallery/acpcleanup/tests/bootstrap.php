@@ -138,6 +138,30 @@ namespace phpbbgallery\core
 			$this->deleted[] = [$image_ids, $files];
 		}
 	}
+
+	class user
+	{
+		public array $image_updates = [];
+		public array $user_updates = [];
+		private int $user_id = 0;
+
+		public function set_user_id(int $user_id, bool $load = true): void
+		{
+			$this->user_id = $user_id;
+		}
+
+		public function update_images(int $num): bool
+		{
+			$this->image_updates[] = [$this->user_id, $num];
+			return true;
+		}
+
+		public function update_users(array|int|string $user_ids, array $data): bool
+		{
+			$this->user_updates[] = [$user_ids, $data];
+			return true;
+		}
+	}
 }
 
 namespace
