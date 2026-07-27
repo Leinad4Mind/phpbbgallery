@@ -1064,6 +1064,20 @@ class image
 					WHERE image_id = ' . (int) $image_id;
 				$this->db->sql_query($sql);
 
+				$updated_image_data = array_merge($image_data, $sql_ary);
+				/**
+				 * Notify add-ons after an authorized image edit has been persisted.
+				 *
+				 * @event phpbbgallery.core.image_edit_after
+				 * @var int   image_id           Edited image identifier
+				 * @var array image_data         Image row before the edit
+				 * @var array updated_image_data Image row after applying the edit
+				 * @var array sql_ary            Values persisted by this edit
+				 * @since 3.4.0
+				 */
+				$vars = ['image_id', 'image_data', 'updated_image_data', 'sql_ary'];
+				extract($this->dispatcher->trigger_event('phpbbgallery.core.image_edit_after', compact($vars)));
+
 				$this->album->update_info($album_data['album_id']);
 				if ($move_to_personal && $personal_album_id)
 				{
