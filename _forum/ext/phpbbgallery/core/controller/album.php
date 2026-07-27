@@ -17,6 +17,9 @@ class album
 	/** @var \phpbb\config\config */
 	protected \phpbb\config\config $config;
 
+	/** @var \phpbb\auth\auth */
+	protected \phpbb\auth\auth $phpbb_auth;
+
 	/** @var \phpbb\controller\helper */
 	protected \phpbb\controller\helper $helper;
 
@@ -81,6 +84,7 @@ class album
 	 * Constructor
 	 *
 	 * @param \phpbb\config\config                                      $config       Config object
+	 * @param \phpbb\auth\auth                                          $phpbb_auth   phpBB auth object
 	 * @param \phpbb\controller\helper                                  $helper       Controller helper object
 	 * @param \phpbb\db\driver\driver|\phpbb\db\driver\driver_interface $db           Database object
 	 * @param \phpbb\pagination                                         $pagination   Pagination object
@@ -98,7 +102,8 @@ class album
 	 * @param \phpbb\request\request_interface                          $request
 	 * @param string                                                    $images_table Gallery image table
 	 */
-	public function __construct(\phpbb\config\config $config, \phpbb\controller\helper $helper,
+	public function __construct(\phpbb\config\config $config, \phpbb\auth\auth $phpbb_auth,
+		\phpbb\controller\helper $helper,
 		\phpbb\db\driver\driver_interface $db, \phpbb\pagination $pagination,
 		\phpbb\template\template $template, \phpbb\user $user, \phpbb\language\language $language,
 		\phpbbgallery\core\album\display $display, \phpbbgallery\core\album\loader $loader,
@@ -109,6 +114,7 @@ class album
 		string $images_table)
 	{
 		$this->config = $config;
+		$this->phpbb_auth = $phpbb_auth;
 		$this->helper = $helper;
 		$this->db = $db;
 		$this->pagination = $pagination;
@@ -220,14 +226,17 @@ class album
 			? $this->helper->route('phpbbgallery_core_album_watch', ['album_id' => (int) $album_id])
 			: '';
 		$this->template->assign_vars([
-			'S_IS_POSTABLE' => $album_data['album_type'] != (int) \phpbbgallery\core\block::TYPE_CAT,
-			'S_IS_LOCKED'   => $album_data['album_status'] == (int) \phpbbgallery\core\block::ALBUM_LOCKED,
+			'S_IS_POSTABLE'      => $album_data['album_type'] != (int) \phpbbgallery\core\block::TYPE_CAT,
+			'S_IS_LOCKED'        => $album_data['album_status'] == (int) \phpbbgallery\core\block::ALBUM_LOCKED,
+			'S_DISPLAY_SEARCHBOX' => $this->can_search_album(),
 
-			'U_RETURN_LINK'  => $this->helper->route('phpbbgallery_core_index'),
-			'L_RETURN_LINK'  => $this->language->lang('RETURN_TO_GALLERY'),
-			'S_ALBUM_ACTION' => $this->helper->route('phpbbgallery_core_album', ['album_id' => (int) $album_id]),
-			'S_IS_WATCHED'   => $this->notifications_helper->get_watched_album($album_id) ? true : false,
-			'U_WATCH_TOGGLE' => $watch_url,
+			'ALBUM_ID'           => $album_id,
+			'U_RETURN_LINK'       => $this->helper->route('phpbbgallery_core_index'),
+			'L_RETURN_LINK'       => $this->language->lang('RETURN_TO_GALLERY'),
+			'S_ALBUM_ACTION'      => $this->helper->route('phpbbgallery_core_album', ['album_id' => (int) $album_id]),
+			'S_SEARCHBOX_ACTION'  => $this->helper->route('phpbbgallery_core_search'),
+			'S_IS_WATCHED'        => $this->notifications_helper->get_watched_album($album_id) ? true : false,
+			'U_WATCH_TOGGLE'      => $watch_url,
 		]);
 
 		if ($album_data['album_type'] != (int) \phpbbgallery\core\block::TYPE_CAT
@@ -572,6 +581,16 @@ class album
 	protected function can_watch_album(): bool
 	{
 		return !empty($this->user->data['is_registered']) && empty($this->user->data['is_bot']);
+	}
+
+	/**
+	 * Check whether phpBB search is available to the current user.
+	 *
+	 * @return bool
+	 */
+	protected function can_search_album(): bool
+	{
+		return !empty($this->config['load_search']) && $this->phpbb_auth->acl_get('u_search');
 	}
 
 	/**

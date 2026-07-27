@@ -52,28 +52,22 @@
 </div>
 
 
-{% if S_IS_POSTABLE and (U_UPLOAD_IMAGE or PAGINATION or TOTAL_IMAGES or (U_SLIDE_SHOW and not S_IS_BOT)) %}
+{% if (not S_IN_GALLERY_POPUP and S_DISPLAY_SEARCHBOX) or (S_IS_POSTABLE and (U_UPLOAD_IMAGE or PAGINATION or TOTAL_IMAGES or (U_SLIDE_SHOW and not S_IS_BOT))) %}
 	<div class="clearfix">
       <div class="space10"></div>
 	{% if not S_IN_GALLERY_POPUP and S_DISPLAY_SEARCHBOX %}
 	<div class="pull-left">
-	<form method="post" id="album-search" action="{{ S_SEARCHBOX_ACTION }}">
-     <fieldset class="hidden-xs">
+	<form method="get" id="album-search" action="{{ S_SEARCHBOX_ACTION }}">
+	 <fieldset>
 		<div class="input-group">
-		    <input type="text" class="form-control" size="25" name="keywords" id="search_keywords" placeholder="{{ lang('SEARCH_ALBUM') }}">
+		    <input type="search" class="form-control" size="25" name="keywords" id="search_keywords" placeholder="{{ lang('SEARCH_ALBUM') }}" aria-label="{{ lang('SEARCH_ALBUM') }}" required>
 		    <input type="hidden" value="{{ ALBUM_ID }}" name="aid[]">
+		    <input type="hidden" value="1" name="sc">
 		   <span class="input-group-btn">
 		    <button type="submit" class="btn btn-default">{{ lang('SEARCH') }}</button>
 		   </span>
 		</div>
 	 </fieldset>
-
-    <div class="input-group visible-xs">
-         <input type="text" class="form-control" size="9" name="keywords" id="search_keywords" placeholder="{{ lang('SEARCH_FORUM') }}">
-	  <span class="input-group-btn">
-		 <button type="submit" class="btn btn-default">{{ lang('SEARCH') }}</button>
-      </span>
-   </div>
     </form>
 	 <div class="space10"></div>
 	</div>

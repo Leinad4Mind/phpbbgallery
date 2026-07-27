@@ -121,6 +121,41 @@ final class controller_album_types_test extends TestCase
 		$this->assertFalse($can_watch->invoke($controller));
 	}
 
+	public function test_album_search_requires_phpbb_search_and_user_permission(): void
+	{
+		$reflection = new \ReflectionClass(album::class);
+		$controller = $reflection->newInstanceWithoutConstructor();
+		$config = new \phpbb\config\config(['load_search' => true]);
+		$auth = $this->getMockBuilder(\phpbb\auth\auth::class)
+			->onlyMethods(['acl_get'])
+			->getMock();
+		$auth->expects($this->exactly(2))
+			->method('acl_get')
+			->with('u_search')
+			->willReturnOnConsecutiveCalls(true, false);
+		$reflection->getProperty('config')->setValue($controller, $config);
+		$reflection->getProperty('phpbb_auth')->setValue($controller, $auth);
+		$can_search = $reflection->getMethod('can_search_album');
+
+		$this->assertTrue($can_search->invoke($controller));
+		$this->assertFalse($can_search->invoke($controller));
+
+		$config['load_search'] = false;
+		$this->assertFalse($can_search->invoke($controller));
+	}
+
+	public function test_album_search_forms_keep_the_album_scope_in_every_style(): void
+	{
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$template = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/album_body.html');
+			$this->assertStringContainsString('method="get" id="album-search"', $template, $style);
+			$this->assertStringContainsString('name="aid[]"', $template, $style);
+			$this->assertStringContainsString('name="sc"', $template, $style);
+			$this->assertSame(1, substr_count($template, 'id="search_keywords"'), $style);
+		}
+	}
+
 	public function test_watch_action_is_not_coupled_to_upload_permission_in_any_style(): void
 	{
 		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
