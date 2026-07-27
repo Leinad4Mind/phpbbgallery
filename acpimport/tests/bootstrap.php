@@ -22,6 +22,10 @@ if (!function_exists('utf8_htmlspecialchars'))
 }
 
 require_once dirname(__DIR__) . '/acp/import_storage.php';
+// The shared extractor lives in the core extension; unpacking an archive is the one
+// thing this add-on cannot do on its own.
+require_once dirname(__DIR__, 2) . '/core/zip/extractor.php';
+require_once dirname(__DIR__) . '/acp/archive_importer.php';
 require_once dirname(__DIR__) . '/acp/main_module.php';
 require_once dirname(__DIR__, 4) . '/vendor/symfony/event-dispatcher/EventSubscriberInterface.php';
 require_once dirname(__DIR__, 4) . '/vendor/symfony/event-dispatcher/Event.php';

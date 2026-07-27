@@ -11,6 +11,36 @@
 </div>
 {% endif %}
 
+<form id="acp_gallery_archives" method="post" action="{{ U_ACTION }}">
+	<fieldset class="field1">
+		<legend>{{ lang('IMPORT_ZIP_SETTINGS') }}</legend>
+		<dl>
+			<dt><label{% if archiverow|length %} for="archives"{% endif %}>{{ lang('IMPORT_ARCHIVES') }}{{ lang('COLON') }}</label>
+				<br /><span>{{ lang('IMPORT_ARCHIVES_SELECT') }}</span></dt>
+			<dd>{% if not archiverow|length %}
+				{{ lang('IMPORT_NO_ARCHIVES') }}
+			{% else %}
+				<select id="archives" name="archives[]" multiple="multiple" size="5">
+					{% for archiverow in archiverow %}<option value="{{ archiverow.FILE_NAME }}">{{ archiverow.FILE_NAME }}</option>{% endfor %}
+				</select>
+			{% endif %}</dd>
+		</dl>
+		<dl>
+			<dt><label for="zip_max_images">{{ lang('IMPORT_ZIP_MAX_IMAGES') }}{{ lang('COLON') }}</label>
+				<br /><span>{{ lang('IMPORT_ZIP_MAX_IMAGES_EXPLAIN') }}</span></dt>
+			<dd><input id="zip_max_images" class="inputbox autowidth" type="number" min="1" max="1000" name="zip_max_images" value="{{ ZIP_MAX_IMAGES }}" /></dd>
+		</dl>
+	</fieldset>
+	<fieldset class="submit-buttons">
+		<legend>{{ lang('SUBMIT') }}</legend>
+		<p class="submit-buttons">
+			{% if archiverow|length %}<input class="button1" type="submit" id="extract" name="extract" value="{{ lang('IMPORT_EXTRACT') }}" />&nbsp;{% endif %}
+			<input class="button2" type="submit" id="save_zip_settings" name="save_zip_settings" value="{{ lang('SUBMIT') }}" />
+			{{ S_FORM_TOKEN }}
+		</p>
+	</fieldset>
+</form>
+
 <form id="acp_gallery" method="post" action="{{ U_ACTION }}">
 	<fieldset class="field1">
 		<legend>{{ lang('ALBUM_SETTINGS') }}</legend>
