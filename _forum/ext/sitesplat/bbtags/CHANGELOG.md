@@ -14,6 +14,8 @@
 - Replace the MySQL-only ACP tag aggregation query with portable SQL.
 - Validate numeric ACP settings and normalize the predefined tag list before saving it.
 - Replace topic tags atomically, skip empty bulk inserts and clean stale tags and counts after topic deletion.
+- Enforce forum search, password and topic visibility boundaries on public tag results.
+- Handle unknown tags and non-AJAX suggestion requests without undefined runtime state.
 
 ### Tests
 
