@@ -27,7 +27,7 @@ $('#bbtags').tagEditor({
 	forceLowercase: true,
 	placeholder: 'Enter tags...',
 	maxTags: maxTags,
-	maxLength: 30,
+	maxLength: maxLength,
 	 autocomplete: {
           delay: 0, position: { collision: 'flip' },
             source: function(request, response) {
@@ -36,7 +36,8 @@ $('#bbtags').tagEditor({
                     url: boardurl + 'bbtags/auto_complete',
                     dataType: "json",
                     data: {
-                        term: request.term
+						term: request.term,
+						forum_id: bbTagsForumId
                     },
                     error: function(xhr, textStatus, errorThrown) {
                         alert('Error: ' + xhr.responseText);

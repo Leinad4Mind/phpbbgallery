@@ -136,6 +136,7 @@ class listener implements EventSubscriberInterface
 					utf8_normalize_nfc($this->request->variable('bbtags', '', true)) : $this->manager->get_tags($topic_id);
 			$data['page_data']['BBTAGS_MAXTAGS'] = $this->config['bbtags_max_tags'];
 			$data['page_data']['BBTAGS_MAXLENGTH'] = isset($this->config['bbtags_max_length']) ? (int) $this->config['bbtags_max_length'] : manager::MAX_TAG_LENGTH;
+			$data['page_data']['BBTAGS_FORUM_ID'] = (int) $forum_id;
 			$event->set_data($data);
 		}
 	}
@@ -182,7 +183,7 @@ class listener implements EventSubscriberInterface
 					$tags[] = $tag;
 				}
 			}
-			$this->manager->assign_tags_to_topic($data['topic_id'], $tags);
+			$this->manager->assign_tags_to_topic($data['topic_id'], $tags, (int) $data['forum_id']);
 		}
 	}
 

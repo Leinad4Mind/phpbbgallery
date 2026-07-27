@@ -46,7 +46,7 @@ class controller_security_test extends TestCase
 		$controller = file_get_contents(dirname(__DIR__) . '/controller/main.php');
 
 		$this->assertStringNotContainsString('preg_grep(', $controller);
-		$this->assertStringContainsString('$this->manager->get_predefined_tags($term, 20)', $controller);
+		$this->assertStringContainsString('$this->manager->get_predefined_tags($term, 20, $forum_id)', $controller);
 		$this->assertStringNotContainsString("get('bbtags_pre_tags')", $controller);
 	}
 
@@ -55,6 +55,19 @@ class controller_security_test extends TestCase
 		$controller = file_get_contents(dirname(__DIR__) . '/controller/main.php');
 
 		$this->assertSame(2, substr_count($controller, "!\$this->auth->acl_get('u_bbtags')"));
+	}
+
+	public function test_autocomplete_sends_the_forum_scope_and_configured_length()
+	{
+		foreach (array('BBOOTS', 'FLATBOOTS') as $style)
+		{
+			$javascript = file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/js/bbtags.js');
+			$template = file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/event/posting_editor_subject_after.html');
+
+			$this->assertStringContainsString('maxLength: maxLength', $javascript, $style);
+			$this->assertStringContainsString('forum_id: bbTagsForumId', $javascript, $style);
+			$this->assertStringContainsString('var bbTagsForumId = {BBTAGS_FORUM_ID};', $template, $style);
+		}
 	}
 
 	public function test_controller_does_not_use_legacy_unscoped_runtime_objects()

@@ -32,38 +32,62 @@ class manager
 
 	private $table_bbtags;
 	private $table_bbtags_context;
+	private $table_bbtags_scope;
 	private $table_bbtags_topic;
 
-	public function __construct(driver_interface $db, config $config, auth $auth, $table_bbtags, $table_bbtags_context, $table_bbtags_topic)
+	public function __construct(driver_interface $db, config $config, auth $auth, $table_bbtags, $table_bbtags_context, $table_bbtags_scope, $table_bbtags_topic)
 	{
 		$this->db					= $db;
 		$this->config				= $config;
 		$this->auth					= $auth;
 		$this->table_bbtags			= $table_bbtags;
 		$this->table_bbtags_context	= $table_bbtags_context;
+		$this->table_bbtags_scope	= $table_bbtags_scope;
 		$this->table_bbtags_topic	= $table_bbtags_topic;
 	}
 
 	public function get_tags($topic_id)
 	{
 		$topic_id = (int) $topic_id;
-		$sql = 'SELECT t.tag
-			FROM ' . $this->table_bbtags . ' t';
+		$sql = 'SELECT t.id, t.tag';
 		if ($topic_id > 0)
 		{
-			$sql .= ' JOIN ' . $this->table_bbtags_topic . ' tt ON tt.tag_id = t.id
-				WHERE tt.topic_id = ' . $topic_id;
+			$sql .= ', topics.forum_id
+				FROM ' . $this->table_bbtags . ' t
+				JOIN ' . $this->table_bbtags_topic . ' tt ON tt.tag_id = t.id
+				JOIN ' . TOPICS_TABLE . ' topics ON topics.topic_id = tt.topic_id
+				JOIN ' . $this->table_bbtags_context . ' tc ON tc.tag_id = t.id
+				WHERE tt.topic_id = ' . $topic_id . '
+					AND tc.provider = \'' . self::FORUM_PROVIDER . '\'
+					AND tc.is_enabled = 1';
+		}
+		else
+		{
+			$sql .= '
+				FROM ' . $this->table_bbtags . ' t
+				JOIN ' . $this->table_bbtags_context . ' tc ON tc.tag_id = t.id
+				WHERE tc.provider = \'' . self::FORUM_PROVIDER . '\'
+					AND tc.is_enabled = 1';
 		}
 		$sql .= ' ORDER BY t.count DESC';
 		$result = $this->db->sql_query_limit($sql, $topic_id ? $this->config['bbtags_max_tags'] : $this->config['bbtags_cloud_limit']);
-		$tag = array();
+		$rows = array();
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$tag[] = $row['tag'];
+			$rows[] = $row;
 		}
 		$this->db->sql_freeresult($result);
+		if ($topic_id > 0 && !empty($rows))
+		{
+			$scope_path = $this->get_forum_scope_path((int) $rows[0]['forum_id']);
+			$available = array_flip($this->filter_available_tag_ids(array_column($rows, 'id'), self::FORUM_PROVIDER, $scope_path));
+			$rows = array_filter($rows, static function ($row) use ($available)
+			{
+				return isset($available[(int) $row['id']]);
+			});
+		}
 
-		return implode(', ' , $tag);
+		return implode(', ', array_column($rows, 'tag'));
 	}
 
 	public function remove_tags_from_topics($topic_ids)
@@ -145,6 +169,11 @@ class manager
 		{
 			return 0;
 		}
+		$sql = 'DELETE FROM ' . $this->table_bbtags_scope . ' WHERE ' . $this->db->sql_in_set('tag_id', $ids);
+		if ($this->db->sql_query($sql) === false)
+		{
+			return false;
+		}
 		$sql = 'DELETE FROM ' . $this->table_bbtags_context . ' WHERE ' . $this->db->sql_in_set('tag_id', $ids);
 		if ($this->db->sql_query($sql) === false)
 		{
@@ -175,6 +204,14 @@ class manager
 
 		$this->db->sql_transaction('begin');
 		$sql = 'DELETE FROM ' . $this->table_bbtags_topic . '
+			WHERE tag_id = ' . $tag_id;
+		if ($this->db->sql_query($sql) === false)
+		{
+			$this->db->sql_transaction('rollback');
+			return false;
+		}
+
+		$sql = 'DELETE FROM ' . $this->table_bbtags_scope . '
 			WHERE tag_id = ' . $tag_id;
 		if ($this->db->sql_query($sql) === false)
 		{
@@ -230,7 +267,7 @@ class manager
 		return $this->db->sql_query($sql) !== false;
 	}
 
-	public function assign_tags_to_topic($topic_id, $valid_tags)
+	public function assign_tags_to_topic($topic_id, $valid_tags, $forum_id = 0)
 	{
 		$topic_id = (int) $topic_id;
 		if ($topic_id <= 0)
@@ -259,6 +296,12 @@ class manager
 			}
 
 			$ids = $this->get_existing_tags($tags, true);
+			if (!$this->ensure_forum_contexts($ids))
+			{
+				$this->db->sql_transaction('rollback');
+				return false;
+			}
+			$ids = $this->filter_available_tag_ids($ids, self::FORUM_PROVIDER, $this->get_forum_scope_path($forum_id));
 			if ($this->delete_topic_relations(array($topic_id)) === false)
 			{
 				$this->db->sql_transaction('rollback');
@@ -443,6 +486,7 @@ class manager
 				'provider' => self::FORUM_PROVIDER,
 				'usage_count' => $count,
 				'is_enabled' => 1,
+				'scope_mode' => 'global',
 			);
 		}
 		$this->db->sql_freeresult($result);
@@ -462,9 +506,9 @@ class manager
 	 *
 	 * @return array
 	 */
-	public function get_predefined_tags($term = '', $limit = 0)
+	public function get_predefined_tags($term = '', $limit = 0, $forum_id = 0)
 	{
-		$sql = 'SELECT t.tag
+		$sql = 'SELECT t.id, t.tag, tc.scope_mode
 			FROM ' . $this->table_bbtags . ' t
 			JOIN ' . $this->table_bbtags_context . " tc ON tc.tag_id = t.id
 			WHERE t.is_predefined = 1
@@ -473,11 +517,26 @@ class manager
 			ORDER BY t.tag ASC";
 		$result = $this->db->sql_query($sql);
 		$term = $this->canonical_tag($term);
-		$tags = array();
+		$rows = array();
 		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$rows[] = $row;
+		}
+		$this->db->sql_freeresult($result);
+
+		$scope_path = $this->get_forum_scope_path($forum_id);
+		$rules = $this->load_scope_rules(array_column($rows, 'id'), self::FORUM_PROVIDER, $scope_path);
+		$tags = array();
+		foreach ($rows as $row)
 		{
 			$tag = (string) $row['tag'];
 			if ($term !== '' && strpos($this->canonical_tag($tag), $term) !== 0)
+			{
+				continue;
+			}
+			$tag_id = (int) $row['id'];
+			$scope_mode = isset($row['scope_mode']) ? $row['scope_mode'] : 'global';
+			if (!$this->scope_allows($scope_mode, isset($rules[$tag_id]) ? $rules[$tag_id] : array(), $scope_path))
 			{
 				continue;
 			}
@@ -487,8 +546,6 @@ class manager
 				break;
 			}
 		}
-		$this->db->sql_freeresult($result);
-
 		return $tags;
 	}
 
@@ -583,11 +640,249 @@ class manager
 					'provider' => self::FORUM_PROVIDER,
 					'usage_count' => 0,
 					'is_enabled' => 1,
+					'scope_mode' => 'global',
 				);
 			}
 		}
 
 		return empty($new_contexts) || $this->db->sql_multi_insert($this->table_bbtags_context, $new_contexts) !== false;
+	}
+
+	/**
+	 * Return the current forum followed by its ancestors and the global root.
+	 *
+	 * @param int $forum_id Forum identifier
+	 *
+	 * @return array
+	 */
+	public function get_forum_scope_path($forum_id)
+	{
+		$forum_id = (int) $forum_id;
+		if ($forum_id <= 0)
+		{
+			return array(0);
+		}
+
+		$sql = 'SELECT forum_left, forum_right
+			FROM ' . FORUMS_TABLE . '
+			WHERE forum_id = ' . $forum_id;
+		$result = $this->db->sql_query($sql);
+		$row = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+		if (!$row)
+		{
+			return array($forum_id, 0);
+		}
+
+		$sql = 'SELECT forum_id
+			FROM ' . FORUMS_TABLE . '
+			WHERE forum_left <= ' . (int) $row['forum_left'] . '
+				AND forum_right >= ' . (int) $row['forum_right'] . '
+			ORDER BY forum_left DESC';
+		$result = $this->db->sql_query($sql);
+		$path = array();
+		while ($ancestor = $this->db->sql_fetchrow($result))
+		{
+			$path[] = (int) $ancestor['forum_id'];
+		}
+		$this->db->sql_freeresult($result);
+		$path[] = 0;
+
+		return array_values(array_unique($path));
+	}
+
+	/**
+	 * Filter tag identifiers through provider state and inherited scope rules.
+	 *
+	 * @param array  $tag_ids    Tag identifiers
+	 * @param string $provider   Provider name
+	 * @param array  $scope_path Current scope followed by its ancestors
+	 *
+	 * @return array
+	 */
+	public function filter_available_tag_ids(array $tag_ids, $provider, array $scope_path)
+	{
+		$tag_ids = array_values(array_unique(array_filter(array_map('intval', $tag_ids))));
+		$provider = $this->validate_provider($provider);
+		if (empty($tag_ids) || $provider === '')
+		{
+			return array();
+		}
+
+		$sql = 'SELECT tag_id, scope_mode, is_enabled
+			FROM ' . $this->table_bbtags_context . '
+			WHERE provider = \'' . $this->db->sql_escape($provider) . '\'
+				AND ' . $this->db->sql_in_set('tag_id', $tag_ids);
+		$result = $this->db->sql_query($sql);
+		$contexts = array();
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$contexts[(int) $row['tag_id']] = $row;
+		}
+		$this->db->sql_freeresult($result);
+
+		$rules = $this->load_scope_rules($tag_ids, $provider, $scope_path);
+		$available = array();
+		foreach ($tag_ids as $tag_id)
+		{
+			if (empty($contexts[$tag_id]['is_enabled']))
+			{
+				continue;
+			}
+			if ($this->scope_allows($contexts[$tag_id]['scope_mode'], isset($rules[$tag_id]) ? $rules[$tag_id] : array(), $scope_path))
+			{
+				$available[] = $tag_id;
+			}
+		}
+
+		return $available;
+	}
+
+	/**
+	 * Resolve nearest-ancestor allow/deny rules.
+	 *
+	 * @param string $scope_mode Provider default: global or restricted
+	 * @param array  $rules      Rules indexed by scope identifier
+	 * @param array  $scope_path Current scope followed by its ancestors
+	 *
+	 * @return bool
+	 */
+	public function scope_allows($scope_mode, array $rules, array $scope_path)
+	{
+		$scope_path = array_values(array_unique(array_map('intval', $scope_path)));
+		if (!in_array(0, $scope_path, true))
+		{
+			$scope_path[] = 0;
+		}
+		foreach ($scope_path as $scope_id)
+		{
+			if (isset($rules[$scope_id]))
+			{
+				return $rules[$scope_id] === 'allow';
+			}
+		}
+
+		return $scope_mode === 'global';
+	}
+
+	/**
+	 * Set global or restricted fallback behaviour for a provider tag.
+	 *
+	 * @param int    $tag_id   Tag identifier
+	 * @param string $provider Provider name
+	 * @param string $mode     global or restricted
+	 *
+	 * @return bool
+	 */
+	public function set_scope_mode($tag_id, $provider, $mode)
+	{
+		$tag_id = (int) $tag_id;
+		$provider = $this->validate_provider($provider);
+		if ($tag_id <= 0 || $provider === '' || !in_array($mode, array('global', 'restricted'), true))
+		{
+			return false;
+		}
+
+		$sql_ary = array('scope_mode' => $mode);
+		$sql = 'UPDATE ' . $this->table_bbtags_context . '
+			SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
+			WHERE tag_id = ' . $tag_id . '
+				AND provider = \'' . $this->db->sql_escape($provider) . '\'';
+
+		return $this->db->sql_query($sql) !== false;
+	}
+
+	/**
+	 * Store an explicit scope rule, or remove it when inheriting.
+	 *
+	 * @param int    $tag_id   Tag identifier
+	 * @param string $provider Provider name
+	 * @param int    $scope_id Provider-specific scope identifier
+	 * @param string $rule     allow, deny or inherit
+	 *
+	 * @return bool
+	 */
+	public function set_scope_rule($tag_id, $provider, $scope_id, $rule)
+	{
+		$tag_id = (int) $tag_id;
+		$scope_id = max(0, (int) $scope_id);
+		$provider = $this->validate_provider($provider);
+		if ($tag_id <= 0 || $provider === '' || !in_array($rule, array('allow', 'deny', 'inherit'), true))
+		{
+			return false;
+		}
+
+		$where = 'tag_id = ' . $tag_id . '
+			AND provider = \'' . $this->db->sql_escape($provider) . '\'
+			AND scope_id = ' . $scope_id;
+		if ($rule === 'inherit')
+		{
+			return $this->db->sql_query('DELETE FROM ' . $this->table_bbtags_scope . ' WHERE ' . $where) !== false;
+		}
+
+		$sql = 'SELECT id FROM ' . $this->table_bbtags_scope . ' WHERE ' . $where;
+		$result = $this->db->sql_query_limit($sql, 1);
+		$row = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+		$sql_ary = array('scope_rule' => $rule);
+		if ($row)
+		{
+			$sql = 'UPDATE ' . $this->table_bbtags_scope . '
+				SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
+				WHERE id = ' . (int) $row['id'];
+		}
+		else
+		{
+			$sql_ary += array(
+				'tag_id' => $tag_id,
+				'provider' => $provider,
+				'scope_id' => $scope_id,
+			);
+			$sql = 'INSERT INTO ' . $this->table_bbtags_scope . ' ' . $this->db->sql_build_array('INSERT', $sql_ary);
+		}
+
+		return $this->db->sql_query($sql) !== false;
+	}
+
+	/**
+	 * Load explicit rules for the requested provider path.
+	 */
+	private function load_scope_rules(array $tag_ids, $provider, array $scope_path)
+	{
+		$tag_ids = array_values(array_unique(array_filter(array_map('intval', $tag_ids))));
+		$scope_path = array_values(array_unique(array_map('intval', $scope_path)));
+		if (!in_array(0, $scope_path, true))
+		{
+			$scope_path[] = 0;
+		}
+		if (empty($tag_ids) || empty($scope_path))
+		{
+			return array();
+		}
+
+		$sql = 'SELECT tag_id, scope_id, scope_rule
+			FROM ' . $this->table_bbtags_scope . '
+			WHERE provider = \'' . $this->db->sql_escape($provider) . '\'
+				AND ' . $this->db->sql_in_set('tag_id', $tag_ids) . '
+				AND ' . $this->db->sql_in_set('scope_id', $scope_path);
+		$result = $this->db->sql_query($sql);
+		$rules = array();
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$rules[(int) $row['tag_id']][(int) $row['scope_id']] = $row['scope_rule'];
+		}
+		$this->db->sql_freeresult($result);
+
+		return $rules;
+	}
+
+	/**
+	 * Validate a provider key used in database filters.
+	 */
+	private function validate_provider($provider)
+	{
+		$provider = (string) $provider;
+		return preg_match('/^[a-z][a-z0-9_]{1,31}$/D', $provider) ? $provider : '';
 	}
 
 	/**

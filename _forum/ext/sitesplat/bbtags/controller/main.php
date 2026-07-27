@@ -110,7 +110,8 @@ class main
 		}
 
 		$term = $this->request->variable('term', '', true);
-		$matches = $this->manager->get_predefined_tags($term, 20);
+		$forum_id = max(0, $this->request->variable('forum_id', 0));
+		$matches = $this->manager->get_predefined_tags($term, 20, $forum_id);
 
 		$response = new json_response();
 		$response->send($matches);

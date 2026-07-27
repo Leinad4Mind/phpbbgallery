@@ -52,6 +52,16 @@ namespace
 		define('CONFIG_TEXT_TABLE', 'phpbb_config_text');
 	}
 
+	if (!defined('FORUMS_TABLE'))
+	{
+		define('FORUMS_TABLE', 'phpbb_forums');
+	}
+
+	if (!defined('TOPICS_TABLE'))
+	{
+		define('TOPICS_TABLE', 'phpbb_topics');
+	}
+
 	require_once __DIR__ . '/stubs/phpbb_config.php';
 	require_once __DIR__ . '/stubs/phpbb_auth.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/db/driver/driver_interface.php';
@@ -62,4 +72,5 @@ namespace
 	require_once dirname(__DIR__) . '/migrations/v33x/m7_global_catalog_schema.php';
 	require_once dirname(__DIR__) . '/migrations/v33x/m8_global_catalog_data.php';
 	require_once dirname(__DIR__) . '/migrations/v33x/m9_global_catalog_constraints.php';
+	require_once dirname(__DIR__) . '/migrations/v33x/m10_hierarchical_scopes.php';
 }

@@ -45,13 +45,15 @@ class manager_admin_test extends TestCase
 		$manager = $this->create_manager($db);
 		$this->assertTrue($manager->delete_tag(12));
 		$this->assertSame(array('begin', 'commit'), $transactions);
-		$this->assertCount(3, $queries);
+		$this->assertCount(4, $queries);
 		$this->assertStringContainsString('DELETE FROM phpbb_bbtags_topic', $queries[0]);
 		$this->assertStringContainsString('tag_id = 12', $queries[0]);
-		$this->assertStringContainsString('DELETE FROM phpbb_bbtags_context', $queries[1]);
+		$this->assertStringContainsString('DELETE FROM phpbb_bbtags_scope', $queries[1]);
 		$this->assertStringContainsString('tag_id = 12', $queries[1]);
-		$this->assertStringContainsString('DELETE FROM phpbb_bbtags', $queries[2]);
-		$this->assertStringContainsString('id = 12', $queries[2]);
+		$this->assertStringContainsString('DELETE FROM phpbb_bbtags_context', $queries[2]);
+		$this->assertStringContainsString('tag_id = 12', $queries[2]);
+		$this->assertStringContainsString('DELETE FROM phpbb_bbtags', $queries[3]);
+		$this->assertStringContainsString('id = 12', $queries[3]);
 	}
 
 	public function test_delete_tag_rolls_back_when_a_query_fails()
@@ -107,6 +109,7 @@ class manager_admin_test extends TestCase
 			$this->createMock(auth::class),
 			'phpbb_bbtags',
 			'phpbb_bbtags_context',
+			'phpbb_bbtags_scope',
 			'phpbb_bbtags_topic'
 		);
 	}

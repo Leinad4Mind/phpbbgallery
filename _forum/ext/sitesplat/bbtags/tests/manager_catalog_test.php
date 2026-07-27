@@ -22,6 +22,7 @@ class manager_catalog_test extends TestCase
 		$services = file_get_contents(dirname(__DIR__) . '/config/services.yml');
 
 		$this->assertStringContainsString('%sitesplat.bbtags.tables.bbtags_context%', $services);
+		$this->assertStringContainsString('%sitesplat.bbtags.tables.bbtags_scope%', $services);
 		$this->assertStringNotContainsString("- '@config_text'", $services);
 	}
 
@@ -40,9 +41,9 @@ class manager_catalog_test extends TestCase
 		$db = $this->createMock(driver_interface::class);
 		$db->method('sql_query')->willReturn('predefined');
 		$rows = array(
-			array('tag' => 'Anime'),
-			array('tag' => 'Animation'),
-			array('tag' => 'Manga'),
+			array('id' => 1, 'tag' => 'Anime', 'scope_mode' => 'global'),
+			array('id' => 2, 'tag' => 'Animation', 'scope_mode' => 'global'),
+			array('id' => 3, 'tag' => 'Manga', 'scope_mode' => 'global'),
 		);
 		$db->method('sql_fetchrow')->willReturnCallback(static function () use (&$rows)
 		{
@@ -150,6 +151,7 @@ class manager_catalog_test extends TestCase
 			$this->createMock(auth::class),
 			'phpbb_bbtags',
 			'phpbb_bbtags_context',
+			'phpbb_bbtags_scope',
 			'phpbb_bbtags_topic'
 		);
 	}

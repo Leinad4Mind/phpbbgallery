@@ -24,6 +24,8 @@
 - Import the existing predefined tag list into the catalogue and enforce canonical tag, route and topic relation uniqueness.
 - Use the database catalogue as the authoritative predefined-tag and autocomplete source while retaining the legacy JSON as a downgrade fallback.
 - Synchronize forum topic usage with its provider context and use the configured 64-character tag limit in the posting UI.
+- Add reusable global/restricted provider scopes with nearest-ancestor allow, deny and inherit rules.
+- Restrict forum autocomplete and saved topic tags to the effective rule of the current forum hierarchy.
 
 ### Tests
 

@@ -1,4 +1,5 @@
 parameters:
     sitesplat.bbtags.tables.bbtags: '%core.table_prefix%bbtags'
     sitesplat.bbtags.tables.bbtags_context: '%core.table_prefix%bbtags_context'
+    sitesplat.bbtags.tables.bbtags_scope: '%core.table_prefix%bbtags_scope'
     sitesplat.bbtags.tables.bbtags_topic: '%core.table_prefix%bbtags_topic'

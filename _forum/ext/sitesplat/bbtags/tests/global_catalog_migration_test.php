@@ -16,6 +16,7 @@ use PHPUnit\Framework\TestCase;
 use sitesplat\bbtags\migrations\v33x\m7_global_catalog_schema;
 use sitesplat\bbtags\migrations\v33x\m8_global_catalog_data;
 use sitesplat\bbtags\migrations\v33x\m9_global_catalog_constraints;
+use sitesplat\bbtags\migrations\v33x\m10_hierarchical_scopes;
 
 class global_catalog_migration_test extends TestCase
 {
@@ -68,6 +69,25 @@ class global_catalog_migration_test extends TestCase
 		$this->assertSame(
 			array('topic_id', 'tag_id'),
 			$schema['add_unique_index']['phpbb_bbtags_topic']['topic_tag']
+		);
+	}
+
+	public function test_hierarchical_scope_schema_is_generic_for_all_providers()
+	{
+		$migration = $this->create_migration(m10_hierarchical_scopes::class);
+		$schema = $migration->update_schema();
+
+		$this->assertSame(
+			array('VCHAR:12', 'global'),
+			$schema['add_columns']['phpbb_bbtags_context']['scope_mode']
+		);
+		$this->assertSame(
+			array('UNIQUE', array('tag_id', 'provider', 'scope_id')),
+			$schema['add_tables']['phpbb_bbtags_scope']['KEYS']['tag_scope']
+		);
+		$this->assertSame(
+			array('\sitesplat\bbtags\migrations\v33x\m9_global_catalog_constraints'),
+			m10_hierarchical_scopes::depends_on()
 		);
 	}
 

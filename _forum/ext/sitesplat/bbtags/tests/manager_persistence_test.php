@@ -58,13 +58,32 @@ class manager_persistence_test extends TestCase
 		{
 			return ($field === 'tag_clean') ? "tag_clean = 'anime'" : 'topic_id = 9';
 		});
-		$db->method('sql_query')->willReturn(true);
-		$db->method('sql_fetchrow')->willReturnOnConsecutiveCalls(
+		$db->method('sql_query')->willReturnCallback(static function ($sql)
+		{
+			return $sql;
+		});
+		$catalog_rows = array(
 			array('id' => 4, 'tag' => 'anime', 'tag_clean' => 'anime'),
 			false,
 			array('id' => 4, 'tag' => 'anime', 'tag_clean' => 'anime'),
-			false
+			false,
 		);
+		$context_queries = 0;
+		$db->method('sql_fetchrow')->willReturnCallback(static function ($result) use (&$catalog_rows, &$context_queries)
+		{
+			if (strpos($result, 'SELECT id, tag, tag_clean') !== false)
+			{
+				return array_shift($catalog_rows);
+			}
+			if (strpos($result, 'FROM phpbb_bbtags_context') !== false)
+			{
+				$context_queries++;
+				return ($context_queries === 1)
+					? array('tag_id' => 4)
+					: (($context_queries === 2) ? false : (($context_queries === 3) ? array('tag_id' => 4, 'scope_mode' => 'global', 'is_enabled' => 1) : false));
+			}
+			return false;
+		});
 		$db->method('sql_affectedrows')->willReturn(1);
 		$db->expects($this->once())->method('sql_multi_insert')->willReturn(false);
 
@@ -115,6 +134,7 @@ class manager_persistence_test extends TestCase
 			$this->createMock(auth::class),
 			'phpbb_bbtags',
 			'phpbb_bbtags_context',
+			'phpbb_bbtags_scope',
 			'phpbb_bbtags_topic'
 		);
 	}
