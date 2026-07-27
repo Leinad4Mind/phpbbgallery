@@ -11,8 +11,8 @@
 
 	{% if not albumrow.S_IS_CAT %}
 		<div class="polaroid">
-			<p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-				<a href="{{ albumrow.U_VIEWALBUM }}" style="font-weight: bold; font-size: 1.2em; display: inline;{% if S_PERSONAL_GALLERY and albumrow.ALBUM_COLOUR %} color: {{ albumrow.ALBUM_COLOUR }};{% endif %}">{{ albumrow.ALBUM_NAME }}</a>
+			<p class="gallery-album-title">
+				<a href="{{ albumrow.U_VIEWALBUM }}"{% if S_PERSONAL_GALLERY and albumrow.ALBUM_COLOUR %} style="color: {{ albumrow.ALBUM_COLOUR }};"{% endif %}>{{ albumrow.ALBUM_NAME }}</a>
 			</p>
 			<hr />
 			{% if albumrow.UC_THUMBNAIL %}
