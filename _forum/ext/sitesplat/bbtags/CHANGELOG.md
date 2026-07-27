@@ -17,7 +17,14 @@
 - Enforce forum search, password and topic visibility boundaries on public tag results.
 - Handle unknown tags and non-AJAX suggestion requests without undefined runtime state.
 
+### Added
+
+- Add a provider-independent canonical tag catalogue while preserving topic relations and retaining the oldest identifier when equivalent legacy tags are merged.
+- Track enabled state and usage totals per provider, beginning with `forum_topics`.
+- Import the existing predefined tag list into the catalogue and enforce canonical tag, route and topic relation uniqueness.
+
 ### Tests
 
 - Add isolated PHPUnit coverage for ACP security contracts and administrative tag operations.
 - Verify the English and Portuguese ACP language catalogues remain in sync.
+- Cover catalogue schema ordering, data preservation, deduplication and provider seeding.

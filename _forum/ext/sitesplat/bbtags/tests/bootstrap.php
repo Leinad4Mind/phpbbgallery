@@ -31,8 +31,35 @@ namespace
 		}
 	}
 
+	if (!function_exists('utf8_normalize_nfc'))
+	{
+		function utf8_normalize_nfc($value)
+		{
+			return $value;
+		}
+	}
+
+	if (!function_exists('utf8_clean_string'))
+	{
+		function utf8_clean_string($value)
+		{
+			return mb_strtolower(trim($value), 'UTF-8');
+		}
+	}
+
+	if (!defined('CONFIG_TEXT_TABLE'))
+	{
+		define('CONFIG_TEXT_TABLE', 'phpbb_config_text');
+	}
+
 	require_once __DIR__ . '/stubs/phpbb_config.php';
 	require_once __DIR__ . '/stubs/phpbb_auth.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/db/driver/driver_interface.php';
+	require_once dirname(__DIR__, 4) . '/phpbb/db/tools/tools_interface.php';
+	require_once dirname(__DIR__, 4) . '/phpbb/db/migration/migration_interface.php';
+	require_once dirname(__DIR__, 4) . '/phpbb/db/migration/migration.php';
 	require_once dirname(__DIR__) . '/tags/manager.php';
+	require_once dirname(__DIR__) . '/migrations/v33x/m7_global_catalog_schema.php';
+	require_once dirname(__DIR__) . '/migrations/v33x/m8_global_catalog_data.php';
+	require_once dirname(__DIR__) . '/migrations/v33x/m9_global_catalog_constraints.php';
 }
