@@ -1,0 +1,98 @@
+<?php
+/**
+ * phpBB Gallery BBTags Bridge architecture tests.
+ *
+ * @package   phpbbgallery/bbtagsbridge
+ * @copyright 2026 Leinad4Mind
+ * @license   GPL-2.0-only
+ */
+
+namespace phpbbgallery\bbtagsbridge\tests;
+
+use PHPUnit\Framework\TestCase;
+
+final class architecture_test extends TestCase
+{
+	private string $root;
+
+	// phpcs:ignore PhpbbCodingStandard.NamingConventions.LowercaseUnderscoredFunctions.NotAllowed -- PHPUnit lifecycle API.
+	protected function setUp(): void
+	{
+		$this->root = dirname(__DIR__);
+	}
+
+	public function test_addon_requires_and_auto_enables_both_extensions(): void
+	{
+		$composer = json_decode((string) file_get_contents($this->root . '/composer.json'), true, 512, JSON_THROW_ON_ERROR);
+		$extension = (string) file_get_contents($this->root . '/ext.php');
+
+		$this->assertSame('phpbbgallery/bbtagsbridge', $composer['name']);
+		$this->assertStringContainsString("'phpbbgallery/core'", $extension);
+		$this->assertStringContainsString("'sitesplat/bbtags'", $extension);
+		$this->assertSame(2, substr_count($extension, '$manager->is_enabled($dependency)'));
+		$this->assertStringContainsString('$manager->enable($dependency)', $extension);
+	}
+
+	public function test_schema_owns_only_image_relations_to_the_shared_catalogue(): void
+	{
+		$migration = (string) file_get_contents($this->root . '/migrations/m1_init.php');
+
+		$this->assertStringContainsString("gallery_image_tags'", $migration);
+		$this->assertStringContainsString("'PRIMARY_KEY' => ['image_id', 'tag_id']", $migration);
+		$this->assertStringContainsString('sitesplat\\bbtags\\migrations\\v33x\\m11_tag_moderation', $migration);
+		$this->assertStringNotContainsString("gallery_tags'", $migration);
+		$this->assertFileDoesNotExist($this->root . '/tag_parser.php');
+	}
+
+	public function test_gallery_provider_is_registered_through_the_bbtags_api(): void
+	{
+		$services = (string) file_get_contents($this->root . '/config/services.yml');
+		$provider = (string) file_get_contents($this->root . '/provider/image_provider.php');
+
+		$this->assertStringContainsString('name: sitesplat.bbtags.provider', $services);
+		$this->assertStringContainsString('implements provider_interface', $provider);
+		$this->assertStringContainsString("PROVIDER = 'gallery_images'", (string) file_get_contents($this->root . '/image_tag_manager.php'));
+	}
+
+	public function test_listener_loads_provider_language_and_cleans_deleted_images(): void
+	{
+		$listener = (string) file_get_contents($this->root . '/event/main_listener.php');
+
+		$this->assertStringContainsString("'core.user_setup'", $listener);
+		$this->assertStringContainsString("'phpbbgallery.core.image.delete_images'", $listener);
+		$this->assertStringContainsString("'ext_name' => 'phpbbgallery/bbtagsbridge'", $listener);
+	}
+
+	public function test_every_core_locale_has_complete_bridge_catalogues(): void
+	{
+		$core_locales = array_map('basename', glob(dirname($this->root) . '/core/language/*', GLOB_ONLYDIR) ?: []);
+		sort($core_locales);
+		$addon_locales = array_map('basename', glob($this->root . '/language/*', GLOB_ONLYDIR) ?: []);
+		sort($addon_locales);
+
+		$this->assertSame($core_locales, $addon_locales);
+		foreach ($addon_locales as $locale)
+		{
+			$files = array_map('basename', glob($this->root . '/language/' . $locale . '/*.php') ?: []);
+			sort($files);
+			$this->assertSame(['bbtagsbridge.php', 'info_bbtagsbridge.php'], $files, $locale);
+			foreach ($files as $file)
+			{
+				$this->assertSame(
+					$this->language_keys($this->root . '/language/en/' . $file),
+					$this->language_keys($this->root . '/language/' . $locale . '/' . $file),
+					$locale . '/' . $file
+				);
+			}
+		}
+	}
+
+	private function language_keys(string $path): array
+	{
+		preg_match_all("/^\\s*'([A-Z0-9_]+)'\\s*=>/m", (string) file_get_contents($path), $matches);
+		$keys = array_values(array_unique($matches[1]));
+		sort($keys);
+
+		return $keys;
+	}
+}

@@ -1,0 +1,26 @@
+parameters:
+    phpbbgallery.bbtagsbridge.tables.image_tags: '%core.table_prefix%gallery_image_tags'
+
+services:
+    phpbbgallery.bbtagsbridge.image_tag_manager:
+        class: phpbbgallery\bbtagsbridge\image_tag_manager
+        arguments:
+            - '@dbal.conn.driver'
+            - '%phpbbgallery.bbtagsbridge.tables.image_tags%'
+            - '%phpbbgallery.tables.gallery_images%'
+            - '%sitesplat.bbtags.tables.bbtags_context%'
+
+    phpbbgallery.bbtagsbridge.provider.gallery_images:
+        class: phpbbgallery\bbtagsbridge\provider\image_provider
+        arguments:
+            - '@phpbbgallery.bbtagsbridge.image_tag_manager'
+            - '@controller.helper'
+        tags:
+            - { name: sitesplat.bbtags.provider }
+
+    phpbbgallery.bbtagsbridge.listener:
+        class: phpbbgallery\bbtagsbridge\event\main_listener
+        arguments:
+            - '@phpbbgallery.bbtagsbridge.image_tag_manager'
+        tags:
+            - { name: event.listener }
