@@ -120,6 +120,16 @@ final class template_syntax_test extends TestCase
 		}
 	}
 
+	public function test_image_edit_forms_accept_addon_file_fields(): void
+	{
+		$core_root = dirname(__DIR__);
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$posting = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/posting_body.html');
+			$this->assertMatchesRegularExpression('/<form[^>]+enctype="multipart\/form-data"/', $posting, $style);
+		}
+	}
+
 	public function test_quick_upload_uses_a_javascript_regex_from_the_configured_extensions(): void
 	{
 		$core_root = dirname(__DIR__);

@@ -138,7 +138,7 @@ class orphan_upload_security_test extends TestCase
 			$template = file_get_contents($template_path);
 			$album_action = str_contains($template, '{{ S_ALBUM_ACTION }}') ? '{{ S_ALBUM_ACTION }}' : '{S_ALBUM_ACTION}';
 			$form_token = str_contains($template, '{{ S_FORM_TOKEN }}') ? '{{ S_FORM_TOKEN }}' : '{S_FORM_TOKEN}';
-			$form_start = strpos($template, '<form id="postform" action="' . $album_action . '" method="post">');
+			$form_start = strpos($template, '<form id="postform" action="' . $album_action . '" method="post" enctype="multipart/form-data">');
 			$this->assertNotFalse($form_start, $template_path);
 			$form_end = strpos($template, '</form>', $form_start);
 			$this->assertNotFalse($form_end, $template_path);

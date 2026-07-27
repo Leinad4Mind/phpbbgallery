@@ -1020,7 +1020,25 @@ class image
 
 			$rotate = $this->request->variable('rotate', [0]);
 			$rotate = (isset($rotate[0])) ? $rotate[0] : 0;
-			if ($this->gallery_config->get('allow_rotate') && ($rotate > 0) && (($rotate % 90) == 0))
+			$file_changed = false;
+
+			/**
+			 * Allow add-ons to replace or otherwise transform the physical image file.
+			 * This event runs after the edit form CSRF and image-ownership checks.
+			 *
+			 * @event phpbbgallery.core.image_edit_file
+			 * @var int   image_id    Image identifier
+			 * @var array image_data  Current image database row
+			 * @var array album_data  Current album database row
+			 * @var array errors      Validation errors; listeners may append messages
+			 * @var int   rotate      Requested rotation in degrees
+			 * @var bool  file_changed Set true when a listener replaced the source file
+			 * @since 3.4.0
+			 */
+			$vars = ['image_id', 'image_data', 'album_data', 'errors', 'rotate', 'file_changed'];
+			extract($this->dispatcher->trigger_event('phpbbgallery.core.image_edit_file', compact($vars)));
+
+			if (!$errors && !$file_changed && $this->gallery_config->get('allow_rotate') && ($rotate > 0) && (($rotate % 90) == 0))
 			{
 				$image_tools = new \phpbbgallery\core\file\file($this->request, $this->url, $this->gallery_config, 2);
 				$image_tools->set_image_options($this->gallery_config->get('max_filesize'), $this->gallery_config->get('max_height'), $this->gallery_config->get('max_width'));
@@ -1099,11 +1117,14 @@ class image
 		 * Event edit image display
 		 *
 		 * @event phpbbgallery.core.image_edit_display
-		 * @var    array    template_vars        Template array.
-		 * @var    array    disp_image_data        Display image array.
+		 * @var array template_vars   Template array
+		 * @var array disp_image_data Display image array
+		 * @var int   image_id        Image identifier
+		 * @var array image_data      Current image database row
+		 * @var array album_data      Current album database row
 		 * @since 3.2.2
 		 */
-		$vars = ['template_vars', 'disp_image_data'];
+		$vars = ['template_vars', 'disp_image_data', 'image_id', 'image_data', 'album_data'];
 		extract($this->dispatcher->trigger_event('phpbbgallery.core.image_edit_display', compact($vars)));
 		$this->template->assign_block_vars('image', $template_vars);
 

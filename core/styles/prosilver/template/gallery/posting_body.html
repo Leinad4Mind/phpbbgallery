@@ -135,7 +135,7 @@
 
 {% if U_VIEW_IMAGE %}<h2>{{ lang('IMAGE_NAME') }}{{ lang('COLON') }}<a href="{{ U_VIEW_IMAGE }}" style="display: inline;"> {{ IMAGE_NAME }}</a></h2>{% else %}<h2>{{ lang('ALBUM_NAME') }}{{ lang('COLON') }}<a href="{{ U_VIEW_ALBUM }}" style="display: inline;"> {{ ALBUM_NAME }}</a></h2>{% endif %}
 
-<form id="postform" action="{{ S_ALBUM_ACTION }}" method="post">
+<form id="postform" action="{{ S_ALBUM_ACTION }}" method="post" enctype="multipart/form-data">
 
 <div class="panel" id="postingbox">
 	<div class="inner">
