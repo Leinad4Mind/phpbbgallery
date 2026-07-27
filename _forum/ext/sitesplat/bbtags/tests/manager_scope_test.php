@@ -82,6 +82,56 @@ class manager_scope_test extends TestCase
 		);
 	}
 
+	public function test_classification_keeps_explicit_denials_out_of_moderation(): void
+	{
+		$db = $this->createMock(driver_interface::class);
+		$db->method('sql_escape')->willReturnArgument(0);
+		$db->method('sql_in_set')->willReturnCallback(static function (string $field, array $values): string
+		{
+			return $field . ' IN (' . implode(',', $values) . ')';
+		});
+		$db->method('sql_query')->willReturnArgument(0);
+		$catalogue = [
+			['id' => 1, 'tag' => 'allowed', 'tag_clean' => 'allowed'],
+			['id' => 2, 'tag' => 'denied', 'tag_clean' => 'denied'],
+			['id' => 3, 'tag' => 'restricted', 'tag_clean' => 'restricted'],
+			['id' => 4, 'tag' => 'disabled', 'tag_clean' => 'disabled'],
+		];
+		$contexts = [
+			['tag_id' => 1, 'scope_mode' => 'global', 'is_enabled' => 1],
+			['tag_id' => 2, 'scope_mode' => 'global', 'is_enabled' => 1],
+			['tag_id' => 3, 'scope_mode' => 'restricted', 'is_enabled' => 1],
+			['tag_id' => 4, 'scope_mode' => 'global', 'is_enabled' => 0],
+		];
+		$rules = [['tag_id' => 2, 'scope_id' => 30, 'scope_rule' => 'deny']];
+		$db->method('sql_fetchrow')->willReturnCallback(static function (string $result) use (&$catalogue, &$contexts, &$rules)
+		{
+			if (strpos($result, 'FROM phpbb_bbtags_context') !== false)
+			{
+				return array_shift($contexts) ?: false;
+			}
+			if (strpos($result, 'FROM phpbb_bbtags_scope') !== false)
+			{
+				return array_shift($rules) ?: false;
+			}
+
+			return array_shift($catalogue) ?: false;
+		});
+
+		$this->assertSame(
+			[
+				'available' => ['allowed'],
+				'suggestible' => ['restricted', 'new tag'],
+				'blocked' => ['denied', 'disabled'],
+			],
+			$this->create_manager($db)->classify_tags(
+				['allowed', 'denied', 'restricted', 'disabled', 'new tag'],
+				manager::FORUM_PROVIDER,
+				[30, 20, 0]
+			)
+		);
+	}
+
 	public function test_topic_subject_must_belong_to_the_declared_forum_scope(): void
 	{
 		$db = $this->createMock(driver_interface::class);

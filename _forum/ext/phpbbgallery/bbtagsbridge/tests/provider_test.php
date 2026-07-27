@@ -25,7 +25,7 @@ final class provider_test extends TestCase
 		$db = new fake_db();
 		$db->images = [10 => 3];
 		$provider = new image_provider(
-			new image_tag_manager($db, 'image_tags', 'images', 'bbtags_context'),
+			new image_tag_manager($db, 'image_tags', 'images', 'bbtags', 'bbtags_context'),
 			new helper()
 		);
 

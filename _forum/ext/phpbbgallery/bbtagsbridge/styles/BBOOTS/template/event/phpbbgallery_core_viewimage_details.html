@@ -1,0 +1,6 @@
+{% if bbtagsbridge_tags|length %}
+<div class="control-group">
+	<label class="control-label">{{ lang('BBTAGSBRIDGE_TAGS') }}{{ lang('COLON') }}</label>
+	<div class="controls controls-row">{% for tag in bbtagsbridge_tags %}<span class="label label-info">#{{ tag.NAME }}</span>{% if not tag.S_LAST_ROW %} {% endif %}{% endfor %}</div>
+</div>
+{% endif %}

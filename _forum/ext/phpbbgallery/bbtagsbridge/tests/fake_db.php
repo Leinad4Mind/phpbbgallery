@@ -12,6 +12,8 @@ namespace phpbbgallery\bbtagsbridge\tests;
 final class fake_db implements \phpbb\db\driver\driver_interface
 {
 	public array $images = [];
+	public array $albums = [];
+	public array $catalogue = [];
 	public array $relations = [];
 	public array $usage = [];
 	public array $transactions = [];
@@ -34,6 +36,36 @@ final class fake_db implements \phpbb\db\driver\driver_interface
 			{
 				$this->pending[] = ['image_album_id' => $this->images[$image_id]];
 			}
+		}
+		else if (preg_match('/FROM albums\s+WHERE album_id = (\d+)/s', $sql, $matches))
+		{
+			$album_id = (int) $matches[1];
+			if (array_key_exists($album_id, $this->albums))
+			{
+				$this->pending[] = ['parent_id' => $this->albums[$album_id]];
+			}
+		}
+		else if (str_contains($sql, 'FROM image_tags it') && str_contains($sql, 'INNER JOIN bbtags b'))
+		{
+			preg_match('/WHERE it\.image_id = (\d+)/', $sql, $matches);
+			$image_id = (int) ($matches[1] ?? 0);
+			foreach ($this->relations as $relation)
+			{
+				if ($relation['image_id'] === $image_id && isset($this->catalogue[$relation['tag_id']]))
+				{
+					$tag = $this->catalogue[$relation['tag_id']];
+					$this->pending[] = [
+						'id' => $relation['tag_id'],
+						'tag' => $tag,
+						'tag_clean' => mb_strtolower($tag, 'UTF-8'),
+						'usage_count' => $this->usage[$relation['tag_id']] ?? 0,
+					];
+				}
+			}
+			usort($this->pending, static function (array $left, array $right): int
+			{
+				return $left['tag_clean'] <=> $right['tag_clean'];
+			});
 		}
 		else if (preg_match('/FROM image_tags\s+WHERE image_id = (\d+)\s+AND tag_id = (\d+)/s', $sql, $matches))
 		{
@@ -110,6 +142,19 @@ final class fake_db implements \phpbb\db\driver\driver_interface
 		}
 
 		return 'result';
+	}
+
+	public function sql_multi_insert($table, $sql_ary): bool
+	{
+		foreach ((array) $sql_ary as $row)
+		{
+			$this->relations[] = [
+				'image_id' => (int) $row['image_id'],
+				'tag_id' => (int) $row['tag_id'],
+			];
+		}
+
+		return true;
 	}
 
 	public function sql_fetchrow($result = false): array|false

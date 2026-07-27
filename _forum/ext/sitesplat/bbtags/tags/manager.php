@@ -408,6 +408,17 @@ class manager
 	 */
 	public function get_available_tags(array $tags, string $provider, array $scope_path): array
 	{
+		return $this->classify_tags($tags, $provider, $scope_path)['available'];
+	}
+
+	/**
+	 * Classify submitted tags without allowing explicit provider or scope denials
+	 * to be converted into moderation suggestions.
+	 *
+	 * @return array{available: array, suggestible: array, blocked: array}
+	 */
+	public function classify_tags(array $tags, string $provider, array $scope_path): array
+	{
 		$normalized = [];
 		foreach ($tags as $tag)
 		{
@@ -420,26 +431,80 @@ class manager
 		}
 		if (empty($normalized))
 		{
-			return [];
+			return ['available' => [], 'suggestible' => [], 'blocked' => []];
 		}
 
 		$existing = $this->get_existing_tags(array_values($normalized));
-		$rows_by_id = [];
+		$rows_by_clean = [];
+		$tag_ids = [];
 		foreach ($existing as $row)
 		{
-			$rows_by_id[(int) $row['id']] = $row;
+			$rows_by_clean[(string) $row['tag_clean']] = $row;
+			$tag_ids[] = (int) $row['id'];
 		}
-		$available_ids = $this->filter_available_tag_ids(array_keys($rows_by_id), $provider, $scope_path);
-		$available = [];
-		foreach ($available_ids as $tag_id)
+
+		$provider = $this->validate_provider($provider);
+		if ($provider === '')
 		{
-			if (isset($rows_by_id[$tag_id]))
+			return ['available' => [], 'suggestible' => [], 'blocked' => array_values($normalized)];
+		}
+		$scope_path = array_values(array_unique(array_map('intval', $scope_path)));
+		if (!in_array(0, $scope_path, true))
+		{
+			$scope_path[] = 0;
+		}
+		$contexts = [];
+		$rules = [];
+		if (!empty($tag_ids))
+		{
+			$sql = 'SELECT tag_id, scope_mode, is_enabled
+				FROM ' . $this->table_bbtags_context . '
+				WHERE provider = \'' . $this->db->sql_escape($provider) . '\'
+					AND ' . $this->db->sql_in_set('tag_id', $tag_ids);
+			$result = $this->db->sql_query($sql);
+			while ($row = $this->db->sql_fetchrow($result))
 			{
-				$available[] = (string) $rows_by_id[$tag_id]['tag'];
+				$contexts[(int) $row['tag_id']] = $row;
+			}
+			$this->db->sql_freeresult($result);
+			$rules = $this->load_scope_rules($tag_ids, $provider, $scope_path);
+		}
+
+		$classified = ['available' => [], 'suggestible' => [], 'blocked' => []];
+		foreach ($normalized as $tag_clean => $tag)
+		{
+			if (!isset($rows_by_clean[$tag_clean]))
+			{
+				$classified['suggestible'][] = $tag;
+				continue;
+			}
+			$tag_id = (int) $rows_by_clean[$tag_clean]['id'];
+			if (!isset($contexts[$tag_id]))
+			{
+				$classified['suggestible'][] = $tag;
+				continue;
+			}
+			if (empty($contexts[$tag_id]['is_enabled']))
+			{
+				$classified['blocked'][] = $tag;
+				continue;
+			}
+			$scope_rule = $this->resolve_scope_rule($rules[$tag_id] ?? [], $scope_path);
+			if ($scope_rule === 'deny')
+			{
+				$classified['blocked'][] = $tag;
+			}
+			else if ($scope_rule === 'allow' || $contexts[$tag_id]['scope_mode'] === 'global')
+			{
+				$classified['available'][] = (string) $rows_by_clean[$tag_clean]['tag'];
+			}
+			else
+			{
+				$classified['suggestible'][] = $tag;
 			}
 		}
 
-		return $available;
+		return $classified;
 	}
 
 	/**
@@ -994,6 +1059,15 @@ class manager
 	 */
 	public function scope_allows($scope_mode, array $rules, array $scope_path)
 	{
+		$scope_rule = $this->resolve_scope_rule($rules, $scope_path);
+		return $scope_rule !== null ? $scope_rule === 'allow' : $scope_mode === 'global';
+	}
+
+	/**
+	 * Return the nearest explicit scope rule, or null when the provider default applies.
+	 */
+	public function resolve_scope_rule(array $rules, array $scope_path): ?string
+	{
 		$scope_path = array_values(array_unique(array_map('intval', $scope_path)));
 		if (!in_array(0, $scope_path, true))
 		{
@@ -1003,11 +1077,11 @@ class manager
 		{
 			if (isset($rules[$scope_id]))
 			{
-				return $rules[$scope_id] === 'allow';
+				return in_array($rules[$scope_id], ['allow', 'deny'], true) ? $rules[$scope_id] : null;
 			}
 		}
 
-		return $scope_mode === 'global';
+		return null;
 	}
 
 	/**

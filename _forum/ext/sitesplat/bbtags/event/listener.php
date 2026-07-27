@@ -206,26 +206,14 @@ class listener implements EventSubscriberInterface
 			}
 
 			$scope_path = $this->manager->get_forum_scope_path($forum_id);
-			$available_tags = $this->manager->get_available_tags($tags, manager::FORUM_PROVIDER, $scope_path);
+			$classified_tags = $this->manager->classify_tags($tags, manager::FORUM_PROVIDER, $scope_path);
+			$available_tags = $classified_tags['available'];
 			if (!$this->manager->assign_tags_to_topic($topic_id, $available_tags, $forum_id, false))
 			{
 				return;
 			}
-			$available_clean = [];
-			foreach ($available_tags as $available_tag)
-			{
-				$available_clean[$this->manager->canonical_tag($available_tag)] = true;
-			}
-			$pending_tags = [];
-			foreach ($tags as $tag)
-			{
-				if (!isset($available_clean[$this->manager->canonical_tag($tag)]))
-				{
-					$pending_tags[] = $tag;
-				}
-			}
 			$this->moderation->sync_item_suggestions(
-				$pending_tags,
+				$classified_tags['suggestible'],
 				manager::FORUM_PROVIDER,
 				$forum_id,
 				$topic_id,
