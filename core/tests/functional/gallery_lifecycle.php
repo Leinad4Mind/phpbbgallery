@@ -14,7 +14,7 @@ namespace phpbbgallery\core\tests\functional;
  *
  * @group functional
  */
-class gallery_lifecycle_test extends \phpbb_functional_test_case
+class gallery_lifecycle extends \phpbb_functional_test_case
 {
 	private const COMPONENTS = [
 		'phpbbgallery/core',
@@ -184,18 +184,24 @@ class gallery_lifecycle_test extends \phpbb_functional_test_case
 		$this->write_test_png($import_path);
 
 		$db = $this->get_db();
-		$sql = "SELECT module_id
-			FROM " . MODULES_TABLE . "
+		$module_basename = '\phpbbgallery\acpimport\acp\main_module';
+		$sql = 'SELECT COUNT(module_id) AS total
+			FROM ' . MODULES_TABLE . "
 			WHERE module_class = 'acp'
-				AND module_langname = 'ACP_IMPORT_ALBUMS'";
+				AND module_basename = '" . $db->sql_escape($module_basename) . "'
+				AND module_mode = 'import_images'";
 		$result = $db->sql_query($sql);
-		$module_id = (int) $db->sql_fetchfield('module_id');
+		$this->assertSame(1, (int) $db->sql_fetchfield('total'));
 		$db->sql_freeresult($result);
-		$this->assertGreaterThan(0, $module_id);
 
-		$path = 'adm/index.php?i=' . $module_id . '&mode=import_images&sid=' . $this->sid;
-		$crawler = self::request('GET', $path);
-		$this->assertStringContainsString($this->lang('ACP_IMPORT_ALBUMS'), $crawler->filter('h1')->text());
+		$crawler = self::request('GET', 'adm/index.php?sid=' . $this->sid);
+		$extensions_link = $crawler->filter('#tabs')->selectLink($this->lang('ACP_CAT_DOT_MODS'));
+		$this->assertSame(1, $extensions_link->count());
+		$crawler = self::$client->click($extensions_link->link());
+		$import_link = $crawler->selectLink($this->lang('ACP_IMPORT_ALBUMS'));
+		$this->assertSame(1, $import_link->count(), $crawler->filter('body')->text());
+		$crawler = self::$client->click($import_link->link());
+		$this->assertStringContainsString($this->lang('ACP_IMPORT_ALBUMS'), $crawler->filter('body')->text());
 		$this->assertSame(1, $crawler->filter('select[name="images[]"] option[value="' . $import_name . '"]')->count());
 
 		$form = $crawler->selectButton('submit')->form();
@@ -250,7 +256,10 @@ class gallery_lifecycle_test extends \phpbb_functional_test_case
 
 		$path = 'app.php/gallery/album/' . $album_id . '/upload?sid=' . $this->sid;
 		$crawler = self::request('GET', $path);
-		$this->assertStringContainsString('Resumable draft', $crawler->filter('body')->text());
+		$this->assertSame(
+			'Resumable draft',
+			$crawler->filter('input[name^="image_name"]')->first()->attr('value')
+		);
 		$this->assertSame(
 			$image_id . '$' . $filename,
 			$crawler->filter('input[name^="upload_ids"]')->first()->attr('value')
@@ -289,7 +298,7 @@ class gallery_lifecycle_test extends \phpbb_functional_test_case
 
 		$db = $this->get_db();
 		$db->sql_query("DELETE FROM phpbb_migrations WHERE migration_name = '" . $db->sql_escape($migration) . "'");
-		$db->sql_query("UPDATE " . CONFIG_TABLE . " SET config_value = '3.3.0' WHERE config_name = 'phpbb_gallery_version'");
+		$db->sql_query('UPDATE ' . CONFIG_TABLE . " SET config_value = '3.3.0' WHERE config_name = 'phpbb_gallery_version'");
 
 		$this->install_ext('phpbbgallery/core');
 		$this->assertSame('3.4.0', $this->config_value('phpbb_gallery_version'));
@@ -308,8 +317,8 @@ class gallery_lifecycle_test extends \phpbb_functional_test_case
 	private function assert_gallery_is_purged(string $phpbb_root_path): void
 	{
 		$db = $this->get_db();
-		$sql = "SELECT COUNT(config_name) AS total
-			FROM " . CONFIG_TABLE . "
+		$sql = 'SELECT COUNT(config_name) AS total
+			FROM ' . CONFIG_TABLE . "
 			WHERE config_name LIKE 'phpbb_gallery_%'";
 		$result = $db->sql_query($sql);
 		$this->assertSame(0, (int) $db->sql_fetchfield('total'));
@@ -350,8 +359,8 @@ class gallery_lifecycle_test extends \phpbb_functional_test_case
 	private function config_value(string $name): string
 	{
 		$db = $this->get_db();
-		$sql = "SELECT config_value
-			FROM " . CONFIG_TABLE . "
+		$sql = 'SELECT config_value
+			FROM ' . CONFIG_TABLE . "
 			WHERE config_name = '" . $db->sql_escape($name) . "'";
 		$result = $db->sql_query($sql);
 		$value = (string) $db->sql_fetchfield('config_value');
@@ -366,8 +375,8 @@ class gallery_lifecycle_test extends \phpbb_functional_test_case
 	private function acl_option_count(string $permission): int
 	{
 		$db = $this->get_db();
-		$sql = "SELECT COUNT(auth_option_id) AS total
-			FROM " . ACL_OPTIONS_TABLE . "
+		$sql = 'SELECT COUNT(auth_option_id) AS total
+			FROM ' . ACL_OPTIONS_TABLE . "
 			WHERE auth_option = '" . $db->sql_escape($permission) . "'";
 		$result = $db->sql_query($sql);
 		$count = (int) $db->sql_fetchfield('total');

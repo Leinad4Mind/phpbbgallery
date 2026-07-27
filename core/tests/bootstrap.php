@@ -19,6 +19,20 @@ namespace phpbb\filesystem
 	}
 }
 
+namespace phpbb\extension
+{
+	if (!class_exists('phpbb\\extension\\manager', false))
+	{
+		class manager
+		{
+			public function is_enabled(string $extension): bool
+			{
+				return false;
+			}
+		}
+	}
+}
+
 namespace
 {
 	if (!defined('IN_PHPBB'))
@@ -70,6 +84,7 @@ namespace
 	require_once dirname(__DIR__, 4) . '/vendor/symfony/event-dispatcher/Event.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/event/data.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/db/driver/driver_interface.php';
+	require_once dirname(__DIR__, 4) . '/phpbb/auth/auth.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/cron/task/task.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/cron/task/base.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/request/request_interface.php';

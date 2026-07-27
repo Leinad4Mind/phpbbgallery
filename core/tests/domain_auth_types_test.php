@@ -51,6 +51,12 @@ final class domain_auth_types_test extends TestCase
 		}
 	}
 
+	public function test_favorite_permission_only_exists_while_its_addon_is_enabled(): void
+	{
+		$this->assertFalse($this->constructed_auth(false)->has_permission('i_favorite'));
+		$this->assertTrue($this->constructed_auth(true)->has_permission('i_favorite'));
+	}
+
 	public function test_cached_permissions_replace_stale_acl_state(): void
 	{
 		$phpbb_user = new \phpbb\user();
@@ -276,6 +282,28 @@ final class domain_auth_types_test extends TestCase
 	private function new_auth(): auth
 	{
 		return (new \ReflectionClass(auth::class))->newInstanceWithoutConstructor();
+	}
+
+	private function constructed_auth(bool $favorite_enabled): auth
+	{
+		$extension_manager = $this->createMock(\phpbb\extension\manager::class);
+		$extension_manager->expects($this->once())
+			->method('is_enabled')
+			->with('phpbbgallery/favorite')
+			->willReturn($favorite_enabled);
+
+		return new auth(
+			$this->createStub(\phpbbgallery\core\cache::class),
+			$this->createStub(\phpbb\db\driver\driver_interface::class),
+			$this->createStub(\phpbbgallery\core\user::class),
+			new \phpbb\user(),
+			$this->createStub(\phpbb\auth\auth::class),
+			'gallery_permissions',
+			'gallery_roles',
+			'gallery_users',
+			'gallery_albums',
+			$extension_manager
+		);
 	}
 
 	private function set_property(auth $service, string $name, mixed $value): void
