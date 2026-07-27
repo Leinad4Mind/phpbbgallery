@@ -8,6 +8,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 - Added a migration-backed total image-view counter to the public and ACP statistics, including automatic updates and ACP resynchronization.
 - Restored album-scoped search on album pages, including empty albums and responsive themes, while respecting phpBB search availability and user permission.
+- Made ACP contest settings appear only while creating or editing an album in contest mode, without an initial visibility flash.
 
 ### Security
 
