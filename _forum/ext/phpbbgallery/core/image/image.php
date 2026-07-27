@@ -213,6 +213,7 @@ class image
 			WHERE ' . $this->db->sql_in_set('image_id', $images);
 		$result = $this->db->sql_query($sql);
 		$resync_album_ids = $resync_contests = $targets = [];
+		$deleted_views = 0;
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			if ($row['image_contest_rank'])
@@ -224,6 +225,7 @@ class image
 			{
 				$targets[$row['image_album_id']][$row['image_id']] = $row['image_user_id'];
 			}
+			$deleted_views += (int) $row['image_view_count'];
 		}
 
 		// Let's prepare notifications
@@ -249,6 +251,10 @@ class image
 		$sql = 'DELETE FROM ' . $this->table_images . '
 			WHERE ' . $this->db->sql_in_set('image_id', $images);
 		$this->db->sql_query($sql);
+		if ($deleted_views > 0)
+		{
+			$this->gallery_config->dec('num_views', $deleted_views, false);
+		}
 
 		// The images need to be deleted, before we grab the new winners.
 		$phpbb_gallery_contest->resync_albums($resync_contests);

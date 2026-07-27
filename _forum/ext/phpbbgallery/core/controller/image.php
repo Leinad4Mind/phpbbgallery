@@ -284,6 +284,7 @@ class image
 				SET image_view_count = image_view_count + 1
 				WHERE image_id = ' . (int) $image_id;
 			$this->db->sql_query($sql);
+			$this->gallery_config->inc('num_views', 1, false);
 		}
 
 		// Do stuff here

@@ -82,6 +82,7 @@ class config
 		'num_comments'			=> 0,
 		'num_images'			=> 0,
 		'num_pegas'				=> 0,
+		'num_views'				=> 0,
 		'num_uploads'			=> 10,
 
 		'pegas_index_album'		=> false,
@@ -164,25 +165,26 @@ class config
 		}
 	}
 
-	public function set(string $name, mixed $value): void
+	public function set(string $name, mixed $value, bool $use_cache = true): void
 	{
-		$this->config->set('phpbb_gallery_' . $name, $value);
+		$this->config->set('phpbb_gallery_' . $name, $value, $use_cache);
 	}
 
-	public function inc(string $name, int $value): void
+	public function inc(string $name, int $value, bool $use_cache = true): void
 	{
 		if (!$this->config->offsetGet('phpbb_gallery_' . $name))
 		{
-			$this->config->set('phpbb_gallery_' . $name, 0);
+			$this->config->set('phpbb_gallery_' . $name, 0, $use_cache);
 		}
-		$this->config->increment('phpbb_gallery_' . $name, (int) $value);
+		$this->config->increment('phpbb_gallery_' . $name, (int) $value, $use_cache);
 	}
-	public function dec(string $name, int $value): void
+
+	public function dec(string $name, int $value, bool $use_cache = true): void
 	{
 		if (!$this->config->offsetGet('phpbb_gallery_' . $name))
 		{
-			$this->config->set('phpbb_gallery_' . $name, 0);
+			$this->config->set('phpbb_gallery_' . $name, 0, $use_cache);
 		}
-		$this->config->increment('phpbb_gallery_' . $name, (int) $value * -1);
+		$this->config->increment('phpbb_gallery_' . $name, (int) $value * -1, $use_cache);
 	}
 }

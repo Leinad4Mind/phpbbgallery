@@ -220,6 +220,7 @@ final class controller_image_types_test extends TestCase
 		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/image.php');
 
 		$this->assertStringContainsString('SET image_view_count = image_view_count + 1', $source);
+		$this->assertStringContainsString("->inc('num_views', 1, false)", $source);
 		$this->assertStringContainsString("ORDER BY ' . \$sql_sort_order;", $source);
 		$this->assertStringNotContainsString("ORDER BY ' . \$sql_sort_order . \$sql_help_sort", $source);
 	}

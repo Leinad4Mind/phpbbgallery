@@ -129,6 +129,7 @@ $lang = array_merge($lang, [
 	'GALLERY_IMAGE'                => 'Imagem',
 	'GALLERY_IMAGES'               => 'Imagens',
 	'GALLERY_VIEWS'                => 'Visualizações na Galeria',
+	'TOTAL_VIEWS'    => 'Total de visualizações',
 	'IGNORE_NOTUPTODATE_MESSAGE'   => 'Lembre-me em 7 dias',
 	'IMAGE_ALREADY_REPORTED'       => 'A imagem já foi reportada.',
 	'IMAGE_BBCODE'                 => 'BBCode de Imagem',

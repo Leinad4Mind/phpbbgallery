@@ -68,6 +68,7 @@ class image_delete_batch_resync_test extends TestCase
 		$source = file_get_contents(dirname(__DIR__) . '/image/image.php');
 
 		$this->assertStringContainsString('->update_infos($resync_album_ids);', $source);
+		$this->assertStringContainsString("->dec('num_views', \$deleted_views, false);", $source);
 		$this->assertStringNotContainsString('foreach ($resync_album_ids as $album_id)', $source);
 	}
 

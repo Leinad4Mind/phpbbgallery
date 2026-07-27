@@ -137,6 +137,7 @@ $lang = array_merge($lang, [
 	'GALLERY_IMAGE'  => 'Image',
 	'GALLERY_IMAGES' => 'Images',
 	'GALLERY_VIEWS'  => 'Views',
+	'TOTAL_VIEWS'    => 'Total views',
 
 	'IGNORE_NOTUPTODATE_MESSAGE'   => 'Remind me in 7 days',
 	'IMAGE_ALREADY_REPORTED'       => 'The image was already reported.',

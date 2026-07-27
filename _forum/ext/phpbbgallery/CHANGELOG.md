@@ -4,6 +4,10 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ## [3.4.0] Unreleased
 
+### Added
+
+- Added a migration-backed total image-view counter to the public and ACP statistics, including automatic updates and ACP resynchronization.
+
 ### Security
 
 - Replaced ZIP extraction during gallery uploads with a controlled per-entry extractor that rejects path traversal, absolute paths, symbolic-link entries, unsupported file types, duplicate destinations, and archive entries whose detected content does not match their extension.

@@ -28,14 +28,18 @@ final class infrastructure_types_test extends TestCase
 
 		$this->assertSame(25, $gallery_config->get('items_per_page'));
 		$this->assertFalse($gallery_config->get('allow_zip'));
+		$this->assertSame(0, $gallery_config->get('num_views'));
 		$this->assertSame(25, $gallery_config->get_all()['items_per_page']);
 
 		$gallery_config->set('allow_zip', true);
 		$gallery_config->inc('num_images', 2);
 		$gallery_config->dec('num_images', 3);
+		$gallery_config->inc('num_views', 7, false);
+		$gallery_config->dec('num_views', 2, false);
 
 		$this->assertTrue($gallery_config->get('allow_zip'));
 		$this->assertSame(4, $gallery_config->get('num_images'));
+		$this->assertSame(5, $gallery_config->get('num_views'));
 	}
 
 	public function test_auth_set_and_block_values_remain_stable(): void

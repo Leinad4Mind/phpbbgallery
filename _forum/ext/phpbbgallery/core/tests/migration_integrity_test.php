@@ -22,6 +22,7 @@ use phpbbgallery\core\migrations\resumable_uploads;
 use phpbbgallery\core\migrations\performance_indexes;
 use phpbbgallery\core\migrations\protect_personal_album_profile_field;
 use phpbbgallery\core\migrations\split_ucp_module_settings;
+use phpbbgallery\core\migrations\total_views;
 
 class migration_integrity_test extends TestCase
 {
@@ -38,6 +39,7 @@ class migration_integrity_test extends TestCase
 		resumable_uploads::class,
 		performance_indexes::class,
 		protect_personal_album_profile_field::class,
+		total_views::class,
 	];
 
 	private array $temp_directories = [];
@@ -87,6 +89,48 @@ class migration_integrity_test extends TestCase
 			['\phpbbgallery\core\migrations\performance_indexes'],
 			protect_personal_album_profile_field::depends_on()
 		);
+		$this->assertSame(
+			['\phpbbgallery\core\migrations\protect_personal_album_profile_field'],
+			total_views::depends_on()
+		);
+	}
+
+	public function test_total_views_migration_initializes_a_dynamic_counter(): void
+	{
+		global $config;
+
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->once())
+			->method('sql_query')
+			->with($this->stringContains('SUM(image_view_count) AS total_views'))
+			->willReturn(1);
+		$db->expects($this->once())
+			->method('sql_fetchfield')
+			->with('total_views')
+			->willReturn('42');
+		$db->expects($this->once())->method('sql_freeresult')->with(1);
+
+		$config = $this->getMockBuilder(\phpbb\config\config::class)
+			->setConstructorArgs([[]])
+			->onlyMethods(['set'])
+			->getMock();
+		$config->expects($this->once())
+			->method('set')
+			->with('phpbb_gallery_num_views', 42, false);
+
+		$reflection = new \ReflectionClass(total_views::class);
+		$migration = $reflection->newInstanceWithoutConstructor();
+		(new \ReflectionProperty(\phpbb\db\migration\migration::class, 'db'))->setValue($migration, $db);
+		(new \ReflectionProperty(\phpbb\db\migration\migration::class, 'table_prefix'))->setValue($migration, 'phpbb_');
+
+		$this->assertSame([
+			['config.add', ['phpbb_gallery_num_views', 0, true]],
+			['custom', [[$migration, 'resync_total_views']]],
+		], $migration->update_data());
+		$this->assertTrue($migration->resync_total_views());
+		$this->assertSame([
+			['config.remove', ['phpbb_gallery_num_views']],
+		], $migration->revert_data());
 	}
 
 	public function test_personal_album_profile_field_is_not_user_editable(): void
@@ -366,7 +410,7 @@ class migration_integrity_test extends TestCase
 
 	private function load_migrations(): void
 	{
-		if (class_exists(release_1_2_0_create_filesystem::class))
+		if (class_exists(total_views::class))
 		{
 			return;
 		}
@@ -389,6 +433,7 @@ class migration_integrity_test extends TestCase
 			'resumable_uploads.php',
 			'performance_indexes.php',
 			'protect_personal_album_profile_field.php',
+			'total_views.php',
 		] as $migration)
 		{
 			require_once dirname(__DIR__) . '/migrations/' . $migration;
