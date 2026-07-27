@@ -108,13 +108,26 @@ final class template_syntax_test extends TestCase
 		$this->assertStringContainsString('c_rows|default([])', $permissions);
 	}
 
-	public function test_every_upload_selector_accepts_webp(): void
+	public function test_every_upload_selector_uses_the_configured_extension_filter(): void
 	{
 		$core_root = dirname(__DIR__);
 		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
 		{
 			$posting = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/posting_body.html');
-			$this->assertMatchesRegularExpression('/<input[^>]+id="files"[^>]+accept="[^"]*image\/webp[^"]*"/', $posting, $style);
+			$this->assertMatchesRegularExpression('/<input[^>]+id="files"[^>]+accept="{{ S_ALLOWED_FILETYPES_ACCEPT }}"/', $posting, $style);
+			$this->assertStringContainsString('{% if not S_UPLOAD_FILETYPES_AVAILABLE %} disabled{% endif %}', $posting, $style);
+			$this->assertStringNotContainsString('image/jpeg,image/png,image/gif,image/webp,application/zip', $posting, $style);
+		}
+	}
+
+	public function test_quick_upload_uses_a_javascript_regex_from_the_configured_extensions(): void
+	{
+		$core_root = dirname(__DIR__);
+		foreach (['all', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$footer = (string) file_get_contents($core_root . '/styles/' . $style . '/template/event/overall_footer_after.html');
+			$this->assertStringContainsString('acceptFileTypes: /(\\.|\\/)({{ S_QUICK_FILE_TYPES }})$/i,', $footer, $style);
+			$this->assertStringNotContainsString('//acceptFileTypes:', $footer, $style);
 		}
 	}
 

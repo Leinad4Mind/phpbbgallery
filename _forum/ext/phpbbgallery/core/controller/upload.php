@@ -433,6 +433,7 @@ class upload
 
 			if ($mode == 'upload')
 			{
+				$allowed_extensions = $process->get_allowed_types();
 				$this->template->assign_vars([
 					'ERROR'               => $error,
 					'S_MAX_FILESIZE'      => get_formatted_filesize($this->gallery_config->get('max_filesize')),
@@ -441,6 +442,8 @@ class upload
 					'S_MAX_WIDTH'         => $this->gallery_config->get('max_width'),
 					'S_MAX_HEIGHT'        => $this->gallery_config->get('max_height'),
 					'S_ALLOWED_FILETYPES' => implode(', ', $process->get_allowed_types(true)),
+					'S_ALLOWED_FILETYPES_ACCEPT' => implode(',', array_map(static fn(string $extension): string => '.' . $extension, $allowed_extensions)),
+					'S_UPLOAD_FILETYPES_AVAILABLE' => !empty($allowed_extensions),
 					'S_ALBUM_ACTION'      => $this->helper->route('phpbbgallery_core_album_upload', ['album_id' => $album_id]),
 					'S_UPLOAD'            => true,
 					'S_ALLOW_ROTATE'      => ($this->gallery_config->get('allow_rotate') && function_exists('imagerotate')),
@@ -451,28 +454,12 @@ class upload
 				]);
 
 				// Quick upload is restricted to registered users.
-				if ($this->user->data['is_registered'])
+				if ($this->user->data['is_registered'] && $allowed_extensions)
 				{
-					$filetypes = [];
-					foreach ($process->get_allowed_types(true) as $filetype)
-					{
-						if ($filetype == 'jpg')
-						{
-							$filetypes[] = 'jpe?g';
-						}
-						if ($filetype == 'zip')
-						{
-							continue;
-						}
-						else
-						{
-							$filetypes[] = $filetype;
-						}
-					}
 					$this->template->assign_vars([
 						'S_GALLERY_QUICK_UPLOAD' => true,
 						'S_QUICK_MAX_FILESIZE'   => $process->get_source_filesize_limit(),
-						'S_QUICK_FILE_TYPES'     => '/(\.|\/)(' . implode('|', $filetypes) . ')$/i',
+						'S_QUICK_FILE_TYPES'     => implode('|', array_map('preg_quote', $allowed_extensions)),
 					]);
 				}
 			}
