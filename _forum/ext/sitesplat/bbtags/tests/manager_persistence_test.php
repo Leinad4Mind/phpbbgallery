@@ -56,13 +56,13 @@ class manager_persistence_test extends TestCase
 		});
 		$db->method('sql_in_set')->willReturnCallback(static function ($field)
 		{
-			return ($field === 'tag') ? "tag = 'anime'" : 'topic_id = 9';
+			return ($field === 'tag_clean') ? "tag_clean = 'anime'" : 'topic_id = 9';
 		});
 		$db->method('sql_query')->willReturn(true);
 		$db->method('sql_fetchrow')->willReturnOnConsecutiveCalls(
-			array('id' => 4, 'tag' => 'anime'),
+			array('id' => 4, 'tag' => 'anime', 'tag_clean' => 'anime'),
 			false,
-			array('id' => 4, 'tag' => 'anime'),
+			array('id' => 4, 'tag' => 'anime', 'tag_clean' => 'anime'),
 			false
 		);
 		$db->method('sql_affectedrows')->willReturn(1);
@@ -79,17 +79,32 @@ class manager_persistence_test extends TestCase
 		$db->method('sql_query')->willReturnCallback(static function ($sql) use (&$queries)
 		{
 			$queries[] = $sql;
-			return true;
+			return $sql;
 		});
-		$db->method('sql_fetchrow')->willReturnOnConsecutiveCalls(
-			array('tag_id' => 4, 'count' => 3),
-			false
+		$rows = array(
+			'contexts' => array(array('tag_id' => 4)),
+			'counts' => array(array('tag_id' => 4, 'count' => 3)),
 		);
+		$db->method('sql_fetchrow')->willReturnCallback(static function ($result) use (&$rows)
+		{
+			if (strpos($result, 'SELECT tag_id') !== false && strpos($result, 'COUNT(') === false)
+			{
+				return array_shift($rows['contexts']) ?: false;
+			}
+			if (strpos($result, 'COUNT(topic_id)') !== false)
+			{
+				return array_shift($rows['counts']) ?: false;
+			}
+			return false;
+		});
+		$db->expects($this->never())->method('sql_multi_insert');
 
 		$this->assertTrue($this->create_manager($db)->calc_count_tags());
 		$this->assertStringContainsString('SET count = 0', $queries[0]);
-		$this->assertStringContainsString('COUNT(topic_id)', $queries[1]);
-		$this->assertStringContainsString('SET count = 3 WHERE id = 4', $queries[2]);
+		$this->assertStringContainsString('SET usage_count = 0', $queries[1]);
+		$this->assertStringContainsString('COUNT(topic_id)', $queries[3]);
+		$this->assertStringContainsString('SET count = 3 WHERE id = 4', $queries[4]);
+		$this->assertStringContainsString('SET usage_count = 3', $queries[5]);
 	}
 
 	private function create_manager(driver_interface $db)
@@ -99,6 +114,7 @@ class manager_persistence_test extends TestCase
 			$this->createMock(config::class),
 			$this->createMock(auth::class),
 			'phpbb_bbtags',
+			'phpbb_bbtags_context',
 			'phpbb_bbtags_topic'
 		);
 	}

@@ -45,11 +45,13 @@ class manager_admin_test extends TestCase
 		$manager = $this->create_manager($db);
 		$this->assertTrue($manager->delete_tag(12));
 		$this->assertSame(array('begin', 'commit'), $transactions);
-		$this->assertCount(2, $queries);
+		$this->assertCount(3, $queries);
 		$this->assertStringContainsString('DELETE FROM phpbb_bbtags_topic', $queries[0]);
 		$this->assertStringContainsString('tag_id = 12', $queries[0]);
-		$this->assertStringContainsString('DELETE FROM phpbb_bbtags', $queries[1]);
-		$this->assertStringContainsString('id = 12', $queries[1]);
+		$this->assertStringContainsString('DELETE FROM phpbb_bbtags_context', $queries[1]);
+		$this->assertStringContainsString('tag_id = 12', $queries[1]);
+		$this->assertStringContainsString('DELETE FROM phpbb_bbtags', $queries[2]);
+		$this->assertStringContainsString('id = 12', $queries[2]);
 	}
 
 	public function test_delete_tag_rolls_back_when_a_query_fails()
@@ -71,10 +73,14 @@ class manager_admin_test extends TestCase
 	public function test_rename_tag_uses_database_update_builder()
 	{
 		$db = $this->createMock(driver_interface::class);
-		$db->expects($this->once())
-			->method('sql_build_array')
-			->with('UPDATE', array('tag' => "owner's tag", 'route' => 'owner-s-tag'))
-			->willReturn("tag = 'owner\\'s tag', route = 'owner-s-tag'");
+		$built_arrays = array();
+		$db->method('sql_build_array')->willReturnCallback(static function ($type, array $values) use (&$built_arrays)
+		{
+			$built_arrays[] = array($type, $values);
+			return $type . ':' . implode(',', array_keys($values));
+		});
+		$db->expects($this->once())->method('sql_query_limit')->willReturn('route_result');
+		$db->method('sql_fetchrow')->willReturn(false);
 		$db->expects($this->once())
 			->method('sql_query')
 			->with($this->callback(static function ($sql)
@@ -86,6 +92,11 @@ class manager_admin_test extends TestCase
 
 		$manager = $this->create_manager($db);
 		$this->assertTrue($manager->rename_tag(7, " Owner's tag "));
+		$this->assertSame(array('SELECT', array('route' => 'owner-s-tag')), $built_arrays[0]);
+		$this->assertSame(
+			array('UPDATE', array('tag' => "owner's tag", 'tag_clean' => "owner's tag", 'route' => 'owner-s-tag')),
+			$built_arrays[1]
+		);
 	}
 
 	private function create_manager(driver_interface $db)
@@ -95,6 +106,7 @@ class manager_admin_test extends TestCase
 			$this->createMock(config::class),
 			$this->createMock(auth::class),
 			'phpbb_bbtags',
+			'phpbb_bbtags_context',
 			'phpbb_bbtags_topic'
 		);
 	}

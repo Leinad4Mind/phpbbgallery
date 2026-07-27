@@ -110,7 +110,7 @@ class bbtags_module
 				$this->display_tags($start, $per_page, $sk, $sd);
 		}
 
-		$predefined_tags = json_decode($this->config_text->get('bbtags_pre_tags'), true);
+		$predefined_tags = $this->manager->get_predefined_tags();
 		$this->template->assign_vars(array(
 			'U_ACTION' => $this->u_action,
 			'EXT_PATH' => $phpbb_path_helper->update_web_root_path($phpbb_extension_manager->get_extension_path('sitesplat/bbtags', true)),
@@ -144,6 +144,12 @@ class bbtags_module
 
 		$tags = array_values(array_unique($tags));
 		sort($tags, SORT_NATURAL | SORT_FLAG_CASE);
+		if (!$this->manager->replace_predefined_tags($tags, (int) $this->user->data['user_id']))
+		{
+			trigger_error($this->user->lang('BBTAGS_TAG_UPDATE_FAILED') . adm_back_link($this->u_action), E_USER_WARNING);
+		}
+
+		// Keep the legacy setting as a downgrade fallback while the catalogue is authoritative.
 		$this->config_text->set('bbtags_pre_tags', json_encode($tags, JSON_UNESCAPED_UNICODE));
 	}
 

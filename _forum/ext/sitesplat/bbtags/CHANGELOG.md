@@ -22,6 +22,8 @@
 - Add a provider-independent canonical tag catalogue while preserving topic relations and retaining the oldest identifier when equivalent legacy tags are merged.
 - Track enabled state and usage totals per provider, beginning with `forum_topics`.
 - Import the existing predefined tag list into the catalogue and enforce canonical tag, route and topic relation uniqueness.
+- Use the database catalogue as the authoritative predefined-tag and autocomplete source while retaining the legacy JSON as a downgrade fallback.
+- Synchronize forum topic usage with its provider context and use the configured 64-character tag limit in the posting UI.
 
 ### Tests
 

@@ -9,6 +9,7 @@ services:
             - '@config'
             - '@auth'
             - '%sitesplat.bbtags.tables.bbtags%'
+            - '%sitesplat.bbtags.tables.bbtags_context%'
             - '%sitesplat.bbtags.tables.bbtags_topic%'
     sitesplat.bbtags.listener:
         class: sitesplat\bbtags\event\listener
@@ -29,7 +30,6 @@ services:
         arguments:
             - '@dbal.conn.driver'
             - '@config'
-            - '@config_text'
             - '@template'
             - '@controller.helper'
             - '@request'

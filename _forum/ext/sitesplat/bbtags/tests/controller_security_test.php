@@ -46,7 +46,8 @@ class controller_security_test extends TestCase
 		$controller = file_get_contents(dirname(__DIR__) . '/controller/main.php');
 
 		$this->assertStringNotContainsString('preg_grep(', $controller);
-		$this->assertStringContainsString('utf8_substr(utf8_strtolower($tag)', $controller);
+		$this->assertStringContainsString('$this->manager->get_predefined_tags($term, 20)', $controller);
+		$this->assertStringNotContainsString("get('bbtags_pre_tags')", $controller);
 	}
 
 	public function test_ajax_endpoints_require_tagging_permission()

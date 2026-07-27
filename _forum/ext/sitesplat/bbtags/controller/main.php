@@ -11,7 +11,6 @@ namespace sitesplat\bbtags\controller;
 use phpbb\auth\auth;
 use phpbb\cache\service;
 use phpbb\config\config;
-use phpbb\config\db_text;
 use phpbb\content_visibility;
 use phpbb\controller\helper;
 use phpbb\db\driver\driver_interface;
@@ -27,7 +26,6 @@ class main
 {
 	protected $db;
 	protected $config;
-	protected $config_text;
 	protected $template;
 	protected $helper;
 	protected $request;
@@ -46,11 +44,10 @@ class main
 	/**
 	 * Constructor.
 	 */
-	public function __construct(driver_interface $db, config $config, db_text $config_text, template $template, helper $helper, request $request, user $user, auth $auth, service $cache, pagination $pagination, dispatcher $phpbb_dispatcher, content_visibility $content_visibility, $php_ext, $phpbb_root_path, manager $manager, $table_bbtags, $table_bbtags_topic)
+	public function __construct(driver_interface $db, config $config, template $template, helper $helper, request $request, user $user, auth $auth, service $cache, pagination $pagination, dispatcher $phpbb_dispatcher, content_visibility $content_visibility, $php_ext, $phpbb_root_path, manager $manager, $table_bbtags, $table_bbtags_topic)
 	{
 		$this->db = $db;
 		$this->config = $config;
-		$this->config_text = $config_text;
 		$this->template = $template;
 		$this->helper = $helper;
 		$this->request = $request;
@@ -112,21 +109,11 @@ class main
 			return $this->helper->error('NOT_AUTHORISED', 403);
 		}
 
-		$predefined_tags = json_decode($this->config_text->get('bbtags_pre_tags'), true);
-		$predefined_tags = is_array($predefined_tags) ? $predefined_tags : array();
-		$term = utf8_strtolower(trim($this->request->variable('term', '', true)));
-		$matches = array();
-		foreach ($predefined_tags as $tag)
-		{
-			$tag = (string) $tag;
-			if ($term === '' || utf8_substr(utf8_strtolower($tag), 0, utf8_strlen($term)) === $term)
-			{
-				$matches[] = $tag;
-			}
-		}
+		$term = $this->request->variable('term', '', true);
+		$matches = $this->manager->get_predefined_tags($term, 20);
 
 		$response = new json_response();
-		$response->send(array_slice(array_values($matches), 0, 20));
+		$response->send($matches);
 	}
 
 	/**

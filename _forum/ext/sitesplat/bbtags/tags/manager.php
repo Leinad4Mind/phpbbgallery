@@ -23,19 +23,24 @@ use phpbb\auth\auth;
 */
 class manager
 {
+	const FORUM_PROVIDER = 'forum_topics';
+	const MAX_TAG_LENGTH = 64;
+
 	private $db;
 	private $config;
 	private $auth;
 
 	private $table_bbtags;
+	private $table_bbtags_context;
 	private $table_bbtags_topic;
 
-	public function __construct(driver_interface $db, config $config, auth $auth, $table_bbtags, $table_bbtags_topic)
+	public function __construct(driver_interface $db, config $config, auth $auth, $table_bbtags, $table_bbtags_context, $table_bbtags_topic)
 	{
 		$this->db					= $db;
 		$this->config				= $config;
 		$this->auth					= $auth;
 		$this->table_bbtags			= $table_bbtags;
+		$this->table_bbtags_context	= $table_bbtags_context;
 		$this->table_bbtags_topic	= $table_bbtags_topic;
 	}
 
@@ -110,11 +115,19 @@ class manager
 	{
 		$sql = 'SELECT t.id
 			FROM ' . $this->table_bbtags . ' t
-			WHERE NOT EXISTS (
+			WHERE t.is_predefined = 0
+				AND NOT EXISTS (
 				SELECT 1
 				FROM ' . $this->table_bbtags_topic . ' tt
 					WHERE tt.tag_id = t.id
-			)';
+			)
+				AND NOT EXISTS (
+				SELECT 1
+				FROM ' . $this->table_bbtags_context . " tc
+					WHERE tc.tag_id = t.id
+						AND tc.provider <> '" . self::FORUM_PROVIDER . "'
+						AND (tc.is_enabled = 1 OR tc.usage_count > 0)
+			)";
 		$result = $this->db->sql_query($sql);
 		$ids = array();
 		while ($row = $this->db->sql_fetchrow($result))
@@ -132,8 +145,16 @@ class manager
 		{
 			return 0;
 		}
+		$sql = 'DELETE FROM ' . $this->table_bbtags_context . ' WHERE ' . $this->db->sql_in_set('tag_id', $ids);
+		if ($this->db->sql_query($sql) === false)
+		{
+			return false;
+		}
 		$sql = 'DELETE FROM ' . $this->table_bbtags . ' WHERE ' . $this->db->sql_in_set('id', $ids);
-		$this->db->sql_query($sql);
+		if ($this->db->sql_query($sql) === false)
+		{
+			return false;
+		}
 		return $this->db->sql_affectedrows();
 	}
 
@@ -154,6 +175,14 @@ class manager
 
 		$this->db->sql_transaction('begin');
 		$sql = 'DELETE FROM ' . $this->table_bbtags_topic . '
+			WHERE tag_id = ' . $tag_id;
+		if ($this->db->sql_query($sql) === false)
+		{
+			$this->db->sql_transaction('rollback');
+			return false;
+		}
+
+		$sql = 'DELETE FROM ' . $this->table_bbtags_context . '
 			WHERE tag_id = ' . $tag_id;
 		if ($this->db->sql_query($sql) === false)
 		{
@@ -192,7 +221,8 @@ class manager
 
 		$sql_ary = array(
 			'tag' => $tag,
-			'route' => $this->slug($tag, array('transliterate' => true)),
+			'tag_clean' => $this->canonical_tag($tag),
+			'route' => $this->unique_route($tag, $tag_id),
 		);
 		$sql = 'UPDATE ' . $this->table_bbtags . '
 			SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
@@ -265,7 +295,7 @@ class manager
 		return true;
 	}
 
-	private function create_missing_tags($tags)
+	private function create_missing_tags($tags, $created_by = 0)
 	{
 		if (empty($tags))
 		{
@@ -274,11 +304,30 @@ class manager
 
 		$tags = array_unique($tags);
 		$existing_tags = $this->get_existing_tags($tags);
+		$existing_clean = array();
+		foreach ($existing_tags as $existing_tag)
+		{
+			$existing_clean[] = isset($existing_tag['tag_clean']) ? $existing_tag['tag_clean'] : $this->canonical_tag($existing_tag['tag']);
+		}
 
 		$sql_ary_new_tags = array();
+		$reserved_routes = array();
 		foreach ($tags as $tag)
 		{
-			(!$this->in_array_r($tag, $existing_tags)) ? $sql_ary_new_tags[] = array('tag' => $tag, 'route' => $this->slug($tag, array('transliterate' => true))) : null;
+			$tag_clean = $this->canonical_tag($tag);
+			if (!in_array($tag_clean, $existing_clean, true))
+			{
+				$sql_ary_new_tags[] = array(
+					'tag' => $tag,
+					'tag_clean' => $tag_clean,
+					'route' => $this->unique_route($tag, 0, $reserved_routes),
+					'count' => 0,
+					'is_predefined' => 0,
+					'created_by' => max(0, (int) $created_by),
+					'created_at' => time(),
+				);
+				$existing_clean[] = $tag_clean;
+			}
 		}
 		if (empty($sql_ary_new_tags))
 		{
@@ -286,18 +335,6 @@ class manager
 		}
 
 		return $this->db->sql_multi_insert($this->table_bbtags, $sql_ary_new_tags) !== false;
-	}
-
-	private function in_array_r($needle, $haystack, $strict = false)
-	{
-		foreach ($haystack as $item)
-		{
-			if (($strict ? $item === $needle : $item == $needle) || (is_array($item) && $this->in_array_r($needle, $item, $strict)))
-			{
-				return true;
-			}
-		}
-		return false;
 	}
 
 	public function get_existing_tags($tags = null, $only_ids = false)
@@ -309,14 +346,15 @@ class manager
 			{
 				return array();
 			}
-			$where = ' WHERE ' . $this->db->sql_in_set('tag', $tags);
+			$tags = array_values(array_unique(array_map(array($this, 'canonical_tag'), $tags)));
+			$where = ' WHERE ' . $this->db->sql_in_set('tag_clean', $tags);
 		}
-		$sql = 'SELECT id, tag FROM ' . $this->table_bbtags . $where;
+		$sql = 'SELECT id, tag, tag_clean FROM ' . $this->table_bbtags . $where;
 		$result = $this->db->sql_query($sql);
 		$ids = array();
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$ids[] = ($only_ids) ? $row['id'] : array('id' => $row['id'], 'tag' => $row['tag']);
+			$ids[] = ($only_ids) ? $row['id'] : array('id' => $row['id'], 'tag' => $row['tag'], 'tag_clean' => $row['tag_clean']);
 		}
 		$this->db->sql_freeresult($result);
 		return $ids;
@@ -324,10 +362,25 @@ class manager
 
 	public function clean_tag($tag)
 	{
-		$tag = trim(utf8_strtolower($tag), '.,');
-		$tag = utf8_substr($tag, 0, 30);
+		$tag = function_exists('utf8_normalize_nfc') ? utf8_normalize_nfc((string) $tag) : (string) $tag;
+		$tag = preg_replace('#[\x00-\x1F\x7F]+#u', '', $tag);
+		$tag = trim(utf8_strtolower($tag), " \t\n\r\0\x0B.,");
+		$tag = utf8_substr($tag, 0, self::MAX_TAG_LENGTH);
 		$tag = trim($tag);
 		return $tag;
+	}
+
+	/**
+	 * Return the canonical, case-insensitive lookup value for a tag.
+	 *
+	 * @param string $tag Tag label
+	 *
+	 * @return string
+	 */
+	public function canonical_tag($tag)
+	{
+		$tag = $this->clean_tag($tag);
+		return function_exists('utf8_clean_string') ? utf8_clean_string($tag) : $tag;
 	}
 
 	public function calc_count_tags()
@@ -338,20 +391,245 @@ class manager
 			return false;
 		}
 
+		$sql = 'UPDATE ' . $this->table_bbtags_context . '
+			SET usage_count = 0
+			WHERE provider = \'' . self::FORUM_PROVIDER . '\'';
+		if ($this->db->sql_query($sql) === false)
+		{
+			return false;
+		}
+
+		$sql = 'SELECT tag_id
+			FROM ' . $this->table_bbtags_context . '
+			WHERE provider = \'' . self::FORUM_PROVIDER . '\'';
+		$context_result = $this->db->sql_query($sql);
+		$context_ids = array();
+		while ($context_row = $this->db->sql_fetchrow($context_result))
+		{
+			$context_ids[(int) $context_row['tag_id']] = true;
+		}
+		$this->db->sql_freeresult($context_result);
+
 		$sql = 'SELECT tag_id, COUNT(topic_id) AS count FROM ' . $this->table_bbtags_topic . ' GROUP BY tag_id';
 		$result = $this->db->sql_query($sql);
+		$new_contexts = array();
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$sql = 'UPDATE ' . $this->table_bbtags . ' SET count = ' . $row['count'] . ' WHERE id = ' . $row['tag_id'];
+			$tag_id = (int) $row['tag_id'];
+			$count = (int) $row['count'];
+			$sql = 'UPDATE ' . $this->table_bbtags . ' SET count = ' . $count . ' WHERE id = ' . $tag_id;
 			if ($this->db->sql_query($sql) === false)
 			{
 				$this->db->sql_freeresult($result);
 				return false;
 			}
+
+			if (isset($context_ids[$tag_id]))
+			{
+				$sql = 'UPDATE ' . $this->table_bbtags_context . '
+					SET usage_count = ' . $count . ', is_enabled = 1
+					WHERE tag_id = ' . $tag_id . '
+						AND provider = \'' . self::FORUM_PROVIDER . '\'';
+				if ($this->db->sql_query($sql) === false)
+				{
+					$this->db->sql_freeresult($result);
+					return false;
+				}
+				continue;
+			}
+
+			$new_contexts[] = array(
+				'tag_id' => $tag_id,
+				'provider' => self::FORUM_PROVIDER,
+				'usage_count' => $count,
+				'is_enabled' => 1,
+			);
+		}
+		$this->db->sql_freeresult($result);
+		if (!empty($new_contexts) && $this->db->sql_multi_insert($this->table_bbtags_context, $new_contexts) === false)
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Return predefined tags available to the forum provider.
+	 *
+	 * @param string $term  Optional canonical prefix
+	 * @param int    $limit Maximum number of matches; zero means unlimited
+	 *
+	 * @return array
+	 */
+	public function get_predefined_tags($term = '', $limit = 0)
+	{
+		$sql = 'SELECT t.tag
+			FROM ' . $this->table_bbtags . ' t
+			JOIN ' . $this->table_bbtags_context . " tc ON tc.tag_id = t.id
+			WHERE t.is_predefined = 1
+				AND tc.provider = '" . self::FORUM_PROVIDER . "'
+				AND tc.is_enabled = 1
+			ORDER BY t.tag ASC";
+		$result = $this->db->sql_query($sql);
+		$term = $this->canonical_tag($term);
+		$tags = array();
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$tag = (string) $row['tag'];
+			if ($term !== '' && strpos($this->canonical_tag($tag), $term) !== 0)
+			{
+				continue;
+			}
+			$tags[] = $tag;
+			if ($limit > 0 && count($tags) >= $limit)
+			{
+				break;
+			}
 		}
 		$this->db->sql_freeresult($result);
 
+		return $tags;
+	}
+
+	/**
+	 * Replace the global predefined list and enable it for forum topics.
+	 *
+	 * @param array $tags       Tag labels
+	 * @param int   $created_by Administrator identifier for new catalogue rows
+	 *
+	 * @return bool
+	 */
+	public function replace_predefined_tags(array $tags, $created_by = 0)
+	{
+		$normalized = array();
+		foreach ($tags as $tag)
+		{
+			$tag = $this->clean_tag($tag);
+			if ($tag !== '')
+			{
+				$normalized[$this->canonical_tag($tag)] = $tag;
+			}
+		}
+		$normalized = array_values($normalized);
+
+		$this->db->sql_transaction('begin');
+		try
+		{
+			$sql = 'UPDATE ' . $this->table_bbtags . ' SET is_predefined = 0';
+			if ($this->db->sql_query($sql) === false || !$this->create_missing_tags($normalized, $created_by))
+			{
+				$this->db->sql_transaction('rollback');
+				return false;
+			}
+
+			$ids = $this->get_existing_tags($normalized, true);
+			if (!empty($ids))
+			{
+				$sql = 'UPDATE ' . $this->table_bbtags . '
+					SET is_predefined = 1
+					WHERE ' . $this->db->sql_in_set('id', $ids);
+				if ($this->db->sql_query($sql) === false || !$this->ensure_forum_contexts($ids))
+				{
+					$this->db->sql_transaction('rollback');
+					return false;
+				}
+			}
+		}
+		catch (\Throwable $exception)
+		{
+			$this->db->sql_transaction('rollback');
+			throw $exception;
+		}
+
+		$this->db->sql_transaction('commit');
 		return true;
+	}
+
+	/**
+	 * Add missing forum context rows without changing their usage counts.
+	 *
+	 * @param array $tag_ids Tag identifiers
+	 *
+	 * @return bool
+	 */
+	private function ensure_forum_contexts(array $tag_ids)
+	{
+		$tag_ids = array_values(array_unique(array_map('intval', $tag_ids)));
+		if (empty($tag_ids))
+		{
+			return true;
+		}
+
+		$sql = 'SELECT tag_id
+			FROM ' . $this->table_bbtags_context . '
+			WHERE provider = \'' . self::FORUM_PROVIDER . '\'
+				AND ' . $this->db->sql_in_set('tag_id', $tag_ids);
+		$result = $this->db->sql_query($sql);
+		$existing = array();
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$existing[(int) $row['tag_id']] = true;
+		}
+		$this->db->sql_freeresult($result);
+
+		$new_contexts = array();
+		foreach ($tag_ids as $tag_id)
+		{
+			if (!isset($existing[$tag_id]))
+			{
+				$new_contexts[] = array(
+					'tag_id' => $tag_id,
+					'provider' => self::FORUM_PROVIDER,
+					'usage_count' => 0,
+					'is_enabled' => 1,
+				);
+			}
+		}
+
+		return empty($new_contexts) || $this->db->sql_multi_insert($this->table_bbtags_context, $new_contexts) !== false;
+	}
+
+	/**
+	 * Build a route that does not collide with a different catalogue row.
+	 *
+	 * @param string $tag            Tag label
+	 * @param int        $excluded_tag_id Tag identifier allowed to own the route
+	 * @param array|null $reserved_routes Routes reserved by the current bulk insert
+	 *
+	 * @return string
+	 */
+	private function unique_route($tag, $excluded_tag_id = 0, ?array &$reserved_routes = null)
+	{
+		$base = $this->slug($tag, array('transliterate' => true));
+		$base = ($base !== '') ? utf8_substr($base, 0, self::MAX_TAG_LENGTH) : 'tag';
+		$route = $base;
+		$attempt = 0;
+
+		do
+		{
+			$sql = 'SELECT id
+				FROM ' . $this->table_bbtags . '
+				WHERE ' . $this->db->sql_build_array('SELECT', array('route' => $route));
+			$result = $this->db->sql_query_limit($sql, 1);
+			$row = $this->db->sql_fetchrow($result);
+			$this->db->sql_freeresult($result);
+			if ((!$row || (int) $row['id'] === (int) $excluded_tag_id) && !isset($reserved_routes[$route]))
+			{
+				if (is_array($reserved_routes))
+				{
+					$reserved_routes[$route] = true;
+				}
+				return $route;
+			}
+
+			$attempt++;
+			$suffix = '-' . substr(hash('sha256', $this->canonical_tag($tag) . ':' . $attempt), 0, 8);
+			$route = utf8_substr($base, 0, self::MAX_TAG_LENGTH - strlen($suffix)) . $suffix;
+		}
+		while ($attempt < 100);
+
+		return 'tag-' . substr(hash('sha256', $this->canonical_tag($tag)), 0, 16);
 	}
 
 	public function slug($string, $options = array())

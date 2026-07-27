@@ -37,6 +37,8 @@ class acp_security_test extends TestCase
 
 		$this->assertStringContainsString('$this->manager->delete_tag($delete_id)', $module);
 		$this->assertStringContainsString('$this->manager->rename_tag(', $module);
+		$this->assertStringContainsString('$this->manager->replace_predefined_tags(', $module);
+		$this->assertStringContainsString('$this->manager->get_predefined_tags()', $module);
 		$this->assertStringNotContainsString('GROUP_CONCAT(', $module);
 	}
 
