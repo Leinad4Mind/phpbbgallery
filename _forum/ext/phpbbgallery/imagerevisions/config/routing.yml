@@ -1,0 +1,15 @@
+phpbbgallery_imagerevisions_preview:
+    path: /gallery/image/{image_id}/revision/{revision_id}
+    defaults: { _controller: phpbbgallery.imagerevisions.controller:preview }
+    methods: [GET]
+    requirements:
+        image_id: \d+
+        revision_id: \d+
+
+phpbbgallery_imagerevisions_restore:
+    path: /gallery/image/{image_id}/revision/{revision_id}/restore
+    defaults: { _controller: phpbbgallery.imagerevisions.controller:restore }
+    methods: [POST]
+    requirements:
+        image_id: \d+
+        revision_id: \d+

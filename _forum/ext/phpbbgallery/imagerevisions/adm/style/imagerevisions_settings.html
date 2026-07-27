@@ -1,0 +1,25 @@
+{% include 'overall_header.html' %}
+
+<h1>{{ lang('ACP_GALLERY_IMAGE_REVISIONS') }}</h1>
+<p>{{ lang('ACP_GALLERY_IMAGE_REVISIONS_EXPLAIN') }}</p>
+
+<form id="imagerevisions_settings" method="post" action="{{ U_ACTION }}">
+	<fieldset>
+		<legend>{{ lang('ACP_GALLERY_IMAGE_REVISIONS_SETTINGS') }}</legend>
+		<dl>
+			<dt><label for="enabled1">{{ lang('ACP_GALLERY_IMAGE_REVISIONS_ENABLE') }}</label><br /><span>{{ lang('ACP_GALLERY_IMAGE_REVISIONS_ENABLE_EXPLAIN') }}</span></dt>
+			<dd><label><input type="radio" class="radio" name="enabled" id="enabled1" value="1"{% if S_ENABLED %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+				<label><input type="radio" class="radio" name="enabled" id="enabled0" value="0"{% if not S_ENABLED %} checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
+		</dl>
+		<dl>
+			<dt><label for="limit">{{ lang('ACP_GALLERY_IMAGE_REVISIONS_LIMIT') }}</label><br /><span>{{ lang('ACP_GALLERY_IMAGE_REVISIONS_LIMIT_EXPLAIN') }}</span></dt>
+			<dd><input type="number" min="1" max="50" name="limit" id="limit" value="{{ REVISION_LIMIT }}" /></dd>
+		</dl>
+	</fieldset>
+	<fieldset class="submit-buttons">
+		<input class="button1" type="submit" name="submit" value="{{ lang('SUBMIT') }}" />
+		{{ S_FORM_TOKEN }}
+	</fieldset>
+</form>
+
+{% include 'overall_footer.html' %}

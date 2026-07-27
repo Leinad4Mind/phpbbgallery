@@ -161,6 +161,7 @@ namespace
 	require_once dirname(__DIR__, 2) . '/acpcleanup/ext.php';
 	require_once dirname(__DIR__, 2) . '/acpimport/ext.php';
 	require_once dirname(__DIR__, 2) . '/exif/ext.php';
+	require_once dirname(__DIR__, 2) . '/imagerevisions/ext.php';
 	require_once dirname(__DIR__) . '/controller/moderate.php';
 	require_once dirname(__DIR__) . '/controller/index.php';
 	require_once dirname(__DIR__) . '/controller/file.php';

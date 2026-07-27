@@ -1,0 +1,23 @@
+{% if S_IMAGE_REVISIONS %}
+<div class="well">
+	<div class="form-group">
+		<label for="replacement_file">{{ lang('REPLACE_IMAGE') }}</label>
+		<p class="help-block">{{ lang('REPLACE_IMAGE_EXPLAIN') }}</p>
+		<input class="form-control" type="file" name="files[]" id="replacement_file" accept="{{ S_REPLACEMENT_FILETYPES_ACCEPT }}"{% if not S_REPLACEMENT_FILETYPES_AVAILABLE %} disabled{% endif %} />
+	</div>
+
+	{% if revision|default([])|length %}
+	<h4>{{ lang('IMAGE_REVISIONS') }}</h4>
+	<p>{{ lang('IMAGE_REVISIONS_EXPLAIN') }}</p>
+	{% for revision in revision|default([]) %}
+	<div class="row" style="margin-bottom: 15px;">
+		<div class="col-sm-3 text-center"><a href="{{ revision.U_PREVIEW }}" target="_blank" rel="noopener"><img src="{{ revision.U_PREVIEW }}" alt="{{ lang('PREVIEW') }}" class="img-responsive img-thumbnail" style="display: inline-block; max-height: 120px;" /></a></div>
+		<div class="col-sm-9">
+			<p>{{ revision.TIME }} &middot; {{ revision.FILESIZE }}<br />{{ lang('EDITED_BY') }} {{ revision.EDITOR }}</p>
+			<button type="submit" class="btn btn-default" formaction="{{ revision.U_RESTORE }}" formmethod="post" formnovalidate><i class="fa fa-history"></i> {{ lang('RESTORE_REVISION') }}</button>
+		</div>
+	</div>
+	{% endfor %}
+	{% endif %}
+</div>
+{% endif %}

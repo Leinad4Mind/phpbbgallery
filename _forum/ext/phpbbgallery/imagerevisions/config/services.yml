@@ -1,0 +1,43 @@
+parameters:
+    phpbbgallery.imagerevisions.tables.revisions: '%core.table_prefix%gallery_image_revisions'
+
+services:
+    phpbbgallery.imagerevisions.revision:
+        class: phpbbgallery\imagerevisions\revision
+        arguments:
+            - '@dbal.conn'
+            - '@user'
+            - '@phpbbgallery.core.url'
+            - '@phpbbgallery.core.log'
+            - '@phpbbgallery.core.cache'
+            - '@phpbbgallery.core.file.tool'
+            - '%phpbbgallery.tables.gallery_images%'
+            - '%phpbbgallery.imagerevisions.tables.revisions%'
+
+    phpbbgallery.imagerevisions.listener:
+        class: phpbbgallery\imagerevisions\event\main_listener
+        arguments:
+            - '@config'
+            - '@request'
+            - '@template'
+            - '@language'
+            - '@user'
+            - '@controller.helper'
+            - '@phpbbgallery.core.upload'
+            - '@phpbbgallery.imagerevisions.revision'
+        tags:
+            - { name: event.listener }
+
+    phpbbgallery.imagerevisions.controller:
+        class: phpbbgallery\imagerevisions\controller\main
+        arguments:
+            - '@config'
+            - '@controller.helper'
+            - '@language'
+            - '@user'
+            - '@phpbbgallery.core.album'
+            - '@phpbbgallery.core.image'
+            - '@phpbbgallery.core.auth'
+            - '@phpbbgallery.core.auth.image_authorization'
+            - '@phpbbgallery.core.file.tool'
+            - '@phpbbgallery.imagerevisions.revision'

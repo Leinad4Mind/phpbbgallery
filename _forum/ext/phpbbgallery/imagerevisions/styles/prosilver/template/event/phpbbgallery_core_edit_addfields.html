@@ -1,0 +1,23 @@
+{% if S_IMAGE_REVISIONS %}
+<dl>
+	<dt><label for="replacement_file">{{ lang('REPLACE_IMAGE') }}{{ lang('COLON') }}</label><br /><span>{{ lang('REPLACE_IMAGE_EXPLAIN') }}</span></dt>
+	<dd><input class="inputbox autowidth" type="file" name="files[]" id="replacement_file" accept="{{ S_REPLACEMENT_FILETYPES_ACCEPT }}"{% if not S_REPLACEMENT_FILETYPES_AVAILABLE %} disabled{% endif %} /></dd>
+</dl>
+
+{% if revision|default([])|length %}
+<dl>
+	<dt><label>{{ lang('IMAGE_REVISIONS') }}{{ lang('COLON') }}</label><br /><span>{{ lang('IMAGE_REVISIONS_EXPLAIN') }}</span></dt>
+	<dd>
+	{% for revision in revision|default([]) %}
+		<div style="display: flex; gap: 12px; align-items: center; margin-bottom: 12px;">
+			<a href="{{ revision.U_PREVIEW }}" target="_blank" rel="noopener"><img src="{{ revision.U_PREVIEW }}" alt="{{ lang('PREVIEW') }}" style="max-width: 120px; max-height: 90px;" /></a>
+			<div>
+				<p>{{ revision.TIME }} &middot; {{ revision.FILESIZE }}<br />{{ lang('EDITED_BY') }} {{ revision.EDITOR }}</p>
+				<button type="submit" class="button2" formaction="{{ revision.U_RESTORE }}" formmethod="post" formnovalidate>{{ lang('RESTORE_REVISION') }}</button>
+			</div>
+		</div>
+	{% endfor %}
+	</dd>
+</dl>
+{% endif %}
+{% endif %}
