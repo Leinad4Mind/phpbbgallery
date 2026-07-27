@@ -155,6 +155,7 @@ namespace
 	require_once __DIR__ . '/stubs/phpbb_user.php';
 	require_once __DIR__ . '/stubs/template_noop_token_parser.php';
 	require_once dirname(__DIR__) . '/zip/extractor.php';
+	require_once dirname(__DIR__) . '/icon/manager.php';
 	require_once dirname(__DIR__) . '/upload.php';
 	require_once dirname(__DIR__) . '/auth/image_authorization.php';
 	require_once dirname(__DIR__) . '/auth/auth.php';

@@ -301,6 +301,13 @@ services:
         class: phpbbgallery\core\zip\extractor
         arguments:
             - '@language'
+    phpbbgallery.core.icon.manager:
+        class: phpbbgallery\core\icon\manager
+        arguments:
+            - '@files.upload'
+            - '@language'
+            - '%phpbbgallery.core.icons.path%'
+            - '%phpbbgallery.core.icons.path_relative%'
     phpbbgallery.core.rating:
         class: phpbbgallery\core\rating
         arguments:

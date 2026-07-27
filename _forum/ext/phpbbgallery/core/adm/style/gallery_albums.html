@@ -126,7 +126,7 @@
 		{% endif %}
 	{% endif %}
 
-	<form id="acp_gallery" method="post" action="{{ U_EDIT_ACTION }}">
+	<form id="acp_gallery" method="post" action="{{ U_EDIT_ACTION }}" enctype="multipart/form-data">
 
 	<fieldset>
 		<legend>{{ lang('ALBUM_SETTINGS') }}</legend>
@@ -157,6 +157,30 @@
 		<dd><label><input type="checkbox" class="radio" name="desc_parse_bbcode"{% if S_DESC_BBCODE_CHECKED %} checked="checked"{% endif %} /> {{ lang('PARSE_BBCODE') }}</label>
 			<label><input type="checkbox" class="radio" name="desc_parse_smilies"{% if S_DESC_SMILIES_CHECKED %} checked="checked"{% endif %} /> {{ lang('PARSE_SMILIES') }}</label>
 			<label><input type="checkbox" class="radio" name="desc_parse_urls"{% if S_DESC_URLS_CHECKED %} checked="checked"{% endif %} /> {{ lang('PARSE_URLS') }}</label></dd>
+		</dl>
+		<dl>
+			<dt><label>{{ lang('ALBUM_ICON_PICKER') }}{{ lang('COLON') }}</label><br /><span>{{ lang('ALBUM_ICON_PICKER_EXPLAIN') }}</span></dt>
+			<dd>
+			{% if L_ICON_UPLOADED %}<p class="confirmbox">{{ L_ICON_UPLOADED }}</p>{% endif %}
+			{% if S_NO_ICONS_AVAILABLE %}
+				{{ lang('NO_ICONS_AVAILABLE') }}
+			{% else %}
+				<ul class="gallery-icon-picker" style="list-style: none; margin: 0; padding: 0;">
+				{% for iconrow in iconrow %}
+					<li style="display: inline-block; margin: 0 8px 8px 0;">
+						<label style="display: block; text-align: center; cursor: pointer;">
+							<input type="radio" name="album_icon_pick" value="{{ iconrow.ICON_FILE }}"{% if iconrow.S_SELECTED %} checked="checked"{% endif %} /><br />
+							<img src="{{ iconrow.ICON_SRC }}" alt="{{ iconrow.ICON_FILE }}" style="max-width: 48px; max-height: 48px;" />
+						</label>
+					</li>
+				{% endfor %}
+				</ul>
+			{% endif %}
+			</dd>
+			<dd>
+				<input type="file" name="icon_file" accept="image/svg+xml,image/png,image/gif,image/jpeg,image/webp" />
+				<input class="button2" type="submit" name="upload_icon" value="{{ lang('UPLOAD_ICON') }}" />
+			</dd>
 		</dl>
 		<dl>
 			<dt><label for="album_image">{{ lang('ALBUM_IMAGE') }}{{ lang('COLON') }}</label><br /><span>{{ lang('ALBUM_IMAGE_EXPLAIN') }}</span></dt>

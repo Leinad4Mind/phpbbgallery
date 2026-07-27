@@ -48,6 +48,7 @@ class albums_module
 		$gallery_user = $phpbb_container->get('phpbbgallery.core.user');
 		$phpbb_ext_gallery_core_auth = $phpbb_container->get('phpbbgallery.core.auth');
 		$phpbb_ext_gallery_core_url = $phpbb_container->get('phpbbgallery.core.url');
+		$icon_manager = $phpbb_container->get('phpbbgallery.core.icon.manager');
 
 		// Init manage albums
 		$manage_albums = $phpbb_container->get('phpbbgallery.core.album.manage');
@@ -70,7 +71,9 @@ class albums_module
 		add_form_key($form_key);
 
 		$action		= $request->variable('action', '');
-		$update		= $request->is_set_post('update');
+		// An icon upload/pick must survive the round trip the same way a failed save
+		// does, so $album_data built below is kept rather than reloaded from the DB.
+		$update		= $request->is_set_post('update') || $request->is_set_post('upload_icon');
 		$album_id	= $request->variable('a', 0);
 
 		$this->parent_id	= $request->variable('parent_id', 0);
@@ -139,6 +142,39 @@ class albums_module
 						'album_password_unset'	=> $request->variable('album_password_unset', false),
 						*/
 					];
+
+					// Icon upload/pick is handled separately from a normal save: it must
+					// never try to persist the album, and it must never lose whatever the
+					// admin was mid-typing in the rest of this form.
+					if ($request->is_set_post('upload_icon'))
+					{
+						$upload_result = $icon_manager->upload('icon_file');
+
+						if ($upload_result['error'])
+						{
+							$errors[] = $upload_result['error'];
+						}
+						else
+						{
+							$album_data['album_image'] = $icon_manager->relative_path($upload_result['filename']);
+							$template->assign_var('L_ICON_UPLOADED', $this->language->lang('ICON_UPLOADED'));
+						}
+
+					break;
+					}
+
+					$album_icon_pick = $request->variable('album_icon_pick', '');
+					if ($album_icon_pick !== '')
+					{
+						if ($icon_manager->is_valid_icon($album_icon_pick))
+						{
+							$album_data['album_image'] = $icon_manager->relative_path($album_icon_pick);
+						}
+						else
+						{
+							$errors[] = $this->language->lang('ICON_INVALID_SELECTION');
+						}
+					}
 
 					/**
 					* Event to send requested data
@@ -520,8 +556,19 @@ class albums_module
 					]);
 				}
 
+				$gallery_icons = $icon_manager->list_icons();
+				foreach ($gallery_icons as $icon_filename)
+				{
+					$template->assign_block_vars('iconrow', [
+						'ICON_FILE'		=> $icon_filename,
+						'ICON_SRC'		=> $phpbb_ext_gallery_core_url->path('phpbb') . $icon_manager->relative_path($icon_filename),
+						'S_SELECTED'	=> ($album_data['album_image'] === $icon_manager->relative_path($icon_filename)),
+					]);
+				}
+
 				$template->assign_vars([
 					'S_EDIT_ALBUM'		=> true,
+					'S_NO_ICONS_AVAILABLE'	=> empty($gallery_icons),
 					'S_ERROR'			=> (sizeof($errors)) ? true : false,
 					'S_PARENT_ID'		=> $this->parent_id,
 					'S_ALBUM_PARENT_ID'	=> $album_data['parent_id'],
