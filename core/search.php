@@ -11,46 +11,46 @@ namespace phpbbgallery\core;
 
 class search
 {
-	/* @var \phpbb\db\driver\driver_interface */
+	/** @var \phpbb\db\driver\driver_interface */
 	protected \phpbb\db\driver\driver_interface $db;
 
-	/* @var \phpbb\template\template */
+	/** @var \phpbb\template\template */
 	protected \phpbb\template\template $template;
 
-	/* @var \phpbb\user */
+	/** @var \phpbb\user */
 	protected \phpbb\user $user;
 
-	/* @var \phpbb\language\language */
+	/** @var \phpbb\language\language */
 	protected \phpbb\language\language $language;
 
-	/* @var \phpbb\controller\helper */
+	/** @var \phpbb\controller\helper */
 	protected \phpbb\controller\helper $helper;
 
-	/* @var \phpbbgallery\core\config */
+	/** @var \phpbbgallery\core\config */
 	protected \phpbbgallery\core\config $gallery_config;
 
-	/* @var \phpbbgallery\core\auth\auth */
+	/** @var \phpbbgallery\core\auth\auth */
 	protected \phpbbgallery\core\auth\auth $gallery_auth;
 
-	/* @var \phpbbgallery\core\album\album */
+	/** @var \phpbbgallery\core\album\album */
 	protected \phpbbgallery\core\album\album $album;
 
-	/* @var \phpbbgallery\core\image\image */
+	/** @var \phpbbgallery\core\image\image */
 	protected \phpbbgallery\core\image\image $image;
 
-	/* @var \phpbb\pagination */
+	/** @var \phpbb\pagination */
 	protected \phpbb\pagination $pagination;
 
-	/* @var \phpbb\user_loader */
+	/** @var \phpbb\user_loader */
 	protected \phpbb\user_loader $user_loader;
 
-	/* @var string */
+	/** @var string */
 	protected string $images_table;
 
-	/* @var string */
+	/** @var string */
 	protected string $albums_table;
 
-	/* @var string */
+	/** @var string */
 	protected string $comments_table;
 
 	/**
@@ -67,15 +67,9 @@ class search
 	 * @param image\image                                               $image
 	 * @param \phpbb\pagination                                         $pagination
 	 * @param \phpbb\user_loader                                        $user_loader
-	 * @param                                                           $images_table
-	 * @param                                                           $albums_table
-	 * @param                                                           $comments_table
-	 * @internal param \phpbb\auth\auth $auth Auth object
-	 * @internal param \phpbb\config\config $config Config object
-	 * @internal param \phpbb\request\request $request Request object
-	 * @internal param album\display $display Albums display object
-	 * @internal param string $root_path Root path
-	 * @internal param string $php_ext php file extension
+	 * @param string                                                    $images_table
+	 * @param string                                                    $albums_table
+	 * @param string                                                    $comments_table
 	 */
 	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\template\template $template, \phpbb\user $user,
 		\phpbb\language\language $language, \phpbb\controller\helper $helper, \phpbbgallery\core\config $gallery_config,
@@ -101,11 +95,11 @@ class search
 
 	/**
 	 * Generate random images and populate template
-	 * @param (int)    $limit    how many images to generate_link
+	 * @param int $limit How many images to generate
 	 * @param int $user
 	 * @param string $fields
-	 * @param bool $block_name
-	 * @param bool $u_block
+	 * @param string|false $block_name
+	 * @param string|false $u_block
 	 */
 	public function random(int $limit, int $user = 0, string $fields = 'rrc_gindex_display', string|false $block_name = false, string|false $u_block = false): void
 	{
@@ -228,9 +222,10 @@ class search
 	}
 
 	/**
-	* Get all recent images the user has access to
-	* return (int) $images_count
-	*/
+	 * Get the number of recent images the user can access.
+	 *
+	 * @return int
+	 */
 	public function recent_count(): int
 	{
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
@@ -292,8 +287,9 @@ class search
 
 	/**
 	 * recent comments
-	 * @param (int)    $limit How many images to query
+	 * @param int $limit How many images to query
 	 * @param int $start
+	 * @param bool $pagination
 	 */
 	public function recent_comments(int $limit, int $start = 0, bool $pagination = true): void
 	{
@@ -393,12 +389,12 @@ class search
 
 	/**
 	 * Generate recent images and populate template
-	 * @param (int)    $limit How many images to query
+	 * @param int $limit How many images to query
 	 * @param int $start
 	 * @param int $user
 	 * @param string $fields
-	 * @param bool $block_name
-	 * @param bool $u_block
+	 * @param string|false $block_name
+	 * @param string|false $u_block
 	 */
 	public function recent(int $limit, int $start = 0, int $user = 0, string $fields = 'rrc_gindex_display', string|false $block_name = false, string|false $u_block = false): void
 	{
@@ -597,7 +593,7 @@ class search
 
 	/**
 	 * Get top rated image
-	 * @param $limit
+	 * @param int $limit
 	 * @param int $start
 	 */
 	public function rating(int $limit, int $start = 0): void

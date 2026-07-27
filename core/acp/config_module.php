@@ -476,8 +476,8 @@ class config_module
 
 	/**
 	 * Disabled Radio Buttons
-	 * @param $value
-	 * @param $key
+	 * @param mixed  $value
+	 * @param string $key
 	 * @return string
 	 */
 	public function disabled_boolean(mixed $value, string $key): string
@@ -495,8 +495,8 @@ class config_module
 
 	/**
 	 * Select sort method
-	 * @param $value
-	 * @param $key
+	 * @param string $value
+	 * @param string $key
 	 * @return string
 	 */
 	public function sort_method_select(string $value, string $key): string
@@ -520,8 +520,8 @@ class config_module
 
 	/**
 	 * Select sort order
-	 * @param $value
-	 * @param $key
+	 * @param string $value
+	 * @param string $key
 	 * @return string
 	 */
 	public function sort_order_select(string $value, string $key): string
@@ -539,8 +539,8 @@ class config_module
 
 	/**
 	 * Radio Buttons for GD library
-	 * @param $value
-	 * @param $key
+	 * @param int    $value
+	 * @param string $key
 	 * @return string
 	 */
 	public function gd_radio(int $value, string $key): string
@@ -560,8 +560,8 @@ class config_module
 
 	/**
 	 * Display watermark
-	 * @param $value
-	 * @param $key
+	 * @param string $value
+	 * @param string $key
 	 * @return string
 	 */
 	public function watermark_source(string $value, string $key): string
@@ -576,8 +576,8 @@ class config_module
 
 	/**
 	 * Display watermark
-	 * @param $value
-	 * @param $key
+	 * @param int    $value
+	 * @param string $key
 	 * @return string
 	 */
 	public function watermark_position(int $value, string $key): string
@@ -604,8 +604,8 @@ class config_module
 
 	/**
 	 * Select the link destination
-	 * @param $value
-	 * @param $key
+	 * @param string $value
+	 * @param string $key
 	 * @return string
 	 */
 	public function uc_select(string $value, string $key): string
@@ -632,8 +632,8 @@ class config_module
 
 	/**
 	 * Select RRC-Config on gallery/index.php and in the profile
-	 * @param $value
-	 * @param $key
+	 * @param int    $value
+	 * @param string $key
 	 * @return string
 	 */
 	public function rrc_modes(int $value, string $key): string
@@ -659,8 +659,8 @@ class config_module
 
 	/**
 	 * Select RRC display options
-	 * @param $value
-	 * @param $key
+	 * @param int    $value
+	 * @param string $key
 	 * @return string
 	 */
 	public function rrc_display(int $value, string $key): string
@@ -688,7 +688,7 @@ class config_module
 
 	/**
 	 * BBCode-Template
-	 * @param $value
+	 * @param string $value
 	 * @return string
 	 */
 	public function bbcode_tpl(string $value): string

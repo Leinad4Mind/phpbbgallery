@@ -23,7 +23,7 @@ class upload
 	/** @var \phpbb\db\driver\driver_interface  */
 	protected \phpbb\db\driver\driver_interface $db;
 
-	/* @var \phpbb\user */
+	/** @var \phpbb\user */
 	protected \phpbb\user $user;
 
 	/** @var \phpbb\language\language  */
@@ -38,16 +38,16 @@ class upload
 	/** @var ContainerInterface  */
 	protected ContainerInterface $phpbb_container;
 
-	/* @var \phpbbgallery\core\misc */
+	/** @var \phpbbgallery\core\misc */
 	protected \phpbbgallery\core\misc $misc;
 
 	/** @var \phpbbgallery\core\auth\auth  */
 	protected \phpbbgallery\core\auth\auth $auth;
 
-	/* @var \phpbbgallery\core\album\album */
+	/** @var \phpbbgallery\core\album\album */
 	protected \phpbbgallery\core\album\album $album;
 
-	/* @var \phpbbgallery\core\album\display */
+	/** @var \phpbbgallery\core\album\display */
 	protected \phpbbgallery\core\album\display $display;
 
 	/** @var \phpbb\controller\helper  */

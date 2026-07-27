@@ -14,37 +14,37 @@ namespace phpbbgallery\core\controller;
 
 class album
 {
-	/* @var \phpbb\config\config */
+	/** @var \phpbb\config\config */
 	protected \phpbb\config\config $config;
 
-	/* @var \phpbb\controller\helper */
+	/** @var \phpbb\controller\helper */
 	protected \phpbb\controller\helper $helper;
 
-	/* @var \phpbb\db\driver\driver_interface */
+	/** @var \phpbb\db\driver\driver_interface */
 	protected \phpbb\db\driver\driver_interface $db;
 
-	/* @var \phpbb\pagination */
+	/** @var \phpbb\pagination */
 	protected \phpbb\pagination $pagination;
 
-	/* @var \phpbb\template\template */
+	/** @var \phpbb\template\template */
 	protected \phpbb\template\template $template;
 
-	/* @var \phpbb\user */
+	/** @var \phpbb\user */
 	protected \phpbb\user $user;
 
 	/** @var \phpbb\language\language */
 	protected \phpbb\language\language $language;
 
-	/* @var \phpbbgallery\core\album\display */
+	/** @var \phpbbgallery\core\album\display */
 	protected \phpbbgallery\core\album\display $display;
 
-	/* @var \phpbbgallery\core\album\loader */
+	/** @var \phpbbgallery\core\album\loader */
 	protected \phpbbgallery\core\album\loader $loader;
 
-	/* @var \phpbbgallery\core\auth\auth */
+	/** @var \phpbbgallery\core\auth\auth */
 	protected \phpbbgallery\core\auth\auth $auth;
 
-	/* @var \phpbbgallery\core\auth\level */
+	/** @var \phpbbgallery\core\auth\level */
 	protected \phpbbgallery\core\auth\level $auth_level;
 
 	/** @var \phpbbgallery\core\notification\helper */
@@ -65,7 +65,7 @@ class album
 	/** @var \phpbbgallery\core\contest */
 	protected \phpbbgallery\core\contest $contest;
 
-	/* @var string */
+	/** @var string */
 	protected string $table_images;
 
 	public const ALBUM_SHOW_IP = 128;
@@ -578,7 +578,6 @@ class album
 	 * @param int $album_id
 	 * @param int $owner_id
 	 * @param int $album_auth_level
-	 * @internal param array $album_data
 	 * @return void
 	 */
 	protected function check_permissions(int $album_id, int $owner_id, int $album_auth_level): void

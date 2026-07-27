@@ -252,6 +252,43 @@ class package_hygiene_test extends TestCase
 		$this->assertSame([], $offenders);
 	}
 
+	public function test_production_phpdoc_uses_supported_annotations(): void
+	{
+		$offenders = [];
+		$patterns = [
+			'#/\* @var\b#',
+			'#@param\s+\$#',
+			'#@param\s+\([^)]#',
+			'#@internal param\b#',
+			'#@author\s*:#',
+			'#@function:#',
+			'#^\s*\*\s+return\b#m',
+		];
+		$iterator = new \RecursiveIteratorIterator(
+			new \RecursiveDirectoryIterator($this->core_root, \FilesystemIterator::SKIP_DOTS)
+		);
+
+		foreach ($iterator as $file)
+		{
+			$path = str_replace('\\', '/', $file->getPathname());
+			if ($file->getExtension() !== 'php' || str_contains($path, '/tests/'))
+			{
+				continue;
+			}
+
+			$source = (string) file_get_contents($file->getPathname());
+			foreach ($patterns as $pattern)
+			{
+				if (preg_match($pattern, $source))
+				{
+					$offenders[] = $path . ':' . $pattern;
+				}
+			}
+		}
+
+		$this->assertSame([], $offenders);
+	}
+
 	public function test_album_image_actions_use_current_moderation_routes(): void
 	{
 		foreach (['/controller/album.php', '/image/image.php'] as $relative_path)

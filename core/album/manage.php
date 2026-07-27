@@ -10,7 +10,7 @@
  * @license   GPL-2.0-only
  *
  * mostly borrowed from phpBB3
- * @author: phpBB Group
+ * @author phpBB Group
  * @location: includes/acp/acp_forums.php
  *
  */
@@ -183,8 +183,7 @@ class manage
 	 * Update album data
 	 *
 	 * borrowed from phpBB3
-	 * @author: phpBB Group
-	 * @function: update_forum_data
+	 * @author phpBB Group
 	 * @param array $album_data
 	 * @param array $contest_data
 	 * @return array
@@ -569,8 +568,7 @@ class manage
 	 * Move album
 	 *
 	 * borrowed from phpBB3
-	 * @author: phpBB Group
-	 * @function: move_forum
+	 * @author phpBB Group
 	 * @param int $from_id
 	 * @param int $to_id
 	 * @return array
@@ -706,8 +704,7 @@ class manage
 	 * Remove complete album
 	 *
 	 * borrowed from phpBB3
-	 * @author: phpBB Group
-	 * @function: delete_forum
+	 * @author phpBB Group
 	 * @param int $album_id
 	 * @param string $action_images
 	 * @param string $action_subalbums
@@ -906,8 +903,7 @@ class manage
 	 * Move album content from one to another album
 	 *
 	 * borrowed from phpBB3
-	 * @author: phpBB Group
-	 * @function: move_forum_content
+	 * @author phpBB Group
 	 * @param int $from_id
 	 * @param int $to_id
 	 * @param bool $sync
@@ -1062,8 +1058,7 @@ class manage
 	 * Move album position by $steps up/down
 	 *
 	 * borrowed from phpBB3
-	 * @author: phpBB Group
-	 * @function: move_forum_by
+	 * @author phpBB Group
 	 * @param array $album_row
 	 * @param string $action
 	 * @param int $steps

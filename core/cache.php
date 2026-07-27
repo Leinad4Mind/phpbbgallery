@@ -91,8 +91,7 @@ class cache
 
 	/**
 	 * Get images cache - get some images and put them in cache
-	 * @param    (array)    $image_ids_array    Array of images to be put in cache
-	 * return    (array)    $images                Array of the information we have for that images
+	 * @param array $image_ids_array Images to be put in cache
 	 * @return array
 	 */
 	public function get_images(array $image_ids_array): array
@@ -188,7 +187,7 @@ class cache
 
 	/**
 	 * Destroy interface for phpbb_cache destroy
-	 * @param $target
+	 * @param string $target
 	 * @param bool $subtarget
 	 */
 	public function destroy(string $target, string|false $subtarget = false): void

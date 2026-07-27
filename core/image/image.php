@@ -565,7 +565,6 @@ class image
 	 * Move image
 	 * @param array $image_id_ary
 	 * @param int $album_id
-	 * @internal param $ (int)    $album_id    The album we want to move image to
 	 * @return void
 	 */
 	public function move_image(array $image_id_ary, int $album_id): void

@@ -123,7 +123,7 @@ class file
 	 * Get image mimetype by filename
 	 *
 	 * Only use this, if the image is secure. As we created all these images, they should be...
-	 * @param $filename
+	 * @param string $filename
 	 * @return string
 	 */
 	public static function mimetype_by_filename(string $filename): string
@@ -286,7 +286,7 @@ class file
 	/**
 	 * Get a browser friendly UTF-8 encoded filename
 	 *
-	 * @param $file
+	 * @param string $file
 	 * @return string
 	 */
 	public function header_filename(string $file): string
@@ -321,7 +321,7 @@ class file
 	 *    - Last change of user's groups
 	 *    - Last change of watermark config
 	 *    - Last change of watermark file
-	 * @param $timestamp
+	 * @param int $timestamp
 	 */
 	public function set_last_modified(int $timestamp): void
 	{
@@ -449,8 +449,8 @@ class file
 	 * Rotate the image
 	 * Usage optimized for 0º, 90º, 180º and 270º because of the height and width
 	 *
-	 * @param $angle
-	 * @param $ignore_dimensions
+	 * @param int  $angle
+	 * @param bool $ignore_dimensions
 	 */
 	public function rotate_image(int $angle, bool $ignore_dimensions): void
 	{
@@ -532,7 +532,7 @@ class file
 	/**
 	 * Watermark the image:
 	 *
-	 * @param $watermark_source
+	 * @param string $watermark_source
 	 * @param int $watermark_position summary of the parameters for vertical and horizontal adjustment
 	 * @param int $min_height
 	 * @param int $min_width
@@ -659,7 +659,7 @@ class file
 	}
 
 	/**
-	 * @param $files
+	 * @param array|string $files
 	 * @param array $locations
 	 */
 	public function delete_cache(array|string $files, array $locations = ['thumbnail', 'medium']): void
@@ -679,7 +679,7 @@ class file
 	}
 
 	/**
-	 * @param $files
+	 * @param array|string $files
 	 */
 	public function delete_wm(array|string $files): void
 	{

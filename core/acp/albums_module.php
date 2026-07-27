@@ -10,7 +10,7 @@
  * @license   GPL-2.0-only
  *
  * mostly borrowed from phpBB3
- * @author: phpBB Group
+ * @author phpBB Group
  * @location: includes/acp/acp_forums.php
  *
  * Note: There are several code parts commented out, for example the album/forum_password.
@@ -748,10 +748,9 @@ class albums_module
 	 * Display progress bar for syncing albums
 	 *
 	 * borrowed from phpBB3
-	 * @author: phpBB Group
-	 * @function: display_progress_bar
-	 * @param $start
-	 * @param $total
+	 * @author phpBB Group
+	 * @param int $start
+	 * @param int $total
 	 */
 	public function display_progress_bar(int $start, int $total): void
 	{

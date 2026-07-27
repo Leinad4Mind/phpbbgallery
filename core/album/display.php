@@ -84,8 +84,7 @@ class display
 	 * Get album branch
 	 *
 	 * borrowed from phpBB3
-	 * @author: phpBB Group
-	 * @function: get_forum_branch
+	 * @author phpBB Group
 	 * @param int $branch_user_id
 	 * @param int $album_id
 	 * @param string $type
@@ -139,8 +138,7 @@ class display
 	 * list if currently null, assign basic album info to template
 	 *
 	 * borrowed from phpBB3
-	 * @author: phpBB Group
-	 * @function: generate_forum_nav
+	 * @author phpBB Group
 	 * @param array $album_data
 	 */
 	public function generate_navigation(array $album_data): void
@@ -210,8 +208,7 @@ class display
 	 * Returns album parents as an array. Get them from album_data if available, or update the database otherwise
 	 *
 	 * borrowed from phpBB3
-	 * @author: phpBB Group
-	 * @function: get_forum_parents
+	 * @author phpBB Group
 	 * @param array $album_data
 	 * @return array
 	 */
@@ -268,8 +265,7 @@ class display
 	 * Obtain list of moderators of each album
 	 *
 	 * borrowed from phpBB3
-	 * @author: phpBB Group
-	 * @function: get_forum_moderators
+	 * @author phpBB Group
 	 * @param array|int|false $album_id
 	 * @return array
 	 */
@@ -347,8 +343,7 @@ class display
 	 * Display albums
 	 *
 	 * borrowed from phpBB3
-	 * @author: phpBB Group
-	 * @function: display_forums
+	 * @author phpBB Group
 	 * @param array|string|false $root_data
 	 * @param bool $display_moderators
 	 * @param bool $return_moderators

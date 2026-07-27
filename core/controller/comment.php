@@ -34,25 +34,25 @@ class comment
 	/** @var \phpbb\template\template */
 	protected \phpbb\template\template $template;
 
-	/* @var \phpbb\request\request_interface */
+	/** @var \phpbb\request\request_interface */
 	protected \phpbb\request\request_interface $request;
 
-	/* @var \phpbb\controller\helper */
+	/** @var \phpbb\controller\helper */
 	protected \phpbb\controller\helper $helper;
 
-	/* @var \phpbbgallery\core\image\image */
+	/** @var \phpbbgallery\core\image\image */
 	protected \phpbbgallery\core\image\image $image;
 
-	/* @var \phpbbgallery\core\album\loader */
+	/** @var \phpbbgallery\core\album\loader */
 	protected \phpbbgallery\core\album\loader $loader;
 
-	/* @var \phpbbgallery\core\album\album */
+	/** @var \phpbbgallery\core\album\album */
 	protected \phpbbgallery\core\album\album $album;
 
-	/* @var \phpbbgallery\core\album\display */
+	/** @var \phpbbgallery\core\album\display */
 	protected \phpbbgallery\core\album\display $display;
 
-	/* @var \phpbbgallery\core\url */
+	/** @var \phpbbgallery\core\url */
 	protected \phpbbgallery\core\url $url;
 
 	/** @var \phpbbgallery\core\auth\auth */

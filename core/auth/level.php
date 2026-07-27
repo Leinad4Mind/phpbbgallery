@@ -67,8 +67,7 @@ class level
 	* @return		null
 	*
 	* borrowed from phpBB3
-	* @author: phpBB Group
-	* @function: gen_forum_auth_level
+	* @author phpBB Group
 	*/
 	public function display(int $album_id, int $album_status, int $album_user_id = -1): void
 	{
