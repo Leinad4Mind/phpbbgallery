@@ -184,6 +184,17 @@ class upload
 		$username = '';
 		$process = $this->gallery_upload;
 		$process->set_up($album_id);
+		$can_change_author = (bool) $this->auth->acl_check('m_edit', $album_id, $album_data['album_user_id']);
+		$change_author = $can_change_author ? $this->request->variable('change_author', '', true, request_interface::POST) : '';
+		$upload_author = ($change_author !== '') ? $this->image->get_new_author_info($change_author) : false;
+		$invalid_author = ($change_author !== '' && $upload_author === false);
+		$upload_author_id = ($upload_author !== false) ? (int) $upload_author['user_id'] : (int) $this->user->data['user_id'];
+		$is_alternate_author = ($upload_author_id !== (int) $this->user->data['user_id']);
+		$this->template->assign_vars([
+			'S_CHANGE_AUTHOR' => $can_change_author,
+			'CHANGE_AUTHOR'   => $change_author,
+			'U_FIND_USERNAME' => $can_change_author ? $this->url->append_sid('phpbb', 'memberlist', 'mode=searchuser&amp;form=postform&amp;field=change_author&amp;select_single=true') : '',
+		]);
 
 		if ($this->request->is_set_post('discard_pending'))
 		{
@@ -225,6 +236,16 @@ class upload
 					],
 				], 400);
 			}
+			if ($invalid_author)
+			{
+				return new \Symfony\Component\HttpFoundation\JsonResponse([
+					'files' => [
+						[
+							'error' => $this->language->lang('INVALID_USERNAME'),
+						],
+					],
+				], 400);
+			}
 
 			// So we use ajax request to upload (so we are going to copy some functions from other upload
 			// Upload Quota Check
@@ -240,7 +261,7 @@ class upload
 			{
 				$sql = 'SELECT COUNT(image_id) count
 					FROM ' . $this->images_table . '
-					WHERE image_user_id = ' . (int) $this->user->data['user_id'] . '
+					WHERE image_user_id = ' . $upload_author_id . '
 						AND image_status <> ' . (int) $this->block->get_image_status_orphan() . '
 						AND image_album_id = ' . (int) $album_id;
 				$result = $this->db->sql_query($sql);
@@ -277,21 +298,25 @@ class upload
 				$image_names[] = $process->image_data[$image_id]['image_name'];
 			}
 			$process->set_names($image_names);
+			if ($upload_author !== false)
+			{
+				$process->set_author((int) $upload_author['user_id'], $upload_author['username'], $upload_author['user_colour']);
+			}
 
 			$success = true;
 			foreach ($process->images as $image_id)
 			{
 				$success = $success && $process->update_image($image_id, !$this->auth->acl_check('i_approve', $album_id, $album_data['album_user_id']), $album_data['album_contest']);
-				if ($this->gallery_user->get_data('watch_own'))
+				if (!$is_alternate_author && $this->gallery_user->get_data('watch_own'))
 				{
-					$this->gallery_notification->add($image_id);
+					$this->gallery_notification->add($image_id, $upload_author_id);
 				}
 			}
 
 			if ($this->auth->acl_check('i_approve', $album_id, $album_data['album_user_id']))
 			{
 				$data = [
-					'targets'    => [$this->user->data['user_id']],
+					'targets'    => [$upload_author_id],
 					'album_id'   => $album_id,
 					'last_image' => end($process->images),
 				];
@@ -302,7 +327,7 @@ class upload
 				$target = [
 					'album_id'   => $album_id,
 					'last_image' => end($process->images),
-					'uploader'   => $this->user->data['user_id'],
+					'uploader'   => $upload_author_id,
 				];
 				$this->notification_helper->notify('approval', $target);
 			}
@@ -343,13 +368,13 @@ class upload
 			{
 				$sql = 'SELECT COUNT(image_id) count
 					FROM ' . $this->images_table . '
-					WHERE image_user_id = ' . (int) $this->user->data['user_id'] . '
+					WHERE image_user_id = ' . $upload_author_id . '
 						AND image_status <> ' . (int) $this->block->get_image_status_orphan() . '
 						AND image_album_id = ' . (int) $album_id;
 				$result = $this->db->sql_query($sql);
 				$own_images = (int) $this->db->sql_fetchfield('count');
 				$this->db->sql_freeresult($result);
-				if ($own_images >= $this->auth->acl_check('i_count', $album_id, $album_data['album_user_id']))
+				if (!$invalid_author && (!$can_change_author || $submit) && $own_images >= $this->auth->acl_check('i_count', $album_id, $album_data['album_user_id']))
 				{
 					//@todo: Add return link
 					trigger_error($this->language->lang('USER_REACHED_QUOTA', $this->auth->acl_check('i_count', $album_id, $album_data['album_user_id'])));
@@ -368,7 +393,7 @@ class upload
 
 			}
 
-			$upload_files_limit = ($this->auth->acl_check('i_unlimited', $album_id, $album_data['album_user_id'])) ? $this->gallery_config->get('num_uploads') : min(($this->auth->acl_check('i_count', $album_id, $album_data['album_user_id']) - $own_images), $this->gallery_config->get('num_uploads'));
+			$upload_files_limit = ($this->auth->acl_check('i_unlimited', $album_id, $album_data['album_user_id']) || ($can_change_author && (!$submit || $invalid_author))) ? $this->gallery_config->get('num_uploads') : min(($this->auth->acl_check('i_count', $album_id, $album_data['album_user_id']) - $own_images), $this->gallery_config->get('num_uploads'));
 			$process = $this->gallery_upload;
 			$process->set_up($album_id, $upload_files_limit);
 			if ($submit)
@@ -376,6 +401,10 @@ class upload
 				if (!check_form_key('gallery'))
 				{
 					trigger_error('FORM_INVALID');
+				}
+				if ($invalid_author)
+				{
+					$process->new_error($this->language->lang('INVALID_USERNAME'));
 				}
 				$process->set_allow_comments($this->request->variable('allow_comments', false, false, request_interface::POST));
 
@@ -482,7 +511,7 @@ class upload
 				// get_images() below and only skip the finalize/redirect step on validation
 				// failure, falling through to redisplay the same review form with the error so
 				// the user can correct it without losing the already-uploaded files.
-				$validation_error = '';
+				$validation_error = $invalid_author ? $this->language->lang('INVALID_USERNAME') : '';
 				$own_images = 0;
 
 				// Upload Quota Check
@@ -498,7 +527,7 @@ class upload
 				{
 					$sql = 'SELECT COUNT(image_id) count
 						FROM ' . $this->images_table . '
-						WHERE image_user_id = ' . (int) $this->user->data['user_id'] . '
+						WHERE image_user_id = ' . $upload_author_id . '
 							AND image_status <> ' . (int) $this->block->get_image_status_orphan() . '
 							AND image_album_id = ' . (int) $album_id;
 					$result = $this->db->sql_query($sql);
@@ -550,6 +579,10 @@ class upload
 				$process->set_descriptions($description_array);
 				$process->set_image_num($this->request->variable('image_num', 0, false, request_interface::POST));
 				$process->use_same_name($this->request->variable('same_name', false, false, request_interface::POST));
+				if ($upload_author !== false)
+				{
+					$process->set_author((int) $upload_author['user_id'], $upload_author['username'], $upload_author['user_colour']);
+				}
 
 				if ($validation_error)
 				{
@@ -561,9 +594,9 @@ class upload
 					foreach ($process->images as $image_id)
 					{
 						$success = $success && $process->update_image($image_id, !$this->auth->acl_check('i_approve', $album_id, $album_data['album_user_id']), $album_data['album_contest']);
-						if ($this->gallery_user->get_data('watch_own'))
+						if (!$is_alternate_author && $this->gallery_user->get_data('watch_own'))
 						{
-							$this->gallery_notification->add($image_id);
+							$this->gallery_notification->add($image_id, $upload_author_id);
 						}
 					}
 
@@ -574,7 +607,7 @@ class upload
 						$message .= (!$error) ? $this->language->lang('ALBUM_UPLOAD_SUCCESSFUL') : $this->language->lang('ALBUM_UPLOAD_SUCCESSFUL_ERROR', $error);
 						$meta_refresh_time = ($success) ? 3 : 20;
 						$data = [
-							'targets'    => [$this->user->data['user_id']],
+							'targets'    => [$upload_author_id],
 							'album_id'   => (int) $album_id,
 							'last_image' => end($process->images),
 						];
@@ -585,7 +618,7 @@ class upload
 						$target = [
 							'album_id'   => (int) $album_id,
 							'last_image' => end($process->images),
-							'uploader'   => $this->user->data['user_id'],
+							'uploader'   => $upload_author_id,
 						];
 						$this->notification_helper->notify('approval', $target);
 						$message .= (!$error) ? $this->language->lang('ALBUM_UPLOAD_NEED_APPROVAL') : $this->language->lang('ALBUM_UPLOAD_NEED_APPROVAL_ERROR', $error);

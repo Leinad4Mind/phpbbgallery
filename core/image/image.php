@@ -128,7 +128,7 @@ class image
 	}
 
 	/**
-	 * Resolve the database identity of a replacement image author.
+	 * Resolve the database identity of an image author.
 	 *
 	 * @param string $username Requested phpBB username
 	 * @return array|false User row, or false when no user matches
