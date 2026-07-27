@@ -58,8 +58,9 @@
 														<a href="{{ overview.U_IMAGE_MODERATE_URL }}"><img class="img-responsive" style="max-width: 70px; max-height: 70px;" src="{{ overview.U_IMAGE }}" alt="{{ overview.U_IMAGE_NAME }}"></a>
 													</span>
 													<span style="margin-left: 10px;">
-														<a href="{{ overview.U_IMAGE_MODERATE_URL }}" class="topictitle">{{ overview.U_IMAGE_NAME }}{% if overview.U_IS_REPORTED %}<span class="imageset icon_topic_reported" style="float: right;" title="{{ lang('REPORTED_IMAGES') }}">{{ lang('REPORTED_IMAGES') }}</span>{% endif %}{% if overview.U_IS_UNAPPROVED %}<span class="image_unapproved" title="{{ lang('QUEUE_STATUS_0') }}">&nbsp;</span>{% endif %}{% if overview.U_IS_LOCKED %}<span class="image_locked" title="{{ lang('QUEUE_STATUS_2') }}">{{ lang('QUEUE_STATUS_2') }}</span>{% endif %}</a><br />
-														<span style="margin-left: 10px; vertical-align: middle;">{{ lang('UPLOADED_BY_USER') }}{{ lang('COLON') }} {{ overview.IMAGE_AUTHOR }} &raquo; {{ overview.IMAGE_TIME }}</span>
+												<a href="{{ overview.U_IMAGE_MODERATE_URL }}" class="topictitle">{{ overview.U_IMAGE_NAME }}{% if overview.U_IS_REPORTED %}<span class="imageset icon_topic_reported" style="float: right;" title="{{ lang('REPORTED_IMAGES') }}">{{ lang('REPORTED_IMAGES') }}</span>{% endif %}{% if overview.U_IS_UNAPPROVED %}<span class="image_unapproved" title="{{ lang('QUEUE_STATUS_0') }}">&nbsp;</span>{% endif %}{% if overview.U_IS_LOCKED %}<span class="image_locked" title="{{ lang('QUEUE_STATUS_2') }}">{{ lang('QUEUE_STATUS_2') }}</span>{% endif %}</a><br />
+												{% if S_CAN_EDIT_IMAGES %}<label class="sr-only" for="image_name_{{ overview.U_IMAGE_ID }}">{{ lang('IMAGE_NAME') }}</label><input class="form-control input-sm" type="text" id="image_name_{{ overview.U_IMAGE_ID }}" name="image_name[{{ overview.U_IMAGE_ID }}]" value="{{ overview.U_IMAGE_NAME }}" maxlength="255">{% endif %}
+												<span style="margin-left: 10px; vertical-align: middle;">{{ lang('UPLOADED_BY_USER') }}{{ lang('COLON') }} {{ overview.IMAGE_AUTHOR }} &raquo; {{ overview.IMAGE_TIME }}</span>
 													</span>
 												</div>
 												</td>
@@ -79,6 +80,13 @@
 					</div>
 					{% if overview|length %}
 					<fieldset class="display-actions">
+						{% if S_CAN_EDIT_IMAGES %}
+						<div class="form-inline">
+							<label for="change_author">{{ lang('CHANGE_AUTHOR') }}{{ lang('COLON') }}</label>
+							<input class="form-control input-sm" type="text" id="change_author" name="change_author" size="24">
+							<a class="btn btn-default btn-sm" href="{{ U_FIND_USERNAME }}" onclick="find_username(this.href); return false;" title="{{ lang('FIND_USERNAME') }}"><i class="fa fa-user"></i></a>
+						</div>
+						{% endif %}
 						{{ U_ACTION_SELECT }} &nbsp; <input class="button1 btn btn-default" name="submit" value="{{ lang('GO') }}" type="submit">
 						<div><a href="#" onclick="marklist('overview_action', 'action', true); return false;">{{ lang('MARK_ALL') }}</a> :: <a href="#" onclick="marklist('overview_action', 'action', false); return false;">{{ lang('UNMARK_ALL') }}</a></div>
 					</fieldset>

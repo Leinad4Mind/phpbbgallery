@@ -312,6 +312,11 @@ class moderate
 		{
 			$actions['move'] = 'QUEUES_A_MOVE';
 		}
+		if ($this->gallery_auth->acl_check('m_edit', $album['album_id'], $album['album_user_id']))
+		{
+			$actions['change_author'] = 'CHANGE_AUTHOR';
+			$actions['rename'] = 'RENAME_IMAGES';
+		}
 		if ($this->gallery_auth->acl_check('m_report', $album['album_id'], $album['album_user_id']))
 		{
 			$actions['report'] = 'REPORT_A_CLOSE';
@@ -398,7 +403,7 @@ class moderate
 			],
 		], 'pagination', 'page', $count, $per_page, ($page - 1) * $per_page);
 
-		$select = '<select name="select_action">';
+		$select = '<select name="select_action" id="select_action">';
 		foreach ($actions as $id => $var)
 		{
 			$select .= '<option value="' . $id . '">' . $this->lang->lang($var) . '</option>';
