@@ -25,6 +25,7 @@ use phpbbgallery\core\migrations\split_ucp_module_settings;
 use phpbbgallery\core\migrations\total_views;
 use phpbbgallery\core\migrations\gallery_title;
 use phpbbgallery\core\migrations\own_image_move;
+use phpbbgallery\core\migrations\create_gallery_icons_folder;
 
 class migration_integrity_test extends TestCase
 {
@@ -44,6 +45,7 @@ class migration_integrity_test extends TestCase
 		total_views::class,
 		gallery_title::class,
 		own_image_move::class,
+		create_gallery_icons_folder::class,
 	];
 
 	private array $temp_directories = [];
@@ -104,6 +106,10 @@ class migration_integrity_test extends TestCase
 		$this->assertSame(
 			['\phpbbgallery\core\migrations\gallery_title'],
 			own_image_move::depends_on()
+		);
+		$this->assertSame(
+			['\phpbbgallery\core\migrations\own_image_move'],
+			create_gallery_icons_folder::depends_on()
 		);
 	}
 
@@ -373,6 +379,116 @@ class migration_integrity_test extends TestCase
 		$this->assertStringNotContainsString('rmdir(', $source);
 	}
 
+	public function test_create_gallery_icons_folder_creates_a_web_accessible_directory(): void
+	{
+		$root = $this->create_temp_directory();
+		mkdir($root . '/images', 0755, true);
+
+		$migration = (new \ReflectionClass(create_gallery_icons_folder::class))->newInstanceWithoutConstructor();
+		global $phpbb_root_path;
+		$previous_root = isset($phpbb_root_path) ? $phpbb_root_path : null;
+		$phpbb_root_path = $root . DIRECTORY_SEPARATOR;
+		try
+		{
+			$migration->create_icons_folder();
+		}
+		finally
+		{
+			$phpbb_root_path = $previous_root;
+		}
+
+		$this->assertDirectoryExists($root . '/images/galleryicons');
+		$this->assertFileExists($root . '/images/galleryicons/index.htm');
+		// Unlike files/phpbbgallery/core, icons have to be reachable over HTTP.
+		$this->assertFileDoesNotExist($root . '/images/galleryicons/.htaccess');
+	}
+
+	public function test_create_gallery_icons_folder_is_skipped_when_images_is_not_writable(): void
+	{
+		$root = $this->create_temp_directory();
+
+		$migration = (new \ReflectionClass(create_gallery_icons_folder::class))->newInstanceWithoutConstructor();
+		global $phpbb_root_path;
+		$previous_root = isset($phpbb_root_path) ? $phpbb_root_path : null;
+		$phpbb_root_path = $root . DIRECTORY_SEPARATOR;
+		try
+		{
+			$migration->create_icons_folder();
+		}
+		finally
+		{
+			$phpbb_root_path = $previous_root;
+		}
+
+		$this->assertDirectoryDoesNotExist($root . '/images/galleryicons');
+	}
+
+	public function test_create_gallery_icons_folder_purge_archives_instead_of_deleting_icons(): void
+	{
+		$root = $this->create_temp_directory();
+		mkdir($root . '/images/galleryicons', 0755, true);
+		file_put_contents($root . '/images/galleryicons/bluray.svg', '<svg xmlns="http://www.w3.org/2000/svg"></svg>');
+
+		$migration = (new \ReflectionClass(create_gallery_icons_folder::class))->newInstanceWithoutConstructor();
+		global $phpbb_root_path;
+		$previous_root = isset($phpbb_root_path) ? $phpbb_root_path : null;
+		$phpbb_root_path = $root . DIRECTORY_SEPARATOR;
+		try
+		{
+			$this->assertTrue($migration->archive_icons_folder());
+		}
+		finally
+		{
+			$phpbb_root_path = $previous_root;
+		}
+
+		$this->assertDirectoryDoesNotExist($root . '/images/galleryicons');
+		$backups = glob($root . '/images/galleryicons_backup_*', GLOB_ONLYDIR);
+		$this->assertCount(1, $backups);
+		$this->assertSame('<svg xmlns="http://www.w3.org/2000/svg"></svg>', file_get_contents($backups[0] . '/bluray.svg'));
+	}
+
+	public function test_create_gallery_icons_folder_purge_is_idempotent_when_no_folder_exists(): void
+	{
+		$root = $this->create_temp_directory();
+		mkdir($root . '/images', 0755, true);
+
+		$migration = (new \ReflectionClass(create_gallery_icons_folder::class))->newInstanceWithoutConstructor();
+		global $phpbb_root_path;
+		$previous_root = isset($phpbb_root_path) ? $phpbb_root_path : null;
+		$phpbb_root_path = $root . DIRECTORY_SEPARATOR;
+		try
+		{
+			$this->assertTrue($migration->archive_icons_folder());
+		}
+		finally
+		{
+			$phpbb_root_path = $previous_root;
+		}
+
+		$this->assertSame([], glob($root . '/images/galleryicons_backup_*', GLOB_ONLYDIR));
+	}
+
+	public function test_create_gallery_icons_folder_revert_uses_the_archive_callback_without_recursive_deletion(): void
+	{
+		$migration = (new \ReflectionClass(create_gallery_icons_folder::class))->newInstanceWithoutConstructor();
+		$this->assertSame(
+			[['custom', [[$migration, 'archive_icons_folder']]]],
+			$migration->revert_data()
+		);
+		$this->assertSame(
+			[['custom', [[$migration, 'create_icons_folder']]]],
+			$migration->update_data()
+		);
+
+		$source = file_get_contents(dirname(__DIR__) . '/migrations/create_gallery_icons_folder.php');
+		$this->assertStringContainsString('is_link($icons_folder)', $source);
+		$this->assertStringContainsString('@rename($source, $backup)', $source);
+		$this->assertStringNotContainsString('recursiveRemoveDirectory', $source);
+		$this->assertStringNotContainsString('unlink(', $source);
+		$this->assertStringNotContainsString('rmdir(', $source);
+	}
+
 	/**
 	 * @return array
 	 */
@@ -491,6 +607,7 @@ class migration_integrity_test extends TestCase
 			'total_views.php',
 			'gallery_title.php',
 			'own_image_move.php',
+			'create_gallery_icons_folder.php',
 		] as $migration)
 		{
 			require_once dirname(__DIR__) . '/migrations/' . $migration;

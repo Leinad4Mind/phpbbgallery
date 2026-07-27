@@ -3,6 +3,8 @@ parameters:
     phpbbgallery.core.file.medium: '%core.root_path%files/phpbbgallery/core/medium/'
     phpbbgallery.core.file.mini: '%core.root_path%files/phpbbgallery/core/mini/'
     phpbbgallery.core.file.watermark: '%core.root_path%ext/phpbbgallery/core/images/watermark.png'
+    phpbbgallery.core.icons.path: '%core.root_path%images/galleryicons/'
+    phpbbgallery.core.icons.path_relative: 'images/galleryicons'
 
     phpbbgallery.tables.gallery_albums: '%core.table_prefix%gallery_albums'
     phpbbgallery.tables.gallery_contests: '%core.table_prefix%gallery_contests'
