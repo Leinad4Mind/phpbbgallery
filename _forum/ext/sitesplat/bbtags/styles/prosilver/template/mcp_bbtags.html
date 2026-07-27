@@ -1,0 +1,62 @@
+{% include 'mcp_header.html' %}
+
+<h2>{{ lang('MCP_BBTAGS_QUEUE') }}</h2>
+<p>{{ lang('MCP_BBTAGS_QUEUE_EXPLAIN') }}</p>
+
+{% if loops.suggestions|length %}
+	<div class="panel">
+		<div class="inner">
+			<table class="table1">
+				<thead>
+					<tr>
+						<th>{{ lang('TAG') }}</th>
+						<th>{{ lang('BBTAGS_PROVIDER') }}</th>
+						<th>{{ lang('BBTAGS_SCOPE_ITEM') }}</th>
+						<th>{{ lang('BBTAGS_SUGGESTED_BY') }}</th>
+						<th>{{ lang('DATE') }}</th>
+						<th>{{ lang('ACTION') }}</th>
+					</tr>
+				</thead>
+				<tbody>
+				{% for suggestion in loops.suggestions %}
+					<tr class="{% if suggestion.S_ROW_COUNT is even %}bg1{% else %}bg2{% endif %}">
+						<td><strong>{{ suggestion.TAG }}</strong></td>
+						<td>{{ suggestion.PROVIDER }}</td>
+						<td>#{{ suggestion.SCOPE_ID }} / {% if suggestion.U_ITEM %}<a href="{{ suggestion.U_ITEM }}">#{{ suggestion.ITEM_ID }}</a>{% else %}#{{ suggestion.ITEM_ID }}{% endif %}</td>
+						<td>{{ suggestion.SUGGESTED_BY }}</td>
+						<td>{{ suggestion.SUGGESTED_AT }}</td>
+						<td>
+							<form method="post" action="{{ U_ACTION }}" class="bbtags-moderation-action">
+								<input type="hidden" name="action" value="approve">
+								<input type="hidden" name="suggestion_id" value="{{ suggestion.ID }}">
+								<input type="submit" class="button1" value="{{ lang('BBTAGS_APPROVE') }}">
+								{{ S_FORM_TOKEN }}
+							</form>
+							<form method="post" action="{{ U_ACTION }}" class="bbtags-moderation-action">
+								<input type="hidden" name="action" value="reject">
+								<input type="hidden" name="suggestion_id" value="{{ suggestion.ID }}">
+								<input type="submit" class="button2" value="{{ lang('BBTAGS_REJECT') }}">
+								{{ S_FORM_TOKEN }}
+							</form>
+						</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="pagination">
+		{{ lang('BBTAGS_PENDING_TOTAL', PENDING_TOTAL) }}
+		{% if loops.pagination|length %}{% include 'pagination.html' %}{% endif %}
+	</div>
+{% else %}
+	<div class="panel">
+		<div class="inner"><p>{{ lang('BBTAGS_NO_PENDING_SUGGESTIONS') }}</p></div>
+	</div>
+{% endif %}
+
+<style>
+.bbtags-moderation-action { display: inline-block; margin: 0 0.25rem 0.25rem 0; }
+</style>
+
+{% include 'mcp_footer.html' %}

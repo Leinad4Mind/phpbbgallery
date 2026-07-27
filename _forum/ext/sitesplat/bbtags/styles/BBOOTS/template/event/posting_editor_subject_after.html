@@ -18,6 +18,7 @@ var bbTagsForumId = {BBTAGS_FORUM_ID};
 	      <a data-toggle="modal" href="#" class="open-bbtagsdialog btn" title="{L_BBTAGS_AUTO_SUGGEST}"><i class="fa fa-search-plus"></i></a>
        </span>
 	</div>   
+	{% if BBTAGS_HAS_PENDING %}<span class="help-block">{{ lang('BBTAGS_PENDING_NOTICE') }}</span>{% endif %}
 	</div>
    </div>	
 </div>	

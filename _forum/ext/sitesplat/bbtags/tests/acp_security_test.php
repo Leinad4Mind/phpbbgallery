@@ -49,7 +49,8 @@ class acp_security_test extends TestCase
 		$this->assertStringContainsString('protected $manager;', $listener);
 		$this->assertStringNotContainsString('protected $tag_manager;', $listener);
 		$this->assertStringContainsString("htmlspecialchars(\$tags, ENT_QUOTES, 'UTF-8')", $listener);
-		$this->assertStringContainsString("assign_tags_to_topic(\$data['topic_id'], \$tags, (int) \$data['forum_id'])", $listener);
+		$this->assertStringContainsString('sync_item_suggestions(', $listener);
+		$this->assertStringContainsString('manager::FORUM_PROVIDER', $listener);
 	}
 
 	public function test_acp_language_catalogs_share_the_same_keys()

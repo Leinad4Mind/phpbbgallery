@@ -64,14 +64,17 @@ namespace
 
 	require_once __DIR__ . '/stubs/phpbb_config.php';
 	require_once __DIR__ . '/stubs/phpbb_auth.php';
+	require_once __DIR__ . '/stubs/phpbb_event_dispatcher.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/db/driver/driver_interface.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/db/tools/tools_interface.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/db/migration/migration_interface.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/db/migration/migration.php';
 	require_once dirname(__DIR__) . '/tags/manager.php';
+	require_once dirname(__DIR__) . '/tags/moderation.php';
 	require_once dirname(__DIR__) . '/tags/search_query.php';
 	require_once dirname(__DIR__) . '/migrations/v33x/m7_global_catalog_schema.php';
 	require_once dirname(__DIR__) . '/migrations/v33x/m8_global_catalog_data.php';
 	require_once dirname(__DIR__) . '/migrations/v33x/m9_global_catalog_constraints.php';
 	require_once dirname(__DIR__) . '/migrations/v33x/m10_hierarchical_scopes.php';
+	require_once dirname(__DIR__) . '/migrations/v33x/m11_tag_moderation.php';
 }

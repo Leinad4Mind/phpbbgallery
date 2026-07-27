@@ -14,6 +14,13 @@ services:
             - '%sitesplat.bbtags.tables.bbtags_context%'
             - '%sitesplat.bbtags.tables.bbtags_scope%'
             - '%sitesplat.bbtags.tables.bbtags_topic%'
+    sitesplat.bbtags.moderation:
+        class: sitesplat\bbtags\tags\moderation
+        arguments:
+            - '@dbal.conn.driver'
+            - '@dispatcher'
+            - '@sitesplat.bbtags.manager'
+            - '%sitesplat.bbtags.tables.bbtags_suggestions%'
     sitesplat.bbtags.listener:
         class: sitesplat\bbtags\event\listener
         arguments:
@@ -24,6 +31,7 @@ services:
             - '@config'
             - '@request'
             - '@sitesplat.bbtags.manager'
+            - '@sitesplat.bbtags.moderation'
             - '%core.root_path%'
             - '%core.php_ext%'
         tags:

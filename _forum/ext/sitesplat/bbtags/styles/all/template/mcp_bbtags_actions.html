@@ -1,0 +1,12 @@
+<form method="post" action="{{ U_ACTION }}" class="bbtags-moderation-action">
+	<input type="hidden" name="action" value="approve">
+	<input type="hidden" name="suggestion_id" value="{{ suggestion.ID }}">
+	<input type="submit" class="button1" value="{{ lang('BBTAGS_APPROVE') }}">
+	{{ S_FORM_TOKEN }}
+</form>
+<form method="post" action="{{ U_ACTION }}" class="bbtags-moderation-action">
+	<input type="hidden" name="action" value="reject">
+	<input type="hidden" name="suggestion_id" value="{{ suggestion.ID }}">
+	<input type="submit" class="button2" value="{{ lang('BBTAGS_REJECT') }}">
+	{{ S_FORM_TOKEN }}
+</form>

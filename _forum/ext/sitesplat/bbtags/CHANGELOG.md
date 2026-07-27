@@ -19,6 +19,11 @@
 
 ### Added
 
+- Add provider-independent tag suggestions with pending, approved, rejected and cancelled audit states.
+- Route unknown user-submitted topic tags to a resumable moderation queue instead of publishing them immediately.
+- Add a CSRF-protected MCP queue governed by the global `m_bbtags_moderate` permission; keep moderation out of the ACP.
+- Apply approved suggestions atomically to their originating provider item and restrict new tags to the approved scope.
+- Expose provider validation and approval events so future integrations can join the same moderation lifecycle.
 - Add a provider-independent canonical tag catalogue while preserving topic relations and retaining the oldest identifier when equivalent legacy tags are merged.
 - Track enabled state and usage totals per provider, beginning with `forum_topics`.
 - Import the existing predefined tag list into the catalogue and enforce canonical tag, route and topic relation uniqueness.
@@ -30,6 +35,7 @@
 
 ### Tests
 
+- Cover suggestion deduplication, provider validation, approval rollback, rejection audit history, MCP placement and permissions across PHP 8.1 through 8.5.
 - Add isolated PHPUnit coverage for ACP security contracts and administrative tag operations.
 - Verify the English and Portuguese ACP language catalogues remain in sync.
 - Cover catalogue schema ordering, data preservation, deduplication and provider seeding.

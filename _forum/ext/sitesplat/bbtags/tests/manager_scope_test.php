@@ -82,6 +82,43 @@ class manager_scope_test extends TestCase
 		);
 	}
 
+	public function test_topic_subject_must_belong_to_the_declared_forum_scope(): void
+	{
+		$db = $this->createMock(driver_interface::class);
+		$db->method('sql_query_limit')->willReturn('topic');
+		$rows = [['forum_id' => 20], ['forum_id' => 20]];
+		$db->method('sql_fetchrow')->willReturnCallback(static function () use (&$rows)
+		{
+			return array_shift($rows);
+		});
+		$manager = $this->create_manager($db);
+
+		$this->assertTrue($manager->topic_matches_scope(10, 20));
+		$this->assertFalse($manager->topic_matches_scope(10, 30));
+	}
+
+	public function test_approval_reenables_an_existing_provider_context(): void
+	{
+		$db = $this->createMock(driver_interface::class);
+		$db->method('sql_escape')->willReturnArgument(0);
+		$db->method('sql_query_limit')->willReturn('context');
+		$db->method('sql_fetchrow')->willReturn(['tag_id' => 7, 'is_enabled' => 0]);
+		$db->method('sql_build_array')->willReturnCallback(static function (string $type, array $values): string
+		{
+			return $type . ':' . implode(',', array_keys($values));
+		});
+		$queries = [];
+		$db->method('sql_query')->willReturnCallback(static function (string $sql) use (&$queries)
+		{
+			$queries[] = $sql;
+			return true;
+		});
+
+		$this->assertTrue($this->create_manager($db)->ensure_provider_context(7, manager::FORUM_PROVIDER, 'restricted'));
+		$this->assertStringContainsString('UPDATE phpbb_bbtags_context', $queries[0]);
+		$this->assertStringContainsString('UPDATE:is_enabled,scope_mode', $queries[0]);
+	}
+
 	public function test_scope_mutations_validate_modes_rules_and_provider_names()
 	{
 		$db = $this->createMock(driver_interface::class);

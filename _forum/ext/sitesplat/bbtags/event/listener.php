@@ -18,6 +18,7 @@ use phpbb\user;
 use phpbb\config\config;
 use phpbb\request\request;
 use sitesplat\bbtags\tags\manager;
+use sitesplat\bbtags\tags\moderation;
 
 /**
 * Event listener
@@ -31,6 +32,7 @@ class listener implements EventSubscriberInterface
 	protected $config;
 	protected $request;
 	protected $manager;
+	protected $moderation;
 	protected $phpbb_root_path;
 	protected $php_ext;
 
@@ -38,7 +40,7 @@ class listener implements EventSubscriberInterface
 	* Constructor
 	* @access public
 	*/
-	public function __construct(auth $auth, helper $helper, template $template, user $user, config $config, request $request, manager $tag_manager, $phpbb_root_path, $php_ext)
+	public function __construct(auth $auth, helper $helper, template $template, user $user, config $config, request $request, manager $tag_manager, moderation $moderation, $phpbb_root_path, $php_ext)
 	{
 		$this->auth = $auth;
 		$this->helper = $helper;
@@ -47,6 +49,7 @@ class listener implements EventSubscriberInterface
 		$this->config = $config;
 		$this->request = $request;
 		$this->manager = $tag_manager;
+		$this->moderation = $moderation;
 		$this->phpbb_root_path = $phpbb_root_path;
 		$this->php_ext = $php_ext;
 	}
@@ -67,6 +70,8 @@ class listener implements EventSubscriberInterface
 			'core.submit_post_end'					=> 'save_tags',
 			'core.delete_topics_after_query'		=> 'delete_tags',
 			'core.permissions'						=> 'add_permission',
+			'sitesplat.bbtags.moderation.validate_subject'	=> 'validate_moderation_subject',
+			'sitesplat.bbtags.moderation.apply_approval'	=> 'apply_moderation_approval',
 		);
 	}
 
@@ -131,9 +136,20 @@ class listener implements EventSubscriberInterface
 		$is_edit_first_post = $topic_id && $this->is_edit_first_post($data['mode'], $data['post_data']);
 		if ($data['mode'] == 'post' || $is_edit_first_post)
 		{
+			$pending_tags = [];
+			if ($topic_id && !$this->request->is_set_post('bbtags'))
+			{
+				$assigned_tags = array_filter(array_map('trim', explode(',', $this->manager->get_tags($topic_id))));
+				$pending_tags = $this->moderation->get_item_pending_tags(manager::FORUM_PROVIDER, (int) $topic_id);
+				$tag_value = implode(', ', array_values(array_unique(array_merge($assigned_tags, $pending_tags))));
+			}
+			else
+			{
+				$tag_value = utf8_normalize_nfc($this->request->variable('bbtags', '', true));
+			}
 			$data['page_data']['BBTAGS_SHOW_FIELD'] = $this->auth->acl_get('u_bbtags');
-			$data['page_data']['BBTAGS_TAGS'] = ($this->request->is_set_post('bbtags') || !$topic_id) ?
-					utf8_normalize_nfc($this->request->variable('bbtags', '', true)) : $this->manager->get_tags($topic_id);
+			$data['page_data']['BBTAGS_TAGS'] = $tag_value;
+			$data['page_data']['BBTAGS_HAS_PENDING'] = !empty($pending_tags);
 			$data['page_data']['BBTAGS_MAXTAGS'] = $this->config['bbtags_max_tags'];
 			$data['page_data']['BBTAGS_MAXLENGTH'] = isset($this->config['bbtags_max_length']) ? (int) $this->config['bbtags_max_length'] : manager::MAX_TAG_LENGTH;
 			$data['page_data']['BBTAGS_FORUM_ID'] = (int) $forum_id;
@@ -183,14 +199,82 @@ class listener implements EventSubscriberInterface
 					$tags[] = $tag;
 				}
 			}
-			$this->manager->assign_tags_to_topic($data['topic_id'], $tags, (int) $data['forum_id']);
+			$tags = array_slice(array_values(array_unique($tags)), 0, (int) $this->config['bbtags_max_tags']);
+			$topic_id = (int) $data['topic_id'];
+			$forum_id = (int) $data['forum_id'];
+			if ($this->auth->acl_get('m_bbtags_moderate'))
+			{
+				if ($this->manager->assign_tags_to_topic($topic_id, $tags, $forum_id))
+				{
+					$this->moderation->sync_item_suggestions([], manager::FORUM_PROVIDER, $forum_id, $topic_id, (int) $this->user->data['user_id']);
+				}
+				return;
+			}
+
+			$scope_path = $this->manager->get_forum_scope_path($forum_id);
+			$available_tags = $this->manager->get_available_tags($tags, manager::FORUM_PROVIDER, $scope_path);
+			if (!$this->manager->assign_tags_to_topic($topic_id, $available_tags, $forum_id, false))
+			{
+				return;
+			}
+			$available_clean = [];
+			foreach ($available_tags as $available_tag)
+			{
+				$available_clean[$this->manager->canonical_tag($available_tag)] = true;
+			}
+			$pending_tags = [];
+			foreach ($tags as $tag)
+			{
+				if (!isset($available_clean[$this->manager->canonical_tag($tag)]))
+				{
+					$pending_tags[] = $tag;
+				}
+			}
+			$this->moderation->sync_item_suggestions(
+				$pending_tags,
+				manager::FORUM_PROVIDER,
+				$forum_id,
+				$topic_id,
+				(int) $this->user->data['user_id']
+			);
 		}
 	}
 
 	public function delete_tags($event)
 	{
 		$topic_ids = $event['topic_ids'];
+		$this->moderation->cancel_items(manager::FORUM_PROVIDER, $topic_ids);
 		$this->manager->remove_tags_from_topics($topic_ids);
+	}
+
+	/**
+	 * Validate the built-in forum topic provider without coupling moderation to topics.
+	 */
+	public function validate_moderation_subject($event)
+	{
+		if ($event['provider'] !== manager::FORUM_PROVIDER)
+		{
+			return;
+		}
+		$event['handled'] = true;
+		$event['valid'] = $this->manager->topic_matches_scope((int) $event['item_id'], (int) $event['scope_id']);
+	}
+
+	/**
+	 * Attach an approved suggestion to its originating topic.
+	 */
+	public function apply_moderation_approval($event)
+	{
+		if ($event['provider'] !== manager::FORUM_PROVIDER)
+		{
+			return;
+		}
+		$event['handled'] = true;
+		$event['success'] = $this->manager->attach_tag_to_topic(
+			(int) $event['tag_id'],
+			(int) $event['item_id'],
+			(int) $event['scope_id']
+		);
 	}
 
 	/**
@@ -202,6 +286,7 @@ class listener implements EventSubscriberInterface
 		$permissions = $event['permissions'];
 		$permissions['u_bbtags'] = array('lang' => 'ACL_U_BBTAGS', 'cat' => 'misc');
 		$permissions['u_bbtags_read'] = array('lang' => 'ACL_U_BBTAGS_READ', 'cat' => 'misc');
+		$permissions['m_bbtags_moderate'] = array('lang' => 'ACL_M_BBTAGS_MODERATE', 'cat' => 'post_actions');
 		$event['permissions'] = $permissions;
 	}
 }

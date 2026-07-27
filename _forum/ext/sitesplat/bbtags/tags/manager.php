@@ -267,7 +267,7 @@ class manager
 		return $this->db->sql_query($sql) !== false;
 	}
 
-	public function assign_tags_to_topic($topic_id, $valid_tags, $forum_id = 0)
+	public function assign_tags_to_topic(int $topic_id, array $valid_tags, int $forum_id = 0, bool $create_missing = true): bool
 	{
 		$topic_id = (int) $topic_id;
 		if ($topic_id <= 0)
@@ -289,14 +289,14 @@ class manager
 		$this->db->sql_transaction('begin');
 		try
 		{
-			if (!$this->create_missing_tags($tags))
+			if ($create_missing && !$this->create_missing_tags($tags))
 			{
 				$this->db->sql_transaction('rollback');
 				return false;
 			}
 
 			$ids = $this->get_existing_tags($tags, true);
-			if (!$this->ensure_forum_contexts($ids))
+			if ($create_missing && !$this->ensure_forum_contexts($ids))
 			{
 				$this->db->sql_transaction('rollback');
 				return false;
@@ -401,6 +401,114 @@ class manager
 		}
 		$this->db->sql_freeresult($result);
 		return $ids;
+	}
+
+	/**
+	 * Return submitted tags that are already enabled in the effective provider scope.
+	 */
+	public function get_available_tags(array $tags, string $provider, array $scope_path): array
+	{
+		$normalized = [];
+		foreach ($tags as $tag)
+		{
+			$tag = $this->clean_tag($tag);
+			$tag_clean = $this->canonical_tag($tag);
+			if ($tag !== '' && $tag_clean !== '')
+			{
+				$normalized[$tag_clean] = $tag;
+			}
+		}
+		if (empty($normalized))
+		{
+			return [];
+		}
+
+		$existing = $this->get_existing_tags(array_values($normalized));
+		$rows_by_id = [];
+		foreach ($existing as $row)
+		{
+			$rows_by_id[(int) $row['id']] = $row;
+		}
+		$available_ids = $this->filter_available_tag_ids(array_keys($rows_by_id), $provider, $scope_path);
+		$available = [];
+		foreach ($available_ids as $tag_id)
+		{
+			if (isset($rows_by_id[$tag_id]))
+			{
+				$available[] = (string) $rows_by_id[$tag_id]['tag'];
+			}
+		}
+
+		return $available;
+	}
+
+	/**
+	 * Create or resolve one canonical catalogue row.
+	 *
+	 * @return int|false Tag identifier
+	 */
+	public function ensure_catalog_tag(string $tag, int $created_by = 0): int|false
+	{
+		$tag = $this->clean_tag($tag);
+		if ($tag === '' || !$this->create_missing_tags([$tag], $created_by))
+		{
+			return false;
+		}
+		$ids = $this->get_existing_tags([$tag], true);
+
+		return empty($ids) ? false : (int) $ids[0];
+	}
+
+	/**
+	 * Ensure that a catalogue tag is known and enabled by a provider.
+	 */
+	public function ensure_provider_context(int $tag_id, string $provider, string $scope_mode = 'global'): bool
+	{
+		$provider = $this->validate_provider($provider);
+		if ($tag_id <= 0 || $provider === '' || !in_array($scope_mode, ['global', 'restricted'], true))
+		{
+			return false;
+		}
+
+		$sql = 'SELECT tag_id, is_enabled
+			FROM ' . $this->table_bbtags_context . '
+			WHERE tag_id = ' . $tag_id . '
+				AND provider = \'' . $this->db->sql_escape($provider) . '\'';
+		$result = $this->db->sql_query_limit($sql, 1);
+		$row = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+		if ($row)
+		{
+			if (!empty($row['is_enabled']))
+			{
+				return true;
+			}
+			$sql_ary = [
+				'is_enabled' => 1,
+				'scope_mode' => $scope_mode,
+			];
+			$sql = 'UPDATE ' . $this->table_bbtags_context . '
+				SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
+				WHERE tag_id = ' . $tag_id . '
+					AND provider = \'' . $this->db->sql_escape($provider) . '\'';
+			return $this->db->sql_query($sql) !== false;
+		}
+
+		return $this->insert_provider_context($tag_id, $provider, $scope_mode);
+	}
+
+	private function insert_provider_context(int $tag_id, string $provider, string $scope_mode): bool
+	{
+		$sql_ary = [
+			'tag_id'      => $tag_id,
+			'provider'    => $provider,
+			'usage_count' => 0,
+			'is_enabled'  => 1,
+			'scope_mode'  => $scope_mode,
+		];
+		$sql = 'INSERT INTO ' . $this->table_bbtags_context . ' ' . $this->db->sql_build_array('INSERT', $sql_ary);
+
+		return $this->db->sql_query($sql) !== false;
 	}
 
 	public function clean_tag($tag)
@@ -646,6 +754,54 @@ class manager
 		}
 
 		return empty($new_contexts) || $this->db->sql_multi_insert($this->table_bbtags_context, $new_contexts) !== false;
+	}
+
+	/**
+	 * Confirm that a moderation subject is the requested forum topic.
+	 */
+	public function topic_matches_scope(int $topic_id, int $forum_id): bool
+	{
+		if ($topic_id <= 0 || $forum_id <= 0)
+		{
+			return false;
+		}
+		$sql = 'SELECT forum_id
+			FROM ' . TOPICS_TABLE . '
+			WHERE topic_id = ' . $topic_id;
+		$result = $this->db->sql_query_limit($sql, 1);
+		$row = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+
+		return $row && (int) $row['forum_id'] === $forum_id;
+	}
+
+	/**
+	 * Attach an approved catalogue tag to its originating forum topic.
+	 */
+	public function attach_tag_to_topic(int $tag_id, int $topic_id, int $forum_id): bool
+	{
+		if ($tag_id <= 0 || !$this->topic_matches_scope($topic_id, $forum_id))
+		{
+			return false;
+		}
+		$sql = 'SELECT id
+			FROM ' . $this->table_bbtags_topic . '
+			WHERE topic_id = ' . $topic_id . '
+				AND tag_id = ' . $tag_id;
+		$result = $this->db->sql_query_limit($sql, 1);
+		$row = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+		if (!$row)
+		{
+			$sql_ary = ['topic_id' => $topic_id, 'tag_id' => $tag_id];
+			$sql = 'INSERT INTO ' . $this->table_bbtags_topic . ' ' . $this->db->sql_build_array('INSERT', $sql_ary);
+			if ($this->db->sql_query($sql) === false)
+			{
+				return false;
+			}
+		}
+
+		return $this->calc_count_tags();
 	}
 
 	/**

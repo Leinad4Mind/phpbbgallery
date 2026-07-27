@@ -17,6 +17,7 @@ use sitesplat\bbtags\migrations\v33x\m7_global_catalog_schema;
 use sitesplat\bbtags\migrations\v33x\m8_global_catalog_data;
 use sitesplat\bbtags\migrations\v33x\m9_global_catalog_constraints;
 use sitesplat\bbtags\migrations\v33x\m10_hierarchical_scopes;
+use sitesplat\bbtags\migrations\v33x\m11_tag_moderation;
 
 class global_catalog_migration_test extends TestCase
 {
@@ -89,6 +90,24 @@ class global_catalog_migration_test extends TestCase
 			array('\sitesplat\bbtags\migrations\v33x\m9_global_catalog_constraints'),
 			m10_hierarchical_scopes::depends_on()
 		);
+	}
+
+	public function test_moderation_schema_installs_an_mcp_queue(): void
+	{
+		$migration = $this->create_migration(m11_tag_moderation::class);
+		$table = $migration->update_schema()['add_tables']['phpbb_bbtags_suggestions'];
+
+		$this->assertArrayHasKey('provider', $table['COLUMNS']);
+		$this->assertArrayHasKey('scope_id', $table['COLUMNS']);
+		$this->assertArrayHasKey('item_id', $table['COLUMNS']);
+		$this->assertArrayHasKey('reviewed_by', $table['COLUMNS']);
+		$this->assertSame(['UNIQUE', ['dedupe_key']], $table['KEYS']['dedupe_key']);
+		$this->assertSame(['\sitesplat\bbtags\migrations\v33x\m10_hierarchical_scopes'], m11_tag_moderation::depends_on());
+
+		$data = $migration->update_data();
+		$this->assertSame(['permission.add', ['m_bbtags_moderate', true]], $data[0]);
+		$this->assertSame('mcp', $data[3][1][0]);
+		$this->assertSame('MCP_QUEUE', $data[3][1][1]);
 	}
 
 	public function test_catalog_conversion_is_atomic_and_seeds_forum_provider()

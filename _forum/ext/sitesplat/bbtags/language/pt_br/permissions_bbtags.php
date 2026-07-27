@@ -39,4 +39,5 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, [
 	'ACL_U_BBTAGS'      => 'Pode gerenciar BBtags',
 	'ACL_U_BBTAGS_READ' => 'Pode ver as BBtags e usar a lista de pesquisa de BBtags',
+	'ACL_M_BBTAGS_MODERATE' => 'Pode aprovar ou rejeitar sugestões de BBTags',
 ]);
