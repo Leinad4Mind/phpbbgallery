@@ -88,7 +88,7 @@ function gallery_init_colours(block_id, quick)
 		<fieldset>
 			<legend>{{ lang('SELECT_PERM_SYS') }}</legend>
 				<dl><dt><input id="p_system_0" name="p_system" class="radio" type="radio" checked="checked" value="0" /><label for="p_system_0">&nbsp;{{ lang('SELECTED_ALBUMS') }}</label></dt>
-					<dd><select id="target" name="album_id[]" multiple="multiple">{{ ALBUM_LIST }}</select></dd>
+					<dd><select id="target" name="album_id[]" multiple="multiple" size="12">{{ ALBUM_LIST }}</select></dd>
 				</dl>
 				<dl><dt><input id="p_system_2" name="p_system" class="radio" type="radio" value="{{ C_OWN_PERSONAL_ALBUMS }}" /><label for="p_system_2">&nbsp;{{ lang('OWN_PERSONAL_ALBUMS') }}</label><br /><span>{{ lang('OWN_PERSONAL_ALBUMS_EXPLAIN') }}</span></dt></dl>
 				<dl><dt><input id="p_system_3" name="p_system" class="radio" type="radio" value="{{ C_PERSONAL_ALBUMS }}" /><label for="p_system_3">&nbsp;{{ lang('PERSONAL_ALBUMS') }}</label><br /><span>{{ lang('PERSONAL_ALBUMS_EXPLAIN') }}</span></dt></dl>
