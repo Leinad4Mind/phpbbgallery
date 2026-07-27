@@ -14,6 +14,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Allowed bounded larger source images when resizing is enabled, enforcing the configured file-size limit on the actual stored result.
 - Added moderator-only manual uploads on behalf of another registered user, with resumable drafts, target-author quotas, counters and notification attribution kept consistent.
 - Added permission-checked batch moderation for changing the author or individual names of multiple images, including balanced user counters, transaction-safe updates and album metadata resynchronization.
+- Added the optional Image Revisions add-on, disabled by default, for replacing an image file without changing its ID, metadata, comments, ratings or view count and for previewing or restoring a bounded history of earlier files.
 
 ### Security
 
@@ -39,6 +40,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Removed production PHP deserialization from album-parent and EXIF caches, storing derived data as JSON and rebuilding legacy or malformed values safely.
 - Routed untrusted Gallery output through phpBB's UTF-8-aware escaping helper in Core, ACP Import, and EXIF.
 - Hid EXIF metadata for active contest entries from non-moderators while preserving access for users with album status-moderation permission.
+- Secured image replacement and rollback with the Core upload allowlist, explicit ZIP rejection, ownership checks for intermediate uploads, editor reauthorization, POST-only restoration, phpBB CSRF validation, storage-root path validation and optimistic concurrency protection.
 
 ### Changed
 
@@ -99,6 +101,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Redesigned the Bootstrap UCP subscription manager with media previews, responsive two-column metadata, inline last-comment content, and a single bulk action control.
 - Modernized Bootstrap personal-subalbum management with full-width controls, responsive parsing options, and a dedicated empty state instead of an empty table header.
 - Removed the obsolete EXIF configuration-set event listener whose event and target configuration class no longer exist.
+- Added generic Core image-file edit extension points, per-operation ZIP exclusion and exact cleanup of files created by an add-on operation, keeping revision storage and policy outside the Core extension.
 
 ### Fixed
 

@@ -17,6 +17,7 @@ final class addon_dependency_test extends TestCase
 		\phpbbgallery\acpcleanup\ext::class => ['phpbbgallery/acpcleanup', 'info_acp_gallery_cleanup'],
 		\phpbbgallery\acpimport\ext::class => ['phpbbgallery/acpimport', 'info_acp_gallery_import'],
 		\phpbbgallery\exif\ext::class => ['phpbbgallery/exif', 'info_exif'],
+		\phpbbgallery\imagerevisions\ext::class => ['phpbbgallery/imagerevisions', 'info_imagerevisions'],
 	];
 
 	public function test_addons_allow_enable_when_core_is_active(): void

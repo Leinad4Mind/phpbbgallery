@@ -234,7 +234,7 @@ class language_catalog_test extends TestCase
 
 	private function components(): array
 	{
-		return ['core', 'acpcleanup', 'acpimport', 'exif'];
+		return ['core', 'acpcleanup', 'acpimport', 'exif', 'imagerevisions'];
 	}
 
 	private function php_files(string $directory): array
