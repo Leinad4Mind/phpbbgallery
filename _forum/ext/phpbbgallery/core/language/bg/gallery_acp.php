@@ -24,6 +24,10 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
+	'PERMISSION_I_MOVE' => 'Може да премества собствените си изображения',
+]);
+
+$lang = array_merge($lang, [
 	'GALLERY_SYSTEM_STATUS'                  => 'Състояние на системата и хранилището',
 	'GALLERY_STORAGE'                        => 'Директории за съхранение',
 	'GALLERY_RUNTIME'                        => 'PHP среда и разширения',
@@ -274,7 +278,7 @@ $lang = array_merge($lang, [
 	'PERMISSION_I_REPORT'         => 'Може да докладва изобраения',
 	'PERMISSION_I_UNLIMITED'      => 'Може да качва не ограничен брой изобраения',
 	'PERMISSION_I_UPLOAD'         => 'Може да качва изобраения',
-	'PERMISSION_I_UPLOAD_EXPLAIN' => 'Това право също се използва и за определяне дали потребителя може да мести изборажения в този албум, когато има модераторски права в други албуми.',
+	'PERMISSION_I_UPLOAD_EXPLAIN' => 'Това право също определя дали потребителят може да премества собствените си изображения в този албум.',
 	'PERMISSION_I_VIEW'           => 'Може да вижда изобраения',
 	'PERMISSION_I_WATERMARK'      => 'Може да вижда изобраения без воден знак',
 	'PERMISSION_M'                => 'Модерация',

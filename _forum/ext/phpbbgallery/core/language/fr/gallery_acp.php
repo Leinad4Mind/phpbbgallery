@@ -23,6 +23,10 @@ if (empty($lang) || !is_array($lang))
 	$lang = [];
 }
 
+$lang = array_merge($lang, [
+	'PERMISSION_I_MOVE' => 'Peut déplacer ses propres images',
+]);
+
 // DEVELOPERS PLEASE NOTE
 //
 // All language files should use UTF-8 as their encoding and the files must not contain a BOM.
@@ -289,7 +293,7 @@ $lang = array_merge($lang, [
 	'PERMISSION_I_REPORT'         => 'Peut rapporter des images',
 	'PERMISSION_I_UNLIMITED'      => 'Peut envoyer sans limite des images',
 	'PERMISSION_I_UPLOAD'         => 'Peut envoyer des images',
-	'PERMISSION_I_UPLOAD_EXPLAIN' => 'Cette permission est également utilisée, pour déterminer si l’utilisateur peut déplacer les images d’un album, lorsqu’il a des permissions de modérateur dans d’autres forums.',
+	'PERMISSION_I_UPLOAD_EXPLAIN' => 'Cette permission détermine également si l’utilisateur peut déplacer ses propres images dans cet album.',
 	'PERMISSION_I_VIEW'           => 'Peut voir les images',
 	'PERMISSION_I_WATERMARK'      => 'Peut voir les images sans filigrane',
 	'PERMISSION_M'                => 'Modération',

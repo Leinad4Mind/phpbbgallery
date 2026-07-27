@@ -47,8 +47,35 @@ class individual_move_security_test extends TestCase
 		$this->assertNotFalse($target_check);
 		$this->assertNotFalse($mutation);
 		$this->assertSame(2, substr_count($method, "gallery_auth->acl_check('m_move'"));
+		$this->assertSame(1, substr_count($method, "gallery_auth->acl_check('i_move'"));
+		$this->assertSame(1, substr_count($method, "gallery_auth->acl_check('i_upload'"));
+		$this->assertStringContainsString('image_authorization->can_manage_image(', $method);
+		$this->assertStringContainsString('ALBUM_LOCKED', $method);
+		$this->assertStringContainsString('TYPE_CAT', $method);
+		$this->assertStringContainsString('STATUS_ORPHAN', $method);
 		$this->assertLessThan($mutation, $source_check);
 		$this->assertLessThan($mutation, $target_check);
+	}
+
+	public function test_owner_and_moderator_destination_selectors_have_distinct_permissions(): void
+	{
+		$method = $this->move_method();
+		$album = (string) file_get_contents(dirname(__DIR__) . '/album/album.php');
+
+		$this->assertStringContainsString("\$has_owner_source_permission ? 'i_move' : 'm_move'", $method);
+		$this->assertStringContainsString("\$requested_permission == 'i_move'", $album);
+		$this->assertStringContainsString("\$requested_permission == 'm_move'", $album);
+		$this->assertStringContainsString("acl_check('i_upload'", $album);
+		$this->assertStringContainsString("acl_check('m_move'", $album);
+	}
+
+	public function test_image_page_exposes_move_only_after_owner_or_moderator_authorization(): void
+	{
+		$controller = (string) file_get_contents(dirname(__DIR__) . '/controller/image.php');
+
+		$this->assertStringContainsString("acl_check('i_move'", $controller);
+		$this->assertStringContainsString("acl_check('m_move'", $controller);
+		$this->assertStringContainsString("'S_QM_MOVE'    => \$s_allowed_move", $controller);
 	}
 
 	public function test_every_move_form_submits_a_phpbb_form_token(): void

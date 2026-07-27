@@ -53,7 +53,9 @@ final class domain_auth_types_test extends TestCase
 
 	public function test_favorite_permission_only_exists_while_its_addon_is_enabled(): void
 	{
-		$this->assertFalse($this->constructed_auth(false)->has_permission('i_favorite'));
+		$core_auth = $this->constructed_auth(false);
+		$this->assertTrue($core_auth->has_permission('i_move'));
+		$this->assertFalse($core_auth->has_permission('i_favorite'));
 		$this->assertTrue($this->constructed_auth(true)->has_permission('i_favorite'));
 	}
 

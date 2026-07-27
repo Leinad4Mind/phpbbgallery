@@ -24,6 +24,7 @@ use phpbbgallery\core\migrations\protect_personal_album_profile_field;
 use phpbbgallery\core\migrations\split_ucp_module_settings;
 use phpbbgallery\core\migrations\total_views;
 use phpbbgallery\core\migrations\gallery_title;
+use phpbbgallery\core\migrations\own_image_move;
 
 class migration_integrity_test extends TestCase
 {
@@ -42,6 +43,7 @@ class migration_integrity_test extends TestCase
 		protect_personal_album_profile_field::class,
 		total_views::class,
 		gallery_title::class,
+		own_image_move::class,
 	];
 
 	private array $temp_directories = [];
@@ -99,6 +101,41 @@ class migration_integrity_test extends TestCase
 			['\phpbbgallery\core\migrations\total_views'],
 			gallery_title::depends_on()
 		);
+		$this->assertSame(
+			['\phpbbgallery\core\migrations\gallery_title'],
+			own_image_move::depends_on()
+		);
+	}
+
+	public function test_own_image_move_migration_adds_permission_and_invalidates_cached_bits(): void
+	{
+		$migration = (new \ReflectionClass(own_image_move::class))->newInstanceWithoutConstructor();
+		(new \ReflectionProperty(\phpbb\db\migration\migration::class, 'table_prefix'))->setValue($migration, 'phpbb_');
+
+		$this->assertSame([
+			'add_columns' => [
+				'phpbb_gallery_roles' => [
+					'i_move' => ['UINT:3', 0],
+				],
+			],
+		], $migration->update_schema());
+		$this->assertSame([
+			'drop_columns' => [
+				'phpbb_gallery_roles' => ['i_move'],
+			],
+		], $migration->revert_schema());
+
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->once())
+			->method('sql_query')
+			->with("UPDATE phpbb_gallery_users\n\t\t\tSET user_permissions = ''");
+		(new \ReflectionProperty(\phpbb\db\migration\migration::class, 'db'))->setValue($migration, $db);
+
+		$this->assertTrue($migration->clear_gallery_permission_cache());
+		$this->assertSame([
+			['custom', [[$migration, 'clear_gallery_permission_cache']]],
+		], $migration->update_data());
+		$this->assertSame($migration->update_data(), $migration->revert_data());
 	}
 
 	public function test_gallery_title_migration_adds_an_optional_configuration_value(): void
@@ -453,6 +490,7 @@ class migration_integrity_test extends TestCase
 			'protect_personal_album_profile_field.php',
 			'total_views.php',
 			'gallery_title.php',
+			'own_image_move.php',
 		] as $migration)
 		{
 			require_once dirname(__DIR__) . '/migrations/' . $migration;

@@ -36,6 +36,12 @@ class auth
 	protected static array $_permission_misc = ['a_list', 'i_count', 'i_unlimited', 'a_count', 'a_unlimited', 'a_restrict'];
 
 	/**
+	 * Core permissions introduced after the original serialized bit layout.
+	 * Keep these appended after every legacy permission.
+	 */
+	protected static array $_permission_core_additions = ['i_move'];
+
+	/**
 	 * Permissions contributed by add-ons, always merged last when their owner
 	 * is enabled.
 	 *
@@ -136,7 +142,7 @@ class auth
 		$this->table_albums = $albums_table;
 
 		$addon_permissions = $extension_manager->is_enabled('phpbbgallery/favorite') ? self::$_permission_addon : [];
-		self::$_permissions = array_merge(self::$_permission_i, self::$_permission_c, self::$_permission_m, self::$_permission_misc, $addon_permissions);
+		self::$_permissions = array_merge(self::$_permission_i, self::$_permission_c, self::$_permission_m, self::$_permission_misc, self::$_permission_core_additions, $addon_permissions);
 		self::$_permissions_flipped = array_flip(array_merge(self::$_permissions, ['m_']));
 		self::$_permissions_flipped['i_count'] = 'i_count';
 		self::$_permissions_flipped['a_count'] = 'a_count';

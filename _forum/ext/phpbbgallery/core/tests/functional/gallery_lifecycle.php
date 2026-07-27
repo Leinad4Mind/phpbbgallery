@@ -152,7 +152,7 @@ class gallery_lifecycle extends \phpbb_functional_test_case
 			'a_list', 'i_view', 'i_watermark', 'i_upload', 'i_edit', 'i_delete',
 			'i_rate', 'i_approve', 'i_lock', 'i_report', 'i_unlimited', 'c_read',
 			'c_post', 'c_edit', 'c_delete', 'm_comments', 'm_delete', 'm_edit',
-			'm_move', 'm_report', 'm_status', 'a_unlimited',
+			'm_move', 'm_report', 'm_status', 'i_move', 'a_unlimited',
 		], 1);
 		$role['i_count'] = 100;
 		$role['a_count'] = 100;

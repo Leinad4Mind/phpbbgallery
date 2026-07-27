@@ -1034,7 +1034,18 @@ class moderate
 		$album_id = (int) $image_data['image_album_id'];
 		$album_data = $this->album->get_info($album_id);
 		$album_backlink = $this->helper->route('phpbbgallery_core_album', ['album_id' => $album_id]);
-		$has_source_permission = is_array($album_data) && isset($album_data['album_user_id']) && $this->gallery_auth->acl_check('m_move', $album_id, $album_data['album_user_id']);
+		$has_moderator_source_permission = is_array($album_data) && isset($album_data['album_user_id']) && $this->gallery_auth->acl_check('m_move', $album_id, $album_data['album_user_id']);
+		$has_owner_source_permission = is_array($album_data) && isset($album_data['album_user_id'], $album_data['album_status'])
+			&& (int) $this->user->data['user_id'] !== ANONYMOUS
+			&& (int) $album_data['album_status'] !== (int) \phpbbgallery\core\block::ALBUM_LOCKED
+			&& $this->image_authorization->can_manage_image(
+				(int) $this->user->data['user_id'],
+				$image_data,
+				$this->gallery_auth->acl_check('i_move', $album_id, $album_data['album_user_id']),
+				false,
+				(int) ($image_data['image_status'] ?? \phpbbgallery\core\block::STATUS_ORPHAN) === (int) \phpbbgallery\core\block::STATUS_ORPHAN
+			);
+		$has_source_permission = $has_moderator_source_permission || $has_owner_source_permission;
 		if (!is_array($album_data) || !$this->image_authorization->can_moderate_image($image_data, $album_data, 0, $has_source_permission))
 		{
 			$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
@@ -1053,7 +1064,14 @@ class moderate
 			}
 
 			$target_album = $moving_target > 0 ? $this->album->get_info($moving_target) : [];
-			$has_target_permission = is_array($target_album) && isset($target_album['album_user_id']) && $this->gallery_auth->acl_check('m_move', $moving_target, $target_album['album_user_id']);
+			$is_movable_target = is_array($target_album) && isset($target_album['album_user_id'], $target_album['album_type'])
+				&& (int) $target_album['album_type'] !== (int) \phpbbgallery\core\block::TYPE_CAT;
+			$has_target_permission = $is_movable_target
+				&& ($this->gallery_auth->acl_check('m_move', $moving_target, $target_album['album_user_id'])
+					|| ($has_owner_source_permission
+						&& isset($target_album['album_status'])
+						&& (int) $target_album['album_status'] !== (int) \phpbbgallery\core\block::ALBUM_LOCKED
+						&& $this->gallery_auth->acl_check('i_upload', $moving_target, $target_album['album_user_id'])));
 			if (!$this->image_authorization->can_moderate_album($target_album, $moving_target, $has_target_permission))
 			{
 				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
@@ -1070,7 +1088,7 @@ class moderate
 		}
 		else
 		{
-			$category_select = $this->album->get_albumbox(false, 'moving_target', $album_id, 'm_move', $album_id);
+			$category_select = $this->album->get_albumbox(false, 'moving_target', $album_id, $has_owner_source_permission ? 'i_move' : 'm_move', $album_id);
 			$this->template->assign_vars([
 				'S_MOVING_IMAGES'	=> true,
 				'S_ALBUM_SELECT'	=> $category_select,

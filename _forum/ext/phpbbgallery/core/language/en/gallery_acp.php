@@ -23,6 +23,10 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
+	'PERMISSION_I_MOVE' => 'Can move own images',
+]);
+
+$lang = array_merge($lang, [
 	'ACP_GALLERY_OVERVIEW'         => 'phpBB Gallery',
 	'ACP_GALLERY_OVERVIEW_EXPLAIN' => 'Here are some statistics about your gallery.',
 
@@ -252,7 +256,7 @@ $lang = array_merge($lang, [
 	'PERMISSION_I_REPORT'         => 'Can report images',
 	'PERMISSION_I_UNLIMITED'      => 'Can upload unlimited images',
 	'PERMISSION_I_UPLOAD'         => 'Can upload images',
-	'PERMISSION_I_UPLOAD_EXPLAIN' => 'This permission is also used, to determinate whether the user can move images to the album, when having moderator permissions in other forums.',
+	'PERMISSION_I_UPLOAD_EXPLAIN' => 'This permission also determines whether the user can move their own images into this album.',
 	'PERMISSION_I_VIEW'           => 'Can view images',
 	'PERMISSION_I_WATERMARK'      => 'Can view images without watermark',
 	'PERMISSION_M'                => 'Moderation',
