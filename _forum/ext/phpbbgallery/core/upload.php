@@ -150,6 +150,9 @@ class upload
 	private bool $allow_comments = false;
 	private bool $sent_quota_error = false;
 	private string $username = '';
+	private int $author_user_id = 0;
+	private string $author_username = '';
+	private string $author_user_colour = '';
 	private array $file_descriptions = [];
 	private array $file_names = [];
 	private array $file_rotating = [];
@@ -213,6 +216,9 @@ class upload
 		$this->album_id = (int) $album_id;
 		$this->file_limit = (int) $num_files;
 		$this->username = $this->user->data['username'];
+		$this->author_user_id = 0;
+		$this->author_username = '';
+		$this->author_user_colour = '';
 
 		$this->max_filesize = max(1, (int) $this->gallery_config->get('max_filesize'));
 		$this->source_max_filesize = $this->calculate_source_filesize_limit(
@@ -893,6 +899,15 @@ class upload
 				'image_name_clean'	=> utf8_clean_string($new_image_name),
 			]);
 		}
+		if ($this->author_user_id > 0)
+		{
+			$sql_ary = array_merge($sql_ary, [
+				'image_user_id'        => $this->author_user_id,
+				'image_username'       => $this->author_username,
+				'image_username_clean' => utf8_clean_string($this->author_username),
+				'image_user_colour'    => $this->author_user_colour,
+			]);
+		}
 
 		$additional_sql_data = [];
 		$image_data = $this->image_data[$image_id];
@@ -930,6 +945,7 @@ class upload
 			SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
 			WHERE image_id = ' . (int) $image_id;
 		$this->db->sql_query($sql);
+		$this->image_data[$image_id] = array_merge($this->image_data[$image_id], $sql_ary);
 
 		return true;
 	}
@@ -1202,6 +1218,24 @@ class upload
 	public function set_username(string $username): void
 	{
 		$this->username = $username;
+	}
+
+	/**
+	 * Apply a trusted registered-user identity when pending images are finalized.
+	 */
+	public function set_author(int $user_id, string $username, string $user_colour): void
+	{
+		if ($user_id <= 0 || $username === '')
+		{
+			$this->author_user_id = 0;
+			$this->author_username = '';
+			$this->author_user_colour = '';
+			return;
+		}
+
+		$this->author_user_id = $user_id;
+		$this->author_username = $username;
+		$this->author_user_colour = $user_colour;
 	}
 
 	public function set_rotating(array $data): void

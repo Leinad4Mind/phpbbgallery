@@ -83,6 +83,15 @@ head.ready(function () {
 					<label class="control-label" for="allow_comments">{{ lang('COMMENTS') }}</label>
 					<input type="checkbox" class="checkbox" name="allow_comments" id="allow_comments"{% if S_ALLOW_COMMENTS %} checked="checked"{% endif %} value="1" /> <label for="allow_comments">{{ lang('ALLOW_COMMENTS') }}</label>
 				{% endif %}
+				{% if S_CHANGE_AUTHOR and U_FIND_USERNAME %}
+				<div class="form-group">
+					<label class="control-label" for="change_author">{{ lang('CHANGE_AUTHOR') }}{{ lang('COLON') }}</label>
+					<div class="input-group">
+						<input type="text" class="form-control" name="change_author" id="change_author" value="{{ CHANGE_AUTHOR }}" size="32">
+						<span class="input-group-btn"><a class="btn btn-default" href="{{ U_FIND_USERNAME }}" onclick="find_username(this.href); return false;" title="{{ lang('FIND_USERNAME') }}"><i class="fa fa-user"></i></a></span>
+					</div>
+				</div>
+				{% endif %}
 				<div>
 					<label class="label label-warning" for="files">{{ lang('IMAGES') }}</label>
 					<input class="btn btn-sm btn-default inputbox autowidth dz-hidden-input" type="file" name="files[]" id="files" size="52" multiple accept="{{ S_ALLOWED_FILETYPES_ACCEPT }}"{% if not S_UPLOAD_FILETYPES_AVAILABLE %} disabled{% endif %} style="display: unset;"/>
@@ -276,7 +285,7 @@ head.ready(function () {
 				<label class="control-label" for="change_author">{{ lang('CHANGE_AUTHOR') }}{{ lang('COLON') }}</label>
 				<div class="controls controls-row">
 				 <div class="input-group">
-			       <input type="text" tabindex="1" class="form-control" name="change_author" id="change_author" value="" size="32" placeholder="">
+			       <input type="text" tabindex="1" class="form-control" name="change_author" id="change_author" value="{{ CHANGE_AUTHOR }}" size="32" placeholder="">
 			    <span class="input-group-btn">
 				   <a title="" data-placement="right" rel="tooltip" onclick="find_username(this.href); return false;" class="btn btn-default" href="{{ U_FIND_USERNAME }}" data-original-title="{{ lang('FIND_USERNAME') }}"><i class="fa fa-user"></i></a>
 			     </span>

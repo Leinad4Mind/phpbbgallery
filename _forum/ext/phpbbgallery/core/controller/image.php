@@ -1117,6 +1117,7 @@ class image
 			'IMAGE_NAME'   => $image_data['image_name'],
 
 			'S_CHANGE_AUTHOR'    => $this->gallery_auth->acl_check('m_edit', $album_id, $album_data['album_user_id']),
+			'CHANGE_AUTHOR'      => $this->request->variable('change_author', '', true),
 			'U_FIND_USERNAME'    => $this->url->append_sid('phpbb', 'memberlist', 'mode=searchuser&amp;form=postform&amp;field=change_author&amp;select_single=true'),
 			'S_COMMENTS_ENABLED' => $this->gallery_config->get('allow_comments') && $this->gallery_config->get('comment_user_control'),
 			'S_ALLOW_COMMENTS'   => $image_data['image_allow_comments'],
