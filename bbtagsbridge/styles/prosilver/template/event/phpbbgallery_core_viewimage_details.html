@@ -1,0 +1,6 @@
+{% if bbtagsbridge_tags|length %}
+<dl>
+	<dt><strong>{{ lang('BBTAGSBRIDGE_TAGS') }}{{ lang('COLON') }}</strong></dt>
+	<dd>{% for tag in bbtagsbridge_tags %}<span class="badge">#{{ tag.NAME }}</span>{% if not tag.S_LAST_ROW %} {% endif %}{% endfor %}</dd>
+</dl>
+{% endif %}

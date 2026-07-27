@@ -21,7 +21,8 @@ final class image_tag_manager_test extends TestCase
 	{
 		$db = new fake_db();
 		$db->images = [10 => 3, 11 => 3];
-		$manager = new image_tag_manager($db, 'image_tags', 'images', 'bbtags_context');
+		$db->catalogue = [7 => 'anime', 8 => 'manga'];
+		$manager = new image_tag_manager($db, 'image_tags', 'images', 'bbtags', 'bbtags_context');
 
 		$this->assertTrue($manager->image_matches_album(10, 3));
 		$this->assertFalse($manager->image_matches_album(10, 4));
@@ -33,22 +34,28 @@ final class image_tag_manager_test extends TestCase
 		$this->assertTrue($manager->attach_tag(11, 7));
 		$this->assertSame(2, $db->usage[7]);
 		$this->assertSame([7], $manager->get_tag_ids_for_image(10));
+		$this->assertSame('anime', $manager->get_tags_for_image(10)[0]['tag']);
+		$this->assertTrue($manager->replace_tags(10, [8, 8]));
+		$this->assertSame([8], $manager->get_tag_ids_for_image(10));
+		$this->assertSame(1, $db->usage[7]);
+		$this->assertSame(1, $db->usage[8]);
 
 		$this->assertTrue($manager->delete_for_images([10, 10, 0]));
-		$this->assertSame(1, $db->usage[7]);
+		$this->assertSame(0, $db->usage[8]);
 		$this->assertTrue($manager->delete_for_images([11]));
 		$this->assertSame(0, $db->usage[7]);
 		$this->assertSame([], $db->relations);
-		$this->assertSame(['begin', 'commit', 'begin', 'commit'], $db->transactions);
+		$this->assertSame(['begin', 'commit', 'begin', 'commit', 'begin', 'commit'], $db->transactions);
 	}
 
 	public function test_invalid_identifiers_fail_closed(): void
 	{
-		$manager = new image_tag_manager(new fake_db(), 'image_tags', 'images', 'bbtags_context');
+		$manager = new image_tag_manager(new fake_db(), 'image_tags', 'images', 'bbtags', 'bbtags_context');
 
 		$this->assertFalse($manager->image_matches_album(0, 1));
 		$this->assertFalse($manager->attach_tag(1, 0));
 		$this->assertSame([], $manager->get_tag_ids_for_image(0));
+		$this->assertFalse($manager->replace_tags(0, [1]));
 		$this->assertTrue($manager->delete_for_images([0, -1]));
 	}
 }

@@ -2,12 +2,25 @@ parameters:
     phpbbgallery.bbtagsbridge.tables.image_tags: '%core.table_prefix%gallery_image_tags'
 
 services:
+    phpbbgallery.bbtagsbridge.input_parser:
+        class: phpbbgallery\bbtagsbridge\input_parser
+        arguments:
+            - '@config'
+            - '@sitesplat.bbtags.manager'
+
+    phpbbgallery.bbtagsbridge.album_scope_resolver:
+        class: phpbbgallery\bbtagsbridge\album_scope_resolver
+        arguments:
+            - '@dbal.conn.driver'
+            - '%phpbbgallery.tables.gallery_albums%'
+
     phpbbgallery.bbtagsbridge.image_tag_manager:
         class: phpbbgallery\bbtagsbridge\image_tag_manager
         arguments:
             - '@dbal.conn.driver'
             - '%phpbbgallery.bbtagsbridge.tables.image_tags%'
             - '%phpbbgallery.tables.gallery_images%'
+            - '%sitesplat.bbtags.tables.bbtags%'
             - '%sitesplat.bbtags.tables.bbtags_context%'
 
     phpbbgallery.bbtagsbridge.provider.gallery_images:
@@ -21,6 +34,15 @@ services:
     phpbbgallery.bbtagsbridge.listener:
         class: phpbbgallery\bbtagsbridge\event\main_listener
         arguments:
+            - '@auth'
+            - '@request'
+            - '@template'
+            - '@language'
+            - '@user'
             - '@phpbbgallery.bbtagsbridge.image_tag_manager'
+            - '@phpbbgallery.bbtagsbridge.input_parser'
+            - '@phpbbgallery.bbtagsbridge.album_scope_resolver'
+            - '@sitesplat.bbtags.manager'
+            - '@sitesplat.bbtags.moderation'
         tags:
             - { name: event.listener }

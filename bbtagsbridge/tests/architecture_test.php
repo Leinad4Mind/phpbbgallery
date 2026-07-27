@@ -59,8 +59,38 @@ final class architecture_test extends TestCase
 		$listener = (string) file_get_contents($this->root . '/event/main_listener.php');
 
 		$this->assertStringContainsString("'core.user_setup'", $listener);
+		$this->assertStringContainsString("'phpbbgallery.core.viewimage'", $listener);
+		$this->assertStringContainsString("'phpbbgallery.core.image_edit_file'", $listener);
+		$this->assertStringContainsString("'phpbbgallery.core.image_edit_display'", $listener);
+		$this->assertStringContainsString("'phpbbgallery.core.image_edit_after'", $listener);
+		$this->assertStringContainsString("'phpbbgallery.core.upload.review_validate'", $listener);
+		$this->assertStringContainsString("'phpbbgallery.core.upload.review_display'", $listener);
+		$this->assertStringContainsString("'phpbbgallery.core.upload.update_image_after'", $listener);
 		$this->assertStringContainsString("'phpbbgallery.core.image.delete_images'", $listener);
 		$this->assertStringContainsString("'ext_name' => 'phpbbgallery/bbtagsbridge'", $listener);
+		$this->assertStringContainsString("acl_get('u_bbtags')", $listener);
+		$this->assertStringContainsString("acl_get('m_bbtags_moderate')", $listener);
+		$this->assertStringContainsString('classify_tags(', $listener);
+		$this->assertStringContainsString('sync_item_suggestions(', $listener);
+		$this->assertStringContainsString('cancel_items(', $listener);
+	}
+
+	public function test_all_supported_styles_integrate_editing_and_viewing_without_legacy_markup_in_modern_styles(): void
+	{
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$event_root = $this->root . '/styles/' . $style . '/template/event/';
+			$edit = (string) file_get_contents($event_root . 'phpbbgallery_core_edit_addfields.html');
+			$view = (string) file_get_contents($event_root . 'phpbbgallery_core_viewimage_details.html');
+
+			$this->assertStringContainsString('bbtagsbridge_tags[{{ image.S_ROW_COUNT }}]', $edit, $style);
+			$this->assertStringContainsString('BBTAGSBRIDGE_PENDING_NOTICE', $edit, $style);
+			$this->assertStringContainsString('bbtagsbridge_tags', $view, $style);
+			if ($style !== 'prosilver')
+			{
+				$this->assertDoesNotMatchRegularExpression('/<(?:dl|dt|dd)\b/i', $edit . $view, $style);
+			}
+		}
 	}
 
 	public function test_every_core_locale_has_complete_bridge_catalogues(): void

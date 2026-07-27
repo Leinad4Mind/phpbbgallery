@@ -64,6 +64,19 @@ final class addon_lifecycle_events_test extends TestCase
 		$this->assertStringContainsString("['image_id', 'image_data', 'updated_image_data', 'sql_ary']", $method);
 	}
 
+	public function test_prosilver_image_edit_form_exposes_the_shared_addon_field_hook(): void
+	{
+		$template = (string) file_get_contents(
+			dirname(__DIR__) . '/styles/prosilver/template/gallery/image_edit_body.html'
+		);
+
+		$this->assertStringContainsString('{% EVENT phpbbgallery_core_edit_addfields %}', $template);
+		$this->assertGreaterThan(
+			strpos($template, '{% endfor %}'),
+			strpos($template, '{% EVENT phpbbgallery_core_edit_addfields %}')
+		);
+	}
+
 	private function extract_method(string $path, string $start_marker, string $end_marker): string
 	{
 		$source = (string) file_get_contents($path);

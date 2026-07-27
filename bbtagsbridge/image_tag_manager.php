@@ -18,18 +18,21 @@ final class image_tag_manager
 	private driver_interface $db;
 	private string $image_tags_table;
 	private string $images_table;
+	private string $bbtags_table;
 	private string $bbtags_context_table;
 
 	public function __construct(
 		driver_interface $db,
 		string $image_tags_table,
 		string $images_table,
+		string $bbtags_table,
 		string $bbtags_context_table
 	)
 	{
 		$this->db = $db;
 		$this->image_tags_table = $image_tags_table;
 		$this->images_table = $images_table;
+		$this->bbtags_table = $bbtags_table;
 		$this->bbtags_context_table = $bbtags_context_table;
 	}
 
@@ -97,6 +100,79 @@ final class image_tag_manager
 		$this->db->sql_freeresult($result);
 
 		return $tag_ids;
+	}
+
+	/**
+	 * @return array<int, array{id: int, tag: string, tag_clean: string, usage_count: int}>
+	 */
+	public function get_tags_for_image(int $image_id): array
+	{
+		if ($image_id <= 0)
+		{
+			return [];
+		}
+		$sql = 'SELECT b.id, b.tag, b.tag_clean, c.usage_count
+			FROM ' . $this->image_tags_table . ' it
+			INNER JOIN ' . $this->bbtags_table . ' b
+				ON b.id = it.tag_id
+			LEFT JOIN ' . $this->bbtags_context_table . " c
+				ON c.tag_id = b.id AND c.provider = '" . self::PROVIDER . "'
+			WHERE it.image_id = " . $image_id . '
+			ORDER BY b.tag_clean ASC';
+		$result = $this->db->sql_query($sql);
+		$tags = [];
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$tags[] = [
+				'id' => (int) $row['id'],
+				'tag' => (string) $row['tag'],
+				'tag_clean' => (string) $row['tag_clean'],
+				'usage_count' => (int) ($row['usage_count'] ?? 0),
+			];
+		}
+		$this->db->sql_freeresult($result);
+
+		return $tags;
+	}
+
+	public function replace_tags(int $image_id, array $tag_ids): bool
+	{
+		if ($image_id <= 0)
+		{
+			return false;
+		}
+		$tag_ids = array_values(array_unique(array_filter(array_map('intval', $tag_ids))));
+		$old_tag_ids = $this->get_tag_ids_for_image($image_id);
+		$affected_tag_ids = array_values(array_unique(array_merge($old_tag_ids, $tag_ids)));
+
+		$this->db->sql_transaction('begin');
+		$sql = 'DELETE FROM ' . $this->image_tags_table . '
+			WHERE ' . $this->db->sql_in_set('image_id', [$image_id]);
+		if ($this->db->sql_query($sql) === false)
+		{
+			$this->db->sql_transaction('rollback');
+			return false;
+		}
+		if (!empty($tag_ids))
+		{
+			$rows = array_map(static function (int $tag_id) use ($image_id): array
+			{
+				return ['image_id' => $image_id, 'tag_id' => $tag_id];
+			}, $tag_ids);
+			if ($this->db->sql_multi_insert($this->image_tags_table, $rows) === false)
+			{
+				$this->db->sql_transaction('rollback');
+				return false;
+			}
+		}
+		if (!$this->sync_usage($affected_tag_ids))
+		{
+			$this->db->sql_transaction('rollback');
+			return false;
+		}
+		$this->db->sql_transaction('commit');
+
+		return true;
 	}
 
 	public function delete_for_images(array $image_ids): bool
