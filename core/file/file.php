@@ -27,6 +27,8 @@ class file
 	// anything down, so a file whose declared dimensions exceed this is rejected before decode,
 	// regardless of the configured max_width/max_height (which only bound the *output* size).
 	public const MAX_DECODE_PIXELS = 40000000;
+	private const MAX_FILESIZE_RESIZE_ATTEMPTS = 6;
+	private const FILESIZE_RESIZE_HEADROOM = 0.92;
 
 	public int $chmod = 0644;
 
@@ -281,6 +283,85 @@ class file
 		{
 			$this->image = null;
 		}
+	}
+
+	/**
+	 * Write an image through a temporary file and reduce its dimensions until the
+	 * configured stored-file limit is met.
+	 *
+	 * @param string $destination Destination path
+	 * @param int $max_filesize Maximum stored size in bytes
+	 * @param int $quality JPEG quality
+	 * @param bool $allow_resize Whether dimensions may be reduced to meet the limit
+	 * @return int|false Final file size, or false when the limit cannot be met
+	 */
+	public function write_image_with_filesize_limit(string $destination, int $max_filesize, int $quality, bool $allow_resize): int|false
+	{
+		$max_filesize = max(1, $max_filesize);
+		if (!$this->image && !$this->read_image(true))
+		{
+			return false;
+		}
+
+		$temporary_file = @tempnam(dirname($destination), 'gallery_resize_');
+		if ($temporary_file === false)
+		{
+			$this->image = null;
+			return false;
+		}
+
+		try
+		{
+			for ($attempt = 0; $attempt <= self::MAX_FILESIZE_RESIZE_ATTEMPTS; $attempt++)
+			{
+				$this->write_image($temporary_file, $quality);
+				clearstatcache(true, $temporary_file);
+				$current_filesize = @filesize($temporary_file);
+
+				if ($current_filesize !== false && $current_filesize > 0 && $current_filesize <= $max_filesize)
+				{
+					if (!@copy($temporary_file, $destination))
+					{
+						return false;
+					}
+					@chmod($destination, $this->chmod);
+					clearstatcache(true, $destination);
+					$stored_filesize = @filesize($destination);
+
+					return $stored_filesize === false ? false : (int) $stored_filesize;
+				}
+
+				if (!$allow_resize || $attempt === self::MAX_FILESIZE_RESIZE_ATTEMPTS)
+				{
+					return false;
+				}
+
+				$current_width = (int) ($this->image_size['width'] ?? 0);
+				$current_height = (int) ($this->image_size['height'] ?? 0);
+				if ($current_width <= 1 && $current_height <= 1)
+				{
+					return false;
+				}
+
+				$scale = $current_filesize === false || $current_filesize < 1
+					? 0.8
+					: sqrt($max_filesize / $current_filesize) * self::FILESIZE_RESIZE_HEADROOM;
+				$scale = max(0.1, min(0.9, $scale));
+				$target_width = max(1, min($current_width - 1, (int) floor($current_width * $scale)));
+				$target_height = max(1, min($current_height - 1, (int) floor($current_height * $scale)));
+				$this->resize_image($target_width, $target_height);
+			}
+		}
+		finally
+		{
+			$this->image = null;
+			if (file_exists($temporary_file))
+			{
+				@unlink($temporary_file);
+			}
+		}
+
+		return false;
 	}
 
 	/**

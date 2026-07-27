@@ -436,6 +436,8 @@ class upload
 				$this->template->assign_vars([
 					'ERROR'               => $error,
 					'S_MAX_FILESIZE'      => get_formatted_filesize($this->gallery_config->get('max_filesize')),
+					'S_SOURCE_MAX_FILESIZE' => get_formatted_filesize($process->get_source_filesize_limit()),
+					'S_RESIZE_LARGE_FILES' => (bool) $this->gallery_config->get('allow_resize') && $process->get_source_filesize_limit() > $this->gallery_config->get('max_filesize'),
 					'S_MAX_WIDTH'         => $this->gallery_config->get('max_width'),
 					'S_MAX_HEIGHT'        => $this->gallery_config->get('max_height'),
 					'S_ALLOWED_FILETYPES' => implode(', ', $process->get_allowed_types(true)),
@@ -469,7 +471,7 @@ class upload
 					}
 					$this->template->assign_vars([
 						'S_GALLERY_QUICK_UPLOAD' => true,
-						'S_QUICK_MAX_FILESIZE'   => $this->gallery_config->get('max_filesize'),
+						'S_QUICK_MAX_FILESIZE'   => $process->get_source_filesize_limit(),
 						'S_QUICK_FILE_TYPES'     => '/(\.|\/)(' . implode('|', $filetypes) . ')$/i',
 					]);
 				}

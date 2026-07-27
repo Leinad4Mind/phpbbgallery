@@ -116,6 +116,12 @@ class upload
 	/** Keep unfinished upload drafts for seven days. */
 	private const ORPHAN_RETENTION_SECONDS = 604800;
 
+	/** Permit a larger source file when it will be resized before storage. */
+	private const RESIZE_SOURCE_SIZE_MULTIPLIER = 32;
+
+	/** Absolute source-file cap for resizeable uploads (64 MiB). */
+	private const MAX_RESIZE_SOURCE_FILESIZE = 67108864;
+
 	/**
 	* Objects: phpBB Upload, 2 Files and Image-Functions
 	*/
@@ -136,6 +142,7 @@ class upload
 	public array $array_id2row = [];
 	public string $error_prefix = '';
 	public int $max_filesize = 0;
+	private int $source_max_filesize = 0;
 	private int $file_limit = 0;
 	private int $album_id = 0;
 	private int $file_count = 0;
@@ -207,7 +214,39 @@ class upload
 		$this->file_limit = (int) $num_files;
 		$this->username = $this->user->data['username'];
 
-		$this->max_filesize = 4 * $this->gallery_config->get('max_filesize');
+		$this->max_filesize = max(1, (int) $this->gallery_config->get('max_filesize'));
+		$this->source_max_filesize = $this->calculate_source_filesize_limit(
+			$this->max_filesize,
+			(bool) $this->gallery_config->get('allow_resize')
+		);
+		$this->file_upload->set_max_filesize($this->source_max_filesize);
+	}
+
+	/**
+	 * Return the largest source file accepted by the upload handler.
+	 */
+	public function get_source_filesize_limit(): int
+	{
+		return $this->source_max_filesize ?: $this->max_filesize;
+	}
+
+	/**
+	 * Calculate a bounded source limit while keeping the configured limit as the
+	 * final stored-file limit.
+	 */
+	private function calculate_source_filesize_limit(int $final_filesize, bool $allow_resize): int
+	{
+		$final_filesize = max(1, $final_filesize);
+		if (!$allow_resize)
+		{
+			return $final_filesize;
+		}
+
+		$scaled_filesize = $final_filesize > intdiv(PHP_INT_MAX, self::RESIZE_SOURCE_SIZE_MULTIPLIER)
+			? PHP_INT_MAX
+			: $final_filesize * self::RESIZE_SOURCE_SIZE_MULTIPLIER;
+
+		return max($final_filesize, min(self::MAX_RESIZE_SOURCE_FILESIZE, $scaled_filesize));
 	}
 
 	/**
@@ -610,7 +649,8 @@ class upload
 		}
 		$remaining_images = min($remaining_images, self::ZIP_MAX_IMAGES);
 
-		$entry_size = min(self::ZIP_MAX_UNCOMPRESSED_SIZE, max(1, (int) ceil(1.2 * $this->max_filesize)));
+		$source_filesize = $this->source_max_filesize ?: $this->max_filesize;
+		$entry_size = min(self::ZIP_MAX_UNCOMPRESSED_SIZE, max(1, (int) ceil(1.2 * $source_filesize)));
 		$total_size = min(self::ZIP_MAX_UNCOMPRESSED_SIZE, $entry_size * max(1, $remaining_images));
 		$archive_size = min(self::ZIP_MAX_UNCOMPRESSED_SIZE, $total_size + self::ZIP_MAX_METADATA_SIZE);
 
@@ -936,8 +976,18 @@ class upload
 		$vars = ['additional_sql_data', 'file'];
 		extract($this->phpbb_dispatcher->trigger_event('phpbbgallery.core.upload.prepare_file_before', compact($vars)));
 
+		$source_filesize = (int) $this->file->get('filesize');
+		$allow_resize = (bool) $this->gallery_config->get('allow_resize');
+		$source_limit = $this->source_max_filesize ?: $this->calculate_source_filesize_limit($this->max_filesize, $allow_resize);
+		if ($source_filesize > $source_limit || (!$allow_resize && $source_filesize > $this->max_filesize))
+		{
+			$this->file->remove();
+			$this->new_error($this->language->lang('UPLOAD_ERROR', $this->file->get('uploadname'), $this->language->lang('BAD_UPLOAD_FILE_SIZE')));
+			return false;
+		}
+
 		$this->tools->set_image_options($this->max_filesize, $this->gallery_config->get('max_height'), $this->gallery_config->get('max_width'));
-		$this->tools->set_image_data($this->file->get('destination_file'), '', $this->file->get('filesize'), true);
+		$this->tools->set_image_data($this->file->get('destination_file'), '', $source_filesize, true);
 
 		// Reject decompression-bomb uploads (huge declared pixel dimensions in a small file)
 		// before any rotate/resize attempt tries to decode the full image into memory.
@@ -962,9 +1012,15 @@ class upload
 		// Resize oversized images
 		if (($this->file->get('width') > $this->gallery_config->get('max_width')) || ($this->file->get('height') > $this->gallery_config->get('max_height')))
 		{
-			if ($this->gallery_config->get('allow_resize'))
+			if ($allow_resize)
 			{
 				$this->tools->resize_image($this->gallery_config->get('max_width'), $this->gallery_config->get('max_height'));
+				if (!$this->tools->resized)
+				{
+					$this->file->remove();
+					$this->new_error($this->language->lang('UPLOAD_ERROR', $this->file->get('uploadname'), $this->language->lang('UPLOAD_IMAGE_SIZE_TOO_BIG')));
+					return false;
+				}
 			}
 			else
 			{
@@ -974,16 +1030,20 @@ class upload
 			}
 		}
 
-		if ($this->file->get('filesize') > (1.2 * $this->max_filesize))
+		if ($this->tools->rotated || $this->tools->resized || $source_filesize > $this->max_filesize)
 		{
-			$this->file->remove();
-			$this->new_error($this->language->lang('UPLOAD_ERROR', $this->file->get('uploadname'), $this->language->lang('BAD_UPLOAD_FILE_SIZE')));
-			return false;
-		}
-
-		if ($this->tools->rotated || $this->tools->resized)
-		{
-			$this->tools->write_image($this->file->get('destination_file'), $this->gallery_config->get('jpg_quality'), true);
+			$stored_filesize = $this->tools->write_image_with_filesize_limit(
+				$this->file->get('destination_file'),
+				$this->max_filesize,
+				$this->gallery_config->get('jpg_quality'),
+				$allow_resize
+			);
+			if ($stored_filesize === false)
+			{
+				$this->file->remove();
+				$this->new_error($this->language->lang('UPLOAD_ERROR', $this->file->get('uploadname'), $this->language->lang('BAD_UPLOAD_FILE_SIZE')));
+				return false;
+			}
 		}
 
 		// Everything okay, now add the file to the database and return the image_id
@@ -1026,12 +1086,13 @@ class upload
 	public function file_to_database(array $additional_sql_ary): int
 	{
 		$image_name = utf8_substr($this->file->get('uploadname'), 0, utf8_strrpos($this->file->get('uploadname'), '.'));
+		$stored_filesize = @filesize($this->file->get('destination_file'));
 
 		$sql_ary = array_merge([
 			'image_name'			=> $image_name,
 			'image_name_clean'		=> utf8_clean_string($image_name),
 			'image_filename' 		=> $this->file->get('realname'),
-			'filesize_upload'		=> $this->file->get('filesize'),
+			'filesize_upload'		=> $stored_filesize === false ? $this->file->get('filesize') : (int) $stored_filesize,
 			'image_time'			=> time() + $this->file_count,
 
 			'image_user_id'			=> $this->user->data['user_id'],
