@@ -12,6 +12,7 @@
 
 namespace phpbbgallery\core\controller;
 
+use phpbb\request\request_interface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class moderate
@@ -480,6 +481,8 @@ class moderate
 		$action = $this->request->variable('select_action', '');
 		$back_link = $this->request->variable('back_link', $this->helper->route('phpbbgallery_core_moderate_view', ['album_id' => $album_id]));
 		$moving_target = $this->request->variable('moving_target', '');
+		$change_author = $this->request->variable('change_author', '', true, request_interface::POST);
+		$image_names = $this->request->variable('image_name', ['' => ''], true, request_interface::POST);
 
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$album_backlink = $album_id === 0 ? $this->helper->route('phpbbgallery_core_moderate') : $this->helper->route('phpbbgallery_core_moderate_album', ['album_id'	=> $album_id]);
@@ -514,6 +517,8 @@ class moderate
 				'delete'	=> 'm_delete',
 				'move'		=> 'm_move',
 				'report'	=> 'm_report',
+				'change_author' => 'm_edit',
+				'rename'	=> 'm_edit',
 			];
 			if (!isset($action_permission[$action]))
 			{
@@ -529,6 +534,32 @@ class moderate
 			}
 			$actions_array = $authorized_action['image_ids'];
 			$actions_by_album = $authorized_action['images_by_album'];
+			$new_author = false;
+			$renamed_images = [];
+			if ($action === 'change_author')
+			{
+				$new_author = $this->image->get_new_author_info($change_author);
+				if ($new_author === false)
+				{
+					trigger_error('INVALID_USERNAME');
+				}
+			}
+			else if ($action === 'rename')
+			{
+				foreach ($actions_array as $image_id)
+				{
+					$image_name = utf8_normalize_nfc(trim($image_names[$image_id] ?? ''));
+					if (utf8_clean_string($image_name) === '')
+					{
+						trigger_error('MISSING_IMAGE_NAME');
+					}
+					if (utf8_strlen($image_name) > 255)
+					{
+						trigger_error('TOO_LONG');
+					}
+					$renamed_images[$image_id] = $image_name;
+				}
+			}
 
 			if ($action == 'move' && $moving_target)
 			{
@@ -607,6 +638,24 @@ class moderate
 						$this->report->close_reports_by_image($actions_array);
 						$message = $this->language->lang('WAITING_REPORTED_DONE', count($actions_array));
 					break;
+
+					case 'change_author':
+						$this->image->change_author($actions_array, $new_author);
+						foreach (array_keys($actions_by_album) as $source_album_id)
+						{
+							$this->album->update_info($source_album_id);
+						}
+						$message = $this->language->lang('IMAGES_UPDATED_SUCCESSFULLY');
+					break;
+
+					case 'rename':
+						$this->image->rename_images($renamed_images);
+						foreach (array_keys($actions_by_album) as $source_album_id)
+						{
+							$this->album->update_info($source_album_id);
+						}
+						$message = $this->language->lang('IMAGES_UPDATED_SUCCESSFULLY');
+					break;
 				}
 
 				if (!empty($message))
@@ -617,12 +666,20 @@ class moderate
 			}
 			else
 			{
-				$s_hidden_fields = '<input type="hidden" name="select_action" value="' . $action . '" />';
-				$s_hidden_fields .= '<input type="hidden" name="back_link" value="' . $back_link . '" />';
-				foreach ($actions_array as $var)
+				$hidden_data = [
+					'select_action' => $action,
+					'back_link'     => $back_link,
+					'action'        => $actions_array,
+				];
+				if ($action === 'change_author')
 				{
-					$s_hidden_fields .= '<input type="hidden" name="action[]" value="' . $var . '" />';
+					$hidden_data['change_author'] = $change_author;
 				}
+				else if ($action === 'rename')
+				{
+					$hidden_data['image_name'] = $renamed_images;
+				}
+				$s_hidden_fields = build_hidden_fields($hidden_data);
 				if ($action == 'report')
 				{
 					confirm_box(false, $this->language->lang('REPORT_A_CLOSE2_CONFIRM'), $s_hidden_fields);
@@ -640,7 +697,8 @@ class moderate
 				}
 				else
 				{
-					confirm_box(false, $this->language->lang('QUEUES_A_' . strtoupper($action) . '2_CONFIRM'), $s_hidden_fields);
+					$confirm_message = in_array($action, ['change_author', 'rename'], true) ? 'CONFIRM_OPERATION' : 'QUEUES_A_' . strtoupper($action) . '2_CONFIRM';
+					confirm_box(false, $this->language->lang($confirm_message), $s_hidden_fields);
 				}
 			}
 		}
@@ -651,6 +709,8 @@ class moderate
 			'U_ALBUM_OVERVIEW'				=> $album_id > 0 ? $this->helper->route('phpbbgallery_core_moderate_view', ['album_id' => $album_id]) : false,
 			'U_GALLERY_MCP_LOGS'			=> $album_id > 0 ? $this->helper->route('phpbbgallery_core_moderate_action_log_album', ['album_id' => $album_id]) : $this->helper->route('phpbbgallery_core_moderate_action_log'),
 			'U_ALBUM_NAME'					=> $album_id > 0 ? $album['album_name'] : false,
+			'S_CAN_EDIT_IMAGES'			=> $album_id > 0 && $this->gallery_auth->acl_check('m_edit', $album['album_id'], $album['album_user_id']),
+			'U_FIND_USERNAME'				=> $this->url->append_sid('phpbb', 'memberlist', 'mode=searchuser&amp;form=overview_action&amp;field=change_author&amp;select_single=true'),
 		]);
 		$this->moderate->album_overview($album_id, $page);
 		return $this->helper->render('gallery/moderate_album_overview.html', $this->gallery_config->get_title($this->language));

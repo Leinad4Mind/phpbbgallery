@@ -25,6 +25,7 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'CHOOSE_ACTION'                => 'Seleccionar acção pretendida',
+	'RENAME_IMAGES'                => 'Renomear imagens seleccionadas',
 	'GALLERY_MCP_MAIN'             => 'Principal',
 	'GALLERY_MCP_OVERVIEW'         => 'Visão Geral',
 	'GALLERY_MCP_QUEUE'            => 'Fila de Imagens',

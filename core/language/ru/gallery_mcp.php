@@ -23,6 +23,7 @@ if (empty($lang) || !is_array($lang))
 }
 $lang = array_merge($lang, [
 	'CHOOSE_ACTION'                => 'Выберите желаемое действие',
+	'RENAME_IMAGES'                => 'Переименовать выбранные изображения',
 	'GALLERY_MCP_MAIN'             => 'Главная',
 	'GALLERY_MCP_OVERVIEW'         => 'Обзор',
 	'GALLERY_MCP_QUEUE'            => 'Очередь на модерацию',

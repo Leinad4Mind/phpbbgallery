@@ -33,8 +33,60 @@ namespace phpbb\extension
 	}
 }
 
+namespace phpbbgallery\core
+{
+	function utf8_substr(string $value, int $offset, ?int $length = null): string
+	{
+		return $length === null ? substr($value, $offset) : substr($value, $offset, $length);
+	}
+
+	function utf8_strrpos(string $value, string $search): int|false
+	{
+		return strrpos($value, $search);
+	}
+
+	function utf8_clean_string(string $value): string
+	{
+		return strtolower($value);
+	}
+
+	function utf8_normalize_nfc(string $value): string
+	{
+		return $value;
+	}
+
+	function utf8_strlen(string $value): int
+	{
+		return strlen($value);
+	}
+}
+
 namespace
 {
+	if (!function_exists('utf8_clean_string'))
+	{
+		function utf8_clean_string(string $value): string
+		{
+			return strtolower($value);
+		}
+	}
+
+	if (!function_exists('utf8_normalize_nfc'))
+	{
+		function utf8_normalize_nfc(string $value): string
+		{
+			return $value;
+		}
+	}
+
+	if (!function_exists('utf8_strlen'))
+	{
+		function utf8_strlen(string $value): int
+		{
+			return strlen($value);
+		}
+	}
+
 	if (!defined('IN_PHPBB'))
 	{
 		define('IN_PHPBB', true);

@@ -8,24 +8,6 @@
  * @license   GPL-2.0-only
  */
 
-namespace phpbbgallery\core
-{
-	function utf8_substr(string $value, int $offset, ?int $length = null): string
-	{
-		return $length === null ? substr($value, $offset) : substr($value, $offset, $length);
-	}
-
-	function utf8_strrpos(string $value, string $search): int|false
-	{
-		return strrpos($value, $search);
-	}
-
-	function utf8_clean_string(string $value): string
-	{
-		return strtolower($value);
-	}
-}
-
 namespace phpbbgallery\core\tests
 {
 

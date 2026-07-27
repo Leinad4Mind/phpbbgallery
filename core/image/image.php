@@ -166,6 +166,142 @@ class image
 	}
 
 	/**
+	 * Change the registered author of multiple images and keep user counters balanced.
+	 *
+	 * @param array $image_ids Image identifiers
+	 * @param array $author    Trusted phpBB user row
+	 * @return int Number of updated images
+	 */
+	public function change_author(array $image_ids, array $author): int
+	{
+		$image_ids = array_values(array_unique(array_filter(array_map('intval', $image_ids), static fn (int $image_id): bool => $image_id > 0)));
+		$author_user_id = (int) ($author['user_id'] ?? 0);
+		$author_username = (string) ($author['username'] ?? '');
+		if (!$image_ids || $author_user_id < 1 || $author_username === '')
+		{
+			return 0;
+		}
+
+		$sql = 'SELECT image_id, image_album_id, image_name
+			FROM ' . $this->table_images . '
+			WHERE ' . $this->db->sql_in_set('image_id', $image_ids);
+		$result = $this->db->sql_query($sql);
+		$image_data = [];
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$image_data[(int) $row['image_id']] = $row;
+		}
+		$this->db->sql_freeresult($result);
+		$image_ids = array_keys($image_data);
+		if (!$image_ids)
+		{
+			return 0;
+		}
+
+		$this->db->sql_transaction('begin');
+		try
+		{
+			$this->handle_counter($image_ids, false);
+			$sql_ary = [
+				'image_user_id'        => $author_user_id,
+				'image_username'       => $author_username,
+				'image_username_clean' => utf8_clean_string($author_username),
+				'image_user_colour'    => $author['user_colour'] ?? '',
+			];
+			$sql = 'UPDATE ' . $this->table_images . '
+				SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
+				WHERE ' . $this->db->sql_in_set('image_id', $image_ids);
+			$this->db->sql_query($sql);
+			$this->handle_counter($image_ids, true);
+
+			foreach ($image_data as $row)
+			{
+				$this->gallery_log->add_log('moderator', 'edit', (int) $row['image_album_id'], (int) $row['image_id'], ['LOG_GALLERY_EDITED', $row['image_name']]);
+			}
+			$this->db->sql_transaction('commit');
+		}
+		catch (\Throwable $exception)
+		{
+			$this->db->sql_transaction('rollback');
+			throw $exception;
+		}
+
+		$this->gallery_cache->destroy_images();
+
+		return count($image_ids);
+	}
+
+	/**
+	 * Rename multiple images using an image-id-to-name map.
+	 *
+	 * @return int Number of updated images
+	 */
+	public function rename_images(array $image_names): int
+	{
+		$normalized_names = [];
+		foreach ($image_names as $image_id => $image_name)
+		{
+			$image_id = (int) $image_id;
+			$image_name = utf8_normalize_nfc(trim((string) $image_name));
+			if ($image_id < 1 || utf8_clean_string($image_name) === '' || utf8_strlen($image_name) > 255)
+			{
+				throw new \InvalidArgumentException('Invalid image name.');
+			}
+			$normalized_names[$image_id] = $image_name;
+		}
+		if (!$normalized_names)
+		{
+			return 0;
+		}
+
+		$sql = 'SELECT image_id, image_album_id, image_name
+			FROM ' . $this->table_images . '
+			WHERE ' . $this->db->sql_in_set('image_id', array_keys($normalized_names));
+		$result = $this->db->sql_query($sql);
+		$image_data = [];
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$image_data[(int) $row['image_id']] = $row;
+		}
+		$this->db->sql_freeresult($result);
+		if (!$image_data)
+		{
+			return 0;
+		}
+
+		$this->db->sql_transaction('begin');
+		try
+		{
+			foreach ($normalized_names as $image_id => $image_name)
+			{
+				if (!isset($image_data[$image_id]))
+				{
+					continue;
+				}
+				$sql_ary = [
+					'image_name'       => $image_name,
+					'image_name_clean' => utf8_clean_string($image_name),
+				];
+				$sql = 'UPDATE ' . $this->table_images . '
+					SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
+					WHERE image_id = ' . $image_id;
+				$this->db->sql_query($sql);
+				$this->gallery_log->add_log('moderator', 'edit', (int) $image_data[$image_id]['image_album_id'], $image_id, ['LOG_GALLERY_EDITED', $image_name]);
+			}
+			$this->db->sql_transaction('commit');
+		}
+		catch (\Throwable $exception)
+		{
+			$this->db->sql_transaction('rollback');
+			throw $exception;
+		}
+
+		$this->gallery_cache->destroy_images();
+
+		return count(array_intersect_key($normalized_names, $image_data));
+	}
+
+	/**
 	 * Delete an image completely.
 	 *
 	 * @param    array $images Array with the image_id(s)
@@ -417,10 +553,9 @@ class image
 		$sql = 'SELECT SUM(image_comments) as comments
 			FROM ' . $this->table_images .'
 			WHERE image_status ' . (($readd) ? '=' : '<>') . ' ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . '
-				AND ' . $this->db->sql_in_set('image_id', $image_id_ary) . '
-			GROUP BY image_user_id';
+				AND ' . $this->db->sql_in_set('image_id', $image_id_ary);
 		$result = $this->db->sql_query($sql);
-		$num_comments = $this->db->sql_fetchfield('comments');
+		$num_comments = (int) $this->db->sql_fetchfield('comments');
 		$this->db->sql_freeresult($result);
 
 		$sql = 'SELECT COUNT(image_id) images, image_user_id
