@@ -23,6 +23,8 @@ class mcp_moderation_test extends TestCase
 		$this->assertStringContainsString('check_form_key(self::FORM_KEY)', $module);
 		$this->assertStringContainsString("is_set_post('action')", $module);
 		$this->assertStringContainsString("['approve', 'reject']", $module);
+		$this->assertStringContainsString('sitesplat.bbtags.provider_registry', $module);
+		$this->assertStringNotContainsString("provider === 'forum_topics'", $module);
 		$this->assertStringNotContainsString('approve_suggestion', $acp);
 		$this->assertStringNotContainsString('reject_suggestion', $acp);
 	}

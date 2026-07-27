@@ -23,7 +23,7 @@
 - Route unknown user-submitted topic tags to a resumable moderation queue instead of publishing them immediately.
 - Add a CSRF-protected MCP queue governed by the global `m_bbtags_moderate` permission; keep moderation out of the ACP.
 - Apply approved suggestions atomically to their originating provider item and restrict new tags to the approved scope.
-- Expose provider validation and approval events so future integrations can join the same moderation lifecycle.
+- Expose a tagged provider interface and registry so integrations can join validation, moderation, linking and approval without coupling BBTags to their content model.
 - Add a provider-independent canonical tag catalogue while preserving topic relations and retaining the oldest identifier when equivalent legacy tags are merged.
 - Track enabled state and usage totals per provider, beginning with `forum_topics`.
 - Import the existing predefined tag list into the catalogue and enforce canonical tag, route and topic relation uniqueness.

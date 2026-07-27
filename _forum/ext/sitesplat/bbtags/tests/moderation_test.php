@@ -9,8 +9,9 @@
 namespace sitesplat\bbtags\tests;
 
 use phpbb\db\driver\driver_interface;
-use phpbb\event\dispatcher_interface;
 use PHPUnit\Framework\TestCase;
+use sitesplat\bbtags\provider\provider_interface;
+use sitesplat\bbtags\provider\provider_registry;
 use sitesplat\bbtags\tags\manager;
 use sitesplat\bbtags\tags\moderation;
 
@@ -19,17 +20,10 @@ class moderation_test extends TestCase
 	public function test_suggestion_is_invisible_catalogue_input_and_deduplicated_by_subject(): void
 	{
 		$db = $this->createMock(driver_interface::class);
-		$dispatcher = $this->createMock(dispatcher_interface::class);
 		$manager = $this->createMock(manager::class);
 		$manager->method('clean_tag')->willReturn('manhwa');
 		$manager->method('canonical_tag')->willReturn('manhwa');
 		$manager->method('get_existing_tags')->willReturn([]);
-		$dispatcher->method('trigger_event')->willReturnCallback(static function (string $event, array $data): array
-		{
-			$data['handled'] = true;
-			$data['valid'] = true;
-			return $data;
-		});
 		$db->method('sql_escape')->willReturnArgument(0);
 		$db->method('sql_query_limit')->willReturn('dedupe');
 		$db->method('sql_fetchrow')->willReturn(false);
@@ -42,7 +36,7 @@ class moderation_test extends TestCase
 		});
 		$db->method('sql_nextid')->willReturn(17);
 
-		$id = $this->create_moderation($db, $dispatcher, $manager)->suggest('Manhwa', 'forum_topics', 12, 34, 56);
+		$id = $this->create_moderation($db, $this->create_provider_registry(), $manager)->suggest('Manhwa', 'forum_topics', 12, 34, 56);
 
 		$this->assertSame(17, $id);
 		$this->assertCount(1, $queries);
@@ -53,7 +47,6 @@ class moderation_test extends TestCase
 	public function test_approval_is_atomic_and_requires_provider_attachment(): void
 	{
 		$db = $this->createMock(driver_interface::class);
-		$dispatcher = $this->createMock(dispatcher_interface::class);
 		$manager = $this->createMock(manager::class);
 		$suggestion = [
 			'suggestion_id' => 9,
@@ -74,52 +67,35 @@ class moderation_test extends TestCase
 			$transactions[] = $status;
 			return true;
 		});
-		$dispatcher->method('trigger_event')->willReturnCallback(static function (string $event, array $data): array
-		{
-			$data['handled'] = true;
-			if ($event === 'sitesplat.bbtags.moderation.validate_subject')
-			{
-				$data['valid'] = true;
-			}
-			else
-			{
-				$data['success'] = true;
-			}
-			return $data;
-		});
+		$provider = $this->createMock(provider_interface::class);
+		$provider->method('get_name')->willReturn(manager::FORUM_PROVIDER);
+		$provider->method('validate_subject')->with(12, 34)->willReturn(true);
+		$provider->expects($this->once())->method('apply_approved_tag')->with(12, 34, 7)->willReturn(true);
 		$manager->expects($this->once())->method('ensure_catalog_tag')->with('manhwa', 56)->willReturn(7);
 		$manager->expects($this->once())->method('ensure_provider_context')->with(7, 'forum_topics', 'restricted')->willReturn(true);
 		$manager->expects($this->once())->method('set_scope_rule')->with(7, 'forum_topics', 12, 'allow')->willReturn(true);
 
-		$this->assertTrue($this->create_moderation($db, $dispatcher, $manager)->approve(9, 2));
+		$this->assertTrue($this->create_moderation($db, new provider_registry([$provider]), $manager)->approve(9, 2));
 		$this->assertSame(['begin', 'commit'], $transactions);
 	}
 
 	public function test_duplicate_pending_suggestion_reuses_the_existing_identifier(): void
 	{
 		$db = $this->createMock(driver_interface::class);
-		$dispatcher = $this->createMock(dispatcher_interface::class);
 		$manager = $this->createMock(manager::class);
 		$manager->method('clean_tag')->willReturn('manhwa');
 		$manager->method('canonical_tag')->willReturn('manhwa');
-		$dispatcher->method('trigger_event')->willReturnCallback(static function (string $event, array $data): array
-		{
-			$data['handled'] = true;
-			$data['valid'] = true;
-			return $data;
-		});
 		$db->method('sql_escape')->willReturnArgument(0);
 		$db->method('sql_query_limit')->willReturn('dedupe');
 		$db->method('sql_fetchrow')->willReturn(['suggestion_id' => 23]);
 		$db->expects($this->never())->method('sql_query');
 
-		$this->assertSame(23, $this->create_moderation($db, $dispatcher, $manager)->suggest('manhwa', 'forum_topics', 12, 34, 56));
+		$this->assertSame(23, $this->create_moderation($db, $this->create_provider_registry(), $manager)->suggest('manhwa', 'forum_topics', 12, 34, 56));
 	}
 
 	public function test_approval_rolls_back_when_provider_does_not_attach_the_tag(): void
 	{
 		$db = $this->createMock(driver_interface::class);
-		$dispatcher = $this->createMock(dispatcher_interface::class);
 		$manager = $this->createMock(manager::class);
 		$db->method('sql_query_limit')->willReturn('pending');
 		$db->method('sql_fetchrow')->willReturn([
@@ -135,18 +111,11 @@ class moderation_test extends TestCase
 			$transactions[] = $status;
 			return true;
 		});
-		$dispatcher->method('trigger_event')->willReturnCallback(static function (string $event, array $data): array
-		{
-			$data['handled'] = true;
-			$data['valid'] = true;
-			$data['success'] = false;
-			return $data;
-		});
 		$manager->method('ensure_catalog_tag')->willReturn(7);
 		$manager->method('ensure_provider_context')->willReturn(true);
 		$manager->method('set_scope_rule')->willReturn(true);
 
-		$this->assertFalse($this->create_moderation($db, $dispatcher, $manager)->approve(9, 2));
+		$this->assertFalse($this->create_moderation($db, $this->create_provider_registry(true, false), $manager)->approve(9, 2));
 		$this->assertSame(['begin', 'rollback'], $transactions);
 	}
 
@@ -169,7 +138,7 @@ class moderation_test extends TestCase
 
 		$moderation = $this->create_moderation(
 			$db,
-			$this->createMock(dispatcher_interface::class),
+			new provider_registry([]),
 			$this->createMock(manager::class)
 		);
 		$this->assertTrue($moderation->reject(9, 2));
@@ -188,17 +157,27 @@ class moderation_test extends TestCase
 
 		$this->assertFalse($this->create_moderation(
 			$db,
-			$this->createMock(dispatcher_interface::class),
+			new provider_registry([]),
 			$manager
 		)->suggest('manhwa', '../invalid', 12, 34, 56));
 	}
 
 	private function create_moderation(
 		driver_interface $db,
-		dispatcher_interface $dispatcher,
+		provider_registry $providers,
 		manager $manager
 	): moderation
 	{
-		return new moderation($db, $dispatcher, $manager, 'phpbb_bbtags_suggestions');
+		return new moderation($db, $providers, $manager, 'phpbb_bbtags_suggestions');
+	}
+
+	private function create_provider_registry(bool $valid = true, bool $applied = true): provider_registry
+	{
+		$provider = $this->createMock(provider_interface::class);
+		$provider->method('get_name')->willReturn(manager::FORUM_PROVIDER);
+		$provider->method('validate_subject')->willReturn($valid);
+		$provider->method('apply_approved_tag')->willReturn($applied);
+
+		return new provider_registry([$provider]);
 	}
 }

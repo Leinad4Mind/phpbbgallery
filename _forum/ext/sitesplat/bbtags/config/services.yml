@@ -14,11 +14,29 @@ services:
             - '%sitesplat.bbtags.tables.bbtags_context%'
             - '%sitesplat.bbtags.tables.bbtags_scope%'
             - '%sitesplat.bbtags.tables.bbtags_topic%'
+    sitesplat.bbtags.provider.services:
+        class: phpbb\di\service_collection
+        arguments:
+            - '@service_container'
+        tags:
+            - { name: service_collection, tag: sitesplat.bbtags.provider }
+    sitesplat.bbtags.provider_registry:
+        class: sitesplat\bbtags\provider\provider_registry
+        arguments:
+            - '@sitesplat.bbtags.provider.services'
+    sitesplat.bbtags.provider.forum_topics:
+        class: sitesplat\bbtags\provider\forum_provider
+        arguments:
+            - '@sitesplat.bbtags.manager'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+        tags:
+            - { name: sitesplat.bbtags.provider }
     sitesplat.bbtags.moderation:
         class: sitesplat\bbtags\tags\moderation
         arguments:
             - '@dbal.conn.driver'
-            - '@dispatcher'
+            - '@sitesplat.bbtags.provider_registry'
             - '@sitesplat.bbtags.manager'
             - '%sitesplat.bbtags.tables.bbtags_suggestions%'
     sitesplat.bbtags.listener:
@@ -32,8 +50,6 @@ services:
             - '@request'
             - '@sitesplat.bbtags.manager'
             - '@sitesplat.bbtags.moderation'
-            - '%core.root_path%'
-            - '%core.php_ext%'
         tags:
             - { name: event.listener }
     sitesplat.bbtags.controller:

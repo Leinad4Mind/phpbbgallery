@@ -47,6 +47,14 @@ namespace
 		}
 	}
 
+	if (!function_exists('append_sid'))
+	{
+		function append_sid($url, $params = false)
+		{
+			return $params ? $url . '?' . $params : $url;
+		}
+	}
+
 	if (!defined('CONFIG_TEXT_TABLE'))
 	{
 		define('CONFIG_TEXT_TABLE', 'phpbb_config_text');
@@ -64,12 +72,14 @@ namespace
 
 	require_once __DIR__ . '/stubs/phpbb_config.php';
 	require_once __DIR__ . '/stubs/phpbb_auth.php';
-	require_once __DIR__ . '/stubs/phpbb_event_dispatcher.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/db/driver/driver_interface.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/db/tools/tools_interface.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/db/migration/migration_interface.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/db/migration/migration.php';
 	require_once dirname(__DIR__) . '/tags/manager.php';
+	require_once dirname(__DIR__) . '/provider/provider_interface.php';
+	require_once dirname(__DIR__) . '/provider/provider_registry.php';
+	require_once dirname(__DIR__) . '/provider/forum_provider.php';
 	require_once dirname(__DIR__) . '/tags/moderation.php';
 	require_once dirname(__DIR__) . '/tags/search_query.php';
 	require_once dirname(__DIR__) . '/migrations/v33x/m7_global_catalog_schema.php';

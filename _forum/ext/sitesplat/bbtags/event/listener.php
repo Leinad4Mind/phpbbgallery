@@ -33,14 +33,12 @@ class listener implements EventSubscriberInterface
 	protected $request;
 	protected $manager;
 	protected $moderation;
-	protected $phpbb_root_path;
-	protected $php_ext;
 
 	/**
 	* Constructor
 	* @access public
 	*/
-	public function __construct(auth $auth, helper $helper, template $template, user $user, config $config, request $request, manager $tag_manager, moderation $moderation, $phpbb_root_path, $php_ext)
+	public function __construct(auth $auth, helper $helper, template $template, user $user, config $config, request $request, manager $tag_manager, moderation $moderation)
 	{
 		$this->auth = $auth;
 		$this->helper = $helper;
@@ -50,8 +48,6 @@ class listener implements EventSubscriberInterface
 		$this->request = $request;
 		$this->manager = $tag_manager;
 		$this->moderation = $moderation;
-		$this->phpbb_root_path = $phpbb_root_path;
-		$this->php_ext = $php_ext;
 	}
 
 	/**
@@ -70,8 +66,6 @@ class listener implements EventSubscriberInterface
 			'core.submit_post_end'					=> 'save_tags',
 			'core.delete_topics_after_query'		=> 'delete_tags',
 			'core.permissions'						=> 'add_permission',
-			'sitesplat.bbtags.moderation.validate_subject'	=> 'validate_moderation_subject',
-			'sitesplat.bbtags.moderation.apply_approval'	=> 'apply_moderation_approval',
 		);
 	}
 
@@ -245,36 +239,6 @@ class listener implements EventSubscriberInterface
 		$topic_ids = $event['topic_ids'];
 		$this->moderation->cancel_items(manager::FORUM_PROVIDER, $topic_ids);
 		$this->manager->remove_tags_from_topics($topic_ids);
-	}
-
-	/**
-	 * Validate the built-in forum topic provider without coupling moderation to topics.
-	 */
-	public function validate_moderation_subject($event)
-	{
-		if ($event['provider'] !== manager::FORUM_PROVIDER)
-		{
-			return;
-		}
-		$event['handled'] = true;
-		$event['valid'] = $this->manager->topic_matches_scope((int) $event['item_id'], (int) $event['scope_id']);
-	}
-
-	/**
-	 * Attach an approved suggestion to its originating topic.
-	 */
-	public function apply_moderation_approval($event)
-	{
-		if ($event['provider'] !== manager::FORUM_PROVIDER)
-		{
-			return;
-		}
-		$event['handled'] = true;
-		$event['success'] = $this->manager->attach_tag_to_topic(
-			(int) $event['tag_id'],
-			(int) $event['item_id'],
-			(int) $event['scope_id']
-		);
 	}
 
 	/**

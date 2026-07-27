@@ -9,7 +9,7 @@
 namespace sitesplat\bbtags\tags;
 
 use phpbb\db\driver\driver_interface;
-use phpbb\event\dispatcher_interface;
+use sitesplat\bbtags\provider\provider_registry;
 
 class moderation
 {
@@ -19,19 +19,19 @@ class moderation
 	public const STATUS_CANCELLED = 'cancelled';
 
 	private driver_interface $db;
-	private dispatcher_interface $dispatcher;
+	private provider_registry $providers;
 	private manager $manager;
 	private string $table_suggestions;
 
 	public function __construct(
 		driver_interface $db,
-		dispatcher_interface $dispatcher,
+		provider_registry $providers,
 		manager $manager,
 		string $table_suggestions
 	)
 	{
 		$this->db = $db;
-		$this->dispatcher = $dispatcher;
+		$this->providers = $providers;
 		$this->manager = $manager;
 		$this->table_suggestions = $table_suggestions;
 	}
@@ -360,26 +360,16 @@ class moderation
 
 	private function provider_accepts_subject(string $provider, int $scope_id, int $item_id): bool
 	{
-		$handled = false;
-		$valid = false;
-		$event_data = $this->dispatcher->trigger_event(
-			'sitesplat.bbtags.moderation.validate_subject',
-			compact('provider', 'scope_id', 'item_id', 'handled', 'valid')
-		);
+		$provider_service = $this->providers->get($provider);
 
-		return !empty($event_data['handled']) && !empty($event_data['valid']);
+		return $provider_service !== null && $provider_service->validate_subject($scope_id, $item_id);
 	}
 
 	private function provider_applies_approval(string $provider, int $scope_id, int $item_id, int $tag_id): bool
 	{
-		$handled = false;
-		$success = false;
-		$event_data = $this->dispatcher->trigger_event(
-			'sitesplat.bbtags.moderation.apply_approval',
-			compact('provider', 'scope_id', 'item_id', 'tag_id', 'handled', 'success')
-		);
+		$provider_service = $this->providers->get($provider);
 
-		return !empty($event_data['handled']) && !empty($event_data['success']);
+		return $provider_service !== null && $provider_service->apply_approved_tag($scope_id, $item_id, $tag_id);
 	}
 
 	private function normalize_provider(string $provider): string

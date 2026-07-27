@@ -20,7 +20,7 @@ class bbtags_module
 
 	public function main(string $id, string $mode): void
 	{
-		global $auth, $db, $phpbb_container, $phpbb_root_path, $request, $template, $user;
+		global $auth, $db, $phpbb_container, $request, $template, $user;
 
 		$user->add_lang_ext('sitesplat/bbtags', ['bbtags', 'info_mcp_bbtags']);
 		if (!$auth->acl_get('m_bbtags_moderate'))
@@ -28,7 +28,7 @@ class bbtags_module
 			trigger_error('NO_AUTH_OPERATION', E_USER_WARNING);
 		}
 		$moderation = $phpbb_container->get('sitesplat.bbtags.moderation');
-		$php_ext = $phpbb_container->getParameter('core.php_ext');
+		$providers = $phpbb_container->get('sitesplat.bbtags.provider_registry');
 		$action = $request->variable('action', '');
 		$suggestion_id = $request->variable('suggestion_id', 0);
 		add_form_key(self::FORM_KEY);
@@ -60,16 +60,17 @@ class bbtags_module
 			$user_id = (int) $row['suggested_by'];
 			$user_row = $usernames[$user_id] ?? ['username' => '', 'user_colour' => ''];
 			$provider = (string) $row['provider'];
+			$provider_service = $providers->get($provider);
 			$item_id = (int) $row['item_id'];
 			$template->assign_block_vars('suggestions', [
 				'ID'           => (int) $row['suggestion_id'],
 				'TAG'          => htmlspecialchars((string) $row['tag'], ENT_QUOTES, 'UTF-8'),
-				'PROVIDER'     => $provider === 'forum_topics' ? $user->lang('BBTAGS_PROVIDER_FORUM_TOPICS') : htmlspecialchars($provider, ENT_QUOTES, 'UTF-8'),
+				'PROVIDER'     => $provider_service !== null ? $user->lang($provider_service->get_language_key()) : htmlspecialchars($provider, ENT_QUOTES, 'UTF-8'),
 				'SCOPE_ID'     => (int) $row['scope_id'],
 				'ITEM_ID'      => $item_id,
 				'SUGGESTED_BY' => get_username_string('full', $user_id, $user_row['username'], $user_row['user_colour']),
 				'SUGGESTED_AT' => $user->format_date((int) $row['suggested_at']),
-				'U_ITEM'       => $provider === 'forum_topics' ? append_sid($phpbb_root_path . 'viewtopic.' . $php_ext, 't=' . $item_id) : '',
+				'U_ITEM'       => $provider_service !== null ? $provider_service->get_item_url((int) $row['scope_id'], $item_id) : '',
 			]);
 		}
 
