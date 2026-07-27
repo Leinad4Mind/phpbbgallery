@@ -56,7 +56,7 @@ final class acp_environment_test extends TestCase
 		$checks = (new environment())->addon_checks($manager);
 
 		$this->assertSame(
-			['enabled', 'disabled', 'not_installed', 'not_available', 'not_available'],
+			['enabled', 'disabled', 'not_installed', 'not_available', 'not_available', 'not_available'],
 			array_column($checks, 'status')
 		);
 		$this->assertSame(
@@ -64,6 +64,7 @@ final class acp_environment_test extends TestCase
 				'phpbbgallery/acpcleanup',
 				'phpbbgallery/acpimport',
 				'phpbbgallery/exif',
+				'phpbbgallery/export',
 				'phpbbgallery/favorite',
 				'phpbbgallery/feed',
 			],

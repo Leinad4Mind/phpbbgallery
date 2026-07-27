@@ -42,6 +42,7 @@ $lang = array_merge($lang, [
 	'GALLERY_ADDON_CLEANUP_EXPLAIN'          => 'Findet und entfernt inkonsistente Bilddateien und Datenbankeinträge sicher.',
 	'GALLERY_ADDON_IMPORT_EXPLAIN'           => 'Importiert einen kontrollierten Stapel serverseitiger Bilder in ein Album.',
 	'GALLERY_ADDON_EXIF_EXPLAIN'             => 'Zeigt die in hochgeladenen Bildern gespeicherten fotografischen Metadaten an.',
+	'GALLERY_ADDON_EXPORT_EXPLAIN'           => 'Fasst die Galeriebilder in einem ZIP-Archiv zusammen, benannt so, wie das Forum sie anzeigt.',
 	'GALLERY_ADDON_FAVORITE_EXPLAIN'         => 'Ermöglicht Mitgliedern, Bilder als Favorit zu speichern und sie über das Persönliche Profil wiederzufinden.',
 	'GALLERY_ADDON_FEED_EXPLAIN'             => 'Veröffentlicht die neuesten Bilder als ATOM-Feed, den man abonnieren kann.',
 	'ACP_GALLERY_OVERVIEW'         => 'phpBB Galerie',
