@@ -34,7 +34,7 @@ final class acp_environment_test extends TestCase
 		$this->assertSame(['PHP', 'gd'], $diagnostics->missing_required_components($checks));
 	}
 
-	public function test_addon_checks_report_enabled_disabled_and_not_installed_states(): void
+	public function test_addon_checks_report_all_packaged_addon_states(): void
 	{
 		$manager = new class {
 			public function is_enabled(string $extension): bool
@@ -55,9 +55,18 @@ final class acp_environment_test extends TestCase
 
 		$checks = (new environment())->addon_checks($manager);
 
-		$this->assertSame(['enabled', 'disabled', 'not_installed'], array_column($checks, 'status'));
 		$this->assertSame(
-			['phpbbgallery/acpcleanup', 'phpbbgallery/acpimport', 'phpbbgallery/exif'],
+			['enabled', 'disabled', 'not_installed', 'not_available', 'not_available'],
+			array_column($checks, 'status')
+		);
+		$this->assertSame(
+			[
+				'phpbbgallery/acpcleanup',
+				'phpbbgallery/acpimport',
+				'phpbbgallery/exif',
+				'phpbbgallery/favorite',
+				'phpbbgallery/feed',
+			],
 			array_column($checks, 'extension')
 		);
 	}

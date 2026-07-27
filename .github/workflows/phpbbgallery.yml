@@ -152,7 +152,7 @@ jobs:
           phpBB/vendor/bin/phpunit
           --configuration .github/phpunit-sqlite3-github.xml
           --bootstrap ./tests/bootstrap.php
-          phpBB/ext/phpbbgallery/core/tests/functional/gallery_lifecycle_test.php
+          phpBB/ext/phpbbgallery/core/tests/functional/gallery_lifecycle.php
 
   quality:
     name: Lint and coding standard
