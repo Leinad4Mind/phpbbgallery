@@ -406,7 +406,7 @@ class main_module
 
 			/**
 			* borrowed from phpBB3
-			* @author: phpBB Group
+			* @author phpBB Group
 			* @location: acp_forums->manage_forums
 			*/
 			// Parent should always be filled otherwise we use initialise_album()

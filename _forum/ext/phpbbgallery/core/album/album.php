@@ -185,7 +185,6 @@ class album
 	 *                                          else {list with options}
 	 *
 	 * comparable to make_forum_select (includes/functions_admin.php)
-	 * @internal param $ (string || array)    $ignore_id                disabled albums, Exp: on moving: the album
 	 *           where the image is now
 	 */
 	public function get_albumbox(bool $ignore_personals, string|false $select_name, array|int|false $select_id = false, string|false $requested_permission = false, array|int|false $ignore_id = false, int $album_user_id = \phpbbgallery\core\block::PUBLIC_ALBUM, int $requested_album_type = -1): string

@@ -273,7 +273,6 @@ class moderate
 	 * @param int $album_id
 	 * @param int $page     This queue builder should return objects for MCP queues, so page?
 	 * @param int $per_page We need how many elements per page
-	 * @internal param int $album album we build queue for
 	 * @return void
 	 */
 	public function album_overview(int $album_id, int $page = 1, int $per_page = 0): void

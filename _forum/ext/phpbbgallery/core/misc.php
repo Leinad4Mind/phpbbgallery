@@ -62,7 +62,7 @@ class misc
 	 * @param \phpbbgallery\core\config         $gallery_config
 	 * @param \phpbbgallery\core\user           $gallery_user
 	 * @param \phpbbgallery\core\url            $url
-	 * @param                                   $track_table
+	 * @param string                            $track_table
 	 */
 	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\language\language $language, \phpbb\config\config $config,
 								   \phpbbgallery\core\config $gallery_config, \phpbbgallery\core\user $gallery_user, \phpbbgallery\core\url $url,
@@ -81,8 +81,8 @@ class misc
 	/**
 	 * Display captcha when needed
 	 *
-	 * @param $mode
-	 * @return mixed
+	 * @param string $mode
+	 * @return bool
 	 */
 	public function display_captcha(string $mode): bool
 	{
@@ -101,7 +101,7 @@ class misc
 	/**
 	 * Create not authorized dialog
 	 *
-	 * @param $backlink
+	 * @param string $backlink
 	 * @param string $loginlink
 	 * @param string $login_explain
 	 */
@@ -131,10 +131,9 @@ class misc
 	 *
 	 * borrowed from phpBB3
 	 *
-	 * @author  : phpBB Group
-	 * @function: markread
-	 * @param      $mode
-	 * @param bool $album_id
+	 * @author phpBB Group
+	 * @param string          $mode
+	 * @param array|int|false $album_id
 	 */
 	public function markread(string $mode, array|int|false $album_id = false): void
 	{

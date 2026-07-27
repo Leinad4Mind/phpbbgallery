@@ -167,9 +167,9 @@ class upload
 	 * @param \phpbbgallery\core\url            $gallery_url    Gallery url
 	 * @param block                             $block
 	 * @param file\file                         $gallery_file
-	 * @param                                   $images_table
-	 * @param                                   $root_path
-	 * @param                                   $php_ext
+	 * @param string                            $images_table
+	 * @param string                            $root_path
+	 * @param string                            $php_ext
 	 */
 	public function __construct(\phpbb\user $user, \phpbb\language\language $language, \phpbb\db\driver\driver_interface $db,
 		\phpbb\event\dispatcher_interface $phpbb_dispatcher, \phpbb\request\request $request, \phpbb\files\upload $file_upload,
@@ -196,8 +196,8 @@ class upload
 	/**
 	 * As we have to use construct for setting up infrastructure the right way,
 	 * we'll be creating this setup function that should setup everything.
-	 * @param     $album_id 	Album ID we are uploading to
-	 * @param int $num_files	Number of files we upload
+	 * @param int $album_id  Album ID we are uploading to
+	 * @param int $num_files Number of files we upload
 	 */
 	public function set_up(int $album_id, int $num_files = 0): void
 	{
@@ -213,7 +213,7 @@ class upload
 	/**
 	 * Upload a file and then call the function for reading the zip or preparing the image
 	 *
-	 * @param $file_count
+	 * @param int $file_count
 	 * @return bool
 	 */
 	public function upload_file(int $file_count): bool

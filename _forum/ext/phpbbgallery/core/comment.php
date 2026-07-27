@@ -45,8 +45,6 @@ class comment
 	 * @param \phpbbgallery\core\block         $block
 	 * @param string                            $comments_table
 	 * @param string                            $images_table
-	 * @internal param image\image $image
-	 * @internal param album\album $album
 	 */
 
 	public function __construct(\phpbb\user $user, \phpbb\db\driver\driver_interface $db,

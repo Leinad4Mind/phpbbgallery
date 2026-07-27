@@ -152,8 +152,8 @@ class report
 	/**
 	 * Move an image from one album to another
 	 *
-	 * @param    mixed $image_ids Array or integer with image_id.
-	 * @param $move_to
+	 * @param array|int $image_ids Array or integer with image_id.
+	 * @param int       $move_to
 	 */
 	public function move_images(array|int $image_ids, int $move_to): void
 	{
@@ -168,9 +168,8 @@ class report
 	/**
 	 * Move the content from one album to another
 	 *
-	 * @param $move_from
-	 * @param $move_to
-	 * @internal param mixed $image_ids Array or integer with image_id.
+	 * @param int $move_from
+	 * @param int $move_to
 	 */
 	public function move_album_content(int $move_from, int $move_to): void
 	{
@@ -266,7 +265,7 @@ class report
 
 	/**
 	 * Helper function building queues
-	 * @param    (string)    type    What type of queue are we building (short or full)
+	 * @param int $album Album used to build the queue
 	 * @param int $page
 	 * @param int $per_page
 	 * @param int $status
@@ -404,8 +403,7 @@ class report
 	/**
 	 * Get report data by image id
 	 *
-	 * @param    (int)    $image_id    Image id for which we will get info about
-	 * return    array    $report_data    array with all report info\
+	 * @param int $image_id Image ID for which report data is requested
 	 * @return array Report data indexed by report ID
 	 */
 	public function get_data_by_image(int $image_id): array

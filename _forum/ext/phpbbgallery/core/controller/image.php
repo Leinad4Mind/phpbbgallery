@@ -115,7 +115,7 @@ class image
 	/** @var string */
 	protected string $php_ext;
 
-	/* @var array */
+	/** @var array */
 	protected array $data = [];
 
 	/** @var array */
@@ -178,7 +178,6 @@ class image
 	 * @param string                                                    $table_comments
 	 * @param string                                                    $phpbb_root_path
 	 * @param string                                                    $php_ext
-	 * @internal param \phpbbgallery\core\comment $gallery_comment Gallery comment class
 	 */
 	public function __construct(\phpbb\request\request_interface $request, \phpbb\auth\auth $auth, \phpbb\config\config $config,
 		\phpbb\controller\helper $helper, \phpbb\db\driver\driver_interface $db,
@@ -1294,7 +1293,6 @@ class image
 	 * @param int $image_status
 	 * @param int $album_auth_level
 	 * @param array $user_data
-	 * @internal param array $album_data
 	 * @return void
 	 */
 	protected function check_permissions(int $album_id, int $owner_id, int $image_status, int $album_auth_level, array $user_data): void

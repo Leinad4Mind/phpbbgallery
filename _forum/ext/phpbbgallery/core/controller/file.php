@@ -14,64 +14,64 @@ namespace phpbbgallery\core\controller;
 
 class file
 {
-	/* @var \phpbb\config\config */
+	/** @var \phpbb\config\config */
 	protected \phpbb\config\config $config;
 
-	/* @var \phpbb\db\driver\driver_interface */
+	/** @var \phpbb\db\driver\driver_interface */
 	protected \phpbb\db\driver\driver_interface $db;
 
-	/* @var \phpbb\user */
+	/** @var \phpbb\user */
 	protected \phpbb\user $user;
 
 	/** @var \phpbb\language\language Gallery language service */
 	protected \phpbb\language\language $language;
 
-	/* @var \phpbbgallery\core\auth\auth */
+	/** @var \phpbbgallery\core\auth\auth */
 	protected \phpbbgallery\core\auth\auth $auth;
 
-	/* @var \phpbbgallery\core\user */
+	/** @var \phpbbgallery\core\user */
 	protected \phpbbgallery\core\user $gallery_user;
 
-	/* @var string */
+	/** @var string */
 	protected string $path_source;
 
-	/* @var string */
+	/** @var string */
 	protected string $path_medium;
 
-	/* @var string */
+	/** @var string */
 	protected string $path_mini;
 
-	/* @var string */
+	/** @var string */
 	protected string $path_watermark;
 
 	/** @var string Gallery error-image directory */
 	protected string $path_error;
 
-	/* @var \phpbbgallery\core\file\file */
+	/** @var \phpbbgallery\core\file\file */
 	protected \phpbbgallery\core\file\file $tool;
 
-	/* @var \phpbb\request\request_interface */
+	/** @var \phpbb\request\request_interface */
 	protected \phpbb\request\request_interface $request;
 
-	/* @var string */
+	/** @var string */
 	protected string $table_albums;
 
-	/* @var string */
+	/** @var string */
 	protected string $table_images;
 
-	/* @var string */
+	/** @var string */
 	protected string $path = '';
 
-	/* @var array */
+	/** @var array */
 	protected array $data = [];
 
-	/* @var string */
+	/** @var string */
 	protected string $error = '';
 
-	/* @var string */
+	/** @var string */
 	protected string $image_src = '';
 
-	/* @var boolean */
+	/** @var boolean */
 	protected bool $use_watermark = false;
 
 	/**
@@ -91,7 +91,6 @@ class file
 	 * @param string $watermark_file
 	 * @param string $albums_table
 	 * @param string $images_table
-	 * @internal param \phpbbgallery\core\album\display $display Albums display object
 	 */
 	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\language\language $language, \phpbbgallery\core\auth\auth $gallery_auth,
 	\phpbbgallery\core\user $gallery_user, \phpbbgallery\core\file\file $tool, \phpbb\request\request_interface $request,

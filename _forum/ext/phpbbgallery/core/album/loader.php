@@ -14,10 +14,10 @@ namespace phpbbgallery\core\album;
 
 class loader
 {
-	/* @var \phpbb\db\driver\driver */
+	/** @var \phpbb\db\driver\driver */
 	protected \phpbb\db\driver\driver_interface $db;
 
-	/* @var \phpbb\user */
+	/** @var \phpbb\user */
 	protected \phpbb\user $user;
 
 	/** @var string */

@@ -13,34 +13,34 @@ namespace phpbbgallery\core\controller;
 
 class search
 {
-	/* @var \phpbb\auth\auth */
+	/** @var \phpbb\auth\auth */
 	protected \phpbb\auth\auth $auth;
 
-	/* @var \phpbb\config\config */
+	/** @var \phpbb\config\config */
 	protected \phpbb\config\config $config;
 
-	/* @var \phpbb\db\driver\driver_interface */
+	/** @var \phpbb\db\driver\driver_interface */
 	protected \phpbb\db\driver\driver_interface $db;
 
 	/** @var \phpbb\pagination  */
 	protected \phpbb\pagination $pagination;
 
-	/* @var \phpbb\request\request_interface */
+	/** @var \phpbb\request\request_interface */
 	protected \phpbb\request\request_interface $request;
 
-	/* @var \phpbb\template\template */
+	/** @var \phpbb\template\template */
 	protected \phpbb\template\template $template;
 
-	/* @var \phpbb\user */
+	/** @var \phpbb\user */
 	protected \phpbb\user $user;
 
 	/** @var \phpbb\language\language  */
 	protected \phpbb\language\language $language;
 
-	/* @var \phpbb\controller\helper */
+	/** @var \phpbb\controller\helper */
 	protected \phpbb\controller\helper $helper;
 
-	/* @var \phpbbgallery\core\album\display */
+	/** @var \phpbbgallery\core\album\display */
 	protected \phpbbgallery\core\album\display $display;
 
 	/** @var \phpbbgallery\core\config  */
@@ -70,10 +70,10 @@ class search
 	/** @var string */
 	protected string $comments_table;
 
-	/* @var string */
+	/** @var string */
 	protected string $root_path;
 
-	/* @var string */
+	/** @var string */
 	protected string $php_ext;
 
 	/**

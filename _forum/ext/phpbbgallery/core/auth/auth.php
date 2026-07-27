@@ -212,7 +212,7 @@ class auth
 
 	/**
 	 * Query the permissions for a given user and store them in the database.
-	 * @param $user_id
+	 * @param int $user_id
 	 */
 	protected function query_auth_data(int $user_id): void
 	{
@@ -298,7 +298,7 @@ class auth
 	 * Line-Format:    bitfields:i_count:a_count::album_id(s)
 	 * Samples:        8912837:0:10::-3
 	 *                9961469:20:0::1:23:42
-	 * @param $auth_data
+	 * @param array $auth_data
 	 * @return string
 	 */
 	protected function serialize_auth_data(array $auth_data): string
@@ -323,7 +323,7 @@ class auth
 
 	/**
 	 * Unserialize the stored auth-data
-	 * @param $serialized_data
+	 * @param string $serialized_data
 	 */
 	protected function unserialize_auth_data(string $serialized_data): void
 	{
@@ -365,8 +365,8 @@ class auth
 
 	/**
 	 * Stores an acl-row into the _auth_data-array.
-	 * @param $album_id
-	 * @param $data
+	 * @param int   $album_id
+	 * @param array $data
 	 */
 	protected function store_acl_row(int $album_id, array $data): void
 	{
@@ -424,7 +424,7 @@ class auth
 
 	/**
 	 * Restrict the access to personal galleries, if the user is not a moderator.
-	 * @param $user_id
+	 * @param int $user_id
 	 */
 	protected function restrict_pegas(int $user_id): void
 	{
@@ -493,7 +493,7 @@ class auth
 
 	/**
 	 * Get the users, which added our user as friend and/or foe
-	 * @param $user_id
+	 * @param int $user_id
 	 * @return array
 	 */
 	public function get_user_zebra(int $user_id): array
@@ -550,9 +550,9 @@ class auth
 
 	/**
 	 * Get zebra state
-	 * @param $zebra_array
-	 * @param $album_author
-	 * @param $album_id
+	 * @param array $zebra_array
+	 * @param int   $album_author
+	 * @param int   $album_id
 	 * @return int
 	 */
 	public function get_zebra_state(array $zebra_array, int $album_author, int $album_id): int
@@ -588,7 +588,7 @@ class auth
 
 	/**
 	 * Get groups a user is member from.
-	 * @param $user_id
+	 * @param int $user_id
 	 * @return array
 	 */
 	public function get_usergroups(int $user_id): array
@@ -615,8 +615,8 @@ class auth
 
 	/**
 	 * Sets the permissions-cache in users-table to given array.
-	 * @param $user_ids
-	 * @param bool $permissions
+	 * @param array|int|string   $user_ids
+	 * @param array|string|false $permissions
 	 */
 	public function set_user_permissions(array|int|string $user_ids, array|string|false $permissions = false): void
 	{
@@ -831,7 +831,6 @@ class auth
 	 * @param    string $acl      One of the permissions, Exp: i_view; *_count permissions are not allowed!
 	 * @param    int    $album_id Album ID we want info for
 	 *
-	 * return    array    $user_ids    Return user IDs as array
 	 * @return array
 	 */
 	public function acl_users_ids(string $acl, int $album_id): array
@@ -928,10 +927,11 @@ class auth
 		return array_values($returning_value);
 	}
 
-	/*
-	* Get all albums that user has no access
-	* return array	$exclude All albums we have no access due to zebra restrictions
-	*/
+	/**
+	 * Get all albums the user cannot access due to zebra restrictions.
+	 *
+	 * @return array
+	 */
 	public function get_exclude_zebra(): array
 	{
 		$zebra_array = $this->get_user_zebra($this->phpbb_user->data['user_id']);

@@ -57,8 +57,8 @@ class log
 	 * @param \phpbb\pagination                 $pagination
 	 * @param auth\auth                         $gallery_auth
 	 * @param config                            $gallery_config
-	 * @param                                   $log_table
-	 * @param                                   $images_table
+	 * @param string                            $log_table
+	 * @param string                            $images_table
 	 */
 	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\language\language $language,
 		\phpbb\user_loader $user_loader, \phpbb\template\template $template, \phpbb\controller\helper $helper, \phpbb\pagination $pagination,

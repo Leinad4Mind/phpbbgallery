@@ -1118,9 +1118,9 @@ class permissions_module
 	/**
 	 * Create the drop-down-options to inherit the c_masks
 	 * or check, whether the chosen option is valid
-	 * @param $cache_obtain_album_list
-	 * @param $allowed_albums
-	 * @param $album_id
+	 * @param array $cache_obtain_album_list
+	 * @param array $allowed_albums
+	 * @param int   $album_id
 	 * @param int $check_inherit_album
 	 * @return bool|string
 	 */
@@ -1171,11 +1171,11 @@ class permissions_module
 	/**
 	 * Create the drop-down-options to inherit the v_masks
 	 * or check, whether the chosen option is valid
-	 * @param $cache_obtain_album_list
-	 * @param $allowed_albums
-	 * @param $allowed_victims
-	 * @param $album_id
-	 * @param $victim_id
+	 * @param array $cache_obtain_album_list
+	 * @param array $allowed_albums
+	 * @param array $allowed_victims
+	 * @param int   $album_id
+	 * @param int   $victim_id
 	 * @param int $check_inherit_album
 	 * @param int $check_inherit_victim
 	 * @return bool|string
@@ -1244,9 +1244,9 @@ class permissions_module
 	/**
 	 * Create the drop-down-options to inherit the v_masks
 	 * or check, whether the chosen option is valid
-	 * @param $p_system
-	 * @param $allowed_victims
-	 * @param $victim_id
+	 * @param int   $p_system
+	 * @param array $allowed_victims
+	 * @param int   $victim_id
 	 * @param int $check_inherit_victim
 	 * @return bool|string
 	 */

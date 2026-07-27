@@ -101,9 +101,9 @@ class rating
 	 * @param \phpbb\request\request            $request
 	 * @param config                            $gallery_config
 	 * @param auth\auth                         $gallery_auth
-	 * @param                                   $images_table
-	 * @param                                   $albums_table
-	 * @param                                   $rates_table
+	 * @param string                            $images_table
+	 * @param string                            $albums_table
+	 * @param string                            $rates_table
 	 */
 	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\template\template $template, \phpbb\user $user,
 		\phpbb\language\language $language, \phpbb\request\request $request, \phpbbgallery\core\config $gallery_config,
@@ -141,8 +141,8 @@ class rating
 	/**
 	 * Returns the value of image_data key.
 	 * If the value is missing, it is queried from the database.
-	 * @param $key
-	 * @return
+	 * @param string $key
+	 * @return mixed
 	 */
 	private function image_data(string $key): mixed
 	{
@@ -171,8 +171,8 @@ class rating
 	 * Returns the value of album_data key.
 	 * If the value is missing, it is queried from the database.
 	 *
-	 * @param    $key    string    The value of the album data, if true it returns the hole array.
-	 * @return mixed|null
+	 * @param string|bool $key The album-data key, or true to return the whole array.
+	 * @return mixed
 	 */
 	private function album_data(string|bool $key): mixed
 	{

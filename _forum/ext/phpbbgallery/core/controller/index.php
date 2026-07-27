@@ -14,31 +14,31 @@ namespace phpbbgallery\core\controller;
 
 class index
 {
-	/* @var \phpbb\auth\auth */
+	/** @var \phpbb\auth\auth */
 	protected \phpbb\auth\auth $auth;
 
-	/* @var \phpbb\config\config */
+	/** @var \phpbb\config\config */
 	protected \phpbb\config\config $config;
 
-	/* @var \phpbb\db\driver\driver_interface */
+	/** @var \phpbb\db\driver\driver_interface */
 	protected \phpbb\db\driver\driver_interface $db;
 
-	/* @var \phpbb\request\request */
+	/** @var \phpbb\request\request */
 	protected \phpbb\request\request $request;
 
-	/* @var \phpbb\template\template */
+	/** @var \phpbb\template\template */
 	protected \phpbb\template\template $template;
 
-	/* @var \phpbb\user */
+	/** @var \phpbb\user */
 	protected \phpbb\user $user;
 
 	/** @var \phpbb\language\language  */
 	protected \phpbb\language\language $language;
 
-	/* @var \phpbb\controller\helper */
+	/** @var \phpbb\controller\helper */
 	protected \phpbb\controller\helper $helper;
 
-	/* @var \phpbbgallery\core\album\display */
+	/** @var \phpbbgallery\core\album\display */
 	protected \phpbbgallery\core\album\display $display;
 
 	/** @var \phpbbgallery\core\config  */
@@ -59,10 +59,10 @@ class index
 	/** @var \phpbbgallery\core\image\image  */
 	protected \phpbbgallery\core\image\image $image;
 
-	/* @var string */
+	/** @var string */
 	protected string $root_path;
 
-	/* @var string */
+	/** @var string */
 	protected string $php_ext;
 
 	public const RRC_MODE_RECENT_COMMENTS = 4;

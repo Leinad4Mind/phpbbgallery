@@ -105,7 +105,9 @@ class block
 	}
 
 	/**
-	 * return int orphan status
+	 * Return the orphan image status.
+	 *
+	 * @return int
 	 */
 	public function get_image_status_orphan(): int
 	{

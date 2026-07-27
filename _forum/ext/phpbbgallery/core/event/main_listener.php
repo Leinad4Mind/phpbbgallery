@@ -27,11 +27,11 @@ class main_listener implements EventSubscriberInterface
 			//'core.viewonline_overwrite_location'	=> 'add_newspage_viewonline',
 		];
 	}
-	/* @var \phpbb\controller\helper */
+	/** @var \phpbb\controller\helper */
 	protected \phpbb\controller\helper $helper;
-	/* @var \phpbb\template\template */
+	/** @var \phpbb\template\template */
 	protected \phpbb\template\template $template;
-	/* @var \phpbb\user */
+	/** @var \phpbb\user */
 	protected \phpbb\user $user;
 
 	/** @var \phpbb\language\language  */
