@@ -174,6 +174,7 @@ $lang = array_merge($lang, [
 	'MARK_ALBUMS_READ'         => 'Segna album come letti',
 	'MAX_DIMENSIONS'           => 'Dimensioni massime',
 	'MAX_FILE_SIZE'            => 'Dimensione massima file',
+	'RESIZE_SOURCE_FILESIZE_EXPLAIN' => 'Quando il ridimensionamento è attivo, sono accettate immagini di origine fino a %1$s; l’immagine salvata non deve superare %2$s.',
 	'MAX_HEIGHT'               => 'Massima altezza immagine',
 	'MAX_WIDTH'                => 'Massima largherzza immagine',
 	'MISSING_COMMENT'          => 'Nessun messaggio inserito',

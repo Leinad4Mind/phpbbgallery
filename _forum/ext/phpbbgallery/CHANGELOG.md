@@ -11,6 +11,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Made ACP contest settings appear only while creating or editing an album in contest mode, without an initial visibility flash.
 - Added a configurable public Gallery title with a translated fallback, applied consistently to menus, breadcrumbs, feeds and page titles.
 - Fixed clipped descenders in polaroid album names with a shared title line box across all supported styles.
+- Allowed bounded larger source images when resizing is enabled, enforcing the configured file-size limit on the actual stored result.
 
 ### Security
 

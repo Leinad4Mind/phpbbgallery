@@ -72,6 +72,7 @@ head.ready(function () {
 			</div>
 
 			<div class="help-block"><span class="label label-warning">{{ lang('MAX_DIMENSIONS') }}</span> {{ lang('FILE_SIZE') }}{{ lang('COLON') }} {{ S_MAX_FILESIZE }}&#44; {{ lang('IMAGE_WIDTH') }}{{ lang('COLON') }} {{ S_MAX_WIDTH }}&#44; {{ lang('IMAGE_HEIGHT') }}{{ lang('COLON') }} {{ S_MAX_HEIGHT }}.</div>
+			{% if S_RESIZE_LARGE_FILES %}<div class="help-block">{{ lang('RESIZE_SOURCE_FILESIZE_EXPLAIN', S_SOURCE_MAX_FILESIZE, S_MAX_FILESIZE) }}</div>{% endif %}
 
 				{% if not S_USER_LOGGED_IN %}
 					<label for="username">{{ lang('USERNAME') }}{{ lang('COLON') }}</label>
