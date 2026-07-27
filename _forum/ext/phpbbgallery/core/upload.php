@@ -157,6 +157,7 @@ class upload
 	private array $file_names = [];
 	private array $file_rotating = [];
 	private array $zip_file_data = [];
+	private bool $allow_zip = true;
 
 	public int $min_width = 0;
 	public int $min_height = 0;
@@ -206,12 +207,14 @@ class upload
 	/**
 	 * As we have to use construct for setting up infrastructure the right way,
 	 * we'll be creating this setup function that should setup everything.
-	 * @param int $album_id  Album ID we are uploading to
-	 * @param int $num_files Number of files we upload
+	 * @param int  $album_id  Album ID we are uploading to
+	 * @param int  $num_files Number of files we upload
+	 * @param bool $allow_zip Whether this upload operation accepts ZIP archives
 	 */
-	public function set_up(int $album_id, int $num_files = 0): void
+	public function set_up(int $album_id, int $num_files = 0, bool $allow_zip = true): void
 	{
-		$this->file_upload->set_allowed_extensions($this->get_allowed_types());
+		$this->allow_zip = $allow_zip;
+		$this->file_upload->set_allowed_extensions($this->get_allowed_types(false, !$allow_zip));
 
 		$this->album_id = (int) $album_id;
 		$this->file_limit = (int) $num_files;
@@ -1422,6 +1425,42 @@ class upload
 	}
 
 	/**
+	 * Delete only the files created by this upload service invocation.
+	 *
+	 * This is intended for add-ons that use the secure upload pipeline as an
+	 * intermediate step and must roll back their own failed operation without
+	 * deleting other resumable drafts owned by the same member.
+	 *
+	 * @return int Number of uploaded images deleted
+	 */
+	public function discard_uploaded_images(): int
+	{
+		if (!$this->images)
+		{
+			return 0;
+		}
+
+		$image_ids = $this->images;
+		$filenames = [];
+		foreach ($image_ids as $image_id)
+		{
+			if (isset($this->image_data[$image_id]['image_filename']))
+			{
+				$filenames[$image_id] = $this->image_data[$image_id]['image_filename'];
+			}
+		}
+
+		$this->gallery_image->delete_images($image_ids, $filenames, false);
+		$this->images = [];
+		$this->image_data = [];
+		$this->array_id2row = [];
+		$this->loaded_files = 0;
+		$this->uploaded_files = 0;
+
+		return count($image_ids);
+	}
+
+	/**
 	 * Build the ownership conditions shared by draft loading and finalization.
 	 *
 	 * @return string
@@ -1503,7 +1542,7 @@ class upload
 			$types[] = $this->language->lang('FILETYPES_WEBP');
 			$extensions[] = 'webp';
 		}
-		if (!$ignore_zip && $this->gallery_config->get('allow_zip'))
+		if ($this->allow_zip && !$ignore_zip && $this->gallery_config->get('allow_zip'))
 		{
 			$types[] = $this->language->lang('FILETYPES_ZIP');
 			$extensions[] = 'zip';
