@@ -41,22 +41,69 @@ class manager
 
 	public function get_tags($topic_id)
 	{
-		$sql = 'SELECT t.tag FROM ' . $this->table_bbtags . ' AS t 
-				' . (($topic_id) ? ', '. $this->table_bbtags_topic . ' AS tt WHERE tt.topic_id = ' . (int) $topic_id . ' AND t.id = tt.tag_id ' : '') . '
-				ORDER BY t.count DESC';
+		$topic_id = (int) $topic_id;
+		$sql = 'SELECT t.tag
+			FROM ' . $this->table_bbtags . ' t';
+		if ($topic_id > 0)
+		{
+			$sql .= ' JOIN ' . $this->table_bbtags_topic . ' tt ON tt.tag_id = t.id
+				WHERE tt.topic_id = ' . $topic_id;
+		}
+		$sql .= ' ORDER BY t.count DESC';
 		$result = $this->db->sql_query_limit($sql, $topic_id ? $this->config['bbtags_max_tags'] : $this->config['bbtags_cloud_limit']);
 		$tag = array();
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$tag[] = $row['tag'];
 		}
+		$this->db->sql_freeresult($result);
+
 		return implode(', ' , $tag);
 	}
 
 	public function remove_tags_from_topics($topic_ids)
 	{
-		$sql = 'DELETE FROM ' . $this->table_bbtags_topic . ' WHERE ' . $this->db->sql_in_set('topic_id', (array) $topic_ids);
-		$this->db->sql_query($sql);
+		$topic_ids = array_values(array_filter(array_map('intval', (array) $topic_ids)));
+		if (empty($topic_ids))
+		{
+			return 0;
+		}
+
+		$this->db->sql_transaction('begin');
+		try
+		{
+			$affected = $this->delete_topic_relations($topic_ids);
+			if ($affected === false || $this->delete_unused_tags() === false || !$this->calc_count_tags())
+			{
+				$this->db->sql_transaction('rollback');
+				return false;
+			}
+		}
+		catch (\Throwable $exception)
+		{
+			$this->db->sql_transaction('rollback');
+			throw $exception;
+		}
+
+		$this->db->sql_transaction('commit');
+		return $affected;
+	}
+
+	private function delete_topic_relations(array $topic_ids)
+	{
+		if (empty($topic_ids))
+		{
+			return 0;
+		}
+
+		$sql = 'DELETE FROM ' . $this->table_bbtags_topic . '
+			WHERE ' . $this->db->sql_in_set('topic_id', $topic_ids);
+		if ($this->db->sql_query($sql) === false)
+		{
+			return false;
+		}
+
+		return $this->db->sql_affectedrows();
 	}
 
 	private function get_unused_tag_ids()
@@ -155,24 +202,76 @@ class manager
 
 	public function assign_tags_to_topic($topic_id, $valid_tags)
 	{
-		$this->remove_tags_from_topics((int) $topic_id);
-		$this->create_missing_tags($valid_tags);
-
-		$ids = $this->get_existing_tags($valid_tags, true);
-
-		$sql_ary = array();
-		foreach ($ids as $id)
+		$topic_id = (int) $topic_id;
+		if ($topic_id <= 0)
 		{
-			$sql_ary[] = array('topic_id' => (int) $topic_id, 'tag_id' => $id);
+			return false;
 		}
-		$this->db->sql_multi_insert($this->table_bbtags_topic, $sql_ary);
 
-		$this->delete_unused_tags();
-		$this->calc_count_tags();
+		$tags = array();
+		foreach ((array) $valid_tags as $tag)
+		{
+			$tag = $this->clean_tag($tag);
+			if ($tag !== '')
+			{
+				$tags[] = $tag;
+			}
+		}
+		$tags = array_values(array_unique($tags));
+
+		$this->db->sql_transaction('begin');
+		try
+		{
+			if (!$this->create_missing_tags($tags))
+			{
+				$this->db->sql_transaction('rollback');
+				return false;
+			}
+
+			$ids = $this->get_existing_tags($tags, true);
+			if ($this->delete_topic_relations(array($topic_id)) === false)
+			{
+				$this->db->sql_transaction('rollback');
+				return false;
+			}
+
+			if (!empty($ids))
+			{
+				$sql_ary = array();
+				foreach ($ids as $id)
+				{
+					$sql_ary[] = array('topic_id' => $topic_id, 'tag_id' => (int) $id);
+				}
+				if ($this->db->sql_multi_insert($this->table_bbtags_topic, $sql_ary) === false)
+				{
+					$this->db->sql_transaction('rollback');
+					return false;
+				}
+			}
+
+			if ($this->delete_unused_tags() === false || !$this->calc_count_tags())
+			{
+				$this->db->sql_transaction('rollback');
+				return false;
+			}
+		}
+		catch (\Throwable $exception)
+		{
+			$this->db->sql_transaction('rollback');
+			throw $exception;
+		}
+
+		$this->db->sql_transaction('commit');
+		return true;
 	}
 
 	private function create_missing_tags($tags)
 	{
+		if (empty($tags))
+		{
+			return true;
+		}
+
 		$tags = array_unique($tags);
 		$existing_tags = $this->get_existing_tags($tags);
 
@@ -181,7 +280,12 @@ class manager
 		{
 			(!$this->in_array_r($tag, $existing_tags)) ? $sql_ary_new_tags[] = array('tag' => $tag, 'route' => $this->slug($tag, array('transliterate' => true))) : null;
 		}
-		$this->db->sql_multi_insert($this->table_bbtags, $sql_ary_new_tags);
+		if (empty($sql_ary_new_tags))
+		{
+			return true;
+		}
+
+		return $this->db->sql_multi_insert($this->table_bbtags, $sql_ary_new_tags) !== false;
 	}
 
 	private function in_array_r($needle, $haystack, $strict = false)
@@ -228,13 +332,26 @@ class manager
 
 	public function calc_count_tags()
 	{
+		$sql = 'UPDATE ' . $this->table_bbtags . ' SET count = 0';
+		if ($this->db->sql_query($sql) === false)
+		{
+			return false;
+		}
+
 		$sql = 'SELECT tag_id, COUNT(topic_id) AS count FROM ' . $this->table_bbtags_topic . ' GROUP BY tag_id';
 		$result = $this->db->sql_query($sql);
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$sql = 'UPDATE ' . $this->table_bbtags . ' SET count = ' . $row['count'] . ' WHERE id = ' . $row['tag_id'];
-			$this->db->sql_query($sql);
+			if ($this->db->sql_query($sql) === false)
+			{
+				$this->db->sql_freeresult($result);
+				return false;
+			}
 		}
+		$this->db->sql_freeresult($result);
+
+		return true;
 	}
 
 	public function slug($string, $options = array())
