@@ -269,7 +269,7 @@ class albums_module
 						'a'			=> $album_id,
 						'action'	=> $action,
 						'parent_id'	=> $this->parent_id,
-					]));
+					]), 'confirm_body.html', $this->u_action);
 				}
 
 				$sql = 'SELECT *
@@ -308,7 +308,7 @@ class albums_module
 						'a'			=> $album_id,
 						'action'	=> $action,
 						'parent_id'	=> $this->parent_id,
-					]));
+					]), 'confirm_body.html', $this->u_action);
 				}
 
 				$sql = 'SELECT album_name, album_type

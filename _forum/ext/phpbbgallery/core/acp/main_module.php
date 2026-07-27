@@ -293,7 +293,7 @@ class main_module
 					'mode'		=> $mode,
 					'action'	=> $action,
 					'reset_album_id'	=> $album_id,
-				]));
+				]), 'confirm_body.html', $this->u_action);
 			}
 		}
 		else

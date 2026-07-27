@@ -82,8 +82,7 @@ class gallery_logs_module
 					'sd'		=> $sort_dir,
 					'i'			=> $id,
 					'mode'		=> $mode,
-					'action'		=> $this->u_action,
-				]));
+				]), 'confirm_body.html', $this->u_action);
 			}
 		}
 

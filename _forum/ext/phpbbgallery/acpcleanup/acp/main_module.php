@@ -325,7 +325,7 @@ class main_module
 				{
 					$clean_gallery_confirm = $user->lang('CONFIRM_PRUNE', $core_cleanup->lang_prune_pattern($prune_pattern)) . '<br />' . $clean_gallery_confirm;
 				}
-				confirm_box(false, $clean_gallery_confirm, $s_hidden_fields);
+				confirm_box(false, $clean_gallery_confirm, $s_hidden_fields, 'confirm_body.html', $this->u_action);
 			}
 		}
 
