@@ -10,6 +10,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Restored album-scoped search on album pages, including empty albums and responsive themes, while respecting phpBB search availability and user permission.
 - Made ACP contest settings appear only while creating or editing an album in contest mode, without an initial visibility flash.
 - Added a configurable public Gallery title with a translated fallback, applied consistently to menus, breadcrumbs, feeds and page titles.
+- Fixed clipped descenders in polaroid album names with a shared title line box across all supported styles.
 
 ### Security
 

@@ -102,6 +102,18 @@ input.autowidth-gallery {
 	max-width: 186px;
 }
 
+.gallery-album-title {
+	font-size: 1.2em;
+	font-weight: bold;
+	line-height: 1.4;
+	margin: 0 0 .5em;
+	overflow: hidden;
+	padding-bottom: .1em;
+	text-align: center;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
 .polaroid_img_container {
 	height: 120px;
 	width: 242px;
