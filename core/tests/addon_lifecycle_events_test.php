@@ -37,6 +37,18 @@ final class addon_lifecycle_events_test extends TestCase
 		$this->assertStringContainsString("['validation_error', 'image_ids']", $controller);
 	}
 
+	public function test_upload_review_display_can_extend_each_image_block(): void
+	{
+		$controller = (string) file_get_contents(dirname(__DIR__) . '/controller/upload.php');
+		$event = strpos($controller, "trigger_event('phpbbgallery.core.upload.review_display'");
+		$assignment = strpos($controller, "assign_block_vars('image', \$image_template_vars)", $event ?: 0);
+
+		$this->assertNotFalse($event);
+		$this->assertNotFalse($assignment);
+		$this->assertLessThan($assignment, $event);
+		$this->assertStringContainsString("['image_id', 'image_index', 'image_data', 'image_template_vars']", $controller);
+	}
+
 	public function test_image_edit_event_runs_after_authorized_persistence_and_before_success(): void
 	{
 		$method = $this->extract_method(dirname(__DIR__) . '/controller/image.php', 'public function edit(', "\n\t// Delete image");

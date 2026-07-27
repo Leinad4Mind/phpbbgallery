@@ -651,11 +651,27 @@ class upload
 			foreach ($process->images as $image_id)
 			{
 				$data = $process->image_data[$image_id];
-				$this->template->assign_block_vars('image', [
+				$image_template_vars = [
 					'U_IMAGE'    => $this->image->generate_link('thumbnail', 'plugin', $image_id, $data['image_name'], $album_id),
 					'IMAGE_NAME' => $data['image_name'],
 					'IMAGE_DESC' => $data['image_desc'],
-				]);
+				];
+
+				/**
+				 * Allow add-ons to add per-image values to the resumable upload review.
+				 *
+				 * @event phpbbgallery.core.upload.review_display
+				 * @var int   image_id           Owned orphan image identifier
+				 * @var int   image_index        Zero-based position in the review batch
+				 * @var array image_data         Current orphan image row
+				 * @var array image_template_vars Values assigned to the image template block
+				 * @since 3.4.0
+				 */
+				$image_index = $num_images;
+				$image_data = $data;
+				$vars = ['image_id', 'image_index', 'image_data', 'image_template_vars'];
+				extract($this->dispatcher->trigger_event('phpbbgallery.core.upload.review_display', compact($vars)));
+				$this->template->assign_block_vars('image', $image_template_vars);
 				$num_images++;
 			}
 
