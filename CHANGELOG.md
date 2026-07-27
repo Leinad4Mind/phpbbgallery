@@ -67,6 +67,8 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added native property, parameter, identifier-list, and operation types throughout the Core report service, with initialized queue state, safe empty-image results, and clamped pagination offsets.
 - Added native property, parameter, count-return, and rendering types throughout the Core search service, with initialized result state, safe missing-count handling, and deterministic fallback sorting.
 - Added native property, parameter, image-read, cache-response, and upload-collection types throughout the Core file services, with safe GD handle state, validated watermark metadata, and deterministic empty multipart uploads.
+- Normalized legacy PHPDoc annotations throughout Core, preserved informative service descriptions, removed stale parameter and function tags, and added regression coverage for unsupported formats.
+- Removed the obsolete commented favorite-module and BBCode stubs from the initial Core migration; those responsibilities now remain with the favorite add-on and the dedicated BBCode migration.
 - Converted the Gallery ACP, ACP Cleanup, ACP Import, and EXIF templates from deprecated phpBB comment tags to native Twig syntax.
 - Converted the shared and prosilver Gallery templates from deprecated phpBB comment tags and template variables to native Twig syntax.
 - Converted the BBOOTS Gallery templates from deprecated phpBB comment tags and template variables to native Twig syntax.
@@ -145,6 +147,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Restored WebP labels and selection in Bootstrap upload controls and replaced the remote upload-preview placeholder with the packaged fallback image.
 - Built Gallery UCP form actions from the board root, preventing personal-album and subalbum operations from posting to duplicated paths such as `/ucp.php/ucp.php`.
 - Corrected album bulk-selection controls in the UCP subscription manager and rendered the actual last-comment body with its author and timestamp.
+- Removed five redundant `imagedestroy()` calls, eliminating PHP 8.5 deprecation warnings while leaving GD objects to PHP's automatic lifecycle.
 
 ### Performance
 
@@ -160,7 +163,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Tests
 
-- Added GitHub Actions coverage for all four Gallery components on PHP 8.1, 8.2, 8.4, and 8.5, plus manifest validation, PHP linting, and production PHPCS checks.
+- Added GitHub Actions coverage for all four Gallery components on PHP 8.1, 8.2, 8.4, and 8.5, plus manifest validation, PHP linting, production PHPCS checks, and official EPV package validation.
 - Added permanent runtime-compatibility tests covering the PHP/phpBB/PHPUnit baselines, legacy `var` regression, and typed ACP/UCP module state.
 - Added standalone ACP Cleanup tests covering typed service/module contracts, centralized form input, safe directory scanning, file cleanup, database-entry cleanup, and moderation delegation.
 - Added standalone ACP Cleanup migration tests covering native contracts, dependency ordering, permission installation, and module registration.
@@ -184,10 +187,10 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added permanent notification-event tests covering phpBB inheritance compatibility, native contracts, identifiers, serialized payloads, and presentation values.
 - Added permanent native-Twig tests covering deprecated-token removal and parsing with the packaged Twig version.
 - Added permanent language-catalog tests covering PHP file and key parity, plural structures, printf placeholders, UTF-8 validity, and non-empty translations across all four Gallery components.
-- Added permanent package-hygiene tests covering generated artefacts, duplicate bundles, namespaced asset resolution, polaroid loading, current widget version, missing source-map references, and third-party checksums.
+- Added permanent package-hygiene tests covering generated artefacts, duplicate bundles, namespaced asset resolution, polaroid loading, current widget version, missing source-map references, third-party checksums, and valid production PHPDoc annotations.
 - Added permanent ACP personal-gallery resync tests covering populated and empty databases, normalized values, and regression against indexing a missing row.
 - Added permanent performance and browser-cache tests covering index creation and rollback, index-name portability, conditional 304 responses, stale validators, no-store responses, file timestamps, and view-counter ownership.
-- Added permanent migration and purge-safety tests covering native contracts, profile-field compatibility, dependency ordering, cycle detection, table prerequisites, atomic file backup, idempotency, and regression against recursive deletion.
+- Added permanent migration and purge-safety tests covering native contracts, profile-field compatibility, dependency ordering, cycle detection, table prerequisites, add-on module ownership, atomic file backup, idempotency, and regression against recursive deletion.
 - Added permanent ZIP extractor tests covering valid archives, traversal attempts, disguised files, duplicate paths, malformed metadata, resource limits, compression-ratio abuse, and cleanup behavior.
 - Added permanent ACP Import tests covering native type contracts, state validation, non-executable persistence, legacy-state cleanup, path containment, symbolic links, MIME validation, safe copying, language completeness, and architectural regressions.
 - Added permanent ACP Import purge tests covering callback safety, path validation, atomic backups, idempotency, and regression against recursive deletion.
@@ -204,11 +207,11 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added permanent ACP Gallery-log tests covering complete native contracts and mutation request/CSRF ordering.
 - Added permanent ACP/UCP module-metadata tests covering public contracts, expected modes, authorization guards, and categories.
 - Validated the ZIP upload, ACP Import, authorization, individual-move security, ACP rating-reset, ACP personal-resync, UCP CSRF, orphan-upload, resumable-upload, subtree-count, hotlink, notification-lifecycle, migration-ordering, purge-safety, database-index, view-counter, browser-cache, package-hygiene, JavaScript-asset, and language-catalog phases with PHP 7.4, 8.1, 8.2, 8.4, and 8.5.
-- Completed isolated phpBB 3.3.12 and SQLite lifecycle smoke tests on PHP 8.1 covering clean installation, enable, disable, purge, reinstall, preserved ACP Import backups, and upgrade from the previous Gallery snapshot with all migrations applied.
+- Added a real phpBB 3.3.x and SQLite functional lifecycle suite covering Core and add-on installation, schema, configuration, storage, permissions, guest denial, ACP Import, resumable drafts and cancellation, a simulated 3.3-to-3.4 update, add-on purge, and Core purge.
 - Added regression tests for restored workflows, search authorization, personal-album ownership, cleanup filters/state, missing images, log compatibility, guest uploads, deleted commenters, pagination, path handling, and JPEG EXIF files.
 - Added permanent Bootstrap template regressions covering responsive layouts, Twig parsing, localization, labels, upload previews, moderation authorization, comment profiles, subscription controls, and UCP album actions.
-- Added query-shape and behavior tests for notification, statistics, role, filesize, last-image, deletion, contest, nested-set batching, visibility, search filters, legacy logs, JSON caches, and random upload paths; the Core suite now contains 348 tests and 6626 assertions.
-- Validated correctly packaged Core, ACP Cleanup, ACP Import, and EXIF components with the official Extension Pre-Validator: no code errors or notices remain; its sole warning is the validator's unrecognized standard `phpunit.xml.dist` suffix.
+- Added query-shape and behavior tests for notification, statistics, role, filesize, last-image, deletion, contest, nested-set batching, visibility, search filters, legacy logs, JSON caches, and random upload paths; the Core suite now contains 382 tests and 6968 assertions.
+- Validated correctly packaged Core, ACP Cleanup, ACP Import, and EXIF components with the official Extension Pre-Validator: no errors, notices, or warnings remain.
 
 ## [3.3.0]
 ### Added
