@@ -42,6 +42,22 @@ final class infrastructure_types_test extends TestCase
 		$this->assertSame(5, $gallery_config->get('num_views'));
 	}
 
+	public function test_gallery_title_uses_a_clean_custom_value_or_the_translated_default(): void
+	{
+		$language = $this->createMock(\phpbb\language\language::class);
+		$language->expects($this->once())
+			->method('lang')
+			->with('GALLERY')
+			->willReturn('Gallery');
+		$config = new \phpbb\config\config(['phpbb_gallery_title' => '  <b>My "Photos" & more</b>  ']);
+		$gallery_config = new gallery_config($config);
+
+		$this->assertSame('My &quot;Photos&quot; &amp; more', $gallery_config->get_title($language));
+
+		$config['phpbb_gallery_title'] = '   ';
+		$this->assertSame('Gallery', $gallery_config->get_title($language));
+	}
+
 	public function test_auth_set_and_block_values_remain_stable(): void
 	{
 		$auth = new auth_set(0, 3, 4);

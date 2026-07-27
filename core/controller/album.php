@@ -546,7 +546,7 @@ class album
 					'INFORMATION' => $this->language->lang('UNWATCH_ALBUM'),
 				]);
 				$this->url->meta_refresh(3, $back_link);
-				return $this->helper->render('gallery/message.html', $this->language->lang('GALLERY'));
+				return $this->helper->render('gallery/message.html', $this->gallery_config->get_title($this->language));
 			}
 			else
 			{
@@ -555,7 +555,7 @@ class album
 					'INFORMATION' => $this->language->lang('WATCH_ALBUM'),
 				]);
 				$this->url->meta_refresh(3, $back_link);
-				return $this->helper->render('gallery/message.html', $this->language->lang('GALLERY'));
+				return $this->helper->render('gallery/message.html', $this->gallery_config->get_title($this->language));
 			}
 		}
 		else

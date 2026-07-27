@@ -23,6 +23,7 @@ use phpbbgallery\core\migrations\performance_indexes;
 use phpbbgallery\core\migrations\protect_personal_album_profile_field;
 use phpbbgallery\core\migrations\split_ucp_module_settings;
 use phpbbgallery\core\migrations\total_views;
+use phpbbgallery\core\migrations\gallery_title;
 
 class migration_integrity_test extends TestCase
 {
@@ -40,6 +41,7 @@ class migration_integrity_test extends TestCase
 		performance_indexes::class,
 		protect_personal_album_profile_field::class,
 		total_views::class,
+		gallery_title::class,
 	];
 
 	private array $temp_directories = [];
@@ -93,6 +95,22 @@ class migration_integrity_test extends TestCase
 			['\phpbbgallery\core\migrations\protect_personal_album_profile_field'],
 			total_views::depends_on()
 		);
+		$this->assertSame(
+			['\phpbbgallery\core\migrations\total_views'],
+			gallery_title::depends_on()
+		);
+	}
+
+	public function test_gallery_title_migration_adds_an_optional_configuration_value(): void
+	{
+		$migration = (new \ReflectionClass(gallery_title::class))->newInstanceWithoutConstructor();
+
+		$this->assertSame([
+			['config.add', ['phpbb_gallery_title', '']],
+		], $migration->update_data());
+		$this->assertSame([
+			['config.remove', ['phpbb_gallery_title']],
+		], $migration->revert_data());
 	}
 
 	public function test_total_views_migration_initializes_a_dynamic_counter(): void
@@ -410,7 +428,7 @@ class migration_integrity_test extends TestCase
 
 	private function load_migrations(): void
 	{
-		if (class_exists(total_views::class))
+		if (class_exists(gallery_title::class))
 		{
 			return;
 		}
@@ -434,6 +452,7 @@ class migration_integrity_test extends TestCase
 			'performance_indexes.php',
 			'protect_personal_album_profile_field.php',
 			'total_views.php',
+			'gallery_title.php',
 		] as $migration)
 		{
 			require_once dirname(__DIR__) . '/migrations/' . $migration;

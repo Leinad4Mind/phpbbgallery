@@ -138,7 +138,7 @@ class image_authorization_test extends TestCase
 		$this->assertStringContainsString('phpbbgallery.core.auth.image_authorization:', $core_services);
 		$this->assertSame(2, substr_count($controller_services, "'@phpbbgallery.core.auth.image_authorization'"));
 		$this->assertStringContainsString("- '@phpbbgallery.core.auth'\n            - '@phpbbgallery.core.auth.image_authorization'\n            - '@phpbbgallery.core.user'", $controller_services);
-		$this->assertStringContainsString("- '@phpbbgallery.core.auth'\n            - '@phpbbgallery.core.auth.image_authorization'\n            - '@phpbbgallery.core.misc'", $controller_services);
+		$this->assertStringContainsString("- '@phpbbgallery.core.auth'\n            - '@phpbbgallery.core.config'\n            - '@phpbbgallery.core.auth.image_authorization'\n            - '@phpbbgallery.core.misc'", $controller_services);
 	}
 
 	/**

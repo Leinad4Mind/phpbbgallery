@@ -40,7 +40,7 @@ class config_module
 
 		$phpbb_gallery_url = $phpbb_container->get('phpbbgallery.core.url');
 		$this->language = $phpbb_container->get('language');
-		$this->language->add_lang(['gallery', 'gallery_acp'], 'phpbbgallery/core');
+		$this->language->add_lang(['gallery', 'gallery_acp', 'gallery_title'], 'phpbbgallery/core');
 
 		$submit = $request->is_set_post('submit');
 		$form_key = 'acp_time';
@@ -81,6 +81,10 @@ class config_module
 
 			if ($submit)
 			{
+				if ($config_name === 'title')
+				{
+					$config_value = trim(strip_tags((string) $config_value));
+				}
 				// Check for RRC-display-options
 				if (isset($null['method']) && (($null['method'] == 'rrc_display') || ($null['method'] == 'rrc_modes')))
 				{
@@ -369,6 +373,7 @@ class config_module
 			'vars'	=> [
 				'' => [],
 				'GALLERY_CONFIG'	=> [
+					'title'				=> ['lang' => 'GALLERY_TITLE',		'validate' => 'string',	'type' => 'text:40:255',	'explain' => true],
 					'items_per_page'		=> ['lang' => 'ITEMS_PER_PAGE',		'validate' => 'int',	'type' => 'text:7:3',		'explain' => true],
 					'allow_comments'		=> ['lang' => 'COMMENT_SYSTEM',		'validate' => 'bool',	'type' => 'radio:yes_no'],
 					'comment_user_control'	=> ['lang' => 'COMMENT_USER_CONTROL',	'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],

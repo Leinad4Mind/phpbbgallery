@@ -43,6 +43,9 @@ class moderate
 	/** @var \phpbbgallery\core\auth\auth  */
 	protected \phpbbgallery\core\auth\auth $gallery_auth;
 
+	/** @var \phpbbgallery\core\config */
+	protected \phpbbgallery\core\config $gallery_config;
+
 	/** @var \phpbbgallery\core\auth\image_authorization */
 	protected \phpbbgallery\core\auth\image_authorization $image_authorization;
 
@@ -88,6 +91,7 @@ class moderate
 	 * @param \phpbbgallery\core\album\display       $display   Albums display object
 	 * @param \phpbbgallery\core\moderate            $moderate
 	 * @param \phpbbgallery\core\auth\auth           $gallery_auth
+	 * @param \phpbbgallery\core\config              $gallery_config
 	 * @param \phpbbgallery\core\auth\image_authorization $image_authorization
 	 * @param \phpbbgallery\core\misc                $misc
 	 * @param \phpbbgallery\core\album\album         $album
@@ -103,7 +107,8 @@ class moderate
 	public function __construct(\phpbb\config\config $config, \phpbb\request\request_interface $request,
 		\phpbb\template\template $template, \phpbb\user $user, \phpbb\language\language $language,
 		\phpbb\controller\helper $helper, \phpbbgallery\core\album\display $display, \phpbbgallery\core\moderate $moderate,
-		\phpbbgallery\core\auth\auth $gallery_auth, \phpbbgallery\core\auth\image_authorization $image_authorization,
+		\phpbbgallery\core\auth\auth $gallery_auth, \phpbbgallery\core\config $gallery_config,
+		\phpbbgallery\core\auth\image_authorization $image_authorization,
 		\phpbbgallery\core\misc $misc, \phpbbgallery\core\album\album $album, \phpbbgallery\core\image\image $image,
 		\phpbbgallery\core\notification\helper $notification_helper, \phpbbgallery\core\url $url, \phpbbgallery\core\log $gallery_log,
 		\phpbbgallery\core\report $report, \phpbb\user_loader $user_loader,
@@ -118,6 +123,7 @@ class moderate
 		$this->display = $display;
 		$this->moderate = $moderate;
 		$this->gallery_auth = $gallery_auth;
+		$this->gallery_config = $gallery_config;
 		$this->image_authorization = $image_authorization;
 		$this->misc = $misc;
 		$this->album = $album;
@@ -179,7 +185,7 @@ class moderate
 			'U_OVERVIEW'					=> true,
 		]);
 
-		return $this->helper->render('gallery/moderate_overview.html', $this->language->lang('GALLERY'));
+		return $this->helper->render('gallery/moderate_overview.html', $this->gallery_config->get_title($this->language));
 	}
 
 	/**
@@ -312,7 +318,7 @@ class moderate
 			'U_ALBUM_NAME'					=> $album_id > 0 ? $album['album_name'] : false,
 		]);
 		$this->moderate->build_list($album_id, $page);
-		return $this->helper->render('gallery/moderate_approve.html', $this->language->lang('GALLERY'));
+		return $this->helper->render('gallery/moderate_approve.html', $this->gallery_config->get_title($this->language));
 	}
 
 	/**
@@ -358,7 +364,7 @@ class moderate
 		]);
 
 		$this->gallery_log->build_list('moderator', 0, $page, $album_id);
-		return $this->helper->render('gallery/moderate_actions.html', $this->language->lang('GALLERY'));
+		return $this->helper->render('gallery/moderate_actions.html', $this->gallery_config->get_title($this->language));
 	}
 
 	/**
@@ -453,7 +459,7 @@ class moderate
 		]);
 
 		$this->report->build_list($album_id, $page, $this->config['phpbb_gallery_items_per_page'], $status);
-		return $this->helper->render('gallery/moderate_reports.html', $this->language->lang('GALLERY'));
+		return $this->helper->render('gallery/moderate_reports.html', $this->gallery_config->get_title($this->language));
 	}
 
 	/**
@@ -630,7 +636,7 @@ class moderate
 						'S_ALBUM_SELECT'	=> $category_select,
 						'S_HIDDEN_FIELDS'	=> $s_hidden_fields,
 					]);
-					return $this->helper->render('gallery/mcp_body.html', $this->language->lang('GALLERY'));
+					return $this->helper->render('gallery/mcp_body.html', $this->gallery_config->get_title($this->language));
 				}
 				else
 				{
@@ -647,7 +653,7 @@ class moderate
 			'U_ALBUM_NAME'					=> $album_id > 0 ? $album['album_name'] : false,
 		]);
 		$this->moderate->album_overview($album_id, $page);
-		return $this->helper->render('gallery/moderate_album_overview.html', $this->language->lang('GALLERY'));
+		return $this->helper->render('gallery/moderate_album_overview.html', $this->gallery_config->get_title($this->language));
 	}
 
 	/**
@@ -837,7 +843,7 @@ class moderate
 				'MANAGER'		=> $var['report_manager'] != 0 ?  $this->user_loader->get_username($var['report_manager'], 'full') : false,
 			]);
 		}
-		return $this->helper->render('gallery/moderate_image_overview.html', $this->language->lang('GALLERY'));
+		return $this->helper->render('gallery/moderate_image_overview.html', $this->gallery_config->get_title($this->language));
 	}
 
 	/**
@@ -898,7 +904,7 @@ class moderate
 			confirm_box(false, $action_msg, $s_hidden_fields, 'mcp_approve.html');
 		}
 
-		return $this->helper->render('gallery/moderate_overview.html', $this->language->lang('GALLERY'));
+		return $this->helper->render('gallery/moderate_overview.html', $this->gallery_config->get_title($this->language));
 	}
 
 	/**
@@ -940,7 +946,7 @@ class moderate
 			confirm_box(false, 'QUEUE_A_UNAPPROVE2', $s_hidden_fields);
 		}
 
-		return $this->helper->render('gallery/moderate_overview.html', $this->language->lang('GALLERY'));
+		return $this->helper->render('gallery/moderate_overview.html', $this->gallery_config->get_title($this->language));
 	}
 
 	/**
@@ -962,7 +968,7 @@ class moderate
 		if (!is_array($image_data) || !isset($image_data['image_album_id']) || (int) $image_data['image_album_id'] < 1)
 		{
 			$this->misc->not_authorised($image_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
-			return $this->helper->render('gallery/mcp_body.html', $this->language->lang('GALLERY'));
+			return $this->helper->render('gallery/mcp_body.html', $this->gallery_config->get_title($this->language));
 		}
 
 		$album_id = (int) $image_data['image_album_id'];
@@ -972,7 +978,7 @@ class moderate
 		if (!is_array($album_data) || !$this->image_authorization->can_moderate_image($image_data, $album_data, 0, $has_source_permission))
 		{
 			$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
-			return $this->helper->render('gallery/mcp_body.html', $this->language->lang('GALLERY'));
+			return $this->helper->render('gallery/mcp_body.html', $this->gallery_config->get_title($this->language));
 		}
 
 		add_form_key('gallery');
@@ -991,7 +997,7 @@ class moderate
 			if (!$this->image_authorization->can_moderate_album($target_album, $moving_target, $has_target_permission))
 			{
 				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
-				return $this->helper->render('gallery/mcp_body.html', $this->language->lang('GALLERY'));
+				return $this->helper->render('gallery/mcp_body.html', $this->gallery_config->get_title($this->language));
 			}
 
 			$target = [$image_id];
@@ -1011,7 +1017,7 @@ class moderate
 			]);
 		}
 
-		return $this->helper->render('gallery/mcp_body.html', $this->language->lang('GALLERY'));
+		return $this->helper->render('gallery/mcp_body.html', $this->gallery_config->get_title($this->language));
 	}
 
 	/**
@@ -1051,7 +1057,7 @@ class moderate
 			confirm_box(false, 'QUEUE_A_LOCK2', $s_hidden_fields);
 		}
 
-		return $this->helper->render('gallery/moderate_overview.html', $this->language->lang('GALLERY'));
+		return $this->helper->render('gallery/moderate_overview.html', $this->gallery_config->get_title($this->language));
 	}
 
 	/**
@@ -1080,7 +1086,7 @@ class moderate
 		}
 
 		$this->template->assign_block_vars('navlinks', [
-			'FORUM_NAME' => $this->language->lang('GALLERY'),
+			'FORUM_NAME' => $this->gallery_config->get_title($this->language),
 			'U_VIEW_FORUM' => $this->helper->route('phpbbgallery_core_index'),
 		]);
 	}
