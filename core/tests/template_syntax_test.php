@@ -339,6 +339,20 @@ final class template_syntax_test extends TestCase
 		}
 	}
 
+	public function test_bootstrap_online_block_uses_the_phpbb_page_header_contract(): void
+	{
+		$core_root = dirname(__DIR__);
+		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$index = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/index_body.html');
+			$this->assertStringContainsString('{% if S_DISPLAY_ONLINE_LIST %}', $index, $style);
+			$this->assertStringNotContainsString('S_DISP_WHOISONLINE', $index, $style);
+		}
+
+		$controller = (string) file_get_contents($core_root . '/controller/index.php');
+		$this->assertStringContainsString("\$this->gallery_config->get('disp_whoisonline')", $controller);
+	}
+
 	public function test_bootstrap_search_controls_match_controller_parameters(): void
 	{
 		$core_root = dirname(__DIR__);
