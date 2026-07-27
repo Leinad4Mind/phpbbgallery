@@ -138,6 +138,7 @@ $lang = array_merge($lang, [
 	'GALLERY_IMAGE'  => 'Afbeelding',
 	'GALLERY_IMAGES' => 'Afbeeldingen',
 	'GALLERY_VIEWS'  => 'Weergaves',
+	'TOTAL_VIEWS'    => 'Totaal aantal weergaven',
 
 	'IGNORE_NOTUPTODATE_MESSAGE'   => 'Herinner mij over 7 dagen weer',
 	'IMAGE_ALREADY_REPORTED'       => 'Deze afbeelding is al gemeld.',

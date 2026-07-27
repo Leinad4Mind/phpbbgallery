@@ -329,8 +329,15 @@ class main_module
 					}
 					$db->sql_freeresult($result);
 
+					$sql = 'SELECT SUM(image_view_count) AS num_views
+						FROM ' . $images_table;
+					$result = $db->sql_query($sql);
+					$total_views = (int) $db->sql_fetchfield('num_views');
+					$db->sql_freeresult($result);
+
 					$phpbb_ext_gallery_config->set('num_images', $total_images);
 					$phpbb_ext_gallery_config->set('num_comments', $total_comments);
+					$phpbb_ext_gallery_config->set('num_views', $total_views, false);
 					trigger_error($this->language->lang('RESYNCED_IMAGECOUNTS') . adm_back_link($this->u_action));
 				break;
 
@@ -591,6 +598,7 @@ class main_module
 			'ACP_GALLERY_TITLE_EXPLAIN'		=> $this->language->lang('ACP_GALLERY_OVERVIEW_EXPLAIN'),
 
 			'TOTAL_IMAGES'			=> $config['phpbb_gallery_num_images'],
+			'TOTAL_VIEWS'			=> $phpbb_ext_gallery_config->get('num_views'),
 			'IMAGES_PER_DAY'		=> $images_per_day,
 			'TOTAL_ALBUMS'			=> $num_albums,
 			'TOTAL_PERSONALS'		=> $config['phpbb_gallery_num_pegas'],

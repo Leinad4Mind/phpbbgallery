@@ -132,6 +132,7 @@ $lang = array_merge($lang, [
 	'GALLERY_IMAGE'                => 'Фото',
 	'GALLERY_IMAGES'               => 'Фотографии',
 	'GALLERY_VIEWS'                => 'Просмотры',
+	'TOTAL_VIEWS'    => 'Всего просмотров',
 	'IGNORE_NOTUPTODATE_MESSAGE'   => 'Напомнить через неделю',
 	'IMAGE_ALREADY_REPORTED'       => 'Фото уже обжаловано.',
 	'IMAGE_BBCODE'                 => 'BBCode',
