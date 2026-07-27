@@ -81,7 +81,7 @@
 			<hr />
 			<dl id="upload_field">
 				<dt><label for="image_file">{{ lang('IMAGES') }}{{ lang('COLON') }}</label></dt>
-				<dd><input class="inputbox autowidth dz-hidden-input" type="file" name="files[]" id="files" size="52" multiple accept="image/jpeg,image/png,image/gif,image/webp,application/zip"/></dd>
+				<dd><input class="inputbox autowidth dz-hidden-input" type="file" name="files[]" id="files" size="52" multiple accept="{{ S_ALLOWED_FILETYPES_ACCEPT }}"{% if not S_UPLOAD_FILETYPES_AVAILABLE %} disabled{% endif %}/></dd>
 
 			</dl>
 			{% for upload_image in upload_image|default([]) %}

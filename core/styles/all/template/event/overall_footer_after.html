@@ -8,7 +8,7 @@
 			replaceFileInput: false,
 			url: "{{ S_ALBUM_ACTION }}",
 			dropZone: $('#covverall'),
-			//acceptFileTypes: '{{ S_QUICK_FILE_TYPES }}', // User side filetype test does not work!
+			acceptFileTypes: /(\.|\/)({{ S_QUICK_FILE_TYPES }})$/i,
 			maxFileSize: '{{ S_QUICK_MAX_FILESIZE }}', // And it appears that user side size is ignored too.
 			dataType: 'json',
 			paramName: 'files[]',
