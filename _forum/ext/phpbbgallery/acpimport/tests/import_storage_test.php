@@ -235,6 +235,25 @@ class import_storage_test extends TestCase
 		$this->assertStringContainsString('L_IMPORT_UNREADABLE_FILES', $template);
 	}
 
+	public function test_normalizes_accented_utf8_and_windows_filenames_for_display(): void
+	{
+		$get_readable_filename = new \ReflectionMethod(import_storage::class, 'get_readable_filename');
+		$utf8_filename = 'Três Irmãs.png';
+		$windows_filename = mb_convert_encoding($utf8_filename, 'Windows-1252', 'UTF-8');
+
+		$this->assertSame($utf8_filename, $get_readable_filename->invoke($this->storage, $utf8_filename));
+		$this->assertSame($utf8_filename, $get_readable_filename->invoke($this->storage, $windows_filename));
+	}
+
+	public function test_imported_title_uses_the_enumerated_utf8_display_name(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/acp/main_module.php');
+
+		$this->assertStringContainsString("\$display_name = \$image['display_name'];", $source);
+		$this->assertStringContainsString('utf8_substr($display_name, 0, utf8_strrpos($display_name, \'.\'))', $source);
+		$this->assertStringNotContainsString('utf8_substr($image_src, 0, utf8_strrpos($image_src, \'.\'))', $source);
+	}
+
 	public function test_resolves_only_an_enumerated_filename(): void
 	{
 		file_put_contents($this->import_directory . 'photo.png', $this->png_image());

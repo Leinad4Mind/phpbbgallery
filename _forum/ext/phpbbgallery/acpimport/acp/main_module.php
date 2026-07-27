@@ -82,6 +82,7 @@ class main_module
 				* Import the images
 				*/
 				$error_occurred = false;
+				$display_name = $image_src;
 				$safe_image_src = utf8_htmlspecialchars($image_src);
 				$image = isset($available_images[$image_src]) ? $available_images[$image_src] : false;
 				if ($image === false)
@@ -91,6 +92,7 @@ class main_module
 				}
 				else
 				{
+					$display_name = $image['display_name'];
 					$inspection = $this->import_storage->inspect_image($image);
 					if ($inspection['error'] === 'mime_mismatch')
 					{
@@ -191,7 +193,7 @@ class main_module
 
 					if ($filename || ($image_name == ''))
 					{
-						$sql_ary['image_name'] = str_replace('_', ' ', utf8_substr($image_src, 0, utf8_strrpos($image_src, '.')));
+						$sql_ary['image_name'] = str_replace('_', ' ', utf8_substr($display_name, 0, utf8_strrpos($display_name, '.')));
 					}
 					else
 					{

@@ -121,6 +121,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Posted personal-album deletion confirmations to the canonical board-root UCP action instead of deriving a duplicated `ucp.php/ucp.php` path.
 - Posted all Gallery ACP confirmations to their canonical module actions instead of deriving duplicated `adm/index.php/adm/index.php` paths.
 - Applied the ACP-enabled upload extensions consistently to backend validation, native file selectors, and quick-upload JavaScript instead of exposing a hard-coded format list.
+- Derived ACP Import image titles from the validated UTF-8 display filename, preserving accented names originating as either UTF-8 or Windows-1252.
 - Corrected the malformed comment-statistics reset query so both the count and last-comment identifier are cleared after deleting comments by image.
 - Prevented Gallery settings from a previously loaded user being reused when switching to a user without a Gallery row.
 - Made empty bulk-user filters match no rows instead of being converted to user ID 1, while keeping the explicit all operation unchanged.
