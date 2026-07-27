@@ -35,43 +35,6 @@ class upload_zip_test extends TestCase
 		$this->remove_directory($this->temporary_directory);
 	}
 
-	/**
-	 * @dataProvider zip_path_provider
-	 */
-	public function test_validates_archive_paths(string $path, mixed $expected): void
-	{
-		$upload = $this->new_upload();
-
-		$this->assertSame($expected, $this->invoke_upload($upload, 'validate_zip_path', [$path]));
-	}
-
-	public static function zip_path_provider(): array
-	{
-		return [
-			['image.png', 'image.png'],
-			['album/image.png', 'album/image.png'],
-			['álbum/imagem.png', 'álbum/imagem.png'],
-			['album\\image.png', 'album/image.png'],
-			['album/', 'album/'],
-			['', false],
-			['/absolute.png', false],
-			['C:\\absolute.png', false],
-			['\\\\server\\share.png', false],
-			['../escape.png', false],
-			['album/../escape.png', false],
-			['./image.png', false],
-			['album//image.png', false],
-			['bad' . chr(0) . '.png', false],
-			['bad' . chr(31) . '.png', false],
-			['bad?.png', false],
-			['trailing./image.png', false],
-			['CON.png', false],
-			['aux/file.png', false],
-			[str_repeat('a', 256) . '.png', false],
-			[str_repeat('a', 4097), false],
-		];
-	}
-
 	public function test_derives_limits_from_size_and_quota(): void
 	{
 		$upload = $this->new_upload();
@@ -127,123 +90,7 @@ class upload_zip_test extends TestCase
 		$this->assert_has_error($upload, 'ZIP_NO_IMAGES');
 	}
 
-	public function test_rejects_image_whose_content_does_not_match_its_extension(): void
-	{
-		$upload = $this->new_upload();
-		$archive = $this->create_archive(['disguised.jpg' => $this->png_image()]);
-		$target = $this->create_target_directory('disguised');
-
-		$this->assertFalse($this->invoke_upload($upload, 'extract_zip', [$archive, $target]));
-		$this->assert_has_error($upload, 'ZIP_INVALID_IMAGE_TYPE');
-		$this->assertSame([], $this->directory_files($target));
-	}
-
-	public function test_rejects_non_image_with_an_enabled_extension(): void
-	{
-		$upload = $this->new_upload();
-		$archive = $this->create_archive(['fake.png' => 'plain text']);
-		$target = $this->create_target_directory('non_image');
-
-		$this->assertFalse($this->invoke_upload($upload, 'extract_zip', [$archive, $target]));
-		$this->assert_has_error($upload, 'ZIP_INVALID_IMAGE_TYPE');
-		$this->assertSame([], $this->directory_files($target));
-	}
-
-	public function test_rejects_traversal_before_writing_files(): void
-	{
-		$upload = $this->new_upload();
-		$archive = $this->create_archive(['../escape.png' => $this->png_image()]);
-		$target = $this->create_target_directory('traversal');
-
-		$this->assertFalse($this->invoke_upload($upload, 'extract_zip', [$archive, $target]));
-		$this->assert_has_error($upload, 'ZIP_UNSAFE_PATH');
-		$this->assertFalse(file_exists($this->temporary_directory . 'escape.png'));
-		$this->assertSame([], $this->directory_files($target));
-	}
-
-	public function test_rejects_case_insensitive_duplicate_paths(): void
-	{
-		$upload = $this->new_upload();
-		$archive = $this->create_archive([
-			'Album/Photo.png' => $this->png_image(),
-			'album/photo.PNG' => $this->png_image(),
-		]);
-		$target = $this->create_target_directory('duplicate');
-
-		$this->assertFalse($this->invoke_upload($upload, 'extract_zip', [$archive, $target]));
-		$this->assert_has_error($upload, 'ZIP_DUPLICATE_PATH');
-		$this->assertSame([], $this->directory_files($target));
-	}
-
-	public function test_rejects_entry_above_the_configured_size_limit(): void
-	{
-		$upload = $this->new_upload();
-		$upload->max_filesize = 20;
-		$archive = $this->create_archive(['large.png' => $this->png_image()]);
-		$target = $this->create_target_directory('entry_size');
-
-		$this->assertFalse($this->invoke_upload($upload, 'extract_zip', [$archive, $target]));
-		$this->assert_has_error($upload, 'ZIP_SIZE_LIMIT_EXCEEDED');
-	}
-
-	public function test_rejects_archive_above_the_preflight_size_limit(): void
-	{
-		$upload = $this->new_upload();
-		$upload->max_filesize = 1;
-		$limits = $this->invoke_upload($upload, 'get_zip_limits');
-		$archive = $this->temporary_directory . 'oversized.zip';
-		file_put_contents($archive, str_repeat('x', $limits['archive_size'] + 1));
-		$target = $this->create_target_directory('archive_size');
-
-		$this->assertFalse($this->invoke_upload($upload, 'extract_zip', [$archive, $target]));
-		$this->assert_has_error($upload, 'ZIP_SIZE_LIMIT_EXCEEDED');
-	}
-
-	public function test_rejects_excessive_compression_ratio(): void
-	{
-		$upload = $this->new_upload();
-		$upload->max_filesize = 500000;
-		$archive = $this->create_archive(['bomb.png' => str_repeat('A', 200000)]);
-		$target = $this->create_target_directory('ratio');
-
-		$this->assertFalse($this->invoke_upload($upload, 'extract_zip', [$archive, $target]));
-		$this->assert_has_error($upload, 'ZIP_COMPRESSION_RATIO_EXCEEDED');
-	}
-
-	public function test_rejects_more_than_one_hundred_images(): void
-	{
-		$entries = [];
-		for ($index = 0; $index < 101; $index++)
-		{
-			$entries['image_' . $index . '.png'] = $this->png_image();
-		}
-
-		$upload = $this->new_upload();
-		$archive = $this->create_archive($entries);
-		$target = $this->create_target_directory('image_count');
-
-		$this->assertFalse($this->invoke_upload($upload, 'extract_zip', [$archive, $target]));
-		$this->assert_has_error($upload, 'ZIP_TOO_MANY_IMAGES');
-		$this->assertSame([], $this->directory_files($target));
-	}
-
-	public function test_rejects_more_than_one_thousand_entries(): void
-	{
-		$entries = [];
-		for ($index = 0; $index < 1001; $index++)
-		{
-			$entries['entry_' . $index . '.txt'] = 'x';
-		}
-
-		$upload = $this->new_upload();
-		$archive = $this->create_archive($entries);
-		$target = $this->create_target_directory('entry_count');
-
-		$this->assertFalse($this->invoke_upload($upload, 'extract_zip', [$archive, $target]));
-		$this->assert_has_error($upload, 'ZIP_TOO_MANY_ENTRIES');
-	}
-
-	public function test_extracts_only_the_remaining_quota_and_reports_it(): void
+	public function test_reports_the_quota_when_the_extractor_stops_short(): void
 	{
 		$upload = $this->new_upload();
 		$upload->set_file_limit(1);
@@ -255,43 +102,22 @@ class upload_zip_test extends TestCase
 
 		$this->assertTrue($this->invoke_upload($upload, 'extract_zip', [$archive, $target]));
 		$this->assertSame(['image_0.png'], $this->directory_files($target));
+		// The extractor reports a reached allowance; turning that into an error is
+		// the upload's job, because only it knows about quotas.
 		$this->assert_has_error($upload, 'USER_REACHED_QUOTA_SHORT');
 	}
 
-	public function test_verifies_crc_while_streaming_an_entry(): void
+	public function test_reports_the_quota_when_nothing_may_be_extracted(): void
 	{
 		$upload = $this->new_upload();
-		$archive = $this->create_archive(['image.png' => $this->png_image()]);
-		$zip = new \ZipArchive();
-		$this->assertTrue($zip->open($archive));
-		$entry = $zip->statIndex(0);
-		$entry['realname'] = 'image.png';
-		$entry['extension'] = 'png';
-		$entry['crc'] = $entry['crc'] ^ 1;
-		$target = $this->temporary_directory . 'crc.png';
+		$upload->set_file_limit(1);
+		$upload->uploaded_files = 1;
+		$archive = $this->create_archive(['first.png' => $this->png_image()]);
+		$target = $this->create_target_directory('exhausted');
 
-		$this->assertFalse($this->invoke_upload($upload, 'extract_zip_entry', [$zip, $entry, $target, 1000]));
-		$zip->close();
-		$this->assertFalse(file_exists($target));
-		$this->assert_has_error($upload, 'ZIP_EXTRACTION_FAILED');
-	}
-
-	public function test_enforces_declared_size_while_streaming_an_entry(): void
-	{
-		$upload = $this->new_upload();
-		$archive = $this->create_archive(['image.png' => $this->png_image()]);
-		$zip = new \ZipArchive();
-		$this->assertTrue($zip->open($archive));
-		$entry = $zip->statIndex(0);
-		$entry['realname'] = 'image.png';
-		$entry['extension'] = 'png';
-		$entry['size']--;
-		$target = $this->temporary_directory . 'runtime_size.png';
-
-		$this->assertFalse($this->invoke_upload($upload, 'extract_zip_entry', [$zip, $entry, $target, 1000]));
-		$zip->close();
-		$this->assertFalse(file_exists($target));
-		$this->assert_has_error($upload, 'ZIP_EXTRACTION_FAILED');
+		$this->assertFalse($this->invoke_upload($upload, 'extract_zip', [$archive, $target]));
+		$this->assert_has_error($upload, 'USER_REACHED_QUOTA_SHORT');
+		$this->assertSame([], $this->directory_files($target));
 	}
 
 	public function test_upload_flow_loads_language_restores_extensions_and_cleans_files(): void
@@ -396,9 +222,26 @@ class upload_zip_test extends TestCase
 		$this->set_upload_property($upload, 'gallery_config', new upload_test_config());
 		$this->set_upload_property($upload, 'gallery_url', new upload_test_url($this->temporary_directory));
 		$this->set_upload_property($upload, 'file_upload', new upload_test_file_upload());
+		$this->set_upload_property($upload, 'zip_extractor', $this->new_extractor());
 		$upload->max_filesize = 2097152;
 
 		return $upload;
+	}
+
+	/**
+	 * The real extractor, not a double: these tests are here to prove the upload and
+	 * the extractor still fit together.
+	 */
+	private function new_extractor(): \phpbbgallery\core\zip\extractor
+	{
+		$reflection = new \ReflectionClass(\phpbbgallery\core\zip\extractor::class);
+		$extractor = $reflection->newInstanceWithoutConstructor();
+
+		$property = $reflection->getProperty('language');
+		$this->make_accessible($property);
+		$property->setValue($extractor, new upload_test_language());
+
+		return $extractor;
 	}
 
 	private function create_archive(array $entries): string

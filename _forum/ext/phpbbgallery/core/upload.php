@@ -92,27 +92,6 @@ class upload
 	*/
 	public const NUM_FILES_PER_DIR = 0;
 
-	/** Maximum number of entries inspected in a ZIP archive. */
-	private const ZIP_MAX_ENTRIES = 1000;
-
-	/** Maximum number of images extracted from a single ZIP archive. */
-	private const ZIP_MAX_IMAGES = 100;
-
-	/** Absolute cap for all uncompressed image data in a ZIP archive (256 MiB). */
-	private const ZIP_MAX_UNCOMPRESSED_SIZE = 268435456;
-
-	/** Space reserved for the central directory and other ZIP metadata (1 MiB). */
-	private const ZIP_MAX_METADATA_SIZE = 1048576;
-
-	/** Maximum accepted ratio between uncompressed and compressed entry sizes. */
-	private const ZIP_MAX_COMPRESSION_RATIO = 100;
-
-	/** Maximum archive path length in bytes. */
-	private const ZIP_MAX_PATH_LENGTH = 4096;
-
-	/** Maximum archive filename length in bytes. */
-	private const ZIP_MAX_FILENAME_LENGTH = 255;
-
 	/** Keep unfinished upload drafts for seven days. */
 	private const ORPHAN_RETENTION_SECONDS = 604800;
 
@@ -130,6 +109,9 @@ class upload
 
 	/** @var \phpbb\files\filespec|null Current ZIP upload file. */
 	private ?object $zip_file = null;
+
+	/** @var \phpbbgallery\core\zip\extractor Shared ZIP extractor. */
+	private \phpbbgallery\core\zip\extractor $zip_extractor;
 
 	/**
 	* Basic variables...
@@ -178,6 +160,7 @@ class upload
 	 * @param \phpbbgallery\core\url            $gallery_url    Gallery url
 	 * @param block                             $block
 	 * @param file\file                         $gallery_file
+	 * @param \phpbbgallery\core\zip\extractor  $zip_extractor
 	 * @param string                            $images_table
 	 * @param string                            $root_path
 	 * @param string                            $php_ext
@@ -185,9 +168,10 @@ class upload
 	public function __construct(\phpbb\user $user, \phpbb\language\language $language, \phpbb\db\driver\driver_interface $db,
 		\phpbb\event\dispatcher_interface $phpbb_dispatcher, \phpbb\request\request $request, \phpbb\files\upload $file_upload,
 		\phpbbgallery\core\image\image $gallery_image, \phpbbgallery\core\config $gallery_config, \phpbbgallery\core\url $gallery_url,
-		\phpbbgallery\core\block $block, \phpbbgallery\core\file\file $gallery_file,
+		\phpbbgallery\core\block $block, \phpbbgallery\core\file\file $gallery_file, \phpbbgallery\core\zip\extractor $zip_extractor,
 		string $images_table, string $root_path, string $php_ext)
 	{
+		$this->zip_extractor = $zip_extractor;
 		$this->user = $user;
 		$this->language = $language;
 		$this->db = $db;
@@ -384,9 +368,9 @@ class upload
 	/**
 	 * Validate and extract permitted images from a ZIP archive.
 	 *
-	 * Archive paths are never used as destination paths. Each accepted entry is
-	 * streamed to a generated filename after the complete archive index passes
-	 * validation.
+	 * The extraction itself belongs to the shared extractor; what stays here is the
+	 * upload's own vocabulary — its quota, its allowed types and its generated
+	 * destination names.
 	 *
 	 * @param string $archive_path
 	 * @param string $target_dir
@@ -394,250 +378,33 @@ class upload
 	 */
 	private function extract_zip(string $archive_path, string $target_dir): bool
 	{
-		if (!class_exists('ZipArchive'))
+		$extracted = $this->zip_extractor->extract(
+			$archive_path,
+			$target_dir,
+			$this->get_allowed_types(false, true),
+			$this->get_zip_limits(),
+			// Archive paths are never used as destination paths.
+			static function (array $entry, int $index): string {
+				return 'image_' . $index . '.' . $entry['extension'];
+			}
+		);
+
+		foreach ($this->zip_extractor->errors() as $error)
 		{
-			$this->new_error($this->language->lang('ZIP_EXTENSION_NOT_AVAILABLE'));
-			return false;
+			$this->new_error($error);
 		}
 
-		$limits = $this->get_zip_limits();
-		if ($limits['image_count'] < 1)
+		if ($this->zip_extractor->quota_reached())
 		{
 			$this->quota_error();
+		}
+
+		if (!$extracted)
+		{
 			return false;
 		}
 
-		$archive_size = @filesize($archive_path);
-		if ($archive_size === false || $archive_size < 1 || $archive_size > $limits['archive_size'])
-		{
-			$this->new_error($this->language->lang('ZIP_SIZE_LIMIT_EXCEEDED'));
-			return false;
-		}
-
-		$zip = new \ZipArchive();
-		$open_result = $zip->open($archive_path, \ZipArchive::CHECKCONS);
-		if ($open_result !== true)
-		{
-			$this->new_error($this->language->lang('ZIP_INVALID_ARCHIVE'));
-			return false;
-		}
-
-		try
-		{
-			$entry_count = (int) $zip->numFiles;
-			if ($entry_count < 1)
-			{
-				$this->new_error($this->language->lang('ZIP_NO_IMAGES'));
-				return false;
-			}
-
-			if ($entry_count > self::ZIP_MAX_ENTRIES)
-			{
-				$this->new_error($this->language->lang('ZIP_TOO_MANY_ENTRIES', self::ZIP_MAX_ENTRIES));
-				return false;
-			}
-
-			$entries = [];
-			$seen_paths = [];
-			$total_size = 0;
-			$quota_reached = false;
-			$allowed_extensions = array_fill_keys($this->get_allowed_types(false, true), true);
-
-			for ($index = 0; $index < $entry_count; $index++)
-			{
-				$entry = $zip->statIndex($index);
-				if ($entry === false || !isset($entry['name'], $entry['size'], $entry['comp_size'], $entry['crc']))
-				{
-					$this->new_error($this->language->lang('ZIP_INVALID_ARCHIVE'));
-					return false;
-				}
-
-				$normalized_path = $this->validate_zip_path($entry['name']);
-				if ($normalized_path === false)
-				{
-					$this->new_error($this->language->lang('ZIP_UNSAFE_PATH'));
-					return false;
-				}
-
-				$path_key = strtolower($normalized_path);
-				if (isset($seen_paths[$path_key]))
-				{
-					$this->new_error($this->language->lang('ZIP_DUPLICATE_PATH'));
-					return false;
-				}
-				$seen_paths[$path_key] = true;
-
-				if (substr($normalized_path, -1) === '/')
-				{
-					continue;
-				}
-
-				$extension = strtolower(pathinfo($normalized_path, PATHINFO_EXTENSION));
-				if (!isset($allowed_extensions[$extension]))
-				{
-					continue;
-				}
-
-				if (count($entries) >= $limits['image_count'])
-				{
-					if ($limits['quota_limited'])
-					{
-						$quota_reached = true;
-						continue;
-					}
-
-					$this->new_error($this->language->lang('ZIP_TOO_MANY_IMAGES', self::ZIP_MAX_IMAGES));
-					return false;
-				}
-
-				$size = (int) $entry['size'];
-				$compressed_size = (int) $entry['comp_size'];
-				if ($size < 1 || $compressed_size < 1 || $size > $limits['entry_size'])
-				{
-					$this->new_error($this->language->lang('ZIP_SIZE_LIMIT_EXCEEDED'));
-					return false;
-				}
-
-				if (($size / $compressed_size) > self::ZIP_MAX_COMPRESSION_RATIO)
-				{
-					$this->new_error($this->language->lang('ZIP_COMPRESSION_RATIO_EXCEEDED'));
-					return false;
-				}
-
-				$total_size += $size;
-				if ($total_size > $limits['total_size'])
-				{
-					$this->new_error($this->language->lang('ZIP_SIZE_LIMIT_EXCEEDED'));
-					return false;
-				}
-
-				$entries[] = [
-					'name' => $entry['name'],
-					'realname' => basename($normalized_path),
-					'extension' => $extension,
-					'size' => $size,
-					'crc' => $entry['crc'],
-				];
-			}
-
-			if (empty($entries))
-			{
-				$this->new_error($this->language->lang('ZIP_NO_IMAGES'));
-				return false;
-			}
-
-			foreach ($entries as $index => $entry)
-			{
-				$target_path = $target_dir . 'image_' . $index . '.' . $entry['extension'];
-				if (!$this->extract_zip_entry($zip, $entry, $target_path, $limits['entry_size']))
-				{
-					return false;
-				}
-			}
-
-			if ($quota_reached)
-			{
-				$this->quota_error();
-			}
-
-			return true;
-		}
-		finally
-		{
-			$zip->close();
-		}
-	}
-
-	/**
-	 * Extract one archive entry through a bounded stream and verify its type.
-	 *
-	 * @param \ZipArchive $zip
-	 * @param array       $entry
-	 * @param string      $target_path
-	 * @param int         $entry_size_limit
-	 * @return bool
-	 */
-	private function extract_zip_entry(\ZipArchive $zip, array $entry, string $target_path, int $entry_size_limit): bool
-	{
-		$source = $zip->getStream($entry['name']);
-		$target = @fopen($target_path, 'xb');
-		if ($source === false || $target === false)
-		{
-			if (is_resource($source))
-			{
-				fclose($source);
-			}
-			if (is_resource($target))
-			{
-				fclose($target);
-			}
-			@unlink($target_path);
-			$this->new_error($this->language->lang('ZIP_EXTRACTION_FAILED'));
-			return false;
-		}
-
-		$bytes_written = 0;
-		$hash = hash_init('crc32b');
-		$stream_valid = true;
-
-		while (!feof($source))
-		{
-			$chunk = fread($source, 8192);
-			if ($chunk === false)
-			{
-				$stream_valid = false;
-				break;
-			}
-			if ($chunk === '')
-			{
-				if (!feof($source))
-				{
-					$stream_valid = false;
-				}
-				break;
-			}
-
-			$chunk_size = strlen($chunk);
-			$bytes_written += $chunk_size;
-			if ($bytes_written > $entry_size_limit || $bytes_written > $entry['size'])
-			{
-				$stream_valid = false;
-				break;
-			}
-
-			hash_update($hash, $chunk);
-			if (fwrite($target, $chunk) !== $chunk_size)
-			{
-				$stream_valid = false;
-				break;
-			}
-		}
-
-		fclose($source);
-		fclose($target);
-
-		$expected_crc = strtolower(substr(sprintf('%08x', $entry['crc']), -8));
-		$actual_crc = strtolower(hash_final($hash));
-		if (!$stream_valid || $bytes_written !== $entry['size'] || $actual_crc !== $expected_crc)
-		{
-			@unlink($target_path);
-			$this->new_error($this->language->lang('ZIP_EXTRACTION_FAILED'));
-			return false;
-		}
-
-		$image_info = @getimagesize($target_path);
-		if (!$this->is_allowed_zip_image($image_info, $entry['extension']))
-		{
-			@unlink($target_path);
-			$this->new_error($this->language->lang('ZIP_INVALID_IMAGE_TYPE', $entry['realname']));
-			return false;
-		}
-
-		$this->zip_file_data[$target_path] = [
-			'type' => $image_info['mime'],
-			'size' => $bytes_written,
-			'realname' => $entry['realname'],
-		];
+		$this->zip_file_data = $this->zip_extractor->get_files();
 
 		return true;
 	}
@@ -649,94 +416,20 @@ class upload
 	 */
 	private function get_zip_limits(): array
 	{
-		$remaining_images = self::ZIP_MAX_IMAGES;
+		$remaining_images = \phpbbgallery\core\zip\extractor::MAX_IMAGES;
 		$quota_limited = false;
 		if ($this->file_limit)
 		{
 			$remaining_images = max(0, $this->file_limit - $this->uploaded_files);
-			$quota_limited = $remaining_images <= self::ZIP_MAX_IMAGES;
+			$quota_limited = $remaining_images <= \phpbbgallery\core\zip\extractor::MAX_IMAGES;
 		}
-		$remaining_images = min($remaining_images, self::ZIP_MAX_IMAGES);
+		$remaining_images = min($remaining_images, \phpbbgallery\core\zip\extractor::MAX_IMAGES);
 
-		$source_filesize = $this->source_max_filesize ?: $this->max_filesize;
-		$entry_size = min(self::ZIP_MAX_UNCOMPRESSED_SIZE, max(1, (int) ceil(1.2 * $source_filesize)));
-		$total_size = min(self::ZIP_MAX_UNCOMPRESSED_SIZE, $entry_size * max(1, $remaining_images));
-		$archive_size = min(self::ZIP_MAX_UNCOMPRESSED_SIZE, $total_size + self::ZIP_MAX_METADATA_SIZE);
-
-		return [
-			'image_count' => $remaining_images,
-			'entry_size' => $entry_size,
-			'total_size' => $total_size,
-			'archive_size' => $archive_size,
-			'quota_limited' => $quota_limited,
-		];
-	}
-
-	/**
-	 * Validate an archive entry path without using it as a filesystem path.
-	 *
-	 * @param string $path
-	 * @return string|false
-	 */
-	private function validate_zip_path(string $path): string|false
-	{
-		if ($path === '' || strlen($path) > self::ZIP_MAX_PATH_LENGTH || preg_match('//u', $path) !== 1 || preg_match('#[\x00-\x1F\x7F]#', $path))
-		{
-			return false;
-		}
-
-		$normalized_path = str_replace('\\', '/', $path);
-		if ($normalized_path[0] === '/' || strpos($normalized_path, '//') !== false || preg_match('#^[a-z]:/#i', $normalized_path))
-		{
-			return false;
-		}
-
-		$is_directory = substr($normalized_path, -1) === '/';
-		$trimmed_path = ($is_directory) ? substr($normalized_path, 0, -1) : $normalized_path;
-		if ($trimmed_path === '')
-		{
-			return false;
-		}
-
-		$segments = explode('/', $trimmed_path);
-		foreach ($segments as $segment)
-		{
-			if ($segment === '' || $segment === '.' || $segment === '..' || strlen($segment) > self::ZIP_MAX_FILENAME_LENGTH || preg_match('#[<>:\x22|?*]#', $segment) || preg_match('#[. ]$#', $segment))
-			{
-				return false;
-			}
-
-			if (preg_match('#^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)#i', $segment))
-			{
-				return false;
-			}
-		}
-
-		return $normalized_path;
-	}
-
-	/**
-	 * Verify that the detected image type matches an enabled extension.
-	 *
-	 * @param array|false $image_info
-	 * @param string      $extension
-	 * @return bool
-	 */
-	private function is_allowed_zip_image(array|false $image_info, string $extension): bool
-	{
-		if ($image_info === false || !isset($image_info[2], $image_info['mime']))
-		{
-			return false;
-		}
-
-		$image_types = [
-			IMAGETYPE_GIF => ['gif'],
-			IMAGETYPE_JPEG => ['jpg', 'jpeg'],
-			IMAGETYPE_PNG => ['png'],
-			IMAGETYPE_WEBP => ['webp'],
-		];
-
-		return isset($image_types[$image_info[2]]) && in_array($extension, $image_types[$image_info[2]], true);
+		return \phpbbgallery\core\zip\extractor::limits(
+			$remaining_images,
+			$this->source_max_filesize ?: $this->max_filesize,
+			$quota_limited
+		);
 	}
 
 	/**

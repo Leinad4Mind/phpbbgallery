@@ -293,9 +293,14 @@ services:
             - '@phpbbgallery.core.url'
             - '@phpbbgallery.core.block'
             - '@phpbbgallery.core.file.tool'
+            - '@phpbbgallery.core.zip.extractor'
             - '%phpbbgallery.tables.gallery_images%'
             - '%core.root_path%'
             - '%core.php_ext%'
+    phpbbgallery.core.zip.extractor:
+        class: phpbbgallery\core\zip\extractor
+        arguments:
+            - '@language'
     phpbbgallery.core.rating:
         class: phpbbgallery\core\rating
         arguments:
