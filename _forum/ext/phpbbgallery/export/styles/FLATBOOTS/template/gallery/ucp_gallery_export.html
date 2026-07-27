@@ -1,0 +1,41 @@
+{% if S_EXPORT_IMAGES %}
+<form id="ucp_gallery" method="post" action="{{ S_UCP_ACTION }}">
+	<div class="tab-pane active">
+		<fieldset class="framed-ucp">
+			<legend>{{ L_TITLE }}</legend>
+			<p>{{ L_TITLE_EXPLAIN }}</p>
+
+			{% if jobrow|length %}
+			{% for job in jobrow %}
+			<div class="well well-sm gallery-subscription-item">
+				<div class="pull-right">
+					{% if job.S_READY %}
+					<a class="btn btn-sm btn-primary" href="{{ job.U_DOWNLOAD }}"><i class="fa fa-download" aria-hidden="true"></i> {{ lang('EXPORT_DOWNLOAD') }}</a>
+					{% else %}
+					<a class="btn btn-sm btn-default" href="{{ job.U_CONTINUE }}"><i class="fa fa-refresh" aria-hidden="true"></i> {{ lang('EXPORT_CONTINUE') }}</a>
+					{% endif %}
+					<button type="submit" name="delete_job" class="btn btn-sm btn-default" onclick="this.form.job_id_delete.value = '{{ job.JOB_ID }}';"><i class="fa fa-trash" aria-hidden="true"></i> {{ lang('DELETE') }}</button>
+				</div>
+				<div class="row gallery-subscription-details">
+					<div class="col-xs-12 col-sm-6"><i class="fa fa-clock-o" aria-hidden="true"></i> {{ lang('EXPORT_JOB_CREATED') }}{{ lang('COLON') }} {{ job.CREATED }}</div>
+					<div class="col-xs-12 col-sm-6"><i class="fa fa-tasks" aria-hidden="true"></i> {{ lang('EXPORT_JOB_PROGRESS') }}{{ lang('COLON') }} <strong>{{ job.STATUS }}</strong> ({{ job.DONE }} / {{ job.TOTAL }})</div>
+					<div class="col-xs-12 col-sm-6"><i class="fa fa-hdd-o" aria-hidden="true"></i> {{ lang('EXPORT_JOB_SIZE') }}{{ lang('COLON') }} {{ job.SIZE }}</div>
+					{% if job.ERRORS %}<div class="col-xs-12 col-sm-6"><i class="fa fa-warning" aria-hidden="true"></i> {{ lang('EXPORT_JOB_ERRORS', job.ERRORS) }}</div>{% endif %}
+				</div>
+			</div>
+			{% endfor %}
+			{% else %}
+			<div class="alert alert-info">
+				<i class="fa fa-warning" aria-hidden="true"></i>&nbsp;<strong>{{ lang('INFO_BOX') }}</strong>&nbsp;{{ lang('EXPORT_NO_JOBS') }}
+			</div>
+			{% endif %}
+		</fieldset>
+
+		<div class="form-actions">
+			<button type="submit" name="start_export" class="btn btn-primary"><i class="fa fa-file-archive-o" aria-hidden="true"></i> {{ lang('EXPORT_START') }}</button>
+			<input type="hidden" name="job_id_delete" value="" />
+			{{ S_FORM_TOKEN }}
+		</div>
+	</div>
+</form>
+{% endif %}

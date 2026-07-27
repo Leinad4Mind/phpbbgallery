@@ -1,0 +1,8 @@
+################################
+#### Gallery export routes #####
+################################
+phpbbgallery_export_download:
+    path: /gallery/export/{job_id}/download
+    defaults: { _controller: phpbbgallery.export.controller:download }
+    requirements:
+        job_id: '[a-f0-9]{32}'

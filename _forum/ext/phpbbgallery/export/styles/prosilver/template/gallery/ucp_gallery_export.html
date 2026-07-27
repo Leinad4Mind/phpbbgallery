@@ -1,0 +1,43 @@
+{% if S_EXPORT_IMAGES %}
+<form id="ucp_gallery" method="post" action="{{ S_UCP_ACTION }}">
+<h2>{{ L_TITLE }}</h2>
+<div class="panel">
+	<div class="inner">
+		<p>{{ L_TITLE_EXPLAIN }}</p>
+
+		{% if jobrow is not empty %}
+		<ul class="topiclist cplist">
+			{% for job in jobrow %}
+			<li class="row{% if loop.index is odd %} bg1{% else %} bg2{% endif %}">
+				<dl>
+					<dt>
+						<dfn>{{ lang('EXPORT_JOB_CREATED') }}</dfn> {{ job.CREATED }}<br />
+						{{ lang('EXPORT_JOB_PROGRESS') }}{{ lang('COLON') }} <strong>{{ job.STATUS }}</strong> ({{ job.DONE }} / {{ job.TOTAL }})<br />
+						{{ lang('EXPORT_JOB_SIZE') }}{{ lang('COLON') }} {{ job.SIZE }}
+						{% if job.ERRORS %}<br />{{ lang('EXPORT_JOB_ERRORS', job.ERRORS) }}{% endif %}
+					</dt>
+					<dd class="mark">
+						{% if job.S_READY %}
+							<a href="{{ job.U_DOWNLOAD }}" class="button2">{{ lang('EXPORT_DOWNLOAD') }}</a>
+						{% else %}
+							<a href="{{ job.U_CONTINUE }}" class="button2">{{ lang('EXPORT_CONTINUE') }}</a>
+						{% endif %}
+						<input class="button2" type="submit" name="delete_job" value="{{ lang('DELETE') }}" onclick="this.form.job_id_delete.value = '{{ job.JOB_ID }}';" />
+					</dd>
+				</dl>
+			</li>
+			{% endfor %}
+		</ul>
+		{% else %}
+		<p class="notopics"><strong>{{ lang('EXPORT_NO_JOBS') }}</strong></p>
+		{% endif %}
+	</div>
+</div>
+
+<fieldset class="display-actions">
+	<input class="button1" type="submit" name="start_export" value="{{ lang('EXPORT_START') }}" />
+	<input type="hidden" name="job_id_delete" value="" />
+	{{ S_FORM_TOKEN }}
+</fieldset>
+</form>
+{% endif %}

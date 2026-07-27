@@ -1,0 +1,88 @@
+{% include 'overall_header.html' %}
+
+<a name="maincontent"></a>
+
+<h1>{{ lang('ACP_GALLERY_EXPORT') }}</h1>
+<p>{{ lang('ACP_GALLERY_EXPORT_EXPLAIN') }}</p>
+
+<form id="acp_gallery" method="post" action="{{ U_ACTION }}">
+	<fieldset class="field1">
+		<legend>{{ lang('EXPORT_SELECTION') }}</legend>
+		<dl>
+			<dt><label for="album_ids">{{ lang('EXPORT_ALBUMS') }}{{ lang('COLON') }}</label>
+				<br /><span>{{ lang('EXPORT_ALBUMS_EXPLAIN') }}</span></dt>
+			<dd>
+				<select id="album_ids" name="album_ids[]" multiple="multiple" size="10">
+					{{ S_ALBUM_OPTIONS }}
+				</select>
+			</dd>
+			<dd><input class="radio" type="checkbox" name="export_all" id="export_all" value="1" /> <label for="export_all">{{ lang('EXPORT_ALL_ALBUMS') }}</label></dd>
+		</dl>
+		<dl>
+			<dt><label for="delivery">{{ lang('EXPORT_DELIVERY') }}{{ lang('COLON') }}</label>
+				<br /><span>{{ lang('EXPORT_DELIVERY_EXPLAIN', EXPORT_SERVER_PATH) }}</span></dt>
+			<dd>
+				<label><input class="radio" type="radio" name="delivery" value="download" checked="checked" /> {{ lang('EXPORT_DELIVERY_DOWNLOAD') }}</label><br />
+				<label><input class="radio" type="radio" name="delivery" value="server" /> {{ lang('EXPORT_DELIVERY_SERVER') }}</label>
+			</dd>
+		</dl>
+		<dl>
+			<dt><label>{{ lang('EXPORT_LIMITS') }}{{ lang('COLON') }}</label></dt>
+			<dd>{{ lang('EXPORT_LIMITS_EXPLAIN', EXPORT_MAX_IMAGES, EXPORT_MAX_SIZE, EXPORT_BATCH_SIZE) }}</dd>
+		</dl>
+	</fieldset>
+	<fieldset class="submit-buttons">
+		<legend>{{ lang('SUBMIT') }}</legend>
+		<p class="submit-buttons">
+			<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('EXPORT_START') }}" />&nbsp;
+			<input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}" />
+			{{ S_FORM_TOKEN }}
+		</p>
+	</fieldset>
+</form>
+
+<form id="acp_gallery_jobs" method="post" action="{{ U_ACTION }}">
+	<table cellspacing="1">
+		<caption>{{ lang('EXPORT_JOBS') }}</caption>
+		<col class="col1" /><col class="col2" /><col class="col1" /><col class="col2" /><col class="col1" />
+	<thead>
+	<tr>
+		<th>{{ lang('EXPORT_JOB_ARCHIVE') }}</th>
+		<th>{{ lang('EXPORT_JOB_CREATED') }}</th>
+		<th>{{ lang('EXPORT_JOB_PROGRESS') }}</th>
+		<th>{{ lang('EXPORT_JOB_SIZE') }}</th>
+		<th>{{ lang('EXPORT_JOB_ACTION') }}</th>
+	</tr>
+	</thead>
+	<tbody>
+	{% for job in jobrow %}
+	<tr>
+		<td>
+			{% if job.S_SERVER %}
+				<strong>{{ job.ARCHIVE }}</strong><br /><small>{{ job.SERVER_PATH }}</small>
+			{% else %}
+				<strong>{{ lang('EXPORT_DELIVERY_DOWNLOAD') }}</strong>
+			{% endif %}
+			{% if job.ERRORS %}<br /><small style="color: #BC8A00;">{{ lang('EXPORT_JOB_ERRORS', job.ERRORS) }}</small>{% endif %}
+		</td>
+		<td>{{ job.CREATED }}</td>
+		<td style="color: {% if job.S_READY %}#009900{% else %}#BC8A00{% endif %};">{{ job.STATUS }}<br /><small>{{ job.DONE }} / {{ job.TOTAL }}</small></td>
+		<td>{{ job.SIZE }}</td>
+		<td>
+			{% if job.S_READY and not job.S_SERVER %}<a href="{{ job.U_DOWNLOAD }}">{{ lang('EXPORT_DOWNLOAD') }}</a>{% endif %}
+			{% if not job.S_READY and job.S_OWN %}<a href="{{ job.U_CONTINUE }}">{{ lang('EXPORT_CONTINUE') }}</a>{% endif %}
+			<br /><input class="button2" type="submit" name="delete_job" value="{{ lang('DELETE') }}" onclick="this.form.job_id_delete.value = '{{ job.JOB_ID }}';" />
+		</td>
+	</tr>
+	{% else %}
+	<tr>
+		<td colspan="5">{{ lang('EXPORT_NO_JOBS') }}</td>
+	</tr>
+	{% endfor %}
+	</tbody>
+	</table>
+	<input type="hidden" name="job_id_delete" value="" />
+	{{ S_FORM_TOKEN }}
+</form>
+
+{% include 'overall_footer.html' %}

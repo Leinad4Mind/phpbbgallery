@@ -1,0 +1,51 @@
+parameters:
+    phpbbgallery.export.path: '%core.root_path%files/phpbbgallery/export/'
+
+services:
+    phpbbgallery.export.storage:
+        class: phpbbgallery\export\job_storage
+        arguments:
+            - '%phpbbgallery.export.path%'
+
+    phpbbgallery.export.archive:
+        class: phpbbgallery\export\archive
+        arguments:
+            - '%phpbbgallery.core.file.source%'
+
+    phpbbgallery.export:
+        class: phpbbgallery\export\export
+        arguments:
+            - '@dbal.conn'
+            - '@phpbbgallery.core.auth'
+            - '@phpbbgallery.core.cache'
+            - '%phpbbgallery.tables.gallery_albums%'
+            - '%phpbbgallery.tables.gallery_images%'
+
+    phpbbgallery.export.runner:
+        class: phpbbgallery\export\runner
+        arguments:
+            - '@config'
+            - '@language'
+            - '@phpbbgallery.export'
+            - '@phpbbgallery.export.archive'
+            - '@phpbbgallery.export.storage'
+
+    phpbbgallery.export.controller:
+        class: phpbbgallery\export\controller\download
+        arguments:
+            - '@auth'
+            - '@language'
+            - '@user'
+            - '@phpbbgallery.core.file.tool'
+            - '@phpbbgallery.export.storage'
+
+# ----- Cron tasks -----
+    phpbbgallery.export.cron.task.prune_exports:
+        class: phpbbgallery\export\cron\prune_exports
+        arguments:
+            - '@config'
+            - '@phpbbgallery.export.storage'
+        calls:
+            - [set_name, [cron.task.phpbbgallery_export_prune]]
+        tags:
+            - { name: cron.task }
