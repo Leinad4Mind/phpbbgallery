@@ -119,6 +119,47 @@ class manager_scope_test extends TestCase
 		$this->assertStringContainsString('DELETE FROM phpbb_bbtags_scope', $queries[2]);
 	}
 
+	public function test_allowed_forums_are_resolved_independently_for_each_tag()
+	{
+		$db = $this->createMock(driver_interface::class);
+		$db->method('sql_in_set')->willReturnCallback(static function ($field, array $values)
+		{
+			return $field . ' IN (' . implode(',', $values) . ')';
+		});
+		$db->method('sql_escape')->willReturnArgument(0);
+		$db->method('sql_query')->willReturnCallback(static function ($sql)
+		{
+			return $sql;
+		});
+		$contexts = array(
+			array('tag_id' => 1, 'scope_mode' => 'global', 'is_enabled' => 1),
+			array('tag_id' => 2, 'scope_mode' => 'restricted', 'is_enabled' => 1),
+		);
+		$forums = array(
+			array('forum_id' => 10, 'forum_left' => 1, 'forum_right' => 10),
+			array('forum_id' => 20, 'forum_left' => 2, 'forum_right' => 5),
+			array('forum_id' => 30, 'forum_left' => 3, 'forum_right' => 4),
+			array('forum_id' => 40, 'forum_left' => 6, 'forum_right' => 9),
+		);
+		$rules = array(array('tag_id' => 2, 'scope_id' => 20, 'scope_rule' => 'allow'));
+		$db->method('sql_fetchrow')->willReturnCallback(static function ($result) use (&$contexts, &$forums, &$rules)
+		{
+			if (strpos($result, 'FROM phpbb_bbtags_context') !== false)
+			{
+				return array_shift($contexts) ?: false;
+			}
+			if (strpos($result, 'SELECT forum_id, forum_left') !== false)
+			{
+				return array_shift($forums) ?: false;
+			}
+			return array_shift($rules) ?: false;
+		});
+
+		$allowed = $this->create_manager($db)->get_allowed_forum_ids_by_tag(array(1, 2));
+		$this->assertSame(array(0, 10, 20, 30, 40), $allowed[1]);
+		$this->assertSame(array(20, 30), $allowed[2]);
+	}
+
 	private function create_manager(driver_interface $db)
 	{
 		return new manager(

@@ -1,4 +1,17 @@
 <!-- INCLUDE overall_header.html -->
+<form action="{S_SEARCH_ACTION}" method="get" class="form-inline bbtags-search">
+	<div class="form-group">
+		<label class="sr-only" for="bbtags-search-tags">{L_BBTAGS_SEARCH_TAGS}</label>
+		<input type="text" id="bbtags-search-tags" name="tags" value="{BBTAGS_SEARCH_VALUE}" class="form-control" placeholder="{L_BBTAGS_SEARCH_TAGS}" />
+	</div>
+	<div class="form-group">
+		<select name="operator" class="form-control" aria-label="{L_BBTAGS_SEARCH_OPERATOR}">
+			<option value="and"<!-- IF S_BBTAGS_OPERATOR_AND --> selected<!-- ENDIF -->>{L_BBTAGS_MATCH_ALL}</option>
+			<option value="or"<!-- IF S_BBTAGS_OPERATOR_OR --> selected<!-- ENDIF -->>{L_BBTAGS_MATCH_ANY}</option>
+		</select>
+	</div>
+	<button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> {L_SEARCH}</button>
+</form>
 <div class="side-segment"><h3>{SEARCH_MATCHES}</h3></div>
 <!-- IF .topicrow -->
 <div class="panel panel-default">

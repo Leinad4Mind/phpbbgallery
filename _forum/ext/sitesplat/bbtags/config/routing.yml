@@ -6,6 +6,10 @@ sitesplat_bbtags_auto_complete_controller:
     path: /bbtags/auto_complete
     defaults: { _controller: sitesplat.bbtags.controller:auto_complete }
     methods:  [POST]
+sitesplat_bbtags_search_controller:
+    path: /bbtags/search
+    defaults: { _controller: sitesplat.bbtags.controller:search }
+    methods:  [GET]
 sitesplat_bbtags_controller:
     path: /bbtags/{tags}
     defaults: { _controller: sitesplat.bbtags.controller:show_topic }

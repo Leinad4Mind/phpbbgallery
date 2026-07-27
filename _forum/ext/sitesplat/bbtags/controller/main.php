@@ -21,6 +21,7 @@ use phpbb\request\request;
 use phpbb\template\template;
 use phpbb\user;
 use sitesplat\bbtags\tags\manager;
+use sitesplat\bbtags\tags\search_query;
 
 class main
 {
@@ -38,13 +39,14 @@ class main
 	protected $php_ext;
 	protected $phpbb_root_path;
 	protected $manager;
+	protected $search_query;
 	protected $table_bbtags;
 	protected $table_bbtags_topic;
 
 	/**
 	 * Constructor.
 	 */
-	public function __construct(driver_interface $db, config $config, template $template, helper $helper, request $request, user $user, auth $auth, service $cache, pagination $pagination, dispatcher $phpbb_dispatcher, content_visibility $content_visibility, $php_ext, $phpbb_root_path, manager $manager, $table_bbtags, $table_bbtags_topic)
+	public function __construct(driver_interface $db, config $config, template $template, helper $helper, request $request, user $user, auth $auth, service $cache, pagination $pagination, dispatcher $phpbb_dispatcher, content_visibility $content_visibility, $php_ext, $phpbb_root_path, manager $manager, search_query $search_query, $table_bbtags, $table_bbtags_topic)
 	{
 		$this->db = $db;
 		$this->config = $config;
@@ -60,6 +62,7 @@ class main
 		$this->php_ext = $php_ext;
 		$this->phpbb_root_path = $phpbb_root_path;
 		$this->manager = $manager;
+		$this->search_query = $search_query;
 		$this->table_bbtags = $table_bbtags;
 		$this->table_bbtags_topic = $table_bbtags_topic;
 	}
@@ -126,6 +129,33 @@ class main
 	 */
 	public function show_topic($tags)
 	{
+		return $this->render_search(array($tags), 'and', true);
+	}
+
+	/**
+	 * Search for topics matching multiple tag names.
+	 *
+	 * @return mixed Symfony response
+	 */
+	public function search()
+	{
+		$tags = preg_split('/[,;]+/u', $this->request->variable('tags', '', true), -1, PREG_SPLIT_NO_EMPTY);
+		$operator = ($this->request->variable('operator', 'and') === 'or') ? 'or' : 'and';
+
+		return $this->render_search($tags ?: array(), $operator, false);
+	}
+
+	/**
+	 * Resolve tags, apply scopes and display visible matching topics.
+	 *
+	 * @param array  $values       Tag names or routes
+	 * @param string $operator     and or or
+	 * @param bool   $values_routes Whether the values are route keys
+	 *
+	 * @return mixed Symfony response
+	 */
+	protected function render_search(array $values, $operator, $values_routes)
+	{
 		if (!$this->auth->acl_get('u_bbtags_read'))
 		{
 			return $this->helper->error('NOT_AUTHORISED', 403);
@@ -134,33 +164,35 @@ class main
 		$this->user->add_lang('search');
 		include_once $this->phpbb_root_path . 'includes/functions_display.' . $this->php_ext;
 
-		$route = $this->manager->slug(utf8_normalize_nfc($tags), array('transliterate' => true));
-		$tag_id = 0;
-		$tag_name = '';
-		$sql = 'SELECT id, tag
-			FROM ' . $this->table_bbtags . '
-			WHERE ' . $this->db->sql_build_array('SELECT', array('route' => $route));
-		$result = $this->db->sql_query_limit($sql, 1);
-		if ($row = $this->db->sql_fetchrow($result))
+		$operator = ($operator === 'or') ? 'or' : 'and';
+		$values = array_slice(array_values(array_unique(array_filter(array_map('trim', $values)))), 0, (int) $this->config['bbtags_max_tags']);
+		$normalized_values = array();
+		foreach ($values as $value)
 		{
-			$tag_id = (int) $row['id'];
-			$tag_name = $row['tag'];
+			$normalized_values[] = $values_routes
+				? $this->manager->slug(utf8_normalize_nfc($value), array('transliterate' => true))
+				: $this->manager->canonical_tag($value);
 		}
-		$this->db->sql_freeresult($result);
+		$expected_tag_count = count(array_unique(array_filter($normalized_values)));
+		$resolved_tags = $this->resolve_search_tags($values, $values_routes);
+		$tag_ids = array_map('intval', array_column($resolved_tags, 'id'));
 
 		$excluded_forums = $this->get_excluded_forum_ids();
 		$visibility_sql = $this->content_visibility->get_global_visibility_sql('topic', $excluded_forums, 'topics.');
-		$where_sql = '1 = 0';
-		if ($tag_id > 0)
+		$allowed_forums = $this->manager->get_allowed_forum_ids_by_tag($tag_ids);
+		foreach ($allowed_forums as $tag_id => $forum_ids)
 		{
-			$where_sql = 'tt.tag_id = ' . $tag_id . '
-				AND topics.topic_moved_id = 0
-				AND ' . $visibility_sql;
+			$allowed_forums[$tag_id] = array_values(array_diff($forum_ids, $excluded_forums));
 		}
+		$match_sql = (empty($resolved_tags) || ($operator === 'and' && count($resolved_tags) !== $expected_tag_count))
+			? '1 = 0'
+			: $this->search_query->build($this->table_bbtags_topic, $allowed_forums, $operator);
+		$where_sql = $match_sql . '
+			AND topics.topic_moved_id = 0
+			AND ' . $visibility_sql;
 
 		$sql = 'SELECT COUNT(DISTINCT topics.topic_id) AS total
-			FROM ' . $this->table_bbtags_topic . ' tt
-			JOIN ' . TOPICS_TABLE . ' topics ON topics.topic_id = tt.topic_id
+			FROM ' . TOPICS_TABLE . ' topics
 			WHERE ' . $where_sql;
 		$result = $this->db->sql_query($sql);
 		$topics_count = (int) $this->db->sql_fetchfield('total');
@@ -168,7 +200,12 @@ class main
 
 		$start = max($this->request->variable('start', 0), 0);
 		$start = $this->pagination->validate_start($start, $this->config['topics_per_page'], $topics_count);
-		$search_url = $this->helper->route('sitesplat_bbtags_controller', array('tags' => $route));
+		$tag_names = array_column($resolved_tags, 'tag');
+		$search_value = implode(', ', $tag_names ?: $values);
+		$search_url = $this->helper->route('sitesplat_bbtags_search_controller', array(
+			'tags' => implode(',', $tag_names ?: $values),
+			'operator' => $operator,
+		));
 		$this->pagination->generate_template_pagination($search_url, 'pagination', 'start', $topics_count, $this->config['topics_per_page'], $start);
 
 		if ($topics_count > 0)
@@ -178,13 +215,63 @@ class main
 
 		$this->template->assign_vars(array(
 			'S_BBTAGS_RESULTS' => true,
-			'BBTAGS_TAG_NAME' => htmlspecialchars($tag_name, ENT_QUOTES, 'UTF-8'),
-			'S_SEARCH_ACTION' => $search_url,
+			'BBTAGS_TAG_NAME' => htmlspecialchars($search_value, ENT_QUOTES, 'UTF-8'),
+			'BBTAGS_SEARCH_VALUE' => htmlspecialchars($search_value, ENT_QUOTES, 'UTF-8'),
+			'S_BBTAGS_OPERATOR_AND' => $operator === 'and',
+			'S_BBTAGS_OPERATOR_OR' => $operator === 'or',
+			'S_SEARCH_ACTION' => $this->helper->route('sitesplat_bbtags_search_controller'),
 			'SEARCH_MATCHES' => $this->user->lang('FOUND_SEARCH_MATCHES', $topics_count),
 		));
 
-		$page_tag = htmlspecialchars(($tag_name !== '') ? $tag_name : $route, ENT_QUOTES, 'UTF-8');
+		$page_tag = htmlspecialchars($search_value, ENT_QUOTES, 'UTF-8');
 		return $this->helper->render('show_topics.html', $this->user->lang('SEARCH') . ' - ' . $page_tag);
+	}
+
+	/**
+	 * Resolve submitted names or legacy route keys to canonical catalogue rows.
+	 *
+	 * @param array $values        Tag names or routes
+	 * @param bool  $values_routes Whether values contain route keys
+	 *
+	 * @return array
+	 */
+	protected function resolve_search_tags(array $values, $values_routes)
+	{
+		if (empty($values))
+		{
+			return array();
+		}
+
+		$lookup = array();
+		foreach ($values as $value)
+		{
+			$key = $values_routes
+				? $this->manager->slug(utf8_normalize_nfc($value), array('transliterate' => true))
+				: $this->manager->canonical_tag($value);
+			if ($key !== '')
+			{
+				$lookup[$key] = true;
+			}
+		}
+		if (empty($lookup))
+		{
+			return array();
+		}
+
+		$field = $values_routes ? 'route' : 'tag_clean';
+		$sql = 'SELECT id, tag, route, tag_clean
+			FROM ' . $this->table_bbtags . '
+			WHERE ' . $this->db->sql_in_set($field, array_keys($lookup));
+		$result = $this->db->sql_query($sql);
+		$rows = array();
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$key = $values_routes ? $row['route'] : $row['tag_clean'];
+			$rows[$key] = $row;
+		}
+		$this->db->sql_freeresult($result);
+
+		return array_values(array_intersect_key($rows, $lookup));
 	}
 
 	/**
@@ -196,9 +283,8 @@ class main
 	protected function display_topics($where_sql, $start)
 	{
 		$icons = $this->cache->obtain_icons();
-		$sql = 'SELECT DISTINCT topics.*, forums.forum_name, topic_track.mark_time
-			FROM ' . $this->table_bbtags_topic . ' tt
-			JOIN ' . TOPICS_TABLE . ' topics ON topics.topic_id = tt.topic_id
+		$sql = 'SELECT topics.*, forums.forum_name, topic_track.mark_time
+			FROM ' . TOPICS_TABLE . ' topics
 			LEFT JOIN ' . FORUMS_TABLE . ' forums ON forums.forum_id = topics.forum_id
 			LEFT JOIN ' . TOPICS_TRACK_TABLE . ' topic_track
 				ON topic_track.topic_id = topics.topic_id

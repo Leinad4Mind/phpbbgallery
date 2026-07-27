@@ -61,10 +61,19 @@ class acp_security_test extends TestCase
 		}
 	}
 
-	private function load_language_keys($language)
+	public function test_public_language_catalogs_share_the_same_keys()
+	{
+		$expected_keys = $this->load_language_keys('en', 'bbtags');
+		foreach (array('pt', 'pt_br', 'pt_preao') as $language)
+		{
+			$this->assertSame($expected_keys, $this->load_language_keys($language, 'bbtags'), $language);
+		}
+	}
+
+	private function load_language_keys($language, $file = 'info_acp_bbtags')
 	{
 		$lang = array();
-		include dirname(__DIR__) . '/language/' . $language . '/info_acp_bbtags.php';
+		include dirname(__DIR__) . '/language/' . $language . '/' . $file . '.php';
 		$keys = array_keys($lang);
 		sort($keys);
 

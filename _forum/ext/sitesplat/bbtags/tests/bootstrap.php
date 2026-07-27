@@ -69,6 +69,7 @@ namespace
 	require_once dirname(__DIR__, 4) . '/phpbb/db/migration/migration_interface.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/db/migration/migration.php';
 	require_once dirname(__DIR__) . '/tags/manager.php';
+	require_once dirname(__DIR__) . '/tags/search_query.php';
 	require_once dirname(__DIR__) . '/migrations/v33x/m7_global_catalog_schema.php';
 	require_once dirname(__DIR__) . '/migrations/v33x/m8_global_catalog_data.php';
 	require_once dirname(__DIR__) . '/migrations/v33x/m9_global_catalog_constraints.php';

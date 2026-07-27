@@ -692,6 +692,95 @@ class manager
 	}
 
 	/**
+	 * Return every forum path from the forum itself to the global root.
+	 *
+	 * @return array Paths indexed by forum identifier
+	 */
+	public function get_forum_scope_paths()
+	{
+		$sql = 'SELECT forum_id, forum_left, forum_right
+			FROM ' . FORUMS_TABLE . '
+			ORDER BY forum_left ASC';
+		$result = $this->db->sql_query($sql);
+		$forums = array();
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$forums[] = array(
+				'forum_id' => (int) $row['forum_id'],
+				'forum_left' => (int) $row['forum_left'],
+				'forum_right' => (int) $row['forum_right'],
+			);
+		}
+		$this->db->sql_freeresult($result);
+
+		$paths = array(0 => array(0));
+		foreach ($forums as $forum)
+		{
+			$ancestors = array();
+			foreach ($forums as $candidate)
+			{
+				if ($candidate['forum_left'] <= $forum['forum_left'] && $candidate['forum_right'] >= $forum['forum_right'])
+				{
+					$ancestors[$candidate['forum_left']] = $candidate['forum_id'];
+				}
+			}
+			krsort($ancestors, SORT_NUMERIC);
+			$ancestors[] = 0;
+			$paths[$forum['forum_id']] = array_values(array_unique($ancestors));
+		}
+
+		return $paths;
+	}
+
+	/**
+	 * Resolve the forum identifiers in which each tag is currently available.
+	 *
+	 * @param array $tag_ids Tag identifiers
+	 *
+	 * @return array Forum identifiers indexed by tag identifier
+	 */
+	public function get_allowed_forum_ids_by_tag(array $tag_ids)
+	{
+		$tag_ids = array_values(array_unique(array_filter(array_map('intval', $tag_ids))));
+		if (empty($tag_ids))
+		{
+			return array();
+		}
+
+		$sql = 'SELECT tag_id, scope_mode, is_enabled
+			FROM ' . $this->table_bbtags_context . '
+			WHERE provider = \'' . self::FORUM_PROVIDER . '\'
+				AND ' . $this->db->sql_in_set('tag_id', $tag_ids);
+		$result = $this->db->sql_query($sql);
+		$contexts = array();
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$contexts[(int) $row['tag_id']] = $row;
+		}
+		$this->db->sql_freeresult($result);
+
+		$scope_paths = $this->get_forum_scope_paths();
+		$rules = $this->load_scope_rules($tag_ids, self::FORUM_PROVIDER, array_keys($scope_paths));
+		$allowed = array_fill_keys($tag_ids, array());
+		foreach ($tag_ids as $tag_id)
+		{
+			if (empty($contexts[$tag_id]['is_enabled']))
+			{
+				continue;
+			}
+			foreach ($scope_paths as $forum_id => $scope_path)
+			{
+				if ($this->scope_allows($contexts[$tag_id]['scope_mode'], isset($rules[$tag_id]) ? $rules[$tag_id] : array(), $scope_path))
+				{
+					$allowed[$tag_id][] = (int) $forum_id;
+				}
+			}
+		}
+
+		return $allowed;
+	}
+
+	/**
 	 * Filter tag identifiers through provider state and inherited scope rules.
 	 *
 	 * @param array  $tag_ids    Tag identifiers

@@ -26,6 +26,7 @@
 - Synchronize forum topic usage with its provider context and use the configured 64-character tag limit in the posting UI.
 - Add reusable global/restricted provider scopes with nearest-ancestor allow, deny and inherit rules.
 - Restrict forum autocomplete and saved topic tags to the effective rule of the current forum hierarchy.
+- Add multi-tag topic search with explicit AND/OR matching and per-tag forum scope enforcement.
 
 ### Tests
 

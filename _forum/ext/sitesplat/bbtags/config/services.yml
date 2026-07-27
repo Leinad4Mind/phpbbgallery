@@ -2,6 +2,8 @@ imports:
     - { resource: tables.yml }
 
 services:
+    sitesplat.bbtags.search_query:
+        class: sitesplat\bbtags\tags\search_query
     sitesplat.bbtags.manager:
         class: sitesplat\bbtags\tags\manager
         arguments:
@@ -43,5 +45,6 @@ services:
             - '%core.php_ext%'
             - '%core.root_path%'
             - '@sitesplat.bbtags.manager'
+            - '@sitesplat.bbtags.search_query'
             - '%sitesplat.bbtags.tables.bbtags%'
             - '%sitesplat.bbtags.tables.bbtags_topic%'
