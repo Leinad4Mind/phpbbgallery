@@ -24,6 +24,10 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
+	'PERMISSION_I_MOVE' => 'Kan eigen afbeeldingen verplaatsen',
+]);
+
+$lang = array_merge($lang, [
 	'GALLERY_SYSTEM_STATUS'                  => 'Systeem- en opslagstatus',
 	'GALLERY_STORAGE'                        => 'Opslagmappen',
 	'GALLERY_RUNTIME'                        => 'PHP-omgeving en extensies',
@@ -274,7 +278,7 @@ $lang = array_merge($lang, [
 	'PERMISSION_I_REPORT'         => 'kan afbeldingen melden',
 	'PERMISSION_I_UNLIMITED'      => 'Kan ongelimiteerd aantal afbeeldingen uploaden',
 	'PERMISSION_I_UPLOAD'         => 'Kan afbeeldingen uploaden',
-	'PERMISSION_I_UPLOAD_EXPLAIN' => 'Deze permissie wordt ook gebruikt, om vast te stellen of een gebruiker afbeeldingen kan verplaatsen naar het album, wanneer deze moderator permissies heeft in andere forums.',
+	'PERMISSION_I_UPLOAD_EXPLAIN' => 'Deze permissie bepaalt ook of een gebruiker eigen afbeeldingen naar dit album kan verplaatsen.',
 	'PERMISSION_I_VIEW'           => 'Kan afbeeldingen bekijken',
 	'PERMISSION_I_WATERMARK'      => 'Kan afbeelding zonder watermerk bekijken',
 	'PERMISSION_M'                => 'Moderatie',

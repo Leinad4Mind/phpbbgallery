@@ -294,20 +294,21 @@ class image
 			$page_title .= ' - ' . $this->language->lang('PAGE_TITLE_NUMBER', $page);
 		}
 
-		$s_allowed_delete = $s_allowed_edit = $s_allowed_status = false;
+		$s_allowed_delete = $s_allowed_edit = $s_allowed_move = $s_allowed_status = false;
 		if (($this->gallery_auth->acl_check('m_', $album_id, $album_data['album_user_id']) || ($this->data['image_user_id'] == $this->user->data['user_id'])) && ($this->user->data['user_id'] != ANONYMOUS))
 		{
 			$s_user_allowed = (($this->data['image_user_id'] == $this->user->data['user_id']) && ($album_data['album_status'] != 1));
 
 			$s_allowed_delete = (($this->gallery_auth->acl_check('i_delete', $album_id, $album_data['album_user_id']) && $s_user_allowed) || $this->gallery_auth->acl_check('m_delete', $album_id, $album_data['album_user_id']));
 			$s_allowed_edit = (($this->gallery_auth->acl_check('i_edit', $album_id, $album_data['album_user_id']) && $s_user_allowed) || $this->gallery_auth->acl_check('m_edit', $album_id, $album_data['album_user_id']));
-			$s_quick_mod = ($s_allowed_delete || $s_allowed_edit || $this->gallery_auth->acl_check('m_status', $album_id, $album_data['album_user_id']) || $this->gallery_auth->acl_check('m_move', $album_id, $album_data['album_user_id']));
+			$s_allowed_move = (($this->gallery_auth->acl_check('i_move', $album_id, $album_data['album_user_id']) && $s_user_allowed) || $this->gallery_auth->acl_check('m_move', $album_id, $album_data['album_user_id']));
+			$s_quick_mod = ($s_allowed_delete || $s_allowed_edit || $s_allowed_move || $this->gallery_auth->acl_check('m_status', $album_id, $album_data['album_user_id']));
 
 			$this->language->add_lang(['gallery_mcp'], 'phpbbgallery/core');
 			$this->template->assign_vars([
 				'S_MOD_ACTION' => $this->helper->route('phpbbgallery_core_moderate_image', ['image_id' => (int) $image_id]),
 				'S_QUICK_MOD'  => $s_quick_mod,
-				'S_QM_MOVE'    => $this->gallery_auth->acl_check('m_move', $album_id, $album_data['album_user_id']),
+				'S_QM_MOVE'    => $s_allowed_move,
 				'S_QM_EDIT'    => $s_allowed_edit,
 				'S_QM_DELETE'  => $s_allowed_delete,
 				'S_QM_REPORT'  => $this->gallery_auth->acl_check('m_report', $album_id, $album_data['album_user_id']),

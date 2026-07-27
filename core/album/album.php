@@ -234,8 +234,10 @@ class album
 				// Is in the ignore_id
 				((is_array($ignore_id) && in_array($row['album_id'], $ignore_id)) || $row['album_id'] == $ignore_id)
 				||
-				// Need upload permissions (for moving)
-				(($requested_permission == 'm_move') && (($row['album_type'] == (int) \phpbbgallery\core\block::TYPE_CAT) || (!$this->gallery_auth->acl_check('i_upload', $row['album_id'], $row['album_user_id']) && !$this->gallery_auth->acl_check('m_move', $row['album_id'], $row['album_user_id']))))
+				// Need the matching destination permission when moving.
+				(($requested_permission == 'm_move') && (($row['album_type'] == (int) \phpbbgallery\core\block::TYPE_CAT) || !$this->gallery_auth->acl_check('m_move', $row['album_id'], $row['album_user_id'])))
+				||
+				(($requested_permission == 'i_move') && (($row['album_type'] == (int) \phpbbgallery\core\block::TYPE_CAT) || (!$this->gallery_auth->acl_check('i_upload', $row['album_id'], $row['album_user_id']) && !$this->gallery_auth->acl_check('m_move', $row['album_id'], $row['album_user_id']))))
 				||
 				// album_type does not fit
 				($check_album_type && ($row['album_type'] != $requested_album_type))

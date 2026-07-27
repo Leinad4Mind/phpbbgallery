@@ -24,6 +24,10 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
+	'PERMISSION_I_MOVE' => 'Может перемещать свои изображения',
+]);
+
+$lang = array_merge($lang, [
 	'GALLERY_SYSTEM_STATUS'                  => 'Состояние системы и хранилища',
 	'GALLERY_STORAGE'                        => 'Каталоги хранилища',
 	'GALLERY_RUNTIME'                        => 'Среда PHP и расширения',
@@ -260,7 +264,7 @@ $lang = array_merge($lang, [
 	'PERMISSION_I_REPORT'                  => 'Может обжаловать фото',
 	'PERMISSION_I_UNLIMITED'               => 'Может загружать неограниченное количество фото',
 	'PERMISSION_I_UPLOAD'                  => 'Может загружать фото',
-	'PERMISSION_I_UPLOAD_EXPLAIN'          => 'Это право также используется для определения, может ли пользователь перемещать фотографии в альбом, если у него имеются модераторские права в других форумах.',
+	'PERMISSION_I_UPLOAD_EXPLAIN'          => 'Это право также определяет, может ли пользователь перемещать свои изображения в этот альбом.',
 	'PERMISSION_I_VIEW'                    => 'Может просматривать фото',
 	'PERMISSION_I_WATERMARK'               => 'Может просматривать фото без водяных знаков',
 	'PERMISSION_M'                         => 'Модерация',

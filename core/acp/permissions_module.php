@@ -52,7 +52,7 @@ class permissions_module
 		}
 		$favorite_permission = $gallery_auth->has_permission('i_favorite') ? ['i_favorite'] : [];
 		$permissions->cats['full'] = [
-			'i'		=> array_merge(['i_view', 'i_watermark', 'i_upload', 'i_approve', 'i_edit', 'i_delete', 'i_report', 'i_rate'], $favorite_permission),
+			'i'		=> array_merge(['i_view', 'i_watermark', 'i_upload', 'i_approve', 'i_edit', 'i_delete', 'i_report', 'i_rate', 'i_move'], $favorite_permission),
 			'c'		=> ['c_read', 'c_post', 'c_edit', 'c_delete'],
 			'm'		=> ['m_comments', 'm_delete', 'm_edit', 'm_move', 'm_report', 'm_status'],
 			'misc'	=> ['a_list', 'i_count', 'i_unlimited', 'a_count', 'a_unlimited', 'a_restrict'],
@@ -61,7 +61,7 @@ class permissions_module
 
 		// Permissions for the normal albums
 		$permissions->cats[$gallery_auth::PUBLIC_ALBUM] = [
-			'i'		=> array_merge(['i_view', 'i_watermark', 'i_upload', 'i_approve', 'i_edit', 'i_delete', 'i_report', 'i_rate'], $favorite_permission),
+			'i'		=> array_merge(['i_view', 'i_watermark', 'i_upload', 'i_approve', 'i_edit', 'i_delete', 'i_report', 'i_rate', 'i_move'], $favorite_permission),
 			'c'		=> ['c_read', 'c_post', 'c_edit', 'c_delete'],
 			'm'		=> ['m_comments', 'm_delete', 'm_edit', 'm_move', 'm_report', 'm_status'],
 			'misc'	=> ['a_list', 'i_count', 'i_unlimited'/*, 'a_count', 'a_unlimited', 'a_restrict'*/],
@@ -72,7 +72,7 @@ class permissions_module
 		// Permissions for own personal albums
 		// Note: we set i_view to 1 as default on storing the permissions
 		$permissions->cats[$gallery_auth::OWN_ALBUM] = [
-			'i'		=> array_merge([/*'i_view', */'i_watermark', 'i_upload', 'i_approve', 'i_edit', 'i_delete', 'i_report', 'i_rate'], $favorite_permission),
+			'i'		=> array_merge([/*'i_view', */'i_watermark', 'i_upload', 'i_approve', 'i_edit', 'i_delete', 'i_report', 'i_rate', 'i_move'], $favorite_permission),
 			'c'		=> ['c_read', 'c_post', 'c_edit', 'c_delete'],
 			'm'		=> ['m_comments', 'm_delete', 'm_edit', 'm_move', 'm_report', 'm_status'],
 			'misc'	=> ['a_list', 'i_count', 'i_unlimited', 'a_count', 'a_unlimited', 'a_restrict'],
@@ -83,7 +83,7 @@ class permissions_module
 		// Permissions for personal albums of other users
 		// Note: Do !NOT! hide the i_upload. It's used for the moving-permissions
 		$permissions->cats[$gallery_auth::PERSONAL_ALBUM] = [
-			'i'		=> array_merge(['i_view', 'i_watermark', 'i_upload', /*'i_approve', 'i_edit', 'i_delete', */'i_report', 'i_rate'], $favorite_permission),
+			'i'		=> array_merge(['i_view', 'i_watermark', 'i_upload', /*'i_approve', 'i_edit', 'i_delete', */'i_report', 'i_rate', 'i_move'], $favorite_permission),
 			'c'		=> ['c_read', 'c_post', 'c_edit', 'c_delete'],
 			'm'		=> ['m_comments', 'm_delete', 'm_edit', 'm_move', 'm_report', 'm_status'],
 			'misc'	=> ['a_list'/*, 'i_count', 'i_unlimited', 'a_count', 'a_unlimited', 'a_restrict'*/],

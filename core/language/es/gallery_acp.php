@@ -24,6 +24,10 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
+	'PERMISSION_I_MOVE' => 'Puede mover sus propias imágenes',
+]);
+
+$lang = array_merge($lang, [
 	'GALLERY_SYSTEM_STATUS'                  => 'Estado del sistema y del almacenamiento',
 	'GALLERY_STORAGE'                        => 'Directorios de almacenamiento',
 	'GALLERY_RUNTIME'                        => 'Entorno PHP y extensiones',
@@ -274,7 +278,7 @@ $lang = array_merge($lang, [
 	'PERMISSION_I_REPORT'         => 'Puede informar imágenes',
 	'PERMISSION_I_UNLIMITED'      => 'Puede subir imágenes ilimitadas',
 	'PERMISSION_I_UPLOAD'         => 'Puede subir imágenes',
-	'PERMISSION_I_UPLOAD_EXPLAIN' => 'Este permiso también se utiliza, para determinar si el usuario puede mover imágenes al álbum, al tener permisos de moderador en otros foros.',
+	'PERMISSION_I_UPLOAD_EXPLAIN' => 'Este permiso también determina si el usuario puede mover sus propias imágenes a este álbum.',
 	'PERMISSION_I_VIEW'           => 'Puede ver imágenes',
 	'PERMISSION_I_WATERMARK'      => 'Puede ver imágenes sin marca de agua',
 	'PERMISSION_M'                => 'Moderación',

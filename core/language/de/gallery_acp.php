@@ -24,6 +24,10 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
+	'PERMISSION_I_MOVE' => 'Kann eigene Bilder verschieben',
+]);
+
+$lang = array_merge($lang, [
 	'GALLERY_SYSTEM_STATUS'                  => 'System- und Speicherstatus',
 	'GALLERY_STORAGE'                        => 'Speicherverzeichnisse',
 	'GALLERY_RUNTIME'                        => 'PHP-Laufzeit und Erweiterungen',
@@ -274,7 +278,7 @@ $lang = array_merge($lang, [
 	'PERMISSION_I_REPORT'         => 'Kann Bilder melden',
 	'PERMISSION_I_UNLIMITED'      => 'Kann unbegrenzt Bilder hochladen',
 	'PERMISSION_I_UPLOAD'         => 'Kann Bilder hochladen',
-	'PERMISSION_I_UPLOAD_EXPLAIN' => 'Diese Berechtigung ist auch dafür verantwortlich, um festzustellen ob ein Benutzer Bilder in das Album verschieben darf, wenn er Moderator-Berechtigungen in einem anderem Album hat.',
+	'PERMISSION_I_UPLOAD_EXPLAIN' => 'Diese Berechtigung bestimmt auch, ob ein Benutzer eigene Bilder in dieses Album verschieben darf.',
 	'PERMISSION_I_VIEW'           => 'Kann Bilder sehen',
 	'PERMISSION_I_WATERMARK'      => 'Kann Bilder ohne Wasserzeichen sehen',
 	'PERMISSION_M'                => 'Moderation',
