@@ -1105,7 +1105,7 @@ class permissions_module
 
 				$s_hidden_fields = build_hidden_fields($s_hidden_fields);
 
-				confirm_box(false, $this->language->lang('COPY_PERMISSIONS_CONFIRM'), $s_hidden_fields);
+				confirm_box(false, $this->language->lang('COPY_PERMISSIONS_CONFIRM'), $s_hidden_fields, 'confirm_body.html', $this->u_action);
 			}
 		}
 

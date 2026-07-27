@@ -114,6 +114,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Reported the 10,000-image ACP Import state limit explicitly and warned administrators when files with unreadable names are ignored, in every packaged language.
 - Synchronized Gallery user image counters and personal-album links after ACP Cleanup removes obsolete or unwanted personal galleries.
 - Posted personal-album deletion confirmations to the canonical board-root UCP action instead of deriving a duplicated `ucp.php/ucp.php` path.
+- Posted all Gallery ACP confirmations to their canonical module actions instead of deriving duplicated `adm/index.php/adm/index.php` paths.
 - Corrected the malformed comment-statistics reset query so both the count and last-comment identifier are cleared after deleting comments by image.
 - Prevented Gallery settings from a previously loaded user being reused when switching to a user without a Gallery row.
 - Made empty bulk-user filters match no rows instead of being converted to user ID 1, while keeping the explicit all operation unchanged.
