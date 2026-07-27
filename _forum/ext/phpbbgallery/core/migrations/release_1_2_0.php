@@ -86,16 +86,6 @@ class release_1_2_0 extends migration
 				'module_mode'		=> 'manage_subscriptions',
 				'module_auth'		=> 'ext_phpbbgallery/core',
 			]]],
-			//@todo move
-			/*			['module.add', ['ucp', 'UCP_GALLERY', [
-							'module_basename'	=> '\phpbbgallery\core\ucp\main_module',
-							'module_langname'	=> 'UCP_GALLERY_FAVORITES',
-							'module_mode'		=> 'manage_favorites',
-							'module_auth'		=> 'ext_phpbbgallery/core',
-						]]],
-			*/
-
-			// @todo: ADD BBCODE
 			['custom', [[&$this, 'install_config']]],
 		];
 	}

@@ -119,6 +119,15 @@ class migration_integrity_test extends TestCase
 		], $permissions);
 	}
 
+	public function test_core_migration_does_not_register_addon_ucp_modules(): void
+	{
+		$migration = (new \ReflectionClass(release_1_2_0::class))->newInstanceWithoutConstructor();
+		$steps = var_export($migration->update_data(), true);
+
+		$this->assertStringNotContainsString('UCP_GALLERY_FAVORITES', $steps);
+		$this->assertStringNotContainsString('manage_favorites', $steps);
+	}
+
 	public function test_profile_contact_url_update_uses_dbal_escaping(): void
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/migrations/release_3_2_1_0.php');
