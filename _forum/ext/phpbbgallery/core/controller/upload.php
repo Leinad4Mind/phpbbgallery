@@ -584,6 +584,19 @@ class upload
 					$process->set_author((int) $upload_author['user_id'], $upload_author['username'], $upload_author['user_colour']);
 				}
 
+				$image_ids = $process->images;
+				/**
+				 * Allow add-ons to validate their per-image review fields before any
+				 * orphan upload is finalized.
+				 *
+				 * @event phpbbgallery.core.upload.review_validate
+				 * @var string validation_error Existing validation error or an empty string
+				 * @var array  image_ids        Owned orphan image identifiers in review order
+				 * @since 3.4.0
+				 */
+				$vars = ['validation_error', 'image_ids'];
+				extract($this->dispatcher->trigger_event('phpbbgallery.core.upload.review_validate', compact($vars)));
+
 				if ($validation_error)
 				{
 					$error = $validation_error;

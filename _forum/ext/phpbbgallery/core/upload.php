@@ -950,6 +950,21 @@ class upload
 		$this->db->sql_query($sql);
 		$this->image_data[$image_id] = array_merge($this->image_data[$image_id], $sql_ary);
 
+		$image_index = $this->file_count;
+		$image_data = $this->image_data[$image_id];
+		/**
+		 * Notify add-ons after an uploaded image has been finalized successfully.
+		 *
+		 * @event phpbbgallery.core.upload.update_image_after
+		 * @var int   image_id    Finalized image identifier
+		 * @var int   image_index Zero-based position in the submitted upload batch
+		 * @var array image_data  Updated image database row
+		 * @var array sql_ary     Values persisted by this finalization
+		 * @since 3.4.0
+		 */
+		$vars = ['image_id', 'image_index', 'image_data', 'sql_ary'];
+		extract($this->phpbb_dispatcher->trigger_event('phpbbgallery.core.upload.update_image_after', compact($vars)));
+
 		return true;
 	}
 
