@@ -51,10 +51,15 @@ class notification_lifecycle_test extends TestCase
 
 		$this->assertSame('notifications', $extension->disable_step(''));
 		$this->assertSame(self::TYPES, $manager->disabled);
+		// Every packaged add-on rides along, so none is left enabled against a
+		// disabled core.
 		$this->assertSame([
 			'phpbbgallery/acpcleanup',
 			'phpbbgallery/acpimport',
 			'phpbbgallery/exif',
+			'phpbbgallery/export',
+			'phpbbgallery/favorite',
+			'phpbbgallery/feed',
 		], $extension_manager->disabled);
 	}
 

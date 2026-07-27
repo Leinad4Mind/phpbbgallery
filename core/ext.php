@@ -30,6 +30,9 @@ class ext extends \phpbb\extension\base
 		'phpbbgallery/acpcleanup',
 		'phpbbgallery/acpimport',
 		'phpbbgallery/exif',
+		'phpbbgallery/export',
+		'phpbbgallery/favorite',
+		'phpbbgallery/feed',
 	];
 
 	/**
