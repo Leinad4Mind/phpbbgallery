@@ -74,6 +74,31 @@ final class event_main_listener_types_test extends TestCase
 		], $event['permissions']);
 	}
 
+	public function test_page_header_exposes_the_configured_gallery_title_without_enabling_the_menu(): void
+	{
+		$template = $this->createMock(\phpbb\template\template::class);
+		$template->expects($this->once())
+			->method('assign_var')
+			->with('GALLERY_TITLE', 'My Photos');
+		$language = $this->createStub(\phpbb\language\language::class);
+		$config = $this->createMock(\phpbbgallery\core\config::class);
+		$config->expects($this->once())
+			->method('get_title')
+			->with($language)
+			->willReturn('My Photos');
+		$config->expects($this->once())
+			->method('get')
+			->with('disp_gallery_icon')
+			->willReturn(false);
+		$reflection = new \ReflectionClass(main_listener::class);
+		$listener = $reflection->newInstanceWithoutConstructor();
+		$this->set_property($listener, 'template', $template);
+		$this->set_property($listener, 'language', $language);
+		$this->set_property($listener, 'gallery_config', $config);
+
+		$listener->add_page_header_link(new \phpbb\event\data([]));
+	}
+
 	public function test_profile_update_preserves_the_managed_personal_album(): void
 	{
 		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);

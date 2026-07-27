@@ -170,7 +170,7 @@ function toggleElement(oElement)
 							</div>
 						</dt>
 						<dd class="topics">
-							<a href="{{ U_G_SEARCH_RECENT }}" title="{{ lang('GALLERY') }} {{ lang('GALLERY_IMAGES') }}">{{ lang('GALLERY_IMAGES') }}</a>
+							<a href="{{ U_G_SEARCH_RECENT }}" title="{{ GALLERY_TITLE }} {{ lang('GALLERY_IMAGES') }}">{{ lang('GALLERY_IMAGES') }}</a>
 						</dd>
 						<dd class="lastpost" style="width: 330px;">
 							<a href="{{ U_IMAGE_ACTION }}" style="padding-left: 5px;" title="{{ lang('VIEW_LATEST_IMAGE') }}&colon; {{ U_IMAGENAME }}">{{ lang('LAST_IMAGE') }}</a>
@@ -192,7 +192,7 @@ function toggleElement(oElement)
 									{{ lang('YOUR_PERSONAL_ALBUM') }}{{ lang('COLON') }} <a href="{{ U_PERSONAL_ALBUM }}" title="{{ lang('YOUR_PERSONAL_ALBUM') }}" {% if not U_PERSONAL_ALBUM_COLOR %}class="username"{% else %}class="username-coloured" style="color: #{{ U_PERSONAL_ALBUM_COLOR }};"{% endif %}>{{ U_PERSONAL_ALBUM_USER }}</a>
 								{% endif %}
 								<div class="responsive-show" style="display: none;">
-									{{ lang('GALLERY') }} {{ lang('GALLERY_IMAGES') }}{{ lang('COLON') }} <strong><a href="{{ U_G_SEARCH_RECENT }}" title="{{ lang('GALLERY') }} {{ lang('GALLERY_IMAGES') }}">{{ U_PERSONAL_GALLERIES_IMAGES }}</a></strong><br />
+									{{ GALLERY_TITLE }} {{ lang('GALLERY_IMAGES') }}{{ lang('COLON') }} <strong><a href="{{ U_G_SEARCH_RECENT }}" title="{{ GALLERY_TITLE }} {{ lang('GALLERY_IMAGES') }}">{{ U_PERSONAL_GALLERIES_IMAGES }}</a></strong><br />
 									<div style="float: left;">
 										<dfn>{{ lang('LAST_IMAGES') }}</dfn>
 										<a href="{{ U_IMAGE_ACTION }}"><img src="{{ U_PERSONAL_GALLERIES_LAST_IMAGE }}" title="{{ lang('VIEW_LATEST_IMAGE') }}&colon; {{ U_IMAGENAME }}"{% if U_IMAGENAME %} alt="{{ U_IMAGENAME }}"{% endif %} style="max-width: 50px; max-height: 50px; padding: 5px;"></a>
@@ -209,7 +209,7 @@ function toggleElement(oElement)
 						</dt>
 						<dd class="topics">
 							<dfn>{{ lang('GALLERY_IMAGES') }}</dfn>
-							<strong><a href="{{ U_G_SEARCH_RECENT }}" title="{{ lang('GALLERY') }} {{ lang('GALLERY_IMAGES') }}">{{ U_PERSONAL_GALLERIES_IMAGES }}</a></strong>
+							<strong><a href="{{ U_G_SEARCH_RECENT }}" title="{{ GALLERY_TITLE }} {{ lang('GALLERY_IMAGES') }}">{{ U_PERSONAL_GALLERIES_IMAGES }}</a></strong>
 						</dd>
 						<dd class="lastpost" style="width: 330px;">
 							<div style="float: left;">

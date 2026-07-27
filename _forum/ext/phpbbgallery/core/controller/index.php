@@ -224,11 +224,11 @@ class index
 		$this->assign_dropdown_links('phpbbgallery_core_index');
 
 		$this->template->assign_block_vars('navlinks', [
-			'FORUM_NAME'	=> $this->language->lang('GALLERY'),
+			'FORUM_NAME'	=> $this->gallery_config->get_title($this->language),
 			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_core_index'),
 		]);
 
-		return $this->helper->render('gallery/index_body.html', $this->language->lang('GALLERY'), 200, $this->gallery_config->get('disp_whoisonline'));
+		return $this->helper->render('gallery/index_body.html', $this->gallery_config->get_title($this->language), 200, $this->gallery_config->get('disp_whoisonline'));
 	}
 
 	/**
@@ -285,7 +285,7 @@ class index
 		]);
 
 		$this->template->assign_block_vars('navlinks', [
-			'FORUM_NAME'	=> $this->language->lang('GALLERY'),
+			'FORUM_NAME'	=> $this->gallery_config->get_title($this->language),
 			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_core_index'),
 		]);
 		$this->template->assign_block_vars('navlinks', [

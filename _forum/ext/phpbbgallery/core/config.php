@@ -16,6 +16,7 @@ class config
 	private \phpbb\config\config $config;
 
 	private array $configs_array = [
+		'title'				=> '',
 		'album_display'		=> 254,
 		'album_images'		=> 2500,
 		'allow_comments'	=> true,
@@ -163,6 +164,21 @@ class config
 		{
 			return $this->configs_array[$key];
 		}
+	}
+
+	/**
+	 * Return the configured public Gallery title or its translated default.
+	 *
+	 * @param \phpbb\language\language $language Language service
+	 * @return string
+	 */
+	public function get_title(\phpbb\language\language $language): string
+	{
+		$title = trim(strip_tags((string) $this->get('title')));
+
+		return $title !== ''
+			? htmlspecialchars($title, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')
+			: $language->lang('GALLERY');
 	}
 
 	public function set(string $name, mixed $value, bool $use_cache = true): void

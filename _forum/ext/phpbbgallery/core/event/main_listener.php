@@ -112,6 +112,8 @@ class main_listener implements EventSubscriberInterface
 	}
 	public function add_page_header_link(\phpbb\event\data $event): void
 	{
+		$this->template->assign_var('GALLERY_TITLE', $this->gallery_config->get_title($this->language));
+
 		if ($this->gallery_config->get('disp_gallery_icon') == 1)
 		{
 			$this->template->assign_vars([

@@ -351,7 +351,7 @@ class search
 			$this->template->assign_vars([
 				'SEARCH_MATCHES'	=> $this->language->lang('FOUND_SEARCH_MATCHES', $search_count),
 			]);
-			return $this->helper->render('gallery/search_results.html', $this->language->lang('GALLERY'));
+			return $this->helper->render('gallery/search_results.html', $this->gallery_config->get_title($this->language));
 		}
 		$this->template->assign_block_vars('navlinks', [
 			'FORUM_NAME'	=> $this->language->lang('SEARCH'),
@@ -369,7 +369,7 @@ class search
 			'S_SELECT_SORT_DAYS'	=> $s_limit_days,
 			'S_IN_SEARCH'			=> true,
 		]);
-		return $this->helper->render('gallery/search_body.html', $this->language->lang('GALLERY'));
+		return $this->helper->render('gallery/search_body.html', $this->gallery_config->get_title($this->language));
 	}
 
 	/**
@@ -391,7 +391,7 @@ class search
 		}
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$this->template->assign_block_vars('navlinks', [
-			'FORUM_NAME'	=> $this->language->lang('GALLERY'),
+			'FORUM_NAME'	=> $this->gallery_config->get_title($this->language),
 			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_core_index'),
 		]);
 		$this->template->assign_block_vars('navlinks', [
@@ -405,7 +405,7 @@ class search
 
 		$this->gallery_search->random($this->gallery_config->get('items_per_page'));
 
-		return $this->helper->render('gallery/search_random.html', $this->language->lang('GALLERY'));
+		return $this->helper->render('gallery/search_random.html', $this->gallery_config->get_title($this->language));
 	}
 
 	/**
@@ -430,7 +430,7 @@ class search
 
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$this->template->assign_block_vars('navlinks', [
-			'FORUM_NAME'	=> $this->language->lang('GALLERY'),
+			'FORUM_NAME'	=> $this->gallery_config->get_title($this->language),
 			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_core_index'),
 		]);
 		$this->template->assign_block_vars('navlinks', [
@@ -446,7 +446,7 @@ class search
 		$start = ($page - 1) * $limit;
 		$this->gallery_search->recent($limit, $start);
 
-		return $this->helper->render('gallery/search_recent.html', $this->language->lang('GALLERY'));
+		return $this->helper->render('gallery/search_recent.html', $this->gallery_config->get_title($this->language));
 	}
 
 	/**
@@ -471,7 +471,7 @@ class search
 
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$this->template->assign_block_vars('navlinks', [
-			'FORUM_NAME'	=> $this->language->lang('GALLERY'),
+			'FORUM_NAME'	=> $this->gallery_config->get_title($this->language),
 			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_core_index'),
 		]);
 		$this->template->assign_block_vars('navlinks', [
@@ -488,7 +488,7 @@ class search
 
 		$this->gallery_search->recent_comments($limit, $start);
 
-		return $this->helper->render('gallery/search_results.html', $this->language->lang('GALLERY'));
+		return $this->helper->render('gallery/search_results.html', $this->gallery_config->get_title($this->language));
 	}
 
 	/**
@@ -513,7 +513,7 @@ class search
 
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$this->template->assign_block_vars('navlinks', [
-			'FORUM_NAME'	=> $this->language->lang('GALLERY'),
+			'FORUM_NAME'	=> $this->gallery_config->get_title($this->language),
 			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_core_index'),
 		]);
 		$this->template->assign_block_vars('navlinks', [
@@ -530,7 +530,7 @@ class search
 
 		$this->gallery_search->recent($limit, $start, $this->user->data['user_id']);
 
-		return $this->helper->render('gallery/search_results.html', $this->language->lang('GALLERY'));
+		return $this->helper->render('gallery/search_results.html', $this->gallery_config->get_title($this->language));
 	}
 
 	/**
@@ -555,7 +555,7 @@ class search
 
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$this->template->assign_block_vars('navlinks', [
-			'FORUM_NAME'	=> $this->language->lang('GALLERY'),
+			'FORUM_NAME'	=> $this->gallery_config->get_title($this->language),
 			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_core_index'),
 		]);
 		$this->template->assign_block_vars('navlinks', [
@@ -572,7 +572,7 @@ class search
 
 		$this->gallery_search->rating($limit, $start);
 
-		return $this->helper->render('gallery/search_results.html', $this->language->lang('GALLERY'));
+		return $this->helper->render('gallery/search_results.html', $this->gallery_config->get_title($this->language));
 	}
 
 	/**

@@ -1,4 +1,4 @@
-{% if S_GALLERY_FEEDS %}<link rel="alternate" type="application/atom+xml" title="{{ lang('FEED') }} - {{ lang('GALLERY') }}" href="{{ U_GALLERY_FEED }}" />{% endif %}
+{% if S_GALLERY_FEEDS %}<link rel="alternate" type="application/atom+xml" title="{{ lang('FEED') }} - {{ GALLERY_TITLE }}" href="{{ U_GALLERY_FEED }}" />{% endif %}
 {% if S_GALLERY_FEEDS and S_ENABLE_FEEDS_ALBUM and ALBUM_ID %}<link rel="alternate" type="application/atom+xml" title="{{ lang('FEED') }} - {{ lang('ALBUM') }} - {{ ALBUM_NAME }}" href="{{ U_GALLERY_FEED }}?album_id={{ ALBUM_ID }}" />{% endif %}
 
 {% if S_GP_HIGHSLIDE %}

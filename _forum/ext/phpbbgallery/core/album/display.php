@@ -23,6 +23,7 @@ class display
 	protected \phpbb\template\template $template;
 	protected \phpbb\user $user;
 	protected \phpbbgallery\core\auth\auth $gallery_auth;
+	protected \phpbbgallery\core\config $gallery_config;
 	protected \phpbbgallery\core\user $gallery_user;
 	protected \phpbbgallery\core\misc $misc;
 	protected string $root_path;
@@ -57,6 +58,7 @@ class display
 								\phpbb\db\driver\driver_interface $db, \phpbb\pagination $pagination,
 								\phpbb\request\request $request, \phpbb\template\template $template,
 								\phpbb\user $user, \phpbb\language\language $language, \phpbbgallery\core\auth\auth $gallery_auth,
+								\phpbbgallery\core\config $gallery_config,
 								\phpbbgallery\core\user $gallery_user, \phpbbgallery\core\misc $misc,
 								string $root_path, string $php_ext, string $albums_table, string $contests_table, string $tracking_table, string $moderators_table)
 	{
@@ -70,6 +72,7 @@ class display
 		$this->user = $user;
 		$this->language = $language;
 		$this->gallery_auth = $gallery_auth;
+		$this->gallery_config = $gallery_config;
 		$this->gallery_user = $gallery_user;
 		$this->misc = $misc;
 		$this->root_path = $root_path;
@@ -146,7 +149,7 @@ class display
 		// Add gallery menu entry
 		// TO DO !!! THIS SHOULD BE MOVED TO MENU CREATOR!!
 		$this->template->assign_block_vars('navlinks', [
-			'FORUM_NAME'   => $this->language->lang('GALLERY'),
+			'FORUM_NAME'   => $this->gallery_config->get_title($this->language),
 			'U_VIEW_FORUM'   => $this->helper->route('phpbbgallery_core_index'),
 		]);
 		// Get album parents
