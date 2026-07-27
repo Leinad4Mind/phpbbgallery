@@ -21,12 +21,26 @@ namespace phpbb\db\migration
 namespace phpbbgallery\acpimport\tests
 {
 	use phpbbgallery\acpimport\migrations\m1_init;
+	use phpbbgallery\acpimport\migrations\m3_zip_import;
 	use PHPUnit\Framework\TestCase;
 
 	require_once dirname(__DIR__) . '/migrations/m1_init.php';
+	require_once dirname(__DIR__) . '/migrations/m3_zip_import.php';
 
 	final class migration_test extends TestCase
 	{
+		public function test_zip_import_migration_adds_the_per_archive_allowance(): void
+		{
+			$this->assertSame(
+				['\phpbbgallery\acpimport\migrations\m2_remove_php_state'],
+				m3_zip_import::depends_on()
+			);
+
+			$steps = (new m3_zip_import())->update_data();
+
+			$this->assertSame([['config.add', ['phpbb_gallery_import_zip_max_images', 1000]]], $steps);
+		}
+
 		/** @var string[] */
 		private array $temporary_directories = [];
 

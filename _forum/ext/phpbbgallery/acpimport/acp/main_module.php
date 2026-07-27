@@ -20,6 +20,9 @@ class main_module
 	private import_storage $import_storage;
 	private array $import_errors = [];
 
+	/** @var array Language keys describing why the last archive could not be unpacked */
+	private array $archive_errors = [];
+
 	public function main(string $id, string $mode): void
 	{
 		global $auth, $cache, $config, $db, $template, $user, $phpbb_root_path, $phpbb_container, $gallery_url, $gallery_config, $gallery_album;
@@ -51,6 +54,43 @@ class main_module
 		$images = $request->variable('images', [''], true);
 
 		$submit = $request->is_set_post('submit');
+
+		// Unpacking an archive is its own action: it only fills the import folder, and
+		// the ordinary import below then treats the result like any hand-uploaded image.
+		if ($request->is_set_post('extract'))
+		{
+			if (!check_form_key('acp_gallery'))
+			{
+				trigger_error($user->lang('FORM_INVALID') . adm_back_link($this->u_action), E_USER_WARNING);
+				return;
+			}
+
+			$this->extract_archives($request->variable('archives', [''], true), 0, 0);
+			return;
+		}
+
+		if ($request->is_set_post('save_zip_settings'))
+		{
+			if (!check_form_key('acp_gallery'))
+			{
+				trigger_error($user->lang('FORM_INVALID') . adm_back_link($this->u_action), E_USER_WARNING);
+				return;
+			}
+
+			$this->save_zip_settings($request->variable('zip_max_images', 0));
+			return;
+		}
+
+		$pending_archives = $request->variable('extract_pending', [''], true);
+		if (!empty($pending_archives))
+		{
+			$this->extract_archives(
+				$pending_archives,
+				max(0, $request->variable('extracted_total', 0)),
+				max(0, $request->variable('archives_done', 0))
+			);
+			return;
+		}
 
 		if ($import_schema)
 		{
@@ -364,6 +404,7 @@ class main_module
 			trigger_error('IMPORT_SCHEMA_CREATED');
 		}
 
+		$archives = $this->import_storage->get_archives();
 		$files = $this->import_storage->get_images($this->get_allowed_extensions());
 		$ignored_unreadable_files = $this->import_storage->get_ignored_unreadable_files();
 		foreach ($files as $file)
@@ -373,8 +414,16 @@ class main_module
 			]);
 		}
 
+		foreach ($archives as $archive)
+		{
+			$template->assign_block_vars('archiverow', [
+				'FILE_NAME' => utf8_htmlspecialchars($archive['display_name']),
+			]);
+		}
+
 		$template->assign_vars([
 			'S_IMPORT_IMAGES'				=> true,
+			'ZIP_MAX_IMAGES'				=> $this->get_zip_max_images(),
 			'ACP_GALLERY_TITLE'				=> $user->lang['ACP_IMPORT_ALBUMS'],
 			'ACP_GALLERY_TITLE_EXPLAIN'		=> $user->lang['ACP_IMPORT_ALBUMS_EXPLAIN'],
 			'L_IMPORT_DIR_EMPTY'			=> sprintf($user->lang['IMPORT_DIR_EMPTY'], $gallery_url->path('import')),
@@ -383,6 +432,162 @@ class main_module
 			'S_SELECT_IMPORT' 				=> $gallery_album->get_albumbox(false, 'album_id', false, false, false, (int) \phpbbgallery\core\block::PUBLIC_ALBUM, (int) \phpbbgallery\core\block::TYPE_UPLOAD),
 			'U_FIND_USERNAME'				=> $gallery_url->append_sid('phpbb', 'memberlist', 'mode=searchuser&amp;form=acp_gallery&amp;field=username&amp;select_single=true'),
 		]);
+	}
+
+	/**
+	 * Unpack one selected archive per request, carrying the rest forward.
+	 *
+	 * The archives still sitting in the import folder are the remaining work, so the
+	 * queue needs no state file of its own; every pass re-checks the carried names
+	 * against a fresh listing rather than trusting what came back in the URL.
+	 *
+	 * @param array $pending         Archive display names still to unpack
+	 * @param int   $extracted_total Images unpacked so far
+	 * @param int   $archives_done   Archives unpacked so far
+	 * @return void
+	 */
+	private function extract_archives(array $pending, int $extracted_total, int $archives_done): void
+	{
+		global $user;
+
+		$available = $this->import_storage->get_archives();
+
+		$queue = [];
+		foreach ($pending as $name)
+		{
+			if (is_string($name) && isset($available[$name]) && !isset($queue[$name]))
+			{
+				$queue[$name] = $name;
+			}
+		}
+		$queue = array_values($queue);
+
+		if (empty($queue))
+		{
+			if ($archives_done)
+			{
+				$this->finish_extraction($extracted_total, $archives_done);
+				return;
+			}
+
+			trigger_error($user->lang('NO_FILE_SELECTED') . adm_back_link($this->u_action), E_USER_WARNING);
+			return;
+		}
+
+		$name = array_shift($queue);
+		$extracted = $this->extract_archive($available[$name]);
+
+		if ($extracted === false)
+		{
+			trigger_error(
+				$user->lang('IMPORT_ZIP_FAILED', utf8_htmlspecialchars($name))
+					. (empty($this->archive_errors) ? '' : '<br /><br />' . implode('<br />', $this->archive_errors))
+					. adm_back_link($this->u_action),
+				E_USER_WARNING
+			);
+			return;
+		}
+
+		// The archive has given up everything it holds, so it goes.
+		@unlink($available[$name]['path']);
+		$extracted_total += $extracted;
+		$archives_done++;
+
+		if (empty($queue))
+		{
+			$this->finish_extraction($extracted_total, $archives_done);
+			return;
+		}
+
+		$forward_url = $this->u_action
+			. '&amp;extracted_total=' . $extracted_total
+			. '&amp;archives_done=' . $archives_done;
+		foreach ($queue as $remaining)
+		{
+			$forward_url .= '&amp;extract_pending%5B%5D=' . urlencode($remaining);
+		}
+
+		meta_refresh(1, $forward_url);
+		trigger_error($user->lang('IMPORT_ZIP_EXTRACTED', $extracted, utf8_htmlspecialchars($name)));
+	}
+
+	/**
+	 * Hand the admin back to the import form with the totals.
+	 *
+	 * @param int $extracted_total Images unpacked
+	 * @param int $archives_done   Archives unpacked
+	 * @return void
+	 */
+	private function finish_extraction(int $extracted_total, int $archives_done): void
+	{
+		global $user;
+
+		meta_refresh(3, $this->u_action);
+		trigger_error($user->lang('IMPORT_ZIP_ALL_EXTRACTED', $extracted_total, $archives_done) . adm_back_link($this->u_action));
+	}
+
+	/**
+	 * Unpack a single archive into the import folder.
+	 *
+	 * @param array $archive Archive entry from import_storage::get_archives()
+	 * @return int|false Images placed in the import folder, or false
+	 */
+	private function extract_archive(array $archive): int|false
+	{
+		global $phpbb_container, $gallery_config, $gallery_url;
+
+		$importer = new archive_importer(
+			$this->import_storage,
+			$phpbb_container->get('phpbbgallery.core.zip.extractor'),
+			$phpbb_container->get('language'),
+			$gallery_url->path('import')
+		);
+
+		// An unlimited gallery file size would otherwise compute a one-byte entry
+		// limit and reject everything.
+		$max_filesize = (int) $gallery_config->get('max_filesize');
+		if ($max_filesize < 1)
+		{
+			$max_filesize = \phpbbgallery\core\zip\extractor::MAX_UNCOMPRESSED_SIZE;
+		}
+
+		$extracted = $importer->extract($archive, $this->get_allowed_extensions(), $this->get_zip_max_images(), $max_filesize);
+		$this->archive_errors = $importer->errors();
+
+		return $extracted;
+	}
+
+	/**
+	 * Store the per-archive image allowance.
+	 *
+	 * @param int $max_images Requested allowance
+	 * @return void
+	 */
+	private function save_zip_settings(int $max_images): void
+	{
+		global $config, $user;
+
+		$config->set('phpbb_gallery_import_zip_max_images', max(1, min($max_images, \phpbbgallery\core\zip\extractor::MAX_ENTRIES)));
+
+		trigger_error($user->lang('IMPORT_ZIP_SETTINGS_SAVED') . adm_back_link($this->u_action));
+	}
+
+	/**
+	 * Images a single archive may yield.
+	 *
+	 * An archive can never hold more entries than the extractor inspects, so the
+	 * setting is capped there rather than at some larger number that could not be
+	 * reached anyway.
+	 *
+	 * @return int
+	 */
+	private function get_zip_max_images(): int
+	{
+		global $config;
+
+		$configured = (int) $config['phpbb_gallery_import_zip_max_images'];
+
+		return max(1, min($configured ?: 1000, \phpbbgallery\core\zip\extractor::MAX_ENTRIES));
 	}
 
 	private function filter_selected_images(array $images, array $available_images): array

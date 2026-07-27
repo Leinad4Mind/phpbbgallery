@@ -266,6 +266,78 @@ class import_storage
 	}
 
 	/**
+	 * Return the ZIP archives sitting in the import directory.
+	 *
+	 * Bound the same way images are: direct children only, no symlinks and nothing
+	 * whose real path escapes the import root. Directories are skipped, so the
+	 * temporary folders a front-end ZIP upload creates never show up here.
+	 *
+	 * @return array Archives indexed by their UTF-8 display name
+	 */
+	public function get_archives(): array
+	{
+		// Listing archives must not disturb the unreadable-file count the caller
+		// collects for the image listing, whichever order the two are read in.
+		$ignored = $this->ignored_unreadable_files;
+		$archives = $this->get_images(['zip']);
+		$this->ignored_unreadable_files = $ignored;
+
+		return $archives;
+	}
+
+	/**
+	 * Turn an archive entry name into a safe, unique direct child of the import folder.
+	 *
+	 * Nested archive paths are flattened, because both get_images() and copy_image()
+	 * only ever accept a direct child. Collisions are resolved rather than allowed:
+	 * two files sharing a display name make get_images() drop *both*, so a clash here
+	 * would silently lose images.
+	 *
+	 * @param string $realname Entry basename, already validated by the extractor
+	 * @param array  $taken    Names already used, as a name => true map
+	 * @return string|false The reserved name, or false when nothing usable remains
+	 */
+	public function reserve_extracted_name(string $realname, array $taken = []): string|false
+	{
+		$realname = basename(str_replace('\\', '/', $realname));
+
+		// A leading dot would hide the file and collide with the state-file namespace.
+		$realname = ltrim($realname, '.');
+		if ($realname === '' || !$this->is_valid_string($realname, 255))
+		{
+			return false;
+		}
+
+		$extension = strtolower(pathinfo($realname, PATHINFO_EXTENSION));
+		if (!preg_match('/^[a-z0-9]+$/', $extension))
+		{
+			return false;
+		}
+
+		$stem = substr($realname, 0, -(strlen($extension) + 1));
+		if ($stem === '')
+		{
+			return false;
+		}
+
+		for ($suffix = 0; $suffix <= 10000; $suffix++)
+		{
+			$candidate = $stem . ($suffix ? '_' . $suffix : '') . '.' . $extension;
+			if (strlen($candidate) > 255)
+			{
+				return false;
+			}
+
+			if (!isset($taken[$candidate]) && !file_exists($this->directory . $candidate) && !is_link($this->directory . $candidate))
+			{
+				return $candidate;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * @return array|false
 	 */
 	public function resolve_image(string $display_name, array $allowed_extensions): array|false

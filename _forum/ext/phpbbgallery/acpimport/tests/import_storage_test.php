@@ -58,6 +58,8 @@ class import_storage_test extends TestCase
 			'remove_state' => 'bool',
 			'remove_legacy_php_state' => 'int',
 			'get_images' => 'array',
+			'get_archives' => 'array',
+			'reserve_extracted_name' => 'string|false',
 			'get_ignored_unreadable_files' => 'int',
 			'resolve_image' => 'array|false',
 			'inspect_image' => 'array',
