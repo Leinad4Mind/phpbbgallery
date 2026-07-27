@@ -67,6 +67,7 @@
             </dl>
         </div>
     </fieldset>
+	{S_FORM_TOKEN}
 </form>
 
 <script type="text/javascript">
@@ -103,7 +104,7 @@
         <td>{records.COUNT}</td>
         <td>
           	<img id="cbChangeId{records.ID}" onclick="cbCmd('cbChange', {records.ID})" src="{EXT_PATH}adm/style/css/images/edit.png" style="width:16px; cursor:pointer;" title="{L_CHANGE}" /> 
-               <a href="{U_ACTION}&amp;action=delete&amp;id={records.ID}" data-ajax="row_delete"><img title="{L_DELETE}" alt="{L_DELETE}" src="{EXT_PATH}adm/style/css/images/delete.png" width="16px"></a>
+			<button type="submit" name="delete_id" value="{records.ID}" class="button2" title="{L_DELETE}"><i class="fa fa-trash"></i></button>
         </td>
     </tr>
     <!-- BEGINELSE -->
@@ -127,6 +128,7 @@
         </td>
     </tr>
     </table>
+	{S_FORM_TOKEN}
 </form>
 <script type="text/javascript">
 function cbItem(a,b){

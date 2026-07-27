@@ -37,7 +37,12 @@ $lang = array_merge($lang, [
 	'QTY'             => 'Qtd.',
 	'PAGEBACK'        => 'Página anterior',
 	'PAGEFURTHER'     => 'Página seguinte',
-	'BBTAGS_NO_TAGS'  => 'Nenhuma BBtag encontrada',
+	'BBTAGS_NO_TAGS'          => 'Nenhuma BBtag encontrada',
+	'BBTAGS_SETTINGS_SAVED'   => 'As definições do BBTags foram guardadas com sucesso.',
+	'BBTAGS_TAG_DELETED'      => 'A tag foi eliminada com sucesso.',
+	'BBTAGS_TAG_NOT_FOUND'    => 'A tag solicitada não existe.',
+	'BBTAGS_TAG_UPDATED'      => 'A tag foi actualizada com sucesso.',
+	'BBTAGS_TAG_UPDATE_FAILED'=> 'Não foi possível actualizar a tag. O nome poderá já estar a ser utilizado.',
 
 	'SS_HELPER_NOTY' => 'O SiteSplat BBcore não existe!<br />Transfere o <a href="https://sitesplat.com" target="_blank">BBcore</a> e copia a pasta BBcore para a pasta da tua extensão sitesplat.',
 	'BBTAGS_NOTICE'  => '<div class="phpinfo"><p>As configurações da extensão encontram-se em <strong>%1$s &#187; %2$s &#187; %3$s</strong>.<br />Não te esqueças de rever/ajustar as <strong>Funções de Permissão de Utilizador</strong> em <strong>Permissões &#187; Funções de permissão &#187; Funções de Utilizador (Selecciona a Função e clica em editar) &#187; Diversos (aba): "Pode Gerir BBtags"</strong>.</p></div>',

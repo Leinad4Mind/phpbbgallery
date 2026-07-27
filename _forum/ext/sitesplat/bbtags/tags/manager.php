@@ -89,7 +89,70 @@ class manager
 		$this->db->sql_query($sql);
 		return $this->db->sql_affectedrows();
 	}
-	
+
+	/**
+	 * Delete a tag and all of its topic associations.
+	 *
+	 * @param int $tag_id Tag identifier
+	 *
+	 * @return bool True when the operation completed successfully
+	 */
+	public function delete_tag($tag_id)
+	{
+		$tag_id = (int) $tag_id;
+		if ($tag_id <= 0)
+		{
+			return false;
+		}
+
+		$this->db->sql_transaction('begin');
+		$sql = 'DELETE FROM ' . $this->table_bbtags_topic . '
+			WHERE tag_id = ' . $tag_id;
+		if ($this->db->sql_query($sql) === false)
+		{
+			$this->db->sql_transaction('rollback');
+			return false;
+		}
+
+		$sql = 'DELETE FROM ' . $this->table_bbtags . '
+			WHERE id = ' . $tag_id;
+		if ($this->db->sql_query($sql) === false)
+		{
+			$this->db->sql_transaction('rollback');
+			return false;
+		}
+
+		$this->db->sql_transaction('commit');
+		return true;
+	}
+
+	/**
+	 * Rename an existing tag using the database driver's escaping rules.
+	 *
+	 * @param int    $tag_id Tag identifier
+	 * @param string $tag    New tag name
+	 *
+	 * @return bool True when the operation completed successfully
+	 */
+	public function rename_tag($tag_id, $tag)
+	{
+		$tag_id = (int) $tag_id;
+		$tag = $this->clean_tag($tag);
+		if ($tag_id <= 0 || $tag === '')
+		{
+			return false;
+		}
+
+		$sql_ary = array(
+			'tag' => $tag,
+			'route' => $this->slug($tag, array('transliterate' => true)),
+		);
+		$sql = 'UPDATE ' . $this->table_bbtags . '
+			SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
+			WHERE id = ' . $tag_id;
+		return $this->db->sql_query($sql) !== false;
+	}
+
 	public function assign_tags_to_topic($topic_id, $valid_tags)
 	{
 		$this->remove_tags_from_topics((int) $topic_id);
@@ -116,7 +179,7 @@ class manager
 		$sql_ary_new_tags = array();
 		foreach ($tags as $tag)
 		{
-			(!$this->in_array_r($tag, $existing_tags)) ? $sql_ary_new_tags[] = array('tag' => $tag, 'route' => $this->Slug($tag, array('transliterate' => true))) : null;
+			(!$this->in_array_r($tag, $existing_tags)) ? $sql_ary_new_tags[] = array('tag' => $tag, 'route' => $this->slug($tag, array('transliterate' => true))) : null;
 		}
 		$this->db->sql_multi_insert($this->table_bbtags, $sql_ary_new_tags);
 	}
@@ -174,11 +237,11 @@ class manager
 		}
 	}
 
-	public function Slug($string, $options = array())
+	public function slug($string, $options = array())
 	{
 		// Make sure string is in UTF-8 and strip invalid UTF-8 characters
-		$string = mb_convert_encoding((string)$string, 'UTF-8', mb_list_encodings());
-		
+		$string = mb_convert_encoding((string) $string, 'UTF-8', mb_list_encodings());
+
 		$defaults = array(
 			'delimiter' => '-',
 			'limit' => null,
@@ -186,26 +249,26 @@ class manager
 			'replacements' => array(),
 			'transliterate' => false,
 		);
-		
+
 		// Merge options
 		$options = array_merge($defaults, $options);
-		
+
 		$char_map = array(
 			// Latin
-			'À' => 'A', 'Á' => 'A', 'Â' => 'A', 'Ã' => 'A', 'Ä' => 'A', 'Å' => 'A', 'Æ' => 'AE', 'Ç' => 'C', 
-			'È' => 'E', 'É' => 'E', 'Ê' => 'E', 'Ë' => 'E', 'Ì' => 'I', 'Í' => 'I', 'Î' => 'I', 'Ï' => 'I', 
-			'Ð' => 'D', 'Ñ' => 'N', 'Ò' => 'O', 'Ó' => 'O', 'Ô' => 'O', 'Õ' => 'O', 'Ö' => 'O', 'Ő' => 'O', 
-			'Ø' => 'O', 'Ù' => 'U', 'Ú' => 'U', 'Û' => 'U', 'Ü' => 'U', 'Ű' => 'U', 'Ý' => 'Y', 'Þ' => 'TH', 
-			'ß' => 'ss', 
-			'à' => 'a', 'á' => 'a', 'â' => 'a', 'ã' => 'a', 'ä' => 'a', 'å' => 'a', 'æ' => 'ae', 'ç' => 'c', 
-			'è' => 'e', 'é' => 'e', 'ê' => 'e', 'ë' => 'e', 'ì' => 'i', 'í' => 'i', 'î' => 'i', 'ï' => 'i', 
-			'ð' => 'd', 'ñ' => 'n', 'ò' => 'o', 'ó' => 'o', 'ô' => 'o', 'õ' => 'o', 'ö' => 'o', 'ő' => 'o', 
-			'ø' => 'o', 'ù' => 'u', 'ú' => 'u', 'û' => 'u', 'ü' => 'u', 'ű' => 'u', 'ý' => 'y', 'þ' => 'th', 
+			'À' => 'A', 'Á' => 'A', 'Â' => 'A', 'Ã' => 'A', 'Ä' => 'A', 'Å' => 'A', 'Æ' => 'AE', 'Ç' => 'C',
+			'È' => 'E', 'É' => 'E', 'Ê' => 'E', 'Ë' => 'E', 'Ì' => 'I', 'Í' => 'I', 'Î' => 'I', 'Ï' => 'I',
+			'Ð' => 'D', 'Ñ' => 'N', 'Ò' => 'O', 'Ó' => 'O', 'Ô' => 'O', 'Õ' => 'O', 'Ö' => 'O', 'Ő' => 'O',
+			'Ø' => 'O', 'Ù' => 'U', 'Ú' => 'U', 'Û' => 'U', 'Ü' => 'U', 'Ű' => 'U', 'Ý' => 'Y', 'Þ' => 'TH',
+			'ß' => 'ss',
+			'à' => 'a', 'á' => 'a', 'â' => 'a', 'ã' => 'a', 'ä' => 'a', 'å' => 'a', 'æ' => 'ae', 'ç' => 'c',
+			'è' => 'e', 'é' => 'e', 'ê' => 'e', 'ë' => 'e', 'ì' => 'i', 'í' => 'i', 'î' => 'i', 'ï' => 'i',
+			'ð' => 'd', 'ñ' => 'n', 'ò' => 'o', 'ó' => 'o', 'ô' => 'o', 'õ' => 'o', 'ö' => 'o', 'ő' => 'o',
+			'ø' => 'o', 'ù' => 'u', 'ú' => 'u', 'û' => 'u', 'ü' => 'u', 'ű' => 'u', 'ý' => 'y', 'þ' => 'th',
 			'ÿ' => 'y',
-	
+
 			// Latin symbols
 			'©' => '(c)',
-	
+
 			// Greek
 			'Α' => 'A', 'Β' => 'B', 'Γ' => 'G', 'Δ' => 'D', 'Ε' => 'E', 'Ζ' => 'Z', 'Η' => 'H', 'Θ' => '8',
 			'Ι' => 'I', 'Κ' => 'K', 'Λ' => 'L', 'Μ' => 'M', 'Ν' => 'N', 'Ξ' => '3', 'Ο' => 'O', 'Π' => 'P',
@@ -217,11 +280,11 @@ class manager
 			'ρ' => 'r', 'σ' => 's', 'τ' => 't', 'υ' => 'y', 'φ' => 'f', 'χ' => 'x', 'ψ' => 'ps', 'ω' => 'w',
 			'ά' => 'a', 'έ' => 'e', 'ί' => 'i', 'ό' => 'o', 'ύ' => 'y', 'ή' => 'h', 'ώ' => 'w', 'ς' => 's',
 			'ϊ' => 'i', 'ΰ' => 'y', 'ϋ' => 'y', 'ΐ' => 'i',
-	
+
 			// Turkish
 			'Ş' => 'S', 'İ' => 'I', 'Ç' => 'C', 'Ü' => 'U', 'Ö' => 'O', 'Ğ' => 'G',
-			'ş' => 's', 'ı' => 'i', 'ç' => 'c', 'ü' => 'u', 'ö' => 'o', 'ğ' => 'g', 
-	
+			'ş' => 's', 'ı' => 'i', 'ç' => 'c', 'ü' => 'u', 'ö' => 'o', 'ğ' => 'g',
+
 			// Russian
 			'А' => 'A', 'Б' => 'B', 'В' => 'V', 'Г' => 'G', 'Д' => 'D', 'Е' => 'E', 'Ё' => 'Yo', 'Ж' => 'Zh',
 			'З' => 'Z', 'И' => 'I', 'Й' => 'J', 'К' => 'K', 'Л' => 'L', 'М' => 'M', 'Н' => 'N', 'О' => 'O',
@@ -233,50 +296,51 @@ class manager
 			'п' => 'p', 'р' => 'r', 'с' => 's', 'т' => 't', 'у' => 'u', 'ф' => 'f', 'х' => 'h', 'ц' => 'c',
 			'ч' => 'ch', 'ш' => 'sh', 'щ' => 'sh', 'ъ' => '', 'ы' => 'y', 'ь' => '', 'э' => 'e', 'ю' => 'yu',
 			'я' => 'ya',
-	
+
 			// Ukrainian
 			'Є' => 'Ye', 'І' => 'I', 'Ї' => 'Yi', 'Ґ' => 'G',
 			'є' => 'ye', 'і' => 'i', 'ї' => 'yi', 'ґ' => 'g',
-	
+
 			// Czech
-			'Č' => 'C', 'Ď' => 'D', 'Ě' => 'E', 'Ň' => 'N', 'Ř' => 'R', 'Š' => 'S', 'Ť' => 'T', 'Ů' => 'U', 
-			'Ž' => 'Z', 
+			'Č' => 'C', 'Ď' => 'D', 'Ě' => 'E', 'Ň' => 'N', 'Ř' => 'R', 'Š' => 'S', 'Ť' => 'T', 'Ů' => 'U',
+			'Ž' => 'Z',
 			'č' => 'c', 'ď' => 'd', 'ě' => 'e', 'ň' => 'n', 'ř' => 'r', 'š' => 's', 'ť' => 't', 'ů' => 'u',
-			'ž' => 'z', 
-	
+			'ž' => 'z',
+
 			// Polish
-			'Ą' => 'A', 'Ć' => 'C', 'Ę' => 'e', 'Ł' => 'L', 'Ń' => 'N', 'Ó' => 'o', 'Ś' => 'S', 'Ź' => 'Z', 
-			'Ż' => 'Z', 
+			'Ą' => 'A', 'Ć' => 'C', 'Ę' => 'e', 'Ł' => 'L', 'Ń' => 'N', 'Ó' => 'o', 'Ś' => 'S', 'Ź' => 'Z',
+			'Ż' => 'Z',
 			'ą' => 'a', 'ć' => 'c', 'ę' => 'e', 'ł' => 'l', 'ń' => 'n', 'ó' => 'o', 'ś' => 's', 'ź' => 'z',
 			'ż' => 'z',
-	
+
 			// Latvian
-			'Ā' => 'A', 'Č' => 'C', 'Ē' => 'E', 'Ģ' => 'G', 'Ī' => 'i', 'Ķ' => 'k', 'Ļ' => 'L', 'Ņ' => 'N', 
+			'Ā' => 'A', 'Č' => 'C', 'Ē' => 'E', 'Ģ' => 'G', 'Ī' => 'i', 'Ķ' => 'k', 'Ļ' => 'L', 'Ņ' => 'N',
 			'Š' => 'S', 'Ū' => 'u', 'Ž' => 'Z',
 			'ā' => 'a', 'č' => 'c', 'ē' => 'e', 'ģ' => 'g', 'ī' => 'i', 'ķ' => 'k', 'ļ' => 'l', 'ņ' => 'n',
 			'š' => 's', 'ū' => 'u', 'ž' => 'z'
 		);
-		
+
 		// Make custom replacements
 		$string = preg_replace(array_keys($options['replacements']), $options['replacements'], $string);
-		
+
 		// Transliterate characters to ASCII
-		if ($options['transliterate']) {
+		if ($options['transliterate'])
+		{
 			$string = str_replace(array_keys($char_map), $char_map, $string);
 		}
-		
+
 		// Replace non-alphanumeric characters with our delimiter
 		$string = preg_replace('/[^\p{L}\p{Nd}]+/u', $options['delimiter'], $string);
-		
+
 		// Remove duplicate delimiters
 		$string = preg_replace('/(' . preg_quote($options['delimiter'], '/') . '){2,}/', '$1', $string);
-		
+
 		// Truncate slug to max. characters
 		$string = mb_substr($string, 0, ($options['limit'] ? $options['limit'] : mb_strlen($string, 'UTF-8')), 'UTF-8');
-		
+
 		// Remove delimiter from ends
 		$string = trim($string, $options['delimiter']);
-		
+
 		return $options['lowercase'] ? mb_strtolower($string, 'UTF-8') : $string;
 	}
 }

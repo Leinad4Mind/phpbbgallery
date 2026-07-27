@@ -30,7 +30,7 @@ class listener implements EventSubscriberInterface
 	protected $user;
 	protected $config;
 	protected $request;
-	protected $tag_manager;
+	protected $manager;
 	protected $phpbb_root_path;
 	protected $php_ext;
 
@@ -83,10 +83,8 @@ class listener implements EventSubscriberInterface
 	public function load_tags()
 	{
 		if ($this->config['bbtags_on_index'] == 2
-			|| (
-				$this->config['bbtags_on_index'] == 1
-				&& substr($this->user->data['session_page'], 0, 6) == 'index.'
-			)
+			|| ($this->config['bbtags_on_index'] == 1
+				&& substr($this->user->data['session_page'], 0, 6) == 'index.')
 		)
 		{
 			$tags = $this->manager->get_tags(0);
@@ -97,11 +95,11 @@ class listener implements EventSubscriberInterface
 					$this->assign_tags_to_template('bbtags', explode(',', $tags));
 				}
 				$this->template->assign_vars(array(
-					'META_KEYWORDS' => '<meta name="keywords" content="' . $tags . '">',
+					'META_KEYWORDS' => '<meta name="keywords" content="' . htmlspecialchars($tags, ENT_QUOTES, 'UTF-8') . '">',
 				));
 			}
 		}
-		
+
 		$topic_id = $this->request->variable('t', 0);
 		if ($topic_id)
 		{
@@ -134,7 +132,7 @@ class listener implements EventSubscriberInterface
 		if ($data['mode'] == 'post' || $is_edit_first_post)
 		{
 			$data['page_data']['BBTAGS_SHOW_FIELD'] = $this->auth->acl_get('u_bbtags');
-			$data['page_data']['BBTAGS_TAGS'] = ($this->request->is_set_post('bbtags') || !$topic_id) ? 
+			$data['page_data']['BBTAGS_TAGS'] = ($this->request->is_set_post('bbtags') || !$topic_id) ?
 					utf8_normalize_nfc($this->request->variable('bbtags', '', true)) : $this->manager->get_tags($topic_id);
 			$data['page_data']['BBTAGS_MAXTAGS'] = $this->config['bbtags_max_tags'];
 			$data['page_data']['BBTAGS_MAXLENGTH'] = $this->config['bbtags_min_length'];
@@ -155,16 +153,14 @@ class listener implements EventSubscriberInterface
 		}
 		return $mode == 'edit' && $post_id && $post_id == $topic_first_post_id;
 	}
-
-
-
 	private function assign_tags_to_template($block_name, array $tags)
 	{
 		foreach ($tags as $tag)
 		{
-			$this->template->assign_block_vars($block_name, array (
-				'TAG'	=> $tag,
-				'URL'	=> $this->helper->route('sitesplat_bbtags_controller', array('tags' => $this->manager->Slug($tag, array('transliterate' => true))))
+			$tag = trim($tag);
+			$this->template->assign_block_vars($block_name, array(
+				'TAG'	=> htmlspecialchars($tag, ENT_QUOTES, 'UTF-8'),
+				'URL'	=> $this->helper->route('sitesplat_bbtags_controller', array('tags' => $this->manager->slug($tag, array('transliterate' => true)))),
 			));
 		}
 	}
@@ -178,10 +174,10 @@ class listener implements EventSubscriberInterface
 			$tag_str = explode(',', $tag_str);
 
 			$tags = array();
-			foreach($tag_str as $tag)
+			foreach ($tag_str as $tag)
 			{
 				(strlen($tag) >= $this->config['bbtags_min_length']) ? $tags[] = $this->manager->clean_tag($tag) : null;
-				
+
 			}
 			$this->manager->assign_tags_to_topic($data['topic_id'], $tags);
 		}
