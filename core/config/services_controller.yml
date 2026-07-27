@@ -32,6 +32,7 @@ services:
         class: phpbbgallery\core\controller\album
         arguments:
             - '@config'
+            - '@auth'
             - '@controller.helper'
             - '@dbal.conn'
             - '@pagination'

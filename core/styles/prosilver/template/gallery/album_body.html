@@ -23,7 +23,7 @@
 	{% include 'gallery/albumlist_polaroid.html' %}
 {% endif %}
 
-{% if S_IS_POSTABLE and (U_UPLOAD_IMAGE or U_WATCH_TOGGLE or PAGINATION or TOTAL_IMAGES or (U_SLIDE_SHOW and not S_IS_BOT)) %}
+{% if (not S_IN_GALLERY_POPUP and S_DISPLAY_SEARCHBOX) or (S_IS_POSTABLE and (U_UPLOAD_IMAGE or U_WATCH_TOGGLE or PAGINATION or TOTAL_IMAGES or (U_SLIDE_SHOW and not S_IS_BOT))) %}
 	<div class="action-bar bar-top" {% if S_HAS_SUBALBUM %}style="margin-top: 2em;"{% endif %}><br />
 
 	{% if not S_IN_GALLERY_POPUP and U_UPLOAD_IMAGE and not S_IS_BOT %}
@@ -33,11 +33,12 @@
 
 	{% if not S_IN_GALLERY_POPUP and S_DISPLAY_SEARCHBOX %}
 		<div class="search-box">
-			<form method="post" id="album-search" action="{{ S_SEARCHBOX_ACTION }}">
+			<form method="get" id="album-search" action="{{ S_SEARCHBOX_ACTION }}">
 			<fieldset>
-				<input class="inputbox search tiny" type="text" name="keywords" id="search_keywords" size="20" value="{{ lang('SEARCH_ALBUM') }}" onclick="if (this.value == '{{ lang_js('SEARCH_ALBUM') }}') this.value = '';" onblur="if (this.value == '') this.value = '{{ lang_js('SEARCH_ALBUM') }}';" />
+				<input class="inputbox search tiny" type="search" name="keywords" id="search_keywords" size="20" placeholder="{{ lang('SEARCH_ALBUM') }}" aria-label="{{ lang('SEARCH_ALBUM') }}" required />
 				<input class="button2" type="submit" value="{{ lang('SEARCH') }}" />
 				<input type="hidden" value="{{ ALBUM_ID }}" name="aid[]" />
+				<input type="hidden" value="1" name="sc" />
 			</fieldset>
 			</form>
 		</div>
