@@ -53,6 +53,12 @@ class config
 
 		'gdlib_version'		=> 2,
 
+		'forum_index_display'		=> 45,
+		'forum_index_mode'			=> 0,
+		'forum_index_personal'		=> false,
+		'forum_index_random_count'	=> 4,
+		'forum_index_recent_count'	=> 4,
+
 		'hotlinking_domains'	=> 'anavaro.com',
 
 		'items_per_page'		=> 15,

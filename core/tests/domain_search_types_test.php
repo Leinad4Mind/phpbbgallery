@@ -64,6 +64,19 @@ final class domain_search_types_test extends TestCase
 		}
 	}
 
+	public function test_random_results_require_image_view_or_moderator_permission(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/search.php');
+		$start = strpos($source, 'public function random(');
+		$end = strpos($source, 'public function recent_count(', $start ?: 0);
+		$random = substr($source, $start, $end - $start);
+
+		$this->assertStringContainsString("acl_album_ids('i_view')", $random);
+		$this->assertStringContainsString("acl_album_ids('m_status')", $random);
+		$this->assertStringNotContainsString("acl_album_ids('a_list')", $random);
+		$this->assertStringContainsString('if (!$id_ary && !$show_empty)', $random);
+	}
+
 	public function test_image_result_filter_normalizes_ids_and_excludes_orphans(): void
 	{
 		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
