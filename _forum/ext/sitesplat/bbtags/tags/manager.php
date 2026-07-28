@@ -723,6 +723,63 @@ class manager
 	}
 
 	/**
+	 * Return enabled provider tags available in at least one supplied scope.
+	 *
+	 * @param string $term        Optional canonical prefix
+	 * @param int    $limit       Maximum matches; zero means unlimited
+	 * @param string $provider    Provider name
+	 * @param array  $scope_paths Scope paths indexed by leaf identifier
+	 *
+	 * @return array
+	 */
+	public function get_provider_tags($term, $limit, $provider, array $scope_paths)
+	{
+		$provider = $this->validate_provider($provider);
+		if ($provider === '' || empty($scope_paths))
+		{
+			return array();
+		}
+		$sql = 'SELECT t.id, t.tag
+			FROM ' . $this->table_bbtags . ' t
+			INNER JOIN ' . $this->table_bbtags_context . " tc ON tc.tag_id = t.id
+			WHERE tc.provider = '" . $this->db->sql_escape($provider) . "'
+				AND tc.is_enabled = 1
+			ORDER BY t.tag ASC";
+		$result = $this->db->sql_query($sql);
+		$rows = array();
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$rows[] = $row;
+		}
+		$this->db->sql_freeresult($result);
+
+		$term = $this->canonical_tag($term);
+		$allowed_scopes = $this->get_allowed_scope_ids_by_tag(
+			array_column($rows, 'id'),
+			$provider,
+			$scope_paths
+		);
+		$tags = array();
+		foreach ($rows as $row)
+		{
+			$tag_id = (int) $row['id'];
+			$tag = (string) $row['tag'];
+			if (empty($allowed_scopes[$tag_id])
+				|| ($term !== '' && strpos($this->canonical_tag($tag), $term) !== 0))
+			{
+				continue;
+			}
+			$tags[] = $tag;
+			if ($limit > 0 && count($tags) >= $limit)
+			{
+				break;
+			}
+		}
+
+		return $tags;
+	}
+
+	/**
 	 * Replace the global predefined list and enable it for forum topics.
 	 *
 	 * @param array $tags       Tag labels
@@ -994,6 +1051,71 @@ class manager
 				if ($this->scope_allows($contexts[$tag_id]['scope_mode'], isset($rules[$tag_id]) ? $rules[$tag_id] : array(), $scope_path))
 				{
 					$allowed[$tag_id][] = (int) $forum_id;
+				}
+			}
+		}
+
+		return $allowed;
+	}
+
+	/**
+	 * Resolve the leaf scopes in which each provider tag is effectively available.
+	 */
+	public function get_allowed_scope_ids_by_tag(array $tag_ids, $provider, array $scope_paths)
+	{
+		$tag_ids = array_values(array_unique(array_filter(array_map('intval', $tag_ids))));
+		$provider = $this->validate_provider($provider);
+		if (empty($tag_ids) || $provider === '' || empty($scope_paths))
+		{
+			return array();
+		}
+		$normalized_paths = array();
+		$all_scope_ids = array();
+		foreach ($scope_paths as $scope_id => $scope_path)
+		{
+			$scope_id = max(0, (int) $scope_id);
+			$scope_path = array_values(array_unique(array_map('intval', (array) $scope_path)));
+			if (!in_array(0, $scope_path, true))
+			{
+				$scope_path[] = 0;
+			}
+			$normalized_paths[$scope_id] = $scope_path;
+			$all_scope_ids = array_merge($all_scope_ids, $scope_path);
+		}
+
+		$sql = 'SELECT tag_id, scope_mode, is_enabled
+			FROM ' . $this->table_bbtags_context . "
+			WHERE provider = '" . $this->db->sql_escape($provider) . "'
+				AND " . $this->db->sql_in_set('tag_id', $tag_ids);
+		$result = $this->db->sql_query($sql);
+		$contexts = array();
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$contexts[(int) $row['tag_id']] = $row;
+		}
+		$this->db->sql_freeresult($result);
+
+		$rules = $this->load_scope_rules(
+			$tag_ids,
+			$provider,
+			array_values(array_unique($all_scope_ids))
+		);
+		$allowed = array_fill_keys($tag_ids, array());
+		foreach ($tag_ids as $tag_id)
+		{
+			if (empty($contexts[$tag_id]['is_enabled']))
+			{
+				continue;
+			}
+			foreach ($normalized_paths as $scope_id => $scope_path)
+			{
+				if ($this->scope_allows(
+					$contexts[$tag_id]['scope_mode'],
+					isset($rules[$tag_id]) ? $rules[$tag_id] : array(),
+					$scope_path
+				))
+				{
+					$allowed[$tag_id][] = (int) $scope_id;
 				}
 			}
 		}

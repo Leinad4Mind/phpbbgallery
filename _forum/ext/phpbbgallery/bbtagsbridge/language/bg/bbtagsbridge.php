@@ -12,4 +12,9 @@ $lang = array_merge($lang ?? [], [
 	'BBTAGSBRIDGE_TAG_LIMIT' => 'Можете да добавите най-много %1$d етикета към изображение.',
 	'BBTAGSBRIDGE_PENDING_NOTICE' => 'Новите етикети остават скрити, докато модератор не ги одобри.',
 	'BBTAGSBRIDGE_SAVE_FAILED' => 'Етикетите на изображението не можаха да бъдат запазени.',
+	'BBTAGSBRIDGE_SEARCH_TAGS' => 'Търсене по етикети',
+	'BBTAGSBRIDGE_SEARCH_TAGS_EXPLAIN' => 'Въведете един или повече етикети, разделени със запетаи.',
+	'BBTAGSBRIDGE_MATCH_ALL_TAGS' => 'Съвпадение с всички етикети (И)',
+	'BBTAGSBRIDGE_MATCH_ANY_TAG' => 'Съвпадение с произволен етикет (ИЛИ)',
+	'BBTAGSBRIDGE_FILTER_MORE_TAGS' => 'Филтриране по още етикети',
 ]);

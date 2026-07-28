@@ -35,4 +35,19 @@ final class album_scope_resolver_test extends TestCase
 		$this->assertSame([], $resolver->get_path(30));
 		$this->assertSame([], $resolver->get_path(0));
 	}
+
+	public function test_all_paths_skip_broken_trees_and_preserve_nearest_ancestor_order(): void
+	{
+		$db = new fake_db();
+		$db->albums = [1 => 0, 2 => 1, 3 => 2, 8 => 99, 9 => 9];
+
+		$this->assertSame(
+			[
+				1 => [1, 0],
+				2 => [2, 1, 0],
+				3 => [3, 2, 1, 0],
+			],
+			(new album_scope_resolver($db, 'albums'))->get_all_paths()
+		);
+	}
 }

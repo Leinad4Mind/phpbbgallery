@@ -147,6 +147,53 @@ class manager_scope_test extends TestCase
 		$this->assertFalse($manager->topic_matches_scope(10, 30));
 	}
 
+	public function test_provider_discovery_uses_effective_paths_instead_of_forum_specific_state(): void
+	{
+		$db = $this->createMock(driver_interface::class);
+		$db->method('sql_escape')->willReturnArgument(0);
+		$db->method('sql_in_set')->willReturnCallback(static function (string $field, array $values): string
+		{
+			return $field . ' IN (' . implode(',', $values) . ')';
+		});
+		$db->method('sql_query')->willReturnArgument(0);
+		$catalogue = [
+			['id' => 1, 'tag' => 'anime'],
+			['id' => 2, 'tag' => 'manga'],
+		];
+		$contexts = [
+			['tag_id' => 1, 'scope_mode' => 'global', 'is_enabled' => 1],
+			['tag_id' => 2, 'scope_mode' => 'restricted', 'is_enabled' => 1],
+		];
+		$rules = [['tag_id' => 2, 'scope_id' => 20, 'scope_rule' => 'allow']];
+		$db->method('sql_fetchrow')->willReturnCallback(static function (string $result) use (&$catalogue, &$contexts, &$rules)
+		{
+			if (strpos($result, 'FROM phpbb_bbtags t') !== false)
+			{
+				return array_shift($catalogue) ?: false;
+			}
+			if (strpos($result, 'FROM phpbb_bbtags_context') !== false)
+			{
+				return array_shift($contexts) ?: false;
+			}
+			if (strpos($result, 'FROM phpbb_bbtags_scope') !== false)
+			{
+				return array_shift($rules) ?: false;
+			}
+
+			return false;
+		});
+
+		$this->assertSame(
+			['anime', 'manga'],
+			$this->create_manager($db)->get_provider_tags(
+				'',
+				20,
+				'gallery_images',
+				[30 => [30, 20, 0], 40 => [40, 0]]
+			)
+		);
+	}
+
 	public function test_approval_reenables_an_existing_provider_context(): void
 	{
 		$db = $this->createMock(driver_interface::class);

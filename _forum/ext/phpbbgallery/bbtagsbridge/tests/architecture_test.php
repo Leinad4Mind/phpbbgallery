@@ -60,6 +60,8 @@ final class architecture_test extends TestCase
 
 		$this->assertStringContainsString("'core.user_setup'", $listener);
 		$this->assertStringContainsString("'phpbbgallery.core.viewimage'", $listener);
+		$this->assertStringContainsString("'phpbbgallery.core.search.configure'", $listener);
+		$this->assertStringContainsString("'phpbbgallery.core.search.results'", $listener);
 		$this->assertStringContainsString("'phpbbgallery.core.image_edit_file'", $listener);
 		$this->assertStringContainsString("'phpbbgallery.core.image_edit_display'", $listener);
 		$this->assertStringContainsString("'phpbbgallery.core.image_edit_after'", $listener);
@@ -82,15 +84,41 @@ final class architecture_test extends TestCase
 			$event_root = $this->root . '/styles/' . $style . '/template/event/';
 			$edit = (string) file_get_contents($event_root . 'phpbbgallery_core_edit_addfields.html');
 			$view = (string) file_get_contents($event_root . 'phpbbgallery_core_viewimage_details.html');
+			$search = (string) file_get_contents($event_root . 'phpbbgallery_core_search_fields.html');
+			$facets = (string) file_get_contents($event_root . 'phpbbgallery_core_search_results_facets.html');
 
 			$this->assertStringContainsString('bbtagsbridge_tags[{{ image.S_ROW_COUNT }}]', $edit, $style);
 			$this->assertStringContainsString('BBTAGSBRIDGE_PENDING_NOTICE', $edit, $style);
 			$this->assertStringContainsString('bbtagsbridge_tags', $view, $style);
+			$this->assertStringContainsString('tag.U_SEARCH', $view, $style);
+			$this->assertStringContainsString('name="tag_operator"', $search, $style);
+			$this->assertStringContainsString('U_BBTAGSBRIDGE_AUTOCOMPLETE', $search, $style);
+			$this->assertStringContainsString('bbtagsbridge_facets', $facets, $style);
+			if ($style !== 'prosilver')
+			{
+				$this->assertStringNotContainsString('<dl', $search . $facets, $style);
+			}
 			if ($style !== 'prosilver')
 			{
 				$this->assertDoesNotMatchRegularExpression('/<(?:dl|dt|dd)\b/i', $edit . $view, $style);
 			}
 		}
+	}
+
+	public function test_autocomplete_is_ajax_read_only_and_permission_scoped(): void
+	{
+		$controller = (string) file_get_contents($this->root . '/controller/tag_controller.php');
+		$routing = (string) file_get_contents($this->root . '/config/routing.yml');
+		$javascript = (string) file_get_contents($this->root . '/styles/all/template/js/gallery_tag_search.js');
+
+		$this->assertStringContainsString('is_ajax()', $controller);
+		$this->assertStringContainsString("acl_get('u_search')", $controller);
+		$this->assertStringContainsString("acl_get('u_bbtags_read')", $controller);
+		$this->assertStringContainsString("acl_album_ids('i_view')", $controller);
+		$this->assertStringContainsString('get_provider_tags(', $controller);
+		$this->assertStringContainsString('methods: [POST]', $routing);
+		$this->assertStringContainsString("'X-Requested-With': 'XMLHttpRequest'", $javascript);
+		$this->assertStringNotContainsString('innerHTML', $javascript);
 	}
 
 	public function test_every_core_locale_has_complete_bridge_catalogues(): void

@@ -135,6 +135,44 @@ final class image_tag_manager
 		return $tags;
 	}
 
+	/**
+	 * Return tag counts per album inside a permission-filtered Core search.
+	 *
+	 * @return array<int, array{tag_id: int, tag: string, tag_clean: string, album_id: int, image_count: int}>
+	 */
+	public function get_facet_rows(string $image_where): array
+	{
+		if (trim($image_where) === '')
+		{
+			return [];
+		}
+		$sql = 'SELECT it.tag_id, b.tag, b.tag_clean, i.image_album_id,
+				COUNT(DISTINCT it.image_id) AS image_count
+			FROM ' . $this->image_tags_table . ' it
+			INNER JOIN ' . $this->images_table . ' i
+				ON i.image_id = it.image_id
+			INNER JOIN ' . $this->bbtags_table . ' b
+				ON b.id = it.tag_id
+			WHERE (' . $image_where . ')
+			GROUP BY it.tag_id, b.tag, b.tag_clean, i.image_album_id
+			ORDER BY b.tag_clean ASC';
+		$result = $this->db->sql_query($sql);
+		$rows = [];
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$rows[] = [
+				'tag_id' => (int) $row['tag_id'],
+				'tag' => (string) $row['tag'],
+				'tag_clean' => (string) $row['tag_clean'],
+				'album_id' => (int) $row['image_album_id'],
+				'image_count' => (int) $row['image_count'],
+			];
+		}
+		$this->db->sql_freeresult($result);
+
+		return $rows;
+	}
+
 	public function replace_tags(int $image_id, array $tag_ids): bool
 	{
 		if ($image_id <= 0)

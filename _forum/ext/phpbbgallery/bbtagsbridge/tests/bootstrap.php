@@ -117,6 +117,7 @@ namespace
 	require_once dirname(__DIR__, 3) . '/sitesplat/bbtags/provider/provider_interface.php';
 	require_once dirname(__DIR__, 3) . '/sitesplat/bbtags/tags/manager.php';
 	require_once dirname(__DIR__) . '/image_tag_manager.php';
+	require_once dirname(__DIR__) . '/image_search_query.php';
 	require_once dirname(__DIR__) . '/input_parser.php';
 	require_once dirname(__DIR__) . '/album_scope_resolver.php';
 	require_once dirname(__DIR__) . '/provider/image_provider.php';

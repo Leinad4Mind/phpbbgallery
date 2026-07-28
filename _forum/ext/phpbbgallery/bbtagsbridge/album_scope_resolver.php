@@ -65,4 +65,49 @@ final class album_scope_resolver
 
 		return $path;
 	}
+
+	/**
+	 * Return every valid album path indexed by its album identifier.
+	 *
+	 * @return array<int, int[]>
+	 */
+	public function get_all_paths(): array
+	{
+		$sql = 'SELECT album_id, parent_id
+			FROM ' . $this->albums_table . '
+			ORDER BY album_id ASC';
+		$result = $this->db->sql_query($sql);
+		$parents = [];
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$parents[(int) $row['album_id']] = max(0, (int) $row['parent_id']);
+		}
+		$this->db->sql_freeresult($result);
+
+		$paths = [];
+		foreach (array_keys($parents) as $album_id)
+		{
+			$path = [];
+			$visited = [];
+			$current_id = $album_id;
+			while ($current_id > 0 && count($path) < self::MAX_DEPTH)
+			{
+				if (isset($visited[$current_id]) || !array_key_exists($current_id, $parents))
+				{
+					$path = [];
+					break;
+				}
+				$visited[$current_id] = true;
+				$path[] = $current_id;
+				$current_id = $parents[$current_id];
+			}
+			if (!empty($path) && $current_id === 0)
+			{
+				$path[] = 0;
+				$paths[$album_id] = $path;
+			}
+		}
+
+		return $paths;
+	}
 }

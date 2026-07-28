@@ -12,4 +12,9 @@ $lang = array_merge($lang ?? [], [
 	'BBTAGSBRIDGE_TAG_LIMIT' => 'No puedes añadir más de %1$d etiquetas a una imagen.',
 	'BBTAGSBRIDGE_PENDING_NOTICE' => 'Las etiquetas nuevas permanecen ocultas hasta que un moderador las apruebe.',
 	'BBTAGSBRIDGE_SAVE_FAILED' => 'No se pudieron guardar las etiquetas de la imagen.',
+	'BBTAGSBRIDGE_SEARCH_TAGS' => 'Buscar por etiquetas',
+	'BBTAGSBRIDGE_SEARCH_TAGS_EXPLAIN' => 'Introduce una o más etiquetas separadas por comas.',
+	'BBTAGSBRIDGE_MATCH_ALL_TAGS' => 'Coincidir con todas las etiquetas (Y)',
+	'BBTAGSBRIDGE_MATCH_ANY_TAG' => 'Coincidir con cualquier etiqueta (O)',
+	'BBTAGSBRIDGE_FILTER_MORE_TAGS' => 'Filtrar por más etiquetas',
 ]);

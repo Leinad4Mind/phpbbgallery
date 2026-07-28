@@ -33,6 +33,7 @@
 - Restrict forum autocomplete and saved topic tags to the effective rule of the current forum hierarchy.
 - Add multi-tag topic search with explicit AND/OR matching and per-tag forum scope enforcement.
 - Classify submitted provider tags as available, suggestible or blocked so explicit denials cannot be bypassed through moderation.
+- Expose generic provider tag discovery and effective-scope resolution for content integrations.
 
 ### Tests
 
