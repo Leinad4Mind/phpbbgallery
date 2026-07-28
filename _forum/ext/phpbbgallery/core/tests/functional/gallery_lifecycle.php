@@ -91,6 +91,7 @@ class gallery_lifecycle extends \phpbb_functional_test_case
 
 		$this->admin_login();
 		$this->run_import($album_id, $phpbb_root_path);
+		$this->assert_forum_index_images();
 		$this->run_resumable_upload($album_id, $phpbb_root_path);
 		$this->logout();
 
@@ -116,6 +117,11 @@ class gallery_lifecycle extends \phpbb_functional_test_case
 		$db->sql_freeresult($result);
 
 		$this->assertSame('3.4.0', $this->config_value('phpbb_gallery_version'));
+		$this->assertSame('45', $this->config_value('phpbb_gallery_forum_index_display'));
+		$this->assertSame('0', $this->config_value('phpbb_gallery_forum_index_mode'));
+		$this->assertSame('0', $this->config_value('phpbb_gallery_forum_index_personal'));
+		$this->assertSame('4', $this->config_value('phpbb_gallery_forum_index_random_count'));
+		$this->assertSame('4', $this->config_value('phpbb_gallery_forum_index_recent_count'));
 		$this->assertSame(1, $this->acl_option_count('a_gallery_manage'));
 		$this->assertSame(1, $this->acl_option_count('a_gallery_albums'));
 		$this->assertSame(1, $this->acl_option_count('a_gallery_import'));
@@ -226,6 +232,25 @@ class gallery_lifecycle extends \phpbb_functional_test_case
 		$this->assertNotSame('', $image_filename, $crawler->filter('body')->text());
 		$this->assertFileDoesNotExist($import_path);
 		$this->assertFileExists($phpbb_root_path . 'files/phpbbgallery/core/source/' . $image_filename);
+	}
+
+	/**
+	 * Confirm the forum-index block is opt-in and renders a permitted image.
+	 */
+	private function assert_forum_index_images(): void
+	{
+		$crawler = self::request('GET', 'index.php?sid=' . $this->sid);
+		$this->assertSame(0, $crawler->filter('.phpbbgallery-forum-index')->count());
+
+		$db = $this->get_db();
+		$db->sql_query('UPDATE ' . CONFIG_TABLE . " SET config_value = '1' WHERE config_name = 'phpbb_gallery_forum_index_mode'");
+		$db->sql_query('UPDATE ' . CONFIG_TABLE . " SET config_value = '1' WHERE config_name = 'phpbb_gallery_forum_index_recent_count'");
+		$this->purge_cache();
+
+		$crawler = self::request('GET', 'index.php?sid=' . $this->sid);
+		$this->assertSame(1, $crawler->filter('.phpbbgallery-forum-index')->count());
+		$this->assertStringContainsString('Functional import 1', $crawler->filter('.phpbbgallery-forum-index')->text());
+		$this->assertSame(1, $crawler->filter('.phpbbgallery-forum-index img')->count());
 	}
 
 	/**

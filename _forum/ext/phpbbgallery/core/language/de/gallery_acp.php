@@ -319,6 +319,8 @@ $lang = array_merge($lang, [
 	'RECENT_ON_INDEX'          => 'Neue Bilder anzeigen',
 	'RECENT_ON_INDEX_EXP'      => 'Die letzten Bilder werden auf der Index-Seite angezeigt',
 	'RECENT_ON_INDEX_COUNT'    => 'Neueste Bilder zählen',
+	'FORUM_INDEX_IMAGES'       => 'Galeriebilder auf der Foren-Startseite',
+
 	'PHPBB_INTEGRATION'        => 'Integration in phpBB',
 	'PNG_ALLOWED'              => 'Es ist erlaubt PNG-Dateien hochzuladen',
 	'WEBP_ALLOWED'             => 'Es ist erlaubt WEBP-Dateien hochzuladen',

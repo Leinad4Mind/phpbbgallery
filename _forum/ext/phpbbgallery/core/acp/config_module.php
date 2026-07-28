@@ -451,6 +451,14 @@ class config_module
 					'rrc_gindex_pegas'		=> ['lang' => 'RRC_GINDEX_PGALLERIES',	'validate' => 'bool',	'type' => 'radio:yes_no'],
 				],
 
+				'FORUM_INDEX_IMAGES'	=> [
+					'forum_index_mode'			=> ['lang' => 'RRC_GINDEX_MODE',			'validate' => 'int',		'type' => 'custom',			'explain' => true,	'method' => 'rrc_modes'],
+					'forum_index_recent_count'	=> ['lang' => 'RECENT_ON_INDEX_COUNT',	'validate' => 'int:1:12',	'type' => 'text:7:2'],
+					'forum_index_random_count'	=> ['lang' => 'RANDOM_ON_INDEX_COUNT',	'validate' => 'int:1:12',	'type' => 'text:7:2'],
+					'forum_index_display'		=> ['lang' => 'RRC_DISPLAY_OPTIONS',		'validate' => 'int',		'type' => 'custom',			'method' => 'rrc_display'],
+					'forum_index_personal'		=> ['lang' => 'RRC_GINDEX_PGALLERIES',	'validate' => 'bool',		'type' => 'radio:yes_no'],
+				],
+
 				'PHPBB_INTEGRATION'	=> [
 					'disp_gallery_icon'			=> ['lang' => 'DISP_GALLERY_ICON',				'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 					'disp_total_images'			=> ['lang' => 'DISP_TOTAL_IMAGES',				'validate' => 'bool',	'type' => 'radio:yes_no'],
@@ -654,7 +662,7 @@ class config_module
 		$rrc_mode_options .= "<option value='" . $phpbb_ext_gallery_core_block::MODE_NONE . "'>" . $this->language->lang('RRC_MODE_NONE') . '</option>';
 		$rrc_mode_options .= '<option' . (($value & $phpbb_ext_gallery_core_block::MODE_RECENT) ? ' selected="selected"' : '') . " value='" . $phpbb_ext_gallery_core_block::MODE_RECENT . "'>" . $this->language->lang('RRC_MODE_RECENT') . '</option>';
 		$rrc_mode_options .= '<option' . (($value & $phpbb_ext_gallery_core_block::MODE_RANDOM) ? ' selected="selected"' : '') . " value='" . $phpbb_ext_gallery_core_block::MODE_RANDOM . "'>" . $this->language->lang('RRC_MODE_RANDOM') . '</option>';
-		if ($key != 'rrc_profile_mode')
+		if (!in_array($key, ['rrc_profile_mode', 'forum_index_mode'], true))
 		{
 			$rrc_mode_options .= '<option' . (($value & $phpbb_ext_gallery_core_block::MODE_COMMENT) ? ' selected="selected"' : '') . " value='" . $phpbb_ext_gallery_core_block::MODE_COMMENT . "'>" . $this->language->lang('RRC_MODE_COMMENTS') . '</option>';
 		}

@@ -21,6 +21,7 @@ class main_listener implements EventSubscriberInterface
 			'core.permissions'                      => 'add_permissions',
 			'core.user_setup'						=> 'load_language_on_setup',
 			'core.page_header'						=> 'add_page_header_link',
+			'core.index_modify_page_title'			=> 'display_forum_index_images',
 			'core.memberlist_view_profile'	       => 'user_profile_galleries',
 			'core.ucp_profile_info_modify_sql_ary' => 'preserve_personal_album_profile_field',
 			//'core.generate_profile_fields_template_data_before'	       => 'profile_fields',
@@ -119,6 +120,38 @@ class main_listener implements EventSubscriberInterface
 			$this->template->assign_vars([
 				'U_GALLERY'	=> $this->helper->route('phpbbgallery_core_index'),
 			]);
+		}
+	}
+
+	/**
+	 * Display permission-filtered Gallery images above the forum list.
+	 *
+	 * @param \phpbb\event\data $event phpBB forum-index event
+	 * @return void
+	 */
+	public function display_forum_index_images(\phpbb\event\data $event): void
+	{
+		$mode = (int) $this->gallery_config->get('forum_index_mode');
+		$mode &= \phpbbgallery\core\block::MODE_RECENT | \phpbbgallery\core\block::MODE_RANDOM;
+		if ($mode === \phpbbgallery\core\block::MODE_NONE)
+		{
+			return;
+		}
+
+		$include_personal = (bool) $this->gallery_config->get('forum_index_personal');
+		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
+		$this->template->assign_var('PHPBBGALLERY_FORUM_INDEX_IMAGES', true);
+
+		if (($mode & \phpbbgallery\core\block::MODE_RECENT) !== 0)
+		{
+			$limit = max(1, min(12, (int) $this->gallery_config->get('forum_index_recent_count')));
+			$this->gallery_search->recent($limit, -1, 0, 'forum_index_display', false, false, $include_personal, false);
+		}
+
+		if (($mode & \phpbbgallery\core\block::MODE_RANDOM) !== 0)
+		{
+			$limit = max(1, min(12, (int) $this->gallery_config->get('forum_index_random_count')));
+			$this->gallery_search->random($limit, 0, 'forum_index_display', false, false, $include_personal, false);
 		}
 	}
 

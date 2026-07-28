@@ -100,8 +100,10 @@ class search
 	 * @param string $fields
 	 * @param string|false $block_name
 	 * @param string|false $u_block
+	 * @param bool|null    $include_personal Override the Gallery-index personal-album setting
+	 * @param bool         $show_empty       Whether an empty result should create a message block
 	 */
-	public function random(int $limit, int $user = 0, string $fields = 'rrc_gindex_display', string|false $block_name = false, string|false $u_block = false): void
+	public function random(int $limit, int $user = 0, string $fields = 'rrc_gindex_display', string|false $block_name = false, string|false $u_block = false, ?bool $include_personal = null, bool $show_empty = true): void
 	{
 		// We will do small escape for not devising by 0
 		if ($limit == 0)
@@ -142,7 +144,8 @@ class search
 			$sql .= ' and image_user_id = ' . (int) $user;
 		}
 		$exclude_albums = [];
-		if (!$this->gallery_config->get('rrc_gindex_pegas'))
+		$include_personal ??= (bool) $this->gallery_config->get('rrc_gindex_pegas');
+		if (!$include_personal)
 		{
 			$sql_no_user = 'SELECT album_id FROM ' . $this->albums_table . ' WHERE album_user_id > 0';
 			$result = $this->db->sql_query($sql_no_user);
@@ -154,7 +157,6 @@ class search
 		}
 		$exclude_albums = array_merge($exclude_albums, $this->gallery_auth->get_exclude_zebra());
 		$sql .= ' AND ((' . $this->db->sql_in_set('image_album_id', array_diff($this->gallery_auth->acl_album_ids('i_view'), $exclude_albums), false, true) . ' AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . ')
-					OR (' . $this->db->sql_in_set('image_album_id', array_diff($this->gallery_auth->acl_album_ids('a_list'), $exclude_albums), false, true) . ' AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . ')
 					OR ' . $this->db->sql_in_set('image_album_id', array_diff($this->gallery_auth->acl_album_ids('m_status'), $exclude_albums), false, true) . ')
 			ORDER BY ' . $sql_order;
 
@@ -174,6 +176,11 @@ class search
 		$this->db->sql_freeresult($result);
 
 		$total_match_count = sizeof($id_ary);
+
+		if (!$id_ary && !$show_empty)
+		{
+			return;
+		}
 
 		$this->template->assign_block_vars('imageblock', [
 			'BLOCK_NAME'	=> $block_name ? $block_name : $this->language->lang('RANDOM_IMAGES'),
@@ -395,8 +402,10 @@ class search
 	 * @param string $fields
 	 * @param string|false $block_name
 	 * @param string|false $u_block
+	 * @param bool|null    $include_personal Override the Gallery-index personal-album setting
+	 * @param bool         $show_empty       Whether an empty result should create a message block
 	 */
-	public function recent(int $limit, int $start = 0, int $user = 0, string $fields = 'rrc_gindex_display', string|false $block_name = false, string|false $u_block = false): void
+	public function recent(int $limit, int $start = 0, int $user = 0, string $fields = 'rrc_gindex_display', string|false $block_name = false, string|false $u_block = false, ?bool $include_personal = null, bool $show_empty = true): void
 	{
 		// We will do small escape for not devising by 0
 		if ($limit == 0)
@@ -448,7 +457,8 @@ class search
 		$sql_order = $sql_order . ($this->gallery_config->get('default_sort_dir') == 'd' ? ' DESC' : ' ASC');
 		$sql_limit = $limit;
 		$exclude_albums = [];
-		if (!$this->gallery_config->get('rrc_gindex_pegas'))
+		$include_personal ??= (bool) $this->gallery_config->get('rrc_gindex_pegas');
+		if (!$include_personal)
 		{
 			$sql_no_user = 'SELECT album_id FROM ' . $this->albums_table . ' WHERE album_user_id > 0';
 			$result = $this->db->sql_query($sql_no_user);
@@ -493,6 +503,11 @@ class search
 		$this->db->sql_freeresult($result);
 
 		$total_match_count = sizeof($id_ary);
+
+		if (!$id_ary && !$show_empty)
+		{
+			return;
+		}
 
 		if ($user > 0)
 		{

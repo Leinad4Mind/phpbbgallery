@@ -297,6 +297,8 @@ $lang = array_merge($lang, [
 	'RECENT_ON_INDEX'          => 'Show recent images',
 	'RECENT_ON_INDEX_EXP'      => 'Should recent images be displayed on index',
 	'RECENT_ON_INDEX_COUNT'    => 'Recent images count',
+	'FORUM_INDEX_IMAGES'       => 'Gallery images on forum index',
+
 	'PHPBB_INTEGRATION'        => 'phpBB integration',
 	'PNG_ALLOWED'              => 'Allowed to upload PNG files',
 	'WEBP_ALLOWED'             => 'Allowed to upload WEBP files',

@@ -27,6 +27,7 @@ use phpbbgallery\core\migrations\gallery_title;
 use phpbbgallery\core\migrations\own_image_move;
 use phpbbgallery\core\migrations\create_gallery_icons_folder;
 use phpbbgallery\core\migrations\disp_resolution;
+use phpbbgallery\core\migrations\forum_index_images;
 
 class migration_integrity_test extends TestCase
 {
@@ -48,6 +49,7 @@ class migration_integrity_test extends TestCase
 		own_image_move::class,
 		create_gallery_icons_folder::class,
 		disp_resolution::class,
+		forum_index_images::class,
 	];
 
 	private array $temp_directories = [];
@@ -117,6 +119,30 @@ class migration_integrity_test extends TestCase
 			['\phpbbgallery\core\migrations\create_gallery_icons_folder'],
 			disp_resolution::depends_on()
 		);
+		$this->assertSame(
+			['\phpbbgallery\core\migrations\disp_resolution'],
+			forum_index_images::depends_on()
+		);
+	}
+
+	public function test_forum_index_images_migration_is_reversible_and_disabled_by_default(): void
+	{
+		$migration = (new \ReflectionClass(forum_index_images::class))->newInstanceWithoutConstructor();
+
+		$this->assertSame([
+			['config.add', ['phpbb_gallery_forum_index_display', 45]],
+			['config.add', ['phpbb_gallery_forum_index_mode', 0]],
+			['config.add', ['phpbb_gallery_forum_index_personal', 0]],
+			['config.add', ['phpbb_gallery_forum_index_random_count', 4]],
+			['config.add', ['phpbb_gallery_forum_index_recent_count', 4]],
+		], $migration->update_data());
+		$this->assertSame([
+			['config.remove', ['phpbb_gallery_forum_index_display']],
+			['config.remove', ['phpbb_gallery_forum_index_mode']],
+			['config.remove', ['phpbb_gallery_forum_index_personal']],
+			['config.remove', ['phpbb_gallery_forum_index_random_count']],
+			['config.remove', ['phpbb_gallery_forum_index_recent_count']],
+		], $migration->revert_data());
 	}
 
 	public function test_resolution_migration_adds_a_reversible_display_switch(): void
@@ -637,6 +663,7 @@ class migration_integrity_test extends TestCase
 			'own_image_move.php',
 			'create_gallery_icons_folder.php',
 			'disp_resolution.php',
+			'forum_index_images.php',
 		] as $migration)
 		{
 			require_once dirname(__DIR__) . '/migrations/' . $migration;

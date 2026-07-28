@@ -6,6 +6,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Added
 
+- Restored an optional permission-filtered recent and random Gallery image block above the forum index, with independent ACP limits, metadata and personal-album controls for all supported styles.
 - Added a migration-backed total image-view counter to the public and ACP statistics, including automatic updates and ACP resynchronization.
 - Restored album-scoped search on album pages, including empty albums and responsive themes, while respecting phpBB search availability and user permission.
 - Made ACP contest settings appear only while creating or editing an album in contest mode, without an initial visibility flash.
@@ -22,6 +23,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Security
 
+- Restricted random-image results to albums granting image-view or status-moderation access instead of accepting list-only permission.
 - Replaced ZIP extraction during gallery uploads with a controlled per-entry extractor that rejects path traversal, absolute paths, symbolic-link entries, unsupported file types, duplicate destinations, and archive entries whose detected content does not match their extension.
 - Added ZIP bomb protections for entry count, individual and cumulative uncompressed size, compression ratio, archive metadata inconsistencies, and extraction time, with guaranteed temporary-file cleanup.
 - Replaced executable PHP state files in ACP Import with validated, size-limited JSON state tied to the administrator who created it and identified by a cryptographically random token.

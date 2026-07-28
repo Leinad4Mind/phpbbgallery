@@ -22,7 +22,7 @@ final class template_syntax_test extends TestCase
 	public function test_modernized_templates_use_only_native_twig_syntax(): void
 	{
 		$template_paths = $this->template_paths();
-		$this->assertCount(157, $template_paths);
+		$this->assertCount(159, $template_paths);
 
 		foreach ($template_paths as $template_path)
 		{
@@ -336,6 +336,28 @@ final class template_syntax_test extends TestCase
 			$this->assertStringContainsString('{{ T_THEME_PATH }}/images/missing.png', $posting, $style);
 			$this->assertStringNotContainsString('placehold.it', $posting, $style);
 			$this->assertStringNotContainsString('http://', $posting, $style);
+		}
+	}
+
+	public function test_forum_index_images_use_native_events_in_every_supported_style(): void
+	{
+		$core_root = dirname(__DIR__);
+		$board_root = dirname(__DIR__, 4);
+		$prosilver_event = (string) file_get_contents($core_root . '/styles/prosilver/template/event/index_body_markforums_before.html');
+		$shared_event = (string) file_get_contents($core_root . '/styles/all/template/event/index_body_forumlist_body_before.html');
+
+		foreach ([$prosilver_event, $shared_event] as $template)
+		{
+			$this->assertStringContainsString('{% if PHPBBGALLERY_FORUM_INDEX_IMAGES %}', $template);
+			$this->assertStringContainsString("{% include 'gallery/imageblock_polaroid.html' %}", $template);
+		}
+
+		$prosilver_index = (string) file_get_contents($board_root . '/styles/prosilver/template/index_body.html');
+		$this->assertStringContainsString('EVENT index_body_markforums_before', $prosilver_index);
+		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$index = (string) file_get_contents($board_root . '/styles/' . $style . '/template/index_body.html');
+			$this->assertStringContainsString('EVENT index_body_forumlist_body_before', $index, $style);
 		}
 	}
 

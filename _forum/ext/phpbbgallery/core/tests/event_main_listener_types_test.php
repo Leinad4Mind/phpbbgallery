@@ -51,6 +51,7 @@ final class event_main_listener_types_test extends TestCase
 			'core.permissions' => 'add_permissions',
 			'core.user_setup' => 'load_language_on_setup',
 			'core.page_header' => 'add_page_header_link',
+			'core.index_modify_page_title' => 'display_forum_index_images',
 			'core.memberlist_view_profile' => 'user_profile_galleries',
 			'core.ucp_profile_info_modify_sql_ary' => 'preserve_personal_album_profile_field',
 		], main_listener::getSubscribedEvents());
@@ -97,6 +98,56 @@ final class event_main_listener_types_test extends TestCase
 		$this->set_property($listener, 'gallery_config', $config);
 
 		$listener->add_page_header_link(new \phpbb\event\data([]));
+	}
+
+	public function test_forum_index_images_are_disabled_without_search_queries(): void
+	{
+		$gallery_search = $this->createMock(\phpbbgallery\core\search::class);
+		$gallery_search->expects($this->never())->method('recent');
+		$gallery_search->expects($this->never())->method('random');
+		$config = $this->createMock(\phpbbgallery\core\config::class);
+		$config->expects($this->once())
+			->method('get')
+			->with('forum_index_mode')
+			->willReturn(0);
+		$listener = $this->listener($this->createStub(\phpbb\db\driver\driver_interface::class));
+		$this->set_property($listener, 'gallery_search', $gallery_search);
+		$this->set_property($listener, 'gallery_config', $config);
+
+		$listener->display_forum_index_images(new \phpbb\event\data([]));
+	}
+
+	public function test_forum_index_images_use_bounded_independent_settings(): void
+	{
+		$gallery_search = $this->createMock(\phpbbgallery\core\search::class);
+		$gallery_search->expects($this->once())
+			->method('recent')
+			->with(12, -1, 0, 'forum_index_display', false, false, false, false);
+		$gallery_search->expects($this->once())
+			->method('random')
+			->with(1, 0, 'forum_index_display', false, false, false, false);
+		$config = $this->createMock(\phpbbgallery\core\config::class);
+		$config->method('get')->willReturnMap([
+			['forum_index_mode', \phpbbgallery\core\block::MODE_RECENT | \phpbbgallery\core\block::MODE_RANDOM],
+			['forum_index_personal', false],
+			['forum_index_recent_count', 99],
+			['forum_index_random_count', 0],
+		]);
+		$language = $this->createMock(\phpbb\language\language::class);
+		$language->expects($this->once())
+			->method('add_lang')
+			->with(['gallery'], 'phpbbgallery/core');
+		$template = $this->createMock(\phpbb\template\template::class);
+		$template->expects($this->once())
+			->method('assign_var')
+			->with('PHPBBGALLERY_FORUM_INDEX_IMAGES', true);
+		$listener = $this->listener($this->createStub(\phpbb\db\driver\driver_interface::class));
+		$this->set_property($listener, 'gallery_search', $gallery_search);
+		$this->set_property($listener, 'gallery_config', $config);
+		$this->set_property($listener, 'language', $language);
+		$this->set_property($listener, 'template', $template);
+
+		$listener->display_forum_index_images(new \phpbb\event\data([]));
 	}
 
 	public function test_profile_update_preserves_the_managed_personal_album(): void
