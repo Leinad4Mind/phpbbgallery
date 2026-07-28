@@ -1124,6 +1124,191 @@ class manager
 	}
 
 	/**
+	 * Return the shared catalogue with its configuration for one provider.
+	 *
+	 * Catalogue tags without a provider context are returned as disabled and
+	 * restricted so an administrator can enable them explicitly.
+	 *
+	 * @return array<int, array{id: int, tag: string, tag_clean: string, is_enabled: int, scope_mode: string}>
+	 */
+	public function get_provider_policies(string $provider): array
+	{
+		$provider = $this->validate_provider($provider);
+		if ($provider === '')
+		{
+			return [];
+		}
+
+		$sql = 'SELECT t.id, t.tag, t.tag_clean, tc.is_enabled, tc.scope_mode
+			FROM ' . $this->table_bbtags . ' t
+			LEFT JOIN ' . $this->table_bbtags_context . " tc
+				ON tc.tag_id = t.id
+				AND tc.provider = '" . $this->db->sql_escape($provider) . "'
+			ORDER BY t.tag_clean ASC";
+		$result = $this->db->sql_query($sql);
+		$policies = [];
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$policies[] = [
+				'id' => (int) $row['id'],
+				'tag' => (string) $row['tag'],
+				'tag_clean' => (string) $row['tag_clean'],
+				'is_enabled' => isset($row['is_enabled']) ? (int) $row['is_enabled'] : 0,
+				'scope_mode' => in_array($row['scope_mode'] ?? '', ['global', 'restricted'], true)
+					? (string) $row['scope_mode']
+					: 'restricted',
+			];
+		}
+		$this->db->sql_freeresult($result);
+
+		return $policies;
+	}
+
+	/**
+	 * Return the explicit rules for one provider tag, indexed by scope.
+	 *
+	 * @return array<int, string>
+	 */
+	public function get_scope_rules(int $tag_id, string $provider): array
+	{
+		$provider = $this->validate_provider($provider);
+		if ($tag_id <= 0 || $provider === '')
+		{
+			return [];
+		}
+
+		$sql = 'SELECT scope_id, scope_rule
+			FROM ' . $this->table_bbtags_scope . '
+			WHERE tag_id = ' . $tag_id . "
+				AND provider = '" . $this->db->sql_escape($provider) . "'
+			ORDER BY scope_id ASC";
+		$result = $this->db->sql_query($sql);
+		$rules = [];
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			if (in_array($row['scope_rule'], ['allow', 'deny'], true))
+			{
+				$rules[max(0, (int) $row['scope_id'])] = (string) $row['scope_rule'];
+			}
+		}
+		$this->db->sql_freeresult($result);
+
+		return $rules;
+	}
+
+	/**
+	 * Atomically replace one provider policy and all of its explicit rules.
+	 */
+	public function save_provider_policy(
+		int $tag_id,
+		string $provider,
+		bool $is_enabled,
+		string $scope_mode,
+		array $rules
+	): bool
+	{
+		$provider = $this->validate_provider($provider);
+		if ($tag_id <= 0 || $provider === '' || !in_array($scope_mode, ['global', 'restricted'], true))
+		{
+			return false;
+		}
+
+		$explicit_rules = [];
+		foreach ($rules as $scope_id => $rule)
+		{
+			$scope_id = (int) $scope_id;
+			if ($scope_id < 0 || !in_array($rule, ['allow', 'deny', 'inherit'], true))
+			{
+				return false;
+			}
+			if ($rule !== 'inherit')
+			{
+				$explicit_rules[$scope_id] = $rule;
+			}
+		}
+
+		$result = $this->db->sql_query_limit(
+			'SELECT id FROM ' . $this->table_bbtags . ' WHERE id = ' . $tag_id,
+			1
+		);
+		$catalogue_row = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+		if (!$catalogue_row)
+		{
+			return false;
+		}
+
+		$this->db->sql_transaction('begin');
+		try
+		{
+			$result = $this->db->sql_query_limit(
+				'SELECT tag_id FROM ' . $this->table_bbtags_context . '
+					WHERE tag_id = ' . $tag_id . "
+						AND provider = '" . $this->db->sql_escape($provider) . "'",
+				1
+			);
+			$context_row = $this->db->sql_fetchrow($result);
+			$this->db->sql_freeresult($result);
+			$context_data = [
+				'is_enabled' => $is_enabled ? 1 : 0,
+				'scope_mode' => $scope_mode,
+			];
+			if ($context_row)
+			{
+				$sql = 'UPDATE ' . $this->table_bbtags_context . '
+					SET ' . $this->db->sql_build_array('UPDATE', $context_data) . '
+					WHERE tag_id = ' . $tag_id . "
+						AND provider = '" . $this->db->sql_escape($provider) . "'";
+			}
+			else
+			{
+				$context_data += [
+					'tag_id' => $tag_id,
+					'provider' => $provider,
+					'usage_count' => 0,
+				];
+				$sql = 'INSERT INTO ' . $this->table_bbtags_context . ' '
+					. $this->db->sql_build_array('INSERT', $context_data);
+			}
+			if ($this->db->sql_query($sql) === false)
+			{
+				throw new \RuntimeException('Unable to store provider context.');
+			}
+
+			$sql = 'DELETE FROM ' . $this->table_bbtags_scope . '
+				WHERE tag_id = ' . $tag_id . "
+					AND provider = '" . $this->db->sql_escape($provider) . "'";
+			if ($this->db->sql_query($sql) === false)
+			{
+				throw new \RuntimeException('Unable to replace provider rules.');
+			}
+
+			$rows = [];
+			foreach ($explicit_rules as $scope_id => $rule)
+			{
+				$rows[] = [
+					'tag_id' => $tag_id,
+					'provider' => $provider,
+					'scope_id' => $scope_id,
+					'scope_rule' => $rule,
+				];
+			}
+			if (!empty($rows) && $this->db->sql_multi_insert($this->table_bbtags_scope, $rows) === false)
+			{
+				throw new \RuntimeException('Unable to insert provider rules.');
+			}
+			$this->db->sql_transaction('commit');
+		}
+		catch (\Throwable $exception)
+		{
+			$this->db->sql_transaction('rollback');
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Filter tag identifiers through provider state and inherited scope rules.
 	 *
 	 * @param array  $tag_ids    Tag identifiers

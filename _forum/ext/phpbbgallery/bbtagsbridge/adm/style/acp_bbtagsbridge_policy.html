@@ -1,0 +1,91 @@
+{% include 'overall_header.html' %}
+
+<h1>{{ lang('ACP_BBTAGSBRIDGE_POLICIES') }}</h1>
+<p>{{ lang('ACP_BBTAGSBRIDGE_POLICIES_EXPLAIN') }}</p>
+
+<form id="acp_bbtagsbridge_policy" method="post" action="{{ U_ACTION }}">
+	<fieldset>
+		<legend>{{ lang('ACP_BBTAGSBRIDGE_TAG') }}</legend>
+		{% if S_HAS_BBTAGSBRIDGE_TAGS %}
+			<dl>
+				<dt><label for="tag_id">{{ lang('ACP_BBTAGSBRIDGE_TAG_SELECT') }}</label></dt>
+				<dd>
+					<select id="tag_id" name="tag_id">
+						{% for tag in bbtagsbridge_policy_tags %}
+							<option value="{{ tag.ID }}"{% if tag.SELECTED %} selected{% endif %}>{{ tag.NAME }}</option>
+						{% endfor %}
+					</select>
+					<input class="button2" type="submit" name="select_tag" value="{{ lang('SELECT') }}">
+				</dd>
+			</dl>
+		{% else %}
+			<p>{{ lang('ACP_BBTAGSBRIDGE_NO_TAGS') }}</p>
+		{% endif %}
+	</fieldset>
+
+	{% if S_BBTAGSBRIDGE_TAG_SELECTED %}
+		<fieldset>
+			<legend>{{ lang('ACP_BBTAGSBRIDGE_PROVIDER_POLICY') }}</legend>
+			<dl>
+				<dt>
+					<label>{{ lang('ACP_BBTAGSBRIDGE_ENABLED') }}</label>
+					<br><span>{{ lang('ACP_BBTAGSBRIDGE_ENABLED_EXPLAIN') }}</span>
+				</dt>
+				<dd>
+					<label><input type="radio" class="radio" name="is_enabled" value="1"{% if S_BBTAGSBRIDGE_ENABLED %} checked{% endif %}> {{ lang('YES') }}</label>
+					<label><input type="radio" class="radio" name="is_enabled" value="0"{% if not S_BBTAGSBRIDGE_ENABLED %} checked{% endif %}> {{ lang('NO') }}</label>
+				</dd>
+			</dl>
+			<dl>
+				<dt>
+					<label for="scope_mode">{{ lang('ACP_BBTAGSBRIDGE_MODE') }}</label>
+					<br><span>{{ lang('ACP_BBTAGSBRIDGE_MODE_EXPLAIN') }}</span>
+				</dt>
+				<dd>
+					<select id="scope_mode" name="scope_mode">
+						<option value="global"{% if S_BBTAGSBRIDGE_GLOBAL %} selected{% endif %}>{{ lang('ACP_BBTAGSBRIDGE_MODE_GLOBAL') }}</option>
+						<option value="restricted"{% if S_BBTAGSBRIDGE_RESTRICTED %} selected{% endif %}>{{ lang('ACP_BBTAGSBRIDGE_MODE_RESTRICTED') }}</option>
+					</select>
+				</dd>
+			</dl>
+		</fieldset>
+
+		<fieldset>
+			<legend>{{ lang('ACP_BBTAGSBRIDGE_ALBUM_RULES') }}</legend>
+			<p>{{ lang('ACP_BBTAGSBRIDGE_ALBUM_RULES_EXPLAIN') }}</p>
+			{% if bbtagsbridge_policy_albums %}
+				<table class="table1 zebra-table">
+					<thead>
+						<tr>
+							<th>{{ lang('ACP_BBTAGSBRIDGE_ALBUM') }}</th>
+							<th>{{ lang('ACP_BBTAGSBRIDGE_RULE') }}</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for album in bbtagsbridge_policy_albums %}
+							<tr>
+								<td>{{ album.PREFIX }}{{ album.NAME }}</td>
+								<td>
+									<select name="rules[{{ album.ID }}]">
+										<option value="inherit"{% if album.S_INHERIT %} selected{% endif %}>{{ lang('ACP_BBTAGSBRIDGE_RULE_INHERIT') }}</option>
+										<option value="allow"{% if album.S_ALLOW %} selected{% endif %}>{{ lang('ACP_BBTAGSBRIDGE_RULE_ALLOW') }}</option>
+										<option value="deny"{% if album.S_DENY %} selected{% endif %}>{{ lang('ACP_BBTAGSBRIDGE_RULE_DENY') }}</option>
+									</select>
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			{% else %}
+				<p>{{ lang('ACP_BBTAGSBRIDGE_NO_ALBUMS') }}</p>
+			{% endif %}
+			<p class="submit-buttons">
+				<input class="button1" type="submit" name="submit" value="{{ lang('SUBMIT') }}">
+			</p>
+		</fieldset>
+	{% endif %}
+
+	{{ S_FORM_TOKEN }}
+</form>
+
+{% include 'overall_footer.html' %}

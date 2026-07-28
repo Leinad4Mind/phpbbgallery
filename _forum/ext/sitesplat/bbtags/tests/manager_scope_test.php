@@ -253,6 +253,120 @@ class manager_scope_test extends TestCase
 		$this->assertStringContainsString('DELETE FROM phpbb_bbtags_scope', $queries[2]);
 	}
 
+	public function test_provider_policy_catalogue_includes_tags_without_a_context(): void
+	{
+		$db = $this->createMock(driver_interface::class);
+		$db->method('sql_escape')->willReturnArgument(0);
+		$db->method('sql_query')->willReturnArgument(0);
+		$rows = [
+			['id' => 1, 'tag' => 'Anime', 'tag_clean' => 'anime', 'is_enabled' => 1, 'scope_mode' => 'global'],
+			['id' => 2, 'tag' => 'Manga', 'tag_clean' => 'manga', 'is_enabled' => null, 'scope_mode' => null],
+		];
+		$db->method('sql_fetchrow')->willReturnCallback(static function () use (&$rows)
+		{
+			return array_shift($rows) ?: false;
+		});
+
+		$this->assertSame(
+			[
+				['id' => 1, 'tag' => 'Anime', 'tag_clean' => 'anime', 'is_enabled' => 1, 'scope_mode' => 'global'],
+				['id' => 2, 'tag' => 'Manga', 'tag_clean' => 'manga', 'is_enabled' => 0, 'scope_mode' => 'restricted'],
+			],
+			$this->create_manager($db)->get_provider_policies('gallery_images')
+		);
+	}
+
+	public function test_provider_policy_rules_return_only_explicit_allow_and_deny_values(): void
+	{
+		$db = $this->createMock(driver_interface::class);
+		$db->method('sql_escape')->willReturnArgument(0);
+		$db->method('sql_query')->willReturnArgument(0);
+		$rows = [
+			['scope_id' => 10, 'scope_rule' => 'allow'],
+			['scope_id' => 20, 'scope_rule' => 'deny'],
+			['scope_id' => 30, 'scope_rule' => 'invalid'],
+		];
+		$db->method('sql_fetchrow')->willReturnCallback(static function () use (&$rows)
+		{
+			return array_shift($rows) ?: false;
+		});
+
+		$this->assertSame(
+			[10 => 'allow', 20 => 'deny'],
+			$this->create_manager($db)->get_scope_rules(7, 'gallery_images')
+		);
+	}
+
+	public function test_provider_policy_is_saved_atomically_with_only_explicit_rules(): void
+	{
+		$db = $this->createMock(driver_interface::class);
+		$db->method('sql_escape')->willReturnArgument(0);
+		$db->method('sql_query_limit')->willReturnArgument(0);
+		$db->method('sql_fetchrow')->willReturnCallback(static function (string $result)
+		{
+			if (strpos($result, 'FROM phpbb_bbtags WHERE id = 7') !== false)
+			{
+				return ['id' => 7];
+			}
+
+			return false;
+		});
+		$db->method('sql_build_array')->willReturnCallback(static function (string $type, array $values): string
+		{
+			return $type . ':' . implode(',', array_keys($values));
+		});
+		$queries = [];
+		$db->method('sql_query')->willReturnCallback(static function (string $sql) use (&$queries)
+		{
+			$queries[] = $sql;
+			return true;
+		});
+		$transactions = [];
+		$db->method('sql_transaction')->willReturnCallback(static function (string $status) use (&$transactions): bool
+		{
+			$transactions[] = $status;
+			return true;
+		});
+		$inserted = [];
+		$db->method('sql_multi_insert')->willReturnCallback(static function (string $table, array $rows) use (&$inserted): bool
+		{
+			$inserted = $rows;
+			return true;
+		});
+
+		$this->assertTrue($this->create_manager($db)->save_provider_policy(
+			7,
+			'gallery_images',
+			true,
+			'restricted',
+			[10 => 'allow', 20 => 'inherit', 30 => 'deny']
+		));
+		$this->assertSame(['begin', 'commit'], $transactions);
+		$this->assertStringContainsString('INSERT INTO phpbb_bbtags_context', $queries[0]);
+		$this->assertStringContainsString('DELETE FROM phpbb_bbtags_scope', $queries[1]);
+		$this->assertSame(
+			[
+				['tag_id' => 7, 'provider' => 'gallery_images', 'scope_id' => 10, 'scope_rule' => 'allow'],
+				['tag_id' => 7, 'provider' => 'gallery_images', 'scope_id' => 30, 'scope_rule' => 'deny'],
+			],
+			$inserted
+		);
+	}
+
+	public function test_provider_policy_rejects_invalid_rules_before_writing(): void
+	{
+		$db = $this->createMock(driver_interface::class);
+		$db->expects($this->never())->method('sql_transaction');
+
+		$this->assertFalse($this->create_manager($db)->save_provider_policy(
+			7,
+			'gallery_images',
+			true,
+			'global',
+			[10 => 'moderate']
+		));
+	}
+
 	public function test_allowed_forums_are_resolved_independently_for_each_tag()
 	{
 		$db = $this->createMock(driver_interface::class);

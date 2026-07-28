@@ -34,7 +34,7 @@ class ext extends \phpbb\extension\base
 		}));
 		if (!empty($missing))
 		{
-			$user->add_lang_ext('phpbbgallery/bbtagsbridge', 'info_bbtagsbridge');
+			$user->add_lang_ext('phpbbgallery/bbtagsbridge', 'info_acp_bbtagsbridge');
 			trigger_error($user->lang('BBTAGSBRIDGE_DEPENDENCIES_MISSING', implode(', ', $missing)), E_USER_WARNING);
 			return false;
 		}
@@ -46,7 +46,7 @@ class ext extends \phpbb\extension\base
 	{
 		if (empty($old_state))
 		{
-			$this->container->get('user')->add_lang_ext('phpbbgallery/bbtagsbridge', 'info_bbtagsbridge');
+			$this->container->get('user')->add_lang_ext('phpbbgallery/bbtagsbridge', 'info_acp_bbtagsbridge');
 			$this->container->get('template')->assign_var('L_EXTENSION_ENABLE_SUCCESS', $this->container->get('user')->lang['EXTENSION_ENABLE_SUCCESS']);
 		}
 

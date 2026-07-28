@@ -50,4 +50,25 @@ final class album_scope_resolver_test extends TestCase
 			(new album_scope_resolver($db, 'albums'))->get_all_paths()
 		);
 	}
+
+	public function test_album_tree_preserves_nested_order_depth_and_skips_broken_rows(): void
+	{
+		$db = new fake_db();
+		$db->album_rows = [
+			['album_id' => 10, 'parent_id' => 0, 'album_name' => 'Root', 'left_id' => 1],
+			['album_id' => 20, 'parent_id' => 10, 'album_name' => 'Child', 'left_id' => 2],
+			['album_id' => 30, 'parent_id' => 20, 'album_name' => 'Grandchild', 'left_id' => 3],
+			['album_id' => 40, 'parent_id' => 99, 'album_name' => 'Broken', 'left_id' => 4],
+		];
+
+		$this->assertSame(
+			[
+				['album_id' => 10, 'parent_id' => 0, 'album_name' => 'Root', 'depth' => 0],
+				['album_id' => 20, 'parent_id' => 10, 'album_name' => 'Child', 'depth' => 1],
+				['album_id' => 30, 'parent_id' => 20, 'album_name' => 'Grandchild', 'depth' => 2],
+			],
+			(new album_scope_resolver($db, 'albums'))->get_album_tree()
+		);
+		$this->assertStringContainsString('WHERE album_user_id = 0', $db->last_query);
+	}
 }

@@ -14,6 +14,7 @@
 - Add permission-aware multi-tag Gallery search with explicit AND/OR matching and pagination-safe filters.
 - Link displayed image tags to search and expose additional tags from the complete visible result set as narrowing facets.
 - Add an AJAX autocomplete endpoint restricted to tags available in albums the current user can view.
+- Add a CSRF-protected ACP policy editor for enabling shared tags and defining inherited allow or deny rules per album.
 
 ### Changed
 
@@ -21,4 +22,4 @@
 
 ### Tests
 
-- Cover provider registration, dependency enforcement, input limits, album inheritance, policy classification, AND/OR SQL, permission-aware facets, idempotent relations, usage totals, lifecycle integration, deletion cleanup, style contracts and locale parity.
+- Cover provider registration, dependency enforcement, input limits, album inheritance, administrative policy persistence, policy classification, AND/OR SQL, permission-aware facets, idempotent relations, usage totals, lifecycle integration, deletion cleanup, style contracts and locale parity.

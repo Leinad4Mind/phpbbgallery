@@ -22,7 +22,7 @@ final class template_syntax_test extends TestCase
 	public function test_modernized_templates_use_only_native_twig_syntax(): void
 	{
 		$template_paths = $this->template_paths();
-		$this->assertCount(156, $template_paths);
+		$this->assertCount(157, $template_paths);
 
 		foreach ($template_paths as $template_path)
 		{
@@ -475,6 +475,7 @@ final class template_syntax_test extends TestCase
 			$core_root . '/styles/prosilver',
 			$gallery_root . '/acpcleanup/adm/style',
 			$gallery_root . '/acpimport/adm/style',
+			$gallery_root . '/bbtagsbridge/adm/style',
 			$gallery_root . '/bbtagsbridge/styles',
 			$gallery_root . '/exif/styles',
 		];

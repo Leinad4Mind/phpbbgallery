@@ -110,4 +110,59 @@ final class album_scope_resolver
 
 		return $paths;
 	}
+
+	/**
+	 * Return valid public albums in nested-set order with a display depth.
+	 *
+	 * @return array<int, array{album_id: int, parent_id: int, album_name: string, depth: int}>
+	 */
+	public function get_album_tree(): array
+	{
+		$sql = 'SELECT album_id, parent_id, album_name, left_id
+			FROM ' . $this->albums_table . '
+			WHERE album_user_id = 0
+			ORDER BY left_id ASC, album_id ASC';
+		$result = $this->db->sql_query($sql);
+		$rows = [];
+		$parents = [];
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$album_id = (int) $row['album_id'];
+			$rows[$album_id] = [
+				'album_id' => $album_id,
+				'parent_id' => max(0, (int) $row['parent_id']),
+				'album_name' => (string) $row['album_name'],
+				'depth' => 0,
+			];
+			$parents[$album_id] = max(0, (int) $row['parent_id']);
+		}
+		$this->db->sql_freeresult($result);
+
+		foreach ($rows as $album_id => &$row)
+		{
+			$visited = [];
+			$current_id = $album_id;
+			$depth = -1;
+			while ($current_id > 0 && $depth < self::MAX_DEPTH)
+			{
+				if (isset($visited[$current_id]) || !array_key_exists($current_id, $parents))
+				{
+					unset($rows[$album_id]);
+					continue 2;
+				}
+				$visited[$current_id] = true;
+				$current_id = $parents[$current_id];
+				$depth++;
+			}
+			if ($current_id > 0)
+			{
+				unset($rows[$album_id]);
+				continue;
+			}
+			$row['depth'] = $depth;
+		}
+		unset($row);
+
+		return array_values($rows);
+	}
 }
