@@ -15,6 +15,7 @@
 		<dd><label for="terms1"><input type="radio" name="terms" id="terms1" value="all" checked="checked" /> {{ lang('SEARCH_ALL_TERMS') }}</label></dd>
 		<dd><label for="terms2"><input type="radio" name="terms" id="terms2" value="any" /> {{ lang('SEARCH_ANY_TERMS') }}</label></dd>
 	</dl>
+	{% EVENT phpbbgallery_core_search_fields %}
 	<dl>
 		<dt><label for="username">{{ lang('SEARCH_AUTHOR') }}{{ lang('COLON') }}</label><br /><span>{{ lang('SEARCH_AUTHOR_EXPLAIN') }}</span></dt>
 		<dd><input type="text" class="inputbox" name="username" id="username" size="40" title="{{ lang('SEARCH_AUTHOR') }}" /></dd>

@@ -27,6 +27,7 @@ function toggleElement(oElement)
 });
 </script>
 <div class="side-segment"><h3>{% if SEARCH_TITLE %}{{ SEARCH_TITLE }}{% else %}{{ SEARCH_MATCHES }}{% endif %}{% if SEARCH_WORDS %}{{ lang('COLON') }} <a href="{{ U_SEARCH_WORDS }}">{{ SEARCH_WORDS }}</a>{% endif %}</h3></div>
+{% EVENT phpbbgallery_core_search_results_facets %}
 
 {% if IGNORED_WORDS %} <p>{{ lang('IGNORED_TERMS') }}{{ lang('COLON') }} <strong>{{ IGNORED_WORDS }}</strong></p>{% endif %}
 

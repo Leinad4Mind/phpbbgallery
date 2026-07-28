@@ -18,6 +18,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added a dedicated `i_move` permission that lets registered image owners move their completed images into albums where they can upload, without granting moderator move access.
 - Added narrow post-persistence and review-validation lifecycle events so optional add-ons can safely attach per-image data to uploads and edits without entering the Core schema.
 - Added a per-image upload-review presentation event so add-ons can preserve validated metadata when the resumable second step must be shown again.
+- Added a permission-preserving search extension contract and template event for optional add-ons to contribute image filters and retain them across pagination.
 
 ### Security
 
