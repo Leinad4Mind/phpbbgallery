@@ -11,6 +11,12 @@ namespace sitesplat\bbprefix\core;
 
 class manager
 {
+	/**
+	 * How long a set stays cached. Bounded on purpose: if anything unexpected ever
+	 * does get stored, it corrects itself rather than waiting for a manual purge.
+	 */
+	private const CACHE_TTL = 3600;
+
 	protected $db;
 	protected $cache;
 	protected $template;
@@ -19,6 +25,14 @@ class manager
 	protected $tokens;
 	protected $prefix_instances;
 	protected $prefixes;
+
+	// Declared rather than created on the fly: dynamic properties are deprecated
+	// since PHP 8.2 and become an error in PHP 9.
+	protected $root_path;
+	protected $php_ext;
+	protected $group_names = [];
+	protected $forum_names = [];
+	protected $prefix_keys = [];
 
 	public function __construct(\phpbb\db\driver\factory $db, \phpbb\cache\driver\driver_interface $cache, \phpbb\template\template $template, \phpbb\request\request_interface $request, \phpbb\user $user, \phpbb\di\service_collection $tokens, \phpbb\controller\helper $helper, $phpbb_root_path, $php_ext)
 	{
@@ -47,39 +61,133 @@ class manager
 	 */
 	public function load_prefixes($refresh = false)
 	{
-		try {
-			if (false === ($this->prefixes = $this->cache->get('_prefixes')) || $refresh)
+		$this->prefixes = $this->load_cached('_prefixes', $refresh, BBPREFIX_TABLE, function ()
+		{
+			$prefixes = [];
+			$sql = 'SELECT id, prefix, name, forums, groups, on_index, bbcode_uid, bbcode_bitfield FROM ' . BBPREFIX_TABLE;
+			$result = $this->db->sql_query($sql);
+			while ($row = $this->db->sql_fetchrow($result))
 			{
-				// $this->cache->destroy('_prefixes');
-				// If we're refreshing, we have to reset the array first
-				$this->prefixes = [];
-				$sql = 'SELECT id, prefix, name, forums, groups, on_index, bbcode_uid, bbcode_bitfield FROM ' . BBPREFIX_TABLE;
-				$result = $this->db->sql_query($sql);
-				while ($row = $this->db->sql_fetchrow($result))
-				{
-					$this->prefixes[$row['id']] = [
-						'id'				=> $row['id'],
-						'prefix'			=> $row['prefix'],
-						'name'				=> $row['name'],
-						'forums'			=> $row['forums'],
-						'groups'			=> $row['groups'],
-						'on_index'			=> $row['on_index'],
-						'bbcode_uid'		=> $row['bbcode_uid'],
-						'bbcode_bitfield'	=> $row['bbcode_bitfield'],
-					];
-				}
-				$this->db->sql_freeresult($result);
-
-				$this->prefixes = $this->get_prefixes_atributes($this->prefixes);
-				$this->cache->put('_prefixes', $this->prefixes);
+				$prefixes[$row['id']] = [
+					'id'				=> $row['id'],
+					'prefix'			=> $row['prefix'],
+					'name'				=> $row['name'],
+					'forums'			=> $row['forums'],
+					'groups'			=> $row['groups'],
+					'on_index'			=> $row['on_index'],
+					'bbcode_uid'		=> $row['bbcode_uid'],
+					'bbcode_bitfield'	=> $row['bbcode_bitfield'],
+				];
 			}
-		} catch (Exception $e) {
-			// Log any exceptions
-			$this->log('Error loading prefixes: ' . $e->getMessage());
-			$this->log('prefixes: ' . $this->prefixes);
-		}
+			$this->db->sql_freeresult($result);
+
+			// Adding attributes does not change how many prefixes there are, so the
+			// row count stays comparable with the table count below.
+			return $this->get_prefixes_atributes($prefixes);
+		});
 
 		return $this;
+	}
+
+	/**
+	 * Read a prefix set from the cache, falling back to the database.
+	 *
+	 * Two things this deliberately does not do, because both are how prefixes used
+	 * to vanish until somebody cleared the cache by hand:
+	 *
+	 *  - it never accepts an empty or non-array cached value. The old check was
+	 *    `false === $cache->get(...)`, so an empty array counted as a valid answer
+	 *    and the database was never consulted again.
+	 *  - it never stores a set it cannot confirm is complete. A result that stops
+	 *    early - an aborted connection, a killed query under load - ends the fetch
+	 *    loop normally, and the short set would otherwise be cached and served as
+	 *    though it were the whole table.
+	 *
+	 * @param string   $cache_key Cache key to read and write
+	 * @param bool     $refresh   True to ignore whatever is cached
+	 * @param string   $table     Table the set is built from, for the count check
+	 * @param callable $fetch     Returns the full set from the database
+	 * @return array
+	 */
+	private function load_cached($cache_key, $refresh, $table, callable $fetch)
+	{
+		if (!$refresh)
+		{
+			try
+			{
+				$cached = $this->cache->get($cache_key);
+			}
+			catch (\Throwable $e)
+			{
+				$this->log('Error reading cache ' . $cache_key . ': ' . $e->getMessage());
+				$cached = false;
+			}
+
+			if (is_array($cached) && $cached !== [])
+			{
+				return $cached;
+			}
+		}
+
+		try
+		{
+			$rows = $fetch();
+		}
+		catch (\Throwable $e)
+		{
+			$this->log('Error loading ' . $cache_key . ': ' . $e->getMessage());
+
+			return [];
+		}
+
+		if (!is_array($rows) || $rows === [])
+		{
+			// Nothing worth caching, and caching it would suppress the next read.
+			return [];
+		}
+
+		$expected = $this->count_rows($table);
+		if ($expected !== null && $expected !== count($rows))
+		{
+			$this->log(sprintf(
+				'Refusing to cache %s: loaded %d of %d rows from %s.',
+				$cache_key,
+				count($rows),
+				$expected,
+				$table
+			));
+
+			// Still usable for this request; simply not trusted enough to keep.
+			return $rows;
+		}
+
+		$this->cache->put($cache_key, $rows, self::CACHE_TTL);
+
+		return $rows;
+	}
+
+	/**
+	 * Count the rows a set should contain.
+	 *
+	 * @param string $table Table name
+	 * @return int|null Null when the count itself could not be established
+	 */
+	private function count_rows($table)
+	{
+		try
+		{
+			$result = $this->db->sql_query('SELECT COUNT(*) AS total FROM ' . $table);
+			$total = $this->db->sql_fetchfield('total');
+			$this->db->sql_freeresult($result);
+
+			return ($total === false || $total === null) ? null : (int) $total;
+		}
+		catch (\Throwable $e)
+		{
+			$this->log('Error counting rows in ' . $table . ': ' . $e->getMessage());
+
+			return null;
+		}
 	}
 
 	/**
@@ -95,6 +203,7 @@ class manager
 		{
 			$this->group_names[$row['group_id']] = (isset($this->user->lang['G_' . $row['group_name']])) ? $this->user->lang['G_' . $row['group_name']] : $row['group_name'];
 		}
+		$this->db->sql_freeresult($result);
 
 		$sql = 'SELECT forum_id, forum_name FROM ' . FORUMS_TABLE . ' ORDER BY forum_name ASC';
 		$result = $this->db->sql_query($sql);
@@ -102,25 +211,29 @@ class manager
 		{
 			$this->forum_names[$row['forum_id']] = $row['forum_name'];
 		}
+		$this->db->sql_freeresult($result);
 
 		$this->prefix_keys = $prefixes;
-		
+
 		foreach($this->prefix_keys as $prefix)
 		{
 			if (isset($prefix['groups'])) {
-				foreach (json_decode($prefix['groups'], true) as $key)
+				// A prefix stores its groups as JSON; an empty or malformed value
+				// decodes to null, which is not something foreach can walk.
+				foreach ((array) json_decode($prefix['groups'], true) as $key)
 				{
-					$this->prefix_keys[$prefix['id']]['groupnames'][] = $this->group_names[$key];
+					// A group that has since been deleted is simply skipped, the same
+					// way a missing forum already is below.
+					if (isset($this->group_names[$key])) {
+						$this->prefix_keys[$prefix['id']]['groupnames'][] = $this->group_names[$key];
+					}
 				}
 			}
 			if (isset($prefix['forums'])) {
-				foreach (json_decode($prefix['forums'], true) as $key)
+				foreach ((array) json_decode($prefix['forums'], true) as $key)
 				{
 					if (isset($this->forum_names[$key])) {
 						$this->prefix_keys[$prefix['id']]['forumnames'][] = $this->forum_names[$key];
-					}
-					else {
-						error_log("Forum name index not found: " . $key);
 					}
 				}
 			}
@@ -136,14 +249,18 @@ class manager
 	public function validate_prefix($prefix = array())
 	{
 		if ($prefix['prefix'] == '' || $prefix['name'] == '') return array($this->user->lang['BBPREFIX_EMPTY_ERROR']);
-		$sql = 'SELECT id FROM ' . BBPREFIX_TABLE . " WHERE prefix = '" . $prefix['prefix'] . "'";
+		// Both values arrive straight from the ACP form, so they are escaped here
+		// rather than interpolated into the query as they used to be.
+		$sql = 'SELECT id FROM ' . BBPREFIX_TABLE . " WHERE prefix = '" . $this->db->sql_escape($prefix['prefix']) . "'";
 		$result = $this->db->sql_query($sql);
 		$row = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
 		if ($row && $row['id'] != $this->request->variable('prefix_id', 0)) return array($this->user->lang['BBPREFIX_TITLE_ERROR']);
 
-		$sql = 'SELECT id FROM ' . BBPREFIX_TABLE . " WHERE name = '" . $prefix['name'] . "'";
+		$sql = 'SELECT id FROM ' . BBPREFIX_TABLE . " WHERE name = '" . $this->db->sql_escape($prefix['name']) . "'";
 		$result = $this->db->sql_query($sql);
 		$row = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
 		if ($row && $row['id'] != $this->request->variable('prefix_id', 0)) return array($this->user->lang['BBPREFIX_NAME_ERROR']);
 
 		return array();
@@ -178,33 +295,25 @@ class manager
 	 */
 	public function load_prefix_instances($refresh = false)
 	{
-		try {
-			if (false === ($this->prefix_instances = $this->cache->get('_prefixes_used')) || $refresh)
+		$this->prefix_instances = $this->load_cached('_prefixes_used', $refresh, BBPREFIX_INSTANCES_TABLE, function ()
+		{
+			$instances = [];
+			$sql = 'SELECT id, prefix, topic, ordered, token_data FROM ' . BBPREFIX_INSTANCES_TABLE;
+			$result = $this->db->sql_query($sql);
+			while ($row = $this->db->sql_fetchrow($result))
 			{
-				// $this->cache->destroy('_prefixes_used');
-				// If we're refreshing, we have to reset the array first
-				$this->prefix_instances = [];
-				$sql = 'SELECT id, prefix, topic, ordered, token_data FROM ' . BBPREFIX_INSTANCES_TABLE;
-				$result = $this->db->sql_query($sql);
-				while ($row = $this->db->sql_fetchrow($result))
-				{
-					$this->prefix_instances[$row['id']] = [
-						'id'			=> $row['id'],
-						'prefix'		=> $row['prefix'],
-						'topic'			=> $row['topic'],
-						'ordered'		=> $row['ordered'],
-						'token_data'	=> $row['token_data'],
-					];
-				}
-				$this->db->sql_freeresult($result);
-
-				$this->cache->put('_prefixes_used', $this->prefix_instances);
+				$instances[$row['id']] = [
+					'id'			=> $row['id'],
+					'prefix'		=> $row['prefix'],
+					'topic'			=> $row['topic'],
+					'ordered'		=> $row['ordered'],
+					'token_data'	=> $row['token_data'],
+				];
 			}
-		} catch (Exception $e) {
-			// Log any exceptions
-			$this->log('Error loading prefix instances: ' . $e->getMessage());
-			$this->log('prefixes_used (instances): ' . $this->prefix_instances);
-		}
+			$this->db->sql_freeresult($result);
+
+			return $instances;
+		});
 
 		return $this;
 	}
