@@ -170,7 +170,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Restored WebP labels and selection in Bootstrap upload controls and replaced the remote upload-preview placeholder with the packaged fallback image.
 - Built Gallery UCP form actions from the board root, preventing personal-album and subalbum operations from posting to duplicated paths such as `/ucp.php/ucp.php`.
 - Corrected album bulk-selection controls in the UCP subscription manager and rendered the actual last-comment body with its author and timestamp.
-- Removed five redundant `imagedestroy()` calls, eliminating PHP 8.5 deprecation warnings while leaving GD objects to PHP's automatic lifecycle.
+- Removed all redundant `imagedestroy()` calls from production and test fixtures, eliminating PHP 8.5 deprecation warnings while leaving GD objects to PHP's automatic lifecycle.
 
 ### Performance
 
