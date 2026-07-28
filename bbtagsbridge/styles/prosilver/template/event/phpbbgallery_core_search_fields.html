@@ -1,9 +1,0 @@
-{% if S_BBTAGSBRIDGE_CAN_SEARCH %}
-<dl>
-	<dt><label for="gallery_tags">{{ lang('BBTAGSBRIDGE_SEARCH_TAGS') }}{{ lang('COLON') }}</label><br /><span>{{ lang('BBTAGSBRIDGE_SEARCH_TAGS_EXPLAIN') }}</span></dt>
-	<dd><input type="text" class="inputbox" name="tags" id="gallery_tags" value="{{ BBTAGSBRIDGE_SEARCH_TAGS }}" list="gallery_tags_suggestions" data-autocomplete-url="{{ U_BBTAGSBRIDGE_AUTOCOMPLETE }}" autocomplete="off" /></dd>
-	<dd><label for="tag_operator_all"><input type="radio" name="tag_operator" id="tag_operator_all" value="and"{% if S_BBTAGSBRIDGE_OPERATOR_AND %} checked="checked"{% endif %} /> {{ lang('BBTAGSBRIDGE_MATCH_ALL_TAGS') }}</label></dd>
-	<dd><label for="tag_operator_any"><input type="radio" name="tag_operator" id="tag_operator_any" value="or"{% if S_BBTAGSBRIDGE_OPERATOR_OR %} checked="checked"{% endif %} /> {{ lang('BBTAGSBRIDGE_MATCH_ANY_TAG') }}</label></dd>
-</dl>
-<datalist id="gallery_tags_suggestions"></datalist>
-{% endif %}
