@@ -152,7 +152,6 @@ class image_resolution_test extends TestCase
 	{
 		$image = imagecreatetruecolor($width, $height);
 		imagepng($image, $this->upload_path . $filename);
-		imagedestroy($image);
 	}
 
 	private function remove_directory(string $directory): void

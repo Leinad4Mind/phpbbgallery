@@ -157,7 +157,7 @@ final class controller_search_types_test extends TestCase
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/search.php');
 		$permission_check = strpos($source, '$this->auth->acl_get(\'u_search\')');
-		$search_execution = strpos($source, 'if ($keywords || $username || $user_id || $search_id || $submit)');
+		$search_execution = strpos($source, 'if ($keywords || $username || $user_id || $search_id || $submit || $additional_search_active)');
 
 		$this->assertNotFalse($permission_check);
 		$this->assertNotFalse($search_execution);
