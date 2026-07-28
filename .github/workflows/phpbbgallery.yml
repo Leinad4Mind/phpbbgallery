@@ -131,10 +131,14 @@ jobs:
         shell: bash
         run: |
           gallery_root='.functional/phpBB3/phpBB/ext/phpbbgallery'
+          sitesplat_root='.functional/phpBB3/phpBB/ext/sitesplat'
           mkdir -p "$gallery_root"
-          for component in core acpcleanup acpimport exif; do
+          mkdir -p "$sitesplat_root"
+          for component in core acpcleanup acpimport exif bbtagsimages; do
             cp -R "_forum/ext/phpbbgallery/$component" "$gallery_root/$component"
           done
+          cp -R '_forum/ext/sitesplat/BBCore' "$sitesplat_root/BBCore"
+          cp -R '_forum/ext/sitesplat/bbtags' "$sitesplat_root/bbtags"
 
       - name: Prepare phpBB functional environment
         shell: bash
@@ -153,6 +157,15 @@ jobs:
           --configuration .github/phpunit-sqlite3-github.xml
           --bootstrap ./tests/bootstrap.php
           phpBB/ext/phpbbgallery/core/tests/functional/gallery_lifecycle.php
+
+      - name: Run Gallery BBTags Images workflow test
+        shell: bash
+        working-directory: .functional/phpBB3
+        run: >-
+          phpBB/vendor/bin/phpunit
+          --configuration .github/phpunit-sqlite3-github.xml
+          --bootstrap ./tests/bootstrap.php
+          phpBB/ext/phpbbgallery/bbtagsimages/tests/functional/bbtagsimages_workflow.php
 
   quality:
     name: Lint and coding standard

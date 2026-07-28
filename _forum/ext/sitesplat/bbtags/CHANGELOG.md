@@ -46,3 +46,4 @@
 - Verify the English and Portuguese ACP language catalogues remain in sync.
 - Cover catalogue schema ordering, data preservation, deduplication and provider seeding.
 - Cover interrupted catalogue upgrades and runtime behavior while migrations are pending.
+- Exercise Gallery-provider suggestions through the authenticated MCP approval form in the phpBB functional environment.

@@ -30,3 +30,4 @@
 ### Tests
 
 - Cover provider registration, dependency enforcement, input limits, album inheritance, administrative policy persistence, policy classification, AND/OR SQL, permission-aware facets, idempotent relations, usage totals, lifecycle integration, deletion cleanup, style contracts and locale parity.
+- Exercise an authenticated phpBB workflow through the real upload review, MCP approval, Gallery search and image-deletion forms.
