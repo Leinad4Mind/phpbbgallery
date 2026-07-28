@@ -58,7 +58,7 @@ class m7_global_catalog_schema extends \phpbb\db\migration\migration
 					'PRIMARY_KEY' => array('tag_id', 'provider'),
 					'KEYS' => array(
 						'provider' => array('INDEX', array('provider', 'is_enabled')),
-						'usage' => array('INDEX', array('provider', 'usage_count')),
+						'provider_usage' => array('INDEX', array('provider', 'usage_count')),
 					),
 				),
 			),

@@ -81,6 +81,11 @@ class listener implements EventSubscriberInterface
 
 	public function load_tags()
 	{
+		if (!$this->catalog_is_ready())
+		{
+			return;
+		}
+
 		if ($this->config['bbtags_on_index'] == 2
 			|| ($this->config['bbtags_on_index'] == 1
 				&& substr($this->user->data['session_page'], 0, 6) == 'index.')
@@ -112,6 +117,11 @@ class listener implements EventSubscriberInterface
 
 	public function modify_template_vars($event)
 	{
+		if (!$this->catalog_is_ready())
+		{
+			return;
+		}
+
 		$data = $event->get_data();
 		$forum_id = $data['forum_id'];
 
@@ -178,6 +188,11 @@ class listener implements EventSubscriberInterface
 
 	public function save_tags($event)
 	{
+		if (!$this->catalog_is_ready())
+		{
+			return;
+		}
+
 		$data = $event['data'];
 		if ($this->auth->acl_get('u_bbtags') && ($event['mode'] == 'post' || $this->is_edit_first_post($event['mode'], $data)))
 		{
@@ -224,6 +239,11 @@ class listener implements EventSubscriberInterface
 
 	public function delete_tags($event)
 	{
+		if (!$this->catalog_is_ready())
+		{
+			return;
+		}
+
 		$topic_ids = $event['topic_ids'];
 		$this->moderation->cancel_items(manager::FORUM_PROVIDER, $topic_ids);
 		$this->manager->remove_tags_from_topics($topic_ids);
@@ -240,5 +260,16 @@ class listener implements EventSubscriberInterface
 		$permissions['u_bbtags_read'] = array('lang' => 'ACL_U_BBTAGS_READ', 'cat' => 'misc');
 		$permissions['m_bbtags_moderate'] = array('lang' => 'ACL_M_BBTAGS_MODERATE', 'cat' => 'post_actions');
 		$event['permissions'] = $permissions;
+	}
+
+	/**
+	 * Check whether the provider-independent catalogue migrations are complete
+	 *
+	 * @return bool
+	 */
+	private function catalog_is_ready()
+	{
+		return isset($this->config['bbtags_catalog_version'])
+			&& (int) $this->config['bbtags_catalog_version'] >= 1;
 	}
 }

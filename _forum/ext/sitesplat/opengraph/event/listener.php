@@ -29,6 +29,20 @@ class listener implements EventSubscriberInterface
 	protected $translator;
 
 	/**
+	 * BBTags manager, when the BBTags extension is enabled
+	 *
+	 * @var \sitesplat\bbtags\tags\manager|false
+	 */
+	protected $manager;
+
+	/**
+	 * Absolute board URL
+	 *
+	 * @var string
+	 */
+	protected $board_url;
+
+	/**
 	 * Constructor
 	 */
 	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, \phpbb\config\config $config, Container $container, $root_path, $php_ext)
@@ -82,17 +96,7 @@ class listener implements EventSubscriberInterface
 		// this is compatible...
 		$event_number = array_search($eventName, array_keys($this->getSubscribedEvents()));
 		
-		$ext_manager = $this->container->get('ext.manager');
-		if ($ext_manager->is_enabled('sitesplat/bbtags'))
-		{
-			$this->manager = new \sitesplat\bbtags\tags\manager(
-					$this->db,
-					$this->config,
-					$this->container->get('auth'),
-					$this->container->getParameter('sitesplat.bbtags.tables.bbtags'),
-					$this->container->getParameter('sitesplat.bbtags.tables.bbtags_topic')
-				);
-		}
+		$this->initialise_bbtags_manager();
 		$picture = ($event_number == 2) ? $event['detail_data']['picture'] : ($event['attachments'] ? $this->find_picture($event['attachments']) : null);
 		if ($picture && is_file($picture)) {
 			$imageinfo = getimagesize($picture);
@@ -139,6 +143,25 @@ class listener implements EventSubscriberInterface
 		));
 		
 		$this->user->add_lang_ext('sitesplat/opengraph', 'bbopengraph');
+	}
+
+	/**
+	 * Resolve BBTags through its public service to keep its dependencies encapsulated
+	 *
+	 * @return void
+	 */
+	private function initialise_bbtags_manager()
+	{
+		if (!isset($this->config['bbtags_catalog_version']) || (int) $this->config['bbtags_catalog_version'] < 1)
+		{
+			return;
+		}
+
+		$ext_manager = $this->container->get('ext.manager');
+		if ($ext_manager->is_enabled('sitesplat/bbtags') && $this->container->has('sitesplat.bbtags.manager'))
+		{
+			$this->manager = $this->container->get('sitesplat.bbtags.manager');
+		}
 	}
 
 	public function find_text($event)

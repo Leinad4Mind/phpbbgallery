@@ -16,6 +16,8 @@
 - Replace topic tags atomically, skip empty bulk inserts and clean stale tags and counts after topic deletion.
 - Enforce forum search, password and topic visibility boundaries on public tag results.
 - Handle unknown tags and non-AJAX suggestion requests without undefined runtime state.
+- Make the 1.2.0 catalogue upgrade discoverable, avoid the reserved MariaDB index name “usage” and repair interrupted upgrades before runtime queries resume.
+- Let OpenGraph resolve the public BBTags service without depending on its constructor signature.
 
 ### Added
 
@@ -42,3 +44,4 @@
 - Add isolated PHPUnit coverage for ACP security contracts and administrative tag operations.
 - Verify the English and Portuguese ACP language catalogues remain in sync.
 - Cover catalogue schema ordering, data preservation, deduplication and provider seeding.
+- Cover interrupted catalogue upgrades and runtime behavior while migrations are pending.

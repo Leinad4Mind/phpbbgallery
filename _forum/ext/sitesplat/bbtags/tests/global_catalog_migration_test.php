@@ -18,6 +18,7 @@ use sitesplat\bbtags\migrations\v33x\m8_global_catalog_data;
 use sitesplat\bbtags\migrations\v33x\m9_global_catalog_constraints;
 use sitesplat\bbtags\migrations\v33x\m10_hierarchical_scopes;
 use sitesplat\bbtags\migrations\v33x\m11_tag_moderation;
+use sitesplat\bbtags\migrations\v33x\m12_catalog_ready;
 
 class global_catalog_migration_test extends TestCase
 {
@@ -33,6 +34,11 @@ class global_catalog_migration_test extends TestCase
 		$this->assertSame(
 			array('tag_id', 'provider'),
 			$schema['add_tables']['phpbb_bbtags_context']['PRIMARY_KEY']
+		);
+		$this->assertArrayNotHasKey('usage', $schema['add_tables']['phpbb_bbtags_context']['KEYS']);
+		$this->assertSame(
+			array('INDEX', array('provider', 'usage_count')),
+			$schema['add_tables']['phpbb_bbtags_context']['KEYS']['provider_usage']
 		);
 	}
 
@@ -108,6 +114,51 @@ class global_catalog_migration_test extends TestCase
 		$this->assertSame(['permission.add', ['m_bbtags_moderate', true]], $data[0]);
 		$this->assertSame('mcp', $data[3][1][0]);
 		$this->assertSame('MCP_QUEUE', $data[3][1][1]);
+	}
+
+	public function test_catalog_is_marked_ready_only_after_all_schema_migrations(): void
+	{
+		$migration = $this->create_migration(m12_catalog_ready::class);
+
+		$this->assertSame(
+			['\sitesplat\bbtags\migrations\v33x\m11_tag_moderation'],
+			m12_catalog_ready::depends_on()
+		);
+		$this->assertSame(
+			['config.add', ['bbtags_catalog_version', 1]],
+			$migration->update_data()[1]
+		);
+	}
+
+	public function test_catalog_ready_migration_repairs_the_reserved_usage_index_name(): void
+	{
+		$db_tools = $this->createMock(tools_interface::class);
+		$index_checks = [];
+		$db_tools->expects($this->exactly(2))
+			->method('sql_index_exists')
+			->willReturnCallback(static function ($table, $index) use (&$index_checks)
+			{
+				$index_checks[] = [$table, $index];
+				return false;
+			});
+		$db_tools->expects($this->once())
+			->method('sql_create_index')
+			->with(
+				'phpbb_bbtags_context',
+				'provider_usage',
+				['provider', 'usage_count']
+			);
+
+		$migration = $this->create_migration(m12_catalog_ready::class, null, $db_tools);
+		$migration->ensure_provider_usage_index();
+
+		$this->assertSame(
+			[
+				['phpbb_bbtags_context', 'usage'],
+				['phpbb_bbtags_context', 'provider_usage'],
+			],
+			$index_checks
+		);
 	}
 
 	public function test_catalog_conversion_is_atomic_and_seeds_forum_provider()
@@ -201,12 +252,12 @@ class global_catalog_migration_test extends TestCase
 	 *
 	 * @return \phpbb\db\migration\migration
 	 */
-	private function create_migration($class, ?driver_interface $db = null)
+	private function create_migration($class, ?driver_interface $db = null, ?tools_interface $db_tools = null)
 	{
 		return new $class(
 			$this->createMock(config::class),
 			$db ?: $this->createMock(driver_interface::class),
-			$this->createMock(tools_interface::class),
+			$db_tools ?: $this->createMock(tools_interface::class),
 			'./',
 			'php',
 			'phpbb_'

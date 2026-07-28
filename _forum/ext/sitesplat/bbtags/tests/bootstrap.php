@@ -70,6 +70,11 @@ namespace
 		define('TOPICS_TABLE', 'phpbb_topics');
 	}
 
+	if (!interface_exists('Symfony\Component\EventDispatcher\EventSubscriberInterface'))
+	{
+		require_once __DIR__ . '/stubs/event_subscriber_interface.php';
+	}
+
 	require_once __DIR__ . '/stubs/phpbb_config.php';
 	require_once __DIR__ . '/stubs/phpbb_auth.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/db/driver/driver_interface.php';
@@ -82,9 +87,11 @@ namespace
 	require_once dirname(__DIR__) . '/provider/forum_provider.php';
 	require_once dirname(__DIR__) . '/tags/moderation.php';
 	require_once dirname(__DIR__) . '/tags/search_query.php';
+	require_once dirname(__DIR__) . '/event/listener.php';
 	require_once dirname(__DIR__) . '/migrations/v33x/m7_global_catalog_schema.php';
 	require_once dirname(__DIR__) . '/migrations/v33x/m8_global_catalog_data.php';
 	require_once dirname(__DIR__) . '/migrations/v33x/m9_global_catalog_constraints.php';
 	require_once dirname(__DIR__) . '/migrations/v33x/m10_hierarchical_scopes.php';
 	require_once dirname(__DIR__) . '/migrations/v33x/m11_tag_moderation.php';
+	require_once dirname(__DIR__) . '/migrations/v33x/m12_catalog_ready.php';
 }
