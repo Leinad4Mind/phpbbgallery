@@ -80,6 +80,7 @@ $lang = array_merge($lang, [
 	'UPLOAD_ICON'                       => 'Symbol hochladen',
 	'ICON_UPLOADED'                     => 'Das Symbol wurde hochgeladen und unten ausgewählt.',
 	'ICON_INVALID_TYPE'                 => 'Die hochgeladene Datei ist kein gültiges Bild oder SVG-Symbol.',
+	'ICON_STORAGE_UNAVAILABLE'          => 'Der Galerie-Symbolordner ist nicht verfügbar oder nicht beschreibbar: %s.',
 	'ICON_INVALID_SELECTION'            => 'Das ausgewählte Symbol wurde nicht gefunden.',
 	'NO_ICONS_AVAILABLE'                => 'Es wurden noch keine Symbole hochgeladen. Lade unten eines hoch, um zu beginnen.',
 	'ALBUM_NAME_EMPTY'                  => 'Du musst einen Namen für dieses Album angeben.',

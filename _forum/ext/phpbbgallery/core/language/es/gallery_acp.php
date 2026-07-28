@@ -80,6 +80,7 @@ $lang = array_merge($lang, [
 	'UPLOAD_ICON'                       => 'Subir icono',
 	'ICON_UPLOADED'                     => 'El icono se subió y quedó seleccionado abajo.',
 	'ICON_INVALID_TYPE'                 => 'El archivo subido no es una imagen ni un icono SVG válido.',
+	'ICON_STORAGE_UNAVAILABLE'          => 'La carpeta de iconos de la Galería no está disponible o no permite escritura: %s.',
 	'ICON_INVALID_SELECTION'            => 'No se encontró el icono seleccionado.',
 	'NO_ICONS_AVAILABLE'                => 'Todavía no hay ningún icono subido. Suba uno abajo para empezar.',
 	'ALBUM_NAME_EMPTY'                  => 'Debe introducir un nombre para este álbum.',

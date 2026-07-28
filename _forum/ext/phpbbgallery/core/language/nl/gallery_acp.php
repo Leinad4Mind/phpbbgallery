@@ -80,6 +80,7 @@ $lang = array_merge($lang, [
 	'UPLOAD_ICON'                       => 'Icoon uploaden',
 	'ICON_UPLOADED'                     => 'Het icoon is geüpload en hieronder geselecteerd.',
 	'ICON_INVALID_TYPE'                 => 'Het geüploade bestand is geen geldige afbeelding of SVG-icoon.',
+	'ICON_STORAGE_UNAVAILABLE'          => 'De map met Galerijpictogrammen is niet beschikbaar of niet beschrijfbaar: %s.',
 	'ICON_INVALID_SELECTION'            => 'Het geselecteerde icoon is niet gevonden.',
 	'NO_ICONS_AVAILABLE'                => 'Er zijn nog geen iconen geüpload. Upload er hieronder een om te beginnen.',
 	'ALBUM_NAME_EMPTY'                  => 'Je moet een naam voor dit album opgeven.',

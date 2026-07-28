@@ -151,6 +151,35 @@ class icon_manager_test extends TestCase
 		$this->assertSame($png, file_get_contents($this->icons_path . 'dvd_icon.png'));
 	}
 
+	public function test_upload_creates_a_missing_icon_directory_and_listing_guard(): void
+	{
+		$directory = $this->icons_path . 'created/';
+		$png = $this->png_bytes();
+		$source = $this->write_source_file('source.png', $png);
+		$file_upload = new icon_manager_test_file_upload();
+		$file_upload->next_upload = ['source' => $source, 'realname' => 'dvd.png', 'size' => strlen($png)];
+
+		$result = $this->build_manager($file_upload, $directory, rtrim($directory, '/\\'))->upload('icon_file');
+
+		$this->assertNull($result['error']);
+		$this->assertFileExists($directory . 'dvd.png');
+		$this->assertFileExists($directory . 'index.htm');
+	}
+
+	public function test_upload_reports_storage_failure_instead_of_invalid_content(): void
+	{
+		$png = $this->png_bytes();
+		$source = $this->write_source_file('source.png', $png);
+		$file_upload = new icon_manager_test_file_upload();
+		$file_upload->fail_move_silently = true;
+		$file_upload->next_upload = ['source' => $source, 'realname' => 'dvd.png', 'size' => strlen($png)];
+
+		$result = $this->new_manager($file_upload)->upload('icon_file');
+
+		$this->assertSame('ICON_STORAGE_UNAVAILABLE:' . rtrim($this->icons_path, '/\\'), $result['error']);
+		$this->assertNull($result['filename']);
+	}
+
 	public function test_upload_rejects_a_disallowed_extension(): void
 	{
 		$source = $this->write_source_file('source.exe', 'not an icon');
@@ -356,6 +385,7 @@ class icon_manager_test_file_upload
 {
 	/** @var array|null ['source' => path, 'realname' => name, 'size' => int] */
 	public ?array $next_upload = null;
+	public bool $fail_move_silently = false;
 
 	private array $allowed_extensions = [];
 	private int $max_filesize = 0;
@@ -383,7 +413,7 @@ class icon_manager_test_file_upload
 	public function handle_upload(string $type, string $form_field)
 	{
 		$upload = $this->next_upload;
-		$file = new icon_manager_test_filespec($upload['source'], $upload['realname']);
+		$file = new icon_manager_test_filespec($upload['source'], $upload['realname'], $this->fail_move_silently);
 
 		$extension = strtolower(pathinfo($upload['realname'], PATHINFO_EXTENSION));
 		if (!in_array($extension, $this->allowed_extensions, true))
@@ -406,11 +436,13 @@ class icon_manager_test_filespec
 	private string $source;
 	private string $realname;
 	private ?string $destination_file = null;
+	private bool $fail_move_silently;
 
-	public function __construct(string $source, string $realname)
+	public function __construct(string $source, string $realname, bool $fail_move_silently = false)
 	{
 		$this->source = $source;
 		$this->realname = $realname;
+		$this->fail_move_silently = $fail_move_silently;
 	}
 
 	public function clean_filename(string $mode): void
@@ -432,11 +464,15 @@ class icon_manager_test_filespec
 		return $property === 'destination_file' ? $this->destination_file : null;
 	}
 
-	public function move_file(string $destination, bool $overwrite = false, bool $skip_image_check = false): void
+	public function move_file(string $destination, bool $overwrite = false, bool $skip_image_check = false): bool
 	{
 		if (!empty($this->error))
 		{
-			return;
+			return false;
+		}
+		if ($this->fail_move_silently)
+		{
+			return false;
 		}
 
 		// The test double treats $destination as the already-absolute target
@@ -448,16 +484,18 @@ class icon_manager_test_filespec
 		{
 			$this->error[] = 'GENERAL_UPLOAD_ERROR';
 
-			return;
+			return false;
 		}
 
 		if (!@copy($this->source, $target))
 		{
 			$this->error[] = 'GENERAL_UPLOAD_ERROR';
 
-			return;
+			return false;
 		}
 
 		$this->destination_file = $target;
+
+		return true;
 	}
 }

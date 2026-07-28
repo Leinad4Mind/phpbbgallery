@@ -77,6 +77,7 @@ $lang = array_merge($lang, [
 	'UPLOAD_ICON'                          => 'Enviar ícone',
 	'ICON_UPLOADED'                        => 'O ícone foi enviado e selecionado abaixo.',
 	'ICON_INVALID_TYPE'                    => 'O arquivo enviado não é uma imagem ou ícone SVG válido.',
+	'ICON_STORAGE_UNAVAILABLE'             => 'A pasta de ícones da Galeria não está disponível ou não permite gravação: %s.',
 	'ICON_INVALID_SELECTION'               => 'O ícone selecionado não foi encontrado.',
 	'NO_ICONS_AVAILABLE'                   => 'Ainda não há nenhum ícone enviado. Envie um abaixo para começar.',
 	'ALBUM_NAME_EMPTY'                     => 'Por favor, insira o Nome do Álbum.',

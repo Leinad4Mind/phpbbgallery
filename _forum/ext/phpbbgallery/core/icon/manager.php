@@ -143,6 +143,14 @@ class manager
 	 */
 	public function upload(string $form_field): array
 	{
+		if (!$this->ensure_icons_directory())
+		{
+			return [
+				'error' => $this->language->lang('ICON_STORAGE_UNAVAILABLE', $this->icons_path_relative),
+				'filename' => null,
+			];
+		}
+
 		$this->file_upload->reset_vars();
 		$this->file_upload->set_allowed_extensions(self::ALLOWED_EXTENSIONS);
 		$this->file_upload->set_max_filesize(self::MAX_FILESIZE);
@@ -159,14 +167,28 @@ class manager
 		$file->clean_filename('real');
 		// Dimension/type checking below is our own, precise for both raster and SVG;
 		// phpBB's own image check cannot make sense of an SVG at all.
-		$file->move_file($this->icons_path_relative, false, true);
-		if (!empty($file->error))
+		$moved = $file->move_file($this->icons_path_relative, false, true);
+		if ($moved !== true || !empty($file->error))
 		{
-			return ['error' => $this->file_error($file), 'filename' => null];
+			return [
+				'error' => $this->file_error($file, 'ICON_STORAGE_UNAVAILABLE'),
+				'filename' => null,
+			];
 		}
 
-		$filename = basename((string) $file->get('destination_file'));
-		$destination = $this->icons_path . $filename;
+		$destination = realpath((string) $file->get('destination_file'));
+		$icons_root = realpath($this->icons_path);
+		if ($destination === false
+			|| $icons_root === false
+			|| strcasecmp(dirname($destination), $icons_root) !== 0)
+		{
+			return [
+				'error' => $this->language->lang('ICON_STORAGE_UNAVAILABLE', $this->icons_path_relative),
+				'filename' => null,
+			];
+		}
+
+		$filename = basename(str_replace('\\', '/', $destination));
 		$extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
 
 		$valid = ($extension === 'svg')
@@ -189,14 +211,49 @@ class manager
 	 * @param mixed $file filespec instance, or a non-object on total failure
 	 * @return string
 	 */
-	private function file_error(mixed $file): string
+	private function file_error(mixed $file, string $fallback = 'ICON_INVALID_TYPE'): string
 	{
 		if (is_object($file) && !empty($file->error))
 		{
 			return implode('<br />', $file->error);
 		}
 
-		return $this->language->lang('ICON_INVALID_TYPE');
+		return $fallback === 'ICON_STORAGE_UNAVAILABLE'
+			? $this->language->lang($fallback, $this->icons_path_relative)
+			: $this->language->lang($fallback);
+	}
+
+	/**
+	 * Ensure the fixed Gallery icon directory exists and cannot be a symlink.
+	 */
+	private function ensure_icons_directory(): bool
+	{
+		$directory = rtrim($this->icons_path, '/\\');
+		if (is_link($directory) || (file_exists($directory) && !is_dir($directory)))
+		{
+			return false;
+		}
+		if (!is_dir($directory))
+		{
+			$parent = realpath(dirname($directory));
+			if ($parent === false || !is_dir($parent) || !is_writable($parent) || !@mkdir($directory, 0755))
+			{
+				return false;
+			}
+		}
+		if (!is_writable($directory))
+		{
+			return false;
+		}
+
+		$index = $directory . DIRECTORY_SEPARATOR . 'index.htm';
+		if (!file_exists($index)
+			&& @file_put_contents($index, "<html>\n<head><title></title></head>\n<body></body>\n</html>\n") === false)
+		{
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
