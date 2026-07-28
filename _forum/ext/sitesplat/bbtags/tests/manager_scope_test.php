@@ -367,6 +367,32 @@ class manager_scope_test extends TestCase
 		));
 	}
 
+	public function test_forum_policy_tree_preserves_categories_and_depth(): void
+	{
+		$db = $this->createMock(driver_interface::class);
+		$db->method('sql_query')->willReturnArgument(0);
+		$forums = [
+			['forum_id' => 10, 'parent_id' => 0, 'forum_name' => 'Comics', 'left_id' => 1],
+			['forum_id' => 20, 'parent_id' => 10, 'forum_name' => 'Manga', 'left_id' => 2],
+			['forum_id' => 30, 'parent_id' => 20, 'forum_name' => 'Korean', 'left_id' => 3],
+			['forum_id' => 40, 'parent_id' => 99, 'forum_name' => 'Detached', 'left_id' => 6],
+		];
+		$db->method('sql_fetchrow')->willReturnCallback(static function () use (&$forums)
+		{
+			return array_shift($forums) ?: false;
+		});
+
+		$this->assertSame(
+			[
+				['forum_id' => 10, 'parent_id' => 0, 'forum_name' => 'Comics', 'depth' => 0],
+				['forum_id' => 20, 'parent_id' => 10, 'forum_name' => 'Manga', 'depth' => 1],
+				['forum_id' => 30, 'parent_id' => 20, 'forum_name' => 'Korean', 'depth' => 2],
+				['forum_id' => 40, 'parent_id' => 99, 'forum_name' => 'Detached', 'depth' => 0],
+			],
+			$this->create_manager($db)->get_forum_tree()
+		);
+	}
+
 	public function test_allowed_forums_are_resolved_independently_for_each_tag()
 	{
 		$db = $this->createMock(driver_interface::class);

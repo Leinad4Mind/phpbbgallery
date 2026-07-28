@@ -1011,6 +1011,52 @@ class manager
 	}
 
 	/**
+	 * Return the complete forum tree in display order for policy editing.
+	 *
+	 * Categories remain in the tree because rules assigned to them are inherited
+	 * by every descendant forum.
+	 *
+	 * @return array<int, array{forum_id: int, parent_id: int, forum_name: string, depth: int}>
+	 */
+	public function get_forum_tree(): array
+	{
+		$sql = 'SELECT forum_id, parent_id, forum_name, left_id
+			FROM ' . FORUMS_TABLE . '
+			ORDER BY left_id ASC, forum_id ASC';
+		$result = $this->db->sql_query($sql);
+		$rows = [];
+		$parents = [];
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$forum_id = (int) $row['forum_id'];
+			$parent_id = max(0, (int) $row['parent_id']);
+			$rows[$forum_id] = [
+				'forum_id' => $forum_id,
+				'parent_id' => $parent_id,
+				'forum_name' => (string) $row['forum_name'],
+				'depth' => 0,
+			];
+			$parents[$forum_id] = $parent_id;
+		}
+		$this->db->sql_freeresult($result);
+
+		foreach ($rows as $forum_id => &$row)
+		{
+			$parent_id = $parents[$forum_id];
+			$seen = [$forum_id => true];
+			while ($parent_id > 0 && isset($parents[$parent_id]) && !isset($seen[$parent_id]))
+			{
+				$seen[$parent_id] = true;
+				$row['depth']++;
+				$parent_id = $parents[$parent_id];
+			}
+		}
+		unset($row);
+
+		return array_values($rows);
+	}
+
+	/**
 	 * Resolve the forum identifiers in which each tag is currently available.
 	 *
 	 * @param array $tag_ids Tag identifiers

@@ -1,0 +1,76 @@
+{% include 'overall_header.html' %}
+
+<a id="maincontent"></a>
+<a href="{{ U_BACK }}" style="float: {{ S_CONTENT_FLOW_END }};">&laquo; {{ lang('BACK') }}</a>
+
+<h1>{{ lang('ACP_BBTAGS_POLICY') }}</h1>
+<p>{{ lang('ACP_BBTAGS_POLICY_EXPLAIN', TAG_NAME) }}</p>
+
+<form id="acp_bbtags_policy" method="post" action="{{ U_ACTION }}">
+	<fieldset>
+		<legend>{{ lang('ACP_BBTAGS_POLICY_PROVIDER') }}</legend>
+		<dl>
+			<dt>
+				<label>{{ lang('ACP_BBTAGS_POLICY_ENABLED') }}</label>
+				<br><span>{{ lang('ACP_BBTAGS_POLICY_ENABLED_EXPLAIN') }}</span>
+			</dt>
+			<dd>
+				<label><input type="radio" class="radio" name="is_enabled" value="1"{% if S_BBTAGS_POLICY_ENABLED %} checked{% endif %}> {{ lang('YES') }}</label>
+				<label><input type="radio" class="radio" name="is_enabled" value="0"{% if not S_BBTAGS_POLICY_ENABLED %} checked{% endif %}> {{ lang('NO') }}</label>
+			</dd>
+		</dl>
+		<dl>
+			<dt>
+				<label for="scope_mode">{{ lang('ACP_BBTAGS_POLICY_MODE') }}</label>
+				<br><span>{{ lang('ACP_BBTAGS_POLICY_MODE_EXPLAIN') }}</span>
+			</dt>
+			<dd>
+				<select id="scope_mode" name="scope_mode">
+					<option value="global"{% if S_BBTAGS_POLICY_GLOBAL %} selected{% endif %}>{{ lang('ACP_BBTAGS_POLICY_MODE_GLOBAL') }}</option>
+					<option value="restricted"{% if S_BBTAGS_POLICY_RESTRICTED %} selected{% endif %}>{{ lang('ACP_BBTAGS_POLICY_MODE_RESTRICTED') }}</option>
+				</select>
+			</dd>
+		</dl>
+	</fieldset>
+
+	<fieldset>
+		<legend>{{ lang('ACP_BBTAGS_POLICY_FORUM_RULES') }}</legend>
+		<p>{{ lang('ACP_BBTAGS_POLICY_FORUM_RULES_EXPLAIN') }}</p>
+		{% if bbtags_forum_policy %}
+			<table class="table1 zebra-table">
+				<thead>
+					<tr>
+						<th>{{ lang('ACP_BBTAGS_POLICY_FORUM') }}</th>
+						<th>{{ lang('ACP_BBTAGS_POLICY_RULE') }}</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for forum in bbtags_forum_policy %}
+						<tr>
+							<td>{{ forum.PREFIX }}{{ forum.NAME }}</td>
+							<td>
+								<select name="rules[{{ forum.ID }}]">
+									<option value="inherit"{% if forum.S_INHERIT %} selected{% endif %}>{{ lang('ACP_BBTAGS_POLICY_RULE_INHERIT') }}</option>
+									<option value="allow"{% if forum.S_ALLOW %} selected{% endif %}>{{ lang('ACP_BBTAGS_POLICY_RULE_ALLOW') }}</option>
+									<option value="deny"{% if forum.S_DENY %} selected{% endif %}>{{ lang('ACP_BBTAGS_POLICY_RULE_DENY') }}</option>
+								</select>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		{% else %}
+			<p>{{ lang('ACP_BBTAGS_POLICY_NO_FORUMS') }}</p>
+		{% endif %}
+
+		<p class="submit-buttons">
+			<input type="hidden" name="action" value="save_policy">
+			<input type="hidden" name="tag_id" value="{{ TAG_ID }}">
+			<input class="button1" type="submit" name="submit" value="{{ lang('SUBMIT') }}">
+		</p>
+	</fieldset>
+
+	{{ S_FORM_TOKEN }}
+</form>
+
+{% include 'overall_footer.html' %}

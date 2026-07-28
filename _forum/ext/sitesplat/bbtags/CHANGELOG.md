@@ -37,6 +37,7 @@
 - Classify submitted provider tags as available, suggestible or blocked so explicit denials cannot be bypassed through moderation.
 - Expose generic provider tag discovery and effective-scope resolution for content integrations.
 - Expose atomic provider-policy administration over the shared catalogue and inherited scope rules.
+- Edit forum_topics availability in the ACP with global or restricted defaults and inherited allow or deny rules across the forum tree.
 
 ### Tests
 

@@ -19,7 +19,7 @@ class acp_security_test extends TestCase
 
 		$this->assertStringContainsString('add_form_key(self::FORM_KEY)', $module);
 		$this->assertStringContainsString('check_form_key(self::FORM_KEY)', $module);
-		$this->assertStringContainsString("array('delete', 'gaUpdate', 'save_config')", $module);
+		$this->assertStringContainsString("array('delete', 'gaUpdate', 'save_config', 'save_policy')", $module);
 	}
 
 	public function test_acp_template_posts_delete_and_form_tokens()
@@ -40,6 +40,24 @@ class acp_security_test extends TestCase
 		$this->assertStringContainsString('$this->manager->replace_predefined_tags(', $module);
 		$this->assertStringContainsString('$this->manager->get_predefined_tags()', $module);
 		$this->assertStringNotContainsString('GROUP_CONCAT(', $module);
+	}
+
+	public function test_forum_policy_editor_uses_scoped_provider_api()
+	{
+		$module = file_get_contents(dirname(__DIR__) . '/acp/bbtags_module.php');
+		$list_template = file_get_contents(dirname(__DIR__) . '/adm/style/acp_bbtags.html');
+		$policy_template = file_get_contents(dirname(__DIR__) . '/adm/style/acp_bbtags_policy.html');
+
+		$this->assertStringContainsString('manager::FORUM_PROVIDER', $module);
+		$this->assertStringContainsString('get_provider_policies(', $module);
+		$this->assertStringContainsString('get_forum_tree()', $module);
+		$this->assertStringContainsString('get_scope_rules(', $module);
+		$this->assertStringContainsString('save_provider_policy(', $module);
+		$this->assertStringContainsString("array('inherit', 'allow', 'deny')", $module);
+		$this->assertStringContainsString('{records.U_POLICY}', $list_template);
+		$this->assertStringContainsString('name="action" value="save_policy"', $policy_template);
+		$this->assertStringContainsString('name="rules[{{ forum.ID }}]"', $policy_template);
+		$this->assertStringContainsString('{{ S_FORM_TOKEN }}', $policy_template);
 	}
 
 	public function test_listener_declares_the_assigned_manager_property()

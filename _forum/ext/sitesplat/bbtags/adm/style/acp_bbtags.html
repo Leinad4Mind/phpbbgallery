@@ -93,7 +93,7 @@
         <td style="width:70px;">{L_QTY}
 			<a href="{U_ACTION}&amp;sk=hits&amp;sd=d" title="{L_DESCENDING}"><i class="fa fa-arrow-up"<!-- IF U_NAME == 'hits' and U_SORT == 'd' --> id="act-arrow"<!-- ENDIF -->></i></a> <a href="{U_ACTION}&amp;sk=hits&amp;sd=a" title="{L_ASCENDING}"><i class="fa fa-arrow-down"<!-- IF U_NAME == 'hits' and U_SORT == 'a' --> id="act-arrow"<!-- ENDIF -->></i></a>
         </td>
-        <td style="width:70px;">{L_CHANGE}</td>
+        <td style="width:190px;">{L_CHANGE}</td>
     </tr>
     
     <!-- BEGIN records -->
@@ -103,6 +103,7 @@
         <td>{records.FORUMS}</td>
         <td>{records.COUNT}</td>
         <td>
+			<a class="button2" href="{records.U_POLICY}">{L_ACP_BBTAGS_POLICY}</a>
           	<img id="cbChangeId{records.ID}" onclick="cbCmd('cbChange', {records.ID})" src="{EXT_PATH}adm/style/css/images/edit.png" style="width:16px; cursor:pointer;" title="{L_CHANGE}" /> 
 			<button type="submit" name="delete_id" value="{records.ID}" class="button2" title="{L_DELETE}"><i class="fa fa-trash"></i></button>
         </td>

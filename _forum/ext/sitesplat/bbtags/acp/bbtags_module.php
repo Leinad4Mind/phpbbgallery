@@ -8,6 +8,9 @@
 
 namespace sitesplat\bbtags\acp;
 
+use phpbb\request\request_interface;
+use sitesplat\bbtags\tags\manager;
+
 class bbtags_module
 {
 	const FORM_KEY = 'sitesplat/bbtags';
@@ -64,7 +67,7 @@ class bbtags_module
 			$action = 'delete';
 		}
 
-		if (in_array($action, array('delete', 'gaUpdate', 'save_config')) && !check_form_key(self::FORM_KEY))
+		if (in_array($action, array('delete', 'gaUpdate', 'save_config', 'save_policy')) && !check_form_key(self::FORM_KEY))
 		{
 			trigger_error($this->user->lang('FORM_INVALID') . adm_back_link($this->u_action), E_USER_WARNING);
 		}
@@ -105,6 +108,14 @@ class bbtags_module
 					trigger_error($this->user->lang('BBTAGS_SETTINGS_SAVED') . adm_back_link($this->u_action));
 				}
 			break;
+
+			case 'policy':
+			case 'save_policy':
+				$this->display_forum_policy(
+					$this->request->variable('tag_id', 0),
+					$action === 'save_policy'
+				);
+				return;
 
 			default:
 				$this->display_tags($start, $per_page, $sk, $sd);
@@ -193,6 +204,7 @@ class bbtags_module
 				'TAG' => htmlspecialchars($row['tag'], ENT_QUOTES, 'UTF-8'),
 				'COUNT' => (int) $row['count'],
 				'FORUMS' => isset($tag_forums[$tag_id]) ? implode(', ', $tag_forums[$tag_id]) : '',
+				'U_POLICY' => $this->u_action . '&amp;action=policy&amp;tag_id=' . $tag_id,
 			));
 		}
 		$javascript[] = "\ncb.data = cbl;\n";
@@ -204,6 +216,112 @@ class bbtags_module
 			'NEXTURL' => ($start + $per_page < $total_tags) ? $this->u_action . '&start=' . ($start + $per_page) . '&sd=' . $sd . '&sk=' . $sk : '',
 			'PREVURL' => ($start >= $per_page) ? $this->u_action . '&start=' . ($start - $per_page) . '&sd=' . $sd . '&sk=' . $sk : '',
 		));
+	}
+
+	/**
+	 * Display and persist the forum_topics policy for one catalogue tag.
+	 *
+	 * @param int  $tag_id Tag identifier
+	 * @param bool $save   Whether the submitted policy must be persisted
+	 */
+	protected function display_forum_policy($tag_id, $save)
+	{
+		$policies = $this->manager->get_provider_policies(manager::FORUM_PROVIDER);
+		$selected = null;
+		foreach ($policies as $policy)
+		{
+			if ((int) $policy['id'] === (int) $tag_id)
+			{
+				$selected = $policy;
+				break;
+			}
+		}
+		if ($selected === null)
+		{
+			trigger_error($this->user->lang('BBTAGS_TAG_NOT_FOUND') . adm_back_link($this->u_action), E_USER_WARNING);
+		}
+
+		$forums = $this->manager->get_forum_tree();
+		if ($save)
+		{
+			$scope_mode = $this->request->variable(
+				'scope_mode',
+				'restricted',
+				false,
+				request_interface::POST
+			);
+			$submitted_rules = $this->request->variable(
+				'rules',
+				array(0 => ''),
+				false,
+				request_interface::POST
+			);
+			if (!in_array($scope_mode, array('global', 'restricted'), true))
+			{
+				trigger_error($this->user->lang('FORM_INVALID') . adm_back_link($this->u_action), E_USER_WARNING);
+			}
+
+			$rules = array();
+			foreach ($forums as $forum)
+			{
+				$forum_id = (int) $forum['forum_id'];
+				$rule = isset($submitted_rules[$forum_id]) ? (string) $submitted_rules[$forum_id] : 'inherit';
+				if (!in_array($rule, array('inherit', 'allow', 'deny'), true))
+				{
+					trigger_error($this->user->lang('FORM_INVALID') . adm_back_link($this->u_action), E_USER_WARNING);
+				}
+				$rules[$forum_id] = $rule;
+			}
+
+			$is_enabled = $this->request->variable(
+				'is_enabled',
+				0,
+				false,
+				request_interface::POST
+			) === 1;
+			if (!$this->manager->save_provider_policy(
+				(int) $selected['id'],
+				manager::FORUM_PROVIDER,
+				$is_enabled,
+				$scope_mode,
+				$rules
+			))
+			{
+				trigger_error($this->user->lang('ACP_BBTAGS_POLICY_SAVE_FAILED') . adm_back_link($this->u_action), E_USER_WARNING);
+			}
+
+			trigger_error(
+				$this->user->lang('ACP_BBTAGS_POLICY_SAVED')
+				. adm_back_link($this->u_action . '&amp;action=policy&amp;tag_id=' . (int) $selected['id'])
+			);
+		}
+
+		$rules = $this->manager->get_scope_rules((int) $selected['id'], manager::FORUM_PROVIDER);
+		$this->tpl_name = 'acp_bbtags_policy';
+		$this->page_title = 'ACP_BBTAGS_POLICY';
+		$this->template->assign_vars(array(
+			'U_ACTION' => $this->u_action,
+			'U_BACK' => $this->u_action,
+			'TAG_ID' => (int) $selected['id'],
+			'TAG_NAME' => htmlspecialchars((string) $selected['tag'], ENT_QUOTES, 'UTF-8'),
+			'S_BBTAGS_POLICY_ENABLED' => !empty($selected['is_enabled']),
+			'S_BBTAGS_POLICY_GLOBAL' => $selected['scope_mode'] === 'global',
+			'S_BBTAGS_POLICY_RESTRICTED' => $selected['scope_mode'] !== 'global',
+		));
+
+		foreach ($forums as $forum)
+		{
+			$forum_id = (int) $forum['forum_id'];
+			$rule = isset($rules[$forum_id]) ? $rules[$forum_id] : 'inherit';
+			$this->template->assign_block_vars('bbtags_forum_policy', array(
+				'ID' => $forum_id,
+				'NAME' => htmlspecialchars((string) $forum['forum_name'], ENT_QUOTES, 'UTF-8'),
+				'PREFIX' => str_repeat("\u{2014} ", (int) $forum['depth']),
+				'S_INHERIT' => $rule === 'inherit',
+				'S_ALLOW' => $rule === 'allow',
+				'S_DENY' => $rule === 'deny',
+			));
+		}
 	}
 
 	/**
