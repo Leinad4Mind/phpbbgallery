@@ -121,6 +121,25 @@ final class architecture_test extends TestCase
 		$this->assertStringNotContainsString('innerHTML', $javascript);
 	}
 
+	public function test_album_policy_configuration_is_in_acp_but_moderation_remains_in_mcp(): void
+	{
+		$info = (string) file_get_contents($this->root . '/acp/policy_info.php');
+		$module = (string) file_get_contents($this->root . '/acp/policy_module.php');
+		$template = (string) file_get_contents($this->root . '/adm/style/acp_bbtagsbridge_policy.html');
+		$migration = (string) file_get_contents($this->root . '/migrations/m2_acp_policy.php');
+		$mcp = (string) file_get_contents(dirname($this->root, 2) . '/sitesplat/bbtags/mcp/bbtags_module.php');
+
+		$this->assertStringContainsString('acl_a_gallery_albums', $info);
+		$this->assertStringContainsString('acl_a_gallery_albums', $migration);
+		$this->assertStringContainsString('add_form_key(self::FORM_KEY)', $module);
+		$this->assertStringContainsString('check_form_key(self::FORM_KEY)', $module);
+		$this->assertStringContainsString('save_provider_policy(', $module);
+		$this->assertStringContainsString('action="{{ U_ACTION }}"', $template);
+		$this->assertStringNotContainsString('approve', $module);
+		$this->assertStringNotContainsString('reject', $module);
+		$this->assertStringContainsString("['approve', 'reject']", $mcp);
+	}
+
 	public function test_every_core_locale_has_complete_bridge_catalogues(): void
 	{
 		$core_locales = array_map('basename', glob(dirname($this->root) . '/core/language/*', GLOB_ONLYDIR) ?: []);
@@ -133,7 +152,7 @@ final class architecture_test extends TestCase
 		{
 			$files = array_map('basename', glob($this->root . '/language/' . $locale . '/*.php') ?: []);
 			sort($files);
-			$this->assertSame(['bbtagsbridge.php', 'info_bbtagsbridge.php'], $files, $locale);
+			$this->assertSame(['bbtagsbridge.php', 'info_acp_bbtagsbridge.php'], $files, $locale);
 			foreach ($files as $file)
 			{
 				$this->assertSame(

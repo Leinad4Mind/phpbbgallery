@@ -13,11 +13,13 @@ final class fake_db implements \phpbb\db\driver\driver_interface
 {
 	public array $images = [];
 	public array $albums = [];
+	public array $album_rows = [];
 	public array $catalogue = [];
 	public array $relations = [];
 	public array $usage = [];
 	public array $facet_rows = [];
 	public array $transactions = [];
+	public string $last_query = '';
 	private array $pending = [];
 	private array $built = [];
 	private ?array $snapshot = null;
@@ -29,6 +31,7 @@ final class fake_db implements \phpbb\db\driver\driver_interface
 
 	public function sql_query($sql, $cache_ttl = 0): string|false
 	{
+		$this->last_query = (string) $sql;
 		$this->pending = [];
 		if (preg_match('/FROM images\s+WHERE image_id = (\d+)/s', $sql, $matches))
 		{
@@ -37,6 +40,10 @@ final class fake_db implements \phpbb\db\driver\driver_interface
 			{
 				$this->pending[] = ['image_album_id' => $this->images[$image_id]];
 			}
+		}
+		else if (str_contains($sql, 'SELECT album_id, parent_id, album_name, left_id') && str_contains($sql, 'FROM albums'))
+		{
+			$this->pending = $this->album_rows;
 		}
 		else if (str_contains($sql, 'SELECT album_id, parent_id') && str_contains($sql, 'FROM albums'))
 		{
