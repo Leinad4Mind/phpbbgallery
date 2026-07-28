@@ -416,6 +416,7 @@ class config_module
 					'description_length'	=> ['lang' => 'IMAGE_DESC_MAX_LENGTH',	'validate' => 'int',	'type' => 'text:7:5',		'append' => 'CHARACTERS'],
 					'disp_nextprev_thumbnail'	=> ['lang' => 'DISP_NEXTPREV_THUMB','validate' => 'bool',	'type' => 'radio:yes_no'],
 					'disp_image_url'		=> ['lang' => 'VIEW_IMAGE_URL',		'validate' => 'bool',	'type' => 'radio:yes_no'],
+					'disp_resolution'		=> ['lang' => 'DISP_RESOLUTION',		'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 				],
 
 				'THUMBNAIL_SETTINGS'	=> [

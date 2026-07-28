@@ -94,6 +94,17 @@ $lang = array_merge($lang, [
 
 	'DISP_EXIF_DATA'			=> 'Afficher les informations des images',
 	'DISP_EXIF_DATA_EXP'		=> 'Cette fonctionnalité ne peut pas être utilisée pour le moment, car la fonction « exif_read_data » n’est pas incluse dans l’installation de votre PHP.',
+	'DISP_EXIF_DATE'      => 'Afficher « Image prise le »',
+	'DISP_EXIF_FOCAL'     => 'Afficher la distance focale',
+	'DISP_EXIF_EXPOSURE'  => 'Afficher la vitesse d’obturation',
+	'DISP_EXIF_APERTURE'  => 'Afficher l’ouverture',
+	'DISP_EXIF_ISO'       => 'Afficher la sensibilité ISO',
+	'DISP_EXIF_WHITEB'    => 'Afficher la balance des blancs',
+	'DISP_EXIF_FLASH'     => 'Afficher le flash',
+	'DISP_EXIF_CAM_MODEL' => 'Afficher le modèle d’appareil',
+	'DISP_EXIF_EXPOSURE_PROG' => 'Afficher le programme d’exposition',
+	'DISP_EXIF_EXPOSURE_BIAS' => 'Afficher la correction d’exposition',
+	'DISP_EXIF_METERING_MODE' => 'Afficher le mode de mesure',
 	'SHOW_EXIF'					=> 'Afficher/Cacher',
 	'VIEWEXIFS_DEFAULT'			=> 'Voir les informations des images par défaut',
 

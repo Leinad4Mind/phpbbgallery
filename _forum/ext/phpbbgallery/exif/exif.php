@@ -311,16 +311,22 @@ class exif
 	*
 	* @param	bool	$expand_view	Shall we expand the Exif data on page view or collapse?
 	* @param	string	$block			Name of the template loop the Exif's are displayed in.
+	* @param	array	$enabled_fields	Prepared fields the board displays. An empty array
+	*									means every field, which keeps older callers working.
 	*/
-	public function send_to_template(bool $expand_view = true, string $block = 'exif_value'): void
+	public function send_to_template(bool $expand_view = true, string $block = 'exif_value', array $enabled_fields = []): void
 	{
 		$this->prepare_data();
 
-		if (!empty($this->prepared_data))
+		$fields = empty($enabled_fields)
+			? $this->prepared_data
+			: array_intersect_key($this->prepared_data, array_flip($enabled_fields));
+
+		if (!empty($fields))
 		{
 			global $template, $user;
 
-			foreach ($this->prepared_data as $exif => $value)
+			foreach ($fields as $exif => $value)
 			{
 				$template->assign_block_vars($block, [
 					'EXIF_NAME'			=> $user->lang[strtoupper($exif)],

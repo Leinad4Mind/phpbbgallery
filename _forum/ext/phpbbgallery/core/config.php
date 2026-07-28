@@ -45,6 +45,7 @@ class config
 		'disp_image_url'			=> true,
 		'disp_login'				=> true,
 		'disp_nextprev_thumbnail'	=> false,
+		'disp_resolution'			=> true,
 		'disp_statistic'			=> true,
 		'disp_total_images'			=> true,
 		'disp_whoisonline'			=> true,

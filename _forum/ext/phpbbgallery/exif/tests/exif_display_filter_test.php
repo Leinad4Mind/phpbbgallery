@@ -1,0 +1,175 @@
+<?php
+// phpcs:disable Generic.Files.OneClassPerFile.MultipleFound -- display filter test doubles intentionally share this fixture.
+/**
+ * phpBB Gallery - Exif Extension tests
+ *
+ * @package   phpbbgallery/exif
+ * @copyright 2026 Leinad4Mind
+ * @license   GPL-2.0-only
+ */
+
+namespace phpbbgallery\exif\tests;
+
+use PHPUnit\Framework\TestCase;
+use phpbbgallery\exif\exif;
+use phpbbgallery\exif\event\exif_listener;
+
+class exif_display_filter_test extends TestCase
+{
+	// phpcs:ignore PhpbbCodingStandard.NamingConventions.LowercaseUnderscoredFunctions.NotAllowed -- PHPUnit lifecycle API.
+	protected function setUp(): void
+	{
+		global $template, $user;
+
+		$template = new filter_test_template();
+		$user = new filter_test_user();
+	}
+
+	/**
+	 * Three fields chosen because prepare_data() derives them without needing any
+	 * language string of its own, keeping the fixture small.
+	 */
+	private function new_handler(): exif
+	{
+		$handler = new exif('/missing/image.jpg');
+		$handler->data = [
+			'EXIF' => [
+				'FNumber' => '28/10',
+				'ISOSpeedRatings' => 400,
+			],
+			'IFD0' => [
+				'Model' => 'canon eos',
+			],
+		];
+
+		return $handler;
+	}
+
+	public function test_an_empty_filter_keeps_every_field(): void
+	{
+		global $template;
+
+		// Backwards compatible: callers that pass nothing still get the full block.
+		$this->new_handler()->send_to_template();
+
+		$this->assertSame(
+			['EXIF_APERTURE', 'EXIF_ISO', 'EXIF_CAM_MODEL'],
+			$template->assigned_names()
+		);
+		$this->assertTrue($template->vars['S_EXIF_DATA']);
+	}
+
+	public function test_only_the_enabled_fields_reach_the_template(): void
+	{
+		global $template;
+
+		$this->new_handler()->send_to_template(true, 'exif_value', ['exif_aperture', 'exif_cam_model']);
+
+		$this->assertSame(['EXIF_APERTURE', 'EXIF_CAM_MODEL'], $template->assigned_names());
+	}
+
+	public function test_disabling_every_field_hides_the_block_entirely(): void
+	{
+		global $template;
+
+		$this->new_handler()->send_to_template(true, 'exif_value', ['exif_focal']);
+
+		$this->assertSame([], $template->assigned_names());
+		// Without this the template would render an empty Exif fieldset.
+		$this->assertArrayNotHasKey('S_EXIF_DATA', $template->vars);
+	}
+
+	public function test_the_expand_preference_still_reaches_the_template(): void
+	{
+		global $template;
+
+		$this->new_handler()->send_to_template(false, 'exif_value', ['exif_iso']);
+
+		$this->assertFalse($template->vars['S_VIEWEXIF']);
+	}
+
+	public function test_every_display_field_maps_to_a_distinct_config_name(): void
+	{
+		$names = array_map(
+			static fn (string $field): string => exif_listener::display_config_name($field),
+			exif_listener::DISPLAY_FIELDS
+		);
+
+		$this->assertSame($names, array_unique($names));
+		$this->assertSame('exif_show_cam_model', exif_listener::display_config_name('exif_cam_model'));
+		$this->assertSame('exif_show_date', exif_listener::display_config_name('exif_date'));
+	}
+
+	public function test_the_display_fields_match_what_prepare_data_can_produce(): void
+	{
+		// A field listed but never produced would show a dead switch in the ACP; one
+		// produced but not listed could never be turned off.
+		$source = (string) file_get_contents(dirname(__DIR__) . '/exif.php');
+		preg_match_all("/prepared_data\['([a-z_]+)'\]/", $source, $matches);
+
+		$produced = array_values(array_unique($matches[1]));
+		sort($produced);
+
+		$listed = exif_listener::DISPLAY_FIELDS;
+		sort($listed);
+
+		$this->assertSame($produced, $listed);
+	}
+
+	public function test_every_display_field_has_an_acp_label_in_every_language(): void
+	{
+		$directories = glob(dirname(__DIR__) . '/language/*', GLOB_ONLYDIR);
+		$this->assertNotEmpty($directories);
+
+		foreach ($directories as $directory)
+		{
+			$lang = [];
+			include $directory . '/info_exif.php';
+
+			foreach (exif_listener::DISPLAY_FIELDS as $field)
+			{
+				$key = 'DISP_' . strtoupper($field);
+				$this->assertArrayHasKey($key, $lang, $key . ' missing for ' . basename($directory));
+				$this->assertNotSame('', $lang[$key]);
+			}
+		}
+	}
+}
+
+class filter_test_template
+{
+	public array $blocks = [];
+	public array $vars = [];
+
+	public function assign_block_vars(string $block, array $values): void
+	{
+		$this->blocks[$block][] = $values;
+	}
+
+	public function assign_vars(array $values): void
+	{
+		$this->vars = array_merge($this->vars, $values);
+	}
+
+	/**
+	 * @return array The EXIF_NAME of every assigned row, in order
+	 */
+	public function assigned_names(): array
+	{
+		return array_column($this->blocks['exif_value'] ?? [], 'EXIF_NAME');
+	}
+}
+
+class filter_test_user
+{
+	public array $lang = [
+		'EXIF_APERTURE' => 'EXIF_APERTURE',
+		'EXIF_ISO' => 'EXIF_ISO',
+		'EXIF_CAM_MODEL' => 'EXIF_CAM_MODEL',
+		'EXIF_FOCAL' => 'EXIF_FOCAL',
+	];
+
+	public function add_lang_ext(string $extension, string $file): void
+	{
+	}
+}

@@ -427,6 +427,7 @@ class image
 			'IMAGE_URL'           => ($this->config['phpbb_gallery_disp_image_url']) ? $this->url->get_uri($this->helper->route('phpbbgallery_core_image_file_medium', ['image_id' => $image_id])) : '',
 			'IMAGE_TIME'          => $this->user->format_date($this->data['image_time']),
 			'IMAGE_VIEW'          => $this->data['image_view_count'],
+			'IMAGE_RESOLUTION'    => $this->get_image_resolution((string) $this->data['image_filename']),
 			'POSTER_IP'           => ($this->auth->acl_get('a_')) ? $this->data['image_user_ip'] : '',
 
 			'S_ALBUM_ACTION' => $this->helper->route('phpbbgallery_core_image', ['image_id' => $image_id]),
@@ -605,6 +606,36 @@ class image
 			$this->display_comments($image_id, $this->data, $album_id, $album_data, ($page - 1) * $this->gallery_config->get('items_per_page'), $this->gallery_config->get('items_per_page'));
 		}
 		return $this->helper->render('gallery/viewimage_body.html', $page_title);
+	}
+
+	/**
+	 * Describe the stored image's pixel dimensions.
+	 *
+	 * The dimensions are read from the file rather than the database so they stay
+	 * true after the gallery resizes or rotates an image, and so they are available
+	 * for every format - unlike EXIF, which only JPEGs carry.
+	 *
+	 * @param string $filename Stored image filename
+	 * @return string Formatted resolution, or an empty string when it is unavailable
+	 */
+	protected function get_image_resolution(string $filename): string
+	{
+		if (!$this->gallery_config->get('disp_resolution') || $filename === '')
+		{
+			return '';
+		}
+
+		// getimagesize() only parses the header, so this stays cheap enough to run
+		// on an image page view.
+		$image_size = @getimagesize($this->url->path('upload') . $filename);
+		if ($image_size === false || empty($image_size[0]) || empty($image_size[1]))
+		{
+			// A missing or unreadable file must not break the page; the template
+			// simply omits the row.
+			return '';
+		}
+
+		return $this->language->lang('IMAGE_RESOLUTION_VALUE', (int) $image_size[0], (int) $image_size[1]);
 	}
 
 	/**

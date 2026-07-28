@@ -94,6 +94,17 @@ $lang = array_merge($lang, [
 
 	'DISP_EXIF_DATA'			=> 'EXIF-Daten anzeigen',
 	'DISP_EXIF_DATA_EXP'		=> 'Diese Funktion kann im Moment nicht verwendet werden, da die Funktion “exif_read_data“ nicht in Deiner PHP-Installation enthalten ist.',
+	'DISP_EXIF_DATE'      => '„Bild aufgenommen am“ anzeigen',
+	'DISP_EXIF_FOCAL'     => 'Brennweite anzeigen',
+	'DISP_EXIF_EXPOSURE'  => 'Belichtungszeit anzeigen',
+	'DISP_EXIF_APERTURE'  => 'Blendenzahl anzeigen',
+	'DISP_EXIF_ISO'       => 'ISO-Empfindlichkeit anzeigen',
+	'DISP_EXIF_WHITEB'    => 'Weißabgleich anzeigen',
+	'DISP_EXIF_FLASH'     => 'Blitz anzeigen',
+	'DISP_EXIF_CAM_MODEL' => 'Kameramodell anzeigen',
+	'DISP_EXIF_EXPOSURE_PROG' => 'Belichtungsprogramm anzeigen',
+	'DISP_EXIF_EXPOSURE_BIAS' => 'Belichtungskorrektur anzeigen',
+	'DISP_EXIF_METERING_MODE' => 'Messmethode anzeigen',
 	'SHOW_EXIF'					=> 'ein-/ausblenden',
 	'VIEWEXIFS_DEFAULT'			=> 'Ansicht Exif-Daten standardmäßig',
 

@@ -129,6 +129,7 @@
 						<li class="visible-xs visible-sm"><i class="fa fa-user"></i> {{ lang('BY') }} <span class="contributor-avatars">{% if U_POSTER %}<a class="shown" href="{{ U_POSTER }}">{{ POSTER_AVATAR }}</a>{% else %}{{ POSTER_AVATAR }}{% endif %}</span> {% if not U_POSTER %}{{ POSTER_FULL }}{% else %}<a href="{{ U_POSTER }}">{{ POSTER_FULL }}</a>{% endif %}</li>
 					{% endif %}
 				<li><i class="fa fa-clock-o"></i> {{ lang('UPLOADED_ON_DATE') }}{{ lang('COLON') }} {{ IMAGE_TIME }}</li>
+				{% if IMAGE_RESOLUTION %}<li><i class="fa fa-expand"></i> {{ lang('IMAGE_RESOLUTION') }}{{ lang('COLON') }} {{ IMAGE_RESOLUTION }}</li>{% endif %}
 				<li><i class="fa fa-eye"></i> {{ lang('GALLERY_VIEWS') }}{{ lang('COLON') }} {{ IMAGE_VIEW }}</li>
 
 				{% if S_VIEW_RATE %}

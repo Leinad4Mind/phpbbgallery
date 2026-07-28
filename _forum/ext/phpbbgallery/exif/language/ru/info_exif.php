@@ -94,6 +94,17 @@ $lang = array_merge($lang, [
 
 	'DISP_EXIF_DATA'			=> 'Просмотр EXIF-Данных',
 	'DISP_EXIF_DATA_EXP'		=> 'Эта функция не может использоваться на данный момент, т.к. функция "exif_read_data" не входит в установке PHP',
+	'DISP_EXIF_DATE'      => 'Показывать «Снимок сделан»',
+	'DISP_EXIF_FOCAL'     => 'Показывать фокусное расстояние',
+	'DISP_EXIF_EXPOSURE'  => 'Показывать выдержку',
+	'DISP_EXIF_APERTURE'  => 'Показывать диафрагму',
+	'DISP_EXIF_ISO'       => 'Показывать светочувствительность ISO',
+	'DISP_EXIF_WHITEB'    => 'Показывать баланс белого',
+	'DISP_EXIF_FLASH'     => 'Показывать вспышку',
+	'DISP_EXIF_CAM_MODEL' => 'Показывать модель камеры',
+	'DISP_EXIF_EXPOSURE_PROG' => 'Показывать программу экспозиции',
+	'DISP_EXIF_EXPOSURE_BIAS' => 'Показывать экспокоррекцию',
+	'DISP_EXIF_METERING_MODE' => 'Показывать режим замера',
 	'SHOW_EXIF'					=> 'Показать / Скрыть',
 	'VIEWEXIFS_DEFAULT'			=> 'Просмотр EXIF-Данных по умолчанию',
 

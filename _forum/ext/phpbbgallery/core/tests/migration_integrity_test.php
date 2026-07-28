@@ -26,6 +26,7 @@ use phpbbgallery\core\migrations\total_views;
 use phpbbgallery\core\migrations\gallery_title;
 use phpbbgallery\core\migrations\own_image_move;
 use phpbbgallery\core\migrations\create_gallery_icons_folder;
+use phpbbgallery\core\migrations\disp_resolution;
 
 class migration_integrity_test extends TestCase
 {
@@ -46,6 +47,7 @@ class migration_integrity_test extends TestCase
 		gallery_title::class,
 		own_image_move::class,
 		create_gallery_icons_folder::class,
+		disp_resolution::class,
 	];
 
 	private array $temp_directories = [];
@@ -111,6 +113,32 @@ class migration_integrity_test extends TestCase
 			['\phpbbgallery\core\migrations\own_image_move'],
 			create_gallery_icons_folder::depends_on()
 		);
+		$this->assertSame(
+			['\phpbbgallery\core\migrations\create_gallery_icons_folder'],
+			disp_resolution::depends_on()
+		);
+	}
+
+	public function test_resolution_migration_adds_a_reversible_display_switch(): void
+	{
+		$migration = (new \ReflectionClass(disp_resolution::class))->newInstanceWithoutConstructor();
+
+		// Shown by default, so an upgraded board gains the row without being configured.
+		$this->assertSame([
+			['config.add', ['phpbb_gallery_disp_resolution', 1]],
+		], $migration->update_data());
+		$this->assertSame([
+			['config.remove', ['phpbb_gallery_disp_resolution']],
+		], $migration->revert_data());
+	}
+
+	public function test_resolution_default_exists_in_the_core_config_fallback(): void
+	{
+		// gallery config falls back to this array when the row is absent, so a
+		// missing entry would surface as an undefined-key warning.
+		$source = (string) file_get_contents(dirname(__DIR__) . '/config.php');
+
+		$this->assertStringContainsString("'disp_resolution'", $source);
 	}
 
 	public function test_own_image_move_migration_adds_permission_and_invalidates_cached_bits(): void
@@ -608,6 +636,7 @@ class migration_integrity_test extends TestCase
 			'gallery_title.php',
 			'own_image_move.php',
 			'create_gallery_icons_folder.php',
+			'disp_resolution.php',
 		] as $migration)
 		{
 			require_once dirname(__DIR__) . '/migrations/' . $migration;
