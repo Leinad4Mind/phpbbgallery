@@ -92,6 +92,17 @@ $lang = array_merge($lang, [
 
 	'DISP_EXIF_DATA'              => 'EXIF-gegevens weergeven',
 	'DISP_EXIF_DATA_EXP'          => 'Deze functie is niet beschikbaar omdat de PHP-installatie de functie “exif_read_data” niet bevat.',
+	'DISP_EXIF_DATE'              => '“Foto genomen op” tonen',
+	'DISP_EXIF_FOCAL'             => 'Brandpuntsafstand tonen',
+	'DISP_EXIF_EXPOSURE'          => 'Sluitertijd tonen',
+	'DISP_EXIF_APERTURE'          => 'Diafragma tonen',
+	'DISP_EXIF_ISO'               => 'ISO-waarde tonen',
+	'DISP_EXIF_WHITEB'            => 'Witbalans tonen',
+	'DISP_EXIF_FLASH'             => 'Flits tonen',
+	'DISP_EXIF_CAM_MODEL'         => 'Cameramodel tonen',
+	'DISP_EXIF_EXPOSURE_PROG'     => 'Belichtingsprogramma tonen',
+	'DISP_EXIF_EXPOSURE_BIAS'     => 'Belichtingscorrectie tonen',
+	'DISP_EXIF_METERING_MODE'     => 'Meetmethode tonen',
 	'SHOW_EXIF'                   => 'tonen/verbergen',
 	'VIEWEXIFS_DEFAULT'           => 'EXIF-gegevens standaard weergeven',
 

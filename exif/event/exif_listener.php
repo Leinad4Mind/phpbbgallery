@@ -64,6 +64,36 @@ class exif_listener implements EventSubscriberInterface
 		$this->gallery_user = $gallery_user;
 	}
 
+	/**
+	 * Every field prepare_data() can produce, mapped to the config value that
+	 * decides whether it is shown. The config name is derived from the field name,
+	 * so adding a field here is all it takes to make it individually switchable.
+	 */
+	public const DISPLAY_FIELDS = [
+		'exif_date',
+		'exif_focal',
+		'exif_exposure',
+		'exif_aperture',
+		'exif_iso',
+		'exif_whiteb',
+		'exif_flash',
+		'exif_cam_model',
+		'exif_exposure_prog',
+		'exif_exposure_bias',
+		'exif_metering_mode',
+	];
+
+	/**
+	 * Config name holding the display switch for one prepared field.
+	 *
+	 * @param string $field Key from DISPLAY_FIELDS
+	 * @return string
+	 */
+	public static function display_config_name(string $field): string
+	{
+		return 'exif_show_' . substr($field, strlen('exif_'));
+	}
+
 	public function acp_config_get_display_vars(\phpbb\event\data $event): void
 	{
 		if ($event['mode'] == 'main')
@@ -74,9 +104,40 @@ class exif_listener implements EventSubscriberInterface
 				$this->user->add_lang_ext('phpbbgallery/exif', 'info_exif');
 
 				$return_ary['vars']['IMAGE_SETTINGS']['disp_exifdata'] = ['lang' => 'DISP_EXIF_DATA',		'validate' => 'bool',	'type' => 'radio:yes_no'];
+
+				// One switch per field, registered the same way as the master switch
+				// above, so the core config module reads and stores them natively.
+				foreach (self::DISPLAY_FIELDS as $field)
+				{
+					$return_ary['vars']['IMAGE_SETTINGS'][self::display_config_name($field)] = [
+						'lang'		=> 'DISP_' . strtoupper($field),
+						'validate'	=> 'bool',
+						'type'		=> 'radio:yes_no',
+					];
+				}
+
 				$event['return_ary'] = $return_ary;
 			}
 		}
+	}
+
+	/**
+	 * Collect the prepared fields the administrator left enabled.
+	 *
+	 * @return array Field names
+	 */
+	protected function get_enabled_fields(): array
+	{
+		$enabled = [];
+		foreach (self::DISPLAY_FIELDS as $field)
+		{
+			if ($this->gallery_config->get(self::display_config_name($field)))
+			{
+				$enabled[] = $field;
+			}
+		}
+
+		return $enabled;
 	}
 
 	public function massimport_update_image_before(\phpbb\event\data $event): void
@@ -228,7 +289,7 @@ class exif_listener implements EventSubscriberInterface
 
 			if (!empty($exif->data['EXIF']))
 			{
-				$exif->send_to_template($this->gallery_user->get_data('user_viewexif'));
+				$exif->send_to_template($this->gallery_user->get_data('user_viewexif'), 'exif_value', $this->get_enabled_fields());
 			}
 			unset($exif);
 		}

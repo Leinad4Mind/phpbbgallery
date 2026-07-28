@@ -134,6 +134,12 @@
 					<dt><label>{{ lang('UPLOADED_ON_DATE') }}{{ lang('COLON') }}</label></dt>
 					<dd>{{ IMAGE_TIME }}</dd>
 				</dl>
+				{% if IMAGE_RESOLUTION %}
+				<dl>
+					<dt><label>{{ lang('IMAGE_RESOLUTION') }}{{ lang('COLON') }}</label></dt>
+					<dd>{{ IMAGE_RESOLUTION }}</dd>
+				</dl>
+				{% endif %}
 				{% if IMAGE_URL %}
 				<dl>
 					<dt><label>{{ lang('IMAGE_URL') }}{{ lang('COLON') }}</label></dt>
