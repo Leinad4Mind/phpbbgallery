@@ -80,6 +80,7 @@ $lang = array_merge($lang, [
 	'UPLOAD_ICON'                       => 'Carica icona',
 	'ICON_UPLOADED'                     => 'L’icona è stata caricata e selezionata qui sotto.',
 	'ICON_INVALID_TYPE'                 => 'Il file caricato non è un’immagine o un’icona SVG valida.',
+	'ICON_STORAGE_UNAVAILABLE'          => 'La cartella delle icone della Galleria non è disponibile o non è scrivibile: %s.',
 	'ICON_INVALID_SELECTION'            => 'L’icona selezionata non è stata trovata.',
 	'NO_ICONS_AVAILABLE'                => 'Non è ancora stata caricata nessuna icona. Caricane una qui sotto per iniziare.',
 	'ALBUM_NAME_EMPTY'                  => 'Devi aggiungere un nome per questo album.',

@@ -96,6 +96,7 @@ $lang = array_merge($lang, [
 	'UPLOAD_ICON'                       => 'Envoyer une icône',
 	'ICON_UPLOADED'                     => 'L’icône a été envoyée et sélectionnée ci-dessous.',
 	'ICON_INVALID_TYPE'                 => 'Le fichier envoyé n’est pas une image ou une icône SVG valide.',
+	'ICON_STORAGE_UNAVAILABLE'          => 'Le dossier des icônes de la Galerie est indisponible ou non accessible en écriture : %s.',
 	'ICON_INVALID_SELECTION'            => 'L’icône sélectionnée est introuvable.',
 	'NO_ICONS_AVAILABLE'                => 'Aucune icône n’a encore été envoyée. Envoyez-en une ci-dessous pour commencer.',
 	'ALBUM_NAME_EMPTY'                  => 'Vous devez saisir un titre d’album.',
