@@ -1,0 +1,10 @@
+{% for image in image %}
+	{% if image.BBTAGSIMAGES_CAN_TAG %}
+	<div class="form-group">
+		<label class="control-label" for="bbtagsimages_tags_{{ image.S_ROW_COUNT }}">{{ lang('BBTAGSIMAGES_TAGS') }}</label>
+		<input class="form-control" type="text" id="bbtagsimages_tags_{{ image.S_ROW_COUNT }}" name="bbtagsimages_tags[{{ image.S_ROW_COUNT }}]" value="{{ image.BBTAGSIMAGES_TAGS }}" autocomplete="off" />
+		<p class="help-block">{{ lang('BBTAGSIMAGES_TAGS_EXPLAIN', BBTAGSIMAGES_MAX_TAGS, BBTAGSIMAGES_MIN_LENGTH, BBTAGSIMAGES_MAX_LENGTH) }}</p>
+		{% if image.BBTAGSIMAGES_HAS_PENDING %}<p class="text-warning"><i class="fa fa-clock-o"></i> {{ lang('BBTAGSIMAGES_PENDING_NOTICE') }}</p>{% endif %}
+	</div>
+	{% endif %}
+{% endfor %}

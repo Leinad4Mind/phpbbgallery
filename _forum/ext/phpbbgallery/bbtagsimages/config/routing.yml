@@ -1,0 +1,4 @@
+phpbbgallery_bbtagsimages_autocomplete:
+    path: /gallery/tags/autocomplete
+    defaults: { _controller: phpbbgallery.bbtagsimages.controller.tags:autocomplete }
+    methods: [POST]

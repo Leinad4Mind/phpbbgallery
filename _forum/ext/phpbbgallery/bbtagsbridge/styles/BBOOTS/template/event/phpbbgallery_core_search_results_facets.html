@@ -1,6 +1,0 @@
-{% if S_BBTAGSBRIDGE_FACETS %}
-<div class="well well-small">
-	<strong>{{ lang('BBTAGSBRIDGE_FILTER_MORE_TAGS') }}{{ lang('COLON') }}</strong>
-	{% for facet in bbtagsbridge_facets %}<a class="label label-info" href="{{ facet.U_SEARCH }}">#{{ facet.NAME }} <span class="badge">{{ facet.COUNT }}</span></a>{% if not facet.S_LAST_ROW %} {% endif %}{% endfor %}
-</div>
-{% endif %}

@@ -1,0 +1,9 @@
+{% for image in image %}
+	{% if image.BBTAGSIMAGES_CAN_TAG %}
+	<dl>
+		<dt><label for="bbtagsimages_tags_{{ image.S_ROW_COUNT }}">{{ lang('BBTAGSIMAGES_TAGS') }}{{ lang('COLON') }}</label><br /><span>{{ lang('BBTAGSIMAGES_TAGS_EXPLAIN', BBTAGSIMAGES_MAX_TAGS, BBTAGSIMAGES_MIN_LENGTH, BBTAGSIMAGES_MAX_LENGTH) }}</span></dt>
+		<dd><input class="inputbox" type="text" id="bbtagsimages_tags_{{ image.S_ROW_COUNT }}" name="bbtagsimages_tags[{{ image.S_ROW_COUNT }}]" value="{{ image.BBTAGSIMAGES_TAGS }}" autocomplete="off" /></dd>
+		{% if image.BBTAGSIMAGES_HAS_PENDING %}<dd><span class="error">{{ lang('BBTAGSIMAGES_PENDING_NOTICE') }}</span></dd>{% endif %}
+	</dl>
+	{% endif %}
+{% endfor %}

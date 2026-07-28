@@ -1,0 +1,6 @@
+{% if S_BBTAGSIMAGES_FACETS %}
+<div class="well well-small">
+	<strong>{{ lang('BBTAGSIMAGES_FILTER_MORE_TAGS') }}{{ lang('COLON') }}</strong>
+	{% for facet in bbtagsimages_facets %}<a class="label label-info" href="{{ facet.U_SEARCH }}">#{{ facet.NAME }} <span class="badge">{{ facet.COUNT }}</span></a>{% if not facet.S_LAST_ROW %} {% endif %}{% endfor %}
+</div>
+{% endif %}

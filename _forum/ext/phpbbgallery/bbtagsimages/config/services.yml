@@ -1,0 +1,66 @@
+parameters:
+    phpbbgallery.bbtagsimages.tables.image_tags: '%core.table_prefix%gallery_image_tags'
+
+services:
+    phpbbgallery.bbtagsimages.input_parser:
+        class: phpbbgallery\bbtagsimages\input_parser
+        arguments:
+            - '@config'
+            - '@sitesplat.bbtags.manager'
+
+    phpbbgallery.bbtagsimages.album_scope_resolver:
+        class: phpbbgallery\bbtagsimages\album_scope_resolver
+        arguments:
+            - '@dbal.conn.driver'
+            - '%phpbbgallery.tables.gallery_albums%'
+
+    phpbbgallery.bbtagsimages.image_tag_manager:
+        class: phpbbgallery\bbtagsimages\image_tag_manager
+        arguments:
+            - '@dbal.conn.driver'
+            - '%phpbbgallery.bbtagsimages.tables.image_tags%'
+            - '%phpbbgallery.tables.gallery_images%'
+            - '%sitesplat.bbtags.tables.bbtags%'
+            - '%sitesplat.bbtags.tables.bbtags_context%'
+
+    phpbbgallery.bbtagsimages.image_search_query:
+        class: phpbbgallery\bbtagsimages\image_search_query
+
+    phpbbgallery.bbtagsimages.controller.tags:
+        class: phpbbgallery\bbtagsimages\controller\tag_controller
+        arguments:
+            - '@auth'
+            - '@config'
+            - '@controller.helper'
+            - '@request'
+            - '@user'
+            - '@phpbbgallery.core.auth'
+            - '@phpbbgallery.bbtagsimages.album_scope_resolver'
+            - '@sitesplat.bbtags.manager'
+
+    phpbbgallery.bbtagsimages.provider.gallery_images:
+        class: phpbbgallery\bbtagsimages\provider\image_provider
+        arguments:
+            - '@phpbbgallery.bbtagsimages.image_tag_manager'
+            - '@controller.helper'
+        tags:
+            - { name: sitesplat.bbtags.provider }
+
+    phpbbgallery.bbtagsimages.listener:
+        class: phpbbgallery\bbtagsimages\event\main_listener
+        arguments:
+            - '@auth'
+            - '@request'
+            - '@controller.helper'
+            - '@template'
+            - '@language'
+            - '@user'
+            - '@phpbbgallery.bbtagsimages.image_tag_manager'
+            - '@phpbbgallery.bbtagsimages.input_parser'
+            - '@phpbbgallery.bbtagsimages.album_scope_resolver'
+            - '@phpbbgallery.bbtagsimages.image_search_query'
+            - '@sitesplat.bbtags.manager'
+            - '@sitesplat.bbtags.moderation'
+            - '%phpbbgallery.bbtagsimages.tables.image_tags%'
+        tags:
+            - { name: event.listener }
