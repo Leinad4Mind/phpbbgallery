@@ -22,6 +22,13 @@ class search
 	/** @var \phpbb\db\driver\driver_interface */
 	protected \phpbb\db\driver\driver_interface $db;
 
+	/**
+	 * Gallery Event Dispatcher
+	 *
+	 * @var \phpbb\event\dispatcher_interface
+	 */
+	protected \phpbb\event\dispatcher_interface $dispatcher;
+
 	/** @var \phpbb\pagination  */
 	protected \phpbb\pagination $pagination;
 
@@ -82,6 +89,7 @@ class search
 	 * @param \phpbb\auth\auth                                          $auth      Auth object
 	 * @param \phpbb\config\config                                      $config    Config object
 	 * @param \phpbb\db\driver\driver|\phpbb\db\driver\driver_interface $db        Database object
+	 * @param \phpbb\event\dispatcher_interface                        $dispatcher
 	 * @param \phpbb\pagination                                         $pagination
 	 * @param \phpbb\request\request_interface                          $request   Request object
 	 * @param \phpbb\template\template                                  $template  Template object
@@ -102,6 +110,7 @@ class search
 	 * @param string                                                    $php_ext   php file extension
 	 */
 	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\db\driver\driver_interface $db,
+		\phpbb\event\dispatcher_interface $dispatcher,
 		\phpbb\pagination $pagination, \phpbb\request\request_interface $request,
 		\phpbb\template\template $template, \phpbb\user $user, \phpbb\language\language $language, \phpbb\controller\helper $helper,
 		\phpbbgallery\core\album\display $display, \phpbbgallery\core\config $gallery_config,
@@ -112,6 +121,7 @@ class search
 		$this->auth = $auth;
 		$this->config = $config;
 		$this->db = $db;
+		$this->dispatcher = $dispatcher;
 		$this->pagination = $pagination;
 		$this->request = $request;
 		$this->template = $template;

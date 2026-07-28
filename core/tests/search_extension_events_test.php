@@ -13,6 +13,23 @@ use PHPUnit\Framework\TestCase;
 
 final class search_extension_events_test extends TestCase
 {
+	public function test_search_events_receive_the_registered_dispatcher(): void
+	{
+		$reflection = new \ReflectionClass(\phpbbgallery\core\controller\search::class);
+		$parameter = $reflection->getConstructor()->getParameters()[3];
+
+		$this->assertSame('dispatcher', $parameter->getName());
+		$this->assertSame('phpbb\\event\\dispatcher_interface', (string) $parameter->getType());
+
+		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/search.php');
+		$this->assertStringContainsString('$this->dispatcher = $dispatcher;', $source);
+
+		$services = (string) file_get_contents(dirname(__DIR__) . '/config/services_controller.yml');
+		$search_service = strstr($services, 'phpbbgallery.core.controller.search:');
+		$search_service = strstr($search_service, 'phpbbgallery.core.controller.comment:', true);
+		$this->assertStringContainsString("- '@dispatcher'", $search_service);
+	}
+
 	public function test_addon_search_conditions_keep_core_permission_and_visibility_filters(): void
 	{
 		$controller = (string) file_get_contents(dirname(__DIR__) . '/controller/search.php');
