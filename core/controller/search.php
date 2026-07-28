@@ -195,6 +195,22 @@ class search
 		}
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 
+		$additional_search_active = false;
+		$additional_search_where = [];
+		$additional_search_params = [];
+		/**
+		 * Allow add-ons to contribute an independently validated image-search
+		 * condition and retain its request values across pagination.
+		 *
+		 * @event phpbbgallery.core.search.configure
+		 * @var bool  additional_search_active Whether the add-on supplied a search criterion
+		 * @var array additional_search_where  Portable SQL conditions applied to image alias i
+		 * @var array additional_search_params Request parameters retained by pagination
+		 * @since 3.4.0
+		 */
+		$vars = ['additional_search_active', 'additional_search_where', 'additional_search_params'];
+		extract($this->dispatcher->trigger_event('phpbbgallery.core.search.configure', compact($vars)));
+
 		$s_limit_days = $s_sort_key = $s_sort_dir = $u_sort_param = '';
 		gen_sort_selects($limit_days, $sort_by_text, $sort_days, $sort_key, $sort_dir, $s_limit_days, $s_sort_key, $s_sort_dir, $u_sort_param);
 		if (!isset($sort_by_sql[$sort_key]))
@@ -208,7 +224,7 @@ class search
 		$sql_array['FROM'] = [
 			$this->images_table => 'i',
 		];
-		if ($keywords || $username || $user_id || $search_id || $submit)
+		if ($keywords || $username || $user_id || $search_id || $submit || $additional_search_active)
 		{
 			$user_id_ary = [];
 			// Let's resolve username to user id ... or array of them.
@@ -265,7 +281,7 @@ class search
 			$search_query = '';
 			$matches = ['i.image_name', 'i.image_desc'];
 
-			if (is_array($keywords_ary) && !sizeof($keywords_ary) && is_array($user_id_ary) && !sizeof($user_id_ary))
+			if (is_array($keywords_ary) && !sizeof($keywords_ary) && is_array($user_id_ary) && !sizeof($user_id_ary) && !$additional_search_active)
 			{
 				trigger_error('NO_SEARCH_RESULTS');
 			}
@@ -286,6 +302,7 @@ class search
 			$search_album = $this->get_search_album_ids($search_album);
 			$sql_where[] = $this->db->sql_in_set('i.image_album_id', $search_album);
 			$sql_where[] = $this->get_image_visibility_sql();
+			$sql_where = array_merge($sql_where, array_filter($additional_search_where, 'is_string'));
 			$sql_array['WHERE'] = implode(' and ', array_filter($sql_where));
 			$sql_array['SELECT'] = 'COUNT(i.image_id) as count';
 
@@ -328,24 +345,39 @@ class search
 			{
 				$this->image->assign_block('imageblock.image', $row, $show_options, $thumbnail_link, $imagename_link);
 			}
+			$pagination_params = array_merge([
+				'keywords' => $keywords,
+				'username' => $username,
+				'user_id' => $user_id,
+				'terms' => $search_terms,
+				'aid' => $search_album,
+				'sc' => $search_child,
+				'sf' => $search_fields,
+				'st' => $sort_days,
+				'sk' => $sort_key,
+				'sd' => $sort_dir,
+				'filtered' => true,
+			], $additional_search_params);
+			$search_where = (string) $sql_array['WHERE'];
+			$search_params = $pagination_params;
+			/**
+			 * Allow add-ons to derive permission-preserving facets from the
+			 * final image result set before the results template is rendered.
+			 *
+			 * @event phpbbgallery.core.search.results
+			 * @var string search_where  Final DBAL SQL condition for image alias i
+			 * @var int    search_count  Number of matching visible images
+			 * @var array  search_params Validated parameters retained by pagination
+			 * @since 3.4.0
+			 */
+			$vars = ['search_where', 'search_count', 'search_params'];
+			$this->dispatcher->trigger_event('phpbbgallery.core.search.results', compact($vars));
 			$this->pagination->generate_template_pagination([
 				'routes' => [
 					'phpbbgallery_core_search',
 					'phpbbgallery_core_search_page',
 				],
-				'params' => [
-					'keywords'	=> $keywords,
-					'username'	=> $username,
-					'user_id'	=> $user_id,
-					'terms'		=> $search_terms,
-					'aid'			=> $search_album,
-					'sc'			=> $search_child,
-					'sf'			=> $search_fields,
-					'st'			=> $sort_days,
-					'sk'			=> $sort_key,
-					'sd'			=> $sort_dir,
-					'filtered'	=> true
-				],
+				'params' => $pagination_params,
 			], 'pagination', 'page', $search_count, $this->gallery_config->get('items_per_page'), $start);
 
 			$this->template->assign_vars([

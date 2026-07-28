@@ -60,6 +60,7 @@ function toggleElement(oElement)
 {% endif %}
 
 <h2>{% if SEARCH_TITLE %}{{ SEARCH_TITLE }}{% else %}{{ SEARCH_MATCHES }}{% endif %}{% if SEARCH_WORDS %}{{ lang('COLON') }} <a href="{{ U_SEARCH_WORDS }}">{{ SEARCH_WORDS }}</a>{% endif %}</h2>
+{% EVENT phpbbgallery_core_search_results_facets %}
 {% if IGNORED_WORDS %} <p>{{ lang('IGNORED_TERMS') }}{{ lang('COLON') }} <strong>{{ IGNORED_WORDS }}</strong></p>{% endif %}
 {% if U_GALLERY_SEARCH %}<p><a class="{{ S_CONTENT_FLOW_BEGIN }}" href="{{ U_GALLERY_SEARCH }}" title="{{ lang('SEARCH_ADV') }}">{{ lang('RETURN_TO_SEARCH_ADV') }}</a></p>{% endif %}
 {% if SEARCH_MATCHES %}
