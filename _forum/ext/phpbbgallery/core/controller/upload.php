@@ -23,6 +23,13 @@ class upload
 	/** @var \phpbb\db\driver\driver_interface  */
 	protected \phpbb\db\driver\driver_interface $db;
 
+	/**
+	 * Gallery Event Dispatcher
+	 *
+	 * @var \phpbb\event\dispatcher_interface
+	 */
+	protected \phpbb\event\dispatcher_interface $dispatcher;
+
 	/** @var \phpbb\user */
 	protected \phpbb\user $user;
 
@@ -91,6 +98,7 @@ class upload
 	 *
 	 * @param request_interface                       $request
 	 * @param \phpbb\db\driver\driver_interface      $db
+	 * @param \phpbb\event\dispatcher_interface      $dispatcher
 	 * @param \phpbb\user                            $user    User object
 	 * @param \phpbb\language\language               $language
 	 * @param \phpbb\template\template               $template
@@ -113,7 +121,7 @@ class upload
 	 * @param string                                 $phpbb_root_path
 	 */
 
-	public function __construct(request_interface $request, \phpbb\db\driver\driver_interface $db, \phpbb\user $user,
+	public function __construct(request_interface $request, \phpbb\db\driver\driver_interface $db, \phpbb\event\dispatcher_interface $dispatcher, \phpbb\user $user,
 		\phpbb\language\language $language, \phpbb\template\template $template, \phpbb\config\config $config, ContainerInterface $phpbb_container,
 		\phpbbgallery\core\album\album $album, \phpbbgallery\core\misc $misc, \phpbbgallery\core\auth\auth $auth, \phpbbgallery\core\album\display $display,
 		\phpbb\controller\helper $helper, \phpbbgallery\core\config $gallery_config, \phpbbgallery\core\user $gallery_user,
@@ -124,6 +132,7 @@ class upload
 	{
 		$this->request = $request;
 		$this->db = $db;
+		$this->dispatcher = $dispatcher;
 		$this->user = $user;
 		$this->language = $language;
 		$this->template = $template;

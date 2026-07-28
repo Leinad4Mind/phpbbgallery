@@ -109,6 +109,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Injected the phpBB event dispatcher into the resumable upload and search controllers so add-on validation, presentation, filtering, and result events execute without fatal errors.
 - Corrected image-cache hits that were assigned to the album variable, merged only missing image IDs into the shared cache, returned only requested rows, and reset request-local data during invalidation.
 - Synchronized the Portuguese, Brazilian Portuguese, and pre-orthographic-agreement catalogs with the English source, translating 99 previously unavailable messages and removing obsolete keys.
 - Corrected plural forms and printf placeholders in Portuguese catalog entries, plus the malformed Spanish plugin-class placeholder.

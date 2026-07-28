@@ -45,6 +45,23 @@ final class controller_upload_types_test extends TestCase
 		}
 	}
 
+	public function test_upload_events_receive_the_registered_dispatcher(): void
+	{
+		$reflection = new \ReflectionClass(upload::class);
+		$parameter = $reflection->getConstructor()->getParameters()[2];
+
+		$this->assertSame('dispatcher', $parameter->getName());
+		$this->assertSame('phpbb\\event\\dispatcher_interface', (string) $parameter->getType());
+
+		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/upload.php');
+		$this->assertStringContainsString('$this->dispatcher = $dispatcher;', $source);
+
+		$services = (string) file_get_contents(dirname(__DIR__) . '/config/services_controller.yml');
+		$upload_service = strstr($services, 'phpbbgallery.core.controller.upload:');
+		$upload_service = strstr($upload_service, 'phpbbgallery.core.controller.album:', true);
+		$this->assertStringContainsString("- '@dispatcher'", $upload_service);
+	}
+
 	public function test_upload_route_uses_an_integer_album_and_returns_a_response(): void
 	{
 		$method = (new \ReflectionClass(upload::class))->getMethod('main');
