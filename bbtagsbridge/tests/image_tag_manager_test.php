@@ -58,4 +58,23 @@ final class image_tag_manager_test extends TestCase
 		$this->assertFalse($manager->replace_tags(0, [1]));
 		$this->assertTrue($manager->delete_for_images([0, -1]));
 	}
+
+	public function test_facets_preserve_album_boundaries_from_the_core_search(): void
+	{
+		$db = new fake_db();
+		$db->facet_rows = [
+			['tag_id' => 7, 'tag' => 'anime', 'tag_clean' => 'anime', 'image_album_id' => 3, 'image_count' => 4],
+			['tag_id' => 7, 'tag' => 'anime', 'tag_clean' => 'anime', 'image_album_id' => 4, 'image_count' => 2],
+		];
+		$manager = new image_tag_manager($db, 'image_tags', 'images', 'bbtags', 'bbtags_context');
+
+		$this->assertSame([], $manager->get_facet_rows(''));
+		$this->assertSame(
+			[
+				['tag_id' => 7, 'tag' => 'anime', 'tag_clean' => 'anime', 'album_id' => 3, 'image_count' => 4],
+				['tag_id' => 7, 'tag' => 'anime', 'tag_clean' => 'anime', 'album_id' => 4, 'image_count' => 2],
+			],
+			$manager->get_facet_rows('i.image_status = 1')
+		);
+	}
 }

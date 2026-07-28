@@ -23,6 +23,21 @@ services:
             - '%sitesplat.bbtags.tables.bbtags%'
             - '%sitesplat.bbtags.tables.bbtags_context%'
 
+    phpbbgallery.bbtagsbridge.image_search_query:
+        class: phpbbgallery\bbtagsbridge\image_search_query
+
+    phpbbgallery.bbtagsbridge.controller.tags:
+        class: phpbbgallery\bbtagsbridge\controller\tag_controller
+        arguments:
+            - '@auth'
+            - '@config'
+            - '@controller.helper'
+            - '@request'
+            - '@user'
+            - '@phpbbgallery.core.auth'
+            - '@phpbbgallery.bbtagsbridge.album_scope_resolver'
+            - '@sitesplat.bbtags.manager'
+
     phpbbgallery.bbtagsbridge.provider.gallery_images:
         class: phpbbgallery\bbtagsbridge\provider\image_provider
         arguments:
@@ -36,13 +51,16 @@ services:
         arguments:
             - '@auth'
             - '@request'
+            - '@controller.helper'
             - '@template'
             - '@language'
             - '@user'
             - '@phpbbgallery.bbtagsbridge.image_tag_manager'
             - '@phpbbgallery.bbtagsbridge.input_parser'
             - '@phpbbgallery.bbtagsbridge.album_scope_resolver'
+            - '@phpbbgallery.bbtagsbridge.image_search_query'
             - '@sitesplat.bbtags.manager'
             - '@sitesplat.bbtags.moderation'
+            - '%phpbbgallery.bbtagsbridge.tables.image_tags%'
         tags:
             - { name: event.listener }

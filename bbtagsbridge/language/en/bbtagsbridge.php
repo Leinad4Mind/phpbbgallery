@@ -12,4 +12,9 @@ $lang = array_merge($lang ?? [], [
 	'BBTAGSBRIDGE_TAG_LIMIT' => 'You may add no more than %1$d tags to an image.',
 	'BBTAGSBRIDGE_PENDING_NOTICE' => 'New tags remain hidden until a moderator approves them.',
 	'BBTAGSBRIDGE_SAVE_FAILED' => 'The image tags could not be saved.',
+	'BBTAGSBRIDGE_SEARCH_TAGS' => 'Search by tags',
+	'BBTAGSBRIDGE_SEARCH_TAGS_EXPLAIN' => 'Enter one or more comma-separated tags.',
+	'BBTAGSBRIDGE_MATCH_ALL_TAGS' => 'Match all tags (AND)',
+	'BBTAGSBRIDGE_MATCH_ANY_TAG' => 'Match any tag (OR)',
+	'BBTAGSBRIDGE_FILTER_MORE_TAGS' => 'Filter by more tags',
 ]);

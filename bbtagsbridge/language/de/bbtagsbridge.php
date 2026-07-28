@@ -12,4 +12,9 @@ $lang = array_merge($lang ?? [], [
 	'BBTAGSBRIDGE_TAG_LIMIT' => 'Du kannst einem Bild höchstens %1$d Schlagwörter hinzufügen.',
 	'BBTAGSBRIDGE_PENDING_NOTICE' => 'Neue Schlagwörter bleiben verborgen, bis ein Moderator sie freigibt.',
 	'BBTAGSBRIDGE_SAVE_FAILED' => 'Die Schlagwörter des Bildes konnten nicht gespeichert werden.',
+	'BBTAGSBRIDGE_SEARCH_TAGS' => 'Nach Schlagwörtern suchen',
+	'BBTAGSBRIDGE_SEARCH_TAGS_EXPLAIN' => 'Gib ein oder mehrere durch Kommas getrennte Schlagwörter ein.',
+	'BBTAGSBRIDGE_MATCH_ALL_TAGS' => 'Alle Schlagwörter müssen zutreffen (UND)',
+	'BBTAGSBRIDGE_MATCH_ANY_TAG' => 'Ein beliebiges Schlagwort muss zutreffen (ODER)',
+	'BBTAGSBRIDGE_FILTER_MORE_TAGS' => 'Nach weiteren Schlagwörtern filtern',
 ]);

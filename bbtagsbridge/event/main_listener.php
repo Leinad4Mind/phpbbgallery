@@ -10,6 +10,7 @@
 namespace phpbbgallery\bbtagsbridge\event;
 
 use phpbb\auth\auth;
+use phpbb\controller\helper;
 use phpbb\event\data;
 use phpbb\language\language;
 use phpbb\request\request_interface;
@@ -17,6 +18,7 @@ use phpbb\template\template;
 use phpbb\user;
 use phpbbgallery\bbtagsbridge\album_scope_resolver;
 use phpbbgallery\bbtagsbridge\image_tag_manager;
+use phpbbgallery\bbtagsbridge\image_search_query;
 use phpbbgallery\bbtagsbridge\input_parser;
 use sitesplat\bbtags\tags\manager;
 use sitesplat\bbtags\tags\moderation;
@@ -26,38 +28,49 @@ final class main_listener implements EventSubscriberInterface
 {
 	private auth $auth;
 	private request_interface $request;
+	private helper $helper;
 	private template $template;
 	private language $language;
 	private user $user;
 	private image_tag_manager $image_tags;
 	private input_parser $parser;
 	private album_scope_resolver $scopes;
+	private image_search_query $search_query;
 	private manager $tags;
 	private moderation $moderation;
+	private string $image_tags_table;
+	private array $search_tags = [];
+	private string $search_operator = 'and';
 
 	public function __construct(
 		auth $auth,
 		request_interface $request,
+		helper $helper,
 		template $template,
 		language $language,
 		user $user,
 		image_tag_manager $image_tags,
 		input_parser $parser,
 		album_scope_resolver $scopes,
+		image_search_query $search_query,
 		manager $tags,
-		moderation $moderation
+		moderation $moderation,
+		string $image_tags_table
 	)
 	{
 		$this->auth = $auth;
 		$this->request = $request;
+		$this->helper = $helper;
 		$this->template = $template;
 		$this->language = $language;
 		$this->user = $user;
 		$this->image_tags = $image_tags;
 		$this->parser = $parser;
 		$this->scopes = $scopes;
+		$this->search_query = $search_query;
 		$this->tags = $tags;
 		$this->moderation = $moderation;
+		$this->image_tags_table = $image_tags_table;
 	}
 
 	public static function getSubscribedEvents(): array
@@ -65,6 +78,8 @@ final class main_listener implements EventSubscriberInterface
 		return [
 			'core.user_setup' => 'load_language_on_setup',
 			'phpbbgallery.core.viewimage' => 'display_image_tags',
+			'phpbbgallery.core.search.configure' => 'configure_search',
+			'phpbbgallery.core.search.results' => 'display_search_facets',
 			'phpbbgallery.core.image_edit_file' => 'validate_image_edit',
 			'phpbbgallery.core.image_edit_display' => 'display_image_edit',
 			'phpbbgallery.core.image_edit_after' => 'save_image_edit',
@@ -93,8 +108,134 @@ final class main_listener implements EventSubscriberInterface
 			$this->template->assign_block_vars('bbtagsbridge_tags', [
 				'NAME' => $tag['tag'],
 				'COUNT' => $tag['usage_count'],
+				'U_SEARCH' => $this->auth->acl_get('u_bbtags_read') ? $this->helper->route('phpbbgallery_core_search', [
+					'tags' => $tag['tag'],
+					'tag_operator' => 'and',
+					'filtered' => true,
+				]) : '',
 			]);
 		}
+	}
+
+	public function configure_search(data $event): void
+	{
+		$can_search = $this->auth->acl_get('u_bbtags_read');
+		$value = $this->request->variable('tags', '', true);
+		$this->search_operator = $this->request->variable('tag_operator', 'and') === 'or' ? 'or' : 'and';
+		$this->template->assign_vars([
+			'S_BBTAGSBRIDGE_SEARCH_FORM' => true,
+			'S_BBTAGSBRIDGE_CAN_SEARCH' => $can_search,
+			'BBTAGSBRIDGE_SEARCH_TAGS' => $value,
+			'S_BBTAGSBRIDGE_OPERATOR_AND' => $this->search_operator === 'and',
+			'S_BBTAGSBRIDGE_OPERATOR_OR' => $this->search_operator === 'or',
+			'U_BBTAGSBRIDGE_AUTOCOMPLETE' => $this->helper->route('phpbbgallery_bbtagsbridge_autocomplete'),
+		]);
+		if ($value === '')
+		{
+			return;
+		}
+		if (!$can_search)
+		{
+			trigger_error('NOT_AUTHORISED');
+		}
+		try
+		{
+			$this->search_tags = $this->parser->parse($value);
+		}
+		catch (\InvalidArgumentException $exception)
+		{
+			trigger_error($this->language->lang(
+				$exception->getMessage(),
+				$this->parser->get_max_tags(),
+				$this->parser->get_min_length(),
+				$this->parser->get_max_length()
+			));
+		}
+
+		$existing = $this->tags->get_existing_tags($this->search_tags);
+		if ($this->search_operator === 'or')
+		{
+			$this->search_tags = array_map('strval', array_column($existing, 'tag'));
+		}
+		$tag_ids = array_map('intval', array_column($existing, 'id'));
+		$allowed_albums = $this->tags->get_allowed_scope_ids_by_tag(
+			$tag_ids,
+			image_tag_manager::PROVIDER,
+			$this->scopes->get_all_paths()
+		);
+		if ($this->search_operator === 'and' && count($existing) !== count($this->search_tags))
+		{
+			$condition = '1 = 0';
+		}
+		else
+		{
+			$condition = $this->search_query->build(
+				$this->image_tags_table,
+				$allowed_albums,
+				$this->search_operator
+			);
+		}
+
+		$where = (array) $event['additional_search_where'];
+		$where[] = $condition;
+		$params = (array) $event['additional_search_params'];
+		$params['tags'] = $this->parser->format($this->search_tags);
+		$params['tag_operator'] = $this->search_operator;
+		$event['additional_search_active'] = true;
+		$event['additional_search_where'] = $where;
+		$event['additional_search_params'] = $params;
+	}
+
+	public function display_search_facets(data $event): void
+	{
+		if (!$this->auth->acl_get('u_bbtags_read'))
+		{
+			return;
+		}
+		if (count($this->search_tags) >= $this->parser->get_max_tags())
+		{
+			return;
+		}
+		$rows = $this->image_tags->get_facet_rows((string) $event['search_where']);
+		if (empty($rows))
+		{
+			return;
+		}
+		$allowed_albums = $this->tags->get_allowed_scope_ids_by_tag(
+			array_map('intval', array_column($rows, 'tag_id')),
+			image_tag_manager::PROVIDER,
+			$this->scopes->get_all_paths()
+		);
+		$selected = array_fill_keys(array_map([$this->tags, 'canonical_tag'], $this->search_tags), true);
+		$facets = [];
+		foreach ($rows as $row)
+		{
+			$tag_id = (int) $row['tag_id'];
+			if (isset($selected[$row['tag_clean']])
+				|| !in_array((int) $row['album_id'], $allowed_albums[$tag_id] ?? [], true))
+			{
+				continue;
+			}
+			if (!isset($facets[$tag_id]))
+			{
+				$facets[$tag_id] = ['tag' => $row['tag'], 'count' => 0];
+			}
+			$facets[$tag_id]['count'] += (int) $row['image_count'];
+		}
+
+		$params = (array) $event['search_params'];
+		foreach ($facets as $facet)
+		{
+			$params['tags'] = $this->parser->format(array_merge($this->search_tags, [$facet['tag']]));
+			$params['tag_operator'] = 'and';
+			$params['filtered'] = true;
+			$this->template->assign_block_vars('bbtagsbridge_facets', [
+				'NAME' => $facet['tag'],
+				'COUNT' => $facet['count'],
+				'U_SEARCH' => $this->helper->route('phpbbgallery_core_search', $params),
+			]);
+		}
+		$this->template->assign_var('S_BBTAGSBRIDGE_FACETS', !empty($facets));
 	}
 
 	public function validate_image_edit(data $event): void

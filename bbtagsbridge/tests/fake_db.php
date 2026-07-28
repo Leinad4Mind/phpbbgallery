@@ -16,6 +16,7 @@ final class fake_db implements \phpbb\db\driver\driver_interface
 	public array $catalogue = [];
 	public array $relations = [];
 	public array $usage = [];
+	public array $facet_rows = [];
 	public array $transactions = [];
 	private array $pending = [];
 	private array $built = [];
@@ -37,6 +38,13 @@ final class fake_db implements \phpbb\db\driver\driver_interface
 				$this->pending[] = ['image_album_id' => $this->images[$image_id]];
 			}
 		}
+		else if (str_contains($sql, 'SELECT album_id, parent_id') && str_contains($sql, 'FROM albums'))
+		{
+			foreach ($this->albums as $album_id => $parent_id)
+			{
+				$this->pending[] = ['album_id' => $album_id, 'parent_id' => $parent_id];
+			}
+		}
 		else if (preg_match('/FROM albums\s+WHERE album_id = (\d+)/s', $sql, $matches))
 		{
 			$album_id = (int) $matches[1];
@@ -44,6 +52,10 @@ final class fake_db implements \phpbb\db\driver\driver_interface
 			{
 				$this->pending[] = ['parent_id' => $this->albums[$album_id]];
 			}
+		}
+		else if (str_contains($sql, 'COUNT(DISTINCT it.image_id) AS image_count'))
+		{
+			$this->pending = $this->facet_rows;
 		}
 		else if (str_contains($sql, 'FROM image_tags it') && str_contains($sql, 'INNER JOIN bbtags b'))
 		{
