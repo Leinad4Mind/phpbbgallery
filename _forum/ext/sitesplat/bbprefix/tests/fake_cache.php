@@ -15,6 +15,9 @@ namespace sitesplat\bbprefix\tests;
  */
 class fake_cache
 {
+	/** phpBB's own driver default, mirrored here so a test can assert against it by name. */
+	public const DEFAULT_TTL = 31536000;
+
 	/** @var array Stored values, keyed the way the manager keys them */
 	public array $store = [];
 
@@ -39,7 +42,7 @@ class fake_cache
 		return array_key_exists($var, $this->store) ? $this->store[$var] : false;
 	}
 
-	public function put($var, $data, $ttl = 31536000)
+	public function put($var, $data, $ttl = self::DEFAULT_TTL)
 	{
 		$this->store[$var] = $data;
 		$this->writes[$var] = ['data' => $data, 'ttl' => $ttl];

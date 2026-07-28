@@ -41,4 +41,17 @@ namespace
 	require_once dirname(__DIR__) . '/core/manager.php';
 	require_once __DIR__ . '/fake_cache.php';
 	require_once __DIR__ . '/fake_db.php';
+	require_once __DIR__ . '/fake_log.php';
+
+	// The real group_memberships() lives in includes/functions_user.php and
+	// queries the database through the global $db. Stubbing it here means
+	// get_allowed_prefixes() never takes that include path in tests, and the
+	// membership list stays under the test's control instead.
+	if (!function_exists('group_memberships'))
+	{
+		function group_memberships($group_type = false, $user_id = false, $no_update = false)
+		{
+			return $GLOBALS['bbprefix_test_group_memberships'] ?? [];
+		}
+	}
 }

@@ -9,6 +9,7 @@ services:
             - '@user'
             - '@bbprefix.token.collection'
             - '@controller.helper'
+            - '@log'
             - '%core.root_path%'
             - '%core.php_ext%'
 

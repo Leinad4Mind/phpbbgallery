@@ -51,6 +51,17 @@ class listener implements EventSubscriberInterface
 	 */
 	public function setup($event)
 	{
+		// The log entries the manager writes on a cache/database anomaly use
+		// this language set, and it needs registering on every pass of this
+		// event - including the ACP's own request - or the raw language key
+		// shows up in the error log instead of the translated text.
+		$lang_set_ext = $event['lang_set_ext'];
+		$lang_set_ext[] = [
+			'ext_name'	=> 'sitesplat/bbprefix',
+			'lang_set'	=> 'bbprefix_log',
+		];
+		$event['lang_set_ext'] = $lang_set_ext;
+
 		// Keep this from running twice
 		if(true === $this->setup_has_been_run)
 		{

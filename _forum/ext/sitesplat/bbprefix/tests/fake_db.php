@@ -33,6 +33,9 @@ class fake_db
 	/** @var int Next result handle */
 	private int $handle = 0;
 
+	/** @var int Next auto-increment ID handed out by sql_nextid() */
+	private int $next_id = 1000;
+
 	public function sql_query($query, $cache_ttl = 0)
 	{
 		$this->queries[] = $query;
@@ -101,6 +104,16 @@ class fake_db
 	public function sql_build_array($query, $assoc_ary = [])
 	{
 		return '';
+	}
+
+	public function sql_nextid()
+	{
+		return ++$this->next_id;
+	}
+
+	public function sql_in_set($column, $array, $negate = false, $allow_empty_set = false)
+	{
+		return $column . ($negate ? ' NOT IN (' : ' IN (') . implode(',', (array) $array) . ')';
 	}
 
 	/**

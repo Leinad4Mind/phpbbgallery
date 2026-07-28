@@ -11,18 +11,13 @@ namespace sitesplat\bbprefix\core;
 
 class manager
 {
-	/**
-	 * How long a set stays cached. Bounded on purpose: if anything unexpected ever
-	 * does get stored, it corrects itself rather than waiting for a manual purge.
-	 */
-	private const CACHE_TTL = 3600;
-
 	protected $db;
 	protected $cache;
 	protected $template;
 	protected $request;
 	protected $user;
 	protected $tokens;
+	protected $log;
 	protected $prefix_instances;
 	protected $prefixes;
 
@@ -33,8 +28,9 @@ class manager
 	protected $group_names = [];
 	protected $forum_names = [];
 	protected $prefix_keys = [];
+	protected $logged_keys = [];
 
-	public function __construct(\phpbb\db\driver\factory $db, \phpbb\cache\driver\driver_interface $cache, \phpbb\template\template $template, \phpbb\request\request_interface $request, \phpbb\user $user, \phpbb\di\service_collection $tokens, \phpbb\controller\helper $helper, $phpbb_root_path, $php_ext)
+	public function __construct(\phpbb\db\driver\factory $db, \phpbb\cache\driver\driver_interface $cache, \phpbb\template\template $template, \phpbb\request\request_interface $request, \phpbb\user $user, \phpbb\di\service_collection $tokens, \phpbb\controller\helper $helper, \phpbb\log\log_interface $log, $phpbb_root_path, $php_ext)
 	{
 		$this->db = $db;
 		$this->cache = $cache;
@@ -42,6 +38,7 @@ class manager
 		$this->request = $request;
 		$this->user = $user;
 		$this->tokens = $tokens;
+		$this->log = $log;
 		$this->root_path = $phpbb_root_path;
 		$this->php_ext = $php_ext;
 
@@ -119,7 +116,7 @@ class manager
 			}
 			catch (\Throwable $e)
 			{
-				$this->log('Error reading cache ' . $cache_key . ': ' . $e->getMessage());
+				$this->log('LOG_BBPREFIX_CACHE_ERROR', [$cache_key, $e->getMessage()]);
 				$cached = false;
 			}
 
@@ -135,7 +132,7 @@ class manager
 		}
 		catch (\Throwable $e)
 		{
-			$this->log('Error loading ' . $cache_key . ': ' . $e->getMessage());
+			$this->log('LOG_BBPREFIX_LOAD_ERROR', [$cache_key, $e->getMessage()]);
 
 			return [];
 		}
@@ -149,19 +146,13 @@ class manager
 		$expected = $this->count_rows($table);
 		if ($expected !== null && $expected !== count($rows))
 		{
-			$this->log(sprintf(
-				'Refusing to cache %s: loaded %d of %d rows from %s.',
-				$cache_key,
-				count($rows),
-				$expected,
-				$table
-			));
+			$this->log('LOG_BBPREFIX_INCOMPLETE', [$cache_key, count($rows), $expected]);
 
 			// Still usable for this request; simply not trusted enough to keep.
 			return $rows;
 		}
 
-		$this->cache->put($cache_key, $rows, self::CACHE_TTL);
+		$this->cache->put($cache_key, $rows);
 
 		return $rows;
 	}
@@ -184,7 +175,7 @@ class manager
 		}
 		catch (\Throwable $e)
 		{
-			$this->log('Error counting rows in ' . $table . ': ' . $e->getMessage());
+			$this->log('LOG_BBPREFIX_COUNT_ERROR', [$table, $e->getMessage()]);
 
 			return null;
 		}
@@ -318,11 +309,42 @@ class manager
 		return $this;
 	}
 
-	private function log($message)
+	/**
+	 * Record a critical, admin-visible entry for a cache/database anomaly.
+	 *
+	 * These calls happen precisely when the database is misbehaving, and writing
+	 * the log entry is itself an INSERT - so failures here must never take the
+	 * page down with them, and a persistent anomaly must not fill the log table
+	 * on every single request.
+	 *
+	 * @param string $log_operation Language key for the log entry
+	 * @param array  $additional_data Extra sprintf() arguments for that key
+	 * @return void
+	 */
+	private function log($log_operation, array $additional_data = [])
 	{
-		// Log to a file or any other preferred logging mechanism
-		$logFile = 'file.log';
-		error_log(date('[Y-m-d H:i:s]') . ' ' . $message . PHP_EOL, 3, $logFile);
+		$dedup_key = $log_operation . '|' . implode('|', $additional_data);
+		if (isset($this->logged_keys[$dedup_key]))
+		{
+			return;
+		}
+		$this->logged_keys[$dedup_key] = true;
+
+		try
+		{
+			$this->log->add(
+				'critical',
+				$this->user->data['user_id'] ?? 0,
+				$this->user->ip ?? '',
+				$log_operation,
+				false,
+				$additional_data
+			);
+		}
+		catch (\Throwable $e)
+		{
+			// Logging must never be the thing that breaks prefix loading.
+		}
 	}
 
 	/**
@@ -466,9 +488,14 @@ class manager
 	 * @param int $prefix_id Prefix ID
 	 * @param int $forum_id Forum ID
 	 * @param int $order The order of the prefix
+	 * @param bool $reload Reload prefix instances from the database afterwards.
+	 *					Pass false when the caller is about to add several
+	 *					prefixes in a row and will reload once at the end
+	 *					instead - the in-memory list is updated either way, so
+	 *					the guard above stays correct for the next call.
 	 * @return null
 	 */
-	public function add_topic_prefix($topic_id, $prefix_id, $forum_id, $order = 0)
+	public function add_topic_prefix($topic_id, $prefix_id, $forum_id, $order = 0, $reload = true)
 	{
 		$allowed_prefixes = $this->get_allowed_prefixes($this->user->data['user_id'], $forum_id);
 
@@ -490,7 +517,15 @@ class manager
 		$sql = 'INSERT INTO ' . BBPREFIX_INSTANCES_TABLE . ' ' . $this->db->sql_build_array('INSERT', $sql_ary);
 		$this->db->sql_query($sql);
 
-		$this->load_prefix_instances(true);
+		if ($reload)
+		{
+			$this->load_prefix_instances(true);
+		}
+		else
+		{
+			$sql_ary['id'] = (int) $this->db->sql_nextid();
+			$this->prefix_instances[$sql_ary['id']] = $sql_ary;
+		}
 	}
 
 	/**
@@ -567,8 +602,9 @@ class manager
 		{
 			foreach ($prefix_ids as $prefix_id)
 			{
-				$this->add_topic_prefix($topic_id, $prefix_id, $forum_id);
+				$this->add_topic_prefix($topic_id, $prefix_id, $forum_id, 0, false);
 			}
+			$this->load_prefix_instances(true);
 		}
 		// Otherwise, we have some more difficult logic because we need to
 		// determine which are being added, removed, and retained
@@ -605,7 +641,6 @@ class manager
 						WHERE prefix = ' . (int) $retained_id;
 					$this->db->sql_query($sql);
 				}
-				$this->load_prefix_instances(true);
 			}
 
 			if (!empty($prefix_ids))
@@ -614,7 +649,7 @@ class manager
 				// that are left in $prefix_ids need to be added
 				foreach ($prefix_ids as $prefix_id)
 				{
-					$this->add_topic_prefix($topic_id, $prefix_id, $forum_id, array_search($prefix_id, $original_ids) + 1);
+					$this->add_topic_prefix($topic_id, $prefix_id, $forum_id, array_search($prefix_id, $original_ids) + 1, false);
 				}
 			}
 
@@ -622,8 +657,12 @@ class manager
 			{
 				// And the ones that are left in $this_topics_prefixes need to be
 				// removed
-				$this->remove_topic_prefixes($topic_id, $this_topics_prefixes);
+				$this->remove_topic_prefixes($topic_id, $this_topics_prefixes, false);
 			}
+
+			// One reload reconciles everything from the database, instead of the
+			// per-call reload each add/remove above used to trigger on its own.
+			$this->load_prefix_instances(true);
 		}
 	}
 
@@ -636,9 +675,12 @@ class manager
 	 * @param mixed	$prefix_id	Array or Integer Prefix ID
 	 *							If empty, ALL prefixes on that topic are
 	 *							removed.
+	 * @param bool $reload Reload prefix instances from the database afterwards.
+	 *					Pass false when the caller will reload once at the end
+	 *					of a larger batch instead.
 	 * @return null
 	 */
-	public function remove_topic_prefixes($topic_id, $prefix_id)
+	public function remove_topic_prefixes($topic_id, $prefix_id, $reload = true)
 	{
 		if (!empty($prefix_id) && !is_array($prefix_id))
 		{
@@ -649,7 +691,20 @@ class manager
 		$sql = 'DELETE FROM ' . BBPREFIX_INSTANCES_TABLE . ' WHERE topic = ' . (int) $topic_id . "$sql_and";
 		$this->db->sql_query($sql);
 
-		$this->load_prefix_instances(true);
+		if ($reload)
+		{
+			$this->load_prefix_instances(true);
+		}
+		else if (!empty($this->prefix_instances))
+		{
+			foreach ($this->prefix_instances as $key => $instance)
+			{
+				if ((int) $instance['topic'] === (int) $topic_id && (empty($prefix_id) || in_array((int) $instance['prefix'], $prefix_id)))
+				{
+					unset($this->prefix_instances[$key]);
+				}
+			}
+		}
 	}
 
 	/**

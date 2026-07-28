@@ -16,12 +16,18 @@ class manager_cache_test extends TestCase
 {
 	private fake_db $db;
 	private fake_cache $cache;
+	private fake_log $log;
 
 	// phpcs:ignore PhpbbCodingStandard.NamingConventions.LowercaseUnderscoredFunctions.NotAllowed -- PHPUnit lifecycle API.
 	protected function setUp(): void
 	{
 		$this->db = new fake_db();
 		$this->cache = new fake_cache();
+		$this->log = new fake_log();
+
+		// Matches the REGISTERED group used by the fixtures below, so prefixes
+		// are allowed for the test user without a real group_memberships() call.
+		$GLOBALS['bbprefix_test_group_memberships'] = [['group_id' => 1]];
 
 		$this->db->tables[BBPREFIX_TABLE] = [
 			$this->prefix_row(1, 'Alpha'),
@@ -41,14 +47,19 @@ class manager_cache_test extends TestCase
 		];
 	}
 
-	public function test_a_complete_load_is_cached_with_a_bounded_lifetime(): void
+	public function test_a_complete_load_is_cached_without_a_shortened_lifetime(): void
 	{
 		$manager = $this->new_manager();
 
 		$this->assertCount(4, $manager->get_prefixes());
 		$this->assertArrayHasKey('_prefixes', $this->cache->writes);
-		// A permanent entry is what made a bad value survive until a manual purge.
-		$this->assertLessThanOrEqual(3600, $this->cache->writes['_prefixes']['ttl']);
+		// Every write path already invalidates its own entry explicitly, so an
+		// hourly TTL only added an unneeded database hit - it must not be passed.
+		$this->assertSame(
+			$this->cache::DEFAULT_TTL,
+			$this->cache->writes['_prefixes']['ttl'],
+			'put() must be called with phpBB\'s own default, not a shortened one'
+		);
 	}
 
 	public function test_a_valid_cache_is_used_without_touching_the_table(): void
@@ -172,6 +183,135 @@ class manager_cache_test extends TestCase
 		$this->assertStringContainsString("O''Brien", $this->db->queries[0]);
 	}
 
+	public function test_a_short_read_logs_through_the_phpbb_logger(): void
+	{
+		$this->db->short_rows[BBPREFIX_TABLE] = 2;
+
+		$this->new_manager();
+
+		$this->assertCount(1, $this->log->calls);
+		$call = $this->log->calls[0];
+		$this->assertSame('critical', $call['mode']);
+		$this->assertSame('LOG_BBPREFIX_INCOMPLETE', $call['log_operation']);
+		$this->assertSame(['_prefixes', 2, 4], $call['additional_data']);
+	}
+
+	public function test_a_repeated_anomaly_in_the_same_request_is_logged_once(): void
+	{
+		$this->db->short_rows[BBPREFIX_TABLE] = 2;
+
+		$manager = $this->new_manager();
+		// Force the same short read again, still within the same request.
+		$manager->load_prefixes(true);
+
+		$this->assertCount(1, $this->log->calls, 'a persistent anomaly must not log on every tick');
+	}
+
+	public function test_a_throwing_logger_does_not_break_prefix_loading(): void
+	{
+		$this->db->short_rows[BBPREFIX_TABLE] = 2;
+		$this->log->throw_on_add = new \RuntimeException('logger unavailable');
+
+		$prefixes = $this->new_manager()->get_prefixes();
+
+		$this->assertCount(2, $prefixes, 'a broken logger must not prevent serving the short read');
+	}
+
+	public function test_no_stray_log_file_is_ever_created(): void
+	{
+		// This is the concrete bug being fixed: log() used to write to a
+		// relative 'file.log', which lands in the web root on a real forum.
+		$this->db->short_rows[BBPREFIX_TABLE] = 2;
+
+		$this->new_manager();
+
+		$this->assertFileDoesNotExist(getcwd() . DIRECTORY_SEPARATOR . 'file.log');
+	}
+
+	public function test_add_topic_prefix_still_reloads_when_called_standalone(): void
+	{
+		$manager = $this->new_manager();
+		$this->db->queries = [];
+
+		$manager->add_topic_prefix(502, 1, 0);
+
+		$this->assertCount(1, $this->reload_queries(), 'a standalone call keeps reloading, same as before');
+	}
+
+	public function test_add_topic_prefix_keeps_the_in_memory_guard_correct_without_reloading(): void
+	{
+		$manager = $this->new_manager();
+		$this->db->queries = [];
+
+		$manager->add_topic_prefix(500, 1, 0, 0, false);
+		$manager->add_topic_prefix(500, 2, 0, 0, false);
+		$manager->add_topic_prefix(500, 3, 0, 0, false);
+
+		$this->assertSame(3, $manager->count_topic_prefixes(500), 'the in-memory list must reflect all three additions');
+		$this->assertCount(0, $this->reload_queries(), 'reload=false must not touch the database for this');
+	}
+
+	public function test_add_topic_prefix_in_memory_guard_stops_at_the_allowed_maximum(): void
+	{
+		$manager = $this->new_manager();
+
+		// All four fixture prefixes belong to group 1, so all four are allowed.
+		$manager->add_topic_prefix(501, 1, 0, 0, false);
+		$manager->add_topic_prefix(501, 2, 0, 0, false);
+		$manager->add_topic_prefix(501, 3, 0, 0, false);
+		$manager->add_topic_prefix(501, 4, 0, 0, false);
+		$this->assertSame(4, $manager->count_topic_prefixes(501));
+
+		$this->db->queries = [];
+		// If the in-memory list had gone stale mid-batch, this guard would
+		// under-count and let a fifth prefix through.
+		$manager->add_topic_prefix(501, 1, 0, 0, false);
+
+		$this->assertSame(4, $manager->count_topic_prefixes(501), 'the topic is already at its allowed maximum');
+		$this->assertSame([], $this->db->queries, 'a refused add must not touch the database at all');
+	}
+
+	public function test_remove_topic_prefixes_without_reload_updates_the_in_memory_list(): void
+	{
+		$manager = $this->new_manager();
+		$this->db->queries = [];
+
+		$manager->remove_topic_prefixes(10, 1, false);
+
+		$this->assertCount(0, $this->reload_queries(), 'reload=false must not touch the database');
+
+		$instances = $manager->get_prefix_instances();
+		$this->assertArrayNotHasKey(1, $instances, 'instance 1 (topic 10, prefix 1) must be gone');
+		$this->assertArrayHasKey(2, $instances, 'instance 2 (topic 11) must be untouched');
+	}
+
+	public function test_set_topic_prefixes_issues_a_single_reload_when_adding_several_prefixes(): void
+	{
+		$manager = $this->new_manager();
+		$this->db->queries = [];
+
+		$manager->set_topic_prefixes(503, [1, 2, 3], 0);
+
+		$this->assertCount(1, $this->reload_queries(), 'adding three prefixes must trigger one reload, not one per prefix');
+
+		$inserts = array_filter($this->db->queries, static function ($query) {
+			return strpos($query, 'INSERT INTO ' . BBPREFIX_INSTANCES_TABLE) !== false;
+		});
+		$this->assertCount(3, $inserts, 'all three prefixes are still individually inserted');
+	}
+
+	/**
+	 * @return array Queries matching the full prefix-instances reload, so a
+	 *				test can count reloads regardless of how many INSERT/
+	 *				UPDATE/COUNT queries happen alongside them.
+	 */
+	private function reload_queries(): array
+	{
+		return array_filter($this->db->queries, static function ($query) {
+			return strpos($query, 'SELECT id, prefix, topic, ordered, token_data FROM') !== false;
+		});
+	}
+
 	private function prefix_row($id, $name, $groups = '[1]', $forums = '[1]')
 	{
 		return [
@@ -197,8 +337,12 @@ class manager_cache_test extends TestCase
 
 		$this->set_property($manager, 'db', $this->db);
 		$this->set_property($manager, 'cache', $this->cache);
+		$this->set_property($manager, 'log', $this->log);
 		$this->set_property($manager, 'user', new manager_test_user());
 		$this->set_property($manager, 'request', new manager_test_request());
+		// calculateTokenDataForInstance() iterates this when an add_topic_prefix()
+		// call actually inserts; no token types are needed for these tests.
+		$this->set_property($manager, 'tokens', []);
 
 		$manager->load_prefixes();
 		$manager->load_prefix_instances();
@@ -224,6 +368,10 @@ class manager_test_user
 		'BBPREFIX_TITLE_ERROR' => 'title',
 		'BBPREFIX_NAME_ERROR' => 'name',
 	];
+
+	public array $data = ['user_id' => 2];
+
+	public string $ip = '127.0.0.1';
 }
 
 class manager_test_request
