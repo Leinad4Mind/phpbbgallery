@@ -4,3 +4,4 @@ _forum/cache
 _forum/config.php
 
 /vendor/
+_forum/LocalValetDriver.php
