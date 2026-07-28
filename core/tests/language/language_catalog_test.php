@@ -157,6 +157,26 @@ class language_catalog_test extends TestCase
 		$this->assertSame([], $failures, implode(chr(10), $failures));
 	}
 
+	public function test_portuguese_acp_settings_describe_the_values_they_control(): void
+	{
+		$expected = [
+			'COMMENT_MAX_LENGTH' => 'Comprimento máximo dos comentários',
+			'IMAGE_DESC_MAX_LENGTH' => 'Comprimento máximo das descrições das imagens',
+			'ITEMS_PER_PAGE' => 'Itens por página',
+			'RATE_SCALE' => 'Escala de classificação',
+		];
+		$language_root = $this->extension_root . '/core/language';
+
+		foreach (['pt', 'pt_preao'] as $locale)
+		{
+			$language = $this->load_language($language_root . '/' . $locale . '/gallery_acp.php');
+			foreach ($expected as $key => $value)
+			{
+				$this->assertSame($value, $language[$key], $locale . ':' . $key);
+			}
+		}
+	}
+
 	public function test_brazilian_portuguese_catalog_uses_brazilian_vocabulary_and_register(): void
 	{
 		$patterns = [
