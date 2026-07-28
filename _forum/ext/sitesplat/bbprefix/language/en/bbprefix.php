@@ -39,4 +39,7 @@ $lang = array_merge($lang, [
 	'PREFIXED_TOKEN_POSTER_EXPLAIN'		=> 'This token is replaced with the username of the topic poster.',
 	'PREFIXED_TOKEN_DATE'				=> '{DATE}',
 	'PREFIXED_TOKEN_DATE_EXPLAIN'		=> 'This token is replaced with the date on which the prefix was applied to to the topic.',
+
+	'BBPREFIX_MIN_SELECTED_ERROR'		=> 'You must select at least %d prefix(es).',
+	'BBPREFIX_MAX_SELECTED_ERROR'		=> 'You may select at most %d prefix(es).',
 ]);

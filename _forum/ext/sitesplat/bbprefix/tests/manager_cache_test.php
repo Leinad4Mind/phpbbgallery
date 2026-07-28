@@ -45,6 +45,7 @@ class manager_cache_test extends TestCase
 		$this->db->tables[FORUMS_TABLE] = [
 			['forum_id' => 1, 'forum_name' => 'General'],
 		];
+		$this->db->tables[BBPREFIX_CATEGORIES_TABLE] = [];
 	}
 
 	public function test_a_complete_load_is_cached_without_a_shortened_lifetime(): void
@@ -300,6 +301,129 @@ class manager_cache_test extends TestCase
 		$this->assertCount(3, $inserts, 'all three prefixes are still individually inserted');
 	}
 
+	public function test_reorder_prefixes_resequences_weight_in_submitted_order(): void
+	{
+		$manager = $this->new_manager();
+		$this->db->queries = [];
+
+		$manager->reorder_prefixes([3, 1, 4]);
+
+		$this->assertStringContainsString('SET weight = 1 WHERE id = 3', $this->db->queries[0]);
+		$this->assertStringContainsString('SET weight = 2 WHERE id = 1', $this->db->queries[1]);
+		$this->assertStringContainsString('SET weight = 3 WHERE id = 4', $this->db->queries[2]);
+	}
+
+	public function test_group_prefix_ids_by_category_ors_within_and_ands_across(): void
+	{
+		$this->db->tables[BBPREFIX_TABLE] = [
+			$this->prefix_row(1, 'Alpha', '[1]', '[1]', 1), // Resolution
+			$this->prefix_row(2, 'Beta', '[1]', '[1]', 1),  // Resolution
+			$this->prefix_row(3, 'Gamma', '[1]', '[1]', 2), // Source
+			$this->prefix_row(4, 'Delta', '[1]', '[1]', 0), // no category
+		];
+		$manager = $this->new_manager();
+
+		$groups = $manager->group_prefix_ids_by_category([1, 2, 3, 4]);
+
+		$this->assertContains([1, 2], $groups, 'same-category prefixes share one OR group');
+		$this->assertContains([3], $groups);
+		$this->assertContains([4], $groups, 'an uncategorised prefix is its own singleton group');
+		$this->assertCount(3, $groups);
+	}
+
+	public function test_build_prefix_filter_exists_clause_ors_within_and_ands_across_categories(): void
+	{
+		$this->db->tables[BBPREFIX_TABLE] = [
+			$this->prefix_row(1, 'Alpha', '[1]', '[1]', 1),
+			$this->prefix_row(2, 'Beta', '[1]', '[1]', 1),
+			$this->prefix_row(3, 'Gamma', '[1]', '[1]', 2),
+		];
+		$manager = $this->new_manager();
+
+		$clause = $manager->build_prefix_filter_exists_clause([1, 2, 3]);
+
+		$this->assertSame(2, substr_count($clause, 'EXISTS'), 'one EXISTS per category group');
+		$this->assertStringContainsString('pr.prefix IN (1,2)', $clause);
+		$this->assertStringContainsString('pr.prefix IN (3)', $clause);
+		$this->assertStringContainsString(' AND ', $clause, 'different category groups are ANDed');
+	}
+
+	public function test_get_active_prefix_ids_is_empty_when_nothing_is_active(): void
+	{
+		$manager = $this->new_manager();
+
+		$this->assertSame([], $manager->get_active_prefix_ids());
+	}
+
+	public function test_get_active_prefix_ids_honours_a_legacy_scalar_link(): void
+	{
+		// Simulates an old bookmarked ?prefix=16 link (no brackets).
+		$request = new fake_request();
+		$request->raw['prefix'] = '16';
+
+		$manager = $this->new_manager($request);
+
+		$this->assertSame([16], $manager->get_active_prefix_ids());
+	}
+
+	public function test_get_active_prefix_ids_reads_the_new_bracket_form(): void
+	{
+		$request = new fake_request();
+		$request->raw['prefix'] = ['16', '17'];
+
+		$manager = $this->new_manager($request);
+
+		$this->assertSame([16, 17], $manager->get_active_prefix_ids());
+	}
+
+	public function test_build_viewforum_url_appends_prefixes_in_order(): void
+	{
+		$manager = $this->new_manager();
+
+		$url = $manager->build_viewforum_url(5, [16, 17]);
+
+		$this->assertStringContainsString('f=5', $url);
+		$this->assertStringContainsString('prefix[]=16', $url);
+		$this->assertStringContainsString('prefix[]=17', $url);
+		$this->assertLessThan(strpos($url, 'prefix[]=17'), strpos($url, 'prefix[]=16'), 'prefixes must appear in the order given');
+	}
+
+	public function test_get_allowed_prefixes_exclude_mode_disallows_listed_forums(): void
+	{
+		$this->db->tables[BBPREFIX_TABLE] = [
+			$this->prefix_row(1, 'Alpha', '[1]', '[5]', 0, 0, 1),
+		];
+		$manager = $this->new_manager();
+
+		$this->assertSame([1], $manager->get_allowed_prefixes(2, 9), 'forum 9 is not in the exclude list, so it is allowed');
+		$this->assertSame([], $manager->get_allowed_prefixes(2, 5), 'forum 5 is in the exclude list, so it is disallowed');
+	}
+
+	public function test_get_allowed_prefixes_include_mode_allows_only_listed_forums(): void
+	{
+		$this->db->tables[BBPREFIX_TABLE] = [
+			$this->prefix_row(1, 'Alpha', '[1]', '[5]', 0, 0, 0),
+		];
+		$manager = $this->new_manager();
+
+		$this->assertSame([1], $manager->get_allowed_prefixes(2, 5), 'forum 5 is in the include list, so it is allowed');
+		$this->assertSame([], $manager->get_allowed_prefixes(2, 9), 'forum 9 is not in the include list, so it is disallowed');
+	}
+
+	public function test_validate_prefix_refuses_an_oversized_forums_list(): void
+	{
+		$manager = $this->new_manager();
+
+		$error = $manager->validate_prefix([
+			'prefix' => 'x',
+			'name' => 'y',
+			'forums' => json_encode(range(1, 200)),
+			'forums_exclude' => 1,
+		]);
+
+		$this->assertNotSame([], $error, 'an oversized list must be refused before it ever reaches the database');
+	}
+
 	/**
 	 * @return array Queries matching the full prefix-instances reload, so a
 	 *				test can count reloads regardless of how many INSERT/
@@ -312,7 +436,7 @@ class manager_cache_test extends TestCase
 		});
 	}
 
-	private function prefix_row($id, $name, $groups = '[1]', $forums = '[1]')
+	private function prefix_row($id, $name, $groups = '[1]', $forums = '[1]', $category_id = 0, $is_suffix = 0, $forums_exclude = 1)
 	{
 		return [
 			'id' => $id,
@@ -323,14 +447,22 @@ class manager_cache_test extends TestCase
 			'on_index' => 1,
 			'bbcode_uid' => '',
 			'bbcode_bitfield' => '',
+			'weight' => $id,
+			'category_id' => $category_id,
+			'is_suffix' => $is_suffix,
+			'forums_exclude' => $forums_exclude,
 		];
 	}
 
 	/**
 	 * The constructor pulls in the whole phpBB container, so it is bypassed and
 	 * only the collaborators these paths touch are supplied.
+	 *
+	 * @param object|null $request Defaults to a double that just echoes back
+	 *				whatever default it is given; pass a fake_request when a
+	 *				test needs to control what the "user" actually submitted.
 	 */
-	private function new_manager(): manager
+	private function new_manager($request = null): manager
 	{
 		$reflection = new \ReflectionClass(manager::class);
 		$manager = $reflection->newInstanceWithoutConstructor();
@@ -339,7 +471,7 @@ class manager_cache_test extends TestCase
 		$this->set_property($manager, 'cache', $this->cache);
 		$this->set_property($manager, 'log', $this->log);
 		$this->set_property($manager, 'user', new manager_test_user());
-		$this->set_property($manager, 'request', new manager_test_request());
+		$this->set_property($manager, 'request', $request ?? new manager_test_request());
 		// calculateTokenDataForInstance() iterates this when an add_topic_prefix()
 		// call actually inserts; no token types are needed for these tests.
 		$this->set_property($manager, 'tokens', []);
@@ -367,6 +499,9 @@ class manager_test_user
 		'BBPREFIX_EMPTY_ERROR' => 'empty',
 		'BBPREFIX_TITLE_ERROR' => 'title',
 		'BBPREFIX_NAME_ERROR' => 'name',
+		'BBPREFIX_FORUMS_TOO_LONG' => 'forums list too long, try %s instead',
+		'BBPREFIX_FORUMS_MODE_INCLUDE' => 'include mode',
+		'BBPREFIX_FORUMS_MODE_EXCLUDE' => 'exclude mode',
 	];
 
 	public array $data = ['user_id' => 2];

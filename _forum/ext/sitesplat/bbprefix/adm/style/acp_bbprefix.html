@@ -12,6 +12,8 @@
 
 	<h1>{L_ACP_BBPREFIX_MANAGE} <a href="javascript:void(0)" class="md-trigger" data-remote="{U_ACTION}&amp;action=details" data-toggle="modal" data-target="#myModal"><span class="label label-success">{L_ACP_BBPREFIX_VERSION} <i class="fa fa-info-circle"></i></span></a></h1>
 
+	<p><a href="{U_ACTION}&amp;action=categories">{L_BBPREFIX_MANAGE_CATEGORIES}</a> &middot; <a href="{U_ACTION}&amp;action=settings">{L_BBPREFIX_SETTINGS}</a></p>
+
 		<!-- Modal -->
 		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 		  <div class="modal-dialog" role="document">
@@ -27,7 +29,7 @@
 		  </div>
 		</div>
 		</div>
-		
+
 <p>{L_TITLE_EXPLAIN}</p>
 
 <!-- IF S_LIST -->
@@ -35,21 +37,27 @@
 		<table class="cbTable" cellpadding="0" cellspacing="0">
 		<thead>
 		<tr class="cbHead">
+			<td style="width:5px;"></td>
 			<td style="width:5px;">#</td>
 			<td>{L_PREFIX_NAME}</td>
 			<td>{L_PREFIX_PARSED}</td>
-			<td style="width:25%;">{L_EX_FORUMS}</td>
-			<td style="width:25%;">{L_GROUPS}</td>
+			<td>{L_BBPREFIX_TYPE}</td>
+			<td style="width:20%;">{L_BBPREFIX_CATEGORY}</td>
+			<td style="width:20%;">{L_EX_FORUMS}</td>
+			<td style="width:20%;">{L_GROUPS}</td>
 			<td>{L_USED}</td>
 			<td>{L_ACTION}</td>
 		</tr>
 		</thead>
-		<tbody>
+		<tbody id="bbprefix_sortable">
 		<!-- BEGIN prefix -->
-    		<tr class="<!-- IF prefix.S_ROW_COUNT is even -->cbOddLine<!-- ELSE -->cbEvenLine<!-- ENDIF -->">
+    		<tr class="<!-- IF prefix.S_ROW_COUNT is even -->cbOddLine<!-- ELSE -->cbEvenLine<!-- ENDIF -->" data-id="{prefix.ID}">
+				<td class="bbprefix-drag-handle" title="{L_BBPREFIX_DRAG_TO_REORDER}"><i class="fa fa-arrows"></i></td>
 				<td>{prefix.NR}</td>
 				<td>{prefix.NAME}</td>
 				<td>{prefix.PREFIX}</td>
+				<td>{prefix.TYPE}</td>
+				<td class="row">{prefix.CATEGORY}</td>
 				<td class="row">{prefix.FORUMS}</td>
 				<td class="row">{prefix.GROUPS}</td>
 				<td>{prefix.USED}</td>
@@ -57,22 +65,111 @@
 			</tr>
 		<!-- BEGINELSE -->
 			<tr class="cbOddLine">
-				<td colspan="6">{L_ACP_NO_ITEMS}</td>
+				<td colspan="9">{L_ACP_NO_ITEMS}</td>
 			</tr>
 		<!-- END prefix -->
-    <tr class="cbNew">
-			<td></td>
+		</tbody>
+		<tbody>
+		<tr class="cbNew">
+			<td colspan="2"></td>
             <td><input type="text" id="prefix_name" name="prefix_name" maxlength="255" value="" style="width:95%" placeholder="{L_PREFIX_NAME}"/></td>
             <td><input type="text" id="prefix_prefix" name="prefix_prefix" maxlength="255" value=""  style="width:95%" placeholder="{L_PREFIX_PARSED}"/></td>
-            <td style="text-align:left;" colspan="3"><input type="hidden" name="action" value="add" /><input class="button1" type="submit" id="submitadd" name="submitadd" value="{L_ADD_PREFIX}" /></td>
+            <td style="text-align:left;" colspan="5"><input type="hidden" name="action" value="add" /><input class="button1" type="submit" id="submitadd" name="submitadd" value="{L_ADD_PREFIX}" /></td>
             <td>
-                <!-- IF PREVURL --><a href="{PREVURL}"><img border="0" title="{L_PAGEBACK}" src="{EXT_PATH}adm/style/css/images/prev.png"  width="13px" /></a><!-- ENDIF --> 
+                <!-- IF PREVURL --><a href="{PREVURL}"><img border="0" title="{L_PAGEBACK}" src="{EXT_PATH}adm/style/css/images/prev.png"  width="13px" /></a><!-- ENDIF -->
                 <!-- IF NEXTURL --><a href="{NEXTURL}"><img border="0" title="{L_PAGEFURTHER}" src="{EXT_PATH}adm/style/css/images/next.png"  width="13px" /></a><!-- ENDIF -->
             </td>
         </tr>
         </tbody>
         </table>
+        <p class="submit-buttons">
+        	<input type="hidden" name="bbprefix_order" id="bbprefix_order" value="" />
+        	<input class="button1" type="submit" name="submit_reorder" value="{L_BBPREFIX_SAVE_ORDER}" />
+        </p>
  	</form>
+
+<!-- ELSEIF S_CATEGORIES_LIST -->
+	<form method="post" action="{U_ACTION}&amp;action=categories">
+		<table class="cbTable" cellpadding="0" cellspacing="0">
+		<thead>
+		<tr class="cbHead">
+			<td style="width:5px;">#</td>
+			<td>{L_BBPREFIX_CATEGORY}</td>
+			<td>{L_USED}</td>
+			<td>{L_ACTION}</td>
+		</tr>
+		</thead>
+		<tbody>
+		<!-- BEGIN category -->
+			<tr class="<!-- IF category.S_ROW_COUNT is even -->cbOddLine<!-- ELSE -->cbEvenLine<!-- ENDIF -->">
+				<td>{category.NR}</td>
+				<td>{category.CATEGORY_NAME}</td>
+				<td>{category.USED}</td>
+				<td style="text-align: center; width: 50px;"><a href="{category.U_EDIT}" title="{L_EDIT}" style="margin:0 10%"><i class="fa fa-pencil"></i></a> <a href="{category.U_DELETE}" title="{L_DELETE}"><i class="fa fa-trash-o"></i></a></td>
+			</tr>
+		<!-- BEGINELSE -->
+			<tr class="cbOddLine">
+				<td colspan="4">{L_ACP_NO_ITEMS}</td>
+			</tr>
+		<!-- END category -->
+		<tr class="cbNew">
+			<td></td>
+			<td><input type="text" id="category_name" name="category_name" maxlength="255" value="" style="width:95%" placeholder="{L_BBPREFIX_CATEGORY}"/></td>
+			<td colspan="2" style="text-align:left;"><input type="hidden" name="action" value="category_add" /><input class="button1" type="submit" id="submit" name="submit" value="{L_ADD_PREFIX}" /></td>
+		</tr>
+		</tbody>
+		</table>
+		{S_FORM_TOKEN}
+	</form>
+
+<!-- ELSEIF S_CATEGORY_FORM -->
+	<form id="acp_bbprefix_category" method="post" action="{U_ACTION}&amp;action={CATEGORY_ACTION}">
+		<fieldset>
+			<legend>{L_BBPREFIX_CATEGORY}</legend>
+			<dl>
+				<dt>
+					<label for="category_name">{L_BBPREFIX_CATEGORY}{L_COLON}</label>
+				</dt>
+				<dd><input type="text" id="category_name" name="category_name" size="60" maxlength="255" value="{CATEGORY_NAME}" /></dd>
+			</dl>
+
+			<p class="submit-buttons">
+				<input type="hidden" name="category_id" value="{CATEGORY_ID}" />
+				<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+				<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+			</p>
+			{S_FORM_TOKEN}
+		</fieldset>
+	</form>
+
+<!-- ELSEIF S_SETTINGS_FORM -->
+	<form id="acp_bbprefix_settings" method="post" action="{U_ACTION}&amp;action=settings">
+		<fieldset>
+			<legend>{L_BBPREFIX_SETTINGS}</legend>
+			<dl>
+				<dt>
+					<label for="bbprefix_min_selected">{L_BBPREFIX_MIN_SELECTED}{L_COLON}</label>
+						<br /><span>{L_BBPREFIX_MIN_SELECTED_EXPLAIN}</span>
+				</dt>
+				<dd><input type="number" min="0" id="bbprefix_min_selected" name="bbprefix_min_selected" size="5" value="{BBPREFIX_MIN_SELECTED}" /></dd>
+			</dl>
+
+			<dl>
+				<dt>
+					<label for="bbprefix_max_selected">{L_BBPREFIX_MAX_SELECTED}{L_COLON}</label>
+						<br /><span>{L_BBPREFIX_MAX_SELECTED_EXPLAIN}</span>
+				</dt>
+				<dd><input type="number" min="0" id="bbprefix_max_selected" name="bbprefix_max_selected" size="5" value="{BBPREFIX_MAX_SELECTED}" /></dd>
+			</dl>
+
+			<p class="submit-buttons">
+				<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+				<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+			</p>
+			{S_FORM_TOKEN}
+		</fieldset>
+	</form>
+
 <!-- ELSE -->
 	<!-- IF S_ERROR -->
 		<div class="errorbox">
@@ -86,23 +183,33 @@
 			<legend>{LEGEND}</legend>
 			<dl>
 				<dt>
-					<label for="prefix_name">{L_BBPREFIX_NAME}:</label>
+					<label for="prefix_name">{L_BBPREFIX_NAME}{L_COLON}</label>
 						<br /><span>{L_BBPREFIX_NAME_EXPLAIN}</span>
 				</dt>
 				<dd><input type="text" id="prefix_name" name="prefix_name" size="60" maxlength="255" value="{PREFIX_NAME}" /></dd>
 			</dl>
-            
+
 			<dl>
 				<dt>
-					<label for="prefix_prefix">{L_BBPREFIX_TITLE}:</label>
+					<label for="prefix_prefix">{L_BBPREFIX_TITLE}{L_COLON}</label>
 						<br /><span>{L_BBPREFIX_TITLE_EXPLAIN}</span>
 				</dt>
 				<dd><input type="text" id="prefix_prefix" name="prefix_prefix" size="60" maxlength="255" value="{PREFIX_PREFIX}" /></dd>
 			</dl>
-            
+
 			<dl>
 				<dt>
-					<label for="prefix_on_index">{L_BBPREFIX_ON_INDEX}:</label>
+					<label for="prefix_is_suffix">{L_BBPREFIX_TYPE}{L_COLON}</label>
+						<br /><span>{L_BBPREFIX_TYPE_EXPLAIN}</span>
+				</dt>
+				<dd><label><input type="radio" class="radio" name="prefix_is_suffix" value="0"<!-- IF not BBPREFIX_IS_SUFFIX --> checked="checked" <!-- ENDIF --> /> {L_BBPREFIX_PREFIX}</label>
+					<label><input type="radio" class="radio" name="prefix_is_suffix" value="1"<!-- IF BBPREFIX_IS_SUFFIX --> checked="checked" <!-- ENDIF --> /> {L_BBPREFIX_SUFFIX}</label>
+				</dd>
+			</dl>
+
+			<dl>
+				<dt>
+					<label for="prefix_on_index">{L_BBPREFIX_ON_INDEX}{L_COLON}</label>
 						<br /><span>{L_BBPREFIX_ON_INDEX_EXPLAIN}</span>
 				</dt>
 				<dd><label><input type="radio" class="radio" name="prefix_on_index" value="1"<!-- IF BBPREFIX_ON_INDEX --> checked="checked" <!-- ENDIF --> /> {L_YES}</label>
@@ -112,7 +219,32 @@
 
 			<dl>
 				<dt>
-					<label for="prefix_forums">{L_BBPREFIX_FORUMS}:</label>
+					<label for="prefix_category">{L_BBPREFIX_CATEGORY}{L_COLON}</label>
+						<br /><span>{L_BBPREFIX_CATEGORY_EXPLAIN}</span>
+				</dt>
+				<dd>
+				<select id="prefix_category" name="prefix_category">
+					<option value="0">{L_BBPREFIX_CATEGORY_NONE}</option>
+					<!-- BEGIN categories -->
+					<option value="{categories.CATEGORY_ID}"{categories.SELECTED}>{categories.CATEGORY_NAME}</option>
+					<!-- END categories -->
+				</select>
+				</dd>
+			</dl>
+
+			<dl>
+				<dt>
+					<label for="prefix_forums_mode">{L_BBPREFIX_FORUMS_MODE}{L_COLON}</label>
+						<br /><span>{L_BBPREFIX_FORUMS_MODE_EXPLAIN}</span>
+				</dt>
+				<dd><label><input type="radio" class="radio" name="prefix_forums_mode" value="exclude"<!-- IF BBPREFIX_FORUMS_EXCLUDE --> checked="checked" <!-- ENDIF --> /> {L_BBPREFIX_FORUMS_MODE_EXCLUDE}</label>
+					<label><input type="radio" class="radio" name="prefix_forums_mode" value="include"<!-- IF not BBPREFIX_FORUMS_EXCLUDE --> checked="checked" <!-- ENDIF --> /> {L_BBPREFIX_FORUMS_MODE_INCLUDE}</label>
+				</dd>
+			</dl>
+
+			<dl>
+				<dt>
+					<label for="prefix_forums">{L_BBPREFIX_FORUMS}{L_COLON}</label>
 						<br /><span>{L_BBPREFIX_FORUMS_EXPLAIN}</span>
 				</dt>
 				<dd><select id="prefix_forums" name="prefix_forums[]" size="10" multiple>{PREFIX_FORUMS}</select></dd>
@@ -120,10 +252,10 @@
 
 			<dl>
 				<dt>
-					<label for="prefix_groups">{L_BBPREFIX_GROUPS}:</label>
+					<label for="prefix_groups">{L_BBPREFIX_GROUPS}{L_COLON}</label>
 						<br /><span>{L_BBPREFIX_GROUPS_EXPLAIN}</span>
 				</dt>
-				<dd>                
+				<dd>
                 <select id="prefix_groups" name="prefix_groups[]" size="5" multiple>
                <option value="0">-----</option>
                 <!-- BEGIN usergroups -->
@@ -141,7 +273,7 @@
 			</p>
 			{S_FORM_TOKEN}
 		</fieldset>
-	</form>	
+	</form>
 <!-- ENDIF -->
 
    <div class="legend-box">
@@ -151,8 +283,9 @@
      <p>{L_BBPREFIX_MANAGE_EXONE}</p>
       <p>{L_BBPREFIX_MANAGE_EXTWO}</p>
 	  <p>{L_BBPREFIX_MANAGE_EXTHREE}</p>
-	<div>  
+	<div>
 
+<!-- INCLUDEJS {ROOT_PATH}ext/sitesplat/bbprefix/vendor/sortablejs/Sortable.min.js -->
 <!-- INCLUDEJS js/bbprefix.js -->
 <!-- INCLUDEJS {ROOT_PATH}ext/sitesplat/bbprefix/vendor/bootstrap/js/bootstrap.min.js -->
 <div class="md-overlay"></div><!-- the overlay element -->

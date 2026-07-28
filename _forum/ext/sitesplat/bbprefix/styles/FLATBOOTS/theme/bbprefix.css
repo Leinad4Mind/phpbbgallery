@@ -97,6 +97,14 @@ li.prefix_placeholder {
     margin-right: 5px;
 }
 
+.bbprefix-active-filters {
+    margin-bottom: 10px;
+}
+
+.bbprefix-active-filters .bbprefix_tag {
+    margin-right: 6px;
+}
+
 .section-viewtopic .side-segment .label {
 	display: inline-block;
 }

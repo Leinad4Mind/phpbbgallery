@@ -39,4 +39,7 @@ $lang = array_merge($lang, [
 	'PREFIXED_TOKEN_POSTER_EXPLAIN'   => 'Este símbolo é substituído pelo nome de usuário do autor do tópico.',
 	'PREFIXED_TOKEN_DATE'             => '{DATE}',
 	'PREFIXED_TOKEN_DATE_EXPLAIN'     => 'Este símbolo é substituído pela data em que o prefixo foi aplicado ao tópico.',
+
+	'BBPREFIX_MIN_SELECTED_ERROR' => 'Você precisa selecionar pelo menos %d prefixo(s).',
+	'BBPREFIX_MAX_SELECTED_ERROR' => 'Você pode selecionar no máximo %d prefixo(s).',
 ]);

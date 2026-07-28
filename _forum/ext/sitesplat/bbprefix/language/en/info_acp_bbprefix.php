@@ -65,15 +65,48 @@ $lang = array_merge($lang, [
 
 	'DELETE_PREFIX'					=> 'Are you sure you want to delete the specified prefix?',
 	'DELETE_PREFIX_CONFIRM'			=> 'The prefix and all of its instances will be deleted. This cannot be undone.',
-	
+
 	'BBPREFIX_EMPTY_ERROR'			=> 'Empty name and / or prefix',
 	'BBPREFIX_NAME_ERROR'			=> 'This BBprefix id already taken',
 	'BBPREFIX_TITLE_ERROR'			=> 'This prefix already exists',
-	
+
 	'PREFIX_ADDED_SUCCESS'			=> 'The prefix has been added successfully.',
 	'PREFIX_EDITED_SUCCESS'			=> 'The prefix has been updated successfully.',
 	'PREFIX_DELETED_SUCCESS'		=> 'The prefix has been deleted successfully.',
 	'NO_PREFIX_ID_SPECIFIED'		=> 'You must specify a valid prefix ID.',
+	'PREFIX_REORDERED_SUCCESS'		=> 'The prefix order has been saved successfully.',
+
+	'BBPREFIX_SAVE_ORDER'			=> 'Save order',
+	'BBPREFIX_DRAG_TO_REORDER'		=> 'Drag to reorder',
+
+	'BBPREFIX_TYPE'					=> 'Type',
+	'BBPREFIX_TYPE_EXPLAIN'			=> 'A prefix is shown before the topic title, a suffix after it.',
+	'BBPREFIX_PREFIX'				=> 'Prefix',
+	'BBPREFIX_SUFFIX'				=> 'Suffix',
+
+	'BBPREFIX_MANAGE_CATEGORIES'	=> 'Manage categories',
+	'BBPREFIX_CATEGORY'				=> 'Category',
+	'BBPREFIX_CATEGORY_EXPLAIN'		=> 'Prefixes in the same category are combined with OR when filtering topics; different categories are combined with AND.',
+	'BBPREFIX_CATEGORY_NONE'		=> '- None -',
+	'BBPREFIX_CATEGORY_EMPTY_ERROR'	=> 'The category name cannot be empty.',
+	'BBPREFIX_CATEGORY_SAVED_SUCCESS'	=> 'The category has been saved successfully.',
+	'BBPREFIX_CATEGORY_DELETED_SUCCESS'	=> 'The category has been deleted. Prefixes that used it are now uncategorised.',
+	'NO_CATEGORY_ID_SPECIFIED'		=> 'You must specify a valid category ID.',
+
+	'DELETE_CATEGORY'				=> 'Are you sure you want to delete the specified category?',
+	'DELETE_CATEGORY_CONFIRM'		=> 'Prefixes using this category are not deleted - they are simply left without a category. This cannot be undone.',
+
+	'BBPREFIX_FORUMS_MODE'			=> 'Forums mode',
+	'BBPREFIX_FORUMS_MODE_EXPLAIN'		=> 'Choose whichever list below is shorter for this prefix.',
+	'BBPREFIX_FORUMS_MODE_EXCLUDE'		=> 'Apply to all forums except these',
+	'BBPREFIX_FORUMS_MODE_INCLUDE'		=> 'Apply only to these forums',
+	'BBPREFIX_FORUMS_TOO_LONG'		=> 'This forum list is too large. Try "%s" instead.',
+
+	'BBPREFIX_SETTINGS'				=> 'Settings',
+	'BBPREFIX_MIN_SELECTED'			=> 'Minimum prefixes',
+	'BBPREFIX_MIN_SELECTED_EXPLAIN'		=> 'The fewest prefixes (and suffixes) a topic must carry. 0 means no minimum.',
+	'BBPREFIX_MAX_SELECTED'			=> 'Maximum prefixes',
+	'BBPREFIX_MAX_SELECTED_EXPLAIN'		=> 'The most prefixes (and suffixes) a topic may carry. 0 means no maximum.',
 	
 	'BBPREFIX_DESCRIPTION'			=> 'Ads some powerful and stylish prexies to the forum topics',
 	'BBPREFIX_DEVELOPERS'			=> 'Developers',

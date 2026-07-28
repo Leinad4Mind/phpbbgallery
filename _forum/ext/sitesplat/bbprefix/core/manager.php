@@ -27,6 +27,7 @@ class manager
 	protected $php_ext;
 	protected $group_names = [];
 	protected $forum_names = [];
+	protected $category_names = [];
 	protected $prefix_keys = [];
 	protected $logged_keys = [];
 
@@ -61,7 +62,7 @@ class manager
 		$this->prefixes = $this->load_cached('_prefixes', $refresh, BBPREFIX_TABLE, function ()
 		{
 			$prefixes = [];
-			$sql = 'SELECT id, prefix, name, forums, groups, on_index, bbcode_uid, bbcode_bitfield FROM ' . BBPREFIX_TABLE;
+			$sql = 'SELECT id, prefix, name, forums, groups, on_index, bbcode_uid, bbcode_bitfield, weight, category_id, is_suffix, forums_exclude FROM ' . BBPREFIX_TABLE . ' ORDER BY weight ASC, id ASC';
 			$result = $this->db->sql_query($sql);
 			while ($row = $this->db->sql_fetchrow($result))
 			{
@@ -74,6 +75,10 @@ class manager
 					'on_index'			=> $row['on_index'],
 					'bbcode_uid'		=> $row['bbcode_uid'],
 					'bbcode_bitfield'	=> $row['bbcode_bitfield'],
+					'weight'			=> $row['weight'],
+					'category_id'		=> $row['category_id'],
+					'is_suffix'			=> $row['is_suffix'],
+					'forums_exclude'	=> $row['forums_exclude'],
 				];
 			}
 			$this->db->sql_freeresult($result);
@@ -204,6 +209,14 @@ class manager
 		}
 		$this->db->sql_freeresult($result);
 
+		$sql = 'SELECT category_id, category_name FROM ' . BBPREFIX_CATEGORIES_TABLE . ' ORDER BY category_name ASC';
+		$result = $this->db->sql_query($sql);
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$this->category_names[$row['category_id']] = $row['category_name'];
+		}
+		$this->db->sql_freeresult($result);
+
 		$this->prefix_keys = $prefixes;
 
 		foreach($this->prefix_keys as $prefix)
@@ -227,6 +240,11 @@ class manager
 						$this->prefix_keys[$prefix['id']]['forumnames'][] = $this->forum_names[$key];
 					}
 				}
+			}
+			// A deleted category is skipped the same way, rather than shown
+			// as a blank/broken name.
+			if (!empty($prefix['category_id']) && isset($this->category_names[$prefix['category_id']])) {
+				$this->prefix_keys[$prefix['id']]['category_name'] = $this->category_names[$prefix['category_id']];
 			}
 		}
 		return $this->prefix_keys;
@@ -254,9 +272,18 @@ class manager
 		$this->db->sql_freeresult($result);
 		if ($row && $row['id'] != $this->request->variable('prefix_id', 0)) return array($this->user->lang['BBPREFIX_NAME_ERROR']);
 
+		// A membership list is meant to stay short; if it does not fit the
+		// column, refuse here with a clear message instead of letting the
+		// INSERT/UPDATE fail with a raw SQL 1406 error.
+		if (isset($prefix['forums']) && strlen($prefix['forums']) > 480)
+		{
+			$mode_key = !empty($prefix['forums_exclude']) ? 'BBPREFIX_FORUMS_MODE_INCLUDE' : 'BBPREFIX_FORUMS_MODE_EXCLUDE';
+			return array(sprintf($this->user->lang['BBPREFIX_FORUMS_TOO_LONG'], $this->user->lang[$mode_key]));
+		}
+
 		return array();
 	}
-	
+
 	/**
 	 * Get the array of prefixes
 	 *
@@ -272,6 +299,32 @@ class manager
 		}
 
 		return $this->prefixes;
+	}
+
+	/**
+	 * Resequence the manual sort order (weight) of all prefix definitions to
+	 * match the order given - e.g. after an admin drags rows around in the
+	 * ACP list.
+	 *
+	 * @param array $ordered_ids Prefix IDs, in their new display order
+	 * @return void
+	 */
+	public function reorder_prefixes(array $ordered_ids)
+	{
+		$weight = 1;
+		foreach (array_map('intval', $ordered_ids) as $prefix_id)
+		{
+			if (!$prefix_id)
+			{
+				continue;
+			}
+
+			$sql = 'UPDATE ' . BBPREFIX_TABLE . ' SET weight = ' . $weight . ' WHERE id = ' . $prefix_id;
+			$this->db->sql_query($sql);
+			$weight++;
+		}
+
+		$this->clear_prefix_cache();
 	}
 
 	/**
@@ -365,15 +418,127 @@ class manager
 	}
 
 	/**
+	 * Read the prefix filter currently active on this request.
+	 *
+	 * Reads the new `?prefix[]=16&prefix[]=17` array form first; if that
+	 * comes back empty, falls back to the historical scalar `?prefix=16`
+	 * form. That fallback is not optional: a scalar value read against an
+	 * array-typed default is discarded outright by phpBB's own
+	 * recursive_set_var() (is_array($var) !== is_array($default) -> []), not
+	 * coerced into a one-element array - so without it, every bookmarked or
+	 * shared link using the old single-value form would silently stop
+	 * filtering at all.
+	 *
+	 * @return array Prefix IDs
+	 */
+	public function get_active_prefix_ids()
+	{
+		$prefix_ids = array_map('intval', (array) $this->request->variable('prefix', [0]));
+		$prefix_ids = array_values(array_filter($prefix_ids));
+
+		if (empty($prefix_ids))
+		{
+			$legacy_prefix_id = (int) $this->request->variable('prefix', 0);
+			if ($legacy_prefix_id)
+			{
+				$prefix_ids = [$legacy_prefix_id];
+			}
+		}
+
+		return array_values(array_unique($prefix_ids));
+	}
+
+	/**
+	 * Build a viewforum URL carrying the given prefix filter.
+	 *
+	 * append_sid() cannot be handed the prefix list as one of its own array
+	 * params - an array value inside $params gets string-concatenated as the
+	 * literal word "Array" (includes/functions.php builds each pair as
+	 * `$key . '=' . $item`, with no special handling for $item being itself an
+	 * array) - so the multi-value part is appended by hand instead.
+	 *
+	 * @param int   $forum_id
+	 * @param array $prefix_ids
+	 * @return string
+	 */
+	public function build_viewforum_url($forum_id, array $prefix_ids)
+	{
+		$url = append_sid($this->root_path . 'viewforum.php', ['f' => (int) $forum_id]);
+
+		$delim = (strpos($url, '?') === false) ? '?' : '&amp;';
+		foreach (array_unique(array_map('intval', $prefix_ids)) as $prefix_id)
+		{
+			$url .= "{$delim}prefix[]={$prefix_id}";
+			$delim = '&amp;';
+		}
+
+		return $url;
+	}
+
+	/**
+	 * Group prefix IDs so the ones sharing a category can be OR'd together in
+	 * the same query, while different categories - or no category at all -
+	 * are AND'd against each other.
+	 *
+	 * A prefix with no category assigned is its own singleton group: it never
+	 * ORs with another uncategorised prefix, only ANDs against everything
+	 * else.
+	 *
+	 * @param array $prefix_ids
+	 * @return array Array of arrays of prefix IDs
+	 */
+	public function group_prefix_ids_by_category(array $prefix_ids)
+	{
+		$groups = [];
+		foreach ($prefix_ids as $prefix_id)
+		{
+			$prefix_id = (int) $prefix_id;
+			$category_id = isset($this->prefixes[$prefix_id]['category_id']) ? (int) $this->prefixes[$prefix_id]['category_id'] : 0;
+			$key = $category_id ? 'c' . $category_id : 's' . $prefix_id;
+			$groups[$key][] = $prefix_id;
+		}
+
+		return array_values($groups);
+	}
+
+	/**
+	 * Build the SQL fragment matching topics carrying the active prefix
+	 * filter: one EXISTS per category group - same category shares one
+	 * IN(...) (the OR), different groups are separate EXISTS clauses ANDed
+	 * together.
+	 *
+	 * @param array $prefix_ids
+	 * @return string Empty when there is nothing to filter by
+	 */
+	public function build_prefix_filter_exists_clause(array $prefix_ids)
+	{
+		$groups = $this->group_prefix_ids_by_category($prefix_ids);
+		if (empty($groups))
+		{
+			return '';
+		}
+
+		$clauses = [];
+		foreach ($groups as $group)
+		{
+			$clauses[] = 'EXISTS (SELECT 1 FROM ' . BBPREFIX_INSTANCES_TABLE . ' pr WHERE pr.topic = t.topic_id AND ' . $this->db->sql_in_set('pr.prefix', $group) . ')';
+		}
+
+		return implode(' AND ', $clauses);
+	}
+
+	/**
 	 * Load a topic's prefix instances
 	 *
 	 * @param	int		$topic_id	ID of the topic
 	 * @param	string	$block		Name of the block to send to the template
 	 * @param   bool    $return_parsed If true, return is the parsed prefix
 	 *								otherwise, it is the plaintext version
+	 * @param	int		$forum_id	Forum the topic lives in, for the filter URL
+	 * @param	string|null	$type	'prefix', 'suffix', or null for both
 	 * @return	string	Plaintext string of a topic's prefixes
 	 */
-	public function load_prefixes_topic($topic_id, $block = '', $return_parsed = false, $forum_id = 0)
+	public function load_prefixes_topic($topic_id, $block = '', $return_parsed = false, $forum_id = 0, $type = null)
 	{
 		// If there aren't any instantiated prefixes, the topic won't have any
 		// to load, so let's just stop right here
@@ -386,7 +551,7 @@ class manager
 		if (!empty($this->prefix_instances)) {
 			foreach ($this->prefix_instances as $instance)
 			{
-				if ((int) $instance['topic'] === (int) $topic_id)
+				if ((int) $instance['topic'] === (int) $topic_id && $this->prefix_matches_type($instance['prefix'], $type))
 				{
 					$topic_prefixes[] = $this->get_instance($instance['id']);
 				}
@@ -406,15 +571,39 @@ class manager
 		foreach ($topic_prefixes as $instance)
 		{
 			$vars = [];
-			// A URL to a viewforum view filtered by the prefix
-			if ($this->request->variable('f', 0))
+			// A URL to a viewforum view filtered by the prefix, merged with
+			// whatever prefixes are already active in this request - so
+			// clicking a second prefix accumulates the filter instead of
+			// replacing it.
+			if ($forum_id || $this->request->variable('f', 0))
 			{
-				$vars['URL'] = append_sid($this->root_path . 'viewforum.php', ['f' => $forum_id ? $forum_id : $this->request->variable('f', 0), 'prefix' => $instance['prefix']]);
+				$active_ids = $this->get_active_prefix_ids();
+				$merged_ids = array_values(array_unique(array_merge($active_ids, [(int) $instance['prefix']])));
+				$vars['URL'] = $this->build_viewforum_url($forum_id ?: $this->request->variable('f', 0), $merged_ids);
 			}
 			$return_string .= $instance->parse($block, $vars, $return_parsed) . '&nbsp;';
 		}
 
 		return $return_string;
+	}
+
+	/**
+	 * Whether a prefix definition matches the requested prefix/suffix type
+	 * filter.
+	 *
+	 * @param int $prefix_id
+	 * @param string|null $type 'prefix', 'suffix', or null for either
+	 * @return bool
+	 */
+	private function prefix_matches_type($prefix_id, $type)
+	{
+		if ($type === null)
+		{
+			return true;
+		}
+
+		$is_suffix = !empty($this->prefixes[$prefix_id]['is_suffix']);
+		return $type === 'suffix' ? $is_suffix : !$is_suffix;
 	}
 
 	/**
@@ -737,11 +926,19 @@ class manager
 
 		foreach ($this->prefixes as $prefix)
 		{
-			// If we are given a forum ID to filter by, only allow use of the
-			// prefix if it is allowed in this forum
-			if ($forum_id && in_array($forum_id, json_decode($prefix['forums'], true)))
+			// If we are given a forum ID to filter by, respect whichever mode
+			// this prefix was set up with: the historical "exclude" mode
+			// disallows the prefix in listed forums, the newer "include" mode
+			// allows it only in listed forums.
+			if ($forum_id)
 			{
-				continue;
+				$forum_in_list = in_array($forum_id, (array) json_decode($prefix['forums'], true));
+				$forums_exclude = !isset($prefix['forums_exclude']) || $prefix['forums_exclude'];
+
+				if ($forums_exclude ? $forum_in_list : !$forum_in_list)
+				{
+					continue;
+				}
 			}
 
 			// If any groups the user is a part of match any allowed groups,

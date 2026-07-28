@@ -236,3 +236,13 @@ td .fa {
 .description-ext > div {
     margin-bottom: 10px;
 }
+
+.bbprefix-drag-handle {
+	cursor: move;
+	color: #999;
+}
+
+.ui-sortable-placeholder {
+	border: 2px dashed #aaa;
+	background: #fafafa;
+}

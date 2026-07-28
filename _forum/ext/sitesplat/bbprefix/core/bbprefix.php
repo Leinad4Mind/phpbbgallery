@@ -98,7 +98,7 @@ class bbprefix extends \ArrayObject
 		}
 
 		// This SQL is only run if the prefix is not cached
-		$sql = 'SELECT id, prefix, name, forums, groups, bbcode_uid, bbcode_bitfield FROM ' . BBPREFIX_TABLE . ' WHERE id = ' . (int) $this['id'];
+		$sql = 'SELECT id, prefix, name, forums, groups, on_index, bbcode_uid, bbcode_bitfield, weight, category_id, is_suffix, forums_exclude FROM ' . BBPREFIX_TABLE . ' WHERE id = ' . (int) $this['id'];
 
 		// Uses the load() method of the 'loadable' trait, aliased as _load()
 		$row = $this->_load('_prefixes', $this['id'], $sql);

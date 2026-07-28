@@ -74,6 +74,39 @@ $lang = array_merge($lang, [
 	'PREFIX_EDITED_SUCCESS'  => 'O prefixo foi actualizado com sucesso.',
 	'PREFIX_DELETED_SUCCESS' => 'O prefixo foi eliminado com sucesso.',
 	'NO_PREFIX_ID_SPECIFIED' => 'Tens de especificar um ID de prefixo válido.',
+	'PREFIX_REORDERED_SUCCESS' => 'A ordem dos prefixos foi guardada com sucesso.',
+
+	'BBPREFIX_SAVE_ORDER'        => 'Guardar ordem',
+	'BBPREFIX_DRAG_TO_REORDER'   => 'Arrasta para ordenar',
+
+	'BBPREFIX_TYPE'         => 'Tipo',
+	'BBPREFIX_TYPE_EXPLAIN' => 'Um prefixo aparece antes do título do tópico, um sufixo depois.',
+	'BBPREFIX_PREFIX'       => 'Prefixo',
+	'BBPREFIX_SUFFIX'       => 'Sufixo',
+
+	'BBPREFIX_MANAGE_CATEGORIES'         => 'Gerir categorias',
+	'BBPREFIX_CATEGORY'                  => 'Categoria',
+	'BBPREFIX_CATEGORY_EXPLAIN'          => 'Prefixos da mesma categoria combinam-se com OU ao filtrar tópicos; categorias diferentes combinam-se com E.',
+	'BBPREFIX_CATEGORY_NONE'             => '- Nenhuma -',
+	'BBPREFIX_CATEGORY_EMPTY_ERROR'      => 'O nome da categoria não pode estar vazio.',
+	'BBPREFIX_CATEGORY_SAVED_SUCCESS'    => 'A categoria foi guardada com sucesso.',
+	'BBPREFIX_CATEGORY_DELETED_SUCCESS'  => 'A categoria foi eliminada. Os prefixos que a usavam ficaram sem categoria.',
+	'NO_CATEGORY_ID_SPECIFIED'           => 'Tens de especificar um ID de categoria válido.',
+
+	'DELETE_CATEGORY'         => 'Tens a certeza de que queres eliminar a categoria especificada?',
+	'DELETE_CATEGORY_CONFIRM' => 'Os prefixos que usam esta categoria não são eliminados - ficam apenas sem categoria. Esta acção não pode ser desfeita.',
+
+	'BBPREFIX_FORUMS_MODE'         => 'Modo de fóruns',
+	'BBPREFIX_FORUMS_MODE_EXPLAIN' => 'Escolhe a lista abaixo que ficar mais curta para este prefixo.',
+	'BBPREFIX_FORUMS_MODE_EXCLUDE' => 'Aplicar a todos os fóruns excepto estes',
+	'BBPREFIX_FORUMS_MODE_INCLUDE' => 'Aplicar só a estes fóruns',
+	'BBPREFIX_FORUMS_TOO_LONG'     => 'Esta lista de fóruns é demasiado grande. Experimenta "%s" em vez disso.',
+
+	'BBPREFIX_SETTINGS'                => 'Definições',
+	'BBPREFIX_MIN_SELECTED'            => 'Mínimo de prefixos',
+	'BBPREFIX_MIN_SELECTED_EXPLAIN'    => 'O número mínimo de prefixos (e sufixos) que um tópico tem de ter. 0 significa sem mínimo.',
+	'BBPREFIX_MAX_SELECTED'            => 'Máximo de prefixos',
+	'BBPREFIX_MAX_SELECTED_EXPLAIN'    => 'O número máximo de prefixos (e sufixos) que um tópico pode ter. 0 significa sem máximo.',
 
 	'BBPREFIX_DESCRIPTION' => 'Adiciona prefixos poderosos e estilosos aos tópicos do fórum',
 	'BBPREFIX_DEVELOPERS'  => 'Programadores',
