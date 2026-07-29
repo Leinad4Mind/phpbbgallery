@@ -39,6 +39,7 @@ class acp_rating_reset_test extends TestCase
 
 		$this->assertStringContainsString("get('phpbbgallery.core.rating')", $module);
 		$this->assertStringContainsString('$this->reset_album_ratings($phpbb_gallery_rating, $image_ids);', $module);
+		$this->assertStringContainsString('$phpbb_gallery_contest->resync($album_id);', $module);
 		$this->assertStringNotContainsString('phpbb_gallery_image_rating', $module);
 		$this->assertStringContainsString('phpbbgallery.core.rating:', $services);
 		$this->assertStringContainsString('class: phpbbgallery\\core\\rating', $services);

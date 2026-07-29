@@ -83,6 +83,7 @@ class main_module
 
 		// init rating
 		$phpbb_gallery_rating = $phpbb_container->get('phpbbgallery.core.rating');
+		$phpbb_gallery_contest = $phpbb_container->get('phpbbgallery.core.contest');
 
 		$action = $request->variable('action', '');
 		$id = $request->variable('i', '');
@@ -450,6 +451,7 @@ class main_module
 					$db->sql_freeresult($result);
 
 					$this->reset_album_ratings($phpbb_gallery_rating, $image_ids);
+					$phpbb_gallery_contest->resync($album_id);
 
 					trigger_error($this->language->lang('RESET_RATING_COMPLETED') . adm_back_link($this->u_action));
 				break;
