@@ -23,6 +23,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Security
 
+- Invalidated targeted Gallery permission snapshots immediately after phpBB group additions, removals, pending-member approvals and attribute changes, including any ACL state already loaded in the same request.
 - Restricted random-image results to albums granting image-view or status-moderation access instead of accepting list-only permission.
 - Replaced ZIP extraction during gallery uploads with a controlled per-entry extractor that rejects path traversal, absolute paths, symbolic-link entries, unsupported file types, duplicate destinations, and archive entries whose detected content does not match their extension.
 - Added ZIP bomb protections for entry count, individual and cumulative uncompressed size, compression ratio, archive metadata inconsistencies, and extraction time, with guaranteed temporary-file cleanup.

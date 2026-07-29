@@ -86,6 +86,51 @@ final class domain_auth_types_test extends TestCase
 		$this->assertSame([], $this->get_property($service, 'acl_cache'));
 	}
 
+	public function test_targeted_permission_invalidation_clears_database_and_loaded_acl_state(): void
+	{
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->once())
+			->method('sql_in_set')
+			->with('user_id', [7, 9])
+			->willReturn('user_id IN (7, 9)');
+		$db->expects($this->once())
+			->method('sql_query')
+			->with($this->logicalAnd(
+				$this->stringContains('UPDATE gallery_users'),
+				$this->stringContains('SET user_permissions = \'\''),
+				$this->stringContains('WHERE user_id IN (7, 9)')
+			));
+		$gallery_user = $this->createMock(\phpbbgallery\core\user::class);
+		$gallery_user->user_id = 7;
+		$gallery_user->expects($this->once())
+			->method('invalidate_permissions')
+			->with($this->isType('int'));
+		$service = $this->new_auth();
+		$this->set_property($service, 'db', $db);
+		$this->set_property($service, 'user', $gallery_user);
+		$this->set_property($service, 'table_users', 'gallery_users');
+		$this->set_property($service, '_auth_data', [99 => new set()]);
+		$this->set_property($service, '_auth_data_never', [99 => new set()]);
+		$this->set_property($service, 'acl_cache', [99 => [0 => true]]);
+
+		$service->invalidate_user_permissions([9, 7, 9, 0, -1]);
+
+		$this->assertSame([], $this->get_property($service, '_auth_data'));
+		$this->assertSame([], $this->get_property($service, '_auth_data_never'));
+		$this->assertSame([], $this->get_property($service, 'acl_cache'));
+	}
+
+	public function test_empty_permission_invalidation_avoids_database_queries(): void
+	{
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->never())->method('sql_query');
+		$db->expects($this->never())->method('sql_in_set');
+		$service = $this->new_auth();
+		$this->set_property($service, 'db', $db);
+
+		$service->invalidate_user_permissions([]);
+	}
+
 	public function test_phpbb_permission_switch_loads_the_impersonated_gallery_user(): void
 	{
 		$phpbb_user = new \phpbb\user();

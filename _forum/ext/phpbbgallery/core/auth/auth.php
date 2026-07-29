@@ -654,6 +654,42 @@ class auth
 	}
 
 	/**
+	 * Invalidate cached Gallery permissions for selected phpBB users.
+	 *
+	 * The database snapshot is used across requests, while the Gallery user and
+	 * ACL arrays may already be loaded in the current request. Both layers must
+	 * be cleared when phpBB group membership changes.
+	 *
+	 * @param array|int $user_ids One or more phpBB user identifiers
+	 * @return void
+	 */
+	public function invalidate_user_permissions(array|int $user_ids): void
+	{
+		$user_ids = is_array($user_ids) ? $user_ids : [$user_ids];
+		$user_ids = array_values(array_unique(array_filter(array_map('intval', $user_ids), static fn (int $user_id): bool => $user_id > 0)));
+		sort($user_ids);
+		if (!$user_ids)
+		{
+			return;
+		}
+
+		$changed_time = time();
+		$sql = 'UPDATE ' . $this->table_users . '
+			SET user_permissions = \'\',
+				user_permissions_changed = ' . $changed_time . '
+			WHERE ' . $this->db->sql_in_set('user_id', $user_ids);
+		$this->db->sql_query($sql);
+
+		if ($this->user->user_id !== null && in_array($this->user->user_id, $user_ids, true))
+		{
+			$this->user->invalidate_permissions($changed_time);
+			$this->_auth_data = [];
+			$this->_auth_data_never = [];
+			$this->acl_cache = [];
+		}
+	}
+
+	/**
 	* Get permission
 	*
 	* @param	string	$acl	One of the permissions, Exp: i_view

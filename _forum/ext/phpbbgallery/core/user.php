@@ -188,6 +188,25 @@ class user
 	}
 
 	/**
+	 * Clear the loaded Gallery permission snapshot for this user.
+	 *
+	 * Group membership can change after the Gallery user row has already been
+	 * loaded in the current request. Clearing both values prevents a later ACL
+	 * check from reusing that stale in-memory snapshot.
+	 *
+	 * @param int $time Permission invalidation time
+	 * @return void
+	 */
+	public function invalidate_permissions(int $time): void
+	{
+		if ($this->data)
+		{
+			$this->data['user_permissions'] = '';
+			$this->data['user_permissions_changed'] = $time;
+		}
+	}
+
+	/**
 	 * Some functions need the data to be loaded or at least checked.
 	 * So here we loaded if it is not loaded yet and we need it ;)
 	 */

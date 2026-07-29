@@ -337,6 +337,12 @@ services:
             - '%phpbbgallery.tables.gallery_users%'
         tags:
             - { name: event.listener }
+    phpbbgallery.core.permission_lifecycle_listener:
+        class: phpbbgallery\core\event\permission_lifecycle_listener
+        arguments:
+            - '@phpbbgallery.core.auth'
+        tags:
+            - { name: event.listener }
 # ----- Cron tasks -----
     phpbbgallery.core.cron.task.cron_cleaner:
         class: phpbbgallery\core\cron\cron_cleaner
