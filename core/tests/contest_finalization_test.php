@@ -174,6 +174,31 @@ final class contest_finalization_test extends TestCase
 		$this->assertSame(3, (int) $config['phpbb_gallery_contests_ended']);
 	}
 
+	public function test_completed_podium_is_resynced_after_eligibility_changes(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/image/image.php');
+		$approve = $this->method_source($source, 'approve_images', 'unapprove_images');
+		$unapprove = $this->method_source($source, 'unapprove_images', 'move_image');
+		$lock = $this->method_source($source, 'lock_images', 'get_last_image');
+
+		foreach ([$approve, $unapprove, $lock] as $method)
+		{
+			$this->assertStringContainsString('image_contest_end', $method);
+			$this->assertStringContainsString('$this->contest->resync($album_id);', $method);
+		}
+	}
+
+	private function method_source(string $source, string $method, string $next_method): string
+	{
+		$start = strpos($source, 'public function ' . $method . '(');
+		$end = strpos($source, 'public function ' . $next_method . '(', (int) $start);
+
+		$this->assertNotFalse($start);
+		$this->assertNotFalse($end);
+
+		return substr($source, (int) $start, (int) $end - (int) $start);
+	}
+
 	private function contest(\phpbb\db\driver\driver_interface $db, \phpbb\config\config $config): contest
 	{
 		return new contest(
