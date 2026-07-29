@@ -188,6 +188,18 @@ final class contest_finalization_test extends TestCase
 		}
 	}
 
+	public function test_image_moves_preserve_contest_boundaries_and_repair_the_source(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/image/image.php');
+		$move = $this->method_source($source, 'move_image', 'lock_images');
+
+		$this->assertStringContainsString("contest::is_step('upload', \$target_data)", $move);
+		$this->assertStringContainsString('image_contest_end', $move);
+		$this->assertStringContainsString('image_contest_rank = 0', $move);
+		$this->assertStringContainsString('$source_album_id === $album_id', $move);
+		$this->assertStringContainsString('$this->contest->resync_albums($resync_contest_albums);', $move);
+	}
+
 	private function method_source(string $source, string $method, string $next_method): string
 	{
 		$start = strpos($source, 'public function ' . $method . '(');

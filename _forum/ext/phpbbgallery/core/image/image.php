@@ -723,23 +723,57 @@ class image
 	public function move_image(array $image_id_ary, int $album_id): void
 	{
 		$target_data = $this->album->get_info($album_id);
+		$target_is_active_contest = (int) $target_data['album_type'] === (int) \phpbbgallery\core\block::TYPE_CONTEST
+			&& !empty($target_data['contest_marked']);
+		if ($target_is_active_contest && !\phpbbgallery\core\contest::is_step('upload', $target_data))
+		{
+			throw new \phpbb\exception\http_exception(403, 'NO_PERMISSIONS');
+		}
+
+		$sql = 'SELECT image_id, image_album_id, image_contest_end
+			FROM ' . $this->table_images . '
+			WHERE ' . $this->db->sql_in_set('image_id', $image_id_ary);
+		$result = $this->db->sql_query($sql);
+		$moved_image_ids = [];
+		$resync_contest_albums = [];
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$source_album_id = (int) $row['image_album_id'];
+			if ($source_album_id === $album_id)
+			{
+				continue;
+			}
+
+			$moved_image_ids[] = (int) $row['image_id'];
+			if ((int) $row['image_contest_end'] > 0)
+			{
+				$resync_contest_albums[] = $source_album_id;
+			}
+		}
+		$this->db->sql_freeresult($result);
+		if (!$moved_image_ids)
+		{
+			return;
+		}
 
 		// Store images to cache (so we can log them)
-		$image_cache = $this->gallery_cache->get_images($image_id_ary);
-		//TO DO - Contests
+		$image_cache = $this->gallery_cache->get_images($moved_image_ids);
 		$sql = 'UPDATE ' . $this->table_images . '
-			SET image_album_id = ' . (int) $album_id . '
-			WHERE ' . $this->db->sql_in_set('image_id', $image_id_ary);
+			SET image_album_id = ' . (int) $album_id . ',
+				image_contest = ' . ($target_is_active_contest ? (int) \phpbbgallery\core\block::IN_CONTEST : (int) \phpbbgallery\core\block::NO_CONTEST) . ',
+				image_contest_end = 0,
+				image_contest_rank = 0
+			WHERE ' . $this->db->sql_in_set('image_id', $moved_image_ids);
 		$this->db->sql_query($sql);
 
-		$this->gallery_report->move_images($image_id_ary, $album_id);
+		$this->gallery_report->move_images($moved_image_ids, $album_id);
 
-		foreach ($image_id_ary as $image)
+		foreach ($moved_image_ids as $image)
 		{
 			$this->gallery_log->add_log('moderator', 'move', 0, $image, ['LOG_GALLERY_MOVED', $image_cache[$image]['image_name'], $target_data['album_name']]);
 		}
 		$this->gallery_cache->destroy_images();
-		//You will need to take care for album sync for the target and source
+		$this->contest->resync_albums($resync_contest_albums);
 	}
 
 	/**
