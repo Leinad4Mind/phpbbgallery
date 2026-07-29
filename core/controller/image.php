@@ -422,7 +422,7 @@ class image
 			'CONTEST_RANK'        => ($this->data['image_contest_rank']) ? $this->language->lang('CONTEST_RESULT_' . $this->data['image_contest_rank']) : '',
 			'IMAGE_NAME'          => $this->data['image_name'],
 			'IMAGE_DESC'          => $image_desc,
-			'IMAGE_BBCODE'        => ($this->config['allow_bbcode']) ? '[album]' . (int) $image_id . '[/album]' : '',
+			'IMAGE_BBCODE'        => ($this->config['allow_bbcode']) ? '[image]' . (int) $image_id . '[/image]' : '',
 			'IMAGE_IMGURL_BBCODE' => ($this->config['phpbb_gallery_disp_image_url']) ? '[url=' . $this->url->get_uri($this->helper->route('phpbbgallery_core_image', ['image_id' => $image_id])) . '][img]' . $this->url->get_uri($this->helper->route('phpbbgallery_core_image_file_mini', ['image_id' => $image_id])) . '[/img][/url]' : '',
 			'IMAGE_URL'           => ($this->config['phpbb_gallery_disp_image_url']) ? $this->url->get_uri($this->helper->route('phpbbgallery_core_image_file_medium', ['image_id' => $image_id])) : '',
 			'IMAGE_TIME'          => $this->user->format_date($this->data['image_time']),

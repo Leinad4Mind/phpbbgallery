@@ -28,6 +28,7 @@ use phpbbgallery\core\migrations\own_image_move;
 use phpbbgallery\core\migrations\create_gallery_icons_folder;
 use phpbbgallery\core\migrations\disp_resolution;
 use phpbbgallery\core\migrations\forum_index_images;
+use phpbbgallery\core\migrations\gallery_bbcodes;
 
 class migration_integrity_test extends TestCase
 {
@@ -50,6 +51,7 @@ class migration_integrity_test extends TestCase
 		create_gallery_icons_folder::class,
 		disp_resolution::class,
 		forum_index_images::class,
+		gallery_bbcodes::class,
 	];
 
 	private array $temp_directories = [];
@@ -122,6 +124,10 @@ class migration_integrity_test extends TestCase
 		$this->assertSame(
 			['\phpbbgallery\core\migrations\disp_resolution'],
 			forum_index_images::depends_on()
+		);
+		$this->assertSame(
+			['\phpbbgallery\core\migrations\forum_index_images'],
+			gallery_bbcodes::depends_on()
 		);
 	}
 
@@ -635,11 +641,6 @@ class migration_integrity_test extends TestCase
 
 	private function load_migrations(): void
 	{
-		if (class_exists(gallery_title::class))
-		{
-			return;
-		}
-
 		$phpbb_root = dirname(__DIR__, 4);
 		require_once $phpbb_root . '/phpbb/db/migration/migration_interface.php';
 		require_once $phpbb_root . '/phpbb/db/migration/migration.php';
@@ -664,6 +665,7 @@ class migration_integrity_test extends TestCase
 			'create_gallery_icons_folder.php',
 			'disp_resolution.php',
 			'forum_index_images.php',
+			'gallery_bbcodes.php',
 		] as $migration)
 		{
 			require_once dirname(__DIR__) . '/migrations/' . $migration;

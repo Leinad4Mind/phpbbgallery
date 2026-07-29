@@ -95,7 +95,13 @@ class release_1_2_0_add_bbcode extends migration
 	}
 	public function remove_bbcode(): void
 	{
-		$sql = 'DELETE FROM ' . BBCODES_TABLE . ' WHERE bbcode_tag = \'image\'';
+		$sql = 'DELETE FROM ' . $this->table_prefix . "bbcodes
+			WHERE LOWER(bbcode_tag) = 'image'
+				AND bbcode_match = '[image]{NUMBER}[/image]'
+				AND (
+					bbcode_helpline = 'GALLERY_HELPLINE_ALBUM'
+					OR second_pass_replace LIKE '%/gallery/image/%'
+				)";
 		$this->db->sql_query($sql);
 	}
 }

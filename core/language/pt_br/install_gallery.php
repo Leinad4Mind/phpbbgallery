@@ -24,6 +24,8 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
+	'GALLERY_BBCODE_CONFLICT' => 'Não é possível instalar o BBCode %s porque essa tag pertence a um BBCode personalizado incompatível. Renomeie ou remova o BBCode personalizado e tente novamente.',
+	'GALLERY_BBCODE_LIMIT_REACHED' => 'Não é possível instalar o BBCode %s porque o limite de BBCodes foi atingido. Remova um BBCode e tente novamente.',
 	'GALLERY_CORE_ENABLE_SUCCESS' => 'A phpBB Gallery Core foi habilitada. Também estão disponíveis os complementos opcionais ACP Cleanup, ACP Import e EXIF.',
 	'GALLERY_REQUIREMENTS_MISSING' => 'Não é possível habilitar a phpBB Gallery. Faltam componentes obrigatórios: %s.',
 	'GALLERY_SUB_EXT_UNINSTALL'      => [

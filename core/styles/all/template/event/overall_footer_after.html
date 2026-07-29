@@ -148,3 +148,28 @@
 {% INCLUDEJS '@phpbbgallery_core/js/jquery.fileupload-validate.js' %}
 {% INCLUDEJS '@phpbbgallery_core/js/jquery.fileupload-ui.js' %}
 {% endif %}
+{% if S_GALLERY_SELECTOR %}
+<dialog id="phpbbgallery-selector-dialog" class="phpbbgallery-selector-dialog" data-endpoint="{{ U_GALLERY_SELECTOR }}" data-all-label="{{ lang('ALL') }}" data-loading-label="{{ lang('LOADING') }}" data-error-label="{{ lang('GENERAL_ERROR') }}" data-empty-label="{{ lang('NO_IMAGES_LONG') }}" data-insert-label="{{ lang('INSERT_IMAGE_POST') }}" data-inserted-label="{{ lang('IMAGE_INSERTED') }}" aria-labelledby="phpbbgallery-selector-title" aria-modal="true" hidden>
+	<div class="phpbbgallery-selector-panel">
+		<header class="phpbbgallery-selector-header">
+			<h2 id="phpbbgallery-selector-title">{{ lang('OWN_IMAGES') }}</h2>
+			<button type="button" class="phpbbgallery-selector-close" data-gallery-selector-close aria-label="{{ lang('CLOSE_WINDOW') }}">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</header>
+		<div class="phpbbgallery-selector-filter">
+			<label for="phpbbgallery-selector-album">{{ lang('ALBUM_NAME') }}{{ lang('COLON') }}</label>
+			<select id="phpbbgallery-selector-album" class="inputbox form-control" data-gallery-selector-album>
+				<option value="0">{{ lang('ALL') }}</option>
+			</select>
+		</div>
+		<div class="phpbbgallery-selector-status" data-gallery-selector-status role="status" aria-live="polite">{{ lang('LOADING') }}</div>
+		<div class="phpbbgallery-selector-grid" data-gallery-selector-grid></div>
+		<nav class="phpbbgallery-selector-pagination" aria-label="{{ lang('GALLERY_POPUP') }}">
+			<button type="button" class="button button-secondary btn btn-default" data-gallery-selector-previous disabled>{{ lang('PREVIOUS') }}</button>
+			<button type="button" class="button button-secondary btn btn-default" data-gallery-selector-next disabled>{{ lang('NEXT') }}</button>
+		</nav>
+	</div>
+</dialog>
+{% INCLUDEJS '@phpbbgallery_core/js/editor_selector.js' %}
+{% endif %}

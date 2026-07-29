@@ -16,6 +16,14 @@ phpbbgallery_core_personal_page:
     requirements:
         page: \d+
 
+################################
+#### Message editor routes #####
+################################
+phpbbgallery_core_editor_images:
+    path: /gallery/editor/images
+    defaults: { _controller: phpbbgallery.core.controller.editor:images }
+    methods: [GET]
+
 ##################################
 #### Album controller routes #####
 ##################################

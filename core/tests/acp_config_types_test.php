@@ -87,17 +87,46 @@ final class acp_config_types_test extends TestCase
 		$this->assertSame('', end($display_vars));
 	}
 
-	public function test_bbcode_templates_keep_the_selected_link_target(): void
+	public function test_bbcode_templates_keep_the_selected_link_target_without_a_session_id(): void
 	{
-		global $phpbb_gallery_url;
+		global $phpbb_container;
 
-		$had_url = isset($phpbb_gallery_url);
-		$previous_url = $phpbb_gallery_url ?? null;
-		$phpbb_gallery_url = new class
+		$had_container = isset($phpbb_container);
+		$previous_container = $phpbb_container ?? null;
+		$helper = new class
 		{
-			public function path(string $name): string
+			public function route(string $name, array $parameters): string
 			{
-				return 'https://example.test/gallery/';
+				$base = '/gallery/image/' . $parameters['image_id'];
+				if ($name === 'phpbbgallery_core_image_file_source')
+				{
+					return $base . '/source?sid=private-session';
+				}
+				if ($name === 'phpbbgallery_core_image_file_mini')
+				{
+					return $base . '/mini?sid=private-session';
+				}
+
+				return $base . '?sid=private-session';
+			}
+		};
+		$gallery_url = $this->getMockBuilder(\phpbbgallery\core\url::class)
+			->disableOriginalConstructor()
+			->onlyMethods(['get_uri'])
+			->getMock();
+		$strip_session_id = (new \ReflectionClass(\phpbbgallery\core\url::class))->getMethod('strip_session_id');
+		$gallery_url->method('get_uri')->willReturnCallback(
+			static fn(string $route): string => 'https://example.test' . $strip_session_id->invoke($gallery_url, $route)
+		);
+		$phpbb_container = new class($helper, $gallery_url)
+		{
+			public function __construct(private object $helper, private object $gallery_url)
+			{
+			}
+
+			public function get(string $service): object
+			{
+				return $service === 'controller.helper' ? $this->helper : $this->gallery_url;
 			}
 		};
 
@@ -107,22 +136,28 @@ final class acp_config_types_test extends TestCase
 			$image_page = $module->bbcode_tpl('image_page');
 			$image = $module->bbcode_tpl('image');
 			$none = $module->bbcode_tpl('none');
+			$image_page_repeat = $module->bbcode_tpl('image_page');
 		}
 		finally
 		{
-			if ($had_url)
+			if ($had_container)
 			{
-				$phpbb_gallery_url = $previous_url;
+				$phpbb_container = $previous_container;
 			}
 			else
 			{
-				unset($phpbb_gallery_url);
+				unset($phpbb_container);
 			}
 		}
 
 		$this->assertStringContainsString('image/{NUMBER}"><img', $image_page);
 		$this->assertStringContainsString('image/{NUMBER}/source"><img', $image);
 		$this->assertStringNotContainsString('<a href=', $none);
+		$this->assertSame($image_page, $image_page_repeat);
+		$this->assertStringNotContainsString('sid=', $image_page . $image . $none);
+
+		$source = (string) file_get_contents(dirname(__DIR__) . '/acp/config_module.php');
+		$this->assertSame(1, substr_count($source, '$phpbb_container->get(\'text_formatter.cache\')->invalidate();'));
 	}
 
 	public function test_request_and_directory_access_are_php8_safe(): void
