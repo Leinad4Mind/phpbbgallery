@@ -2,7 +2,7 @@
 
 All notable changes to the phpBB Gallery extension suite are documented in this file.
 
-## [3.4.0] Unreleased
+## [4.0.0] Unreleased
 
 ### Added
 
@@ -246,36 +246,73 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added query-shape and behavior tests for notification, statistics, role, filesize, last-image, deletion, contest, nested-set batching, visibility, search filters, legacy logs, JSON caches, and random upload paths; the Core suite now contains 382 tests and 6968 assertions.
 - Validated correctly packaged Core, ACP Cleanup, ACP Import, and EXIF components with the official Extension Pre-Validator: no errors, notices, or warnings remain.
 
-## [3.3.0]
+## [3.4.0]
+
 ### Added
-- New feature: Poster can now see unapproved images.
-- Added version checkers (`version-check`).
-- Added gallery button on navigation header only for guests, improving index and album layout for guests.
-- Added Spanish (ES) and Italian (IT) languages and improved translations.
+
+- Added version checkers for the Core, ACP Cleanup, ACP Import, and EXIF components.
 
 ### Changed
-- Major refactoring of enabling, disabling, and purging logic.
-- Refactored `assign_block` using bitwise operators.
-- Significant restructuring and improvement of Core, ACP Cleanup, Exif, and ACP Import add-ons.
-- Refactored moderate switch and controller logic.
-- Refactored ACP gallery logs module.
-- Changed placeholders logic for MariaDB compatibility.
-- Simplified alphabet navigation.
-- Final repository restructuring to facilitate long-term gallery maintenance.
+
+- Improved extension enable, disable, and purge handling across the Gallery suite.
+- Improved Gallery image-page behavior and compatibility with other phpBB extensions.
+- Updated extension metadata and Composer compatibility for the phpBB 3.3 line.
+- Reworked cleanup, import, configuration, and uninstall handling to keep component state consistent.
+- Removed deprecated SPDX license identifiers and aligned packaged metadata with current validation requirements.
+
+### Security
+
+- Fixed an insecure redirect in Gallery notifications.
+- Hardened notification, configuration, cleanup, and uninstall paths against invalid or inconsistent state.
 
 ### Fixed
-- WebP image support fixes.
-- Security: Fixed insecure redirection bug on notifications.
-- Security: Resolved potential SQL injection warnings and implemented safer `unserialize`.
-- Fixed missing notification on purge/enable.
-- Fixed missing license files across add-ons.
-- Fixed who is online and circular reference issues.
+
+- Fixed WebP image handling.
+- Fixed Symfony array compatibility problems and conflicts with some third-party extensions.
+- Fixed missing configuration removal and permission cleanup during uninstall and purge.
+- Fixed missing notification registration or cleanup during extension enable and purge operations.
+- Fixed ACP Import failures during uninstall.
+- Fixed ACP Cleanup regressions.
+- Fixed Gallery configuration layout issues in the ACP.
+- Fixed incorrect comment counts after deleting images.
+- Fixed undefined indexes while deleting comments.
+- Fixed image names in image reports.
+- Fixed IP handling and other image-page regressions.
+- Fixed MariaDB compatibility for the `image_exif_data` field.
+- Fixed version-check configuration and Extension Pre-Validator issues.
+- Fixed missing or inconsistent license files and assorted language, whitespace, and packaging issues.
+
+## [3.3.0]
+
+### Added
+
+- Added support for image posters to view their own unapproved images.
+- Added a Gallery navigation entry for guests and improved guest-facing index and album layouts.
+- Added Spanish and Italian translations and improved existing language catalogs.
+
+### Changed
+
+- Updated the Gallery suite for phpBB 3.3 compatibility.
+- Refactored `assign_block()` using bitwise operations.
+- Restructured and modernized the Core, ACP Cleanup, ACP Import, and EXIF components.
+- Refactored moderation switches, controller logic, and the ACP Gallery log module.
+- Simplified alphabet navigation.
+- Reorganized the repository and add-on boundaries for long-term maintenance.
+
+### Security
+
+- Reduced unsafe deserialization paths and hardened database-query construction.
+- Addressed validator-reported SQL-injection risks.
+
+### Fixed
+
+- Fixed notification lifecycle and routing issues.
+- Fixed “Who is online” and circular-reference problems.
 - Fixed ACP and MCP pagination.
-- Fixed meta refresh on approval.
-- Fixed all typos on comments and language files.
-- Fixed sub-album moving through editing and image updates.
+- Fixed meta-refresh behavior after image approval.
+- Fixed subalbum movement while editing albums and updating images.
 - Fixed EPV event dependencies.
-- Removed deprecated SPDX license identifiers.
+- Fixed comment and language-file typographical errors.
 
 ## [3.2.2]
 ### Added
