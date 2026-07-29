@@ -273,6 +273,13 @@ class image
 		$album_id = (int) $this->data['image_album_id'];
 		$album_data = $this->loader->get($album_id);
 		$this->check_permissions($album_id, $album_data['album_user_id'], $this->data['image_status'], $album_data['album_auth_access'], $this->data);
+		$can_moderate_contest = $this->gallery_auth->acl_check('m_status', $album_id, $album_data['album_user_id']);
+		$hide_contest_private_data = \phpbbgallery\core\contest::hides_private_data(
+			$this->data,
+			(int) $this->user->data['user_id'],
+			$can_moderate_contest
+		);
+		$hide_contest_results = \phpbbgallery\core\contest::hides_results($this->data, $can_moderate_contest);
 
 		$this->display->generate_navigation($album_data);
 
@@ -321,7 +328,10 @@ class image
 				'S_STATUS_LOCKED'     => ($this->data['image_status'] == (int) \phpbbgallery\core\block::STATUS_LOCKED),
 			]);
 		}
-		$image_desc = generate_text_for_display($this->data['image_desc'], $this->data['image_desc_uid'], $this->data['image_desc_bitfield'], 7);
+		$contest_end_time = (int) ($album_data['contest_start'] ?? 0) + (int) ($album_data['contest_end'] ?? 0);
+		$image_desc = $hide_contest_private_data
+			? $this->language->lang('CONTEST_IMAGE_DESC', $this->user->format_date($contest_end_time, false, true))
+			: generate_text_for_display($this->data['image_desc'], $this->data['image_desc_uid'], $this->data['image_desc_bitfield'], 7);
 
 		// Let's see if we can get next end prev
 		$sort_key = $this->request->variable('sk', ($album_data['album_sort_key']) ? $album_data['album_sort_key'] : $this->config['phpbb_gallery_default_sort_key']);
@@ -364,6 +374,13 @@ class image
 			$sort_by_sql['c'] = 'image_comments';
 			$sort_by_text['lc'] = $this->language->lang('NEW_COMMENT');
 			$sort_by_sql['lc'] = 'image_last_comment';
+		}
+		if ($hide_contest_results)
+		{
+			foreach (['u', 'ra', 'r', 'c', 'lc'] as $private_sort_key)
+			{
+				unset($sort_by_text[$private_sort_key], $sort_by_sql[$private_sort_key]);
+			}
 		}
 		$sort_key = $this->normalize_sort_key($sort_key, $sort_by_sql);
 		gen_sort_selects($limit_days, $sort_by_text, $sort_days, $sort_key, $sort_dir, $s_limit_days, $s_sort_key, $s_sort_dir, $u_sort_param);
@@ -428,7 +445,7 @@ class image
 			'IMAGE_TIME'          => $this->user->format_date($this->data['image_time']),
 			'IMAGE_VIEW'          => $this->data['image_view_count'],
 			'IMAGE_RESOLUTION'    => $this->get_image_resolution((string) $this->data['image_filename']),
-			'POSTER_IP'           => ($this->auth->acl_get('a_')) ? $this->data['image_user_ip'] : '',
+			'POSTER_IP'           => (!$hide_contest_private_data && $this->auth->acl_get('a_')) ? $this->data['image_user_ip'] : '',
 
 			'S_ALBUM_ACTION' => $this->helper->route('phpbbgallery_core_image', ['image_id' => $image_id]),
 
@@ -453,43 +470,52 @@ class image
 
 		$this->data = $image_data;
 
-		$this->users_id_array[$this->data['image_user_id']] = $this->data['image_user_id'];
+		$hide_contest_private_data = $hide_contest_private_data || \phpbbgallery\core\contest::hides_private_data(
+			$this->data,
+			(int) $this->user->data['user_id'],
+			$can_moderate_contest
+		);
+		if ($hide_contest_private_data)
+		{
+			$this->template->assign_var('IMAGE_DESC', $image_desc);
+			$this->assign_hidden_contest_poster();
+		}
+		else
+		{
+			$this->users_id_array[$this->data['image_user_id']] = $this->data['image_user_id'];
 
-		$this->load_users_data();
+			$this->load_users_data();
 
-		$user_id = $this->data['image_user_id'];
-		$this->users_data_array[$user_id]['username'] = ($this->data['image_username']) ? $this->data['image_username'] : $this->language->lang('GUEST');
-		$user_data = $this->users_data_array[$user_id] ?? [];
-		$this->assign_image_poster_profile_fields((int) $user_id);
-		$this->template->assign_vars([
-			'POSTER_FULL'     => get_username_string('full', $user_id, $user_data['username'] ?? '', $user_data['user_colour'] ?? ''),
-			'POSTER_COLOUR'   => get_username_string('colour', $user_id, $user_data['username'] ?? '', $user_data['user_colour'] ?? ''),
-			'POSTER_USERNAME' => get_username_string('username', $user_id, $user_data['username'] ?? '', $user_data['user_colour'] ?? ''),
-			'U_POSTER'        => get_username_string('profile', $user_id, $user_data['username'] ?? '', $user_data['user_colour'] ?? ''),
+			$user_id = $this->data['image_user_id'];
+			$this->users_data_array[$user_id]['username'] = ($this->data['image_username']) ? $this->data['image_username'] : $this->language->lang('GUEST');
+			$user_data = $this->users_data_array[$user_id] ?? [];
+			$this->assign_image_poster_profile_fields((int) $user_id);
+			$this->template->assign_vars([
+				'POSTER_FULL'     => get_username_string('full', $user_id, $user_data['username'] ?? '', $user_data['user_colour'] ?? ''),
+				'POSTER_COLOUR'   => get_username_string('colour', $user_id, $user_data['username'] ?? '', $user_data['user_colour'] ?? ''),
+				'POSTER_USERNAME' => get_username_string('username', $user_id, $user_data['username'] ?? '', $user_data['user_colour'] ?? ''),
+				'U_POSTER'        => get_username_string('profile', $user_id, $user_data['username'] ?? '', $user_data['user_colour'] ?? ''),
 
-			'POSTER_SIGNATURE'    => $user_data['sig'] ?? '',
-			'POSTER_RANK_TITLE'   => $user_data['rank_title'] ?? '',
-			'POSTER_RANK_IMG'     => $user_data['rank_image'] ?? '',
-			'POSTER_RANK_IMG_SRC' => $user_data['rank_image_src'] ?? '',
-			'POSTER_JOINED'       => $user_data['joined'] ?? '',
-			'POSTER_POSTS'        => $user_data['posts'] ?? 0,
-			'POSTER_AVATAR'       => $user_data['avatar'] ?? '',
-			'POSTER_WARNINGS'     => $user_data['warnings'] ?? 0,
-			'POSTER_AGE'          => $user_data['age'] ?? '',
+				'POSTER_SIGNATURE'    => $user_data['sig'] ?? '',
+				'POSTER_RANK_TITLE'   => $user_data['rank_title'] ?? '',
+				'POSTER_RANK_IMG'     => $user_data['rank_image'] ?? '',
+				'POSTER_RANK_IMG_SRC' => $user_data['rank_image_src'] ?? '',
+				'POSTER_JOINED'       => $user_data['joined'] ?? '',
+				'POSTER_POSTS'        => $user_data['posts'] ?? 0,
+				'POSTER_AVATAR'       => $user_data['avatar'] ?? '',
+				'POSTER_WARNINGS'     => $user_data['warnings'] ?? 0,
+				'POSTER_AGE'          => $user_data['age'] ?? '',
 
-			'POSTER_ONLINE_IMG' => ($user_id == ANONYMOUS || !$this->config['load_onlinetrack']) ? '' : (($user_data['online'] ?? false) ? $this->user->img('icon_user_online', 'ONLINE') : $this->user->img('icon_user_offline', 'OFFLINE')),
-			'S_POSTER_ONLINE'   => ($user_id == ANONYMOUS || !$this->config['load_onlinetrack']) ? false : (($user_data['online'] ?? false) ? true : false),
+				'POSTER_ONLINE_IMG' => ($user_id == ANONYMOUS || !$this->config['load_onlinetrack']) ? '' : (($user_data['online'] ?? false) ? $this->user->img('icon_user_online', 'ONLINE') : $this->user->img('icon_user_offline', 'OFFLINE')),
+				'S_POSTER_ONLINE'   => ($user_id == ANONYMOUS || !$this->config['load_onlinetrack']) ? false : (($user_data['online'] ?? false) ? true : false),
 
-			//'U_POSTER_PROFILE'		=> $user_data['profile'] ?? '',
-			'U_POSTER_SEARCH'   => $user_data['search'] ?? '',
-			'U_POSTER_PM'       => ($user_id != ANONYMOUS && $this->config['allow_privmsg'] && $this->auth->acl_get('u_sendpm') && (($user_data['allow_pm'] ?? false) || $this->auth->acl_gets('a_', 'm_'))) ? $this->url->append_sid('phpbb', 'ucp', 'i=pm&amp;mode=compose&amp;u=' . $user_id) : '',
-			'U_POSTER_EMAIL'    => ($this->auth->acl_gets('a_') || !$this->config['board_hide_emails']) ? ($user_data['email'] ?? false) : false,
-			'U_POSTER_JABBER'   => $user_data['jabber'] ?? '',
-
-			//'U_POSTER_GALLERY'			=> $user_data['gallery_album'] ?? '',
-			//'POSTER_GALLERY_IMAGES'		=> $user_data['gallery_images'] ?? '',
-			//'U_POSTER_GALLERY_SEARCH'		=> $user_data['gallery_search'] ?? '',
-		]);
+				//'U_POSTER_PROFILE'		=> $user_data['profile'] ?? '',
+				'U_POSTER_SEARCH' => $user_data['search'] ?? '',
+				'U_POSTER_PM'     => ($user_id != ANONYMOUS && $this->config['allow_privmsg'] && $this->auth->acl_get('u_sendpm') && (($user_data['allow_pm'] ?? false) || $this->auth->acl_gets('a_', 'm_'))) ? $this->url->append_sid('phpbb', 'ucp', 'i=pm&amp;mode=compose&amp;u=' . $user_id) : '',
+				'U_POSTER_EMAIL'  => ($this->auth->acl_gets('a_') || !$this->config['board_hide_emails']) ? ($user_data['email'] ?? false) : false,
+				'U_POSTER_JABBER' => $user_data['jabber'] ?? '',
+			]);
+		}
 
 		// Add ratings
 		if ($this->gallery_config->get('allow_rates'))
@@ -594,9 +620,16 @@ class image
 		/**
 		 * Listing comment
 		 */
-		if ($this->gallery_config->get('allow_comments') && $this->gallery_auth->acl_check('c_read', $album_id, $album_data['album_user_id']))
+		if (!$hide_contest_results && $this->gallery_config->get('allow_comments') && $this->gallery_auth->acl_check('c_read', $album_id, $album_data['album_user_id']))
 		{
 			$this->display_comments($image_id, $this->data, $album_id, $album_data, ($page - 1) * $this->gallery_config->get('items_per_page'), $this->gallery_config->get('items_per_page'));
+		}
+		else if ($hide_contest_results)
+		{
+			$this->template->assign_vars([
+				'S_ALLOWED_READ_COMMENTS' => false,
+				'IMAGE_COMMENTS'          => 0,
+			]);
 		}
 		return $this->helper->render('gallery/viewimage_body.html', $page_title);
 	}
@@ -690,6 +723,55 @@ class image
 				$this->template->assign_block_vars('custom_fields', $field_data);
 			}
 		}
+	}
+
+	/**
+	 * Assign an anonymous poster shell for an active contest entry.
+	 *
+	 * Every profile and contact variable used by the bundled styles is cleared so
+	 * a template or event cannot accidentally expose the real entrant.
+	 *
+	 * @return void
+	 */
+	private function assign_hidden_contest_poster(): void
+	{
+		$this->template->destroy_block_vars('contact');
+		$this->template->destroy_block_vars('custom_fields');
+		$this->template->assign_vars([
+			'POSTER_FULL'               => $this->language->lang('CONTEST_USERNAME'),
+			'POSTER_COLOUR'             => '',
+			'POSTER_USERNAME'           => $this->language->lang('CONTEST_USERNAME'),
+			'POSTER_SIGNATURE'          => '',
+			'POSTER_RANK_TITLE'         => '',
+			'POSTER_RANK_IMG'           => '',
+			'POSTER_RANK_IMG_SRC'       => '',
+			'POSTER_JOINED'             => '',
+			'POSTER_POSTS'              => '',
+			'POSTER_FROM'               => '',
+			'POSTER_AVATAR'             => '',
+			'POSTER_WARNINGS'           => 0,
+			'POSTER_AGE'                => '',
+			'POSTER_ONLINE_IMG'         => '',
+			'POSTER_GALLERY_IMAGES'     => '',
+			'POSTER_IP'                 => '',
+			'U_POSTER'                  => '',
+			'U_POSTER_PROFILE'          => '',
+			'U_POSTER_SEARCH'           => '',
+			'U_POSTER_PM'               => '',
+			'U_POSTER_EMAIL'            => '',
+			'U_POSTER_WWW'              => '',
+			'U_POSTER_MSN'              => '',
+			'U_POSTER_ICQ'              => '',
+			'U_POSTER_YIM'              => '',
+			'U_POSTER_AIM'              => '',
+			'U_POSTER_JABBER'           => '',
+			'U_POSTER_GALLERY'          => '',
+			'U_POSTER_GALLERY_SEARCH'   => '',
+			'U_POSTER_WHOIS'            => '',
+			'S_POSTER_ONLINE'           => false,
+			'S_CUSTOM_FIELDS'           => false,
+			'S_CONTEST_IDENTITY_HIDDEN' => true,
+		]);
 	}
 
 	/**

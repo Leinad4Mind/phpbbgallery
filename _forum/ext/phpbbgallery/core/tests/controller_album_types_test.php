@@ -71,6 +71,14 @@ final class controller_album_types_test extends TestCase
 		$this->assertSame('n', $normalizer->invoke($controller, 'n', $sort_columns));
 	}
 
+	public function test_active_contest_album_uses_the_central_privacy_policy(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/album.php');
+
+		$this->assertStringContainsString('contest::hides_private_data(', $source);
+		$this->assertStringContainsString('contest::hides_results(', $source);
+	}
+
 	public function test_album_pages_are_clamped_to_the_first_page(): void
 	{
 		$reflection = new \ReflectionClass(album::class);

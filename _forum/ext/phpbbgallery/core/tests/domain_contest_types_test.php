@@ -103,6 +103,43 @@ final class domain_contest_types_test extends TestCase
 		}
 	}
 
+	public function test_active_contest_privacy_preserves_only_registered_owner_and_moderator_exceptions(): void
+	{
+		$active = [
+			'image_contest' => block::IN_CONTEST,
+			'image_user_id' => 7,
+		];
+
+		$this->assertTrue(contest::is_active_image($active));
+		$this->assertTrue(contest::hides_private_data($active, 8, false));
+		$this->assertFalse(contest::hides_private_data($active, 7, false));
+		$this->assertFalse(contest::hides_private_data($active, 8, true));
+		$this->assertFalse(contest::hides_private_data([
+			'image_contest' => block::NO_CONTEST,
+			'image_user_id' => 7,
+		], 8, false));
+	}
+
+	public function test_anonymous_contest_entry_never_receives_owner_exception(): void
+	{
+		$anonymous_id = defined('ANONYMOUS') ? (int) constant('ANONYMOUS') : 1;
+
+		$this->assertTrue(contest::hides_private_data([
+			'image_contest' => block::IN_CONTEST,
+			'image_user_id' => $anonymous_id,
+		], $anonymous_id, false));
+	}
+
+	public function test_active_contest_results_are_visible_only_to_moderators(): void
+	{
+		$active = ['image_contest' => block::IN_CONTEST];
+
+		$this->assertTrue(contest::hides_results($active, false));
+		$this->assertFalse(contest::hides_results($active, true));
+		$this->assertFalse(contest::hides_results(['image_contest' => block::NO_CONTEST], false));
+		$this->assertFalse(contest::is_active_image([]));
+	}
+
 	public function test_missing_contest_returns_false_and_releases_the_result(): void
 	{
 		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);

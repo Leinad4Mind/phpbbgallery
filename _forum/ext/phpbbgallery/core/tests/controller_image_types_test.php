@@ -215,6 +215,53 @@ final class controller_image_types_test extends TestCase
 		$this->assertSame('https://example.test', $assigned_blocks['contact'][0]['U_CONTACT']);
 	}
 
+	public function test_hidden_contest_poster_clears_every_profile_surface(): void
+	{
+		$reflection = new \ReflectionClass(image::class);
+		$controller = $reflection->newInstanceWithoutConstructor();
+		$assigned_vars = [];
+		$template = $this->createMock(\phpbb\template\template::class);
+		$template->expects($this->exactly(2))
+			->method('destroy_block_vars')
+			->with($this->logicalOr('contact', 'custom_fields'));
+		$template->expects($this->once())
+			->method('assign_vars')
+			->willReturnCallback(function (array $vars) use (&$assigned_vars): void
+			{
+				$assigned_vars = $vars;
+			});
+		$language = $this->createStub(\phpbb\language\language::class);
+		$language->method('lang')->with('CONTEST_USERNAME')->willReturn('<strong>Contest</strong>');
+		$reflection->getProperty('template')->setValue($controller, $template);
+		$reflection->getProperty('language')->setValue($controller, $language);
+
+		$reflection->getMethod('assign_hidden_contest_poster')->invoke($controller);
+
+		$this->assertSame('<strong>Contest</strong>', $assigned_vars['POSTER_FULL']);
+		$this->assertSame('<strong>Contest</strong>', $assigned_vars['POSTER_USERNAME']);
+		$this->assertTrue($assigned_vars['S_CONTEST_IDENTITY_HIDDEN']);
+		$this->assertFalse($assigned_vars['S_POSTER_ONLINE']);
+		$this->assertFalse($assigned_vars['S_CUSTOM_FIELDS']);
+		foreach (['POSTER_AVATAR', 'POSTER_SIGNATURE', 'POSTER_IP', 'U_POSTER', 'U_POSTER_EMAIL',
+			'U_POSTER_JABBER', 'U_POSTER_PM', 'U_POSTER_SEARCH'] as $private_variable)
+		{
+			$this->assertSame('', $assigned_vars[$private_variable], $private_variable);
+		}
+	}
+
+	public function test_direct_image_page_reasserts_contest_privacy_after_extension_event(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/image.php');
+		$event_position = strpos($source, 'trigger_event(\'phpbbgallery.core.viewimage\'');
+		$privacy_reassertion = strpos($source, '$hide_contest_private_data = $hide_contest_private_data ||', (int) $event_position);
+
+		$this->assertNotFalse($event_position);
+		$this->assertNotFalse($privacy_reassertion);
+		$this->assertGreaterThan($event_position, $privacy_reassertion);
+		$this->assertStringContainsString('lang(\'CONTEST_IMAGE_DESC\'', $source);
+		$this->assertStringContainsString('if (!$hide_contest_results && $this->gallery_config->get', $source);
+	}
+
 	public function test_view_counter_remains_page_owned_and_sort_order_has_no_duplicate_suffix(): void
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/image.php');

@@ -24,6 +24,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Security
 
+- Centralized active-contest privacy so public image pages, album listings and reusable image blocks hide entrant identity, descriptions, ratings, comment history and private sort side channels while preserving explicit owner and moderator exceptions.
 - Enforced fail-closed contest phases at upload entry and finalization, comment submission, and rating display and persistence, with explicit boundary handling for the upload, voting, and completed phases.
 - Made the Gallery BBCode migration fail before any database write when a tag belongs to another extension or the required IDs cannot be allocated, and restricted historical rollback to Gallery-owned definitions.
 - Restricted the editor selector to the authenticated author's completed approved or locked images in albums that remain visible after Gallery ACL and zebra filtering, excluding orphaned and active-contest uploads and retaining protected image routes.

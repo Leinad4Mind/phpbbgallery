@@ -97,8 +97,45 @@ final class domain_rating_types_test extends TestCase
 		$this->assertTrue($rating->is_able());
 	}
 
+	public function test_active_contest_rating_results_are_visible_only_to_moderators(): void
+	{
+		$reflection = new \ReflectionClass(rating::class);
+		$rating = $reflection->newInstanceWithoutConstructor();
+		$gallery_auth = $this->createMock(\phpbbgallery\core\auth\auth::class);
+		$gallery_auth->expects($this->exactly(2))
+			->method('acl_check')
+			->with('m_status', 4, 0)
+			->willReturnOnConsecutiveCalls(false, true);
+		$language = $this->createStub(\phpbb\language\language::class);
+		$language->method('lang')->willReturnCallback(static function (string $key): string
+		{
+			return $key;
+		});
+		$reflection->getProperty('gallery_auth')->setValue($rating, $gallery_auth);
+		$reflection->getProperty('language')->setValue($rating, $language);
+		$reflection->getProperty('template')->setValue($rating, $this->createStub(\phpbb\template\template::class));
+		$rating->loader(12, [
+			'image_contest' => block::IN_CONTEST,
+			'image_rates' => 3,
+			'image_rate_avg' => 450,
+		], [
+			'album_id' => 4,
+			'album_user_id' => 0,
+			'contest_start' => 100,
+			'contest_end' => 200,
+		]);
+
+		$this->assertSame('CONTEST_RATING_HIDDEN', $rating->get_image_rating(false, false));
+		$this->assertSame('RATING_STRINGS', $rating->get_image_rating(false, false));
+	}
+
 	public function test_submit_rating_rechecks_ability_before_writing(): void
 	{
+		if (!defined('ANONYMOUS'))
+		{
+			define('ANONYMOUS', 1);
+		}
+
 		$rating = $this->getMockBuilder(rating::class)
 			->disableOriginalConstructor()
 			->onlyMethods(['is_able'])
