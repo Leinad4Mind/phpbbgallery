@@ -464,19 +464,20 @@ class contest
 	private function persist_podium(int $album_id, int $end_time, array $winners): void
 	{
 		$rank_cases = [];
-		$end_cases = [];
 		foreach ($winners as $rank => $image_id)
 		{
 			$rank_cases[] = 'WHEN ' . $image_id . ' THEN ' . ($rank + 1);
-			$end_cases[] = 'WHEN ' . $image_id . ' THEN ' . $end_time;
 		}
 
 		$rank_sql = $rank_cases ? 'CASE image_id ' . implode(' ', $rank_cases) . ' ELSE 0 END' : '0';
-		$end_sql = $end_cases ? 'CASE image_id ' . implode(' ', $end_cases) . ' ELSE 0 END' : '0';
 		$sql = 'UPDATE ' . $this->images_table . '
-			SET image_contest = ' . self::NO_CONTEST . ',
+			SET image_contest_end = CASE
+					WHEN image_contest = ' . (int) block::IN_CONTEST . '
+						OR image_contest_end = ' . $end_time . ' THEN ' . $end_time . '
+					ELSE 0
+				END,
 				image_contest_rank = ' . $rank_sql . ',
-				image_contest_end = ' . $end_sql . '
+				image_contest = ' . self::NO_CONTEST . '
 			WHERE image_album_id = ' . $album_id;
 		$this->db->sql_query($sql);
 	}
@@ -491,10 +492,26 @@ class contest
 
 		foreach (array_chunk($album_ids, 100) as $album_batch)
 		{
+			$sql = 'SELECT contest_album_id, contest_start, contest_end
+				FROM ' . $this->contest_table . '
+				WHERE ' . $this->db->sql_in_set('contest_album_id', $album_batch) . '
+					AND contest_marked = ' . self::NO_CONTEST;
+			$result = $this->db->sql_query($sql);
+			$contest_end_times = [];
+			while ($row = $this->db->sql_fetchrow($result))
+			{
+				$contest_end_times[(int) $row['contest_album_id']] = (int) $row['contest_start'] + (int) $row['contest_end'];
+			}
+			$this->db->sql_freeresult($result);
+			if (!$contest_end_times)
+			{
+				continue;
+			}
+
+			$participant_sql = $this->participant_sql('', $contest_end_times);
 			$sql = 'UPDATE ' . $this->images_table . '
-				SET image_contest = ' . self::NO_CONTEST . ',
-					image_contest_rank = 0
-				WHERE ' . $this->db->sql_in_set('image_album_id', $album_batch);
+				SET image_contest_rank = 0
+				WHERE ' . $participant_sql;
 			$this->db->sql_query($sql);
 
 			$ranked_status_sql = $this->eligible_status_sql('ranked.image_status');
@@ -507,10 +524,11 @@ class contest
 					AND (SELECT COUNT(better.image_id)
 						FROM ' . $this->images_table . ' better
 						WHERE better.image_album_id = ranked.image_album_id
+							AND better.image_contest_end = ranked.image_contest_end
 							AND %s
 							AND (%s)) < %d
 				ORDER BY ranked.image_album_id ASC, %s',
-				$this->db->sql_in_set('ranked.image_album_id', $album_batch),
+				$this->participant_sql('ranked', $contest_end_times),
 				$ranked_status_sql,
 				$better_status_sql,
 				$this->get_better_image_condition(),
@@ -542,9 +560,11 @@ class contest
 				$contest_updates[] = $column . ' = CASE contest_album_id ' . implode(' ', $cases) . ' ELSE ' . $column . ' END';
 			}
 
+			$completed_album_ids = array_keys($contest_end_times);
 			$sql = 'UPDATE ' . $this->contest_table . '
 				SET ' . implode(",\n\t\t\t\t\t", $contest_updates) . '
-				WHERE ' . $this->db->sql_in_set('contest_album_id', $album_batch);
+				WHERE ' . $this->db->sql_in_set('contest_album_id', $completed_album_ids) . '
+					AND contest_marked = ' . self::NO_CONTEST;
 			$this->db->sql_query($sql);
 
 			$image_ranks = [];
@@ -602,5 +622,25 @@ class contest
 			block::STATUS_APPROVED,
 			block::STATUS_LOCKED,
 		]);
+	}
+
+	/**
+	 * Match images proven to belong to each completed contest.
+	 *
+	 * @param string $alias             Optional image-table alias
+	 * @param array  $contest_end_times Contest end timestamp keyed by album ID
+	 * @return string
+	 */
+	private function participant_sql(string $alias, array $contest_end_times): string
+	{
+		$prefix = self::sql_alias_prefix($alias);
+		$conditions = [];
+		foreach ($contest_end_times as $album_id => $end_time)
+		{
+			$conditions[] = '(' . $prefix . 'image_album_id = ' . (int) $album_id . '
+				AND ' . $prefix . 'image_contest_end = ' . (int) $end_time . ')';
+		}
+
+		return '(' . implode(' OR ', $conditions) . ')';
 	}
 }

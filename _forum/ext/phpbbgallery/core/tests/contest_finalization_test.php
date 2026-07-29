@@ -80,7 +80,8 @@ final class contest_finalization_test extends TestCase
 		$this->assertStringContainsString('contest_second = 8', $updates[0]);
 		$this->assertStringContainsString('contest_third = 0', $updates[0]);
 		$this->assertStringContainsString('image_contest_rank = CASE image_id WHEN 7 THEN 1 WHEN 8 THEN 2 ELSE 0 END', $updates[1]);
-		$this->assertStringContainsString('image_contest_end = CASE image_id WHEN 7 THEN 1500 WHEN 8 THEN 1500 ELSE 0 END', $updates[1]);
+		$this->assertStringContainsString('WHEN image_contest = 1', $updates[1]);
+		$this->assertStringContainsString('OR image_contest_end = 1500', $updates[1]);
 		$this->assertStringContainsString('contest_marked = 0', $updates[2]);
 		$this->assertStringContainsString('contest_marked = 2', $updates[2]);
 		$this->assertStringNotContainsString('image_id = 0', implode("\n", $updates));

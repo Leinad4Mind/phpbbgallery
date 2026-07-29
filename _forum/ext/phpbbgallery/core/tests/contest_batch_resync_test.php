@@ -19,7 +19,7 @@ final class contest_batch_resync_test extends TestCase
 	{
 		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
 		$queries = [];
-		$db->expects($this->exactly(4))
+		$db->expects($this->exactly(5))
 			->method('sql_query')
 			->willReturnCallback(function (string $sql) use (&$queries): int
 			{
@@ -34,7 +34,11 @@ final class contest_batch_resync_test extends TestCase
 			});
 
 		$rows = [
-			2 => [
+			1 => [
+				['contest_album_id' => 10, 'contest_start' => 1_000, 'contest_end' => 500],
+				['contest_album_id' => 11, 'contest_start' => 1_000, 'contest_end' => 600],
+			],
+			3 => [
 				['image_album_id' => 10, 'image_id' => 7],
 				['image_album_id' => 10, 'image_id' => 8],
 				['image_album_id' => 11, 'image_id' => 9],
@@ -45,21 +49,25 @@ final class contest_batch_resync_test extends TestCase
 			{
 				return !empty($rows[$result]) ? array_shift($rows[$result]) : false;
 			});
-		$db->expects($this->once())->method('sql_freeresult')->with(2);
+		$db->expects($this->exactly(2))->method('sql_freeresult');
 
 		$this->contest($db)->resync_albums([10, 11, 10, 0]);
 
-		$this->assertStringContainsString('image_album_id IN (10, 11)', $queries[0]);
-		$this->assertStringContainsString('image_contest_rank = 0', $queries[0]);
-		$this->assertStringContainsString('SELECT COUNT(better.image_id)', $queries[1]);
-		$this->assertStringContainsString('ranked.image_status IN (1, 2)', $queries[1]);
-		$this->assertStringContainsString('better.image_status IN (1, 2)', $queries[1]);
-		$this->assertStringContainsString('better.image_rate_avg > ranked.image_rate_avg', $queries[1]);
-		$this->assertStringContainsString('ranked.image_rate_avg DESC', $queries[1]);
-		$this->assertStringContainsString('contest_first = CASE contest_album_id WHEN 10 THEN 7 WHEN 11 THEN 9', $queries[2]);
-		$this->assertStringContainsString('contest_second = CASE contest_album_id WHEN 10 THEN 8 WHEN 11 THEN 0', $queries[2]);
-		$this->assertStringContainsString('contest_third = CASE contest_album_id WHEN 10 THEN 0 WHEN 11 THEN 0', $queries[2]);
-		$this->assertStringContainsString('WHEN 7 THEN 1 WHEN 8 THEN 2 WHEN 9 THEN 1', $queries[3]);
+		$this->assertStringContainsString('contest_album_id IN (10, 11)', $queries[0]);
+		$this->assertStringContainsString('contest_marked = 0', $queries[0]);
+		$this->assertStringContainsString('image_album_id = 10', $queries[1]);
+		$this->assertStringContainsString('image_contest_end = 1500', $queries[1]);
+		$this->assertStringContainsString('image_contest_rank = 0', $queries[1]);
+		$this->assertStringContainsString('SELECT COUNT(better.image_id)', $queries[2]);
+		$this->assertStringContainsString('ranked.image_status IN (1, 2)', $queries[2]);
+		$this->assertStringContainsString('better.image_status IN (1, 2)', $queries[2]);
+		$this->assertStringContainsString('better.image_contest_end = ranked.image_contest_end', $queries[2]);
+		$this->assertStringContainsString('better.image_rate_avg > ranked.image_rate_avg', $queries[2]);
+		$this->assertStringContainsString('ranked.image_rate_avg DESC', $queries[2]);
+		$this->assertStringContainsString('contest_first = CASE contest_album_id WHEN 10 THEN 7 WHEN 11 THEN 9', $queries[3]);
+		$this->assertStringContainsString('contest_second = CASE contest_album_id WHEN 10 THEN 8 WHEN 11 THEN 0', $queries[3]);
+		$this->assertStringContainsString('contest_third = CASE contest_album_id WHEN 10 THEN 0 WHEN 11 THEN 0', $queries[3]);
+		$this->assertStringContainsString('WHEN 7 THEN 1 WHEN 8 THEN 2 WHEN 9 THEN 1', $queries[4]);
 	}
 
 	public function test_empty_album_set_does_not_query_the_database(): void
@@ -68,6 +76,29 @@ final class contest_batch_resync_test extends TestCase
 		$db->expects($this->never())->method('sql_query');
 
 		$this->contest($db)->resync_albums([0, -1]);
+	}
+
+	public function test_active_contest_batch_does_not_clear_image_markers(): void
+	{
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$queries = [];
+		$db->expects($this->once())
+			->method('sql_query')
+			->willReturnCallback(static function (string $sql) use (&$queries): int
+			{
+				$queries[] = $sql;
+
+				return 1;
+			});
+		$db->method('sql_in_set')->willReturn('contest_album_id IN (10)');
+		$db->expects($this->once())->method('sql_fetchrow')->with(1)->willReturn(false);
+		$db->expects($this->once())->method('sql_freeresult')->with(1);
+
+		$this->contest($db)->resync_albums([10]);
+
+		$this->assertCount(1, $queries);
+		$this->assertStringContainsString('contest_marked = 0', $queries[0]);
+		$this->assertStringNotContainsString('UPDATE gallery_images', $queries[0]);
 	}
 
 	public function test_single_album_resync_delegates_to_batch_resync(): void
