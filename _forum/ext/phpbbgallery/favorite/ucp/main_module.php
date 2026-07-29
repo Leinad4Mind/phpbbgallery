@@ -107,13 +107,17 @@ class main_module
 
 		foreach ($rowset as $row)
 		{
-			$is_contest = (int) $row['image_contest'] === (int) \phpbbgallery\core\block::IN_CONTEST;
+			$hide_contest_private_data = \phpbbgallery\core\contest::hides_private_data(
+				$row,
+				(int) $user->data['user_id'],
+				$gallery_auth->acl_check('m_status', (int) $row['image_album_id'], (int) $row['album_user_id'])
+			);
 
 			$template->assign_block_vars('image_row', [
 				'IMAGE_ID'			=> (int) $row['image_id'],
 				'ALBUM_NAME'		=> $row['album_name'],
 				'IMAGE_TIME'		=> $user->format_date($row['image_time']),
-				'UPLOADER'			=> ($is_contest && !$gallery_auth->acl_check('m_status', (int) $row['image_album_id'], (int) $row['album_user_id']))
+				'UPLOADER'			=> $hide_contest_private_data
 					? $language->lang('CONTEST_USERNAME')
 					: get_username_string('full', $row['image_user_id'], $row['image_username'], $row['image_user_colour']),
 				'UC_IMAGE_NAME'		=> $gallery_image->generate_link('image_name', $gallery_config->get('link_image_name'), $row['image_id'], $row['image_name'], $row['album_id']),

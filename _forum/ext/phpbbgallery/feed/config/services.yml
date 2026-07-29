@@ -8,6 +8,7 @@ services:
             - '@phpbbgallery.core.album'
             - '%phpbbgallery.tables.gallery_albums%'
             - '%phpbbgallery.tables.gallery_images%'
+            - '%phpbbgallery.tables.gallery_contests%'
 
     phpbbgallery.feed.controller:
         class: phpbbgallery\feed\controller\main
