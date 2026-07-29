@@ -31,6 +31,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Preserved completed-contest participant provenance so podium resynchronization cannot promote later images or alter an active contest.
 - Recalculated completed contest podiums when moderation changes a participant between approved, unapproved and locked states.
 - Restricted moves into active contests to the upload phase, cleared obsolete contest metadata on moved images and repaired affected source podiums.
+- Resynchronized completed contest podiums after an administrator resets all ratings in the album.
 - Enforced fail-closed contest phases at upload entry and finalization, comment submission, and rating display and persistence, with explicit boundary handling for the upload, voting, and completed phases.
 - Made the Gallery BBCode migration fail before any database write when a tag belongs to another extension or the required IDs cannot be allocated, and restricted historical rollback to Gallery-owned definitions.
 - Restricted the editor selector to the authenticated author's completed approved or locked images in albums that remain visible after Gallery ACL and zebra filtering, excluding orphaned and active-contest uploads and retaining protected image routes.
