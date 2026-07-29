@@ -41,6 +41,11 @@ class contest
 	 */
 	private const NO_CONTEST = 0;
 
+	/**
+	 * Recoverable intermediate state while a selected podium is published.
+	 */
+	private const FINALIZING_CONTEST = 2;
+
 	public const NUM_IMAGES = 3;
 
 	/**
@@ -298,54 +303,182 @@ class contest
 		)));
 	}
 
-	public function end(int $album_id, int $contest_id, int $end_time): void
+	/**
+	 * Finalize a due contest and persist its deterministic podium.
+	 *
+	 * The selected podium is first claimed in a recoverable intermediate state
+	 * and then published in one idempotent image update. Concurrent requests use
+	 * the stored podium and only the request completing the state transition
+	 * increments the completed-contest statistic.
+	 *
+	 * @param int      $album_id  Contest album identifier
+	 * @param int      $contest_id Contest identifier
+	 * @param int      $end_time  Scheduled contest end timestamp
+	 * @param int|null $now       Current timestamp override for deterministic tests
+	 * @return bool Whether this request completed or recovered the finalization
+	 */
+	public function end(int $album_id, int $contest_id, int $end_time, ?int $now = null): bool
 	{
-		$sql = 'UPDATE ' . $this->images_table . '
-			SET image_contest = ' . self::NO_CONTEST . '
-			WHERE image_album_id = ' . (int) $album_id;
-		$this->db->sql_query($sql);
+		if ($album_id <= 0 || $contest_id <= 0 || $end_time <= 0)
+		{
+			return false;
+		}
 
-		$sql = 'SELECT image_id
-			FROM ' . $this->images_table . '
-			WHERE image_album_id = ' . (int) $album_id . '
-			ORDER BY ' .$this->get_tabulation();
-		$result = $this->db->sql_query_limit($sql, self::NUM_IMAGES);
-		$first = $this->db->sql_fetchfield('image_id');
-		$second = $this->db->sql_fetchfield('image_id');
-		$third = $this->db->sql_fetchfield('image_id');
+		$now ??= time();
+		$sql = 'SELECT contest_marked, contest_first, contest_second, contest_third
+			FROM ' . $this->contest_table . '
+			WHERE contest_id = ' . $contest_id . '
+				AND contest_album_id = ' . $album_id . '
+				AND contest_marked IN (' . (int) block::IN_CONTEST . ', ' . self::FINALIZING_CONTEST . ')
+				AND contest_start + contest_end = ' . $end_time . '
+				AND contest_start + contest_end <= ' . $now;
+		$result = $this->db->sql_query_limit($sql, 1);
+		$contest = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
+		if (!$contest)
+		{
+			return false;
+		}
 
-		$first = (int) $first;
-		$second = (int) $second;
-		$third = (int) $third;
+		if ((int) $contest['contest_marked'] === (int) block::IN_CONTEST)
+		{
+			$winners = $this->select_winners($album_id);
+			$first = $winners[0] ?? 0;
+			$second = $winners[1] ?? 0;
+			$third = $winners[2] ?? 0;
+			$sql = 'UPDATE ' . $this->contest_table . '
+				SET contest_marked = ' . self::FINALIZING_CONTEST . ',
+					contest_first = ' . $first . ',
+					contest_second = ' . $second . ',
+					contest_third = ' . $third . '
+				WHERE contest_id = ' . $contest_id . '
+					AND contest_album_id = ' . $album_id . '
+					AND contest_marked = ' . (int) block::IN_CONTEST . '
+					AND contest_start + contest_end = ' . $end_time;
+			$this->db->sql_query($sql);
+
+			if ((int) $this->db->sql_affectedrows() !== 1)
+			{
+				$contest = $this->get_finalizing_contest($album_id, $contest_id, $end_time);
+				if (!$contest)
+				{
+					return false;
+				}
+				$winners = $this->stored_winners($contest);
+			}
+		}
+		else
+		{
+			$winners = $this->stored_winners($contest);
+		}
+
+		$this->persist_podium($album_id, $end_time, $winners);
 
 		$sql = 'UPDATE ' . $this->contest_table . '
-			SET contest_marked = ' . self::NO_CONTEST . ",
-				contest_first = $first,
-				contest_second = $second,
-				contest_third = $third
-			WHERE contest_id = " . (int) $contest_id;
+			SET contest_marked = ' . self::NO_CONTEST . '
+			WHERE contest_id = ' . $contest_id . '
+				AND contest_album_id = ' . $album_id . '
+				AND contest_marked = ' . self::FINALIZING_CONTEST . '
+				AND contest_start + contest_end = ' . $end_time;
 		$this->db->sql_query($sql);
 
+		if ((int) $this->db->sql_affectedrows() === 1)
+		{
+			$this->gallery_config->inc('contests_ended', 1);
+		}
+
+		return true;
+	}
+
+	/**
+	 * Select the eligible participants for the contest podium.
+	 *
+	 * @param int $album_id Contest album identifier
+	 * @return int[]
+	 */
+	private function select_winners(int $album_id): array
+	{
+		$sql = 'SELECT image_id
+			FROM ' . $this->images_table . '
+			WHERE image_album_id = ' . $album_id . '
+				AND image_contest = ' . (int) block::IN_CONTEST . '
+				AND ' . $this->eligible_status_sql('image_status') . '
+			ORDER BY ' . $this->get_tabulation();
+		$result = $this->db->sql_query_limit($sql, self::NUM_IMAGES);
+		$winners = [];
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$winners[] = (int) $row['image_id'];
+		}
+		$this->db->sql_freeresult($result);
+
+		return $winners;
+	}
+
+	/**
+	 * Reload a podium already claimed by a concurrent finalizer.
+	 *
+	 * @param int $album_id  Contest album identifier
+	 * @param int $contest_id Contest identifier
+	 * @param int $end_time  Scheduled contest end timestamp
+	 * @return array|false
+	 */
+	private function get_finalizing_contest(int $album_id, int $contest_id, int $end_time): array|false
+	{
+		$sql = 'SELECT contest_first, contest_second, contest_third
+			FROM ' . $this->contest_table . '
+			WHERE contest_id = ' . $contest_id . '
+				AND contest_album_id = ' . $album_id . '
+				AND contest_marked = ' . self::FINALIZING_CONTEST . '
+				AND contest_start + contest_end = ' . $end_time;
+		$result = $this->db->sql_query_limit($sql, 1);
+		$contest = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+
+		return $contest ?: false;
+	}
+
+	/**
+	 * Convert the stored podium columns into ordered, non-zero image IDs.
+	 *
+	 * @param array $contest Contest row
+	 * @return int[]
+	 */
+	private function stored_winners(array $contest): array
+	{
+		return array_values(array_filter([
+			(int) ($contest['contest_first'] ?? 0),
+			(int) ($contest['contest_second'] ?? 0),
+			(int) ($contest['contest_third'] ?? 0),
+		]));
+	}
+
+	/**
+	 * Publish a stored podium and clear every active image marker atomically.
+	 *
+	 * @param int   $album_id Contest album identifier
+	 * @param int   $end_time Scheduled contest end timestamp
+	 * @param int[] $winners  Ordered winner image identifiers
+	 * @return void
+	 */
+	private function persist_podium(int $album_id, int $end_time, array $winners): void
+	{
+		$rank_cases = [];
+		$end_cases = [];
+		foreach ($winners as $rank => $image_id)
+		{
+			$rank_cases[] = 'WHEN ' . $image_id . ' THEN ' . ($rank + 1);
+			$end_cases[] = 'WHEN ' . $image_id . ' THEN ' . $end_time;
+		}
+
+		$rank_sql = $rank_cases ? 'CASE image_id ' . implode(' ', $rank_cases) . ' ELSE 0 END' : '0';
+		$end_sql = $end_cases ? 'CASE image_id ' . implode(' ', $end_cases) . ' ELSE 0 END' : '0';
 		$sql = 'UPDATE ' . $this->images_table . '
-			SET image_contest_end = ' . (int) $end_time . ',
-				image_contest_rank = 1
-			WHERE image_id = ' . (int) $first;
+			SET image_contest = ' . self::NO_CONTEST . ',
+				image_contest_rank = ' . $rank_sql . ',
+				image_contest_end = ' . $end_sql . '
+			WHERE image_album_id = ' . $album_id;
 		$this->db->sql_query($sql);
-
-		$sql = 'UPDATE ' . $this->images_table . '
-			SET image_contest_end = ' . (int) $end_time . ',
-				image_contest_rank = 2
-			WHERE image_id = ' . (int) $second;
-		$this->db->sql_query($sql);
-
-		$sql = 'UPDATE ' . $this->images_table . '
-			SET image_contest_end = ' . (int) $end_time . ',
-				image_contest_rank = 3
-			WHERE image_id = ' . (int) $third;
-		$this->db->sql_query($sql);
-
-		$this->gallery_config->inc('contests_ended', 1);
 	}
 
 	public function resync_albums(array|int $album_ids): void
@@ -364,16 +497,22 @@ class contest
 				WHERE ' . $this->db->sql_in_set('image_album_id', $album_batch);
 			$this->db->sql_query($sql);
 
+			$ranked_status_sql = $this->eligible_status_sql('ranked.image_status');
+			$better_status_sql = $this->eligible_status_sql('better.image_status');
 			$sql = sprintf(
 				'SELECT ranked.image_album_id, ranked.image_id
 				FROM ' . $this->images_table . ' ranked
 				WHERE %s
+					AND %s
 					AND (SELECT COUNT(better.image_id)
 						FROM ' . $this->images_table . ' better
 						WHERE better.image_album_id = ranked.image_album_id
+							AND %s
 							AND (%s)) < %d
 				ORDER BY ranked.image_album_id ASC, %s',
 				$this->db->sql_in_set('ranked.image_album_id', $album_batch),
+				$ranked_status_sql,
+				$better_status_sql,
 				$this->get_better_image_condition(),
 				self::NUM_IMAGES,
 				$this->get_tabulation('ranked')
@@ -449,5 +588,19 @@ class contest
 			OR (better.' . $first_column . ' = ranked.' . $first_column . '
 				AND better.' . $second_column . ' = ranked.' . $second_column . '
 				AND better.image_id < ranked.image_id)';
+	}
+
+	/**
+	 * SQL predicate for images eligible for a completed contest podium.
+	 *
+	 * @param string $column Qualified image-status column
+	 * @return string
+	 */
+	private function eligible_status_sql(string $column): string
+	{
+		return $this->db->sql_in_set($column, [
+			block::STATUS_APPROVED,
+			block::STATUS_LOCKED,
+		]);
 	}
 }

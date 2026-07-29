@@ -158,16 +158,23 @@ class album
 
 		$album_data = $this->loader->get($album_id);
 
-		if ($album_data['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST)
-		{
-			if ($album_data['contest_id'] && $album_data['contest_marked'] && (($album_data['contest_start'] + $album_data['contest_end']) < time()))
-			{
-				$contest_end_time = $album_data['contest_start'] + $album_data['contest_end'];
-				$this->contest->end($album_id, $album_data['contest_id'], $contest_end_time);
-			}
-		}
 		$this->check_permissions($album_id, $album_data['album_user_id'], $album_data['album_auth_access']);
 		$this->auth_level->display($album_id, $album_data['album_status'], $album_data['album_user_id']);
+
+		if ($album_data['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST
+			&& $album_data['contest_id']
+			&& $album_data['contest_marked'])
+		{
+			$contest_end_time = (int) $album_data['contest_start'] + (int) $album_data['contest_end'];
+			$now = time();
+			if ($contest_end_time <= $now)
+			{
+				if ($this->contest->end($album_id, (int) $album_data['contest_id'], $contest_end_time, $now))
+				{
+					$album_data['contest_marked'] = \phpbbgallery\core\block::NO_CONTEST;
+				}
+			}
+		}
 
 		$this->display->generate_navigation($album_data);
 		$album_display = $this->display->display_albums($album_data, $this->config['load_moderators']);

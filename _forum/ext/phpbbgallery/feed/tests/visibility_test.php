@@ -69,7 +69,7 @@ final class visibility_test extends TestCase
 		$source = (string) file_get_contents(dirname(__DIR__) . '/feed.php');
 
 		$this->assertStringContainsString('c.contest_start, c.contest_end', $source);
-		$this->assertStringContainsString('c.contest_marked = ', $source);
+		$this->assertStringContainsString('c.contest_marked <> ', $source);
 	}
 
 	public function test_feed_controller_hides_contest_author_and_description(): void

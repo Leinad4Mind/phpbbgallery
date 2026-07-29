@@ -107,7 +107,7 @@ final class ucp_main_types_test extends TestCase
 		$this->assertGreaterThanOrEqual(2, substr_count($source, 'contest::hides_private_data('));
 		$this->assertStringContainsString('contest::hides_results(', $source);
 		$this->assertStringContainsString('$hide_contest_results ? 0', $source);
-		$this->assertStringContainsString('c.contest_marked = ', $source);
+		$this->assertStringContainsString('c.contest_marked <> ', $source);
 	}
 
 	public function test_subscription_rows_render_the_last_comment_body(): void

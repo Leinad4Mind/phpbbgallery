@@ -79,6 +79,19 @@ final class controller_album_types_test extends TestCase
 		$this->assertStringContainsString('contest::hides_results(', $source);
 	}
 
+	public function test_contest_finalization_runs_only_after_album_access_checks(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/album.php');
+		$permissions = strpos($source, '$this->check_permissions(');
+		$display = strpos($source, '$this->auth_level->display(', (int) $permissions);
+		$finalize = strpos($source, '$this->contest->end(', (int) $display);
+
+		$this->assertNotFalse($permissions);
+		$this->assertNotFalse($display);
+		$this->assertNotFalse($finalize);
+		$this->assertTrue($permissions < $display && $display < $finalize);
+	}
+
 	public function test_album_pages_are_clamped_to_the_first_page(): void
 	{
 		$reflection = new \ReflectionClass(album::class);
