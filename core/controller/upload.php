@@ -171,14 +171,9 @@ class upload
 		{
 			$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
 		}
-		if ($album_data['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST)
+		if (!$this->contest->is_step('upload', $album_data))
 		{
-			$contest = [];
-			$contest = $this->contest->get_contest($album_id, 'album');
-			if ($contest['contest_start'] + $contest['contest_rating'] <= time())
-			{
-				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
-			}
+			$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
 		}
 		$page_title = $this->language->lang('UPLOAD_IMAGE') . ' - ' . $album_data['album_name'];
 
@@ -313,6 +308,10 @@ class upload
 			}
 
 			$success = true;
+			if (!$this->contest->is_step('upload', $album_data))
+			{
+				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
+			}
 			foreach ($process->images as $image_id)
 			{
 				$success = $success && $process->update_image($image_id, !$this->auth->acl_check('i_approve', $album_id, $album_data['album_user_id']), $album_data['album_contest']);
@@ -612,6 +611,11 @@ class upload
 				}
 				else
 				{
+					if (!$this->contest->is_step('upload', $album_data))
+					{
+						$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
+					}
+
 					$success = true;
 					foreach ($process->images as $image_id)
 					{

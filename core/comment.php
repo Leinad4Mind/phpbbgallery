@@ -90,7 +90,8 @@ class comment
 	 */
 	public function is_able(array $album_data, array $image_data): bool
 	{
-		return $this->is_allowed($album_data, $image_data); //&& phpbb_ext_gallery_core_contest::is_step('comment', $album_data);
+		return $this->is_allowed($album_data, $image_data) &&
+			contest::is_step('comment', $album_data);
 	}
 
 	/**

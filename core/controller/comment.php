@@ -200,7 +200,8 @@ class comment
 		$album_loginlink = append_sid($this->phpbb_root_path . 'ucp.' . $this->php_ext . '?mode=login');
 
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
-		if (!$this->gallery_auth->acl_check('c_post', $album_id, $album_data['album_user_id']))
+		if (!$this->gallery_auth->acl_check('c_post', $album_id, $album_data['album_user_id']) ||
+			!$this->comment->is_able($album_data, $image_data))
 		{
 			$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
 		}
@@ -229,14 +230,7 @@ class comment
 		// Build smilies array
 		generate_smilies('inline', 0);
 
-		if (isset($album_data['contest_start']))
-		{
-			$s_hide_comment_input = (time() < ($album_data['contest_start'] + $album_data['contest_end'])) ? true : false;
-		}
-		else
-		{
-			$s_hide_comment_input = false;
-		}
+		$s_hide_comment_input = !\phpbbgallery\core\contest::is_step('comment', $album_data);
 
 		$this->template->assign_vars([
 			'BBCODE_STATUS'			=> ($bbcode_status) ? sprintf($this->language->lang('BBCODE_IS_ON'), '<a href="' . $this->url->append_sid('phpbb', 'faq', 'mode=bbcode') . '">', '</a>') : sprintf($this->language->lang('BBCODE_IS_OFF'), '<a href="' . $this->url->append_sid('phpbb', 'faq', 'mode=bbcode') . '">', '</a>'),
@@ -339,6 +333,11 @@ class comment
 			];
 			if ((!$error) && ($sql_ary['comment'] != ''))
 			{
+				if (!$this->comment->is_able($album_data, $image_data))
+				{
+					$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
+				}
+
 				if ($this->misc->display_captcha('comment'))
 				{
 					$captcha->reset();
@@ -867,7 +866,7 @@ class comment
 			$user_rating = $rating->get_user_rating($this->user->data['user_id']);
 
 			// Check: User didn't rate yet, has permissions, it's not the users own image and the user is logged in
-			if (!$user_rating && $rating->is_allowed())
+			if (!$user_rating && $rating->is_able())
 			{
 				$rating->display_box();
 
@@ -885,7 +884,7 @@ class comment
 					$message .= $this->language->lang('RATING_SUCCESSFUL') . '<br />';
 				}
 				$this->template->assign_vars([
-					'S_ALLOWED_TO_RATE'			=> $rating->is_allowed(),
+					'S_ALLOWED_TO_RATE'			=> $rating->is_able(),
 				]);
 			}
 

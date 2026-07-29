@@ -9,6 +9,7 @@
 
 namespace phpbbgallery\core\tests;
 
+use phpbbgallery\core\block;
 use phpbbgallery\core\rating;
 use PHPUnit\Framework\TestCase;
 
@@ -70,6 +71,49 @@ final class domain_rating_types_test extends TestCase
 		$rating->user_rating = [12 => 4];
 
 		$this->assertSame(4, $rating->get_user_rating(12));
+	}
+
+	public function test_rating_ability_respects_the_contest_phase(): void
+	{
+		$rating = $this->getMockBuilder(rating::class)
+			->disableOriginalConstructor()
+			->onlyMethods(['is_allowed'])
+			->getMock();
+		$rating->expects($this->exactly(2))->method('is_allowed')->willReturn(true);
+		$current_time = time();
+		$reflection = new \ReflectionClass(rating::class);
+		$album_data = [
+			'album_type' => block::TYPE_CONTEST,
+			'contest_id' => 8,
+			'contest_start' => $current_time - 10,
+			'contest_rating' => 20,
+			'contest_end' => 100,
+		];
+		$reflection->getProperty('album_data')->setValue($rating, $album_data);
+
+		$this->assertFalse($rating->is_able());
+		$album_data['contest_start'] = $current_time - 30;
+		$reflection->getProperty('album_data')->setValue($rating, $album_data);
+		$this->assertTrue($rating->is_able());
+	}
+
+	public function test_submit_rating_rechecks_ability_before_writing(): void
+	{
+		$rating = $this->getMockBuilder(rating::class)
+			->disableOriginalConstructor()
+			->onlyMethods(['is_able'])
+			->getMock();
+		$rating->expects($this->once())->method('is_able')->willReturn(false);
+		$user = $this->createStub(\phpbb\user::class);
+		$user->data = ['user_id' => 2];
+		$reflection = new \ReflectionClass(rating::class);
+		$reflection->getProperty('user')->setValue($rating, $user);
+		$reflection->getProperty('gallery_config')->setValue(
+			$rating,
+			new \phpbbgallery\core\config(new \phpbb\config\config([]))
+		);
+
+		$this->assertFalse($rating->submit_rating(false, 5));
 	}
 
 	public function test_album_loader_uses_the_image_album_identifier(): void

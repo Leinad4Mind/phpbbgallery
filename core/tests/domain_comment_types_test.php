@@ -9,6 +9,7 @@
 
 namespace phpbbgallery\core\tests;
 
+use phpbbgallery\core\block;
 use phpbbgallery\core\comment;
 use PHPUnit\Framework\TestCase;
 
@@ -63,6 +64,27 @@ final class domain_comment_types_test extends TestCase
 		$this->assertFalse($comment->add([]));
 		$this->assertFalse($comment->add(['comment_image_id' => 10]));
 		$this->assertFalse($comment->edit(3, []));
+	}
+
+	public function test_comment_ability_respects_the_contest_phase(): void
+	{
+		$comment = $this->getMockBuilder(comment::class)
+			->disableOriginalConstructor()
+			->onlyMethods(['is_allowed'])
+			->getMock();
+		$comment->expects($this->exactly(2))->method('is_allowed')->willReturn(true);
+		$current_time = time();
+		$album_data = [
+			'album_type' => block::TYPE_CONTEST,
+			'contest_id' => 4,
+			'contest_start' => $current_time - 100,
+			'contest_rating' => 20,
+			'contest_end' => 200,
+		];
+
+		$this->assertFalse($comment->is_able($album_data, []));
+		$album_data['contest_start'] = $current_time - 300;
+		$this->assertTrue($comment->is_able($album_data, []));
 	}
 
 	public function test_identifier_normalization_preserves_order_and_casts_values(): void
