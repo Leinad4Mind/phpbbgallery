@@ -140,6 +140,11 @@ class index
 		else
 		{
 			$last_image = $this->normalize_last_image($this->image->get_last_image());
+			$hide_last_image_uploader = $last_image['image_id'] > 0 && \phpbbgallery\core\contest::hides_private_data(
+				$last_image,
+				(int) $this->user->data['user_id'],
+				$this->gallery_auth->acl_check('m_status', (int) $last_image['image_album_id'])
+			);
 			switch ($this->gallery_config->get('link_image_icon'))
 			{
 				case 'image_page':
@@ -170,7 +175,9 @@ class index
 				'U_IMAGE_ACTION'	=> $action_image,
 				'U_IMAGENAME_ACTION'	=> $this->helper->route('phpbbgallery_core_image', ['image_id' => $last_image['image_id']]),
 				'U_TIME'	=> ($last_image['image_id'] > 0) ?  $this->user->format_date($last_image['image_time']) : false,
-				'U_UPLOADER'	=> ($last_image['image_id'] > 0) ? get_username_string('full', $last_image['image_user_id'], $last_image['image_username'], $last_image['image_user_colour']) : false,
+				'U_UPLOADER'	=> ($last_image['image_id'] > 0)
+					? ($hide_last_image_uploader ? $this->language->lang('CONTEST_USERNAME') : get_username_string('full', $last_image['image_user_id'], $last_image['image_username'], $last_image['image_user_colour']))
+					: false,
 				'ALPHABET_NAVIGATION' => implode('&nbsp;', $alpha_links),
 			]);
 			$this->gallery_user->set_user_id($this->user->data['user_id']);

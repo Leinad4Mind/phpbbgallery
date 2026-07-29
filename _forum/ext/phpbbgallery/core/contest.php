@@ -214,6 +214,90 @@ class contest
 		return self::is_active_image($image_data) && !$can_moderate;
 	}
 
+	/**
+	 * Build the SQL boundary for fields covered by the author exception.
+	 *
+	 * @param string $alias               Optional, trusted image-table alias
+	 * @param int    $viewer_id           Current user identifier
+	 * @param array  $moderated_album_ids Albums where the viewer may moderate status
+	 * @return string
+	 */
+	public static function private_data_visibility_sql(string $alias, int $viewer_id, array $moderated_album_ids): string
+	{
+		$prefix = self::sql_alias_prefix($alias);
+		$visibility = [$prefix . 'image_contest = ' . (int) block::NO_CONTEST];
+		$anonymous_id = defined('ANONYMOUS') ? (int) constant('ANONYMOUS') : 1;
+
+		if ($viewer_id > 0 && $viewer_id !== $anonymous_id)
+		{
+			$visibility[] = $prefix . 'image_user_id = ' . $viewer_id;
+		}
+
+		$moderated_album_ids = self::normalize_album_ids($moderated_album_ids);
+		if ($moderated_album_ids)
+		{
+			$visibility[] = $prefix . 'image_album_id IN (' . implode(', ', $moderated_album_ids) . ')';
+		}
+
+		return '(' . implode(' OR ', $visibility) . ')';
+	}
+
+	/**
+	 * Build the SQL boundary for ratings and comment history.
+	 *
+	 * @param string $alias               Optional, trusted image-table alias
+	 * @param array  $moderated_album_ids Albums where the viewer may moderate status
+	 * @return string
+	 */
+	public static function results_visibility_sql(string $alias, array $moderated_album_ids): string
+	{
+		$prefix = self::sql_alias_prefix($alias);
+		$visibility = [$prefix . 'image_contest = ' . (int) block::NO_CONTEST];
+		$moderated_album_ids = self::normalize_album_ids($moderated_album_ids);
+
+		if ($moderated_album_ids)
+		{
+			$visibility[] = $prefix . 'image_album_id IN (' . implode(', ', $moderated_album_ids) . ')';
+		}
+
+		return '(' . implode(' OR ', $visibility) . ')';
+	}
+
+	/**
+	 * Validate an internal SQL alias before using it as an identifier prefix.
+	 *
+	 * @param string $alias Table alias
+	 * @return string
+	 */
+	private static function sql_alias_prefix(string $alias): string
+	{
+		if ($alias === '')
+		{
+			return '';
+		}
+
+		if (!preg_match('/^[A-Za-z_][A-Za-z0-9_]*$/D', $alias))
+		{
+			throw new \InvalidArgumentException('Invalid SQL alias.');
+		}
+
+		return $alias . '.';
+	}
+
+	/**
+	 * Normalize album identifiers embedded in policy SQL.
+	 *
+	 * @param array $album_ids Album identifiers
+	 * @return array
+	 */
+	private static function normalize_album_ids(array $album_ids): array
+	{
+		return array_values(array_unique(array_filter(
+			array_map('intval', $album_ids),
+			static fn(int $album_id): bool => $album_id > 0
+		)));
+	}
+
 	public function end(int $album_id, int $contest_id, int $end_time): void
 	{
 		$sql = 'UPDATE ' . $this->images_table . '

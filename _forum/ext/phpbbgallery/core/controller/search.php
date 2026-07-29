@@ -204,6 +204,7 @@ class search
 			$sort_by_sql['lc'] = 'image_last_comment';
 		}
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
+		$moderated_album_ids = $this->gallery_auth->acl_album_ids('m_status');
 
 		$additional_search_active = false;
 		$additional_search_where = [];
@@ -237,6 +238,12 @@ class search
 		if ($keywords || $username || $user_id || $search_id || $submit || $additional_search_active)
 		{
 			$user_id_ary = [];
+			$contest_private_data_sql = \phpbbgallery\core\contest::private_data_visibility_sql(
+				'i',
+				(int) $this->user->data['user_id'],
+				$moderated_album_ids
+			);
+			$contest_results_sql = \phpbbgallery\core\contest::results_visibility_sql('i', $moderated_album_ids);
 			// Let's resolve username to user id ... or array of them.
 			if ($username)
 			{
@@ -265,6 +272,15 @@ class search
 			if (!empty($user_id))
 			{
 				$sql_where[] =  $this->db->sql_in_set('i.image_user_id', $user_id);
+				$sql_where[] = $contest_private_data_sql;
+			}
+			if ($sort_key === 'u' && empty($user_id))
+			{
+				$sql_where[] = $contest_private_data_sql;
+			}
+			else if (in_array($sort_key, ['ra', 'r', 'c', 'lc'], true))
+			{
+				$sql_where[] = $contest_results_sql;
 			}
 			// if we search in an existing search result just add the additional keywords. But we need to use "all search terms"-mode
 			// so we can keep the old keywords in their old mode, but add the new ones as required words
@@ -289,22 +305,17 @@ class search
 			$sql_limit = 0;
 
 			$search_query = '';
-			$matches = ['i.image_name', 'i.image_desc'];
 
-			if (is_array($keywords_ary) && !sizeof($keywords_ary) && is_array($user_id_ary) && !sizeof($user_id_ary) && !$additional_search_active)
+			if (is_array($keywords_ary) && !sizeof($keywords_ary) && empty($user_id) && !$additional_search_active)
 			{
 				trigger_error('NO_SEARCH_RESULTS');
 			}
-			$matches = ['i.image_name', 'i.image_desc'];
 
 			foreach ($keywords_ary as $word)
 			{
-				$match_search_query = '';
-				foreach ($matches as $match)
-				{
-					$match_search_query .= (($match_search_query) ? ' OR ' : '') . 'LOWER('. $match . ') ';
-					$match_search_query .= $this->db->sql_like_expression(str_replace('*', $this->db->get_any_char(), $this->db->get_any_char() . mb_strtolower($word) . $this->db->get_any_char()));
-				}
+				$like_expression = $this->db->sql_like_expression(str_replace('*', $this->db->get_any_char(), $this->db->get_any_char() . mb_strtolower($word) . $this->db->get_any_char()));
+				$match_search_query = 'LOWER(i.image_name) ' . $like_expression .
+					' OR (' . $contest_private_data_sql . ' AND LOWER(i.image_desc) ' . $like_expression . ')';
 				$search_query .= ((!$search_query) ? '' : (($search_terms == 'all') ? ' AND ' : ' OR ')) . '(' . $match_search_query . ')';
 			}
 			$sql_where[] = $search_query;

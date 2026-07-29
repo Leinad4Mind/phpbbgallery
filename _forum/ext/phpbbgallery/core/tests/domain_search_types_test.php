@@ -57,11 +57,58 @@ final class domain_search_types_test extends TestCase
 	public function test_count_and_rendering_contracts_are_explicit(): void
 	{
 		$this->assertSame('int', (string) (new \ReflectionMethod(search::class, 'recent_count'))->getReturnType());
+		$this->assertSame('int', (string) (new \ReflectionMethod(search::class, 'user_image_count'))->getReturnType());
 
 		foreach (['random', 'recent_comments', 'recent', 'rating'] as $method_name)
 		{
 			$this->assertSame('void', (string) (new \ReflectionMethod(search::class, $method_name))->getReturnType());
 		}
+	}
+
+	public function test_profile_image_count_applies_permissions_and_contest_identity_boundary(): void
+	{
+		$queries = [];
+		$gallery_auth = $this->createMock(\phpbbgallery\core\auth\auth::class);
+		$gallery_auth->expects($this->once())->method('load_user_permissions')->with(7);
+		$gallery_auth->expects($this->once())->method('get_exclude_zebra')->willReturn([5]);
+		$gallery_auth->expects($this->exactly(2))
+			->method('acl_album_ids')
+			->willReturnCallback(static fn(string $permission): array => $permission === 'i_view' ? [2, 5] : [9, 5]);
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->exactly(2))
+			->method('sql_in_set')
+			->willReturnCallback(static fn(string $field, array $ids): string => $field . ' IN (' . implode(', ', $ids) . ')');
+		$db->expects($this->once())
+			->method('sql_query')
+			->willReturnCallback(static function (string $sql) use (&$queries): string
+			{
+				$queries[] = $sql;
+				return 'result';
+			});
+		$db->expects($this->once())->method('sql_fetchrow')->with('result')->willReturn(['count' => 4]);
+		$db->expects($this->once())->method('sql_freeresult')->with('result');
+		$user = new \phpbb\user();
+		$user->data = ['user_id' => 7];
+		$reflection = new \ReflectionClass(search::class);
+		$search = $reflection->newInstanceWithoutConstructor();
+		$reflection->getProperty('gallery_auth')->setValue($search, $gallery_auth);
+		$reflection->getProperty('db')->setValue($search, $db);
+		$reflection->getProperty('user')->setValue($search, $user);
+		$reflection->getProperty('images_table')->setValue($search, 'gallery_images');
+
+		$this->assertSame(4, $search->user_image_count(12));
+		$this->assertStringContainsString('image_user_id = 12', $queries[0]);
+		$this->assertStringContainsString('(image_contest = 0 OR image_user_id = 7 OR image_album_id IN (9))', $queries[0]);
+		$this->assertStringContainsString('image_album_id IN (2)', $queries[0]);
+		$this->assertStringContainsString('image_album_id IN (9)', $queries[0]);
+	}
+
+	public function test_discovery_queries_apply_the_matching_contest_boundary(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/search.php');
+
+		$this->assertGreaterThanOrEqual(3, substr_count($source, 'contest::private_data_visibility_sql('));
+		$this->assertGreaterThanOrEqual(3, substr_count($source, 'contest::results_visibility_sql('));
 	}
 
 	public function test_random_results_require_image_view_or_moderator_permission(): void
