@@ -225,7 +225,14 @@ class rating
 	{
 		$this->template->assign_var('GALLERY_RATING', self::MODE_SELECT);
 
-		if ($this->image_data('image_contest'))
+		$can_moderate_contest = $this->gallery_auth->acl_check(
+			'm_status',
+			(int) $this->album_data('album_id'),
+			(int) $this->album_data('album_user_id')
+		);
+		if (\phpbbgallery\core\contest::hides_results([
+			'image_contest' => (int) $this->image_data('image_contest'),
+		], $can_moderate_contest))
 		{
 			if (!$display_contest_end)
 			{

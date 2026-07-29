@@ -161,6 +161,59 @@ class contest
 		};
 	}
 
+	/**
+	 * Check whether an image still belongs to an active, anonymous contest.
+	 *
+	 * The persisted marker is authoritative. It is cleared only after contest
+	 * finalization, so incomplete or delayed finalization remains fail-closed.
+	 *
+	 * @param array $image_data Image data
+	 * @return bool
+	 */
+	public static function is_active_image(array $image_data): bool
+	{
+		return (int) ($image_data['image_contest'] ?? block::NO_CONTEST) === (int) block::IN_CONTEST;
+	}
+
+	/**
+	 * Decide whether an active contest image must hide its author and description.
+	 *
+	 * Moderators may inspect every entry. A registered author may inspect their
+	 * own entry, while anonymous entries never receive an owner exception.
+	 *
+	 * @param array $image_data  Image data
+	 * @param int   $viewer_id   Current user identifier
+	 * @param bool  $can_moderate Whether the viewer can moderate image status
+	 * @return bool
+	 */
+	public static function hides_private_data(array $image_data, int $viewer_id, bool $can_moderate): bool
+	{
+		if (!self::is_active_image($image_data) || $can_moderate)
+		{
+			return false;
+		}
+
+		$anonymous_id = defined('ANONYMOUS') ? (int) constant('ANONYMOUS') : 1;
+		$owner_id = (int) ($image_data['image_user_id'] ?? $anonymous_id);
+
+		return $owner_id === $anonymous_id || $owner_id !== $viewer_id;
+	}
+
+	/**
+	 * Decide whether aggregate ratings and comment history must remain hidden.
+	 *
+	 * Unlike identity data, contest results stay private even from the entry
+	 * author. Only an album status moderator may inspect them before finalization.
+	 *
+	 * @param array $image_data  Image data
+	 * @param bool  $can_moderate Whether the viewer can moderate image status
+	 * @return bool
+	 */
+	public static function hides_results(array $image_data, bool $can_moderate): bool
+	{
+		return self::is_active_image($image_data) && !$can_moderate;
+	}
+
 	public function end(int $album_id, int $contest_id, int $end_time): void
 	{
 		$sql = 'UPDATE ' . $this->images_table . '
