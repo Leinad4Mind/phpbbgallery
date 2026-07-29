@@ -500,13 +500,13 @@ class image
 			$user_rating = $rating->get_user_rating($this->user->data['user_id']);
 
 			// Check: User didn't rate yet, has permissions, it's not the users own image and the user is logged in
-			if (!$user_rating && $rating->is_allowed())
+			if (!$user_rating && $rating->is_able())
 			{
 				$rating->display_box();
 			}
 			$this->template->assign_vars([
 				'IMAGE_RATING'      => $rating->get_image_rating($user_rating),
-				'S_ALLOWED_TO_RATE' => (!$user_rating && $rating->is_allowed()),
+				'S_ALLOWED_TO_RATE' => (!$user_rating && $rating->is_able()),
 				'S_VIEW_RATE'       => ($this->gallery_auth->acl_check('i_rate', $album_id, $album_data['album_user_id'])) ? true : false,
 				'S_RATE_ACTION'     => $this->helper->route('phpbbgallery_core_image_rate', ['image_id' => $image_id]),
 			]);
@@ -516,7 +516,7 @@ class image
 		 * Posting comment
 		 */
 		$comments_disabled = (!$this->gallery_config->get('allow_comments') || ($this->gallery_config->get('comment_user_control') && !$image_data['image_allow_comments']));
-		if (!$comments_disabled && $this->gallery_auth->acl_check('c_post', $album_id, $album_data['album_user_id']) && ($album_data['album_status'] != $this->block->get_album_status_locked()) && (($image_data['image_status'] != $this->block->get_image_status_locked()) || $this->gallery_auth->acl_check('m_status', $album_id, $album_data['album_user_id'])))
+		if (!$comments_disabled && $this->gallery_auth->acl_check('c_post', $album_id, $album_data['album_user_id']) && $this->comment->is_allowed($album_data, $image_data))
 		{
 			add_form_key('gallery');
 			$this->language->add_lang('posting');
@@ -543,14 +543,7 @@ class image
 			// Build smilies array
 			generate_smilies('inline', 0);
 
-			if (isset($album_data['contest_start']))
-			{
-				$s_hide_comment_input = (time() < ($album_data['contest_start'] + $album_data['contest_end'])) ? true : false;
-			}
-			else
-			{
-				$s_hide_comment_input = false;
-			}
+			$s_hide_comment_input = !\phpbbgallery\core\contest::is_step('comment', $album_data);
 
 			$this->template->assign_vars([
 				'S_ALLOWED_TO_COMMENT' => true,

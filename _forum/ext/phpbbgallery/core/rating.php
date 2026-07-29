@@ -275,7 +275,8 @@ class rating
 	*/
 	public function is_able(): bool
 	{
-		return $this->is_allowed(); //&& phpbb_ext_gallery_core_contest::is_step('rate', $this->album_data(true));
+		return $this->is_allowed() &&
+			contest::is_step('rate', $this->album_data(true));
 	}
 
 	/**
@@ -322,7 +323,7 @@ class rating
 		$points = ($points) ? $points : (int) $this->request->variable('rating', 0);
 		$points = max(1, min($points, (int) $this->gallery_config->get('max_rating')));
 
-		if (($user_id == ANONYMOUS) || $this->get_user_rating($user_id))
+		if (($user_id == ANONYMOUS) || !$this->is_able() || $this->get_user_rating($user_id))
 		{
 			return false;
 		}

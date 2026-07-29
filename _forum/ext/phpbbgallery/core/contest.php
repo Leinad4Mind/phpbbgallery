@@ -103,18 +103,61 @@ class contest
 			: $prefix . 'image_rate_avg DESC, ' . $prefix . 'image_rate_points DESC, ' . $prefix . 'image_id ASC';
 	}
 
-	public function is_step(string $mode, array $album_data): bool
+	/**
+	 * Check whether a Gallery action is available in the current contest phase.
+	 *
+	 * Regular albums are not subject to contest phases. A contest album without
+	 * a complete contest row is rejected so broken data cannot silently bypass
+	 * the phase restrictions.
+	 *
+	 * @param string   $mode       Action to check: upload, rate or comment
+	 * @param array    $album_data Album data, including its contest row
+	 * @param int|null $now        Current timestamp, injectable for tests
+	 * @return bool
+	 */
+	public static function is_step(string $mode, array $album_data, ?int $now = null): bool
 	{
-		$current_time = time();
+		if (!in_array($mode, ['upload', 'rate', 'comment'], true))
+		{
+			return false;
+		}
+
+		$is_contest = isset($album_data['album_type'])
+			? (int) $album_data['album_type'] === (int) block::TYPE_CONTEST
+			: !empty($album_data['contest_id']);
+
+		if (!$is_contest)
+		{
+			return true;
+		}
+
+		$required_fields = ['contest_id', 'contest_start', 'contest_rating', 'contest_end'];
+		foreach ($required_fields as $field)
+		{
+			if (!isset($album_data[$field]) || !is_numeric($album_data[$field]))
+			{
+				return false;
+			}
+		}
+
+		$contest_id = (int) $album_data['contest_id'];
+		$start = (int) $album_data['contest_start'];
+		$rating_delay = (int) $album_data['contest_rating'];
+		$duration = (int) $album_data['contest_end'];
+		if ($contest_id <= 0 || $start < 0 || $rating_delay < 0 || $duration < $rating_delay)
+		{
+			return false;
+		}
+
+		$now ??= time();
+		$rating_start = $start + $rating_delay;
+		$end = $start + $duration;
 
 		return match ($mode)
 		{
-			'upload' => !$album_data['contest_id'] || ($album_data['contest_start'] < $current_time &&
-				$current_time < $album_data['contest_start'] + $album_data['contest_rating']),
-			'rate' => !$album_data['contest_id'] || ($album_data['contest_start'] + $album_data['contest_rating'] < $current_time &&
-				$current_time < $album_data['contest_start'] + $album_data['contest_end']),
-			'comment' => !$album_data['contest_id'] || $current_time > $album_data['contest_start'] + $album_data['contest_end'],
-			default => false,
+			'upload' => $start <= $now && $now < $rating_start,
+			'rate' => $rating_start <= $now && $now < $end,
+			'comment' => $now >= $end,
 		};
 	}
 
