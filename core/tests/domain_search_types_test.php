@@ -59,7 +59,7 @@ final class domain_search_types_test extends TestCase
 		$this->assertSame('int', (string) (new \ReflectionMethod(search::class, 'recent_count'))->getReturnType());
 		$this->assertSame('int', (string) (new \ReflectionMethod(search::class, 'user_image_count'))->getReturnType());
 
-		foreach (['random', 'recent_comments', 'recent', 'rating'] as $method_name)
+		foreach (['random', 'recent_comments', 'recent', 'contest_winners', 'rating'] as $method_name)
 		{
 			$this->assertSame('void', (string) (new \ReflectionMethod(search::class, $method_name))->getReturnType());
 		}
