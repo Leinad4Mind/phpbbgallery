@@ -108,21 +108,29 @@ class config_module
 							$phpbb_gallery_url->_include('acp/acp_bbcodes', 'phpbb');
 						}
 						$acp_bbcodes = new \acp_bbcodes();
-						$bbcode_match = '[image]{NUMBER}[/image]';
 						$bbcode_tpl = $this->bbcode_tpl($config_value);
-
-						$sql_ary = $acp_bbcodes->build_regexp($bbcode_match, $bbcode_tpl);
-						$sql_ary = array_merge($sql_ary, [
-							'bbcode_match'			=> $bbcode_match,
-							'bbcode_tpl'			=> $bbcode_tpl,
-							'display_on_posting'	=> true,
-							'bbcode_helpline'		=> 'GALLERY_HELPLINE_ALBUM',
-						]);
-						$sql = 'UPDATE ' . BBCODES_TABLE . '
-							SET ' . $db->sql_build_array('UPDATE', $sql_ary) . "
-							WHERE bbcode_tag = '" . $db->sql_escape($sql_ary['bbcode_tag']) . "'";
-						$db->sql_query($sql);
+						foreach (['image' => true, 'album' => false] as $bbcode_tag => $display_on_posting)
+						{
+							$bbcode_match = '[' . $bbcode_tag . ']{NUMBER}[/' . $bbcode_tag . ']';
+							$sql_ary = $acp_bbcodes->build_regexp($bbcode_match, $bbcode_tpl);
+							$sql_ary = array_merge($sql_ary, [
+								'bbcode_match'        => $bbcode_match,
+								'bbcode_tpl'          => $bbcode_tpl,
+								'display_on_posting'  => $display_on_posting,
+								'bbcode_helpline'     => 'GALLERY_HELPLINE_ALBUM',
+							]);
+							$sql = 'UPDATE ' . BBCODES_TABLE . '
+								SET ' . $db->sql_build_array('UPDATE', $sql_ary) . "
+								WHERE LOWER(bbcode_tag) = '" . $db->sql_escape($bbcode_tag) . "'
+									AND bbcode_match = '" . $db->sql_escape($bbcode_match) . "'
+									AND (
+										bbcode_helpline = 'GALLERY_HELPLINE_ALBUM'
+										OR second_pass_replace LIKE '%/gallery/image/%'
+									)";
+							$db->sql_query($sql);
+						}
 						$cache->destroy('sql', BBCODES_TABLE);
+						$phpbb_container->get('text_formatter.cache')->invalidate();
 					}
 				}
 				if ((strpos($config_name, 'watermark') !== false) && ($phpbb_gallery_configs->get($config_name) != $config_value))
@@ -707,20 +715,35 @@ class config_module
 	 */
 	public function bbcode_tpl(string $value): string
 	{
-		global $phpbb_gallery_url;
-		$gallery_url = $phpbb_gallery_url->path('full');
+		global $phpbb_container;
+
+		$helper = $phpbb_container->get('controller.helper');
+		$gallery_url = $phpbb_container->get('phpbbgallery.core.url');
+		$placeholder = 987654321;
+		$image_page = $gallery_url->get_uri($helper->route('phpbbgallery_core_image', [
+			'image_id' => $placeholder,
+		]));
+		$image_source = $gallery_url->get_uri($helper->route('phpbbgallery_core_image_file_source', [
+			'image_id' => $placeholder,
+		]));
+		$image_mini = $gallery_url->get_uri($helper->route('phpbbgallery_core_image_file_mini', [
+			'image_id' => $placeholder,
+		]));
+		$image_page = str_replace((string) $placeholder, '{NUMBER}', $image_page);
+		$image_source = str_replace((string) $placeholder, '{NUMBER}', $image_source);
+		$image_mini = str_replace((string) $placeholder, '{NUMBER}', $image_mini);
 
 		if ($value == 'image_page')
 		{
-			$bbcode_tpl = '<a href="' . $gallery_url . 'image/{NUMBER}"><img src="' . $gallery_url . 'image/{NUMBER}/mini" alt="{NUMBER}" /></a>';
+			$bbcode_tpl = '<a href="' . $image_page . '"><img src="' . $image_mini . '" alt="{NUMBER}" /></a>';
 		}
 		else if ($value == 'image')
 		{
-			$bbcode_tpl = '<a href="' . $gallery_url . 'image/{NUMBER}/source"><img src="' . $gallery_url . 'image/{NUMBER}/mini" alt="{NUMBER}" /></a>';
+			$bbcode_tpl = '<a href="' . $image_source . '"><img src="' . $image_mini . '" alt="{NUMBER}" /></a>';
 		}
 		else
 		{
-			$bbcode_tpl = '<img src="' . $gallery_url . 'image/{NUMBER}/mini" alt="{NUMBER}" />';
+			$bbcode_tpl = '<img src="' . $image_mini . '" alt="{NUMBER}" />';
 		}
 
 		return $bbcode_tpl;

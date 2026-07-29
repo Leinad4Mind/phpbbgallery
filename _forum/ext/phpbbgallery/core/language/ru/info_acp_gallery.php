@@ -32,7 +32,7 @@ $lang = array_merge($lang, [
 	'ACP_GALLERY_OVERVIEW'               => 'Обзор',
 	'GALLERY'                            => 'Галерея',
 	'GALLERY_EXPLAIN'                    => 'Фотогалерея',
-	'GALLERY_HELPLINE_ALBUM'             => 'Фото из галереи: [album]ID фото[/album]',
+	'GALLERY_HELPLINE_ALBUM'             => 'Фото из галереи: [image]ID фото[/image]',
 	'GALLERY_POPUP'                      => 'Галерея',
 	'GALLERY_POPUP_HELPLINE'             => 'Выбрать фото из галереи или загрузить новое',
 	// Please do not change the copyright.

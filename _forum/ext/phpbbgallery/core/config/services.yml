@@ -243,6 +243,13 @@ services:
             - '%phpbbgallery.tables.gallery_images%'
             - '%phpbbgallery.tables.gallery_albums%'
             - '%phpbbgallery.tables.gallery_comments%'
+    phpbbgallery.core.image.selector:
+        class: phpbbgallery\core\image\selector
+        arguments:
+            - '@dbal.conn'
+            - '@phpbbgallery.core.auth'
+            - '%phpbbgallery.tables.gallery_images%'
+            - '%phpbbgallery.tables.gallery_albums%'
     phpbbgallery.core.notification:
         class: phpbbgallery\core\notification
         arguments:
@@ -358,6 +365,16 @@ services:
         class: phpbbgallery\core\event\identity_lifecycle_listener
         arguments:
             - '@phpbbgallery.core.identity_sync'
+        tags:
+            - { name: event.listener }
+    phpbbgallery.core.editor_listener:
+        class: phpbbgallery\core\event\editor_listener
+        arguments:
+            - '@controller.helper'
+            - '@user'
+            - '@config'
+            - '@auth'
+            - '@phpbbgallery.core.auth'
         tags:
             - { name: event.listener }
 # ----- Cron tasks -----

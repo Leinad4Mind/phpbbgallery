@@ -75,6 +75,7 @@ class package_hygiene_test extends TestCase
 	{
 		$asset_directory = $this->core_root . '/styles/all/template/js';
 		$expected = [
+			'editor_selector.js',
 			'gallery_polaroid.js',
 			'jquery.fileupload-image.js',
 			'jquery.fileupload-process.js',

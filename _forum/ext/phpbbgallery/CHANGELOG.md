@@ -6,6 +6,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Added
 
+- Restored a responsive, accessible Gallery image selector in topic, reply, private-message and quick-reply editors, with album filtering, pagination and insertion at the active cursor.
 - Restored an optional permission-filtered recent and random Gallery image block above the forum index, with independent ACP limits, metadata and personal-album controls for all supported styles.
 - Added a migration-backed total image-view counter to the public and ACP statistics, including automatic updates and ACP resynchronization.
 - Restored album-scoped search on album pages, including empty albums and responsive themes, while respecting phpBB search availability and user permission.
@@ -23,6 +24,8 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Security
 
+- Made the Gallery BBCode migration fail before any database write when a tag belongs to another extension or the required IDs cannot be allocated, and restricted historical rollback to Gallery-owned definitions.
+- Restricted the editor selector to the authenticated author's completed approved or locked images in albums that remain visible after Gallery ACL and zebra filtering, excluding orphaned and active-contest uploads and retaining protected image routes.
 - Invalidated Gallery permission snapshots for every approved group member when ACP changes the phpBB group_skip_auth setting.
 - Invalidated targeted Gallery permission snapshots immediately after phpBB group additions, removals, pending-member approvals and attribute changes, including any ACL state already loaded in the same request.
 - Restricted random-image results to albums granting image-view or status-moderation access instead of accepting list-only permission.
@@ -52,6 +55,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Made [image]ID[/image] the canonical Gallery BBCode while retaining [album]ID[/album] as a hidden migration-backed compatibility alias for posts imported from the legacy MOD.
 - Raised the minimum runtime for all Gallery components to PHP 8.1 and phpBB 3.3, and moved the standalone test dependency from PHPUnit 7/9 to PHPUnit 10.5.
 - Replaced legacy and dynamic ACP/UCP module state with declared typed properties, preventing PHP 8.2 dynamic-property deprecations.
 - Added native property, parameter, and return types throughout the ACP Cleanup service API.
@@ -113,6 +117,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Generated Gallery BBCode targets through phpBB's router without session identifiers, refreshed both the canonical and legacy parsers from ACP, and invalidated the text-formatter cache immediately.
 - Synchronized renamed users and default-group colours across Gallery images, comments, last-image metadata, personal albums and statistics; removed deleted user/group ACL rows and kept moderator listings on live phpBB identities.
 - Injected the phpBB event dispatcher into the resumable upload and search controllers so add-on validation, presentation, filtering, and result events execute without fatal errors.
 - Corrected image-cache hits that were assigned to the album variable, merged only missing image IDs into the shared cache, returned only requested rows, and reset request-local data during invalidation.

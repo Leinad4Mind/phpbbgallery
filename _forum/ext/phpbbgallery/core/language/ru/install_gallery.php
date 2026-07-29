@@ -22,6 +22,8 @@ if (empty($lang) || !is_array($lang))
 	$lang = [];
 }
 $lang = array_merge($lang, [
+	'GALLERY_BBCODE_CONFLICT' => 'BBCode %s невозможно установить, поскольку этот тег принадлежит несовместимому пользовательскому BBCode. Переименуйте или удалите пользовательский BBCode и повторите попытку.',
+	'GALLERY_BBCODE_LIMIT_REACHED' => 'BBCode %s невозможно установить, поскольку достигнут лимит BBCodes. Удалите один BBCode и повторите попытку.',
 	'GALLERY_CORE_ENABLE_SUCCESS' => 'phpBB Gallery Core включено. Также доступны необязательные дополнения ACP Cleanup, ACP Import и EXIF.',
 	'GALLERY_REQUIREMENTS_MISSING' => 'phpBB Gallery невозможно включить. Отсутствуют обязательные компоненты: %s.',
 	'GALLERY_SUB_EXT_UNINSTALL' => [

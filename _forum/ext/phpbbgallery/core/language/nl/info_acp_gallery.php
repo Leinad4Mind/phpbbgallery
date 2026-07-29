@@ -35,7 +35,7 @@ $lang = array_merge($lang, [
 
 	'GALLERY'                => 'Galerij',
 	'GALLERY_EXPLAIN'        => 'Galerij afbeelding',
-	'GALLERY_HELPLINE_ALBUM' => 'Galerij afbeelding: [album]image_id[/album], met deze BBCode kan je een afbeelding uit de galerij toevoegen aan je bericht.',
+	'GALLERY_HELPLINE_ALBUM' => 'Galerij afbeelding: [image]image_id[/image], met deze BBCode kan je een afbeelding uit de galerij toevoegen aan je bericht.',
 	'GALLERY_POPUP'          => 'Galerij',
 	'GALLERY_POPUP_HELPLINE' => 'Opent een popup-venster waarin je je eigen recente afbeeldingen kan selecteren en nieuwe afbeeldingen kan uploaden.',
 

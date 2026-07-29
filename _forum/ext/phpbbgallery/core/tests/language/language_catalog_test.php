@@ -245,10 +245,14 @@ class language_catalog_test extends TestCase
 		{
 			$language = $this->load_language($directory . '/install_gallery.php');
 			$this->assertSame([
+				'GALLERY_BBCODE_CONFLICT',
+				'GALLERY_BBCODE_LIMIT_REACHED',
 				'GALLERY_CORE_ENABLE_SUCCESS',
 				'GALLERY_REQUIREMENTS_MISSING',
 				'GALLERY_SUB_EXT_UNINSTALL',
 			], array_keys($language), basename($directory));
+			$this->assertSame(['s'], $this->placeholder_shape($language['GALLERY_BBCODE_CONFLICT']), basename($directory));
+			$this->assertSame(['s'], $this->placeholder_shape($language['GALLERY_BBCODE_LIMIT_REACHED']), basename($directory));
 		}
 	}
 

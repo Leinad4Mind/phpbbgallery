@@ -23,6 +23,8 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
+	'GALLERY_BBCODE_CONFLICT' => 'The %s BBCode cannot be installed because that tag belongs to an incompatible custom BBCode. Rename or remove the custom BBCode, then try again.',
+	'GALLERY_BBCODE_LIMIT_REACHED' => 'The %s BBCode cannot be installed because the BBCode limit has been reached. Remove a BBCode, then try again.',
 	'GALLERY_CORE_ENABLE_SUCCESS' => 'phpBB Gallery Core has been enabled. Optional ACP Cleanup, ACP Import and EXIF add-ons are also available.',
 	'GALLERY_REQUIREMENTS_MISSING' => 'phpBB Gallery cannot be enabled. Required components are missing: %s.',
 	'GALLERY_SUB_EXT_UNINSTALL' => [

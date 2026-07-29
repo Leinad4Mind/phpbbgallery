@@ -2,6 +2,14 @@
 #### Define controllers #####
 #############################
 services:
+    phpbbgallery.core.controller.editor:
+        class: phpbbgallery\core\controller\editor
+        arguments:
+            - '@request'
+            - '@user'
+            - '@language'
+            - '@controller.helper'
+            - '@phpbbgallery.core.image.selector'
     phpbbgallery.core.controller.upload:
         class: phpbbgallery\core\controller\upload
         arguments:
