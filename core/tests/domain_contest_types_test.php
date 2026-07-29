@@ -140,6 +140,35 @@ final class domain_contest_types_test extends TestCase
 		$this->assertFalse(contest::is_active_image([]));
 	}
 
+	public function test_sql_privacy_boundaries_match_identity_and_result_exceptions(): void
+	{
+		$this->assertSame(
+			'(i.image_contest = 0 OR i.image_user_id = 7 OR i.image_album_id IN (9, 4))',
+			contest::private_data_visibility_sql('i', 7, [0, 9, 4, 9, -1])
+		);
+		$this->assertSame(
+			'(i.image_contest = 0 OR i.image_album_id IN (9, 4))',
+			contest::results_visibility_sql('i', [0, 9, 4, 9, -1])
+		);
+	}
+
+	public function test_anonymous_sql_privacy_has_no_owner_exception(): void
+	{
+		$anonymous_id = defined('ANONYMOUS') ? (int) constant('ANONYMOUS') : 1;
+
+		$this->assertSame(
+			'(image_contest = 0)',
+			contest::private_data_visibility_sql('', $anonymous_id, [])
+		);
+		$this->assertSame('(image_contest = 0)', contest::results_visibility_sql('', []));
+	}
+
+	public function test_sql_privacy_rejects_untrusted_aliases(): void
+	{
+		$this->expectException(\InvalidArgumentException::class);
+		contest::private_data_visibility_sql('i; DROP TABLE gallery_images', 7, []);
+	}
+
 	public function test_missing_contest_returns_false_and_releases_the_result(): void
 	{
 		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);

@@ -730,7 +730,16 @@ class display
 			$s_subalbums_list = (string) implode(', ', $s_subalbums_list);
 			$catless = ($row['parent_id'] == $root_data['album_id']) ? true : false;
 
-			$s_username_hidden = ($lastimage_album_type == (int) \phpbbgallery\core\block::TYPE_CONTEST) && $lastimage_contest_marked && !$this->gallery_auth->acl_check('m_status', $album_id, $row['album_user_id']) && ($this->user->data['user_id'] != $row['album_last_user_id'] || $row['album_last_user_id'] == ANONYMOUS);
+			$s_username_hidden = \phpbbgallery\core\contest::hides_private_data(
+				[
+					'image_contest' => ($lastimage_album_type == (int) \phpbbgallery\core\block::TYPE_CONTEST && $lastimage_contest_marked)
+						? \phpbbgallery\core\block::IN_CONTEST
+						: \phpbbgallery\core\block::NO_CONTEST,
+					'image_user_id' => (int) $row['album_last_user_id'],
+				],
+				(int) $this->user->data['user_id'],
+				$this->gallery_auth->acl_check('m_status', $album_id, $row['album_user_id'])
+			);
 
 			$this->template->assign_block_vars('albumrow', [
 				'S_IS_CAT'			=> false,

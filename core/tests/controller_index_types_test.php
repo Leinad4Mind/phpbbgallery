@@ -82,4 +82,13 @@ final class controller_index_types_test extends TestCase
 		$this->assertSame(2, index::RRC_MODE_RANDOM_IMAGES);
 		$this->assertSame(1, index::RRC_MODE_RECENT_IMAGES);
 	}
+
+	public function test_latest_image_summary_uses_the_contest_identity_policy(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/index.php');
+
+		$this->assertStringContainsString('$hide_last_image_uploader', $source);
+		$this->assertStringContainsString('contest::hides_private_data(', $source);
+		$this->assertStringContainsString('CONTEST_USERNAME', $source);
+	}
 }

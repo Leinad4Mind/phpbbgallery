@@ -61,6 +61,14 @@ final class domain_album_types_test extends TestCase
 		$this->assertSame('string|false', (string) (new \ReflectionMethod(manage::class, 'move_album_by'))->getReturnType());
 	}
 
+	public function test_album_last_image_uses_the_central_contest_identity_policy(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/album/display.php');
+
+		$this->assertStringContainsString('contest::hides_private_data(', $source);
+		$this->assertStringContainsString('album_last_user_id', $source);
+	}
+
 	public function test_loader_initializes_and_reuses_loaded_album_data(): void
 	{
 		$reflection = new \ReflectionClass(loader::class);

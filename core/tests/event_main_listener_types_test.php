@@ -150,6 +150,31 @@ final class event_main_listener_types_test extends TestCase
 		$listener->display_forum_index_images(new \phpbb\event\data([]));
 	}
 
+	public function test_profile_image_stat_uses_the_permission_filtered_count(): void
+	{
+		$gallery_search = $this->createMock(\phpbbgallery\core\search::class);
+		$gallery_search->expects($this->once())->method('user_image_count')->with(12)->willReturn(4);
+		$gallery_search->expects($this->never())->method('recent');
+		$gallery_search->expects($this->never())->method('random');
+		$config = $this->createMock(\phpbbgallery\core\config::class);
+		$config->method('get')->willReturnMap([
+			['rrc_profile_mode', 0],
+			['profile_user_images', 1],
+		]);
+		$template = $this->createMock(\phpbb\template\template::class);
+		$template->expects($this->once())->method('assign_vars')->with([
+			'U_GALLERY_IMAGES_ALLOW' => true,
+			'U_GALLERY_IMAGES' => 4,
+		]);
+		$listener = $this->listener($this->createStub(\phpbb\db\driver\driver_interface::class));
+		$this->set_property($listener, 'gallery_search', $gallery_search);
+		$this->set_property($listener, 'gallery_config', $config);
+		$this->set_property($listener, 'template', $template);
+		$this->set_property($listener, 'language', $this->createStub(\phpbb\language\language::class));
+
+		$listener->user_profile_galleries(new \phpbb\event\data(['member' => ['user_id' => 12]]));
+	}
+
 	public function test_profile_update_preserves_the_managed_personal_album(): void
 	{
 		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);

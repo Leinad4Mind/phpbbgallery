@@ -142,6 +142,11 @@ class search
 		if ($user > 0)
 		{
 			$sql .= ' and image_user_id = ' . (int) $user;
+			$sql .= ' AND ' . \phpbbgallery\core\contest::private_data_visibility_sql(
+				'',
+				(int) $this->user->data['user_id'],
+				$this->gallery_auth->acl_album_ids('m_status')
+			);
 		}
 		$exclude_albums = [];
 		$include_personal ??= (bool) $this->gallery_config->get('rrc_gindex_pegas');
@@ -290,6 +295,38 @@ class search
 		return is_array($row) ? (int) $row['count'] : 0;
 	}
 
+	/**
+	 * Count a member's images without exposing private active-contest entries.
+	 *
+	 * @param int $image_user_id Member whose images are being counted
+	 * @return int
+	 */
+	public function user_image_count(int $image_user_id): int
+	{
+		$this->gallery_auth->load_user_permissions((int) $this->user->data['user_id']);
+		$excluded_albums = $this->gallery_auth->get_exclude_zebra();
+		$viewable_albums = array_diff($this->gallery_auth->acl_album_ids('i_view'), $excluded_albums);
+		$moderated_albums = array_diff($this->gallery_auth->acl_album_ids('m_status'), $excluded_albums);
+		$viewer_id = (int) $this->user->data['user_id'];
+
+		$sql = 'SELECT COUNT(image_id) AS count
+			FROM ' . $this->images_table . '
+			WHERE image_user_id = ' . (int) $image_user_id . '
+				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
+				AND ' . \phpbbgallery\core\contest::private_data_visibility_sql('', $viewer_id, $moderated_albums) . '
+				AND (
+					(' . $this->db->sql_in_set('image_album_id', $viewable_albums, false, true) . '
+						AND (image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . '
+							OR image_user_id = ' . $viewer_id . '))
+					OR ' . $this->db->sql_in_set('image_album_id', $moderated_albums, false, true) . '
+				)';
+		$result = $this->db->sql_query($sql);
+		$row = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+
+		return is_array($row) ? (int) $row['count'] : 0;
+	}
+
 
 
 	/**
@@ -325,6 +362,10 @@ class search
 		];
 		$sql_array['WHERE'] .= ' AND ((' . $this->db->sql_in_set('image_album_id', array_diff($this->gallery_auth->acl_album_ids('i_view'), $exclude_albums), false, true) . ' AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . ')
 					OR ' . $this->db->sql_in_set('image_album_id', array_diff($this->gallery_auth->acl_album_ids('m_status'), $exclude_albums), false, true) . ')';
+		$sql_array['WHERE'] .= ' AND ' . \phpbbgallery\core\contest::results_visibility_sql(
+			'i',
+			$this->gallery_auth->acl_album_ids('m_status')
+		);
 
 		$sql_array_count = $sql_array;
 		$sql_array_count['SELECT'] = 'COUNT(c.comment_id) as count';
@@ -424,7 +465,8 @@ class search
 		}
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$sql_order = '';
-		switch ($this->gallery_config->get('default_sort_key'))
+		$default_sort_key = (string) $this->gallery_config->get('default_sort_key');
+		switch ($default_sort_key)
 		{
 			case 't':
 				$sql_order = 'image_time';
@@ -478,6 +520,26 @@ class search
 		if ($user > 0)
 		{
 			$sql_ary['WHERE'] .= ' and image_user_id = ' . (int) $user;
+			$sql_ary['WHERE'] .= ' AND ' . \phpbbgallery\core\contest::private_data_visibility_sql(
+				'i',
+				(int) $this->user->data['user_id'],
+				$this->gallery_auth->acl_album_ids('m_status')
+			);
+		}
+		if ($default_sort_key === 'u' && $user <= 0)
+		{
+			$sql_ary['WHERE'] .= ' AND ' . \phpbbgallery\core\contest::private_data_visibility_sql(
+				'i',
+				(int) $this->user->data['user_id'],
+				$this->gallery_auth->acl_album_ids('m_status')
+			);
+		}
+		else if (in_array($default_sort_key, ['ra', 'r', 'c', 'lc'], true))
+		{
+			$sql_ary['WHERE'] .= ' AND ' . \phpbbgallery\core\contest::results_visibility_sql(
+				'i',
+				$this->gallery_auth->acl_album_ids('m_status')
+			);
 		}
 		$user_id = (int) $this->user->data['user_id'];
 		$sql_ary['WHERE'] .= ' AND ((' . $this->db->sql_in_set('image_album_id', array_diff($this->gallery_auth->acl_album_ids('i_view'), $exclude_albums), false, true) . ' AND (image_status <> ' . \phpbbgallery\core\block::STATUS_UNAPPROVED . ' OR image_user_id = ' . $user_id . '))
@@ -618,7 +680,11 @@ class search
 		$sql_array['FROM'] = [
 			$this->images_table	=> 'i'
 		];
-		$sql_array['WHERE'] = $this->db->sql_in_set('image_album_id', $this->gallery_auth->acl_album_ids('i_view'), false, true) . ' and image_rate_avg <> 0';
+		$sql_array['WHERE'] = $this->db->sql_in_set('image_album_id', $this->gallery_auth->acl_album_ids('i_view'), false, true) .
+			' and image_rate_avg <> 0 AND ' . \phpbbgallery\core\contest::results_visibility_sql(
+				'i',
+				$this->gallery_auth->acl_album_ids('m_status')
+			);
 		$sql_array['SELECT'] = 'COUNT(image_id) as count';
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
 		$result = $this->db->sql_query($sql);
