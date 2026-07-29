@@ -1052,7 +1052,7 @@ class main_module
 				[
 					'FROM'		=> [$contests_table => 'c'],
 					'ON'		=> 'a.album_id = c.contest_album_id
-						AND c.contest_marked = ' . (int) \phpbbgallery\core\block::IN_CONTEST,
+						AND c.contest_marked <> ' . (int) \phpbbgallery\core\block::NO_CONTEST,
 				],
 			],
 
