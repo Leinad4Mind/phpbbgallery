@@ -113,6 +113,23 @@ final class domain_user_types_test extends TestCase
 		$this->assertSame(['user_images' => -3], $gallery_user->validate_data(['user_images' => -3], true));
 	}
 
+	public function test_permission_invalidation_clears_loaded_serialized_snapshot(): void
+	{
+		$reflection = new \ReflectionClass(user::class);
+		$gallery_user = $reflection->newInstanceWithoutConstructor();
+		$reflection->getProperty('data')->setValue($gallery_user, [
+			'user_permissions' => 'serialized',
+			'user_permissions_changed' => 10,
+			'user_images' => 4,
+		]);
+
+		$gallery_user->invalidate_permissions(25);
+
+		$this->assertSame('', $gallery_user->get_data('user_permissions'));
+		$this->assertSame(25, $gallery_user->get_data('user_permissions_changed'));
+		$this->assertSame(4, $gallery_user->get_data('user_images'));
+	}
+
 	public function test_personal_album_lookup_frees_the_database_result(): void
 	{
 		$reflection = new \ReflectionClass(user::class);
