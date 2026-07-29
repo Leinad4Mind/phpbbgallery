@@ -288,7 +288,7 @@ class display
 		}
 
 		$sql_array = [
-			'SELECT'	=> 'm.*, u.user_colour, g.group_colour, g.group_type',
+			'SELECT'	=> 'm.*, u.username AS current_username, u.user_colour, g.group_name AS current_group_name, g.group_colour, g.group_type',
 			'FROM'		=> [$this->table_moderators => 'm'],
 
 			'LEFT_JOIN'	=> [
@@ -314,18 +314,28 @@ class display
 		{
 			$a_id = (int) $row['album_id'];
 
-			if (!isset($album_id_ary[$a_id]))
+			if ($album_id !== false && !isset($album_id_ary[$a_id]))
 			{
 				continue;
 			}
 
 			if (!empty($row['user_id']))
 			{
-				$album_moderators[$a_id][] = get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']);
+				if (!isset($row['current_username']))
+				{
+					continue;
+				}
+
+				$album_moderators[$a_id][] = get_username_string('full', $row['user_id'], $row['current_username'], $row['user_colour']);
 			}
 			else
 			{
-				$group_name = (($row['group_type'] == GROUP_SPECIAL) ? $this->language->lang('G_' . $row['group_name']) : $row['group_name']);
+				if (empty($row['group_id']) || !isset($row['current_group_name']))
+				{
+					continue;
+				}
+
+				$group_name = (($row['group_type'] == GROUP_SPECIAL) ? $this->language->lang('G_' . $row['current_group_name']) : $row['current_group_name']);
 
 				if ($this->user->data['user_id'] != ANONYMOUS && !$this->auth->acl_get('u_viewprofile'))
 				{

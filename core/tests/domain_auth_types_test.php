@@ -120,6 +120,48 @@ final class domain_auth_types_test extends TestCase
 		$this->assertSame([], $this->get_property($service, 'acl_cache'));
 	}
 
+	public function test_group_permission_invalidation_targets_approved_members_only(): void
+	{
+		if (!defined('USER_GROUP_TABLE'))
+		{
+			define('USER_GROUP_TABLE', 'phpbb_user_group');
+		}
+
+		$queries = [];
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->exactly(2))
+			->method('sql_query')
+			->willReturnCallback(static function (string $sql) use (&$queries): string
+			{
+				$queries[] = $sql;
+
+				return count($queries) === 1 ? 'members-result' : 'update-result';
+			});
+		$db->expects($this->exactly(3))
+			->method('sql_fetchrow')
+			->with('members-result')
+			->willReturnOnConsecutiveCalls(['user_id' => 9], ['user_id' => 7], false);
+		$db->expects($this->once())->method('sql_freeresult')->with('members-result');
+		$db->expects($this->once())
+			->method('sql_in_set')
+			->with('user_id', [7, 9])
+			->willReturn('user_id IN (7, 9)');
+		$gallery_user = $this->createMock(\phpbbgallery\core\user::class);
+		$gallery_user->user_id = null;
+		$service = $this->new_auth();
+		$this->set_property($service, 'db', $db);
+		$this->set_property($service, 'user', $gallery_user);
+		$this->set_property($service, 'table_users', 'gallery_users');
+
+		$service->invalidate_group_permissions(5);
+
+		$this->assertStringContainsString('FROM ' . USER_GROUP_TABLE, $queries[0]);
+		$this->assertStringContainsString('group_id = 5', $queries[0]);
+		$this->assertStringContainsString('user_pending = 0', $queries[0]);
+		$this->assertStringContainsString('UPDATE gallery_users', $queries[1]);
+		$this->assertStringContainsString('user_id IN (7, 9)', $queries[1]);
+	}
+
 	public function test_empty_permission_invalidation_avoids_database_queries(): void
 	{
 		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
