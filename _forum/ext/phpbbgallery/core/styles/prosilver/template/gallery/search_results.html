@@ -65,11 +65,15 @@ function toggleElement(oElement)
 {% if U_GALLERY_SEARCH %}<p><a class="{{ S_CONTENT_FLOW_BEGIN }}" href="{{ U_GALLERY_SEARCH }}" title="{{ lang('SEARCH_ADV') }}">{{ lang('RETURN_TO_SEARCH_ADV') }}</a></p>{% endif %}
 {% if SEARCH_MATCHES %}
 {% for imageblock in imageblock %}
-
+<span class="clear"></span>
+{% if imageblock.S_CONTEST_BLOCK and imageblock.U_BLOCK %}<h2><a href="{{ imageblock.U_BLOCK }}">{{ imageblock.BLOCK_NAME }}</a></h2>{% endif %}
 {% if imageblock.ERROR %}<h2>{{ imageblock.ERROR }}</h2>
 
 {% else %}
 {% for image in imageblock.image %}
+{% if image.S_CONTEST_PLACEHOLDER %}
+<div class="polaroid gallery-contest-placeholder" aria-hidden="true" style="visibility: hidden;"></div>
+{% else %}
 <div  class="polaroid">
 	{% if image.S_CONTEST_RANK > 0 %}
 	<div class="trophy-container">
@@ -111,6 +115,7 @@ function toggleElement(oElement)
 
 {% if image.S_LAST_ROW %}
 	<span class="clear"></span>
+{% endif %}
 {% endif %}
 {% endfor %}
 {% endif %}

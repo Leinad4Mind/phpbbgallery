@@ -91,4 +91,14 @@ final class controller_index_types_test extends TestCase
 		$this->assertStringContainsString('contest::hides_private_data(', $source);
 		$this->assertStringContainsString('CONTEST_USERNAME', $source);
 	}
+
+	public function test_contest_winner_link_is_permission_checked_and_visibility_aware(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/index.php');
+
+		$this->assertStringContainsString("['load_search']", $source);
+		$this->assertStringContainsString("acl_get('u_search')", $source);
+		$this->assertStringContainsString('has_visible_contest_winners()', $source);
+		$this->assertStringContainsString("'U_G_SEARCH_CONTESTS'", $source);
+	}
 }

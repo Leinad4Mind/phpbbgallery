@@ -313,6 +313,9 @@ class index
 		$show_comments = (bool) ($show_options & self::RRC_MODE_RECENT_COMMENTS);
 		$show_random   = (bool) ($show_options & self::RRC_MODE_RANDOM_IMAGES);
 		$show_recent   = (bool) ($show_options & self::RRC_MODE_RECENT_IMAGES);
+		$has_visible_contest_winners = $this->config['load_search']
+			&& $this->auth->acl_get('u_search')
+			&& $this->gallery_search->has_visible_contest_winners();
 
 		$this->template->assign_vars([
 			'TOTAL_IMAGES'		=> ($this->gallery_config->get('disp_statistic')) ? $this->language->lang('TOTAL_IMAGES_SPRINTF', $this->gallery_config->get('num_images')) : '',
@@ -329,7 +332,7 @@ class index
 
 			'U_GALLERY_SEARCH'				=> $this->helper->route('phpbbgallery_core_search'),
 			'U_G_SEARCH_COMMENTED'			=> $this->config['phpbb_gallery_allow_comments'] && $show_comments ? $this->helper->route('phpbbgallery_core_search_commented') : false,
-			//'U_G_SEARCH_CONTESTS'			=> $this->config['phpbb_gallery_allow_rates'] && $this->config['phpbb_gallery_contests_ended'] ? $this->helper->route('phpbbgallery_core_search_contests') : '',
+			'U_G_SEARCH_CONTESTS'			=> $has_visible_contest_winners ? $this->helper->route('phpbbgallery_core_search_contests') : false,
 			'U_G_SEARCH_RECENT'				=> $show_recent ? $this->helper->route('phpbbgallery_core_search_recent') : false,
 			'U_G_SEARCH_RANDOM'				=> $show_random ? $this->helper->route('phpbbgallery_core_search_random') : false,
 			'U_G_SEARCH_SELF'				=> $this->helper->route('phpbbgallery_core_search_egosearch'),

@@ -53,6 +53,9 @@ class search
 	/** @var string */
 	protected string $comments_table;
 
+	/** @var string */
+	protected string $contests_table;
+
 	/**
 	 * Constructor
 	 *
@@ -70,12 +73,13 @@ class search
 	 * @param string                                                    $images_table
 	 * @param string                                                    $albums_table
 	 * @param string                                                    $comments_table
+	 * @param string                                                    $contests_table
 	 */
 	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\template\template $template, \phpbb\user $user,
 		\phpbb\language\language $language, \phpbb\controller\helper $helper, \phpbbgallery\core\config $gallery_config,
 		\phpbbgallery\core\auth\auth $gallery_auth, \phpbbgallery\core\album\album $album, \phpbbgallery\core\image\image $image,
 		\phpbb\pagination $pagination, \phpbb\user_loader $user_loader,
-		string $images_table, string $albums_table, string $comments_table)
+		string $images_table, string $albums_table, string $comments_table, string $contests_table)
 	{
 		$this->db = $db;
 		$this->template = $template;
@@ -91,6 +95,7 @@ class search
 		$this->images_table = $images_table;
 		$this->albums_table = $albums_table;
 		$this->comments_table = $comments_table;
+		$this->contests_table = $contests_table;
 	}
 
 	/**
@@ -666,6 +671,289 @@ class search
 			'i.image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN,
 			$this->db->sql_in_set('i.image_id', array_map('intval', $image_ids)),
 		]);
+	}
+
+	/**
+	 * Check whether the current user can see a completed contest with a valid winner.
+	 */
+	public function has_visible_contest_winners(): bool
+	{
+		$visible_album_ids = $this->get_visible_public_contest_album_ids();
+
+		return $visible_album_ids !== [] && $this->count_visible_contests($visible_album_ids, time()) > 0;
+	}
+
+	/**
+	 * Display completed contest winners, paginated by contest.
+	 *
+	 * @param int $limit Number of contests per page
+	 * @param int $start Contest offset
+	 */
+	public function contest_winners(int $limit, int $start = 0): void
+	{
+		$limit = max(1, $limit);
+		$start = max(0, $start);
+		$visible_album_ids = $this->get_visible_public_contest_album_ids();
+		$now = time();
+		$count = $visible_album_ids === [] ? 0 : $this->count_visible_contests($visible_album_ids, $now);
+
+		if ($count === 0)
+		{
+			trigger_error('NO_SEARCH_RESULTS');
+			return;
+		}
+
+		$sql_array = [
+			'SELECT' => 'c.contest_id, c.contest_album_id, c.contest_start, c.contest_end,
+				c.contest_first, c.contest_second, c.contest_third, a.album_name',
+			'FROM' => [
+				$this->contests_table => 'c',
+				$this->albums_table => 'a',
+			],
+			'WHERE' => $this->get_visible_contest_where($visible_album_ids, $now),
+			'ORDER_BY' => 'c.contest_start + c.contest_end DESC, c.contest_id DESC',
+		];
+		$sql = $this->db->sql_build_query('SELECT', $sql_array);
+		$result = $this->db->sql_query_limit($sql, $limit, $start);
+		$contests = [];
+		$winner_ids = [];
+
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$row['contest_album_id'] = (int) $row['contest_album_id'];
+			$row['contest_scheduled_end'] = (int) $row['contest_start'] + (int) $row['contest_end'];
+			foreach (['contest_first', 'contest_second', 'contest_third'] as $winner_column)
+			{
+				$row[$winner_column] = (int) $row[$winner_column];
+				if ($row[$winner_column] > 0)
+				{
+					$winner_ids[] = $row[$winner_column];
+				}
+			}
+			$contests[] = $row;
+		}
+		$this->db->sql_freeresult($result);
+
+		if ($contests === [])
+		{
+			trigger_error('NO_SEARCH_RESULTS');
+			return;
+		}
+
+		$winner_rows = $this->get_valid_winner_rows($winner_ids, $visible_album_ids);
+		$show_options = (int) $this->gallery_config->get('search_display');
+		$thumbnail_link = (string) $this->gallery_config->get('link_thumbnail');
+		$imagename_link = (string) $this->gallery_config->get('link_image_name');
+		$winner_columns = [
+			1 => 'contest_first',
+			2 => 'contest_second',
+			3 => 'contest_third',
+		];
+
+		foreach ($contests as $contest)
+		{
+			$album_id = (int) $contest['contest_album_id'];
+			$this->template->assign_block_vars('imageblock', [
+				'BLOCK_NAME' => $this->language->lang('CONTEST_WINNERS_OF', $contest['album_name']),
+				'U_BLOCK' => $this->helper->route('phpbbgallery_core_album', ['album_id' => $album_id]),
+				'S_CONTEST_BLOCK' => true,
+			]);
+
+			$used_winner_ids = [];
+			foreach ($winner_columns as $rank => $winner_column)
+			{
+				$image_id = (int) $contest[$winner_column];
+				$is_valid = $image_id > 0
+					&& isset($winner_rows[$image_id])
+					&& (int) $winner_rows[$image_id]['image_album_id'] === $album_id
+					&& (int) $winner_rows[$image_id]['image_contest_end'] === (int) $contest['contest_scheduled_end']
+					&& !isset($used_winner_ids[$image_id]);
+
+				if (!$is_valid)
+				{
+					$this->template->assign_block_vars('imageblock.image', [
+						'S_CONTEST_PLACEHOLDER' => true,
+						'S_CONTEST_RANK' => $rank,
+					]);
+					continue;
+				}
+
+				$used_winner_ids[$image_id] = true;
+				$winner_rows[$image_id]['image_contest_rank'] = $rank;
+				$this->image->assign_block(
+					'imageblock.image',
+					$winner_rows[$image_id],
+					$show_options,
+					$thumbnail_link,
+					$imagename_link
+				);
+			}
+		}
+
+		$this->template->assign_vars([
+			'SEARCH_MATCHES' => $this->language->lang('FOUND_SEARCH_MATCHES', $count),
+			'SEARCH_TITLE' => $this->language->lang('SEARCH_CONTEST'),
+			'SEARCH_IN_RESULTS' => false,
+			'S_SEARCH_ACTION' => $this->helper->route('phpbbgallery_core_search_contests'),
+			'U_GALLERY_SEARCH' => $this->helper->route('phpbbgallery_core_search'),
+		]);
+		$this->pagination->generate_template_pagination([
+			'routes' => [
+				'phpbbgallery_core_search_contests',
+				'phpbbgallery_core_search_contests_page',
+			],
+			'params' => [],
+		], 'pagination', 'page', $count, $limit, $start);
+	}
+
+	/**
+	 * Restrict contest discovery to visible, non-zebra, public contest albums.
+	 *
+	 * @return int[]
+	 */
+	private function get_visible_public_contest_album_ids(): array
+	{
+		$this->gallery_auth->load_user_permissions((int) $this->user->data['user_id']);
+		$viewable_album_ids = $this->normalize_ids((array) $this->gallery_auth->acl_album_ids('i_view'));
+		$excluded_album_ids = $this->normalize_ids((array) $this->gallery_auth->get_exclude_zebra());
+		$viewable_album_ids = array_values(array_diff($viewable_album_ids, $excluded_album_ids));
+
+		if ($viewable_album_ids === [])
+		{
+			return [];
+		}
+
+		$sql = 'SELECT album_id
+			FROM ' . $this->albums_table . '
+			WHERE ' . $this->db->sql_in_set('album_id', $viewable_album_ids) . '
+				AND album_user_id = ' . (int) \phpbbgallery\core\auth\auth::PUBLIC_ALBUM . '
+				AND album_type = ' . (int) \phpbbgallery\core\block::TYPE_CONTEST . '
+			ORDER BY album_id ASC';
+		$result = $this->db->sql_query($sql);
+		$contest_album_ids = [];
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$contest_album_ids[] = (int) $row['album_id'];
+		}
+		$this->db->sql_freeresult($result);
+
+		return $this->normalize_ids($contest_album_ids);
+	}
+
+	/**
+	 * Count completed visible contests that still have a valid winner.
+	 *
+	 * @param int[] $visible_album_ids Visible public contest album IDs
+	 * @param int   $now               Current Unix timestamp
+	 */
+	private function count_visible_contests(array $visible_album_ids, int $now): int
+	{
+		$sql_array = [
+			'SELECT' => 'COUNT(c.contest_id) AS count',
+			'FROM' => [
+				$this->contests_table => 'c',
+				$this->albums_table => 'a',
+			],
+			'WHERE' => $this->get_visible_contest_where($visible_album_ids, $now),
+		];
+		$sql = $this->db->sql_build_query('SELECT', $sql_array);
+		$result = $this->db->sql_query($sql);
+		$row = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+
+		return is_array($row) ? (int) $row['count'] : 0;
+	}
+
+	/**
+	 * Build the fail-closed completed-contest boundary.
+	 *
+	 * @param int[] $visible_album_ids Visible public contest album IDs
+	 * @param int   $now               Current Unix timestamp
+	 */
+	private function get_visible_contest_where(array $visible_album_ids, int $now): string
+	{
+		$valid_statuses = [
+			\phpbbgallery\core\block::STATUS_APPROVED,
+			\phpbbgallery\core\block::STATUS_LOCKED,
+		];
+
+		return implode(' AND ', [
+			'a.album_id = c.contest_album_id',
+			'a.album_user_id = ' . (int) \phpbbgallery\core\auth\auth::PUBLIC_ALBUM,
+			'a.album_type = ' . (int) \phpbbgallery\core\block::TYPE_CONTEST,
+			$this->db->sql_in_set('c.contest_album_id', $visible_album_ids),
+			'c.contest_marked = ' . (int) \phpbbgallery\core\block::NO_CONTEST,
+			'c.contest_start + c.contest_end <= ' . $now,
+			'EXISTS (SELECT 1
+				FROM ' . $this->images_table . ' cw
+				WHERE cw.image_album_id = c.contest_album_id
+					AND cw.image_contest = ' . (int) \phpbbgallery\core\block::NO_CONTEST . '
+					AND cw.image_contest_end = c.contest_start + c.contest_end
+					AND ' . $this->db->sql_in_set('cw.image_status', $valid_statuses) . '
+					AND (cw.image_id = c.contest_first
+						OR cw.image_id = c.contest_second
+						OR cw.image_id = c.contest_third))',
+		]);
+	}
+
+	/**
+	 * Load winner rows while revalidating album ownership and image status.
+	 *
+	 * @param int[] $winner_ids        Stored winner image IDs
+	 * @param int[] $visible_album_ids Visible public contest album IDs
+	 * @return array<int, array>
+	 */
+	private function get_valid_winner_rows(array $winner_ids, array $visible_album_ids): array
+	{
+		$winner_ids = $this->normalize_ids($winner_ids);
+		if ($winner_ids === [])
+		{
+			return [];
+		}
+
+		$sql_array = [
+			'SELECT' => 'i.*, a.album_name, a.album_status, a.album_user_id, a.album_id',
+			'FROM' => [
+				$this->images_table => 'i',
+				$this->albums_table => 'a',
+			],
+			'WHERE' => implode(' AND ', [
+				'a.album_id = i.image_album_id',
+				'a.album_user_id = ' . (int) \phpbbgallery\core\auth\auth::PUBLIC_ALBUM,
+				'a.album_type = ' . (int) \phpbbgallery\core\block::TYPE_CONTEST,
+				'i.image_contest = ' . (int) \phpbbgallery\core\block::NO_CONTEST,
+				$this->db->sql_in_set('i.image_album_id', $visible_album_ids),
+				$this->db->sql_in_set('i.image_id', $winner_ids),
+				$this->db->sql_in_set('i.image_status', [
+					\phpbbgallery\core\block::STATUS_APPROVED,
+					\phpbbgallery\core\block::STATUS_LOCKED,
+				]),
+			]),
+		];
+		$sql = $this->db->sql_build_query('SELECT', $sql_array);
+		$result = $this->db->sql_query($sql);
+		$winner_rows = [];
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$winner_rows[(int) $row['image_id']] = $row;
+		}
+		$this->db->sql_freeresult($result);
+
+		return $winner_rows;
+	}
+
+	/**
+	 * Normalize database and ACL identifier lists.
+	 *
+	 * @param array $ids Identifier values
+	 * @return int[]
+	 */
+	private function normalize_ids(array $ids): array
+	{
+		$ids = array_map('intval', $ids);
+		$ids = array_filter($ids, static fn (int $id): bool => $id > 0);
+
+		return array_values(array_unique($ids));
 	}
 
 	/**

@@ -243,6 +243,7 @@ services:
             - '%phpbbgallery.tables.gallery_images%'
             - '%phpbbgallery.tables.gallery_albums%'
             - '%phpbbgallery.tables.gallery_comments%'
+            - '%phpbbgallery.tables.gallery_contests%'
     phpbbgallery.core.image.selector:
         class: phpbbgallery\core\image\selector
         arguments:
