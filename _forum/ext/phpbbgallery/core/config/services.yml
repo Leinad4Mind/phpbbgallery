@@ -116,6 +116,17 @@ services:
             - '@dbal.conn'
             - '%phpbbgallery.tables.gallery_albums%'
             - '%phpbbgallery.tables.gallery_images%'
+    phpbbgallery.core.identity_sync:
+        class: phpbbgallery\core\identity_sync
+        arguments:
+            - '@dbal.conn'
+            - '@phpbbgallery.core.config'
+            - '@phpbbgallery.core.cache'
+            - '%phpbbgallery.tables.gallery_albums%'
+            - '%phpbbgallery.tables.gallery_images%'
+            - '%phpbbgallery.tables.gallery_comments%'
+            - '%phpbbgallery.tables.gallery_moderators%'
+            - '%phpbbgallery.tables.gallery_permissions%'
     phpbbgallery.core.file.tool:
         class: phpbbgallery\core\file\file
         arguments:
@@ -341,6 +352,12 @@ services:
         class: phpbbgallery\core\event\permission_lifecycle_listener
         arguments:
             - '@phpbbgallery.core.auth'
+        tags:
+            - { name: event.listener }
+    phpbbgallery.core.identity_lifecycle_listener:
+        class: phpbbgallery\core\event\identity_lifecycle_listener
+        arguments:
+            - '@phpbbgallery.core.identity_sync'
         tags:
             - { name: event.listener }
 # ----- Cron tasks -----

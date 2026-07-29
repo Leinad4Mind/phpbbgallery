@@ -933,6 +933,7 @@ class manage
 		$sql = 'DELETE FROM ' . $this->moderators_table . ' 
 			WHERE album_id = ' . (int) $from_id;
 		$this->db->sql_query($sql);
+		$this->gallery_cache->destroy('sql', $this->moderators_table);
 
 		$this->gallery_notification->delete_albums($from_id);
 
@@ -1014,6 +1015,7 @@ class manage
 		$sql = 'DELETE FROM ' . $this->moderators_table . ' 
 			WHERE album_id = ' . (int) $album_id;
 		$this->db->sql_query($sql);
+		$this->gallery_cache->destroy('sql', $this->moderators_table);
 
 		$this->gallery_notification->delete_albums($album_id);
 

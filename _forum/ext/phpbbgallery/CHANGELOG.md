@@ -23,6 +23,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Security
 
+- Invalidated Gallery permission snapshots for every approved group member when ACP changes the phpBB group_skip_auth setting.
 - Invalidated targeted Gallery permission snapshots immediately after phpBB group additions, removals, pending-member approvals and attribute changes, including any ACL state already loaded in the same request.
 - Restricted random-image results to albums granting image-view or status-moderation access instead of accepting list-only permission.
 - Replaced ZIP extraction during gallery uploads with a controlled per-entry extractor that rejects path traversal, absolute paths, symbolic-link entries, unsupported file types, duplicate destinations, and archive entries whose detected content does not match their extension.
@@ -112,6 +113,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Synchronized renamed users and default-group colours across Gallery images, comments, last-image metadata, personal albums and statistics; removed deleted user/group ACL rows and kept moderator listings on live phpBB identities.
 - Injected the phpBB event dispatcher into the resumable upload and search controllers so add-on validation, presentation, filtering, and result events execute without fatal errors.
 - Corrected image-cache hits that were assigned to the album variable, merged only missing image IDs into the shared cache, returned only requested rows, and reset request-local data during invalidation.
 - Synchronized the Portuguese, Brazilian Portuguese, and pre-orthographic-agreement catalogs with the English source, translating 99 previously unavailable messages and removing obsolete keys.

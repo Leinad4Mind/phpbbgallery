@@ -17,6 +17,7 @@ final class permission_lifecycle_listener_test extends TestCase
 	public function test_subscribes_to_every_group_membership_transition(): void
 	{
 		$this->assertSame([
+			'core.acp_manage_group_request_data' => 'invalidate_group_auth_setting',
 			'core.group_add_user_after' => 'invalidate_group_members',
 			'core.group_delete_user_after' => 'invalidate_group_members',
 			'core.user_set_group_attributes' => 'invalidate_group_members',
@@ -69,6 +70,57 @@ final class permission_lifecycle_listener_test extends TestCase
 			->with([]);
 
 		(new permission_lifecycle_listener($gallery_auth))->invalidate_group_members(new \phpbb\event\data([]));
+	}
+
+	public function test_group_skip_auth_change_invalidates_every_approved_member(): void
+	{
+		$gallery_auth = $this->createMock(\phpbbgallery\core\auth\auth::class);
+		$gallery_auth->expects($this->once())
+			->method('invalidate_group_permissions')
+			->with(5);
+		$listener = new permission_lifecycle_listener($gallery_auth);
+
+		$listener->invalidate_group_auth_setting(new \phpbb\event\data([
+			'action' => 'edit',
+			'group_id' => 5,
+			'group_row' => ['group_skip_auth' => 0],
+			'submit_ary' => ['skip_auth' => 1],
+		]));
+	}
+
+	/**
+	 * @dataProvider unchanged_group_provider
+	 */
+	public function test_unrelated_group_submission_does_not_invalidate_permissions(array $event_data): void
+	{
+		$gallery_auth = $this->createMock(\phpbbgallery\core\auth\auth::class);
+		$gallery_auth->expects($this->never())->method('invalidate_group_permissions');
+
+		(new permission_lifecycle_listener($gallery_auth))->invalidate_group_auth_setting(new \phpbb\event\data($event_data));
+	}
+
+	public static function unchanged_group_provider(): array
+	{
+		return [
+			'new group' => [[
+				'action' => 'add',
+				'group_id' => 5,
+				'group_row' => [],
+				'submit_ary' => ['skip_auth' => 1],
+			]],
+			'unchanged setting' => [[
+				'action' => 'edit',
+				'group_id' => 5,
+				'group_row' => ['group_skip_auth' => 1],
+				'submit_ary' => ['skip_auth' => 1],
+			]],
+			'missing setting' => [[
+				'action' => 'edit',
+				'group_id' => 5,
+				'group_row' => ['group_skip_auth' => 0],
+				'submit_ary' => [],
+			]],
+		];
 	}
 
 	public function test_listener_contract_is_fully_typed(): void

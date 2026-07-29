@@ -690,6 +690,38 @@ class auth
 	}
 
 	/**
+	 * Invalidate Gallery permissions for every approved member of a group.
+	 *
+	 * phpBB can change group_skip_auth without emitting a membership event.
+	 * Resolve the current approved members so their Gallery snapshots cannot
+	 * continue using the previous group-authentication state.
+	 *
+	 * @param int $group_id phpBB group identifier
+	 * @return void
+	 */
+	public function invalidate_group_permissions(int $group_id): void
+	{
+		if ($group_id <= 0)
+		{
+			return;
+		}
+
+		$sql = 'SELECT user_id
+			FROM ' . USER_GROUP_TABLE . '
+			WHERE group_id = ' . $group_id . '
+				AND user_pending = 0';
+		$result = $this->db->sql_query($sql);
+		$user_ids = [];
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$user_ids[] = (int) $row['user_id'];
+		}
+		$this->db->sql_freeresult($result);
+
+		$this->invalidate_user_permissions($user_ids);
+	}
+
+	/**
 	* Get permission
 	*
 	* @param	string	$acl	One of the permissions, Exp: i_view

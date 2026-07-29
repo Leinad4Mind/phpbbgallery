@@ -174,6 +174,8 @@ namespace
 	require_once dirname(__DIR__) . '/controller/image.php';
 	require_once dirname(__DIR__) . '/event/main_listener.php';
 	require_once dirname(__DIR__) . '/event/permission_lifecycle_listener.php';
+	require_once dirname(__DIR__) . '/identity_sync.php';
+	require_once dirname(__DIR__) . '/event/identity_lifecycle_listener.php';
 	require_once dirname(__DIR__) . '/acp/environment.php';
 	require_once dirname(__DIR__) . '/acp/main_module.php';
 	require_once dirname(__DIR__) . '/acp/config_module.php';

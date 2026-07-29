@@ -33,6 +33,7 @@ class permission_lifecycle_listener implements EventSubscriberInterface
 	public static function getSubscribedEvents(): array
 	{
 		return [
+			'core.acp_manage_group_request_data' => 'invalidate_group_auth_setting',
 			'core.group_add_user_after'       => 'invalidate_group_members',
 			'core.group_delete_user_after'    => 'invalidate_group_members',
 			'core.user_set_group_attributes' => 'invalidate_group_members',
@@ -52,5 +53,37 @@ class permission_lifecycle_listener implements EventSubscriberInterface
 	{
 		$user_ids = $event['user_id_ary'] ?? [];
 		$this->gallery_auth->invalidate_user_permissions(is_array($user_ids) ? $user_ids : [(int) $user_ids]);
+	}
+
+	/**
+	 * Clear Gallery ACL snapshots before phpBB changes group_skip_auth.
+	 *
+	 * phpBB exposes this ACP event before validation rather than after saving the
+	 * group. An early invalidation is harmless if validation later fails, while
+	 * retaining a stale allow decision after a successful update is not.
+	 *
+	 * @param \phpbb\event\data $event ACP group update event
+	 * @return void
+	 */
+	public function invalidate_group_auth_setting(\phpbb\event\data $event): void
+	{
+		if (($event['action'] ?? '') !== 'edit')
+		{
+			return;
+		}
+
+		$group_row = $event['group_row'] ?? [];
+		$submit_ary = $event['submit_ary'] ?? [];
+		if (!is_array($group_row) || !is_array($submit_ary) || !array_key_exists('skip_auth', $submit_ary))
+		{
+			return;
+		}
+
+		if ((bool) ($group_row['group_skip_auth'] ?? false) === (bool) $submit_ary['skip_auth'])
+		{
+			return;
+		}
+
+		$this->gallery_auth->invalidate_group_permissions((int) ($event['group_id'] ?? 0));
 	}
 }
