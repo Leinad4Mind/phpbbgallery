@@ -190,6 +190,27 @@ class main
 	}
 
 	/**
+	 * Whether the feed viewer must be denied private contest data.
+	 *
+	 * @param array $row Image and album row
+	 * @return bool
+	 */
+	protected function hides_contest_private_data(array $row): bool
+	{
+		$can_moderate = $this->gallery_auth->acl_check(
+			'm_status',
+			(int) $row['image_album_id'],
+			(int) $row['album_user_id']
+		);
+
+		return \phpbbgallery\core\contest::hides_private_data(
+			$row,
+			(int) $this->user->data['user_id'],
+			$can_moderate
+		);
+	}
+
+	/**
 	 * Author line for an entry, keeping contest entries anonymous.
 	 *
 	 * @param array $row Image row
@@ -197,9 +218,7 @@ class main
 	 */
 	protected function get_author(array $row): string
 	{
-		$is_contest = (int) $row['image_contest'] === (int) \phpbbgallery\core\block::IN_CONTEST;
-
-		if ($is_contest && !$this->gallery_auth->acl_check('m_status', (int) $row['image_album_id'], (int) $row['album_user_id']))
+		if ($this->hides_contest_private_data($row))
 		{
 			return $this->language->lang('CONTEST_USERNAME');
 		}
@@ -215,6 +234,16 @@ class main
 	 */
 	protected function get_description(array $row): string
 	{
+		if ($this->hides_contest_private_data($row))
+		{
+			$contest_end_time = (int) ($row['contest_start'] ?? 0) + (int) ($row['contest_end'] ?? 0);
+
+			return $this->language->lang(
+				'CONTEST_IMAGE_DESC',
+				$this->user->format_date($contest_end_time, false, true)
+			);
+		}
+
 		$description = (string) $row['image_desc'];
 
 		if (!empty($row['image_desc_uid']))

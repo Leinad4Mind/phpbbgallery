@@ -61,7 +61,24 @@ final class visibility_test extends TestCase
 			}
 		};
 
-		return new feed($db, $auth, $config, new \phpbbgallery\core\album\album(), 'albums', 'images');
+		return new feed($db, $auth, $config, new \phpbbgallery\core\album\album(), 'albums', 'images', 'contests');
+	}
+
+	public function test_feed_query_joins_only_the_active_contest_window(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/feed.php');
+
+		$this->assertStringContainsString('c.contest_start, c.contest_end', $source);
+		$this->assertStringContainsString('c.contest_marked = ', $source);
+	}
+
+	public function test_feed_controller_hides_contest_author_and_description(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/main.php');
+
+		$this->assertGreaterThanOrEqual(2, substr_count($source, 'hides_contest_private_data('));
+		$this->assertStringContainsString('CONTEST_USERNAME', $source);
+		$this->assertStringContainsString('CONTEST_IMAGE_DESC', $source);
 	}
 
 	/**
@@ -74,7 +91,6 @@ final class visibility_test extends TestCase
 	private function where(feed $feed, array $candidates): string
 	{
 		$method = new \ReflectionMethod($feed, 'build_visibility_where');
-		$method->setAccessible(true);
 
 		return $method->invoke($feed, $candidates);
 	}

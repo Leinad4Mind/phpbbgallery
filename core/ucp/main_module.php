@@ -1051,7 +1051,8 @@ class main_module
 				],
 				[
 					'FROM'		=> [$contests_table => 'c'],
-					'ON'		=> 'a.album_id = c.contest_album_id',
+					'ON'		=> 'a.album_id = c.contest_album_id
+						AND c.contest_marked = ' . (int) \phpbbgallery\core\block::IN_CONTEST,
 				],
 			],
 
@@ -1061,6 +1062,17 @@ class main_module
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result))
 		{
+			$can_moderate_contest = $phpbb_ext_gallery_core_auth->acl_check('m_status', $row['album_id'], $row['album_user_id']);
+			$hide_contest_private_data = \phpbbgallery\core\contest::hides_private_data(
+				[
+					'image_contest' => (($row['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST) && $row['contest_marked'])
+						? \phpbbgallery\core\block::IN_CONTEST
+						: \phpbbgallery\core\block::NO_CONTEST,
+					'image_user_id' => $row['album_last_user_id'],
+				],
+				(int) $user->data['user_id'],
+				$can_moderate_contest
+			);
 			$template->assign_block_vars('album_row', [
 				'ALBUM_ID'			=> $row['album_id'],
 				'ALBUM_NAME'		=> $row['album_name'],
@@ -1069,7 +1081,7 @@ class main_module
 
 				'UC_IMAGE_NAME'		=> $phpbb_ext_gallery_core_image->generate_link('image_name', $phpbb_ext_gallery_config->get('link_image_name'), $row['album_last_image_id'], $row['album_last_image_name'], $row['album_id']),
 				'UC_FAKE_THUMBNAIL'	=> $phpbb_ext_gallery_core_image->generate_link('fake_thumbnail', $phpbb_ext_gallery_config->get('link_thumbnail'), $row['album_last_image_id'], $row['album_last_image_name'], $row['album_id']),
-				'UPLOADER'			=> (($row['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST) && ($row['contest_marked'] && !$phpbb_ext_gallery_core_auth->acl_check('m_status', $row['album_id'], $row['album_user_id']))) ? $this->language->lang('CONTEST_USERNAME') : get_username_string('full', $row['album_last_user_id'], $row['album_last_username'], $row['album_last_user_colour']),
+				'UPLOADER'			=> $hide_contest_private_data ? $this->language->lang('CONTEST_USERNAME') : get_username_string('full', $row['album_last_user_id'], $row['album_last_username'], $row['album_last_user_colour']),
 				'LAST_IMAGE_TIME'	=> $user->format_date($row['album_last_image_time']),
 				'LAST_IMAGE'		=> $row['album_last_image_id'],
 				'U_IMAGE'			=> $phpbb_gallery_url->show_image($row['image_id']),
@@ -1091,7 +1103,7 @@ class main_module
 		$db->sql_freeresult($result);
 
 		$sql_array = [
-			'SELECT'		=> 'w.*, i.*, a.album_name, c.*',
+			'SELECT'		=> 'w.*, i.*, a.album_name, a.album_user_id, c.*',
 			'FROM'			=> [$watch_table => 'w'],
 
 			'LEFT_JOIN'		=> [
@@ -1115,12 +1127,19 @@ class main_module
 		$result = $db->sql_query_limit($sql, $images_per_page, $start);
 		while ($row = $db->sql_fetchrow($result))
 		{
+			$can_moderate_contest = $phpbb_ext_gallery_core_auth->acl_check('m_status', $row['image_album_id'], $row['album_user_id']);
+			$hide_contest_private_data = \phpbbgallery\core\contest::hides_private_data(
+				$row,
+				(int) $user->data['user_id'],
+				$can_moderate_contest
+			);
+			$hide_contest_results = \phpbbgallery\core\contest::hides_results($row, $can_moderate_contest);
 			$template->assign_block_vars('image_row', [
-				'UPLOADER'			=> ($row['image_contest'] && !$phpbb_ext_gallery_core_auth->acl_check('m_status', $row['image_album_id'])) ? $this->language->lang('CONTEST_USERNAME') : get_username_string('full', $row['image_user_id'], $row['image_username'], $row['image_user_colour']),
-				'LAST_COMMENT_BY'	=> get_username_string('full', $row['comment_user_id'], $row['comment_username'], $row['comment_user_colour']),
-				'COMMENT'			=> $row['image_comments'],
-				'LAST_COMMENT'		=> $row['image_comments'] ? generate_text_for_display($row['comment'], $row['comment_uid'], $row['comment_bitfield'], 7) : '',
-				'LAST_COMMENT_TIME'	=> $user->format_date($row['comment_time']),
+				'UPLOADER'			=> $hide_contest_private_data ? $this->language->lang('CONTEST_USERNAME') : get_username_string('full', $row['image_user_id'], $row['image_username'], $row['image_user_colour']),
+				'LAST_COMMENT_BY'	=> $hide_contest_results ? false : get_username_string('full', $row['comment_user_id'], $row['comment_username'], $row['comment_user_colour']),
+				'COMMENT'			=> $hide_contest_results ? 0 : $row['image_comments'],
+				'LAST_COMMENT'		=> (!$hide_contest_results && $row['image_comments']) ? generate_text_for_display($row['comment'], $row['comment_uid'], $row['comment_bitfield'], 7) : '',
+				'LAST_COMMENT_TIME'	=> $hide_contest_results ? false : $user->format_date($row['comment_time']),
 				'IMAGE_TIME'		=> $user->format_date($row['image_time']),
 				'UC_IMAGE_NAME'		=> $phpbb_ext_gallery_core_image->generate_link('image_name', $phpbb_ext_gallery_config->get('link_image_name'), $row['image_id'], $row['image_name'], $row['album_id']),
 				'UC_FAKE_THUMBNAIL'	=> $phpbb_ext_gallery_core_image->generate_link('fake_thumbnail', $phpbb_ext_gallery_config->get('link_thumbnail'), $row['image_id'], $row['image_name'], $row['album_id']),

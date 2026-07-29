@@ -100,6 +100,16 @@ final class ucp_main_types_test extends TestCase
 		$this->assertStringNotContainsString('sizeof($target)', $source);
 	}
 
+	public function test_subscriptions_apply_active_contest_privacy_policies(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/ucp/main_module.php');
+
+		$this->assertGreaterThanOrEqual(2, substr_count($source, 'contest::hides_private_data('));
+		$this->assertStringContainsString('contest::hides_results(', $source);
+		$this->assertStringContainsString('$hide_contest_results ? 0', $source);
+		$this->assertStringContainsString('c.contest_marked = ', $source);
+	}
+
 	public function test_subscription_rows_render_the_last_comment_body(): void
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/ucp/main_module.php');
