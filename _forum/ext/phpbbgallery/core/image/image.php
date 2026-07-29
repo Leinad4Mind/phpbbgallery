@@ -642,17 +642,19 @@ class image
 	*/
 	public function approve_images(array $image_id_ary, int $album_id): void
 	{
-		$sql = 'SELECT image_id, image_name, image_user_id
+		$sql = 'SELECT image_id, image_name, image_user_id, image_contest_end
 			FROM ' . $this->table_images . ' 
 			WHERE image_status = 0
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary);
 		$result = $this->db->sql_query($sql);
 		$targets = [];
+		$resync_contest = false;
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$this->gallery_log->add_log('moderator', 'approve', $album_id, $row['image_id'], ['LOG_GALLERY_APPROVED', $row['image_name']]);
 			$targets[] = $row['image_user_id'];
 			$last_img = $row['image_id'];
+			$resync_contest = $resync_contest || (int) $row['image_contest_end'] > 0;
 		}
 		$this->db->sql_freeresult($result);
 		if (!empty($targets))
@@ -672,6 +674,10 @@ class image
 			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary);
 		$this->db->sql_query($sql);
+		if ($resync_contest)
+		{
+			$this->contest->resync($album_id);
+		}
 	}
 
 	/**
@@ -690,16 +696,22 @@ class image
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary);
 		$this->db->sql_query($sql);
 
-		$sql = 'SELECT image_id, image_name
+		$sql = 'SELECT image_id, image_name, image_contest_end
 			FROM ' . $this->table_images .' 
 			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary);
 		$result = $this->db->sql_query($sql);
+		$resync_contest = false;
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$this->gallery_log->add_log('moderator', 'unapprove', $album_id, $row['image_id'], ['LOG_GALLERY_UNAPPROVED', $row['image_name']]);
+			$resync_contest = $resync_contest || (int) $row['image_contest_end'] > 0;
 		}
 		$this->db->sql_freeresult($result);
+		if ($resync_contest)
+		{
+			$this->contest->resync($album_id);
+		}
 	}
 
 	/**
@@ -746,16 +758,22 @@ class image
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary);
 		$this->db->sql_query($sql);
 
-		$sql = 'SELECT image_id, image_name
+		$sql = 'SELECT image_id, image_name, image_contest_end
 			FROM ' . $this->table_images . ' 
 			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary);
 		$result = $this->db->sql_query($sql);
+		$resync_contest = false;
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$this->gallery_log->add_log('moderator', 'lock', $album_id, $row['image_id'], ['LOG_GALLERY_LOCKED', $row['image_name']]);
+			$resync_contest = $resync_contest || (int) $row['image_contest_end'] > 0;
 		}
 		$this->db->sql_freeresult($result);
+		if ($resync_contest)
+		{
+			$this->contest->resync($album_id);
+		}
 	}
 
 	/**
