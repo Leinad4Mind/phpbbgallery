@@ -356,6 +356,20 @@ services:
             - '%phpbbgallery.tables.gallery_users%'
         tags:
             - { name: event.listener }
+    phpbbgallery.core.mini_profile_listener:
+        class: phpbbgallery\core\event\mini_profile_listener
+        arguments:
+            - '@controller.helper'
+            - '@auth'
+            - '@config'
+            - '@user'
+            - '@dbal.conn'
+            - '@phpbbgallery.core.auth'
+            - '@phpbbgallery.core.config'
+            - '@phpbbgallery.core.search'
+            - '%phpbbgallery.tables.gallery_users%'
+        tags:
+            - { name: event.listener }
     phpbbgallery.core.permission_lifecycle_listener:
         class: phpbbgallery\core\event\permission_lifecycle_listener
         arguments:

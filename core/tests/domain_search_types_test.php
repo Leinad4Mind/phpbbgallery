@@ -58,6 +58,7 @@ final class domain_search_types_test extends TestCase
 	{
 		$this->assertSame('int', (string) (new \ReflectionMethod(search::class, 'recent_count'))->getReturnType());
 		$this->assertSame('int', (string) (new \ReflectionMethod(search::class, 'user_image_count'))->getReturnType());
+		$this->assertSame('array', (string) (new \ReflectionMethod(search::class, 'user_image_counts'))->getReturnType());
 
 		foreach (['random', 'recent_comments', 'recent', 'contest_winners', 'rating'] as $method_name)
 		{
@@ -75,7 +76,7 @@ final class domain_search_types_test extends TestCase
 			->method('acl_album_ids')
 			->willReturnCallback(static fn(string $permission): array => $permission === 'i_view' ? [2, 5] : [9, 5]);
 		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
-		$db->expects($this->exactly(2))
+		$db->expects($this->exactly(3))
 			->method('sql_in_set')
 			->willReturnCallback(static fn(string $field, array $ids): string => $field . ' IN (' . implode(', ', $ids) . ')');
 		$db->expects($this->once())
@@ -85,7 +86,7 @@ final class domain_search_types_test extends TestCase
 				$queries[] = $sql;
 				return 'result';
 			});
-		$db->expects($this->once())->method('sql_fetchrow')->with('result')->willReturn(['count' => 4]);
+		$db->expects($this->exactly(2))->method('sql_fetchrow')->with('result')->willReturnOnConsecutiveCalls(['image_user_id' => 12, 'count' => 4], false);
 		$db->expects($this->once())->method('sql_freeresult')->with('result');
 		$user = new \phpbb\user();
 		$user->data = ['user_id' => 7];
@@ -97,10 +98,34 @@ final class domain_search_types_test extends TestCase
 		$reflection->getProperty('images_table')->setValue($search, 'gallery_images');
 
 		$this->assertSame(4, $search->user_image_count(12));
-		$this->assertStringContainsString('image_user_id = 12', $queries[0]);
+		$this->assertStringContainsString('image_user_id IN (12)', $queries[0]);
+		$this->assertStringContainsString('GROUP BY image_user_id', $queries[0]);
 		$this->assertStringContainsString('(image_contest = 0 OR image_user_id = 7 OR image_album_id IN (9))', $queries[0]);
 		$this->assertStringContainsString('image_album_id IN (2)', $queries[0]);
 		$this->assertStringContainsString('image_album_id IN (9)', $queries[0]);
+	}
+
+	public function test_batch_profile_counts_return_zero_without_additional_queries(): void
+	{
+		$gallery_auth = $this->createMock(\phpbbgallery\core\auth\auth::class);
+		$gallery_auth->expects($this->once())->method('load_user_permissions')->with(7);
+		$gallery_auth->method('get_exclude_zebra')->willReturn([]);
+		$gallery_auth->method('acl_album_ids')->willReturn([2]);
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->method('sql_in_set')->willReturnCallback(static fn(string $field, array $ids): string => $field . ' IN (' . implode(', ', $ids) . ')');
+		$db->expects($this->once())->method('sql_query')->willReturn('result');
+		$db->expects($this->exactly(2))->method('sql_fetchrow')->with('result')->willReturnOnConsecutiveCalls(['image_user_id' => 12, 'count' => 4], false);
+		$db->expects($this->once())->method('sql_freeresult')->with('result');
+		$user = new \phpbb\user();
+		$user->data = ['user_id' => 7];
+		$reflection = new \ReflectionClass(search::class);
+		$search = $reflection->newInstanceWithoutConstructor();
+		$reflection->getProperty('gallery_auth')->setValue($search, $gallery_auth);
+		$reflection->getProperty('db')->setValue($search, $db);
+		$reflection->getProperty('user')->setValue($search, $user);
+		$reflection->getProperty('images_table')->setValue($search, 'gallery_images');
+
+		$this->assertSame([12 => 4, 13 => 0], $search->user_image_counts([12, 13, 12, ANONYMOUS]));
 	}
 
 	public function test_discovery_queries_apply_the_matching_contest_boundary(): void

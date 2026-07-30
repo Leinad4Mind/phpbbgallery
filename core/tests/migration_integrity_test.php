@@ -29,6 +29,7 @@ use phpbbgallery\core\migrations\create_gallery_icons_folder;
 use phpbbgallery\core\migrations\disp_resolution;
 use phpbbgallery\core\migrations\forum_index_images;
 use phpbbgallery\core\migrations\gallery_bbcodes;
+use phpbbgallery\core\migrations\viewtopic_profiles;
 
 class migration_integrity_test extends TestCase
 {
@@ -52,6 +53,7 @@ class migration_integrity_test extends TestCase
 		disp_resolution::class,
 		forum_index_images::class,
 		gallery_bbcodes::class,
+		viewtopic_profiles::class,
 	];
 
 	private array $temp_directories = [];
@@ -129,6 +131,26 @@ class migration_integrity_test extends TestCase
 			['\phpbbgallery\core\migrations\forum_index_images'],
 			gallery_bbcodes::depends_on()
 		);
+		$this->assertSame(
+			['\phpbbgallery\core\migrations\gallery_bbcodes'],
+			viewtopic_profiles::depends_on()
+		);
+	}
+
+	public function test_viewtopic_profile_migration_restores_reversible_switches(): void
+	{
+		$migration = (new \ReflectionClass(viewtopic_profiles::class))->newInstanceWithoutConstructor();
+
+		$this->assertSame([
+			['config.add', ['phpbb_gallery_viewtopic_icon', 1]],
+			['config.add', ['phpbb_gallery_viewtopic_images', 1]],
+			['config.add', ['phpbb_gallery_viewtopic_link', 0]],
+		], $migration->update_data());
+		$this->assertSame([
+			['config.remove', ['phpbb_gallery_viewtopic_icon']],
+			['config.remove', ['phpbb_gallery_viewtopic_images']],
+			['config.remove', ['phpbb_gallery_viewtopic_link']],
+		], $migration->revert_data());
 	}
 
 	public function test_forum_index_images_migration_is_reversible_and_disabled_by_default(): void
@@ -666,6 +688,7 @@ class migration_integrity_test extends TestCase
 			'disp_resolution.php',
 			'forum_index_images.php',
 			'gallery_bbcodes.php',
+			'viewtopic_profiles.php',
 		] as $migration)
 		{
 			require_once dirname(__DIR__) . '/migrations/' . $migration;

@@ -91,6 +91,10 @@ namespace
 	{
 		define('IN_PHPBB', true);
 	}
+	if (!defined('ANONYMOUS'))
+	{
+		define('ANONYMOUS', 1);
+	}
 
 	// Load only packaged Twig classes so isolated tests do not initialize unrelated Composer file autoloaders.
 	spl_autoload_register(static function (string $class_name): void
@@ -137,6 +141,9 @@ namespace
 	require_once dirname(__DIR__, 4) . '/phpbb/event/data.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/db/driver/driver_interface.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/auth/auth.php';
+	require_once dirname(__DIR__, 4) . '/vendor/symfony/routing/RequestContextAwareInterface.php';
+	require_once dirname(__DIR__, 4) . '/vendor/symfony/routing/Generator/UrlGeneratorInterface.php';
+	require_once dirname(__DIR__, 4) . '/phpbb/controller/helper.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/cron/task/task.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/cron/task/base.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/request/request_interface.php';
@@ -173,6 +180,7 @@ namespace
 	require_once dirname(__DIR__) . '/controller/comment.php';
 	require_once dirname(__DIR__) . '/controller/image.php';
 	require_once dirname(__DIR__) . '/event/main_listener.php';
+	require_once dirname(__DIR__) . '/event/mini_profile_listener.php';
 	require_once dirname(__DIR__) . '/event/permission_lifecycle_listener.php';
 	require_once dirname(__DIR__) . '/identity_sync.php';
 	require_once dirname(__DIR__) . '/event/identity_lifecycle_listener.php';
