@@ -265,7 +265,7 @@ class upload
 			{
 				$sql = 'SELECT COUNT(image_id) count
 					FROM ' . $this->images_table . '
-					WHERE image_user_id = ' . $upload_author_id . '
+					WHERE image_user_id = ' . (int) $upload_author_id . '
 						AND image_status <> ' . (int) $this->block->get_image_status_orphan() . '
 						AND image_album_id = ' . (int) $album_id;
 				$result = $this->db->sql_query($sql);
@@ -376,7 +376,7 @@ class upload
 			{
 				$sql = 'SELECT COUNT(image_id) count
 					FROM ' . $this->images_table . '
-					WHERE image_user_id = ' . $upload_author_id . '
+					WHERE image_user_id = ' . (int) $upload_author_id . '
 						AND image_status <> ' . (int) $this->block->get_image_status_orphan() . '
 						AND image_album_id = ' . (int) $album_id;
 				$result = $this->db->sql_query($sql);
@@ -535,7 +535,7 @@ class upload
 				{
 					$sql = 'SELECT COUNT(image_id) count
 						FROM ' . $this->images_table . '
-						WHERE image_user_id = ' . $upload_author_id . '
+						WHERE image_user_id = ' . (int) $upload_author_id . '
 							AND image_status <> ' . (int) $this->block->get_image_status_orphan() . '
 							AND image_album_id = ' . (int) $album_id;
 					$result = $this->db->sql_query($sql);

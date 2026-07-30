@@ -184,7 +184,7 @@ class config
 		$title = trim(strip_tags((string) $this->get('title')));
 
 		return $title !== ''
-			? htmlspecialchars($title, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')
+			? utf8_htmlspecialchars($title)
 			: $language->lang('GALLERY');
 	}
 

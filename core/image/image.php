@@ -284,7 +284,7 @@ class image
 				];
 				$sql = 'UPDATE ' . $this->table_images . '
 					SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
-					WHERE image_id = ' . $image_id;
+					WHERE image_id = ' . (int) $image_id;
 				$this->db->sql_query($sql);
 				$this->gallery_log->add_log('moderator', 'edit', (int) $image_data[$image_id]['image_album_id'], $image_id, ['LOG_GALLERY_EDITED', $image_name]);
 			}
