@@ -350,6 +350,9 @@ $lang = array_merge($lang, [
 	'VIEW_SEARCH_SELF'      => 'Виж своите изображения',
 	'VIEWING_ALBUM'         => 'Разглежда албум %s',
 	'VIEWING_IMAGE'         => 'Разглежда изображения в албум %s',
+	'VIEWING_GALLERY'       => 'Разглежда %s',
+	'SEARCHING_GALLERY'     => 'Търси в %s',
+	'UPLOADING_TO_ALBUM'    => 'Качва изображения в албума %s',
 
 	'VISIT_GALLERY' => 'Посети потребителската галерия',
 

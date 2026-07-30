@@ -54,7 +54,33 @@ final class event_main_listener_types_test extends TestCase
 			'core.index_modify_page_title' => 'display_forum_index_images',
 			'core.memberlist_view_profile' => 'user_profile_galleries',
 			'core.ucp_profile_info_modify_sql_ary' => 'preserve_personal_album_profile_field',
+			'core.viewonline_overwrite_location' => 'overwrite_viewonline_location',
 		], main_listener::getSubscribedEvents());
+	}
+
+	public function test_viewonline_location_is_delegated_without_touching_unrelated_event_data(): void
+	{
+		$online_location = $this->createMock(\phpbbgallery\core\online_location::class);
+		$online_location->expects($this->once())
+			->method('resolve')
+			->with('app.php/gallery')
+			->willReturn([
+				'location' => 'Viewing Gallery',
+				'location_url' => '/gallery',
+			]);
+		$listener = $this->listener($this->createStub(\phpbb\db\driver\driver_interface::class));
+		$this->set_property($listener, 'online_location', $online_location);
+		$event = new \phpbb\event\data([
+			'row' => ['session_page' => 'app.php/gallery'],
+			'location' => 'Board index',
+			'location_url' => '/index.php',
+		]);
+
+		$listener->overwrite_viewonline_location($event);
+
+		$this->assertSame('Viewing Gallery', $event['location']);
+		$this->assertSame('/gallery', $event['location_url']);
+		$this->assertSame(['session_page' => 'app.php/gallery'], $event['row']);
 	}
 
 	public function test_gallery_administrator_permissions_are_registered(): void

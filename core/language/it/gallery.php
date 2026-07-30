@@ -353,6 +353,9 @@ $lang = array_merge($lang, [
 	'VIEW_SEARCH_SELF'      => 'Visualizza le tue immagini',
 	'VIEWING_ALBUM'         => 'Visualizza l’album %s',
 	'VIEWING_IMAGE'         => 'Visualizzando immagine nell’album %s',
+	'VIEWING_GALLERY'       => 'Visualizza %s',
+	'SEARCHING_GALLERY'     => 'Cerca in %s',
+	'UPLOADING_TO_ALBUM'    => 'Carica immagini nell’album %s',
 
 	'WATCH_ALBUM'    => 'Iscriviti all’album',
 	'WATCH_IMAGE'    => 'Iscriviti all’immagine',

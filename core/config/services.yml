@@ -354,8 +354,20 @@ services:
             - '@phpbbgallery.core.config'
             - '@dbal.conn'
             - '%phpbbgallery.tables.gallery_users%'
+            - '@phpbbgallery.core.online_location'
         tags:
             - { name: event.listener }
+    phpbbgallery.core.online_location:
+        class: phpbbgallery\core\online_location
+        arguments:
+            - '@dbal.conn'
+            - '@phpbbgallery.core.auth'
+            - '@user'
+            - '@language'
+            - '@controller.helper'
+            - '@phpbbgallery.core.config'
+            - '%phpbbgallery.tables.gallery_albums%'
+            - '%phpbbgallery.tables.gallery_images%'
     phpbbgallery.core.mini_profile_listener:
         class: phpbbgallery\core\event\mini_profile_listener
         arguments:
