@@ -1,3 +1,5 @@
+<div id="phpbbgallery-image-page" class="phpbbgallery-image-page" data-gallery-image-page data-ajax-navigation="{% if S_AJAX_IMAGE_NAVIGATION %}1{% else %}0{% endif %}" data-loading-label="{{ lang('LOADING') }}">
+<p class="phpbbgallery-image-navigation-status sr-only" role="status" aria-live="polite"></p>
 {% include 'gallery/gallery_header.html' %}
 <div class="side-segment"><h3><a href="{{ S_ALBUM_ACTION }}">{{ IMAGE_NAME }}</a></h3></div>
 
@@ -12,9 +14,9 @@
 
 	<div class="panel thumbnail center-block vertical-center"{% if S_STATUS_UNAPPROVED %} style="position:relative;border-color:#daa520;border-width:3px;"{% endif %}>
 		<ul class="gallery-image-navigation">
-			<li class="gallery-image-navigation-side gallery-image-navigation-previous">{% if UC_PREV_IMAGE %}{{ UC_PREV_IMAGE }}{% else %}<span class="gallery-image-navigation-placeholder" aria-hidden="true"></span>{% endif %}</li>
-			<li class="gallery-image-navigation-current">{% if UC_IMAGE_ACTION %}<a href="{{ UC_IMAGE_ACTION }}">{% endif %}<img src="{{ UC_IMAGE }}" alt="{{ IMAGE_NAME }}" class="postimage"/>{% if UC_IMAGE_ACTION %}</a>{% endif %}</li>
-			<li class="gallery-image-navigation-side gallery-image-navigation-next">{% if UC_NEXT_IMAGE %}{{ UC_NEXT_IMAGE }}{% else %}<span class="gallery-image-navigation-placeholder" aria-hidden="true"></span>{% endif %}</li>
+			<li class="gallery-image-navigation-side gallery-image-navigation-previous">{% if U_PREV_IMAGE %}<a href="{{ U_PREV_IMAGE }}" rel="prev" data-gallery-image-navigation="previous">{% if U_PREV_IMAGE_THUMB %}<img src="{{ U_PREV_IMAGE_THUMB }}" alt="{{ PREV_IMAGE_NAME }}">{% else %}&laquo;&laquo;&nbsp;{{ PREV_IMAGE_NAME }}{% endif %}</a>{% else %}<span class="gallery-image-navigation-placeholder" aria-hidden="true"></span>{% endif %}</li>
+			<li class="gallery-image-navigation-current">{% if UC_IMAGE_ACTION %}<a href="{{ UC_IMAGE_ACTION }}"{% if S_IMAGE_ACTION_NEXT %} data-gallery-image-navigation="next"{% endif %}>{% endif %}<img src="{{ UC_IMAGE }}" alt="{{ IMAGE_NAME }}" class="postimage"/>{% if UC_IMAGE_ACTION %}</a>{% endif %}</li>
+			<li class="gallery-image-navigation-side gallery-image-navigation-next">{% if U_NEXT_IMAGE %}<a href="{{ U_NEXT_IMAGE }}" rel="next" data-gallery-image-navigation="next">{% if U_NEXT_IMAGE_THUMB %}<img src="{{ U_NEXT_IMAGE_THUMB }}" alt="{{ NEXT_IMAGE_NAME }}">{% else %}{{ NEXT_IMAGE_NAME }}&nbsp;&raquo;&raquo;{% endif %}</a>{% else %}<span class="gallery-image-navigation-placeholder" aria-hidden="true"></span>{% endif %}</li>
 		</ul>
 		{% if IMAGE_DESC %}
 		<div class="space10"></div>
@@ -527,3 +529,5 @@
 
 
 {% include 'gallery/gallery_footer.html' %}
+</div>
+{% if S_AJAX_IMAGE_NAVIGATION %}{% INCLUDEJS '@phpbbgallery_core/js/image_navigation.js' %}{% endif %}

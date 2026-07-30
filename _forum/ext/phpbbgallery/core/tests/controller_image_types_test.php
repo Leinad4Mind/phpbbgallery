@@ -132,12 +132,38 @@ final class controller_image_types_test extends TestCase
 		{
 			$template = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/viewimage_body.html');
 			$this->assertStringContainsString('<ul class="gallery-image-navigation">', $template, $style);
-			$this->assertStringContainsString('gallery-image-navigation-previous">{% if UC_PREV_IMAGE %}', $template, $style);
+			$this->assertStringContainsString('gallery-image-navigation-previous">{% if U_PREV_IMAGE %}', $template, $style);
 			$this->assertStringContainsString('gallery-image-navigation-current">{% if UC_IMAGE_ACTION %}<a', $template, $style);
-			$this->assertStringContainsString('gallery-image-navigation-next">{% if UC_NEXT_IMAGE %}', $template, $style);
+			$this->assertStringContainsString('gallery-image-navigation-next">{% if U_NEXT_IMAGE %}', $template, $style);
 			$this->assertSame(2, substr_count($template, 'gallery-image-navigation-placeholder'), $style);
 			$this->assertStringContainsString('{% if UC_IMAGE_ACTION %}</a>{% endif %}</li>', $template, $style);
 		}
+	}
+
+	public function test_legacy_navigation_links_escape_stored_image_names(): void
+	{
+		require_once dirname(__DIR__, 4) . '/vendor/symfony/routing/RequestContextAwareInterface.php';
+		require_once dirname(__DIR__, 4) . '/vendor/symfony/routing/Generator/UrlGeneratorInterface.php';
+		require_once dirname(__DIR__, 4) . '/phpbb/controller/helper.php';
+		$reflection = new \ReflectionClass(image::class);
+		$controller = $reflection->newInstanceWithoutConstructor();
+		$helper = $this->createStub(\phpbb\controller\helper::class);
+		$helper->method('route')->willReturnCallback(static function (string $route, array $parameters): string
+		{
+			return '/' . $route . '/' . $parameters['image_id'];
+		});
+		$reflection->getProperty('helper')->setValue($controller, $helper);
+		$build = $reflection->getMethod('build_legacy_navigation_link');
+		$image_data = ['image_id' => 9, 'image_name' => '"><script>alert(1)</script>'];
+
+		$link = $build->invoke($controller, $image_data, false, false);
+		$thumbnail = $build->invoke($controller, $image_data, true, true);
+
+		$this->assertStringNotContainsString('<script>', $link);
+		$this->assertStringContainsString('&lt;script&gt;', $link);
+		$this->assertStringNotContainsString('<script>', $thumbnail);
+		$this->assertStringContainsString('alt="&quot;&gt;&lt;script&gt;', $thumbnail);
+		$this->assertSame('', $build->invoke($controller, false, false, false));
 	}
 
 	public function test_navigation_visibility_conditions_respect_moderation_access(): void

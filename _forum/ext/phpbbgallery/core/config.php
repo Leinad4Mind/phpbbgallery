@@ -29,6 +29,7 @@ class config
 		'allow_resize'		=> true,
 		'allow_rotate'		=> true,
 		'allow_zip'			=> false,
+		'ajax_navigation'	=> false,
 
 		'captcha_comment'		=> true,
 		'captcha_upload'		=> true,

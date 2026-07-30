@@ -1,3 +1,5 @@
+<div id="phpbbgallery-image-page" class="phpbbgallery-image-page" data-gallery-image-page data-ajax-navigation="{% if S_AJAX_IMAGE_NAVIGATION %}1{% else %}0{% endif %}" data-loading-label="{{ lang('LOADING') }}">
+<p class="phpbbgallery-image-navigation-status sr-only" role="status" aria-live="polite"></p>
 {% include 'gallery/gallery_header.html' %}
 <h2>{{ lang('IMAGE_NAME') }}{{ lang('COLON') }}<a href="{{ S_ALBUM_ACTION }}" style="display: inline;"> {{ IMAGE_NAME }}</a></h2>
 
@@ -14,7 +16,7 @@
 <div class="post bg2{% if S_IMAGE_REPORTED %} reported{% endif %}">
 	<div class="inner">
 		<div class="postbody_album" id="image">
-			{% if UC_IMAGE_ACTION %}<a href="{{ UC_IMAGE_ACTION }}">{% endif %}<img src="{{ UC_IMAGE }}" alt="{{ IMAGE_NAME }}" class="postimage"/>{% if UC_IMAGE_ACTION %}</a>{% endif %}
+			{% if UC_IMAGE_ACTION %}<a href="{{ UC_IMAGE_ACTION }}"{% if S_IMAGE_ACTION_NEXT %} data-gallery-image-navigation="next"{% endif %}>{% endif %}<img src="{{ UC_IMAGE }}" alt="{{ IMAGE_NAME }}" class="postimage"/>{% if UC_IMAGE_ACTION %}</a>{% endif %}
 			{% if S_IMAGE_REPORTED %}<br /><br /><a href="{{ U_IMAGE_REPORTED }}"><span class="error">{{ lang('IMAGE_REPORTED') }}</span></a>{% endif %}
 		</div>
 	</div>
@@ -31,15 +33,15 @@
 	</div>
 {% endif %}
 
-{% if UC_PREV_IMAGE or UC_NEXT_IMAGE %}
+{% if U_PREV_IMAGE or U_NEXT_IMAGE %}
 <div class="post bg2">
 	<div class="inner">
 		<div style="text-align: center;">
 			<div style="vertical-align: middle; display: table-cell; width: 1%;">
-			{% if UC_PREV_IMAGE %}<div class="image_prev_image" title="{{ lang('VIEW_IMAGE') }}">{{ UC_PREV_IMAGE }}</div>{% endif %}
+			{% if U_PREV_IMAGE %}<div class="image_prev_image" title="{{ lang('VIEW_IMAGE') }}"><a href="{{ U_PREV_IMAGE }}" rel="prev" data-gallery-image-navigation="previous">{% if U_PREV_IMAGE_THUMB %}<img src="{{ U_PREV_IMAGE_THUMB }}" alt="{{ PREV_IMAGE_NAME }}">{% else %}&laquo;&laquo;&nbsp;{{ PREV_IMAGE_NAME }}{% endif %}</a></div>{% endif %}
 			</div>
 			<div style="vertical-align: middle; display: table-cell; width: 1%;">
-			{% if UC_NEXT_IMAGE %}<div class="image_next_image" title="{{ lang('VIEW_IMAGE') }}">{{ UC_NEXT_IMAGE }}</div>{% endif %}
+			{% if U_NEXT_IMAGE %}<div class="image_next_image" title="{{ lang('VIEW_IMAGE') }}"><a href="{{ U_NEXT_IMAGE }}" rel="next" data-gallery-image-navigation="next">{% if U_NEXT_IMAGE_THUMB %}<img src="{{ U_NEXT_IMAGE_THUMB }}" alt="{{ NEXT_IMAGE_NAME }}">{% else %}{{ NEXT_IMAGE_NAME }}&nbsp;&raquo;&raquo;{% endif %}</a></div>{% endif %}
 			</div>
 		</div>
 	</div>
@@ -422,3 +424,5 @@
 {% endif %}
 <br />
 {% include 'gallery/gallery_footer.html' %}
+</div>
+{% if S_AJAX_IMAGE_NAVIGATION %}{% INCLUDEJS '@phpbbgallery_core/js/image_navigation.js' %}{% endif %}

@@ -2,6 +2,18 @@
 	background: none top left no-repeat;
 }
 
+.phpbbgallery-image-page
+{
+	transition: opacity 120ms ease-in-out;
+}
+
+.phpbbgallery-image-page.is-loading
+{
+	cursor: progress;
+	opacity: 0.55;
+	pointer-events: none;
+}
+
 ul.profile-icons li.gallery-icon {
 	width: 20px; height: 20px;
 }

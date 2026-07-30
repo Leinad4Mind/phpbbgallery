@@ -423,13 +423,27 @@ class image
 			];
 		}
 		$this->db->sql_freeresult($result);
+		$display_navigation_thumbnails = (bool) $this->gallery_config->get('disp_nextprev_thumbnail');
+		$next_url = $next ? $this->helper->route('phpbbgallery_core_image', ['image_id' => (int) $next['image_id']]) : '';
+		$previous_url = $prev ? $this->helper->route('phpbbgallery_core_image', ['image_id' => (int) $prev['image_id']]) : '';
+		$image_action = $this->get_image_action((int) $image_id, $next);
 
 		$this->template->assign_vars([
-			'UC_NEXT_IMAGE' => ($next ? ($this->gallery_config->get('disp_nextprev_thumbnail') ? '<a href="' . $this->helper->route('phpbbgallery_core_image', ['image_id' => $next['image_id']]) . '"><img src="' . $this->helper->route('phpbbgallery_core_image_file_mini', ['image_id' => $next['image_id']]) . '" alt="' . $next['image_name'] . '"></a>' : '<a href="' . $this->helper->route('phpbbgallery_core_image', ['image_id' => $next['image_id']]) . '">' . $next['image_name'] . '&nbsp;&raquo;&raquo;</a>') : ''),
-			'UC_PREV_IMAGE' => ($prev ? ($this->gallery_config->get('disp_nextprev_thumbnail') ? '<a href="' . $this->helper->route('phpbbgallery_core_image', ['image_id' => $prev['image_id']]) . '"><img src="' . $this->helper->route('phpbbgallery_core_image_file_mini', ['image_id' => $prev['image_id']]) . '" alt="' . $prev['image_name'] . '"></a>' : '<a href="' . $this->helper->route('phpbbgallery_core_image', ['image_id' => $prev['image_id']]) . '">&laquo;&laquo;&nbsp;' . $prev['image_name'] . '</a>') : ''),
+			// Deprecated compatibility variables for third-party styles. Core styles
+			// render the structured values below and therefore escape image names.
+			'UC_NEXT_IMAGE' => $this->build_legacy_navigation_link($next, false, $display_navigation_thumbnails),
+			'UC_PREV_IMAGE' => $this->build_legacy_navigation_link($prev, true, $display_navigation_thumbnails),
+			'U_NEXT_IMAGE' => $next_url,
+			'U_PREV_IMAGE' => $previous_url,
+			'U_NEXT_IMAGE_THUMB' => ($next && $display_navigation_thumbnails) ? $this->helper->route('phpbbgallery_core_image_file_mini', ['image_id' => (int) $next['image_id']]) : '',
+			'U_PREV_IMAGE_THUMB' => ($prev && $display_navigation_thumbnails) ? $this->helper->route('phpbbgallery_core_image_file_mini', ['image_id' => (int) $prev['image_id']]) : '',
+			'NEXT_IMAGE_NAME' => $next ? (string) $next['image_name'] : '',
+			'PREV_IMAGE_NAME' => $prev ? (string) $prev['image_name'] : '',
 			'U_VIEW_ALBUM'  => $this->helper->route('phpbbgallery_core_album', ['album_id' => $album_id]),
 			'UC_IMAGE'      => $this->helper->route('phpbbgallery_core_image_file_medium', ['image_id' => (int) $image_id]),
-			'UC_IMAGE_ACTION' => $this->get_image_action((int) $image_id, $next),
+			'UC_IMAGE_ACTION' => $image_action,
+			'S_AJAX_IMAGE_NAVIGATION' => (bool) $this->gallery_config->get('ajax_navigation'),
+			'S_IMAGE_ACTION_NEXT' => $image_action !== '' && $image_action === $next_url,
 
 			'U_DELETE' => ($s_allowed_delete) ? $this->helper->route('phpbbgallery_core_image_delete', ['image_id' => $image_id]) : '',
 			'U_EDIT'   => ($s_allowed_edit) ? $this->helper->route('phpbbgallery_core_image_edit', ['image_id' => $image_id]) : '',
@@ -632,6 +646,33 @@ class image
 			]);
 		}
 		return $this->helper->render('gallery/viewimage_body.html', $page_title);
+	}
+
+	/**
+	 * Build the deprecated pre-rendered navigation link for third-party styles.
+	 *
+	 * @param array|false $image     Adjacent image data
+	 * @param bool        $previous  Whether this is the previous-image link
+	 * @param bool        $thumbnail Whether to render the mini image
+	 * @return string Legacy HTML link, or an empty string at the album edge
+	 */
+	protected function build_legacy_navigation_link(array|false $image, bool $previous, bool $thumbnail): string
+	{
+		if (!$image)
+		{
+			return '';
+		}
+
+		$image_id = (int) $image['image_id'];
+		$image_name = utf8_htmlspecialchars((string) $image['image_name']);
+		$image_url = utf8_htmlspecialchars($this->helper->route('phpbbgallery_core_image', ['image_id' => $image_id]));
+		if ($thumbnail)
+		{
+			$thumbnail_url = utf8_htmlspecialchars($this->helper->route('phpbbgallery_core_image_file_mini', ['image_id' => $image_id]));
+			return '<a href="' . $image_url . '"><img src="' . $thumbnail_url . '" alt="' . $image_name . '"></a>';
+		}
+
+		return '<a href="' . $image_url . '">' . ($previous ? '&laquo;&laquo;&nbsp;' : '') . $image_name . ($previous ? '' : '&nbsp;&raquo;&raquo;') . '</a>';
 	}
 
 	/**
