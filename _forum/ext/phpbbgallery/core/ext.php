@@ -85,7 +85,18 @@ class ext extends \phpbb\extension\base
 
 			default:
 				// Run parent enable step method
-				return parent::enable_step($old_state);
+				$next_state = parent::enable_step($old_state);
+				if ($next_state === false
+					&& ($this->container->get('config')['phpbb_gallery_bbcode_tag'] ?? 'image') === 'galleryimage')
+				{
+					$user = $this->container->get('user');
+					$user->add_lang_ext('phpbbgallery/core', 'install_gallery');
+					$this->container->get('template')->assign_var(
+						'L_EXTENSION_ENABLE_SUCCESS',
+						$user->lang('GALLERY_CORE_ENABLE_BBCODE_FALLBACK')
+					);
+				}
+				return $next_state;
 			break;
 		}
 	}

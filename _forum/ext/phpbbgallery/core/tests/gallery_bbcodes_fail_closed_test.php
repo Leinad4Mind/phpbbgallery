@@ -50,13 +50,17 @@ namespace phpbbgallery\core\tests
 			$migration = $this->gallery_migration($this->createMock(driver_interface::class));
 			$steps = $migration->update_data();
 
-			$this->assertCount(2, $steps);
-			$this->assertSame('custom', $steps[0][0]);
-			$this->assertSame([[$migration, 'ensure_gallery_bbcodes']], $steps[0][1]);
+			$this->assertCount(3, $steps);
+			$this->assertSame([
+				'config.add',
+				['phpbb_gallery_bbcode_tag', 'image'],
+			], $steps[0]);
+			$this->assertSame('custom', $steps[1][0]);
+			$this->assertSame([[$migration, 'ensure_gallery_bbcodes']], $steps[1][1]);
 			$this->assertSame([
 				'config.add',
 				['phpbb_gallery_bbcode_ready', 1],
-			], $steps[1]);
+			], $steps[2]);
 		}
 
 		/**
@@ -85,32 +89,21 @@ namespace phpbbgallery\core\tests
 
 		public static function conflicting_tag_provider(): array
 		{
-			$gallery_image = [
-				'bbcode_id'           => 31,
-				'bbcode_match'        => '[image]{NUMBER}[/image]',
-				'bbcode_helpline'     => 'GALLERY_HELPLINE_ALBUM',
-				'second_pass_replace' => '/gallery/image/${1}/mini',
-			];
-
 			return [
-				'image conflict' => ['image', [
+				'both image tags conflict' => ['galleryimage', [
 					'image' => [[
 						'bbcode_id'           => 77,
 						'bbcode_match'        => '[image={TEXT}]{TEXT}[/image]',
 						'bbcode_helpline'     => 'Third-party image BBCode',
 						'second_pass_replace' => '/custom/image/${1}',
 					]],
-					'album' => [],
-					'max'   => [],
-				]],
-				'album conflict' => ['album', [
-					'image' => [$gallery_image],
-					'album' => [[
-						'bbcode_id'           => 88,
-						'bbcode_match'        => '[album={TEXT}]{TEXT}[/album]',
-						'bbcode_helpline'     => 'Third-party album BBCode',
-						'second_pass_replace' => '/music/${1}',
+					'galleryimage' => [[
+						'bbcode_id'           => 78,
+						'bbcode_match'        => '[galleryimage={TEXT}]{TEXT}[/galleryimage]',
+						'bbcode_helpline'     => 'Third-party Gallery image BBCode',
+						'second_pass_replace' => '/custom/gallery/${1}',
 					]],
+					'album' => [],
 					'max'   => [],
 				]],
 			];
@@ -234,6 +227,10 @@ namespace phpbbgallery\core\tests
 					if (str_contains($result, "LOWER(bbcode_tag) = 'image'"))
 					{
 						return !empty($rows['image']) ? array_shift($rows['image']) : false;
+					}
+					if (str_contains($result, "LOWER(bbcode_tag) = 'galleryimage'"))
+					{
+						return !empty($rows['galleryimage']) ? array_shift($rows['galleryimage']) : false;
 					}
 					if (str_contains($result, "LOWER(bbcode_tag) = 'album'"))
 					{

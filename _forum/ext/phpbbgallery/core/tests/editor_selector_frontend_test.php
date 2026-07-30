@@ -35,6 +35,7 @@ final class editor_selector_frontend_test extends TestCase
 		$this->assertStringContainsString('{% if S_GALLERY_SELECTOR %}', $template);
 		$this->assertStringContainsString('<dialog id="phpbbgallery-selector-dialog"', $template);
 		$this->assertStringContainsString('data-endpoint="{{ U_GALLERY_SELECTOR }}"', $template);
+		$this->assertStringContainsString("GALLERY_BBCODE_TAG|default('image')", $template);
 		$this->assertStringContainsString('aria-labelledby="phpbbgallery-selector-title"', $template);
 		$this->assertStringContainsString('role="status" aria-live="polite"', $template);
 		$this->assertStringContainsString('data-gallery-selector-album', $template);
@@ -49,7 +50,8 @@ final class editor_selector_frontend_test extends TestCase
 		$javascript = $this->read('styles/all/template/js/editor_selector.js');
 
 		$this->assertStringContainsString('Number.isInteger(imageId)', $javascript);
-		$this->assertStringContainsString("var bbcode = '[image]' + imageId + '[/image]'", $javascript);
+		$this->assertStringContainsString("dialog.getAttribute('data-bbcode-tag') || 'image'", $javascript);
+		$this->assertStringContainsString("var bbcode = '[' + bbcodeTag + ']' + imageId + '[/' + bbcodeTag + ']'", $javascript);
 		$this->assertStringContainsString("activeTrigger.closest('form')", $javascript);
 		$this->assertStringContainsString("form.querySelector('textarea[name=\"message\"]')", $javascript);
 		$this->assertStringContainsString('window.insert_text(bbcode, true)', $javascript);

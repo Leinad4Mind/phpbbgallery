@@ -104,7 +104,8 @@
 			return;
 		}
 
-		var bbcode = '[image]' + imageId + '[/image]';
+		var bbcodeTag = dialog.getAttribute('data-bbcode-tag') || 'image';
+		var bbcode = '[' + bbcodeTag + ']' + imageId + '[/' + bbcodeTag + ']';
 		textarea.focus();
 		if (form.id === 'postform' && typeof window.insert_text === 'function')
 		{

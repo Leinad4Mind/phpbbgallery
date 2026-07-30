@@ -51,7 +51,9 @@ $lang = array_merge($lang, [
 
 	'GALLERY'                => 'Galerie',
 	'GALLERY_EXPLAIN'        => 'Images de la Galerie',
-	'GALLERY_HELPLINE_ALBUM' => 'Images de la Galerie : au moyen de ce BBCode [image]image_id[/image], ajoutez dans votre message une image de la galerie.',
+	'GALLERY_HELPLINE_IMAGE' => 'Images de la Galerie : au moyen de ce BBCode [image]image_id[/image], ajoutez dans votre message une image de la galerie.',
+	'GALLERY_HELPLINE_GALLERYIMAGE' => 'Image de la galerie : [galleryimage]image_id[/galleryimage], utilisé car [image] appartient déjà à un autre BBCode personnalisé.',
+	'GALLERY_HELPLINE_IMAGE_LEGACY' => 'Image de la galerie : le BBCode historique [album]image_id[/album] permet d’ajouter une image de la galerie à votre message.',
 	'GALLERY_POPUP'          => 'Galerie',
 	'GALLERY_POPUP_HELPLINE' => 'Ouvrir une nouvelle fenêtre, où vous pouvez sélectionner vos images récentes et charger de nouvelles images.',
 

@@ -17,6 +17,10 @@ use phpbb\db\migration\migration;
  */
 class gallery_bbcodes extends migration
 {
+	private const IMAGE_TAG = 'image';
+	private const FALLBACK_IMAGE_TAG = 'galleryimage';
+	private const LEGACY_IMAGE_TAG = 'album';
+
 	public static function depends_on(): array
 	{
 		return ['\\phpbbgallery\\core\\migrations\\forum_index_images'];
@@ -25,6 +29,7 @@ class gallery_bbcodes extends migration
 	public function update_data(): array
 	{
 		return [
+			['config.add', ['phpbb_gallery_bbcode_tag', self::IMAGE_TAG]],
 			['custom', [[$this, 'ensure_gallery_bbcodes']]],
 			['config.add', ['phpbb_gallery_bbcode_ready', 1]],
 		];
@@ -35,20 +40,28 @@ class gallery_bbcodes extends migration
 		return [
 			['config.remove', ['phpbb_gallery_bbcode_ready']],
 			['custom', [[$this, 'remove_legacy_alias']]],
+			['config.remove', ['phpbb_gallery_bbcode_tag']],
 		];
 	}
 
 	public function ensure_gallery_bbcodes(): void
 	{
 		$template = $this->gallery_template();
-		$definitions = [
-			'image' => true,
-			'album' => false,
-		];
-		$rows = [];
+		[$image_tag, $image_row] = $this->select_image_bbcode();
+		$definitions = [$image_tag => true];
+		$rows = [$image_tag => $image_row];
+		$album_row = $this->get_bbcode(self::LEGACY_IMAGE_TAG);
+		if (!$album_row || $this->is_gallery_bbcode($album_row, self::LEGACY_IMAGE_TAG))
+		{
+			$definitions[self::LEGACY_IMAGE_TAG] = false;
+			$rows[self::LEGACY_IMAGE_TAG] = $album_row;
+		}
 		foreach (array_keys($definitions) as $tag)
 		{
-			$rows[$tag] = $this->get_bbcode($tag);
+			if (!array_key_exists($tag, $rows))
+			{
+				$rows[$tag] = $this->get_bbcode($tag);
+			}
 			if ($rows[$tag] && !$this->is_gallery_bbcode($rows[$tag], $tag))
 			{
 				// Never overwrite an unrelated custom BBCode that happens to use this tag.
@@ -73,6 +86,7 @@ class gallery_bbcodes extends migration
 			$new_ids[$tag] = $next_id++;
 		}
 
+		$this->config->set('phpbb_gallery_bbcode_tag', $image_tag);
 		foreach ($definitions as $tag => $display_on_posting)
 		{
 			$this->install_or_update(
@@ -94,12 +108,40 @@ class gallery_bbcodes extends migration
 		$this->db->sql_query($sql);
 	}
 
+	/**
+	 * Preserve an unrelated [image] BBCode and fall back to [galleryimage].
+	 *
+	 * @return array{0: string, 1: array|false}
+	 */
+	private function select_image_bbcode(): array
+	{
+		$configured_tag = strtolower((string) ($this->config['phpbb_gallery_bbcode_tag'] ?? self::IMAGE_TAG));
+		if ($configured_tag === self::FALLBACK_IMAGE_TAG)
+		{
+			return [self::FALLBACK_IMAGE_TAG, $this->get_bbcode(self::FALLBACK_IMAGE_TAG)];
+		}
+
+		$image_row = $this->get_bbcode(self::IMAGE_TAG);
+		if (!$image_row || $this->is_gallery_bbcode($image_row, self::IMAGE_TAG))
+		{
+			return [self::IMAGE_TAG, $image_row];
+		}
+
+		return [self::FALLBACK_IMAGE_TAG, $this->get_bbcode(self::FALLBACK_IMAGE_TAG)];
+	}
+
 	private function install_or_update(string $tag, bool $display_on_posting, string $template,
 		array|false $row, ?int $bbcode_id): void
 	{
 		$replacement_reference = '$' . '{1}';
+		$helpline = match ($tag)
+		{
+			self::FALLBACK_IMAGE_TAG => 'GALLERY_HELPLINE_GALLERYIMAGE',
+			self::LEGACY_IMAGE_TAG => 'GALLERY_HELPLINE_IMAGE_LEGACY',
+			default => 'GALLERY_HELPLINE_IMAGE',
+		};
 		$sql_ary = [
-			'bbcode_helpline'     => 'GALLERY_HELPLINE_ALBUM',
+			'bbcode_helpline'     => $helpline,
 			'display_on_posting'  => $display_on_posting ? 1 : 0,
 			'bbcode_match'        => '[' . $tag . ']{NUMBER}[/' . $tag . ']',
 			'bbcode_tpl'          => $template,
@@ -141,8 +183,18 @@ class gallery_bbcodes extends migration
 
 	private function is_gallery_bbcode(array $row, string $tag): bool
 	{
+		$helpline = match ($tag)
+		{
+			self::FALLBACK_IMAGE_TAG => 'GALLERY_HELPLINE_GALLERYIMAGE',
+			self::LEGACY_IMAGE_TAG => 'GALLERY_HELPLINE_IMAGE_LEGACY',
+			default => 'GALLERY_HELPLINE_IMAGE',
+		};
+		$is_legacy_helpline = $tag !== self::FALLBACK_IMAGE_TAG
+			&& ($row['bbcode_helpline'] ?? '') === 'GALLERY_HELPLINE_ALBUM';
+
 		return ($row['bbcode_match'] ?? '') === '[' . $tag . ']{NUMBER}[/' . $tag . ']'
-			&& (($row['bbcode_helpline'] ?? '') === 'GALLERY_HELPLINE_ALBUM'
+			&& (($row['bbcode_helpline'] ?? '') === $helpline
+				|| $is_legacy_helpline
 				|| str_contains((string) ($row['second_pass_replace'] ?? ''), '/gallery/image/'));
 	}
 

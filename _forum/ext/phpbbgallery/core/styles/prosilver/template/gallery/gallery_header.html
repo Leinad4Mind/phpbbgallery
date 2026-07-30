@@ -19,7 +19,8 @@
 	// <![CDATA[
 	function insert_image(image_id, field_id)
 	{
-		opener.document.forms['postform'].message.value += '[image]' + image_id +'[/image]';
+		var bbcodeTag = '{{ GALLERY_BBCODE_TAG|default('image')|escape('js') }}';
+		opener.document.forms['postform'].message.value += '[' + bbcodeTag + ']' + image_id + '[/' + bbcodeTag + ']';
 		document.getElementById('inserted_' + field_id).style.display = 'block';
 	}
 	// ]]>

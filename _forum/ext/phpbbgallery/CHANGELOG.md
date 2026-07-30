@@ -135,6 +135,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Preserved unrelated custom [image] BBCodes during installation by selecting [galleryimage] for new Gallery content while retaining [album] only as a hidden compatibility alias for historical posts.
 - Corrected the BBOOTS and FLATBOOTS rating selectors to use the translated DO_NOT_RATE_IMAGE label instead of displaying an undefined language key.
 - Completed Gallery add-on release packages with their declared GPL license and excluded development-only PHPUnit files from EPV validation.
 - Prevented member profiles from rendering an undefined Gallery image block when profile images are disabled.

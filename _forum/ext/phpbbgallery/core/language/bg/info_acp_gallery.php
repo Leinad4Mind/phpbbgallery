@@ -35,7 +35,9 @@ $lang = array_merge($lang, [
 
 	'GALLERY'                => 'Галерия',
 	'GALLERY_EXPLAIN'        => 'Галерия',
-	'GALLERY_HELPLINE_ALBUM' => 'Изображение: [image]image_id[/image], с този BBCode можете да добавите изборажение към поста си.',
+	'GALLERY_HELPLINE_IMAGE' => 'Изображение: [image]image_id[/image], с този BBCode можете да добавите изборажение към поста си.',
+	'GALLERY_HELPLINE_GALLERYIMAGE' => 'Изображение: [galleryimage]image_id[/galleryimage], използва се, защото [image] принадлежи на друг персонализиран BBCode.',
+	'GALLERY_HELPLINE_IMAGE_LEGACY' => 'Изображение: [album]image_id[/album], с този наследен BBCode можете да добавите изображение към публикацията си.',
 	'GALLERY_POPUP'          => 'Галерия',
 	'GALLERY_POPUP_HELPLINE' => 'Отвори popup където можете да изберете последните си избражения и да добавите нови.',
 
