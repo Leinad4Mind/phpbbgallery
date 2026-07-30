@@ -102,6 +102,41 @@ final class template_syntax_test extends TestCase
 		}
 	}
 
+	public function test_gallery_and_forum_index_statistics_have_style_appropriate_labels_and_layouts(): void
+	{
+		$core_root = dirname(__DIR__);
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$index = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/index_body.html');
+			$this->assertStringContainsString("lang('GALLERY_STATISTICS')", $index, $style);
+			$this->assertStringNotContainsString("lang('STATISTICS')", $index, $style);
+		}
+
+		$flatboots_statistic = (string) file_get_contents(
+			$core_root . '/styles/FLATBOOTS/template/event/index_body_block_stats_append.html'
+		);
+		$this->assertStringContainsString('id="phpbbgallery-index-total-images"', $flatboots_statistic);
+		$this->assertStringContainsString("document.querySelector('.panel-stats > .panel-body > .row')", $flatboots_statistic);
+		$this->assertStringContainsString('statisticsRow.appendChild(statistic)', $flatboots_statistic);
+		$this->assertStringContainsString('@media (max-width: 767px)', $flatboots_statistic);
+	}
+
+	public function test_all_rating_selectors_use_the_defined_do_not_rate_language_key(): void
+	{
+		$core_root = dirname(__DIR__);
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			foreach (['comment_body.html', 'viewimage_body.html'] as $template)
+			{
+				$source = (string) file_get_contents(
+					$core_root . '/styles/' . $style . '/template/gallery/' . $template
+				);
+				$this->assertStringContainsString("lang('DO_NOT_RATE_IMAGE')", $source, $style . '/' . $template);
+				$this->assertStringNotContainsString("lang('DONT_RATE_IMAGE')", $source, $style . '/' . $template);
+			}
+		}
+	}
+
 	public function test_optional_acp_blocks_default_to_empty_arrays(): void
 	{
 		$core_root = dirname(__DIR__);

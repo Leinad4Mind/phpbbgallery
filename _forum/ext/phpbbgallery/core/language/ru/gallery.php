@@ -131,6 +131,7 @@ $lang = array_merge($lang, [
 
 	'GALLERY_IMAGE'                => 'Фото',
 	'GALLERY_IMAGES'               => 'Фотографии',
+	'GALLERY_STATISTICS'           => 'Статистика галереи',
 	'GALLERY_VIEWS'                => 'Просмотры',
 	'TOTAL_VIEWS'    => 'Всего просмотров',
 	'IGNORE_NOTUPTODATE_MESSAGE'   => 'Напомнить через неделю',

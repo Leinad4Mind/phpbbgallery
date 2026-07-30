@@ -308,7 +308,7 @@ function toggleElement(oElement)
 {% endif %}
 
 {% if TOTAL_IMAGES %}
-	<h3>{{ lang('STATISTICS') }}</h3>
+	<h3>{{ lang('GALLERY_STATISTICS') }}</h3>
 	<p>{{ TOTAL_IMAGES }}{% if TOTAL_VIEWS is not same as(false) %} &bull; {{ lang('TOTAL_VIEWS') }}{{ lang('COLON') }} <strong>{{ TOTAL_VIEWS }}</strong>{% endif %}{% if TOTAL_COMMENTS %} &bull; {{ TOTAL_COMMENTS }}{% endif %}{% if TOTAL_PGALLERIES %} &bull; {{ TOTAL_PGALLERIES }}{% if NEWEST_PGALLERIES %} &bull; {{ NEWEST_PGALLERIES }}{% endif %}{% endif %}</p>
 {% endif %}
 

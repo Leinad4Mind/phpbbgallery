@@ -1,1 +1,55 @@
-{% if PHPBBGALLERY_INDEX_STATS %}&bull; {{ lang('TOTAL_IMAGES') }} <b>{{ PHPBBGALLERY_INDEX_STATS }}</b>{% endif %}
+{% if PHPBBGALLERY_INDEX_STATS %}
+	<div id="phpbbgallery-index-total-images" class="col-md-2 col-sm-2 col-xs-4 text-center">
+		<span class="output text-green">{{ PHPBBGALLERY_INDEX_STATS }}</span>
+		<strong>{{ lang('TOTAL_IMAGES') }}</strong>
+	</div>
+	<style>
+		.phpbbgallery-seven-stats {
+			display: flex;
+			flex-wrap: wrap;
+		}
+		.phpbbgallery-seven-stats > .text-center {
+			float: none;
+			flex: 0 0 14.285714%;
+			max-width: 14.285714%;
+			width: 14.285714%;
+		}
+		.phpbbgallery-seven-stats > .visible-xs {
+			display: none !important;
+		}
+		@media (min-width: 768px) and (max-width: 991px) {
+			.phpbbgallery-seven-stats > .text-center {
+				flex-basis: 25%;
+				max-width: 25%;
+				width: 25%;
+			}
+		}
+		@media (max-width: 767px) {
+			.phpbbgallery-seven-stats > .text-center {
+				flex-basis: 33.333333%;
+				max-width: 33.333333%;
+				width: 33.333333%;
+			}
+		}
+	</style>
+	<script>
+		(function () {
+			function placeGalleryStatistic() {
+				var statistic = document.getElementById('phpbbgallery-index-total-images');
+				var statisticsRow = document.querySelector('.panel-stats > .panel-body > .row');
+				if (!statistic || !statisticsRow) {
+					return;
+				}
+
+				statisticsRow.classList.add('phpbbgallery-seven-stats');
+				statisticsRow.appendChild(statistic);
+			}
+
+			if (document.readyState === 'loading') {
+				document.addEventListener('DOMContentLoaded', placeGalleryStatistic);
+			} else {
+				placeGalleryStatistic();
+			}
+		}());
+	</script>
+{% endif %}

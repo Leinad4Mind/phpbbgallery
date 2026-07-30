@@ -137,6 +137,7 @@ $lang = array_merge($lang, [
 
 	'GALLERY_IMAGE'  => 'Immagine',
 	'GALLERY_IMAGES' => 'Immagini',
+	'GALLERY_STATISTICS' => 'Statistiche della galleria',
 	'GALLERY_VIEWS'  => 'Visualizzazioni',
 	'TOTAL_VIEWS'    => 'Visualizzazioni totali',
 

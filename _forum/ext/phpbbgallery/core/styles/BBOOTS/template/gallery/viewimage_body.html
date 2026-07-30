@@ -268,7 +268,7 @@
 						{% if rate_scale|length %}
 							<select class="selectpicker show-tick" data-container="body" data-style="btn-sm btn btn-default" name="rating" id="rating">
 							{% for rate_scale in rate_scale %}
-								{% if rate_scale.RATE_POINT == 1 %}<option value="0">{{ lang('DONT_RATE_IMAGE') }}</option>{% endif %}
+								{% if rate_scale.RATE_POINT == 1 %}<option value="0">{{ lang('DO_NOT_RATE_IMAGE') }}</option>{% endif %}
 								<option value="{{ rate_scale.RATE_POINT }}">{{ rate_scale.RATE_POINT }}</option>
 							{% endfor %}
 							</select>
