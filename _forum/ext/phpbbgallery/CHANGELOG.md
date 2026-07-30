@@ -25,6 +25,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Security
 
+- Disabled every packaged Gallery add-on before disabling the Core, preventing add-on services from breaking container compilation when their required Core parameters and services are unavailable.
 - Centralized active-contest privacy so public image pages, album listings and reusable image blocks hide entrant identity, descriptions, ratings, comment history and private sort side channels while preserving explicit owner and moderator exceptions.
 - Extended active-contest privacy to search terms and sorting, profile lists and counts, recent comments, top-rated results, album summaries and latest-image attribution.
 - Protected feed descriptions, favorite attribution and UCP subscription comment history with the same active-contest identity and result policies.

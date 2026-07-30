@@ -60,7 +60,30 @@ class notification_lifecycle_test extends TestCase
 			'phpbbgallery/export',
 			'phpbbgallery/favorite',
 			'phpbbgallery/feed',
+			'phpbbgallery/imagerevisions',
+			'phpbbgallery/bbtagsimages',
 		], $extension_manager->disabled);
+	}
+
+	public function test_every_packaged_addon_is_disabled_with_the_core(): void
+	{
+		$reflection = new \ReflectionClass(gallery_extension::class);
+		$extension = $reflection->newInstanceWithoutConstructor();
+		$sub_extensions = $reflection->getProperty('sub_extensions')->getValue($extension);
+		$packaged_addons = [];
+
+		foreach (glob(dirname(__DIR__, 2) . '/*/ext.php') as $extension_file)
+		{
+			$extension_name = basename(dirname($extension_file));
+			if ($extension_name !== 'core')
+			{
+				$packaged_addons[] = 'phpbbgallery/' . $extension_name;
+			}
+		}
+
+		sort($packaged_addons);
+		sort($sub_extensions);
+		$this->assertSame($packaged_addons, $sub_extensions);
 	}
 
 	public function test_purge_removes_every_registered_notification_type(): void
