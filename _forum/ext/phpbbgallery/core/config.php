@@ -120,9 +120,9 @@ class config
 		'thumbnail_quality'		=> 50,
 		'thumbnail_width'		=> 240,
 
-		//'viewtopic_icon'		=> true,
-		//'viewtopic_images'		=> true,
-		//'viewtopic_link'		=> false,
+		'viewtopic_icon'		=> true,
+		'viewtopic_images'		=> true,
+		'viewtopic_link'		=> false,
 
 		'watermark_changed'		=> 0,
 		'watermark_enabled'		=> true,

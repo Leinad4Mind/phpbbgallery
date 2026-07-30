@@ -1,0 +1,12 @@
+{% if postrow.S_GALLERY_IMAGE_COUNT|default(false) %}
+	<div class="user-profile-row profile-gallery-images">
+		<div class="user-profile-tag">{{ lang('GALLERY_IMAGES') }}</div>
+		<div class="user-profile-output">{% if postrow.U_POSTER_GALLERY_SEARCH %}<a href="{{ postrow.U_POSTER_GALLERY_SEARCH }}">{{ postrow.POSTER_GALLERY_IMAGES }}</a>{% else %}{{ postrow.POSTER_GALLERY_IMAGES }}{% endif %}</div>
+	</div>
+{% endif %}
+{% if postrow.U_POSTER_PERSONAL_ALBUM|default('') %}
+	<div class="user-profile-row profile-gallery-album">
+		<div class="user-profile-tag">{{ lang('PERSONAL_ALBUMS') }}</div>
+		<div class="user-profile-output"><a href="{{ postrow.U_POSTER_PERSONAL_ALBUM }}"><i class="fa fa-camera" aria-hidden="true"></i> {{ lang('PERSONAL_ALBUMS') }}</a></div>
+	</div>
+{% endif %}

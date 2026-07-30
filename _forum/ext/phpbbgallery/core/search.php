@@ -308,15 +308,37 @@ class search
 	 */
 	public function user_image_count(int $image_user_id): int
 	{
+		$counts = $this->user_image_counts([$image_user_id]);
+
+		return $counts[$image_user_id] ?? 0;
+	}
+
+	/**
+	 * Count visible images for several members in one query.
+	 *
+	 * Every requested member is returned, including members with a zero count.
+	 *
+	 * @param array $image_user_ids Members whose images are being counted
+	 * @return array<int, int> Image counts keyed by member ID
+	 */
+	public function user_image_counts(array $image_user_ids): array
+	{
+		$image_user_ids = array_values(array_unique(array_filter(array_map('intval', $image_user_ids), static fn(int $user_id): bool => $user_id > (int) ANONYMOUS)));
+		if (!$image_user_ids)
+		{
+			return [];
+		}
+
 		$this->gallery_auth->load_user_permissions((int) $this->user->data['user_id']);
 		$excluded_albums = $this->gallery_auth->get_exclude_zebra();
 		$viewable_albums = array_diff($this->gallery_auth->acl_album_ids('i_view'), $excluded_albums);
 		$moderated_albums = array_diff($this->gallery_auth->acl_album_ids('m_status'), $excluded_albums);
 		$viewer_id = (int) $this->user->data['user_id'];
+		$counts = array_fill_keys($image_user_ids, 0);
 
-		$sql = 'SELECT COUNT(image_id) AS count
+		$sql = 'SELECT image_user_id, COUNT(image_id) AS count
 			FROM ' . $this->images_table . '
-			WHERE image_user_id = ' . (int) $image_user_id . '
+			WHERE ' . $this->db->sql_in_set('image_user_id', $image_user_ids) . '
 				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
 				AND ' . \phpbbgallery\core\contest::private_data_visibility_sql('', $viewer_id, $moderated_albums) . '
 				AND (
@@ -324,12 +346,20 @@ class search
 						AND (image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . '
 							OR image_user_id = ' . $viewer_id . '))
 					OR ' . $this->db->sql_in_set('image_album_id', $moderated_albums, false, true) . '
-				)';
+				)
+			GROUP BY image_user_id';
 		$result = $this->db->sql_query($sql);
-		$row = $this->db->sql_fetchrow($result);
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$user_id = (int) $row['image_user_id'];
+			if (isset($counts[$user_id]))
+			{
+				$counts[$user_id] = (int) $row['count'];
+			}
+		}
 		$this->db->sql_freeresult($result);
 
-		return is_array($row) ? (int) $row['count'] : 0;
+		return $counts;
 	}
 
 

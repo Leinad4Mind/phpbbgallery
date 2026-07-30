@@ -22,7 +22,7 @@ final class template_syntax_test extends TestCase
 	public function test_modernized_templates_use_only_native_twig_syntax(): void
 	{
 		$template_paths = $this->template_paths();
-		$this->assertCount(161, $template_paths);
+		$this->assertCount(167, $template_paths);
 
 		foreach ($template_paths as $template_path)
 		{
@@ -73,6 +73,10 @@ final class template_syntax_test extends TestCase
 				}
 
 				$relative_path = substr($file->getPathname(), strlen($style_root) + 1);
+				if ($style === 'BBOOTS' && $relative_path === 'event' . DIRECTORY_SEPARATOR . 'ucp_pm_viewmessage_avatar_after.html')
+				{
+					continue;
+				}
 				$has_counterpart = false;
 				foreach ($base_directories as $base_directory)
 				{
@@ -240,7 +244,7 @@ final class template_syntax_test extends TestCase
 			}
 		}
 
-		$this->assertCount(90, $templates);
+		$this->assertCount(94, $templates);
 		foreach ($templates as $template)
 		{
 			$source = (string) file_get_contents($template);
@@ -371,6 +375,26 @@ final class template_syntax_test extends TestCase
 
 			$this->assertStringContainsString('{% if imageblock|default([])|length %}', $event, $style);
 			$this->assertStringContainsString('{% for imageblock in imageblock|default([]) %}', $polaroid, $style);
+		}
+	}
+
+	public function test_topic_and_private_message_profiles_use_style_appropriate_events(): void
+	{
+		$core_root = dirname(__DIR__);
+		$events = [
+			'prosilver' => 'ucp_pm_viewmessage_custom_fields_after.html',
+			'BBOOTS' => 'ucp_pm_viewmessage_avatar_after.html',
+			'FLATBOOTS' => 'ucp_pm_viewmessage_custom_fields_after.html',
+		];
+		foreach ($events as $style => $pm_event)
+		{
+			$topic = (string) file_get_contents($core_root . '/styles/' . $style . '/template/event/viewtopic_body_postrow_custom_fields_after.html');
+			$pm = (string) file_get_contents($core_root . '/styles/' . $style . '/template/event/' . $pm_event);
+
+			$this->assertStringContainsString('postrow.S_GALLERY_IMAGE_COUNT|default(false)', $topic, $style);
+			$this->assertStringContainsString('postrow.U_POSTER_PERSONAL_ALBUM', $topic, $style);
+			$this->assertStringContainsString('S_GALLERY_IMAGE_COUNT|default(false)', $pm, $style);
+			$this->assertStringContainsString('U_POSTER_PERSONAL_ALBUM', $pm, $style);
 		}
 	}
 

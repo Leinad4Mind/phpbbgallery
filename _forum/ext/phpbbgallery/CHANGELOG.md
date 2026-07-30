@@ -6,6 +6,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Added
 
+- Restored optional permission-filtered Gallery image counts and personal-album links in topic and private-message mini profiles, with batched loading and independent ACP controls.
 - Restored the permission-filtered contest winner search, grouped by contest and ordered newest first, with provenance-checked podium positions, pagination and Gallery index access.
 - Restored a responsive, accessible Gallery image selector in topic, reply, private-message and quick-reply editors, with album filtering, pagination and insertion at the active cursor.
 - Restored an optional permission-filtered recent and random Gallery image block above the forum index, with independent ACP limits, metadata and personal-album controls for all supported styles.
