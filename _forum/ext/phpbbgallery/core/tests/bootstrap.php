@@ -187,6 +187,7 @@ namespace
 	require_once dirname(__DIR__) . '/controller/upload.php';
 	require_once dirname(__DIR__) . '/controller/comment.php';
 	require_once dirname(__DIR__) . '/controller/image.php';
+	require_once dirname(__DIR__) . '/online_location.php';
 	require_once dirname(__DIR__) . '/event/main_listener.php';
 	require_once dirname(__DIR__) . '/event/mini_profile_listener.php';
 	require_once dirname(__DIR__) . '/event/permission_lifecycle_listener.php';

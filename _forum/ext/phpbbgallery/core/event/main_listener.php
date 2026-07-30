@@ -24,8 +24,8 @@ class main_listener implements EventSubscriberInterface
 			'core.index_modify_page_title'			=> 'display_forum_index_images',
 			'core.memberlist_view_profile'	       => 'user_profile_galleries',
 			'core.ucp_profile_info_modify_sql_ary' => 'preserve_personal_album_profile_field',
+			'core.viewonline_overwrite_location'   => 'overwrite_viewonline_location',
 			//'core.generate_profile_fields_template_data_before'	       => 'profile_fields',
-			//'core.viewonline_overwrite_location'	=> 'add_newspage_viewonline',
 		];
 	}
 	/** @var \phpbb\controller\helper */
@@ -43,6 +43,9 @@ class main_listener implements EventSubscriberInterface
 
 	/** @var \phpbbgallery\core\config  */
 	protected \phpbbgallery\core\config $gallery_config;
+
+	/** @var \phpbbgallery\core\online_location */
+	protected \phpbbgallery\core\online_location $online_location;
 	/** @var \phpbb\db\driver\driver_interface  */
 	protected \phpbb\db\driver\driver_interface $db;
 
@@ -60,11 +63,12 @@ class main_listener implements EventSubscriberInterface
 	 * @param \phpbbgallery\core\config $gallery_config
 	 * @param \phpbb\db\driver\driver_interface $db
 	 * @param string $users_table
+	 * @param \phpbbgallery\core\online_location $online_location
 	 */
 	public function __construct(\phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\user $user,
 								\phpbb\language\language $lang, \phpbbgallery\core\search $gallery_search,
 								\phpbbgallery\core\config $gallery_config, \phpbb\db\driver\driver_interface $db,
-								string $users_table)
+								string $users_table, \phpbbgallery\core\online_location $online_location)
 	{
 		$this->helper = $helper;
 		$this->template = $template;
@@ -74,7 +78,28 @@ class main_listener implements EventSubscriberInterface
 		$this->gallery_config = $gallery_config;
 		$this->db = $db;
 		$this->users_table = $users_table;
+		$this->online_location = $online_location;
 	}
+
+	/**
+	 * Replace phpBB's generic session location with a permission-safe Gallery location.
+	 *
+	 * @param \phpbb\event\data $event phpBB viewonline event
+	 * @return void
+	 */
+	public function overwrite_viewonline_location(\phpbb\event\data $event): void
+	{
+		$row = $event['row'];
+		$resolved = $this->online_location->resolve((string) ($row['session_page'] ?? ''));
+		if ($resolved === null)
+		{
+			return;
+		}
+
+		$event['location'] = $resolved['location'];
+		$event['location_url'] = $resolved['location_url'];
+	}
+
 	/**
 	 * Register the Gallery administrator permissions in phpBB's permission UI.
 	 *
