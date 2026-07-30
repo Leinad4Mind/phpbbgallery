@@ -33,6 +33,51 @@
 
 {% if S_GALLERY_OVERVIEW %}
 	<table cellspacing="1">
+		<caption>{{ lang('GALLERY_STATS') }}</caption>
+		<col class="col1" /><col class="col2" /><col class="col1" /><col class="col2" />
+	<thead>
+	<tr>
+		<th>{{ lang('STATISTIC') }}</th>
+		<th>{{ lang('VALUE') }}</th>
+		<th>{{ lang('STATISTIC') }}</th>
+		<th>{{ lang('VALUE') }}</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td>{{ lang('NUMBER_IMAGES') }}{{ lang('COLON') }}</td>
+		<td><strong>{{ TOTAL_IMAGES }}</strong></td>
+		<td>{{ lang('TOTAL_VIEWS') }}{{ lang('COLON') }}</td>
+		<td><strong>{{ TOTAL_VIEWS }}</strong></td>
+	</tr>
+	<tr>
+		<td>{{ lang('IMAGES_PER_DAY') }}{{ lang('COLON') }}</td>
+		<td><strong>{{ IMAGES_PER_DAY }}</strong></td>
+		<td>{{ lang('NUMBER_ALBUMS') }}{{ lang('COLON') }}</td>
+		<td><strong>{{ TOTAL_ALBUMS }}</strong></td>
+	</tr>
+	<tr>
+		<td>{{ lang('NUMBER_PERSONALS') }}{{ lang('COLON') }}</td>
+		<td><strong>{{ TOTAL_PERSONALS }}</strong></td>
+		<td>{{ lang('GUPLOAD_DIR_SIZE') }}{{ lang('COLON') }}</td>
+		<td><strong>{{ GUPLOAD_DIR_SIZE }}</strong></td>
+	</tr>
+	<tr>
+		<td>{{ lang('MEDIUM_DIR_SIZE') }}{{ lang('COLON') }}</td>
+		<td><strong>{{ MEDIUM_DIR_SIZE }}</strong></td>
+		<td>{{ lang('CACHE_DIR_SIZE') }}{{ lang('COLON') }}</td>
+		<td><strong>{{ CACHE_DIR_SIZE }}</strong></td>
+	</tr>
+	<tr>
+		<td>{{ lang('GALLERY_VERSION') }}{{ lang('COLON') }}</td>
+		<td><strong>{{ GALLERY_VERSION }}</strong></td>
+		<td></td>
+		<td></td>
+	</tr>
+	</tbody>
+	</table>
+
+	<table cellspacing="1">
 		<caption>{{ lang('GALLERY_SYSTEM_STATUS') }}</caption>
 		<col class="col1" /><col class="col2" /><col class="col1" />
 	<tbody>
@@ -97,51 +142,6 @@
 		<td style="color: {% if addon.S_ENABLED %}#009900;{% elseif addon.S_MISSING %}#CC0000;{% else %}#BC8A00;{% endif %}"><strong>{{ addon.STATUS }}</strong></td>
 	</tr>
 	{% endfor %}
-	</tbody>
-	</table>
-
-	<table cellspacing="1">
-		<caption>{{ lang('GALLERY_STATS') }}</caption>
-		<col class="col1" /><col class="col2" /><col class="col1" /><col class="col2" />
-	<thead>
-	<tr>
-		<th>{{ lang('STATISTIC') }}</th>
-		<th>{{ lang('VALUE') }}</th>
-		<th>{{ lang('STATISTIC') }}</th>
-		<th>{{ lang('VALUE') }}</th>
-	</tr>
-	</thead>
-	<tbody>
-	<tr>
-		<td>{{ lang('NUMBER_IMAGES') }}{{ lang('COLON') }}</td>
-		<td><strong>{{ TOTAL_IMAGES }}</strong></td>
-		<td>{{ lang('TOTAL_VIEWS') }}{{ lang('COLON') }}</td>
-		<td><strong>{{ TOTAL_VIEWS }}</strong></td>
-	</tr>
-	<tr>
-		<td>{{ lang('IMAGES_PER_DAY') }}{{ lang('COLON') }}</td>
-		<td><strong>{{ IMAGES_PER_DAY }}</strong></td>
-		<td>{{ lang('NUMBER_ALBUMS') }}{{ lang('COLON') }}</td>
-		<td><strong>{{ TOTAL_ALBUMS }}</strong></td>
-	</tr>
-	<tr>
-		<td>{{ lang('NUMBER_PERSONALS') }}{{ lang('COLON') }}</td>
-		<td><strong>{{ TOTAL_PERSONALS }}</strong></td>
-		<td>{{ lang('GUPLOAD_DIR_SIZE') }}{{ lang('COLON') }}</td>
-		<td><strong>{{ GUPLOAD_DIR_SIZE }}</strong></td>
-	</tr>
-	<tr>
-		<td>{{ lang('MEDIUM_DIR_SIZE') }}{{ lang('COLON') }}</td>
-		<td><strong>{{ MEDIUM_DIR_SIZE }}</strong></td>
-		<td>{{ lang('CACHE_DIR_SIZE') }}{{ lang('COLON') }}</td>
-		<td><strong>{{ CACHE_DIR_SIZE }}</strong></td>
-	</tr>
-	<tr>
-		<td>{{ lang('GALLERY_VERSION') }}{{ lang('COLON') }}</td>
-		<td><strong>{{ GALLERY_VERSION }}</strong></td>
-		<td></td>
-		<td></td>
-	</tr>
 	</tbody>
 	</table>
 

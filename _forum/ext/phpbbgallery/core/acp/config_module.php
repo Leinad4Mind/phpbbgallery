@@ -412,7 +412,7 @@ class config_module
 					'max_height'			=> ['lang' => 'MAX_HEIGHT',			'validate' => 'int',	'type' => 'text:7:5',		'append' => 'PIXELS'],
 					'allow_resize'			=> ['lang' => 'RESIZE_IMAGES',			'validate' => 'bool',	'type' => 'radio:yes_no'],
 					'allow_rotate'			=> ['lang' => 'ROTATE_IMAGES',			'validate' => 'bool',	'type' => 'radio:yes_no'],
-					'jpg_quality'			=> ['lang' => 'JPG_QUALITY',			'validate' => 'int',	'type' => 'text:7:5',		'explain' => true],
+					'jpg_quality'			=> ['lang' => 'JPG_QUALITY',			'validate' => 'int:0:100',	'type' => 'number:0:100',	'explain' => true],
 					//'medium_cache'			=> ['lang' => 'MEDIUM_CACHE',			'validate' => 'bool',	'type' => 'radio:yes_no'],
 					'medium_width'			=> ['lang' => 'RSZ_WIDTH',				'validate' => 'int',	'type' => 'text:7:4',		'append' => 'PIXELS'],
 					'medium_height'			=> ['lang' => 'RSZ_HEIGHT',			'validate' => 'int',	'type' => 'text:7:4',		'append' => 'PIXELS'],

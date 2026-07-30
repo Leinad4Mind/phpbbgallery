@@ -72,18 +72,18 @@ final class acp_environment_test extends TestCase
 		);
 	}
 
-	public function test_overview_keeps_status_and_statistics_in_separate_tables(): void
+	public function test_overview_shows_statistics_first_and_keeps_tables_separate(): void
 	{
 		$template = (string) file_get_contents(dirname(__DIR__) . '/adm/style/gallery_main.html');
-		$status = strpos($template, "lang('GALLERY_SYSTEM_STATUS')");
+		$statistics = strpos($template, "lang('GALLERY_STATS')");
+		$status = strpos($template, "lang('GALLERY_SYSTEM_STATUS')", $statistics);
 		$addons = strpos($template, "lang('GALLERY_ADDONS')", $status);
-		$statistics = strpos($template, "lang('GALLERY_STATS')", $addons);
 
+		$this->assertNotFalse($statistics);
 		$this->assertNotFalse($status);
 		$this->assertNotFalse($addons);
-		$this->assertNotFalse($statistics);
+		$this->assertLessThan($status, $statistics);
 		$this->assertLessThan($addons, $status);
-		$this->assertLessThan($statistics, $addons);
 		$system_table = substr($template, $status, $addons - $status);
 		$this->assertStringNotContainsString("<th>{{ lang('STATISTIC') }}</th>", $system_table);
 		$this->assertStringContainsString(
