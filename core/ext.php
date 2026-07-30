@@ -33,6 +33,8 @@ class ext extends \phpbb\extension\base
 		'phpbbgallery/export',
 		'phpbbgallery/favorite',
 		'phpbbgallery/feed',
+		'phpbbgallery/imagerevisions',
+		'phpbbgallery/bbtagsimages',
 	];
 
 	/**
