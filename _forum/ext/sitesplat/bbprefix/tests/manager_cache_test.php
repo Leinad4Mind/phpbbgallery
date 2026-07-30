@@ -286,6 +286,36 @@ class manager_cache_test extends TestCase
 		$this->assertArrayHasKey(2, $instances, 'instance 2 (topic 11) must be untouched');
 	}
 
+	public function test_index_visibility_ignores_an_instance_of_a_deleted_prefix(): void
+	{
+		$this->db->tables[BBPREFIX_INSTANCES_TABLE][] = [
+			'id' => 3,
+			'prefix' => 12,
+			'topic' => 10,
+			'ordered' => 1,
+			'token_data' => '',
+		];
+
+		$manager = $this->new_manager();
+
+		$this->assertTrue($manager->get_on_index_enabled(['row' => ['topic_id' => 10]]));
+	}
+
+	public function test_index_visibility_handles_rows_without_a_last_post_topic(): void
+	{
+		$manager = $this->new_manager();
+
+		$this->assertTrue($manager->get_on_index_enabled(['row' => ['forum_last_post_id' => 0]]));
+	}
+
+	public function test_index_visibility_uses_valid_prefix_rules(): void
+	{
+		$this->db->tables[BBPREFIX_TABLE][0]['on_index'] = 0;
+		$manager = $this->new_manager();
+
+		$this->assertFalse($manager->get_on_index_enabled(['row' => ['topic_id' => 10]]));
+	}
+
 	public function test_set_topic_prefixes_issues_a_single_reload_when_adding_several_prefixes(): void
 	{
 		$manager = $this->new_manager();

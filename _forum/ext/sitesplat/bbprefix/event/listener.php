@@ -431,11 +431,12 @@ class listener implements EventSubscriberInterface
 	 */
 	protected function load_prefixes_topic($event, $array_name = 'row', $block = 'prefix', $return_parsed = false, $type = null)
 	{
+		$topic_id = 0;
 		if (isset($event[$array_name]['topic_id']))
 		{
 			$topic_id = (int) $event[$array_name]['topic_id'];
 		}
-		else if (isset($event[$array_name]['forum_last_post_id']))
+		else if (isset($event[$array_name]['forum_last_post_topic_id']))
 		{
 			$topic_id = (int) $event[$array_name]['forum_last_post_topic_id'];
 		}

@@ -1094,20 +1094,28 @@ class manager
 	 */
 	public function get_on_index_enabled($event)
 	{
+		$topic_id = 0;
 		if (isset($event['row']['topic_id']))
 		{
 			$topic_id = (int) $event['row']['topic_id'];
 		}
-		else if (isset($event['row']['forum_last_post_id']))
+		else if (isset($event['row']['forum_last_post_topic_id']))
 		{
 			$topic_id = (int) $event['row']['forum_last_post_topic_id'];
 		}
-		$onindex = true;
-		foreach($this->prefix_instances as $key => $product)
+
+		if (!$topic_id)
 		{
-			if ( $product['topic'] == (int) $topic_id )
+			return true;
+		}
+
+		$onindex = true;
+		foreach ($this->prefix_instances as $product)
+		{
+			$prefix_id = (int) $product['prefix'];
+			if ((int) $product['topic'] === $topic_id && isset($this->prefixes[$prefix_id]))
 			{
-			 	$onindex = $onindex && $this->prefixes[$product['prefix']]['on_index'];
+				$onindex = $onindex && (bool) $this->prefixes[$prefix_id]['on_index'];
 			}
 		}
 		return $onindex;
