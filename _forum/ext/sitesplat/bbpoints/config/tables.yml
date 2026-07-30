@@ -1,2 +1,3 @@
 parameters:
     sitesplat.bbpoints.table: '%core.table_prefix%bbpoints'
+    sitesplat.bbpoints.operations_table: '%core.table_prefix%bbpoints_operations'

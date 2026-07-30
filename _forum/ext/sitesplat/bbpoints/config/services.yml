@@ -10,6 +10,18 @@ services:
             - '@config'
             - '@notification_manager'
 
+    sitesplat.bbpoints.ledger:
+        class: sitesplat\bbpoints\core\ledger
+        arguments:
+            - '@dbal.conn'
+            - '@cache.driver'
+            - '@dispatcher'
+            - '%sitesplat.bbpoints.table%'
+            - '%sitesplat.bbpoints.operations_table%'
+            - '%tables.users%'
+            - '%tables.posts%'
+            - '%tables.topics%'
+
     sitesplat.bbpoints.admin_controller:
         class: sitesplat\bbpoints\controller\admin_controller
         arguments:
@@ -24,6 +36,7 @@ services:
             - '%core.root_path%'
             - '%core.php_ext%'
             - '%sitesplat.bbpoints.table%'
+            - '%sitesplat.bbpoints.operations_table%'
             - '@sitesplat.bbpoints.helper'
 
     sitesplat.bbpoints.controller:
