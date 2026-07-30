@@ -78,6 +78,8 @@ namespace phpbbgallery\core\tests
 				$this->assertNotSame($by_tag['image']['bbcode_id'], $by_tag['album']['bbcode_id']);
 				$this->assertSame(1, $by_tag['image']['display_on_posting']);
 				$this->assertSame(0, $by_tag['album']['display_on_posting']);
+				$this->assertSame('GALLERY_HELPLINE_IMAGE', $by_tag['image']['bbcode_helpline']);
+				$this->assertSame('GALLERY_HELPLINE_IMAGE_LEGACY', $by_tag['album']['bbcode_helpline']);
 				$this->assertStringContainsString($expected_base_url . '{NUMBER}/source', $by_tag['image']['bbcode_tpl']);
 				$this->assertStringContainsString($expected_base_url . '${1}/source', $by_tag['image']['second_pass_replace']);
 				$this->assertStringNotContainsString('sid=', serialize($inserts));
@@ -91,12 +93,14 @@ namespace phpbbgallery\core\tests
 			$migration = $this->migration($this->createMock(driver_interface::class), []);
 
 			$this->assertSame([
+				['config.add', ['phpbb_gallery_bbcode_tag', 'image']],
 				['custom', [[$migration, 'ensure_gallery_bbcodes']]],
 				['config.add', ['phpbb_gallery_bbcode_ready', 1]],
 			], $migration->update_data());
 			$this->assertSame([
 				['config.remove', ['phpbb_gallery_bbcode_ready']],
 				['custom', [[$migration, 'remove_legacy_alias']]],
+				['config.remove', ['phpbb_gallery_bbcode_tag']],
 			], $migration->revert_data());
 		}
 
@@ -139,6 +143,8 @@ namespace phpbbgallery\core\tests
 			$this->assertSame($updates[1]['values'], $updates[3]['values']);
 			$this->assertSame('[image]{NUMBER}[/image]', $updates[0]['values']['bbcode_match']);
 			$this->assertSame('[album]{NUMBER}[/album]', $updates[1]['values']['bbcode_match']);
+			$this->assertSame('GALLERY_HELPLINE_IMAGE', $updates[0]['values']['bbcode_helpline']);
+			$this->assertSame('GALLERY_HELPLINE_IMAGE_LEGACY', $updates[1]['values']['bbcode_helpline']);
 			$this->assertArrayNotHasKey('bbcode_id', $updates[0]['values']);
 			$this->assertArrayNotHasKey('bbcode_id', $updates[1]['values']);
 			$this->assertSame(2, $this->query_count($queries, 'WHERE bbcode_id = 31'));
@@ -148,7 +154,56 @@ namespace phpbbgallery\core\tests
 			$this->assertStringNotContainsString('sid=', serialize($updates));
 		}
 
-		public function test_unrelated_image_and_album_bbcodes_fail_with_a_localised_conflict(): void
+		public function test_unrelated_image_bbcode_is_preserved_and_uses_a_fallback_tag(): void
+		{
+			$custom_image = [
+				'bbcode_id'           => 113,
+				'bbcode_match'        => '[image=&quot;{INTTEXT?}&quot;]{TEXT}[/image]',
+				'bbcode_helpline'     => 'GALLERY_HELPLINE_ALBUM | custom URL image',
+				'second_pass_replace' => '',
+			];
+			$gallery_album = [
+				'bbcode_id'           => 47,
+				'bbcode_match'        => '[album]{NUMBER}[/album]',
+				'bbcode_helpline'     => 'GALLERY_HELPLINE_ALBUM',
+				'second_pass_replace' => '/gallery/image/${1}/mini',
+			];
+			$row_queues = [
+				'image'        => [$custom_image],
+				'galleryimage' => [false],
+				'album'        => [$gallery_album],
+				'max'          => [['max_bbcode_id' => 113]],
+			];
+			$built_arrays = [];
+			$queries = [];
+			$db = $this->database($row_queues, $built_arrays, $queries);
+			$migration = $this->migration($db, [
+				'enable_mod_rewrite'           => 1,
+				'phpbb_gallery_link_thumbnail' => 'image_page',
+			]);
+
+			$migration->ensure_gallery_bbcodes();
+
+			$inserts = array_values(array_filter(
+				$built_arrays,
+				static fn(array $entry): bool => $entry['operation'] === 'INSERT'
+			));
+			$updates = array_values(array_filter(
+				$built_arrays,
+				static fn(array $entry): bool => $entry['operation'] === 'UPDATE'
+			));
+			$this->assertCount(1, $inserts);
+			$this->assertCount(1, $updates);
+			$this->assertSame('galleryimage', $inserts[0]['values']['bbcode_tag']);
+			$this->assertSame('[galleryimage]{NUMBER}[/galleryimage]', $inserts[0]['values']['bbcode_match']);
+			$this->assertSame('GALLERY_HELPLINE_GALLERYIMAGE', $inserts[0]['values']['bbcode_helpline']);
+			$this->assertSame('[album]{NUMBER}[/album]', $updates[0]['values']['bbcode_match']);
+			$this->assertSame('GALLERY_HELPLINE_IMAGE_LEGACY', $updates[0]['values']['bbcode_helpline']);
+			$this->assertSame(0, $updates[0]['values']['display_on_posting']);
+			$this->assertSame(0, $this->query_count($queries, 'WHERE bbcode_id = 113'));
+		}
+
+		public function test_unrelated_album_bbcode_is_preserved_when_image_is_available(): void
 		{
 			$gallery_image = [
 				'bbcode_id'           => 31,
@@ -156,55 +211,31 @@ namespace phpbbgallery\core\tests
 				'bbcode_helpline'     => 'GALLERY_HELPLINE_ALBUM',
 				'second_pass_replace' => '/gallery/image/${1}/mini',
 			];
-			$conflicts = [
-				'image' => [
-					'image' => [[
-						'bbcode_id'           => 77,
-						'bbcode_match'        => '[image]{NUMBER}[/image]',
-						'bbcode_helpline'     => 'Custom linked image BBCode',
-						'second_pass_replace' => '/custom/image/${1}',
-					]],
-					'album' => [],
-					'max'   => [],
-				],
-				'album' => [
-					'image' => [$gallery_image],
-					'album' => [[
-						'bbcode_id'           => 88,
-						'bbcode_match'        => '[album={TEXT}]{TEXT}[/album]',
-						'bbcode_helpline'     => 'Custom music album BBCode',
-						'second_pass_replace' => '/music/${1}',
-					]],
-					'max'   => [],
-				],
+			$row_queues = [
+				'image' => [$gallery_image],
+				'album' => [[
+					'bbcode_id'           => 88,
+					'bbcode_match'        => '[album={TEXT}]{TEXT}[/album]',
+					'bbcode_helpline'     => 'Custom music album BBCode',
+					'second_pass_replace' => '/music/${1}',
+				]],
+				'max'   => [],
 			];
+			$built_arrays = [];
+			$queries = [];
+			$db = $this->database($row_queues, $built_arrays, $queries);
+			$migration = $this->migration($db, [
+				'enable_mod_rewrite'           => 1,
+				'phpbb_gallery_link_thumbnail' => 'none',
+			]);
 
-			foreach ($conflicts as $tag => $row_queues)
-			{
-				$built_arrays = [];
-				$queries = [];
-				$db = $this->database($row_queues, $built_arrays, $queries);
-				$migration = $this->migration($db, [
-					'enable_mod_rewrite'           => 1,
-					'phpbb_gallery_link_thumbnail' => 'none',
-				]);
+			$migration->ensure_gallery_bbcodes();
 
-				try
-				{
-					$migration->ensure_gallery_bbcodes();
-					$this->fail('The unrelated [' . $tag . '] BBCode must stop the migration.');
-				}
-				catch (migration_exception $exception)
-				{
-					$this->assertSame('GALLERY_BBCODE_CONFLICT', $exception->getMessage());
-					$this->assertSame(['[' . $tag . ']'], $exception->getParameters());
-				}
-
-				$conflicting_id = $tag === 'image' ? 77 : 88;
-				$this->assertSame([], $built_arrays, 'Preflight must finish before writing [' . $tag . '].');
-				$this->assertSame(0, $this->query_count($queries, 'WHERE bbcode_id = ' . $conflicting_id));
-				$this->assertSame(0, $this->query_count($queries, 'INSERT INTO'));
-			}
+			$this->assertCount(1, $built_arrays);
+			$this->assertSame('UPDATE', $built_arrays[0]['operation']);
+			$this->assertSame('[image]{NUMBER}[/image]', $built_arrays[0]['values']['bbcode_match']);
+			$this->assertSame(0, $this->query_count($queries, 'WHERE bbcode_id = 88'));
+			$this->assertSame(0, $this->query_count($queries, 'INSERT INTO'));
 		}
 
 		private function migration(driver_interface $db, array $values): gallery_bbcodes
@@ -237,6 +268,10 @@ namespace phpbbgallery\core\tests
 					if (str_contains($result, 'LOWER(bbcode_tag) = \'image\''))
 					{
 						return array_shift($row_queues['image']);
+					}
+					if (str_contains($result, "LOWER(bbcode_tag) = 'galleryimage'"))
+					{
+						return array_shift($row_queues['galleryimage']);
 					}
 					if (str_contains($result, 'LOWER(bbcode_tag) = \'album\''))
 					{

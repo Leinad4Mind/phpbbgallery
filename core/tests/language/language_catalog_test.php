@@ -248,6 +248,7 @@ class language_catalog_test extends TestCase
 				'GALLERY_BBCODE_CONFLICT',
 				'GALLERY_BBCODE_LIMIT_REACHED',
 				'GALLERY_CORE_ENABLE_SUCCESS',
+				'GALLERY_CORE_ENABLE_BBCODE_FALLBACK',
 				'GALLERY_REQUIREMENTS_MISSING',
 				'GALLERY_SUB_EXT_UNINSTALL',
 			], array_keys($language), basename($directory));

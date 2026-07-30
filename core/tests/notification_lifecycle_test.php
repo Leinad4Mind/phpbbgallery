@@ -43,6 +43,17 @@ class notification_lifecycle_test extends TestCase
 		$this->assertSame('GALLERY_CORE_ENABLE_SUCCESS', $manager->success_message);
 	}
 
+	public function test_enable_reports_when_galleryimage_is_selected_to_preserve_an_existing_image_bbcode(): void
+	{
+		$manager = $this->create_notification_manager();
+		$extension = $this->create_extension($manager, null, 'galleryimage');
+
+		$extension->enable_step('');
+		$this->assertFalse($extension->enable_step('notifications'));
+
+		$this->assertSame('GALLERY_CORE_ENABLE_BBCODE_FALLBACK', $manager->success_message);
+	}
+
 	public function test_disable_uses_the_same_types_and_disables_sub_extensions(): void
 	{
 		$manager = $this->create_notification_manager();
@@ -126,24 +137,27 @@ class notification_lifecycle_test extends TestCase
 	 * @param object|null $extension_manager
 	 * @return gallery_extension
 	 */
-	private function create_extension($notification_manager, $extension_manager = null)
+	private function create_extension($notification_manager, $extension_manager = null, string $bbcode_tag = 'image')
 	{
 		if ($extension_manager === null)
 		{
 			$extension_manager = $this->create_extension_manager();
 		}
 
-		$container = new class($notification_manager, $extension_manager) {
+		$container = new class($notification_manager, $extension_manager, $bbcode_tag) {
 			/** @var object */
 			private $notification_manager;
 
 			/** @var object */
 			private $extension_manager;
 
-			public function __construct($notification_manager, $extension_manager)
+			private string $bbcode_tag;
+
+			public function __construct($notification_manager, $extension_manager, string $bbcode_tag)
 			{
 				$this->notification_manager = $notification_manager;
 				$this->extension_manager = $extension_manager;
+				$this->bbcode_tag = $bbcode_tag;
 			}
 
 			public function get($service)
@@ -156,6 +170,11 @@ class notification_lifecycle_test extends TestCase
 				if ($service === 'ext.manager')
 				{
 					return $this->extension_manager;
+				}
+
+				if ($service === 'config')
+				{
+					return new \ArrayObject(['phpbb_gallery_bbcode_tag' => $this->bbcode_tag]);
 				}
 
 				if ($service === 'user')

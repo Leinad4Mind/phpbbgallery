@@ -109,22 +109,35 @@ class config_module
 						}
 						$acp_bbcodes = new \acp_bbcodes();
 						$bbcode_tpl = $this->bbcode_tpl($config_value);
-						foreach (['image' => true, 'album' => false] as $bbcode_tag => $display_on_posting)
+						$image_bbcode_tag = strtolower((string) ($config['phpbb_gallery_bbcode_tag'] ?? 'image'));
+						if (!in_array($image_bbcode_tag, ['image', 'galleryimage'], true))
+						{
+							$image_bbcode_tag = 'image';
+						}
+						$gallery_bbcodes = [$image_bbcode_tag => true];
+						$gallery_bbcodes['album'] = false;
+						foreach ($gallery_bbcodes as $bbcode_tag => $display_on_posting)
 						{
 							$bbcode_match = '[' . $bbcode_tag . ']{NUMBER}[/' . $bbcode_tag . ']';
+							$bbcode_helpline = match ($bbcode_tag)
+							{
+								'galleryimage' => 'GALLERY_HELPLINE_GALLERYIMAGE',
+								'album' => 'GALLERY_HELPLINE_IMAGE_LEGACY',
+								default => 'GALLERY_HELPLINE_IMAGE',
+							};
 							$sql_ary = $acp_bbcodes->build_regexp($bbcode_match, $bbcode_tpl);
 							$sql_ary = array_merge($sql_ary, [
 								'bbcode_match'        => $bbcode_match,
 								'bbcode_tpl'          => $bbcode_tpl,
 								'display_on_posting'  => $display_on_posting,
-								'bbcode_helpline'     => 'GALLERY_HELPLINE_ALBUM',
+								'bbcode_helpline'     => $bbcode_helpline,
 							]);
 							$sql = 'UPDATE ' . BBCODES_TABLE . '
 								SET ' . $db->sql_build_array('UPDATE', $sql_ary) . "
 								WHERE LOWER(bbcode_tag) = '" . $db->sql_escape($bbcode_tag) . "'
 									AND bbcode_match = '" . $db->sql_escape($bbcode_match) . "'
 									AND (
-										bbcode_helpline = 'GALLERY_HELPLINE_ALBUM'
+										bbcode_helpline = '" . $db->sql_escape($bbcode_helpline) . "'
 										OR second_pass_replace LIKE '%/gallery/image/%'
 									)";
 							$db->sql_query($sql);

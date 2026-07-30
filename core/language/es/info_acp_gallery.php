@@ -35,7 +35,9 @@ $lang = array_merge($lang, [
 
 	'GALLERY'                => 'Galería',
 	'GALLERY_EXPLAIN'        => 'Galería de imágenes',
-	'GALLERY_HELPLINE_ALBUM' => 'Imagen de la galería: [image]image_id[/image], con este BBCode puedes añadir una imagen de la galería a tu publicación.',
+	'GALLERY_HELPLINE_IMAGE' => 'Imagen de la galería: [image]image_id[/image], con este BBCode puedes añadir una imagen de la galería a tu publicación.',
+	'GALLERY_HELPLINE_GALLERYIMAGE' => 'Imagen de la galería: [galleryimage]image_id[/galleryimage], usado porque [image] pertenece a otro BBCode personalizado.',
+	'GALLERY_HELPLINE_IMAGE_LEGACY' => 'Imagen de la galería: [album]image_id[/album], con este BBCode heredado puedes añadir una imagen de la galería a tu publicación.',
 	'GALLERY_POPUP'          => 'Galería',
 	'GALLERY_POPUP_HELPLINE' => 'Abre una ventana emergente donde puedes seleccionar tus imágenes recientes y subir nuevas imágenes.',
 

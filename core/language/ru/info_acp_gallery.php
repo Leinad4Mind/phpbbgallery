@@ -32,7 +32,9 @@ $lang = array_merge($lang, [
 	'ACP_GALLERY_OVERVIEW'               => 'Обзор',
 	'GALLERY'                            => 'Галерея',
 	'GALLERY_EXPLAIN'                    => 'Фотогалерея',
-	'GALLERY_HELPLINE_ALBUM'             => 'Фото из галереи: [image]ID фото[/image]',
+	'GALLERY_HELPLINE_IMAGE'             => 'Фото из галереи: [image]ID фото[/image]',
+	'GALLERY_HELPLINE_GALLERYIMAGE'      => 'Фото из галереи: [galleryimage]ID фото[/galleryimage], используется, поскольку [image] принадлежит другому пользовательскому BBCode.',
+	'GALLERY_HELPLINE_IMAGE_LEGACY'      => 'Фото из галереи: [album]ID фото[/album] (устаревший BBCode)',
 	'GALLERY_POPUP'                      => 'Галерея',
 	'GALLERY_POPUP_HELPLINE'             => 'Выбрать фото из галереи или загрузить новое',
 	// Please do not change the copyright.

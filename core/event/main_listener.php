@@ -129,6 +129,7 @@ class main_listener implements EventSubscriberInterface
 			'lang_set'	=> ['info_acp_gallery', 'gallery', 'gallery_notifications'/*, 'permissions_gallery'*/],
 		];
 		$event['lang_set_ext'] = $lang_set_ext;
+		$this->template->assign_var('GALLERY_BBCODE_TAG', $this->gallery_config->get_bbcode_tag());
 		if ($this->gallery_config->get('disp_total_images') == 1)
 		{
 			$this->template->assign_vars([

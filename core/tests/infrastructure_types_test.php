@@ -29,6 +29,7 @@ final class infrastructure_types_test extends TestCase
 		$this->assertSame(25, $gallery_config->get('items_per_page'));
 		$this->assertFalse($gallery_config->get('allow_zip'));
 		$this->assertSame(0, $gallery_config->get('num_views'));
+		$this->assertSame('image', $gallery_config->get_bbcode_tag());
 		$this->assertSame(25, $gallery_config->get_all()['items_per_page']);
 
 		$gallery_config->set('allow_zip', true);
@@ -40,6 +41,11 @@ final class infrastructure_types_test extends TestCase
 		$this->assertTrue($gallery_config->get('allow_zip'));
 		$this->assertSame(4, $gallery_config->get('num_images'));
 		$this->assertSame(5, $gallery_config->get('num_views'));
+
+		$gallery_config->set('bbcode_tag', 'galleryimage');
+		$this->assertSame('galleryimage', $gallery_config->get_bbcode_tag());
+		$gallery_config->set('bbcode_tag', 'invalid');
+		$this->assertSame('image', $gallery_config->get_bbcode_tag());
 	}
 
 	public function test_gallery_title_uses_a_clean_custom_value_or_the_translated_default(): void

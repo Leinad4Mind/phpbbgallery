@@ -35,7 +35,9 @@ $lang = array_merge($lang, [
 
 	'GALLERY'                => 'Galerij',
 	'GALLERY_EXPLAIN'        => 'Galerij afbeelding',
-	'GALLERY_HELPLINE_ALBUM' => 'Galerij afbeelding: [image]image_id[/image], met deze BBCode kan je een afbeelding uit de galerij toevoegen aan je bericht.',
+	'GALLERY_HELPLINE_IMAGE' => 'Galerij afbeelding: [image]image_id[/image], met deze BBCode kan je een afbeelding uit de galerij toevoegen aan je bericht.',
+	'GALLERY_HELPLINE_GALLERYIMAGE' => 'Galerijafbeelding: [galleryimage]image_id[/galleryimage], gebruikt omdat [image] bij een andere aangepaste BBCode hoort.',
+	'GALLERY_HELPLINE_IMAGE_LEGACY' => 'Galerijafbeelding: [album]image_id[/album], met deze verouderde BBCode kan je een afbeelding uit de galerij aan je bericht toevoegen.',
 	'GALLERY_POPUP'          => 'Galerij',
 	'GALLERY_POPUP_HELPLINE' => 'Opent een popup-venster waarin je je eigen recente afbeeldingen kan selecteren en nieuwe afbeeldingen kan uploaden.',
 
