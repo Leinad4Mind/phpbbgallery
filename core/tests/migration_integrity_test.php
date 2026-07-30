@@ -30,6 +30,7 @@ use phpbbgallery\core\migrations\disp_resolution;
 use phpbbgallery\core\migrations\forum_index_images;
 use phpbbgallery\core\migrations\gallery_bbcodes;
 use phpbbgallery\core\migrations\viewtopic_profiles;
+use phpbbgallery\core\migrations\ajax_image_navigation;
 
 class migration_integrity_test extends TestCase
 {
@@ -54,6 +55,7 @@ class migration_integrity_test extends TestCase
 		forum_index_images::class,
 		gallery_bbcodes::class,
 		viewtopic_profiles::class,
+		ajax_image_navigation::class,
 	];
 
 	private array $temp_directories = [];
@@ -135,6 +137,23 @@ class migration_integrity_test extends TestCase
 			['\phpbbgallery\core\migrations\gallery_bbcodes'],
 			viewtopic_profiles::depends_on()
 		);
+		$this->assertSame(
+			['\phpbbgallery\core\migrations\viewtopic_profiles'],
+			ajax_image_navigation::depends_on()
+		);
+	}
+
+	public function test_ajax_image_navigation_migration_is_reversible_and_disabled_by_default(): void
+	{
+		$migration = (new \ReflectionClass(ajax_image_navigation::class))->newInstanceWithoutConstructor();
+
+		$this->assertSame([
+			['config.add', ['phpbb_gallery_ajax_navigation', 0]],
+		], $migration->update_data());
+		$this->assertSame([
+			['config.remove', ['phpbb_gallery_ajax_navigation']],
+		], $migration->revert_data());
+		$this->assertStringContainsString("'ajax_navigation'", (string) file_get_contents(dirname(__DIR__) . '/config.php'));
 	}
 
 	public function test_viewtopic_profile_migration_restores_reversible_switches(): void
@@ -689,6 +708,7 @@ class migration_integrity_test extends TestCase
 			'forum_index_images.php',
 			'gallery_bbcodes.php',
 			'viewtopic_profiles.php',
+			'ajax_image_navigation.php',
 		] as $migration)
 		{
 			require_once dirname(__DIR__) . '/migrations/' . $migration;

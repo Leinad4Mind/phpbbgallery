@@ -134,6 +134,32 @@ final class template_syntax_test extends TestCase
 		}
 	}
 
+	public function test_image_navigation_is_progressive_and_replaces_the_complete_view(): void
+	{
+		$core_root = dirname(__DIR__);
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$view_image = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/viewimage_body.html');
+			$this->assertStringContainsString('data-gallery-image-page', $view_image, $style);
+			$this->assertStringContainsString('data-ajax-navigation=', $view_image, $style);
+			$this->assertStringContainsString('data-gallery-image-navigation="previous"', $view_image, $style);
+			$this->assertStringContainsString('data-gallery-image-navigation="next"', $view_image, $style);
+			$this->assertStringContainsString("INCLUDEJS '@phpbbgallery_core/js/image_navigation.js'", $view_image, $style);
+			$this->assertLessThan(strpos($view_image, "include 'gallery/gallery_header.html'"), strpos($view_image, 'data-gallery-image-page'), $style);
+			$this->assertGreaterThan(strpos($view_image, "include 'gallery/gallery_footer.html'"), strrpos($view_image, '</div>'), $style);
+		}
+
+		$javascript = (string) file_get_contents($core_root . '/styles/all/template/js/image_navigation.js');
+		$this->assertStringContainsString('fetch(url, {', $javascript);
+		$this->assertStringContainsString("credentials: 'same-origin'", $javascript);
+		$this->assertStringContainsString('history.pushState', $javascript);
+		$this->assertStringContainsString("window.addEventListener('popstate'", $javascript);
+		$this->assertStringContainsString('window.scrollTo(0, scrollPosition)', $javascript);
+		$this->assertStringContainsString('window.location.assign(url)', $javascript);
+		$this->assertStringContainsString('phpbbgallery:imagechange', $javascript);
+		$this->assertStringContainsString('requestId !== requestSequence', $javascript);
+	}
+
 	public function test_quick_upload_uses_a_javascript_regex_from_the_configured_extensions(): void
 	{
 		$core_root = dirname(__DIR__);

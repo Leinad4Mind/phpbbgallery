@@ -122,6 +122,7 @@ class gallery_lifecycle extends \phpbb_functional_test_case
 		$this->assertSame('0', $this->config_value('phpbb_gallery_forum_index_personal'));
 		$this->assertSame('4', $this->config_value('phpbb_gallery_forum_index_random_count'));
 		$this->assertSame('4', $this->config_value('phpbb_gallery_forum_index_recent_count'));
+		$this->assertSame('0', $this->config_value('phpbb_gallery_ajax_navigation'));
 		$this->assertSame(1, $this->acl_option_count('a_gallery_manage'));
 		$this->assertSame(1, $this->acl_option_count('a_gallery_albums'));
 		$this->assertSame(1, $this->acl_option_count('a_gallery_import'));

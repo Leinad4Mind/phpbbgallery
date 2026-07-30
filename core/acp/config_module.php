@@ -449,6 +449,7 @@ class config_module
 					'link_imagepage'		=> ['lang' => 'UC_IMAGEPAGE',			'validate' => 'string',	'type' => 'custom',			'explain' => true,	'method' => 'uc_select'],
 					'link_image_name'		=> ['lang' => 'UC_IMAGE_NAME',			'validate' => 'string',	'type' => 'custom',			'method' => 'uc_select'],
 					'link_image_icon'		=> ['lang' => 'UC_IMAGE_ICON',			'validate' => 'string',	'type' => 'custom',			'method' => 'uc_select'],
+					'ajax_navigation'		=> ['lang' => 'AJAX_IMAGE_NAVIGATION',	'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 				],
 
 				'RRC_GINDEX'	=> [

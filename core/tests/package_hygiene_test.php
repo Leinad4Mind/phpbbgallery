@@ -77,6 +77,7 @@ class package_hygiene_test extends TestCase
 		$expected = [
 			'editor_selector.js',
 			'gallery_polaroid.js',
+			'image_navigation.js',
 			'jquery.fileupload-image.js',
 			'jquery.fileupload-process.js',
 			'jquery.fileupload-ui.js',
