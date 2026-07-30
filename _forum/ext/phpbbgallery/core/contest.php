@@ -327,11 +327,11 @@ class contest
 		$now ??= time();
 		$sql = 'SELECT contest_marked, contest_first, contest_second, contest_third
 			FROM ' . $this->contest_table . '
-			WHERE contest_id = ' . $contest_id . '
-				AND contest_album_id = ' . $album_id . '
+			WHERE contest_id = ' . (int) $contest_id . '
+				AND contest_album_id = ' . (int) $album_id . '
 				AND contest_marked IN (' . (int) block::IN_CONTEST . ', ' . self::FINALIZING_CONTEST . ')
-				AND contest_start + contest_end = ' . $end_time . '
-				AND contest_start + contest_end <= ' . $now;
+				AND contest_start + contest_end = ' . (int) $end_time . '
+				AND contest_start + contest_end <= ' . (int) $now;
 		$result = $this->db->sql_query_limit($sql, 1);
 		$contest = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
@@ -348,13 +348,13 @@ class contest
 			$third = $winners[2] ?? 0;
 			$sql = 'UPDATE ' . $this->contest_table . '
 				SET contest_marked = ' . self::FINALIZING_CONTEST . ',
-					contest_first = ' . $first . ',
-					contest_second = ' . $second . ',
-					contest_third = ' . $third . '
-				WHERE contest_id = ' . $contest_id . '
-					AND contest_album_id = ' . $album_id . '
+					contest_first = ' . (int) $first . ',
+					contest_second = ' . (int) $second . ',
+					contest_third = ' . (int) $third . '
+				WHERE contest_id = ' . (int) $contest_id . '
+					AND contest_album_id = ' . (int) $album_id . '
 					AND contest_marked = ' . (int) block::IN_CONTEST . '
-					AND contest_start + contest_end = ' . $end_time;
+					AND contest_start + contest_end = ' . (int) $end_time;
 			$this->db->sql_query($sql);
 
 			if ((int) $this->db->sql_affectedrows() !== 1)
@@ -376,10 +376,10 @@ class contest
 
 		$sql = 'UPDATE ' . $this->contest_table . '
 			SET contest_marked = ' . self::NO_CONTEST . '
-			WHERE contest_id = ' . $contest_id . '
-				AND contest_album_id = ' . $album_id . '
+			WHERE contest_id = ' . (int) $contest_id . '
+				AND contest_album_id = ' . (int) $album_id . '
 				AND contest_marked = ' . self::FINALIZING_CONTEST . '
-				AND contest_start + contest_end = ' . $end_time;
+				AND contest_start + contest_end = ' . (int) $end_time;
 		$this->db->sql_query($sql);
 
 		if ((int) $this->db->sql_affectedrows() === 1)
@@ -400,9 +400,12 @@ class contest
 	{
 		$sql = 'SELECT image_id
 			FROM ' . $this->images_table . '
-			WHERE image_album_id = ' . $album_id . '
+			WHERE image_album_id = ' . (int) $album_id . '
 				AND image_contest = ' . (int) block::IN_CONTEST . '
-				AND ' . $this->eligible_status_sql('image_status') . '
+				AND ' . $this->db->sql_in_set('image_status', [
+					block::STATUS_APPROVED,
+					block::STATUS_LOCKED,
+				]) . '
 			ORDER BY ' . $this->get_tabulation();
 		$result = $this->db->sql_query_limit($sql, self::NUM_IMAGES);
 		$winners = [];
@@ -427,10 +430,10 @@ class contest
 	{
 		$sql = 'SELECT contest_first, contest_second, contest_third
 			FROM ' . $this->contest_table . '
-			WHERE contest_id = ' . $contest_id . '
-				AND contest_album_id = ' . $album_id . '
+			WHERE contest_id = ' . (int) $contest_id . '
+				AND contest_album_id = ' . (int) $album_id . '
 				AND contest_marked = ' . self::FINALIZING_CONTEST . '
-				AND contest_start + contest_end = ' . $end_time;
+				AND contest_start + contest_end = ' . (int) $end_time;
 		$result = $this->db->sql_query_limit($sql, 1);
 		$contest = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
@@ -466,19 +469,19 @@ class contest
 		$rank_cases = [];
 		foreach ($winners as $rank => $image_id)
 		{
-			$rank_cases[] = 'WHEN ' . $image_id . ' THEN ' . ($rank + 1);
+			$rank_cases[] = 'WHEN ' . (int) $image_id . ' THEN ' . ((int) $rank + 1);
 		}
 
 		$rank_sql = $rank_cases ? 'CASE image_id ' . implode(' ', $rank_cases) . ' ELSE 0 END' : '0';
 		$sql = 'UPDATE ' . $this->images_table . '
 			SET image_contest_end = CASE
 					WHEN image_contest = ' . (int) block::IN_CONTEST . '
-						OR image_contest_end = ' . $end_time . ' THEN ' . $end_time . '
+						OR image_contest_end = ' . (int) $end_time . ' THEN ' . (int) $end_time . '
 					ELSE 0
 				END,
 				image_contest_rank = ' . $rank_sql . ',
 				image_contest = ' . self::NO_CONTEST . '
-			WHERE image_album_id = ' . $album_id;
+			WHERE image_album_id = ' . (int) $album_id;
 		$this->db->sql_query($sql);
 	}
 

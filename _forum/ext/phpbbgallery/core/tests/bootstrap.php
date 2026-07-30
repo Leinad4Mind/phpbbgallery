@@ -87,6 +87,14 @@ namespace
 		}
 	}
 
+	if (!function_exists('utf8_htmlspecialchars'))
+	{
+		function utf8_htmlspecialchars(string $value): string
+		{
+			return htmlspecialchars($value, ENT_COMPAT, 'UTF-8');
+		}
+	}
+
 	if (!defined('IN_PHPBB'))
 	{
 		define('IN_PHPBB', true);

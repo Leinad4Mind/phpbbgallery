@@ -53,6 +53,10 @@ final class infrastructure_types_test extends TestCase
 		$gallery_config = new gallery_config($config);
 
 		$this->assertSame('My &quot;Photos&quot; &amp; more', $gallery_config->get_title($language));
+		$this->assertStringContainsString(
+			'utf8_htmlspecialchars($title)',
+			(string) file_get_contents(dirname(__DIR__) . '/config.php')
+		);
 
 		$config['phpbb_gallery_title'] = '   ';
 		$this->assertSame('Gallery', $gallery_config->get_title($language));

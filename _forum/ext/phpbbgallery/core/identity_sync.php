@@ -91,28 +91,28 @@ class identity_sync
 		$sql = 'UPDATE ' . $this->images_table . "
 			SET image_username = '" . $username . "',
 				image_username_clean = '" . $username_clean . "'
-			WHERE image_user_id = " . $user_id;
+			WHERE image_user_id = " . (int) $user_id;
 		$this->db->sql_query($sql);
 
 		$sql = 'UPDATE ' . $this->comments_table . "
 			SET comment_username = '" . $username . "'
-			WHERE comment_user_id = " . $user_id;
+			WHERE comment_user_id = " . (int) $user_id;
 		$this->db->sql_query($sql);
 
 		$sql = 'UPDATE ' . $this->albums_table . "
 			SET album_last_username = '" . $username . "'
-			WHERE album_last_user_id = " . $user_id;
+			WHERE album_last_user_id = " . (int) $user_id;
 		$this->db->sql_query($sql);
 
 		$sql = 'UPDATE ' . $this->albums_table . "
 			SET album_name = CASE WHEN parent_id = 0 THEN '" . $username . "' ELSE album_name END,
 				album_parents = ''
-			WHERE album_user_id = " . $user_id;
+			WHERE album_user_id = " . (int) $user_id;
 		$this->db->sql_query($sql);
 
 		$sql = 'UPDATE ' . $this->moderators_table . "
 			SET username = '" . $username . "'
-			WHERE user_id = " . $user_id;
+			WHERE user_id = " . (int) $user_id;
 		$this->db->sql_query($sql);
 
 		if ((int) $this->config->get('newest_pega_user_id') === $user_id)
@@ -200,11 +200,11 @@ class identity_sync
 		}
 
 		$sql = 'DELETE FROM ' . $this->moderators_table . '
-			WHERE group_id = ' . $group_id;
+			WHERE group_id = ' . (int) $group_id;
 		$this->db->sql_query($sql);
 
 		$sql = 'DELETE FROM ' . $this->permissions_table . '
-			WHERE perm_group_id = ' . $group_id;
+			WHERE perm_group_id = ' . (int) $group_id;
 		$this->db->sql_query($sql);
 
 		$this->clear_moderator_permission_caches();

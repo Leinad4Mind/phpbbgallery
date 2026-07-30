@@ -708,7 +708,7 @@ class auth
 
 		$sql = 'SELECT user_id
 			FROM ' . USER_GROUP_TABLE . '
-			WHERE group_id = ' . $group_id . '
+			WHERE group_id = ' . (int) $group_id . '
 				AND user_pending = 0';
 		$result = $this->db->sql_query($sql);
 		$user_ids = [];
