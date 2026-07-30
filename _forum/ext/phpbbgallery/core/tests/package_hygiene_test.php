@@ -305,11 +305,39 @@ class package_hygiene_test extends TestCase
 	{
 		$attributes = (string) file_get_contents($this->extension_root . '/.gitattributes');
 
-		foreach (['core', 'acpcleanup', 'acpimport', 'exif'] as $extension)
+		foreach ([
+			'core',
+			'acpcleanup',
+			'acpimport',
+			'exif',
+			'export',
+			'favorite',
+			'feed',
+			'bbtagsimages',
+			'imagerevisions',
+		] as $extension)
 		{
 			$this->assertStringContainsString('/' . $extension . '/phpunit.xml.dist export-ignore', $attributes);
 			$this->assertStringContainsString('/' . $extension . '/tests export-ignore', $attributes);
 			$this->assertStringContainsString('/' . $extension . '/tests/** export-ignore', $attributes);
+		}
+	}
+
+	public function test_every_packaged_component_contains_the_declared_license(): void
+	{
+		foreach ([
+			'core',
+			'acpcleanup',
+			'acpimport',
+			'exif',
+			'export',
+			'favorite',
+			'feed',
+			'bbtagsimages',
+			'imagerevisions',
+		] as $extension)
+		{
+			$this->assertFileExists($this->extension_root . '/' . $extension . '/license.txt', $extension);
 		}
 	}
 }
