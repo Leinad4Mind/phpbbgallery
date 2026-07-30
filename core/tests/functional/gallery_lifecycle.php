@@ -191,22 +191,24 @@ class gallery_lifecycle extends \phpbb_functional_test_case
 
 		$db = $this->get_db();
 		$module_basename = '\phpbbgallery\acpimport\acp\main_module';
-		$sql = 'SELECT COUNT(module_id) AS total
+		$sql = 'SELECT module_id, module_auth
 			FROM ' . MODULES_TABLE . "
 			WHERE module_class = 'acp'
 				AND module_basename = '" . $db->sql_escape($module_basename) . "'
 				AND module_mode = 'import_images'";
 		$result = $db->sql_query($sql);
-		$this->assertSame(1, (int) $db->sql_fetchfield('total'));
+		$module = $db->sql_fetchrow($result);
+		$duplicate_module = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
+		$this->assertIsArray($module);
+		$this->assertFalse($duplicate_module);
+		$this->assertSame('ext_phpbbgallery/acpimport && acl_a_gallery_import', $module['module_auth']);
 
-		$crawler = self::request('GET', 'adm/index.php?sid=' . $this->sid);
-		$extensions_link = $crawler->filter('#tabs')->selectLink($this->lang('ACP_CAT_DOT_MODS'));
-		$this->assertSame(1, $extensions_link->count());
-		$crawler = self::$client->click($extensions_link->link());
-		$import_link = $crawler->selectLink($this->lang('ACP_IMPORT_ALBUMS'));
-		$this->assertSame(1, $import_link->count(), $crawler->filter('body')->text());
-		$crawler = self::$client->click($import_link->link());
+		$crawler = self::request(
+			'GET',
+			'adm/index.php?i=' . (int) $module['module_id'] . '&mode=import_images&sid=' . $this->sid
+		);
+		self::assert_response_html(200);
 		$this->assertStringContainsString($this->lang('ACP_IMPORT_ALBUMS'), $crawler->filter('body')->text());
 		$this->assertSame(1, $crawler->filter('select[name="images[]"] option[value="' . $import_name . '"]')->count());
 
