@@ -423,6 +423,7 @@ class config_module
 					'allow_zip'				=> ['lang' => 'ZIP_ALLOWED',			'validate' => 'bool',	'type' => 'radio:yes_no'],
 					'description_length'	=> ['lang' => 'IMAGE_DESC_MAX_LENGTH',	'validate' => 'int',	'type' => 'text:7:5',		'append' => 'CHARACTERS'],
 					'disp_nextprev_thumbnail'	=> ['lang' => 'DISP_NEXTPREV_THUMB','validate' => 'bool',	'type' => 'radio:yes_no'],
+					'ajax_navigation'		=> ['lang' => 'AJAX_IMAGE_NAVIGATION',	'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 					'disp_image_url'		=> ['lang' => 'VIEW_IMAGE_URL',		'validate' => 'bool',	'type' => 'radio:yes_no'],
 					'disp_resolution'		=> ['lang' => 'DISP_RESOLUTION',		'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 				],
@@ -449,7 +450,6 @@ class config_module
 					'link_imagepage'		=> ['lang' => 'UC_IMAGEPAGE',			'validate' => 'string',	'type' => 'custom',			'explain' => true,	'method' => 'uc_select'],
 					'link_image_name'		=> ['lang' => 'UC_IMAGE_NAME',			'validate' => 'string',	'type' => 'custom',			'method' => 'uc_select'],
 					'link_image_icon'		=> ['lang' => 'UC_IMAGE_ICON',			'validate' => 'string',	'type' => 'custom',			'method' => 'uc_select'],
-					'ajax_navigation'		=> ['lang' => 'AJAX_IMAGE_NAVIGATION',	'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 				],
 
 				'RRC_GINDEX'	=> [

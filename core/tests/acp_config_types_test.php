@@ -88,6 +88,15 @@ final class acp_config_types_test extends TestCase
 		$this->assertArrayHasKey('forum_index_random_count', $display['vars']);
 		$this->assertArrayHasKey('forum_index_display', $display['vars']);
 		$this->assertArrayHasKey('forum_index_personal', $display['vars']);
+		$config_keys = array_keys($display['vars']);
+		$this->assertGreaterThan(
+			array_search('disp_nextprev_thumbnail', $config_keys, true),
+			array_search('ajax_navigation', $config_keys, true)
+		);
+		$this->assertLessThan(
+			array_search('disp_image_url', $config_keys, true),
+			array_search('ajax_navigation', $config_keys, true)
+		);
 		$display_vars = $display['vars'];
 		$this->assertSame('', end($display_vars));
 	}
