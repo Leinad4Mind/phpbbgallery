@@ -131,6 +131,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Completed Gallery add-on release packages with their declared GPL license and excluded development-only PHPUnit files from EPV validation.
 - Prevented member profiles from rendering an undefined Gallery image block when profile images are disabled.
 - Generated Gallery BBCode targets through phpBB's router without session identifiers, refreshed both the canonical and legacy parsers from ACP, and invalidated the text-formatter cache immediately.
 - Synchronized renamed users and default-group colours across Gallery images, comments, last-image metadata, personal albums and statistics; removed deleted user/group ACL rows and kept moderator listings on live phpBB identities.
