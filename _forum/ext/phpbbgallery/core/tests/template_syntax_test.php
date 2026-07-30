@@ -361,6 +361,19 @@ final class template_syntax_test extends TestCase
 		}
 	}
 
+	public function test_profile_image_blocks_are_safe_when_the_feature_is_disabled(): void
+	{
+		$core_root = dirname(__DIR__);
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$event = (string) file_get_contents($core_root . '/styles/' . $style . '/template/event/memberlist_view_content_append.html');
+			$polaroid = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/imageblock_polaroid.html');
+
+			$this->assertStringContainsString('{% if imageblock|default([])|length %}', $event, $style);
+			$this->assertStringContainsString('{% for imageblock in imageblock|default([]) %}', $polaroid, $style);
+		}
+	}
+
 	public function test_bootstrap_online_block_uses_the_phpbb_page_header_contract(): void
 	{
 		$core_root = dirname(__DIR__);
