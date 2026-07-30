@@ -67,6 +67,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Clarified the Portuguese ACP labels for per-album image limits, thumbnail metadata and thumbnail settings.
 - Moved Gallery statistics to the top of the ACP overview and clarified the JPG quality setting while constraining it to GD's supported 0–100 range.
 - Made [image]ID[/image] the canonical Gallery BBCode while retaining [album]ID[/album] as a hidden migration-backed compatibility alias for posts imported from the legacy MOD.
 - Raised the minimum runtime for all Gallery components to PHP 8.1 and phpBB 3.3, and moved the standalone test dependency from PHPUnit 7/9 to PHPUnit 10.5.
