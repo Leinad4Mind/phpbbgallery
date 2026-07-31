@@ -6,6 +6,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Added
 
+- Added a confirmed, resumable ACP maintenance action that converts legacy [album] Gallery BBCodes into the active [image] or [galleryimage] tag across posts, private messages and signatures while preserving phpBB storage metadata.
 - Added optional progressive previous/next image navigation that replaces the complete image view in place, preserves browser history and scroll position, supports keyboard arrows, and falls back to normal permission-checked links.
 - Restored permission-safe Gallery locations in phpBB's “Who is online” page for the Gallery index, searches, albums, uploads and images, with target details hidden whenever the viewer cannot access them.
 - Restored optional permission-filtered Gallery image counts and personal-album links in topic and private-message mini profiles, with batched loading and independent ACP controls.

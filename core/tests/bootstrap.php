@@ -174,6 +174,7 @@ namespace
 	require_once dirname(__DIR__) . '/upload.php';
 	require_once dirname(__DIR__) . '/auth/image_authorization.php';
 	require_once dirname(__DIR__) . '/auth/auth.php';
+	require_once dirname(__DIR__) . '/bbcode/legacy_migrator.php';
 	require_once dirname(__DIR__) . '/ext.php';
 	require_once dirname(__DIR__, 2) . '/acpcleanup/ext.php';
 	require_once dirname(__DIR__, 2) . '/acpimport/ext.php';
