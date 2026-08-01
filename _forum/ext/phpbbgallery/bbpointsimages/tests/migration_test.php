@@ -11,6 +11,7 @@ namespace phpbbgallery\bbpointsimages\tests;
 
 use phpbbgallery\bbpointsimages\migrations\m1_init;
 use phpbbgallery\bbpointsimages\migrations\m2_reward_lifecycle;
+use phpbbgallery\bbpointsimages\migrations\m3_acp_settings;
 use PHPUnit\Framework\TestCase;
 
 final class migration_test extends TestCase
@@ -70,5 +71,22 @@ final class migration_test extends TestCase
 		$this->assertSame(['source_sha256'], $schema['add_unique_index'][$table]['source_sha256']);
 		$this->assertSame(['\phpbbgallery\bbpointsimages\migrations\m1_init'], m2_reward_lifecycle::depends_on());
 		$this->assertSame(['source_sha256'], $migration->revert_schema()['drop_keys'][$table]);
+	}
+
+	public function test_acp_settings_module_is_permission_checked_and_reversible(): void
+	{
+		$migration = new m3_acp_settings();
+		$module = $migration->update_data()[0][1][2];
+
+		$this->assertSame(['\phpbbgallery\bbpointsimages\migrations\m2_reward_lifecycle'], m3_acp_settings::depends_on());
+		$this->assertSame('settings', $module['module_mode']);
+		$this->assertSame(
+			'acl_a_gallery_albums && ext_phpbbgallery/bbpointsimages',
+			$module['module_auth']
+		);
+		$this->assertSame([[
+			'module.remove',
+			['acp', 'PHPBB_GALLERY', 'ACP_BBPOINTSIMAGES_SETTINGS'],
+		]], $migration->revert_data());
 	}
 }

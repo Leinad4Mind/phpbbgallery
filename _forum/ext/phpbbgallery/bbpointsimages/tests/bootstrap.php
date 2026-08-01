@@ -30,6 +30,18 @@ namespace phpbbgallery\core
 	{
 		public const STATUS_APPROVED = 1;
 	}
+
+	final class url
+	{
+		public function __construct(private string $source_path)
+		{
+		}
+
+		public function path(string $type): string
+		{
+			return $this->source_path;
+		}
+	}
 }
 
 namespace sitesplat\bbpoints\core
@@ -124,7 +136,9 @@ namespace
 	require_once dirname(__DIR__) . '/policy.php';
 	require_once dirname(__DIR__) . '/migrations/m1_init.php';
 	require_once dirname(__DIR__) . '/migrations/m2_reward_lifecycle.php';
+	require_once dirname(__DIR__) . '/migrations/m3_acp_settings.php';
 	require_once dirname(__DIR__) . '/reward_manager.php';
+	require_once dirname(__DIR__) . '/retro_sync.php';
 	require_once __DIR__ . '/fake_db.php';
 	require_once __DIR__ . '/reward_fake_db.php';
 }

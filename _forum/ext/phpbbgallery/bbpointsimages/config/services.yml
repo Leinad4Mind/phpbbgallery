@@ -25,3 +25,11 @@ services:
             - '@phpbbgallery.bbpointsimages.reward_manager'
         tags:
             - { name: event.listener }
+
+    phpbbgallery.bbpointsimages.retro_sync:
+        class: phpbbgallery\bbpointsimages\retro_sync
+        arguments:
+            - '@dbal.conn'
+            - '@phpbbgallery.bbpointsimages.reward_manager'
+            - '@phpbbgallery.core.url'
+            - '%phpbbgallery.tables.gallery_images%'

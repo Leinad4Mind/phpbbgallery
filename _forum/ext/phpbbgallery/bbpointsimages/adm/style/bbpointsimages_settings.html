@@ -1,0 +1,51 @@
+{% include 'overall_header.html' %}
+
+<h1>{{ lang('ACP_BBPOINTSIMAGES_SETTINGS') }}</h1>
+<p>{{ lang('ACP_BBPOINTSIMAGES_SETTINGS_EXPLAIN') }}</p>
+
+<form id="acp_gallery_bbpointsimages" method="post" action="{{ U_ACTION }}">
+	<fieldset>
+		<legend>{{ lang('ACP_BBPOINTSIMAGES_GLOBAL') }}</legend>
+		<dl>
+			<dt><label for="upload_reward">{{ lang('ACP_BBPOINTSIMAGES_UPLOAD_REWARD') }}</label><br><span>{{ lang('ACP_BBPOINTSIMAGES_UPLOAD_REWARD_EXPLAIN') }}</span></dt>
+			<dd><input id="upload_reward" name="upload_reward" type="number" min="0" max="2147483647" value="{{ UPLOAD_REWARD }}"></dd>
+		</dl>
+		<dl>
+			<dt><label for="source_cost">{{ lang('ACP_BBPOINTSIMAGES_SOURCE_COST') }}</label><br><span>{{ lang('ACP_BBPOINTSIMAGES_SOURCE_COST_EXPLAIN') }}</span></dt>
+			<dd><input id="source_cost" name="source_cost" type="number" min="0" max="2147483647" value="{{ SOURCE_COST }}"></dd>
+		</dl>
+	</fieldset>
+
+	<fieldset>
+		<legend>{{ lang('ACP_BBPOINTSIMAGES_ALBUM_RULES') }}</legend>
+		<p>{{ lang('ACP_BBPOINTSIMAGES_ALBUM_RULES_EXPLAIN') }}</p>
+		<table class="table1 zebra-table">
+			<thead><tr><th>{{ lang('ACP_BBPOINTSIMAGES_ALBUM') }}</th><th>{{ lang('ACP_BBPOINTSIMAGES_UPLOAD_REWARD') }}</th><th>{{ lang('ACP_BBPOINTSIMAGES_SOURCE_COST') }}</th></tr></thead>
+			<tbody>
+			{% for album in bbpointsimages_albums %}
+				<tr>
+					<td>{{ album.PREFIX }}{{ album.NAME }}</td>
+					<td><input name="album_rules[{{ album.ID }}][upload_reward]" type="number" min="-1" max="2147483647" value="{{ album.UPLOAD_REWARD }}" title="{{ lang('ACP_BBPOINTSIMAGES_INHERIT_EXPLAIN') }}"></td>
+					<td><input name="album_rules[{{ album.ID }}][source_cost]" type="number" min="-1" max="2147483647" value="{{ album.SOURCE_COST }}" title="{{ lang('ACP_BBPOINTSIMAGES_INHERIT_EXPLAIN') }}"></td>
+				</tr>
+			{% else %}
+				<tr><td colspan="3">{{ lang('ACP_BBPOINTSIMAGES_NO_ALBUMS') }}</td></tr>
+			{% endfor %}
+			</tbody>
+		</table>
+		<p>{{ lang('ACP_BBPOINTSIMAGES_INHERIT_EXPLAIN') }}</p>
+		<p class="submit-buttons"><input class="button1" type="submit" name="submit" value="{{ lang('SUBMIT') }}"></p>
+	</fieldset>
+	{{ S_FORM_TOKEN }}
+</form>
+
+<form method="post" action="{{ U_SYNC }}">
+	<fieldset>
+		<legend>{{ lang('ACP_BBPOINTSIMAGES_SYNC') }}</legend>
+		<p>{{ lang('ACP_BBPOINTSIMAGES_SYNC_EXPLAIN') }}</p>
+		<p class="submit-buttons"><input class="button2" type="submit" name="sync" value="{{ lang('ACP_BBPOINTSIMAGES_SYNC_BUTTON') }}"></p>
+		{{ S_FORM_TOKEN }}
+	</fieldset>
+</form>
+
+{% include 'overall_footer.html' %}

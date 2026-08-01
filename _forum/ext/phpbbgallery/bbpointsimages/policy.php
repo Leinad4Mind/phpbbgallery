@@ -90,4 +90,72 @@ final class policy
 	{
 		return min(self::MAX_POINTS, max(0, $value));
 	}
+
+	/**
+	 * Return the complete album tree with its direct overrides.
+	 */
+	public function get_album_rules(): array
+	{
+		$sql = 'SELECT albums.album_id, albums.album_name, albums.left_id, albums.right_id,
+				rules.upload_reward, rules.source_cost
+			FROM ' . $this->albums_table . ' albums
+			LEFT JOIN ' . $this->rules_table . ' rules ON rules.album_id = albums.album_id
+			ORDER BY albums.left_id ASC';
+		$result = $this->db->sql_query($sql);
+		$rows = [];
+		$parents = [];
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$left_id = (int) $row['left_id'];
+			while ($parents && end($parents) < $left_id)
+			{
+				array_pop($parents);
+			}
+			$row['depth'] = count($parents);
+			$rows[] = $row;
+			$parents[] = (int) $row['right_id'];
+		}
+		$this->db->sql_freeresult($result);
+		return $rows;
+	}
+
+	/**
+	 * Replace direct overrides for the submitted, existing albums.
+	 *
+	 * @param array<int, array{upload_reward: int, source_cost: int}> $rules
+	 */
+	public function save_album_rules(array $rules): void
+	{
+		$available = [];
+		foreach ($this->get_album_rules() as $album)
+		{
+			$available[(int) $album['album_id']] = true;
+		}
+		$album_ids = array_values(array_filter(
+			array_map('intval', array_keys($rules)),
+			static fn (int $album_id): bool => isset($available[$album_id])
+		));
+		if (!$album_ids)
+		{
+			return;
+		}
+
+		$sql = 'DELETE FROM ' . $this->rules_table . '
+			WHERE ' . $this->db->sql_in_set('album_id', $album_ids);
+		$this->db->sql_query($sql);
+		$insert = [];
+		foreach ($album_ids as $album_id)
+		{
+			$upload_reward = self::normalize_override((int) ($rules[$album_id]['upload_reward'] ?? self::INHERIT));
+			$source_cost = self::normalize_override((int) ($rules[$album_id]['source_cost'] ?? self::INHERIT));
+			if ($upload_reward !== self::INHERIT || $source_cost !== self::INHERIT)
+			{
+				$insert[] = compact('album_id', 'upload_reward', 'source_cost');
+			}
+		}
+		if ($insert)
+		{
+			$this->db->sql_multi_insert($this->rules_table, $insert);
+		}
+	}
 }

@@ -12,12 +12,32 @@ namespace phpbbgallery\bbpointsimages\tests;
 final class reward_fake_db implements \phpbb\db\driver\driver_interface
 {
 	public array $policy_rows = [];
+	public array $images = [];
 	public array $rewards = [];
 	public array $stats = [];
 	private array $built = [];
 	private array $pending = [];
 	private int $affected = 0;
 	private bool $error = false;
+
+	public function sql_query_limit(string $sql, int $limit): string
+	{
+		$this->pending = [];
+		$after_id = 0;
+		if (preg_match('/image_id > (\d+)/', $sql, $matches))
+		{
+			$after_id = (int) $matches[1];
+		}
+		$rows = array_values(array_filter(
+			$this->images,
+			static fn (array $row): bool => (int) $row['image_id'] > $after_id
+				&& (int) $row['image_status'] === \phpbbgallery\core\block::STATUS_APPROVED
+		));
+		usort($rows, static fn (array $first, array $second): int =>
+			(int) $first['image_id'] <=> (int) $second['image_id']);
+		$this->pending = array_slice($rows, 0, $limit);
+		return 'result';
+	}
 
 	public function sql_query(string $sql): string|false
 	{

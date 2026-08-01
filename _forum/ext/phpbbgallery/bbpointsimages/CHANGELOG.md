@@ -10,3 +10,5 @@ All notable changes to the phpBB Gallery BBPoints Images add-on are documented i
 - Added inherited per-album upload-reward and source-cost policies with global fallbacks.
 - Added dedicated storage for contributors, publication rewards, paid source access, source hashes and download counters.
 - Added retry-safe rewards for uploaded, imported and approved images, exact-file duplicate protection and reward migration when authorship changes.
+- Added an ACP policy editor with independent inherited upload rewards and source costs per album.
+- Added an explicitly confirmed, paginated and resumable synchronization that rewards eligible historical images without duplicate credits.

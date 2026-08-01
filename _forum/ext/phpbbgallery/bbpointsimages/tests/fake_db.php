@@ -13,13 +13,26 @@ final class fake_db implements \phpbb\db\driver\driver_interface
 {
 	public array $rows = [];
 	public string $last_query = '';
+	public array $queries = [];
+	public array $inserted = [];
 	private int $position = 0;
 
 	public function sql_query(string $sql): string
 	{
 		$this->last_query = $sql;
+		$this->queries[] = $sql;
 		$this->position = 0;
 		return 'result';
+	}
+
+	public function sql_in_set(string $field, array $values): string
+	{
+		return $field . ' IN (' . implode(',', array_map('intval', $values)) . ')';
+	}
+
+	public function sql_multi_insert(string $table, array $rows): void
+	{
+		$this->inserted[$table] = $rows;
 	}
 
 	public function sql_fetchrow(string $result): array|false

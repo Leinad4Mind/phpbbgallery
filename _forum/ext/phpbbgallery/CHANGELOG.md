@@ -6,6 +6,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Added
 
+- Added an ACP editor for global and inherited per-album BBPoints image policies plus a confirmed, resumable and idempotent historical reward synchronization.
 - Added BBPoints image-reward lifecycle hooks for finalized uploads, ACP imports, moderation approvals and author changes without coupling Gallery Core to BBPoints.
 - Added the independent BBPoints Images add-on foundation with inherited per-album upload rewards and source costs plus dedicated contributor, reward, purchase, source-hash and download-counter storage.
 - Added a confirmed, resumable ACP Cleanup maintenance action that converts legacy [album] Gallery BBCodes into the active [image] or [galleryimage] tag across posts, private messages and signatures while preserving phpBB storage metadata.
