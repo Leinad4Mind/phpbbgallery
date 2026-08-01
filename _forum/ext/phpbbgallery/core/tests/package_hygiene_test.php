@@ -315,6 +315,7 @@ class package_hygiene_test extends TestCase
 			'favorite',
 			'feed',
 			'bbtagsimages',
+			'bbpointsimages',
 			'imagerevisions',
 		] as $extension)
 		{
@@ -335,6 +336,7 @@ class package_hygiene_test extends TestCase
 			'favorite',
 			'feed',
 			'bbtagsimages',
+			'bbpointsimages',
 			'imagerevisions',
 		] as $extension)
 		{

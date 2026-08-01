@@ -1,0 +1,6 @@
+parameters:
+    phpbbgallery.bbpointsimages.tables.album_rules: '%core.table_prefix%gallery_bbpoints_album_rules'
+    phpbbgallery.bbpointsimages.tables.contributors: '%core.table_prefix%gallery_bbpoints_contributors'
+    phpbbgallery.bbpointsimages.tables.rewards: '%core.table_prefix%gallery_bbpoints_rewards'
+    phpbbgallery.bbpointsimages.tables.purchases: '%core.table_prefix%gallery_bbpoints_purchases'
+    phpbbgallery.bbpointsimages.tables.image_stats: '%core.table_prefix%gallery_bbpoints_image_stats'

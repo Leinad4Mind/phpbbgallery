@@ -1,0 +1,37 @@
+{
+	"name": "phpbbgallery/bbpointsimages",
+	"type": "phpbb-extension",
+	"description": "Integrates phpBB Gallery image rewards and source downloads with SiteSplat BBPoints",
+	"homepage": "https://github.com/satanasov/phpbbgallery",
+	"version": "1.0.0",
+	"time": "2026-08-01",
+	"license": "GPL-2.0-only",
+	"authors": [
+		{
+			"name": "Leinad4Mind",
+			"homepage": "https://www.leinad4mind.top/forum",
+			"role": "Extension Developer"
+		}
+	],
+	"require": {
+		"php": ">=8.1"
+	},
+	"require-dev": {
+		"phpunit/phpunit": "^10.5"
+	},
+	"scripts": {
+		"test": "phpunit -c phpunit.xml.dist"
+	},
+	"extra": {
+		"display-name": "phpBB Gallery Add-on: BBPoints Images",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.3.0,<4.0.0@dev"
+		}
+	},
+	"version-check": {
+		"host": "raw.githubusercontent.com",
+		"directory": "/satanasov/phpbbgallery/master/",
+		"filename": "gallery-bbpointsimages.json",
+		"ssl": true
+	}
+}

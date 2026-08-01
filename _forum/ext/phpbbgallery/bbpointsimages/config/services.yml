@@ -1,0 +1,11 @@
+imports:
+    - { resource: tables.yml }
+
+services:
+    phpbbgallery.bbpointsimages.policy:
+        class: phpbbgallery\bbpointsimages\policy
+        arguments:
+            - '@dbal.conn'
+            - '@config'
+            - '%phpbbgallery.tables.gallery_albums%'
+            - '%phpbbgallery.bbpointsimages.tables.album_rules%'

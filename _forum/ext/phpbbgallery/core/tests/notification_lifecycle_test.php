@@ -73,6 +73,7 @@ class notification_lifecycle_test extends TestCase
 			'phpbbgallery/feed',
 			'phpbbgallery/imagerevisions',
 			'phpbbgallery/bbtagsimages',
+			'phpbbgallery/bbpointsimages',
 		], $extension_manager->disabled);
 	}
 
