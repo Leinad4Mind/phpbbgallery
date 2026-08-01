@@ -38,7 +38,7 @@ final class acp_confirmation_action_test extends TestCase
 			['core/acp/albums_module.php', 2],
 			['core/acp/gallery_logs_module.php', 1],
 			['core/acp/permissions_module.php', 1],
-			['acpcleanup/acp/main_module.php', 1],
+			['acpcleanup/acp/main_module.php', 2],
 		];
 	}
 

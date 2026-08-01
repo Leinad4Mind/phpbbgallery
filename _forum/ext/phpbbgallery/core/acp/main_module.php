@@ -84,26 +84,10 @@ class main_module
 		// init rating
 		$phpbb_gallery_rating = $phpbb_container->get('phpbbgallery.core.rating');
 		$phpbb_gallery_contest = $phpbb_container->get('phpbbgallery.core.contest');
-		$active_bbcode_tag = $phpbb_ext_gallery_config->get_bbcode_tag();
 
 		$action = $request->variable('action', '');
 		$id = $request->variable('i', '');
 		$mode = 'overview';
-		$legacy_bbcode_migrator = null;
-		$legacy_bbcode_records = 0;
-		if ($action === 'migrate_legacy_bbcodes')
-		{
-			if (!$auth->acl_get('a_board'))
-			{
-				trigger_error($this->language->lang('NO_AUTH_OPERATION') . adm_back_link($this->u_action), E_USER_WARNING);
-			}
-			$legacy_bbcode_migrator = $phpbb_container->get('phpbbgallery.core.bbcode.legacy_migrator');
-			$legacy_bbcode_records = $legacy_bbcode_migrator->count_remaining();
-			if ($legacy_bbcode_records === 0)
-			{
-				trigger_error($this->language->lang('GALLERY_LEGACY_BBCODE_MIGRATE_NONE') . adm_back_link($this->u_action));
-			}
-		}
 
 		// before we start let's check if directory structure is OK
 		if (!is_writable($phpbb_root_path . 'files'))
@@ -220,7 +204,6 @@ class main_module
 		if (!confirm_box(true))
 		{
 			$confirm = false;
-			$confirm_message = '';
 			$album_id = 0;
 			switch ($action)
 			{
@@ -253,14 +236,6 @@ class main_module
 				case 'resync_albums_to_cpf':
 					$confirm = true;
 					$confirm_lang = 'GALLERY_RESYNC_ALBUMS_TO_CPF_CONFIRM';
-				break;
-				case 'migrate_legacy_bbcodes':
-					$confirm = true;
-					$confirm_message = $this->language->lang(
-						'GALLERY_LEGACY_BBCODE_MIGRATE_CONFIRM',
-						$legacy_bbcode_records,
-						'[' . $active_bbcode_tag . ']'
-					);
 				break;
 				case 'create_pega':
 					$confirm = false;
@@ -314,7 +289,7 @@ class main_module
 
 			if ($confirm)
 			{
-				confirm_box(false, $confirm_message !== '' ? $confirm_message : (($album_id) ? $confirm_lang : $this->language->lang($confirm_lang)), build_hidden_fields([
+				confirm_box(false, (($album_id) ? $confirm_lang : $this->language->lang($confirm_lang)), build_hidden_fields([
 					'i'			=> $id,
 					'mode'		=> $mode,
 					'action'	=> $action,
@@ -580,16 +555,6 @@ class main_module
 				case 'resync_albums_to_cpf':
 					$resync_albums_to_cpf_stage = 'gather';
 				break;
-
-				case 'migrate_legacy_bbcodes':
-					$result = $legacy_bbcode_migrator->migrate_batch();
-					trigger_error($this->language->lang(
-						'GALLERY_LEGACY_BBCODE_MIGRATE_RESULT',
-						$result['migrated'],
-						$result['failed'],
-						$result['remaining']
-					) . adm_back_link($this->u_action));
-				break;
 			}
 		}
 
@@ -647,7 +612,6 @@ class main_module
 			'S_SELECT_ALBUM'		=> $phpbb_ext_gallery_core_album->get_albumbox(false, 'reset_album_id', false, false, false, (int) \phpbbgallery\core\block::PUBLIC_ALBUM, (int) \phpbbgallery\core\block::TYPE_UPLOAD),
 
 			'S_FOUNDER'				=> ($user->data['user_type'] == USER_FOUNDER) ? true : false,
-			'ACTIVE_BBCODE_TAG'		=> '[' . $active_bbcode_tag . ']',
 			'U_ACTION'				=> $this->u_action,
 		]);
 	}

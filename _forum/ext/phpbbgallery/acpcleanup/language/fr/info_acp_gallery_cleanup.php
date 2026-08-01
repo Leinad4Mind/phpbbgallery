@@ -80,6 +80,11 @@ $lang = array_merge($lang, [
 	'MOVE_TO_USER_EXP'     => 'Les images et les commentaires seront attribués à l’utilisateur que vous avez défini. Si aucun n’est sélectionné - “Anonyme“ sera utilisé.',
 	'CLEAN_USER_NOT_FOUND' => 'L’utilisateur sélectionné n’existe pas!',
 
+	'GALLERY_LEGACY_BBCODE_MIGRATE' => 'Migrer les BBCodes historiques de la galerie',
+	'GALLERY_LEGACY_BBCODE_MIGRATE_EXPLAIN' => 'Recherche l’alias masqué [album] dans les messages, messages privés et signatures. Après confirmation, chaque exécution réanalyse jusqu’à 250 enregistrements en %s et maintient cohérentes les métadonnées BBCode de phpBB. Répétez l’action jusqu’à ce qu’il ne reste aucun enregistrement.',
+	'GALLERY_LEGACY_BBCODE_MIGRATE_CONFIRM' => 'Convertir le prochain lot de [album] vers %2$s ? Il reste actuellement %1$d enregistrements.',
+	'GALLERY_LEGACY_BBCODE_MIGRATE_NONE' => 'Il ne reste aucun enregistrement historique [album].',
+	'GALLERY_LEGACY_BBCODE_MIGRATE_RESULT' => '%1$d enregistrements ont été convertis. %2$d enregistrements n’ont pas pu être convertis. Il reste %3$d enregistrements.',
 	'GALLERY_CORE_NOT_FOUND'   => 'L’extension phpBB Gallery Core doit d’abord être installée et activée.',
 	'EXTENSION_ENABLE_SUCCESS' => 'L’extension a été activée avec succès.',
 ]);

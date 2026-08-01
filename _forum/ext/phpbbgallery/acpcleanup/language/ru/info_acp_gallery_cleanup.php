@@ -80,6 +80,11 @@ $lang = array_merge($lang, [
 	'MOVE_TO_USER_EXP'     => 'Images and comments will be moved as those of user you have defined. If none is selected - Anonymous will be used.',
 	'CLEAN_USER_NOT_FOUND' => 'The user you selected does not exists!',
 
+	'GALLERY_LEGACY_BBCODE_MIGRATE' => 'Перенести устаревшие BBCode галереи',
+	'GALLERY_LEGACY_BBCODE_MIGRATE_EXPLAIN' => 'Ищет скрытый псевдоним [album] в сообщениях, личных сообщениях и подписях. После подтверждения каждый запуск повторно обрабатывает до 250 записей как %s и сохраняет согласованность метаданных BBCode phpBB. Повторяйте действие, пока записей не останется.',
+	'GALLERY_LEGACY_BBCODE_MIGRATE_CONFIRM' => 'Преобразовать следующую группу из [album] в %2$s? Сейчас осталось %1$d записей.',
+	'GALLERY_LEGACY_BBCODE_MIGRATE_NONE' => 'Устаревших записей [album] больше нет.',
+	'GALLERY_LEGACY_BBCODE_MIGRATE_RESULT' => 'Преобразовано записей: %1$d. Не удалось преобразовать: %2$d. Осталось записей: %3$d.',
 	'GALLERY_CORE_NOT_FOUND'   => 'Сначала необходимо установить и включить расширение phpBB Gallery Core.',
 	'EXTENSION_ENABLE_SUCCESS' => 'Расширение успешно включено.',
 ]);

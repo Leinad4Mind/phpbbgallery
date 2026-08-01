@@ -23,6 +23,7 @@ class main_module
 		global $auth, $cache, $config, $db, $template, $request, $user, $phpbb_root_path, $phpbb_ext_gallery;
 
 		$user->add_lang_ext('phpbbgallery/core', ['gallery_acp', 'gallery']);
+		$user->add_lang_ext('phpbbgallery/acpcleanup', 'info_acp_gallery_cleanup');
 		$this->tpl_name = 'gallery_cleanup';
 
 		add_form_key('acp_gallery');
@@ -49,6 +50,42 @@ class main_module
 	public function cleanup(bool $submit = false): void
 	{
 		global $auth, $cache, $db, $template, $user, $phpbb_ext_gallery, $table_prefix, $phpbb_container, $request;
+		$gallery_config = $phpbb_container->get('phpbbgallery.core.config');
+		$action = $request->variable('action', '');
+		if ($action === 'migrate_legacy_bbcodes')
+		{
+			if (!$auth->acl_get('a_gallery_cleanup'))
+			{
+				trigger_error($user->lang('NO_AUTH_OPERATION') . adm_back_link($this->u_action), E_USER_WARNING);
+			}
+
+			$legacy_migrator = $phpbb_container->get('phpbbgallery.acpcleanup.bbcode.legacy_migrator');
+			$remaining = $legacy_migrator->count_remaining();
+			if ($remaining === 0)
+			{
+				trigger_error($user->lang('GALLERY_LEGACY_BBCODE_MIGRATE_NONE') . adm_back_link($this->u_action));
+			}
+
+			if (confirm_box(true))
+			{
+				$result = $legacy_migrator->migrate_batch();
+				trigger_error($user->lang(
+					'GALLERY_LEGACY_BBCODE_MIGRATE_RESULT',
+					$result['migrated'],
+					$result['failed'],
+					$result['remaining']
+				) . adm_back_link($this->u_action));
+			}
+
+			confirm_box(false, $user->lang(
+				'GALLERY_LEGACY_BBCODE_MIGRATE_CONFIRM',
+				$remaining,
+				'[' . $gallery_config->get_bbcode_tag() . ']'
+			), build_hidden_fields([
+				'action' => $action,
+			]), 'confirm_body.html', $this->u_action);
+			return;
+		}
 
 		$delete = $request->is_set_post('delete');
 		$prune = $request->is_set_post('prune');
@@ -76,7 +113,6 @@ class main_module
 		$gallery_album = $phpbb_container->get('phpbbgallery.core.album');
 		$core_cleanup = $phpbb_container->get('phpbbgallery.acpcleanup.cleanup');
 		$gallery_auth = $phpbb_container->get('phpbbgallery.core.auth');
-		$gallery_config = $phpbb_container->get('phpbbgallery.core.config');
 		$gallery_url = $phpbb_container->get('phpbbgallery.core.url');
 
 		// Lets detect if ACP Import exists (find if directory is with RW access)
@@ -529,6 +565,7 @@ class main_module
 			'S_SELECT_ALBUM'		=> $gallery_album->get_albumbox(false, '', false, false, false, (int) \phpbbgallery\core\block::PUBLIC_ALBUM, (int) \phpbbgallery\core\block::TYPE_UPLOAD),
 
 			'S_FOUNDER'				=> ($user->data['user_type'] == USER_FOUNDER) ? true : false,
+			'ACTIVE_BBCODE_TAG'		=> '[' . $gallery_config->get_bbcode_tag() . ']',
 		]);
 	}
 }

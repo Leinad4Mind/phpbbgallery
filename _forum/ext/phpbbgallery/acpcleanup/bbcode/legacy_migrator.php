@@ -1,14 +1,14 @@
 <?php
 /**
- * phpBB Gallery - Core Extension
+ * phpBB Gallery - ACP Cleanup Extension
  *
- * @package   phpbbgallery/core
+ * @package   phpbbgallery/acpcleanup
  * @author    Leinad4Mind
  * @copyright 2026 Leinad4Mind
  * @license   GPL-2.0-only
  */
 
-namespace phpbbgallery\core\bbcode;
+namespace phpbbgallery\acpcleanup\bbcode;
 
 /**
  * Convert the hidden Gallery [album] compatibility alias in stored phpBB text.

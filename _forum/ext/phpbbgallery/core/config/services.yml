@@ -171,17 +171,6 @@ services:
         class: phpbbgallery\core\config
         arguments:
             - '@config'
-    phpbbgallery.core.bbcode.legacy_migrator:
-        class: phpbbgallery\core\bbcode\legacy_migrator
-        arguments:
-            - '@dbal.conn'
-            - '@phpbbgallery.core.config'
-            - '%core.root_path%'
-            - '%core.php_ext%'
-            - '%tables.bbcodes%'
-            - '%tables.posts%'
-            - '%tables.privmsgs%'
-            - '%tables.users%'
     phpbbgallery.core.report:
         class: phpbbgallery\core\report
         arguments:

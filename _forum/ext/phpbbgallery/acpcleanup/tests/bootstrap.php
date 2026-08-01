@@ -117,6 +117,13 @@ namespace phpbbgallery\core
 		public function dec(string $key, int $value): void
 		{
 		}
+
+		public function get_bbcode_tag(): string
+		{
+			$tag = (string) ($this->values['bbcode_tag'] ?? 'image');
+
+			return in_array($tag, ['image', 'galleryimage'], true) ? $tag : 'image';
+		}
 	}
 
 	class log
@@ -166,6 +173,49 @@ namespace phpbbgallery\core
 
 namespace
 {
+	if (!class_exists('bitfield'))
+	{
+		class bitfield
+		{
+			private string $data;
+
+			public function __construct(string $bitfield = '')
+			{
+				$decoded = base64_decode($bitfield, true);
+				$this->data = is_string($decoded) ? $decoded : '';
+			}
+
+			public function set(int $bit): void
+			{
+				$byte = intdiv($bit, 8);
+				$this->pad($byte);
+				$this->data[$byte] = chr(ord($this->data[$byte]) | (1 << (7 - ($bit % 8))));
+			}
+
+			public function clear(int $bit): void
+			{
+				$byte = intdiv($bit, 8);
+				if ($byte < strlen($this->data))
+				{
+					$this->data[$byte] = chr(ord($this->data[$byte]) & ~(1 << (7 - ($bit % 8))));
+				}
+			}
+
+			public function get_base64(): string
+			{
+				return base64_encode($this->data);
+			}
+
+			private function pad(int $byte): void
+			{
+				if ($byte >= strlen($this->data))
+				{
+					$this->data = str_pad($this->data, $byte + 1, "\0");
+				}
+			}
+		}
+	}
+
 	if (!defined('IN_PHPBB'))
 	{
 		define('IN_PHPBB', true);
@@ -176,6 +226,7 @@ namespace
 	require_once dirname(__DIR__, 4) . '/phpbb/event/data.php';
 	require_once dirname(__DIR__) . '/event/main_listener.php';
 	require_once dirname(__DIR__) . '/cleanup.php';
+	require_once dirname(__DIR__) . '/bbcode/legacy_migrator.php';
 	require_once dirname(__DIR__) . '/acp/main_module.php';
 	require_once dirname(__DIR__) . '/migrations/m1_init.php';
 }

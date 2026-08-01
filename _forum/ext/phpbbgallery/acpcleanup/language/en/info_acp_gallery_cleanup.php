@@ -81,4 +81,10 @@ $lang = array_merge($lang, [
 
 	'GALLERY_CORE_NOT_FOUND'   => 'phpBB Gallery Core extension must be installed and enabled first.',
 	'EXTENSION_ENABLE_SUCCESS' => 'The extension has been enabled successfully.',
+
+	'GALLERY_LEGACY_BBCODE_MIGRATE'         => 'Migrate legacy Gallery BBCodes',
+	'GALLERY_LEGACY_BBCODE_MIGRATE_EXPLAIN' => 'Searches posts, private messages and signatures for the hidden [album] alias. After confirmation, each run reparses up to 250 records as %s and keeps the phpBB BBCode metadata consistent. Repeat the action until no records remain.',
+	'GALLERY_LEGACY_BBCODE_MIGRATE_CONFIRM' => 'Convert the next batch from [album] to %2$s? There are currently %1$d records remaining.',
+	'GALLERY_LEGACY_BBCODE_MIGRATE_NONE'    => 'There are no legacy [album] records remaining.',
+	'GALLERY_LEGACY_BBCODE_MIGRATE_RESULT'  => '%1$d records were converted. %2$d records could not be converted. %3$d records remain.',
 ]);
