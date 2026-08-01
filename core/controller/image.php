@@ -708,8 +708,8 @@ class image
 	/**
 	 * Resolve the configured action when the displayed image is clicked.
 	 *
-	 * Legacy popup modes fall back to the original image because their optional
-	 * JavaScript integrations may no longer be installed.
+	 * Unknown modes fall back to the original image so links remain usable if a
+	 * third-party integration is removed before its saved configuration.
 	 *
 	 * @param int         $image_id Current image identifier
 	 * @param array|false $next     Next visible image, when one exists

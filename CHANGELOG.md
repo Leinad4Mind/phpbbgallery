@@ -71,6 +71,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Removed the dead Highslide, Lytebox and Shadowbox frontend integrations and language remnants, normalizing saved legacy link modes to supported destinations while retaining normal links and optional progressive AJAX navigation.
 - Labelled the public Gallery statistics independently from the forum statistics, placed the FLATBOOTS total-image counter in its responsive index statistics grid, and moved the AJAX image-navigation switch beside the related image navigation settings in the ACP.
 - Clarified the Portuguese ACP labels for per-album image limits, thumbnail metadata and thumbnail settings.
 - Moved Gallery statistics to the top of the ACP overview and clarified the JPG quality setting while constraining it to GD's supported 0–100 range.
