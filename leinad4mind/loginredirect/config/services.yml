@@ -1,0 +1,48 @@
+services:
+    leinad4mind.loginredirect.core.functions:
+        class: leinad4mind\loginredirect\core\functions
+        arguments:
+            - '@ext.manager'
+
+    leinad4mind.loginredirect.core.topic_repository:
+        class: leinad4mind\loginredirect\core\topic_repository
+        arguments:
+            - '@dbal.conn'
+            - '@auth'
+            - '%tables%'
+
+    leinad4mind.loginredirect.core.redirect_helper:
+        class: leinad4mind\loginredirect\core\redirect_helper
+        arguments:
+            - '%core.root_path%'
+            - '%core.php_ext%'
+
+    leinad4mind.loginredirect.main.controller:
+        class: leinad4mind\loginredirect\controller\main_controller
+        arguments:
+            - '@config'
+            - '@user'
+            - '@language'
+            - '@leinad4mind.loginredirect.core.topic_repository'
+            - '@leinad4mind.loginredirect.core.redirect_helper'
+
+    leinad4mind.loginredirect.admin.controller:
+        class: leinad4mind\loginredirect\controller\admin_controller
+        arguments:
+            - '@config'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '@log'
+            - '@language'
+            - '@leinad4mind.loginredirect.core.functions'
+            - '@leinad4mind.loginredirect.core.topic_repository'
+        public: true
+
+    leinad4mind.loginredirect.listener:
+        class: leinad4mind\loginredirect\event\listener
+        arguments:
+            - '@leinad4mind.loginredirect.core.functions'
+            - '@leinad4mind.loginredirect.main.controller'
+        tags:
+            - { name: event.listener }
