@@ -29,18 +29,18 @@ class editor_listener implements EventSubscriberInterface
 	/** @var \phpbb\auth\auth phpBB authorization object */
 	protected \phpbb\auth\auth $auth;
 
-	/** @var \phpbbgallery\core\auth\auth Gallery auth object */
-	protected \phpbbgallery\core\auth\auth $gallery_auth;
+	/** @var \phpbbgallery\core\image\selector Permission-filtered image selector */
+	protected \phpbbgallery\core\image\selector $selector;
 
 	public function __construct(\phpbb\controller\helper $helper, \phpbb\user $user,
 		\phpbb\config\config $config, \phpbb\auth\auth $auth,
-		\phpbbgallery\core\auth\auth $gallery_auth)
+		\phpbbgallery\core\image\selector $selector)
 	{
 		$this->helper = $helper;
 		$this->user = $user;
 		$this->config = $config;
 		$this->auth = $auth;
-		$this->gallery_auth = $gallery_auth;
+		$this->selector = $selector;
 	}
 
 	public static function getSubscribedEvents(): array
@@ -106,9 +106,7 @@ class editor_listener implements EventSubscriberInterface
 			return false;
 		}
 
-		$this->gallery_auth->load_user_permissions((int) $this->user->data['user_id']);
-
-		return $this->gallery_auth->acl_check_global('i_view');
+		return $this->selector->has_images((int) $this->user->data['user_id']);
 	}
 
 	private function template_variables(): array

@@ -39,6 +39,29 @@ class selector
 	}
 
 	/**
+	 * Check whether the active user owns at least one selectable image.
+	 */
+	public function has_images(int $user_id): bool
+	{
+		$viewable_album_ids = $this->get_viewable_album_ids($user_id);
+		if (empty($viewable_album_ids))
+		{
+			return false;
+		}
+
+		$sql = 'SELECT i.image_id
+			FROM ' . $this->images_table . ' i
+			INNER JOIN ' . $this->albums_table . ' a
+				ON a.album_id = i.image_album_id
+			WHERE ' . implode(' AND ', $this->get_image_conditions($user_id, $viewable_album_ids));
+		$result = $this->db->sql_query_limit($sql, 1);
+		$has_images = (bool) $this->db->sql_fetchfield('image_id');
+		$this->db->sql_freeresult($result);
+
+		return $has_images;
+	}
+
+	/**
 	 * Return one page of completed images authored by the active user.
 	 *
 	 * Unapproved, orphaned and active-contest images are deliberately excluded:
@@ -55,18 +78,7 @@ class selector
 	{
 		$page = max(1, $page);
 		$per_page = max(1, min(50, $per_page));
-		$this->gallery_auth->load_user_permissions($user_id);
-
-		$viewable_album_ids = $this->gallery_auth->acl_album_ids('i_view');
-		if (!is_array($viewable_album_ids))
-		{
-			$viewable_album_ids = [];
-		}
-
-		$viewable_album_ids = array_values(array_unique(array_filter(array_map('intval', $viewable_album_ids))));
-		$excluded_album_ids = array_map('intval', $this->gallery_auth->get_exclude_zebra());
-		$viewable_album_ids = array_values(array_diff($viewable_album_ids, $excluded_album_ids));
-		sort($viewable_album_ids, SORT_NUMERIC);
+		$viewable_album_ids = $this->get_viewable_album_ids($user_id);
 
 		if ($album_id > 0 && !in_array($album_id, $viewable_album_ids, true))
 		{
@@ -78,15 +90,7 @@ class selector
 			return $this->empty_page($album_id, 1, $per_page);
 		}
 
-		$conditions = [
-			'i.image_user_id = ' . (int) $user_id,
-			$this->db->sql_in_set('i.image_album_id', $viewable_album_ids),
-			$this->db->sql_in_set('i.image_status', [
-				\phpbbgallery\core\block::STATUS_APPROVED,
-				\phpbbgallery\core\block::STATUS_LOCKED,
-			]),
-			'i.image_contest = ' . (int) \phpbbgallery\core\block::NO_CONTEST,
-		];
+		$conditions = $this->get_image_conditions($user_id, $viewable_album_ids);
 
 		$sql = 'SELECT a.album_id, a.album_name, a.left_id,
 				COUNT(DISTINCT p.album_id) AS album_depth
@@ -161,6 +165,41 @@ class selector
 				'per_page' => $per_page,
 				'total'    => $total,
 			],
+		];
+	}
+
+	/** @return int[] */
+	private function get_viewable_album_ids(int $user_id): array
+	{
+		$this->gallery_auth->load_user_permissions($user_id);
+		$viewable_album_ids = $this->gallery_auth->acl_album_ids('i_view');
+		if (!is_array($viewable_album_ids))
+		{
+			$viewable_album_ids = [];
+		}
+
+		$viewable_album_ids = array_values(array_unique(array_filter(array_map('intval', $viewable_album_ids))));
+		$excluded_album_ids = array_map('intval', $this->gallery_auth->get_exclude_zebra());
+		$viewable_album_ids = array_values(array_diff($viewable_album_ids, $excluded_album_ids));
+		sort($viewable_album_ids, SORT_NUMERIC);
+
+		return $viewable_album_ids;
+	}
+
+	/**
+	 * @param int[] $viewable_album_ids
+	 * @return string[]
+	 */
+	private function get_image_conditions(int $user_id, array $viewable_album_ids): array
+	{
+		return [
+			'i.image_user_id = ' . (int) $user_id,
+			$this->db->sql_in_set('i.image_album_id', $viewable_album_ids),
+			$this->db->sql_in_set('i.image_status', [
+				\phpbbgallery\core\block::STATUS_APPROVED,
+				\phpbbgallery\core\block::STATUS_LOCKED,
+			]),
+			'i.image_contest = ' . (int) \phpbbgallery\core\block::NO_CONTEST,
 		];
 	}
 
