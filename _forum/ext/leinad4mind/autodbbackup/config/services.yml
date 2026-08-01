@@ -1,0 +1,44 @@
+services:
+    leinad4mind.autodbbackup.admin.controller:
+        class: leinad4mind\autodbbackup\controller\admin_controller
+        arguments:
+            - '@config'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '@log'
+            - '@language'
+            - '@leinad4mind.autodbbackup.core.functions'
+        public: true
+
+    leinad4mind.autodbbackup.core.functions:
+        class: leinad4mind\autodbbackup\core\functions
+        arguments:
+            - '@ext.manager'
+
+    leinad4mind.autodbbackup.core.backup_registry:
+        class: leinad4mind\autodbbackup\core\backup_registry
+        arguments:
+            - '@config_text'
+            - '@filesystem'
+
+    leinad4mind.autodbbackup.cron.task.auto_db_backup:
+        class: leinad4mind\autodbbackup\cron\task\auto_db_backup
+        arguments:
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%core.table_prefix%'
+            - '@config'
+            - '@language'
+            - '@log'
+            - '@user'
+            - '@service_container'
+            - '@dispatcher'
+            - '@dbal.tools'
+            - '@leinad4mind.autodbbackup.core.functions'
+            - '@filesystem'
+            - '@leinad4mind.autodbbackup.core.backup_registry'
+        calls:
+            - [set_name, [cron.task.auto_db_backup]]
+        tags:
+            - { name: cron.task }
