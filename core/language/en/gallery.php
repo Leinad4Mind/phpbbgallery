@@ -376,4 +376,7 @@ $lang = array_merge($lang, [
 
 	// Versions 1.2.1 additions
 	'GALLERY_DROP' => 'Drop your images here',
+	'IMAGE_SUBTITLE'          => 'Image subtitle',
+	'IMAGE_SUBTITLE_EXPLAIN'  => 'Optional. On the image page, the subtitle can be used to search the Gallery for the same words.',
+	'IMAGE_SUBTITLE_TOO_LONG' => 'The image subtitle cannot be longer than %d characters.',
 ]);

@@ -378,4 +378,7 @@ $lang = array_merge($lang, [
 
 	// Versions 1.2.1 additions
 	'GALLERY_DROP' => 'Plaats je afbeeldingen hier',
+	'IMAGE_SUBTITLE'          => 'Ondertitel van afbeelding',
+	'IMAGE_SUBTITLE_EXPLAIN'  => 'Optioneel. Op de afbeeldingspagina kan met de ondertitel naar dezelfde woorden in de galerij worden gezocht.',
+	'IMAGE_SUBTITLE_TOO_LONG' => 'De ondertitel van de afbeelding mag niet langer zijn dan %d tekens.',
 ]);

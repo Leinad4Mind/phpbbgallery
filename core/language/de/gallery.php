@@ -376,4 +376,7 @@ $lang = array_merge($lang, [
 
 	// Versions 1.2.1 additions
 	'GALLERY_DROP' => 'Lege Dein Bild hier rein',
+	'IMAGE_SUBTITLE'          => 'Bilduntertitel',
+	'IMAGE_SUBTITLE_EXPLAIN'  => 'Optional. Auf der Bildseite kann über den Untertitel nach denselben Wörtern in der Galerie gesucht werden.',
+	'IMAGE_SUBTITLE_TOO_LONG' => 'Der Bilduntertitel darf nicht länger als %d Zeichen sein.',
 ]);
