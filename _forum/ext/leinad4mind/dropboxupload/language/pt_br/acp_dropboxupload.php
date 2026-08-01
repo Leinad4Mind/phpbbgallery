@@ -1,0 +1,79 @@
+<?php
+
+/**
+ * @package Dropbox Upload for phpBB.
+ * @copyright (c) 2016 david63
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ * @translation Leinad4Mind [Brazilian Portuguese [pt_br]] (2026)
+ */
+
+/**
+ * DO NOT CHANGE
+ */
+if (!defined('IN_PHPBB'))
+{
+	exit;
+}
+
+if (empty($lang) || !is_array($lang))
+{
+	$lang = [];
+}
+
+/// DEVELOPERS PLEASE NOTE
+//
+// All language files should use UTF-8 as their encoding and the files must not contain a BOM.
+//
+// Placeholders can now contain order information, e.g. instead of
+// 'Page %s of %s' you can (and should) write 'Page %1$s of %2$s', this allows
+// translators to re-order the output of data while ensuring it remains correct
+//
+// You do not need this where single placeholders are used, e.g. 'Message %d' is fine
+// equally where a string contains only two placeholders which are used to wrap text
+// in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
+//
+// Some characters you may want to copy&paste:
+// ’ » “ ” …
+//
+
+$lang = array_merge($lang, [
+	'CREATE_NEW_APP'      => 'Criar uma nova aplicação na plataforma Dropbox',
+	'CREATE_NEW_APP_TEXT' => 'Crie um aplicativo com acesso à pasta do aplicativo, ative a permissão files.content.write e obtenha credenciais OAuth offline.',
+
+	'DROPBOX_UPLOAD_ENABLE'          => 'Habilitar upload para o Dropbox',
+	'DROPBOX_FOLDER'                 => 'Pasta Dropbox',
+	'DROPBOX_FOLDER_EXPLAIN'         => 'A pasta Dropbox (dentro da pasta "Apps") para onde os backups serão carregados. Deixar isto em branco fará o upload dos backups para a pasta raiz da aplicação.<br>Qualquer pasta inserida aqui será criada automaticamente.',
+	'DROPBOX_FOLDER_OPTIONS'         => 'Opções de pasta',
+	'DROPBOX_FOLDER_OPTIONS_EXPLAIN' => 'Selecione a opção para criação "inteligente" de pastas.<br>A opção padrão usará o nome da pasta inserido acima, enquanto qualquer outra opção criará uma pasta baseada nas opções de data selecionadas.<br>Estas pastas serão criadas automaticamente.',
+	'DROPBOX_FREQUENCY'              => 'Frequência de upload',
+	'DROPBOX_FREQUENCY_EXPLAIN'      => 'Com que frequência o backup deve ser carregado para o Dropbox.<br>Definir isto como "1" resultará em todos os backups a serem carregados para o Dropbox - qualquer outro valor significará que cada <em>enésimo</em> backup será carregado.',
+	'DROPBOX_UPLOAD_EXPLAIN'         => 'Insira aqui os parâmetros necessários para permitir que arquivos sejam carregados para a sua conta Dropbox.<br><br><strong>Nota: Esta extensão <em>NÃO</em> remove nenhuns arquivos da conta Dropbox - isso terá de ser feito manualmente.</strong>',
+	'DROPBOX_UPLOAD_OPTIONS'         => 'Opções de upload do Dropbox',
+
+	'DROPBOX_REFRESH_AUTH' => 'Autorização offline recomendada',
+	'DROPBOX_REFRESH_AUTH_EXPLAIN' => 'Para backups automáticos, informe a chave, o segredo e o refresh token. Campos vazios preservam o valor salvo.',
+	'DROPBOX_APP_KEY' => 'Chave do aplicativo Dropbox',
+	'DROPBOX_APP_KEY_EXPLAIN' => 'Identificador OAuth do aplicativo Dropbox.',
+	'DROPBOX_APP_SECRET' => 'Segredo do aplicativo Dropbox',
+	'DROPBOX_APP_SECRET_EXPLAIN' => 'Segredo OAuth. O valor nunca volta a ser exibido depois de salvo.',
+	'DROPBOX_REFRESH_TOKEN' => 'Refresh token do Dropbox',
+	'DROPBOX_REFRESH_TOKEN_EXPLAIN' => 'Refresh token OAuth offline. O valor nunca volta a ser exibido.',
+	'DROPBOX_ACCESS_TOKEN' => 'Token de acesso legado',
+	'DROPBOX_ACCESS_TOKEN_EXPLAIN' => 'Alternativa para um token de acesso de longa duração existente.',
+	'DROPBOX_CREDENTIAL_CONFIGURED' => 'Configurado',
+	'DROPBOX_CREDENTIAL_NOT_CONFIGURED' => 'Não configurado',
+	'DROPBOX_CREDENTIAL_CLEAR' => 'Remover valor salvo',
+	'DROPBOX_FOLDER_DEFAULT' => 'Somente a pasta configurada',
+	'DROPBOX_FOLDER_CURRENT_DAY' => 'Dia atual',
+	'DROPBOX_FOLDER_DAY_OF_WEEK' => 'Dia da semana',
+	'DROPBOX_FOLDER_WEEK_NO' => 'Número da semana',
+	'DROPBOX_FOLDER_MONTH' => 'Mês',
+	'DROPBOX_FOLDER_YEAR' => 'Ano',
+	'DROPBOX_FOLDER_MONTH_YEAR' => 'Mês e ano',
+	'DROPBOX_FOLDER_INVALID' => 'A pasta Dropbox é inválida.',
+	'DROPBOX_FOLDER_OPTION_INVALID' => 'A opção de pasta Dropbox é inválida.',
+	'DROPBOX_FREQUENCY_INVALID' => 'A frequência deve estar entre 1 e 25.',
+	'DROPBOX_CREDENTIAL_INVALID' => 'Uma credencial contém dados inválidos ou é muito longa.',
+	'DROPBOX_CREDENTIALS_REQUIRED' => 'Configure um token de acesso ou credenciais completas de refresh token antes de habilitar.',
+	'DROPBOX_REFRESH_CREDENTIALS_INCOMPLETE' => 'A chave, o segredo e o refresh token devem ser configurados juntos.',
+]);

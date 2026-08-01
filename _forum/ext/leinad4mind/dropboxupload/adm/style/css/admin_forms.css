@@ -1,0 +1,70 @@
+.head-panel,
+.head-panel-version,
+.head-panel-noversion {
+	border: 1px solid #d7d7d7;
+	border-radius: 8px;
+	box-shadow: 2px 2px 0 #899599;
+	margin-bottom: 1em;
+	padding: 0.75em;
+}
+
+.head-panel {
+	background: #fff;
+	color: #115098;
+}
+
+.head-panel-version,
+.head-panel-noversion {
+	color: #fff;
+	text-align: center;
+}
+
+.head-panel-version {
+	background: #287d28;
+}
+
+.head-panel-noversion {
+	background: #546ced;
+}
+
+.head-title {
+	font: 1.7em Trebuchet MS, Helvetica, sans-serif;
+	margin-bottom: 0.25em;
+}
+
+.head-description {
+	font-size: 0.9em;
+	line-height: 1.4;
+}
+
+.version-wrapper {
+	display: inline-flex;
+	margin-top: 0.5em;
+}
+
+.version-text,
+.version-data {
+	color: #fff;
+	font-weight: bold;
+	padding: 4px 6px;
+}
+
+.version-text {
+	background: #2e2e2e;
+	border-radius: 4px 0 0 4px;
+}
+
+.version-data {
+	background: #a45f00;
+	border-radius: 0 4px 4px 0;
+}
+
+fieldset {
+	border-radius: 8px;
+}
+
+input[type='password'],
+input[type='text'] {
+	max-width: 42em;
+	width: 100%;
+}

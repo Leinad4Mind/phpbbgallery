@@ -1,0 +1,44 @@
+services:
+    leinad4mind.dropboxupload.http_client:
+        class: GuzzleHttp\Client
+
+    leinad4mind.dropboxupload.core.functions:
+        class: leinad4mind\dropboxupload\core\functions
+        arguments:
+            - '@ext.manager'
+
+    leinad4mind.dropboxupload.core.dropbox_client:
+        class: leinad4mind\dropboxupload\core\dropbox_client
+        arguments:
+            - '@leinad4mind.dropboxupload.http_client'
+
+    leinad4mind.dropboxupload.main.controller:
+        class: leinad4mind\dropboxupload\controller\main_controller
+        arguments:
+            - '@config'
+            - '@config_text'
+            - '@user'
+            - '@log'
+            - '@leinad4mind.dropboxupload.core.dropbox_client'
+            - '%core.root_path%'
+
+    leinad4mind.dropboxupload.admin.controller:
+        class: leinad4mind\dropboxupload\controller\admin_controller
+        arguments:
+            - '@config'
+            - '@config_text'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '@language'
+            - '@log'
+            - '@leinad4mind.dropboxupload.core.functions'
+        public: true
+
+    leinad4mind.dropboxupload.listener:
+        class: leinad4mind\dropboxupload\event\listener
+        arguments:
+            - '@config'
+            - '@leinad4mind.dropboxupload.main.controller'
+        tags:
+            - { name: event.listener }

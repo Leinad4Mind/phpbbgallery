@@ -1,0 +1,34 @@
+{
+	"name": "leinad4mind/dropboxupload",
+	"type": "phpbb-extension",
+	"description": "Uploads verified Auto Database Backup files to Dropbox.",
+	"version": "3.3.0",
+	"time": "2026-08-01",
+	"keywords": ["phpbb", "extension", "autobackup", "dropbox"],
+	"license": "GPL-2.0-only",
+	"authors": [
+		{ "name": "Leinad4Mind", "role": "Developer and Maintainer" },
+		{ "name": "David Wood", "role": "Original Developer" },
+		{
+			"name": "Kunal Varma",
+			"homepage": "https://github.com/kunalvarma05/dropbox-php-sdk",
+			"role": "Original Dropbox SDK author"
+		}
+	],
+	"require": {
+		"php": ">=7.2.0",
+		"composer/installers": "~1.0"
+	},
+	"extra": {
+		"display-name": "[Leinad4Mind] Dropbox upload for Auto Database Backup",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.3.0,<4.0.0@dev"
+		},
+		"version-check": {
+			"host": "version.phpbbdev.space",
+			"directory": "/versions",
+			"filename": "dropbox_upload_version_file.json",
+			"ssl": true
+		}
+	}
+}
