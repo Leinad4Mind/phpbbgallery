@@ -25,6 +25,9 @@
 /bbtagsimages/phpunit.xml.dist export-ignore
 /bbtagsimages/tests export-ignore
 /bbtagsimages/tests/** export-ignore
+/bbpointsimages/phpunit.xml.dist export-ignore
+/bbpointsimages/tests export-ignore
+/bbpointsimages/tests/** export-ignore
 /imagerevisions/phpunit.xml.dist export-ignore
 /imagerevisions/tests export-ignore
 /imagerevisions/tests/** export-ignore

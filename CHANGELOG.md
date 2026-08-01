@@ -6,6 +6,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Added
 
+- Added the independent BBPoints Images add-on foundation with inherited per-album upload rewards and source costs plus dedicated contributor, reward, purchase, source-hash and download-counter storage.
 - Added a confirmed, resumable ACP Cleanup maintenance action that converts legacy [album] Gallery BBCodes into the active [image] or [galleryimage] tag across posts, private messages and signatures while preserving phpBB storage metadata.
 - Added optional progressive previous/next image navigation that replaces the complete image view in place, preserves browser history and scroll position, supports keyboard arrows, and falls back to normal permission-checked links.
 - Restored permission-safe Gallery locations in phpBB's “Who is online” page for the Gallery index, searches, albums, uploads and images, with target details hidden whenever the viewer cannot access them.
