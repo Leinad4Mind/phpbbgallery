@@ -46,6 +46,18 @@ namespace phpbbgallery\core
 
 namespace sitesplat\bbpoints\core
 {
+	final class distribution
+	{
+		public function __construct(private bool $created)
+		{
+		}
+
+		public function was_created(): bool
+		{
+			return $this->created;
+		}
+	}
+
 	final class operation
 	{
 		public function __construct(private bool $created)
@@ -62,6 +74,7 @@ namespace sitesplat\bbpoints\core
 	{
 		public array $credits = [];
 		public array $transfers = [];
+		public array $distributions = [];
 
 		public function credit(int $user_id, int $amount, string $reason, string $key): operation
 		{
@@ -78,6 +91,16 @@ namespace sitesplat\bbpoints\core
 				'from_user_id', 'to_user_id', 'amount', 'reason', 'key', 'allow_negative'
 			);
 			return new operation($created);
+		}
+
+		public function distribute(int $from_user_id, array $recipients, string $reason,
+			string $key, bool $allow_negative = false): distribution
+		{
+			$created = !isset($this->distributions[$key]);
+			$this->distributions[$key] = compact(
+				'from_user_id', 'recipients', 'reason', 'key', 'allow_negative'
+			);
+			return new distribution($created);
 		}
 	}
 }
@@ -138,7 +161,9 @@ namespace
 	require_once dirname(__DIR__) . '/migrations/m2_reward_lifecycle.php';
 	require_once dirname(__DIR__) . '/migrations/m3_acp_settings.php';
 	require_once dirname(__DIR__) . '/reward_manager.php';
+	require_once dirname(__DIR__) . '/purchase_manager.php';
 	require_once dirname(__DIR__) . '/retro_sync.php';
 	require_once __DIR__ . '/fake_db.php';
 	require_once __DIR__ . '/reward_fake_db.php';
+	require_once __DIR__ . '/purchase_fake_db.php';
 }

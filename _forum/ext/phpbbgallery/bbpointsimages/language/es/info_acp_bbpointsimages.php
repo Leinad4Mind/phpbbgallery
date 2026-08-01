@@ -33,4 +33,9 @@ $lang = array_merge($lang, [
 	'ACP_BBPOINTSIMAGES_SYNC_CONFIRM' => '¿Seguro que quieres recompensar todas las imágenes existentes elegibles con las reglas actuales de los álbumes?',
 	'ACP_BBPOINTSIMAGES_SYNC_PROGRESS' => 'La sincronización continúa. Hasta ahora se analizaron %1$d imágenes y se concedieron %2$d recompensas.',
 	'ACP_BBPOINTSIMAGES_SYNC_COMPLETE' => 'La sincronización terminó. Se analizaron %1$d imágenes y se concedieron %2$d recompensas.',
+	'BBPOINTSIMAGES_SOURCE_LOGIN' => 'Debes iniciar sesión para comprar este archivo de imagen original.',
+	'BBPOINTSIMAGES_SOURCE_PURCHASE_CONFIRM' => 'Descargar este archivo de imagen original cuesta %1$d puntos. ¿Quieres continuar?',
+	'BBPOINTSIMAGES_INSUFFICIENT_FUNDS' => 'Tienes %1$d puntos, pero este archivo de imagen original requiere %2$d puntos.',
+	'BBPOINTSIMAGES_SOURCE_UNAVAILABLE' => 'No se puede comprar el archivo de imagen original en este momento.',
+	'BBPOINTSIMAGES_DOWNLOADS' => 'Descargas del original',
 ]);

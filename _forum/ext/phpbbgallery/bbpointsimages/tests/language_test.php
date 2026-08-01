@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 
 final class language_test extends TestCase
 {
-	public function test_every_gallery_locale_has_the_dependency_message_and_placeholder(): void
+	public function test_every_gallery_locale_has_the_required_messages_and_placeholders(): void
 	{
 		$gallery_locales = array_map('basename', glob(dirname(__DIR__, 2) . '/core/language/*', GLOB_ONLYDIR));
 		sort($gallery_locales);
@@ -27,6 +27,12 @@ final class language_test extends TestCase
 			require dirname(__DIR__) . '/language/' . $locale . '/info_acp_bbpointsimages.php';
 			$this->assertArrayHasKey('BBPOINTSIMAGES_DEPENDENCIES_MISSING', $lang, $locale);
 			$this->assertSame(1, substr_count($lang['BBPOINTSIMAGES_DEPENDENCIES_MISSING'], '%s'), $locale);
+			$this->assertSame(1, substr_count($lang['BBPOINTSIMAGES_SOURCE_PURCHASE_CONFIRM'], '%1$d'), $locale);
+			$this->assertSame(1, substr_count($lang['BBPOINTSIMAGES_INSUFFICIENT_FUNDS'], '%1$d'), $locale);
+			$this->assertSame(1, substr_count($lang['BBPOINTSIMAGES_INSUFFICIENT_FUNDS'], '%2$d'), $locale);
+			$this->assertArrayHasKey('BBPOINTSIMAGES_SOURCE_LOGIN', $lang, $locale);
+			$this->assertArrayHasKey('BBPOINTSIMAGES_SOURCE_UNAVAILABLE', $lang, $locale);
+			$this->assertArrayHasKey('BBPOINTSIMAGES_DOWNLOADS', $lang, $locale);
 		}
 	}
 }

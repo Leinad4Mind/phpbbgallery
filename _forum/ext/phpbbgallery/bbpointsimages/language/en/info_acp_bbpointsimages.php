@@ -33,4 +33,9 @@ $lang = array_merge($lang, [
 	'ACP_BBPOINTSIMAGES_SYNC_CONFIRM' => 'Are you sure you want to reward all eligible historical images using the current album policies?',
 	'ACP_BBPOINTSIMAGES_SYNC_PROGRESS' => 'Historical reward synchronization is continuing. %1$d images scanned and %2$d rewards granted so far.',
 	'ACP_BBPOINTSIMAGES_SYNC_COMPLETE' => 'Historical reward synchronization completed. %1$d images were scanned and %2$d rewards were granted.',
+	'BBPOINTSIMAGES_SOURCE_LOGIN' => 'You must sign in to purchase this original image file.',
+	'BBPOINTSIMAGES_SOURCE_PURCHASE_CONFIRM' => 'Downloading this original image file costs %1$d points. Do you want to continue?',
+	'BBPOINTSIMAGES_INSUFFICIENT_FUNDS' => 'You have %1$d points, but this original image file requires %2$d points.',
+	'BBPOINTSIMAGES_SOURCE_UNAVAILABLE' => 'The original image file cannot be purchased at this time.',
+	'BBPOINTSIMAGES_DOWNLOADS' => 'Original downloads',
 ]);

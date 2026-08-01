@@ -12,3 +12,5 @@ All notable changes to the phpBB Gallery BBPoints Images add-on are documented i
 - Added retry-safe rewards for uploaded, imported and approved images, exact-file duplicate protection and reward migration when authorship changes.
 - Added an ACP policy editor with independent inherited upload rewards and source costs per album.
 - Added an explicitly confirmed, paginated and resumable synchronization that rewards eligible historical images without duplicate credits.
+- Added permanent, confirmation-protected original-source purchases with atomic author/contributor distributions and retry-safe access.
+- Added per-image and per-purchase original download counters while keeping medium images and thumbnails free.

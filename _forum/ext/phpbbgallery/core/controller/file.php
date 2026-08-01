@@ -53,6 +53,9 @@ class file
 	/** @var \phpbb\request\request_interface */
 	protected \phpbb\request\request_interface $request;
 
+	/** @var \phpbb\event\dispatcher_interface Source-access extension dispatcher */
+	protected \phpbb\event\dispatcher_interface $dispatcher;
+
 	/** @var string */
 	protected string $table_albums;
 
@@ -85,6 +88,7 @@ class file
 	 * @param \phpbbgallery\core\user $gallery_user Gallery user object
 	 * @param \phpbbgallery\core\file\file $tool
 	 * @param \phpbb\request\request_interface $request
+	 * @param \phpbb\event\dispatcher_interface $dispatcher
 	 * @param string $source_path
 	 * @param string $medium_path
 	 * @param string $mini_path
@@ -94,7 +98,8 @@ class file
 	 */
 	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\language\language $language, \phpbbgallery\core\auth\auth $gallery_auth,
 	\phpbbgallery\core\user $gallery_user, \phpbbgallery\core\file\file $tool, \phpbb\request\request_interface $request,
-	string $source_path, string $medium_path, string $mini_path, string $watermark_file, string $albums_table, string $images_table)
+	\phpbb\event\dispatcher_interface $dispatcher, string $source_path, string $medium_path, string $mini_path,
+	string $watermark_file, string $albums_table, string $images_table)
 	{
 		$this->config = $config;
 		$this->db = $db;
@@ -104,6 +109,7 @@ class file
 		$this->gallery_user = $gallery_user;
 		$this->tool = $tool;
 		$this->request = $request;
+		$this->dispatcher = $dispatcher;
 		$this->path_source = $this->resolve_gallery_path($source_path);
 		$this->path_medium = $this->resolve_gallery_path($medium_path);
 		$this->path_mini = $this->resolve_gallery_path($mini_path);
@@ -126,6 +132,25 @@ class file
 		$this->path = $this->path_source;
 		$this->load_data($image_id);
 		$this->check_auth();
+		if ($this->error === '')
+		{
+			$image_data = $this->data;
+			$source_path = $this->path_source . $this->data['image_filename'];
+			/**
+			 * Allow add-ons to authorize or account for original-source access.
+			 *
+			 * A listener may interrupt the request with a login, confirmation or
+			 * HTTP exception. Medium and thumbnail routes do not trigger this event.
+			 *
+			 * @event phpbbgallery.core.file.source_access
+			 * @var array  image_data Complete image and album row
+			 * @var string source_path Absolute original-source path
+			 */
+			$this->dispatcher->trigger_event(
+				'phpbbgallery.core.file.source_access',
+				compact('image_data', 'source_path')
+			);
+		}
 
 		$this->generate_image_src();
 		// @todo Enable watermark
@@ -134,13 +159,12 @@ class file
 
 		$this->tool->set_image_options($this->config['phpbb_gallery_max_filesize'], $this->config['phpbb_gallery_max_height'], $this->config['phpbb_gallery_max_width']);
 		$this->tool->set_image_data($this->image_src, $this->data['image_name']);
-		if ($this->error || !$this->user->data['is_registered'])
-		{
-			$this->tool->disable_browser_cache();
-		}
+		// Original-source access may be user-specific; never let the browser or
+		// an intermediary reuse a response without passing through authorization.
+		$this->tool->disable_browser_cache();
 
 		// The image-page controller owns view counting; browsers may repeat binary requests.
-		return $this->display();
+		return $this->display(true);
 	}
 
 	/**
@@ -318,7 +342,7 @@ class file
 	*
 	* @return \Symfony\Component\HttpFoundation\BinaryFileResponse A Symfony Response object
 	*/
-	public function display(): \Symfony\Component\HttpFoundation\BinaryFileResponse
+	public function display(bool $attachment = false): \Symfony\Component\HttpFoundation\BinaryFileResponse
 	{
 		$this->tool->set_last_modified($this->gallery_user->get_data('user_permissions_changed'));
 		$this->tool->set_last_modified($this->config['phpbb_gallery_watermark_changed']);
@@ -357,7 +381,7 @@ class file
 		{
 			$response->headers->set('X-Content-Type-Options', 'nosniff');
 		}
-		if (empty($this->user->browser) || (!$this->tool->is_ie_greater7($this->user->browser) && (strpos(strtolower($this->user->browser), 'msie') !== false)))
+		if ($attachment || empty($this->user->browser) || (!$this->tool->is_ie_greater7($this->user->browser) && (strpos(strtolower($this->user->browser), 'msie') !== false)))
 		{
 			$response->headers->set('Content-Disposition', 'attachment; ' . $this->tool->header_filename(htmlspecialchars_decode($this->tool->image_name) . '.' . $this->tool->image_type));
 			if (empty($this->user->browser) || (strpos(strtolower($this->user->browser), 'msie 6.0') !== false))
