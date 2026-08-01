@@ -17,7 +17,7 @@ final class m1_init extends migration
 	{
 		return [
 			'\phpbbgallery\core\migrations\remove_legacy_image_plugins',
-			'\sitesplat\bbpoints\migrations\v13x\m1_ledger_api',
+			'\sitesplat\bbpoints\migrations\v13x\m2_distributions',
 		];
 	}
 

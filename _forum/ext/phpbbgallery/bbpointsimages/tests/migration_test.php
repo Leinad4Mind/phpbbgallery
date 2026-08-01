@@ -38,7 +38,7 @@ final class migration_test extends TestCase
 	{
 		$this->assertSame([
 			'\phpbbgallery\core\migrations\remove_legacy_image_plugins',
-			'\sitesplat\bbpoints\migrations\v13x\m1_ledger_api',
+			'\sitesplat\bbpoints\migrations\v13x\m2_distributions',
 		], m1_init::depends_on());
 	}
 

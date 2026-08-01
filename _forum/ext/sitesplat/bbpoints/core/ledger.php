@@ -27,6 +27,7 @@ use sitesplat\bbpoints\exception\operation_conflict;
 final class ledger
 {
 	public const SYSTEM_USER_ID = 0;
+	private const MAX_AMOUNT = 2147483647;
 	private const OPERATION_KEY_PATTERN = '#^[A-Za-z0-9][A-Za-z0-9:._/-]{0,190}$#D';
 
 	public function __construct(
@@ -35,6 +36,7 @@ final class ledger
 		private dispatcher_interface $dispatcher,
 		private string $bbpoints_table,
 		private string $operations_table,
+		private string $distributions_table,
 		private string $users_table,
 		private string $posts_table,
 		private string $topics_table
@@ -113,6 +115,117 @@ final class ledger
 			$operation_key,
 			$allow_negative
 		);
+	}
+
+	/**
+	 * Transfer one debit atomically between several registered recipients.
+	 *
+	 * @param array<int, int> $recipients Recipient user ID => amount
+	 */
+	public function distribute(int $from_user_id, array $recipients, string $reason,
+		string $operation_key, bool $allow_negative = false): distribution
+	{
+		$this->validate_operation_key($operation_key);
+		if (!$this->is_registered_user_id($from_user_id))
+		{
+			throw new invalid_operation('The BBPoints payer must be a registered user.');
+		}
+
+		$recipients = $this->normalize_recipients($from_user_id, $recipients);
+		$total = array_sum($recipients);
+		$recipients_hash = $this->hash_recipients($recipients);
+		$this->assert_user_exists($from_user_id);
+		foreach (array_keys($recipients) as $to_user_id)
+		{
+			$this->assert_user_exists($to_user_id);
+		}
+
+		$existing = $this->load_distribution(
+			$from_user_id,
+			$recipients,
+			$total,
+			$recipients_hash,
+			$operation_key
+		);
+		if ($existing !== null)
+		{
+			return $existing;
+		}
+
+		$this->db->sql_transaction('begin');
+		try
+		{
+			$timestamp = time();
+			if (!$this->reserve_distribution(
+				$operation_key,
+				$from_user_id,
+				$total,
+				$recipients_hash,
+				$timestamp
+			))
+			{
+				throw new \RuntimeException('The BBPoints distribution key could not be reserved.');
+			}
+
+			$this->lock_users([$from_user_id, ...array_keys($recipients)]);
+			$balance = $this->get_balance($from_user_id);
+			if (!$allow_negative && $balance < $total)
+			{
+				throw new insufficient_funds($balance, $total);
+			}
+
+			$operations = [];
+			foreach ($recipients as $to_user_id => $amount)
+			{
+				$child_key = $this->distribution_child_key($operation_key, count($operations));
+				if (!$this->reserve_operation($child_key))
+				{
+					throw new \RuntimeException('A BBPoints distribution movement could not be reserved.');
+				}
+				$operation = $this->insert_movement(
+					$from_user_id,
+					$to_user_id,
+					$amount,
+					$reason,
+					$child_key
+				);
+				if ($operation === null)
+				{
+					throw new \RuntimeException('A BBPoints distribution movement could not be recorded.');
+				}
+				$this->bind_operation($child_key, $operation->get_id());
+				$operations[] = $operation;
+			}
+
+			$distribution = new distribution(
+				$operation_key,
+				$from_user_id,
+				$total,
+				$operations,
+				$timestamp,
+				true
+			);
+			$this->db->sql_transaction('commit');
+		}
+		catch (\Throwable $exception)
+		{
+			$this->db->sql_transaction('rollback');
+			$existing = $this->load_distribution(
+				$from_user_id,
+				$recipients,
+				$total,
+				$recipients_hash,
+				$operation_key
+			);
+			if ($existing !== null)
+			{
+				return $existing;
+			}
+			throw $exception;
+		}
+
+		$this->announce_distribution($distribution);
+		return $distribution;
 	}
 
 	/**
@@ -241,6 +354,22 @@ final class ledger
 		return $this->execute_write($sql);
 	}
 
+	private function reserve_distribution(string $operation_key, int $from_user_id, int $total,
+		string $recipients_hash, int $timestamp): bool
+	{
+		$sql_ary = [
+			'operation_key'   => $operation_key,
+			'from_id'         => $from_user_id,
+			'total_amount'    => $total,
+			'recipients_hash' => $recipients_hash,
+			'created_time'    => $timestamp,
+		];
+		$sql = 'INSERT INTO ' . $this->distributions_table . ' '
+			. $this->db->sql_build_array('INSERT', $sql_ary);
+
+		return $this->execute_write($sql);
+	}
+
 	private function insert_movement(int $from_user_id, int $to_user_id, int $amount,
 		string $reason, string $operation_key): ?operation
 	{
@@ -318,6 +447,114 @@ final class ledger
 		);
 	}
 
+	/**
+	 * @param array<int, int> $recipients
+	 */
+	private function load_distribution(int $from_user_id, array $recipients, int $total,
+		string $recipients_hash, string $operation_key): ?distribution
+	{
+		$sql = 'SELECT operation_key, from_id, total_amount, recipients_hash, created_time
+			FROM ' . $this->distributions_table . "
+			WHERE operation_key = '" . $this->db->sql_escape($operation_key) . "'";
+		$result = $this->db->sql_query($sql);
+		$row = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+		if (!$row)
+		{
+			return null;
+		}
+		if ((int) $row['from_id'] !== $from_user_id
+			|| (int) $row['total_amount'] !== $total
+			|| !hash_equals((string) $row['recipients_hash'], $recipients_hash))
+		{
+			throw new operation_conflict('The BBPoints distribution key already belongs to another payment.');
+		}
+
+		$operations = [];
+		foreach ($recipients as $to_user_id => $amount)
+		{
+			$operation = $this->find_operation(
+				$this->distribution_child_key($operation_key, count($operations))
+			);
+			if ($operation === null)
+			{
+				throw new \RuntimeException('The BBPoints distribution is incomplete.');
+			}
+			$operations[] = $this->assert_same_operation(
+				$operation,
+				$from_user_id,
+				$to_user_id,
+				$amount
+			);
+		}
+
+		return new distribution(
+			$operation_key,
+			$from_user_id,
+			$total,
+			$operations,
+			(int) $row['created_time'],
+			false
+		);
+	}
+
+	/**
+	 * @param array<int|string, mixed> $recipients
+	 * @return array<int, int>
+	 */
+	private function normalize_recipients(int $from_user_id, array $recipients): array
+	{
+		$normalized = [];
+		$total = 0;
+		foreach ($recipients as $to_user_id => $amount)
+		{
+			if ((!is_int($to_user_id) && !ctype_digit((string) $to_user_id)) || !is_int($amount))
+			{
+				throw new invalid_operation('BBPoints distribution recipients and amounts must be integers.');
+			}
+			$to_user_id = (int) $to_user_id;
+			if (!$this->is_registered_user_id($to_user_id) || $to_user_id === $from_user_id)
+			{
+				throw new invalid_operation('A BBPoints distribution requires different registered recipients.');
+			}
+			if ($amount <= 0 || $amount > self::MAX_AMOUNT
+				|| $total > self::MAX_AMOUNT - $amount)
+			{
+				throw new invalid_operation('The BBPoints distribution amount is outside the supported range.');
+			}
+			if (isset($normalized[$to_user_id]))
+			{
+				throw new invalid_operation('A BBPoints distribution recipient may only occur once.');
+			}
+			$normalized[$to_user_id] = $amount;
+			$total += $amount;
+		}
+		if (empty($normalized))
+		{
+			throw new invalid_operation('A BBPoints distribution requires at least one recipient.');
+		}
+		ksort($normalized, SORT_NUMERIC);
+		return $normalized;
+	}
+
+	/**
+	 * @param array<int, int> $recipients
+	 */
+	private function hash_recipients(array $recipients): string
+	{
+		$parts = [];
+		foreach ($recipients as $user_id => $amount)
+		{
+			$parts[] = $user_id . ':' . $amount;
+		}
+		return hash('sha256', implode(';', $parts));
+	}
+
+	private function distribution_child_key(string $operation_key, int $index): string
+	{
+		return 'distribution:' . hash('sha256', $operation_key) . ':' . $index;
+	}
+
 	private function assert_same_operation(operation $operation, int $from_user_id,
 		int $to_user_id, int $amount): operation
 	{
@@ -335,9 +572,9 @@ final class ledger
 		string $operation_key): void
 	{
 		$this->validate_operation_key($operation_key);
-		if ($amount <= 0)
+		if ($amount <= 0 || $amount > self::MAX_AMOUNT)
 		{
-			throw new invalid_operation('The BBPoints amount must be greater than zero.');
+			throw new invalid_operation('The BBPoints amount is outside the supported range.');
 		}
 		if ($from_user_id === $to_user_id)
 		{
@@ -386,6 +623,24 @@ final class ledger
 		$this->cache->destroy('sql', [$this->bbpoints_table, $this->operations_table]);
 		$this->dispatcher->trigger_event('sitesplat.bbpoints.operation_recorded', [
 			'operation' => $operation,
+		]);
+	}
+
+	private function announce_distribution(distribution $distribution): void
+	{
+		$this->cache->destroy('sql', [
+			$this->bbpoints_table,
+			$this->operations_table,
+			$this->distributions_table,
+		]);
+		foreach ($distribution->get_operations() as $operation)
+		{
+			$this->dispatcher->trigger_event('sitesplat.bbpoints.operation_recorded', [
+				'operation' => $operation,
+			]);
+		}
+		$this->dispatcher->trigger_event('sitesplat.bbpoints.distribution_recorded', [
+			'distribution' => $distribution,
 		]);
 	}
 }

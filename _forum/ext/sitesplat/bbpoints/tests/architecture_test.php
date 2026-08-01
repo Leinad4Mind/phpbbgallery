@@ -12,12 +12,13 @@ namespace sitesplat\bbpoints\tests;
 use PHPUnit\Framework\TestCase;
 use sitesplat\bbpoints\core\ledger;
 use sitesplat\bbpoints\core\operation;
+use sitesplat\bbpoints\core\distribution;
 
 final class architecture_test extends TestCase
 {
 	public function test_ledger_api_is_fully_typed(): void
 	{
-		foreach ([ledger::class, operation::class] as $class_name)
+		foreach ([ledger::class, operation::class, distribution::class] as $class_name)
 		{
 			$reflection = new \ReflectionClass($class_name);
 			foreach ($reflection->getProperties() as $property)
@@ -51,11 +52,17 @@ final class architecture_test extends TestCase
 		$this->assertStringContainsString("- '%sitesplat.bbpoints.table%'", $services);
 		$this->assertStringContainsString("- '%sitesplat.bbpoints.operations_table%'", $services);
 		$this->assertSame(2, substr_count($services, "- '%sitesplat.bbpoints.operations_table%'"));
+		$this->assertStringContainsString("- '%sitesplat.bbpoints.distributions_table%'", $services);
+		$this->assertSame(2, substr_count($services, "- '%sitesplat.bbpoints.distributions_table%'"));
 		$this->assertStringContainsString("- '%tables.users%'", $services);
 		$this->assertStringContainsString("- '%tables.posts%'", $services);
 		$this->assertStringContainsString("- '%tables.topics%'", $services);
 		$this->assertStringContainsString(
 			"TRUNCATE ' . \$this->bbpoints_operations_table",
+			(string) file_get_contents(dirname(__DIR__) . '/controller/admin_controller.php')
+		);
+		$this->assertStringContainsString(
+			"TRUNCATE ' . \$this->bbpoints_distributions_table",
 			(string) file_get_contents(dirname(__DIR__) . '/controller/admin_controller.php')
 		);
 	}

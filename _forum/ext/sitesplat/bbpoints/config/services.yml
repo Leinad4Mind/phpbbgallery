@@ -18,6 +18,7 @@ services:
             - '@dispatcher'
             - '%sitesplat.bbpoints.table%'
             - '%sitesplat.bbpoints.operations_table%'
+            - '%sitesplat.bbpoints.distributions_table%'
             - '%tables.users%'
             - '%tables.posts%'
             - '%tables.topics%'
@@ -37,6 +38,7 @@ services:
             - '%core.php_ext%'
             - '%sitesplat.bbpoints.table%'
             - '%sitesplat.bbpoints.operations_table%'
+            - '%sitesplat.bbpoints.distributions_table%'
             - '@sitesplat.bbpoints.helper'
 
     sitesplat.bbpoints.controller:

@@ -64,8 +64,10 @@ namespace
 	require_once dirname(__DIR__) . '/exception/insufficient_funds.php';
 	require_once dirname(__DIR__) . '/exception/operation_conflict.php';
 	require_once dirname(__DIR__) . '/core/operation.php';
+	require_once dirname(__DIR__) . '/core/distribution.php';
 	require_once dirname(__DIR__) . '/core/ledger.php';
 	require_once dirname(__DIR__) . '/migrations/v13x/m1_ledger_api.php';
+	require_once dirname(__DIR__) . '/migrations/v13x/m2_distributions.php';
 	require_once __DIR__ . '/fake_db.php';
 	require_once __DIR__ . '/fake_cache.php';
 	require_once __DIR__ . '/fake_dispatcher.php';

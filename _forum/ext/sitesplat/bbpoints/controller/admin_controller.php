@@ -35,6 +35,7 @@ class admin_controller
 	protected $php_ext;
 	protected $bbpoints_table;
 	protected $bbpoints_operations_table;
+	protected $bbpoints_distributions_table;
 	protected $bbpoints_helper;
 	protected $phpbb_dispatcher;
 
@@ -44,7 +45,8 @@ class admin_controller
 	* @access public
 	*/
 	public function __construct(db $db, request $request, template $template, user $user, language $lang, config $config, ContainerInterface $container,
-		dispatcher $phpbb_dispatcher, $root_path, $php_ext, $bbpoints_table, $bbpoints_operations_table, $bbpoints_helper)
+		dispatcher $phpbb_dispatcher, $root_path, $php_ext, $bbpoints_table, $bbpoints_operations_table,
+		$bbpoints_distributions_table, $bbpoints_helper)
 	{
 		$this->db = $db;
 		$this->request = $request;
@@ -58,6 +60,7 @@ class admin_controller
 		$this->php_ext = $php_ext;
 		$this->bbpoints_table = $bbpoints_table;
 		$this->bbpoints_operations_table = $bbpoints_operations_table;
+		$this->bbpoints_distributions_table = $bbpoints_distributions_table;
 		$this->bbpoints_helper = $bbpoints_helper;
 		$this->bbpoints_config = json_decode($this->config['bbpoints_settings'], true);
 	}
@@ -311,6 +314,8 @@ class admin_controller
 		$sql = 'TRUNCATE ' . $this->bbpoints_table;
 		$this->db->sql_query($sql);
 		$sql = 'TRUNCATE ' . $this->bbpoints_operations_table;
+		$this->db->sql_query($sql);
+		$sql = 'TRUNCATE ' . $this->bbpoints_distributions_table;
 		$this->db->sql_query($sql);
 
 		/**

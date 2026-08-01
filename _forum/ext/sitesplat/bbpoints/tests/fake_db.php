@@ -16,12 +16,15 @@ final class fake_db implements \phpbb\db\driver\driver_interface
 	public array $topics;
 	public array $movements;
 	public array $operations = [];
+	public array $distributions = [];
 	public array $statements = [];
 	public array $transactions = [];
 	public bool $fail_next_insert = false;
+	public int $fail_movement_insert_at = 0;
 	private array $built = [];
 	private array $pending = [];
 	private int $next_id = 1;
+	private int $movement_insert_count = 0;
 	private bool $error = false;
 	private int $affected_rows = 0;
 	private ?array $snapshot = null;
@@ -103,9 +106,23 @@ final class fake_db implements \phpbb\db\driver\driver_interface
 			$this->operations[$operation_key] = $this->built;
 			$this->affected_rows = 1;
 		}
+		else if (str_starts_with($sql, 'INSERT INTO point_distributions'))
+		{
+			$operation_key = $this->built['operation_key'] ?? null;
+			if ($this->fail_next_insert || isset($this->distributions[$operation_key]))
+			{
+				$this->fail_next_insert = false;
+				$this->error = true;
+				return false;
+			}
+			$this->distributions[$operation_key] = $this->built;
+			$this->affected_rows = 1;
+		}
 		else if (str_starts_with($sql, 'INSERT INTO points'))
 		{
-			if ($this->fail_next_insert)
+			$this->movement_insert_count++;
+			if ($this->fail_next_insert
+				|| $this->movement_insert_count === $this->fail_movement_insert_at)
 			{
 				$this->fail_next_insert = false;
 				$this->error = true;
@@ -122,6 +139,15 @@ final class fake_db implements \phpbb\db\driver\driver_interface
 			if (isset($this->movements[$movement_id]))
 			{
 				$this->pending[] = $this->movements[$movement_id] + ['operation_key' => $operation_key];
+			}
+		}
+		else if (str_contains($sql, 'FROM point_distributions')
+			&& preg_match("/WHERE operation_key = '((?:''|[^'])*)'/", $sql, $matches))
+		{
+			$operation_key = str_replace("''", "'", $matches[1]);
+			if (isset($this->distributions[$operation_key]))
+			{
+				$this->pending[] = $this->distributions[$operation_key];
 			}
 		}
 
@@ -181,11 +207,23 @@ final class fake_db implements \phpbb\db\driver\driver_interface
 		$this->transactions[] = $status;
 		if ($status === 'begin')
 		{
-			$this->snapshot = [$this->movements, $this->operations, $this->next_id];
+			$this->snapshot = [
+				$this->movements,
+				$this->operations,
+				$this->distributions,
+				$this->next_id,
+				$this->movement_insert_count,
+			];
 		}
 		else if ($status === 'rollback' && $this->snapshot !== null)
 		{
-			[$this->movements, $this->operations, $this->next_id] = $this->snapshot;
+			[
+				$this->movements,
+				$this->operations,
+				$this->distributions,
+				$this->next_id,
+				$this->movement_insert_count,
+			] = $this->snapshot;
 			$this->snapshot = null;
 		}
 		else if ($status === 'commit')
