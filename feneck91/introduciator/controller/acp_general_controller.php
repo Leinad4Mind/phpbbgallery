@@ -75,6 +75,12 @@ class acp_general_controller
 		//Load metadata for this extension
 		$ext_meta = $this->ext_manager_helper->get_ext_meta();
 
+		// Not a translation: the extension is listed on the French community's own
+		// customisation database, so French links there instead of phpbb.com.
+		$details_url = ($this->user->lang_name === 'fr')
+			? 'http://www.phpbb-fr.com/customise/db/extension/introduciator_2'
+			: 'https://www.phpbb.com/customise/db/extension/introduciator/';
+
 		$this->template->assign_vars([
 			// Display general page content into ACP Extensions tab
 			'S_INTRODUCIATOR_GENERAL_PAGES'			=> true,
@@ -82,6 +88,8 @@ class acp_general_controller
 			'INTRODUCIATOR_VERSION'					=> $ext_meta['version'],
 			// Install date of this extension
 			'INTRODUCIATOR_INSTALL_DATE'			=> $this->user->format_date($this->dbconfig['introduciator_install_date']),
+			// URL to the extension's listing page
+			'U_INTRODUCIATOR_GP_DETAILS'				=> $details_url,
 		]);
 	}
 }
