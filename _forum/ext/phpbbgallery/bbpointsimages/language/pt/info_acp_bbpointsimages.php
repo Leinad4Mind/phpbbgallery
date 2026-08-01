@@ -38,4 +38,10 @@ $lang = array_merge($lang, [
 	'BBPOINTSIMAGES_INSUFFICIENT_FUNDS' => 'Tens %1$d pontos, mas este ficheiro de imagem original requer %2$d pontos.',
 	'BBPOINTSIMAGES_SOURCE_UNAVAILABLE' => 'Não é possível comprar o ficheiro de imagem original neste momento.',
 	'BBPOINTSIMAGES_DOWNLOADS' => 'Transferências do original',
+	'ACP_BBPOINTSIMAGES_CONTRIBUTORS' => 'Permitir atribuir colaboradores',
+	'ACP_BBPOINTSIMAGES_CONTRIBUTORS_EXPLAIN' => 'Permite que os autores e editores das imagens indiquem colaboradores. Os colaboradores existentes mantêm a atribuição e a sua parte das transferências pagas quando esta opção é desativada.',
+	'BBPOINTSIMAGES_CONTRIBUTORS' => 'Colaboradores',
+	'BBPOINTSIMAGES_CONTRIBUTORS_EXPLAIN' => 'Introduz um nome de utilizador registado por linha, até ao máximo de %1$d. O autor da imagem é excluído automaticamente.',
+	'BBPOINTSIMAGES_CONTRIBUTORS_UNKNOWN' => 'Não foi possível encontrar estes colaboradores ou estão inativos: %1$s.',
+	'BBPOINTSIMAGES_CONTRIBUTORS_TOO_MANY' => 'Uma imagem não pode ter mais de %1$d colaboradores.',
 ]);

@@ -154,6 +154,20 @@ namespace
 	{
 		define('IN_PHPBB', true);
 	}
+	if (!function_exists('utf8_normalize_nfc'))
+	{
+		function utf8_normalize_nfc(string $value): string
+		{
+			return $value;
+		}
+	}
+	if (!function_exists('utf8_clean_string'))
+	{
+		function utf8_clean_string(string $value): string
+		{
+			return function_exists('mb_strtolower') ? mb_strtolower($value, 'UTF-8') : strtolower($value);
+		}
+	}
 
 	require_once dirname(__DIR__) . '/ext.php';
 	require_once dirname(__DIR__) . '/policy.php';
@@ -162,8 +176,10 @@ namespace
 	require_once dirname(__DIR__) . '/migrations/m3_acp_settings.php';
 	require_once dirname(__DIR__) . '/reward_manager.php';
 	require_once dirname(__DIR__) . '/purchase_manager.php';
+	require_once dirname(__DIR__) . '/contributor_manager.php';
 	require_once dirname(__DIR__) . '/retro_sync.php';
 	require_once __DIR__ . '/fake_db.php';
 	require_once __DIR__ . '/reward_fake_db.php';
 	require_once __DIR__ . '/purchase_fake_db.php';
+	require_once __DIR__ . '/contributor_fake_db.php';
 }

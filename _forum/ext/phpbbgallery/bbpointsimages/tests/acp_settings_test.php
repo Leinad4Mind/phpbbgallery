@@ -25,6 +25,8 @@ final class acp_settings_test extends TestCase
 		$this->assertStringContainsString("get('phpbbgallery.bbpointsimages.retro_sync')", $module);
 		$this->assertStringContainsString('name="album_rules[{{ album.ID }}][upload_reward]"', $template);
 		$this->assertStringContainsString('name="album_rules[{{ album.ID }}][source_cost]"', $template);
+		$this->assertStringContainsString('phpbb_gallery_bbpoints_contributors_enabled', $module);
+		$this->assertStringContainsString('name="contributors_enabled"', $template);
 		$this->assertSame(2, substr_count($template, '{{ S_FORM_TOKEN }}'));
 	}
 }

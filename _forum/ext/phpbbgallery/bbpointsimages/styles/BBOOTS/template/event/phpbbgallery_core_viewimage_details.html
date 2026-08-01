@@ -2,3 +2,9 @@
 	<dt><label>{{ lang('BBPOINTSIMAGES_DOWNLOADS') }}{{ lang('COLON') }}</label></dt>
 	<dd>{{ BBPOINTSIMAGES_DOWNLOAD_COUNT }}</dd>
 </dl>
+{% if bbpointsimages_contributors|length %}
+<dl>
+	<dt><label>{{ lang('BBPOINTSIMAGES_CONTRIBUTORS') }}{{ lang('COLON') }}</label></dt>
+	<dd>{% for contributor in bbpointsimages_contributors %}{{ contributor.FULL }}{% if not loop.last %}, {% endif %}{% endfor %}</dd>
+</dl>
+{% endif %}

@@ -29,16 +29,26 @@ services:
             - '%phpbbgallery.bbpointsimages.tables.purchases%'
             - '%phpbbgallery.bbpointsimages.tables.image_stats%'
 
+    phpbbgallery.bbpointsimages.contributor_manager:
+        class: phpbbgallery\bbpointsimages\contributor_manager
+        arguments:
+            - '@dbal.conn'
+            - '%phpbbgallery.bbpointsimages.tables.contributors%'
+            - '%tables.users%'
+
     phpbbgallery.bbpointsimages.listener:
         class: phpbbgallery\bbpointsimages\event\main_listener
         arguments:
             - '@phpbbgallery.bbpointsimages.reward_manager'
             - '@phpbbgallery.bbpointsimages.purchase_manager'
+            - '@phpbbgallery.bbpointsimages.contributor_manager'
             - '@request'
             - '@user'
             - '@language'
             - '@controller.helper'
             - '@template'
+            - '@config'
+            - '@phpbbgallery.core.url'
         tags:
             - { name: event.listener }
 

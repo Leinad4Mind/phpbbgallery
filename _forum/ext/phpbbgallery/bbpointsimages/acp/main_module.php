@@ -50,6 +50,9 @@ final class main_module
 			$config->set('phpbb_gallery_bbpoints_source_cost', policy::normalize_amount(
 				$request->variable('source_cost', 0, false, request_interface::POST)
 			));
+			$config->set('phpbb_gallery_bbpoints_contributors_enabled',
+				$request->variable('contributors_enabled', false, false, request_interface::POST) ? 1 : 0
+			);
 			$submitted = $request->variable('album_rules', [0 => ['upload_reward' => -1, 'source_cost' => -1]], false, request_interface::POST);
 			$policies->save_album_rules($submitted);
 			trigger_error($language->lang('ACP_BBPOINTSIMAGES_SAVED') . adm_back_link($this->u_action));
@@ -65,6 +68,7 @@ final class main_module
 			'U_SYNC' => $this->u_action . '&amp;action=sync',
 			'UPLOAD_REWARD' => policy::normalize_amount((int) $config['phpbb_gallery_bbpoints_upload_reward']),
 			'SOURCE_COST' => policy::normalize_amount((int) $config['phpbb_gallery_bbpoints_source_cost']),
+			'S_CONTRIBUTORS_ENABLED' => !empty($config['phpbb_gallery_bbpoints_contributors_enabled']),
 		]);
 		foreach ($policies->get_album_rules() as $album)
 		{

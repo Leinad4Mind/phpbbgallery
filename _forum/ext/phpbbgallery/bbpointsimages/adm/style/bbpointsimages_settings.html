@@ -14,6 +14,11 @@
 			<dt><label for="source_cost">{{ lang('ACP_BBPOINTSIMAGES_SOURCE_COST') }}</label><br><span>{{ lang('ACP_BBPOINTSIMAGES_SOURCE_COST_EXPLAIN') }}</span></dt>
 			<dd><input id="source_cost" name="source_cost" type="number" min="0" max="2147483647" value="{{ SOURCE_COST }}"></dd>
 		</dl>
+		<dl>
+			<dt><label>{{ lang('ACP_BBPOINTSIMAGES_CONTRIBUTORS') }}</label><br><span>{{ lang('ACP_BBPOINTSIMAGES_CONTRIBUTORS_EXPLAIN') }}</span></dt>
+			<dd><label><input name="contributors_enabled" type="radio" value="1"{% if S_CONTRIBUTORS_ENABLED %} checked{% endif %}> {{ lang('YES') }}</label>
+				<label><input name="contributors_enabled" type="radio" value="0"{% if not S_CONTRIBUTORS_ENABLED %} checked{% endif %}> {{ lang('NO') }}</label></dd>
+		</dl>
 	</fieldset>
 
 	<fieldset>

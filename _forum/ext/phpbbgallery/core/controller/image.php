@@ -477,9 +477,10 @@ class image
 		 * @var    array    image_data        All the data related to the image
 		 * @var    array    album_data        All the data related to the album image is part of
 		 * @var    string    page_title        Page title
+		 * @var    bool      hide_contest_private_data Whether author-related data must remain hidden
 		 * @since 1.2.0
 		 */
-		$vars = ['image_id', 'image_data', 'album_data', 'page_title'];
+		$vars = ['image_id', 'image_data', 'album_data', 'page_title', 'hide_contest_private_data'];
 		extract($this->dispatcher->trigger_event('phpbbgallery.core.viewimage', compact($vars)));
 
 		$this->data = $image_data;

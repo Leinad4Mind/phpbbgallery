@@ -1,0 +1,9 @@
+{% for image in image %}
+	{% if image.BBPOINTSIMAGES_CAN_ASSIGN_CONTRIBUTORS %}
+	<dl>
+		<dt><label for="bbpointsimages_contributors_{{ image.S_ROW_COUNT }}">{{ lang('BBPOINTSIMAGES_CONTRIBUTORS') }}{{ lang('COLON') }}</label><br><span>{{ lang('BBPOINTSIMAGES_CONTRIBUTORS_EXPLAIN', BBPOINTSIMAGES_MAX_CONTRIBUTORS) }}</span></dt>
+		<dd><textarea class="inputbox" id="bbpointsimages_contributors_{{ image.S_ROW_COUNT }}" name="bbpointsimages_contributors_{{ image.S_ROW_COUNT }}" rows="3" cols="40">{{ image.BBPOINTSIMAGES_CONTRIBUTORS }}</textarea></dd>
+		<dd><strong><a href="{{ image.U_BBPOINTSIMAGES_FIND_CONTRIBUTORS }}" onclick="find_username(this.href); return false;">{{ lang('FIND_USERNAME') }}</a></strong></dd>
+	</dl>
+	{% endif %}
+{% endfor %}

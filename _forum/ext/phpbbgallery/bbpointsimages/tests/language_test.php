@@ -33,6 +33,11 @@ final class language_test extends TestCase
 			$this->assertArrayHasKey('BBPOINTSIMAGES_SOURCE_LOGIN', $lang, $locale);
 			$this->assertArrayHasKey('BBPOINTSIMAGES_SOURCE_UNAVAILABLE', $lang, $locale);
 			$this->assertArrayHasKey('BBPOINTSIMAGES_DOWNLOADS', $lang, $locale);
+			$this->assertArrayHasKey('ACP_BBPOINTSIMAGES_CONTRIBUTORS', $lang, $locale);
+			$this->assertArrayHasKey('ACP_BBPOINTSIMAGES_CONTRIBUTORS_EXPLAIN', $lang, $locale);
+			$this->assertSame(1, substr_count($lang['BBPOINTSIMAGES_CONTRIBUTORS_EXPLAIN'], '%1$d'), $locale);
+			$this->assertSame(1, substr_count($lang['BBPOINTSIMAGES_CONTRIBUTORS_UNKNOWN'], '%1$s'), $locale);
+			$this->assertSame(1, substr_count($lang['BBPOINTSIMAGES_CONTRIBUTORS_TOO_MANY'], '%1$d'), $locale);
 		}
 	}
 }

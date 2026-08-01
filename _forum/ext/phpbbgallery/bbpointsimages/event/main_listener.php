@@ -10,6 +10,7 @@
 namespace phpbbgallery\bbpointsimages\event;
 
 use phpbb\controller\helper;
+use phpbb\config\config;
 use phpbb\event\data;
 use phpbb\language\language;
 use phpbb\request\request_interface;
@@ -17,6 +18,8 @@ use phpbb\template\template;
 use phpbb\user;
 use phpbbgallery\bbpointsimages\purchase_manager;
 use phpbbgallery\bbpointsimages\reward_manager;
+use phpbbgallery\bbpointsimages\contributor_manager;
+use phpbbgallery\core\url;
 use sitesplat\bbpoints\exception\insufficient_funds;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -25,11 +28,14 @@ final class main_listener implements EventSubscriberInterface
 	public function __construct(
 		private reward_manager $rewards,
 		private purchase_manager $purchases,
+		private contributor_manager $contributors,
 		private request_interface $request,
 		private user $user,
 		private language $language,
 		private helper $helper,
-		private template $template
+		private template $template,
+		private config $config,
+		private url $gallery_url
 	)
 	{
 	}
@@ -37,18 +43,95 @@ final class main_listener implements EventSubscriberInterface
 	public static function getSubscribedEvents(): array
 	{
 		return [
+			'core.user_setup' => 'load_language_on_setup',
 			'phpbbgallery.core.upload.update_image_after' => 'uploaded',
+			'phpbbgallery.core.upload.review_validate' => 'validate_upload_review',
+			'phpbbgallery.core.upload.review_display' => 'display_upload_review',
+			'phpbbgallery.core.image_edit_file' => 'validate_image_edit',
+			'phpbbgallery.core.image_edit_display' => 'display_image_edit',
+			'phpbbgallery.core.image_edit_after' => 'save_image_edit',
 			'phpbbgallery.core.image.approve_after' => 'approved',
 			'phpbbgallery.core.image.change_author_after' => 'author_changed',
+			'phpbbgallery.core.image.delete_images' => 'images_deleted',
 			'phpbbgallery.acpimport.insert_image_after' => 'imported',
 			'phpbbgallery.core.file.source_access' => 'source_access',
 			'phpbbgallery.core.viewimage' => 'viewimage',
 		];
 	}
 
+	private array $validated_contributors = [];
+
+	public function load_language_on_setup(data $event): void
+	{
+		$lang_set_ext = (array) $event['lang_set_ext'];
+		$lang_set_ext[] = [
+			'ext_name' => 'phpbbgallery/bbpointsimages',
+			'lang_set' => 'info_acp_bbpointsimages',
+		];
+		$event['lang_set_ext'] = $lang_set_ext;
+	}
+
 	public function uploaded(data $event): void
 	{
+		$image_data = (array) $event['image_data'];
+		$this->save_contributors(
+			(int) $event['image_id'],
+			(int) $image_data['image_user_id'],
+			(int) $event['image_index']
+		);
 		$this->rewards->reward((array) $event['image_data'], (string) $event['file_link']);
+	}
+
+	public function validate_upload_review(data $event): void
+	{
+		if (!$this->assignment_enabled() || (string) $event['validation_error'] !== '')
+		{
+			return;
+		}
+		foreach (array_keys((array) $event['image_ids']) as $image_index)
+		{
+			$error = $this->validate_contributors((int) $image_index);
+			if ($error !== '')
+			{
+				$event['validation_error'] = $error;
+				return;
+			}
+		}
+	}
+
+	public function display_upload_review(data $event): void
+	{
+		$template_vars = (array) $event['image_template_vars'];
+		$this->assign_contributor_field($template_vars, (int) $event['image_id'], (int) $event['image_index']);
+		$event['image_template_vars'] = $template_vars;
+	}
+
+	public function validate_image_edit(data $event): void
+	{
+		if (!$this->assignment_enabled())
+		{
+			return;
+		}
+		$error = $this->validate_contributors(0);
+		if ($error !== '')
+		{
+			$errors = (array) $event['errors'];
+			$errors[] = $error;
+			$event['errors'] = $errors;
+		}
+	}
+
+	public function display_image_edit(data $event): void
+	{
+		$template_vars = (array) $event['template_vars'];
+		$this->assign_contributor_field($template_vars, (int) $event['image_id'], 0);
+		$event['template_vars'] = $template_vars;
+	}
+
+	public function save_image_edit(data $event): void
+	{
+		$updated = (array) $event['updated_image_data'];
+		$this->save_contributors((int) $event['image_id'], (int) $updated['image_user_id'], 0);
 	}
 
 	public function approved(data $event): void
@@ -68,6 +151,12 @@ final class main_listener implements EventSubscriberInterface
 	{
 		$author = (array) $event['author'];
 		$this->rewards->reassign((array) $event['image_ids'], (int) ($author['user_id'] ?? 0));
+		$this->contributors->remove_author((array) $event['image_ids'], (int) ($author['user_id'] ?? 0));
+	}
+
+	public function images_deleted(data $event): void
+	{
+		$this->contributors->delete_for_images((array) $event['images']);
 	}
 
 	public function source_access(data $event): void
@@ -134,5 +223,84 @@ final class main_listener implements EventSubscriberInterface
 			'BBPOINTSIMAGES_DOWNLOAD_COUNT',
 			$this->purchases->get_download_count($image_id)
 		);
+		if (!empty($event['hide_contest_private_data']))
+		{
+			return;
+		}
+		foreach ($this->contributors->get_for_image($image_id) as $contributor)
+		{
+			$this->template->assign_block_vars('bbpointsimages_contributors', [
+				'FULL' => get_username_string(
+					'full',
+					(int) $contributor['user_id'],
+					(string) $contributor['username'],
+					(string) $contributor['user_colour']
+				),
+			]);
+		}
+	}
+
+	private function assign_contributor_field(array &$template_vars, int $image_id, int $image_index): void
+	{
+		$template_vars['BBPOINTSIMAGES_CAN_ASSIGN_CONTRIBUTORS'] = $this->assignment_enabled();
+		if (!$template_vars['BBPOINTSIMAGES_CAN_ASSIGN_CONTRIBUTORS'])
+		{
+			return;
+		}
+		$template_vars['BBPOINTSIMAGES_CONTRIBUTORS'] = $this->request->is_set_post('bbpointsimages_contributors_' . $image_index)
+			? $this->submitted_value($image_index)
+			: $this->contributors->format_for_image($image_id);
+		$template_vars['U_BBPOINTSIMAGES_FIND_CONTRIBUTORS'] = $this->gallery_url->append_sid(
+			'phpbb',
+			'memberlist',
+			'mode=searchuser&amp;form=postform&amp;field=bbpointsimages_contributors_' . $image_index
+		);
+		$this->template->assign_var('BBPOINTSIMAGES_MAX_CONTRIBUTORS', contributor_manager::MAX_CONTRIBUTORS);
+	}
+
+	private function validate_contributors(int $image_index): string
+	{
+		try
+		{
+			$this->validated_contributors[$image_index] = $this->contributors->resolve($this->submitted_value($image_index));
+		}
+		catch (\LengthException $exception)
+		{
+			return $this->language->lang('BBPOINTSIMAGES_CONTRIBUTORS_TOO_MANY', contributor_manager::MAX_CONTRIBUTORS);
+		}
+		catch (\InvalidArgumentException $exception)
+		{
+			return $this->language->lang('BBPOINTSIMAGES_CONTRIBUTORS_UNKNOWN', $exception->getMessage());
+		}
+
+		return '';
+	}
+
+	private function save_contributors(int $image_id, int $author_id, int $image_index): void
+	{
+		if (!$this->assignment_enabled())
+		{
+			return;
+		}
+		if (!array_key_exists($image_index, $this->validated_contributors))
+		{
+			$this->validated_contributors[$image_index] = $this->contributors->resolve($this->submitted_value($image_index));
+		}
+		$this->contributors->replace($image_id, $author_id, $this->validated_contributors[$image_index]);
+	}
+
+	private function submitted_value(int $image_index): string
+	{
+		return $this->request->variable(
+			'bbpointsimages_contributors_' . $image_index,
+			'',
+			true,
+			request_interface::POST
+		);
+	}
+
+	private function assignment_enabled(): bool
+	{
+		return !empty($this->config['phpbb_gallery_bbpoints_contributors_enabled']);
 	}
 }
