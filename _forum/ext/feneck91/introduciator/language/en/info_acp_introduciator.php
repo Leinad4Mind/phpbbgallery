@@ -49,5 +49,7 @@ $lang = array_merge($lang, [
 	'INTRODUCIATOR_GENERAL'       => 'General',
 	'INTRODUCIATOR_CONFIGURATION' => 'Configuration',
 	'INTRODUCIATOR_EXPLANATION'   => 'Explanation',
-	'INTRODUCIATOR_STATISCICS'    => 'Statistics',
+	'INTRODUCIATOR_STATISTICS'    => 'Statistics',
+
+	'INTRODUCIATOR_NOTICE'        => '<div class="phpinfo"><p>The settings for this extension are in <strong>%1$s &#187; %2$s &#187; %3$s</strong>. It stays <strong>disabled</strong> until you pick the forum users must introduce themselves in and turn it on there &#8212; no one is required to introduce themselves until you do.</p></div>',
 ]);
