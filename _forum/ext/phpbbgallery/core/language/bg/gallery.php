@@ -99,7 +99,7 @@ $lang = array_merge($lang, [
 	'CONTEST_USERNAME'        => '<strong>Contest</strong>',
 	'CONTEST_USERNAME_LONG'   => '<strong>Contest</strong> » The username is hidden, until the end of the contest on %s.',
 	'CONTEST_IMAGE_DESC'      => '<strong>Contest</strong> » The image-description is hidden, until the end of the contest on %s.',
-	'CONTEST_WINNERS_OF'      => 'Contest winner of “%s“',
+	'CONTEST_WINNERS_OF'      => 'Победители в конкурса „%s“',
 	'CONTINUE'                => 'Продължи',
 
 	'DATABASE_NOT_UPTODATE'   => 'Базта данни не е същата версия като файловте ви. Моля, обновете базата си.',
@@ -346,7 +346,7 @@ $lang = array_merge($lang, [
 	'VIEW_SEARCH_RECENT'    => 'Виж скорошни изображения',
 	'VIEW_SEARCH_RANDOM'    => 'Виж случайни изображения',
 	'VIEW_SEARCH_COMMENTED' => 'Виж последни коментари',
-	'VIEW_SEARCH_CONTESTS'  => 'Виж изображеняита спечелили конкурси',
+	'VIEW_SEARCH_CONTESTS'  => 'Виж победителите в конкурсите',
 	'VIEW_SEARCH_TOPRATED'  => 'Виж най-оценените изображия',
 	'VIEW_SEARCH_SELF'      => 'Виж своите изображения',
 	'VIEWING_ALBUM'         => 'Разглежда албум %s',

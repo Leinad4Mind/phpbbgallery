@@ -99,7 +99,7 @@ $lang = array_merge($lang, [
 	'CONTEST_USERNAME'        => '<strong>Concorso</strong>',
 	'CONTEST_USERNAME_LONG'   => '<strong>Concorso</strong> » L’username è nascosto, fino alla fine del concorso il %s.',
 	'CONTEST_IMAGE_DESC'      => '<strong>Concorso</strong> » La descrizione dell’immagine è nascosta, fino alla fine del concorso il %s.',
-	'CONTEST_WINNERS_OF'      => 'Vincitore del concorso del “%s“',
+	'CONTEST_WINNERS_OF'      => 'Vincitori del concorso “%s”',
 	'CONTINUE'                => 'Continua',
 
 	'DATABASE_NOT_UPTODATE'   => 'Il tuo database non è della stessa versione dei tuoi file. Si prega di aggiornare il tuo database.',
