@@ -4,7 +4,7 @@
 
 {% if U_IMAGE %}
 <div class="well text-center">
-	<a href="{{ U_IMAGE }}"{% if S_GP_HIGHSLIDE %} class="highslide" onclick="return hs.expand(this)"{% elseif S_GP_LYTEBOX %} rel="lytebox" class="image-resize"{% endif %}><img src="{{ U_IMAGE }}" alt="{{ IMAGE_NAME }}" title="{{ IMAGE_NAME }}" style="max-height: {{ IMAGE_RSZ_HEIGHT }}px; max-width: {{ IMAGE_RSZ_WIDTH }}px;" /></a>
+	<a href="{{ U_IMAGE }}"><img src="{{ U_IMAGE }}" alt="{{ IMAGE_NAME }}" title="{{ IMAGE_NAME }}" style="max-height: {{ IMAGE_RSZ_HEIGHT }}px; max-width: {{ IMAGE_RSZ_WIDTH }}px;" /></a>
 </div>
 {% endif %}
 

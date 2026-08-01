@@ -31,6 +31,7 @@ use phpbbgallery\core\migrations\forum_index_images;
 use phpbbgallery\core\migrations\gallery_bbcodes;
 use phpbbgallery\core\migrations\viewtopic_profiles;
 use phpbbgallery\core\migrations\ajax_image_navigation;
+use phpbbgallery\core\migrations\remove_legacy_image_plugins;
 
 class migration_integrity_test extends TestCase
 {
@@ -56,6 +57,7 @@ class migration_integrity_test extends TestCase
 		gallery_bbcodes::class,
 		viewtopic_profiles::class,
 		ajax_image_navigation::class,
+		remove_legacy_image_plugins::class,
 	];
 
 	private array $temp_directories = [];
@@ -141,6 +143,39 @@ class migration_integrity_test extends TestCase
 			['\phpbbgallery\core\migrations\viewtopic_profiles'],
 			ajax_image_navigation::depends_on()
 		);
+		$this->assertSame(
+			['\phpbbgallery\core\migrations\ajax_image_navigation'],
+			remove_legacy_image_plugins::depends_on()
+		);
+	}
+
+	public function test_obsolete_image_plugin_modes_are_normalized_to_supported_links(): void
+	{
+		$config = new \phpbb\config\config([
+			'phpbb_gallery_link_thumbnail' => 'highslide',
+			'phpbb_gallery_link_imagepage' => 'lytebox',
+			'phpbb_gallery_link_image_name' => 'shadowbox',
+			'phpbb_gallery_link_image_icon' => 'shadowbox_slide_show',
+		]);
+		$migration = (new \ReflectionClass(remove_legacy_image_plugins::class))->newInstanceWithoutConstructor();
+		(new \ReflectionProperty(\phpbb\db\migration\migration::class, 'config'))->setValue($migration, $config);
+
+		$this->assertSame([
+			['custom', [[$migration, 'normalize_legacy_link_modes']]],
+		], $migration->update_data());
+		$migration->normalize_legacy_link_modes();
+
+		$this->assertSame('image_page', $config['phpbb_gallery_link_thumbnail']);
+		$this->assertSame('image', $config['phpbb_gallery_link_imagepage']);
+		$this->assertSame('image_page', $config['phpbb_gallery_link_image_name']);
+		$this->assertSame('image_page', $config['phpbb_gallery_link_image_icon']);
+
+		$config['phpbb_gallery_link_imagepage'] = 'lytebox_slide_show';
+		$config['phpbb_gallery_link_image_icon'] = 'image';
+		$migration->normalize_legacy_link_modes();
+		$this->assertSame('image', $config['phpbb_gallery_link_imagepage']);
+		$this->assertSame('image', $config['phpbb_gallery_link_image_icon']);
+		$this->assertSame([], $migration->revert_data());
 	}
 
 	public function test_ajax_image_navigation_migration_is_reversible_and_disabled_by_default(): void
@@ -709,6 +744,7 @@ class migration_integrity_test extends TestCase
 			'gallery_bbcodes.php',
 			'viewtopic_profiles.php',
 			'ajax_image_navigation.php',
+			'remove_legacy_image_plugins.php',
 		] as $migration)
 		{
 			require_once dirname(__DIR__) . '/migrations/' . $migration;
