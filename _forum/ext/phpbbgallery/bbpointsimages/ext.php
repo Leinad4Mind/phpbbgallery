@@ -9,11 +9,17 @@
 
 namespace phpbbgallery\bbpointsimages;
 
+use phpbbgallery\bbpointsimages\notification\helper;
+
 class ext extends \phpbb\extension\base
 {
 	private const DEPENDENCIES = [
 		'phpbbgallery/core',
 		'sitesplat/bbpoints',
+	];
+	private const NOTIFICATION_TYPES = [
+		helper::REWARD_TYPE,
+		helper::SOURCE_PURCHASE_TYPE,
 	];
 
 	public function is_enableable(): bool
@@ -57,9 +63,42 @@ class ext extends \phpbb\extension\base
 				'L_EXTENSION_ENABLE_SUCCESS',
 				$this->container->get('user')->lang['EXTENSION_ENABLE_SUCCESS']
 			);
+			$this->update_notification_types('enable_notifications');
+			return 'notifications';
 		}
 
 		return parent::enable_step($old_state);
+	}
+
+	public function disable_step(mixed $old_state): mixed
+	{
+		if (empty($old_state))
+		{
+			$this->update_notification_types('disable_notifications');
+			return 'notifications';
+		}
+
+		return parent::disable_step($old_state);
+	}
+
+	public function purge_step(mixed $old_state): mixed
+	{
+		if (empty($old_state))
+		{
+			$this->update_notification_types('purge_notifications');
+			return 'notifications';
+		}
+
+		return parent::purge_step($old_state);
+	}
+
+	private function update_notification_types(string $method): void
+	{
+		$notification_manager = $this->container->get('notification_manager');
+		foreach (self::NOTIFICATION_TYPES as $notification_type)
+		{
+			$notification_manager->{$method}($notification_type);
+		}
 	}
 
 	private function reject_missing_dependencies(object $user, array $dependencies): bool

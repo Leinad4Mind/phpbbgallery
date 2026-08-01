@@ -14,6 +14,62 @@ use PHPUnit\Framework\TestCase;
 
 final class ext_enablement_test extends TestCase
 {
+	public function test_notification_types_follow_the_extension_lifecycle(): void
+	{
+		$notifications = new class {
+			public array $calls = [];
+
+			public function __call(string $method, array $arguments): void
+			{
+				$this->calls[] = [$method, $arguments[0]];
+			}
+		};
+		$template = new class {
+			public function assign_var(string $name, string $value): void
+			{
+			}
+		};
+		$user = new class {
+			public array $lang = ['EXTENSION_ENABLE_SUCCESS' => 'Enabled'];
+		};
+		$container = new class($notifications, $template, $user) {
+			public function __construct(
+				private object $notifications,
+				private object $template,
+				private object $user
+			)
+			{
+			}
+
+			public function get(string $service): object
+			{
+				return match ($service) {
+					'notification_manager' => $this->notifications,
+					'template' => $this->template,
+					default => $this->user,
+				};
+			}
+		};
+		$extension = new ext();
+		$setter = \Closure::bind(function (object $container): void
+		{
+			$this->container = $container;
+		}, $extension, ext::class);
+		$setter($container);
+
+		$this->assertSame('notifications', $extension->enable_step(''));
+		$this->assertSame('notifications', $extension->disable_step(''));
+		$this->assertSame('notifications', $extension->purge_step(''));
+		$this->assertSame([
+			['enable_notifications', 'phpbbgallery.bbpointsimages.notification.reward'],
+			['enable_notifications', 'phpbbgallery.bbpointsimages.notification.source_purchase'],
+			['disable_notifications', 'phpbbgallery.bbpointsimages.notification.reward'],
+			['disable_notifications', 'phpbbgallery.bbpointsimages.notification.source_purchase'],
+			['purge_notifications', 'phpbbgallery.bbpointsimages.notification.reward'],
+			['purge_notifications', 'phpbbgallery.bbpointsimages.notification.source_purchase'],
+		], $notifications->calls);
+	}
+
 	public function test_available_dependencies_are_enabled_in_order(): void
 	{
 		[$extension, $manager] = $this->extension([], [

@@ -137,6 +137,11 @@ final class reward_manager
 		return $changed;
 	}
 
+	public function get_reward(int $image_id): array|false
+	{
+		return $image_id > 0 ? $this->find_reward_by_image($image_id) : false;
+	}
+
 	private function complete_reserved_reward(array $reward): bool
 	{
 		$operation = $this->ledger->credit(

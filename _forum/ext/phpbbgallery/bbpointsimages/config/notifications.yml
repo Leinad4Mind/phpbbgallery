@@ -1,0 +1,16 @@
+services:
+    phpbbgallery.bbpointsimages.notification.reward:
+        class: phpbbgallery\bbpointsimages\notification\type\reward
+        shared: false
+        parent: notification.type.base
+        tags:
+            - { name: notification.type }
+
+    phpbbgallery.bbpointsimages.notification.source_purchase:
+        class: phpbbgallery\bbpointsimages\notification\type\source_purchase
+        shared: false
+        parent: notification.type.base
+        calls:
+            - [set_user_loader, ['@user_loader']]
+        tags:
+            - { name: notification.type }

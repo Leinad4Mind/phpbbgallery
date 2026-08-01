@@ -38,6 +38,13 @@ final class language_test extends TestCase
 			$this->assertSame(1, substr_count($lang['BBPOINTSIMAGES_CONTRIBUTORS_EXPLAIN'], '%1$d'), $locale);
 			$this->assertSame(1, substr_count($lang['BBPOINTSIMAGES_CONTRIBUTORS_UNKNOWN'], '%1$s'), $locale);
 			$this->assertSame(1, substr_count($lang['BBPOINTSIMAGES_CONTRIBUTORS_TOO_MANY'], '%1$d'), $locale);
+			$this->assertArrayHasKey('NOTIFICATION_TYPE_BBPOINTSIMAGES_REWARD', $lang, $locale);
+			$this->assertArrayHasKey('NOTIFICATION_TYPE_BBPOINTSIMAGES_SOURCE_PURCHASE', $lang, $locale);
+			$this->assertSame(1, substr_count($lang['NOTIFICATION_BBPOINTSIMAGES_REWARD'], '%1$d'), $locale);
+			$this->assertSame(1, substr_count($lang['NOTIFICATION_BBPOINTSIMAGES_REWARD'], '%2$s'), $locale);
+			$this->assertSame(1, substr_count($lang['NOTIFICATION_BBPOINTSIMAGES_SOURCE_PURCHASE'], '%1$s'), $locale);
+			$this->assertSame(1, substr_count($lang['NOTIFICATION_BBPOINTSIMAGES_SOURCE_PURCHASE'], '%2$d'), $locale);
+			$this->assertSame(1, substr_count($lang['NOTIFICATION_BBPOINTSIMAGES_SOURCE_PURCHASE'], '%3$s'), $locale);
 		}
 	}
 }

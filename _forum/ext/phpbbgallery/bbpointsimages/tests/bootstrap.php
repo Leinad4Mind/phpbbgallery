@@ -24,6 +24,95 @@ namespace phpbb\db\migration
 	}
 }
 
+namespace phpbb\notification
+{
+	class exception extends \RuntimeException
+	{
+	}
+
+	class manager
+	{
+		public array $calls = [];
+
+		public function add_notifications(string $type, array $data): void
+		{
+			$this->calls[] = compact('type', 'data');
+		}
+	}
+}
+
+namespace phpbb\notification\type
+{
+	abstract class base
+	{
+		protected object $language;
+		private array $test_data = [];
+
+		public function __construct()
+		{
+			$this->language = new class {
+				public function lang(string $key, mixed ...$arguments): string
+				{
+					return $key . ':' . implode('|', array_map('strval', $arguments));
+				}
+			};
+		}
+
+		protected function check_user_notification_options(array $users, mixed $options = []): array
+		{
+			return array_combine($users, $users) ?: [];
+		}
+
+		protected function set_data(string $name, mixed $value): void
+		{
+			$this->test_data[$name] = $value;
+		}
+
+		protected function get_data(string $name): mixed
+		{
+			return $this->test_data[$name] ?? null;
+		}
+
+		public function create_insert_array(mixed $data, mixed $pre_create_data = []): void
+		{
+		}
+	}
+}
+
+namespace phpbb\controller
+{
+	class helper
+	{
+		public function route(string $name, array $parameters = []): string
+		{
+			return '/' . $name . '/' . ($parameters['image_id'] ?? 0);
+		}
+	}
+}
+
+namespace phpbb
+{
+	class user_loader
+	{
+		public array $loaded = [];
+
+		public function load_users(array $user_ids): void
+		{
+			$this->loaded = array_values(array_unique(array_merge($this->loaded, $user_ids)));
+		}
+
+		public function get_username(int $user_id, string $mode): string
+		{
+			return 'User ' . $user_id;
+		}
+
+		public function get_avatar(int $user_id, bool $ignore_config = false, bool $lazy = false): string
+		{
+			return 'avatar:' . $user_id;
+		}
+	}
+}
+
 namespace phpbbgallery\core
 {
 	final class block
@@ -168,6 +257,13 @@ namespace
 			return function_exists('mb_strtolower') ? mb_strtolower($value, 'UTF-8') : strtolower($value);
 		}
 	}
+	if (!function_exists('utf8_htmlspecialchars'))
+	{
+		function utf8_htmlspecialchars(string $value): string
+		{
+			return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+		}
+	}
 
 	require_once dirname(__DIR__) . '/ext.php';
 	require_once dirname(__DIR__) . '/policy.php';
@@ -177,6 +273,9 @@ namespace
 	require_once dirname(__DIR__) . '/reward_manager.php';
 	require_once dirname(__DIR__) . '/purchase_manager.php';
 	require_once dirname(__DIR__) . '/contributor_manager.php';
+	require_once dirname(__DIR__) . '/notification/helper.php';
+	require_once dirname(__DIR__) . '/notification/type/reward.php';
+	require_once dirname(__DIR__) . '/notification/type/source_purchase.php';
 	require_once dirname(__DIR__) . '/retro_sync.php';
 	require_once __DIR__ . '/fake_db.php';
 	require_once __DIR__ . '/reward_fake_db.php';

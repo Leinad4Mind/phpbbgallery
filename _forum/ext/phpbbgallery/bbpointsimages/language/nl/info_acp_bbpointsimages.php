@@ -44,4 +44,8 @@ $lang = array_merge($lang, [
 	'BBPOINTSIMAGES_CONTRIBUTORS_EXPLAIN' => 'Voer één geregistreerde gebruikersnaam per regel in, maximaal %1$d. De auteur van de afbeelding wordt automatisch uitgesloten.',
 	'BBPOINTSIMAGES_CONTRIBUTORS_UNKNOWN' => 'Deze bijdragers zijn niet gevonden of zijn inactief: %1$s.',
 	'BBPOINTSIMAGES_CONTRIBUTORS_TOO_MANY' => 'Een afbeelding mag niet meer dan %1$d bijdragers hebben.',
+	'NOTIFICATION_TYPE_BBPOINTSIMAGES_REWARD' => 'Beloningen voor galerijafbeeldingen',
+	'NOTIFICATION_BBPOINTSIMAGES_REWARD' => 'Je hebt %1$d punten ontvangen voor het publiceren van de afbeelding <strong>%2$s</strong>.',
+	'NOTIFICATION_TYPE_BBPOINTSIMAGES_SOURCE_PURCHASE' => 'Verkoop van originele galerijbestanden',
+	'NOTIFICATION_BBPOINTSIMAGES_SOURCE_PURCHASE' => '%1$s heeft het originele bestand van <strong>%3$s</strong> gekocht; je hebt %2$d punten ontvangen.',
 ]);

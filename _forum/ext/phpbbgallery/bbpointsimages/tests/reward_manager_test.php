@@ -39,6 +39,8 @@ final class reward_manager_test extends TestCase
 		$this->assertSame(hash_file('sha256', $file), $db->stats[9]['source_sha256']);
 		$this->assertCount(1, $ledger->credits);
 		$this->assertSame(10, $ledger->credits['gallery:image:9:reward']['amount']);
+		$this->assertSame(10, $manager->get_reward(9)['amount']);
+		$this->assertFalse($manager->get_reward(0));
 	}
 
 	public function test_exact_file_duplicate_is_not_rewarded_twice(): void

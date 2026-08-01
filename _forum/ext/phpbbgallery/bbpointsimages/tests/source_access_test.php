@@ -23,6 +23,8 @@ final class source_access_test extends TestCase
 		$this->assertStringContainsString('login_box($source_url', $source);
 		$this->assertStringContainsString('record_download($image_id, $buyer_id)', $source);
 		$this->assertStringContainsString('catch (insufficient_funds $exception)', $source);
+		$this->assertStringContainsString('if ($purchase)', $source);
+		$this->assertStringContainsString("source_purchase(\$image_data, \$buyer_id, \$purchase['recipients'])", $source);
 	}
 
 	public function test_purchase_manager_is_wired_to_the_atomic_bbpoints_ledger(): void

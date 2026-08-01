@@ -19,6 +19,7 @@ use phpbb\user;
 use phpbbgallery\bbpointsimages\purchase_manager;
 use phpbbgallery\bbpointsimages\reward_manager;
 use phpbbgallery\bbpointsimages\contributor_manager;
+use phpbbgallery\bbpointsimages\notification\helper as notification_helper;
 use phpbbgallery\core\url;
 use sitesplat\bbpoints\exception\insufficient_funds;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -29,6 +30,7 @@ final class main_listener implements EventSubscriberInterface
 		private reward_manager $rewards,
 		private purchase_manager $purchases,
 		private contributor_manager $contributors,
+		private notification_helper $notifications,
 		private request_interface $request,
 		private user $user,
 		private language $language,
@@ -79,7 +81,7 @@ final class main_listener implements EventSubscriberInterface
 			(int) $image_data['image_user_id'],
 			(int) $event['image_index']
 		);
-		$this->rewards->reward((array) $event['image_data'], (string) $event['file_link']);
+		$this->reward_and_notify((array) $event['image_data'], (string) $event['file_link']);
 	}
 
 	public function validate_upload_review(data $event): void
@@ -138,20 +140,33 @@ final class main_listener implements EventSubscriberInterface
 	{
 		foreach ((array) $event['approved_images'] as $image_data)
 		{
-			$this->rewards->reward((array) $image_data, (string) $image_data['source_path']);
+			$this->reward_and_notify((array) $image_data, (string) $image_data['source_path']);
 		}
 	}
 
 	public function imported(data $event): void
 	{
-		$this->rewards->reward((array) $event['image_data'], (string) $event['file_link']);
+		$this->reward_and_notify((array) $event['image_data'], (string) $event['file_link']);
 	}
 
 	public function author_changed(data $event): void
 	{
 		$author = (array) $event['author'];
-		$this->rewards->reassign((array) $event['image_ids'], (int) ($author['user_id'] ?? 0));
-		$this->contributors->remove_author((array) $event['image_ids'], (int) ($author['user_id'] ?? 0));
+		$author_id = (int) ($author['user_id'] ?? 0);
+		$changed = $this->rewards->reassign((array) $event['image_ids'], $author_id);
+		$this->contributors->remove_author((array) $event['image_ids'], $author_id);
+		if ($changed > 0)
+		{
+			foreach ((array) $event['image_data'] as $image_data)
+			{
+				$reward = $this->rewards->get_reward((int) $image_data['image_id']);
+				if ($reward && (int) $reward['user_id'] === $author_id)
+				{
+					$image_data['image_user_id'] = $author_id;
+					$this->notifications->reward($image_data, (int) $reward['amount']);
+				}
+			}
+		}
 	}
 
 	public function images_deleted(data $event): void
@@ -197,7 +212,11 @@ final class main_listener implements EventSubscriberInterface
 
 			try
 			{
-				$this->purchases->purchase($image_data, $buyer_id);
+				$purchase = $this->purchases->purchase($image_data, $buyer_id);
+				if ($purchase)
+				{
+					$this->notifications->source_purchase($image_data, $buyer_id, $purchase['recipients']);
+				}
 			}
 			catch (insufficient_funds $exception)
 			{
@@ -302,5 +321,18 @@ final class main_listener implements EventSubscriberInterface
 	private function assignment_enabled(): bool
 	{
 		return !empty($this->config['phpbb_gallery_bbpoints_contributors_enabled']);
+	}
+
+	private function reward_and_notify(array $image_data, string $source_path): void
+	{
+		if (!$this->rewards->reward($image_data, $source_path))
+		{
+			return;
+		}
+		$reward = $this->rewards->get_reward((int) $image_data['image_id']);
+		if ($reward)
+		{
+			$this->notifications->reward($image_data, (int) $reward['amount']);
+		}
 	}
 }

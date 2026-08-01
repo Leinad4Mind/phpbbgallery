@@ -1,5 +1,6 @@
 imports:
     - { resource: tables.yml }
+    - { resource: notifications.yml }
 
 services:
     phpbbgallery.bbpointsimages.policy:
@@ -36,12 +37,19 @@ services:
             - '%phpbbgallery.bbpointsimages.tables.contributors%'
             - '%tables.users%'
 
+    phpbbgallery.bbpointsimages.notification.helper:
+        class: phpbbgallery\bbpointsimages\notification\helper
+        arguments:
+            - '@notification_manager'
+            - '@controller.helper'
+
     phpbbgallery.bbpointsimages.listener:
         class: phpbbgallery\bbpointsimages\event\main_listener
         arguments:
             - '@phpbbgallery.bbpointsimages.reward_manager'
             - '@phpbbgallery.bbpointsimages.purchase_manager'
             - '@phpbbgallery.bbpointsimages.contributor_manager'
+            - '@phpbbgallery.bbpointsimages.notification.helper'
             - '@request'
             - '@user'
             - '@language'

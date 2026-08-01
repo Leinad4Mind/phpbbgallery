@@ -29,7 +29,7 @@ final class purchase_manager
 	}
 
 	/**
-	 * @return array{cost: int, contributors: int[], complimentary: bool, purchased: bool, requires_purchase: bool}
+	 * @return array{cost: int, contributors: int[], recipients: array<int, int>, complimentary: bool, purchased: bool, requires_purchase: bool}
 	 */
 	public function quote(array $image_data, int $buyer_id): array
 	{
@@ -43,6 +43,7 @@ final class purchase_manager
 
 		$cost = (int) $this->policy->resolve($album_id)['source_cost'];
 		$contributors = $this->load_contributors($image_id, $author_id);
+		$recipients = $this->split_recipients($author_id, $contributors, $cost);
 		$complimentary = $cost === 0
 			|| ($this->is_registered_user($buyer_id) && $buyer_id === $author_id)
 			|| in_array($buyer_id, $contributors, true);
@@ -51,13 +52,17 @@ final class purchase_manager
 		return [
 			'cost' => $cost,
 			'contributors' => $contributors,
+			'recipients' => $recipients,
 			'complimentary' => $complimentary,
 			'purchased' => $purchased,
 			'requires_purchase' => !$complimentary && !$purchased,
 		];
 	}
 
-	public function purchase(array $image_data, int $buyer_id): bool
+	/**
+	 * @return array{amount: int, recipients: array<int, int>}|false
+	 */
+	public function purchase(array $image_data, int $buyer_id): array|false
 	{
 		if (!$this->is_registered_user($buyer_id))
 		{
@@ -72,7 +77,7 @@ final class purchase_manager
 
 		$image_id = (int) $image_data['image_id'];
 		$author_id = (int) $image_data['image_user_id'];
-		$recipients = $this->split_recipients($author_id, $quote['contributors'], $quote['cost']);
+		$recipients = $quote['recipients'];
 		if (!$recipients)
 		{
 			throw new \RuntimeException('The image has no registered BBPoints beneficiary.');
@@ -101,7 +106,10 @@ final class purchase_manager
 			throw new \RuntimeException('The Gallery source purchase could not be recorded.');
 		}
 
-		return true;
+		return [
+			'amount' => $quote['cost'],
+			'recipients' => $recipients,
+		];
 	}
 
 	public function record_download(int $image_id, int $buyer_id): void

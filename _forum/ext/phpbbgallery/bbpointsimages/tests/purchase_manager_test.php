@@ -25,13 +25,17 @@ final class purchase_manager_test extends TestCase
 		$this->assertTrue($manager->quote($this->image(), 4)['complimentary']);
 		$this->assertTrue($manager->quote($this->image(), 5)['complimentary']);
 		$this->assertTrue($manager->quote($this->image(), 8)['requires_purchase']);
+		$this->assertSame([3 => 4, 4 => 3, 5 => 3], $manager->quote($this->image(), 8)['recipients']);
 	}
 
 	public function test_purchase_is_permanent_idempotent_and_split_with_the_remainder_for_the_author(): void
 	{
 		[$manager, $db, $ledger] = $this->manager(10, [9 => [4, 5]]);
 
-		$this->assertTrue($manager->purchase($this->image(), 8));
+		$this->assertSame([
+			'amount' => 10,
+			'recipients' => [3 => 4, 4 => 3, 5 => 3],
+		], $manager->purchase($this->image(), 8));
 		$this->assertFalse($manager->purchase($this->image(), 8));
 		$key = 'gallery:image:9:source:buyer:8';
 		$this->assertSame([3 => 4, 4 => 3, 5 => 3], $ledger->distributions[$key]['recipients']);
