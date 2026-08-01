@@ -72,6 +72,11 @@ $lang = array_merge($lang, [
 	'MOVE_TO_USER'                         => 'Mover para o utilizador',
 	'MOVE_TO_USER_EXP'                     => 'Imagens e comentários serão movidos para o utilizador definido. Se não selecionar nenhum, será usado o Visitante.',
 	'CLEAN_USER_NOT_FOUND'                 => 'O utilizador selecionado não existe!',
+	'GALLERY_LEGACY_BBCODE_MIGRATE' => 'Migrar BBCodes legados da Galeria',
+	'GALLERY_LEGACY_BBCODE_MIGRATE_EXPLAIN' => 'Procura o alias oculto [album] em mensagens, mensagens privadas e assinaturas. Após confirmação, cada execução reprocessa até 250 registos para %s e mantém coerentes os metadados dos BBCodes do phpBB. Repete a acção até não restarem registos.',
+	'GALLERY_LEGACY_BBCODE_MIGRATE_CONFIRM' => 'Converter o próximo lote de [album] para %2$s? Restam actualmente %1$d registos.',
+	'GALLERY_LEGACY_BBCODE_MIGRATE_NONE' => 'Não restam registos com o BBCode legado [album].',
+	'GALLERY_LEGACY_BBCODE_MIGRATE_RESULT' => 'Foram convertidos %1$d registos. Não foi possível converter %2$d registos. Restam %3$d registos.',
 	'GALLERY_CORE_NOT_FOUND'               => 'A extensão phpBB Gallery Core deve ser instalada e ativada primeiro.',
 	'EXTENSION_ENABLE_SUCCESS'             => 'A extensão foi ativada com sucesso.',
 ]);

@@ -153,4 +153,18 @@
 	{{ S_FORM_TOKEN }}
 </form>
 
+<form id="action_migrate_legacy_bbcodes_form" method="post" action="{{ U_ACTION }}">
+	<fieldset>
+		<legend>{{ lang('GALLERY_LEGACY_BBCODE_MIGRATE') }}</legend>
+		<dl>
+			<dt><label for="action_migrate_legacy_bbcodes">{{ lang('GALLERY_LEGACY_BBCODE_MIGRATE') }}</label>
+				<br /><span>{{ lang('GALLERY_LEGACY_BBCODE_MIGRATE_EXPLAIN', ACTIVE_BBCODE_TAG) }}</span></dt>
+			<dd>
+				<input type="hidden" name="action" value="migrate_legacy_bbcodes" />
+				<input class="button2" type="submit" id="action_migrate_legacy_bbcodes" name="action_migrate_legacy_bbcodes" value="{{ lang('RUN') }}" />
+			</dd>
+		</dl>
+	</fieldset>
+</form>
+
 {% include 'overall_footer.html' %}

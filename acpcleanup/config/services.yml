@@ -24,3 +24,15 @@ services:
             - '@phpbbgallery.core.user'
             - '%phpbbgallery.tables.gallery_albums%'
             - '%phpbbgallery.tables.gallery_images%'
+
+    phpbbgallery.acpcleanup.bbcode.legacy_migrator:
+        class: phpbbgallery\acpcleanup\bbcode\legacy_migrator
+        arguments:
+            - '@dbal.conn'
+            - '@phpbbgallery.core.config'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%tables.bbcodes%'
+            - '%tables.posts%'
+            - '%tables.privmsgs%'
+            - '%tables.users%'
