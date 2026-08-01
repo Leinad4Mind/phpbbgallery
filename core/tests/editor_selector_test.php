@@ -125,6 +125,52 @@ final class editor_selector_test extends TestCase
 		$this->assertStringContainsString('ORDER BY i.image_time DESC, i.image_id DESC', $image_query);
 	}
 
+	public function test_has_images_uses_the_same_permission_and_image_filters(): void
+	{
+		$gallery_auth = $this->createMock(auth::class);
+		$gallery_auth->expects($this->once())->method('load_user_permissions')->with(7);
+		$gallery_auth->expects($this->once())->method('acl_album_ids')->with('i_view')->willReturn([30, 20]);
+		$gallery_auth->expects($this->once())->method('get_exclude_zebra')->willReturn([20]);
+
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->exactly(2))
+			->method('sql_in_set')
+			->willReturnCallback(static function (string $field, array $values): string
+			{
+				return $field . ' IN (' . implode(',', $values) . ')';
+			});
+		$query = '';
+		$db->expects($this->once())
+			->method('sql_query_limit')
+			->with($this->isType('string'), 1)
+			->willReturnCallback(static function (string $sql) use (&$query): string
+			{
+				$query = $sql;
+				return 'exists-result';
+			});
+		$db->expects($this->once())->method('sql_fetchfield')->with('image_id')->willReturn(91);
+		$db->expects($this->once())->method('sql_freeresult')->with('exists-result');
+
+		$this->assertTrue((new selector($db, $gallery_auth, 'gallery_images', 'gallery_albums'))->has_images(7));
+		$this->assertStringContainsString('i.image_user_id = 7', $query);
+		$this->assertStringContainsString('i.image_album_id IN (30)', $query);
+		$this->assertStringNotContainsString('IN (20)', $query);
+		$this->assertStringContainsString('i.image_status IN (1,2)', $query);
+		$this->assertStringContainsString('i.image_contest = 0', $query);
+	}
+
+	public function test_has_images_returns_false_without_querying_when_no_album_is_viewable(): void
+	{
+		$gallery_auth = $this->createMock(auth::class);
+		$gallery_auth->expects($this->once())->method('load_user_permissions')->with(7);
+		$gallery_auth->method('acl_album_ids')->with('i_view')->willReturn([]);
+		$gallery_auth->method('get_exclude_zebra')->willReturn([]);
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->never())->method('sql_query_limit');
+
+		$this->assertFalse((new selector($db, $gallery_auth, 'gallery_images', 'gallery_albums'))->has_images(7));
+	}
+
 	public function test_forbidden_album_returns_before_any_database_query(): void
 	{
 		$gallery_auth = $this->createMock(auth::class);

@@ -401,7 +401,7 @@ services:
             - '@user'
             - '@config'
             - '@auth'
-            - '@phpbbgallery.core.auth'
+            - '@phpbbgallery.core.image.selector'
         tags:
             - { name: event.listener }
 # ----- Cron tasks -----

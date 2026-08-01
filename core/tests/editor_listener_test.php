@@ -9,8 +9,8 @@
 
 namespace phpbbgallery\core\tests;
 
-use phpbbgallery\core\auth\auth;
 use phpbbgallery\core\event\editor_listener;
+use phpbbgallery\core\image\selector;
 use PHPUnit\Framework\TestCase;
 
 final class editor_listener_test extends TestCase
@@ -31,6 +31,10 @@ final class editor_listener_test extends TestCase
 		if (!class_exists(\phpbb\controller\helper::class, false))
 		{
 			require_once $phpbb_root . '/phpbb/controller/helper.php';
+		}
+		if (!class_exists(selector::class, false))
+		{
+			require_once dirname(__DIR__) . '/image/selector.php';
 		}
 		if (!class_exists(editor_listener::class, false))
 		{
@@ -53,9 +57,8 @@ final class editor_listener_test extends TestCase
 	public function test_available_registered_user_receives_selector_variables(string $method, string $container,
 		array $event_data): void
 	{
-		$gallery_auth = $this->createMock(auth::class);
-		$gallery_auth->expects($this->once())->method('load_user_permissions')->with(7);
-		$gallery_auth->expects($this->once())->method('acl_check_global')->with('i_view')->willReturn(true);
+		$selector = $this->createMock(selector::class);
+		$selector->expects($this->once())->method('has_images')->with(7)->willReturn(true);
 		$helper = $this->createMock(\phpbb\controller\helper::class);
 		$helper->expects($this->exactly(2))
 			->method('route')
@@ -71,7 +74,7 @@ final class editor_listener_test extends TestCase
 		}
 		$event = new \phpbb\event\data($event_data);
 
-		$this->listener($gallery_auth, $helper, true, true, false, true, $phpbb_auth)->{$method}($event);
+		$this->listener($selector, $helper, true, true, false, true, $phpbb_auth)->{$method}($event);
 
 		$variables = $event[$container];
 		$this->assertSame('preserved', $variables['ORIGINAL']);
@@ -103,37 +106,37 @@ final class editor_listener_test extends TestCase
 
 	public function test_unrelated_posting_mode_never_checks_gallery_permissions(): void
 	{
-		$gallery_auth = $this->createMock(auth::class);
-		$gallery_auth->expects($this->never())->method('load_user_permissions');
+		$selector = $this->createMock(selector::class);
+		$selector->expects($this->never())->method('has_images');
 		$helper = $this->createMock(\phpbb\controller\helper::class);
 		$event = new \phpbb\event\data([
 			'mode' => 'delete',
 			'page_data' => ['S_BBCODE_ALLOWED' => 1, 'ORIGINAL' => 'preserved'],
 		]);
 
-		$this->listener($gallery_auth, $helper)->posting_editor($event);
+		$this->listener($selector, $helper)->posting_editor($event);
 
 		$this->assertSame(['S_BBCODE_ALLOWED' => 1, 'ORIGINAL' => 'preserved'], $event['page_data']);
 	}
 
 	public function test_disabled_bbcode_never_exposes_selector(): void
 	{
-		$gallery_auth = $this->createMock(auth::class);
-		$gallery_auth->expects($this->never())->method('load_user_permissions');
+		$selector = $this->createMock(selector::class);
+		$selector->expects($this->never())->method('has_images');
 		$helper = $this->createMock(\phpbb\controller\helper::class);
 		$event = new \phpbb\event\data([
 			'template_ary' => ['S_BBCODE_ALLOWED' => 0, 'ORIGINAL' => 'preserved'],
 		]);
 
-		$this->listener($gallery_auth, $helper)->private_message_editor($event);
+		$this->listener($selector, $helper)->private_message_editor($event);
 
 		$this->assertArrayNotHasKey('S_GALLERY_SELECTOR', $event['template_ary']);
 	}
 
 	public function test_selector_is_hidden_until_the_image_bbcode_is_ready(): void
 	{
-		$gallery_auth = $this->createMock(auth::class);
-		$gallery_auth->expects($this->never())->method('load_user_permissions');
+		$selector = $this->createMock(selector::class);
+		$selector->expects($this->never())->method('has_images');
 		$helper = $this->createMock(\phpbb\controller\helper::class);
 		$helper->expects($this->never())->method('route');
 		$event = new \phpbb\event\data([
@@ -141,7 +144,7 @@ final class editor_listener_test extends TestCase
 			'page_data' => ['S_BBCODE_ALLOWED' => 1, 'ORIGINAL' => 'preserved'],
 		]);
 
-		$this->listener($gallery_auth, $helper, true, true, false, true, null, false)->posting_editor($event);
+		$this->listener($selector, $helper, true, true, false, true, null, false)->posting_editor($event);
 
 		$this->assertSame(['S_BBCODE_ALLOWED' => 1, 'ORIGINAL' => 'preserved'], $event['page_data']);
 	}
@@ -151,15 +154,15 @@ final class editor_listener_test extends TestCase
 	 */
 	public function test_guest_or_bot_never_exposes_selector(bool $registered, bool $bot): void
 	{
-		$gallery_auth = $this->createMock(auth::class);
-		$gallery_auth->expects($this->never())->method('load_user_permissions');
+		$selector = $this->createMock(selector::class);
+		$selector->expects($this->never())->method('has_images');
 		$helper = $this->createMock(\phpbb\controller\helper::class);
 		$event = new \phpbb\event\data([
 			'mode' => 'reply',
 			'page_data' => ['S_BBCODE_ALLOWED' => 1],
 		]);
 
-		$this->listener($gallery_auth, $helper, true, $registered, $bot)->posting_editor($event);
+		$this->listener($selector, $helper, true, $registered, $bot)->posting_editor($event);
 
 		$this->assertArrayNotHasKey('S_GALLERY_SELECTOR', $event['page_data']);
 	}
@@ -172,11 +175,10 @@ final class editor_listener_test extends TestCase
 		];
 	}
 
-	public function test_user_without_global_view_permission_never_exposes_selector(): void
+	public function test_user_without_selectable_images_never_exposes_selector(): void
 	{
-		$gallery_auth = $this->createMock(auth::class);
-		$gallery_auth->expects($this->once())->method('load_user_permissions')->with(7);
-		$gallery_auth->expects($this->once())->method('acl_check_global')->with('i_view')->willReturn(false);
+		$selector = $this->createMock(selector::class);
+		$selector->expects($this->once())->method('has_images')->with(7)->willReturn(false);
 		$helper = $this->createMock(\phpbb\controller\helper::class);
 		$helper->expects($this->never())->method('route');
 		$event = new \phpbb\event\data([
@@ -184,15 +186,15 @@ final class editor_listener_test extends TestCase
 			'page_data' => ['S_BBCODE_ALLOWED' => 1],
 		]);
 
-		$this->listener($gallery_auth, $helper)->posting_editor($event);
+		$this->listener($selector, $helper)->posting_editor($event);
 
 		$this->assertArrayNotHasKey('S_GALLERY_SELECTOR', $event['page_data']);
 	}
 
 	public function test_quick_reply_respects_global_bbcode_configuration(): void
 	{
-		$gallery_auth = $this->createMock(auth::class);
-		$gallery_auth->expects($this->never())->method('load_user_permissions');
+		$selector = $this->createMock(selector::class);
+		$selector->expects($this->never())->method('has_images');
 		$helper = $this->createMock(\phpbb\controller\helper::class);
 		$phpbb_auth = $this->createMock(\phpbb\auth\auth::class);
 		$phpbb_auth->expects($this->never())->method('acl_get');
@@ -201,15 +203,15 @@ final class editor_listener_test extends TestCase
 			'topic_data' => ['forum_id' => 42],
 		]);
 
-		$this->listener($gallery_auth, $helper, false, true, false, true, $phpbb_auth)->quick_reply_editor($event);
+		$this->listener($selector, $helper, false, true, false, true, $phpbb_auth)->quick_reply_editor($event);
 
 		$this->assertSame(['ORIGINAL' => 'preserved'], $event['tpl_ary']);
 	}
 
 	public function test_quick_reply_respects_user_bbcode_preference(): void
 	{
-		$gallery_auth = $this->createMock(auth::class);
-		$gallery_auth->expects($this->never())->method('load_user_permissions');
+		$selector = $this->createMock(selector::class);
+		$selector->expects($this->never())->method('has_images');
 		$helper = $this->createMock(\phpbb\controller\helper::class);
 		$phpbb_auth = $this->createMock(\phpbb\auth\auth::class);
 		$phpbb_auth->expects($this->never())->method('acl_get');
@@ -218,15 +220,15 @@ final class editor_listener_test extends TestCase
 			'topic_data' => ['forum_id' => 42],
 		]);
 
-		$this->listener($gallery_auth, $helper, true, true, false, false, $phpbb_auth)->quick_reply_editor($event);
+		$this->listener($selector, $helper, true, true, false, false, $phpbb_auth)->quick_reply_editor($event);
 
 		$this->assertSame(['ORIGINAL' => 'preserved'], $event['tpl_ary']);
 	}
 
 	public function test_quick_reply_respects_forum_bbcode_permission(): void
 	{
-		$gallery_auth = $this->createMock(auth::class);
-		$gallery_auth->expects($this->never())->method('load_user_permissions');
+		$selector = $this->createMock(selector::class);
+		$selector->expects($this->never())->method('has_images');
 		$helper = $this->createMock(\phpbb\controller\helper::class);
 		$phpbb_auth = $this->createMock(\phpbb\auth\auth::class);
 		$phpbb_auth->expects($this->once())->method('acl_get')->with('f_bbcode', 42)->willReturn(false);
@@ -235,7 +237,7 @@ final class editor_listener_test extends TestCase
 			'topic_data' => ['forum_id' => 42],
 		]);
 
-		$this->listener($gallery_auth, $helper, true, true, false, true, $phpbb_auth)->quick_reply_editor($event);
+		$this->listener($selector, $helper, true, true, false, true, $phpbb_auth)->quick_reply_editor($event);
 
 		$this->assertSame(['ORIGINAL' => 'preserved'], $event['tpl_ary']);
 	}
@@ -268,7 +270,7 @@ final class editor_listener_test extends TestCase
 		}
 	}
 
-	private function listener(auth $gallery_auth, \phpbb\controller\helper $helper, bool $allow_bbcode = true,
+	private function listener(selector $selector, \phpbb\controller\helper $helper, bool $allow_bbcode = true,
 		bool $registered = true, bool $bot = false, bool $user_bbcode = true,
 		?\phpbb\auth\auth $phpbb_auth = null, bool $gallery_bbcode_ready = true): editor_listener
 	{
@@ -300,7 +302,7 @@ final class editor_listener_test extends TestCase
 				'phpbb_gallery_bbcode_ready' => $gallery_bbcode_ready,
 			]),
 			$phpbb_auth ?? $this->createMock(\phpbb\auth\auth::class),
-			$gallery_auth
+			$selector
 		);
 	}
 }
