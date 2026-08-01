@@ -70,6 +70,7 @@ services:
             - '@phpbbgallery.core.user'
             - '@phpbbgallery.core.file.tool'
             - '@request'
+            - '@dispatcher'
             - '%phpbbgallery.core.file.source%'
             - '%phpbbgallery.core.file.medium%'
             - '%phpbbgallery.core.file.mini%'
