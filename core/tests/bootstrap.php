@@ -1,4 +1,5 @@
 <?php
+// phpcs:disable Generic.Files.OneInterfacePerFile.MultipleFound -- Isolated dependency stubs share the test bootstrap.
 /**
  * phpBB Gallery - Core Extension tests
  *
@@ -29,6 +30,17 @@ namespace phpbb\extension
 			{
 				return false;
 			}
+		}
+	}
+}
+
+namespace phpbb\event
+{
+	if (!interface_exists('phpbb\\event\\dispatcher_interface'))
+	{
+		interface dispatcher_interface
+		{
+			public function trigger_event($event_name, $data = []);
 		}
 	}
 }

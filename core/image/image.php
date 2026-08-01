@@ -182,7 +182,7 @@ class image
 			return 0;
 		}
 
-		$sql = 'SELECT image_id, image_album_id, image_name
+		$sql = 'SELECT image_id, image_album_id, image_name, image_user_id
 			FROM ' . $this->table_images . '
 			WHERE ' . $this->db->sql_in_set('image_id', $image_ids);
 		$result = $this->db->sql_query($sql);
@@ -227,6 +227,17 @@ class image
 		}
 
 		$this->gallery_cache->destroy_images();
+		/**
+		 * Notify add-ons after image authorship and counters are committed.
+		 *
+		 * @event phpbbgallery.core.image.change_author_after
+		 * @var array image_ids  Changed image identifiers
+		 * @var array image_data Previous image rows
+		 * @var array author     New trusted phpBB user row
+		 * @since 3.4.0
+		 */
+		$vars = ['image_ids', 'image_data', 'author'];
+		extract($this->phpbb_dispatcher->trigger_event('phpbbgallery.core.image.change_author_after', compact($vars)));
 
 		return count($image_ids);
 	}
@@ -642,17 +653,22 @@ class image
 	*/
 	public function approve_images(array $image_id_ary, int $album_id): void
 	{
-		$sql = 'SELECT image_id, image_name, image_user_id, image_contest_end
+		$sql = 'SELECT image_id, image_name, image_user_id, image_album_id,
+				image_filename, image_contest_end
 			FROM ' . $this->table_images . ' 
 			WHERE image_status = 0
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary);
 		$result = $this->db->sql_query($sql);
 		$targets = [];
+		$approved_images = [];
 		$resync_contest = false;
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$this->gallery_log->add_log('moderator', 'approve', $album_id, $row['image_id'], ['LOG_GALLERY_APPROVED', $row['image_name']]);
 			$targets[] = $row['image_user_id'];
+			$row['image_status'] = \phpbbgallery\core\block::STATUS_APPROVED;
+			$row['source_path'] = $this->url->path('upload') . $row['image_filename'];
+			$approved_images[] = $row;
 			$last_img = $row['image_id'];
 			$resync_contest = $resync_contest || (int) $row['image_contest_end'] > 0;
 		}
@@ -677,6 +693,19 @@ class image
 		if ($resync_contest)
 		{
 			$this->contest->resync($album_id);
+		}
+		if ($approved_images)
+		{
+			/**
+			 * Notify add-ons after images become approved.
+			 *
+			 * @event phpbbgallery.core.image.approve_after
+			 * @var array approved_images Approved rows with their source paths
+			 * @var int   album_id       Album used by the moderation action
+			 * @since 3.4.0
+			 */
+			$vars = ['approved_images', 'album_id'];
+			extract($this->phpbb_dispatcher->trigger_event('phpbbgallery.core.image.approve_after', compact($vars)));
 		}
 	}
 
