@@ -3,7 +3,7 @@
  *
  * @package phpBB Extension - Introduciator Extension
  * @author Feneck91 (Stéphane Château) feneck91@free.fr
- * @copyright (c) 2019 Feneck91
+ * @copyright (c) 2019-2022 Feneck91
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  */
 
@@ -27,12 +27,7 @@ use phpbb\user;
 class acp_statistics_controller extends acp_main_controller
 {
 	/**
-	 * Number of items displayed into statistics table.
-	 */
-	const NUMBER_ITEMS_BY_PAGE = 10;
-
-	/**
-	 * @var \feneck91\introduciator\helper\introduciator_helper Introduciator helper. The important code is into this helper
+	 * @var introduciator_helper Introduciator helper. The important code is into this helper
 	 */
 	protected $helper;
 
@@ -49,16 +44,16 @@ class acp_statistics_controller extends acp_main_controller
 	/**
 	 * Constructor
 	 *
-	 * @param \feneck91\introduciator\helper\introduciator_helper   $helper         Extension helper
-	 * @param \phpbb\db\driver\factory                              $db             Database interface
-	 * @param \phpbb\pagination                                     $pagination     Used to manage information split to display it into several pages
-	 * @param string                                                $root_path      phpBB root path
-	 * @param string                                                $php_ext        phpBB Extention
-	 * @param \phpbb\language\language                              $language       Language user object
-	 * @param \phpbb\request\request                                $request        Request object
-	 * @param \phpbb\template\template                              $template       Template object
-	 * @param \phpbb\user                                           $user           User object
-	 * @param \phpbb\config\db                                      $dbconfig       Config object
+	 * @param introduciator_helper          $helper         Extension helper
+	 * @param \phpbb\db\driver\factory      $db             Database interface
+	 * @param \phpbb\pagination             $pagination     Used to manage information split to display it into several pages
+	 * @param string                        $root_path      phpBB root path
+	 * @param string                        $php_ext        phpBB Extension
+	 * @param \phpbb\language\language      $language       Language user object
+	 * @param \phpbb\request\request        $request        Request object
+	 * @param \phpbb\template\template      $template       Template object
+	 * @param \phpbb\user                   $user           User object
+	 * @param \phpbb\config\db              $dbconfig       Config object
 	 *
 	 * @access public
 	 */
@@ -83,12 +78,12 @@ class acp_statistics_controller extends acp_main_controller
 	 * Manage the page.
 	 *
 	 * When action is empty, the page is filled with current extension configuration, else it check if the current action
-	 * is really comming from this extension by checking form key
+	 * is really coming from this extension by checking form key
 	 *
 	 * @param string $mode Current mode
 	 * @param string $action Current action to manage:
-	 *    check to display first page
-	 *    otherpage to change the informations page displayed to the user
+	 *    'check' to display first page
+	 *    'otherpage' to change the informations page displayed to the user
 	 *
 	 * @throws \Exception
 	 * @return void
@@ -96,10 +91,15 @@ class acp_statistics_controller extends acp_main_controller
 	 */
 	public function do_action($mode, $action)
 	{
+		if (!$this->helper->is_introduciator_allowed())
+		{	// The introduciator must be enable else it can be not configure correctly
+			trigger_error($this->language->lang('INTRODUCIATOR_ST_NOT_ENABLED_FOR_STATISTICS') . adm_back_link(append_sid("{$this->root_path}adm/index.$this->php_ext", 'i=-feneck91-introduciator-acp-introduciator_module&amp;mode=configuration')), E_USER_WARNING);
+		}
+
 		// If no action, display configuration
 		if (empty($action))
 		{	// no action or update current
-			$this->do_empty_action();
+			$this->display_configuration();
 		}
 		else
 		{
@@ -110,16 +110,14 @@ class acp_statistics_controller extends acp_main_controller
 					{
 						trigger_error($this->language->lang('FORM_INVALID') . adm_back_link($this->u_action), E_USER_WARNING);
 					}
-					$this->do_check_action();
-				break;
+					// break; No break !
 
 				case 'otherpage':
 					$this->do_check_action();
-				break;
+					break;
 
 				default:
 					trigger_error($this->language->lang('NO_MODE') . adm_back_link($this->u_action));
-				break;
 			}
 		}
 	}
@@ -131,15 +129,13 @@ class acp_statistics_controller extends acp_main_controller
 	 * @return void
 	 * @access private
 	 */
-	private function do_empty_action()
+	private function display_configuration()
 	{
-		$this->template->assign_vars(array(
-			'U_ACTION'				=> $this->u_action,
-		));
+		$this->template->assign_var('U_ACTION' , $this->u_action);
 
-		$s_hidden_fields = build_hidden_fields(array(
-			'action'				=> 'check', // Action
-		));
+		$s_hidden_fields = build_hidden_fields([
+			'action' => 'check', // Action
+		]);
 
 		$this->template->assign_var('S_HIDDEN_FIELDS', $s_hidden_fields);
 	}
@@ -158,125 +154,85 @@ class acp_statistics_controller extends acp_main_controller
 		//
 		// Compute number of introductions
 		//
-		$sql = $this->db->sql_build_query('SELECT', array(
-				'SELECT'	=> 'COUNT(topic_id)',
-				'FROM'		=> array(TOPICS_TABLE => TOPICS_TABLE),
-				'WHERE'		=> TOPICS_TABLE . '.topic_type = ' . POST_NORMAL . ' AND ' . TOPICS_TABLE . ".forum_id = {$params['fk_forum_id']} AND " . TOPICS_TABLE . '.topic_visibility = ' . ITEM_APPROVED,
-			));
+		$sql = $this->db->sql_build_query('SELECT', [
+			'SELECT'	=> 'COUNT(topic_id) as numrows',
+			'FROM'		=> [TOPICS_TABLE => TOPICS_TABLE],
+			'WHERE'		=> TOPICS_TABLE . '.topic_type = ' . POST_NORMAL . ' AND ' . TOPICS_TABLE . '.forum_id = ' . (int) $params['fk_forum_id'] . ' AND ' . TOPICS_TABLE . '.topic_visibility = ' . ITEM_APPROVED,
+		]);
 		$row = $this->db->sql_fetchrow($this->db->sql_query($sql));
-		$nb_introductions = reset($row);
-		$this->template->assign_vars(array(
-			'INTRODUCTIONS_NUMBER' 	=> $nb_introductions,
-		));
+		$nb_introductions = (int) $row['numrows'];
+		$this->template->assign_var('INTRODUCTIONS_NUMBER', $nb_introductions);
 
 		//
 		// Compute multiple introduction
 		//
 		$start = $this->request->variable('start', 0);
+
 		//
 		// Here, we must check database to see if some user have more than one introduction
-		// 1> Get the number of introduce errors (more than once)
+		// 1> Get the ids of users that post more than one introduce
+		 $sql = $this->db->sql_build_query('SELECT', [
+			'SELECT'	=> 'topic_poster, topic_first_poster_name',
+			'FROM'		=> [TOPICS_TABLE => TOPICS_TABLE],
+			'WHERE'		=> TOPICS_TABLE . '.topic_type = ' . POST_NORMAL . ' AND ' . TOPICS_TABLE . '.forum_id = ' . (int) $params['fk_forum_id'] . ' AND ' . TOPICS_TABLE . '.topic_visibility = ' . ITEM_APPROVED,
+			'GROUP_BY'	=> 'topic_poster, topic_first_poster_name HAVING count(1) > 1' ,
+		]);
 
-		$sql_where = $this->db->sql_build_query('SELECT', array(
-				'SELECT'	=> 'COUNT(topic_id)',
-				'FROM'		=> array(TOPICS_TABLE => TOPICS_TABLE),
-				'WHERE'		=> TOPICS_TABLE . '.topic_type = ' . POST_NORMAL . ' AND phpbbtopics.topic_poster = ' . TOPICS_TABLE . '.topic_poster AND ' . TOPICS_TABLE . ".forum_id = {$params['fk_forum_id']} AND " . TOPICS_TABLE . '.topic_visibility = ' . ITEM_APPROVED,
-			));
-		 $sql = $this->db->sql_build_query('SELECT', array(
-			'SELECT'	=> 'COUNT(result.topic_id)',
-			'FROM'		=> array(
-				$this->db->sql_build_query('SELECT', array(
-					'SELECT'	=> 'topic_id',
-					'FROM'		=> array(TOPICS_TABLE => 'phpbbtopics'),
-					'WHERE'		=> "( {$sql_where} ) > 1",
-					'GROUP_BY'	=> 'topic_poster',
-				)) => ''),
-			)) . " result";
-
-		$row = $this->db->sql_fetchrow($this->db->sql_query($sql));
-		$nb_several_introduce = reset($row);
-
-		if ($nb_several_introduce > 0)
+		 // Record all users that have more than one posted introduction and MUST introduce (not ignored)
+		$users_ids = [];
+		$result = $this->db->sql_query($sql);
+		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$sql_where = $this->db->sql_build_query('SELECT', array(
-					'SELECT'	=> 'COUNT(topic_id)',
-					'FROM'		=> array(TOPICS_TABLE => TOPICS_TABLE),
-					'WHERE'		=> TOPICS_TABLE . '.topic_type = ' . POST_NORMAL . ' AND phpbbtopics.topic_poster = ' . TOPICS_TABLE . '.topic_poster AND ' . TOPICS_TABLE . ".forum_id = {$params['fk_forum_id']} AND " . TOPICS_TABLE . '.topic_visibility = ' . ITEM_APPROVED,
-				));
-			$sql = $this->db->sql_build_query('SELECT', array(
-				'SELECT'	=> 'topic_poster, topic_first_poster_name',
-				'FROM'		=> array(TOPICS_TABLE => 'phpbbtopics'),
-				'WHERE'		=> "( {$sql_where} ) > 1",
-				'GROUP_BY'	=> 'topic_poster',
-				'ORDER_BY'	=> 'topic_first_poster_name',
-			));
-
-			// Get all users that post more than one introduce
-			$result = $this->db->sql_query($sql);
-			$all_users = array(); // Receive all users info
-			while ($row = $this->db->sql_fetchrow($result))
+			if ($this->helper->is_user_must_introduce_himself((int) $row['topic_poster'], null, $row['topic_first_poster_name']))
 			{
-				array_push($all_users, $row);
-			}
-			$this->db->sql_freeresult($result);
-
-			// For all these users, Chek to know if they are not ignored
-			$users_to_check = array(); // Receive all users info
-			foreach ($all_users as $user)
-			{
-				if ($this->helper->is_user_must_introduce_himself($user['topic_poster'], null, $user['topic_first_poster_name']))
-				{
-					// User is not ignored, check it
-					array_push($users_to_check, $user);
-				}
-			}
-
-			// Here it is the list of all user (not ignored) that have post more than one introduce
-			$nb_several_introduce = count($users_to_check);
-
-			if ($nb_several_introduce > 0)
-			{
-				$start = min($start, $nb_several_introduce - 1);
-
-				for ($index = $start; $index < min($nb_several_introduce, $start + acp_statistics_controller::NUMBER_ITEMS_BY_PAGE); ++$index)
-				{
-					// Here, no more need to test if number of introduce > 1 because it is already done just before
-					$sql = $this->db->sql_build_query('SELECT', array(
-						'SELECT'    => "topic_id, topic_first_post_id, topic_title, topic_visibility, topic_time, topic_poster, topic_first_poster_name, topic_first_poster_colour, topic_type",
-						'FROM'      => array(TOPICS_TABLE => TOPICS_TABLE),
-						'WHERE'		=> "forum_id = {$params['fk_forum_id']} AND topic_poster = {$users_to_check[$index]['topic_poster']} AND topic_visibility = " . ITEM_APPROVED . ' AND topic_type = ' . POST_NORMAL,
-						'ORDER_BY'	=> 'topic_time',
-					));
-
-					$result = $this->db->sql_query($sql);
-					$first_row = true;
-					while ($row = $this->db->sql_fetchrow($result))
-					{
-						$link_to_introduce = $this->helper->get_url_to_post($params['fk_forum_id'], $row['topic_id'], $row['topic_first_post_id']);
-
-						$this->template->assign_block_vars('introduces', array(
-							'FIRST_ROW_SPAN'	=> $first_row,
-							'ROW_SPAN'			=> $result->num_rows,
-							'POSTER'			=> get_username_string('full', $row['topic_poster'], $row['topic_first_poster_name'], $row['topic_first_poster_colour']),
-							'DATE'				=> $this->user->format_date($row['topic_time']),
-							'INTRODUCE'			=> "<a href=\"{$link_to_introduce}\">{$row['topic_title']}</a>",
-							'ROW_NUMBER'		=> $index - $start + 1,
-						));
-						$first_row = false;
-					}
-					$this->db->sql_freeresult($result);
-				}
-				$this->template->assign_vars(array(
-					'S_DISPLAY_INTRODUCES'		=> ($nb_several_introduce > 0) ? true : false,
-					'PAGE_NUMBER' 				=> $this->pagination->validate_start($nb_several_introduce, acp_statistics_controller::NUMBER_ITEMS_BY_PAGE, $start),
-				));
-				$this->pagination->generate_template_pagination($this->u_action . "&amp;action=otherpage", 'pagination', 'start', $nb_several_introduce, acp_statistics_controller::NUMBER_ITEMS_BY_PAGE, $start);
+				// Record this users (not ignored)
+				$users_ids[] = (int) $row['topic_poster'];
 			}
 		}
 
-		$this->template->assign_vars(array(
+		$nb_several_introduce = count($users_ids);
+		if ($nb_several_introduce > 0)
+		{
+			$start = min($start, $nb_several_introduce - 1);
+
+			for ($index = $start; $index < min($nb_several_introduce, $start + (int) $this->dbconfig['topics_per_page']); ++$index)
+			{
+				// Here, no more need to test if number of introduce > 1 because it is already done just before
+				$sql = $this->db->sql_build_query('SELECT', [
+					'SELECT'    => 'topic_id, topic_first_post_id, topic_title, topic_visibility, topic_time, topic_poster, topic_first_poster_name, topic_first_poster_colour, topic_type',
+					'FROM'      => [TOPICS_TABLE => TOPICS_TABLE],
+					'WHERE'		=> 'forum_id = ' . (int) $params['fk_forum_id'] . ' AND topic_poster = ' . (int) $users_ids[$index] . ' AND topic_visibility = ' . ITEM_APPROVED . ' AND topic_type = ' . POST_NORMAL,
+					'ORDER_BY'	=> 'topic_time',
+				]);
+
+				$result = $this->db->sql_query($sql);
+				$first_row = true;
+				while ($row = $this->db->sql_fetchrow($result))
+				{
+					$link_to_introduce = $this->helper->get_post_url($params['fk_forum_id'], $row['topic_id'], $row['topic_first_post_id']);
+
+					$this->template->assign_block_vars('introduces', [
+						'FIRST_ROW_SPAN'	=> $first_row,
+						'ROW_SPAN'			=> $result->num_rows,
+						'POSTER'			=> get_username_string('full', $row['topic_poster'], $row['topic_first_poster_name'], $row['topic_first_poster_colour']),
+						'DATE'				=> $this->user->format_date($row['topic_time']),
+						'INTRODUCE'			=> '<a href="' . $link_to_introduce . '">' . $row['topic_title'] . '</a>',
+						'ROW_NUMBER'		=> $index - $start + 1,
+					]);
+					$first_row = false;
+				}
+				$this->db->sql_freeresult($result);
+			}
+			$this->template->assign_vars([
+				'S_DISPLAY_INTRODUCES'		=> true,
+				'PAGE_NUMBER' 				=> $this->pagination->validate_start($nb_several_introduce, (int) $this->dbconfig['topics_per_page'], $start),
+			]);
+			$this->pagination->generate_template_pagination($this->u_action . "&amp;action=otherpage", 'pagination', 'start', $nb_several_introduce, (int) $this->dbconfig['topics_per_page'], $start);
+		}
+
+		$this->template->assign_vars([
 			'U_ACTION'					=> $this->u_action,
 			'S_CHECK_DATABASE'			=> true,
-		));
+		]);
 	}
 }

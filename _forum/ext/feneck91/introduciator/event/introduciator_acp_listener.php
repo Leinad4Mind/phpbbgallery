@@ -3,7 +3,7 @@
  *
  * @package phpBB Extension - Introduciator Extension
  * @author Feneck91 (Stéphane Château) feneck91@free.fr
- * @copyright (c) 2019 Feneck91
+ * @copyright (c) 2019-2022 Feneck91
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  */
 
@@ -23,31 +23,24 @@ class introduciator_acp_listener implements EventSubscriberInterface
 	 * @access public
 	 */
 
-	static public function getSubscribedEvents()
+	public static function getSubscribedEvents()
 	{
 		return array(
-			'core.permissions'		=> 'add_permission',
+			'core.permissions'		=> 'add_permissions',
 		);
 	}
 
 	/**
 	 * Manage Introduciator permissions
 	 *
-	 * @param array $event
+	 * @param \phpbb\event\data $event The event object
+	 *
+	 * @return void
 	 * @access public
 	 */
-	public function add_permission($event)
+	public function add_permissions($event)
 	{
-		$permissions = $event['permissions'];
-
-		$permissions += array(
-			// Administators
-			'a_shout_manage'		=> array('lang' => 'ACL_A_INTRODUCIATOR_MANAGE', 	'cat' => 'misc'),
-
-			// Users
-			'u_shout_bbcode'		=> array('lang' => 'ACL_U_MUST_INTRODUCE',			'cat' => 'post'),
-		);
-
-		$event['permissions'] = $permissions;
+		$event->update_subarray('permissions', 'a_introduciator_manage', array('lang' => 'ACL_A_INTRODUCIATOR_MANAGE', 'cat' => 'misc'));
+		$event->update_subarray('permissions', 'u_must_introduce', array('lang' => 'ACL_U_MUST_INTRODUCE', 'cat' => 'post'));
 	}
 }

@@ -4,7 +4,7 @@
  *
  * @package phpBB Extension - Introduciator Extension
  * @author Feneck91 (Stéphane Château) feneck91@free.fr
- * @copyright (c) 2019 Feneck91
+ * @copyright (c) 2019-2022 Feneck91
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  */
 
@@ -37,7 +37,7 @@ abstract class acp_main_controller
 	protected $root_path;
 
 	/**
-	 * @var string phpBB Extention
+	 * @var string phpBB Extension
 	 */
 	protected $php_ext;
 
@@ -70,7 +70,7 @@ abstract class acp_main_controller
 	 * Constructor
 	 *
 	 * @param string                        $root_path      phpBB root path
-	 * @param string                        $php_ext        phpBB Extention
+	 * @param string                        $php_ext        phpBB Extension
 	 * @param \phpbb\language\language      $language       Language user object
 	 * @param \phpbb\request\request        $request        Request object
 	 * @param \phpbb\template\template      $template       Template object
