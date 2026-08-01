@@ -99,7 +99,7 @@ $lang = array_merge($lang, [
 	'CONTEST_USERNAME'        => '<strong>Wedstrijd</strong>',
 	'CONTEST_USERNAME_LONG'   => '<strong>Wedstrijd</strong> » De gebruikersnaam is verborgen tot de wedsteijd eindigt op %s.',
 	'CONTEST_IMAGE_DESC'      => '<strong>Wedstrijd</strong> » De afbeeldingsomschrijving is verborgen tot de wedsteijd eindigt op %s.',
-	'CONTEST_WINNERS_OF'      => 'Wedstrijd winnaar van “%s“',
+	'CONTEST_WINNERS_OF'      => 'Winnaars van de wedstrijd “%s”',
 	'CONTINUE'                => 'Doorgaan',
 
 	'DATABASE_NOT_UPTODATE'   => 'Je database heeft niet dezelfde versie als je bestanden. Update alstublieft je database.',
@@ -348,7 +348,7 @@ $lang = array_merge($lang, [
 	'VIEW_SEARCH_RECENT'    => 'Recente afbeeldingen',
 	'VIEW_SEARCH_RANDOM'    => 'Willikeurige afbeeldingen',
 	'VIEW_SEARCH_COMMENTED' => 'Recente reacties',
-	'VIEW_SEARCH_CONTESTS'  => 'Wedstrijd winnaars',
+	'VIEW_SEARCH_CONTESTS'  => 'Wedstrijdwinnaars bekijken',
 	'VIEW_SEARCH_TOPRATED'  => 'Best beoordeelde afbeeldingen',
 	'VIEW_SEARCH_SELF'      => 'Je afbeeldingen',
 	'VIEWING_ALBUM'         => 'Bekijkt het album %s',

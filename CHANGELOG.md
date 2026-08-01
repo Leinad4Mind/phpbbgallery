@@ -136,6 +136,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Corrected contest-winner headings and links across every language so the three-place podium is consistently described in the plural.
 - Hid the message-editor Gallery selector when the current user has no completed, permission-accessible images to insert.
 - Preserved unrelated custom [image] BBCodes during installation by selecting [galleryimage] for new Gallery content while retaining [album] only as a hidden compatibility alias for historical posts.
 - Corrected the BBOOTS and FLATBOOTS rating selectors to use the translated DO_NOT_RATE_IMAGE label instead of displaying an undefined language key.

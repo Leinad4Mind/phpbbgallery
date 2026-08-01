@@ -99,7 +99,7 @@ $lang = array_merge($lang, [
 	'CONTEST_USERNAME'        => '<strong>Wettbewerb</strong>',
 	'CONTEST_USERNAME_LONG'   => '<strong>Wettbewerb</strong> » Der Benutzername wird bis zum Ende des Wettbewerbs am %s versteckt.',
 	'CONTEST_IMAGE_DESC'      => '<strong>Wettbewerb</strong> » Die Beschreibung wird bis zum Ende des Wettbewerbs am %s versteckt.',
-	'CONTEST_WINNERS_OF'      => 'Sieger des Wettbewerbs „%s“',
+	'CONTEST_WINNERS_OF'      => 'Gewinner des Wettbewerbs „%s“',
 	'CONTINUE'                => 'Fortsetzen',
 
 	'DATABASE_NOT_UPTODATE'   => 'Deine Datenbank hat nicht die gleiche Version wie deine Dateien. Bitte aktualisiere deine Datenbank.',
@@ -348,7 +348,7 @@ $lang = array_merge($lang, [
 	'VIEW_SEARCH_RECENT'    => 'Neueste Bilder',
 	'VIEW_SEARCH_RANDOM'    => 'Zufällige Bilder',
 	'VIEW_SEARCH_COMMENTED' => 'Neueste Kommentare',
-	'VIEW_SEARCH_CONTESTS'  => 'Wettbewerb-Sieger',
+	'VIEW_SEARCH_CONTESTS'  => 'Wettbewerbsgewinner anzeigen',
 	'VIEW_SEARCH_TOPRATED'  => 'Beste Bewertungen',
 	'VIEW_SEARCH_SELF'      => 'Eigene Bilder',
 	'VIEWING_ALBUM'         => 'Betrachtet Album %s',
