@@ -315,6 +315,7 @@ class search
 			{
 				$like_expression = $this->db->sql_like_expression(str_replace('*', $this->db->get_any_char(), $this->db->get_any_char() . mb_strtolower($word) . $this->db->get_any_char()));
 				$match_search_query = 'LOWER(i.image_name) ' . $like_expression .
+					' OR LOWER(i.image_subtitle) ' . $like_expression .
 					' OR (' . $contest_private_data_sql . ' AND LOWER(i.image_desc) ' . $like_expression . ')';
 				$search_query .= ((!$search_query) ? '' : (($search_terms == 'all') ? ' AND ' : ' OR ')) . '(' . $match_search_query . ')';
 			}

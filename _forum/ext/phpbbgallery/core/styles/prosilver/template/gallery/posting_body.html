@@ -173,9 +173,13 @@
 							<dt><label for="image_name_{{ image.S_ROW_COUNT }}">{{ lang('IMAGE_NAME') }}{{ lang('COLON') }}</label></dt>
 							{% if image.S_FIRST_ROW and (NUM_IMAGES > 1) %}
 							<dd><input type="checkbox" name="same_name" id="same_name" value="1" onchange="change_read_write();" /> <label for="same_name">{{ lang('USE_SAME_NAME') }}</label></dd>
-							<dd>{{ lang('USE_NUM') }} <input class="inputbox" type="text" id="image_num" name="image_num" size="5" onchange="update_all('image_name'); update_all('message');" onkeyup="update_all('image_name'); update_all('message');" value="1" /></dd>
+							<dd>{{ lang('USE_NUM') }} <input class="inputbox" type="text" id="image_num" name="image_num" size="5" onchange="update_all('image_name'); update_all('image_subtitle'); update_all('message');" onkeyup="update_all('image_name'); update_all('image_subtitle'); update_all('message');" value="1" /></dd>
 							{% endif %}
 							<dd><input class="inputbox" type="text" tabindex="1{{ image.S_ROW_COUNT }}" id="image_name_{{ image.S_ROW_COUNT }}" name="image_name[{{ image.S_ROW_COUNT }}]" value="{{ image.IMAGE_NAME }}"{% if image.S_FIRST_ROW %} onchange="update_all('image_name');" onselect="update_all('image_name');" onclick="update_all('image_name');" onkeyup="update_all('image_name');"{% endif %} size="60"/></dd>
+						</dl>
+						<dl>
+							<dt><label for="image_subtitle_{{ image.S_ROW_COUNT }}">{{ lang('IMAGE_SUBTITLE') }}{{ lang('COLON') }}</label><br><span>{{ lang('IMAGE_SUBTITLE_EXPLAIN') }}</span></dt>
+							<dd><input class="inputbox" type="text" tabindex="2{{ image.S_ROW_COUNT }}" id="image_subtitle_{{ image.S_ROW_COUNT }}" name="image_subtitle[{{ image.S_ROW_COUNT }}]" value="{{ image.IMAGE_SUBTITLE }}"{% if image.S_FIRST_ROW %} onchange="update_all('image_subtitle');" onselect="update_all('image_subtitle');" onclick="update_all('image_subtitle');" onkeyup="update_all('image_subtitle');"{% endif %} maxlength="255"></dd>
 						</dl>
 						<dl>
 							<dt><label for="message_{{ image.S_ROW_COUNT }}">{{ lang('IMAGE_DESC') }}{{ lang('COLON') }}</label></dt>

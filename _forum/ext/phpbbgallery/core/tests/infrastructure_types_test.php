@@ -191,7 +191,7 @@ final class infrastructure_types_test extends TestCase
 	private function image_row(int $image_id, string $filename): array
 	{
 		$row = array_fill_keys([
-			'image_id', 'image_filename', 'image_name', 'image_name_clean', 'image_desc', 'image_desc_uid', 'image_desc_bitfield',
+			'image_id', 'image_filename', 'image_name', 'image_name_clean', 'image_subtitle', 'image_desc', 'image_desc_uid', 'image_desc_bitfield',
 			'image_user_id', 'image_username', 'image_username_clean', 'image_user_colour', 'image_user_ip', 'image_time', 'image_album_id',
 			'image_view_count', 'image_status', 'image_filemissing', 'image_rates', 'image_rate_points', 'image_rate_avg', 'image_comments',
 			'image_last_comment', 'image_allow_comments', 'image_favorited', 'image_reported', 'filesize_upload', 'filesize_medium',

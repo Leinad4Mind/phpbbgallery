@@ -1,7 +1,10 @@
 <div id="phpbbgallery-image-page" class="phpbbgallery-image-page" data-gallery-image-page data-ajax-navigation="{% if S_AJAX_IMAGE_NAVIGATION %}1{% else %}0{% endif %}" data-loading-label="{{ lang('LOADING') }}">
 <p class="phpbbgallery-image-navigation-status sr-only" role="status" aria-live="polite"></p>
 {% include 'gallery/gallery_header.html' %}
-<div class="side-segment"><h3><a href="{{ S_ALBUM_ACTION }}">{{ IMAGE_NAME }}</a></h3></div>
+<div class="side-segment">
+	<h3><a href="{{ S_ALBUM_ACTION }}">{{ IMAGE_NAME }}</a></h3>
+	{% if IMAGE_SUBTITLE %}<p class="phpbbgallery-image-subtitle">{% if U_IMAGE_SUBTITLE_SEARCH %}<a href="{{ U_IMAGE_SUBTITLE_SEARCH }}" title="{{ lang('SEARCH') }}">{{ IMAGE_SUBTITLE }}</a>{% else %}{{ IMAGE_SUBTITLE }}{% endif %}</p>{% endif %}
+</div>
 
 <div class="clearfix">
 	{% if S_IMAGE_REPORTED %}

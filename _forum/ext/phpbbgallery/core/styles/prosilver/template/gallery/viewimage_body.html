@@ -2,6 +2,7 @@
 <p class="phpbbgallery-image-navigation-status sr-only" role="status" aria-live="polite"></p>
 {% include 'gallery/gallery_header.html' %}
 <h2>{{ lang('IMAGE_NAME') }}{{ lang('COLON') }}<a href="{{ S_ALBUM_ACTION }}" style="display: inline;"> {{ IMAGE_NAME }}</a></h2>
+{% if IMAGE_SUBTITLE %}<p class="phpbbgallery-image-subtitle">{% if U_IMAGE_SUBTITLE_SEARCH %}<a href="{{ U_IMAGE_SUBTITLE_SEARCH }}" title="{{ lang('SEARCH') }}">{{ IMAGE_SUBTITLE }}</a>{% else %}{{ IMAGE_SUBTITLE }}{% endif %}</p>{% endif %}
 
 {% if S_STATUS_UNAPPROVED %}
 <div class="post">

@@ -101,6 +101,9 @@ class upload
 	/** Absolute source-file cap for resizeable uploads (64 MiB). */
 	private const MAX_RESIZE_SOURCE_FILESIZE = 67108864;
 
+	/** Maximum length of the optional plain-text image subtitle. */
+	public const IMAGE_SUBTITLE_MAX_LENGTH = 255;
+
 	/**
 	* Objects: phpBB Upload, 2 Files and Image-Functions
 	*/
@@ -137,6 +140,7 @@ class upload
 	private string $author_user_colour = '';
 	private array $file_descriptions = [];
 	private array $file_names = [];
+	private array $file_subtitles = [];
 	private array $file_rotating = [];
 	private array $zip_file_data = [];
 	private bool $allow_zip = true;
@@ -582,6 +586,7 @@ class upload
 			'image_status'				=> ($needs_approval) ? $this->block->get_image_status_unapproved() : $this->block->get_image_status_approved(),
 			'image_contest'				=> ($is_in_contest) ? $this->block->get_in_contest() : $this->block->get_no_contest(),
 			'image_upload_session_hash'	=> '',
+			'image_subtitle'			=> $this->get_subtitle(),
 			'image_desc'				=> $message_parser->message,
 			'image_desc_uid'			=> $message_parser->bbcode_uid,
 			'image_desc_bitfield'		=> $message_parser->bbcode_bitfield,
@@ -834,6 +839,7 @@ class upload
 			'image_status'			=> $this->block->get_image_status_orphan(),
 			'image_contest'			=> $this->block->get_no_contest(),
 			'image_allow_comments'	=> $this->allow_comments,
+			'image_subtitle'		=> '',
 			'image_desc'			=> '',
 			'image_desc_uid'		=> '',
 			'image_desc_bitfield'	=> '',
@@ -970,6 +976,11 @@ class upload
 		$this->file_names = $names;
 	}
 
+	public function set_subtitles(array $subtitles): void
+	{
+		$this->file_subtitles = $subtitles;
+	}
+
 	public function set_image_num(int $num): void
 	{
 		$this->image_num = (int) $num;
@@ -981,10 +992,12 @@ class upload
 		{
 			$image_name = $this->file_names[0];
 			$image_desc = $this->file_descriptions[0] ?? '';
+			$image_subtitle = $this->file_subtitles[0] ?? '';
 			for ($i = 0; $i < sizeof($this->file_names); $i++)
 			{
 				$this->file_names[$i] = str_replace('{NUM}', ($this->image_num + $i), $image_name);
 				$this->file_descriptions[$i] = str_replace('{NUM}', ($this->image_num + $i), $image_desc);
+				$this->file_subtitles[$i] = str_replace('{NUM}', ($this->image_num + $i), $image_subtitle);
 			}
 		}
 	}
@@ -1011,6 +1024,16 @@ class upload
 		}
 
 		return utf8_normalize_nfc($this->file_names[$this->file_count]);
+	}
+
+	public function get_subtitle(): string
+	{
+		if (!isset($this->file_subtitles[$this->file_count]))
+		{
+			return '';
+		}
+
+		return trim(utf8_normalize_nfc((string) $this->file_subtitles[$this->file_count]));
 	}
 
 	public function get_description(): string

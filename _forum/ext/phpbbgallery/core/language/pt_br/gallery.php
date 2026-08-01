@@ -348,4 +348,7 @@ $lang = array_merge($lang, [
 	'UNREAD_IMAGES'    => 'Imagens não lidas',
 	'NO_UNREAD_IMAGES' => 'Nenhuma imagem não lida',
 	'GALLERY_DROP'     => 'Solte suas imagens aqui',
+	'IMAGE_SUBTITLE'          => 'Subtítulo da Imagem',
+	'IMAGE_SUBTITLE_EXPLAIN'  => 'Opcional. Na página da imagem, o subtítulo permite pesquisar as mesmas palavras na Galeria.',
+	'IMAGE_SUBTITLE_TOO_LONG' => 'O subtítulo da imagem não pode ter mais de %d caracteres.',
 ]);

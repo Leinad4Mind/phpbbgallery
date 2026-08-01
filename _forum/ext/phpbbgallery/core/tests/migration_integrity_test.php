@@ -32,6 +32,7 @@ use phpbbgallery\core\migrations\gallery_bbcodes;
 use phpbbgallery\core\migrations\viewtopic_profiles;
 use phpbbgallery\core\migrations\ajax_image_navigation;
 use phpbbgallery\core\migrations\remove_legacy_image_plugins;
+use phpbbgallery\core\migrations\image_subtitle;
 
 class migration_integrity_test extends TestCase
 {
@@ -58,6 +59,7 @@ class migration_integrity_test extends TestCase
 		viewtopic_profiles::class,
 		ajax_image_navigation::class,
 		remove_legacy_image_plugins::class,
+		image_subtitle::class,
 	];
 
 	private array $temp_directories = [];
@@ -147,6 +149,10 @@ class migration_integrity_test extends TestCase
 			['\phpbbgallery\core\migrations\ajax_image_navigation'],
 			remove_legacy_image_plugins::depends_on()
 		);
+		$this->assertSame(
+			['\phpbbgallery\core\migrations\remove_legacy_image_plugins'],
+			image_subtitle::depends_on()
+		);
 	}
 
 	public function test_obsolete_image_plugin_modes_are_normalized_to_supported_links(): void
@@ -176,6 +182,28 @@ class migration_integrity_test extends TestCase
 		$this->assertSame('image', $config['phpbb_gallery_link_imagepage']);
 		$this->assertSame('image', $config['phpbb_gallery_link_image_icon']);
 		$this->assertSame([], $migration->revert_data());
+	}
+
+	public function test_image_subtitle_migration_adds_only_the_plain_text_column(): void
+	{
+		$migration = (new \ReflectionClass(image_subtitle::class))->newInstanceWithoutConstructor();
+		(new \ReflectionProperty(\phpbb\db\migration\migration::class, 'table_prefix'))->setValue($migration, 'phpbb_');
+
+		$this->assertSame([
+			'add_columns' => [
+				'phpbb_gallery_images' => [
+					'image_subtitle' => ['VCHAR:255', ''],
+				],
+			],
+		], $migration->update_schema());
+		$this->assertSame([
+			'drop_columns' => [
+				'phpbb_gallery_images' => [
+					'image_subtitle',
+				],
+			],
+		], $migration->revert_schema());
+		$this->assertStringNotContainsString('image_subtitle_clean', var_export($migration->update_schema(), true));
 	}
 
 	public function test_ajax_image_navigation_migration_is_reversible_and_disabled_by_default(): void
@@ -745,6 +773,7 @@ class migration_integrity_test extends TestCase
 			'viewtopic_profiles.php',
 			'ajax_image_navigation.php',
 			'remove_legacy_image_plugins.php',
+			'image_subtitle.php',
 		] as $migration)
 		{
 			require_once dirname(__DIR__) . '/migrations/' . $migration;

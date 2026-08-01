@@ -378,4 +378,7 @@ $lang = array_merge($lang, [
 
 	// Versions 1.2.1 additions
 	'GALLERY_DROP' => 'Deja tus imágenes aquí',
+	'IMAGE_SUBTITLE'          => 'Subtítulo de la imagen',
+	'IMAGE_SUBTITLE_EXPLAIN'  => 'Opcional. En la página de la imagen, el subtítulo permite buscar las mismas palabras en la Galería.',
+	'IMAGE_SUBTITLE_TOO_LONG' => 'El subtítulo de la imagen no puede superar los %d caracteres.',
 ]);

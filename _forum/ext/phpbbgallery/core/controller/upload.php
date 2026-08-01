@@ -503,6 +503,7 @@ class upload
 		}
 		if ($mode == 'upload_edit')
 		{
+			$image_subtitles = [];
 			if ($submit)
 			{
 				if (!check_form_key('gallery'))
@@ -559,6 +560,15 @@ class upload
 						}
 					}
 				}
+				$image_subtitles = $this->request->variable('image_subtitle', [''], true, request_interface::POST);
+				foreach ($image_subtitles as $index => $image_subtitle)
+				{
+					$image_subtitles[$index] = trim(utf8_normalize_nfc((string) $image_subtitle));
+					if (!$validation_error && utf8_strlen($image_subtitles[$index]) > \phpbbgallery\core\upload::IMAGE_SUBTITLE_MAX_LENGTH)
+					{
+						$validation_error = $this->language->lang('IMAGE_SUBTITLE_TOO_LONG', \phpbbgallery\core\upload::IMAGE_SUBTITLE_MAX_LENGTH);
+					}
+				}
 				$upload_files_limit = ($this->auth->acl_check('i_unlimited', $album_id, $album_data['album_user_id'])) ? $this->gallery_config->get('num_uploads') : min(($this->auth->acl_check('i_count', $album_id, $album_data['album_user_id']) - $own_images), $this->gallery_config->get('num_uploads'));
 
 				$upload_ids = $this->request->variable('upload_ids', [''], false, request_interface::POST);
@@ -584,6 +594,7 @@ class upload
 
 				$image_names = $this->request->variable('image_name', [''], true, request_interface::POST);
 				$process->set_names($image_names);
+				$process->set_subtitles($image_subtitles);
 				$process->set_descriptions($description_array);
 				$process->set_image_num($this->request->variable('image_num', 0, false, request_interface::POST));
 				$process->use_same_name($this->request->variable('same_name', false, false, request_interface::POST));
@@ -667,6 +678,7 @@ class upload
 				$image_template_vars = [
 					'U_IMAGE'    => $this->image->generate_link('thumbnail', 'plugin', $image_id, $data['image_name'], $album_id),
 					'IMAGE_NAME' => $data['image_name'],
+					'IMAGE_SUBTITLE' => $image_subtitles[$num_images] ?? ($data['image_subtitle'] ?? ''),
 					'IMAGE_DESC' => $data['image_desc'],
 				];
 

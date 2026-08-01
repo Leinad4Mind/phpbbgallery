@@ -31,6 +31,7 @@ function change_read_write()
 	{
 		update_all('message');
 		update_all('image_name');
+		update_all('image_subtitle');
 		{% for image in image %}
 			{% if not image.S_FIRST_ROW %}
 		make_readonly('{{ image.S_ROW_COUNT }}');
@@ -53,6 +54,11 @@ function make_readonly(image) {
 	element.readOnly = true;
 	add_class(element, 'readonly');
 
+	// Image subtitle
+	element = document.getElementById('image_subtitle_' + image);
+	element.readOnly = true;
+	add_class(element, 'readonly');
+
 	// Description length note
 	element = document.getElementById('desc_length_' + image);
 	element.style.display = 'none';
@@ -68,6 +74,11 @@ function make_writable(image) {
 
 	// Image name
 	element = document.getElementById('image_name_' + image);
+	element.readOnly = false;
+	remove_class(element, 'readonly');
+
+	// Image subtitle
+	element = document.getElementById('image_subtitle_' + image);
 	element.readOnly = false;
 	remove_class(element, 'readonly');
 

@@ -332,6 +332,8 @@ class image
 		$image_desc = $hide_contest_private_data
 			? $this->language->lang('CONTEST_IMAGE_DESC', $this->user->format_date($contest_end_time, false, true))
 			: generate_text_for_display($this->data['image_desc'], $this->data['image_desc_uid'], $this->data['image_desc_bitfield'], 7);
+		$image_subtitle = (string) ($this->data['image_subtitle'] ?? '');
+		$image_subtitle_search_url = $this->build_subtitle_search_url($image_subtitle);
 
 		// Let's see if we can get next end prev
 		$sort_key = $this->request->variable('sk', ($album_data['album_sort_key']) ? $album_data['album_sort_key'] : $this->config['phpbb_gallery_default_sort_key']);
@@ -452,6 +454,8 @@ class image
 
 			'CONTEST_RANK'        => ($this->data['image_contest_rank']) ? $this->language->lang('CONTEST_RESULT_' . $this->data['image_contest_rank']) : '',
 			'IMAGE_NAME'          => $this->data['image_name'],
+			'IMAGE_SUBTITLE'      => $image_subtitle,
+			'U_IMAGE_SUBTITLE_SEARCH' => $image_subtitle_search_url,
 			'IMAGE_DESC'          => $image_desc,
 			'IMAGE_BBCODE'        => ($this->config['allow_bbcode']) ? '[' . $this->gallery_config->get_bbcode_tag() . ']' . (int) $image_id . '[/' . $this->gallery_config->get_bbcode_tag() . ']' : '',
 			'IMAGE_IMGURL_BBCODE' => ($this->config['phpbb_gallery_disp_image_url']) ? '[url=' . $this->url->get_uri($this->helper->route('phpbbgallery_core_image', ['image_id' => $image_id])) . '][img]' . $this->url->get_uri($this->helper->route('phpbbgallery_core_image_file_mini', ['image_id' => $image_id])) . '[/img][/url]' : '',
@@ -732,6 +736,27 @@ class image
 			default:
 				return $this->helper->route('phpbbgallery_core_image_file_source', ['image_id' => $image_id]);
 		}
+	}
+
+	protected function normalize_subtitle_search_terms(string $subtitle): string
+	{
+		$terms = preg_replace('#\s+#u', ' ', str_replace(['(', ')'], ' ', $subtitle));
+		return trim($terms ?? '');
+	}
+
+	protected function build_subtitle_search_url(string $subtitle): string
+	{
+		$terms = $this->normalize_subtitle_search_terms($subtitle);
+		if ($terms === '' || !$this->auth->acl_get('u_search') || empty($this->config['load_search']))
+		{
+			return '';
+		}
+
+		return $this->helper->route('phpbbgallery_core_search', [
+			'keywords' => $terms,
+			'terms' => 'all',
+			'submit' => 1,
+		]);
 	}
 
 	/**
@@ -1066,9 +1091,15 @@ class image
 			$image_desc = $image_desc[0];
 			$image_name = $this->request->variable('image_name', [''], true);
 			$image_name = $image_name[0];
+			$image_subtitle = $this->request->variable('image_subtitle', [''], true);
+			$image_subtitle = trim(utf8_normalize_nfc((string) $image_subtitle[0]));
 			if (strlen($image_desc) > $this->gallery_config->get('description_length'))
 			{
 				trigger_error($this->language->lang('DESC_TOO_LONG'));
+			}
+			if (utf8_strlen($image_subtitle) > \phpbbgallery\core\upload::IMAGE_SUBTITLE_MAX_LENGTH)
+			{
+				trigger_error($this->language->lang('IMAGE_SUBTITLE_TOO_LONG', \phpbbgallery\core\upload::IMAGE_SUBTITLE_MAX_LENGTH));
 			}
 			// Create message parser instance
 			if (!class_exists('parse_message'))
@@ -1085,6 +1116,7 @@ class image
 			$sql_ary = [
 				'image_name'           => $image_name,
 				'image_name_clean'     => utf8_clean_string($image_name),
+				'image_subtitle'       => $image_subtitle,
 				'image_desc'           => $message_parser->message,
 				'image_desc_uid'       => $message_parser->bbcode_uid,
 				'image_desc_bitfield'  => $message_parser->bbcode_bitfield,
@@ -1273,6 +1305,7 @@ class image
 		$template_vars = [
 			'U_IMAGE'    => $this->image->generate_link('thumbnail', 'plugin', $image_id, $image_data['image_name'], $album_id),
 			'IMAGE_NAME' => $disp_image_data['image_name'],
+			'IMAGE_SUBTITLE' => $disp_image_data['image_subtitle'] ?? '',
 			'IMAGE_DESC' => $message_parser->message,
 		];
 
