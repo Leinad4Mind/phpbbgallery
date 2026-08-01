@@ -17,3 +17,4 @@ All notable changes to the phpBB Gallery BBPoints Images add-on are documented i
 - Added optional contributor assignment during resumable uploads and image editing, using phpBB's multi-user finder and strict server-side validation.
 - Added contributor attribution on image pages, cleanup on image deletion or author changes, and contest-privacy protection.
 - Added independent UCP notification preferences for publication rewards and paid original-source income, emitted only for newly created BBPoints operations.
+- Added an installed-phpBB functional workflow covering alternate authors, approval, ACP import, contributors, paid source access, notifications, historical synchronization and extension reactivation.
