@@ -64,7 +64,7 @@ $lang = array_merge($lang, [
 	'LICENSE_INFO'        => 'Proprietário - SiteSplat Todos os direitos reservados',
 	'EXTENSION_DEVELOPER' => 'Desenvolvedor',
 
-	'BBPOINTS_NOTICE' => '<div style="width:80%;margin:20px auto;"><p>As configurações para esta extensão encontram-se em <strong>%1$s » %2$s » %3$s</strong>.<br />Não se esqueça de verificar as Permissões de Grupo do Fórum e também as opções de Gerenciamento de Fóruns!</p></div>',
+	'BBPOINTS_NOTICE' => '<div style="width:80%%;margin:20px auto;"><p>As configurações para esta extensão encontram-se em <strong>%1$s » %2$s » %3$s</strong>.<br />Não se esqueça de verificar as Permissões de Grupo do Fórum e também as opções de Gerenciamento de Fóruns!</p></div>',
 	'SS_HELPER_NOTY'  => 'O SiteSplat BBcore não existe!<br />Baixe o <a href="https://sitesplat.com" target="_blank">BBcore</a> e copie a pasta BBcore para a pasta da sua extensão sitesplat.',
 
 	'POINTS_DESCRIPTION' => 'Os PontosGold permitem que os membros do seu fórum se divirtam e colecionem pontos por determinadas ações...',

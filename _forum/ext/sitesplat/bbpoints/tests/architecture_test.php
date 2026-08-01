@@ -75,4 +75,21 @@ final class architecture_test extends TestCase
 		$this->assertSame('>=8.1', $composer['require']['php']);
 		$this->assertSame('>=3.3.0,<4.0.0@dev', $composer['extra']['soft-require']['phpbb/phpbb']);
 	}
+
+	public function test_activation_notice_escapes_css_percent_for_sprintf(): void
+	{
+		foreach (glob(dirname(__DIR__) . '/language/*/info_acp_bbpoints.php') as $file)
+		{
+			$lang = [];
+			include $file;
+			if (!isset($lang['BBPOINTS_NOTICE']))
+			{
+				continue;
+			}
+
+			$notice = sprintf($lang['BBPOINTS_NOTICE'], 'Forums', 'Manage', 'Points');
+			$this->assertStringContainsString('width:80%;', $notice, $file);
+			$this->assertStringContainsString('Forums » Manage » Points', $notice, $file);
+		}
+	}
 }
