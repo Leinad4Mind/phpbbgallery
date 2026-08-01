@@ -24,6 +24,52 @@ namespace phpbb\db\migration
 	}
 }
 
+namespace phpbbgallery\core
+{
+	final class block
+	{
+		public const STATUS_APPROVED = 1;
+	}
+}
+
+namespace sitesplat\bbpoints\core
+{
+	final class operation
+	{
+		public function __construct(private bool $created)
+		{
+		}
+
+		public function was_created(): bool
+		{
+			return $this->created;
+		}
+	}
+
+	class ledger
+	{
+		public array $credits = [];
+		public array $transfers = [];
+
+		public function credit(int $user_id, int $amount, string $reason, string $key): operation
+		{
+			$created = !isset($this->credits[$key]);
+			$this->credits[$key] = compact('user_id', 'amount', 'reason', 'key');
+			return new operation($created);
+		}
+
+		public function transfer(int $from_user_id, int $to_user_id, int $amount,
+			string $reason, string $key, bool $allow_negative = false): operation
+		{
+			$created = !isset($this->transfers[$key]);
+			$this->transfers[$key] = compact(
+				'from_user_id', 'to_user_id', 'amount', 'reason', 'key', 'allow_negative'
+			);
+			return new operation($created);
+		}
+	}
+}
+
 namespace phpbb\extension
 {
 	class base
@@ -77,5 +123,8 @@ namespace
 	require_once dirname(__DIR__) . '/ext.php';
 	require_once dirname(__DIR__) . '/policy.php';
 	require_once dirname(__DIR__) . '/migrations/m1_init.php';
+	require_once dirname(__DIR__) . '/migrations/m2_reward_lifecycle.php';
+	require_once dirname(__DIR__) . '/reward_manager.php';
 	require_once __DIR__ . '/fake_db.php';
+	require_once __DIR__ . '/reward_fake_db.php';
 }

@@ -22,7 +22,10 @@ final class addon_lifecycle_events_test extends TestCase
 		$this->assertNotFalse($mutation);
 		$this->assertNotFalse($event);
 		$this->assertLessThan($event, $mutation);
-		$this->assertStringContainsString("['image_id', 'image_index', 'image_data', 'sql_ary']", $method);
+		$this->assertStringContainsString(
+			"['image_id', 'image_index', 'image_data', 'sql_ary', 'file_link']",
+			$method
+		);
 	}
 
 	public function test_upload_review_validation_runs_before_any_image_is_finalized(): void
@@ -62,6 +65,21 @@ final class addon_lifecycle_events_test extends TestCase
 		$this->assertLessThan($event, $mutation);
 		$this->assertLessThan($success, $event);
 		$this->assertStringContainsString("['image_id', 'image_data', 'updated_image_data', 'sql_ary']", $method);
+	}
+
+	public function test_approval_and_author_changes_dispatch_after_persistence(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/image/image.php');
+		$this->assertStringContainsString('phpbbgallery.core.image.approve_after', $source);
+		$this->assertStringContainsString('phpbbgallery.core.image.change_author_after', $source);
+		$this->assertGreaterThan(
+			strpos($source, "SET image_status = '"),
+			strpos($source, "trigger_event('phpbbgallery.core.image.approve_after'")
+		);
+		$this->assertGreaterThan(
+			strpos($source, "sql_transaction('commit')"),
+			strpos($source, "trigger_event('phpbbgallery.core.image.change_author_after'")
+		);
 	}
 
 	public function test_prosilver_image_edit_form_exposes_the_shared_addon_field_hook(): void

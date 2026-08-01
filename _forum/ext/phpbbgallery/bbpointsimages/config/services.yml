@@ -9,3 +9,19 @@ services:
             - '@config'
             - '%phpbbgallery.tables.gallery_albums%'
             - '%phpbbgallery.bbpointsimages.tables.album_rules%'
+
+    phpbbgallery.bbpointsimages.reward_manager:
+        class: phpbbgallery\bbpointsimages\reward_manager
+        arguments:
+            - '@dbal.conn'
+            - '@phpbbgallery.bbpointsimages.policy'
+            - '@sitesplat.bbpoints.ledger'
+            - '%phpbbgallery.bbpointsimages.tables.rewards%'
+            - '%phpbbgallery.bbpointsimages.tables.image_stats%'
+
+    phpbbgallery.bbpointsimages.listener:
+        class: phpbbgallery\bbpointsimages\event\main_listener
+        arguments:
+            - '@phpbbgallery.bbpointsimages.reward_manager'
+        tags:
+            - { name: event.listener }

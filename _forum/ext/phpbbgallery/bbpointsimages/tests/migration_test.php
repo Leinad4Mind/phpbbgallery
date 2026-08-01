@@ -10,6 +10,7 @@
 namespace phpbbgallery\bbpointsimages\tests;
 
 use phpbbgallery\bbpointsimages\migrations\m1_init;
+use phpbbgallery\bbpointsimages\migrations\m2_reward_lifecycle;
 use PHPUnit\Framework\TestCase;
 
 final class migration_test extends TestCase
@@ -56,5 +57,18 @@ final class migration_test extends TestCase
 			['config.remove', ['phpbb_gallery_bbpoints_source_cost']],
 			['config.remove', ['phpbb_gallery_bbpoints_upload_reward']],
 		], $migration->revert_data());
+	}
+
+	public function test_reward_lifecycle_schema_prevents_duplicate_original_rewards(): void
+	{
+		$migration = new m2_reward_lifecycle();
+		$schema = $migration->update_schema();
+		$table = 'phpbb_gallery_bbpoints_rewards';
+
+		$this->assertSame(['VCHAR:64', ''], $schema['add_columns'][$table]['source_sha256']);
+		$this->assertSame(['UINT:11', 0], $schema['add_columns'][$table]['reassignment_count']);
+		$this->assertSame(['source_sha256'], $schema['add_unique_index'][$table]['source_sha256']);
+		$this->assertSame(['\phpbbgallery\bbpointsimages\migrations\m1_init'], m2_reward_lifecycle::depends_on());
+		$this->assertSame(['source_sha256'], $migration->revert_schema()['drop_keys'][$table]);
 	}
 }

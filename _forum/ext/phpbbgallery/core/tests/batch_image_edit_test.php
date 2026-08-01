@@ -28,7 +28,15 @@ final class batch_image_edit_test extends TestCase
 		$log->expects($this->exactly(2))->method('add_log')->with('moderator', 'edit', 2, $this->anything(), $this->anything());
 		$cache = $this->createMock(cache::class);
 		$cache->expects($this->once())->method('destroy_images');
-		$image = $this->image_service($db, $log, $cache);
+		$dispatcher = $this->createMock(\phpbb\event\dispatcher_interface::class);
+		$dispatcher->expects($this->once())
+			->method('trigger_event')
+			->with('phpbbgallery.core.image.change_author_after', $this->callback(
+				static fn (array $data): bool => $data['image_ids'] === [5, 7]
+					&& (int) $data['author']['user_id'] === 42
+			))
+			->willReturnArgument(1);
+		$image = $this->image_service($db, $log, $cache, $dispatcher);
 
 		$this->assertSame(2, $image->change_author([5, 7, 5], [
 			'user_id'     => 42,
@@ -177,13 +185,15 @@ final class batch_image_edit_test extends TestCase
 		return [$db, $state];
 	}
 
-	private function image_service(object $db, log $log, cache $cache): batch_edit_image
+	private function image_service(object $db, log $log, cache $cache,
+		?\phpbb\event\dispatcher_interface $dispatcher = null): batch_edit_image
 	{
 		$image = (new \ReflectionClass(batch_edit_image::class))->newInstanceWithoutConstructor();
 		foreach ([
 			'db'            => $db,
 			'gallery_log'   => $log,
 			'gallery_cache' => $cache,
+			'phpbb_dispatcher' => $dispatcher ?? $this->createMock(\phpbb\event\dispatcher_interface::class),
 			'table_images'  => 'gallery_images',
 		] as $name => $value)
 		{

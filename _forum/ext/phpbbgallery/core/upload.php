@@ -653,9 +653,10 @@ class upload
 		 * @var int   image_index Zero-based position in the submitted upload batch
 		 * @var array image_data  Updated image database row
 		 * @var array sql_ary     Values persisted by this finalization
+		 * @var string file_link  Absolute original-image path
 		 * @since 3.4.0
 		 */
-		$vars = ['image_id', 'image_index', 'image_data', 'sql_ary'];
+		$vars = ['image_id', 'image_index', 'image_data', 'sql_ary', 'file_link'];
 		extract($this->phpbb_dispatcher->trigger_event('phpbbgallery.core.upload.update_image_after', compact($vars)));
 
 		return true;

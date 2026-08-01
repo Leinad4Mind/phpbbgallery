@@ -243,6 +243,19 @@ class main_module
 
 					// Put the images into the database
 					$db->sql_query('INSERT INTO ' . $table_prefix . 'gallery_images ' . $db->sql_build_array('INSERT', $sql_ary));
+					$image_id = (int) $db->sql_nextid();
+					$image_data = ['image_id' => $image_id] + $sql_ary;
+					/**
+					 * Notify add-ons after an imported image is stored successfully.
+					 *
+					 * @event phpbbgallery.acpimport.insert_image_after
+					 * @var int    image_id   Imported image identifier
+					 * @var array  image_data Complete imported image row
+					 * @var string file_link  Absolute imported original-image path
+					 * @since 1.3.0
+					 */
+					$vars = ['image_id', 'image_data', 'file_link'];
+					extract($phpbb_dispatcher->trigger_event('phpbbgallery.acpimport.insert_image_after', compact($vars)));
 					// If the source image is imported, we delete it.
 					if (file_exists($image_src_full))
 					{
