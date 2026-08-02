@@ -25,3 +25,15 @@ services:
             - '@phpbbgallery.contest.manager'
         tags:
             - { name: event.listener }
+    phpbbgallery.contest.album_lifecycle_listener:
+        class: phpbbgallery\contest\event\album_lifecycle_listener
+        arguments:
+            - '@dbal.conn'
+            - '@language'
+            - '@user'
+            - '@phpbbgallery.contest.manager'
+            - '%phpbbgallery.tables.gallery_albums%'
+            - '%phpbbgallery.tables.gallery_images%'
+            - '%phpbbgallery.contest.tables.contests%'
+        tags:
+            - { name: event.listener }

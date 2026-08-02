@@ -70,6 +70,8 @@ final class package_test extends TestCase
 		$this->assertStringContainsString('class: phpbbgallery\\contest\\event\\policy_listener', $services);
 		$this->assertStringContainsString('phpbbgallery.contest.acp_listener:', $services);
 		$this->assertStringContainsString('class: phpbbgallery\\contest\\event\\acp_listener', $services);
+		$this->assertStringContainsString('phpbbgallery.contest.album_lifecycle_listener:', $services);
+		$this->assertStringContainsString('class: phpbbgallery\\contest\\event\\album_lifecycle_listener', $services);
 		$this->assertStringContainsString('- { name: event.listener }', $services);
 	}
 
