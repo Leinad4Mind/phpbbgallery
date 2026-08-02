@@ -35,6 +35,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Security
 
+- Made resumable-upload cancellation and scheduled orphan pruning delete drafts only while their database row still has orphan status, preventing a concurrent finalization from losing the completed image or its files.
 - Made every dynamic numeric SQL boundary explicit with integer casts and routed the public Gallery title through phpBB's UTF-8 escaping helper, allowing the Core release package to pass EPV without suppressions.
 - Disabled every packaged Gallery add-on before disabling the Core, preventing add-on services from breaking container compilation when their required Core parameters and services are unavailable.
 - Centralized active-contest privacy so public image pages, album listings and reusable image blocks hide entrant identity, descriptions, ratings, comment history and private sort side channels while preserving explicit owner and moderator exceptions.
