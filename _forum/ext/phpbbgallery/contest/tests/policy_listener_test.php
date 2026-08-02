@@ -57,6 +57,62 @@ final class policy_listener_test extends TestCase
 		$this->assertTrue($result_event['hidden']);
 	}
 
+	public function test_listener_restricts_contest_operations_to_their_active_phase(): void
+	{
+		$listener = new policy_listener($this->manager(true));
+		$album_data = [
+			'album_type' => \phpbbgallery\core\block::TYPE_CONTEST,
+			'contest_id' => 7,
+			'contest_start' => time() - 100,
+			'contest_rating' => 200,
+			'contest_end' => 300,
+		];
+		$upload_event = new \phpbb\event\data([
+			'operation' => 'upload',
+			'album_data' => $album_data,
+			'allowed' => true,
+		]);
+		$comment_event = new \phpbb\event\data([
+			'operation' => 'comment',
+			'album_data' => $album_data,
+			'allowed' => true,
+		]);
+
+		$listener->restrict_album_operation($upload_event);
+		$listener->restrict_album_operation($comment_event);
+
+		$this->assertTrue($upload_event['allowed']);
+		$this->assertFalse($comment_event['allowed']);
+	}
+
+	public function test_listener_marks_only_valid_contest_uploads(): void
+	{
+		$listener = new policy_listener($this->manager(true));
+		$contest_event = new \phpbb\event\data([
+			'album_data' => [
+				'album_type' => \phpbbgallery\core\block::TYPE_CONTEST,
+				'contest_id' => 7,
+			],
+			'additional_sql_data' => [],
+		]);
+		$regular_event = new \phpbb\event\data([
+			'album_data' => [
+				'album_type' => \phpbbgallery\core\block::TYPE_UPLOAD,
+				'contest_id' => 7,
+			],
+			'additional_sql_data' => [],
+		]);
+
+		$listener->mark_contest_upload($contest_event);
+		$listener->mark_contest_upload($regular_event);
+
+		$this->assertSame(
+			\phpbbgallery\core\block::IN_CONTEST,
+			$contest_event['additional_sql_data']['image_contest']
+		);
+		$this->assertSame([], $regular_event['additional_sql_data']);
+	}
+
 	public function test_listener_appends_parameterized_visibility_conditions(): void
 	{
 		$listener = new policy_listener($this->manager(true));

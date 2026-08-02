@@ -26,3 +26,5 @@ All notable changes to the phpBB Gallery Contest add-on are documented in this f
   add-on for every supported Gallery language.
 - Routed Core search and search-controller privacy/result filtering through the
   extension-neutral image-visibility policy.
+- Routed upload availability and contest image marking through extension-neutral
+  Core policies, preserving checks at entry and immediately before finalization.

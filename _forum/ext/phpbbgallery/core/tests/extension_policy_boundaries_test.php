@@ -10,6 +10,7 @@
 namespace phpbbgallery\core\tests;
 
 use phpbbgallery\core\album\type_registry;
+use phpbbgallery\core\policy\album_operation;
 use phpbbgallery\core\policy\image_visibility;
 use PHPUnit\Framework\TestCase;
 
@@ -23,7 +24,48 @@ final class extension_policy_boundaries_test extends TestCase
 		$this->assertStringContainsString('class: phpbbgallery\\core\\album\\type_registry', $services);
 		$this->assertStringContainsString('phpbbgallery.core.policy.image_visibility:', $services);
 		$this->assertStringContainsString('class: phpbbgallery\\core\\policy\\image_visibility', $services);
+		$this->assertStringContainsString('phpbbgallery.core.policy.album_operation:', $services);
+		$this->assertStringContainsString('class: phpbbgallery\\core\\policy\\album_operation', $services);
 		$this->assertStringNotContainsString('legacy_contest_policy_listener', $services);
+	}
+
+	public function test_album_operation_combines_type_capabilities_and_addon_rules(): void
+	{
+		$dispatcher = $this->dispatcher(static function (string $event_name, array $data): array
+		{
+			if ($event_name === 'phpbbgallery.core.album.types')
+			{
+				$data['types'][2] = [
+					'lang' => 'CONTEST',
+					'accepts_images' => true,
+					'can_create' => true,
+				];
+			}
+			else if ($event_name === 'phpbbgallery.core.album_operation'
+				&& (int) $data['album_data']['album_type'] === 2)
+			{
+				$data['allowed'] = false;
+			}
+
+			return $data;
+		});
+		$policy = new album_operation($dispatcher, new type_registry($dispatcher));
+
+		$this->assertTrue($policy->allows('upload', ['album_type' => \phpbbgallery\core\block::TYPE_UPLOAD]));
+		$this->assertFalse($policy->allows('upload', ['album_type' => \phpbbgallery\core\block::TYPE_CAT]));
+		$this->assertFalse($policy->allows('upload', ['album_type' => 2]));
+		$this->assertFalse($policy->allows('upload', ['album_type' => 99]));
+	}
+
+	public function test_album_operation_rejects_an_empty_operation(): void
+	{
+		$dispatcher = $this->dispatcher(
+			static fn(string $event_name, array $data): array => $data
+		);
+		$policy = new album_operation($dispatcher, new type_registry($dispatcher));
+
+		$this->expectException(\InvalidArgumentException::class);
+		$policy->allows(' ', ['album_type' => \phpbbgallery\core\block::TYPE_UPLOAD]);
 	}
 
 	public function test_album_registry_keeps_core_types_and_normalizes_extensions(): void

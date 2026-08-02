@@ -306,6 +306,11 @@ services:
         class: phpbbgallery\core\policy\image_visibility
         arguments:
             - '@dispatcher'
+    phpbbgallery.core.policy.album_operation:
+        class: phpbbgallery\core\policy\album_operation
+        arguments:
+            - '@dispatcher'
+            - '@phpbbgallery.core.album.type_registry'
     phpbbgallery.core.upload:
         class: phpbbgallery\core\upload
         arguments:

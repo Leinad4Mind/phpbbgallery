@@ -228,6 +228,7 @@ namespace
 	require_once dirname(__DIR__) . '/contest.php';
 	require_once dirname(__DIR__) . '/album/type_registry.php';
 	require_once dirname(__DIR__) . '/policy/image_visibility.php';
+	require_once dirname(__DIR__) . '/policy/album_operation.php';
 	require_once dirname(__DIR__) . '/file/file.php';
 	require_once dirname(__DIR__) . '/file/types/multiform.php';
 	require_once dirname(__DIR__) . '/album/album.php';
