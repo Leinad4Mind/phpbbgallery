@@ -90,6 +90,18 @@ final class package_test extends TestCase
 		}
 	}
 
+	public function test_acp_album_type_fragment_contains_contest_fields(): void
+	{
+		$template = (string) file_get_contents(
+			dirname(__DIR__) . '/adm/style/event/phpbbgallery_core_adm_album_type_options.html'
+		);
+
+		$this->assertStringContainsString('id="album_contest_options"', $template);
+		$this->assertStringContainsString('name="contest_start"', $template);
+		$this->assertStringContainsString('name="contest_rating"', $template);
+		$this->assertStringContainsString('name="contest_end"', $template);
+	}
+
 	private function load_language(string $path): array
 	{
 		$lang = [];

@@ -1,0 +1,17 @@
+<div id="album_contest_options"{% if not S_ALBUM_CONTEST %} hidden{% endif %}>
+	<fieldset>
+		<legend>{{ lang('CONTEST_SETTINGS') }}</legend>
+		<dl>
+			<dt><label for="contest_start">{{ lang('CONTEST_START') }}{{ lang('COLON') }}</label><br /><span>{{ lang('CONTEST_START_EXPLAIN') }}</span><br /><span>{{ lang('CONTEST_DATE_EXPLAIN') }}</span></dt>
+			<dd><input class="text" type="text" id="contest_start" name="contest_start" value="{{ S_CONTEST_START }}" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="contest_rating">{{ lang('CONTEST_RATING') }}{{ lang('COLON') }}</label><br /><span>{{ lang('CONTEST_RATING_EXPLAIN') }}</span><br /><span>{{ lang('CONTEST_DATE_EXPLAIN') }}</span></dt>
+			<dd><input class="text" type="text" id="contest_rating" name="contest_rating" value="{{ CONTEST_RATING }}" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="contest_end">{{ lang('CONTEST_END') }}{{ lang('COLON') }}</label><br /><span>{{ lang('CONTEST_END_EXPLAIN') }}</span><br /><span>{{ lang('CONTEST_DATE_EXPLAIN') }}</span></dt>
+			<dd><input class="text" type="text" id="contest_end" name="contest_end" value="{{ CONTEST_END }}" /></dd>
+		</dl>
+	</fieldset>
+</div>

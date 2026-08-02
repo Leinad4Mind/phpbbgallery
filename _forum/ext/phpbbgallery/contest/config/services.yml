@@ -19,5 +19,9 @@ services:
         class: phpbbgallery\contest\event\acp_listener
         arguments:
             - '@language'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '@phpbbgallery.contest.manager'
         tags:
             - { name: event.listener }

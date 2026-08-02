@@ -60,8 +60,6 @@ class albums_module
 
 		$phpbb_ext_gallery_core_album_display = $phpbb_container->get('phpbbgallery.core.album.display');
 
-		// Init contest
-		$phpbb_gallery_contest = $phpbb_container->get('phpbbgallery.core.contest');
 		$album_type_registry = $phpbb_container->get('phpbbgallery.core.album.type_registry');
 
 		$this->tpl_name = 'gallery_albums';
@@ -184,7 +182,8 @@ class albums_module
 					* @var	array	album_data	Album data for the album
 					* @since 1.2.0
 					*/
-					$vars = ['action', 'album_id', 'album_data'];
+					$album_type_data = [];
+					$vars = ['action', 'album_id', 'album_data', 'album_type_data'];
 					extract($phpbb_dispatcher->trigger_event('phpbbgallery.core.acp.albums.request_data', compact($vars)));
 
 					// Categories are not able to be locked...
@@ -193,20 +192,13 @@ class albums_module
 						$album_data['album_status'] = (int) \phpbbgallery\core\block::ALBUM_OPEN;
 					}
 
-					// Contests need contest_data, freaky... :-O
-					$contest_data = [
-						'contest_start'			=> $request->variable('contest_start', ''),
-						'contest_rating'		=> $request->variable('contest_rating', ''),
-						'contest_end'			=> $request->variable('contest_end', ''),
-					];
-
 					// Get data for album description if specified
 					if ($album_data['album_desc'])
 					{
 						generate_text_for_storage($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_bitfield'], $album_data['album_desc_options'], $request->variable('desc_parse_bbcode', false), $request->variable('desc_parse_urls', false), $request->variable('desc_parse_smilies', false));
 					}
 
-					$errors = $manage_albums->update_album_data($album_data, $contest_data);
+					$errors = $manage_albums->update_album_data($album_data, $album_type_data);
 
 					if (!sizeof($errors))
 					{
@@ -372,6 +364,7 @@ class albums_module
 			case 'edit':
 
 				// Show form to create/modify a album
+				$old_album_type = null;
 				if ($action == 'edit')
 				{
 					$this->page_title = 'EDIT_ALBUM';
@@ -387,19 +380,12 @@ class albums_module
 						$album_data['left_id'] = $row['left_id'];
 						$album_data['right_id'] = $row['right_id'];
 					}
-					if ($row['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST)
-					{
-						$contest_data = $phpbb_gallery_contest->get_contest($album_id, 'album');
-					}
-					else
-					{
-						// Default values, 3 days later rate and 7 for the end of the contest
-						$contest_data = [
-							'contest_start'			=> time(),
-							'contest_rating'		=> 3 * 86400,
-							'contest_end'			=> 7 * 86400,
-						];
-					}
+					$album_type_data = [];
+					$vars = ['action', 'album_data', 'album_type_data'];
+					extract($phpbb_dispatcher->trigger_event(
+						'phpbbgallery.core.acp.albums.load_type_data',
+						compact($vars)
+					));
 
 					// Make sure no direct child albums are able to be selected as parents.
 					$exclude_albums = [];
@@ -448,15 +434,9 @@ class albums_module
 						* @var	array	album_data	Album data array
 						* @since 1.2.0
 						*/
-						$vars = ['action', 'album_data'];
+						$album_type_data = [];
+						$vars = ['action', 'album_data', 'album_type_data'];
 						extract($phpbb_dispatcher->trigger_event('phpbbgallery.core.acp.albums.default_data', compact($vars)));
-
-						// Default values, 3 days later rate and 7 for the end of the contest
-						$contest_data = [
-							'contest_start'			=> time(),
-							'contest_rating'		=> 3 * 86400,
-							'contest_end'			=> 7 * 86400,
-						];
 					}
 				}
 
@@ -610,13 +590,10 @@ class albums_module
 
 					'S_ALBUM_ORIG_UPLOAD'		=> (isset($old_album_type) && $old_album_type == (int) \phpbbgallery\core\block::TYPE_UPLOAD) ? true : false,
 					'S_ALBUM_ORIG_CAT'			=> (isset($old_album_type) && $old_album_type == (int) \phpbbgallery\core\block::TYPE_CAT) ? true : false,
-					'S_ALBUM_ORIG_CONTEST'		=> (isset($old_album_type) && $old_album_type == (int) \phpbbgallery\core\block::TYPE_CONTEST) ? true : false,
 					'S_ALBUM_UPLOAD'			=> ($album_data['album_type'] == (int) \phpbbgallery\core\block::TYPE_UPLOAD) ? true : false,
 					'S_ALBUM_CAT'				=> ($album_data['album_type'] == (int) \phpbbgallery\core\block::TYPE_CAT) ? true : false,
-					'S_ALBUM_CONTEST'			=> ($album_data['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST) ? true : false,
 					'ALBUM_UPLOAD'				=> (int) \phpbbgallery\core\block::TYPE_UPLOAD,
 					'ALBUM_CAT'					=> (int) \phpbbgallery\core\block::TYPE_CAT,
-					'ALBUM_CONTEST'				=> (int) \phpbbgallery\core\block::TYPE_CONTEST,
 					'S_CAN_COPY_PERMISSIONS'	=> true,
 
 					'S_ALBUM_WATERMARK'			=> ($album_data['album_watermark']) ? true : false,
@@ -625,10 +602,6 @@ class albums_module
 					'S_DISPLAY_SUBALBUM_LIST'	=> ($album_data['display_subalbum_list']) ? true : false,
 					'S_DISPLAY_ON_INDEX'		=> ($album_data['display_on_index']) ? true : false,
 					'S_DISPLAY_IN_RRC'			=> ($album_data['display_in_rrc']) ? true : false,
-
-					'S_CONTEST_START'			=> $user->format_date($contest_data['contest_start'], 'Y-m-d H:i'),
-					'CONTEST_RATING'			=> $user->format_date($contest_data['contest_start'] + $contest_data['contest_rating'], 'Y-m-d H:i'),
-					'CONTEST_END'				=> $user->format_date($contest_data['contest_start'] + $contest_data['contest_end'], 'Y-m-d H:i'),
 				]);
 
 				/**
@@ -639,7 +612,7 @@ class albums_module
 				* @var	array	album_data	Album data array
 				* @since 1.2.0
 				*/
-				$vars = ['action', 'album_data'];
+				$vars = ['action', 'album_data', 'album_type_data', 'old_album_type'];
 				extract($phpbb_dispatcher->trigger_event('phpbbgallery.core.acp.albums.send_to_template', compact($vars)));
 
 				return;

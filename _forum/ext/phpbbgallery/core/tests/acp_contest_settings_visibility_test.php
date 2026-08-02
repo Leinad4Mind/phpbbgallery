@@ -17,10 +17,7 @@ final class acp_contest_settings_visibility_test extends TestCase
 	{
 		$template = (string) file_get_contents(dirname(__DIR__) . '/adm/style/gallery_albums.html');
 
-		$this->assertStringContainsString(
-			'id="album_contest_options"{% if not S_ALBUM_CONTEST %} hidden{% endif %}',
-			$template
-		);
+		$this->assertStringContainsString('{% EVENT phpbbgallery_core_adm_album_type_options %}', $template);
 		$this->assertStringContainsString(
 			'contest_options.hidden = Number(value) !== {{ ALBUM_CONTEST }};',
 			$template
