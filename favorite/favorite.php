@@ -92,9 +92,44 @@ class favorite
 			WHERE ' . $this->db->sql_in_set('image_id', $new_ids);
 		$this->db->sql_query($sql);
 
+		// An image can be deleted after the initial favourite check but before
+		// this write finishes. Keep only relations whose image still exists;
+		// the Core delete event covers the opposite ordering of the race.
+		$existing_ids = $this->get_existing_image_ids($new_ids);
+		$missing_ids = array_values(array_diff($new_ids, $existing_ids));
+		if (!empty($missing_ids))
+		{
+			$sql = 'DELETE FROM ' . $this->favorites_table . '
+				WHERE user_id = ' . (int) $user_id . '
+					AND ' . $this->db->sql_in_set('image_id', $missing_ids);
+			$this->db->sql_query($sql);
+		}
+
 		$this->db->sql_transaction('commit');
 
-		return count($new_ids);
+		return count($existing_ids);
+	}
+
+	/**
+	 * Return the requested image ids that still exist in the Core table.
+	 *
+	 * @param array $image_ids Image ids to verify
+	 * @return array
+	 */
+	private function get_existing_image_ids(array $image_ids): array
+	{
+		$existing_ids = [];
+		$sql = 'SELECT image_id
+			FROM ' . $this->images_table . '
+			WHERE ' . $this->db->sql_in_set('image_id', $image_ids);
+		$result = $this->db->sql_query($sql);
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$existing_ids[] = (int) $row['image_id'];
+		}
+		$this->db->sql_freeresult($result);
+
+		return $existing_ids;
 	}
 
 	/**
