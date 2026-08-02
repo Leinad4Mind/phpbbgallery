@@ -1,0 +1,2 @@
+parameters:
+    phpbbgallery.contest.tables.contests: '%core.table_prefix%gallery_contests'
