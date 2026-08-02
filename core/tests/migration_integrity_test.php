@@ -18,6 +18,7 @@ use phpbbgallery\core\migrations\release_3_2_1_0;
 use phpbbgallery\core\migrations\release_3_2_1_1;
 use phpbbgallery\core\migrations\release_3_3_0;
 use phpbbgallery\core\migrations\release_3_4_0;
+use phpbbgallery\core\migrations\release_4_0_0;
 use phpbbgallery\core\migrations\resumable_uploads;
 use phpbbgallery\core\migrations\performance_indexes;
 use phpbbgallery\core\migrations\protect_personal_album_profile_field;
@@ -62,6 +63,7 @@ class migration_integrity_test extends TestCase
 		remove_legacy_image_plugins::class,
 		image_subtitle::class,
 		contest_creation::class,
+		release_4_0_0::class,
 	];
 
 	private array $temp_directories = [];
@@ -159,6 +161,19 @@ class migration_integrity_test extends TestCase
 			['\phpbbgallery\core\migrations\image_subtitle'],
 			contest_creation::depends_on()
 		);
+		$this->assertSame(
+			['\phpbbgallery\core\migrations\contest_creation'],
+			release_4_0_0::depends_on()
+		);
+	}
+
+	public function test_release_4_0_0_updates_the_installed_version(): void
+	{
+		$migration = (new \ReflectionClass(release_4_0_0::class))->newInstanceWithoutConstructor();
+
+		$this->assertSame([
+			['config.update', ['phpbb_gallery_version', '4.0.0']],
+		], $migration->update_data());
 	}
 
 	public function test_contest_creation_switch_is_reversible_and_enabled_by_default(): void
@@ -793,6 +808,7 @@ class migration_integrity_test extends TestCase
 			'remove_legacy_image_plugins.php',
 			'image_subtitle.php',
 			'contest_creation.php',
+			'release_4_0_0.php',
 		] as $migration)
 		{
 			require_once dirname(__DIR__) . '/migrations/' . $migration;

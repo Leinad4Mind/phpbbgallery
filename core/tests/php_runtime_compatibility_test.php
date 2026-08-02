@@ -17,7 +17,13 @@ final class php_runtime_compatibility_test extends TestCase
 		'core',
 		'acpcleanup',
 		'acpimport',
+		'bbpointsimages',
+		'bbtagsimages',
 		'exif',
+		'export',
+		'favorite',
+		'feed',
+		'imagerevisions',
 	];
 
 	public function test_all_components_declare_the_supported_runtime(): void
@@ -33,6 +39,7 @@ final class php_runtime_compatibility_test extends TestCase
 			$this->assertSame('>=3.3.0,<4.0.0@dev', $composer['extra']['soft-require']['phpbb/phpbb'], $component . ' has an unexpected phpBB requirement.');
 			if ($component === 'core')
 			{
+				$this->assertSame('4.0.0', $composer['version']);
 				$this->assertSame('*', $composer['require']['ext-gd']);
 				$this->assertSame('*', $composer['require']['ext-mbstring']);
 			}
