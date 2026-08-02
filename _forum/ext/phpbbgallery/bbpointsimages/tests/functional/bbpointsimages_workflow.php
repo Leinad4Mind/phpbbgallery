@@ -80,7 +80,7 @@ class bbpointsimages_workflow extends \phpbb_functional_test_case
 		$contributor_two_id = $this->create_user(self::CONTRIBUTOR_TWO);
 		$import_author_id = $this->create_user(self::IMPORT_AUTHOR);
 		$retro_author_id = $this->create_user(self::RETRO_AUTHOR);
-		$approved_album = $this->create_album($author_id, true, 'Paid sources');
+		$approved_album = $this->create_album($author_id, true, 'Paid sources', [$buyer_id]);
 		$moderated_album = $this->create_album($author_id, false, 'Moderated rewards');
 
 		$this->set_config('phpbb_gallery_bbpoints_upload_reward', self::REWARD);
@@ -90,6 +90,7 @@ class bbpointsimages_workflow extends \phpbb_functional_test_case
 		$this->purge_cache();
 
 		$this->login();
+		$admin_balance_before_upload = $this->balance(2);
 		[$paid_image_id, $paid_filename] = $this->upload_image(
 			$approved_album,
 			$phpbb_root_path,
@@ -100,14 +101,15 @@ class bbpointsimages_workflow extends \phpbb_functional_test_case
 		);
 		$this->assert_reward($paid_image_id, $author_id, self::REWARD, $paid_filename, $phpbb_root_path);
 		$this->assertSame(self::REWARD, $this->balance($author_id));
-		$this->assertSame(0, $this->balance(2));
+		$this->assertSame($admin_balance_before_upload, $this->balance(2));
 		$this->assert_contributors($paid_image_id, [$contributor_one_id, $contributor_two_id]);
 		$this->assert_notification('phpbbgallery.bbpointsimages.notification.reward', $author_id, $paid_image_id);
 		$this->logout();
 
 		$this->login(self::BUYER);
+		$buyer_balance_before_purchase = $this->balance($buyer_id);
 		$this->purchase_and_download($paid_image_id, $buyer_id);
-		$this->assertSame(40, $this->balance($buyer_id));
+		$this->assertSame($buyer_balance_before_purchase - self::SOURCE_COST, $this->balance($buyer_id));
 		$this->assertSame(self::REWARD + 4, $this->balance($author_id));
 		$this->assertSame(3, $this->balance($contributor_one_id));
 		$this->assertSame(3, $this->balance($contributor_two_id));
@@ -134,10 +136,11 @@ class bbpointsimages_workflow extends \phpbb_functional_test_case
 		$this->approve_image($pending_image_id);
 		$this->assertSame(1, $this->reward_count($pending_image_id));
 
+		$admin_balance_before_import = $this->balance(2);
 		$import_image_id = $this->import_image($approved_album, $phpbb_root_path, self::IMPORT_AUTHOR);
 		$this->assert_reward_row($import_image_id, $import_author_id, self::REWARD);
 		$this->assertSame(self::REWARD, $this->balance($import_author_id));
-		$this->assertSame(0, $this->balance(2));
+		$this->assertSame($admin_balance_before_import, $this->balance(2));
 
 		$retro_image_id = $this->insert_historical_image($approved_album, $retro_author_id, $phpbb_root_path);
 		$this->assertSame(0, $this->reward_count($retro_image_id));
@@ -157,7 +160,10 @@ class bbpointsimages_workflow extends \phpbb_functional_test_case
 		$this->assertSame(1, $this->reward_count($paid_image_id));
 	}
 
-	private function create_album(int $uploader_id, bool $approve, string $name): int
+	/**
+	 * @param int[] $viewer_ids
+	 */
+	private function create_album(int $uploader_id, bool $approve, string $name, array $viewer_ids = []): int
 	{
 		$db = $this->get_db();
 		$album = [
@@ -194,7 +200,24 @@ class bbpointsimages_workflow extends \phpbb_functional_test_case
 		$this->insert_album_permission($album_id, $uploader_id, $uploader_role_id);
 		$this->insert_album_permission($album_id, 2, $moderator_role_id);
 
-		$db->sql_query('UPDATE ' . $this->table('gallery_users') . " SET user_permissions = '' WHERE user_id IN (1, 2, " . $uploader_id . ')');
+		if ($viewer_ids)
+		{
+			$viewer_role = array_fill_keys(array_keys($uploader_role), 0);
+			foreach (['a_list', 'i_view', 'i_watermark', 'c_read'] as $permission)
+			{
+				$viewer_role[$permission] = 1;
+			}
+			$viewer_role_id = $this->insert_role($viewer_role);
+			foreach (array_unique(array_map('intval', $viewer_ids)) as $viewer_id)
+			{
+				$this->insert_album_permission($album_id, $viewer_id, $viewer_role_id);
+			}
+		}
+
+		$permission_users = array_unique([1, 2, $uploader_id, ...array_map('intval', $viewer_ids)]);
+		$db->sql_query('UPDATE ' . $this->table('gallery_users') . "
+			SET user_permissions = ''
+			WHERE user_id IN (" . implode(', ', $permission_users) . ')');
 		return $album_id;
 	}
 
@@ -263,15 +286,25 @@ class bbpointsimages_workflow extends \phpbb_functional_test_case
 		$this->assertStringContainsString((string) self::SOURCE_COST, $crawler->filter('body')->text());
 		$this->assertSame(0, $this->purchase_count($image_id, $buyer_id));
 		$form = $crawler->selectButton($this->lang('YES'))->form();
-		self::submit($form);
+		self::submit($form, [], false);
+		$this->assert_source_download_response();
 		$this->assertSame(1, $this->purchase_count($image_id, $buyer_id));
 		$this->assert_download_counters($image_id, $buyer_id, 1);
 
 		$balance = $this->balance($buyer_id);
-		self::request('GET', $path);
+		self::request('GET', $path, [], false);
+		$this->assert_source_download_response();
 		$this->assertSame(1, $this->purchase_count($image_id, $buyer_id));
 		$this->assertSame($balance, $this->balance($buyer_id));
 		$this->assert_download_counters($image_id, $buyer_id, 2);
+	}
+
+	private function assert_source_download_response(): void
+	{
+		self::assert_response_status_code(200);
+		$response = self::$client->getResponse();
+		$this->assertStringStartsWith('attachment;', (string) $response->getHeader('Content-Disposition'));
+		$this->assertStringStartsWith("\x89PNG\r\n\x1a\n", $response->getContent());
 	}
 
 	private function approve_image(int $image_id): void
