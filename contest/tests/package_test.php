@@ -107,6 +107,17 @@ final class package_test extends TestCase
 		$this->assertStringContainsString('name="contest_start"', $template);
 		$this->assertStringContainsString('name="contest_rating"', $template);
 		$this->assertStringContainsString('name="contest_end"', $template);
+
+		$display = (string) file_get_contents(
+			dirname(__DIR__) . '/adm/style/event/phpbbgallery_core_adm_album_display_options.html'
+		);
+		$warnings = (string) file_get_contents(
+			dirname(__DIR__) . '/adm/style/event/phpbbgallery_core_adm_album_type_warnings.html'
+		);
+		$this->assertStringContainsString('contest_options.hidden', $display);
+		$this->assertStringContainsString("dE('album_upload_options', 1)", $display);
+		$this->assertStringContainsString('cat_to_contest_actions', $warnings);
+		$this->assertStringContainsString('contest_change_type_actions', $warnings);
 	}
 
 	private function load_language(string $path): array
