@@ -19,3 +19,6 @@ All notable changes to the phpBB Gallery Contest add-on are documented in this f
   persistence out of the Core album manager and into the add-on lifecycle.
 - Moved contest image reset and historical-row cleanup during album moves and
   deletion into the add-on while preserving one atomic image-update query.
+- Moved contest-specific ACP visibility and type-change warnings into add-on
+  template-event fragments, leaving neutral album-type hooks in Core.
+- Added syntax coverage for every Contest ACP template-event fragment.

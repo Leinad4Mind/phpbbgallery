@@ -1,0 +1,43 @@
+var contest_options = document.getElementById('album_contest_options');
+if (contest_options)
+{
+	contest_options.hidden = Number(value) !== {{ ALBUM_CONTEST }};
+}
+
+{% if not S_ADD_ACTION and S_ALBUM_ORIG_CAT %}
+	if (value == {{ ALBUM_CONTEST }})
+	{
+		dE('cat_to_contest_actions', 1);
+	}
+	else
+	{
+		dE('cat_to_contest_actions', -1);
+	}
+{% endif %}
+
+{% if not S_ADD_ACTION and S_ALBUM_ORIG_CONTEST %}
+	if (value != {{ ALBUM_CONTEST }})
+	{
+		dE('contest_change_type_actions', 1);
+	}
+	else
+	{
+		dE('contest_change_type_actions', -1);
+	}
+{% endif %}
+
+{% if not S_ADD_ACTION and S_ALBUM_ORIG_UPLOAD %}
+	if (value == {{ ALBUM_CONTEST }})
+	{
+		dE('album_to_contest_actions', 1);
+	}
+	else
+	{
+		dE('album_to_contest_actions', -1);
+	}
+{% endif %}
+
+if (value == {{ ALBUM_CONTEST }})
+{
+	dE('album_upload_options', 1);
+}
