@@ -50,6 +50,10 @@ services:
             - '@user'
             - '@phpbbgallery.core.contest'
             - '%phpbbgallery.tables.gallery_albums%'
+    phpbbgallery.core.album.type_registry:
+        class: phpbbgallery\core\album\type_registry
+        arguments:
+            - '@dispatcher'
     phpbbgallery.core.album.manage:
         class: phpbbgallery\core\album\manage
         arguments:
@@ -299,6 +303,16 @@ services:
             - '@phpbbgallery.core.config'
             - '%phpbbgallery.tables.gallery_images%'
             - '%phpbbgallery.tables.gallery_contests%'
+    phpbbgallery.core.policy.image_visibility:
+        class: phpbbgallery\core\policy\image_visibility
+        arguments:
+            - '@dispatcher'
+    phpbbgallery.core.legacy_contest_policy_listener:
+        class: phpbbgallery\core\event\legacy_contest_policy_listener
+        arguments:
+            - '@phpbbgallery.core.contest'
+        tags:
+            - { name: event.listener }
     phpbbgallery.core.upload:
         class: phpbbgallery\core\upload
         arguments:

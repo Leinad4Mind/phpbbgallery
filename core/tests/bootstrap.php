@@ -225,6 +225,9 @@ namespace
 	require_once dirname(__DIR__) . '/auth/level.php';
 	require_once dirname(__DIR__) . '/block.php';
 	require_once dirname(__DIR__) . '/contest.php';
+	require_once dirname(__DIR__) . '/album/type_registry.php';
+	require_once dirname(__DIR__) . '/policy/image_visibility.php';
+	require_once dirname(__DIR__) . '/event/legacy_contest_policy_listener.php';
 	require_once dirname(__DIR__) . '/file/file.php';
 	require_once dirname(__DIR__) . '/file/types/multiform.php';
 	require_once dirname(__DIR__) . '/album/album.php';
