@@ -1243,6 +1243,35 @@ class manager
 	}
 
 	/**
+	 * Delete explicit provider rules for scopes that no longer exist.
+	 *
+	 * @param string $provider  Provider identifier
+	 * @param array  $scope_ids Scope identifiers
+	 *
+	 * @return bool
+	 */
+	public function delete_scope_rules(string $provider, array $scope_ids): bool
+	{
+		$provider = $this->validate_provider($provider);
+		$scope_ids = array_values(array_unique(array_filter(
+			array_map('intval', $scope_ids),
+			static function (int $scope_id): bool
+			{
+				return $scope_id > 0;
+			}
+		)));
+		if ($provider === '' || empty($scope_ids))
+		{
+			return false;
+		}
+
+		$sql = 'DELETE FROM ' . $this->table_bbtags_scope . '
+			WHERE provider = \'' . $this->db->sql_escape($provider) . '\'
+				AND ' . $this->db->sql_in_set('scope_id', $scope_ids);
+		return $this->db->sql_query($sql) !== false;
+	}
+
+	/**
 	 * Atomically replace one provider policy and all of its explicit rules.
 	 */
 	public function save_provider_policy(

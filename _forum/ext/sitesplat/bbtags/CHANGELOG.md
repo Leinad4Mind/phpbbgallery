@@ -10,6 +10,7 @@
 
 ### Fixed
 
+- Allow content providers to remove explicit scope rules when their underlying scopes are deleted.
 - Declare runtime properties used by the ACP module and event listener for PHP 8.2 and later.
 - Replace the MySQL-only ACP tag aggregation query with portable SQL.
 - Validate numeric ACP settings and normalize the predefined tag list before saving it.

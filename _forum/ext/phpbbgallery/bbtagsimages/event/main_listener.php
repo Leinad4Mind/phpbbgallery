@@ -87,6 +87,7 @@ final class main_listener implements EventSubscriberInterface
 			'phpbbgallery.core.upload.review_display' => 'display_upload_review',
 			'phpbbgallery.core.upload.update_image_after' => 'save_uploaded_image',
 			'phpbbgallery.core.image.delete_images' => 'delete_image_tags',
+			'phpbbgallery.core.album.manage.delete_album_content' => 'delete_album_scope_rules',
 		];
 	}
 
@@ -312,6 +313,11 @@ final class main_listener implements EventSubscriberInterface
 		$image_ids = (array) $event['images'];
 		$this->moderation->cancel_items(image_tag_manager::PROVIDER, $image_ids);
 		$this->image_tags->delete_for_images($image_ids);
+	}
+
+	public function delete_album_scope_rules(data $event): void
+	{
+		$this->tags->delete_scope_rules(image_tag_manager::PROVIDER, [(int) $event['album_id']]);
 	}
 
 	private function assign_edit_values(array &$template_vars, int $image_id, int $album_id, int $image_index): void

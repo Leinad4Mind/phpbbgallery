@@ -126,4 +126,15 @@ final class policy_test extends TestCase
 			'source_cost' => 9,
 		]], $db->inserted['rules']);
 	}
+
+	public function test_deleted_albums_remove_their_direct_rules(): void
+	{
+		$db = new fake_db();
+		$resolver = new policy($db, new config([]), 'albums', 'rules');
+
+		$resolver->delete_for_albums([7, 7, 0, -1]);
+
+		$this->assertStringContainsString('DELETE FROM rules', $db->last_query);
+		$this->assertStringContainsString('album_id IN (7)', $db->last_query);
+	}
 }

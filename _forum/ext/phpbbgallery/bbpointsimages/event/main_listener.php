@@ -20,6 +20,7 @@ use phpbbgallery\bbpointsimages\purchase_manager;
 use phpbbgallery\bbpointsimages\reward_manager;
 use phpbbgallery\bbpointsimages\contributor_manager;
 use phpbbgallery\bbpointsimages\notification\helper as notification_helper;
+use phpbbgallery\bbpointsimages\policy;
 use phpbbgallery\core\url;
 use sitesplat\bbpoints\exception\insufficient_funds;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -30,6 +31,7 @@ final class main_listener implements EventSubscriberInterface
 		private reward_manager $rewards,
 		private purchase_manager $purchases,
 		private contributor_manager $contributors,
+		private policy $policy,
 		private notification_helper $notifications,
 		private request_interface $request,
 		private user $user,
@@ -55,6 +57,7 @@ final class main_listener implements EventSubscriberInterface
 			'phpbbgallery.core.image.approve_after' => 'approved',
 			'phpbbgallery.core.image.change_author_after' => 'author_changed',
 			'phpbbgallery.core.image.delete_images' => 'images_deleted',
+			'phpbbgallery.core.album.manage.delete_album_content' => 'album_deleted',
 			'phpbbgallery.acpimport.insert_image_after' => 'imported',
 			'phpbbgallery.core.file.source_access' => 'source_access',
 			'phpbbgallery.core.viewimage' => 'viewimage',
@@ -172,6 +175,11 @@ final class main_listener implements EventSubscriberInterface
 	public function images_deleted(data $event): void
 	{
 		$this->contributors->delete_for_images((array) $event['images']);
+	}
+
+	public function album_deleted(data $event): void
+	{
+		$this->policy->delete_for_albums([(int) $event['album_id']]);
 	}
 
 	public function source_access(data $event): void

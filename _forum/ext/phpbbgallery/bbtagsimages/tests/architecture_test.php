@@ -70,12 +70,14 @@ final class architecture_test extends TestCase
 		$this->assertStringContainsString("'phpbbgallery.core.upload.review_display'", $listener);
 		$this->assertStringContainsString("'phpbbgallery.core.upload.update_image_after'", $listener);
 		$this->assertStringContainsString("'phpbbgallery.core.image.delete_images'", $listener);
+		$this->assertStringContainsString("'phpbbgallery.core.album.manage.delete_album_content'", $listener);
 		$this->assertStringContainsString("'ext_name' => 'phpbbgallery/bbtagsimages'", $listener);
 		$this->assertStringContainsString("acl_get('u_bbtags')", $listener);
 		$this->assertStringContainsString("acl_get('m_bbtags_moderate')", $listener);
 		$this->assertStringContainsString('classify_tags(', $listener);
 		$this->assertStringContainsString('sync_item_suggestions(', $listener);
 		$this->assertStringContainsString('cancel_items(', $listener);
+		$this->assertStringContainsString('delete_scope_rules(', $listener);
 	}
 
 	public function test_all_supported_styles_integrate_editing_and_viewing_without_legacy_markup_in_modern_styles(): void

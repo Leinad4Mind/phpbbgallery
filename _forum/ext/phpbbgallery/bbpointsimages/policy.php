@@ -158,4 +158,20 @@ final class policy
 			$this->db->sql_multi_insert($this->rules_table, $insert);
 		}
 	}
+
+	public function delete_for_albums(array $album_ids): void
+	{
+		$album_ids = array_values(array_unique(array_filter(
+			array_map('intval', $album_ids),
+			static fn (int $album_id): bool => $album_id > 0
+		)));
+		if (!$album_ids)
+		{
+			return;
+		}
+
+		$sql = 'DELETE FROM ' . $this->rules_table . '
+			WHERE ' . $this->db->sql_in_set('album_id', $album_ids);
+		$this->db->sql_query($sql);
+	}
 }

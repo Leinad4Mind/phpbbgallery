@@ -28,6 +28,26 @@ class manager_scope_test extends TestCase
 		$this->assertTrue($manager->scope_allows('global', array(), $path));
 	}
 
+	public function test_deleted_provider_scopes_remove_only_their_explicit_rules(): void
+	{
+		$query = '';
+		$db = $this->createMock(driver_interface::class);
+		$db->method('sql_escape')->willReturnArgument(0);
+		$db->method('sql_in_set')->willReturnCallback(static function (string $field, array $values): string
+		{
+			return $field . ' IN (' . implode(',', $values) . ')';
+		});
+		$db->method('sql_query')->willReturnCallback(static function (string $sql) use (&$query): string
+		{
+			$query = $sql;
+			return $sql;
+		});
+
+		$this->assertTrue($this->create_manager($db)->delete_scope_rules('gallery_images', [7, 7, 0, -1]));
+		$this->assertStringContainsString("provider = 'gallery_images'", $query);
+		$this->assertStringContainsString('scope_id IN (7)', $query);
+	}
+
 	public function test_forum_path_is_ordered_from_current_forum_to_root()
 	{
 		$db = $this->createMock(driver_interface::class);

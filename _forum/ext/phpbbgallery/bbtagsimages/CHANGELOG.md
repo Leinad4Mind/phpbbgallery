@@ -27,6 +27,7 @@
 
 - Render the Gallery album hierarchy marker as a valid Unicode em dash instead of corrupted text.
 - Remove newly written tag relations if their image is deleted during the same request.
+- Remove inherited tag-policy rules when their Gallery album is deleted.
 
 ### Tests
 

@@ -50,6 +50,7 @@ services:
             - '@phpbbgallery.bbpointsimages.reward_manager'
             - '@phpbbgallery.bbpointsimages.purchase_manager'
             - '@phpbbgallery.bbpointsimages.contributor_manager'
+            - '@phpbbgallery.bbpointsimages.policy'
             - '@phpbbgallery.bbpointsimages.notification.helper'
             - '@request'
             - '@user'
