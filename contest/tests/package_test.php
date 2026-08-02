@@ -68,6 +68,8 @@ final class package_test extends TestCase
 		$this->assertStringContainsString('%phpbbgallery.contest.tables.contests%', $services);
 		$this->assertStringContainsString('phpbbgallery.contest.policy_listener:', $services);
 		$this->assertStringContainsString('class: phpbbgallery\\contest\\event\\policy_listener', $services);
+		$this->assertStringContainsString('phpbbgallery.contest.acp_listener:', $services);
+		$this->assertStringContainsString('class: phpbbgallery\\contest\\event\\acp_listener', $services);
 		$this->assertStringContainsString('- { name: event.listener }', $services);
 	}
 
@@ -79,8 +81,12 @@ final class package_test extends TestCase
 		foreach ($languages as $language)
 		{
 			$messages = $this->load_language($language_root . '/' . $language . '/info_contest.php');
+			$acp_messages = $this->load_language($language_root . '/' . $language . '/contest_acp.php');
 			$this->assertArrayHasKey('GALLERY_CORE_NOT_FOUND', $messages, $language);
 			$this->assertArrayHasKey('EXTENSION_ENABLE_SUCCESS', $messages, $language);
+			$this->assertArrayHasKey('CONTEST_CREATION', $acp_messages, $language);
+			$this->assertArrayHasKey('CONTEST_CREATION_EXPLAIN', $acp_messages, $language);
+			$this->assertArrayHasKey('CONTEST_CREATION_DISABLED', $acp_messages, $language);
 		}
 	}
 

@@ -396,7 +396,6 @@ class config_module
 				'GALLERY_CONFIG'	=> [
 					'title'				=> ['lang' => 'GALLERY_TITLE',		'validate' => 'string',	'type' => 'text:40:255',	'explain' => true],
 					'items_per_page'		=> ['lang' => 'ITEMS_PER_PAGE',		'validate' => 'int',	'type' => 'text:7:3',		'explain' => true],
-					'allow_contests'		=> ['lang' => 'CONTEST_CREATION',	'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 					'allow_comments'		=> ['lang' => 'COMMENT_SYSTEM',		'validate' => 'bool',	'type' => 'radio:yes_no'],
 					'comment_user_control'	=> ['lang' => 'COMMENT_USER_CONTROL',	'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 					'comment_length'		=> ['lang' => 'COMMENT_MAX_LENGTH',	'validate' => 'int',	'type' => 'text:7:5',		'append' => 'CHARACTERS'],
