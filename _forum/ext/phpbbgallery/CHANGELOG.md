@@ -144,6 +144,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Removed per-user album read-tracking rows when public or personal albums are deleted, including the complete subtree of a deleted personal album.
 - Corrected contest-winner headings and links across every language so the three-place podium is consistently described in the plural.
 - Hid the message-editor Gallery selector when the current user has no completed, permission-accessible images to insert.
 - Preserved unrelated custom [image] BBCodes during installation by selecting [galleryimage] for new Gallery content while retaining [album] only as a hidden compatibility alias for historical posts.

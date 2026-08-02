@@ -41,7 +41,6 @@ class albums_module
 		// Let us define some helpers;
 		$albums_table = $table_prefix . 'gallery_albums';
 		$contests_table = $table_prefix . 'gallery_contests';
-		$tracking_table = $table_prefix . 'gallery_albums_tracking';
 		// Init ext gallery
 		$this->language->add_lang(['gallery_acp', 'gallery'], 'phpbbgallery/core');
 
