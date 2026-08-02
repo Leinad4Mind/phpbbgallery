@@ -113,7 +113,8 @@ class introduciator_listener implements EventSubscriberInterface
 	 */
 	public function on_before_quickreply_displayed($event)
 	{
-		if ($event['tpl_ary']['S_QUICK_REPLY'] === true && false === $this->helper->user_can_post('reply', $event['forum_id'], 0, null, false))
+		$topic_data = $event['topic_data'];
+		if ($event['tpl_ary']['S_QUICK_REPLY'] === true && false === $this->helper->user_can_post('reply', $topic_data['forum_id'], 0, $topic_data, false, false, $topic_data['topic_id']))
 		{	// Quick Reply should be show and is not allowed, hide it !
 			$tpl_ary = $event['tpl_ary'];
 			$tpl_ary['S_QUICK_REPLY'] = false;
@@ -131,7 +132,7 @@ class introduciator_listener implements EventSubscriberInterface
 	 */
 	public function on_displaying_posting_screen($event)
 	{
-		$this->helper->user_can_post($event['mode'], $event['forum_id'], $event['post_id'], $event['post_data'], true);
+		$this->helper->user_can_post($event['mode'], $event['forum_id'], $event['post_id'], $event['post_data'], true, false, $event['topic_id']);
 	}
 
 	/**
@@ -146,14 +147,14 @@ class introduciator_listener implements EventSubscriberInterface
 	 */
 	public function on_submit_post_before($event)
 	{
-		if ($this->helper->user_can_post($event['mode'], $event['forum_id'], $event['post_id'], $event['post_data'], true, true))
+		if ($this->helper->user_can_post($event['mode'], $event['forum_id'], $event['post_id'], $event['post_data'], true, true, $event['topic_id']))
 		{	// Posting is allowed
-			$introduciator_posting_must_be_approved = $this->helper->post_need_approval($event['mode'], $event['data']['forum_id']);
+			$introduciator_posting_must_be_approved = $this->helper->post_need_approval($event['mode'], $event['data']['forum_id'], $event['topic_id']);
 			if ($introduciator_posting_must_be_approved)
 			{	// If posting should not be approved, let $data['force_approved_state'] unchanged (in case of another extension has modified it)
 				$data = $event['data'];
 				$data['force_visibility'] = ITEM_UNAPPROVED;    // Force approval
-				$data['introduciator_force_unapproved'] = $this->helper->get_post_approval_level($event['mode'], $event['data']['forum_id']); // Force approval
+				$data['introduciator_force_unapproved'] = $this->helper->get_post_approval_level($event['mode'], $event['data']['forum_id'], $event['topic_id']); // Force approval
 				$event['data'] = $data;
 			}
 		}
@@ -326,7 +327,7 @@ class introduciator_listener implements EventSubscriberInterface
 	*/
 	public function on_user_want_post($event)
 	{
-		if ($this->helper->user_can_post_or_edit($event['mode'], $event['forum_id'], $event['post_data']))
+		if ($this->helper->user_can_post_or_edit($event['mode'], $event['forum_id'], $event['topic_id'], $event['post_data']))
 		{
 			$data = $event['post_data'];
 			$data['topic_visibility'] = ITEM_APPROVED; // Force approval
