@@ -43,22 +43,22 @@ class bbpoints_module
 				$sql = 'SELECT ' . $userid . ' AS user_id,
 				COALESCE((
 					SELECT SUM(bbpoints)
-					FROM bbgta_posts
+					FROM ' . POSTS_TABLE . '
 					WHERE post_visibility = 1 AND poster_id = ' . $userid . '
 				), 0)
 				 + COALESCE((
 					SELECT SUM(bbpoints)
-					FROM bbgta_topics
+					FROM ' . TOPICS_TABLE . '
 					WHERE topic_poster = ' . $userid . '
 				), 0)
 				 + COALESCE((
 					SELECT SUM(bbpoints)
-					FROM bbgta_bbpoints
+					FROM ' . $this->bbpoints_table . '
 					WHERE to_id = ' . $userid . '
 				), 0)
 				 - COALESCE((
 					SELECT SUM(bbpoints)
-					FROM bbgta_bbpoints
+					FROM ' . $this->bbpoints_table . '
 					WHERE from_id = ' . $userid . '
 				), 0) AS total;';
 				$result = $db->sql_query($sql);

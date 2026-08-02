@@ -94,22 +94,22 @@ class main_controller
 				$sql = 'SELECT ' . $user_id . ' AS user_id,
 				COALESCE((
 					SELECT SUM(bbpoints)
-					FROM bbgta_posts
+					FROM ' . POSTS_TABLE . '
 					WHERE post_visibility = 1 AND poster_id = ' . $user_id . '
 				), 0)
 				 + COALESCE((
 					SELECT SUM(bbpoints)
-					FROM bbgta_topics
+					FROM ' . TOPICS_TABLE . '
 					WHERE topic_poster = ' . $user_id . '
 				), 0)
 				 + COALESCE((
 					SELECT SUM(bbpoints)
-					FROM bbgta_bbpoints
+					FROM ' . $this->bbpoints_table . '
 					WHERE to_id = ' . $user_id . '
 				), 0)
 				 - COALESCE((
 					SELECT SUM(bbpoints)
-					FROM bbgta_bbpoints
+					FROM ' . $this->bbpoints_table . '
 					WHERE from_id = ' . $user_id . '
 				), 0) AS total;';
 				$result = $this->db->sql_query($sql);

@@ -92,4 +92,24 @@ final class architecture_test extends TestCase
 			$this->assertStringContainsString('Forums » Manage » Points', $notice, $file);
 		}
 	}
+
+	public function test_richest_users_query_qualifies_grouped_user_id(): void
+	{
+		$listener = (string) file_get_contents(dirname(__DIR__) . '/event/listener.php');
+
+		$this->assertStringContainsString('GROUP BY t1.user_id', $listener);
+		$this->assertStringNotContainsString("\n\t\t\t\t\tGROUP BY user_id", $listener);
+	}
+
+	public function test_runtime_queries_do_not_use_an_installation_specific_table_prefix(): void
+	{
+		foreach ([
+			dirname(__DIR__) . '/event/listener.php',
+			dirname(__DIR__) . '/controller/main_controller.php',
+			dirname(__DIR__) . '/ucp/bbpoints_module.php',
+		] as $file)
+		{
+			$this->assertStringNotContainsString('bbgta_', (string) file_get_contents($file), $file);
+		}
+	}
 }

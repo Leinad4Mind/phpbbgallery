@@ -306,7 +306,7 @@ class listener implements EventSubscriberInterface
 					UNION 
 					SELECT poster_id AS user_id, SUM(bbpoints) AS points FROM ' . POSTS_TABLE . ' WHERE post_visibility = 1 GROUP BY poster_id) t1 
 					LEFT JOIN ' . USERS_TABLE . ' u ON u.user_id = t1.user_id
-					GROUP BY user_id
+					GROUP BY t1.user_id
 					ORDER BY total DESC';
 			$result = $this->db->sql_query_limit($sql, 10, 0, 300);
 			while ($row = $this->db->sql_fetchrow($result))
@@ -477,22 +477,22 @@ class listener implements EventSubscriberInterface
 		$sql = 'SELECT ' . $user_id . ' AS user_id,
 				COALESCE((
 					SELECT SUM(bbpoints)
-					FROM bbgta_posts
+					FROM ' . POSTS_TABLE . '
 					WHERE post_visibility = 1 AND poster_id = ' . $user_id . '
 				), 0)
 				 + COALESCE((
 					SELECT SUM(bbpoints)
-					FROM bbgta_topics
+					FROM ' . TOPICS_TABLE . '
 					WHERE topic_poster = ' . $user_id . '
 				), 0)
 				 + COALESCE((
 					SELECT SUM(bbpoints)
-					FROM bbgta_bbpoints
+					FROM ' . $this->bbpoints_table . '
 					WHERE to_id = ' . $user_id . '
 				), 0)
 				 - COALESCE((
 					SELECT SUM(bbpoints)
-					FROM bbgta_bbpoints
+					FROM ' . $this->bbpoints_table . '
 					WHERE from_id = ' . $user_id . '
 				), 0) AS total;';
 		$result = $this->db->sql_query($sql);
