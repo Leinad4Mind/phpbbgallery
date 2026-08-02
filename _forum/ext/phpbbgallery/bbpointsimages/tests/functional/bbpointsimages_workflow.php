@@ -135,6 +135,7 @@ class bbpointsimages_workflow extends \phpbb_functional_test_case
 		$this->assert_reward($pending_image_id, $author_id, self::REWARD, $pending_filename, $phpbb_root_path);
 		$this->approve_image($pending_image_id);
 		$this->assertSame(1, $this->reward_count($pending_image_id));
+		$this->admin_login();
 
 		$admin_balance_before_import = $this->balance(2);
 		$import_image_id = $this->import_image($approved_album, $phpbb_root_path, self::IMPORT_AUTHOR);
