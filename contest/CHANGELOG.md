@@ -8,3 +8,5 @@ All notable changes to the phpBB Gallery Contest add-on are documented in this f
 
 - Created the independent Contest add-on package and its safe dependency lifecycle.
 - Adopted the historical Gallery contest storage without copying or deleting existing data.
+- Added the contest domain manager and the Gallery Core policy provider, including
+  fail-closed privacy when the add-on is unavailable.

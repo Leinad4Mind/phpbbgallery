@@ -307,12 +307,6 @@ services:
         class: phpbbgallery\core\policy\image_visibility
         arguments:
             - '@dispatcher'
-    phpbbgallery.core.legacy_contest_policy_listener:
-        class: phpbbgallery\core\event\legacy_contest_policy_listener
-        arguments:
-            - '@phpbbgallery.core.contest'
-        tags:
-            - { name: event.listener }
     phpbbgallery.core.upload:
         class: phpbbgallery\core\upload
         arguments:

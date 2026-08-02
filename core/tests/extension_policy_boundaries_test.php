@@ -10,13 +10,12 @@
 namespace phpbbgallery\core\tests;
 
 use phpbbgallery\core\album\type_registry;
-use phpbbgallery\core\event\legacy_contest_policy_listener;
 use phpbbgallery\core\policy\image_visibility;
 use PHPUnit\Framework\TestCase;
 
 final class extension_policy_boundaries_test extends TestCase
 {
-	public function test_services_register_the_boundaries_and_legacy_provider(): void
+	public function test_services_register_the_extension_boundaries(): void
 	{
 		$services = (string) file_get_contents(dirname(__DIR__) . '/config/services.yml');
 
@@ -24,9 +23,7 @@ final class extension_policy_boundaries_test extends TestCase
 		$this->assertStringContainsString('class: phpbbgallery\\core\\album\\type_registry', $services);
 		$this->assertStringContainsString('phpbbgallery.core.policy.image_visibility:', $services);
 		$this->assertStringContainsString('class: phpbbgallery\\core\\policy\\image_visibility', $services);
-		$this->assertStringContainsString('phpbbgallery.core.legacy_contest_policy_listener:', $services);
-		$this->assertStringContainsString('class: phpbbgallery\\core\\event\\legacy_contest_policy_listener', $services);
-		$this->assertStringContainsString('- { name: event.listener }', $services);
+		$this->assertStringNotContainsString('legacy_contest_policy_listener', $services);
 	}
 
 	public function test_album_registry_keeps_core_types_and_normalizes_extensions(): void
@@ -67,15 +64,18 @@ final class extension_policy_boundaries_test extends TestCase
 				case 'phpbbgallery.core.image_visibility.private_data':
 				case 'phpbbgallery.core.image_visibility.results':
 					$data['hidden'] = true;
+					$data['covered_markers'][] = 'image_contest';
 				break;
 
 				case 'phpbbgallery.core.image_visibility.private_data_sql':
 					$data['conditions'][] = 'i.private_allowed = 1';
 					$data['conditions'][] = 'i.embargo_ended = 1';
+					$data['covered_markers'][] = 'image_contest';
 				break;
 
 				case 'phpbbgallery.core.image_visibility.results_sql':
 					$data['conditions'][] = 'i.results_visible = 1';
+					$data['covered_markers'][] = 'image_contest';
 				break;
 
 				default:
@@ -103,53 +103,23 @@ final class extension_policy_boundaries_test extends TestCase
 
 		$this->assertFalse($policy->hides_private_data([], 2, false));
 		$this->assertFalse($policy->hides_results([], false));
-		$this->assertSame('1 = 1', $policy->private_data_sql('', 2, []));
-		$this->assertSame('1 = 1', $policy->results_sql('image_alias', []));
+		$this->assertSame('(image_contest = 0)', $policy->private_data_sql('', 2, []));
+		$this->assertSame('(image_alias.image_contest = 0)', $policy->results_sql('image_alias', []));
 
 		$this->expectException(\InvalidArgumentException::class);
 		$policy->private_data_sql('i; DROP TABLE images', 2, []);
 	}
 
-	public function test_legacy_bridge_preserves_contest_registration_and_privacy(): void
+	public function test_visibility_policy_fails_closed_for_unowned_persisted_markers(): void
 	{
-		$config = new \phpbb\config\config(['phpbb_gallery_allow_contests' => 0]);
-		$gallery_config = new \phpbbgallery\core\config($config);
-		$contest = new \phpbbgallery\core\contest(
-			$this->createStub(\phpbb\db\driver\driver_interface::class),
-			$gallery_config,
-			'gallery_images',
-			'gallery_contests'
-		);
-		$listener = new legacy_contest_policy_listener($contest);
+		$policy = new image_visibility($this->dispatcher(
+			static fn(string $event_name, array $data): array => $data
+		));
+		$active = ['image_contest' => \phpbbgallery\core\block::IN_CONTEST];
 
-		$type_event = new \phpbb\event\data(['types' => [], 'context' => []]);
-		$listener->register_album_type($type_event);
-		$types = (array) $type_event['types'];
-		$this->assertSame('CONTEST', $types[\phpbbgallery\core\block::TYPE_CONTEST]['lang']);
-		$this->assertTrue($types[\phpbbgallery\core\block::TYPE_CONTEST]['accepts_images']);
-		$this->assertFalse($types[\phpbbgallery\core\block::TYPE_CONTEST]['can_create']);
-
-		$privacy_event = new \phpbb\event\data([
-			'image_data' => [
-				'image_contest' => \phpbbgallery\core\block::IN_CONTEST,
-				'image_user_id' => 7,
-			],
-			'viewer_id' => 8,
-			'can_moderate' => false,
-			'hidden' => false,
-		]);
-		$listener->hide_private_data($privacy_event);
-		$this->assertTrue($privacy_event['hidden']);
-
-		$sql_event = new \phpbb\event\data([
-			'alias' => 'i',
-			'viewer_id' => 8,
-			'moderated_album_ids' => [5],
-			'conditions' => [],
-		]);
-		$listener->restrict_private_data_sql($sql_event);
-		$this->assertStringContainsString('i.image_contest = 0', $sql_event['conditions'][0]);
-		$this->assertStringContainsString('i.image_album_id IN (5)', $sql_event['conditions'][0]);
+		$this->assertTrue($policy->hides_private_data($active, 7, true));
+		$this->assertTrue($policy->hides_results($active, true));
+		$this->assertFalse($policy->hides_private_data(['image_contest' => 0], 7, false));
 	}
 
 	private function dispatcher(callable $callback): \phpbb\event\dispatcher_interface

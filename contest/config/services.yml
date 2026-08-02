@@ -1,0 +1,17 @@
+imports:
+    - { resource: tables.yml }
+
+services:
+    phpbbgallery.contest.manager:
+        class: phpbbgallery\contest\manager
+        arguments:
+            - '@dbal.conn'
+            - '@phpbbgallery.core.config'
+            - '%phpbbgallery.tables.gallery_images%'
+            - '%phpbbgallery.contest.tables.contests%'
+    phpbbgallery.contest.policy_listener:
+        class: phpbbgallery\contest\event\policy_listener
+        arguments:
+            - '@phpbbgallery.contest.manager'
+        tags:
+            - { name: event.listener }

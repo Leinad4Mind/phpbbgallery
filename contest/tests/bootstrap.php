@@ -24,5 +24,8 @@ namespace
 		define('IN_PHPBB', true);
 	}
 
+	require_once dirname(__DIR__, 2) . '/core/tests/bootstrap.php';
+	require_once dirname(__DIR__) . '/manager.php';
+	require_once dirname(__DIR__) . '/event/policy_listener.php';
 	require_once dirname(__DIR__) . '/migrations/m1_init.php';
 }
