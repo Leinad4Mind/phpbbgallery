@@ -38,6 +38,9 @@ class search
 	/** @var \phpbbgallery\core\image\image */
 	protected \phpbbgallery\core\image\image $image;
 
+	/** @var \phpbbgallery\core\policy\image_visibility */
+	protected \phpbbgallery\core\policy\image_visibility $image_visibility;
+
 	/** @var \phpbb\pagination */
 	protected \phpbb\pagination $pagination;
 
@@ -68,6 +71,7 @@ class search
 	 * @param auth\auth                                                 $gallery_auth
 	 * @param album\album                                               $album
 	 * @param image\image                                               $image
+	 * @param policy\image_visibility                                  $image_visibility
 	 * @param \phpbb\pagination                                         $pagination
 	 * @param \phpbb\user_loader                                        $user_loader
 	 * @param string                                                    $images_table
@@ -78,7 +82,7 @@ class search
 	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\template\template $template, \phpbb\user $user,
 		\phpbb\language\language $language, \phpbb\controller\helper $helper, \phpbbgallery\core\config $gallery_config,
 		\phpbbgallery\core\auth\auth $gallery_auth, \phpbbgallery\core\album\album $album, \phpbbgallery\core\image\image $image,
-		\phpbb\pagination $pagination, \phpbb\user_loader $user_loader,
+		\phpbbgallery\core\policy\image_visibility $image_visibility, \phpbb\pagination $pagination, \phpbb\user_loader $user_loader,
 		string $images_table, string $albums_table, string $comments_table, string $contests_table)
 	{
 		$this->db = $db;
@@ -90,6 +94,7 @@ class search
 		$this->gallery_auth = $gallery_auth;
 		$this->album = $album;
 		$this->image = $image;
+		$this->image_visibility = $image_visibility;
 		$this->pagination = $pagination;
 		$this->user_loader = $user_loader;
 		$this->images_table = $images_table;
@@ -147,7 +152,7 @@ class search
 		if ($user > 0)
 		{
 			$sql .= ' and image_user_id = ' . (int) $user;
-			$sql .= ' AND ' . \phpbbgallery\core\contest::private_data_visibility_sql(
+			$sql .= ' AND ' . $this->image_visibility->private_data_sql(
 				'',
 				(int) $this->user->data['user_id'],
 				$this->gallery_auth->acl_album_ids('m_status')
@@ -340,7 +345,7 @@ class search
 			FROM ' . $this->images_table . '
 			WHERE ' . $this->db->sql_in_set('image_user_id', $image_user_ids) . '
 				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
-				AND ' . \phpbbgallery\core\contest::private_data_visibility_sql('', $viewer_id, $moderated_albums) . '
+				AND ' . $this->image_visibility->private_data_sql('', $viewer_id, $moderated_albums) . '
 				AND (
 					(' . $this->db->sql_in_set('image_album_id', $viewable_albums, false, true) . '
 						AND (image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . '
@@ -397,7 +402,7 @@ class search
 		];
 		$sql_array['WHERE'] .= ' AND ((' . $this->db->sql_in_set('image_album_id', array_diff($this->gallery_auth->acl_album_ids('i_view'), $exclude_albums), false, true) . ' AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . ')
 					OR ' . $this->db->sql_in_set('image_album_id', array_diff($this->gallery_auth->acl_album_ids('m_status'), $exclude_albums), false, true) . ')';
-		$sql_array['WHERE'] .= ' AND ' . \phpbbgallery\core\contest::results_visibility_sql(
+		$sql_array['WHERE'] .= ' AND ' . $this->image_visibility->results_sql(
 			'i',
 			$this->gallery_auth->acl_album_ids('m_status')
 		);
@@ -555,7 +560,7 @@ class search
 		if ($user > 0)
 		{
 			$sql_ary['WHERE'] .= ' and image_user_id = ' . (int) $user;
-			$sql_ary['WHERE'] .= ' AND ' . \phpbbgallery\core\contest::private_data_visibility_sql(
+			$sql_ary['WHERE'] .= ' AND ' . $this->image_visibility->private_data_sql(
 				'i',
 				(int) $this->user->data['user_id'],
 				$this->gallery_auth->acl_album_ids('m_status')
@@ -563,7 +568,7 @@ class search
 		}
 		if ($default_sort_key === 'u' && $user <= 0)
 		{
-			$sql_ary['WHERE'] .= ' AND ' . \phpbbgallery\core\contest::private_data_visibility_sql(
+			$sql_ary['WHERE'] .= ' AND ' . $this->image_visibility->private_data_sql(
 				'i',
 				(int) $this->user->data['user_id'],
 				$this->gallery_auth->acl_album_ids('m_status')
@@ -571,7 +576,7 @@ class search
 		}
 		else if (in_array($default_sort_key, ['ra', 'r', 'c', 'lc'], true))
 		{
-			$sql_ary['WHERE'] .= ' AND ' . \phpbbgallery\core\contest::results_visibility_sql(
+			$sql_ary['WHERE'] .= ' AND ' . $this->image_visibility->results_sql(
 				'i',
 				$this->gallery_auth->acl_album_ids('m_status')
 			);
@@ -999,7 +1004,7 @@ class search
 			$this->images_table	=> 'i'
 		];
 		$sql_array['WHERE'] = $this->db->sql_in_set('image_album_id', $this->gallery_auth->acl_album_ids('i_view'), false, true) .
-			' and image_rate_avg <> 0 AND ' . \phpbbgallery\core\contest::results_visibility_sql(
+			' and image_rate_avg <> 0 AND ' . $this->image_visibility->results_sql(
 				'i',
 				$this->gallery_auth->acl_album_ids('m_status')
 			);

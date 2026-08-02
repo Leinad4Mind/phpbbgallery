@@ -90,12 +90,18 @@ final class domain_search_types_test extends TestCase
 		$db->expects($this->once())->method('sql_freeresult')->with('result');
 		$user = new \phpbb\user();
 		$user->data = ['user_id' => 7];
+		$image_visibility = $this->createMock(\phpbbgallery\core\policy\image_visibility::class);
+		$image_visibility->expects($this->once())
+			->method('private_data_sql')
+			->with('', 7, [9])
+			->willReturn('(image_contest = 0 OR image_user_id = 7 OR image_album_id IN (9))');
 		$reflection = new \ReflectionClass(search::class);
 		$search = $reflection->newInstanceWithoutConstructor();
 		$reflection->getProperty('gallery_auth')->setValue($search, $gallery_auth);
 		$reflection->getProperty('db')->setValue($search, $db);
 		$reflection->getProperty('user')->setValue($search, $user);
 		$reflection->getProperty('images_table')->setValue($search, 'gallery_images');
+		$reflection->getProperty('image_visibility')->setValue($search, $image_visibility);
 
 		$this->assertSame(4, $search->user_image_count(12));
 		$this->assertStringContainsString('image_user_id IN (12)', $queries[0]);
@@ -118,22 +124,29 @@ final class domain_search_types_test extends TestCase
 		$db->expects($this->once())->method('sql_freeresult')->with('result');
 		$user = new \phpbb\user();
 		$user->data = ['user_id' => 7];
+		$image_visibility = $this->createMock(\phpbbgallery\core\policy\image_visibility::class);
+		$image_visibility->expects($this->once())
+			->method('private_data_sql')
+			->with('', 7, [2])
+			->willReturn('(image_contest = 0)');
 		$reflection = new \ReflectionClass(search::class);
 		$search = $reflection->newInstanceWithoutConstructor();
 		$reflection->getProperty('gallery_auth')->setValue($search, $gallery_auth);
 		$reflection->getProperty('db')->setValue($search, $db);
 		$reflection->getProperty('user')->setValue($search, $user);
 		$reflection->getProperty('images_table')->setValue($search, 'gallery_images');
+		$reflection->getProperty('image_visibility')->setValue($search, $image_visibility);
 
 		$this->assertSame([12 => 4, 13 => 0], $search->user_image_counts([12, 13, 12, ANONYMOUS]));
 	}
 
-	public function test_discovery_queries_apply_the_matching_contest_boundary(): void
+	public function test_discovery_queries_apply_the_matching_visibility_boundary(): void
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/search.php');
 
-		$this->assertGreaterThanOrEqual(3, substr_count($source, 'contest::private_data_visibility_sql('));
-		$this->assertGreaterThanOrEqual(3, substr_count($source, 'contest::results_visibility_sql('));
+		$this->assertGreaterThanOrEqual(3, substr_count($source, '$this->image_visibility->private_data_sql('));
+		$this->assertGreaterThanOrEqual(3, substr_count($source, '$this->image_visibility->results_sql('));
+		$this->assertStringNotContainsString('core\\contest::', $source);
 	}
 
 	public function test_random_results_require_image_view_or_moderator_permission(): void

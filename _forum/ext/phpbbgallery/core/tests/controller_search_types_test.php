@@ -166,15 +166,16 @@ final class controller_search_types_test extends TestCase
 		$this->assertStringNotContainsString('utf8_clean_string($this->db->sql_escape($username))', $source);
 	}
 
-	public function test_search_protects_contest_author_description_and_result_side_channels(): void
+	public function test_search_protects_private_description_and_result_side_channels(): void
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/search.php');
 
-		$this->assertStringContainsString('contest::private_data_visibility_sql(', $source);
-		$this->assertStringContainsString('contest::results_visibility_sql(', $source);
+		$this->assertStringContainsString('$this->image_visibility->private_data_sql(', $source);
+		$this->assertStringContainsString('$this->image_visibility->results_sql(', $source);
 		$this->assertStringContainsString('AND LOWER(i.image_desc)', $source);
 		$this->assertStringContainsString('in_array($sort_key, [\'ra\', \'r\', \'c\', \'lc\'], true)', $source);
-		$this->assertStringContainsString('$sql_where[] = $contest_private_data_sql;', $source);
+		$this->assertStringContainsString('$sql_where[] = $private_data_sql;', $source);
+		$this->assertStringNotContainsString('core\\contest::', $source);
 	}
 
 	public function test_search_pagination_and_toprated_breadcrumb_use_the_correct_targets(): void

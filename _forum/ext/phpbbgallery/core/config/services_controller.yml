@@ -156,6 +156,7 @@ services:
             - '@phpbbgallery.core.image'
             - '@phpbbgallery.core.url'
             - '@phpbbgallery.core.search'
+            - '@phpbbgallery.core.policy.image_visibility'
             - '%phpbbgallery.tables.gallery_images%'
             - '%phpbbgallery.tables.gallery_albums%'
             - '%phpbbgallery.tables.gallery_comments%'

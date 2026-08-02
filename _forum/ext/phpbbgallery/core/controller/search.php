@@ -68,6 +68,9 @@ class search
 	/** @var \phpbbgallery\core\search  */
 	protected \phpbbgallery\core\search $gallery_search;
 
+	/** @var \phpbbgallery\core\policy\image_visibility */
+	protected \phpbbgallery\core\policy\image_visibility $image_visibility;
+
 	/** @var string */
 	protected string $images_table;
 
@@ -103,6 +106,7 @@ class search
 	 * @param \phpbbgallery\core\image\image                            $image
 	 * @param \phpbbgallery\core\url                                    $url
 	 * @param \phpbbgallery\core\search                                 $gallery_search
+	 * @param \phpbbgallery\core\policy\image_visibility               $image_visibility
 	 * @param string                                                    $images_table
 	 * @param string                                                    $albums_table
 	 * @param string                                                    $comments_table
@@ -116,6 +120,7 @@ class search
 		\phpbbgallery\core\album\display $display, \phpbbgallery\core\config $gallery_config,
 		\phpbbgallery\core\auth\auth $gallery_auth, \phpbbgallery\core\album\album $album, \phpbbgallery\core\image\image $image,
 		\phpbbgallery\core\url $url, \phpbbgallery\core\search $gallery_search,
+		\phpbbgallery\core\policy\image_visibility $image_visibility,
 		string $images_table, string $albums_table, string $comments_table, string $root_path, string $php_ext)
 	{
 		$this->auth = $auth;
@@ -135,6 +140,7 @@ class search
 		$this->image = $image;
 		$this->url = $url;
 		$this->gallery_search = $gallery_search;
+		$this->image_visibility = $image_visibility;
 		$this->images_table = $images_table;
 		$this->albums_table = $albums_table;
 		$this->comments_table = $comments_table;
@@ -238,12 +244,12 @@ class search
 		if ($keywords || $username || $user_id || $search_id || $submit || $additional_search_active)
 		{
 			$user_id_ary = [];
-			$contest_private_data_sql = \phpbbgallery\core\contest::private_data_visibility_sql(
+			$private_data_sql = $this->image_visibility->private_data_sql(
 				'i',
 				(int) $this->user->data['user_id'],
 				$moderated_album_ids
 			);
-			$contest_results_sql = \phpbbgallery\core\contest::results_visibility_sql('i', $moderated_album_ids);
+			$results_sql = $this->image_visibility->results_sql('i', $moderated_album_ids);
 			// Let's resolve username to user id ... or array of them.
 			if ($username)
 			{
@@ -272,15 +278,15 @@ class search
 			if (!empty($user_id))
 			{
 				$sql_where[] =  $this->db->sql_in_set('i.image_user_id', $user_id);
-				$sql_where[] = $contest_private_data_sql;
+				$sql_where[] = $private_data_sql;
 			}
 			if ($sort_key === 'u' && empty($user_id))
 			{
-				$sql_where[] = $contest_private_data_sql;
+				$sql_where[] = $private_data_sql;
 			}
 			else if (in_array($sort_key, ['ra', 'r', 'c', 'lc'], true))
 			{
-				$sql_where[] = $contest_results_sql;
+				$sql_where[] = $results_sql;
 			}
 			// if we search in an existing search result just add the additional keywords. But we need to use "all search terms"-mode
 			// so we can keep the old keywords in their old mode, but add the new ones as required words
@@ -316,7 +322,7 @@ class search
 				$like_expression = $this->db->sql_like_expression(str_replace('*', $this->db->get_any_char(), $this->db->get_any_char() . mb_strtolower($word) . $this->db->get_any_char()));
 				$match_search_query = 'LOWER(i.image_name) ' . $like_expression .
 					' OR LOWER(i.image_subtitle) ' . $like_expression .
-					' OR (' . $contest_private_data_sql . ' AND LOWER(i.image_desc) ' . $like_expression . ')';
+					' OR (' . $private_data_sql . ' AND LOWER(i.image_desc) ' . $like_expression . ')';
 				$search_query .= ((!$search_query) ? '' : (($search_terms == 'all') ? ' AND ' : ' OR ')) . '(' . $match_search_query . ')';
 			}
 			$sql_where[] = $search_query;
