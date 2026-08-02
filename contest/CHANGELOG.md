@@ -22,3 +22,5 @@ All notable changes to the phpBB Gallery Contest add-on are documented in this f
 - Moved contest-specific ACP visibility and type-change warnings into add-on
   template-event fragments, leaving neutral album-type hooks in Core.
 - Added syntax coverage for every Contest ACP template-event fragment.
+- Moved all contest ACP field, validation and type-change messages into the
+  add-on for every supported Gallery language.

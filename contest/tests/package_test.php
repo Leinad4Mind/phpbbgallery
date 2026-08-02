@@ -91,9 +91,30 @@ final class package_test extends TestCase
 			$acp_messages = $this->load_language($language_root . '/' . $language . '/contest_acp.php');
 			$this->assertArrayHasKey('GALLERY_CORE_NOT_FOUND', $messages, $language);
 			$this->assertArrayHasKey('EXTENSION_ENABLE_SUCCESS', $messages, $language);
-			$this->assertArrayHasKey('CONTEST_CREATION', $acp_messages, $language);
-			$this->assertArrayHasKey('CONTEST_CREATION_EXPLAIN', $acp_messages, $language);
-			$this->assertArrayHasKey('CONTEST_CREATION_DISABLED', $acp_messages, $language);
+			foreach ([
+				'ALBUM_NO_TYPE_CHANGE_TO_CONTEST',
+				'ALBUM_WITH_CONTEST_NO_TYPE_CHANGE',
+				'CONTEST_CREATION',
+				'CONTEST_CREATION_EXPLAIN',
+				'CONTEST_CREATION_DISABLED',
+				'CONTEST_DATE_EXPLAIN',
+				'CONTEST_END',
+				'CONTEST_END_BEFORE_RATING',
+				'CONTEST_END_BEFORE_START',
+				'CONTEST_END_EXPLAIN',
+				'CONTEST_END_INVALID',
+				'CONTEST_RATING',
+				'CONTEST_RATING_BEFORE_START',
+				'CONTEST_RATING_EXPLAIN',
+				'CONTEST_RATING_INVALID',
+				'CONTEST_SETTINGS',
+				'CONTEST_START',
+				'CONTEST_START_EXPLAIN',
+				'CONTEST_START_INVALID',
+			] as $key)
+			{
+				$this->assertArrayHasKey($key, $acp_messages, $language);
+			}
 		}
 	}
 
