@@ -90,8 +90,9 @@ final class contest_album_edit_test extends TestCase
 
 		$this->assertStringContainsString("!isset(\$album_data['album_id'])", $manager);
 		$this->assertStringContainsString('!$this->gallery_contest->can_create()', $manager);
-		$this->assertStringContainsString('$phpbb_gallery_contest->can_create()', $module);
-		$this->assertStringContainsString("\$album_data['album_type'] === (int) \\phpbbgallery\\core\\block::TYPE_CONTEST", $module);
+		$this->assertStringContainsString("get('phpbbgallery.core.album.type_registry')", $module);
+		$this->assertStringContainsString("!\$definition['can_create']", $module);
+		$this->assertStringContainsString('(int) $value !== $current_album_type', $module);
 	}
 
 	public function test_disabled_creation_rejects_a_crafted_new_contest_submission(): void

@@ -62,6 +62,7 @@ class albums_module
 
 		// Init contest
 		$phpbb_gallery_contest = $phpbb_container->get('phpbbgallery.core.contest');
+		$album_type_registry = $phpbb_container->get('phpbbgallery.core.album.type_registry');
 
 		$this->tpl_name = 'gallery_albums';
 		$this->page_title = 'ACP_GALLERY_MANAGE_ALBUMS';
@@ -484,10 +485,16 @@ class albums_module
 				}
 
 				$album_type_options = '';
-				$album_type_ary = [(int) \phpbbgallery\core\block::TYPE_CAT => 'CAT', (int) \phpbbgallery\core\block::TYPE_UPLOAD => 'UPLOAD'];
-				if ($phpbb_gallery_contest->can_create() || (int) $album_data['album_type'] === (int) \phpbbgallery\core\block::TYPE_CONTEST)
+				$album_type_ary = [];
+				$current_album_type = (int) $album_data['album_type'];
+				foreach ($album_type_registry->get_types(['current_type' => $current_album_type]) as $value => $definition)
 				{
-					$album_type_ary[(int) \phpbbgallery\core\block::TYPE_CONTEST] = 'CONTEST';
+					if (!$definition['can_create'] && (int) $value !== $current_album_type)
+					{
+						continue;
+					}
+
+					$album_type_ary[(int) $value] = $definition['lang'];
 				}
 
 				foreach ($album_type_ary as $value => $lang)
