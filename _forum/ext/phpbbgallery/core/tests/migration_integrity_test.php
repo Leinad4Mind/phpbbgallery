@@ -33,6 +33,7 @@ use phpbbgallery\core\migrations\viewtopic_profiles;
 use phpbbgallery\core\migrations\ajax_image_navigation;
 use phpbbgallery\core\migrations\remove_legacy_image_plugins;
 use phpbbgallery\core\migrations\image_subtitle;
+use phpbbgallery\core\migrations\contest_creation;
 
 class migration_integrity_test extends TestCase
 {
@@ -60,6 +61,7 @@ class migration_integrity_test extends TestCase
 		ajax_image_navigation::class,
 		remove_legacy_image_plugins::class,
 		image_subtitle::class,
+		contest_creation::class,
 	];
 
 	private array $temp_directories = [];
@@ -153,6 +155,22 @@ class migration_integrity_test extends TestCase
 			['\phpbbgallery\core\migrations\remove_legacy_image_plugins'],
 			image_subtitle::depends_on()
 		);
+		$this->assertSame(
+			['\phpbbgallery\core\migrations\image_subtitle'],
+			contest_creation::depends_on()
+		);
+	}
+
+	public function test_contest_creation_switch_is_reversible_and_enabled_by_default(): void
+	{
+		$migration = (new \ReflectionClass(contest_creation::class))->newInstanceWithoutConstructor();
+
+		$this->assertSame([
+			['config.add', ['phpbb_gallery_allow_contests', 1]],
+		], $migration->update_data());
+		$this->assertSame([
+			['config.remove', ['phpbb_gallery_allow_contests']],
+		], $migration->revert_data());
 	}
 
 	public function test_obsolete_image_plugin_modes_are_normalized_to_supported_links(): void
@@ -774,6 +792,7 @@ class migration_integrity_test extends TestCase
 			'ajax_image_navigation.php',
 			'remove_legacy_image_plugins.php',
 			'image_subtitle.php',
+			'contest_creation.php',
 		] as $migration)
 		{
 			require_once dirname(__DIR__) . '/migrations/' . $migration;

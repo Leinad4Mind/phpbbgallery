@@ -36,6 +36,7 @@ class config
 		'captcha_upload'		=> true,
 		'comment_length'		=> 2000,
 		'comment_user_control'	=> true,
+		'allow_contests'		=> true,
 		'contests_ended'		=> 0,
 		'current_upload_dir_size'	=> 0,
 		'current_upload_dir'	=> 0,

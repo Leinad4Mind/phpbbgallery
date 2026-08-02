@@ -74,6 +74,16 @@ class contest
 	}
 
 	/**
+	 * Whether administrators may create new contest albums.
+	 *
+	 * Existing contests deliberately remain operational when this is disabled.
+	 */
+	public function can_create(): bool
+	{
+		return (bool) $this->gallery_config->get('allow_contests');
+	}
+
+	/**
 	* Get the contest row from the table
 	*
 	* @param	int		$id				ID of the contest or album, depending on second parameter

@@ -88,6 +88,7 @@ final class acp_config_types_test extends TestCase
 		$this->assertArrayHasKey('forum_index_random_count', $display['vars']);
 		$this->assertArrayHasKey('forum_index_display', $display['vars']);
 		$this->assertArrayHasKey('forum_index_personal', $display['vars']);
+		$this->assertArrayHasKey('allow_contests', $display['vars']);
 		$config_keys = array_keys($display['vars']);
 		$this->assertGreaterThan(
 			array_search('disp_nextprev_thumbnail', $config_keys, true),
