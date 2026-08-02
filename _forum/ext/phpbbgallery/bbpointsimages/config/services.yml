@@ -36,6 +36,7 @@ services:
             - '@dbal.conn'
             - '%phpbbgallery.bbpointsimages.tables.contributors%'
             - '%tables.users%'
+            - '%phpbbgallery.tables.gallery_images%'
 
     phpbbgallery.bbpointsimages.notification.helper:
         class: phpbbgallery\bbpointsimages\notification\helper

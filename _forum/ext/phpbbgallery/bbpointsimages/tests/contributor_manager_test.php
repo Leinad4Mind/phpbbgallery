@@ -26,7 +26,8 @@ final class contributor_manager_test extends TestCase
 			3 => ['user_id' => 3, 'username' => 'Bob Smith', 'username_clean' => 'bob smith', 'user_colour' => '', 'user_type' => 3],
 			4 => ['user_id' => 4, 'username' => 'Inactive', 'username_clean' => 'inactive', 'user_colour' => '', 'user_type' => 1],
 		];
-		$this->manager = new contributor_manager($this->db, 'contributors', 'users');
+		$this->db->images = [10 => true, 11 => true];
+		$this->manager = new contributor_manager($this->db, 'contributors', 'users', 'images');
 	}
 
 	public function test_resolve_preserves_first_seen_order_and_deduplicates_names(): void
@@ -78,6 +79,15 @@ final class contributor_manager_test extends TestCase
 		$this->assertSame([3], array_column($this->db->contributors[10], 'user_id'));
 		$this->assertSame([], $this->db->contributors[11]);
 		$this->manager->delete_for_images([10]);
+		$this->assertArrayNotHasKey(10, $this->db->contributors);
+	}
+
+	public function test_image_deleted_while_saving_contributors_leaves_no_relation(): void
+	{
+		$this->db->delete_image_on_relation_insert = true;
+
+		$this->manager->replace(10, 2, [['user_id' => 3]]);
+
 		$this->assertArrayNotHasKey(10, $this->db->contributors);
 	}
 }

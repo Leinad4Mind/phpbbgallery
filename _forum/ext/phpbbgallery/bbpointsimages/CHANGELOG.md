@@ -4,6 +4,10 @@ All notable changes to the phpBB Gallery BBPoints Images add-on are documented i
 
 ## [1.0.0] Unreleased
 
+### Fixed
+
+- Prevent contributor relations from surviving when an image is deleted while its contributor list is being saved.
+
 ### Added
 
 - Added an independent Gallery add-on requiring phpBB Gallery Core and SiteSplat BBPoints.

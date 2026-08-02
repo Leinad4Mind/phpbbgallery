@@ -18,7 +18,8 @@ final class contributor_manager
 	public function __construct(
 		private driver_interface $db,
 		private string $contributors_table,
-		private string $users_table
+		private string $users_table,
+		private string $images_table
 	)
 	{
 	}
@@ -111,6 +112,10 @@ final class contributor_manager
 		if ($rows)
 		{
 			$this->db->sql_multi_insert($this->contributors_table, $rows);
+			if (!$this->image_exists($image_id))
+			{
+				$this->delete_for_images([$image_id]);
+			}
 		}
 	}
 
@@ -174,5 +179,17 @@ final class contributor_manager
 			array_map('intval', $ids),
 			static fn (int $id): bool => $id > 0
 		)));
+	}
+
+	private function image_exists(int $image_id): bool
+	{
+		$sql = 'SELECT image_id
+			FROM ' . $this->images_table . '
+			WHERE image_id = ' . $image_id;
+		$result = $this->db->sql_query($sql);
+		$row = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+
+		return (bool) $row;
 	}
 }

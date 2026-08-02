@@ -54,7 +54,7 @@ final class image_tag_manager
 
 	public function attach_tag(int $image_id, int $tag_id): bool
 	{
-		if ($image_id <= 0 || $tag_id <= 0)
+		if ($image_id <= 0 || $tag_id <= 0 || !$this->image_exists($image_id))
 		{
 			return false;
 		}
@@ -73,6 +73,12 @@ final class image_tag_manager
 			{
 				return false;
 			}
+		}
+		if (!$this->image_exists($image_id))
+		{
+			$this->delete_for_images([$image_id]);
+
+			return false;
 		}
 
 		return $this->sync_usage([$tag_id]);
@@ -175,7 +181,7 @@ final class image_tag_manager
 
 	public function replace_tags(int $image_id, array $tag_ids): bool
 	{
-		if ($image_id <= 0)
+		if ($image_id <= 0 || !$this->image_exists($image_id))
 		{
 			return false;
 		}
@@ -203,6 +209,19 @@ final class image_tag_manager
 				return false;
 			}
 		}
+		if (!$this->image_exists($image_id))
+		{
+			$sql = 'DELETE FROM ' . $this->image_tags_table . '
+				WHERE ' . $this->db->sql_in_set('image_id', [$image_id]);
+			if ($this->db->sql_query($sql) === false || !$this->sync_usage($affected_tag_ids))
+			{
+				$this->db->sql_transaction('rollback');
+				return false;
+			}
+			$this->db->sql_transaction('commit');
+
+			return false;
+		}
 		if (!$this->sync_usage($affected_tag_ids))
 		{
 			$this->db->sql_transaction('rollback');
@@ -211,6 +230,18 @@ final class image_tag_manager
 		$this->db->sql_transaction('commit');
 
 		return true;
+	}
+
+	private function image_exists(int $image_id): bool
+	{
+		$sql = 'SELECT image_id
+			FROM ' . $this->images_table . '
+			WHERE image_id = ' . $image_id;
+		$result = $this->db->sql_query_limit($sql, 1);
+		$row = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+
+		return (bool) $row;
 	}
 
 	public function delete_for_images(array $image_ids): bool

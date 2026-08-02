@@ -1,4 +1,5 @@
 <?php
+// phpcs:disable PSR1.Files.SideEffects.FoundWithSymbols -- The focused database test double is loaded beside this test case.
 /**
  * phpBB Gallery - Favorite tests
  *
@@ -19,9 +20,9 @@ require_once __DIR__ . '/fake_db.php';
  */
 final class counter_test extends TestCase
 {
-	private function make(array $already_favorited = []): array
+	private function make(array $already_favorited = [], ?array $existing_images = null): array
 	{
-		$db = new fake_db($already_favorited);
+		$db = new fake_db($already_favorited, $existing_images);
 
 		return [new favorite($db, 'favorites', 'images'), $db];
 	}
@@ -54,6 +55,17 @@ final class counter_test extends TestCase
 		$increment = $db->matching('image_favorited = image_favorited + 1');
 		$this->assertCount(1, $increment);
 		$this->assertStringContainsString('image_id IN (43)', $increment[0]);
+	}
+
+	public function test_image_deleted_while_being_favourited_leaves_no_relation(): void
+	{
+		[$favorite, $db] = $this->make([], []);
+
+		$this->assertSame(0, $favorite->add(42, 7));
+		$deletes = $db->matching('DELETE FROM favorites');
+		$this->assertCount(1, $deletes);
+		$this->assertStringContainsString('user_id = 7', $deletes[0]);
+		$this->assertStringContainsString('image_id IN (42)', $deletes[0]);
 	}
 
 	public function test_removing_a_favourite_deletes_it_and_lowers_the_counter(): void

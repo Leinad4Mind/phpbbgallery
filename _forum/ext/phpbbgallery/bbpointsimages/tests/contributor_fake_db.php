@@ -12,7 +12,9 @@ namespace phpbbgallery\bbpointsimages\tests;
 final class contributor_fake_db implements \phpbb\db\driver\driver_interface
 {
 	public array $users = [];
+	public array $images = [];
 	public array $contributors = [];
+	public bool $delete_image_on_relation_insert = false;
 	private array $pending = [];
 
 	public function sql_in_set(string $field, array $values): string
@@ -38,6 +40,15 @@ final class contributor_fake_db implements \phpbb\db\driver\driver_interface
 				{
 					$this->pending[] = $user;
 				}
+			}
+		}
+		else if (str_contains($sql, 'FROM images'))
+		{
+			preg_match('/image_id = (\d+)/', $sql, $matches);
+			$image_id = (int) ($matches[1] ?? 0);
+			if (isset($this->images[$image_id]))
+			{
+				$this->pending[] = ['image_id' => $image_id];
 			}
 		}
 		else if (str_contains($sql, 'FROM contributors c'))
@@ -83,6 +94,10 @@ final class contributor_fake_db implements \phpbb\db\driver\driver_interface
 		foreach ($rows as $row)
 		{
 			$this->contributors[$row['image_id']][] = $row;
+		}
+		if ($this->delete_image_on_relation_insert && $rows)
+		{
+			unset($this->images[(int) $rows[0]['image_id']]);
 		}
 	}
 

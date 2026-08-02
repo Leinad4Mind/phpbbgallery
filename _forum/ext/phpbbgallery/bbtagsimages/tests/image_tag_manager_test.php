@@ -59,6 +59,32 @@ final class image_tag_manager_test extends TestCase
 		$this->assertTrue($manager->delete_for_images([0, -1]));
 	}
 
+	public function test_image_deleted_while_attaching_a_tag_leaves_no_relation(): void
+	{
+		$db = new fake_db();
+		$db->images = [10 => 3];
+		$db->delete_image_on_relation_insert = true;
+		$manager = new image_tag_manager($db, 'image_tags', 'images', 'bbtags', 'bbtags_context');
+
+		$this->assertFalse($manager->attach_tag(10, 7));
+		$this->assertSame([], $db->relations);
+		$this->assertSame(0, $db->usage[7]);
+	}
+
+	public function test_image_deleted_while_replacing_tags_leaves_no_relation(): void
+	{
+		$db = new fake_db();
+		$db->images = [10 => 3];
+		$db->catalogue = [7 => 'anime'];
+		$db->delete_image_on_relation_insert = true;
+		$manager = new image_tag_manager($db, 'image_tags', 'images', 'bbtags', 'bbtags_context');
+
+		$this->assertFalse($manager->replace_tags(10, [7]));
+		$this->assertSame([], $db->relations);
+		$this->assertSame(0, $db->usage[7]);
+		$this->assertSame(['begin', 'commit'], $db->transactions);
+	}
+
 	public function test_facets_preserve_album_boundaries_from_the_core_search(): void
 	{
 		$db = new fake_db();

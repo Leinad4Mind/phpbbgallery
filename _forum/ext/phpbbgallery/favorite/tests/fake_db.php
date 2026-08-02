@@ -30,12 +30,16 @@ class fake_db implements \phpbb\db\driver\driver_interface
 	/** @var array Image ids the member has already favourited */
 	private array $favorited;
 
+	/** @var array|null Existing Core image ids; null accepts every requested id */
+	private ?array $existing_images;
+
 	/** @var array Rows queued for the next fetch */
 	private array $pending = [];
 
-	public function __construct(array $favorited = [])
+	public function __construct(array $favorited = [], ?array $existing_images = null)
 	{
 		$this->favorited = $favorited;
+		$this->existing_images = $existing_images;
 	}
 
 	public function sql_in_set($field, $array, $negate = false, $allow_empty_set = false)
@@ -47,7 +51,19 @@ class fake_db implements \phpbb\db\driver\driver_interface
 	{
 		$this->statements[] = $sql;
 
-		if (stripos($sql, 'SELECT image_id') !== false)
+		if (stripos($sql, 'SELECT image_id') !== false && stripos($sql, 'FROM images') !== false)
+		{
+			$requested = $this->ids_in($sql);
+			$matched = $this->existing_images === null
+				? $requested
+				: array_intersect($this->existing_images, $requested);
+
+			foreach ($matched as $image_id)
+			{
+				$this->pending[] = ['image_id' => $image_id];
+			}
+		}
+		else if (stripos($sql, 'SELECT image_id') !== false)
 		{
 			$requested = $this->ids_in($sql);
 			$matched = $requested === [] ? $this->favorited : array_intersect($this->favorited, $requested);

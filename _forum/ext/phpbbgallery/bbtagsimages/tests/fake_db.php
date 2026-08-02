@@ -19,6 +19,7 @@ final class fake_db implements \phpbb\db\driver\driver_interface
 	public array $usage = [];
 	public array $facet_rows = [];
 	public array $transactions = [];
+	public bool $delete_image_on_relation_insert = false;
 	public string $last_query = '';
 	private array $pending = [];
 	private array $built = [];
@@ -38,7 +39,7 @@ final class fake_db implements \phpbb\db\driver\driver_interface
 			$image_id = (int) $matches[1];
 			if (isset($this->images[$image_id]))
 			{
-				$this->pending[] = ['image_album_id' => $this->images[$image_id]];
+				$this->pending[] = ['image_id' => $image_id, 'image_album_id' => $this->images[$image_id]];
 			}
 		}
 		else if (str_contains($sql, 'SELECT album_id, parent_id, album_name, left_id') && str_contains($sql, 'FROM albums'))
@@ -102,6 +103,10 @@ final class fake_db implements \phpbb\db\driver\driver_interface
 				'image_id' => (int) $this->built['image_id'],
 				'tag_id' => (int) $this->built['tag_id'],
 			];
+			if ($this->delete_image_on_relation_insert)
+			{
+				unset($this->images[(int) $this->built['image_id']]);
+			}
 		}
 		else if (str_contains($sql, 'SELECT tag_id') && str_contains($sql, 'WHERE image_id ='))
 		{
@@ -171,6 +176,11 @@ final class fake_db implements \phpbb\db\driver\driver_interface
 				'image_id' => (int) $row['image_id'],
 				'tag_id' => (int) $row['tag_id'],
 			];
+		}
+		if ($this->delete_image_on_relation_insert && !empty($sql_ary))
+		{
+			$first_row = reset($sql_ary);
+			unset($this->images[(int) $first_row['image_id']]);
 		}
 
 		return true;
