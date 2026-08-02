@@ -46,7 +46,7 @@ final class album_scope_resolver
 			$visited[$current_id] = true;
 			$sql = 'SELECT parent_id
 				FROM ' . $this->albums_table . '
-				WHERE album_id = ' . $current_id;
+				WHERE album_id = ' . (int) $current_id;
 			$result = $this->db->sql_query_limit($sql, 1);
 			$row = $this->db->sql_fetchrow($result);
 			$this->db->sql_freeresult($result);

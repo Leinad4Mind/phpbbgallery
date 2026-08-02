@@ -47,7 +47,7 @@ class revision
 			FROM ' . $this->table_revisions . ' r
 			LEFT JOIN ' . USERS_TABLE . ' u
 				ON (r.revision_user_id = u.user_id)
-			WHERE r.image_id = ' . $image_id . '
+			WHERE r.image_id = ' . (int) $image_id . '
 			ORDER BY r.revision_time DESC, r.revision_id DESC';
 		$result = $this->db->sql_query($sql);
 		$revisions = [];
@@ -69,8 +69,8 @@ class revision
 
 		$sql = 'SELECT *
 			FROM ' . $this->table_revisions . '
-			WHERE revision_id = ' . $revision_id . '
-				AND image_id = ' . $image_id;
+			WHERE revision_id = ' . (int) $revision_id . '
+				AND image_id = ' . (int) $image_id;
 		$result = $this->db->sql_query($sql);
 		$revision = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
@@ -126,7 +126,7 @@ class revision
 			}
 
 			$sql = 'DELETE FROM ' . $this->table_images . '
-				WHERE image_id = ' . $uploaded_image_id;
+				WHERE image_id = ' . (int) $uploaded_image_id;
 			$this->db->sql_query($sql);
 			$pruned_files = $this->prune($image_id, $limit);
 			$this->db->sql_transaction('commit');
@@ -178,8 +178,8 @@ class revision
 			}
 
 			$sql = 'DELETE FROM ' . $this->table_revisions . '
-				WHERE revision_id = ' . $revision_id . '
-					AND image_id = ' . $image_id;
+				WHERE revision_id = ' . (int) $revision_id . '
+					AND image_id = ' . (int) $image_id;
 			$this->db->sql_query($sql);
 			$pruned_files = $this->prune($image_id, $limit);
 			$this->db->sql_transaction('commit');
@@ -311,7 +311,7 @@ class revision
 	{
 		$sql = 'UPDATE ' . $this->table_images . '
 			SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
-			WHERE image_id = ' . $image_id . "
+			WHERE image_id = ' . (int) $image_id . "
 				AND image_filename = '" . $this->db->sql_escape($expected_filename) . "'";
 		$this->db->sql_query($sql);
 
@@ -323,7 +323,7 @@ class revision
 		$limit = max(1, min(self::MAX_REVISIONS, $limit));
 		$sql = 'SELECT revision_id, revision_filename
 			FROM ' . $this->table_revisions . '
-			WHERE image_id = ' . $image_id . '
+			WHERE image_id = ' . (int) $image_id . '
 			ORDER BY revision_time DESC, revision_id DESC';
 		$result = $this->db->sql_query($sql);
 		$position = 0;

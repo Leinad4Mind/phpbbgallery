@@ -44,7 +44,7 @@ final class image_tag_manager
 		}
 		$sql = 'SELECT image_album_id
 			FROM ' . $this->images_table . '
-			WHERE image_id = ' . $image_id;
+			WHERE image_id = ' . (int) $image_id;
 		$result = $this->db->sql_query_limit($sql, 1);
 		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
@@ -60,8 +60,8 @@ final class image_tag_manager
 		}
 		$sql = 'SELECT image_id
 			FROM ' . $this->image_tags_table . '
-			WHERE image_id = ' . $image_id . '
-				AND tag_id = ' . $tag_id;
+			WHERE image_id = ' . (int) $image_id . '
+				AND tag_id = ' . (int) $tag_id;
 		$result = $this->db->sql_query_limit($sql, 1);
 		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
@@ -95,7 +95,7 @@ final class image_tag_manager
 		}
 		$sql = 'SELECT tag_id
 			FROM ' . $this->image_tags_table . '
-			WHERE image_id = ' . $image_id . '
+			WHERE image_id = ' . (int) $image_id . '
 			ORDER BY tag_id ASC';
 		$result = $this->db->sql_query($sql);
 		$tag_ids = [];
@@ -123,7 +123,7 @@ final class image_tag_manager
 				ON b.id = it.tag_id
 			LEFT JOIN ' . $this->bbtags_context_table . " c
 				ON c.tag_id = b.id AND c.provider = '" . self::PROVIDER . "'
-			WHERE it.image_id = " . $image_id . '
+			WHERE it.image_id = " . (int) $image_id . '
 			ORDER BY b.tag_clean ASC';
 		$result = $this->db->sql_query($sql);
 		$tags = [];
@@ -236,7 +236,7 @@ final class image_tag_manager
 	{
 		$sql = 'SELECT image_id
 			FROM ' . $this->images_table . '
-			WHERE image_id = ' . $image_id;
+			WHERE image_id = ' . (int) $image_id;
 		$result = $this->db->sql_query_limit($sql, 1);
 		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
@@ -337,7 +337,7 @@ final class image_tag_manager
 			$sql_ary = ['usage_count' => $usage[$tag_id] ?? 0];
 			$sql = 'UPDATE ' . $this->bbtags_context_table . '
 				SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
-				WHERE tag_id = ' . $tag_id . "
+				WHERE tag_id = ' . (int) $tag_id . "
 					AND provider = '" . self::PROVIDER . "'";
 			if ($this->db->sql_query($sql) === false)
 			{

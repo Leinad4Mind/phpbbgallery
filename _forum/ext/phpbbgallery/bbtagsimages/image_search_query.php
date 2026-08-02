@@ -17,17 +17,14 @@ final class image_search_query
 	 * @param string $relation_table Relation table containing image_id and tag_id
 	 * @param array  $allowed_albums Album identifiers indexed by tag identifier
 	 * @param string $operator       and or or
-	 * @param string $image_alias    Outer image table alias
 	 */
 	public function build(
 		string $relation_table,
 		array $allowed_albums,
-		string $operator = 'and',
-		string $image_alias = 'i'
+		string $operator = 'and'
 	): string
 	{
-		if (!preg_match('/^[a-zA-Z0-9_]+$/D', $relation_table)
-			|| !preg_match('/^[a-zA-Z][a-zA-Z0-9_]*$/D', $image_alias))
+		if (!preg_match('/^[a-zA-Z0-9_]+$/D', $relation_table))
 		{
 			return '1 = 0';
 		}
@@ -45,8 +42,8 @@ final class image_search_query
 				}
 				continue;
 			}
-			$conditions[] = 'tag_match.tag_id = ' . $tag_id . '
-					AND ' . $image_alias . '.image_album_id IN (' . implode(', ', $album_ids) . ')';
+			$conditions[] = 'tag_match.tag_id = ' . (int) $tag_id . '
+					AND i.image_album_id IN (' . implode(', ', $album_ids) . ')';
 		}
 		if (empty($conditions))
 		{
@@ -57,19 +54,19 @@ final class image_search_query
 			return 'EXISTS (
 				SELECT 1
 				FROM ' . $relation_table . ' tag_match
-				WHERE tag_match.image_id = ' . $image_alias . '.image_id
+				WHERE tag_match.image_id = i.image_id
 					AND ((' . implode(') OR (', $conditions) . '))
 			)';
 		}
 
 		$exists = [];
-		foreach ($conditions as $condition)
+		foreach ($conditions as $get_sql_where)
 		{
 			$exists[] = 'EXISTS (
 				SELECT 1
 				FROM ' . $relation_table . ' tag_match
-				WHERE tag_match.image_id = ' . $image_alias . '.image_id
-					AND ' . $condition . '
+				WHERE tag_match.image_id = i.image_id
+					AND ' . $get_sql_where . '
 			)';
 		}
 

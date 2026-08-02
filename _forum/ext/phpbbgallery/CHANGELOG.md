@@ -38,6 +38,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 - Made resumable-upload cancellation and scheduled orphan pruning delete drafts only while their database row still has orphan status, preventing a concurrent finalization from losing the completed image or its files.
 - Made every dynamic numeric SQL boundary explicit with integer casts and routed the public Gallery title through phpBB's UTF-8 escaping helper, allowing the Core release package to pass EPV without suppressions.
+- Made BBTags Images and Image Revisions SQL boundaries explicit at interpolation time and fixed the Gallery search relation to its trusted outer image alias, allowing both add-on release packages to pass EPV without suppressions.
 - Disabled every packaged Gallery add-on before disabling the Core, preventing add-on services from breaking container compilation when their required Core parameters and services are unavailable.
 - Centralized active-contest privacy so public image pages, album listings and reusable image blocks hide entrant identity, descriptions, ratings, comment history and private sort side channels while preserving explicit owner and moderator exceptions.
 - Extended active-contest privacy to search terms and sorting, profile lists and counts, recent comments, top-rated results, album summaries and latest-image attribution.
@@ -79,6 +80,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Aligned the Core package and terminal migration with the 4.0.0 release line documented by this changelog.
 - Removed the dead Highslide, Lytebox and Shadowbox frontend integrations and language remnants, normalizing saved legacy link modes to supported destinations while retaining normal links and optional progressive AJAX navigation.
 - Labelled the public Gallery statistics independently from the forum statistics, placed the FLATBOOTS total-image counter in its responsive index statistics grid, and moved the AJAX image-navigation switch beside the related image navigation settings in the ACP.
 - Clarified the Portuguese ACP labels for per-album image limits, thumbnail metadata and thumbnail settings.
@@ -145,6 +147,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Reconciled stale Favorite, Image Revisions, BBTags Images and BBPoints Images data after an add-on is re-enabled, removing missing image/album relations and revision files while preserving permanent financial history.
 - Removed per-user album read-tracking rows when public or personal albums are deleted, including the complete subtree of a deleted personal album.
 - Corrected contest-winner headings and links across every language so the three-place podium is consistently described in the plural.
 - Hid the message-editor Gallery selector when the current user has no completed, permission-accessible images to insert.
@@ -231,7 +234,9 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Tests
 
-- Added GitHub Actions coverage for all four Gallery components on PHP 8.1, 8.2, 8.4, and 8.5, plus manifest validation, PHP linting, production PHPCS checks, and official EPV package validation.
+- Extended the PHPUnit, EPV and manifest-validation matrices to every packaged Gallery component, and added functional installation/purge smoke coverage for Export and Feed.
+- Added a real phpBB reactivation workflow covering disabled add-ons, deleted images/albums, automatic orphan reconciliation, preserved BBPoints history and successful container recompilation.
+- Established GitHub Actions coverage for Core, ACP Cleanup, ACP Import and EXIF on PHP 8.1, 8.2, 8.4, and 8.5, plus manifest validation, PHP linting, production PHPCS checks, and official EPV package validation.
 - Added permanent runtime-compatibility tests covering the PHP/phpBB/PHPUnit baselines, legacy `var` regression, and typed ACP/UCP module state.
 - Added standalone ACP Cleanup tests covering typed service/module contracts, centralized form input, safe directory scanning, file cleanup, database-entry cleanup, and moderation delegation.
 - Added standalone ACP Cleanup migration tests covering native contracts, dependency ordering, permission installation, and module registration.
@@ -275,7 +280,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added permanent ACP Gallery-log tests covering complete native contracts and mutation request/CSRF ordering.
 - Added permanent ACP/UCP module-metadata tests covering public contracts, expected modes, authorization guards, and categories.
 - Validated the ZIP upload, ACP Import, authorization, individual-move security, ACP rating-reset, ACP personal-resync, UCP CSRF, orphan-upload, resumable-upload, subtree-count, hotlink, notification-lifecycle, migration-ordering, purge-safety, database-index, view-counter, browser-cache, package-hygiene, JavaScript-asset, and language-catalog phases with PHP 7.4, 8.1, 8.2, 8.4, and 8.5.
-- Added a real phpBB 3.3.x and SQLite functional lifecycle suite covering Core and add-on installation, schema, configuration, storage, permissions, guest denial, ACP Import, resumable drafts and cancellation, a simulated 3.3-to-3.4 update, add-on purge, and Core purge.
+- Added a real phpBB 3.3.x and SQLite functional lifecycle suite covering Core and add-on installation, schema, configuration, storage, permissions, guest denial, ACP Import, resumable drafts and cancellation, a simulated 3.4-to-4.0 update, add-on purge, and Core purge.
 - Added regression tests for restored workflows, search authorization, personal-album ownership, cleanup filters/state, missing images, log compatibility, guest uploads, deleted commenters, pagination, path handling, and JPEG EXIF files.
 - Added permanent Bootstrap template regressions covering responsive layouts, Twig parsing, localization, labels, upload previews, moderation authorization, comment profiles, subscription controls, and UCP album actions.
 - Added query-shape and behavior tests for notification, statistics, role, filesize, last-image, deletion, contest, nested-set batching, visibility, search filters, legacy logs, JSON caches, and random upload paths; the Core suite now contains 382 tests and 6968 assertions.
