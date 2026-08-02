@@ -59,6 +59,18 @@ final class package_test extends TestCase
 		);
 	}
 
+	public function test_services_own_the_contest_domain_and_policy_provider(): void
+	{
+		$services = (string) file_get_contents(dirname(__DIR__) . '/config/services.yml');
+
+		$this->assertStringContainsString('phpbbgallery.contest.manager:', $services);
+		$this->assertStringContainsString('class: phpbbgallery\\contest\\manager', $services);
+		$this->assertStringContainsString('%phpbbgallery.contest.tables.contests%', $services);
+		$this->assertStringContainsString('phpbbgallery.contest.policy_listener:', $services);
+		$this->assertStringContainsString('class: phpbbgallery\\contest\\event\\policy_listener', $services);
+		$this->assertStringContainsString('- { name: event.listener }', $services);
+	}
+
 	public function test_every_gallery_language_has_the_dependency_messages(): void
 	{
 		$language_root = dirname(__DIR__) . '/language';

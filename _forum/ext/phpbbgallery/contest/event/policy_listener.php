@@ -1,24 +1,25 @@
 <?php
 /**
- * Temporary bridge between the generic Core policies and legacy contests.
+ * phpBB Gallery Contest policy integration.
  *
- * @package   phpbbgallery/core
+ * @package   phpbbgallery/contest
  * @copyright 2018- Leinad4Mind
  * @license   GPL-2.0-only
  */
 
-namespace phpbbgallery\core\event;
+namespace phpbbgallery\contest\event;
 
+use phpbbgallery\contest\manager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Preserves existing contest behaviour while its domain moves to an add-on.
+ * Connects contest rules to the extension-neutral Gallery Core boundaries.
  */
-class legacy_contest_policy_listener implements EventSubscriberInterface
+class policy_listener implements EventSubscriberInterface
 {
-	private \phpbbgallery\core\contest $contest;
+	private manager $contest;
 
-	public function __construct(\phpbbgallery\core\contest $contest)
+	public function __construct(manager $contest)
 	{
 		$this->contest = $contest;
 	}
@@ -47,7 +48,8 @@ class legacy_contest_policy_listener implements EventSubscriberInterface
 
 	public function hide_private_data(\phpbb\event\data $event): void
 	{
-		$event['hidden'] = (bool) $event['hidden'] || \phpbbgallery\core\contest::hides_private_data(
+		$this->cover_contest_marker($event);
+		$event['hidden'] = (bool) $event['hidden'] || manager::hides_private_data(
 			(array) $event['image_data'],
 			(int) $event['viewer_id'],
 			(bool) $event['can_moderate']
@@ -56,7 +58,8 @@ class legacy_contest_policy_listener implements EventSubscriberInterface
 
 	public function hide_results(\phpbb\event\data $event): void
 	{
-		$event['hidden'] = (bool) $event['hidden'] || \phpbbgallery\core\contest::hides_results(
+		$this->cover_contest_marker($event);
+		$event['hidden'] = (bool) $event['hidden'] || manager::hides_results(
 			(array) $event['image_data'],
 			(bool) $event['can_moderate']
 		);
@@ -64,8 +67,9 @@ class legacy_contest_policy_listener implements EventSubscriberInterface
 
 	public function restrict_private_data_sql(\phpbb\event\data $event): void
 	{
+		$this->cover_contest_marker($event);
 		$conditions = (array) $event['conditions'];
-		$conditions[] = \phpbbgallery\core\contest::private_data_visibility_sql(
+		$conditions[] = manager::private_data_visibility_sql(
 			(string) $event['alias'],
 			(int) $event['viewer_id'],
 			(array) $event['moderated_album_ids']
@@ -75,11 +79,19 @@ class legacy_contest_policy_listener implements EventSubscriberInterface
 
 	public function restrict_results_sql(\phpbb\event\data $event): void
 	{
+		$this->cover_contest_marker($event);
 		$conditions = (array) $event['conditions'];
-		$conditions[] = \phpbbgallery\core\contest::results_visibility_sql(
+		$conditions[] = manager::results_visibility_sql(
 			(string) $event['alias'],
 			(array) $event['moderated_album_ids']
 		);
 		$event['conditions'] = $conditions;
+	}
+
+	private function cover_contest_marker(\phpbb\event\data $event): void
+	{
+		$covered_markers = (array) $event['covered_markers'];
+		$covered_markers[] = 'image_contest';
+		$event['covered_markers'] = array_values(array_unique($covered_markers));
 	}
 }

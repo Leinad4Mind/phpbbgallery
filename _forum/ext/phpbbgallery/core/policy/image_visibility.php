@@ -24,36 +24,40 @@ class image_visibility
 	public function hides_private_data(array $image_data, int $viewer_id, bool $can_moderate): bool
 	{
 		$hidden = false;
-		$vars = ['image_data', 'viewer_id', 'can_moderate', 'hidden'];
+		$covered_markers = [];
+		$vars = ['image_data', 'viewer_id', 'can_moderate', 'hidden', 'covered_markers'];
 		extract($this->dispatcher->trigger_event(
 			'phpbbgallery.core.image_visibility.private_data',
 			compact($vars)
 		));
 
-		return (bool) $hidden;
+		return (bool) $hidden || $this->has_uncovered_active_marker($image_data, (array) $covered_markers);
 	}
 
 	public function hides_results(array $image_data, bool $can_moderate): bool
 	{
 		$hidden = false;
-		$vars = ['image_data', 'can_moderate', 'hidden'];
+		$covered_markers = [];
+		$vars = ['image_data', 'can_moderate', 'hidden', 'covered_markers'];
 		extract($this->dispatcher->trigger_event(
 			'phpbbgallery.core.image_visibility.results',
 			compact($vars)
 		));
 
-		return (bool) $hidden;
+		return (bool) $hidden || $this->has_uncovered_active_marker($image_data, (array) $covered_markers);
 	}
 
 	public function private_data_sql(string $alias, int $viewer_id, array $moderated_album_ids): string
 	{
 		$this->validate_alias($alias);
 		$conditions = [];
-		$vars = ['alias', 'viewer_id', 'moderated_album_ids', 'conditions'];
+		$covered_markers = [];
+		$vars = ['alias', 'viewer_id', 'moderated_album_ids', 'conditions', 'covered_markers'];
 		extract($this->dispatcher->trigger_event(
 			'phpbbgallery.core.image_visibility.private_data_sql',
 			compact($vars)
 		));
+		$conditions = $this->append_uncovered_marker_sql($alias, (array) $conditions, (array) $covered_markers);
 
 		return $this->combine_conditions((array) $conditions);
 	}
@@ -62,13 +66,37 @@ class image_visibility
 	{
 		$this->validate_alias($alias);
 		$conditions = [];
-		$vars = ['alias', 'moderated_album_ids', 'conditions'];
+		$covered_markers = [];
+		$vars = ['alias', 'moderated_album_ids', 'conditions', 'covered_markers'];
 		extract($this->dispatcher->trigger_event(
 			'phpbbgallery.core.image_visibility.results_sql',
 			compact($vars)
 		));
+		$conditions = $this->append_uncovered_marker_sql($alias, (array) $conditions, (array) $covered_markers);
 
 		return $this->combine_conditions((array) $conditions);
+	}
+
+	/**
+	 * Keep persisted optional-feature data private when its provider is absent.
+	 */
+	private function has_uncovered_active_marker(array $image_data, array $covered_markers): bool
+	{
+		return (int) ($image_data['image_contest'] ?? 0) !== 0
+			&& !in_array('image_contest', $covered_markers, true);
+	}
+
+	/**
+	 * Exclude persisted optional-feature rows when no active provider owns them.
+	 */
+	private function append_uncovered_marker_sql(string $alias, array $conditions, array $covered_markers): array
+	{
+		if (!in_array('image_contest', $covered_markers, true))
+		{
+			$conditions[] = ($alias !== '' ? $alias . '.' : '') . 'image_contest = 0';
+		}
+
+		return $conditions;
 	}
 
 	private function validate_alias(string $alias): void
