@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="tests/bootstrap.php" colors="true" cacheResult="false" failOnWarning="true">
+	<testsuites>
+		<testsuite name="PM Monitor">
+			<directory suffix="_test.php">tests</directory>
+		</testsuite>
+	</testsuites>
+	<source restrictDeprecations="true">
+		<include>
+			<directory suffix=".php">.</directory>
+		</include>
+	</source>
+</phpunit>

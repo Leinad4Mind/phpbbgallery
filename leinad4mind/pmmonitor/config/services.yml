@@ -1,0 +1,29 @@
+services:
+    leinad4mind.pmmonitor.core.message_repository:
+        class: leinad4mind\pmmonitor\core\message_repository
+        arguments:
+            - '@dbal.conn'
+            - '@notification_manager'
+            - '@attachment.manager'
+            - '%tables%'
+
+    leinad4mind.pmmonitor.admin.controller:
+        class: leinad4mind\pmmonitor\controller\admin_controller
+        arguments:
+            - '@config'
+            - '@request'
+            - '@template'
+            - '@pagination'
+            - '@user'
+            - '@auth'
+            - '@language'
+            - '@log'
+            - '@leinad4mind.pmmonitor.core.message_repository'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+        public: true
+
+    leinad4mind.pmmonitor.listener:
+        class: leinad4mind\pmmonitor\event\listener
+        tags:
+            - { name: event.listener }

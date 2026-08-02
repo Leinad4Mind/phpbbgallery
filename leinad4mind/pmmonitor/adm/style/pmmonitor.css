@@ -1,0 +1,67 @@
+.pmmonitor-privacy-notice {
+	background: #fff8dc;
+	border: 1px solid #d6b656;
+	border-radius: 4px;
+	color: #4a3b00;
+	margin: 12px 0;
+	padding: 10px 12px;
+}
+
+.pmmonitor-table {
+	table-layout: fixed;
+	width: 100%;
+}
+
+.pmmonitor-table th,
+.pmmonitor-table td {
+	overflow-wrap: anywhere;
+	vertical-align: top;
+}
+
+.pmmonitor-table .pmmonitor-mark {
+	text-align: center;
+	width: 5%;
+}
+
+.pmmonitor-table th:nth-child(2) {
+	width: 17%;
+}
+
+.pmmonitor-table th:nth-child(3),
+.pmmonitor-table th:nth-child(4) {
+	width: 14%;
+}
+
+.pmmonitor-table th:nth-child(5) {
+	width: 10%;
+}
+
+.pmmonitor-table th:nth-child(6),
+.pmmonitor-table th:nth-child(7) {
+	width: 8%;
+}
+
+.pmmonitor-table th:nth-child(8),
+.pmmonitor-table th:nth-child(9) {
+	width: 12%;
+}
+
+.pmmonitor-detail {
+	background: #f6f6f6;
+	border: 1px solid #ccd1d9;
+	border-radius: 4px;
+	margin: 12px 0;
+	padding: 12px;
+}
+
+.pmmonitor-detail .content {
+	max-width: none;
+	padding: 8px 0;
+}
+
+.pmmonitor-actions {
+	display: flex;
+	gap: 14px;
+	align-items: center;
+	margin: 12px 0;
+}

@@ -1,0 +1,86 @@
+{% include 'overall_header.html' %}
+{% INCLUDECSS '@leinad4mind_pmmonitor/pmmonitor.css' %}
+
+<a id="maincontent"></a>
+
+<h1>{{ lang('PM_MONITOR_READ') }}</h1>
+<p>{{ lang('PM_MONITOR_READ_EXPLAIN') }}</p>
+<div class="pmmonitor-privacy-notice">{{ lang('PM_MONITOR_PRIVACY_NOTICE') }}</div>
+
+{% if S_SHOW_MESSAGE %}
+	<section class="pmmonitor-detail" aria-labelledby="pmmonitor-detail-title">
+		<h2 id="pmmonitor-detail-title">{{ PM_DETAIL_SUBJECT }}</h2>
+		<div class="content">{{ PM_DETAIL_TEXT|raw }}</div>
+		<p><a href="{{ U_CLOSE_MESSAGE }}">{{ lang('PM_CLOSE_MESSAGE') }}</a></p>
+	</section>
+{% endif %}
+
+<form id="pm_monitor" method="post" action="{{ U_ACTION }}">
+	<div class="pagination">
+		{{ lang('MSG_COUNT') }}{{ lang('COLON') }} {{ MESSAGE_COUNT }}
+		{% if pagination %}&bull; {% include 'pagination.html' %}{% endif %}
+	</div>
+
+	<fieldset class="display-options">
+		<strong>{{ lang('SORT_BY') }}{{ lang('COLON') }}</strong>
+		{{ S_SORT_KEY|raw }} {{ S_SORT_DIR|raw }}
+		<input class="button2" type="submit" value="{{ lang('GO') }}" name="sort">
+	</fieldset>
+
+	{% if S_HAS_MESSAGES %}
+		<table class="table1 zebra-table fixed-width-table pmmonitor-table">
+			<thead>
+				<tr>
+					<th class="pmmonitor-mark">{{ lang('MARK') }}</th>
+					<th>{{ lang('SUBJECT') }}</th>
+					<th>{{ lang('SORT_FROM') }}</th>
+					<th>{{ lang('SORT_TO') }}</th>
+					<th>{{ lang('BCC') }}</th>
+					<th>{{ lang('IS_GROUP') }}</th>
+					<th>{{ lang('PM_BOX') }}</th>
+					<th>{{ lang('AUTHOR_IP') }}</th>
+					<th>{{ lang('DATE') }}</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for pm in pm_row %}
+					<tr class="{{ cycle(['row1', 'row2'], loop.index0) }}">
+						<td class="pmmonitor-mark">
+							{% if S_CAN_DELETE %}<input type="checkbox" class="radio" name="mark[]" value="{{ pm.PM_SELECTION }}">{% else %}&mdash;{% endif %}
+						</td>
+						<td>
+							<a href="{{ pm.U_PM_VIEW }}">{{ pm.PM_SUBJECT }}</a>
+						</td>
+						<td>{{ pm.FROM|raw }}{% if pm.LAST_VISIT_FROM %}<br>{{ pm.LAST_VISIT_FROM }}{% endif %}</td>
+						<td>{{ pm.TO|raw }}{% if pm.LAST_VISIT_TO %}<br>{{ pm.LAST_VISIT_TO }}{% endif %}</td>
+						<td>{{ pm.BCC|raw }}</td>
+						<td>{{ pm.IS_GROUP }}</td>
+						<td>{{ pm.FOLDER }}</td>
+						<td>{{ pm.AUTHOR_IP }}</td>
+						<td>{{ pm.DATE }}</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+
+		{% if S_CAN_DELETE %}
+			<div class="pmmonitor-actions">
+				<input class="button2" type="submit" value="{{ lang('DELETE_PMS') }}" name="delete">
+				<span class="small">
+					<a href="#" data-mark="all">{{ lang('MARK_ALL') }}</a>
+					&bull;
+					<a href="#" data-mark="none">{{ lang('UNMARK_ALL') }}</a>
+				</span>
+			</div>
+		{% endif %}
+	{% else %}
+		<div class="errorbox notice"><p>{{ lang('NO_PM_DATA') }}</p></div>
+	{% endif %}
+
+	<div class="pagination">
+		{% if pagination %}{% include 'pagination.html' %}{% endif %}
+	</div>
+	{{ S_FORM_TOKEN }}
+</form>
+
+{% include 'overall_footer.html' %}
