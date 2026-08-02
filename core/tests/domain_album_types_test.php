@@ -187,4 +187,17 @@ final class domain_album_types_test extends TestCase
 		$this->assertSame(5, $manager->parent_id);
 		$this->assertSame('adm/index.php', $manage_reflection->getProperty('u_action')->getValue($manager));
 	}
+
+	public function test_every_album_deletion_path_cleans_read_tracking_rows(): void
+	{
+		$manager = (string) file_get_contents(dirname(__DIR__) . '/album/manage.php');
+		$ucp = (string) file_get_contents(dirname(__DIR__) . '/ucp/main_module.php');
+		$services = (string) file_get_contents(dirname(__DIR__) . '/config/services.yml');
+		$acp = (string) file_get_contents(dirname(__DIR__) . '/acp/albums_module.php');
+
+		$this->assertStringContainsString("DELETE FROM ' . \$this->tracking_table", $manager);
+		$this->assertStringContainsString("DELETE FROM ' . \$tracking_table", $ucp);
+		$this->assertStringContainsString("'%phpbbgallery.tables.gallery_tracking%'", $services);
+		$this->assertStringNotContainsString('gallery_albums_tracking', $acp);
+	}
 }

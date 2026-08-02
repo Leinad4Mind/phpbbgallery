@@ -26,7 +26,7 @@ class main_module
 	{
 		global $user, $phpbb_container, $table_prefix, $phpbb_gallery_url;
 		global $phpbb_ext_gallery_core_album, $albums_table, $phpbb_ext_gallery_core_auth, $phpbb_ext_gallery_core_album_display, $images_table;
-		global $phpbb_gallery_image, $users_table, $phpbb_ext_gallery_config, $comments_table, $rates_table, $reports_table, $watch_table, $contests_table;
+		global $phpbb_gallery_image, $users_table, $phpbb_ext_gallery_config, $comments_table, $rates_table, $reports_table, $watch_table, $contests_table, $tracking_table;
 		global $phpbb_ext_gallery_user, $request;
 
 		$phpbb_gallery_url = $phpbb_container->get('phpbbgallery.core.url');
@@ -56,6 +56,7 @@ class main_module
 		$rates_table = $table_prefix . 'gallery_rates';
 		$reports_table = $table_prefix . 'gallery_reports';
 		$watch_table = $table_prefix . 'gallery_watch';
+		$tracking_table = $table_prefix . 'gallery_albums_track';
 
 		$this->language->add_lang(['gallery', 'gallery_acp', 'gallery_mcp', 'gallery_ucp'], 'phpbbgallery/core');
 		$this->language->add_lang('posting');
@@ -707,7 +708,7 @@ class main_module
 	{
 		global $cache, $db, $template, $user, $phpbb_gallery_url, $phpbb_ext_gallery_core_album, $albums_table, $phpbb_container;
 		global $images_table, $phpbb_gallery_image, $phpbb_ext_gallery_config, $phpbb_dispatcher, $request, $users_table;
-		global $comments_table, $images_table, $rates_table, $reports_table, $watch_table, $phpbb_ext_gallery_core_auth, $phpbb_ext_gallery_user;
+		global $comments_table, $images_table, $rates_table, $reports_table, $watch_table, $tracking_table, $phpbb_ext_gallery_core_auth, $phpbb_ext_gallery_user;
 
 		$this->language = $phpbb_container->get('language');
 
@@ -775,6 +776,10 @@ class main_module
 			}
 
 			$sql = 'DELETE FROM ' . $albums_table . '
+				WHERE ' . $db->sql_in_set('album_id', $deleted_albums);
+			$db->sql_query($sql);
+
+			$sql = 'DELETE FROM ' . $tracking_table . '
 				WHERE ' . $db->sql_in_set('album_id', $deleted_albums);
 			$db->sql_query($sql);
 

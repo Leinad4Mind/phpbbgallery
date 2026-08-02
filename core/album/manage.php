@@ -95,6 +95,9 @@ class manage
 	/** @var string */
 	protected string $contests_table;
 
+	/** @var string */
+	protected string $tracking_table;
+
 	/**
 	 * manage constructor.
 	 * @param \phpbb\user $user
@@ -118,6 +121,7 @@ class manage
 	 * @param string $permissions_table
 	 * @param string $moderators_table
 	 * @param string $contests_table
+	 * @param string $tracking_table
 	 */
 	public function __construct(\phpbb\user $user, \phpbb\language\language $language,
 								\phpbb\request\request $request, \phpbb\db\driver\driver_interface $db,
@@ -128,7 +132,7 @@ class manage
 								\phpbbgallery\core\config $gallery_config,
 								\phpbbgallery\core\contest $gallery_contest, \phpbbgallery\core\report $gallery_report,
 								\phpbbgallery\core\log $gallery_log, \phpbbgallery\core\notification $gallery_notification,
-								string $albums_table, string $images_table, string $comments_table, string $permissions_table, string $moderators_table, string $contests_table)
+								string $albums_table, string $images_table, string $comments_table, string $permissions_table, string $moderators_table, string $contests_table, string $tracking_table)
 	{
 		$this->user = $user;
 		$this->language = $language;
@@ -152,6 +156,7 @@ class manage
 		$this->permissions_table = $permissions_table;
 		$this->moderators_table = $moderators_table;
 		$this->contests_table = $contests_table;
+		$this->tracking_table = $tracking_table;
 	}
 
 	public function set_user(int $user_id): void
@@ -1016,6 +1021,10 @@ class manage
 			WHERE album_id = ' . (int) $album_id;
 		$this->db->sql_query($sql);
 		$this->gallery_cache->destroy('sql', $this->moderators_table);
+
+		$sql = 'DELETE FROM ' . $this->tracking_table . '
+			WHERE album_id = ' . (int) $album_id;
+		$this->db->sql_query($sql);
 
 		$this->gallery_notification->delete_albums($album_id);
 
