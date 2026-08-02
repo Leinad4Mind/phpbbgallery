@@ -151,4 +151,14 @@ final class counter_test extends TestCase
 		$this->assertCount(1, $db->matching('DELETE FROM favorites'));
 		$this->assertCount(2, $db->matching('image_favorited = image_favorited - 1'));
 	}
+
+	public function test_reactivation_removes_favourites_for_missing_images(): void
+	{
+		[$favorite, $db] = $this->make();
+		$db->orphan_image_ids = [42, 43];
+
+		$this->assertSame(2, $favorite->reconcile_orphans());
+		$this->assertSame([], $db->orphan_image_ids);
+		$this->assertCount(2, $db->matching('LEFT JOIN images'));
+	}
 }
