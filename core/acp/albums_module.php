@@ -484,7 +484,11 @@ class albums_module
 				}
 
 				$album_type_options = '';
-				$album_type_ary = [(int) \phpbbgallery\core\block::TYPE_CAT => 'CAT', (int) \phpbbgallery\core\block::TYPE_UPLOAD => 'UPLOAD', (int) \phpbbgallery\core\block::TYPE_CONTEST => 'CONTEST'];
+				$album_type_ary = [(int) \phpbbgallery\core\block::TYPE_CAT => 'CAT', (int) \phpbbgallery\core\block::TYPE_UPLOAD => 'UPLOAD'];
+				if ($phpbb_gallery_contest->can_create() || (int) $album_data['album_type'] === (int) \phpbbgallery\core\block::TYPE_CONTEST)
+				{
+					$album_type_ary[(int) \phpbbgallery\core\block::TYPE_CONTEST] = 'CONTEST';
+				}
 
 				foreach ($album_type_ary as $value => $lang)
 				{

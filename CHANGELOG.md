@@ -6,6 +6,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Added
 
+- Added an ACP switch and a dedicated Core contest policy boundary that can prevent creation of new contest albums while keeping every existing contest active, editable and privacy-protected.
 - Added an optional plain-text image subtitle across resumable uploads and editing, with a permission-aware search link that removes display parentheses at request time without storing a duplicate cleaned column.
 - Added a generic authorization and accounting event before serving original image sources, while keeping medium images and thumbnails unaffected.
 - Added permanent BBPoints purchases for original image files, including confirmation, direct-link enforcement, atomic contributor shares and download counters.

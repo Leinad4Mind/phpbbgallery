@@ -83,6 +83,44 @@ final class contest_album_edit_test extends TestCase
 		$this->assertStringContainsString('$this->update_contest_data($album_id, $contest_data, $reset_marked_images);', $source);
 	}
 
+	public function test_disabled_creation_is_enforced_server_side_but_existing_contests_remain_selectable(): void
+	{
+		$manager = (string) file_get_contents(dirname(__DIR__) . '/album/manage.php');
+		$module = (string) file_get_contents(dirname(__DIR__) . '/acp/albums_module.php');
+
+		$this->assertStringContainsString("!isset(\$album_data['album_id'])", $manager);
+		$this->assertStringContainsString('!$this->gallery_contest->can_create()', $manager);
+		$this->assertStringContainsString('$phpbb_gallery_contest->can_create()', $module);
+		$this->assertStringContainsString("\$album_data['album_type'] === (int) \\phpbbgallery\\core\\block::TYPE_CONTEST", $module);
+	}
+
+	public function test_disabled_creation_rejects_a_crafted_new_contest_submission(): void
+	{
+		$user = new \phpbb\user();
+		$user->data = ['user_timezone' => 'UTC'];
+		$manager = $this->manager($this->createStub(\phpbb\db\driver\driver_interface::class), $user);
+		$contest = $this->createMock(\phpbbgallery\core\contest::class);
+		$contest->expects($this->once())->method('can_create')->willReturn(false);
+		$language = $this->createStub(\phpbb\language\language::class);
+		$language->method('lang')->willReturnCallback(static fn (string $key): string => $key);
+		$reflection = new \ReflectionClass($manager);
+		$reflection->getProperty('gallery_contest')->setValue($manager, $contest);
+		$reflection->getProperty('language')->setValue($manager, $language);
+
+		$album_data = [
+			'album_name' => 'Blocked contest',
+			'album_desc' => '',
+			'album_type' => \phpbbgallery\core\block::TYPE_CONTEST,
+		];
+		$contest_data = [
+			'contest_start' => '2026-08-03 10:00',
+			'contest_rating' => '2026-08-04 10:00',
+			'contest_end' => '2026-08-05 10:00',
+		];
+
+		$this->assertContains('CONTEST_CREATION_DISABLED', $manager->update_album_data($album_data, $contest_data));
+	}
+
 	private function manager(\phpbb\db\driver\driver_interface $db, ?\phpbb\user $user = null): manage
 	{
 		$reflection = new \ReflectionClass(manage::class);

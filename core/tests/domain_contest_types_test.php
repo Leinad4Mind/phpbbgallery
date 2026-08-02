@@ -49,6 +49,21 @@ final class domain_contest_types_test extends TestCase
 		$this->assertSame(contest::MODE_AVERAGE, contest::$mode);
 	}
 
+	public function test_contest_creation_switch_does_not_disable_existing_runtime_rules(): void
+	{
+		$config = $this->createMock(gallery_config::class);
+		$config->expects($this->once())->method('get')->with('allow_contests')->willReturn(false);
+		$contest = new contest(
+			$this->createStub(\phpbb\db\driver\driver_interface::class),
+			$config,
+			'gallery_images',
+			'gallery_contests'
+		);
+
+		$this->assertFalse($contest->can_create());
+		$this->assertTrue(contest::is_step('upload', ['album_type' => block::TYPE_UPLOAD], 100));
+	}
+
 	public function test_regular_albums_are_not_restricted_by_contest_phases(): void
 	{
 		$album_data = ['album_type' => block::TYPE_UPLOAD, 'contest_id' => 0];

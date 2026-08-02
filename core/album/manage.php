@@ -207,6 +207,13 @@ class manage
 			$errors[] = $this->language->lang('ALBUM_DESC_TOO_LONG');
 		}
 
+		if (!isset($album_data['album_id'])
+			&& (int) $album_data['album_type'] === (int) \phpbbgallery\core\block::TYPE_CONTEST
+			&& !$this->gallery_contest->can_create())
+		{
+			$errors[] = $this->language->lang('CONTEST_CREATION_DISABLED');
+		}
+
 		// Validate the contest timestamps:
 		if ($album_data['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST)
 		{
