@@ -6,3 +6,4 @@ _forum/config.php
 /vendor/
 /.functional/
 _forum/LocalValetDriver.php
+_forum/files/phpbbgallery
