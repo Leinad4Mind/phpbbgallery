@@ -225,6 +225,35 @@ class revision
 		return count($filenames);
 	}
 
+	public function reconcile_orphans(int $batch_size = 500): int
+	{
+		$deleted = 0;
+		$batch_size = max(1, min(self::MAX_REVISIONS * 20, $batch_size));
+		do
+		{
+			$sql = 'SELECT DISTINCT revision.image_id
+				FROM ' . $this->table_revisions . ' revision
+				LEFT JOIN ' . $this->table_images . ' image
+					ON image.image_id = revision.image_id
+				WHERE image.image_id IS NULL';
+			$result = $this->db->sql_query_limit($sql, $batch_size);
+			$image_ids = [];
+			while ($row = $this->db->sql_fetchrow($result))
+			{
+				$image_ids[] = (int) $row['image_id'];
+			}
+			$this->db->sql_freeresult($result);
+			if (!$image_ids)
+			{
+				break;
+			}
+			$deleted += $this->delete_for_images($image_ids);
+		}
+		while (count($image_ids) === $batch_size);
+
+		return $deleted;
+	}
+
 	public function resolve_source_file(string $filename): string|false
 	{
 		if ($filename === '' || strpos($filename, "\0") !== false || preg_match('#(^|[\\\\/])\.\.([\\\\/]|$)#', $filename)

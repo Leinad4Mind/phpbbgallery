@@ -358,6 +358,43 @@ class favorite
 	}
 
 	/**
+	 * Remove favourites whose Core image disappeared while this addon was disabled.
+	 */
+	public function reconcile_orphans(int $batch_size = 500): int
+	{
+		$deleted = 0;
+		$batch_size = max(1, min(1000, $batch_size));
+		do
+		{
+			$sql = 'SELECT DISTINCT favorite.image_id
+				FROM ' . $this->favorites_table . ' favorite
+				LEFT JOIN ' . $this->images_table . ' image
+					ON image.image_id = favorite.image_id
+				WHERE image.image_id IS NULL';
+			$result = $this->db->sql_query_limit($sql, $batch_size);
+			$image_ids = [];
+			while ($row = $this->db->sql_fetchrow($result))
+			{
+				$image_ids[] = (int) $row['image_id'];
+			}
+			$this->db->sql_freeresult($result);
+			if (!$image_ids)
+			{
+				break;
+			}
+
+			$sql = 'DELETE FROM ' . $this->favorites_table . '
+				WHERE ' . $this->db->sql_in_set('image_id', $image_ids);
+			$this->db->sql_query($sql);
+			$affected = (int) $this->db->sql_affectedrows();
+			$deleted += $affected;
+		}
+		while ($affected > 0);
+
+		return $deleted;
+	}
+
+	/**
 	 * Normalise a scalar or array of ids into a list of unique positive ints.
 	 *
 	 * @param array|int $ids Ids to normalise

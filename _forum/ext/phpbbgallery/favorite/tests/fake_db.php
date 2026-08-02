@@ -26,6 +26,8 @@ class fake_db implements \phpbb\db\driver\driver_interface
 
 	/** @var array Transaction commands issued */
 	public array $transactions = [];
+	public array $orphan_image_ids = [];
+	private int $affected = 0;
 
 	/** @var array Image ids the member has already favourited */
 	private array $favorited;
@@ -50,8 +52,16 @@ class fake_db implements \phpbb\db\driver\driver_interface
 	public function sql_query($sql, $cache_ttl = 0)
 	{
 		$this->statements[] = $sql;
+		$this->affected = 0;
 
-		if (stripos($sql, 'SELECT image_id') !== false && stripos($sql, 'FROM images') !== false)
+		if (stripos($sql, 'LEFT JOIN images') !== false)
+		{
+			foreach ($this->orphan_image_ids as $image_id)
+			{
+				$this->pending[] = ['image_id' => $image_id];
+			}
+		}
+		else if (stripos($sql, 'SELECT image_id') !== false && stripos($sql, 'FROM images') !== false)
 		{
 			$requested = $this->ids_in($sql);
 			$matched = $this->existing_images === null
@@ -73,8 +83,24 @@ class fake_db implements \phpbb\db\driver\driver_interface
 				$this->pending[] = ['image_id' => $image_id];
 			}
 		}
+		else if (stripos($sql, 'DELETE FROM favorites') !== false)
+		{
+			$deleted = array_intersect($this->orphan_image_ids, $this->ids_in($sql));
+			$this->affected = count($deleted);
+			$this->orphan_image_ids = array_values(array_diff($this->orphan_image_ids, $deleted));
+		}
 
 		return 'handle';
+	}
+
+	public function sql_query_limit($sql, $total, $offset = 0, $cache_ttl = 0)
+	{
+		return $this->sql_query($sql, $cache_ttl);
+	}
+
+	public function sql_affectedrows()
+	{
+		return $this->affected;
 	}
 
 	public function sql_multi_insert($table, $rows)

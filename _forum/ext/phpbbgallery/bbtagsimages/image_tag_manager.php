@@ -279,6 +279,39 @@ final class image_tag_manager
 		return true;
 	}
 
+	public function reconcile_orphans(int $batch_size = 500): int
+	{
+		$deleted = 0;
+		$batch_size = max(1, min(1000, $batch_size));
+		do
+		{
+			$sql = 'SELECT DISTINCT relation.image_id
+				FROM ' . $this->image_tags_table . ' relation
+				LEFT JOIN ' . $this->images_table . ' image
+					ON image.image_id = relation.image_id
+				WHERE image.image_id IS NULL';
+			$result = $this->db->sql_query_limit($sql, $batch_size);
+			$image_ids = [];
+			while ($row = $this->db->sql_fetchrow($result))
+			{
+				$image_ids[] = (int) $row['image_id'];
+			}
+			$this->db->sql_freeresult($result);
+			if (!$image_ids)
+			{
+				break;
+			}
+			if (!$this->delete_for_images($image_ids))
+			{
+				break;
+			}
+			$deleted += count($image_ids);
+		}
+		while (count($image_ids) === $batch_size);
+
+		return $deleted;
+	}
+
 	private function sync_usage(array $tag_ids): bool
 	{
 		$tag_ids = array_values(array_unique(array_filter(array_map('intval', $tag_ids))));

@@ -103,4 +103,20 @@ final class image_tag_manager_test extends TestCase
 			$manager->get_facet_rows('i.image_status = 1')
 		);
 	}
+
+	public function test_reactivation_removes_relations_for_missing_images_and_resyncs_usage(): void
+	{
+		$db = new fake_db();
+		$db->relations = [
+			['image_id' => 10, 'tag_id' => 7],
+			['image_id' => 99, 'tag_id' => 7],
+		];
+		$db->images = [10 => 3];
+		$db->usage = [7 => 2];
+		$manager = new image_tag_manager($db, 'image_tags', 'images', 'bbtags', 'bbtags_context');
+
+		$this->assertSame(1, $manager->reconcile_orphans());
+		$this->assertSame([['image_id' => 10, 'tag_id' => 7]], $db->relations);
+		$this->assertSame(1, $db->usage[7]);
+	}
 }

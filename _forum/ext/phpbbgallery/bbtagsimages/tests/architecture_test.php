@@ -31,6 +31,9 @@ final class architecture_test extends TestCase
 		$this->assertStringContainsString("'sitesplat/bbtags'", $extension);
 		$this->assertSame(2, substr_count($extension, '$manager->is_enabled($dependency)'));
 		$this->assertStringContainsString('$manager->enable($dependency)', $extension);
+		$this->assertStringContainsString("\$old_state === 'reconcile'", $extension);
+		$this->assertStringContainsString('bbtags_suggestions', $extension);
+		$this->assertStringContainsString('bbtags_scope', $extension);
 	}
 
 	public function test_schema_owns_only_image_relations_to_the_shared_catalogue(): void

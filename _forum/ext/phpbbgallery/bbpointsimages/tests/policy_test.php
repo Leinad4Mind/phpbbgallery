@@ -137,4 +137,14 @@ final class policy_test extends TestCase
 		$this->assertStringContainsString('DELETE FROM rules', $db->last_query);
 		$this->assertStringContainsString('album_id IN (7)', $db->last_query);
 	}
+
+	public function test_reactivation_removes_rules_for_missing_albums(): void
+	{
+		$db = new fake_db();
+		$db->rows = [['album_id' => 9]];
+		$resolver = new policy($db, new config([]), 'albums', 'rules');
+
+		$this->assertSame(1, $resolver->reconcile_orphans());
+		$this->assertStringContainsString('album_id IN (9)', $db->last_query);
+	}
 }

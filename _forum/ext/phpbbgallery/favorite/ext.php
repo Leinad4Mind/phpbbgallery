@@ -48,12 +48,24 @@ class ext extends \phpbb\extension\base
 	 */
 	public function enable_step(mixed $old_state): mixed
 	{
+		if ($old_state === 'reconcile')
+		{
+			$prefix = (string) $this->container->getParameter('core.table_prefix');
+			$favorite = new favorite(
+				$this->container->get('dbal.conn'),
+				$prefix . 'gallery_favorites',
+				$prefix . 'gallery_images'
+			);
+			$favorite->reconcile_orphans();
+
+			return false;
+		}
 		if (empty($old_state))
 		{
 			$this->container->get('user')->add_lang_ext('phpbbgallery/favorite', 'info_favorite');
 			$this->container->get('template')->assign_var('L_EXTENSION_ENABLE_SUCCESS', $this->container->get('user')->lang['EXTENSION_ENABLE_SUCCESS']);
 		}
 
-		return parent::enable_step($old_state);
+		return parent::enable_step($old_state) ? 'migrations' : 'reconcile';
 	}
 }

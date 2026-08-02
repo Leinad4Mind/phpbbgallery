@@ -57,6 +57,11 @@ class ext extends \phpbb\extension\base
 
 	public function enable_step(mixed $old_state): mixed
 	{
+		if ($old_state === 'reconcile')
+		{
+			$this->reconcile_orphans();
+			return false;
+		}
 		if (empty($old_state))
 		{
 			$this->container->get('template')->assign_var(
@@ -67,7 +72,7 @@ class ext extends \phpbb\extension\base
 			return 'notifications';
 		}
 
-		return parent::enable_step($old_state);
+		return parent::enable_step($old_state) ? 'migrations' : 'reconcile';
 	}
 
 	public function disable_step(mixed $old_state): mixed
@@ -106,5 +111,23 @@ class ext extends \phpbb\extension\base
 		$user->add_lang_ext('phpbbgallery/bbpointsimages', 'info_acp_bbpointsimages');
 		trigger_error($user->lang('BBPOINTSIMAGES_DEPENDENCIES_MISSING', implode(', ', $dependencies)), E_USER_WARNING);
 		return false;
+	}
+
+	private function reconcile_orphans(): void
+	{
+		$prefix = (string) $this->container->getParameter('core.table_prefix');
+		$db = $this->container->get('dbal.conn');
+		(new contributor_manager(
+			$db,
+			$prefix . 'gallery_bbpoints_contributors',
+			USERS_TABLE,
+			$prefix . 'gallery_images'
+		))->reconcile_orphans();
+		(new policy(
+			$db,
+			$this->container->get('config'),
+			$prefix . 'gallery_albums',
+			$prefix . 'gallery_bbpoints_album_rules'
+		))->reconcile_orphans();
 	}
 }

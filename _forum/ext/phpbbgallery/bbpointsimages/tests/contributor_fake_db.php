@@ -30,7 +30,17 @@ final class contributor_fake_db implements \phpbb\db\driver\driver_interface
 	public function sql_query(string $sql): string
 	{
 		$this->pending = [];
-		if (str_contains($sql, 'FROM users'))
+		if (str_contains($sql, 'LEFT JOIN images image'))
+		{
+			foreach ($this->contributors as $image_id => $rows)
+			{
+				if ($rows && !isset($this->images[$image_id]))
+				{
+					$this->pending[] = ['image_id' => $image_id];
+				}
+			}
+		}
+		else if (str_contains($sql, 'FROM users'))
 		{
 			preg_match_all("/'((?:''|[^'])*)'/", $sql, $matches);
 			$wanted = array_map(static fn (string $value): string => str_replace("''", "'", $value), $matches[1]);

@@ -34,7 +34,18 @@ final class fake_db implements \phpbb\db\driver\driver_interface
 	{
 		$this->last_query = (string) $sql;
 		$this->pending = [];
-		if (preg_match('/FROM images\s+WHERE image_id = (\d+)/s', $sql, $matches))
+		if (str_contains($sql, 'LEFT JOIN images image'))
+		{
+			foreach ($this->relations as $relation)
+			{
+				if (!isset($this->images[$relation['image_id']]))
+				{
+					$this->pending[$relation['image_id']] = ['image_id' => $relation['image_id']];
+				}
+			}
+			$this->pending = array_values($this->pending);
+		}
+		else if (preg_match('/FROM images\s+WHERE image_id = (\d+)/s', $sql, $matches))
 		{
 			$image_id = (int) $matches[1];
 			if (isset($this->images[$image_id]))

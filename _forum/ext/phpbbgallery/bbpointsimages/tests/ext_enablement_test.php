@@ -14,6 +14,16 @@ use PHPUnit\Framework\TestCase;
 
 final class ext_enablement_test extends TestCase
 {
+	public function test_enablement_has_a_post_migration_reconciliation_step(): void
+	{
+		$extension = (string) file_get_contents(dirname(__DIR__) . '/ext.php');
+
+		$this->assertStringContainsString("\$old_state === 'reconcile'", $extension);
+		$this->assertStringContainsString('reconcile_orphans()', $extension);
+		$this->assertStringContainsString('gallery_bbpoints_contributors', $extension);
+		$this->assertStringContainsString('gallery_bbpoints_album_rules', $extension);
+	}
+
 	public function test_notification_types_follow_the_extension_lifecycle(): void
 	{
 		$notifications = new class {

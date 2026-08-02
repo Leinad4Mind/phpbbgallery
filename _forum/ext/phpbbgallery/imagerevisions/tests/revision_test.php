@@ -132,6 +132,16 @@ final class revision_test extends TestCase
 		$this->assertFileExists($this->source_root . '/replacement.png');
 	}
 
+	public function test_reactivation_deletes_revision_files_for_missing_images(): void
+	{
+		$this->assertTrue($this->revision->replace_file(10, 11, 5));
+		unset($this->db->images[10]);
+
+		$this->assertSame(1, $this->revision->reconcile_orphans());
+		$this->assertSame([], $this->db->revisions);
+		$this->assertFileDoesNotExist($this->source_root . '/current.jpg');
+	}
+
 	public function test_revision_lookup_is_scoped_to_the_image(): void
 	{
 		$this->assertTrue($this->revision->replace_file(10, 11, 5));

@@ -8,6 +8,7 @@ All notable changes to the phpBB Gallery BBPoints Images add-on are documented i
 
 - Prevent contributor relations from surviving when an image is deleted while its contributor list is being saved.
 - Remove per-album points rules when their Gallery album is deleted.
+- Reconcile orphan contributor and album-rule rows after reactivation while preserving financial reward and purchase history.
 
 ### Added
 

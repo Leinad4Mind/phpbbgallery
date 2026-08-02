@@ -45,7 +45,19 @@ final class fake_db implements \phpbb\db\driver\driver_interface
 		$this->pending = [];
 		$this->affected_rows = 0;
 
-		if (preg_match('/SELECT \*\s+FROM images\s+WHERE image_id IN \(([^)]*)\)/s', $sql, $matches))
+		if (str_contains($sql, 'LEFT JOIN images image'))
+		{
+			foreach ($this->revisions as $revision)
+			{
+				$image_id = (int) $revision['image_id'];
+				if (!isset($this->images[$image_id]))
+				{
+					$this->pending[$image_id] = ['image_id' => $image_id];
+				}
+			}
+			$this->pending = array_values($this->pending);
+		}
+		else if (preg_match('/SELECT \*\s+FROM images\s+WHERE image_id IN \(([^)]*)\)/s', $sql, $matches))
 		{
 			foreach ($this->ids($matches[1]) as $image_id)
 			{
@@ -124,6 +136,11 @@ final class fake_db implements \phpbb\db\driver\driver_interface
 		}
 
 		return 'handle';
+	}
+
+	public function sql_query_limit($sql, $total, $offset = 0, $cache_ttl = 0)
+	{
+		return $this->sql_query($sql, $cache_ttl);
 	}
 
 	public function sql_fetchrow($handle = false)

@@ -35,12 +35,29 @@ class ext extends \phpbb\extension\base
 
 	public function enable_step(mixed $old_state): mixed
 	{
+		if ($old_state === 'reconcile')
+		{
+			$prefix = (string) $this->container->getParameter('core.table_prefix');
+			$revision = new revision(
+				$this->container->get('dbal.conn'),
+				$this->container->get('user'),
+				$this->container->get('phpbbgallery.core.url'),
+				$this->container->get('phpbbgallery.core.log'),
+				$this->container->get('phpbbgallery.core.cache'),
+				$this->container->get('phpbbgallery.core.file.tool'),
+				$prefix . 'gallery_images',
+				$prefix . 'gallery_image_revisions'
+			);
+			$revision->reconcile_orphans();
+
+			return false;
+		}
 		if (empty($old_state))
 		{
 			$this->container->get('user')->add_lang_ext('phpbbgallery/imagerevisions', 'info_imagerevisions');
 			$this->container->get('template')->assign_var('L_EXTENSION_ENABLE_SUCCESS', $this->container->get('user')->lang['EXTENSION_ENABLE_SUCCESS']);
 		}
 
-		return parent::enable_step($old_state);
+		return parent::enable_step($old_state) ? 'migrations' : 'reconcile';
 	}
 }

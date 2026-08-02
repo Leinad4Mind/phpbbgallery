@@ -90,4 +90,14 @@ final class contributor_manager_test extends TestCase
 
 		$this->assertArrayNotHasKey(10, $this->db->contributors);
 	}
+
+	public function test_reactivation_removes_contributors_for_missing_images(): void
+	{
+		$this->db->contributors[99] = [
+			['image_id' => 99, 'user_id' => 3, 'contributor_order' => 0],
+		];
+
+		$this->assertSame(1, $this->manager->reconcile_orphans());
+		$this->assertArrayNotHasKey(99, $this->db->contributors);
+	}
 }

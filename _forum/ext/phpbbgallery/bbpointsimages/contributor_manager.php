@@ -173,6 +173,25 @@ final class contributor_manager
 		$this->db->sql_query($sql);
 	}
 
+	public function reconcile_orphans(): int
+	{
+		$sql = 'SELECT DISTINCT contributor.image_id
+			FROM ' . $this->contributors_table . ' contributor
+			LEFT JOIN ' . $this->images_table . ' image
+				ON image.image_id = contributor.image_id
+			WHERE image.image_id IS NULL';
+		$result = $this->db->sql_query($sql);
+		$image_ids = [];
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$image_ids[] = (int) $row['image_id'];
+		}
+		$this->db->sql_freeresult($result);
+		$this->delete_for_images($image_ids);
+
+		return count($image_ids);
+	}
+
 	private function normalize_ids(array $ids): array
 	{
 		return array_values(array_unique(array_filter(

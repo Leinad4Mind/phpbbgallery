@@ -174,4 +174,23 @@ final class policy
 			WHERE ' . $this->db->sql_in_set('album_id', $album_ids);
 		$this->db->sql_query($sql);
 	}
+
+	public function reconcile_orphans(): int
+	{
+		$sql = 'SELECT DISTINCT rules.album_id
+			FROM ' . $this->rules_table . ' rules
+			LEFT JOIN ' . $this->albums_table . ' albums
+				ON albums.album_id = rules.album_id
+			WHERE albums.album_id IS NULL';
+		$result = $this->db->sql_query($sql);
+		$album_ids = [];
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$album_ids[] = (int) $row['album_id'];
+		}
+		$this->db->sql_freeresult($result);
+		$this->delete_for_albums($album_ids);
+
+		return count($album_ids);
+	}
 }
