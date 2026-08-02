@@ -84,8 +84,8 @@ class upload
 	/** @var \phpbbgallery\core\block  */
 	protected \phpbbgallery\core\block $block;
 
-	/** @var \phpbbgallery\core\contest */
-	protected \phpbbgallery\core\contest $contest;
+	/** @var \phpbbgallery\core\policy\album_operation */
+	protected \phpbbgallery\core\policy\album_operation $album_operation;
 
 	/** @var string */
 	protected string $images_table;
@@ -127,7 +127,7 @@ class upload
 		\phpbb\controller\helper $helper, \phpbbgallery\core\config $gallery_config, \phpbbgallery\core\user $gallery_user,
 		\phpbbgallery\core\image\image $image, \phpbbgallery\core\notification $gallery_notification,
 		\phpbbgallery\core\notification\helper $notification_helper, \phpbbgallery\core\url $url,
-		\phpbbgallery\core\upload $gallery_upload, \phpbbgallery\core\block $block, \phpbbgallery\core\contest $contest,
+		\phpbbgallery\core\upload $gallery_upload, \phpbbgallery\core\block $block, \phpbbgallery\core\policy\album_operation $album_operation,
 		string $images_table, string $phpbb_root_path)
 	{
 		$this->request = $request;
@@ -151,7 +151,7 @@ class upload
 		$this->gallery_notification = $gallery_notification;
 		$this->notification_helper = $notification_helper;
 		$this->block = $block;
-		$this->contest = $contest;
+		$this->album_operation = $album_operation;
 		$this->images_table = $images_table;
 		$this->phpbb_root_path = $phpbb_root_path;
 	}
@@ -171,7 +171,7 @@ class upload
 		{
 			$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
 		}
-		if (!$this->contest->is_step('upload', $album_data))
+		if (!$this->album_operation->allows('upload', $album_data))
 		{
 			$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
 		}
@@ -308,13 +308,13 @@ class upload
 			}
 
 			$success = true;
-			if (!$this->contest->is_step('upload', $album_data))
+			if (!$this->album_operation->allows('upload', $album_data))
 			{
 				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
 			}
 			foreach ($process->images as $image_id)
 			{
-				$success = $success && $process->update_image($image_id, !$this->auth->acl_check('i_approve', $album_id, $album_data['album_user_id']), $album_data['album_contest']);
+				$success = $success && $process->update_image($image_id, !$this->auth->acl_check('i_approve', $album_id, $album_data['album_user_id']), $album_data);
 				if (!$is_alternate_author && $this->gallery_user->get_data('watch_own'))
 				{
 					$this->gallery_notification->add($image_id, $upload_author_id);
@@ -622,7 +622,7 @@ class upload
 				}
 				else
 				{
-					if (!$this->contest->is_step('upload', $album_data))
+					if (!$this->album_operation->allows('upload', $album_data))
 					{
 						$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
 					}
@@ -630,7 +630,7 @@ class upload
 					$success = true;
 					foreach ($process->images as $image_id)
 					{
-						$success = $success && $process->update_image($image_id, !$this->auth->acl_check('i_approve', $album_id, $album_data['album_user_id']), $album_data['album_contest']);
+						$success = $success && $process->update_image($image_id, !$this->auth->acl_check('i_approve', $album_id, $album_data['album_user_id']), $album_data);
 						if (!$is_alternate_author && $this->gallery_user->get_data('watch_own'))
 						{
 							$this->gallery_notification->add($image_id, $upload_author_id);

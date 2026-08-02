@@ -115,10 +115,11 @@ final class controller_upload_types_test extends TestCase
 		$this->assertStringNotContainsString('$error_array', $source);
 	}
 
-	public function test_contest_phase_is_checked_at_entry_and_before_both_finalization_paths(): void
+	public function test_album_operation_is_checked_at_entry_and_before_both_finalization_paths(): void
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/upload.php');
 
-		$this->assertSame(3, substr_count($source, '$this->contest->is_step(\'upload\', $album_data)'));
+		$this->assertSame(3, substr_count($source, '$this->album_operation->allows(\'upload\', $album_data)'));
+		$this->assertStringNotContainsString('core\\contest', $source);
 	}
 }

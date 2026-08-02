@@ -28,11 +28,41 @@ class policy_listener implements EventSubscriberInterface
 	{
 		return [
 			'phpbbgallery.core.album.types' => 'register_album_type',
+			'phpbbgallery.core.album_operation' => 'restrict_album_operation',
+			'phpbbgallery.core.upload.update_image_before' => 'mark_contest_upload',
 			'phpbbgallery.core.image_visibility.private_data' => 'hide_private_data',
 			'phpbbgallery.core.image_visibility.results' => 'hide_results',
 			'phpbbgallery.core.image_visibility.private_data_sql' => 'restrict_private_data_sql',
 			'phpbbgallery.core.image_visibility.results_sql' => 'restrict_results_sql',
 		];
+	}
+
+	public function restrict_album_operation(\phpbb\event\data $event): void
+	{
+		$album_data = (array) $event['album_data'];
+		if ((int) ($album_data['album_type'] ?? -1) !== (int) \phpbbgallery\core\block::TYPE_CONTEST)
+		{
+			return;
+		}
+
+		$event['allowed'] = (bool) $event['allowed'] && manager::is_step(
+			(string) $event['operation'],
+			$album_data
+		);
+	}
+
+	public function mark_contest_upload(\phpbb\event\data $event): void
+	{
+		$album_data = (array) $event['album_data'];
+		if ((int) ($album_data['album_type'] ?? -1) !== (int) \phpbbgallery\core\block::TYPE_CONTEST
+			|| (int) ($album_data['contest_id'] ?? $album_data['album_contest'] ?? 0) <= 0)
+		{
+			return;
+		}
+
+		$additional_sql_data = (array) $event['additional_sql_data'];
+		$additional_sql_data['image_contest'] = (int) \phpbbgallery\core\block::IN_CONTEST;
+		$event['additional_sql_data'] = $additional_sql_data;
 	}
 
 	public function register_album_type(\phpbb\event\data $event): void

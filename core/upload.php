@@ -554,14 +554,14 @@ class upload
 	}
 
 	/**
-	 * Update image information in the database: name, description, status, contest, ...
+	 * Update image information in the database.
 	 *
 	 * @param int $image_id
 	 * @param bool $needs_approval
-	 * @param bool $is_in_contest
+	 * @param array $album_data
 	 * @return bool
 	 */
-	public function update_image(int $image_id, bool $needs_approval = false, bool $is_in_contest = false): bool
+	public function update_image(int $image_id, bool $needs_approval = false, array $album_data = []): bool
 	{
 		if ($this->file_limit && ($this->uploaded_files > $this->file_limit))
 		{
@@ -584,7 +584,6 @@ class upload
 
 		$sql_ary = [
 			'image_status'				=> ($needs_approval) ? $this->block->get_image_status_unapproved() : $this->block->get_image_status_approved(),
-			'image_contest'				=> ($is_in_contest) ? $this->block->get_in_contest() : $this->block->get_no_contest(),
 			'image_upload_session_hash'	=> '',
 			'image_subtitle'			=> $this->get_subtitle(),
 			'image_desc'				=> $message_parser->message,
@@ -620,10 +619,13 @@ class upload
 		* @event phpbbgallery.core.upload.update_image_before
 		* @var	array	additional_sql_data		array of additional settings
 		* @var	array	image_data				array of image_data
+		* @var	array	album_data				array of album data
 		* @var	string	file_link				link to file
+		* @var	int		image_id				image identifier
 		* @since 1.2.0
+		* @changed 4.1.0 Added album_data and image_id
 		*/
-		$vars = ['additional_sql_data', 'image_data', 'file_link'];
+		$vars = ['additional_sql_data', 'image_data', 'album_data', 'file_link', 'image_id'];
 		extract($this->phpbb_dispatcher->trigger_event('phpbbgallery.core.upload.update_image_before', compact($vars)));
 
 		// Rotate image

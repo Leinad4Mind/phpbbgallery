@@ -34,7 +34,7 @@ services:
             - '@phpbbgallery.core.url'
             - '@phpbbgallery.core.upload'
             - '@phpbbgallery.core.block'
-            - '@phpbbgallery.core.contest'
+            - '@phpbbgallery.core.policy.album_operation'
             - '%phpbbgallery.tables.gallery_images%'
             - '%core.root_path%'
     phpbbgallery.core.controller.album:
