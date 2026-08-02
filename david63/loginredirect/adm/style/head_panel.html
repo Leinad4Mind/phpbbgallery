@@ -1,0 +1,22 @@
+{% include 'overall_header.html' %}
+{% INCLUDECSS '@david63_loginredirect/css/admin_forms.css' %}
+
+<a id='maincontent'></a>
+<div class='head-panel'>
+	<div class='head-title'>{{ HEAD_TITLE }}</div>
+	<div class='head-description'>{{ HEAD_DESCRIPTION }}</div>
+	<div class='version-wrapper'>
+		<span class='version-text'>{{ lang('VERSION') }}</span><span class='version-data'>{{ VERSION_NUMBER }}</span>
+	</div>
+</div>
+
+{% if S_VERSION_CHECK %}
+	{% if S_VERSION_CHECK == 'fail' %}
+		<div class='head-panel-noversion'>{{ lang('NO_VERSION_EXPLAIN') }}</div>
+	{% else %}
+		<div class='head-panel-version'>
+			{{ lang('NEW_VERSION', S_VERSION_CHECK) }}
+			{% if VERSION_DOWNLOAD %}<br><a href='{{ VERSION_DOWNLOAD }}' rel='noopener noreferrer'>{{ lang('NEW_VERSION_LINK') }}</a>{% endif %}
+		</div>
+	{% endif %}
+{% endif %}

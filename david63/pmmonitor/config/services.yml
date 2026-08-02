@@ -1,0 +1,29 @@
+services:
+    david63.pmmonitor.core.message_repository:
+        class: david63\pmmonitor\core\message_repository
+        arguments:
+            - '@dbal.conn'
+            - '@notification_manager'
+            - '@attachment.manager'
+            - '%tables%'
+
+    david63.pmmonitor.admin.controller:
+        class: david63\pmmonitor\controller\admin_controller
+        arguments:
+            - '@config'
+            - '@request'
+            - '@template'
+            - '@pagination'
+            - '@user'
+            - '@auth'
+            - '@language'
+            - '@log'
+            - '@david63.pmmonitor.core.message_repository'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+        public: true
+
+    david63.pmmonitor.listener:
+        class: david63\pmmonitor\event\listener
+        tags:
+            - { name: event.listener }

@@ -1,0 +1,44 @@
+services:
+    david63.dropboxupload.http_client:
+        class: GuzzleHttp\Client
+
+    david63.dropboxupload.core.functions:
+        class: david63\dropboxupload\core\functions
+        arguments:
+            - '@ext.manager'
+
+    david63.dropboxupload.core.dropbox_client:
+        class: david63\dropboxupload\core\dropbox_client
+        arguments:
+            - '@david63.dropboxupload.http_client'
+
+    david63.dropboxupload.main.controller:
+        class: david63\dropboxupload\controller\main_controller
+        arguments:
+            - '@config'
+            - '@config_text'
+            - '@user'
+            - '@log'
+            - '@david63.dropboxupload.core.dropbox_client'
+            - '%core.root_path%'
+
+    david63.dropboxupload.admin.controller:
+        class: david63\dropboxupload\controller\admin_controller
+        arguments:
+            - '@config'
+            - '@config_text'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '@language'
+            - '@log'
+            - '@david63.dropboxupload.core.functions'
+        public: true
+
+    david63.dropboxupload.listener:
+        class: david63\dropboxupload\event\listener
+        arguments:
+            - '@config'
+            - '@david63.dropboxupload.main.controller'
+        tags:
+            - { name: event.listener }
