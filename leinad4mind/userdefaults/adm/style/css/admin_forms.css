@@ -1,0 +1,19 @@
+.userdefaults-note {
+	color: #536482;
+	margin-left: 0.5rem;
+}
+
+#userdefaults select {
+	min-width: 12rem;
+}
+
+#userdefaults dd > label,
+#userdefaults dd > span {
+	margin-left: 0.5rem;
+}
+
+.rtl #userdefaults dd > label,
+.rtl #userdefaults dd > span {
+	margin-left: 0;
+	margin-right: 0.5rem;
+}
