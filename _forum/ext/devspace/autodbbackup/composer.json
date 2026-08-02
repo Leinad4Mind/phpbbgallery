@@ -2,8 +2,8 @@
 	"name": "devspace/autodbbackup",
 	"type": "phpbb-extension",
 	"description": "An extension for phpBB that will automatically backup your database using the phpBB Cron.",
-	"version": "3.3.0",
-	"time": "2022-10-14",
+	"version": "3.3.1",
+	"time": "2026-08-02",
 	"keywords": [
 		"phpbb",
 		"extension",
@@ -13,6 +13,10 @@
 	],
 	"license": "GPL-2.0-only",
 	"authors": [{
+		"name": "Leinad4Mind",
+		"role": "Developer"
+	},
+	{
 	 	"name": "devspace",
 		"role": "Maintainer"
     },
@@ -25,7 +29,7 @@
         "role": "Original Developer"
 	}],
 	"require": {
-        "php": ">=7.1.3",
+        "php": ">=7.2.0",
         "composer/installers": "~1.0"
     },
 	"extra": {

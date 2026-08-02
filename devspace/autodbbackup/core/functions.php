@@ -2,179 +2,152 @@
 /**
  *
  * @package Auto db Backup
- * @copyright (c) 2022 devspace
+ * @copyright (c) 2015 david63
+ * @copyright (c) 2026 Leinad4Mind
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
 
 namespace devspace\autodbbackup\core;
 
-use phpbb\extension\manager;
 use phpbb\exception\version_check_exception;
+use phpbb\extension\manager;
 
 /**
- * functions
+ * Shared extension helpers.
  */
 class functions
 {
 	/** @var manager */
-	protected $phpbb_extension_manager;
+	protected $ext_manager;
+
+	/** @var string */
+	protected $namespace;
+
+	/** @var array|null */
+	protected $metadata;
+
+	/** @var array|null */
+	protected $metadata_flat;
 
 	/**
-	 * Constructor for functions
-	 *
-	 * @param manager   $phpbb_extension_manager    Extension manager
-	 *
-	 * @access public
+	 * @param manager $ext_manager Extension manager
 	 */
-	public function __construct(manager $phpbb_extension_manager)
+	public function __construct(manager $ext_manager)
 	{
-		$this->ext_manager = $phpbb_extension_manager;
-
+		$this->ext_manager = $ext_manager;
 		$this->namespace = __NAMESPACE__;
 	}
 
 	/**
-	 * Get the extension's namespace
+	 * Get the extension namespace in the requested notation.
 	 *
-	 * @return $extension_name
-	 * @access public
+	 * @param string $mode php or twig
+	 *
+	 * @return string
 	 */
 	public function get_ext_namespace($mode = 'php')
 	{
-		// Let's extract the extension name from the namespace
-		$extension_name = substr($this->namespace, 0, -(strlen($this->namespace) - strrpos($this->namespace, '\\')));
+		$extension_name = substr($this->namespace, 0, strrpos($this->namespace, '\\'));
 
-		// Now format the extension name
-		switch ($mode)
+		if ($mode === 'twig')
 		{
-			case 'php':
-				$extension_name = str_replace('\\', '/', $extension_name);
-				break;
-
-			case 'twig':
-				$extension_name = str_replace('\\', '_', $extension_name);
-				break;
+			return str_replace('\\', '_', $extension_name);
 		}
 
-		return $extension_name;
+		return str_replace('\\', '/', $extension_name);
 	}
 
 	/**
-	 * Check if there is an updated version of the extension
+	 * Check for an extension update using phpBB's cached version checker.
 	 *
-	 * @return $new_version
-	 * @access public
+	 * @return array
 	 */
 	public function version_check()
 	{
-		if ($this->get_meta('host') == 'www.phpbb.com')
-		{
-			$port   = 'https://';
-			$stable = null;
-		}
-		else
-		{
-			$port   = 'http://';
-			$stable = 'unstable';
-		}
+		$version_data = array();
 
-		// Can we access the version srver?
-		if (@fopen($port . $this->get_meta('host') . $this->get_meta('directory') . '/' . $this->get_meta('filename'), 'r'))
+		try
 		{
-			try
-			{
-				$md_manager   = $this->ext_manager->create_extension_metadata_manager($this->get_ext_namespace());
-				$version_data = $this->ext_manager->version_check($md_manager, true, false, $stable);
-			}
-			catch (version_check_exception $e)
-			{
-				$version_data['current'] = 'fail';
-			}
+			$metadata_manager = $this->ext_manager->create_extension_metadata_manager($this->get_ext_namespace());
+			$version_data = $this->ext_manager->version_check($metadata_manager, false, false, null);
 		}
-		else
+		catch (version_check_exception $exception)
 		{
 			$version_data['current'] = 'fail';
 		}
 
-		return $version_data;
+		return is_array($version_data) ? $version_data : array();
 	}
 
 	/**
-	 * Get a meta_data key value
+	 * Get a flattened metadata value.
 	 *
-	 * @return $meta_data
-	 * @access public
+	 * @param string $key Metadata key
+	 *
+	 * @return mixed|string
 	 */
-	public function get_meta($data)
+	public function get_meta($key)
 	{
-		$meta_data  = '';
-		$md_manager = $this->ext_manager->create_extension_metadata_manager($this->get_ext_namespace());
-
-		foreach (new \RecursiveIteratorIterator(new \RecursiveArrayIterator($md_manager->get_metadata('all'))) as $key => $value)
+		if ($this->metadata_flat === null)
 		{
-			if ($data === $key)
+			$metadata_manager = $this->ext_manager->create_extension_metadata_manager($this->get_ext_namespace());
+			$this->metadata = $metadata_manager->get_metadata('all');
+			$this->metadata_flat = array();
+
+			foreach (new \RecursiveIteratorIterator(new \RecursiveArrayIterator($this->metadata)) as $metadata_key => $value)
 			{
-				$meta_data = $value;
+				$this->metadata_flat[$metadata_key] = $value;
 			}
 		}
 
-		return $meta_data;
+		return array_key_exists($key, $this->metadata_flat) ? $this->metadata_flat[$key] : '';
 	}
 
 	/**
-	 * Check that the reqirements are met for this extension
+	 * Check whether PHP and phpBB satisfy every declared constraint.
 	 *
 	 * @return array
-	 * @access public
 	 */
 	public function ext_requirements()
 	{
-		$php_valid = $phpbb_valid = false;
-
-		// Check the PHP version is valid
-		$php_versn = htmlspecialchars_decode($this->get_meta('php'));
-
-		if ($php_versn)
-		{
-			// Get the conditions
-			preg_match('/\d/', $php_versn, $php_pos, PREG_OFFSET_CAPTURE);
-			$php_valid = phpbb_version_compare(PHP_VERSION, substr($php_versn, $php_pos[0][1]), substr($php_versn, 0, $php_pos[0][1]));
-		}
-
-		// Check phpBB versions are valid
-		$phpbb_versn = htmlspecialchars_decode($this->get_meta('phpbb/phpbb'));
-		$phpbb_vers  = explode(',', $phpbb_versn);
-
-		if ($phpbb_vers[0])
-		{
-			// Get the first conditions
-			preg_match('/\d/', $phpbb_vers[0], $phpbb_pos_0, PREG_OFFSET_CAPTURE);
-			$phpbb_valid = phpbb_version_compare(PHPBB_VERSION, substr($phpbb_vers[0], $phpbb_pos_0[0][1]), substr($phpbb_vers[0], 0, $phpbb_pos_0[0][1]));
-
-			if ($phpbb_vers[1] && !$phpbb_valid)
-			{
-				// Get the second conditions
-				preg_match('/\d/', $phpbb_vers[1], $phpbb_pos_1, PREG_OFFSET_CAPTURE);
-				$phpbb_valid = phpbb_version_compare(PHPBB_VERSION, substr($phpbb_vers[0], $phpbb_pos_0[0][1]), substr($phpbb_vers[0], 0, $phpbb_pos_0[0][1]));
-			}
-		}
-
-		return [$php_valid, $phpbb_valid];
+		return array(
+			$this->matches_constraints(PHP_VERSION, htmlspecialchars_decode((string) $this->get_meta('php'))),
+			$this->matches_constraints(PHPBB_VERSION, htmlspecialchars_decode((string) $this->get_meta('phpbb/phpbb'))),
+		);
 	}
 
 	/**
-	 * Get the UTC timezone offset from server time
+	 * Evaluate a comma-separated set of Composer-style comparison constraints.
 	 *
-	 * @return utc_offset
-	 * @access public
+	 * @param string $current Current version
+	 * @param string $constraints Constraints to evaluate
+	 *
+	 * @return bool
 	 */
-	public function get_utc_offset()
+	protected function matches_constraints($current, $constraints)
 	{
-		$utc_dtz = new \DateTimeZone('UTC');
-		$php_dtz = new \DateTimeZone(date_default_timezone_get());
-		$utc_dt  = new \DateTime('now', $utc_dtz);
+		if (trim($constraints) === '')
+		{
+			return false;
+		}
 
-		return $php_dtz->getOffset($utc_dt);
+		foreach (explode(',', $constraints) as $constraint)
+		{
+			$constraint = trim(str_replace('@dev', '', $constraint));
+			if (!preg_match('#^(<=|>=|!=|==|=|<|>)?\s*([0-9][0-9A-Za-z._+\-]*)$#', $constraint, $matches))
+			{
+				return false;
+			}
+
+			$operator = $matches[1] !== '' ? $matches[1] : '>=';
+			$operator = $operator === '=' ? '==' : $operator;
+			if (!phpbb_version_compare($current, $matches[2], $operator))
+			{
+				return false;
+			}
+		}
+
+		return true;
 	}
 }

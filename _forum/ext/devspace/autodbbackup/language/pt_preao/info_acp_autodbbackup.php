@@ -2,7 +2,8 @@
 
 /**
  * @package Auto db Backup for phpBB.
- * @copyright (c) 2022 devspace
+ * @copyright (c) 2015 david63
+ * @copyright (c) 2026 Leinad4Mind
  * @license GNU General Public License, version 2 (GPL-2.0)
  * @translation Leinad4Mind [Portuguese [pt_preao]] (2026)
  */
@@ -20,28 +21,29 @@ if (empty($lang) || !is_array($lang))
 	$lang = [];
 }
 
-/**
- * DEVELOPERS PLEASE NOTE
- *
- * All language files should use UTF-8 as their encoding and the files must not contain a BOM.
- *
- * Placeholders can now contain order information, e.g. instead of
- * 'Page %s of %s' you can (and should) write 'Page %1$s of %2$s', this allows
- * translators to re-order the output of data while ensuring it remains correct
- *
- * You do not need this where single placeholders are used, e.g. 'Message %d' is fine
- * equally where a string contains only two placeholders which are used to wrap text
- * in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
- *
- * Some characters you may want to copy&paste:
- * ’ » “ ” …
- *
- */
+// DEVELOPERS PLEASE NOTE
+//
+// All language files should use UTF-8 as their encoding and the files must not contain a BOM.
+//
+// Placeholders can now contain order information, e.g. instead of
+// 'Page %s of %s' you can (and should) write 'Page %1$s of %2$s', this allows
+// translators to re-order the output of data while ensuring it remains correct
+//
+// You do not need this where single placeholders are used, e.g. 'Message %d' is fine
+// equally where a string contains only two placeholders which are used to wrap text
+// in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
+//
+// Some characters you may want to copy&paste:
+// â€™ Â» â€œ â€ â€¦
+//
 
 $lang = array_merge($lang, [
-	'ACP_AUTO_DB_BACKUP'          => 'Backup Automático da Base de Dados',
-	'ACP_AUTO_DB_BACKUP_SETTINGS' => 'Configurações do backup automático',
-	'LOG_AUTO_DB_BACKUP'          => '<strong>Backup automático da base de dados concluído<br>»</strong> %1$s (%2$s)',
-	'LOG_AUTO_DB_BACKUP_SETTINGS' => '<strong>Configurações do Backup Automático da Base de Dados alteradas</strong>',
-	'LOG_AUTO_DB_BACKUP_TIMEZONE' => 'O Backup Automático da Base de Dados falhou devido a uma configuração de fuso horário inválida',
+	'ACP_AUTO_DB_BACKUP'          => 'Backup AutomÃ¡tico da Base de Dados',
+	'ACP_AUTO_DB_BACKUP_SETTINGS' => 'ConfiguraÃ§Ãµes de backup automÃ¡tico',
+
+	'LOG_AUTO_DB_BACKUP'          => '<strong>Backup automÃ¡tico da base de dados concluÃ­do<br>Â»</strong>%1$s (%2$s)',
+	'LOG_AUTO_DB_BACKUP_EXPORT_FAILED' => '<strong>Falha ao exportar o backup automÃ¡tico da base de dados</strong><br>Â» %s',
+	'LOG_AUTO_DB_BACKUP_FAILED'        => '<strong>Falha no backup automÃ¡tico da base de dados</strong><br>Â» %s',
+	'LOG_AUTO_DB_BACKUP_PRUNE_FAILED'  => '<strong>NÃ£o foi possÃ­vel remover backups automÃ¡ticos antigos</strong><br>Â» %s',
+	'LOG_AUTO_DB_BACKUP_SETTINGS' => '<strong>ConfiguraÃ§Ãµes do Backup AutomÃ¡tico da Base de Dados alteradas</strong>',
 ]);

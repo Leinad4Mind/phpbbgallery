@@ -1,313 +1,445 @@
 <?php
 /**
- *
  * @package Auto db Backup
- * @copyright (c) 2022 devspace
+ * @copyright (c) 2015 david63
+ * @copyright (c) 2026 Leinad4Mind
  * @license GNU General Public License, version 2 (GPL-2.0)
- *
  */
 
 namespace devspace\autodbbackup\cron\task;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use phpbb\cron\task\base;
+use devspace\autodbbackup\core\backup_policy;
+use devspace\autodbbackup\core\backup_registry;
+use devspace\autodbbackup\core\functions;
 use phpbb\config\config;
+use phpbb\cron\task\base;
+use phpbb\db\tools\tools_interface;
+use phpbb\event\dispatcher_interface;
+use phpbb\filesystem\filesystem;
 use phpbb\language\language;
-use phpbb\db\driver\driver_interface;
 use phpbb\log\log;
 use phpbb\user;
-use phpbb\event\dispatcher_interface;
-use phpbb\db\tools\tools_interface;
-use devspace\autodbbackup\core\functions;
-use phpbb\filesystem\filesystem;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/** Create and retain automatic phpBB database backups. */
 class auto_db_backup extends base
 {
-	/** @var string phpBB root path */
+	/** @var string */
 	protected $root_path;
-
-	/** @var string phpBB extension */
+	/** @var string */
 	protected $php_ext;
-
-	/** @var string phpBB table prefix */
+	/** @var string */
 	protected $table_prefix;
-
 	/** @var config */
 	protected $config;
-
 	/** @var language */
 	protected $language;
-
-	/** @var driver_interface */
-	protected $db;
-
 	/** @var log */
 	protected $log;
-
 	/** @var user */
 	protected $user;
-
 	/** @var ContainerInterface */
 	protected $container;
-
 	/** @var dispatcher_interface */
 	protected $dispatcher;
-
 	/** @var tools_interface */
 	protected $db_tools;
-
 	/** @var functions */
 	protected $functions;
-
 	/** @var filesystem */
 	protected $filesystem;
+	/** @var backup_registry */
+	protected $backup_registry;
 
 	/**
-	 * Constructor for cron auto_db_backup
-	 *
-	 * @param string                 $root_path          phpBB root path
-	 * @param string                 $php_ext            phpBB file extension
-	 * @param string                 $table_prefix       phpBB table prefix
-	 * @param config                 $config             Config object
-	 * @param language               $language           Language object
-	 * @param driver_interface       $db                 Database object
-	 * @param log                    $log                phpBB log
-	 * @param user                   $user               User object
-	 * @param ContainerInterface     $phpbb_container    phpBBcontainer
-	 * @param dispatcher_interface   $dispatcher         phpBB dispatcher
-	 * @param tools_interface        $db_tools           phpBB db tools
-	 * @param functions              $functions          Functions for the extension
-	 * @param filesystem             $filesystem         phpBB filesystem
-	 *
-	 * @access   public
+	 * @param string               $root_path phpBB root path
+	 * @param string               $php_ext phpBB file extension
+	 * @param string               $table_prefix phpBB table prefix
+	 * @param config               $config Config object
+	 * @param language             $language Language object
+	 * @param log                  $log phpBB log
+	 * @param user                 $user User object
+	 * @param ContainerInterface   $container Service container
+	 * @param dispatcher_interface $dispatcher Event dispatcher
+	 * @param tools_interface      $db_tools Database tools
+	 * @param functions            $functions Extension helpers
+	 * @param filesystem           $filesystem Filesystem service
+	 * @param backup_registry      $backup_registry Owned backup registry
 	 */
-	public function __construct(string $root_path, string $php_ext, string $table_prefix, config $config, language $language, driver_interface $db, log $log, user $user, ContainerInterface $phpbb_container, dispatcher_interface $dispatcher, tools_interface $db_tools, functions $functions, filesystem $filesystem)
+	public function __construct(string $root_path, string $php_ext, string $table_prefix, config $config, language $language, log $log, user $user, ContainerInterface $container, dispatcher_interface $dispatcher, tools_interface $db_tools, functions $functions, filesystem $filesystem, backup_registry $backup_registry)
 	{
-		$this->root_path    = $root_path;
-		$this->php_ext      = $php_ext;
+		$this->root_path = $root_path;
+		$this->php_ext = $php_ext;
 		$this->table_prefix = $table_prefix;
-		$this->config       = $config;
-		$this->language     = $language;
-		$this->db           = $db;
-		$this->log          = $log;
-		$this->user         = $user;
-		$this->container    = $phpbb_container;
-		$this->dispatcher   = $dispatcher;
-		$this->db_tools     = $db_tools;
-		$this->functions    = $functions;
-		$this->filesystem   = $filesystem;
+		$this->config = $config;
+		$this->language = $language;
+		$this->log = $log;
+		$this->user = $user;
+		$this->container = $container;
+		$this->dispatcher = $dispatcher;
+		$this->db_tools = $db_tools;
+		$this->functions = $functions;
+		$this->filesystem = $filesystem;
+		$this->backup_registry = $backup_registry;
 	}
 
-	/**
-	 * Run this cron task.
-	 *
-	 * @return null
-	 */
+	/** Run the backup task. */
 	public function run()
 	{
-		$time            = time();
-		$additional_data = [];
+		$started_at = time();
+		$location = $this->root_path . 'store/';
+		$temp_path = '';
+		$extractor = null;
+		$extractor_open = false;
+		$error_handler_installed = false;
 
-		// Add the language file
-		$this->language->add_lang('acp_autobackup', $this->functions->get_ext_namespace());
+		$this->language->add_lang(array('acp_autobackup', 'info_acp_autodbbackup'), $this->functions->get_ext_namespace());
 
-		// Update the next backup time.
-		$next_cron_backup = $time + ($this->config['auto_db_backup_gc'] * 3600); // Convert hours to seconds
-
-		// Do we want to maintain the time?
-		if ($this->config['auto_db_backup_maintain_freq'])
+		try
 		{
-			$next_cron_backup = $this->config['auto_db_backup_next_gc'];
+			$interval = (int) $this->config['auto_db_backup_gc'];
+			$copies = (int) $this->config['auto_db_backup_copies'];
+			$enabled = (int) $this->config['auto_db_backup_enable'];
+			$maintain = (int) $this->config['auto_db_backup_maintain_freq'];
+			$file_type = (string) $this->config['auto_db_backup_filetype'];
+			backup_policy::validate_settings($interval, $copies, $enabled, $maintain, $file_type, $this->get_available_file_types());
 
-			while ($next_cron_backup < $time)
+			$next_run = backup_policy::calculate_next_run($started_at, (int) $this->config['auto_db_backup_next_gc'], $interval, (bool) $maintain);
+			$this->include_database_helpers();
+			backup_policy::validate_free_space(disk_free_space($location));
+			@set_time_limit(1200);
+
+			$tables = backup_policy::filter_tables($this->db_tools->sql_list_tables(), $this->table_prefix);
+			if (!$tables)
 			{
-				$next_cron_backup += $this->config['auto_db_backup_gc'] * 3600;
+				throw new \RuntimeException('AUTO_DB_BACKUP_NO_TABLES');
+			}
+
+			$identifier = unique_id();
+			$temp_base = 'autodbbackup_tmp_' . $started_at . '_' . $identifier;
+			$final_base = 'backup_' . $started_at . '_' . $identifier;
+			$extension = $this->get_extension($file_type);
+			$temp_path = $location . $temp_base . $extension;
+			$final_filename = $final_base . $extension;
+			$final_path = $location . $final_filename;
+			$marker = 'AUTO_DB_BACKUP_COMPLETE:' . $identifier;
+
+			set_error_handler(function ($severity, $message, $file, $line)
+			{
+				if (!(error_reporting() & $severity))
+				{
+					return false;
+				}
+
+				throw new \ErrorException($message, 0, $severity, $file, $line);
+			});
+			$error_handler_installed = true;
+
+			$extractor = $this->container->get('dbal.extractor');
+			$extractor->init_extractor($file_type, $temp_base, $started_at, false, true);
+			$extractor_open = true;
+			$extractor->write_start($this->table_prefix);
+
+			foreach ($tables as $table_name)
+			{
+				$extractor->write_table($table_name);
+				$extractor->write_data($table_name);
+			}
+
+			$extractor->flush("\n-- " . $marker . "\n");
+			$extractor->write_end();
+			$extractor_open = false;
+			$this->verify_backup($temp_path, $file_type, $marker);
+			restore_error_handler();
+			$error_handler_installed = false;
+
+			$this->filesystem->rename($temp_path, $final_path, false);
+			$temp_path = '';
+			$metadata = $this->backup_registry->record($location, $final_filename, time());
+
+			try
+			{
+				$this->backup_registry->prune($location, $copies);
+			}
+			catch (\Throwable $exception)
+			{
+				$this->add_failure_log('LOG_AUTO_DB_BACKUP_PRUNE_FAILED', $exception);
+			}
+
+			$this->config->set('auto_db_backup_next_gc', $next_run, true);
+			$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_AUTO_DB_BACKUP', time(), array($final_filename, get_formatted_filesize($metadata['size'])));
+
+			try
+			{
+				/**
+				 * Event to allow exporting of a verified backup file.
+				 *
+				 * Event return values cannot alter the local publication or retention paths.
+				 *
+				 * @event devspace.autodbbackup.backup_file_export
+				 * @var string filename  Backup filename without extension
+				 * @var string file_type Backup file type (text, bzip2 or gzip)
+				 * @var string extension Backup filename extension
+				 * @var string location  Location of backup files
+				 * @var int    size      Verified backup size in bytes
+				 * @var string sha256    Verified backup SHA-256 checksum
+				 * @since 2.1.0
+				 * @changed 3.3.1 Runs only after verified publication and cannot mutate local paths
+				 */
+				$event_data = array(
+					'filename'  => $final_base,
+					'file_type' => $file_type,
+					'extension' => $extension,
+					'location'  => $location,
+					'size'      => $metadata['size'],
+					'sha256'    => $metadata['sha256'],
+				);
+				$this->dispatcher->trigger_event('devspace.autodbbackup.backup_file_export', $event_data);
+			}
+			catch (\Throwable $exception)
+			{
+				$this->add_failure_log('LOG_AUTO_DB_BACKUP_EXPORT_FAILED', $exception);
 			}
 		}
-
-		// We do this here to prevent the Auto Backup running twice
-		$this->config->set('auto_db_backup_next_gc', $next_cron_backup, true);
-
-		// Need to include this file for the get_usable_memory() function
-		if (!function_exists('get_usable_memory'))
+		catch (\Throwable $exception)
 		{
-			// Need to use "real path" as using dots in the path could fail
-			$file_name = $this->filesystem->realpath($this->root_path) . '\includes\acp\acp_database.' . $this->php_ext;
-			$file_name = str_replace('\\', '/', $file_name);
-			include_once $file_name;
-		}
-
-		@set_time_limit(1200);
-		@set_time_limit(0);
-
-		$tables    = $this->db_tools->sql_list_tables();
-		$filename  = 'backup_' . $time . '_' . unique_id();
-		$file_type = $this->config['auto_db_backup_filetype'];
-		$location  = $this->root_path . 'store/';
-		$extractor = $this->container->get('dbal.extractor');
-		$extension = $this->get_extension($file_type);
-
-		$extractor->init_extractor($file_type, $filename, $time, false, true);
-		$extractor->write_start($this->table_prefix);
-
-		foreach ($tables as $table_name)
-		{
-			$extractor->write_table($table_name);
-
-			if ($this->config['auto_db_backup_optimize'])
+			if ($extractor_open && $extractor !== null)
 			{
-				switch ($this->db->get_sql_layer())
+				try
 				{
-					case 'sqlite':
-					case 'sqlite3':
-						$extractor->flush('DELETE FROM ' . $table_name . ";\n");
-						break;
-
-					case 'mssql':
-					case 'mssql_odbc':
-					case 'mssqlnative':
-						$extractor->flush('TRUNCATE TABLE ' . $table_name . "GO\n");
-						break;
-
-					case 'oracle':
-						$extractor->flush('TRUNCATE TABLE ' . $table_name . "/\n");
-						break;
-
-					default:
-						$extractor->flush('TRUNCATE TABLE ' . $table_name . ";\n");
-						break;
+					$extractor->write_end();
+				}
+				catch (\Throwable $close_exception)
+				{
+					// Preserve the original error.
 				}
 			}
-			$extractor->write_data($table_name);
-		}
-		$extractor->write_end();
 
-		/**
-		 * Event to allow exporting of a backup file
-		 *
-		 * @event devspace.autodbbackup.backup_file_export
-		 * @var  string  filename    The backup filename
-		 * @var  string  file_type   The backup file type (text, bzip2 or gzip)
-		 * @var  string  extension   The file extension for the file type
-		 * @var  string  location    The location of the backup files
-		 *
-		 * @since 2.1.0
-		 */
-		$vars = [
-			'filename',
-			'file_type',
-			'extension',
-			'location',
-		];
-		extract($this->dispatcher->trigger_event('devspace.autodbbackup.backup_file_export', compact($vars)));
-
-		// Delete backup copies
-		if ($this->config['auto_db_backup_copies'] > 0)
-		{
-			$dir   = opendir($location);
-			$files = [];
-
-			while (($file = readdir($dir)) !== false)
+			if ($error_handler_installed)
 			{
-				if (is_file($location . $file) && (substr($file, -3) == '.gz' || substr($file, -4) == '.bz2' || substr($file, -4) == '.sql'))
+				restore_error_handler();
+			}
+
+			if ($temp_path !== '' && is_file($temp_path))
+			{
+				try
 				{
-					$files[$file] = fileatime($location . $file);
+					$this->filesystem->remove($temp_path);
+				}
+				catch (\Throwable $remove_exception)
+				{
+					// Preserve the original error.
 				}
 			}
-			closedir($dir);
 
-			arsort($files);
-			reset($files);
-
-			if (count($files) > $this->config['auto_db_backup_copies'])
-			{
-				$i = 0;
-				foreach ($files as $key => $val)
-				{
-					$i++;
-					if ($i > $this->config['auto_db_backup_copies'])
-					{
-						@unlink($location . $key);
-					}
-				}
-			}
+			$retry_interval = min(3600, max(300, ((int) $this->config['auto_db_backup_gc']) * 60));
+			$this->config->set('auto_db_backup_next_gc', time() + $retry_interval, true);
+			$this->add_failure_log('LOG_AUTO_DB_BACKUP_FAILED', $exception);
 		}
-
-		// Write the log entry
-		$additional_data[] = $filename . $extension;
-		$additional_data[] = $this->readable_filesize($location, $filename, $extension);
-		$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_AUTO_DB_BACKUP', time(), $additional_data);
 	}
 
-	/**
-	 * Get the extension type.
-	 *
-	 * @param $file_type
-	 *
-	 * @return string $extension
-	 */
-	protected function get_extension($file_type)
+	/** Include phpBB's database backup helper functions. */
+	protected function include_database_helpers()
 	{
-		switch ($file_type)
+		if (function_exists('get_usable_memory'))
 		{
-			case 'gzip':
-				$extension = '.sql.gz';
-				break;
-
-			case 'bzip2':
-				$extension = '.sql.bz2';
-				break;
-
-			default:
-				$extension = '.sql';
-				break;
+			return;
 		}
 
-		return $extension;
+		$root_path = $this->filesystem->realpath($this->root_path);
+		if (!is_string($root_path) || $root_path === '')
+		{
+			throw new \RuntimeException('AUTO_DB_BACKUP_INVALID_PATH');
+		}
+
+		$helper = str_replace('\\', '/', $root_path) . '/includes/acp/acp_database.' . $this->php_ext;
+		if (!is_file($helper))
+		{
+			throw new \RuntimeException('AUTO_DB_BACKUP_HELPER_MISSING');
+		}
+
+		include_once $helper;
 	}
 
 	/**
-	 * Format the file size into a human readable format.
+	 * Verify decompression to EOF and require a unique completion marker.
 	 *
-	 * @param $file_type
+	 * @param string $path Backup path
+	 * @param string $file_type Backup file type
+	 * @param string $marker Completion marker
+	 */
+	protected function verify_backup($path, $file_type, $marker)
+	{
+		if (!is_file($path) || filesize($path) <= 0)
+		{
+			throw new \RuntimeException('AUTO_DB_BACKUP_VERIFY_FAILED');
+		}
+
+		$handle = $this->open_backup($path, $file_type);
+		$tail = '';
+
+		try
+		{
+			while (true)
+			{
+				$chunk = $this->read_backup_chunk($handle, $file_type);
+				if ($chunk === false)
+				{
+					throw new \RuntimeException('AUTO_DB_BACKUP_VERIFY_FAILED');
+				}
+
+				if ($chunk === '')
+				{
+					break;
+				}
+
+				$tail = substr($tail . $chunk, -4096);
+			}
+		}
+		finally
+		{
+			$this->close_backup($handle, $file_type);
+		}
+
+		if (strpos($tail, '-- ' . $marker) === false)
+		{
+			throw new \RuntimeException('AUTO_DB_BACKUP_VERIFY_FAILED');
+		}
+	}
+
+	/**
+	 * @param string $path Backup path
+	 * @param string $file_type Backup file type
+	 *
+	 * @return resource
+	 */
+	protected function open_backup($path, $file_type)
+	{
+		if ($file_type === 'gzip')
+		{
+			$handle = gzopen($path, 'rb');
+		}
+		else if ($file_type === 'bzip2')
+		{
+			$handle = bzopen($path, 'r');
+		}
+		else
+		{
+			$handle = fopen($path, 'rb');
+		}
+
+		if ($handle === false)
+		{
+			throw new \RuntimeException('AUTO_DB_BACKUP_VERIFY_FAILED');
+		}
+
+		return $handle;
+	}
+
+	/**
+	 * @param resource $handle Backup stream
+	 * @param string   $file_type Backup file type
+	 *
+	 * @return string|false
+	 */
+	protected function read_backup_chunk($handle, $file_type)
+	{
+		if ($file_type === 'gzip')
+		{
+			return gzread($handle, 8192);
+		}
+
+		if ($file_type === 'bzip2')
+		{
+			return bzread($handle, 8192);
+		}
+
+		return fread($handle, 8192);
+	}
+
+	/**
+	 * @param resource $handle Backup stream
+	 * @param string   $file_type Backup file type
+	 */
+	protected function close_backup($handle, $file_type)
+	{
+		if ($file_type === 'gzip')
+		{
+			gzclose($handle);
+		}
+		else if ($file_type === 'bzip2')
+		{
+			bzclose($handle);
+		}
+		else
+		{
+			fclose($handle);
+		}
+	}
+
+	/** @return array */
+	protected function get_available_file_types()
+	{
+		$file_types = array('text');
+
+		if (extension_loaded('zlib'))
+		{
+			$file_types[] = 'gzip';
+		}
+
+		if (extension_loaded('bz2'))
+		{
+			$file_types[] = 'bzip2';
+		}
+
+		return $file_types;
+	}
+
+	/**
+	 * @param string $file_type Backup file type
 	 *
 	 * @return string
 	 */
-	protected function readable_filesize($location, $filename, $extension)
+	protected function get_extension($file_type)
 	{
-		$bytes = filesize($location . $filename . $extension);
-		$i     = floor(log($bytes, 1024));
+		$extensions = array(
+			'bzip2' => '.sql.bz2',
+			'gzip'  => '.sql.gz',
+			'text'  => '.sql',
+		);
 
-		return round($bytes / pow(1024, $i), [0, 0, 2, 2, 3][$i]) . $this->language->lang(['FILE_SIZE', $i]);
+		if (!isset($extensions[$file_type]))
+		{
+			throw new \InvalidArgumentException('AUTO_DB_BACKUP_FILETYPE_ERROR');
+		}
+
+		return $extensions[$file_type];
 	}
 
 	/**
-	 * Returns whether this cron task can run, given current board configuration.
-	 *
-	 * @return bool
+	 * @param string     $log_key Language key
+	 * @param \Throwable $exception Failure
 	 */
+	protected function add_failure_log($log_key, \Throwable $exception)
+	{
+		$message = $exception->getMessage();
+		if ($this->language->is_set($message))
+		{
+			$message = $this->language->lang($message);
+		}
+
+		$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, $log_key, time(), array($message));
+	}
+
+	/** @return bool */
 	public function is_runnable()
 	{
 		return (bool) $this->config['auto_db_backup_enable'];
 	}
 
-	/**
-	 * Returns whether this cron task should run now, because enough time
-	 * has passed since it was last run.
-	 *
-	 * @return bool
-	 */
+	/** @return bool */
 	public function should_run()
 	{
-		if (!in_array(date_default_timezone_get(), timezone_identifiers_list()))
-		{
-			// Report this in the log
-			$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_AUTO_DB_BACKUP_TIMEZONE');
-			return false;
-		}
-		else
-		{
-			return $this->config['auto_db_backup_next_gc'] < time();
-		}
+		return (int) $this->config['auto_db_backup_next_gc'] <= time();
 	}
 }

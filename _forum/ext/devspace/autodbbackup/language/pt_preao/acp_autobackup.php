@@ -2,7 +2,8 @@
 
 /**
  * @package Auto db Backup for phpBB.
- * @copyright (c) 2022 devspace
+ * @copyright (c) 2015 david63
+ * @copyright (c) 2026 Leinad4Mind
  * @license GNU General Public License, version 2 (GPL-2.0)
  * @translation Leinad4Mind [Portuguese [pt_preao]] (2026)
  */
@@ -20,52 +21,56 @@ if (empty($lang) || !is_array($lang))
 	$lang = [];
 }
 
-/**
- * DEVELOPERS PLEASE NOTE
- *
- * All language files should use UTF-8 as their encoding and the files must not contain a BOM.
- *
- * Placeholders can now contain order information, e.g. instead of
- * 'Page %s of %s' you can (and should) write 'Page %1$s of %2$s', this allows
- * translators to re-order the output of data while ensuring it remains correct
- *
- * You do not need this where single placeholders are used, e.g. 'Message %d' is fine
- * equally where a string contains only two placeholders which are used to wrap text
- * in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
- *
- * Some characters you may want to copy&paste:
- * ’ » “ ” …
- *
- */
+// DEVELOPERS PLEASE NOTE
+//
+// All language files should use UTF-8 as their encoding and the files must not contain a BOM.
+//
+// Placeholders can now contain order information, e.g. instead of
+// 'Page %s of %s' you can (and should) write 'Page %1$s of %2$s', this allows
+// translators to re-order the output of data while ensuring it remains correct
+//
+// You do not need this where single placeholders are used, e.g. 'Message %d' is fine
+// equally where a string contains only two placeholders which are used to wrap text
+// in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
+//
+// Some characters you may want to copy&paste:
+// â€™ Â» â€œ â€ â€¦
+//
 
 $lang = array_merge($lang, [
 	'AUTO_DB_BACKUP_COPIES'                => 'Backups armazenados',
-	'AUTO_DB_BACKUP_COPIES_EXPLAIN'        => 'O número de backups que serão armazenados no servidor.<br>0 significa desactivado e todos os backups serão armazenados no servidor.',
-	'AUTO_DB_BACKUP_ENABLE'                => 'Activar backup automático da base de dados',
-	'AUTO_DB_BACKUP_ENABLE_EXPLAIN'        => 'Activar ou desactivar os backups automáticos da base de dados.',
+	'AUTO_DB_BACKUP_COPIES_EXPLAIN'        => 'O nÃºmero de backups que serÃ£o armazenados no servidor.<br>0 significa desactivado e todos os backups serÃ£o armazenados no servidor.',
+	'AUTO_DB_BACKUP_ENABLE'                => 'Activar backup automÃ¡tico da base de dados',
+	'AUTO_DB_BACKUP_ENABLE_EXPLAIN'        => 'Activar ou desactivar os backups automÃ¡ticos da base de dados',
 	'AUTO_DB_BACKUP_FILETYPE'              => 'Tipo de ficheiro',
 	'AUTO_DB_BACKUP_FILETYPE_EXPLAIN'      => 'Selecciona o tipo de ficheiro para os backups.',
-	'AUTO_DB_BACKUP_FREQ'                  => 'Frequência de backup',
-	'AUTO_DB_BACKUP_FREQ_EXPLAIN'          => 'Define a frequência de backup em horas.',
-	'AUTO_DB_BACKUP_MAINTAIN_FREQ'         => 'Manter a frequência de tempo do backup',
-	'AUTO_DB_BACKUP_MAINTAIN_FREQ_EXPLAIN' => 'Definir isto como <strong>"Sim"</strong> significa que o tempo da frequência de backup será mantido.<br>Por exemplo - se a hora for definida para as 23:15 e a frequência definida para 24 horas, o próximo backup será às 23:15 do dia seguinte. Se estiver definido como <strong>"Não"</strong>, o próximo backup será 24 horas após a execução do backup.',
-	'AUTO_DB_BACKUP_OPTIMIZE'              => 'Optimizar a base de dados antes de efectuar o backup',
-	'AUTO_DB_BACKUP_OPTIMIZE_EXPLAIN'      => 'Optimizar apenas as tabelas da base de dados não optimizadas antes de fazer o backup.',
-	'AUTO_DB_BACKUP_SETTINGS'              => 'Configurações de backup automático da base de dados',
-	'AUTO_DB_BACKUP_SETTINGS_CHANGED'      => 'As configurações de backup automático da base de dados foram alteradas.',
-	'AUTO_DB_BACKUP_SETTINGS_EXPLAIN'      => 'Aqui podes definir as configurações padrão para os backups automáticos da base de dados. Dependendo da configuração do teu servidor, poderá ser possível comprimir a base de dados.<br>Todos os backups serão armazenados na pasta <samp>/store/</samp>. Podes restaurar um backup através do painel de <em>Restauro</em>.',
-	'AUTO_DB_BACKUP_TIME'                  => 'Próxima hora de backup',
-	'AUTO_DB_BACKUP_TIME_ERROR'            => 'A <strong>próxima hora de backup</strong> está incorrecta. A hora tem que ser definida no futuro.',
-	'AUTO_DB_BACKUP_TIME_EXPLAIN'          => 'A hora a que deve ser feito o próximo backup da base de dados.<br><strong>Nota:</strong> A data/hora especificada deve ser no futuro.',
+	'AUTO_DB_BACKUP_FREQ'                  => 'FrequÃªncia de backup',
+	'AUTO_DB_BACKUP_FREQ_EXPLAIN'          => 'Define a frequÃªncia de backup em horas.',
+	'AUTO_DB_BACKUP_MAINTAIN_FREQ'         => 'Manter a frequÃªncia de tempo do backup',
+	'AUTO_DB_BACKUP_MAINTAIN_FREQ_EXPLAIN' => 'Definir isto como <strong>"Sim"</strong> significa que o tempo da frequÃªncia de backup serÃ¡ mantido.<br>Por exemplo - se a hora for definida para as 23:15 e a frequÃªncia definida para 24 horas, o prÃ³ximo backup serÃ¡ Ã s 23:15 do dia seguinte. Se estiver definido como <strong>"NÃ£o"</strong>, o prÃ³ximo backup serÃ¡ 24 horas apÃ³s a execuÃ§Ã£o do backup.',
+	'AUTO_DB_BACKUP_SETTINGS'              => 'ConfiguraÃ§Ãµes de backup automÃ¡tico da base de dados',
+	'AUTO_DB_BACKUP_SETTINGS_CHANGED'      => 'As configuraÃ§Ãµes de backup automÃ¡tico da base de dados foram alteradas.',
+	'AUTO_DB_BACKUP_SETTINGS_EXPLAIN'      => 'Configura backups lÃ³gicos automÃ¡ticos da base de dados. Os backups sÃ£o guardados em <samp>/store/</samp> e podem ser restaurados no painel de <em>Restauro</em>.<br><strong>Nota de consistÃªncia:</strong> actividade durante um backup lÃ³gico pode incluir dados de momentos ligeiramente diferentes. Usa snapshots nativos da base de dados quando precisares de recuperaÃ§Ã£o rigorosa para um ponto no tempo.',
+	'AUTO_DB_BACKUP_TIME'                  => 'PrÃ³xima hora de backup',
+	'AUTO_DB_BACKUP_TIME_ERROR'            => 'A <strong>prÃ³xima hora de backup</strong> estÃ¡ incorreta. A hora tem que ser definida no futuro.',
+	'AUTO_DB_BACKUP_TIME_EXPLAIN'          => 'A hora a que deve ser feito o prÃ³ximo backup da base de dados.<br><strong>Nota:</strong> A data/hora especificada deve ser no futuro.',
 
-	'CLICK_SELECT' => 'Clica na caixa de texto para seleccionar a data/hora',
+	'DATE_FORMAT_ERROR' => 'O formato da data/hora do prÃ³ximo backup Ã© invÃ¡lido.',
+	'AUTO_DB_BACKUP_BOOLEAN_ERROR'  => 'Uma opÃ§Ã£o de activaÃ§Ã£o/desactivaÃ§Ã£o Ã© invÃ¡lida.',
+	'AUTO_DB_BACKUP_COPIES_ERROR'   => 'O nÃºmero de backups armazenados deve estar entre 0 e 99.',
+	'AUTO_DB_BACKUP_FILETYPE_ERROR' => 'O tipo de ficheiro seleccionado nÃ£o estÃ¡ disponÃ­vel.',
+	'AUTO_DB_BACKUP_FREQ_ERROR'     => 'A frequÃªncia deve estar entre 1 e 350 horas.',
+	'AUTO_DB_BACKUP_HELPER_MISSING'   => 'O auxiliar de backup da base de dados do phpBB nÃ£o estÃ¡ disponÃ­vel.',
+	'AUTO_DB_BACKUP_INVALID_FILENAME' => 'O nome de ficheiro de backup gerado Ã© invÃ¡lido.',
+	'AUTO_DB_BACKUP_INVALID_PATH'     => 'O caminho do backup Ã© invÃ¡lido ou estÃ¡ fora da pasta store.',
+	'AUTO_DB_BACKUP_MANIFEST_FAILED'  => 'NÃ£o foi possÃ­vel guardar o manifesto de propriedade dos backups.',
+	'AUTO_DB_BACKUP_NO_TABLES'        => 'NÃ£o foram encontradas tabelas do phpBB para incluir no backup.',
+	'AUTO_DB_BACKUP_DISK_SPACE'       => 'N&atilde;o existe espa&ccedil;o livre suficiente para criar um backup em seguran&ccedil;a.',
+	'AUTO_DB_BACKUP_VERIFY_FAILED'    => 'O backup gerado falhou a verificaÃ§Ã£o de integridade.',
 
-	'DATE_FORMAT_ERROR' => 'O formato da data/hora do próximo backup é inválido.',
+	'INVALID_USER_TIMEZONE' => 'Existe um problema com a tua configuraÃ§Ã£o de fuso horÃ¡rio no UCP.',
 
-	'INVALID_PHP_TIMEZONE'  => 'O fuso horário padrão no teu ficheiro php.ini é inválido.',
-	'INVALID_USER_TIMEZONE' => 'Existe um problema com a tua configuração de fuso horário no UCP.',
-
-	'NO_TIMEZONE_SET' => 'Não tens um fuso horário definido no teu UCP - por favor define-o antes de poderes continuar.',
+	'NO_TIMEZONE_SET' => 'NÃ£o tens um fuso horÃ¡rio definido no teu UCP - por favor define-o antes de poderes continuar.',
 
 	'FILETYPE' => [
 		'gzip'  => 'gzip',
@@ -86,11 +91,10 @@ $lang = array_merge($lang, [
 $lang = array_merge($lang, [
 	'HOUR_TEXT'   => 'Hora',
 	'MINUTE_TEXT' => 'Minuto',
-	'NEXT_TEXT'   => 'Seguinte »',
-	'PREV_TEXT'   => '« Anterior',
+	'NEXT_TEXT'   => 'Seguinte Â»',
+	'PREV_TEXT'   => 'Â« Anterior',
 	'TIME_TEXT'   => 'Hora',
 
-	// Translators note: retain the format of [" "] as they are creating JSON compatible arrays
-	'DAY_NAMES_MIN' => '["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"]',
-	'MONTH_NAMES'   => '["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"]',
+	'DAY_NAMES_MIN' => '["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "SÃ¡b"]',
+	'MONTH_NAMES'   => '["Janeiro", "Fevereiro", "MarÃ§o", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"]',
 ]);

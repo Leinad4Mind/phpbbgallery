@@ -2,23 +2,25 @@
 /**
  *
  * @package Auto db Backup
- * @copyright (c) 2022 devspace
+ * @copyright (c) 2015 david63
+ * @copyright (c) 2026 Leinad4Mind
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
 
 namespace devspace\autodbbackup\controller;
 
+use devspace\autodbbackup\core\backup_policy;
+use devspace\autodbbackup\core\functions;
 use phpbb\config\config;
+use phpbb\language\language;
+use phpbb\log\log;
 use phpbb\request\request;
 use phpbb\template\template;
 use phpbb\user;
-use phpbb\log\log;
-use phpbb\language\language;
-use devspace\autodbbackup\core\functions;
 
 /**
- * Admin controller
+ * ACP settings controller.
  */
 class admin_controller
 {
@@ -44,214 +46,175 @@ class admin_controller
 	protected $functions;
 
 	/** @var string */
-	protected $ext_images_path;
-
-	/** @var string Custom form action */
 	protected $u_action;
 
-	/** @var int Backup date */
-	protected $backup_date;
-
 	/**
-	 * Constructor for admin controller
-	 *
-	 * @param config		$config             Config object
-	 * @param request		$request            Request object
-	 * @param template		$template           Template object
-	 * @param user			$user               User object
-	 * @param log			$log                Log object
-	 * @param language		$language           Language object
-	 * @param functions		$functions			Functions for the extension
-	 * @param string		$ext_images_path	Path to this extension's images
-	 *
-	 * @return \devspace\autodbbackup\controller\admin_controller
-	 * @access public
+	 * @param config    $config Config object
+	 * @param request   $request Request object
+	 * @param template  $template Template object
+	 * @param user      $user User object
+	 * @param log       $log Log object
+	 * @param language  $language Language object
+	 * @param functions $functions Extension helpers
 	 */
-	public function __construct(config $config, request $request, template $template, user $user, log $log, language $language, functions $functions, string $ext_images_path)
+	public function __construct(config $config, request $request, template $template, user $user, log $log, language $language, functions $functions)
 	{
-		$this->config          = $config;
-		$this->request         = $request;
-		$this->template        = $template;
-		$this->user            = $user;
-		$this->log             = $log;
-		$this->language        = $language;
-		$this->functions       = $functions;
-		$this->ext_images_path = $ext_images_path;
+		$this->config = $config;
+		$this->request = $request;
+		$this->template = $template;
+		$this->user = $user;
+		$this->log = $log;
+		$this->language = $language;
+		$this->functions = $functions;
 	}
 
 	/**
-	 * Display the options a user can configure for this extension
-	 *
-	 * @return null
-	 * @access public
+	 * Display and process extension settings.
 	 */
 	public function display_options()
 	{
-		// Add the language files
 		$this->language->add_lang(array('acp_autobackup', 'acp_common'), $this->functions->get_ext_namespace());
 
-		// Need to do some timezone checking before we go any further
-		// Does the user have a timezone set?
-		if (!$this->user->data['user_timezone'])
+		$timezone_name = isset($this->user->data['user_timezone']) ? $this->user->data['user_timezone'] : '';
+		if ($timezone_name === '')
 		{
 			trigger_error($this->language->lang('NO_TIMEZONE_SET'), E_USER_WARNING);
 		}
 
-		// Is the user's timezone valid?
-		// This should never happen!
-		if (!in_array($this->user->data['user_timezone'], timezone_identifiers_list()))
+		if (!in_array($timezone_name, timezone_identifiers_list(), true))
 		{
 			trigger_error($this->language->lang('INVALID_USER_TIMEZONE'), E_USER_WARNING);
 		}
 
-		// Is there a valid timezone in php.ini?
-		if (!in_array(date_default_timezone_get(), timezone_identifiers_list()))
-		{
-			trigger_error($this->language->lang('INVALID_PHP_TIMEZONE'), E_USER_WARNING);
-		}
-
-		// Create a form key for preventing CSRF attacks
-		$form_key = 'auto_db_backup';
+		$user_timezone = new \DateTimeZone($timezone_name);
+		$form_key = 'devspace/autodbbackup';
 		add_form_key($form_key);
+		$available_file_types = $this->get_available_file_types();
 
-		$back = false;
-
-		// Let's do some timezone manipulation
-		$utc_offset  = $this->functions->get_utc_offset();
-		$user_dtz    = new \DateTimeZone($this->user->data['user_timezone']);
-		$user_offset = $user_dtz->getOffset(new \DateTime);
-
-		// Submit
 		if ($this->request->is_set_post('submit'))
 		{
-			// Is the submitted form is valid?
 			if (!check_form_key($form_key))
 			{
 				trigger_error($this->language->lang('FORM_INVALID') . adm_back_link($this->u_action), E_USER_WARNING);
 			}
 
-			// Let's check that we have a valid date & time and convert it to a timestamp so that we have a common value.
-			if (($this->backup_date = strtotime($this->request->variable('auto_db_time', ''))) === false)
+			$settings = array(
+				'copies'   => $this->request->variable('auto_db_backup_copies', 0),
+				'enabled'  => $this->request->variable('auto_db_backup_enable', 0),
+				'file_type' => $this->request->variable('auto_db_backup_filetype', 'text'),
+				'interval' => $this->request->variable('auto_db_backup_gc', 0),
+				'maintain' => $this->request->variable('auto_db_backup_maintain_freq', 0),
+			);
+
+			try
+			{
+				backup_policy::validate_settings($settings['interval'], $settings['copies'], $settings['enabled'], $settings['maintain'], $settings['file_type'], $available_file_types);
+			}
+			catch (\InvalidArgumentException $exception)
+			{
+				trigger_error($this->language->lang($exception->getMessage()) . adm_back_link($this->u_action), E_USER_WARNING);
+			}
+
+			$backup_date = backup_policy::parse_local_time($this->request->variable('auto_db_time', ''), $user_timezone);
+			if ($backup_date === false)
 			{
 				trigger_error($this->language->lang('DATE_FORMAT_ERROR') . adm_back_link($this->u_action), E_USER_WARNING);
 			}
 
-			if ($this->request->variable('auto_db_backup_enable', 0) && (($this->backup_date - $user_offset) <= (time() - $utc_offset)))
+			if ($settings['enabled'] && $backup_date <= time())
 			{
 				trigger_error($this->language->lang('AUTO_DB_BACKUP_TIME_ERROR') . adm_back_link($this->u_action), E_USER_WARNING);
 			}
 
-			// Set the options the user has configured
-			$this->backup_date = ($this->backup_date - $user_offset + $utc_offset);
-			$this->set_options();
-
-			// Add option settings change action to the admin log
+			$this->set_options($settings, $backup_date);
 			$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_AUTO_DB_BACKUP_SETTINGS');
 			trigger_error($this->language->lang('AUTO_DB_BACKUP_SETTINGS_CHANGED') . adm_back_link($this->u_action));
 		}
 
-		// Template vars for header panel
 		$version_data = $this->functions->version_check();
-
-		// Are the PHP and phpBB versions valid for this extension?
 		$valid = $this->functions->ext_requirements();
+		$download_url = isset($version_data['download']) ? (string) $version_data['download'] : '';
+		if (parse_url($download_url, PHP_URL_SCHEME) !== 'https')
+		{
+			$download_url = '';
+		}
 
+		$this->assign_file_types($available_file_types);
 		$this->template->assign_vars(array(
-			'DOWNLOAD' 			=> (array_key_exists('download', $version_data)) ? '<a class="download" href =' . $version_data['download'] . '>' . $this->language->lang('NEW_VERSION_LINK') . '</a>' : '',
-
-			'EXT_IMAGE_PATH'	=> $this->ext_images_path,
-
-			'HEAD_TITLE' 		=> $this->language->lang('AUTO_DB_BACKUP_SETTINGS'),
-			'HEAD_DESCRIPTION' 	=> $this->language->lang('AUTO_DB_BACKUP_SETTINGS_EXPLAIN'),
-
-			'NAMESPACE' 		=> $this->functions->get_ext_namespace('twig'),
-
-			'PHP_VALID' 		=> $valid[0],
-			'PHPBB_VALID' 		=> $valid[1],
-
-			'S_BACK' 			=> $back,
-			'S_VERSION_CHECK' 	=> (array_key_exists('current', $version_data)) ? $version_data['current'] : false,
-
-			'VERSION_NUMBER' 	=> $this->functions->get_meta('version'),
-		));
-
-		// Output the page
-		$this->get_filetypes();
-
-		$this->template->assign_vars(array(
-			'AUTO_DB_BACKUP_COPIES' 		=> $this->config['auto_db_backup_copies'],
-			'AUTO_DB_BACKUP_GC' 			=> $this->config['auto_db_backup_gc'],
-			'AUTO_DB_BACKUP_MAINTAIN_FREQ'	=> $this->config['auto_db_backup_maintain_freq'],
-
-			'NEXT_BACKUP_TIME' 				=> date('d-m-Y H:i', $this->config['auto_db_backup_next_gc'] + $user_offset - $utc_offset),
-
-			'RTL_LANGUAGE' 					=> ($this->language->lang('DIRECTION') == 'rtl') ? true : false,
-
-			'S_AUTO_DB_BACKUP_ENABLE' 		=> $this->config['auto_db_backup_enable'],
-			'S_AUTO_DB_BACKUP_OPTIMIZE' 	=> $this->config['auto_db_backup_optimize'],
-
-			'U_ACTION' 						=> $this->u_action,
+			'AUTO_DB_BACKUP_COPIES'        => (int) $this->config['auto_db_backup_copies'],
+			'AUTO_DB_BACKUP_GC'            => (int) $this->config['auto_db_backup_gc'],
+			'AUTO_DB_BACKUP_MAINTAIN_FREQ' => (bool) $this->config['auto_db_backup_maintain_freq'],
+			'DOWNLOAD_URL'                  => $download_url,
+			'HEAD_DESCRIPTION'              => $this->language->lang('AUTO_DB_BACKUP_SETTINGS_EXPLAIN'),
+			'HEAD_TITLE'                    => $this->language->lang('AUTO_DB_BACKUP_SETTINGS'),
+			'NAMESPACE'                     => $this->functions->get_ext_namespace('twig'),
+			'NEXT_BACKUP_TIME'              => backup_policy::format_local_time((int) $this->config['auto_db_backup_next_gc'], $user_timezone),
+			'PHP_VALID'                     => $valid[0],
+			'PHPBB_VALID'                   => $valid[1],
+			'S_AUTO_DB_BACKUP_ENABLE'       => (bool) $this->config['auto_db_backup_enable'],
+			'S_BACK'                        => false,
+			'S_VERSION_CHECK'               => isset($version_data['current']) ? $version_data['current'] : false,
+			'U_ACTION'                      => $this->u_action,
+			'VERSION_NUMBER'                => $this->functions->get_meta('version'),
 		));
 	}
 
 	/**
-	 * Set the options a user can configure
+	 * Store already validated settings.
 	 *
-	 * @return null
-	 * @access protected
+	 * @param array $settings Validated settings
+	 * @param int   $backup_date Next run timestamp
 	 */
-	protected function set_options()
+	protected function set_options(array $settings, $backup_date)
 	{
-		$this->config->set('auto_db_backup_copies', $this->request->variable('auto_db_backup_copies', 0));
-		$this->config->set('auto_db_backup_enable', $this->request->variable('auto_db_backup_enable', 0));
-		$this->config->set('auto_db_backup_filetype', $this->request->variable('auto_db_backup_filetype', 'text'));
-		$this->config->set('auto_db_backup_gc', $this->request->variable('auto_db_backup_gc', 0));
-		$this->config->set('auto_db_backup_next_gc', $this->backup_date, 0);
-		$this->config->set('auto_db_backup_maintain_freq', $this->request->variable('auto_db_backup_maintain_freq', 0));
-		$this->config->set('auto_db_backup_optimize', $this->request->variable('auto_db_backup_optimize', 0));
+		$this->config->set('auto_db_backup_copies', $settings['copies']);
+		$this->config->set('auto_db_backup_enable', $settings['enabled']);
+		$this->config->set('auto_db_backup_filetype', $settings['file_type']);
+		$this->config->set('auto_db_backup_gc', $settings['interval']);
+		$this->config->set('auto_db_backup_next_gc', $backup_date, true);
+		$this->config->set('auto_db_backup_maintain_freq', $settings['maintain']);
 	}
 
 	/**
-	 * Create the filetype array
-	 *
-	 * @return template variables
-	 * @access protected
+	 * @return array File types supported by this PHP installation
 	 */
-	protected function get_filetypes()
+	protected function get_available_file_types()
 	{
-		$filetypes = array();
+		$file_types = array('text');
 
-		if (@extension_loaded('zlib'))
+		if (extension_loaded('zlib'))
 		{
-			$filetypes['gzip'] = $this->language->lang(array('FILETYPE', 'gzip'));
+			$file_types[] = 'gzip';
 		}
 
-		if (@extension_loaded('bz2'))
+		if (extension_loaded('bz2'))
 		{
-			$filetypes['bzip2'] = $this->language->lang(array('FILETYPE', 'bzip2'));
+			$file_types[] = 'bzip2';
 		}
 
-		$filetypes['text'] = $this->language->lang(array('FILETYPE', 'text'));
+		return $file_types;
+	}
 
-		foreach ($filetypes as $filetype => $value)
+	/**
+	 * @param array $file_types Supported file types
+	 */
+	protected function assign_file_types(array $file_types)
+	{
+		foreach ($file_types as $file_type)
 		{
 			$this->template->assign_block_vars('filetypes', array(
-				'FILETYPE'	=> $filetype,
-				'VALUE' 	=> $value,
-				'S_CHECKED' => ($this->config['auto_db_backup_filetype'] == $filetype) ? true : false,
+				'FILETYPE' => $file_type,
+				'S_CHECKED' => (string) $this->config['auto_db_backup_filetype'] === $file_type,
+				'VALUE' => $this->language->lang(array('FILETYPE', $file_type)),
 			));
 		}
 	}
 
 	/**
-	 * Set page url
-	 *
-	 * @param string $u_action Custom form action
-	 * @return null
-	 * @access public
+	 * @param string $u_action ACP form action
 	 */
 	public function set_page_url($u_action)
 	{
-		return $this->u_action = $u_action;
+		$this->u_action = $u_action;
 	}
 }
