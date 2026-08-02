@@ -69,6 +69,40 @@ final class domain_image_types_test extends TestCase
 		$this->assertNull($image->handle_counter([], true));
 	}
 
+	public function test_status_guard_does_not_delete_a_draft_finalized_after_selection(): void
+	{
+		$queries = [];
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->method('sql_in_set')->willReturn('image_id IN (71)');
+		$db->method('sql_query')->willReturnCallback(static function (string $sql) use (&$queries): string
+		{
+			$queries[] = $sql;
+
+			return count($queries) === 1 ? 'selected-draft' : 'conditional-delete';
+		});
+		$db->expects($this->exactly(2))
+			->method('sql_fetchrow')
+			->with('selected-draft')
+			->willReturnOnConsecutiveCalls([
+				'image_id' => 71,
+				'image_filename' => 'draft.png',
+			], false);
+		$db->expects($this->once())->method('sql_freeresult')->with('selected-draft');
+		$db->expects($this->once())->method('sql_affectedrows')->willReturn(0);
+
+		$reflection = new \ReflectionClass(image::class);
+		$image = $reflection->newInstanceWithoutConstructor();
+		$reflection->getProperty('db')->setValue($image, $db);
+		$reflection->getProperty('contest')->setValue($image, $this->createMock(\phpbbgallery\core\contest::class));
+		$reflection->getProperty('table_images')->setValue($image, 'gallery_images');
+
+		$this->assertSame(0, $image->delete_images_matching_status([71], 3, [71 => 'draft.png'], false));
+		$this->assertCount(2, $queries);
+		$this->assertStringContainsString('AND image_status = 3', $queries[0]);
+		$this->assertStringContainsString('WHERE image_id = 71', $queries[1]);
+		$this->assertStringContainsString('AND image_status = 3', $queries[1]);
+	}
+
 	public function test_missing_image_database_row_returns_false(): void
 	{
 		$reflection = new \ReflectionClass(image::class);

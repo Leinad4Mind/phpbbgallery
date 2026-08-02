@@ -878,7 +878,12 @@ class upload
 
 		if ($images)
 		{
-			$this->gallery_image->delete_images($images, $filenames, false);
+			$this->gallery_image->delete_images_matching_status(
+				$images,
+				(int) $this->block->get_image_status_orphan(),
+				$filenames,
+				false
+			);
 		}
 	}
 
@@ -1147,13 +1152,18 @@ class upload
 			$filenames[$image_id] = $this->image_data[$image_id]['image_filename'];
 		}
 
-		$this->gallery_image->delete_images($image_ids, $filenames, false);
+		$deleted = $this->gallery_image->delete_images_matching_status(
+			$image_ids,
+			(int) $this->block->get_image_status_orphan(),
+			$filenames,
+			false
+		);
 		$this->images = [];
 		$this->image_data = [];
 		$this->array_id2row = [];
 		$this->loaded_files = 0;
 
-		return count($image_ids);
+		return $deleted;
 	}
 
 	/**
@@ -1182,14 +1192,19 @@ class upload
 			}
 		}
 
-		$this->gallery_image->delete_images($image_ids, $filenames, false);
+		$deleted = $this->gallery_image->delete_images_matching_status(
+			$image_ids,
+			(int) $this->block->get_image_status_orphan(),
+			$filenames,
+			false
+		);
 		$this->images = [];
 		$this->image_data = [];
 		$this->array_id2row = [];
 		$this->loaded_files = 0;
 		$this->uploaded_files = 0;
 
-		return count($image_ids);
+		return $deleted;
 	}
 
 	/**

@@ -76,6 +76,7 @@ final class upload_filetype_configuration_test extends TestCase
 		$upload = (new \ReflectionClass(upload::class))->newInstanceWithoutConstructor();
 		$image_service = new upload_discard_test_image();
 		$this->set_property($upload, 'gallery_image', $image_service);
+		$this->set_property($upload, 'block', new upload_discard_test_block());
 		$upload->images = [71, 72];
 		$upload->image_data = [
 			71 => ['image_filename' => 'first.jpg'],
@@ -86,7 +87,7 @@ final class upload_filetype_configuration_test extends TestCase
 		$upload->uploaded_files = 2;
 
 		$this->assertSame(2, $upload->discard_uploaded_images());
-		$this->assertSame([[[71, 72], [71 => 'first.jpg', 72 => 'second.png'], false]], $image_service->calls);
+		$this->assertSame([[[71, 72], 3, [71 => 'first.jpg', 72 => 'second.png'], false]], $image_service->calls);
 		$this->assertSame([], $upload->images);
 		$this->assertSame([], $upload->image_data);
 		$this->assertSame([], $upload->array_id2row);
@@ -164,10 +165,18 @@ final class upload_discard_test_image
 {
 	public array $calls = [];
 
-	public function delete_images(array $images, array $filenames = [], bool $resync_albums = true): bool
+	public function delete_images_matching_status(array $images, int $required_status, array $filenames = [], bool $resync_albums = true): int
 	{
-		$this->calls[] = [$images, $filenames, $resync_albums];
+		$this->calls[] = [$images, $required_status, $filenames, $resync_albums];
 
-		return true;
+		return count($images);
+	}
+}
+
+final class upload_discard_test_block
+{
+	public function get_image_status_orphan(): int
+	{
+		return 3;
 	}
 }

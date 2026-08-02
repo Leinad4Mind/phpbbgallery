@@ -324,23 +324,97 @@ class image
 	 */
 	public function delete_images(array $images, array $filenames = [], bool $resync_albums = true, bool $skip_files = false): bool
 	{
-		if (empty($images))
+		return !empty($this->delete_images_internal($images, $filenames, $resync_albums, $skip_files));
+	}
+
+	/**
+	 * Delete only images that still have the expected status when the DELETE is executed.
+	 *
+	 * This protects resumable-upload cancellation and pruning from deleting a draft
+	 * that another request finalized after it was selected.
+	 *
+	 * @param array $images Image IDs
+	 * @param int $required_status Status that must still be present
+	 * @param array $filenames Known filenames indexed by image ID
+	 * @param bool $resync_albums Whether affected albums should be resynchronized
+	 * @param bool $skip_files Whether source and derived files should be preserved
+	 * @return int Number of rows actually deleted
+	 */
+	public function delete_images_matching_status(array $images, int $required_status, array $filenames = [], bool $resync_albums = true, bool $skip_files = false): int
+	{
+		return count($this->delete_images_internal($images, $filenames, $resync_albums, $skip_files, $required_status));
+	}
+
+	/**
+	 * Delete images and finish their dependent cleanup.
+	 *
+	 * @return int[] IDs confirmed as deleted
+	 */
+	private function delete_images_internal(array $images, array $filenames, bool $resync_albums, bool $skip_files, ?int $required_status = null): array
+	{
+		$images = array_values(array_unique(array_filter(array_map('intval', $images))));
+		if (!$images)
 		{
-			return false;
+			return [];
 		}
 		$phpbb_gallery_contest = $this->contest;
-		if (!$skip_files)
+
+		$sql = 'SELECT *
+			FROM ' . $this->table_images . '
+			WHERE ' . $this->db->sql_in_set('image_id', $images);
+		if ($required_status !== null)
 		{
-			// Delete the files from the disc...
-			$need_filenames = [];
-			foreach ($images as $image)
+			$sql .= '
+				AND image_status = ' . (int) $required_status;
+		}
+		$result = $this->db->sql_query($sql);
+		$image_rows = [];
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$image_rows[(int) $row['image_id']] = $row;
+		}
+		$this->db->sql_freeresult($result);
+		if (!$image_rows)
+		{
+			return [];
+		}
+
+		$deleted_rows = [];
+		if ($required_status === null)
+		{
+			$sql = 'DELETE FROM ' . $this->table_images . '
+				WHERE ' . $this->db->sql_in_set('image_id', array_keys($image_rows));
+			$this->db->sql_query($sql);
+			$deleted_rows = $image_rows;
+		}
+		else
+		{
+			foreach ($image_rows as $image_id => $row)
 			{
-				if (!isset($filenames[$image]))
+				$sql = 'DELETE FROM ' . $this->table_images . '
+					WHERE image_id = ' . (int) $image_id . '
+						AND image_status = ' . (int) $required_status;
+				$this->db->sql_query($sql);
+				if ($this->db->sql_affectedrows() === 1)
 				{
-					$need_filenames[] = $image;
+					$deleted_rows[$image_id] = $row;
 				}
 			}
-			$filenames = array_merge($filenames, $this->get_filenames($need_filenames));
+		}
+
+		if (!$deleted_rows)
+		{
+			return [];
+		}
+
+		$images = array_keys($deleted_rows);
+		$filenames = [];
+		foreach ($deleted_rows as $image_id => $row)
+		{
+			$filenames[$image_id] = (string) $row['image_filename'];
+		}
+		if (!$skip_files)
+		{
 			$this->file->delete($filenames);
 		}
 
@@ -348,20 +422,16 @@ class image
 		* Event delete images
 		*
 		* @event phpbbgallery.core.image.delete_images
-		* @var	array	images			array of the image ids we are deleting
+		* @var	array	images			array of the image ids confirmed as deleted
 		* @var	array	filenames		array of the image filenames
 		* @since 1.2.0
 		*/
 		$vars = ['images', 'filenames'];
 		extract($this->phpbb_dispatcher->trigger_event('phpbbgallery.core.image.delete_images', compact($vars)));
 
-		$sql = 'SELECT *
-			FROM ' . $this->table_images . '
-			WHERE ' . $this->db->sql_in_set('image_id', $images);
-		$result = $this->db->sql_query($sql);
 		$resync_album_ids = $resync_contests = $targets = [];
 		$deleted_views = 0;
-		while ($row = $this->db->sql_fetchrow($result))
+		foreach ($deleted_rows as $row)
 		{
 			if ($row['image_contest_rank'])
 			{
@@ -391,13 +461,8 @@ class image
 
 		}
 
-		$this->db->sql_freeresult($result);
 		$resync_contests = array_unique($resync_contests);
 		$resync_album_ids = array_unique($resync_album_ids);
-
-		$sql = 'DELETE FROM ' . $this->table_images . '
-			WHERE ' . $this->db->sql_in_set('image_id', $images);
-		$this->db->sql_query($sql);
 		if ($deleted_views > 0)
 		{
 			$this->gallery_config->dec('num_views', $deleted_views, false);
@@ -410,7 +475,7 @@ class image
 			$this->album->update_infos($resync_album_ids);
 		}
 
-		return true;
+		return $images;
 	}
 
 	/**

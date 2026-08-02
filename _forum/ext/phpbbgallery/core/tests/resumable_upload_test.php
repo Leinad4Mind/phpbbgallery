@@ -69,6 +69,7 @@ class resumable_upload_test extends TestCase
 		$this->assertSame([
 			[
 				'images'       => [41, 42],
+				'required_status' => 3,
 				'filenames'     => [
 					41 => 'file-41.png',
 					42 => 'file-42.png',
@@ -381,13 +382,16 @@ class resumable_upload_test extends TestCase
 			/** @var array */
 			public $calls = [];
 
-			public function delete_images(array $images, array $filenames, bool $resync_albums): void
+			public function delete_images_matching_status(array $images, int $required_status, array $filenames, bool $resync_albums): int
 			{
 				$this->calls[] = [
 					'images'        => $images,
+					'required_status' => $required_status,
 					'filenames'      => $filenames,
 					'resync_albums' => $resync_albums,
 				];
+
+				return count($images);
 			}
 		};
 	}
