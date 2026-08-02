@@ -65,9 +65,6 @@ class manage
 	/** @var \phpbbgallery\core\config */
 	protected \phpbbgallery\core\config $gallery_config;
 
-	/** @var \phpbbgallery\core\contest */
-	protected \phpbbgallery\core\contest $gallery_contest;
-
 	/** @var \phpbbgallery\core\report */
 	protected \phpbbgallery\core\report $gallery_report;
 
@@ -111,7 +108,6 @@ class manage
 	 * @param \phpbbgallery\core\cache $gallery_cache
 	 * @param \phpbbgallery\core\user $gallery_user
 	 * @param \phpbbgallery\core\config $gallery_config
-	 * @param \phpbbgallery\core\contest $gallery_contest
 	 * @param \phpbbgallery\core\report $gallery_report
 	 * @param \phpbbgallery\core\log $gallery_log
 	 * @param \phpbbgallery\core\notification $gallery_notification
@@ -130,7 +126,7 @@ class manage
 								\phpbbgallery\core\album\display $gallery_display, \phpbbgallery\core\image\image $gallery_image,
 								\phpbbgallery\core\cache $gallery_cache, \phpbbgallery\core\user $gallery_user,
 								\phpbbgallery\core\config $gallery_config,
-								\phpbbgallery\core\contest $gallery_contest, \phpbbgallery\core\report $gallery_report,
+								\phpbbgallery\core\report $gallery_report,
 								\phpbbgallery\core\log $gallery_log, \phpbbgallery\core\notification $gallery_notification,
 								string $albums_table, string $images_table, string $comments_table, string $permissions_table, string $moderators_table, string $contests_table, string $tracking_table)
 	{
@@ -146,7 +142,6 @@ class manage
 		$this->gallery_cache = $gallery_cache;
 		$this->gallery_user = $gallery_user;
 		$this->gallery_config = $gallery_config;
-		$this->gallery_contest = $gallery_contest;
 		$this->gallery_report = $gallery_report;
 		$this->gallery_log = $gallery_log;
 		$this->gallery_notification = $gallery_notification;
@@ -190,10 +185,10 @@ class manage
 	 * borrowed from phpBB3
 	 * @author phpBB Group
 	 * @param array $album_data
-	 * @param array $contest_data
+	 * @param array $album_type_data
 	 * @return array
 	 */
-	public function update_album_data(array &$album_data, array &$contest_data): array
+	public function update_album_data(array &$album_data, array &$album_type_data): array
 	{
 		$errors = [];
 
@@ -207,52 +202,20 @@ class manage
 			$errors[] = $this->language->lang('ALBUM_DESC_TOO_LONG');
 		}
 
-		if (!isset($album_data['album_id'])
-			&& (int) $album_data['album_type'] === (int) \phpbbgallery\core\block::TYPE_CONTEST
-			&& !$this->gallery_contest->can_create())
-		{
-			$errors[] = $this->language->lang('CONTEST_CREATION_DISABLED');
-		}
-
-		// Validate the contest timestamps:
-		if ($album_data['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST)
-		{
-			$contest_start = $this->parse_contest_date((string) $contest_data['contest_start']);
-			$contest_rating = $this->parse_contest_date((string) $contest_data['contest_rating']);
-			$contest_end = $this->parse_contest_date((string) $contest_data['contest_end']);
-			if ($contest_start === false)
-			{
-				$errors[] = sprintf($this->language->lang('CONTEST_START_INVALID'), $contest_data['contest_start']);
-			}
-			if ($contest_rating === false)
-			{
-				$errors[] = sprintf($this->language->lang('CONTEST_RATING_INVALID'), $contest_data['contest_rating']);
-			}
-			if ($contest_end === false)
-			{
-				$errors[] = sprintf($this->language->lang('CONTEST_END_INVALID'), $contest_data['contest_end']);
-			}
-
-			if ($contest_start !== false && $contest_rating !== false && $contest_end !== false)
-			{
-				$contest_data['contest_start'] = $contest_start;
-				$contest_data['contest_rating'] = $contest_rating - $contest_start;
-				$contest_data['contest_end'] = $contest_end - $contest_start;
-
-				if ($contest_data['contest_end'] < $contest_data['contest_rating'])
-				{
-					$errors[] = $this->language->lang('CONTEST_END_BEFORE_RATING');
-				}
-				if ($contest_data['contest_rating'] < 0)
-				{
-					$errors[] = $this->language->lang('CONTEST_RATING_BEFORE_START');
-				}
-				if ($contest_data['contest_end'] < 0)
-				{
-					$errors[] = $this->language->lang('CONTEST_END_BEFORE_START');
-				}
-			}
-		}
+		/**
+		 * Validate data owned by the selected album type before persisting an album.
+		 *
+		 * @event phpbbgallery.core.album.manage.validate_type_data
+		 * @var array album_data      Base album data
+		 * @var array album_type_data Data owned by the selected album type
+		 * @var array errors          Validation errors
+		 * @since 4.1.0
+		 */
+		$vars = ['album_data', 'album_type_data', 'errors'];
+		extract($this->dispatcher->trigger_event(
+			'phpbbgallery.core.album.manage.validate_type_data',
+			compact($vars)
+		));
 
 		// Unset data that are not database fields
 		$album_data_sql = $album_data;
@@ -350,44 +313,47 @@ class manage
 			$this->db->sql_query($sql);
 			$album_data['album_id'] = (int) $this->db->sql_nextid();
 
-			// Type is contest, so create it...
-			if ($album_data['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST)
-			{
-				$contest_data_sql = $contest_data;
-				$contest_data_sql['contest_album_id'] = $album_data['album_id'];
-				$contest_data_sql['contest_marked'] = (int) \phpbbgallery\core\block::IN_CONTEST;
-
-				$sql = 'INSERT INTO ' . $this->contests_table . ' ' . $this->db->sql_build_array('INSERT', $contest_data_sql);
-				$this->db->sql_query($sql);
-				$album_data['album_contest'] = (int) $this->db->sql_nextid();
-
-				$sql = 'UPDATE ' . $this->albums_table . ' 
-					SET album_contest = ' . $album_data['album_contest'] . '
-					WHERE album_id = ' . (int) $album_data['album_id'];
-				$this->db->sql_query($sql);
-			}
+			/**
+			 * Persist data owned by the selected album type after creating an album.
+			 *
+			 * @event phpbbgallery.core.album.manage.created
+			 * @var array album_data      Persisted base album data
+			 * @var array album_type_data Validated data owned by the selected album type
+			 * @since 4.1.0
+			 */
+			$vars = ['album_data', 'album_type_data'];
+			extract($this->dispatcher->trigger_event(
+				'phpbbgallery.core.album.manage.created',
+				compact($vars)
+			));
 			$this->gallery_log->add_log('admin', 'add', $album_data['album_id'], 0, ['LOG_ALBUM_ADD', $album_data['album_name']]);
 		}
 		else
 		{
 			$row = $this->gallery_album->get_info($album_data_sql['album_id']);
-			$reset_marked_images = false;
+			$album_type_state = [];
+			/**
+			 * Prepare data owned by an album type before updating an existing album.
+			 *
+			 * @event phpbbgallery.core.album.manage.prepare_update
+			 * @var array album_data_sql  Base album data to persist
+			 * @var array album_type_data Validated data owned by the selected album type
+			 * @var array album_type_state Private state passed to the post-update event
+			 * @var array row              Existing album row
+			 * @var array errors           Validation errors
+			 * @since 4.1.0
+			 */
+			$vars = ['album_data_sql', 'album_type_data', 'album_type_state', 'row', 'errors'];
+			extract($this->dispatcher->trigger_event(
+				'phpbbgallery.core.album.manage.prepare_update',
+				compact($vars)
+			));
+			if (sizeof($errors))
+			{
+				return $errors;
+			}
 
-			if ($row['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST && $album_data_sql['album_type'] != (int) \phpbbgallery\core\block::TYPE_CONTEST)
-			{
-				// Changing a contest to album? No!
-				// Changing a contest to category? No!
-				$errors[] = $this->language->lang('ALBUM_WITH_CONTEST_NO_TYPE_CHANGE');
-				return $errors;
-			}
-			else if ($row['album_type'] != (int) \phpbbgallery\core\block::TYPE_CONTEST && $album_data_sql['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST)
-			{
-				// Changing a album to contest? No!
-				// Changing a category to contest? No!
-				$errors[] = $this->language->lang('ALBUM_NO_TYPE_CHANGE_TO_CONTEST');
-				return $errors;
-			}
-			else if ($row['album_type'] == (int) \phpbbgallery\core\block::TYPE_CAT && $album_data_sql['album_type'] == (int) \phpbbgallery\core\block::TYPE_UPLOAD)
+			if ($row['album_type'] == (int) \phpbbgallery\core\block::TYPE_CAT && $album_data_sql['album_type'] == (int) \phpbbgallery\core\block::TYPE_UPLOAD)
 			{
 				// Changing a category to a album? Yes!
 				// Reset the data (you couldn't upload directly in a cat, you must use a album)
@@ -420,24 +386,6 @@ class manage
 					return [$this->language->lang('NO_ALBUM_ACTION')];
 				}
 			}
-			else if ($row['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST && $album_data_sql['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST)
-			{
-				// Changing a contest to contest? Yes!
-				// We need to check for the contest_data
-				$row_contest = $this->gallery_contest->get_contest($album_data['album_id'], 'album');
-				$contest_data['contest_id'] = $row_contest['contest_id'];
-				if ($row_contest['contest_marked'] == (int) \phpbbgallery\core\block::NO_CONTEST)
-				{
-					// If the old contest is finished, but the new one isn't, we need to remark the images!
-					// If we change it the other way round, the album.php will do the end on the first visit!
-					if ($this->should_reopen_contest($row_contest, $contest_data, time()))
-					{
-						$contest_data['contest_marked'] = (int) \phpbbgallery\core\block::IN_CONTEST;
-						$reset_marked_images = true;
-					}
-				}
-			}
-
 			if (sizeof($errors))
 			{
 				return $errors;
@@ -479,10 +427,22 @@ class manage
 				WHERE album_id = ' . (int) $album_id;
 			$this->db->sql_query($sql);
 
-			if ($album_data_sql['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST)
-			{
-				$this->update_contest_data($album_id, $contest_data, $reset_marked_images);
-			}
+			/**
+			 * Persist data owned by an album type after updating an existing album.
+			 *
+			 * @event phpbbgallery.core.album.manage.updated
+			 * @var int   album_id         Updated album identifier
+			 * @var array album_data_sql   Persisted base album data
+			 * @var array album_type_data  Validated data owned by the selected album type
+			 * @var array album_type_state Private state prepared before the base update
+			 * @var array row              Previous album row
+			 * @since 4.1.0
+			 */
+			$vars = ['album_id', 'album_data_sql', 'album_type_data', 'album_type_state', 'row'];
+			extract($this->dispatcher->trigger_event(
+				'phpbbgallery.core.album.manage.updated',
+				compact($vars)
+			));
 
 			// Add it back
 			$album_data['album_id'] = $album_id;
@@ -491,89 +451,6 @@ class manage
 		}
 
 		return $errors;
-	}
-
-	/**
-	 * Parse an ACP contest date in the current user's timezone.
-	 *
-	 * @param string $value Date in YYYY-MM-DD HH:MM format
-	 * @return int|false UTC timestamp, or false for an invalid date
-	 */
-	protected function parse_contest_date(string $value): int|false
-	{
-		if (!preg_match('#\A\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{2}\z#', $value))
-		{
-			return false;
-		}
-
-		try
-		{
-			$timezone = new \DateTimeZone($this->user->data['user_timezone'] ?: 'UTC');
-		}
-		catch (\Exception)
-		{
-			$timezone = new \DateTimeZone('UTC');
-		}
-
-		$date = \DateTimeImmutable::createFromFormat('!Y-n-j G:i', $value, $timezone);
-		$date_errors = \DateTimeImmutable::getLastErrors();
-		if ($date === false || ($date_errors !== false && ($date_errors['warning_count'] || $date_errors['error_count'])))
-		{
-			return false;
-		}
-
-		return $date->getTimestamp();
-	}
-
-	/**
-	 * Determine whether extending a completed contest makes it active again.
-	 *
-	 * @param array $existing Existing contest row
-	 * @param array $updated  Validated contest data
-	 * @param int   $now      Current timestamp
-	 * @return bool
-	 */
-	protected function should_reopen_contest(array $existing, array $updated, int $now): bool
-	{
-		return (int) $existing['contest_marked'] === (int) \phpbbgallery\core\block::NO_CONTEST
-			&& (int) $updated['contest_start'] + (int) $updated['contest_end'] > $now;
-	}
-
-	/**
-	 * Persist edited contest dates and restore image contest state when reopened.
-	 *
-	 * @param int   $album_id           Contest album identifier
-	 * @param array $contest_data        Validated contest data
-	 * @param bool  $reset_marked_images Whether completed images must re-enter the contest
-	 * @return void
-	 */
-	protected function update_contest_data(int $album_id, array $contest_data, bool $reset_marked_images): void
-	{
-		$contest_id = (int) $contest_data['contest_id'];
-		$contest_data_sql = [
-			'contest_start' => (int) $contest_data['contest_start'],
-			'contest_rating' => (int) $contest_data['contest_rating'],
-			'contest_end' => (int) $contest_data['contest_end'],
-		];
-		if (array_key_exists('contest_marked', $contest_data))
-		{
-			$contest_data_sql['contest_marked'] = (int) $contest_data['contest_marked'];
-		}
-
-		$sql = 'UPDATE ' . $this->contests_table . '
-			SET ' . $this->db->sql_build_array('UPDATE', $contest_data_sql) . '
-			WHERE contest_id = ' . (int) $contest_id;
-		$this->db->sql_query($sql);
-
-		if ($reset_marked_images)
-		{
-			$sql = 'UPDATE ' . $this->images_table . '
-				SET image_contest_rank = 0,
-					image_contest_end = 0,
-					image_contest = ' . (int) \phpbbgallery\core\block::IN_CONTEST . '
-				WHERE image_album_id = ' . (int) $album_id;
-			$this->db->sql_query($sql);
-		}
 	}
 
 	/**

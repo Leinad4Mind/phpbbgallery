@@ -69,7 +69,6 @@ services:
             - '@phpbbgallery.core.cache'
             - '@phpbbgallery.core.user'
             - '@phpbbgallery.core.config'
-            - '@phpbbgallery.core.contest'
             - '@phpbbgallery.core.report'
             - '@phpbbgallery.core.log'
             - '@phpbbgallery.core.notification'
