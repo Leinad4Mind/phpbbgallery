@@ -77,7 +77,6 @@ services:
             - '%phpbbgallery.tables.gallery_comments%'
             - '%phpbbgallery.tables.gallery_permissions%'
             - '%phpbbgallery.tables.gallery_moderators%'
-            - '%phpbbgallery.tables.gallery_contests%'
             - '%phpbbgallery.tables.gallery_tracking%'
     phpbbgallery.core.misc:
         class: phpbbgallery\core\misc

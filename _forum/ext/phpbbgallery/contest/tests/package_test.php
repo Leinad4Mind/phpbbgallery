@@ -73,6 +73,11 @@ final class package_test extends TestCase
 		$this->assertStringContainsString('phpbbgallery.contest.album_lifecycle_listener:', $services);
 		$this->assertStringContainsString('class: phpbbgallery\\contest\\event\\album_lifecycle_listener', $services);
 		$this->assertStringContainsString('- { name: event.listener }', $services);
+
+		$listener = (string) file_get_contents(dirname(__DIR__) . '/event/album_lifecycle_listener.php');
+		$this->assertStringContainsString('phpbbgallery.core.album.manage.prepare_move_album_content', $listener);
+		$this->assertStringContainsString('phpbbgallery.core.album.manage.move_album_content', $listener);
+		$this->assertStringContainsString('phpbbgallery.core.album.manage.delete_album_content', $listener);
 	}
 
 	public function test_every_gallery_language_has_the_dependency_messages(): void

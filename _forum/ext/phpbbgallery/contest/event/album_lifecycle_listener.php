@@ -32,6 +32,9 @@ class album_lifecycle_listener implements EventSubscriberInterface
 			'phpbbgallery.core.album.manage.created' => 'created',
 			'phpbbgallery.core.album.manage.prepare_update' => 'prepare_update',
 			'phpbbgallery.core.album.manage.updated' => 'updated',
+			'phpbbgallery.core.album.manage.prepare_move_album_content' => 'prepare_move_album_content',
+			'phpbbgallery.core.album.manage.move_album_content' => 'moved_album_content',
+			'phpbbgallery.core.album.manage.delete_album_content' => 'deleted_album_content',
 		];
 	}
 
@@ -178,6 +181,31 @@ class album_lifecycle_listener implements EventSubscriberInterface
 					image_contest = ' . (int) \phpbbgallery\core\block::IN_CONTEST . '
 				WHERE image_album_id = ' . (int) $event['album_id']);
 		}
+	}
+
+	public function prepare_move_album_content(\phpbb\event\data $event): void
+	{
+		$data = (array) $event['image_move_data'];
+		$data['image_contest_rank'] = 0;
+		$data['image_contest_end'] = 0;
+		$data['image_contest'] = (int) \phpbbgallery\core\block::NO_CONTEST;
+		$event['image_move_data'] = $data;
+	}
+
+	public function moved_album_content(\phpbb\event\data $event): void
+	{
+		$this->delete_contest((int) $event['from_id']);
+	}
+
+	public function deleted_album_content(\phpbb\event\data $event): void
+	{
+		$this->delete_contest((int) $event['album_id']);
+	}
+
+	private function delete_contest(int $album_id): void
+	{
+		$this->db->sql_query('DELETE FROM ' . $this->contests_table . '
+			WHERE contest_album_id = ' . $album_id);
 	}
 
 	private function parse_date(string $value): int|false
