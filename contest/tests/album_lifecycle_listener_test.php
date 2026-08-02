@@ -109,6 +109,39 @@ final class album_lifecycle_listener_test extends TestCase
 		$this->assertStringContainsString('WHERE image_album_id = 17', $queries[1]);
 	}
 
+	public function test_album_content_cleanup_is_owned_by_the_addon(): void
+	{
+		$queries = [];
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->exactly(2))
+			->method('sql_query')
+			->willReturnCallback(static function (string $sql) use (&$queries): string
+			{
+				$queries[] = $sql;
+				return 'result';
+			});
+		$listener = $this->listener(new \phpbb\user(), true, $db);
+		$move = new \phpbb\event\data([
+			'from_id' => 12,
+			'to_id' => 24,
+			'image_move_data' => ['image_album_id' => 24],
+		]);
+
+		$listener->prepare_move_album_content($move);
+		$this->assertSame([
+			'image_album_id' => 24,
+			'image_contest_rank' => 0,
+			'image_contest_end' => 0,
+			'image_contest' => \phpbbgallery\core\block::NO_CONTEST,
+		], $move['image_move_data']);
+
+		$listener->moved_album_content(new \phpbb\event\data(['from_id' => 12]));
+		$listener->deleted_album_content(new \phpbb\event\data(['album_id' => 36]));
+
+		$this->assertStringContainsString('WHERE contest_album_id = 12', $queries[0]);
+		$this->assertStringContainsString('WHERE contest_album_id = 36', $queries[1]);
+	}
+
 	private function listener(
 		\phpbb\user $user,
 		bool $can_create,

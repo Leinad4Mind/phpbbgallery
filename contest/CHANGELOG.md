@@ -17,3 +17,5 @@ All notable changes to the phpBB Gallery Contest add-on are documented in this f
 - Moved the contest date fields into an add-on ACP template-event fragment.
 - Moved server-side date validation, contest creation, editing and reopening
   persistence out of the Core album manager and into the add-on lifecycle.
+- Moved contest image reset and historical-row cleanup during album moves and
+  deletion into the add-on while preserving one atomic image-update query.

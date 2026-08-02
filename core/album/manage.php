@@ -90,9 +90,6 @@ class manage
 	protected string $moderators_table;
 
 	/** @var string */
-	protected string $contests_table;
-
-	/** @var string */
 	protected string $tracking_table;
 
 	/**
@@ -116,7 +113,6 @@ class manage
 	 * @param string $comments_table
 	 * @param string $permissions_table
 	 * @param string $moderators_table
-	 * @param string $contests_table
 	 * @param string $tracking_table
 	 */
 	public function __construct(\phpbb\user $user, \phpbb\language\language $language,
@@ -128,7 +124,7 @@ class manage
 								\phpbbgallery\core\config $gallery_config,
 								\phpbbgallery\core\report $gallery_report,
 								\phpbbgallery\core\log $gallery_log, \phpbbgallery\core\notification $gallery_notification,
-								string $albums_table, string $images_table, string $comments_table, string $permissions_table, string $moderators_table, string $contests_table, string $tracking_table)
+								string $albums_table, string $images_table, string $comments_table, string $permissions_table, string $moderators_table, string $tracking_table)
 	{
 		$this->user = $user;
 		$this->language = $language;
@@ -150,7 +146,6 @@ class manage
 		$this->comments_table = $comments_table;
 		$this->permissions_table = $permissions_table;
 		$this->moderators_table = $moderators_table;
-		$this->contests_table = $contests_table;
 		$this->tracking_table = $tracking_table;
 	}
 
@@ -800,20 +795,28 @@ class manage
 	 */
 	public function move_album_content(int $from_id, int $to_id, bool $sync = true): array
 	{
-		// Reset contest-information for safety.
-		$sql = 'UPDATE ' . $this->images_table . ' 
-			SET image_album_id = ' . (int) $to_id . ',
-				image_contest_rank = 0,
-				image_contest_end = 0,
-				image_contest = ' . (int) \phpbbgallery\core\block::NO_CONTEST . '
+		$image_move_data = ['image_album_id' => (int) $to_id];
+		/**
+		 * Add album-type-owned image fields to the same query that moves album content.
+		 *
+		 * @event phpbbgallery.core.album.manage.prepare_move_album_content
+		 * @var int   from_id         Album being emptied
+		 * @var int   to_id           Destination album
+		 * @var array image_move_data Image fields updated during the move
+		 * @since 4.1.0
+		 */
+		$vars = ['from_id', 'to_id', 'image_move_data'];
+		extract($this->dispatcher->trigger_event(
+			'phpbbgallery.core.album.manage.prepare_move_album_content',
+			compact($vars)
+		));
+
+		$sql = 'UPDATE ' . $this->images_table . '
+			SET ' . $this->db->sql_build_array('UPDATE', $image_move_data) . '
 			WHERE image_album_id = ' . (int) $from_id;
 		$this->db->sql_query($sql);
 
 		$this->gallery_report->move_album_content($from_id, $to_id);
-
-		$sql = 'DELETE FROM ' . $this->contests_table . ' 
-			WHERE contest_album_id = ' . (int) $from_id;
-		$this->db->sql_query($sql);
 
 		$sql = 'DELETE FROM ' . $this->permissions_table . ' 
 			WHERE perm_album_id = ' . (int) $from_id;
@@ -897,10 +900,6 @@ class manage
 		$sql = 'DELETE FROM ' . $this->permissions_table . ' 
 			WHERE perm_album_id = ' . (int) $album_id;
 		$this->db->sql_query($sql);
-		$sql = 'DELETE FROM ' . $this->contests_table . ' 
-			WHERE contest_album_id = ' . (int) $album_id;
-		$this->db->sql_query($sql);
-
 		$sql = 'DELETE FROM ' . $this->moderators_table . ' 
 			WHERE album_id = ' . (int) $album_id;
 		$this->db->sql_query($sql);
