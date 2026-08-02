@@ -31,3 +31,6 @@
 /imagerevisions/phpunit.xml.dist export-ignore
 /imagerevisions/tests export-ignore
 /imagerevisions/tests/** export-ignore
+/contest/phpunit.xml.dist export-ignore
+/contest/tests export-ignore
+/contest/tests/** export-ignore

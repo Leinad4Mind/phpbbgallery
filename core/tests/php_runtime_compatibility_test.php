@@ -19,6 +19,7 @@ final class php_runtime_compatibility_test extends TestCase
 		'acpimport',
 		'bbpointsimages',
 		'bbtagsimages',
+		'contest',
 		'exif',
 		'export',
 		'favorite',

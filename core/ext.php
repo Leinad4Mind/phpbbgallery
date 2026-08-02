@@ -36,6 +36,7 @@ class ext extends \phpbb\extension\base
 		'phpbbgallery/imagerevisions',
 		'phpbbgallery/bbtagsimages',
 		'phpbbgallery/bbpointsimages',
+		'phpbbgallery/contest',
 	];
 
 	/**
