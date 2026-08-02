@@ -41,7 +41,7 @@ final class m1_init extends migration
 					],
 					'PRIMARY_KEY' => ['image_id', 'user_id'],
 					'KEYS' => [
-						'user_id' => ['INDEX', ['user_id']],
+						'gbpc_user' => ['INDEX', ['user_id']],
 					],
 				],
 				$this->table_prefix . 'gallery_bbpoints_rewards' => [
@@ -54,7 +54,7 @@ final class m1_init extends migration
 					],
 					'PRIMARY_KEY' => 'image_id',
 					'KEYS' => [
-						'user_id' => ['INDEX', ['user_id']],
+						'gbpr_user' => ['INDEX', ['user_id']],
 					],
 				],
 				$this->table_prefix . 'gallery_bbpoints_purchases' => [
@@ -69,7 +69,7 @@ final class m1_init extends migration
 					],
 					'PRIMARY_KEY' => ['image_id', 'buyer_id'],
 					'KEYS' => [
-						'buyer_id' => ['INDEX', ['buyer_id']],
+						'gbpp_buyer' => ['INDEX', ['buyer_id']],
 					],
 				],
 				$this->table_prefix . 'gallery_bbpoints_image_stats' => [
@@ -80,7 +80,7 @@ final class m1_init extends migration
 					],
 					'PRIMARY_KEY' => 'image_id',
 					'KEYS' => [
-						'source_sha256' => ['INDEX', ['source_sha256']],
+						'gbpis_hash' => ['INDEX', ['source_sha256']],
 					],
 				],
 			],

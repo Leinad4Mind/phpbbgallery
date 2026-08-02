@@ -29,7 +29,7 @@ final class m2_reward_lifecycle extends migration
 			],
 			'add_unique_index' => [
 				$this->table_prefix . 'gallery_bbpoints_rewards' => [
-					'source_sha256' => ['source_sha256'],
+					'gbpr_hash' => ['source_sha256'],
 				],
 			],
 		];
@@ -39,7 +39,7 @@ final class m2_reward_lifecycle extends migration
 	{
 		return [
 			'drop_keys' => [
-				$this->table_prefix . 'gallery_bbpoints_rewards' => ['source_sha256'],
+				$this->table_prefix . 'gallery_bbpoints_rewards' => ['gbpr_hash'],
 			],
 			'drop_columns' => [
 				$this->table_prefix . 'gallery_bbpoints_rewards' => [

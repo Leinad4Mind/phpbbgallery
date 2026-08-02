@@ -31,6 +31,12 @@ final class migration_test extends TestCase
 		$this->assertSame(['image_id', 'user_id'], $schema['phpbb_gallery_bbpoints_contributors']['PRIMARY_KEY']);
 		$this->assertSame(['image_id', 'buyer_id'], $schema['phpbb_gallery_bbpoints_purchases']['PRIMARY_KEY']);
 		$this->assertSame(['VCHAR:64', ''], $schema['phpbb_gallery_bbpoints_image_stats']['COLUMNS']['source_sha256']);
+		$index_names = [];
+		foreach ($schema as $table)
+		{
+			$index_names = array_merge($index_names, array_keys($table['KEYS'] ?? []));
+		}
+		$this->assertCount(count(array_unique($index_names)), $index_names);
 		$this->assertSame([
 			'drop_tables' => array_reverse(array_keys($schema)),
 		], $migration->revert_schema());
@@ -68,9 +74,9 @@ final class migration_test extends TestCase
 
 		$this->assertSame(['VCHAR:64', ''], $schema['add_columns'][$table]['source_sha256']);
 		$this->assertSame(['UINT:11', 0], $schema['add_columns'][$table]['reassignment_count']);
-		$this->assertSame(['source_sha256'], $schema['add_unique_index'][$table]['source_sha256']);
+		$this->assertSame(['source_sha256'], $schema['add_unique_index'][$table]['gbpr_hash']);
 		$this->assertSame(['\phpbbgallery\bbpointsimages\migrations\m1_init'], m2_reward_lifecycle::depends_on());
-		$this->assertSame(['source_sha256'], $migration->revert_schema()['drop_keys'][$table]);
+		$this->assertSame(['gbpr_hash'], $migration->revert_schema()['drop_keys'][$table]);
 	}
 
 	public function test_acp_settings_module_is_permission_checked_and_reversible(): void
