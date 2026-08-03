@@ -136,6 +136,7 @@ services:
             - '@pagination'
             - '@phpbbgallery.core.user'
             - '@phpbbgallery.core.image'
+            - '@phpbbgallery.core.policy.image_visibility'
             - '%core.root_path%'
             - '%core.php_ext%'
     phpbbgallery.core.controller.search:

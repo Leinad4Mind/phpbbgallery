@@ -59,6 +59,9 @@ class index
 	/** @var \phpbbgallery\core\image\image  */
 	protected \phpbbgallery\core\image\image $image;
 
+	/** @var \phpbbgallery\core\policy\image_visibility */
+	protected \phpbbgallery\core\policy\image_visibility $image_visibility;
+
 	/** @var string */
 	protected string $root_path;
 
@@ -86,6 +89,7 @@ class index
 	 * @param \phpbbgallery\core\user                                   $gallery_user
 	 * @param \phpbbgallery\core\search                                 $gallery_search
 	 * @param \phpbbgallery\core\image\image                            $image
+	 * @param \phpbbgallery\core\policy\image_visibility                $image_visibility
 	 * @param string                                                    $root_path Root path
 	 * @param string                                                    $php_ext   php file extension
 	 */
@@ -94,6 +98,7 @@ class index
 		\phpbb\controller\helper $helper, \phpbbgallery\core\album\display $display, \phpbbgallery\core\config $gallery_config,
 		\phpbbgallery\core\auth\auth $gallery_auth, \phpbbgallery\core\search $gallery_search, \phpbb\pagination $pagination,
 		\phpbbgallery\core\user $gallery_user, \phpbbgallery\core\image\image $image,
+		\phpbbgallery\core\policy\image_visibility $image_visibility,
 		string $root_path, string $php_ext)
 	{
 		$this->auth = $auth;
@@ -111,6 +116,7 @@ class index
 		$this->pagination = $pagination;
 		$this->gallery_user = $gallery_user;
 		$this->image = $image;
+		$this->image_visibility = $image_visibility;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
 	}
@@ -140,7 +146,7 @@ class index
 		else
 		{
 			$last_image = $this->normalize_last_image($this->image->get_last_image());
-			$hide_last_image_uploader = $last_image['image_id'] > 0 && \phpbbgallery\core\contest::hides_private_data(
+			$hide_last_image_uploader = $last_image['image_id'] > 0 && $this->image_visibility->hides_private_data(
 				$last_image,
 				(int) $this->user->data['user_id'],
 				$this->gallery_auth->acl_check('m_status', (int) $last_image['image_album_id'])
