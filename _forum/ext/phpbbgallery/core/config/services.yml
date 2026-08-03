@@ -37,6 +37,7 @@ services:
             - '@phpbbgallery.core.config'
             - '@phpbbgallery.core.user'
             - '@phpbbgallery.core.misc'
+            - '@phpbbgallery.core.policy.image_visibility'
             - '%core.root_path%'
             - '%core.php_ext%'
             - '%phpbbgallery.tables.gallery_albums%'
