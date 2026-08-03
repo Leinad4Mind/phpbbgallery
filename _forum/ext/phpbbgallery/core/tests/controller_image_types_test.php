@@ -286,6 +286,21 @@ final class controller_image_types_test extends TestCase
 		$this->assertGreaterThan($event_position, $privacy_reassertion);
 		$this->assertStringContainsString('lang(\'CONTEST_IMAGE_DESC\'', $source);
 		$this->assertStringContainsString('if (!$hide_contest_results && $this->gallery_config->get', $source);
+		$this->assertStringContainsString('$this->image_visibility->hides_private_data(', $source);
+		$this->assertStringContainsString('$this->image_visibility->hides_results(', $source);
+		$this->assertStringNotContainsString('core\\contest::', $source);
+	}
+
+	public function test_image_controller_receives_the_neutral_visibility_policy(): void
+	{
+		$services = (string) file_get_contents(dirname(__DIR__) . '/config/services_controller.yml');
+		$image_service = strstr($services, 'phpbbgallery.core.controller.image:');
+		$image_service = strstr($image_service, 'phpbbgallery.core.controller.index:', true);
+
+		$this->assertStringContainsString(
+			"- '@phpbbgallery.core.policy.image_visibility'",
+			$image_service
+		);
 	}
 
 	public function test_view_counter_remains_page_owned_and_sort_order_has_no_duplicate_suffix(): void

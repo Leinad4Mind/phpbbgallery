@@ -103,6 +103,9 @@ class image
 	/** @var \phpbbgallery\core\block */
 	protected \phpbbgallery\core\block $block;
 
+	/** @var \phpbbgallery\core\policy\image_visibility */
+	protected \phpbbgallery\core\policy\image_visibility $image_visibility;
+
 	/** @var ContainerInterface */
 	protected ContainerInterface $phpbb_container;
 
@@ -171,6 +174,7 @@ class image
 	 * @param \phpbbgallery\core\moderate                               $moderate
 	 * @param \phpbbgallery\core\rating                                 $gallery_rating
 	 * @param \phpbbgallery\core\block                                  $block
+	 * @param \phpbbgallery\core\policy\image_visibility                $image_visibility
 	 * @param ContainerInterface                                        $phpbb_container
 	 * @param string                                                    $albums_table Gallery albums table
 	 * @param string                                                    $images_table Gallery images table
@@ -192,7 +196,8 @@ class image
 		\phpbbgallery\core\comment $comment, \phpbbgallery\core\report $report,
 		\phpbbgallery\core\notification\helper $notification_helper, \phpbbgallery\core\log $gallery_log,
 		\phpbbgallery\core\moderate $moderate, \phpbbgallery\core\rating $gallery_rating,
-		\phpbbgallery\core\block $block, ContainerInterface $phpbb_container,
+		\phpbbgallery\core\block $block, \phpbbgallery\core\policy\image_visibility $image_visibility,
+		ContainerInterface $phpbb_container,
 		string $albums_table, string $images_table, string $users_table, string $table_comments, string $phpbb_root_path, string $php_ext)
 	{
 		$this->request = $request;
@@ -224,6 +229,7 @@ class image
 		$this->moderate = $moderate;
 		$this->gallery_rating = $gallery_rating;
 		$this->block = $block;
+		$this->image_visibility = $image_visibility;
 		$this->phpbb_container = $phpbb_container;
 		$this->table_albums = $albums_table;
 		$this->table_images = $images_table;
@@ -274,12 +280,12 @@ class image
 		$album_data = $this->loader->get($album_id);
 		$this->check_permissions($album_id, $album_data['album_user_id'], $this->data['image_status'], $album_data['album_auth_access'], $this->data);
 		$can_moderate_contest = $this->gallery_auth->acl_check('m_status', $album_id, $album_data['album_user_id']);
-		$hide_contest_private_data = \phpbbgallery\core\contest::hides_private_data(
+		$hide_contest_private_data = $this->image_visibility->hides_private_data(
 			$this->data,
 			(int) $this->user->data['user_id'],
 			$can_moderate_contest
 		);
-		$hide_contest_results = \phpbbgallery\core\contest::hides_results($this->data, $can_moderate_contest);
+		$hide_contest_results = $this->image_visibility->hides_results($this->data, $can_moderate_contest);
 
 		$this->display->generate_navigation($album_data);
 
@@ -489,7 +495,7 @@ class image
 
 		$this->data = $image_data;
 
-		$hide_contest_private_data = $hide_contest_private_data || \phpbbgallery\core\contest::hides_private_data(
+		$hide_contest_private_data = $hide_contest_private_data || $this->image_visibility->hides_private_data(
 			$this->data,
 			(int) $this->user->data['user_id'],
 			$can_moderate_contest
@@ -588,7 +594,7 @@ class image
 			// Build smilies array
 			generate_smilies('inline', 0);
 
-			$s_hide_comment_input = !\phpbbgallery\core\contest::is_step('comment', $album_data);
+			$s_hide_comment_input = !$this->comment->is_able($album_data, $this->data);
 
 			$this->template->assign_vars([
 				'S_ALLOWED_TO_COMMENT' => true,
