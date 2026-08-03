@@ -41,6 +41,33 @@ final class winner_controller_test extends TestCase
 		$this->assertStringContainsString('$this->winner_search->display(', $source);
 	}
 
+	public function test_core_search_has_no_contest_dependency_and_templates_support_placeholders(): void
+	{
+		$core_root = dirname(__DIR__, 2) . '/core';
+		$core_search = (string) file_get_contents($core_root . '/search.php');
+		$core_controller = (string) file_get_contents($core_root . '/controller/search.php');
+		$core_services = (string) file_get_contents($core_root . '/config/services.yml');
+
+		$this->assertStringNotContainsString('contests_table', $core_search);
+		$this->assertStringNotContainsString('contest_winners', $core_search);
+		$this->assertStringNotContainsString('function contests', $core_controller);
+		$service_start = strpos($core_services, '    phpbbgallery.core.search:');
+		$service_end = strpos($core_services, '    phpbbgallery.core.image.selector:', $service_start ?: 0);
+		$search_service = substr($core_services, $service_start, $service_end - $service_start);
+		$this->assertStringNotContainsString('gallery_contests', $search_service);
+
+		foreach ([
+			$core_root . '/styles/prosilver/template/gallery/search_results.html',
+			$core_root . '/styles/BBOOTS/template/gallery/imageblock_polaroid.html',
+			$core_root . '/styles/FLATBOOTS/template/gallery/imageblock_polaroid.html',
+		] as $template)
+		{
+			$source = (string) file_get_contents($template);
+			$this->assertStringContainsString('S_CONTEST_PLACEHOLDER', $source, $template);
+			$this->assertStringContainsString('gallery-contest-placeholder', $source, $template);
+		}
+	}
+
 	public function test_index_listener_adds_link_only_when_winners_are_visible(): void
 	{
 		$config = new \phpbb\config\config(['load_search' => 1]);

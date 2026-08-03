@@ -48,7 +48,7 @@ final class controller_search_types_test extends TestCase
 	public function test_search_routes_return_responses_and_paged_routes_use_integers(): void
 	{
 		$reflection = new \ReflectionClass(search::class);
-		foreach (['base', 'random', 'recent', 'recent_comments', 'ego_search', 'contests', 'toprated'] as $method_name)
+		foreach (['base', 'random', 'recent', 'recent_comments', 'ego_search', 'toprated'] as $method_name)
 		{
 			$method = $reflection->getMethod($method_name);
 			$this->assertSame('Symfony\\Component\\HttpFoundation\\Response', (string) $method->getReturnType());
