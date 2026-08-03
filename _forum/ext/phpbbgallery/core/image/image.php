@@ -59,9 +59,6 @@ class image
 	/** @var \phpbbgallery\core\user  */
 	protected \phpbbgallery\core\user $gallery_user;
 
-	/** @var \phpbbgallery\core\contest  */
-	protected \phpbbgallery\core\contest $contest;
-
 	/** @var \phpbbgallery\core\policy\image_visibility */
 	protected \phpbbgallery\core\policy\image_visibility $image_visibility;
 
@@ -101,7 +98,6 @@ class image
 	 * @param \phpbbgallery\core\report              $report
 	 * @param \phpbbgallery\core\cache               $gallery_cache
 	 * @param \phpbbgallery\core\user                $gallery_user
-	 * @param \phpbbgallery\core\contest             $contest
 	 * @param \phpbbgallery\core\policy\image_visibility $image_visibility
 	 * @param \phpbbgallery\core\policy\album_operation $album_operation
 	 * @param \phpbbgallery\core\file\file           $file
@@ -112,7 +108,7 @@ class image
 		\phpbbgallery\core\album\album $album, \phpbbgallery\core\config $gallery_config, \phpbb\controller\helper $helper,
 		\phpbbgallery\core\url $url, \phpbbgallery\core\log $gallery_log, \phpbbgallery\core\notification\helper $notification_helper,
 		\phpbbgallery\core\report $report, \phpbbgallery\core\cache $gallery_cache, \phpbbgallery\core\user $gallery_user,
-		\phpbbgallery\core\contest $contest, \phpbbgallery\core\policy\image_visibility $image_visibility,
+		\phpbbgallery\core\policy\image_visibility $image_visibility,
 		\phpbbgallery\core\policy\album_operation $album_operation,
 		\phpbbgallery\core\file\file $file,
 		string $table_images)
@@ -132,11 +128,34 @@ class image
 		$this->gallery_cache = $gallery_cache;
 		$this->gallery_report = $report;
 		$this->gallery_user = $gallery_user;
-		$this->contest = $contest;
 		$this->image_visibility = $image_visibility;
 		$this->album_operation = $album_operation;
 		$this->file = $file;
 		$this->table_images = $table_images;
+	}
+
+	private function notify_state_change(string $operation, array $image_rows, array $album_ids): void
+	{
+		$album_ids = array_values(array_unique(array_filter(array_map('intval', $album_ids))));
+		if (!$image_rows || !$album_ids)
+		{
+			return;
+		}
+
+		/**
+		 * Notify optional providers after image state changes have been persisted.
+		 *
+		 * @event phpbbgallery.core.image.state_changed
+		 * @var string operation  Mutation that was performed
+		 * @var array  image_rows Image rows captured for the mutation
+		 * @var array  album_ids  Affected album identifiers
+		 * @since 4.1.0
+		 */
+		$vars = ['operation', 'image_rows', 'album_ids'];
+		extract($this->phpbb_dispatcher->trigger_event(
+			'phpbbgallery.core.image.state_changed',
+			compact($vars)
+		));
 	}
 
 	/**
@@ -369,8 +388,6 @@ class image
 		{
 			return [];
 		}
-		$phpbb_gallery_contest = $this->contest;
-
 		$sql = 'SELECT *
 			FROM ' . $this->table_images . '
 			WHERE ' . $this->db->sql_in_set('image_id', $images);
@@ -441,14 +458,10 @@ class image
 		$vars = ['images', 'filenames'];
 		extract($this->phpbb_dispatcher->trigger_event('phpbbgallery.core.image.delete_images', compact($vars)));
 
-		$resync_album_ids = $resync_contests = $targets = [];
+		$resync_album_ids = $targets = [];
 		$deleted_views = 0;
 		foreach ($deleted_rows as $row)
 		{
-			if ($row['image_contest_rank'])
-			{
-				$resync_contests[] = (int) $row['image_album_id'];
-			}
 			$resync_album_ids[] = (int) $row['image_album_id'];
 			if ($row['image_status'] == (int) \phpbbgallery\core\block::STATUS_UNAPPROVED)
 			{
@@ -473,15 +486,13 @@ class image
 
 		}
 
-		$resync_contests = array_unique($resync_contests);
 		$resync_album_ids = array_unique($resync_album_ids);
 		if ($deleted_views > 0)
 		{
 			$this->gallery_config->dec('num_views', $deleted_views, false);
 		}
 
-		// The images need to be deleted, before we grab the new winners.
-		$phpbb_gallery_contest->resync_albums($resync_contests);
+		$this->notify_state_change('delete', array_values($deleted_rows), $resync_album_ids);
 		if ($resync_albums)
 		{
 			$this->album->update_infos($resync_album_ids);
@@ -738,7 +749,6 @@ class image
 		$result = $this->db->sql_query($sql);
 		$targets = [];
 		$approved_images = [];
-		$resync_contest = false;
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$this->gallery_log->add_log('moderator', 'approve', $album_id, $row['image_id'], ['LOG_GALLERY_APPROVED', $row['image_name']]);
@@ -747,7 +757,6 @@ class image
 			$row['source_path'] = $this->url->path('upload') . $row['image_filename'];
 			$approved_images[] = $row;
 			$last_img = $row['image_id'];
-			$resync_contest = $resync_contest || (int) $row['image_contest_end'] > 0;
 		}
 		$this->db->sql_freeresult($result);
 		if (!empty($targets))
@@ -767,10 +776,7 @@ class image
 			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary);
 		$this->db->sql_query($sql);
-		if ($resync_contest)
-		{
-			$this->contest->resync($album_id);
-		}
+		$this->notify_state_change('approve', $approved_images, [$album_id]);
 		if ($approved_images)
 		{
 			/**
@@ -802,22 +808,19 @@ class image
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary);
 		$this->db->sql_query($sql);
 
-		$sql = 'SELECT image_id, image_name, image_contest_end
+		$sql = 'SELECT image_id, image_name, image_album_id, image_contest_end
 			FROM ' . $this->table_images .' 
 			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary);
 		$result = $this->db->sql_query($sql);
-		$resync_contest = false;
+		$changed_images = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$this->gallery_log->add_log('moderator', 'unapprove', $album_id, $row['image_id'], ['LOG_GALLERY_UNAPPROVED', $row['image_name']]);
-			$resync_contest = $resync_contest || (int) $row['image_contest_end'] > 0;
+			$changed_images[] = $row;
 		}
 		$this->db->sql_freeresult($result);
-		if ($resync_contest)
-		{
-			$this->contest->resync($album_id);
-		}
+		$this->notify_state_change('unapprove', $changed_images, [$album_id]);
 	}
 
 	/**
@@ -839,7 +842,7 @@ class image
 			WHERE ' . $this->db->sql_in_set('image_id', $image_id_ary);
 		$result = $this->db->sql_query($sql);
 		$moved_image_ids = [];
-		$resync_contest_albums = [];
+		$moved_image_rows = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$source_album_id = (int) $row['image_album_id'];
@@ -849,10 +852,7 @@ class image
 			}
 
 			$moved_image_ids[] = (int) $row['image_id'];
-			if ((int) $row['image_contest_end'] > 0)
-			{
-				$resync_contest_albums[] = $source_album_id;
-			}
+			$moved_image_rows[] = $row;
 		}
 		$this->db->sql_freeresult($result);
 		if (!$moved_image_ids)
@@ -864,9 +864,6 @@ class image
 		$image_cache = $this->gallery_cache->get_images($moved_image_ids);
 		$image_move_data = [
 			'image_album_id' => (int) $album_id,
-			'image_contest' => (int) \phpbbgallery\core\block::NO_CONTEST,
-			'image_contest_end' => 0,
-			'image_contest_rank' => 0,
 		];
 
 		/**
@@ -896,7 +893,11 @@ class image
 			$this->gallery_log->add_log('moderator', 'move', 0, $image, ['LOG_GALLERY_MOVED', $image_cache[$image]['image_name'], $target_data['album_name']]);
 		}
 		$this->gallery_cache->destroy_images();
-		$this->contest->resync_albums($resync_contest_albums);
+		$this->notify_state_change(
+			'move',
+			$moved_image_rows,
+			array_column($moved_image_rows, 'image_album_id')
+		);
 	}
 
 	/**
@@ -915,22 +916,19 @@ class image
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary);
 		$this->db->sql_query($sql);
 
-		$sql = 'SELECT image_id, image_name, image_contest_end
+		$sql = 'SELECT image_id, image_name, image_album_id, image_contest_end
 			FROM ' . $this->table_images . ' 
 			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary);
 		$result = $this->db->sql_query($sql);
-		$resync_contest = false;
+		$changed_images = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$this->gallery_log->add_log('moderator', 'lock', $album_id, $row['image_id'], ['LOG_GALLERY_LOCKED', $row['image_name']]);
-			$resync_contest = $resync_contest || (int) $row['image_contest_end'] > 0;
+			$changed_images[] = $row;
 		}
 		$this->db->sql_freeresult($result);
-		if ($resync_contest)
-		{
-			$this->contest->resync($album_id);
-		}
+		$this->notify_state_change('lock', $changed_images, [$album_id]);
 	}
 
 	/**

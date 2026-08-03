@@ -184,7 +184,8 @@ final class contest_finalization_test extends TestCase
 		foreach ([$approve, $unapprove, $lock] as $method)
 		{
 			$this->assertStringContainsString('image_contest_end', $method);
-			$this->assertStringContainsString('$this->contest->resync($album_id);', $method);
+			$this->assertStringContainsString('$this->notify_state_change(', $method);
+			$this->assertStringNotContainsString('$this->contest->', $method);
 		}
 	}
 
@@ -199,12 +200,11 @@ final class contest_finalization_test extends TestCase
 		);
 		$this->assertStringNotContainsString('contest::is_step(', $move);
 		$this->assertStringContainsString('phpbbgallery.core.image.prepare_move', $move);
-		$this->assertStringContainsString("'image_contest' => (int) \\phpbbgallery\\core\\block::NO_CONTEST", $move);
 		$this->assertStringContainsString("sql_build_array('UPDATE', \$image_move_data)", $move);
 		$this->assertStringContainsString('image_contest_end', $move);
-		$this->assertStringContainsString("'image_contest_rank' => 0", $move);
 		$this->assertStringContainsString('$source_album_id === $album_id', $move);
-		$this->assertStringContainsString('$this->contest->resync_albums($resync_contest_albums);', $move);
+		$this->assertStringContainsString('$this->notify_state_change(', $move);
+		$this->assertStringNotContainsString('$this->contest->', $move);
 	}
 
 	private function method_source(string $source, string $method, string $next_method): string

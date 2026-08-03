@@ -33,6 +33,7 @@ class policy_listener implements EventSubscriberInterface
 			'phpbbgallery.core.album_operation' => 'restrict_album_operation',
 			'phpbbgallery.core.upload.update_image_before' => 'mark_contest_upload',
 			'phpbbgallery.core.image.prepare_move' => 'prepare_image_move',
+			'phpbbgallery.core.image.state_changed' => 'resync_contest_results',
 			'phpbbgallery.core.image_visibility.private_data' => 'hide_private_data',
 			'phpbbgallery.core.image_visibility.results' => 'hide_results',
 			'phpbbgallery.core.image_visibility.private_data_sql' => 'restrict_private_data_sql',
@@ -129,16 +130,41 @@ class policy_listener implements EventSubscriberInterface
 	public function prepare_image_move(\phpbb\event\data $event): void
 	{
 		$target_data = (array) $event['target_data'];
+		$image_move_data = (array) $event['image_move_data'];
+		$image_move_data['image_contest'] = (int) \phpbbgallery\core\block::NO_CONTEST;
+		$image_move_data['image_contest_end'] = 0;
+		$image_move_data['image_contest_rank'] = 0;
+
 		if ((int) ($target_data['album_type'] ?? -1) !== (int) \phpbbgallery\core\block::TYPE_CONTEST
 			|| (int) ($target_data['contest_marked'] ?? \phpbbgallery\core\block::NO_CONTEST)
 				!== (int) \phpbbgallery\core\block::IN_CONTEST)
 		{
+			$event['image_move_data'] = $image_move_data;
 			return;
 		}
 
-		$image_move_data = (array) $event['image_move_data'];
 		$image_move_data['image_contest'] = (int) \phpbbgallery\core\block::IN_CONTEST;
 		$event['image_move_data'] = $image_move_data;
+	}
+
+	public function resync_contest_results(\phpbb\event\data $event): void
+	{
+		$operation = (string) $event['operation'];
+		$marker = $operation === 'delete' ? 'image_contest_rank' : 'image_contest_end';
+		$needs_resync = false;
+		foreach ((array) $event['image_rows'] as $row)
+		{
+			if ((int) ($row[$marker] ?? 0) > 0)
+			{
+				$needs_resync = true;
+				break;
+			}
+		}
+
+		if ($needs_resync)
+		{
+			$this->contest->resync_albums((array) $event['album_ids']);
+		}
 	}
 
 	public function register_album_type(\phpbb\event\data $event): void

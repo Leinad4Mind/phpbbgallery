@@ -115,7 +115,6 @@ final class domain_image_types_test extends TestCase
 		$reflection = new \ReflectionClass(image::class);
 		$image = $reflection->newInstanceWithoutConstructor();
 		$reflection->getProperty('db')->setValue($image, $db);
-		$reflection->getProperty('contest')->setValue($image, $this->createMock(\phpbbgallery\core\contest::class));
 		$reflection->getProperty('table_images')->setValue($image, 'gallery_images');
 
 		$this->assertSame(0, $image->delete_images_matching_status([71], 3, [71 => 'draft.png'], false));
