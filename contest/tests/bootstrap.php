@@ -25,7 +25,9 @@ namespace
 	}
 
 	require_once dirname(__DIR__, 2) . '/core/tests/bootstrap.php';
+	require_once dirname(__DIR__, 4) . '/phpbb/pagination.php';
 	require_once dirname(__DIR__) . '/manager.php';
+	require_once dirname(__DIR__) . '/winner_search.php';
 	require_once dirname(__DIR__) . '/event/acp_listener.php';
 	require_once dirname(__DIR__) . '/event/album_lifecycle_listener.php';
 	require_once dirname(__DIR__) . '/event/policy_listener.php';
