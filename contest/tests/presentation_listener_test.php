@@ -127,4 +127,22 @@ final class presentation_listener_test extends TestCase
 
 		$this->assertSame('CONTEST_COMMENTS_STARTS:1300', $event['message']);
 	}
+
+	public function test_contest_rank_becomes_generic_image_award(): void
+	{
+		$language = $this->createStub(\phpbb\language\language::class);
+		$language->method('lang')->willReturnCallback(static fn(string $key): string => $key);
+		$event = new \phpbb\event\data([
+			'image_data' => ['image_contest_rank' => 2],
+			'rank' => 0,
+			'label' => '',
+			'title' => '',
+		]);
+
+		(new presentation_listener($language, $this->createStub(\phpbb\user::class)))->image_award($event);
+
+		$this->assertSame(2, $event['rank']);
+		$this->assertSame('CONTEST_RESULT_2', $event['label']);
+		$this->assertSame('CONTEST_RESULT', $event['title']);
+	}
 }

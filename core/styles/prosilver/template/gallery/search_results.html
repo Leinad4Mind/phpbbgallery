@@ -66,19 +66,19 @@ function toggleElement(oElement)
 {% if SEARCH_MATCHES %}
 {% for imageblock in imageblock %}
 <span class="clear"></span>
-{% if imageblock.S_CONTEST_BLOCK and imageblock.U_BLOCK %}<h2><a href="{{ imageblock.U_BLOCK }}">{{ imageblock.BLOCK_NAME }}</a></h2>{% endif %}
+{% if imageblock.S_IMAGE_AWARD_BLOCK and imageblock.U_BLOCK %}<h2><a href="{{ imageblock.U_BLOCK }}">{{ imageblock.BLOCK_NAME }}</a></h2>{% endif %}
 {% if imageblock.ERROR %}<h2>{{ imageblock.ERROR }}</h2>
 
 {% else %}
 {% for image in imageblock.image %}
-{% if image.S_CONTEST_PLACEHOLDER %}
+{% if image.S_IMAGE_AWARD_PLACEHOLDER %}
 <div class="polaroid gallery-contest-placeholder" aria-hidden="true" style="visibility: hidden;"></div>
 {% else %}
 <div  class="polaroid">
-	{% if image.S_CONTEST_RANK > 0 %}
+	{% if image.S_IMAGE_AWARD_RANK > 0 %}
 	<div class="trophy-container">
-		<i class="trophy-icon fa-trophy fa-stack-2x trophy-color-{{ image.S_CONTEST_RANK }}"></i>
-		<strong class="fa-stack-1x trophy-text">{{ image.S_CONTEST_RANK }}</strong>
+		<i class="trophy-icon fa-trophy fa-stack-2x trophy-color-{{ image.S_IMAGE_AWARD_RANK }}"></i>
+		<strong class="fa-stack-1x trophy-text">{{ image.S_IMAGE_AWARD_RANK }}</strong>
 	</div>
 	{% endif %}
 	<p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 1.2em; margin-bottom: 1em;">

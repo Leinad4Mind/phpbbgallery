@@ -28,8 +28,22 @@ class presentation_listener implements EventSubscriberInterface
 			'phpbbgallery.core.album.enrich_template_vars' => 'enrich_album_template_vars',
 			'phpbbgallery.core.image_visibility.private_data_label' => 'private_data_label',
 			'phpbbgallery.core.image_visibility.private_data_description' => 'private_data_description',
+			'phpbbgallery.core.image_visibility.award' => 'image_award',
 			'phpbbgallery.core.album_operation.message' => 'album_operation_message',
 		];
+	}
+
+	public function image_award(\phpbb\event\data $event): void
+	{
+		$rank = (int) (((array) $event['image_data'])['image_contest_rank'] ?? 0);
+		if ($rank < 1 || $rank > 3)
+		{
+			return;
+		}
+
+		$event['rank'] = $rank;
+		$event['label'] = $this->language->lang('CONTEST_RESULT_' . $rank);
+		$event['title'] = $this->language->lang('CONTEST_RESULT');
 	}
 
 	public function album_operation_message(\phpbb\event\data $event): void

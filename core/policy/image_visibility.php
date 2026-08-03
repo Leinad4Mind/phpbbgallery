@@ -108,6 +108,29 @@ class image_visibility
 		)));
 	}
 
+	/**
+	 * Resolve optional award presentation data for an image.
+	 *
+	 * @return array{rank: int, label: string, title: string}
+	 */
+	public function award(array $image_data): array
+	{
+		$rank = 0;
+		$label = '';
+		$title = '';
+		$vars = ['image_data', 'rank', 'label', 'title'];
+		extract($this->dispatcher->trigger_event(
+			'phpbbgallery.core.image_visibility.award',
+			compact($vars)
+		));
+
+		return [
+			'rank' => max(0, (int) $rank),
+			'label' => trim((string) $label),
+			'title' => trim((string) $title),
+		];
+	}
+
 	public function private_data_sql(string $alias, int $viewer_id, array $moderated_album_ids): string
 	{
 		$this->validate_alias($alias);

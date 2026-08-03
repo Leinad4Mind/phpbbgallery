@@ -130,7 +130,7 @@ class winner_search
 			$this->template->assign_block_vars('imageblock', [
 				'BLOCK_NAME' => $this->language->lang('CONTEST_WINNERS_OF', $contest['album_name']),
 				'U_BLOCK' => $this->helper->route('phpbbgallery_core_album', ['album_id' => $album_id]),
-				'S_CONTEST_BLOCK' => true,
+				'S_IMAGE_AWARD_BLOCK' => true,
 			]);
 
 			$used_winner_ids = [];
@@ -146,8 +146,8 @@ class winner_search
 				if (!$is_valid)
 				{
 					$this->template->assign_block_vars('imageblock.image', [
-						'S_CONTEST_PLACEHOLDER' => true,
-						'S_CONTEST_RANK' => $rank,
+						'S_IMAGE_AWARD_PLACEHOLDER' => true,
+						'S_IMAGE_AWARD_RANK' => $rank,
 					]);
 					continue;
 				}

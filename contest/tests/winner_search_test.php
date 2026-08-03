@@ -168,10 +168,10 @@ final class winner_search_test extends TestCase
 		$placeholders = array_values(array_filter(
 			$assigned_blocks,
 			static fn(array $assignment): bool => $assignment[0] === 'imageblock.image'
-				&& !empty($assignment[1]['S_CONTEST_PLACEHOLDER'])
+				&& !empty($assignment[1]['S_IMAGE_AWARD_PLACEHOLDER'])
 		));
 		$this->assertCount(1, $placeholders);
-		$this->assertSame(2, $placeholders[0][1]['S_CONTEST_RANK']);
+		$this->assertSame(2, $placeholders[0][1]['S_IMAGE_AWARD_RANK']);
 		$this->assertSame('SEARCH_CONTEST', $assigned_vars['SEARCH_TITLE']);
 
 		$all_where = implode(' ', array_column($built_queries, 'WHERE'));

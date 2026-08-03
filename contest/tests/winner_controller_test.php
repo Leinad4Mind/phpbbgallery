@@ -63,7 +63,7 @@ final class winner_controller_test extends TestCase
 		] as $template)
 		{
 			$source = (string) file_get_contents($template);
-			$this->assertStringContainsString('S_CONTEST_PLACEHOLDER', $source, $template);
+			$this->assertStringContainsString('S_IMAGE_AWARD_PLACEHOLDER', $source, $template);
 			$this->assertStringContainsString('gallery-contest-placeholder', $source, $template);
 		}
 	}

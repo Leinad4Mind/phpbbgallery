@@ -127,10 +127,10 @@
 			</ul>
 			<h2 style= "font-size: 1.5em; font-weight: bold;">{{ lang('IMAGE_NAME') }}{{ lang('COLON') }}<a href="{{ S_ALBUM_ACTION }}" style="display: inline; line-height: 1.2em; font-weight: bold;"> {{ IMAGE_NAME }}</a></h2>
 			<fieldset class="fields1 anti-postbody">
-				{% if CONTEST_RANK %}
+				{% if IMAGE_AWARD %}
 				<dl>
-					<dt><label>{{ lang('CONTEST_RESULT') }}{{ lang('COLON') }}</label></dt>
-					<dd>{{ CONTEST_RANK }}</dd>
+					<dt><label>{{ IMAGE_AWARD_TITLE }}{{ lang('COLON') }}</label></dt>
+					<dd>{{ IMAGE_AWARD }}</dd>
 				</dl>
 				{% endif %}
 				<dl>
