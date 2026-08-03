@@ -62,7 +62,7 @@ class acp_listener implements EventSubscriberInterface
 			return;
 		}
 
-		$this->language->add_lang('contest_acp', 'phpbbgallery/contest');
+		$this->load_acp_language();
 		$return_ary = (array) $event['return_ary'];
 		$settings = (array) ($return_ary['vars']['GALLERY_CONFIG'] ?? []);
 		$contest = [
@@ -93,6 +93,7 @@ class acp_listener implements EventSubscriberInterface
 
 	public function request_album_type_data(\phpbb\event\data $event): void
 	{
+		$this->load_acp_language();
 		$event['album_type_data'] = [
 			'contest_start' => $this->request->variable('contest_start', ''),
 			'contest_rating' => $this->request->variable('contest_rating', ''),
@@ -102,6 +103,7 @@ class acp_listener implements EventSubscriberInterface
 
 	public function default_album_type_data(\phpbb\event\data $event): void
 	{
+		$this->load_acp_language();
 		$event['album_type_data'] = [
 			'contest_start' => time(),
 			'contest_rating' => 3 * 86400,
@@ -111,6 +113,7 @@ class acp_listener implements EventSubscriberInterface
 
 	public function load_album_type_data(\phpbb\event\data $event): void
 	{
+		$this->load_acp_language();
 		$album_data = (array) $event['album_data'];
 		if ((int) ($album_data['album_type'] ?? -1) === (int) manager::ALBUM_TYPE)
 		{
@@ -123,7 +126,7 @@ class acp_listener implements EventSubscriberInterface
 
 	public function send_album_type_to_template(\phpbb\event\data $event): void
 	{
-		$this->language->add_lang('contest_acp', 'phpbbgallery/contest');
+		$this->load_acp_language();
 		$album_data = (array) $event['album_data'];
 		$type_data = (array) $event['album_type_data'];
 		$start = (int) ($type_data['contest_start'] ?? time());
@@ -135,5 +138,10 @@ class acp_listener implements EventSubscriberInterface
 			'CONTEST_RATING' => $this->user->format_date($start + (int) ($type_data['contest_rating'] ?? 0), 'Y-m-d H:i'),
 			'CONTEST_END' => $this->user->format_date($start + (int) ($type_data['contest_end'] ?? 0), 'Y-m-d H:i'),
 		]);
+	}
+
+	private function load_acp_language(): void
+	{
+		$this->language->add_lang('contest_acp', 'phpbbgallery/contest');
 	}
 }

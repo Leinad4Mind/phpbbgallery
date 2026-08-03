@@ -353,7 +353,7 @@ class manage
 			{
 				// Changing a category to a album? Yes!
 				// Reset the data (you couldn't upload directly in a cat, you must use a album)
-				$album_data_sql['album_images'] = $album_data_sql['album_images_real'] = $album_data_sql['album_last_image_id'] = $album_data_sql['album_last_user_id'] = $album_data_sql['album_last_image_time'] = $album_data_sql['album_contest'] = 0;
+				$album_data_sql['album_images'] = $album_data_sql['album_images_real'] = $album_data_sql['album_last_image_id'] = $album_data_sql['album_last_user_id'] = $album_data_sql['album_last_image_time'] = 0;
 				$album_data_sql['album_last_username'] = $album_data_sql['album_last_user_colour'] = $album_data_sql['album_last_image_name'] = '';
 			}
 			else if ($row['album_type'] == (int) \phpbbgallery\core\block::TYPE_UPLOAD && $album_data_sql['album_type'] == (int) \phpbbgallery\core\block::TYPE_CAT)

@@ -176,16 +176,30 @@ class migration_integrity_test extends TestCase
 		], $migration->update_data());
 	}
 
-	public function test_contest_creation_switch_is_reversible_and_enabled_by_default(): void
+	public function test_optional_contest_storage_is_not_created_by_fresh_core_installs(): void
 	{
-		$migration = (new \ReflectionClass(contest_creation::class))->newInstanceWithoutConstructor();
+		$migration = (new \ReflectionClass(release_1_2_0_db_create::class))->newInstanceWithoutConstructor();
+		(new \ReflectionProperty(\phpbb\db\migration\migration::class, 'table_prefix'))->setValue($migration, 'phpbb_');
+		$tables = $migration->update_schema()['add_tables'];
 
-		$this->assertSame([
-			['config.add', ['phpbb_gallery_allow_contests', 1]],
-		], $migration->update_data());
-		$this->assertSame([
-			['config.remove', ['phpbb_gallery_allow_contests']],
-		], $migration->revert_data());
+		$this->assertArrayNotHasKey('phpbb_gallery_contests', $tables);
+		$this->assertArrayNotHasKey('album_contest', $tables['phpbb_gallery_albums']['COLUMNS']);
+		$this->assertArrayNotHasKey('image_contest_end', $tables['phpbb_gallery_images']['COLUMNS']);
+		$this->assertArrayNotHasKey('image_contest_rank', $tables['phpbb_gallery_images']['COLUMNS']);
+		$this->assertArrayHasKey('image_contest', $tables['phpbb_gallery_images']['COLUMNS']);
+		$this->assertArrayNotHasKey('contests_ended', release_1_2_0::$configs);
+		$this->assertStringNotContainsString("'allow_contests'", (string) file_get_contents(dirname(__DIR__) . '/config.php'));
+		$this->assertStringNotContainsString("'contests_ended'", (string) file_get_contents(dirname(__DIR__) . '/config.php'));
+	}
+
+	public function test_historical_contest_migration_is_a_reversible_no_op(): void
+	{
+		$migration = new \ReflectionClass(contest_creation::class);
+
+		foreach (['update_data', 'revert_data', 'update_schema', 'revert_schema'] as $method)
+		{
+			$this->assertNotSame(contest_creation::class, $migration->getMethod($method)->getDeclaringClass()->getName());
+		}
 	}
 
 	public function test_obsolete_image_plugin_modes_are_normalized_to_supported_links(): void

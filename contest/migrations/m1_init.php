@@ -14,7 +14,7 @@ use phpbb\db\migration\migration;
 class m1_init extends migration
 {
 	/**
-	 * Contest storage is already present in the historical Core schema.
+	 * Start after the Core 4.0.0 compatibility baseline.
 	 */
 	public static function depends_on(): array
 	{

@@ -10,6 +10,11 @@
 namespace phpbbgallery\contest\tests;
 
 use phpbbgallery\contest\migrations\m1_init;
+use phpbbgallery\contest\migrations\m2_settings;
+use phpbbgallery\contest\migrations\m3_album_storage;
+use phpbbgallery\contest\migrations\m4_image_end_storage;
+use phpbbgallery\contest\migrations\m5_image_rank_storage;
+use phpbbgallery\contest\migrations\m6_contest_storage;
 use PHPUnit\Framework\TestCase;
 
 final class package_test extends TestCase
@@ -30,13 +35,33 @@ final class package_test extends TestCase
 		$this->assertSame('GPL-2.0-only', $manifest['license']);
 	}
 
-	public function test_initial_migration_adopts_the_core_4_0_storage(): void
+	public function test_migrations_adopt_legacy_storage_and_own_new_installations(): void
 	{
 		$this->assertSame(
 			['\phpbbgallery\core\migrations\release_4_0_0'],
 			m1_init::depends_on()
 		);
 		$this->assertFalse((new \ReflectionClass(m1_init::class))->hasMethod('update_schema'));
+		$this->assertSame(['\phpbbgallery\contest\migrations\m1_init'], m2_settings::depends_on());
+		$this->assertSame(['\phpbbgallery\contest\migrations\m2_settings'], m3_album_storage::depends_on());
+		$this->assertSame(['\phpbbgallery\contest\migrations\m3_album_storage'], m4_image_end_storage::depends_on());
+		$this->assertSame(['\phpbbgallery\contest\migrations\m4_image_end_storage'], m5_image_rank_storage::depends_on());
+		$this->assertSame(['\phpbbgallery\contest\migrations\m5_image_rank_storage'], m6_contest_storage::depends_on());
+
+		$settings = (new \ReflectionClass(m2_settings::class))->newInstanceWithoutConstructor();
+		$this->assertSame([
+			['config.add', ['phpbb_gallery_allow_contests', 1]],
+			['config.add', ['phpbb_gallery_contests_ended', 0]],
+		], $settings->update_data());
+
+		foreach ([m3_album_storage::class, m4_image_end_storage::class, m5_image_rank_storage::class, m6_contest_storage::class] as $migration_class)
+		{
+			$migration = (new \ReflectionClass($migration_class))->newInstanceWithoutConstructor();
+			(new \ReflectionProperty(\phpbb\db\migration\migration::class, 'table_prefix'))->setValue($migration, 'phpbb_');
+			$this->assertNotSame([], $migration->update_schema(), $migration_class);
+			$this->assertSame([], $migration->revert_schema(), $migration_class);
+			$this->assertTrue((new \ReflectionClass($migration_class))->hasMethod('effectively_installed'));
+		}
 	}
 
 	public function test_extension_uses_the_standard_core_dependency_lifecycle(): void
@@ -52,11 +77,13 @@ final class package_test extends TestCase
 	public function test_table_parameter_uses_the_historical_storage_name(): void
 	{
 		$tables = (string) file_get_contents(dirname(__DIR__) . '/config/tables.yml');
+		$core_tables = (string) file_get_contents(dirname(__DIR__, 2) . '/core/config/tables.yml');
 
 		$this->assertStringContainsString(
 			"phpbbgallery.contest.tables.contests: '%core.table_prefix%gallery_contests'",
 			$tables
 		);
+		$this->assertStringNotContainsString('gallery_contests', $core_tables);
 	}
 
 	public function test_services_own_the_contest_domain_and_policy_provider(): void
@@ -116,6 +143,7 @@ final class package_test extends TestCase
 				$this->assertArrayHasKey($key, $frontend_messages, $language);
 			}
 			foreach ([
+				'ALBUM_TYPE_CONTEST',
 				'ALBUM_NO_TYPE_CHANGE_TO_CONTEST',
 				'ALBUM_WITH_CONTEST_NO_TYPE_CHANGE',
 				'CONTEST_CREATION',
@@ -175,6 +203,7 @@ final class package_test extends TestCase
 			}
 
 			$acp_messages = $this->load_language($core_language_root . '/' . $language . '/gallery_acp.php');
+			$this->assertArrayNotHasKey('ALBUM_TYPE_CONTEST', $acp_messages, $language);
 			$this->assertArrayNotHasKey('RRC_GINDEX_CONTESTS', $acp_messages, $language);
 		}
 	}

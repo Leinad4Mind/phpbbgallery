@@ -165,7 +165,6 @@ class release_1_2_0 extends migration
 		'captcha_upload'		=> true,
 		'comment_length'		=> 2000,
 		'comment_user_control'	=> true,
-		'contests_ended'		=> 0,
 		'current_upload_dir_size'	=> 0,
 		'current_upload_dir'	=> 0,
 

@@ -6,6 +6,9 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Moved contest configuration, album/result storage and the contest album-type
+  label from Gallery Core into the independent Contests add-on, while retaining
+  the neutral fail-closed image marker and historical migration compatibility.
 - Moved the remaining contest-specific frontend presentation and translations
   out of Gallery Core and into the independent Contests add-on.
 

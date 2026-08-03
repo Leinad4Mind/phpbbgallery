@@ -13,6 +13,7 @@ if (!defined('IN_PHPBB'))
 }
 
 $lang = array_merge($lang, [
+	'ALBUM_TYPE_CONTEST'                  => 'Concours',
 	'CONTEST_CREATION'                    => 'Autoriser les nouveaux concours',
 	'CONTEST_CREATION_EXPLAIN'            => 'Permet aux administrateurs de créer de nouveaux albums de concours. Les concours existants restent actifs et modifiables lorsque cette option est désactivée.',
 	'CONTEST_CREATION_DISABLED'           => 'La création de nouveaux albums de concours est désactivée dans la configuration de la Galerie.',

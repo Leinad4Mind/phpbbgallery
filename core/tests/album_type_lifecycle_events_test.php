@@ -25,6 +25,7 @@ final class album_type_lifecycle_events_test extends TestCase
 		$this->assertStringNotContainsString('update_contest_data', $source);
 		$this->assertStringNotContainsString('$gallery_contest', $source);
 		$this->assertStringNotContainsString('$contests_table', $source);
+		$this->assertStringNotContainsString('album_contest', $source);
 		$this->assertStringNotContainsString('image_contest_rank', $source);
 	}
 }

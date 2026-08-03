@@ -13,6 +13,7 @@ if (!defined('IN_PHPBB'))
 }
 
 $lang = array_merge($lang, [
+	'ALBUM_TYPE_CONTEST'                  => 'Wettbewerb',
 	'CONTEST_CREATION'                    => 'Neue Wettbewerbe erlauben',
 	'CONTEST_CREATION_EXPLAIN'            => 'Erlaubt Administratoren, neue Wettbewerbsalben zu erstellen. Bestehende Wettbewerbe bleiben aktiv und bearbeitbar, wenn diese Option deaktiviert ist.',
 	'CONTEST_CREATION_DISABLED'           => 'Das Erstellen neuer Wettbewerbsalben ist in der Galerie-Konfiguration deaktiviert.',

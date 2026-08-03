@@ -102,7 +102,6 @@ $lang = array_merge($lang, [
 	'ALBUM_STATUS'                      => 'Статус на албума',
 	'ALBUM_TYPE'                        => 'Вид албум',
 	'ALBUM_TYPE_CAT'                    => 'Категория',
-	'ALBUM_TYPE_CONTEST'                => 'Конкурс',
 	'ALBUM_TYPE_UPLOAD'                 => 'Албум',
 	'ALBUM_UPDATED'                     => 'Албумът е опреснен упешно.',
 	'ALBUM_WATERMARK'                   => 'Показвай воден знак',

@@ -12,7 +12,8 @@ namespace phpbbgallery\core\migrations;
 use phpbb\db\migration\migration;
 
 /**
- * Add the switch controlling creation of new contest albums.
+ * Preserve the historical migration identifier after ownership moved to the
+ * optional Contest add-on.
  */
 class contest_creation extends migration
 {
@@ -21,17 +22,4 @@ class contest_creation extends migration
 		return ['\phpbbgallery\core\migrations\image_subtitle'];
 	}
 
-	public function update_data(): array
-	{
-		return [
-			['config.add', ['phpbb_gallery_allow_contests', 1]],
-		];
-	}
-
-	public function revert_data(): array
-	{
-		return [
-			['config.remove', ['phpbb_gallery_allow_contests']],
-		];
-	}
 }
