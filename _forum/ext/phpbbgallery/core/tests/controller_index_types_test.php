@@ -83,13 +83,22 @@ final class controller_index_types_test extends TestCase
 		$this->assertSame(1, index::RRC_MODE_RECENT_IMAGES);
 	}
 
-	public function test_latest_image_summary_uses_the_contest_identity_policy(): void
+	public function test_latest_image_summary_uses_the_neutral_identity_policy(): void
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/index.php');
 
 		$this->assertStringContainsString('$hide_last_image_uploader', $source);
-		$this->assertStringContainsString('contest::hides_private_data(', $source);
+		$this->assertStringContainsString('$this->image_visibility->hides_private_data(', $source);
+		$this->assertStringNotContainsString('core\\contest::', $source);
 		$this->assertStringContainsString('CONTEST_USERNAME', $source);
+
+		$services = (string) file_get_contents(dirname(__DIR__) . '/config/services_controller.yml');
+		$index_service = strstr($services, 'phpbbgallery.core.controller.index:');
+		$index_service = strstr($index_service, 'phpbbgallery.core.controller.search:', true);
+		$this->assertStringContainsString(
+			"- '@phpbbgallery.core.policy.image_visibility'",
+			$index_service
+		);
 	}
 
 	public function test_contest_winner_link_is_permission_checked_and_visibility_aware(): void
