@@ -37,14 +37,14 @@ class album
 	/** @var \phpbbgallery\core\config */
 	protected \phpbbgallery\core\config $gallery_config;
 
+	/** @var \phpbbgallery\core\album\data_enricher */
+	protected data_enricher $data_enricher;
+
 	/** @var string */
 	protected string $images_table;
 
 	/** @var string */
 	protected string $watch_table;
-
-	/** @var string */
-	protected string $contests_table;
 
 	/** @var string */
 	protected string $albums_table;
@@ -60,16 +60,16 @@ class album
 	 * @param \phpbbgallery\core\cache          $gallery_cache
 	 * @param \phpbbgallery\core\block          $block
 	 * @param \phpbbgallery\core\config         $gallery_config
+	 * @param \phpbbgallery\core\album\data_enricher $data_enricher
 	 * @param string                            $albums_table
 	 * @param string                            $images_table
 	 * @param string                            $watch_table
-	 * @param string                            $contest_table
 	 */
 	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\user $user,
 		\phpbb\language\language $language, \phpbb\profilefields\manager $user_cpf,
 		\phpbbgallery\core\auth\auth $gallery_auth, \phpbbgallery\core\cache $gallery_cache, \phpbbgallery\core\block $block,
-		\phpbbgallery\core\config $gallery_config,
-		string $albums_table, string $images_table, string $watch_table, string $contest_table)
+		\phpbbgallery\core\config $gallery_config, data_enricher $data_enricher,
+		string $albums_table, string $images_table, string $watch_table)
 	{
 		$this->db = $db;
 		$this->user = $user;
@@ -79,10 +79,10 @@ class album
 		$this->gallery_cache = $gallery_cache;
 		$this->block = $block;
 		$this->gallery_config = $gallery_config;
+		$this->data_enricher = $data_enricher;
 		$this->albums_table = $albums_table;
 		$this->images_table = $images_table;
 		$this->watch_table = $watch_table;
-		$this->contests_table = $contest_table;
 	}
 
 	/**
@@ -103,15 +103,11 @@ class album
 
 		if ($extended_info)
 		{
-			$sql_array['SELECT'] .= ', c.*, w.watch_id';
+			$sql_array['SELECT'] .= ', w.watch_id';
 			$sql_array['LEFT_JOIN'] = [
 				[
 					'FROM' => [$this->watch_table => 'w'],
 					'ON'   => 'a.album_id = w.album_id AND w.user_id = ' . (int) $this->user->data['user_id'],
-				],
-				[
-					'FROM' => [$this->contests_table => 'c'],
-					'ON'   => 'a.album_id = c.contest_album_id',
 				],
 			];
 		}
@@ -126,18 +122,7 @@ class album
 			throw new \phpbb\exception\http_exception(404, 'ALBUM_NOT_EXIST');
 		}
 
-		if ($extended_info && !isset($row['contest_id']))
-		{
-			$row['contest_id'] = 0;
-			$row['contest_rates_start'] = 0;
-			$row['contest_end'] = 0;
-			$row['contest_marked'] = 0;
-			$row['contest_first'] = 0;
-			$row['contest_second'] = 0;
-			$row['contest_third'] = 0;
-		}
-
-		return $row;
+		return $this->data_enricher->enrich($row);
 	}
 
 	/**

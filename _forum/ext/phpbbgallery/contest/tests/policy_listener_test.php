@@ -29,6 +29,36 @@ final class policy_listener_test extends TestCase
 		$this->assertFalse($type['can_create']);
 	}
 
+	public function test_listener_enriches_only_contest_album_rows(): void
+	{
+		$manager = $this->createMock(manager::class);
+		$manager->expects($this->once())
+			->method('get_contest')
+			->with(7, 'album', false)
+			->willReturn([
+				'contest_id' => 11,
+				'contest_album_id' => 7,
+				'contest_marked' => \phpbbgallery\core\block::IN_CONTEST,
+			]);
+		$listener = new policy_listener($manager);
+		$contest = new \phpbb\event\data(['album_data' => [
+			'album_id' => 7,
+			'album_type' => \phpbbgallery\core\block::TYPE_CONTEST,
+			'album_name' => 'Contest',
+		]]);
+		$regular = new \phpbb\event\data(['album_data' => [
+			'album_id' => 8,
+			'album_type' => \phpbbgallery\core\block::TYPE_UPLOAD,
+		]]);
+
+		$listener->enrich_album_data($contest);
+		$listener->enrich_album_data($regular);
+
+		$this->assertSame(11, $contest['album_data']['contest_id']);
+		$this->assertSame('Contest', $contest['album_data']['album_name']);
+		$this->assertArrayNotHasKey('contest_id', $regular['album_data']);
+	}
+
 	public function test_listener_applies_private_data_and_result_boundaries(): void
 	{
 		$listener = new policy_listener($this->manager(true));

@@ -17,10 +17,10 @@ services:
             - '@phpbbgallery.core.cache'
             - '@phpbbgallery.core.block'
             - '@phpbbgallery.core.config'
+            - '@phpbbgallery.core.album.data_enricher'
             - '%phpbbgallery.tables.gallery_albums%'
             - '%phpbbgallery.tables.gallery_images%'
             - '%phpbbgallery.tables.gallery_watch%'
-            - '%phpbbgallery.tables.gallery_contests%'
     phpbbgallery.core.album.display:
         class: phpbbgallery\core\album\display
         arguments:
@@ -49,8 +49,12 @@ services:
         arguments:
             - '@dbal.conn'
             - '@user'
-            - '@phpbbgallery.core.contest'
+            - '@phpbbgallery.core.album.data_enricher'
             - '%phpbbgallery.tables.gallery_albums%'
+    phpbbgallery.core.album.data_enricher:
+        class: phpbbgallery\core\album\data_enricher
+        arguments:
+            - '@dispatcher'
     phpbbgallery.core.album.type_registry:
         class: phpbbgallery\core\album\type_registry
         arguments:
