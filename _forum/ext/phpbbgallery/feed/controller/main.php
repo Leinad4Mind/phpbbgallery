@@ -36,6 +36,9 @@ class main
 	/* @var \phpbbgallery\core\auth\auth */
 	protected \phpbbgallery\core\auth\auth $gallery_auth;
 
+	/* @var \phpbbgallery\core\policy\image_visibility */
+	protected \phpbbgallery\core\policy\image_visibility $image_visibility;
+
 	/* @var \phpbbgallery\feed\feed */
 	protected \phpbbgallery\feed\feed $feed;
 
@@ -48,10 +51,12 @@ class main
 	 * @param \phpbb\template\twig\environment   $twig         Twig environment
 	 * @param \phpbb\user                       $user         User object
 	 * @param \phpbbgallery\core\auth\auth      $gallery_auth Gallery auth object
+	 * @param \phpbbgallery\core\policy\image_visibility $image_visibility Image privacy boundary
 	 * @param \phpbbgallery\feed\feed           $feed         Gallery feed object
 	 */
 	public function __construct(\phpbb\config\config $config, \phpbb\controller\helper $helper, \phpbb\language\language $language,
-		\phpbb\template\twig\environment $twig, \phpbb\user $user, \phpbbgallery\core\auth\auth $gallery_auth, \phpbbgallery\feed\feed $feed)
+		\phpbb\template\twig\environment $twig, \phpbb\user $user, \phpbbgallery\core\auth\auth $gallery_auth,
+		\phpbbgallery\core\policy\image_visibility $image_visibility, \phpbbgallery\feed\feed $feed)
 	{
 		$this->config = $config;
 		$this->helper = $helper;
@@ -59,6 +64,7 @@ class main
 		$this->twig = $twig;
 		$this->user = $user;
 		$this->gallery_auth = $gallery_auth;
+		$this->image_visibility = $image_visibility;
 		$this->feed = $feed;
 	}
 
@@ -151,13 +157,23 @@ class main
 			$album_id = (int) $row['image_album_id'];
 			$image_time = (int) $row['image_time'];
 			$updated_time = max($updated_time, $image_time);
+			$can_moderate = (bool) $this->gallery_auth->acl_check(
+				'm_status',
+				$album_id,
+				(int) $row['album_user_id']
+			);
+			$hide_private_data = $this->image_visibility->hides_private_data(
+				$row,
+				(int) $this->user->data['user_id'],
+				$can_moderate
+			);
 
 			$entries[] = [
 				'title'			=> censor_text($row['image_name']),
 				'album_name'	=> censor_text((string) $row['album_name']),
-				'author'		=> $this->get_author($row),
+				'author'		=> $this->get_author($row, $hide_private_data, $can_moderate),
 				'updated'		=> gmdate(DATE_ATOM, $image_time),
-				'description'	=> $this->get_description($row),
+				'description'	=> $this->get_description($row, $hide_private_data, $can_moderate),
 				'link'			=> $this->absolute_route('phpbbgallery_core_image', ['image_id' => $image_id]),
 				'album_link'	=> $this->absolute_route('phpbbgallery_core_album', ['album_id' => $album_id]),
 				'thumbnail'		=> $this->absolute_route('phpbbgallery_core_image_file_mini', ['image_id' => $image_id]),
@@ -190,37 +206,23 @@ class main
 	}
 
 	/**
-	 * Whether the feed viewer must be denied private contest data.
+	 * Author line for an entry, keeping protected identities private.
 	 *
-	 * @param array $row Image and album row
-	 * @return bool
-	 */
-	protected function hides_contest_private_data(array $row): bool
-	{
-		$can_moderate = $this->gallery_auth->acl_check(
-			'm_status',
-			(int) $row['image_album_id'],
-			(int) $row['album_user_id']
-		);
-
-		return \phpbbgallery\core\contest::hides_private_data(
-			$row,
-			(int) $this->user->data['user_id'],
-			$can_moderate
-		);
-	}
-
-	/**
-	 * Author line for an entry, keeping contest entries anonymous.
-	 *
-	 * @param array $row Image row
+	 * @param array $row               Image row
+	 * @param bool  $hide_private_data Whether identity is protected
+	 * @param bool  $can_moderate      Whether the viewer moderates the album
 	 * @return string
 	 */
-	protected function get_author(array $row): string
+	protected function get_author(array $row, bool $hide_private_data, bool $can_moderate): string
 	{
-		if ($this->hides_contest_private_data($row))
+		if ($hide_private_data)
 		{
-			return $this->language->lang('CONTEST_USERNAME');
+			return $this->image_visibility->private_data_label(
+				$row,
+				(int) $this->user->data['user_id'],
+				$can_moderate,
+				$this->language->lang('GALLERY_PRIVATE_USER')
+			);
 		}
 
 		return (string) $row['image_username'];
@@ -229,18 +231,21 @@ class main
 	/**
 	 * Plain-text description of an entry.
 	 *
-	 * @param array $row Image row
+	 * @param array $row               Image row
+	 * @param bool  $hide_private_data Whether description is protected
+	 * @param bool  $can_moderate      Whether the viewer moderates the album
 	 * @return string
 	 */
-	protected function get_description(array $row): string
+	protected function get_description(array $row, bool $hide_private_data, bool $can_moderate): string
 	{
-		if ($this->hides_contest_private_data($row))
+		if ($hide_private_data)
 		{
-			$contest_end_time = (int) ($row['contest_start'] ?? 0) + (int) ($row['contest_end'] ?? 0);
-
-			return $this->language->lang(
-				'CONTEST_IMAGE_DESC',
-				$this->user->format_date($contest_end_time, false, true)
+			return $this->image_visibility->private_data_description(
+				$row,
+				$row,
+				(int) $this->user->data['user_id'],
+				$can_moderate,
+				$this->language->lang('GALLERY_PRIVATE_IMAGE_DESC')
 			);
 		}
 

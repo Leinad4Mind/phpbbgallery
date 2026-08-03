@@ -21,7 +21,6 @@ class exif_listener implements EventSubscriberInterface
 {
 	protected \phpbb\user $user;
 	protected \phpbbgallery\core\config $gallery_config;
-	protected \phpbbgallery\core\auth\auth $gallery_auth;
 	protected \phpbbgallery\core\url $gallery_url;
 	protected \phpbbgallery\core\user $gallery_user;
 
@@ -50,16 +49,14 @@ class exif_listener implements EventSubscriberInterface
 	*
 	* @param \phpbb\user					$user			User object
 	* @param \phpbbgallery\core\config		$gallery_config	Core gallery config object
-	* @param \phpbbgallery\core\auth\auth	$gallery_auth	Core gallery auth object
 	* @param \phpbbgallery\core\url			$gallery_url	Core gallery url object
 	* @param \phpbbgallery\core\user		$gallery_user	Core gallery user wrapper
 	*/
 
-	public function __construct(\phpbb\user $user, \phpbbgallery\core\config $gallery_config, \phpbbgallery\core\auth\auth $gallery_auth, \phpbbgallery\core\url $gallery_url, \phpbbgallery\core\user $gallery_user)
+	public function __construct(\phpbb\user $user, \phpbbgallery\core\config $gallery_config, \phpbbgallery\core\url $gallery_url, \phpbbgallery\core\user $gallery_user)
 	{
 		$this->user = $user;
 		$this->gallery_config = $gallery_config;
-		$this->gallery_auth = $gallery_auth;
 		$this->gallery_url	= $gallery_url;
 		$this->gallery_user = $gallery_user;
 	}
@@ -282,7 +279,7 @@ class exif_listener implements EventSubscriberInterface
 	{
 		$this->user->add_lang_ext('phpbbgallery/exif', 'info_exif');
 
-		if ($this->gallery_config->get('disp_exifdata') && ($event['image_data']['image_has_exif'] != \phpbbgallery\exif\exif::UNAVAILABLE) && $this->is_jpeg_filename($event['image_data']['image_filename']) && function_exists('exif_read_data') && $this->can_view_contest_exif($event['image_data'], $event['album_data']))
+		if ($this->gallery_config->get('disp_exifdata') && ($event['image_data']['image_has_exif'] != \phpbbgallery\exif\exif::UNAVAILABLE) && $this->is_jpeg_filename($event['image_data']['image_filename']) && function_exists('exif_read_data') && !$event['hide_private_data'])
 		{
 			$exif = new \phpbbgallery\exif\exif($this->gallery_url->path('upload') . $event['image_data']['image_filename'], $event['image_id']);
 			$exif->interpret($event['image_data']['image_has_exif'], $event['image_data']['image_exif_data']);
@@ -293,19 +290,6 @@ class exif_listener implements EventSubscriberInterface
 			}
 			unset($exif);
 		}
-	}
-
-	/**
-	 * Check whether EXIF metadata may be shown while an image is in a contest.
-	 *
-	 * @param array $image_data Image data
-	 * @param array $album_data Album data
-	 * @return bool
-	 */
-	protected function can_view_contest_exif(array $image_data, array $album_data): bool
-	{
-		return (int) $image_data['image_contest'] !== \phpbbgallery\core\block::IN_CONTEST
-			|| (bool) $this->gallery_auth->acl_check('m_status', (int) $image_data['image_album_id'], (int) $album_data['album_user_id']);
 	}
 
 	/**

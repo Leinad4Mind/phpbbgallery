@@ -4,7 +4,6 @@ services:
         arguments:
             - '@user'
             - '@phpbbgallery.core.config'
-            - '@phpbbgallery.core.auth'
             - '@phpbbgallery.core.url'
             - '@phpbbgallery.core.user'
         tags:

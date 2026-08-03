@@ -31,14 +31,14 @@ class feed
 	/* @var \phpbbgallery\core\album\album */
 	protected \phpbbgallery\core\album\album $album;
 
+	/* @var \phpbbgallery\core\album\data_enricher */
+	protected \phpbbgallery\core\album\data_enricher $data_enricher;
+
 	/* @var string */
 	protected string $albums_table;
 
 	/* @var string */
 	protected string $images_table;
-
-	/* @var string */
-	protected string $contests_table;
 
 	/**
 	 * Constructor
@@ -47,21 +47,21 @@ class feed
 	 * @param \phpbbgallery\core\auth\auth      $gallery_auth   Gallery auth object
 	 * @param \phpbbgallery\core\config         $gallery_config Gallery config object
 	 * @param \phpbbgallery\core\album\album    $album          Gallery album object
+	 * @param \phpbbgallery\core\album\data_enricher $data_enricher Album extension-data boundary
 	 * @param string                            $albums_table   Gallery albums table
 	 * @param string                            $images_table   Gallery images table
-	 * @param string                            $contests_table Gallery contests table
 	 */
 	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbbgallery\core\auth\auth $gallery_auth,
-		\phpbbgallery\core\config $gallery_config, \phpbbgallery\core\album\album $album, string $albums_table, string $images_table,
-		string $contests_table)
+		\phpbbgallery\core\config $gallery_config, \phpbbgallery\core\album\album $album,
+		\phpbbgallery\core\album\data_enricher $data_enricher, string $albums_table, string $images_table)
 	{
 		$this->db = $db;
 		$this->gallery_auth = $gallery_auth;
 		$this->gallery_config = $gallery_config;
 		$this->album = $album;
+		$this->data_enricher = $data_enricher;
 		$this->albums_table = $albums_table;
 		$this->images_table = $images_table;
-		$this->contests_table = $contests_table;
 	}
 
 	/**
@@ -158,17 +158,12 @@ class feed
 		}
 
 		$sql_array = [
-			'SELECT'	=> 'i.*, a.album_name, a.album_user_id, a.album_id, c.contest_start, c.contest_end',
+			'SELECT'	=> 'i.*, a.album_name, a.album_user_id, a.album_id, a.album_type',
 			'FROM'		=> [$this->images_table => 'i'],
 			'LEFT_JOIN'	=> [
 				[
 					'FROM'	=> [$this->albums_table => 'a'],
 					'ON'	=> 'i.image_album_id = a.album_id',
-				],
-				[
-					'FROM'	=> [$this->contests_table => 'c'],
-					'ON'	=> 'i.image_album_id = c.contest_album_id
-						AND c.contest_marked <> ' . (int) \phpbbgallery\core\block::NO_CONTEST,
 				],
 			],
 			'WHERE'		=> $where,
@@ -185,7 +180,7 @@ class feed
 		}
 		$this->db->sql_freeresult($result);
 
-		return $rowset;
+		return $this->data_enricher->enrich_many($rowset);
 	}
 
 	/**

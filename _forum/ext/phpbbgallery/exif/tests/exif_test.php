@@ -55,7 +55,6 @@ final class exif_test extends TestCase
 		$expected_properties = [
 			'user' => 'phpbb\\user',
 			'gallery_config' => 'phpbbgallery\\core\\config',
-			'gallery_auth' => 'phpbbgallery\\core\\auth\\auth',
 			'gallery_url' => 'phpbbgallery\\core\\url',
 			'gallery_user' => 'phpbbgallery\\core\\user',
 		];
@@ -133,44 +132,17 @@ final class exif_test extends TestCase
 		$this->assertFalse($is_jpeg_filename->invoke($listener, 'image.png'));
 	}
 
-	public function test_contest_exif_is_limited_to_moderators(): void
+	public function test_private_metadata_visibility_comes_from_the_core_event_context(): void
 	{
-		$gallery_auth = new class extends \phpbbgallery\core\auth\auth
-		{
-			public bool $allowed = false;
-			public array $checks = [];
+		$source = (string) file_get_contents(dirname(__DIR__) . '/event/exif_listener.php');
 
-			public function __construct()
-			{
-			}
+		$this->assertStringContainsString("!\$event['hide_private_data']", $source);
+		$this->assertStringNotContainsString('image_contest', $source);
+		$this->assertStringNotContainsString('can_view_contest_exif', $source);
+		$this->assertStringNotContainsString('core\\block::IN_CONTEST', $source);
 
-			public function acl_check(string $acl, int $a_id, int $u_id = -1): bool|int
-			{
-				$this->checks[] = [$acl, $a_id, $u_id];
-				return $this->allowed;
-			}
-		};
-
-		$reflection = new \ReflectionClass(exif_listener::class);
-		$listener = $reflection->newInstanceWithoutConstructor();
-		$reflection->getProperty('gallery_auth')->setValue($listener, $gallery_auth);
-		$can_view = $reflection->getMethod('can_view_contest_exif');
-		$image_data = [
-			'image_contest' => \phpbbgallery\core\block::IN_CONTEST,
-			'image_album_id' => 31,
-		];
-		$album_data = ['album_user_id' => 7];
-
-		$this->assertFalse($can_view->invoke($listener, $image_data, $album_data));
-		$this->assertSame([['m_status', 31, 7]], $gallery_auth->checks);
-
-		$gallery_auth->allowed = true;
-		$this->assertTrue($can_view->invoke($listener, $image_data, $album_data));
-
-		$image_data['image_contest'] = 0;
-		$gallery_auth->checks = [];
-		$this->assertTrue($can_view->invoke($listener, $image_data, $album_data));
-		$this->assertSame([], $gallery_auth->checks);
+		$services = (string) file_get_contents(dirname(__DIR__) . '/config/services.yml');
+		$this->assertStringNotContainsString('@phpbbgallery.core.auth', $services);
 	}
 
 	public function test_template_events_cover_every_supported_style(): void
