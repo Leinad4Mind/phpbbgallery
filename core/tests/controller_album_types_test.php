@@ -77,7 +77,9 @@ final class controller_album_types_test extends TestCase
 
 		$this->assertStringContainsString('$this->image_visibility->hides_private_data(', $source);
 		$this->assertStringContainsString('$this->image_visibility->hides_results(', $source);
+		$this->assertStringContainsString('$this->image_visibility->restricted_sort_keys(', $source);
 		$this->assertStringNotContainsString('core\\contest::', $source);
+		$this->assertStringNotContainsString("album_data['contest_marked']", $source);
 
 		$services = (string) file_get_contents(dirname(__DIR__) . '/config/services_controller.yml');
 		$album_service = strstr($services, 'phpbbgallery.core.controller.album:');

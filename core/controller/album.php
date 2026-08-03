@@ -333,13 +333,10 @@ class album
 			$sort_by_text['lc'] = $this->language->lang('NEW_COMMENT');
 			$sort_by_sql['lc'] = 'image_last_comment';
 		}
-		$can_moderate_contest = $this->auth->acl_check('m_status', $album_id, $album_owner_id);
-		if (!empty($album_data['contest_marked']) && !$can_moderate_contest)
+		$can_moderate = $this->auth->acl_check('m_status', $album_id, $album_owner_id);
+		foreach ($this->image_visibility->restricted_sort_keys($album_data, $can_moderate) as $private_sort_key)
 		{
-			foreach (['u', 'ra', 'r', 'c', 'lc'] as $private_sort_key)
-			{
-				unset($sort_by_text[$private_sort_key], $sort_by_sql[$private_sort_key]);
-			}
+			unset($sort_by_text[$private_sort_key], $sort_by_sql[$private_sort_key]);
 		}
 		$sort_key = $this->normalize_sort_key($sort_key, $sort_by_sql);
 		if (in_array($sort_key, ['r', 'ra'], true))
