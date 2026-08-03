@@ -58,6 +58,24 @@ final class domain_image_types_test extends TestCase
 		$this->assertSame('void', (string) (new \ReflectionMethod(image::class, 'assign_block'))->getReturnType());
 	}
 
+	public function test_image_blocks_use_the_neutral_visibility_policy(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/image/image.php');
+		$assign_block = strstr($source, 'public function assign_block(');
+
+		$this->assertStringContainsString('$this->image_visibility->hides_private_data(', $assign_block);
+		$this->assertStringContainsString('$this->image_visibility->hides_results(', $assign_block);
+		$this->assertStringNotContainsString('core\\contest::', $assign_block);
+
+		$services = (string) file_get_contents(dirname(__DIR__) . '/config/services.yml');
+		$image_service = strstr($services, 'phpbbgallery.core.image:');
+		$image_service = strstr($image_service, 'phpbbgallery.core.user:', true);
+		$this->assertStringContainsString(
+			"- '@phpbbgallery.core.policy.image_visibility'",
+			$image_service
+		);
+	}
+
 	public function test_empty_image_operations_have_stable_results_without_dependencies(): void
 	{
 		$image = (new \ReflectionClass(image::class))->newInstanceWithoutConstructor();

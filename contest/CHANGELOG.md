@@ -40,3 +40,5 @@ All notable changes to the phpBB Gallery Contest add-on are documented in this f
   Core image-visibility policy.
 - Routed the Gallery index's latest-image identity through the neutral Core
   image-visibility policy.
+- Routed reusable image blocks through the neutral Core image-visibility
+  policy for identity, rating and comment privacy.
