@@ -1046,8 +1046,9 @@ class main_module
 		}
 
 		// Subscribed albums
+		$last_image_projection = 'last_image_visibility_marker';
 		$sql_array = [
-			'SELECT'		=> 'w.*, a.*, li.image_contest AS last_image_contest',
+			'SELECT'		=> 'w.*, a.*, ' . $image_visibility->projection_sql('li', $last_image_projection),
 			'FROM'			=> [$watch_table => 'w'],
 
 			'LEFT_JOIN'		=> [
@@ -1075,10 +1076,9 @@ class main_module
 		foreach ($album_rows as $row)
 		{
 			$can_moderate = $phpbb_ext_gallery_core_auth->acl_check('m_status', $row['album_id'], $row['album_user_id']);
-			$last_image_data = [
-				'image_contest' => (int) ($row['last_image_contest'] ?? 0),
+			$last_image_data = $image_visibility->projected_data($row, $last_image_projection, [
 				'image_user_id' => $row['album_last_user_id'],
-			];
+			]);
 			$hide_private_data = $image_visibility->hides_private_data(
 				$last_image_data,
 				(int) $user->data['user_id'],

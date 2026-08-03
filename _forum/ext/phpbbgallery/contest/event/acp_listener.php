@@ -9,6 +9,7 @@
 
 namespace phpbbgallery\contest\event;
 
+use phpbbgallery\contest\manager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -111,7 +112,7 @@ class acp_listener implements EventSubscriberInterface
 	public function load_album_type_data(\phpbb\event\data $event): void
 	{
 		$album_data = (array) $event['album_data'];
-		if ((int) ($album_data['album_type'] ?? -1) === (int) \phpbbgallery\core\block::TYPE_CONTEST)
+		if ((int) ($album_data['album_type'] ?? -1) === (int) manager::ALBUM_TYPE)
 		{
 			$event['album_type_data'] = $this->contest->get_contest((int) $album_data['album_id'], 'album');
 			return;
@@ -127,9 +128,9 @@ class acp_listener implements EventSubscriberInterface
 		$type_data = (array) $event['album_type_data'];
 		$start = (int) ($type_data['contest_start'] ?? time());
 		$this->template->assign_vars([
-			'S_ALBUM_ORIG_CONTEST' => (int) ($event['old_album_type'] ?? -1) === (int) \phpbbgallery\core\block::TYPE_CONTEST,
-			'S_ALBUM_CONTEST' => (int) ($album_data['album_type'] ?? -1) === (int) \phpbbgallery\core\block::TYPE_CONTEST,
-			'ALBUM_CONTEST' => (int) \phpbbgallery\core\block::TYPE_CONTEST,
+			'S_ALBUM_ORIG_CONTEST' => (int) ($event['old_album_type'] ?? -1) === (int) manager::ALBUM_TYPE,
+			'S_ALBUM_CONTEST' => (int) ($album_data['album_type'] ?? -1) === (int) manager::ALBUM_TYPE,
+			'ALBUM_CONTEST' => (int) manager::ALBUM_TYPE,
 			'S_CONTEST_START' => $this->user->format_date($start, 'Y-m-d H:i'),
 			'CONTEST_RATING' => $this->user->format_date($start + (int) ($type_data['contest_rating'] ?? 0), 'Y-m-d H:i'),
 			'CONTEST_END' => $this->user->format_date($start + (int) ($type_data['contest_end'] ?? 0), 'Y-m-d H:i'),

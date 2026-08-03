@@ -38,15 +38,19 @@ class manager
 	 */
 	private string $contest_table;
 
-	/**
-	 * Contest state written to images and contest rows after tabulation.
-	 */
-	private const NO_CONTEST = 0;
+	/** Persisted Gallery album type owned by this add-on. */
+	public const ALBUM_TYPE = 2;
+
+	/** Inactive or completed state persisted on contest and image rows. */
+	public const STATE_INACTIVE = 0;
+
+	/** Active contest state persisted on contest and image rows. */
+	public const STATE_ACTIVE = 1;
 
 	/**
 	 * Recoverable intermediate state while a selected podium is published.
 	 */
-	private const FINALIZING_CONTEST = 2;
+	private const STATE_FINALIZING = 2;
 
 	public const NUM_IMAGES = 3;
 
@@ -166,7 +170,7 @@ class manager
 		}
 
 		$is_contest = isset($album_data['album_type'])
-			? (int) $album_data['album_type'] === (int) block::TYPE_CONTEST
+			? (int) $album_data['album_type'] === self::ALBUM_TYPE
 			: !empty($album_data['contest_id']);
 
 		if (!$is_contest)
@@ -215,7 +219,7 @@ class manager
 	 */
 	public static function is_active_image(array $image_data): bool
 	{
-		return (int) ($image_data['image_contest'] ?? block::NO_CONTEST) === (int) block::IN_CONTEST;
+		return (int) ($image_data['image_contest'] ?? self::STATE_INACTIVE) === self::STATE_ACTIVE;
 	}
 
 	/**
@@ -268,7 +272,7 @@ class manager
 	public static function private_data_visibility_sql(string $alias, int $viewer_id, array $moderated_album_ids): string
 	{
 		$prefix = self::sql_alias_prefix($alias);
-		$visibility = [$prefix . 'image_contest = ' . (int) block::NO_CONTEST];
+		$visibility = [$prefix . 'image_contest = ' . self::STATE_INACTIVE];
 		$anonymous_id = defined('ANONYMOUS') ? (int) constant('ANONYMOUS') : 1;
 
 		if ($viewer_id > 0 && $viewer_id !== $anonymous_id)
@@ -295,7 +299,7 @@ class manager
 	public static function results_visibility_sql(string $alias, array $moderated_album_ids): string
 	{
 		$prefix = self::sql_alias_prefix($alias);
-		$visibility = [$prefix . 'image_contest = ' . (int) block::NO_CONTEST];
+		$visibility = [$prefix . 'image_contest = ' . self::STATE_INACTIVE];
 		$moderated_album_ids = self::normalize_album_ids($moderated_album_ids);
 
 		if ($moderated_album_ids)
@@ -367,7 +371,7 @@ class manager
 			FROM ' . $this->contest_table . '
 			WHERE contest_id = ' . (int) $contest_id . '
 				AND contest_album_id = ' . (int) $album_id . '
-				AND contest_marked IN (' . (int) block::IN_CONTEST . ', ' . self::FINALIZING_CONTEST . ')
+				AND contest_marked IN (' . self::STATE_ACTIVE . ', ' . self::STATE_FINALIZING . ')
 				AND contest_start + contest_end = ' . (int) $end_time . '
 				AND contest_start + contest_end <= ' . (int) $now;
 		$result = $this->db->sql_query_limit($sql, 1);
@@ -378,20 +382,20 @@ class manager
 			return false;
 		}
 
-		if ((int) $contest['contest_marked'] === (int) block::IN_CONTEST)
+		if ((int) $contest['contest_marked'] === self::STATE_ACTIVE)
 		{
 			$winners = $this->select_winners($album_id);
 			$first = $winners[0] ?? 0;
 			$second = $winners[1] ?? 0;
 			$third = $winners[2] ?? 0;
 			$sql = 'UPDATE ' . $this->contest_table . '
-				SET contest_marked = ' . self::FINALIZING_CONTEST . ',
+				SET contest_marked = ' . self::STATE_FINALIZING . ',
 					contest_first = ' . (int) $first . ',
 					contest_second = ' . (int) $second . ',
 					contest_third = ' . (int) $third . '
 				WHERE contest_id = ' . (int) $contest_id . '
 					AND contest_album_id = ' . (int) $album_id . '
-					AND contest_marked = ' . (int) block::IN_CONTEST . '
+					AND contest_marked = ' . self::STATE_ACTIVE . '
 					AND contest_start + contest_end = ' . (int) $end_time;
 			$this->db->sql_query($sql);
 
@@ -413,10 +417,10 @@ class manager
 		$this->persist_podium($album_id, $end_time, $winners);
 
 		$sql = 'UPDATE ' . $this->contest_table . '
-			SET contest_marked = ' . self::NO_CONTEST . '
+			SET contest_marked = ' . self::STATE_INACTIVE . '
 			WHERE contest_id = ' . (int) $contest_id . '
 				AND contest_album_id = ' . (int) $album_id . '
-				AND contest_marked = ' . self::FINALIZING_CONTEST . '
+				AND contest_marked = ' . self::STATE_FINALIZING . '
 				AND contest_start + contest_end = ' . (int) $end_time;
 		$this->db->sql_query($sql);
 
@@ -439,7 +443,7 @@ class manager
 		$sql = 'SELECT image_id
 			FROM ' . $this->images_table . '
 			WHERE image_album_id = ' . (int) $album_id . '
-				AND image_contest = ' . (int) block::IN_CONTEST . '
+				AND image_contest = ' . self::STATE_ACTIVE . '
 				AND ' . $this->db->sql_in_set('image_status', [
 					block::STATUS_APPROVED,
 					block::STATUS_LOCKED,
@@ -470,7 +474,7 @@ class manager
 			FROM ' . $this->contest_table . '
 			WHERE contest_id = ' . (int) $contest_id . '
 				AND contest_album_id = ' . (int) $album_id . '
-				AND contest_marked = ' . self::FINALIZING_CONTEST . '
+				AND contest_marked = ' . self::STATE_FINALIZING . '
 				AND contest_start + contest_end = ' . (int) $end_time;
 		$result = $this->db->sql_query_limit($sql, 1);
 		$contest = $this->db->sql_fetchrow($result);
@@ -513,12 +517,12 @@ class manager
 		$rank_sql = $rank_cases ? 'CASE image_id ' . implode(' ', $rank_cases) . ' ELSE 0 END' : '0';
 		$sql = 'UPDATE ' . $this->images_table . '
 			SET image_contest_end = CASE
-					WHEN image_contest = ' . (int) block::IN_CONTEST . '
+					WHEN image_contest = ' . self::STATE_ACTIVE . '
 						OR image_contest_end = ' . (int) $end_time . ' THEN ' . (int) $end_time . '
 					ELSE 0
 				END,
 				image_contest_rank = ' . $rank_sql . ',
-				image_contest = ' . self::NO_CONTEST . '
+				image_contest = ' . self::STATE_INACTIVE . '
 			WHERE image_album_id = ' . (int) $album_id;
 		$this->db->sql_query($sql);
 	}
@@ -536,7 +540,7 @@ class manager
 			$sql = 'SELECT contest_album_id, contest_start, contest_end
 				FROM ' . $this->contest_table . '
 				WHERE ' . $this->db->sql_in_set('contest_album_id', $album_batch) . '
-					AND contest_marked = ' . self::NO_CONTEST;
+					AND contest_marked = ' . self::STATE_INACTIVE;
 			$result = $this->db->sql_query($sql);
 			$contest_end_times = [];
 			while ($row = $this->db->sql_fetchrow($result))
@@ -605,7 +609,7 @@ class manager
 			$sql = 'UPDATE ' . $this->contest_table . '
 				SET ' . implode(",\n\t\t\t\t\t", $contest_updates) . '
 				WHERE ' . $this->db->sql_in_set('contest_album_id', $completed_album_ids) . '
-					AND contest_marked = ' . self::NO_CONTEST;
+					AND contest_marked = ' . self::STATE_INACTIVE;
 			$this->db->sql_query($sql);
 
 			$image_ranks = [];

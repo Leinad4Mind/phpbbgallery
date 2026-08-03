@@ -26,7 +26,7 @@ final class presentation_listener_test extends TestCase
 		$event = new \phpbb\event\data([
 			'context' => 'navigation',
 			'album_data' => [
-				'album_type' => \phpbbgallery\core\block::TYPE_CONTEST,
+				'album_type' => \phpbbgallery\contest\manager::ALBUM_TYPE,
 				'contest_start' => $start,
 				'contest_rating' => 600,
 				'contest_end' => 1200,
@@ -66,7 +66,7 @@ final class presentation_listener_test extends TestCase
 		$listener = new presentation_listener($language, $this->createStub(\phpbb\user::class));
 		$event = new \phpbb\event\data([
 			'image_data' => [
-				'image_contest' => \phpbbgallery\core\block::IN_CONTEST,
+				'image_contest' => \phpbbgallery\contest\manager::STATE_ACTIVE,
 				'image_user_id' => 7,
 			],
 			'viewer_id' => 8,
@@ -90,7 +90,7 @@ final class presentation_listener_test extends TestCase
 		$listener = new presentation_listener($language, $user);
 		$event = new \phpbb\event\data([
 			'image_data' => [
-				'image_contest' => \phpbbgallery\core\block::IN_CONTEST,
+				'image_contest' => \phpbbgallery\contest\manager::STATE_ACTIVE,
 				'image_user_id' => 7,
 			],
 			'album_data' => ['contest_start' => 1_000, 'contest_end' => 300],
@@ -114,7 +114,7 @@ final class presentation_listener_test extends TestCase
 		$user->method('format_date')->willReturnCallback(static fn(int $timestamp): string => (string) $timestamp);
 		$listener = new presentation_listener($language, $user);
 		$base = [
-			'image_data' => ['image_contest' => \phpbbgallery\core\block::IN_CONTEST],
+			'image_data' => ['image_contest' => \phpbbgallery\contest\manager::STATE_ACTIVE],
 			'album_data' => ['contest_start' => 1_000, 'contest_end' => 300],
 			'can_moderate' => false,
 			'message' => 'Results hidden',
@@ -140,7 +140,7 @@ final class presentation_listener_test extends TestCase
 		$event = new \phpbb\event\data([
 			'operation' => 'comment',
 			'album_data' => [
-				'album_type' => \phpbbgallery\core\block::TYPE_CONTEST,
+				'album_type' => \phpbbgallery\contest\manager::ALBUM_TYPE,
 				'contest_start' => 1_000,
 				'contest_end' => 300,
 			],

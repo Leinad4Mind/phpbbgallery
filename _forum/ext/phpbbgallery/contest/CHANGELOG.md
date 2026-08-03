@@ -43,7 +43,11 @@ All notable changes to the phpBB Gallery Contest add-on are documented in this f
 - Routed last-image identity privacy in album listings through the neutral Core
   image-visibility policy.
 - Routed album and image subscription privacy in the UCP through the neutral
-  Core image-visibility policy.
+  Core image-visibility policy without exposing the legacy contest marker in
+  album or UCP result rows.
+- Made the Contest add-on the owner of its persisted album type and state
+  values; Gallery Core retains documented deprecated aliases for compatibility
+  with existing add-ons and stored data.
 - Routed the Gallery index's latest-image identity through the neutral Core
   image-visibility policy.
 - Routed reusable image blocks through the neutral Core image-visibility

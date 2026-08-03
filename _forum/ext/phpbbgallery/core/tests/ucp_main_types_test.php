@@ -113,7 +113,9 @@ final class ucp_main_types_test extends TestCase
 		$this->assertStringContainsString('$image_visibility->hides_results(', $source);
 		$this->assertStringNotContainsString('core\\contest::', $source);
 		$this->assertStringNotContainsString('block::TYPE_CONTEST', $source);
-		$this->assertStringContainsString('li.image_contest AS last_image_contest', $source);
+		$this->assertStringContainsString("projection_sql('li', \$last_image_projection)", $source);
+		$this->assertStringContainsString('projected_data($row, $last_image_projection', $source);
+		$this->assertStringNotContainsString('last_image_contest', $source);
 		$this->assertStringContainsString('li.image_id = a.album_last_image_id', $source);
 		$this->assertStringContainsString('$hide_results ? 0', $source);
 		$this->assertStringContainsString('$album_data_enricher->enrich_many($album_rows)', $source);

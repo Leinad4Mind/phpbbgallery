@@ -9,6 +9,7 @@
 
 namespace phpbbgallery\contest\event;
 
+use phpbbgallery\contest\manager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class album_lifecycle_listener implements EventSubscriberInterface
@@ -41,7 +42,7 @@ class album_lifecycle_listener implements EventSubscriberInterface
 	public function validate(\phpbb\event\data $event): void
 	{
 		$album_data = (array) $event['album_data'];
-		if ((int) ($album_data['album_type'] ?? -1) !== (int) \phpbbgallery\core\block::TYPE_CONTEST)
+		if ((int) ($album_data['album_type'] ?? -1) !== (int) manager::ALBUM_TYPE)
 		{
 			return;
 		}
@@ -95,14 +96,14 @@ class album_lifecycle_listener implements EventSubscriberInterface
 	public function created(\phpbb\event\data $event): void
 	{
 		$album_data = (array) $event['album_data'];
-		if ((int) $album_data['album_type'] !== (int) \phpbbgallery\core\block::TYPE_CONTEST)
+		if ((int) $album_data['album_type'] !== (int) manager::ALBUM_TYPE)
 		{
 			return;
 		}
 
 		$data = (array) $event['album_type_data'];
 		$data['contest_album_id'] = (int) $album_data['album_id'];
-		$data['contest_marked'] = (int) \phpbbgallery\core\block::IN_CONTEST;
+		$data['contest_marked'] = (int) manager::STATE_ACTIVE;
 		$this->db->sql_query('INSERT INTO ' . $this->contests_table . ' ' . $this->db->sql_build_array('INSERT', $data));
 		$contest_id = (int) $this->db->sql_nextid();
 		$this->db->sql_query('UPDATE ' . $this->albums_table . '
@@ -120,18 +121,18 @@ class album_lifecycle_listener implements EventSubscriberInterface
 		$old_type = (int) $row['album_type'];
 		$new_type = (int) $album_data['album_type'];
 		$errors = (array) $event['errors'];
-		if (($old_type === (int) \phpbbgallery\core\block::TYPE_CONTEST) !==
-			($new_type === (int) \phpbbgallery\core\block::TYPE_CONTEST))
+		if (($old_type === (int) manager::ALBUM_TYPE) !==
+			($new_type === (int) manager::ALBUM_TYPE))
 		{
 			$errors[] = $this->language->lang(
-				$old_type === (int) \phpbbgallery\core\block::TYPE_CONTEST
+				$old_type === (int) manager::ALBUM_TYPE
 					? 'ALBUM_WITH_CONTEST_NO_TYPE_CHANGE'
 					: 'ALBUM_NO_TYPE_CHANGE_TO_CONTEST'
 			);
 			$event['errors'] = $errors;
 			return;
 		}
-		if ($new_type !== (int) \phpbbgallery\core\block::TYPE_CONTEST)
+		if ($new_type !== (int) manager::ALBUM_TYPE)
 		{
 			return;
 		}
@@ -140,10 +141,10 @@ class album_lifecycle_listener implements EventSubscriberInterface
 		$existing = $this->contest->get_contest((int) $row['album_id'], 'album');
 		$data['contest_id'] = (int) $existing['contest_id'];
 		$state = (array) $event['album_type_state'];
-		if ((int) $existing['contest_marked'] === (int) \phpbbgallery\core\block::NO_CONTEST
+		if ((int) $existing['contest_marked'] === (int) manager::STATE_INACTIVE
 			&& (int) $data['contest_start'] + (int) $data['contest_end'] > time())
 		{
-			$data['contest_marked'] = (int) \phpbbgallery\core\block::IN_CONTEST;
+			$data['contest_marked'] = (int) manager::STATE_ACTIVE;
 			$state['reset_marked_images'] = true;
 		}
 		$event['album_type_data'] = $data;
@@ -153,7 +154,7 @@ class album_lifecycle_listener implements EventSubscriberInterface
 	public function updated(\phpbb\event\data $event): void
 	{
 		$album_data = (array) $event['album_data_sql'];
-		if ((int) $album_data['album_type'] !== (int) \phpbbgallery\core\block::TYPE_CONTEST)
+		if ((int) $album_data['album_type'] !== (int) manager::ALBUM_TYPE)
 		{
 			return;
 		}
@@ -178,7 +179,7 @@ class album_lifecycle_listener implements EventSubscriberInterface
 			$this->db->sql_query('UPDATE ' . $this->images_table . '
 				SET image_contest_rank = 0,
 					image_contest_end = 0,
-					image_contest = ' . (int) \phpbbgallery\core\block::IN_CONTEST . '
+					image_contest = ' . (int) manager::STATE_ACTIVE . '
 				WHERE image_album_id = ' . (int) $event['album_id']);
 		}
 	}
@@ -188,7 +189,7 @@ class album_lifecycle_listener implements EventSubscriberInterface
 		$data = (array) $event['image_move_data'];
 		$data['image_contest_rank'] = 0;
 		$data['image_contest_end'] = 0;
-		$data['image_contest'] = (int) \phpbbgallery\core\block::NO_CONTEST;
+		$data['image_contest'] = (int) manager::STATE_INACTIVE;
 		$event['image_move_data'] = $data;
 	}
 

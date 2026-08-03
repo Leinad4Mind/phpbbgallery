@@ -16,6 +16,16 @@ use PHPUnit\Framework\TestCase;
 
 final class manager_types_test extends TestCase
 {
+	public function test_owned_persisted_values_match_legacy_core_aliases(): void
+	{
+		$this->assertSame(2, contest::ALBUM_TYPE);
+		$this->assertSame(0, contest::STATE_INACTIVE);
+		$this->assertSame(1, contest::STATE_ACTIVE);
+		$this->assertSame(block::TYPE_CONTEST, contest::ALBUM_TYPE);
+		$this->assertSame(block::NO_CONTEST, contest::STATE_INACTIVE);
+		$this->assertSame(block::IN_CONTEST, contest::STATE_ACTIVE);
+	}
+
 	public function test_contest_properties_parameters_and_returns_are_fully_typed(): void
 	{
 		$reflection = new \ReflectionClass(contest::class);
@@ -77,7 +87,7 @@ final class manager_types_test extends TestCase
 	public function test_contest_phase_boundaries_are_explicit_and_contiguous(): void
 	{
 		$album_data = [
-			'album_type' => block::TYPE_CONTEST,
+			'album_type' => contest::ALBUM_TYPE,
 			'contest_id' => 7,
 			'contest_start' => 100,
 			'contest_rating' => 20,
@@ -100,10 +110,10 @@ final class manager_types_test extends TestCase
 
 	public function test_broken_contest_configuration_fails_closed(): void
 	{
-		$missing_row = ['album_type' => block::TYPE_CONTEST, 'contest_id' => 0];
-		$incomplete_row = ['album_type' => block::TYPE_CONTEST, 'contest_id' => 7];
+		$missing_row = ['album_type' => contest::ALBUM_TYPE, 'contest_id' => 0];
+		$incomplete_row = ['album_type' => contest::ALBUM_TYPE, 'contest_id' => 7];
 		$invalid_window = [
-			'album_type' => block::TYPE_CONTEST,
+			'album_type' => contest::ALBUM_TYPE,
 			'contest_id' => 7,
 			'contest_start' => 100,
 			'contest_rating' => 60,
@@ -121,7 +131,7 @@ final class manager_types_test extends TestCase
 	public function test_active_contest_privacy_preserves_only_registered_owner_and_moderator_exceptions(): void
 	{
 		$active = [
-			'image_contest' => block::IN_CONTEST,
+			'image_contest' => contest::STATE_ACTIVE,
 			'image_user_id' => 7,
 		];
 
@@ -130,7 +140,7 @@ final class manager_types_test extends TestCase
 		$this->assertFalse(contest::hides_private_data($active, 7, false));
 		$this->assertFalse(contest::hides_private_data($active, 8, true));
 		$this->assertFalse(contest::hides_private_data([
-			'image_contest' => block::NO_CONTEST,
+			'image_contest' => contest::STATE_INACTIVE,
 			'image_user_id' => 7,
 		], 8, false));
 	}
@@ -140,18 +150,18 @@ final class manager_types_test extends TestCase
 		$anonymous_id = defined('ANONYMOUS') ? (int) constant('ANONYMOUS') : 1;
 
 		$this->assertTrue(contest::hides_private_data([
-			'image_contest' => block::IN_CONTEST,
+			'image_contest' => contest::STATE_ACTIVE,
 			'image_user_id' => $anonymous_id,
 		], $anonymous_id, false));
 	}
 
 	public function test_active_contest_results_are_visible_only_to_moderators(): void
 	{
-		$active = ['image_contest' => block::IN_CONTEST];
+		$active = ['image_contest' => contest::STATE_ACTIVE];
 
 		$this->assertTrue(contest::hides_results($active, false));
 		$this->assertFalse(contest::hides_results($active, true));
-		$this->assertFalse(contest::hides_results(['image_contest' => block::NO_CONTEST], false));
+		$this->assertFalse(contest::hides_results(['image_contest' => contest::STATE_INACTIVE], false));
 		$this->assertFalse(contest::is_active_image([]));
 	}
 

@@ -448,8 +448,9 @@ class display
 			$sql_where = 'a.left_id > ' . (int) $root_data['left_id'] . ' AND a.left_id < ' . (int) $root_data['right_id'] . ' AND a.album_user_id = ' . (int) $root_data['album_user_id'];
 		}
 
+		$last_image_projection = 'last_image_visibility_marker';
 		$sql_array = [
-			'SELECT'	=> 'a.*, at.mark_time, li.image_contest AS last_image_contest',
+			'SELECT'	=> 'a.*, at.mark_time, ' . $this->image_visibility->projection_sql('li', $last_image_projection),
 			'FROM'		=> [$this->table_albums => 'a'],
 
 			'LEFT_JOIN'	=> [
@@ -551,7 +552,7 @@ class display
 					$branch_root_id = $album_id;
 				}
 				$album_rows[$parent_id]['album_id_last_image'] = $row['album_id'];
-				$album_rows[$parent_id]['last_image_contest'] = (int) ($row['last_image_contest'] ?? 0);
+				$album_rows[$parent_id][$last_image_projection] = (int) ($row[$last_image_projection] ?? 0);
 				$album_rows[$parent_id]['orig_album_last_image_time'] = $row['album_last_image_time'];
 			}
 			else if ($row['album_type'])
@@ -577,7 +578,7 @@ class display
 					$album_rows[$parent_id]['album_last_user_id'] = $row['album_last_user_id'];
 					$album_rows[$parent_id]['album_last_username'] = $row['album_last_username'];
 					$album_rows[$parent_id]['album_last_user_colour'] = $row['album_last_user_colour'];
-					$album_rows[$parent_id]['last_image_contest'] = (int) ($row['last_image_contest'] ?? 0);
+					$album_rows[$parent_id][$last_image_projection] = (int) ($row[$last_image_projection] ?? 0);
 					$album_rows[$parent_id]['album_id_last_image'] = $album_id;
 				}
 			}
@@ -739,10 +740,9 @@ class display
 			$s_subalbums_list = (string) implode(', ', $s_subalbums_list);
 			$catless = ($row['parent_id'] == $root_data['album_id']) ? true : false;
 
-			$last_image_data = [
-				'image_contest' => (int) ($row['last_image_contest'] ?? 0),
+			$last_image_data = $this->image_visibility->projected_data($row, $last_image_projection, [
 				'image_user_id' => (int) $row['album_last_user_id'],
-			];
+			]);
 			$can_moderate = $this->gallery_auth->acl_check('m_status', $album_id, $row['album_user_id']);
 			$s_username_hidden = $this->image_visibility->hides_private_data(
 				$last_image_data,
