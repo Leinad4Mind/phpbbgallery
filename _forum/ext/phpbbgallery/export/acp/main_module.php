@@ -61,12 +61,59 @@ class main_module
 			$this->delete_job($storage, $language);
 		}
 
+		if ($request->is_set_post('save_settings'))
+		{
+			$this->save_settings($language);
+		}
+
 		if ($request->is_set_post('submit'))
 		{
 			$this->start_job($user_id, $runner, $language);
 		}
 
 		$this->display_form($storage, $runner, $language);
+	}
+
+	/**
+	 * Save the resource limits used by new ACP and UCP exports.
+	 */
+	protected function save_settings(\phpbb\language\language $language): void
+	{
+		global $config, $request;
+
+		if (!check_form_key('acp_gallery'))
+		{
+			trigger_error($language->lang('FORM_INVALID') . adm_back_link($this->u_action), E_USER_WARNING);
+			return;
+		}
+
+		$settings = $this->normalize_settings(
+			$request->variable('export_max_images', 5000),
+			$request->variable('export_max_size_mib', 2048),
+			$request->variable('export_batch_size', 25)
+		);
+
+		$config->set('phpbb_gallery_export_max_images', $settings['max_images']);
+		$config->set('phpbb_gallery_export_max_bytes', $settings['max_bytes']);
+		$config->set('phpbb_gallery_export_batch_size', $settings['batch_size']);
+
+		trigger_error($language->lang('EXPORT_SETTINGS_SAVED') . adm_back_link($this->u_action));
+	}
+
+	/**
+	 * Normalize administrator input before it reaches phpBB's configuration.
+	 *
+	 * @return array{max_images: int, max_bytes: int, batch_size: int}
+	 */
+	protected function normalize_settings(int $max_images, int $max_size_mib, int $batch_size): array
+	{
+		$maximum_size_mib = intdiv(\phpbbgallery\export\runner::MAX_EXPORT_BYTES, 1048576);
+
+		return [
+			'max_images' => max(1, min($max_images, job_storage::MAX_IMAGES)),
+			'max_bytes' => max(1, min($max_size_mib, $maximum_size_mib)) * 1048576,
+			'batch_size' => max(1, min($batch_size, \phpbbgallery\export\runner::MAX_BATCH_SIZE)),
+		];
 	}
 
 	/**
@@ -201,7 +248,7 @@ class main_module
 	 */
 	protected function display_form(job_storage $storage, \phpbbgallery\export\runner $runner, \phpbb\language\language $language): void
 	{
-		global $config, $template, $user, $phpbb_container;
+		global $template, $user, $phpbb_container;
 
 		$gallery_album = $phpbb_container->get('phpbbgallery.core.album');
 		$controller_helper = $phpbb_container->get('controller.helper');
@@ -236,9 +283,16 @@ class main_module
 			'S_ALBUM_OPTIONS'		=> $gallery_album->get_albumbox(false, false, false, 'a_list'),
 
 			'EXPORT_MAX_IMAGES'		=> $runner->get_max_images(job_storage::SCOPE_ACP),
-			'EXPORT_MAX_SIZE'		=> get_formatted_filesize((int) $config['phpbb_gallery_export_max_bytes']),
+			'EXPORT_MAX_SIZE'		=> get_formatted_filesize($runner->get_max_bytes()),
 			'EXPORT_BATCH_SIZE'		=> $runner->get_batch_size(),
 			'EXPORT_SERVER_PATH'	=> 'files/phpbbgallery/export/',
+
+			'EXPORT_SETTING_MAX_IMAGES' => $runner->get_max_images(job_storage::SCOPE_ACP),
+			'EXPORT_SETTING_MAX_SIZE_MIB' => intdiv($runner->get_max_bytes(), 1048576),
+			'EXPORT_SETTING_BATCH_SIZE' => $runner->get_batch_size(),
+			'EXPORT_HARD_MAX_IMAGES' => job_storage::MAX_IMAGES,
+			'EXPORT_HARD_MAX_SIZE_MIB' => intdiv(\phpbbgallery\export\runner::MAX_EXPORT_BYTES, 1048576),
+			'EXPORT_HARD_MAX_BATCH_SIZE' => \phpbbgallery\export\runner::MAX_BATCH_SIZE,
 		]);
 	}
 }

@@ -18,6 +18,10 @@ namespace phpbbgallery\export;
  */
 class runner
 {
+	public const MAX_BATCH_SIZE = 500;
+	public const MIN_EXPORT_BYTES = 1048576;
+	public const MAX_EXPORT_BYTES = 1099511627776;
+
 	/** @var \phpbb\config\config */
 	protected \phpbb\config\config $config;
 
@@ -85,8 +89,8 @@ class runner
 			return ['error' => $this->language->lang('EXPORT_TOO_MANY_IMAGES', $max_images)];
 		}
 
-		$max_bytes = (int) $this->config['phpbb_gallery_export_max_bytes'];
-		if ($max_bytes > 0 && $bytes > $max_bytes)
+		$max_bytes = $this->get_max_bytes();
+		if ($bytes > $max_bytes)
 		{
 			return ['error' => $this->language->lang('EXPORT_SIZE_LIMIT_EXCEEDED', get_formatted_filesize($max_bytes))];
 		}
@@ -204,7 +208,18 @@ class runner
 	 */
 	public function get_batch_size(): int
 	{
-		return max(1, (int) $this->config['phpbb_gallery_export_batch_size']);
+		return max(1, min((int) $this->config['phpbb_gallery_export_batch_size'], self::MAX_BATCH_SIZE));
+	}
+
+	/**
+	 * Largest total source size permitted for one export.
+	 */
+	public function get_max_bytes(): int
+	{
+		return max(
+			self::MIN_EXPORT_BYTES,
+			min((int) $this->config['phpbb_gallery_export_max_bytes'], self::MAX_EXPORT_BYTES)
+		);
 	}
 
 	/**

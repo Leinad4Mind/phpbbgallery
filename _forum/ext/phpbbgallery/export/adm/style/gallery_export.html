@@ -5,6 +5,31 @@
 <h1>{{ lang('ACP_GALLERY_EXPORT') }}</h1>
 <p>{{ lang('ACP_GALLERY_EXPORT_EXPLAIN') }}</p>
 
+<form id="acp_gallery_settings" method="post" action="{{ U_ACTION }}">
+	<fieldset>
+		<legend>{{ lang('EXPORT_SETTINGS') }}</legend>
+		<dl>
+			<dt><label for="export_max_images">{{ lang('EXPORT_MAX_IMAGES') }}{{ lang('COLON') }}</label>
+				<br /><span>{{ lang('EXPORT_MAX_IMAGES_EXPLAIN', EXPORT_HARD_MAX_IMAGES) }}</span></dt>
+			<dd><input type="number" id="export_max_images" name="export_max_images" min="1" max="{{ EXPORT_HARD_MAX_IMAGES }}" value="{{ EXPORT_SETTING_MAX_IMAGES }}" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="export_max_size_mib">{{ lang('EXPORT_MAX_SIZE_MIB') }}{{ lang('COLON') }}</label>
+				<br /><span>{{ lang('EXPORT_MAX_SIZE_MIB_EXPLAIN', EXPORT_HARD_MAX_SIZE_MIB) }}</span></dt>
+			<dd><input type="number" id="export_max_size_mib" name="export_max_size_mib" min="1" max="{{ EXPORT_HARD_MAX_SIZE_MIB }}" value="{{ EXPORT_SETTING_MAX_SIZE_MIB }}" /></dd>
+		</dl>
+		<dl>
+			<dt><label for="export_batch_size">{{ lang('EXPORT_BATCH_SIZE') }}{{ lang('COLON') }}</label>
+				<br /><span>{{ lang('EXPORT_BATCH_SIZE_EXPLAIN', EXPORT_HARD_MAX_BATCH_SIZE) }}</span></dt>
+			<dd><input type="number" id="export_batch_size" name="export_batch_size" min="1" max="{{ EXPORT_HARD_MAX_BATCH_SIZE }}" value="{{ EXPORT_SETTING_BATCH_SIZE }}" /></dd>
+		</dl>
+		<p class="submit-buttons">
+			<input class="button1" type="submit" name="save_settings" value="{{ lang('SUBMIT') }}" />
+			{{ S_FORM_TOKEN }}
+		</p>
+	</fieldset>
+</form>
+
 <form id="acp_gallery" method="post" action="{{ U_ACTION }}">
 	<fieldset class="field1">
 		<legend>{{ lang('EXPORT_SELECTION') }}</legend>

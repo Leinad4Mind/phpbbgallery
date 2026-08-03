@@ -126,10 +126,27 @@ class runner_test extends TestCase
 
 	public function test_a_selection_beyond_the_size_limit_is_refused(): void
 	{
-		$result = $this->runner(new fake_export(), ['phpbb_gallery_export_max_bytes' => 100])
-			->create(2, job_storage::SCOPE_ACP, job_storage::DELIVERY_DOWNLOAD, [], ['image_ids' => [1], 'bytes' => 101]);
+		$result = $this->runner(new fake_export(), ['phpbb_gallery_export_max_bytes' => runner::MIN_EXPORT_BYTES])
+			->create(2, job_storage::SCOPE_ACP, job_storage::DELIVERY_DOWNLOAD, [], ['image_ids' => [1], 'bytes' => runner::MIN_EXPORT_BYTES + 1]);
 
 		self::assertSame('EXPORT_SIZE_LIMIT_EXCEEDED', $result['error']);
+	}
+
+	public function test_resource_limits_are_clamped_to_safe_boundaries(): void
+	{
+		$minimum = $this->runner(new fake_export(), [
+			'phpbb_gallery_export_batch_size' => 0,
+			'phpbb_gallery_export_max_bytes' => 0,
+		]);
+		$maximum = $this->runner(new fake_export(), [
+			'phpbb_gallery_export_batch_size' => runner::MAX_BATCH_SIZE + 1,
+			'phpbb_gallery_export_max_bytes' => runner::MAX_EXPORT_BYTES + 1,
+		]);
+
+		self::assertSame(1, $minimum->get_batch_size());
+		self::assertSame(runner::MIN_EXPORT_BYTES, $minimum->get_max_bytes());
+		self::assertSame(runner::MAX_BATCH_SIZE, $maximum->get_batch_size());
+		self::assertSame(runner::MAX_EXPORT_BYTES, $maximum->get_max_bytes());
 	}
 
 	public function test_the_member_limit_applies_to_a_member_export(): void

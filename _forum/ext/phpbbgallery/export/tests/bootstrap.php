@@ -163,5 +163,6 @@ namespace
 	require_once dirname(__DIR__) . '/job_storage.php';
 	require_once dirname(__DIR__) . '/export.php';
 	require_once dirname(__DIR__) . '/runner.php';
+	require_once dirname(__DIR__) . '/acp/main_module.php';
 	require_once dirname(__DIR__) . '/cron/prune_exports.php';
 }
