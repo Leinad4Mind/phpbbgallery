@@ -62,6 +62,9 @@ class index
 	/** @var \phpbbgallery\core\policy\image_visibility */
 	protected \phpbbgallery\core\policy\image_visibility $image_visibility;
 
+	/** @var \phpbb\event\dispatcher_interface */
+	protected \phpbb\event\dispatcher_interface $dispatcher;
+
 	/** @var string */
 	protected string $root_path;
 
@@ -90,6 +93,7 @@ class index
 	 * @param \phpbbgallery\core\search                                 $gallery_search
 	 * @param \phpbbgallery\core\image\image                            $image
 	 * @param \phpbbgallery\core\policy\image_visibility                $image_visibility
+	 * @param \phpbb\event\dispatcher_interface                        $dispatcher
 	 * @param string                                                    $root_path Root path
 	 * @param string                                                    $php_ext   php file extension
 	 */
@@ -98,7 +102,7 @@ class index
 		\phpbb\controller\helper $helper, \phpbbgallery\core\album\display $display, \phpbbgallery\core\config $gallery_config,
 		\phpbbgallery\core\auth\auth $gallery_auth, \phpbbgallery\core\search $gallery_search, \phpbb\pagination $pagination,
 		\phpbbgallery\core\user $gallery_user, \phpbbgallery\core\image\image $image,
-		\phpbbgallery\core\policy\image_visibility $image_visibility,
+		\phpbbgallery\core\policy\image_visibility $image_visibility, \phpbb\event\dispatcher_interface $dispatcher,
 		string $root_path, string $php_ext)
 	{
 		$this->auth = $auth;
@@ -117,6 +121,7 @@ class index
 		$this->gallery_user = $gallery_user;
 		$this->image = $image;
 		$this->image_visibility = $image_visibility;
+		$this->dispatcher = $dispatcher;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
 	}
@@ -319,10 +324,6 @@ class index
 		$show_comments = (bool) ($show_options & self::RRC_MODE_RECENT_COMMENTS);
 		$show_random   = (bool) ($show_options & self::RRC_MODE_RANDOM_IMAGES);
 		$show_recent   = (bool) ($show_options & self::RRC_MODE_RECENT_IMAGES);
-		$has_visible_contest_winners = $this->config['load_search']
-			&& $this->auth->acl_get('u_search')
-			&& $this->gallery_search->has_visible_contest_winners();
-
 		$this->template->assign_vars([
 			'TOTAL_IMAGES'		=> ($this->gallery_config->get('disp_statistic')) ? $this->language->lang('TOTAL_IMAGES_SPRINTF', $this->gallery_config->get('num_images')) : '',
 			'TOTAL_VIEWS'		=> ($this->gallery_config->get('disp_statistic')) ? $this->gallery_config->get('num_views') : false,
@@ -331,19 +332,33 @@ class index
 			'NEWEST_PGALLERIES'	=> ($this->gallery_config->get('num_pegas')) ? sprintf($this->language->lang('NEWEST_PGALLERY'), '<a href="' . $this->helper->route('phpbbgallery_core_album', ['album_id' => $this->gallery_config->get('newest_pega_album_id')]) . '" '. ($this->gallery_config->get('newest_pega_user_colour') ? 'class="username-coloured" style="color: #' . $this->gallery_config->get('newest_pega_user_colour') . ';"' : 'class="username"') . '>' . $this->gallery_config->get('newest_pega_username') . '</a>') : '',
 		]);
 
-		$this->template->assign_vars([
+		$dropdown_links = [
 			'U_MCP'		=> ($this->gallery_auth->acl_check_global('m_')) ? $this->helper->route('phpbbgallery_core_moderate') : '',
 			'U_MARK_ALBUMS'					=> ($this->user->data['is_registered']) ? $this->helper->route($base_route, ['hash' => generate_link_hash('global'), 'mark' => 'albums']) : '',
 			'S_LOGIN_ACTION'			=> append_sid($this->root_path . 'ucp.' . $this->php_ext, 'mode=login&amp;redirect=' . urlencode($this->helper->route($base_route))),
 
 			'U_GALLERY_SEARCH'				=> $this->helper->route('phpbbgallery_core_search'),
 			'U_G_SEARCH_COMMENTED'			=> $this->config['phpbb_gallery_allow_comments'] && $show_comments ? $this->helper->route('phpbbgallery_core_search_commented') : false,
-			'U_G_SEARCH_CONTESTS'			=> $has_visible_contest_winners ? $this->helper->route('phpbbgallery_core_search_contests') : false,
 			'U_G_SEARCH_RECENT'				=> $show_recent ? $this->helper->route('phpbbgallery_core_search_recent') : false,
 			'U_G_SEARCH_RANDOM'				=> $show_random ? $this->helper->route('phpbbgallery_core_search_random') : false,
 			'U_G_SEARCH_SELF'				=> $this->helper->route('phpbbgallery_core_search_egosearch'),
 			'U_G_SEARCH_TOPRATED'			=> $this->config['phpbb_gallery_allow_rates'] ? $this->helper->route('phpbbgallery_core_search_toprated') : '',
-		]);
+		];
+
+		/**
+		 * Allow optional providers to add links to the Gallery index menu.
+		 *
+		 * @event phpbbgallery.core.index.dropdown_links
+		 * @var array  dropdown_links Template variables for index menu links
+		 * @var string base_route     Current Gallery index route
+		 * @since 4.1.0
+		 */
+		$vars = ['dropdown_links', 'base_route'];
+		extract($this->dispatcher->trigger_event(
+			'phpbbgallery.core.index.dropdown_links',
+			compact($vars)
+		));
+		$this->template->assign_vars($dropdown_links);
 	}
 
 	protected function display_legend(): void

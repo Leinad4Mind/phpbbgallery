@@ -101,13 +101,13 @@ final class controller_index_types_test extends TestCase
 		);
 	}
 
-	public function test_contest_winner_link_is_permission_checked_and_visibility_aware(): void
+	public function test_optional_index_links_are_added_through_neutral_event(): void
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/index.php');
 
-		$this->assertStringContainsString("['load_search']", $source);
-		$this->assertStringContainsString("acl_get('u_search')", $source);
-		$this->assertStringContainsString('has_visible_contest_winners()', $source);
-		$this->assertStringContainsString("'U_G_SEARCH_CONTESTS'", $source);
+		$this->assertStringContainsString('phpbbgallery.core.index.dropdown_links', $source);
+		$this->assertStringContainsString('$this->template->assign_vars($dropdown_links)', $source);
+		$this->assertStringNotContainsString('has_visible_contest_winners()', $source);
+		$this->assertStringNotContainsString("'U_G_SEARCH_CONTESTS'", $source);
 	}
 }
