@@ -27,6 +27,7 @@ class presentation_listener implements EventSubscriberInterface
 		return [
 			'phpbbgallery.core.album.enrich_template_vars' => 'enrich_album_template_vars',
 			'phpbbgallery.core.image_visibility.private_data_label' => 'private_data_label',
+			'phpbbgallery.core.image_visibility.private_data_description' => 'private_data_description',
 		];
 	}
 
@@ -39,6 +40,28 @@ class presentation_listener implements EventSubscriberInterface
 		))
 		{
 			$event['label'] = $this->language->lang('CONTEST_USERNAME');
+		}
+	}
+
+	public function private_data_description(\phpbb\event\data $event): void
+	{
+		if (!\phpbbgallery\contest\manager::hides_private_data(
+			(array) $event['image_data'],
+			(int) $event['viewer_id'],
+			(bool) $event['can_moderate']
+		))
+		{
+			return;
+		}
+
+		$album_data = (array) $event['album_data'];
+		$end_time = (int) ($album_data['contest_start'] ?? 0) + (int) ($album_data['contest_end'] ?? 0);
+		if ($end_time > 0)
+		{
+			$event['description'] = $this->language->lang(
+				'CONTEST_IMAGE_DESC',
+				$this->user->format_date($end_time, false, true)
+			);
 		}
 	}
 

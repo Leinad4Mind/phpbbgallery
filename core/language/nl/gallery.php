@@ -96,6 +96,7 @@ $lang = array_merge($lang, [
 	'CONTEST_RESULT_HIDDEN'   => 'De beoordelingen van deze afbeeldingen zijn verborgen tot de wedstrijd eindigt op %s.',
 	'CONTEST_STARTED'         => 'Deze wedstrijd is begonnen op %s.',
 	'CONTEST_STARTS'          => 'Deze wedstrijd begint op %s.',
+	'GALLERY_PRIVATE_IMAGE_DESC' => '<strong>Privéafbeelding</strong> » De afbeeldingsbeschrijving is momenteel verborgen.',
 	'GALLERY_PRIVATE_USER'    => '<strong>Verborgen gebruiker</strong>',
 	'CONTEST_USERNAME'        => '<strong>Wedstrijd</strong>',
 	'CONTEST_USERNAME_LONG'   => '<strong>Wedstrijd</strong> » De gebruikersnaam is verborgen tot de wedsteijd eindigt op %s.',
