@@ -293,14 +293,6 @@ phpbbgallery_core_search_toprated_page:
     defaults: { _controller: phpbbgallery.core.controller.search:toprated }
     requirements:
         page: \d+
-phpbbgallery_core_search_contests:
-    path: /gallery/search/contests
-    defaults: { _controller: phpbbgallery.core.controller.search:contests, page: 1 }
-phpbbgallery_core_search_contests_page:
-    path: /gallery/search/contests/{page}
-    defaults: { _controller: phpbbgallery.core.controller.search:contests }
-    requirements:
-        page: \d+
 phpbbgallery_core_search:
     path: /gallery/search
     defaults: { _controller: phpbbgallery.core.controller.search:base, page: 1 }

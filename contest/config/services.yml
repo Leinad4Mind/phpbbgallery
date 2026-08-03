@@ -24,6 +24,25 @@ services:
             - '%phpbbgallery.tables.gallery_images%'
             - '%phpbbgallery.tables.gallery_albums%'
             - '%phpbbgallery.contest.tables.contests%'
+    phpbbgallery.contest.controller.winners:
+        class: phpbbgallery\contest\controller\winners
+        arguments:
+            - '@auth'
+            - '@config'
+            - '@template'
+            - '@language'
+            - '@controller.helper'
+            - '@phpbbgallery.core.config'
+            - '@phpbbgallery.contest.winner_search'
+    phpbbgallery.contest.index_listener:
+        class: phpbbgallery\contest\event\index_listener
+        arguments:
+            - '@auth'
+            - '@config'
+            - '@controller.helper'
+            - '@phpbbgallery.contest.winner_search'
+        tags:
+            - { name: event.listener }
     phpbbgallery.contest.policy_listener:
         class: phpbbgallery\contest\event\policy_listener
         arguments:
