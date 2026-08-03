@@ -29,6 +29,7 @@ class policy_listener implements EventSubscriberInterface
 		return [
 			'phpbbgallery.core.album.types' => 'register_album_type',
 			'phpbbgallery.core.album.enrich_data' => 'enrich_album_data',
+			'phpbbgallery.core.album.enrich_rows' => 'enrich_album_rows',
 			'phpbbgallery.core.album.prepare_display' => 'finalize_expired_contest',
 			'phpbbgallery.core.album_operation' => 'restrict_album_operation',
 			'phpbbgallery.core.upload.update_image_before' => 'mark_contest_upload',
@@ -86,6 +87,34 @@ class policy_listener implements EventSubscriberInterface
 		{
 			$event['album_data'] = array_merge($album_data, $contest_data);
 		}
+	}
+
+	public function enrich_album_rows(\phpbb\event\data $event): void
+	{
+		$album_rows = (array) $event['album_rows'];
+		$contest_album_ids = [];
+		foreach ($album_rows as $row)
+		{
+			if ((int) ($row['album_type'] ?? -1) === (int) \phpbbgallery\core\block::TYPE_CONTEST)
+			{
+				$contest_album_ids[] = (int) ($row['album_id'] ?? 0);
+			}
+		}
+
+		$contest_rows = $this->contest->get_contests_by_album_ids($contest_album_ids);
+		foreach ($album_rows as $index => $row)
+		{
+			$album_id = (int) ($row['album_id'] ?? 0);
+			if (isset($contest_rows[$album_id]))
+			{
+				$album_rows[$index] = array_merge($row, $contest_rows[$album_id]);
+			}
+			else if ((int) ($row['album_type'] ?? -1) === (int) \phpbbgallery\core\block::TYPE_CONTEST)
+			{
+				$album_rows[$index]['contest_marked'] = \phpbbgallery\core\block::IN_CONTEST;
+			}
+		}
+		$event['album_rows'] = $album_rows;
 	}
 
 	public function restrict_album_operation(\phpbb\event\data $event): void

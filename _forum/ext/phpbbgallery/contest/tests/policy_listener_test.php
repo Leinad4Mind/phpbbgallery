@@ -59,6 +59,29 @@ final class policy_listener_test extends TestCase
 		$this->assertArrayNotHasKey('contest_id', $regular['album_data']);
 	}
 
+	public function test_listener_enriches_contest_album_rows_in_one_batch(): void
+	{
+		$manager = $this->createMock(manager::class);
+		$manager->expects($this->once())
+			->method('get_contests_by_album_ids')
+			->with([7, 9])
+			->willReturn([
+				7 => ['contest_id' => 11, 'contest_album_id' => 7],
+			]);
+		$event = new \phpbb\event\data(['album_rows' => [
+			['album_id' => 7, 'album_type' => \phpbbgallery\core\block::TYPE_CONTEST],
+			['album_id' => 8, 'album_type' => \phpbbgallery\core\block::TYPE_UPLOAD],
+			['album_id' => 9, 'album_type' => \phpbbgallery\core\block::TYPE_CONTEST],
+		]]);
+
+		(new policy_listener($manager))->enrich_album_rows($event);
+
+		$this->assertSame(11, $event['album_rows'][0]['contest_id']);
+		$this->assertArrayNotHasKey('contest_id', $event['album_rows'][1]);
+		$this->assertArrayNotHasKey('contest_id', $event['album_rows'][2]);
+		$this->assertSame(\phpbbgallery\core\block::IN_CONTEST, $event['album_rows'][2]['contest_marked']);
+	}
+
 	public function test_listener_finalizes_only_expired_active_contests(): void
 	{
 		$manager = $this->createMock(manager::class);

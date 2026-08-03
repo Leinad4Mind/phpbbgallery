@@ -36,4 +36,24 @@ class data_enricher
 
 		return (array) $album_data;
 	}
+
+	public function enrich_many(array $album_rows): array
+	{
+		if (!$album_rows)
+		{
+			return [];
+		}
+
+		/**
+		 * Allow optional album-type providers to append data to album rows in bulk.
+		 *
+		 * @event phpbbgallery.core.album.enrich_rows
+		 * @var array album_rows Base album rows and data added by earlier listeners
+		 * @since 4.1.0
+		 */
+		$vars = ['album_rows'];
+		extract($this->dispatcher->trigger_event('phpbbgallery.core.album.enrich_rows', compact($vars)));
+
+		return (array) $album_rows;
+	}
 }

@@ -111,6 +111,32 @@ class manager
 		return (!$row) ? false : $row;
 	}
 
+	public function get_contests_by_album_ids(array $album_ids): array
+	{
+		$album_ids = array_values(array_unique(array_filter(
+			array_map('intval', $album_ids),
+			static fn (int $album_id): bool => $album_id > 0
+		)));
+		if (!$album_ids)
+		{
+			return [];
+		}
+		sort($album_ids);
+
+		$sql = 'SELECT *
+			FROM ' . $this->contest_table . '
+			WHERE ' . $this->db->sql_in_set('contest_album_id', $album_ids);
+		$result = $this->db->sql_query($sql);
+		$contests = [];
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$contests[(int) $row['contest_album_id']] = $row;
+		}
+		$this->db->sql_freeresult($result);
+
+		return $contests;
+	}
+
 	private function get_tabulation(string $alias = ''): string
 	{
 		$prefix = $alias !== '' ? $alias . '.' : '';

@@ -52,4 +52,38 @@ final class album_data_enricher_test extends TestCase
 		$this->assertStringNotContainsString('gallery_contests', $album_service);
 		$this->assertStringNotContainsString('core.contest', $loader_service);
 	}
+
+	public function test_enricher_supports_bulk_rows_without_dispatching_empty_batches(): void
+	{
+		$dispatcher = new class implements \phpbb\event\dispatcher_interface
+		{
+			public int $calls = 0;
+
+			public function trigger_event($event_name, $data = [])
+			{
+				$this->calls++;
+				$data['album_rows'][0]['provider_value'] = 42;
+
+				return $data;
+			}
+		};
+		$enricher = new data_enricher($dispatcher);
+
+		$this->assertSame([], $enricher->enrich_many([]));
+		$this->assertSame(0, $dispatcher->calls);
+		$this->assertSame(42, $enricher->enrich_many([['album_id' => 7]])[0]['provider_value']);
+		$this->assertSame(1, $dispatcher->calls);
+	}
+
+	public function test_album_listing_does_not_query_contest_storage_directly(): void
+	{
+		$display = (string) file_get_contents(dirname(__DIR__) . '/album/display.php');
+		$services = (string) file_get_contents(dirname(__DIR__) . '/config/services.yml');
+		$display_service = strstr($services, 'phpbbgallery.core.album.display:');
+		$display_service = strstr($display_service, 'phpbbgallery.core.album.loader:', true);
+
+		$this->assertStringContainsString('$this->data_enricher->enrich_many($rows)', $display);
+		$this->assertStringNotContainsString('table_contests', $display);
+		$this->assertStringNotContainsString('gallery_contests', $display_service);
+	}
 }

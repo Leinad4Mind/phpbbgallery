@@ -38,10 +38,10 @@ services:
             - '@phpbbgallery.core.user'
             - '@phpbbgallery.core.misc'
             - '@phpbbgallery.core.policy.image_visibility'
+            - '@phpbbgallery.core.album.data_enricher'
             - '%core.root_path%'
             - '%core.php_ext%'
             - '%phpbbgallery.tables.gallery_albums%'
-            - '%phpbbgallery.tables.gallery_contests%'
             - '%phpbbgallery.tables.gallery_tracking%'
             - '%phpbbgallery.tables.gallery_moderators%'
     phpbbgallery.core.album.loader:
