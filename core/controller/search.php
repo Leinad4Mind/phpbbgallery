@@ -594,46 +594,6 @@ class search
 	}
 
 	/**
-	 * Display completed contest winners.
-	 *    Route: gallery/search/contests/{page}
-	 *
-	 * @param int $page
-	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
-	 */
-	public function contests(int $page): \Symfony\Component\HttpFoundation\Response
-	{
-		$page = $this->normalize_page($page);
-		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
-		$this->language->add_lang('search');
-
-		if (!$this->auth->acl_get('u_search') || !$this->config['load_search'])
-		{
-			$this->template->assign_var('S_NO_SEARCH', true);
-			trigger_error('NO_SEARCH');
-		}
-
-		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
-		$this->template->assign_block_vars('navlinks', [
-			'FORUM_NAME' => $this->gallery_config->get_title($this->language),
-			'U_VIEW_FORUM' => $this->helper->route('phpbbgallery_core_index'),
-		]);
-		$this->template->assign_block_vars('navlinks', [
-			'FORUM_NAME' => $this->language->lang('SEARCH'),
-			'U_VIEW_FORUM' => $this->helper->route('phpbbgallery_core_search'),
-		]);
-		$this->template->assign_block_vars('navlinks', [
-			'FORUM_NAME' => $this->language->lang('SEARCH_CONTEST'),
-			'U_VIEW_FORUM' => $this->helper->route('phpbbgallery_core_search_contests'),
-		]);
-
-		$limit = max(1, (int) $this->gallery_config->get('album_rows'));
-		$start = ($page - 1) * $limit;
-		$this->gallery_search->contest_winners($limit, $start);
-
-		return $this->helper->render('gallery/search_results.html', $this->gallery_config->get_title($this->language));
-	}
-
-	/**
 	 * Index Controller
 	 *    Route: gallery/search/toprated/{page}
 	 *
