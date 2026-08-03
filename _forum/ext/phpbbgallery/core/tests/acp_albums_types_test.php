@@ -49,4 +49,12 @@ final class acp_albums_types_test extends TestCase
 		$this->assertStringContainsString('$request->is_set_post(\'update\')', $source);
 		$this->assertStringNotContainsString('$' . '_POST', $source);
 	}
+
+	public function test_image_capability_comes_from_the_album_type_registry(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/acp/albums_module.php');
+
+		$this->assertSame(2, substr_count($source, '$album_type_registry->accepts_images('));
+		$this->assertStringNotContainsString('block::TYPE_CONTEST', $source);
+	}
 }

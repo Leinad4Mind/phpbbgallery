@@ -514,7 +514,7 @@ class albums_module
 				$db->sql_freeresult($result);
 
 				// Subalbum move options
-				if ($action == 'edit' && in_array($album_data['album_type'], [(int) \phpbbgallery\core\block::TYPE_UPLOAD, (int) \phpbbgallery\core\block::TYPE_CONTEST]))
+				if ($action == 'edit' && $album_type_registry->accepts_images((int) $album_data['album_type']))
 				{
 					$subalbums_id = [];
 					$subalbums = $phpbb_ext_gallery_core_album_display->get_branch((int) \phpbbgallery\core\block::PUBLIC_ALBUM, $album_id, 'children');
@@ -659,7 +659,7 @@ class albums_module
 					'U_BACK'				=> $this->u_action . '&amp;parent_id=' . $this->parent_id,
 
 					'ALBUM_NAME'			=> $album_data['album_name'],
-					'S_ALBUM_POST'			=> (in_array($album_data['album_type'], [(int) \phpbbgallery\core\block::TYPE_UPLOAD, (int) \phpbbgallery\core\block::TYPE_CONTEST])) ? true : false,
+					'S_ALBUM_POST'			=> $album_type_registry->accepts_images((int) $album_data['album_type']),
 					'S_HAS_SUBALBUMS'		=> ($album_data['right_id'] - $album_data['left_id'] > 1) ? true : false,
 					'S_ALBUMS_LIST'			=> $albums_list,
 
