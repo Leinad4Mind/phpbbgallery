@@ -337,7 +337,6 @@ $lang = array_merge($lang, [
 	'RRC_GINDEX'                 => 'Последние и случайные фото, комментарии',
 	'RRC_GINDEX_COLUMNS'         => 'Столбцы',
 	'RRC_GINDEX_COMMENTS'        => 'Свернуть комментарии',
-	'RRC_GINDEX_CONTESTS'        => 'Количество конкурсов',
 	'RRC_GINDEX_CROWS'           => 'Количество комментариев',
 	'RRC_GINDEX_MODE'            => 'Режим',
 	'RRC_GINDEX_MODE_EXP'        => 'Функция «Случайные фото может замедлить работу галереи.',

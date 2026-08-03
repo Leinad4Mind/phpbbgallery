@@ -301,7 +301,7 @@ class search
 	}
 
 	/**
-	 * Count a member's images without exposing private active-contest entries.
+	 * Count a member's images without exposing entries hidden by visibility providers.
 	 *
 	 * @param int $image_user_id Member whose images are being counted
 	 * @return int

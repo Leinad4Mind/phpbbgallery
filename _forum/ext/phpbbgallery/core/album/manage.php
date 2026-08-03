@@ -217,7 +217,8 @@ class manage
 
 		// What are we going to do tonight Brain? The same thing we do every night,
 		// try to take over the world ... or decide whether to continue update
-		// and if so, whether it's a new album/cat/contest or an existing one
+		// and if so, whether it is a new album, category or provider-defined type
+		// or an existing one
 		if (sizeof($errors))
 		{
 			return $errors;

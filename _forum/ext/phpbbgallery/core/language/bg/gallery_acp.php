@@ -354,7 +354,6 @@ $lang = array_merge($lang, [
 	'RRC_GINDEX'             => 'Скорошни- &amp; Случайни Изображение &amp; Коментари - възможности',
 	'RRC_GINDEX_COLUMNS'     => 'Колони',
 	'RRC_GINDEX_COMMENTS'    => 'Свий коментарите',
-	'RRC_GINDEX_CONTESTS'    => 'Брой конкурси',
 	'RRC_GINDEX_CROWS'       => 'Брой коментари',
 	'RRC_GINDEX_MODE'        => 'Състояние',
 	'RRC_GINDEX_MODE_EXP'    => '“Случайни изображения“ може да отнеме малко повече време да зареди при големи бази!',

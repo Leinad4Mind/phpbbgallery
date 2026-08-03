@@ -92,8 +92,29 @@ final class package_test extends TestCase
 			$acp_messages = $this->load_language($language_root . '/' . $language . '/contest_acp.php');
 			$this->assertArrayHasKey('GALLERY_CORE_NOT_FOUND', $messages, $language);
 			$this->assertArrayHasKey('EXTENSION_ENABLE_SUCCESS', $messages, $language);
-			$this->assertArrayHasKey('CONTEST_RATING_HIDDEN', $frontend_messages, $language);
-			$this->assertArrayHasKey('CONTEST_RESULT_HIDDEN', $frontend_messages, $language);
+			foreach ([
+				'CONTEST_COMMENTS_STARTS',
+				'CONTEST_ENDED',
+				'CONTEST_ENDS',
+				'CONTEST_IMAGE_DESC',
+				'CONTEST_RATING_HIDDEN',
+				'CONTEST_RATING_STARTED',
+				'CONTEST_RATING_STARTS',
+				'CONTEST_RESULT',
+				'CONTEST_RESULT_1',
+				'CONTEST_RESULT_2',
+				'CONTEST_RESULT_3',
+				'CONTEST_RESULT_HIDDEN',
+				'CONTEST_STARTED',
+				'CONTEST_STARTS',
+				'CONTEST_USERNAME',
+				'CONTEST_WINNERS_OF',
+				'SEARCH_CONTEST',
+				'VIEW_SEARCH_CONTESTS',
+			] as $key)
+			{
+				$this->assertArrayHasKey($key, $frontend_messages, $language);
+			}
 			foreach ([
 				'ALBUM_NO_TYPE_CHANGE_TO_CONTEST',
 				'ALBUM_WITH_CONTEST_NO_TYPE_CHANGE',
@@ -118,6 +139,43 @@ final class package_test extends TestCase
 			{
 				$this->assertArrayHasKey($key, $acp_messages, $language);
 			}
+		}
+	}
+
+	public function test_core_no_longer_owns_contest_frontend_messages(): void
+	{
+		$core_language_root = dirname(__DIR__, 2) . '/core/language';
+		$languages = ['bg', 'de', 'en', 'es', 'fr', 'it', 'nl', 'pt', 'pt_br', 'pt_preao', 'ru'];
+
+		foreach ($languages as $language)
+		{
+			$messages = $this->load_language($core_language_root . '/' . $language . '/gallery.php');
+			foreach ([
+				'CONTEST_COMMENTS_STARTS',
+				'CONTEST_ENDED',
+				'CONTEST_ENDS',
+				'CONTEST_IMAGE_DESC',
+				'CONTEST_RATING_ENDED',
+				'CONTEST_RATING_STARTED',
+				'CONTEST_RATING_STARTS',
+				'CONTEST_RESULT',
+				'CONTEST_RESULT_1',
+				'CONTEST_RESULT_2',
+				'CONTEST_RESULT_3',
+				'CONTEST_STARTED',
+				'CONTEST_STARTS',
+				'CONTEST_USERNAME',
+				'CONTEST_USERNAME_LONG',
+				'CONTEST_WINNERS_OF',
+				'SEARCH_CONTEST',
+				'VIEW_SEARCH_CONTESTS',
+			] as $key)
+			{
+				$this->assertArrayNotHasKey($key, $messages, $language);
+			}
+
+			$acp_messages = $this->load_language($core_language_root . '/' . $language . '/gallery_acp.php');
+			$this->assertArrayNotHasKey('RRC_GINDEX_CONTESTS', $acp_messages, $language);
 		}
 	}
 

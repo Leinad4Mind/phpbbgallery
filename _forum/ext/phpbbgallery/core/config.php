@@ -106,7 +106,6 @@ class config
 		'prune_orphan_time'		=> 0,
 
 		'rrc_gindex_comments'	=> false,
-		//'rrc_gindex_contests'	=> 1,
 		'rrc_gindex_display'	=> 173,
 		'rrc_gindex_mode'		=> 7,
 		'rrc_gindex_pegas'		=> true,

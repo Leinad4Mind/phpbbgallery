@@ -354,7 +354,6 @@ $lang = array_merge($lang, [
 	'RRC_GINDEX'             => 'Neueste &amp; zufällige Bilder &amp; Kommentare - Feature',
 	'RRC_GINDEX_COLUMNS'     => 'Spalten',
 	'RRC_GINDEX_COMMENTS'    => 'Kommentare einklappen',
-	'RRC_GINDEX_CONTESTS'    => 'Anzahl der Wettbewerbe',
 	'RRC_GINDEX_CROWS'       => 'Anzahl der Kommentare',
 	'RRC_GINDEX_MODE'        => 'Modus',
 	'RRC_GINDEX_MODE_EXP'    => '„Zufällige Bilder“ kann bei großen Datenbanken einige Ladezeit in Anspruch nehmen!',

@@ -34,6 +34,10 @@ All notable changes to the phpBB Gallery Contest add-on are documented in this f
   image-visibility policy, including the post-event privacy recheck.
 - Moved hidden-rating presentation and its frontend translations out of the Core
   and into the add-on through a neutral hidden-results message event.
+- Moved all active contest frontend messages, album schedule presentation and
+  winner-search links into add-on-owned language and style event fragments.
+- Replaced the remaining contest-named Core layout placeholder with a generic
+  image-award placeholder and removed unused contest configuration remnants.
 - Removed the Core dependency on contest result columns during image state
   changes; the add-on now decides whether affected albums require resyncing.
 - Routed the message-editor image selector through the neutral results policy so

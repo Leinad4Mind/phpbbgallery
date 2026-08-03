@@ -354,7 +354,6 @@ $lang = array_merge($lang, [
 	'RRC_GINDEX'             => 'Recent- &amp; Random-Images &amp; Comment - Feature',
 	'RRC_GINDEX_COLUMNS'     => 'Kolommen',
 	'RRC_GINDEX_COMMENTS'    => 'Reacties uitklappen',
-	'RRC_GINDEX_CONTESTS'    => 'Aantal wedstrijden',
 	'RRC_GINDEX_CROWS'       => 'Aantal reacties',
 	'RRC_GINDEX_MODE'        => 'Mode',
 	'RRC_GINDEX_MODE_EXP'    => 'Het laden van de “Willekeurige afbeeldingen“ kan enkele minuten duren bij grote databases!',

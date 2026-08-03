@@ -2,12 +2,10 @@
 
 <h2>{{ lang('ALBUM_NAME') }}{{ lang('COLON') }}<a href="{{ U_VIEW_ALBUM }}" style="display: inline;"> {{ ALBUM_NAME }}</a></h2>
 
-{% if not S_IN_GALLERY_POPUP and ALBUM_DESC or MODERATORS or U_MCP %}
+{% if not S_IN_GALLERY_POPUP and ALBUM_DESC or MODERATORS or U_MCP or S_ALBUM_TYPE_DETAILS %}
 <div>
 	{% if ALBUM_DESC %}<div id="description" class="panel" style="font-size: 1.2em;"><h3>{{ lang('ALBUM_DESC') }}</h3>{{ ALBUM_DESC }}<br /></div>{% endif %}
-	{% if ALBUM_CONTEST_START %}<span>{{ ALBUM_CONTEST_START }}<br /></span>{% endif %}
-	{% if ALBUM_CONTEST_RATING %}<span>{{ ALBUM_CONTEST_RATING }}<br /></span>{% endif %}
-	{% if ALBUM_CONTEST_END %}<span>{{ ALBUM_CONTEST_END }}<br /><br /></span>{% endif %}
+	{% EVENT phpbbgallery_core_album_type_details %}
 	{% if MODERATORS %}<strong>{{ lang('MODERATORS') }}{{ lang('COLON') }}</strong> {{ MODERATORS }}<br />{% endif %}
 	{% if U_EDIT_ALBUM %}<br /><strong><a href="{{ U_EDIT_ALBUM }}">{{ lang('EDIT_ALBUM') }}</a></strong>{% endif %}
 	{% if U_CREATE_ALBUM %}<br /><strong><a href="{{ U_CREATE_ALBUM }}">{{ lang('CREATE_SUBALBUM') }}</a></strong>{% endif %}

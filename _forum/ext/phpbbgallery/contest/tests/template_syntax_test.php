@@ -37,4 +37,26 @@ final class template_syntax_test extends TestCase
 			$this->addToAssertionCount(1);
 		}
 	}
+
+	#[IgnoreDeprecations]
+	public function test_frontend_event_fragments_parse_with_packaged_twig(): void
+	{
+		$twig = new Environment(new ArrayLoader());
+		$twig->addFunction(new TwigFunction('lang', static fn (): string => ''));
+
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$directory = dirname(__DIR__) . '/styles/' . $style . '/template/event';
+			foreach ([
+				'phpbbgallery_core_album_type_details.html',
+				'phpbbgallery_core_index_search_links_after.html',
+			] as $file)
+			{
+				$path = $directory . '/' . $file;
+				$source = new Source((string) file_get_contents($path), $path);
+				$twig->parse($twig->tokenize($source));
+				$this->addToAssertionCount(1);
+			}
+		}
+	}
 }

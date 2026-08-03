@@ -16,7 +16,7 @@
 	<div class="clearfix row">
 		{% for image in imageblock.image %}
 		{% if image.S_IMAGE_AWARD_PLACEHOLDER %}
-		<div class="hidden-xs hidden-sm col-md-4 gallery-contest-placeholder" aria-hidden="true"></div>
+		<div class="hidden-xs hidden-sm col-md-4 gallery-image-award-placeholder" aria-hidden="true"></div>
 		{% else %}
 		<div class="col-xs-12 col-sm-6 {% if imageblock.S_IMAGE_AWARD_BLOCK %}col-md-4{% else %}col-md-3{% endif %}">
 			<div class="well well-sm{% if image.S_STATUS_UNAPPROVED %} image_unapproved{% endif %}" {% if image.S_STATUS_UNAPPROVED %}style="border-color: #daa520;"{% endif %}>

@@ -33,13 +33,11 @@
 	{% if not S_IS_BOT and U_MARK_ALBUMS %}
       <ul class="pagination pagination-sm pull-right">
 	    <li><a href="{{ U_MARK_ALBUMS }}">{{ lang('MARK_ALBUMS_READ') }}</a></li>
-		{% if MODERATORS or ALBUM_CONTEST_START or ALBUM_CONTEST_RATING or ALBUM_CONTEST_END %}
+		{% if MODERATORS or S_ALBUM_TYPE_DETAILS %}
 			<li class="dropdown">
 				<a title="" data-original-title="" class="btn btn-small btn-default" data-toggle="dropdown" href="#"> {{ lang('MODERATORS') }} </a>
 				 <ul class="dropdown-menu">
-					{% if ALBUM_CONTEST_START %}<li>{{ ALBUM_CONTEST_START }}</li>{% endif %}
-					{% if ALBUM_CONTEST_RATING %}<li>{{ ALBUM_CONTEST_RATING }}</li>{% endif %}
-					{% if ALBUM_CONTEST_END %}<li>{{ ALBUM_CONTEST_END }}</li>{% endif %}
+					{% EVENT phpbbgallery_core_album_type_details %}
 					{% if MODERATORS %}<li>{{ MODERATORS }}</li>{% endif %}
 				</ul>
 			</li>

@@ -64,7 +64,7 @@ final class winner_controller_test extends TestCase
 		{
 			$source = (string) file_get_contents($template);
 			$this->assertStringContainsString('S_IMAGE_AWARD_PLACEHOLDER', $source, $template);
-			$this->assertStringContainsString('gallery-contest-placeholder', $source, $template);
+			$this->assertStringContainsString('gallery-image-award-placeholder', $source, $template);
 		}
 	}
 
@@ -77,9 +77,13 @@ final class winner_controller_test extends TestCase
 		$search->method('has_visible_winners')->willReturn(true);
 		$helper = $this->createMock(\phpbb\controller\helper::class);
 		$helper->method('route')->willReturn('/gallery/search/contests');
+		$language = $this->createMock(\phpbb\language\language::class);
+		$language->expects($this->once())
+			->method('add_lang')
+			->with('contest', 'phpbbgallery/contest');
 		$event = new \phpbb\event\data(['dropdown_links' => ['U_GALLERY_SEARCH' => '/gallery/search']]);
 
-		(new index_listener($auth, $config, $helper, $search))->add_winner_search_link($event);
+		(new index_listener($auth, $config, $helper, $language, $search))->add_winner_search_link($event);
 
 		$this->assertSame('/gallery/search/contests', $event['dropdown_links']['U_G_SEARCH_CONTESTS']);
 	}

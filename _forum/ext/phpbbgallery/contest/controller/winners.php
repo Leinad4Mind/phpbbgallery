@@ -42,6 +42,7 @@ class winners
 	{
 		$page = max(1, $page);
 		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
+		$this->language->add_lang('contest', 'phpbbgallery/contest');
 		$this->language->add_lang('search');
 
 		if (!$this->auth->acl_get('u_search') || empty($this->config['load_search']))

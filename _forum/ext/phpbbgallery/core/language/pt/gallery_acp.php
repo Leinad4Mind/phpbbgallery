@@ -334,7 +334,6 @@ $lang = array_merge($lang, [
 	'RRC_GINDEX'                 => 'Recurso de Imagens Recentes e Aleatórias e Comentários',
 	'RRC_GINDEX_COLUMNS'         => 'Colunas',
 	'RRC_GINDEX_COMMENTS'        => 'Recolher comentários',
-	'RRC_GINDEX_CONTESTS'        => 'Número de concursos',
 	'RRC_GINDEX_CROWS'           => 'Número de comentários',
 	'RRC_GINDEX_MODE'            => 'Modo',
 	'RRC_GINDEX_MODE_EXP'        => '"Imagens aleatórias" podem levar algum tempo a carregar em bases de dados grandes!',

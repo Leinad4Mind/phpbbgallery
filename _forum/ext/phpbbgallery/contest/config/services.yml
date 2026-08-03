@@ -40,6 +40,7 @@ services:
             - '@auth'
             - '@config'
             - '@controller.helper'
+            - '@language'
             - '@phpbbgallery.contest.winner_search'
         tags:
             - { name: event.listener }

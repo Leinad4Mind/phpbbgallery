@@ -145,6 +145,7 @@ class presentation_listener implements EventSubscriberInterface
 		$now = time();
 		$template_vars = (array) $event['template_vars'];
 		$template_vars += [
+			'S_ALBUM_TYPE_DETAILS' => true,
 			'ALBUM_CONTEST_START' => $this->phase_text('CONTEST_START', $start, $now),
 			'ALBUM_CONTEST_RATING' => $this->phase_text('CONTEST_RATING_START', $rating_start, $now),
 			'ALBUM_CONTEST_END' => $this->phase_text('CONTEST_END', $end, $now),
