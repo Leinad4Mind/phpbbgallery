@@ -56,20 +56,47 @@ final class acp_environment_test extends TestCase
 		$checks = (new environment())->addon_checks($manager);
 
 		$this->assertSame(
-			['enabled', 'disabled', 'not_installed', 'not_available', 'not_available', 'not_available'],
+			[
+				'enabled',
+				'disabled',
+				'not_available',
+				'not_installed',
+				'not_available',
+				'not_available',
+				'not_available',
+				'not_available',
+				'not_available',
+				'not_available',
+			],
 			array_column($checks, 'status')
 		);
 		$this->assertSame(
 			[
 				'phpbbgallery/acpcleanup',
 				'phpbbgallery/acpimport',
+				'phpbbgallery/contest',
 				'phpbbgallery/exif',
-				'phpbbgallery/export',
 				'phpbbgallery/favorite',
 				'phpbbgallery/feed',
+				'phpbbgallery/bbpointsimages',
+				'phpbbgallery/bbtagsimages',
+				'phpbbgallery/export',
+				'phpbbgallery/imagerevisions',
 			],
 			array_column($checks, 'extension')
 		);
+		$this->assertSame(
+			['free', 'free', 'free', 'free', 'free', 'free', 'premium', 'premium', 'premium', 'premium'],
+			array_column($checks, 'tier')
+		);
+		$this->assertSame(
+			['1.4.0', '1.4.0', '1.0.0', '1.4.0', '1.0.0', '1.0.0', '1.0.0', '1.0.0', '1.0.0', '1.0.0'],
+			array_column($checks, 'version')
+		);
+		$this->assertSame('phpBB Gallery Add-on: ACP Cleanup', $checks[0]['name']);
+		$this->assertSame('phpBB Gallery Add-on: Image Revisions', $checks[9]['name']);
+		$this->assertSame('GALLERY_ADDON_CONTEST_EXPLAIN', $checks[2]['description']);
+		$this->assertSame('GALLERY_ADDON_IMAGE_REVISIONS_EXPLAIN', $checks[9]['description']);
 	}
 
 	public function test_overview_shows_statistics_first_and_keeps_tables_separate(): void
@@ -91,5 +118,9 @@ final class acp_environment_test extends TestCase
 			preg_replace('/\\s+/', ' ', $system_table)
 		);
 		$this->assertStringContainsString('mods|default([])', $template);
+		$this->assertStringContainsString('addon_groups|default([])', $template);
+		$this->assertStringContainsString('group.addons|default([])', $template);
+		$this->assertStringContainsString('{{ addon.VERSION }}', $template);
+		$this->assertStringContainsString('{{ addon.DESCRIPTION }}', $template);
 	}
 }

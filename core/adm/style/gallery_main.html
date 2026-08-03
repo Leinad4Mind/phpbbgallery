@@ -130,19 +130,26 @@
 	<thead>
 	<tr>
 		<th>{{ lang('EXTENSION') }}</th>
+		<th>{{ lang('GALLERY_ADDON_VERSION') }}</th>
 		<th>{{ lang('GALLERY_ADDON_BENEFIT') }}</th>
 		<th>{{ lang('VALUE') }}</th>
 	</tr>
 	</thead>
+	{% for group in addon_groups|default([]) %}
 	<tbody>
-	{% for addon in addon_checks|default([]) %}
+	<tr>
+		<th colspan="4">{{ group.TITLE }}</th>
+	</tr>
+	{% for addon in group.addons|default([]) %}
 	<tr>
 		<td><strong>{{ addon.NAME }}</strong><br /><small>{{ addon.EXTENSION }}</small></td>
+		<td>{{ addon.VERSION }}</td>
 		<td>{{ addon.DESCRIPTION }}</td>
 		<td style="color: {% if addon.S_ENABLED %}#009900;{% elseif addon.S_MISSING %}#CC0000;{% else %}#BC8A00;{% endif %}"><strong>{{ addon.STATUS }}</strong></td>
 	</tr>
 	{% endfor %}
 	</tbody>
+	{% endfor %}
 	</table>
 
 	<fieldset>
