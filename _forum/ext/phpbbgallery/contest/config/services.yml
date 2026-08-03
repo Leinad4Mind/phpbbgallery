@@ -43,6 +43,13 @@ services:
             - '@phpbbgallery.contest.winner_search'
         tags:
             - { name: event.listener }
+    phpbbgallery.contest.presentation_listener:
+        class: phpbbgallery\contest\event\presentation_listener
+        arguments:
+            - '@language'
+            - '@user'
+        tags:
+            - { name: event.listener }
     phpbbgallery.contest.policy_listener:
         class: phpbbgallery\contest\event\policy_listener
         arguments:

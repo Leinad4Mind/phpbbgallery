@@ -56,4 +56,24 @@ class data_enricher
 
 		return (array) $album_rows;
 	}
+
+	public function enrich_template_vars(string $context, array $album_data, array $template_vars): array
+	{
+		/**
+		 * Allow optional album-type providers to append presentation data.
+		 *
+		 * @event phpbbgallery.core.album.enrich_template_vars
+		 * @var string context       Template context being prepared
+		 * @var array  album_data    Base and provider-enriched album data
+		 * @var array  template_vars Values assigned by the Core
+		 * @since 4.1.0
+		 */
+		$vars = ['context', 'album_data', 'template_vars'];
+		extract($this->dispatcher->trigger_event(
+			'phpbbgallery.core.album.enrich_template_vars',
+			compact($vars)
+		));
+
+		return (array) $template_vars;
+	}
 }
