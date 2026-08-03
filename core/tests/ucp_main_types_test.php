@@ -100,12 +100,17 @@ final class ucp_main_types_test extends TestCase
 		$this->assertStringNotContainsString('sizeof($target)', $source);
 	}
 
-	public function test_subscriptions_apply_active_contest_privacy_policies(): void
+	public function test_subscriptions_apply_the_neutral_privacy_policy(): void
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/ucp/main_module.php');
 
-		$this->assertGreaterThanOrEqual(2, substr_count($source, 'contest::hides_private_data('));
-		$this->assertStringContainsString('contest::hides_results(', $source);
+		$this->assertStringContainsString(
+			'$phpbb_container->get(\'phpbbgallery.core.policy.image_visibility\')',
+			$source
+		);
+		$this->assertGreaterThanOrEqual(2, substr_count($source, '$image_visibility->hides_private_data('));
+		$this->assertStringContainsString('$image_visibility->hides_results(', $source);
+		$this->assertStringNotContainsString('core\\contest::', $source);
 		$this->assertStringContainsString('$hide_contest_results ? 0', $source);
 		$this->assertStringContainsString('c.contest_marked <> ', $source);
 	}

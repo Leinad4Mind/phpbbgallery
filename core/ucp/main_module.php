@@ -1009,6 +1009,7 @@ class main_module
 		$phpbb_ext_gallery_core_image = $phpbb_container->get('phpbbgallery.core.image');
 		$phpbb_ext_gallery_config = $phpbb_container->get('phpbbgallery.core.config');
 		$phpbb_gallery_notification = $phpbb_container->get('phpbbgallery.core.notification');
+		$image_visibility = $phpbb_container->get('phpbbgallery.core.policy.image_visibility');
 		$this->language = $phpbb_container->get('language');
 
 		$action = $request->variable('action', '', true, \phpbb\request\request_interface::POST);
@@ -1068,7 +1069,7 @@ class main_module
 		while ($row = $db->sql_fetchrow($result))
 		{
 			$can_moderate_contest = $phpbb_ext_gallery_core_auth->acl_check('m_status', $row['album_id'], $row['album_user_id']);
-			$hide_contest_private_data = \phpbbgallery\core\contest::hides_private_data(
+			$hide_contest_private_data = $image_visibility->hides_private_data(
 				[
 					'image_contest' => (($row['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST) && $row['contest_marked'])
 						? \phpbbgallery\core\block::IN_CONTEST
@@ -1133,12 +1134,12 @@ class main_module
 		while ($row = $db->sql_fetchrow($result))
 		{
 			$can_moderate_contest = $phpbb_ext_gallery_core_auth->acl_check('m_status', $row['image_album_id'], $row['album_user_id']);
-			$hide_contest_private_data = \phpbbgallery\core\contest::hides_private_data(
+			$hide_contest_private_data = $image_visibility->hides_private_data(
 				$row,
 				(int) $user->data['user_id'],
 				$can_moderate_contest
 			);
-			$hide_contest_results = \phpbbgallery\core\contest::hides_results($row, $can_moderate_contest);
+			$hide_contest_results = $image_visibility->hides_results($row, $can_moderate_contest);
 			$template->assign_block_vars('image_row', [
 				'UPLOADER'			=> $hide_contest_private_data ? $this->language->lang('CONTEST_USERNAME') : get_username_string('full', $row['image_user_id'], $row['image_username'], $row['image_user_colour']),
 				'LAST_COMMENT_BY'	=> $hide_contest_results ? false : get_username_string('full', $row['comment_user_id'], $row['comment_username'], $row['comment_user_colour']),
