@@ -28,7 +28,27 @@ class presentation_listener implements EventSubscriberInterface
 			'phpbbgallery.core.album.enrich_template_vars' => 'enrich_album_template_vars',
 			'phpbbgallery.core.image_visibility.private_data_label' => 'private_data_label',
 			'phpbbgallery.core.image_visibility.private_data_description' => 'private_data_description',
+			'phpbbgallery.core.album_operation.message' => 'album_operation_message',
 		];
+	}
+
+	public function album_operation_message(\phpbb\event\data $event): void
+	{
+		$album_data = (array) $event['album_data'];
+		if ((string) $event['operation'] !== 'comment'
+			|| (int) ($album_data['album_type'] ?? -1) !== (int) \phpbbgallery\core\block::TYPE_CONTEST)
+		{
+			return;
+		}
+
+		$end_time = (int) ($album_data['contest_start'] ?? 0) + (int) ($album_data['contest_end'] ?? 0);
+		if ($end_time > 0)
+		{
+			$event['message'] = $this->language->lang(
+				'CONTEST_COMMENTS_STARTS',
+				$this->user->format_date($end_time, false, true)
+			);
+		}
 	}
 
 	public function private_data_label(\phpbb\event\data $event): void

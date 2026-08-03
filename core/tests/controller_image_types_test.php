@@ -283,10 +283,41 @@ final class controller_image_types_test extends TestCase
 		$this->assertGreaterThan($event_position, $privacy_reassertion);
 		$this->assertStringContainsString('$this->image_visibility->private_data_description(', $source);
 		$this->assertStringNotContainsString('lang(\'CONTEST_IMAGE_DESC\'', $source);
+		$this->assertStringContainsString('$this->album_operation_message(', $source);
+		$this->assertStringNotContainsString('CONTEST_COMMENTS_STARTS', $source);
 		$this->assertStringContainsString('if (!$hide_contest_results && $this->gallery_config->get', $source);
 		$this->assertStringContainsString('$this->image_visibility->hides_private_data(', $source);
 		$this->assertStringContainsString('$this->image_visibility->hides_results(', $source);
 		$this->assertStringNotContainsString('core\\contest::', $source);
+	}
+
+	public function test_comment_operation_message_uses_extension_boundary_and_safe_fallback(): void
+	{
+		$reflection = new \ReflectionClass(image::class);
+		$controller = $reflection->newInstanceWithoutConstructor();
+		$dispatcher = new class implements \phpbb\event\dispatcher_interface
+		{
+			public function trigger_event($event_name, $data = [])
+			{
+				if ((string) $event_name !== 'phpbbgallery.core.album_operation.message')
+				{
+					throw new \UnexpectedValueException((string) $event_name);
+				}
+				$data['message'] = '';
+				return $data;
+			}
+		};
+		$reflection->getProperty('dispatcher')->setValue($controller, $dispatcher);
+
+		$message = $reflection->getMethod('album_operation_message')->invoke(
+			$controller,
+			'comment',
+			['album_id' => 3],
+			['image_id' => 7],
+			'Comments unavailable'
+		);
+
+		$this->assertSame('Comments unavailable', $message);
 	}
 
 	public function test_image_controller_receives_the_neutral_visibility_policy(): void

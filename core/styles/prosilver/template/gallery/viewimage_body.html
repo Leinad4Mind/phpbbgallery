@@ -405,6 +405,8 @@
 			</div>
 		{% EVENT quickreply_editor_panel_after %}
 		</form>
+	{% elseif S_HIDE_COMMENT_INPUT %}
+		<div class="panel"><div class="inner">{{ COMMENT_UNAVAILABLE_MESSAGE }}</div></div>
 	{% endif %}
 {% endif %}
 {% endif %}

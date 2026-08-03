@@ -31,8 +31,8 @@ class image
 	/** @var \phpbb\db\driver\driver_interface */
 	protected \phpbb\db\driver\driver_interface $db;
 
-	/** @var \phpbb\event\dispatcher */
-	protected \phpbb\event\dispatcher $dispatcher;
+	/** @var \phpbb\event\dispatcher_interface */
+	protected \phpbb\event\dispatcher_interface $dispatcher;
 
 	/** @var \phpbb\pagination */
 	protected \phpbb\pagination $pagination;
@@ -150,7 +150,7 @@ class image
 	 * @param \phpbb\config\config                                      $config       Config object
 	 * @param \phpbb\controller\helper                                  $helper       Controller helper object
 	 * @param \phpbb\db\driver\driver|\phpbb\db\driver\driver_interface $db           Database object
-	 * @param \phpbb\event\dispatcher                                   $dispatcher   Event dispatcher object
+	 * @param \phpbb\event\dispatcher_interface                         $dispatcher   Event dispatcher object
 	 * @param \phpbb\pagination                                         $pagination   Pagination object
 	 * @param \phpbb\template\template                                  $template     Template object
 	 * @param \phpbb\user                                               $user         User object
@@ -185,7 +185,7 @@ class image
 	 */
 	public function __construct(\phpbb\request\request_interface $request, \phpbb\auth\auth $auth, \phpbb\config\config $config,
 		\phpbb\controller\helper $helper, \phpbb\db\driver\driver_interface $db,
-		\phpbb\event\dispatcher $dispatcher, \phpbb\pagination $pagination,
+		\phpbb\event\dispatcher_interface $dispatcher, \phpbb\pagination $pagination,
 		\phpbb\template\template $template, \phpbb\user $user, \phpbb\profilefields\manager $cpf_manager,
 		\phpbb\language\language $language, \phpbbgallery\core\album\display $display,
 		\phpbbgallery\core\album\loader $loader, \phpbbgallery\core\album\album $album,
@@ -607,7 +607,12 @@ class image
 			$this->template->assign_vars([
 				'S_ALLOWED_TO_COMMENT' => true,
 				'S_HIDE_COMMENT_INPUT' => $s_hide_comment_input,
-				'CONTEST_COMMENTS'     => ($s_hide_comment_input ? sprintf($this->language->lang_raw('CONTEST_COMMENTS_STARTS'), $this->user->format_date(($album_data['contest_start'] + $album_data['contest_end']), false, true)) : ''),
+				'COMMENT_UNAVAILABLE_MESSAGE' => $s_hide_comment_input ? $this->album_operation_message(
+					'comment',
+					$album_data,
+					$this->data,
+					$this->language->lang('GALLERY_COMMENT_UNAVAILABLE')
+				) : '',
 
 				'BBCODE_STATUS'       => ($bbcode_status) ? sprintf($this->language->lang('BBCODE_IS_ON'), '<a href="' . $this->url->append_sid('phpbb', 'faq', 'mode=bbcode') . '">', '</a>') : sprintf($this->language->lang('BBCODE_IS_OFF'), '<a href="' . $this->url->append_sid('phpbb', 'faq', 'mode=bbcode') . '">', '</a>'),
 				'IMG_STATUS'          => ($img_status) ? $this->language->lang('IMAGES_ARE_ON') : $this->language->lang('IMAGES_ARE_OFF'),
@@ -665,6 +670,28 @@ class image
 			]);
 		}
 		return $this->helper->render('gallery/viewimage_body.html', $page_title);
+	}
+
+	/**
+	 * Resolve the explanation for an operation blocked by an optional album type.
+	 */
+	private function album_operation_message(
+		string $operation,
+		array $album_data,
+		array $image_data,
+		string $fallback
+	): string
+	{
+		$message = $fallback;
+		$vars = ['operation', 'album_data', 'image_data', 'message'];
+		extract($this->dispatcher->trigger_event(
+			'phpbbgallery.core.album_operation.message',
+			compact($vars)
+		));
+
+		$message = trim((string) $message);
+
+		return $message !== '' ? $message : $fallback;
 	}
 
 	/**

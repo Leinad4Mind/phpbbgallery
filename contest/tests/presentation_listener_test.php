@@ -103,4 +103,28 @@ final class presentation_listener_test extends TestCase
 
 		$this->assertSame('CONTEST_IMAGE_DESC:1300', $event['description']);
 	}
+
+	public function test_blocked_contest_comment_includes_start_date(): void
+	{
+		$language = $this->createStub(\phpbb\language\language::class);
+		$language->method('lang')->willReturnCallback(
+			static fn(string $key, string $date): string => $key . ':' . $date
+		);
+		$user = $this->createStub(\phpbb\user::class);
+		$user->method('format_date')->willReturnCallback(static fn(int $timestamp): string => (string) $timestamp);
+		$event = new \phpbb\event\data([
+			'operation' => 'comment',
+			'album_data' => [
+				'album_type' => \phpbbgallery\core\block::TYPE_CONTEST,
+				'contest_start' => 1_000,
+				'contest_end' => 300,
+			],
+			'image_data' => ['image_id' => 7],
+			'message' => 'Comments unavailable',
+		]);
+
+		(new presentation_listener($language, $user))->album_operation_message($event);
+
+		$this->assertSame('CONTEST_COMMENTS_STARTS:1300', $event['message']);
+	}
 }
