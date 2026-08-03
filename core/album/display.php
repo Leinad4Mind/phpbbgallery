@@ -26,6 +26,7 @@ class display
 	protected \phpbbgallery\core\config $gallery_config;
 	protected \phpbbgallery\core\user $gallery_user;
 	protected \phpbbgallery\core\misc $misc;
+	protected \phpbbgallery\core\policy\image_visibility $image_visibility;
 	protected string $root_path;
 	protected string $php_ext;
 	protected string $table_albums;
@@ -60,6 +61,7 @@ class display
 								\phpbb\user $user, \phpbb\language\language $language, \phpbbgallery\core\auth\auth $gallery_auth,
 								\phpbbgallery\core\config $gallery_config,
 								\phpbbgallery\core\user $gallery_user, \phpbbgallery\core\misc $misc,
+								\phpbbgallery\core\policy\image_visibility $image_visibility,
 								string $root_path, string $php_ext, string $albums_table, string $contests_table, string $tracking_table, string $moderators_table)
 	{
 		$this->auth = $auth;
@@ -75,6 +77,7 @@ class display
 		$this->gallery_config = $gallery_config;
 		$this->gallery_user = $gallery_user;
 		$this->misc = $misc;
+		$this->image_visibility = $image_visibility;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
 		$this->table_albums = $albums_table;
@@ -730,7 +733,7 @@ class display
 			$s_subalbums_list = (string) implode(', ', $s_subalbums_list);
 			$catless = ($row['parent_id'] == $root_data['album_id']) ? true : false;
 
-			$s_username_hidden = \phpbbgallery\core\contest::hides_private_data(
+			$s_username_hidden = $this->image_visibility->hides_private_data(
 				[
 					'image_contest' => ($lastimage_album_type == (int) \phpbbgallery\core\block::TYPE_CONTEST && $lastimage_contest_marked)
 						? \phpbbgallery\core\block::IN_CONTEST

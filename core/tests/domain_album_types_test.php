@@ -61,12 +61,21 @@ final class domain_album_types_test extends TestCase
 		$this->assertSame('string|false', (string) (new \ReflectionMethod(manage::class, 'move_album_by'))->getReturnType());
 	}
 
-	public function test_album_last_image_uses_the_central_contest_identity_policy(): void
+	public function test_album_last_image_uses_the_neutral_identity_policy(): void
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/album/display.php');
 
-		$this->assertStringContainsString('contest::hides_private_data(', $source);
+		$this->assertStringContainsString('$this->image_visibility->hides_private_data(', $source);
+		$this->assertStringNotContainsString('core\\contest::', $source);
 		$this->assertStringContainsString('album_last_user_id', $source);
+
+		$services = (string) file_get_contents(dirname(__DIR__) . '/config/services.yml');
+		$display_service = strstr($services, 'phpbbgallery.core.album.display:');
+		$display_service = strstr($display_service, 'phpbbgallery.core.album.loader:', true);
+		$this->assertStringContainsString(
+			"- '@phpbbgallery.core.policy.image_visibility'",
+			$display_service
+		);
 	}
 
 	public function test_loader_initializes_and_reuses_loaded_album_data(): void
