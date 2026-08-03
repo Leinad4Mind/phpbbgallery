@@ -102,6 +102,21 @@ final class controller_album_types_test extends TestCase
 		$this->assertStringNotContainsString('$this->contest->', $source);
 	}
 
+	public function test_upload_link_uses_the_neutral_album_operation_policy(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/album.php');
+		$this->assertStringContainsString('$this->album_operation->allows(\'upload\', $album_data)', $source);
+		$this->assertStringNotContainsString('array_key_exists(\'contest_start\'', $source);
+
+		$services = (string) file_get_contents(dirname(__DIR__) . '/config/services_controller.yml');
+		$album_service = strstr($services, 'phpbbgallery.core.controller.album:');
+		$album_service = strstr($album_service, 'phpbbgallery.core.controller.file:', true);
+		$this->assertStringContainsString(
+			"- '@phpbbgallery.core.policy.album_operation'",
+			$album_service
+		);
+	}
+
 	public function test_album_pages_are_clamped_to_the_first_page(): void
 	{
 		$reflection = new \ReflectionClass(album::class);

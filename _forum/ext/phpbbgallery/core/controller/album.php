@@ -71,6 +71,9 @@ class album
 	/** @var \phpbbgallery\core\policy\image_visibility */
 	protected \phpbbgallery\core\policy\image_visibility $image_visibility;
 
+	/** @var \phpbbgallery\core\policy\album_operation */
+	protected \phpbbgallery\core\policy\album_operation $album_operation;
+
 	/** @var string */
 	protected string $table_images;
 
@@ -105,6 +108,7 @@ class album
 	 * @param \phpbb\request\request_interface                          $request
 	 * @param \phpbb\event\dispatcher_interface                        $phpbb_dispatcher
 	 * @param \phpbbgallery\core\policy\image_visibility                $image_visibility
+	 * @param \phpbbgallery\core\policy\album_operation                 $album_operation
 	 * @param string                                                    $images_table Gallery image table
 	 */
 	public function __construct(\phpbb\config\config $config, \phpbb\auth\auth $phpbb_auth,
@@ -116,6 +120,7 @@ class album
 		\phpbbgallery\core\config $gallery_config, \phpbbgallery\core\notification\helper $notifications_helper,
 		\phpbbgallery\core\url $url, \phpbbgallery\core\image\image $image, \phpbb\request\request_interface $request,
 		\phpbb\event\dispatcher_interface $phpbb_dispatcher, \phpbbgallery\core\policy\image_visibility $image_visibility,
+		\phpbbgallery\core\policy\album_operation $album_operation,
 		string $images_table)
 	{
 		$this->config = $config;
@@ -137,6 +142,7 @@ class album
 		$this->request = $request;
 		$this->phpbb_dispatcher = $phpbb_dispatcher;
 		$this->image_visibility = $image_visibility;
+		$this->album_operation = $album_operation;
 		$this->table_images = $images_table;
 	}
 
@@ -215,25 +221,13 @@ class album
 		}
 
 		if ((!$album_data['album_user_id'] || $album_data['album_user_id'] == $this->user->data['user_id'])
-			&& ($this->user->data['user_id'] == ANONYMOUS || $this->auth->acl_check('i_upload', $album_id, $album_data['album_user_id'])))
+			&& ($this->user->data['user_id'] == ANONYMOUS || $this->auth->acl_check('i_upload', $album_id, $album_data['album_user_id']))
+			&& $this->album_operation->allows('upload', $album_data))
 		{
-			if (!array_key_exists('contest_start', $album_data))
-			{
-				$this->template->assign_var('U_UPLOAD_IMAGE', $this->helper->route(
-					'phpbbgallery_core_album_upload',
-					['album_id' => (int) $album_id]
-				));
-			}
-			else
-			{
-				if ($album_data['contest_start'] + $album_data['contest_rating'] > time())
-				{
-					$this->template->assign_var('U_UPLOAD_IMAGE', $this->helper->route(
-						'phpbbgallery_core_album_upload',
-						['album_id' => (int) $album_id]
-					));
-				}
-			}
+			$this->template->assign_var('U_UPLOAD_IMAGE', $this->helper->route(
+				'phpbbgallery_core_album_upload',
+				['album_id' => (int) $album_id]
+			));
 		}
 
 		$watch_url = $this->can_watch_album()
