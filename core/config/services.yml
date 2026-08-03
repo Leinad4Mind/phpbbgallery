@@ -260,6 +260,7 @@ services:
         arguments:
             - '@dbal.conn'
             - '@phpbbgallery.core.auth'
+            - '@phpbbgallery.core.policy.image_visibility'
             - '%phpbbgallery.tables.gallery_images%'
             - '%phpbbgallery.tables.gallery_albums%'
     phpbbgallery.core.notification:

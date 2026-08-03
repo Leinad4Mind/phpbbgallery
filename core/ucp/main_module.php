@@ -1155,13 +1155,13 @@ class main_module
 				$can_moderate,
 				$this->language->lang('GALLERY_PRIVATE_USER')
 			) : '';
-			$hide_contest_results = $image_visibility->hides_results($row, $can_moderate);
+			$hide_results = $image_visibility->hides_results($row, $can_moderate);
 			$template->assign_block_vars('image_row', [
 				'UPLOADER'			=> $hide_private_data ? $private_data_label : get_username_string('full', $row['image_user_id'], $row['image_username'], $row['image_user_colour']),
-				'LAST_COMMENT_BY'	=> $hide_contest_results ? false : get_username_string('full', $row['comment_user_id'], $row['comment_username'], $row['comment_user_colour']),
-				'COMMENT'			=> $hide_contest_results ? 0 : $row['image_comments'],
-				'LAST_COMMENT'		=> (!$hide_contest_results && $row['image_comments']) ? generate_text_for_display($row['comment'], $row['comment_uid'], $row['comment_bitfield'], 7) : '',
-				'LAST_COMMENT_TIME'	=> $hide_contest_results ? false : $user->format_date($row['comment_time']),
+				'LAST_COMMENT_BY'	=> $hide_results ? false : get_username_string('full', $row['comment_user_id'], $row['comment_username'], $row['comment_user_colour']),
+				'COMMENT'			=> $hide_results ? 0 : $row['image_comments'],
+				'LAST_COMMENT'		=> (!$hide_results && $row['image_comments']) ? generate_text_for_display($row['comment'], $row['comment_uid'], $row['comment_bitfield'], 7) : '',
+				'LAST_COMMENT_TIME'	=> $hide_results ? false : $user->format_date($row['comment_time']),
 				'IMAGE_TIME'		=> $user->format_date($row['image_time']),
 				'UC_IMAGE_NAME'		=> $phpbb_ext_gallery_core_image->generate_link('image_name', $phpbb_ext_gallery_config->get('link_image_name'), $row['image_id'], $row['image_name'], $row['album_id']),
 				'UC_FAKE_THUMBNAIL'	=> $phpbb_ext_gallery_core_image->generate_link('fake_thumbnail', $phpbb_ext_gallery_config->get('link_thumbnail'), $row['image_id'], $row['image_name'], $row['album_id']),

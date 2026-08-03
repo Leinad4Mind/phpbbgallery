@@ -179,21 +179,10 @@ class policy_listener implements EventSubscriberInterface
 
 	public function resync_contest_results(\phpbb\event\data $event): void
 	{
-		$operation = (string) $event['operation'];
-		$marker = $operation === 'delete' ? 'image_contest_rank' : 'image_contest_end';
-		$needs_resync = false;
-		foreach ((array) $event['image_rows'] as $row)
+		$album_ids = (array) $event['album_ids'];
+		if ($album_ids)
 		{
-			if ((int) ($row[$marker] ?? 0) > 0)
-			{
-				$needs_resync = true;
-				break;
-			}
-		}
-
-		if ($needs_resync)
-		{
-			$this->contest->resync_albums((array) $event['album_ids']);
+			$this->contest->resync_albums($album_ids);
 		}
 	}
 

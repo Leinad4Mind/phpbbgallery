@@ -273,9 +273,5 @@ final class resize_test_block
 		return 3;
 	}
 
-	public function get_no_contest(): int
-	{
-		return 0;
-	}
 }
 }

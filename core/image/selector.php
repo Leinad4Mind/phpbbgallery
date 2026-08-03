@@ -23,17 +23,26 @@ class selector
 	/** @var \phpbbgallery\core\auth\auth Gallery auth object */
 	protected \phpbbgallery\core\auth\auth $gallery_auth;
 
+	/** @var \phpbbgallery\core\policy\image_visibility Optional-feature visibility boundary */
+	protected \phpbbgallery\core\policy\image_visibility $image_visibility;
+
 	/** @var string Gallery images table */
 	protected string $images_table;
 
 	/** @var string Gallery albums table */
 	protected string $albums_table;
 
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbbgallery\core\auth\auth $gallery_auth,
-		string $images_table, string $albums_table)
+	public function __construct(
+		\phpbb\db\driver\driver_interface $db,
+		\phpbbgallery\core\auth\auth $gallery_auth,
+		\phpbbgallery\core\policy\image_visibility $image_visibility,
+		string $images_table,
+		string $albums_table
+	)
 	{
 		$this->db = $db;
 		$this->gallery_auth = $gallery_auth;
+		$this->image_visibility = $image_visibility;
 		$this->images_table = $images_table;
 		$this->albums_table = $albums_table;
 	}
@@ -64,7 +73,7 @@ class selector
 	/**
 	 * Return one page of completed images authored by the active user.
 	 *
-	 * Unapproved, orphaned and active-contest images are deliberately excluded:
+	 * Unapproved, orphaned and provider-restricted images are deliberately excluded:
 	 * inserting any of them into a message would either expose draft state or
 	 * produce content that most readers cannot access.
 	 *
@@ -199,7 +208,7 @@ class selector
 				\phpbbgallery\core\block::STATUS_APPROVED,
 				\phpbbgallery\core\block::STATUS_LOCKED,
 			]),
-			'i.image_contest = ' . (int) \phpbbgallery\core\block::NO_CONTEST,
+			$this->image_visibility->results_sql('i', []),
 		];
 	}
 

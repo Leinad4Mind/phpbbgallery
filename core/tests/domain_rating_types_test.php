@@ -96,7 +96,7 @@ final class domain_rating_types_test extends TestCase
 		$this->assertTrue($rating->is_able());
 	}
 
-	public function test_active_contest_rating_results_are_visible_only_to_moderators(): void
+	public function test_hidden_rating_presentation_is_delegated_to_the_visibility_policy(): void
 	{
 		$reflection = new \ReflectionClass(rating::class);
 		$rating = $reflection->newInstanceWithoutConstructor();
@@ -115,22 +115,33 @@ final class domain_rating_types_test extends TestCase
 		$image_visibility->expects($this->exactly(2))
 			->method('hides_results')
 			->willReturnCallback(static fn (array $image_data, bool $can_moderate): bool => !$can_moderate);
+		$image_visibility->expects($this->once())
+			->method('hidden_results_message')
+			->with(
+				$this->isType('array'),
+				$this->isType('array'),
+				false,
+				false,
+				'GALLERY_RESULTS_HIDDEN'
+			)
+			->willReturn('ADDON_RESULTS_HIDDEN');
 		$reflection->getProperty('image_visibility')->setValue($rating, $image_visibility);
 		$reflection->getProperty('language')->setValue($rating, $language);
 		$reflection->getProperty('template')->setValue($rating, $this->createStub(\phpbb\template\template::class));
 		$rating->loader(12, [
-			'image_contest' => block::IN_CONTEST,
+			'provider_marker' => 1,
 			'image_rates' => 3,
 			'image_rate_avg' => 450,
 		], [
 			'album_id' => 4,
 			'album_user_id' => 0,
-			'contest_start' => 100,
-			'contest_end' => 200,
 		]);
 
-		$this->assertSame('CONTEST_RATING_HIDDEN', $rating->get_image_rating(false, false));
+		$this->assertSame('ADDON_RESULTS_HIDDEN', $rating->get_image_rating(false, false));
 		$this->assertSame('RATING_STRINGS', $rating->get_image_rating(false, false));
+		$source = (string) file_get_contents(dirname(__DIR__) . '/rating.php');
+		$this->assertStringNotContainsString('CONTEST_', $source);
+		$this->assertStringNotContainsString("image_data('image_contest')", $source);
 	}
 
 	public function test_submit_rating_rechecks_ability_before_writing(): void

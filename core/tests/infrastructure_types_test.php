@@ -88,8 +88,6 @@ final class infrastructure_types_test extends TestCase
 		$this->assertSame(block::STATUS_APPROVED, $block->get_image_status_approved());
 		$this->assertSame(block::STATUS_LOCKED, $block->get_image_status_locked());
 		$this->assertSame(block::STATUS_ORPHAN, $block->get_image_status_orphan());
-		$this->assertSame(block::NO_CONTEST, $block->get_no_contest());
-		$this->assertSame(block::IN_CONTEST, $block->get_in_contest());
 	}
 
 	public function test_image_cache_merges_missing_ids_and_returns_only_requested_rows(): void

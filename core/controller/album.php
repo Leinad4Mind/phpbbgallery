@@ -411,20 +411,19 @@ class album
 			}
 			$s_allowed_delete = (($this->auth->acl_check('i_delete', $image_data['image_album_id'], $album_user_id) && $s_user_allowed) || $this->auth->acl_check('m_delete', $image_data['image_album_id'], $album_user_id));
 			$s_allowed_edit = (($this->auth->acl_check('i_edit', $image_data['image_album_id'], $album_user_id) && $s_user_allowed) || $this->auth->acl_check('m_edit', $image_data['image_album_id'], $album_user_id));
-			$can_moderate_contest = $this->auth->acl_check('m_status', $image_data['image_album_id'], $album_user_id);
-			$s_quick_mod = ($s_allowed_delete || $s_allowed_edit || $can_moderate_contest || $this->auth->acl_check('m_move', $image_data['image_album_id'], $album_user_id));
+			$s_quick_mod = ($s_allowed_delete || $s_allowed_edit || $can_moderate || $this->auth->acl_check('m_move', $image_data['image_album_id'], $album_user_id));
 			$s_username_hidden = $this->image_visibility->hides_private_data(
 				$image_data,
 				(int) $this->user->data['user_id'],
-				$can_moderate_contest
+				$can_moderate
 			);
 			$private_data_label = $s_username_hidden ? $this->image_visibility->private_data_label(
 				$image_data,
 				(int) $this->user->data['user_id'],
-				$can_moderate_contest,
+				$can_moderate,
 				$this->language->lang('GALLERY_PRIVATE_USER')
 			) : '';
-			$hide_contest_results = $this->image_visibility->hides_results($image_data, $can_moderate_contest);
+			$hide_results = $this->image_visibility->hides_results($image_data, $can_moderate);
 			$image_award = $this->image_visibility->award($image_data);
 			$this->template->assign_block_vars('imageblock.image', [
 				'IMAGE_ID'      => (int) $image_data['image_id'],
@@ -442,13 +441,13 @@ class album
 				'POSTER'              => ($show_username) ? (($s_username_hidden) ? $private_data_label : get_username_string('full', $image_data['image_user_id'], $image_data['image_username'], $image_data['image_user_colour'])) : false,
 				'TIME'                => $show_time ? $this->user->format_date($image_data['image_time']) : false,
 
-				'S_RATINGS'  => (!$hide_contest_results && $this->config['phpbb_gallery_allow_rates'] == 1 && $show_ratings) ? ($image_data['image_rates'] > 0 ? $image_data['image_rate_avg'] / 100 : $this->language->lang('NOT_RATED')) : false,
-				'U_RATINGS'  => !$hide_contest_results ? $this->helper->route('phpbbgallery_core_image', ['image_id' => $image_data['image_id']]) . '#rating' : false,
-				'L_COMMENTS' => !$hide_contest_results ? (($image_data['image_comments'] == 1) ? $this->language->lang('COMMENT') : $this->language->lang('COMMENTS')) : false,
-				'S_COMMENTS' => (!$hide_contest_results && $this->config['phpbb_gallery_allow_comments'] && $this->auth->acl_check('c_read', $image_data['image_album_id'], $album_user_id) && $show_comments) ? (($image_data['image_comments']) ? $image_data['image_comments'] : $this->language->lang('NO_COMMENTS')) : false,
-				'U_COMMENTS' => !$hide_contest_results ? $this->helper->route('phpbbgallery_core_image', ['image_id' => $image_data['image_id']]) . '#comments' : false,
+				'S_RATINGS'  => (!$hide_results && $this->config['phpbb_gallery_allow_rates'] == 1 && $show_ratings) ? ($image_data['image_rates'] > 0 ? $image_data['image_rate_avg'] / 100 : $this->language->lang('NOT_RATED')) : false,
+				'U_RATINGS'  => !$hide_results ? $this->helper->route('phpbbgallery_core_image', ['image_id' => $image_data['image_id']]) . '#rating' : false,
+				'L_COMMENTS' => !$hide_results ? (($image_data['image_comments'] == 1) ? $this->language->lang('COMMENT') : $this->language->lang('COMMENTS')) : false,
+				'S_COMMENTS' => (!$hide_results && $this->config['phpbb_gallery_allow_comments'] && $this->auth->acl_check('c_read', $image_data['image_album_id'], $album_user_id) && $show_comments) ? (($image_data['image_comments']) ? $image_data['image_comments'] : $this->language->lang('NO_COMMENTS')) : false,
+				'U_COMMENTS' => !$hide_results ? $this->helper->route('phpbbgallery_core_image', ['image_id' => $image_data['image_id']]) . '#comments' : false,
 
-				'U_USER_IP'                  => $show_ip && $can_moderate_contest ? $image_data['image_user_ip'] : false,
+				'U_USER_IP'                  => $show_ip && $can_moderate ? $image_data['image_user_ip'] : false,
 				'S_IMAGE_REPORTED'           => $image_data['image_reported'],
 				'U_IMAGE_REPORTED'           => ($image_data['image_reported'] && $this->auth->acl_check('m_report', $image_data['image_album_id'], $album_user_id)) ? $this->helper->route('phpbbgallery_core_moderate_image', ['image_id' => (int) $image_data['image_id']]) : '',
 				'S_STATUS_APPROVED'          => ($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_APPROVED) ? true : false,

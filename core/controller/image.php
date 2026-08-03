@@ -279,13 +279,13 @@ class image
 		$album_id = (int) $this->data['image_album_id'];
 		$album_data = $this->loader->get($album_id);
 		$this->check_permissions($album_id, $album_data['album_user_id'], $this->data['image_status'], $album_data['album_auth_access'], $this->data);
-		$can_moderate_contest = $this->gallery_auth->acl_check('m_status', $album_id, $album_data['album_user_id']);
+		$can_moderate = $this->gallery_auth->acl_check('m_status', $album_id, $album_data['album_user_id']);
 		$hide_private_data = $this->image_visibility->hides_private_data(
 			$this->data,
 			(int) $this->user->data['user_id'],
-			$can_moderate_contest
+			$can_moderate
 		);
-		$hide_contest_results = $this->image_visibility->hides_results($this->data, $can_moderate_contest);
+		$hide_results = $this->image_visibility->hides_results($this->data, $can_moderate);
 
 		$this->display->generate_navigation($album_data);
 
@@ -381,7 +381,7 @@ class image
 			$sort_by_text['lc'] = $this->language->lang('NEW_COMMENT');
 			$sort_by_sql['lc'] = 'image_last_comment';
 		}
-		if ($hide_contest_results)
+		if ($hide_results)
 		{
 			foreach (['u', 'ra', 'r', 'c', 'lc'] as $private_sort_key)
 			{
@@ -498,7 +498,7 @@ class image
 		$hide_private_data = $hide_private_data || $this->image_visibility->hides_private_data(
 			$this->data,
 			(int) $this->user->data['user_id'],
-			$can_moderate_contest
+			$can_moderate
 		);
 		if ($hide_private_data)
 		{
@@ -506,13 +506,13 @@ class image
 				$this->data,
 				$album_data,
 				(int) $this->user->data['user_id'],
-				$can_moderate_contest,
+				$can_moderate,
 				$this->language->lang('GALLERY_PRIVATE_IMAGE_DESC')
 			));
 			$this->assign_hidden_poster($this->image_visibility->private_data_label(
 				$this->data,
 				(int) $this->user->data['user_id'],
-				$can_moderate_contest,
+				$can_moderate,
 				$this->language->lang('GALLERY_PRIVATE_USER')
 			));
 		}
@@ -661,11 +661,11 @@ class image
 		/**
 		 * Listing comment
 		 */
-		if (!$hide_contest_results && $this->gallery_config->get('allow_comments') && $this->gallery_auth->acl_check('c_read', $album_id, $album_data['album_user_id']))
+		if (!$hide_results && $this->gallery_config->get('allow_comments') && $this->gallery_auth->acl_check('c_read', $album_id, $album_data['album_user_id']))
 		{
 			$this->display_comments($image_id, $this->data, $album_id, $album_data, ($page - 1) * $this->gallery_config->get('items_per_page'), $this->gallery_config->get('items_per_page'));
 		}
-		else if ($hide_contest_results)
+		else if ($hide_results)
 		{
 			$this->template->assign_vars([
 				'S_ALLOWED_READ_COMMENTS' => false,
