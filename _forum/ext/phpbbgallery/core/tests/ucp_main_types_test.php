@@ -112,7 +112,9 @@ final class ucp_main_types_test extends TestCase
 		$this->assertStringContainsString('$image_visibility->hides_results(', $source);
 		$this->assertStringNotContainsString('core\\contest::', $source);
 		$this->assertStringContainsString('$hide_contest_results ? 0', $source);
-		$this->assertStringContainsString('c.contest_marked <> ', $source);
+		$this->assertStringContainsString('$album_data_enricher->enrich_many($album_rows)', $source);
+		$this->assertStringNotContainsString('$contests_table', $source);
+		$this->assertStringContainsString("show_image(\$row['album_last_image_id'])", $source);
 	}
 
 	public function test_subscription_rows_render_the_last_comment_body(): void

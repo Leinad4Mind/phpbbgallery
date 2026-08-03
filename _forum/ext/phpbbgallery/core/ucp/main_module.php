@@ -26,7 +26,7 @@ class main_module
 	{
 		global $user, $phpbb_container, $table_prefix, $phpbb_gallery_url;
 		global $phpbb_ext_gallery_core_album, $albums_table, $phpbb_ext_gallery_core_auth, $phpbb_ext_gallery_core_album_display, $images_table;
-		global $phpbb_gallery_image, $users_table, $phpbb_ext_gallery_config, $comments_table, $rates_table, $reports_table, $watch_table, $contests_table, $tracking_table;
+		global $phpbb_gallery_image, $users_table, $phpbb_ext_gallery_config, $comments_table, $rates_table, $reports_table, $watch_table, $tracking_table;
 		global $phpbb_ext_gallery_user, $request;
 
 		$phpbb_gallery_url = $phpbb_container->get('phpbbgallery.core.url');
@@ -49,7 +49,6 @@ class main_module
 		$roles_table = $table_prefix . 'gallery_roles';
 		$permissions_table = $table_prefix . 'gallery_permissions';
 		$modscache_table = $table_prefix . 'gallery_modscache';
-		$contests_table = $table_prefix . 'gallery_contests';
 		$users_table = $table_prefix . 'gallery_users';
 		$images_table = $table_prefix . 'gallery_images';
 		$comments_table = $table_prefix . 'gallery_comments';
@@ -1003,13 +1002,14 @@ class main_module
 
 	public function manage_subscriptions(): void
 	{
-		global $db, $template, $user, $phpbb_container, $phpbb_ext_gallery_core_album, $phpbb_gallery_notification, $watch_table, $albums_table, $contests_table;
+		global $db, $template, $user, $phpbb_container, $phpbb_ext_gallery_core_album, $phpbb_gallery_notification, $watch_table, $albums_table;
 		global $images_table, $comments_table, $request, $phpbb_gallery_url, $phpbb_ext_gallery_core_auth;
 
 		$phpbb_ext_gallery_core_image = $phpbb_container->get('phpbbgallery.core.image');
 		$phpbb_ext_gallery_config = $phpbb_container->get('phpbbgallery.core.config');
 		$phpbb_gallery_notification = $phpbb_container->get('phpbbgallery.core.notification');
 		$image_visibility = $phpbb_container->get('phpbbgallery.core.policy.image_visibility');
+		$album_data_enricher = $phpbb_container->get('phpbbgallery.core.album.data_enricher');
 		$this->language = $phpbb_container->get('language');
 
 		$action = $request->variable('action', '', true, \phpbb\request\request_interface::POST);
@@ -1055,23 +1055,25 @@ class main_module
 					'FROM'		=> [$albums_table => 'a'],
 					'ON'		=> 'w.album_id = a.album_id',
 				],
-				[
-					'FROM'		=> [$contests_table => 'c'],
-					'ON'		=> 'a.album_id = c.contest_album_id
-						AND c.contest_marked <> ' . (int) \phpbbgallery\core\block::NO_CONTEST,
-				],
 			],
 
 			'WHERE'			=> 'w.album_id <> 0 AND w.user_id = ' . (int) $user->data['user_id'],
 		];
 		$sql = $db->sql_build_query('SELECT', $sql_array);
 		$result = $db->sql_query($sql);
+		$album_rows = [];
 		while ($row = $db->sql_fetchrow($result))
+		{
+			$album_rows[] = $row;
+		}
+		$db->sql_freeresult($result);
+		$album_rows = $album_data_enricher->enrich_many($album_rows);
+		foreach ($album_rows as $row)
 		{
 			$can_moderate_contest = $phpbb_ext_gallery_core_auth->acl_check('m_status', $row['album_id'], $row['album_user_id']);
 			$hide_contest_private_data = $image_visibility->hides_private_data(
 				[
-					'image_contest' => (($row['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST) && $row['contest_marked'])
+					'image_contest' => (($row['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST) && !empty($row['contest_marked']))
 						? \phpbbgallery\core\block::IN_CONTEST
 						: \phpbbgallery\core\block::NO_CONTEST,
 					'image_user_id' => $row['album_last_user_id'],
@@ -1090,10 +1092,9 @@ class main_module
 				'UPLOADER'			=> $hide_contest_private_data ? $this->language->lang('CONTEST_USERNAME') : get_username_string('full', $row['album_last_user_id'], $row['album_last_username'], $row['album_last_user_colour']),
 				'LAST_IMAGE_TIME'	=> $user->format_date($row['album_last_image_time']),
 				'LAST_IMAGE'		=> $row['album_last_image_id'],
-				'U_IMAGE'			=> $phpbb_gallery_url->show_image($row['image_id']),
+				'U_IMAGE'			=> $phpbb_gallery_url->show_image($row['album_last_image_id']),
 			]);
 		}
-		$db->sql_freeresult($result);
 
 		// Subscribed images
 		$start				= $request->variable('start', 0);
