@@ -31,6 +31,7 @@ class display
 	protected string $root_path;
 	protected string $php_ext;
 	protected string $table_albums;
+	protected string $table_images;
 	protected string $table_moderators;
 	protected string $table_tracking;
 	protected \phpbb\language\language $language;
@@ -63,7 +64,8 @@ class display
 								\phpbbgallery\core\user $gallery_user, \phpbbgallery\core\misc $misc,
 								\phpbbgallery\core\policy\image_visibility $image_visibility,
 								data_enricher $data_enricher,
-								string $root_path, string $php_ext, string $albums_table, string $tracking_table, string $moderators_table)
+								string $root_path, string $php_ext, string $albums_table, string $images_table,
+								string $tracking_table, string $moderators_table)
 	{
 		$this->auth = $auth;
 		$this->config = $config;
@@ -83,6 +85,7 @@ class display
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
 		$this->table_albums = $albums_table;
+		$this->table_images = $images_table;
 		$this->table_tracking = $tracking_table;
 		$this->table_moderators = $moderators_table;
 	}
@@ -446,14 +449,18 @@ class display
 		}
 
 		$sql_array = [
-			'SELECT'	=> 'a.*, at.mark_time',
+			'SELECT'	=> 'a.*, at.mark_time, li.image_contest AS last_image_contest',
 			'FROM'		=> [$this->table_albums => 'a'],
 
 			'LEFT_JOIN'	=> [
 				[
 					'FROM'	=> [$this->table_tracking => 'at'],
 					'ON'	=> 'at.user_id = ' . (int) $this->user->data['user_id'] . ' AND a.album_id = at.album_id'
-				]
+				],
+				[
+					'FROM'	=> [$this->table_images => 'li'],
+					'ON'	=> 'li.image_id = a.album_last_image_id',
+				],
 			],
 
 			'ORDER_BY'	=> 'a.album_user_id, a.left_id',
@@ -544,8 +551,7 @@ class display
 					$branch_root_id = $album_id;
 				}
 				$album_rows[$parent_id]['album_id_last_image'] = $row['album_id'];
-				$album_rows[$parent_id]['album_type_last_image'] = $row['album_type'];
-				$album_rows[$parent_id]['album_contest_marked'] = (int) ($row['contest_marked'] ?? 0);
+				$album_rows[$parent_id]['last_image_contest'] = (int) ($row['last_image_contest'] ?? 0);
 				$album_rows[$parent_id]['orig_album_last_image_time'] = $row['album_last_image_time'];
 			}
 			else if ($row['album_type'])
@@ -571,8 +577,7 @@ class display
 					$album_rows[$parent_id]['album_last_user_id'] = $row['album_last_user_id'];
 					$album_rows[$parent_id]['album_last_username'] = $row['album_last_username'];
 					$album_rows[$parent_id]['album_last_user_colour'] = $row['album_last_user_colour'];
-					$album_rows[$parent_id]['album_type_last_image'] = $row['album_type'];
-					$album_rows[$parent_id]['album_contest_marked'] = (int) ($row['contest_marked'] ?? 0);
+					$album_rows[$parent_id]['last_image_contest'] = (int) ($row['last_image_contest'] ?? 0);
 					$album_rows[$parent_id]['album_id_last_image'] = $album_id;
 				}
 			}
@@ -705,8 +710,6 @@ class display
 			if ($row['album_last_image_id'])
 			{
 				$lastimage_time = $this->user->format_date($row['album_last_image_time']);
-				$lastimage_album_type = $row['album_type_last_image'];
-				$lastimage_contest_marked = $row['album_contest_marked'];
 				$lastimage_uc_fake_thumbnail = $row['album_image'] ? generate_board_url() . '/' . $row['album_image'] : $this->helper->route('phpbbgallery_core_image_file_mini', ['image_id' => $row['album_last_image_id']]);
 				$lastimage_uc_fake_thumbnail_url = $row['album_image'] ? generate_board_url() . '/' . $row['album_image'] : $this->helper->route('phpbbgallery_core_image', ['image_id' => $row['album_last_image_id']]);
 				$lastimage_uc_thumbnail = $row['album_image'] ? generate_board_url() . '/' . $row['album_image'] : $this->helper->route('phpbbgallery_core_image_file_mini', ['image_id' => $row['album_last_image_id']]);
@@ -715,7 +718,7 @@ class display
 			}
 			else
 			{
-				$lastimage_time = $lastimage_album_type = $lastimage_contest_marked = 0;
+				$lastimage_time = 0;
 				$lastimage_uc_fake_thumbnail = $lastimage_uc_fake_thumbnail_url = $lastimage_uc_thumbnail = $lastimage_uc_name = $lastimage_uc_icon = '';
 				$lastimage_uc_fake_thumbnail = $lastimage_uc_fake_thumbnail_url = $lastimage_uc_thumbnail = $this->helper->route('phpbbgallery_core_image_file_mini', ['image_id' => 0]);
 			}
@@ -738,9 +741,7 @@ class display
 
 			$s_username_hidden = $this->image_visibility->hides_private_data(
 				[
-					'image_contest' => ($lastimage_album_type == (int) \phpbbgallery\core\block::TYPE_CONTEST && $lastimage_contest_marked)
-						? \phpbbgallery\core\block::IN_CONTEST
-						: \phpbbgallery\core\block::NO_CONTEST,
+					'image_contest' => (int) ($row['last_image_contest'] ?? 0),
 					'image_user_id' => (int) $row['album_last_user_id'],
 				],
 				(int) $this->user->data['user_id'],

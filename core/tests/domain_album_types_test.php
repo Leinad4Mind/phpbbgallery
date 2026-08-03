@@ -68,6 +68,10 @@ final class domain_album_types_test extends TestCase
 		$this->assertStringContainsString('$this->image_visibility->hides_private_data(', $source);
 		$this->assertStringNotContainsString('core\\contest::', $source);
 		$this->assertStringContainsString('album_last_user_id', $source);
+		$this->assertStringContainsString('li.image_id = a.album_last_image_id', $source);
+		$this->assertStringContainsString("'image_contest' => (int) (\$row['last_image_contest'] ?? 0)", $source);
+		$this->assertStringNotContainsString('block::TYPE_CONTEST', $source);
+		$this->assertStringNotContainsString('album_contest_marked', $source);
 
 		$services = (string) file_get_contents(dirname(__DIR__) . '/config/services.yml');
 		$display_service = strstr($services, 'phpbbgallery.core.album.display:');
@@ -76,6 +80,7 @@ final class domain_album_types_test extends TestCase
 			"- '@phpbbgallery.core.policy.image_visibility'",
 			$display_service
 		);
+		$this->assertStringContainsString("'%phpbbgallery.tables.gallery_images%'", $display_service);
 	}
 
 	public function test_loader_initializes_and_reuses_loaded_album_data(): void
