@@ -28,3 +28,5 @@ All notable changes to the phpBB Gallery Contest add-on are documented in this f
   extension-neutral image-visibility policy.
 - Routed upload availability and contest image marking through extension-neutral
   Core policies, preserving checks at entry and immediately before finalization.
+- Routed comment and rating availability, plus rating-result privacy, through
+  the same extension-neutral Core policies.

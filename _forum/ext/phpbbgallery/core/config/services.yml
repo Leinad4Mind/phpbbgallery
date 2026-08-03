@@ -199,6 +199,7 @@ services:
             - '@phpbbgallery.core.config'
             - '@phpbbgallery.core.auth'
             - '@phpbbgallery.core.block'
+            - '@phpbbgallery.core.policy.album_operation'
             - '%phpbbgallery.tables.gallery_comments%'
             - '%phpbbgallery.tables.gallery_images%'
     phpbbgallery.core.url:
@@ -350,6 +351,8 @@ services:
             - '@request'
             - '@phpbbgallery.core.config'
             - '@phpbbgallery.core.auth'
+            - '@phpbbgallery.core.policy.album_operation'
+            - '@phpbbgallery.core.policy.image_visibility'
             - '%phpbbgallery.tables.gallery_images%'
             - '%phpbbgallery.tables.gallery_albums%'
             - '%phpbbgallery.tables.gallery_rates%'

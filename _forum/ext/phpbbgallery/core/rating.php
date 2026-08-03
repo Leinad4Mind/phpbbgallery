@@ -50,6 +50,16 @@ class rating
 	protected \phpbbgallery\core\auth\auth $gallery_auth;
 
 	/**
+	* @var \phpbbgallery\core\policy\album_operation
+	*/
+	protected \phpbbgallery\core\policy\album_operation $album_operation;
+
+	/**
+	* @var \phpbbgallery\core\policy\image_visibility
+	*/
+	protected \phpbbgallery\core\policy\image_visibility $image_visibility;
+
+	/**
 	* @var string
 	*/
 	protected string $images_table;
@@ -82,7 +92,7 @@ class rating
 
 	/**
 	* Is rating currently possible?
-	* Might be blocked because of contest-settings.
+	* Might be blocked by the album type policy.
 	*/
 	public bool $rating_enabled = false;
 
@@ -101,13 +111,16 @@ class rating
 	 * @param \phpbb\request\request            $request
 	 * @param config                            $gallery_config
 	 * @param auth\auth                         $gallery_auth
+	 * @param policy\album_operation            $album_operation
+	 * @param policy\image_visibility           $image_visibility
 	 * @param string                            $images_table
 	 * @param string                            $albums_table
 	 * @param string                            $rates_table
 	 */
 	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\template\template $template, \phpbb\user $user,
 		\phpbb\language\language $language, \phpbb\request\request $request, \phpbbgallery\core\config $gallery_config,
-		\phpbbgallery\core\auth\auth $gallery_auth,
+		\phpbbgallery\core\auth\auth $gallery_auth, \phpbbgallery\core\policy\album_operation $album_operation,
+		\phpbbgallery\core\policy\image_visibility $image_visibility,
 		string $images_table, string $albums_table, string $rates_table)
 	{
 		$this->db = $db;
@@ -117,6 +130,8 @@ class rating
 		$this->request = $request;
 		$this->gallery_config = $gallery_config;
 		$this->gallery_auth = $gallery_auth;
+		$this->album_operation = $album_operation;
+		$this->image_visibility = $image_visibility;
 		$this->images_table = $images_table;
 		$this->albums_table = $albums_table;
 		$this->rates_table = $rates_table;
@@ -230,7 +245,7 @@ class rating
 			(int) $this->album_data('album_id'),
 			(int) $this->album_data('album_user_id')
 		);
-		if (\phpbbgallery\core\contest::hides_results([
+		if ($this->image_visibility->hides_results([
 			'image_contest' => (int) $this->image_data('image_contest'),
 		], $can_moderate_contest))
 		{
@@ -276,14 +291,14 @@ class rating
 	* Is the user able to rate?
 	* Following statements must be true:
 	*	- User must be allowed to rate
-	*	- If the image is in a contest, it must be in the rating timespan
+	*	- The album type policy must allow rating
 	*
 	* @return	bool
 	*/
 	public function is_able(): bool
 	{
 		return $this->is_allowed() &&
-			contest::is_step('rate', $this->album_data(true));
+			$this->album_operation->allows('rate', $this->album_data(true));
 	}
 
 	/**

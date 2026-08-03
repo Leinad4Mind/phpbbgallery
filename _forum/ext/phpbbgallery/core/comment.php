@@ -29,6 +29,9 @@ class comment
 	/** @var \phpbbgallery\core\block */
 	protected \phpbbgallery\core\block $block;
 
+	/** @var \phpbbgallery\core\policy\album_operation */
+	protected \phpbbgallery\core\policy\album_operation $album_operation;
+
 	/** @var string */
 	protected string $comments_table;
 
@@ -43,12 +46,14 @@ class comment
 	 * @param \phpbbgallery\core\config         $config
 	 * @param \phpbbgallery\core\auth\auth      $auth
 	 * @param \phpbbgallery\core\block         $block
+	 * @param \phpbbgallery\core\policy\album_operation $album_operation
 	 * @param string                            $comments_table
 	 * @param string                            $images_table
 	 */
 
 	public function __construct(\phpbb\user $user, \phpbb\db\driver\driver_interface $db,
 								\phpbbgallery\core\config $config, \phpbbgallery\core\auth\auth $auth, \phpbbgallery\core\block $block,
+								\phpbbgallery\core\policy\album_operation $album_operation,
 								string $comments_table, string $images_table)
 	{
 		$this->user = $user;
@@ -56,6 +61,7 @@ class comment
 		$this->config = $config;
 		$this->auth = $auth;
 		$this->block = $block;
+		$this->album_operation = $album_operation;
 		$this->comments_table = $comments_table;
 		$this->images_table = $images_table;
 	}
@@ -81,8 +87,8 @@ class comment
 	/**
 	 * Is the user able to comment?
 	 * Following statements must be true:
-	 *    - User must be allowed to rate
-	 *    - If the image is in a contest, it must be finished
+	 *    - User must be allowed to comment.
+	 *    - The album type policy must allow comments.
 	 *
 	 * @param array $album_data
 	 * @param array $image_data
@@ -91,7 +97,7 @@ class comment
 	public function is_able(array $album_data, array $image_data): bool
 	{
 		return $this->is_allowed($album_data, $image_data) &&
-			contest::is_step('comment', $album_data);
+			$this->album_operation->allows('comment', $album_data);
 	}
 
 	/**
