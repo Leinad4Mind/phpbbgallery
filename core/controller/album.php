@@ -68,6 +68,9 @@ class album
 	/** @var \phpbbgallery\core\contest */
 	protected \phpbbgallery\core\contest $contest;
 
+	/** @var \phpbbgallery\core\policy\image_visibility */
+	protected \phpbbgallery\core\policy\image_visibility $image_visibility;
+
 	/** @var string */
 	protected string $table_images;
 
@@ -100,6 +103,8 @@ class album
 	 * @param \phpbbgallery\core\url                                    $url
 	 * @param \phpbbgallery\core\image\image                            $image
 	 * @param \phpbb\request\request_interface                          $request
+	 * @param \phpbbgallery\core\contest                                $contest
+	 * @param \phpbbgallery\core\policy\image_visibility                $image_visibility
 	 * @param string                                                    $images_table Gallery image table
 	 */
 	public function __construct(\phpbb\config\config $config, \phpbb\auth\auth $phpbb_auth,
@@ -110,7 +115,7 @@ class album
 		\phpbbgallery\core\auth\auth $auth, \phpbbgallery\core\auth\level $auth_level,
 		\phpbbgallery\core\config $gallery_config, \phpbbgallery\core\notification\helper $notifications_helper,
 		\phpbbgallery\core\url $url, \phpbbgallery\core\image\image $image, \phpbb\request\request_interface $request,
-		\phpbbgallery\core\contest $contest,
+		\phpbbgallery\core\contest $contest, \phpbbgallery\core\policy\image_visibility $image_visibility,
 		string $images_table)
 	{
 		$this->config = $config;
@@ -131,6 +136,7 @@ class album
 		$this->gallery_config = $gallery_config;
 		$this->request = $request;
 		$this->contest = $contest;
+		$this->image_visibility = $image_visibility;
 		$this->table_images = $images_table;
 	}
 
@@ -415,12 +421,12 @@ class album
 			$s_allowed_edit = (($this->auth->acl_check('i_edit', $image_data['image_album_id'], $album_user_id) && $s_user_allowed) || $this->auth->acl_check('m_edit', $image_data['image_album_id'], $album_user_id));
 			$can_moderate_contest = $this->auth->acl_check('m_status', $image_data['image_album_id'], $album_user_id);
 			$s_quick_mod = ($s_allowed_delete || $s_allowed_edit || $can_moderate_contest || $this->auth->acl_check('m_move', $image_data['image_album_id'], $album_user_id));
-			$s_username_hidden = \phpbbgallery\core\contest::hides_private_data(
+			$s_username_hidden = $this->image_visibility->hides_private_data(
 				$image_data,
 				(int) $this->user->data['user_id'],
 				$can_moderate_contest
 			);
-			$hide_contest_results = \phpbbgallery\core\contest::hides_results($image_data, $can_moderate_contest);
+			$hide_contest_results = $this->image_visibility->hides_results($image_data, $can_moderate_contest);
 			$this->template->assign_block_vars('imageblock.image', [
 				'IMAGE_ID'      => (int) $image_data['image_id'],
 				'U_IMAGE'       => $action_image,

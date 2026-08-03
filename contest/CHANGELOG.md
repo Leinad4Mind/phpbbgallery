@@ -32,3 +32,5 @@ All notable changes to the phpBB Gallery Contest add-on are documented in this f
   the same extension-neutral Core policies.
 - Routed direct image-page identity and result privacy through the neutral Core
   image-visibility policy, including the post-event privacy recheck.
+- Routed album thumbnail identity, rating and comment privacy through the
+  neutral Core image-visibility policy.
