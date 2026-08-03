@@ -62,6 +62,9 @@ class image
 	/** @var \phpbbgallery\core\contest  */
 	protected \phpbbgallery\core\contest $contest;
 
+	/** @var \phpbbgallery\core\policy\image_visibility */
+	protected \phpbbgallery\core\policy\image_visibility $image_visibility;
+
 	/** @var \phpbbgallery\core\file\file  */
 	protected \phpbbgallery\core\file\file $file;
 
@@ -96,6 +99,7 @@ class image
 	 * @param \phpbbgallery\core\cache               $gallery_cache
 	 * @param \phpbbgallery\core\user                $gallery_user
 	 * @param \phpbbgallery\core\contest             $contest
+	 * @param \phpbbgallery\core\policy\image_visibility $image_visibility
 	 * @param \phpbbgallery\core\file\file           $file
 	 * @param string                                 $table_images
 	 */
@@ -104,7 +108,8 @@ class image
 		\phpbbgallery\core\album\album $album, \phpbbgallery\core\config $gallery_config, \phpbb\controller\helper $helper,
 		\phpbbgallery\core\url $url, \phpbbgallery\core\log $gallery_log, \phpbbgallery\core\notification\helper $notification_helper,
 		\phpbbgallery\core\report $report, \phpbbgallery\core\cache $gallery_cache, \phpbbgallery\core\user $gallery_user,
-		\phpbbgallery\core\contest $contest, \phpbbgallery\core\file\file $file,
+		\phpbbgallery\core\contest $contest, \phpbbgallery\core\policy\image_visibility $image_visibility,
+		\phpbbgallery\core\file\file $file,
 		string $table_images)
 	{
 		$this->db = $db;
@@ -123,6 +128,7 @@ class image
 		$this->gallery_report = $report;
 		$this->gallery_user = $gallery_user;
 		$this->contest = $contest;
+		$this->image_visibility = $image_visibility;
 		$this->file = $file;
 		$this->table_images = $table_images;
 	}
@@ -988,12 +994,12 @@ class image
 		}
 
 		$can_moderate_contest = $this->gallery_auth->acl_check('m_status', $image_data['image_album_id'], $image_data['album_user_id']);
-		$hide_contest_private_data = \phpbbgallery\core\contest::hides_private_data(
+		$hide_contest_private_data = $this->image_visibility->hides_private_data(
 			$image_data,
 			(int) $this->user->data['user_id'],
 			$can_moderate_contest
 		);
-		$hide_contest_results = \phpbbgallery\core\contest::hides_results($image_data, $can_moderate_contest);
+		$hide_contest_results = $this->image_visibility->hides_results($image_data, $can_moderate_contest);
 
 		$this->template->assign_block_vars($image_block_name, [
 			'IMAGE_ID'		=> $image_data['image_id'],
