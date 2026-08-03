@@ -158,6 +158,7 @@ services:
             - '@phpbbgallery.core.user'
             - '@phpbbgallery.core.contest'
             - '@phpbbgallery.core.policy.image_visibility'
+            - '@phpbbgallery.core.policy.album_operation'
             - '@phpbbgallery.core.file.tool'
             - '%phpbbgallery.tables.gallery_images%'
     phpbbgallery.core.user:

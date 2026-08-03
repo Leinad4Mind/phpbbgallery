@@ -65,6 +65,9 @@ class image
 	/** @var \phpbbgallery\core\policy\image_visibility */
 	protected \phpbbgallery\core\policy\image_visibility $image_visibility;
 
+	/** @var \phpbbgallery\core\policy\album_operation */
+	protected \phpbbgallery\core\policy\album_operation $album_operation;
+
 	/** @var \phpbbgallery\core\file\file  */
 	protected \phpbbgallery\core\file\file $file;
 
@@ -100,6 +103,7 @@ class image
 	 * @param \phpbbgallery\core\user                $gallery_user
 	 * @param \phpbbgallery\core\contest             $contest
 	 * @param \phpbbgallery\core\policy\image_visibility $image_visibility
+	 * @param \phpbbgallery\core\policy\album_operation $album_operation
 	 * @param \phpbbgallery\core\file\file           $file
 	 * @param string                                 $table_images
 	 */
@@ -109,6 +113,7 @@ class image
 		\phpbbgallery\core\url $url, \phpbbgallery\core\log $gallery_log, \phpbbgallery\core\notification\helper $notification_helper,
 		\phpbbgallery\core\report $report, \phpbbgallery\core\cache $gallery_cache, \phpbbgallery\core\user $gallery_user,
 		\phpbbgallery\core\contest $contest, \phpbbgallery\core\policy\image_visibility $image_visibility,
+		\phpbbgallery\core\policy\album_operation $album_operation,
 		\phpbbgallery\core\file\file $file,
 		string $table_images)
 	{
@@ -129,6 +134,7 @@ class image
 		$this->gallery_user = $gallery_user;
 		$this->contest = $contest;
 		$this->image_visibility = $image_visibility;
+		$this->album_operation = $album_operation;
 		$this->file = $file;
 		$this->table_images = $table_images;
 	}
@@ -823,9 +829,7 @@ class image
 	public function move_image(array $image_id_ary, int $album_id): void
 	{
 		$target_data = $this->album->get_info($album_id);
-		$target_is_active_contest = (int) $target_data['album_type'] === (int) \phpbbgallery\core\block::TYPE_CONTEST
-			&& !empty($target_data['contest_marked']);
-		if ($target_is_active_contest && !\phpbbgallery\core\contest::is_step('upload', $target_data))
+		if (!$this->album_operation->allows('move_in', $target_data))
 		{
 			throw new \phpbb\exception\http_exception(403, 'NO_PERMISSIONS');
 		}
@@ -858,11 +862,30 @@ class image
 
 		// Store images to cache (so we can log them)
 		$image_cache = $this->gallery_cache->get_images($moved_image_ids);
+		$image_move_data = [
+			'image_album_id' => (int) $album_id,
+			'image_contest' => (int) \phpbbgallery\core\block::NO_CONTEST,
+			'image_contest_end' => 0,
+			'image_contest_rank' => 0,
+		];
+
+		/**
+		 * Allow optional album-type providers to add fields to an image move.
+		 *
+		 * @event phpbbgallery.core.image.prepare_move
+		 * @var array target_data     Destination album data
+		 * @var array moved_image_ids Image identifiers that will be moved
+		 * @var array image_move_data Fields persisted by the atomic move query
+		 * @since 4.1.0
+		 */
+		$vars = ['target_data', 'moved_image_ids', 'image_move_data'];
+		extract($this->phpbb_dispatcher->trigger_event(
+			'phpbbgallery.core.image.prepare_move',
+			compact($vars)
+		));
+
 		$sql = 'UPDATE ' . $this->table_images . '
-			SET image_album_id = ' . (int) $album_id . ',
-				image_contest = ' . ($target_is_active_contest ? (int) \phpbbgallery\core\block::IN_CONTEST : (int) \phpbbgallery\core\block::NO_CONTEST) . ',
-				image_contest_end = 0,
-				image_contest_rank = 0
+			SET ' . $this->db->sql_build_array('UPDATE', $image_move_data) . '
 			WHERE ' . $this->db->sql_in_set('image_id', $moved_image_ids);
 		$this->db->sql_query($sql);
 

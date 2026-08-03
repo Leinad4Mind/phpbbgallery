@@ -61,6 +61,8 @@ final class extension_policy_boundaries_test extends TestCase
 
 		$this->assertTrue($policy->allows('upload', ['album_type' => \phpbbgallery\core\block::TYPE_UPLOAD]));
 		$this->assertFalse($policy->allows('upload', ['album_type' => \phpbbgallery\core\block::TYPE_CAT]));
+		$this->assertTrue($policy->allows('move_in', ['album_type' => \phpbbgallery\core\block::TYPE_UPLOAD]));
+		$this->assertFalse($policy->allows('move_in', ['album_type' => \phpbbgallery\core\block::TYPE_CAT]));
 		$this->assertFalse($policy->allows('upload', ['album_type' => 2]));
 		$this->assertFalse($policy->allows('upload', ['album_type' => 99]));
 	}

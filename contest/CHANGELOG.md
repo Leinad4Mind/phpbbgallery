@@ -42,3 +42,5 @@ All notable changes to the phpBB Gallery Contest add-on are documented in this f
   image-visibility policy.
 - Routed reusable image blocks through the neutral Core image-visibility
   policy for identity, rating and comment privacy.
+- Routed moves into albums through the neutral operation policy while
+  preserving the legacy distinction between active and completed contests.
