@@ -334,10 +334,7 @@ class image
 				'S_STATUS_LOCKED'     => ($this->data['image_status'] == (int) \phpbbgallery\core\block::STATUS_LOCKED),
 			]);
 		}
-		$contest_end_time = (int) ($album_data['contest_start'] ?? 0) + (int) ($album_data['contest_end'] ?? 0);
-		$image_desc = $hide_private_data
-			? $this->language->lang('CONTEST_IMAGE_DESC', $this->user->format_date($contest_end_time, false, true))
-			: generate_text_for_display($this->data['image_desc'], $this->data['image_desc_uid'], $this->data['image_desc_bitfield'], 7);
+		$image_desc = generate_text_for_display($this->data['image_desc'], $this->data['image_desc_uid'], $this->data['image_desc_bitfield'], 7);
 		$image_subtitle = (string) ($this->data['image_subtitle'] ?? '');
 		$image_subtitle_search_url = $this->build_subtitle_search_url($image_subtitle);
 
@@ -502,7 +499,13 @@ class image
 		);
 		if ($hide_private_data)
 		{
-			$this->template->assign_var('IMAGE_DESC', $image_desc);
+			$this->template->assign_var('IMAGE_DESC', $this->image_visibility->private_data_description(
+				$this->data,
+				$album_data,
+				(int) $this->user->data['user_id'],
+				$can_moderate_contest,
+				$this->language->lang('GALLERY_PRIVATE_IMAGE_DESC')
+			));
 			$this->assign_hidden_poster($this->image_visibility->private_data_label(
 				$this->data,
 				(int) $this->user->data['user_id'],

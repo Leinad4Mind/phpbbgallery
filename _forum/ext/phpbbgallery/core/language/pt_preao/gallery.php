@@ -92,6 +92,7 @@ $lang = array_merge($lang, [
 	'CONTEST_RESULT_HIDDEN'        => 'A classificação para estas imagens está oculta até ao fim do concurso em %s.',
 	'CONTEST_STARTED'              => 'O concurso iniciou em %s.',
 	'CONTEST_STARTS'               => 'O concurso inicia em %s.',
+	'GALLERY_PRIVATE_IMAGE_DESC'   => '<strong>Imagem privada</strong> » A descrição da imagem está actualmente oculta.',
 	'GALLERY_PRIVATE_USER'         => '<strong>Utilizador oculto</strong>',
 	'CONTEST_USERNAME'             => '<strong>Concurso</strong>',
 	'CONTEST_USERNAME_LONG'        => '<strong>Concurso</strong> » O nome de utilizador está oculto até ao fim do concurso em %s.',

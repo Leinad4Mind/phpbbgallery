@@ -78,4 +78,29 @@ final class presentation_listener_test extends TestCase
 
 		$this->assertSame('<strong>Contest</strong>', $event['label']);
 	}
+
+	public function test_private_contest_description_includes_end_date(): void
+	{
+		$language = $this->createStub(\phpbb\language\language::class);
+		$language->method('lang')->willReturnCallback(
+			static fn(string $key, string $date): string => $key . ':' . $date
+		);
+		$user = $this->createStub(\phpbb\user::class);
+		$user->method('format_date')->willReturnCallback(static fn(int $timestamp): string => (string) $timestamp);
+		$listener = new presentation_listener($language, $user);
+		$event = new \phpbb\event\data([
+			'image_data' => [
+				'image_contest' => \phpbbgallery\core\block::IN_CONTEST,
+				'image_user_id' => 7,
+			],
+			'album_data' => ['contest_start' => 1_000, 'contest_end' => 300],
+			'viewer_id' => 8,
+			'can_moderate' => false,
+			'description' => 'Hidden description',
+		]);
+
+		$listener->private_data_description($event);
+
+		$this->assertSame('CONTEST_IMAGE_DESC:1300', $event['description']);
+	}
 }

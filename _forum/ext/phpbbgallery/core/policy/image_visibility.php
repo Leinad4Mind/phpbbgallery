@@ -54,6 +54,29 @@ class image_visibility
 		return $label !== '' ? $label : $fallback;
 	}
 
+	/**
+	 * Resolve the message shown instead of a protected image description.
+	 */
+	public function private_data_description(
+		array $image_data,
+		array $album_data,
+		int $viewer_id,
+		bool $can_moderate,
+		string $fallback
+	): string
+	{
+		$description = $fallback;
+		$vars = ['image_data', 'album_data', 'viewer_id', 'can_moderate', 'description'];
+		extract($this->dispatcher->trigger_event(
+			'phpbbgallery.core.image_visibility.private_data_description',
+			compact($vars)
+		));
+
+		$description = trim((string) $description);
+
+		return $description !== '' ? $description : $fallback;
+	}
+
 	public function hides_results(array $image_data, bool $can_moderate): bool
 	{
 		$hidden = false;
