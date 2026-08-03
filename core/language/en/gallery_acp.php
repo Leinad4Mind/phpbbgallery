@@ -325,7 +325,6 @@ $lang = array_merge($lang, [
 	'RRC_GINDEX'             => 'Recent- &amp; Random-Images &amp; Comment - Feature',
 	'RRC_GINDEX_COLUMNS'     => 'Columns',
 	'RRC_GINDEX_COMMENTS'    => 'Collapse comments',
-	'RRC_GINDEX_CONTESTS'    => 'Number of contests',
 	'RRC_GINDEX_CROWS'       => 'Number of comments',
 	'RRC_GINDEX_MODE'        => 'Mode',
 	'RRC_GINDEX_MODE_EXP'    => '“Random images“ may take some time to load, on large databases!',

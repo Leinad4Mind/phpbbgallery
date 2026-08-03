@@ -468,7 +468,6 @@ class config_module
 				'RRC_GINDEX'	=> [
 					'rrc_gindex_mode'		=> ['lang' => 'RRC_GINDEX_MODE',		'validate' => 'int',	'type' => 'custom',			'explain' => true,	'method' => 'rrc_modes'],
 					'rrc_gindex_comments'	=> ['lang' => 'RRC_GINDEX_COMMENTS',	'validate' => 'bool',	'type' => 'radio:yes_no'],
-					//'rrc_gindex_contests'	=> ['lang' => 'RRC_GINDEX_CONTESTS',	'validate' => 'int',	'type' => 'text:7:3'],
 					'rrc_gindex_display'	=> ['lang' => 'RRC_DISPLAY_OPTIONS',	'validate' => '',		'type' => 'custom',			'method' => 'rrc_display'],
 					'rrc_gindex_pegas'		=> ['lang' => 'RRC_GINDEX_PGALLERIES',	'validate' => 'bool',	'type' => 'radio:yes_no'],
 				],

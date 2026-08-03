@@ -85,13 +85,7 @@ function toggleElement(oElement)
 						</a>
 					</li>
 					{% endif %}
-					{% if U_G_SEARCH_CONTESTS %}
-					<li>
-						<a href="{{ U_G_SEARCH_CONTESTS }}">
-							<span>{{ lang('VIEW_SEARCH_CONTESTS') }}</span>
-						</a>
-					</li>
-					{% endif %}
+					{% EVENT phpbbgallery_core_index_search_links_after %}
 					{% if S_USER_LOGGED_IN %}
 					<li>
 						<a href="{{ U_G_SEARCH_SELF }}">

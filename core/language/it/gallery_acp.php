@@ -352,7 +352,6 @@ $lang = array_merge($lang, [
 	'RRC_GINDEX'             => 'Recenti- & immagini Casuali &amp; Commenti - Funzionalità',
 	'RRC_GINDEX_COLUMNS'     => 'Colonne',
 	'RRC_GINDEX_COMMENTS'    => 'Seleziona e sposta commenti',
-	'RRC_GINDEX_CONTESTS'    => 'Numero di concorsi',
 	'RRC_GINDEX_CROWS'       => 'Numero di commenti',
 	'RRC_GINDEX_MODE'        => 'Modo',
 	'RRC_GINDEX_MODE_EXP'    => '“immagini casuali“ può richiedere maggior carico su database di grandi dimensioni!',

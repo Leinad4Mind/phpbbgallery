@@ -4,6 +4,11 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ## [4.0.0] Unreleased
 
+### Changed
+
+- Moved the remaining contest-specific frontend presentation and translations
+  out of Gallery Core and into the independent Contests add-on.
+
 ### Added
 
 - Added an ACP switch and a dedicated Core contest policy boundary that can prevent creation of new contest albums while keeping every existing contest active, editable and privacy-protected.

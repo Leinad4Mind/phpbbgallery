@@ -37,6 +37,7 @@ final class presentation_listener_test extends TestCase
 		(new presentation_listener($language, $user))->enrich_album_template_vars($event);
 
 		$template_vars = (array) $event['template_vars'];
+		$this->assertTrue($template_vars['S_ALBUM_TYPE_DETAILS']);
 		$this->assertSame('CONTEST_STARTS:' . $start, $template_vars['ALBUM_CONTEST_START']);
 		$this->assertSame('CONTEST_RATING_STARTS:' . ($start + 600), $template_vars['ALBUM_CONTEST_RATING']);
 		$this->assertSame('CONTEST_ENDS:' . ($start + 1200), $template_vars['ALBUM_CONTEST_END']);

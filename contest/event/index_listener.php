@@ -16,18 +16,21 @@ class index_listener implements EventSubscriberInterface
 	private \phpbb\auth\auth $auth;
 	private \phpbb\config\config $config;
 	private \phpbb\controller\helper $helper;
+	private \phpbb\language\language $language;
 	private \phpbbgallery\contest\winner_search $winner_search;
 
 	public function __construct(
 		\phpbb\auth\auth $auth,
 		\phpbb\config\config $config,
 		\phpbb\controller\helper $helper,
+		\phpbb\language\language $language,
 		\phpbbgallery\contest\winner_search $winner_search
 	)
 	{
 		$this->auth = $auth;
 		$this->config = $config;
 		$this->helper = $helper;
+		$this->language = $language;
 		$this->winner_search = $winner_search;
 	}
 
@@ -48,6 +51,7 @@ class index_listener implements EventSubscriberInterface
 		}
 
 		$dropdown_links = (array) $event['dropdown_links'];
+		$this->language->add_lang('contest', 'phpbbgallery/contest');
 		$dropdown_links['U_G_SEARCH_CONTESTS'] = $this->helper->route('phpbbgallery_core_search_contests');
 		$event['dropdown_links'] = $dropdown_links;
 	}
