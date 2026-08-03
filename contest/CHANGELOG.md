@@ -58,3 +58,12 @@ All notable changes to the phpBB Gallery Contest add-on are documented in this f
   policy for identity, rating and comment privacy.
 - Routed moves into albums through the neutral operation policy while
   preserving the legacy distinction between active and completed contests.
+- Added an authenticated phpBB functional workflow covering ACP contest
+  creation, resumable uploads, entrant privacy, fail-closed disable/enable,
+  real ratings, deterministic finalization and the published winners page.
+
+### Fixed
+
+- Used the configured Gallery items-per-page limit for winner pagination.
+- Rendered the shared Core search results through its explicit template
+  namespace so the winners page remains available from the add-on controller.

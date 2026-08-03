@@ -64,11 +64,11 @@ class winners
 			'U_VIEW_FORUM' => $this->helper->route('phpbbgallery_core_search_contests'),
 		]);
 
-		$limit = max(1, (int) $this->gallery_config->get('album_rows'));
+		$limit = max(1, (int) $this->gallery_config->get('items_per_page'));
 		$this->winner_search->display($limit, ($page - 1) * $limit);
 
 		return $this->helper->render(
-			'gallery/search_results.html',
+			'@phpbbgallery_core/gallery/search_results.html',
 			$this->gallery_config->get_title($this->language)
 		);
 	}
