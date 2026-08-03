@@ -71,12 +71,21 @@ final class controller_album_types_test extends TestCase
 		$this->assertSame('n', $normalizer->invoke($controller, 'n', $sort_columns));
 	}
 
-	public function test_active_contest_album_uses_the_central_privacy_policy(): void
+	public function test_album_images_use_the_neutral_privacy_policy(): void
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/album.php');
 
-		$this->assertStringContainsString('contest::hides_private_data(', $source);
-		$this->assertStringContainsString('contest::hides_results(', $source);
+		$this->assertStringContainsString('$this->image_visibility->hides_private_data(', $source);
+		$this->assertStringContainsString('$this->image_visibility->hides_results(', $source);
+		$this->assertStringNotContainsString('core\\contest::', $source);
+
+		$services = (string) file_get_contents(dirname(__DIR__) . '/config/services_controller.yml');
+		$album_service = strstr($services, 'phpbbgallery.core.controller.album:');
+		$album_service = strstr($album_service, 'phpbbgallery.core.controller.file:', true);
+		$this->assertStringContainsString(
+			"- '@phpbbgallery.core.policy.image_visibility'",
+			$album_service
+		);
 	}
 
 	public function test_contest_finalization_runs_only_after_album_access_checks(): void
