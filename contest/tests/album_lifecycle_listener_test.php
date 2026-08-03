@@ -20,7 +20,7 @@ final class album_lifecycle_listener_test extends TestCase
 		$user->data = ['user_timezone' => 'Europe/Amsterdam'];
 		$listener = $this->listener($user, true);
 		$event = new \phpbb\event\data([
-			'album_data' => ['album_type' => \phpbbgallery\core\block::TYPE_CONTEST],
+			'album_data' => ['album_type' => \phpbbgallery\contest\manager::ALBUM_TYPE],
 			'album_type_data' => [
 				'contest_start' => '2026-01-15 12:00',
 				'contest_rating' => '2026-07-15 12:00',
@@ -48,7 +48,7 @@ final class album_lifecycle_listener_test extends TestCase
 	{
 		$listener = $this->listener(new \phpbb\user(), false);
 		$event = new \phpbb\event\data([
-			'album_data' => ['album_type' => \phpbbgallery\core\block::TYPE_CONTEST],
+			'album_data' => ['album_type' => \phpbbgallery\contest\manager::ALBUM_TYPE],
 			'album_type_data' => [
 				'contest_start' => 'invalid',
 				'contest_rating' => 'invalid',
@@ -75,7 +75,7 @@ final class album_lifecycle_listener_test extends TestCase
 				'contest_start' => 1_000,
 				'contest_rating' => 200,
 				'contest_end' => 500,
-				'contest_marked' => \phpbbgallery\core\block::IN_CONTEST,
+				'contest_marked' => \phpbbgallery\contest\manager::STATE_ACTIVE,
 			])
 			->willReturn('contest_fields');
 		$db->expects($this->exactly(2))
@@ -88,13 +88,13 @@ final class album_lifecycle_listener_test extends TestCase
 		$listener = $this->listener(new \phpbb\user(), true, $db);
 		$event = new \phpbb\event\data([
 			'album_id' => 17,
-			'album_data_sql' => ['album_type' => \phpbbgallery\core\block::TYPE_CONTEST],
+			'album_data_sql' => ['album_type' => \phpbbgallery\contest\manager::ALBUM_TYPE],
 			'album_type_data' => [
 				'contest_id' => 4,
 				'contest_start' => 1_000,
 				'contest_rating' => 200,
 				'contest_end' => 500,
-				'contest_marked' => \phpbbgallery\core\block::IN_CONTEST,
+				'contest_marked' => \phpbbgallery\contest\manager::STATE_ACTIVE,
 			],
 			'album_type_state' => ['reset_marked_images' => true],
 			'row' => [],
@@ -105,7 +105,7 @@ final class album_lifecycle_listener_test extends TestCase
 		$this->assertStringContainsString('UPDATE gallery_contests', $queries[0]);
 		$this->assertStringContainsString('WHERE contest_id = 4', $queries[0]);
 		$this->assertStringContainsString('UPDATE gallery_images', $queries[1]);
-		$this->assertStringContainsString('image_contest = ' . \phpbbgallery\core\block::IN_CONTEST, $queries[1]);
+		$this->assertStringContainsString('image_contest = ' . \phpbbgallery\contest\manager::STATE_ACTIVE, $queries[1]);
 		$this->assertStringContainsString('WHERE image_album_id = 17', $queries[1]);
 	}
 
@@ -132,7 +132,7 @@ final class album_lifecycle_listener_test extends TestCase
 			'image_album_id' => 24,
 			'image_contest_rank' => 0,
 			'image_contest_end' => 0,
-			'image_contest' => \phpbbgallery\core\block::NO_CONTEST,
+			'image_contest' => \phpbbgallery\contest\manager::STATE_INACTIVE,
 		], $move['image_move_data']);
 
 		$listener->moved_album_content(new \phpbb\event\data(['from_id' => 12]));

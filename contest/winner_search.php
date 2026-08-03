@@ -196,7 +196,7 @@ class winner_search
 			FROM ' . $this->albums_table . '
 			WHERE ' . $this->db->sql_in_set('album_id', $viewable_album_ids) . '
 				AND album_user_id = ' . (int) \phpbbgallery\core\auth\auth::PUBLIC_ALBUM . '
-				AND album_type = ' . (int) \phpbbgallery\core\block::TYPE_CONTEST . '
+				AND album_type = ' . (int) manager::ALBUM_TYPE . '
 			ORDER BY album_id ASC';
 		$result = $this->db->sql_query($sql);
 		$contest_album_ids = [];
@@ -237,14 +237,14 @@ class winner_search
 		return implode(' AND ', [
 			'a.album_id = c.contest_album_id',
 			'a.album_user_id = ' . (int) \phpbbgallery\core\auth\auth::PUBLIC_ALBUM,
-			'a.album_type = ' . (int) \phpbbgallery\core\block::TYPE_CONTEST,
+			'a.album_type = ' . (int) manager::ALBUM_TYPE,
 			$this->db->sql_in_set('c.contest_album_id', $visible_album_ids),
-			'c.contest_marked = ' . (int) \phpbbgallery\core\block::NO_CONTEST,
+			'c.contest_marked = ' . (int) manager::STATE_INACTIVE,
 			'c.contest_start + c.contest_end <= ' . $now,
 			'EXISTS (SELECT 1
 				FROM ' . $this->images_table . ' cw
 				WHERE cw.image_album_id = c.contest_album_id
-					AND cw.image_contest = ' . (int) \phpbbgallery\core\block::NO_CONTEST . '
+					AND cw.image_contest = ' . (int) manager::STATE_INACTIVE . '
 					AND cw.image_contest_end = c.contest_start + c.contest_end
 					AND ' . $this->db->sql_in_set('cw.image_status', $valid_statuses) . '
 					AND (cw.image_id = c.contest_first
@@ -270,8 +270,8 @@ class winner_search
 			'WHERE' => implode(' AND ', [
 				'a.album_id = i.image_album_id',
 				'a.album_user_id = ' . (int) \phpbbgallery\core\auth\auth::PUBLIC_ALBUM,
-				'a.album_type = ' . (int) \phpbbgallery\core\block::TYPE_CONTEST,
-				'i.image_contest = ' . (int) \phpbbgallery\core\block::NO_CONTEST,
+				'a.album_type = ' . (int) manager::ALBUM_TYPE,
+				'i.image_contest = ' . (int) manager::STATE_INACTIVE,
 				$this->db->sql_in_set('i.image_album_id', $visible_album_ids),
 				$this->db->sql_in_set('i.image_id', $winner_ids),
 				$this->db->sql_in_set('i.image_status', [

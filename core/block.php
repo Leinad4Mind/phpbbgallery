@@ -27,6 +27,11 @@ class block
 
 	public const TYPE_CAT = 0;
 	public const TYPE_UPLOAD = 1;
+
+	/**
+	 * @deprecated 4.2.0 Contest album types are owned by phpbbgallery/contest.
+	 * Retained as a persisted-value compatibility alias for third-party add-ons.
+	 */
 	public const TYPE_CONTEST = 2;
 
 	public const ALBUM_OPEN = 0;
@@ -76,12 +81,14 @@ class block
 	public const STATUS_ORPHAN = 3;
 
 	/**
-	 * Constants regarding the image contest relation
+	 * @deprecated 4.2.0 Contest states are owned by phpbbgallery/contest.
+	 * Retained as a persisted-value compatibility alias for third-party add-ons.
 	 */
 	public const NO_CONTEST = 0;
 
 	/**
-	 * The image is element of an open contest. Only moderators can see the user_name of the user.
+	 * @deprecated 4.2.0 Contest states are owned by phpbbgallery/contest.
+	 * Retained as a persisted-value compatibility alias for third-party add-ons.
 	 */
 	public const IN_CONTEST = 1;
 

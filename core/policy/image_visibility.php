@@ -185,6 +185,31 @@ class image_visibility
 	}
 
 	/**
+	 * Project the historical visibility marker without exposing its storage name
+	 * to Core readers. This compatibility boundary can be removed with the
+	 * legacy column once every persisted row has an add-on-owned state.
+	 */
+	public function projection_sql(string $table_alias, string $projection_alias): string
+	{
+		$this->validate_alias($table_alias);
+		$this->validate_projection_alias($projection_alias);
+
+		return ($table_alias !== '' ? $table_alias . '.' : '')
+			. 'image_contest AS ' . $projection_alias;
+	}
+
+	/**
+	 * Hydrate policy input from a projected historical visibility marker.
+	 */
+	public function projected_data(array $row, string $projection_alias, array $image_data = []): array
+	{
+		$this->validate_projection_alias($projection_alias);
+		$image_data['image_contest'] = (int) ($row[$projection_alias] ?? 0);
+
+		return $image_data;
+	}
+
+	/**
 	 * Keep persisted optional-feature data private when its provider is absent.
 	 */
 	private function has_uncovered_active_marker(array $image_data, array $covered_markers): bool
@@ -212,6 +237,16 @@ class image_visibility
 		{
 			throw new \InvalidArgumentException('Invalid SQL alias.');
 		}
+	}
+
+	private function validate_projection_alias(string $alias): void
+	{
+		if ($alias === '')
+		{
+			throw new \InvalidArgumentException('A projection alias is required.');
+		}
+
+		$this->validate_alias($alias);
 	}
 
 	private function combine_conditions(array $conditions): string

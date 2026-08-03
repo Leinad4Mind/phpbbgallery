@@ -176,6 +176,11 @@ final class extension_policy_boundaries_test extends TestCase
 			$policy->private_data_sql('i', 2, [3])
 		);
 		$this->assertSame('(i.results_visible = 1)', $policy->results_sql('i', [3]));
+		$this->assertSame('li.image_contest AS last_image_visibility_marker', $policy->projection_sql('li', 'last_image_visibility_marker'));
+		$this->assertSame([
+			'image_user_id' => 7,
+			'image_contest' => 1,
+		], $policy->projected_data(['last_image_visibility_marker' => 1], 'last_image_visibility_marker', ['image_user_id' => 7]));
 	}
 
 	public function test_visibility_policy_is_open_without_providers_and_rejects_invalid_aliases(): void
@@ -196,6 +201,16 @@ final class extension_policy_boundaries_test extends TestCase
 
 		$this->expectException(\InvalidArgumentException::class);
 		$policy->private_data_sql('i; DROP TABLE images', 2, []);
+	}
+
+	public function test_visibility_policy_requires_a_safe_projection_alias(): void
+	{
+		$policy = new image_visibility($this->dispatcher(
+			static fn(string $event_name, array $data): array => $data
+		));
+
+		$this->expectException(\InvalidArgumentException::class);
+		$policy->projection_sql('i', '');
 	}
 
 	public function test_visibility_policy_fails_closed_for_unowned_persisted_markers(): void

@@ -23,7 +23,7 @@ final class policy_listener_test extends TestCase
 		$listener->register_album_type($event);
 
 		$types = (array) $event['types'];
-		$type = $types[\phpbbgallery\core\block::TYPE_CONTEST];
+		$type = $types[\phpbbgallery\contest\manager::ALBUM_TYPE];
 		$this->assertSame('CONTEST', $type['lang']);
 		$this->assertTrue($type['accepts_images']);
 		$this->assertFalse($type['can_create']);
@@ -38,12 +38,12 @@ final class policy_listener_test extends TestCase
 			->willReturn([
 				'contest_id' => 11,
 				'contest_album_id' => 7,
-				'contest_marked' => \phpbbgallery\core\block::IN_CONTEST,
+				'contest_marked' => \phpbbgallery\contest\manager::STATE_ACTIVE,
 			]);
 		$listener = new policy_listener($manager);
 		$contest = new \phpbb\event\data(['album_data' => [
 			'album_id' => 7,
-			'album_type' => \phpbbgallery\core\block::TYPE_CONTEST,
+			'album_type' => \phpbbgallery\contest\manager::ALBUM_TYPE,
 			'album_name' => 'Contest',
 		]]);
 		$regular = new \phpbb\event\data(['album_data' => [
@@ -69,9 +69,9 @@ final class policy_listener_test extends TestCase
 				7 => ['contest_id' => 11, 'contest_album_id' => 7],
 			]);
 		$event = new \phpbb\event\data(['album_rows' => [
-			['album_id' => 7, 'album_type' => \phpbbgallery\core\block::TYPE_CONTEST],
+			['album_id' => 7, 'album_type' => \phpbbgallery\contest\manager::ALBUM_TYPE],
 			['album_id' => 8, 'album_type' => \phpbbgallery\core\block::TYPE_UPLOAD],
-			['album_id' => 9, 'album_type' => \phpbbgallery\core\block::TYPE_CONTEST],
+			['album_id' => 9, 'album_type' => \phpbbgallery\contest\manager::ALBUM_TYPE],
 		]]);
 
 		(new policy_listener($manager))->enrich_album_rows($event);
@@ -79,7 +79,7 @@ final class policy_listener_test extends TestCase
 		$this->assertSame(11, $event['album_rows'][0]['contest_id']);
 		$this->assertArrayNotHasKey('contest_id', $event['album_rows'][1]);
 		$this->assertArrayNotHasKey('contest_id', $event['album_rows'][2]);
-		$this->assertSame(\phpbbgallery\core\block::IN_CONTEST, $event['album_rows'][2]['contest_marked']);
+		$this->assertSame(\phpbbgallery\contest\manager::STATE_ACTIVE, $event['album_rows'][2]['contest_marked']);
 	}
 
 	public function test_listener_finalizes_only_expired_active_contests(): void
@@ -94,9 +94,9 @@ final class policy_listener_test extends TestCase
 			'album_id' => 7,
 			'now' => 1_400,
 			'album_data' => [
-				'album_type' => \phpbbgallery\core\block::TYPE_CONTEST,
+				'album_type' => \phpbbgallery\contest\manager::ALBUM_TYPE,
 				'contest_id' => 11,
-				'contest_marked' => \phpbbgallery\core\block::IN_CONTEST,
+				'contest_marked' => \phpbbgallery\contest\manager::STATE_ACTIVE,
 				'contest_start' => 1_000,
 				'contest_end' => 300,
 			],
@@ -105,9 +105,9 @@ final class policy_listener_test extends TestCase
 			'album_id' => 8,
 			'now' => 1_400,
 			'album_data' => [
-				'album_type' => \phpbbgallery\core\block::TYPE_CONTEST,
+				'album_type' => \phpbbgallery\contest\manager::ALBUM_TYPE,
 				'contest_id' => 12,
-				'contest_marked' => \phpbbgallery\core\block::IN_CONTEST,
+				'contest_marked' => \phpbbgallery\contest\manager::STATE_ACTIVE,
 				'contest_start' => 1_300,
 				'contest_end' => 300,
 			],
@@ -116,15 +116,15 @@ final class policy_listener_test extends TestCase
 		$listener->finalize_expired_contest($expired);
 		$listener->finalize_expired_contest($future);
 
-		$this->assertSame(\phpbbgallery\core\block::NO_CONTEST, $expired['album_data']['contest_marked']);
-		$this->assertSame(\phpbbgallery\core\block::IN_CONTEST, $future['album_data']['contest_marked']);
+		$this->assertSame(\phpbbgallery\contest\manager::STATE_INACTIVE, $expired['album_data']['contest_marked']);
+		$this->assertSame(\phpbbgallery\contest\manager::STATE_ACTIVE, $future['album_data']['contest_marked']);
 	}
 
 	public function test_listener_applies_private_data_and_result_boundaries(): void
 	{
 		$listener = new policy_listener($this->manager(true));
 		$image_data = [
-			'image_contest' => \phpbbgallery\core\block::IN_CONTEST,
+			'image_contest' => \phpbbgallery\contest\manager::STATE_ACTIVE,
 			'image_user_id' => 7,
 		];
 		$privacy_event = new \phpbb\event\data([
@@ -152,12 +152,12 @@ final class policy_listener_test extends TestCase
 	{
 		$listener = new policy_listener($this->manager(true));
 		$restricted = new \phpbb\event\data([
-			'album_data' => ['contest_marked' => \phpbbgallery\core\block::IN_CONTEST],
+			'album_data' => ['contest_marked' => \phpbbgallery\contest\manager::STATE_ACTIVE],
 			'can_moderate' => false,
 			'sort_keys' => ['existing'],
 		]);
 		$moderated = new \phpbb\event\data([
-			'album_data' => ['contest_marked' => \phpbbgallery\core\block::IN_CONTEST],
+			'album_data' => ['contest_marked' => \phpbbgallery\contest\manager::STATE_ACTIVE],
 			'can_moderate' => true,
 			'sort_keys' => [],
 		]);
@@ -173,7 +173,7 @@ final class policy_listener_test extends TestCase
 	{
 		$listener = new policy_listener($this->manager(true));
 		$album_data = [
-			'album_type' => \phpbbgallery\core\block::TYPE_CONTEST,
+			'album_type' => \phpbbgallery\contest\manager::ALBUM_TYPE,
 			'contest_id' => 7,
 			'contest_start' => time() - 100,
 			'contest_rating' => 200,
@@ -202,7 +202,7 @@ final class policy_listener_test extends TestCase
 		$listener = new policy_listener($this->manager(true));
 		$contest_event = new \phpbb\event\data([
 			'album_data' => [
-				'album_type' => \phpbbgallery\core\block::TYPE_CONTEST,
+				'album_type' => \phpbbgallery\contest\manager::ALBUM_TYPE,
 				'contest_id' => 7,
 			],
 			'additional_sql_data' => [],
@@ -219,7 +219,7 @@ final class policy_listener_test extends TestCase
 		$listener->mark_contest_upload($regular_event);
 
 		$this->assertSame(
-			\phpbbgallery\core\block::IN_CONTEST,
+			\phpbbgallery\contest\manager::STATE_ACTIVE,
 			$contest_event['additional_sql_data']['image_contest']
 		);
 		$this->assertSame([], $regular_event['additional_sql_data']);
@@ -231,9 +231,9 @@ final class policy_listener_test extends TestCase
 		$completed = new \phpbb\event\data([
 			'operation' => 'move_in',
 			'album_data' => [
-				'album_type' => \phpbbgallery\core\block::TYPE_CONTEST,
+				'album_type' => \phpbbgallery\contest\manager::ALBUM_TYPE,
 				'contest_id' => 7,
-				'contest_marked' => \phpbbgallery\core\block::NO_CONTEST,
+				'contest_marked' => \phpbbgallery\contest\manager::STATE_INACTIVE,
 				'contest_start' => 100,
 				'contest_rating' => 20,
 				'contest_end' => 50,
@@ -243,9 +243,9 @@ final class policy_listener_test extends TestCase
 		$active_rating_phase = new \phpbb\event\data([
 			'operation' => 'move_in',
 			'album_data' => [
-				'album_type' => \phpbbgallery\core\block::TYPE_CONTEST,
+				'album_type' => \phpbbgallery\contest\manager::ALBUM_TYPE,
 				'contest_id' => 8,
-				'contest_marked' => \phpbbgallery\core\block::IN_CONTEST,
+				'contest_marked' => \phpbbgallery\contest\manager::STATE_ACTIVE,
 				'contest_start' => time() - 30,
 				'contest_rating' => 20,
 				'contest_end' => 100,
@@ -265,28 +265,28 @@ final class policy_listener_test extends TestCase
 		$listener = new policy_listener($this->manager(true));
 		$active = new \phpbb\event\data([
 			'target_data' => [
-				'album_type' => \phpbbgallery\core\block::TYPE_CONTEST,
-				'contest_marked' => \phpbbgallery\core\block::IN_CONTEST,
+				'album_type' => \phpbbgallery\contest\manager::ALBUM_TYPE,
+				'contest_marked' => \phpbbgallery\contest\manager::STATE_ACTIVE,
 			],
-			'image_move_data' => ['image_contest' => \phpbbgallery\core\block::NO_CONTEST],
+			'image_move_data' => ['image_contest' => \phpbbgallery\contest\manager::STATE_INACTIVE],
 		]);
 		$completed = new \phpbb\event\data([
 			'target_data' => [
-				'album_type' => \phpbbgallery\core\block::TYPE_CONTEST,
-				'contest_marked' => \phpbbgallery\core\block::NO_CONTEST,
+				'album_type' => \phpbbgallery\contest\manager::ALBUM_TYPE,
+				'contest_marked' => \phpbbgallery\contest\manager::STATE_INACTIVE,
 			],
-			'image_move_data' => ['image_contest' => \phpbbgallery\core\block::NO_CONTEST],
+			'image_move_data' => ['image_contest' => \phpbbgallery\contest\manager::STATE_INACTIVE],
 		]);
 
 		$listener->prepare_image_move($active);
 		$listener->prepare_image_move($completed);
 
 		$this->assertSame(
-			\phpbbgallery\core\block::IN_CONTEST,
+			\phpbbgallery\contest\manager::STATE_ACTIVE,
 			$active['image_move_data']['image_contest']
 		);
 		$this->assertSame(
-			\phpbbgallery\core\block::NO_CONTEST,
+			\phpbbgallery\contest\manager::STATE_INACTIVE,
 			$completed['image_move_data']['image_contest']
 		);
 		$this->assertSame(0, $completed['image_move_data']['image_contest_end']);

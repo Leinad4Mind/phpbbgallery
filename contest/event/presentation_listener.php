@@ -9,6 +9,7 @@
 
 namespace phpbbgallery\contest\event;
 
+use phpbbgallery\contest\manager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class presentation_listener implements EventSubscriberInterface
@@ -79,7 +80,7 @@ class presentation_listener implements EventSubscriberInterface
 	{
 		$album_data = (array) $event['album_data'];
 		if ((string) $event['operation'] !== 'comment'
-			|| (int) ($album_data['album_type'] ?? -1) !== (int) \phpbbgallery\core\block::TYPE_CONTEST)
+			|| (int) ($album_data['album_type'] ?? -1) !== (int) manager::ALBUM_TYPE)
 		{
 			return;
 		}
@@ -132,7 +133,7 @@ class presentation_listener implements EventSubscriberInterface
 	{
 		$album_data = (array) $event['album_data'];
 		if ((string) $event['context'] !== 'navigation'
-			|| (int) ($album_data['album_type'] ?? -1) !== (int) \phpbbgallery\core\block::TYPE_CONTEST
+			|| (int) ($album_data['album_type'] ?? -1) !== (int) manager::ALBUM_TYPE
 			|| !isset($album_data['contest_start'], $album_data['contest_rating'], $album_data['contest_end']))
 		{
 			return;

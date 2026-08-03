@@ -69,7 +69,9 @@ final class domain_album_types_test extends TestCase
 		$this->assertStringNotContainsString('core\\contest::', $source);
 		$this->assertStringContainsString('album_last_user_id', $source);
 		$this->assertStringContainsString('li.image_id = a.album_last_image_id', $source);
-		$this->assertStringContainsString("'image_contest' => (int) (\$row['last_image_contest'] ?? 0)", $source);
+		$this->assertStringContainsString("projection_sql('li', \$last_image_projection)", $source);
+		$this->assertStringContainsString('projected_data($row, $last_image_projection', $source);
+		$this->assertStringNotContainsString('last_image_contest', $source);
 		$this->assertStringNotContainsString('block::TYPE_CONTEST', $source);
 		$this->assertStringNotContainsString('album_contest_marked', $source);
 

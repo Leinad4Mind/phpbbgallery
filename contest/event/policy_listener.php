@@ -46,10 +46,10 @@ class policy_listener implements EventSubscriberInterface
 	public function finalize_expired_contest(\phpbb\event\data $event): void
 	{
 		$album_data = (array) $event['album_data'];
-		if ((int) ($album_data['album_type'] ?? -1) !== (int) \phpbbgallery\core\block::TYPE_CONTEST
+		if ((int) ($album_data['album_type'] ?? -1) !== (int) manager::ALBUM_TYPE
 			|| (int) ($album_data['contest_id'] ?? 0) <= 0
-			|| (int) ($album_data['contest_marked'] ?? \phpbbgallery\core\block::NO_CONTEST)
-				!== (int) \phpbbgallery\core\block::IN_CONTEST)
+			|| (int) ($album_data['contest_marked'] ?? manager::STATE_INACTIVE)
+				!== (int) manager::STATE_ACTIVE)
 		{
 			return;
 		}
@@ -69,7 +69,7 @@ class policy_listener implements EventSubscriberInterface
 			$now
 		))
 		{
-			$album_data['contest_marked'] = \phpbbgallery\core\block::NO_CONTEST;
+			$album_data['contest_marked'] = manager::STATE_INACTIVE;
 			$event['album_data'] = $album_data;
 		}
 	}
@@ -77,7 +77,7 @@ class policy_listener implements EventSubscriberInterface
 	public function enrich_album_data(\phpbb\event\data $event): void
 	{
 		$album_data = (array) $event['album_data'];
-		if ((int) ($album_data['album_type'] ?? -1) !== (int) \phpbbgallery\core\block::TYPE_CONTEST
+		if ((int) ($album_data['album_type'] ?? -1) !== (int) manager::ALBUM_TYPE
 			|| (int) ($album_data['album_id'] ?? 0) <= 0)
 		{
 			return;
@@ -96,7 +96,7 @@ class policy_listener implements EventSubscriberInterface
 		$contest_album_ids = [];
 		foreach ($album_rows as $row)
 		{
-			if ((int) ($row['album_type'] ?? -1) === (int) \phpbbgallery\core\block::TYPE_CONTEST)
+			if ((int) ($row['album_type'] ?? -1) === (int) manager::ALBUM_TYPE)
 			{
 				$contest_album_ids[] = (int) ($row['album_id'] ?? 0);
 			}
@@ -110,9 +110,9 @@ class policy_listener implements EventSubscriberInterface
 			{
 				$album_rows[$index] = array_merge($row, $contest_rows[$album_id]);
 			}
-			else if ((int) ($row['album_type'] ?? -1) === (int) \phpbbgallery\core\block::TYPE_CONTEST)
+			else if ((int) ($row['album_type'] ?? -1) === (int) manager::ALBUM_TYPE)
 			{
-				$album_rows[$index]['contest_marked'] = \phpbbgallery\core\block::IN_CONTEST;
+				$album_rows[$index]['contest_marked'] = manager::STATE_ACTIVE;
 			}
 		}
 		$event['album_rows'] = $album_rows;
@@ -121,7 +121,7 @@ class policy_listener implements EventSubscriberInterface
 	public function restrict_album_operation(\phpbb\event\data $event): void
 	{
 		$album_data = (array) $event['album_data'];
-		if ((int) ($album_data['album_type'] ?? -1) !== (int) \phpbbgallery\core\block::TYPE_CONTEST)
+		if ((int) ($album_data['album_type'] ?? -1) !== (int) manager::ALBUM_TYPE)
 		{
 			return;
 		}
@@ -131,7 +131,7 @@ class policy_listener implements EventSubscriberInterface
 		{
 			$contest_id = (int) ($album_data['contest_id'] ?? 0);
 			$completed = isset($album_data['contest_marked'])
-				&& (int) $album_data['contest_marked'] === (int) \phpbbgallery\core\block::NO_CONTEST;
+				&& (int) $album_data['contest_marked'] === (int) manager::STATE_INACTIVE;
 			$allowed_by_contest = $contest_id > 0
 				&& ($completed || manager::is_step('upload', $album_data));
 		}
@@ -146,14 +146,14 @@ class policy_listener implements EventSubscriberInterface
 	public function mark_contest_upload(\phpbb\event\data $event): void
 	{
 		$album_data = (array) $event['album_data'];
-		if ((int) ($album_data['album_type'] ?? -1) !== (int) \phpbbgallery\core\block::TYPE_CONTEST
+		if ((int) ($album_data['album_type'] ?? -1) !== (int) manager::ALBUM_TYPE
 			|| (int) ($album_data['contest_id'] ?? $album_data['album_contest'] ?? 0) <= 0)
 		{
 			return;
 		}
 
 		$additional_sql_data = (array) $event['additional_sql_data'];
-		$additional_sql_data['image_contest'] = (int) \phpbbgallery\core\block::IN_CONTEST;
+		$additional_sql_data['image_contest'] = (int) manager::STATE_ACTIVE;
 		$event['additional_sql_data'] = $additional_sql_data;
 	}
 
@@ -161,19 +161,19 @@ class policy_listener implements EventSubscriberInterface
 	{
 		$target_data = (array) $event['target_data'];
 		$image_move_data = (array) $event['image_move_data'];
-		$image_move_data['image_contest'] = (int) \phpbbgallery\core\block::NO_CONTEST;
+		$image_move_data['image_contest'] = (int) manager::STATE_INACTIVE;
 		$image_move_data['image_contest_end'] = 0;
 		$image_move_data['image_contest_rank'] = 0;
 
-		if ((int) ($target_data['album_type'] ?? -1) !== (int) \phpbbgallery\core\block::TYPE_CONTEST
-			|| (int) ($target_data['contest_marked'] ?? \phpbbgallery\core\block::NO_CONTEST)
-				!== (int) \phpbbgallery\core\block::IN_CONTEST)
+		if ((int) ($target_data['album_type'] ?? -1) !== (int) manager::ALBUM_TYPE
+			|| (int) ($target_data['contest_marked'] ?? manager::STATE_INACTIVE)
+				!== (int) manager::STATE_ACTIVE)
 		{
 			$event['image_move_data'] = $image_move_data;
 			return;
 		}
 
-		$image_move_data['image_contest'] = (int) \phpbbgallery\core\block::IN_CONTEST;
+		$image_move_data['image_contest'] = (int) manager::STATE_ACTIVE;
 		$event['image_move_data'] = $image_move_data;
 	}
 
@@ -189,7 +189,7 @@ class policy_listener implements EventSubscriberInterface
 	public function register_album_type(\phpbb\event\data $event): void
 	{
 		$types = (array) $event['types'];
-		$types[(int) \phpbbgallery\core\block::TYPE_CONTEST] = [
+		$types[(int) manager::ALBUM_TYPE] = [
 			'lang' => 'CONTEST',
 			'accepts_images' => true,
 			'can_create' => $this->contest->can_create(),

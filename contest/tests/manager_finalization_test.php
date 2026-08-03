@@ -53,7 +53,7 @@ final class manager_finalization_test extends TestCase
 				if ($result === 10)
 				{
 					return [
-						'contest_marked' => \phpbbgallery\core\block::IN_CONTEST,
+						'contest_marked' => \phpbbgallery\contest\manager::STATE_ACTIVE,
 						'contest_first' => 0,
 						'contest_second' => 0,
 						'contest_third' => 0,
@@ -142,7 +142,7 @@ final class manager_finalization_test extends TestCase
 			return match ($result)
 			{
 				10 => [
-					'contest_marked' => \phpbbgallery\core\block::IN_CONTEST,
+					'contest_marked' => \phpbbgallery\contest\manager::STATE_ACTIVE,
 					'contest_first' => 0,
 					'contest_second' => 0,
 					'contest_third' => 0,
