@@ -1,10 +1,10 @@
 <?php
 /**
- *
- * @package User Defaults Extension
+ * @package User Defaults
+ * @copyright (c) 2016 David Wood
  * @copyright (c) 2022 devspace
+ * @copyright (c) 2026 Leinad4Mind
  * @license GNU General Public License, version 2 (GPL-2.0)
- *
  */
 
 namespace devspace\userdefaults\acp;
@@ -13,12 +13,16 @@ class userdefaults_info
 {
 	public function module()
 	{
-		return [
-			'filename'	=> '\devspace\userdefaults\acp\userdefaults_module',
-			'title' 	=> 'USER_DEFAULTS',
-			'modes' 	=> [
-				'manage' => ['title' => 'MANAGE_DEFAULTS', 'auth' => 'ext_devspace/userdefaults && acl_a_user', 'cat' => ['USER_DEFAULTS']],
-			],
-		];
+		return array(
+			'filename' => '\\devspace\\userdefaults\\acp\\userdefaults_module',
+			'title' => 'USER_DEFAULTS',
+			'modes' => array(
+				'manage' => array(
+					'title' => 'MANAGE_DEFAULTS',
+					'auth' => 'ext_devspace/userdefaults && acl_a_user',
+					'cat' => array('USER_DEFAULTS'),
+				),
+			),
+		);
 	}
 }

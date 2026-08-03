@@ -2,7 +2,9 @@
 
 /**
  * @package User Defaults Extension for phpBB.
+ * @copyright (c) 2016 david63
  * @copyright (c) 2022 devspace
+ * @copyright (c) 2026 Leinad4Mind
  * @license GNU General Public License, version 2 (GPL-2.0)
  * @translation Leinad4Mind [Brazilian Portuguese [pt_br]] (2026)
  */
@@ -34,12 +36,12 @@ if (empty($lang) || !is_array($lang))
  * in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
  *
  * Some characters you may want to copy&paste:
- * ’ » “ ” …
+ * â€™ Â» â€œ â€ â€¦
  *
  */
 
 $lang = array_merge($lang, [
-	'MANAGE_DEFAULTS'   => 'Gerir configurações',
-	'USER_DEFAULTS'     => 'Padrões de usuário',
-	'USER_DEFAULTS_LOG' => '<strong>As configurações padrão de usuário foram atualizadas</strong>',
+	'MANAGE_DEFAULTS'   => 'Gerenciar configuraÃ§Ãµes',
+	'USER_DEFAULTS'     => 'PadrÃµes de usuÃ¡rio',
+	'USER_DEFAULTS_LOG' => '<strong>As configuraÃ§Ãµes padrÃ£o de usuÃ¡rio foram atualizadas</strong>',
 ]);

@@ -3,6 +3,7 @@
  *
  * @package User Defaults Extension
  * @copyright (c) 2022 devspace
+ * @copyright (c) 2026 Leinad4Mind
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */

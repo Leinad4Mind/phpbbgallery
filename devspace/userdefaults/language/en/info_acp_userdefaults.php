@@ -2,7 +2,9 @@
 /**
  *
  * @package User Defaults Extension
+ * @copyright (c) 2016 david63
  * @copyright (c) 2022 devspace
+ * @copyright (c) 2026 Leinad4Mind
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -34,7 +36,7 @@ if (empty($lang) || !is_array($lang))
  * in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
  *
  * Some characters you may want to copy&paste:
- * ’ » “ ” …
+ * â€™ Â» â€œ â€ â€¦
  *
  */
 

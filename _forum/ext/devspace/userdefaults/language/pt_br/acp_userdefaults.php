@@ -2,7 +2,9 @@
 
 /**
  * @package User Defaults Extension for phpBB.
+ * @copyright (c) 2016 david63
  * @copyright (c) 2022 devspace
+ * @copyright (c) 2026 Leinad4Mind
  * @license GNU General Public License, version 2 (GPL-2.0)
  * @translation Leinad4Mind [Brazilian Portuguese [pt_br]] (2026)
  */
@@ -34,25 +36,30 @@ if (empty($lang) || !is_array($lang))
  * in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
  *
  * Some characters you may want to copy&paste:
- * ’ » “ ” …
+ * â€™ Â» â€œ â€ â€¦
  *
  */
 
 $lang = array_merge($lang, [
-	'DEFAULT_ALL_POSTS'     => '<strong>Padrão = Todas as mensagens</strong>',
-	'DEFAULT_ALL_TOPICS'    => '<strong>Padrão = Todos os tópicos</strong>',
-	'DEFAULT_ASC'           => '<strong>Padrão = Ascendente</strong>',
-	'DEFAULT_DATE_FORMAT'   => '<strong>Padrão = %s</strong>',
-	'DEFAULT_DESC'          => '<strong>Padrão = Descendente</strong>',
-	'DEFAULT_EMAIL'         => '<strong>Padrão = E-mail</strong>',
-	'DEFAULT_NO'            => '<strong>Padrão = Não</strong>',
-	'DEFAULT_NOTIFICATION'  => '<strong>Padrão = Notificação</strong>',
-	'DEFAULT_POST_TIME'     => '<strong>Padrão = Hora da mensagem</strong>',
-	'DEFAULT_YES'           => '<strong>Padrão = Sim</strong>',
-	'DISPLAY_SETTINGS'      => 'Opções de apresentação',
-	'EMAIL'                 => 'E-mail',
-	'GLOBAL_SETTINGS'       => 'Configurações globais',
-	'NOTIFICATION'          => 'Notificação',
-	'POSTING_SETTINGS'      => 'Padrões de publicação',
-	'USER_DEFAULTS_EXPLAIN' => 'Defina aqui os valores que deseja como valores padrão para <strong>novos</strong> usuários.<br>Quaisquer alterações feitas através deste formulário <strong>não</strong> afetarão usuários já existentes.',
+	'DEFAULT_ALL_POSTS'    => '<strong>PadrÃ£o = Todas as mensagens</strong>',
+	'DEFAULT_ALL_TOPICS'   => '<strong>PadrÃ£o = Todos os tÃ³picos</strong>',
+	'DEFAULT_ASC'          => '<strong>PadrÃ£o = Ascendente</strong>',
+	'DEFAULT_DATE_FORMAT'  => '<strong>PadrÃ£o = %s</strong>',
+	'DEFAULT_DESC'         => '<strong>PadrÃ£o = Descendente</strong>',
+	'DEFAULT_EMAIL'        => '<strong>PadrÃ£o = E-mail</strong>',
+	'DEFAULT_NO'           => '<strong>PadrÃ£o = NÃ£o</strong>',
+	'DEFAULT_NOTIFICATION' => '<strong>PadrÃ£o = NotificaÃ§Ã£o</strong>',
+	'DEFAULT_POST_TIME'    => '<strong>PadrÃ£o = Hora da mensagem</strong>',
+	'DEFAULT_YES'          => '<strong>PadrÃ£o = Sim</strong>',
+	'DISPLAY_SETTINGS'     => 'OpÃ§Ãµes de apresentaÃ§Ã£o',
+
+	'EMAIL' => 'E-mail',
+
+	'GLOBAL_SETTINGS' => 'ConfiguraÃ§Ãµes globais',
+
+	'NOTIFICATION' => 'NotificaÃ§Ã£o',
+
+	'POSTING_SETTINGS' => 'PadrÃµes de publicaÃ§Ã£o',
+
+	'USER_DEFAULTS_EXPLAIN' => 'Defina aqui os valores que deseja como valores padrÃ£o para <strong>novos</strong> usuÃ¡rios.<br>Quaisquer alteraÃ§Ãµes feitas atravÃ©s deste formulÃ¡rio <strong>nÃ£o</strong> afetarÃ£o usuÃ¡rios jÃ¡ existentes.',
 ]);

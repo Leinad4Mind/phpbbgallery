@@ -1,8 +1,10 @@
 <?php
 
 /**
- * @package User Defaults Extension for phpBB.
+ * @package Log Connections for phpBB.
+ * @copyright (c) 2017 david63
  * @copyright (c) 2022 devspace
+ * @copyright (c) 2026 Leinad4Mind
  * @license GNU General Public License, version 2 (GPL-2.0)
  * @translation Leinad4Mind [Portuguese [pt]] (2026)
  */
@@ -34,14 +36,15 @@ if (empty($lang) || !is_array($lang))
  * in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
  *
  * Some characters you may want to copy&paste:
- * ’ » “ ” …
+ * â€™ Â» â€œ â€ â€¦
  *
  */
 
 $lang = array_merge($lang, [
-	'EXT_ENABLE_ERROR' => 'Esta extensão requer uma versão do phpBB igual ou superior a %1$s mas inferior a %2$s.<br>A tua versão do phpBB é %3$s.',
-	'EXT_PHP_ERROR'    => 'Esta extensão requer o PHP %1$s (ou superior).<br>A tua versão do PHP é %2$s.',
+	'EXT_ENABLE_ERROR' => 'Esta extensÃ£o requer uma versÃ£o do phpBB igual ou superior a %1$s mas inferior a %2$s.<br>A tua versÃ£o do phpBB Ã© %3$s.',
+	'EXT_PHP_ERROR'    => 'Esta extensÃ£o requer o PHP %1$s (ou superior).<br>A tua versÃ£o do PHP Ã© %2$s.',
 ]);
+
 $lang = array_merge($lang, [
 	'EXTENSION_NOT_ENABLEABLE'     => isset($lang['EXTENSION_NOT_ENABLEABLE']) ? $lang['EXTENSION_NOT_ENABLEABLE'] . '<br><br><strong>' . $lang['EXT_ENABLE_ERROR'] . '</strong>' : null,
 	'CLI_EXTENSION_ENABLE_FAILURE' => isset($lang['CLI_EXTENSION_ENABLE_FAILURE']) ? $lang['CLI_EXTENSION_ENABLE_FAILURE'] . ' : ' . $lang['EXT_ENABLE_ERROR'] : null,

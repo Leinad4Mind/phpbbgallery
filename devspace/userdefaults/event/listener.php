@@ -1,53 +1,35 @@
 <?php
 /**
  *
- * @package User Defaults Extension
+ * User Defaults extension for phpBB.
+ *
+ * @copyright (c) 2016 David Wood
  * @copyright (c) 2022 devspace
+ * @copyright (c) 2026 Leinad4Mind
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
 
 namespace devspace\userdefaults\event;
 
-/**
- * @ignore
- */
+use devspace\userdefaults\core\settings_policy;
+use phpbb\config\config;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-use phpbb\config\config;
-
-/**
- * Event listener
- */
 class listener implements EventSubscriberInterface
 {
 	/** @var config */
 	protected $config;
 
-	/** @var string custom constants */
-	protected $udconstants;
+	/** @var settings_policy */
+	protected $policy;
 
-	/**
-	 * Constructor for listener
-	 *
-	 * @param config $config phpBB   config
-	 * @param array                  $constants      Constants
-	 *
-	 * @access public
-	 */
-	public function __construct(config $config, $udconstants)
+	public function __construct(config $config, settings_policy $policy)
 	{
-		$this->config    = $config;
-		$this->constants = $udconstants;
+		$this->config = $config;
+		$this->policy = $policy;
 	}
 
-	/**
-	 * Assign functions defined in this class to event listeners in the core
-	 *
-	 * @return array
-	 * @static
-	 * @access public
-	 */
 	public static function getSubscribedEvents()
 	{
 		return [
@@ -55,103 +37,54 @@ class listener implements EventSubscriberInterface
 		];
 	}
 
-	/**
-	 * Update the user default settings
-	 *
-	 * @param object $event The event object
-	 * @return null
-	 * @access public
-	 */
 	public function modify_user_defaults($event)
 	{
-		// Set the required notifications
-		$notifications_data = [];
-
-		if ($this->config['ud_moderation_queue'] != $this->constants['notification'])
+		$user_row = $event['user_row'];
+		if (defined('USER_IGNORE') && isset($user_row['user_type']) && (int) $user_row['user_type'] === USER_IGNORE)
 		{
-			$notifications_data[] = ['item_type' => 'moderation_queue', 'method' => 'notification.method.email'];
+			return;
 		}
 
-		if ($this->config['ud_type_bookmark'] != $this->constants['notification'])
+		$stored = [];
+		foreach ($this->policy->defaults() as $key => $default)
 		{
-			$notifications_data[] = ['item_type' => 'notification.type.bookmark', 'method' => 'notification.method.email'];
+			if (isset($this->config[$key]))
+			{
+				$stored[$key] = $this->config[$key];
+			}
 		}
+		$settings = $this->policy->normalise_stored($stored);
 
-		if ($this->config['ud_type_forum_post'] != $this->constants['notification'])
+		if ($event['notifications_data'] === null)
 		{
-			$notifications_data[] = ['item_type' => 'notification.type.forum', 'method' => 'notification.method.email'];
+			$notifications = [];
+			foreach ($this->policy->notification_types() as $config_key => $item_type)
+			{
+				if ($settings[$config_key] === 1)
+				{
+					$notifications[] = [
+						'item_type' => $item_type,
+						'method' => 'notification.method.email',
+					];
+				}
+			}
+			$event['notifications_data'] = $notifications;
 		}
-
-		if ($this->config['ud_type_group'] != $this->constants['notification'])
-		{
-			$notifications_data[] = ['item_type' => 'notification.type.group_request', 'method' => 'notification.method.email'];
-		}
-
-		if ($this->config['ud_type_needs_approval'] != $this->constants['notification'])
-		{
-			$notifications_data[] = ['item_type' => 'notification.type.needs_approval', 'method' => 'notification.method.email'];
-		}
-
-		if ($this->config['ud_type_pm'] != $this->constants['notification'])
-		{
-			$notifications_data[] = ['item_type' => 'notification.type.pm', 'method' => 'notification.method.email'];
-		}
-
-		if ($this->config['ud_type_pm_close'] != $this->constants['notification'])
-		{
-			$notifications_data[] = ['item_type' => 'notification.type.report_pm_closed', 'method' => 'notification.method.email'];
-		}
-
-		if ($this->config['ud_type_pm_report'] != $this->constants['notification'])
-		{
-			$notifications_data[] = ['item_type' => 'notification.type.report_pm', 'method' => 'notification.method.email'];
-		}
-
-		if ($this->config['ud_type_post'] != $this->constants['notification'])
-		{
-			$notifications_data[] = ['item_type' => 'notification.type.post', 'method' => 'notification.method.email'];
-		}
-
-		if ($this->config['ud_type_quote'] != $this->constants['notification'])
-		{
-			$notifications_data[] = ['item_type' => 'notification.type.quote', 'method' => 'notification.method.email'];
-		}
-
-		if ($this->config['ud_type_report'] != $this->constants['notification'])
-		{
-			$notifications_data[] = ['item_type' => 'notification.type.report', 'method' => 'notification.method.email'];
-		}
-
-		if ($this->config['ud_type_report_close'] != $this->constants['notification'])
-		{
-			$notifications_data[] = ['item_type' => 'notification.type.report_post_closed', 'method' => 'notification.method.email'];
-		}
-
-		if ($this->config['ud_type_topic'] != $this->constants['notification'])
-		{
-			$notifications_data[] = ['item_type' => 'notification.type.topic', 'method' => 'notification.method.email'];
-		}
-
-		$event->offsetSet('notifications_data', $notifications_data);
 
 		$sql_ary = $event['sql_ary'];
-
-		$sql_ary['user_allow_massemail']   = $this->config['ud_allow_massemail'];
-		$sql_ary['user_allow_pm']          = $this->config['ud_allow_pm'];
-		$sql_ary['user_allow_viewemail']   = $this->config['ud_allow_viewemail'];
-		$sql_ary['user_dateformat']        = $this->config['ud_date_format'];
-		$sql_ary['user_notify']            = $this->config['ud_notify'];
-		$sql_ary['user_notify_pm']         = $this->config['ud_notify_pm'];
-		$sql_ary['user_options']           = $this->config['ud_options'];
-		$sql_ary['user_post_show_days']    = $this->config['ud_post_st'];
-		$sql_ary['user_post_sortby_dir']   = $this->config['ud_post_sd'];
-		$sql_ary['user_post_sortby_type']  = $this->config['ud_post_sk'];
-		$sql_ary['user_topic_show_days']   = $this->config['ud_topic_st'];
-		$sql_ary['user_topic_sortby_dir']  = $this->config['ud_topic_sd'];
-		$sql_ary['user_topic_sortby_type'] = $this->config['ud_topic_sk'];
-
+		$sql_ary['user_allow_massemail'] = $settings['ud_allow_massemail'];
+		$sql_ary['user_allow_pm'] = $settings['ud_allow_pm'];
+		$sql_ary['user_allow_viewemail'] = $settings['ud_allow_viewemail'];
+		$sql_ary['user_dateformat'] = $settings['ud_date_format'];
+		$sql_ary['user_notify'] = $settings['ud_notify'];
+		$sql_ary['user_notify_pm'] = $settings['ud_notify_pm'];
+		$sql_ary['user_options'] = $settings['ud_options'];
+		$sql_ary['user_post_show_days'] = $settings['ud_post_st'];
+		$sql_ary['user_post_sortby_dir'] = $settings['ud_post_sd'];
+		$sql_ary['user_post_sortby_type'] = $settings['ud_post_sk'];
+		$sql_ary['user_topic_show_days'] = $settings['ud_topic_st'];
+		$sql_ary['user_topic_sortby_dir'] = $settings['ud_topic_sd'];
+		$sql_ary['user_topic_sortby_type'] = $settings['ud_topic_sk'];
 		$event['sql_ary'] = $sql_ary;
-
-		return $event;
 	}
 }
