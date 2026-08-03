@@ -37,6 +37,7 @@ class policy_listener implements EventSubscriberInterface
 			'phpbbgallery.core.image.state_changed' => 'resync_contest_results',
 			'phpbbgallery.core.image_visibility.private_data' => 'hide_private_data',
 			'phpbbgallery.core.image_visibility.results' => 'hide_results',
+			'phpbbgallery.core.image_visibility.restricted_sort_keys' => 'restrict_sort_keys',
 			'phpbbgallery.core.image_visibility.private_data_sql' => 'restrict_private_data_sql',
 			'phpbbgallery.core.image_visibility.results_sql' => 'restrict_results_sql',
 		];
@@ -224,6 +225,18 @@ class policy_listener implements EventSubscriberInterface
 			(array) $event['image_data'],
 			(bool) $event['can_moderate']
 		);
+	}
+
+	public function restrict_sort_keys(\phpbb\event\data $event): void
+	{
+		$album_data = (array) $event['album_data'];
+		if (!empty($album_data['contest_marked']) && !(bool) $event['can_moderate'])
+		{
+			$event['sort_keys'] = array_merge(
+				(array) $event['sort_keys'],
+				['u', 'ra', 'r', 'c', 'lc']
+			);
+		}
 	}
 
 	public function restrict_private_data_sql(\phpbb\event\data $event): void

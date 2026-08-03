@@ -148,6 +148,27 @@ final class policy_listener_test extends TestCase
 		$this->assertTrue($result_event['hidden']);
 	}
 
+	public function test_listener_restricts_private_album_sort_keys_for_non_moderators(): void
+	{
+		$listener = new policy_listener($this->manager(true));
+		$restricted = new \phpbb\event\data([
+			'album_data' => ['contest_marked' => \phpbbgallery\core\block::IN_CONTEST],
+			'can_moderate' => false,
+			'sort_keys' => ['existing'],
+		]);
+		$moderated = new \phpbb\event\data([
+			'album_data' => ['contest_marked' => \phpbbgallery\core\block::IN_CONTEST],
+			'can_moderate' => true,
+			'sort_keys' => [],
+		]);
+
+		$listener->restrict_sort_keys($restricted);
+		$listener->restrict_sort_keys($moderated);
+
+		$this->assertSame(['existing', 'u', 'ra', 'r', 'c', 'lc'], $restricted['sort_keys']);
+		$this->assertSame([], $moderated['sort_keys']);
+	}
+
 	public function test_listener_restricts_contest_operations_to_their_active_phase(): void
 	{
 		$listener = new policy_listener($this->manager(true));

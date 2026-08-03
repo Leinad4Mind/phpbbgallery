@@ -67,6 +67,24 @@ class image_visibility
 		return (bool) $hidden || $this->has_uncovered_active_marker($image_data, (array) $covered_markers);
 	}
 
+	/**
+	 * Return sort keys that would expose private add-on data in an album.
+	 */
+	public function restricted_sort_keys(array $album_data, bool $can_moderate): array
+	{
+		$sort_keys = [];
+		$vars = ['album_data', 'can_moderate', 'sort_keys'];
+		extract($this->dispatcher->trigger_event(
+			'phpbbgallery.core.image_visibility.restricted_sort_keys',
+			compact($vars)
+		));
+
+		return array_values(array_unique(array_filter(
+			array_map('strval', (array) $sort_keys),
+			static fn(string $sort_key): bool => $sort_key !== ''
+		)));
+	}
+
 	public function private_data_sql(string $alias, int $viewer_id, array $moderated_album_ids): string
 	{
 		$this->validate_alias($alias);
