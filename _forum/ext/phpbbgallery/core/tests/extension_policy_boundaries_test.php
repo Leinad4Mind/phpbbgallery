@@ -127,6 +127,10 @@ final class extension_policy_boundaries_test extends TestCase
 				$data['description'] = 'Extension description';
 			break;
 
+			case 'phpbbgallery.core.image_visibility.hidden_results_message':
+				$data['message'] = 'Extension results hidden';
+			break;
+
 			case 'phpbbgallery.core.image_visibility.restricted_sort_keys':
 				$data['sort_keys'] = ['u', 'ra', 'u', ''];
 			break;
@@ -160,6 +164,7 @@ final class extension_policy_boundaries_test extends TestCase
 		$this->assertSame('Extension participant', $policy->private_data_label(['image_id' => 7], 2, false, 'Hidden user'));
 		$this->assertSame('Extension description', $policy->private_data_description(['image_id' => 7], ['album_id' => 3], 2, false, 'Hidden description'));
 		$this->assertTrue($policy->hides_results(['image_id' => 7], false));
+		$this->assertSame('Extension results hidden', $policy->hidden_results_message(['image_id' => 7], ['album_id' => 3], false, true, 'Results hidden'));
 		$this->assertSame(['u', 'ra'], $policy->restricted_sort_keys(['album_id' => 3], false));
 		$this->assertSame([
 			'rank' => 2,
@@ -185,6 +190,7 @@ final class extension_policy_boundaries_test extends TestCase
 		$this->assertSame(['rank' => 0, 'label' => '', 'title' => ''], $policy->award([]));
 		$this->assertSame('Hidden user', $policy->private_data_label([], 2, false, 'Hidden user'));
 		$this->assertSame('Hidden description', $policy->private_data_description([], [], 2, false, 'Hidden description'));
+		$this->assertSame('Results hidden', $policy->hidden_results_message([], [], false, true, 'Results hidden'));
 		$this->assertSame('(image_contest = 0)', $policy->private_data_sql('', 2, []));
 		$this->assertSame('(image_alias.image_contest = 0)', $policy->results_sql('image_alias', []));
 

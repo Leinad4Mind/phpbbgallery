@@ -114,16 +114,6 @@ class block
 		return self::STATUS_ORPHAN;
 	}
 
-	public function get_no_contest(): int
-	{
-		return self::NO_CONTEST;
-	}
-
-	public function get_in_contest(): int
-	{
-		return self::IN_CONTEST;
-	}
-
 	/**
 	 * Unspecified (to specify them)
 	 */

@@ -183,7 +183,7 @@ final class manager_finalization_test extends TestCase
 
 		foreach ([$approve, $unapprove, $lock] as $method)
 		{
-			$this->assertStringContainsString('image_contest_end', $method);
+			$this->assertStringNotContainsString('image_contest_end', $method);
 			$this->assertStringContainsString('$this->notify_state_change(', $method);
 			$this->assertStringNotContainsString('$this->contest->', $method);
 		}
@@ -200,7 +200,7 @@ final class manager_finalization_test extends TestCase
 		);
 		$this->assertStringContainsString('phpbbgallery.core.image.prepare_move', $move);
 		$this->assertStringContainsString("sql_build_array('UPDATE', \$image_move_data)", $move);
-		$this->assertStringContainsString('image_contest_end', $move);
+		$this->assertStringNotContainsString('image_contest_end', $move);
 		$this->assertStringContainsString('$source_album_id === $album_id', $move);
 		$this->assertStringContainsString('$this->notify_state_change(', $move);
 		$this->assertStringNotContainsString('$this->contest->', $move);

@@ -11,6 +11,7 @@ namespace phpbbgallery\core\tests;
 
 use phpbbgallery\core\auth\auth;
 use phpbbgallery\core\image\selector;
+use phpbbgallery\core\policy\image_visibility;
 use PHPUnit\Framework\TestCase;
 
 final class editor_selector_test extends TestCase
@@ -95,7 +96,7 @@ final class editor_selector_test extends TestCase
 			});
 		$db->expects($this->exactly(3))->method('sql_freeresult');
 
-		$result = (new selector($db, $gallery_auth, 'gallery_images', 'gallery_albums'))
+		$result = $this->selector($db, $gallery_auth)
 			->get_page(7, 30, 9, 10);
 
 		$this->assertTrue($result['authorized']);
@@ -151,7 +152,7 @@ final class editor_selector_test extends TestCase
 		$db->expects($this->once())->method('sql_fetchfield')->with('image_id')->willReturn(91);
 		$db->expects($this->once())->method('sql_freeresult')->with('exists-result');
 
-		$this->assertTrue((new selector($db, $gallery_auth, 'gallery_images', 'gallery_albums'))->has_images(7));
+		$this->assertTrue($this->selector($db, $gallery_auth)->has_images(7));
 		$this->assertStringContainsString('i.image_user_id = 7', $query);
 		$this->assertStringContainsString('i.image_album_id IN (30)', $query);
 		$this->assertStringNotContainsString('IN (20)', $query);
@@ -168,7 +169,7 @@ final class editor_selector_test extends TestCase
 		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
 		$db->expects($this->never())->method('sql_query_limit');
 
-		$this->assertFalse((new selector($db, $gallery_auth, 'gallery_images', 'gallery_albums'))->has_images(7));
+		$this->assertFalse($this->selector($db, $gallery_auth)->has_images(7));
 	}
 
 	public function test_forbidden_album_returns_before_any_database_query(): void
@@ -182,7 +183,7 @@ final class editor_selector_test extends TestCase
 		$db->expects($this->never())->method('sql_query');
 		$db->expects($this->never())->method('sql_query_limit');
 
-		$result = (new selector($db, $gallery_auth, 'gallery_images', 'gallery_albums'))
+		$result = $this->selector($db, $gallery_auth)
 			->get_page(7, 99, 0, 99);
 
 		$this->assertFalse($result['authorized']);
@@ -207,7 +208,7 @@ final class editor_selector_test extends TestCase
 		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
 		$db->expects($this->never())->method('sql_query');
 
-		$result = (new selector($db, $gallery_auth, 'gallery_images', 'gallery_albums'))
+		$result = $this->selector($db, $gallery_auth)
 			->get_page(9, 0, 4, 0);
 
 		$this->assertTrue($result['authorized']);
@@ -242,5 +243,15 @@ final class editor_selector_test extends TestCase
 				$this->assertNotNull($method->getReturnType(), selector::class . '::' . $method->getName());
 			}
 		}
+	}
+
+	private function selector(\phpbb\db\driver\driver_interface $db, auth $gallery_auth): selector
+	{
+		$image_visibility = $this->createStub(image_visibility::class);
+		$image_visibility->method('results_sql')
+			->with('i', [])
+			->willReturn('(i.image_contest = 0)');
+
+		return new selector($db, $gallery_auth, $image_visibility, 'gallery_images', 'gallery_albums');
 	}
 }

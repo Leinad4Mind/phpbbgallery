@@ -20,6 +20,7 @@ class presentation_listener implements EventSubscriberInterface
 	{
 		$this->language = $language;
 		$this->user = $user;
+		$this->language->add_lang('contest', 'phpbbgallery/contest');
 	}
 
 	public static function getSubscribedEvents(): array
@@ -28,9 +29,37 @@ class presentation_listener implements EventSubscriberInterface
 			'phpbbgallery.core.album.enrich_template_vars' => 'enrich_album_template_vars',
 			'phpbbgallery.core.image_visibility.private_data_label' => 'private_data_label',
 			'phpbbgallery.core.image_visibility.private_data_description' => 'private_data_description',
+			'phpbbgallery.core.image_visibility.hidden_results_message' => 'hidden_results_message',
 			'phpbbgallery.core.image_visibility.award' => 'image_award',
 			'phpbbgallery.core.album_operation.message' => 'album_operation_message',
 		];
+	}
+
+	public function hidden_results_message(\phpbb\event\data $event): void
+	{
+		if (!\phpbbgallery\contest\manager::hides_results(
+			(array) $event['image_data'],
+			(bool) $event['can_moderate']
+		))
+		{
+			return;
+		}
+
+		if (!(bool) $event['detailed'])
+		{
+			$event['message'] = $this->language->lang('CONTEST_RATING_HIDDEN');
+			return;
+		}
+
+		$album_data = (array) $event['album_data'];
+		$end_time = (int) ($album_data['contest_start'] ?? 0) + (int) ($album_data['contest_end'] ?? 0);
+		if ($end_time > 0)
+		{
+			$event['message'] = $this->language->lang(
+				'CONTEST_RESULT_HIDDEN',
+				$this->user->format_date($end_time, false, true)
+			);
+		}
 	}
 
 	public function image_award(\phpbb\event\data $event): void

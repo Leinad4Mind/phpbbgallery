@@ -139,7 +139,7 @@
 
 				{% if S_VIEW_RATE %}
 					<li><i class="fa fa-star"></i> {{ lang('RATING') }}{{ lang('COLON') }}
-					{% if CONTEST_RESULT_HIDDEN %}{{ CONTEST_RESULT_HIDDEN }}{% else %}{{ IMAGE_RATING }}{% endif %}{% if S_YOUR_RATING %} ({{ lang('YOUR_RATING') }}{{ lang('COLON') }} {{ S_YOUR_RATING }}){% endif %}</li>
+					{{ IMAGE_RATING }}{% if S_YOUR_RATING %} ({{ lang('YOUR_RATING') }}{{ lang('COLON') }} {{ S_YOUR_RATING }}){% endif %}</li>
 				{% endif %}
 
 				{% if IMAGE_AWARD %}
@@ -253,8 +253,6 @@
 							{% if (not S_ALLOWED_TO_COMMENT or S_HIDE_COMMENT_INPUT) and rate_scale|length %}
 								<button type="submit" class="btn btn-sm btn-default" value="{{ lang('SUBMIT') }}" name="submit">{{ lang('SUBMIT') }}</button>
 							{% endif %}
-						{% else %}
-							{{ CONTEST_RATING }}
 						{% endif %}
 				</div>
 			</div>

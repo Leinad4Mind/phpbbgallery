@@ -115,7 +115,7 @@ final class ucp_main_types_test extends TestCase
 		$this->assertStringNotContainsString('block::TYPE_CONTEST', $source);
 		$this->assertStringContainsString('li.image_contest AS last_image_contest', $source);
 		$this->assertStringContainsString('li.image_id = a.album_last_image_id', $source);
-		$this->assertStringContainsString('$hide_contest_results ? 0', $source);
+		$this->assertStringContainsString('$hide_results ? 0', $source);
 		$this->assertStringContainsString('$album_data_enricher->enrich_many($album_rows)', $source);
 		$this->assertStringNotContainsString('$contests_table', $source);
 		$this->assertStringContainsString("show_image(\$row['album_last_image_id'])", $source);

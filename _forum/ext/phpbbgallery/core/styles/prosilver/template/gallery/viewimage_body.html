@@ -165,7 +165,7 @@
 				{% if S_VIEW_RATE %}
 				<dl>
 					<dt><label>{{ lang('RATING') }}{{ lang('COLON') }}</label></dt>
-					<dd>{% if CONTEST_RESULT_HIDDEN %}{{ CONTEST_RESULT_HIDDEN }}{% else %}{{ IMAGE_RATING }}{% endif %}{% if S_YOUR_RATING %} ({{ lang('YOUR_RATING') }}{{ lang('COLON') }} {{ S_YOUR_RATING }}){% endif %}</dd>
+					<dd>{{ IMAGE_RATING }}{% if S_YOUR_RATING %} ({{ lang('YOUR_RATING') }}{{ lang('COLON') }} {{ S_YOUR_RATING }}){% endif %}</dd>
 				</dl>
 				{% endif %}
 				{% if S_ALLOWED_TO_RATE %}
@@ -180,8 +180,6 @@
 								<option value="{{ rate_scale.RATE_POINT }}">{{ rate_scale.RATE_POINT }}</option>
 							{% endfor %}
 							</select>
-						{% else %}
-							{{ CONTEST_RATING }}
 						{% endif %}
 					</dd>
 				</dl>

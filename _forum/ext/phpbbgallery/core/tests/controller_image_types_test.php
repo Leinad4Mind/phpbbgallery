@@ -287,7 +287,7 @@ final class controller_image_types_test extends TestCase
 		$this->assertStringNotContainsString("['image_contest_rank']", $source);
 		$this->assertStringContainsString('$this->album_operation_message(', $source);
 		$this->assertStringNotContainsString('CONTEST_COMMENTS_STARTS', $source);
-		$this->assertStringContainsString('if (!$hide_contest_results && $this->gallery_config->get', $source);
+		$this->assertStringContainsString('if (!$hide_results && $this->gallery_config->get', $source);
 		$this->assertStringContainsString('$this->image_visibility->hides_private_data(', $source);
 		$this->assertStringContainsString('$this->image_visibility->hides_results(', $source);
 		$this->assertStringNotContainsString('core\\contest::', $source);

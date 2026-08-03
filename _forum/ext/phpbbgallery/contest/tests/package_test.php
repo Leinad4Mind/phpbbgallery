@@ -88,9 +88,12 @@ final class package_test extends TestCase
 		foreach ($languages as $language)
 		{
 			$messages = $this->load_language($language_root . '/' . $language . '/info_contest.php');
+			$frontend_messages = $this->load_language($language_root . '/' . $language . '/contest.php');
 			$acp_messages = $this->load_language($language_root . '/' . $language . '/contest_acp.php');
 			$this->assertArrayHasKey('GALLERY_CORE_NOT_FOUND', $messages, $language);
 			$this->assertArrayHasKey('EXTENSION_ENABLE_SUCCESS', $messages, $language);
+			$this->assertArrayHasKey('CONTEST_RATING_HIDDEN', $frontend_messages, $language);
+			$this->assertArrayHasKey('CONTEST_RESULT_HIDDEN', $frontend_messages, $language);
 			foreach ([
 				'ALBUM_NO_TYPE_CHANGE_TO_CONTEST',
 				'ALBUM_WITH_CONTEST_NO_TYPE_CHANGE',

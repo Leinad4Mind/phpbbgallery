@@ -104,6 +104,31 @@ final class presentation_listener_test extends TestCase
 		$this->assertSame('CONTEST_IMAGE_DESC:1300', $event['description']);
 	}
 
+	public function test_hidden_contest_results_receive_compact_and_detailed_messages(): void
+	{
+		$language = $this->createStub(\phpbb\language\language::class);
+		$language->method('lang')->willReturnCallback(
+			static fn(string $key, string $date = ''): string => $key . ($date !== '' ? ':' . $date : '')
+		);
+		$user = $this->createStub(\phpbb\user::class);
+		$user->method('format_date')->willReturnCallback(static fn(int $timestamp): string => (string) $timestamp);
+		$listener = new presentation_listener($language, $user);
+		$base = [
+			'image_data' => ['image_contest' => \phpbbgallery\core\block::IN_CONTEST],
+			'album_data' => ['contest_start' => 1_000, 'contest_end' => 300],
+			'can_moderate' => false,
+			'message' => 'Results hidden',
+		];
+		$compact = new \phpbb\event\data($base + ['detailed' => false]);
+		$detailed = new \phpbb\event\data($base + ['detailed' => true]);
+
+		$listener->hidden_results_message($compact);
+		$listener->hidden_results_message($detailed);
+
+		$this->assertSame('CONTEST_RATING_HIDDEN', $compact['message']);
+		$this->assertSame('CONTEST_RESULT_HIDDEN:1300', $detailed['message']);
+	}
+
 	public function test_blocked_contest_comment_includes_start_date(): void
 	{
 		$language = $this->createStub(\phpbb\language\language::class);

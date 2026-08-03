@@ -293,27 +293,27 @@ final class policy_listener_test extends TestCase
 		$this->assertSame(0, $completed['image_move_data']['image_contest_rank']);
 	}
 
-	public function test_listener_resyncs_results_only_for_relevant_image_changes(): void
+	public function test_listener_delegates_affected_albums_without_reading_contest_columns_from_core(): void
 	{
 		$manager = $this->createMock(manager::class);
-		$manager->expects($this->exactly(2))
+		$manager->expects($this->exactly(3))
 			->method('resync_albums')
 			->with([7]);
 		$listener = new policy_listener($manager);
 
 		$listener->resync_contest_results(new \phpbb\event\data([
 			'operation' => 'approve',
-			'image_rows' => [['image_contest_end' => 1_500]],
+			'image_rows' => [['image_id' => 10]],
 			'album_ids' => [7],
 		]));
 		$listener->resync_contest_results(new \phpbb\event\data([
 			'operation' => 'delete',
-			'image_rows' => [['image_contest_rank' => 1]],
+			'image_rows' => [['image_id' => 11]],
 			'album_ids' => [7],
 		]));
 		$listener->resync_contest_results(new \phpbb\event\data([
 			'operation' => 'lock',
-			'image_rows' => [['image_contest_end' => 0]],
+			'image_rows' => [['image_id' => 12]],
 			'album_ids' => [7],
 		]));
 	}

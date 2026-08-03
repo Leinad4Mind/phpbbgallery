@@ -91,6 +91,29 @@ class image_visibility
 	}
 
 	/**
+	 * Resolve the message presented in place of results hidden by an add-on.
+	 */
+	public function hidden_results_message(
+		array $image_data,
+		array $album_data,
+		bool $can_moderate,
+		bool $detailed,
+		string $fallback
+	): string
+	{
+		$message = $fallback;
+		$vars = ['image_data', 'album_data', 'can_moderate', 'detailed', 'message'];
+		extract($this->dispatcher->trigger_event(
+			'phpbbgallery.core.image_visibility.hidden_results_message',
+			compact($vars)
+		));
+
+		$message = trim((string) $message);
+
+		return $message !== '' ? $message : $fallback;
+	}
+
+	/**
 	 * Return sort keys that would expose private add-on data in an album.
 	 */
 	public function restricted_sort_keys(array $album_data, bool $can_moderate): array

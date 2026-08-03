@@ -742,7 +742,7 @@ class image
 	public function approve_images(array $image_id_ary, int $album_id): void
 	{
 		$sql = 'SELECT image_id, image_name, image_user_id, image_album_id,
-				image_filename, image_contest_end
+				image_filename
 			FROM ' . $this->table_images . ' 
 			WHERE image_status = 0
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary);
@@ -808,7 +808,7 @@ class image
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary);
 		$this->db->sql_query($sql);
 
-		$sql = 'SELECT image_id, image_name, image_album_id, image_contest_end
+		$sql = 'SELECT image_id, image_name, image_album_id
 			FROM ' . $this->table_images .' 
 			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary);
@@ -837,7 +837,7 @@ class image
 			throw new \phpbb\exception\http_exception(403, 'NO_PERMISSIONS');
 		}
 
-		$sql = 'SELECT image_id, image_album_id, image_contest_end
+		$sql = 'SELECT image_id, image_album_id
 			FROM ' . $this->table_images . '
 			WHERE ' . $this->db->sql_in_set('image_id', $image_id_ary);
 		$result = $this->db->sql_query($sql);
@@ -916,7 +916,7 @@ class image
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary);
 		$this->db->sql_query($sql);
 
-		$sql = 'SELECT image_id, image_name, image_album_id, image_contest_end
+		$sql = 'SELECT image_id, image_name, image_album_id
 			FROM ' . $this->table_images . ' 
 			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary);
@@ -1014,19 +1014,19 @@ class image
 				break;
 		}
 
-		$can_moderate_contest = $this->gallery_auth->acl_check('m_status', $image_data['image_album_id'], $image_data['album_user_id']);
+		$can_moderate = $this->gallery_auth->acl_check('m_status', $image_data['image_album_id'], $image_data['album_user_id']);
 		$hide_private_data = $this->image_visibility->hides_private_data(
 			$image_data,
 			(int) $this->user->data['user_id'],
-			$can_moderate_contest
+			$can_moderate
 		);
 		$private_data_label = $hide_private_data ? $this->image_visibility->private_data_label(
 			$image_data,
 			(int) $this->user->data['user_id'],
-			$can_moderate_contest,
+			$can_moderate,
 			$this->language->lang('GALLERY_PRIVATE_USER')
 		) : '';
-		$hide_contest_results = $this->image_visibility->hides_results($image_data, $can_moderate_contest);
+		$hide_results = $this->image_visibility->hides_results($image_data, $can_moderate);
 		$image_award = $this->image_visibility->award($image_data);
 
 		$this->template->assign_block_vars($image_block_name, [
@@ -1039,7 +1039,7 @@ class image
 			//'UC_THUMBNAIL'	=> 'self::generate_link('thumbnail', $phpbb_ext_gallery->config->get('link_thumbnail'), $image_data['image_id'], $image_data['image_name'], $image_data['image_album_id']),
 			'UC_THUMBNAIL'		=> $this->helper->route('phpbbgallery_core_image_file_mini', ['image_id' => (int) $image_data['image_id']]),
 			'UC_THUMBNAIL_ACTION'	=> $action,
-			'S_UNAPPROVED'	=> ($can_moderate_contest && ($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_UNAPPROVED)) ? true : false,
+			'S_UNAPPROVED'	=> ($can_moderate && ($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_UNAPPROVED)) ? true : false,
 			'S_LOCKED'		=> ($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_LOCKED) ? true : false,
 			'S_REPORTED'	=> ($this->gallery_auth->acl_check('m_report', $image_data['image_album_id'], $image_data['album_user_id']) && $image_data['image_reported']) ? true : false,
 			'POSTER'		=> $show_username ? ($hide_private_data ? $private_data_label : get_username_string('full', $image_data['image_user_id'], $image_data['image_username'], $image_data['image_user_colour'])) : false,
@@ -1048,22 +1048,22 @@ class image
 			'IMAGE_AWARD_TITLE' => $image_award['title'],
 			'S_IMAGE_AWARD_RANK' => $image_award['rank'],
 
-			'S_RATINGS'		=> (!$hide_contest_results && $this->gallery_config->get('allow_rates') == 1 && $show_ratings) ? ($image_data['image_rates'] > 0 ? $image_data['image_rate_avg'] / 100 : $this->language->lang('NOT_RATED')) : false,
-			'U_RATINGS'		=> !$hide_contest_results ? $this->helper->route('phpbbgallery_core_image', ['image_id' => (int) $image_data['image_id']]) . '#rating' : false,
-			'L_COMMENTS'	=> !$hide_contest_results ? (($image_data['image_comments'] == 1) ? $this->language->lang('COMMENT') : $this->language->lang('COMMENTS')) : false,
-			'S_COMMENTS'	=> (!$hide_contest_results && $show_comments) ? (($this->gallery_config->get('allow_comments') && $this->gallery_auth->acl_check('c_read', $image_data['image_album_id'], $image_data['album_user_id'])) ? (($image_data['image_comments']) ? $image_data['image_comments'] : $this->language->lang('NO_COMMENTS')) : '') : false,
-			'U_COMMENTS'	=> !$hide_contest_results ? $this->helper->route('phpbbgallery_core_image', ['image_id' => (int) $image_data['image_id']]) . '#comments' : false,
-			'U_USER_IP'		=> $show_ip && $can_moderate_contest ? $image_data['image_user_ip'] : false,
+			'S_RATINGS'		=> (!$hide_results && $this->gallery_config->get('allow_rates') == 1 && $show_ratings) ? ($image_data['image_rates'] > 0 ? $image_data['image_rate_avg'] / 100 : $this->language->lang('NOT_RATED')) : false,
+			'U_RATINGS'		=> !$hide_results ? $this->helper->route('phpbbgallery_core_image', ['image_id' => (int) $image_data['image_id']]) . '#rating' : false,
+			'L_COMMENTS'	=> !$hide_results ? (($image_data['image_comments'] == 1) ? $this->language->lang('COMMENT') : $this->language->lang('COMMENTS')) : false,
+			'S_COMMENTS'	=> (!$hide_results && $show_comments) ? (($this->gallery_config->get('allow_comments') && $this->gallery_auth->acl_check('c_read', $image_data['image_album_id'], $image_data['album_user_id'])) ? (($image_data['image_comments']) ? $image_data['image_comments'] : $this->language->lang('NO_COMMENTS')) : '') : false,
+			'U_COMMENTS'	=> !$hide_results ? $this->helper->route('phpbbgallery_core_image', ['image_id' => (int) $image_data['image_id']]) . '#comments' : false,
+			'U_USER_IP'		=> $show_ip && $can_moderate ? $image_data['image_user_ip'] : false,
 
 			'S_IMAGE_REPORTED'		=> $image_data['image_reported'],
 			'U_IMAGE_REPORTED'		=> ($image_data['image_reported'] && $this->gallery_auth->acl_check('m_report', $image_data['image_album_id'], $image_data['album_user_id'])) ? $this->helper->route('phpbbgallery_core_moderate_image', ['image_id' => (int) $image_data['image_id']]) : '',
 			'S_STATUS_APPROVED'		=> ($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_APPROVED) ? true : false,
 			'S_STATUS_UNAPPROVED'	=> ($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_UNAPPROVED) ? true : false,
-			'S_STATUS_UNAPPROVED_ACTION'	=> ($can_moderate_contest && $image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_UNAPPROVED) ? $this->helper->route('phpbbgallery_core_moderate_image_approve', ['image_id' => (int) $image_data['image_id']]) : '',
+			'S_STATUS_UNAPPROVED_ACTION'	=> ($can_moderate && $image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_UNAPPROVED) ? $this->helper->route('phpbbgallery_core_moderate_image_approve', ['image_id' => (int) $image_data['image_id']]) : '',
 			'S_STATUS_LOCKED'		=> ($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_LOCKED) ? true : false,
 
 			'U_REPORT'	=> ($this->gallery_auth->acl_check('m_report', $image_data['image_album_id'], $image_data['album_user_id']) && $image_data['image_reported']) ? $this->helper->route('phpbbgallery_core_moderate_image', ['image_id' => (int) $image_data['image_id']]) : '',
-			'U_STATUS'	=> $can_moderate_contest ? $this->helper->route('phpbbgallery_core_moderate_image', ['image_id' => (int) $image_data['image_id']]) : '',
+			'U_STATUS'	=> $can_moderate ? $this->helper->route('phpbbgallery_core_moderate_image', ['image_id' => (int) $image_data['image_id']]) : '',
 			'L_STATUS'	=> ($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_UNAPPROVED) ? $this->language->lang('APPROVE_IMAGE') : (($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_APPROVED) ? $this->language->lang('CHANGE_IMAGE_STATUS') : $this->language->lang('UNLOCK_IMAGE')),
 		]);
 	}

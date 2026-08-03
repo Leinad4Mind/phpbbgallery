@@ -839,7 +839,6 @@ class upload
 
 			'image_album_id'		=> $this->album_id,
 			'image_status'			=> $this->block->get_image_status_orphan(),
-			'image_contest'			=> $this->block->get_no_contest(),
 			'image_allow_comments'	=> $this->allow_comments,
 			'image_subtitle'		=> '',
 			'image_desc'			=> '',

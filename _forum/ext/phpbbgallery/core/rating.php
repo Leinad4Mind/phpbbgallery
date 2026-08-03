@@ -156,10 +156,10 @@ class rating
 	/**
 	 * Returns the value of image_data key.
 	 * If the value is missing, it is queried from the database.
-	 * @param string $key
+	 * @param string|bool $key Image-data key, or true to return the whole array.
 	 * @return mixed
 	 */
-	private function image_data(string $key): mixed
+	private function image_data(string|bool $key): mixed
 	{
 		if ($this->image_data === null)
 		{
@@ -179,7 +179,7 @@ class rating
 			$this->image_data = $image_data;
 		}
 
-		return $this->image_data[$key];
+		return ($key === true) ? $this->image_data : $this->image_data[$key];
 	}
 
 	/**
@@ -232,28 +232,30 @@ class rating
 	/**
 	 * Get rating for a image
 	 *
-	 * @param bool|Personal $user_rating Personal rating of the user is displayed in most cases.
-	 * @param bool|Shall $display_contest_end Shall we display the end-time of the contest? This requires the album-data to be filled.
+	 * @param int|false $user_rating Personal rating of the user, when available
+	 * @param bool      $detailed_hidden_result Whether an add-on may include details in its hidden-results message
 	 * @return string Returns a string containing the information how the image was rated in average and how often.
 	 */
-	public function get_image_rating(int|false $user_rating = false, bool $display_contest_end = true): string
+	public function get_image_rating(int|false $user_rating = false, bool $detailed_hidden_result = true): string
 	{
 		$this->template->assign_var('GALLERY_RATING', self::MODE_SELECT);
 
-		$can_moderate_contest = $this->gallery_auth->acl_check(
+		$image_data = (array) $this->image_data(true);
+		$album_data = (array) $this->album_data(true);
+		$can_moderate = $this->gallery_auth->acl_check(
 			'm_status',
-			(int) $this->album_data('album_id'),
-			(int) $this->album_data('album_user_id')
+			(int) $album_data['album_id'],
+			(int) $album_data['album_user_id']
 		);
-		if ($this->image_visibility->hides_results([
-			'image_contest' => (int) $this->image_data('image_contest'),
-		], $can_moderate_contest))
+		if ($this->image_visibility->hides_results($image_data, $can_moderate))
 		{
-			if (!$display_contest_end)
-			{
-				return $this->language->lang('CONTEST_RATING_HIDDEN');
-			}
-			return $this->language->lang('CONTEST_RESULT_HIDDEN', $this->user->format_date(($this->album_data('contest_start') + $this->album_data('contest_end')), false, true));
+			return $this->image_visibility->hidden_results_message(
+				$image_data,
+				$album_data,
+				$can_moderate,
+				$detailed_hidden_result,
+				$this->language->lang('GALLERY_RESULTS_HIDDEN')
+			);
 		}
 
 		if ($user_rating)
