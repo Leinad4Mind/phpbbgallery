@@ -22,6 +22,7 @@ use phpbb\template\template;
 use phpbb\user;
 use sitesplat\bbtags\tags\manager;
 use sitesplat\bbtags\tags\search_query;
+use sitesplat\bbtags\tags\filter_url;
 
 class main
 {
@@ -40,13 +41,14 @@ class main
 	protected $phpbb_root_path;
 	protected $manager;
 	protected $search_query;
+	protected $filter_url;
 	protected $table_bbtags;
 	protected $table_bbtags_topic;
 
 	/**
 	 * Constructor.
 	 */
-	public function __construct(driver_interface $db, config $config, template $template, helper $helper, request $request, user $user, auth $auth, service $cache, pagination $pagination, dispatcher $phpbb_dispatcher, content_visibility $content_visibility, $php_ext, $phpbb_root_path, manager $manager, search_query $search_query, $table_bbtags, $table_bbtags_topic)
+	public function __construct(driver_interface $db, config $config, template $template, helper $helper, request $request, user $user, auth $auth, service $cache, pagination $pagination, dispatcher $phpbb_dispatcher, content_visibility $content_visibility, $php_ext, $phpbb_root_path, manager $manager, search_query $search_query, filter_url $filter_url, $table_bbtags, $table_bbtags_topic)
 	{
 		$this->db = $db;
 		$this->config = $config;
@@ -63,6 +65,7 @@ class main
 		$this->phpbb_root_path = $phpbb_root_path;
 		$this->manager = $manager;
 		$this->search_query = $search_query;
+		$this->filter_url = $filter_url;
 		$this->table_bbtags = $table_bbtags;
 		$this->table_bbtags_topic = $table_bbtags_topic;
 	}
@@ -139,8 +142,13 @@ class main
 	 */
 	public function search()
 	{
-		$tags = preg_split('/[,;]+/u', $this->request->variable('tags', '', true), -1, PREG_SPLIT_NO_EMPTY);
 		$operator = ($this->request->variable('operator', 'and') === 'or') ? 'or' : 'and';
+		$routes = $this->filter_url->parse_routes($this->request->variable('routes', '', true));
+		if (!empty($routes))
+		{
+			return $this->render_search($routes, $operator, true);
+		}
+		$tags = preg_split('/[,;]+/u', $this->request->variable('tags', '', true), -1, PREG_SPLIT_NO_EMPTY);
 
 		return $this->render_search($tags ?: array(), $operator, false);
 	}
@@ -170,7 +178,7 @@ class main
 		foreach ($values as $value)
 		{
 			$normalized_values[] = $values_routes
-				? $this->manager->slug(utf8_normalize_nfc($value), array('transliterate' => true))
+				? trim((string) $value)
 				: $this->manager->canonical_tag($value);
 		}
 		$expected_tag_count = count(array_unique(array_filter($normalized_values)));
@@ -201,16 +209,22 @@ class main
 		$start = max($this->request->variable('start', 0), 0);
 		$start = $this->pagination->validate_start($start, $this->config['topics_per_page'], $topics_count);
 		$tag_names = array_column($resolved_tags, 'tag');
+		$active_routes = array_column($resolved_tags, 'route');
 		$search_value = implode(', ', $tag_names ?: $values);
-		$search_url = $this->helper->route('sitesplat_bbtags_search_controller', array(
-			'tags' => implode(',', $tag_names ?: $values),
-			'operator' => $operator,
-		));
+		$search_url = $this->filter_url->build($active_routes, $operator);
 		$this->pagination->generate_template_pagination($search_url, 'pagination', 'start', $topics_count, $this->config['topics_per_page'], $start);
 
 		if ($topics_count > 0)
 		{
-			$this->display_topics($where_sql, $start);
+			$this->display_topics($where_sql, $start, $active_routes, $operator);
+		}
+
+		foreach ($resolved_tags as $tag)
+		{
+			$this->template->assign_block_vars('bbtags_filter', array(
+				'TAG' => htmlspecialchars($tag['tag'], ENT_QUOTES, 'UTF-8'),
+				'U_REMOVE' => $this->filter_url->toggle($active_routes, $tag['route'], $operator),
+			));
 		}
 
 		$this->template->assign_vars(array(
@@ -220,6 +234,7 @@ class main
 			'S_BBTAGS_OPERATOR_AND' => $operator === 'and',
 			'S_BBTAGS_OPERATOR_OR' => $operator === 'or',
 			'S_SEARCH_ACTION' => $this->helper->route('sitesplat_bbtags_search_controller'),
+			'U_BBTAGS_CLEAR' => $this->filter_url->build(array()),
 			'SEARCH_MATCHES' => $this->user->lang('FOUND_SEARCH_MATCHES', $topics_count),
 		));
 
@@ -246,7 +261,7 @@ class main
 		foreach ($values as $value)
 		{
 			$key = $values_routes
-				? $this->manager->slug(utf8_normalize_nfc($value), array('transliterate' => true))
+				? trim((string) $value)
 				: $this->manager->canonical_tag($value);
 			if ($key !== '')
 			{
@@ -271,7 +286,16 @@ class main
 		}
 		$this->db->sql_freeresult($result);
 
-		return array_values(array_intersect_key($rows, $lookup));
+		$resolved = array();
+		foreach (array_keys($lookup) as $key)
+		{
+			if (isset($rows[$key]))
+			{
+				$resolved[] = $rows[$key];
+			}
+		}
+
+		return $resolved;
 	}
 
 	/**
@@ -280,7 +304,7 @@ class main
 	 * @param string $where_sql Visibility-aware SQL condition
 	 * @param int    $start     Pagination offset
 	 */
-	protected function display_topics($where_sql, $start)
+	protected function display_topics($where_sql, $start, array $active_routes, $operator)
 	{
 		$icons = $this->cache->obtain_icons();
 		$sql = 'SELECT topics.*, forums.forum_name, topic_track.mark_time
@@ -292,7 +316,17 @@ class main
 			WHERE ' . $where_sql . '
 			ORDER BY topics.topic_last_post_time DESC';
 		$result = $this->db->sql_query_limit($sql, $this->config['topics_per_page'], $start);
+		$rows = array();
+		$topic_forums = array();
 		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$rows[] = $row;
+			$topic_forums[(int) $row['topic_id']] = (int) $row['forum_id'];
+		}
+		$this->db->sql_freeresult($result);
+		$topic_tags = $this->manager->get_topic_tags($topic_forums);
+
+		foreach ($rows as $row)
 		{
 			$topic_id = (int) $row['topic_id'];
 			$forum_id = (int) $row['forum_id'];
@@ -360,13 +394,37 @@ class main
 				'TOPIC_VIEWS' => (int) $row['topic_views'],
 				'U_VIEW_TOPIC' => append_sid($this->phpbb_root_path . 'viewtopic.' . $this->php_ext, $view_topic_params),
 				'U_VIEW_FORUM' => $forum_id > 0 ? append_sid($this->phpbb_root_path . 'viewforum.' . $this->php_ext, 'f=' . $forum_id) : '',
+				'BBTAGS' => $this->build_tag_links(
+					isset($topic_tags[$topic_id]) ? $topic_tags[$topic_id] : array(),
+					$active_routes,
+					$operator
+				),
 			);
 
 			$vars = array('topic_row');
 			extract($this->phpbb_dispatcher->trigger_event('sitesplat.bbtags.btpreview', compact($vars)));
 			$this->template->assign_block_vars('topicrow', $topic_row);
 		}
-		$this->db->sql_freeresult($result);
+	}
+
+	/**
+	 * Build add/remove links for tags displayed inside one result row.
+	 */
+	protected function build_tag_links(array $tags, array $active_routes, $operator)
+	{
+		$links = array();
+		foreach ($tags as $tag)
+		{
+			$is_active = in_array($tag['route'], $active_routes, true);
+			$links[] = array(
+				'TAG' => htmlspecialchars($tag['tag'], ENT_QUOTES, 'UTF-8'),
+				'URL' => $this->filter_url->toggle($active_routes, $tag['route'], $operator),
+				'S_ACTIVE' => $is_active,
+				'TITLE' => $this->user->lang($is_active ? 'BBTAGS_REMOVE_FILTER' : 'BBTAGS_ADD_FILTER'),
+			);
+		}
+
+		return $links;
 	}
 
 	/**

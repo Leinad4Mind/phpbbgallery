@@ -19,15 +19,17 @@ class acp_security_test extends TestCase
 
 		$this->assertStringContainsString('add_form_key(self::FORM_KEY)', $module);
 		$this->assertStringContainsString('check_form_key(self::FORM_KEY)', $module);
-		$this->assertStringContainsString("array('delete', 'gaUpdate', 'save_config', 'save_policy')", $module);
+		$this->assertStringContainsString("array('delete', 'gaUpdate', 'merge', 'save_config', 'save_policy')", $module);
 	}
 
 	public function test_acp_template_posts_delete_and_form_tokens()
 	{
 		$template = file_get_contents(dirname(__DIR__) . '/adm/style/acp_bbtags.html');
 
-		$this->assertSame(2, substr_count($template, '{S_FORM_TOKEN}'));
+		$this->assertSame(3, substr_count($template, '{S_FORM_TOKEN}'));
 		$this->assertStringContainsString('name="delete_id"', $template);
+		$this->assertStringContainsString('name="source_tag_id"', $template);
+		$this->assertStringContainsString('name="destination_tag_id"', $template);
 		$this->assertStringNotContainsString('action=delete&amp;id=', $template);
 	}
 
@@ -37,9 +39,23 @@ class acp_security_test extends TestCase
 
 		$this->assertStringContainsString('$this->manager->delete_tag($delete_id)', $module);
 		$this->assertStringContainsString('$this->manager->rename_tag(', $module);
+		$this->assertStringContainsString('$this->manager->merge_tags(', $module);
+		$this->assertStringContainsString('$this->manager->get_merge_blocking_providers(', $module);
 		$this->assertStringContainsString('$this->manager->replace_predefined_tags(', $module);
 		$this->assertStringContainsString('$this->manager->get_predefined_tags()', $module);
 		$this->assertStringNotContainsString('GROUP_CONCAT(', $module);
+	}
+
+	public function test_acp_version_comes_only_from_composer_metadata()
+	{
+		$module = file_get_contents(dirname(__DIR__) . '/acp/bbtags_module.php');
+		$template = file_get_contents(dirname(__DIR__) . '/adm/style/acp_bbtags.html');
+		$composer = json_decode(file_get_contents(dirname(__DIR__) . '/composer.json'), true);
+
+		$this->assertSame('1.3.0', $composer['version']);
+		$this->assertStringContainsString("get_metadata('version')", $module);
+		$this->assertStringContainsString('{BBTAGS_VERSION}', $template);
+		$this->assertStringNotContainsString('L_ACP_BBTAGS_VERSION', $template);
 	}
 
 	public function test_forum_policy_editor_uses_scoped_provider_api()
@@ -69,6 +85,10 @@ class acp_security_test extends TestCase
 		$this->assertStringContainsString("htmlspecialchars(\$tags, ENT_QUOTES, 'UTF-8')", $listener);
 		$this->assertStringContainsString('sync_item_suggestions(', $listener);
 		$this->assertStringContainsString('manager::FORUM_PROVIDER', $listener);
+		$this->assertStringContainsString("'core.search_modify_rowset'", $listener);
+		$this->assertStringContainsString("'core.search_modify_tpl_ary'", $listener);
+		$this->assertStringContainsString('$this->manager->get_topic_tags(', $listener);
+		$this->assertStringNotContainsString('$this->manager->slug(', $listener);
 	}
 
 	public function test_acp_language_catalogs_share_the_same_keys()

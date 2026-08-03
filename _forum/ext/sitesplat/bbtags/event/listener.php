@@ -19,6 +19,7 @@ use phpbb\config\config;
 use phpbb\request\request;
 use sitesplat\bbtags\tags\manager;
 use sitesplat\bbtags\tags\moderation;
+use sitesplat\bbtags\tags\filter_url;
 
 /**
 * Event listener
@@ -33,12 +34,14 @@ class listener implements EventSubscriberInterface
 	protected $request;
 	protected $manager;
 	protected $moderation;
+	protected $filter_url;
+	protected $search_topic_tags = array();
 
 	/**
 	* Constructor
 	* @access public
 	*/
-	public function __construct(auth $auth, helper $helper, template $template, user $user, config $config, request $request, manager $tag_manager, moderation $moderation)
+	public function __construct(auth $auth, helper $helper, template $template, user $user, config $config, request $request, manager $tag_manager, moderation $moderation, filter_url $filter_url)
 	{
 		$this->auth = $auth;
 		$this->helper = $helper;
@@ -48,6 +51,7 @@ class listener implements EventSubscriberInterface
 		$this->request = $request;
 		$this->manager = $tag_manager;
 		$this->moderation = $moderation;
+		$this->filter_url = $filter_url;
 	}
 
 	/**
@@ -66,6 +70,8 @@ class listener implements EventSubscriberInterface
 			'core.submit_post_end'					=> 'save_tags',
 			'core.delete_topics_after_query'		=> 'delete_tags',
 			'core.permissions'						=> 'add_permission',
+			'core.search_modify_rowset'				=> 'load_search_tags',
+			'core.search_modify_tpl_ary'				=> 'assign_search_tags',
 		);
 	}
 
@@ -81,7 +87,7 @@ class listener implements EventSubscriberInterface
 
 	public function load_tags()
 	{
-		if (!$this->catalog_is_ready())
+		if (!$this->catalog_is_ready() || !$this->auth->acl_get('u_bbtags_read'))
 		{
 			return;
 		}
@@ -91,13 +97,11 @@ class listener implements EventSubscriberInterface
 				&& substr($this->user->data['session_page'], 0, 6) == 'index.')
 		)
 		{
-			$tags = $this->manager->get_tags(0);
-			if ($tags != '')
+			$tag_rows = $this->manager->get_tag_rows(0);
+			if (!empty($tag_rows))
 			{
-				if ($this->auth->acl_get('u_bbtags_read'))
-				{
-					$this->assign_tags_to_template('bbtags', explode(',', $tags));
-				}
+				$tags = implode(', ', array_column($tag_rows, 'tag'));
+				$this->assign_tags_to_template('bbtags', $tag_rows);
 				$this->template->assign_vars(array(
 					'META_KEYWORDS' => '<meta name="keywords" content="' . htmlspecialchars($tags, ENT_QUOTES, 'UTF-8') . '">',
 				));
@@ -107,10 +111,10 @@ class listener implements EventSubscriberInterface
 		$topic_id = $this->request->variable('t', 0);
 		if ($topic_id)
 		{
-			$tags = $this->manager->get_tags($topic_id);
-			if ($tags != '' && $this->auth->acl_get('u_bbtags_read'))
+			$tag_rows = $this->manager->get_tag_rows($topic_id);
+			if (!empty($tag_rows))
 			{
-				$this->assign_tags_to_template('bbtagstopic', explode(',', $tags));
+				$this->assign_tags_to_template('bbtagstopic', $tag_rows);
 			}
 		}
 	}
@@ -178,12 +182,56 @@ class listener implements EventSubscriberInterface
 	{
 		foreach ($tags as $tag)
 		{
-			$tag = trim($tag);
 			$this->template->assign_block_vars($block_name, array(
-				'TAG'	=> htmlspecialchars($tag, ENT_QUOTES, 'UTF-8'),
-				'URL'	=> $this->helper->route('sitesplat_bbtags_controller', array('tags' => $this->manager->slug($tag, array('transliterate' => true)))),
+				'TAG'	=> htmlspecialchars($tag['tag'], ENT_QUOTES, 'UTF-8'),
+				'URL'	=> $this->filter_url->build(array($tag['route'])),
 			));
 		}
+	}
+
+	public function load_search_tags($event)
+	{
+		$this->search_topic_tags = array();
+		if (!$this->catalog_is_ready() || !$this->auth->acl_get('u_bbtags_read'))
+		{
+			return;
+		}
+
+		$topic_forums = array();
+		foreach ($event['rowset'] as $row)
+		{
+			if (!empty($row['topic_id']))
+			{
+				$topic_forums[(int) $row['topic_id']] = (int) $row['forum_id'];
+			}
+		}
+		$this->search_topic_tags = $this->manager->get_topic_tags($topic_forums);
+	}
+
+	public function assign_search_tags($event)
+	{
+		if (!$this->catalog_is_ready() || !$this->auth->acl_get('u_bbtags_read'))
+		{
+			return;
+		}
+		$row = $event['row'];
+		$topic_id = isset($row['topic_id']) ? (int) $row['topic_id'] : 0;
+		if ($topic_id <= 0 || empty($this->search_topic_tags[$topic_id]))
+		{
+			return;
+		}
+
+		$tpl_ary = $event['tpl_ary'];
+		$tpl_ary['BBTAGS'] = array();
+		foreach ($this->search_topic_tags[$topic_id] as $tag)
+		{
+			$tpl_ary['BBTAGS'][] = array(
+				'TAG' => htmlspecialchars($tag['tag'], ENT_QUOTES, 'UTF-8'),
+				'URL' => $this->filter_url->build(array($tag['route'])),
+				'TITLE' => $this->user->lang('BBTAGS_ADD_FILTER'),
+			);
+		}
+		$event['tpl_ary'] = $tpl_ary;
 	}
 
 	public function save_tags($event)

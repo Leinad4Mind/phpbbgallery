@@ -44,6 +44,19 @@ $lang = array_merge($lang, array(
 	'BBTAGS_TAG_NOT_FOUND'			=> 'The requested tag does not exist.',
 	'BBTAGS_TAG_UPDATED'				=> 'The tag was updated successfully.',
 	'BBTAGS_TAG_UPDATE_FAILED'		=> 'The tag could not be updated. Its name may already be in use.',
+	'BBTAGS_TAG_EXISTS_USE_MERGE'	=> 'That tag already exists. Use the merge tool to combine both tags.',
+	'ACP_BBTAGS_MERGE'				=> 'Merge tags',
+	'ACP_BBTAGS_MERGE_EXPLAIN'		=> 'Move every relation from a source tag into an existing destination tag. The destination name, route and policy are kept.',
+	'BBTAGS_MERGE_SOURCE'			=> 'Source tag',
+	'BBTAGS_MERGE_SOURCE_EXPLAIN'	=> 'This tag will be removed after its relations are transferred.',
+	'BBTAGS_MERGE_DESTINATION'		=> 'Destination tag',
+	'BBTAGS_MERGE_DESTINATION_EXPLAIN' => 'This tag and its current policy will be kept.',
+	'BBTAGS_MERGE_SUBMIT'			=> 'Merge tags',
+	'BBTAGS_MERGE_INVALID'			=> 'The source and destination tags must be different.',
+	'BBTAGS_MERGE_CONFIRM'			=> 'Are you sure you want to merge “%1$s” into “%2$s”? This cannot be undone.',
+	'BBTAGS_MERGE_EXTERNAL_PROVIDER'=> 'The source tag cannot be merged because it is actively used by these external providers: %s.',
+	'BBTAGS_MERGE_FAILED'			=> 'The tags could not be merged. No changes were committed.',
+	'BBTAGS_MERGE_SUCCESS'			=> 'The tags were merged successfully.',
 
 	'SS_HELPER_NOTY'	                => 'SiteSplat BBcore does not exist!<br />Download the <a href="https://sitesplat.com" target="_blank">BBcore</a> and copy the BBcore folder into your sitesplat extension folder.',
 	'BBTAGS_NOTICE'						=> '<div class="phpinfo"><p>The extension settings are under <strong>%1$s &#187; %2$s &#187; %3$s</strong>.<br />Don\'t forget to review/adjust the <strong>User Permission Roles</strong> under <strong>Permissions &#187; Permission roles &#187; User Roles (Select the Role and hit edit) &#187; Misc (tab): "Can Manage BBtags"</strong>.</p></div>',
@@ -85,7 +98,6 @@ $lang = array_merge($lang, array(
 	'EXTENSION_DEVELOPER'	    		=> 'Developer',
 	'ACP_BBTAGS_NOTICE_CLOSE'			=> 'Close',
 
-	'ACP_BBTAGS_VERSION'				=> '1.1.3',
 	'ACP_LOADING'			    		=> 'Hold On. Loading...',
 
 ));

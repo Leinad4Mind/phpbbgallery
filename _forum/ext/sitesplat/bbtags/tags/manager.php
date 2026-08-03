@@ -34,8 +34,9 @@ class manager
 	private $table_bbtags_context;
 	private $table_bbtags_scope;
 	private $table_bbtags_topic;
+	private $table_bbtags_suggestions;
 
-	public function __construct(driver_interface $db, config $config, auth $auth, $table_bbtags, $table_bbtags_context, $table_bbtags_scope, $table_bbtags_topic)
+	public function __construct(driver_interface $db, config $config, auth $auth, $table_bbtags, $table_bbtags_context, $table_bbtags_scope, $table_bbtags_topic, $table_bbtags_suggestions = '')
 	{
 		$this->db					= $db;
 		$this->config				= $config;
@@ -44,12 +45,21 @@ class manager
 		$this->table_bbtags_context	= $table_bbtags_context;
 		$this->table_bbtags_scope	= $table_bbtags_scope;
 		$this->table_bbtags_topic	= $table_bbtags_topic;
+		$this->table_bbtags_suggestions = $table_bbtags_suggestions;
 	}
 
 	public function get_tags($topic_id)
 	{
+		return implode(', ', array_column($this->get_tag_rows($topic_id), 'tag'));
+	}
+
+	/**
+	 * Return public catalogue rows, including their authoritative routes.
+	 */
+	public function get_tag_rows($topic_id = 0)
+	{
 		$topic_id = (int) $topic_id;
-		$sql = 'SELECT t.id, t.tag';
+		$sql = 'SELECT t.id, t.tag, t.route';
 		if ($topic_id > 0)
 		{
 			$sql .= ', topics.forum_id
@@ -87,7 +97,84 @@ class manager
 			});
 		}
 
-		return implode(', ', array_column($rows, 'tag'));
+		return array_values($rows);
+	}
+
+	public function get_topic_tags(array $topic_forums): array
+	{
+		$normalized = [];
+		foreach ($topic_forums as $topic_id => $forum_id)
+		{
+			$topic_id = (int) $topic_id;
+			if ($topic_id > 0)
+			{
+				$normalized[$topic_id] = max(0, (int) $forum_id);
+			}
+		}
+		if (empty($normalized))
+		{
+			return [];
+		}
+
+		$sql = 'SELECT tt.topic_id, t.id, t.tag, t.route
+			FROM ' . $this->table_bbtags_topic . ' tt
+			INNER JOIN ' . $this->table_bbtags . ' t ON t.id = tt.tag_id
+			INNER JOIN ' . $this->table_bbtags_context . ' tc ON tc.tag_id = t.id
+			WHERE tc.provider = \'' . self::FORUM_PROVIDER . '\'
+				AND tc.is_enabled = 1
+				AND ' . $this->db->sql_in_set('tt.topic_id', array_keys($normalized)) . '
+			ORDER BY t.tag ASC';
+		$result = $this->db->sql_query($sql);
+		$rows = [];
+		$tag_ids = [];
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$rows[] = $row;
+			$tag_ids[] = (int) $row['id'];
+		}
+		$this->db->sql_freeresult($result);
+		if (empty($rows))
+		{
+			return [];
+		}
+
+		return $this->filter_topic_tag_rows($rows, $tag_ids, $normalized);
+	}
+
+	private function filter_topic_tag_rows(array $rows, array $tag_ids, array $topic_forums): array
+	{
+		$all_paths = $this->get_forum_scope_paths();
+		$scope_paths = [];
+		foreach (array_unique(array_values($topic_forums)) as $forum_id)
+		{
+			$scope_paths[$forum_id] = isset($all_paths[$forum_id])
+				? $all_paths[$forum_id]
+				: [$forum_id, 0];
+		}
+		$allowed = $this->get_allowed_scope_ids_by_tag(
+			array_values(array_unique($tag_ids)),
+			self::FORUM_PROVIDER,
+			$scope_paths
+		);
+
+		$tags = [];
+		foreach ($rows as $row)
+		{
+			$topic_id = (int) $row['topic_id'];
+			$tag_id = (int) $row['id'];
+			$allowed_forums = isset($allowed[$tag_id]) ? $allowed[$tag_id] : [];
+			if (!in_array($topic_forums[$topic_id], $allowed_forums, true))
+			{
+				continue;
+			}
+			$tags[$topic_id][] = [
+				'id' => $tag_id,
+				'tag' => (string) $row['tag'],
+				'route' => (string) $row['route'],
+			];
+		}
+
+		return $tags;
 	}
 
 	public function remove_tags_from_topics($topic_ids)
@@ -255,7 +342,11 @@ class manager
 		{
 			return false;
 		}
-
+		$existing = $this->find_catalog_tag($tag);
+		if ($existing && (int) $existing['id'] !== $tag_id)
+		{
+			return false;
+		}
 		$sql_ary = array(
 			'tag' => $tag,
 			'tag_clean' => $this->canonical_tag($tag),
@@ -264,6 +355,252 @@ class manager
 		$sql = 'UPDATE ' . $this->table_bbtags . '
 			SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
 			WHERE id = ' . $tag_id;
+		return $this->db->sql_query($sql) !== false;
+	}
+
+	public function get_catalog_tags(): array
+	{
+		$sql = 'SELECT id, tag, tag_clean, route, count, is_predefined
+			FROM ' . $this->table_bbtags . '
+			ORDER BY tag_clean ASC';
+		$result = $this->db->sql_query($sql);
+		$rows = [];
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$rows[] = $row;
+		}
+		$this->db->sql_freeresult($result);
+
+		return $rows;
+	}
+
+	public function get_catalog_tag(int $tag_id): array|false
+	{
+		if ($tag_id <= 0)
+		{
+			return false;
+		}
+		$result = $this->db->sql_query_limit(
+			'SELECT id, tag, tag_clean, route, count, is_predefined
+				FROM ' . $this->table_bbtags . '
+				WHERE id = ' . $tag_id,
+			1
+		);
+		$row = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+
+		return $row ?: false;
+	}
+
+	public function find_catalog_tag(string $tag): array|false
+	{
+		$tag_clean = $this->canonical_tag($tag);
+		if ($tag_clean === '')
+		{
+			return false;
+		}
+		$sql = 'SELECT id, tag, tag_clean, route, count, is_predefined
+			FROM ' . $this->table_bbtags . '
+			WHERE tag_clean = \'' . $this->db->sql_escape($tag_clean) . '\'';
+		$result = $this->db->sql_query_limit($sql, 1);
+		$row = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+
+		return $row ?: false;
+	}
+
+	public function get_merge_blocking_providers(int $source_tag_id): array
+	{
+		if ($source_tag_id <= 0)
+		{
+			return [];
+		}
+		$sql = 'SELECT provider
+			FROM ' . $this->table_bbtags_context . '
+			WHERE tag_id = ' . $source_tag_id . '
+				AND provider <> \'' . self::FORUM_PROVIDER . '\'
+				AND (is_enabled = 1 OR usage_count > 0)
+			ORDER BY provider ASC';
+		$result = $this->db->sql_query($sql);
+		$providers = [];
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$providers[] = (string) $row['provider'];
+		}
+		$this->db->sql_freeresult($result);
+
+		return array_values(array_unique($providers));
+	}
+
+	/**
+	 * Merge a source catalogue tag into an existing destination tag.
+	 *
+	 * The destination identity, label, route and provider policy remain authoritative.
+	 */
+	public function merge_tags(int $source_tag_id, int $destination_tag_id): bool
+	{
+		if ($source_tag_id <= 0 || $destination_tag_id <= 0 || $source_tag_id === $destination_tag_id)
+		{
+			return false;
+		}
+		$this->db->sql_transaction('begin');
+		try
+		{
+			$source = $this->get_catalog_tag($source_tag_id);
+			$destination = $this->get_catalog_tag($destination_tag_id);
+			if (!$source || !$destination || !empty($this->get_merge_blocking_providers($source_tag_id)))
+			{
+				$this->db->sql_transaction('rollback');
+				return false;
+			}
+			if (!$this->merge_topic_relations($source_tag_id, $destination_tag_id)
+				|| !$this->merge_suggestions($source, $destination)
+				|| !$this->remove_merged_catalogue_row($source, $destination)
+				|| !$this->calc_count_tags())
+			{
+				$this->db->sql_transaction('rollback');
+				return false;
+			}
+		}
+		catch (\Throwable $exception)
+		{
+			$this->db->sql_transaction('rollback');
+			throw $exception;
+		}
+
+		$this->db->sql_transaction('commit');
+		return true;
+	}
+
+	private function merge_topic_relations(int $source_tag_id, int $destination_tag_id): bool
+	{
+		$sql = 'SELECT topic_id, tag_id
+			FROM ' . $this->table_bbtags_topic . '
+			WHERE ' . $this->db->sql_in_set('tag_id', [$source_tag_id, $destination_tag_id]);
+		$result = $this->db->sql_query($sql);
+		$source_topics = [];
+		$destination_topics = [];
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			if ((int) $row['tag_id'] === $source_tag_id)
+			{
+				$source_topics[(int) $row['topic_id']] = true;
+			}
+			else
+			{
+				$destination_topics[(int) $row['topic_id']] = true;
+			}
+		}
+		$this->db->sql_freeresult($result);
+
+		$rows = [];
+		foreach (array_diff_key($source_topics, $destination_topics) as $topic_id => $unused)
+		{
+			$rows[] = [
+				'topic_id' => (int) $topic_id,
+				'tag_id' => $destination_tag_id,
+			];
+		}
+		if (!empty($rows) && $this->db->sql_multi_insert($this->table_bbtags_topic, $rows) === false)
+		{
+			return false;
+		}
+
+		$sql = 'DELETE FROM ' . $this->table_bbtags_topic . '
+			WHERE tag_id = ' . $source_tag_id;
+		return $this->db->sql_query($sql) !== false;
+	}
+
+	private function merge_suggestions(array $source, array $destination): bool
+	{
+		if ($this->table_bbtags_suggestions === '')
+		{
+			return true;
+		}
+		$sql = 'SELECT suggestion_id, provider, scope_id, item_id, status
+			FROM ' . $this->table_bbtags_suggestions . '
+			WHERE tag_id = ' . (int) $source['id'] . '
+				OR (status = \'pending\'
+					AND tag_clean = \'' . $this->db->sql_escape($source['tag_clean']) . '\')';
+		$result = $this->db->sql_query($sql);
+		$rows = [];
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$rows[] = $row;
+		}
+		$this->db->sql_freeresult($result);
+
+		foreach ($rows as $row)
+		{
+			$suggestion_id = (int) $row['suggestion_id'];
+			$data = ['tag_id' => (int) $destination['id']];
+			if ($row['status'] === 'pending')
+			{
+				$dedupe_key = hash(
+					'sha256',
+					$row['provider'] . ':' . (int) $row['scope_id'] . ':' . (int) $row['item_id'] . ':' . $destination['tag_clean']
+				);
+				$duplicate_result = $this->db->sql_query_limit(
+					'SELECT suggestion_id
+						FROM ' . $this->table_bbtags_suggestions . '
+						WHERE dedupe_key = \'' . $this->db->sql_escape($dedupe_key) . '\'
+							AND suggestion_id <> ' . $suggestion_id,
+					1
+				);
+				$duplicate = $this->db->sql_fetchrow($duplicate_result);
+				$this->db->sql_freeresult($duplicate_result);
+				$data += [
+					'tag' => (string) $destination['tag'],
+					'tag_clean' => (string) $destination['tag_clean'],
+					'dedupe_key' => $duplicate ? 'merged-' . $suggestion_id : $dedupe_key,
+				];
+				if ($duplicate)
+				{
+					$data += [
+						'status' => 'cancelled',
+						'reviewed_by' => 0,
+						'reviewed_at' => time(),
+					];
+				}
+			}
+			$sql = 'UPDATE ' . $this->table_bbtags_suggestions . '
+				SET ' . $this->db->sql_build_array('UPDATE', $data) . '
+				WHERE suggestion_id = ' . $suggestion_id;
+			if ($this->db->sql_query($sql) === false)
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	private function remove_merged_catalogue_row(array $source, array $destination): bool
+	{
+		$source_tag_id = (int) $source['id'];
+		if (!empty($source['is_predefined']) && empty($destination['is_predefined']))
+		{
+			$sql = 'UPDATE ' . $this->table_bbtags . '
+				SET is_predefined = 1
+				WHERE id = ' . (int) $destination['id'];
+			if ($this->db->sql_query($sql) === false)
+			{
+				return false;
+			}
+		}
+
+		foreach ([$this->table_bbtags_scope, $this->table_bbtags_context] as $table)
+		{
+			$sql = 'DELETE FROM ' . $table . '
+				WHERE tag_id = ' . $source_tag_id;
+			if ($this->db->sql_query($sql) === false)
+			{
+				return false;
+			}
+		}
+		$sql = 'DELETE FROM ' . $this->table_bbtags . '
+			WHERE id = ' . $source_tag_id;
+
 		return $this->db->sql_query($sql) !== false;
 	}
 
@@ -941,7 +1278,7 @@ class manager
 			return array(0);
 		}
 
-		$sql = 'SELECT forum_left, forum_right
+		$sql = 'SELECT left_id, right_id
 			FROM ' . FORUMS_TABLE . '
 			WHERE forum_id = ' . $forum_id;
 		$result = $this->db->sql_query($sql);
@@ -954,9 +1291,9 @@ class manager
 
 		$sql = 'SELECT forum_id
 			FROM ' . FORUMS_TABLE . '
-			WHERE forum_left <= ' . (int) $row['forum_left'] . '
-				AND forum_right >= ' . (int) $row['forum_right'] . '
-			ORDER BY forum_left DESC';
+			WHERE left_id <= ' . (int) $row['left_id'] . '
+				AND right_id >= ' . (int) $row['right_id'] . '
+			ORDER BY left_id DESC';
 		$result = $this->db->sql_query($sql);
 		$path = array();
 		while ($ancestor = $this->db->sql_fetchrow($result))
@@ -976,35 +1313,30 @@ class manager
 	 */
 	public function get_forum_scope_paths()
 	{
-		$sql = 'SELECT forum_id, forum_left, forum_right
+		$sql = 'SELECT forum_id, parent_id
 			FROM ' . FORUMS_TABLE . '
-			ORDER BY forum_left ASC';
+			ORDER BY forum_id ASC';
 		$result = $this->db->sql_query($sql);
-		$forums = array();
+		$parents = array();
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$forums[] = array(
-				'forum_id' => (int) $row['forum_id'],
-				'forum_left' => (int) $row['forum_left'],
-				'forum_right' => (int) $row['forum_right'],
-			);
+			$parents[(int) $row['forum_id']] = max(0, (int) $row['parent_id']);
 		}
 		$this->db->sql_freeresult($result);
 
 		$paths = array(0 => array(0));
-		foreach ($forums as $forum)
+		foreach ($parents as $forum_id => $parent_id)
 		{
-			$ancestors = array();
-			foreach ($forums as $candidate)
+			$path = array($forum_id);
+			$seen = array($forum_id => true);
+			while ($parent_id > 0 && isset($parents[$parent_id]) && !isset($seen[$parent_id]))
 			{
-				if ($candidate['forum_left'] <= $forum['forum_left'] && $candidate['forum_right'] >= $forum['forum_right'])
-				{
-					$ancestors[$candidate['forum_left']] = $candidate['forum_id'];
-				}
+				$path[] = $parent_id;
+				$seen[$parent_id] = true;
+				$parent_id = $parents[$parent_id];
 			}
-			krsort($ancestors, SORT_NUMERIC);
-			$ancestors[] = 0;
-			$paths[$forum['forum_id']] = array_values(array_unique($ancestors));
+			$path[] = 0;
+			$paths[$forum_id] = $path;
 		}
 
 		return $paths;

@@ -43,6 +43,19 @@ $lang = array_merge($lang, [
 	'BBTAGS_TAG_NOT_FOUND'    => 'A tag solicitada não existe.',
 	'BBTAGS_TAG_UPDATED'      => 'A tag foi atualizada com sucesso.',
 	'BBTAGS_TAG_UPDATE_FAILED'=> 'Não foi possível atualizar a tag. O nome pode já estar em uso.',
+	'BBTAGS_TAG_EXISTS_USE_MERGE' => 'Essa tag já existe. Use a ferramenta de mesclagem para combinar as duas tags.',
+	'ACP_BBTAGS_MERGE' => 'Mesclar tags',
+	'ACP_BBTAGS_MERGE_EXPLAIN' => 'Transfere todos os relacionamentos de uma tag de origem para uma tag de destino existente. O nome, a route e a política do destino são mantidos.',
+	'BBTAGS_MERGE_SOURCE' => 'Tag de origem',
+	'BBTAGS_MERGE_SOURCE_EXPLAIN' => 'Esta tag será removida depois que os relacionamentos forem transferidos.',
+	'BBTAGS_MERGE_DESTINATION' => 'Tag de destino',
+	'BBTAGS_MERGE_DESTINATION_EXPLAIN' => 'Esta tag e sua política atual serão mantidas.',
+	'BBTAGS_MERGE_SUBMIT' => 'Mesclar tags',
+	'BBTAGS_MERGE_INVALID' => 'As tags de origem e destino devem ser diferentes.',
+	'BBTAGS_MERGE_CONFIRM' => 'Tem certeza de que deseja mesclar “%1$s” em “%2$s”? Esta operação não pode ser desfeita.',
+	'BBTAGS_MERGE_EXTERNAL_PROVIDER' => 'A tag de origem não pode ser mesclada porque está sendo usada ativamente pelos seguintes providers externos: %s.',
+	'BBTAGS_MERGE_FAILED' => 'Não foi possível mesclar as tags. Nenhuma alteração foi confirmada.',
+	'BBTAGS_MERGE_SUCCESS' => 'As tags foram mescladas com sucesso.',
 
 	'SS_HELPER_NOTY' => 'O SiteSplat BBcore não existe!<br />Baixe o <a href="https://sitesplat.com" target="_blank">BBcore</a> e copie a pasta BBcore para a pasta da sua extensão sitesplat.',
 	'BBTAGS_NOTICE'  => '<div class="phpinfo"><p>As configurações da extensão encontram-se em <strong>%1$s &#187; %2$s &#187; %3$s</strong>.<br />Não se esqueça de revisar/ajustar as <strong>Funções de Permissão de Usuário</strong> em <strong>Permissões &#187; Funções de permissão &#187; Funções de Usuário (Selecione a Função e clique em editar) &#187; Diversos (aba): "Pode Gerenciar BBtags"</strong>.</p></div>',
@@ -84,6 +97,5 @@ $lang = array_merge($lang, [
 	'EXTENSION_DEVELOPER'     => 'Desenvolvedor',
 	'ACP_BBTAGS_NOTICE_CLOSE' => 'Fechar',
 
-	'ACP_BBTAGS_VERSION' => '1.1.3',
 	'ACP_LOADING'        => 'Aguarde. Carregando...',
 ]);

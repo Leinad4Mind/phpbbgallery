@@ -27,6 +27,10 @@ $lang = array_merge($lang, [
 	'BBTAGS_SEARCH_OPERATOR'        => 'Modo de correspondencia das tags',
 	'BBTAGS_MATCH_ALL'              => 'Corresponder a todas as tags',
 	'BBTAGS_MATCH_ANY'              => 'Corresponder a qualquer tag',
+	'BBTAGS_FILTERING_BY'           => 'A filtrar por',
+	'BBTAGS_ADD_FILTER'             => 'Adicionar esta tag ao filtro',
+	'BBTAGS_REMOVE_FILTER'          => 'Remover esta tag do filtro',
+	'BBTAGS_CLEAR_FILTERS'          => 'Limpar filtros',
 	'BBTAGS_PENDING_NOTICE'         => 'As novas tags aqui apresentadas aguardam aprovação e ainda não são públicas.',
 	'TOPICTIME'                     => 'Tempo de atividade do tópico',
 ]);

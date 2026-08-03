@@ -28,6 +28,10 @@ $lang = array_merge($lang, array(
 	'BBTAGS_SEARCH_OPERATOR'         => 'Tag matching mode',
 	'BBTAGS_MATCH_ALL'               => 'Match all tags',
 	'BBTAGS_MATCH_ANY'               => 'Match any tag',
+	'BBTAGS_FILTERING_BY'            => 'Filtering by',
+	'BBTAGS_ADD_FILTER'              => 'Add this tag to the filter',
+	'BBTAGS_REMOVE_FILTER'           => 'Remove this tag from the filter',
+	'BBTAGS_CLEAR_FILTERS'           => 'Clear filters',
 	'BBTAGS_PENDING_NOTICE'          => 'New tags shown here are awaiting approval and are not public yet.',
 	'TOPICTIME'		        		=> 'Topic active time',
 ));

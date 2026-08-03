@@ -12,6 +12,15 @@
 	</div>
 	<button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> {L_SEARCH}</button>
 </form>
+<!-- IF .bbtags_filter -->
+<div class="alert alert-info bbtags-active-filters">
+	<strong>{L_BBTAGS_FILTERING_BY}{L_COLON}</strong>
+	<!-- BEGIN bbtags_filter -->
+	<a class="label label-primary" href="{bbtags_filter.U_REMOVE}" title="{L_BBTAGS_REMOVE_FILTER}">{bbtags_filter.TAG} &times;</a>
+	<!-- END bbtags_filter -->
+	<a class="btn btn-default btn-xs" href="{U_BBTAGS_CLEAR}">{L_BBTAGS_CLEAR_FILTERS}</a>
+</div>
+<!-- ENDIF -->
 <div class="side-segment"><h3>{SEARCH_MATCHES}</h3></div>
 <!-- IF .topicrow -->
 <div class="panel panel-default">
@@ -55,6 +64,13 @@
 			    <!-- ENDIF -->
 				{L_POST_BY_AUTHOR}&nbsp;{topicrow.TOPIC_AUTHOR_FULL}&nbsp;&#45;&nbsp;<small>{topicrow.FIRST_POST_TIME}</small>
 				<!-- IF not topicrow.S_TOPIC_GLOBAL --><i class="fa fa-comments"></i>&nbsp;{L_IN}&nbsp;<a href="{topicrow.U_VIEW_FORUM}">{topicrow.FORUM_TITLE}</a><!-- ELSE -->&nbsp;&#40;{L_GLOBAL}&#41;<!-- ENDIF -->
+				{% if topicrow.BBTAGS %}
+				<ul class="bbtags bbtags-result">
+					{% for tag in topicrow.BBTAGS %}
+					<li><a class="bbtag{% if tag.S_ACTIVE %} active{% endif %}" href="{{ tag.URL }}" title="{{ tag.TITLE }}">{{ tag.TAG }}</a></li>
+					{% endfor %}
+				</ul>
+				{% endif %}
 			<!-- EVENT topiclist_row_append -->
 			</span>
 			</td>

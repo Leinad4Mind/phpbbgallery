@@ -127,3 +127,17 @@
   border-left-color: #ee836e;
 }
 
+.bbtags-active-filters .label {
+  display: inline-block;
+  margin: 0 4px 4px 0;
+}
+
+.bbtags-result,
+.bbtags-search-result {
+  margin: 6px 0 0;
+}
+
+.bbtags-result .active {
+  box-shadow: 0 0 0 2px #d9534f;
+}
+

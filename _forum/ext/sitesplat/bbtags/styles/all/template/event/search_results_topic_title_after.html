@@ -1,0 +1,7 @@
+{% if searchresults.BBTAGS %}
+<ul class="bbtags bbtags-search-result">
+	{% for tag in searchresults.BBTAGS %}
+	<li><a class="bbtag" href="{{ tag.URL }}" title="{{ tag.TITLE }}">{{ tag.TAG }}</a></li>
+	{% endfor %}
+</ul>
+{% endif %}

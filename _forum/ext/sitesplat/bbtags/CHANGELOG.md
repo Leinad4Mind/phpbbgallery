@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+### Changed
+
+- Build every public tag link from the route persisted in the catalogue, keeping transliteration collisions distinct.
+- Read the ACP version directly from Composer metadata instead of maintaining a second version value.
+- Resolve all forum ancestry paths from one parent map instead of comparing every forum with every other forum.
+
+### Fixed
+
+- Display independently clickable BBTags in standard search.php topic and post results.
+- Preserve pagination and the selected AND/OR operator when filtering by several tags.
+- Use phpBB's actual left_id and right_id forum-tree columns when resolving one forum scope.
+
+### Added
+
+- Add cumulative tag filtering: clicking an inactive tag adds it, while clicking an active tag removes it.
+- Show removable active-filter chips and a clear-all action on BBTags result pages.
+- Add an explicit, confirmed ACP merge operation that deduplicates topic relations and preserves the destination tag identity and policy.
+- Block unsafe merges when the source tag is actively owned by an external provider.
+
 ### Security
 
 - Protect ACP tag updates, deletion and configuration changes with phpBB form tokens.

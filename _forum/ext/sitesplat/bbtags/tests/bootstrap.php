@@ -31,6 +31,14 @@ namespace
 		}
 	}
 
+	if (!function_exists('utf8_strlen'))
+	{
+		function utf8_strlen($value)
+		{
+			return mb_strlen($value, 'UTF-8');
+		}
+	}
+
 	if (!function_exists('utf8_normalize_nfc'))
 	{
 		function utf8_normalize_nfc($value)
@@ -87,6 +95,7 @@ namespace
 	require_once dirname(__DIR__) . '/provider/forum_provider.php';
 	require_once dirname(__DIR__) . '/tags/moderation.php';
 	require_once dirname(__DIR__) . '/tags/search_query.php';
+	require_once dirname(__DIR__) . '/tags/filter_url.php';
 	require_once dirname(__DIR__) . '/event/listener.php';
 	require_once dirname(__DIR__) . '/migrations/v33x/m7_global_catalog_schema.php';
 	require_once dirname(__DIR__) . '/migrations/v33x/m8_global_catalog_data.php';

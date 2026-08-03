@@ -67,7 +67,10 @@ class bbtags_module
 			$action = 'delete';
 		}
 
-		if (in_array($action, array('delete', 'gaUpdate', 'save_config', 'save_policy')) && !check_form_key(self::FORM_KEY))
+		$confirmed_merge = $action === 'merge' && confirm_box(true);
+		if (in_array($action, array('delete', 'gaUpdate', 'merge', 'save_config', 'save_policy'))
+			&& !$confirmed_merge
+			&& !check_form_key(self::FORM_KEY))
 		{
 			trigger_error($this->user->lang('FORM_INVALID') . adm_back_link($this->u_action), E_USER_WARNING);
 		}
@@ -88,10 +91,17 @@ class bbtags_module
 			break;
 
 			case 'gaUpdate':
+				$tag_id = $this->request->variable('id', 0);
+				$tag = utf8_normalize_nfc($this->request->variable('tag', '', true));
+				$existing = $this->manager->find_catalog_tag($tag);
+				if ($existing && (int) $existing['id'] !== $tag_id)
+				{
+					trigger_error($this->user->lang('BBTAGS_TAG_EXISTS_USE_MERGE') . adm_back_link($this->u_action), E_USER_WARNING);
+				}
 				$this->db->sql_return_on_error(true);
 				$updated = $this->manager->rename_tag(
-					$this->request->variable('id', 0),
-					utf8_normalize_nfc($this->request->variable('tag', '', true))
+					$tag_id,
+					$tag
 				);
 				$this->db->sql_return_on_error(false);
 				if (!$updated)
@@ -99,6 +109,10 @@ class bbtags_module
 					trigger_error($this->user->lang('BBTAGS_TAG_UPDATE_FAILED') . adm_back_link($this->u_action), E_USER_WARNING);
 				}
 				trigger_error($this->user->lang('BBTAGS_TAG_UPDATED') . adm_back_link($this->u_action));
+			break;
+
+			case 'merge':
+				$this->merge_tags($confirmed_merge);
 			break;
 
 			case 'save_config':
@@ -122,15 +136,73 @@ class bbtags_module
 		}
 
 		$predefined_tags = $this->manager->get_predefined_tags();
+		$metadata_manager = $phpbb_extension_manager->create_extension_metadata_manager('sitesplat/bbtags');
+		foreach ($this->manager->get_catalog_tags() as $tag)
+		{
+			$this->template->assign_block_vars('bbtags_catalog', array(
+				'ID' => (int) $tag['id'],
+				'TAG' => htmlspecialchars($tag['tag'], ENT_QUOTES, 'UTF-8'),
+				'COUNT' => (int) $tag['count'],
+			));
+		}
 		$this->template->assign_vars(array(
 			'U_ACTION' => $this->u_action,
 			'EXT_PATH' => $phpbb_path_helper->update_web_root_path($phpbb_extension_manager->get_extension_path('sitesplat/bbtags', true)),
+			'BBTAGS_VERSION' => htmlspecialchars($metadata_manager->get_metadata('version'), ENT_QUOTES, 'UTF-8'),
 			'BBTAGS_MIN_LENGTH' => $this->config['bbtags_min_length'],
 			'BBTAGS_MAX_TAGS' => $this->config['bbtags_max_tags'],
 			'BBTAGS_CLOUD_LIMIT' => $this->config['bbtags_cloud_limit'],
 			'BBTAGS_ON_INDEX' => $this->config['bbtags_on_index'],
 			'PRE_BBTAGS' => htmlspecialchars(implode("\n", is_array($predefined_tags) ? $predefined_tags : array()), ENT_QUOTES, 'UTF-8'),
 		));
+	}
+
+	protected function merge_tags($confirmed)
+	{
+		$source_tag_id = $this->request->variable('source_tag_id', 0);
+		$destination_tag_id = $this->request->variable('destination_tag_id', 0);
+		if ($source_tag_id <= 0 || $destination_tag_id <= 0 || $source_tag_id === $destination_tag_id)
+		{
+			trigger_error($this->user->lang('BBTAGS_MERGE_INVALID') . adm_back_link($this->u_action), E_USER_WARNING);
+		}
+		$source = $this->manager->get_catalog_tag($source_tag_id);
+		$destination = $this->manager->get_catalog_tag($destination_tag_id);
+		if (!$source || !$destination)
+		{
+			trigger_error($this->user->lang('BBTAGS_TAG_NOT_FOUND') . adm_back_link($this->u_action), E_USER_WARNING);
+		}
+		$blocking_providers = $this->manager->get_merge_blocking_providers($source_tag_id);
+		if (!empty($blocking_providers))
+		{
+			trigger_error(
+				$this->user->lang('BBTAGS_MERGE_EXTERNAL_PROVIDER', implode(', ', $blocking_providers))
+				. adm_back_link($this->u_action),
+				E_USER_WARNING
+			);
+		}
+		if (!$confirmed)
+		{
+			confirm_box(
+				false,
+				$this->user->lang(
+					'BBTAGS_MERGE_CONFIRM',
+					htmlspecialchars($source['tag'], ENT_QUOTES, 'UTF-8'),
+					htmlspecialchars($destination['tag'], ENT_QUOTES, 'UTF-8')
+				),
+				build_hidden_fields(array(
+					'action' => 'merge',
+					'source_tag_id' => $source_tag_id,
+					'destination_tag_id' => $destination_tag_id,
+				))
+			);
+			return;
+		}
+		if (!$this->manager->merge_tags($source_tag_id, $destination_tag_id))
+		{
+			trigger_error($this->user->lang('BBTAGS_MERGE_FAILED') . adm_back_link($this->u_action), E_USER_WARNING);
+		}
+
+		trigger_error($this->user->lang('BBTAGS_MERGE_SUCCESS') . adm_back_link($this->u_action));
 	}
 
 	/**

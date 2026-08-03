@@ -89,4 +89,29 @@ class controller_security_test extends TestCase
 		$this->assertStringContainsString('sitesplat_bbtags_search_controller:', $routing);
 		$this->assertStringContainsString('methods:  [GET]', $routing);
 	}
+
+	public function test_cumulative_links_use_persisted_routes_without_reslugging_names()
+	{
+		$controller = file_get_contents(dirname(__DIR__) . '/controller/main.php');
+		$listener = file_get_contents(dirname(__DIR__) . '/event/listener.php');
+
+		$this->assertStringContainsString("\$this->request->variable('routes', '', true)", $controller);
+		$this->assertStringContainsString('$this->filter_url->build($active_routes, $operator)', $controller);
+		$this->assertStringContainsString('$this->filter_url->toggle($active_routes, $tag[\'route\'], $operator)', $controller);
+		$this->assertStringContainsString('$this->manager->get_tag_rows(', $listener);
+		$this->assertStringNotContainsString('slug(utf8_normalize_nfc($value)', $controller);
+	}
+
+	public function test_standard_search_templates_link_tags_independently_from_topics()
+	{
+		foreach (array('topiclist_row_topic_title_after', 'search_results_topic_title_after') as $event)
+		{
+			$template = file_get_contents(
+				dirname(__DIR__) . '/styles/all/template/event/' . $event . '.html'
+			);
+
+			$this->assertStringContainsString('href="{{ tag.URL }}"', $template, $event);
+			$this->assertStringNotContainsString('U_VIEW_TOPIC', $template, $event);
+		}
+	}
 }

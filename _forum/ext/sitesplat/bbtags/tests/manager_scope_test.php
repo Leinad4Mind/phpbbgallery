@@ -55,7 +55,7 @@ class manager_scope_test extends TestCase
 		{
 			return $sql;
 		});
-		$bounds = array(array('forum_left' => 8, 'forum_right' => 13));
+		$bounds = array(array('left_id' => 8, 'right_id' => 13));
 		$ancestors = array(
 			array('forum_id' => 30),
 			array('forum_id' => 20),
@@ -63,7 +63,7 @@ class manager_scope_test extends TestCase
 		);
 		$db->method('sql_fetchrow')->willReturnCallback(static function ($result) use (&$bounds, &$ancestors)
 		{
-			return (strpos($result, 'SELECT forum_left') !== false)
+			return (strpos($result, 'SELECT left_id') !== false)
 				? (array_shift($bounds) ?: false)
 				: (array_shift($ancestors) ?: false);
 		});
@@ -430,10 +430,10 @@ class manager_scope_test extends TestCase
 			array('tag_id' => 2, 'scope_mode' => 'restricted', 'is_enabled' => 1),
 		);
 		$forums = array(
-			array('forum_id' => 10, 'forum_left' => 1, 'forum_right' => 10),
-			array('forum_id' => 20, 'forum_left' => 2, 'forum_right' => 5),
-			array('forum_id' => 30, 'forum_left' => 3, 'forum_right' => 4),
-			array('forum_id' => 40, 'forum_left' => 6, 'forum_right' => 9),
+			array('forum_id' => 10, 'parent_id' => 0),
+			array('forum_id' => 20, 'parent_id' => 10),
+			array('forum_id' => 30, 'parent_id' => 20),
+			array('forum_id' => 40, 'parent_id' => 10),
 		);
 		$rules = array(array('tag_id' => 2, 'scope_id' => 20, 'scope_rule' => 'allow'));
 		$db->method('sql_fetchrow')->willReturnCallback(static function ($result) use (&$contexts, &$forums, &$rules)
@@ -442,7 +442,7 @@ class manager_scope_test extends TestCase
 			{
 				return array_shift($contexts) ?: false;
 			}
-			if (strpos($result, 'SELECT forum_id, forum_left') !== false)
+			if (strpos($result, 'SELECT forum_id, parent_id') !== false)
 			{
 				return array_shift($forums) ?: false;
 			}

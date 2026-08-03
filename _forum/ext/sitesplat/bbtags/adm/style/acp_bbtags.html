@@ -11,7 +11,7 @@
 <a name="maincontent"></a>
 <!-- IF U_BACK --><a href="{U_BACK}" style="float: {S_CONTENT_FLOW_END};">&laquo; {L_BACK}</a><!-- ENDIF -->
 
-<h1>{L_ACP_BBTAGS} <a href="javascript:void(0)" class="md-trigger" data-remote="{U_ACTION}&amp;action=details" data-toggle="modal" data-target="#myModal"><span class="label label-success">{L_ACP_BBTAGS_VERSION} <i class="fa fa-info-circle"></i></span></a></h1>
+<h1>{L_ACP_BBTAGS} <a href="javascript:void(0)" class="md-trigger" data-remote="{U_ACTION}&amp;action=details" data-toggle="modal" data-target="#myModal"><span class="label label-success">{BBTAGS_VERSION} <i class="fa fa-info-circle"></i></span></a></h1>
 
 		<!-- Modal -->
 		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -81,6 +81,41 @@
 	var sid = '{_SID}';
 </script>
 <h4 style="margin-bottom:10px;">{L_ACP_BBTAGS_MANAGE}</h4>
+<!-- IF .bbtags_catalog -->
+<form method="post" action="{U_ACTION}" style="margin-bottom:20px;">
+	<fieldset>
+		<legend>{L_ACP_BBTAGS_MERGE}</legend>
+		<p>{L_ACP_BBTAGS_MERGE_EXPLAIN}</p>
+		<dl>
+			<dt><label for="source_tag_id">{L_BBTAGS_MERGE_SOURCE}</label><br /><span>{L_BBTAGS_MERGE_SOURCE_EXPLAIN}</span></dt>
+			<dd>
+				<select id="source_tag_id" name="source_tag_id" required>
+					<option value="0">{L_SELECT_OPTION}</option>
+					<!-- BEGIN bbtags_catalog -->
+					<option value="{bbtags_catalog.ID}">{bbtags_catalog.TAG} ({bbtags_catalog.COUNT})</option>
+					<!-- END bbtags_catalog -->
+				</select>
+			</dd>
+		</dl>
+		<dl>
+			<dt><label for="destination_tag_id">{L_BBTAGS_MERGE_DESTINATION}</label><br /><span>{L_BBTAGS_MERGE_DESTINATION_EXPLAIN}</span></dt>
+			<dd>
+				<select id="destination_tag_id" name="destination_tag_id" required>
+					<option value="0">{L_SELECT_OPTION}</option>
+					<!-- BEGIN bbtags_catalog -->
+					<option value="{bbtags_catalog.ID}">{bbtags_catalog.TAG} ({bbtags_catalog.COUNT})</option>
+					<!-- END bbtags_catalog -->
+				</select>
+			</dd>
+		</dl>
+		<p class="submit-buttons">
+			<input type="hidden" name="action" value="merge" />
+			<input type="submit" class="button1" value="{L_BBTAGS_MERGE_SUBMIT}" />
+		</p>
+	</fieldset>
+	{S_FORM_TOKEN}
+</form>
+<!-- ENDIF -->
 <form name="cbNewForm" method="post" action="{U_ACTION}">
     <table class="cbTable" cellpadding="0" cellspacing="0">
     <tr class="cbHead">

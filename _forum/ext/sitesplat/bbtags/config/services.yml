@@ -4,6 +4,11 @@ imports:
 services:
     sitesplat.bbtags.search_query:
         class: sitesplat\bbtags\tags\search_query
+    sitesplat.bbtags.filter_url:
+        class: sitesplat\bbtags\tags\filter_url
+        arguments:
+            - '@controller.helper'
+            - '@config'
     sitesplat.bbtags.manager:
         class: sitesplat\bbtags\tags\manager
         arguments:
@@ -14,6 +19,7 @@ services:
             - '%sitesplat.bbtags.tables.bbtags_context%'
             - '%sitesplat.bbtags.tables.bbtags_scope%'
             - '%sitesplat.bbtags.tables.bbtags_topic%'
+            - '%sitesplat.bbtags.tables.bbtags_suggestions%'
     sitesplat.bbtags.provider.services:
         class: phpbb\di\service_collection
         arguments:
@@ -50,6 +56,7 @@ services:
             - '@request'
             - '@sitesplat.bbtags.manager'
             - '@sitesplat.bbtags.moderation'
+            - '@sitesplat.bbtags.filter_url'
         tags:
             - { name: event.listener }
     sitesplat.bbtags.controller:
@@ -70,5 +77,6 @@ services:
             - '%core.root_path%'
             - '@sitesplat.bbtags.manager'
             - '@sitesplat.bbtags.search_query'
+            - '@sitesplat.bbtags.filter_url'
             - '%sitesplat.bbtags.tables.bbtags%'
             - '%sitesplat.bbtags.tables.bbtags_topic%'

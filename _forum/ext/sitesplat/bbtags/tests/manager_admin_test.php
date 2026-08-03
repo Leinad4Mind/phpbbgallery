@@ -81,7 +81,7 @@ class manager_admin_test extends TestCase
 			$built_arrays[] = array($type, $values);
 			return $type . ':' . implode(',', array_keys($values));
 		});
-		$db->expects($this->once())->method('sql_query_limit')->willReturn('route_result');
+		$db->expects($this->exactly(2))->method('sql_query_limit')->willReturnOnConsecutiveCalls('name_result', 'route_result');
 		$db->method('sql_fetchrow')->willReturn(false);
 		$db->expects($this->once())
 			->method('sql_query')
@@ -99,6 +99,78 @@ class manager_admin_test extends TestCase
 			array('UPDATE', array('tag' => "owner's tag", 'tag_clean' => "owner's tag", 'route' => 'owner-s-tag')),
 			$built_arrays[1]
 		);
+	}
+
+	public function test_rename_tag_rejects_an_existing_destination_name()
+	{
+		$db = $this->createMock(driver_interface::class);
+		$db->method('sql_query_limit')->willReturn('existing');
+		$db->method('sql_fetchrow')->willReturn(array('id' => 9));
+		$db->expects($this->never())->method('sql_query');
+
+		$this->assertFalse($this->create_manager($db)->rename_tag(7, 'existing tag'));
+	}
+
+	public function test_merge_rejects_the_same_source_and_destination_without_queries()
+	{
+		$db = $this->createMock(driver_interface::class);
+		$db->expects($this->never())->method('sql_query');
+		$db->expects($this->never())->method('sql_query_limit');
+		$db->expects($this->never())->method('sql_transaction');
+
+		$this->assertFalse($this->create_manager($db)->merge_tags(7, 7));
+	}
+
+	public function test_merge_rolls_back_when_source_is_used_by_external_provider()
+	{
+		$db = $this->createMock(driver_interface::class);
+		$transactions = array();
+		$db->method('sql_transaction')->willReturnCallback(static function ($status) use (&$transactions)
+		{
+			$transactions[] = $status;
+			return true;
+		});
+		$db->method('sql_query_limit')->willReturnCallback(static function ($sql)
+		{
+			return strpos($sql, 'id = 7') !== false ? 'source' : 'destination';
+		});
+		$db->method('sql_query')->willReturn('providers');
+		$rows = array(
+			'source' => array(array('id' => 7, 'tag' => 'typo', 'tag_clean' => 'typo', 'route' => 'typo', 'count' => 1, 'is_predefined' => 0)),
+			'destination' => array(array('id' => 8, 'tag' => 'phpbb', 'tag_clean' => 'phpbb', 'route' => 'phpbb', 'count' => 7, 'is_predefined' => 1)),
+			'providers' => array(array('provider' => 'gallery_items')),
+		);
+		$db->method('sql_fetchrow')->willReturnCallback(static function ($result) use (&$rows)
+		{
+			return array_shift($rows[$result]) ?: false;
+		});
+
+		$this->assertFalse($this->create_manager($db)->merge_tags(7, 8));
+		$this->assertSame(array('begin', 'rollback'), $transactions);
+	}
+
+	public function test_merge_topic_relations_deduplicates_destination_topics()
+	{
+		$db = $this->createMock(driver_interface::class);
+		$db->method('sql_in_set')->willReturn('tag_id IN (7, 8)');
+		$db->method('sql_query')->willReturnOnConsecutiveCalls('relations', true);
+		$rows = array(
+			array('topic_id' => 10, 'tag_id' => 7),
+			array('topic_id' => 11, 'tag_id' => 7),
+			array('topic_id' => 11, 'tag_id' => 8),
+		);
+		$db->method('sql_fetchrow')->willReturnCallback(static function ($result) use (&$rows)
+		{
+			return $result === 'relations' ? (array_shift($rows) ?: false) : false;
+		});
+		$db->expects($this->once())
+			->method('sql_multi_insert')
+			->with('phpbb_bbtags_topic', array(array('topic_id' => 10, 'tag_id' => 8)))
+			->willReturn(true);
+
+		$method = new \ReflectionMethod(manager::class, 'merge_topic_relations');
+
+		$this->assertTrue($method->invoke($this->create_manager($db), 7, 8));
 	}
 
 	private function create_manager(driver_interface $db)
