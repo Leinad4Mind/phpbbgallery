@@ -245,6 +245,33 @@ final class policy_listener_test extends TestCase
 			\phpbbgallery\core\block::NO_CONTEST,
 			$completed['image_move_data']['image_contest']
 		);
+		$this->assertSame(0, $completed['image_move_data']['image_contest_end']);
+		$this->assertSame(0, $completed['image_move_data']['image_contest_rank']);
+	}
+
+	public function test_listener_resyncs_results_only_for_relevant_image_changes(): void
+	{
+		$manager = $this->createMock(manager::class);
+		$manager->expects($this->exactly(2))
+			->method('resync_albums')
+			->with([7]);
+		$listener = new policy_listener($manager);
+
+		$listener->resync_contest_results(new \phpbb\event\data([
+			'operation' => 'approve',
+			'image_rows' => [['image_contest_end' => 1_500]],
+			'album_ids' => [7],
+		]));
+		$listener->resync_contest_results(new \phpbb\event\data([
+			'operation' => 'delete',
+			'image_rows' => [['image_contest_rank' => 1]],
+			'album_ids' => [7],
+		]));
+		$listener->resync_contest_results(new \phpbb\event\data([
+			'operation' => 'lock',
+			'image_rows' => [['image_contest_end' => 0]],
+			'album_ids' => [7],
+		]));
 	}
 
 	public function test_listener_appends_parameterized_visibility_conditions(): void

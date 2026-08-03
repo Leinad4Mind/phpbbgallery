@@ -160,7 +160,6 @@ services:
             - '@phpbbgallery.core.report'
             - '@phpbbgallery.core.cache'
             - '@phpbbgallery.core.user'
-            - '@phpbbgallery.core.contest'
             - '@phpbbgallery.core.policy.image_visibility'
             - '@phpbbgallery.core.policy.album_operation'
             - '@phpbbgallery.core.file.tool'
