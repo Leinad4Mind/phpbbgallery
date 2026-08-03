@@ -1,13 +1,11 @@
 <?php
 /**
- *
  * User Defaults extension for phpBB.
  *
  * @copyright (c) 2016 David Wood
  * @copyright (c) 2022 devspace
  * @copyright (c) 2026 Leinad4Mind
  * @license GNU General Public License, version 2 (GPL-2.0)
- *
  */
 
 namespace devspace\userdefaults\core;
@@ -18,21 +16,9 @@ class settings_policy
 		'ud_allow_massemail' => 1,
 		'ud_allow_pm' => 1,
 		'ud_allow_viewemail' => 1,
+		'ud_allow_viewonline' => 1,
 		'ud_notify' => 0,
 		'ud_notify_pm' => 1,
-		'ud_moderation_queue' => 0,
-		'ud_type_bookmark' => 0,
-		'ud_type_forum_post' => 0,
-		'ud_type_group' => 0,
-		'ud_type_needs_approval' => 0,
-		'ud_type_pm' => 0,
-		'ud_type_pm_close' => 0,
-		'ud_type_pm_report' => 0,
-		'ud_type_post' => 1,
-		'ud_type_quote' => 0,
-		'ud_type_report' => 0,
-		'ud_type_report_close' => 0,
-		'ud_type_topic' => 1,
 	];
 
 	const OPTION_BITS = [
@@ -45,6 +31,10 @@ class settings_policy
 		'ud_sig' => 6,
 		'ud_bbcode' => 8,
 		'ud_smilies' => 9,
+		'ud_popuppm' => 10,
+		'ud_sig_bbcode' => 15,
+		'ud_sig_smilies' => 16,
+		'ud_sig_links' => 17,
 	];
 
 	const SORT_FIELDS = [
@@ -56,20 +46,8 @@ class settings_policy
 		'ud_topic_st' => ['request' => 'topic_st', 'default' => 0, 'allowed' => [0, 1, 7, 14, 30, 90, 180, 365]],
 	];
 
-	const NOTIFICATION_TYPES = [
-		'ud_moderation_queue' => 'moderation_queue',
-		'ud_type_bookmark' => 'notification.type.bookmark',
-		'ud_type_forum_post' => 'notification.type.forum',
-		'ud_type_group' => 'notification.type.group_request',
-		'ud_type_needs_approval' => 'notification.type.needs_approval',
-		'ud_type_pm' => 'notification.type.pm',
-		'ud_type_pm_close' => 'notification.type.report_pm_closed',
-		'ud_type_pm_report' => 'notification.type.report_pm',
-		'ud_type_post' => 'notification.type.post',
-		'ud_type_quote' => 'notification.type.quote',
-		'ud_type_report' => 'notification.type.report',
-		'ud_type_report_close' => 'notification.type.report_post_closed',
-		'ud_type_topic' => 'notification.type.topic',
+	const CHOICE_FIELDS = [
+		'ud_notify_type' => ['request' => 'ud_notify_type', 'default' => 0, 'allowed' => [0, 1, 2]],
 	];
 
 	public function defaults()
@@ -77,10 +55,7 @@ class settings_policy
 		return array_merge(self::BOOLEAN_DEFAULTS, [
 			'ud_date_format' => 'd M Y H:i',
 			'ud_options' => 230271,
-		], array_map(function ($policy)
-		{
-			return $policy['default'];
-		}, self::SORT_FIELDS));
+		], $this->field_defaults(self::SORT_FIELDS), $this->field_defaults(self::CHOICE_FIELDS));
 	}
 
 	public function normalise_submission(array $input, array $allowed_date_formats, $current_options)
@@ -109,15 +84,8 @@ class settings_policy
 		}
 		$settings['ud_options'] = $options;
 
-		foreach (self::SORT_FIELDS as $config_key => $policy)
-		{
-			$value = isset($input[$policy['request']]) ? $input[$policy['request']] : $policy['default'];
-			if (is_int($policy['default']))
-			{
-				$value = (int) $value;
-			}
-			$settings[$config_key] = in_array($value, $policy['allowed'], true) ? $value : $policy['default'];
-		}
+		$this->normalise_fields($settings, $input, self::SORT_FIELDS);
+		$this->normalise_fields($settings, $input, self::CHOICE_FIELDS);
 
 		return $settings;
 	}
@@ -139,21 +107,72 @@ class settings_policy
 		}
 		$settings['ud_options'] = isset($stored['ud_options']) ? max(0, (int) $stored['ud_options']) : $settings['ud_options'];
 
-		foreach (self::SORT_FIELDS as $key => $policy)
-		{
-			$value = isset($stored[$key]) ? $stored[$key] : $policy['default'];
-			if (is_int($policy['default']))
-			{
-				$value = (int) $value;
-			}
-			$settings[$key] = in_array($value, $policy['allowed'], true) ? $value : $policy['default'];
-		}
+		$this->normalise_fields($settings, $stored, self::SORT_FIELDS, true);
+		$this->normalise_fields($settings, $stored, self::CHOICE_FIELDS, true);
 
 		return $settings;
 	}
 
-	public function notification_types()
+	public function user_values(array $settings, $current_options = null)
 	{
-		return self::NOTIFICATION_TYPES;
+		$options = $current_options === null
+			? $settings['ud_options']
+			: $this->merge_user_options($current_options, $settings['ud_options']);
+
+		return [
+			'user_allow_massemail' => $settings['ud_allow_massemail'],
+			'user_allow_pm' => $settings['ud_allow_pm'],
+			'user_allow_viewemail' => $settings['ud_allow_viewemail'],
+			'user_allow_viewonline' => $settings['ud_allow_viewonline'],
+			'user_dateformat' => $settings['ud_date_format'],
+			'user_notify' => $settings['ud_notify'],
+			'user_notify_pm' => $settings['ud_notify_pm'],
+			'user_notify_type' => $settings['ud_notify_type'],
+			'user_options' => $options,
+			'user_post_show_days' => $settings['ud_post_st'],
+			'user_post_sortby_dir' => $settings['ud_post_sd'],
+			'user_post_sortby_type' => $settings['ud_post_sk'],
+			'user_topic_show_days' => $settings['ud_topic_st'],
+			'user_topic_sortby_dir' => $settings['ud_topic_sd'],
+			'user_topic_sortby_type' => $settings['ud_topic_sk'],
+		];
+	}
+
+	public function merge_user_options($current_options, $configured_options)
+	{
+		$mask = $this->managed_option_mask();
+		return ((int) $current_options & ~$mask) | ((int) $configured_options & $mask);
+	}
+
+	public function managed_option_mask()
+	{
+		$mask = 0;
+		foreach (self::OPTION_BITS as $bit)
+		{
+			$mask |= 1 << $bit;
+		}
+		return $mask;
+	}
+
+	protected function field_defaults(array $fields)
+	{
+		return array_map(function ($policy)
+		{
+			return $policy['default'];
+		}, $fields);
+	}
+
+	protected function normalise_fields(array &$settings, array $input, array $fields, $stored = false)
+	{
+		foreach ($fields as $config_key => $policy)
+		{
+			$request_key = $stored ? $config_key : $policy['request'];
+			$value = isset($input[$request_key]) ? $input[$request_key] : $policy['default'];
+			if (is_int($policy['default']))
+			{
+				$value = (int) $value;
+			}
+			$settings[$config_key] = in_array($value, $policy['allowed'], true) ? $value : $policy['default'];
+		}
 	}
 }

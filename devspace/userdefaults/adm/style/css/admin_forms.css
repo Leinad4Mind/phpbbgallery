@@ -3,6 +3,16 @@
 	margin-left: 0.5rem;
 }
 
+.userdefaults-sync-warning {
+	margin: 1em 0;
+}
+
+#sync_progress {
+	display: block;
+	margin-top: 1em;
+	width: 100%;
+}
+
 #userdefaults select {
 	min-width: 12rem;
 }

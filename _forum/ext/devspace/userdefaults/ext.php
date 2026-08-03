@@ -23,6 +23,14 @@ class ext extends base
 		{
 			return $this->language_error('EXT_ENABLE_ERROR', '3.3.0', '4.0.0@dev', PHPBB_VERSION);
 		}
+		$extension_manager = $this->container->get('ext.manager');
+		foreach (array('david63/userdefaults', 'forumhulp/userdefault') as $extension)
+		{
+			if ($extension_manager->is_enabled($extension))
+			{
+				return $this->language_error('EXT_CONFLICT_ERROR', $extension);
+			}
+		}
 		return true;
 	}
 

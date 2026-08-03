@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * @package Log Connections
+ * @package User Defaults
  * @copyright (c) 2017 david63
  * @copyright (c) 2022 devspace
  * @copyright (c) 2026 Leinad4Mind
@@ -36,12 +36,13 @@ if (empty($lang) || !is_array($lang))
  * in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
  *
  * Some characters you may want to copy&paste:
- * â€™ Â» â€œ â€ â€¦
+ * ’ » “ ” …
  *
  */
 
 $lang = array_merge($lang, [
 	'EXT_ENABLE_ERROR' => 'This extension requires a phpBB version of %1$s but less than %2$s<br>Your version of phpBB is %3$s.',
+	'EXT_CONFLICT_ERROR' => 'Disable the conflicting extension %s before enabling User Defaults.',
 	'EXT_PHP_ERROR'    => 'This extension requires PHP %1$s (or greater)<br>Your PHP version is %2$s.',
 ]);
 

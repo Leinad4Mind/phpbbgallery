@@ -34,4 +34,6 @@ foreach (array('IN_PHPBB' => true, 'USER_IGNORE' => 2) as $constant => $value)
 }
 
 require_once dirname(__DIR__) . '/core/settings_policy.php';
+require_once dirname(__DIR__) . '/core/notification_defaults.php';
+require_once dirname(__DIR__) . '/core/user_sync.php';
 require_once dirname(__DIR__) . '/event/listener.php';

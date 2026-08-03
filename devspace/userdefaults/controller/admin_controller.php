@@ -13,6 +13,8 @@
 namespace devspace\userdefaults\controller;
 
 use devspace\userdefaults\core\settings_policy;
+use devspace\userdefaults\core\notification_defaults;
+use devspace\userdefaults\core\user_sync;
 use phpbb\config\config;
 use phpbb\language\language;
 use phpbb\log\log;
@@ -43,10 +45,16 @@ class admin_controller
 	/** @var settings_policy */
 	protected $policy;
 
+	/** @var notification_defaults */
+	protected $notifications;
+
+	/** @var user_sync */
+	protected $user_sync;
+
 	/** @var string */
 	protected $u_action = '';
 
-	public function __construct(config $config, request $request, template $template, user $user, log $log, language $language, settings_policy $policy)
+	public function __construct(config $config, request $request, template $template, user $user, log $log, language $language, settings_policy $policy, notification_defaults $notifications, user_sync $user_sync)
 	{
 		$this->config = $config;
 		$this->request = $request;
@@ -55,6 +63,8 @@ class admin_controller
 		$this->log = $log;
 		$this->language = $language;
 		$this->policy = $policy;
+		$this->notifications = $notifications;
+		$this->user_sync = $user_sync;
 	}
 
 	public function display_options()
@@ -62,6 +72,12 @@ class admin_controller
 		$this->language->add_lang('acp_userdefaults', 'devspace/userdefaults');
 		$this->language->add_lang('ucp');
 		add_form_key('devspace_userdefaults');
+
+		if ($this->request->is_set_post('sync_users'))
+		{
+			$this->synchronise_users();
+			return;
+		}
 
 		$date_formats = $this->language->lang_raw('dateformats');
 		if ($this->request->is_set_post('submit'))
@@ -76,12 +92,20 @@ class admin_controller
 				array_keys($date_formats),
 				isset($this->config['ud_options']) ? $this->config['ud_options'] : 230271
 			);
+			$submitted_notifications = $this->request->variable('notification_defaults', array(0 => array(0 => 0)));
+			$settings[notification_defaults::CONFIG_KEY] = $this->notifications->encode(
+				$this->notifications->normalise_submission($submitted_notifications)
+			);
 			$this->persist_changed($settings);
 			$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'USER_DEFAULTS_LOG');
 			trigger_error($this->language->lang('CONFIG_UPDATED') . adm_back_link($this->u_action));
 		}
 
 		$settings = $this->stored_settings();
+		$notification_settings = $this->notifications->normalise_stored(
+			isset($this->config[notification_defaults::CONFIG_KEY]) ? $this->config[notification_defaults::CONFIG_KEY] : null,
+			$this->notifications->legacy_values($this->config)
+		);
 		$sort_directions = [
 			'a' => $this->language->lang('ASCENDING'),
 			'd' => $this->language->lang('DESCENDING'),
@@ -118,6 +142,9 @@ class admin_controller
 			'TOPIC_DAY_OPTIONS' => $this->select_options($day_options, $settings['ud_topic_st']),
 			'TOPIC_DIRECTION_OPTIONS' => $this->select_options($sort_directions, $settings['ud_topic_sd']),
 			'TOPIC_KEY_OPTIONS' => $this->select_options($topic_sort_keys, $settings['ud_topic_sk']),
+			'NOTIFICATION_GROUPS' => $this->notifications->template_groups($this->language, $notification_settings),
+			'S_JABBER_DISABLED' => empty($this->config['jab_enable']),
+			'SYNC_CURSOR' => max(0, $this->request->variable('sync_cursor', 0)),
 			'U_ACTION' => $this->u_action,
 		]));
 	}
@@ -139,6 +166,14 @@ class admin_controller
 		foreach (settings_policy::SORT_FIELDS as $policy)
 		{
 			$input[$policy['request']] = $this->request->variable($policy['request'], $policy['default']);
+		}
+		foreach (settings_policy::CHOICE_FIELDS as $policy)
+		{
+			$input[$policy['request']] = $this->request->variable($policy['request'], $policy['default']);
+		}
+		if (empty($this->config['jab_enable']) && $input['ud_notify_type'] !== 0)
+		{
+			$input['ud_notify_type'] = 0;
 		}
 		return $input;
 	}
@@ -206,19 +241,6 @@ class admin_controller
 		return [
 			'HEAD_TITLE' => $this->language->lang('USER_DEFAULTS'),
 			'HEAD_DESCRIPTION' => $this->language->lang('USER_DEFAULTS_EXPLAIN'),
-			'NOTIFY_BOOKMARK' => $settings['ud_type_bookmark'],
-			'NOTIFY_FORUM_POST' => $settings['ud_type_forum_post'],
-			'NOTIFY_GROUP' => $settings['ud_type_group'],
-			'NOTIFY_MODERATOR_APPROVAL' => $settings['ud_type_needs_approval'],
-			'NOTIFY_MODERATION_QUEUE' => $settings['ud_moderation_queue'],
-			'NOTIFY_PM' => $settings['ud_type_pm'],
-			'NOTIFY_PM_CLOSE' => $settings['ud_type_pm_close'],
-			'NOTIFY_PM_REPORT' => $settings['ud_type_pm_report'],
-			'NOTIFY_QUOTE' => $settings['ud_type_quote'],
-			'NOTIFY_REPORT' => $settings['ud_type_report'],
-			'NOTIFY_REPORT_CLOSE' => $settings['ud_type_report_close'],
-			'NOTIFY_SUBSCRIBED' => $settings['ud_type_post'],
-			'NOTIFY_TOPIC' => $settings['ud_type_topic'],
 			'S_AVATARS' => $this->option_enabled($options, 4),
 			'S_BBCODE' => $this->option_enabled($options, 8),
 			'S_DISABLE_CENSORS' => $this->option_enabled($options, 5),
@@ -226,14 +248,64 @@ class admin_controller
 			'S_IMAGES' => $this->option_enabled($options, 0),
 			'S_SMILIES' => $this->option_enabled($options, 9),
 			'S_SIG' => $this->option_enabled($options, 6),
+			'S_POPUP_PM' => $this->option_enabled($options, 10),
+			'S_SIG_BBCODE' => $this->option_enabled($options, 15),
+			'S_SIG_SMILIES' => $this->option_enabled($options, 16),
+			'S_SIG_LINKS' => $this->option_enabled($options, 17),
 			'S_SIGS' => $this->option_enabled($options, 3),
 			'S_VSMILIES' => $this->option_enabled($options, 2),
 			'USER_ALLOW_MASSEMAIL' => $settings['ud_allow_massemail'],
 			'USER_ALLOW_PM' => $settings['ud_allow_pm'],
 			'USER_ALLOW_VIEWEMAIL' => $settings['ud_allow_viewemail'],
+			'USER_ALLOW_VIEWONLINE' => $settings['ud_allow_viewonline'],
 			'USER_NOTIFY' => $settings['ud_notify'],
 			'USER_NOTIFY_PM' => $settings['ud_notify_pm'],
+			'USER_NOTIFY_TYPE' => $settings['ud_notify_type'],
 		];
+	}
+
+	protected function synchronise_users()
+	{
+		if (!check_form_key('devspace_userdefaults'))
+		{
+			$this->send_sync_response(['error' => $this->language->lang('FORM_INVALID')]);
+		}
+		if ($this->request->variable('sync_confirm', 0) !== 1)
+		{
+			$this->send_sync_response(['error' => $this->language->lang('SYNC_USERS_CONFIRM_REQUIRED')]);
+		}
+
+		$cursor = max(0, $this->request->variable('sync_cursor', 0));
+		if ($cursor === 0)
+		{
+			$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'USER_DEFAULTS_SYNC_STARTED');
+		}
+
+		$result = $this->user_sync->run_batch($cursor);
+		if ($result['done'])
+		{
+			$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'USER_DEFAULTS_SYNC_COMPLETED', false, [$result['total']]);
+		}
+		$this->send_sync_response($result);
+	}
+
+	protected function send_sync_response(array $data)
+	{
+		if ($this->request->is_ajax())
+		{
+			$response = new \phpbb\json_response();
+			$response->send($data);
+		}
+
+		$message = isset($data['error'])
+			? $data['error']
+			: $this->language->lang('SYNC_USERS_BATCH_COMPLETE', $data['completed'], $data['total']);
+		$back_url = $this->u_action;
+		if (!isset($data['error']) && empty($data['done']))
+		{
+			$back_url .= '&amp;sync_cursor=' . (int) $data['next_cursor'];
+		}
+		trigger_error($message . adm_back_link($back_url), isset($data['error']) ? E_USER_WARNING : E_USER_NOTICE);
 	}
 
 	protected function option_enabled($options, $bit)

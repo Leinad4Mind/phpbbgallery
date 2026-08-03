@@ -3,11 +3,29 @@ services:
         class: devspace\userdefaults\core\settings_policy
         public: false
 
+    devspace.userdefaults.notification_defaults:
+        class: devspace\userdefaults\core\notification_defaults
+        arguments:
+            - '@notification_manager'
+        public: false
+
+    devspace.userdefaults.user_sync:
+        class: devspace\userdefaults\core\user_sync
+        arguments:
+            - '@config'
+            - '@dbal.conn'
+            - '%tables.users%'
+            - '@devspace.userdefaults.settings_policy'
+            - '@devspace.userdefaults.notification_defaults'
+        public: false
+
     devspace.userdefaults.listener:
         class: devspace\userdefaults\event\listener
         arguments:
             - '@config'
             - '@devspace.userdefaults.settings_policy'
+            - '@devspace.userdefaults.notification_defaults'
+            - '@ext.manager'
         public: false
         tags:
             - { name: event.listener }
@@ -22,4 +40,6 @@ services:
             - '@log'
             - '@language'
             - '@devspace.userdefaults.settings_policy'
+            - '@devspace.userdefaults.notification_defaults'
+            - '@devspace.userdefaults.user_sync'
         public: true

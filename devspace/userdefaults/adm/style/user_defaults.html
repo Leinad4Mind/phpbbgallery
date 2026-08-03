@@ -42,6 +42,17 @@
 			</dl>
 
 			<dl>
+				<dt><label for="ud_allow_viewonline1">{{ lang('DISPLAY_ONLINE_STATUS') }}{{ lang('COLON') }}</label></dt>
+				<dd>
+					<input type="radio" id="ud_allow_viewonline1" name="ud_allow_viewonline" value="1"{% if USER_ALLOW_VIEWONLINE %} checked="checked"{% endif %} />
+					<label class="set" for="ud_allow_viewonline1">{{ lang('YES') }}</label>
+					<input type="radio" id="ud_allow_viewonline0" name="ud_allow_viewonline" value="0"{% if not USER_ALLOW_VIEWONLINE %} checked="checked"{% endif %} />
+					<label class="unset" for="ud_allow_viewonline0">{{ lang('NO') }}</label>
+					<span class="userdefaults-note">{{ lang('DEFAULT_YES') }}</span>
+				</dd>
+			</dl>
+
+			<dl>
 				<dt><label for="ud_notify_pm1">{{ lang('NOTIFY_ON_PM') }}{{ lang('COLON') }}</label></dt>
 				<dd>
 					<input type="radio" id="ud_notify_pm1" name="ud_notify_pm" value="1"{% if USER_NOTIFY_PM %} checked="checked"{% endif %} />
@@ -49,6 +60,30 @@
 					<input type="radio" id="ud_notify_pm0" name="ud_notify_pm" value="0"{% if not USER_NOTIFY_PM %} checked="checked"{% endif %} />
 					<label class="unset" for="ud_notify_pm0">{{ lang('NO') }}</label>
 					<span class="userdefaults-note">{{ lang('DEFAULT_YES') }}</span>
+				</dd>
+			</dl>
+
+			<dl>
+				<dt><label for="ud_popuppm1">{{ lang('POPUP_ON_PM') }}{{ lang('COLON') }}</label></dt>
+				<dd>
+					<input type="radio" id="ud_popuppm1" name="ud_popuppm" value="1"{% if S_POPUP_PM %} checked="checked"{% endif %} />
+					<label class="set" for="ud_popuppm1">{{ lang('YES') }}</label>
+					<input type="radio" id="ud_popuppm0" name="ud_popuppm" value="0"{% if not S_POPUP_PM %} checked="checked"{% endif %} />
+					<label class="unset" for="ud_popuppm0">{{ lang('NO') }}</label>
+					<span class="userdefaults-note">{{ lang('DEFAULT_NO') }}</span>
+				</dd>
+			</dl>
+
+			<dl>
+				<dt><label for="ud_notify_type0">{{ lang('NOTIFY_METHOD') }}{{ lang('COLON') }}</label></dt>
+				<dd>
+					<input type="radio" id="ud_notify_type0" name="ud_notify_type" value="0"{% if USER_NOTIFY_TYPE == 0 %} checked="checked"{% endif %} />
+					<label for="ud_notify_type0">{{ lang('NOTIFY_METHOD_EMAIL') }}</label>
+					<input type="radio" id="ud_notify_type1" name="ud_notify_type" value="1"{% if USER_NOTIFY_TYPE == 1 %} checked="checked"{% endif %}{% if S_JABBER_DISABLED %} disabled="disabled"{% endif %} />
+					<label for="ud_notify_type1">{{ lang('NOTIFY_METHOD_IM') }}</label>
+					<input type="radio" id="ud_notify_type2" name="ud_notify_type" value="2"{% if USER_NOTIFY_TYPE == 2 %} checked="checked"{% endif %}{% if S_JABBER_DISABLED %} disabled="disabled"{% endif %} />
+					<label for="ud_notify_type2">{{ lang('NOTIFY_METHOD_BOTH') }}</label>
+					<span class="userdefaults-note">{{ lang('DEFAULT_EMAIL') }}</span>
 				</dd>
 			</dl>
 
@@ -97,6 +132,39 @@
 					<label class="set" for="ud_sig1">{{ lang('YES') }}</label>
 					<input type="radio" id="ud_sig0" name="ud_sig" value="0"{% if not S_SIG %} checked="checked"{% endif %} />
 					<label class="unset" for="ud_sig0">{{ lang('NO') }}</label>
+					<span class="userdefaults-note">{{ lang('DEFAULT_YES') }}</span>
+				</dd>
+			</dl>
+
+			<dl>
+				<dt><label for="ud_sig_bbcode1">{{ lang('ALLOW_SIG_BBCODE') }}{{ lang('COLON') }}</label></dt>
+				<dd>
+					<input type="radio" id="ud_sig_bbcode1" name="ud_sig_bbcode" value="1"{% if S_SIG_BBCODE %} checked="checked"{% endif %} />
+					<label class="set" for="ud_sig_bbcode1">{{ lang('YES') }}</label>
+					<input type="radio" id="ud_sig_bbcode0" name="ud_sig_bbcode" value="0"{% if not S_SIG_BBCODE %} checked="checked"{% endif %} />
+					<label class="unset" for="ud_sig_bbcode0">{{ lang('NO') }}</label>
+					<span class="userdefaults-note">{{ lang('DEFAULT_YES') }}</span>
+				</dd>
+			</dl>
+
+			<dl>
+				<dt><label for="ud_sig_smilies1">{{ lang('ALLOW_SIG_SMILIES') }}{{ lang('COLON') }}</label></dt>
+				<dd>
+					<input type="radio" id="ud_sig_smilies1" name="ud_sig_smilies" value="1"{% if S_SIG_SMILIES %} checked="checked"{% endif %} />
+					<label class="set" for="ud_sig_smilies1">{{ lang('YES') }}</label>
+					<input type="radio" id="ud_sig_smilies0" name="ud_sig_smilies" value="0"{% if not S_SIG_SMILIES %} checked="checked"{% endif %} />
+					<label class="unset" for="ud_sig_smilies0">{{ lang('NO') }}</label>
+					<span class="userdefaults-note">{{ lang('DEFAULT_YES') }}</span>
+				</dd>
+			</dl>
+
+			<dl>
+				<dt><label for="ud_sig_links1">{{ lang('ALLOW_SIG_LINKS') }}{{ lang('COLON') }}</label></dt>
+				<dd>
+					<input type="radio" id="ud_sig_links1" name="ud_sig_links" value="1"{% if S_SIG_LINKS %} checked="checked"{% endif %} />
+					<label class="set" for="ud_sig_links1">{{ lang('YES') }}</label>
+					<input type="radio" id="ud_sig_links0" name="ud_sig_links" value="0"{% if not S_SIG_LINKS %} checked="checked"{% endif %} />
+					<label class="unset" for="ud_sig_links0">{{ lang('NO') }}</label>
 					<span class="userdefaults-note">{{ lang('DEFAULT_YES') }}</span>
 				</dd>
 			</dl>
@@ -259,160 +327,22 @@
 			</dl>
 		</fieldset>
 
-		<fieldset>
-			<legend>{{ lang('NOTIFICATION_GROUP_POSTING') }}</legend>
-
-			<dl>
-				<dt><label for="ud_moderation_queue0">{{ lang('NOTIFICATION_TYPE_IN_MODERATION_QUEUE') }}{{ lang('COLON') }}</label></dt>
-				<dd>
-					<input type="radio" id="ud_moderation_queue0" name="ud_moderation_queue" value="0"{% if not NOTIFY_MODERATION_QUEUE %} checked="checked"{% endif %} />
-					<label class="set" for="ud_moderation_queue0">{{ lang('NOTIFICATION') }}</label>
-					<input type="radio" id="ud_moderation_queue1" name="ud_moderation_queue" value="1"{% if NOTIFY_MODERATION_QUEUE %} checked="checked"{% endif %} />
-					<label class="set" for="ud_moderation_queue1">{{ lang('EMAIL') }}</label>
-					<span class="userdefaults-note">{{ lang('DEFAULT_NOTIFICATION') }}</span>
-				</dd>
-			</dl>
-
-			<dl>
-				<dt><label for="ud_type_bookmark0">{{ lang('NOTIFICATION_TYPE_BOOKMARK') }}{{ lang('COLON') }}</label></dt>
-				<dd>
-					<input type="radio" id="ud_type_bookmark0" name="ud_type_bookmark" value="0"{% if not NOTIFY_BOOKMARK %} checked="checked"{% endif %} />
-					<label class="set" for="ud_type_bookmark0">{{ lang('NOTIFICATION') }}</label>
-					<input type="radio" id="ud_type_bookmark1" name="ud_type_bookmark" value="1"{% if NOTIFY_BOOKMARK %} checked="checked"{% endif %} />
-					<label class="set" for="ud_type_bookmark1">{{ lang('EMAIL') }}</label>
-					<span class="userdefaults-note">{{ lang('DEFAULT_NOTIFICATION') }}</span>
-				</dd>
-			</dl>
-
-			<dl>
-				<dt><label for="ud_type_post0">{{ lang('NOTIFICATION_TYPE_POST') }}{{ lang('COLON') }}</label></dt>
-				<dd>
-					<input type="radio" id="ud_type_post0" name="ud_type_post" value="0"{% if not NOTIFY_SUBSCRIBED %} checked="checked"{% endif %} />
-					<label class="set" for="ud_type_post0">{{ lang('NOTIFICATION') }}</label>
-					<input type="radio" id="ud_type_post1" name="ud_type_post" value="1"{% if NOTIFY_SUBSCRIBED %} checked="checked"{% endif %} />
-					<label class="set" for="ud_type_post1">{{ lang('EMAIL') }}</label>
-					<span class="userdefaults-note">{{ lang('DEFAULT_EMAIL') }}</span>
-				</dd>
-			</dl>
-
-			<dl>
-				<dt><label for="ud_type_quote0">{{ lang('NOTIFICATION_TYPE_QUOTE') }}{{ lang('COLON') }}</label></dt>
-				<dd>
-					<input type="radio" id="ud_type_quote0" name="ud_type_quote" value="0"{% if not NOTIFY_QUOTE %} checked="checked"{% endif %} />
-					<label class="set" for="ud_type_quote0">{{ lang('NOTIFICATION') }}</label>
-					<input type="radio" id="ud_type_quote1" name="ud_type_quote" value="1"{% if NOTIFY_QUOTE %} checked="checked"{% endif %} />
-					<label class="set" for="ud_type_quote1">{{ lang('EMAIL') }}</label>
-					<span class="userdefaults-note">{{ lang('DEFAULT_NOTIFICATION') }}</span>
-				</dd>
-			</dl>
-
-	   		<dl>
-				<dt><label for="ud_type_topic0">{{ lang('NOTIFICATION_TYPE_TOPIC') }}{{ lang('COLON') }}</label></dt>
-				<dd>
-					<input type="radio" id="ud_type_topic0" name="ud_type_topic" value="0"{% if not NOTIFY_TOPIC %} checked="checked"{% endif %} />
-					<label class="set" for="ud_type_topic0">{{ lang('NOTIFICATION') }}</label>
-					<input type="radio" id="ud_type_topic1" name="ud_type_topic" value="1"{% if NOTIFY_TOPIC %} checked="checked"{% endif %} />
-					<label class="set" for="ud_type_topic1">{{ lang('EMAIL') }}</label>
-					<span class="userdefaults-note">{{ lang('DEFAULT_EMAIL') }}</span>
-				</dd>
-			</dl>
-
-			<dl>
-				<dt><label for="ud_type_forum_post0">{{ lang('NOTIFICATION_TYPE_FORUM') }}{{ lang('COLON') }}</label></dt>
-				<dd>
-					<input type="radio" id="ud_type_forum_post0" name="ud_type_forum_post" value="0"{% if not NOTIFY_FORUM_POST %} checked="checked"{% endif %} />
-					<label class="set" for="ud_type_forum_post0">{{ lang('NOTIFICATION') }}</label>
-					<input type="radio" id="ud_type_forum_post1" name="ud_type_forum_post" value="1"{% if NOTIFY_FORUM_POST %} checked="checked"{% endif %} />
-					<label class="set" for="ud_type_forum_post1">{{ lang('EMAIL') }}</label>
-					<span class="userdefaults-note">{{ lang('DEFAULT_NOTIFICATION') }}</span>
-				</dd>
-			</dl>
-		</fieldset>
-
-		<fieldset>
-			<legend>{{ lang('NOTIFICATION_GROUP_MODERATION') }}</legend>
-
-			<dl>
-				<dt><label for="ud_type_needs_approval0">{{ lang('NOTIFICATION_TYPE_IN_MODERATION_QUEUE') }}{{ lang('COLON') }}</label></dt>
-				<dd>
-					<input type="radio" id="ud_type_needs_approval0" name="ud_type_needs_approval" value="0"{% if not NOTIFY_MODERATOR_APPROVAL %} checked="checked"{% endif %} />
-					<label class="set" for="ud_type_needs_approval0">{{ lang('NOTIFICATION') }}</label>
-					<input type="radio" id="ud_type_needs_approval1" name="ud_type_needs_approval" value="1"{% if NOTIFY_MODERATOR_APPROVAL %} checked="checked"{% endif %} />
-					<label class="set" for="ud_type_needs_approval1">{{ lang('EMAIL') }}</label>
-					<span class="userdefaults-note">{{ lang('DEFAULT_NOTIFICATION') }}</span>
-				</dd>
-			</dl>
-
-			<dl>
-				<dt><label for="ud_type_pm_report0">{{ lang('NOTIFICATION_TYPE_REPORT_PM') }}{{ lang('COLON') }}</label></dt>
-				<dd>
-					<input type="radio" id="ud_type_pm_report0" name="ud_type_pm_report" value="0"{% if not NOTIFY_PM_REPORT %} checked="checked"{% endif %} />
-					<label class="set" for="ud_type_pm_report0">{{ lang('NOTIFICATION') }}</label>
-					<input type="radio" id="ud_type_pm_report1" name="ud_type_pm_report" value="1"{% if NOTIFY_PM_REPORT %} checked="checked"{% endif %} />
-					<label class="set" for="ud_type_pm_report1">{{ lang('EMAIL') }}</label>
-					<span class="userdefaults-note">{{ lang('DEFAULT_NOTIFICATION') }}</span>
-				</dd>
-			</dl>
-
-			<dl>
-				<dt><label for="ud_type_report0">{{ lang('NOTIFICATION_TYPE_REPORT') }}{{ lang('COLON') }}</label></dt>
-				<dd>
-					<input type="radio" id="ud_type_report0" name="ud_type_report" value="0"{% if not NOTIFY_REPORT %} checked="checked"{% endif %} />
-					<label class="set" for="ud_type_report0">{{ lang('NOTIFICATION') }}</label>
-					<input type="radio" id="ud_type_report1" name="ud_type_report" value="1"{% if NOTIFY_REPORT %} checked="checked"{% endif %} />
-					<label class="set" for="ud_type_report1">{{ lang('EMAIL') }}</label>
-					<span class="userdefaults-note">{{ lang('DEFAULT_NOTIFICATION') }}</span>
-				</dd>
-			</dl>
-		</fieldset>
-
-		<fieldset>
-			<legend>{{ lang('NOTIFICATION_GROUP_MISCELLANEOUS') }}</legend>
-
-			<dl>
-				<dt><label for="ud_type_group0">{{ lang('NOTIFICATION_TYPE_GROUP_REQUEST') }}{{ lang('COLON') }}</label></dt>
-				<dd>
-					<input type="radio" id="ud_type_group0" name="ud_type_group" value="0"{% if not NOTIFY_GROUP %} checked="checked"{% endif %} />
-					<label class="set" for="ud_type_group0">{{ lang('NOTIFICATION') }}</label>
-					<input type="radio" id="ud_type_group1" name="ud_type_group" value="1"{% if NOTIFY_GROUP %} checked="checked"{% endif %} />
-					<label class="set" for="ud_type_group1">{{ lang('EMAIL') }}</label>
-					<span class="userdefaults-note">{{ lang('DEFAULT_NOTIFICATION') }}</span>
-				</dd>
-			</dl>
-
-			<dl>
-				<dt><label for="ud_type_pm0">{{ lang('NOTIFICATION_TYPE_PM') }}{{ lang('COLON') }}</label></dt>
-				<dd>
-					<input type="radio" id="ud_type_pm0" name="ud_type_pm" value="0"{% if not NOTIFY_PM %} checked="checked"{% endif %} />
-					<label class="set" for="ud_type_pm0">{{ lang('NOTIFICATION') }}</label>
-					<input type="radio" id="ud_type_pm1" name="ud_type_pm" value="1"{% if NOTIFY_PM %} checked="checked"{% endif %} />
-					<label class="set" for="ud_type_pm1">{{ lang('EMAIL') }}</label>
-					<span class="userdefaults-note">{{ lang('DEFAULT_NOTIFICATION') }}</span>
-				</dd>
-			</dl>
-
-			<dl>
-				<dt><label for="ud_type_pm_close0">{{ lang('NOTIFICATION_TYPE_REPORT_PM_CLOSED') }}{{ lang('COLON') }}</label></dt>
-				<dd>
-					<input type="radio" id="ud_type_pm_close0" name="ud_type_pm_close" value="0"{% if not NOTIFY_PM_CLOSE %} checked="checked"{% endif %} />
-					<label class="set" for="ud_type_pm_close0">{{ lang('NOTIFICATION') }}</label>
-					<input type="radio" id="ud_type_pm_close1" name="ud_type_pm_close" value="1"{% if NOTIFY_PM_CLOSE %} checked="checked"{% endif %} />
-					<label class="set" for="ud_type_pm_close1">{{ lang('EMAIL') }}</label>
-					<span class="userdefaults-note">{{ lang('DEFAULT_NOTIFICATION') }}</span>
-				</dd>
-			</dl>
-
-			<dl>
-				<dt><label for="ud_type_report_close0">{{ lang('NOTIFICATION_TYPE_REPORT_CLOSED') }}{{ lang('COLON') }}</label></dt>
-				<dd>
-					<input type="radio" id="ud_type_report_close0" name="ud_type_report_close" value="0"{% if not NOTIFY_REPORT_CLOSE %} checked="checked"{% endif %} />
-					<label class="set" for="ud_type_report_close0">{{ lang('NOTIFICATION') }}</label>
-					<input type="radio" id="ud_type_report_close1" name="ud_type_report_close" value="1"{% if NOTIFY_REPORT_CLOSE %} checked="checked"{% endif %} />
-					<label class="set" for="ud_type_report_close1">{{ lang('EMAIL') }}</label>
-					<span class="userdefaults-note">{{ lang('DEFAULT_NOTIFICATION') }}</span>
-				</dd>
-			</dl>
-		</fieldset>
+		{% for group in NOTIFICATION_GROUPS %}
+			<fieldset>
+				<legend>{{ group.NAME }}</legend>
+				{% for type in group.TYPES %}
+					<dl>
+						<dt><strong>{{ type.NAME }}{{ lang('COLON') }}</strong></dt>
+						<dd>
+							{% for method in type.METHODS %}
+								<input type="checkbox" id="notification_{{ type.INDEX }}_{{ method.INDEX }}" name="notification_defaults[{{ type.INDEX }}][{{ method.INDEX }}]" value="1"{% if method.S_CHECKED %} checked="checked"{% endif %} />
+								<label for="notification_{{ type.INDEX }}_{{ method.INDEX }}">{{ method.NAME }}</label>
+							{% endfor %}
+						</dd>
+					</dl>
+				{% endfor %}
+			</fieldset>
+		{% endfor %}
 
 		<fieldset>
 			<legend>{{ lang('ACP_SUBMIT_CHANGES') }}</legend>
@@ -423,5 +353,28 @@
 			{{ S_FORM_TOKEN }}
    		</fieldset>
 	</form>
+
+	<form id="userdefaults-sync" method="post" action="{{ U_ACTION }}" data-running="{{ lang('SYNC_USERS_RUNNING') }}" data-complete="{{ lang('SYNC_USERS_COMPLETE') }}">
+		<fieldset>
+			<legend>{{ lang('SYNC_USERS') }}</legend>
+			<p>{{ lang('SYNC_USERS_EXPLAIN') }}</p>
+			<div class="errorbox userdefaults-sync-warning">
+				<p>{{ lang('SYNC_USERS_WARNING') }}</p>
+			</div>
+			<label>
+				<input type="checkbox" id="sync_confirm" name="sync_confirm" value="1" />
+				{{ lang('SYNC_USERS_CONFIRM') }}
+			</label>
+			<input type="hidden" id="sync_cursor" name="sync_cursor" value="{{ SYNC_CURSOR }}" />
+			<p class="submit-buttons">
+				<button class="button2" type="submit" id="sync_users" name="sync_users" value="1">{{ lang('SYNC_USERS') }}</button>
+			</p>
+			<p id="sync_status" role="status" aria-live="polite"></p>
+			<progress id="sync_progress" value="0" max="100" hidden="hidden">0%</progress>
+			{{ S_FORM_TOKEN }}
+		</fieldset>
+	</form>
+
+{% INCLUDEJS '@devspace_userdefaults/js/userdefaults_sync.js' %}
 
 {% include 'overall_footer.html' %}

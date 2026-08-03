@@ -36,7 +36,7 @@ if (empty($lang) || !is_array($lang))
  * in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
  *
  * Some characters you may want to copy&paste:
- * â€™ Â» â€œ â€ â€¦
+ * ’ » “ ” …
  *
  */
 
@@ -44,4 +44,6 @@ $lang = array_merge($lang, [
 	'MANAGE_DEFAULTS'   => 'Manage settings',
 	'USER_DEFAULTS'     => 'User defaults',
 	'USER_DEFAULTS_LOG' => '<strong>User default settings updated</strong>',
+	'USER_DEFAULTS_SYNC_STARTED' => '<strong>Existing-user synchronization started</strong>',
+	'USER_DEFAULTS_SYNC_COMPLETED' => '<strong>Existing-user synchronization completed</strong><br>» %d users updated',
 ]);

@@ -3,9 +3,12 @@
 namespace devspace\userdefaults\tests;
 
 use devspace\userdefaults\core\settings_policy;
+use devspace\userdefaults\core\notification_defaults;
 use devspace\userdefaults\event\listener;
 use phpbb\config\config;
 use phpbb\event\data;
+use phpbb\extension\manager as extension_manager;
+use phpbb\notification\manager;
 use PHPUnit\Framework\TestCase;
 
 class listener_test extends TestCase
@@ -21,7 +24,7 @@ class listener_test extends TestCase
 			'notifications_data' => null,
 		));
 
-		(new listener($config, new settings_policy()))->modify_user_defaults($event);
+		(new listener($config, new settings_policy(), $this->notifications(), $this->extension_manager()))->modify_user_defaults($event);
 
 		$sql = $event['sql_ary'];
 		$this->assertSame('new-user', $sql['username']);
@@ -44,7 +47,7 @@ class listener_test extends TestCase
 			'notifications_data' => $explicit,
 		));
 
-		(new listener(new config(array()), new settings_policy()))->modify_user_defaults($event);
+		(new listener(new config(array()), new settings_policy(), $this->notifications(), $this->extension_manager()))->modify_user_defaults($event);
 		$this->assertSame($explicit, $event['notifications_data']);
 	}
 
@@ -61,7 +64,7 @@ class listener_test extends TestCase
 			'ud_allow_pm' => 9,
 		));
 
-		(new listener($config, new settings_policy()))->modify_user_defaults($event);
+		(new listener($config, new settings_policy(), $this->notifications(), $this->extension_manager()))->modify_user_defaults($event);
 		$this->assertSame('a', $event['sql_ary']['user_post_sortby_dir']);
 		$this->assertSame(0, $event['sql_ary']['user_topic_show_days']);
 		$this->assertSame(0, $event['sql_ary']['user_allow_pm']);
@@ -75,8 +78,66 @@ class listener_test extends TestCase
 			'notifications_data' => null,
 		));
 
-		(new listener(new config(array()), new settings_policy()))->modify_user_defaults($event);
+		(new listener(new config(array()), new settings_policy(), $this->notifications(), $this->extension_manager()))->modify_user_defaults($event);
 		$this->assertSame(array('user_allow_pm' => 7), $event['sql_ary']);
 		$this->assertNull($event['notifications_data']);
+	}
+
+	public function test_default_notification_methods_are_explicitly_applied_after_creation()
+	{
+		$manager = $this->manager();
+		$manager->expects($this->exactly(2))->method('add_subscription');
+		$manager->expects($this->once())->method('delete_subscription');
+		$listener = new listener(new config(array()), new settings_policy(), new notification_defaults($manager), $this->extension_manager());
+		$event = new data(array(
+			'user_row' => array('user_type' => 0),
+			'sql_ary' => array(),
+			'notifications_data' => null,
+		));
+
+		$listener->modify_user_defaults($event);
+		$listener->apply_notification_defaults(new data(array('user_id' => 42)));
+	}
+
+	public function test_conflicting_extension_disables_mutation()
+	{
+		$event = new data(array(
+			'user_row' => array('user_type' => 0),
+			'sql_ary' => array('user_allow_pm' => 7),
+			'notifications_data' => null,
+		));
+		$listener = new listener(new config(array()), new settings_policy(), $this->notifications(), $this->extension_manager(true));
+
+		$listener->modify_user_defaults($event);
+		$this->assertSame(array('user_allow_pm' => 7), $event['sql_ary']);
+		$this->assertNull($event['notifications_data']);
+	}
+
+	protected function notifications()
+	{
+		return new notification_defaults($this->manager());
+	}
+
+	protected function manager()
+	{
+		$manager = $this->createMock(manager::class);
+		$manager->method('get_subscription_types')->willReturn(array(
+			'NOTIFICATION_GROUP_MISCELLANEOUS' => array(
+				'notification.type.pm' => array('lang' => 'NOTIFICATION_TYPE_PM'),
+				'notification.type.post' => array('lang' => 'NOTIFICATION_TYPE_POST'),
+				'notification.type.topic' => array('lang' => 'NOTIFICATION_TYPE_TOPIC'),
+			),
+		));
+		$manager->method('get_subscription_methods')->willReturn(array(
+			'email' => array('id' => 'notification.method.email', 'lang' => 'NOTIFICATION_METHOD_EMAIL'),
+		));
+		return $manager;
+	}
+
+	protected function extension_manager($conflict = false)
+	{
+		$manager = $this->createMock(extension_manager::class);
+		$manager->method('is_enabled')->willReturn($conflict);
+		return $manager;
 	}
 }
