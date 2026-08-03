@@ -28,6 +28,7 @@ class policy_listener implements EventSubscriberInterface
 	{
 		return [
 			'phpbbgallery.core.album.types' => 'register_album_type',
+			'phpbbgallery.core.album.enrich_data' => 'enrich_album_data',
 			'phpbbgallery.core.album_operation' => 'restrict_album_operation',
 			'phpbbgallery.core.upload.update_image_before' => 'mark_contest_upload',
 			'phpbbgallery.core.image.prepare_move' => 'prepare_image_move',
@@ -36,6 +37,22 @@ class policy_listener implements EventSubscriberInterface
 			'phpbbgallery.core.image_visibility.private_data_sql' => 'restrict_private_data_sql',
 			'phpbbgallery.core.image_visibility.results_sql' => 'restrict_results_sql',
 		];
+	}
+
+	public function enrich_album_data(\phpbb\event\data $event): void
+	{
+		$album_data = (array) $event['album_data'];
+		if ((int) ($album_data['album_type'] ?? -1) !== (int) \phpbbgallery\core\block::TYPE_CONTEST
+			|| (int) ($album_data['album_id'] ?? 0) <= 0)
+		{
+			return;
+		}
+
+		$contest_data = $this->contest->get_contest((int) $album_data['album_id'], 'album', false);
+		if ($contest_data !== false)
+		{
+			$event['album_data'] = array_merge($album_data, $contest_data);
+		}
 	}
 
 	public function restrict_album_operation(\phpbb\event\data $event): void

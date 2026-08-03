@@ -1,0 +1,39 @@
+<?php
+/**
+ * phpBB Gallery album-data extension boundary.
+ *
+ * @package   phpbbgallery/core
+ * @copyright 2018- Leinad4Mind
+ * @license   GPL-2.0-only
+ */
+
+namespace phpbbgallery\core\album;
+
+/**
+ * Lets optional album-type providers append their data without coupling Core
+ * to their storage or services.
+ */
+class data_enricher
+{
+	private \phpbb\event\dispatcher_interface $dispatcher;
+
+	public function __construct(\phpbb\event\dispatcher_interface $dispatcher)
+	{
+		$this->dispatcher = $dispatcher;
+	}
+
+	public function enrich(array $album_data): array
+	{
+		/**
+		 * Allow optional album-type providers to append data to an album row.
+		 *
+		 * @event phpbbgallery.core.album.enrich_data
+		 * @var array album_data Base album data and data added by earlier listeners
+		 * @since 4.1.0
+		 */
+		$vars = ['album_data'];
+		extract($this->dispatcher->trigger_event('phpbbgallery.core.album.enrich_data', compact($vars)));
+
+		return (array) $album_data;
+	}
+}

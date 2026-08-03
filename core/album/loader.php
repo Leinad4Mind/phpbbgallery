@@ -26,22 +26,22 @@ class loader
 	/** @var array */
 	protected array $data = [];
 
-	/** @var \phpbbgallery\core\contest */
-	protected \phpbbgallery\core\contest $contest;
+	/** @var \phpbbgallery\core\album\data_enricher */
+	protected data_enricher $data_enricher;
 
 	/**
 	 * Constructor
 	 *
 	 * @param \phpbb\db\driver\driver|\phpbb\db\driver\driver_interface $db           Database object
 	 * @param \phpbb\user                                               $user         User object
-	 * @param \phpbbgallery\core\contest                                $contest      Gallery contest object
+	 * @param \phpbbgallery\core\album\data_enricher                   $data_enricher Optional album data provider boundary
 	 * @param string                                                    $albums_table Gallery albums table
 	 */
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbbgallery\core\contest $contest, string $albums_table)
+	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\user $user, data_enricher $data_enricher, string $albums_table)
 	{
 		$this->db = $db;
 		$this->user = $user;
-		$this->contest = $contest;
+		$this->data_enricher = $data_enricher;
 		$this->table_albums = $albums_table;
 	}
 
@@ -70,11 +70,7 @@ class loader
 		{
 			throw new \OutOfBoundsException('INVALID_ALBUM');
 		}
-		if ($row['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST)
-		{
-			$album_contest_data = $this->contest->get_contest($row['album_id'], 'album');
-			$row = array_merge($row, $album_contest_data);
-		}
+		$row = $this->data_enricher->enrich($row);
 
 		$this->data[$album_id] = $row;
 

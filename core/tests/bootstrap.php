@@ -227,6 +227,7 @@ namespace
 	require_once dirname(__DIR__) . '/block.php';
 	require_once dirname(__DIR__) . '/contest.php';
 	require_once dirname(__DIR__) . '/album/type_registry.php';
+	require_once dirname(__DIR__) . '/album/data_enricher.php';
 	require_once dirname(__DIR__) . '/policy/image_visibility.php';
 	require_once dirname(__DIR__) . '/policy/album_operation.php';
 	require_once dirname(__DIR__) . '/file/file.php';
