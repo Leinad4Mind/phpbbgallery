@@ -302,13 +302,6 @@ services:
             - '%phpbbgallery.tables.gallery_images%'
     phpbbgallery.core.block:
         class: phpbbgallery\core\block
-    phpbbgallery.core.contest:
-        class: phpbbgallery\core\contest
-        arguments:
-            - '@dbal.conn'
-            - '@phpbbgallery.core.config'
-            - '%phpbbgallery.tables.gallery_images%'
-            - '%phpbbgallery.tables.gallery_contests%'
     phpbbgallery.core.policy.image_visibility:
         class: phpbbgallery\core\policy\image_visibility
         arguments:
