@@ -1,4 +1,4 @@
-{% include 'gallery/gallery_header.html' %}
+{% include '@phpbbgallery_core/gallery/gallery_header.html' %}
 <script>
 head.ready(function () {
 function getElement(iElementId)
@@ -67,9 +67,9 @@ function toggleElement(oElement)
 
 {% if SEARCH_MATCHES %}
 	{% if S_IN_GALLERY_POPUP %}
-		{% include 'gallery/imageblock_popup.html' %}
+		{% include '@phpbbgallery_core/gallery/imageblock_popup.html' %}
 	{% else %}
-		{% include 'gallery/imageblock_polaroid.html' %}
+		{% include '@phpbbgallery_core/gallery/imageblock_polaroid.html' %}
 	{% endif %}
 {% endif %}
 
@@ -158,4 +158,4 @@ function toggleElement(oElement)
 {% endif %}
 
 </div>
-{% include 'gallery/gallery_footer.html' %}
+{% include '@phpbbgallery_core/gallery/gallery_footer.html' %}

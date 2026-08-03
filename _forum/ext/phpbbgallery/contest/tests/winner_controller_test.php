@@ -38,7 +38,10 @@ final class winner_controller_test extends TestCase
 		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/winners.php');
 		$this->assertStringContainsString("acl_get('u_search')", $source);
 		$this->assertStringContainsString("['load_search']", $source);
+		$this->assertStringContainsString("get('items_per_page')", $source);
+		$this->assertStringNotContainsString("get('album_rows')", $source);
 		$this->assertStringContainsString('$this->winner_search->display(', $source);
+		$this->assertStringContainsString("'@phpbbgallery_core/gallery/search_results.html'", $source);
 	}
 
 	public function test_core_search_has_no_contest_dependency_and_templates_support_placeholders(): void
@@ -65,6 +68,13 @@ final class winner_controller_test extends TestCase
 			$source = (string) file_get_contents($template);
 			$this->assertStringContainsString('S_IMAGE_AWARD_PLACEHOLDER', $source, $template);
 			$this->assertStringContainsString('gallery-image-award-placeholder', $source, $template);
+		}
+
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$results = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/search_results.html');
+			$this->assertStringContainsString("'@phpbbgallery_core/gallery/gallery_header.html'", $results, $style);
+			$this->assertStringContainsString("'@phpbbgallery_core/gallery/gallery_footer.html'", $results, $style);
 		}
 	}
 

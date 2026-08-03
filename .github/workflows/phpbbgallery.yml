@@ -134,7 +134,7 @@ jobs:
           sitesplat_root='.functional/phpBB3/phpBB/ext/sitesplat'
           mkdir -p "$gallery_root"
           mkdir -p "$sitesplat_root"
-          for component in core acpcleanup acpimport bbpointsimages bbtagsimages exif export favorite feed imagerevisions; do
+          for component in core acpcleanup acpimport bbpointsimages bbtagsimages contest exif export favorite feed imagerevisions; do
             cp -R "_forum/ext/phpbbgallery/$component" "$gallery_root/$component"
           done
           cp -R '_forum/ext/sitesplat/BBCore' "$sitesplat_root/BBCore"
@@ -176,6 +176,15 @@ jobs:
           --configuration .github/phpunit-sqlite3-github.xml
           --bootstrap ./tests/bootstrap.php
           phpBB/ext/phpbbgallery/bbpointsimages/tests/functional/bbpointsimages_workflow.php
+
+      - name: Run Gallery Contest workflow test
+        shell: bash
+        working-directory: .functional/phpBB3
+        run: >-
+          phpBB/vendor/bin/phpunit
+          --configuration .github/phpunit-sqlite3-github.xml
+          --bootstrap ./tests/bootstrap.php
+          phpBB/ext/phpbbgallery/contest/tests/functional/contest_workflow.php
 
       - name: Run Gallery addon reconciliation workflow test
         shell: bash

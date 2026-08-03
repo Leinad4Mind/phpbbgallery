@@ -11,6 +11,8 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Added
 
+- Added an authenticated Contest end-to-end workflow to the functional CI,
+  covering creation, uploads, privacy, disable/enable, voting and winners.
 - Added an ACP switch and a dedicated Core contest policy boundary that can prevent creation of new contest albums while keeping every existing contest active, editable and privacy-protected.
 - Added an optional plain-text image subtitle across resumable uploads and editing, with a permission-aware search link that removes display parentheses at request time without storing a duplicate cleaned column.
 - Added a generic authorization and accounting event before serving original image sources, while keeping medium images and thumbnails unaffected.
@@ -155,6 +157,9 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Fixed Contest winner pagination using an undefined legacy configuration key
+  and made the shared search template reusable from add-on controllers through
+  explicit Core template paths.
 - Reconciled stale Favorite, Image Revisions, BBTags Images and BBPoints Images data after an add-on is re-enabled, removing missing image/album relations and revision files while preserving permanent financial history.
 - Removed per-user album read-tracking rows when public or personal albums are deleted, including the complete subtree of a deleted personal album.
 - Corrected contest-winner headings and links across every language so the three-place podium is consistently described in the plural.
