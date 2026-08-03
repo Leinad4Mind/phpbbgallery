@@ -109,6 +109,41 @@ final class manager_batch_resync_test extends TestCase
 		$this->assertStringNotContainsString('foreach ($album_ids as $album_id)', $source);
 	}
 
+	public function test_contest_rows_are_loaded_for_album_ids_in_one_query(): void
+	{
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->once())
+			->method('sql_in_set')
+			->with('contest_album_id', [7, 9])
+			->willReturn('contest_album_id IN (7, 9)');
+		$db->expects($this->once())
+			->method('sql_query')
+			->with($this->stringContains('contest_album_id IN (7, 9)'))
+			->willReturn(1);
+		$db->expects($this->exactly(3))
+			->method('sql_fetchrow')
+			->with(1)
+			->willReturnOnConsecutiveCalls(
+				['contest_id' => 11, 'contest_album_id' => 7],
+				['contest_id' => 12, 'contest_album_id' => 9],
+				false
+			);
+		$db->expects($this->once())->method('sql_freeresult')->with(1);
+
+		$rows = $this->contest($db)->get_contests_by_album_ids([9, 7, 9, 0]);
+
+		$this->assertSame(11, $rows[7]['contest_id']);
+		$this->assertSame(12, $rows[9]['contest_id']);
+	}
+
+	public function test_empty_contest_album_lookup_does_not_query_database(): void
+	{
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->never())->method('sql_query');
+
+		$this->assertSame([], $this->contest($db)->get_contests_by_album_ids([0, -1]));
+	}
+
 	private function contest(\phpbb\db\driver\driver_interface $db): contest
 	{
 		return new contest(

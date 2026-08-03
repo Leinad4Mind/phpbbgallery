@@ -27,10 +27,10 @@ class display
 	protected \phpbbgallery\core\user $gallery_user;
 	protected \phpbbgallery\core\misc $misc;
 	protected \phpbbgallery\core\policy\image_visibility $image_visibility;
+	protected data_enricher $data_enricher;
 	protected string $root_path;
 	protected string $php_ext;
 	protected string $table_albums;
-	protected string $table_contests;
 	protected string $table_moderators;
 	protected string $table_tracking;
 	protected \phpbb\language\language $language;
@@ -62,7 +62,8 @@ class display
 								\phpbbgallery\core\config $gallery_config,
 								\phpbbgallery\core\user $gallery_user, \phpbbgallery\core\misc $misc,
 								\phpbbgallery\core\policy\image_visibility $image_visibility,
-								string $root_path, string $php_ext, string $albums_table, string $contests_table, string $tracking_table, string $moderators_table)
+								data_enricher $data_enricher,
+								string $root_path, string $php_ext, string $albums_table, string $tracking_table, string $moderators_table)
 	{
 		$this->auth = $auth;
 		$this->config = $config;
@@ -78,10 +79,10 @@ class display
 		$this->gallery_user = $gallery_user;
 		$this->misc = $misc;
 		$this->image_visibility = $image_visibility;
+		$this->data_enricher = $data_enricher;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
 		$this->table_albums = $albums_table;
-		$this->table_contests = $contests_table;
 		$this->table_tracking = $tracking_table;
 		$this->table_moderators = $moderators_table;
 	}
@@ -465,12 +466,6 @@ class display
 			$sql_array['ORDER_BY'] = 'u.username_clean, a.left_id';
 		}
 
-		$sql_array['LEFT_JOIN'][] = [
-			'FROM'	=> [$this->table_contests => 'c'],
-			'ON'	=> 'c.contest_album_id = a.album_id',
-		];
-		$sql_array['SELECT'] = $sql_array['SELECT'] . ', c.contest_marked';
-
 		$sql = $this->db->sql_build_query('SELECT', [
 			'SELECT'	=> $sql_array['SELECT'],
 			'FROM'		=> $sql_array['FROM'],
@@ -481,11 +476,19 @@ class display
 
 		$result = $this->db->sql_query($sql);
 
+		$rows = [];
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$rows[] = $row;
+		}
+		$this->db->sql_freeresult($result);
+		$rows = $this->data_enricher->enrich_many($rows);
+
 		$album_tracking_info = [];
 		$branch_root_id = $root_data['album_id'];
 		$zebra_array = $this->gallery_auth->get_user_zebra($this->user->data['user_id']);
 		$listable = $this->gallery_auth->acl_album_ids('a_list');
-		while ($row = $this->db->sql_fetchrow($result))
+		foreach ($rows as $row)
 		{
 			$album_id = $row['album_id'];
 			//if user has no right to see the album - skip it here!
@@ -540,7 +543,7 @@ class display
 				}
 				$album_rows[$parent_id]['album_id_last_image'] = $row['album_id'];
 				$album_rows[$parent_id]['album_type_last_image'] = $row['album_type'];
-				$album_rows[$parent_id]['album_contest_marked'] = $row['contest_marked'];
+				$album_rows[$parent_id]['album_contest_marked'] = (int) ($row['contest_marked'] ?? 0);
 				$album_rows[$parent_id]['orig_album_last_image_time'] = $row['album_last_image_time'];
 			}
 			else if ($row['album_type'])
@@ -567,13 +570,11 @@ class display
 					$album_rows[$parent_id]['album_last_username'] = $row['album_last_username'];
 					$album_rows[$parent_id]['album_last_user_colour'] = $row['album_last_user_colour'];
 					$album_rows[$parent_id]['album_type_last_image'] = $row['album_type'];
-					$album_rows[$parent_id]['album_contest_marked'] = $row['contest_marked'];
+					$album_rows[$parent_id]['album_contest_marked'] = (int) ($row['contest_marked'] ?? 0);
 					$album_rows[$parent_id]['album_id_last_image'] = $album_id;
 				}
 			}
 		}
-		$this->db->sql_freeresult($result);
-
 		// Handle marking albums
 		if ($mark_read == 'albums' || $mark_read == 'all')
 		{
