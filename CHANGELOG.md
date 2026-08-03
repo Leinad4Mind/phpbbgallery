@@ -43,6 +43,9 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Centralized active-contest privacy so public image pages, album listings and reusable image blocks hide entrant identity, descriptions, ratings, comment history and private sort side channels while preserving explicit owner and moderator exceptions.
 - Extended active-contest privacy to search terms and sorting, profile lists and counts, recent comments, top-rated results, album summaries and latest-image attribution.
 - Protected feed descriptions, favorite attribution and UCP subscription comment history with the same active-contest identity and result policies.
+- Routed EXIF and Feed privacy through extension-neutral Core decisions, removing
+  their direct contest constants, helpers and storage-table dependencies while
+  retaining fail-closed protection when an optional provider is unavailable.
 - Made contest finalization idempotent and deterministic, ranking only approved or locked images and allowing only authorized album views to trigger it.
 - Preserved completed-contest participant provenance so podium resynchronization cannot promote later images or alter an active contest.
 - Recalculated completed contest podiums when moderation changes a participant between approved, unapproved and locked states.

@@ -28,6 +28,8 @@ final class visibility_test extends TestCase
 	 */
 	private function make_feed(array $viewable, array $moderated, array $excluded = []): feed
 	{
+		require_once dirname(__DIR__, 2) . '/core/album/data_enricher.php';
+
 		$db = new class implements \phpbb\db\driver\driver_interface
 		{
 			public function sql_in_set($field, $array, $negate = false, $allow_empty_set = false)
@@ -61,24 +63,51 @@ final class visibility_test extends TestCase
 			}
 		};
 
-		return new feed($db, $auth, $config, new \phpbbgallery\core\album\album(), 'albums', 'images', 'contests');
+		$data_enricher = new class extends \phpbbgallery\core\album\data_enricher
+		{
+			public function __construct()
+			{
+			}
+
+			public function enrich_many(array $album_rows): array
+			{
+				return $album_rows;
+			}
+		};
+
+		return new feed($db, $auth, $config, new \phpbbgallery\core\album\album(), $data_enricher, 'albums', 'images');
 	}
 
-	public function test_feed_query_joins_only_the_active_contest_window(): void
+	public function test_feed_query_uses_neutral_album_enrichment_without_contest_storage(): void
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/feed.php');
 
-		$this->assertStringContainsString('c.contest_start, c.contest_end', $source);
-		$this->assertStringContainsString('c.contest_marked <> ', $source);
+		$this->assertStringContainsString('$this->data_enricher->enrich_many($rowset)', $source);
+		$this->assertStringContainsString('a.album_type', $source);
+		$this->assertStringNotContainsString('contests_table', $source);
+		$this->assertStringNotContainsString('contest_marked', $source);
+		$this->assertStringNotContainsString('core\\block::NO_CONTEST', $source);
+
+		$services = (string) file_get_contents(dirname(__DIR__) . '/config/services.yml');
+		$this->assertStringContainsString('@phpbbgallery.core.album.data_enricher', $services);
+		$this->assertStringNotContainsString('phpbbgallery.tables.gallery_contests', $services);
 	}
 
-	public function test_feed_controller_hides_contest_author_and_description(): void
+	public function test_feed_controller_uses_neutral_private_data_presentation(): void
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/main.php');
 
-		$this->assertGreaterThanOrEqual(2, substr_count($source, 'hides_contest_private_data('));
-		$this->assertStringContainsString('CONTEST_USERNAME', $source);
-		$this->assertStringContainsString('CONTEST_IMAGE_DESC', $source);
+		$this->assertStringContainsString('$this->image_visibility->hides_private_data(', $source);
+		$this->assertStringContainsString('$this->image_visibility->private_data_label(', $source);
+		$this->assertStringContainsString('$this->image_visibility->private_data_description(', $source);
+		$this->assertStringContainsString('GALLERY_PRIVATE_USER', $source);
+		$this->assertStringContainsString('GALLERY_PRIVATE_IMAGE_DESC', $source);
+		$this->assertStringNotContainsString('core\\contest', $source);
+		$this->assertStringNotContainsString('CONTEST_USERNAME', $source);
+		$this->assertStringNotContainsString('CONTEST_IMAGE_DESC', $source);
+
+		$services = (string) file_get_contents(dirname(__DIR__) . '/config/services.yml');
+		$this->assertStringContainsString('@phpbbgallery.core.policy.image_visibility', $services);
 	}
 
 	/**

@@ -6,9 +6,9 @@ services:
             - '@phpbbgallery.core.auth'
             - '@phpbbgallery.core.config'
             - '@phpbbgallery.core.album'
+            - '@phpbbgallery.core.album.data_enricher'
             - '%phpbbgallery.tables.gallery_albums%'
             - '%phpbbgallery.tables.gallery_images%'
-            - '%phpbbgallery.tables.gallery_contests%'
 
     phpbbgallery.feed.controller:
         class: phpbbgallery\feed\controller\main
@@ -19,6 +19,7 @@ services:
             - '@template.twig.environment'
             - '@user'
             - '@phpbbgallery.core.auth'
+            - '@phpbbgallery.core.policy.image_visibility'
             - '@phpbbgallery.feed'
 
     phpbbgallery.feed.listener:
