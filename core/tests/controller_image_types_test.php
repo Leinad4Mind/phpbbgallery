@@ -241,7 +241,7 @@ final class controller_image_types_test extends TestCase
 		$this->assertSame('https://example.test', $assigned_blocks['contact'][0]['U_CONTACT']);
 	}
 
-	public function test_hidden_contest_poster_clears_every_profile_surface(): void
+	public function test_hidden_poster_clears_every_profile_surface(): void
 	{
 		$reflection = new \ReflectionClass(image::class);
 		$controller = $reflection->newInstanceWithoutConstructor();
@@ -256,16 +256,13 @@ final class controller_image_types_test extends TestCase
 			{
 				$assigned_vars = $vars;
 			});
-		$language = $this->createStub(\phpbb\language\language::class);
-		$language->method('lang')->with('CONTEST_USERNAME')->willReturn('<strong>Contest</strong>');
 		$reflection->getProperty('template')->setValue($controller, $template);
-		$reflection->getProperty('language')->setValue($controller, $language);
 
-		$reflection->getMethod('assign_hidden_contest_poster')->invoke($controller);
+		$reflection->getMethod('assign_hidden_poster')->invoke($controller, '<strong>Private</strong>');
 
-		$this->assertSame('<strong>Contest</strong>', $assigned_vars['POSTER_FULL']);
-		$this->assertSame('<strong>Contest</strong>', $assigned_vars['POSTER_USERNAME']);
-		$this->assertTrue($assigned_vars['S_CONTEST_IDENTITY_HIDDEN']);
+		$this->assertSame('<strong>Private</strong>', $assigned_vars['POSTER_FULL']);
+		$this->assertSame('<strong>Private</strong>', $assigned_vars['POSTER_USERNAME']);
+		$this->assertTrue($assigned_vars['S_PRIVATE_IDENTITY_HIDDEN']);
 		$this->assertFalse($assigned_vars['S_POSTER_ONLINE']);
 		$this->assertFalse($assigned_vars['S_CUSTOM_FIELDS']);
 		foreach (['POSTER_AVATAR', 'POSTER_SIGNATURE', 'POSTER_IP', 'U_POSTER', 'U_POSTER_EMAIL',
@@ -279,7 +276,7 @@ final class controller_image_types_test extends TestCase
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/image.php');
 		$event_position = strpos($source, 'trigger_event(\'phpbbgallery.core.viewimage\'');
-		$privacy_reassertion = strpos($source, '$hide_contest_private_data = $hide_contest_private_data ||', (int) $event_position);
+		$privacy_reassertion = strpos($source, '$hide_private_data = $hide_private_data ||', (int) $event_position);
 
 		$this->assertNotFalse($event_position);
 		$this->assertNotFalse($privacy_reassertion);

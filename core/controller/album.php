@@ -421,6 +421,12 @@ class album
 				(int) $this->user->data['user_id'],
 				$can_moderate_contest
 			);
+			$private_data_label = $s_username_hidden ? $this->image_visibility->private_data_label(
+				$image_data,
+				(int) $this->user->data['user_id'],
+				$can_moderate_contest,
+				$this->language->lang('GALLERY_PRIVATE_USER')
+			) : '';
 			$hide_contest_results = $this->image_visibility->hides_results($image_data, $can_moderate_contest);
 			$this->template->assign_block_vars('imageblock.image', [
 				'IMAGE_ID'      => (int) $image_data['image_id'],
@@ -435,7 +441,7 @@ class album
 				'S_UNAPPROVED'        => ($this->auth->acl_check('m_status', $image_data['image_album_id'], $album_user_id) && ($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_UNAPPROVED)) ? true : false,
 				'S_LOCKED'            => ($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_LOCKED) ? true : false,
 				'S_REPORTED'          => ($this->auth->acl_check('m_report', $image_data['image_album_id'], $album_user_id) && $image_data['image_reported']) ? true : false,
-				'POSTER'              => ($show_username) ? (($s_username_hidden) ? $this->language->lang('CONTEST_USERNAME') : get_username_string('full', $image_data['image_user_id'], $image_data['image_username'], $image_data['image_user_colour'])) : false,
+				'POSTER'              => ($show_username) ? (($s_username_hidden) ? $private_data_label : get_username_string('full', $image_data['image_user_id'], $image_data['image_username'], $image_data['image_user_colour'])) : false,
 				'TIME'                => $show_time ? $this->user->format_date($image_data['image_time']) : false,
 
 				'S_RATINGS'  => (!$hide_contest_results && $this->config['phpbb_gallery_allow_rates'] == 1 && $show_ratings) ? ($image_data['image_rates'] > 0 ? $image_data['image_rate_avg'] / 100 : $this->language->lang('NOT_RATED')) : false,

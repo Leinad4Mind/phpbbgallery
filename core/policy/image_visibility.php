@@ -34,6 +34,26 @@ class image_visibility
 		return (bool) $hidden || $this->has_uncovered_active_marker($image_data, (array) $covered_markers);
 	}
 
+	/**
+	 * Resolve the public label used when an image owner's identity is hidden.
+	 *
+	 * Optional add-ons may replace the neutral Core label with wording that
+	 * describes their own privacy state without leaking that feature into Core.
+	 */
+	public function private_data_label(array $image_data, int $viewer_id, bool $can_moderate, string $fallback): string
+	{
+		$label = $fallback;
+		$vars = ['image_data', 'viewer_id', 'can_moderate', 'label'];
+		extract($this->dispatcher->trigger_event(
+			'phpbbgallery.core.image_visibility.private_data_label',
+			compact($vars)
+		));
+
+		$label = trim((string) $label);
+
+		return $label !== '' ? $label : $fallback;
+	}
+
 	public function hides_results(array $image_data, bool $can_moderate): bool
 	{
 		$hidden = false;

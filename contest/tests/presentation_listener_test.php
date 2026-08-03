@@ -58,4 +58,24 @@ final class presentation_listener_test extends TestCase
 
 		$this->assertSame(['ALBUM_ID' => 8], $event['template_vars']);
 	}
+
+	public function test_private_contest_identity_receives_contest_label(): void
+	{
+		$language = $this->createStub(\phpbb\language\language::class);
+		$language->method('lang')->with('CONTEST_USERNAME')->willReturn('<strong>Contest</strong>');
+		$listener = new presentation_listener($language, $this->createStub(\phpbb\user::class));
+		$event = new \phpbb\event\data([
+			'image_data' => [
+				'image_contest' => \phpbbgallery\core\block::IN_CONTEST,
+				'image_user_id' => 7,
+			],
+			'viewer_id' => 8,
+			'can_moderate' => false,
+			'label' => 'Hidden user',
+		]);
+
+		$listener->private_data_label($event);
+
+		$this->assertSame('<strong>Contest</strong>', $event['label']);
+	}
 }

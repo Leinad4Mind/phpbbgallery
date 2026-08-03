@@ -109,8 +109,12 @@ final class ucp_main_types_test extends TestCase
 			$source
 		);
 		$this->assertGreaterThanOrEqual(2, substr_count($source, '$image_visibility->hides_private_data('));
+		$this->assertGreaterThanOrEqual(2, substr_count($source, '$image_visibility->private_data_label('));
 		$this->assertStringContainsString('$image_visibility->hides_results(', $source);
 		$this->assertStringNotContainsString('core\\contest::', $source);
+		$this->assertStringNotContainsString('block::TYPE_CONTEST', $source);
+		$this->assertStringContainsString('li.image_contest AS last_image_contest', $source);
+		$this->assertStringContainsString('li.image_id = a.album_last_image_id', $source);
 		$this->assertStringContainsString('$hide_contest_results ? 0', $source);
 		$this->assertStringContainsString('$album_data_enricher->enrich_many($album_rows)', $source);
 		$this->assertStringNotContainsString('$contests_table', $source);

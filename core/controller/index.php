@@ -156,6 +156,12 @@ class index
 				(int) $this->user->data['user_id'],
 				$this->gallery_auth->acl_check('m_status', (int) $last_image['image_album_id'])
 			);
+			$last_image_uploader_label = $hide_last_image_uploader ? $this->image_visibility->private_data_label(
+				$last_image,
+				(int) $this->user->data['user_id'],
+				$this->gallery_auth->acl_check('m_status', (int) $last_image['image_album_id']),
+				$this->language->lang('GALLERY_PRIVATE_USER')
+			) : '';
 			switch ($this->gallery_config->get('link_image_icon'))
 			{
 				case 'image_page':
@@ -187,7 +193,7 @@ class index
 				'U_IMAGENAME_ACTION'	=> $this->helper->route('phpbbgallery_core_image', ['image_id' => $last_image['image_id']]),
 				'U_TIME'	=> ($last_image['image_id'] > 0) ?  $this->user->format_date($last_image['image_time']) : false,
 				'U_UPLOADER'	=> ($last_image['image_id'] > 0)
-					? ($hide_last_image_uploader ? $this->language->lang('CONTEST_USERNAME') : get_username_string('full', $last_image['image_user_id'], $last_image['image_username'], $last_image['image_user_colour']))
+					? ($hide_last_image_uploader ? $last_image_uploader_label : get_username_string('full', $last_image['image_user_id'], $last_image['image_username'], $last_image['image_user_colour']))
 					: false,
 				'ALPHABET_NAVIGATION' => implode('&nbsp;', $alpha_links),
 			]);

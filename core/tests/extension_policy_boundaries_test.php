@@ -113,11 +113,15 @@ final class extension_policy_boundaries_test extends TestCase
 		{
 			switch ($event_name)
 			{
-				case 'phpbbgallery.core.image_visibility.private_data':
-				case 'phpbbgallery.core.image_visibility.results':
-					$data['hidden'] = true;
-					$data['covered_markers'][] = 'image_contest';
-				break;
+			case 'phpbbgallery.core.image_visibility.private_data':
+			case 'phpbbgallery.core.image_visibility.results':
+				$data['hidden'] = true;
+				$data['covered_markers'][] = 'image_contest';
+			break;
+
+			case 'phpbbgallery.core.image_visibility.private_data_label':
+				$data['label'] = 'Extension participant';
+			break;
 
 				case 'phpbbgallery.core.image_visibility.private_data_sql':
 					$data['conditions'][] = 'i.private_allowed = 1';
@@ -139,6 +143,7 @@ final class extension_policy_boundaries_test extends TestCase
 		$policy = new image_visibility($dispatcher);
 
 		$this->assertTrue($policy->hides_private_data(['image_id' => 7], 2, false));
+		$this->assertSame('Extension participant', $policy->private_data_label(['image_id' => 7], 2, false, 'Hidden user'));
 		$this->assertTrue($policy->hides_results(['image_id' => 7], false));
 		$this->assertSame(
 			'(i.private_allowed = 1) AND (i.embargo_ended = 1)',
@@ -155,6 +160,7 @@ final class extension_policy_boundaries_test extends TestCase
 
 		$this->assertFalse($policy->hides_private_data([], 2, false));
 		$this->assertFalse($policy->hides_results([], false));
+		$this->assertSame('Hidden user', $policy->private_data_label([], 2, false, 'Hidden user'));
 		$this->assertSame('(image_contest = 0)', $policy->private_data_sql('', 2, []));
 		$this->assertSame('(image_alias.image_contest = 0)', $policy->results_sql('image_alias', []));
 
