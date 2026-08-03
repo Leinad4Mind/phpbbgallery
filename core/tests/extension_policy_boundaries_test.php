@@ -27,6 +27,14 @@ final class extension_policy_boundaries_test extends TestCase
 		$this->assertStringContainsString('phpbbgallery.core.policy.album_operation:', $services);
 		$this->assertStringContainsString('class: phpbbgallery\\core\\policy\\album_operation', $services);
 		$this->assertStringNotContainsString('legacy_contest_policy_listener', $services);
+
+		$comment_service = strstr($services, 'phpbbgallery.core.comment:');
+		$comment_service = strstr($comment_service, 'phpbbgallery.core.url:', true);
+		$rating_service = strstr($services, 'phpbbgallery.core.rating:');
+		$rating_service = strstr($rating_service, '#### Define event', true);
+		$this->assertStringContainsString("- '@phpbbgallery.core.policy.album_operation'", $comment_service);
+		$this->assertStringContainsString("- '@phpbbgallery.core.policy.album_operation'", $rating_service);
+		$this->assertStringContainsString("- '@phpbbgallery.core.policy.image_visibility'", $rating_service);
 	}
 
 	public function test_album_operation_combines_type_capabilities_and_addon_rules(): void

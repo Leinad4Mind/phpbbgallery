@@ -73,27 +73,26 @@ final class domain_rating_types_test extends TestCase
 		$this->assertSame(4, $rating->get_user_rating(12));
 	}
 
-	public function test_rating_ability_respects_the_contest_phase(): void
+	public function test_rating_ability_respects_the_album_operation_policy(): void
 	{
 		$rating = $this->getMockBuilder(rating::class)
 			->disableOriginalConstructor()
 			->onlyMethods(['is_allowed'])
 			->getMock();
 		$rating->expects($this->exactly(2))->method('is_allowed')->willReturn(true);
-		$current_time = time();
+		$operation = $this->createMock(\phpbbgallery\core\policy\album_operation::class);
+		$operation->expects($this->exactly(2))
+			->method('allows')
+			->with('rate', $this->isType('array'))
+			->willReturnOnConsecutiveCalls(false, true);
 		$reflection = new \ReflectionClass(rating::class);
+		$reflection->getProperty('album_operation')->setValue($rating, $operation);
 		$album_data = [
-			'album_type' => block::TYPE_CONTEST,
-			'contest_id' => 8,
-			'contest_start' => $current_time - 10,
-			'contest_rating' => 20,
-			'contest_end' => 100,
+			'album_type' => block::TYPE_UPLOAD,
 		];
 		$reflection->getProperty('album_data')->setValue($rating, $album_data);
 
 		$this->assertFalse($rating->is_able());
-		$album_data['contest_start'] = $current_time - 30;
-		$reflection->getProperty('album_data')->setValue($rating, $album_data);
 		$this->assertTrue($rating->is_able());
 	}
 
@@ -112,6 +111,11 @@ final class domain_rating_types_test extends TestCase
 			return $key;
 		});
 		$reflection->getProperty('gallery_auth')->setValue($rating, $gallery_auth);
+		$image_visibility = $this->createMock(\phpbbgallery\core\policy\image_visibility::class);
+		$image_visibility->expects($this->exactly(2))
+			->method('hides_results')
+			->willReturnCallback(static fn (array $image_data, bool $can_moderate): bool => !$can_moderate);
+		$reflection->getProperty('image_visibility')->setValue($rating, $image_visibility);
 		$reflection->getProperty('language')->setValue($rating, $language);
 		$reflection->getProperty('template')->setValue($rating, $this->createStub(\phpbb\template\template::class));
 		$rating->loader(12, [

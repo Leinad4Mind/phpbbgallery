@@ -66,24 +66,24 @@ final class domain_comment_types_test extends TestCase
 		$this->assertFalse($comment->edit(3, []));
 	}
 
-	public function test_comment_ability_respects_the_contest_phase(): void
+	public function test_comment_ability_respects_the_album_operation_policy(): void
 	{
 		$comment = $this->getMockBuilder(comment::class)
 			->disableOriginalConstructor()
 			->onlyMethods(['is_allowed'])
 			->getMock();
 		$comment->expects($this->exactly(2))->method('is_allowed')->willReturn(true);
-		$current_time = time();
+		$operation = $this->createMock(\phpbbgallery\core\policy\album_operation::class);
+		$operation->expects($this->exactly(2))
+			->method('allows')
+			->with('comment', $this->isType('array'))
+			->willReturnOnConsecutiveCalls(false, true);
+		(new \ReflectionClass(comment::class))->getProperty('album_operation')->setValue($comment, $operation);
 		$album_data = [
-			'album_type' => block::TYPE_CONTEST,
-			'contest_id' => 4,
-			'contest_start' => $current_time - 100,
-			'contest_rating' => 20,
-			'contest_end' => 200,
+			'album_type' => block::TYPE_UPLOAD,
 		];
 
 		$this->assertFalse($comment->is_able($album_data, []));
-		$album_data['contest_start'] = $current_time - 300;
 		$this->assertTrue($comment->is_able($album_data, []));
 	}
 

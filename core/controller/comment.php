@@ -230,7 +230,7 @@ class comment
 		// Build smilies array
 		generate_smilies('inline', 0);
 
-		$s_hide_comment_input = !\phpbbgallery\core\contest::is_step('comment', $album_data);
+		$s_hide_comment_input = !$this->comment->is_able($album_data, $image_data);
 
 		$this->template->assign_vars([
 			'BBCODE_STATUS'			=> ($bbcode_status) ? sprintf($this->language->lang('BBCODE_IS_ON'), '<a href="' . $this->url->append_sid('phpbb', 'faq', 'mode=bbcode') . '">', '</a>') : sprintf($this->language->lang('BBCODE_IS_OFF'), '<a href="' . $this->url->append_sid('phpbb', 'faq', 'mode=bbcode') . '">', '</a>'),
@@ -506,14 +506,7 @@ class comment
 		// Build smilies array
 		generate_smilies('inline', 0);
 
-		if (isset($album_data['contest_start']))
-		{
-			$s_hide_comment_input = (time() < ($album_data['contest_start'] + $album_data['contest_end'])) ? true : false;
-		}
-		else
-		{
-			$s_hide_comment_input = false;
-		}
+		$s_hide_comment_input = !$this->comment->is_able($album_data, $image_data);
 
 		$this->template->assign_vars([
 			'BBCODE_STATUS'			=> ($bbcode_status) ? sprintf($this->language->lang('BBCODE_IS_ON'), '<a href="' . $this->url->append_sid('phpbb', 'faq', 'mode=bbcode') . '">', '</a>') : sprintf($this->language->lang('BBCODE_IS_OFF'), '<a href="' . $this->url->append_sid('phpbb', 'faq', 'mode=bbcode') . '">', '</a>'),
@@ -727,9 +720,7 @@ class comment
 		// Build smilies array
 		generate_smilies('inline', 0);
 
-		$contest_start = $album_data['contest_start'] ?? 0;
-		$contest_end = $album_data['contest_end'] ?? 0;
-		$s_hide_comment_input = (time() < ($contest_start + $contest_end)) ? true : false;
+		$s_hide_comment_input = !$this->comment->is_able($album_data, $image_data);
 
 		$this->template->assign_vars([
 			'BBCODE_STATUS'			=> ($bbcode_status) ? sprintf($this->language->lang('BBCODE_IS_ON'), '<a href="' . $this->url->append_sid('phpbb', 'faq', 'mode=bbcode') . '">', '</a>') : sprintf($this->language->lang('BBCODE_IS_OFF'), '<a href="' . $this->url->append_sid('phpbb', 'faq', 'mode=bbcode') . '">', '</a>'),
