@@ -74,6 +74,24 @@ final class acp_listener_test extends TestCase
 		$this->assertStringNotContainsString("get('phpbbgallery.core.contest')", $core);
 	}
 
+	public function test_listener_resyncs_contest_after_album_ratings_are_reset(): void
+	{
+		$manager = $this->createMock(\phpbbgallery\contest\manager::class);
+		$manager->expects($this->once())->method('resync')->with(7);
+		$listener = new acp_listener(
+			$this->createStub(\phpbb\language\language::class),
+			$this->createStub(\phpbb\request\request_interface::class),
+			$this->createStub(\phpbb\template\template::class),
+			$this->createStub(\phpbb\user::class),
+			$manager
+		);
+
+		$listener->resync_contest_results(new \phpbb\event\data([
+			'album_id' => 7,
+			'image_ids' => [12, 34],
+		]));
+	}
+
 	private function listener(\phpbb\language\language $language): acp_listener
 	{
 		return new acp_listener(

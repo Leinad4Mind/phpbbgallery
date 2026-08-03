@@ -41,11 +41,17 @@ class acp_listener implements EventSubscriberInterface
 	{
 		return [
 			'phpbbgallery.core.acp.config.get_display_vars' => 'add_config',
+			'phpbbgallery.core.acp.album_ratings_reset' => 'resync_contest_results',
 			'phpbbgallery.core.acp.albums.request_data' => 'request_album_type_data',
 			'phpbbgallery.core.acp.albums.default_data' => 'default_album_type_data',
 			'phpbbgallery.core.acp.albums.load_type_data' => 'load_album_type_data',
 			'phpbbgallery.core.acp.albums.send_to_template' => 'send_album_type_to_template',
 		];
+	}
+
+	public function resync_contest_results(\phpbb\event\data $event): void
+	{
+		$this->contest->resync((int) $event['album_id']);
 	}
 
 	public function add_config(\phpbb\event\data $event): void
