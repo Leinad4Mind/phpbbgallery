@@ -39,11 +39,12 @@ final class image_block_contest_privacy_test extends TestCase
 		$gallery_config->method('get')->willReturn(true);
 		$image_visibility = $this->createStub(\phpbbgallery\core\policy\image_visibility::class);
 		$image_visibility->method('hides_private_data')->willReturn(true);
+		$image_visibility->method('private_data_label')->willReturn('Contest');
 		$image_visibility->method('hides_results')->willReturn(true);
 		$language = $this->createStub(\phpbb\language\language::class);
 		$language->method('lang')->willReturnCallback(static function (string $key): string
 		{
-			return $key === 'CONTEST_USERNAME' ? 'Contest' : $key;
+			return $key === 'GALLERY_PRIVATE_USER' ? 'Hidden user' : $key;
 		});
 		$user = new \phpbb\user();
 		$user->data = ['user_id' => 8];

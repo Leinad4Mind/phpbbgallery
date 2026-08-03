@@ -89,8 +89,9 @@ final class controller_index_types_test extends TestCase
 
 		$this->assertStringContainsString('$hide_last_image_uploader', $source);
 		$this->assertStringContainsString('$this->image_visibility->hides_private_data(', $source);
+		$this->assertStringContainsString('$this->image_visibility->private_data_label(', $source);
 		$this->assertStringNotContainsString('core\\contest::', $source);
-		$this->assertStringContainsString('CONTEST_USERNAME', $source);
+		$this->assertStringNotContainsString('CONTEST_USERNAME', $source);
 
 		$services = (string) file_get_contents(dirname(__DIR__) . '/config/services_controller.yml');
 		$index_service = strstr($services, 'phpbbgallery.core.controller.index:');

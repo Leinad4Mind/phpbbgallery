@@ -280,7 +280,7 @@ class image
 		$album_data = $this->loader->get($album_id);
 		$this->check_permissions($album_id, $album_data['album_user_id'], $this->data['image_status'], $album_data['album_auth_access'], $this->data);
 		$can_moderate_contest = $this->gallery_auth->acl_check('m_status', $album_id, $album_data['album_user_id']);
-		$hide_contest_private_data = $this->image_visibility->hides_private_data(
+		$hide_private_data = $this->image_visibility->hides_private_data(
 			$this->data,
 			(int) $this->user->data['user_id'],
 			$can_moderate_contest
@@ -335,7 +335,7 @@ class image
 			]);
 		}
 		$contest_end_time = (int) ($album_data['contest_start'] ?? 0) + (int) ($album_data['contest_end'] ?? 0);
-		$image_desc = $hide_contest_private_data
+		$image_desc = $hide_private_data
 			? $this->language->lang('CONTEST_IMAGE_DESC', $this->user->format_date($contest_end_time, false, true))
 			: generate_text_for_display($this->data['image_desc'], $this->data['image_desc_uid'], $this->data['image_desc_bitfield'], 7);
 		$image_subtitle = (string) ($this->data['image_subtitle'] ?? '');
@@ -469,7 +469,7 @@ class image
 			'IMAGE_TIME'          => $this->user->format_date($this->data['image_time']),
 			'IMAGE_VIEW'          => $this->data['image_view_count'],
 			'IMAGE_RESOLUTION'    => $this->get_image_resolution((string) $this->data['image_filename']),
-			'POSTER_IP'           => (!$hide_contest_private_data && $this->auth->acl_get('a_')) ? $this->data['image_user_ip'] : '',
+			'POSTER_IP'           => (!$hide_private_data && $this->auth->acl_get('a_')) ? $this->data['image_user_ip'] : '',
 
 			'S_ALBUM_ACTION' => $this->helper->route('phpbbgallery_core_image', ['image_id' => $image_id]),
 
@@ -487,23 +487,28 @@ class image
 		 * @var    array    image_data        All the data related to the image
 		 * @var    array    album_data        All the data related to the album image is part of
 		 * @var    string    page_title        Page title
-		 * @var    bool      hide_contest_private_data Whether author-related data must remain hidden
+		 * @var    bool      hide_private_data Whether author-related data must remain hidden
 		 * @since 1.2.0
 		 */
-		$vars = ['image_id', 'image_data', 'album_data', 'page_title', 'hide_contest_private_data'];
+		$vars = ['image_id', 'image_data', 'album_data', 'page_title', 'hide_private_data'];
 		extract($this->dispatcher->trigger_event('phpbbgallery.core.viewimage', compact($vars)));
 
 		$this->data = $image_data;
 
-		$hide_contest_private_data = $hide_contest_private_data || $this->image_visibility->hides_private_data(
+		$hide_private_data = $hide_private_data || $this->image_visibility->hides_private_data(
 			$this->data,
 			(int) $this->user->data['user_id'],
 			$can_moderate_contest
 		);
-		if ($hide_contest_private_data)
+		if ($hide_private_data)
 		{
 			$this->template->assign_var('IMAGE_DESC', $image_desc);
-			$this->assign_hidden_contest_poster();
+			$this->assign_hidden_poster($this->image_visibility->private_data_label(
+				$this->data,
+				(int) $this->user->data['user_id'],
+				$can_moderate_contest,
+				$this->language->lang('GALLERY_PRIVATE_USER')
+			));
 		}
 		else
 		{
@@ -799,21 +804,21 @@ class image
 	}
 
 	/**
-	 * Assign an anonymous poster shell for an active contest entry.
+	 * Assign an anonymous poster shell for data protected by an add-on policy.
 	 *
 	 * Every profile and contact variable used by the bundled styles is cleared so
 	 * a template or event cannot accidentally expose the real entrant.
 	 *
 	 * @return void
 	 */
-	private function assign_hidden_contest_poster(): void
+	private function assign_hidden_poster(string $label): void
 	{
 		$this->template->destroy_block_vars('contact');
 		$this->template->destroy_block_vars('custom_fields');
 		$this->template->assign_vars([
-			'POSTER_FULL'               => $this->language->lang('CONTEST_USERNAME'),
+			'POSTER_FULL'               => $label,
 			'POSTER_COLOUR'             => '',
-			'POSTER_USERNAME'           => $this->language->lang('CONTEST_USERNAME'),
+			'POSTER_USERNAME'           => $label,
 			'POSTER_SIGNATURE'          => '',
 			'POSTER_RANK_TITLE'         => '',
 			'POSTER_RANK_IMG'           => '',
@@ -843,7 +848,7 @@ class image
 			'U_POSTER_WHOIS'            => '',
 			'S_POSTER_ONLINE'           => false,
 			'S_CUSTOM_FIELDS'           => false,
-			'S_CONTEST_IDENTITY_HIDDEN' => true,
+			'S_PRIVATE_IDENTITY_HIDDEN' => true,
 		]);
 	}
 

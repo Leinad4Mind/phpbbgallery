@@ -26,7 +26,20 @@ class presentation_listener implements EventSubscriberInterface
 	{
 		return [
 			'phpbbgallery.core.album.enrich_template_vars' => 'enrich_album_template_vars',
+			'phpbbgallery.core.image_visibility.private_data_label' => 'private_data_label',
 		];
+	}
+
+	public function private_data_label(\phpbb\event\data $event): void
+	{
+		if (\phpbbgallery\contest\manager::hides_private_data(
+			(array) $event['image_data'],
+			(int) $event['viewer_id'],
+			(bool) $event['can_moderate']
+		))
+		{
+			$event['label'] = $this->language->lang('CONTEST_USERNAME');
+		}
 	}
 
 	public function enrich_album_template_vars(\phpbb\event\data $event): void

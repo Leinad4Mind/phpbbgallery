@@ -739,14 +739,22 @@ class display
 			$s_subalbums_list = (string) implode(', ', $s_subalbums_list);
 			$catless = ($row['parent_id'] == $root_data['album_id']) ? true : false;
 
+			$last_image_data = [
+				'image_contest' => (int) ($row['last_image_contest'] ?? 0),
+				'image_user_id' => (int) $row['album_last_user_id'],
+			];
+			$can_moderate = $this->gallery_auth->acl_check('m_status', $album_id, $row['album_user_id']);
 			$s_username_hidden = $this->image_visibility->hides_private_data(
-				[
-					'image_contest' => (int) ($row['last_image_contest'] ?? 0),
-					'image_user_id' => (int) $row['album_last_user_id'],
-				],
+				$last_image_data,
 				(int) $this->user->data['user_id'],
-				$this->gallery_auth->acl_check('m_status', $album_id, $row['album_user_id'])
+				$can_moderate
 			);
+			$last_image_label = $s_username_hidden ? $this->image_visibility->private_data_label(
+				$last_image_data,
+				(int) $this->user->data['user_id'],
+				$can_moderate,
+				$this->language->lang('GALLERY_PRIVATE_USER')
+			) : '';
 
 			$this->template->assign_block_vars('albumrow', [
 				'S_IS_CAT'			=> false,
@@ -766,7 +774,7 @@ class display
 				'ALBUM_FOLDER_IMG_ALT'	=> $this->language->lang($folder_alt) ? $this->language->lang($folder_alt) : '',
 				'ALBUM_IMAGE'			=> ($row['album_image']) ? $row['album_image'] : '',
 				'LAST_IMAGE_TIME'		=> $lastimage_time,
-				'LAST_USER_FULL'		=> ($s_username_hidden) ? $this->language->lang('CONTEST_USERNAME') : get_username_string('full', $row['album_last_user_id'], $row['album_last_username'], $row['album_last_user_colour']),
+				'LAST_USER_FULL'		=> ($s_username_hidden) ? $last_image_label : get_username_string('full', $row['album_last_user_id'], $row['album_last_username'], $row['album_last_user_colour']),
 				'UC_THUMBNAIL'			=> $this->config['phpbb_gallery_mini_thumbnail_disp'] ? $lastimage_uc_thumbnail : '',
 				'UC_FAKE_THUMBNAIL'		=> $this->config['phpbb_gallery_mini_thumbnail_disp'] ? $lastimage_uc_fake_thumbnail : '',
 				'UC_IMAGE_URL'			=> $this->config['phpbb_gallery_mini_thumbnail_disp'] ? $lastimage_uc_fake_thumbnail_url : '',

@@ -250,7 +250,7 @@ final class main_listener implements EventSubscriberInterface
 			'BBPOINTSIMAGES_DOWNLOAD_COUNT',
 			$this->purchases->get_download_count($image_id)
 		);
-		if (!empty($event['hide_contest_private_data']))
+		if (!empty($event['hide_private_data']))
 		{
 			return;
 		}

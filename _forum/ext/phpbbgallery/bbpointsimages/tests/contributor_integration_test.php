@@ -29,7 +29,7 @@ final class contributor_integration_test extends TestCase
 		{
 			$this->assertStringContainsString("'$event'", $listener);
 		}
-		$this->assertStringContainsString("!empty(\$event['hide_contest_private_data'])", $listener);
+		$this->assertStringContainsString("!empty(\$event['hide_private_data'])", $listener);
 		$this->assertStringContainsString("'mode=searchuser&amp;form=postform&amp;field=bbpointsimages_contributors_'", $listener);
 	}
 
@@ -50,7 +50,7 @@ final class contributor_integration_test extends TestCase
 	{
 		$core = file_get_contents(dirname(__DIR__, 2) . '/core/controller/image.php');
 		$this->assertStringContainsString(
-			"['image_id', 'image_data', 'album_data', 'page_title', 'hide_contest_private_data']",
+			"['image_id', 'image_data', 'album_data', 'page_title', 'hide_private_data']",
 			$core
 		);
 	}
