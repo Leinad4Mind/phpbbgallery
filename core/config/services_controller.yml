@@ -59,6 +59,7 @@ services:
             - '@request'
             - '@dispatcher'
             - '@phpbbgallery.core.policy.image_visibility'
+            - '@phpbbgallery.core.policy.album_operation'
             - '%phpbbgallery.tables.gallery_images%'
     phpbbgallery.core.controller.file:
         class: phpbbgallery\core\controller\file
