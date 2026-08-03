@@ -113,6 +113,72 @@ final class policy_listener_test extends TestCase
 		$this->assertSame([], $regular_event['additional_sql_data']);
 	}
 
+	public function test_listener_preserves_completed_contest_move_semantics(): void
+	{
+		$listener = new policy_listener($this->manager(true));
+		$completed = new \phpbb\event\data([
+			'operation' => 'move_in',
+			'album_data' => [
+				'album_type' => \phpbbgallery\core\block::TYPE_CONTEST,
+				'contest_id' => 7,
+				'contest_marked' => \phpbbgallery\core\block::NO_CONTEST,
+				'contest_start' => 100,
+				'contest_rating' => 20,
+				'contest_end' => 50,
+			],
+			'allowed' => true,
+		]);
+		$active_rating_phase = new \phpbb\event\data([
+			'operation' => 'move_in',
+			'album_data' => [
+				'album_type' => \phpbbgallery\core\block::TYPE_CONTEST,
+				'contest_id' => 8,
+				'contest_marked' => \phpbbgallery\core\block::IN_CONTEST,
+				'contest_start' => time() - 30,
+				'contest_rating' => 20,
+				'contest_end' => 100,
+			],
+			'allowed' => true,
+		]);
+
+		$listener->restrict_album_operation($completed);
+		$listener->restrict_album_operation($active_rating_phase);
+
+		$this->assertTrue($completed['allowed']);
+		$this->assertFalse($active_rating_phase['allowed']);
+	}
+
+	public function test_listener_marks_moves_only_for_active_contests(): void
+	{
+		$listener = new policy_listener($this->manager(true));
+		$active = new \phpbb\event\data([
+			'target_data' => [
+				'album_type' => \phpbbgallery\core\block::TYPE_CONTEST,
+				'contest_marked' => \phpbbgallery\core\block::IN_CONTEST,
+			],
+			'image_move_data' => ['image_contest' => \phpbbgallery\core\block::NO_CONTEST],
+		]);
+		$completed = new \phpbb\event\data([
+			'target_data' => [
+				'album_type' => \phpbbgallery\core\block::TYPE_CONTEST,
+				'contest_marked' => \phpbbgallery\core\block::NO_CONTEST,
+			],
+			'image_move_data' => ['image_contest' => \phpbbgallery\core\block::NO_CONTEST],
+		]);
+
+		$listener->prepare_image_move($active);
+		$listener->prepare_image_move($completed);
+
+		$this->assertSame(
+			\phpbbgallery\core\block::IN_CONTEST,
+			$active['image_move_data']['image_contest']
+		);
+		$this->assertSame(
+			\phpbbgallery\core\block::NO_CONTEST,
+			$completed['image_move_data']['image_contest']
+		);
+	}
+
 	public function test_listener_appends_parameterized_visibility_conditions(): void
 	{
 		$listener = new policy_listener($this->manager(true));

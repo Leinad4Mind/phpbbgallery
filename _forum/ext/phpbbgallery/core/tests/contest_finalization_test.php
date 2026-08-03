@@ -193,9 +193,16 @@ final class contest_finalization_test extends TestCase
 		$source = (string) file_get_contents(dirname(__DIR__) . '/image/image.php');
 		$move = $this->method_source($source, 'move_image', 'lock_images');
 
-		$this->assertStringContainsString("contest::is_step('upload', \$target_data)", $move);
+		$this->assertStringContainsString(
+			'$this->album_operation->allows(\'move_in\', $target_data)',
+			$move
+		);
+		$this->assertStringNotContainsString('contest::is_step(', $move);
+		$this->assertStringContainsString('phpbbgallery.core.image.prepare_move', $move);
+		$this->assertStringContainsString("'image_contest' => (int) \\phpbbgallery\\core\\block::NO_CONTEST", $move);
+		$this->assertStringContainsString("sql_build_array('UPDATE', \$image_move_data)", $move);
 		$this->assertStringContainsString('image_contest_end', $move);
-		$this->assertStringContainsString('image_contest_rank = 0', $move);
+		$this->assertStringContainsString("'image_contest_rank' => 0", $move);
 		$this->assertStringContainsString('$source_album_id === $album_id', $move);
 		$this->assertStringContainsString('$this->contest->resync_albums($resync_contest_albums);', $move);
 	}

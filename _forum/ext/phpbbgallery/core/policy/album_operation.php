@@ -47,7 +47,8 @@ class album_operation
 			return false;
 		}
 
-		$allowed = $operation !== 'upload'
+		$requires_image_capability = in_array($operation, ['upload', 'move_in'], true);
+		$allowed = !$requires_image_capability
 			|| $this->type_registry->accepts_images($album_type, $context);
 
 		/**

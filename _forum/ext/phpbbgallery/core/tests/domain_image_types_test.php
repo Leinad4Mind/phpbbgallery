@@ -74,6 +74,10 @@ final class domain_image_types_test extends TestCase
 			"- '@phpbbgallery.core.policy.image_visibility'",
 			$image_service
 		);
+		$this->assertStringContainsString(
+			"- '@phpbbgallery.core.policy.album_operation'",
+			$image_service
+		);
 	}
 
 	public function test_empty_image_operations_have_stable_results_without_dependencies(): void
