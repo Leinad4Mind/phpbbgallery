@@ -32,14 +32,15 @@ class acp_rating_reset_test extends TestCase
 		$this->assertSame([], $rating->calls);
 	}
 
-	public function test_acp_resolves_the_registered_service_without_the_removed_legacy_class(): void
+	public function test_acp_notifies_optional_providers_without_resolving_contest_service(): void
 	{
 		$module = file_get_contents(dirname(__DIR__) . '/acp/main_module.php');
 		$services = file_get_contents(dirname(__DIR__) . '/config/services.yml');
 
 		$this->assertStringContainsString("get('phpbbgallery.core.rating')", $module);
 		$this->assertStringContainsString('$this->reset_album_ratings($phpbb_gallery_rating, $image_ids);', $module);
-		$this->assertStringContainsString('$phpbb_gallery_contest->resync($album_id);', $module);
+		$this->assertStringContainsString('phpbbgallery.core.acp.album_ratings_reset', $module);
+		$this->assertStringNotContainsString("get('phpbbgallery.core.contest')", $module);
 		$this->assertStringNotContainsString('phpbb_gallery_image_rating', $module);
 		$this->assertStringContainsString('phpbbgallery.core.rating:', $services);
 		$this->assertStringContainsString('class: phpbbgallery\\core\\rating', $services);

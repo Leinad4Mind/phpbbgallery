@@ -83,7 +83,7 @@ class main_module
 
 		// init rating
 		$phpbb_gallery_rating = $phpbb_container->get('phpbbgallery.core.rating');
-		$phpbb_gallery_contest = $phpbb_container->get('phpbbgallery.core.contest');
+		$phpbb_dispatcher = $phpbb_container->get('dispatcher');
 
 		$action = $request->variable('action', '');
 		$id = $request->variable('i', '');
@@ -451,7 +451,20 @@ class main_module
 					$db->sql_freeresult($result);
 
 					$this->reset_album_ratings($phpbb_gallery_rating, $image_ids);
-					$phpbb_gallery_contest->resync($album_id);
+
+					/**
+					 * Notify optional providers after every rating in an album is reset.
+					 *
+					 * @event phpbbgallery.core.acp.album_ratings_reset
+					 * @var int   album_id Album whose ratings were reset
+					 * @var array image_ids Images included in the reset
+					 * @since 4.1.0
+					 */
+					$vars = ['album_id', 'image_ids'];
+					extract($phpbb_dispatcher->trigger_event(
+						'phpbbgallery.core.acp.album_ratings_reset',
+						compact($vars)
+					));
 
 					trigger_error($this->language->lang('RESET_RATING_COMPLETED') . adm_back_link($this->u_action));
 				break;
