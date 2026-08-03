@@ -13,6 +13,7 @@ if (!defined('IN_PHPBB'))
 }
 
 $lang = array_merge($lang, [
+	'ALBUM_TYPE_CONTEST'                  => 'Wedstrijd',
 	'CONTEST_CREATION'                    => 'Nieuwe wedstrijden toestaan',
 	'CONTEST_CREATION_EXPLAIN'            => 'Staat beheerders toe nieuwe wedstrijdalbums te maken. Bestaande wedstrijden blijven actief en bewerkbaar wanneer deze optie is uitgeschakeld.',
 	'CONTEST_CREATION_DISABLED'           => 'Het maken van nieuwe wedstrijdalbums is uitgeschakeld in de Galerijconfiguratie.',

@@ -102,7 +102,6 @@ $lang = array_merge($lang, [
 	'ALBUM_STATUS'                      => 'Estado del álbum',
 	'ALBUM_TYPE'                        => 'Tipo de álbum',
 	'ALBUM_TYPE_CAT'                    => 'Categoría',
-	'ALBUM_TYPE_CONTEST'                => 'Concurso',
 	'ALBUM_TYPE_UPLOAD'                 => 'Álbum',
 	'ALBUM_UPDATED'                     => 'El álbum se ha actualizado correctamente.',
 	'ALBUM_WATERMARK'                   => 'Mostrar marca de agua',

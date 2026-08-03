@@ -13,6 +13,7 @@ namespace phpbb\db\migration
 	{
 		abstract class migration
 		{
+			protected string $table_prefix = '';
 		}
 	}
 }
@@ -35,4 +36,9 @@ namespace
 	require_once dirname(__DIR__) . '/event/album_lifecycle_listener.php';
 	require_once dirname(__DIR__) . '/event/policy_listener.php';
 	require_once dirname(__DIR__) . '/migrations/m1_init.php';
+	require_once dirname(__DIR__) . '/migrations/m2_settings.php';
+	require_once dirname(__DIR__) . '/migrations/m3_album_storage.php';
+	require_once dirname(__DIR__) . '/migrations/m4_image_end_storage.php';
+	require_once dirname(__DIR__) . '/migrations/m5_image_rank_storage.php';
+	require_once dirname(__DIR__) . '/migrations/m6_contest_storage.php';
 }

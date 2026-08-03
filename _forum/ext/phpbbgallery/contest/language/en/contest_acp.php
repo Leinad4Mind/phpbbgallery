@@ -13,6 +13,7 @@ if (!defined('IN_PHPBB'))
 }
 
 $lang = array_merge($lang, [
+	'ALBUM_TYPE_CONTEST'                  => 'Contest',
 	'CONTEST_CREATION'                    => 'Allow new contests',
 	'CONTEST_CREATION_EXPLAIN'            => 'Allows administrators to create new contest albums. Existing contests remain active and editable when this is disabled.',
 	'CONTEST_CREATION_DISABLED'           => 'Creating new contest albums is disabled in the Gallery configuration.',

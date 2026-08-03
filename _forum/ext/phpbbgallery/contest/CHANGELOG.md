@@ -7,7 +7,11 @@ All notable changes to the phpBB Gallery Contest add-on are documented in this f
 ### Added
 
 - Created the independent Contest add-on package and its safe dependency lifecycle.
-- Adopted the historical Gallery contest storage without copying or deleting existing data.
+- Added add-on-owned migrations for contest configuration, album state, result
+  columns and the contest table, adopting historical Core storage in place
+  without copying or deleting existing data.
+- Moved the contest album-type label into the add-on for every supported Gallery
+  language and loaded it before Core builds the extensible album-type selector.
 - Added the contest domain manager and the Gallery Core policy provider, including
   fail-closed privacy when the add-on is unavailable.
 - Moved the switch for creating new contests from the Core configuration model
