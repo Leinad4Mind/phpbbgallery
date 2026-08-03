@@ -716,16 +716,33 @@ class main_module
 			'not_installed' => 'GALLERY_ADDON_NOT_INSTALLED',
 			'not_available' => 'GALLERY_ADDON_NOT_AVAILABLE',
 		];
+		$addon_groups = [];
 		foreach ($environment->addon_checks($extension_manager) as $addon)
 		{
-			$template->assign_block_vars('addon_checks', [
-				'NAME' => $addon['name'],
-				'EXTENSION' => $addon['extension'],
-				'DESCRIPTION' => $this->language->lang($addon['description']),
-				'S_ENABLED' => $addon['status'] === 'enabled',
-				'S_MISSING' => $addon['status'] === 'not_available',
-				'STATUS' => $this->language->lang($status_keys[$addon['status']]),
+			$addon_groups[$addon['tier']][] = $addon;
+		}
+		foreach (['free' => 'GALLERY_ADDON_FREE', 'premium' => 'GALLERY_ADDON_PREMIUM'] as $tier => $title_key)
+		{
+			if (empty($addon_groups[$tier]))
+			{
+				continue;
+			}
+
+			$template->assign_block_vars('addon_groups', [
+				'TITLE' => $this->language->lang($title_key),
 			]);
+			foreach ($addon_groups[$tier] as $addon)
+			{
+				$template->assign_block_vars('addon_groups.addons', [
+					'NAME' => $addon['name'],
+					'EXTENSION' => $addon['extension'],
+					'VERSION' => $addon['version'],
+					'DESCRIPTION' => $this->language->lang($addon['description']),
+					'S_ENABLED' => $addon['status'] === 'enabled',
+					'S_MISSING' => $addon['status'] === 'not_available',
+					'STATUS' => $this->language->lang($status_keys[$addon['status']]),
+				]);
+			}
 		}
 	}
 }

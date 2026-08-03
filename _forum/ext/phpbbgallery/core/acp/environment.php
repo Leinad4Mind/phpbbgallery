@@ -26,12 +26,16 @@ final class environment
 	];
 
 	private const ADDONS = [
-		'phpbbgallery/acpcleanup' => ['ACP Cleanup', 'GALLERY_ADDON_CLEANUP_EXPLAIN'],
-		'phpbbgallery/acpimport' => ['ACP Import', 'GALLERY_ADDON_IMPORT_EXPLAIN'],
-		'phpbbgallery/exif' => ['EXIF', 'GALLERY_ADDON_EXIF_EXPLAIN'],
-		'phpbbgallery/export' => ['Export', 'GALLERY_ADDON_EXPORT_EXPLAIN'],
-		'phpbbgallery/favorite' => ['Favorite', 'GALLERY_ADDON_FAVORITE_EXPLAIN'],
-		'phpbbgallery/feed' => ['Feed', 'GALLERY_ADDON_FEED_EXPLAIN'],
+		'phpbbgallery/acpcleanup' => ['ACP Cleanup', '1.4.0', 'free', 'GALLERY_ADDON_CLEANUP_EXPLAIN'],
+		'phpbbgallery/acpimport' => ['ACP Import', '1.4.0', 'free', 'GALLERY_ADDON_IMPORT_EXPLAIN'],
+		'phpbbgallery/contest' => ['Contests', '1.0.0', 'free', 'GALLERY_ADDON_CONTEST_EXPLAIN'],
+		'phpbbgallery/exif' => ['Exif', '1.4.0', 'free', 'GALLERY_ADDON_EXIF_EXPLAIN'],
+		'phpbbgallery/favorite' => ['Favorite', '1.0.0', 'free', 'GALLERY_ADDON_FAVORITE_EXPLAIN'],
+		'phpbbgallery/feed' => ['Feed', '1.0.0', 'free', 'GALLERY_ADDON_FEED_EXPLAIN'],
+		'phpbbgallery/bbpointsimages' => ['BBPoints Images', '1.0.0', 'premium', 'GALLERY_ADDON_BBPOINTS_IMAGES_EXPLAIN'],
+		'phpbbgallery/bbtagsimages' => ['BBTags Images', '1.0.0', 'premium', 'GALLERY_ADDON_BBTAGS_IMAGES_EXPLAIN'],
+		'phpbbgallery/export' => ['Export', '1.0.0', 'premium', 'GALLERY_ADDON_EXPORT_EXPLAIN'],
+		'phpbbgallery/imagerevisions' => ['Image Revisions', '1.0.0', 'premium', 'GALLERY_ADDON_IMAGE_REVISIONS_EXPLAIN'],
 	];
 
 	/**
@@ -120,7 +124,7 @@ final class environment
 	public function addon_checks(object $extension_manager): array
 	{
 		$checks = [];
-		foreach (self::ADDONS as $extension => [$name, $description])
+		foreach (self::ADDONS as $extension => [$name, $version, $tier, $description])
 		{
 			if ($extension_manager->is_enabled($extension))
 			{
@@ -141,11 +145,22 @@ final class environment
 
 			$checks[] = [
 				'extension' => $extension,
-				'name' => $name,
+				'name' => 'phpBB Gallery Add-on: ' . $name,
+				'version' => $version,
+				'tier' => $tier,
 				'description' => $description,
 				'status' => $status,
 			];
 		}
+		$tier_order = ['free' => 0, 'premium' => 1];
+		usort($checks, static function(array $left, array $right) use ($tier_order): int
+		{
+			$tier_comparison = $tier_order[$left['tier']] <=> $tier_order[$right['tier']];
+
+			return $tier_comparison !== 0
+				? $tier_comparison
+				: strcasecmp($left['name'], $right['name']);
+		});
 
 		return $checks;
 	}
