@@ -29,6 +29,7 @@ class policy_listener implements EventSubscriberInterface
 		return [
 			'phpbbgallery.core.album.types' => 'register_album_type',
 			'phpbbgallery.core.album.enrich_data' => 'enrich_album_data',
+			'phpbbgallery.core.album.prepare_display' => 'finalize_expired_contest',
 			'phpbbgallery.core.album_operation' => 'restrict_album_operation',
 			'phpbbgallery.core.upload.update_image_before' => 'mark_contest_upload',
 			'phpbbgallery.core.image.prepare_move' => 'prepare_image_move',
@@ -37,6 +38,37 @@ class policy_listener implements EventSubscriberInterface
 			'phpbbgallery.core.image_visibility.private_data_sql' => 'restrict_private_data_sql',
 			'phpbbgallery.core.image_visibility.results_sql' => 'restrict_results_sql',
 		];
+	}
+
+	public function finalize_expired_contest(\phpbb\event\data $event): void
+	{
+		$album_data = (array) $event['album_data'];
+		if ((int) ($album_data['album_type'] ?? -1) !== (int) \phpbbgallery\core\block::TYPE_CONTEST
+			|| (int) ($album_data['contest_id'] ?? 0) <= 0
+			|| (int) ($album_data['contest_marked'] ?? \phpbbgallery\core\block::NO_CONTEST)
+				!== (int) \phpbbgallery\core\block::IN_CONTEST)
+		{
+			return;
+		}
+
+		$contest_end_time = (int) ($album_data['contest_start'] ?? 0)
+			+ (int) ($album_data['contest_end'] ?? 0);
+		$now = (int) $event['now'];
+		if ($contest_end_time <= 0 || $contest_end_time > $now)
+		{
+			return;
+		}
+
+		if ($this->contest->end(
+			(int) $event['album_id'],
+			(int) $album_data['contest_id'],
+			$contest_end_time,
+			$now
+		))
+		{
+			$album_data['contest_marked'] = \phpbbgallery\core\block::NO_CONTEST;
+			$event['album_data'] = $album_data;
+		}
 	}
 
 	public function enrich_album_data(\phpbb\event\data $event): void

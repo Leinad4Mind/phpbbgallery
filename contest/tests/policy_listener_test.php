@@ -59,6 +59,44 @@ final class policy_listener_test extends TestCase
 		$this->assertArrayNotHasKey('contest_id', $regular['album_data']);
 	}
 
+	public function test_listener_finalizes_only_expired_active_contests(): void
+	{
+		$manager = $this->createMock(manager::class);
+		$manager->expects($this->once())
+			->method('end')
+			->with(7, 11, 1_300, 1_400)
+			->willReturn(true);
+		$listener = new policy_listener($manager);
+		$expired = new \phpbb\event\data([
+			'album_id' => 7,
+			'now' => 1_400,
+			'album_data' => [
+				'album_type' => \phpbbgallery\core\block::TYPE_CONTEST,
+				'contest_id' => 11,
+				'contest_marked' => \phpbbgallery\core\block::IN_CONTEST,
+				'contest_start' => 1_000,
+				'contest_end' => 300,
+			],
+		]);
+		$future = new \phpbb\event\data([
+			'album_id' => 8,
+			'now' => 1_400,
+			'album_data' => [
+				'album_type' => \phpbbgallery\core\block::TYPE_CONTEST,
+				'contest_id' => 12,
+				'contest_marked' => \phpbbgallery\core\block::IN_CONTEST,
+				'contest_start' => 1_300,
+				'contest_end' => 300,
+			],
+		]);
+
+		$listener->finalize_expired_contest($expired);
+		$listener->finalize_expired_contest($future);
+
+		$this->assertSame(\phpbbgallery\core\block::NO_CONTEST, $expired['album_data']['contest_marked']);
+		$this->assertSame(\phpbbgallery\core\block::IN_CONTEST, $future['album_data']['contest_marked']);
+	}
+
 	public function test_listener_applies_private_data_and_result_boundaries(): void
 	{
 		$listener = new policy_listener($this->manager(true));

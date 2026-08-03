@@ -65,8 +65,8 @@ class album
 	/** @var \phpbb\request\request_interface */
 	protected \phpbb\request\request_interface $request;
 
-	/** @var \phpbbgallery\core\contest */
-	protected \phpbbgallery\core\contest $contest;
+	/** @var \phpbb\event\dispatcher_interface */
+	protected \phpbb\event\dispatcher_interface $phpbb_dispatcher;
 
 	/** @var \phpbbgallery\core\policy\image_visibility */
 	protected \phpbbgallery\core\policy\image_visibility $image_visibility;
@@ -103,7 +103,7 @@ class album
 	 * @param \phpbbgallery\core\url                                    $url
 	 * @param \phpbbgallery\core\image\image                            $image
 	 * @param \phpbb\request\request_interface                          $request
-	 * @param \phpbbgallery\core\contest                                $contest
+	 * @param \phpbb\event\dispatcher_interface                        $phpbb_dispatcher
 	 * @param \phpbbgallery\core\policy\image_visibility                $image_visibility
 	 * @param string                                                    $images_table Gallery image table
 	 */
@@ -115,7 +115,7 @@ class album
 		\phpbbgallery\core\auth\auth $auth, \phpbbgallery\core\auth\level $auth_level,
 		\phpbbgallery\core\config $gallery_config, \phpbbgallery\core\notification\helper $notifications_helper,
 		\phpbbgallery\core\url $url, \phpbbgallery\core\image\image $image, \phpbb\request\request_interface $request,
-		\phpbbgallery\core\contest $contest, \phpbbgallery\core\policy\image_visibility $image_visibility,
+		\phpbb\event\dispatcher_interface $phpbb_dispatcher, \phpbbgallery\core\policy\image_visibility $image_visibility,
 		string $images_table)
 	{
 		$this->config = $config;
@@ -135,7 +135,7 @@ class album
 		$this->image = $image;
 		$this->gallery_config = $gallery_config;
 		$this->request = $request;
-		$this->contest = $contest;
+		$this->phpbb_dispatcher = $phpbb_dispatcher;
 		$this->image_visibility = $image_visibility;
 		$this->table_images = $images_table;
 	}
@@ -167,20 +167,21 @@ class album
 		$this->check_permissions($album_id, $album_data['album_user_id'], $album_data['album_auth_access']);
 		$this->auth_level->display($album_id, $album_data['album_status'], $album_data['album_user_id']);
 
-		if ($album_data['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST
-			&& $album_data['contest_id']
-			&& $album_data['contest_marked'])
-		{
-			$contest_end_time = (int) $album_data['contest_start'] + (int) $album_data['contest_end'];
-			$now = time();
-			if ($contest_end_time <= $now)
-			{
-				if ($this->contest->end($album_id, (int) $album_data['contest_id'], $contest_end_time, $now))
-				{
-					$album_data['contest_marked'] = \phpbbgallery\core\block::NO_CONTEST;
-				}
-			}
-		}
+		/**
+		 * Prepare type-specific album state only after access has been authorized.
+		 *
+		 * @event phpbbgallery.core.album.prepare_display
+		 * @var int   album_id   Album being displayed
+		 * @var array album_data Base and provider-enriched album data
+		 * @var int   now        Current Unix timestamp
+		 * @since 4.1.0
+		 */
+		$now = time();
+		$vars = ['album_id', 'album_data', 'now'];
+		extract($this->phpbb_dispatcher->trigger_event(
+			'phpbbgallery.core.album.prepare_display',
+			compact($vars)
+		));
 
 		$this->display->generate_navigation($album_data);
 		$album_display = $this->display->display_albums($album_data, $this->config['load_moderators']);

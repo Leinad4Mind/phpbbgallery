@@ -57,7 +57,7 @@ services:
             - '@phpbbgallery.core.url'
             - '@phpbbgallery.core.image'
             - '@request'
-            - '@phpbbgallery.core.contest'
+            - '@dispatcher'
             - '@phpbbgallery.core.policy.image_visibility'
             - '%phpbbgallery.tables.gallery_images%'
     phpbbgallery.core.controller.file:

@@ -93,12 +93,13 @@ final class controller_album_types_test extends TestCase
 		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/album.php');
 		$permissions = strpos($source, '$this->check_permissions(');
 		$display = strpos($source, '$this->auth_level->display(', (int) $permissions);
-		$finalize = strpos($source, '$this->contest->end(', (int) $display);
+		$prepare = strpos($source, 'phpbbgallery.core.album.prepare_display', (int) $display);
 
 		$this->assertNotFalse($permissions);
 		$this->assertNotFalse($display);
-		$this->assertNotFalse($finalize);
-		$this->assertTrue($permissions < $display && $display < $finalize);
+		$this->assertNotFalse($prepare);
+		$this->assertTrue($permissions < $display && $display < $prepare);
+		$this->assertStringNotContainsString('$this->contest->', $source);
 	}
 
 	public function test_album_pages_are_clamped_to_the_first_page(): void
