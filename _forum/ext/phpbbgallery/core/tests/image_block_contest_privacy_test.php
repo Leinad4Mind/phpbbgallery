@@ -41,6 +41,7 @@ final class image_block_contest_privacy_test extends TestCase
 		$image_visibility->method('hides_private_data')->willReturn(true);
 		$image_visibility->method('private_data_label')->willReturn('Contest');
 		$image_visibility->method('hides_results')->willReturn(true);
+		$image_visibility->method('award')->willReturn(['rank' => 0, 'label' => '', 'title' => '']);
 		$language = $this->createStub(\phpbb\language\language::class);
 		$language->method('lang')->willReturnCallback(static function (string $key): string
 		{

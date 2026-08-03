@@ -6,10 +6,10 @@
 {% else %}
 {% for image in imageblock.image %}
 <div  class="polaroid">
-	{% if image.S_CONTEST_RANK > 0 %}
+	{% if image.S_IMAGE_AWARD_RANK > 0 %}
 	<div class="trophy-container">
-		<i class="trophy-icon fa-trophy fa-stack-2x trophy-color-{{ image.S_CONTEST_RANK }}"></i>
-		<strong class="fa-stack-1x trophy-text">{{ image.S_CONTEST_RANK }}</strong>
+		<i class="trophy-icon fa-trophy fa-stack-2x trophy-color-{{ image.S_IMAGE_AWARD_RANK }}"></i>
+		<strong class="fa-stack-1x trophy-text">{{ image.S_IMAGE_AWARD_RANK }}</strong>
 	</div>
 	{% endif %}
 	<p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 1.2em; margin-bottom: 1em;">

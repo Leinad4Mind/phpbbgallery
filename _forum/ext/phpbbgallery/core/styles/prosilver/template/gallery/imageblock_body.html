@@ -24,7 +24,7 @@
 								<tr>
 									<td class="bg2" style="vertical-align: top;">
 										<div class="gensmall" style="overflow: hidden;">
-											{% if image.CONTEST_RANK %}{{ lang('CONTEST_RESULT') }}{{ lang('COLON') }} <strong>{{ image.CONTEST_RANK }}</strong><br />{% endif %}
+											{% if image.IMAGE_AWARD %}{{ image.IMAGE_AWARD_TITLE }}{{ lang('COLON') }} <strong>{{ image.IMAGE_AWARD }}</strong><br />{% endif %}
 											{% if image.UC_IMAGE_NAME %}{{ lang('IMAGE_NAME') }}{{ lang('COLON') }} {{ image.UC_IMAGE_NAME }}<br />{% endif %}
 											{% if image.U_ALBUM %}{{ lang('ALBUM_NAME') }}{{ lang('COLON') }} <a href="{{ image.U_ALBUM }}" style="font-weight: bold;" title="{{ image.ALBUM_NAME_FULL }}">{{ image.ALBUM_NAME }}</a><br />{% endif %}
 											{% if image.POSTER %}{{ lang('UPLOADED_BY_USER') }}{{ lang('COLON') }} {{ image.POSTER }}<br />{% endif %}

@@ -425,6 +425,7 @@ class album
 				$this->language->lang('GALLERY_PRIVATE_USER')
 			) : '';
 			$hide_contest_results = $this->image_visibility->hides_results($image_data, $can_moderate_contest);
+			$image_award = $this->image_visibility->award($image_data);
 			$this->template->assign_block_vars('imageblock.image', [
 				'IMAGE_ID'      => (int) $image_data['image_id'],
 				'U_IMAGE'       => $action_image,
@@ -459,7 +460,9 @@ class album
 				'U_STATUS' => $this->auth->acl_check('m_status', $image_data['image_album_id'], $album_user_id) ? $this->helper->route('phpbbgallery_core_moderate_image', ['image_id' => (int) $image_data['image_id']]) : '',
 				'L_STATUS' => ($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_UNAPPROVED) ? $this->language->lang('APPROVE_IMAGE') : (($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_APPROVED) ? $this->language->lang('CHANGE_IMAGE_STATUS') : $this->language->lang('UNLOCK_IMAGE')),
 
-				'S_CONTEST_RANK' => $image_data['image_contest_rank'],
+				'IMAGE_AWARD' => $image_award['label'],
+				'IMAGE_AWARD_TITLE' => $image_award['title'],
+				'S_IMAGE_AWARD_RANK' => $image_award['rank'],
 			]);
 		}
 		$this->db->sql_freeresult($result);

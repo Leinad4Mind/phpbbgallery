@@ -21,7 +21,7 @@
 				</div>
 					<div class="clearfix details-gallery text-overflow">
 						<ul class="list-unstyled">
-							{% if image.CONTEST_RANK %}<li>{{ lang('CONTEST_RESULT') }}{{ lang('COLON') }} <strong>{{ image.CONTEST_RANK }}</strong></li>{% endif %}
+							{% if image.IMAGE_AWARD %}<li>{{ image.IMAGE_AWARD_TITLE }}{{ lang('COLON') }} <strong>{{ image.IMAGE_AWARD }}</strong></li>{% endif %}
 							{% if image.UC_IMAGE_NAME %}<li>{{ lang('IMAGE_NAME') }}{{ lang('COLON') }} {{ image.UC_IMAGE_NAME }}</li>{% endif %}
 							{% if image.U_ALBUM %}<li>{{ lang('ALBUM_NAME') }}{{ lang('COLON') }} <a href="{{ image.U_ALBUM }}" style="font-weight: bold;" title="{{ image.ALBUM_NAME_FULL }}">{{ image.ALBUM_NAME }}</a></li>{% endif %}
 							{% if image.POSTER %}<li>{{ lang('UPLOADED_BY_USER') }}{{ lang('COLON') }} {{ image.POSTER }}</li>{% endif %}

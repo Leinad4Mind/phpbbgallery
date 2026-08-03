@@ -337,6 +337,7 @@ class image
 		$image_desc = generate_text_for_display($this->data['image_desc'], $this->data['image_desc_uid'], $this->data['image_desc_bitfield'], 7);
 		$image_subtitle = (string) ($this->data['image_subtitle'] ?? '');
 		$image_subtitle_search_url = $this->build_subtitle_search_url($image_subtitle);
+		$image_award = $this->image_visibility->award($this->data);
 
 		// Let's see if we can get next end prev
 		$sort_key = $this->request->variable('sk', ($album_data['album_sort_key']) ? $album_data['album_sort_key'] : $this->config['phpbb_gallery_default_sort_key']);
@@ -455,7 +456,9 @@ class image
 			'U_REPORT' => ($this->gallery_auth->acl_check('i_report', $album_id, $album_data['album_user_id']) && ($this->data['image_user_id'] != $this->user->data['user_id'])) ? $this->helper->route('phpbbgallery_core_image_report', ['image_id' => $image_id]) : '',
 			'U_STATUS' => ($s_allowed_status) ? $this->helper->route('phpbbgallery_core_moderate_image', ['image_id' => $image_id]) : '',
 
-			'CONTEST_RANK'        => ($this->data['image_contest_rank']) ? $this->language->lang('CONTEST_RESULT_' . $this->data['image_contest_rank']) : '',
+			'IMAGE_AWARD'         => $image_award['label'],
+			'IMAGE_AWARD_TITLE'   => $image_award['title'],
+			'S_IMAGE_AWARD_RANK'  => $image_award['rank'],
 			'IMAGE_NAME'          => $this->data['image_name'],
 			'IMAGE_SUBTITLE'      => $image_subtitle,
 			'U_IMAGE_SUBTITLE_SEARCH' => $image_subtitle_search_url,
