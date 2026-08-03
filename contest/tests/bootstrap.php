@@ -30,6 +30,7 @@ namespace
 	require_once dirname(__DIR__) . '/winner_search.php';
 	require_once dirname(__DIR__) . '/controller/winners.php';
 	require_once dirname(__DIR__) . '/event/index_listener.php';
+	require_once dirname(__DIR__) . '/event/presentation_listener.php';
 	require_once dirname(__DIR__) . '/event/acp_listener.php';
 	require_once dirname(__DIR__) . '/event/album_lifecycle_listener.php';
 	require_once dirname(__DIR__) . '/event/policy_listener.php';

@@ -14,6 +14,34 @@ use PHPUnit\Framework\TestCase;
 
 final class album_data_enricher_test extends TestCase
 {
+	public function test_template_vars_can_be_enriched_without_album_type_knowledge(): void
+	{
+		$dispatcher = $this->createMock(\phpbb\event\dispatcher_interface::class);
+		$dispatcher->expects($this->once())
+			->method('trigger_event')
+			->with(
+				'phpbbgallery.core.album.enrich_template_vars',
+				$this->callback(static fn(array $data): bool =>
+					$data['context'] === 'navigation'
+					&& $data['album_data']['album_id'] === 7
+					&& $data['template_vars']['ALBUM_ID'] === 7)
+			)
+			->willReturn([
+				'context' => 'navigation',
+				'album_data' => ['album_id' => 7],
+				'template_vars' => ['ALBUM_ID' => 7, 'ADDON_VALUE' => 'yes'],
+			]);
+
+		$enricher = new \phpbbgallery\core\album\data_enricher($dispatcher);
+		$result = $enricher->enrich_template_vars(
+			'navigation',
+			['album_id' => 7],
+			['ALBUM_ID' => 7]
+		);
+
+		$this->assertSame('yes', $result['ADDON_VALUE']);
+	}
+
 	public function test_enricher_returns_data_from_optional_provider(): void
 	{
 		$dispatcher = new class implements \phpbb\event\dispatcher_interface

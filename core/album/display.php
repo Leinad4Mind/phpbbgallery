@@ -198,15 +198,17 @@ class display
 			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_core_album', ['album_id' => (int) $album_data['album_id']]),
 		]);
 
-		$this->template->assign_vars([
+		$template_vars = [
 			'ALBUM_ID' 		=> $album_data['album_id'],
 			'ALBUM_NAME'	=> $album_data['album_name'],
 			'ALBUM_DESC'	=> generate_text_for_display($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_bitfield'], $album_data['album_desc_options']),
-			'ALBUM_CONTEST_START'	=> ($album_data['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST) ? $this->language->lang('CONTEST_START' . ((($album_data['contest_start']) < time())? 'ED' : 'S'), $this->user->format_date(($album_data['contest_start']), false, true)) : '',
-			'ALBUM_CONTEST_RATING'	=> ($album_data['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST) ? $this->language->lang('CONTEST_RATING_START' . ((($album_data['contest_start'] + $album_data['contest_rating']) < time())? 'ED' : 'S'), $this->user->format_date(($album_data['contest_start'] + $album_data['contest_rating']), false, true)) : '',
-			'ALBUM_CONTEST_END'		=> ($album_data['album_type'] == (int) \phpbbgallery\core\block::TYPE_CONTEST) ? $this->language->lang('CONTEST_END' . ((($album_data['contest_start'] + $album_data['contest_end']) < time())? 'ED' : 'S'), $this->user->format_date(($album_data['contest_start'] + $album_data['contest_end']), false, true)) : '',
 			'U_VIEW_ALBUM'	=> $this->helper->route('phpbbgallery_core_album', ['album_id' => (int) $album_data['album_id']]),
-		]);
+		];
+		$this->template->assign_vars($this->data_enricher->enrich_template_vars(
+			'navigation',
+			$album_data,
+			$template_vars
+		));
 
 		return;
 	}

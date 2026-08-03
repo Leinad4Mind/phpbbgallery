@@ -16,4 +16,9 @@ class user
 	public string $browser = '';
 
 	public string $ip = '';
+
+	public function format_date(int $timestamp, string|false $format = false, bool $force_absolute = false): string
+	{
+		return (string) $timestamp;
+	}
 }
