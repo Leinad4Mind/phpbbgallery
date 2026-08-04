@@ -143,7 +143,8 @@ class search
 		$sql_limit = $images_per_page;
 		$sql = 'SELECT image_id
 			FROM ' . $this->images_table . '
-			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN;
+			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
+				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED;
 		if ($user > 0)
 		{
 			$sql .= ' and image_user_id = ' . (int) $user;
@@ -273,7 +274,8 @@ class search
 
 		$sql = 'SELECT COUNT(image_id) AS count
 			FROM ' . $this->images_table . '
-			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN;
+			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
+				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED;
 
 		$conditions = [];
 
@@ -340,6 +342,7 @@ class search
 			FROM ' . $this->images_table . '
 			WHERE ' . $this->db->sql_in_set('image_user_id', $image_user_ids) . '
 				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
+				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED . '
 				AND ' . $this->image_visibility->get_visibility_sql_for_private_data('', $viewer_id, $moderated_albums) . '
 				AND (
 					(' . $this->db->sql_in_set('image_album_id', $viewable_albums, false, true) . '
@@ -395,7 +398,8 @@ class search
 			'GROUP_BY'	=> 'c.comment_id, c.comment_time, i.image_id',
 			'ORDER_BY'	=> 'comment_time DESC'
 		];
-		$sql_array['WHERE'] .= ' AND ((' . $this->db->sql_in_set('image_album_id', array_diff($this->gallery_auth->acl_album_ids('i_view'), $exclude_albums), false, true) . ' AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . ')
+		$sql_array['WHERE'] .= ' AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED . '
+			AND ((' . $this->db->sql_in_set('image_album_id', array_diff($this->gallery_auth->acl_album_ids('i_view'), $exclude_albums), false, true) . ' AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . ')
 					OR ' . $this->db->sql_in_set('image_album_id', array_diff($this->gallery_auth->acl_album_ids('m_status'), $exclude_albums), false, true) . ')';
 		$sql_array['WHERE'] .= ' AND ' . $this->image_visibility->get_visibility_sql_for_results(
 			'i',
@@ -550,7 +554,8 @@ class search
 			'FROM'	=>	[
 				$this->images_table	=> 'i'
 			],
-			'WHERE'	=> 'image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN
+			'WHERE'	=> 'image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
+				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED
 		];
 		if ($user > 0)
 		{
@@ -699,6 +704,7 @@ class search
 	{
 		return implode(' AND ', [
 			'i.image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN,
+			'i.image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED,
 			$this->db->sql_in_set('i.image_id', array_map('intval', $image_ids)),
 		]);
 	}

@@ -43,7 +43,8 @@ $lang = array_merge($lang, [
 	'CREATED_SUBALBUM'      => 'Subalbum succesvol aangemaakt',
 
 	'DELETE_ALBUM'         => 'Verwijder Album',
-	'DELETE_ALBUM_CONFIRM' => 'Verwijder Album, met alle bijgevoegde subalbums en afbeeldingen?',
+	'DELETE_ALBUM_CONFIRM' => 'Dit album en de lege subalbums verwijderen?',
+	'DELETE_ALBUM_REQUIRES_EMPTY' => 'Albums met gepubliceerde afbeeldingen of afbeeldingen die op moderatie wachten, kunnen niet worden verwijderd. Vraag eerst verwijdering van die afbeeldingen aan en wacht op moderatie.',
 	'DELETED_ALBUMS'       => 'Albums succesvol verwijderd',
 
 	'EDIT'              => 'Wijzig',

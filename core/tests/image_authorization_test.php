@@ -127,7 +127,7 @@ class image_authorization_test extends TestCase
 		$this->assertStringContainsString("acl_check('i_edit'", $image_controller);
 		$this->assertStringContainsString("acl_check('i_delete'", $image_controller);
 		$this->assertSame(3, substr_count($moderate_controller, '$this->authorize_action_images('));
-		$this->assertStringContainsString('authorize_action_images($selected_image_ids', $moderate_controller);
+		$this->assertStringContainsString("\$is_deletion_action ? 'm_delete' : 'm_status'", $moderate_controller);
 		$this->assertStringContainsString('authorize_action_images($report_ary', $moderate_controller);
 		$this->assertStringContainsString('authorize_action_images($actions_array', $moderate_controller);
 		$this->assertStringContainsString('image->get_image_data($image_id)', $moderate_controller);

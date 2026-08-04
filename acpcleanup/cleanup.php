@@ -167,7 +167,8 @@ class cleanup
 			$filenames[(int) $row['image_id']] = $row['image_filename'];
 
 			if (($row['image_status'] == $this->block->get_image_status_unapproved()) ||
-			($row['image_status'] == $this->block->get_image_status_orphan()))
+			($row['image_status'] == $this->block->get_image_status_orphan()) ||
+			($row['image_status'] == $this->block->get_image_status_delete_requested()))
 			{
 				continue;
 			}

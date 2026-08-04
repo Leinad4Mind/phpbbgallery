@@ -753,17 +753,27 @@ class main_module
 
 			// $deleted_albums is the array of albums we are going to delete.
 			// Now get the images in $deleted_images
-			$sql = 'SELECT image_id, image_filename
+			$sql = 'SELECT image_id, image_filename, image_status
 				FROM ' . $images_table . '
 				WHERE ' . $db->sql_in_set('image_album_id', $deleted_albums) . '
 				ORDER BY image_id ASC';
 			$result = $db->sql_query($sql);
 
 			$deleted_images = $filenames = [];
+			$contains_protected_images = false;
 			while ($row = $db->sql_fetchrow($result))
 			{
 				$deleted_images[] = $row['image_id'];
 				$filenames[(int) $row['image_id']] = $row['image_filename'];
+				if ((int) $row['image_status'] !== (int) \phpbbgallery\core\block::STATUS_ORPHAN)
+				{
+					$contains_protected_images = true;
+				}
+			}
+			$db->sql_freeresult($result);
+			if ($contains_protected_images)
+			{
+				trigger_error($this->language->lang('DELETE_ALBUM_REQUIRES_EMPTY'));
 			}
 
 			// We have all image_ids in $deleted_images which are deleted.
@@ -786,19 +796,14 @@ class main_module
 			$sql = 'SELECT COUNT(image_id) AS num_images, SUM(image_comments) AS num_comments
 				FROM ' . $images_table . '
 				WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . '
-					AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN;
+					AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
+					AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED;
 			$result = $db->sql_query($sql);
 			$row = $db->sql_fetchrow($result);
 			$db->sql_freeresult($result);
 
 			$phpbb_ext_gallery_config->set('num_images', $row['num_images']);
 			$phpbb_ext_gallery_config->set('num_comments', (int) $row['num_comments']);
-
-			$num_images = sizeof($deleted_images);
-			if ($num_images)
-			{
-				$phpbb_ext_gallery_user->update_images((0 - $num_images));
-			}
 
 			// Maybe we deleted all, so we have to empty phpbb_gallery::$user->get_data('personal_album_id')
 			if (in_array($phpbb_ext_gallery_user->get_data('personal_album_id'), $deleted_albums))

@@ -42,7 +42,8 @@ $lang = array_merge($lang, [
 	'CREATE_SUBALBUM_EXP'   => 'È possibile allegare un nuovo sotto-album alla tua galleria personale.',
 	'CREATED_SUBALBUM'      => 'Sotto-album creato con successo',
 	'DELETE_ALBUM'          => 'Cancella album',
-	'DELETE_ALBUM_CONFIRM'  => 'Vuoi cancellare questo album con i sotto-albums e immagini collegate?',
+	'DELETE_ALBUM_CONFIRM'  => 'Eliminare questo album e i suoi sottoalbum vuoti?',
+	'DELETE_ALBUM_REQUIRES_EMPTY' => 'Non è possibile eliminare album che contengono immagini pubblicate o in attesa di moderazione. Richiedi prima l’eliminazione di tali immagini e attendi la moderazione.',
 	'DELETED_ALBUMS'        => 'Albums cancellati con successo',
 
 	'EDIT'              => 'Modifica',

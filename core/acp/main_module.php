@@ -313,6 +313,7 @@ class main_module
 						FROM ' . $images_table . '
 						WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . '
 							AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
+							AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED . '
 						GROUP BY image_user_id';
 					$result = $db->sql_query($sql);
 

@@ -122,7 +122,7 @@
 				{% EVENT phpbbgallery_core_viewimage_actions %}
 				<!--<li><a href="{{ U_EDIT }}" title="{{ lang('EDIT_IMAGE') }}" class="button icon-button icon-notification"><span>{{ lang('EDIT_IMAGE') }}</span></a></li>-->
 				{% if U_EDIT %}<li><a href="{{ U_EDIT }}" title="{{ lang('EDIT_IMAGE') }}" class="button button-icon-only"><i class="icon fa-pencil fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('EDIT_IMAGE') }}</span></a></li>{% endif %}
-				{% if U_DELETE %}<li><a href="{{ U_DELETE }}" title="{{ lang('DELETE_IMAGE') }}" class="button button-icon-only"><i class="icon fa-times fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('DELETE_IMAGE') }}</span></a></li>{% endif %}
+				{% if U_DELETE %}<li><a href="{{ U_DELETE }}" title="{{ L_DELETE_IMAGE }}" class="button button-icon-only"><i class="icon fa-times fa-fw" aria-hidden="true"></i><span class="sr-only">{{ L_DELETE_IMAGE }}</span></a></li>{% endif %}
 				{% if U_REPORT %}<li><a href="{{ U_REPORT }}" title="{{ lang('REPORT_IMAGE') }}" class="button button-icon-only"><i class="icon fa-exclamation fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('REPORT_IMAGE') }}</span></a></li>{% endif %}
 			</ul>
 			<h2 style= "font-size: 1.5em; font-weight: bold;">{{ lang('IMAGE_NAME') }}{{ lang('COLON') }}<a href="{{ S_ALBUM_ACTION }}" style="display: inline; line-height: 1.2em; font-weight: bold;"> {{ IMAGE_NAME }}</a></h2>

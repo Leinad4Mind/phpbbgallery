@@ -291,7 +291,10 @@ class image
 
 		$image_visibility_conditions = $this->get_image_visibility_conditions($album_id, (int) $album_data['album_user_id']);
 
-		if (!$this->user->data['is_bot'] && isset($this->user->data['session_page']) && (strpos($this->user->data['session_page'], '&image_id=' . $image_id) === false || isset($this->user->data['session_created'])))
+		if (!$this->user->data['is_bot']
+			&& (int) $this->data['image_status'] !== (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED
+			&& isset($this->user->data['session_page'])
+			&& (strpos($this->user->data['session_page'], '&image_id=' . $image_id) === false || isset($this->user->data['session_created'])))
 		{
 			$sql = 'UPDATE ' . $this->table_images . '
 				SET image_view_count = image_view_count + 1
@@ -315,6 +318,11 @@ class image
 			$s_allowed_delete = (($this->gallery_auth->acl_check('i_delete', $album_id, $album_data['album_user_id']) && $s_user_allowed) || $this->gallery_auth->acl_check('m_delete', $album_id, $album_data['album_user_id']));
 			$s_allowed_edit = (($this->gallery_auth->acl_check('i_edit', $album_id, $album_data['album_user_id']) && $s_user_allowed) || $this->gallery_auth->acl_check('m_edit', $album_id, $album_data['album_user_id']));
 			$s_allowed_move = (($this->gallery_auth->acl_check('i_move', $album_id, $album_data['album_user_id']) && $s_user_allowed) || $this->gallery_auth->acl_check('m_move', $album_id, $album_data['album_user_id']));
+			if ((int) $this->data['image_status'] === (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED)
+			{
+				$s_allowed_delete = $this->gallery_auth->acl_check('m_delete', $album_id, $album_data['album_user_id']);
+				$s_allowed_edit = $s_allowed_move = false;
+			}
 			$s_quick_mod = ($s_allowed_delete || $s_allowed_edit || $s_allowed_move || $this->gallery_auth->acl_check('m_status', $album_id, $album_data['album_user_id']));
 
 			$this->language->add_lang(['gallery_mcp'], 'phpbbgallery/core');
@@ -452,8 +460,14 @@ class image
 			'S_IMAGE_ACTION_NEXT' => $image_action !== '' && $image_action === $next_url,
 
 			'U_DELETE' => ($s_allowed_delete) ? $this->helper->route('phpbbgallery_core_image_delete', ['image_id' => $image_id]) : '',
+			'L_DELETE_IMAGE' => $this->gallery_auth->acl_check('m_delete', $album_id, $album_data['album_user_id'])
+				? $this->language->lang('DELETE_IMAGE')
+				: $this->language->lang('REQUEST_IMAGE_DELETION'),
 			'U_EDIT'   => ($s_allowed_edit) ? $this->helper->route('phpbbgallery_core_image_edit', ['image_id' => $image_id]) : '',
-			'U_REPORT' => ($this->gallery_auth->acl_check('i_report', $album_id, $album_data['album_user_id']) && ($this->data['image_user_id'] != $this->user->data['user_id'])) ? $this->helper->route('phpbbgallery_core_image_report', ['image_id' => $image_id]) : '',
+			'U_REPORT' => ((int) $this->data['image_status'] !== (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED
+				&& $this->gallery_auth->acl_check('i_report', $album_id, $album_data['album_user_id'])
+				&& $this->data['image_user_id'] != $this->user->data['user_id'])
+				? $this->helper->route('phpbbgallery_core_image_report', ['image_id' => $image_id]) : '',
 			'U_STATUS' => ($s_allowed_status) ? $this->helper->route('phpbbgallery_core_moderate_image', ['image_id' => $image_id]) : '',
 
 			'IMAGE_AWARD'         => $image_award['label'],
@@ -895,6 +909,7 @@ class image
 		$conditions = [
 			'image_album_id = ' . (int) $album_id,
 			'image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN,
+			'image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED,
 		];
 
 		if (!$this->gallery_auth->acl_check('m_status', $album_id, $album_user_id))
@@ -1118,7 +1133,15 @@ class image
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$has_image_permission = $this->gallery_auth->acl_check('i_edit', $album_id, $album_data['album_user_id']);
 		$has_moderator_permission = $this->gallery_auth->acl_check('m_edit', $album_id, $album_data['album_user_id']);
-		$is_orphan = $image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_ORPHAN;
+		if ((int) $image_data['image_status'] === (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED)
+		{
+			$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
+			return null;
+		}
+		$is_orphan = in_array((int) $image_data['image_status'], [
+			\phpbbgallery\core\block::STATUS_ORPHAN,
+			\phpbbgallery\core\block::STATUS_DELETE_REQUESTED,
+		], true);
 		if (!$this->image_authorization->can_manage_image((int) $this->user->data['user_id'], $image_data, $has_image_permission, $has_moderator_permission, $is_orphan))
 		{
 			$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
@@ -1405,7 +1428,10 @@ class image
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$has_image_permission = $this->gallery_auth->acl_check('i_delete', $album_id, $album_data['album_user_id']);
 		$has_moderator_permission = $this->gallery_auth->acl_check('m_delete', $album_id, $album_data['album_user_id']);
-		$is_orphan = $image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_ORPHAN;
+		$is_orphan = in_array((int) $image_data['image_status'], [
+			\phpbbgallery\core\block::STATUS_ORPHAN,
+			\phpbbgallery\core\block::STATUS_DELETE_REQUESTED,
+		], true);
 		if (!$this->image_authorization->can_manage_image((int) $this->user->data['user_id'], $image_data, $has_image_permission, $has_moderator_permission, $is_orphan))
 		{
 			$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
@@ -1419,11 +1445,31 @@ class image
 
 		if (confirm_box(true))
 		{
-			$this->image->handle_counter($image_id, false);
-			$this->moderate->delete_images([$image_id], [$image_id => $image_data['image_filename']]);
-			$this->album->update_info($album_id);
-
-			$message = $this->language->lang('DELETED_IMAGE') . '<br />';
+			if ($has_moderator_permission)
+			{
+				if ((int) $image_data['image_status'] === (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED)
+				{
+					if ($this->moderate->delete_requested_images([$image_id]) !== 1)
+					{
+						$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
+						return null;
+					}
+				}
+				else
+				{
+					$this->moderate->delete_images([$image_id], [$image_id => $image_data['image_filename']]);
+				}
+				$message = $this->language->lang('DELETED_IMAGE') . '<br />';
+			}
+			else
+			{
+				if ($this->image->request_deletion($image_id, (int) $this->user->data['user_id']) === false)
+				{
+					$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
+					return null;
+				}
+				$message = $this->language->lang('IMAGE_DELETION_REQUESTED') . '<br />';
+			}
 			$message .= '<br />' . sprintf($this->language->lang('CLICK_RETURN_ALBUM'), '<a href="' . $album_backlink . '">', '</a>');
 
 			if ($this->user->data['user_id'] != $image_data['image_user_id'])
@@ -1446,7 +1492,7 @@ class image
 			}
 			else
 			{
-				confirm_box(false, 'DELETE_IMAGE2', $s_hidden_fields);
+				confirm_box(false, $has_moderator_permission ? 'DELETE_IMAGE2' : 'REQUEST_IMAGE_DELETION_CONFIRM', $s_hidden_fields);
 			}
 		}
 
@@ -1463,7 +1509,9 @@ class image
 		$image_backlink = $this->helper->route('phpbbgallery_core_image', ['image_id' => $image_id]);
 		$album_backlink = $this->helper->route('phpbbgallery_core_album', ['album_id' => $image_data['image_album_id']]);
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
-		if (!$this->gallery_auth->acl_check('i_report', $album_id, $album_data['album_user_id']) || ($image_data['image_user_id'] == $this->user->data['user_id']))
+		if ((int) $image_data['image_status'] === (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED
+			|| !$this->gallery_auth->acl_check('i_report', $album_id, $album_data['album_user_id'])
+			|| ($image_data['image_user_id'] == $this->user->data['user_id']))
 		{
 			$this->misc->not_authorised($image_backlink, '');
 		}
@@ -1562,7 +1610,12 @@ class image
 	{
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$zebra_array = $this->gallery_auth->get_user_zebra($this->user->data['user_id']);
-		if (!$this->gallery_auth->acl_check('i_view', $album_id, $owner_id) || ($image_status == (int) \phpbbgallery\core\block::STATUS_ORPHAN) || $this->gallery_auth->get_zebra_state($zebra_array, (int) $owner_id, (int) $album_id) < (int) $album_auth_level)
+		$is_delete_request_visible = $image_status == (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED
+			&& $this->gallery_auth->acl_check('m_delete', $album_id, $owner_id);
+		if (!$this->gallery_auth->acl_check('i_view', $album_id, $owner_id)
+			|| ($image_status == (int) \phpbbgallery\core\block::STATUS_ORPHAN)
+			|| ($image_status == (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED && !$is_delete_request_visible)
+			|| $this->gallery_auth->get_zebra_state($zebra_array, (int) $owner_id, (int) $album_id) < (int) $album_auth_level)
 		{
 			if ($this->user->data['is_bot'])
 			{

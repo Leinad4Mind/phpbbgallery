@@ -35,6 +35,7 @@ use phpbbgallery\core\migrations\ajax_image_navigation;
 use phpbbgallery\core\migrations\remove_legacy_image_plugins;
 use phpbbgallery\core\migrations\image_subtitle;
 use phpbbgallery\core\migrations\contest_creation;
+use phpbbgallery\core\migrations\image_deletion_requests;
 
 class migration_integrity_test extends TestCase
 {
@@ -63,6 +64,7 @@ class migration_integrity_test extends TestCase
 		remove_legacy_image_plugins::class,
 		image_subtitle::class,
 		contest_creation::class,
+		image_deletion_requests::class,
 		release_4_0_0::class,
 	];
 
@@ -163,8 +165,49 @@ class migration_integrity_test extends TestCase
 		);
 		$this->assertSame(
 			['\phpbbgallery\core\migrations\contest_creation'],
+			image_deletion_requests::depends_on()
+		);
+		$this->assertSame(
+			['\phpbbgallery\core\migrations\image_deletion_requests'],
 			release_4_0_0::depends_on()
 		);
+	}
+
+	public function test_image_deletion_request_migration_is_reversible(): void
+	{
+		$migration = (new \ReflectionClass(image_deletion_requests::class))->newInstanceWithoutConstructor();
+		(new \ReflectionProperty(\phpbb\db\migration\migration::class, 'table_prefix'))->setValue($migration, 'phpbb_');
+
+		$this->assertSame([
+			'add_columns' => [
+				'phpbb_gallery_images' => [
+					'image_delete_previous_status' => ['UINT:3', \phpbbgallery\core\block::STATUS_APPROVED],
+					'image_delete_request_user_id' => ['UINT:10', 0],
+					'image_delete_request_time' => ['UINT:11', 0],
+				],
+			],
+			'add_index' => [
+				'phpbb_gallery_images' => [
+					'delete_status_time' => ['image_status', 'image_delete_request_time'],
+				],
+			],
+		], $migration->update_schema());
+
+		$this->assertSame([
+			'drop_keys' => [
+				'phpbb_gallery_images' => ['delete_status_time'],
+			],
+			'drop_columns' => [
+				'phpbb_gallery_images' => [
+					'image_delete_previous_status',
+					'image_delete_request_user_id',
+					'image_delete_request_time',
+				],
+			],
+		], $migration->revert_schema());
+		$this->assertSame([
+			['custom', [[$migration, 'restore_pending_images']]],
+		], $migration->revert_data());
 	}
 
 	public function test_release_4_0_0_updates_the_installed_version(): void
@@ -822,6 +865,7 @@ class migration_integrity_test extends TestCase
 			'remove_legacy_image_plugins.php',
 			'image_subtitle.php',
 			'contest_creation.php',
+			'image_deletion_requests.php',
 			'release_4_0_0.php',
 		] as $migration)
 		{

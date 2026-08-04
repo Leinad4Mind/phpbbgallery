@@ -190,6 +190,7 @@ class comment
 		$s_user_rated = false;
 		// load Image Data
 		$image_data = $this->image->get_image_data_or_fail($image_id);
+		$this->assert_image_is_mutable($image_data);
 		$album_id = (int) $image_data['image_album_id'];
 		$album_data = $this->loader->get($album_id);
 		$this->display->generate_navigation($album_data);
@@ -455,6 +456,7 @@ class comment
 
 		// load Image Data (based on the comment's real image, so the ACL check below can't be pointed at a different album)
 		$image_data = $this->image->get_image_data_or_fail($image_id);
+		$this->assert_image_is_mutable($image_data);
 		$album_id = (int) $image_data['image_album_id'];
 		$album_data = $this->loader->get($album_id);
 		$this->display->generate_navigation($album_data);
@@ -669,6 +671,7 @@ class comment
 
 		// load Image Data (based on the comment's real image, so the ACL check below can't be pointed at a different album)
 		$image_data = $this->image->get_image_data_or_fail($image_id);
+		$this->assert_image_is_mutable($image_data);
 		$album_id = (int) $image_data['image_album_id'];
 		$album_data = $this->loader->get($album_id);
 		$this->display->generate_navigation($album_data);
@@ -807,6 +810,7 @@ class comment
 		$error = $message = '';
 		// load Image Data
 		$image_data = $this->image->get_image_data_or_fail($image_id);
+		$this->assert_image_is_mutable($image_data);
 		$album_id = (int) $image_data['image_album_id'];
 		$album_data = $this->loader->get($album_id);
 		$this->display->generate_navigation($album_data);
@@ -888,5 +892,13 @@ class comment
 		trigger_error($message);
 
 		return $this->helper->render('gallery/comment_body.html', $page_title);
+	}
+
+	private function assert_image_is_mutable(array $image_data): void
+	{
+		if ((int) $image_data['image_status'] === (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED)
+		{
+			throw new \phpbb\exception\http_exception(404, 'IMAGE_NOT_EXIST');
+		}
 	}
 }

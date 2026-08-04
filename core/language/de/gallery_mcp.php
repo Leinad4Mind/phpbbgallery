@@ -153,4 +153,19 @@ $lang = array_merge($lang, [
 		2 => 'Insgesamt wurden <span style="font-weight: bold;">%s</span> Bilder verschoben.',
 	],
 	'NO_WAITING_UNAPPROVED_IMAGE' => 'Keine Bilder warten auf Genehmigung.',
+	'GALLERY_MCP_DELETE_REQUESTS' => 'Anträge auf Bildlöschung',
+	'LATEST_IMAGE_DELETE_REQUESTS' => 'Neueste Anträge auf Bildlöschung',
+	'DELETE_REQUEST_RESTORE_CONFIRM' => 'Möchtest Du die ausgewählten Bilder wirklich wiederherstellen?',
+	'QUEUE_STATUS_4' => 'Löschung beantragt',
+	'WAITING_DELETE_REQUESTS' => [
+		0 => 'Keine Anträge auf Bildlöschung warten.',
+		1 => 'Insgesamt wartet <span style="font-weight: bold;">1</span> Antrag auf Bildlöschung.',
+		2 => 'Insgesamt warten <span style="font-weight: bold;">%s</span> Anträge auf Bildlöschung.',
+	],
+	'RESTORED_IMAGES' => [
+		0 => 'Keine Bilder wiederhergestellt.',
+		1 => 'Insgesamt wurde <span style="font-weight: bold;">1</span> Bild wiederhergestellt.',
+		2 => 'Insgesamt wurden <span style="font-weight: bold;">%s</span> Bilder wiederhergestellt.',
+	],
+	'NO_WAITING_DELETE_REQUESTS' => 'Keine Anträge auf Bildlöschung warten.',
 ]);

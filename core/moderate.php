@@ -175,7 +175,11 @@ class moderate
 		}
 		else
 		{
-			$mod_array = [$album];
+			$approve_album = $this->album->get_info($album);
+			$mod_array = $approve_album
+				&& $this->gallery_auth->acl_check('m_status', $album, (int) $approve_album['album_user_id'])
+				? [$album]
+				: [0];
 		}
 		// Let's get count of unapproved
 		$sql = 'SELECT COUNT(DISTINCT image_id) as count 
@@ -210,13 +214,53 @@ class moderate
 		}
 		$this->db->sql_freeresult($result);
 
-		if (empty($users_array))
+		// Deletion requests deliberately use m_delete rather than m_status: an
+		// album may delegate permanent deletion without delegating approvals.
+		if ($album === 0)
 		{
-			return;
+			$delete_mod_array = $this->gallery_auth->acl_album_ids('m_delete');
+		}
+		else
+		{
+			$delete_album = $this->album->get_info($album);
+			$delete_mod_array = $delete_album
+				&& $this->gallery_auth->acl_check('m_delete', $album, (int) $delete_album['album_user_id'])
+				? [$album]
+				: [];
+		}
+		if (!$delete_mod_array)
+		{
+			$delete_mod_array = [0];
 		}
 
-		// Load users
-		$this->user_loader->load_users(array_keys($users_array));
+		$sql = 'SELECT COUNT(DISTINCT image_id) AS count
+			FROM ' . $this->images_table . '
+			WHERE image_status = ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED . '
+				AND ' . $this->db->sql_in_set('image_album_id', $delete_mod_array);
+		$result = $this->db->sql_query($sql);
+		$delete_count = (int) $this->db->sql_fetchfield('count');
+		$this->db->sql_freeresult($result);
+
+		$sql = 'SELECT i.*, a.album_name
+			FROM ' . $this->images_table . ' i
+			INNER JOIN ' . $this->albums_table . ' a
+				ON a.album_id = i.image_album_id
+			WHERE i.image_status = ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED . '
+				AND ' . $this->db->sql_in_set('i.image_album_id', $delete_mod_array) . '
+			ORDER BY i.image_delete_request_time DESC, i.image_id DESC';
+		$result = $this->db->sql_query_limit($sql, $per_page, $page * $per_page);
+		$delete_requests = [];
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$delete_requests[] = $row;
+			$users_array[(int) $row['image_user_id']] = [''];
+		}
+		$this->db->sql_freeresult($result);
+
+		if ($users_array)
+		{
+			$this->user_loader->load_users(array_keys($users_array));
+		}
 
 		foreach ($waiting_images as $image_data)
 		{
@@ -233,10 +277,26 @@ class moderate
 				'IMAGE_ALBUM_ID'       => $image_data['image_album_id'],
 			]);
 		}
+		foreach ($delete_requests as $image_data)
+		{
+			$this->template->assign_block_vars('image_delete_requested', [
+				'U_IMAGE_ID'           => (int) $image_data['image_id'],
+				'U_IMAGE'              => $this->helper->route('phpbbgallery_core_image_file_mini', ['image_id' => (int) $image_data['image_id']]),
+				'U_IMAGE_MODERATE_URL' => $this->helper->route('phpbbgallery_core_moderate_image', ['image_id' => (int) $image_data['image_id']]),
+				'U_IMAGE_NAME'         => $image_data['image_name'],
+				'IMAGE_AUTHOR'         => $this->user_loader->get_username((int) $image_data['image_user_id'], 'full'),
+				'IMAGE_TIME'           => $this->user->format_date((int) $image_data['image_delete_request_time']),
+				'IMAGE_ALBUM'          => $image_data['album_name'],
+				'IMAGE_ALBUM_URL'      => $this->helper->route('phpbbgallery_core_album', ['album_id' => (int) $image_data['image_album_id']]),
+				'IMAGE_ALBUM_ID'       => (int) $image_data['image_album_id'],
+			]);
+		}
 		$this->template->assign_vars([
 			'TOTAL_IMAGES_WAITING'     => $this->lang->lang('WAITING_UNAPPROVED_IMAGE', (int) $count),
+			'TOTAL_DELETE_REQUESTS'    => $this->lang->lang('WAITING_DELETE_REQUESTS', $delete_count),
 			'S_GALLERY_APPROVE_ACTION' => $album > 0 ? $this->helper->route('phpbbgallery_core_moderate_queue_approve_album', ['album_id' => $album]) : $this->helper->route('phpbbgallery_core_moderate_queue_approve'),
 		]);
+		$count = max((int) $count, $delete_count);
 		if ($album === 0)
 		{
 			$this->pagination->generate_template_pagination([
@@ -430,6 +490,10 @@ class moderate
 			$files = [];
 		}
 
+		// handle_counter excludes unapproved, orphan and pending-deletion rows,
+		// therefore only images still represented in public counters are removed.
+		$this->image->handle_counter($images, false);
+
 		// We are going to do some cleanup
 		$this->gallery_rating->loader(0);
 		$this->gallery_rating->delete_ratings($images);
@@ -437,5 +501,28 @@ class moderate
 		$this->gallery_notification->delete_images($images);
 		$this->report->delete_images($images);
 		$this->image->delete_images($images, $files);
+	}
+
+	/**
+	 * Permanently delete only images still awaiting deletion review.
+	 */
+	public function delete_requested_images(array $images): int
+	{
+		$this->gallery_rating->loader(0);
+		$deleted = $this->image->delete_images_matching_status_ids(
+			$images,
+			\phpbbgallery\core\block::STATUS_DELETE_REQUESTED
+		);
+		if (!$deleted)
+		{
+			return 0;
+		}
+
+		$this->gallery_rating->delete_ratings($deleted);
+		$this->comment->delete_images($deleted);
+		$this->gallery_notification->delete_images($deleted);
+		$this->report->delete_images($deleted);
+
+		return count($deleted);
 	}
 }

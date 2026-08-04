@@ -869,7 +869,8 @@ class manage
 			FROM ' . $this->images_table . ' 
 			WHERE image_album_id = ' . (int) $album_id . '
 				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . '
-				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN;
+				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
+				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED;
 		$result = $this->db->sql_query($sql);
 
 		$image_counts = [];
@@ -926,7 +927,8 @@ class manage
 		$sql = 'SELECT COUNT(image_id) AS num_images, SUM(image_comments) AS num_comments
 			FROM ' . $this->images_table . '  
 			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . '
-				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN;
+				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
+				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED;
 		$result = $this->db->sql_query($sql);
 		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);

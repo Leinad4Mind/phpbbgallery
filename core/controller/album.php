@@ -270,7 +270,8 @@ class album
 		$sort_key = $this->request->variable('sk', ($album_data['album_sort_key']) ? $album_data['album_sort_key'] : $this->config['phpbb_gallery_default_sort_key']);
 		$sort_dir = $this->normalize_sort_direction($this->request->variable('sd', ($album_data['album_sort_dir']) ? $album_data['album_sort_dir'] : $this->config['phpbb_gallery_default_sort_dir']));
 
-		$image_status_check = ' AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED;
+		$image_status_check = ' AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED .
+			' AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED;
 
 		$image_counter = $album_data['album_images'];
 
@@ -284,13 +285,15 @@ class album
 		}
 		else
 		{
-			$image_status_check = ' AND (image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . " OR image_user_id = $user_id)";
+			$image_status_check = ' AND (image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . " OR image_user_id = $user_id)" .
+				' AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED;
 
 			$sql = 'SELECT COUNT(*) AS total_images
 				FROM ' . $this->table_images . '
 				WHERE image_album_id = ' . (int) $album_id . '
-					AND (image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . " OR image_user_id = $user_id)
-					AND image_status <> " . (int) \phpbbgallery\core\block::STATUS_ORPHAN;
+					AND (image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . " OR image_user_id = $user_id)" . '
+					AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
+					AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED;
 			$result = $this->db->sql_query($sql);
 			$image_counter = (int) $this->db->sql_fetchfield('total_images');
 			$this->db->sql_freeresult($result);
@@ -357,10 +360,9 @@ class album
 		$images = [];
 		$sql = 'SELECT *
 			FROM ' . $this->table_images . '
-			WHERE image_album_id = ' . (int) $album_id . "
-				$image_status_check
-				AND image_status <> " . (int) \phpbbgallery\core\block::STATUS_ORPHAN . "
-			ORDER BY $sql_sort_order" . $sql_help_sort;
+			WHERE image_album_id = ' . (int) $album_id . $image_status_check . '
+				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
+			ORDER BY ' . $sql_sort_order . $sql_help_sort;
 		$result = $this->db->sql_query_limit($sql, $limit, $start);
 
 		// Now let's get display options
@@ -534,7 +536,8 @@ class album
 		$sql = 'SELECT COUNT(image_id) AS total_images
 			FROM ' . $this->table_images . '
 			WHERE (' . implode(' OR ', $visibility_sql) . ')
-				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN;
+				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
+				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED;
 		$result = $this->db->sql_query($sql);
 		$total = (int) $this->db->sql_fetchfield('total_images');
 		$this->db->sql_freeresult($result);

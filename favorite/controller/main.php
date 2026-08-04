@@ -176,6 +176,7 @@ class main
 		// and to the moderators of the album.
 		$status = (int) $image_data['image_status'];
 		$is_hidden = $status === (int) \phpbbgallery\core\block::STATUS_ORPHAN
+			|| $status === (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED
 			|| ($status === (int) \phpbbgallery\core\block::STATUS_UNAPPROVED
 				&& (int) $image_data['image_user_id'] !== $user_id
 				&& !$this->gallery_auth->acl_check('m_status', $album_id, $album_user_id));

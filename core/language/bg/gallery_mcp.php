@@ -153,4 +153,19 @@ $lang = array_merge($lang, [
 		2 => 'Общо <span style="font-weight: bold;">%s</span> изображения са преместени.',
 	],
 	'NO_WAITING_UNAPPROVED_IMAGE' => 'Няма изображения чакащи одобрение.',
+	'GALLERY_MCP_DELETE_REQUESTS' => 'Заявки за изтриване на изображения',
+	'LATEST_IMAGE_DELETE_REQUESTS' => 'Последни заявки за изтриване на изображения',
+	'DELETE_REQUEST_RESTORE_CONFIRM' => 'Сигурни ли сте, че искате да възстановите избраните изображения?',
+	'QUEUE_STATUS_4' => 'Заявено изтриване',
+	'WAITING_DELETE_REQUESTS' => [
+		0 => 'Няма чакащи заявки за изтриване на изображения.',
+		1 => 'Има <span style="font-weight: bold;">1</span> чакаща заявка за изтриване на изображение.',
+		2 => 'Има <span style="font-weight: bold;">%s</span> чакащи заявки за изтриване на изображения.',
+	],
+	'RESTORED_IMAGES' => [
+		0 => 'Няма възстановени изображения.',
+		1 => 'Възстановено е <span style="font-weight: bold;">1</span> изображение.',
+		2 => 'Възстановени са <span style="font-weight: bold;">%s</span> изображения.',
+	],
+	'NO_WAITING_DELETE_REQUESTS' => 'Няма чакащи заявки за изтриване на изображения.',
 ]);

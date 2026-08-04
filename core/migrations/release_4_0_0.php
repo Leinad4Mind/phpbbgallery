@@ -18,7 +18,7 @@ class release_4_0_0 extends migration
 {
 	public static function depends_on(): array
 	{
-		return ['\phpbbgallery\core\migrations\contest_creation'];
+		return ['\phpbbgallery\core\migrations\image_deletion_requests'];
 	}
 
 	public function update_data(): array

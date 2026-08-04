@@ -127,7 +127,7 @@ final class controller_search_types_test extends TestCase
 		$visibility = (new \ReflectionMethod(search::class, 'get_image_visibility_sql'))->invoke($controller);
 
 		$this->assertSame(
-			'i.image_status <> 3 AND (i.image_status <> 0 OR i.image_user_id = 42 OR i.image_album_id IN (9))',
+			'i.image_status <> 3 AND i.image_status <> 4 AND (i.image_status <> 0 OR i.image_user_id = 42 OR i.image_album_id IN (9))',
 			$visibility
 		);
 	}
@@ -150,7 +150,7 @@ final class controller_search_types_test extends TestCase
 
 		$visibility = (new \ReflectionMethod(search::class, 'get_image_visibility_sql'))->invoke($controller);
 
-		$this->assertSame('i.image_status <> 3 AND (i.image_status <> 0)', $visibility);
+		$this->assertSame('i.image_status <> 3 AND i.image_status <> 4 AND (i.image_status <> 0)', $visibility);
 	}
 
 	public function test_search_permission_is_checked_before_queries_and_wildcards_are_escaped_once(): void

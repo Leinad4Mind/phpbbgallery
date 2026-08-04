@@ -130,4 +130,15 @@ final class ucp_main_types_test extends TestCase
 		$this->assertStringContainsString("'LAST_COMMENT'", $source);
 		$this->assertStringContainsString("generate_text_for_display(\$row['comment'], \$row['comment_uid'], \$row['comment_bitfield'], 7)", $source);
 	}
+
+	public function test_personal_album_deletion_cannot_bypass_recoverable_image_deletion(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/ucp/main_module.php');
+
+		$this->assertStringContainsString('SELECT image_id, image_filename, image_status', $source);
+		$this->assertStringContainsString('block::STATUS_ORPHAN', $source);
+		$this->assertStringContainsString('$contains_protected_images = true', $source);
+		$this->assertStringContainsString('DELETE_ALBUM_REQUIRES_EMPTY', $source);
+		$this->assertStringNotContainsString('$num_images = sizeof($deleted_images)', $source);
+	}
 }

@@ -45,7 +45,8 @@ final class domain_moderate_types_test extends TestCase
 
 			if (!$method->isConstructor())
 			{
-				$this->assertSame('void', (string) $method->getReturnType(), moderate::class . '::' . $method->getName() . '()');
+				$expected_return = $method->getName() === 'delete_requested_images' ? 'int' : 'void';
+				$this->assertSame($expected_return, (string) $method->getReturnType(), moderate::class . '::' . $method->getName() . '()');
 			}
 		}
 	}
@@ -68,6 +69,7 @@ final class domain_moderate_types_test extends TestCase
 		$notification->expects($this->once())->method('delete_images')->with($images);
 		$report->expects($this->once())->method('delete_images')->with($images);
 		$image->expects($this->once())->method('delete_images')->with($images, $files);
+		$image->expects($this->once())->method('handle_counter')->with($images, false);
 
 		$reflection->getProperty('gallery_rating')->setValue($moderate, $rating);
 		$reflection->getProperty('comment')->setValue($moderate, $comment);
@@ -90,6 +92,7 @@ final class domain_moderate_types_test extends TestCase
 		$image = $this->createMock(image::class);
 
 		$image->expects($this->once())->method('delete_images')->with($images, []);
+		$image->expects($this->once())->method('handle_counter')->with($images, false);
 
 		$reflection->getProperty('gallery_rating')->setValue($moderate, $rating);
 		$reflection->getProperty('comment')->setValue($moderate, $comment);
@@ -98,6 +101,36 @@ final class domain_moderate_types_test extends TestCase
 		$reflection->getProperty('image')->setValue($moderate, $image);
 
 		$moderate->delete_images($images, false);
+	}
+
+	public function test_requested_deletion_cleans_dependants_only_after_status_matched_delete(): void
+	{
+		$moderate = (new \ReflectionClass(moderate::class))->newInstanceWithoutConstructor();
+		$requested = [11, 14];
+		$deleted = [11];
+		$rating = $this->createMock(rating::class);
+		$comment = $this->createMock(comment::class);
+		$notification = $this->createMock(notification::class);
+		$report = $this->createMock(report::class);
+		$image = $this->createMock(image::class);
+
+		$image->expects($this->once())->method('delete_images_matching_status_ids')
+			->with($requested, \phpbbgallery\core\block::STATUS_DELETE_REQUESTED)
+			->willReturn($deleted);
+		$rating->expects($this->once())->method('loader')->with(0);
+		$rating->expects($this->once())->method('delete_ratings')->with($deleted);
+		$comment->expects($this->once())->method('delete_images')->with($deleted);
+		$notification->expects($this->once())->method('delete_images')->with($deleted);
+		$report->expects($this->once())->method('delete_images')->with($deleted);
+
+		$reflection = new \ReflectionClass(moderate::class);
+		$reflection->getProperty('gallery_rating')->setValue($moderate, $rating);
+		$reflection->getProperty('comment')->setValue($moderate, $comment);
+		$reflection->getProperty('gallery_notification')->setValue($moderate, $notification);
+		$reflection->getProperty('report')->setValue($moderate, $report);
+		$reflection->getProperty('image')->setValue($moderate, $image);
+
+		$this->assertSame(1, $moderate->delete_requested_images($requested));
 	}
 
 	public function test_waiting_queue_loads_album_names_in_the_listing_query(): void
