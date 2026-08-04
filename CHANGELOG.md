@@ -6,6 +6,9 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Added a deterministic release builder that creates and validates all 11
+  component ZIPs from a committed Git ref, records their SHA-256 hashes and
+  publishes the verified package set as a CI artifact.
 - Made all 11 component manifests expose their version-check configuration in
   phpBB's supported `extra.version-check` location, added matching release
   metadata files and documented the Core and add-on catalogue.
