@@ -139,6 +139,8 @@ final class architecture_test extends TestCase
 		$this->assertStringContainsString('acl_a_gallery_albums', $migration);
 		$this->assertStringContainsString('ACP_BBTAGSBRIDGE_POLICIES', $migration);
 		$this->assertStringContainsString('ACP_BBTAGSIMAGES_POLICIES', $migration);
+		$this->assertStringContainsString('remove_provisional_module', $migration);
+		$this->assertStringNotContainsString("['module.remove', ['acp', 'PHPBB_GALLERY', 'ACP_BBTAGSBRIDGE_POLICIES']]", $migration);
 		$this->assertStringContainsString('add_form_key(self::FORM_KEY)', $module);
 		$this->assertStringContainsString('check_form_key(self::FORM_KEY)', $module);
 		$this->assertStringContainsString('save_provider_policy(', $module);
