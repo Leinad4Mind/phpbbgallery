@@ -154,7 +154,7 @@ class image_visibility
 		];
 	}
 
-	public function private_data_sql(string $alias, int $viewer_id, array $moderated_album_ids): string
+	public function get_visibility_sql_for_private_data(string $alias, int $viewer_id, array $moderated_album_ids): string
 	{
 		$this->validate_alias($alias);
 		$conditions = [];
@@ -169,7 +169,7 @@ class image_visibility
 		return $this->combine_conditions((array) $conditions);
 	}
 
-	public function results_sql(string $alias, array $moderated_album_ids): string
+	public function get_visibility_sql_for_results(string $alias, array $moderated_album_ids): string
 	{
 		$this->validate_alias($alias);
 		$conditions = [];
@@ -182,6 +182,22 @@ class image_visibility
 		$conditions = $this->append_uncovered_marker_sql($alias, (array) $conditions, (array) $covered_markers);
 
 		return $this->combine_conditions((array) $conditions);
+	}
+
+	/**
+	 * @deprecated Use get_visibility_sql_for_private_data().
+	 */
+	public function private_data_sql(string $alias, int $viewer_id, array $moderated_album_ids): string
+	{
+		return $this->get_visibility_sql_for_private_data($alias, $viewer_id, $moderated_album_ids);
+	}
+
+	/**
+	 * @deprecated Use get_visibility_sql_for_results().
+	 */
+	public function results_sql(string $alias, array $moderated_album_ids): string
+	{
+		return $this->get_visibility_sql_for_results($alias, $moderated_album_ids);
 	}
 
 	/**

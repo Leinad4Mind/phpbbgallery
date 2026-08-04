@@ -208,7 +208,7 @@ class selector
 				\phpbbgallery\core\block::STATUS_APPROVED,
 				\phpbbgallery\core\block::STATUS_LOCKED,
 			]),
-			$this->image_visibility->results_sql('i', []),
+			$this->image_visibility->get_visibility_sql_for_results('i', []),
 		];
 	}
 

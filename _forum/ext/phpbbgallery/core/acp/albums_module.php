@@ -179,6 +179,7 @@ class albums_module
 					* @var	string	action		Action we are taking
 					* @var	int		album_id	Album we are doing it to
 					* @var	array	album_data	Album data for the album
+					* @var	array	album_type_data	Validated data owned by the selected album type
 					* @since 1.2.0
 					*/
 					$album_type_data = [];
@@ -431,6 +432,7 @@ class albums_module
 						* @event phpbbgallery.core.acp.albums.default_data
 						* @var	action	action		Action taken
 						* @var	array	album_data	Album data array
+						* @var	array	album_type_data	Default data owned by the selected album type
 						* @since 1.2.0
 						*/
 						$album_type_data = [];
@@ -609,6 +611,8 @@ class albums_module
 				* @event phpbbgallery.core.acp.albums.send_to_template
 				* @var	action	action		Action taken
 				* @var	array	album_data	Album data array
+				* @var	array	album_type_data	Validated data owned by the selected album type
+				* @var	int|null	old_album_type	Previous album type when editing
 				* @since 1.2.0
 				*/
 				$vars = ['action', 'album_data', 'album_type_data', 'old_album_type'];

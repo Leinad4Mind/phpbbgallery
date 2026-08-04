@@ -244,12 +244,12 @@ class search
 		if ($keywords || $username || $user_id || $search_id || $submit || $additional_search_active)
 		{
 			$user_id_ary = [];
-			$private_data_sql = $this->image_visibility->private_data_sql(
+			$private_data_sql = $this->image_visibility->get_visibility_sql_for_private_data(
 				'i',
 				(int) $this->user->data['user_id'],
 				$moderated_album_ids
 			);
-			$results_sql = $this->image_visibility->results_sql('i', $moderated_album_ids);
+			$results_sql = $this->image_visibility->get_visibility_sql_for_results('i', $moderated_album_ids);
 			// Let's resolve username to user id ... or array of them.
 			if ($username)
 			{

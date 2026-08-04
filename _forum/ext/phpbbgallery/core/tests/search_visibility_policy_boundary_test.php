@@ -22,10 +22,10 @@ final class search_visibility_policy_boundary_test extends TestCase
 
 		$this->assertStringContainsString('policy\\image_visibility $image_visibility', $search);
 		$this->assertStringContainsString('policy\\image_visibility $image_visibility', $controller);
-		$this->assertStringContainsString('$this->image_visibility->private_data_sql(', $search);
-		$this->assertStringContainsString('$this->image_visibility->results_sql(', $search);
-		$this->assertStringContainsString('$this->image_visibility->private_data_sql(', $controller);
-		$this->assertStringContainsString('$this->image_visibility->results_sql(', $controller);
+		$this->assertStringContainsString('$this->image_visibility->get_visibility_sql_for_private_data(', $search);
+		$this->assertStringContainsString('$this->image_visibility->get_visibility_sql_for_results(', $search);
+		$this->assertStringContainsString('$this->image_visibility->get_visibility_sql_for_private_data(', $controller);
+		$this->assertStringContainsString('$this->image_visibility->get_visibility_sql_for_results(', $controller);
 		$this->assertStringNotContainsString('core\\contest::', $search);
 		$this->assertStringNotContainsString('core\\contest::', $controller);
 		$search_service = strstr($services, 'phpbbgallery.core.search:');

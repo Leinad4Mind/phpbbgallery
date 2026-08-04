@@ -170,8 +170,8 @@ final class controller_search_types_test extends TestCase
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/search.php');
 
-		$this->assertStringContainsString('$this->image_visibility->private_data_sql(', $source);
-		$this->assertStringContainsString('$this->image_visibility->results_sql(', $source);
+		$this->assertStringContainsString('$this->image_visibility->get_visibility_sql_for_private_data(', $source);
+		$this->assertStringContainsString('$this->image_visibility->get_visibility_sql_for_results(', $source);
 		$this->assertStringContainsString('AND LOWER(i.image_desc)', $source);
 		$this->assertStringContainsString('in_array($sort_key, [\'ra\', \'r\', \'c\', \'lc\'], true)', $source);
 		$this->assertStringContainsString('$sql_where[] = $private_data_sql;', $source);
