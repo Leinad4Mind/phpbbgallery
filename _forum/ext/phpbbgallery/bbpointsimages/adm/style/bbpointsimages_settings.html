@@ -25,23 +25,40 @@
 		<legend>{{ lang('ACP_BBPOINTSIMAGES_ALBUM_RULES') }}</legend>
 		<p>{{ lang('ACP_BBPOINTSIMAGES_ALBUM_RULES_EXPLAIN') }}</p>
 		<table class="table1 zebra-table">
-			<thead><tr><th>{{ lang('ACP_BBPOINTSIMAGES_ALBUM') }}</th><th>{{ lang('ACP_BBPOINTSIMAGES_UPLOAD_REWARD') }}</th><th>{{ lang('ACP_BBPOINTSIMAGES_SOURCE_COST') }}</th></tr></thead>
+			<thead><tr><th>{{ lang('ACP_BBPOINTSIMAGES_ALBUM') }}</th><th>{{ lang('ACP_BBPOINTSIMAGES_UPLOAD_REWARD') }}</th><th>{{ lang('ACP_BBPOINTSIMAGES_SOURCE_COST') }}</th><th>{{ lang('ACP_BBPOINTSIMAGES_CONTRIBUTORS') }}</th><th>{{ lang('OPTIONS') }}</th></tr></thead>
 			<tbody>
 			{% for album in bbpointsimages_albums %}
 				<tr>
 					<td>{{ album.PREFIX }}{{ album.NAME }}</td>
-					<td><input name="album_rules[{{ album.ID }}][upload_reward]" type="number" min="-1" max="2147483647" value="{{ album.UPLOAD_REWARD }}" title="{{ lang('ACP_BBPOINTSIMAGES_INHERIT_EXPLAIN') }}"></td>
-					<td><input name="album_rules[{{ album.ID }}][source_cost]" type="number" min="-1" max="2147483647" value="{{ album.SOURCE_COST }}" title="{{ lang('ACP_BBPOINTSIMAGES_INHERIT_EXPLAIN') }}"></td>
+					<td><strong>{{ album.EFFECTIVE_UPLOAD_REWARD }}</strong><br><span>{% if album.UPLOAD_REWARD == -1 %}{{ lang('ACP_BBPOINTSIMAGES_INHERITED') }}{% else %}{{ lang('ACP_BBPOINTSIMAGES_DIRECT_VALUE', album.UPLOAD_REWARD) }}{% endif %}</span></td>
+					<td><strong>{{ album.EFFECTIVE_SOURCE_COST }}</strong><br><span>{% if album.SOURCE_COST == -1 %}{{ lang('ACP_BBPOINTSIMAGES_INHERITED') }}{% else %}{{ lang('ACP_BBPOINTSIMAGES_DIRECT_VALUE', album.SOURCE_COST) }}{% endif %}</span></td>
+					<td><strong>{{ album.EFFECTIVE_CONTRIBUTORS_ENABLED ? lang('YES') : lang('NO') }}</strong><br><span>{% if album.CONTRIBUTORS_ENABLED == -1 %}{{ lang('ACP_BBPOINTSIMAGES_INHERITED') }}{% else %}{{ lang('ACP_BBPOINTSIMAGES_DIRECT_SETTING') }}{% endif %}</span></td>
+					<td><a href="{{ album.U_EDIT }}">{{ lang('EDIT') }}</a></td>
 				</tr>
 			{% else %}
-				<tr><td colspan="3">{{ lang('ACP_BBPOINTSIMAGES_NO_ALBUMS') }}</td></tr>
+				<tr><td colspan="5">{{ lang('ACP_BBPOINTSIMAGES_NO_ALBUMS') }}</td></tr>
 			{% endfor %}
 			</tbody>
 		</table>
-		<p>{{ lang('ACP_BBPOINTSIMAGES_INHERIT_EXPLAIN') }}</p>
-		<p class="submit-buttons"><input class="button1" type="submit" name="submit" value="{{ lang('SUBMIT') }}"></p>
 	</fieldset>
+	<p class="submit-buttons"><input class="button1" type="submit" name="submit" value="{{ lang('SUBMIT') }}"></p>
 	{{ S_FORM_TOKEN }}
+</form>
+
+<form method="post" action="{{ U_CONTRIBUTORS_BULK }}">
+	<fieldset>
+		<legend>{{ lang('ACP_BBPOINTSIMAGES_CONTRIBUTORS_BULK') }}</legend>
+		<p>{{ lang('ACP_BBPOINTSIMAGES_CONTRIBUTORS_BULK_EXPLAIN') }}</p>
+		<p class="submit-buttons">
+			<select name="contributors_bulk">
+				<option value="-1">{{ lang('ACP_BBPOINTSIMAGES_INHERIT_GLOBAL') }}</option>
+				<option value="1">{{ lang('ACP_BBPOINTSIMAGES_ENABLE_ALL') }}</option>
+				<option value="0">{{ lang('ACP_BBPOINTSIMAGES_DISABLE_ALL') }}</option>
+			</select>
+			<input class="button2" type="submit" name="apply_contributors_bulk" value="{{ lang('ACP_BBPOINTSIMAGES_APPLY_ALL') }}">
+		</p>
+		{{ S_FORM_TOKEN }}
+	</fieldset>
 </form>
 
 <form method="post" action="{{ U_SYNC }}">

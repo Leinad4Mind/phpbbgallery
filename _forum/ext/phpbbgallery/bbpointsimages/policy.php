@@ -30,7 +30,7 @@ final class policy
 	}
 
 	/**
-	 * @return array{upload_reward: int, source_cost: int}
+	 * @return array{upload_reward: int, source_cost: int, contributors_enabled: int}
 	 */
 	public function resolve(int $album_id): array
 	{
@@ -42,12 +42,14 @@ final class policy
 		$resolved = [
 			'upload_reward' => null,
 			'source_cost' => null,
+			'contributors_enabled' => null,
 		];
-		$sql = 'SELECT rules.upload_reward, rules.source_cost
+		$sql = 'SELECT rules.upload_reward, rules.source_cost, rules.contributors_enabled
 			FROM ' . $this->albums_table . ' current_album
 			INNER JOIN ' . $this->albums_table . ' ancestor
 				ON ancestor.left_id <= current_album.left_id
 				AND ancestor.right_id >= current_album.right_id
+				AND ancestor.album_user_id = current_album.album_user_id
 			LEFT JOIN ' . $this->rules_table . ' rules
 				ON rules.album_id = ancestor.album_id
 			WHERE current_album.album_id = ' . $album_id . '
@@ -59,10 +61,16 @@ final class policy
 			$album_exists = true;
 			foreach (array_keys($resolved) as $setting)
 			{
-				if ($resolved[$setting] === null && $row[$setting] !== null
-					&& (int) $row[$setting] >= 0)
+				$row_value = $row[$setting] ?? null;
+				if ($setting === 'contributors_enabled' && $row_value !== null
+					&& !in_array((int) $row_value, [0, 1], true))
 				{
-					$resolved[$setting] = (int) $row[$setting];
+					continue;
+				}
+				if ($resolved[$setting] === null && $row_value !== null
+					&& (int) $row_value >= 0)
+				{
+					$resolved[$setting] = (int) $row_value;
 				}
 			}
 		}
@@ -78,6 +86,8 @@ final class policy
 				?? self::normalize_amount((int) $this->config['phpbb_gallery_bbpoints_upload_reward']),
 			'source_cost' => $resolved['source_cost']
 				?? self::normalize_amount((int) $this->config['phpbb_gallery_bbpoints_source_cost']),
+			'contributors_enabled' => $resolved['contributors_enabled']
+				?? (empty($this->config['phpbb_gallery_bbpoints_contributors_enabled']) ? 0 : 1),
 		];
 	}
 
@@ -91,38 +101,88 @@ final class policy
 		return min(self::MAX_POINTS, max(0, $value));
 	}
 
+	public static function normalize_toggle_override(int $value): int
+	{
+		return in_array($value, [self::INHERIT, 0, 1], true) ? $value : self::INHERIT;
+	}
+
+	/**
+	 * @return array{upload_reward: int, source_cost: int, contributors_enabled: int}
+	 */
+	public function get_global_rule(): array
+	{
+		return [
+			'upload_reward' => self::normalize_amount((int) $this->config['phpbb_gallery_bbpoints_upload_reward']),
+			'source_cost' => self::normalize_amount((int) $this->config['phpbb_gallery_bbpoints_source_cost']),
+			'contributors_enabled' => empty($this->config['phpbb_gallery_bbpoints_contributors_enabled']) ? 0 : 1,
+		];
+	}
+
 	/**
 	 * Return the complete album tree with its direct overrides.
 	 */
 	public function get_album_rules(): array
 	{
-		$sql = 'SELECT albums.album_id, albums.album_name, albums.left_id, albums.right_id,
-				rules.upload_reward, rules.source_cost
+		$sql = 'SELECT albums.album_id, albums.parent_id, albums.album_user_id, albums.album_name,
+				albums.left_id, albums.right_id, rules.upload_reward, rules.source_cost,
+				rules.contributors_enabled
 			FROM ' . $this->albums_table . ' albums
 			LEFT JOIN ' . $this->rules_table . ' rules ON rules.album_id = albums.album_id
+			WHERE albums.album_user_id = 0
 			ORDER BY albums.left_id ASC';
 		$result = $this->db->sql_query($sql);
 		$rows = [];
 		$parents = [];
+		$global = $this->get_global_rule();
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$left_id = (int) $row['left_id'];
-			while ($parents && end($parents) < $left_id)
+			while ($parents && (int) end($parents)['right_id'] < $left_id)
 			{
 				array_pop($parents);
 			}
+			$inherited = $parents ? end($parents)['effective'] : $global;
+			$effective = [];
+			foreach (array_keys($global) as $setting)
+			{
+				$direct = $row[$setting] === null ? self::INHERIT : (int) $row[$setting];
+				if ($setting === 'contributors_enabled')
+				{
+					$direct = self::normalize_toggle_override($direct);
+				}
+				$effective[$setting] = $direct >= 0 ? $direct : $inherited[$setting];
+			}
 			$row['depth'] = count($parents);
+			$row['effective_upload_reward'] = $effective['upload_reward'];
+			$row['effective_source_cost'] = $effective['source_cost'];
+			$row['effective_contributors_enabled'] = $effective['contributors_enabled'];
 			$rows[] = $row;
-			$parents[] = (int) $row['right_id'];
+			$parents[] = [
+				'right_id' => (int) $row['right_id'],
+				'effective' => $effective,
+			];
 		}
 		$this->db->sql_freeresult($result);
 		return $rows;
 	}
 
+	public function get_album_rule(int $album_id): array
+	{
+		foreach ($this->get_album_rules() as $album)
+		{
+			if ((int) $album['album_id'] === $album_id)
+			{
+				return $album;
+			}
+		}
+
+		throw new \OutOfBoundsException('The public Gallery album does not exist.');
+	}
+
 	/**
 	 * Replace direct overrides for the submitted, existing albums.
 	 *
-	 * @param array<int, array{upload_reward: int, source_cost: int}> $rules
+	 * @param array<int, array{upload_reward: int, source_cost: int, contributors_enabled?: int}> $rules
 	 */
 	public function save_album_rules(array $rules): void
 	{
@@ -148,15 +208,46 @@ final class policy
 		{
 			$upload_reward = self::normalize_override((int) ($rules[$album_id]['upload_reward'] ?? self::INHERIT));
 			$source_cost = self::normalize_override((int) ($rules[$album_id]['source_cost'] ?? self::INHERIT));
-			if ($upload_reward !== self::INHERIT || $source_cost !== self::INHERIT)
+			$contributors_enabled = self::normalize_toggle_override((int) ($rules[$album_id]['contributors_enabled'] ?? self::INHERIT));
+			if ($upload_reward !== self::INHERIT || $source_cost !== self::INHERIT
+				|| $contributors_enabled !== self::INHERIT)
 			{
-				$insert[] = compact('album_id', 'upload_reward', 'source_cost');
+				$insert[] = compact('album_id', 'upload_reward', 'source_cost', 'contributors_enabled');
 			}
 		}
 		if ($insert)
 		{
 			$this->db->sql_multi_insert($this->rules_table, $insert);
 		}
+	}
+
+	/**
+	 * Save one public album without changing any sibling rules.
+	 *
+	 * @param array{upload_reward: int, source_cost: int, contributors_enabled: int} $rule
+	 */
+	public function save_album_rule(int $album_id, array $rule): void
+	{
+		$this->save_album_rules([$album_id => $rule]);
+	}
+
+	/**
+	 * Set the contributor override for every public album while preserving its
+	 * reward and source-cost choices.
+	 */
+	public function set_all_contributors(int $value): void
+	{
+		$value = self::normalize_toggle_override($value);
+		$rules = [];
+		foreach ($this->get_album_rules() as $album)
+		{
+			$rules[(int) $album['album_id']] = [
+				'upload_reward' => $album['upload_reward'] === null ? self::INHERIT : (int) $album['upload_reward'],
+				'source_cost' => $album['source_cost'] === null ? self::INHERIT : (int) $album['source_cost'],
+				'contributors_enabled' => $value,
+			];
+		}
+		$this->save_album_rules($rules);
 	}
 
 	public function delete_for_albums(array $album_ids): void

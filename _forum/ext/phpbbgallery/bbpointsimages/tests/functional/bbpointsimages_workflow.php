@@ -71,6 +71,7 @@ class bbpointsimages_workflow extends \phpbb_functional_test_case
 		global $phpbb_root_path;
 
 		$this->add_lang_ext('phpbbgallery/core', 'gallery');
+		$this->add_lang_ext('phpbbgallery/core', 'gallery_acp');
 		$this->add_lang_ext('phpbbgallery/acpimport', 'info_acp_gallery_import');
 		$this->add_lang_ext('phpbbgallery/bbpointsimages', 'info_acp_bbpointsimages');
 
@@ -88,6 +89,11 @@ class bbpointsimages_workflow extends \phpbb_functional_test_case
 		$this->set_config('phpbb_gallery_bbpoints_contributors_enabled', 1);
 		$this->seed_points($buyer_id, 50);
 		$this->purge_cache();
+		$this->login();
+		$this->admin_login();
+		$this->configure_album_policy($approved_album, self::REWARD, self::SOURCE_COST, 1);
+		$this->assert_policy_overview($approved_album, 'Paid sources');
+		$this->logout();
 
 		$this->login();
 		$admin_balance_before_upload = $this->balance(2);
@@ -159,6 +165,45 @@ class bbpointsimages_workflow extends \phpbb_functional_test_case
 		$this->assert_extension_state('phpbbgallery/bbpointsimages', true);
 		$this->assert_notification_type_state(true);
 		$this->assertSame(1, $this->reward_count($paid_image_id));
+	}
+
+	private function configure_album_policy(int $album_id, int $reward, int $cost, int $contributors): void
+	{
+		$module_id = $this->module_id('acp', '\phpbbgallery\core\acp\albums_module', 'manage');
+		$crawler = self::request('GET', 'adm/index.php?i=' . $module_id
+			. '&mode=manage&parent_id=0&action=edit&a=' . $album_id . '&sid=' . $this->sid);
+		$this->assertSame(1, $crawler->filter('input[name="bbpointsimages_upload_reward"]')->count());
+		$this->assertSame(1, $crawler->filter('input[name="bbpointsimages_source_cost"]')->count());
+		$this->assertSame(1, $crawler->filter('select[name="bbpointsimages_contributors_enabled"]')->count());
+
+		$form = $crawler->selectButton($this->lang('SUBMIT'))->form();
+		$crawler = self::submit($form, [
+			'bbpointsimages_upload_reward' => $reward,
+			'bbpointsimages_source_cost' => $cost,
+			'bbpointsimages_contributors_enabled' => $contributors,
+		]);
+		$this->assertStringContainsString($this->lang('ALBUM_UPDATED'), $crawler->filter('body')->text());
+
+		$db = $this->get_db();
+		$result = $db->sql_query('SELECT upload_reward, source_cost, contributors_enabled
+			FROM ' . $this->table('gallery_bbpoints_album_rules') . '
+			WHERE album_id = ' . $album_id);
+		$row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+		$this->assertSame([
+			'upload_reward' => $reward,
+			'source_cost' => $cost,
+			'contributors_enabled' => $contributors,
+		], $row);
+	}
+
+	private function assert_policy_overview(int $album_id, string $album_name): void
+	{
+		$module_id = $this->module_id('acp', '\phpbbgallery\bbpointsimages\acp\main_module', 'settings');
+		$crawler = self::request('GET', 'adm/index.php?i=' . $module_id . '&mode=settings&sid=' . $this->sid);
+		$this->assertStringContainsString($album_name, $crawler->filter('body')->text());
+		$this->assertSame(0, $crawler->filter('input[name^="album_rules["]')->count());
+		$this->assertSame(1, $crawler->filter('a[href*="a=' . $album_id . '"][href*="action=edit"]')->count());
 	}
 
 	/**

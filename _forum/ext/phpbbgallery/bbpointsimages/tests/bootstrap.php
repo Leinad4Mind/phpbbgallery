@@ -270,6 +270,7 @@ namespace
 	require_once dirname(__DIR__) . '/migrations/m1_init.php';
 	require_once dirname(__DIR__) . '/migrations/m2_reward_lifecycle.php';
 	require_once dirname(__DIR__) . '/migrations/m3_acp_settings.php';
+	require_once dirname(__DIR__) . '/migrations/m4_contributor_policy.php';
 	require_once dirname(__DIR__) . '/reward_manager.php';
 	require_once dirname(__DIR__) . '/purchase_manager.php';
 	require_once dirname(__DIR__) . '/contributor_manager.php';

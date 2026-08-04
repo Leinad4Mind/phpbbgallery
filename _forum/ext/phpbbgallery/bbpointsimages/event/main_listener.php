@@ -10,7 +10,6 @@
 namespace phpbbgallery\bbpointsimages\event;
 
 use phpbb\controller\helper;
-use phpbb\config\config;
 use phpbb\event\data;
 use phpbb\language\language;
 use phpbb\request\request_interface;
@@ -38,7 +37,6 @@ final class main_listener implements EventSubscriberInterface
 		private language $language,
 		private helper $helper,
 		private template $template,
-		private config $config,
 		private url $gallery_url
 	)
 	{
@@ -82,14 +80,15 @@ final class main_listener implements EventSubscriberInterface
 		$this->save_contributors(
 			(int) $event['image_id'],
 			(int) $image_data['image_user_id'],
-			(int) $event['image_index']
+			(int) $event['image_index'],
+			(int) $image_data['image_album_id']
 		);
 		$this->reward_and_notify((array) $event['image_data'], (string) $event['file_link']);
 	}
 
 	public function validate_upload_review(data $event): void
 	{
-		if (!$this->assignment_enabled() || (string) $event['validation_error'] !== '')
+		if (!$this->assignment_enabled((int) $event['album_id']) || (string) $event['validation_error'] !== '')
 		{
 			return;
 		}
@@ -107,13 +106,20 @@ final class main_listener implements EventSubscriberInterface
 	public function display_upload_review(data $event): void
 	{
 		$template_vars = (array) $event['image_template_vars'];
-		$this->assign_contributor_field($template_vars, (int) $event['image_id'], (int) $event['image_index']);
+		$image_data = (array) $event['image_data'];
+		$this->assign_contributor_field(
+			$template_vars,
+			(int) $event['image_id'],
+			(int) $event['image_index'],
+			(int) $image_data['image_album_id']
+		);
 		$event['image_template_vars'] = $template_vars;
 	}
 
 	public function validate_image_edit(data $event): void
 	{
-		if (!$this->assignment_enabled())
+		$album_data = (array) $event['album_data'];
+		if (!$this->assignment_enabled((int) $album_data['album_id']))
 		{
 			return;
 		}
@@ -129,14 +135,20 @@ final class main_listener implements EventSubscriberInterface
 	public function display_image_edit(data $event): void
 	{
 		$template_vars = (array) $event['template_vars'];
-		$this->assign_contributor_field($template_vars, (int) $event['image_id'], 0);
+		$album_data = (array) $event['album_data'];
+		$this->assign_contributor_field($template_vars, (int) $event['image_id'], 0, (int) $album_data['album_id']);
 		$event['template_vars'] = $template_vars;
 	}
 
 	public function save_image_edit(data $event): void
 	{
 		$updated = (array) $event['updated_image_data'];
-		$this->save_contributors((int) $event['image_id'], (int) $updated['image_user_id'], 0);
+		$this->save_contributors(
+			(int) $event['image_id'],
+			(int) $updated['image_user_id'],
+			0,
+			(int) $updated['image_album_id']
+		);
 	}
 
 	public function approved(data $event): void
@@ -267,9 +279,9 @@ final class main_listener implements EventSubscriberInterface
 		}
 	}
 
-	private function assign_contributor_field(array &$template_vars, int $image_id, int $image_index): void
+	private function assign_contributor_field(array &$template_vars, int $image_id, int $image_index, int $album_id): void
 	{
-		$template_vars['BBPOINTSIMAGES_CAN_ASSIGN_CONTRIBUTORS'] = $this->assignment_enabled();
+		$template_vars['BBPOINTSIMAGES_CAN_ASSIGN_CONTRIBUTORS'] = $this->assignment_enabled($album_id);
 		if (!$template_vars['BBPOINTSIMAGES_CAN_ASSIGN_CONTRIBUTORS'])
 		{
 			return;
@@ -303,9 +315,9 @@ final class main_listener implements EventSubscriberInterface
 		return '';
 	}
 
-	private function save_contributors(int $image_id, int $author_id, int $image_index): void
+	private function save_contributors(int $image_id, int $author_id, int $image_index, int $album_id): void
 	{
-		if (!$this->assignment_enabled())
+		if (!$this->assignment_enabled($album_id))
 		{
 			return;
 		}
@@ -326,9 +338,16 @@ final class main_listener implements EventSubscriberInterface
 		);
 	}
 
-	private function assignment_enabled(): bool
+	private function assignment_enabled(int $album_id): bool
 	{
-		return !empty($this->config['phpbb_gallery_bbpoints_contributors_enabled']);
+		try
+		{
+			return !empty($this->policy->resolve($album_id)['contributors_enabled']);
+		}
+		catch (\OutOfBoundsException)
+		{
+			return false;
+		}
 	}
 
 	private function reward_and_notify(array $image_data, string $source_path): void

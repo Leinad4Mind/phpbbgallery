@@ -6,12 +6,19 @@ All notable changes to the phpBB Gallery BBPoints Images add-on are documented i
 
 ### Fixed
 
+- Kept policy inheritance inside the same Gallery owner tree and excluded
+  personal album trees from the public ACP hierarchy.
 - Prevent contributor relations from surviving when an image is deleted while its contributor list is being saved.
 - Remove per-album points rules when their Gallery album is deleted.
 - Reconcile orphan contributor and album-rule rows after reactivation while preserving financial reward and purchase history.
 
 ### Added
 
+- Added inherited contributor-assignment policies per album, editable together
+  with reward and source-cost overrides in Gallery's album manager.
+- Added a read-only public-album policy overview with direct/effective values,
+  edit links and confirmed actions to enable, disable or globally inherit
+  contributor assignment across every public album.
 - Added an independent Gallery add-on requiring phpBB Gallery Core and SiteSplat BBPoints.
 - Added inherited per-album upload-reward and source-cost policies with global fallbacks.
 - Added dedicated storage for contributors, publication rewards, paid source access, source hashes and download counters.

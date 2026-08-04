@@ -12,6 +12,7 @@ namespace phpbbgallery\bbpointsimages\tests;
 use phpbbgallery\bbpointsimages\migrations\m1_init;
 use phpbbgallery\bbpointsimages\migrations\m2_reward_lifecycle;
 use phpbbgallery\bbpointsimages\migrations\m3_acp_settings;
+use phpbbgallery\bbpointsimages\migrations\m4_contributor_policy;
 use PHPUnit\Framework\TestCase;
 
 final class migration_test extends TestCase
@@ -94,5 +95,15 @@ final class migration_test extends TestCase
 			'module.remove',
 			['acp', 'PHPBB_GALLERY', 'ACP_BBPOINTSIMAGES_SETTINGS'],
 		]], $migration->revert_data());
+	}
+
+	public function test_contributor_policy_column_is_inherited_and_reversible(): void
+	{
+		$migration = new m4_contributor_policy();
+		$table = 'phpbb_gallery_bbpoints_album_rules';
+
+		$this->assertSame(['\phpbbgallery\bbpointsimages\migrations\m3_acp_settings'], m4_contributor_policy::depends_on());
+		$this->assertSame(['INT:11', -1], $migration->update_schema()['add_columns'][$table]['contributors_enabled']);
+		$this->assertSame(['contributors_enabled'], $migration->revert_schema()['drop_columns'][$table]);
 	}
 }

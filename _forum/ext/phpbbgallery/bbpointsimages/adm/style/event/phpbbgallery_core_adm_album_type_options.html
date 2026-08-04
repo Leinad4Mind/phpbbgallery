@@ -1,0 +1,20 @@
+<fieldset>
+	<legend>{{ lang('ACP_BBPOINTSIMAGES_ALBUM_SETTINGS') }}</legend>
+	<p>{{ lang('ACP_BBPOINTSIMAGES_ALBUM_SETTINGS_EXPLAIN') }}</p>
+	<dl>
+		<dt><label for="bbpointsimages_upload_reward">{{ lang('ACP_BBPOINTSIMAGES_UPLOAD_REWARD') }}</label><br><span>{{ lang('ACP_BBPOINTSIMAGES_EFFECTIVE_VALUE', BBPOINTSIMAGES_EFFECTIVE_UPLOAD_REWARD) }}</span></dt>
+		<dd><input id="bbpointsimages_upload_reward" name="bbpointsimages_upload_reward" type="number" min="-1" max="2147483647" value="{{ BBPOINTSIMAGES_ALBUM_UPLOAD_REWARD }}"></dd>
+	</dl>
+	<dl>
+		<dt><label for="bbpointsimages_source_cost">{{ lang('ACP_BBPOINTSIMAGES_SOURCE_COST') }}</label><br><span>{{ lang('ACP_BBPOINTSIMAGES_EFFECTIVE_VALUE', BBPOINTSIMAGES_EFFECTIVE_SOURCE_COST) }}</span></dt>
+		<dd><input id="bbpointsimages_source_cost" name="bbpointsimages_source_cost" type="number" min="-1" max="2147483647" value="{{ BBPOINTSIMAGES_ALBUM_SOURCE_COST }}"></dd>
+	</dl>
+	<dl>
+		<dt><label for="bbpointsimages_contributors_enabled">{{ lang('ACP_BBPOINTSIMAGES_CONTRIBUTORS') }}</label><br><span>{{ lang('ACP_BBPOINTSIMAGES_EFFECTIVE_TOGGLE', BBPOINTSIMAGES_EFFECTIVE_CONTRIBUTORS ? lang('YES') : lang('NO')) }}</span></dt>
+		<dd><select id="bbpointsimages_contributors_enabled" name="bbpointsimages_contributors_enabled">
+			<option value="-1"{% if BBPOINTSIMAGES_ALBUM_CONTRIBUTORS == -1 %} selected{% endif %}>{{ lang('ACP_BBPOINTSIMAGES_INHERIT') }}</option>
+			<option value="1"{% if BBPOINTSIMAGES_ALBUM_CONTRIBUTORS == 1 %} selected{% endif %}>{{ lang('YES') }}</option>
+			<option value="0"{% if BBPOINTSIMAGES_ALBUM_CONTRIBUTORS == 0 %} selected{% endif %}>{{ lang('NO') }}</option>
+		</select></dd>
+	</dl>
+</fieldset>

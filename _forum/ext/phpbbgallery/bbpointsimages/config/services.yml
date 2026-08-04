@@ -57,8 +57,17 @@ services:
             - '@language'
             - '@controller.helper'
             - '@template'
-            - '@config'
             - '@phpbbgallery.core.url'
+        tags:
+            - { name: event.listener }
+
+    phpbbgallery.bbpointsimages.acp_listener:
+        class: phpbbgallery\bbpointsimages\event\acp_listener
+        arguments:
+            - '@phpbbgallery.bbpointsimages.policy'
+            - '@request'
+            - '@template'
+            - '@language'
         tags:
             - { name: event.listener }
 

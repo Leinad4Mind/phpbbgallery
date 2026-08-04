@@ -53,9 +53,11 @@ final class main_module
 			$config->set('phpbb_gallery_bbpoints_contributors_enabled',
 				$request->variable('contributors_enabled', false, false, request_interface::POST) ? 1 : 0
 			);
-			$submitted = $request->variable('album_rules', [0 => ['upload_reward' => -1, 'source_cost' => -1]], false, request_interface::POST);
-			$policies->save_album_rules($submitted);
 			trigger_error($language->lang('ACP_BBPOINTSIMAGES_SAVED') . adm_back_link($this->u_action));
+		}
+		if ($action === 'contributors_bulk')
+		{
+			$this->bulk_contributors($request, $language, $policies);
 		}
 
 		if ($action === 'sync')
@@ -66,10 +68,12 @@ final class main_module
 		$template->assign_vars([
 			'U_ACTION' => $this->u_action . '&amp;action=save',
 			'U_SYNC' => $this->u_action . '&amp;action=sync',
+			'U_CONTRIBUTORS_BULK' => $this->u_action . '&amp;action=contributors_bulk',
 			'UPLOAD_REWARD' => policy::normalize_amount((int) $config['phpbb_gallery_bbpoints_upload_reward']),
 			'SOURCE_COST' => policy::normalize_amount((int) $config['phpbb_gallery_bbpoints_source_cost']),
 			'S_CONTRIBUTORS_ENABLED' => !empty($config['phpbb_gallery_bbpoints_contributors_enabled']),
 		]);
+		$gallery_url = $phpbb_container->get('phpbbgallery.core.url');
 		foreach ($policies->get_album_rules() as $album)
 		{
 			$template->assign_block_vars('bbpointsimages_albums', [
@@ -78,8 +82,40 @@ final class main_module
 				'PREFIX' => str_repeat("\u{2014} ", (int) $album['depth']),
 				'UPLOAD_REWARD' => $album['upload_reward'] === null ? policy::INHERIT : (int) $album['upload_reward'],
 				'SOURCE_COST' => $album['source_cost'] === null ? policy::INHERIT : (int) $album['source_cost'],
+				'CONTRIBUTORS_ENABLED' => $album['contributors_enabled'] === null ? policy::INHERIT : (int) $album['contributors_enabled'],
+				'EFFECTIVE_UPLOAD_REWARD' => (int) $album['effective_upload_reward'],
+				'EFFECTIVE_SOURCE_COST' => (int) $album['effective_source_cost'],
+				'EFFECTIVE_CONTRIBUTORS_ENABLED' => (int) $album['effective_contributors_enabled'],
+				'U_EDIT' => $gallery_url->append_sid(
+					'admin',
+					'index',
+					'i=-phpbbgallery-core-acp-albums_module&amp;mode=manage&amp;parent_id=' . (int) $album['parent_id']
+						. '&amp;a=' . (int) $album['album_id'] . '&amp;action=edit'
+				),
 			]);
 		}
+	}
+
+	private function bulk_contributors(request_interface $request, language $language, policy $policies): void
+	{
+		$value = policy::normalize_toggle_override($request->variable(
+			'contributors_bulk', policy::INHERIT, false, request_interface::POST
+		));
+		if ($request->is_set_post('apply_contributors_bulk') && !check_form_key(self::FORM_KEY))
+		{
+			trigger_error($language->lang('FORM_INVALID') . adm_back_link($this->u_action), E_USER_WARNING);
+		}
+		if (!confirm_box(true))
+		{
+			confirm_box(false, $language->lang('ACP_BBPOINTSIMAGES_CONTRIBUTORS_BULK_CONFIRM'), build_hidden_fields([
+				'action' => 'contributors_bulk',
+				'contributors_bulk' => $value,
+			]));
+			return;
+		}
+
+		$policies->set_all_contributors($value);
+		trigger_error($language->lang('ACP_BBPOINTSIMAGES_CONTRIBUTORS_BULK_SAVED') . adm_back_link($this->u_action));
 	}
 
 	private function synchronize(request_interface $request, language $language, retro_sync $sync): void
