@@ -127,15 +127,39 @@ jobs:
         env:
           fail-fast: true
 
-      - name: Install Gallery components in phpBB
+      - name: Install Gallery release packages in phpBB
         shell: bash
         run: |
+          package_root="${RUNNER_TEMP}/phpbbgallery-functional-packages"
           gallery_root='.functional/phpBB3/phpBB/ext/phpbbgallery'
           sitesplat_root='.functional/phpBB3/phpBB/ext/sitesplat'
-          mkdir -p "$gallery_root"
-          mkdir -p "$sitesplat_root"
+
+          php _forum/ext/phpbbgallery/build_release_packages.php --output="$package_root" --ref=HEAD
+          mapfile -t archives < <(find "$package_root" -maxdepth 1 -type f -name '*.zip' -print | sort)
+          if (( ${#archives[@]} != 11 )); then
+            echo "Expected 11 Gallery release packages, found ${#archives[@]}." >&2
+            exit 1
+          fi
+
+          mkdir -p '.functional/phpBB3/phpBB/ext' "$sitesplat_root"
+          for archive in "${archives[@]}"; do
+            unzip -q "$archive" -d '.functional/phpBB3/phpBB/ext'
+          done
+
+          if find "$gallery_root" -path '*/tests' -print -quit | grep -q . ||
+            find "$gallery_root" -name 'phpunit.xml.dist' -print -quit | grep -q .; then
+            echo 'A release package contains development-only test files.' >&2
+            exit 1
+          fi
+
+          # Functional test cases are development-only and are copied after the
+          # production packages have been extracted and verified.
           for component in core acpcleanup acpimport bbpointsimages bbtagsimages contest exif export favorite feed imagerevisions; do
-            cp -R "_forum/ext/phpbbgallery/$component" "$gallery_root/$component"
+            functional_tests="_forum/ext/phpbbgallery/$component/tests/functional"
+            if [[ -d "$functional_tests" ]]; then
+              mkdir -p "$gallery_root/$component/tests/functional"
+              cp -R "$functional_tests/." "$gallery_root/$component/tests/functional/"
+            fi
           done
           cp -R '_forum/ext/sitesplat/BBCore' "$sitesplat_root/BBCore"
           cp -R '_forum/ext/sitesplat/bbpoints' "$sitesplat_root/bbpoints"
@@ -227,6 +251,15 @@ jobs:
           --configuration .github/phpunit-sqlite3-github.xml
           --bootstrap ./tests/bootstrap.php
           phpBB/ext/phpbbgallery/core/tests/functional/image_deletion_workflow.php
+
+      - name: Run complete packaged component lifecycle test
+        shell: bash
+        working-directory: .functional/phpBB3
+        run: >-
+          phpBB/vendor/bin/phpunit
+          --configuration .github/phpunit-sqlite3-github.xml
+          --bootstrap ./tests/bootstrap.php
+          phpBB/ext/phpbbgallery/core/tests/functional/package_lifecycle.php
 
   quality:
     name: Lint and coding standard
