@@ -6,6 +6,9 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Namespaced the Contests add-on's internal route identifiers and made its
+  album-lifecycle SQL boundary explicit, allowing its release package to pass
+  EPV while preserving the existing public URLs.
 - Documented every ACP album event variable and exposed explicitly named
   visibility SQL builders while retaining the previous public aliases, allowing
   Gallery Core to pass EPV without compatibility regressions.

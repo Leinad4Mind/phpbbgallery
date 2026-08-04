@@ -206,7 +206,7 @@ class album_lifecycle_listener implements EventSubscriberInterface
 	private function delete_contest(int $album_id): void
 	{
 		$this->db->sql_query('DELETE FROM ' . $this->contests_table . '
-			WHERE contest_album_id = ' . $album_id);
+			WHERE contest_album_id = ' . (int) $album_id);
 	}
 
 	private function parse_date(string $value): int|false
