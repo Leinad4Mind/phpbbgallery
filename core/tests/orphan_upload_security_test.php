@@ -281,7 +281,6 @@ class orphan_upload_security_test extends TestCase
 		$property = new \ReflectionProperty(\phpbbgallery\core\upload::class, $name);
 		if (PHP_VERSION_ID < 80100)
 		{
-			$property->setAccessible(true);
 		}
 		$property->setValue($upload, $value);
 	}

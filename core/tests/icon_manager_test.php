@@ -63,7 +63,6 @@ class icon_manager_test extends TestCase
 		$property = new \ReflectionProperty($object, $name);
 		if (PHP_VERSION_ID < 80100)
 		{
-			$property->setAccessible(true);
 		}
 		$property->setValue($object, $value);
 	}

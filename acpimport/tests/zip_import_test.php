@@ -216,7 +216,6 @@ class zip_import_test extends TestCase
 		$property = $reflection->getProperty('language');
 		if (PHP_VERSION_ID < 80100)
 		{
-			$property->setAccessible(true);
 		}
 		$property->setValue($extractor, new zip_import_test_language());
 
