@@ -39,7 +39,7 @@
 
 <form id="postform" action="{{ S_ALBUM_ACTION }}" method="post" enctype="multipart/form-data" data-url="{{ S_ALBUM_ACTION }}">
 <div class="panel" id="postingbox" style="position: relative;">
-<div id="covverall" data-url="{{ S_ALBUM_ACTION }}">
+<div id="covverall" data-gallery-quick-upload data-url="{{ S_ALBUM_ACTION }}" data-max-file-size="{{ S_QUICK_MAX_FILESIZE }}" data-upload-limit="{{ S_UPLOAD_LIMIT }}" data-allowed-extensions="{{ S_ALLOWED_FILETYPES_ACCEPT }}" data-label-cancel="{{ lang('CANCEL') }}" data-label-error="{{ lang('ERROR') }}" data-label-image-name="{{ lang('IMAGE_NAME') }}" data-error-file-type="{{ lang('FILE_DISALLOWED_EXTENSION') }}" data-error-file-size="{{ lang('WRONG_FILESIZE') }}" data-error-upload-limit="{{ lang('QUICK_UPLOAD_LIMIT_REACHED', S_UPLOAD_LIMIT) }}">
 	<div class="dropzone">
 		<span>{{ lang('GALLERY_DROP') }}</span>
 	</div>
@@ -122,9 +122,9 @@
 <div id="outputTarget" class="panel bg2 hidden">
 	<div class="inner">
 			<div class="meter">
-				<span style="width: 0"><p>0%</p></span>
+				<span style="width: 0" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span class="gallery-quick-upload-progress-label">0%</span></span>
 			</div>
-			<div class="containuploads">
+			<div class="containuploads" aria-live="polite">
 			</div>
 		</div>
 </div>

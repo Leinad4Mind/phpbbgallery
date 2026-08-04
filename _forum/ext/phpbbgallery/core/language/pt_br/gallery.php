@@ -280,6 +280,7 @@ $lang = array_merge($lang, [
 	'UPLOAD_IMAGE'              => 'Enviar imagem',
 	'UPLOAD_IMAGE_SIZE_TOO_BIG' => 'O tamanho da sua imagem excede o valor permitido para os envios.',
 	'UPLOAD_NO_FILE'            => 'Você deve informar o caminho e o nome do arquivo.',
+	'QUICK_UPLOAD_LIMIT_REACHED' => 'Você pode enviar no máximo %d arquivos por vez.',
 	'UPLOADED_BY_USER'          => 'Enviado por',
 	'UPLOADED_ON_DATE'          => 'Enviado em',
 	'IMAGE_RESOLUTION'          => 'Resolução',

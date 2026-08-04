@@ -63,7 +63,7 @@ final class upload_alternate_author_test extends TestCase
 		$this->assertNotFalse($invalid);
 		$this->assertNotFalse($upload);
 		$this->assertLessThan($upload, $invalid);
-		$this->assertStringContainsString("'error' => \$this->language->lang('INVALID_USERNAME')", substr($source, $invalid, $upload - $invalid));
+		$this->assertStringContainsString("return \$this->ajax_error(\$this->language->lang('INVALID_USERNAME'))", substr($source, $invalid, $upload - $invalid));
 	}
 
 	public function test_target_author_drives_quota_finalization_and_notifications(): void

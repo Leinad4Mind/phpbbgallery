@@ -280,6 +280,7 @@ $lang = array_merge($lang, [
 	'UPLOAD_IMAGE'              => 'Carregar Imagem',
 	'UPLOAD_IMAGE_SIZE_TOO_BIG' => 'O tamanho da sua imagem excede o valor permitido para os carregamentos.',
 	'UPLOAD_NO_FILE'            => 'Terá de preencher a fonte/localização para carregar uma imagem.',
+	'QUICK_UPLOAD_LIMIT_REACHED' => 'Só pode carregar até %d ficheiros de cada vez.',
 	'UPLOADED_BY_USER'          => 'Carregado por',
 	'UPLOADED_ON_DATE'          => 'Carregado em',
 	'IMAGE_RESOLUTION'          => 'Resolução',

@@ -298,6 +298,7 @@ $lang = array_merge($lang, [
 	'UPLOAD_IMAGE'              => 'Качи Изображение',
 	'UPLOAD_IMAGE_SIZE_TOO_BIG' => 'Размерите на вашето изображениe са прекалено големи.',
 	'UPLOAD_NO_FILE'            => 'Трябва да въведете пътя и името на фаила.',
+	'QUICK_UPLOAD_LIMIT_REACHED' => 'Могат да бъдат качени най-много %d файла наведнъж.',
 	'UPLOADED_BY_USER'          => 'Качена от',
 	'UPLOADED_ON_DATE'          => 'Качена на',
 	'IMAGE_RESOLUTION'          => 'Разделителна способност',

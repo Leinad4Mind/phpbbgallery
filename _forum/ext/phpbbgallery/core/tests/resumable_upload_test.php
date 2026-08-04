@@ -127,13 +127,20 @@ class resumable_upload_test extends TestCase
 		$this->assertLessThan($upload, $guard);
 	}
 
-	public function test_ajax_submits_the_phpbb_form_token(): void
+	public function test_native_ajax_upload_submits_the_current_form_fields_and_file(): void
 	{
-		foreach ($this->quick_upload_templates() as $template_path)
+		$javascript = (string) file_get_contents(dirname(__DIR__) . '/styles/all/template/js/quick_upload.js');
+
+		$this->assertStringContainsString('new FormData(form)', $javascript);
+		$this->assertStringContainsString('if (!(value instanceof File))', $javascript);
+		$this->assertStringContainsString("data.append('files[]', task.file, task.file.name)", $javascript);
+		$this->assertStringContainsString("request.setRequestHeader('X-Requested-With', 'XMLHttpRequest')", $javascript);
+		foreach ($this->posting_templates() as $template_path)
 		{
 			$template = file_get_contents($template_path);
 
-			$this->assertStringContainsString("return \$('#postform').serializeArray();", $template, $template_path);
+			$this->assertStringContainsString('data-gallery-quick-upload', $template, $template_path);
+			$this->assertStringContainsString('{{ S_FORM_TOKEN }}', $template, $template_path);
 		}
 	}
 
@@ -448,15 +455,6 @@ class resumable_upload_test extends TestCase
 			dirname(__DIR__) . '/styles/prosilver/template/gallery/posting_body.html',
 			dirname(__DIR__) . '/styles/BBOOTS/template/gallery/posting_body.html',
 			dirname(__DIR__) . '/styles/FLATBOOTS/template/gallery/posting_body.html',
-		];
-	}
-
-	private function quick_upload_templates(): array
-	{
-		return [
-			dirname(__DIR__) . '/styles/all/template/event/overall_footer_after.html',
-			dirname(__DIR__) . '/styles/BBOOTS/template/event/overall_footer_after.html',
-			dirname(__DIR__) . '/styles/FLATBOOTS/template/event/overall_footer_after.html',
 		];
 	}
 

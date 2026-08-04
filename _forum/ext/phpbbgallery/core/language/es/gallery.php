@@ -299,6 +299,7 @@ $lang = array_merge($lang, [
 	'UPLOAD_IMAGE'              => 'Subir imagen',
 	'UPLOAD_IMAGE_SIZE_TOO_BIG' => 'El tamaño de la dimensión de la imagen es demasiado grande',
 	'UPLOAD_NO_FILE'            => 'Debe introducir su ruta de acceso y nombre de archivo',
+	'QUICK_UPLOAD_LIMIT_REACHED' => 'Solo se pueden subir %d archivos a la vez.',
 	'UPLOADED_BY_USER'          => 'Subido por',
 	'UPLOADED_ON_DATE'          => 'Subido en',
 	'IMAGE_RESOLUTION'          => 'Resolución',

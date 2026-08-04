@@ -299,6 +299,7 @@ $lang = array_merge($lang, [
 	'UPLOAD_IMAGE'              => 'Bild hochladen',
 	'UPLOAD_IMAGE_SIZE_TOO_BIG' => 'Die Dimension Deines Bildes ist zu groß',
 	'UPLOAD_NO_FILE'            => 'Du musst deinen Pfad und Dateinamen eingeben',
+	'QUICK_UPLOAD_LIMIT_REACHED' => 'Es können höchstens %d Dateien gleichzeitig hochgeladen werden.',
 	'UPLOADED_BY_USER'          => 'Hochgeladen von',
 	'UPLOADED_ON_DATE'          => 'Hochgeladen',
 	'IMAGE_RESOLUTION'          => 'Auflösung',
