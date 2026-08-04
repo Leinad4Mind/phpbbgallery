@@ -6,6 +6,9 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Moved BBPoints image overrides into each album's ACP edit form and replaced
+  the bulk matrix with a read-only hierarchy showing direct and effective
+  values, edit links and confirmed contributor-assignment bulk actions.
 - Moved contest configuration, album/result storage and the contest album-type
   label from Gallery Core into the independent Contests add-on, while retaining
   the neutral fail-closed image marker and historical migration compatibility.
@@ -46,6 +49,8 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Security
 
+- Isolated inherited BBPoints policies by album owner so nested-set intervals
+  from personal galleries can never be treated as ancestors of public albums.
 - Made resumable-upload cancellation and scheduled orphan pruning delete drafts only while their database row still has orphan status, preventing a concurrent finalization from losing the completed image or its files.
 - Made every dynamic numeric SQL boundary explicit with integer casts and routed the public Gallery title through phpBB's UTF-8 escaping helper, allowing the Core release package to pass EPV without suppressions.
 - Made BBTags Images and Image Revisions SQL boundaries explicit at interpolation time and fixed the Gallery search relation to its trusted outer image alias, allowing both add-on release packages to pass EPV without suppressions.

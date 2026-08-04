@@ -37,7 +37,7 @@ final class addon_lifecycle_events_test extends TestCase
 		$this->assertNotFalse($event);
 		$this->assertNotFalse($finalization);
 		$this->assertLessThan($finalization, $event);
-		$this->assertStringContainsString("['validation_error', 'image_ids']", $controller);
+		$this->assertStringContainsString("['validation_error', 'image_ids', 'album_id', 'album_data']", $controller);
 	}
 
 	public function test_upload_review_display_can_extend_each_image_block(): void

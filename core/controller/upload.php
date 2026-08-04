@@ -611,9 +611,11 @@ class upload
 				 * @event phpbbgallery.core.upload.review_validate
 				 * @var string validation_error Existing validation error or an empty string
 				 * @var array  image_ids        Owned orphan image identifiers in review order
+				 * @var int    album_id        Destination album identifier
+				 * @var array  album_data      Destination album row
 				 * @since 3.4.0
 				 */
-				$vars = ['validation_error', 'image_ids'];
+				$vars = ['validation_error', 'image_ids', 'album_id', 'album_data'];
 				extract($this->dispatcher->trigger_event('phpbbgallery.core.upload.review_validate', compact($vars)));
 
 				if ($validation_error)
