@@ -26,10 +26,12 @@
 				{% endif %}
 				<form method="post" action="{S_LOGIN_ACTION}">
 					<fieldset class="discencql-fieldset">
-						<label for="username-ql"><input type="text" tabindex="1" name="username" id="username-ql" placeholder="{L_USERNAME}" size="10" class="inputbox" title="{L_USERNAME}" /></label>
-						<label for="password-ql"><input type="password" tabindex="2" name="password" id="password-ql" placeholder="{L_PASSWORD}" size="10" class="inputbox" title="{L_PASSWORD}" autocomplete="off" /></label>
-						{% if U_SEND_PASSWORD %}
-							<a href="{U_SEND_PASSWORD}">{L_FORGOT_PASS}</a>
+						<label class="sr-only" for="username-ql">{L_USERNAME}{L_COLON}</label>
+						<input type="text" tabindex="1" name="username" id="username-ql" placeholder="{L_USERNAME}" size="10" class="inputbox" title="{L_USERNAME}" autocomplete="username" />
+						<label class="sr-only" for="password-ql">{L_PASSWORD}{L_COLON}</label>
+						<input type="password" tabindex="2" name="password" id="password-ql" placeholder="{L_PASSWORD}" size="10" class="inputbox" title="{L_PASSWORD}" autocomplete="current-password" />
+						{% if DISCENCQL_U_SEND_PASSWORD %}
+							<a href="{DISCENCQL_U_SEND_PASSWORD}">{L_FORGOT_PASS}</a>
 						{% endif %}
 						{% if S_AUTOLOGIN_ENABLED %}
 							<label for="autologin-ql" class="discencql-autologin">{L_LOG_ME_IN}<input type="checkbox" tabindex="4" name="autologin" id="autologin-ql" /></label>

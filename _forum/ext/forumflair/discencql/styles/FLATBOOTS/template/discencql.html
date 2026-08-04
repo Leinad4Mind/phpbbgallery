@@ -29,19 +29,19 @@
 						<div class="form-group">
 						<label class="sr-only" for="username-ql">{L_USERNAME}{L_COLON}</label>
 						<div class="form-icon">
-						 <input type="text" tabindex="1" name="username" id="username-ql" value="{LOGIN_USERNAME}" class="form-control input-lg inputbox" placeholder="{L_USERNAME}">
-						 
-						</div> 
-						</div> 
+						 <input type="text" tabindex="1" name="username" id="username-ql" class="form-control input-lg inputbox" placeholder="{L_USERNAME}" autocomplete="username">
+
+						</div>
+						</div>
 						<div class="form-group">
 						 <label class="sr-only" for="password-ql">{L_PASSWORD}{L_COLON}</label>
 						  <div class="form-icon">
-							<input type="password" tabindex="2" id="password-ql" name="password" class="form-control input-lg inputbox" placeholder="{L_PASSWORD}" autocomplete="off">
-							
-						  </div> 
+							<input type="password" tabindex="2" id="password-ql" name="password" class="form-control input-lg inputbox" placeholder="{L_PASSWORD}" autocomplete="current-password">
+
+						  </div>
 						</div>
-						{% if U_SEND_PASSWORD %}
-							<a href="{U_SEND_PASSWORD}">{L_FORGOT_PASS}</a>
+						{% if DISCENCQL_U_SEND_PASSWORD %}
+							<a href="{DISCENCQL_U_SEND_PASSWORD}">{L_FORGOT_PASS}</a>
 						{% endif %}
 						{% if S_AUTOLOGIN_ENABLED %}
 							<label for="autologin-ql" class="">{L_LOG_ME_IN}<input type="checkbox" tabindex="4" name="autologin" id="autologin-ql" /></label>

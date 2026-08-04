@@ -3,5 +3,8 @@ services:
         class: forumflair\discencql\event\main_listener
         arguments:
             - '@language'
+            - '@config'
+            - '@controller.helper'
+            - '@template'
         tags:
             - { name: event.listener }
