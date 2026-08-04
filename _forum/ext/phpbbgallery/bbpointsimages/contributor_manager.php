@@ -125,7 +125,7 @@ final class contributor_manager
 			FROM ' . $this->contributors_table . ' c
 			JOIN ' . $this->users_table . ' u
 				ON u.user_id = c.user_id
-			WHERE c.image_id = ' . $image_id . '
+			WHERE c.image_id = ' . (int) $image_id . '
 				AND u.user_type IN (0, 3)
 			ORDER BY c.contributor_order ASC, c.user_id ASC';
 		$result = $this->db->sql_query($sql);
@@ -157,7 +157,7 @@ final class contributor_manager
 		}
 		$sql = 'DELETE FROM ' . $this->contributors_table . '
 			WHERE ' . $this->db->sql_in_set('image_id', $image_ids) . '
-				AND user_id = ' . $author_id;
+				AND user_id = ' . (int) $author_id;
 		$this->db->sql_query($sql);
 	}
 
@@ -204,7 +204,7 @@ final class contributor_manager
 	{
 		$sql = 'SELECT image_id
 			FROM ' . $this->images_table . '
-			WHERE image_id = ' . $image_id;
+			WHERE image_id = ' . (int) $image_id;
 		$result = $this->db->sql_query($sql);
 		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);

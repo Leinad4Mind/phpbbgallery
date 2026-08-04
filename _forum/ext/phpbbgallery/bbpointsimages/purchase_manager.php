@@ -121,7 +121,7 @@ final class purchase_manager
 
 		$sql = 'UPDATE ' . $this->stats_table . '
 			SET download_count = download_count + 1
-			WHERE image_id = ' . $image_id;
+			WHERE image_id = ' . (int) $image_id;
 		$this->db->sql_query($sql);
 		if ((int) $this->db->sql_affectedrows() === 0)
 		{
@@ -140,8 +140,8 @@ final class purchase_manager
 		{
 			$sql = 'UPDATE ' . $this->purchases_table . '
 				SET last_download_time = ' . time() . ', download_count = download_count + 1
-				WHERE image_id = ' . $image_id . '
-					AND buyer_id = ' . $buyer_id;
+				WHERE image_id = ' . (int) $image_id . '
+					AND buyer_id = ' . (int) $buyer_id;
 			$this->db->sql_query($sql);
 		}
 	}
@@ -154,7 +154,7 @@ final class purchase_manager
 		}
 		$sql = 'SELECT download_count
 			FROM ' . $this->stats_table . '
-			WHERE image_id = ' . $image_id;
+			WHERE image_id = ' . (int) $image_id;
 		$result = $this->db->sql_query($sql);
 		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
@@ -166,7 +166,7 @@ final class purchase_manager
 	{
 		$sql = 'SELECT user_id
 			FROM ' . $this->contributors_table . '
-			WHERE image_id = ' . $image_id . '
+			WHERE image_id = ' . (int) $image_id . '
 			ORDER BY contributor_order ASC, user_id ASC';
 		$result = $this->db->sql_query($sql);
 		$contributors = [];
@@ -214,8 +214,8 @@ final class purchase_manager
 		$sql = 'SELECT image_id, buyer_id, amount, operation_key, purchase_time,
 				last_download_time, download_count
 			FROM ' . $this->purchases_table . '
-			WHERE image_id = ' . $image_id . '
-				AND buyer_id = ' . $buyer_id;
+			WHERE image_id = ' . (int) $image_id . '
+				AND buyer_id = ' . (int) $buyer_id;
 		$result = $this->db->sql_query($sql);
 		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);

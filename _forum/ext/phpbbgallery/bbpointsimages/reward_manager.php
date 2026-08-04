@@ -125,10 +125,10 @@ final class reward_manager
 				true
 			);
 			$sql = 'UPDATE ' . $this->rewards_table . '
-				SET user_id = ' . $new_user_id . ', reassignment_count = ' . $next_count . '
-				WHERE image_id = ' . $image_id . '
-					AND user_id = ' . $old_user_id . '
-					AND reassignment_count = ' . ($next_count - 1);
+				SET user_id = ' . (int) $new_user_id . ', reassignment_count = ' . (int) $next_count . '
+				WHERE image_id = ' . (int) $image_id . '
+					AND user_id = ' . (int) $old_user_id . '
+					AND reassignment_count = ' . (int) ($next_count - 1);
 			$this->db->sql_query($sql);
 			$changed += (int) $this->db->sql_affectedrows();
 		}
@@ -157,7 +157,7 @@ final class reward_manager
 	{
 		$sql = 'UPDATE ' . $this->stats_table . "
 			SET source_sha256 = '" . $this->db->sql_escape($source_hash) . "'
-			WHERE image_id = " . $image_id;
+			WHERE image_id = " . (int) $image_id;
 		$this->db->sql_query($sql);
 		if ((int) $this->db->sql_affectedrows() > 0)
 		{
@@ -173,7 +173,7 @@ final class reward_manager
 
 	private function find_reward_by_image(int $image_id): array|false
 	{
-		return $this->find_reward('image_id = ' . $image_id);
+		return $this->find_reward('image_id = ' . (int) $image_id);
 	}
 
 	private function find_reward_by_hash(string $source_hash): array|false

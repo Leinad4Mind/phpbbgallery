@@ -38,7 +38,7 @@ final class retro_sync
 		$sql = 'SELECT image_id, image_album_id, image_user_id, image_status, image_filename
 			FROM ' . $this->images_table . '
 			WHERE image_status = ' . (int) \phpbbgallery\core\block::STATUS_APPROVED . '
-				AND image_id > ' . $after_id . '
+				AND image_id > ' . (int) $after_id . '
 			ORDER BY image_id ASC';
 		$result = $this->db->sql_query_limit($sql, $limit + 1);
 		$rows = [];

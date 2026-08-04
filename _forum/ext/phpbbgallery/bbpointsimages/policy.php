@@ -52,7 +52,7 @@ final class policy
 				AND ancestor.album_user_id = current_album.album_user_id
 			LEFT JOIN ' . $this->rules_table . ' rules
 				ON rules.album_id = ancestor.album_id
-			WHERE current_album.album_id = ' . $album_id . '
+			WHERE current_album.album_id = ' . (int) $album_id . '
 			ORDER BY ancestor.left_id DESC';
 		$result = $this->db->sql_query($sql);
 		$album_exists = false;
