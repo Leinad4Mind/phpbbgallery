@@ -55,6 +55,8 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Security
 
+- Made every BBPoints Images identifier explicit at its SQL interpolation
+  boundary, allowing the add-on release package to pass EPV without suppressions.
 - Isolated inherited BBPoints policies by album owner so nested-set intervals
   from personal galleries can never be treated as ancestors of public albums.
 - Made resumable-upload cancellation and scheduled orphan pruning delete drafts only while their database row still has orphan status, preventing a concurrent finalization from losing the completed image or its files.
