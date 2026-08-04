@@ -147,7 +147,7 @@ class search
 		if ($user > 0)
 		{
 			$sql .= ' and image_user_id = ' . (int) $user;
-			$sql .= ' AND ' . $this->image_visibility->private_data_sql(
+			$sql .= ' AND ' . $this->image_visibility->get_visibility_sql_for_private_data(
 				'',
 				(int) $this->user->data['user_id'],
 				$this->gallery_auth->acl_album_ids('m_status')
@@ -340,7 +340,7 @@ class search
 			FROM ' . $this->images_table . '
 			WHERE ' . $this->db->sql_in_set('image_user_id', $image_user_ids) . '
 				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
-				AND ' . $this->image_visibility->private_data_sql('', $viewer_id, $moderated_albums) . '
+				AND ' . $this->image_visibility->get_visibility_sql_for_private_data('', $viewer_id, $moderated_albums) . '
 				AND (
 					(' . $this->db->sql_in_set('image_album_id', $viewable_albums, false, true) . '
 						AND (image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . '
@@ -397,7 +397,7 @@ class search
 		];
 		$sql_array['WHERE'] .= ' AND ((' . $this->db->sql_in_set('image_album_id', array_diff($this->gallery_auth->acl_album_ids('i_view'), $exclude_albums), false, true) . ' AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . ')
 					OR ' . $this->db->sql_in_set('image_album_id', array_diff($this->gallery_auth->acl_album_ids('m_status'), $exclude_albums), false, true) . ')';
-		$sql_array['WHERE'] .= ' AND ' . $this->image_visibility->results_sql(
+		$sql_array['WHERE'] .= ' AND ' . $this->image_visibility->get_visibility_sql_for_results(
 			'i',
 			$this->gallery_auth->acl_album_ids('m_status')
 		);
@@ -555,7 +555,7 @@ class search
 		if ($user > 0)
 		{
 			$sql_ary['WHERE'] .= ' and image_user_id = ' . (int) $user;
-			$sql_ary['WHERE'] .= ' AND ' . $this->image_visibility->private_data_sql(
+			$sql_ary['WHERE'] .= ' AND ' . $this->image_visibility->get_visibility_sql_for_private_data(
 				'i',
 				(int) $this->user->data['user_id'],
 				$this->gallery_auth->acl_album_ids('m_status')
@@ -563,7 +563,7 @@ class search
 		}
 		if ($default_sort_key === 'u' && $user <= 0)
 		{
-			$sql_ary['WHERE'] .= ' AND ' . $this->image_visibility->private_data_sql(
+			$sql_ary['WHERE'] .= ' AND ' . $this->image_visibility->get_visibility_sql_for_private_data(
 				'i',
 				(int) $this->user->data['user_id'],
 				$this->gallery_auth->acl_album_ids('m_status')
@@ -571,7 +571,7 @@ class search
 		}
 		else if (in_array($default_sort_key, ['ra', 'r', 'c', 'lc'], true))
 		{
-			$sql_ary['WHERE'] .= ' AND ' . $this->image_visibility->results_sql(
+			$sql_ary['WHERE'] .= ' AND ' . $this->image_visibility->get_visibility_sql_for_results(
 				'i',
 				$this->gallery_auth->acl_album_ids('m_status')
 			);
@@ -716,7 +716,7 @@ class search
 			$this->images_table	=> 'i'
 		];
 		$sql_array['WHERE'] = $this->db->sql_in_set('image_album_id', $this->gallery_auth->acl_album_ids('i_view'), false, true) .
-			' and image_rate_avg <> 0 AND ' . $this->image_visibility->results_sql(
+			' and image_rate_avg <> 0 AND ' . $this->image_visibility->get_visibility_sql_for_results(
 				'i',
 				$this->gallery_auth->acl_album_ids('m_status')
 			);

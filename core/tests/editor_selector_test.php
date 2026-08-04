@@ -248,7 +248,7 @@ final class editor_selector_test extends TestCase
 	private function selector(\phpbb\db\driver\driver_interface $db, auth $gallery_auth): selector
 	{
 		$image_visibility = $this->createStub(image_visibility::class);
-		$image_visibility->method('results_sql')
+		$image_visibility->method('get_visibility_sql_for_results')
 			->with('i', [])
 			->willReturn('(i.image_contest = 0)');
 

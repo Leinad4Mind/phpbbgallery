@@ -6,6 +6,9 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Documented every ACP album event variable and exposed explicitly named
+  visibility SQL builders while retaining the previous public aliases, allowing
+  Gallery Core to pass EPV without compatibility regressions.
 - Moved Image Revisions overrides into each album's ACP edit form and added a
   read-only hierarchy showing inherited and effective enablement and retention
   limits, while preserving global defaults.

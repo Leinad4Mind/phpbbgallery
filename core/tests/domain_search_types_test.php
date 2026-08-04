@@ -92,7 +92,7 @@ final class domain_search_types_test extends TestCase
 		$user->data = ['user_id' => 7];
 		$image_visibility = $this->createMock(\phpbbgallery\core\policy\image_visibility::class);
 		$image_visibility->expects($this->once())
-			->method('private_data_sql')
+			->method('get_visibility_sql_for_private_data')
 			->with('', 7, [9])
 			->willReturn('(image_contest = 0 OR image_user_id = 7 OR image_album_id IN (9))');
 		$reflection = new \ReflectionClass(search::class);
@@ -126,7 +126,7 @@ final class domain_search_types_test extends TestCase
 		$user->data = ['user_id' => 7];
 		$image_visibility = $this->createMock(\phpbbgallery\core\policy\image_visibility::class);
 		$image_visibility->expects($this->once())
-			->method('private_data_sql')
+			->method('get_visibility_sql_for_private_data')
 			->with('', 7, [2])
 			->willReturn('(image_contest = 0)');
 		$reflection = new \ReflectionClass(search::class);
@@ -144,8 +144,8 @@ final class domain_search_types_test extends TestCase
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/search.php');
 
-		$this->assertGreaterThanOrEqual(3, substr_count($source, '$this->image_visibility->private_data_sql('));
-		$this->assertGreaterThanOrEqual(3, substr_count($source, '$this->image_visibility->results_sql('));
+		$this->assertGreaterThanOrEqual(3, substr_count($source, '$this->image_visibility->get_visibility_sql_for_private_data('));
+		$this->assertGreaterThanOrEqual(3, substr_count($source, '$this->image_visibility->get_visibility_sql_for_results('));
 		$this->assertStringNotContainsString('core\\contest::', $source);
 	}
 
