@@ -1,0 +1,2 @@
+parameters:
+    kasimi.topicindexbridge.table.topicindex: '%core.table_prefix%forum_lists'

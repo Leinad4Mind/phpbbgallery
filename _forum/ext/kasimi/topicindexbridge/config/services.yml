@@ -1,0 +1,27 @@
+imports:
+    - { resource: tables.yml }
+services:
+    kasimi.topicindexbridge.manager:
+        class: kasimi\topicindexbridge\core\bridge_manager
+        arguments:
+            - '@config'
+            - '@ext.manager'
+            - '@cache'
+            - '@path_helper'
+            - '@controller.helper'
+            - '@service_container'
+    kasimi.topicindexbridge.listener:
+        class: kasimi\topicindexbridge\event\main_listener
+        arguments:
+            - '@kasimi.topicindexbridge.manager'
+            - '@config'
+            - '@template'
+            - '@request'
+            - '@language'
+            - '@user_loader'
+            - '@controller.helper'
+            - '@user'
+            - '@dbal.conn'
+            - '%kasimi.topicindexbridge.table.topicindex%'
+        tags:
+            - { name: event.listener }

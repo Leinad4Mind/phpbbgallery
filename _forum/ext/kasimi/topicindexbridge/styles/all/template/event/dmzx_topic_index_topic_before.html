@@ -1,0 +1,3 @@
+{% if block_topic_index.BRIDGE_IMAGES %}<span class="topicindex-bridge-images">{% for image in block_topic_index.BRIDGE_IMAGES %}<a href="{{ image.SOURCE }}"><img src="{{ image.MINI }}" alt="{{ lang('IMAGE') }}" style="max-width:{{ image.MIN_SIZE }}px;max-height:{{ image.MIN_SIZE }}px"></a>{% endfor %}</span>{% endif %}
+{% if block_topic_index.BRIDGE_FORUM_IMAGE %}<a href="{{ block_topic_index.BRIDGE_FORUM_URL }}"><img class="topicindex-bridge-forum-image" src="{{ block_topic_index.BRIDGE_FORUM_IMAGE }}" alt="{{ block_topic_index.BRIDGE_FORUM_NAME }}"></a>{% endif %}
+{% if block_topic_index.BRIDGE_FORUM_NAME %}<small><a href="{{ block_topic_index.BRIDGE_FORUM_URL }}">[{{ block_topic_index.BRIDGE_FORUM_NAME }}]</a></small> {% endif %}

@@ -1,0 +1,29 @@
+{
+    "name": "kasimi/topicindexbridge",
+    "type": "phpbb-extension",
+    "description": "Unified optional integrations for the dmzx Topic Index extension.",
+    "version": "1.0.0",
+    "time": "2026-08-04",
+    "license": "GPL-2.0-only",
+    "authors": [
+        {
+            "name": "kasimi",
+            "homepage": "https://kasimi.net",
+            "role": "Original Developer"
+        },
+        {
+            "name": "Leinad4Mind",
+            "role": "Maintainer"
+        }
+    ],
+    "require": {
+        "php": ">=7.4",
+        "composer/installers": "~1.0"
+    },
+    "extra": {
+        "display-name": "Topic Index Bridge",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.3.0,<4.0.0@dev"
+        }
+    }
+}

@@ -1,0 +1,20 @@
+{% if S_TOPICINDEX_BRIDGE %}
+<hr>
+<h3>{{ lang('TOPICINDEX_BRIDGE_TITLE') }}</h3>
+<p>{{ lang('TOPICINDEX_BRIDGE_EXPLAIN') }}</p>
+{% for module in loops.topicindex_bridge_modules %}
+<dl>
+	<dt><label for="{{ module.CONFIG_NAME }}">{{ module.LABEL }}{{ lang('COLON') }}</label><br><span>{% if module.S_LEGACY %}{{ lang('TOPICINDEX_BRIDGE_LEGACY_ACTIVE') }}{% elseif not module.S_AVAILABLE %}{{ lang('TOPICINDEX_BRIDGE_UNAVAILABLE') }}{% elseif module.S_EFFECTIVE %}{{ lang('TOPICINDEX_BRIDGE_ACTIVE') }}{% else %}{{ lang('TOPICINDEX_BRIDGE_INACTIVE') }}{% endif %}</span></dt>
+	<dd><label><input type="radio" class="radio" id="{{ module.CONFIG_NAME }}" name="{{ module.CONFIG_NAME }}" value="1"{% if module.S_CHECKED %} checked{% endif %}> {{ lang('YES') }}</label>
+		<label><input type="radio" class="radio" name="{{ module.CONFIG_NAME }}" value="0"{% if not module.S_CHECKED %} checked{% endif %}> {{ lang('NO') }}</label></dd>
+</dl>
+{% endfor %}
+<dl>
+	<dt><label for="topicindex_bridge_profile_list">{{ lang('TOPICINDEX_BRIDGE_PROFILE_LIST') }}{{ lang('COLON') }}</label><br><span>{{ lang('TOPICINDEX_BRIDGE_PROFILE_LIST_EXPLAIN') }}</span></dt>
+	<dd><select id="topicindex_bridge_profile_list" name="topicindex_bridge_profile_list"><option value="0">{{ lang('NONE') }}</option>{% for list in loops.topicindex_available_lists %}<option value="{{ list.ID }}"{% if list.ID == TOPICINDEX_BRIDGE_PROFILE_LIST %} selected{% endif %}>{{ list.NAME }}</option>{% endfor %}</select></dd>
+</dl>
+<dl>
+	<dt><label for="topicindex_bridge_self_list">{{ lang('TOPICINDEX_BRIDGE_SELF_LIST') }}{{ lang('COLON') }}</label><br><span>{{ lang('TOPICINDEX_BRIDGE_SELF_LIST_EXPLAIN') }}</span></dt>
+	<dd><select id="topicindex_bridge_self_list" name="topicindex_bridge_self_list"><option value="0">{{ lang('NONE') }}</option>{% for list in loops.topicindex_available_lists %}<option value="{{ list.ID }}"{% if list.ID == TOPICINDEX_BRIDGE_SELF_LIST %} selected{% endif %}>{{ list.NAME }}</option>{% endfor %}</select></dd>
+</dl>
+{% endif %}

@@ -1,0 +1,20 @@
+.topicindex-bridge-images {
+	display: inline-flex;
+	gap: .25rem;
+	margin-right: .4rem;
+	vertical-align: middle;
+}
+
+.topicindex-bridge-images img,
+.topicindex-bridge-icon,
+.topicindex-bridge-forum-image {
+	max-height: 2rem;
+	max-width: 3rem;
+	object-fit: contain;
+	vertical-align: middle;
+}
+
+.topicindex-bridge-prefix,
+.topicindex-bridge-qte {
+	margin-right: .25rem;
+}
