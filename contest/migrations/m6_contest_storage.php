@@ -47,6 +47,10 @@ class m6_contest_storage extends migration
 
 	public function revert_schema(): array
 	{
-		return [];
+		return [
+			'drop_tables' => [
+				$this->table_prefix . 'gallery_contests',
+			],
+		];
 	}
 }

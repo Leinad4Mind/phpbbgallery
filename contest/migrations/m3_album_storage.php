@@ -36,6 +36,12 @@ class m3_album_storage extends migration
 
 	public function revert_schema(): array
 	{
-		return [];
+		return [
+			'drop_columns' => [
+				$this->table_prefix . 'gallery_albums' => [
+					'album_contest',
+				],
+			],
+		];
 	}
 }
