@@ -22,4 +22,24 @@
 	</fieldset>
 </form>
 
+<fieldset>
+	<legend>{{ lang('ACP_GALLERY_IMAGE_REVISIONS_ALBUM_OVERVIEW') }}</legend>
+	<p>{{ lang('ACP_GALLERY_IMAGE_REVISIONS_ALBUM_OVERVIEW_EXPLAIN') }}</p>
+	<table class="table1 zebra-table">
+		<thead><tr><th>{{ lang('ACP_GALLERY_IMAGE_REVISIONS_ALBUM') }}</th><th>{{ lang('ACP_GALLERY_IMAGE_REVISIONS_ENABLE') }}</th><th>{{ lang('ACP_GALLERY_IMAGE_REVISIONS_LIMIT') }}</th><th>{{ lang('OPTIONS') }}</th></tr></thead>
+		<tbody>
+		{% for album in imagerevisions_albums %}
+			<tr>
+				<td>{{ album.PREFIX }}{{ album.NAME }}</td>
+				<td><strong>{{ album.EFFECTIVE_ENABLED ? lang('YES') : lang('NO') }}</strong><br><span>{% if album.ENABLED == -1 %}{{ lang('ACP_GALLERY_IMAGE_REVISIONS_INHERITED') }}{% else %}{{ lang('ACP_GALLERY_IMAGE_REVISIONS_DIRECT') }}{% endif %}</span></td>
+				<td><strong>{{ album.EFFECTIVE_LIMIT }}</strong><br><span>{% if album.LIMIT == -1 %}{{ lang('ACP_GALLERY_IMAGE_REVISIONS_INHERITED') }}{% else %}{{ lang('ACP_GALLERY_IMAGE_REVISIONS_DIRECT_VALUE', album.LIMIT) }}{% endif %}</span></td>
+				<td><a href="{{ album.U_EDIT }}">{{ lang('EDIT') }}</a></td>
+			</tr>
+		{% else %}
+			<tr><td colspan="4">{{ lang('ACP_GALLERY_IMAGE_REVISIONS_NO_ALBUMS') }}</td></tr>
+		{% endfor %}
+		</tbody>
+	</table>
+</fieldset>
+
 {% include 'overall_footer.html' %}

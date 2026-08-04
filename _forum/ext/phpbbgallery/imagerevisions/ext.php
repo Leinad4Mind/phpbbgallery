@@ -49,6 +49,13 @@ class ext extends \phpbb\extension\base
 				$prefix . 'gallery_image_revisions'
 			);
 			$revision->reconcile_orphans();
+			$policy = new policy(
+				$this->container->get('dbal.conn'),
+				$this->container->get('config'),
+				$prefix . 'gallery_albums',
+				$prefix . 'gallery_imagerevisions_album_rules'
+			);
+			$policy->reconcile_orphans();
 
 			return false;
 		}

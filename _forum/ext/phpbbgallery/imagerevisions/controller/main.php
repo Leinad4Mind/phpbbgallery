@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 class main
 {
-	protected \phpbb\config\config $config;
+	protected \phpbbgallery\imagerevisions\policy $policy;
 	protected \phpbb\controller\helper $helper;
 	protected \phpbb\language\language $language;
 	protected \phpbb\user $user;
@@ -26,13 +26,13 @@ class main
 	protected \phpbbgallery\core\file\file $file;
 	protected \phpbbgallery\imagerevisions\revision $revisions;
 
-	public function __construct(\phpbb\config\config $config, \phpbb\controller\helper $helper,
+	public function __construct(\phpbbgallery\imagerevisions\policy $policy, \phpbb\controller\helper $helper,
 		\phpbb\language\language $language, \phpbb\user $user, \phpbbgallery\core\album\album $album,
 		\phpbbgallery\core\image\image $image, \phpbbgallery\core\auth\auth $gallery_auth,
 		\phpbbgallery\core\auth\image_authorization $image_authorization, \phpbbgallery\core\file\file $file,
 		\phpbbgallery\imagerevisions\revision $revisions)
 	{
-		$this->config = $config;
+		$this->policy = $policy;
 		$this->helper = $helper;
 		$this->language = $language;
 		$this->user = $user;
@@ -66,12 +66,13 @@ class main
 
 	public function restore(int $image_id, int $revision_id): ?Response
 	{
-		$this->authorize($image_id);
+		$image_data = $this->authorize($image_id);
 		if (!check_form_key('gallery'))
 		{
 			trigger_error('FORM_INVALID');
 		}
-		if (!$this->revisions->restore($image_id, $revision_id, $this->limit()))
+		$settings = $this->policy->resolve((int) $image_data['image_album_id']);
+		if (!$this->revisions->restore($image_id, $revision_id, $settings['revision_limit']))
 		{
 			trigger_error($this->language->lang('IMAGE_REVISION_NOT_AVAILABLE'));
 		}
@@ -87,13 +88,20 @@ class main
 	{
 		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
 		$this->language->add_lang('imagerevisions', 'phpbbgallery/imagerevisions');
-		if (empty($this->config['phpbb_gallery_imagerevisions_enabled']))
+		$image_data = $this->image->get_image_data_or_fail($image_id);
+		$album_id = (int) $image_data['image_album_id'];
+		try
+		{
+			$settings = $this->policy->resolve($album_id);
+		}
+		catch (\OutOfBoundsException)
 		{
 			throw new \phpbb\exception\http_exception(404, 'IMAGE_REVISION_NOT_AVAILABLE');
 		}
-
-		$image_data = $this->image->get_image_data_or_fail($image_id);
-		$album_id = (int) $image_data['image_album_id'];
+		if (!$settings['enabled'])
+		{
+			throw new \phpbb\exception\http_exception(404, 'IMAGE_REVISION_NOT_AVAILABLE');
+		}
 		$album_data = $this->album->get_info($album_id);
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$has_image_permission = $this->gallery_auth->acl_check('i_edit', $album_id, $album_data['album_user_id']);
@@ -105,10 +113,5 @@ class main
 		}
 
 		return $image_data;
-	}
-
-	private function limit(): int
-	{
-		return max(1, min(50, (int) ($this->config['phpbb_gallery_imagerevisions_limit'] ?? 5)));
 	}
 }

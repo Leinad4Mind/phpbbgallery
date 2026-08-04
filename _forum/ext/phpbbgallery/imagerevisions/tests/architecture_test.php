@@ -9,6 +9,7 @@
 
 namespace phpbbgallery\imagerevisions\tests;
 
+use phpbbgallery\imagerevisions\migrations\m2_album_policy;
 use PHPUnit\Framework\TestCase;
 
 final class architecture_test extends TestCase
@@ -46,6 +47,44 @@ final class architecture_test extends TestCase
 		$this->assertStringContainsString('$this->upload->discard_uploaded_images();', $listener);
 	}
 
+	public function test_album_policy_is_owned_by_the_addon_and_edited_from_gallery_albums(): void
+	{
+		$migration = new m2_album_policy();
+		$schema = $migration->update_schema();
+		$table = 'phpbb_gallery_imagerevisions_album_rules';
+		$this->assertSame(['INT:11', -1], $schema['add_tables'][$table]['COLUMNS']['enabled']);
+		$this->assertSame(['INT:11', -1], $schema['add_tables'][$table]['COLUMNS']['revision_limit']);
+
+		$listener = (string) file_get_contents($this->root . '/event/acp_listener.php');
+		$album_template = (string) file_get_contents(
+			$this->root . '/adm/style/event/phpbbgallery_core_adm_album_type_options.html'
+		);
+		$overview = (string) file_get_contents($this->root . '/adm/style/imagerevisions_settings.html');
+		$this->assertStringContainsString('phpbbgallery.core.acp.albums.send_to_template', $listener);
+		$this->assertStringContainsString('phpbbgallery.core.album.manage.created', $listener);
+		$this->assertStringContainsString('phpbbgallery.core.album.manage.updated', $listener);
+		$this->assertStringContainsString('phpbbgallery.core.album.manage.delete_album_content', $listener);
+		$this->assertStringContainsString('save_created_album_settings', $listener);
+		$this->assertStringContainsString('save_updated_album_settings', $listener);
+		$this->assertStringContainsString('imagerevisions_enabled', $album_template);
+		$this->assertStringContainsString('imagerevisions_limit', $album_template);
+		$this->assertStringContainsString('album.U_EDIT', $overview);
+		$this->assertStringNotContainsString('album_rules[', $overview);
+	}
+
+	public function test_runtime_uses_the_effective_album_policy(): void
+	{
+		$listener = (string) file_get_contents($this->root . '/event/main_listener.php');
+		$controller = (string) file_get_contents($this->root . '/controller/main.php');
+		$services = (string) file_get_contents($this->root . '/config/services.yml');
+
+		$this->assertStringContainsString('$this->policy->resolve($album_id)', $listener);
+		$this->assertStringContainsString('revision_limit', $listener);
+		$this->assertStringContainsString('$this->policy->resolve($album_id)', $controller);
+		$this->assertStringContainsString('revision_limit', $controller);
+		$this->assertStringContainsString('@phpbbgallery.imagerevisions.policy', $services);
+	}
+
 	public function test_restore_is_post_only_reauthorized_and_csrf_protected(): void
 	{
 		$routing = (string) file_get_contents($this->root . '/config/routing.yml');
@@ -79,6 +118,7 @@ final class architecture_test extends TestCase
 			$files = array_map('basename', glob($this->root . '/language/' . $locale . '/*.php') ?: []);
 			sort($files);
 			$this->assertSame(['imagerevisions.php', 'info_acp_imagerevisions.php', 'info_imagerevisions.php'], $files, $locale);
+			$this->assertSame($this->language_keys('en'), $this->language_keys($locale), $locale);
 		}
 	}
 
@@ -105,5 +145,15 @@ final class architecture_test extends TestCase
 		$this->assertStringContainsString('realpath($this->phpbb_root_path . \'files/phpbbgallery/core/source\')', $migration);
 		$this->assertStringContainsString('strncasecmp($normalized_path, $root_prefix', $migration);
 		$this->assertStringContainsString('@unlink($path);', $migration);
+	}
+
+	private function language_keys(string $locale): array
+	{
+		$lang = [];
+		include $this->root . '/language/' . $locale . '/info_acp_imagerevisions.php';
+		$keys = array_keys($lang);
+		sort($keys);
+
+		return $keys;
 	}
 }

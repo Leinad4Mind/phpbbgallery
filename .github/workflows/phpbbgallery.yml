@@ -186,6 +186,15 @@ jobs:
           --bootstrap ./tests/bootstrap.php
           phpBB/ext/phpbbgallery/contest/tests/functional/contest_workflow.php
 
+      - name: Run Gallery Image Revisions workflow test
+        shell: bash
+        working-directory: .functional/phpBB3
+        run: >-
+          phpBB/vendor/bin/phpunit
+          --configuration .github/phpunit-sqlite3-github.xml
+          --bootstrap ./tests/bootstrap.php
+          phpBB/ext/phpbbgallery/imagerevisions/tests/functional/imagerevisions_workflow.php
+
       - name: Run Gallery addon reconciliation workflow test
         shell: bash
         working-directory: .functional/phpBB3

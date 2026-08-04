@@ -1,7 +1,16 @@
 parameters:
     phpbbgallery.imagerevisions.tables.revisions: '%core.table_prefix%gallery_image_revisions'
+    phpbbgallery.imagerevisions.tables.album_rules: '%core.table_prefix%gallery_imagerevisions_album_rules'
 
 services:
+    phpbbgallery.imagerevisions.policy:
+        class: phpbbgallery\imagerevisions\policy
+        arguments:
+            - '@dbal.conn'
+            - '@config'
+            - '%phpbbgallery.tables.gallery_albums%'
+            - '%phpbbgallery.imagerevisions.tables.album_rules%'
+
     phpbbgallery.imagerevisions.revision:
         class: phpbbgallery\imagerevisions\revision
         arguments:
@@ -17,7 +26,7 @@ services:
     phpbbgallery.imagerevisions.listener:
         class: phpbbgallery\imagerevisions\event\main_listener
         arguments:
-            - '@config'
+            - '@phpbbgallery.imagerevisions.policy'
             - '@request'
             - '@template'
             - '@language'
@@ -28,10 +37,20 @@ services:
         tags:
             - { name: event.listener }
 
+    phpbbgallery.imagerevisions.acp_listener:
+        class: phpbbgallery\imagerevisions\event\acp_listener
+        arguments:
+            - '@phpbbgallery.imagerevisions.policy'
+            - '@request'
+            - '@template'
+            - '@language'
+        tags:
+            - { name: event.listener }
+
     phpbbgallery.imagerevisions.controller:
         class: phpbbgallery\imagerevisions\controller\main
         arguments:
-            - '@config'
+            - '@phpbbgallery.imagerevisions.policy'
             - '@controller.helper'
             - '@language'
             - '@user'

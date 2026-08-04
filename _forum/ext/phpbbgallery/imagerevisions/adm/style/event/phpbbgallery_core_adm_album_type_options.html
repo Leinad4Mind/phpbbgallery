@@ -1,0 +1,16 @@
+<fieldset>
+	<legend>{{ lang('ACP_GALLERY_IMAGE_REVISIONS_ALBUM_SETTINGS') }}</legend>
+	<p>{{ lang('ACP_GALLERY_IMAGE_REVISIONS_ALBUM_SETTINGS_EXPLAIN') }}</p>
+	<dl>
+		<dt><label for="imagerevisions_enabled">{{ lang('ACP_GALLERY_IMAGE_REVISIONS_ENABLE') }}</label><br><span>{{ lang('ACP_GALLERY_IMAGE_REVISIONS_EFFECTIVE_TOGGLE', IMAGEREVISIONS_EFFECTIVE_ENABLED ? lang('YES') : lang('NO')) }}</span></dt>
+		<dd><select id="imagerevisions_enabled" name="imagerevisions_enabled">
+			<option value="-1"{% if IMAGEREVISIONS_ALBUM_ENABLED == -1 %} selected{% endif %}>{{ lang('ACP_GALLERY_IMAGE_REVISIONS_INHERIT') }}</option>
+			<option value="1"{% if IMAGEREVISIONS_ALBUM_ENABLED == 1 %} selected{% endif %}>{{ lang('YES') }}</option>
+			<option value="0"{% if IMAGEREVISIONS_ALBUM_ENABLED == 0 %} selected{% endif %}>{{ lang('NO') }}</option>
+		</select></dd>
+	</dl>
+	<dl>
+		<dt><label for="imagerevisions_limit">{{ lang('ACP_GALLERY_IMAGE_REVISIONS_LIMIT') }}</label><br><span>{{ lang('ACP_GALLERY_IMAGE_REVISIONS_EFFECTIVE_VALUE', IMAGEREVISIONS_EFFECTIVE_LIMIT) }}</span></dt>
+		<dd><input id="imagerevisions_limit" name="imagerevisions_limit" type="number" min="-1" max="50" value="{{ IMAGEREVISIONS_ALBUM_LIMIT }}"></dd>
+	</dl>
+</fieldset>

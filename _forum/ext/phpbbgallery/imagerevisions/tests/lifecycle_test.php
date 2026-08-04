@@ -19,6 +19,7 @@ final class lifecycle_test extends TestCase
 
 		$this->assertStringContainsString("\$old_state === 'reconcile'", $extension);
 		$this->assertStringContainsString('phpbbgallery.core.file.tool', $extension);
-		$this->assertStringContainsString('reconcile_orphans()', $extension);
+		$this->assertSame(2, substr_count($extension, 'reconcile_orphans()'));
+		$this->assertStringContainsString("\$prefix . 'gallery_imagerevisions_album_rules'", $extension);
 	}
 }

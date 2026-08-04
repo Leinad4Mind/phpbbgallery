@@ -15,6 +15,9 @@ final class fake_db implements \phpbb\db\driver\driver_interface
 	public array $revisions = [];
 	public array $transactions = [];
 	public array $statements = [];
+	public array $rows = [];
+	public array $inserted = [];
+	public string $last_query = '';
 	public bool $reject_updates = false;
 	private array $pending = [];
 	private array $built = [];
@@ -22,7 +25,7 @@ final class fake_db implements \phpbb\db\driver\driver_interface
 	private int $affected_rows = 0;
 	private ?array $snapshot = null;
 
-	public function __construct(array $images)
+	public function __construct(array $images = [])
 	{
 		$this->images = $images;
 	}
@@ -42,10 +45,20 @@ final class fake_db implements \phpbb\db\driver\driver_interface
 	public function sql_query($sql, $cache_ttl = 0)
 	{
 		$this->statements[] = $sql;
+		$this->last_query = $sql;
 		$this->pending = [];
 		$this->affected_rows = 0;
 
-		if (str_contains($sql, 'LEFT JOIN images image'))
+		if (str_contains($sql, 'FROM albums ') || str_contains($sql, 'FROM rules rules'))
+		{
+			$this->pending = $this->rows;
+		}
+		else if (preg_match('/INSERT INTO rules/', $sql))
+		{
+			$this->inserted[] = $this->built;
+			$this->affected_rows = 1;
+		}
+		else if (str_contains($sql, 'LEFT JOIN images image'))
 		{
 			foreach ($this->revisions as $revision)
 			{

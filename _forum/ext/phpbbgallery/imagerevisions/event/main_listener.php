@@ -9,11 +9,12 @@
 
 namespace phpbbgallery\imagerevisions\event;
 
+use phpbbgallery\imagerevisions\policy;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class main_listener implements EventSubscriberInterface
 {
-	protected \phpbb\config\config $config;
+	protected \phpbbgallery\imagerevisions\policy $policy;
 	protected \phpbb\request\request_interface $request;
 	protected \phpbb\template\template $template;
 	protected \phpbb\language\language $language;
@@ -22,12 +23,12 @@ class main_listener implements EventSubscriberInterface
 	protected \phpbbgallery\core\upload $upload;
 	protected \phpbbgallery\imagerevisions\revision $revisions;
 
-	public function __construct(\phpbb\config\config $config, \phpbb\request\request_interface $request,
+	public function __construct(\phpbbgallery\imagerevisions\policy $policy, \phpbb\request\request_interface $request,
 		\phpbb\template\template $template, \phpbb\language\language $language, \phpbb\user $user,
 		\phpbb\controller\helper $helper, \phpbbgallery\core\upload $upload,
 		\phpbbgallery\imagerevisions\revision $revisions)
 	{
-		$this->config = $config;
+		$this->policy = $policy;
 		$this->request = $request;
 		$this->template = $template;
 		$this->language = $language;
@@ -58,7 +59,9 @@ class main_listener implements EventSubscriberInterface
 
 	public function replace_file(\phpbb\event\data $event): void
 	{
-		if (!$this->enabled() || $event['errors'])
+		$album_data = (array) $event['album_data'];
+		$settings = $this->settings((int) $album_data['album_id']);
+		if (!$settings['enabled'] || $event['errors'])
 		{
 			return;
 		}
@@ -90,7 +93,7 @@ class main_listener implements EventSubscriberInterface
 		}
 
 		$uploaded_image_id = (int) $this->upload->images[0];
-		if (!$this->revisions->replace_file((int) $event['image_id'], $uploaded_image_id, $this->limit()))
+		if (!$this->revisions->replace_file((int) $event['image_id'], $uploaded_image_id, $settings['revision_limit']))
 		{
 			$this->upload->discard_uploaded_images();
 			$errors[] = $this->language->lang('IMAGE_REPLACE_FAILED');
@@ -103,7 +106,8 @@ class main_listener implements EventSubscriberInterface
 
 	public function display_revisions(\phpbb\event\data $event): void
 	{
-		if (!$this->enabled())
+		$album_data = (array) $event['album_data'];
+		if (!$this->settings((int) $album_data['album_id'])['enabled'])
 		{
 			return;
 		}
@@ -137,13 +141,16 @@ class main_listener implements EventSubscriberInterface
 		$this->revisions->delete_for_images((array) $event['images']);
 	}
 
-	private function enabled(): bool
+	/** @return array{enabled: int, revision_limit: int} */
+	private function settings(int $album_id): array
 	{
-		return !empty($this->config['phpbb_gallery_imagerevisions_enabled']);
-	}
-
-	private function limit(): int
-	{
-		return max(1, min(50, (int) ($this->config['phpbb_gallery_imagerevisions_limit'] ?? 5)));
+		try
+		{
+			return $this->policy->resolve($album_id);
+		}
+		catch (\OutOfBoundsException)
+		{
+			return ['enabled' => 0, 'revision_limit' => policy::MIN_LIMIT];
+		}
 	}
 }
