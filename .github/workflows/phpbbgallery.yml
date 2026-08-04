@@ -268,3 +268,40 @@ jobs:
           --extensions=php
           --ignore='*/tests/*'
           _forum/ext/phpbbgallery
+
+  packages:
+    name: Release packages
+    needs: [phpunit, epv, functional, quality]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: zip
+          coverage: none
+        env:
+          fail-fast: true
+
+      - name: Build and verify release packages
+        run: >-
+          php _forum/ext/phpbbgallery/build_release_packages.php
+          --output=build/phpbbgallery
+          --ref=HEAD
+
+      - name: Upload release packages
+        uses: actions/upload-artifact@v7
+        with:
+          name: phpbbgallery-release-packages
+          path: |
+            build/phpbbgallery/*.zip
+            build/phpbbgallery/SHA256SUMS
+            build/phpbbgallery/release-manifest.json
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 0

@@ -38,3 +38,17 @@ licences. Every packaged component declares its own licence in `composer.json`.
 Each component has an independent phpBB version check. The corresponding
 `gallery-*.json` files in this directory must be published at the root of the
 `satanasov/phpbbgallery` default branch whenever a release version changes.
+
+## Building release packages
+
+The release builder archives a committed Git ref, applies the suite-level
+`export-ignore` rules and creates one package per component with the required
+`phpbbgallery/<component>/` directory structure:
+
+```console
+php _forum/ext/phpbbgallery/build_release_packages.php --output=build/phpbbgallery --ref=HEAD
+```
+
+When this directory is the repository root, use `php build_release_packages.php`
+instead. Uncommitted changes are intentionally excluded. The output contains 11
+versioned ZIP files, `SHA256SUMS` and a deterministic `release-manifest.json`.
