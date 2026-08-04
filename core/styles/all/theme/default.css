@@ -1,6 +1,10 @@
 #covverall {
 	display: none;
 }
+
+#postingbox {
+	position: relative;
+}
 #covverall .dropzone {
 	border: 5px dashed #536482;
 	height: 95%;
@@ -29,6 +33,11 @@
 	padding: 5px;
 }
 
+#covverall.hover .dropzone {
+	background-color: rgba(43, 194, 83, 0.12);
+	border-color: #2bc253;
+}
+
 #covverall.fade {
 	-webkit-transition: all 0.3s ease-out;
 	-moz-transition: all 0.3s ease-out;
@@ -41,13 +50,22 @@
 .uploadImage {
 	padding: 4px;
 	background-color: #ECF1F3;
-	margin-right: 8px;
-	margin-bottom: 8px;
-	width: 19%;
-	float: left;
+	box-sizing: border-box;
+	min-width: 0;
 }
+
+.containuploads {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+	gap: 8px;
+}
+
 .uploadImage .preview {
-	padding-left: 3%;
+	align-items: center;
+	display: flex;
+	justify-content: center;
+	min-height: 80px;
+	padding: 3%;
 }
 
 .uploadImage .preview img {
@@ -57,12 +75,33 @@
 }
 
 .uploadImage .info {
-	padding-left: 3%;
+	padding: 0 3% 3%;
 }
-.uploadImage .info .name{
+
+.uploadImage .info .name {
+	display: inline;
 	font-size: 8pt;
 	color: #105289;
+	overflow-wrap: anywhere;
 	overflow: hidden;
+}
+
+.gallery-quick-upload-error {
+	color: #BC2A4D;
+	font-weight: bold;
+	margin: 4px 0;
+}
+
+.gallery-quick-upload-cancel {
+	margin-top: 4px;
+}
+
+.gallery-quick-upload-complete {
+	border: 1px solid rgba(43, 194, 83, 0.45);
+}
+
+.gallery-quick-upload-failed {
+	border: 1px solid rgba(188, 42, 77, 0.45);
 }
 
 .meter {
@@ -96,7 +135,8 @@
   overflow: hidden;
 }
 
-.meter > span > p {
+.gallery-quick-upload-progress-label {
+	display: block;
 	margin-top: 2px;
 	text-align: center;
 	color: #115098;

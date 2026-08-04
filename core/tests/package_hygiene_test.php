@@ -78,14 +78,7 @@ class package_hygiene_test extends TestCase
 			'editor_selector.js',
 			'gallery_polaroid.js',
 			'image_navigation.js',
-			'jquery.fileupload-image.js',
-			'jquery.fileupload-process.js',
-			'jquery.fileupload-ui.js',
-			'jquery.fileupload-validate.js',
-			'jquery.fileupload.js',
-			'jquery.iframe-transport.js',
-			'jquery.ui.widget.js',
-			'load-image.all.min.js',
+			'quick_upload.js',
 		];
 		$actual = array_values(array_filter(scandir($asset_directory), function (string $name) use ($asset_directory): bool
 		{
@@ -184,31 +177,34 @@ class package_hygiene_test extends TestCase
 		}
 	}
 
-	public function test_third_party_assets_match_the_documented_checksums(): void
+	public function test_quick_upload_is_native_and_has_no_legacy_jquery_dependencies(): void
 	{
-		$checksums = [
-			'jquery.ui.widget.js' => 'd50b39d3a03aed723335188a428bca4a783b211368e8b13ae024fea22cad34f3',
-			'load-image.all.min.js' => '1f9a171543305bc03d542822165a94ffad55580cc137634da12877736b04bbe9',
-			'jquery.iframe-transport.js' => 'be43036704c70db0148f4970326f6dd36bad7b34eed8e5f76719269ef70cb8cd',
-			'jquery.fileupload.js' => '071e66375d2207b30024197a4b566c5fd70c6f72ab394f1375f2521d36cc3dac',
-			'jquery.fileupload-process.js' => 'a7f04469af255c4c547e8961ead78e4894718337f7a79df44df892d0067cf2b8',
-			'jquery.fileupload-image.js' => 'bed7dd16807fe0e8d477a396d1103d0d609c4e4c9933fa2cc0f459d53a4b30a1',
-			'jquery.fileupload-validate.js' => '8e899b2766035a6d318c7c50cbd258b78eb29c8108a171afeef6bbee2ffe2446',
-			'jquery.fileupload-ui.js' => '3c3b4e896fe9763c331a2ce9dfa40779c0bf11a8d839a6e5ddca917ce6ff743c',
-		];
 		$asset_directory = $this->core_root . '/styles/all/template/js';
-		$notices = file_get_contents($this->core_root . '/THIRD_PARTY.md');
+		$quick_upload = (string) file_get_contents($asset_directory . '/quick_upload.js');
+		$legacy_assets = [
+			'jquery.ui.widget.js',
+			'load-image.all.min.js',
+			'jquery.iframe-transport.js',
+			'jquery.fileupload.js',
+			'jquery.fileupload-process.js',
+			'jquery.fileupload-image.js',
+			'jquery.fileupload-validate.js',
+			'jquery.fileupload-ui.js',
+		];
 
-		foreach ($checksums as $file => $checksum)
+		$this->assertStringContainsString('new FormData(form)', $quick_upload);
+		$this->assertStringContainsString('new XMLHttpRequest()', $quick_upload);
+		$this->assertStringContainsString('URL.createObjectURL(file)', $quick_upload);
+		$this->assertStringContainsString('request.abort()', $quick_upload);
+		$this->assertStringContainsString('X-Requested-With', $quick_upload);
+		$this->assertStringNotContainsString('jQuery', $quick_upload);
+		$this->assertStringNotContainsString('innerHTML', $quick_upload);
+
+		foreach ($legacy_assets as $file)
 		{
-			$this->assertSame($checksum, hash_file('sha256', $asset_directory . '/' . $file));
-			$this->assertStringContainsString($file . ' | ' . $checksum, $notices);
+			$this->assertFileDoesNotExist($asset_directory . '/' . $file);
 		}
-
-		$widget = file_get_contents($asset_directory . '/jquery.ui.widget.js');
-		$loader = file_get_contents($asset_directory . '/load-image.all.min.js');
-		$this->assertStringContainsString('jQuery UI Widget 1.14.2', $widget);
-		$this->assertStringNotContainsString('sourceMappingURL=', $loader);
+		$this->assertFileDoesNotExist($this->core_root . '/THIRD_PARTY.md');
 	}
 
 	public function test_php_sources_do_not_keep_executable_code_in_comments(): void

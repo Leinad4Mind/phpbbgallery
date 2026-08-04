@@ -195,15 +195,33 @@ final class template_syntax_test extends TestCase
 		$this->assertStringContainsString('requestId !== requestSequence', $javascript);
 	}
 
-	public function test_quick_upload_uses_a_javascript_regex_from_the_configured_extensions(): void
+	public function test_quick_upload_uses_the_native_shared_client_and_server_configuration(): void
 	{
 		$core_root = dirname(__DIR__);
 		foreach (['all', 'BBOOTS', 'FLATBOOTS'] as $style)
 		{
 			$footer = (string) file_get_contents($core_root . '/styles/' . $style . '/template/event/overall_footer_after.html');
-			$this->assertStringContainsString('acceptFileTypes: /(\\.|\\/)({{ S_QUICK_FILE_TYPES }})$/i,', $footer, $style);
-			$this->assertStringNotContainsString('//acceptFileTypes:', $footer, $style);
+			$this->assertStringContainsString("INCLUDEJS '@phpbbgallery_core/js/quick_upload.js'", $footer, $style);
+			$this->assertStringNotContainsString('jquery.fileupload', $footer, $style);
 		}
+
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$posting = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/posting_body.html');
+			$this->assertStringContainsString('data-gallery-quick-upload', $posting, $style);
+			$this->assertStringContainsString('data-allowed-extensions="{{ S_ALLOWED_FILETYPES_ACCEPT }}"', $posting, $style);
+			$this->assertStringContainsString('data-max-file-size="{{ S_QUICK_MAX_FILESIZE }}"', $posting, $style);
+			$this->assertStringContainsString('data-upload-limit="{{ S_UPLOAD_LIMIT }}"', $posting, $style);
+			$this->assertStringContainsString('id="outputTarget"', $posting, $style);
+		}
+
+		$javascript = (string) file_get_contents($core_root . '/styles/all/template/js/quick_upload.js');
+		$this->assertStringContainsString("split(',')", $javascript);
+		$this->assertStringContainsString('allowedExtensions.indexOf(extensionOf(file.name))', $javascript);
+		$this->assertStringContainsString('file.size > maximumFileSize', $javascript);
+		$this->assertStringContainsString('accepted >= uploadLimit', $javascript);
+		$this->assertStringContainsString('response.files.forEach', $javascript);
+		$this->assertStringNotContainsString('innerHTML', $javascript);
 	}
 
 	public function test_bootstrap_moderation_empty_states_use_theme_alerts(): void

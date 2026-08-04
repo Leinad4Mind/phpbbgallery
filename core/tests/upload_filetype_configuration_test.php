@@ -96,14 +96,14 @@ final class upload_filetype_configuration_test extends TestCase
 		$this->assertSame(0, $upload->discard_uploaded_images());
 	}
 
-	public function test_controller_builds_native_and_javascript_filters_from_raw_extensions(): void
+	public function test_controller_builds_the_native_filter_from_raw_extensions(): void
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/upload.php');
 
 		$this->assertStringContainsString('$allowed_extensions = $process->get_allowed_types();', $source);
 		$this->assertStringContainsString("'S_ALLOWED_FILETYPES_ACCEPT'", $source);
-		$this->assertStringContainsString("'S_QUICK_FILE_TYPES'", $source);
-		$this->assertStringContainsString("array_map('preg_quote', \$allowed_extensions)", $source);
+		$this->assertStringContainsString("'S_QUICK_MAX_FILESIZE'", $source);
+		$this->assertStringNotContainsString("'S_QUICK_FILE_TYPES'", $source);
 		$this->assertStringNotContainsString("if (\$filetype == 'zip')", $source);
 	}
 

@@ -298,6 +298,7 @@ $lang = array_merge($lang, [
 	'UPLOAD_IMAGE'              => 'Afbeelding uploaden',
 	'UPLOAD_IMAGE_SIZE_TOO_BIG' => 'De afmetingen van je afbeelding zijn te groot',
 	'UPLOAD_NO_FILE'            => 'Je moet het pad en bestandsnaam invullen',
+	'QUICK_UPLOAD_LIMIT_REACHED' => 'Je kunt maximaal %d bestanden tegelijk uploaden.',
 	'UPLOADED_BY_USER'          => 'Geüpload door',
 	'UPLOADED_ON_DATE'          => 'Geüpload op',
 	'IMAGE_RESOLUTION'          => 'Resolutie',

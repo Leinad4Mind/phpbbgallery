@@ -280,6 +280,7 @@ $lang = array_merge($lang, [
 	'UPLOAD_IMAGE'              => 'Добавить фото',
 	'UPLOAD_IMAGE_SIZE_TOO_BIG' => 'Разрешение фотографии слишком велико',
 	'UPLOAD_NO_FILE'            => 'Вы должны ввести путь и название файла',
+	'QUICK_UPLOAD_LIMIT_REACHED' => 'За один раз можно загрузить не более %d файлов.',
 	'UPLOADED_BY_USER'          => 'Автор',
 	'UPLOADED_ON_DATE'          => 'Дата',
 	'IMAGE_RESOLUTION'          => 'Разрешение',

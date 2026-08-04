@@ -225,30 +225,17 @@ class upload
 			}
 		}
 
-		// So let's see if we have AJAX and use jQuery shit.
-		// We are going to use ajax upload only for registered users.
-		// Anons should suffer.
+		// The progressive upload client is available only to registered users.
+		// Anonymous users retain the normal multipart form as a reliable fallback.
 		if ($mode == 'upload' && $is_ajax && $this->user->data['is_registered'])
 		{
 			if (!check_form_key('gallery'))
 			{
-				return new \Symfony\Component\HttpFoundation\JsonResponse([
-					'files' => [
-						[
-							'error' => $this->language->lang('FORM_INVALID'),
-						],
-					],
-				], 400);
+				return $this->ajax_error($this->language->lang('FORM_INVALID'));
 			}
 			if ($invalid_author)
 			{
-				return new \Symfony\Component\HttpFoundation\JsonResponse([
-					'files' => [
-						[
-							'error' => $this->language->lang('INVALID_USERNAME'),
-						],
-					],
-				], 400);
+				return $this->ajax_error($this->language->lang('INVALID_USERNAME'));
 			}
 
 			// So we use ajax request to upload (so we are going to copy some functions from other upload
@@ -256,8 +243,7 @@ class upload
 			// 1. Check album-configuration Quota
 			if (($this->gallery_config->get('album_images') >= 0) && ($album_data['album_images'] >= $this->gallery_config->get('album_images')))
 			{
-				//@todo: Add return link
-				trigger_error('ALBUM_REACHED_QUOTA');
+				return $this->ajax_error($this->language->lang('ALBUM_REACHED_QUOTA'));
 			}
 
 			// 2. Check user-limit, if he is not allowed to go unlimited
@@ -273,8 +259,7 @@ class upload
 				$this->db->sql_freeresult($result);
 				if ($own_images >= $this->auth->acl_check('i_count', $album_id, $album_data['album_user_id']))
 				{
-					//@todo: Add return link
-					trigger_error($this->language->lang('USER_REACHED_QUOTA', $this->auth->acl_check('i_count', $album_id, $album_data['album_user_id'])));
+					return $this->ajax_error($this->language->lang('USER_REACHED_QUOTA', $this->auth->acl_check('i_count', $album_id, $album_data['album_user_id'])));
 				}
 			}
 
@@ -286,13 +271,7 @@ class upload
 			$process->upload_file(1);
 			if (!empty($process->errors))
 			{
-				return new \Symfony\Component\HttpFoundation\JsonResponse([
-					'files' => [
-						[
-							'error' => implode(',', $process->errors)
-						]
-					]
-				]);
+				return $this->ajax_error(implode(', ', $process->errors));
 			}
 			$checks = $process->generate_hidden_fields();
 			$process->get_images($checks);
@@ -496,7 +475,6 @@ class upload
 					$this->template->assign_vars([
 						'S_GALLERY_QUICK_UPLOAD' => true,
 						'S_QUICK_MAX_FILESIZE'   => $process->get_source_filesize_limit(),
-						'S_QUICK_FILE_TYPES'     => implode('|', array_map('preg_quote', $allowed_extensions)),
 					]);
 				}
 			}
@@ -721,6 +699,17 @@ class upload
 			]);
 		}
 		return $this->helper->render('gallery/posting_body.html', $page_title);
+	}
+
+	private function ajax_error(string $message, int $status = 400): \Symfony\Component\HttpFoundation\JsonResponse
+	{
+		return new \Symfony\Component\HttpFoundation\JsonResponse([
+			'files' => [
+				[
+					'error' => $message,
+				],
+			],
+		], $status);
 	}
 
 	private function check_fs(): bool
