@@ -36,6 +36,12 @@ class m5_image_rank_storage extends migration
 
 	public function revert_schema(): array
 	{
-		return [];
+		return [
+			'drop_columns' => [
+				$this->table_prefix . 'gallery_images' => [
+					'image_contest_rank',
+				],
+			],
+		];
 	}
 }

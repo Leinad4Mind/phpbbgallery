@@ -54,12 +54,32 @@ final class package_test extends TestCase
 			['config.add', ['phpbb_gallery_contests_ended', 0]],
 		], $settings->update_data());
 
-		foreach ([m3_album_storage::class, m4_image_end_storage::class, m5_image_rank_storage::class, m6_contest_storage::class] as $migration_class)
+		$owned_storage = [
+			m3_album_storage::class => [
+				'drop_columns' => [
+					'phpbb_gallery_albums' => ['album_contest'],
+				],
+			],
+			m4_image_end_storage::class => [
+				'drop_columns' => [
+					'phpbb_gallery_images' => ['image_contest_end'],
+				],
+			],
+			m5_image_rank_storage::class => [
+				'drop_columns' => [
+					'phpbb_gallery_images' => ['image_contest_rank'],
+				],
+			],
+			m6_contest_storage::class => [
+				'drop_tables' => ['phpbb_gallery_contests'],
+			],
+		];
+		foreach ($owned_storage as $migration_class => $expected_revert)
 		{
 			$migration = (new \ReflectionClass($migration_class))->newInstanceWithoutConstructor();
 			(new \ReflectionProperty(\phpbb\db\migration\migration::class, 'table_prefix'))->setValue($migration, 'phpbb_');
 			$this->assertNotSame([], $migration->update_schema(), $migration_class);
-			$this->assertSame([], $migration->revert_schema(), $migration_class);
+			$this->assertSame($expected_revert, $migration->revert_schema(), $migration_class);
 			$this->assertTrue((new \ReflectionClass($migration_class))->hasMethod('effectively_installed'));
 		}
 	}
