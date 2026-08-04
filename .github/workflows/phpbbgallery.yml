@@ -219,6 +219,15 @@ jobs:
           --bootstrap ./tests/bootstrap.php
           phpBB/ext/phpbbgallery/core/tests/functional/addon_reconciliation.php
 
+      - name: Run Gallery recoverable deletion workflow test
+        shell: bash
+        working-directory: .functional/phpBB3
+        run: >-
+          phpBB/vendor/bin/phpunit
+          --configuration .github/phpunit-sqlite3-github.xml
+          --bootstrap ./tests/bootstrap.php
+          phpBB/ext/phpbbgallery/core/tests/functional/image_deletion_workflow.php
+
   quality:
     name: Lint and coding standard
     runs-on: ubuntu-latest
