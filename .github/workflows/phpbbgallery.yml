@@ -171,11 +171,26 @@ jobs:
       - name: Run Gallery BBPoints Images workflow test
         shell: bash
         working-directory: .functional/phpBB3
-        run: >-
-          phpBB/vendor/bin/phpunit
-          --configuration .github/phpunit-sqlite3-github.xml
-          --bootstrap ./tests/bootstrap.php
-          phpBB/ext/phpbbgallery/bbpointsimages/tests/functional/bbpointsimages_workflow.php
+        run: |
+          output_file="${RUNNER_TEMP}/bbpointsimages-functional.log"
+          set +e
+          phpBB/vendor/bin/phpunit \
+            --configuration .github/phpunit-sqlite3-github.xml \
+            --bootstrap ./tests/bootstrap.php \
+            phpBB/ext/phpbbgallery/bbpointsimages/tests/functional/bbpointsimages_workflow.php \
+            2>&1 | tee "${output_file}"
+          status=${PIPESTATUS[0]}
+          set -e
+
+          if (( status != 0 )) && grep -Fq 'Output found before DOCTYPE specification.' "${output_file}"; then
+            echo 'The phpBB functional web server returned an empty initial response; retrying once.'
+            phpBB/vendor/bin/phpunit \
+              --configuration .github/phpunit-sqlite3-github.xml \
+              --bootstrap ./tests/bootstrap.php \
+              phpBB/ext/phpbbgallery/bbpointsimages/tests/functional/bbpointsimages_workflow.php
+          else
+            exit "${status}"
+          fi
 
       - name: Run Gallery Contest workflow test
         shell: bash
