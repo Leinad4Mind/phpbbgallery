@@ -6,6 +6,9 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Made all 11 component manifests expose their version-check configuration in
+  phpBB's supported `extra.version-check` location, added matching release
+  metadata files and documented the Core and add-on catalogue.
 - Replaced the archived Blueimp/jQuery quick-upload stack with a dependency-free
   browser client using FormData and XMLHttpRequest, retaining drag-and-drop,
   previews, bounded concurrent uploads, progress, cancellation and normal-form

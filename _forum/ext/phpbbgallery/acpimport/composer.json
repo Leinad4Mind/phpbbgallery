@@ -34,12 +34,12 @@
 		"display-name": "phpBB Gallery Add-on: ACP Import",
 		"soft-require": {
 			"phpbb/phpbb": ">=3.3.0,<4.0.0@dev"
+		},
+		"version-check": {
+			"host": "raw.githubusercontent.com",
+			"directory": "/satanasov/phpbbgallery/master/",
+			"filename": "gallery-import.json",
+			"ssl": true
 		}
-	},
-	"version-check": {
-		"host": "raw.githubusercontent.com",
-		"directory": "/satanasov/phpbbgallery/master/",
-		"filename": "gallery-import.json",
-		"ssl": true
 	}
 }
