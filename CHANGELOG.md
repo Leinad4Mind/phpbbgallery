@@ -6,6 +6,9 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Moved Image Revisions overrides into each album's ACP edit form and added a
+  read-only hierarchy showing inherited and effective enablement and retention
+  limits, while preserving global defaults.
 - Moved BBPoints image overrides into each album's ACP edit form and replaced
   the bulk matrix with a read-only hierarchy showing direct and effective
   values, edit links and confirmed contributor-assignment bulk actions.
