@@ -298,7 +298,6 @@ class upload_zip_test extends TestCase
 	{
 		if (PHP_VERSION_ID < 80100)
 		{
-			$reflection->setAccessible(true);
 		}
 	}
 

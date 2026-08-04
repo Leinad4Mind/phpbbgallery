@@ -225,7 +225,6 @@ class resumable_upload_test extends TestCase
 		$property = new \ReflectionProperty(\phpbb\db\migration\migration::class, 'table_prefix');
 		if (PHP_VERSION_ID < 80100)
 		{
-			$property->setAccessible(true);
 		}
 		$property->setValue($migration, 'phpbb_');
 
@@ -415,7 +414,6 @@ class resumable_upload_test extends TestCase
 		$property = new \ReflectionProperty(\phpbbgallery\core\upload::class, $name);
 		if (PHP_VERSION_ID < 80100)
 		{
-			$property->setAccessible(true);
 		}
 		$property->setValue($upload, $value);
 	}

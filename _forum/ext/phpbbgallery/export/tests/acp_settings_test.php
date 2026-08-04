@@ -28,7 +28,6 @@ final class acp_settings_test extends TestCase
 	public function test_submitted_values_are_normalized_to_safe_limits(): void
 	{
 		$method = new \ReflectionMethod(main_module::class, 'normalize_settings');
-		$method->setAccessible(true);
 		$module = new main_module();
 
 		self::assertSame([
