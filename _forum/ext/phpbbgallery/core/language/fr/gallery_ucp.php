@@ -59,7 +59,8 @@ $lang = array_merge($lang, [
 	'CREATED_SUBALBUM'      => 'Sous-album créé avec succès.',
 
 	'DELETE_ALBUM'         => 'Supprimer l’album',
-	'DELETE_ALBUM_CONFIRM' => 'Confirmer la suppression de l’album ainsi que tous ses sous-albums et toutes les images contenues.',
+	'DELETE_ALBUM_CONFIRM' => 'Supprimer cet album et ses sous-albums vides ?',
+	'DELETE_ALBUM_REQUIRES_EMPTY' => 'Les albums contenant des images publiées ou en attente de modération ne peuvent pas être supprimés. Demandez d’abord la suppression de ces images et attendez la modération.',
 	'DELETED_ALBUMS'       => 'Album supprimé avec succès.',
 
 	'EDIT'              => 'Modifier',

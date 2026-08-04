@@ -43,7 +43,8 @@ $lang = array_merge($lang, [
 	'CREATED_SUBALBUM'      => 'Subalbum creado correctamente',
 
 	'DELETE_ALBUM'         => 'Eliminar álbum',
-	'DELETE_ALBUM_CONFIRM' => '¿Eliminar álbum, con todos los subalbums e imágenes adjuntos?',
+	'DELETE_ALBUM_CONFIRM' => '¿Eliminar este álbum y sus subálbumes vacíos?',
+	'DELETE_ALBUM_REQUIRES_EMPTY' => 'No se pueden eliminar álbumes que contengan imágenes publicadas o pendientes de moderación. Solicita primero la eliminación de esas imágenes y espera la moderación.',
 	'DELETED_ALBUMS'       => 'Álbumes eliminados correctamente',
 
 	'EDIT'              => 'Editar',

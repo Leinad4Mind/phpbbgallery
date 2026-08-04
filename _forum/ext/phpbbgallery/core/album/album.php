@@ -339,6 +339,7 @@ class album
 			FROM ' . $this->images_table . ' 
 			WHERE image_status <> ' . (int) $this->block->get_image_status_unapproved() . '
 				AND image_status <> ' . (int) $this->block->get_image_status_orphan() . '
+				AND image_status <> ' . (int) $this->block->get_image_status_delete_requested() . '
 				AND image_album_id = ' . (int) $album_id;
 		$result = $this->db->sql_query($sql);
 		$images = $this->db->sql_fetchfield('images');
@@ -348,6 +349,7 @@ class album
 		$sql = 'SELECT COUNT(image_id) images_real
 			FROM ' . $this->images_table . '
 			WHERE image_status <> ' . (int) $this->block->get_image_status_orphan() . '
+				AND image_status <> ' . (int) $this->block->get_image_status_delete_requested() . '
 				AND image_album_id = ' . (int) $album_id;
 		$result = $this->db->sql_query($sql);
 		$images_real = $this->db->sql_fetchfield('images_real');
@@ -358,6 +360,7 @@ class album
 			FROM ' . $this->images_table . '
 			WHERE image_status <> ' . (int) $this->block->get_image_status_unapproved() . '
 				AND image_status <> ' . (int) $this->block->get_image_status_orphan() . '
+				AND image_status <> ' . (int) $this->block->get_image_status_delete_requested() . '
 				AND image_album_id = ' . (int) $album_id . '
 			ORDER BY image_time DESC';
 		$result = $this->db->sql_query($sql);
@@ -434,11 +437,13 @@ class album
 
 			$sql = 'SELECT image_album_id, COUNT(image_id) AS album_images_real,
 					SUM(CASE
-						WHEN image_status <> ' . (int) $this->block->get_image_status_unapproved() . ' THEN 1
+						WHEN image_status <> ' . (int) $this->block->get_image_status_unapproved() . '
+							AND image_status <> ' . (int) $this->block->get_image_status_delete_requested() . ' THEN 1
 						ELSE 0
 					END) AS album_images
 				FROM ' . $this->images_table . '
 				WHERE image_status <> ' . (int) $this->block->get_image_status_orphan() . '
+					AND image_status <> ' . (int) $this->block->get_image_status_delete_requested() . '
 					AND ' . $this->db->sql_in_set('image_album_id', $batch_ids) . '
 				GROUP BY image_album_id';
 			$result = $this->db->sql_query($sql);
@@ -498,6 +503,7 @@ class album
 				FROM ' . $this->images_table . ' i
 				WHERE i.image_status <> ' . (int) $this->block->get_image_status_unapproved() . '
 					AND i.image_status <> ' . (int) $this->block->get_image_status_orphan() . '
+					AND i.image_status <> ' . (int) $this->block->get_image_status_delete_requested() . '
 					AND ' . $this->db->sql_in_set('i.image_album_id', array_keys($album_data)) . '
 					AND NOT EXISTS (
 						SELECT 1
@@ -505,6 +511,7 @@ class album
 						WHERE newer.image_album_id = i.image_album_id
 							AND newer.image_status <> ' . (int) $this->block->get_image_status_unapproved() . '
 							AND newer.image_status <> ' . (int) $this->block->get_image_status_orphan() . '
+							AND newer.image_status <> ' . (int) $this->block->get_image_status_delete_requested() . '
 							AND (newer.image_time > i.image_time
 								OR (newer.image_time = i.image_time AND newer.image_id > i.image_id))
 					)';

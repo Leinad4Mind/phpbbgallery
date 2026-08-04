@@ -81,6 +81,11 @@ class block
 	public const STATUS_ORPHAN = 3;
 
 	/**
+	 * Hidden while a moderator reviews the author's deletion request.
+	 */
+	public const STATUS_DELETE_REQUESTED = 4;
+
+	/**
 	 * @deprecated 4.2.0 Contest states are owned by phpbbgallery/contest.
 	 * Retained as a persisted-value compatibility alias for third-party add-ons.
 	 */
@@ -119,6 +124,11 @@ class block
 	public function get_image_status_orphan(): int
 	{
 		return self::STATUS_ORPHAN;
+	}
+
+	public function get_image_status_delete_requested(): int
+	{
+		return self::STATUS_DELETE_REQUESTED;
 	}
 
 	/**

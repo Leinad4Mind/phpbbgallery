@@ -215,7 +215,8 @@ class image
 
 		$sql = 'SELECT image_id, image_album_id, image_name, image_user_id
 			FROM ' . $this->table_images . '
-			WHERE ' . $this->db->sql_in_set('image_id', $image_ids);
+			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED . '
+				AND ' . $this->db->sql_in_set('image_id', $image_ids);
 		$result = $this->db->sql_query($sql);
 		$image_data = [];
 		while ($row = $this->db->sql_fetchrow($result))
@@ -298,7 +299,8 @@ class image
 
 		$sql = 'SELECT image_id, image_album_id, image_name
 			FROM ' . $this->table_images . '
-			WHERE ' . $this->db->sql_in_set('image_id', array_keys($normalized_names));
+			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED . '
+				AND ' . $this->db->sql_in_set('image_id', array_keys($normalized_names));
 		$result = $this->db->sql_query($sql);
 		$image_data = [];
 		while ($row = $this->db->sql_fetchrow($result))
@@ -373,7 +375,17 @@ class image
 	 */
 	public function delete_images_matching_status(array $images, int $required_status, array $filenames = [], bool $resync_albums = true, bool $skip_files = false): int
 	{
-		return count($this->delete_images_internal($images, $filenames, $resync_albums, $skip_files, $required_status));
+		return count($this->delete_images_matching_status_ids($images, $required_status, $filenames, $resync_albums, $skip_files));
+	}
+
+	/**
+	 * Delete images that still have the expected status and return their IDs.
+	 *
+	 * @return int[] IDs confirmed as deleted
+	 */
+	public function delete_images_matching_status_ids(array $images, int $required_status, array $filenames = [], bool $resync_albums = true, bool $skip_files = false): array
+	{
+		return $this->delete_images_internal($images, $filenames, $resync_albums, $skip_files, $required_status);
 	}
 
 	/**
@@ -652,6 +664,8 @@ class image
 		$sql = 'SELECT SUM(image_comments) as comments
 			FROM ' . $this->table_images .'
 			WHERE image_status ' . (($readd) ? '=' : '<>') . ' ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . '
+				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
+				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED . '
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary);
 		$result = $this->db->sql_query($sql);
 		$num_comments = (int) $this->db->sql_fetchfield('comments');
@@ -660,6 +674,8 @@ class image
 		$sql = 'SELECT COUNT(image_id) images, image_user_id
 			FROM ' . $this->table_images .' 
 			WHERE image_status ' . (($readd) ? '=' : '<>') . ' ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . '
+				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
+				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED . '
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary) . '
 			GROUP BY image_user_id';
 		$result = $this->db->sql_query($sql);
@@ -734,6 +750,162 @@ class image
 	}
 
 	/**
+	 * Hide an author's completed image until a moderator reviews its deletion.
+	 *
+	 * @return array|false Updated image row, or false when the request lost authorization/state
+	 */
+	public function request_deletion(int $image_id, int $requester_id): array|false
+	{
+		$request_time = time();
+		$image_data = $this->get_image_data($image_id);
+		if ($image_data === false
+			|| $requester_id <= ANONYMOUS
+			|| (int) $image_data['image_user_id'] !== $requester_id)
+		{
+			return false;
+		}
+
+		$previous_status = (int) $image_data['image_status'];
+		if (!in_array($previous_status, [
+			\phpbbgallery\core\block::STATUS_UNAPPROVED,
+			\phpbbgallery\core\block::STATUS_APPROVED,
+			\phpbbgallery\core\block::STATUS_LOCKED,
+		], true))
+		{
+			return false;
+		}
+
+		$sql = 'UPDATE ' . $this->table_images . '
+			SET image_status = ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED . ',
+				image_delete_previous_status = ' . (int) $previous_status . ',
+				image_delete_request_user_id = ' . (int) $requester_id . ',
+				image_delete_request_time = ' . (int) $request_time . '
+			WHERE image_id = ' . (int) $image_id . '
+				AND image_user_id = ' . (int) $requester_id . '
+				AND image_status = ' . (int) $previous_status;
+		$this->db->sql_query($sql);
+		if ((int) $this->db->sql_affectedrows() !== 1)
+		{
+			return false;
+		}
+
+		$image_data['image_delete_previous_status'] = $previous_status;
+		$image_data['image_delete_request_user_id'] = $requester_id;
+		$image_data['image_delete_request_time'] = $request_time;
+		$image_data['image_status'] = \phpbbgallery\core\block::STATUS_DELETE_REQUESTED;
+		$this->adjust_visible_counters([$image_data], false);
+		$this->album->update_info((int) $image_data['image_album_id']);
+		$this->gallery_cache->destroy_images();
+		$this->notify_state_change('delete_request', [$image_data], [(int) $image_data['image_album_id']]);
+
+		return $image_data;
+	}
+
+	/**
+	 * Restore moderator-selected deletion requests to their previous state.
+	 *
+	 * @return int[] IDs confirmed as restored
+	 */
+	public function restore_deletion_requests(array $image_ids): array
+	{
+		$image_ids = array_values(array_unique(array_filter(array_map('intval', $image_ids))));
+		if (!$image_ids)
+		{
+			return [];
+		}
+
+		$sql = 'SELECT *
+			FROM ' . $this->table_images . '
+			WHERE image_status = ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED . '
+				AND ' . $this->db->sql_in_set('image_id', $image_ids);
+		$result = $this->db->sql_query($sql);
+		$pending = [];
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$pending[(int) $row['image_id']] = $row;
+		}
+		$this->db->sql_freeresult($result);
+
+		$restored = [];
+		foreach ($pending as $image_id => $row)
+		{
+			$previous_status = (int) $row['image_delete_previous_status'];
+			if (!in_array($previous_status, [
+				\phpbbgallery\core\block::STATUS_UNAPPROVED,
+				\phpbbgallery\core\block::STATUS_APPROVED,
+				\phpbbgallery\core\block::STATUS_LOCKED,
+			], true))
+			{
+				$previous_status = \phpbbgallery\core\block::STATUS_APPROVED;
+			}
+			$sql = 'UPDATE ' . $this->table_images . '
+				SET image_status = ' . (int) $previous_status . ',
+					image_delete_previous_status = ' . (int) \phpbbgallery\core\block::STATUS_APPROVED . ',
+					image_delete_request_user_id = 0,
+					image_delete_request_time = 0
+				WHERE image_id = ' . (int) $image_id . '
+					AND image_status = ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED;
+			$this->db->sql_query($sql);
+			if ((int) $this->db->sql_affectedrows() === 1)
+			{
+				$row['image_status'] = $previous_status;
+				$restored[$image_id] = $row;
+			}
+		}
+
+		if (!$restored)
+		{
+			return [];
+		}
+
+		$this->adjust_visible_counters(array_values($restored), true);
+		$album_ids = array_values(array_unique(array_map(
+			static fn(array $row): int => (int) $row['image_album_id'],
+			$restored
+		)));
+		$this->album->update_infos($album_ids);
+		$this->gallery_cache->destroy_images();
+		$this->notify_state_change('delete_restore', array_values($restored), $album_ids);
+
+		return array_keys($restored);
+	}
+
+	private function adjust_visible_counters(array $image_rows, bool $add): void
+	{
+		$num_images = 0;
+		$num_comments = 0;
+		$user_images = [];
+		foreach ($image_rows as $row)
+		{
+			$status = (int) ($row['image_delete_previous_status'] ?? $row['image_status']);
+			if ($status === \phpbbgallery\core\block::STATUS_UNAPPROVED)
+			{
+				continue;
+			}
+			$num_images++;
+			$num_comments += (int) $row['image_comments'];
+			$user_id = (int) $row['image_user_id'];
+			$user_images[$user_id] = ($user_images[$user_id] ?? 0) + 1;
+		}
+
+		foreach ($user_images as $user_id => $count)
+		{
+			$this->gallery_user->set_user_id($user_id, false);
+			$this->gallery_user->update_images($add ? $count : -$count);
+		}
+		if ($add)
+		{
+			$this->gallery_config->inc('num_images', $num_images);
+			$this->gallery_config->inc('num_comments', $num_comments);
+		}
+		else
+		{
+			$this->gallery_config->dec('num_images', $num_images);
+			$this->gallery_config->dec('num_comments', $num_comments);
+		}
+	}
+
+	/**
 	* Approve image
 	* @param	array	$image_id_ary	The image ID array to be approved
 	* @param	int		$album_id		The album image is approved to (just save some queries for log)
@@ -774,6 +946,7 @@ class image
 		$sql = 'UPDATE ' . $this->table_images . '
 			SET image_status = ' . (int) \phpbbgallery\core\block::STATUS_APPROVED . '
 			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
+				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED . '
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary);
 		$this->db->sql_query($sql);
 		$this->notify_state_change('approve', $approved_images, [$album_id]);
@@ -805,12 +978,14 @@ class image
 		$sql = 'UPDATE ' . $this->table_images .' 
 			SET image_status = ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . '
 			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
+				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED . '
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary);
 		$this->db->sql_query($sql);
 
 		$sql = 'SELECT image_id, image_name, image_album_id
 			FROM ' . $this->table_images .' 
 			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
+				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED . '
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary);
 		$result = $this->db->sql_query($sql);
 		$changed_images = [];
@@ -839,7 +1014,9 @@ class image
 
 		$sql = 'SELECT image_id, image_album_id
 			FROM ' . $this->table_images . '
-			WHERE ' . $this->db->sql_in_set('image_id', $image_id_ary);
+			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
+				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED . '
+				AND ' . $this->db->sql_in_set('image_id', $image_id_ary);
 		$result = $this->db->sql_query($sql);
 		$moved_image_ids = [];
 		$moved_image_rows = [];
@@ -913,12 +1090,14 @@ class image
 		$sql = 'UPDATE ' . $this->table_images . ' 
 			SET image_status = ' . (int) \phpbbgallery\core\block::STATUS_LOCKED . '
 			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
+				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED . '
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary);
 		$this->db->sql_query($sql);
 
 		$sql = 'SELECT image_id, image_name, image_album_id
 			FROM ' . $this->table_images . ' 
 			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
+				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED . '
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary);
 		$result = $this->db->sql_query($sql);
 		$changed_images = [];
@@ -945,6 +1124,7 @@ class image
 		$sql = 'SELECT * 
 			FROM ' . $this->table_images . '
 			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
+				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED . '
 				AND (
 					(
 						' . $this->db->sql_in_set('image_album_id', $this->gallery_auth->acl_album_ids('i_view'), false, true) . '

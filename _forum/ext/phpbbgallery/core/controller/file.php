@@ -278,7 +278,9 @@ class file
 		if (!$this->auth->acl_check('i_view', $this->data['album_id'], $this->data['album_user_id'])
 			|| (!$this->auth->acl_check('m_status', $this->data['album_id'], $this->data['album_user_id'])
 				&& $this->data['image_status'] == (int) \phpbbgallery\core\block::STATUS_UNAPPROVED
-				&& $this->data['image_user_id'] != $this->user->data['user_id']))
+				&& $this->data['image_user_id'] != $this->user->data['user_id'])
+			|| ($this->data['image_status'] == (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED
+				&& !$this->auth->acl_check('m_delete', $this->data['album_id'], $this->data['album_user_id'])))
 		{
 			// Missing permissions
 			$this->set_error_image('not_authorised.jpg', $this->language->lang('NOT_AUTHORISED'));

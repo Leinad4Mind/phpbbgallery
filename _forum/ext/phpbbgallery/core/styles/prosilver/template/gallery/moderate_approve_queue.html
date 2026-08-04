@@ -55,3 +55,55 @@
 		{% endif %}
 	</div>
 </form>
+
+<form id="gallery_delete_requests" method="post" action="{{ S_GALLERY_APPROVE_ACTION }}">
+	<div class="panel">
+		<div class="inner">
+			{% if U_OVERVIEW %}
+			<h3>{{ lang('LATEST_IMAGE_DELETE_REQUESTS') }}</h3>
+			{% else %}
+			<p>{{ TOTAL_DELETE_REQUESTS }}</p>
+			{% endif %}
+			{% if image_delete_requested|length %}
+			<ul class="topiclist two-long-columns">
+				<li class="header">
+					<dl class="row-item">
+						<dt>{{ lang('GALLERY_MCP_DELETE_REQUESTS') }}</dt>
+						<dd class="lastpost">{{ lang('ALBUM') }}</dd>
+						<dd class="mark">{{ lang('MARK') }}</dd>
+					</dl>
+				</li>
+			</ul>
+			<ul class="topiclist cplist missing-column responsive-show-all">
+				{% for image_delete_requested in image_delete_requested %}
+				<li class="row{% if image_delete_requested.S_ROW_COUNT is odd %} bg1{% else %} bg2{% endif %}">
+					<dl>
+						<dt>
+							<div style="float: left; padding: 5px; width: 70px;">
+								<a href="{{ image_delete_requested.U_IMAGE_MODERATE_URL }}"><img style="max-width: 70px; max-height: 70px;" src="{{ image_delete_requested.U_IMAGE }}" alt="{{ image_delete_requested.U_IMAGE_NAME }}"></a>
+							</div>
+							<div class="list-inner">
+								<a href="{{ image_delete_requested.U_IMAGE_MODERATE_URL }}" class="topictitle">{{ image_delete_requested.U_IMAGE_NAME }}</a><br>
+								{{ lang('UPLOADED_BY_USER') }}{{ lang('COLON') }} {{ image_delete_requested.IMAGE_AUTHOR }}<br>
+								&raquo; {{ image_delete_requested.IMAGE_TIME }}
+							</div>
+						</dt>
+						<dd class="lastpost"><a href="{{ image_delete_requested.IMAGE_ALBUM_URL }}">{{ image_delete_requested.IMAGE_ALBUM }}</a></dd>
+						<dd class="mark"><input name="deletion[{{ image_delete_requested.IMAGE_ALBUM_ID }}][]" value="{{ image_delete_requested.U_IMAGE_ID }}" type="checkbox"></dd>
+					</dl>
+				</li>
+				{% endfor %}
+			</ul>
+			{% else %}
+			<p>{{ lang('NO_WAITING_DELETE_REQUESTS') }}</p>
+			{% endif %}
+		</div>
+		{% if image_delete_requested|length %}
+		<fieldset class="display-actions">
+			<input class="button2" name="action[delete_request]" value="{{ lang('DELETE') }}" type="submit">&nbsp;
+			<input class="button1" name="action[restore]" value="{{ lang('RESTORE') }}" type="submit">
+			<div><a href="#" onclick="marklist('gallery_delete_requests', 'deletion', true); return false;">{{ lang('MARK_ALL') }}</a> :: <a href="#" onclick="marklist('gallery_delete_requests', 'deletion', false); return false;">{{ lang('UNMARK_ALL') }}</a></div>
+		</fieldset>
+		{% endif %}
+	</div>
+</form>

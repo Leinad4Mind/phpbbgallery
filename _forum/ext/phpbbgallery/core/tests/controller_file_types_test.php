@@ -117,6 +117,39 @@ final class controller_file_types_test extends TestCase
 		$this->assertSame('NOT_AUTHORISED', $data['image_name']);
 	}
 
+	public function test_pending_deletion_files_require_delete_moderation_permission(): void
+	{
+		$reflection = new \ReflectionClass(file::class);
+		$controller = $reflection->newInstanceWithoutConstructor();
+		$reflection->getProperty('data')->setValue($controller, [
+			'image_id' => 27,
+			'image_user_id' => 8,
+			'image_status' => \phpbbgallery\core\block::STATUS_DELETE_REQUESTED,
+			'album_id' => 4,
+			'album_user_id' => 2,
+			'album_auth_access' => 0,
+		]);
+		$reflection->getProperty('error')->setValue($controller, '');
+		$this->set_language($reflection, $controller);
+
+		$user = new \phpbb\user();
+		$user->data = ['user_id' => 8, 'user_lang' => 'en'];
+		$reflection->getProperty('user')->setValue($controller, $user);
+
+		$auth = $this->createMock(\phpbbgallery\core\auth\auth::class);
+		$auth->method('get_user_zebra')->willReturn([]);
+		$auth->method('get_zebra_state')->willReturn(0);
+		$auth->method('acl_check')->willReturnCallback(static function (string $permission): bool
+		{
+			return $permission === 'i_view';
+		});
+		$reflection->getProperty('auth')->setValue($controller, $auth);
+
+		$controller->check_auth();
+
+		$this->assertSame('not_authorised.jpg', $reflection->getProperty('error')->getValue($controller));
+	}
+
 	public function test_gallery_storage_paths_are_anchored_to_the_phpbb_root(): void
 	{
 		$reflection = new \ReflectionClass(file::class);

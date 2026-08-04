@@ -704,6 +704,7 @@ class search
 		}
 
 		return 'i.image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN .
+			' AND i.image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED .
 			' AND (' . implode(' OR ', $visibility) . ')';
 	}
 }

@@ -80,6 +80,7 @@ namespace phpbbgallery\core
 	{
 		public const STATUS_APPROVED = 1;
 		public const STATUS_ORPHAN = 3;
+		public const STATUS_DELETE_REQUESTED = 4;
 	}
 }
 

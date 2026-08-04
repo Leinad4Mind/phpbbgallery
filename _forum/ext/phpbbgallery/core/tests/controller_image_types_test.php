@@ -184,12 +184,22 @@ final class controller_image_types_test extends TestCase
 		$this->assertSame([
 			'image_album_id = 7',
 			'image_status <> ' . \phpbbgallery\core\block::STATUS_ORPHAN,
+			'image_status <> ' . \phpbbgallery\core\block::STATUS_DELETE_REQUESTED,
 		], $conditions->invoke($controller, 7, 0));
 		$this->assertSame([
 			'image_album_id = 7',
 			'image_status <> ' . \phpbbgallery\core\block::STATUS_ORPHAN,
+			'image_status <> ' . \phpbbgallery\core\block::STATUS_DELETE_REQUESTED,
 			'(image_status = ' . \phpbbgallery\core\block::STATUS_APPROVED . ' OR image_user_id = 42)',
 		], $conditions->invoke($controller, 7, 0));
+	}
+
+	public function test_direct_moderator_deletion_preserves_the_pending_request_race_guard(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/image.php');
+
+		$this->assertStringContainsString('STATUS_DELETE_REQUESTED', $source);
+		$this->assertStringContainsString('delete_requested_images([$image_id]) !== 1', $source);
 	}
 
 	public function test_image_poster_profile_fields_are_assigned_to_safe_root_blocks(): void

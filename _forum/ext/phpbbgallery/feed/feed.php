@@ -233,6 +233,7 @@ class feed
 		}
 
 		return '(' . implode(' OR ', $conditions) . ')
-			AND i.image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN;
+			AND i.image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
+			AND i.image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED;
 	}
 }

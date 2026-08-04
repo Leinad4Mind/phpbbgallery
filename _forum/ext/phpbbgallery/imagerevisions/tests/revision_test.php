@@ -103,6 +103,17 @@ final class revision_test extends TestCase
 		$this->assertFileExists($this->source_root . '/replacement.png');
 	}
 
+	public function test_pending_deletion_cannot_be_replaced_or_restored(): void
+	{
+		$this->db->images[10]['image_status'] = \phpbbgallery\core\block::STATUS_DELETE_REQUESTED;
+		$this->assertFalse($this->revision->replace_file(10, 11, 5));
+
+		$this->db->images[10]['image_status'] = \phpbbgallery\core\block::STATUS_APPROVED;
+		$this->assertTrue($this->revision->replace_file(10, 11, 5));
+		$this->db->images[10]['image_status'] = \phpbbgallery\core\block::STATUS_DELETE_REQUESTED;
+		$this->assertFalse($this->revision->restore(10, 1, 5));
+	}
+
 	public function test_history_limit_prunes_the_oldest_file_and_restore_remains_reversible(): void
 	{
 		$this->assertTrue($this->revision->replace_file(10, 11, 1));

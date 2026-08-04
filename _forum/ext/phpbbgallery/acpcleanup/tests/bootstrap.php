@@ -88,6 +88,11 @@ namespace phpbbgallery\core
 		{
 			return 2;
 		}
+
+		public function get_image_status_delete_requested(): int
+		{
+			return 4;
+		}
 	}
 
 	class comment

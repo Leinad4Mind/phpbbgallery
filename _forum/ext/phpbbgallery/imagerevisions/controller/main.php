@@ -106,7 +106,10 @@ class main
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$has_image_permission = $this->gallery_auth->acl_check('i_edit', $album_id, $album_data['album_user_id']);
 		$has_moderator_permission = $this->gallery_auth->acl_check('m_edit', $album_id, $album_data['album_user_id']);
-		$is_orphan = (int) $image_data['image_status'] === (int) \phpbbgallery\core\block::STATUS_ORPHAN;
+		$is_orphan = in_array((int) $image_data['image_status'], [
+			\phpbbgallery\core\block::STATUS_ORPHAN,
+			\phpbbgallery\core\block::STATUS_DELETE_REQUESTED,
+		], true);
 		if (!$this->image_authorization->can_manage_image((int) $this->user->data['user_id'], $image_data, $has_image_permission, $has_moderator_permission, $is_orphan))
 		{
 			throw new \phpbb\exception\http_exception(403, 'NOT_AUTHORISED');

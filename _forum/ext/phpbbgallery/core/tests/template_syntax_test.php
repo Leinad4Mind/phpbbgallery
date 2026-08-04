@@ -233,6 +233,21 @@ final class template_syntax_test extends TestCase
 		}
 	}
 
+	public function test_all_styles_expose_the_separate_deletion_request_queue(): void
+	{
+		$core_root = dirname(__DIR__);
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$source = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/moderate_approve_queue.html');
+			$queue = strstr($source, '<form id="gallery_delete_requests"');
+			$this->assertIsString($queue, $style);
+			$this->assertStringContainsString('image_delete_requested', $queue, $style);
+			$this->assertStringContainsString('name="action[restore]"', $queue, $style);
+			$this->assertStringContainsString('name="action[delete_request]"', $queue, $style);
+			$this->assertStringContainsString('deletion[{{ image_delete_requested.IMAGE_ALBUM_ID }}][]', $queue, $style);
+		}
+	}
+
 	public function test_bootstrap_approval_queue_checkboxes_have_associated_labels(): void
 	{
 		$core_root = dirname(__DIR__);

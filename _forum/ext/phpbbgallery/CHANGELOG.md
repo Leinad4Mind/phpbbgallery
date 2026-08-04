@@ -26,6 +26,10 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Added
 
+- Added recoverable image-deletion requests for ordinary authors, with a
+  dedicated moderation queue, exact status restoration, permanent moderator
+  deletion, fail-closed visibility across Core and Gallery add-ons, and
+  protection against bypassing review through personal-album deletion.
 - Added an authenticated Contest end-to-end workflow to the functional CI,
   covering creation, uploads, privacy, disable/enable, voting and winners.
 - Added an ACP switch and a dedicated Core contest policy boundary that can prevent creation of new contest albums while keeping every existing contest active, editable and privacy-protected.

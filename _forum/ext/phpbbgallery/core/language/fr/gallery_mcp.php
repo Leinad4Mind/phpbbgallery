@@ -169,4 +169,19 @@ $lang = array_merge($lang, [
 		2 => 'Au total <span style="font-weight: bold;">%s</span> images ont été déplacées.',
 	],
 	'NO_WAITING_UNAPPROVED_IMAGE' => 'Aucune image en attente d’approbation.',
+	'GALLERY_MCP_DELETE_REQUESTS' => 'Demandes de suppression d’images',
+	'LATEST_IMAGE_DELETE_REQUESTS' => 'Dernières demandes de suppression d’images',
+	'DELETE_REQUEST_RESTORE_CONFIRM' => 'Voulez-vous vraiment restaurer les images sélectionnées ?',
+	'QUEUE_STATUS_4' => 'Suppression demandée',
+	'WAITING_DELETE_REQUESTS' => [
+		0 => 'Aucune demande de suppression d’image en attente.',
+		1 => '<span style="font-weight: bold;">1</span> demande de suppression d’image est en attente.',
+		2 => '<span style="font-weight: bold;">%s</span> demandes de suppression d’images sont en attente.',
+	],
+	'RESTORED_IMAGES' => [
+		0 => 'Aucune image restaurée.',
+		1 => '<span style="font-weight: bold;">1</span> image a été restaurée.',
+		2 => '<span style="font-weight: bold;">%s</span> images ont été restaurées.',
+	],
+	'NO_WAITING_DELETE_REQUESTS' => 'Aucune demande de suppression d’image en attente.',
 ]);

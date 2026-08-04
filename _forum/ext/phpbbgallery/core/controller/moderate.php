@@ -201,8 +201,11 @@ class moderate
 	{
 		$page = $this->normalize_page($page);
 		$approve_ary = $this->request->variable('approval', ['' => [0]]);
+		$deletion_ary = $this->request->variable('deletion', ['' => [0]]);
 		$action_ary = $this->request->variable('action', ['' => 0]);
-		$back_link = $this->request->variable('back_link', $album_id > 0 ? $this->helper->route('phpbbgallery_core_moderate_queue_approve_album', ['album_id' => $album_id]) : $this->helper->route('phpbbgallery_core_moderate_queue_approve'));
+		$back_link = $album_id > 0
+			? $this->helper->route('phpbbgallery_core_moderate_queue_approve_album', ['album_id' => $album_id])
+			: $this->helper->route('phpbbgallery_core_moderate_queue_approve');
 		$action = '';
 		foreach ($action_ary as $act => $garb)
 		{
@@ -217,7 +220,8 @@ class moderate
 		$album_loginlink = append_sid($this->root_path . 'ucp.' . $this->php_ext . '?mode=login');
 		if ($album_id === 0)
 		{
-			if (!$this->gallery_auth->acl_check_global('m_status'))
+			if (!$this->gallery_auth->acl_check_global('m_status')
+				&& !$this->gallery_auth->acl_check_global('m_delete'))
 			{
 				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
 				return null;
@@ -226,22 +230,25 @@ class moderate
 		else
 		{
 			$album = $this->album->get_info($album_id);
-			if (!$this->gallery_auth->acl_check('m_status', $album['album_id'], $album['album_user_id']))
+			if (!$this->gallery_auth->acl_check('m_status', $album['album_id'], $album['album_user_id'])
+				&& !$this->gallery_auth->acl_check('m_delete', $album['album_id'], $album['album_user_id']))
 			{
 				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
 				return null;
 			}
 		}
-		if (!empty($approve_ary))
+		if ($action !== '')
 		{
-			if (count($action_ary) !== 1 || !in_array($action, ['approve', 'disapprove'], true))
+			if (count($action_ary) !== 1 || !in_array($action, ['approve', 'disapprove', 'restore', 'delete_request'], true))
 			{
 				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
 				return null;
 			}
 
+			$is_deletion_action = in_array($action, ['restore', 'delete_request'], true);
+			$submitted_groups = $is_deletion_action ? $deletion_ary : $approve_ary;
 			$selected_image_ids = [];
-			foreach ($approve_ary as $submitted_image_ids)
+			foreach ($submitted_groups as $submitted_image_ids)
 			{
 				if (!is_array($submitted_image_ids))
 				{
@@ -250,20 +257,36 @@ class moderate
 				}
 				$selected_image_ids = array_merge($selected_image_ids, $submitted_image_ids);
 			}
-			$authorized_action = $this->authorize_action_images($selected_image_ids, 'm_status', (int) $album_id);
+			$authorized_action = $this->authorize_action_images(
+				$selected_image_ids,
+				$is_deletion_action ? 'm_delete' : 'm_status',
+				(int) $album_id
+			);
 			if ($authorized_action === false)
 			{
 				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
 				return null;
 			}
-			$approve_ary = $authorized_action['images_by_album'];
+			$images_by_album = $authorized_action['images_by_album'];
+			if ($is_deletion_action)
+			{
+				foreach ($authorized_action['image_ids'] as $selected_image_id)
+				{
+					$selected_image = $this->image->get_image_data_or_fail($selected_image_id);
+					if ((int) $selected_image['image_status'] !== (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED)
+					{
+						$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
+						return null;
+					}
+				}
+			}
 
 			if (confirm_box(true))
 			{
 				if ($action == 'approve')
 				{
 					$count = 0;
-					foreach ($approve_ary as $target_album_id => $approve_array)
+					foreach ($images_by_album as $target_album_id => $approve_array)
 					{
 						$this->image->approve_images($approve_array, $target_album_id);
 						$this->album->update_info($target_album_id);
@@ -277,7 +300,7 @@ class moderate
 				if ($action == 'disapprove')
 				{
 					$count = 0;
-					foreach ($approve_ary as $target_album_id => $delete_array)
+					foreach ($images_by_album as $target_album_id => $delete_array)
 					{
 						// Let's load info for images, so we can
 						$filenames = $this->image->get_filenames($delete_array);
@@ -293,19 +316,36 @@ class moderate
 					$this->url->meta_refresh(3, $back_link);
 					trigger_error($message);
 				}
+				if ($action == 'restore')
+				{
+					$restored = $this->image->restore_deletion_requests($authorized_action['image_ids']);
+					$message = $this->language->lang('RESTORED_IMAGES', count($restored));
+					$this->url->meta_refresh(3, $back_link);
+					trigger_error($message);
+				}
+				if ($action == 'delete_request')
+				{
+					$deleted = $this->moderate->delete_requested_images($authorized_action['image_ids']);
+					$message = $this->language->lang('DELETED_IMAGES', $deleted);
+					$this->url->meta_refresh(3, $back_link);
+					trigger_error($message);
+				}
 			}
 			else
 			{
 				$s_hidden_fields = '<input type="hidden" name="action['.$action.']" value="' . $action . '" />';
-				$s_hidden_fields .= '<input type="hidden" name="back_link" value="' . $back_link . '" />';
-				foreach ($approve_ary as $id => $var)
+				$field_name = $is_deletion_action ? 'deletion' : 'approval';
+				foreach ($images_by_album as $id => $var)
 				{
 					foreach ($var as $var1)
 					{
-						$s_hidden_fields .= '<input type="hidden" name="approval[' . $id . '][]" value="' . $var1 . '" />';
+						$s_hidden_fields .= '<input type="hidden" name="' . $field_name . '[' . $id . '][]" value="' . $var1 . '" />';
 					}
 				}
-				confirm_box(false, $this->language->lang('QUEUES_A_' . strtoupper($action) . '2_CONFIRM'), $s_hidden_fields);
+				$confirm_key = $action === 'restore'
+					? 'DELETE_REQUEST_RESTORE_CONFIRM'
+					: ($action === 'delete_request' ? 'QUEUES_A_DELETE2_CONFIRM' : 'QUEUES_A_' . strtoupper($action) . '2_CONFIRM');
+				confirm_box(false, $this->language->lang($confirm_key), $s_hidden_fields);
 			}
 		}
 
@@ -771,6 +811,12 @@ class moderate
 		$this->language->add_lang(['gallery_mcp', 'gallery'], 'phpbbgallery/core');
 		$this->language->add_lang('mcp');
 		$quick_action = $this->request->variable('action', '');
+		$image_data = $this->image->get_image_data_or_fail($image_id);
+		$is_delete_requested = (int) $image_data['image_status'] === (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED;
+		if ($is_delete_requested && !in_array($quick_action, ['', 'images_delete'], true))
+		{
+			$quick_action = '';
+		}
 
 		// If we have quick mode (EDIT, DELETE) just send us to the page we need
 		switch ($quick_action)
@@ -794,8 +840,7 @@ class moderate
 				$route = $this->helper->route('phpbbgallery_core_image_delete', ['image_id'	=> $image_id]);
 				return new RedirectResponse($route);
 			case 'reports_close':
-				$reports_close_image_data = $this->image->get_image_data_or_fail($image_id);
-				$reports_close_album_data = $this->album->get_info($reports_close_image_data['image_album_id']);
+				$reports_close_album_data = $this->album->get_info($image_data['image_album_id']);
 				$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 				if (!$this->gallery_auth->acl_check('m_report', $reports_close_album_data['album_id'], $reports_close_album_data['album_user_id']))
 				{
@@ -821,7 +866,6 @@ class moderate
 				$route = $this->helper->route('phpbbgallery_core_image_report', ['image_id'	=> $image_id]);
 				return new RedirectResponse($route);
 		}
-		$image_data = $this->image->get_image_data_or_fail($image_id);
 		$album_data = $this->album->get_info($image_data['image_album_id']);
 		$users_array = $report_data = [];
 		$open_report = false;
@@ -840,7 +884,7 @@ class moderate
 		// Now let's get some ACL
 		$select_select = '<option value="" selected="selected">' . $this->language->lang('CHOOSE_ACTION') . '</option>';
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
-		if ($this->gallery_auth->acl_check('m_status', $album_data['album_id'], $album_data['album_user_id']))
+		if (!$is_delete_requested && $this->gallery_auth->acl_check('m_status', $album_data['album_id'], $album_data['album_user_id']))
 		{
 			if ($image_data['image_status'] == 0)
 			{
@@ -862,11 +906,11 @@ class moderate
 		{
 			$select_select .= '<option value="images_delete">' . $this->language->lang('QUEUE_A_DELETE') . '</option>';
 		}
-		if ($this->gallery_auth->acl_check('m_move', $album_data['album_id'], $album_data['album_user_id']))
+		if (!$is_delete_requested && $this->gallery_auth->acl_check('m_move', $album_data['album_id'], $album_data['album_user_id']))
 		{
 			$select_select .= '<option value="images_move">' . $this->language->lang('QUEUES_A_MOVE') . '</option>';
 		}
-		if ($this->gallery_auth->acl_check('m_report', $album_data['album_id'], $album_data['album_user_id']))
+		if (!$is_delete_requested && $this->gallery_auth->acl_check('m_report', $album_data['album_id'], $album_data['album_user_id']))
 		{
 			if ($open_report)
 			{
@@ -881,12 +925,12 @@ class moderate
 		$this->template->assign_vars([
 			'ALBUM_NAME'		=> $album_data['album_name'],
 			'U_VIEW_ALBUM'		=> $this->helper->route('phpbbgallery_core_moderate_album', ['album_id' => $image_data['image_album_id']]),
-			'U_EDIT_IMAGE'		=> $this->helper->route('phpbbgallery_core_image_edit', ['image_id'	=> $image_id]),
+			'U_EDIT_IMAGE'		=> !$is_delete_requested ? $this->helper->route('phpbbgallery_core_image_edit', ['image_id'	=> $image_id]) : '',
 			'U_DELETE_IMAGE'	=> $this->helper->route('phpbbgallery_core_image_delete', ['image_id'	=> $image_id]),
 			'IMAGE_NAME'		=> $image_data['image_name'],
 			'IMAGE_TIME'		=> $this->user->format_date($image_data['image_time']),
 			'UPLOADER'			=> $this->user_loader->get_username($image_data['image_user_id'], 'full'),
-			'U_MOVE_IMAGE'		=> $this->helper->route('phpbbgallery_core_moderate_image_move', ['image_id'	=> $image_id]),
+			'U_MOVE_IMAGE'		=> !$is_delete_requested ? $this->helper->route('phpbbgallery_core_moderate_image_move', ['image_id'	=> $image_id]) : '',
 			'STATUS'			=> $this->language->lang('QUEUE_STATUS_' . $image_data['image_status']),
 			'UC_IMAGE'			=> $this->image->generate_link('medium', $this->config['phpbb_gallery_link_thumbnail'], $image_data['image_id'], $image_data['image_name'], $image_data['image_album_id']),
 			'IMAGE_DESC'		=> generate_text_for_display($image_data['image_desc'], $image_data['image_desc_uid'], $image_data['image_desc_bitfield'], 7),
@@ -1034,8 +1078,13 @@ class moderate
 		$album_id = (int) $image_data['image_album_id'];
 		$album_data = $this->album->get_info($album_id);
 		$album_backlink = $this->helper->route('phpbbgallery_core_album', ['album_id' => $album_id]);
-		$has_moderator_source_permission = is_array($album_data) && isset($album_data['album_user_id']) && $this->gallery_auth->acl_check('m_move', $album_id, $album_data['album_user_id']);
-		$has_owner_source_permission = is_array($album_data) && isset($album_data['album_user_id'], $album_data['album_status'])
+		$is_delete_requested = (int) ($image_data['image_status'] ?? \phpbbgallery\core\block::STATUS_ORPHAN)
+			=== (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED;
+		$has_moderator_source_permission = !$is_delete_requested
+			&& is_array($album_data) && isset($album_data['album_user_id'])
+			&& $this->gallery_auth->acl_check('m_move', $album_id, $album_data['album_user_id']);
+		$has_owner_source_permission = !$is_delete_requested
+			&& is_array($album_data) && isset($album_data['album_user_id'], $album_data['album_status'])
 			&& (int) $this->user->data['user_id'] !== ANONYMOUS
 			&& (int) $album_data['album_status'] !== (int) \phpbbgallery\core\block::ALBUM_LOCKED
 			&& $this->image_authorization->can_manage_image(

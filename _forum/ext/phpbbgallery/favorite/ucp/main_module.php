@@ -71,7 +71,8 @@ class main_module
 			$where = 'f.user_id = ' . $user_id . '
 				AND ' . $db->sql_in_set('i.image_album_id', $visible_albums) . '
 				AND i.image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . '
-				AND i.image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN;
+				AND i.image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
+				AND i.image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED;
 
 			$sql_array = [
 				'SELECT'	=> 'COUNT(f.favorite_id) AS favorites',

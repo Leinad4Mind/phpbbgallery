@@ -68,4 +68,16 @@ final class controller_comment_types_test extends TestCase
 		$this->assertStringContainsString("\$this->request->is_set_post('attach_sig')", $source);
 		$this->assertStringNotContainsString('\$_POST', $source);
 	}
+
+	public function test_pending_deletion_freezes_comment_mutations(): void
+	{
+		$reflection = new \ReflectionClass(comment::class);
+		$controller = $reflection->newInstanceWithoutConstructor();
+		$guard = $reflection->getMethod('assert_image_is_mutable');
+
+		$guard->invoke($controller, ['image_status' => \phpbbgallery\core\block::STATUS_APPROVED]);
+		$this->expectException(\phpbb\exception\http_exception::class);
+		$this->expectExceptionMessage('IMAGE_NOT_EXIST');
+		$guard->invoke($controller, ['image_status' => \phpbbgallery\core\block::STATUS_DELETE_REQUESTED]);
+	}
 }

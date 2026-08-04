@@ -57,3 +57,45 @@
 		</fieldset>
 		{% endif %}
 	</form>
+
+	<form id="gallery_delete_requests" method="post" action="{{ S_GALLERY_APPROVE_ACTION }}">
+		<div class="panel">
+			<div class="panel-body">
+				{% if U_OVERVIEW %}<h3>{{ lang('LATEST_IMAGE_DELETE_REQUESTS') }}</h3>{% else %}<p>{{ TOTAL_DELETE_REQUESTS }}</p>{% endif %}
+				{% if image_delete_requested|length %}
+				<div class="table-responsive">
+					<table class="footable table table-striped table-bordered table-white table-primary table-hover">
+						<thead><tr><th data-class="expand">{{ lang('GALLERY_MCP_DELETE_REQUESTS') }}</th><th data-hide="phone">{{ lang('ALBUM') }}</th><th class="table-check">{{ lang('MARK') }}</th></tr></thead>
+						<tbody>
+						{% for image_delete_requested in image_delete_requested %}
+						<tr>
+							<td>
+								<a href="{{ image_delete_requested.U_IMAGE_MODERATE_URL }}"><img class="img-responsive pull-left" style="max-width: 70px; max-height: 70px; margin-right: 10px;" src="{{ image_delete_requested.U_IMAGE }}" alt="{{ image_delete_requested.U_IMAGE_NAME }}"></a>
+								<a href="{{ image_delete_requested.U_IMAGE_MODERATE_URL }}" class="topictitle">{{ image_delete_requested.U_IMAGE_NAME }}</a><br>
+								{{ lang('UPLOADED_BY_USER') }}{{ lang('COLON') }} {{ image_delete_requested.IMAGE_AUTHOR }} &raquo; {{ image_delete_requested.IMAGE_TIME }}
+							</td>
+							<td><a href="{{ image_delete_requested.IMAGE_ALBUM_URL }}">{{ image_delete_requested.IMAGE_ALBUM }}</a></td>
+							<td class="table-check text-center"><input id="deletion_{{ image_delete_requested.U_IMAGE_ID }}" name="deletion[{{ image_delete_requested.IMAGE_ALBUM_ID }}][]" value="{{ image_delete_requested.U_IMAGE_ID }}" type="checkbox"><label for="deletion_{{ image_delete_requested.U_IMAGE_ID }}"></label></td>
+						</tr>
+						{% endfor %}
+						</tbody>
+					</table>
+				</div>
+				{% else %}
+				<div class="alert alert-info fade in" role="alert"><i class="fa fa-info-circle" aria-hidden="true"></i>&nbsp;{{ lang('NO_WAITING_DELETE_REQUESTS') }}</div>
+				{% endif %}
+			</div>
+			{% if image_delete_requested|length %}
+			<fieldset class="display-actions">
+				<div class="btn-group">
+					<button class="btn btn-danger" name="action[delete_request]" value="{{ lang('DELETE') }}" type="submit" title="{{ lang('DELETE') }}"><i class="fa fa-trash" aria-hidden="true"></i></button>
+					<button class="btn btn-success" name="action[restore]" value="{{ lang('RESTORE') }}" type="submit" title="{{ lang('RESTORE') }}"><i class="fa fa-undo" aria-hidden="true"></i></button>
+				</div>
+				<div class="btn-group">
+					<a href="javascript:void(0);" onclick="marklist('gallery_delete_requests', 'deletion', true); return false;" class="btn btn-default" title="{{ lang('MARK_ALL') }}"><i class="fa fa-check-square-o"></i></a>
+					<a href="javascript:void(0);" onclick="marklist('gallery_delete_requests', 'deletion', false); return false;" class="btn btn-default" title="{{ lang('UNMARK_ALL') }}"><i class="fa fa-square-o"></i></a>
+				</div>
+			</fieldset>
+			{% endif %}
+		</div>
+	</form>

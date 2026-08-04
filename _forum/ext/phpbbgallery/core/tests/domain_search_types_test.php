@@ -174,7 +174,9 @@ final class domain_search_types_test extends TestCase
 		$reflection->getProperty('db')->setValue($search, $db);
 
 		$this->assertSame(
-			'i.image_status <> ' . \phpbbgallery\core\block::STATUS_ORPHAN . ' AND i.image_id IN (3, 7)',
+			'i.image_status <> ' . \phpbbgallery\core\block::STATUS_ORPHAN .
+				' AND i.image_status <> ' . \phpbbgallery\core\block::STATUS_DELETE_REQUESTED .
+				' AND i.image_id IN (3, 7)',
 			$reflection->getMethod('get_image_result_where')->invoke($search, ['3', 7])
 		);
 	}

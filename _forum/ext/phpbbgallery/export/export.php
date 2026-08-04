@@ -62,6 +62,7 @@ class export
 	public function resolve_admin_selection(array $album_ids): array
 	{
 		$where = 'image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
+			AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED . '
 			AND image_filemissing = 0';
 
 		$album_ids = $this->clean_ids($album_ids);
@@ -95,6 +96,7 @@ class export
 
 		$where = 'image_user_id = ' . (int) $user_id . '
 			AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
+			AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED . '
 			AND image_filemissing = 0
 			AND ' . $this->db->sql_in_set('image_album_id', $visible_albums);
 

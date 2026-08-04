@@ -93,7 +93,10 @@ class revision
 
 		$current = $rows[$image_id];
 		$uploaded = $rows[$uploaded_image_id];
-		if ((int) $current['image_status'] === (int) \phpbbgallery\core\block::STATUS_ORPHAN
+		if (in_array((int) $current['image_status'], [
+			\phpbbgallery\core\block::STATUS_ORPHAN,
+			\phpbbgallery\core\block::STATUS_DELETE_REQUESTED,
+		], true)
 			|| (int) $uploaded['image_status'] !== (int) \phpbbgallery\core\block::STATUS_ORPHAN
 			|| (int) $uploaded['image_user_id'] !== (int) $this->user->data['user_id']
 			|| (int) $uploaded['image_album_id'] !== (int) $current['image_album_id']
@@ -147,7 +150,10 @@ class revision
 		$current_rows = $this->get_image_rows([$image_id]);
 		$restored = $this->get_revision($image_id, $revision_id);
 		if (!isset($current_rows[$image_id]) || $restored === false
-			|| (int) $current_rows[$image_id]['image_status'] === (int) \phpbbgallery\core\block::STATUS_ORPHAN
+			|| in_array((int) $current_rows[$image_id]['image_status'], [
+				\phpbbgallery\core\block::STATUS_ORPHAN,
+				\phpbbgallery\core\block::STATUS_DELETE_REQUESTED,
+			], true)
 			|| $this->resolve_source_file((string) $restored['revision_filename']) === false)
 		{
 			return false;
