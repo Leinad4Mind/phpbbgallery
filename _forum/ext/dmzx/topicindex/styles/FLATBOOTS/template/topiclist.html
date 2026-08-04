@@ -1,83 +1,10 @@
 {% INCLUDE 'overall_header.html' %}
 
 <fieldset class="framed-ucp topic-list">
-	<legend>{{ lang('OIINDEX_HEADER') }} {% if TOPIC_INDEX_USER_TOPICS_FILTERING_NAME %}{{ lang('TOPIC_INDEX_USER_TOPICS_FILTERING', TOPIC_INDEX_USER_TOPICS_FILTERING_NAME) }}{% endif %}</legend>
-
-<form action="{{ U_ACTION }}" method="post">
-	<div class="panel-content">
-		<div class="panel-body">
-			<fieldset>
-				<div class="controls controls-row"> 
-					<select class="selectpicker" data-container="body" name="list" id="listslc" onchange="this.form.submit();" data-togglable-settings="true">
-						<option value="0" selected="selected">{{ lang('SELECT_A_LIST') }}</option>{{ S_LIST_OPTIONS }}
-					</select>
-				</div>
-			</fieldset>
-		</div>
-	</div>
-{{ S_FORM_TOKEN }}
-</form>
-
-{% if S_SHOWLIST %}
-<div class="panel bg1">
-	<div class="inner">
-	{% EVENT dmzx_topic_index_topic_filter_container_before %}
-		<p class="filtrino icenter">
-			{% for block_nofiltrino in loops.block_nofiltrino %}
-				<span class="btn btn-default btn-xs"><a href="{{ block_nofiltrino.U_TUTTI }}">{{ lang('ALL') }}</a></span>
-				{% if block_nofiltrino.S_09 %}<span class="btn btn-default btn-xs"><a href="{{ block_nofiltrino.U_09 }}">{{ lang('09') }}</a></span>{% else %}<span  class="btn-basic btn-xs">{{ lang('09') }}</span>{% endif %}
-				{% if block_nofiltrino.S_SYMB %}<span class="btn btn-default btn-xs"><a href="{{ block_nofiltrino.U_SYMB }}">{{ lang('SYMB') }}</a></span>{% else %}<span  class="btn-basic btn-xs">{{ lang('SYMB') }}</span>{% endif %}
-			{% endfor %}
-			{% for block_filtrino in loops.block_filtrino %}
-				{% EVENT dmzx_topic_index_topic_filter_before %}
-				{% if block_filtrino.S_ISWITH %}
-					<span class="btn btn-default btn-xs"><a href="{{ block_filtrino.U_FILTER }}">{{ block_filtrino.FILTRINO }}</a></span>
-				{% else %}
-					<span class="btn-basic btn-xs">{{ block_filtrino.FILTRINO }}</span>
-				{% endif %}
-				{% EVENT dmzx_topic_index_topic_filter_after %}
-			{% endfor %}
-		</p>
-		{% EVENT dmzx_topic_index_topic_filter_container_after %}
-	</div>
-</div>
-<div class="filtrino icenter">
-	<a href="{ROOT_PATH}viewforum.php?f=124" role="button" title="{L_BUTTON_UPLOAD_EXPLAIN}"class="btn btn-default btn-load" data-loading-text="{L_LOADING}&nbsp;<i class='fa-spin fa fa-spinner fa-lg icon-white'></i>"><i class="fa fa-plus"></i>&nbsp;{L_BUTTON_UPLOAD}</a>
-</div>
-{% if loops.block_list|length %}
-{% for block_list in loops.block_list %}
-{% if block_list.S_ISWITH2 %}
-<br/><br/>
-<h3>{{ block_list.FILTRINO }}</h3>
-
-	<table class="table table-bordered">
-		<thead> 
-			<tr> 
-				<th class="list-inner">{{ lang('TITLE') }}</th>
-				<th class="topics">{{ lang('AUTHOR') }}</th>
-				<th class="posts">{{ lang('COMMENTS') }}</th>
-				{% if U_ACP %}<th class="lastpost"><span>{{ lang('REMOVE_FROM_LIST') }}</span></th>{% endif %}
-			</tr>
-		</thead>
-		{% for block_topic_index in block_list.block_topic_index %}
-		<tbody>
-			<tr>
-				<td class="topicindex">{% EVENT dmzx_topic_index_topic_before %}<a href="{{ block_topic_index.ITOPIC_URL }}">{% EVENT dmzx_topic_index_topic_title_container_before %}<strong>{% EVENT dmzx_topic_index_topic_title_before %} {{ block_topic_index.ITOPIC_TITLE }}</strong>{% EVENT dmzx_topic_index_topic_title_after %}</a>{% EVENT dmzx_topic_index_topic_title_container_after %}</td>
-				<td class="topics">{{ block_topic_index.ITOPIC_POSTER }}</td>
-				<td class="posts">{{ block_topic_index.ITOPIC_TOTREP }}</td>
-				{% if U_ACP %}<td class="lastpost"><span class="topicindexremove"><a href="{{ block_topic_index.U_REMOVE_FROM }}" class="btn btn-sm btn-danger"><i class="fa fa-trash" aria-hidden="true" title="{{ lang('REMOVE_FROM_LIST') }}"></i></a></span></td>{% endif %}
-			</tr>
-		</tbody>
-		{% endfor %}
-	</table>
-{% endif %}
-{% endfor %}
-{% else %}
-<fieldset>
-	<p class="ianytopuc">{{ lang('ANY_TOPIC_IN_LIST') }}</p>
+	<legend>{{ L_OIINDEX_HEADER }}</legend>
+	{% if TOPIC_INDEX_USER_TOPICS_FILTERING_NAME %}<p>{{ lang('TOPIC_INDEX_USER_TOPICS_FILTERING', TOPIC_INDEX_USER_TOPICS_FILTERING_NAME) }} <a href="{{ U_TOPIC_INDEX_USER_TOPICS_NO_FILTER }}">{{ lang('TOPIC_INDEX_USER_TOPICS_NO_FILTER') }}</a></p>{% endif %}
+	{% if loops.topicindex_lists|length %}<div class="panel panel-default"><div class="panel-body"><form action="{{ U_ACTION }}" method="get"><label for="topicindex-list">{{ lang('SELECT_A_LIST') }}{{ lang('COLON') }}</label> <select class="form-control selectpicker" id="topicindex-list" name="list"><option value="0">{{ lang('SELECT_A_LIST') }}</option>{% for list in loops.topicindex_lists %}<option value="{{ list.ID }}"{% if list.S_SELECTED %} selected{% endif %}>{{ list.NAME }}</option>{% endfor %}</select>{% if TOPICINDEX_RETURN_USER %}<input type="hidden" name="user" value="{{ TOPICINDEX_RETURN_USER }}">{% endif %}<button class="btn btn-default btn-sm" type="submit">{{ lang('GO') }}</button></form></div></div>{% endif %}
+	{% if S_SHOWLIST %}<div class="topicindex-content">{% INCLUDE '@dmzx_topicindex/topicindex_filters.html' %}{% if U_TOPICINDEX_NEW_TOPIC %}<p class="topicindex-new"><a class="btn btn-default btn-sm" href="{{ U_TOPICINDEX_NEW_TOPIC }}"><i class="fa fa-plus" aria-hidden="true"></i> {{ lang('BUTTON_UPLOAD') }}</a></p>{% endif %}{% INCLUDE '@dmzx_topicindex/topicindex_rows.html' %}</div>{% endif %}
 </fieldset>
-{% endif %}
 
-{% endif %}
-</fieldset>
 {% INCLUDE 'overall_footer.html' %}

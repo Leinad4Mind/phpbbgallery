@@ -61,3 +61,10 @@ $lang = array_merge($lang, [
 	'BUTTON_UPLOAD_EXPLAIN' => 'Sim! Começa a partilhar projectos na nossa comunidade!',
 
 ]);
+
+$lang = array_merge($lang, [
+	'TOPICINDEX_FILTERS'          => 'Filtros do índice de tópicos',
+	'TOPICINDEX_LIST_NOT_FOUND'   => 'A lista de tópicos pedida não existe.',
+	'LOG_TOPICINDEX_ADD_TOPIC'    => '<strong>Tópico adicionado ao índice</strong><br>ID do tópico: %d',
+	'LOG_TOPICINDEX_REMOVE_TOPIC' => '<strong>Tópico removido do índice</strong><br>ID do tópico: %d',
+]);

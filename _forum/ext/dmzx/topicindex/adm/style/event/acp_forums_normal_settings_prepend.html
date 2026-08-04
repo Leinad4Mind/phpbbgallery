@@ -1,28 +1,33 @@
-{% if SHOW_OINDEX %}
+{% if S_SHOW_OINDEX %}
 <fieldset>
 	<legend>{{ lang('OFFICIAL_TOPIC_INDEX') }}</legend>
 	<p>{{ lang('OTINDEX_LIST_INTOPIC_DSC') }}</p>
 	<dl>
-		<dt><label for="post_index">{{ lang('ACTIVE_TOPIC_INDEX') }}{{ lang('COLON') }}</label><br /><span>{{ lang('ACTIVE_TOPIC_INDEX_EXPLAIN') }}</span></dt>
+		<dt><label for="post_index">{{ lang('ACTIVE_TOPIC_INDEX') }}{{ lang('COLON') }}</label><br><span>{{ lang('ACTIVE_TOPIC_INDEX_EXPLAIN') }}</span></dt>
 		<dd><select id="post_index" name="post_index">
-				<option value="0" {{ LEGATOPIC1 }}>--- {{ lang('NON_ACTIVE') }}</option>
-				{% for block_topic_index in loops.block_topic_index %}
-					<option value="{{ block_topic_index.ITOPIC_ID }}" {{ block_topic_index.ITOPIC_SEL }}>{{ block_topic_index.ITOPIC_NAME }}</option>
-				{% endfor %}
-			</select>
-		</dd>
+			<option value="0"{% if S_TOPICINDEX_INACTIVE %} selected{% endif %}>{{ lang('NON_ACTIVE') }}</option>
+			{% for topic in loops.block_topic_index %}<option value="{{ topic.ITOPIC_ID }}"{% if topic.S_SELECTED %} selected{% endif %}>{{ topic.ITOPIC_NAME }}</option>{% endfor %}
+		</select></dd>
 	</dl>
 	<dl>
-		<dt><label for="default_inindex">{{ lang('TOPIC_INDEX_DEFAULT') }}{{ lang('COLON') }}</label><br /><span>{{ lang('TOPIC_INDEX_DEFAULT_EXPLAIN') }}</span></dt>
+		<dt><label for="default_inindex">{{ lang('TOPIC_INDEX_DEFAULT') }}{{ lang('COLON') }}</label><br><span>{{ lang('TOPIC_INDEX_DEFAULT_EXPLAIN') }}</span></dt>
 		<dd><select id="default_inindex" name="default_inindex">
-				<option value="0" {{ ITOPICDEF0 }}>{{ lang('DEF_ALL_TOPICS_IN') }}</option>
-				<option value="1" {{ ITOPICDEF1 }}>{{ lang('DEF_ALL_TOPICS_OFF') }}</option>
-			</select>
-		</dd>
+			<option value="0"{% if not S_TOPICINDEX_MANUAL %} selected{% endif %}>{{ lang('DEF_ALL_TOPICS_IN') }}</option>
+			<option value="1"{% if S_TOPICINDEX_MANUAL %} selected{% endif %}>{{ lang('DEF_ALL_TOPICS_OFF') }}</option>
+		</select></dd>
 	</dl>
 	<dl>
-		<dt><label for="index_filter">{{ lang('ACTIVE_INDEX_FILTER') }}{{ lang('COLON') }}</label><br /><span>{{ lang('ACTIVE_INDEX_FILTER_EXPLAIN') }}</span></dt>
-		<dd><input type="checkbox" class="radio" name="index_filter" id="index_filter" value="1" {{ ITOPICTAG }} /></dd>
+		<dt><label for="topicindex_display_mode">{{ lang('TOPICINDEX_DISPLAY_MODE') }}{{ lang('COLON') }}</label><br><span>{{ lang('TOPICINDEX_DISPLAY_MODE_EXPLAIN') }}</span></dt>
+		<dd><select id="topicindex_display_mode" name="topicindex_display_mode">
+			<option value="after"{% if TOPICINDEX_DISPLAY_MODE == 'after' %} selected{% endif %}>{{ lang('TOPICINDEX_DISPLAY_AFTER') }}</option>
+			<option value="before"{% if TOPICINDEX_DISPLAY_MODE == 'before' %} selected{% endif %}>{{ lang('TOPICINDEX_DISPLAY_BEFORE') }}</option>
+			<option value="replace"{% if TOPICINDEX_DISPLAY_MODE == 'replace' %} selected{% endif %}>{{ lang('TOPICINDEX_DISPLAY_REPLACE') }}</option>
+		</select></dd>
+	</dl>
+	<dl>
+		<dt><label for="index_filter">{{ lang('ACTIVE_INDEX_FILTER') }}{{ lang('COLON') }}</label><br><span>{{ lang('ACTIVE_INDEX_FILTER_EXPLAIN') }}</span></dt>
+		<dd><label><input type="radio" class="radio" id="index_filter" name="index_filter" value="1"{% if S_TOPICINDEX_TAG_FILTER %} checked{% endif %}> {{ lang('YES') }}</label>
+			<label><input type="radio" class="radio" name="index_filter" value="0"{% if not S_TOPICINDEX_TAG_FILTER %} checked{% endif %}> {{ lang('NO') }}</label></dd>
 	</dl>
 </fieldset>
 {% endif %}

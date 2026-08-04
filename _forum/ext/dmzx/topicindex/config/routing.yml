@@ -1,3 +1,8 @@
 dmzx_topicindex_controller:
     path: /topicindex
     defaults: { _controller: dmzx.topicindex.controller:handle_topicindex }
+
+dmzx_topicindex_manage:
+    path: /topicindex/manage
+    defaults: { _controller: dmzx.topicindex.controller:handle_manage }
+    methods: [POST]

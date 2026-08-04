@@ -1,0 +1,42 @@
+.topicindex-content {
+	clear: both;
+	margin: 1em 0;
+}
+
+#content_index_flow {
+	max-height: 50rem;
+	overflow: auto;
+	padding-right: .25rem;
+}
+
+.topicindex-filters,
+.topicindex-new,
+.topicindex-empty,
+.topicindex-intro {
+	margin: .75rem 0;
+	text-align: center;
+}
+
+.topicindex-filters .button {
+	margin: .15rem;
+	text-transform: uppercase;
+}
+
+.topicindex-filters .disabled {
+	cursor: default;
+	opacity: .45;
+}
+
+.topicindex-group form {
+	display: inline;
+}
+
+.topicindex-group .topicindex {
+	font-size: 1.1em;
+}
+
+@media (max-width: 700px) {
+	.topicindex-group dd {
+		display: none;
+	}
+}

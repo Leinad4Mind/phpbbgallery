@@ -11,7 +11,7 @@ namespace dmzx\topicindex\acp;
 
 class topicindex_info
 {
-	function module()
+	public function module()
 	{
 		return array(
 			'filename'	=> '\dmzx\topicindex\acp\topicindex_module',

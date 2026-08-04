@@ -59,3 +59,21 @@ $lang = array_merge($lang, [
 	'ACTIVE_INDEX_FILTER'         => 'Ativa filtro de tag',
 	'ACTIVE_INDEX_FILTER_EXPLAIN' => 'Deves ativar isto se tiveres tópicos com uma TAG comum no título. Suportamos tags em formato simples ou duplo: <strong>[]</strong>,<strong>{}</strong>,<strong>()</strong>.',
 ]);
+
+$lang = array_merge($lang, [
+	'OINDEX_CFG_EXPLAIN'                 => 'Configura os índices de tópicos incorporados e externos. A mensagem original do tópico oficial não é alterada na base de dados.',
+	'TOPICINDEX_MAX_TOPICS'              => 'Máximo de tópicos por índice',
+	'TOPICINDEX_MAX_TOPICS_EXPLAIN'      => 'Limite entre 1 e 5000 para proteger o tempo de resposta da página.',
+	'TOPICINDEX_NEW_TOPIC_FORUM'         => 'Fórum para novos tópicos',
+	'TOPICINDEX_NEW_TOPIC_FORUM_EXPLAIN' => 'Fórum opcional usado pelo botão de novo tópico. O botão fica oculto para quem não puder publicar.',
+	'TOPICINDEX_EXISTING_LISTS'          => 'Listas externas existentes',
+	'TOPICINDEX_UNKNOWN_FORUM'           => 'Fórum desconhecido #%d',
+	'TOPICINDEX_LIST_NAME_TOO_LONG'      => 'O nome da lista não pode exceder 255 caracteres.',
+	'TOPICINDEX_LIST_NAME_EXISTS'        => 'Já existe uma lista com este nome.',
+	'TOPICINDEX_DELETE_LIST_CONFIRM'     => 'Tens a certeza de que pretendes eliminar esta lista?',
+	'TOPICINDEX_DISPLAY_MODE'            => 'Posição do índice incorporado',
+	'TOPICINDEX_DISPLAY_MODE_EXPLAIN'    => 'Escolhe como o índice é combinado com a primeira mensagem do tópico oficial.',
+	'TOPICINDEX_DISPLAY_AFTER'           => 'Depois da mensagem original (recomendado)',
+	'TOPICINDEX_DISPLAY_BEFORE'          => 'Antes da mensagem original',
+	'TOPICINDEX_DISPLAY_REPLACE'         => 'Substituir a mensagem original (legado)',
+]);

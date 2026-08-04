@@ -59,4 +59,8 @@ $lang = array_merge($lang, [
 	'COMMENTS'              => 'Comments',
 	'BUTTON_UPLOAD'         => 'Share Project',
 	'BUTTON_UPLOAD_EXPLAIN' => 'Yes! Start sharing projects in our community!',
+	'TOPICINDEX_FILTERS'        => 'Topic index filters',
+	'TOPICINDEX_LIST_NOT_FOUND' => 'The requested topic list does not exist.',
+	'LOG_TOPICINDEX_ADD_TOPIC'  => '<strong>Added topic to the topic index</strong><br>Topic ID: %d',
+	'LOG_TOPICINDEX_REMOVE_TOPIC' => '<strong>Removed topic from the topic index</strong><br>Topic ID: %d',
 ]);

@@ -19,9 +19,7 @@ class topicindex_1_0_5 extends \phpbb\db\migration\migration
 	}
 
 	public function update_data()
-	{
-		return [
-			['config.update', ['topicindex_version', '1.0.5']],
-		];
+ {
+		return [];
 	}
 }

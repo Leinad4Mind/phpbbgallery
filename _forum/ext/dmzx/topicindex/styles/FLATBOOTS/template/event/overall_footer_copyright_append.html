@@ -1,3 +1,1 @@
-{% if TOPICINDEX_FOOTER_VIEW and S_USER_LOGGED_IN %}
-	<div>{{ TOPICINDEX_DISPLAY_NAME }} <span title="{{ lang('TOPICINDEX_VERSION') }}{{ lang('COLON') }} {{ TOPICINDEX_VERSION }}">&copy;</span> {{ lang('POST_BY_AUTHOR') }} {{ TOPICINDEX_AUTHOR_HOMEPAGES }}</div>
-{% endif %}
+{% if S_TOPICINDEX_ASSETS and S_USER_LOGGED_IN %}<div>{{ TOPICINDEX_DISPLAY_NAME }} {{ TOPICINDEX_VERSION }} &copy; {% for author in loops.topicindex_authors %}{% if not loop.first %}, {% endif %}{% if author.HOMEPAGE %}<a href="{{ author.HOMEPAGE }}">{{ author.NAME }}</a>{% else %}{{ author.NAME }}{% endif %}{% endfor %}</div>{% endif %}

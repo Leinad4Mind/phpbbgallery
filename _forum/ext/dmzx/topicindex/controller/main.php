@@ -1,83 +1,56 @@
 <?php
 /**
-*
-* @package phpBB Extension - Topic Index
-* @copyright (c) 2015 dmzx - https://www.dmzx-web.net
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ *
+ * @package phpBB Extension - Topic Index
+ * @copyright (c) 2015 dmzx - https://www.dmzx-web.net
+ * @copyright (c) 2026 Leinad4Mind
+ * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ *
+ */
 
 namespace dmzx\topicindex\controller;
 
 use dmzx\topicindex\core\functions_topicindex;
+use phpbb\auth\auth;
+use phpbb\config\config;
+use phpbb\controller\helper;
+use phpbb\db\driver\driver_interface as db_interface;
+use phpbb\exception\http_exception;
 use phpbb\event\dispatcher_interface;
+use phpbb\language\language;
+use phpbb\request\request_interface;
 use phpbb\template\template;
 use phpbb\user;
-use phpbb\auth\auth;
-use phpbb\db\driver\driver_interface as db_interface;
-use phpbb\request\request_interface;
-use phpbb\controller\helper;
-use phpbb\config\config;
-use phpbb\exception\http_exception;
 
 class main
 {
 	/** @var functions_topicindex */
 	protected $functions_topicindex;
-
 	/** @var template */
 	protected $template;
-
 	/** @var user */
 	protected $user;
-
 	/** @var auth */
 	protected $auth;
-
 	/** @var db_interface */
 	protected $db;
-
 	/** @var request_interface */
 	protected $request;
-
 	/** @var helper */
 	protected $helper;
-
+	/** @var language */
+	protected $language;
 	/** @var config */
 	protected $config;
-
 	/** @var dispatcher_interface */
 	protected $dispatcher;
-
 	/** @var string */
 	protected $root_path;
-
 	/** @var string */
 	protected $php_ext;
-
-	/**
-	* The database table
-	*
-	* @var string
-	*/
+	/** @var string */
 	protected $forum_lists_table;
 
-	/**
-	* Constructor
-	*
-	* @param functions_topicindex	$functions_topicindex
-	* @param template		 		$template
-	* @param user					$user
-	* @param auth					$auth
-	* @param db_interface			$db
-	* @param request_interface		$request
-	* @param helper		 			$helper
-	* @param config					$config
-	* @param dispatcher_interface	$dispatcher
-	* @param string 				$root_path
-	* @param string 				$php_ext
-	* @param string 				$forum_lists_table
-	*/
 	public function __construct(
 		functions_topicindex $functions_topicindex,
 		template $template,
@@ -86,6 +59,7 @@ class main
 		db_interface $db,
 		request_interface $request,
 		helper $helper,
+		language $language,
 		config $config,
 		dispatcher_interface $dispatcher,
 		$root_path,
@@ -93,20 +67,26 @@ class main
 		$forum_lists_table
 	)
 	{
-		$this->functions_topicindex	= $functions_topicindex;
-		$this->template 			= $template;
-		$this->user 				= $user;
-		$this->auth 				= $auth;
-		$this->db 					= $db;
-		$this->request 				= $request;
-		$this->helper 				= $helper;
-		$this->config				= $config;
-		$this->dispatcher			= $dispatcher;
-		$this->root_path 			= $root_path;
-		$this->php_ext 				= $php_ext;
-		$this->forum_lists_table 	= $forum_lists_table;
+		$this->functions_topicindex = $functions_topicindex;
+		$this->template = $template;
+		$this->user = $user;
+		$this->auth = $auth;
+		$this->db = $db;
+		$this->request = $request;
+		$this->helper = $helper;
+		$this->language = $language;
+		$this->config = $config;
+		$this->dispatcher = $dispatcher;
+		$this->root_path = $root_path;
+		$this->php_ext = $php_ext;
+		$this->forum_lists_table = $forum_lists_table;
 	}
 
+	/**
+	 * Display an external topic index.
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
 	public function handle_topicindex()
 	{
 		if (!$this->auth->acl_get('u_topicindex_view'))
@@ -114,188 +94,225 @@ class main
 			throw new http_exception(403, 'NOT_AUTHORISED');
 		}
 
-		$list		= $this->request->variable('list', 0);
-		$iremove	= $this->request->variable('iremove', 0);
-		$ilimiter	= $this->request->variable('ilimit', '');
-		$zurl		= $this->helper->route('dmzx_topicindex_controller', array('list' => $list));
-
-		// Action add / remove topics
-		if (!empty($iremove))
+		$list_id = max(0, $this->request->variable('list', 0));
+		$filter = $this->normalise_filter($this->request->variable('ilimit', ''));
+		$query_context = [
+			'poster_id' => 0,
+			'route_parameters' => [],
+			'template_variables' => [],
+			'not_found' => false,
+		];
+		$vars = ['list_id', 'query_context'];
+		extract($this->dispatcher->trigger_event('dmzx.topicindex.request_context', compact($vars)));
+		if (!empty($query_context['not_found']))
 		{
-			// Get the relative forum
-			$sql	= 'SELECT topic_id, forum_id
-				FROM ' . TOPICS_TABLE . '
-				WHERE topic_id = ' . $iremove;
-			$result	= $this->db->sql_query_limit($sql,1);
-			$row	= $this->db->sql_fetchrow($result);
-			$this->db->sql_freeresult($result);
+			throw new http_exception(404, 'NO_USER');
+		}
+		$user_id = max(0, (int) $query_context['poster_id']);
+		$route_parameters = is_array($query_context['route_parameters']) ? $query_context['route_parameters'] : [];
 
-			$this->functions_topicindex->remove_from_ilist($row['forum_id'], $iremove);
-			redirect($zurl, false, true);
+		$lists = $this->get_lists();
+		$current_list = isset($lists[$list_id]) ? $lists[$list_id] : null;
+		if ($list_id && $current_list === null)
+		{
+			throw new http_exception(404, 'TOPICINDEX_LIST_NOT_FOUND');
 		}
 
-		$selected_category = '';
-
-		if (empty($list))
+		foreach ($lists as $list)
 		{
-			// This is the main page
-
-			// Grab crated list for select
-			$s_list_options = '';
-			$sql	= 'SELECT *
-				FROM ' . $this->forum_lists_table . '
-				ORDER BY list_name ASC';
-			$result	= $this->db->sql_query($sql);
-			while ($row = $this->db->sql_fetchrow($result))
-			{
-				$s_list_options .= '<option value="' . $row['list_id'] . '">' . $row['list_name'] . '</option>';
-			}
-			$this->db->sql_freeresult($result);
-
-			$this->template->assign_vars(array(
-				'S_SHOWLIST'	 	=> false,
-				'U_ACTION'			=> $zurl,
-				'S_LIST_OPTIONS'	=> $s_list_options
-			));
-		}
-		else
-		{
-			// This is for the real list
-
-			// Grab crated list for select
-			$s_list_options = '';
-			$sql	= 'SELECT *
-				FROM ' . $this->forum_lists_table . '
-				ORDER BY list_name ASC';
-			$result	= $this->db->sql_query($sql);
-			while ($row = $this->db->sql_fetchrow($result))
-			{
-				if ($list == $row['list_id'])
-				{
-					$selected_category = $row['list_name'];
-				}
-
-				$s_list_options .= '<option value="' . $row['list_id'] . '"' . (($list == $row['list_id']) ? ' selected="selected"' : '') . '>' . $row['list_name'] . '</option>';
-			}
-			$this->db->sql_freeresult($result);
-
-			$this->template->assign_vars(array(
-				'S_SHOWLIST'	 	=> true,
-				'U_ACTION'			=> $zurl,
-				'S_LIST_OPTIONS'	=> $s_list_options,
-				'U_MCP'				=> ($this->auth->acl_getf_global('m_')) ? true : false
-			));
-
-			// Get relative list data
-			$sql1 		= 'SELECT *
-				FROM ' . $this->forum_lists_table . '
-				WHERE list_id = ' . $list;
-			$result1	= $this->db->sql_query($sql1);
-			$row1		= $this->db->sql_fetchrow($result1);
-			$this->db->sql_freeresult($result1);
-
-			$forumsari 	= @json_decode($row1['list_forum']);
-			$forumsari	= is_array($forumsari) ? $forumsari : [];
-			$filtrini	= range('a', 'z');
-			$indexlist	= array();
-
-			foreach ($forumsari as $forum_id)
-			{
-				$forum_id			= (int) $forum_id;
-				$forum_data			= $this->functions_topicindex->get_ForumBasedata($forum_id);
-				$indexlist_temp		= $this->functions_topicindex->get_topic_index($forum_id, 0, $forum_data['inindex'], $forum_data['filter']);
-				$indexlist			= array_merge($indexlist, $indexlist_temp);
-			}
-
-			// Order the topics
-			if (count($indexlist) > 0)
-			{
-				foreach ($indexlist as $key => $row)
-				{
-					$order_in_category[$key]	= $row['keybig'];
-				}
-				array_multisort($order_in_category, SORT_ASC, $indexlist);
-			}
-
-			$fixa 		= $this->functions_topicindex->create_key_list($indexlist);
-			$fixedlist	= $this->functions_topicindex->filter_topiclist($indexlist, $ilimiter);
-			$bulo		= (!$ilimiter) ? $fixa : array($ilimiter);
-
-			// Create data for template
-			foreach ($filtrini as $filtrino)
-			{
-				// Build menu
-				$this->template->assign_block_vars('block_filtrino', array(
-					'U_FILTER'	=> $this->helper->route('dmzx_topicindex_controller', array('list' => $list, 'ilimit' => $filtrino)),
-					'FILTRINO'	=> $filtrino,
-					'S_ISWITH'	=> (in_array($filtrino, $fixa)) ? true : false
-				));
-			}
-
-			// Build template data
-			foreach ($fixa as $realfilter)
-			{
-				$this->template->assign_block_vars('block_list', array(
-					'FILTRINO'	=> ($realfilter == '_') ? $this->user->lang['SYMB'] : strtoupper($realfilter),
-					'S_ISWITH2'	=> (in_array($realfilter, $bulo)) ? true : false
-				));
-
-				$nums = 0;
-				foreach ($fixedlist as $indexdata)
-				{
-					if ($realfilter == $indexdata['key'])
-					{
-						$template_vars = array(
-							'ITOPIC_URL'	=> append_sid("{$this->root_path}viewtopic.$this->php_ext", "f={$indexdata['forum_id']}&amp;t={$indexdata['id']}"),
-							'ITOPIC_TITLE'	=> $indexdata['title'],
-							'ITOPIC_POSTER'	=> get_username_string('full', $indexdata['posterid'], $indexdata['poster'], $indexdata['postercol']),
-							'ITOPIC_TOTREP'	=> $indexdata['posts'],
-							'U_REMOVE_FROM'	=> $this->helper->route('dmzx_topicindex_controller', array('list' => $list, 'iremove' => $indexdata['id'])),
-							'ITOPIC_CLASS'	=> ($nums % 2) ? 'row bg1' : 'row bg2'
-						);
-
-						/**
-						 * Modify the topic index data before it is assigned to the template
-						 *
-						 * @event dmzx.topicindex.modify_block_topic_index_ary
-						 * @var		array	template_vars	Template block array with topic data
-						 * @since 1.0.5
-						 */
-						$vars = array('indexdata', 'template_vars');
-						extract($this->dispatcher->trigger_event('dmzx.topicindex.modify_block_topic_index_ary', compact($vars)));
-
-						$this->template->assign_block_vars('block_list.block_topic_index', $template_vars);
-						$nums++;
-					}
-				}
-			}
-
-			// Others data for menu
-			$this->template->assign_block_vars('block_nofiltrino', array(
-				'U_TUTTI'	=> $this->helper->route('dmzx_topicindex_controller', array('list' => $list)),
-				'U_09'		=> $this->helper->route('dmzx_topicindex_controller', array('list' => $list, 'ilimit' => '09')),
-				'U_SYMB'	=> $this->helper->route('dmzx_topicindex_controller', array('list' => $list, 'ilimit' => '_')),
-				'S_09'		=> (in_array('09', $fixa)) ? true : false,
-				'S_SYMB'	=> (in_array('_', $fixa)) ? true : false
-			));
+			$args = array_merge($route_parameters, ['list' => $list['list_id']]);
+			$this->template->assign_block_vars('topicindex_lists', [
+				'ID' => $list['list_id'],
+				'NAME' => $list['list_name'],
+				'S_SELECTED' => $list_id === $list['list_id'],
+				'U_VIEW' => $this->helper->route('dmzx_topicindex_controller', $args),
+			]);
 		}
 
-		$title = implode(' - ', array_filter([$this->user->lang['OIINDEX_HEADER'], $selected_category]));
+		$selected_name = '';
+		$topics = [];
+		if ($current_list !== null)
+		{
+			$selected_name = $current_list['list_name'];
+			$forum_ids = json_decode($current_list['list_forum'], true);
+			$forum_ids = is_array($forum_ids) ? array_values(array_unique(array_filter(array_map('intval', $forum_ids)))) : [];
+			$settings = $this->functions_topicindex->get_forum_settings($forum_ids);
+			$topics = $this->functions_topicindex->get_topic_indexes($settings, 0, $user_id);
+		}
 
-		// Navigation
-		$this->template->assign_block_vars('navlinks', array(
-			'FORUM_NAME'	=> $title,
-			'U_VIEW_FORUM'	=> $zurl
-		));
+		$filter_args = array_merge($route_parameters, ['list' => $list_id]);
+		$this->assign_index_blocks($topics, $filter, $filter_args);
 
-		$this->functions_topicindex->assign_authors();
-
-		$this->template->assign_vars([
-			'TOPICINDEX_FOOTER_VIEW'	=> true,
-			'L_OIINDEX_HEADER'			=> $title,
+		add_form_key('topicindex_manage', '_TOPICINDEX');
+		$title = implode(' - ', array_filter([$this->language->lang('OIINDEX_HEADER'), $selected_name]));
+		$this->template->assign_block_vars('navlinks', [
+			'FORUM_NAME' => $title,
+			'U_VIEW_FORUM' => $this->helper->route('dmzx_topicindex_controller', $list_id ? ['list' => $list_id] : []),
 		]);
+		$this->functions_topicindex->assign_authors();
+		$this->template->assign_vars([
+			'S_SHOWLIST' => $current_list !== null,
+			'S_TOPICINDEX_ASSETS' => true,
+			'S_CAN_MANAGE_TOPIC_INDEX' => count(array_filter($topics, function ($topic)
+			{
+				return $topic['can_manage'];
+			})) > 0,
+			'U_ACTION' => $this->helper->route('dmzx_topicindex_controller'),
+			'U_TOPICINDEX_MANAGE' => $this->helper->route('dmzx_topicindex_manage'),
+			'U_TOPICINDEX_ALL' => $this->helper->route('dmzx_topicindex_controller', $filter_args),
+			'U_TOPICINDEX_NEW_TOPIC' => $this->get_new_topic_url(),
+			'TOPICINDEX_RETURN_LIST' => $list_id,
+			'L_OIINDEX_HEADER' => $title,
+		] + (is_array($query_context['template_variables']) ? $query_context['template_variables'] : []));
 
-		// Send all data to the template file
 		return $this->helper->render('topiclist.html', $title);
 	}
+
+	/**
+	 * Process an add/remove request.
+	 *
+	 * @return void
+	 */
+	public function handle_manage()
+	{
+		if (!$this->request->is_set_post('topicindex_action'))
+		{
+			throw new http_exception(405, 'FORM_INVALID');
+		}
+		if (!check_form_key('topicindex_manage'))
+		{
+			throw new http_exception(403, 'FORM_INVALID');
+		}
+
+		$action = $this->request->variable('topicindex_action', '');
+		$topic_id = max(0, $this->request->variable('topic_id', 0));
+		if (!in_array($action, ['add', 'remove'], true) || !$topic_id)
+		{
+			throw new http_exception(400, 'FORM_INVALID');
+		}
+
+		$sql = 'SELECT topic_id, forum_id
+			FROM ' . TOPICS_TABLE . '
+			WHERE topic_id = ' . $topic_id;
+		$result = $this->db->sql_query_limit($sql, 1);
+		$topic = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+		if (!$topic || !$this->functions_topicindex->set_topic_in_list($topic['forum_id'], $topic_id, $action === 'add'))
+		{
+			throw new http_exception(403, 'NOT_AUTHORISED');
+		}
+
+		$return_list = max(0, $this->request->variable('return_list', 0));
+		$return_user = max(0, $this->request->variable('return_user', 0));
+		if ($return_list)
+		{
+			$args = ['list' => $return_list];
+			if ($return_user)
+			{
+				$args['user'] = $return_user;
+			}
+			redirect($this->helper->route('dmzx_topicindex_controller', $args));
+		}
+
+		$return_topic = max(0, $this->request->variable('return_topic', $topic_id));
+		redirect(append_sid($this->root_path . 'viewtopic.' . $this->php_ext, [
+			'f' => (int) $topic['forum_id'],
+			't' => $return_topic,
+		]));
+	}
+
+	protected function get_lists()
+	{
+		$sql = 'SELECT list_id, list_name, list_forum
+			FROM ' . $this->forum_lists_table . '
+			ORDER BY list_name ASC';
+		$result = $this->db->sql_query($sql);
+		$lists = [];
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$row['list_id'] = (int) $row['list_id'];
+			$forum_ids = json_decode($row['list_forum'], true);
+			$forum_ids = is_array($forum_ids) ? array_map('intval', $forum_ids) : [];
+			if (!empty($this->functions_topicindex->get_readable_forum_ids($forum_ids)))
+			{
+				$lists[$row['list_id']] = $row;
+			}
+		}
+		$this->db->sql_freeresult($result);
+
+		return $lists;
+	}
+
+	protected function normalise_filter($filter)
+	{
+		$filter = mb_strtolower(trim((string) $filter));
+
+		return preg_match('#^(?:[a-z]|09|_)$#', $filter) ? $filter : '';
+	}
+
+	protected function assign_index_blocks(array $topics, $filter, array $base_args)
+	{
+		$keys = $this->functions_topicindex->create_key_list($topics);
+		$filtered_topics = $this->functions_topicindex->filter_topiclist($topics, $filter);
+		foreach (range('a', 'z') as $letter)
+		{
+			$args = array_merge($base_args, ['ilimit' => $letter]);
+			$this->template->assign_block_vars('block_filtrino', [
+				'U_FILTER' => $this->helper->route('dmzx_topicindex_controller', $args),
+				'FILTRINO' => $letter,
+				'S_ISWITH' => in_array($letter, $keys, true),
+			]);
+		}
+
+		foreach ($keys as $key)
+		{
+			$this->template->assign_block_vars('block_list', [
+				'FILTRINO' => $key === '_' ? $this->language->lang('SYMB') : mb_strtoupper($key),
+				'S_ISWITH2' => $filter === '' || $filter === $key,
+			]);
+			$row_number = 0;
+			foreach ($filtered_topics as $topic)
+			{
+				if ($topic['key'] !== $key)
+				{
+					continue;
+				}
+
+				$template_vars = [
+					'ITOPIC_ID' => $topic['id'],
+					'ITOPIC_URL' => append_sid($this->root_path . 'viewtopic.' . $this->php_ext, ['f' => $topic['forum_id'], 't' => $topic['id']]),
+					'ITOPIC_TITLE' => $topic['title'],
+					'ITOPIC_POSTER' => get_username_string('full', $topic['posterid'], $topic['poster'], $topic['postercol']),
+					'ITOPIC_TOTREP' => $topic['posts'],
+					'ITOPIC_CLASS' => $row_number % 2 ? 'row bg1' : 'row bg2',
+					'U_FORUM' => append_sid($this->root_path . 'viewforum.' . $this->php_ext, ['f' => $topic['forum_id']]),
+					'S_CAN_MANAGE' => $topic['can_manage'],
+					'MANAGE_ACTION' => 'remove',
+				];
+				$template_vars = $this->functions_topicindex->enrich_template_vars($topic, $template_vars);
+				$this->template->assign_block_vars('block_list.block_topic_index', $template_vars);
+				$row_number++;
+			}
+		}
+
+		$this->template->assign_block_vars('block_nofiltrino', [
+			'U_TUTTI' => $this->helper->route('dmzx_topicindex_controller', $base_args),
+			'U_09' => $this->helper->route('dmzx_topicindex_controller', array_merge($base_args, ['ilimit' => '09'])),
+			'U_SYMB' => $this->helper->route('dmzx_topicindex_controller', array_merge($base_args, ['ilimit' => '_'])),
+			'S_09' => in_array('09', $keys, true),
+			'S_SYMB' => in_array('_', $keys, true),
+		]);
+	}
+
+	protected function get_new_topic_url()
+	{
+		$forum_id = (int) $this->config['topicindex_new_topic_forum'];
+		if (!$forum_id || !$this->auth->acl_get('f_post', $forum_id))
+		{
+			return '';
+		}
+
+		return append_sid($this->root_path . 'posting.' . $this->php_ext, ['mode' => 'post', 'f' => $forum_id]);
+	}
+
 }

@@ -1,0 +1,12 @@
+<nav class="topicindex-filters" aria-label="{{ lang('TOPICINDEX_FILTERS') }}">
+	{% for block_nofiltrino in loops.block_nofiltrino %}
+		<a class="btn btn-default btn-xs" href="{{ block_nofiltrino.U_TUTTI }}">{{ lang('ALL') }}</a>
+		{% if block_nofiltrino.S_09 %}<a class="btn btn-default btn-xs" href="{{ block_nofiltrino.U_09 }}">{{ lang('09') }}</a>{% else %}<span class="btn btn-basic btn-xs disabled">{{ lang('09') }}</span>{% endif %}
+		{% if block_nofiltrino.S_SYMB %}<a class="btn btn-default btn-xs" href="{{ block_nofiltrino.U_SYMB }}">{{ lang('SYMB') }}</a>{% else %}<span class="btn btn-basic btn-xs disabled">{{ lang('SYMB') }}</span>{% endif %}
+	{% endfor %}
+	{% for block_filtrino in loops.block_filtrino %}
+		{% EVENT dmzx_topic_index_topic_filter_before %}
+		{% if block_filtrino.S_ISWITH %}<a class="btn btn-default btn-xs" href="{{ block_filtrino.U_FILTER }}">{{ block_filtrino.FILTRINO|upper }}</a>{% else %}<span class="btn btn-basic btn-xs disabled">{{ block_filtrino.FILTRINO|upper }}</span>{% endif %}
+		{% EVENT dmzx_topic_index_topic_filter_after %}
+	{% endfor %}
+</nav>

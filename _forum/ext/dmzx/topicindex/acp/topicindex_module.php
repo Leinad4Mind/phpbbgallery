@@ -12,10 +12,15 @@ namespace dmzx\topicindex\acp;
 class topicindex_module
 {
 	public $u_action;
+	public $tpl_name;
+	public $page_title;
 
-	function main($id, $mode)
+	public function main($id, $mode)
 	{
-		global $phpbb_container, $user;
+		global $phpbb_container;
+
+		$language = $phpbb_container->get('language');
+		$language->add_lang('acp_topicindex', 'dmzx/topicindex');
 
 		// Get an instance of the admin controller
 		$admin_controller = $phpbb_container->get('dmzx.topicindex.admin.controller');
@@ -29,7 +34,7 @@ class topicindex_module
 				// Load a template from adm/style for our ACP page
 				$this->tpl_name = 'acp_oindex';
 				// Set the page title for our ACP page
-				$this->page_title = $user->lang['ACP_OINDEX_CFG'];
+				$this->page_title = $language->lang('ACP_OINDEX_CFG');
 				// Load the display options handle in the admin controller
 				$admin_controller->display_options();
 			break;

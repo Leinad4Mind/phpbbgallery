@@ -21,8 +21,6 @@ class topicindex_1_0_3 extends \phpbb\db\migration\migration
 	public function update_data()
 	{
 		return array(
-			// Update config
-			array('config.update', array('topicindex_version', '1.0.3')),
 			// Permission
 			array('permission.add', array('u_topicindex_view', true)),
 			// Set Permission

@@ -1,6 +1,8 @@
 imports:
     - { resource: tables.yml }
 services:
+    dmzx.topicindex.core.title_helper:
+        class: dmzx\topicindex\core\title_helper
     dmzx.topicindex.listener:
         class: dmzx\topicindex\event\listener
         arguments:
@@ -12,6 +14,7 @@ services:
             - '@config'
             - '@controller.helper'
             - '@request'
+            - '@language'
             - '%core.root_path%'
             - '%core.php_ext%'
         tags:
@@ -22,9 +25,11 @@ services:
             - '@config'
             - '@template'
             - '@log'
+            - '@language'
             - '@user'
             - '@dbal.conn'
             - '@request'
+            - '@dispatcher'
             - '%dmzx.topicindex.table.topicindex%'
     dmzx.topicindex.controller:
         class: dmzx\topicindex\controller\main
@@ -36,6 +41,7 @@ services:
             - '@dbal.conn'
             - '@request'
             - '@controller.helper'
+            - '@language'
             - '@config'
             - '@dispatcher'
             - '%core.root_path%'
@@ -50,3 +56,8 @@ services:
             - '@auth'
             - '@dispatcher'
             - '@ext.manager'
+            - '@content.visibility'
+            - '@language'
+            - '@log'
+            - '@user'
+            - '@dmzx.topicindex.core.title_helper'

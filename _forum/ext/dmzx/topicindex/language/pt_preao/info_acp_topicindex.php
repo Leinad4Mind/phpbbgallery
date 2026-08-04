@@ -44,4 +44,6 @@ $lang = array_merge($lang, [
 	'LOG_OINDEX_ADDLIST'    => '<strong>Adicionada nova lista de tópicos.</strong><br />%s',
 	'LOG_OINDEX_DELETELIST' => '<strong>Excluída lista de tópicos.</strong><br />%s',
 	'LOG_OINDEX_EDITCFG'    => '<strong>Editada a configuração da Official Topic Index.</strong><br />%s',
+	'LOG_TOPICINDEX_ADD_TOPIC'    => '<strong>Tópico adicionado ao índice</strong><br>ID do tópico: %d',
+	'LOG_TOPICINDEX_REMOVE_TOPIC' => '<strong>Tópico removido do índice</strong><br>ID do tópico: %d',
 ]);

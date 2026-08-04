@@ -1,19 +1,22 @@
-# Topic Index Extension
+# Topic Index
 
-[![Build Status](https://travis-ci.org/dmzx/Topic-Index.svg?branch=master)](https://travis-ci.org/dmzx/Topic-Index)
+Topic Index creates alphabetical topic indexes inside an official topic or on standalone pages. Version 2.0 adds scoped moderator controls, CSRF-protected mutations, visibility-aware batch queries, configurable display modes, and shared `styles/all` templates.
 
-## Install
-1. Download the latest release.
-2. Unzip the downloaded release, and change the name of the folder to `topicindex`.
-3. In the `ext` directory of your phpBB board, create a new directory named `dmzx` (if it does not already exist).
-4. Copy the `topicindex` folder to `/ext/dmzx/` (if done correctly, you'll have the main extension class at (your forum root)/ext/dmzx/topicindex/composer.json).
-5. Navigate in the ACP to `Customise -> Manage extensions`.
-6. Look for `Topic Index` under the Disabled Extensions list, and click its `Enable` link.
+## Requirements
 
-## Uninstall
-1. Navigate in the ACP to `Customise -> Extension Management -> Extensions`.
-2. Look for `Topic Index` under the Enabled Extensions list, and click its `Disable` link.
-3. To permanently uninstall, click `Delete Data` and then delete the `/ext/dmzx/topicindex` folder.
+- phpBB 3.3
+- PHP 7.4 or newer
+
+## Installation and updates
+
+Copy this directory to `ext/dmzx/topicindex`, then enable or update **Topic Index** in the ACP. Existing installations retain the `dmzx/topicindex` vendor and migration chain, so the extension can be updated in place.
+
+Existing configured official indexes are migrated to the legacy **replace** display mode. New forum configurations default to showing the index after the original message.
+
+## Optional integrations
+
+Install `kasimi/topicindexbridge` to manage Forum Info, Quick Title Edition, BBPrefix, BBEmoji, Topic Image Preview, and User Topics integrations from the Topic Index ACP page. Legacy Kasimi integration extensions can remain installed during transition; the unified bridge suppresses overlapping modules while their legacy counterpart is enabled.
 
 ## License
-[GNU General Public License v2](http://opensource.org/licenses/GPL-2.0)
+
+[GNU General Public License v2](https://opensource.org/licenses/GPL-2.0)

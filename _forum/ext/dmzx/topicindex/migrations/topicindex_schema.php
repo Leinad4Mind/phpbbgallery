@@ -46,7 +46,7 @@ class topicindex_schema extends \phpbb\db\migration\migration
 				$this->table_prefix . 'forum_lists',
 			),
 			'drop_columns' => array(
-				$this->table_prefix . 'posts'	=> array(
+				$this->table_prefix . 'topics'	=> array(
 					'inindex_topic',
 					'outindex_topic',
 				),
