@@ -168,13 +168,13 @@ class winner_search
 			'SEARCH_MATCHES' => $this->language->lang('FOUND_SEARCH_MATCHES', $count),
 			'SEARCH_TITLE' => $this->language->lang('SEARCH_CONTEST'),
 			'SEARCH_IN_RESULTS' => false,
-			'S_SEARCH_ACTION' => $this->helper->route('phpbbgallery_core_search_contests'),
+			'S_SEARCH_ACTION' => $this->helper->route('phpbbgallery_contest_search'),
 			'U_GALLERY_SEARCH' => $this->helper->route('phpbbgallery_core_search'),
 		]);
 		$this->pagination->generate_template_pagination([
 			'routes' => [
-				'phpbbgallery_core_search_contests',
-				'phpbbgallery_core_search_contests_page',
+				'phpbbgallery_contest_search',
+				'phpbbgallery_contest_search_page',
 			],
 			'params' => [],
 		], 'pagination', 'page', $count, $limit, $start);

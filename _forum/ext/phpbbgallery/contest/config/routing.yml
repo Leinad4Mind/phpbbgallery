@@ -1,8 +1,8 @@
-phpbbgallery_core_search_contests:
+phpbbgallery_contest_search:
     path: /gallery/search/contests
     defaults: { _controller: phpbbgallery.contest.controller.winners:base, page: 1 }
 
-phpbbgallery_core_search_contests_page:
+phpbbgallery_contest_search_page:
     path: /gallery/search/contests/{page}
     defaults: { _controller: phpbbgallery.contest.controller.winners:base }
     requirements:

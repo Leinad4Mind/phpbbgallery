@@ -61,7 +61,7 @@ class winners
 		]);
 		$this->template->assign_block_vars('navlinks', [
 			'FORUM_NAME' => $this->language->lang('SEARCH_CONTEST'),
-			'U_VIEW_FORUM' => $this->helper->route('phpbbgallery_core_search_contests'),
+			'U_VIEW_FORUM' => $this->helper->route('phpbbgallery_contest_search'),
 		]);
 
 		$limit = max(1, (int) $this->gallery_config->get('items_per_page'));

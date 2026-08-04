@@ -52,7 +52,7 @@ class index_listener implements EventSubscriberInterface
 
 		$dropdown_links = (array) $event['dropdown_links'];
 		$this->language->add_lang('contest', 'phpbbgallery/contest');
-		$dropdown_links['U_G_SEARCH_CONTESTS'] = $this->helper->route('phpbbgallery_core_search_contests');
+		$dropdown_links['U_G_SEARCH_CONTESTS'] = $this->helper->route('phpbbgallery_contest_search');
 		$event['dropdown_links'] = $dropdown_links;
 	}
 }

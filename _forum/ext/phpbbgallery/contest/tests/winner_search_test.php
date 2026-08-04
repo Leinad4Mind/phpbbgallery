@@ -137,7 +137,7 @@ final class winner_search_test extends TestCase
 			->method('generate_template_pagination')
 			->with(
 				$this->callback(static fn(array $data): bool =>
-					$data['routes'] === ['phpbbgallery_core_search_contests', 'phpbbgallery_core_search_contests_page']),
+					$data['routes'] === ['phpbbgallery_contest_search', 'phpbbgallery_contest_search_page']),
 				'pagination',
 				'page',
 				1,

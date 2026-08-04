@@ -21,9 +21,9 @@ final class winner_controller_test extends TestCase
 		$addon_routes = (string) file_get_contents(dirname(__DIR__) . '/config/routing.yml');
 		$core_routes = (string) file_get_contents(dirname(__DIR__, 2) . '/core/config/routing.yml');
 
-		$this->assertStringContainsString('phpbbgallery_core_search_contests:', $addon_routes);
+		$this->assertStringContainsString('phpbbgallery_contest_search:', $addon_routes);
 		$this->assertStringContainsString('phpbbgallery.contest.controller.winners:base', $addon_routes);
-		$this->assertStringNotContainsString('phpbbgallery_core_search_contests:', $core_routes);
+		$this->assertStringNotContainsString('phpbbgallery_contest_search:', $core_routes);
 	}
 
 	public function test_controller_contract_is_typed_and_checks_phpbb_search_permission(): void
