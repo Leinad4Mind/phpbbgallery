@@ -1,3 +1,6 @@
+imports:
+    - { resource: tables.yml }
+
 services:
     phpbbgallery.remotestorage.http:
         class: phpbbgallery\remotestorage\http\guzzle_client
@@ -10,6 +13,26 @@ services:
 
     phpbbgallery.remotestorage.connection_tester:
         class: phpbbgallery\remotestorage\connection_tester
+
+    phpbbgallery.remotestorage.migration.provider_resolver:
+        class: phpbbgallery\remotestorage\migration\provider_resolver
+        arguments:
+            - '@phpbbgallery.core.storage.local'
+            - '@phpbbgallery.remotestorage.s3.builder'
+
+    phpbbgallery.remotestorage.migration.state_store:
+        class: phpbbgallery\remotestorage\migration\db_state_store
+        arguments:
+            - '@dbal.conn'
+            - '%phpbbgallery.tables.gallery_remote_migrations%'
+
+    phpbbgallery.remotestorage.migration.provider_migrator:
+        class: phpbbgallery\remotestorage\migration\provider_migrator
+        arguments:
+            - '@config'
+            - '@phpbbgallery.remotestorage.migration.provider_resolver'
+            - '@phpbbgallery.remotestorage.migration.state_store'
+            - '%core.cache_dir%phpbbgallery/remote-migration/'
 
     phpbbgallery.storage.provider.s3:
         class: phpbbgallery\remotestorage\s3\provider

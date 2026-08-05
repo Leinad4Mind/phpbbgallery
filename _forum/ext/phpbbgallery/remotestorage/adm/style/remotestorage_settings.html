@@ -7,6 +7,42 @@
 	<p>{{ lang('REMOTE_STORAGE_ACTIVE_PROVIDER', ACTIVE_PROVIDER) }}</p>
 </div>
 
+<fieldset>
+	<legend>{{ lang('REMOTE_STORAGE_MIGRATION') }}</legend>
+	{% if S_MIGRATION_ACTIVE or S_MIGRATION_COMPLETE %}
+		<div class="{% if S_MIGRATION_ERROR %}errorbox{% else %}successbox{% endif %} notice">
+			<p>{{ lang('REMOTE_STORAGE_MIGRATION_DIRECTION', MIGRATION_SOURCE, MIGRATION_TARGET) }}</p>
+			<p>{{ lang('REMOTE_STORAGE_MIGRATION_PROGRESS', MIGRATION_VARIANT, MIGRATION_COPIED, MIGRATION_SKIPPED, MIGRATION_FAILED) }}</p>
+			{% if MIGRATION_LAST_ERROR %}<p>{{ MIGRATION_LAST_ERROR }}</p>{% endif %}
+			{% if S_MIGRATION_COMPLETE %}<p>{{ lang('REMOTE_STORAGE_MIGRATION_COMPLETE') }}</p>{% endif %}
+		</div>
+	{% endif %}
+	{% if S_MIGRATION_ACTIVE %}
+		<form id="remote_storage_migration_continue" method="post" action="{{ U_ACTION }}">
+			<p class="submit-buttons">
+				<input class="button1" type="submit" name="continue_migration" value="{{ lang(S_MIGRATION_ERROR ? 'REMOTE_STORAGE_MIGRATION_RETRY' : 'REMOTE_STORAGE_MIGRATION_CONTINUE') }}">
+				{% if S_MIGRATION_CAN_ABORT %}<input class="button2" type="submit" name="abort_migration" value="{{ lang('REMOTE_STORAGE_MIGRATION_ABORT') }}">{% endif %}
+			</p>
+			{{ S_FORM_TOKEN }}
+		</form>
+		{% if not S_MIGRATION_ERROR %}
+		<script>
+			window.setTimeout(function () {
+				document.getElementById('remote_storage_migration_continue').requestSubmit(
+					document.querySelector('#remote_storage_migration_continue [name="continue_migration"]')
+				);
+			}, 500);
+		</script>
+		{% endif %}
+	{% elseif S_MIGRATION_CAN_START %}
+		<p>{{ lang('REMOTE_STORAGE_MIGRATION_EXPLAIN') }}</p>
+		<form method="post" action="{{ U_ACTION }}">
+			<p class="submit-buttons"><input class="button1" type="submit" name="start_migration" value="{{ lang('REMOTE_STORAGE_MIGRATION_TO', MIGRATION_NEXT_TARGET) }}"></p>
+			{{ S_FORM_TOKEN }}
+		</form>
+	{% endif %}
+</fieldset>
+
 {% if environment_overrides %}
 <div class="errorbox notice">
 	<p>{{ lang('REMOTE_STORAGE_ENVIRONMENT_OVERRIDES') }}</p>
@@ -47,7 +83,7 @@
 		</dl>
 	</fieldset>
 	<fieldset class="submit-buttons">
-		<input class="button1" type="submit" name="save" value="{{ lang('REMOTE_STORAGE_TEST_AND_SAVE') }}">
+		<input class="button1" type="submit" name="save" value="{{ lang('REMOTE_STORAGE_TEST_AND_SAVE') }}"{% if S_MIGRATION_ACTIVE %} disabled{% endif %}>
 		{{ S_FORM_TOKEN }}
 	</fieldset>
 </form>

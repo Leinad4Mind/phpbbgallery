@@ -1,0 +1,2 @@
+parameters:
+    phpbbgallery.tables.gallery_remote_migrations: '%core.table_prefix%gallery_remote_migrations'
