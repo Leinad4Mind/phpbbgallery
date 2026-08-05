@@ -1,11 +1,15 @@
 imports:
     - { resource: tables.yml }
 
+parameters:
+    phpbbgallery.remotestorage.provider_ids:
+        - s3
+
 services:
     phpbbgallery.remotestorage.http:
         class: phpbbgallery\remotestorage\http\guzzle_client
 
-    phpbbgallery.remotestorage.s3.builder:
+    phpbbgallery.remotestorage.provider_factory.s3:
         class: phpbbgallery\remotestorage\s3\configured_factory
         arguments:
             - '@phpbbgallery.remotestorage.http'
@@ -18,7 +22,8 @@ services:
         class: phpbbgallery\remotestorage\migration\provider_resolver
         arguments:
             - '@phpbbgallery.core.storage.local'
-            - '@phpbbgallery.remotestorage.s3.builder'
+            - '@service_container'
+            - '%phpbbgallery.remotestorage.provider_ids%'
 
     phpbbgallery.remotestorage.migration.state_store:
         class: phpbbgallery\remotestorage\migration\db_state_store
@@ -36,4 +41,4 @@ services:
 
     phpbbgallery.storage.provider.s3:
         class: phpbbgallery\remotestorage\s3\provider
-        factory: ['@phpbbgallery.remotestorage.s3.builder', create]
+        factory: ['@phpbbgallery.remotestorage.provider_factory.s3', create]

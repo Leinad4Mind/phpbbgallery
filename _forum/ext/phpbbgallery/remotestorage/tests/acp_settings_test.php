@@ -38,6 +38,17 @@ final class acp_settings_test extends TestCase
 		$this->assertStringContainsString('gallery_remote_migrations', $tables);
 	}
 
+	public function test_provider_catalogue_uses_validated_factory_services(): void
+	{
+		$services = (string) file_get_contents(dirname(__DIR__) . '/config/services.yml');
+		$module = (string) file_get_contents(dirname(__DIR__) . '/acp/main_module.php');
+
+		$this->assertStringContainsString('phpbbgallery.remotestorage.provider_ids:', $services);
+		$this->assertStringContainsString('phpbbgallery.remotestorage.provider_factory.s3:', $services);
+		$this->assertStringContainsString('factory(\'s3\')', $module);
+		$this->assertStringNotContainsString('phpbbgallery.remotestorage.s3.builder', $services . $module);
+	}
+
 	public function test_acp_tests_before_persisting_and_never_activates_s3_directly(): void
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/acp/main_module.php');

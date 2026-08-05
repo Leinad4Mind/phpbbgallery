@@ -34,7 +34,8 @@ class main_module
 		$this->tpl_name = 'remotestorage_settings';
 		$this->page_title = 'ACP_GALLERY_REMOTE_STORAGE';
 		add_form_key('acp_gallery_remote_storage');
-		$factory = $phpbb_container->get('phpbbgallery.remotestorage.s3.builder');
+		$providers = $phpbb_container->get('phpbbgallery.remotestorage.migration.provider_resolver');
+		$factory = $providers->factory('s3');
 		$connection_tester = $phpbb_container->get('phpbbgallery.remotestorage.connection_tester');
 		$migrator = $phpbb_container->get('phpbbgallery.remotestorage.migration.provider_migrator');
 		$state = $migrator->state();

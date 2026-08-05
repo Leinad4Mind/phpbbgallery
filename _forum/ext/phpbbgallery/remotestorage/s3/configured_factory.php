@@ -10,9 +10,10 @@
 namespace phpbbgallery\remotestorage\s3;
 
 use phpbbgallery\remotestorage\http\client_interface;
+use phpbbgallery\remotestorage\configured_provider_factory_interface;
 
 /** Combine ACP configuration with optional process-level secret overrides. */
-final class configured_factory
+final class configured_factory implements configured_provider_factory_interface
 {
 	private const FIELDS = [
 		'endpoint' => 'PHPBBGALLERY_S3_ENDPOINT',
@@ -39,6 +40,11 @@ final class configured_factory
 	public function create(): provider
 	{
 		return $this->create_from([]);
+	}
+
+	public function get_id(): string
+	{
+		return 's3';
 	}
 
 	/**
