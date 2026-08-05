@@ -26,6 +26,7 @@ final class version_check_metadata_test extends TestCase
 		'feed' => 'gallery-feed.json',
 		'imagerevisions' => 'gallery-imagerevisions.json',
 		'remotestorage' => 'gallery-remotestorage.json',
+		'tiff' => 'gallery-tiff.json',
 	];
 
 	public function test_every_component_exposes_a_phpbb_version_check(): void

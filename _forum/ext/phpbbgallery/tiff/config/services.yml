@@ -1,0 +1,13 @@
+services:
+    phpbbgallery.tiff.processor:
+        class: phpbbgallery\tiff\processor
+        arguments:
+            - '@config'
+
+    phpbbgallery.tiff.listener:
+        class: phpbbgallery\tiff\event\listener
+        arguments:
+            - '@config'
+            - '@language'
+        tags:
+            - { name: event.listener }

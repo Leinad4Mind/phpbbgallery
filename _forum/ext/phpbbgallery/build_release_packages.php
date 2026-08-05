@@ -27,6 +27,7 @@ final class package_builder
 		'feed',
 		'imagerevisions',
 		'remotestorage',
+		'tiff',
 	];
 
 	private string $repository_root;

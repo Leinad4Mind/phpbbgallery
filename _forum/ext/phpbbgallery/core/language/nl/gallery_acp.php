@@ -57,6 +57,7 @@ $lang = array_merge($lang, [
 	'GALLERY_ADDON_CONTEST_EXPLAIN'         => 'Beheert wedstrijdfasen, anonieme inzendingen, beoordelingen en de publicatie van winnaars.',
 	'GALLERY_ADDON_IMAGE_REVISIONS_EXPLAIN' => 'Bewaart optioneel eerdere versies van vervangen afbeeldingen zodat moderators ze kunnen herstellen.',
 	'GALLERY_ADDON_REMOTE_STORAGE_EXPLAIN'   => 'Voegt privé S3- en S3-compatibele externe opslag toe met geverifieerde, hervatbare migraties.',
+	'GALLERY_ADDON_TIFF_EXPLAIN'             => 'Voegt veilige TIFF-uploads via Imagick en privé WebP-afgeleiden van het eerste frame toe.',
 	'GALLERY_ADDON_BENEFIT'             => 'Voordeel',
 	'GALLERY_ADDON_ENABLED'             => 'Ingeschakeld',
 	'GALLERY_ADDON_DISABLED'            => 'Uitgeschakeld',

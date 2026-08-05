@@ -1,0 +1,29 @@
+{% include 'overall_header.html' %}
+
+<h1>{{ lang('ACP_GALLERY_TIFF') }}</h1>
+<p>{{ lang('ACP_GALLERY_TIFF_EXPLAIN') }}</p>
+
+{% if not S_TIFF_SUPPORTED %}
+	<div class="errorbox"><p>{{ lang('GALLERY_TIFF_IMAGICK_REQUIRED') }}</p></div>
+{% endif %}
+
+<form id="tiff_settings" method="post" action="{{ U_ACTION }}">
+	<fieldset>
+		<legend>{{ lang('ACP_GALLERY_TIFF_SETTINGS') }}</legend>
+		<dl>
+			<dt><label for="enabled1">{{ lang('ACP_GALLERY_TIFF_ENABLE') }}</label><br /><span>{{ lang('ACP_GALLERY_TIFF_ENABLE_EXPLAIN') }}</span></dt>
+			<dd><label><input type="radio" class="radio" name="enabled" id="enabled1" value="1"{% if S_TIFF_ENABLED %} checked="checked"{% endif %}{% if not S_TIFF_SUPPORTED %} disabled{% endif %} /> {{ lang('YES') }}</label>
+				<label><input type="radio" class="radio" name="enabled" id="enabled0" value="0"{% if not S_TIFF_ENABLED %} checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
+		</dl>
+		<dl>
+			<dt><label for="webp_quality">{{ lang('ACP_GALLERY_TIFF_WEBP_QUALITY') }}</label><br /><span>{{ lang('ACP_GALLERY_TIFF_WEBP_QUALITY_EXPLAIN') }}</span></dt>
+			<dd><input type="number" min="1" max="100" name="webp_quality" id="webp_quality" value="{{ TIFF_WEBP_QUALITY }}" /></dd>
+		</dl>
+	</fieldset>
+	<fieldset class="submit-buttons">
+		<input class="button1" type="submit" name="submit" value="{{ lang('SUBMIT') }}" />
+		{{ S_FORM_TOKEN }}
+	</fieldset>
+</form>
+
+{% include 'overall_footer.html' %}

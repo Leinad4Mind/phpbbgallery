@@ -31,7 +31,7 @@ jobs:
       fail-fast: false
       matrix:
         php: ['8.1', '8.2', '8.3', '8.4', '8.5']
-        component: [core, acpcleanup, acpimport, bbpointsimages, bbtagsimages, contest, exif, export, favorite, feed, imagerevisions, remotestorage]
+        component: [core, acpcleanup, acpimport, bbpointsimages, bbtagsimages, contest, exif, export, favorite, feed, imagerevisions, remotestorage, tiff]
 
     steps:
       - name: Check out repository
@@ -41,7 +41,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '${{ matrix.php }}'
-          extensions: fileinfo, gd, mbstring, zip
+          extensions: fileinfo, gd, imagick, mbstring, zip
           coverage: none
           tools: phpunit:10.5.64
         env:
@@ -57,7 +57,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        component: [core, acpcleanup, acpimport, bbpointsimages, bbtagsimages, contest, exif, export, favorite, feed, imagerevisions, remotestorage]
+        component: [core, acpcleanup, acpimport, bbpointsimages, bbtagsimages, contest, exif, export, favorite, feed, imagerevisions, remotestorage, tiff]
 
     steps:
       - name: Check out repository
@@ -74,6 +74,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.1'
+          extensions: imagick
           coverage: none
           tools: composer:v2
         env:
@@ -122,7 +123,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.1'
-          extensions: curl, dom, gd, mbstring, pdo_sqlite, sqlite3, zip
+          extensions: curl, dom, gd, imagick, mbstring, pdo_sqlite, sqlite3, zip
           coverage: none
         env:
           fail-fast: true
@@ -136,8 +137,8 @@ jobs:
 
           php _forum/ext/phpbbgallery/build_release_packages.php --output="$package_root" --ref=HEAD
           mapfile -t archives < <(find "$package_root" -maxdepth 1 -type f -name '*.zip' -print | sort)
-          if (( ${#archives[@]} != 11 )); then
-            echo "Expected 11 Gallery release packages, found ${#archives[@]}." >&2
+          if (( ${#archives[@]} != 13 )); then
+            echo "Expected 13 Gallery release packages, found ${#archives[@]}." >&2
             exit 1
           fi
 
@@ -154,7 +155,7 @@ jobs:
 
           # Functional test cases are development-only and are copied after the
           # production packages have been extracted and verified.
-          for component in core acpcleanup acpimport bbpointsimages bbtagsimages contest exif export favorite feed imagerevisions remotestorage; do
+          for component in core acpcleanup acpimport bbpointsimages bbtagsimages contest exif export favorite feed imagerevisions remotestorage tiff; do
             functional_tests="_forum/ext/phpbbgallery/$component/tests/functional"
             if [[ -d "$functional_tests" ]]; then
               mkdir -p "$gallery_root/$component/tests/functional"
@@ -284,7 +285,7 @@ jobs:
 
       - name: Validate component manifests
         run: |
-          for component in core acpcleanup acpimport bbpointsimages bbtagsimages contest exif export favorite feed imagerevisions remotestorage; do
+          for component in core acpcleanup acpimport bbpointsimages bbtagsimages contest exif export favorite feed imagerevisions remotestorage tiff; do
             composer validate --no-check-publish "_forum/ext/phpbbgallery/${component}/composer.json"
           done
 

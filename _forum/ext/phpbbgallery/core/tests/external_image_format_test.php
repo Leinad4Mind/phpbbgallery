@@ -59,6 +59,27 @@ final class external_image_format_test extends TestCase
 		$this->assertNull($registry->processor_for_filename('photo.jpg'));
 	}
 
+	public function test_disabled_upload_format_still_resolves_existing_images(): void
+	{
+		$processor = new external_format_test_processor();
+		$container = $this->createMock(ContainerInterface::class);
+		$container->method('has')->willReturn(true);
+		$container->method('get')->willReturn($processor);
+		$registry = new format_registry(new external_format_test_dispatcher([
+			'tiff' => [
+				'service' => 'phpbbgallery.tiff.processor',
+				'mime' => 'image/tiff',
+				'label' => 'FILETYPES_TIFF',
+				'upload' => false,
+			],
+		]), $container);
+		$language = $this->createMock(\phpbb\language\language::class);
+
+		$this->assertSame([], $registry->extensions());
+		$this->assertSame([], $registry->labels($language));
+		$this->assertSame($processor, $registry->processor_for_filename('existing.tiff'));
+	}
+
 	public function test_registry_rejects_spoofed_or_dangerously_large_metadata(): void
 	{
 		$processor = new external_format_test_processor();

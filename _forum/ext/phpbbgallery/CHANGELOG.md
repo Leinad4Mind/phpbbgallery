@@ -6,17 +6,17 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
-- Added a deterministic release builder that creates and validates all 12
+- Added a deterministic release builder that creates and validates all 13
   component ZIPs from a committed Git ref, records their SHA-256 hashes and
   publishes the verified package set as a CI artifact.
 - Made the functional CI install the generated ZIPs instead of source folders
-  and added a clean-board lifecycle covering all 12 components, automatic
+  and added a clean-board lifecycle covering all 13 components, automatic
   add-on disablement, reactivation and ordered purge.
 - Fixed BBTags Images purging so phpBB no longer recreates the provisional ACP
   module and block removal of the Gallery Core category.
 - Made the Contest add-on remove its owned table and columns when its data is
   purged, avoiding orphaned storage.
-- Made all 12 component manifests expose their version-check configuration in
+- Made all 13 component manifests expose their version-check configuration in
   phpBB's supported `extra.version-check` location, added matching release
   metadata files and documented the Core and add-on catalogue.
 - Replaced the archived Blueimp/jQuery quick-upload stack with a dependency-free
@@ -57,6 +57,9 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
   inspection, decoding and encoding, including configurable output quality,
   browser filters, ZIP uploads, ACP Import, album icons, derived images,
   rotation, watermarks, cleanup and translations for every supported locale.
+- Added the independently packaged TIFF add-on with opt-in TIF/TIFF uploads,
+  bounded Imagick decoding, preserved originals, first-frame WebP derivatives,
+  ZIP and ACP Import support, and translations for every supported locale.
 - Added an optional distributed local filesystem layout, including a confirmed,
   resumable and collision-checked migration from existing flat storage.
 - Added a fail-closed pluggable storage-provider contract with verified private
