@@ -54,6 +54,8 @@ class main_module
 		$images = $request->variable('images', [''], true);
 
 		$submit = $request->is_set_post('submit');
+		$storage_keys = $phpbb_container->get('phpbbgallery.core.storage.key_generator');
+		$local_storage = $phpbb_container->get('phpbbgallery.core.storage.local');
 
 		// Unpacking an archive is its own action: it only fills the import folder, and
 		// the ordinary import below then treats the result like any hand-uploaded image.
@@ -148,12 +150,31 @@ class main_module
 					{
 						$filetype = $inspection['image_info'];
 						$image_src_full = $image['path'];
-						$image_filename = bin2hex(random_bytes(16)) . $inspection['target_extension'];
-						$file_link = $gallery_url->path('upload') . $image_filename;
-						if (!$this->import_storage->copy_image($image_src_full, $file_link))
+						try
+						{
+							$image_filename = $storage_keys->create(bin2hex(random_bytes(16)) . $inspection['target_extension']);
+						}
+						catch (\Throwable)
+						{
+							$image_filename = '';
+						}
+
+						$storage_ready = $image_filename !== '';
+						foreach ([
+							\phpbbgallery\core\storage\provider_interface::SOURCE,
+							\phpbbgallery\core\storage\provider_interface::MEDIUM,
+							\phpbbgallery\core\storage\provider_interface::MINI,
+						] as $variant)
+						{
+							$storage_ready = $storage_ready && $local_storage->prepare($variant, $image_filename);
+						}
+						$file_link = $storage_ready
+							? $local_storage->local_path(\phpbbgallery\core\storage\provider_interface::SOURCE, $image_filename)
+							: null;
+						if ($file_link === null || !$this->import_storage->copy_image($image_src_full, $file_link))
 						{
 							$user->add_lang('posting');
-							$this->log_import_error(sprintf($user->lang['GENERAL_UPLOAD_ERROR'], $file_link));
+							$this->log_import_error(sprintf($user->lang['GENERAL_UPLOAD_ERROR'], (string) $file_link));
 							$error_occurred = true;
 						}
 					}

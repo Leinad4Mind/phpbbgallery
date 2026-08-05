@@ -84,14 +84,6 @@ class upload
 	*/
 	protected string $php_ext;
 
-	/**
-	* Number of Files per Directory
-	*
-	* If this constant is set to a value >0 the gallery will create a new directory,
-	* when the current directory has more files in it than set here.
-	*/
-	public const NUM_FILES_PER_DIR = 0;
-
 	/** Keep unfinished upload drafts for seven days. */
 	private const ORPHAN_RETENTION_SECONDS = 604800;
 
@@ -115,6 +107,12 @@ class upload
 
 	/** @var \phpbbgallery\core\zip\extractor Shared ZIP extractor. */
 	private \phpbbgallery\core\zip\extractor $zip_extractor;
+
+	/** Generates safe relative keys for newly stored images. */
+	private \phpbbgallery\core\storage\key_generator $storage_keys;
+
+	/** Local provider used while the Core still processes images through GD paths. */
+	private \phpbbgallery\core\storage\local_provider $local_storage;
 
 	/**
 	* Basic variables...
@@ -164,6 +162,8 @@ class upload
 	 * @param \phpbbgallery\core\url            $gallery_url    Gallery url
 	 * @param block                             $block
 	 * @param file\file                         $gallery_file
+	 * @param \phpbbgallery\core\storage\key_generator $storage_keys
+	 * @param \phpbbgallery\core\storage\local_provider $local_storage
 	 * @param \phpbbgallery\core\zip\extractor  $zip_extractor
 	 * @param string                            $images_table
 	 * @param string                            $root_path
@@ -172,10 +172,14 @@ class upload
 	public function __construct(\phpbb\user $user, \phpbb\language\language $language, \phpbb\db\driver\driver_interface $db,
 		\phpbb\event\dispatcher_interface $phpbb_dispatcher, \phpbb\request\request $request, \phpbb\files\upload $file_upload,
 		\phpbbgallery\core\image\image $gallery_image, \phpbbgallery\core\config $gallery_config, \phpbbgallery\core\url $gallery_url,
-		\phpbbgallery\core\block $block, \phpbbgallery\core\file\file $gallery_file, \phpbbgallery\core\zip\extractor $zip_extractor,
+		\phpbbgallery\core\block $block, \phpbbgallery\core\file\file $gallery_file,
+		\phpbbgallery\core\storage\key_generator $storage_keys, \phpbbgallery\core\storage\local_provider $local_storage,
+		\phpbbgallery\core\zip\extractor $zip_extractor,
 		string $images_table, string $root_path, string $php_ext)
 	{
 		$this->zip_extractor = $zip_extractor;
+		$this->storage_keys = $storage_keys;
+		$this->local_storage = $local_storage;
 		$this->user = $user;
 		$this->language = $language;
 		$this->db = $db;
@@ -670,24 +674,60 @@ class upload
 	}
 
 	/**
+	 * Move an accepted upload into its configured local storage layout.
+	 */
+	private function move_file_to_storage(): bool
+	{
+		$this->file->clean_filename('unique_ext');
+		try
+		{
+			$storage_key = $this->storage_keys->create((string) $this->file->get('realname'));
+		}
+		catch (\InvalidArgumentException)
+		{
+			$this->file->remove();
+			$this->new_error($this->language->lang('GENERAL_UPLOAD_ERROR', $this->file->get('uploadname')));
+			return false;
+		}
+
+		foreach ([
+			\phpbbgallery\core\storage\provider_interface::SOURCE,
+			\phpbbgallery\core\storage\provider_interface::MEDIUM,
+			\phpbbgallery\core\storage\provider_interface::MINI,
+		] as $variant)
+		{
+			if (!$this->local_storage->prepare($variant, $storage_key))
+			{
+				$this->file->remove();
+				$this->new_error($this->language->lang('GENERAL_UPLOAD_ERROR', $this->file->get('uploadname')));
+				return false;
+			}
+		}
+
+		$upload_dir = dirname($storage_key);
+		if ($upload_dir !== '.')
+		{
+			// Preserve the generated basename while storing its relative directory in image_filename.
+			$this->file->clean_filename('real', $upload_dir . '/');
+		}
+		$this->file->move_file(
+			$this->gallery_url->path('upload_noroot') . ($upload_dir === '.' ? '' : $upload_dir),
+			false,
+			false,
+			CHMOD_ALL
+		);
+
+		return true;
+	}
+
+	/**
 	* Prepare file on upload: rotate and resize
 	*/
 	public function prepare_file(): int|false
 	{
-		$upload_dir = $this->get_current_upload_dir();
-
-		// Rename the file, move it to the correct location and set chmod
-		if (!$upload_dir)
+		if (!$this->move_file_to_storage())
 		{
-			$this->file->clean_filename('unique_ext');
-			$this->file->move_file(substr($this->gallery_url->path('upload'), 0, -1), false, false, CHMOD_ALL);
-		}
-		else
-		{
-			// Okay, this looks hacky, but what we do here is, we store the directory name in the filename.
-			// However phpBB strips directories form the filename, when moving, so we need to specify that again.
-			$this->file->clean_filename('unique_ext', $upload_dir . '/');
-			$this->file->move_file($this->gallery_url->path('upload_noroot') . $upload_dir, false, false, CHMOD_ALL);
+			return false;
 		}
 
 		if (!empty($this->file->error))
@@ -886,37 +926,6 @@ class upload
 				false
 			);
 		}
-	}
-
-	/**
-	 * Get the current upload dir (doh!)
-	 * @return int|string
-	 */
-	private function get_current_upload_dir(): int|string
-	{
-		if (self::NUM_FILES_PER_DIR <= 0)
-		{
-			return 0;
-		}
-
-		// This code is never invoked. It's left here for future implementation.
-		$this->gallery_config->inc('current_upload_dir_size', 1);
-		if ($this->gallery_config->get('current_upload_dir_size') >= self::NUM_FILES_PER_DIR)
-		{
-			$this->gallery_config->set('current_upload_dir_size', 0);
-			$this->gallery_config->inc('current_upload_dir', 1);
-			@mkdir($this->gallery_url->path('upload') . $this->gallery_config->get('current_upload_dir'));
-			@mkdir($this->gallery_url->path('medium') . $this->gallery_config->get('current_upload_dir'));
-			@mkdir($this->gallery_url->path('thumbnail') . $this->gallery_config->get('current_upload_dir'));
-			@copy($this->gallery_url->path('upload') . 'index.htm', $this->gallery_url->path('upload') . $this->gallery_config->get('current_upload_dir') . '/index.htm');
-			@copy($this->gallery_url->path('upload') . 'index.htm', $this->gallery_url->path('medium') . $this->gallery_config->get('current_upload_dir') . '/index.htm');
-			@copy($this->gallery_url->path('upload') . 'index.htm', $this->gallery_url->path('thumbnail') . $this->gallery_config->get('current_upload_dir') . '/index.htm');
-			@copy($this->gallery_url->path('upload') . '.htaccess', $this->gallery_url->path('upload') . $this->gallery_config->get('current_upload_dir') . '/.htaccess');
-			@copy($this->gallery_url->path('upload') . '.htaccess', $this->gallery_url->path('medium') . $this->gallery_config->get('current_upload_dir') . '/.htaccess');
-			@copy($this->gallery_url->path('upload') . '.htaccess', $this->gallery_url->path('thumbnail') . $this->gallery_config->get('current_upload_dir') . '/.htaccess');
-		}
-		$current_upload_dir = $this->gallery_config->get('current_upload_dir');
-		return is_int($current_upload_dir) ? $current_upload_dir : (string) $current_upload_dir;
 	}
 
 	public function quota_error(): void

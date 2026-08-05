@@ -88,6 +88,8 @@ final class acp_config_types_test extends TestCase
 		$this->assertArrayHasKey('forum_index_random_count', $display['vars']);
 		$this->assertArrayHasKey('forum_index_display', $display['vars']);
 		$this->assertArrayHasKey('forum_index_personal', $display['vars']);
+		$this->assertArrayHasKey('storage_layout', $display['vars']);
+		$this->assertSame('storage_layout_select', $display['vars']['storage_layout']['method']);
 		$this->assertArrayNotHasKey('allow_contests', $display['vars']);
 		$config_keys = array_keys($display['vars']);
 		$this->assertGreaterThan(
@@ -100,6 +102,20 @@ final class acp_config_types_test extends TestCase
 		);
 		$display_vars = $display['vars'];
 		$this->assertSame('', end($display_vars));
+	}
+
+	public function test_storage_layout_selector_marks_the_current_layout(): void
+	{
+		$language = $this->createMock(\phpbb\language\language::class);
+		$language->method('lang')->willReturnCallback(static fn(string $key): string => $key);
+		$module = new config_module();
+		$module->language = $language;
+
+		$html = $module->storage_layout_select('distributed', 'storage_layout');
+
+		$this->assertStringContainsString('value=' . chr(34) . 'flat' . chr(34), $html);
+		$this->assertStringContainsString('value=' . chr(34) . 'distributed' . chr(34) . ' selected=' . chr(34) . 'selected' . chr(34), $html);
+		$this->assertStringContainsString('STORAGE_LAYOUT_DISTRIBUTED', $html);
 	}
 
 	public function test_bbcode_templates_keep_the_selected_link_target_without_a_session_id(): void

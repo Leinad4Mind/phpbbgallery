@@ -51,7 +51,7 @@ final class domain_upload_types_test extends TestCase
 		$this->assertContains((string) (new \ReflectionMethod(upload::class, 'prepare_file'))->getReturnType(), ['int|false', 'false|int']);
 		$this->assertSame('int', (string) (new \ReflectionMethod(upload::class, 'load_pending_images'))->getReturnType());
 		$this->assertSame('int', (string) (new \ReflectionMethod(upload::class, 'discard_pending_images'))->getReturnType());
-		$this->assertTrue((new \ReflectionClassConstant(upload::class, 'NUM_FILES_PER_DIR'))->isPublic());
+		$this->assertSame('phpbbgallery\\core\\storage\\key_generator', (string) (new \ReflectionProperty(upload::class, 'storage_keys'))->getType());
 	}
 
 	public function test_empty_multiform_upload_has_an_explicit_success_result(): void

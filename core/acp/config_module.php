@@ -60,6 +60,14 @@ class config_module
 
 		// We validate the complete config if whished
 		validate_config_vars($vars['vars'], $cfg_array, $error);
+		if (isset($cfg_array['storage_layout'])
+			&& !in_array($cfg_array['storage_layout'], [
+				\phpbbgallery\core\storage\key_generator::LAYOUT_FLAT,
+				\phpbbgallery\core\storage\key_generator::LAYOUT_DISTRIBUTED,
+			], true))
+		{
+			$error[] = $this->language->lang('INVALID_STORAGE_LAYOUT');
+		}
 		if ($submit && !check_form_key($form_key))
 		{
 			$error[] = $this->language->lang('FORM_INVALID');
@@ -418,6 +426,10 @@ class config_module
 					'search_display'		=> ['lang' => 'RRC_DISPLAY_OPTIONS',	'validate' => 'int',	'type' => 'custom',			'method' => 'rrc_display'],
 				],
 
+				'STORAGE_SETTINGS'	=> [
+					'storage_layout'		=> ['lang' => 'STORAGE_LAYOUT',		'validate' => 'string',	'type' => 'select',			'explain' => true,	'method' => 'storage_layout_select'],
+				],
+
 				'IMAGE_SETTINGS'	=> [
 					'num_uploads'			=> ['lang' => 'UPLOAD_IMAGES',			'validate' => 'int',	'type' => 'text:7:2'],
 					'max_filesize'			=> ['lang' => 'MAX_FILE_SIZE',			'validate' => 'int',	'type' => 'text:12:9',		'append' => 'BYTES'],
@@ -570,6 +582,25 @@ class config_module
 		$sort_order_options .= '<option' . (($value == 'a') ? ' selected="selected"' : '') . " value='a'>" . $this->language->lang('SORT_ASCENDING') . '</option>';
 
 		return "<select name=\"config[$key]\" id=\"$key\">$sort_order_options</select>";
+	}
+
+	/**
+	 * Select the local storage layout used for newly written files.
+	 */
+	public function storage_layout_select(string $value, string $key): string
+	{
+		$options = '';
+		$quote = chr(34);
+		foreach ([
+			\phpbbgallery\core\storage\key_generator::LAYOUT_FLAT => 'STORAGE_LAYOUT_FLAT',
+			\phpbbgallery\core\storage\key_generator::LAYOUT_DISTRIBUTED => 'STORAGE_LAYOUT_DISTRIBUTED',
+		] as $layout => $language_key)
+		{
+			$selected = $value === $layout ? ' selected=' . $quote . 'selected' . $quote : '';
+			$options .= '<option value=' . $quote . $layout . $quote . $selected . '>' . $this->language->lang($language_key) . '</option>';
+		}
+
+		return '<select name=' . $quote . 'config[' . $key . ']' . $quote . ' id=' . $quote . $key . $quote . '>' . $options . '</select>';
 	}
 
 	/**
