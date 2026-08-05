@@ -1,0 +1,12 @@
+leinad4mind_officialtopicindex_controller:
+    path: /officialtopicindex
+    defaults: { _controller: leinad4mind.officialtopicindex.controller:handle_topicindex }
+
+leinad4mind_officialtopicindex_legacy_controller:
+    path: /topicindex
+    defaults: { _controller: leinad4mind.officialtopicindex.controller:handle_topicindex }
+
+leinad4mind_officialtopicindex_manage:
+    path: /officialtopicindex/manage
+    defaults: { _controller: leinad4mind.officialtopicindex.controller:handle_manage }
+    methods: [POST]

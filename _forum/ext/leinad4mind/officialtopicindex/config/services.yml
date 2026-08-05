@@ -1,0 +1,63 @@
+imports:
+    - { resource: tables.yml }
+services:
+    leinad4mind.officialtopicindex.core.title_helper:
+        class: leinad4mind\officialtopicindex\core\title_helper
+    leinad4mind.officialtopicindex.listener:
+        class: leinad4mind\officialtopicindex\event\listener
+        arguments:
+            - '@leinad4mind.officialtopicindex.core.functions'
+            - '@user'
+            - '@auth'
+            - '@template'
+            - '@dbal.conn'
+            - '@config'
+            - '@controller.helper'
+            - '@request'
+            - '@language'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+        tags:
+            - { name: event.listener }
+    leinad4mind.officialtopicindex.admin.controller:
+        class: leinad4mind\officialtopicindex\controller\admin_controller
+        arguments:
+            - '@config'
+            - '@template'
+            - '@log'
+            - '@language'
+            - '@user'
+            - '@dbal.conn'
+            - '@request'
+            - '@dispatcher'
+            - '%leinad4mind.officialtopicindex.table.officialtopicindex%'
+    leinad4mind.officialtopicindex.controller:
+        class: leinad4mind\officialtopicindex\controller\main
+        arguments:
+            - '@leinad4mind.officialtopicindex.core.functions'
+            - '@template'
+            - '@user'
+            - '@auth'
+            - '@dbal.conn'
+            - '@request'
+            - '@controller.helper'
+            - '@language'
+            - '@config'
+            - '@dispatcher'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%leinad4mind.officialtopicindex.table.officialtopicindex%'
+    leinad4mind.officialtopicindex.core.functions:
+        class: leinad4mind\officialtopicindex\core\functions_officialtopicindex
+        arguments:
+            - '@dbal.conn'
+            - '@template'
+            - '@config'
+            - '@auth'
+            - '@dispatcher'
+            - '@ext.manager'
+            - '@content.visibility'
+            - '@language'
+            - '@log'
+            - '@user'
+            - '@leinad4mind.officialtopicindex.core.title_helper'

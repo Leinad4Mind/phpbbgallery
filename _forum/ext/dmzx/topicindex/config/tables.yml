@@ -1,2 +1,0 @@
-parameters:
-    dmzx.topicindex.table.topicindex: '%core.table_prefix%forum_lists'

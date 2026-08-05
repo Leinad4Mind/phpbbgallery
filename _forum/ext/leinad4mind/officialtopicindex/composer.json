@@ -1,0 +1,45 @@
+{
+	"name": "leinad4mind/officialtopicindex",
+	"type": "phpbb-extension",
+	"description": "Create an ordered list of topics inside an official topic and on standalone pages.",
+	"homepage": "https://leinad4mind.top/forum",
+	"version": "2.0.0",
+	"time": "2026-08-05",
+	"keywords": [
+		"phpbb",
+		"extension",
+		"officialtopicindex",
+		"topicindex"
+	],
+	"license": "GPL-2.0-only",
+	"authors": [
+		{
+			"name": "Leinad4Mind",
+			"homepage": "https://leinad4mind.top/forum",
+			"role": "Extension Developer and Maintainer"
+		},
+		{
+			"name": "dmzx",
+			"homepage": "https://www.dmzx-web.net",
+			"role": "Previous Extension Developer"
+		},
+		{
+			"name": "Soshen",
+			"homepage": "http://www.nipponart.org",
+			"role": "Original MOD Author"
+		}
+	],
+	"require": {
+		"php": ">=7.4",
+		"composer/installers": "~1.0"
+	},
+	"require-dev": {
+		"phpbb/epv": "dev-master"
+	},
+	"extra": {
+		"display-name": "Official Topic Index",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.3.0,<4.0.0@dev"
+		}
+	}
+}
