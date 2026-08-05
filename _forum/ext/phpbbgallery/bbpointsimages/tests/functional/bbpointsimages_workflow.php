@@ -349,6 +349,7 @@ class bbpointsimages_workflow extends \phpbb_functional_test_case
 	{
 		self::assert_response_status_code(200);
 		$response = self::$client->getResponse();
+		$this->assertSame('nosniff', $response->getHeader('X-Content-Type-Options'));
 		$this->assertStringStartsWith('attachment;', (string) $response->getHeader('Content-Disposition'));
 		$this->assertStringStartsWith("\x89PNG\r\n\x1a\n", $response->getContent());
 	}

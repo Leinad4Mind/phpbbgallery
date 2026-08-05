@@ -93,6 +93,8 @@ class gallery_lifecycle extends \phpbb_functional_test_case
 
 		$this->admin_login();
 		$this->run_import($album_id, $phpbb_root_path);
+		[$imported_image_id, $imported_filename] = $this->imported_image();
+		$this->assert_source_delivery($album_id, $imported_image_id, $imported_filename, $phpbb_root_path);
 		$this->assert_forum_index_images();
 		$this->run_resumable_upload($album_id, $phpbb_root_path);
 		$this->logout();
@@ -245,6 +247,73 @@ class gallery_lifecycle extends \phpbb_functional_test_case
 		$this->assertMatchesRegularExpression('#^[a-f0-9]/[a-f0-9]{2}/[a-f0-9]{32}[.]png$#', $image_filename);
 		$this->assertFileDoesNotExist($import_path);
 		$this->assertFileExists($phpbb_root_path . 'files/phpbbgallery/core/source/' . $image_filename);
+	}
+
+	/** @return array{0: int, 1: string} */
+	private function imported_image(): array
+	{
+		$db = $this->get_db();
+		$result = $db->sql_query('SELECT image_id, image_filename
+			FROM phpbb_gallery_images
+			WHERE image_name = ' . chr(39) . 'Functional import 1' . chr(39));
+		$row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+		$this->assertIsArray($row);
+
+		return [(int) $row['image_id'], (string) $row['image_filename']];
+	}
+
+	private function assert_source_delivery(int $album_id, int $image_id, string $filename, string $phpbb_root_path): void
+	{
+		self::$client->setServerParameter('HTTP_USER_AGENT', 'Mozilla/5.0');
+		$path = 'app.php/gallery/image/' . $image_id . '/source?sid=' . $this->sid;
+		self::request('GET', $path, [], false);
+		self::assert_response_status_code(200);
+		$response = self::$client->getResponse();
+		$this->assertSame('nosniff', $response->getHeader('X-Content-Type-Options'));
+		$this->assertStringStartsWith('inline;', (string) $response->getHeader('Content-Disposition'));
+		$this->assertStringStartsWith('image/png', (string) $response->getHeader('Content-Type'));
+		$this->assertStringStartsWith((string) hex2bin('89504e470d0a1a0a'), $response->getContent());
+
+		$source_path = $phpbb_root_path . 'files/phpbbgallery/core/source/' . $filename;
+		$this->write_watermark_source($source_path);
+		$original = (string) file_get_contents($source_path);
+		$db = $this->get_db();
+		$db->sql_query('UPDATE phpbb_gallery_albums SET album_watermark = 1 WHERE album_id = ' . $album_id);
+		$db->sql_query('UPDATE phpbb_gallery_roles SET i_watermark = 0 WHERE role_id IN (
+			SELECT perm_role_id FROM phpbb_gallery_permissions
+			WHERE perm_album_id = ' . $album_id . ' AND perm_user_id = 2)');
+		$db->sql_query('UPDATE phpbb_gallery_users SET user_permissions = ' . chr(39) . chr(39) . ' WHERE user_id = 2');
+		$this->set_config_value('phpbb_gallery_watermark_enabled', '1');
+		$this->set_config_value('phpbb_gallery_watermark_height', '0');
+		$this->set_config_value('phpbb_gallery_watermark_width', '0');
+		$this->purge_cache();
+
+		self::request('GET', $path, [], false);
+		self::assert_response_status_code(200);
+		$response = self::$client->getResponse();
+		$this->assertSame('nosniff', $response->getHeader('X-Content-Type-Options'));
+		$this->assertStringStartsWith('inline;', (string) $response->getHeader('Content-Disposition'));
+		$this->assertStringStartsWith((string) hex2bin('89504e470d0a1a0a'), $response->getContent());
+		$this->assertNotSame($original, $response->getContent());
+		$this->assertSame($original, (string) file_get_contents($source_path));
+
+		$db->sql_query('UPDATE phpbb_gallery_albums SET album_watermark = 0 WHERE album_id = ' . $album_id);
+		$db->sql_query('UPDATE phpbb_gallery_roles SET i_watermark = 1 WHERE role_id IN (
+			SELECT perm_role_id FROM phpbb_gallery_permissions
+			WHERE perm_album_id = ' . $album_id . ' AND perm_user_id = 2)');
+		$db->sql_query('UPDATE phpbb_gallery_users SET user_permissions = ' . chr(39) . chr(39) . ' WHERE user_id = 2');
+		$this->purge_cache();
+	}
+
+	private function write_watermark_source(string $path): void
+	{
+		$image = imagecreatetruecolor(400, 300);
+		$this->assertInstanceOf(\GdImage::class, $image);
+		$colour = imagecolorallocate($image, 40, 80, 160);
+		$this->assertIsInt($colour);
+		$this->assertTrue(imagefill($image, 0, 0, $colour));
+		$this->assertTrue(imagepng($image, $path));
 	}
 
 	private function set_config_value(string $name, string $value): void
