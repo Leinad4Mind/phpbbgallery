@@ -374,7 +374,7 @@ class image
 
 		$limit_days = [];
 		$sort_by_text = [
-			't'  => $this->language->lang('TIME'),
+			't'  => $this->language->lang('IMAGE_UPLOAD_TIME'),
 			'n'  => $this->language->lang('IMAGE_NAME'),
 			'vc' => $this->language->lang('GALLERY_VIEWS'),
 			'u'  => $this->language->lang('SORT_USERNAME'),
@@ -400,6 +400,23 @@ class image
 			$sort_by_text['lc'] = $this->language->lang('NEW_COMMENT');
 			$sort_by_sql['lc'] = 'image_last_comment';
 		}
+		$sort_from = $this->table_images;
+		/**
+		 * Keep previous/next navigation in the same add-on-provided order as the
+		 * album page.
+		 *
+		 * @event phpbbgallery.core.image.sort_options
+		 * @var array  album_data  Current album row
+		 * @var array  sort_by_text Sort-key labels
+		 * @var array  sort_by_sql  Sort-key SQL expressions
+		 * @var string sort_from    SQL FROM expression for the image query
+		 * @since 4.0.0
+		 */
+		$vars = ['album_data', 'sort_by_text', 'sort_by_sql', 'sort_from'];
+		extract($this->dispatcher->trigger_event(
+			'phpbbgallery.core.image.sort_options',
+			compact($vars)
+		));
 		if ($hide_results)
 		{
 			foreach (['u', 'ra', 'r', 'c', 'lc'] as $private_sort_key)
@@ -414,7 +431,7 @@ class image
 
 		// Let's see if there is previous image
 		$sql = 'SELECT *
-			FROM ' . $this->table_images . '
+			FROM ' . $sort_from . '
 			WHERE ' . implode(' AND ', $image_visibility_conditions) . '
 			ORDER BY ' . $sql_sort_order;
 
@@ -1327,6 +1344,10 @@ class image
 				{
 					$errors[] = $this->language->lang('GENERAL_ERROR');
 				}
+				else
+				{
+					$file_changed = true;
+				}
 			}
 
 			$error = implode('<br />', $errors);
@@ -1347,9 +1368,10 @@ class image
 				 * @var array image_data         Image row before the edit
 				 * @var array updated_image_data Image row after applying the edit
 				 * @var array sql_ary            Values persisted by this edit
+				 * @var bool  file_changed       Whether the original file changed
 				 * @since 3.4.0
 				 */
-				$vars = ['image_id', 'image_data', 'updated_image_data', 'sql_ary'];
+				$vars = ['image_id', 'image_data', 'updated_image_data', 'sql_ary', 'file_changed'];
 				extract($this->dispatcher->trigger_event('phpbbgallery.core.image_edit_after', compact($vars)));
 
 				$this->album->update_info($album_data['album_id']);

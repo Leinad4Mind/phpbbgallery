@@ -142,6 +142,7 @@ $lang = array_merge($lang, [
 	'IMAGE_INSERTED'               => 'Bild eingefügt',
 	'IMAGE_LOCKED'                 => 'Entschuldigung, aber dieses Bild wurde gesperrt. Du kannst für dieses Bild keine Kommentare mehr abgeben.',
 	'IMAGE_NAME'                   => 'Bildname',
+	'IMAGE_UPLOAD_TIME'            => 'Upload-Datum',
 	'IMAGE_NOT_EXIST'              => 'Dieses Bild existiert nicht',
 	'HOTLINK_NOT_ALLOWED'          => 'Hotlinking ist nicht erlaubt.',
 	'IMAGE_NOT_APPROVED'           => 'Wartet auf Freigabe',

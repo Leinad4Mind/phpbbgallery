@@ -142,6 +142,7 @@ $lang = array_merge($lang, [
 	'IMAGE_INSERTED'               => 'Imagen insertada',
 	'IMAGE_LOCKED'                 => 'Lo siento, esta imagen está bloqueada. No puedes publicar más comentarios para esta imagen. ',
 	'IMAGE_NAME'                   => 'Nombre de imagen',
+	'IMAGE_UPLOAD_TIME'            => 'Fecha de subida',
 	'IMAGE_NOT_EXIST'              => 'Esta imagen no existe.',
 	'HOTLINK_NOT_ALLOWED'          => 'No se permite enlazar imágenes directamente.',
 	'IMAGE_NOT_APPROVED'           => 'Para aprobación',

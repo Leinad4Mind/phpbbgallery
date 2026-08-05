@@ -483,19 +483,38 @@ class config_module
 	 */
 	public function sort_method_select(string $value, string $key): string
 	{
-		global $phpbb_container;
+		global $phpbb_container, $phpbb_dispatcher;
 		$this->language = $phpbb_container->get('language');
 
-		$sort_method_options = '';
+		$sort_by_text = [
+			't' => $this->language->lang('IMAGE_UPLOAD_TIME'),
+			'n' => $this->language->lang('IMAGE_NAME'),
+			'vc' => $this->language->lang('GALLERY_VIEWS'),
+			'u' => $this->language->lang('USERNAME'),
+			'ra' => $this->language->lang('RATING'),
+			'r' => $this->language->lang('RATES_COUNT'),
+			'c' => $this->language->lang('COMMENTS'),
+			'lc' => $this->language->lang('NEW_COMMENT'),
+		];
+		/**
+		 * Allow add-ons to expose their image sort labels in the global default.
+		 *
+		 * @event phpbbgallery.core.image.sort_labels
+		 * @var array sort_by_text Sort-key labels
+		 * @since 4.0.0
+		 */
+		$vars = ['sort_by_text'];
+		extract($phpbb_dispatcher->trigger_event(
+			'phpbbgallery.core.image.sort_labels',
+			compact($vars)
+		));
 
-		$sort_method_options .= '<option' . (($value == 't') ? ' selected="selected"' : '') . " value='t'>" . $this->language->lang('TIME') . '</option>';
-		$sort_method_options .= '<option' . (($value == 'n') ? ' selected="selected"' : '') . " value='n'>" . $this->language->lang('IMAGE_NAME') . '</option>';
-		$sort_method_options .= '<option' . (($value == 'vc') ? ' selected="selected"' : '') . " value='vc'>" . $this->language->lang('GALLERY_VIEWS') . '</option>';
-		$sort_method_options .= '<option' . (($value == 'u') ? ' selected="selected"' : '') . " value='u'>" . $this->language->lang('USERNAME') . '</option>';
-		$sort_method_options .= '<option' . (($value == 'ra') ? ' selected="selected"' : '') . " value='ra'>" . $this->language->lang('RATING') . '</option>';
-		$sort_method_options .= '<option' . (($value == 'r') ? ' selected="selected"' : '') . " value='r'>" . $this->language->lang('RATES_COUNT') . '</option>';
-		$sort_method_options .= '<option' . (($value == 'c') ? ' selected="selected"' : '') . " value='c'>" . $this->language->lang('COMMENTS') . '</option>';
-		$sort_method_options .= '<option' . (($value == 'lc') ? ' selected="selected"' : '') . " value='lc'>" . $this->language->lang('NEW_COMMENT') . '</option>';
+		$sort_method_options = '';
+		foreach ($sort_by_text as $sort_key => $sort_label)
+		{
+			$sort_method_options .= '<option' . (($value === $sort_key) ? ' selected="selected"' : '')
+				. " value='" . utf8_htmlspecialchars((string) $sort_key) . "'>" . $sort_label . '</option>';
+		}
 
 		return "<select name=\"config[$key]\" id=\"$key\">$sort_method_options</select>";
 	}

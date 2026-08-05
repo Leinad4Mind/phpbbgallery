@@ -483,16 +483,36 @@ class albums_module
 					$album_type_options .= '<option value="' . $value . '"' . (($value == $album_data['album_type']) ? ' selected="selected"' : '') . '>' . $user->lang['ALBUM_TYPE_' . $lang] . '</option>';
 				}
 
-				$album_sort_key_options = '';
-				$album_sort_key_options .= '<option' . ((!in_array($album_data['album_sort_key'], ['t', 'n', 'vc', 'u', 'ra', 'r', 'c', 'lc'])) ? ' selected="selected"' : '') . " value=''>" . $this->language->lang('SORT_DEFAULT') . '</option>';
-				$album_sort_key_options .= '<option' . (($album_data['album_sort_key'] == 't') ? ' selected="selected"' : '') . " value='t'>" . $this->language->lang('TIME') . '</option>';
-				$album_sort_key_options .= '<option' . (($album_data['album_sort_key'] == 'n') ? ' selected="selected"' : '') . " value='n'>" . $this->language->lang('IMAGE_NAME') . '</option>';
-				$album_sort_key_options .= '<option' . (($album_data['album_sort_key'] == 'vc') ? ' selected="selected"' : '') . " value='vc'>" . $this->language->lang('GALLERY_VIEWS') . '</option>';
-				$album_sort_key_options .= '<option' . (($album_data['album_sort_key'] == 'u') ? ' selected="selected"' : '') . " value='u'>" . $this->language->lang('USERNAME') . '</option>';
-				$album_sort_key_options .= '<option' . (($album_data['album_sort_key'] == 'ra') ? ' selected="selected"' : '') . " value='ra'>" . $this->language->lang('RATING') . '</option>';
-				$album_sort_key_options .= '<option' . (($album_data['album_sort_key'] == 'r') ? ' selected="selected"' : '') . " value='r'>" . $this->language->lang('RATES_COUNT') . '</option>';
-				$album_sort_key_options .= '<option' . (($album_data['album_sort_key'] == 'c') ? ' selected="selected"' : '') . " value='c'>" . $this->language->lang('COMMENTS') . '</option>';
-				$album_sort_key_options .= '<option' . (($album_data['album_sort_key'] == 'lc') ? ' selected="selected"' : '') . " value='lc'>" . $this->language->lang('NEW_COMMENT') . '</option>';
+				$sort_by_text = [
+					't' => $this->language->lang('IMAGE_UPLOAD_TIME'),
+					'n' => $this->language->lang('IMAGE_NAME'),
+					'vc' => $this->language->lang('GALLERY_VIEWS'),
+					'u' => $this->language->lang('USERNAME'),
+					'ra' => $this->language->lang('RATING'),
+					'r' => $this->language->lang('RATES_COUNT'),
+					'c' => $this->language->lang('COMMENTS'),
+					'lc' => $this->language->lang('NEW_COMMENT'),
+				];
+				/**
+				 * Allow add-ons to expose their image sort labels per album.
+				 *
+				 * @event phpbbgallery.core.image.sort_labels
+				 * @var array sort_by_text Sort-key labels
+				 * @since 4.0.0
+				 */
+				$vars = ['sort_by_text'];
+				extract($phpbb_dispatcher->trigger_event(
+					'phpbbgallery.core.image.sort_labels',
+					compact($vars)
+				));
+
+				$album_sort_key_options = '<option' . ((!isset($sort_by_text[$album_data['album_sort_key']])) ? ' selected="selected"' : '')
+					. " value=''>" . $this->language->lang('SORT_DEFAULT') . '</option>';
+				foreach ($sort_by_text as $sort_key => $sort_label)
+				{
+					$album_sort_key_options .= '<option' . (($album_data['album_sort_key'] === $sort_key) ? ' selected="selected"' : '')
+						. " value='" . utf8_htmlspecialchars((string) $sort_key) . "'>" . $sort_label . '</option>';
+				}
 
 				$album_sort_dir_options = '';
 				$album_sort_dir_options .= '<option' . ((($album_data['album_sort_dir'] != 'd') && ($album_data['album_sort_dir'] != 'a')) ? ' selected="selected"' : '') . " value=''>" . $this->language->lang('SORT_DEFAULT') . '</option>';

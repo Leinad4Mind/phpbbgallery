@@ -12,6 +12,9 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
   binary image response.
 - Made BBOOTS and FLATBOOTS album pagination use the themes' native list
   structure so their standard page-jump control is displayed and initialized.
+- Clarified that the existing time sort uses the image upload date and exposed
+  neutral sort-option hooks so add-ons can keep album listings, previous/next
+  navigation and ACP defaults in the same indexed order.
 - Open browser-compatible GIF, JPEG, PNG, WebP and AVIF originals inline when
   no add-on requires a download, while retaining attachment delivery for BMP,
   TIFF and unknown source formats.
