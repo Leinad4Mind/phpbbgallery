@@ -50,7 +50,6 @@ $lang = array_merge($lang, [
 	'DISAPPROVE'        => 'Afkeuren',
 	'APPROVE_IMAGE'     => 'Afbeelding goedkeuren',
 
-	//@todo
 	'ALBUM_COMMENT_CAN'    => 'Je <strong>kan</strong> reageren op afbeeldingen in dit album',
 	'ALBUM_COMMENT_CANNOT' => 'Je <strong>kan niet</strong> reageren op afbeeldingen in dit album',
 	'ALBUM_DELETE_CAN'     => 'Je <strong>kan</strong> je eigen afbeeldingen uit dit album verwijderen',
@@ -194,7 +193,7 @@ $lang = array_merge($lang, [
 	'NO_ALBUMS'             => 'Er zijn geen albums in deze galerij.',
 	'NO_COMMENTS'           => 'Nog geen reacties',
 	'NO_IMAGES'             => 'Geen afbeeldingen',
-	'NO_COMMENTS_NO_IMAGES' => 'No comments or own pictures yet',
+	'NO_COMMENTS_NO_IMAGES' => 'Nog geen reacties of eigen afbeeldingen',
 	'NO_IMAGES_FOUND'       => 'Geen afbeldingen gevonden.',
 	'NO_NEW_IMAGES'         => 'Geen nieuwe afbeeldingen',
 	'NO_IMAGES_LONG'        => 'Er zijn geen afbeeldingen in dit album.',
@@ -263,7 +262,7 @@ $lang = array_merge($lang, [
 	'SEARCH_USER_IMAGES_OF'             => 'Afbeeldingen van %s',
 	'SELECT_ALBUM'                      => 'Selecteer een album',
 	'SHOW_PERSONAL_ALBUM_OF'            => 'Toon persoonlijk album van %s',
-	'SLIDE_SHOW'                        => 'Slideshow',
+	'SLIDE_SHOW'                        => 'Diavoorstelling',
 	'SORT_ASCENDING'                    => 'Oplopend',
 	'SORT_DEFAULT'                      => 'Standaard',
 	'SORT_DESCENDING'                   => 'Aflopend',
@@ -370,8 +369,8 @@ $lang = array_merge($lang, [
 	'QUICK_MOD'      => 'Selecteer moderator actie',
 	'WRONG_FILESIZE' => 'De afbeeldingsgrootte is groter dan toegestaan!',
 
-	'UNREAD_IMAGES'    => 'Unviewed images',
-	'NO_UNREAD_IMAGES' => 'No unviewed images',
+	'UNREAD_IMAGES'    => 'Niet-bekeken afbeeldingen',
+	'NO_UNREAD_IMAGES' => 'Geen niet-bekeken afbeeldingen',
 
 	// Versions 1.2.1 additions
 	'GALLERY_DROP' => 'Plaats je afbeeldingen hier',

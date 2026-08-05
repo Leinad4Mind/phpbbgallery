@@ -18,6 +18,10 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Preserved the requested image after guest login, replaced relative permission
   redirects, added album return links to initial quota errors and restored
   administrator-only Whois actions without accepting IP addresses from URLs.
+- Batched album-tree content deletion so images, counters, permissions,
+  notifications, tracking rows and caches are processed once per deleted branch.
+- Replaced residual English fallback text in the Bulgarian, German, Spanish,
+  French, Italian, Dutch and Russian Core language catalogs.
 - Open browser-compatible GIF, JPEG, PNG, WebP and AVIF originals inline when
   no add-on requires a download, while retaining attachment delivery for BMP,
   TIFF and unknown source formats.

@@ -73,11 +73,11 @@ $lang = array_merge($lang, [
 	'ACP_GALLERY_OVERVIEW_EXPLAIN'      => 'Hier findest du ein paar Statistiken zu deiner Galerie.',
 
 	// File dirs states
-	'ACP_FILES_DIR_STATE'  => '<strong>./files/</strong> state',
-	'ACP_CORE_DIR_STATE'   => '<strong>./files/phpbbgallery/core/</strong> state',
-	'ACP_SOURCE_DIR_STATE' => '<strong>./files/phpbbgallery/core/source/</strong> state',
-	'ACP_MEDIUM_DIR_STATE' => '<strong>./files/phpbbgallery/core/medium/</strong> state',
-	'ACP_MINI_DIR_STATE'   => '<strong>./files/phpbbgallery/core/mini/</strong> state',
+	'ACP_FILES_DIR_STATE'  => 'Status von <strong>./files/</strong>',
+	'ACP_CORE_DIR_STATE'   => 'Status von <strong>./files/phpbbgallery/core/</strong>',
+	'ACP_SOURCE_DIR_STATE' => 'Status von <strong>./files/phpbbgallery/core/source/</strong>',
+	'ACP_MEDIUM_DIR_STATE' => 'Status von <strong>./files/phpbbgallery/core/medium/</strong>',
+	'ACP_MINI_DIR_STATE'   => 'Status von <strong>./files/phpbbgallery/core/mini/</strong>',
 
 	'ADD_ALBUM_ON_TOP'                  => 'Album oben einfügen',
 	'ADD_PERMISSIONS'                   => 'Berechtigungen hinzufügen',
@@ -476,5 +476,5 @@ $lang = array_merge($lang, [
 	'NOT_UP_TO_DATE'       => '%s ist nicht aktuell',
 	'RELEASE_ANNOUNCEMENT' => 'Ankündigungsthema',
 	'UP_TO_DATE'           => '%s ist aktuell',
-	'VERSION_CHECK'        => 'MOD Version Check',
+	'VERSION_CHECK'        => 'Versionsprüfung',
 ]);

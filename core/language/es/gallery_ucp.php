@@ -66,7 +66,7 @@ $lang = array_merge($lang, [
 	'NO_PERSONAL_ALBUM'         => 'Todavía no tienes un álbum personal. Aquí puedes crear tu álbum personal, con algunos subalbums.<br />En álbumes personales sólo el propietario puede subir imágenes. ',
 	'NO_SUBALBUMS'              => 'No hay álbumes adjuntos',
 	'NO_SUBSCRIPTIONS'          => 'No se ha suscrito a ninguna imagen.',
-	'NO_SUBSCRIPTIONS_ALBUM'    => 'You are not subscribed to an album.',
+	'NO_SUBSCRIPTIONS_ALBUM'    => 'No estás suscrito a ningún álbum.',
 
 	'PARSE_BBCODE'   => 'Analizar BBCode',
 	'PARSE_SMILIES'  => 'Analizar smilies',
@@ -83,6 +83,6 @@ $lang = array_merge($lang, [
 	'WATCH_NOTE'    => 'Esta opción sólo afecta a las nuevas imágenes. Todas las demás imágenes deben añadirse mediante la opción "suscribir imagen". ',
 	'WATCH_OWN'     => 'Suscribir imágenes propias por defecto',
 
-	'RRC_ZEBRA'         => 'Hide from foes in RRC',
-	'RRC_ZEBRA_EXPLAIN' => 'Hide images in albums from foes in Recent, Random and Comments part of the index.<br /><strong>WARNING!</strong> This won\'t hide images uploaded in common/public albums.'
+	'RRC_ZEBRA'         => 'Ocultar a los ignorados en RRC',
+	'RRC_ZEBRA_EXPLAIN' => 'Oculta las imágenes de los álbumes de usuarios ignorados en las secciones recientes, aleatorias y comentarios del índice.<br /><strong>ADVERTENCIA:</strong> no se ocultarán las imágenes subidas a álbumes comunes o públicos.'
 ]);

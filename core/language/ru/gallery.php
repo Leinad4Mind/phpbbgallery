@@ -47,7 +47,6 @@ $lang = array_merge($lang, [
 	'APPROVE'           => 'Одобрить',
 	'DISAPPROVE'        => 'Не одобрять',
 	'APPROVE_IMAGE'     => 'Одобрить фото',
-	//@todo
 	'ALBUM_COMMENT_CAN'       => 'Вы <strong>можете</strong> оставлять комментарии',
 	'ALBUM_COMMENT_CANNOT'    => 'Вы <strong>не можете</strong> оставлять комментарии',
 	'ALBUM_DELETE_CAN'        => 'Вы <strong>можете</strong> удалять свои фото',
@@ -184,7 +183,7 @@ $lang = array_merge($lang, [
 	'NO_ALBUMS'                    => 'Нет альбомов',
 	'NO_COMMENTS'                  => 'пока нет',
 	'NO_IMAGES'                    => 'Нет фотографий',
-	'NO_COMMENTS_NO_IMAGES'        => 'No comments or own pictures yet',
+	'NO_COMMENTS_NO_IMAGES'        => 'Пока нет комментариев или собственных изображений',
 	'NO_IMAGES_FOUND'              => 'Фото не найдены.',
 	'NO_NEW_IMAGES'                => 'Нет новых фотографий',
 	'NO_IMAGES_LONG'               => 'Этот альбом пуст.',

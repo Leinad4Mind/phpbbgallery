@@ -50,7 +50,6 @@ $lang = array_merge($lang, [
 	'DISAPPROVE'        => 'Dissaprova',
 	'APPROVE_IMAGE'     => 'Approva immagine',
 
-	//@todo
 	'ALBUM_COMMENT_CAN'    => 'Tu <strong>puoi</strong> commentare le immagini in quest’album',
 	'ALBUM_COMMENT_CANNOT' => 'Tu <strong>non puoi</strong> commentare le immagini in quest’album',
 	'ALBUM_DELETE_CAN'     => 'Tu <strong>puoi</strong> cancellare le tue immagini in quest’album',
@@ -194,7 +193,7 @@ $lang = array_merge($lang, [
 	'NO_ALBUMS'             => 'Non ci sono album in questa galleria.',
 	'NO_COMMENTS'           => 'Ancora nessun commento',
 	'NO_IMAGES'             => 'Nessuna immagine',
-	'NO_COMMENTS_NO_IMAGES' => 'No comments or own pictures yet',
+	'NO_COMMENTS_NO_IMAGES' => 'Non ci sono ancora commenti o immagini personali',
 	'NO_IMAGES_FOUND'       => 'Nessuna immagine trovata.',
 	'NO_NEW_IMAGES'         => 'Nessuna nuova immagine',
 	'NO_IMAGES_LONG'        => 'Non ci sono immagini in quest’album.',
@@ -264,7 +263,7 @@ $lang = array_merge($lang, [
 	'SEARCH_USER_IMAGES_OF'             => 'Immagini di %s',
 	'SELECT_ALBUM'                      => 'Seleziona un album',
 	'SHOW_PERSONAL_ALBUM_OF'            => 'Mostra l’album personale di %s',
-	'SLIDE_SHOW'                        => 'Slideshow',
+	'SLIDE_SHOW'                        => 'Presentazione',
 	'SORT_ASCENDING'                    => 'Ascendente',
 	'SORT_DEFAULT'                      => 'Predefinito',
 	'SORT_DESCENDING'                   => 'Discendente',

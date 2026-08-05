@@ -73,11 +73,11 @@ $lang = array_merge($lang, [
 	'ACP_GALLERY_OVERVIEW_EXPLAIN'      => 'Qui trovi alcune statistiche sulla tua galleria.',
 
 	// File dirs states
-	'ACP_FILES_DIR_STATE'  => '<strong>./files/</strong> state',
-	'ACP_CORE_DIR_STATE'   => '<strong>./files/phpbbgallery/core/</strong> state',
-	'ACP_SOURCE_DIR_STATE' => '<strong>./files/phpbbgallery/core/source/</strong> state',
-	'ACP_MEDIUM_DIR_STATE' => '<strong>./files/phpbbgallery/core/medium/</strong> state',
-	'ACP_MINI_DIR_STATE'   => '<strong>./files/phpbbgallery/core/mini/</strong> state',
+	'ACP_FILES_DIR_STATE'  => 'Stato di <strong>./files/</strong>',
+	'ACP_CORE_DIR_STATE'   => 'Stato di <strong>./files/phpbbgallery/core/</strong>',
+	'ACP_SOURCE_DIR_STATE' => 'Stato di <strong>./files/phpbbgallery/core/source/</strong>',
+	'ACP_MEDIUM_DIR_STATE' => 'Stato di <strong>./files/phpbbgallery/core/medium/</strong>',
+	'ACP_MINI_DIR_STATE'   => 'Stato di <strong>./files/phpbbgallery/core/mini/</strong>',
 
 	'ADD_ALBUM_ON_TOP'                  => 'Aggiungi album in cima',
 	'ADD_PERMISSIONS'                   => 'Aggiungi Permessi',
@@ -106,7 +106,7 @@ $lang = array_merge($lang, [
 	'ALBUM_NAME_EMPTY'                  => 'Devi aggiungere un nome per questo album.',
 	'ALBUM_PARENT'                      => 'Album padre',
 	'ALBUM_PARENT_INVALID'              => 'L’album padre selezionato non è valido. Potrebbe essere essere un figlio dell’album, oppure non esiste.',
-	'ALBUM_PASSWORD'                    => 'Album password',
+	'ALBUM_PASSWORD'                    => 'Password dell’album',
 	'ALBUM_PASSWORD_EXPLAIN'            => 'Definisci una password per questo album, utilizza il sistema preferenze di autorizzazione.',
 	'ALBUM_PASSWORD_CONFIRM'            => 'Conferma password album',
 	'ALBUM_PASSWORD_CONFIRM_EXPLAIN'    => 'Deve essere aggiunto solo se è stata impostata una password.',
@@ -438,7 +438,7 @@ $lang = array_merge($lang, [
 
 	'VIEW_IMAGE_URL' => 'Visualizza URL immagini sulla pagina immagini',
 
-	'WATERMARK'                 => 'Watermark',
+	'WATERMARK'                 => 'Filigrana',
 	'WATERMARK_HEIGHT'          => 'Altezza minima per watermark',
 	'WATERMARK_HEIGHT_EXP'      => 'Per evitare che immagini piccole siano contenute in Watermark, è possibile immettere una minimo-larghezza/altezza.',
 	'WATERMARK_IMAGES'          => 'immagini Watermark',
