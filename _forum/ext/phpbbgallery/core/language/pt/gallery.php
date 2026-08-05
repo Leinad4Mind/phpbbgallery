@@ -172,6 +172,11 @@ $lang = array_merge($lang, [
 	'MOVE_TO_PERSONAL_EXPLAIN'     => 'Quando selecionas esta opção, a imagem é movida para o teu álbum pessoal. Se ainda não tiveres um, será criado automaticamente.',
 	'NEW_COMMENT'                  => 'Novo Comentário',
 	'NEW_IMAGES'                   => 'Novas Imagens',
+	'GALLERY_NEW_IMAGES_COUNT'     => [
+		0 => 'Sem imagens novas',
+		1 => '%d imagem nova',
+		2 => '%d imagens novas',
+	],
 	'NEWEST_PGALLERY'              => 'O álbum pessoal mais recente criado é o de %s.',
 	'NO_ALBUMS'                    => 'Não existem álbuns na galeria.',
 	'NO_COMMENTS'                  => 'Não existem comentários ainda.',

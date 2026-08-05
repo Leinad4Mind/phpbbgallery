@@ -50,6 +50,9 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Added
 
+- Added an optional, permission-filtered unread-image badge beside the Gallery
+  link, backed by the existing global and per-album read markers and capped at
+  99+ without an unbounded count query.
 - Added a fail-closed external image-processor contract and deterministic
   browser-safe derivative keys, allowing add-ons to retain non-native originals
   while serving, migrating and deleting their WebP medium/thumbnail variants.

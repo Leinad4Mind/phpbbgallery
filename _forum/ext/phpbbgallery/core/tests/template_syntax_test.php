@@ -121,6 +121,28 @@ final class template_syntax_test extends TestCase
 		$this->assertStringContainsString('@media (max-width: 767px)', $flatboots_statistic);
 	}
 
+	public function test_gallery_navigation_exposes_an_accessible_unread_image_badge_in_every_style(): void
+	{
+		$core_root = dirname(__DIR__);
+		$templates = [
+			'prosilver/template/event/navbar_header_user_profile_prepend.html',
+			'prosilver/template/event/overall_header_navigation_prepend.html',
+			'BBOOTS/template/event/overall_header_navigation_prepend.html',
+			'FLATBOOTS/template/event/overall_header_navigation_prepend.html',
+		];
+
+		foreach ($templates as $template)
+		{
+			$source = (string) file_get_contents($core_root . '/styles/' . $template);
+			$this->assertStringContainsString('S_GALLERY_NEW_IMAGES', $source, $template);
+			$this->assertStringContainsString('GALLERY_NEW_IMAGES_DISPLAY', $source, $template);
+			$this->assertStringContainsString('aria-label="{{ GALLERY_NEW_IMAGES_LABEL }}"', $source, $template);
+		}
+
+		$stylesheet = (string) file_get_contents($core_root . '/styles/all/theme/gallery.css');
+		$this->assertStringContainsString('.phpbbgallery-new-images-badge', $stylesheet);
+	}
+
 	public function test_all_rating_selectors_use_the_defined_do_not_rate_language_key(): void
 	{
 		$core_root = dirname(__DIR__);

@@ -537,3 +537,22 @@ input.autowidth-gallery {
 		max-width: none;
 	}
 }
+
+.phpbbgallery-new-images-badge
+{
+	align-items: center;
+	background: #d9534f;
+	border-radius: 999px;
+	box-sizing: border-box;
+	color: #fff;
+	display: inline-flex;
+	font-size: 0.75em;
+	font-weight: 700;
+	height: 1.5em;
+	justify-content: center;
+	line-height: 1;
+	margin-left: 0.35em;
+	min-width: 1.5em;
+	padding: 0 0.4em;
+	vertical-align: middle;
+}

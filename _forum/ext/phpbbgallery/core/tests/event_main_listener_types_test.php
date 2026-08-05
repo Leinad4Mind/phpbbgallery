@@ -126,6 +126,96 @@ final class event_main_listener_types_test extends TestCase
 		$listener->add_page_header_link(new \phpbb\event\data([]));
 	}
 
+	public function test_page_header_exposes_a_bounded_accessible_unread_badge(): void
+	{
+		$template = $this->createMock(\phpbb\template\template::class);
+		$template->expects($this->once())->method('assign_var')->with('GALLERY_TITLE', 'Gallery');
+		$template->expects($this->once())->method('assign_vars')->with([
+			'U_GALLERY' => '/gallery',
+			'S_GALLERY_NEW_IMAGES' => true,
+			'GALLERY_NEW_IMAGES_DISPLAY' => '99+',
+			'GALLERY_NEW_IMAGES_LABEL' => '100 new images',
+		]);
+		$language = $this->createMock(\phpbb\language\language::class);
+		$language->expects($this->once())
+			->method('lang')
+			->with('GALLERY_NEW_IMAGES_COUNT', 100)
+			->willReturn('100 new images');
+		$config = $this->createMock(\phpbbgallery\core\config::class);
+		$config->method('get')->willReturnMap([
+			['disp_gallery_icon', 1],
+			['disp_new_image_count', 1],
+		]);
+		$config->method('get_title')->with($language)->willReturn('Gallery');
+		$helper = $this->createMock(\phpbb\controller\helper::class);
+		$helper->expects($this->once())->method('route')->with('phpbbgallery_core_index')->willReturn('/gallery');
+		$counter = $this->createMock(\phpbbgallery\core\unread_counter::class);
+		$counter->expects($this->once())->method('count')->willReturn(100);
+		$reflection = new \ReflectionClass(main_listener::class);
+		$listener = $reflection->newInstanceWithoutConstructor();
+		$this->set_property($listener, 'template', $template);
+		$this->set_property($listener, 'language', $language);
+		$this->set_property($listener, 'gallery_config', $config);
+		$this->set_property($listener, 'helper', $helper);
+		$this->set_property($listener, 'unread_counter', $counter);
+
+		$listener->add_page_header_link(new \phpbb\event\data([]));
+	}
+
+	public function test_page_header_badge_can_be_disabled_without_counting(): void
+	{
+		$template = $this->createMock(\phpbb\template\template::class);
+		$template->expects($this->once())->method('assign_var')->with('GALLERY_TITLE', 'Gallery');
+		$template->expects($this->once())->method('assign_vars')->with(['U_GALLERY' => '/gallery']);
+		$language = $this->createStub(\phpbb\language\language::class);
+		$config = $this->createMock(\phpbbgallery\core\config::class);
+		$config->method('get')->willReturnMap([
+			['disp_gallery_icon', 1],
+			['disp_new_image_count', 0],
+		]);
+		$config->method('get_title')->with($language)->willReturn('Gallery');
+		$helper = $this->createStub(\phpbb\controller\helper::class);
+		$helper->method('route')->willReturn('/gallery');
+		$counter = $this->createMock(\phpbbgallery\core\unread_counter::class);
+		$counter->expects($this->never())->method('count');
+		$reflection = new \ReflectionClass(main_listener::class);
+		$listener = $reflection->newInstanceWithoutConstructor();
+		$this->set_property($listener, 'template', $template);
+		$this->set_property($listener, 'language', $language);
+		$this->set_property($listener, 'gallery_config', $config);
+		$this->set_property($listener, 'helper', $helper);
+		$this->set_property($listener, 'unread_counter', $counter);
+
+		$listener->add_page_header_link(new \phpbb\event\data([]));
+	}
+
+	public function test_page_header_omits_an_empty_unread_badge(): void
+	{
+		$template = $this->createMock(\phpbb\template\template::class);
+		$template->expects($this->once())->method('assign_var')->with('GALLERY_TITLE', 'Gallery');
+		$template->expects($this->once())->method('assign_vars')->with(['U_GALLERY' => '/gallery']);
+		$language = $this->createStub(\phpbb\language\language::class);
+		$config = $this->createMock(\phpbbgallery\core\config::class);
+		$config->method('get')->willReturnMap([
+			['disp_gallery_icon', 1],
+			['disp_new_image_count', 1],
+		]);
+		$config->method('get_title')->with($language)->willReturn('Gallery');
+		$helper = $this->createStub(\phpbb\controller\helper::class);
+		$helper->method('route')->willReturn('/gallery');
+		$counter = $this->createMock(\phpbbgallery\core\unread_counter::class);
+		$counter->expects($this->once())->method('count')->willReturn(0);
+		$reflection = new \ReflectionClass(main_listener::class);
+		$listener = $reflection->newInstanceWithoutConstructor();
+		$this->set_property($listener, 'template', $template);
+		$this->set_property($listener, 'language', $language);
+		$this->set_property($listener, 'gallery_config', $config);
+		$this->set_property($listener, 'helper', $helper);
+		$this->set_property($listener, 'unread_counter', $counter);
+
+		$listener->add_page_header_link(new \phpbb\event\data([]));
+	}
+
 	public function test_forum_index_images_are_disabled_without_search_queries(): void
 	{
 		$gallery_search = $this->createMock(\phpbbgallery\core\search::class);
