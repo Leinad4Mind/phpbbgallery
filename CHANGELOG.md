@@ -40,9 +40,22 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
   the neutral fail-closed image marker and historical migration compatibility.
 - Moved the remaining contest-specific frontend presentation and translations
   out of Gallery Core and into the independent Contests add-on.
+- Routed uploads, image delivery, editing, deletion, approval hooks, EXIF,
+  Image Revisions, BBPoints historical rewards, Export and ACP maintenance
+  through the selected storage provider instead of assuming local source,
+  medium and thumbnail paths.
+- Made Export preserve the Gallery album/subalbum hierarchy and use stable
+  IMAGEID_AUTHORID_IMAGENAME.ext filenames while reading source objects
+  through the active provider.
 
 ### Added
 
+- Added an optional distributed local filesystem layout, including a confirmed,
+  resumable and collision-checked migration from existing flat storage.
+- Added a fail-closed pluggable storage-provider contract with verified private
+  workspaces, atomic publication/replacement, checksums, metadata and paginated
+  object enumeration as the foundation for independently packaged remote
+  storage providers.
 - Added recoverable image-deletion requests for ordinary authors, with a
   dedicated moderation queue, exact status restoration, permanent moderator
   deletion, fail-closed visibility across Core and Gallery add-ons, and
@@ -79,6 +92,9 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Security
 
+- Prevented configured remote storage from silently falling back to local
+  files, verified materialized and published objects by size and SHA-256 where
+  supported, and rejected malformed provider listings and stalled cursors.
 - Made every BBPoints Images identifier explicit at its SQL interpolation
   boundary, allowing the add-on release package to pass EPV without suppressions.
 - Isolated inherited BBPoints policies by album owner so nested-set intervals
