@@ -1,31 +1,28 @@
 {
 	"name": "forumhulp/notification_manager",
 	"type": "phpbb-extension",
-	"description": "Notification_manager for phpBB",
-	"homepage": "http://forumhulp.com",
-	"version": "3.2.0",
-	"keywords": ["phpbbSEO", "extension", "seo"],
-	"license": "@license Proprietary",
+	"description": "Notification manager for phpBB",
+	"homepage": "https://forumhulp.com",
+	"version": "3.3.0",
+	"keywords": ["phpbb", "extension", "notifications"],
+	"license": "proprietary",
 	"authors": [
 		{
-            "name": "John Peskens",
-            "homepage": "http://forumhulp.com/",
-            "role": "Developer"
+			"name": "John Peskens",
+			"homepage": "https://forumhulp.com/",
+			"role": "Developer"
 		}
 	],
 	"require": {
-		"php": ">=5.4.0",
-		"phpbb/phpbb": "3.2.*@dev"
+		"php": ">=8.1",
+		"phpbb/phpbb": ">=3.3.12,<4.0.0"
 	},
 	"extra": {
 		"display-name": "Notification manager for phpBB",
-		"soft-require": {
-			"phpbb/phpbb": ">=3.2.0"
-		},
 		"version-check": {
-            "host": "forumhulp.com",
-            "directory": "/ext",
-            "filename": "index.php?id=113"
+			"host": "forumhulp.com",
+			"directory": "/ext",
+			"filename": "index.php?id=113"
 		}
 	}
 }

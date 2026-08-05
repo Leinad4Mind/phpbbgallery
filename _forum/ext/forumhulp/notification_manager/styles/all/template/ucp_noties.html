@@ -1,92 +1,91 @@
-<!-- INCLUDE ucp_header.html -->
+{% include 'ucp_header.html' %}
 
-<form id="ucp" method="post" action="{S_UCP_ACTION}">
+<form id="ucp" method="post" action="{{ S_UCP_ACTION }}"{{ S_FORM_ENCTYPE }}>
 
-<h2>{L_UCP_NOTIES}</h2>
+<h2>{{ lang('UCP_NOTIES') }}</h2>
 <div class="panel">
 	<div class="inner">
 
-		<p>{L_UCP_NOTIES_EXPLAIN}</p>
+		<p>{{ lang('UCP_NOTIES_EXPLAIN') }}</p>
 
-			<!-- IF .notification_list -->
-				<div class="action-bar bar-top">
-					<div class="pagination">
-						<!-- IF U_MARK_ALL --><a href="{U_MARK_ALL}" class="mark">{L_NOTIFICATIONS_MARK_ALL_READ}</a> &bull; <!-- ENDIF -->
-						{L_NOTIFICATIONS} [<strong>{TOTAL_COUNT}</strong>]
-						<!-- IF .pagination -->
-							<!-- INCLUDE pagination.html -->
-						<!-- ELSE -->
-							 &bull; {PAGE_NUMBER}
-						<!-- ENDIF -->
-					</div>
+		{% if loops.notification_list|length %}
+			<div class="action-bar bar-top">
+				<div class="pagination">
+					{% if U_MARK_ALL %}<a href="{{ U_MARK_ALL }}" class="mark">{{ lang('NOTIFICATIONS_MARK_ALL_READ') }}</a> &bull; {% endif %}
+					{{ lang('NOTIFICATIONS') }} [<strong>{{ TOTAL_COUNT }}</strong>]
+					{% if loops.pagination|length %}
+						{% include 'pagination.html' %}
+					{% else %}
+						&bull; {{ PAGE_NUMBER }}
+					{% endif %}
 				</div>
+			</div>
 
 			<div class="notification_list">
 				<ul class="topiclist two-columns">
 					<li class="header">
 						<dl>
-							<dt><div class="list-inner">{L_NOTIFICATIONS}</div></dt>
-							<dd class="mark"><a href="#" onclick="$('input[name=mark\\[\\]]:not(:disabled)').prop('checked', true); return false;">{L_MARK_READ}</a></dd>
-							<dd class="mark_unread"><a href="#" onclick="$('input[name=unmark\\[\\]]:not(:disabled)').prop('checked', true); return false;">{L_MARK_UNREAD}</a></dd>
-							<dd class="mark_delete"><a href="#" onclick="$('input[name=delete\\[\\]]:not(:disabled)').prop('checked', true); return false;">{L_MARK_DELETE}</a></dd>
+							<dt><div class="list-inner">{{ lang('NOTIFICATIONS') }}</div></dt>
+							<dd class="mark"><a href="#" data-notification-action data-notification-target="mark" data-notification-checked="true" data-notification-exclusive="true" data-submit-label="{{ lang('MARK_READ_SELECTED') }}">{{ lang('MARK_READ') }}</a></dd>
+							<dd class="mark_unread"><a href="#" data-notification-action data-notification-target="unmark" data-notification-checked="true" data-notification-exclusive="true" data-submit-label="{{ lang('MARK_UNREAD_SELECTED') }}">{{ lang('MARK_UNREAD') }}</a></dd>
+							<dd class="mark_delete"><a href="#" data-notification-action data-notification-target="delete" data-notification-checked="true" data-notification-exclusive="true" data-submit-label="{{ lang('MARK_DELETE_SELECTED') }}">{{ lang('MARK_DELETE') }}</a></dd>
 						</dl>
 					</li>
 				</ul>
 				<ul class="topiclist cplist two-columns">
-					<!-- BEGIN notification_list -->
-						<li class="row<!-- IF notification_list.UNREAD --> bg3<!-- ELSE --><!-- IF notification_list.S_ROW_COUNT is odd --> bg1<!-- ELSE --> bg2<!-- ENDIF --><!-- ENDIF --><!-- IF notification_list.STYLING --> {notification_list.STYLING}<!-- ENDIF -->">
+					{% for notification in loops.notification_list %}
+						<li class="row{% if notification.UNREAD %} bg3{% elseif loop.index0 is odd %} bg1{% else %} bg2{% endif %}{% if notification.STYLING %} {{ notification.STYLING }}{% endif %}">
 							<dl>
 								<dt>
 									<div class="list-inner">
-										<!-- IF notification_list.AVATAR -->{notification_list.AVATAR}<!-- ELSE --><img src="{T_THEME_PATH}/images/no_avatar.gif" alt="" /><!-- ENDIF -->
+										{% if notification.AVATAR %}{{ notification.AVATAR }}{% else %}<img src="{{ T_THEME_PATH }}/images/no_avatar.gif" alt="" />{% endif %}
 										<div class="notifications">
-											<!-- IF notification_list.URL --><a href="<!-- IF notification_list.UNREAD -->{notification_list.U_MARK_READ}<!-- ELSE -->{notification_list.URL}<!-- ENDIF -->"><!-- ENDIF -->
-											<p class="notifications_title">{notification_list.FORMATTED_TITLE}<!-- IF notification_list.REFERENCE --> {notification_list.REFERENCE}<!-- ENDIF --></p>
-											<!-- IF notification_list.URL --></a><!-- ENDIF -->
-											<!-- IF notification_list.FORUM --><p class="notifications_forum">{notification_list.FORUM}</p><!-- ENDIF -->
-											<!-- IF notification_list.REASON --><p class="notifications_reason">{notification_list.REASON}</p><!-- ENDIF -->
-											<p class="notifications_time">{notification_list.TIME}</p>
+											{% if notification.URL %}<a href="{{ notification.UNREAD ? notification.U_MARK_READ : notification.URL }}">{% endif %}
+											<p class="notifications_title">{{ notification.FORMATTED_TITLE }}{% if notification.REFERENCE %} {{ notification.REFERENCE }}{% endif %}</p>
+											{% if notification.URL %}</a>{% endif %}
+											{% if notification.FORUM %}<p class="notifications_forum">{{ notification.FORUM }}</p>{% endif %}
+											{% if notification.REASON %}<p class="notifications_reason">{{ notification.REASON }}</p>{% endif %}
+											<p class="notifications_time">{{ notification.TIME }}</p>
 										</div>
 									</div>
 								</dt>
 
-								<dd class="mark">&nbsp;<input type="checkbox" name="mark[]" value="{notification_list.NOTIFICATION_ID}"<!-- IF not notification_list.UNREAD --> disabled="disabled"<!-- ENDIF --> /> <dfn>{L_MARK_READ}</dfn>&nbsp;</dd>
-								<dd class="mark_unread">&nbsp;<input type="checkbox" name="unmark[]" value="{notification_list.NOTIFICATION_ID}"<!-- IF  notification_list.UNREAD --> disabled="disabled"<!-- ENDIF --> /> <dfn>{L_MARK_UNREAD}</dfn>&nbsp;</dd>
-								<dd class="mark_delete">&nbsp;<input type="checkbox" name="delete[]" value="{notification_list.NOTIFICATION_ID}"<!-- IF notification_list.UNREAD --> disabled="disabled"<!-- ENDIF --> /> <dfn>{L_MARK_DELETE}</dfn>&nbsp;</dd>
+								<dd class="mark">&nbsp;<input type="checkbox" name="mark[]" value="{{ notification.NOTIFICATION_ID }}"{% if not notification.UNREAD %} disabled{% endif %} /> <dfn>{{ lang('MARK_READ') }}</dfn>&nbsp;</dd>
+								<dd class="mark_unread">&nbsp;<input type="checkbox" name="unmark[]" value="{{ notification.NOTIFICATION_ID }}"{% if notification.UNREAD %} disabled{% endif %} /> <dfn>{{ lang('MARK_UNREAD') }}</dfn>&nbsp;</dd>
+								<dd class="mark_delete">&nbsp;<input type="checkbox" name="delete[]" value="{{ notification.NOTIFICATION_ID }}"{% if notification.UNREAD %} disabled{% endif %} /> <dfn>{{ lang('MARK_DELETE') }}</dfn>&nbsp;</dd>
 							</dl>
 						</li>
-					<!-- END notification_list -->
+					{% endfor %}
 				</ul>
 			</div>
 
 			<div class="action-bar bar-bottom">
 				<div class="pagination">
-					{L_NOTIFICATIONS} [<strong>{TOTAL_COUNT}</strong>]
-					<!-- IF .pagination -->
-						<!-- INCLUDE pagination.html -->
-					<!-- ELSE -->
-						  &bull; {PAGE_NUMBER}
-					<!-- ENDIF -->
+					{{ lang('NOTIFICATIONS') }} [<strong>{{ TOTAL_COUNT }}</strong>]
+					{% if loops.pagination|length %}
+						{% include 'pagination.html' %}
+					{% else %}
+						&bull; {{ PAGE_NUMBER }}
+					{% endif %}
 				</div>
 			</div>
-
-			<!-- ELSE -->
-				<p><strong>{L_NO_NOTIFICATIONS}</strong></p>
-			<!-- ENDIF -->
+		{% else %}
+			<p><strong>{{ lang('NO_NOTIFICATIONS') }}</strong></p>
+		{% endif %}
 
 	</div>
 </div>
 
-<!-- IF .notification_types or .notification_list -->
-<fieldset class="display-actions">
-	<input type="hidden" name="form_time" value="{FORM_TIME}" />
-	{S_HIDDEN_FIELDS}
-	<input type="submit" name="submit" value="{L_SUBMIT}" class="button1" />
-	<div><a href="#" onclick="$('#ucp input:checkbox').prop('checked', true); return false;">{L_MARK_ALL}</a> &bull; <a href="#" onclick="$('#ucp input:checkbox').prop('checked', false); return false;">{L_UNMARK_ALL}</a></div>
-	{S_FORM_TOKEN}
-</fieldset>
-<!-- ENDIF -->
+{% if loops.notification_list|length %}
+	<fieldset class="display-actions">
+		<input type="hidden" name="form_time" value="{{ FORM_TIME }}" />
+		{{ S_HIDDEN_FIELDS }}
+		<input type="submit" name="submit" value="{{ lang('UCP_NOTIES_SUBMIT') }}" class="button1" />
+		{{ S_FORM_TOKEN }}
+	</fieldset>
+{% endif %}
 
 </form>
 
-<!-- INCLUDE ucp_footer.html -->
+{% INCLUDEJS '@forumhulp_notification_manager/js/noties.js' %}
+{% include 'ucp_footer.html' %}
