@@ -265,6 +265,15 @@ jobs:
           --bootstrap ./tests/bootstrap.php
           phpBB/ext/phpbbgallery/remotestorage/tests/functional/remotestorage_workflow.php
 
+      - name: Run Gallery Export workflow test
+        shell: bash
+        working-directory: .functional/phpBB3
+        run: >-
+          phpBB/vendor/bin/phpunit
+          --configuration .github/phpunit-sqlite3-github.xml
+          --bootstrap ./tests/bootstrap.php
+          phpBB/ext/phpbbgallery/export/tests/functional/export_workflow.php
+
       - name: Run Gallery addon reconciliation workflow test
         shell: bash
         working-directory: .functional/phpBB3
