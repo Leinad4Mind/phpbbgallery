@@ -1,29 +1,27 @@
-Search Results
-===========
+# Search Results
 
-Search Results logs the searchwords your visitors searched for. It will totalize words and show you first and last time your visitor searched for the words. A cron job will maximize the words in the archive.
+Search Results logs and aggregates the words visitors search for. The ACP module shows the hit count and the first and most recent search time for every recorded word.
 
-[![Build Status](https://travis-ci.org/ForumHulp/searchresults.svg?branch=master)](https://travis-ci.org/ForumHulp/searchresults)
+The retention limit is configured under **ACP > General > Board configuration > Board features**. A value of `0` disables pruning; any positive value keeps the most frequently and recently searched words up to that limit.
 
 ## Requirements
-* phpBB 3.1-dev or higher
-* PHP 5.3 or higher
+
+- phpBB 3.3.12 or newer in the 3.x series
+- PHP 8.1 or newer
+- The `forumhulp/helper` extension installed and enabled
 
 ## Installation
-You can install this on the latest copy of the develop branch ([phpBB 3.1-dev](https://github.com/phpbb/phpbb3)) by doing the following:
 
-1. Copy the entire contents of this repo to to `FORUM_DIRECTORY/ext/forumhulp/searchresults/`
-2. Navigate in the ACP to `Customise -> Extension Management -> Extensions`.
-3. Click Search Results => `Enable`.
+1. Copy this directory to `ext/forumhulp/searchresults/`.
+2. In the ACP, open **Customise > Extension Management > Extensions**.
+3. Enable **Search Results**.
 
 ## Uninstallation
-Navigate in the ACP to `Customise -> Extension Management -> Extensions` and click Search Results => `Disable`.
 
-To permanently uninstall, click `Delete Data` and then you can safely delete the `/ext/forumhulp/searchresults/` folder.
-
-We feel sorry as our answers on phpbb sites are removed, so use github or our forum for answers.
+Disable the extension under **Customise > Extension Management > Extensions**. To remove its database data permanently, choose **Delete data** before deleting the extension directory.
 
 ## License
-[GNU General Public License v2](http://opensource.org/licenses/GPL-2.0)
 
-© 2014 - John Peskens (ForumHulp.com)
+[GNU General Public License v2](https://opensource.org/licenses/GPL-2.0)
+
+Copyright 2014 John Peskens (ForumHulp.com)

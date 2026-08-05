@@ -1,8 +1,54 @@
-/* CSS Document */
+h1 {
+	position: relative;
+}
 
-h1 {position: relative;}
-#circle {float: right; font-size: 30px;}
+#circle {
+	float: right;
+	font-size: 30px;
+}
 
-.fa-arrow-up, .fa-arrow-down {float:right; color:#fff; padding: 0 2px;}
+.fa-arrow-up,
+.fa-arrow-down {
+	float: right;
+	padding: 0 2px;
+	color: #fff;
+}
 
-#act-arrow {color:#CECECE;}
+#act-arrow {
+	color: #cecece;
+}
+
+.searchresults-center {
+	text-align: center;
+}
+
+.searchresults-description {
+	width: 100%;
+}
+
+.searchresults-description-split {
+	width: 48%;
+}
+
+.searchresults-description-note {
+	float: right;
+	width: 48%;
+}
+
+.searchresults-details-heading {
+	color: #1e5c18;
+	background-color: #d7fdd3;
+}
+
+.searchresults-notice-heading {
+	color: #103f53;
+	background-color: #e0f5fe;
+}
+
+.searchresults-version-warning {
+	color: #c00;
+}
+
+.searchresults-requirement-right {
+	float: right;
+}

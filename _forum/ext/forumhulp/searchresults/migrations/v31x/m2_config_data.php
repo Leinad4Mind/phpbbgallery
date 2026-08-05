@@ -35,7 +35,7 @@ class m2_config_data extends \phpbb\db\migration\migration
 	public function update_data()
 	{
 		return array(
-			array('config.add', array('prune_searchresults', 30)),
+			array('config.add', array('prune_searchresults', 50)),
 		);
 	}
 }

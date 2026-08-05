@@ -1,11 +1,10 @@
 <?php
+
 /**
-*
-* @package Search Results
-* @copyright (c) 2014 ForumHulp.com
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ * @package Search Results for phpBB.
+ * @copyright (c) 2014 ForumHulp.com
+ * @license https://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ */
 
 if (!defined('IN_PHPBB'))
 {
@@ -14,19 +13,17 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
-$lang = array_merge($lang, array(
-	'ACP_SEARCHRESULTS'	=> 'Search results',
-
-	'ACP_SR_MANAGE'			=> 'Search results',
-	'ACP_SR_MANAGE_EXPLAIN'	=> 'Display a list of searchwords your visitors searched for.<br />You can sort on searchword, hits and first and last visit date. A job will delete records where last visit is older then x days, adjustable in Board features.',
-
-	'SEARCHWORD'	=> 'Searchword(s)',
-	'REF_HITS'		=> 'Visits',
-	'REF_FIRST'		=> 'First visit',
-	'REF_LAST'		=> 'Latest visit',
-	'FOUND'			=> 'Found',
-	'NOTFOUND'		=> 'Not found',
-));
+$lang = array_merge($lang, [
+	'ACP_SEARCHRESULTS'     => 'Search results',
+	'ACP_SR_MANAGE'         => 'Search results',
+	'ACP_SR_MANAGE_EXPLAIN' => 'Displays the search words used by visitors.<br />You can sort by search word, hits, and first or latest visit. The limit configured under Board features retains the most frequently and recently searched words.',
+	'SEARCHWORD'            => 'Search word(s)',
+	'REF_HITS'              => 'Hits',
+	'REF_FIRST'             => 'First visit',
+	'REF_LAST'              => 'Latest visit',
+	'FOUND'                 => 'Found',
+	'NOTFOUND'              => 'Not found',
+]);

@@ -1,162 +1,222 @@
 <?php
 /**
-*
-* @package Search Results
-* @copyright (c) 2014 John Peskens (http://ForumHulp.com)
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ *
+ * Search Results extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2014 John Peskens (http://ForumHulp.com)
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ */
 
 namespace forumhulp\searchresults\event;
 
+use phpbb\config\config;
+use phpbb\db\driver\driver_interface;
+use phpbb\event\data;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-/**
-* Event listener
-*/
 class listener implements EventSubscriberInterface
 {
-	protected $config;
-	protected $helper;
-	protected $user;
-	protected $request;
-	protected $db;
-	protected $log;
-	protected $phpbb_root_path;
-	protected $php_ext;
-	protected $searchresults_table;
+	private const PRUNE_BATCH_SIZE = 500;
 
-	/**
-	* Constructor
-	*/
-	public function __construct(\phpbb\config\config $config, \phpbb\controller\helper $helper, \phpbb\user $user, \phpbb\request\request $request, \phpbb\db\driver\driver_interface $db, \phpbb\log\log $log, $phpbb_root_path, $php_ext, $searchresults_table)
+	private config $config;
+	private driver_interface $db;
+	private string $searchresults_table;
+
+	public function __construct(config $config, driver_interface $db, string $searchresults_table)
 	{
 		$this->config = $config;
-		$this->helper = $helper;
-		$this->user = $user;
-		$this->request = $request;
 		$this->db = $db;
-		$this->log = $log;
-		$this->phpbb_root_path = $phpbb_root_path;
-		$this->php_ext = $php_ext;
 		$this->searchresults_table = $searchresults_table;
 	}
 
-	static public function getSubscribedEvents()
+	public static function getSubscribedEvents(): array
 	{
-		return array(
-			'core.search_results_modify_search_title'	=> 'list_keywords',
-			'core.acp_board_config_edit_add'			=> 'load_config_on_setup',
-		);
+		return [
+			'core.search_results_modify_search_title' => 'list_keywords',
+			'core.acp_board_config_edit_add' => 'load_config_on_setup',
+		];
 	}
 
-	public function list_keywords($event)
+	public function list_keywords(data $event): void
 	{
-		$keywords = $this->request->variable('keywords', '');
-		$match		= array('#\sand\s#iu', '#\sor\s#iu', '#\snot\s#iu', '#(^|\s)\+#', '#(^|\s)-#', '#(^|\s)\|#');
-		$replace	= array(' +', ' |', ' -', ' +', ' -', ' |');
-		$keywords = preg_replace($match, $replace, $keywords);
+		$this->prune_searchresults();
 
-		// Filter out as above
-		$split_keywords = preg_replace("#[\n\r\t]+#", ' ', trim(htmlspecialchars_decode(strtolower($keywords))));
+		$minimum_chars = max(1, (int) $this->config['fulltext_native_min_chars']);
+		$maximum_chars = max($minimum_chars, (int) $this->config['fulltext_native_max_chars']);
+		$keywords = $this->normalise_keywords((string) $event['keywords'], $minimum_chars, $maximum_chars);
+		$now = time();
 
-		// Split words
-		$split_keywords = preg_replace('#([^\p{L}\p{N}\'*"()])#u', '$1$1', str_replace('\'\'', '\' \'', trim($split_keywords)));
-		$matches = array();
-		preg_match_all('#(?:[^\p{L}\p{N}*"()]|^)([+\-|]?(?:[\p{L}\p{N}*"()]+\'?)*[\p{L}\p{N}*"()])(?:[^\p{L}\p{N}*"()]|$)#u', $split_keywords, $matches);
-		$this->split_words = $matches[1];
-
-		foreach ($this->split_words as $word)
+		foreach ($keywords as $keyword)
 		{
-			if (strlen($word) <= $this->config['fulltext_native_min_chars'])
+			$sql = 'SELECT word_id
+				FROM ' . SEARCH_WORDLIST_TABLE . "
+				WHERE word_text = '" . $this->db->sql_escape($keyword) . "'";
+			$result = $this->db->sql_query_limit($sql, 1);
+			$in_post = (bool) $this->db->sql_fetchfield('word_id');
+			$this->db->sql_freeresult($result);
+
+			$this->record_keyword($keyword, $in_post, $now);
+		}
+
+		$this->prune_searchresults();
+	}
+
+	public function load_config_on_setup(data $event): void
+	{
+		if ($event['mode'] !== 'features')
+		{
+			return;
+		}
+
+		$display_vars = $event['display_vars'];
+		$additional_config = [
+			'prune_searchresults' => [
+				'lang' => 'PRUNE_SEARCHRESULTS',
+				'validate' => 'int',
+				'type' => 'number:0:999999',
+				'explain' => true,
+			],
+		];
+		$display_vars['vars'] = phpbb_insert_config_array(
+			$display_vars['vars'],
+			$additional_config,
+			['after' => 'allow_quick_reply']
+		);
+		$event['display_vars'] = [
+			'title' => $display_vars['title'],
+			'vars' => $display_vars['vars'],
+		];
+	}
+
+	private function normalise_keywords(string $keywords, int $minimum_chars, int $maximum_chars): array
+	{
+		$keywords = utf8_strtolower(htmlspecialchars_decode($keywords, ENT_QUOTES));
+		preg_match_all("~[\\p{L}\\p{N}]+(?:['’][\\p{L}\\p{N}]+)*~u", $keywords, $matches);
+
+		$normalised = [];
+		$boolean_operators = [
+			'and' => true,
+			'or' => true,
+			'not' => true,
+		];
+
+		foreach ($matches[0] as $keyword)
+		{
+			$length = utf8_strlen($keyword);
+			if ($length < $minimum_chars || $length > $maximum_chars || isset($boolean_operators[$keyword]))
 			{
 				continue;
 			}
 
-			$sql = 'SELECT word_id FROM ' . SEARCH_WORDLIST_TABLE . " WHERE word_text = '" . $this->db->sql_escape($word) . "'";
-			$resulttemp = $this->db->sql_query($sql);
-			$found = ($rowtemp = $this->db->sql_fetchrow($resulttemp));
+			$normalised[$keyword] = $keyword;
+		}
 
-			$sql = 'SELECT search_keywords, last_time FROM ' . $this->searchresults_table . " WHERE search_keywords = '" . $this->db->sql_escape($word) . "'";
-			$result = $this->db->sql_query($sql);
-			$used = ($row = $this->db->sql_fetchrow($result));
-			$this->db->sql_freeresult($result);
+		return array_values($normalised);
+	}
 
-			$fields = array('last_time' => time(), 'in_post' => ($found) ? 1 : 0);
-			if (!$used)
+	private function record_keyword(string $keyword, bool $in_post, int $now): void
+	{
+		$sql = 'SELECT search_key, hits, first_time, last_time, in_post
+			FROM ' . $this->searchresults_table . "
+			WHERE search_keywords = '" . $this->db->sql_escape($keyword) . "'
+			ORDER BY search_key ASC";
+		$result = $this->db->sql_query($sql);
+		$rows = [];
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$rows[] = $row;
+		}
+		$this->db->sql_freeresult($result);
+
+		if (!$rows)
+		{
+			$sql = 'INSERT INTO ' . $this->searchresults_table . ' ' . $this->db->sql_build_array('INSERT', [
+				'search_keywords' => $keyword,
+				'in_post' => $in_post ? 1 : 0,
+				'hits' => 1,
+				'first_time' => $now,
+				'last_time' => $now,
+			]);
+			$this->db->sql_query($sql);
+			return;
+		}
+
+		$canonical = array_shift($rows);
+		if (!$rows)
+		{
+			$sql_set = 'hits = hits + 1, last_time = ' . $now;
+			if ($in_post && !(bool) $canonical['in_post'])
 			{
-				$fields += array(
-					'search_keywords' => $word,
-					'hits' => 1,
-					'first_time' => time(),
-				);
-				$sql = 'INSERT INTO ' . $this->searchresults_table . ' ' . $this->db->sql_build_array('INSERT', $fields);
-			} else
-			{
-				$sql = 'UPDATE ' . $this->searchresults_table . ' SET hits = hits + 1, ' . $this->db->sql_build_array('UPDATE', $fields) . '
-						WHERE search_keywords = "' . $word . '"';
+				$sql_set .= ', in_post = 1';
 			}
+
+			$sql = 'UPDATE ' . $this->searchresults_table . '
+				SET ' . $sql_set . '
+				WHERE search_key = ' . (int) $canonical['search_key'];
+			$this->db->sql_query($sql);
+			return;
+		}
+
+		$hits = (int) $canonical['hits'] + 1;
+		$first_time = (int) $canonical['first_time'];
+		$stored_in_post = (bool) $canonical['in_post'];
+		$duplicate_ids = [];
+
+		foreach ($rows as $duplicate)
+		{
+			$hits += (int) $duplicate['hits'];
+			$first_time = min($first_time, (int) $duplicate['first_time']);
+			$stored_in_post = $stored_in_post || (bool) $duplicate['in_post'];
+			$duplicate_ids[] = (int) $duplicate['search_key'];
+		}
+
+		$sql = 'UPDATE ' . $this->searchresults_table . '
+			SET ' . $this->db->sql_build_array('UPDATE', [
+				'hits' => $hits,
+				'first_time' => $first_time,
+				'last_time' => $now,
+				'in_post' => ($in_post || $stored_in_post) ? 1 : 0,
+			]) . '
+			WHERE search_key = ' . (int) $canonical['search_key'];
+		$this->db->sql_query($sql);
+
+		if ($duplicate_ids)
+		{
+			$sql = 'DELETE FROM ' . $this->searchresults_table . '
+				WHERE ' . $this->db->sql_in_set('search_key', $duplicate_ids);
 			$this->db->sql_query($sql);
 		}
 	}
 
-	public function search_result($event)
+	private function prune_searchresults(): void
 	{
-		$sql = 'SELECT search_time, search_keywords, search_authors FROM ' . SEARCH_RESULTS_TABLE;
-		$result = $this->db->sql_query($sql);
-		while ($row = $this->db->sql_fetchrow($result))
+		$maximum_records = (int) $this->config['prune_searchresults'];
+		if ($maximum_records <= 0)
 		{
-			$sql = 'SELECT search_keywords, last_time FROM ' . $this->searchresults_table . " WHERE search_keywords = '" . $this->db->sql_escape($row['search_keywords']) . "'";
-			$resulttemp = $this->db->sql_query($sql);
-			$found = ($rowtemp = $this->db->sql_fetchrow($resulttemp));
-			$this->db->sql_freeresult($resulttemp);
-
-			$fields = array('last_time' => $row['search_time']);
-			if (!$found)
-			{
-				$fields += array(
-					'search_keywords' => $row['search_keywords'],
-					'hits' => 1,
-					'first_time' => $row['search_time'],
-				);
-				$sql = 'INSERT INTO ' . $this->searchresults_table . ' ' . $this->db->sql_build_array('INSERT', $fields);
-			} else if ($row['search_time'] != $rowtemp['last_time'])
-			{
-				$sql = 'UPDATE ' . $this->searchresults_table . ' SET hits = hits + 1, ' . $this->db->sql_build_array('UPDATE', $fields) . '
-						WHERE search_keywords = \'' . $this->db->sql_escape($row['search_keywords']) . '\'';
-			}
-			$this->db->sql_query($sql);
-
+			return;
 		}
-		if ($this->config['prune_searchresults'])
-		{
-			$sql = 'SELECT hits, last_time FROM ' . $this->searchresults_table . ' ORDER BY hits DESC LIMIT '. $this->config['prune_searchresults'] .', 1';
-			$result = $this->db->sql_query($sql);
 
-			$prune = $this->db->sql_fetchrow($result);
-			if ($prune)
+		do
+		{
+			$sql = 'SELECT search_key
+				FROM ' . $this->searchresults_table . '
+				ORDER BY hits DESC, last_time DESC, search_key ASC';
+			$result = $this->db->sql_query_limit($sql, self::PRUNE_BATCH_SIZE, $maximum_records);
+			$delete_ids = [];
+			while (($search_key = $this->db->sql_fetchfield('search_key')) !== false)
 			{
-				$sql = 'DELETE FROM ' . $this->searchresults_table . ' WHERE hits < ' . $prune['hits'] . ' AND last_time < ' . $prune['last_time'];
+				$delete_ids[] = (int) $search_key;
+			}
+			$this->db->sql_freeresult($result);
+
+			if ($delete_ids)
+			{
+				$sql = 'DELETE FROM ' . $this->searchresults_table . '
+					WHERE ' . $this->db->sql_in_set('search_key', $delete_ids);
 				$this->db->sql_query($sql);
 			}
 		}
-	}
-
-	public function load_config_on_setup($event)
-	{
-		if ($event['mode'] == 'features')
-		{
-			$display_vars = $event['display_vars'];
-
-			$add_config_var['prune_searchresults'] =
-				array(
-					'lang' 		=> 'PRUNE_SEARCHRESULTS',
-					'validate'	=> 'int',
-					'type'		=> 'number:0:99',
-					'explain'	=> true
-				);
-			$display_vars['vars'] = phpbb_insert_config_array($display_vars['vars'], $add_config_var, array('after' =>'allow_quick_reply'));
-			$event['display_vars'] = array('title' => $display_vars['title'], 'vars' => $display_vars['vars']);
-		}
+		while (count($delete_ids) === self::PRUNE_BATCH_SIZE);
 	}
 }

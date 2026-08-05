@@ -1,60 +1,28 @@
 <?php
 /**
-*
-* @package Search Results
-* @copyright (c) 2014 ForumHulp.com
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ *
+ * Search Results extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2014 ForumHulp.com
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ */
 
 namespace forumhulp\searchresults;
 
-class ext extends \phpbb\extension\base
+use phpbb\extension\base;
+
+class ext extends base
 {
-	public function is_enableable()
+	public function is_enableable(): bool
 	{
-		if (!class_exists('forumhulp\helper\helper'))
+		if (!class_exists('forumhulp\\helper\\helper'))
 		{
 			$this->container->get('user')->add_lang_ext('forumhulp/searchresults', 'info_acp_searchresults');
 			trigger_error($this->container->get('user')->lang['FH_HELPER_NOTICE'], E_USER_WARNING);
+			return false;
 		}
 
-		if (!$this->container->get('ext.manager')->is_enabled('forumhulp/helper'))
-		{
-			$this->container->get('ext.manager')->enable('forumhulp/helper');
-		}
-
-		return class_exists('forumhulp\helper\helper');
-	}
-
-	function enable_step($old_state)
-	{
-		switch ($old_state)
-		{
-			case '': // Empty means nothing has run yet
-				$this->container->get('user')->add_lang_ext('forumhulp/searchresults', 'info_acp_searchresults');
-				$this->container->get('template')->assign_var('L_EXTENSION_ENABLE_SUCCESS', $this->container->get('user')->lang['EXTENSION_ENABLE_SUCCESS'] .
-					(isset($this->container->get('user')->lang['SEARCHRESULTS_NOTICE']) ?
-							sprintf($this->container->get('user')->lang['SEARCHRESULTS_NOTICE'],
-									$this->container->get('user')->lang['ACP_CAT_MAINTENANCE'],
-									$this->container->get('user')->lang['ACP_FORUM_LOGS'],
-									$this->container->get('user')->lang['ACP_SEARCHRESULTS'],
-
-									$this->container->get('user')->lang['ACP_CAT_GENERAL'],
-									$this->container->get('user')->lang['ACP_BOARD_CONFIGURATION'],
-									$this->container->get('user')->lang['ACP_BOARD_FEATURES']) : ''));
-
-				// Run parent enable step method
-				return parent::enable_step($old_state);
-
-			break;
-
-			default:
-
-				// Run parent enable step method
-				return parent::enable_step($old_state);
-
-			break;
-		}
+		return $this->container->get('ext.manager')->is_enabled('forumhulp/helper');
 	}
 }

@@ -1,118 +1,111 @@
-<!-- IF S_ALLOW_CDN -->
-<!-- INCLUDECSS //maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css -->
-<!-- ELSE -->
-<!-- INCLUDECSS {ROOT_PATH}ext/forumhulp/helper/css/font-awesome.min.css -->
-<!-- ENDIF -->
-<!-- INCLUDECSS css/searchresults.css -->
-<!-- INCLUDECSS {ROOT_PATH}ext/forumhulp/helper/css/jquery.simpledialog.css -->
-<!-- INCLUDECSS {ROOT_PATH}ext/forumhulp/helper/css/ext_details.css -->
-<!-- INCLUDE overall_header.html -->
+{% if S_ALLOW_CDN %}
+	{% INCLUDECSS '//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css' %}
+{% else %}
+	{% INCLUDECSS ROOT_PATH ~ 'ext/forumhulp/helper/css/font-awesome.min.css' %}
+{% endif %}
+{% INCLUDECSS 'css/searchresults.css' %}
+{% INCLUDECSS ROOT_PATH ~ 'ext/forumhulp/helper/css/jquery.simpledialog.css' %}
+{% INCLUDECSS ROOT_PATH ~ 'ext/forumhulp/helper/css/ext_details.css' %}
+{% include 'overall_header.html' %}
 
-<a name="maincontent"></a>
+<a id="maincontent"></a>
 
-<h1>{L_ACP_SR_MANAGE} <a href="{U_ACTION}&amp;action=details" class="simpledialog"><i class="fa fa-info-circle"></i></a></h1>
+<h1>{{ lang('ACP_SR_MANAGE') }} <a href="{{ U_ACTION }}&amp;action=details" class="simpledialog"><i class="fa fa-info-circle"></i></a></h1>
 
-<p>{L_ACP_SR_MANAGE_EXPLAIN}</p>
+<p>{{ lang('ACP_SR_MANAGE_EXPLAIN') }}</p>
 
-<form id="acp_referrers" method="post" action="{U_ACTION}">
+<form id="acp_referrers" method="post" action="{{ U_ACTION }}">
 
-<!-- IF .pagination or TOTAL_POSTS -->
-    <div class="pagination">
-        <!-- IF .pagination -->
-            <!-- INCLUDE pagination.html -->
-        <!-- ELSE -->
-            &bull; {PAGE_NUMBER}
-        <!-- ENDIF -->
-    </div>
-<!-- ENDIF -->
+	{% if loops.pagination|length %}
+		<div class="pagination">
+			{% include 'pagination.html' %}
+		</div>
+	{% endif %}
 
-<fieldset class="tabulated">
+	<fieldset class="tabulated">
+		<table class="table1 zebra-table fixed-width-table">
+			<thead>
+				<tr>
+					<th style="width: 50%;">
+						{{ lang('SEARCHWORD') }}
+						<a href="{{ U_ACTION }}&amp;sk=h&amp;sd=a" title="{{ lang('ASCENDING') }}"><i class="fa fa-arrow-up"{% if S_SORT_KEY == 'h' and S_SORT_DIR == 'a' %} id="act-arrow"{% endif %}></i></a>
+						<a href="{{ U_ACTION }}&amp;sk=h&amp;sd=d" title="{{ lang('DESCENDING') }}"><i class="fa fa-arrow-down"{% if S_SORT_KEY == 'h' and S_SORT_DIR == 'd' %} id="act-arrow"{% endif %}></i></a>
+					</th>
+					<th>
+						{{ lang('REF_HITS') }}
+						<a href="{{ U_ACTION }}&amp;sk=v&amp;sd=a" title="{{ lang('ASCENDING') }}"><i class="fa fa-arrow-up"{% if S_SORT_KEY == 'v' and S_SORT_DIR == 'a' %} id="act-arrow"{% endif %}></i></a>
+						<a href="{{ U_ACTION }}&amp;sk=v&amp;sd=d" title="{{ lang('DESCENDING') }}"><i class="fa fa-arrow-down"{% if S_SORT_KEY == 'v' and S_SORT_DIR == 'd' %} id="act-arrow"{% endif %}></i></a>
+					</th>
+					<th>
+						{{ lang('REF_FIRST') }}
+						<a href="{{ U_ACTION }}&amp;sk=f&amp;sd=a" title="{{ lang('ASCENDING') }}"><i class="fa fa-arrow-up"{% if S_SORT_KEY == 'f' and S_SORT_DIR == 'a' %} id="act-arrow"{% endif %}></i></a>
+						<a href="{{ U_ACTION }}&amp;sk=f&amp;sd=d" title="{{ lang('DESCENDING') }}"><i class="fa fa-arrow-down"{% if S_SORT_KEY == 'f' and S_SORT_DIR == 'd' %} id="act-arrow"{% endif %}></i></a>
+					</th>
+					<th>
+						{{ lang('REF_LAST') }}
+						<a href="{{ U_ACTION }}&amp;sk=l&amp;sd=a" title="{{ lang('ASCENDING') }}"><i class="fa fa-arrow-up"{% if S_SORT_KEY == 'l' and S_SORT_DIR == 'a' %} id="act-arrow"{% endif %}></i></a>
+						<a href="{{ U_ACTION }}&amp;sk=l&amp;sd=d" title="{{ lang('DESCENDING') }}"><i class="fa fa-arrow-down"{% if S_SORT_KEY == 'l' and S_SORT_DIR == 'd' %} id="act-arrow"{% endif %}></i></a>
+					</th>
+					{% if S_REFDEL %}<th style="width: 10%;">{{ lang('MARK') }}</th>{% endif %}
+				</tr>
+			</thead>
+			<tbody>
+				{% if loops.not_found|length %}
+					<tr>
+						<td class="row3" colspan="{{ S_REFDEL ? 5 : 4 }}"><strong>{{ lang('NOTFOUND') }} {{ lang('SEARCHWORD') }}</strong></td>
+					</tr>
+					{% for result in loops.not_found %}
+						<tr class="ext_enabled row-highlight">
+							<td title="{{ result.SEARCHWORD }}"><a href="{{ result.U_SEARCH }}">{{ result.SEARCHWORD }}</a></td>
+							<td class="searchresults-center">{{ result.HITS }}</td>
+							<td class="searchresults-center">{{ result.FIRST }}</td>
+							<td class="searchresults-center">{{ result.LAST }}</td>
+							{% if S_REFDEL %}<td class="searchresults-center"><input type="checkbox" class="radio" name="mark[]" value="{{ result.ID }}" /></td>{% endif %}
+						</tr>
+					{% endfor %}
+				{% endif %}
 
-<table class="table1 zebra-table fixed-width-table">
-<thead>
-<tr>
-	<th style="width:50%;">{L_SEARCHWORD}<a href="{U_ACTION}&amp;sk=h&amp;sd=a" title="{L_DESCENDING}"><i class="fa fa-arrow-up"<!-- IF S_SORT_KEY == 'h' and S_SORT_DIR == 'a' --> id="act-arrow"<!-- ENDIF -->></i></a> 
-            <a href="{U_ACTION}&amp;sk=h&amp;sd=d" title="{L_ASCENDING}"><i class="fa fa-arrow-down"<!-- IF S_SORT_KEY == 'h' and S_SORT_DIR == 'd' --> id="act-arrow"<!-- ENDIF -->></i></a></th>
-	<th>{L_REF_HITS}<a href="{U_ACTION}&amp;sk=v&amp;sd=a" title="{L_DESCENDING}"><i class="fa fa-arrow-up"<!-- IF S_SORT_KEY == 'v' and S_SORT_DIR == 'a' --> id="act-arrow"<!-- ENDIF -->></i></a> 
-            <a href="{U_ACTION}&amp;sk=v&amp;sd=d" title="{L_ASCENDING}"><i class="fa fa-arrow-down"<!-- IF S_SORT_KEY == 'v' and S_SORT_DIR == 'd' --> id="act-arrow"<!-- ENDIF -->></i></a></th>
-	<th>{L_REF_FIRST}<a href="{U_ACTION}&amp;sk=f&amp;sd=a" title="{L_DESCENDING}"><i class="fa fa-arrow-up"<!-- IF S_SORT_KEY == 'f' and S_SORT_DIR == 'a' --> id="act-arrow"<!-- ENDIF -->></i></a> 
-            <a href="{U_ACTION}&amp;sk=f&amp;sd=d" title="{L_ASCENDING}"><i class="fa fa-arrow-down"<!-- IF S_SORT_KEY == 'f' and S_SORT_DIR == 'd' --> id="act-arrow"<!-- ENDIF -->></i></a></th>
-	<th>{L_REF_LAST}<a href="{U_ACTION}&amp;sk=l&amp;sd=a" title="{L_DESCENDING}"><i class="fa fa-arrow-up"<!-- IF S_SORT_KEY == 'l' and S_SORT_DIR == 'a' --> id="act-arrow"<!-- ENDIF -->></i></a> 
-            <a href="{U_ACTION}&amp;sk=l&amp;sd=d" title="{L_ASCENDING}"><i class="fa fa-arrow-down"<!-- IF S_SORT_KEY == 'l' and S_SORT_DIR == 'd' --> id="act-arrow"<!-- ENDIF -->></i></a></th>
-	<!-- IF S_REFDEL -->
-	<th style="width:10%;">{L_MARK}</th>
-	<!-- ENDIF -->
-</tr>
-</thead>
-<tbody>
-<!-- IF .not_found -->
-<tr>
-    <td class="row3" colspan="<!-- IF S_REFDEL -->5<!-- ELSE -->4<!-- ENDIF -->"><strong>{L_NOTFOUND} {L_SEARCHWORD}</strong></td>
-</tr>
+				{% if loops.found|length %}
+					<tr>
+						<td class="row3" colspan="{{ S_REFDEL ? 5 : 4 }}"><strong>{{ lang('FOUND') }} {{ lang('SEARCHWORD') }}</strong></td>
+					</tr>
+					{% for result in loops.found %}
+						<tr class="ext_enabled row-highlight">
+							<td title="{{ result.SEARCHWORD }}"><a href="{{ result.U_SEARCH }}">{{ result.SEARCHWORD }}</a></td>
+							<td class="searchresults-center">{{ result.HITS }}</td>
+							<td class="searchresults-center">{{ result.FIRST }}</td>
+							<td class="searchresults-center">{{ result.LAST }}</td>
+							{% if S_REFDEL %}<td class="searchresults-center"><input type="checkbox" class="radio" name="mark[]" value="{{ result.ID }}" /></td>{% endif %}
+						</tr>
+					{% endfor %}
+				{% endif %}
 
-<!-- BEGIN not_found -->
-<tr class="ext_enabled row-highlight">
-	<td title="{not_found.SEARCHWORD}"><a href="/search.php?keywords={not_found.SEARCHWORD}">{not_found.SEARCHWORD}</a></td>
-	<td style="text-align:center;">{not_found.HITS}</td>
-	<td style="text-align:center;">{not_found.FIRST}</td>
-	<td style="text-align:center;">{not_found.LAST}</td>
-	<!-- IF S_REFDEL -->
-	<td style="text-align: center;">
-		<input type="checkbox" class="radio" name="mark[]" value="{not_found.ID}" />
-	</td>
-	<!-- ENDIF -->
-</tr>
-<!-- END not_found -->
-<!-- ENDIF -->
+				{% if not loops.found|length and not loops.not_found|length %}
+					<tr class="row3"><td colspan="{{ S_REFDEL ? 5 : 4 }}">{{ lang('ACP_NO_ITEMS') }}</td></tr>
+				{% endif %}
+			</tbody>
+		</table>
 
-<!-- IF .found -->
-<tr>
-    <td class="row3" colspan="<!-- IF S_REFDEL -->5<!-- ELSE -->4<!-- ENDIF -->"><strong>{L_FOUND} {L_SEARCHWORD}</strong></td>
-</tr>
+		{% if loops.pagination|length %}
+			<div class="pagination">{% include 'pagination.html' %}</div>
+		{% endif %}
 
-<!-- BEGIN found -->
-<tr class="ext_enabled row-highlight">
-	<td title="{found.SEARCHWORD}"><a href="/search.php?keywords={found.SEARCHWORD}">{found.SEARCHWORD}</a></td>
-	<td style="text-align:center;">{found.HITS}</td>
-	<td style="text-align:center;">{found.FIRST}</td>
-	<td style="text-align:center;">{found.LAST}</td>
-	<!-- IF S_REFDEL -->
-	<td style="text-align: center;">
-		<input type="checkbox" class="radio" name="mark[]" value="{found.ID}" />
-	</td>
-	<!-- ENDIF -->
-</tr>
-<!-- END found -->
-<!-- ENDIF -->
-<!-- IF not .found and not .not_found -->
-<tr class="row3">
-	<td colspan="<!-- IF S_REFDEL -->5<!-- ELSE -->4<!-- ENDIF -->">{L_ACP_NO_ITEMS}</td>
-</tr>
-<!-- ENDIF -->
-</tbody>
-</table>
+		{% if (loops.found|length or loops.not_found|length) and S_REFDEL %}
+			<fieldset class="quick">
+				<input class="button2" type="submit" name="delall" value="{{ lang('DELETE_ALL') }}" />&nbsp;
+				<input class="button2" type="submit" name="delmarked" value="{{ lang('DELETE_MARKED') }}" /><br />
+				<p class="small">
+					<a href="#" data-mark-action="all">{{ lang('MARK_ALL') }}</a> &bull;
+					<a href="#" data-mark-action="none">{{ lang('UNMARK_ALL') }}</a>
+				</p>
+			</fieldset>
+		{% endif %}
+	</fieldset>
 
-<!-- IF .pagination or TOTAL_POSTS -->
-    <div class="pagination">
-        <!-- IF .pagination -->
-            <!-- INCLUDE pagination.html -->
-        <!-- ELSE -->
-            &bull; {PAGE_NUMBER}
-        <!-- ENDIF -->
-    </div>
-<!-- ENDIF -->
-
-<!-- IF (.found || .not_found) && S_REFDEL -->
-<fieldset class="quick">
-	<input class="button2" type="submit" name="delall" value="{L_DELETE_ALL}" />&nbsp;
-	<input class="button2" type="submit" name="delmarked" value="{L_DELETE_MARKED}" /><br />
-	<p class="small"><a href="#" onclick="marklist('acp_referrers', 'mark', true); return false;">{L_MARK_ALL}</a> &bull; <a href="#" onclick="marklist('acp_referrers', 'mark', false); return false;">{L_UNMARK_ALL}</a></p>
-</fieldset>
-<!-- ENDIF -->
-
-</fieldset>
+	{{ S_FORM_TOKEN }}
 </form>
-<!-- INCLUDEJS {ROOT_PATH}ext/forumhulp/helper/js/jquery.simpledialog.js -->
-<!-- INCLUDEJS js/searchresults.js -->
 
-<!-- INCLUDE overall_footer.html -->
+{% INCLUDEJS ROOT_PATH ~ 'ext/forumhulp/helper/js/jquery.simpledialog.js' %}
+{% INCLUDEJS 'js/searchresults.js' %}
+
+{% include 'overall_footer.html' %}

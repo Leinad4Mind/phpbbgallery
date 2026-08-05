@@ -6,13 +6,7 @@ services:
         class: forumhulp\searchresults\event\listener
         arguments:
             - '@config'
-            - '@controller.helper'
-            - '@user'
-            - '@request'
             - '@dbal.conn'
-            - '@log'
-            - '%core.root_path%'
-            - '%core.php_ext%'
             - '%tables.searchresults%'
         tags:
             - { name: event.listener }
