@@ -101,6 +101,55 @@ class local_provider implements provider_interface
 		return true;
 	}
 
+	public function replace(string $variant, string $key, string $local_file): bool
+	{
+		$destination = $this->existing_path($variant, $key);
+		if ($destination === null || !is_file($local_file) || is_link($local_file))
+		{
+			return false;
+		}
+
+		$source_path = realpath($local_file);
+		$destination_path = realpath($destination);
+		if ($source_path !== false && $destination_path !== false && $source_path === $destination_path)
+		{
+			return true;
+		}
+
+		try
+		{
+			$suffix = bin2hex(random_bytes(8));
+		}
+		catch (\Throwable)
+		{
+			return false;
+		}
+
+		$temporary = $destination . '.part-' . $suffix;
+		$backup = $destination . '.backup-' . $suffix;
+		if (!@copy($local_file, $temporary))
+		{
+			@unlink($temporary);
+			return false;
+		}
+		@chmod($temporary, 0644);
+
+		if (!@rename($destination, $backup))
+		{
+			@unlink($temporary);
+			return false;
+		}
+		if (!@rename($temporary, $destination))
+		{
+			@rename($backup, $destination);
+			@unlink($temporary);
+			return false;
+		}
+		@unlink($backup);
+
+		return true;
+	}
+
 	public function open_stream(string $variant, string $key): mixed
 	{
 		$path = $this->existing_path($variant, $key);

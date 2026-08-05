@@ -56,6 +56,7 @@ class main_module
 		$submit = $request->is_set_post('submit');
 		$storage_keys = $phpbb_container->get('phpbbgallery.core.storage.key_generator');
 		$local_storage = $phpbb_container->get('phpbbgallery.core.storage.local');
+		$storage_workspace = $phpbb_container->get('phpbbgallery.core.storage.workspace');
 
 		// Unpacking an archive is its own action: it only fills the import folder, and
 		// the ordinary import below then treats the result like any hand-uploaded image.
@@ -124,6 +125,7 @@ class main_module
 				* Import the images
 				*/
 				$error_occurred = false;
+				$staged_source_key = '';
 				$display_name = $image_src;
 				$safe_image_src = utf8_htmlspecialchars($image_src);
 				$image = isset($available_images[$image_src]) ? $available_images[$image_src] : false;
@@ -153,23 +155,20 @@ class main_module
 						try
 						{
 							$image_filename = $storage_keys->create(bin2hex(random_bytes(16)) . $inspection['target_extension']);
+							$staged_source_key = 'staging/' . bin2hex(random_bytes(16)) . '/' . basename($image_filename);
 						}
 						catch (\Throwable)
 						{
 							$image_filename = '';
 						}
 
-						$storage_ready = $image_filename !== '';
-						foreach ([
-							\phpbbgallery\core\storage\provider_interface::SOURCE,
-							\phpbbgallery\core\storage\provider_interface::MEDIUM,
-							\phpbbgallery\core\storage\provider_interface::MINI,
-						] as $variant)
-						{
-							$storage_ready = $storage_ready && $local_storage->prepare($variant, $image_filename);
-						}
+						$storage_ready = $image_filename !== '' && $staged_source_key !== ''
+							&& $local_storage->prepare(
+								\phpbbgallery\core\storage\provider_interface::SOURCE,
+								$staged_source_key
+							);
 						$file_link = $storage_ready
-							? $local_storage->local_path(\phpbbgallery\core\storage\provider_interface::SOURCE, $image_filename)
+							? $local_storage->local_path(\phpbbgallery\core\storage\provider_interface::SOURCE, $staged_source_key)
 							: null;
 						if ($file_link === null || !$this->import_storage->copy_image($image_src_full, $file_link))
 						{
@@ -262,9 +261,39 @@ class main_module
 					}
 					$sql_ary['image_name_clean'] = utf8_clean_string($sql_ary['image_name']);
 
-					// Put the images into the database
-					$db->sql_query('INSERT INTO ' . $table_prefix . 'gallery_images ' . $db->sql_build_array('INSERT', $sql_ary));
-					$image_id = (int) $db->sql_nextid();
+					try
+					{
+						$storage_workspace->publish(
+							\phpbbgallery\core\storage\provider_interface::SOURCE,
+							$image_filename,
+							$file_link
+						);
+					}
+					catch (\RuntimeException)
+					{
+						$user->add_lang('posting');
+						$this->log_import_error(sprintf($user->lang['GENERAL_UPLOAD_ERROR'], $display_name));
+						$error_occurred = true;
+					}
+				}
+
+				if (!$error_occurred)
+				{
+					try
+					{
+						// Publish first so the database never points at a missing provider object.
+						$db->sql_query('INSERT INTO ' . $table_prefix . 'gallery_images ' . $db->sql_build_array('INSERT', $sql_ary));
+						$image_id = (int) $db->sql_nextid();
+					}
+					catch (\Throwable $exception)
+					{
+						$storage_workspace->delete(\phpbbgallery\core\storage\provider_interface::SOURCE, $image_filename);
+						$local_storage->delete(
+							\phpbbgallery\core\storage\provider_interface::SOURCE,
+							$staged_source_key
+						);
+						throw $exception;
+					}
 					$image_data = ['image_id' => $image_id] + $sql_ary;
 					/**
 					 * Notify add-ons after an imported image is stored successfully.
@@ -284,6 +313,13 @@ class main_module
 					}
 					$successful_images++;
 					$done_images++;
+				}
+				if ($staged_source_key !== '')
+				{
+					$local_storage->delete(
+						\phpbbgallery\core\storage\provider_interface::SOURCE,
+						$staged_source_key
+					);
 				}
 
 				// Remove the image from the list

@@ -31,6 +31,9 @@ interface provider_interface
 	/** Copy a local file into the provider. */
 	public function write(string $variant, string $key, string $local_file): bool;
 
+	/** Replace an existing object from a local file without exposing a partial write. */
+	public function replace(string $variant, string $key, string $local_file): bool;
+
 	/** Open an object as a readable stream resource. */
 	public function open_stream(string $variant, string $key): mixed;
 
