@@ -1,0 +1,46 @@
+<?php
+/** phpBB Gallery - Remote Storage language. */
+if (!defined('IN_PHPBB'))
+{
+	exit;
+}
+$lang = array_merge($lang, [
+	'ACP_GALLERY_REMOTE_STORAGE' => 'Externe opslag',
+	'ACP_GALLERY_REMOTE_STORAGE_EXPLAIN' => 'Configureert en controleert privé-objectopslag voor Galerijbestanden. Het opslaan van deze instellingen verplaatst geen bestanden en activeert S3 niet.',
+	'ACL_A_GALLERY_REMOTE_STORAGE' => 'Kan de externe opslag van de Galerij beheren',
+	'GALLERY_CORE_NOT_FOUND' => 'De extensie phpBB Gallery Core is vereist.',
+	'REMOTE_STORAGE_ACTIVE_PROVIDER' => 'Actieve opslagprovider van de Galerij: %s',
+	'REMOTE_STORAGE_CONNECTION_FAILED' => 'De S3-verbindingstest is mislukt: %s',
+	'REMOTE_STORAGE_ENVIRONMENT_OVERRIDES' => 'De volgende procesomgevingsvariabelen vervangen hun ACP-waarden. Geheimen die zo worden verstrekt, worden nooit door phpBB getoond of opgeslagen:',
+	'REMOTE_STORAGE_MIGRATION' => 'Providermigratie',
+	'REMOTE_STORAGE_MIGRATION_ABORT' => 'Migratie afbreken',
+	'REMOTE_STORAGE_MIGRATION_ABORT_CONFIRM' => 'De actieve providermigratie afbreken? Geverifieerde kopieën op de bestemming blijven behouden, maar de huidige bronprovider blijft actief.',
+	'REMOTE_STORAGE_MIGRATION_ABORTED' => 'De providermigratie is afgebroken. De bronprovider blijft actief.',
+	'REMOTE_STORAGE_MIGRATION_COMPLETE' => 'Alle gevonden objecten zijn gekopieerd en gecontroleerd. De doelprovider is nu actief; bronkopieën zijn bewaard om terug te kunnen keren.',
+	'REMOTE_STORAGE_MIGRATION_CONTINUE' => 'Migratie voortzetten',
+	'REMOTE_STORAGE_MIGRATION_DIRECTION' => 'Richting: %1$s → %2$s',
+	'REMOTE_STORAGE_MIGRATION_EXPLAIN' => 'Bestanden worden in hervatbare batches gekopieerd. Wijzigingen aan Galerijbestanden worden tijdens de bewerking gespiegeld, elk object wordt op grootte en SHA-256 gecontroleerd en bronkopieën blijven behouden.',
+	'REMOTE_STORAGE_MIGRATION_FAILED' => 'De providermigratie kon niet worden gestart of hervat: %s',
+	'REMOTE_STORAGE_MIGRATION_PROGRESS' => 'Variant: %1$s. Gekopieerd: %2$d; al identiek: %3$d; mislukte pogingen: %4$d.',
+	'REMOTE_STORAGE_MIGRATION_RETRY' => 'Mislukte batch opnieuw proberen',
+	'REMOTE_STORAGE_MIGRATION_START' => 'Providermigratie starten',
+	'REMOTE_STORAGE_MIGRATION_START_CONFIRM' => 'De providermigratie starten? Wijzigingen aan Galerijbestanden worden naar beide providers gespiegeld totdat alle objecten zijn gekopieerd en gecontroleerd.',
+	'REMOTE_STORAGE_MIGRATION_TO' => 'Migreren naar %s',
+	'REMOTE_STORAGE_NOT_ACTIVE_UNTIL_MIGRATION' => 'S3 blijft inactief totdat de gecontroleerde migratie is voltooid. Zo blijven bestaande Galerijbestanden beschikbaar.',
+	'REMOTE_STORAGE_REQUIREMENTS_MISSING' => 'Externe opslag vereist de HTTP-client en SimpleXML van een ondersteunde phpBB-installatie.',
+	'REMOTE_STORAGE_S3_ACCESS_KEY' => 'Toegangssleutel',
+	'REMOTE_STORAGE_S3_BUCKET' => 'Bucket',
+	'REMOTE_STORAGE_S3_ENDPOINT' => 'S3-endpoint',
+	'REMOTE_STORAGE_S3_ENDPOINT_EXPLAIN' => 'Bijvoorbeeld https://s3.eu-west-1.amazonaws.com of het privé-endpoint van MinIO/QNAP. Omleidingen worden nooit gevolgd.',
+	'REMOTE_STORAGE_S3_PREFIX' => 'Objectvoorvoegsel',
+	'REMOTE_STORAGE_S3_PREFIX_EXPLAIN' => 'Privé-naamruimte binnen de bucket. Deze mag niet worden gedeeld met niet-gerelateerde bestanden.',
+	'REMOTE_STORAGE_S3_REGION' => 'Regio',
+	'REMOTE_STORAGE_S3_REGION_EXPLAIN' => 'Gebruik de regio die de dienst vereist. Veel compatibele providers gebruiken us-east-1.',
+	'REMOTE_STORAGE_S3_SECRET_KEY' => 'Geheime sleutel',
+	'REMOTE_STORAGE_S3_SETTINGS' => 'S3-/S3-compatibele verbinding',
+	'REMOTE_STORAGE_SECRET_REQUIRED' => 'Een geheime sleutel of de omgevingsvariabele PHPBBGALLERY_S3_SECRET_KEY is vereist.',
+	'REMOTE_STORAGE_SECRET_RETAINED' => 'Laat leeg om de ingestelde geheime sleutel te behouden.',
+	'REMOTE_STORAGE_SETTINGS_SAVED' => 'De S3-verbinding is gecontroleerd en de instellingen zijn opgeslagen. Er zijn geen Galerijbestanden verplaatst.',
+	'REMOTE_STORAGE_SETTINGS_LOCKED' => 'S3-verbindingsinstellingen kunnen niet worden gewijzigd tijdens een actieve providermigratie.',
+	'REMOTE_STORAGE_TEST_AND_SAVE' => 'Verbinding testen en opslaan',
+]);

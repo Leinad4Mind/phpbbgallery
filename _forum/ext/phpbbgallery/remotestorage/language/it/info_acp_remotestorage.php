@@ -1,0 +1,46 @@
+<?php
+/** phpBB Gallery - Remote Storage language. */
+if (!defined('IN_PHPBB'))
+{
+	exit;
+}
+$lang = array_merge($lang, [
+	'ACP_GALLERY_REMOTE_STORAGE' => 'Archiviazione remota',
+	'ACP_GALLERY_REMOTE_STORAGE_EXPLAIN' => 'Configura e verifica l’archiviazione privata a oggetti per i file della Galleria. Il salvataggio non sposta file e non attiva S3.',
+	'ACL_A_GALLERY_REMOTE_STORAGE' => 'Può gestire l’archiviazione remota della Galleria',
+	'GALLERY_CORE_NOT_FOUND' => 'È richiesta l’estensione phpBB Gallery Core.',
+	'REMOTE_STORAGE_ACTIVE_PROVIDER' => 'Provider di archiviazione attivo della Galleria: %s',
+	'REMOTE_STORAGE_CONNECTION_FAILED' => 'Il test della connessione S3 non è riuscito: %s',
+	'REMOTE_STORAGE_ENVIRONMENT_OVERRIDES' => 'Le seguenti variabili di ambiente del processo sostituiscono i valori dell’ACP. I segreti forniti in questo modo non vengono mai mostrati o salvati da phpBB:',
+	'REMOTE_STORAGE_MIGRATION' => 'Migrazione del provider',
+	'REMOTE_STORAGE_MIGRATION_ABORT' => 'Interrompi migrazione',
+	'REMOTE_STORAGE_MIGRATION_ABORT_CONFIRM' => 'Interrompere la migrazione attiva? Le copie verificate a destinazione saranno conservate, ma il provider di origine corrente resterà attivo.',
+	'REMOTE_STORAGE_MIGRATION_ABORTED' => 'La migrazione del provider è stata interrotta. Il provider di origine resta attivo.',
+	'REMOTE_STORAGE_MIGRATION_COMPLETE' => 'Tutti gli oggetti elencati sono stati copiati e verificati. Il provider di destinazione è ora attivo; le copie di origine sono state conservate per il ripristino.',
+	'REMOTE_STORAGE_MIGRATION_CONTINUE' => 'Continua migrazione',
+	'REMOTE_STORAGE_MIGRATION_DIRECTION' => 'Direzione: %1$s → %2$s',
+	'REMOTE_STORAGE_MIGRATION_EXPLAIN' => 'I file vengono copiati in lotti riprendibili. Le modifiche della Galleria vengono replicate durante l’operazione, ogni oggetto è verificato per dimensione e SHA-256 e le copie di origine vengono conservate.',
+	'REMOTE_STORAGE_MIGRATION_FAILED' => 'Impossibile avviare o riprendere la migrazione del provider: %s',
+	'REMOTE_STORAGE_MIGRATION_PROGRESS' => 'Variante: %1$s. Copiati: %2$d; già identici: %3$d; tentativi non riusciti: %4$d.',
+	'REMOTE_STORAGE_MIGRATION_RETRY' => 'Riprova il lotto non riuscito',
+	'REMOTE_STORAGE_MIGRATION_START' => 'Avvia migrazione del provider',
+	'REMOTE_STORAGE_MIGRATION_START_CONFIRM' => 'Avviare la migrazione del provider? Le modifiche ai file della Galleria saranno replicate su entrambi i provider finché tutti gli oggetti non saranno copiati e verificati.',
+	'REMOTE_STORAGE_MIGRATION_TO' => 'Migra a %s',
+	'REMOTE_STORAGE_NOT_ACTIVE_UNTIL_MIGRATION' => 'S3 resterà inattivo fino al completamento della migrazione controllata. Ciò evita che i file esistenti della Galleria diventino indisponibili.',
+	'REMOTE_STORAGE_REQUIREMENTS_MISSING' => 'L’Archiviazione remota richiede il client HTTP e SimpleXML forniti da un’installazione phpBB supportata.',
+	'REMOTE_STORAGE_S3_ACCESS_KEY' => 'Chiave di accesso',
+	'REMOTE_STORAGE_S3_BUCKET' => 'Bucket',
+	'REMOTE_STORAGE_S3_ENDPOINT' => 'Endpoint S3',
+	'REMOTE_STORAGE_S3_ENDPOINT_EXPLAIN' => 'Ad esempio https://s3.eu-west-1.amazonaws.com o l’endpoint privato di MinIO/QNAP. I reindirizzamenti non vengono mai seguiti.',
+	'REMOTE_STORAGE_S3_PREFIX' => 'Prefisso degli oggetti',
+	'REMOTE_STORAGE_S3_PREFIX_EXPLAIN' => 'Namespace privato usato nel bucket. Non deve essere condiviso con file non correlati.',
+	'REMOTE_STORAGE_S3_REGION' => 'Regione',
+	'REMOTE_STORAGE_S3_REGION_EXPLAIN' => 'Usa la regione richiesta dal servizio. Molti provider compatibili usano us-east-1.',
+	'REMOTE_STORAGE_S3_SECRET_KEY' => 'Chiave segreta',
+	'REMOTE_STORAGE_S3_SETTINGS' => 'Connessione S3/compatibile S3',
+	'REMOTE_STORAGE_SECRET_REQUIRED' => 'È richiesta una chiave segreta o la variabile di ambiente PHPBBGALLERY_S3_SECRET_KEY.',
+	'REMOTE_STORAGE_SECRET_RETAINED' => 'Lascia vuoto per mantenere la chiave segreta configurata.',
+	'REMOTE_STORAGE_SETTINGS_SAVED' => 'La connessione S3 è stata verificata e le impostazioni sono state salvate. Nessun file della Galleria è stato spostato.',
+	'REMOTE_STORAGE_SETTINGS_LOCKED' => 'Le impostazioni della connessione S3 non possono essere modificate durante una migrazione attiva.',
+	'REMOTE_STORAGE_TEST_AND_SAVE' => 'Verifica connessione e salva',
+]);

@@ -1,0 +1,46 @@
+<?php
+/** phpBB Gallery - Remote Storage language. */
+if (!defined('IN_PHPBB'))
+{
+	exit;
+}
+$lang = array_merge($lang, [
+	'ACP_GALLERY_REMOTE_STORAGE' => 'Отдалечено хранилище',
+	'ACP_GALLERY_REMOTE_STORAGE_EXPLAIN' => 'Настройва и проверява частно обектно хранилище за файловете на Галерията. Запазването не премества файлове и не активира S3.',
+	'ACL_A_GALLERY_REMOTE_STORAGE' => 'Може да управлява отдалеченото хранилище на Галерията',
+	'GALLERY_CORE_NOT_FOUND' => 'Необходимо е разширението phpBB Gallery Core.',
+	'REMOTE_STORAGE_ACTIVE_PROVIDER' => 'Активен доставчик на хранилище за Галерията: %s',
+	'REMOTE_STORAGE_CONNECTION_FAILED' => 'Тестът на S3 връзката е неуспешен: %s',
+	'REMOTE_STORAGE_ENVIRONMENT_OVERRIDES' => 'Следните променливи на средата заместват стойностите от ACP. Подадените така тайни никога не се показват или съхраняват от phpBB:',
+	'REMOTE_STORAGE_MIGRATION' => 'Миграция на доставчик',
+	'REMOTE_STORAGE_MIGRATION_ABORT' => 'Прекъсни миграцията',
+	'REMOTE_STORAGE_MIGRATION_ABORT_CONFIRM' => 'Да се прекъсне ли активната миграция? Проверените копия в целта ще се запазят, а текущият източник ще остане активен.',
+	'REMOTE_STORAGE_MIGRATION_ABORTED' => 'Миграцията е прекъсната. Доставчикът източник остава активен.',
+	'REMOTE_STORAGE_MIGRATION_COMPLETE' => 'Всички изброени обекти са копирани и проверени. Целевият доставчик вече е активен; копията в източника са запазени за връщане.',
+	'REMOTE_STORAGE_MIGRATION_CONTINUE' => 'Продължи миграцията',
+	'REMOTE_STORAGE_MIGRATION_DIRECTION' => 'Посока: %1$s → %2$s',
+	'REMOTE_STORAGE_MIGRATION_EXPLAIN' => 'Файловете се копират на възобновяеми партиди. Промените в Галерията се дублират по време на операцията, всеки обект се проверява по размер и SHA-256 и копията в източника се запазват.',
+	'REMOTE_STORAGE_MIGRATION_FAILED' => 'Миграцията не може да бъде стартирана или продължена: %s',
+	'REMOTE_STORAGE_MIGRATION_PROGRESS' => 'Вариант: %1$s. Копирани: %2$d; вече еднакви: %3$d; неуспешни опити: %4$d.',
+	'REMOTE_STORAGE_MIGRATION_RETRY' => 'Повтори неуспешната партида',
+	'REMOTE_STORAGE_MIGRATION_START' => 'Стартирай миграция',
+	'REMOTE_STORAGE_MIGRATION_START_CONFIRM' => 'Да се стартира ли миграцията? Промените във файловете на Галерията ще се дублират към двата доставчика, докато всички обекти бъдат копирани и проверени.',
+	'REMOTE_STORAGE_MIGRATION_TO' => 'Мигрирай към %s',
+	'REMOTE_STORAGE_NOT_ACTIVE_UNTIL_MIGRATION' => 'S3 ще остане неактивен до завършване на контролираната миграция. Така съществуващите файлове на Галерията остават достъпни.',
+	'REMOTE_STORAGE_REQUIREMENTS_MISSING' => 'Отдалеченото хранилище изисква HTTP клиента и SimpleXML от поддържана phpBB инсталация.',
+	'REMOTE_STORAGE_S3_ACCESS_KEY' => 'Ключ за достъп',
+	'REMOTE_STORAGE_S3_BUCKET' => 'Bucket',
+	'REMOTE_STORAGE_S3_ENDPOINT' => 'S3 endpoint',
+	'REMOTE_STORAGE_S3_ENDPOINT_EXPLAIN' => 'Например https://s3.eu-west-1.amazonaws.com или частният endpoint на MinIO/QNAP. Пренасочванията никога не се следват.',
+	'REMOTE_STORAGE_S3_PREFIX' => 'Префикс на обектите',
+	'REMOTE_STORAGE_S3_PREFIX_EXPLAIN' => 'Частно пространство от имена в bucket-а. То не трябва да се споделя с несвързани файлове.',
+	'REMOTE_STORAGE_S3_REGION' => 'Регион',
+	'REMOTE_STORAGE_S3_REGION_EXPLAIN' => 'Използвайте региона, изискван от услугата. Много съвместими доставчици използват us-east-1.',
+	'REMOTE_STORAGE_S3_SECRET_KEY' => 'Таен ключ',
+	'REMOTE_STORAGE_S3_SETTINGS' => 'S3/S3-съвместима връзка',
+	'REMOTE_STORAGE_SECRET_REQUIRED' => 'Необходим е таен ключ или променливата PHPBBGALLERY_S3_SECRET_KEY.',
+	'REMOTE_STORAGE_SECRET_RETAINED' => 'Оставете празно, за да запазите настроения таен ключ.',
+	'REMOTE_STORAGE_SETTINGS_SAVED' => 'S3 връзката е проверена и настройките са запазени. Не са преместени файлове на Галерията.',
+	'REMOTE_STORAGE_SETTINGS_LOCKED' => 'Настройките на S3 връзката не могат да се променят по време на активна миграция.',
+	'REMOTE_STORAGE_TEST_AND_SAVE' => 'Тествай връзката и запази',
+]);

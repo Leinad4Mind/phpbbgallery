@@ -67,11 +67,24 @@ final class acp_settings_test extends TestCase
 		$this->assertStringNotContainsString("'S3_SECRET_KEY' =>", $module);
 	}
 
-	public function test_english_and_portuguese_catalogues_have_identical_keys(): void
+	public function test_all_gallery_language_catalogues_have_identical_keys_and_placeholders(): void
 	{
 		$english = $this->language(dirname(__DIR__) . '/language/en/info_acp_remotestorage.php');
-		$portuguese = $this->language(dirname(__DIR__) . '/language/pt/info_acp_remotestorage.php');
-		$this->assertSame(array_keys($english), array_keys($portuguese));
+		foreach (['bg', 'de', 'es', 'fr', 'it', 'nl', 'pt', 'pt_br', 'pt_preao', 'ru'] as $iso)
+		{
+			$file = dirname(__DIR__) . '/language/' . $iso . '/info_acp_remotestorage.php';
+			$contents = (string) file_get_contents($file);
+			$this->assertSame(1, preg_match('//u', $contents), $iso . ' is not valid UTF-8');
+			$this->assertDoesNotMatchRegularExpression('/(?:Ã.|Â.|â†)/u', $contents, $iso);
+			$catalogue = $this->language($file);
+			$this->assertSame(array_keys($english), array_keys($catalogue), $iso);
+			foreach ($english as $key => $value)
+			{
+				preg_match_all('/%(?:[0-9]+\$)?[sdu]/', (string) $value, $expected);
+				preg_match_all('/%(?:[0-9]+\$)?[sdu]/', (string) $catalogue[$key], $actual);
+				$this->assertSame($expected[0], $actual[0], $iso . ':' . $key);
+			}
+		}
 	}
 
 	private function language(string $file): array
