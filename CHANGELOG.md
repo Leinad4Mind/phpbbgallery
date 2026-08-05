@@ -1,5 +1,6 @@
 # Changelog
 
+- Added private Azure Blob Storage support with Shared Key signing, ACP-managed connections, resumable remote-to-remote migrations, public-container rejection and an Azurite functional workflow.
 - Added a validated Remote Storage provider-factory catalogue so migrations and ACP connection tests can support additional backends without hard-coded resolver branches.
 - Expanded the complete phpBB functional lifecycle to SQLite, MySQL 8.4 LTS and MariaDB 11.4 LTS, including database-neutral purge assertions.
 - Added an end-to-end Export workflow covering ACP limits and batching, nested album paths, readable image names, manifests, protected downloads and member-owned UCP exports.
