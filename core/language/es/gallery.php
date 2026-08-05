@@ -156,6 +156,7 @@ $lang = array_merge($lang, [
 	'INSERT_IMAGE_POST'            => 'Insertar imagen en la publicación',
 	'INVALID_USERNAME'             => 'Tu nombre de usuario no es válido',
 	'INVALID_IMAGE'                => 'Imagen no válida',
+	'INVALID_COMMENT'              => 'Comentario no válido',
 	'FILE_DISALLOWED_EXTENSION'    => 'La extensión de archivo no está permitida',
 	'FILE_WRONG_FILESIZE'          => 'Tamaño de archivo incorrecto',
 

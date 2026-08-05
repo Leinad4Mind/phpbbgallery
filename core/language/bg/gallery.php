@@ -156,6 +156,7 @@ $lang = array_merge($lang, [
 	'INSERT_IMAGE_POST'            => 'Вкарай изображение в пост',
 	'INVALID_USERNAME'             => 'Потребителското ви име е невалидно',
 	'INVALID_IMAGE'                => 'Заявното изображение е невалидно',
+	'INVALID_COMMENT'              => 'Невалиден коментар',
 	'FILE_DISALLOWED_EXTENSION'    => 'Непозволено разширение!',
 	'FILE_WRONG_FILESIZE'          => 'Грешен размер!',
 

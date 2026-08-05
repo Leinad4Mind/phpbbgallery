@@ -73,7 +73,7 @@
 			{% if POSTER_GALLERY_IMAGES != '' %}<dd><strong>{{ lang('IMAGES') }}{{ lang('COLON') }}</strong> {% if U_POSTER_GALLERY_SEARCH %}<a href="{{ U_POSTER_GALLERY_SEARCH }}">{{ POSTER_GALLERY_IMAGES }}</a>{% else %}{{ POSTER_GALLERY_IMAGES }}{% endif %}</dd>{% endif %}
 			{% if POSTER_JOINED %}<dd class="profile-joined"><strong>{{ lang('JOINED') }}{{ lang('COLON') }} </strong><span style="white-space: nowrap;"> {{ POSTER_JOINED }}</span></dd>{% endif %}
 			{% if POSTER_WARNINGS %}<dd class="profile-warnings"><strong>{{ lang('WARNINGS') }}{{ lang('COLON') }}</strong> {{ POSTER_WARNINGS }}</dd>{% endif %}
-			{% if U_ACP and POSTER_IP %}<dd><strong>{{ lang('IP') }}{{ lang('COLON') }}</strong> {{ POSTER_IP }} <!-- [ <a href="{{ U_POSTER_WHOIS }}" onclick="popup(this.href, 750, 500); return false;">{{ lang('WHOIS') }}</a> ]--></dd>{% endif %}
+			{% if U_ACP and POSTER_IP %}<dd><strong>{{ lang('IP') }}{{ lang('COLON') }}</strong> {{ POSTER_IP }}{% if U_POSTER_WHOIS %} [ <a href="{{ U_POSTER_WHOIS }}" onclick="popup(this.href, 750, 500); return false;">{{ lang('WHOIS') }}</a> ]{% endif %}</dd>{% endif %}
 
 			{% if S_PROFILE_FIELD1 %}
 				<!-- Use a construct like this to include admin defined profile fields. Replace FIELD1 with the name of your field. -->
@@ -264,7 +264,7 @@
 				{% if commentrow.POSTER_GALLERY_IMAGES != '' %}<dd><strong>{{ lang('IMAGES') }}{{ lang('COLON') }}</strong> {% if commentrow.U_POSTER_GALLERY_SEARCH %}<a href="{{ commentrow.U_POSTER_GALLERY_SEARCH }}">{{ POSTER_GALLERY_IMAGES }}</a>{% else %}{{ POSTER_GALLERY_IMAGES }}{% endif %}</dd>{% endif %}
 				{% if commentrow.POSTER_JOINED %}<dd class="profile-joined"><strong>{{ lang('JOINED') }}{{ lang('COLON') }} </strong><span style="white-space: nowrap;"> {{ commentrow.POSTER_JOINED }}</span></dd>{% endif %}
 				{% if commentrow.POSTER_WARNINGS %}<dd class="profile-warnings"><strong>{{ lang('WARNINGS') }}{{ lang('COLON') }}</strong> {{ commentrow.POSTER_WARNINGS }}</dd>{% endif %}
-				{% if U_ACP and commentrow.POSTER_IP %}<dd><strong>{{ lang('IP') }}{{ lang('COLON') }}</strong> {{ commentrow.POSTER_IP }} <!-- [ <a href="{{ U_POSTER_WHOIS }}" onclick="popup(this.href, 750, 500); return false;">{{ lang('WHOIS') }}</a> ]--></dd>{% endif %}
+				{% if U_ACP and commentrow.POSTER_IP %}<dd><strong>{{ lang('IP') }}{{ lang('COLON') }}</strong> {{ commentrow.POSTER_IP }}{% if commentrow.U_WHOIS %} [ <a href="{{ commentrow.U_WHOIS }}" onclick="popup(this.href, 750, 500); return false;">{{ lang('WHOIS') }}</a> ]{% endif %}</dd>{% endif %}
 
 				{% if commentrow.S_PROFILE_FIELD1 %}
 				<!-- Use a construct like this to include admin defined profile fields. Replace FIELD1 with the name of your field. -->

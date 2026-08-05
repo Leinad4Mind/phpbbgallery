@@ -79,6 +79,16 @@ phpbbgallery_core_image_report:
     defaults: { _controller: phpbbgallery.core.controller.image:report }
     requirements:
         image_id: \d+
+phpbbgallery_core_image_whois:
+    path: /gallery/image/{image_id}/whois
+    defaults: { _controller: phpbbgallery.core.controller.image:whois_image }
+    requirements:
+        image_id: \d+
+phpbbgallery_core_comment_whois:
+    path: /gallery/comment/{comment_id}/whois
+    defaults: { _controller: phpbbgallery.core.controller.image:whois_comment }
+    requirements:
+        comment_id: \d+
 phpbbgallery_core_comment_add:
     path: /gallery/comment/{image_id}/add/{comment_id}
     defaults: { _controller: phpbbgallery.core.controller.comment:add }

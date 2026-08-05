@@ -346,8 +346,8 @@ class upload
 			// 1. Check album-configuration Quota
 			if (($this->gallery_config->get('album_images') >= 0) && ($album_data['album_images'] >= $this->gallery_config->get('album_images')))
 			{
-				//@todo: Add return link
-				trigger_error('ALBUM_REACHED_QUOTA');
+				trigger_error($this->language->lang('ALBUM_REACHED_QUOTA') . '<br /><br />'
+					. $this->language->lang('CLICK_RETURN_ALBUM', '<a href="' . $album_backlink . '">', '</a>'));
 			}
 
 			// 2. Check user-limit, if he is not allowed to go unlimited
@@ -363,8 +363,8 @@ class upload
 				$this->db->sql_freeresult($result);
 				if (!$invalid_author && (!$can_change_author || $submit) && $own_images >= $this->auth->acl_check('i_count', $album_id, $album_data['album_user_id']))
 				{
-					//@todo: Add return link
-					trigger_error($this->language->lang('USER_REACHED_QUOTA', $this->auth->acl_check('i_count', $album_id, $album_data['album_user_id'])));
+					trigger_error($this->language->lang('USER_REACHED_QUOTA', $this->auth->acl_check('i_count', $album_id, $album_data['album_user_id']))
+						. '<br /><br />' . $this->language->lang('CLICK_RETURN_ALBUM', '<a href="' . $album_backlink . '">', '</a>'));
 				}
 			}
 
@@ -505,7 +505,6 @@ class upload
 				// 1. Check album-configuration Quota
 				if (($this->gallery_config->get('album_images') >= 0) && ($album_data['album_images'] >= $this->gallery_config->get('album_images')))
 				{
-					//@todo: Add return link
 					$validation_error = $this->language->lang('ALBUM_REACHED_QUOTA');
 				}
 
@@ -522,7 +521,6 @@ class upload
 					$this->db->sql_freeresult($result);
 					if (!$validation_error && $own_images >= $this->auth->acl_check('i_count', $album_id, $album_data['album_user_id']))
 					{
-						//@todo: Add return link
 						$validation_error = $this->language->lang('USER_REACHED_QUOTA', $this->auth->acl_check('i_count', $album_id, $album_data['album_user_id']));
 					}
 				}

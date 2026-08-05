@@ -156,6 +156,7 @@ $lang = array_merge($lang, [
 	'INSERT_IMAGE_POST'            => 'Voeg afbeelding aan bericht toe',
 	'INVALID_USERNAME'             => 'Je gebruikersnaam is ongeldig',
 	'INVALID_IMAGE'                => 'De afbeelding is ongeldig',
+	'INVALID_COMMENT'              => 'Ongeldige reactie',
 	'FILE_DISALLOWED_EXTENSION'    => 'Bestandstype is niet toegestaan',
 	'FILE_WRONG_FILESIZE'          => 'Verkeerde bestandsgrootte',
 

@@ -149,6 +149,7 @@ $lang = array_merge($lang, [
 	'INSERT_IMAGE_POST'            => 'Вставить фото в сообщение',
 	'INVALID_USERNAME'             => 'Неверное имя пользователя',
 	'INVALID_IMAGE'                => 'Изображение не найдено',
+	'INVALID_COMMENT'              => 'Недопустимый комментарий',
 	'FILE_DISALLOWED_EXTENSION'    => 'Неразрешенный тип файла',
 	'FILE_WRONG_FILESIZE'          => 'Некорректный размер файла',
 	'LAST_COMMENT'                 => 'Последний комментарий',
