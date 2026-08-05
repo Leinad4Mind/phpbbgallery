@@ -98,7 +98,27 @@ final class workspace
 	/** @return array{keys: list<string>, cursor: string|null} */
 	public function list_objects(string $variant, ?string $cursor = null, int $limit = 500): array
 	{
-		return $this->storage->list_objects($variant, $cursor, $limit);
+		$page = $this->storage->list_objects($variant, $cursor, $limit);
+		if (!isset($page['keys']) || !is_array($page['keys'])
+			|| !array_key_exists('cursor', $page)
+			|| ($page['cursor'] !== null && (!is_string($page['cursor']) || $page['cursor'] === '')))
+		{
+			throw new \RuntimeException('The Gallery storage provider returned an invalid object page.');
+		}
+		$keys = array_values($page['keys']);
+		if (count($keys) > max(1, min(1000, $limit)))
+		{
+			throw new \RuntimeException('The Gallery storage provider exceeded the object page limit.');
+		}
+		foreach ($keys as $key)
+		{
+			if (!is_string($key) || $key === '')
+			{
+				throw new \RuntimeException('The Gallery storage provider returned an invalid object key.');
+			}
+		}
+
+		return ['keys' => $keys, 'cursor' => $page['cursor']];
 	}
 
 	/** Publish a new object and verify that the provider stored the complete file. */

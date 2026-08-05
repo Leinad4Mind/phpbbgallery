@@ -163,6 +163,17 @@ final class storage_provider_test extends TestCase
 		$this->assertFileDoesNotExist($path);
 	}
 
+	public function test_workspace_rejects_a_malformed_provider_listing(): void
+	{
+		$provider = $this->createMock(provider_interface::class);
+		$provider->method('list_objects')->willReturn(['keys' => ['valid.jpg', 42], 'cursor' => null]);
+		$workspace = new workspace($provider, $this->temporary_directory . '/workspace');
+
+		$this->expectException(\RuntimeException::class);
+		$this->expectExceptionMessage('invalid object key');
+		$workspace->list_objects(provider_interface::SOURCE);
+	}
+
 	public function test_workspace_removes_partial_file_when_size_verification_fails(): void
 	{
 		$remote = new memory_storage_provider('s3', ['image.jpg' => 'remote-image']);
