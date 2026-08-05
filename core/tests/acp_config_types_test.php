@@ -197,8 +197,8 @@ final class acp_config_types_test extends TestCase
 
 		$this->assertStringNotContainsString('$' . '_POST', $source);
 		$this->assertStringNotContainsString('$' . '_REQUEST', $source);
-		$this->assertStringNotContainsString('@readdir(', $source);
-		$this->assertStringNotContainsString('@closedir(', $source);
-		$this->assertSame(6, substr_count($source, '!== false && ('));
+		$this->assertStringNotContainsString('opendir(', $source);
+		$this->assertStringNotContainsString('readdir(', $source);
+		$this->assertStringContainsString('$file_tool->delete_wm($filenames);', $source);
 	}
 }

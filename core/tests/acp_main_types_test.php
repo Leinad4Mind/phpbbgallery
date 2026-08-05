@@ -48,14 +48,15 @@ final class acp_main_types_test extends TestCase
 		$this->assertSame('void', (string) (new \ReflectionMethod(main_module::class, 'overview'))->getReturnType());
 	}
 
-	public function test_cache_purge_is_php8_safe_and_uses_numbered_upload_path(): void
+	public function test_cache_purge_uses_the_active_storage_file_tool(): void
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/acp/main_module.php');
 
-		$this->assertStringNotContainsString('@readdir(', $source);
-		$this->assertStringNotContainsString('@closedir(', $source);
-		$this->assertSame(6, substr_count($source, '!== false && ('));
-		$this->assertStringContainsString('@unlink($gallery_url->path(\'upload\') . $i . \'/\' . $upload_file);', $source);
+		$this->assertStringNotContainsString('opendir(', $source);
+		$this->assertStringNotContainsString('readdir(', $source);
+		$this->assertStringNotContainsString('@unlink(', $source);
+		$this->assertStringContainsString('$file_tool->delete_cache($filenames);', $source);
+		$this->assertStringContainsString('$active_storage->size(', $source);
 	}
 
 	public function test_empty_user_resync_still_passes_an_initialized_list(): void
