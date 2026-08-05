@@ -110,4 +110,12 @@ $lang = array_merge($lang, [
 
 	'GALLERY_CORE_NOT_FOUND'		=> 'L’extension phpBB Gallery Core doit d’abord être installée et activée.',
 	'EXTENSION_ENABLE_SUCCESS'		=> 'L’extension a été activée avec succès.',
+	'ACP_GALLERY_EXIF'           => 'Métadonnées EXIF',
+	'ACP_GALLERY_EXIF_EXPLAIN'   => 'Gère les dates de prise de vue indexées utilisées pour trier la Galerie.',
+	'ACP_EXIF_CAPTURE_INDEX'     => 'Index des dates de prise de vue',
+	'ACP_EXIF_INDEXED_IMAGES'    => 'Images avec une date de prise de vue indexée',
+	'ACP_EXIF_SYNC_EXPLAIN'      => 'Reconstruit l’index depuis les métadonnées EXIF enregistrées et, si nécessaire, depuis les fichiers JPEG originaux. L’opération utilise de petits lots reprenables.',
+	'ACP_EXIF_SYNC_CONFIRM'      => 'Voulez-vous vraiment reconstruire l’index des dates de prise de vue EXIF ?',
+	'ACP_EXIF_SYNC_PROGRESS'     => 'Synchronisation EXIF en cours : %1$d images analysées, %2$d dates indexées et %3$d fichiers source temporairement indisponibles.',
+	'ACP_EXIF_SYNC_COMPLETE'     => 'Synchronisation EXIF terminée : %1$d images analysées, %2$d dates indexées et %3$d fichiers source indisponibles.',
 ]);

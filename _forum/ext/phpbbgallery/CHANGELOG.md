@@ -65,6 +65,9 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Added
 
+- Added indexed EXIF DateTimeOriginal sorting with upload-date fallback across
+  album listings, previous/next navigation and ACP defaults, including
+  OffsetTimeOriginal handling and a confirmed resumable rebuild for old images.
 - Added opt-in BMP uploads through native GD with complete decode validation,
   preserved BMP originals and browser-safe WebP medium/thumbnail derivatives,
   including ZIP uploads, ACP Import, replacements and converted album icons.

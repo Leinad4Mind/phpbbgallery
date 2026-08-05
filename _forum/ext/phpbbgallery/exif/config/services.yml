@@ -1,4 +1,21 @@
+imports:
+    - { resource: tables.yml }
+
 services:
+    phpbbgallery.exif.capture_index:
+        class: phpbbgallery\exif\capture_index
+        arguments:
+            - '@dbal.conn'
+            - '%phpbbgallery.exif.tables.capture_index%'
+
+    phpbbgallery.exif.capture_sync:
+        class: phpbbgallery\exif\capture_sync
+        arguments:
+            - '@dbal.conn'
+            - '@phpbbgallery.exif.capture_index'
+            - '@phpbbgallery.core.storage.workspace'
+            - '%phpbbgallery.tables.gallery_images%'
+
     phpbbgallery.exif.listener:
         class: phpbbgallery\exif\event\exif_listener
         arguments:
@@ -6,5 +23,8 @@ services:
             - '@phpbbgallery.core.config'
             - '@phpbbgallery.core.user'
             - '@phpbbgallery.core.storage.workspace'
+            - '@phpbbgallery.exif.capture_index'
+            - '@phpbbgallery.exif.capture_sync'
+            - '%phpbbgallery.exif.tables.capture_index%'
         tags:
             - { name: event.listener }

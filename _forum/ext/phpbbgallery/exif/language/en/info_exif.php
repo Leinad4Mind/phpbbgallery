@@ -92,7 +92,7 @@ $lang = array_merge($lang, [
 	'EXIF_WHITEB_MANU'			=> 'Manual',
 
 	'DISP_EXIF_DATA'			=> 'Display Exif-data',
-	'DISP_EXIF_DATA_EXP'		=> 'This feature can not be used at the moment, as the need function “exif_read_data“ is not included in your PHP Installation.',
+	'DISP_EXIF_DATA_EXP'		=> 'This option requires the PHP EXIF extension and its exif_read_data() function.',
 	'DISP_EXIF_DATE'      => 'Show “Image taken on”',
 	'DISP_EXIF_FOCAL'     => 'Show focus length',
 	'DISP_EXIF_EXPOSURE'  => 'Show shutter speed',
@@ -109,4 +109,12 @@ $lang = array_merge($lang, [
 
 	'GALLERY_CORE_NOT_FOUND'		=> 'phpBB Gallery Core extension must be installed and enabled first.',
 	'EXTENSION_ENABLE_SUCCESS'		=> 'The extension has been enabled successfully.',
+	'ACP_GALLERY_EXIF'           => 'EXIF metadata',
+	'ACP_GALLERY_EXIF_EXPLAIN'   => 'Manage the indexed image capture dates used by Gallery sorting.',
+	'ACP_EXIF_CAPTURE_INDEX'     => 'Capture-date index',
+	'ACP_EXIF_INDEXED_IMAGES'    => 'Images with an indexed capture date',
+	'ACP_EXIF_SYNC_EXPLAIN'      => 'Rebuild the index from cached EXIF metadata and, when necessary, from the original JPEG files. The operation runs in small resumable batches.',
+	'ACP_EXIF_SYNC_CONFIRM'      => 'Are you sure you want to rebuild the EXIF capture-date index?',
+	'ACP_EXIF_SYNC_PROGRESS'     => 'EXIF synchronization in progress: %1$d images scanned, %2$d capture dates indexed and %3$d source files temporarily unavailable.',
+	'ACP_EXIF_SYNC_COMPLETE'     => 'EXIF synchronization complete: %1$d images scanned, %2$d capture dates indexed and %3$d source files unavailable.',
 ]);

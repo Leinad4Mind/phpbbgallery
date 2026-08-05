@@ -57,6 +57,9 @@ final class exif_test extends TestCase
 			'gallery_config' => 'phpbbgallery\\core\\config',
 			'gallery_user' => 'phpbbgallery\\core\\user',
 			'storage_workspace' => 'phpbbgallery\\core\\storage\\workspace',
+			'capture_index' => 'phpbbgallery\\exif\\capture_index',
+			'capture_sync' => 'phpbbgallery\\exif\\capture_sync',
+			'capture_table' => 'string',
 		];
 
 		foreach ($expected_properties as $property_name => $expected_type)
@@ -110,11 +113,17 @@ final class exif_test extends TestCase
 			'phpbbgallery.core.acp.config.get_display_vars' => 'acp_config_get_display_vars',
 			'phpbbgallery.acpimport.update_image_before' => 'massimport_update_image_before',
 			'phpbbgallery.acpimport.update_image' => 'massimport_update_image',
+			'phpbbgallery.acpimport.insert_image_after' => 'capture_after_import',
 			'phpbbgallery.core.posting.edit_before_rotate' => 'posting_edit_before_rotate',
+			'phpbbgallery.core.image.delete_images' => 'capture_deleted_images',
+			'phpbbgallery.core.image.sort_labels' => 'sort_labels',
+			'phpbbgallery.core.image.sort_options' => 'sort_options',
+			'phpbbgallery.core.image_edit_after' => 'capture_after_edit',
 			'phpbbgallery.core.ucp.set_settings_submit' => 'ucp_set_settings_submit',
 			'phpbbgallery.core.ucp.set_settings_nosubmit' => 'ucp_set_settings_nosubmit',
 			'phpbbgallery.core.upload.prepare_file_before' => 'upload_prepare_file_before',
 			'phpbbgallery.core.upload.update_image_before' => 'upload_update_image_before',
+			'phpbbgallery.core.upload.update_image_after' => 'capture_after_upload',
 			'phpbbgallery.core.user.get_default_values' => 'user_get_default_values',
 			'phpbbgallery.core.user.validate_data' => 'user_validate_data',
 			'phpbbgallery.core.viewimage' => 'viewimage',

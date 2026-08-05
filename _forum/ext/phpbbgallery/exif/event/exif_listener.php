@@ -23,6 +23,9 @@ class exif_listener implements EventSubscriberInterface
 	protected \phpbbgallery\core\config $gallery_config;
 	protected \phpbbgallery\core\user $gallery_user;
 	protected \phpbbgallery\core\storage\workspace $storage_workspace;
+	protected \phpbbgallery\exif\capture_index $capture_index;
+	protected \phpbbgallery\exif\capture_sync $capture_sync;
+	protected string $capture_table;
 
 	public static function getSubscribedEvents(): array
 	{
@@ -30,11 +33,17 @@ class exif_listener implements EventSubscriberInterface
 			'phpbbgallery.core.acp.config.get_display_vars'		=> 'acp_config_get_display_vars',
 			'phpbbgallery.acpimport.update_image_before'	=> 'massimport_update_image_before',
 			'phpbbgallery.acpimport.update_image'			=> 'massimport_update_image',
+			'phpbbgallery.acpimport.insert_image_after'		=> 'capture_after_import',
 			'phpbbgallery.core.posting.edit_before_rotate'		=> 'posting_edit_before_rotate',
+			'phpbbgallery.core.image.delete_images'			=> 'capture_deleted_images',
+			'phpbbgallery.core.image.sort_labels'			=> 'sort_labels',
+			'phpbbgallery.core.image.sort_options'			=> 'sort_options',
+			'phpbbgallery.core.image_edit_after'				=> 'capture_after_edit',
 			'phpbbgallery.core.ucp.set_settings_submit'			=> 'ucp_set_settings_submit',
 			'phpbbgallery.core.ucp.set_settings_nosubmit'		=> 'ucp_set_settings_nosubmit',
 			'phpbbgallery.core.upload.prepare_file_before'		=> 'upload_prepare_file_before',
 			'phpbbgallery.core.upload.update_image_before'		=> 'upload_update_image_before',
+			'phpbbgallery.core.upload.update_image_after'		=> 'capture_after_upload',
 			//'phpbbgallery.core.upload.update_image_nofilechange'	=> 'upload_update_image_nofilechange',
 			'phpbbgallery.core.user.get_default_values'			=> 'user_get_default_values',
 			'phpbbgallery.core.user.validate_data'				=> 'user_validate_data',
@@ -51,19 +60,80 @@ class exif_listener implements EventSubscriberInterface
 	* @param \phpbbgallery\core\config		$gallery_config	Core gallery config object
 	* @param \phpbbgallery\core\user		$gallery_user	Core gallery user wrapper
 	* @param \phpbbgallery\core\storage\workspace $storage_workspace Active storage workspace
+	* @param \phpbbgallery\exif\capture_index $capture_index Capture-date index
+	* @param \phpbbgallery\exif\capture_sync $capture_sync Capture-date synchronizer
+	* @param string $capture_table EXIF capture index table
 	*/
 
 	public function __construct(
 		\phpbb\user $user,
 		\phpbbgallery\core\config $gallery_config,
 		\phpbbgallery\core\user $gallery_user,
-		\phpbbgallery\core\storage\workspace $storage_workspace
+		\phpbbgallery\core\storage\workspace $storage_workspace,
+		\phpbbgallery\exif\capture_index $capture_index,
+		\phpbbgallery\exif\capture_sync $capture_sync,
+		string $capture_table
 	)
 	{
 		$this->user = $user;
 		$this->gallery_config = $gallery_config;
 		$this->gallery_user = $gallery_user;
 		$this->storage_workspace = $storage_workspace;
+		$this->capture_index = $capture_index;
+		$this->capture_sync = $capture_sync;
+		$this->capture_table = $capture_table;
+	}
+
+	public function sort_labels(\phpbb\event\data $event): void
+	{
+		$this->user->add_lang_ext('phpbbgallery/exif', 'info_exif');
+		$sort_by_text = $event['sort_by_text'];
+		$sort_by_text['et'] = $this->user->lang('EXIF_DATE');
+		$event['sort_by_text'] = $sort_by_text;
+	}
+
+	public function sort_options(\phpbb\event\data $event): void
+	{
+		$this->sort_labels($event);
+		$sort_by_sql = $event['sort_by_sql'];
+		$sort_by_sql['et'] = 'COALESCE(NULLIF(gallery_exif_sort.exif_taken_time, 0), image_time)';
+		$sort_from = $event['sort_from'];
+		if ((string) $event['sort_key'] === 'et' && strpos($sort_from, ' gallery_exif_sort ') === false)
+		{
+			$sort_from .= ' LEFT JOIN ' . $this->capture_table . ' gallery_exif_sort
+				ON gallery_exif_sort.exif_image_id = image_id';
+		}
+		$event['sort_by_sql'] = $sort_by_sql;
+		$event['sort_from'] = $sort_from;
+	}
+
+	public function capture_after_upload(\phpbb\event\data $event): void
+	{
+		$this->capture_index->replace(
+			(int) $event['image_id'],
+			(string) ($event['image_data']['image_exif_data'] ?? '')
+		);
+	}
+
+	public function capture_after_import(\phpbb\event\data $event): void
+	{
+		$this->capture_after_upload($event);
+	}
+
+	public function capture_after_edit(\phpbb\event\data $event): void
+	{
+		if (!empty($event['file_changed']))
+		{
+			$this->capture_sync->refresh_image(
+				(int) $event['image_id'],
+				(string) $event['updated_image_data']['image_filename']
+			);
+		}
+	}
+
+	public function capture_deleted_images(\phpbb\event\data $event): void
+	{
+		$this->capture_index->delete($event['images']);
 	}
 
 	/**

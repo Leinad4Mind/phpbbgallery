@@ -407,12 +407,13 @@ class image
 		 *
 		 * @event phpbbgallery.core.image.sort_options
 		 * @var array  album_data  Current album row
+		 * @var string sort_key    Requested image sort key before allowlist normalization
 		 * @var array  sort_by_text Sort-key labels
 		 * @var array  sort_by_sql  Sort-key SQL expressions
 		 * @var string sort_from    SQL FROM expression for the image query
 		 * @since 4.0.0
 		 */
-		$vars = ['album_data', 'sort_by_text', 'sort_by_sql', 'sort_from'];
+		$vars = ['album_data', 'sort_key', 'sort_by_text', 'sort_by_sql', 'sort_from'];
 		extract($this->dispatcher->trigger_event(
 			'phpbbgallery.core.image.sort_options',
 			compact($vars)
