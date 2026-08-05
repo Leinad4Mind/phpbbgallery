@@ -30,6 +30,7 @@ final class infrastructure_types_test extends TestCase
 		$this->assertFalse($gallery_config->get('allow_zip'));
 		$this->assertSame(0, $gallery_config->get('num_views'));
 		$this->assertSame('flat', $gallery_config->get('storage_layout'));
+		$this->assertSame('local', $gallery_config->get('storage_provider'));
 		$this->assertSame('image', $gallery_config->get_bbcode_tag());
 		$this->assertSame(25, $gallery_config->get_all()['items_per_page']);
 

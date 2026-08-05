@@ -14,6 +14,7 @@ namespace phpbbgallery\core\storage;
  *
  * Providers receive opaque, validated keys. They must never make stored objects
  * publicly accessible without passing through the Gallery authorization layer.
+ * Add-ons expose non-local providers as phpbbgallery.storage.provider.PROVIDER_ID.
  */
 interface provider_interface
 {
@@ -41,6 +42,9 @@ interface provider_interface
 	public function delete(string $variant, string $key): bool;
 
 	public function size(string $variant, string $key): ?int;
+
+	/** Return the object modification time as a Unix timestamp when available. */
+	public function modified_time(string $variant, string $key): ?int;
 
 	public function checksum(string $variant, string $key, string $algorithm = 'sha256'): ?string;
 }

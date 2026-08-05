@@ -114,6 +114,7 @@ class config
 
 		'search_display'		=> 45,
 		'storage_layout'		=> 'flat',
+		'storage_provider'		=> 'local',
 
 		//'thumbnail_cache'		=> true,
 		'thumbnail_height'		=> 160,
