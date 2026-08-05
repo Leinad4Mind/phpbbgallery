@@ -16,18 +16,21 @@ class layout_migrator
 	private key_generator $keys;
 	private local_provider $storage;
 	private string $images_table;
+	private variant_key $variant_key;
 
 	public function __construct(
 		\phpbb\db\driver\driver_interface $db,
 		key_generator $keys,
 		local_provider $storage,
-		string $images_table
+		string $images_table,
+		?variant_key $variant_key = null
 	)
 	{
 		$this->db = $db;
 		$this->keys = $keys;
 		$this->storage = $storage;
 		$this->images_table = $images_table;
+		$this->variant_key = $variant_key ?? new variant_key();
 	}
 
 	/**
@@ -142,7 +145,10 @@ class layout_migrator
 		$created = [];
 		foreach ([provider_interface::SOURCE, provider_interface::MEDIUM, provider_interface::MINI] as $variant)
 		{
-			foreach ([[$old_key, $new_key], [$this->watermark_key($old_key), $this->watermark_key($new_key)]] as [$old_object, $new_object])
+			foreach ([
+				[$this->variant_key->resolve($variant, $old_key), $this->variant_key->resolve($variant, $new_key)],
+				[$this->variant_key->resolve($variant, $this->watermark_key($old_key)), $this->variant_key->resolve($variant, $this->watermark_key($new_key))],
+			] as [$old_object, $new_object])
 			{
 				if (!$this->storage->exists($variant, $old_object))
 				{
@@ -171,8 +177,8 @@ class layout_migrator
 
 		foreach ([provider_interface::SOURCE, provider_interface::MEDIUM, provider_interface::MINI] as $variant)
 		{
-			$this->storage->delete($variant, $old_key);
-			$this->storage->delete($variant, $this->watermark_key($old_key));
+			$this->storage->delete($variant, $this->variant_key->resolve($variant, $old_key));
+			$this->storage->delete($variant, $this->variant_key->resolve($variant, $this->watermark_key($old_key)));
 		}
 
 		return 'migrated';

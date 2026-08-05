@@ -50,6 +50,9 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Added
 
+- Added a fail-closed external image-processor contract and deterministic
+  browser-safe derivative keys, allowing add-ons to retain non-native originals
+  while serving, migrating and deleting their WebP medium/thumbnail variants.
 - Added opt-in AVIF uploads when PHP 8.2 or later and GD provide safe AVIF
   inspection, decoding and encoding, including configurable output quality,
   browser filters, ZIP uploads, ACP Import, album icons, derived images,

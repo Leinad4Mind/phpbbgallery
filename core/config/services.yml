@@ -187,6 +187,13 @@ services:
         class: phpbbgallery\core\storage\key_generator
         arguments:
             - '@phpbbgallery.core.config'
+    phpbbgallery.core.storage.variant_key:
+        class: phpbbgallery\core\storage\variant_key
+    phpbbgallery.core.image.format_registry:
+        class: phpbbgallery\core\image\format_registry
+        arguments:
+            - '@dispatcher'
+            - '@service_container'
     phpbbgallery.core.storage.local:
         class: phpbbgallery\core\storage\local_provider
         arguments:
@@ -199,6 +206,7 @@ services:
             - '@phpbbgallery.core.config'
             - '@service_container'
             - '@phpbbgallery.core.storage.local'
+            - '@phpbbgallery.core.storage.variant_key'
     phpbbgallery.core.storage.workspace:
         class: phpbbgallery\core\storage\workspace
         arguments:
@@ -211,6 +219,7 @@ services:
             - '@phpbbgallery.core.storage.key_generator'
             - '@phpbbgallery.core.storage.local'
             - '%phpbbgallery.tables.gallery_images%'
+            - '@phpbbgallery.core.storage.variant_key'
     phpbbgallery.core.report:
         class: phpbbgallery\core\report
         arguments:
@@ -356,6 +365,7 @@ services:
             - '@phpbbgallery.core.url'
             - '@phpbbgallery.core.block'
             - '@phpbbgallery.core.file.tool'
+            - '@phpbbgallery.core.image.format_registry'
             - '@phpbbgallery.core.storage.key_generator'
             - '@phpbbgallery.core.storage.local'
             - '@phpbbgallery.core.storage.workspace'

@@ -59,6 +59,12 @@ class file
 	/** Active-provider workspace; null only for legacy direct construction. */
 	protected ?\phpbbgallery\core\storage\workspace $storage_workspace = null;
 
+	/** Trusted image formats supplied by enabled Gallery add-ons. */
+	protected ?\phpbbgallery\core\image\format_registry $format_registry = null;
+
+	/** Resolve source keys to the concrete key used by each variant. */
+	protected ?\phpbbgallery\core\storage\variant_key $variant_key = null;
+
 	/** Lease for the provider object currently used by the response. */
 	protected ?\phpbbgallery\core\storage\local_object $image_object = null;
 
@@ -109,6 +115,7 @@ class file
 	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\language\language $language, \phpbbgallery\core\auth\auth $gallery_auth,
 	\phpbbgallery\core\user $gallery_user, \phpbbgallery\core\file\file $tool, \phpbb\request\request_interface $request,
 	\phpbb\event\dispatcher_interface $dispatcher, \phpbbgallery\core\storage\workspace $storage_workspace,
+	\phpbbgallery\core\image\format_registry $format_registry, \phpbbgallery\core\storage\variant_key $variant_key,
 	string $source_path, string $medium_path, string $mini_path,
 	string $watermark_file, string $albums_table, string $images_table)
 	{
@@ -122,6 +129,8 @@ class file
 		$this->request = $request;
 		$this->dispatcher = $dispatcher;
 		$this->storage_workspace = $storage_workspace;
+		$this->format_registry = $format_registry;
+		$this->variant_key = $variant_key;
 		$this->path_source = $this->resolve_gallery_path($source_path);
 		$this->path_medium = $this->resolve_gallery_path($medium_path);
 		$this->path_mini = $this->resolve_gallery_path($mini_path);
@@ -172,6 +181,22 @@ class file
 
 		$this->tool->set_image_options($this->config['phpbb_gallery_max_filesize'], $this->config['phpbb_gallery_max_height'], $this->config['phpbb_gallery_max_width']);
 		$this->tool->set_image_data($this->image_src, $this->data['image_name']);
+		$external_processor = $this->format_registry?->processor_for_filename($this->data['image_filename']);
+		if ($this->error === '' && $external_processor !== null)
+		{
+			$metadata = $external_processor->inspect($this->image_src);
+			if ($metadata === null || !$this->format_registry->accepts_metadata($this->data['image_filename'], $metadata))
+			{
+				$this->set_error_image('image_not_exist.jpg', $this->language->lang('IMAGE_NOT_EXIST'));
+				$this->generate_image_src();
+				$this->tool->set_image_data($this->image_src, $this->data['image_name'], 0, true);
+			}
+			else
+			{
+				$this->tool->image_content_type = (string) $metadata['mime'];
+				$this->tool->image_type = (string) $metadata['extension'];
+			}
+		}
 		// Original-source access may be user-specific; never let the browser or
 		// an intermediary reuse a response without passing through authorization.
 		$this->tool->disable_browser_cache();
@@ -463,6 +488,7 @@ class file
 			$source_object = null;
 			$output_object = null;
 			$key = $this->data['image_filename'];
+			$derived_key = ($this->variant_key ?? new \phpbbgallery\core\storage\variant_key())->resolve($this->storage_variant, $key);
 			try
 			{
 				if ($this->storage_workspace !== null)
@@ -471,38 +497,63 @@ class file
 						\phpbbgallery\core\storage\provider_interface::SOURCE,
 						$key
 					);
-					$output_object = $this->storage_workspace->create_temporary($key);
+					$output_object = $this->storage_workspace->create_temporary($derived_key);
 					$source_path = $source_object->get_path();
 					$output_path = $output_object->get_path();
 				}
 				else
 				{
 					$source_path = $this->path_source . $key;
-					$output_path = $this->path . $key;
+					$output_path = $this->path . $derived_key;
 				}
 
-				$this->tool->set_image_data($source_path, '', 0, true);
-				if (!$this->tool->read_image(true))
+				$external_processor = $this->format_registry?->processor_for_filename($key);
+				if ($external_processor !== null)
 				{
-					throw new \RuntimeException('The Gallery source image could not be decoded.');
+					$metadata = $external_processor->create_derivative(
+						$source_path,
+						$output_path,
+						$resize_width,
+						$resize_height,
+						(int) $this->config['phpbb_gallery_jpg_quality']
+					);
+					if ($metadata === null
+						|| ($metadata['extension'] ?? '') !== 'webp'
+						|| ($metadata['mime'] ?? '') !== 'image/webp'
+						|| (int) ($metadata['width'] ?? 0) < 1
+						|| (int) ($metadata['height'] ?? 0) < 1
+						|| ((int) $metadata['width'] * (int) $metadata['height']) > \phpbbgallery\core\file\file::MAX_DECODE_PIXELS
+						|| (int) ($metadata['filesize'] ?? 0) < 1
+						|| !is_file($output_path) || is_link($output_path))
+					{
+						throw new \RuntimeException('The Gallery external derivative could not be generated.');
+					}
 				}
-
-				$image_size = [
-					'file' => $this->tool->image_size['file'],
-					'width' => $this->tool->image_size['width'],
-					'height' => $this->tool->image_size['height'],
-				];
-
-				$this->tool->set_image_data($output_path);
-				if (($image_size['width'] > $resize_width) || ($image_size['height'] > $resize_height))
+				else
 				{
-					$this->tool->create_thumbnail($resize_width, $resize_height, $put_details, \phpbbgallery\core\file\file::THUMBNAIL_INFO_HEIGHT, $image_size);
-				}
+					$this->tool->set_image_data($source_path, '', 0, true);
+					if (!$this->tool->read_image(true))
+					{
+						throw new \RuntimeException('The Gallery source image could not be decoded.');
+					}
 
-				if (!$this->tool->write_image($output_path, $this->config['phpbb_gallery_jpg_quality'], false)
-					|| !is_file($output_path) || is_link($output_path))
-				{
-					throw new \RuntimeException('The Gallery derived image could not be generated.');
+					$image_size = [
+						'file' => $this->tool->image_size['file'],
+						'width' => $this->tool->image_size['width'],
+						'height' => $this->tool->image_size['height'],
+					];
+
+					$this->tool->set_image_data($output_path);
+					if (($image_size['width'] > $resize_width) || ($image_size['height'] > $resize_height))
+					{
+						$this->tool->create_thumbnail($resize_width, $resize_height, $put_details, \phpbbgallery\core\file\file::THUMBNAIL_INFO_HEIGHT, $image_size);
+					}
+
+					if (!$this->tool->write_image($output_path, $this->config['phpbb_gallery_jpg_quality'], false)
+						|| !is_file($output_path) || is_link($output_path))
+					{
+						throw new \RuntimeException('The Gallery derived image could not be generated.');
+					}
 				}
 				$generated_size = @filesize($output_path);
 
