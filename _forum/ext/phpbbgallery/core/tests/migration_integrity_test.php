@@ -40,6 +40,7 @@ use phpbbgallery\core\migrations\local_storage_layout;
 use phpbbgallery\core\migrations\storage_provider;
 use phpbbgallery\core\migrations\avif_support;
 use phpbbgallery\core\migrations\unread_image_badge;
+use phpbbgallery\core\migrations\bmp_support;
 
 class migration_integrity_test extends TestCase
 {
@@ -74,6 +75,7 @@ class migration_integrity_test extends TestCase
 		storage_provider::class,
 		avif_support::class,
 		unread_image_badge::class,
+		bmp_support::class,
 	];
 
 	private array $temp_directories = [];
@@ -195,6 +197,10 @@ class migration_integrity_test extends TestCase
 			['\phpbbgallery\core\migrations\avif_support'],
 			unread_image_badge::depends_on()
 		);
+		$this->assertSame(
+			['\phpbbgallery\core\migrations\unread_image_badge'],
+			bmp_support::depends_on()
+		);
 	}
 
 	public function test_image_deletion_request_migration_is_reversible(): void
@@ -290,6 +296,18 @@ class migration_integrity_test extends TestCase
 		], $migration->update_data());
 		$this->assertSame([
 			['config.remove', ['phpbb_gallery_disp_new_image_count']],
+		], $migration->revert_data());
+	}
+
+	public function test_bmp_support_is_opt_in_and_reversible(): void
+	{
+		$migration = (new \ReflectionClass(bmp_support::class))->newInstanceWithoutConstructor();
+
+		$this->assertSame([
+			['config.add', ['phpbb_gallery_allow_bmp', 0]],
+		], $migration->update_data());
+		$this->assertSame([
+			['config.remove', ['phpbb_gallery_allow_bmp']],
 		], $migration->revert_data());
 	}
 
@@ -945,6 +963,7 @@ class migration_integrity_test extends TestCase
 			'storage_provider.php',
 			'avif_support.php',
 			'unread_image_badge.php',
+			'bmp_support.php',
 		] as $migration)
 		{
 			require_once dirname(__DIR__) . '/migrations/' . $migration;

@@ -194,6 +194,8 @@ services:
         arguments:
             - '@dispatcher'
             - '@service_container'
+    phpbbgallery.core.image.bmp_processor:
+        class: phpbbgallery\core\image\bmp_processor
     phpbbgallery.core.storage.local:
         class: phpbbgallery\core\storage\local_provider
         arguments:
@@ -385,6 +387,8 @@ services:
             - '@language'
             - '%phpbbgallery.core.icons.path%'
             - '%phpbbgallery.core.icons.path_relative%'
+            - '@phpbbgallery.core.config'
+            - '@phpbbgallery.core.image.bmp_processor'
     phpbbgallery.core.rating:
         class: phpbbgallery\core\rating
         arguments:
@@ -457,6 +461,13 @@ services:
             - '@phpbbgallery.core.config'
             - '@phpbbgallery.core.search'
             - '%phpbbgallery.tables.gallery_users%'
+        tags:
+            - { name: event.listener }
+    phpbbgallery.core.image_format_listener:
+        class: phpbbgallery\core\event\image_format_listener
+        arguments:
+            - '@phpbbgallery.core.config'
+            - '@language'
         tags:
             - { name: event.listener }
     phpbbgallery.core.permission_lifecycle_listener:

@@ -40,12 +40,12 @@ class icon_manager_test extends TestCase
 	 * (for move_file()/storage); pointing both at the same temp directory lets the
 	 * test double's move_file() write to a real path without a full phpBB container.
 	 */
-	private function new_manager(?icon_manager_test_file_upload $file_upload = null): manager
+	private function new_manager(?icon_manager_test_file_upload $file_upload = null, bool $allow_bmp = false): manager
 	{
-		return $this->build_manager($file_upload ?? new icon_manager_test_file_upload(), $this->icons_path, rtrim($this->icons_path, '/\\'));
+		return $this->build_manager($file_upload ?? new icon_manager_test_file_upload(), $this->icons_path, rtrim($this->icons_path, '/\\'), $allow_bmp);
 	}
 
-	private function build_manager(icon_manager_test_file_upload $file_upload, string $icons_path, string $icons_path_relative): manager
+	private function build_manager(icon_manager_test_file_upload $file_upload, string $icons_path, string $icons_path_relative, bool $allow_bmp = false): manager
 	{
 		$reflection = new \ReflectionClass(manager::class);
 		$manager = $reflection->newInstanceWithoutConstructor();
@@ -54,6 +54,10 @@ class icon_manager_test extends TestCase
 		$this->set_property($manager, 'language', new icon_manager_test_language());
 		$this->set_property($manager, 'icons_path', rtrim($icons_path, '/\\') . DIRECTORY_SEPARATOR);
 		$this->set_property($manager, 'icons_path_relative', rtrim($icons_path_relative, '/\\'));
+		$this->set_property($manager, 'gallery_config', new \phpbbgallery\core\config(new \phpbb\config\config([
+			'phpbb_gallery_allow_bmp' => $allow_bmp ? 1 : 0,
+		])));
+		$this->set_property($manager, 'bmp_processor', new \phpbbgallery\core\image\bmp_processor());
 
 		return $manager;
 	}
@@ -178,6 +182,43 @@ class icon_manager_test extends TestCase
 		$this->assertNull($result['error']);
 		$this->assertSame('album_icon.avif', $result['filename']);
 		$this->assertFileExists($this->icons_path . 'album_icon.avif');
+	}
+
+	public function test_upload_converts_enabled_bmp_icon_to_webp(): void
+	{
+		if (!\phpbbgallery\core\image\bmp_processor::is_supported())
+		{
+			$this->markTestSkipped('BMP and WebP GD support is unavailable.');
+		}
+		$image = imagecreatetruecolor(4, 3);
+		$source = $this->write_source_file('source.bmp', '');
+		$this->assertTrue(imagebmp($image, $source, true));
+		$image = null;
+		$file_upload = new icon_manager_test_file_upload();
+		$file_upload->next_upload = [
+			'source' => $source,
+			'realname' => 'Album Icon.bmp',
+			'size' => (int) filesize($source),
+		];
+
+		$result = $this->new_manager($file_upload, true)->upload('icon_file');
+
+		$this->assertNull($result['error']);
+		$this->assertSame('album_icon.webp', $result['filename']);
+		$this->assertFileDoesNotExist($this->icons_path . 'album_icon.bmp');
+		$this->assertSame(IMAGETYPE_WEBP, getimagesize($this->icons_path . 'album_icon.webp')[2]);
+	}
+
+	public function test_upload_rejects_bmp_icon_when_format_is_disabled(): void
+	{
+		$source = $this->write_source_file('source.bmp', 'BMnot-a-real-bitmap');
+		$file_upload = new icon_manager_test_file_upload();
+		$file_upload->next_upload = ['source' => $source, 'realname' => 'album.bmp', 'size' => 19];
+
+		$result = $this->new_manager($file_upload)->upload('icon_file');
+
+		$this->assertNotNull($result['error']);
+		$this->assertNull($result['filename']);
 	}
 
 	public function test_upload_creates_a_missing_icon_directory_and_listing_guard(): void

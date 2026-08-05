@@ -194,7 +194,9 @@ namespace
 	require_once __DIR__ . '/stubs/phpbb_user.php';
 	require_once __DIR__ . '/stubs/template_noop_token_parser.php';
 	require_once dirname(__DIR__) . '/image/external_processor_interface.php';
+	require_once dirname(__DIR__) . '/image/bmp_processor.php';
 	require_once dirname(__DIR__) . '/image/format_registry.php';
+	require_once dirname(__DIR__, 2) . '/acpimport/acp/import_storage.php';
 	require_once dirname(__DIR__) . '/storage/variant_key.php';
 	require_once dirname(__DIR__) . '/zip/extractor.php';
 	require_once dirname(__DIR__) . '/icon/manager.php';
@@ -220,6 +222,7 @@ namespace
 	require_once dirname(__DIR__) . '/controller/image.php';
 	require_once dirname(__DIR__) . '/online_location.php';
 	require_once dirname(__DIR__) . '/event/main_listener.php';
+	require_once dirname(__DIR__) . '/event/image_format_listener.php';
 	require_once dirname(__DIR__) . '/event/mini_profile_listener.php';
 	require_once dirname(__DIR__) . '/event/permission_lifecycle_listener.php';
 	require_once dirname(__DIR__) . '/identity_sync.php';

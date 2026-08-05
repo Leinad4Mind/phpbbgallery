@@ -9,7 +9,7 @@
 
 namespace phpbbgallery\core\image;
 
-/** Contract implemented by add-ons which safely process non-native image formats. */
+/** Contract implemented by trusted processors for browser-unsafe source formats. */
 interface external_processor_interface
 {
 	/**

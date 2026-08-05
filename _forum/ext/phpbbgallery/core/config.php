@@ -26,6 +26,7 @@ class config
 		'allow_png'			=> true,
 		'allow_webp'		=> true,
 		'allow_avif'		=> false,
+		'allow_bmp'			=> false,
 		'allow_rates'		=> true,
 		'allow_resize'		=> true,
 		'allow_rotate'		=> true,
