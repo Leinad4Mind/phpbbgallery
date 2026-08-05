@@ -52,17 +52,17 @@ class archive
 		'ç' => 'c', 'ñ' => 'n', 'ý' => 'y', 'ÿ' => 'y', 'ß' => 'ss', 'æ' => 'ae', 'œ' => 'oe',
 	];
 
-	/** @var string Directory holding the original uploads, with a trailing separator */
-	private string $source_path;
+	/** Active Gallery storage provider. */
+	private \phpbbgallery\core\storage\provider_interface $storage;
 
 	/**
 	 * Constructor
 	 *
-	 * @param string $source_path Gallery source directory
+	 * @param \phpbbgallery\core\storage\provider_interface $storage Gallery storage provider
 	 */
-	public function __construct(string $source_path)
+	public function __construct(\phpbbgallery\core\storage\provider_interface $storage)
 	{
-		$this->source_path = rtrim(path::resolve($source_path), '/\\') . DIRECTORY_SEPARATOR;
+		$this->storage = $storage;
 	}
 
 	/**
@@ -119,16 +119,17 @@ class archive
 	/**
 	 * Build the path an image takes inside the archive.
 	 *
-	 * The image id is appended to the name because `image_name` is neither unique nor
-	 * carries an extension; the extension comes from the hashed filename on disk.
+	 * Image and author identifiers make the exported filename stable and unique;
+	 * the extension comes from the generated storage key.
 	 *
 	 * @param array  $album_segments Album names from the root down to the image's album
 	 * @param string $image_name     Display name, as stored
 	 * @param string $image_filename Hashed filename on disk
 	 * @param int    $image_id       Image identifier
+	 * @param int    $author_id      Final image author identifier
 	 * @return string
 	 */
-	public static function entry_path(array $album_segments, string $image_name, string $image_filename, int $image_id): string
+	public static function entry_path(array $album_segments, string $image_name, string $image_filename, int $image_id, int $author_id): string
 	{
 		$segments = [];
 		foreach ($album_segments as $album_segment)
@@ -137,10 +138,11 @@ class archive
 		}
 
 		$extension = \phpbbgallery\core\file\file::extension_by_filename($image_filename);
-		$suffix = '_' . $image_id . ($extension !== '' ? '.' . $extension : '');
+		$prefix = max(0, $image_id) . '_' . max(0, $author_id) . '_';
+		$suffix = $extension !== '' ? '.' . $extension : '';
 
-		$name = self::sanitize_segment($image_name, 'image', self::MAX_SEGMENT_LENGTH - strlen($suffix));
-		$segments[] = $name . $suffix;
+		$name = self::sanitize_segment($image_name, 'image', self::MAX_SEGMENT_LENGTH - strlen($prefix) - strlen($suffix));
+		$segments[] = $prefix . $name . $suffix;
 
 		return implode('/', $segments);
 	}
@@ -229,7 +231,7 @@ class archive
 				continue;
 			}
 
-			$entry = self::entry_path($row['album_segments'], (string) $row['image_name'], (string) $row['image_filename'], (int) $row['image_id']);
+			$entry = self::entry_path($row['album_segments'], (string) $row['image_name'], (string) $row['image_filename'], (int) $row['image_id'], (int) $row['author_id']);
 			if (!$zip->addFile($source, $entry))
 			{
 				$result['errors'][] = ['type' => 'unreadable', 'image_id' => (int) $row['image_id'], 'file' => (string) $row['image_filename']];
@@ -286,7 +288,7 @@ class archive
 				'image_id' => (int) $row['image_id'],
 				'album_id' => (int) $row['album_id'],
 				'album_name' => htmlspecialchars_decode((string) $row['album_name']),
-				'zip_path' => self::entry_path($row['album_segments'], (string) $row['image_name'], (string) $row['image_filename'], (int) $row['image_id']),
+				'zip_path' => self::entry_path($row['album_segments'], (string) $row['image_name'], (string) $row['image_filename'], (int) $row['image_id'], (int) $row['author_id']),
 				'image_name' => htmlspecialchars_decode((string) $row['image_name']),
 				'original_filename' => (string) $row['image_filename'],
 				'uploader' => htmlspecialchars_decode((string) $row['uploader']),
@@ -357,24 +359,8 @@ class archive
 	 */
 	private function resolve_source(string $filename): string|false
 	{
-		if ($filename === '' || basename($filename) !== $filename || strpos($filename, '..') !== false)
-		{
-			return false;
-		}
+		$path = $this->storage->local_path(\phpbbgallery\core\storage\provider_interface::SOURCE, $filename);
 
-		$root = realpath($this->source_path);
-		$path = realpath($this->source_path . $filename);
-		if ($root === false || $path === false)
-		{
-			return false;
-		}
-
-		$root = rtrim(str_replace('\\', '/', $root), '/') . '/';
-		if (strncmp(str_replace('\\', '/', $path), $root, strlen($root)) !== 0)
-		{
-			return false;
-		}
-
-		return is_file($path) && is_readable($path) ? $path : false;
+		return $path !== null && is_file($path) && is_readable($path) ? $path : false;
 	}
 }

@@ -75,7 +75,11 @@ class runner_test extends TestCase
 			$this->config($config_overrides),
 			new \phpbb\language\language(),
 			$export,
-			new archive($this->source),
+			new archive(new \phpbbgallery\core\storage\local_provider(
+				$this->source,
+				$this->root . '/medium',
+				$this->root . '/mini'
+			)),
 			$this->storage
 		);
 	}
@@ -84,6 +88,7 @@ class runner_test extends TestCase
 	{
 		return [
 			'image_id' => $image_id,
+			'author_id' => 2,
 			'album_id' => 1,
 			'album_name' => 'Album',
 			'album_segments' => ['Album'],
@@ -221,7 +226,7 @@ class runner_test extends TestCase
 
 		self::assertContains(archive::MANIFEST_CSV, $names);
 		self::assertContains(archive::MANIFEST_JSON, $names);
-		self::assertContains('Album/Picture 1_1.jpg', $names);
+		self::assertContains('Album/1_2_Picture 1.jpg', $names);
 	}
 
 	public function test_a_missing_file_is_recorded_without_stopping_the_job(): void

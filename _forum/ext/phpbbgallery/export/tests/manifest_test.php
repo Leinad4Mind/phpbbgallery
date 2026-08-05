@@ -16,6 +16,7 @@ class manifest_test extends TestCase
 	{
 		return array_merge([
 			'image_id' => 1042,
+			'author_id' => 2,
 			'album_id' => 1,
 			'album_name' => 'Capas de Animação Oriental',
 			'album_segments' => ['Capas de Animação Oriental'],
@@ -34,7 +35,7 @@ class manifest_test extends TestCase
 		$manifest = archive::manifest_rows([$this->row()]);
 
 		self::assertCount(1, $manifest);
-		self::assertSame('Capas de Animação Oriental/Akira poster_1042.jpg', $manifest[0]['zip_path']);
+		self::assertSame('Capas de Animação Oriental/1042_2_Akira poster.jpg', $manifest[0]['zip_path']);
 		self::assertSame('a3f0c9.jpg', $manifest[0]['original_filename']);
 		self::assertSame(1042, $manifest[0]['image_id']);
 		self::assertSame(42, $manifest[0]['views']);
@@ -106,7 +107,7 @@ class manifest_test extends TestCase
 		self::assertSame('acp', $decoded['export']['scope']);
 		self::assertSame(1, $decoded['export']['images']);
 		self::assertCount(1, $decoded['images']);
-		self::assertSame('Capas de Animação Oriental/Akira poster_1042.jpg', $decoded['images'][0]['zip_path']);
+		self::assertSame('Capas de Animação Oriental/1042_2_Akira poster.jpg', $decoded['images'][0]['zip_path']);
 	}
 
 	public function test_json_keeps_accents_and_slashes_readable(): void

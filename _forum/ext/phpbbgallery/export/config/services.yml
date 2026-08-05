@@ -10,7 +10,7 @@ services:
     phpbbgallery.export.archive:
         class: phpbbgallery\export\archive
         arguments:
-            - '%phpbbgallery.core.file.source%'
+            - '@phpbbgallery.core.storage.local'
 
     phpbbgallery.export:
         class: phpbbgallery\export\export

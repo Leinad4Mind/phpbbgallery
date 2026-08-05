@@ -119,7 +119,7 @@ class export
 
 		$albums = $this->cache->get_albums();
 
-		$sql = 'SELECT i.image_id, i.image_name, i.image_filename, i.image_username, i.image_time,
+		$sql = 'SELECT i.image_id, i.image_user_id, i.image_name, i.image_filename, i.image_username, i.image_time,
 				i.image_view_count, i.filesize_upload, i.image_desc, i.image_desc_uid, i.image_desc_bitfield,
 				i.image_album_id, a.album_name, a.album_user_id, u.username AS album_owner
 			FROM ' . $this->table_images . ' i
@@ -136,6 +136,7 @@ class export
 			$album_id = (int) $row['image_album_id'];
 			$rows[(int) $row['image_id']] = [
 				'image_id' => (int) $row['image_id'],
+				'author_id' => (int) $row['image_user_id'],
 				'album_id' => $album_id,
 				'album_name' => (string) $row['album_name'],
 				'album_segments' => $this->album_segments($album_id, $albums, (string) $row['album_owner']),

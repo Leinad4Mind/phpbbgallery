@@ -70,41 +70,42 @@ class filename_test extends TestCase
 	public function test_entry_path_restores_name_extension_and_album(): void
 	{
 		self::assertSame(
-			'Capas de Animação Oriental/Akira poster_1042.jpg',
-			archive::entry_path(['Capas de Animação Oriental'], 'Akira poster', 'a3f0c9deadbeef.jpg', 1042)
+			'Capas de Animação Oriental/1042_2_Akira poster.jpg',
+			archive::entry_path(['Capas de Animação Oriental'], 'Akira poster', 'a3f0c9deadbeef.jpg', 1042, 2)
 		);
 	}
 
 	public function test_entry_path_nests_subalbums(): void
 	{
 		self::assertSame(
-			'Parent/Child/Ghost in the Shell_1051.png',
-			archive::entry_path(['Parent', 'Child'], 'Ghost in the Shell', '0badc0ffee.png', 1051)
+			'Parent/Child/1051_2_Ghost in the Shell.png',
+			archive::entry_path(['Parent', 'Child'], 'Ghost in the Shell', '0badc0ffee.png', 1051, 2)
 		);
 	}
 
 	public function test_entry_path_disambiguates_identical_names_by_id(): void
 	{
-		$first = archive::entry_path(['Album'], 'Poster', 'aaa.jpg', 1);
-		$second = archive::entry_path(['Album'], 'Poster', 'bbb.jpg', 2);
+		$first = archive::entry_path(['Album'], 'Poster', 'aaa.jpg', 1, 2);
+		$second = archive::entry_path(['Album'], 'Poster', 'bbb.jpg', 2, 2);
 
 		self::assertNotSame($first, $second);
-		self::assertSame('Album/Poster_1.jpg', $first);
-		self::assertSame('Album/Poster_2.jpg', $second);
+		self::assertSame('Album/1_2_Poster.jpg', $first);
+		self::assertSame('Album/2_2_Poster.jpg', $second);
 	}
 
 	public function test_entry_path_leaves_room_for_the_suffix(): void
 	{
-		$path = archive::entry_path([], str_repeat('a', 400), 'x.webp', 999999);
+		$path = archive::entry_path([], str_repeat('a', 400), 'x.webp', 999999, 2);
 		$name = basename($path);
 
 		self::assertLessThanOrEqual(archive::MAX_SEGMENT_LENGTH, strlen($name));
-		self::assertStringEndsWith('_999999.webp', $name);
+		self::assertStringStartsWith('999999_2_', $name);
+		self::assertStringEndsWith('.webp', $name);
 	}
 
 	public function test_entry_path_without_a_known_extension(): void
 	{
-		self::assertSame('Album/Poster_5', archive::entry_path(['Album'], 'Poster', 'no-extension-here', 5));
+		self::assertSame('Album/5_2_Poster', archive::entry_path(['Album'], 'Poster', 'no-extension-here', 5, 2));
 	}
 
 	public function test_slug_transliterates_and_lowercases(): void

@@ -29,7 +29,11 @@ class archive_test extends TestCase
 		mkdir($this->source, 0777, true);
 
 		$this->archive_path = $this->root . '/export.zip';
-		$this->archive = new archive($this->source);
+		$this->archive = new archive(new \phpbbgallery\core\storage\local_provider(
+			$this->source,
+			$this->root . '/medium',
+			$this->root . '/mini'
+		));
 	}
 
 	protected function tearDown(): void
@@ -54,6 +58,11 @@ class archive_test extends TestCase
 
 	private function write_source(string $filename, string $contents = 'image-bytes'): void
 	{
+		$directory = dirname($this->source . '/' . $filename);
+		if (!is_dir($directory))
+		{
+			mkdir($directory, 0777, true);
+		}
 		file_put_contents($this->source . '/' . $filename, $contents);
 	}
 
@@ -61,6 +70,7 @@ class archive_test extends TestCase
 	{
 		return [
 			'image_id' => $image_id,
+			'author_id' => 2,
 			'album_id' => 1,
 			'album_name' => 'Album',
 			'album_segments' => $segments,
@@ -103,8 +113,8 @@ class archive_test extends TestCase
 		self::assertSame(2, $result['added']);
 		self::assertSame([], $result['errors']);
 		self::assertSame([
-			'Capas de Animação Oriental/Akira poster_1042.jpg',
-			'Capas de Animação Oriental/Subalbum/Ghost in the Shell_1051.png',
+			'Capas de Animação Oriental/1042_2_Akira poster.jpg',
+			'Capas de Animação Oriental/Subalbum/1051_2_Ghost in the Shell.png',
 		], $this->entries());
 	}
 
@@ -121,7 +131,7 @@ class archive_test extends TestCase
 		self::assertCount(1, $result['errors']);
 		self::assertSame('missing', $result['errors'][0]['type']);
 		self::assertSame(1, $result['errors'][0]['image_id']);
-		self::assertSame(['Album/Still here_2.jpg'], $this->entries());
+		self::assertSame(['Album/2_2_Still here.jpg'], $this->entries());
 	}
 
 	public function test_a_filename_pointing_outside_the_source_directory_is_refused(): void
@@ -145,7 +155,7 @@ class archive_test extends TestCase
 		$this->archive->append($this->archive_path, [$this->row(1, 'one.jpg', 'First')], true);
 		$this->archive->append($this->archive_path, [$this->row(2, 'two.jpg', 'Second')], false);
 
-		self::assertSame(['Album/First_1.jpg', 'Album/Second_2.jpg'], $this->entries());
+		self::assertSame(['Album/1_2_First.jpg', 'Album/2_2_Second.jpg'], $this->entries());
 	}
 
 	public function test_the_first_batch_starts_a_fresh_archive(): void
@@ -156,7 +166,7 @@ class archive_test extends TestCase
 		$result = $this->archive->append($this->archive_path, [$this->row(1, 'one.jpg', 'First')], true);
 
 		self::assertSame(1, $result['added']);
-		self::assertSame(['Album/First_1.jpg'], $this->entries());
+		self::assertSame(['Album/1_2_First.jpg'], $this->entries());
 	}
 
 	public function test_the_manifest_is_written_into_the_archive(): void
@@ -168,7 +178,7 @@ class archive_test extends TestCase
 		self::assertTrue($this->archive->write_manifest($this->archive_path, $rows, ['scope' => 'acp']));
 
 		self::assertSame([
-			'Album/First_1.jpg',
+			'Album/1_2_First.jpg',
 			archive::MANIFEST_CSV,
 			archive::MANIFEST_JSON,
 		], $this->entries());
@@ -185,5 +195,18 @@ class archive_test extends TestCase
 		], true);
 
 		self::assertSame(150, $result['bytes']);
+	}
+
+	public function test_distributed_source_keys_are_exported(): void
+	{
+		$this->write_source('7/71/7127abfe.jpg', 'distributed');
+
+		$result = $this->archive->append($this->archive_path, [
+			$this->row(12, '7/71/7127abfe.jpg', 'Distributed'),
+		], true);
+
+		self::assertSame(1, $result['added']);
+		self::assertSame([], $result['errors']);
+		self::assertSame(['Album/12_2_Distributed.jpg'], $this->entries());
 	}
 }
