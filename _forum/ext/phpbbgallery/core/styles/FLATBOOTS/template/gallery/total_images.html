@@ -1,6 +1,6 @@
 {% if pagination|length or TOTAL_IMAGES %}
 	<div class="pull-right">
-		<div class="pagination pagination-sm">
+		<ul class="pagination pagination-sm">
 			<li class="active">
 				<a>{{ TOTAL_IMAGES }}</a>
 			</li>
@@ -11,6 +11,6 @@
 				<a>{{ PAGE_NUMBER }}</a>
 			</li>
 			{% endif %}
-		</div>
+		</ul>
 	</div>
 {% endif %}

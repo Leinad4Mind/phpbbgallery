@@ -459,6 +459,18 @@ final class template_syntax_test extends TestCase
 		}
 	}
 
+	public function test_bootstrap_album_pagination_uses_the_native_list_contract(): void
+	{
+		$core_root = dirname(__DIR__);
+		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$pagination = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/total_images.html');
+			$this->assertStringContainsString('<ul class="pagination pagination-sm">', $pagination, $style);
+			$this->assertStringContainsString("{% include 'pagination.html' %}", $pagination, $style);
+			$this->assertStringNotContainsString('<div class="pagination pagination-sm">', $pagination, $style);
+		}
+	}
+
 	public function test_forum_index_images_use_native_events_in_every_supported_style(): void
 	{
 		$core_root = dirname(__DIR__);
