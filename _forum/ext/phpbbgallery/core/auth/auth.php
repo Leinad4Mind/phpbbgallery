@@ -504,7 +504,7 @@ class auth
 	 */
 	public function get_user_zebra(int $user_id): array
 	{
-
+		$user_id = $this->get_effective_user_id($user_id);
 		$zebra = ['foe' => [], 'friend' => [], 'bff' => []];
 		$sql = 'SELECT *
 			FROM ' . ZEBRA_TABLE . '
@@ -540,6 +540,7 @@ class auth
 	}
 	public function get_user_foes(int $user_id): array
 	{
+		$user_id = $this->get_effective_user_id($user_id);
 		$foes = [];
 		$sql = 'SELECT * 
 		FROM ' . ZEBRA_TABLE . '
@@ -564,13 +565,14 @@ class auth
 	public function get_zebra_state(array $zebra_array, int $album_author, int $album_id): int
 	{
 		$state = 0;
+		$viewer_id = $this->get_effective_user_id((int) ($this->phpbb_user->data['user_id'] ?? 0));
 		// if we check for ourselves or user is mod or admin - make biggest possible step
-		if ($this->phpbb_user->data['user_id'] == $album_author || $this->acl_check('m_', $album_id, $album_author) || $this->auth->acl_get('a_user'))
+		if ($viewer_id == $album_author || $this->acl_check('m_', $album_id, $album_author) || $this->auth->acl_get('a_user'))
 		{
 			$state = 5;
 		}
 		//If user is not anon - we will check ... else its state is 0
-		else if ($this->phpbb_user->data['user_id'] != ANONYMOUS)
+		else if ($viewer_id != ANONYMOUS)
 		{
 			if (in_array($album_author, $zebra_array['foe']))
 			{
@@ -774,7 +776,7 @@ class auth
 		$p_id = $a_id;
 		if ($u_id)
 		{
-			$this->user->set_user_id($this->phpbb_user->data['user_id']);
+			$this->user->set_user_id($this->get_effective_user_id((int) ($this->phpbb_user->data['user_id'] ?? 0)));
 			if ($this->user->is_user($u_id))
 			{
 				$p_id = self::OWN_ALBUM;
@@ -1008,11 +1010,12 @@ class auth
 	 */
 	public function get_exclude_zebra(): array
 	{
-		$zebra_array = $this->get_user_zebra($this->phpbb_user->data['user_id']);
+		$viewer_id = $this->get_effective_user_id((int) ($this->phpbb_user->data['user_id'] ?? 0));
+		$zebra_array = $this->get_user_zebra($viewer_id);
 		$foes = [];
 		if ($this->user->get_data('rrc_zebra'))
 		{
-			$foes = $this->get_user_foes($this->phpbb_user->data['user_id']);
+			$foes = $this->get_user_foes($viewer_id);
 		}
 		$albums = $this->cache->get_albums();
 		$exclude = [];

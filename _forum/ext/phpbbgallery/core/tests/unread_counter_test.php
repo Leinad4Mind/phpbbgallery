@@ -9,7 +9,7 @@
 
 namespace phpbbgallery\core\tests;
 
-use phpbbgallery\core\auth\auth;
+use phpbbgallery\core\album_access;
 use phpbbgallery\core\policy\image_visibility;
 use phpbbgallery\core\unread_counter;
 use PHPUnit\Framework\TestCase;
@@ -35,9 +35,9 @@ class unread_counter_test extends TestCase
 		{
 			$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
 			$db->expects($this->never())->method('sql_query_limit');
-			$gallery_auth = $this->createMock(auth::class);
-			$gallery_auth->expects($this->never())->method('load_user_permissions');
-			$counter = $this->counter($db, $gallery_auth, $user_data);
+			$access = $this->createMock(album_access::class);
+			$access->expects($this->never())->method('resolve');
+			$counter = $this->counter($db, $access, $user_data);
 
 			$this->assertSame(0, $counter->count());
 		}
@@ -47,25 +47,24 @@ class unread_counter_test extends TestCase
 	{
 		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
 		$db->expects($this->never())->method('sql_query_limit');
-		$gallery_auth = $this->createMock(auth::class);
-		$gallery_auth->expects($this->never())->method('load_user_permissions');
+		$access = $this->createMock(album_access::class);
+		$access->expects($this->never())->method('resolve');
 
-		$this->assertSame(0, $this->counter($db, $gallery_auth)->count(0));
+		$this->assertSame(0, $this->counter($db, $access)->count(0));
 	}
 
 	public function test_no_visible_albums_avoids_image_query(): void
 	{
 		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
 		$db->expects($this->never())->method('sql_query_limit');
-		$gallery_auth = $this->createMock(auth::class);
-		$gallery_auth->expects($this->once())->method('load_user_permissions')->with(7);
-		$gallery_auth->method('get_exclude_zebra')->willReturn([2, 3]);
-		$gallery_auth->method('acl_album_ids')->willReturnMap([
-			['i_view', 'array', false, true, [2]],
-			['m_status', 'array', false, true, [3]],
+		$access = $this->createMock(album_access::class);
+		$access->expects($this->once())->method('resolve')->willReturn([
+			'viewable' => [],
+			'moderated' => [],
+			'visible' => [],
 		]);
 
-		$this->assertSame(0, $this->counter($db, $gallery_auth)->count());
+		$this->assertSame(0, $this->counter($db, $access)->count());
 	}
 
 	public function test_query_uses_permission_filtered_albums_statuses_privacy_and_read_markers(): void
@@ -90,7 +89,7 @@ class unread_counter_test extends TestCase
 			->with($this->callback(static function (string $sql): bool
 			{
 				TestCase::assertStringContainsString('LEFT JOIN phpbb_gallery_albums_track t', $sql);
-				TestCase::assertStringContainsString('t.user_id = 7', $sql);
+				TestCase::assertStringContainsString('t.user_id = 42', $sql);
 				TestCase::assertStringContainsString('i.image_album_id IN (2, 4, 6)', $sql);
 				TestCase::assertStringContainsString('i.image_status IN (1, 2)', $sql);
 				TestCase::assertStringContainsString('(i.image_contest = 0)', $sql);
@@ -105,14 +104,14 @@ class unread_counter_test extends TestCase
 			->willReturnOnConsecutiveCalls(['image_id' => 11], ['image_id' => 12], false);
 		$db->expects($this->once())->method('sql_freeresult')->with('result');
 
-		$gallery_auth = $this->createMock(auth::class);
-		$gallery_auth->expects($this->once())->method('load_user_permissions')->with(7);
-		$gallery_auth->method('get_exclude_zebra')->willReturn([3]);
-		$gallery_auth->method('acl_album_ids')->willReturnMap([
-			['i_view', 'array', false, true, [2, 3, 4]],
-			['m_status', 'array', false, true, [4, 6]],
+		$access = $this->createMock(album_access::class);
+		$access->expects($this->once())->method('resolve')->willReturn([
+			'viewable' => [2, 4],
+			'moderated' => [4, 6],
+			'visible' => [2, 4, 6],
 		]);
 		$gallery_user = $this->createMock(\phpbbgallery\core\user::class);
+		$gallery_user->user_id = 42;
 		$gallery_user->expects($this->once())->method('get_data')->with('user_lastmark')->willReturn(1234);
 		$visibility = $this->createMock(image_visibility::class);
 		$visibility->expects($this->once())
@@ -120,12 +119,17 @@ class unread_counter_test extends TestCase
 			->with('i', [4, 6])
 			->willReturn('(i.image_contest = 0)');
 
-		$this->assertSame(2, $this->counter($db, $gallery_auth, null, $gallery_user, $visibility)->count(500));
+		$this->assertSame(2, $this->counter($db, $access, [
+			'user_id' => 2,
+			'user_perm_from' => 42,
+			'is_registered' => true,
+			'is_bot' => false,
+		], $gallery_user, $visibility)->count(500));
 	}
 
 	private function counter(
 		\phpbb\db\driver\driver_interface $db,
-		auth $gallery_auth,
+		album_access $access,
 		?array $user_data = null,
 		?\phpbbgallery\core\user $gallery_user = null,
 		?image_visibility $visibility = null
@@ -141,7 +145,7 @@ class unread_counter_test extends TestCase
 		return new unread_counter(
 			$db,
 			$user,
-			$gallery_auth,
+			$access,
 			$gallery_user ?? $this->createStub(\phpbbgallery\core\user::class),
 			$visibility ?? $this->createStub(image_visibility::class),
 			'phpbb_gallery_images',

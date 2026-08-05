@@ -151,12 +151,18 @@ final class event_main_listener_types_test extends TestCase
 		$helper->expects($this->once())->method('route')->with('phpbbgallery_core_index')->willReturn('/gallery');
 		$counter = $this->createMock(\phpbbgallery\core\unread_counter::class);
 		$counter->expects($this->once())->method('count')->willReturn(100);
+		$access = $this->createMock(\phpbbgallery\core\album_access::class);
+		$access->expects($this->once())->method('has_any')->willReturn(true);
+		$user = new \phpbb\user();
+		$user->data = ['is_bot' => false];
 		$reflection = new \ReflectionClass(main_listener::class);
 		$listener = $reflection->newInstanceWithoutConstructor();
 		$this->set_property($listener, 'template', $template);
 		$this->set_property($listener, 'language', $language);
 		$this->set_property($listener, 'gallery_config', $config);
 		$this->set_property($listener, 'helper', $helper);
+		$this->set_property($listener, 'user', $user);
+		$this->set_property($listener, 'album_access', $access);
 		$this->set_property($listener, 'unread_counter', $counter);
 
 		$listener->add_page_header_link(new \phpbb\event\data([]));
@@ -178,12 +184,18 @@ final class event_main_listener_types_test extends TestCase
 		$helper->method('route')->willReturn('/gallery');
 		$counter = $this->createMock(\phpbbgallery\core\unread_counter::class);
 		$counter->expects($this->never())->method('count');
+		$access = $this->createMock(\phpbbgallery\core\album_access::class);
+		$access->expects($this->once())->method('has_any')->willReturn(true);
+		$user = new \phpbb\user();
+		$user->data = ['is_bot' => false];
 		$reflection = new \ReflectionClass(main_listener::class);
 		$listener = $reflection->newInstanceWithoutConstructor();
 		$this->set_property($listener, 'template', $template);
 		$this->set_property($listener, 'language', $language);
 		$this->set_property($listener, 'gallery_config', $config);
 		$this->set_property($listener, 'helper', $helper);
+		$this->set_property($listener, 'user', $user);
+		$this->set_property($listener, 'album_access', $access);
 		$this->set_property($listener, 'unread_counter', $counter);
 
 		$listener->add_page_header_link(new \phpbb\event\data([]));
@@ -205,13 +217,48 @@ final class event_main_listener_types_test extends TestCase
 		$helper->method('route')->willReturn('/gallery');
 		$counter = $this->createMock(\phpbbgallery\core\unread_counter::class);
 		$counter->expects($this->once())->method('count')->willReturn(0);
+		$access = $this->createMock(\phpbbgallery\core\album_access::class);
+		$access->expects($this->once())->method('has_any')->willReturn(true);
+		$user = new \phpbb\user();
+		$user->data = ['is_bot' => false];
 		$reflection = new \ReflectionClass(main_listener::class);
 		$listener = $reflection->newInstanceWithoutConstructor();
 		$this->set_property($listener, 'template', $template);
 		$this->set_property($listener, 'language', $language);
 		$this->set_property($listener, 'gallery_config', $config);
 		$this->set_property($listener, 'helper', $helper);
+		$this->set_property($listener, 'user', $user);
+		$this->set_property($listener, 'album_access', $access);
 		$this->set_property($listener, 'unread_counter', $counter);
+
+		$listener->add_page_header_link(new \phpbb\event\data([]));
+	}
+
+	public function test_page_header_hides_gallery_when_effective_identity_has_no_album_access(): void
+	{
+		$template = $this->createMock(\phpbb\template\template::class);
+		$template->expects($this->once())->method('assign_var')->with('GALLERY_TITLE', 'Gallery');
+		$template->expects($this->never())->method('assign_vars');
+		$language = $this->createStub(\phpbb\language\language::class);
+		$config = $this->createMock(\phpbbgallery\core\config::class);
+		$config->method('get')->with('disp_gallery_icon')->willReturn(1);
+		$config->method('get_title')->with($language)->willReturn('Gallery');
+		$access = $this->createMock(\phpbbgallery\core\album_access::class);
+		$access->expects($this->once())->method('has_any')->willReturn(false);
+		$counter = $this->createMock(\phpbbgallery\core\unread_counter::class);
+		$counter->expects($this->never())->method('count');
+		$helper = $this->createMock(\phpbb\controller\helper::class);
+		$helper->expects($this->never())->method('route');
+		$user = new \phpbb\user();
+		$user->data = ['user_id' => 2, 'user_perm_from' => 42, 'is_bot' => false];
+		$listener = (new \ReflectionClass(main_listener::class))->newInstanceWithoutConstructor();
+		$this->set_property($listener, 'template', $template);
+		$this->set_property($listener, 'language', $language);
+		$this->set_property($listener, 'gallery_config', $config);
+		$this->set_property($listener, 'album_access', $access);
+		$this->set_property($listener, 'unread_counter', $counter);
+		$this->set_property($listener, 'helper', $helper);
+		$this->set_property($listener, 'user', $user);
 
 		$listener->add_page_header_link(new \phpbb\event\data([]));
 	}

@@ -211,6 +211,80 @@ final class domain_auth_types_test extends TestCase
 		$this->assertSame(77, $this->invoke_method($service, 'get_effective_user_id', [77]));
 	}
 
+	public function test_permission_switch_uses_impersonated_user_for_zebra_queries(): void
+	{
+		if (!defined('ZEBRA_TABLE'))
+		{
+			define('ZEBRA_TABLE', 'phpbb_zebra');
+		}
+
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->once())
+			->method('sql_query')
+			->with($this->logicalAnd(
+				$this->stringContains('FROM ' . ZEBRA_TABLE),
+				$this->stringContains('WHERE zebra_id = 42')
+			))
+			->willReturn('zebra-result');
+		$db->expects($this->once())->method('sql_fetchrow')->with('zebra-result')->willReturn(false);
+		$db->expects($this->once())->method('sql_freeresult')->with('zebra-result');
+		$phpbb_user = new \phpbb\user();
+		$phpbb_user->data = ['user_id' => 2, 'user_perm_from' => 42];
+		$service = $this->new_auth();
+		$this->set_property($service, 'db', $db);
+		$this->set_property($service, 'phpbb_user', $phpbb_user);
+
+		$this->assertSame(['foe' => [], 'friend' => [], 'bff' => []], $service->get_user_zebra(2));
+	}
+
+	public function test_permission_switch_does_not_treat_real_administrator_as_album_owner(): void
+	{
+		$phpbb_user = new \phpbb\user();
+		$phpbb_user->data = ['user_id' => 2, 'user_perm_from' => 42];
+		$phpbb_auth = $this->createMock(\phpbb\auth\auth::class);
+		$phpbb_auth->expects($this->once())->method('acl_get')->with('a_user')->willReturn(false);
+		$service = $this->getMockBuilder(auth::class)
+			->disableOriginalConstructor()
+			->onlyMethods(['acl_check'])
+			->getMock();
+		$service->expects($this->once())->method('acl_check')->with('m_', 77, 2)->willReturn(false);
+		$this->set_property($service, 'phpbb_user', $phpbb_user);
+		$this->set_property($service, 'auth', $phpbb_auth);
+
+		$this->assertSame(2, $service->get_zebra_state(
+			['foe' => [], 'friend' => [], 'bff' => []],
+			2,
+			77
+		));
+	}
+
+	public function test_permission_switch_uses_effective_identity_for_personal_album_acl(): void
+	{
+		$phpbb_user = new \phpbb\user();
+		$phpbb_user->data = ['user_id' => 2, 'user_perm_from' => 42];
+		$gallery_user = $this->createMock(\phpbbgallery\core\user::class);
+		$gallery_user->expects($this->once())->method('set_user_id')->with(42);
+		$gallery_user->expects($this->once())->method('is_user')->with(2)->willReturn(false);
+		$permission_set = new set();
+		$permissions = new \ReflectionProperty(auth::class, '_permissions_flipped');
+		$original_permissions = $permissions->getValue();
+		$permissions->setValue(null, ['i_view' => 0]);
+		try
+		{
+			$service = $this->new_auth();
+			$this->set_property($service, 'phpbb_user', $phpbb_user);
+			$this->set_property($service, 'user', $gallery_user);
+			$this->set_property($service, '_auth_data', [auth::PERSONAL_ALBUM => $permission_set]);
+			$this->set_property($service, 'acl_cache', []);
+
+			$this->assertFalse($service->acl_check('i_view', 77, 2));
+		}
+		finally
+		{
+			$permissions->setValue(null, $original_permissions);
+		}
+	}
+
 	public function test_cached_acl_round_trip_ignores_malformed_rows(): void
 	{
 		$permission_set = new set();

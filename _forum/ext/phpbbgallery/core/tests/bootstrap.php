@@ -275,6 +275,7 @@ namespace
 	require_once dirname(__DIR__) . '/notification/events/phpbbgallery_new_report.php';
 	require_once dirname(__DIR__) . '/moderate.php';
 	require_once dirname(__DIR__) . '/user.php';
+	require_once dirname(__DIR__) . '/album_access.php';
 	require_once dirname(__DIR__) . '/unread_counter.php';
 	require_once dirname(__DIR__) . '/log.php';
 	require_once dirname(__DIR__) . '/misc.php';

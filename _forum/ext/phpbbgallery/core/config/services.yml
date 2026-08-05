@@ -415,6 +415,7 @@ services:
             - '@dbal.conn'
             - '%phpbbgallery.tables.gallery_users%'
             - '@phpbbgallery.core.online_location'
+            - '@phpbbgallery.core.album_access'
             - '@phpbbgallery.core.unread_counter'
         tags:
             - { name: event.listener }
@@ -423,11 +424,16 @@ services:
         arguments:
             - '@dbal.conn'
             - '@user'
-            - '@phpbbgallery.core.auth'
+            - '@phpbbgallery.core.album_access'
             - '@phpbbgallery.core.user'
             - '@phpbbgallery.core.policy.image_visibility'
             - '%phpbbgallery.tables.gallery_images%'
             - '%phpbbgallery.tables.gallery_tracking%'
+    phpbbgallery.core.album_access:
+        class: phpbbgallery\core\album_access
+        arguments:
+            - '@phpbbgallery.core.auth'
+            - '@user'
     phpbbgallery.core.online_location:
         class: phpbbgallery\core\online_location
         arguments:

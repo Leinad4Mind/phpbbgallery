@@ -16,7 +16,7 @@ class unread_counter
 {
 	private \phpbb\db\driver\driver_interface $db;
 	private \phpbb\user $user;
-	private \phpbbgallery\core\auth\auth $gallery_auth;
+	private \phpbbgallery\core\album_access $album_access;
 	private \phpbbgallery\core\user $gallery_user;
 	private \phpbbgallery\core\policy\image_visibility $image_visibility;
 	private string $images_table;
@@ -25,7 +25,7 @@ class unread_counter
 	public function __construct(
 		\phpbb\db\driver\driver_interface $db,
 		\phpbb\user $user,
-		\phpbbgallery\core\auth\auth $gallery_auth,
+		\phpbbgallery\core\album_access $album_access,
 		\phpbbgallery\core\user $gallery_user,
 		\phpbbgallery\core\policy\image_visibility $image_visibility,
 		string $images_table,
@@ -34,7 +34,7 @@ class unread_counter
 	{
 		$this->db = $db;
 		$this->user = $user;
-		$this->gallery_auth = $gallery_auth;
+		$this->album_access = $album_access;
 		$this->gallery_user = $gallery_user;
 		$this->image_visibility = $image_visibility;
 		$this->images_table = $images_table;
@@ -52,22 +52,16 @@ class unread_counter
 			return 0;
 		}
 
-		$viewer_id = (int) $this->user->data['user_id'];
-		$this->gallery_auth->load_user_permissions($viewer_id);
-
-		$excluded_album_ids = $this->gallery_auth->get_exclude_zebra();
-		$viewable_album_ids = array_diff($this->gallery_auth->acl_album_ids('i_view'), $excluded_album_ids);
-		$moderated_album_ids = array_diff($this->gallery_auth->acl_album_ids('m_status'), $excluded_album_ids);
-		$visible_album_ids = array_values(array_unique(array_map(
-			'intval',
-			array_merge($viewable_album_ids, $moderated_album_ids)
-		)));
+		$access = $this->album_access->resolve();
+		$visible_album_ids = $access['visible'];
+		$moderated_album_ids = $access['moderated'];
 
 		if (!$visible_album_ids)
 		{
 			return 0;
 		}
 
+		$viewer_id = (int) $this->gallery_user->user_id;
 		$global_mark_time = max(0, (int) $this->gallery_user->get_data('user_lastmark'));
 		$sql = 'SELECT i.image_id
 			FROM ' . $this->images_table . ' i
