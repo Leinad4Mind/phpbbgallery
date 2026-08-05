@@ -87,6 +87,52 @@ final class storage_provider_test extends TestCase
 		$this->active('s3', $container)->get_id();
 	}
 
+	public function test_migration_mirrors_create_replace_and_delete_operations(): void
+	{
+		$remote = new memory_storage_provider('s3');
+		$container = $this->createMock(ContainerInterface::class);
+		$container->expects($this->once())->method('has')->with('phpbbgallery.storage.provider.s3')->willReturn(true);
+		$container->expects($this->once())->method('get')->with('phpbbgallery.storage.provider.s3')->willReturn($remote);
+		$storage = $this->active('local', $container, 'local', 's3');
+		$source = $this->temporary_directory . '/migration-source.jpg';
+		file_put_contents($source, 'first');
+
+		$this->assertTrue($storage->prepare(provider_interface::SOURCE, 'image.jpg'));
+		$this->assertTrue($storage->write(provider_interface::SOURCE, 'image.jpg', $source));
+		$this->assertSame(hash('sha256', 'first'), $remote->checksum(provider_interface::SOURCE, 'image.jpg'));
+
+		$this->assertTrue($remote->delete(provider_interface::SOURCE, 'image.jpg'));
+		file_put_contents($source, 'second');
+		$replaced = $storage->replace(provider_interface::SOURCE, 'image.jpg', $source);
+		$this->assertSame(hash('sha256', 'second'), $remote->checksum(provider_interface::SOURCE, 'image.jpg'));
+		$this->assertSame(hash('sha256', 'second'), $storage->checksum(provider_interface::SOURCE, 'image.jpg'));
+		$this->assertTrue($replaced);
+
+		file_put_contents($source, 'third');
+		$this->assertTrue($storage->replace(provider_interface::SOURCE, 'image.jpg', $source));
+		$this->assertSame(hash('sha256', 'third'), $remote->checksum(provider_interface::SOURCE, 'image.jpg'));
+
+		$this->assertTrue($storage->delete(provider_interface::SOURCE, 'image.jpg'));
+		$this->assertFalse($remote->exists(provider_interface::SOURCE, 'image.jpg'));
+		$this->assertFalse($storage->exists(provider_interface::SOURCE, 'image.jpg'));
+	}
+
+	public function test_failed_mirror_creation_removes_the_new_primary_object(): void
+	{
+		$remote = new memory_storage_provider('s3');
+		$remote->fail_writes = true;
+		$container = $this->createMock(ContainerInterface::class);
+		$container->method('has')->willReturn(true);
+		$container->method('get')->willReturn($remote);
+		$storage = $this->active('local', $container, 'local', 's3');
+		$source = $this->temporary_directory . '/migration-failure.jpg';
+		file_put_contents($source, 'image');
+
+		$this->assertTrue($storage->prepare(provider_interface::SOURCE, 'image.jpg'));
+		$this->assertFalse($storage->write(provider_interface::SOURCE, 'image.jpg', $source));
+		$this->assertFalse($storage->exists(provider_interface::SOURCE, 'image.jpg'));
+	}
+
 	/** @dataProvider invalid_provider_id_provider */
 	public function test_invalid_provider_identifiers_are_rejected_before_service_lookup(string $provider_id): void
 	{
@@ -267,10 +313,17 @@ final class storage_provider_test extends TestCase
 		$this->assertSame(hash('sha256', 'replacement'), $provider->checksum(provider_interface::SOURCE, 'image.jpg'));
 	}
 
-	private function active(string $provider_id, ContainerInterface $container): active_provider
+	private function active(
+		string $provider_id,
+		ContainerInterface $container,
+		string $migration_source = '',
+		string $migration_target = ''
+	): active_provider
 	{
 		$gallery_config = new config(new \phpbb\config\config([
 			'phpbb_gallery_storage_provider' => $provider_id,
+			'phpbb_gallery_storage_migration_source' => $migration_source,
+			'phpbb_gallery_storage_migration_target' => $migration_target,
 		]));
 
 		return new active_provider($gallery_config, $container, $this->local());
@@ -309,6 +362,7 @@ final class memory_storage_provider implements provider_interface
 {
 	public ?int $reported_size = null;
 	public ?string $reported_checksum = null;
+	public bool $fail_writes = false;
 
 	public function __construct(private string $id, private array $objects = [])
 	{
@@ -326,6 +380,10 @@ final class memory_storage_provider implements provider_interface
 
 	public function write(string $variant, string $key, string $local_file): bool
 	{
+		if ($this->fail_writes)
+		{
+			return false;
+		}
 		$contents = @file_get_contents($local_file);
 		if ($contents === false)
 		{
