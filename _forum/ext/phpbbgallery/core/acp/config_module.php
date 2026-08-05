@@ -36,9 +36,10 @@ class config_module
 			trigger_error('NO_MODE', E_USER_ERROR);
 		}
 
-		global $config, $db, $user, $template, $cache, $phpbb_container, $phpbb_gallery_url, $request;
+		global $config, $db, $user, $template, $cache, $phpbb_container, $phpbb_gallery_url, $request, $table_prefix;
 
 		$phpbb_gallery_url = $phpbb_container->get('phpbbgallery.core.url');
+		$file_tool = $phpbb_container->get('phpbbgallery.core.file.tool');
 		$this->language = $phpbb_container->get('language');
 		$this->language->add_lang(['gallery', 'gallery_acp', 'gallery_title'], 'phpbbgallery/core');
 
@@ -157,85 +158,7 @@ class config_module
 				if ((strpos($config_name, 'watermark') !== false) && ($phpbb_gallery_configs->get($config_name) != $config_value))
 				{
 					$phpbb_gallery_configs->set('watermark_changed', time());
-					// OK .. let's try and destroy watermarked images
-					$cache_dir = @opendir($phpbb_gallery_url->path('thumbnail'));
-					while ($cache_dir !== false && ($cache_file = readdir($cache_dir)) !== false)
-					{
-						if (preg_match('/(\_wm.webp$|\_wm.gif$|\_wm.png$|\_wm.jpg|\_wm.jpeg)$/is', $cache_file))
-						{
-							@unlink($phpbb_gallery_url->path('thumbnail') . $cache_file);
-						}
-					}
-					if ($cache_dir !== false)
-					{
-						closedir($cache_dir);
-					}
-
-					$medium_dir = @opendir($phpbb_gallery_url->path('medium'));
-					while ($medium_dir !== false && ($medium_file = readdir($medium_dir)) !== false)
-					{
-						if (preg_match('/(\_wm.webp$|\_wm.gif$|\_wm.png$|\_wm.jpg|\_wm.jpeg)$/is', $medium_file))
-						{
-							@unlink($phpbb_gallery_url->path('medium') . $medium_file);
-						}
-					}
-					if ($medium_dir !== false)
-					{
-						closedir($medium_dir);
-					}
-					$upload_dir = @opendir($phpbb_gallery_url->path('upload'));
-					while ($upload_dir !== false && ($upload_file = readdir($upload_dir)) !== false)
-					{
-						if (preg_match('/(\_wm.webp$|\_wm.gif$|\_wm.png$|\_wm.jpg|\_wm.jpeg)$/is', $upload_file))
-						{
-							@unlink($phpbb_gallery_url->path('upload') . $upload_file);
-						}
-					}
-					if ($upload_dir !== false)
-					{
-						closedir($upload_dir);
-					}
-
-					for ($i = 1; $i <= $phpbb_gallery_configs->get('current_upload_dir'); $i++)
-					{
-						$cache_dir = @opendir($phpbb_gallery_url->path('thumbnail') . $i . '/');
-						while ($cache_dir !== false && ($cache_file = readdir($cache_dir)) !== false)
-						{
-							if (preg_match('/(\_wm.webp$|\_wm.gif$|\_wm.png$|\_wm.jpg|\_wm.jpeg)$/is', $cache_file))
-							{
-								@unlink($phpbb_gallery_url->path('thumbnail') . $i . '/' . $cache_file);
-							}
-						}
-						if ($cache_dir !== false)
-						{
-							closedir($cache_dir);
-						}
-
-						$medium_dir = @opendir($phpbb_gallery_url->path('medium') . $i . '/');
-						while ($medium_dir !== false && ($medium_file = readdir($medium_dir)) !== false)
-						{
-							if (preg_match('/(\_wm.webp$|\_wm.gif$|\_wm.png$|\_wm.jpg|\_wm.jpeg)$/is', $medium_file))
-							{
-								@unlink($phpbb_gallery_url->path('medium') . $i . '/' . $medium_file);
-							}
-						}
-						if ($medium_dir !== false)
-						{
-							closedir($medium_dir);
-						}
-						$upload_dir = @opendir($phpbb_gallery_url->path('upload') . $i . '/');
-						while ($upload_dir !== false && ($upload_file = readdir($upload_dir)) !== false)
-						{
-							if (preg_match('/(\_wm.webp$|\_wm.gif$|\_wm.png$|\_wm.jpg|\_wm.jpeg)$/is', $upload_file))
-							{
-								@unlink($phpbb_gallery_url->path('upload') . $upload_file);
-							}
-						}
-						if ($upload_dir !== false)
-						{
-							closedir($upload_dir);
-						}
-					}
+					$this->purge_watermarked_images($db, $file_tool, $table_prefix . 'gallery_images');
 				}
 				$phpbb_gallery_configs->set($config_name, $config_value);
 			}
@@ -791,5 +714,26 @@ class config_module
 		}
 
 		return $bbcode_tpl;
+	}
+
+	private function purge_watermarked_images(
+		\phpbb\db\driver\driver_interface $db,
+		\phpbbgallery\core\file\file $file_tool,
+		string $images_table
+	): void
+	{
+		$sql = 'SELECT image_filename
+			FROM ' . $images_table;
+		$result = $db->sql_query($sql);
+		$filenames = [];
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$filenames[] = (string) $row['image_filename'];
+		}
+		$db->sql_freeresult($result);
+		if ($filenames)
+		{
+			$file_tool->delete_wm($filenames);
+		}
 	}
 }

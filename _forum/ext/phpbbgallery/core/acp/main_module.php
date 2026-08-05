@@ -80,6 +80,8 @@ class main_module
 		// init config
 		$phpbb_ext_gallery_config = $phpbb_container->get('phpbbgallery.core.config');
 		$storage_migrator = $phpbb_container->get('phpbbgallery.core.storage.layout_migrator');
+		$active_storage = $phpbb_container->get('phpbbgallery.core.storage.active');
+		$file_tool = $phpbb_container->get('phpbbgallery.core.file.tool');
 		$distributed_storage = $phpbb_ext_gallery_config->get('storage_layout') === \phpbbgallery\core\storage\key_generator::LAYOUT_DISTRIBUTED;
 
 		// init rating
@@ -434,9 +436,9 @@ class main_module
 					while ($row = $db->sql_fetchrow($result))
 					{
 						$image_filesizes[(int) $row['image_id']] = [
-							'filesize_upload' => (int) @filesize($gallery_url->path('upload') . $row['image_filename']),
-							'filesize_medium' => (int) @filesize($gallery_url->path('medium') . $row['image_filename']),
-							'filesize_cache'  => (int) @filesize($gallery_url->path('thumbnail') . $row['image_filename']),
+							'filesize_upload' => (int) ($active_storage->size(\phpbbgallery\core\storage\provider_interface::SOURCE, $row['image_filename']) ?? 0),
+							'filesize_medium' => (int) ($active_storage->size(\phpbbgallery\core\storage\provider_interface::MEDIUM, $row['image_filename']) ?? 0),
+							'filesize_cache'  => (int) ($active_storage->size(\phpbbgallery\core\storage\provider_interface::MINI, $row['image_filename']) ?? 0),
 						];
 					}
 					$db->sql_freeresult($result);
@@ -499,83 +501,18 @@ class main_module
 						trigger_error($this->language->lang('NO_AUTH_OPERATION') . adm_back_link($this->u_action), E_USER_WARNING);
 					}
 
-					$cache_dir = @opendir($gallery_url->path('thumbnail'));
-					while ($cache_dir !== false && ($cache_file = readdir($cache_dir)) !== false)
+					$sql = 'SELECT image_filename
+						FROM ' . $images_table;
+					$result = $db->sql_query($sql);
+					$filenames = [];
+					while ($row = $db->sql_fetchrow($result))
 					{
-						if (preg_match('/(\.webp$|\.gif$|\.png$|\.jpg|\.jpeg)$/is', $cache_file))
-						{
-							@unlink($gallery_url->path('thumbnail') . $cache_file);
-						}
+						$filenames[] = (string) $row['image_filename'];
 					}
-					if ($cache_dir !== false)
+					$db->sql_freeresult($result);
+					if ($filenames)
 					{
-						closedir($cache_dir);
-					}
-
-					$medium_dir = @opendir($gallery_url->path('medium'));
-					while ($medium_dir !== false && ($medium_file = readdir($medium_dir)) !== false)
-					{
-						if (preg_match('/(\.webp$|\.gif$|\.png$|\.jpg|\.jpeg)$/is', $medium_file))
-						{
-							@unlink($gallery_url->path('medium') . $medium_file);
-						}
-					}
-					if ($medium_dir !== false)
-					{
-						closedir($medium_dir);
-					}
-					$upload_dir = @opendir($gallery_url->path('upload'));
-					while ($upload_dir !== false && ($upload_file = readdir($upload_dir)) !== false)
-					{
-						if (preg_match('/(\_wm.webp$|\_wm.gif$|\_wm.png$|\_wm.jpg|\_wm.jpeg)$/is', $upload_file))
-						{
-							@unlink($gallery_url->path('upload') . $upload_file);
-						}
-					}
-					if ($upload_dir !== false)
-					{
-						closedir($upload_dir);
-					}
-
-					for ($i = 1; $i <= $phpbb_ext_gallery_config->get('current_upload_dir'); $i++)
-					{
-						$cache_dir = @opendir($gallery_url->path('thumbnail') . $i . '/');
-						while ($cache_dir !== false && ($cache_file = readdir($cache_dir)) !== false)
-						{
-							if (preg_match('/(\.webp$|\.gif$|\.png$|\.jpg|\.jpeg)$/is', $cache_file))
-							{
-								@unlink($gallery_url->path('thumbnail') . $i . '/' . $cache_file);
-							}
-						}
-						if ($cache_dir !== false)
-						{
-							closedir($cache_dir);
-						}
-
-						$medium_dir = @opendir($gallery_url->path('medium') . $i . '/');
-						while ($medium_dir !== false && ($medium_file = readdir($medium_dir)) !== false)
-						{
-							if (preg_match('/(\.webp$|\.gif$|\.png$|\.jpg|\.jpeg)$/is', $medium_file))
-							{
-								@unlink($gallery_url->path('medium') . $i . '/' . $medium_file);
-							}
-						}
-						if ($medium_dir !== false)
-						{
-							closedir($medium_dir);
-						}
-						$upload_dir = @opendir($gallery_url->path('upload') . $i . '/');
-						while ($upload_dir !== false && ($upload_file = readdir($upload_dir)) !== false)
-						{
-							if (preg_match('/(\_wm.webp$|\_wm.gif$|\_wm.png$|\_wm.jpg|\_wm.jpeg)$/is', $upload_file))
-							{
-								@unlink($gallery_url->path('upload') . $i . '/' . $upload_file);
-							}
-						}
-						if ($upload_dir !== false)
-						{
-							closedir($upload_dir);
-						}
+						$file_tool->delete_cache($filenames);
 					}
 
 					$sql_ary = [
