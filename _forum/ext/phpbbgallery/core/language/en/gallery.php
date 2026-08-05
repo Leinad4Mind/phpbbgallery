@@ -49,7 +49,6 @@ $lang = array_merge($lang, [
 	'DISAPPROVE'        => 'Disapprove',
 	'APPROVE_IMAGE'     => 'Approve image',
 
-	//@todo
 	'ALBUM_COMMENT_CAN'    => 'You <strong>can</strong> post comments to images in this album',
 	'ALBUM_COMMENT_CANNOT' => 'You <strong>cannot</strong> post comments to images in this album',
 	'ALBUM_DELETE_CAN'     => 'You <strong>can</strong> delete your images in this album',

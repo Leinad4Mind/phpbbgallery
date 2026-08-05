@@ -50,7 +50,6 @@ $lang = array_merge($lang, [
 	'DISAPPROVE'        => 'Desaprobar',
 	'APPROVE_IMAGE'     => 'Aprobar imagen',
 
-	//@todo
 	'ALBUM_COMMENT_CAN'    => '<strong>Puedes</strong> publicar comentarios en las imágenes de este álbum',
 	'ALBUM_COMMENT_CANNOT' => '<strong>No puedes</strong> publicar comentarios en las imágenes de este álbum',
 	'ALBUM_DELETE_CAN'     => '<strong>Puedes</strong> eliminar tus imágenes en este álbum',
@@ -194,7 +193,7 @@ $lang = array_merge($lang, [
 	'NO_ALBUMS'             => 'No hay álbumes en esta galería.',
 	'NO_COMMENTS'           => 'No hay comentarios todavía',
 	'NO_IMAGES'             => 'Sin imágenes',
-	'NO_COMMENTS_NO_IMAGES' => 'No comments or own pictures yet',
+	'NO_COMMENTS_NO_IMAGES' => 'Todavía no hay comentarios ni imágenes propias',
 	'NO_IMAGES_FOUND'       => 'No se encontraron imágenes.',
 	'NO_NEW_IMAGES'         => 'No hay nuevas imágenes',
 	'NO_IMAGES_LONG'        => 'No hay imágenes en este álbum.',
@@ -269,8 +268,8 @@ $lang = array_merge($lang, [
 	'SORT_DEFAULT'                      => 'Predeterminado',
 	'SORT_DESCENDING'                   => 'Descendente',
 	'STATUS'                            => 'Estado',
-	'SUBALBUMS'                         => 'Subalbums',
-	'SUBALBUM'                          => 'Subalbum',
+	'SUBALBUMS'                         => 'Subálbumes',
+	'SUBALBUM'                          => 'Subálbum',
 
 	'THUMBNAIL_SIZE'         => 'Tamaño de la miniatura (píxeles)',
 	'TOTAL_COMMENTS_SPRINTF' => [
@@ -370,8 +369,8 @@ $lang = array_merge($lang, [
 
 	'QUICK_MOD'        => 'Seleccionar la acción del moderador',
 	'WRONG_FILESIZE'   => 'La imagen es más grande que el límite!',
-	'UNREAD_IMAGES'    => 'Unviewed images',
-	'NO_UNREAD_IMAGES' => 'No unviewed images',
+	'UNREAD_IMAGES'    => 'Imágenes no vistas',
+	'NO_UNREAD_IMAGES' => 'No hay imágenes sin ver',
 
 	// Versions 1.2.1 additions
 	'GALLERY_DROP' => 'Deja tus imágenes aquí',

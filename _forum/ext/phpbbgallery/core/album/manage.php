@@ -603,11 +603,16 @@ class manage
 		$errors = [];
 		$log_action_images = $log_action_albums = $images_to_name = $subalbums_to_name = '';
 		$album_ids = [$album_id];
+		$delete_root_content = false;
 
 		if ($action_images == 'delete')
 		{
 			$log_action_images = 'IMAGES';
-			$errors = array_merge($errors, $this->delete_album_content($album_id));
+			$delete_root_content = true;
+			if ($action_subalbums != 'delete')
+			{
+				$errors = array_merge($errors, $this->delete_album_content($album_id));
+			}
 		}
 		else if ($action_images == 'move')
 		{
@@ -647,11 +652,20 @@ class manage
 		{
 			$log_action_albums = 'ALBUMS';
 			$rows = $this->gallery_display->get_branch($this->user_id, $album_id, 'children', 'descending', false);
+			$content_album_ids = [];
 
 			foreach ($rows as $row)
 			{
 				$album_ids[] = $row['album_id'];
-				$errors = array_merge($errors, $this->delete_album_content($row['album_id']));
+				$content_album_ids[] = (int) $row['album_id'];
+			}
+			if ($delete_root_content)
+			{
+				array_unshift($content_album_ids, $album_id);
+			}
+			if ($content_album_ids)
+			{
+				$errors = array_merge($errors, $this->delete_album_content($content_album_ids));
 			}
 
 			if (sizeof($errors))
@@ -857,32 +871,37 @@ class manage
 	/**
 	 * Delete album content:
 	 * Deletes all images, comments, rates, image-files, etc.
-	 * @param int $album_id
+	 * @param array<int>|int $album_id
 	 * @return array
 	 */
-	public function delete_album_content(int $album_id): array
+	public function delete_album_content(array|int $album_id): array
 	{
-		$album_id = (int) $album_id;
+		$album_ids = array_values(array_unique(array_map('intval', (array) $album_id)));
+		if (!$album_ids)
+		{
+			return [];
+		}
 
 		// Before we remove anything we make sure we are able to adjust the image counts later. ;)
-		$sql = 'SELECT image_user_id
+		$sql = 'SELECT image_user_id, COUNT(image_id) AS image_count
 			FROM ' . $this->images_table . ' 
-			WHERE image_album_id = ' . (int) $album_id . '
+			WHERE ' . $this->db->sql_in_set('image_album_id', $album_ids) . '
 				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . '
 				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
-				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED;
+				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED . '
+			GROUP BY image_user_id';
 		$result = $this->db->sql_query($sql);
 
 		$image_counts = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$image_counts[$row['image_user_id']] = (!empty($image_counts[$row['image_user_id']])) ? $image_counts[$row['image_user_id']] + 1 : 1;
+			$image_counts[(int) $row['image_user_id']] = (int) $row['image_count'];
 		}
 		$this->db->sql_freeresult($result);
 
 		$sql = 'SELECT image_id, image_filename, image_album_id
 			FROM ' . $this->images_table . ' 
-			WHERE image_album_id = ' . (int) $album_id;
+			WHERE ' . $this->db->sql_in_set('image_album_id', $album_ids);
 		$result = $this->db->sql_query($sql);
 
 		$filenames = $deleted_images = [];
@@ -895,23 +914,22 @@ class manage
 
 		if (!empty($deleted_images))
 		{
-			$this->gallery_image->delete_images($deleted_images, $filenames);
+			$this->gallery_image->delete_images($deleted_images, $filenames, false);
 		}
 
-		//@todo: merge queries into loop
 		$sql = 'DELETE FROM ' . $this->permissions_table . ' 
-			WHERE perm_album_id = ' . (int) $album_id;
+			WHERE ' . $this->db->sql_in_set('perm_album_id', $album_ids);
 		$this->db->sql_query($sql);
 		$sql = 'DELETE FROM ' . $this->moderators_table . ' 
-			WHERE album_id = ' . (int) $album_id;
+			WHERE ' . $this->db->sql_in_set('album_id', $album_ids);
 		$this->db->sql_query($sql);
 		$this->gallery_cache->destroy('sql', $this->moderators_table);
 
 		$sql = 'DELETE FROM ' . $this->tracking_table . '
-			WHERE album_id = ' . (int) $album_id;
+			WHERE ' . $this->db->sql_in_set('album_id', $album_ids);
 		$this->db->sql_query($sql);
 
-		$this->gallery_notification->delete_albums($album_id);
+		$this->gallery_notification->delete_albums($album_ids);
 
 		// Adjust users image counts
 		if (!empty($image_counts))
@@ -943,8 +961,11 @@ class manage
 		* @var	int	album_id		Album we are deleting
 		* @since 1.2.0
 		*/
-		$vars = ['album_id'];
-		extract($this->dispatcher->trigger_event('phpbbgallery.core.album.manage.delete_album_content', compact($vars)));
+		foreach ($album_ids as $album_id)
+		{
+			$vars = ['album_id'];
+			extract($this->dispatcher->trigger_event('phpbbgallery.core.album.manage.delete_album_content', compact($vars)));
+		}
 
 		$this->gallery_cache->destroy_albums();
 

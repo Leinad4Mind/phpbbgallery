@@ -66,7 +66,7 @@ $lang = array_merge($lang, [
 	'NO_PERSONAL_ALBUM'         => 'Je hebt nog geen persoonlijk album. Hier kan je persoonlijke albums creëren, met een aantal subalbums.<br />In persoonlijke albums kan alleen de eigenaar afbeeldingen uploaden.',
 	'NO_SUBALBUMS'              => 'Geen albums toegevoegd',
 	'NO_SUBSCRIPTIONS'          => 'Je bent niet geabonneerd op een afbeelding.',
-	'NO_SUBSCRIPTIONS_ALBUM'    => 'You are not subscribed to an album.',
+	'NO_SUBSCRIPTIONS_ALBUM'    => 'Je bent niet op een album geabonneerd.',
 
 	'PARSE_BBCODE'   => 'BBCode gebruiken',
 	'PARSE_SMILIES'  => 'Smilies gebruiken',
@@ -83,6 +83,6 @@ $lang = array_merge($lang, [
 	'WATCH_NOTE'    => 'Deze optie heeft alleen effect op nieuwe afbeeldingen. Alle andere afbeeldingen moeten worden toegevoegd door de “abonneer afbeelding“ optie.',
 	'WATCH_OWN'     => 'Aboneer standaard op eigen afbeeldingen',
 
-	'RRC_ZEBRA'         => 'Hide from foes in RRC',
-	'RRC_ZEBRA_EXPLAIN' => 'Hide images in albums from foes in Recent, Random and Comments part of the index.<br /><strong>WARNING!</strong> This won\'t hide images uploaded in common/public albums.'
+	'RRC_ZEBRA'         => 'Afbeeldingen van genegeerde gebruikers verbergen in RRC',
+	'RRC_ZEBRA_EXPLAIN' => 'Verberg albumafbeeldingen van genegeerde gebruikers bij recente en willekeurige afbeeldingen en reacties.<br /><strong>WAARSCHUWING:</strong> afbeeldingen in gedeelde of openbare albums worden niet verborgen.'
 ]);

@@ -50,7 +50,6 @@ $lang = array_merge($lang, [
 	'DISAPPROVE'        => 'Sperren',
 	'APPROVE_IMAGE'     => 'Bild freischalten',
 
-	//@todo
 	'ALBUM_COMMENT_CAN'    => 'Du <strong>darfst</strong> Bilder in diesem Album kommentieren',
 	'ALBUM_COMMENT_CANNOT' => 'Du <strong>darfst keine</strong> Bilder in diesem Album kommentieren',
 	'ALBUM_DELETE_CAN'     => 'Du <strong>darfst</strong> deine Bilder in diesem Album löschen',

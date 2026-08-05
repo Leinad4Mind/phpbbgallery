@@ -237,6 +237,45 @@ class language_catalog_test extends TestCase
 		$this->assertSame([], $failures, implode(chr(10), $failures));
 	}
 
+	public function test_foreign_core_catalogs_do_not_keep_known_english_fallbacks(): void
+	{
+		$forbidden = [
+			'No comments or own pictures yet',
+			'You are not subscribed to an album.',
+			'Show gallery link',
+			'Show link to the gallery in user menu.',
+			'Report closed by',
+			'Not approved images',
+			'Resync personal albums to profile fields',
+		];
+		$failures = [];
+		$language_root = $this->extension_root . '/core/language';
+
+		foreach ($this->language_directories($language_root) as $directory)
+		{
+			if (basename($directory) === 'en')
+			{
+				continue;
+			}
+
+			foreach ($this->php_files($directory) as $file)
+			{
+				foreach ($this->load_language($directory . '/' . $file) as $key => $value)
+				{
+					foreach ($this->string_values($value) as $text)
+					{
+						if (in_array($text, $forbidden, true))
+						{
+							$failures[] = basename($directory) . '/' . $file . ':' . $key;
+						}
+					}
+				}
+			}
+		}
+
+		$this->assertSame([], $failures, implode(chr(10), $failures));
+	}
+
 	public function test_install_catalog_contains_runtime_lifecycle_messages(): void
 	{
 		$language_root = $this->extension_root . '/core/language';

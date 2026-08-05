@@ -644,7 +644,7 @@ class image
 				* @since 1.2.0
 				*/
 				$vars = ['mode', 'tpl'];
-				extract($this->phpbb_dispatcher->trigger_event('phpbbgallery.core.image.generate_link', compact($vars)));//@todo: Correctly identify the event
+				extract($this->phpbb_dispatcher->trigger_event('phpbbgallery.core.image.generate_link', compact($vars)));
 			break;
 		}
 

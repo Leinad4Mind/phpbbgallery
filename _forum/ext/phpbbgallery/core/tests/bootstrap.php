@@ -1,5 +1,5 @@
 <?php
-// phpcs:disable Generic.Files.OneInterfacePerFile.MultipleFound -- Isolated dependency stubs share the test bootstrap.
+// phpcs:disable Generic.Files.OneInterfacePerFile.MultipleFound, Generic.Files.OneClassPerFile.MultipleFound, PhpbbCodingStandard.NamingConventions.LowercaseUnderscoredClasses.NotAllowed -- Isolated dependency stubs share the test bootstrap.
 /**
  * phpBB Gallery - Core Extension tests
  *
@@ -41,6 +41,17 @@ namespace phpbb\event
 		interface dispatcher_interface
 		{
 			public function trigger_event($event_name, $data = []);
+		}
+	}
+
+	if (!class_exists('phpbb\\event\\dispatcher', false))
+	{
+		class dispatcher implements dispatcher_interface
+		{
+			public function trigger_event($event_name, $data = [])
+			{
+				return $data;
+			}
 		}
 	}
 }

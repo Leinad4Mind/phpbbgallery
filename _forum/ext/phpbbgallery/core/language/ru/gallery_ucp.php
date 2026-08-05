@@ -58,7 +58,7 @@ $lang = array_merge($lang, [
 	'NO_PERSONAL_ALBUM'              => 'У вас пока нет личного фотоальбома. Здесь можно создать его, а также вложенные альбомы.',
 	'NO_SUBALBUMS'                   => 'Нет вложенных альбомов',
 	'NO_SUBSCRIPTIONS'               => 'Вы не подписаны ни на одно фото.',
-	'NO_SUBSCRIPTIONS_ALBUM'         => 'You are not subscribed to an album.',
+	'NO_SUBSCRIPTIONS_ALBUM'         => 'Вы не подписаны ни на один альбом.',
 
 	'PARSE_BBCODE'        => 'Разрешить BBCode',
 	'PARSE_SMILIES'       => 'Разрешить смайлики',
@@ -72,6 +72,6 @@ $lang = array_merge($lang, [
 	'WATCH_NOTE'          => 'Параметры подписки по умолчанию. Они коснутся только новых фотографий и новых комментариев.',
 	'WATCH_OWN'           => 'Подписаться на комментарии к вашим фотографиям',
 
-	'RRC_ZEBRA'         => 'Hide from foes in RRC',
-	'RRC_ZEBRA_EXPLAIN' => 'Hide images in albums from foes in Recent, Random and Comments part of the index.<br /><strong>WARNING!</strong> This won\'t hide images uploaded in common/public albums.'
+	'RRC_ZEBRA'         => 'Скрывать изображения игнорируемых пользователей в RRC',
+	'RRC_ZEBRA_EXPLAIN' => 'Скрывает изображения игнорируемых пользователей в разделах последних и случайных изображений и комментариев.<br /><strong>ВНИМАНИЕ:</strong> изображения в общих или публичных альбомах скрыты не будут.'
 ]);

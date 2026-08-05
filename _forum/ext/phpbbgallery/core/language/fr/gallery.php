@@ -66,7 +66,6 @@ $lang = array_merge($lang, [
 	'DISAPPROVE'        => 'Refuser',
 	'APPROVE_IMAGE'     => 'Valider l’image',
 
-	//@todo
 	'ALBUM_COMMENT_CAN'    => 'Vous <strong>pouvez</strong> publier des commentaires dans cet album.',
 	'ALBUM_COMMENT_CANNOT' => 'Vous <strong>ne pouvez pas</strong> publier de commentaires dans cet album.',
 	'ALBUM_DELETE_CAN'     => 'Vous <strong>pouvez</strong> supprimer vos images de cet album.',
@@ -210,7 +209,7 @@ $lang = array_merge($lang, [
 	'NO_ALBUMS'             => 'Il n’y a aucun album dans cette galerie.',
 	'NO_COMMENTS'           => 'Aucun commentaire',
 	'NO_IMAGES'             => 'Aucune image',
-	'NO_COMMENTS_NO_IMAGES' => 'No comments or own pictures yet',
+	'NO_COMMENTS_NO_IMAGES' => 'Aucun commentaire ni aucune image personnelle pour le moment',
 	'NO_IMAGES_FOUND'       => 'Aucune image trouvée.',
 	'NO_NEW_IMAGES'         => 'Aucune nouvelle image',
 	'NO_IMAGES_LONG'        => 'Il n’y a aucune image dans cet album.',
@@ -385,8 +384,8 @@ $lang = array_merge($lang, [
 
 	'QUICK_MOD'        => 'Sélectionner l’action du modérateur',
 	'WRONG_FILESIZE'   => 'L’image est plus lourde que la limite de poids autorisée.',
-	'UNREAD_IMAGES'    => 'Unviewed images',
-	'NO_UNREAD_IMAGES' => 'No unviewed images',
+	'UNREAD_IMAGES'    => 'Images non consultées',
+	'NO_UNREAD_IMAGES' => 'Aucune image non consultée',
 
 	// Versions 1.2.1 additions
 	'GALLERY_DROP' => 'Déposez vos images ici',

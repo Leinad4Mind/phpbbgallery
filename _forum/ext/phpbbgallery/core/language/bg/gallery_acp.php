@@ -73,11 +73,11 @@ $lang = array_merge($lang, [
 	'ACP_GALLERY_OVERVIEW_EXPLAIN' => 'Тук се намират някои от статистиките за вашата галерия.',
 
 	// File dirs states
-	'ACP_FILES_DIR_STATE'  => '<strong>./files/</strong> state',
-	'ACP_CORE_DIR_STATE'   => '<strong>./files/phpbbgallery/core/</strong> state',
-	'ACP_SOURCE_DIR_STATE' => '<strong>./files/phpbbgallery/core/source/</strong> state',
-	'ACP_MEDIUM_DIR_STATE' => '<strong>./files/phpbbgallery/core/medium/</strong> state',
-	'ACP_MINI_DIR_STATE'   => '<strong>./files/phpbbgallery/core/mini/</strong> state',
+	'ACP_FILES_DIR_STATE'  => 'Състояние на <strong>./files/</strong>',
+	'ACP_CORE_DIR_STATE'   => 'Състояние на <strong>./files/phpbbgallery/core/</strong>',
+	'ACP_SOURCE_DIR_STATE' => 'Състояние на <strong>./files/phpbbgallery/core/source/</strong>',
+	'ACP_MEDIUM_DIR_STATE' => 'Състояние на <strong>./files/phpbbgallery/core/medium/</strong>',
+	'ACP_MINI_DIR_STATE'   => 'Състояние на <strong>./files/phpbbgallery/core/mini/</strong>',
 
 	'ADD_ALBUM_ON_TOP'                  => 'Добави албума от горе',
 	'ADD_PERMISSIONS'                   => 'Добави права',
@@ -194,7 +194,7 @@ $lang = array_merge($lang, [
 	'GALLERY_CONFIG'                       => 'Настройка на галерията',
 	'GALLERY_CONFIG_EXPLAIN'               => 'От тук можете да настроите основните функции на phpBB Gallery.',
 	'GALLERY_CONFIG_UPDATED'               => 'Конфигурацията на галерията беше опреснена успешно.',
-	'GALLERY_INDEX'                        => 'Gallery-Index',
+	'GALLERY_INDEX'                        => 'Начална страница на галерията',
 	'GALLERY_PURGE_CACHE_EXPLAIN'          => 'Ако зиползвате Thumbnail Cache опцията, ще се наложи да изчистите thumbnail кеша след промяна на настройките на thumbnail-ите в "Настройки на галерията за да ги накрате да се презаредят.',
 	'GALLERY_RESYNC_ALBUMS_TO_CPF'         => 'Ресинхронизирай личните албуми към профилни полета',
 	'GALLERY_RESYNC_ALBUMS_TO_CPF_EXPLAIN' => 'Това действие ще въведе на ново всички top level лични албуми като полета за контакт в профила. <br> Внимание! Ако имате прекалено много top level лични албуми, това действие може да отнеме малко повече време!',
@@ -233,7 +233,7 @@ $lang = array_merge($lang, [
 	'JPG_QUALITY_EXP' => 'При въртене или преоразмеряване на изображение, големината на файла може да стане по-голяма от тази преди това. С тази опция можете да намалите качеството за да спестите дисково пространство.',
 
 	'LIST_INDEX'             => 'Изброявай подалбумите в информацията на старшите албуми',
-	'LIST_INDEX_EXPLAIN'     => 'Displays this album on the index and elsewhere as a link within the legend of its parent-album if the parent-album’s “List subalbums in legend” option is enabled.',
+	'LIST_INDEX_EXPLAIN'     => 'Показва този албум в началната страница и другаде като връзка в списъка на родителския албум, ако опцията за показване на подалбуми е включена.',
 	'LIST_SUBALBUMS'         => 'Покажи подалбумите в информацията',
 	'LIST_SUBALBUMS_EXPLAIN' => 'Покажи подалбумите на този албум в началото и другаде като инфоемация ако "Изброявай подалбумите в информацията на старшите албуми" опцията е разрешена.',
 	'LOCKED'                 => 'Заключен',
@@ -415,7 +415,7 @@ $lang = array_merge($lang, [
 	'SYNC_IN_PROGRESS'         => 'Синхронизация на албум',
 	'SYNC_IN_PROGRESS_EXPLAIN' => 'В момента се ресинхронизират изобрания в интервала %1$d/%2$d.',
 
-	'THUMBNAIL_CACHE'       => 'Thumbnail cache',
+	'THUMBNAIL_CACHE'       => 'Кеш на миниатюрите',
 	'THUMBNAIL_HEIGHT'      => 'Thumbnail ширина',
 	'THUMBNAIL_QUALITY'     => 'Качество на thumbnail',
 	'THUMBNAIL_QUALITY_EXP' => 'Стойността трябва да е между 1 и 100.',
@@ -432,7 +432,7 @@ $lang = array_merge($lang, [
 	'UC_LINK_NEXT'       => 'Следващо изображение',
 	'UC_LINK_NEWTAB'     => 'Отвори в Нов таб',
 	'UC_LINK_NONE'       => 'Без действие',
-	'UC_THUMBNAIL'       => 'Thumbnail',
+	'UC_THUMBNAIL'       => 'Миниатюра',
 	'UC_THUMBNAIL_EXP'   => 'Също се използва за BBCode.',
 	'UNLOCKED'           => 'Отключен',
 	'UPDATE_BBCODE'      => 'Опресни BBCode',
@@ -468,13 +468,13 @@ $lang = array_merge($lang, [
  * A copy of Handyman` s MOD version check, to view it on the gallery overview
  */
 $lang = array_merge($lang, [
-	'ANNOUNCEMENT_TOPIC'   => 'Release Announcement',
-	'CURRENT_VERSION'      => 'Current Version',
-	'DOWNLOAD_LATEST'      => 'Download Latest Version',
-	'LATEST_VERSION'       => 'Latest Version',
-	'NO_INFO'              => 'Version server could not be contacted',
-	'NOT_UP_TO_DATE'       => '%s is not up to date',
+	'ANNOUNCEMENT_TOPIC'   => 'Обявление за изданието',
+	'CURRENT_VERSION'      => 'Текуща версия',
+	'DOWNLOAD_LATEST'      => 'Изтегляне на последната версия',
+	'LATEST_VERSION'       => 'Последна версия',
+	'NO_INFO'              => 'Сървърът за версии не може да бъде достигнат',
+	'NOT_UP_TO_DATE'       => '%s не е актуална',
 	'RELEASE_ANNOUNCEMENT' => 'Annoucement Topic',
-	'UP_TO_DATE'           => '%s is up to date',
-	'VERSION_CHECK'        => 'MOD Version Check',
+	'UP_TO_DATE'           => '%s е актуална',
+	'VERSION_CHECK'        => 'Проверка на версията',
 ]);

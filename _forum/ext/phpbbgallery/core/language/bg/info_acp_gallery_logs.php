@@ -32,7 +32,7 @@ $lang = array_merge($lang, [
 	'ACP_LOG_GALLERY_SYSTEM_EXP' => 'Системен лог с всички съобщяния свързани с действието на системата',
 	'LOG_GALLERY_SHOW_LOGS'      => 'Покажи само',
 
-	'SORT_USER_ID' => 'User ID',
+	'SORT_USER_ID' => 'ID на потребителя',
 
 	'LOG_ALBUM_ADD'                         => '<strong>Създаден нов албум</strong><br />» %s',
 	'LOG_ALBUM_DEL_ALBUM'                   => '<strong>Изтрит албум</strong><br />» %s',
