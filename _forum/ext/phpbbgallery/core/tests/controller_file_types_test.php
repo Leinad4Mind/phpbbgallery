@@ -59,19 +59,37 @@ final class controller_file_types_test extends TestCase
 		}
 	}
 
-	public function test_original_source_has_an_extension_gate_and_forces_download_disposition(): void
+	public function test_original_source_has_an_extension_gate_and_addon_download_override(): void
 	{
 		$source = file_get_contents(dirname(__DIR__) . '/controller/file.php');
 		$services = file_get_contents(dirname(__DIR__) . '/config/services_controller.yml');
 
 		$this->assertStringContainsString('phpbbgallery.core.file.source_access', $source);
-		$this->assertStringContainsString('return $this->display(true);', $source);
+		$this->assertStringContainsString('$vars = [\'image_data\', \'source_path\', \'force_download\'];', $source);
+		$this->assertStringContainsString('$force_download || $this->source_requires_download', $source);
 		$this->assertStringContainsString('if ($attachment || empty($this->user->browser)', $source);
 		$this->assertStringContainsString('Original-source access may be user-specific', $source);
 		$this->assertStringContainsString('$this->tool->disable_browser_cache();', $source);
 		$file_service = strstr($services, 'phpbbgallery.core.controller.file:');
 		$file_service = strstr($file_service, 'phpbbgallery.core.controller.image:', true);
 		$this->assertStringContainsString("- '@dispatcher'", $file_service);
+	}
+
+	public function test_browser_safe_sources_are_inline_and_other_formats_are_downloads(): void
+	{
+		$reflection = new \ReflectionClass(file::class);
+		$controller = $reflection->newInstanceWithoutConstructor();
+		$requires_download = $reflection->getMethod('source_requires_download');
+
+		foreach (['image.gif', 'image.jpg', 'image.JPEG', 'image.png', 'image.webp', 'image.avif'] as $filename)
+		{
+			$this->assertFalse($requires_download->invoke($controller, $filename), $filename);
+		}
+
+		foreach (['image.bmp', 'image.tif', 'image.tiff', 'image.svg', 'image'] as $filename)
+		{
+			$this->assertTrue($requires_download->invoke($controller, $filename), $filename);
+		}
 	}
 
 	public function test_zero_identifier_resets_stale_state_to_a_complete_error_image(): void

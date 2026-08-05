@@ -18,6 +18,7 @@ final class source_access_test extends TestCase
 		$source = file_get_contents(dirname(__DIR__) . '/event/main_listener.php');
 
 		$this->assertStringContainsString("'phpbbgallery.core.file.source_access' => 'source_access'", $source);
+		$this->assertStringContainsString('$event[\'force_download\'] = true;', $source);
 		$this->assertStringContainsString('if (!confirm_box(true))', $source);
 		$this->assertStringContainsString("is_set_post('cancel')", $source);
 		$this->assertStringContainsString('login_box($source_url', $source);

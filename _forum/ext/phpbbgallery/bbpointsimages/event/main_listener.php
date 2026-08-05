@@ -196,6 +196,9 @@ final class main_listener implements EventSubscriberInterface
 
 	public function source_access(data $event): void
 	{
+		// Sources managed by BBPoints are always delivered as downloads, even
+		// when the effective album policy currently makes access free.
+		$event['force_download'] = true;
 		$source_path = (string) $event['source_path'];
 		if (!is_file($source_path))
 		{

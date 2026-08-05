@@ -6,6 +6,9 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Open browser-compatible GIF, JPEG, PNG, WebP and AVIF originals inline when
+  no add-on requires a download, while retaining attachment delivery for BMP,
+  TIFF and unknown source formats.
 - Made the phpBB permission-test identity authoritative for Gallery album,
   ownership and zebra checks, and hide the header link when that effective
   identity cannot view or moderate any album.

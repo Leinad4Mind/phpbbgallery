@@ -4,6 +4,11 @@ All notable changes to the phpBB Gallery BBPoints Images add-on are documented i
 
 ## [1.0.0] Unreleased
 
+### Changed
+
+- Force every original source managed by BBPoints Images to download as an
+  attachment, including sources whose effective access cost is zero.
+
 ### Fixed
 
 - Kept policy inheritance inside the same Gallery owner tree and excluded
