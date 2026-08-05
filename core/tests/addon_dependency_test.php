@@ -18,6 +18,7 @@ final class addon_dependency_test extends TestCase
 		\phpbbgallery\acpimport\ext::class => ['phpbbgallery/acpimport', 'info_acp_gallery_import'],
 		\phpbbgallery\exif\ext::class => ['phpbbgallery/exif', 'info_exif'],
 		\phpbbgallery\imagerevisions\ext::class => ['phpbbgallery/imagerevisions', 'info_imagerevisions'],
+		\phpbbgallery\remotestorage\ext::class => ['phpbbgallery/remotestorage', 'info_remotestorage'],
 		\phpbbgallery\contest\ext::class => ['phpbbgallery/contest', 'info_contest'],
 	];
 
