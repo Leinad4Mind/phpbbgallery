@@ -53,6 +53,9 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Added
 
+- Added opt-in BMP uploads through native GD with complete decode validation,
+  preserved BMP originals and browser-safe WebP medium/thumbnail derivatives,
+  including ZIP uploads, ACP Import, replacements and converted album icons.
 - Added an optional, permission-filtered unread-image badge beside the Gallery
   link, backed by the existing global and per-album read markers and capped at
   99+ without an unbounded count query.

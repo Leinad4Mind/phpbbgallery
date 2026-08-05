@@ -38,6 +38,12 @@ class manager
 	/** @var string Root-relative path to the icons folder, no trailing separator */
 	private string $icons_path_relative;
 
+	/** @var \phpbbgallery\core\config */
+	private \phpbbgallery\core\config $gallery_config;
+
+	/** @var \phpbbgallery\core\image\bmp_processor */
+	private \phpbbgallery\core\image\bmp_processor $bmp_processor;
+
 	/**
 	 * Constructor
 	 *
@@ -45,13 +51,18 @@ class manager
 	 * @param \phpbb\language\language $language            Language object
 	 * @param string                   $icons_path           Absolute icons folder path
 	 * @param string                   $icons_path_relative Root-relative icons folder path
+	 * @param \phpbbgallery\core\config $gallery_config Gallery configuration
+	 * @param \phpbbgallery\core\image\bmp_processor $bmp_processor Safe BMP processor
 	 */
-	public function __construct(\phpbb\files\upload $file_upload, \phpbb\language\language $language, string $icons_path, string $icons_path_relative)
+	public function __construct(\phpbb\files\upload $file_upload, \phpbb\language\language $language, string $icons_path, string $icons_path_relative,
+		\phpbbgallery\core\config $gallery_config, \phpbbgallery\core\image\bmp_processor $bmp_processor)
 	{
 		$this->file_upload = $file_upload;
 		$this->language = $language;
 		$this->icons_path = rtrim($icons_path, '/\\') . DIRECTORY_SEPARATOR;
 		$this->icons_path_relative = rtrim($icons_path_relative, '/\\');
+		$this->gallery_config = $gallery_config;
+		$this->bmp_processor = $bmp_processor;
 	}
 
 	/**
@@ -157,6 +168,10 @@ class manager
 
 		$this->file_upload->reset_vars();
 		$allowed_extensions = self::ALLOWED_EXTENSIONS;
+		if ($this->gallery_config->get('allow_bmp') && \phpbbgallery\core\image\bmp_processor::is_supported())
+		{
+			$allowed_extensions[] = 'bmp';
+		}
 		if (!\phpbbgallery\core\file\file::supports_avif())
 		{
 			$allowed_extensions = array_values(array_diff($allowed_extensions, ['avif']));
@@ -200,6 +215,11 @@ class manager
 		$filename = basename(str_replace('\\', '/', $destination));
 		$extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
 
+		if ($extension === 'bmp')
+		{
+			return $this->convert_bmp_icon($destination, $filename);
+		}
+
 		$valid = ($extension === 'svg')
 			? $this->sanitize_svg($destination)
 			: $this->is_allowed_raster_image($destination, $extension);
@@ -212,6 +232,36 @@ class manager
 		}
 
 		return ['error' => null, 'filename' => $filename];
+	}
+
+	/** Convert an accepted BMP icon to a browser-safe WebP file. */
+	private function convert_bmp_icon(string $source, string $filename): array
+	{
+		$metadata = $this->bmp_processor->inspect($source);
+		$webp_filename = pathinfo($filename, PATHINFO_FILENAME) . '.webp';
+		$destination = dirname($source) . DIRECTORY_SEPARATOR . $webp_filename;
+		if ($metadata === null || $this->bmp_processor->create_derivative(
+			$source,
+			$destination,
+			min(1024, (int) $metadata['width']),
+			min(1024, (int) $metadata['height']),
+			82
+		) === null || !@unlink($source))
+		{
+			if (is_file($source) && !is_link($source))
+			{
+				@unlink($source);
+			}
+			if (is_file($destination) && !is_link($destination))
+			{
+				@unlink($destination);
+			}
+
+			return ['error' => $this->language->lang('ICON_INVALID_TYPE'), 'filename' => null];
+		}
+		@chmod($destination, 0644);
+
+		return ['error' => null, 'filename' => $webp_filename];
 	}
 
 	/**

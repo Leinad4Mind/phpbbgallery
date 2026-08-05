@@ -73,6 +73,10 @@ class config_module
 		{
 			$error[] = $this->language->lang('AVIF_NOT_SUPPORTED');
 		}
+		if (!empty($cfg_array['allow_bmp']) && !\phpbbgallery\core\image\bmp_processor::is_supported())
+		{
+			$error[] = $this->language->lang('BMP_NOT_SUPPORTED');
+		}
 		if ($submit && !check_form_key($form_key))
 		{
 			$error[] = $this->language->lang('FORM_INVALID');
@@ -374,6 +378,7 @@ class config_module
 					'allow_png'				=> ['lang' => 'PNG_ALLOWED',			'validate' => 'bool',	'type' => 'radio:yes_no'],
 					'allow_webp'			=> ['lang' => 'WEBP_ALLOWED',			'validate' => 'bool',	'type' => 'radio:yes_no'],
 					'allow_avif'			=> ['lang' => 'AVIF_ALLOWED',			'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
+					'allow_bmp'			=> ['lang' => 'BMP_ALLOWED',			'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 					'allow_zip'				=> ['lang' => 'ZIP_ALLOWED',			'validate' => 'bool',	'type' => 'radio:yes_no'],
 					'description_length'	=> ['lang' => 'IMAGE_DESC_MAX_LENGTH',	'validate' => 'int',	'type' => 'text:7:5',		'append' => 'CHARACTERS'],
 					'disp_nextprev_thumbnail'	=> ['lang' => 'DISP_NEXTPREV_THUMB','validate' => 'bool',	'type' => 'radio:yes_no'],
