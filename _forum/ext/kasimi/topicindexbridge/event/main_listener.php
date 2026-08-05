@@ -75,6 +75,13 @@ class main_listener implements EventSubscriberInterface
 			'dmzx.topicindex.acp_display' => 'acp_display',
 			'dmzx.topicindex.acp_save' => 'acp_save',
 			'dmzx.topicindex.list_deleted' => 'list_deleted',
+			'leinad4mind.officialtopicindex.sql_fetch_topics_before' => 'sql_before',
+			'leinad4mind.officialtopicindex.enrich_topiclist' => 'enrich_topics',
+			'leinad4mind.officialtopicindex.modify_block_topic_index_ary' => 'template_vars',
+			'leinad4mind.officialtopicindex.request_context' => 'request_context',
+			'leinad4mind.officialtopicindex.acp_display' => 'acp_display',
+			'leinad4mind.officialtopicindex.acp_save' => 'acp_save',
+			'leinad4mind.officialtopicindex.list_deleted' => 'list_deleted',
 		];
 	}
 
@@ -127,7 +134,7 @@ class main_listener implements EventSubscriberInterface
 		$context['template_variables'] += [
 			'TOPICINDEX_RETURN_USER' => $user_id,
 			'TOPIC_INDEX_USER_TOPICS_FILTERING_NAME' => $this->user_loader->get_username($user_id, 'full'),
-			'U_TOPIC_INDEX_USER_TOPICS_NO_FILTER' => $this->helper->route('dmzx_topicindex_controller', $event['list_id'] ? ['list' => (int) $event['list_id']] : []),
+			'U_TOPIC_INDEX_USER_TOPICS_NO_FILTER' => $this->helper->route($this->manager->get_topicindex_route(), $event['list_id'] ? ['list' => (int) $event['list_id']] : []),
 		];
 		$event['query_context'] = $context;
 	}
@@ -141,7 +148,7 @@ class main_listener implements EventSubscriberInterface
 		$list_id = (int) $this->config['topicindex_bridge_self_list'];
 		if ($list_id && $this->list_exists($list_id))
 		{
-			$this->template->assign_var('U_TOPIC_INDEX_USER_TOPICS_SELF', $this->helper->route('dmzx_topicindex_controller', [
+			$this->template->assign_var('U_TOPIC_INDEX_USER_TOPICS_SELF', $this->helper->route($this->manager->get_topicindex_route(), [
 				'list' => $list_id,
 				'user' => (int) $this->user->data['user_id'],
 			]));
@@ -157,7 +164,7 @@ class main_listener implements EventSubscriberInterface
 		$list_id = (int) $this->config['topicindex_bridge_profile_list'];
 		if ($list_id && $this->list_exists($list_id) && !empty($event['member']['user_id']))
 		{
-			$this->template->assign_var('U_TOPIC_INDEX_USER_TOPICS', $this->helper->route('dmzx_topicindex_controller', [
+			$this->template->assign_var('U_TOPIC_INDEX_USER_TOPICS', $this->helper->route($this->manager->get_topicindex_route(), [
 				'list' => $list_id,
 				'user' => (int) $event['member']['user_id'],
 			]));

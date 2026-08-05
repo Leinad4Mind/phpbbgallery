@@ -76,6 +76,13 @@ class bridge_manager
 		return $result;
 	}
 
+	public function get_topicindex_route()
+	{
+		return $this->extension_manager->is_enabled('leinad4mind/officialtopicindex')
+			? 'leinad4mind_officialtopicindex_controller'
+			: 'dmzx_topicindex_controller';
+	}
+
 	public function is_effective($name)
 	{
 		return isset($this->modules[$name])
@@ -232,7 +239,8 @@ class bridge_manager
 
 	protected function is_available($name)
 	{
-		if (!$this->extension_manager->is_enabled('dmzx/topicindex'))
+		if (!$this->extension_manager->is_enabled('leinad4mind/officialtopicindex')
+			&& !$this->extension_manager->is_enabled('dmzx/topicindex'))
 		{
 			return false;
 		}

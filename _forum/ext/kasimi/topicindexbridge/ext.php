@@ -16,14 +16,18 @@ class ext extends \phpbb\extension\base
 	public function is_enableable()
 	{
 		$extension_manager = $this->container->get('ext.manager');
-		if (!$extension_manager->is_enabled('dmzx/topicindex'))
+		$topicindex_extension = $extension_manager->is_enabled('leinad4mind/officialtopicindex')
+			? 'leinad4mind/officialtopicindex'
+			: 'dmzx/topicindex';
+
+		if (!$extension_manager->is_enabled($topicindex_extension))
 		{
 			return false;
 		}
 
 		try
 		{
-			$metadata = $extension_manager->create_extension_metadata_manager('dmzx/topicindex')->get_metadata();
+			$metadata = $extension_manager->create_extension_metadata_manager($topicindex_extension)->get_metadata();
 
 			return version_compare($metadata['version'], '2.0.0', '>=');
 		}

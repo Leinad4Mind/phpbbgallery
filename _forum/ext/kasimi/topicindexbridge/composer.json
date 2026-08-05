@@ -1,9 +1,9 @@
 {
     "name": "kasimi/topicindexbridge",
     "type": "phpbb-extension",
-    "description": "Unified optional integrations for the dmzx Topic Index extension.",
-    "version": "1.0.0",
-    "time": "2026-08-04",
+    "description": "Unified optional integrations for Official Topic Index, with legacy DMZX compatibility.",
+    "version": "1.1.0",
+    "time": "2026-08-05",
     "license": "GPL-2.0-only",
     "authors": [
         {
