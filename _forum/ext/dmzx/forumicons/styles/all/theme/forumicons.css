@@ -1,1 +1,50 @@
-.imageline{height:auto;overflow-y:scroll;border:none;margin-top:5px;padding:5px}.imageline img{cursor:pointer}#fimg{vertical-align:bottom;padding-left:8px}
+.forumicons-list {
+	display: flex;
+	max-height: 18rem;
+	margin-top: 5px;
+	padding: 5px;
+	overflow-y: auto;
+	border: 0;
+	flex-wrap: wrap;
+	gap: 4px;
+	align-content: flex-start;
+}
+
+.forumicons-list p {
+	width: 100%;
+}
+
+.forumicons-option {
+	display: inline-flex;
+	width: 42px;
+	height: 42px;
+	padding: 4px;
+	border: 1px solid transparent;
+	background: transparent;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+}
+
+.forumicons-option:hover,
+.forumicons-option:focus,
+.forumicons-option[aria-pressed="true"] {
+	border-color: #105289;
+	background-color: #dbeaf5;
+}
+
+.forumicons-option img,
+#forumicons-preview-image {
+	max-width: 32px;
+	max-height: 32px;
+	object-fit: contain;
+}
+
+#forumicons-preview {
+	display: inline-flex;
+	min-width: 32px;
+	min-height: 32px;
+	padding-left: 8px;
+	vertical-align: middle;
+	align-items: center;
+}

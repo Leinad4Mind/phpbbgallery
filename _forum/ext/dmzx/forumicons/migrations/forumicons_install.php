@@ -1,50 +1,47 @@
 <?php
 /**
-*
-* @package phpBB Extension - Forum Icons
-* @copyright (c) 2015 dmzx - http://www.dmzx-web.net
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ *
+ * @package phpBB Extension - Forum Icons
+ * @copyright (c) 2015 dmzx - https://www.dmzx-web.net
+ * @license https://opensource.org/license/gpl-2-0 GNU General Public License v2
+ *
+ */
 
 namespace dmzx\forumicons\migrations;
 
 class forumicons_install extends \phpbb\db\migration\migration
 {
-	public function effectively_installed()
+	public static function depends_on()
 	{
-		return isset($this->config['forumicons_version']) && version_compare($this->config['forumicons_version'], '1.0.2', '>=');
-	}
-
-	static public function depends_on()
-	{
-		return array('\phpbb\db\migration\data\v31x\v311');
+		return [
+			'\phpbb\db\migration\data\v31x\v311',
+		];
 	}
 
 	public function update_data()
 	{
-		return array(
-			// Add configs
-			array('config.add', array('forumicons_version', '1.0.2')),
-
-			// Add upload directory
-			array('custom', array(array($this, 'upload_directory'))),
-		);
+		return [
+			['custom', [[$this, 'create_icon_directory']]],
+		];
 	}
 
-	public function upload_directory()
+	/**
+	 * Create the directory used for forum icons.
+	 *
+	 * @throws \RuntimeException When the directory cannot be created
+	 */
+	public function create_icon_directory()
 	{
-		$directory = 'images/forumicons';
+		$directory = $this->phpbb_root_path . 'images/forumicons';
 
-		if (!is_dir($this->phpbb_root_path . $directory))
+		if (!is_dir($directory) && !mkdir($directory, 0755, true) && !is_dir($directory))
 		{
-			@mkdir($this->phpbb_root_path . $directory, 0755);
-			@chmod($this->phpbb_root_path . $directory, 0755);
+			throw new \RuntimeException('Unable to create the forum icon directory: ' . $directory);
+		}
 
-			if (!is_dir($this->phpbb_root_path . $directory))
-			{
-				$directory = 'forumicons';
-			}
+		if (!is_readable($directory))
+		{
+			throw new \RuntimeException('The forum icon directory is not readable: ' . $directory);
 		}
 	}
 }

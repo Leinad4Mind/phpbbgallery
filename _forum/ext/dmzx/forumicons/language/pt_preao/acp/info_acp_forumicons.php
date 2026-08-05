@@ -1,10 +1,11 @@
 <?php
-
 /**
- * @package phpBB Extension - Forum Icons for phpBB.
- * @copyright (c) 2015 dmzx - http://www.dmzx-web.net
- * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ *
+ * @package phpBB Extension - Forum Icons
+ * @copyright (c) 2015 dmzx - https://www.dmzx-web.net
+ * @license https://opensource.org/license/gpl-2-0 GNU General Public License v2
  * @translation Leinad4Mind [Portuguese [pt_preao]] (2026)
+ *
  */
 
 if (!defined('IN_PHPBB'))
@@ -18,8 +19,11 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'AVAILABLE_FORUM_IMAGE'         => '<strong>Clica numa imagem para seleccionar</strong>',
-	'AVAILABLE_FORUM_IMAGE_EXPLAIN' => 'As imagens são mostradas com ~50% do tamanho real.',
-	'SELECTED_FORUM_IMAGE'          => '<strong>Imagem do fórum seleccionada</strong>',
-	'CLEAR_BUTTON'                  => 'Limpar imagem do fórum',
+	'AVAILABLE_FORUM_IMAGE'             => 'Imagens disponíveis para o fórum',
+	'AVAILABLE_FORUM_IMAGE_EXPLAIN'     => 'Selecciona uma imagem PNG ou GIF. As pré-visualizações são ajustadas a 32 × 32 píxeis.',
+	'SELECTED_FORUM_IMAGE'              => 'Imagem do fórum seleccionada',
+	'CLEAR_BUTTON'                      => 'Limpar imagem do fórum',
+	'FORUMICONS_DIRECTORY_UNAVAILABLE' => 'A directoria images/forumicons não existe ou não pode ser lida.',
+	'FORUMICONS_NO_IMAGES'              => 'Não foram encontradas imagens PNG ou GIF na directoria images/forumicons.',
+	'FORUMICONS_LIMIT_REACHED'          => 'Apenas são mostradas as primeiras 500 imagens válidas. Remove os ficheiros que não sejam necessários para mostrar as restantes.',
 ]);

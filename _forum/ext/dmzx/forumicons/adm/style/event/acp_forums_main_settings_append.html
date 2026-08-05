@@ -1,29 +1,40 @@
-<script type="text/javascript">
-	// <![CDATA[
-	function set_image(data)
-	{
-		var path = 'images/forumicons/' + data;
+{% INCLUDEJS '@dmzx_forumicons/forumicons.js' %}
 
-		if (data == '')
-		{
-			document.getElementById('forum_image').value='';
-			document.getElementById("fimg").innerHTML = "<img alt='' height='25' width='25' src='./../" + path + "' />";
-			return;
-		}
+<dl id="forumicons-selector">
+	<dt>
+		<strong>{{ lang('AVAILABLE_FORUM_IMAGE') }}</strong><br>
+		<span>{{ lang('AVAILABLE_FORUM_IMAGE_EXPLAIN') }}</span><br><br>
+		<strong>{{ lang('SELECTED_FORUM_IMAGE') }}{{ lang('COLON') }}</strong>
+		<span id="forumicons-preview">
+			<img id="forumicons-preview-image"
+				{% if FORUM_IMAGE_SRC %}src="{{ FORUM_IMAGE_SRC|e('html_attr') }}"{% else %}hidden{% endif %}
+				alt="{{ lang('SELECTED_FORUM_IMAGE')|e('html_attr') }}">
+		</span><br><br>
+		<button class="button1" type="button" id="forumicons-clear">{{ lang('CLEAR_BUTTON') }}</button>
+	</dt>
+	<dd class="forumicons-list" id="forumicons-list">
+		{% if not FORUMICONS_DIRECTORY_AVAILABLE %}
+			<p class="error">{{ lang('FORUMICONS_DIRECTORY_UNAVAILABLE') }}</p>
+		{% elseif forum_img_file_name %}
+			{% for icon in forum_img_file_name %}
+				<button type="button"
+					class="forumicons-option"
+					data-image-path="{{ icon.FORUM_IMAGE_PATH|e('html_attr') }}"
+					data-image-url="{{ icon.FORUM_IMAGE_URL|e('html_attr') }}"
+					data-image-name="{{ icon.FORUM_IMAGE_NAME|e('html_attr') }}"
+					title="{{ icon.FORUM_IMAGE_PATH|e('html_attr') }}"
+					aria-pressed="false">
+					<img src="{{ icon.FORUM_IMAGE_URL|e('html_attr') }}"
+						alt="{{ icon.FORUM_IMAGE_NAME|e('html_attr') }}"
+						width="32" height="32" loading="lazy">
+				</button>
+			{% endfor %}
+		{% else %}
+			<p>{{ lang('FORUMICONS_NO_IMAGES') }}</p>
+		{% endif %}
 
-		document.getElementById('forum_image').value=path;
-		document.getElementById("fimg").innerHTML = "<img alt='' height='25' width='25' src='./../" + path + "' />";
-	}
-
-	// ]]&gt;
-</script>
-<dl>
-	<dt><label for="side">{L_AVAILABLE_FORUM_IMAGE}{L_COLON}</label><br />{L_AVAILABLE_FORUM_IMAGE_EXPLAIN}<br /><br />{L_SELECTED_FORUM_IMAGE}{L_COLON}<span id="fimg"><img src="{FORUM_IMAGE_SRC}" width="25" height="25" alt="" /></span><br /><br /><input onclick="set_image('')" class="button1" type="button" id="clear" name="clear" value="{L_CLEAR_BUTTON}" /></dt>
-	<dd class="imageline" id="side">
-		<!-- BEGIN forum_img_file_name -->
-			<!-- IF forum_img_file_name.FORUM_IMAGE_OPT -->
-				<a onclick="set_image('{forum_img_file_name.FORUM_IMAGE_OPT}', true, true); return false;"><img src='{FORUM_IMAGE_SRC_PATH}{forum_img_file_name.FORUM_IMAGE_OPT}' title="{FORUM_IMAGE_PATH}{forum_img_file_name.FORUM_IMAGE_OPT}" width="25" height="25" alt="" /></a>
-			<!-- ENDIF -->
-		<!-- END forum_img_file_name -->
+		{% if FORUMICONS_LIMIT_REACHED %}
+			<p class="warning">{{ lang('FORUMICONS_LIMIT_REACHED') }}</p>
+		{% endif %}
 	</dd>
 </dl>
