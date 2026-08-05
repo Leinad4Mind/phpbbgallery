@@ -155,12 +155,31 @@ class package_lifecycle extends \phpbb_functional_test_case
 		$this->assertSame(0, (int) $db->sql_fetchfield('total'));
 		$db->sql_freeresult($result);
 
-		$sql = "SELECT COUNT(name) AS total
-			FROM sqlite_master
-			WHERE type = 'table'
-				AND name LIKE 'phpbb_gallery_%'";
+		$this->assertSame(0, $this->gallery_table_count());
+	}
+
+	/** Count remaining Gallery tables on every database used by the functional CI. */
+	private function gallery_table_count(): int
+	{
+		$db = $this->get_db();
+		if ($db->get_sql_layer() === 'sqlite3')
+		{
+			$sql = 'SELECT name FROM sqlite_master WHERE type = ' . chr(39) . 'table' . chr(39)
+				. ' AND name LIKE ' . chr(39) . 'phpbb_gallery_%' . chr(39);
+		}
+		else
+		{
+			$sql = 'SHOW TABLES LIKE ' . chr(39) . 'phpbb_gallery_%' . chr(39);
+		}
 		$result = $db->sql_query($sql);
-		$this->assertSame(0, (int) $db->sql_fetchfield('total'));
+
+		$count = 0;
+		while ($db->sql_fetchrow($result))
+		{
+			$count++;
+		}
 		$db->sql_freeresult($result);
+
+		return $count;
 	}
 }
