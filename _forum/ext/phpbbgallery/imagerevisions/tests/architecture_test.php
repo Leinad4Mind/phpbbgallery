@@ -99,7 +99,8 @@ final class architecture_test extends TestCase
 	public function test_preview_is_private_and_never_serves_an_unresolved_path(): void
 	{
 		$controller = (string) file_get_contents($this->root . '/controller/main.php');
-		$this->assertStringContainsString('resolve_source_file(', $controller);
+		$this->assertStringContainsString('$this->storage_workspace->materialize(', $controller);
+		$this->assertStringContainsString('deleteFileAfterSend(true)', $controller);
 		$this->assertStringContainsString("'X-Content-Type-Options', 'nosniff'", $controller);
 		$this->assertStringContainsString("'Cache-Control', 'private, no-store, max-age=0'", $controller);
 	}

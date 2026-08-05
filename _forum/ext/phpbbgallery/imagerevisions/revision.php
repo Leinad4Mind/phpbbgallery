@@ -15,20 +15,21 @@ class revision
 
 	protected \phpbb\db\driver\driver_interface $db;
 	protected \phpbb\user $user;
-	protected \phpbbgallery\core\url $url;
+	protected \phpbbgallery\core\storage\workspace $storage_workspace;
 	protected \phpbbgallery\core\log $gallery_log;
 	protected \phpbbgallery\core\cache $gallery_cache;
 	protected \phpbbgallery\core\file\file $file;
 	protected string $table_images;
 	protected string $table_revisions;
 
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbbgallery\core\url $url,
+	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\user $user,
+		\phpbbgallery\core\storage\workspace $storage_workspace,
 		\phpbbgallery\core\log $gallery_log, \phpbbgallery\core\cache $gallery_cache, \phpbbgallery\core\file\file $file,
 		string $table_images, string $table_revisions)
 	{
 		$this->db = $db;
 		$this->user = $user;
-		$this->url = $url;
+		$this->storage_workspace = $storage_workspace;
 		$this->gallery_log = $gallery_log;
 		$this->gallery_cache = $gallery_cache;
 		$this->file = $file;
@@ -100,12 +101,12 @@ class revision
 			|| (int) $uploaded['image_status'] !== (int) \phpbbgallery\core\block::STATUS_ORPHAN
 			|| (int) $uploaded['image_user_id'] !== (int) $this->user->data['user_id']
 			|| (int) $uploaded['image_album_id'] !== (int) $current['image_album_id']
-			|| $this->resolve_source_file((string) $uploaded['image_filename']) === false)
+			|| !$this->source_exists((string) $uploaded['image_filename']))
 		{
 			return false;
 		}
 
-		$current_exists = $this->resolve_source_file((string) $current['image_filename']) !== false;
+		$current_exists = $this->source_exists((string) $current['image_filename']);
 		$pruned_files = [];
 		$this->db->sql_transaction('begin');
 		try
@@ -154,13 +155,13 @@ class revision
 				\phpbbgallery\core\block::STATUS_ORPHAN,
 				\phpbbgallery\core\block::STATUS_DELETE_REQUESTED,
 			], true)
-			|| $this->resolve_source_file((string) $restored['revision_filename']) === false)
+			|| !$this->source_exists((string) $restored['revision_filename']))
 		{
 			return false;
 		}
 
 		$current = $current_rows[$image_id];
-		$current_exists = $this->resolve_source_file((string) $current['image_filename']) !== false;
+		$current_exists = $this->source_exists((string) $current['image_filename']);
 		$pruned_files = [];
 		$this->db->sql_transaction('begin');
 		try
@@ -260,7 +261,7 @@ class revision
 		return $deleted;
 	}
 
-	public function resolve_source_file(string $filename): string|false
+	public function source_exists(string $filename): bool
 	{
 		if ($filename === '' || strpos($filename, "\0") !== false || preg_match('#(^|[\\\\/])\.\.([\\\\/]|$)#', $filename)
 			|| preg_match('#^(?:[a-z]:|[\\\\/])#i', $filename))
@@ -268,17 +269,10 @@ class revision
 			return false;
 		}
 
-		$root = realpath((string) $this->url->path('upload'));
-		$file = $root === false ? false : realpath($root . DIRECTORY_SEPARATOR . str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $filename));
-		if ($root === false || $file === false || !is_file($file))
-		{
-			return false;
-		}
-
-		$root_prefix = rtrim(str_replace('\\', '/', $root), '/') . '/';
-		$normalized_file = str_replace('\\', '/', $file);
-
-		return strncasecmp($normalized_file, $root_prefix, strlen($root_prefix)) === 0 ? $file : false;
+		return $this->storage_workspace->exists(
+			\phpbbgallery\core\storage\provider_interface::SOURCE,
+			$filename
+		);
 	}
 
 	private function get_image_rows(array $image_ids): array

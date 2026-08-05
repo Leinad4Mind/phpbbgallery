@@ -23,6 +23,7 @@ final class revision_test extends TestCase
 	private revision_test_log $log;
 	private revision_test_cache $cache;
 	private revision $revision;
+	private \phpbbgallery\core\storage\workspace $workspace;
 
 	// phpcs:ignore PhpbbCodingStandard.NamingConventions.LowercaseUnderscoredFunctions.NotAllowed -- PHPUnit lifecycle API.
 	protected function setUp(): void
@@ -38,21 +39,18 @@ final class revision_test extends TestCase
 		]);
 		$user = new \phpbb\user();
 		$user->data = ['user_id' => 7];
-		$url = new revision_test_url($this->source_root);
+		$provider = new \phpbbgallery\core\storage\local_provider($this->source_root, $this->source_root, $this->source_root);
+		$this->workspace = new \phpbbgallery\core\storage\workspace($provider, $this->source_root . '/workspace');
 		$this->file = new revision_test_file($this->source_root);
 		$this->log = new revision_test_log();
 		$this->cache = new revision_test_cache();
-		$this->revision = new revision($this->db, $user, $url, $this->log, $this->cache, $this->file, 'images', 'revisions');
+		$this->revision = new revision($this->db, $user, $this->workspace, $this->log, $this->cache, $this->file, 'images', 'revisions');
 	}
 
 	// phpcs:ignore PhpbbCodingStandard.NamingConventions.LowercaseUnderscoredFunctions.NotAllowed -- PHPUnit lifecycle API.
 	protected function tearDown(): void
 	{
-		foreach (array_diff(scandir($this->source_root) ?: [], ['.', '..']) as $file)
-		{
-			@unlink($this->source_root . '/' . $file);
-		}
-		@rmdir($this->source_root);
+		$this->remove_directory($this->source_root);
 	}
 
 	public function test_replacement_preserves_the_image_record_and_stores_the_previous_file(): void
@@ -162,13 +160,27 @@ final class revision_test extends TestCase
 		$this->assertSame('Editor', $this->revision->get_revisions(10)[0]['username']);
 	}
 
-	public function test_source_path_resolution_rejects_absolute_traversal_and_missing_paths(): void
+	public function test_source_lookup_rejects_absolute_traversal_and_missing_keys(): void
 	{
-		$this->assertSame(realpath($this->source_root . '/current.jpg'), $this->revision->resolve_source_file('current.jpg'));
-		$this->assertFalse($this->revision->resolve_source_file('../current.jpg'));
-		$this->assertFalse($this->revision->resolve_source_file($this->source_root . '/current.jpg'));
-		$this->assertFalse($this->revision->resolve_source_file("bad\0name.jpg"));
-		$this->assertFalse($this->revision->resolve_source_file('missing.jpg'));
+		$this->assertTrue($this->revision->source_exists('current.jpg'));
+		$this->assertFalse($this->revision->source_exists('../current.jpg'));
+		$this->assertFalse($this->revision->source_exists($this->source_root . '/current.jpg'));
+		$this->assertFalse($this->revision->source_exists('bad' . chr(0) . 'name.jpg'));
+		$this->assertFalse($this->revision->source_exists('missing.jpg'));
+	}
+
+	private function remove_directory(string $directory): void
+	{
+		if (!is_dir($directory))
+		{
+			return;
+		}
+		foreach (array_diff(scandir($directory) ?: [], ['.', '..']) as $name)
+		{
+			$path = $directory . '/' . $name;
+			is_dir($path) && !is_link($path) ? $this->remove_directory($path) : @unlink($path);
+		}
+		@rmdir($directory);
 	}
 
 	private function image(int $image_id, string $filename, int $status, int $user_id, int $filesize): array
@@ -187,18 +199,6 @@ final class revision_test extends TestCase
 			'filesize_cache' => 2,
 			'image_filemissing' => 0,
 		];
-	}
-}
-
-final class revision_test_url extends \phpbbgallery\core\url
-{
-	public function __construct(private string $source_root)
-	{
-	}
-
-	public function path(string $directory = 'gallery'): string|false
-	{
-		return rtrim($this->source_root, '/\\') . DIRECTORY_SEPARATOR;
 	}
 }
 

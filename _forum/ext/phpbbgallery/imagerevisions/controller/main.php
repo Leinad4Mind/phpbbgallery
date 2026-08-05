@@ -25,12 +25,13 @@ class main
 	protected \phpbbgallery\core\auth\image_authorization $image_authorization;
 	protected \phpbbgallery\core\file\file $file;
 	protected \phpbbgallery\imagerevisions\revision $revisions;
+	protected \phpbbgallery\core\storage\workspace $storage_workspace;
 
 	public function __construct(\phpbbgallery\imagerevisions\policy $policy, \phpbb\controller\helper $helper,
 		\phpbb\language\language $language, \phpbb\user $user, \phpbbgallery\core\album\album $album,
 		\phpbbgallery\core\image\image $image, \phpbbgallery\core\auth\auth $gallery_auth,
 		\phpbbgallery\core\auth\image_authorization $image_authorization, \phpbbgallery\core\file\file $file,
-		\phpbbgallery\imagerevisions\revision $revisions)
+		\phpbbgallery\imagerevisions\revision $revisions, \phpbbgallery\core\storage\workspace $storage_workspace)
 	{
 		$this->policy = $policy;
 		$this->helper = $helper;
@@ -42,24 +43,40 @@ class main
 		$this->image_authorization = $image_authorization;
 		$this->file = $file;
 		$this->revisions = $revisions;
+		$this->storage_workspace = $storage_workspace;
 	}
 
 	public function preview(int $image_id, int $revision_id): BinaryFileResponse
 	{
 		$this->authorize($image_id);
 		$revision = $this->revisions->get_revision($image_id, $revision_id);
-		$source = $revision === false ? false : $this->revisions->resolve_source_file((string) $revision['revision_filename']);
-		if ($source === false)
+		if ($revision === false)
+		{
+			throw new \phpbb\exception\http_exception(404, 'IMAGE_REVISION_NOT_AVAILABLE');
+		}
+		try
+		{
+			$source = $this->storage_workspace->materialize(
+				\phpbbgallery\core\storage\provider_interface::SOURCE,
+				(string) $revision['revision_filename']
+			);
+		}
+		catch (\RuntimeException)
 		{
 			throw new \phpbb\exception\http_exception(404, 'IMAGE_REVISION_NOT_AVAILABLE');
 		}
 
-		$content_type = $this->file->mimetype_by_filename($source) ?: 'application/octet-stream';
-		$response = new BinaryFileResponse($source);
+		$content_type = $this->file->mimetype_by_filename((string) $revision['revision_filename']) ?: 'application/octet-stream';
+		$response = new BinaryFileResponse($source->get_path());
 		$response->headers->set('Content-Type', $content_type);
 		$response->headers->set('X-Content-Type-Options', 'nosniff');
 		$response->headers->set('Cache-Control', 'private, no-store, max-age=0');
-		$response->headers->set('Content-Disposition', $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_INLINE, basename($source)));
+		$response->headers->set('Content-Disposition', $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_INLINE, basename((string) $revision['revision_filename'])));
+		if ($source->is_temporary())
+		{
+			$source->detach();
+			$response->deleteFileAfterSend(true);
+		}
 
 		return $response;
 	}
