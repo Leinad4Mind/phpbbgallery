@@ -20,7 +20,7 @@ use phpbb\template\template;
 */
 class acp_listener implements EventSubscriberInterface
 {
-	protected $phpbb_extension_manager;
+	protected $extension_manager;
 	protected $helper;
 	protected $template;
 
@@ -37,7 +37,6 @@ class acp_listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
-			'core.acp_extensions_run_action'		=> 'run_action',
 			'core.acp_extensions_run_action_before'	=> 'run_action'
 		);
 	}
@@ -60,7 +59,7 @@ class acp_listener implements EventSubscriberInterface
 				{
 					if ((time() - $start_time) >= $safe_time_limit)
 					{
-						meta_refresh(0, $this->u_action . '&amp;action=disable-all');
+						meta_refresh(0, $event['u_action'] . '&amp;action=disable-all');
 					}
 				}
 			}

@@ -18,19 +18,21 @@ use phpbb\request\request;
 use phpbb\log\log;
 use phpbb\cache\service;
 
-class helper 
+class helper
 {
 	protected $db;
 	protected $config;
-	protected $phpbb_extension_manager;
+	protected $ext_manager;
 	protected $template;
 	protected $user;
 	protected $request;
 	protected $log;
 	protected $cache;
 	protected $root_path;
+	protected $metadata;
+	protected $replacements;
 
-	public function __construct(driver_interface $db, config $config, manager $phpbb_extension_manager, template $template, user $user, request $request, log $log, service $cache, 
+	public function __construct(driver_interface $db, config $config, manager $phpbb_extension_manager, template $template, user $user, request $request, log $log, service $cache,
 		$root_path)
 	{
 		$this->db			= $db;
@@ -187,7 +189,7 @@ class helper
 	* @return null
 	* @access public
 	*/
-	public function update_files($replacements = array(), $revert)
+	public function update_files($replacements = array(), $revert = false)
 	{
 		$this->replacements = $replacements;
 		$files = $this->replacements['files'];
