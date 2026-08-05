@@ -133,6 +133,14 @@ class local_provider implements provider_interface
 		return $size === false ? null : (int) $size;
 	}
 
+	public function modified_time(string $variant, string $key): ?int
+	{
+		$path = $this->existing_path($variant, $key);
+		$modified_time = $path === null ? false : @filemtime($path);
+
+		return $modified_time === false ? null : (int) $modified_time;
+	}
+
 	public function checksum(string $variant, string $key, string $algorithm = 'sha256'): ?string
 	{
 		if (!in_array($algorithm, hash_algos(), true))

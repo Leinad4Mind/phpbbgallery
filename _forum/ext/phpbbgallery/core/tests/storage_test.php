@@ -99,6 +99,7 @@ final class storage_test extends TestCase
 		$this->assertTrue($provider->write(provider_interface::SOURCE, $key, $input));
 		$this->assertTrue($provider->exists(provider_interface::SOURCE, $key));
 		$this->assertSame(14, $provider->size(provider_interface::SOURCE, $key));
+		$this->assertIsInt($provider->modified_time(provider_interface::SOURCE, $key));
 		$this->assertSame(hash('sha256', 'gallery source'), $provider->checksum(provider_interface::SOURCE, $key));
 		$this->assertFalse($provider->write(provider_interface::SOURCE, $key, $input));
 
@@ -109,6 +110,7 @@ final class storage_test extends TestCase
 
 		$this->assertTrue($provider->delete(provider_interface::SOURCE, $key));
 		$this->assertFalse($provider->exists(provider_interface::SOURCE, $key));
+		$this->assertNull($provider->modified_time(provider_interface::SOURCE, $key));
 		$this->assertTrue($provider->delete(provider_interface::SOURCE, $key));
 	}
 

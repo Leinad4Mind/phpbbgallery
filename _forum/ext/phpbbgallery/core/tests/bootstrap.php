@@ -158,6 +158,8 @@ namespace
 
 	require_once dirname(__DIR__, 4) . '/vendor/symfony/event-dispatcher/EventSubscriberInterface.php';
 	require_once dirname(__DIR__, 4) . '/vendor/symfony/event-dispatcher/Event.php';
+	require_once dirname(__DIR__, 4) . '/vendor/psr/container/src/ContainerInterface.php';
+	require_once dirname(__DIR__, 4) . '/vendor/symfony/dependency-injection/ContainerInterface.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/event/data.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/db/driver/driver_interface.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/auth/auth.php';
@@ -234,6 +236,9 @@ namespace
 	require_once dirname(__DIR__) . '/storage/provider_interface.php';
 	require_once dirname(__DIR__) . '/storage/key_generator.php';
 	require_once dirname(__DIR__) . '/storage/local_provider.php';
+	require_once dirname(__DIR__) . '/storage/active_provider.php';
+	require_once dirname(__DIR__) . '/storage/local_object.php';
+	require_once dirname(__DIR__) . '/storage/workspace.php';
 	require_once dirname(__DIR__) . '/storage/layout_migrator.php';
 	require_once dirname(__DIR__) . '/album/album.php';
 	require_once dirname(__DIR__) . '/album/display.php';

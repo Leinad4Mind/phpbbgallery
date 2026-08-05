@@ -191,6 +191,17 @@ services:
             - '%phpbbgallery.core.file.source%'
             - '%phpbbgallery.core.file.medium%'
             - '%phpbbgallery.core.file.mini%'
+    phpbbgallery.core.storage.active:
+        class: phpbbgallery\core\storage\active_provider
+        arguments:
+            - '@phpbbgallery.core.config'
+            - '@service_container'
+            - '@phpbbgallery.core.storage.local'
+    phpbbgallery.core.storage.workspace:
+        class: phpbbgallery\core\storage\workspace
+        arguments:
+            - '@phpbbgallery.core.storage.active'
+            - '%core.cache_dir%phpbbgallery/storage-workspace/'
     phpbbgallery.core.storage.layout_migrator:
         class: phpbbgallery\core\storage\layout_migrator
         arguments:
