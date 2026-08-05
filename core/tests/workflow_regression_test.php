@@ -91,4 +91,17 @@ final class workflow_regression_test extends TestCase
 			$this->assertSame(0, preg_match('/(?<![a-zA-Z0-9_])htmlspecialchars\s*\(/', $source), $path);
 		}
 	}
+
+	public function test_functional_ci_covers_sqlite_mysql_and_mariadb(): void
+	{
+		$workflow = (string) file_get_contents(dirname(__DIR__, 5) . '/.github/workflows/phpbbgallery.yml');
+
+		foreach (['database: sqlite3', 'database: mysql', 'database: mariadb'] as $database)
+		{
+			$this->assertStringContainsString($database, $workflow);
+		}
+		$this->assertStringContainsString('phpunit-${{ matrix.database }}-github.xml', $workflow);
+		$this->assertStringContainsString('setup-database.sh $DB 0', $workflow);
+		$this->assertStringNotContainsString('phpunit-sqlite3-github.xml', $workflow);
+	}
 }
