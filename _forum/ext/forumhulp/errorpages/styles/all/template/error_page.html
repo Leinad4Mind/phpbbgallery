@@ -1,0 +1,13 @@
+{% include 'overall_header.html' %}
+
+<div class="panel" id="message">
+	<div class="inner">
+		<h2 class="message-title">{{ ERRORPAGES_TITLE|e }}</h2>
+		{% if S_ERRORPAGES_EXPLAIN %}
+			<p>{{ ERRORPAGES_EXPLANATION|e }}</p>
+		{% endif %}
+		<p><a href="{{ U_INDEX|e('html_attr') }}" class="button1">{{ lang('ERRORPAGES_RETURN_INDEX') }}</a></p>
+	</div>
+</div>
+
+{% include 'overall_footer.html' %}

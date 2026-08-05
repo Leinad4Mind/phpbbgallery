@@ -1,17 +1,19 @@
 services:
-    kernel.listener.forumhulp_errorpages:
+    forumhulp.errorpages.listener:
         class: forumhulp\errorpages\event\listener
         arguments:
             - '@config'
-            - '@user'
+            - '@language'
             - '@template'
             - '@log'
+            - '@user'
+            - '%debug.exceptions%'
         tags:
-            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+            - { name: kernel.event_listener, event: kernel.exception, method: on_kernel_exception, priority: 10 }
 
     forumhulp.errorpages.acp_listener:
         class: forumhulp\errorpages\event\acp_listener
         arguments:
-            - '@controller.helper'
+            - '@language'
         tags:
             - { name: event.listener }

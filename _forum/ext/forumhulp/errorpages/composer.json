@@ -1,37 +1,34 @@
 {
     "name": "forumhulp/errorpages",
     "type": "phpbb-extension",
-    "description": "Error Pages displays Apache errors in your forums style.",
-    "homepage": "http://forumhulp.com",
-    "version": "3.1.2",
+    "description": "Displays safe, styled error responses for phpBB controller requests.",
+    "version": "3.2.0",
+    "time": "2026-08-05",
     "keywords": [
-        "forumhulp",
         "phpbb",
         "extension",
-        "error",
-        "error pages"
+        "error pages",
+        "http"
     ],
-    "license": "GPL-2.0",
+    "license": "GPL-2.0-only",
     "authors": [
         {
+            "name": "Leinad4Mind",
+            "role": "Extension Developer"
+        },
+        {
             "name": "John Peskens",
-            "homepage": "http://forumhulp.com",
-            "email": "info@forumhulp.com",
-            "role": "Developer"
+            "role": "Original Developer"
         }
     ],
     "require": {
-        "php": ">=5.3.3"
+        "php": ">=7.2.0",
+        "composer/installers": "~1.0"
     },
     "extra": {
-        "display-name": "Error pages",
+        "display-name": "Error Pages",
         "soft-require": {
-            "phpbb/phpbb": ">=3.1.*"
-        },
-        "version-check": {
-			"host": "forumhulp.com",
-			"directory": "/ext",
-			"filename": "index.php?id=35"
+            "phpbb/phpbb": ">=3.3.0,<4.0.0@dev"
         }
     }
 }
