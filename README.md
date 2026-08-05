@@ -35,7 +35,7 @@ add-ons use sibling directories under `ext/phpbbgallery/`.
 
 | Add-on | Version | Description |
 | --- | --- | --- |
-| Remote Storage | 1.0.0 | Stores private Gallery objects in S3 or S3-compatible services with verified, resumable Local/S3 migration. |
+| Remote Storage | 1.0.0 | Stores private Gallery objects in S3-compatible, Azure Blob, SFTP or Dropbox storage with verified, resumable provider migrations. |
 
 The Free and Premium labels describe distribution tiers, not different source
 licences. Every packaged component declares its own licence in `composer.json`.
