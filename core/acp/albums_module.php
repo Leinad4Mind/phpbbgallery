@@ -560,6 +560,8 @@ class albums_module
 				$template->assign_vars([
 					'S_EDIT_ALBUM'		=> true,
 					'S_NO_ICONS_AVAILABLE'	=> empty($gallery_icons),
+					'S_ICON_ACCEPT'		=> 'image/svg+xml,image/png,image/gif,image/jpeg,image/webp'
+						. (\phpbbgallery\core\file\file::supports_avif() ? ',image/avif' : ''),
 					'S_ERROR'			=> (sizeof($errors)) ? true : false,
 					'S_PARENT_ID'		=> $this->parent_id,
 					'S_ALBUM_PARENT_ID'	=> $album_data['parent_id'],

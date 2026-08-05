@@ -1476,12 +1476,12 @@ class image
 				return false;
 			}
 
-			$this->image_tools->write_image(
+			$written = $this->image_tools->write_image(
 				$output->get_path(),
 				$this->gallery_config->get('jpg_quality'),
 				true
 			);
-			if (!is_file($output->get_path()) || (int) @filesize($output->get_path()) < 1)
+			if (!$written || !is_file($output->get_path()) || (int) @filesize($output->get_path()) < 1)
 			{
 				return false;
 			}

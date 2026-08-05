@@ -80,6 +80,10 @@ final class acp_config_types_test extends TestCase
 		$this->assertArrayHasKey('watermark_enabled', $display['vars']);
 		$this->assertSame('int:0:100', $display['vars']['jpg_quality']['validate']);
 		$this->assertSame('number:0:100', $display['vars']['jpg_quality']['type']);
+		$this->assertSame('int:0:100', $display['vars']['avif_quality']['validate']);
+		$this->assertSame('number:0:100', $display['vars']['avif_quality']['type']);
+		$this->assertSame('AVIF_ALLOWED', $display['vars']['allow_avif']['lang']);
+		$this->assertTrue($display['vars']['allow_avif']['explain']);
 		$this->assertArrayHasKey('viewtopic_icon', $display['vars']);
 		$this->assertArrayHasKey('viewtopic_images', $display['vars']);
 		$this->assertArrayHasKey('viewtopic_link', $display['vars']);

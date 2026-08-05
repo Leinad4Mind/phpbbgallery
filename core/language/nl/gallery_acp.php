@@ -334,6 +334,11 @@ $lang = array_merge($lang, [
 	'PHPBB_INTEGRATION' => 'phpBB integratie',
 	'PNG_ALLOWED'       => 'Bevoegt om PNG bestanden te uploaden',
 	'WEBP_ALLOWED'      => 'Bevoegt om WEBP bestanden te uploaden',
+	'AVIF_ALLOWED'      => 'AVIF-bestanden uploaden toestaan',
+	'AVIF_ALLOWED_EXPLAIN' => 'Vereist PHP 8.2 of nieuwer en GD met ondersteuning voor het decoderen en coderen van AVIF.',
+	'AVIF_NOT_SUPPORTED' => 'AVIF-uploads kunnen niet worden ingeschakeld omdat deze PHP/GD-omgeving AVIF-afbeeldingen niet veilig kan inspecteren, decoderen en coderen.',
+	'AVIF_QUALITY'      => 'AVIF-kwaliteit',
+	'AVIF_QUALITY_EXPLAIN' => 'Stelt de AVIF-coderingskwaliteit in van 0 tot 100.',
 	'PURGED_CACHE'      => 'Cache legen',
 
 	'RATE_SCALE'                 => 'Beoordelingsschaal',

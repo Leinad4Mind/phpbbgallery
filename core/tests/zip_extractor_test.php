@@ -19,7 +19,7 @@ class zip_extractor_test extends TestCase
 	private int $archive_number = 0;
 
 	/** Every extension the gallery ever enables, so the tests bound themselves instead. */
-	private const ALLOWED = ['jpg', 'jpeg', 'gif', 'png', 'webp'];
+	private const ALLOWED = ['jpg', 'jpeg', 'gif', 'png', 'webp', 'avif'];
 
 	// phpcs:ignore PhpbbCodingStandard.NamingConventions.LowercaseUnderscoredFunctions.NotAllowed -- PHPUnit lifecycle API.
 	protected function setUp(): void
@@ -124,6 +124,23 @@ class zip_extractor_test extends TestCase
 		$this->assertSame('image/png', $files[$target . 'image_0.png']['type']);
 		$this->assertSame(strlen($image), $files[$target . 'image_0.png']['size']);
 		$this->assertSame('photo.png', $files[$target . 'image_0.png']['realname']);
+	}
+
+	public function test_extracts_an_avif_whose_content_matches_its_extension(): void
+	{
+		if (!\phpbbgallery\core\file\file::supports_avif())
+		{
+			$this->markTestSkipped('This PHP/GD build does not support safe AVIF processing.');
+		}
+
+		$extractor = $this->new_extractor();
+		$image = $this->avif_image();
+		$archive = $this->create_archive(['photo.avif' => $image]);
+		$target = $this->create_target_directory('avif');
+
+		$this->assertTrue($this->extract($extractor, $archive, $target));
+		$this->assertSame(['image_0.avif'], $this->directory_files($target));
+		$this->assertSame('image/avif', $extractor->get_files()[$target . 'image_0.avif']['type']);
 	}
 
 	public function test_the_caller_names_the_extracted_files(): void
@@ -418,6 +435,18 @@ class zip_extractor_test extends TestCase
 	private function png_image(): string
 	{
 		return base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=');
+	}
+
+	private function avif_image(): string
+	{
+		$image = imagecreatetruecolor(2, 2);
+		ob_start();
+		$this->assertTrue(imageavif($image, null, 60));
+		$contents = (string) ob_get_clean();
+		$image = null;
+		$this->assertNotSame('', $contents);
+
+		return $contents;
 	}
 
 	private function assert_has_error(extractor $extractor, string $error): void

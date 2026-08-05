@@ -891,7 +891,14 @@ class upload
 			$this->tools->rotate_image($this->get_rotating(),$this->gallery_config->get('allow_resize'));
 			if ($this->tools->rotated)
 			{
-				$this->tools->write_image($this->tools->image_source, $this->gallery_config->get('jpg_quality'), true);
+				if (!$this->tools->write_image($this->tools->image_source, $this->gallery_config->get('jpg_quality'), true))
+				{
+					if ($source_object !== null)
+					{
+						$source_object->release();
+					}
+					return false;
+				}
 				$this->storage_workspace->replace(
 					\phpbbgallery\core\storage\provider_interface::SOURCE,
 					$this->image_data[$image_id]['image_filename'],
@@ -1405,6 +1412,11 @@ class upload
 		{
 			$types[] = $this->language->lang('FILETYPES_WEBP');
 			$extensions[] = 'webp';
+		}
+		if ($this->gallery_config->get('allow_avif') && \phpbbgallery\core\file\file::supports_avif())
+		{
+			$types[] = $this->language->lang('FILETYPES_AVIF');
+			$extensions[] = 'avif';
 		}
 		if ($this->allow_zip && !$ignore_zip && $this->gallery_config->get('allow_zip'))
 		{

@@ -25,6 +25,7 @@ class config
 		'allow_jpg'			=> true,
 		'allow_png'			=> true,
 		'allow_webp'		=> true,
+		'allow_avif'		=> false,
 		'allow_rates'		=> true,
 		'allow_resize'		=> true,
 		'allow_rotate'		=> true,
@@ -65,6 +66,7 @@ class config
 		'items_per_page'		=> 15,
 
 		'jpg_quality'			=> 100,
+		'avif_quality'			=> 75,
 
 		'link_thumbnail'		=> 'image_page',
 		'link_imagepage'		=> 'image',

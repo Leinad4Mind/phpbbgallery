@@ -11,6 +11,7 @@
 namespace phpbbgallery\core\tests;
 
 use phpbbgallery\core\upload;
+use phpbbgallery\core\file\file;
 use PHPUnit\Framework\TestCase;
 
 final class upload_filetype_configuration_test extends TestCase
@@ -22,6 +23,7 @@ final class upload_filetype_configuration_test extends TestCase
 			'allow_gif' => false,
 			'allow_png' => true,
 			'allow_webp' => true,
+			'allow_avif' => true,
 			'allow_zip' => true,
 			'allow_resize' => false,
 			'max_filesize' => 512000,
@@ -29,12 +31,22 @@ final class upload_filetype_configuration_test extends TestCase
 		$file_upload = new upload_filetype_test_handler();
 		$upload = $this->new_upload($config, $file_upload);
 
-		$this->assertSame(['jpg', 'jpeg', 'png', 'webp', 'zip'], $upload->get_allowed_types());
-		$this->assertSame(['jpg', 'png', 'webp', 'zip'], $upload->get_allowed_types(true));
+		$extensions = ['jpg', 'jpeg', 'png', 'webp'];
+		$types = ['jpg', 'png', 'webp'];
+		if (file::supports_avif())
+		{
+			$extensions[] = 'avif';
+			$types[] = 'avif';
+		}
+		$extensions[] = 'zip';
+		$types[] = 'zip';
+
+		$this->assertSame($extensions, $upload->get_allowed_types());
+		$this->assertSame($types, $upload->get_allowed_types(true));
 
 		$upload->set_up(4, 2);
 
-		$this->assertSame(['jpg', 'jpeg', 'png', 'webp', 'zip'], $file_upload->allowed_extensions);
+		$this->assertSame($extensions, $file_upload->allowed_extensions);
 		$this->assertSame(512000, $file_upload->max_filesize);
 	}
 

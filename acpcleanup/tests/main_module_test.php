@@ -83,14 +83,14 @@ final class main_module_test extends TestCase
 		{
 			mkdir($root, 0700, true);
 			file_put_contents($input, 'image');
-			foreach (['known.jpg', '7/71/orphan.webp', 'orphan.png', 'cached_wm.jpg', 'notes.txt', 'image_not_exist.jpg'] as $key)
+			foreach (['known.jpg', '7/71/orphan.webp', 'orphan.png', 'orphan.avif', 'cached_wm.jpg', 'notes.txt', 'image_not_exist.jpg'] as $key)
 			{
 				$this->assertTrue($provider->write(\phpbbgallery\core\storage\provider_interface::SOURCE, $key, $input));
 			}
 
 			$module = new main_module();
 			$method = new \ReflectionMethod($module, 'find_orphan_source_keys');
-			$this->assertSame(['7/71/orphan.webp', 'orphan.png'], $method->invoke($module, $workspace, ['known.jpg']));
+			$this->assertSame(['7/71/orphan.webp', 'orphan.avif', 'orphan.png'], $method->invoke($module, $workspace, ['known.jpg']));
 		}
 		finally
 		{

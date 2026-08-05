@@ -122,6 +122,7 @@ $lang = array_merge($lang, [
 	'FILETYPES_JPG'              => 'jpg',
 	'FILETYPES_PNG'              => 'png',
 	'FILETYPES_WEBP'             => 'webp',
+	'FILETYPES_AVIF'             => 'avif',
 	'FILETYPES_ZIP'              => 'zip',
 
 	'FULL_EDITOR_GALLERY' => 'Full editor',

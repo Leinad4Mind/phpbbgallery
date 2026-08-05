@@ -50,6 +50,10 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Added
 
+- Added opt-in AVIF uploads when PHP 8.2 or later and GD provide safe AVIF
+  inspection, decoding and encoding, including configurable output quality,
+  browser filters, ZIP uploads, ACP Import, album icons, derived images,
+  rotation, watermarks, cleanup and translations for every supported locale.
 - Added an optional distributed local filesystem layout, including a confirmed,
   resumable and collision-checked migration from existing flat storage.
 - Added a fail-closed pluggable storage-provider contract with verified private
@@ -102,6 +106,9 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Security
 
+- Kept AVIF disabled on runtimes that cannot inspect dimensions before GD
+  decoding, applied the existing pixel limit before decode and verified every
+  encoded AVIF by size, MIME type and dimensions before publication.
 - Prevented configured remote storage from silently falling back to local
   files, verified materialized and published objects by size and SHA-256 where
   supported, and rejected malformed provider listings and stalled cursors.

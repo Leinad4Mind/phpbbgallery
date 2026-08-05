@@ -69,6 +69,10 @@ class config_module
 		{
 			$error[] = $this->language->lang('INVALID_STORAGE_LAYOUT');
 		}
+		if (!empty($cfg_array['allow_avif']) && !\phpbbgallery\core\file\file::supports_avif())
+		{
+			$error[] = $this->language->lang('AVIF_NOT_SUPPORTED');
+		}
 		if ($submit && !check_form_key($form_key))
 		{
 			$error[] = $this->language->lang('FORM_INVALID');
@@ -361,6 +365,7 @@ class config_module
 					'allow_resize'			=> ['lang' => 'RESIZE_IMAGES',			'validate' => 'bool',	'type' => 'radio:yes_no'],
 					'allow_rotate'			=> ['lang' => 'ROTATE_IMAGES',			'validate' => 'bool',	'type' => 'radio:yes_no'],
 					'jpg_quality'			=> ['lang' => 'JPG_QUALITY',			'validate' => 'int:0:100',	'type' => 'number:0:100',	'explain' => true],
+					'avif_quality'			=> ['lang' => 'AVIF_QUALITY',			'validate' => 'int:0:100',	'type' => 'number:0:100',	'explain' => true],
 					//'medium_cache'			=> ['lang' => 'MEDIUM_CACHE',			'validate' => 'bool',	'type' => 'radio:yes_no'],
 					'medium_width'			=> ['lang' => 'RSZ_WIDTH',				'validate' => 'int',	'type' => 'text:7:4',		'append' => 'PIXELS'],
 					'medium_height'			=> ['lang' => 'RSZ_HEIGHT',			'validate' => 'int',	'type' => 'text:7:4',		'append' => 'PIXELS'],
@@ -368,6 +373,7 @@ class config_module
 					'allow_jpg'				=> ['lang' => 'JPG_ALLOWED',			'validate' => 'bool',	'type' => 'radio:yes_no'],
 					'allow_png'				=> ['lang' => 'PNG_ALLOWED',			'validate' => 'bool',	'type' => 'radio:yes_no'],
 					'allow_webp'			=> ['lang' => 'WEBP_ALLOWED',			'validate' => 'bool',	'type' => 'radio:yes_no'],
+					'allow_avif'			=> ['lang' => 'AVIF_ALLOWED',			'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 					'allow_zip'				=> ['lang' => 'ZIP_ALLOWED',			'validate' => 'bool',	'type' => 'radio:yes_no'],
 					'description_length'	=> ['lang' => 'IMAGE_DESC_MAX_LENGTH',	'validate' => 'int',	'type' => 'text:7:5',		'append' => 'CHARACTERS'],
 					'disp_nextprev_thumbnail'	=> ['lang' => 'DISP_NEXTPREV_THUMB','validate' => 'bool',	'type' => 'radio:yes_no'],

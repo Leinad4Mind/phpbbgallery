@@ -285,9 +285,10 @@ final class controller_file_types_test extends TestCase
 			return true;
 		});
 		$tool->expects($this->once())->method('create_thumbnail');
-		$tool->method('write_image')->willReturnCallback(static function (string $path): void
+		$tool->method('write_image')->willReturnCallback(static function (string $path): bool
 		{
 			file_put_contents($path, 'derived-image');
+			return true;
 		});
 
 		$reflection = new \ReflectionClass(file::class);

@@ -594,8 +594,8 @@ class main_module
 			foreach ($page['keys'] as $key)
 			{
 				$basename = basename($key);
-				if (!isset($requested[$key]) && preg_match('/\.(?:webp|gif|png|jpe?g)$/iD', $basename)
-					&& preg_match('/_wm\.(?:webp|gif|png|jpe?g)$/iD', $basename) !== 1
+				if (!isset($requested[$key]) && preg_match('/\.(?:avif|webp|gif|png|jpe?g)$/iD', $basename)
+					&& preg_match('/_wm\.(?:avif|webp|gif|png|jpe?g)$/iD', $basename) !== 1
 					&& !preg_match('/(?:image_not_exist|not_authorised|no_hotlinking)/i', $basename))
 				{
 					$orphans[] = $key;

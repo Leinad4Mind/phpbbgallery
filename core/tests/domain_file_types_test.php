@@ -30,8 +30,64 @@ final class domain_file_types_test extends TestCase
 		$this->assertSame('image/jpeg', file::mimetype_by_filename('Photo.JPEG'));
 		$this->assertSame('jpg', file::extension_by_filename('Photo.JPEG'));
 		$this->assertSame('image/webp', file::mimetype_by_filename('preview.WEBP'));
+		$this->assertSame('image/avif', file::mimetype_by_filename('preview.AVIF'));
+		$this->assertSame('avif', file::extension_by_filename('preview.AVIF'));
 		$this->assertSame('', file::mimetype_by_filename('archive.zip'));
 		$this->assertSame('', file::extension_by_filename('archive.zip'));
+	}
+
+	public function test_avif_capability_requires_safe_dimensions_and_round_trips_when_available(): void
+	{
+		if (PHP_VERSION_ID < 80200)
+		{
+			$this->assertFalse(file::supports_avif());
+			$writer = (new \ReflectionClass(file::class))->newInstanceWithoutConstructor();
+			$writer->image = imagecreatetruecolor(1, 1);
+			$writer->image_type = 'avif';
+			$destination = tempnam(sys_get_temp_dir(), 'gallery-avif-disabled-');
+			$this->assertFalse($writer->write_image($destination, 75, true));
+			$this->assertNull($writer->image);
+			$this->assertFileDoesNotExist($destination);
+			return;
+		}
+		if (!file::supports_avif())
+		{
+			$this->markTestSkipped('This PHP/GD build does not support safe AVIF processing.');
+		}
+
+		$gallery_config = new \phpbbgallery\core\config(new \phpbb\config\config([
+			'phpbb_gallery_avif_quality' => 75,
+		]));
+		$writer = (new \ReflectionClass(file::class))->newInstanceWithoutConstructor();
+		$writer->gallery_config = $gallery_config;
+		$writer->image = imagecreatetruecolor(3, 2);
+		$writer->image_type = 'avif';
+		$writer->image_size = ['width' => 3, 'height' => 2];
+		$destination = tempnam(sys_get_temp_dir(), 'gallery-avif-');
+
+		try
+		{
+			$this->assertTrue($writer->write_image($destination, 90, true));
+			$this->assertNull($writer->image);
+			$this->assertGreaterThan(0, filesize($destination));
+			$this->assertSame('image/avif', getimagesize($destination)['mime']);
+
+			$reader = (new \ReflectionClass(file::class))->newInstanceWithoutConstructor();
+			$reader->set_image_data($destination, '', 0, true);
+			$this->assertTrue($reader->read_image(true));
+			$this->assertSame('avif', $reader->image_type);
+			$this->assertSame(3, $reader->image_size['width']);
+			$this->assertSame(2, $reader->image_size['height']);
+			$reader->image = null;
+		}
+		finally
+		{
+			$writer->image = null;
+			if ($destination !== false && file_exists($destination))
+			{
+				unlink($destination);
+			}
+		}
 	}
 
 	public function test_image_state_can_be_reset_before_reusing_the_service(): void
@@ -133,9 +189,37 @@ final class domain_file_types_test extends TestCase
 
 		try
 		{
-			$file->write_image($destination, 90, true);
+			$this->assertTrue($file->write_image($destination, 90, true));
 			$this->assertNull($file->image);
 			$this->assertGreaterThan(0, filesize($destination));
+		}
+		finally
+		{
+			$file->image = null;
+			if ($destination !== false && file_exists($destination))
+			{
+				unlink($destination);
+			}
+		}
+	}
+
+	public function test_write_image_fails_closed_when_the_encoder_type_is_unknown(): void
+	{
+		if (!function_exists('imagecreatetruecolor'))
+		{
+			$this->markTestSkipped('The GD extension is required.');
+		}
+
+		$file = (new \ReflectionClass(file::class))->newInstanceWithoutConstructor();
+		$file->image = imagecreatetruecolor(1, 1);
+		$file->image_type = 'unknown';
+		$destination = tempnam(sys_get_temp_dir(), 'gallery-write-invalid-');
+
+		try
+		{
+			$this->assertFalse($file->write_image($destination, 90, true));
+			$this->assertNull($file->image);
+			$this->assertFileDoesNotExist($destination);
 		}
 		finally
 		{

@@ -135,20 +135,23 @@ class file
 	 */
 	public static function mimetype_by_filename(string $filename): string
 	{
-		switch (substr(strtolower($filename), -4))
+		switch (strtolower(pathinfo($filename, PATHINFO_EXTENSION)))
 		{
-			case '.png':
+			case 'png':
 				return 'image/png';
 			break;
-			case '.gif':
+			case 'gif':
 				return 'image/gif';
 			break;
 			case 'jpeg':
-			case '.jpg':
+			case 'jpg':
 				return 'image/jpeg';
 			break;
 			case 'webp':
 				return 'image/webp';
+			break;
+			case 'avif':
+				return 'image/avif';
 			break;
 		}
 
@@ -157,24 +160,45 @@ class file
 
 	public static function extension_by_filename(string $filename): string
 	{
-		switch (substr(strtolower($filename), -4))
+		switch (strtolower(pathinfo($filename, PATHINFO_EXTENSION)))
 		{
-			case '.png':
+			case 'png':
 				return 'png';
 			break;
-			case '.gif':
+			case 'gif':
 				return 'gif';
 			break;
 			case 'jpeg':
-			case '.jpg':
+			case 'jpg':
 				return 'jpg';
 			break;
 			case 'webp':
 				return 'webp';
 			break;
+			case 'avif':
+				return 'avif';
+			break;
 		}
 
 		return '';
+	}
+
+	/**
+	 * Whether this runtime can safely inspect, decode and encode AVIF images.
+	 *
+	 * PHP 8.1 exposes the GD AVIF functions but getimagesize() can report 0x0
+	 * dimensions. Requiring PHP 8.2 keeps the decompression-bomb pixel limit in
+	 * front of the expensive GD decode.
+	 */
+	public static function supports_avif(): bool
+	{
+		return PHP_VERSION_ID >= 80200
+			&& defined('IMG_AVIF')
+			&& defined('IMAGETYPE_AVIF')
+			&& function_exists('imagecreatefromavif')
+			&& function_exists('imageavif')
+			&& function_exists('imagetypes')
+			&& (imagetypes() & IMG_AVIF) === IMG_AVIF;
 	}
 
 	/**
@@ -212,7 +236,8 @@ class file
 		$this->image_size['height'] = $image_size[1];
 		$this->image_content_type = $image_size['mime'];
 
-		if (($image_size[0] * $image_size[1]) > self::MAX_DECODE_PIXELS)
+		if ($image_size[0] < 1 || $image_size[1] < 1
+			|| ($image_size[0] * $image_size[1]) > self::MAX_DECODE_PIXELS)
 		{
 			$this->image = false;
 			return false;
@@ -227,6 +252,15 @@ class file
 			case 'image/webp':
 				$this->image_type = 'webp';
 				$this->image = @imagecreatefromwebp($this->image_source);
+			break;
+			case 'image/avif':
+				if (!self::supports_avif())
+				{
+					$this->image = false;
+					break;
+				}
+				$this->image_type = 'avif';
+				$this->image = @imagecreatefromavif($this->image_source);
 			break;
 			case 'image/gif':
 				$this->image_type = 'gif';
@@ -246,7 +280,7 @@ class file
 			return false;
 		}
 
-		if ($this->image_type == 'png')
+		if (in_array($this->image_type, ['png', 'webp', 'avif'], true))
 		{
 			imagealphablending($this->image, true); // Set alpha blending on ...
 			imagesavealpha($this->image, true); // ... and save alpha blending!
@@ -260,34 +294,87 @@ class file
 	 * @param string $destination Destination path
 	 * @param int $quality JPEG quality
 	 * @param bool $destroy_image Whether to release the in-memory image after writing
+	 * @return bool Whether a non-empty image of the expected type was written
 	 */
-	public function write_image(string $destination, int $quality = -1, bool $destroy_image = false): void
+	public function write_image(string $destination, int $quality = -1, bool $destroy_image = false): bool
 	{
+		if (is_link($destination))
+		{
+			return false;
+		}
 		if ($quality == -1)
 		{
 			$quality = (int) $this->gallery_config->get('jpg_quality');
 		}
+		$written = false;
 		switch ($this->image_type)
 		{
 			case 'jpeg':
-				imagejpeg($this->image, $destination, $quality);
+				$written = imagejpeg($this->image, $destination, $quality);
 			break;
 			case 'png':
-				imagepng($this->image, $destination);
+				$written = imagepng($this->image, $destination);
 			break;
 			case 'webp':
-				imagewebp($this->image, $destination);
+				$written = imagewebp($this->image, $destination);
+			break;
+			case 'avif':
+				if (!self::supports_avif())
+				{
+					break;
+				}
+				$avif_quality = max(0, min(100, (int) $this->gallery_config->get('avif_quality')));
+				$written = imageavif($this->image, $destination, $avif_quality);
 			break;
 			case 'gif':
-				imagegif($this->image, $destination);
+				$written = imagegif($this->image, $destination);
 			break;
 		}
-		@chmod($destination, $this->chmod);
+		$valid = $written && $this->validate_written_image($destination);
+		if ($valid)
+		{
+			@chmod($destination, $this->chmod);
+		}
+		else if (is_file($destination) && !is_link($destination))
+		{
+			@unlink($destination);
+		}
 
 		if ($destroy_image)
 		{
 			$this->image = null;
 		}
+
+		return $valid;
+	}
+
+	private function validate_written_image(string $destination): bool
+	{
+		clearstatcache(true, $destination);
+		$filesize = @filesize($destination);
+		if (!is_file($destination) || is_link($destination) || $filesize === false || $filesize < 1)
+		{
+			return false;
+		}
+		$expected_mime = [
+			'jpeg' => 'image/jpeg',
+			'png' => 'image/png',
+			'webp' => 'image/webp',
+			'avif' => 'image/avif',
+			'gif' => 'image/gif',
+		][$this->image_type] ?? '';
+		if ($expected_mime === '')
+		{
+			return false;
+		}
+
+		$image_info = @getimagesize($destination);
+
+		return $image_info !== false
+			&& ($image_info['mime'] ?? '') === $expected_mime
+			&& (int) $image_info[0] > 0
+			&& (int) $image_info[1] > 0
+			&& ((int) $image_info[0] * (int) $image_info[1]) <= self::MAX_DECODE_PIXELS;
 	}
 
 	/**
@@ -319,7 +406,10 @@ class file
 		{
 			for ($attempt = 0; $attempt <= self::MAX_FILESIZE_RESIZE_ATTEMPTS; $attempt++)
 			{
-				$this->write_image($temporary_file, $quality);
+				if (!$this->write_image($temporary_file, $quality))
+				{
+					return false;
+				}
 				clearstatcache(true, $temporary_file);
 				$current_filesize = @filesize($temporary_file);
 
@@ -578,7 +668,7 @@ class file
 			}
 		}
 
-		$preserve_alpha = in_array($this->image_type, ['png', 'webp'], true);
+		$preserve_alpha = in_array($this->image_type, ['png', 'webp', 'avif'], true);
 		$background_colour = 0;
 		if ($preserve_alpha)
 		{
@@ -673,6 +763,14 @@ class file
 				case 'image/webp':
 					$imagecreate = 'imagecreatefromwebp';
 					break;
+				case 'image/avif':
+					if (!self::supports_avif())
+					{
+						$this->errors[] = ['WATERMARK_IMAGE_IMAGECREATE'];
+						return;
+					}
+					$imagecreate = 'imagecreatefromavif';
+					break;
 				case 'image/gif':
 					$imagecreate = 'imagecreatefromgif';
 					break;
@@ -709,7 +807,11 @@ class file
 			}
 			imagecopy($this->image, $this->watermark, $dst_x, $dst_y, 0, 0, $this->watermark_size[0], $this->watermark_size[1]);
 			$this->watermark = null;
-			$this->write_image($get_wm_name);
+			if (!$this->write_image($get_wm_name))
+			{
+				$this->errors[] = ['WATERMARK_IMAGE_IMAGECREATE'];
+				return;
+			}
 			$this->image_source = $get_wm_name;
 			$this->read_image();
 			if (!$this->image)

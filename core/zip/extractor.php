@@ -466,6 +466,7 @@ final class extractor
 			IMAGETYPE_JPEG => ['jpg', 'jpeg'],
 			IMAGETYPE_PNG => ['png'],
 			IMAGETYPE_WEBP => ['webp'],
+			IMAGETYPE_AVIF => ['avif'],
 		];
 
 		return isset($image_types[$image_info[2]]) && in_array($extension, $image_types[$image_info[2]], true);
