@@ -28,7 +28,7 @@ interface provider_interface
 	/** Prepare the provider to store an object. */
 	public function prepare(string $variant, string $key): bool;
 
-	/** Copy a local file into the provider. */
+	/** Copy a local file into the provider; a false result must not leave a partial object. */
 	public function write(string $variant, string $key, string $local_file): bool;
 
 	/** Replace an existing object from a local file without exposing a partial write. */
