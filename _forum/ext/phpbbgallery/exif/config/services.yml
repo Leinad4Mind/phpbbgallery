@@ -4,7 +4,7 @@ services:
         arguments:
             - '@user'
             - '@phpbbgallery.core.config'
-            - '@phpbbgallery.core.url'
             - '@phpbbgallery.core.user'
+            - '@phpbbgallery.core.storage.workspace'
         tags:
             - { name: event.listener }

@@ -55,8 +55,8 @@ final class exif_test extends TestCase
 		$expected_properties = [
 			'user' => 'phpbb\\user',
 			'gallery_config' => 'phpbbgallery\\core\\config',
-			'gallery_url' => 'phpbbgallery\\core\\url',
 			'gallery_user' => 'phpbbgallery\\core\\user',
+			'storage_workspace' => 'phpbbgallery\\core\\storage\\workspace',
 		];
 
 		foreach ($expected_properties as $property_name => $expected_type)
@@ -143,6 +143,18 @@ final class exif_test extends TestCase
 
 		$services = (string) file_get_contents(dirname(__DIR__) . '/config/services.yml');
 		$this->assertStringNotContainsString('@phpbbgallery.core.auth', $services);
+	}
+
+	public function test_viewimage_materializes_and_releases_the_active_source(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/event/exif_listener.php');
+		$services = (string) file_get_contents(dirname(__DIR__) . '/config/services.yml');
+
+		$this->assertStringContainsString('$this->storage_workspace->materialize(', $source);
+		$this->assertStringContainsString('provider_interface::SOURCE', $source);
+		$this->assertStringContainsString('$source->release()', $source);
+		$this->assertStringNotContainsString('$this->gallery_url->path', $source);
+		$this->assertStringContainsString('@phpbbgallery.core.storage.workspace', $services);
 	}
 
 	public function test_template_events_cover_every_supported_style(): void
