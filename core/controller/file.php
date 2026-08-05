@@ -149,6 +149,7 @@ class file
 	*/
 	public function source(int $image_id): \Symfony\Component\HttpFoundation\BinaryFileResponse
 	{
+		$force_download = false;
 		$this->auth->load_user_permissions($this->user->data['user_id']);
 		$this->path = $this->path_source;
 		$this->load_data($image_id);
@@ -163,16 +164,20 @@ class file
 			 * Allow add-ons to authorize or account for original-source access.
 			 *
 			 * A listener may interrupt the request with a login, confirmation or
-			 * HTTP exception. Medium and thumbnail routes do not trigger this event.
+			 * HTTP exception, or require an attachment response. Medium and thumbnail
+			 * routes do not trigger this event.
 			 *
 			 * @event phpbbgallery.core.file.source_access
-			 * @var array  image_data Complete image and album row
+			 * @var array image_data Complete image and album row
 			 * @var string source_path Absolute original-source path
+			 * @var bool force_download Whether an add-on requires a download response
 			 */
-			$this->dispatcher->trigger_event(
+			$vars = ['image_data', 'source_path', 'force_download'];
+			extract($this->dispatcher->trigger_event(
 				'phpbbgallery.core.file.source_access',
-				compact('image_data', 'source_path')
-			);
+				compact($vars)
+			));
+			$force_download = (bool) $force_download;
 		}
 
 		// @todo Enable watermark
@@ -202,7 +207,17 @@ class file
 		$this->tool->disable_browser_cache();
 
 		// The image-page controller owns view counting; browsers may repeat binary requests.
-		return $this->display(true);
+		return $this->display(
+			$force_download || $this->source_requires_download($this->data['image_filename'])
+		);
+	}
+
+	/** Determine whether a source format is unsuitable for inline browser display. */
+	protected function source_requires_download(string $filename): bool
+	{
+		$extension = strtolower((string) pathinfo($filename, PATHINFO_EXTENSION));
+
+		return !in_array($extension, ['gif', 'jpg', 'jpeg', 'png', 'webp', 'avif'], true);
 	}
 
 	/**
