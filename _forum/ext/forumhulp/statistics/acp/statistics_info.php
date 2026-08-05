@@ -3,7 +3,7 @@
 *
 * @package Statistics
 * @copyright (c) 2014 ForumHulp.com
-* @license Proprietary
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
 
@@ -20,7 +20,7 @@ class statistics_info
 			'modes'		=> array(
 				'stat'	=> array(
 					'title'	=> 'ACP_STATISTICS',
-					'auth'	=> 'ext_forumhulp/statistics && acl_a_viewlogs',
+					'auth'	=> 'ext_forumhulp/statistics && acl_a_statistics',
 					'cat'	=> array('ACP_QUICK_ACCESS')
 				),
 			),

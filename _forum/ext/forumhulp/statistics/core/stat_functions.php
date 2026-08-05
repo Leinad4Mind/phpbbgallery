@@ -3,22 +3,40 @@
 *
 * @package Statistics
 * @copyright (c) 2014 ForumHulp.com
-* @license Proprietary
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
 
+namespace forumhulp\statistics\core;
+
 class stat_functions
 {
+	/**
+	* JSON-encode a scalar for embedding inside a <script> block: escapes '<', '>', '&', quotes so
+	* stored visitor-controlled text (referer, user-agent, screen resolution, search terms, ...)
+	* can never break out of the script context or reintroduce markup.
+	*/
+	private static function js($value)
+	{
+		return json_encode($value, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
+	}
+
 	/**
 	* get_config data
 	*/
 	public static function get_config()
 	{
-		global $db, $sconfig, $tables, $phpbb_container;
+		global $db, $sconfig, $tables;
 
 		$sql = 'SELECT * FROM ' . $tables['config'];
 		$result = $db->sql_query($sql);
 		$row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		if (!$row)
+		{
+			return;
+		}
 
 		foreach ($row as $key => $value)
 		{
@@ -36,6 +54,7 @@ class stat_functions
 		{
 			$search_eng[$row['name']] = $row['query'];
 		}
+		$db->sql_freeresult($result);
 	}
 
 	public static function count_array($aray, $row1)
@@ -70,7 +89,7 @@ class stat_functions
 			$modules = ['FORUM_INDEX' => $user->lang['FORUM_INDEX'], 'VIEWING_FAQ' => $user->lang['VIEWING_FAQ'], 'VIEWING_MCP' => $user->lang['VIEWING_MCP'],
 						'SEARCHING_FORUMS' => $user->lang['SEARCHING_FORUMS'], 'VIEWING_ONLINE' => $user->lang['VIEWING_ONLINE'],
 						'VIEWING_MEMBERS' => $user->lang['VIEWING_MEMBERS'], 'VIEWING_UCP' => $user->lang['VIEWING_UCP']];
-						
+
 			if (defined('FORUMS_TABLE'))
 			{
 				$sql = 'SELECT forum_id, forum_name FROM ' . FORUMS_TABLE;
@@ -79,8 +98,9 @@ class stat_functions
 				{
 					$modules[$row['forum_id']] = $row['forum_name'];
 				}
+				$db->sql_freeresult($result);
 			}
-			
+
 			$sql = 'SELECT module_id, module_langname FROM ' . MODULES_TABLE . " WHERE module_class IN ('ucp', 'mcp')";
 			$result = $db->sql_query($sql);
 			while ($row = $db->sql_fetchrow($result))
@@ -88,9 +108,10 @@ class stat_functions
 				(isset($user->lang[$row['module_langname']])) ? $modules[$row['module_langname']] = $user->lang[$row['module_langname']] : null;
 				(isset($user->lang[$row['module_langname']])) ? $modules[$row['module_id']] = $user->lang[$row['module_langname']] : null;
 			}
-	
-			$m = unserialize($sconfig['statistics_custom_pages']);
-			if (sizeof($m) > 0)
+			$db->sql_freeresult($result);
+
+			$m = (!empty($sconfig['statistics_custom_pages'])) ? @unserialize($sconfig['statistics_custom_pages'], ['allowed_classes' => false]) : false;
+			if (is_array($m) && sizeof($m) > 0)
 			{
 				foreach($m as $value)
 				{
@@ -106,6 +127,7 @@ class stat_functions
 				{
 					$modules[$row['title']] = $row['title'];
 				}
+				$db->sql_freeresult($result);
 			}
 
 			$cache->put('_modules_stats_lang', $modules, 3600);
@@ -123,8 +145,12 @@ class stat_functions
 		$sort_key	= $request->variable('sk', 't');
 		$sort_dir	= $request->variable('sd', 'd');
 		$sort_by_sql = array('t' => 'time', 'u' => 'uname', 'm' => 'module', 'd' => 'domain', 'h' => 'host', 'g' => 'ugroup');
+		if (!isset($sort_by_sql[$sort_key]))
+		{
+			$sort_key = 't';
+		}
 		$sql_sort = $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
-		
+
 		$template->assign_vars(array(
 			'U_ACTION'			=> $uaction,
 			'S_SORT_KEY'		=> $sort_key,
@@ -133,17 +159,21 @@ class stat_functions
 			'SUB_DISPLAY'		=> 'online'
 		));
 
+		$botswhere = '';
 		if (!$sconfig['statistics_botsinc'])
 		{
-			$sql = 'SET SESSION group_concat_max_len = 15000';
-			$db->sql_query($sql);
-			$sql = 'SELECT GROUP_CONCAT(CONCAT("""", bot_name, """")) AS bots FROM ' . BOTS_TABLE;
+			$sql = 'SELECT bot_name FROM ' . BOTS_TABLE;
 			$result = $db->sql_query($sql);
-			$botswhere = ' WHERE uname NOT IN (' . $db->sql_fetchfield('bots') . ')';			
+			$bot_names = array();
+			while ($row = $db->sql_fetchrow($result))
+			{
+				$bot_names[] = $row['bot_name'];
+			}
 			$db->sql_freeresult($result);
+			$botswhere = ' WHERE ' . $db->sql_in_set('uname', $bot_names, true);
 		}
 
-		$sql = 'SELECT COUNT(id) AS total_entries FROM ' . $tables['online'] . ((!$sconfig['statistics_botsinc']) ? $botswhere : '');
+		$sql = 'SELECT COUNT(id) AS total_entries FROM ' . $tables['online'] . $botswhere;
 		$result = $db->sql_query($sql);
 		$total_entries = (int) $db->sql_fetchfield('total_entries');
 		$db->sql_freeresult($result);
@@ -153,9 +183,9 @@ class stat_functions
 		$pagination->generate_template_pagination($base_url, 'pagination', 'start', $total_entries, $sconfig['statistics_max_online'], $start);
 
 		$sql = 'SELECT o.time, o.uname, o.ugroup, g.group_name, g.group_type, o.agent, o.ip_addr, o.host, o.domain, d.description, o.module, o.page, o.referer FROM ' . $tables['online'] . ' o
-				LEFT JOIN ' . $tables['domain'] . ' d ON (d.domain = o.domain) 
+				LEFT JOIN ' . $tables['domain'] . ' d ON (d.domain = o.domain)
 				LEFT JOIN ' . GROUPS_TABLE . ' g ON (g.group_id = o.ugroup) '
-				. ((!$sconfig['statistics_botsinc']) ? $botswhere : '') . ' ORDER BY o.' . $sql_sort;
+				. $botswhere . ' ORDER BY o.' . $sql_sort;
 
 		$result = $db->sql_query_limit($sql, $sconfig['statistics_max_online'], $start);
 		$counter = 0;
@@ -181,6 +211,7 @@ class stat_functions
 				)
 			);
 		}
+		$db->sql_freeresult($result);
 	}
 
 	public static function browsers($start = 0, $uaction = '', $overall = 0)
@@ -191,6 +222,10 @@ class stat_functions
 		$sort_key	= $request->variable('sk', 'd');
 		$sort_dir	= $request->variable('sd', 'd');
 		$sort_by_sql = array('d' => (($overall) ? 'o.name' : 'agent'), 't' => 'total_per_domain', 'p' => 'percent');
+		if (!isset($sort_by_sql[$sort_key]))
+		{
+			$sort_key = 'd';
+		}
 		$sql_sort = $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
 
 		$template->assign_vars(array(
@@ -213,9 +248,9 @@ class stat_functions
 														$user->format_date($row['lastdate'], 'd m \'y') . ')': '',
 									'OVERALLSORT'	=> ($overall) ? '&amp;overall=1' : ''));
 
-		$sql = ($overall) ? 'SELECT o.name, o.hits AS total_per_domain, 
+		$sql = ($overall) ? 'SELECT o.name, o.hits AS total_per_domain,
 				(SELECT SUM(hits) FROM ' . $tables['archive'] . ' WHERE cat = 2) as total,
-				SUM(o.hits) / (SELECT SUM(hits) FROM ' . $tables['archive'] . ' WHERE cat = 2) AS percent 
+				SUM(o.hits) / (SELECT SUM(hits) FROM ' . $tables['archive'] . ' WHERE cat = 2) AS percent
 				FROM ' . $tables['archive'] . ' o
 				WHERE cat = 2 GROUP BY o.name ORDER BY ' . $sql_sort :
 				'SELECT DISTINCT agent FROM ' . $tables['online'];
@@ -236,13 +271,12 @@ class stat_functions
 					'TMODULETOTAL'	=> round((($row['total_per_domain'] / $row['total']) * 100), 1) . ' % (' . $row['total_per_domain'] . ' of ' . $row['total'] . ')'
 					)
 				);
-				$graphstr .= (($graphstr == '') ? '' : ', ') . '[\'' . html_entity_decode($db->sql_escape($row['name'])) . '\', ' . $row['total_per_domain'] . ']';
+				$graphstr .= (($graphstr == '') ? '' : ', ') . '[' . self::js($row['name']) . ', ' . $row['total_per_domain'] . ']';
 			}
 		} else
 		{
-			include('find_os.php');
 			$browser = new find_os();
-			
+
 			$browser_aray = array();
 			while ($row = $db->sql_fetchrow($result))
 			{
@@ -273,9 +307,10 @@ class stat_functions
 					'MODULETOTAL'	=> round((($row['total_per_browser'] / $row['total']) * 100), 1) . ' % (' . $row['total_per_browser'] . ' of ' . $row['total'] . ')'
 					)
 				);
-				$graphstr .= (($graphstr == '') ? '' : ', ') . '[\'' . html_entity_decode($db->sql_escape($row['Browser'])) . '\', ' . $row['total_per_browser'] . ']';
+				$graphstr .= (($graphstr == '') ? '' : ', ') . '[' . self::js($row['Browser']) . ', ' . $row['total_per_browser'] . ']';
 			}
 		}
+		$db->sql_freeresult($result);
 
 		$pagination = $phpbb_container->get('pagination');
 		$base_url = $uaction . '&amp;screen=browsers&amp;sk=' . $sort_key . '&amp;sd=' . $sort_dir . (($overall)? '&amp;overall=1' : '&amp;overall=0');
@@ -294,6 +329,10 @@ class stat_functions
 		$sort_key	= $request->variable('sk', 'd');
 		$sort_dir	= $request->variable('sd', 'd');
 		$sort_by_sql = array('d' => (($overall) ? 'o.name' : 'o.agent'), 't' => 'total_per_os', 'p' => 'percent');
+		if (!isset($sort_by_sql[$sort_key]))
+		{
+			$sort_key = 'd';
+		}
 		$sql_sort = $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
 
 		$template->assign_vars(array(
@@ -341,11 +380,10 @@ class stat_functions
 					'TMODULETOTAL'	=> round((($row['total_per_os'] / $row['total']) * 100), 1) . ' % (' . $row['total_per_os'] . ' of ' . $row['total'] . ')'
 					)
 				);
-				$graphstr .= (($graphstr == '') ? '' : ', ') . '[\'' . html_entity_decode($db->sql_escape($row['name'])) . '\', ' . $row['total_per_os'] . ']';
+				$graphstr .= (($graphstr == '') ? '' : ', ') . '[' . self::js($row['name']) . ', ' . $row['total_per_os'] . ']';
 			}
 		} else
 		{
-			include('find_os.php');
 			$os = new find_os();
 			$os_aray = array();
 			while ($row = $db->sql_fetchrow($result))
@@ -377,9 +415,10 @@ class stat_functions
 					'MODULETOTAL'	=> round((($row['total_per_os'] / $row['total']) * 100), 1) . ' % (' . $row['total_per_os'] . ' of ' . $row['total'] . ')'
 					)
 				);
-				$graphstr .= (($graphstr == '') ? '' : ', ') . '[\'' . html_entity_decode($db->sql_escape($row['Operating System'])) . '\', ' . $row['total_per_os'] . ']';
+				$graphstr .= (($graphstr == '') ? '' : ', ') . '[' . self::js($row['Operating System']) . ', ' . $row['total_per_os'] . ']';
 			}
 		}
+		$db->sql_freeresult($result);
 
 		$pagination = $phpbb_container->get('pagination');
 		$base_url = $uaction . '&amp;screen=os&amp;sk=' . $sort_key . '&amp;sd=' . $sort_dir . (($overall)? '&amp;overall=1' : '&amp;overall=0');
@@ -398,6 +437,10 @@ class stat_functions
 		$sort_key	= $request->variable('sk', 'd');
 		$sort_dir	= $request->variable('sd', 'd');
 		$sort_by_sql = array('d' => (($overall) ? 'o.name' : 'o.domain'), 't' => 'total_per_domain', 'p' => 'percent');
+		if (!isset($sort_by_sql[$sort_key]))
+		{
+			$sort_key = 'd';
+		}
 		$sql_sort = $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
 
 		$template->assign_vars(array(
@@ -453,8 +496,9 @@ class stat_functions
 				'TMODULETOTAL'	=> round((($row['total_per_domain'] / $row['total']) * 100), 1) . ' % (' . $row['total_per_domain'] . ' of ' . $row['total'] . ')'
 				)
 			);
-			$graphstr .= (($graphstr == '') ? '' : ', ') . '[\'' . html_entity_decode($db->sql_escape($row['description'])) . '\', ' . $row['total_per_domain'] . ']';
+			$graphstr .= (($graphstr == '') ? '' : ', ') . '[' . self::js($row['description']) . ', ' . $row['total_per_domain'] . ']';
 		}
+		$db->sql_freeresult($result);
 		$template->assign_vars(array('GRAPH' => '[' . $graphstr . ']'));
 	}
 
@@ -466,6 +510,10 @@ class stat_functions
 		$sort_key	= $request->variable('sk', 'd');
 		$sort_dir	= $request->variable('sd', 'd');
 		$sort_by_sql = array('d' => 'domain', 't' => 'total_per_referer', 'p' => 'percent');
+		if (!isset($sort_by_sql[$sort_key]))
+		{
+			$sort_key = 'd';
+		}
 		$sql_sort = ((!$overall && $sort_key == 'p') ? 'total' :  $sort_by_sql[$sort_key]) . ' ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
 
 		$template->assign_vars(array(
@@ -477,7 +525,7 @@ class stat_functions
 		));
 
 		$sql = ($overall) ? 'SELECT COUNT(name) AS total_entries, MIN(first) AS firstdate, MAX(last) AS lastdate FROM ' . $tables['archive'] . ' WHERE cat = 7' :
-				'SELECT COUNT(DISTINCT referer) AS total_entries FROM ' . $tables['online'] . ' WHERE referer <> "" AND referer not LIKE "%' . $config['server_name']. '%"';
+				'SELECT COUNT(DISTINCT referer) AS total_entries FROM ' . $tables['online'] . ' WHERE referer <> ' . $db->sql_escape('') . ' AND referer NOT ' . $db->sql_like_expression('%' . $config['server_name'] . '%');
 
 		$result = $db->sql_query($sql);
 		$row = $db->sql_fetchrow($result);
@@ -496,14 +544,14 @@ class stat_functions
 									'OVERALLSORT'	=> ($overall) ? '&amp;overall=1' : ''));
 
 		$sql = ($overall) ? 'SELECT name AS domain, hits AS total_per_referer,
-				(SELECT SUM(hits) FROM ' . $tables['archive'] . ' WHERE cat = 7 <> "") as total,
-				SUM(hits) / (SELECT SUM(hits) FROM ' . $tables['archive'] . ' WHERE cat = 7) AS percent
-				FROM ' . $tables['archive'] . ' o WHERE cat = 7
+				SUM(hits) / (SELECT SUM(hits) FROM ' . $tables['archive'] . ' WHERE cat = 7) AS percent,
+				(SELECT SUM(hits) FROM ' . $tables['archive'] . ' WHERE cat = 7) as total
+				FROM ' . $tables['archive'] . ' WHERE cat = 7
 				GROUP BY name ORDER BY ' . $sql_sort :
 
 				'SELECT DISTINCT referer AS domain, COUNT(referer) AS total_per_referer,
-				(SELECT COUNT(referer) AS total_entries FROM ' . $tables['online'] . ' WHERE referer <> "" AND referer not LIKE "%' . $config['server_name']. '%") AS total
-				 FROM ' . $tables['online'] . ' WHERE referer <> "" AND referer not LIKE "%'. $config['server_name'] . '%"
+				(SELECT COUNT(referer) AS total_entries FROM ' . $tables['online'] . ' WHERE referer <> ' . $db->sql_escape('') . ' AND referer NOT ' . $db->sql_like_expression('%' . $config['server_name'] . '%') . ') AS total
+				 FROM ' . $tables['online'] . ' WHERE referer <> ' . $db->sql_escape('') . ' AND referer NOT ' . $db->sql_like_expression('%' . $config['server_name'] . '%') . '
 				 GROUP BY referer ORDER BY ' . $sql_sort;
 
 		$result = $db->sql_query_limit($sql, $sconfig['statistics_max_referer'], $start);
@@ -521,8 +569,9 @@ class stat_functions
 				'TMODULETOTAL'	=> round((($row['total_per_referer'] / $row['total']) * 100), 1) . ' % (' . $row['total_per_referer'] . ' of ' . $row['total'] . ')'
 				)
 			);
-			$graphstr .= (($graphstr == '') ? '' : ', ') . '[\'' . html_entity_decode($db->sql_escape(substr($row['domain'], 0, 20))) . '\', ' . $row['total_per_referer'] . ']';
+			$graphstr .= (($graphstr == '') ? '' : ', ') . '[' . self::js(substr($row['domain'], 0, 20)) . ', ' . $row['total_per_referer'] . ']';
 		}
+		$db->sql_freeresult($result);
 		$template->assign_vars(array('GRAPH' => '[' . $graphstr . ']'));
 	}
 
@@ -534,6 +583,10 @@ class stat_functions
 		$sort_key	= $request->variable('sk', 'd');
 		$sort_dir	= $request->variable('sd', 'd');
 		$sort_by_sql = array('d' => (($overall) ? 'name' : 'referer'), 't' => 'total_per_referer', 'p' => 'percent');
+		if (!isset($sort_by_sql[$sort_key]))
+		{
+			$sort_key = 'd';
+		}
 		$sql_sort = $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
 
 		$template->assign_vars(array(
@@ -544,7 +597,7 @@ class stat_functions
 			'SUBTITLE'			=> $user->lang['SEARCHENG'],
 		));
 
-		$sql = 'SELECT COUNT(name) AS total_entries, MIN(first) AS firstdate, MAX(last) AS lastdate FROM ' . $tables['archive'] . ' 
+		$sql = 'SELECT COUNT(name) AS total_entries, MIN(first) AS firstdate, MAX(last) AS lastdate FROM ' . $tables['archive'] . '
 				WHERE name REGEXP (SELECT GROUP_CONCAT(name ORDER BY name SEPARATOR "|") FROM '. $tables['se'] . ')';
 		$result = $db->sql_query($sql);
 		$row = $db->sql_fetchrow($result);
@@ -562,17 +615,17 @@ class stat_functions
 														$user->format_date($row['lastdate'], 'd m \'y') . ')': '',
 									'OVERALLSORT'	=> ($overall) ? '&amp;overall=1' : ''));
 
-		$sql = ($overall) ? 'SELECT name AS referer, hits AS total_per_referer, 
-				(SELECT SUM(hits) FROM ' . $tables['archive'] . ' WHERE cat = 7) as total, 
+		$sql = ($overall) ? 'SELECT name AS referer, hits AS total_per_referer,
+				(SELECT SUM(hits) FROM ' . $tables['archive'] . ' WHERE cat = 7) as total,
 				SUM(hits) / (SELECT SUM(hits) FROM ' . $tables['archive'] . '
-				WHERE name REGEXP (SELECT GROUP_CONCAT(name ORDER BY name SEPARATOR "|") FROM '. $tables['se'] . ')) AS percent FROM ' . $tables['archive'] . ' 
+				WHERE name REGEXP (SELECT GROUP_CONCAT(name ORDER BY name SEPARATOR "|") FROM '. $tables['se'] . ')) AS percent FROM ' . $tables['archive'] . '
 				WHERE name REGEXP (SELECT GROUP_CONCAT(name ORDER BY name SEPARATOR "|") FROM '. $tables['se'] . ') AND cat = 7 GROUP BY name ORDER BY ' . $sql_sort :
 
-				'SELECT DISTINCT SUBSTR(referer, 1, IF(LOCATE("?", referer, 8), LOCATE("?", referer, 8) -1, LENGTH(referer))) AS referer, COUNT(referer) AS total_per_referer, 
-				(SELECT COUNT(referer) FROM ' . $tables['online'] . ' WHERE referer <> "") as total, 
-				COUNT(referer) / (SELECT COUNT(referer) FROM ' . $tables['online'] . ' 
-				WHERE referer REGEXP (SELECT GROUP_CONCAT(name ORDER BY name SEPARATOR "|") FROM '. $tables['se'] . ')) AS percent FROM ' . $tables['online'] . ' 
-				WHERE referer REGEXP (SELECT GROUP_CONCAT(name ORDER BY name SEPARATOR "|") FROM '. $tables['se'] . ') 
+				'SELECT DISTINCT SUBSTR(referer, 1, IF(LOCATE("?", referer, 8), LOCATE("?", referer, 8) -1, LENGTH(referer))) AS referer, COUNT(referer) AS total_per_referer,
+				(SELECT COUNT(referer) FROM ' . $tables['online'] . ' WHERE referer <> "") as total,
+				COUNT(referer) / (SELECT COUNT(referer) FROM ' . $tables['online'] . '
+				WHERE referer REGEXP (SELECT GROUP_CONCAT(name ORDER BY name SEPARATOR "|") FROM '. $tables['se'] . ')) AS percent FROM ' . $tables['online'] . '
+				WHERE referer REGEXP (SELECT GROUP_CONCAT(name ORDER BY name SEPARATOR "|") FROM '. $tables['se'] . ')
 				GROUP BY referer ORDER BY ' . $sql_sort;
 
 		$result = $db->sql_query_limit($sql, $sconfig['statistics_max_se'], $start);
@@ -590,8 +643,9 @@ class stat_functions
 				'TMODULETOTAL'	=> round((($row['total_per_referer'] / $row['total']) * 100), 1) . ' % (' . $row['total_per_referer'] . ' of ' . $row['total'] . ')'
 				)
 			);
-			$graphstr .= (($graphstr == '') ? '' : ', ') . '[\'' . html_entity_decode($db->sql_escape($row['referer'])) . '\', ' . $row['total_per_referer'] . ']';
+			$graphstr .= (($graphstr == '') ? '' : ', ') . '[' . self::js($row['referer']) . ', ' . $row['total_per_referer'] . ']';
 		}
+		$db->sql_freeresult($result);
 		$template->assign_vars(array('GRAPH' => '[' . $graphstr . ']'));
 	}
 
@@ -613,6 +667,7 @@ class stat_functions
 				)
 			);
 		}
+		$db->sql_freeresult($result);
 		$template->assign_vars(array(
 			'U_ACTION'			=> $uaction,
 			'SUB_DISPLAY'		=> 'ese',
@@ -628,6 +683,10 @@ class stat_functions
 		$sort_key	= $request->variable('sk', 'd');
 		$sort_dir	= $request->variable('sd', 'd');
 		$sort_by_sql = array('d' => (($overall) ? 'name' : 'referer'), 't' => 'total_per_referer', 'p' => 'percent');
+		if (!isset($sort_by_sql[$sort_key]))
+		{
+			$sort_key = 'd';
+		}
 		$sql_sort = $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
 
 		$template->assign_vars(array(
@@ -642,16 +701,22 @@ class stat_functions
 							'SELECT DISTINCT se_terms, COUNT(se_terms) AS rowtotal FROM ' . $tables['online'] . ' WHERE se_terms <> "" GROUP BY se_terms';
 		$result = $db->sql_query($sql);
 		$se_terms = array();
+		$firstdate = $lastdate = 0;
 		while ($row = $db->sql_fetchrow($result))
 		{
 			$terms = explode(' ', $row['se_terms']);
 			foreach($terms as $key)
 			{
-				isset($se_terms[$key]) ? $se_terms[$key] = (isset($se_terms[$key]) ? $se_terms[$key] + (int) $row['rowtotal'] : (int) $row['rowtotal']) : null;
+				if ($key === '')
+				{
+					continue;
+				}
+				$se_terms[$key] = (isset($se_terms[$key]) ? $se_terms[$key] : 0) + (int) $row['rowtotal'];
 			}
 			($overall) ? $firstdate = $row['firstdate'] : null;
 			($overall) ? $lastdate = $row['lastdate'] : null;
 		}
+		$db->sql_freeresult($result);
 
 		$total_entries = sizeof($se_terms);
 
@@ -676,8 +741,8 @@ class stat_functions
 
 		$counter = 0;
 		$graphstr = '';
-		$row['total'] = array_sum($se_terms);
-		foreach ($se_terms as $row['referer'] => $row['total_per_referer'])
+		$row = array('total' => array_sum($se_terms));
+		foreach (array_slice($se_terms, $start, $sconfig['statistics_max_se_terms'], true) as $row['referer'] => $row['total_per_referer'])
 		{
 			$counter += 1;
 			$template->assign_block_vars('onlinerow', array(
@@ -689,7 +754,7 @@ class stat_functions
 				'TMODULETOTAL'	=> round((($row['total_per_referer'] / $row['total']) * 100), 1) . ' % (' . $row['total_per_referer'] . ' of ' . $row['total'] . ')'
 				)
 			);
-			$graphstr .= (($graphstr == '') ? '' : ', ') . '[\'' . html_entity_decode($db->sql_escape($row['referer'])) . '\', ' . $row['total_per_referer'] . ']';
+			$graphstr .= (($graphstr == '') ? '' : ', ') . '[' . self::js($row['referer']) . ', ' . $row['total_per_referer'] . ']';
 		}
 		$template->assign_vars(array('GRAPH' => '[' . $graphstr . ']'));
 	}
@@ -702,6 +767,10 @@ class stat_functions
 		$sort_key	= $request->variable('sk', 'd');
 		$sort_dir	= $request->variable('sd', 'd');
 		$sort_by_sql = array('d' => ($overall) ? 'a.name' : 'a.uname', 't' => 'total_per_users', 'p' => 'total');
+		if (!isset($sort_by_sql[$sort_key]))
+		{
+			$sort_key = 'd';
+		}
 		$sql_sort = ((!$overall && $sort_key == 't') ? 'total' :  $sort_by_sql[$sort_key]) . ' ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
 
 		$template->assign_vars(array(
@@ -748,7 +817,7 @@ class stat_functions
 				(SELECT  sum(a.hits)
 				FROM    ' . $tables['archive'] . ' a, ' . BOTS_TABLE . ' b
 				WHERE  a.name = b.bot_name AND a.cat = 5) AS total
-				FROM    ' . $tables['archive'] . ' a, ' . BOTS_TABLE . ' u
+				FROM    ' . $tables['archive'] . ' a, ' . BOTS_TABLE . ' b
 				WHERE  a.uname = b.bot_name AND a.cat = 5 AND b.bot_name IS not NULL ORDER BY ' . $sql_sort :
 
 				'SELECT  a.uname, COUNT(a.uname) AS total_per_users,
@@ -767,15 +836,16 @@ class stat_functions
 			$template->assign_block_vars('onlinerow', array(
 				'COUNTER'   	=> $start + $counter,
 				'NAME'			=> $row['uname'],
-				'USER_ID'		=> $row['user_id'],
+				'USER_ID'		=> isset($row['user_id']) ? $row['user_id'] : 0,
 				'MODULECOUNT'	=> self::roundk($row['total_per_users']),
 				'TMODULECOUNT'	=> $row['total_per_users'],
 				'MODULETOTAL'	=> round((($row['total_per_users'] / $row['total']) * 100), 1) . ' % (' . self::roundk($row['total_per_users']) . ' of ' . self::roundk($row['total']) . ')',
 				'TMODULETOTAL'	=> round((($row['total_per_users'] / $row['total']) * 100), 1) . ' % (' . $row['total_per_users'] . ' of ' . $row['total'] . ')'
 				)
 			);
-			$graphstr .= (($graphstr == '') ? '' : ', ') . '[\'' . html_entity_decode($db->sql_escape($row['uname'])) . '\', ' . $row['total_per_users'] . ']';
+			$graphstr .= (($graphstr == '') ? '' : ', ') . '[' . self::js($row['uname']) . ', ' . $row['total_per_users'] . ']';
 		}
+		$db->sql_freeresult($result);
 		$template->assign_vars(array('GRAPH' => '[' . $graphstr . ']'));
 	}
 
@@ -788,6 +858,10 @@ class stat_functions
 		$sort_key	= $request->variable('sk', 'm');
 		$sort_dir	= $request->variable('sd', 'd');
 		$sort_by_sql = array('m' => (($overall) ? 'name' : 'module'), 't' => 'total_per_module', 'p' => 'percent');
+		if (!isset($sort_by_sql[$sort_key]))
+		{
+			$sort_key = 'm';
+		}
 
 		if ($sort_key == 'm')
 		{
@@ -839,17 +913,19 @@ class stat_functions
 		while ($row = $db->sql_fetchrow($result))
 		{
 			$counter += 1;
+			$module_name = isset($modules[$row['module']]) ? $modules[$row['module']] : 'Module not found';
 			$template->assign_block_vars('onlinerow', array(
 				'COUNTER'   	=> $start + $counter,
-				'NAME'			=> isset($modules[$row['module']]) ? $modules[$row['module']] : 'Module not found',
+				'NAME'			=> $module_name,
 				'MODULECOUNT'	=> self::roundk($row['total_per_module']),
 				'TMODULECOUNT'	=> $row['total_per_module'],
 				'MODULETOTAL'	=> round((($row['total_per_module'] / $row['total']) * 100), 1) . ' % (' . self::roundk($row['total_per_module']) . ' of ' . self::roundk($row['total']) . ')',
 				'TMODULETOTAL'	=> round((($row['total_per_module'] / $row['total']) * 100), 1) . ' % (' . $row['total_per_module'] . ' of ' . $row['total'] . ')'
 				)
 			);
-			$graphstr .= (($graphstr == '') ? '' : ', ') . '[\'' . html_entity_decode(isset($modules[$row['module']]) ? $db->sql_escape($modules[$row['module']]) : 'Module not found') . '\', ' . $row['total_per_module'] . ']';
+			$graphstr .= (($graphstr == '') ? '' : ', ') . '[' . self::js($module_name) . ', ' . $row['total_per_module'] . ']';
 		}
+		$db->sql_freeresult($result);
 		$template->assign_vars(array('GRAPH' => '[' . $graphstr . ']'));
 	}
 
@@ -861,6 +937,10 @@ class stat_functions
 		$sort_key	= $request->variable('sk', 'd');
 		$sort_dir	= $request->variable('sd', 'd');
 		$sort_by_sql = array('d' => ($overall) ? 'name' : 'o.scr_res', 't' => 'total_per_screen', 'p' => 'percent');
+		if (!isset($sort_by_sql[$sort_key]))
+		{
+			$sort_key = 'd';
+		}
 		$sql_sort = $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
 
 		$template->assign_vars(array(
@@ -889,7 +969,7 @@ class stat_functions
 														$user->format_date($row['lastdate'], 'd m \'y') . ')': '',
 									'OVERALLSORT'	=> ($overall) ? '&amp;overall=1' : ''));
 
-		$sql = ($overall) ? 'SELECT name AS scr_res, hits AS total_per_screen, 
+		$sql = ($overall) ? 'SELECT name AS scr_res, hits AS total_per_screen,
 				(SELECT SUM(hits) FROM ' . $tables['archive'] . ' WHERE cat = 6) as total,
 				SUM(hits) / (SELECT SUM(hits) FROM ' . $tables['archive'] . ' WHERE cat = 6) AS percent
 				FROM ' . $tables['archive'] . '
@@ -916,8 +996,9 @@ class stat_functions
 				'TMODULETOTAL'	=> round((($row['total_per_screen'] / $row['total']) * 100), 1) . ' % (' . $row['total_per_screen'] . ' of ' . $row['total'] . ')'
 				)
 			);
-			$graphstr .= (($graphstr == '') ? '' : ', ') . '[\'' . html_entity_decode($row['scr_res']) . '\', ' . $row['total_per_screen'] . ']';
+			$graphstr .= (($graphstr == '') ? '' : ', ') . '[' . self::js($row['scr_res']) . ', ' . $row['total_per_screen'] . ']';
 		}
+		$db->sql_freeresult($result);
 		$template->assign_vars(array('GRAPH' => '[' . $graphstr . ']'));
 	}
 
@@ -927,6 +1008,10 @@ class stat_functions
 
 		// sort keys, direction en sql
 		$sort_key	= $request->variable('sk', 'd');
+		if (!in_array($sort_key, array('d', 'm', 'y'), true))
+		{
+			$sort_key = 'd';
+		}
 		$month = $request->variable('m', date('n', time()));
 		$year = $request->variable('y', date('Y', time()));
 
@@ -941,10 +1026,10 @@ class stat_functions
 
 		if ($sort_key == 'd')
 		{
-			$sql =  'SELECT hits, month, day FROM ' . $tables['stats'] . ' WHERE year = ' . $year . ' AND month = ' . $month . ' ORDER BY year, month, day ASC';
+			$sql =  'SELECT hits, month, day FROM ' . $tables['stats'] . ' WHERE year = ' . (int) $year . ' AND month = ' . (int) $month . ' ORDER BY year, month, day ASC';
 		} else if ($sort_key == 'm')
 		{
-			$sql =  'SELECT SUM(hits) AS hits, month, year FROM ' . $tables['stats'] . ' WHERE year = ' . $year . ' GROUP BY month ORDER BY year, month ASC';
+			$sql =  'SELECT SUM(hits) AS hits, month, year FROM ' . $tables['stats'] . ' WHERE year = ' . (int) $year . ' GROUP BY month ORDER BY year, month ASC';
 		} else
 		{
 			$sql =  'SELECT SUM(hits) AS hits, year FROM ' . $tables['stats'] . ' GROUP BY year ORDER BY year ASC';
@@ -954,13 +1039,13 @@ class stat_functions
 		while ($row = $db->sql_fetchrow($result))
 		{
 			$graphstr .= (($graphstr == '') ? '' : ', ') . '' . $row['hits'] . '';
-			$datestr .= (($datestr == '') ? '' : ', ') . '\'' . html_entity_decode(
-						(($sort_key == 'd') ? $row['day'] . ' ' . $row['month'] : (($sort_key == 'm') ? $row['month'] . '<br>' . $row['year'] : $row['year']))) . '\'';
+			$datestr .= (($datestr == '') ? '' : ', ') . self::js(($sort_key == 'd') ? $row['day'] . ' ' . $row['month'] : (($sort_key == 'm') ? $row['month'] . '<br>' . $row['year'] : $row['year']));
 		}
+		$db->sql_freeresult($result);
 		$template->assign_vars(array(
 			'STATS' => '[' . $graphstr . ']', 'DATES' => '[' . $datestr . ']',
-			'TITLE' => '\'' . (($sort_key == 'd') ? $user->lang['DOV'] . ' ' . date("F",mktime(0,0,0,$month,1,2014)) . ' ' . $year :
-						(($sort_key == 'm') ? $user->lang['MOV'] . ' ' . $year : $user->lang['YOV'] . ' ')) . '\''));
+			'TITLE' => self::js(($sort_key == 'd') ? $user->lang['DOV'] . ' ' . date("F",mktime(0,0,0,$month,1,2014)) . ' ' . $year :
+						(($sort_key == 'm') ? $user->lang['MOV'] . ' ' . $year : $user->lang['YOV'] . ' '))));
 	}
 
 	public static function ustats($start = 0, $uaction = '')
@@ -980,11 +1065,12 @@ class stat_functions
 		while ($row = $db->sql_fetchrow($result))
 		{
 			$graphstr .= (($graphstr == '') ? '' : ', ') . '' . $row['hits'] . '';
-			$datestr .= (($datestr == '') ? '' : ', ') . '\'' . html_entity_decode($row['hour']) . '\'';
+			$datestr .= (($datestr == '') ? '' : ', ') . self::js($row['hour']);
 		}
+		$db->sql_freeresult($result);
 		$template->assign_vars(array(
 			'STATS' => '[' . $graphstr . ']', 'DATES' => '[' . $datestr . ']',
-			'TITLE' => '\'' . $user->lang['HOV'] . '\''));
+			'TITLE' => self::js($user->lang['HOV'])));
 	}
 
 	public static function users($start = 0, $uaction = '', $overall = 0)
@@ -995,6 +1081,10 @@ class stat_functions
 		$sort_key	= $request->variable('sk', 'd');
 		$sort_dir	= $request->variable('sd', 'd');
 		$sort_by_sql = array('d' => ($overall) ? 'a.name' : 'a.uname', 't' => 'total_per_users', 'p' => 'total');
+		if (!isset($sort_by_sql[$sort_key]))
+		{
+			$sort_key = 'd';
+		}
 		$sql_sort = $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
 
 		$template->assign_vars(array(
@@ -1067,8 +1157,9 @@ class stat_functions
 				'TMODULETOTAL'	=> round((($row['total_per_users'] / $row['total']) * 100), 1) . ' % (' . $row['total_per_users'] . ' of ' . $row['total'] . ')'
 				)
 			);
-			$graphstr .= (($graphstr == '') ? '' : ', ') . '[\'' . html_entity_decode($db->sql_escape($row['uname'])) . '\', ' . $row['total_per_users'] . ']';
+			$graphstr .= (($graphstr == '') ? '' : ', ') . '[' . self::js($row['uname']) . ', ' . $row['total_per_users'] . ']';
 		}
+		$db->sql_freeresult($result);
 		$template->assign_vars(array('GRAPH' => '[' . $graphstr . ']'));
 	}
 
@@ -1078,39 +1169,33 @@ class stat_functions
 		$module_aray = array(0 => 'COUNTRIES', 1 => 'REFERRALS', 2 => 'SEARCHENG', 3 => 'SEARCHTERMS', 4 => 'BROWSERS', 5 => 'CRAWLERS', 6 => 'SYSTEMS', 7 => 'MODULES',
 							8 => 'RESOLUTIONS', 9 => 'USERS', 10 => 'FL_DATE', 11 => 'POSTS', 12 => 'UGROUPS', 13 => 'SEARCHRESULTS', 14 => 'UNIQUE');
 		$modules = self::get_modules();
-		
-		if (version_compare($config['version'], '3.2.*', '<'))
-		{
-			 $db_tools = new \phpbb\db\tools($db);
-		} else
-		{
-			$db_tools_factory = new \phpbb\db\tools\factory();
-			$db_tools = $db_tools_factory->get($db);
-		}
+
+		$db_tools_factory = new \phpbb\db\tools\factory();
+		$db_tools = $db_tools_factory->get($db);
 		$searchresulttabel = $db_tools->sql_table_exists($table_prefix . 'searchresults');
 
-		$sql_aray[] = 'SELECT d.description AS name, o.hits FROM ' . $tables['archive'] . ' o LEFT JOIN ' . $tables['domain'] . ' d ON (d.domain = o.name) 
+		$sql_aray[] = 'SELECT d.description AS name, o.hits FROM ' . $tables['archive'] . ' o LEFT JOIN ' . $tables['domain'] . ' d ON (d.domain = o.name)
 						WHERE cat = 4 GROUP BY o.name ORDER BY hits DESC';
 		$sql_aray[] = 'SELECT name, hits FROM ' . $tables['archive'] . ' WHERE cat = 7 ORDER BY hits DESC';
 		$sql_aray[] = 'SELECT name, hits FROM ' . $tables['archive'] . ' WHERE cat = 7 ORDER BY hits DESC';
 		$sql_aray[] = 'SELECT name, hits FROM ' . $tables['archive'] . ' WHERE cat = 8 ORDER BY hits DESC';
 		$sql_aray[] = 'SELECT name, hits FROM ' . $tables['archive'] . ' WHERE cat = 2 ORDER BY hits DESC';
-		$sql_aray[] = 'SELECT a.name, a.hits FROM ' . $tables['archive'] . ' a LEFT JOIN ' . BOTS_TABLE . ' b ON a.name = b.bot_name 
+		$sql_aray[] = 'SELECT a.name, a.hits FROM ' . $tables['archive'] . ' a LEFT JOIN ' . BOTS_TABLE . ' b ON a.name = b.bot_name
 					   WHERE  a.cat = 5 AND b.bot_name IS NOT NULL ORDER BY hits DESC';
 		$sql_aray[] = 'SELECT name, hits FROM ' . $tables['archive'] . ' WHERE cat = 3 ORDER BY hits DESC';
 		$sql_aray[] = 'SELECT name, hits FROM ' . $tables['archive'] . ' WHERE cat = 1 ORDER BY hits DESC';
 		$sql_aray[] = 'SELECT name, hits FROM ' . $tables['archive'] . ' WHERE cat = 6 ORDER BY hits DESC';
-		$sql_aray[] = 'SELECT a.name, a.hits FROM ' . $tables['archive'] . ' a LEFT JOIN ' . USERS_TABLE . ' b ON a.name = b.username 
+		$sql_aray[] = 'SELECT a.name, a.hits FROM ' . $tables['archive'] . ' a LEFT JOIN ' . USERS_TABLE . ' b ON a.name = b.username
 					   WHERE  a.cat = 5 AND b.username IS NOT NULL ORDER BY hits DESC';
 
-		$sql_aray[] = 'SELECT "First startdate" AS name, MIN(first) AS hits FROM ' . $tables['archive'] . ' UNION 
-					   SELECT "Last startdate" AS name, MAX(last) AS hits FROM ' . $tables['archive'] . ' 
-					   UNION SELECT "Rows" AS name, ROUND(COUNT(id), 0) AS hits FROM ' . $tables['archive'] . ' 
+		$sql_aray[] = 'SELECT "First startdate" AS name, MIN(first) AS hits FROM ' . $tables['archive'] . ' UNION
+					   SELECT "Last startdate" AS name, MAX(last) AS hits FROM ' . $tables['archive'] . '
+					   UNION SELECT "Rows" AS name, ROUND(COUNT(id), 0) AS hits FROM ' . $tables['archive'] . '
 					   UNION SELECT "Table size" AS name, CASE WHEN data_length + index_length < 1024 THEN CONCAT(ROUND(((data_length + index_length)), 1), " B")
 					   WHEN data_length + index_length BETWEEN 1024 AND 1048576 THEN CONCAT(ROUND(((data_length + index_length) / 1024), 1), " Kb")
 					   WHEN data_length + index_length > 1048576 THEN CONCAT(ROUND(((data_length + index_length) / 1024 / 1024), 1), " Mb")
-					   END AS hits FROM information_schema.TABLES 
-					   WHERE table_schema = "' . $db->get_db_name() . '" AND table_name = "' . $tables['archive'] . '"' . 
+					   END AS hits FROM information_schema.TABLES
+					   WHERE table_schema = "' . $db->get_db_name() . '" AND table_name = "' . $tables['archive'] . '"' .
 					   (($searchresulttabel) ? ' UNION SELECT "Searchwords" AS name, COUNT(search_key) AS hits FROM ' . $table_prefix . 'searchresults' : '');
 		$sql_aray[] = '';
 		$sql_aray[] = 'SELECT g.group_name AS name, g.group_type, hits FROM ' . $tables['archive'] . ' LEFT JOIN ' . GROUPS_TABLE . ' g ON g.group_id = name WHERE cat = 10 ORDER BY hits DESC';
@@ -1139,13 +1224,14 @@ class stat_functions
 					$counter += 1;
 					$template->assign_block_vars('blocks.block', array(
 						'COUNTER'  	=> $counter,
-						'NAME'		=> ($i == 7) ? ((isset($modules[$row['name']])) ? $modules[$row['name']] : 'Not found') : 
+						'NAME'		=> ($i == 7) ? ((isset($modules[$row['name']])) ? $modules[$row['name']] : 'Not found') :
 										(($i == 12 && $row['group_type'] == GROUP_SPECIAL) ? $user->lang['G_' . $row['name']] : $row['name']),
 						'HITS'		=> ($i == 10 && isset($row['hits']) && $counter < 3) ? $user->format_date($row['hits'], 'd m \'y') : self::roundk($row['hits']),
 						'THITS'		=> ($i == 10 && isset($row['hits']) && $counter < 3) ? $user->format_date($row['hits']) : $row['hits']
 						)
 					);
 				}
+				$db->sql_freeresult($result);
 				if ($counter < 10)
 				{
 					for($counter + 1; $counter + 1 <= 10; $counter++)
@@ -1184,6 +1270,7 @@ class stat_functions
 						)
 					);
 				}
+				$db->sql_freeresult($result);
 				for($counter + 1; $counter + 1 <= 10; $counter++)
 				{
 					$template->assign_block_vars('blocks.block', array(
@@ -1222,6 +1309,17 @@ class stat_functions
 	{
 		global $db, $config, $sconfig, $user, $tables, $request, $template, $phpbb_container;
 
+		add_form_key('forumhulp_statistics');
+
+		$is_write_action = $request->is_set_post('submit_ese') || $request->is_set_post('delmarked') || $request->is_set_post('delall')
+			|| $request->is_set_post('config') || $request->is_set_post('dell_custom_page') || $request->is_set_post('submit_custom_page')
+			|| $request->is_set_post('submit_start_screen') || $request->is_set_post('botsincbtn') || $request->is_set_post('logbtn');
+
+		if ($is_write_action && !check_form_key('forumhulp_statistics'))
+		{
+			trigger_error('FORM_INVALID');
+		}
+
 		$se_name = $request->variable('se_name', array('' => ''), true);
 		$se_query = $request->variable('se_query', array('' => ''), true);
 		$se_mark = $request->variable('mark', array('' => 0), true);
@@ -1231,20 +1329,22 @@ class stat_functions
 			{
 				if ($key != -1)
 				{
-					$sql = 'UPDATE ' . $tables['se'] . ' SET name = "' . $value . '", query = "' . $se_query[$key] . '" WHERE id  = '. $key;
+					$sql = 'UPDATE ' . $tables['se'] . ' SET ' . $db->sql_build_array('UPDATE', array('name' => $value, 'query' => $se_query[$key])) . ' WHERE id = ' . (int) $key;
+					$db->sql_query($sql);
 				} else if ($value != '' && $se_query[$key] != '')
 				{
-					$sql = 'INSERT INTO ' . $tables['se'] . ' VALUES(NULL, "' . $value . '", "' . $se_query[$key] . '")';
+					$sql = 'INSERT INTO ' . $tables['se'] . ' ' . $db->sql_build_array('INSERT', array('name' => $value, 'query' => $se_query[$key]));
+					$db->sql_query($sql);
 				}
-				$db->sql_query($sql);
 			}
 		}
 
 		if (sizeof($se_mark) && $request->variable('delmarked', ''))
 		{
-			foreach($se_mark as $key => $value)
+			$mark_ids = array_map('intval', array_keys($se_mark));
+			if (!empty($mark_ids))
 			{
-				$sql = 'DELETE FROM ' . $tables['se'] . ' WHERE id  = '. $key;
+				$sql = 'DELETE FROM ' . $tables['se'] . ' WHERE ' . $db->sql_in_set('id', $mark_ids);
 				$db->sql_query($sql);
 			}
 		}
@@ -1255,10 +1355,16 @@ class stat_functions
 			$db->sql_query($sql);
 		}
 
-		$sconfig = $request->variable('config', array('' => 0), true);
-		if (sizeof($sconfig))
+		// Only known config columns may be written - the request array's keys are otherwise
+		// attacker controlled and sql_build_array() does not escape UPDATE keys, only values
+		$allowed_columns = array('max_modules', 'max_browsers', 'max_os', 'max_countries', 'max_users', 'max_screens',
+			'max_referer', 'max_se_terms', 'max_se', 'max_crawl', 'max_online',
+			't_modules', 't_browsers', 't_os', 't_countries', 't_users', 't_screens', 't_referer', 't_se_terms', 't_se', 't_crawl', 't_online');
+		$config_input = $request->variable('config', array('' => 0), true);
+		$config_update = array_map('intval', array_intersect_key($config_input, array_flip($allowed_columns)));
+		if (sizeof($config_update))
 		{
-			$sql = 'UPDATE ' . $tables['config'] . ' SET ' . $db->sql_build_array('UPDATE', $sconfig);
+			$sql = 'UPDATE ' . $tables['config'] . ' SET ' . $db->sql_build_array('UPDATE', $config_update);
 			$db->sql_query($sql);
 		}
 
@@ -1267,8 +1373,10 @@ class stat_functions
 			$sql = 'SELECT custom_pages FROM ' . $tables['config'];
 			$result = $db->sql_query($sql);
 			$row = $db->sql_fetchfield('custom_pages');
-			$row = unserialize($row);
-			
+			$db->sql_freeresult($result);
+			$row = (!empty($row)) ? @unserialize($row, ['allowed_classes' => false]) : array();
+			$row = is_array($row) ? $row : array();
+
 			if ($request->is_set('dell_custom_page'))
 			{
 				unset($row[$request->variable('custom_page', '')]);
@@ -1277,30 +1385,47 @@ class stat_functions
 				$row[$request->variable('custom_page', '')] = strtoupper($request->variable('custom_value', ''));
 			}
 			asort($row);
-			$sql = 'UPDATE ' . $tables['config'] . ' SET custom_pages = "' . $db->sql_escape(serialize($row)) . '"';
+			$sql = 'UPDATE ' . $tables['config'] . ' SET ' . $db->sql_build_array('UPDATE', array('custom_pages' => serialize($row)));
 			$db->sql_query($sql);
 		}
 
 		if ($request->is_set('submit_start_screen'))
 		{
-			$sql = 'UPDATE ' . $tables['config'] . ' SET start_screen = "' . $request->variable('start_screen', 'online') . '", archive=' . $request->variable('archive', 0) . '';
+			$module_aray_screens = array('countries', 'referrals', 'se', 'se_terms', 'browsers', 'crawl', 'os', 'modules', 'stats', 'screens', 'top10', 'users', 'ustats', 'default');
+			$start_screen = $request->variable('start_screen', 'online');
+			if (!in_array($start_screen, $module_aray_screens, true))
+			{
+				$start_screen = 'online';
+			}
+			$sql = 'UPDATE ' . $tables['config'] . ' SET ' . $db->sql_build_array('UPDATE', array('start_screen' => $start_screen, 'archive' => (int) $request->variable('archive', 0)));
 			$db->sql_query($sql);
 		}
 
 		if ($request->is_set('botsincbtn'))
 		{
-			$sql = 'UPDATE ' . $tables['config'] . ' SET botsinc = "' . $request->variable('botsinc', 0) . '"';
+			$sql = 'UPDATE ' . $tables['config'] . ' SET ' . $db->sql_build_array('UPDATE', array('botsinc' => (int) $request->variable('botsinc', 0)));
 			$db->sql_query($sql);
 		}
 
 		if ($request->is_set('logbtn'))
 		{
-			$sql = 'UPDATE ' . $tables['config'] . ' SET log = "' . $request->variable('log', 0) . '"';
+			$sql = 'UPDATE ' . $tables['config'] . ' SET ' . $db->sql_build_array('UPDATE', array('log' => (int) $request->variable('log', 0)));
+			$db->sql_query($sql);
+		}
+
+		if ($request->is_set('geoipbtn'))
+		{
+			$sql = 'UPDATE ' . $tables['config'] . ' SET ' . $db->sql_build_array('UPDATE', array('geoip_lookup' => (int) $request->variable('geoip_lookup', 0)));
 			$db->sql_query($sql);
 		}
 
 		if ($request->is_set('submit_del_stat'))
 		{
+			if (!check_form_key('forumhulp_statistics'))
+			{
+				trigger_error('FORM_INVALID');
+			}
+
 			if (!confirm_box(true))
 			{
 				confirm_box(false, $user->lang('STAT_DELETE_CONFIRM'), build_hidden_fields(array(
@@ -1316,19 +1441,19 @@ class stat_functions
 				$db->sql_query('TRUNCATE TABLE ' . $tables['archive']);
 
 				add_log('admin', 'STAT_DELETE_SUCCESS');
-				if ($request->is_ajax())
-				{
-					trigger_error('STAT_DELETE_SUCCESS');
-				} else
-				{
-					trigger_error('STAT_DELETE_SUCCESS');
-				}
+				trigger_error('STAT_DELETE_SUCCESS');
 			}
 		}
 
 		$sql = 'SELECT * FROM ' . $tables['config'];
 		$result = $db->sql_query($sql);
 		$row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		if (!$row)
+		{
+			return;
+		}
 
 		for ($i = 0; $i < floor(sizeof($row) / 2) - 3; $i++)
 		{
@@ -1337,15 +1462,17 @@ class stat_functions
 				'TITLE'			=> $user->lang[strtoupper(key($row))],
 				'S_EXPLAIN'		=> (isset($user->lang[strtoupper(key($row)) . '_EXPLAIN'])) ? true : false,
 				'TITLE_EXPLAIN'	=> (isset($user->lang[strtoupper(key($row)) . '_EXPLAIN'])) ? $user->lang[strtoupper(key($row)) . '_EXPLAIN'] : '',
-				'CONTENT'		=> '<input type="number" name="config[' . key($row) . ']" id="config_' . key($row) . '" size="3" value="' . $row[key($row)] . '" /> <input name="config[' . str_replace('max_', 't_', key($row)) . ']" size="3" value="' . $row[str_replace('max_', 't_', key($row))] . '" />'
+				'CONTENT'		=> '<input type="number" name="config[' . key($row) . ']" id="config_' . key($row) . '" size="3" value="' . (int) $row[key($row)] . '" /> <input name="config[' . str_replace('max_', 't_', key($row)) . ']" size="3" value="' . (int) $row[str_replace('max_', 't_', key($row))] . '" />'
 			));
 			next($row);
 		}
 
-		$modules_ext = unserialize($row['custom_pages']);
+		$modules_ext = (!empty($row['custom_pages'])) ? @unserialize($row['custom_pages'], ['allowed_classes' => false]) : false;
+		$modules_ext = is_array($modules_ext) ? $modules_ext : false;
 
 		if (!$modules_ext)
 		{
+			$modules_ext = array();
 			$router = $phpbb_container->get('router');
 			foreach ($router->getRouteCollection()->all() as $route_name => $route)
 			{
@@ -1356,7 +1483,7 @@ class stat_functions
 				}
 			}
 			asort($modules_ext);
-			$sql = 'UPDATE ' . $tables['config'] . ' SET custom_pages = "' . $db->sql_escape(serialize($modules_ext)) . '"';
+			$sql = 'UPDATE ' . $tables['config'] . ' SET ' . $db->sql_build_array('UPDATE', array('custom_pages' => serialize($modules_ext)));
 			$db->sql_query($sql);
 		}
 
@@ -1365,7 +1492,7 @@ class stat_functions
 		{
 			foreach($modules_ext as $key => $value)
 			{
-				$options .= '<option value="' . $key . '">' . $value . '</option>';
+				$options .= '<option value="' . htmlspecialchars($key) . '">' . htmlspecialchars($value) . '</option>';
 			}
 		}
 
@@ -1384,6 +1511,7 @@ class stat_functions
 			'ARCHIVE'			=> ($row['archive']) ? ' checked= "checked"' : '',
 			'BOTS_INC_ENABLED'	=> ($row['botsinc']) ? true : false,
 			'LOG_ENABLED'		=> ($row['log']) ? true : false,
+			'GEOIP_LOOKUP_ENABLED' => ($row['geoip_lookup']) ? true : false,
 			'U_ACTION'			=> $uaction . '&amp;screen=config',
 			'SUB_DISPLAY'		=> 'config'
 		));

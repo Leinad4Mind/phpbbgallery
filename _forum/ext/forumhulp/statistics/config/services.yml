@@ -35,9 +35,7 @@ services:
             - [set_name, [forumhulp.cron.statistics]]
         tags:
             - { name: cron.task }
-    forumhulp.statistics.acp.statistics_module:
-        class: forumhulp\statistics\acp\statistics_module
-        arguments:
-            - '@user'
-            - '@ext.manager'
-            - '%core.root_path%'
+    forumhulp.statistics.acp_listener:
+        class: forumhulp\statistics\event\acp_listener
+        tags:
+            - { name: event.listener }

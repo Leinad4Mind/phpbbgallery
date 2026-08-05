@@ -3,7 +3,7 @@
 *
 * @package Statistics
 * @copyright (c) 2014 ForumHulp.com
-* @license Proprietary
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
 
@@ -112,6 +112,8 @@ $lang = array_merge($lang, array(
 
 	'LOG'						=> 'Logs',
 	'LOG_EXPLAIN'				=> 'Add logs to maintenance log.',
+	'GEOIP_LOOKUP'				=> 'Look up country via ip-api.com',
+	'GEOIP_LOOKUP_EXPLAIN'		=> 'When enabled, each visitor\'s IP address is sent to the third-party service ip-api.com to resolve their country flag. When disabled (the default), the country is guessed locally from the reverse DNS of the visitor\'s IP instead, and nothing is sent off the server.',
 
 	'DEL_STAT'					=> 'Empty archive tables',
 	'DEL_STAT_EXPLAIN'			=> 'Empty archive tables and reset Board Statistics.',

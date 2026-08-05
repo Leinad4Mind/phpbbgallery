@@ -3,7 +3,7 @@
 /**
  * @package Statistics for phpBB.
  * @copyright (c) 2014 ForumHulp.com
- * @license Proprietary
+ * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  * @translation Leinad4Mind [Portuguese [pt]] (2026)
  */
 
@@ -96,6 +96,8 @@ $lang = array_merge($lang, [
 	'BOTS_INC_EXPLAIN'           => 'Incluir bots na visualização online.',
 	'LOG'                        => 'Registos',
 	'LOG_EXPLAIN'                => 'Adicionar registos ao registo de manutenção.',
+	'GEOIP_LOOKUP'               => 'Consultar o país através do ip-api.com',
+	'GEOIP_LOOKUP_EXPLAIN'       => 'Quando ativada, o endereço IP de cada visitante é enviado ao serviço externo ip-api.com para obter a bandeira do país. Quando desativada (predefinição), o país é deduzido localmente a partir do DNS inverso do IP do visitante, sem nada ser enviado para fora do servidor.',
 	'DEL_STAT'                   => 'Esvaziar tabelas de arquivo',
 	'DEL_STAT_EXPLAIN'           => 'Esvaziar tabelas de arquivo e reiniciar as Estatísticas do Fórum.',
 	'STAT_DELETE_CONFIRM'        => 'Esvaziar tabelas de arquivo?',

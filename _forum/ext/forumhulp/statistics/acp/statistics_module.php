@@ -3,35 +3,33 @@
 *
 * @package Statistics
 * @copyright (c) 2014 ForumHulp.com
-* @license Proprietary
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
 
 namespace forumhulp\statistics\acp;
 
+use forumhulp\statistics\core\stat_functions;
+
 class statistics_module
 {
 	public $u_action;
+	public $tpl_name;
+	public $page_title;
 
 	function main($id, $mode)
 	{
 		global $db, $config, $sconfig, $phpbb_root_path, $user, $template, $request, $phpbb_extension_manager, $phpbb_container, $phpbb_path_helper, $tables;
 		$user->add_lang_ext('forumhulp/statistics', 'statistics');
 
-	function __construct(\phpbb\user $user, \phpbb\extension\manager $extension_manager, $phpbb_root_path)
-	{
-		$this->extension_manager	= $extension_manager;
-		$this->phpbb_root_path		= $phpbb_root_path;
-	}
 		$tables['config']	= $phpbb_container->getParameter('tables.config_table');
 		$tables['online'] 	= $phpbb_container->getParameter('tables.online_table');
 		$tables['domain'] 	= $phpbb_container->getParameter('tables.domain_table');
 		$tables['se']	  	= $phpbb_container->getParameter('tables.se_table');
 		$tables['archive']	= $phpbb_container->getParameter('tables.archive_table');
 		$tables['stats']	= $phpbb_container->getParameter('tables.stats_table');
-		include($phpbb_root_path . 'ext/forumhulp/statistics/vendor/stat_functions.php');
 
-		\stat_functions::get_config();
+		stat_functions::get_config();
 
 		$action		= $request->variable('action', '');
 		$screen		= $request->variable('screen', $sconfig['statistics_start_screen']);
@@ -57,72 +55,72 @@ class statistics_module
 				break;
 
 			case 'nyi':
-				\stat_functions::nyi($start, $this->u_action, $overall);
+				stat_functions::nyi($start, $this->u_action, $overall);
 			break;
 
 			case 'countries':
-				\stat_functions::countries($start, $this->u_action, $overall);
+				stat_functions::countries($start, $this->u_action, $overall);
 			break;
 
 			case 'browsers':
-				\stat_functions::browsers($start, $this->u_action, $overall);
+				stat_functions::browsers($start, $this->u_action, $overall);
 			break;
 
 			case 'os':
-				\stat_functions::os($start, $this->u_action, $overall);
+				stat_functions::os($start, $this->u_action, $overall);
 			break;
 
 			case 'referrals':
-				\stat_functions::referrals($start, $this->u_action, $overall);
+				stat_functions::referrals($start, $this->u_action, $overall);
 			break;
 
 			case 'se':
-				\stat_functions::se($start, $this->u_action, $overall);
+				stat_functions::se($start, $this->u_action, $overall);
 			break;
 
 			case 'ese':
 				$this->tpl_name = 'subdisplays/ese';
-				\stat_functions::ese($this->u_action, $action);
+				stat_functions::ese($this->u_action, $action);
 			break;
 
 			case 'se_terms':
-				\stat_functions::se_terms($start, $this->u_action, $overall);
+				stat_functions::se_terms($start, $this->u_action, $overall);
 			break;
 
 			case 'crawl':
-				\stat_functions::crawl($start, $this->u_action, $overall);
+				stat_functions::crawl($start, $this->u_action, $overall);
 			break;
 
 			case 'modules':
-				\stat_functions::modules($start, $this->u_action, $overall);
+				stat_functions::modules($start, $this->u_action, $overall);
 			break;
 
 			case 'screens':
-				\stat_functions::screens($start, $this->u_action, $overall);
+				stat_functions::screens($start, $this->u_action, $overall);
 			break;
 
 			case 'stats':
-				\stat_functions::stats($start, $this->u_action);
+				stat_functions::stats($start, $this->u_action);
 			break;
 
 			case 'ustats':
-				\stat_functions::ustats($start, $this->u_action);
+				stat_functions::ustats($start, $this->u_action);
 			break;
 
 			case 'users':
-				\stat_functions::users($start, $this->u_action, $overall);
+				stat_functions::users($start, $this->u_action, $overall);
 			break;
 
 			case 'config':
-				\stat_functions::config($start, $this->u_action);
+				stat_functions::config($start, $this->u_action);
 			break;
 
 			case 'top10':
-				\stat_functions::top10($start, $this->u_action);
+				stat_functions::top10($start, $this->u_action);
 			break;
 
 			default:
-				\stat_functions::online($start, $this->u_action);
+				stat_functions::online($start, $this->u_action);
 			break;
 		}
 	}

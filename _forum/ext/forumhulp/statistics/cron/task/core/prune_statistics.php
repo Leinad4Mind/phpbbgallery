@@ -3,7 +3,7 @@
 *
 * @package Statistics
 * @copyright (c) 2014 ForumHulp.com
-* @license Proprietary
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
 
@@ -13,6 +13,7 @@ use phpbb\config\config;
 use phpbb\user;
 use phpbb\db\driver\driver_interface;
 use phpbb\log\log;
+use forumhulp\statistics\core\find_os;
 
 /**
 * @ignore
@@ -78,11 +79,10 @@ class prune_statistics extends \phpbb\cron\task\base
 			$starttime = explode(' ', microtime());
 			$starttime = $starttime[1] + $starttime[0];
 			$row_count = 0;
-			include($this->phpbb_root_path . 'ext/forumhulp/statistics/vendor/find_os.' . $this->php_ext);
 			while (still_on_time() && $row = $this->db->sql_fetchrow($result))
 			{
 				$module_aray	= ($row['module'] != '') ? $this->count_array($module_aray, $row['module']) : null;
-				$os = new \find_os();
+				$os = new find_os();
 
 				$os->setUserAgent($row['agent']);
 				$browser_aray	= ($row['agent'] != '') ? $this->count_array($browser_aray, $os->getBrowser() . ' ' . $os->getVersion()) : null;
