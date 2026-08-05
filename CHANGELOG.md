@@ -1,5 +1,6 @@
 # Changelog
 
+- Added an end-to-end Export workflow covering ACP limits and batching, nested album paths, readable image names, manifests, protected downloads and member-owned UCP exports.
 - Added a functional MinIO workflow that validates ACP connection testing, resumable provider migration, remote source delivery with watermarking, temporary-file cleanup and migration back to local storage.
 
 All notable changes to the phpBB Gallery extension suite are documented in this file.
