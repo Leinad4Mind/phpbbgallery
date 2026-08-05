@@ -165,6 +165,7 @@ services:
             - '@phpbbgallery.core.policy.image_visibility'
             - '@phpbbgallery.core.policy.album_operation'
             - '@phpbbgallery.core.file.tool'
+            - '@phpbbgallery.core.storage.workspace'
             - '%phpbbgallery.tables.gallery_images%'
     phpbbgallery.core.user:
         class: phpbbgallery\core\user
