@@ -336,6 +336,180 @@ final class controller_file_types_test extends TestCase
 		}
 	}
 
+	public function test_external_source_is_converted_to_a_temporary_webp_before_watermarking(): void
+	{
+		$workspace_root = sys_get_temp_dir() . '/gallery-controller-' . bin2hex(random_bytes(6));
+		$source = tempnam(sys_get_temp_dir(), 'gallery-external-');
+		file_put_contents($source, 'external-image');
+
+		$reflection = new \ReflectionClass(file::class);
+		$controller = $reflection->newInstanceWithoutConstructor();
+		$reflection->getProperty('storage_workspace')->setValue(
+			$controller,
+			new workspace(new controller_storage_provider(), $workspace_root)
+		);
+		$reflection->getProperty('data')->setValue($controller, [
+			'image_filename' => 'image.tiff',
+			'image_name' => 'External image',
+		]);
+		$reflection->getProperty('image_src')->setValue($controller, $source);
+		$reflection->getProperty('config')->setValue($controller, new \phpbb\config\config([
+			'phpbb_gallery_jpg_quality' => 85,
+		]));
+		$tool = (new \ReflectionClass(\phpbbgallery\core\file\file::class))->newInstanceWithoutConstructor();
+		$reflection->getProperty('tool')->setValue($controller, $tool);
+
+		try
+		{
+			$prepared = $reflection->getMethod('prepare_external_watermark_source')->invoke(
+				$controller,
+				new controller_external_processor(true),
+				['extension' => 'tiff', 'mime' => 'image/tiff', 'width' => 320, 'height' => 240, 'filesize' => 14]
+			);
+			$object = $reflection->getProperty('response_object')->getValue($controller);
+
+			$this->assertTrue($prepared);
+			$this->assertNotNull($object);
+			$this->assertTrue($object->is_temporary());
+			$this->assertFileExists($object->get_path());
+			$this->assertSame($object->get_path(), $tool->image_source);
+			$this->assertSame('image/webp', $tool->image_content_type);
+			$this->assertSame('webp', $tool->image_type);
+			$object->release();
+		}
+		finally
+		{
+			@unlink($source);
+			@rmdir($workspace_root);
+		}
+	}
+
+	public function test_invalid_external_watermark_derivative_fails_closed_and_is_removed(): void
+	{
+		$workspace_root = sys_get_temp_dir() . '/gallery-controller-' . bin2hex(random_bytes(6));
+		$source = tempnam(sys_get_temp_dir(), 'gallery-external-');
+		file_put_contents($source, 'external-image');
+
+		$reflection = new \ReflectionClass(file::class);
+		$controller = $reflection->newInstanceWithoutConstructor();
+		$reflection->getProperty('storage_workspace')->setValue(
+			$controller,
+			new workspace(new controller_storage_provider(), $workspace_root)
+		);
+		$reflection->getProperty('data')->setValue($controller, [
+			'image_filename' => 'image.bmp',
+			'image_name' => 'External image',
+		]);
+		$reflection->getProperty('image_src')->setValue($controller, $source);
+		$reflection->getProperty('config')->setValue($controller, new \phpbb\config\config([
+			'phpbb_gallery_jpg_quality' => 85,
+		]));
+		$reflection->getProperty('tool')->setValue(
+			$controller,
+			(new \ReflectionClass(\phpbbgallery\core\file\file::class))->newInstanceWithoutConstructor()
+		);
+
+		try
+		{
+			$this->assertFalse($reflection->getMethod('prepare_external_watermark_source')->invoke(
+				$controller,
+				new controller_external_processor(false),
+				['extension' => 'bmp', 'mime' => 'image/bmp', 'width' => 320, 'height' => 240, 'filesize' => 14]
+			));
+			$this->assertNull($reflection->getProperty('response_object')->getValue($controller));
+			$this->assertSame([], is_dir($workspace_root) ? array_values(array_diff(scandir($workspace_root), ['.', '..'])) : []);
+		}
+		finally
+		{
+			@unlink($source);
+			@rmdir($workspace_root);
+		}
+	}
+
+	public function test_response_cleanup_removes_inputs_and_defers_watermark_until_send(): void
+	{
+		$workspace_root = sys_get_temp_dir() . '/gallery-controller-' . bin2hex(random_bytes(6));
+		$workspace = new workspace(new controller_storage_provider(), $workspace_root);
+		$source_object = $workspace->create_temporary('source.bmp');
+		$response_object = $workspace->create_temporary('converted.webp');
+		file_put_contents($source_object->get_path(), 'source');
+		file_put_contents($response_object->get_path(), 'converted');
+		$dot = strrpos($response_object->get_path(), '.');
+		$watermarked = substr_replace($response_object->get_path(), '_wm', $dot, 0);
+		file_put_contents($watermarked, 'watermarked');
+
+		$reflection = new \ReflectionClass(file::class);
+		$controller = $reflection->newInstanceWithoutConstructor();
+		$reflection->getProperty('image_object')->setValue($controller, $source_object);
+		$reflection->getProperty('response_object')->setValue($controller, $response_object);
+		$tool = (new \ReflectionClass(\phpbbgallery\core\file\file::class))->newInstanceWithoutConstructor();
+		$tool->image_source = $watermarked;
+		$reflection->getProperty('tool')->setValue($controller, $tool);
+		$response = new \Symfony\Component\HttpFoundation\BinaryFileResponse($watermarked);
+
+		try
+		{
+			$reflection->getMethod('release_response_objects')->invoke($controller, $response);
+			$this->assertFileDoesNotExist($source_object->get_path());
+			$this->assertFileDoesNotExist($response_object->get_path());
+			$this->assertFileExists($watermarked);
+
+			ob_start();
+			$response->sendContent();
+			ob_end_clean();
+			$this->assertFileDoesNotExist($watermarked);
+		}
+		finally
+		{
+			@unlink($source_object->get_path());
+			@unlink($response_object->get_path());
+			@unlink($watermarked);
+			@rmdir($workspace_root);
+		}
+	}
+
+	public function test_inline_responses_always_disable_content_sniffing(): void
+	{
+		$image = tempnam(sys_get_temp_dir(), 'gallery-inline-');
+		file_put_contents($image, 'image');
+		$reflection = new \ReflectionClass(file::class);
+		$controller = $reflection->newInstanceWithoutConstructor();
+		$tool = (new \ReflectionClass(\phpbbgallery\core\file\file::class))->newInstanceWithoutConstructor();
+		$tool->set_image_data($image, 'Browser image');
+		$tool->image_content_type = 'image/png';
+		$tool->image_type = 'png';
+		$tool->disable_browser_cache();
+		$tool_reflection = new \ReflectionClass($tool);
+		$request = $this->createMock(\phpbb\request\request_interface::class);
+		$request->method('server')->willReturn('');
+		$tool_reflection->getProperty('request')->setValue($tool, $request);
+		$reflection->getProperty('tool')->setValue($controller, $tool);
+		$gallery_user = $this->createMock(\phpbbgallery\core\user::class);
+		$gallery_user->method('get_data')->willReturn(0);
+		$reflection->getProperty('gallery_user')->setValue($controller, $gallery_user);
+		$reflection->getProperty('config')->setValue($controller, new \phpbb\config\config([
+			'phpbb_gallery_watermark_changed' => 0,
+		]));
+		$user = new \phpbb\user();
+		$user->browser = 'Mozilla/5.0';
+		$reflection->getProperty('user')->setValue($controller, $user);
+		$reflection->getProperty('storage_workspace')->setValue($controller, null);
+		$reflection->getProperty('data')->setValue($controller, ['image_filename' => basename($image)]);
+		$reflection->getProperty('error')->setValue($controller, '');
+		$reflection->getProperty('use_watermark')->setValue($controller, false);
+
+		try
+		{
+			$response = $controller->display();
+			$this->assertSame('nosniff', $response->headers->get('X-Content-Type-Options'));
+			$this->assertStringStartsWith('inline;', (string) $response->headers->get('Content-Disposition'));
+		}
+		finally
+		{
+			@unlink($image);
+		}
+	}
+
 	private function set_language(\ReflectionClass $reflection, file $controller): void
 	{
 		$language = $this->createMock(\phpbb\language\language::class);
@@ -435,5 +609,34 @@ final class controller_storage_provider implements provider_interface
 	public function contents(string $variant, string $key): ?string
 	{
 		return $this->objects[$variant][$key] ?? null;
+	}
+}
+
+final class controller_external_processor implements \phpbbgallery\core\image\external_processor_interface
+{
+	public function __construct(private bool $valid)
+	{
+	}
+
+	public function inspect(string $source): ?array
+	{
+		return null;
+	}
+
+	public function prepare_source(string $source, array $options): ?array
+	{
+		return null;
+	}
+
+	public function create_derivative(string $source, string $destination, int $max_width, int $max_height, int $quality): ?array
+	{
+		if (!$this->valid)
+		{
+			return null;
+		}
+
+		file_put_contents($destination, 'webp');
+
+		return ['extension' => 'webp', 'mime' => 'image/webp', 'width' => $max_width, 'height' => $max_height, 'filesize' => 4];
 	}
 }
