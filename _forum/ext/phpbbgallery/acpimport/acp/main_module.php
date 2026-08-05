@@ -229,7 +229,11 @@ class main_module
 							$image_tools->resize_image($gallery_config->get('max_width'), $gallery_config->get('max_height'));
 							if ($image_tools->resized)
 							{
-								$image_tools->write_image($file_link, $gallery_config->get('jpg_quality'), true);
+								if (!$image_tools->write_image($file_link, $gallery_config->get('jpg_quality'), true))
+								{
+									$this->log_import_error($this->language->lang('GENERAL_UPLOAD_ERROR', $display_name));
+									continue;
+								}
 							}
 						}
 					}
@@ -733,6 +737,10 @@ class main_module
 		if ($gallery_config->get('allow_webp'))
 		{
 			$extensions[] = 'webp';
+		}
+		if ($gallery_config->get('allow_avif') && \phpbbgallery\core\file\file::supports_avif())
+		{
+			$extensions[] = 'avif';
 		}
 
 		return $extensions;

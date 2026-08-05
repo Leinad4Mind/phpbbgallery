@@ -348,6 +348,11 @@ $lang = array_merge($lang, [
 	'PHPBB_INTEGRATION'           => 'Intégration à phpBB',
 	'PNG_ALLOWED'                 => 'Autoriser à charger des fichiers PNG',
 	'WEBP_ALLOWED'                => 'Autoriser à charger des fichiers WEBP',
+	'AVIF_ALLOWED'                => 'Autoriser le chargement de fichiers AVIF',
+	'AVIF_ALLOWED_EXPLAIN'        => 'Nécessite PHP 8.2 ou ultérieur et GD prenant en charge le décodage et l’encodage AVIF.',
+	'AVIF_NOT_SUPPORTED'          => 'Les chargements AVIF ne peuvent pas être activés, car cet environnement PHP/GD ne peut pas inspecter, décoder et encoder les images AVIF en toute sécurité.',
+	'AVIF_QUALITY'                => 'Qualité AVIF',
+	'AVIF_QUALITY_EXPLAIN'        => 'Définit la qualité d’encodage AVIF entre 0 et 100.',
 	'PURGED_CACHE'                => 'Vider le cache',
 
 	'RATE_SCALE'                 => 'Notes sur',

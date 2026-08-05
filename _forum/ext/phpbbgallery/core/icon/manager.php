@@ -21,7 +21,7 @@ namespace phpbbgallery\core\icon;
  */
 class manager
 {
-	private const ALLOWED_EXTENSIONS = ['svg', 'png', 'gif', 'jpg', 'jpeg', 'webp'];
+	private const ALLOWED_EXTENSIONS = ['svg', 'png', 'gif', 'jpg', 'jpeg', 'webp', 'avif'];
 
 	/** Icons are small, curated assets; there is no reason to allow more than this. */
 	private const MAX_FILESIZE = 524288;
@@ -101,6 +101,10 @@ class manager
 			{
 				continue;
 			}
+			if ($extension === 'avif' && !\phpbbgallery\core\file\file::supports_avif())
+			{
+				continue;
+			}
 
 			$icons[] = $file;
 		}
@@ -152,7 +156,12 @@ class manager
 		}
 
 		$this->file_upload->reset_vars();
-		$this->file_upload->set_allowed_extensions(self::ALLOWED_EXTENSIONS);
+		$allowed_extensions = self::ALLOWED_EXTENSIONS;
+		if (!\phpbbgallery\core\file\file::supports_avif())
+		{
+			$allowed_extensions = array_values(array_diff($allowed_extensions, ['avif']));
+		}
+		$this->file_upload->set_allowed_extensions($allowed_extensions);
 		$this->file_upload->set_max_filesize(self::MAX_FILESIZE);
 		// The SVG branch below parses and rewrites the file itself, which is a far
 		// more precise check than a generic first-256-bytes content sniff.
@@ -276,6 +285,7 @@ class manager
 			IMAGETYPE_JPEG => ['jpg', 'jpeg'],
 			IMAGETYPE_PNG => ['png'],
 			IMAGETYPE_WEBP => ['webp'],
+			IMAGETYPE_AVIF => ['avif'],
 		];
 
 		return isset($image_types[$image_info[2]]) && in_array($extension, $image_types[$image_info[2]], true);

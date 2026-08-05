@@ -302,6 +302,24 @@ class import_storage_test extends TestCase
 		$this->assertSame('invalid_type', $this->storage->inspect_image($fake)['error']);
 	}
 
+	public function test_inspects_avif_content_when_the_runtime_supports_it(): void
+	{
+		if (!\phpbbgallery\core\file\file::supports_avif())
+		{
+			$this->markTestSkipped('This PHP/GD build does not support safe AVIF processing.');
+		}
+
+		$image = imagecreatetruecolor(2, 2);
+		$path = $this->import_directory . 'valid.avif';
+		$this->assertTrue(imageavif($image, $path, 60));
+		$image = null;
+
+		$resolved = $this->storage->resolve_image('valid.avif', ['avif']);
+		$inspection = $this->storage->inspect_image($resolved);
+		$this->assertSame('', $inspection['error']);
+		$this->assertSame('.avif', $inspection['target_extension']);
+	}
+
 	public function test_copies_only_to_a_new_destination(): void
 	{
 		$source = $this->import_directory . 'source.png';

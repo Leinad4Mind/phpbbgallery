@@ -499,8 +499,8 @@ class file
 					$this->tool->create_thumbnail($resize_width, $resize_height, $put_details, \phpbbgallery\core\file\file::THUMBNAIL_INFO_HEIGHT, $image_size);
 				}
 
-				$this->tool->write_image($output_path, $this->config['phpbb_gallery_jpg_quality'], false);
-				if (!is_file($output_path) || is_link($output_path))
+				if (!$this->tool->write_image($output_path, $this->config['phpbb_gallery_jpg_quality'], false)
+					|| !is_file($output_path) || is_link($output_path))
 				{
 					throw new \RuntimeException('The Gallery derived image could not be generated.');
 				}

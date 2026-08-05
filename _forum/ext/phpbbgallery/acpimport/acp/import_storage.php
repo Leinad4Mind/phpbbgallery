@@ -376,6 +376,7 @@ class import_storage
 			'image/gif' => ['extensions' => ['gif'], 'target_extension' => '.gif'],
 			'image/giff' => ['extensions' => ['gif'], 'target_extension' => '.gif'],
 			'image/webp' => ['extensions' => ['webp'], 'target_extension' => '.webp'],
+			'image/avif' => ['extensions' => ['avif'], 'target_extension' => '.avif'],
 		];
 		$mime_type = strtolower($image_info['mime']);
 		if (!isset($mime_types[$mime_type]))

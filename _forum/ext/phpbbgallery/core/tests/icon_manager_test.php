@@ -150,6 +150,36 @@ class icon_manager_test extends TestCase
 		$this->assertSame($png, file_get_contents($this->icons_path . 'dvd_icon.png'));
 	}
 
+	public function test_upload_accepts_avif_only_when_safe_runtime_support_is_available(): void
+	{
+		$image = imagecreatetruecolor(2, 2);
+		$source = $this->write_source_file('source.avif', '');
+		if (function_exists('imageavif'))
+		{
+			$this->assertTrue(imageavif($image, $source, 60));
+		}
+		$image = null;
+
+		$file_upload = new icon_manager_test_file_upload();
+		$file_upload->next_upload = [
+			'source' => $source,
+			'realname' => 'Album Icon.avif',
+			'size' => (int) filesize($source),
+		];
+		$result = $this->new_manager($file_upload)->upload('icon_file');
+
+		if (!\phpbbgallery\core\file\file::supports_avif())
+		{
+			$this->assertNotNull($result['error']);
+			$this->assertNull($result['filename']);
+			return;
+		}
+
+		$this->assertNull($result['error']);
+		$this->assertSame('album_icon.avif', $result['filename']);
+		$this->assertFileExists($this->icons_path . 'album_icon.avif');
+	}
+
 	public function test_upload_creates_a_missing_icon_directory_and_listing_guard(): void
 	{
 		$directory = $this->icons_path . 'created/';

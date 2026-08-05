@@ -32,4 +32,14 @@ final class acp_album_type_extension_points_test extends TestCase
 		$this->assertStringContainsString('display_options(album_type.value);', $template);
 		$this->assertStringNotContainsString('onload = function()', $template);
 	}
+
+	public function test_album_icon_accept_filter_is_runtime_capability_aware(): void
+	{
+		$template = (string) file_get_contents(dirname(__DIR__) . '/adm/style/gallery_albums.html');
+		$module = (string) file_get_contents(dirname(__DIR__) . '/acp/albums_module.php');
+
+		$this->assertStringContainsString('accept="{{ S_ICON_ACCEPT }}"', $template);
+		$this->assertStringContainsString("'S_ICON_ACCEPT'", $module);
+		$this->assertStringContainsString('file::supports_avif()', $module);
+	}
 }

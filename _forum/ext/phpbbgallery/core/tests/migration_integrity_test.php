@@ -38,6 +38,7 @@ use phpbbgallery\core\migrations\contest_creation;
 use phpbbgallery\core\migrations\image_deletion_requests;
 use phpbbgallery\core\migrations\local_storage_layout;
 use phpbbgallery\core\migrations\storage_provider;
+use phpbbgallery\core\migrations\avif_support;
 
 class migration_integrity_test extends TestCase
 {
@@ -70,6 +71,7 @@ class migration_integrity_test extends TestCase
 		release_4_0_0::class,
 		local_storage_layout::class,
 		storage_provider::class,
+		avif_support::class,
 	];
 
 	private array $temp_directories = [];
@@ -183,6 +185,10 @@ class migration_integrity_test extends TestCase
 			['\phpbbgallery\core\migrations\local_storage_layout'],
 			storage_provider::depends_on()
 		);
+		$this->assertSame(
+			['\phpbbgallery\core\migrations\storage_provider'],
+			avif_support::depends_on()
+		);
 	}
 
 	public function test_image_deletion_request_migration_is_reversible(): void
@@ -252,6 +258,20 @@ class migration_integrity_test extends TestCase
 		], $migration->update_data());
 		$this->assertSame([
 			['config.remove', ['phpbb_gallery_storage_provider']],
+		], $migration->revert_data());
+	}
+
+	public function test_avif_support_is_opt_in_and_reversible(): void
+	{
+		$migration = (new \ReflectionClass(avif_support::class))->newInstanceWithoutConstructor();
+
+		$this->assertSame([
+			['config.add', ['phpbb_gallery_allow_avif', 0]],
+			['config.add', ['phpbb_gallery_avif_quality', 75]],
+		], $migration->update_data());
+		$this->assertSame([
+			['config.remove', ['phpbb_gallery_avif_quality']],
+			['config.remove', ['phpbb_gallery_allow_avif']],
 		], $migration->revert_data());
 	}
 
@@ -905,6 +925,7 @@ class migration_integrity_test extends TestCase
 			'release_4_0_0.php',
 			'local_storage_layout.php',
 			'storage_provider.php',
+			'avif_support.php',
 		] as $migration)
 		{
 			require_once dirname(__DIR__) . '/migrations/' . $migration;

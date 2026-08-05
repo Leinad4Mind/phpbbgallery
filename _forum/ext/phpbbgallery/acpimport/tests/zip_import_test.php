@@ -21,7 +21,7 @@ class zip_import_test extends TestCase
 	private import_storage $storage;
 	private int $archive_number = 0;
 
-	private const ALLOWED = ['jpg', 'jpeg', 'gif', 'png', 'webp'];
+	private const ALLOWED = ['jpg', 'jpeg', 'gif', 'png', 'webp', 'avif'];
 
 	// phpcs:ignore PhpbbCodingStandard.NamingConventions.LowercaseUnderscoredFunctions.NotAllowed -- PHPUnit lifecycle API.
 	protected function setUp(): void
