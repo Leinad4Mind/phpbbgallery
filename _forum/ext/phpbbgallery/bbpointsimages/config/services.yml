@@ -57,7 +57,7 @@ services:
             - '@language'
             - '@controller.helper'
             - '@template'
-            - '@phpbbgallery.core.url'
+            - '@phpbbgallery.core.storage.workspace'
         tags:
             - { name: event.listener }
 

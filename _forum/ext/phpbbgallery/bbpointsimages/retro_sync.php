@@ -10,14 +10,15 @@
 namespace phpbbgallery\bbpointsimages;
 
 use phpbb\db\driver\driver_interface;
-use phpbbgallery\core\url;
+use phpbbgallery\core\storage\provider_interface;
+use phpbbgallery\core\storage\workspace;
 
 final class retro_sync
 {
 	public function __construct(
 		private driver_interface $db,
 		private reward_manager $rewards,
-		private url $gallery_url,
+		private workspace $storage_workspace,
 		private string $images_table
 	)
 	{
@@ -30,11 +31,6 @@ final class retro_sync
 	{
 		$after_id = max(0, $after_id);
 		$limit = max(1, min(500, $limit));
-		$source_root = $this->gallery_url->path('upload');
-		if (!is_string($source_root) || !is_dir($source_root))
-		{
-			throw new \RuntimeException('The Gallery source directory is not available.');
-		}
 		$sql = 'SELECT image_id, image_album_id, image_user_id, image_status, image_filename
 			FROM ' . $this->images_table . '
 			WHERE image_status = ' . (int) \phpbbgallery\core\block::STATUS_APPROVED . '
@@ -56,10 +52,22 @@ final class retro_sync
 		$rewarded = 0;
 		foreach ($rows as $row)
 		{
-			$rewarded += (int) $this->rewards->reward(
-				$row,
-				$source_root . $row['image_filename']
-			);
+			try
+			{
+				$source = $this->storage_workspace->materialize(provider_interface::SOURCE, (string) $row['image_filename']);
+			}
+			catch (\RuntimeException)
+			{
+				continue;
+			}
+			try
+			{
+				$rewarded += (int) $this->rewards->reward($row, $source->get_path());
+			}
+			finally
+			{
+				$source->release();
+			}
 		}
 
 		return [

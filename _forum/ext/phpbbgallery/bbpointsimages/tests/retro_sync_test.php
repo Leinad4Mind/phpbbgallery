@@ -13,7 +13,8 @@ use phpbb\config\config;
 use phpbbgallery\bbpointsimages\policy;
 use phpbbgallery\bbpointsimages\retro_sync;
 use phpbbgallery\bbpointsimages\reward_manager;
-use phpbbgallery\core\url;
+use phpbbgallery\core\storage\local_provider;
+use phpbbgallery\core\storage\workspace;
 use PHPUnit\Framework\TestCase;
 use sitesplat\bbpoints\core\ledger;
 
@@ -60,7 +61,7 @@ final class retro_sync_test extends TestCase
 			'phpbb_gallery_bbpoints_source_cost' => 0,
 		]), 'albums', 'rules');
 		$rewards = new reward_manager($db, $policy, $ledger, 'rewards', 'stats');
-		$sync = new retro_sync($db, $rewards, new url($this->source_path), 'images');
+		$sync = new retro_sync($db, $rewards, $this->workspace($this->source_path), 'images');
 
 		$first = $sync->run_batch(0, 2);
 		$second = $sync->run_batch($first['last_id'], 2);
@@ -72,15 +73,21 @@ final class retro_sync_test extends TestCase
 		$this->assertCount(3, $ledger->credits);
 	}
 
-	public function test_sync_stops_when_the_source_directory_is_unavailable(): void
+	public function test_sync_skips_a_missing_source_without_aborting_the_batch(): void
 	{
 		$db = new reward_fake_db();
+		$db->policy_rows = [['upload_reward' => 10, 'source_cost' => -1]];
+		$db->images = [$this->image(1, 1, 'missing.jpg')];
 		$policy = new policy($db, new config([]), 'albums', 'rules');
 		$rewards = new reward_manager($db, $policy, new ledger(), 'rewards', 'stats');
-		$sync = new retro_sync($db, $rewards, new url($this->source_path . 'missing/'), 'images');
+		$sync = new retro_sync($db, $rewards, $this->workspace($this->source_path), 'images');
 
-		$this->expectException(\RuntimeException::class);
-		$sync->run_batch(0);
+		$this->assertSame(['last_id' => 1, 'scanned' => 1, 'rewarded' => 0, 'has_more' => false], $sync->run_batch(0));
+	}
+
+	private function workspace(string $source): workspace
+	{
+		return new workspace(new local_provider($source, $source, $source), $source . 'workspace/');
 	}
 
 	private function image(int $image_id, int $status, string $filename): array

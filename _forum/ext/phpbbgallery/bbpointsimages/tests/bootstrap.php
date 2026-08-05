@@ -265,6 +265,11 @@ namespace
 		}
 	}
 
+	$gallery_root = dirname(__DIR__, 2);
+	require_once $gallery_root . '/core/storage/provider_interface.php';
+	require_once $gallery_root . '/core/storage/local_object.php';
+	require_once $gallery_root . '/core/storage/local_provider.php';
+	require_once $gallery_root . '/core/storage/workspace.php';
 	require_once dirname(__DIR__) . '/ext.php';
 	require_once dirname(__DIR__) . '/policy.php';
 	require_once dirname(__DIR__) . '/migrations/m1_init.php';
