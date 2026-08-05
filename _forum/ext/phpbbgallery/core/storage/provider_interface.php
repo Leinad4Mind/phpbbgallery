@@ -49,5 +49,14 @@ interface provider_interface
 	/** Return the object modification time as a Unix timestamp when available. */
 	public function modified_time(string $variant, string $key): ?int;
 
+	/**
+	 * Enumerate stored keys in deterministic pages.
+	 *
+	 * The cursor is provider-owned and callers must pass it back unchanged.
+	 *
+	 * @return array{keys: list<string>, cursor: string|null}
+	 */
+	public function list_objects(string $variant, ?string $cursor = null, int $limit = 500): array;
+
 	public function checksum(string $variant, string $key, string $algorithm = 'sha256'): ?string;
 }

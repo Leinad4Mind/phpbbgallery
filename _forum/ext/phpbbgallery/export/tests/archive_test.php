@@ -250,6 +250,11 @@ final class export_remote_provider implements \phpbbgallery\core\storage\provide
 		return false;
 	}
 
+	public function replace(string $variant, string $key, string $local_file): bool
+	{
+		return false;
+	}
+
 	public function open_stream(string $variant, string $key): mixed
 	{
 		if (!isset($this->objects[$key]))
@@ -286,6 +291,11 @@ final class export_remote_provider implements \phpbbgallery\core\storage\provide
 	public function modified_time(string $variant, string $key): ?int
 	{
 		return isset($this->objects[$key]) ? 1785945600 : null;
+	}
+
+	public function list_objects(string $variant, ?string $cursor = null, int $limit = 500): array
+	{
+		return ['keys' => [], 'cursor' => null];
 	}
 
 	public function checksum(string $variant, string $key, string $algorithm = 'sha256'): ?string
