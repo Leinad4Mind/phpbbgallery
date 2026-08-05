@@ -205,18 +205,12 @@ class exif
 		$user->add_lang_ext('phpbbgallery/exif', 'info_exif');
 
 		$this->prepared_data = [];
-		if (isset($this->data['EXIF']['DateTimeOriginal']))
+		if (is_array($this->data))
 		{
-			$timestamp_year = (int) substr($this->data['EXIF']['DateTimeOriginal'], 0, 4);
-			$timestamp_month = (int) substr($this->data['EXIF']['DateTimeOriginal'], 5, 2);
-			$timestamp_day = (int) substr($this->data['EXIF']['DateTimeOriginal'], 8, 2);
-			$timestamp_hour = (int) substr($this->data['EXIF']['DateTimeOriginal'], 11, 2);
-			$timestamp_minute = (int) substr($this->data['EXIF']['DateTimeOriginal'], 14, 2);
-			$timestamp_second = (int) substr($this->data['EXIF']['DateTimeOriginal'], 17, 2);
-			$timestamp = (int) @mktime($timestamp_hour, $timestamp_minute, $timestamp_second, $timestamp_month, $timestamp_day, $timestamp_year);
-			if ($timestamp)
+			$timestamp = capture_index::timestamp_from_data($this->data);
+			if ($timestamp !== null)
 			{
-				$this->prepared_data['exif_date'] = $user->format_date($timestamp + self::TIME_OFFSET);
+				$this->prepared_data['exif_date'] = $user->format_date($timestamp);
 			}
 		}
 		if (isset($this->data['EXIF']['FocalLength']) && !is_array($this->data['EXIF']['FocalLength']))
@@ -372,6 +366,7 @@ class exif
 
 	private static array $allowed_keys = [
 		'DateTimeOriginal',
+		'OffsetTimeOriginal',
 		'FocalLength',
 		'ExposureTime',
 		'FNumber',

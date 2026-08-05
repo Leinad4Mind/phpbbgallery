@@ -24,6 +24,7 @@ final class image_sort_extension_test extends TestCase
 			$this->assertNotFalse($event, $controller);
 			$this->assertNotFalse($normalization, $controller);
 			$this->assertLessThan($normalization, $event, $controller);
+			$this->assertStringContainsString("['album_data', 'sort_key', 'sort_by_text', 'sort_by_sql', 'sort_from']", $source, $controller);
 			$this->assertStringContainsString("FROM ' . \$sort_from . '", $source, $controller);
 		}
 	}

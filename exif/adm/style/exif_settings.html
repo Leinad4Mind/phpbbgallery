@@ -1,0 +1,21 @@
+{% include 'overall_header.html' %}
+
+<h1>{{ lang('ACP_GALLERY_EXIF') }}</h1>
+<p>{{ lang('ACP_GALLERY_EXIF_EXPLAIN') }}</p>
+
+<fieldset>
+	<legend>{{ lang('ACP_EXIF_CAPTURE_INDEX') }}</legend>
+	<dl>
+		<dt><label>{{ lang('ACP_EXIF_INDEXED_IMAGES') }}</label></dt>
+		<dd><strong>{{ INDEXED_IMAGES }}</strong></dd>
+	</dl>
+	<form method='post' action='{{ U_SYNC }}'>
+		<p>{{ lang('ACP_EXIF_SYNC_EXPLAIN') }}</p>
+		<p class='submit-buttons'>
+			<input class='button1' type='submit' name='sync' value='{{ lang('RUN') }}' />
+		</p>
+		{{ S_FORM_TOKEN }}
+	</form>
+</fieldset>
+
+{% include 'overall_footer.html' %}

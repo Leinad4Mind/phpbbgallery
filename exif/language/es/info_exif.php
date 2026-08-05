@@ -108,4 +108,12 @@ $lang = array_merge($lang, [
 
 	'GALLERY_CORE_NOT_FOUND'      => 'Primero debe instalar y activar la extensión principal phpBB Gallery.',
 	'EXTENSION_ENABLE_SUCCESS'    => 'La extensión se activó correctamente.',
+	'ACP_GALLERY_EXIF'           => 'Metadatos EXIF',
+	'ACP_GALLERY_EXIF_EXPLAIN'   => 'Gestiona las fechas de captura indexadas usadas para ordenar la Galería.',
+	'ACP_EXIF_CAPTURE_INDEX'     => 'Índice de fechas de captura',
+	'ACP_EXIF_INDEXED_IMAGES'    => 'Imágenes con fecha de captura indexada',
+	'ACP_EXIF_SYNC_EXPLAIN'      => 'Reconstruye el índice desde los metadatos EXIF guardados y, cuando sea necesario, desde los archivos JPEG originales. La operación usa pequeños lotes reanudables.',
+	'ACP_EXIF_SYNC_CONFIRM'      => '¿Seguro que deseas reconstruir el índice de fechas de captura EXIF?',
+	'ACP_EXIF_SYNC_PROGRESS'     => 'Sincronización EXIF en curso: %1$d imágenes revisadas, %2$d fechas indexadas y %3$d archivos de origen temporalmente no disponibles.',
+	'ACP_EXIF_SYNC_COMPLETE'     => 'Sincronización EXIF terminada: %1$d imágenes revisadas, %2$d fechas indexadas y %3$d archivos de origen no disponibles.',
 ]);

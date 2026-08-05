@@ -108,4 +108,12 @@ $lang = array_merge($lang, [
 
 	'GALLERY_CORE_NOT_FOUND'      => 'De phpBB Gallery Core-extensie moet eerst worden geïnstalleerd en ingeschakeld.',
 	'EXTENSION_ENABLE_SUCCESS'    => 'De extensie is ingeschakeld.',
+	'ACP_GALLERY_EXIF'           => 'EXIF-metadata',
+	'ACP_GALLERY_EXIF_EXPLAIN'   => 'Beheert de geïndexeerde opnamedatums die voor het sorteren van de Galerij worden gebruikt.',
+	'ACP_EXIF_CAPTURE_INDEX'     => 'Index van opnamedatums',
+	'ACP_EXIF_INDEXED_IMAGES'    => 'Afbeeldingen met een geïndexeerde opnamedatum',
+	'ACP_EXIF_SYNC_EXPLAIN'      => 'Bouwt de index opnieuw op uit opgeslagen EXIF-metadata en zo nodig uit de originele JPEG-bestanden. De bewerking gebruikt kleine hervatbare batches.',
+	'ACP_EXIF_SYNC_CONFIRM'      => 'Weet je zeker dat je de EXIF-opnamedatumindex opnieuw wilt opbouwen?',
+	'ACP_EXIF_SYNC_PROGRESS'     => 'EXIF-synchronisatie bezig: %1$d afbeeldingen gecontroleerd, %2$d datums geïndexeerd en %3$d bronbestanden tijdelijk niet beschikbaar.',
+	'ACP_EXIF_SYNC_COMPLETE'     => 'EXIF-synchronisatie voltooid: %1$d afbeeldingen gecontroleerd, %2$d datums geïndexeerd en %3$d bronbestanden niet beschikbaar.',
 ]);

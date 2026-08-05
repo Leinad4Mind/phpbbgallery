@@ -125,10 +125,25 @@ class exif_display_filter_test extends TestCase
 		{
 			$lang = [];
 			include $directory . '/info_exif.php';
+			$this->assertFileExists($directory . '/info_acp_exif.php');
+			include $directory . '/info_acp_exif.php';
 
+			$required = [
+				'ACP_GALLERY_EXIF',
+				'ACP_GALLERY_EXIF_EXPLAIN',
+				'ACP_EXIF_CAPTURE_INDEX',
+				'ACP_EXIF_INDEXED_IMAGES',
+				'ACP_EXIF_SYNC_EXPLAIN',
+				'ACP_EXIF_SYNC_CONFIRM',
+				'ACP_EXIF_SYNC_PROGRESS',
+				'ACP_EXIF_SYNC_COMPLETE',
+			];
 			foreach (exif_listener::DISPLAY_FIELDS as $field)
 			{
-				$key = 'DISP_' . strtoupper($field);
+				$required[] = 'DISP_' . strtoupper($field);
+			}
+			foreach ($required as $key)
+			{
 				$this->assertArrayHasKey($key, $lang, $key . ' missing for ' . basename($directory));
 				$this->assertNotSame('', $lang[$key]);
 			}

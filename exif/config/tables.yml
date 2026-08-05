@@ -1,0 +1,2 @@
+parameters:
+    phpbbgallery.exif.tables.capture_index: '%core.table_prefix%gallery_exif_capture'
