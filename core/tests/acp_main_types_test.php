@@ -71,4 +71,20 @@ final class acp_main_types_test extends TestCase
 		$this->assertLessThan($query, $initialization);
 		$this->assertLessThan($sync, $query);
 	}
+
+	public function test_storage_migration_requires_confirmation_authorization_and_csrf_on_resume(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/acp/main_module.php');
+		$template = (string) file_get_contents(dirname(__DIR__) . '/adm/style/gallery_main.html');
+		$quote = chr(39);
+
+		$this->assertStringContainsString('case ' . $quote . 'storage_migrate' . $quote . ':', $source);
+		$this->assertStringContainsString('$confirm_lang = ' . $quote . 'STORAGE_MIGRATION_CONFIRM' . $quote . ';', $source);
+		$this->assertStringContainsString('is_set_post(' . $quote . 'storage_migration_continue' . $quote . ')', $source);
+		$this->assertStringContainsString('check_form_key(' . $quote . 'acp_gallery' . $quote . ')', $source);
+		$this->assertStringContainsString('acl_get(' . $quote . 'a_board' . $quote . ')', $source);
+		$this->assertStringContainsString('name=' . $quote . 'storage_migration_continue' . $quote, $template);
+		$this->assertStringContainsString('method=' . $quote . 'post' . $quote, $template);
+		$this->assertStringContainsString('{{ S_FORM_TOKEN }}', $template);
+	}
 }

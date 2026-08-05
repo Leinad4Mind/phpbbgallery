@@ -25,6 +25,17 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'PERMISSION_I_MOVE' => 'Peut déplacer ses propres images',
+	'STORAGE_MIGRATION' => 'Migration vers le stockage distribué',
+	'STORAGE_MIGRATION_EXPLAIN' => 'Déplace les fichiers image locaux existants vers la structure distribuée configurée, par lots vérifiés et reprenables.',
+	'STORAGE_MIGRATION_CONFIRM' => 'Voulez-vous vraiment migrer les fichiers existants de la Galerie vers la structure distribuée ?',
+	'STORAGE_MIGRATION_STATUS' => 'En attente : %1$d ; déjà distribués : %2$d ; clés invalides : %3$d.',
+	'STORAGE_MIGRATION_INVALID_EXPLAIN' => 'Les clés de stockage invalides nécessitent une vérification manuelle et ne seront pas déplacées.',
+	'STORAGE_MIGRATION_RUN' => 'Migrer les fichiers existants',
+	'STORAGE_MIGRATION_PROGRESS' => 'Migration en cours',
+	'STORAGE_MIGRATION_COMPLETE' => 'Passe de migration terminée',
+	'STORAGE_MIGRATION_RESULT' => 'Migrés : %1$d ; inchangés : %2$d ; échecs : %3$d.',
+	'STORAGE_MIGRATION_FAILED_EXPLAIN' => 'Certains enregistrements n’ont pas pu être migrés. Leurs clés et fichiers d’origine ont été conservés afin de pouvoir réessayer en toute sécurité.',
+	'STORAGE_MIGRATION_CONTINUE' => 'Continuer la migration',
 ]);
 
 // DEVELOPERS PLEASE NOTE

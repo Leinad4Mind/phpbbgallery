@@ -82,6 +82,12 @@ final class storage_test extends TestCase
 		];
 	}
 
+	public function test_distributed_key_must_fit_the_database_column(): void
+	{
+		$this->expectException(\InvalidArgumentException::class);
+		$this->generator(key_generator::LAYOUT_DISTRIBUTED)->create(str_repeat('a', 247) . '.jpg');
+	}
+
 	public function test_local_provider_writes_and_reads_distributed_objects(): void
 	{
 		$provider = $this->provider();

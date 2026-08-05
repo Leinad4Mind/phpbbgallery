@@ -191,6 +191,13 @@ services:
             - '%phpbbgallery.core.file.source%'
             - '%phpbbgallery.core.file.medium%'
             - '%phpbbgallery.core.file.mini%'
+    phpbbgallery.core.storage.layout_migrator:
+        class: phpbbgallery\core\storage\layout_migrator
+        arguments:
+            - '@dbal.conn'
+            - '@phpbbgallery.core.storage.key_generator'
+            - '@phpbbgallery.core.storage.local'
+            - '%phpbbgallery.tables.gallery_images%'
     phpbbgallery.core.report:
         class: phpbbgallery\core\report
         arguments:

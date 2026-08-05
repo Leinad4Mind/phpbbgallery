@@ -25,6 +25,17 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'PERMISSION_I_MOVE' => 'Может перемещать свои изображения',
+	'STORAGE_MIGRATION' => 'Миграция в распределённое хранилище',
+	'STORAGE_MIGRATION_EXPLAIN' => 'Перемещает существующие локальные изображения в настроенную распределённую структуру проверяемыми возобновляемыми пакетами.',
+	'STORAGE_MIGRATION_CONFIRM' => 'Действительно перенести существующие файлы Галереи в распределённую структуру?',
+	'STORAGE_MIGRATION_STATUS' => 'Ожидают: %1$d; уже распределены: %2$d; недопустимые ключи: %3$d.',
+	'STORAGE_MIGRATION_INVALID_EXPLAIN' => 'Недопустимые ключи требуют ручной проверки и не будут перемещены.',
+	'STORAGE_MIGRATION_RUN' => 'Перенести существующие файлы',
+	'STORAGE_MIGRATION_PROGRESS' => 'Выполняется миграция',
+	'STORAGE_MIGRATION_COMPLETE' => 'Проход миграции завершён',
+	'STORAGE_MIGRATION_RESULT' => 'Перенесено: %1$d; без изменений: %2$d; ошибок: %3$d.',
+	'STORAGE_MIGRATION_FAILED_EXPLAIN' => 'Некоторые записи не удалось перенести. Исходные ключи и файлы сохранены для безопасного повторного запуска.',
+	'STORAGE_MIGRATION_CONTINUE' => 'Продолжить миграцию',
 ]);
 
 $lang = array_merge($lang, [
