@@ -73,6 +73,7 @@ services:
             - '@phpbbgallery.core.file.tool'
             - '@request'
             - '@dispatcher'
+            - '@phpbbgallery.core.storage.workspace'
             - '%phpbbgallery.core.file.source%'
             - '%phpbbgallery.core.file.medium%'
             - '%phpbbgallery.core.file.mini%'

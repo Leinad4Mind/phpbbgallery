@@ -10,6 +10,8 @@
 namespace phpbbgallery\core\tests;
 
 use phpbbgallery\core\controller\file;
+use phpbbgallery\core\storage\provider_interface;
+use phpbbgallery\core\storage\workspace;
 use PHPUnit\Framework\TestCase;
 
 final class controller_file_types_test extends TestCase
@@ -230,10 +232,184 @@ final class controller_file_types_test extends TestCase
 		$this->assertFileExists($image_src);
 	}
 
+	public function test_remote_source_is_materialized_only_as_a_temporary_local_object(): void
+	{
+		$provider = new controller_storage_provider();
+		$source = tempnam(sys_get_temp_dir(), 'gallery-remote-');
+		$workspace_root = sys_get_temp_dir() . '/gallery-controller-' . bin2hex(random_bytes(6));
+		file_put_contents($source, 'remote-image');
+		$this->assertTrue($provider->write(provider_interface::SOURCE, 'image.jpg', $source));
+
+		$reflection = new \ReflectionClass(file::class);
+		$controller = $reflection->newInstanceWithoutConstructor();
+		$reflection->getProperty('storage_workspace')->setValue($controller, new workspace($provider, $workspace_root));
+		$reflection->getProperty('storage_variant')->setValue($controller, provider_interface::SOURCE);
+		$reflection->getProperty('data')->setValue($controller, [
+			'image_id' => 27,
+			'image_filename' => 'image.jpg',
+			'image_filemissing' => 0,
+		]);
+		$reflection->getProperty('error')->setValue($controller, '');
+		$reflection->getProperty('config')->setValue($controller, new \phpbb\config\config([
+			'phpbb_gallery_allow_hotlinking' => 1,
+		]));
+
+		try
+		{
+			$controller->generate_image_src();
+			$object = $reflection->getProperty('image_object')->getValue($controller);
+			$this->assertNotNull($object);
+			$this->assertTrue($object->is_temporary());
+			$this->assertSame('remote-image', file_get_contents($reflection->getProperty('image_src')->getValue($controller)));
+			$object->release();
+		}
+		finally
+		{
+			@unlink($source);
+			@rmdir($workspace_root);
+		}
+	}
+
+	public function test_missing_derived_variant_is_generated_and_published(): void
+	{
+		$provider = new controller_storage_provider();
+		$source = tempnam(sys_get_temp_dir(), 'gallery-source-');
+		$workspace_root = sys_get_temp_dir() . '/gallery-controller-' . bin2hex(random_bytes(6));
+		file_put_contents($source, 'source-image');
+		$this->assertTrue($provider->write(provider_interface::SOURCE, 'image.jpg', $source));
+
+		$tool = $this->createMock(\phpbbgallery\core\file\file::class);
+		$tool->method('read_image')->willReturnCallback(function () use ($tool): bool
+		{
+			$tool->image_size = ['file' => 12, 'width' => 100, 'height' => 100];
+			return true;
+		});
+		$tool->expects($this->once())->method('create_thumbnail');
+		$tool->method('write_image')->willReturnCallback(static function (string $path): void
+		{
+			file_put_contents($path, 'derived-image');
+		});
+
+		$reflection = new \ReflectionClass(file::class);
+		$controller = $reflection->newInstanceWithoutConstructor();
+		$reflection->getProperty('storage_workspace')->setValue($controller, new workspace($provider, $workspace_root));
+		$reflection->getProperty('storage_variant')->setValue($controller, provider_interface::MEDIUM);
+		$reflection->getProperty('data')->setValue($controller, ['image_filename' => 'image.jpg']);
+		$reflection->getProperty('image_src')->setValue($controller, '');
+		$reflection->getProperty('tool')->setValue($controller, $tool);
+		$reflection->getProperty('config')->setValue($controller, new \phpbb\config\config([
+			'phpbb_gallery_jpg_quality' => 85,
+		]));
+
+		try
+		{
+			$reflection->getMethod('resize')->invoke($controller, 27, 50, 50);
+			$this->assertTrue($provider->exists(provider_interface::MEDIUM, 'image.jpg'));
+			$this->assertSame('derived-image', $provider->contents(provider_interface::MEDIUM, 'image.jpg'));
+			$object = $reflection->getProperty('image_object')->getValue($controller);
+			$this->assertNotNull($object);
+			$object->release();
+		}
+		finally
+		{
+			@unlink($source);
+			@rmdir($workspace_root);
+		}
+	}
+
 	private function set_language(\ReflectionClass $reflection, file $controller): void
 	{
 		$language = $this->createMock(\phpbb\language\language::class);
 		$language->method('lang')->willReturnCallback(static fn (string $key): string => $key);
 		$reflection->getProperty('language')->setValue($controller, $language);
+	}
+}
+
+// phpcs:disable Generic.Files.OneClassPerFile.MultipleFound -- Provider double belongs to this controller test.
+final class controller_storage_provider implements provider_interface
+{
+	private array $objects = [];
+
+	public function get_id(): string
+	{
+		return 'remote-test';
+	}
+
+	public function prepare(string $variant, string $key): bool
+	{
+		return true;
+	}
+
+	public function write(string $variant, string $key, string $local_file): bool
+	{
+		if (isset($this->objects[$variant][$key]))
+		{
+			return false;
+		}
+		$contents = @file_get_contents($local_file);
+		if ($contents === false)
+		{
+			return false;
+		}
+		$this->objects[$variant][$key] = $contents;
+		return true;
+	}
+
+	public function replace(string $variant, string $key, string $local_file): bool
+	{
+		if (!isset($this->objects[$variant][$key]))
+		{
+			return false;
+		}
+		unset($this->objects[$variant][$key]);
+		return $this->write($variant, $key, $local_file);
+	}
+
+	public function open_stream(string $variant, string $key): mixed
+	{
+		if (!isset($this->objects[$variant][$key]))
+		{
+			return false;
+		}
+		$stream = fopen('php://temp', 'w+b');
+		fwrite($stream, $this->objects[$variant][$key]);
+		rewind($stream);
+		return $stream;
+	}
+
+	public function local_path(string $variant, string $key): ?string
+	{
+		return null;
+	}
+
+	public function exists(string $variant, string $key): bool
+	{
+		return isset($this->objects[$variant][$key]);
+	}
+
+	public function delete(string $variant, string $key): bool
+	{
+		unset($this->objects[$variant][$key]);
+		return true;
+	}
+
+	public function size(string $variant, string $key): ?int
+	{
+		return isset($this->objects[$variant][$key]) ? strlen($this->objects[$variant][$key]) : null;
+	}
+
+	public function modified_time(string $variant, string $key): ?int
+	{
+		return $this->exists($variant, $key) ? 1785945600 : null;
+	}
+
+	public function checksum(string $variant, string $key, string $algorithm = 'sha256'): ?string
+	{
+		return isset($this->objects[$variant][$key]) ? hash($algorithm, $this->objects[$variant][$key]) : null;
+	}
+
+	public function contents(string $variant, string $key): ?string
+	{
+		return $this->objects[$variant][$key] ?? null;
 	}
 }

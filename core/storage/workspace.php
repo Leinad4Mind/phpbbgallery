@@ -70,6 +70,31 @@ final class workspace
 		return new local_object($path, true);
 	}
 
+	/** Create an empty private local file for GD or another local processor. */
+	public function create_temporary(string $key): local_object
+	{
+		$path = $this->create_path($key);
+		$stream = @fopen($path, 'xb');
+		if ($stream === false)
+		{
+			throw new \RuntimeException('The Gallery storage workspace file could not be created.');
+		}
+		fclose($stream);
+		@chmod($path, 0600);
+
+		return new local_object($path, true);
+	}
+
+	public function exists(string $variant, string $key): bool
+	{
+		return $this->storage->exists($variant, $key);
+	}
+
+	public function modified_time(string $variant, string $key): ?int
+	{
+		return $this->storage->modified_time($variant, $key);
+	}
+
 	/** Publish a new object and verify that the provider stored the complete file. */
 	public function publish(string $variant, string $key, string $local_file): void
 	{
@@ -83,7 +108,7 @@ final class workspace
 			&& $this->storage->write($variant, $key, $local_file);
 		if (!$written || !$this->verify_published($variant, $key, $local_file))
 		{
-			if ($written || $this->storage->exists($variant, $key))
+			if ($written)
 			{
 				$this->storage->delete($variant, $key);
 			}

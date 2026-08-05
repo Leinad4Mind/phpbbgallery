@@ -41,6 +41,14 @@ final class local_object
 		$this->released = true;
 	}
 
+	/** Transfer cleanup ownership to the response that will send this file. */
+	public function detach(): string
+	{
+		$this->released = true;
+
+		return $this->path;
+	}
+
 	public function __destruct()
 	{
 		$this->release();

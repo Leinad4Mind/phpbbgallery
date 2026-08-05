@@ -56,6 +56,15 @@ class file
 	/** @var \phpbb\event\dispatcher_interface Source-access extension dispatcher */
 	protected \phpbb\event\dispatcher_interface $dispatcher;
 
+	/** Active-provider workspace; null only for legacy direct construction. */
+	protected ?\phpbbgallery\core\storage\workspace $storage_workspace = null;
+
+	/** Lease for the provider object currently used by the response. */
+	protected ?\phpbbgallery\core\storage\local_object $image_object = null;
+
+	/** Provider variant requested by the current route. */
+	protected string $storage_variant = \phpbbgallery\core\storage\provider_interface::SOURCE;
+
 	/** @var string */
 	protected string $table_albums;
 
@@ -89,6 +98,7 @@ class file
 	 * @param \phpbbgallery\core\file\file $tool
 	 * @param \phpbb\request\request_interface $request
 	 * @param \phpbb\event\dispatcher_interface $dispatcher
+	 * @param \phpbbgallery\core\storage\workspace $storage_workspace
 	 * @param string $source_path
 	 * @param string $medium_path
 	 * @param string $mini_path
@@ -98,7 +108,8 @@ class file
 	 */
 	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\language\language $language, \phpbbgallery\core\auth\auth $gallery_auth,
 	\phpbbgallery\core\user $gallery_user, \phpbbgallery\core\file\file $tool, \phpbb\request\request_interface $request,
-	\phpbb\event\dispatcher_interface $dispatcher, string $source_path, string $medium_path, string $mini_path,
+	\phpbb\event\dispatcher_interface $dispatcher, \phpbbgallery\core\storage\workspace $storage_workspace,
+	string $source_path, string $medium_path, string $mini_path,
 	string $watermark_file, string $albums_table, string $images_table)
 	{
 		$this->config = $config;
@@ -110,6 +121,7 @@ class file
 		$this->tool = $tool;
 		$this->request = $request;
 		$this->dispatcher = $dispatcher;
+		$this->storage_workspace = $storage_workspace;
 		$this->path_source = $this->resolve_gallery_path($source_path);
 		$this->path_medium = $this->resolve_gallery_path($medium_path);
 		$this->path_mini = $this->resolve_gallery_path($mini_path);
@@ -131,11 +143,13 @@ class file
 		$this->auth->load_user_permissions($this->user->data['user_id']);
 		$this->path = $this->path_source;
 		$this->load_data($image_id);
+		$this->storage_variant = \phpbbgallery\core\storage\provider_interface::SOURCE;
 		$this->check_auth();
+		$this->generate_image_src();
 		if ($this->error === '')
 		{
 			$image_data = $this->data;
-			$source_path = $this->path_source . $this->data['image_filename'];
+			$source_path = $this->image_src;
 			/**
 			 * Allow add-ons to authorize or account for original-source access.
 			 *
@@ -152,7 +166,6 @@ class file
 			);
 		}
 
-		$this->generate_image_src();
 		// @todo Enable watermark
 
 		$this->use_watermark = $this->config['phpbb_gallery_watermark_enabled'] && $this->data['album_watermark'] && !$this->auth->acl_check('i_watermark', $this->data['album_id'], $this->data['album_user_id']);
@@ -179,6 +192,7 @@ class file
 
 		$this->path = $this->path_medium;
 		$this->load_data($image_id);
+		$this->storage_variant = \phpbbgallery\core\storage\provider_interface::MEDIUM;
 		$this->check_auth();
 
 		$this->generate_image_src();
@@ -213,6 +227,7 @@ class file
 	{
 		$this->path = $this->path_mini;
 		$this->load_data($image_id);
+		$this->storage_variant = \phpbbgallery\core\storage\provider_interface::MINI;
 		$this->check_auth();
 		$this->generate_image_src();
 
@@ -238,6 +253,8 @@ class file
 		$this->data = [];
 		$this->error = '';
 		$this->image_src = '';
+		$this->image_object = null;
+		$this->storage_variant = \phpbbgallery\core\storage\provider_interface::SOURCE;
 		$this->use_watermark = false;
 
 		if ($image_id == 0)
@@ -300,10 +317,12 @@ class file
 			return;
 		}
 
-		$source_file = $this->path_source . $this->data['image_filename'];
-		$this->image_src = $this->path . $this->data['image_filename'];
+		$key = $this->data['image_filename'];
+		$source_exists = $this->storage_workspace !== null
+			? $this->storage_workspace->exists(\phpbbgallery\core\storage\provider_interface::SOURCE, $key)
+			: file_exists($this->path_source . $key);
 
-		if (!file_exists($source_file))
+		if (!$source_exists)
 		{
 			if (empty($this->data['image_filemissing']))
 			{
@@ -335,6 +354,30 @@ class file
 		{
 			$this->image_src = $this->get_error_image_src();
 			$this->use_watermark = false;
+			return;
+		}
+
+		if ($this->storage_workspace === null)
+		{
+			$this->image_src = $this->path . $key;
+			return;
+		}
+
+		if (!$this->storage_workspace->exists($this->storage_variant, $key))
+		{
+			$this->image_src = '';
+			return;
+		}
+
+		try
+		{
+			$this->image_object = $this->storage_workspace->materialize($this->storage_variant, $key);
+			$this->image_src = $this->image_object->get_path();
+		}
+		catch (\RuntimeException)
+		{
+			$this->set_error_image('image_not_exist.jpg', $this->language->lang('IMAGE_NOT_EXIST'));
+			$this->image_src = $this->get_error_image_src();
 		}
 	}
 
@@ -355,7 +398,10 @@ class file
 			$this->tool->set_last_modified(@filemtime($this->config['phpbb_gallery_watermark_source']));
 			$this->tool->watermark_image($this->config['phpbb_gallery_watermark_source'], $this->config['phpbb_gallery_watermark_position'], $this->config['phpbb_gallery_watermark_height'], $this->config['phpbb_gallery_watermark_width']);
 		}
-		$this->tool->set_last_modified(@filemtime($this->tool->image_source));
+		$provider_modified = $this->storage_workspace !== null && $this->error === ''
+			? $this->storage_workspace->modified_time($this->storage_variant, $this->data['image_filename'])
+			: null;
+		$this->tool->set_last_modified($provider_modified ?? (int) @filemtime($this->tool->image_source));
 
 		// Let's check image is loaded
 		if (!$this->tool->image_content_type)
@@ -400,6 +446,12 @@ class file
 			}
 		}
 		$this->tool->apply_browser_cache($response);
+		if ($this->image_object !== null && $this->image_object->is_temporary())
+		{
+			$this->image_object->detach();
+			$response->deleteFileAfterSend(true);
+			$this->image_object = null;
+		}
 
 		return $response;
 	}
@@ -408,30 +460,86 @@ class file
 	{
 		if (!file_exists($this->image_src))
 		{
-			$this->tool->set_image_data($this->path_source . $this->data['image_filename'], '', 0, true);
-			if (!$this->tool->read_image(true))
+			$source_object = null;
+			$output_object = null;
+			$key = $this->data['image_filename'];
+			try
 			{
-				$this->set_error_image('image_not_exist.jpg', $this->language->lang('IMAGE_NOT_EXIST'));
-				$this->generate_image_src();
-				return;
+				if ($this->storage_workspace !== null)
+				{
+					$source_object = $this->storage_workspace->materialize(
+						\phpbbgallery\core\storage\provider_interface::SOURCE,
+						$key
+					);
+					$output_object = $this->storage_workspace->create_temporary($key);
+					$source_path = $source_object->get_path();
+					$output_path = $output_object->get_path();
+				}
+				else
+				{
+					$source_path = $this->path_source . $key;
+					$output_path = $this->path . $key;
+				}
+
+				$this->tool->set_image_data($source_path, '', 0, true);
+				if (!$this->tool->read_image(true))
+				{
+					throw new \RuntimeException('The Gallery source image could not be decoded.');
+				}
+
+				$image_size = [
+					'file' => $this->tool->image_size['file'],
+					'width' => $this->tool->image_size['width'],
+					'height' => $this->tool->image_size['height'],
+				];
+
+				$this->tool->set_image_data($output_path);
+				if (($image_size['width'] > $resize_width) || ($image_size['height'] > $resize_height))
+				{
+					$this->tool->create_thumbnail($resize_width, $resize_height, $put_details, \phpbbgallery\core\file\file::THUMBNAIL_INFO_HEIGHT, $image_size);
+				}
+
+				$this->tool->write_image($output_path, $this->config['phpbb_gallery_jpg_quality'], false);
+				if (!is_file($output_path) || is_link($output_path))
+				{
+					throw new \RuntimeException('The Gallery derived image could not be generated.');
+				}
+				$generated_size = @filesize($output_path);
+
+				if ($this->storage_workspace !== null)
+				{
+					try
+					{
+						$this->storage_workspace->publish($this->storage_variant, $key, $output_path);
+					}
+					catch (\RuntimeException $exception)
+					{
+						// Another authorized request may have published the same cache first.
+						if (!$this->storage_workspace->exists($this->storage_variant, $key))
+						{
+							throw $exception;
+						}
+					}
+					$output_object->release();
+					$source_object->release();
+					$this->image_object = $this->storage_workspace->materialize($this->storage_variant, $key);
+					$this->image_src = $this->image_object->get_path();
+				}
+				else
+				{
+					$this->image_src = $output_path;
+				}
 			}
-
-			$image_size = [
-				'file' => $this->tool->image_size['file'],
-				'width' => $this->tool->image_size['width'],
-				'height' => $this->tool->image_size['height'],
-			];
-
-			$this->tool->set_image_data($this->image_src);
-
-			if (($image_size['width'] > $resize_width) || ($image_size['height'] > $resize_height))
+			catch (\RuntimeException)
 			{
-				$this->tool->create_thumbnail($resize_width, $resize_height, $put_details, \phpbbgallery\core\file\file::THUMBNAIL_INFO_HEIGHT, $image_size);
-			}
-
-			$this->tool->write_image($this->image_src, $this->config['phpbb_gallery_jpg_quality'], false);
-			if (!file_exists($this->image_src))
-			{
+				if ($output_object !== null)
+				{
+					$output_object->release();
+				}
+				if ($source_object !== null)
+				{
+					$source_object->release();
+				}
 				$this->set_error_image('image_not_exist.jpg', $this->language->lang('IMAGE_NOT_EXIST'));
 				$this->generate_image_src();
 				return;
@@ -439,7 +547,7 @@ class file
 
 			if ($store_filesize)
 			{
-				$this->data[$store_filesize] = @filesize($this->image_src);
+				$this->data[$store_filesize] = $generated_size === false ? 0 : (int) $generated_size;
 				$sql = 'UPDATE ' . $this->table_images . '
 					SET ' . $this->db->sql_build_array('UPDATE', [
 						$store_filesize => $this->data[$store_filesize],
@@ -447,8 +555,6 @@ class file
 					WHERE ' . $this->db->sql_in_set('image_id', $image_id);
 				$this->db->sql_query($sql);
 			}
-
-//			}
 		}
 	}
 
