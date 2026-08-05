@@ -1,12 +1,17 @@
 services:
+    dmzx.usernamecolourchanger.colour_helper:
+        class: dmzx\usernamecolourchanger\core\colour_helper
+
     dmzx.usernamecolourchanger.listener:
         class: dmzx\usernamecolourchanger\event\listener
         arguments:
-            - @request
-            - @template
-            - @user
-            - @auth
-            - @dbal.conn
-            - @config
+            - '@request'
+            - '@template'
+            - '@user'
+            - '@auth'
+            - '@dbal.conn'
+            - '@config'
+            - '@language'
+            - '@dmzx.usernamecolourchanger.colour_helper'
         tags:
             - { name: event.listener }

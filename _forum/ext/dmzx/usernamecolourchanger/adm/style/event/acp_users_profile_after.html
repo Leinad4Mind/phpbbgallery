@@ -1,5 +1,9 @@
-<!-- INCLUDEJS @dmzx_usernamecolourchanger/jscolor/jscolor.js -->
 <dl>
-	<dt><label for="user_colour">{L_USER_COLOUR_TITLE}{L_COLON}</label><br /><span>{L_USER_COLOUR_EXPLAIN}</span></dt>
-	<dd><input class="text post color {required:false,caps:false}" name="user_colour" type="text" id="user_colour" value="{USER_COLOUR}" size="6" maxlength="6" /></dd>
+	<dt><label for="user_colour">{{ lang('USER_COLOUR_TITLE') ~ lang('COLON') }}</label><br><span>{{ lang('USER_COLOUR_EXPLAIN') }}</span></dt>
+	<dd>
+		<input class="text post" name="user_colour" type="text" id="user_colour" value="{{ USER_COLOUR }}" size="6" maxlength="6" pattern="[0-9A-Fa-f]{3}([0-9A-Fa-f]{3})?">
+		{% if USER_COLOUR_PREVIEW %}<span style="background-color: #{{ USER_COLOUR_PREVIEW }}">&nbsp; &nbsp;</span>{% endif %}
+		<span>[ <a href="#" id="color_palette_toggle">{{ lang('COLOUR_SWATCH') }}</a> ]</span>
+	</dd>
+	<dd id="color_palette_placeholder" style="display: none;" data-color-palette="h" data-orientation="h" data-height="12" data-width="15" data-target="#user_colour"></dd>
 </dl>

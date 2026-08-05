@@ -1,50 +1,60 @@
 <?php
 /**
-*
-* @package phpBB Extension - Username Colour Changer
-* @copyright (c) 2015 dmzx - http://www.dmzx-web.net
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ *
+ * @package phpBB Extension - Username Colour Changer
+ * @copyright (c) 2015 dmzx - https://www.dmzx-web.net
+ * @license https://opensource.org/licenses/GPL-2.0 GNU General Public License v2
+ *
+ */
 
 namespace dmzx\usernamecolourchanger\event;
 
+use dmzx\usernamecolourchanger\core\colour_helper;
+use phpbb\auth\auth;
+use phpbb\config\config;
+use phpbb\db\driver\driver_interface;
+use phpbb\language\language;
+use phpbb\request\request_interface;
+use phpbb\template\template;
+use phpbb\user;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-/**
-* Event listener
-*/
 class listener implements EventSubscriberInterface
 {
-	/** @var \phpbb\request\request */
+	/** @var request_interface */
 	protected $request;
 
-	/** @var \phpbb\template\template */
+	/** @var template */
 	protected $template;
 
-	/** @var \phpbb\user */
+	/** @var user */
 	protected $user;
 
-	/** @var \phpbb\auth\auth */
+	/** @var auth */
 	protected $auth;
 
-	/** @var \phpbb\db\driver\driver */
+	/** @var driver_interface */
 	protected $db;
 
-	/** @var \phpbb\config\config */
+	/** @var config */
 	protected $config;
 
-	/**
-	* Constructor
-	*
-	* @param \phpbb\request\request				$request
-	* @param \phpbb\template\template			$template
-	* @param \phpbb\user						$user
-	* @param \phpbb\auth\auth					$auth
-	* @param \phpbb\db\driver\driver			$db
-	* @param \phpbb\config\config				$config
-	*/
-	public function __construct(\phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, \phpbb\auth\auth $auth, \phpbb\db\driver\driver_interface $db, \phpbb\config\config $config)
+	/** @var language */
+	protected $language;
+
+	/** @var colour_helper */
+	protected $colour_helper;
+
+	public function __construct(
+		request_interface $request,
+		template $template,
+		user $user,
+		auth $auth,
+		driver_interface $db,
+		config $config,
+		language $language,
+		colour_helper $colour_helper
+	)
 	{
 		$this->request = $request;
 		$this->template = $template;
@@ -52,150 +62,231 @@ class listener implements EventSubscriberInterface
 		$this->auth = $auth;
 		$this->db = $db;
 		$this->config = $config;
+		$this->language = $language;
+		$this->colour_helper = $colour_helper;
 	}
 
-	/**
-	* Assign functions defined in this class to event listeners in the core
-	*
-	* @return array
-	* @static
-	* @access public
-	*/
-	static public function getSubscribedEvents()
+	public static function getSubscribedEvents()
 	{
-		return array(
-			'core.permissions'							=> 'add_permission',
-			'core.acp_users_modify_profile'				=> 'acp_user_title_profile',
-			'core.acp_users_profile_modify_sql_ary'		=> 'info_modify_sql_ary',
-			'core.ucp_profile_modify_profile_info'		=> 'modify_profile_info',
-			'core.ucp_profile_validate_profile_info'	=> 'validate_profile_info',
-			'core.ucp_profile_info_modify_sql_ary'		=> 'info_modify_sql_ary',
-		);
+		return [
+			'core.permissions' => 'add_permission',
+			'core.acp_users_modify_profile' => 'acp_modify_profile',
+			'core.acp_users_profile_validate' => 'acp_validate_profile',
+			'core.acp_users_profile_modify_sql_ary' => 'acp_modify_sql_ary',
+			'core.ucp_profile_modify_profile_info' => 'ucp_modify_profile',
+			'core.ucp_profile_validate_profile_info' => 'ucp_validate_profile',
+			'core.ucp_profile_info_modify_sql_ary' => 'ucp_modify_sql_ary',
+		];
 	}
 
 	/**
-	* Add permissions
-	*
-	* @param object $event The event object
-	* @return null
-	* @access public
-	*/
+	 * @param object $event Event object
+	 */
 	public function add_permission($event)
 	{
 		$permissions = $event['permissions'];
-		$permissions['u_usernamecolourchanger_use'] = array('lang' => 'ACL_U_USERNAMECOLOURCHANGER_USE', 'cat' => 'misc');
+		$permissions['u_usernamecolourchanger_use'] = [
+			'lang' => 'ACL_U_USERNAMECOLOURCHANGER_USE',
+			'cat' => 'misc',
+		];
 		$event['permissions'] = $permissions;
 	}
 
 	/**
-	 * Allow admins to change their colour
-	 *
-	 * @param object $event The event object
-	 * @return null
-	 * @access public
+	 * @param object $event Event object
 	 */
-	public function acp_user_title_profile($event)
+	public function acp_modify_profile($event)
 	{
-		// Request the user option vars and add them to the data array
-		$event['data'] = array_merge($event['data'], array(
-			'user_colour'	=> $this->request->variable('user_colour', $event['user_row']['user_colour'], true),
-		));
-		$this->template->assign_vars(array(
-			'USER_COLOUR'			=> $event['data']['user_colour'],
-		));
+		$this->language->add_lang('common', 'dmzx/usernamecolourchanger');
+
+		$data = $event['data'];
+		$data['user_colour'] = $this->request->variable(
+			'user_colour',
+			(string) $event['user_row']['user_colour']
+		);
+		$event['data'] = $data;
+
+		$this->template->assign_vars([
+			'USER_COLOUR' => $data['user_colour'],
+			'USER_COLOUR_PREVIEW' => $this->preview_colour($data['user_colour']),
+		]);
 	}
 
 	/**
-	* Allow to change their colour
-	*
-	* @param object $event The event object
-	* @return null
-	* @access public
-	*/
-	public function modify_profile_info($event)
+	 * @param object $event Event object
+	 */
+	public function acp_validate_profile($event)
 	{
-		$this->user->add_lang_ext('dmzx/usernamecolourchanger', 'common');
-
-		// Request the user option vars and add them to the data array
-		$event['data'] = array_merge($event['data'], array(
-			'user_colour'	=> $this->request->variable('user_colour', $this->user->data['user_colour'], true),
-		));
-
-		$this->template->assign_vars(array(
-			'COLOUR'		=> $event['data']['user_colour'],
-			'USE_USERNAMECOLOURCHANGER'	 	=> $this->auth->acl_get('u_usernamecolourchanger_use'),
-		));
+		$this->validate_colour($event);
 	}
 
 	/**
-	* Validate changes to their colour
-	*
-	* @param object $event The event object
-	* @return null
-	* @access public
-	*/
-	public function validate_profile_info($event)
+	 * @param object $event Event object
+	 */
+	public function acp_modify_sql_ary($event)
 	{
-		$array = $event['error'];
+		$this->apply_colour_change(
+			$event,
+			(int) $event['user_id'],
+			(string) $event['user_row']['user_colour']
+		);
+	}
 
-		if (!function_exists('validate_data'))
+	/**
+	 * @param object $event Event object
+	 */
+	public function ucp_modify_profile($event)
+	{
+		$this->language->add_lang('common', 'dmzx/usernamecolourchanger');
+
+		$can_change_colour = (bool) $this->auth->acl_get('u_usernamecolourchanger_use');
+		$this->template->assign_var('USE_USERNAMECOLOURCHANGER', $can_change_colour);
+
+		if (!$can_change_colour)
 		{
-			include($this->root_path . 'includes/functions_user.' . $this->php_ext);
+			return;
 		}
-		$validate_array = array(
-			'user_colour'		=> array('string', true, 3, 6),
+
+		$data = $event['data'];
+		$data['user_colour'] = $this->request->variable(
+			'user_colour',
+			(string) $this->user->data['user_colour']
 		);
-		$error = validate_data($event['data'], $validate_array);
-		$event['error'] = array_merge($array, $error);
+		$event['data'] = $data;
+
+		$this->template->assign_vars([
+			'COLOUR' => $data['user_colour'],
+			'COLOUR_PREVIEW' => $this->preview_colour($data['user_colour']),
+		]);
 	}
 
 	/**
-	* Changed their colour so update the database
-	*
-	* @param object $event The event object
-	* @return null
-	* @access public
-	*/
-	public function info_modify_sql_ary($event)
+	 * @param object $event Event object
+	 */
+	public function ucp_validate_profile($event)
 	{
-		// user is changing their colour so update the topics table to reflect that
-		$this->update_tables($event['data']['user_colour']);
-
-		$event['sql_ary'] = array_merge($event['sql_ary'], array(
-			'user_colour' => $event['data']['user_colour'],
-		));
-	}
-
-	/**
-	* Update update_tables
-	* @param object $user_colour The colour of the user chosen in the UCP
-	* @return null
-	* @access private
-	*/
-	private function update_tables($user_colour)
-	{
-		$sql_ary = array(
-			'topic_last_poster_colour'	=> $user_colour,
-		);
-		$sql = 'UPDATE ' . TOPICS_TABLE . ' SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . ' WHERE topic_last_poster_id = ' . $this->user->data['user_id'];
-		$this->db->sql_query($sql);
-
-		$sql_ary = array(
-			'topic_first_poster_colour'	=> $user_colour,
-		);
-		$sql = 'UPDATE ' . TOPICS_TABLE . ' SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . ' WHERE topic_poster = ' . $this->user->data['user_id'];
-		$this->db->sql_query($sql);
-
-		$sql_ary = array(
-			'forum_last_poster_colour'	=> $user_colour,
-		);
-		$sql = 'UPDATE ' . FORUMS_TABLE . ' SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . ' WHERE forum_last_poster_id = ' . $this->user->data['user_id'];
-		$this->db->sql_query($sql);
-
-		if ($this->config['newest_user_id'] == $this->user->data['user_id'])
+		if (!$this->auth->acl_get('u_usernamecolourchanger_use'))
 		{
-			$this->config->set('newest_user_colour', $user_colour, true);
+			return;
 		}
-		return;
+
+		$this->validate_colour($event);
+	}
+
+	/**
+	 * @param object $event Event object
+	 */
+	public function ucp_modify_sql_ary($event)
+	{
+		if (!$this->auth->acl_get('u_usernamecolourchanger_use'))
+		{
+			return;
+		}
+
+		$this->apply_colour_change(
+			$event,
+			(int) $this->user->data['user_id'],
+			(string) $this->user->data['user_colour']
+		);
+	}
+
+	/**
+	 * @param object $event Event object
+	 */
+	private function validate_colour($event)
+	{
+		$data = $event['data'];
+		if (!array_key_exists('user_colour', $data))
+		{
+			return;
+		}
+
+		$normalised = $this->colour_helper->normalise($data['user_colour']);
+		if ($normalised === false)
+		{
+			$error = $event['error'];
+			$error[] = 'USERNAMECOLOURCHANGER_INVALID_COLOUR';
+			$event['error'] = $error;
+			return;
+		}
+
+		$data['user_colour'] = $normalised;
+		$event['data'] = $data;
+	}
+
+	/**
+	 * @param object $event Event object
+	 * @param int    $user_id Target user ID
+	 * @param string $old_colour Existing colour
+	 */
+	private function apply_colour_change($event, $user_id, $old_colour)
+	{
+		$data = $event['data'];
+		if (!array_key_exists('user_colour', $data))
+		{
+			return;
+		}
+
+		$new_colour = $this->colour_helper->normalise($data['user_colour']);
+		if ($new_colour === false)
+		{
+			return;
+		}
+
+		$old_colour = $this->colour_helper->normalise($old_colour);
+		if ($old_colour !== false && $new_colour === $old_colour)
+		{
+			return;
+		}
+
+		$sql_ary = $event['sql_ary'];
+		$sql_ary['user_colour'] = $new_colour;
+		$event['sql_ary'] = $sql_ary;
+
+		$this->update_cached_colours($user_id, $new_colour);
+	}
+
+	/**
+	 * @param int    $user_id User ID
+	 * @param string $user_colour Canonical username colour
+	 */
+	private function update_cached_colours($user_id, $user_colour)
+	{
+		$sql = 'UPDATE ' . TOPICS_TABLE . '
+			SET ' . $this->db->sql_build_array('UPDATE', [
+				'topic_last_poster_colour' => $user_colour,
+			]) . '
+			WHERE topic_last_poster_id = ' . (int) $user_id;
+		$this->db->sql_query($sql);
+
+		$sql = 'UPDATE ' . TOPICS_TABLE . '
+			SET ' . $this->db->sql_build_array('UPDATE', [
+				'topic_first_poster_colour' => $user_colour,
+			]) . '
+			WHERE topic_poster = ' . (int) $user_id;
+		$this->db->sql_query($sql);
+
+		$sql = 'UPDATE ' . FORUMS_TABLE . '
+			SET ' . $this->db->sql_build_array('UPDATE', [
+				'forum_last_poster_colour' => $user_colour,
+			]) . '
+			WHERE forum_last_poster_id = ' . (int) $user_id;
+		$this->db->sql_query($sql);
+
+		if ((int) $this->config['newest_user_id'] === (int) $user_id)
+		{
+			$this->config->set('newest_user_colour', $user_colour, false);
+		}
+	}
+
+	/**
+	 * @param string $colour Colour value
+	 * @return string
+	 */
+	private function preview_colour($colour)
+	{
+		$colour = $this->colour_helper->normalise($colour);
+
+		return $colour === false ? '' : $colour;
 	}
 }

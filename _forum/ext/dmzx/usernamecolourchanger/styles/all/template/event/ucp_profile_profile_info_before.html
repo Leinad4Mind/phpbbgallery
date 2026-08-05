@@ -1,0 +1,11 @@
+{% if USE_USERNAMECOLOURCHANGER %}
+	<dl>
+		<dt><label for="user_colour">{{ lang('COLOUR') ~ lang('COLON') }}</label></dt>
+		<dd>
+			<input name="user_colour" type="text" id="user_colour" value="{{ COLOUR }}" size="6" maxlength="6" pattern="[0-9A-Fa-f]{3}([0-9A-Fa-f]{3})?" class="inputbox autowidth">
+			{% if COLOUR_PREVIEW %}<span style="background-color: #{{ COLOUR_PREVIEW }}">&nbsp; &nbsp;</span>{% endif %}
+			<span>[ <a href="#" id="color_palette_toggle">{{ lang('COLOUR_SWATCH') }}</a> ]</span>
+		</dd>
+		<dd id="color_palette_placeholder" class="color_palette_placeholder hidden" data-color-palette="h" data-orientation="h" data-height="12" data-width="15" data-target="#user_colour"></dd>
+	</dl>
+{% endif %}
