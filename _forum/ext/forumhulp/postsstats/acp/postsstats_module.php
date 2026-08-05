@@ -3,11 +3,13 @@
 *
 * @package PostsStatistics
 * @copyright (c) 2014 ForumHulp.com
-* @license Proprietary
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
 
 namespace forumhulp\postsstats\acp;
+
+use forumhulp\postsstats\core\stat_functions;
 
 class postsstats_module
 {
@@ -18,10 +20,9 @@ class postsstats_module
 		global $db, $config, $sconfig, $phpbb_root_path, $user, $template, $request, $phpbb_extension_manager, $phpbb_container, $phpbb_path_helper, $tables;
 		$user->add_lang_ext('forumhulp/postsstats', 'postsstats');
 
-		include($phpbb_root_path . 'ext/forumhulp/postsstats/vendor/stat_functions.php');
 		$tables['config']	= $phpbb_container->getParameter('tables.poststatconfig_table');
 		$tables['domain']	= $phpbb_container->getParameter('tables.poststatdomain_table');
-		\stat_functions::get_config();
+		stat_functions::get_config();
 
 		$action		= $request->variable('action', '');
 		$screen		= $request->variable('screen', $sconfig['start_screen']);
@@ -29,6 +30,10 @@ class postsstats_module
 		$type		= $request->variable('t', 0);
 		$month 		= $request->variable('m', date('n', time()));
 		$year		= $request->variable('y', date('Y', time()));
+
+		// Guard against malformed values reaching mktime()/date() below
+		$month = ($month >= 1 && $month <= 12) ? $month : (int) date('n', time());
+		$year = ($year >= 1970 && $year <= (int) date('Y', time()) + 1) ? $year : (int) date('Y', time());
 
 		$prev = ($type == 0) ? '&amp;m='.(($month-1 == 0) ? 12 : $month-1).'&amp;y='.(($month-1 == 0) ? $year-1 : $year) : (($type==2) ? '' : '&amp;t='.$type.'&amp;y=' . ($year - 1));
 		$next = ($type == 0) ? '&amp;m='.(($month+1 == 13) ? 1 : $month+1).'&amp;y='.(($month+1 == 13) ? $year+1 : $year) : (($type==2) ? '' : '&amp;t='.$type.'&amp;y=' . ($year + 1));
@@ -49,55 +54,55 @@ class postsstats_module
 			break;
 
 			case 'nyi':
-				\stat_functions::nyi($start, $this->u_action);
+				stat_functions::nyi($start, $this->u_action);
 			break;
 
 			case 'posts':
-				\stat_functions::posts($type, $month, $year, $next, $prev, $this->u_action);
+				stat_functions::posts($type, $month, $year, $next, $prev, $this->u_action);
 			break;
 
 			case 'ppu':
-				\stat_functions::ppu($type, $month, $year, $next, $prev, $this->u_action);
+				stat_functions::ppu($type, $month, $year, $next, $prev, $this->u_action);
 			break;
 
 			case 'ppt':
-				\stat_functions::ppt($type, $month, $year,  $next, $prev, $this->u_action);
+				stat_functions::ppt($type, $month, $year,  $next, $prev, $this->u_action);
 			break;
 
 			case 'topics':
-				\stat_functions::topics($type, $month, $year, $next, $prev, $this->u_action);
+				stat_functions::topics($type, $month, $year, $next, $prev, $this->u_action);
 			break;
 
 			case 'tpu':
-				\stat_functions::tpu($type, $month, $year, $next, $prev, $this->u_action);
+				stat_functions::tpu($type, $month, $year, $next, $prev, $this->u_action);
 			break;
 
 			case 'tpf':
-				\stat_functions::tpf($type, $month, $year, $next, $prev, $this->u_action);
+				stat_functions::tpf($type, $month, $year, $next, $prev, $this->u_action);
 			break;
 
 			case 'tv':
-				\stat_functions::tv($type, $month, $year, $next, $prev, $this->u_action);
+				stat_functions::tv($type, $month, $year, $next, $prev, $this->u_action);
 			break;
 
 			case 'gp':
-				\stat_functions::gp($type, $month, $year, $next, $prev, $this->u_action);
+				stat_functions::gp($type, $month, $year, $next, $prev, $this->u_action);
 			break;
 
 			case 'ptv':
-				\stat_functions::ptv($type, $month, $year, $next, $prev, $this->u_action);
+				stat_functions::ptv($type, $month, $year, $next, $prev, $this->u_action);
 			break;
 
 			case 'poll':
-				\stat_functions::poll($type, $month, $year, $next, $prev, $this->u_action);
+				stat_functions::poll($type, $month, $year, $next, $prev, $this->u_action);
 			break;
 
 			case 'config':
-				\stat_functions::config($start, $this->u_action);
+				stat_functions::config($start, $this->u_action);
 			break;
 
 			default:
-				\stat_functions::online($start, $this->u_action);
+				stat_functions::online($start, $this->u_action);
 			break;
 		}
 	}

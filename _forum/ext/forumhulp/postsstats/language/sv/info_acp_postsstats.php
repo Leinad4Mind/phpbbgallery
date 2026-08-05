@@ -3,7 +3,7 @@
 *
 * @package PostsStatistics
 * @copyright (c) 2014 ForumHulp.com
-* @license Proprietary
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 * @translated into Swedish by Holger (http://www.maskinisten.net)
 *
 */

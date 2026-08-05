@@ -1,2 +1,8 @@
 imports:
     - { resource: tables.yml }
+
+services:
+    forumhulp.postsstats.acp_listener:
+        class: forumhulp\postsstats\event\acp_listener
+        tags:
+            - { name: event.listener }
