@@ -154,7 +154,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.1'
-          extensions: curl, dom, gd, imagick, mbstring, mysqli, pdo_mysql, pdo_sqlite, sqlite3, zip
+          extensions: curl, dom, gd, imagick, mbstring, mysqli, pdo_mysql, pdo_sqlite, sqlite3, ssh2, zip
           coverage: none
         env:
           fail-fast: true
@@ -311,7 +311,25 @@ jobs:
           done
           curl --silent --output /dev/null 'http://127.0.0.1:10000/devstoreaccount1'
 
-      - name: Run Gallery Remote Storage MinIO and Azurite workflow test
+      - name: Start SFTP storage service
+        shell: bash
+        run: |
+          docker run --detach --name phpbbgallery-sftp \
+            --publish 2222:22 \
+            atmoz/sftp@sha256:81fa92512bf8ead4849f33c1c153907b86d32d77704d1c62a9c70b4316ae9e50 \
+            gallery:gallery-functional-secret:1001:1001:storage
+
+          for attempt in {1..30}; do
+            if ssh-keyscan -p 2222 127.0.0.1 2>/dev/null | grep -q .; then
+              break
+            fi
+            sleep 1
+          done
+          fingerprint=$(php -r '$session = ssh2_connect($argv[1], (int) $argv[2]); echo strtolower(ssh2_fingerprint($session, SSH2_FINGERPRINT_SHA1 | SSH2_FINGERPRINT_HEX));' 127.0.0.1 2222)
+          test ${#fingerprint} -eq 40
+          echo PHPBBGALLERY_SFTP_HOST_FINGERPRINT=${fingerprint} >> ${GITHUB_ENV}
+
+      - name: Run Gallery Remote Storage MinIO, Azurite and SFTP workflow test
         shell: bash
         working-directory: .functional/phpBB3
         run: >-

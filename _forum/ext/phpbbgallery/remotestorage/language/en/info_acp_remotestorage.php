@@ -62,4 +62,13 @@ $lang = array_merge($lang, [
 	'REMOTE_STORAGE_SETTINGS_SAVED' => 'The remote storage connection was verified and its settings were saved. No Gallery files were moved.',
 	'REMOTE_STORAGE_SETTINGS_LOCKED' => 'Remote provider settings cannot be changed while a migration is active.',
 	'REMOTE_STORAGE_TEST_AND_SAVE' => 'Test connection and save',
+	'REMOTE_STORAGE_SFTP_SETTINGS' => 'Secure SFTP connection',
+	'REMOTE_STORAGE_SFTP_HOST' => 'SFTP server host',
+	'REMOTE_STORAGE_SFTP_PORT' => 'SFTP server port',
+	'REMOTE_STORAGE_SFTP_USERNAME' => 'Username',
+	'REMOTE_STORAGE_SFTP_PASSWORD' => 'Password',
+	'REMOTE_STORAGE_SFTP_HOST_FINGERPRINT' => 'SHA-1 host fingerprint',
+	'REMOTE_STORAGE_SFTP_HOST_FINGERPRINT_EXPLAIN' => 'Required pinned fingerprint of the SSH host key, with or without colon separators. A mismatch is rejected before authentication.',
+	'REMOTE_STORAGE_SFTP_ROOT' => 'Private remote root',
+	'REMOTE_STORAGE_SFTP_ROOT_EXPLAIN' => 'Absolute directory reserved exclusively for Gallery files. It must not be publicly served by the remote host.',
 ]);

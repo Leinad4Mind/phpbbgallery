@@ -54,4 +54,13 @@ $lang = array_merge($lang, [
 	'REMOTE_STORAGE_LOCAL' => 'Локальное хранилище сервера',
 	'REMOTE_STORAGE_MIGRATION_TARGET' => 'Целевой провайдер',
 	'REMOTE_STORAGE_MIGRATION_TARGET_INVALID' => 'Выбранный целевой провайдер недопустим или уже активен.',
+	'REMOTE_STORAGE_SFTP_SETTINGS' => 'Защищённое SFTP-соединение',
+	'REMOTE_STORAGE_SFTP_HOST' => 'SFTP-сервер',
+	'REMOTE_STORAGE_SFTP_PORT' => 'Порт SFTP',
+	'REMOTE_STORAGE_SFTP_USERNAME' => 'Имя пользователя',
+	'REMOTE_STORAGE_SFTP_PASSWORD' => 'Пароль',
+	'REMOTE_STORAGE_SFTP_HOST_FINGERPRINT' => 'SHA-1-отпечаток сервера',
+	'REMOTE_STORAGE_SFTP_HOST_FINGERPRINT_EXPLAIN' => 'Закреплённый отпечаток SSH-ключа. Несовпадение отклоняется до аутентификации.',
+	'REMOTE_STORAGE_SFTP_ROOT' => 'Закрытый удалённый каталог',
+	'REMOTE_STORAGE_SFTP_ROOT_EXPLAIN' => 'Абсолютный каталог только для файлов Галереи; он не должен быть публичным.',
 ]);

@@ -62,4 +62,13 @@ $lang = array_merge($lang, [
 	'REMOTE_STORAGE_LOCAL' => 'Armazenamento local do servidor',
 	'REMOTE_STORAGE_MIGRATION_TARGET' => 'Provedor de destino',
 	'REMOTE_STORAGE_MIGRATION_TARGET_INVALID' => 'O provedor de destino selecionado é inválido ou já está ativo.',
+	'REMOTE_STORAGE_SFTP_SETTINGS' => 'Conexão SFTP segura',
+	'REMOTE_STORAGE_SFTP_HOST' => 'Servidor SFTP',
+	'REMOTE_STORAGE_SFTP_PORT' => 'Porta do servidor SFTP',
+	'REMOTE_STORAGE_SFTP_USERNAME' => 'Nome de usuário',
+	'REMOTE_STORAGE_SFTP_PASSWORD' => 'Senha',
+	'REMOTE_STORAGE_SFTP_HOST_FINGERPRINT' => 'Fingerprint SHA-1 do servidor',
+	'REMOTE_STORAGE_SFTP_HOST_FINGERPRINT_EXPLAIN' => 'Fingerprint fixa da chave SSH. Uma divergência é rejeitada antes da autenticação.',
+	'REMOTE_STORAGE_SFTP_ROOT' => 'Raiz remota privada',
+	'REMOTE_STORAGE_SFTP_ROOT_EXPLAIN' => 'Diretório absoluto reservado aos arquivos da Galeria. Não pode ser servido publicamente pelo host remoto.',
 ]);

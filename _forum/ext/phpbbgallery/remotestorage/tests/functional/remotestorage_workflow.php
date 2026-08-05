@@ -9,7 +9,7 @@
 
 namespace phpbbgallery\remotestorage\tests\functional;
 
-/** Exercise local, MinIO and Azurite storage migrations and delivery. */
+/** Exercise local, MinIO, Azurite and SFTP storage migrations and delivery. */
 class remotestorage_workflow extends \phpbb_functional_test_case
 {
 	private const ENDPOINT = 'http://127.0.0.1:9000';
@@ -21,6 +21,11 @@ class remotestorage_workflow extends \phpbb_functional_test_case
 	private const AZURE_ACCOUNT = 'devstoreaccount1';
 	private const AZURE_CONTAINER = 'phpbbgallery-functional';
 	private const AZURE_ACCOUNT_KEY = 'Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==';
+	private const SFTP_HOST = '127.0.0.1';
+	private const SFTP_PORT = '2222';
+	private const SFTP_USERNAME = 'gallery';
+	private const SFTP_PASSWORD = 'gallery-functional-secret';
+	private const SFTP_ROOT = '/storage/phpbbgallery';
 
 	protected static function setup_extensions(): array
 	{
@@ -71,6 +76,9 @@ class remotestorage_workflow extends \phpbb_functional_test_case
 		$this->migrate($module_id, 'azure');
 		$this->assertSame('azure', $this->config_value('phpbb_gallery_storage_provider'));
 		$this->assert_remote_source($album_id, $image_id, $original, $phpbb_root_path);
+		$this->migrate($module_id, 'sftp');
+		$this->assertSame('sftp', $this->config_value('phpbb_gallery_storage_provider'));
+		$this->assert_remote_source($album_id, $image_id, $original, $phpbb_root_path);
 
 		$this->migrate($module_id, 'local');
 		$this->assertSame('local', $this->config_value('phpbb_gallery_storage_provider'));
@@ -105,6 +113,21 @@ class remotestorage_workflow extends \phpbb_functional_test_case
 			'container' => self::AZURE_CONTAINER,
 			'account_key' => self::AZURE_ACCOUNT_KEY,
 			'prefix' => self::PREFIX,
+		]);
+		$this->assertStringContainsString(
+			$this->lang('REMOTE_STORAGE_SETTINGS_SAVED'),
+			$crawler->filter('body')->text()
+		);
+
+		$crawler = self::request('GET', $this->module_url($module_id));
+		$form = $crawler->selectButton('save_sftp')->form();
+		$crawler = self::submit($form, [
+			'host' => self::SFTP_HOST,
+			'port' => self::SFTP_PORT,
+			'username' => self::SFTP_USERNAME,
+			'password' => self::SFTP_PASSWORD,
+			'host_fingerprint' => '',
+			'root' => self::SFTP_ROOT,
 		]);
 		$this->assertStringContainsString(
 			$this->lang('REMOTE_STORAGE_SETTINGS_SAVED'),

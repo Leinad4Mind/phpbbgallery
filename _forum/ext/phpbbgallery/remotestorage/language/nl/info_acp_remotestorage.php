@@ -54,4 +54,13 @@ $lang = array_merge($lang, [
 	'REMOTE_STORAGE_LOCAL' => 'Lokale serveropslag',
 	'REMOTE_STORAGE_MIGRATION_TARGET' => 'Doelprovider',
 	'REMOTE_STORAGE_MIGRATION_TARGET_INVALID' => 'De geselecteerde doelprovider is ongeldig of al actief.',
+	'REMOTE_STORAGE_SFTP_SETTINGS' => 'Beveiligde SFTP-verbinding',
+	'REMOTE_STORAGE_SFTP_HOST' => 'SFTP-server',
+	'REMOTE_STORAGE_SFTP_PORT' => 'SFTP-serverpoort',
+	'REMOTE_STORAGE_SFTP_USERNAME' => 'Gebruikersnaam',
+	'REMOTE_STORAGE_SFTP_PASSWORD' => 'Wachtwoord',
+	'REMOTE_STORAGE_SFTP_HOST_FINGERPRINT' => 'SHA-1-hostvingerafdruk',
+	'REMOTE_STORAGE_SFTP_HOST_FINGERPRINT_EXPLAIN' => 'Vastgelegde vingerafdruk van de SSH-hostsleutel. Afwijkingen worden voor authenticatie geweigerd.',
+	'REMOTE_STORAGE_SFTP_ROOT' => 'Persoonlijke externe hoofdmap',
+	'REMOTE_STORAGE_SFTP_ROOT_EXPLAIN' => 'Absolute map uitsluitend voor galerijbestanden. Deze mag niet openbaar worden aangeboden.',
 ]);

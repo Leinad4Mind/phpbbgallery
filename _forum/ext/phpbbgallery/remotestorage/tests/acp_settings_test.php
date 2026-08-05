@@ -97,6 +97,21 @@ final class acp_settings_test extends TestCase
 		$this->assertStringContainsString('{ name: phpbbgallery.storage.provider_factory }', $services);
 	}
 
+	public function test_sftp_migration_registers_optional_pinned_host_configuration(): void
+	{
+		$migration = (string) file_get_contents(dirname(__DIR__) . '/migrations/m4_sftp.php');
+		$services = (string) file_get_contents(dirname(__DIR__) . '/config/services.yml');
+		$composer = json_decode((string) file_get_contents(dirname(__DIR__) . '/composer.json'), true, 512, JSON_THROW_ON_ERROR);
+
+		$this->assertStringContainsString('m3_azure_blob', $migration);
+		foreach (['host', 'port', 'username', 'password', 'host_fingerprint', 'root'] as $field)
+		{
+			$this->assertStringContainsString('phpbb_gallery_sftp_' . $field, $migration);
+		}
+		$this->assertStringContainsString('phpbbgallery.remotestorage.provider_factory.sftp:', $services);
+		$this->assertSame('Required only when the SFTP provider is selected', $composer['suggest']['ext-ssh2']);
+	}
+
 	public function test_all_gallery_language_catalogues_have_identical_keys_and_placeholders(): void
 	{
 		$english = $this->language(dirname(__DIR__) . '/language/en/info_acp_remotestorage.php');
