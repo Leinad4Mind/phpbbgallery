@@ -13,6 +13,7 @@ use phpbbgallery\core\storage\provider_interface;
 use phpbbgallery\remotestorage\http\client_interface;
 use phpbbgallery\remotestorage\http\response;
 use phpbbgallery\remotestorage\s3\configuration;
+use phpbbgallery\remotestorage\s3\configured_factory;
 use phpbbgallery\remotestorage\s3\factory;
 use phpbbgallery\remotestorage\s3\provider;
 use phpbbgallery\remotestorage\s3\signer;
@@ -218,6 +219,35 @@ final class s3_provider_test extends TestCase
 
 		$this->expectException(\InvalidArgumentException::class);
 		(new factory(new fake_http_client(), []))->create();
+	}
+
+	public function test_configured_factory_can_test_submitted_values_without_persisting_them(): void
+	{
+		$config = new \ArrayObject([
+			'phpbb_gallery_s3_endpoint' => '',
+			'phpbb_gallery_s3_bucket' => '',
+			'phpbb_gallery_s3_access_key' => '',
+			'phpbb_gallery_s3_secret_key' => '',
+			'phpbb_gallery_s3_region' => 'us-east-1',
+			'phpbb_gallery_s3_prefix' => 'phpbbgallery',
+		]);
+		$client = new fake_http_client();
+		$client->responses[] = new response(404);
+		$provider = (new configured_factory($client, $config, []))->create_from([
+			'endpoint' => 'https://submitted.example',
+			'bucket' => 'submitted-bucket',
+			'access_key' => 'access',
+			'secret_key' => 'secret',
+			'region' => 'eu-west-1',
+			'prefix' => 'submitted',
+		]);
+
+		$this->assertFalse($provider->exists(provider_interface::SOURCE, 'image.jpg'));
+		$this->assertSame(
+			'https://submitted.example/submitted-bucket/submitted/source/image.jpg',
+			$client->requests[0]['url']
+		);
+		$this->assertSame('', $config['phpbb_gallery_s3_endpoint']);
 	}
 
 	private function provider(fake_http_client $client): provider

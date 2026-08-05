@@ -2,11 +2,15 @@ services:
     phpbbgallery.remotestorage.http:
         class: phpbbgallery\remotestorage\http\guzzle_client
 
-    phpbbgallery.remotestorage.s3.factory:
-        class: phpbbgallery\remotestorage\s3\factory
+    phpbbgallery.remotestorage.s3.builder:
+        class: phpbbgallery\remotestorage\s3\configured_factory
         arguments:
             - '@phpbbgallery.remotestorage.http'
+            - '@config'
+
+    phpbbgallery.remotestorage.connection_tester:
+        class: phpbbgallery\remotestorage\connection_tester
 
     phpbbgallery.storage.provider.s3:
         class: phpbbgallery\remotestorage\s3\provider
-        factory: ['@phpbbgallery.remotestorage.s3.factory', create]
+        factory: ['@phpbbgallery.remotestorage.s3.builder', create]

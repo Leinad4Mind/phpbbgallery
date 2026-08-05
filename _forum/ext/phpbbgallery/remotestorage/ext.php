@@ -21,14 +21,14 @@ class ext extends \phpbb\extension\base
 		}
 		if (!$manager->is_enabled('phpbbgallery/core'))
 		{
-			$user->add_lang_ext('phpbbgallery/remotestorage', 'info_remotestorage');
+			$user->add_lang_ext('phpbbgallery/remotestorage', 'info_acp_remotestorage');
 			trigger_error($user->lang('GALLERY_CORE_NOT_FOUND'), E_USER_WARNING);
 
 			return false;
 		}
 		if (!class_exists(\GuzzleHttp\Client::class) || !function_exists('simplexml_load_string'))
 		{
-			$user->add_lang_ext('phpbbgallery/remotestorage', 'info_remotestorage');
+			$user->add_lang_ext('phpbbgallery/remotestorage', 'info_acp_remotestorage');
 			trigger_error($user->lang('REMOTE_STORAGE_REQUIREMENTS_MISSING'), E_USER_WARNING);
 
 			return false;

@@ -1,0 +1,59 @@
+{% include 'overall_header.html' %}
+
+<h1>{{ lang('ACP_GALLERY_REMOTE_STORAGE') }}</h1>
+<p>{{ lang('ACP_GALLERY_REMOTE_STORAGE_EXPLAIN') }}</p>
+
+<div class="successbox notice">
+	<p>{{ lang('REMOTE_STORAGE_ACTIVE_PROVIDER', ACTIVE_PROVIDER) }}</p>
+</div>
+
+{% if environment_overrides %}
+<div class="errorbox notice">
+	<p>{{ lang('REMOTE_STORAGE_ENVIRONMENT_OVERRIDES') }}</p>
+	<ul>
+		{% for variable in environment_overrides %}
+			<li><code>{{ variable.NAME }}</code></li>
+		{% endfor %}
+	</ul>
+</div>
+{% endif %}
+
+<form id="remotestorage_settings" method="post" action="{{ U_ACTION }}">
+	<fieldset>
+		<legend>{{ lang('REMOTE_STORAGE_S3_SETTINGS') }}</legend>
+		<dl>
+			<dt><label for="endpoint">{{ lang('REMOTE_STORAGE_S3_ENDPOINT') }}</label><br><span>{{ lang('REMOTE_STORAGE_S3_ENDPOINT_EXPLAIN') }}</span></dt>
+			<dd><input class="text long" type="url" maxlength="255" name="endpoint" id="endpoint" value="{{ S3_ENDPOINT }}" required></dd>
+		</dl>
+		<dl>
+			<dt><label for="bucket">{{ lang('REMOTE_STORAGE_S3_BUCKET') }}</label></dt>
+			<dd><input class="text medium" type="text" maxlength="63" name="bucket" id="bucket" value="{{ S3_BUCKET }}" required></dd>
+		</dl>
+		<dl>
+			<dt><label for="region">{{ lang('REMOTE_STORAGE_S3_REGION') }}</label><br><span>{{ lang('REMOTE_STORAGE_S3_REGION_EXPLAIN') }}</span></dt>
+			<dd><input class="text medium" type="text" maxlength="64" name="region" id="region" value="{{ S3_REGION }}" required></dd>
+		</dl>
+		<dl>
+			<dt><label for="prefix">{{ lang('REMOTE_STORAGE_S3_PREFIX') }}</label><br><span>{{ lang('REMOTE_STORAGE_S3_PREFIX_EXPLAIN') }}</span></dt>
+			<dd><input class="text medium" type="text" maxlength="255" name="prefix" id="prefix" value="{{ S3_PREFIX }}" required></dd>
+		</dl>
+		<dl>
+			<dt><label for="access_key">{{ lang('REMOTE_STORAGE_S3_ACCESS_KEY') }}</label></dt>
+			<dd><input class="text long" type="text" maxlength="255" name="access_key" id="access_key" value="{{ S3_ACCESS_KEY }}" autocomplete="off" required></dd>
+		</dl>
+		<dl>
+			<dt><label for="secret_key">{{ lang('REMOTE_STORAGE_S3_SECRET_KEY') }}</label><br><span>{% if S_SECRET_CONFIGURED %}{{ lang('REMOTE_STORAGE_SECRET_RETAINED') }}{% else %}{{ lang('REMOTE_STORAGE_SECRET_REQUIRED') }}{% endif %}</span></dt>
+			<dd><input class="text long" type="password" maxlength="255" name="secret_key" id="secret_key" value="" autocomplete="new-password"{% if not S_SECRET_CONFIGURED %} required{% endif %}></dd>
+		</dl>
+	</fieldset>
+	<fieldset class="submit-buttons">
+		<input class="button1" type="submit" name="save" value="{{ lang('REMOTE_STORAGE_TEST_AND_SAVE') }}">
+		{{ S_FORM_TOKEN }}
+	</fieldset>
+</form>
+
+<div class="errorbox notice">
+	<p>{{ lang('REMOTE_STORAGE_NOT_ACTIVE_UNTIL_MIGRATION') }}</p>
+</div>
+
+{% include 'overall_footer.html' %}
