@@ -35,3 +35,6 @@
 /contest/phpunit.xml.dist export-ignore
 /contest/tests export-ignore
 /contest/tests/** export-ignore
+/remotestorage/phpunit.xml.dist export-ignore
+/remotestorage/tests export-ignore
+/remotestorage/tests/** export-ignore

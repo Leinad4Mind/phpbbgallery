@@ -26,6 +26,7 @@ final class package_builder
 		'favorite',
 		'feed',
 		'imagerevisions',
+		'remotestorage',
 	];
 
 	private string $repository_root;
