@@ -19,6 +19,7 @@ final class connection_tester_test extends TestCase
 	{
 		$stored = null;
 		$provider = $this->createMock(provider_interface::class);
+		$provider->expects($this->once())->method('prepare')->willReturn(true);
 		$provider->expects($this->once())->method('list_objects')->willReturn(['keys' => [], 'cursor' => null]);
 		$provider->expects($this->once())->method('write')->willReturnCallback(
 			static function (string $variant, string $key, string $file) use (&$stored): bool
@@ -59,6 +60,7 @@ final class connection_tester_test extends TestCase
 	public function test_failed_verification_still_removes_the_test_object(): void
 	{
 		$provider = $this->createMock(provider_interface::class);
+		$provider->method('prepare')->willReturn(true);
 		$provider->method('list_objects')->willReturn(['keys' => [], 'cursor' => null]);
 		$provider->method('write')->willReturn(true);
 		$provider->method('size')->willReturn(0);

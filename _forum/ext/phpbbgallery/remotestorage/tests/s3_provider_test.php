@@ -233,7 +233,8 @@ final class s3_provider_test extends TestCase
 		]);
 		$client = new fake_http_client();
 		$client->responses[] = new response(404);
-		$provider = (new configured_factory($client, $config, []))->create_from([
+		$request = $this->createMock(\phpbb\request\request_interface::class);
+		$provider = (new configured_factory($client, $config, $request, []))->create_from([
 			'endpoint' => 'https://submitted.example',
 			'bucket' => 'submitted-bucket',
 			'access_key' => 'access',

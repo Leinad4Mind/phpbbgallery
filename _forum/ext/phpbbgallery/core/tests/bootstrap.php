@@ -274,6 +274,7 @@ namespace
 	require_once dirname(__DIR__) . '/file/file.php';
 	require_once dirname(__DIR__) . '/file/types/multiform.php';
 	require_once dirname(__DIR__) . '/storage/provider_interface.php';
+	require_once dirname(__DIR__) . '/storage/provider_factory_interface.php';
 	require_once dirname(__DIR__) . '/storage/key_generator.php';
 	require_once dirname(__DIR__) . '/storage/local_provider.php';
 	require_once dirname(__DIR__) . '/storage/active_provider.php';

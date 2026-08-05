@@ -202,11 +202,17 @@ services:
             - '%phpbbgallery.core.file.source%'
             - '%phpbbgallery.core.file.medium%'
             - '%phpbbgallery.core.file.mini%'
+    phpbbgallery.core.storage.provider_factory_collection:
+        class: phpbb\di\service_collection
+        arguments:
+            - '@service_container'
+        tags:
+            - { name: service_collection, tag: phpbbgallery.storage.provider_factory }
     phpbbgallery.core.storage.active:
         class: phpbbgallery\core\storage\active_provider
         arguments:
             - '@phpbbgallery.core.config'
-            - '@service_container'
+            - '@phpbbgallery.core.storage.provider_factory_collection'
             - '@phpbbgallery.core.storage.local'
             - '@phpbbgallery.core.storage.variant_key'
     phpbbgallery.core.storage.workspace:

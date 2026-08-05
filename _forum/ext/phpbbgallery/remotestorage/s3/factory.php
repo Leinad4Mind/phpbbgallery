@@ -15,11 +15,11 @@ use phpbbgallery\remotestorage\http\client_interface;
 final class factory
 {
 	private client_interface $client;
-	/** @var array<string, string>|null */
-	private ?array $environment;
+	/** @var array<string, string> */
+	private array $environment;
 
-	/** @param array<string, string>|null $environment */
-	public function __construct(client_interface $client, ?array $environment = null)
+	/** @param array<string, string> $environment */
+	public function __construct(client_interface $client, array $environment)
 	{
 		$this->client = $client;
 		$this->environment = $environment;
@@ -43,12 +43,6 @@ final class factory
 
 	private function value(string $name, string $default = ''): string
 	{
-		if ($this->environment !== null)
-		{
-			return trim((string) ($this->environment[$name] ?? $default));
-		}
-		$value = getenv($name);
-
-		return $value === false ? $default : trim($value);
+		return trim((string) ($this->environment[$name] ?? $default));
 	}
 }

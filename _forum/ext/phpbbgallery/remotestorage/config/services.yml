@@ -4,6 +4,7 @@ imports:
 parameters:
     phpbbgallery.remotestorage.provider_ids:
         - s3
+        - azure
 
 services:
     phpbbgallery.remotestorage.http:
@@ -14,6 +15,18 @@ services:
         arguments:
             - '@phpbbgallery.remotestorage.http'
             - '@config'
+            - '@request'
+        tags:
+            - { name: phpbbgallery.storage.provider_factory }
+
+    phpbbgallery.remotestorage.provider_factory.azure:
+        class: phpbbgallery\remotestorage\azure\configured_factory
+        arguments:
+            - '@phpbbgallery.remotestorage.http'
+            - '@config'
+            - '@request'
+        tags:
+            - { name: phpbbgallery.storage.provider_factory }
 
     phpbbgallery.remotestorage.connection_tester:
         class: phpbbgallery\remotestorage\connection_tester
@@ -38,7 +51,3 @@ services:
             - '@phpbbgallery.remotestorage.migration.provider_resolver'
             - '@phpbbgallery.remotestorage.migration.state_store'
             - '%core.cache_dir%phpbbgallery/remote-migration/'
-
-    phpbbgallery.storage.provider.s3:
-        class: phpbbgallery\remotestorage\s3\provider
-        factory: ['@phpbbgallery.remotestorage.provider_factory.s3', create]

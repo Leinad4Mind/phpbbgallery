@@ -45,7 +45,8 @@ final class acp_settings_test extends TestCase
 
 		$this->assertStringContainsString('phpbbgallery.remotestorage.provider_ids:', $services);
 		$this->assertStringContainsString('phpbbgallery.remotestorage.provider_factory.s3:', $services);
-		$this->assertStringContainsString('factory(\'s3\')', $module);
+		$this->assertStringContainsString('factory($save_provider)', $module);
+		$this->assertStringContainsString('factory($target_provider)', $module);
 		$this->assertStringNotContainsString('phpbbgallery.remotestorage.s3.builder', $services . $module);
 	}
 
@@ -74,10 +75,26 @@ final class acp_settings_test extends TestCase
 		$template = (string) file_get_contents(dirname(__DIR__) . '/adm/style/remotestorage_settings.html');
 		$module = (string) file_get_contents(dirname(__DIR__) . '/acp/main_module.php');
 
-		$this->assertStringContainsString('type="password"', $template);
-		$this->assertStringContainsString('value=""', $template);
+		$this->assertStringContainsString('type="{{ field.TYPE }}"', $template);
+		$this->assertStringContainsString('value="{{ field.VALUE }}"', $template);
+		$this->assertStringContainsString('$definition[', $module);
 		$this->assertStringNotContainsString('{{ S3_SECRET_KEY }}', $template);
 		$this->assertStringNotContainsString("'S3_SECRET_KEY' =>", $module);
+	}
+
+	public function test_azure_migration_registers_private_provider_configuration(): void
+	{
+		$migration = (string) file_get_contents(dirname(__DIR__) . '/migrations/m3_azure_blob.php');
+		$services = (string) file_get_contents(dirname(__DIR__) . '/config/services.yml');
+
+		$this->assertStringContainsString('m2_provider_migration', $migration);
+		foreach (['endpoint', 'account', 'container', 'account_key', 'prefix'] as $field)
+		{
+			$this->assertStringContainsString('phpbb_gallery_azure_' . $field, $migration);
+		}
+		$this->assertStringContainsString('phpbbgallery.remotestorage.provider_factory.azure:', $services);
+		$this->assertStringContainsString('phpbbgallery.remotestorage.provider_factory.azure:', $services);
+		$this->assertStringContainsString('{ name: phpbbgallery.storage.provider_factory }', $services);
 	}
 
 	public function test_all_gallery_language_catalogues_have_identical_keys_and_placeholders(): void

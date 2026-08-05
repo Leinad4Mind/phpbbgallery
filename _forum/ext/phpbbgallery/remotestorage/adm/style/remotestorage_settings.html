@@ -37,7 +37,15 @@
 	{% elseif S_MIGRATION_CAN_START %}
 		<p>{{ lang('REMOTE_STORAGE_MIGRATION_EXPLAIN') }}</p>
 		<form method="post" action="{{ U_ACTION }}">
-			<p class="submit-buttons"><input class="button1" type="submit" name="start_migration" value="{{ lang('REMOTE_STORAGE_MIGRATION_TO', MIGRATION_NEXT_TARGET) }}"></p>
+			<dl>
+				<dt><label for="target_provider">{{ lang('REMOTE_STORAGE_MIGRATION_TARGET') }}</label></dt>
+				<dd>
+					<select name="target_provider" id="target_provider">
+						{% for target in migration_targets %}<option value="{{ target.ID }}">{{ target.NAME }}</option>{% endfor %}
+					</select>
+				</dd>
+			</dl>
+			<p class="submit-buttons"><input class="button1" type="submit" name="start_migration" value="{{ lang('REMOTE_STORAGE_MIGRATION_START') }}"></p>
 			{{ S_FORM_TOKEN }}
 		</form>
 	{% endif %}
@@ -54,39 +62,27 @@
 </div>
 {% endif %}
 
-<form id="remotestorage_settings" method="post" action="{{ U_ACTION }}">
+{% for provider in providers %}
+<form id="remotestorage_settings_{{ provider.ID }}" method="post" action="{{ U_ACTION }}">
 	<fieldset>
-		<legend>{{ lang('REMOTE_STORAGE_S3_SETTINGS') }}</legend>
-		<dl>
-			<dt><label for="endpoint">{{ lang('REMOTE_STORAGE_S3_ENDPOINT') }}</label><br><span>{{ lang('REMOTE_STORAGE_S3_ENDPOINT_EXPLAIN') }}</span></dt>
-			<dd><input class="text long" type="url" maxlength="255" name="endpoint" id="endpoint" value="{{ S3_ENDPOINT }}" required></dd>
-		</dl>
-		<dl>
-			<dt><label for="bucket">{{ lang('REMOTE_STORAGE_S3_BUCKET') }}</label></dt>
-			<dd><input class="text medium" type="text" maxlength="63" name="bucket" id="bucket" value="{{ S3_BUCKET }}" required></dd>
-		</dl>
-		<dl>
-			<dt><label for="region">{{ lang('REMOTE_STORAGE_S3_REGION') }}</label><br><span>{{ lang('REMOTE_STORAGE_S3_REGION_EXPLAIN') }}</span></dt>
-			<dd><input class="text medium" type="text" maxlength="64" name="region" id="region" value="{{ S3_REGION }}" required></dd>
-		</dl>
-		<dl>
-			<dt><label for="prefix">{{ lang('REMOTE_STORAGE_S3_PREFIX') }}</label><br><span>{{ lang('REMOTE_STORAGE_S3_PREFIX_EXPLAIN') }}</span></dt>
-			<dd><input class="text medium" type="text" maxlength="255" name="prefix" id="prefix" value="{{ S3_PREFIX }}" required></dd>
-		</dl>
-		<dl>
-			<dt><label for="access_key">{{ lang('REMOTE_STORAGE_S3_ACCESS_KEY') }}</label></dt>
-			<dd><input class="text long" type="text" maxlength="255" name="access_key" id="access_key" value="{{ S3_ACCESS_KEY }}" autocomplete="off" required></dd>
-		</dl>
-		<dl>
-			<dt><label for="secret_key">{{ lang('REMOTE_STORAGE_S3_SECRET_KEY') }}</label><br><span>{% if S_SECRET_CONFIGURED %}{{ lang('REMOTE_STORAGE_SECRET_RETAINED') }}{% else %}{{ lang('REMOTE_STORAGE_SECRET_REQUIRED') }}{% endif %}</span></dt>
-			<dd><input class="text long" type="password" maxlength="255" name="secret_key" id="secret_key" value="" autocomplete="new-password"{% if not S_SECRET_CONFIGURED %} required{% endif %}></dd>
-		</dl>
+		<legend>{{ provider.NAME }}</legend>
+		{% for field in provider.fields %}
+			<dl>
+				<dt>
+					<label for="{{ provider.ID }}_{{ field.NAME }}">{{ field.LABEL }}</label>
+					{% if field.EXPLAIN %}<br><span>{{ field.EXPLAIN }}</span>{% endif %}
+					{% if field.S_SECRET %}<br><span>{{ lang(field.S_SECRET_CONFIGURED ? 'REMOTE_STORAGE_SECRET_RETAINED' : 'REMOTE_STORAGE_SECRET_REQUIRED') }}</span>{% endif %}
+				</dt>
+				<dd><input class="text long" type="{{ field.TYPE }}" maxlength="{{ field.MAXLENGTH }}" name="{{ field.NAME }}" id="{{ provider.ID }}_{{ field.NAME }}" value="{{ field.VALUE }}"{% if field.S_SECRET %} autocomplete="new-password"{% else %} autocomplete="off"{% endif %}{% if field.S_REQUIRED and not field.S_OVERRIDDEN and (not field.S_SECRET or not field.S_SECRET_CONFIGURED) %} required{% endif %}></dd>
+			</dl>
+		{% endfor %}
 	</fieldset>
 	<fieldset class="submit-buttons">
-		<input class="button1" type="submit" name="save" value="{{ lang('REMOTE_STORAGE_TEST_AND_SAVE') }}"{% if S_MIGRATION_ACTIVE %} disabled{% endif %}>
+		<input class="button1" type="submit" name="save_{{ provider.ID }}" value="{{ lang('REMOTE_STORAGE_TEST_AND_SAVE') }}"{% if S_MIGRATION_ACTIVE %} disabled{% endif %}>
 		{{ S_FORM_TOKEN }}
 	</fieldset>
 </form>
+{% endfor %}
 
 <div class="errorbox notice">
 	<p>{{ lang('REMOTE_STORAGE_NOT_ACTIVE_UNTIL_MIGRATION') }}</p>

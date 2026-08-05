@@ -24,6 +24,11 @@ if (!interface_exists(\Symfony\Component\DependencyInjection\ContainerInterface:
 	require_once dirname(__DIR__, 4) . '/vendor/symfony/dependency-injection/ContainerInterface.php';
 }
 
+if (!interface_exists(\phpbb\request\request_interface::class))
+{
+	require_once dirname(__DIR__, 4) . '/phpbb/request/request_interface.php';
+}
+
 spl_autoload_register(static function (string $class_name): void
 {
 	$prefix = 'Twig\\';
@@ -44,6 +49,7 @@ spl_autoload_register(static function (string $class_name): void
 
 require_once dirname(__DIR__) . '/s3/signer.php';
 require_once dirname(__DIR__, 2) . '/core/storage/provider_interface.php';
+require_once dirname(__DIR__, 2) . '/core/storage/provider_factory_interface.php';
 require_once dirname(__DIR__, 2) . '/core/storage/local_provider.php';
 require_once dirname(__DIR__) . '/s3/configuration.php';
 require_once dirname(__DIR__) . '/http/response.php';
@@ -52,6 +58,11 @@ require_once dirname(__DIR__) . '/configured_provider_factory_interface.php';
 require_once dirname(__DIR__) . '/s3/provider.php';
 require_once dirname(__DIR__) . '/s3/factory.php';
 require_once dirname(__DIR__) . '/s3/configured_factory.php';
+require_once dirname(__DIR__) . '/azure/configuration.php';
+require_once dirname(__DIR__) . '/azure/signer.php';
+require_once dirname(__DIR__) . '/azure/provider.php';
+require_once dirname(__DIR__) . '/azure/factory.php';
+require_once dirname(__DIR__) . '/azure/configured_factory.php';
 require_once dirname(__DIR__) . '/connection_tester.php';
 require_once dirname(__DIR__) . '/migration/provider_resolver_interface.php';
 require_once dirname(__DIR__) . '/migration/provider_resolver.php';

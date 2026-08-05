@@ -295,7 +295,23 @@ jobs:
           AWS_DEFAULT_REGION=us-east-1 \
             aws --endpoint-url 'http://127.0.0.1:9000' s3 mb 's3://phpbbgallery-functional'
 
-      - name: Run Gallery Remote Storage MinIO workflow test
+      - name: Start Azurite Blob service
+        shell: bash
+        run: |
+          docker run --detach --name phpbbgallery-azurite \
+            --publish 10000:10000 \
+            mcr.microsoft.com/azure-storage/azurite@sha256:37493d0f2e764467421ffe16eb3caa39277e5fa7f6adea18eb5bbfb3c5247f98 \
+            azurite-blob --blobHost 0.0.0.0
+
+          for attempt in {1..30}; do
+            if curl --silent --output /dev/null 'http://127.0.0.1:10000/devstoreaccount1'; then
+              break
+            fi
+            sleep 1
+          done
+          curl --silent --output /dev/null 'http://127.0.0.1:10000/devstoreaccount1'
+
+      - name: Run Gallery Remote Storage MinIO and Azurite workflow test
         shell: bash
         working-directory: .functional/phpBB3
         run: >-

@@ -9,29 +9,29 @@
 
 namespace phpbbgallery\core\storage;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
-
 /** Resolve and proxy the storage provider selected in the Gallery configuration. */
 class active_provider implements provider_interface
 {
-	private const SERVICE_PREFIX = 'phpbbgallery.storage.provider.';
-
 	private \phpbbgallery\core\config $config;
-	private ContainerInterface $container;
+	/** @var iterable<provider_factory_interface> */
+	private iterable $provider_factory_collection;
 	private local_provider $local;
 	private variant_key $variant_key;
 	/** @var array<string, provider_interface> */
 	private array $providers = [];
+	/** @var array<string, provider_factory_interface> */
+	private array $provider_factories = [];
+	private bool $provider_factories_loaded = false;
 
 	public function __construct(
 		\phpbbgallery\core\config $config,
-		ContainerInterface $container,
+		iterable $provider_factory_collection,
 		local_provider $local,
 		?variant_key $variant_key = null
 	)
 	{
 		$this->config = $config;
-		$this->container = $container;
+		$this->provider_factory_collection = $provider_factory_collection;
 		$this->local = $local;
 		$this->variant_key = $variant_key ?? new variant_key();
 	}
@@ -162,19 +162,49 @@ class active_provider implements provider_interface
 			return $this->providers[$provider_id] = $this->local;
 		}
 
-		$service_id = self::SERVICE_PREFIX . $provider_id;
-		if (!$this->container->has($service_id))
+		$this->load_provider_factories();
+		if (!isset($this->provider_factories[$provider_id]))
 		{
 			throw new \RuntimeException('The configured Gallery storage provider is not available: ' . $provider_id);
 		}
 
-		$provider = $this->container->get($service_id);
-		if (!$provider instanceof provider_interface || $provider->get_id() !== $provider_id)
+		$provider = $this->provider_factories[$provider_id]->create();
+		if ($provider->get_id() !== $provider_id)
 		{
-			throw new \RuntimeException('The configured Gallery storage provider service is incompatible: ' . $provider_id);
+			throw new \RuntimeException('The configured Gallery storage provider factory returned an incompatible provider.');
 		}
 
 		return $this->providers[$provider_id] = $provider;
+	}
+
+	private function load_provider_factories(): void
+	{
+		if ($this->provider_factories_loaded)
+		{
+			return;
+		}
+
+		foreach ($this->provider_factory_collection as $factory)
+		{
+			if (!$factory instanceof provider_factory_interface)
+			{
+				throw new \RuntimeException('A registered Gallery storage provider factory is incompatible.');
+			}
+
+			$provider_id = strtolower(trim($factory->get_id()));
+			if ($provider_id === 'local' || preg_match('/^[a-z][a-z0-9_.-]{0,63}$/D', $provider_id) !== 1)
+			{
+				throw new \RuntimeException('A registered Gallery storage provider identifier is invalid.');
+			}
+			if (isset($this->provider_factories[$provider_id]))
+			{
+				throw new \RuntimeException('A Gallery storage provider identifier is registered more than once: ' . $provider_id);
+			}
+
+			$this->provider_factories[$provider_id] = $factory;
+		}
+
+		$this->provider_factories_loaded = true;
 	}
 
 	private function migration_peer(provider_interface $primary): ?provider_interface

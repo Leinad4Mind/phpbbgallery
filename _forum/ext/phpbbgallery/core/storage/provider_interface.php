@@ -14,7 +14,7 @@ namespace phpbbgallery\core\storage;
  *
  * Providers receive opaque, validated keys. They must never make stored objects
  * publicly accessible without passing through the Gallery authorization layer.
- * Add-ons expose non-local providers as phpbbgallery.storage.provider.PROVIDER_ID.
+ * Add-ons register factories with the phpbbgallery.storage.provider_factory service tag.
  */
 interface provider_interface
 {

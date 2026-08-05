@@ -9,7 +9,7 @@
 
 namespace phpbbgallery\remotestorage\tests\functional;
 
-/** Exercise a complete local to MinIO to local storage migration. */
+/** Exercise local, MinIO and Azurite storage migrations and delivery. */
 class remotestorage_workflow extends \phpbb_functional_test_case
 {
 	private const ENDPOINT = 'http://127.0.0.1:9000';
@@ -17,6 +17,10 @@ class remotestorage_workflow extends \phpbb_functional_test_case
 	private const ACCESS_KEY = 'phpbbgallery';
 	private const SECRET_KEY = 'phpbbgallery-functional-secret';
 	private const PREFIX = 'functional-board';
+	private const AZURE_ENDPOINT = 'http://127.0.0.1:10000/devstoreaccount1';
+	private const AZURE_ACCOUNT = 'devstoreaccount1';
+	private const AZURE_CONTAINER = 'phpbbgallery-functional';
+	private const AZURE_ACCOUNT_KEY = 'Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==';
 
 	protected static function setup_extensions(): array
 	{
@@ -47,7 +51,7 @@ class remotestorage_workflow extends \phpbb_functional_test_case
 		$this->logout();
 	}
 
-	public function test_minio_migration_delivery_and_temporary_cleanup(): void
+	public function test_remote_provider_migration_delivery_and_temporary_cleanup(): void
 	{
 		global $phpbb_root_path;
 
@@ -55,7 +59,7 @@ class remotestorage_workflow extends \phpbb_functional_test_case
 		$this->login();
 		$this->admin_login();
 		$module_id = $this->module_id();
-		$this->save_connection($module_id);
+		$this->save_connections($module_id);
 
 		[$album_id, $image_id, $filename, $original] = $this->create_remote_image($phpbb_root_path);
 		$this->migrate($module_id, 's3');
@@ -63,6 +67,9 @@ class remotestorage_workflow extends \phpbb_functional_test_case
 
 		$this->remove_local_variants($phpbb_root_path, $filename);
 		$this->assertSame(0, $this->workspace_file_count($phpbb_root_path));
+		$this->assert_remote_source($album_id, $image_id, $original, $phpbb_root_path);
+		$this->migrate($module_id, 'azure');
+		$this->assertSame('azure', $this->config_value('phpbb_gallery_storage_provider'));
 		$this->assert_remote_source($album_id, $image_id, $original, $phpbb_root_path);
 
 		$this->migrate($module_id, 'local');
@@ -73,10 +80,10 @@ class remotestorage_workflow extends \phpbb_functional_test_case
 		}
 	}
 
-	private function save_connection(int $module_id): void
+	private function save_connections(int $module_id): void
 	{
 		$crawler = self::request('GET', $this->module_url($module_id));
-		$form = $crawler->selectButton('save')->form();
+		$form = $crawler->selectButton('save_s3')->form();
 		$crawler = self::submit($form, [
 			'endpoint' => self::ENDPOINT,
 			'bucket' => self::BUCKET,
@@ -89,13 +96,27 @@ class remotestorage_workflow extends \phpbb_functional_test_case
 			$this->lang('REMOTE_STORAGE_SETTINGS_SAVED'),
 			$crawler->filter('body')->text()
 		);
+
+		$crawler = self::request('GET', $this->module_url($module_id));
+		$form = $crawler->selectButton('save_azure')->form();
+		$crawler = self::submit($form, [
+			'endpoint' => self::AZURE_ENDPOINT,
+			'account' => self::AZURE_ACCOUNT,
+			'container' => self::AZURE_CONTAINER,
+			'account_key' => self::AZURE_ACCOUNT_KEY,
+			'prefix' => self::PREFIX,
+		]);
+		$this->assertStringContainsString(
+			$this->lang('REMOTE_STORAGE_SETTINGS_SAVED'),
+			$crawler->filter('body')->text()
+		);
 	}
 
 	private function migrate(int $module_id, string $target): void
 	{
 		$crawler = self::request('GET', $this->module_url($module_id));
 		$form = $crawler->selectButton('start_migration')->form();
-		$crawler = self::submit($form);
+		$crawler = self::submit($form, ['target_provider' => $target]);
 		$form = $crawler->selectButton($this->lang('YES'))->form();
 		$crawler = self::submit($form);
 

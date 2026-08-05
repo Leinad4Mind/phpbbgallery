@@ -9,6 +9,7 @@
 
 namespace phpbbgallery\remotestorage\s3;
 
+use phpbb\request\request_interface;
 use phpbbgallery\remotestorage\http\client_interface;
 use phpbbgallery\remotestorage\configured_provider_factory_interface;
 
@@ -30,7 +31,12 @@ final class configured_factory implements configured_provider_factory_interface
 	private ?array $environment;
 
 	/** @param array<string, string>|null $environment */
-	public function __construct(client_interface $client, \ArrayAccess $config, ?array $environment = null)
+	public function __construct(
+		client_interface $client,
+		\ArrayAccess $config,
+		private request_interface $request,
+		?array $environment = null
+	)
 	{
 		$this->client = $client;
 		$this->config = $config;
@@ -45,6 +51,33 @@ final class configured_factory implements configured_provider_factory_interface
 	public function get_id(): string
 	{
 		return 's3';
+	}
+
+	public function get_name_language_key(): string
+	{
+		return 'REMOTE_STORAGE_S3_SETTINGS';
+	}
+
+	public function field_definitions(): array
+	{
+		return [
+			'endpoint' => $this->field('url', 255, 'REMOTE_STORAGE_S3_ENDPOINT', 'REMOTE_STORAGE_S3_ENDPOINT_EXPLAIN'),
+			'bucket' => $this->field('text', 63, 'REMOTE_STORAGE_S3_BUCKET'),
+			'region' => $this->field('text', 64, 'REMOTE_STORAGE_S3_REGION', 'REMOTE_STORAGE_S3_REGION_EXPLAIN', 'us-east-1'),
+			'prefix' => $this->field('text', 255, 'REMOTE_STORAGE_S3_PREFIX', 'REMOTE_STORAGE_S3_PREFIX_EXPLAIN', 'phpbbgallery'),
+			'access_key' => $this->field('text', 255, 'REMOTE_STORAGE_S3_ACCESS_KEY'),
+			'secret_key' => $this->field('password', 255, 'REMOTE_STORAGE_S3_SECRET_KEY', '', '', true),
+		];
+	}
+
+	public function config_key(string $field): string
+	{
+		if (!array_key_exists($field, self::FIELDS))
+		{
+			throw new \InvalidArgumentException('The S3 configuration field is invalid.');
+		}
+
+		return 'phpbb_gallery_s3_' . $field;
 	}
 
 	/**
@@ -92,6 +125,21 @@ final class configured_factory implements configured_provider_factory_interface
 				: false;
 		}
 
-		return getenv($variable);
+		$value = $this->request->server($variable, '');
+
+		return $value === '' ? false : (string) $value;
+	}
+
+	/** @return array{type: string, maxlength: int, label: string, explain: string, required: bool, secret: bool, default: string} */
+	private function field(
+		string $type,
+		int $maxlength,
+		string $label,
+		string $explain = '',
+		string $default = '',
+		bool $secret = false
+	): array
+	{
+		return compact('type', 'maxlength', 'label', 'explain', 'default', 'secret') + ['required' => true];
 	}
 }

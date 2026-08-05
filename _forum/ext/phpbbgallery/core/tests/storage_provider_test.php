@@ -12,10 +12,10 @@ namespace phpbbgallery\core\tests;
 use phpbbgallery\core\config;
 use phpbbgallery\core\storage\active_provider;
 use phpbbgallery\core\storage\local_provider;
+use phpbbgallery\core\storage\provider_factory_interface;
 use phpbbgallery\core\storage\provider_interface;
 use phpbbgallery\core\storage\workspace;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 final class storage_provider_test extends TestCase
 {
@@ -38,9 +38,7 @@ final class storage_provider_test extends TestCase
 
 	public function test_local_is_the_explicit_default_without_container_lookup(): void
 	{
-		$container = $this->createMock(ContainerInterface::class);
-		$container->expects($this->never())->method('has');
-		$storage = $this->active('local', $container);
+		$storage = $this->active('local');
 
 		$this->assertSame('local', $storage->get_id());
 	}
@@ -48,10 +46,7 @@ final class storage_provider_test extends TestCase
 	public function test_configured_provider_is_resolved_once_and_all_calls_are_delegated(): void
 	{
 		$remote = new memory_storage_provider('s3', ['image.jpg' => 'remote-image']);
-		$container = $this->createMock(ContainerInterface::class);
-		$container->expects($this->once())->method('has')->with('phpbbgallery.storage.provider.s3')->willReturn(true);
-		$container->expects($this->once())->method('get')->with('phpbbgallery.storage.provider.s3')->willReturn($remote);
-		$storage = $this->active('s3', $container);
+		$storage = $this->active('s3', [$remote]);
 
 		$this->assertSame('s3', $storage->get_id());
 		$this->assertTrue($storage->exists(provider_interface::SOURCE, 'image.jpg'));
@@ -65,13 +60,22 @@ final class storage_provider_test extends TestCase
 		fclose($stream);
 	}
 
+	public function test_unselected_provider_factory_is_never_created(): void
+	{
+		$s3 = new memory_storage_factory(new memory_storage_provider('s3'));
+		$azure = new memory_storage_factory(new memory_storage_provider('azure'));
+		$storage = $this->active('s3', [$s3, $azure]);
+
+		$this->assertSame('s3', $storage->get_id());
+		$this->assertSame('s3', $storage->get_id());
+		$this->assertSame(1, $s3->create_calls);
+		$this->assertSame(0, $azure->create_calls);
+	}
+
 	public function test_external_format_derivatives_are_transparently_mapped_to_webp_keys(): void
 	{
 		$remote = new memory_storage_provider('s3');
-		$container = $this->createMock(ContainerInterface::class);
-		$container->method('has')->willReturn(true);
-		$container->method('get')->willReturn($remote);
-		$storage = $this->active('s3', $container);
+		$storage = $this->active('s3', [$remote]);
 		$source = $this->temporary_directory . '/derived.webp';
 		file_put_contents($source, 'webp-derivative');
 
@@ -84,33 +88,36 @@ final class storage_provider_test extends TestCase
 
 	public function test_missing_provider_never_falls_back_to_local(): void
 	{
-		$container = $this->createMock(ContainerInterface::class);
-		$container->expects($this->once())->method('has')->with('phpbbgallery.storage.provider.s3')->willReturn(false);
-		$container->expects($this->never())->method('get');
-
 		$this->expectException(\RuntimeException::class);
 		$this->expectExceptionMessage('not available');
-		$this->active('s3', $container)->get_id();
+		$this->active('s3')->get_id();
 	}
 
 	public function test_incompatible_provider_service_is_rejected(): void
 	{
-		$container = $this->createMock(ContainerInterface::class);
-		$container->method('has')->willReturn(true);
-		$container->method('get')->willReturn(new memory_storage_provider('azure'));
+		$this->expectException(\RuntimeException::class);
+		$this->expectExceptionMessage('not available');
+		$this->active('s3', [new memory_storage_provider('azure')])->get_id();
+	}
 
+	public function test_incompatible_registered_service_is_rejected(): void
+	{
 		$this->expectException(\RuntimeException::class);
 		$this->expectExceptionMessage('incompatible');
-		$this->active('s3', $container)->get_id();
+		$this->active('s3', [new \stdClass()])->get_id();
+	}
+
+	public function test_duplicate_provider_identifier_is_rejected(): void
+	{
+		$this->expectException(\RuntimeException::class);
+		$this->expectExceptionMessage('more than once');
+		$this->active('s3', [new memory_storage_provider('s3'), new memory_storage_provider('s3')])->get_id();
 	}
 
 	public function test_migration_mirrors_create_replace_and_delete_operations(): void
 	{
 		$remote = new memory_storage_provider('s3');
-		$container = $this->createMock(ContainerInterface::class);
-		$container->expects($this->once())->method('has')->with('phpbbgallery.storage.provider.s3')->willReturn(true);
-		$container->expects($this->once())->method('get')->with('phpbbgallery.storage.provider.s3')->willReturn($remote);
-		$storage = $this->active('local', $container, 'local', 's3');
+		$storage = $this->active('local', [$remote], 'local', 's3');
 		$source = $this->temporary_directory . '/migration-source.jpg';
 		file_put_contents($source, 'first');
 
@@ -138,10 +145,7 @@ final class storage_provider_test extends TestCase
 	{
 		$remote = new memory_storage_provider('s3');
 		$remote->fail_writes = true;
-		$container = $this->createMock(ContainerInterface::class);
-		$container->method('has')->willReturn(true);
-		$container->method('get')->willReturn($remote);
-		$storage = $this->active('local', $container, 'local', 's3');
+		$storage = $this->active('local', [$remote], 'local', 's3');
 		$source = $this->temporary_directory . '/migration-failure.jpg';
 		file_put_contents($source, 'image');
 
@@ -153,12 +157,9 @@ final class storage_provider_test extends TestCase
 	/** @dataProvider invalid_provider_id_provider */
 	public function test_invalid_provider_identifiers_are_rejected_before_service_lookup(string $provider_id): void
 	{
-		$container = $this->createMock(ContainerInterface::class);
-		$container->expects($this->never())->method('has');
-
 		$this->expectException(\RuntimeException::class);
 		$this->expectExceptionMessage('identifier is invalid');
-		$this->active($provider_id, $container)->get_id();
+		$this->active($provider_id)->get_id();
 	}
 
 	public static function invalid_provider_id_provider(): array
@@ -332,18 +333,25 @@ final class storage_provider_test extends TestCase
 
 	private function active(
 		string $provider_id,
-		ContainerInterface $container,
+		iterable $providers = [],
 		string $migration_source = '',
 		string $migration_target = ''
 	): active_provider
 	{
+		$factories = [];
+		foreach ($providers as $provider)
+		{
+			$factories[] = $provider instanceof provider_interface
+				? new memory_storage_factory($provider)
+				: $provider;
+		}
 		$gallery_config = new config(new \phpbb\config\config([
 			'phpbb_gallery_storage_provider' => $provider_id,
 			'phpbb_gallery_storage_migration_source' => $migration_source,
 			'phpbb_gallery_storage_migration_target' => $migration_target,
 		]));
 
-		return new active_provider($gallery_config, $container, $this->local());
+		return new active_provider($gallery_config, $factories, $this->local());
 	}
 
 	private function local(): local_provider
@@ -375,6 +383,27 @@ final class storage_provider_test extends TestCase
 }
 
 // phpcs:disable Generic.Files.OneClassPerFile.MultipleFound -- Provider double belongs to this isolated storage test.
+final class memory_storage_factory implements provider_factory_interface
+{
+	public int $create_calls = 0;
+
+	public function __construct(private provider_interface $provider)
+	{
+	}
+
+	public function get_id(): string
+	{
+		return $this->provider->get_id();
+	}
+
+	public function create(): provider_interface
+	{
+		$this->create_calls++;
+
+		return $this->provider;
+	}
+}
+
 final class memory_storage_provider implements provider_interface
 {
 	public ?int $reported_size = null;
