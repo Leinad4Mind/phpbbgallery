@@ -250,6 +250,61 @@ class image
 		$this->php_ext = $php_ext;
 	}
 
+	/** Display the uploader IP ownership information to board administrators. */
+	public function whois_image(int $image_id): \Symfony\Component\HttpFoundation\Response
+	{
+		$this->assert_whois_access();
+
+		$sql = 'SELECT image_user_ip AS user_ip
+			FROM ' . $this->table_images . '
+			WHERE image_id = ' . (int) $image_id;
+		$result = $this->db->sql_query($sql);
+		$row = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+
+		return $this->render_whois($row, 'INVALID_IMAGE');
+	}
+
+	/** Display a comment author IP ownership information to board administrators. */
+	public function whois_comment(int $comment_id): \Symfony\Component\HttpFoundation\Response
+	{
+		$this->assert_whois_access();
+
+		$sql = 'SELECT comment_user_ip AS user_ip
+			FROM ' . $this->table_comments . '
+			WHERE comment_id = ' . (int) $comment_id;
+		$result = $this->db->sql_query($sql);
+		$row = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+
+		return $this->render_whois($row, 'INVALID_COMMENT');
+	}
+
+	private function assert_whois_access(): void
+	{
+		if (!$this->auth->acl_get('a_'))
+		{
+			throw new \phpbb\exception\http_exception(403, 'NOT_AUTHORISED');
+		}
+	}
+
+	/** @param array<string, mixed>|false $row */
+	private function render_whois(array|false $row, string $not_found): \Symfony\Component\HttpFoundation\Response
+	{
+		if (!is_array($row) || filter_var((string) $row['user_ip'], FILTER_VALIDATE_IP) === false)
+		{
+			throw new \phpbb\exception\http_exception(404, $not_found);
+		}
+
+		if (!function_exists('user_ipwhois'))
+		{
+			include $this->phpbb_root_path . 'includes/functions_user.' . $this->php_ext;
+		}
+		$this->template->assign_var('WHOIS', user_ipwhois((string) $row['user_ip']));
+
+		return $this->helper->render('viewonline_whois.html', $this->language->lang('WHO_IS_ONLINE'));
+	}
+
 	/**
 	 * Image Controller
 	 *    Route: gallery/image_id/{image_id}
@@ -513,6 +568,8 @@ class image
 			'IMAGE_VIEW'          => $this->data['image_view_count'],
 			'IMAGE_RESOLUTION'    => $this->get_image_resolution((string) $this->data['image_filename']),
 			'POSTER_IP'           => (!$hide_private_data && $this->auth->acl_get('a_')) ? $this->data['image_user_ip'] : '',
+			'U_POSTER_WHOIS'      => (!$hide_private_data && $this->auth->acl_get('a_') && $this->data['image_user_ip'] !== '')
+				? $this->helper->route('phpbbgallery_core_image_whois', ['image_id' => (int) $image_id]) : '',
 
 			'S_ALBUM_ACTION' => $this->helper->route('phpbbgallery_core_image', ['image_id' => $image_id]),
 
@@ -1070,8 +1127,8 @@ class image
 					'U_DELETE'   => ($this->gallery_auth->acl_check('m_comments', $album_id, $album_data['album_user_id']) || ($this->gallery_auth->acl_check('c_delete', $album_id, $album_data['album_user_id']) && ($row['comment_user_id'] == $this->user->data['user_id']) && $this->user->data['is_registered'])) ? $this->helper->route('phpbbgallery_core_comment_delete', ['image_id' => $image_id, 'comment_id' => $row['comment_id']]) : '',
 					'U_QUOTE'    => ($this->gallery_auth->acl_check('c_post', $album_id, $album_data['album_user_id'])) ? $this->helper->route('phpbbgallery_core_comment_add', ['image_id' => $image_id, 'comment_id' => $row['comment_id']]) : '',
 					'U_EDIT'     => ($this->gallery_auth->acl_check('m_comments', $album_id, $album_data['album_user_id']) || ($this->gallery_auth->acl_check('c_edit', $album_id, $album_data['album_user_id']) && ($row['comment_user_id'] == $this->user->data['user_id']) && $this->user->data['is_registered'])) ? $this->helper->route('phpbbgallery_core_comment_edit', ['image_id' => $image_id, 'comment_id' => $row['comment_id']]) : '',
-					// TODO Whois link
-					// 'U_WHOIS'     => ($this->auth->acl_get('a_')) ? $this->url->append_sid('mcp', 'mode=whois&amp;ip=' . $row['comment_user_ip']) : '',
+					'U_WHOIS'     => ($this->auth->acl_get('a_') && $row['comment_user_ip'] !== '')
+						? $this->helper->route('phpbbgallery_core_comment_whois', ['comment_id' => (int) $row['comment_id']]) : '',
 
 					'POSTER_FULL'     => get_username_string('full', $display_poster_id, $poster_username, $poster_colour),
 					'POSTER_COLOUR'   => get_username_string('colour', $display_poster_id, $poster_username, $poster_colour),
@@ -1746,17 +1803,16 @@ class image
 			// Display login box for guests and an error for users
 			if (!$this->user->data['is_registered'])
 			{
-				// @todo Add "redirect after login" url
-				login_box();
+				login_box($this->helper->route('phpbbgallery_core_image', ['image_id' => (int) $user_data['image_id']]));
 			}
 			else
 			{
-				redirect('gallery/album/' . $album_id);
+				redirect($this->helper->route('phpbbgallery_core_album', ['album_id' => $album_id]));
 			}
 		}
 		if (!$this->gallery_auth->acl_check('m_status', $album_id, $owner_id) && $user_data['image_user_id'] != $this->user->data['user_id'] && ($image_status == (int) \phpbbgallery\core\block::STATUS_UNAPPROVED))
 		{
-			redirect('gallery/album/' . $album_id);
+			redirect($this->helper->route('phpbbgallery_core_album', ['album_id' => $album_id]));
 		}
 	}
 

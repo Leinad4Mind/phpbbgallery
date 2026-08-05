@@ -149,6 +149,7 @@ $lang = array_merge($lang, [
 	'INSERT_IMAGE_POST'            => 'Inserir a Imagem selecionada na mensagem atual',
 	'INVALID_USERNAME'             => 'Seu Nome de utilizador é inválido',
 	'INVALID_IMAGE'                => 'Imagem Inválida',
+	'INVALID_COMMENT'              => 'Comentário inválido',
 	'FILE_DISALLOWED_EXTENSION'    => 'Extensão de ficheiro não é permitida',
 	'FILE_WRONG_FILESIZE'          => 'Tamanho de ficheiro errado',
 	'LAST_COMMENT'                 => 'Último comentário',

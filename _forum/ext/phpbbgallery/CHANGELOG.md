@@ -15,6 +15,9 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Clarified that the existing time sort uses the image upload date and exposed
   neutral sort-option hooks so add-ons can keep album listings, previous/next
   navigation and ACP defaults in the same indexed order.
+- Preserved the requested image after guest login, replaced relative permission
+  redirects, added album return links to initial quota errors and restored
+  administrator-only Whois actions without accepting IP addresses from URLs.
 - Open browser-compatible GIF, JPEG, PNG, WebP and AVIF originals inline when
   no add-on requires a download, while retaining attachment delivery for BMP,
   TIFF and unknown source formats.
