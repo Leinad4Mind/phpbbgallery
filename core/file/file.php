@@ -42,6 +42,9 @@ class file
 	/** @var \phpbbgallery\core\url */
 	private \phpbbgallery\core\url $url;
 
+	/** Active Gallery storage; null only for legacy direct construction. */
+	private ?\phpbbgallery\core\storage\provider_interface $storage;
+
 	public int $gd_version = 0;
 
 	/** @var \phpbbgallery\core\config */
@@ -79,13 +82,15 @@ class file
 	 * @param \phpbbgallery\core\url $url
 	 * @param \phpbbgallery\core\config $gallery_config
 	 * @param int $gd_version
+	 * @param \phpbbgallery\core\storage\provider_interface|null $storage
 	 */
-	public function __construct(\phpbb\request\request_interface $request, \phpbbgallery\core\url $url, \phpbbgallery\core\config $gallery_config, int $gd_version)
+	public function __construct(\phpbb\request\request_interface $request, \phpbbgallery\core\url $url, \phpbbgallery\core\config $gallery_config, int $gd_version, ?\phpbbgallery\core\storage\provider_interface $storage = null)
 	{
 		$this->request = $request;
 		$this->url = $url;
 		$this->gallery_config = $gallery_config;
 		$this->gd_version = $gd_version;
+		$this->storage = $storage;
 	}
 
 	public function set_image_options(int $max_file_size, int $max_height, int $max_width): void
@@ -734,7 +739,15 @@ class file
 		{
 			foreach ($locations as $location)
 			{
-				@unlink($this->url->path($location) . $file);
+				$variant = $this->storage_variant($location);
+				if ($this->storage !== null && $variant !== null)
+				{
+					$this->storage->delete($variant, $file);
+				}
+				else
+				{
+					@unlink($this->url->path($location) . $file);
+				}
 			}
 		}
 	}
@@ -754,7 +767,15 @@ class file
 		{
 			foreach ($locations as $location)
 			{
-				@unlink($this->url->path($location) . $file);
+				$variant = $this->storage_variant($location);
+				if ($this->storage !== null && $variant !== null)
+				{
+					$this->storage->delete($variant, $file);
+				}
+				else
+				{
+					@unlink($this->url->path($location) . $file);
+				}
 			}
 		}
 	}
@@ -775,8 +796,27 @@ class file
 			$get_wm_name = substr_replace($file, '_wm', $get_dot, 0);
 			foreach ($locations as $location)
 			{
-				@unlink($this->url->path($location) . $get_wm_name);
+				$variant = $this->storage_variant($location);
+				if ($this->storage !== null && $variant !== null)
+				{
+					$this->storage->delete($variant, $get_wm_name);
+				}
+				else
+				{
+					@unlink($this->url->path($location) . $get_wm_name);
+				}
 			}
 		}
+	}
+
+	private function storage_variant(string $location): ?string
+	{
+		return match ($location)
+		{
+			'upload' => \phpbbgallery\core\storage\provider_interface::SOURCE,
+			'medium' => \phpbbgallery\core\storage\provider_interface::MEDIUM,
+			'thumbnail' => \phpbbgallery\core\storage\provider_interface::MINI,
+			default => null,
+		};
 	}
 }
