@@ -1,0 +1,12 @@
+services:
+    phpbbgallery.remotestorage.http:
+        class: phpbbgallery\remotestorage\http\guzzle_client
+
+    phpbbgallery.remotestorage.s3.factory:
+        class: phpbbgallery\remotestorage\s3\factory
+        arguments:
+            - '@phpbbgallery.remotestorage.http'
+
+    phpbbgallery.storage.provider.s3:
+        class: phpbbgallery\remotestorage\s3\provider
+        factory: ['@phpbbgallery.remotestorage.s3.factory', create]
