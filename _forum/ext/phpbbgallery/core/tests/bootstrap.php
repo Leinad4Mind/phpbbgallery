@@ -231,6 +231,9 @@ namespace
 	require_once dirname(__DIR__) . '/policy/album_operation.php';
 	require_once dirname(__DIR__) . '/file/file.php';
 	require_once dirname(__DIR__) . '/file/types/multiform.php';
+	require_once dirname(__DIR__) . '/storage/provider_interface.php';
+	require_once dirname(__DIR__) . '/storage/key_generator.php';
+	require_once dirname(__DIR__) . '/storage/local_provider.php';
 	require_once dirname(__DIR__) . '/album/album.php';
 	require_once dirname(__DIR__) . '/album/display.php';
 	require_once dirname(__DIR__) . '/album/loader.php';

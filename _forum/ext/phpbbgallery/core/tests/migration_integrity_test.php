@@ -36,6 +36,7 @@ use phpbbgallery\core\migrations\remove_legacy_image_plugins;
 use phpbbgallery\core\migrations\image_subtitle;
 use phpbbgallery\core\migrations\contest_creation;
 use phpbbgallery\core\migrations\image_deletion_requests;
+use phpbbgallery\core\migrations\local_storage_layout;
 
 class migration_integrity_test extends TestCase
 {
@@ -66,6 +67,7 @@ class migration_integrity_test extends TestCase
 		contest_creation::class,
 		image_deletion_requests::class,
 		release_4_0_0::class,
+		local_storage_layout::class,
 	];
 
 	private array $temp_directories = [];
@@ -171,6 +173,10 @@ class migration_integrity_test extends TestCase
 			['\phpbbgallery\core\migrations\image_deletion_requests'],
 			release_4_0_0::depends_on()
 		);
+		$this->assertSame(
+			['\phpbbgallery\core\migrations\release_4_0_0'],
+			local_storage_layout::depends_on()
+		);
 	}
 
 	public function test_image_deletion_request_migration_is_reversible(): void
@@ -217,6 +223,18 @@ class migration_integrity_test extends TestCase
 		$this->assertSame([
 			['config.update', ['phpbb_gallery_version', '4.0.0']],
 		], $migration->update_data());
+	}
+
+	public function test_local_storage_layout_defaults_to_flat_and_is_reversible(): void
+	{
+		$migration = (new \ReflectionClass(local_storage_layout::class))->newInstanceWithoutConstructor();
+
+		$this->assertSame([
+			['config.add', ['phpbb_gallery_storage_layout', 'flat']],
+		], $migration->update_data());
+		$this->assertSame([
+			['config.remove', ['phpbb_gallery_storage_layout']],
+		], $migration->revert_data());
 	}
 
 	public function test_optional_contest_storage_is_not_created_by_fresh_core_installs(): void
@@ -867,6 +885,7 @@ class migration_integrity_test extends TestCase
 			'contest_creation.php',
 			'image_deletion_requests.php',
 			'release_4_0_0.php',
+			'local_storage_layout.php',
 		] as $migration)
 		{
 			require_once dirname(__DIR__) . '/migrations/' . $migration;

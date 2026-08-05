@@ -125,6 +125,7 @@ class gallery_lifecycle extends \phpbb_functional_test_case
 		$this->assertSame('4', $this->config_value('phpbb_gallery_forum_index_random_count'));
 		$this->assertSame('4', $this->config_value('phpbb_gallery_forum_index_recent_count'));
 		$this->assertSame('0', $this->config_value('phpbb_gallery_ajax_navigation'));
+		$this->assertSame('flat', $this->config_value('phpbb_gallery_storage_layout'));
 		$result = $db->sql_query('SELECT image_subtitle FROM phpbb_gallery_images WHERE 1 = 0');
 		$this->assertNotFalse($result);
 		$db->sql_freeresult($result);
@@ -191,6 +192,9 @@ class gallery_lifecycle extends \phpbb_functional_test_case
 	 */
 	private function run_import(int $album_id, string $phpbb_root_path): void
 	{
+		$this->set_config_value('phpbb_gallery_storage_layout', 'distributed');
+		$this->purge_cache();
+
 		$import_name = 'functional-import.png';
 		$import_path = $phpbb_root_path . 'files/phpbbgallery/import/' . $import_name;
 		$this->write_test_png($import_path);
@@ -238,8 +242,18 @@ class gallery_lifecycle extends \phpbb_functional_test_case
 		$db->sql_freeresult($result);
 
 		$this->assertNotSame('', $image_filename, $crawler->filter('body')->text());
+		$this->assertMatchesRegularExpression('#^[a-f0-9]/[a-f0-9]{2}/[a-f0-9]{32}[.]png$#', $image_filename);
 		$this->assertFileDoesNotExist($import_path);
 		$this->assertFileExists($phpbb_root_path . 'files/phpbbgallery/core/source/' . $image_filename);
+	}
+
+	private function set_config_value(string $name, string $value): void
+	{
+		$db = $this->get_db();
+		$sql = 'UPDATE ' . CONFIG_TABLE . '
+			SET ' . $db->sql_build_array('UPDATE', ['config_value' => $value]) . '
+			WHERE config_name = ' . chr(39) . $db->sql_escape($name) . chr(39);
+		$db->sql_query($sql);
 	}
 
 	/**

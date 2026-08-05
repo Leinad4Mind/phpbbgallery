@@ -181,6 +181,16 @@ services:
         class: phpbbgallery\core\config
         arguments:
             - '@config'
+    phpbbgallery.core.storage.key_generator:
+        class: phpbbgallery\core\storage\key_generator
+        arguments:
+            - '@phpbbgallery.core.config'
+    phpbbgallery.core.storage.local:
+        class: phpbbgallery\core\storage\local_provider
+        arguments:
+            - '%phpbbgallery.core.file.source%'
+            - '%phpbbgallery.core.file.medium%'
+            - '%phpbbgallery.core.file.mini%'
     phpbbgallery.core.report:
         class: phpbbgallery\core\report
         arguments:
@@ -326,6 +336,8 @@ services:
             - '@phpbbgallery.core.url'
             - '@phpbbgallery.core.block'
             - '@phpbbgallery.core.file.tool'
+            - '@phpbbgallery.core.storage.key_generator'
+            - '@phpbbgallery.core.storage.local'
             - '@phpbbgallery.core.zip.extractor'
             - '%phpbbgallery.tables.gallery_images%'
             - '%core.root_path%'
