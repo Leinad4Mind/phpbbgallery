@@ -55,6 +55,67 @@ class image_resolution_test extends TestCase
 		$this->assertSame('1920 × 1080 px', $this->resolution_for('screenshot.png'));
 	}
 
+	public function test_reads_dimensions_from_a_provider_workspace(): void
+	{
+		$this->write_png('remote.png', 8, 3);
+		$contents = (string) file_get_contents($this->upload_path . 'remote.png');
+		unlink($this->upload_path . 'remote.png');
+
+		$provider = $this->createMock(\phpbbgallery\core\storage\provider_interface::class);
+		$provider->method('local_path')->willReturn(null);
+		$provider->method('open_stream')->willReturnCallback(static function () use ($contents) {
+			$stream = fopen('php://temp', 'w+b');
+			fwrite($stream, $contents);
+			rewind($stream);
+
+			return $stream;
+		});
+		$provider->method('size')->willReturn(strlen($contents));
+		$provider->method('checksum')->willReturn(hash('sha256', $contents));
+		$workspace = new \phpbbgallery\core\storage\workspace($provider, $this->root . 'workspace/');
+
+		$this->assertSame('8 × 3 px', $this->resolution_for('remote.png', true, $workspace));
+		$this->assertSame([], array_diff((array) scandir($this->root . 'workspace/'), ['.', '..']));
+	}
+
+	public function test_rotation_replaces_the_source_and_invalidates_provider_derivatives(): void
+	{
+		$source = $this->root . 'storage/source/';
+		$medium = $this->root . 'storage/medium/';
+		$mini = $this->root . 'storage/mini/';
+		mkdir($source, 0700, true);
+		mkdir($medium, 0700, true);
+		mkdir($mini, 0700, true);
+		$this->write_png_to($source . 'photo.png', 4, 2);
+		file_put_contents($medium . 'photo.png', 'stale medium');
+		file_put_contents($mini . 'photo.png', 'stale mini');
+
+		$provider = new \phpbbgallery\core\storage\local_provider($source, $medium, $mini);
+		$workspace = new \phpbbgallery\core\storage\workspace($provider, $this->root . 'workspace/');
+		$config = $this->new_gallery_config(true);
+		$tool = new \phpbbgallery\core\file\file(
+			$this->createMock(\phpbb\request\request_interface::class),
+			$this->new_url(),
+			$config,
+			2,
+			$provider
+		);
+		$controller = (new \ReflectionClass(image::class))->newInstanceWithoutConstructor();
+		$this->set_property($controller, 'gallery_config', $config);
+		$this->set_property($controller, 'storage_workspace', $workspace);
+		$this->set_property($controller, 'image_tools', $tool);
+
+		$method = new \ReflectionMethod(image::class, 'rotate_stored_image');
+		$this->make_accessible($method);
+		$this->assertTrue($method->invoke($controller, 'photo.png', 90));
+
+		$dimensions = getimagesize($source . 'photo.png');
+		$this->assertSame(2, $dimensions[0]);
+		$this->assertSame(4, $dimensions[1]);
+		$this->assertFileDoesNotExist($medium . 'photo.png');
+		$this->assertFileDoesNotExist($mini . 'photo.png');
+	}
+
 	public function test_returns_nothing_when_the_option_is_disabled(): void
 	{
 		$this->write_png('photo.png', 4, 2);
@@ -79,13 +140,14 @@ class image_resolution_test extends TestCase
 		$this->assertSame('', $this->resolution_for(''));
 	}
 
-	private function resolution_for(string $filename, bool $enabled = true): string
+	private function resolution_for(string $filename, bool $enabled = true, ?\phpbbgallery\core\storage\workspace $workspace = null): string
 	{
 		$controller = (new \ReflectionClass(image::class))->newInstanceWithoutConstructor();
 
 		$this->set_property($controller, 'gallery_config', $this->new_gallery_config($enabled));
 		$this->set_property($controller, 'url', $this->new_url());
 		$this->set_property($controller, 'language', $this->new_language());
+		$this->set_property($controller, 'storage_workspace', $workspace);
 
 		$method = new \ReflectionMethod(image::class, 'get_image_resolution');
 		$this->make_accessible($method);
@@ -101,6 +163,11 @@ class image_resolution_test extends TestCase
 		$config = (new \ReflectionClass(\phpbbgallery\core\config::class))->newInstanceWithoutConstructor();
 		$this->set_property($config, 'config', new \phpbb\config\config([
 			'phpbb_gallery_disp_resolution' => $enabled ? 1 : 0,
+			'phpbb_gallery_allow_rotate' => 1,
+			'phpbb_gallery_max_filesize' => 10 * 1024 * 1024,
+			'phpbb_gallery_max_height' => 4096,
+			'phpbb_gallery_max_width' => 4096,
+			'phpbb_gallery_jpg_quality' => 90,
 		]));
 
 		return $config;
@@ -149,8 +216,13 @@ class image_resolution_test extends TestCase
 
 	private function write_png(string $filename, int $width, int $height): void
 	{
+		$this->write_png_to($this->upload_path . $filename, $width, $height);
+	}
+
+	private function write_png_to(string $path, int $width, int $height): void
+	{
 		$image = imagecreatetruecolor($width, $height);
-		imagepng($image, $this->upload_path . $filename);
+		imagepng($image, $path);
 	}
 
 	private function remove_directory(string $directory): void

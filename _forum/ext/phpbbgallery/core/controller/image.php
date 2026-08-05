@@ -106,6 +106,12 @@ class image
 	/** @var \phpbbgallery\core\policy\image_visibility */
 	protected \phpbbgallery\core\policy\image_visibility $image_visibility;
 
+	/** Active-provider workspace used for local image processing. */
+	protected ?\phpbbgallery\core\storage\workspace $storage_workspace = null;
+
+	/** Gallery image processing tool. */
+	protected ?\phpbbgallery\core\file\file $image_tools = null;
+
 	/** @var ContainerInterface */
 	protected ContainerInterface $phpbb_container;
 
@@ -175,6 +181,8 @@ class image
 	 * @param \phpbbgallery\core\rating                                 $gallery_rating
 	 * @param \phpbbgallery\core\block                                  $block
 	 * @param \phpbbgallery\core\policy\image_visibility                $image_visibility
+	 * @param \phpbbgallery\core\storage\workspace                      $storage_workspace
+	 * @param \phpbbgallery\core\file\file                              $image_tools
 	 * @param ContainerInterface                                        $phpbb_container
 	 * @param string                                                    $albums_table Gallery albums table
 	 * @param string                                                    $images_table Gallery images table
@@ -197,6 +205,7 @@ class image
 		\phpbbgallery\core\notification\helper $notification_helper, \phpbbgallery\core\log $gallery_log,
 		\phpbbgallery\core\moderate $moderate, \phpbbgallery\core\rating $gallery_rating,
 		\phpbbgallery\core\block $block, \phpbbgallery\core\policy\image_visibility $image_visibility,
+		\phpbbgallery\core\storage\workspace $storage_workspace, \phpbbgallery\core\file\file $image_tools,
 		ContainerInterface $phpbb_container,
 		string $albums_table, string $images_table, string $users_table, string $table_comments, string $phpbb_root_path, string $php_ext)
 	{
@@ -230,6 +239,8 @@ class image
 		$this->gallery_rating = $gallery_rating;
 		$this->block = $block;
 		$this->image_visibility = $image_visibility;
+		$this->storage_workspace = $storage_workspace;
+		$this->image_tools = $image_tools;
 		$this->phpbb_container = $phpbb_container;
 		$this->table_albums = $albums_table;
 		$this->table_images = $images_table;
@@ -755,9 +766,33 @@ class image
 			return '';
 		}
 
-		// getimagesize() only parses the header, so this stays cheap enough to run
-		// on an image page view.
-		$image_size = @getimagesize($this->url->path('upload') . $filename);
+		$source = null;
+		try
+		{
+			// getimagesize() only parses the header. The workspace also verifies a
+			// provider-backed object before exposing it to the local image parser.
+			$path = $this->url->path('upload') . $filename;
+			if ($this->storage_workspace !== null)
+			{
+				$source = $this->storage_workspace->materialize(
+					\phpbbgallery\core\storage\provider_interface::SOURCE,
+					$filename
+				);
+				$path = $source->get_path();
+			}
+			$image_size = @getimagesize($path);
+		}
+		catch (\RuntimeException)
+		{
+			return '';
+		}
+		finally
+		{
+			if ($source !== null)
+			{
+				$source->release();
+			}
+		}
 		if ($image_size === false || empty($image_size[0]) || empty($image_size[1]))
 		{
 			// A missing or unreadable file must not break the page; the template
@@ -1288,18 +1323,10 @@ class image
 
 			if (!$errors && !$file_changed && $this->gallery_config->get('allow_rotate') && ($rotate > 0) && (($rotate % 90) == 0))
 			{
-				$image_tools = new \phpbbgallery\core\file\file($this->request, $this->url, $this->gallery_config, 2);
-				$image_tools->set_image_options($this->gallery_config->get('max_filesize'), $this->gallery_config->get('max_height'), $this->gallery_config->get('max_width'));
-				$image_tools->set_image_data($this->url->path('upload') . $image_data['image_filename']);
-
-				// Rotate the image
-				$image_tools->rotate_image($rotate, $this->gallery_config->get('allow_rotate'));
-				if ($image_tools->rotated)
+				if (!$this->rotate_stored_image((string) $image_data['image_filename'], $rotate))
 				{
-					$image_tools->write_image($image_tools->image_source, $this->gallery_config->get('jpg_quality'), true);
+					$errors[] = $this->language->lang('GENERAL_ERROR');
 				}
-				@unlink($this->url->path('thumbnail') . $image_data['image_filename']);
-				@unlink($this->url->path('medium') . $image_data['image_filename']);
 			}
 
 			$error = implode('<br />', $errors);
@@ -1413,6 +1440,76 @@ class image
 		]);
 
 		return $this->helper->render('gallery/posting_body.html', $page_title);
+	}
+
+	/**
+	 * Rotate a verified local copy, atomically replace the active source and
+	 * invalidate derivatives only after publication succeeds.
+	 */
+	protected function rotate_stored_image(string $filename, int $angle): bool
+	{
+		if ($filename === '' || $this->storage_workspace === null || $this->image_tools === null)
+		{
+			return false;
+		}
+
+		$source = null;
+		$output = null;
+		try
+		{
+			$source = $this->storage_workspace->materialize(
+				\phpbbgallery\core\storage\provider_interface::SOURCE,
+				$filename
+			);
+			$output = $this->storage_workspace->create_temporary($filename);
+
+			$this->image_tools->errors = [];
+			$this->image_tools->set_image_options(
+				$this->gallery_config->get('max_filesize'),
+				$this->gallery_config->get('max_height'),
+				$this->gallery_config->get('max_width')
+			);
+			$this->image_tools->set_image_data($source->get_path(), '', 0, true);
+			$this->image_tools->rotate_image($angle, $this->gallery_config->get('allow_rotate'));
+			if (!$this->image_tools->rotated || $this->image_tools->errors)
+			{
+				return false;
+			}
+
+			$this->image_tools->write_image(
+				$output->get_path(),
+				$this->gallery_config->get('jpg_quality'),
+				true
+			);
+			if (!is_file($output->get_path()) || (int) @filesize($output->get_path()) < 1)
+			{
+				return false;
+			}
+
+			$this->storage_workspace->replace(
+				\phpbbgallery\core\storage\provider_interface::SOURCE,
+				$filename,
+				$output->get_path()
+			);
+			$this->image_tools->delete_cache($filename);
+
+			return true;
+		}
+		catch (\RuntimeException)
+		{
+			return false;
+		}
+		finally
+		{
+			if ($output !== null)
+			{
+				$output->release();
+			}
+			if ($source !== null)
+			{
+				$source->release();
+			}
+		}
 	}
 
 	// Delete image

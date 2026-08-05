@@ -113,6 +113,8 @@ services:
             - '@phpbbgallery.core.rating'
             - '@phpbbgallery.core.block'
             - '@phpbbgallery.core.policy.image_visibility'
+            - '@phpbbgallery.core.storage.workspace'
+            - '@phpbbgallery.core.file.tool'
             - '@service_container'
             - '%phpbbgallery.tables.gallery_albums%'
             - '%phpbbgallery.tables.gallery_images%'
