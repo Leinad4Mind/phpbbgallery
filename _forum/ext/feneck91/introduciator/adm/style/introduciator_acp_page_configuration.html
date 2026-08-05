@@ -24,6 +24,7 @@ function introduciator_display_mode()
 	var is_topic_mode = document.getElementById("mode_topic").checked;
 	document.getElementById("forum_choice_block").style.display = is_topic_mode ? "none" : "block";
 	document.getElementById("check_delete_first_post_block").style.display = is_topic_mode ? "none" : "block";
+	document.getElementById("check_move_duplicate_block").style.display = is_topic_mode ? "none" : "block";
 	document.getElementById("topic_choice_block").style.display = is_topic_mode ? "block" : "none";
 	document.getElementById("posting_approval_level_with_edit_option").style.display = is_topic_mode ? "none" : "inline";
 }
@@ -82,6 +83,17 @@ function introduciator_reset_display_mode()
 			<dd>
 				<label><input id="check_delete_first_post_activated" name="check_delete_first_post_activated" type="radio" class="radio" value="1"{% if INTRODUCIATOR_CHECK_DELETE_FIRST_POST_ACTIVATED %} checked="checked"{% endif %}> {{ lang('YES') }}</label>
 				<label><input id="no_check_delete_first_post_activated" name="check_delete_first_post_activated" type="radio" class="radio" value="0"{% if not INTRODUCIATOR_CHECK_DELETE_FIRST_POST_ACTIVATED %} checked="checked"{% endif %}> {{ lang('NO') }}</label>
+			</dd>
+		</dl>
+		{# Activate / Desactivate blocking a move into the introduce forum that would duplicate a presentation : only meaningful in forum mode #}
+		<dl id="check_move_duplicate_block" style="display: {% if INTRODUCIATOR_MODE_TOPIC_ENABLED %}none{% else %}block{% endif %}">
+			<dt>
+				<label for="check_move_duplicate_activated">{{ lang('INTRODUCIATOR_CP_CHECK_MOVE_DUPLICATE') }}</label><br>
+				<span>{{ lang('INTRODUCIATOR_CP_CHECK_MOVE_DUPLICATE_EXPLAIN') }}</span>
+			</dt>
+			<dd>
+				<label><input id="check_move_duplicate_activated" name="check_move_duplicate_activated" type="radio" class="radio" value="1"{% if INTRODUCIATOR_CHECK_MOVE_DUPLICATE_ACTIVATED %} checked="checked"{% endif %}> {{ lang('YES') }}</label>
+				<label><input id="no_check_move_duplicate_activated" name="check_move_duplicate_activated" type="radio" class="radio" value="0"{% if not INTRODUCIATOR_CHECK_MOVE_DUPLICATE_ACTIVATED %} checked="checked"{% endif %}> {{ lang('NO') }}</label>
 			</dd>
 		</dl>
 		{# Forum Choice (where the user MUST introduce himself #}

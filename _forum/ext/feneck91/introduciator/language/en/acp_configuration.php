@@ -56,6 +56,8 @@ $lang = array_merge($lang, [
 	'INTRODUCIATOR_CP_CHECK_DEL_1ST_POST_EXPLAIN' => 'When this option is on, the extension prevents the first post in any topic in the forum for introductions from deletion.
 																			<br/>Even moderators or administrators don’t have this permission to be sure that the first post in any introductive topic is the really the introduction of a forum member. However, it remains possible to delete the topic if the permissions allow it.
 																			<br/>You can deactivate this option but in this case a member will be able to have several introductions. Enabling this option is preferable.',
+		'INTRODUCIATOR_CP_CHECK_MOVE_DUPLICATE'         => 'Authorize the extension to block moving a topic into the forum for introductions if its author already has a presentation there:',
+		'INTRODUCIATOR_CP_CHECK_MOVE_DUPLICATE_EXPLAIN' => 'When this option is on, moving a topic (from the MCP, QuickMod, or when deleting a user and reassigning their topics) into the forum for introductions is blocked if the topic’s author already has a different presentation topic there, to avoid ending up with two. The moderator is asked to merge or delete the extra topic instead.',
 	'INTRODUCIATOR_CP_MODE'                            => 'Introduction mode:',
 	'INTRODUCIATOR_CP_MODE_EXPLAIN'                    => 'Choose how members introduce themselves: by creating their own topic in a dedicated forum, or by posting in a single shared topic.',
 	'INTRODUCIATOR_CP_MODE_FORUM'                      => 'By forum: each member creates their own introduction topic',

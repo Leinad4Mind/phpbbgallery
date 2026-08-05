@@ -76,6 +76,7 @@ class introduciator_listener implements EventSubscriberInterface
 			'core.phpbb_content_visibility_get_visibility_sql_before'	=> 'get_topic_sql_visibility',					// Allow phpBB to retrieve a topic for the user that post it into introduce
 			'core.viewtopic_modify_post_row'							=> 'on_viewtopic_modify_post_row',				// Hide S_POST_UNAPPROVED if the user is into his own introduce (hide approved / unapproved) if has not this right + prepare data to be displayed.
 			'core.posting_modify_row_data'								=> 'on_user_want_post',							// Let the moderator to post into an unapproved post and user to edit own introduce. Added in 3.2.8 version of phpBB: https://tracker.phpbb.com/browse/PHPBB3-15946
+			'core.move_topics_before'									=> 'on_move_topics_before',						// Block moving a topic into the introduce forum if its author already has a presentation there (MCP, QuickMod, or ACP delete-user reassignment)
 
 			//=============================================
 			// From here, this is events for template html
@@ -128,11 +129,26 @@ class introduciator_listener implements EventSubscriberInterface
 	 * Called when the user want to post, when it's display panel.
 	 * Return true, false or RedirectResponse if redirection is needed.
 	 *
+	 * Also pre-fills the Subject field when the user is about to start a new introduction topic
+	 * and hasn't typed (or loaded from a draft) a subject yet - a suggestion, not enforced.
+	 *
 	 * @param \phpbb\event\data $event Event.
 	 */
 	public function on_displaying_posting_screen($event)
 	{
 		$this->helper->user_can_post($event['mode'], $event['forum_id'], $event['post_id'], $event['post_data'], true, false, $event['topic_id']);
+
+		if ($event['mode'] == 'post' && empty($event['post_data']['post_subject']))
+		{
+			$title = $this->helper->get_topic_title_template($event['forum_id']);
+
+			if ($title !== '')
+			{
+				$page_data = $event['page_data'];
+				$page_data['SUBJECT'] = $title;
+				$event['page_data'] = $page_data;
+			}
+		}
 	}
 
 	/**
@@ -333,6 +349,44 @@ class introduciator_listener implements EventSubscriberInterface
 			$data['topic_visibility'] = ITEM_APPROVED; // Force approval
 			$event['post_data'] = $data;
 		}
+	}
+
+	/**
+	 * Block moving topics into the introduce forum (forum mode) when doing so would create a
+	 * duplicate: a topic's author already has a different presentation topic there.
+	 *
+	 * Fires before any database write happens (this is the first thing move_topics() does), so
+	 * interrupting here via trigger_error() leaves nothing moved and no inconsistent state, for any
+	 * caller of move_topics() - MCP move, QuickMod's move task, or the ACP's delete-user topic
+	 * reassignment.
+	 *
+	 * @param \phpbb\event\data $event Event.
+	 */
+	public function on_move_topics_before($event)
+	{
+		$conflicts = $this->helper->check_move_creates_duplicate_introduction($event['topic_ids'], $event['forum_id']);
+
+		if (empty($conflicts))
+		{
+			return;
+		}
+
+		$lines = [];
+		foreach ($conflicts as $conflict)
+		{
+			$username_link = get_username_string('full', $conflict['poster_id'], $conflict['poster_name'], $conflict['poster_colour']);
+			$existing_url = $this->helper->get_post_url($event['forum_id'], $conflict['existing_topic_id'], $conflict['existing_first_post_id']);
+
+			$lines[] = sprintf(
+				$this->language->lang('INTRODUCIATOR_EXT_MOVE_DUPLICATE_ITEM'),
+				$username_link,
+				'<a href="' . $existing_url . '">',
+				'</a>'
+			);
+		}
+
+		$message = $this->language->lang('INTRODUCIATOR_EXT_MOVE_DUPLICATE_HEADER') . '<br /><br />' . implode('<br />', $lines);
+		trigger_error($message);
 	}
 
 	//

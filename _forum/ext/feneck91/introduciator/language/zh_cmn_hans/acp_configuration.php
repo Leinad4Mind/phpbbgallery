@@ -57,6 +57,8 @@ $lang = array_merge($lang, [
 	'INTRODUCIATOR_CP_CHECK_DEL_1ST_POST_EXPLAIN' => '激活此选项后，扩展将阻止在自我介绍板块中，任何主题的第一个帖子被删除。
 																			<br/>甚至版主或者管理员都没有此权限，来确保每个主题的第一个帖子是真正的自我介绍。 但是任然保留了删除主题的权限。
 																			<br/>你可以不启用此选项，但是这会给与用户发布多个自我介绍的能力。建议启用此选项。',
+		'INTRODUCIATOR_CP_CHECK_MOVE_DUPLICATE'         => '授权扩展在主题作者已在目标板块中拥有自我介绍时，阻止将该主题移动到自我介绍板块：',
+		'INTRODUCIATOR_CP_CHECK_MOVE_DUPLICATE_EXPLAIN' => '启用此选项后，如果主题作者在自我介绍板块中已经有另一个自我介绍主题，则阻止将主题（通过版主控制面板、快速管理工具，或删除用户并重新分配其主题时）移动到该板块，以避免出现两个自我介绍。系统会要求版主改为合并或删除多余的主题。',
 	'INTRODUCIATOR_CP_MODE'                            => '介绍模式：',
 	'INTRODUCIATOR_CP_MODE_EXPLAIN'                    => '选择用户如何进行自我介绍：在专用板块中创建自己的主题，或者在一个共享主题中发帖。',
 	'INTRODUCIATOR_CP_MODE_FORUM'                      => '按板块：每个用户创建自己的自我介绍主题',

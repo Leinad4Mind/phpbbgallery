@@ -54,6 +54,8 @@ $lang = array_merge($lang, [
 	'INTRODUCIATOR_CP_CHECK_DEL_1ST_POST_EXPLAIN' => 'Quando esta opção está activada, a extensão impede a eliminação da primeira mensagem de qualquer tópico no fórum de apresentações.
 																			<br/>Nem os moderadores ou administradores têm esta permissão para garantir que a primeira mensagem em qualquer tópico de apresentação é realmente a apresentação de um membro do fórum. No entanto, continua a ser possível eliminar o tópico se as permissões o permitirem.
 																			<br/>Podes desactivar esta opção mas, neste caso, um membro poderá ter várias apresentações. Activar esta opção é preferível.',
+		'INTRODUCIATOR_CP_CHECK_MOVE_DUPLICATE'         => 'Autorizar a extensão a bloquear mover um tópico para o fórum de apresentações se o seu autor já tiver lá uma apresentação:',
+		'INTRODUCIATOR_CP_CHECK_MOVE_DUPLICATE_EXPLAIN' => 'Quando esta opção está activada, mover um tópico (a partir do MCP, do QuickMod, ou ao eliminar um utilizador e reatribuir os seus tópicos) para o fórum de apresentações é bloqueado se o autor do tópico já tiver lá um tópico de apresentação diferente, para evitar ficar com dois. É pedido ao moderador que junte (merge) ou elimine o tópico a mais.',
 	'INTRODUCIATOR_CP_MODE'                            => 'Modo de apresentação:',
 	'INTRODUCIATOR_CP_MODE_EXPLAIN'                    => 'Escolhe como os membros se apresentam: criando o seu próprio tópico num fórum dedicado, ou publicando num único tópico partilhado.',
 	'INTRODUCIATOR_CP_MODE_FORUM'                      => 'Por fórum: cada membro cria o seu próprio tópico de apresentação',

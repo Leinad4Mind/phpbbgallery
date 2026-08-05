@@ -57,6 +57,8 @@ $lang = array_merge($lang, [
 	'INTRODUCIATOR_CP_CHECK_DEL_1ST_POST_EXPLAIN' => 'Quando questa opzione è abilitata, il MOD impedisce il primo post in qualsiasi argomento nel forum per le presentazioni dall’eliminazione.
 																			<br/>Anche i moderatori o gli amministratori non hanno questo permesso per essere sicuri che il primo messaggio in qualsiasi argomento introduttivo è davvero l’introduzione di un membro del forum. Tuttavia, rimane possibile cancellare l’argomento se i permessi lo consentono.
 																			<br/>È possibile disattivare questa opzione, ma in questo caso un utente sarà in grado di avere diverse presentazioni. L’attivazione di questa opzione è preferibile.',
+		'INTRODUCIATOR_CP_CHECK_MOVE_DUPLICATE'         => 'Autorizza l’estensione a bloccare lo spostamento di un argomento nel forum per le presentazioni se il suo autore ha già una presentazione lì:',
+		'INTRODUCIATOR_CP_CHECK_MOVE_DUPLICATE_EXPLAIN' => 'Quando questa opzione è abilitata, lo spostamento di un argomento (dal MCP, da QuickMod, o durante l’eliminazione di un utente con riassegnazione dei suoi argomenti) nel forum per le presentazioni viene bloccato se l’autore dell’argomento ha già lì un altro argomento di presentazione, per evitare di ritrovarsi con due presentazioni. Al moderatore viene chiesto di unire o eliminare l’argomento in eccesso.',
 	'INTRODUCIATOR_CP_MODE'                            => 'Modalità di presentazione:',
 	'INTRODUCIATOR_CP_MODE_EXPLAIN'                    => 'Scegli come i membri si presentano: creando un proprio argomento in un forum dedicato, oppure pubblicando in un unico argomento condiviso.',
 	'INTRODUCIATOR_CP_MODE_FORUM'                      => 'Per forum: ogni membro crea il proprio argomento di presentazione',

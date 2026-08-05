@@ -56,6 +56,8 @@ $lang = array_merge($lang, [
 	'INTRODUCIATOR_CP_CHECK_DEL_1ST_POST_EXPLAIN' => 'Lorsque cette option est activée, l’extension empèche la suppression du premier message qui a créé le sujet dans le forum de présentation.
 																			<br/>Même les modérateurs et les administrateurs n’ont pas cette permission pour être certain que le premier message du sujet est la présentation du membre. Il reste toutefois possible de supprimer le sujet si les permissions le permettent.
 																			<br/>Vous pouvez désactiver cette option mais dans ce cas un membre peut avoir plusieurs présentations. Il est recommandé d’activer cette option.',
+		'INTRODUCIATOR_CP_CHECK_MOVE_DUPLICATE'         => 'Autorise l’extension à bloquer le déplacement d’un sujet vers le forum de présentation si son auteur y a déjà une présentation :',
+		'INTRODUCIATOR_CP_CHECK_MOVE_DUPLICATE_EXPLAIN' => 'Lorsque cette option est activée, le déplacement d’un sujet (depuis le MCP, QuickMod, ou lors de la suppression d’un utilisateur avec réattribution de ses sujets) vers le forum de présentation est bloqué si l’auteur du sujet y a déjà un autre sujet de présentation, pour éviter de se retrouver avec deux présentations. Il est demandé au modérateur de fusionner ou de supprimer le sujet en trop.',
 	'INTRODUCIATOR_CP_MODE'                            => 'Mode de présentation :',
 	'INTRODUCIATOR_CP_MODE_EXPLAIN'                    => 'Choisissez comment les membres se présentent : en créant leur propre sujet dans un forum dédié, ou en postant dans un unique sujet partagé.',
 	'INTRODUCIATOR_CP_MODE_FORUM'                      => 'Par forum : chaque membre crée son propre sujet de présentation',

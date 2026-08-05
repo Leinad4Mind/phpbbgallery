@@ -131,6 +131,7 @@ class acp_configuration_controller extends acp_main_controller
 			'INTRODUCIATOR_EXTENSION_ACTIVATED'					=> $params['introduciator_allow'],
 			'INTRODUCIATOR_INTRODUCTION_MANDATORY'				=> $params['is_introduction_mandatory'],
 			'INTRODUCIATOR_CHECK_DELETE_FIRST_POST_ACTIVATED'	=> $params['is_check_delete_first_post'],
+			'INTRODUCIATOR_CHECK_MOVE_DUPLICATE_ACTIVATED'		=> $params['is_check_move_duplicate'],
 			'INTRODUCIATOR_MODE_FORUM_ENABLED'					=> $params['mode'] == introduciator_helper::MODE_FORUM,
 			'INTRODUCIATOR_MODE_TOPIC_ENABLED'					=> $params['mode'] == introduciator_helper::MODE_TOPIC,
 			'INTRODUCIATOR_TOPIC_CHOICE'							=> $params['fk_topic_id'],
@@ -224,6 +225,7 @@ class acp_configuration_controller extends acp_main_controller
 		$is_enabled									= $this->request->variable('extension_activated', false);
 		$is_check_introduction_mandatory_activated  = $this->request->variable('check_introduction_mandatory_activated', true);
 		$is_check_delete_first_post_activated		= $this->request->variable('check_delete_first_post_activated', false);
+		$is_check_move_duplicate_activated			= $this->request->variable('check_move_duplicate_activated', false);
 		$mode										= $this->request->variable('mode', introduciator_helper::MODE_FORUM);
 		$fk_forum_id								= $this->request->variable('forum_choice', 0);
 		$fk_topic_id								= $this->request->variable('topic_choice', 0);
@@ -273,6 +275,7 @@ class acp_configuration_controller extends acp_main_controller
 		$this->dbconfig->set('introduciator_allow', $is_enabled); // Set the activation extension config
 		$this->dbconfig->set('introduciator_is_introduction_mandatory', $is_check_introduction_mandatory_activated);
 		$this->dbconfig->set('introduciator_is_check_delete_first_post', $is_check_delete_first_post_activated);
+		$this->dbconfig->set('introduciator_is_check_move_duplicate', $is_check_move_duplicate_activated);
 		$this->dbconfig->set('introduciator_mode', $mode);
 		$this->dbconfig->set('introduciator_fk_forum_id', $fk_forum_id);
 		$this->dbconfig->set('introduciator_fk_topic_id', $fk_topic_id);

@@ -306,6 +306,9 @@ class introduciator_helper
 			$rules_textbitfield				= isset($row['rules_text_bitfield']) ? $row['rules_text_bitfield'] : '';
 			$rules_text_bbcode_options		= isset($row['rules_text_bbcode_options']) ? $row['rules_text_bbcode_options'] : '';
 
+			// Plain text, unlike the fields above: no BBCode, so no uid/bitfield/options to decode
+			$topic_title_template			= isset($row['topic_title_template']) ? $row['topic_title_template'] : '';
+
 			if ($is_edit)
 			{
 				$message_title = generate_text_for_edit($message_title, $message_title_uid, (int) $message_title_bbcode_options);
@@ -339,6 +342,7 @@ class introduciator_helper
 						'edit_message_text'		=> $message_text,
 						'edit_rules_title'		=> $rules_title,
 						'edit_rules_text'		=> $rules_text,
+						'edit_topic_title_template'	=> $topic_title_template,
 					],
 				];
 			}
@@ -364,6 +368,7 @@ class introduciator_helper
 						'rules_text_uid'				=> $rules_text_uid,
 						'rules_text_bitfield'			=> $rules_textbitfield,
 						'rules_text_bbcode_options'		=> $rules_text_bbcode_options,
+						'topic_title_template'			=> $topic_title_template,
 					],
 				];
 			}
@@ -425,6 +430,7 @@ class introduciator_helper
 			'fk_topic_id'							=> (int) $fk_topic_id,
 			'is_introduction_mandatory'				=> (bool) $this->config['introduciator_is_introduction_mandatory'],
 			'is_check_delete_first_post'			=> (bool) $this->config['introduciator_is_check_delete_first_post'],
+			'is_check_move_duplicate'				=> (bool) $this->config['introduciator_is_check_move_duplicate'],
 			'is_explanation_enabled'				=> (bool) $this->config['introduciator_is_explanation_enabled'],
 			'is_use_permissions'					=> (bool) $this->config['introduciator_is_use_permissions'],
 			'is_include_groups'						=> (bool) $this->config['introduciator_is_include_groups'],
@@ -1125,6 +1131,76 @@ class introduciator_helper
 	}
 
 	/**
+	 * Check whether moving the given topics into the introduce forum (forum mode only) would create
+	 * a duplicate: another, different topic already exists there, created by the same user as one of
+	 * the topics about to be moved.
+	 *
+	 * No-op (returns an empty array) outside forum mode, when the destination isn't the introduce
+	 * forum, when the extension or this specific check is disabled, or when there's nothing to check.
+	 *
+	 * @param array $topic_ids   Topic identifiers about to be moved
+	 * @param int   $to_forum_id Destination forum identifier
+	 *
+	 * @return array Empty if no conflict; else one entry per conflict with 'moved_topic_id',
+	 *               'moved_topic_title', 'poster_id', 'poster_name', 'poster_colour',
+	 *               'existing_topic_id', 'existing_first_post_id'
+	 * @access public
+	 */
+	public function check_move_creates_duplicate_introduction($topic_ids, $to_forum_id)
+	{
+		$conflicts = [];
+
+		if (empty($topic_ids))
+		{
+			return $conflicts;
+		}
+
+		if (empty($this->introduciator_params))
+		{
+			$this->introduciator_params = $this->introduciator_getparams();
+		}
+
+		if (!$this->is_introduciator_allowed()
+			|| !$this->introduciator_params['is_check_move_duplicate']
+			|| (int) $this->introduciator_params['mode'] !== self::MODE_FORUM
+			|| (int) $this->introduciator_params['fk_forum_id'] !== (int) $to_forum_id)
+		{
+			return $conflicts;
+		}
+
+		$sql = 'SELECT t.topic_id, t.topic_title, t.topic_poster, u.username, u.user_colour
+				FROM ' . TOPICS_TABLE . ' t
+				LEFT JOIN ' . USERS_TABLE . ' u ON u.user_id = t.topic_poster
+				WHERE ' . $this->db->sql_in_set('t.topic_id', array_map('intval', $topic_ids));
+		$result = $this->db->sql_query($sql);
+
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$poster_id = (int) $row['topic_poster'];
+			$existing_topic_id = 0;
+			$existing_post_id = 0;
+			$existing_approved = false;
+
+			if ($this->is_user_post_into_forum($to_forum_id, $poster_id, $existing_topic_id, $existing_post_id, $existing_approved)
+				&& $existing_topic_id != $row['topic_id'])
+			{
+				$conflicts[] = [
+					'moved_topic_id'			=> (int) $row['topic_id'],
+					'moved_topic_title'			=> $row['topic_title'],
+					'poster_id'					=> $poster_id,
+					'poster_name'				=> $row['username'],
+					'poster_colour'				=> $row['user_colour'],
+					'existing_topic_id'			=> (int) $existing_topic_id,
+					'existing_first_post_id'	=> (int) $existing_post_id,
+				];
+			}
+		}
+		$this->db->sql_freeresult($result);
+
+		return $conflicts;
+	}
+
+	/**
 	 * Check whether the given forum / topic IS the configured introduction scope: the forum, in
 	 * forum mode, or the single shared topic, in topic mode.
 	 *
@@ -1195,6 +1271,46 @@ class introduciator_helper
 		}
 
 		return append_sid("{$this->root_path}viewforum.{$this->php_ext}", 'f=' . (int) $this->introduciator_params['fk_forum_id']);
+	}
+
+	/**
+	 * Get the title to pre-fill (not enforce) when a member starts a new introduction topic, in
+	 * the current user's language, with %username% substituted.
+	 *
+	 * Forum mode only: topic mode has no "new introduction topic" moment to pre-fill a title for.
+	 *
+	 * @param int $forum_id Forum the user is posting into
+	 *
+	 * @return string Empty if not applicable, or no template configured for this language
+	 * @access public
+	 */
+	public function get_topic_title_template($forum_id)
+	{
+		if (empty($this->introduciator_params))
+		{
+			$this->introduciator_params = $this->introduciator_getparams();
+		}
+
+		if (!$this->is_introduciator_allowed()
+			|| (int) $this->introduciator_params['mode'] !== self::MODE_FORUM
+			|| (int) $this->introduciator_params['fk_forum_id'] !== (int) $forum_id)
+		{
+			return '';
+		}
+
+		foreach ($this->introduciator_get_explanations(false, true) as $explanation_value)
+		{
+			$title = $explanation_value['explanation']['topic_title_template'];
+
+			if ($title !== '')
+			{
+				$this->replace_all_by([&$title], ['%username%' => $this->user->data['username']]);
+			}
+
+			return $title;
+		}
+
+		return '';
 	}
 
 	/**
