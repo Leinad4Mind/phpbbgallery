@@ -7,5 +7,5 @@
 			"searchreplace visualblocks code fullscreen","pagebreak",
 			"insertdatetime media table contextmenu paste textcolor"
 		],
-		toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | fore-color | link image | forecolor",
+		toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | link image | forecolor",
 	});

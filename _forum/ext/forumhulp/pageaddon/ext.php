@@ -13,10 +13,12 @@ class ext extends \phpbb\extension\base
 {
 	public function is_enableable()
 	{
-		if (!class_exists('forumhulp\helper\helper'))
+		$user = $this->container->get('user');
+		$user->add_lang_ext('forumhulp/pageaddon', 'pageaddon');
+
+		if (!class_exists('forumhulp\helper\helper') && isset($user->lang['FH_HELPER_NOTICE']))
 		{
-			$this->container->get('user')->add_lang_ext('forumhulp/pageaddon', 'pageaddon');
-			trigger_error($this->container->get('user')->lang['FH_HELPER_NOTICE'], E_USER_WARNING);
+			trigger_error($user->lang['FH_HELPER_NOTICE'], E_USER_WARNING);
 		}
 
 		if (!$this->container->get('ext.manager')->is_enabled('forumhulp/helper'))
@@ -25,6 +27,11 @@ class ext extends \phpbb\extension\base
 		}
 
 		$manager = $this->container->get('ext.manager');
+
+		if (!$manager->is_enabled('phpbb/pages') && isset($user->lang['PAGES_NOTICE']))
+		{
+			trigger_error($user->lang['PAGES_NOTICE'], E_USER_WARNING);
+		}
 
 		return $manager->is_enabled('phpbb/pages') && class_exists('forumhulp\helper\helper');
 	}
