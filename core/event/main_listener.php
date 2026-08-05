@@ -49,6 +49,9 @@ class main_listener implements EventSubscriberInterface
 
 	/** @var \phpbbgallery\core\unread_counter */
 	protected \phpbbgallery\core\unread_counter $unread_counter;
+
+	/** @var \phpbbgallery\core\album_access */
+	protected \phpbbgallery\core\album_access $album_access;
 	/** @var \phpbb\db\driver\driver_interface  */
 	protected \phpbb\db\driver\driver_interface $db;
 
@@ -67,12 +70,14 @@ class main_listener implements EventSubscriberInterface
 	 * @param \phpbb\db\driver\driver_interface $db
 	 * @param string $users_table
 	 * @param \phpbbgallery\core\online_location $online_location
+	 * @param \phpbbgallery\core\album_access $album_access
 	 * @param \phpbbgallery\core\unread_counter $unread_counter
 	 */
 	public function __construct(\phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\user $user,
 								\phpbb\language\language $lang, \phpbbgallery\core\search $gallery_search,
 								\phpbbgallery\core\config $gallery_config, \phpbb\db\driver\driver_interface $db,
 								string $users_table, \phpbbgallery\core\online_location $online_location,
+								\phpbbgallery\core\album_access $album_access,
 								\phpbbgallery\core\unread_counter $unread_counter)
 	{
 		$this->helper = $helper;
@@ -84,6 +89,7 @@ class main_listener implements EventSubscriberInterface
 		$this->db = $db;
 		$this->users_table = $users_table;
 		$this->online_location = $online_location;
+		$this->album_access = $album_access;
 		$this->unread_counter = $unread_counter;
 	}
 
@@ -147,7 +153,9 @@ class main_listener implements EventSubscriberInterface
 	{
 		$this->template->assign_var('GALLERY_TITLE', $this->gallery_config->get_title($this->language));
 
-		if ($this->gallery_config->get('disp_gallery_icon') == 1)
+		if ($this->gallery_config->get('disp_gallery_icon') == 1
+			&& empty($this->user->data['is_bot'])
+			&& $this->album_access->has_any())
 		{
 			$template_vars = [
 				'U_GALLERY' => $this->helper->route('phpbbgallery_core_index'),

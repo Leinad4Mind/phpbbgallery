@@ -6,6 +6,9 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Made the phpBB permission-test identity authoritative for Gallery album,
+  ownership and zebra checks, and hide the header link when that effective
+  identity cannot view or moderate any album.
 - Added a deterministic release builder that creates and validates all 13
   component ZIPs from a committed Git ref, records their SHA-256 hashes and
   publishes the verified package set as a CI artifact.
