@@ -45,6 +45,16 @@ namespace phpbb\event
 	}
 }
 
+namespace GuzzleHttp
+{
+	if (!class_exists('GuzzleHttp\\Client', false))
+	{
+		class Client
+		{
+		}
+	}
+}
+
 namespace phpbbgallery\core
 {
 	function utf8_substr(string $value, int $offset, ?int $length = null): string
@@ -193,6 +203,7 @@ namespace
 	require_once dirname(__DIR__, 2) . '/acpimport/ext.php';
 	require_once dirname(__DIR__, 2) . '/exif/ext.php';
 	require_once dirname(__DIR__, 2) . '/imagerevisions/ext.php';
+	require_once dirname(__DIR__, 2) . '/remotestorage/ext.php';
 	require_once dirname(__DIR__, 2) . '/contest/ext.php';
 	require_once dirname(__DIR__) . '/controller/moderate.php';
 	require_once dirname(__DIR__) . '/controller/index.php';
