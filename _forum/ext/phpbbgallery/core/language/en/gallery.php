@@ -144,6 +144,7 @@ $lang = array_merge($lang, [
 	'IMAGE_INSERTED'               => 'Image inserted',
 	'IMAGE_LOCKED'                 => 'Sorry, this image is locked. You cannot post comments for this image anymore.',
 	'IMAGE_NAME'                   => 'Imagename',
+	'IMAGE_UPLOAD_TIME'            => 'Upload date',
 	'IMAGE_NOT_EXIST'              => 'This image does not exist.',
 	'HOTLINK_NOT_ALLOWED'          => 'Hotlinking is not allowed.',
 	'IMAGE_NOT_APPROVED'           => 'For approval',

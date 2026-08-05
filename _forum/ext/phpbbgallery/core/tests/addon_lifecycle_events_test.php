@@ -64,7 +64,7 @@ final class addon_lifecycle_events_test extends TestCase
 		$this->assertNotFalse($success);
 		$this->assertLessThan($event, $mutation);
 		$this->assertLessThan($success, $event);
-		$this->assertStringContainsString("['image_id', 'image_data', 'updated_image_data', 'sql_ary']", $method);
+		$this->assertStringContainsString("['image_id', 'image_data', 'updated_image_data', 'sql_ary', 'file_changed']", $method);
 	}
 
 	public function test_approval_and_author_changes_dispatch_after_persistence(): void

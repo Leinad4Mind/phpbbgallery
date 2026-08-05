@@ -310,7 +310,7 @@ class album
 
 		$limit_days = [];
 		$sort_by_text = [
-			't'  => $this->language->lang('TIME'),
+			't'  => $this->language->lang('IMAGE_UPLOAD_TIME'),
 			'n'  => $this->language->lang('IMAGE_NAME'),
 			'vc' => $this->language->lang('GALLERY_VIEWS'),
 			'u'  => $this->language->lang('SORT_USERNAME'),
@@ -336,6 +336,25 @@ class album
 			$sort_by_text['lc'] = $this->language->lang('NEW_COMMENT');
 			$sort_by_sql['lc'] = 'image_last_comment';
 		}
+		$sort_from = $this->table_images;
+		/**
+		 * Allow add-ons to provide indexed album-image sort methods.
+		 *
+		 * Sort keys still pass through the Core allowlist below. A listener that
+		 * adds a SQL expression must also add the matching human-readable label.
+		 *
+		 * @event phpbbgallery.core.image.sort_options
+		 * @var array  album_data  Current album row
+		 * @var array  sort_by_text Sort-key labels
+		 * @var array  sort_by_sql  Sort-key SQL expressions
+		 * @var string sort_from    SQL FROM expression for the image query
+		 * @since 4.0.0
+		 */
+		$vars = ['album_data', 'sort_by_text', 'sort_by_sql', 'sort_from'];
+		extract($this->phpbb_dispatcher->trigger_event(
+			'phpbbgallery.core.image.sort_options',
+			compact($vars)
+		));
 		$can_moderate = $this->auth->acl_check('m_status', $album_id, $album_owner_id);
 		foreach ($this->image_visibility->restricted_sort_keys($album_data, $can_moderate) as $private_sort_key)
 		{
@@ -359,7 +378,7 @@ class album
 
 		$images = [];
 		$sql = 'SELECT *
-			FROM ' . $this->table_images . '
+			FROM ' . $sort_from . '
 			WHERE image_album_id = ' . (int) $album_id . $image_status_check . '
 				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
 			ORDER BY ' . $sql_sort_order . $sql_help_sort;
