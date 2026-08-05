@@ -6,17 +6,17 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
-- Added a deterministic release builder that creates and validates all 11
+- Added a deterministic release builder that creates and validates all 12
   component ZIPs from a committed Git ref, records their SHA-256 hashes and
   publishes the verified package set as a CI artifact.
 - Made the functional CI install the generated ZIPs instead of source folders
-  and added a clean-board lifecycle covering all 11 components, automatic
+  and added a clean-board lifecycle covering all 12 components, automatic
   add-on disablement, reactivation and ordered purge.
 - Fixed BBTags Images purging so phpBB no longer recreates the provisional ACP
   module and block removal of the Gallery Core category.
 - Made the Contest add-on remove its owned table and columns when its data is
   purged, avoiding orphaned storage.
-- Made all 11 component manifests expose their version-check configuration in
+- Made all 12 component manifests expose their version-check configuration in
   phpBB's supported `extra.version-check` location, added matching release
   metadata files and documented the Core and add-on catalogue.
 - Replaced the archived Blueimp/jQuery quick-upload stack with a dependency-free
@@ -56,6 +56,16 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
   workspaces, atomic publication/replacement, checksums, metadata and paginated
   object enumeration as the foundation for independently packaged remote
   storage providers.
+- Added the independently packaged Remote Storage add-on with private S3 and
+  S3-compatible object storage, AWS Signature Version 4 requests, path-style
+  endpoint support and release-package, version-check and CI integration.
+- Added verified Remote Storage ACP configuration in all supported languages,
+  including environment-variable overrides, secret-safe forms and a complete
+  write, checksum, read and delete connection test before settings are saved.
+- Added confirmed, resumable and abortable Local-to-S3 and S3-to-Local storage
+  migrations with bounded batches, mirrored writes during the transition,
+  size and SHA-256 verification, crash-safe final activation and retained
+  source copies for recovery.
 - Added recoverable image-deletion requests for ordinary authors, with a
   dedicated moderation queue, exact status restoration, permanent moderator
   deletion, fail-closed visibility across Core and Gallery add-ons, and
