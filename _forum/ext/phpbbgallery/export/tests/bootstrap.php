@@ -159,6 +159,8 @@ namespace
 	require_once dirname(__DIR__, 2) . '/core/file/file.php';
 	require_once dirname(__DIR__, 2) . '/core/storage/provider_interface.php';
 	require_once dirname(__DIR__, 2) . '/core/storage/local_provider.php';
+	require_once dirname(__DIR__, 2) . '/core/storage/local_object.php';
+	require_once dirname(__DIR__, 2) . '/core/storage/workspace.php';
 
 	require_once dirname(__DIR__) . '/path.php';
 	require_once dirname(__DIR__) . '/archive.php';

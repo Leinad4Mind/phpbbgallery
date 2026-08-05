@@ -71,15 +71,17 @@ class runner_test extends TestCase
 
 	private function runner(fake_export $export, array $config_overrides = []): runner
 	{
+		$provider = new \phpbbgallery\core\storage\local_provider(
+			$this->source,
+			$this->root . '/medium',
+			$this->root . '/mini'
+		);
+
 		return new runner(
 			$this->config($config_overrides),
 			new \phpbb\language\language(),
 			$export,
-			new archive(new \phpbbgallery\core\storage\local_provider(
-				$this->source,
-				$this->root . '/medium',
-				$this->root . '/mini'
-			)),
+			new archive(new \phpbbgallery\core\storage\workspace($provider, $this->root . '/workspace')),
 			$this->storage
 		);
 	}

@@ -29,11 +29,12 @@ class archive_test extends TestCase
 		mkdir($this->source, 0777, true);
 
 		$this->archive_path = $this->root . '/export.zip';
-		$this->archive = new archive(new \phpbbgallery\core\storage\local_provider(
+		$provider = new \phpbbgallery\core\storage\local_provider(
 			$this->source,
 			$this->root . '/medium',
 			$this->root . '/mini'
-		));
+		);
+		$this->archive = new archive(new \phpbbgallery\core\storage\workspace($provider, $this->root . '/workspace'));
 	}
 
 	protected function tearDown(): void
@@ -208,5 +209,87 @@ class archive_test extends TestCase
 		self::assertSame(1, $result['added']);
 		self::assertSame([], $result['errors']);
 		self::assertSame(['Album/12_2_Distributed.jpg'], $this->entries());
+	}
+
+	public function test_remote_source_is_materialized_only_until_the_archive_is_closed(): void
+	{
+		$workspace_root = $this->root . '/remote-workspace';
+		$provider = new export_remote_provider(['7/71/remote.jpg' => 'remote-source']);
+		$archive = new archive(new \phpbbgallery\core\storage\workspace($provider, $workspace_root));
+
+		$result = $archive->append($this->archive_path, [
+			$this->row(13, '7/71/remote.jpg', 'Remote'),
+		], true);
+
+		self::assertSame(1, $result['added']);
+		self::assertSame([], $result['errors']);
+		self::assertSame(['Album/13_2_Remote.jpg'], $this->entries());
+		self::assertSame([], glob($workspace_root . '/*') ?: []);
+	}
+}
+
+// phpcs:disable Generic.Files.OneClassPerFile.MultipleFound -- Remote provider double belongs to this archive test.
+final class export_remote_provider implements \phpbbgallery\core\storage\provider_interface
+{
+	public function __construct(private array $objects)
+	{
+	}
+
+	public function get_id(): string
+	{
+		return 'remote-test';
+	}
+
+	public function prepare(string $variant, string $key): bool
+	{
+		return true;
+	}
+
+	public function write(string $variant, string $key, string $local_file): bool
+	{
+		return false;
+	}
+
+	public function open_stream(string $variant, string $key): mixed
+	{
+		if (!isset($this->objects[$key]))
+		{
+			return false;
+		}
+		$stream = fopen('php://temp', 'w+b');
+		fwrite($stream, $this->objects[$key]);
+		rewind($stream);
+
+		return $stream;
+	}
+
+	public function local_path(string $variant, string $key): ?string
+	{
+		return null;
+	}
+
+	public function exists(string $variant, string $key): bool
+	{
+		return isset($this->objects[$key]);
+	}
+
+	public function delete(string $variant, string $key): bool
+	{
+		return false;
+	}
+
+	public function size(string $variant, string $key): ?int
+	{
+		return isset($this->objects[$key]) ? strlen($this->objects[$key]) : null;
+	}
+
+	public function modified_time(string $variant, string $key): ?int
+	{
+		return isset($this->objects[$key]) ? 1785945600 : null;
+	}
+
+	public function checksum(string $variant, string $key, string $algorithm = 'sha256'): ?string
+	{
+		return isset($this->objects[$key]) ? hash($algorithm, $this->objects[$key]) : null;
 	}
 }

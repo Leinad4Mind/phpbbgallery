@@ -52,17 +52,17 @@ class archive
 		'ç' => 'c', 'ñ' => 'n', 'ý' => 'y', 'ÿ' => 'y', 'ß' => 'ss', 'æ' => 'ae', 'œ' => 'oe',
 	];
 
-	/** Active Gallery storage provider. */
-	private \phpbbgallery\core\storage\provider_interface $storage;
+	/** Private local workspace for active-provider objects. */
+	private \phpbbgallery\core\storage\workspace $workspace;
 
 	/**
 	 * Constructor
 	 *
-	 * @param \phpbbgallery\core\storage\provider_interface $storage Gallery storage provider
+	 * @param \phpbbgallery\core\storage\workspace $workspace Gallery storage workspace
 	 */
-	public function __construct(\phpbbgallery\core\storage\provider_interface $storage)
+	public function __construct(\phpbbgallery\core\storage\workspace $workspace)
 	{
-		$this->storage = $storage;
+		$this->workspace = $workspace;
 	}
 
 	/**
@@ -222,14 +222,17 @@ class archive
 			return $result;
 		}
 
+		$objects = [];
 		foreach ($rows as $row)
 		{
-			$source = $this->resolve_source((string) $row['image_filename']);
-			if ($source === false)
+			$object = $this->resolve_source((string) $row['image_filename']);
+			if ($object === false)
 			{
 				$result['errors'][] = ['type' => 'missing', 'image_id' => (int) $row['image_id'], 'file' => (string) $row['image_filename']];
 				continue;
 			}
+			$objects[] = $object;
+			$source = $object->get_path();
 
 			$entry = self::entry_path($row['album_segments'], (string) $row['image_name'], (string) $row['image_filename'], (int) $row['image_id'], (int) $row['author_id']);
 			if (!$zip->addFile($source, $entry))
@@ -242,7 +245,12 @@ class archive
 			$result['bytes'] += (int) @filesize($source);
 		}
 
-		if (!$zip->close())
+		$closed = $zip->close();
+		foreach ($objects as $object)
+		{
+			$object->release();
+		}
+		if (!$closed)
 		{
 			$result['errors'][] = ['type' => 'archive', 'file' => basename($archive_path)];
 		}
@@ -355,12 +363,17 @@ class archive
 	 * but it is still confined to the source directory before anything is read.
 	 *
 	 * @param string $filename Stored filename
-	 * @return string|false Path, or false when it is missing or out of bounds
+	 * @return \phpbbgallery\core\storage\local_object|false Local lease, or false when unavailable
 	 */
-	private function resolve_source(string $filename): string|false
+	private function resolve_source(string $filename): \phpbbgallery\core\storage\local_object|false
 	{
-		$path = $this->storage->local_path(\phpbbgallery\core\storage\provider_interface::SOURCE, $filename);
-
-		return $path !== null && is_file($path) && is_readable($path) ? $path : false;
+		try
+		{
+			return $this->workspace->materialize(\phpbbgallery\core\storage\provider_interface::SOURCE, $filename);
+		}
+		catch (\RuntimeException)
+		{
+			return false;
+		}
 	}
 }
