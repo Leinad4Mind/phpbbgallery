@@ -2,10 +2,10 @@ services:
     forumhulp.checkmail.checkmail:
         class: forumhulp\checkmail\cron\task\checkmail
         arguments:
-            - @config
-            - @dbal.conn
-            - @user
-            - %forumhulp.checkmail.tables.checkmail%
+            - '@config'
+            - '@dbal.conn'
+            - '@user'
+            - '%forumhulp.checkmail.tables.checkmail%'
         calls:
             - [set_name, [forumhulp.checkmail]]
         tags:

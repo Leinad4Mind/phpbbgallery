@@ -274,7 +274,13 @@ class verifyEmail {
 		$mxs = $this->getMXrecords(self::parse_email($email));
 		$timeout = ceil($this->max_connection_timeout / count($mxs));
 		foreach ($mxs as $host) {
-			$this->stream = @stream_socket_client("tcp://" . $host . ":" . $this->port, $errno, $errstr, $timeout);
+			$ip = filter_var($host, FILTER_VALIDATE_IP) ? $host : @gethostbyname($host);
+			if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+				$this->edebug($host . ": refused, non-public address");
+				continue;
+			}
+
+			$this->stream = @stream_socket_client("tcp://" . $ip . ":" . $this->port, $errno, $errstr, $timeout);
 			if ($this->stream === FALSE) {
 				if ($errno == 0) {
 					$this->set_error("Problem initializing the socket");

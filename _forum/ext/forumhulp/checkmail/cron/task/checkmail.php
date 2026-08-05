@@ -44,31 +44,37 @@ class checkmail extends \phpbb\cron\task\base
 	public function run()
 	{
 		$this->user->add_lang_ext('forumhulp/checkmail', 'info_acp_checkmail');
-		$sql = 'SELECT GROUP_CONCAT(group_id SEPARATOR ",") AS ignore_group FROM ' . GROUPS_TABLE . " WHERE group_name = 'BOTS' OR group_name = 'GUESTS'";
+		$sql = 'SELECT group_id FROM ' . GROUPS_TABLE . ' WHERE ' . $this->db->sql_in_set('group_name', array('BOTS', 'GUESTS'));
 		$result = $this->db->sql_query($sql);
-		$ignore_group = $this->db->sql_fetchfield('ignore_group');
+		$ignore_group = array();
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$ignore_group[] = (int) $row['group_id'];
+		}
+		$this->db->sql_freeresult($result);
 
 		$sql = 'SELECT u.user_id, u.user_email FROM ' . USERS_TABLE . ' u
 				LEFT OUTER JOIN ' . $this->checkmail_table . ' c ON u.user_id = c.user_id
-				WHERE u.group_id NOT IN (' . $ignore_group . ') AND c.user_id IS null
-				LIMIT 2';
-		$result = $this->db->sql_query($sql);
+				WHERE ' . $this->db->sql_in_set('u.group_id', $ignore_group, true) . ' AND c.user_id IS null';
+		$result = $this->db->sql_query_limit($sql, 2);
 		$ids = array();
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$ids[ $row['user_id']] = $row['user_email'];
 		}
-		
+		$this->db->sql_freeresult($result);
+
 		if (!sizeof($ids))
 		{
-			$sql = 'SELECT c.user_id, u.user_email FROM ' . $this->checkmail_table . ' c 
+			$sql = 'SELECT c.user_id, u.user_email FROM ' . $this->checkmail_table . ' c
 					LEFT JOIN ' . USERS_TABLE . ' u ON u.user_id = c.user_id
-					ORDER BY c.timestamp ASC LIMIT 2';
-			$result = $this->db->sql_query($sql);
+					ORDER BY c.timestamp ASC';
+			$result = $this->db->sql_query_limit($sql, 2);
 			while ($row = $this->db->sql_fetchrow($result))
 			{
 				$ids[ $row['user_id']] = $row['user_email'];
 			}
+			$this->db->sql_freeresult($result);
 		}
 
 		if (sizeof($ids))
@@ -76,28 +82,34 @@ class checkmail extends \phpbb\cron\task\base
 			$vmail = new verifyEmail();
 			$vmail->setStreamTimeoutWait(5);
 			$vmail->setPort(($this->config['smtp_delivery']) ? $this->config['smtp_port'] : 25);
-			
+
 			$vmail->setEmailFrom(($this->config['smtp_delivery']) ? $this->config['smtp_username'] : $this->config['board_email']);
-	
+
 			foreach($ids as $user_id => $user_email)
 			{
-					$status = 0;
-					if ($vmail->check($user_email)) {
-						$msg = $this->user->lang['EMAIL'] . $user_email . $this->user->lang['EXIST'];
+					if ($vmail->check($user_email))
+					{
 						$status = 1;
-					} elseif (verifyEmail::validate($user_email)) {
-						$msg = $this->user->lang['EMAIL'] . $user_email . $this->user->lang['VALID'];
-					} else {
-						$msg = $this->user->lang['EMAIL'] . $user_email . $this->user->lang['NOT_VALID'];
 					}
+					else if (verifyEmail::validate($user_email))
+					{
+						$status = 2;
+					}
+					else
+					{
+						$status = 0;
+					}
+
 					$sql_ary = array(
-						'email'		=> $msg,
+						'user_id'	=> (int) $user_id,
+						'email'		=> $user_email,
 						'status'	=> $status,
-						'responce'	=> $vmail->getStreamResponce()
+						'responce'	=> $vmail->getStreamResponce(),
+						'timestamp'	=> time(),
 					);
-					$sql = 'REPLACE INTO ' . $this->checkmail_table . ' 
-							VALUES (' . $user_id . ', "' . $sql_ary['email'] . '", ' . $sql_ary['status'] . ', "' . $this->db->sql_escape($sql_ary['responce']) . '", ' . time() . ')';
-					$this->db->sql_query($sql);
+
+					$this->db->sql_query('DELETE FROM ' . $this->checkmail_table . ' WHERE user_id = ' . (int) $user_id);
+					$this->db->sql_query('INSERT INTO ' . $this->checkmail_table . ' ' . $this->db->sql_build_array('INSERT', $sql_ary));
 			}
 		}
 		$this->config->set('checkmail_last_gc', time());
