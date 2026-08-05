@@ -6,6 +6,10 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Enforced watermarking for externally processed BMP/TIFF originals by first
+  creating a bounded temporary WebP, cleaned all provider response leases and
+  watermark derivatives after delivery, and disabled MIME sniffing on every
+  binary image response.
 - Open browser-compatible GIF, JPEG, PNG, WebP and AVIF originals inline when
   no add-on requires a download, while retaining attachment delivery for BMP,
   TIFF and unknown source formats.

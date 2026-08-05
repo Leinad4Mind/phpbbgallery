@@ -68,6 +68,9 @@ class file
 	/** Lease for the provider object currently used by the response. */
 	protected ?\phpbbgallery\core\storage\local_object $image_object = null;
 
+	/** Lease for a temporary browser-safe source prepared for the response. */
+	protected ?\phpbbgallery\core\storage\local_object $response_object = null;
+
 	/** Provider variant requested by the current route. */
 	protected string $storage_variant = \phpbbgallery\core\storage\provider_interface::SOURCE;
 
@@ -180,8 +183,6 @@ class file
 			$force_download = (bool) $force_download;
 		}
 
-		// @todo Enable watermark
-
 		$this->use_watermark = $this->config['phpbb_gallery_watermark_enabled'] && $this->data['album_watermark'] && !$this->auth->acl_check('i_watermark', $this->data['album_id'], $this->data['album_user_id']);
 
 		$this->tool->set_image_options($this->config['phpbb_gallery_max_filesize'], $this->config['phpbb_gallery_max_height'], $this->config['phpbb_gallery_max_width']);
@@ -200,6 +201,12 @@ class file
 			{
 				$this->tool->image_content_type = (string) $metadata['mime'];
 				$this->tool->image_type = (string) $metadata['extension'];
+				if ($this->use_watermark && !$this->prepare_external_watermark_source($external_processor, $metadata))
+				{
+					$this->set_error_image('image_not_exist.jpg', $this->language->lang('IMAGE_NOT_EXIST'));
+					$this->generate_image_src();
+					$this->tool->set_image_data($this->image_src, $this->data['image_name'], 0, true);
+				}
 			}
 		}
 		// Original-source access may be user-specific; never let the browser or
@@ -218,6 +225,71 @@ class file
 		$extension = strtolower((string) pathinfo($filename, PATHINFO_EXTENSION));
 
 		return !in_array($extension, ['gif', 'jpg', 'jpeg', 'png', 'webp', 'avif'], true);
+	}
+
+	/**
+	 * Convert a browser-unsafe original to a full-size temporary WebP before
+	 * applying the Core watermark. Failure must never expose the unwatermarked
+	 * source to a user who lacks the watermark-bypass permission.
+	 *
+	 * @param \phpbbgallery\core\image\external_processor_interface $processor
+	 * @param array $metadata Verified original metadata
+	 */
+	protected function prepare_external_watermark_source(
+		\phpbbgallery\core\image\external_processor_interface $processor,
+		array $metadata
+	): bool
+	{
+		if ($this->storage_workspace === null)
+		{
+			return false;
+		}
+
+		$temporary = null;
+		try
+		{
+			$temporary = $this->storage_workspace->create_temporary(
+				$this->data['image_filename'] . '.watermark.webp'
+			);
+			$derived = $processor->create_derivative(
+				$this->image_src,
+				$temporary->get_path(),
+				(int) ($metadata['width'] ?? 0),
+				(int) ($metadata['height'] ?? 0),
+				(int) $this->config['phpbb_gallery_jpg_quality']
+			);
+			if ($derived === null
+				|| strtolower((string) ($derived['extension'] ?? '')) !== 'webp'
+				|| strtolower((string) ($derived['mime'] ?? '')) !== 'image/webp'
+				|| (int) ($derived['width'] ?? 0) < 1
+				|| (int) ($derived['height'] ?? 0) < 1
+				|| ((int) $derived['width'] * (int) $derived['height']) > \phpbbgallery\core\file\file::MAX_DECODE_PIXELS
+				|| (int) ($derived['filesize'] ?? 0) < 1
+				|| !is_file($temporary->get_path())
+				|| is_link($temporary->get_path()))
+			{
+				return false;
+			}
+
+			$this->response_object = $temporary;
+			$temporary = null;
+			$this->tool->set_image_data($this->response_object->get_path(), $this->data['image_name'], 0, true);
+			$this->tool->image_content_type = 'image/webp';
+			$this->tool->image_type = 'webp';
+
+			return true;
+		}
+		catch (\Throwable)
+		{
+			return false;
+		}
+		finally
+		{
+			if ($temporary !== null)
+			{
+				$temporary->release();
+			}
+		}
 	}
 
 	/**
@@ -294,6 +366,7 @@ class file
 		$this->error = '';
 		$this->image_src = '';
 		$this->image_object = null;
+		$this->response_object = null;
 		$this->storage_variant = \phpbbgallery\core\storage\provider_interface::SOURCE;
 		$this->use_watermark = false;
 
@@ -465,10 +538,7 @@ class file
 		$response = new \Symfony\Component\HttpFoundation\BinaryFileResponse($this->tool->image_source);
 
 		$response->headers->set('Content-Type', $this->tool->image_content_type);
-		if ($this->tool->is_ie_greater7($this->user->browser))
-		{
-			$response->headers->set('X-Content-Type-Options', 'nosniff');
-		}
+		$response->headers->set('X-Content-Type-Options', 'nosniff');
 		if ($attachment || empty($this->user->browser) || (!$this->tool->is_ie_greater7($this->user->browser) && (strpos(strtolower($this->user->browser), 'msie') !== false)))
 		{
 			$response->headers->set('Content-Disposition', 'attachment; ' . $this->tool->header_filename(htmlspecialchars_decode($this->tool->image_name) . '.' . $this->tool->image_type));
@@ -486,14 +556,55 @@ class file
 			}
 		}
 		$this->tool->apply_browser_cache($response);
-		if ($this->image_object !== null && $this->image_object->is_temporary())
-		{
-			$this->image_object->detach();
-			$response->deleteFileAfterSend(true);
-			$this->image_object = null;
-		}
+		$this->release_response_objects($response);
 
 		return $response;
+	}
+
+	/** Release provider leases while preserving the file until Symfony sends it. */
+	protected function release_response_objects(\Symfony\Component\HttpFoundation\BinaryFileResponse $response): void
+	{
+		$response_path = $this->tool->image_source;
+		$delete_after_send = false;
+
+		foreach (['response_object', 'image_object'] as $property)
+		{
+			$object = $this->{$property};
+			if ($object === null)
+			{
+				continue;
+			}
+
+			if ($object->is_temporary() && $response_path === $object->get_path())
+			{
+				$object->detach();
+				$delete_after_send = true;
+			}
+			else
+			{
+				$delete_after_send = $delete_after_send
+					|| ($object->is_temporary() && $this->response_is_watermark_derivative($response_path, $object));
+				$object->release();
+			}
+			$this->{$property} = null;
+		}
+
+		if ($delete_after_send)
+		{
+			$response->deleteFileAfterSend(true);
+		}
+	}
+
+	/** Determine whether a response is the watermark derivative of a leased file. */
+	protected function response_is_watermark_derivative(
+		string $response_path,
+		\phpbbgallery\core\storage\local_object $object
+	): bool
+	{
+		$object_path = $object->get_path();
+		$dot = strrpos($object_path, '.');
+
+		return $dot !== false && $response_path === substr_replace($object_path, '_wm', $dot, 0);
 	}
 
 	protected function resize(int $image_id, int $resize_width, int $resize_height, string $store_filesize = '', bool $put_details = false): void

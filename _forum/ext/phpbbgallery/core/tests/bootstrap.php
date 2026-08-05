@@ -175,6 +175,16 @@ namespace
 	require_once dirname(__DIR__, 4) . '/phpbb/auth/auth.php';
 	require_once dirname(__DIR__, 4) . '/vendor/symfony/routing/RequestContextAwareInterface.php';
 	require_once dirname(__DIR__, 4) . '/vendor/symfony/routing/Generator/UrlGeneratorInterface.php';
+	$error_level = error_reporting();
+	error_reporting($error_level & ~E_DEPRECATED);
+	require_once dirname(__DIR__, 4) . '/vendor/symfony/http-foundation/HeaderBag.php';
+	require_once dirname(__DIR__, 4) . '/vendor/symfony/http-foundation/ResponseHeaderBag.php';
+	require_once dirname(__DIR__, 4) . '/vendor/symfony/http-foundation/Response.php';
+	require_once dirname(__DIR__, 4) . '/vendor/symfony/http-foundation/File/Exception/FileException.php';
+	require_once dirname(__DIR__, 4) . '/vendor/symfony/http-foundation/File/Exception/FileNotFoundException.php';
+	require_once dirname(__DIR__, 4) . '/vendor/symfony/http-foundation/File/File.php';
+	require_once dirname(__DIR__, 4) . '/vendor/symfony/http-foundation/BinaryFileResponse.php';
+	error_reporting($error_level);
 	require_once dirname(__DIR__, 4) . '/phpbb/controller/helper.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/cron/task/task.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/cron/task/base.php';
