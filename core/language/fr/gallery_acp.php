@@ -72,6 +72,7 @@ $lang = array_merge($lang, [
 	'GALLERY_ADDON_BBTAGS_IMAGES_EXPLAIN'   => 'Ajoute les tags BBTags partagés, leur modération, l’autocomplétion et la recherche d’images par plusieurs tags.',
 	'GALLERY_ADDON_CONTEST_EXPLAIN'         => 'Gère les phases des concours, les participations anonymes, les évaluations et la publication des gagnants.',
 	'GALLERY_ADDON_IMAGE_REVISIONS_EXPLAIN' => 'Conserve facultativement les anciennes versions des images remplacées afin que les modérateurs puissent les restaurer.',
+	'GALLERY_ADDON_REMOTE_STORAGE_EXPLAIN'   => 'Ajoute un stockage distant privé S3 et compatible S3 avec des migrations vérifiées et reprenables.',
 	'GALLERY_ADDON_BENEFIT'                  => 'Avantage',
 	'GALLERY_ADDON_ENABLED'                  => 'Activé',
 	'GALLERY_ADDON_DISABLED'                 => 'Désactivé',

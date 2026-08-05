@@ -67,6 +67,7 @@ final class acp_environment_test extends TestCase
 				'not_available',
 				'not_available',
 				'not_available',
+				'not_available',
 			],
 			array_column($checks, 'status')
 		);
@@ -82,21 +83,24 @@ final class acp_environment_test extends TestCase
 				'phpbbgallery/bbtagsimages',
 				'phpbbgallery/export',
 				'phpbbgallery/imagerevisions',
+				'phpbbgallery/remotestorage',
 			],
 			array_column($checks, 'extension')
 		);
 		$this->assertSame(
-			['free', 'free', 'free', 'free', 'free', 'free', 'premium', 'premium', 'premium', 'premium'],
+			['free', 'free', 'free', 'free', 'free', 'free', 'premium', 'premium', 'premium', 'premium', 'premium'],
 			array_column($checks, 'tier')
 		);
 		$this->assertSame(
-			['1.4.0', '1.4.0', '1.0.0', '1.4.0', '1.0.0', '1.0.0', '1.0.0', '1.0.0', '1.0.0', '1.0.0'],
+			['1.4.0', '1.4.0', '1.0.0', '1.4.0', '1.0.0', '1.0.0', '1.0.0', '1.0.0', '1.0.0', '1.0.0', '1.0.0'],
 			array_column($checks, 'version')
 		);
 		$this->assertSame('phpBB Gallery Add-on: ACP Cleanup', $checks[0]['name']);
 		$this->assertSame('phpBB Gallery Add-on: Image Revisions', $checks[9]['name']);
+		$this->assertSame('phpBB Gallery Add-on: Remote Storage', $checks[10]['name']);
 		$this->assertSame('GALLERY_ADDON_CONTEST_EXPLAIN', $checks[2]['description']);
 		$this->assertSame('GALLERY_ADDON_IMAGE_REVISIONS_EXPLAIN', $checks[9]['description']);
+		$this->assertSame('GALLERY_ADDON_REMOTE_STORAGE_EXPLAIN', $checks[10]['description']);
 	}
 
 	public function test_overview_shows_statistics_first_and_keeps_tables_separate(): void

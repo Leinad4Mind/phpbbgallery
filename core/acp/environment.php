@@ -36,6 +36,7 @@ final class environment
 		'phpbbgallery/bbtagsimages' => ['BBTags Images', '1.0.0', 'premium', 'GALLERY_ADDON_BBTAGS_IMAGES_EXPLAIN'],
 		'phpbbgallery/export' => ['Export', '1.0.0', 'premium', 'GALLERY_ADDON_EXPORT_EXPLAIN'],
 		'phpbbgallery/imagerevisions' => ['Image Revisions', '1.0.0', 'premium', 'GALLERY_ADDON_IMAGE_REVISIONS_EXPLAIN'],
+		'phpbbgallery/remotestorage' => ['Remote Storage', '1.0.0', 'premium', 'GALLERY_ADDON_REMOTE_STORAGE_EXPLAIN'],
 	];
 
 	/**
