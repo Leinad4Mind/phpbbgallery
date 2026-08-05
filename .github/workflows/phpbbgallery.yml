@@ -235,6 +235,36 @@ jobs:
           --bootstrap ./tests/bootstrap.php
           phpBB/ext/phpbbgallery/imagerevisions/tests/functional/imagerevisions_workflow.php
 
+      - name: Start MinIO storage service
+        shell: bash
+        run: |
+          docker run --detach --name phpbbgallery-minio \
+            --publish 9000:9000 \
+            --env MINIO_ROOT_USER=phpbbgallery \
+            --env MINIO_ROOT_PASSWORD=phpbbgallery-functional-secret \
+            quay.io/minio/minio@sha256:3f97c5651cb6662b880c787a232b6b34fec8d8922e08d6617b25d241a21164bb server /data
+
+          for attempt in {1..30}; do
+            if curl --fail --silent 'http://127.0.0.1:9000/minio/health/live' > /dev/null; then
+              break
+            fi
+            sleep 1
+          done
+          curl --fail --silent 'http://127.0.0.1:9000/minio/health/live' > /dev/null
+          AWS_ACCESS_KEY_ID=phpbbgallery \
+          AWS_SECRET_ACCESS_KEY=phpbbgallery-functional-secret \
+          AWS_DEFAULT_REGION=us-east-1 \
+            aws --endpoint-url 'http://127.0.0.1:9000' s3 mb 's3://phpbbgallery-functional'
+
+      - name: Run Gallery Remote Storage MinIO workflow test
+        shell: bash
+        working-directory: .functional/phpBB3
+        run: >-
+          phpBB/vendor/bin/phpunit
+          --configuration .github/phpunit-sqlite3-github.xml
+          --bootstrap ./tests/bootstrap.php
+          phpBB/ext/phpbbgallery/remotestorage/tests/functional/remotestorage_workflow.php
+
       - name: Run Gallery addon reconciliation workflow test
         shell: bash
         working-directory: .functional/phpBB3

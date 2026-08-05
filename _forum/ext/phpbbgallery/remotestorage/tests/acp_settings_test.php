@@ -54,6 +54,8 @@ final class acp_settings_test extends TestCase
 		$this->assertStringContainsString("is_set_post('continue_migration')", $source);
 		$this->assertStringContainsString("is_set_post('abort_migration')", $source);
 		$this->assertStringContainsString('confirm_box(true)', $source);
+		$this->assertStringContainsString('REMOTE_STORAGE_MIGRATION_START_CONFIRM', $source);
+		$this->assertStringContainsString('REMOTE_STORAGE_MIGRATION_ABORT_CONFIRM', $source);
 	}
 
 	public function test_secret_is_never_rendered_back_into_the_form(): void

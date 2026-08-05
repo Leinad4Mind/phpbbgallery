@@ -48,7 +48,7 @@ class main_module
 			{
 				confirm_box(
 					false,
-					'REMOTE_STORAGE_MIGRATION_START',
+					'REMOTE_STORAGE_MIGRATION_START_CONFIRM',
 					$this->confirmation_fields($request, 'start_migration'),
 					'confirm_body.html',
 					$this->u_action
@@ -90,7 +90,7 @@ class main_module
 			{
 				confirm_box(
 					false,
-					'REMOTE_STORAGE_MIGRATION_ABORT',
+					'REMOTE_STORAGE_MIGRATION_ABORT_CONFIRM',
 					$this->confirmation_fields($request, 'abort_migration'),
 					'confirm_body.html',
 					$this->u_action
