@@ -76,6 +76,7 @@ class notification_lifecycle_test extends TestCase
 			'phpbbgallery/bbpointsimages',
 			'phpbbgallery/contest',
 			'phpbbgallery/remotestorage',
+			'phpbbgallery/tiff',
 		], $extension_manager->disabled);
 	}
 

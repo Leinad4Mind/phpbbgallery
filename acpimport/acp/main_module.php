@@ -31,7 +31,10 @@ class main_module
 		$gallery_config = $phpbb_container->get('phpbbgallery.core.config');
 		$gallery_album = $phpbb_container->get('phpbbgallery.core.album');
 		$gallery_url->_include('functions_display', 'phpbb');
-		$this->import_storage = new import_storage($gallery_url->path('import'));
+		$this->import_storage = new import_storage(
+			$gallery_url->path('import'),
+			$phpbb_container->get('phpbbgallery.core.image.format_registry')
+		);
 		$this->import_storage->remove_legacy_php_state();
 
 		$user->add_lang_ext('phpbbgallery/core', ['gallery_acp', 'gallery']);
@@ -199,6 +202,8 @@ class main_module
 						//'image_exif_data'		=> '',
 					];
 
+					$format_registry = $phpbb_container->get('phpbbgallery.core.image.format_registry');
+					$external_processor = $format_registry->processor_for_filename($file_link);
 					$image_tools = $phpbb_container->get('phpbbgallery.core.file.tool');
 					$image_tools->set_image_options($gallery_config->get('max_filesize'), $gallery_config->get('max_height'), $gallery_config->get('max_width'));
 					// force_empty_image=true resets the shared file.tool's state (image/resized/rotated/watermarked)
@@ -219,7 +224,27 @@ class main_module
 					$vars = ['additional_sql_data', 'file_link'];
 					extract($phpbb_dispatcher->trigger_event('phpbbgallery.acpimport.update_image_before', compact($vars)));
 
-					if (($filetype[0] > $gallery_config->get('max_width')) || ($filetype[1] > $gallery_config->get('max_height')))
+					if ($external_processor !== null)
+					{
+						$metadata = $external_processor->prepare_source($file_link, [
+							'max_filesize' => (int) $gallery_config->get('max_filesize'),
+							'max_width' => (int) $gallery_config->get('max_width'),
+							'max_height' => (int) $gallery_config->get('max_height'),
+							'allow_resize' => (bool) $gallery_config->get('allow_resize'),
+							'rotation' => 0,
+						]);
+						if ($metadata === null || !$format_registry->accepts_metadata($file_link, $metadata))
+						{
+							$this->log_import_error($this->language->lang('GENERAL_UPLOAD_ERROR', $display_name));
+							$local_storage->delete(
+								\phpbbgallery\core\storage\provider_interface::SOURCE,
+								$staged_source_key
+							);
+							continue;
+						}
+						$filetype = [(int) $metadata['width'], (int) $metadata['height']];
+					}
+					else if (($filetype[0] > $gallery_config->get('max_width')) || ($filetype[1] > $gallery_config->get('max_height')))
 					{
 						/**
 						* Resize oversize images
@@ -237,7 +262,7 @@ class main_module
 							}
 						}
 					}
-					$file_updated = (bool) $image_tools->resized;
+					$file_updated = $external_processor !== null || (bool) $image_tools->resized;
 
 					/**
 					* Event to trigger before mass update
@@ -718,31 +743,8 @@ class main_module
 
 	private function get_allowed_extensions(): array
 	{
-		global $gallery_config;
+		global $phpbb_container;
 
-		$extensions = [];
-		if ($gallery_config->get('allow_jpg'))
-		{
-			$extensions[] = 'jpg';
-			$extensions[] = 'jpeg';
-		}
-		if ($gallery_config->get('allow_png'))
-		{
-			$extensions[] = 'png';
-		}
-		if ($gallery_config->get('allow_gif'))
-		{
-			$extensions[] = 'gif';
-		}
-		if ($gallery_config->get('allow_webp'))
-		{
-			$extensions[] = 'webp';
-		}
-		if ($gallery_config->get('allow_avif') && \phpbbgallery\core\file\file::supports_avif())
-		{
-			$extensions[] = 'avif';
-		}
-
-		return $extensions;
+		return $phpbb_container->get('phpbbgallery.core.upload')->get_allowed_types(false, true);
 	}
 }

@@ -1,0 +1,38 @@
+{
+	"name": "phpbbgallery/tiff",
+	"type": "phpbb-extension",
+	"description": "This phpBB Gallery Add-on accepts TIFF originals and creates browser-safe WebP variants",
+	"homepage": "https://github.com/satanasov/phpbbgallery",
+	"version": "1.0.0",
+	"time": "2026-08-05",
+	"license": "GPL-2.0-only",
+	"authors": [
+		{
+			"name": "Leinad4Mind",
+			"homepage": "https://www.leinad4mind.top/forum",
+			"role": "Extension Developer"
+		}
+	],
+	"require": {
+		"php": ">=8.1",
+		"ext-imagick": "*"
+	},
+	"require-dev": {
+		"phpunit/phpunit": "^10.5"
+	},
+	"scripts": {
+		"test": "phpunit -c phpunit.xml.dist"
+	},
+	"extra": {
+		"display-name": "phpBB Gallery Add-on: TIFF",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.3.0,<4.0.0@dev"
+		},
+		"version-check": {
+			"host": "raw.githubusercontent.com",
+			"directory": "/satanasov/phpbbgallery/master/",
+			"filename": "gallery-tiff.json",
+			"ssl": true
+		}
+	}
+}

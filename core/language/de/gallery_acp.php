@@ -57,6 +57,7 @@ $lang = array_merge($lang, [
 	'GALLERY_ADDON_CONTEST_EXPLAIN'         => 'Verwaltet Wettbewerbsphasen, anonyme Beiträge, Bewertungen und die Veröffentlichung der Gewinner.',
 	'GALLERY_ADDON_IMAGE_REVISIONS_EXPLAIN' => 'Bewahrt optional frühere Versionen ersetzter Bilder auf, damit Moderatoren sie wiederherstellen können.',
 	'GALLERY_ADDON_REMOTE_STORAGE_EXPLAIN'   => 'Fügt privaten S3- und S3-kompatiblen Remotespeicher mit geprüften, fortsetzbaren Migrationen hinzu.',
+	'GALLERY_ADDON_TIFF_EXPLAIN'             => 'Ermöglicht sichere TIFF-Uploads über Imagick und private WebP-Ableitungen aus dem ersten Frame.',
 	'GALLERY_ADDON_BENEFIT'             => 'Nutzen',
 	'GALLERY_ADDON_ENABLED'             => 'Aktiviert',
 	'GALLERY_ADDON_DISABLED'            => 'Deaktiviert',

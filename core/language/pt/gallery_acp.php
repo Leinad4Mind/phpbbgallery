@@ -57,6 +57,7 @@ $lang = array_merge($lang, [
 	'GALLERY_ADDON_CONTEST_EXPLAIN'         => 'Gere as fases dos concursos, participações anónimas, classificações e publicação dos vencedores.',
 	'GALLERY_ADDON_IMAGE_REVISIONS_EXPLAIN' => 'Mantém versões anteriores opcionais das imagens substituídas para que os moderadores as possam restaurar.',
 	'GALLERY_ADDON_REMOTE_STORAGE_EXPLAIN'   => 'Adiciona armazenamento remoto privado S3 e compatível com S3, com migrações verificadas e retomáveis.',
+	'GALLERY_ADDON_TIFF_EXPLAIN'             => 'Adiciona carregamentos TIFF seguros através de Imagick e derivados WebP privados do primeiro frame.',
 	'GALLERY_ADDON_BENEFIT'                => 'Benefício',
 	'GALLERY_ADDON_ENABLED'                => 'Ativado',
 	'GALLERY_ADDON_DISABLED'               => 'Desativado',

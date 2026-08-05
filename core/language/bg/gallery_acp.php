@@ -57,6 +57,7 @@ $lang = array_merge($lang, [
 	'GALLERY_ADDON_CONTEST_EXPLAIN'         => 'Управлява етапите на конкурсите, анонимните участия, оценяването и публикуването на победителите.',
 	'GALLERY_ADDON_IMAGE_REVISIONS_EXPLAIN' => 'Пази незадължителни предишни версии на заменени изображения, за да могат модераторите да ги възстановят.',
 	'GALLERY_ADDON_REMOTE_STORAGE_EXPLAIN'   => 'Добавя частно S3 и S3-съвместимо отдалечено хранилище с проверени и възобновяеми миграции.',
+	'GALLERY_ADDON_TIFF_EXPLAIN'             => 'Добавя сигурни TIFF качвания чрез Imagick и частни WebP производни от първия frame.',
 	'GALLERY_ADDON_BENEFIT'                  => 'Полза',
 	'GALLERY_ADDON_ENABLED'                  => 'Активирано',
 	'GALLERY_ADDON_DISABLED'                 => 'Деактивирано',

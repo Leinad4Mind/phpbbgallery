@@ -20,10 +20,12 @@ class import_storage
 
 	private string $directory;
 	private int $ignored_unreadable_files = 0;
+	private ?\phpbbgallery\core\image\format_registry $format_registry;
 
-	public function __construct(string $directory)
+	public function __construct(string $directory, ?\phpbbgallery\core\image\format_registry $format_registry = null)
 	{
 		$this->directory = rtrim($directory, '/\\') . DIRECTORY_SEPARATOR;
+		$this->format_registry = $format_registry;
 	}
 
 	public function create_schema_id(): string
@@ -361,6 +363,27 @@ class import_storage
 			return ['error' => 'invalid_type'];
 		}
 
+		$extension = strtolower(pathinfo($image['filename'], PATHINFO_EXTENSION));
+		$processor = $this->format_registry?->processor_for_filename($image['path']);
+		if ($processor !== null)
+		{
+			$metadata = $processor->inspect($image['path']);
+			if ($metadata === null || !$this->format_registry->accepts_metadata($image['path'], $metadata))
+			{
+				return ['error' => 'invalid_type'];
+			}
+
+			return [
+				'error' => '',
+				'image_info' => [
+					0 => (int) $metadata['width'],
+					1 => (int) $metadata['height'],
+					'mime' => (string) $metadata['mime'],
+				],
+				'target_extension' => '.' . $extension,
+			];
+		}
+
 		$image_info = @getimagesize($image['path']);
 		if ($image_info === false || !isset($image_info['mime']))
 		{
@@ -384,7 +407,6 @@ class import_storage
 			return ['error' => 'invalid_type', 'mime' => $mime_type];
 		}
 
-		$extension = strtolower(pathinfo($image['filename'], PATHINFO_EXTENSION));
 		if (!in_array($extension, $mime_types[$mime_type]['extensions'], true))
 		{
 			return ['error' => 'mime_mismatch', 'mime' => $mime_type];

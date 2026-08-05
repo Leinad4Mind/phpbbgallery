@@ -315,6 +315,7 @@ class package_hygiene_test extends TestCase
 			'imagerevisions',
 			'contest',
 			'remotestorage',
+			'tiff',
 		] as $extension)
 		{
 			$this->assertStringContainsString('/' . $extension . '/phpunit.xml.dist export-ignore', $attributes);
@@ -338,6 +339,7 @@ class package_hygiene_test extends TestCase
 			'imagerevisions',
 			'contest',
 			'remotestorage',
+			'tiff',
 		] as $extension)
 		{
 			$this->assertFileExists($this->extension_root . '/' . $extension . '/license.txt', $extension);

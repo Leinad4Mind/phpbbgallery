@@ -38,3 +38,6 @@
 /remotestorage/phpunit.xml.dist export-ignore
 /remotestorage/tests export-ignore
 /remotestorage/tests/** export-ignore
+/tiff/phpunit.xml.dist export-ignore
+/tiff/tests export-ignore
+/tiff/tests/** export-ignore

@@ -38,6 +38,7 @@ class ext extends \phpbb\extension\base
 		'phpbbgallery/bbpointsimages',
 		'phpbbgallery/contest',
 		'phpbbgallery/remotestorage',
+		'phpbbgallery/tiff',
 	];
 
 	/**

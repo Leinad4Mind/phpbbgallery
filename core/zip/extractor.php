@@ -46,6 +46,7 @@ final class extractor
 
 	/** @var \phpbb\language\language */
 	private object $language;
+	private ?\phpbbgallery\core\image\format_registry $format_registry = null;
 
 	/** @var array Errors collected during the last extraction */
 	private array $errors = [];
@@ -59,11 +60,13 @@ final class extractor
 	/**
 	 * Constructor
 	 *
-	 * @param \phpbb\language\language $language Language object
+	 * @param \phpbb\language\language                       $language         Language object
+	 * @param \phpbbgallery\core\image\format_registry|null $format_registry External image formats
 	 */
-	public function __construct(\phpbb\language\language $language)
+	public function __construct(\phpbb\language\language $language, ?\phpbbgallery\core\image\format_registry $format_registry = null)
 	{
 		$this->language = $language;
+		$this->format_registry = $format_registry;
 	}
 
 	/**
@@ -357,8 +360,8 @@ final class extractor
 			return false;
 		}
 
-		$image_info = @getimagesize($target_path);
-		if (!$this->is_allowed_image($image_info, $entry['extension']))
+		$image_info = $this->inspect_image($target_path, $entry['extension']);
+		if ($image_info === false)
 		{
 			@unlink($target_path);
 			$this->new_error($this->language->lang('ZIP_INVALID_IMAGE_TYPE', $entry['realname']));
@@ -470,6 +473,37 @@ final class extractor
 		];
 
 		return isset($image_types[$image_info[2]]) && in_array($extension, $image_types[$image_info[2]], true);
+	}
+
+	/**
+	 * Validate either a native GD image or a format supplied by a trusted add-on.
+	 *
+	 * @return array|false getimagesize-compatible metadata
+	 */
+	private function inspect_image(string $path, string $extension): array|false
+	{
+		$image_info = @getimagesize($path);
+		if ($this->is_allowed_image($image_info, $extension))
+		{
+			return $image_info;
+		}
+		if ($this->format_registry === null)
+		{
+			return false;
+		}
+
+		$processor = $this->format_registry->processor_for_filename($path);
+		$metadata = $processor?->inspect($path);
+		if ($metadata === null || !$this->format_registry->accepts_metadata($path, $metadata))
+		{
+			return false;
+		}
+
+		return [
+			0 => (int) $metadata['width'],
+			1 => (int) $metadata['height'],
+			'mime' => (string) $metadata['mime'],
+		];
 	}
 
 	/**

@@ -377,6 +377,7 @@ services:
         class: phpbbgallery\core\zip\extractor
         arguments:
             - '@language'
+            - '@phpbbgallery.core.image.format_registry'
     phpbbgallery.core.icon.manager:
         class: phpbbgallery\core\icon\manager
         arguments:
