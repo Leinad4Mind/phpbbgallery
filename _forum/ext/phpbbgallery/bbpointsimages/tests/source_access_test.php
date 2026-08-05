@@ -37,6 +37,18 @@ final class source_access_test extends TestCase
 		$this->assertStringContainsString("- '%phpbbgallery.bbpointsimages.tables.contributors%'", $services);
 	}
 
+	public function test_listener_receives_the_gallery_url_service_required_by_its_constructor(): void
+	{
+		$services = file_get_contents(dirname(__DIR__) . '/config/services.yml');
+		$listener = strstr($services, 'phpbbgallery.bbpointsimages.listener:');
+		$this->assertIsString($listener);
+		$listener = strstr($listener, 'phpbbgallery.bbpointsimages.acp_listener:', true);
+		$this->assertIsString($listener);
+
+		$this->assertStringContainsString("- '@phpbbgallery.core.url'", $listener);
+		$this->assertStringNotContainsString("- '@phpbbgallery.core.storage.workspace'", $listener);
+	}
+
 	public function test_download_counter_is_exposed_in_every_supported_style(): void
 	{
 		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
