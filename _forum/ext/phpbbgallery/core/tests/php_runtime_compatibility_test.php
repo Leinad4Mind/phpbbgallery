@@ -25,6 +25,7 @@ final class php_runtime_compatibility_test extends TestCase
 		'favorite',
 		'feed',
 		'imagerevisions',
+		'remotestorage',
 	];
 
 	public function test_all_components_declare_the_supported_runtime(): void

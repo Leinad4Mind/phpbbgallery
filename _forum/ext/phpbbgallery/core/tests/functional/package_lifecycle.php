@@ -27,6 +27,7 @@ class package_lifecycle extends \phpbb_functional_test_case
 		'phpbbgallery/favorite' => '1.0.0',
 		'phpbbgallery/feed' => '1.0.0',
 		'phpbbgallery/imagerevisions' => '1.0.0',
+		'phpbbgallery/remotestorage' => '1.0.0',
 	];
 
 	private const COMPONENTS = [

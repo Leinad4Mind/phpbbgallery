@@ -30,6 +30,12 @@ add-ons use sibling directories under `ext/phpbbgallery/`.
 | Export | 1.0.0 | Exports Gallery images to controlled ZIP archives using their display names. |
 | Image Revisions | 1.0.0 | Retains bounded histories of replaced image files for preview and rollback. |
 
+## Storage add-ons
+
+| Add-on | Version | Description |
+| --- | --- | --- |
+| Remote Storage | 1.0.0 | Stores private Gallery objects in S3 or S3-compatible services with verified, resumable Local/S3 migration. |
+
 The Free and Premium labels describe distribution tiers, not different source
 licences. Every packaged component declares its own licence in `composer.json`.
 
@@ -50,5 +56,5 @@ php _forum/ext/phpbbgallery/build_release_packages.php --output=build/phpbbgalle
 ```
 
 When this directory is the repository root, use `php build_release_packages.php`
-instead. Uncommitted changes are intentionally excluded. The output contains 11
+instead. Uncommitted changes are intentionally excluded. The output contains 12
 versioned ZIP files, `SHA256SUMS` and a deterministic `release-manifest.json`.
