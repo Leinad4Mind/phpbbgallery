@@ -6,6 +6,7 @@ parameters:
         - s3
         - azure
         - sftp
+        - dropbox
 
 services:
     phpbbgallery.remotestorage.http:
@@ -32,6 +33,15 @@ services:
     phpbbgallery.remotestorage.provider_factory.sftp:
         class: phpbbgallery\remotestorage\sftp\configured_factory
         arguments:
+            - '@config'
+            - '@request'
+        tags:
+            - { name: phpbbgallery.storage.provider_factory }
+
+    phpbbgallery.remotestorage.provider_factory.dropbox:
+        class: phpbbgallery\remotestorage\dropbox\configured_factory
+        arguments:
+            - '@phpbbgallery.remotestorage.http'
             - '@config'
             - '@request'
         tags:

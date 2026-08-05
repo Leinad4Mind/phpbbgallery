@@ -112,6 +112,20 @@ final class acp_settings_test extends TestCase
 		$this->assertSame('Required only when the SFTP provider is selected', $composer['suggest']['ext-ssh2']);
 	}
 
+	public function test_dropbox_migration_registers_private_oauth_configuration(): void
+	{
+		$migration = (string) file_get_contents(dirname(__DIR__) . '/migrations/m5_dropbox.php');
+		$services = (string) file_get_contents(dirname(__DIR__) . '/config/services.yml');
+
+		$this->assertStringContainsString('m4_sftp', $migration);
+		foreach (['app_key', 'app_secret', 'refresh_token', 'root'] as $field)
+		{
+			$this->assertStringContainsString('phpbb_gallery_dropbox_' . $field, $migration);
+		}
+		$this->assertStringContainsString('phpbbgallery.remotestorage.provider_factory.dropbox:', $services);
+		$this->assertStringContainsString('- dropbox', $services);
+	}
+
 	public function test_all_gallery_language_catalogues_have_identical_keys_and_placeholders(): void
 	{
 		$english = $this->language(dirname(__DIR__) . '/language/en/info_acp_remotestorage.php');
