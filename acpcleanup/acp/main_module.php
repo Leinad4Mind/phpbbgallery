@@ -98,9 +98,10 @@ class main_module
 		$prune_rating_avg_check = $request->is_set_post('prune_rating_avg_check');
 
 		$missing_sources = $request->variable('source', [0]);
-		// basename() strips any directory traversal (../) so these can only ever
-		// refer to a bare file inside the gallery upload/import directories below.
-		$missing_entries = array_map('basename', $request->variable('entry', [''], true));
+		$missing_entries = array_values(array_filter(
+			$request->variable('entry', [''], true),
+			static fn (mixed $entry): bool => is_string($entry) && $entry !== '' && strpos($entry, chr(0)) === false
+		));
 		$missing_authors = $request->variable('author', [0], true);
 		$missing_comments = $request->variable('comment', [0], true);
 		$missing_personals = $request->variable('personal', [0], true);
@@ -114,6 +115,7 @@ class main_module
 		$core_cleanup = $phpbb_container->get('phpbbgallery.acpcleanup.cleanup');
 		$gallery_auth = $phpbb_container->get('phpbbgallery.core.auth');
 		$gallery_url = $phpbb_container->get('phpbbgallery.core.url');
+		$storage_workspace = $phpbb_container->get('phpbbgallery.core.storage.workspace');
 
 		// Lets detect if ACP Import exists (find if directory is with RW access)
 		$acp_import_installed = false;
@@ -225,12 +227,36 @@ class main_module
 			{
 				if ($acp_import_installed && $move_to_import)
 				{
+					$moved_entries = [];
 					foreach ($missing_entries as $entry)
 					{
-						copy($gallery_url->path('upload') . '/' . $entry, $gallery_url->path('import') . '/' . $entry);
+						try
+						{
+							$source = $storage_workspace->materialize(\phpbbgallery\core\storage\provider_interface::SOURCE, $entry);
+						}
+						catch (\RuntimeException)
+						{
+							continue;
+						}
+						try
+						{
+							$destination = rtrim((string) $gallery_url->path('import'), '/\\') . DIRECTORY_SEPARATOR . basename($entry);
+							if (!file_exists($destination) && @copy($source->get_path(), $destination))
+							{
+								$moved_entries[] = $entry;
+							}
+						}
+						finally
+						{
+							$source->release();
+						}
 					}
+					$missing_entries = $moved_entries;
 				}
-				$message[] = $core_cleanup->delete_files($missing_entries);
+				if ($missing_entries)
+				{
+					$message[] = $core_cleanup->delete_files($missing_entries);
+				}
 			}
 			if ($missing_sources)
 			{
@@ -416,7 +442,7 @@ class main_module
 			$result = $db->sql_query($sql);
 			while ($row = $db->sql_fetchrow($result))
 			{
-				if (!file_exists($gallery_url->path('upload') . $row['image_filename']))
+				if (!$storage_workspace->exists(\phpbbgallery\core\storage\provider_interface::SOURCE, (string) $row['image_filename']))
 				{
 					$source_missing[] = $row['image_id'];
 				}
@@ -434,30 +460,11 @@ class main_module
 
 		if ($check_mode == 'entry')
 		{
-			$directory = $gallery_url->path('upload');
-			$handle = @opendir($directory);
-			while ($handle !== false && ($file = readdir($handle)) !== false)
+			foreach ($this->find_orphan_source_keys($storage_workspace, $requested_source) as $file)
 			{
-				if (!is_dir($directory . $file) &&
-				 ((substr(strtolower($file), '-5') == '.webp') || (substr(strtolower($file), '-4') == '.png') || (substr(strtolower($file), '-4') == '.gif') || (substr(strtolower($file), '-4') == '.jpg') || (substr(strtolower($file), '-5') == '.jpeg')) &&
-				 ((substr(strtolower($file), '-8') <> '_wm.webp') && (substr(strtolower($file), '-7') <> '_wm.png') && (substr(strtolower($file), '-7') <> '_wm.gif') && (substr(strtolower($file), '-7') <> '_wm.jpg') && (substr(strtolower($file), '-8') <> '_wm.jpeg'))
-				 && !in_array($file, $requested_source)
-				)
-				{
-					if ((strpos($file, 'image_not_exist') !== false) || (strpos($file, 'not_authorised') !== false) || (strpos($file, 'no_hotlinking') !== false))
-					{
-						continue;
-					}
-
-					$encoding = mb_detect_encoding($file, ['UTF-8', 'ISO-8859-1', 'Windows-1252'], true);
-					$template->assign_block_vars('entryrow', [
-						'FILE_NAME'				=> $encoding === 'UTF-8' ? $file : mb_convert_encoding($file, 'UTF-8', $encoding ?: 'Windows-1252'),
-					]);
-				}
-			}
-			if ($handle !== false)
-			{
-				closedir($handle);
+				$template->assign_block_vars('entryrow', [
+					'FILE_NAME' => $file,
+				]);
 			}
 		}
 
@@ -569,5 +576,39 @@ class main_module
 			'S_FOUNDER'				=> ($user->data['user_type'] == USER_FOUNDER) ? true : false,
 			'ACTIVE_BBCODE_TAG'		=> '[' . $gallery_config->get_bbcode_tag() . ']',
 		]);
+	}
+
+	/** @return list<string> */
+	private function find_orphan_source_keys(
+		\phpbbgallery\core\storage\workspace $storage_workspace,
+		array $requested_source
+	): array
+	{
+		$requested = array_fill_keys(array_map('strval', $requested_source), true);
+		$orphans = [];
+		$cursor = null;
+		do
+		{
+			$previous_cursor = $cursor;
+			$page = $storage_workspace->list_objects(\phpbbgallery\core\storage\provider_interface::SOURCE, $cursor, 500);
+			foreach ($page['keys'] as $key)
+			{
+				$basename = basename($key);
+				if (!isset($requested[$key]) && preg_match('/\.(?:webp|gif|png|jpe?g)$/iD', $basename)
+					&& preg_match('/_wm\.(?:webp|gif|png|jpe?g)$/iD', $basename) !== 1
+					&& !preg_match('/(?:image_not_exist|not_authorised|no_hotlinking)/i', $basename))
+				{
+					$orphans[] = $key;
+				}
+			}
+			$cursor = $page['cursor'];
+			if ($cursor !== null && $cursor === $previous_cursor)
+			{
+				throw new \RuntimeException('The Gallery storage provider returned a repeated object cursor.');
+			}
+		}
+		while ($cursor !== null);
+
+		return $orphans;
 	}
 }
