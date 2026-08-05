@@ -27,4 +27,23 @@ final class lifecycle_event_test extends TestCase
 		$this->assertGreaterThan($event, $cleanup);
 		$this->assertStringContainsString("['image_id' => \$image_id] + \$sql_ary", $source);
 	}
+
+	public function test_import_publishes_before_insert_and_rolls_back_database_failure(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/acp/main_module.php');
+		$publish = strpos($source, '$storage_workspace->publish(');
+		$insert = strpos($source, 'gallery_images ', $publish ?: 0);
+		$rollback = strpos($source, '$storage_workspace->delete(', $insert ?: 0);
+		$staging_cleanup = strpos($source, '$local_storage->delete(', $rollback ?: 0);
+
+		$this->assertIsInt($publish);
+		$this->assertIsInt($insert);
+		$this->assertIsInt($rollback);
+		$this->assertIsInt($staging_cleanup);
+		$this->assertLessThan($insert, $publish);
+		$this->assertLessThan($rollback, $insert);
+		$this->assertLessThan($staging_cleanup, $rollback);
+		$this->assertStringContainsString('staging/', $source);
+		$this->assertStringContainsString('bin2hex(random_bytes(16))', $source);
+	}
 }

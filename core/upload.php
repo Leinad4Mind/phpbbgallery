@@ -111,8 +111,14 @@ class upload
 	/** Generates safe relative keys for newly stored images. */
 	private \phpbbgallery\core\storage\key_generator $storage_keys;
 
-	/** Local provider used while the Core still processes images through GD paths. */
+	/** Local provider used for private upload staging before provider publication. */
 	private \phpbbgallery\core\storage\local_provider $local_storage;
+
+	/** Active-provider workspace used for verified publication and materialization. */
+	private \phpbbgallery\core\storage\workspace $storage_workspace;
+
+	/** Opaque local staging key for the current upload. */
+	private string $staged_source_key = '';
 
 	/**
 	* Basic variables...
@@ -164,6 +170,7 @@ class upload
 	 * @param file\file                         $gallery_file
 	 * @param \phpbbgallery\core\storage\key_generator $storage_keys
 	 * @param \phpbbgallery\core\storage\local_provider $local_storage
+	 * @param \phpbbgallery\core\storage\workspace $storage_workspace
 	 * @param \phpbbgallery\core\zip\extractor  $zip_extractor
 	 * @param string                            $images_table
 	 * @param string                            $root_path
@@ -174,12 +181,14 @@ class upload
 		\phpbbgallery\core\image\image $gallery_image, \phpbbgallery\core\config $gallery_config, \phpbbgallery\core\url $gallery_url,
 		\phpbbgallery\core\block $block, \phpbbgallery\core\file\file $gallery_file,
 		\phpbbgallery\core\storage\key_generator $storage_keys, \phpbbgallery\core\storage\local_provider $local_storage,
+		\phpbbgallery\core\storage\workspace $storage_workspace,
 		\phpbbgallery\core\zip\extractor $zip_extractor,
 		string $images_table, string $root_path, string $php_ext)
 	{
 		$this->zip_extractor = $zip_extractor;
 		$this->storage_keys = $storage_keys;
 		$this->local_storage = $local_storage;
+		$this->storage_workspace = $storage_workspace;
 		$this->user = $user;
 		$this->language = $language;
 		$this->db = $db;
@@ -615,7 +624,19 @@ class upload
 
 		$additional_sql_data = [];
 		$image_data = $this->image_data[$image_id];
-		$file_link = $this->gallery_url->path('upload') . $this->image_data[$image_id]['image_filename'];
+		try
+		{
+			$source_object = $this->storage_workspace->materialize(
+				\phpbbgallery\core\storage\provider_interface::SOURCE,
+				$this->image_data[$image_id]['image_filename']
+			);
+		}
+		catch (\RuntimeException)
+		{
+			$this->new_error($this->language->lang('GENERAL_UPLOAD_ERROR', $this->image_data[$image_id]['image_filename']));
+			return false;
+		}
+		$file_link = $source_object->get_path();
 
 		/**
 		* Event upload image before
@@ -633,7 +654,7 @@ class upload
 		extract($this->phpbb_dispatcher->trigger_event('phpbbgallery.core.upload.update_image_before', compact($vars)));
 
 		// Rotate image
-		if (!$this->prepare_file_update($image_id))
+		if (!$this->prepare_file_update($image_id, $file_link))
 		{
 			/**
 			* Event upload image update
@@ -669,12 +690,13 @@ class upload
 		 */
 		$vars = ['image_id', 'image_index', 'image_data', 'sql_ary', 'file_link'];
 		extract($this->phpbb_dispatcher->trigger_event('phpbbgallery.core.upload.update_image_after', compact($vars)));
+		$source_object->release();
 
 		return true;
 	}
 
 	/**
-	 * Move an accepted upload into its configured local storage layout.
+	 * Move an accepted upload into an opaque local staging location.
 	 */
 	private function move_file_to_storage(): bool
 	{
@@ -690,18 +712,24 @@ class upload
 			return false;
 		}
 
-		foreach ([
-			\phpbbgallery\core\storage\provider_interface::SOURCE,
-			\phpbbgallery\core\storage\provider_interface::MEDIUM,
-			\phpbbgallery\core\storage\provider_interface::MINI,
-		] as $variant)
+		try
 		{
-			if (!$this->local_storage->prepare($variant, $storage_key))
-			{
-				$this->file->remove();
-				$this->new_error($this->language->lang('GENERAL_UPLOAD_ERROR', $this->file->get('uploadname')));
-				return false;
-			}
+			$this->staged_source_key = 'staging/' . bin2hex(random_bytes(16)) . '/' . basename($storage_key);
+		}
+		catch (\Throwable)
+		{
+			$this->file->remove();
+			$this->new_error($this->language->lang('GENERAL_UPLOAD_ERROR', $this->file->get('uploadname')));
+			return false;
+		}
+		if (!$this->local_storage->prepare(
+			\phpbbgallery\core\storage\provider_interface::SOURCE,
+			$this->staged_source_key
+		))
+		{
+			$this->file->remove();
+			$this->new_error($this->language->lang('GENERAL_UPLOAD_ERROR', $this->file->get('uploadname')));
+			return false;
 		}
 
 		$upload_dir = dirname($storage_key);
@@ -711,7 +739,7 @@ class upload
 			$this->file->clean_filename('real', $upload_dir . '/');
 		}
 		$this->file->move_file(
-			$this->gallery_url->path('upload_noroot') . ($upload_dir === '.' ? '' : $upload_dir),
+			$this->gallery_url->path('upload_noroot') . dirname($this->staged_source_key),
 			false,
 			false,
 			CHMOD_ALL
@@ -823,7 +851,16 @@ class upload
 
 		// Everything okay, now add the file to the database and return the image_id
 
-		return $this->file_to_database($additional_sql_data);
+		try
+		{
+			return $this->file_to_database($additional_sql_data);
+		}
+		catch (\RuntimeException)
+		{
+			$this->remove_staged_source();
+			$this->new_error($this->language->lang('GENERAL_UPLOAD_ERROR', $this->file->get('uploadname')));
+			return false;
+		}
 	}
 
 	/**
@@ -831,12 +868,22 @@ class upload
 	 * You can still rotate the image there.
 	 *
 	 * @param int $image_id
+	 * @param string $source_path Materialized source path, when already available
 	 * @return bool
 	 */
-	public function prepare_file_update(int $image_id): bool
+	public function prepare_file_update(int $image_id, string $source_path = ''): bool
 	{
+		$source_object = null;
+		if ($source_path === '')
+		{
+			$source_object = $this->storage_workspace->materialize(
+				\phpbbgallery\core\storage\provider_interface::SOURCE,
+				$this->image_data[$image_id]['image_filename']
+			);
+			$source_path = $source_object->get_path();
+		}
 		$this->tools->set_image_options($this->max_filesize, $this->gallery_config->get('max_height'), $this->gallery_config->get('max_width'));
-		$this->tools->set_image_data($this->gallery_url->path('upload') . $this->image_data[$image_id]['image_filename'], '', 0, true);
+		$this->tools->set_image_data($source_path, '', 0, true);
 
 		// Rotate the image
 		if ($this->gallery_config->get('allow_rotate') && $this->get_rotating())
@@ -845,11 +892,28 @@ class upload
 			if ($this->tools->rotated)
 			{
 				$this->tools->write_image($this->tools->image_source, $this->gallery_config->get('jpg_quality'), true);
-				@unlink($this->gallery_url->path('thumbnail') . $this->image_data[$image_id]['image_filename']);
-				@unlink($this->gallery_url->path('medium') . $this->image_data[$image_id]['image_filename']);
+				$this->storage_workspace->replace(
+					\phpbbgallery\core\storage\provider_interface::SOURCE,
+					$this->image_data[$image_id]['image_filename'],
+					$source_path
+				);
+				$this->storage_workspace->delete(
+					\phpbbgallery\core\storage\provider_interface::MINI,
+					$this->image_data[$image_id]['image_filename']
+				);
+				$this->storage_workspace->delete(
+					\phpbbgallery\core\storage\provider_interface::MEDIUM,
+					$this->image_data[$image_id]['image_filename']
+				);
 			}
 		}
-		return (bool) $this->tools->rotated;
+		$rotated = (bool) $this->tools->rotated;
+		if ($source_object !== null)
+		{
+			$source_object->release();
+		}
+
+		return $rotated;
 	}
 
 	/**
@@ -862,11 +926,30 @@ class upload
 	{
 		$image_name = utf8_substr($this->file->get('uploadname'), 0, utf8_strrpos($this->file->get('uploadname'), '.'));
 		$stored_filesize = @filesize($this->file->get('destination_file'));
+		$storage_key = (string) $this->file->get('realname');
+		$published = false;
+		if ($this->staged_source_key !== '')
+		{
+			$staged_path = $this->local_storage->local_path(
+				\phpbbgallery\core\storage\provider_interface::SOURCE,
+				$this->staged_source_key
+			);
+			if ($staged_path === null)
+			{
+				throw new \RuntimeException('The staged Gallery upload is unavailable.');
+			}
+			$this->storage_workspace->publish(
+				\phpbbgallery\core\storage\provider_interface::SOURCE,
+				$storage_key,
+				$staged_path
+			);
+			$published = true;
+		}
 
 		$sql_ary = array_merge([
 			'image_name'			=> $image_name,
 			'image_name_clean'		=> utf8_clean_string($image_name),
-			'image_filename' 		=> $this->file->get('realname'),
+			'image_filename' 		=> $storage_key,
 			'filesize_upload'		=> $stored_filesize === false ? $this->file->get('filesize') : (int) $stored_filesize,
 			'image_time'			=> time() + $this->file_count,
 
@@ -886,13 +969,37 @@ class upload
 			'image_desc_bitfield'	=> '',
 		], $additional_sql_ary);
 
-		$sql = 'INSERT INTO ' . $this->images_table . ' ' . $this->db->sql_build_array('INSERT', $sql_ary);
-		$this->db->sql_query($sql);
-
-		$image_id = (int) $this->db->sql_nextid();
+		try
+		{
+			$sql = 'INSERT INTO ' . $this->images_table . ' ' . $this->db->sql_build_array('INSERT', $sql_ary);
+			$this->db->sql_query($sql);
+			$image_id = (int) $this->db->sql_nextid();
+		}
+		catch (\Throwable $exception)
+		{
+			if ($published)
+			{
+				$this->storage_workspace->delete(\phpbbgallery\core\storage\provider_interface::SOURCE, $storage_key);
+			}
+			$this->remove_staged_source();
+			throw $exception;
+		}
+		$this->remove_staged_source();
 		$this->image_data[$image_id] = $sql_ary;
 
 		return $image_id;
+	}
+
+	private function remove_staged_source(): void
+	{
+		if ($this->staged_source_key !== '')
+		{
+			$this->local_storage->delete(
+				\phpbbgallery\core\storage\provider_interface::SOURCE,
+				$this->staged_source_key
+			);
+			$this->staged_source_key = '';
+		}
 	}
 
 	/**

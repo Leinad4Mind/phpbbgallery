@@ -356,6 +356,7 @@ services:
             - '@phpbbgallery.core.file.tool'
             - '@phpbbgallery.core.storage.key_generator'
             - '@phpbbgallery.core.storage.local'
+            - '@phpbbgallery.core.storage.workspace'
             - '@phpbbgallery.core.zip.extractor'
             - '%phpbbgallery.tables.gallery_images%'
             - '%core.root_path%'

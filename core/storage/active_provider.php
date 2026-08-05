@@ -48,6 +48,11 @@ class active_provider implements provider_interface
 		return $this->provider()->write($variant, $key, $local_file);
 	}
 
+	public function replace(string $variant, string $key, string $local_file): bool
+	{
+		return $this->provider()->replace($variant, $key, $local_file);
+	}
+
 	public function open_stream(string $variant, string $key): mixed
 	{
 		return $this->provider()->open_stream($variant, $key);

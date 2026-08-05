@@ -13,6 +13,7 @@ use phpbbgallery\core\config;
 use phpbbgallery\core\storage\key_generator;
 use phpbbgallery\core\storage\local_provider;
 use phpbbgallery\core\storage\provider_interface;
+use phpbbgallery\core\storage\workspace;
 use PHPUnit\Framework\TestCase;
 
 final class storage_test extends TestCase
@@ -172,7 +173,23 @@ final class storage_test extends TestCase
 		$this->assertSame([], glob($this->temporary_directory . '/source/a/ab/*.part-*') ?: []);
 	}
 
-	public function test_upload_flow_records_the_distributed_key_and_prepares_all_variants(): void
+	public function test_local_provider_replaces_an_existing_object_without_leftovers(): void
+	{
+		$provider = $this->provider();
+		$key = 'a/ab/image.jpg';
+		$old = $this->temporary_directory . '/old.jpg';
+		$new = $this->temporary_directory . '/new.jpg';
+		file_put_contents($old, 'old-image');
+		file_put_contents($new, 'new-image');
+		$this->assertTrue($provider->write(provider_interface::SOURCE, $key, $old));
+
+		$this->assertTrue($provider->replace(provider_interface::SOURCE, $key, $new));
+		$this->assertSame(hash('sha256', 'new-image'), $provider->checksum(provider_interface::SOURCE, $key));
+		$this->assertSame([], glob($this->temporary_directory . '/source/a/ab/*.part-*') ?: []);
+		$this->assertSame([], glob($this->temporary_directory . '/source/a/ab/*.backup-*') ?: []);
+	}
+
+	public function test_upload_flow_records_the_distributed_key_and_uses_opaque_staging(): void
 	{
 		if (!defined('CHMOD_ALL'))
 		{
@@ -191,10 +208,95 @@ final class storage_test extends TestCase
 
 		$this->assertTrue($result);
 		$this->assertSame('7/71/7127abfe9cf6b6d3eb0a523e6158e896.jpeg', $file->realname);
-		$this->assertSame('files/phpbbgallery/core/source/7/71', $file->destination);
-		$this->assertDirectoryExists($this->temporary_directory . '/source/7/71');
-		$this->assertDirectoryExists($this->temporary_directory . '/medium/7/71');
-		$this->assertDirectoryExists($this->temporary_directory . '/mini/7/71');
+		$this->assertMatchesRegularExpression(
+			'#^files/phpbbgallery/core/source/staging/[a-f0-9]{32}$#D',
+			$file->destination
+		);
+		$staged_key = (new \ReflectionProperty($upload, 'staged_source_key'))->getValue($upload);
+		$this->assertMatchesRegularExpression(
+			'#^staging/[a-f0-9]{32}/7127abfe9cf6b6d3eb0a523e6158e896[.]jpeg$#D',
+			$staged_key
+		);
+		$this->assertDirectoryExists(dirname((string) $this->provider()->local_path(provider_interface::SOURCE, $staged_key)));
+		$this->assertDirectoryDoesNotExist($this->temporary_directory . '/source/7/71');
+		$this->assertDirectoryDoesNotExist($this->temporary_directory . '/medium/7/71');
+		$this->assertDirectoryDoesNotExist($this->temporary_directory . '/mini/7/71');
+	}
+
+	public function test_upload_publishes_before_insert_and_removes_staging(): void
+	{
+		$provider = $this->provider();
+		$staged_key = 'staging/' . str_repeat('a', 32) . '/image.jpg';
+		$this->assertTrue($provider->prepare(provider_interface::SOURCE, $staged_key));
+		$staged_path = (string) $provider->local_path(provider_interface::SOURCE, $staged_key);
+		file_put_contents($staged_path, 'validated-image');
+
+		$database = new storage_upload_database(false);
+		$upload = $this->publication_upload($provider, $database, $staged_key, $staged_path);
+
+		$this->assertSame(77, $upload->file_to_database([]));
+		$this->assertTrue($provider->exists(provider_interface::SOURCE, '7/71/image.jpg'));
+		$this->assertFalse($provider->exists(provider_interface::SOURCE, $staged_key));
+		$this->assertStringContainsString('7/71/image.jpg', $database->query);
+	}
+
+	public function test_database_failure_rolls_back_published_and_staged_objects(): void
+	{
+		$provider = $this->provider();
+		$staged_key = 'staging/' . str_repeat('b', 32) . '/image.jpg';
+		$this->assertTrue($provider->prepare(provider_interface::SOURCE, $staged_key));
+		$staged_path = (string) $provider->local_path(provider_interface::SOURCE, $staged_key);
+		file_put_contents($staged_path, 'validated-image');
+
+		$upload = $this->publication_upload(
+			$provider,
+			new storage_upload_database(true),
+			$staged_key,
+			$staged_path
+		);
+
+		$this->expectException(\RuntimeException::class);
+		try
+		{
+			$upload->file_to_database([]);
+		}
+		finally
+		{
+			$this->assertFalse($provider->exists(provider_interface::SOURCE, '7/71/image.jpg'));
+			$this->assertFalse($provider->exists(provider_interface::SOURCE, $staged_key));
+		}
+	}
+
+	private function publication_upload(
+		local_provider $provider,
+		storage_upload_database $database,
+		string $staged_key,
+		string $staged_path
+	): \phpbbgallery\core\upload
+	{
+		$upload = (new \ReflectionClass(\phpbbgallery\core\upload::class))->newInstanceWithoutConstructor();
+		$this->set_upload_property($upload, 'file', new storage_upload_file('7/71/image.jpg', $staged_path));
+		$this->set_upload_property($upload, 'staged_source_key', $staged_key);
+		$this->set_upload_property($upload, 'local_storage', $provider);
+		$this->set_upload_property($upload, 'storage_workspace', new workspace($provider, $this->temporary_directory . '/workspace'));
+		$this->set_upload_property($upload, 'db', $database);
+		$this->set_upload_property($upload, 'images_table', 'phpbb_gallery_images');
+		$this->set_upload_property($upload, 'username', 'Uploader');
+		$this->set_upload_property($upload, 'album_id', 4);
+		$this->set_upload_property($upload, 'allow_comments', true);
+		$this->set_upload_property($upload, 'user', (object) [
+			'data' => ['user_id' => 2, 'user_colour' => 'ABCDEF', 'session_id' => 'session'],
+			'ip' => '127.0.0.1',
+		]);
+		$this->set_upload_property($upload, 'block', new class
+		{
+			public function get_image_status_orphan(): int
+			{
+				return 3;
+			}
+		});
+
+		return $upload;
 	}
 
 	private function generator(string $layout): key_generator
@@ -244,7 +346,7 @@ final class storage_upload_file
 	public string $destination = '';
 	public bool $removed = false;
 
-	public function __construct(public string $realname)
+	public function __construct(public string $realname, private string $destination_file = '')
 	{
 	}
 
@@ -262,6 +364,8 @@ final class storage_upload_file
 		{
 			'realname' => $this->realname,
 			'uploadname' => 'upload.jpeg',
+			'destination_file' => $this->destination_file,
+			'filesize' => $this->destination_file !== '' ? filesize($this->destination_file) : 0,
 			default => null,
 		};
 	}
@@ -274,6 +378,34 @@ final class storage_upload_file
 	public function remove(): void
 	{
 		$this->removed = true;
+	}
+}
+
+final class storage_upload_database
+{
+	public string $query = '';
+
+	public function __construct(private bool $fail)
+	{
+	}
+
+	public function sql_build_array(string $type, array $data): string
+	{
+		return var_export($data, true);
+	}
+
+	public function sql_query(string $query): void
+	{
+		$this->query = $query;
+		if ($this->fail)
+		{
+			throw new \RuntimeException('database failure');
+		}
+	}
+
+	public function sql_nextid(): int
+	{
+		return 77;
 	}
 }
 

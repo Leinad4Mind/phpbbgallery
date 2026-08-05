@@ -189,6 +189,50 @@ final class storage_provider_test extends TestCase
 		$workspace->materialize(provider_interface::SOURCE, 'image.jpg');
 	}
 
+	public function test_workspace_publishes_and_verifies_a_new_object(): void
+	{
+		$provider = new memory_storage_provider('s3');
+		$workspace = new workspace($provider, $this->temporary_directory . '/workspace');
+		$source = $this->temporary_directory . '/new.jpg';
+		file_put_contents($source, 'new-image');
+
+		$workspace->publish(provider_interface::SOURCE, 'folder/new.jpg', $source);
+
+		$this->assertTrue($provider->exists(provider_interface::SOURCE, 'folder/new.jpg'));
+		$this->assertSame(hash('sha256', 'new-image'), $provider->checksum(provider_interface::SOURCE, 'folder/new.jpg'));
+	}
+
+	public function test_failed_publication_verification_removes_the_new_object(): void
+	{
+		$provider = new memory_storage_provider('s3');
+		$provider->reported_checksum = str_repeat('0', 64);
+		$workspace = new workspace($provider, $this->temporary_directory . '/workspace');
+		$source = $this->temporary_directory . '/new.jpg';
+		file_put_contents($source, 'new-image');
+
+		$this->expectException(\RuntimeException::class);
+		try
+		{
+			$workspace->publish(provider_interface::SOURCE, 'new.jpg', $source);
+		}
+		finally
+		{
+			$this->assertFalse($provider->exists(provider_interface::SOURCE, 'new.jpg'));
+		}
+	}
+
+	public function test_workspace_replaces_and_verifies_an_existing_object(): void
+	{
+		$provider = new memory_storage_provider('s3', ['image.jpg' => 'old-image']);
+		$workspace = new workspace($provider, $this->temporary_directory . '/workspace');
+		$source = $this->temporary_directory . '/replacement.jpg';
+		file_put_contents($source, 'replacement');
+
+		$workspace->replace(provider_interface::SOURCE, 'image.jpg', $source);
+
+		$this->assertSame(hash('sha256', 'replacement'), $provider->checksum(provider_interface::SOURCE, 'image.jpg'));
+	}
+
 	private function active(string $provider_id, ContainerInterface $container): active_provider
 	{
 		$gallery_config = new config(new \phpbb\config\config([
@@ -256,6 +300,16 @@ final class memory_storage_provider implements provider_interface
 		$this->objects[$key] = $contents;
 
 		return true;
+	}
+
+	public function replace(string $variant, string $key, string $local_file): bool
+	{
+		if (!isset($this->objects[$key]))
+		{
+			return false;
+		}
+
+		return $this->write($variant, $key, $local_file);
 	}
 
 	public function open_stream(string $variant, string $key): mixed
