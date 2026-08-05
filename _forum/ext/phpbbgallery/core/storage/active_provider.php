@@ -19,18 +19,21 @@ class active_provider implements provider_interface
 	private \phpbbgallery\core\config $config;
 	private ContainerInterface $container;
 	private local_provider $local;
+	private variant_key $variant_key;
 	/** @var array<string, provider_interface> */
 	private array $providers = [];
 
 	public function __construct(
 		\phpbbgallery\core\config $config,
 		ContainerInterface $container,
-		local_provider $local
+		local_provider $local,
+		?variant_key $variant_key = null
 	)
 	{
 		$this->config = $config;
 		$this->container = $container;
 		$this->local = $local;
+		$this->variant_key = $variant_key ?? new variant_key();
 	}
 
 	public function get_id(): string
@@ -40,6 +43,7 @@ class active_provider implements provider_interface
 
 	public function prepare(string $variant, string $key): bool
 	{
+		$key = $this->variant_key->resolve($variant, $key);
 		$primary = $this->provider();
 		$peer = $this->migration_peer($primary);
 
@@ -49,6 +53,7 @@ class active_provider implements provider_interface
 
 	public function write(string $variant, string $key, string $local_file): bool
 	{
+		$key = $this->variant_key->resolve($variant, $key);
 		$primary = $this->provider();
 		$peer = $this->migration_peer($primary);
 		if (!$primary->write($variant, $key, $local_file))
@@ -68,6 +73,7 @@ class active_provider implements provider_interface
 
 	public function replace(string $variant, string $key, string $local_file): bool
 	{
+		$key = $this->variant_key->resolve($variant, $key);
 		$primary = $this->provider();
 		$peer = $this->migration_peer($primary);
 		if ($peer !== null && !$this->replace_peer($peer, $variant, $key, $local_file))
@@ -80,21 +86,25 @@ class active_provider implements provider_interface
 
 	public function open_stream(string $variant, string $key): mixed
 	{
+		$key = $this->variant_key->resolve($variant, $key);
 		return $this->provider()->open_stream($variant, $key);
 	}
 
 	public function local_path(string $variant, string $key): ?string
 	{
+		$key = $this->variant_key->resolve($variant, $key);
 		return $this->provider()->local_path($variant, $key);
 	}
 
 	public function exists(string $variant, string $key): bool
 	{
+		$key = $this->variant_key->resolve($variant, $key);
 		return $this->provider()->exists($variant, $key);
 	}
 
 	public function delete(string $variant, string $key): bool
 	{
+		$key = $this->variant_key->resolve($variant, $key);
 		$primary = $this->provider();
 		$peer = $this->migration_peer($primary);
 		if ($peer !== null && !$peer->delete($variant, $key))
@@ -107,11 +117,13 @@ class active_provider implements provider_interface
 
 	public function size(string $variant, string $key): ?int
 	{
+		$key = $this->variant_key->resolve($variant, $key);
 		return $this->provider()->size($variant, $key);
 	}
 
 	public function modified_time(string $variant, string $key): ?int
 	{
+		$key = $this->variant_key->resolve($variant, $key);
 		return $this->provider()->modified_time($variant, $key);
 	}
 
@@ -122,6 +134,7 @@ class active_provider implements provider_interface
 
 	public function checksum(string $variant, string $key, string $algorithm = 'sha256'): ?string
 	{
+		$key = $this->variant_key->resolve($variant, $key);
 		return $this->provider()->checksum($variant, $key, $algorithm);
 	}
 

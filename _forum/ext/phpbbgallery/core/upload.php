@@ -69,6 +69,9 @@ class upload
 	*/
 	protected \phpbbgallery\core\file\file $tools;
 
+	/** Trusted image formats supplied by enabled Gallery add-ons. */
+	private ?\phpbbgallery\core\image\format_registry $format_registry = null;
+
 	/**
 	* @var string
 	*/
@@ -180,6 +183,7 @@ class upload
 		\phpbb\event\dispatcher_interface $phpbb_dispatcher, \phpbb\request\request $request, \phpbb\files\upload $file_upload,
 		\phpbbgallery\core\image\image $gallery_image, \phpbbgallery\core\config $gallery_config, \phpbbgallery\core\url $gallery_url,
 		\phpbbgallery\core\block $block, \phpbbgallery\core\file\file $gallery_file,
+		\phpbbgallery\core\image\format_registry $format_registry,
 		\phpbbgallery\core\storage\key_generator $storage_keys, \phpbbgallery\core\storage\local_provider $local_storage,
 		\phpbbgallery\core\storage\workspace $storage_workspace,
 		\phpbbgallery\core\zip\extractor $zip_extractor,
@@ -200,6 +204,7 @@ class upload
 		$this->gallery_url	= $gallery_url;
 		$this->block = $block;
 		$this->tools = $gallery_file;
+		$this->format_registry = $format_registry;
 		$this->images_table = $images_table;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
@@ -791,6 +796,58 @@ class upload
 
 		$this->tools->set_image_options($this->max_filesize, $this->gallery_config->get('max_height'), $this->gallery_config->get('max_width'));
 		$this->tools->set_image_data($this->file->get('destination_file'), '', $source_filesize, true);
+		$external_processor = $this->format_registry?->processor_for_filename($this->file->get('destination_file'));
+		if ($external_processor !== null)
+		{
+			$metadata = $external_processor->inspect($this->file->get('destination_file'));
+			if ($metadata === null || !$this->format_registry->accepts_metadata($this->file->get('destination_file'), $metadata))
+			{
+				$this->file->remove();
+				$this->new_error($this->language->lang('UPLOAD_ERROR', $this->file->get('uploadname'), $this->language->lang('UNABLE_GET_IMAGE_SIZE')));
+				return false;
+			}
+
+			$width = (int) $metadata['width'];
+			$height = (int) $metadata['height'];
+			$rotation = $this->gallery_config->get('allow_rotate') ? $this->get_rotating() : 0;
+			$oversized = $width > $this->gallery_config->get('max_width') || $height > $this->gallery_config->get('max_height');
+			if ($oversized && !$allow_resize)
+			{
+				$this->file->remove();
+				$this->new_error($this->language->lang('UPLOAD_ERROR', $this->file->get('uploadname'), $this->language->lang('UPLOAD_IMAGE_SIZE_TOO_BIG')));
+				return false;
+			}
+
+			if ($rotation || $oversized || $source_filesize > $this->max_filesize)
+			{
+				$metadata = $external_processor->prepare_source($this->file->get('destination_file'), [
+					'max_width' => (int) $this->gallery_config->get('max_width'),
+					'max_height' => (int) $this->gallery_config->get('max_height'),
+					'max_filesize' => $this->max_filesize,
+					'allow_resize' => $allow_resize,
+					'rotation' => $rotation,
+				]);
+				if ($metadata === null
+					|| !$this->format_registry->accepts_metadata($this->file->get('destination_file'), $metadata)
+					|| (int) $metadata['filesize'] > $this->max_filesize)
+				{
+					$this->file->remove();
+					$this->new_error($this->language->lang('UPLOAD_ERROR', $this->file->get('uploadname'), $this->language->lang('BAD_UPLOAD_FILE_SIZE')));
+					return false;
+				}
+			}
+
+			try
+			{
+				return $this->file_to_database($additional_sql_data);
+			}
+			catch (\RuntimeException)
+			{
+				$this->remove_staged_source();
+				$this->new_error($this->language->lang('GENERAL_UPLOAD_ERROR', $this->file->get('uploadname')));
+				return false;
+			}
+		}
 
 		// Reject decompression-bomb uploads (huge declared pixel dimensions in a small file)
 		// before any rotate/resize attempt tries to decode the full image into memory.
@@ -884,6 +941,57 @@ class upload
 		}
 		$this->tools->set_image_options($this->max_filesize, $this->gallery_config->get('max_height'), $this->gallery_config->get('max_width'));
 		$this->tools->set_image_data($source_path, '', 0, true);
+		$external_processor = $this->format_registry?->processor_for_filename($this->image_data[$image_id]['image_filename']);
+		if ($external_processor !== null)
+		{
+			$rotation = $this->gallery_config->get('allow_rotate') ? $this->get_rotating() : 0;
+			if (!$rotation)
+			{
+				if ($source_object !== null)
+				{
+					$source_object->release();
+				}
+				return false;
+			}
+
+			$metadata = $external_processor->prepare_source($source_path, [
+				'max_width' => (int) $this->gallery_config->get('max_width'),
+				'max_height' => (int) $this->gallery_config->get('max_height'),
+				'max_filesize' => $this->max_filesize,
+				'allow_resize' => (bool) $this->gallery_config->get('allow_resize'),
+				'rotation' => $rotation,
+			]);
+			if ($metadata === null
+				|| !$this->format_registry->accepts_metadata($this->image_data[$image_id]['image_filename'], $metadata)
+				|| (int) $metadata['filesize'] > $this->max_filesize)
+			{
+				if ($source_object !== null)
+				{
+					$source_object->release();
+				}
+				return false;
+			}
+
+			$this->storage_workspace->replace(
+				\phpbbgallery\core\storage\provider_interface::SOURCE,
+				$this->image_data[$image_id]['image_filename'],
+				$source_path
+			);
+			$this->storage_workspace->delete(
+				\phpbbgallery\core\storage\provider_interface::MINI,
+				$this->image_data[$image_id]['image_filename']
+			);
+			$this->storage_workspace->delete(
+				\phpbbgallery\core\storage\provider_interface::MEDIUM,
+				$this->image_data[$image_id]['image_filename']
+			);
+			if ($source_object !== null)
+			{
+				$source_object->release();
+			}
+
+			return true;
+		}
 
 		// Rotate the image
 		if ($this->gallery_config->get('allow_rotate') && $this->get_rotating())
@@ -1417,6 +1525,20 @@ class upload
 		{
 			$types[] = $this->language->lang('FILETYPES_AVIF');
 			$extensions[] = 'avif';
+		}
+		foreach ($this->format_registry?->extensions() ?? [] as $extension)
+		{
+			if (!in_array($extension, $extensions, true))
+			{
+				$extensions[] = $extension;
+			}
+		}
+		foreach ($this->format_registry?->labels($this->language) ?? [] as $label)
+		{
+			if (!in_array($label, $types, true))
+			{
+				$types[] = $label;
+			}
 		}
 		if ($this->allow_zip && !$ignore_zip && $this->gallery_config->get('allow_zip'))
 		{

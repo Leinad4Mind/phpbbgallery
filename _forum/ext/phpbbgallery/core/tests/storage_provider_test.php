@@ -65,6 +65,23 @@ final class storage_provider_test extends TestCase
 		fclose($stream);
 	}
 
+	public function test_external_format_derivatives_are_transparently_mapped_to_webp_keys(): void
+	{
+		$remote = new memory_storage_provider('s3');
+		$container = $this->createMock(ContainerInterface::class);
+		$container->method('has')->willReturn(true);
+		$container->method('get')->willReturn($remote);
+		$storage = $this->active('s3', $container);
+		$source = $this->temporary_directory . '/derived.webp';
+		file_put_contents($source, 'webp-derivative');
+
+		$this->assertTrue($storage->prepare(provider_interface::MEDIUM, 'scan.tiff'));
+		$this->assertTrue($storage->write(provider_interface::MEDIUM, 'scan.tiff', $source));
+		$this->assertTrue($storage->exists(provider_interface::MEDIUM, 'scan.tiff'));
+		$this->assertTrue($remote->exists(provider_interface::MEDIUM, 'scan.tiff.webp'));
+		$this->assertFalse($remote->exists(provider_interface::MEDIUM, 'scan.tiff'));
+	}
+
 	public function test_missing_provider_never_falls_back_to_local(): void
 	{
 		$container = $this->createMock(ContainerInterface::class);

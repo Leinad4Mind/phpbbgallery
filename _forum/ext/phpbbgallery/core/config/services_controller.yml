@@ -74,6 +74,8 @@ services:
             - '@request'
             - '@dispatcher'
             - '@phpbbgallery.core.storage.workspace'
+            - '@phpbbgallery.core.image.format_registry'
+            - '@phpbbgallery.core.storage.variant_key'
             - '%phpbbgallery.core.file.source%'
             - '%phpbbgallery.core.file.medium%'
             - '%phpbbgallery.core.file.mini%'

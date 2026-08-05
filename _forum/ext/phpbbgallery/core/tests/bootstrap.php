@@ -193,6 +193,9 @@ namespace
 	require_once __DIR__ . '/stubs/phpbb_config.php';
 	require_once __DIR__ . '/stubs/phpbb_user.php';
 	require_once __DIR__ . '/stubs/template_noop_token_parser.php';
+	require_once dirname(__DIR__) . '/image/external_processor_interface.php';
+	require_once dirname(__DIR__) . '/image/format_registry.php';
+	require_once dirname(__DIR__) . '/storage/variant_key.php';
 	require_once dirname(__DIR__) . '/zip/extractor.php';
 	require_once dirname(__DIR__) . '/icon/manager.php';
 	require_once dirname(__DIR__) . '/upload.php';
