@@ -58,6 +58,7 @@ final class storage_provider_test extends TestCase
 		$this->assertSame(12, $storage->size(provider_interface::SOURCE, 'image.jpg'));
 		$this->assertSame(1785945600, $storage->modified_time(provider_interface::SOURCE, 'image.jpg'));
 		$this->assertSame(hash('sha256', 'remote-image'), $storage->checksum(provider_interface::SOURCE, 'image.jpg'));
+		$this->assertSame(['keys' => ['image.jpg'], 'cursor' => null], $storage->list_objects(provider_interface::SOURCE));
 		$stream = $storage->open_stream(provider_interface::SOURCE, 'image.jpg');
 		$this->assertIsResource($stream);
 		$this->assertSame('remote-image', stream_get_contents($stream));
@@ -121,6 +122,28 @@ final class storage_provider_test extends TestCase
 		$this->assertSame('local-image', file_get_contents($object->get_path()));
 		$object->release();
 		$this->assertFileExists((string) $local->local_path(provider_interface::SOURCE, 'image.jpg'));
+	}
+
+	public function test_local_object_listing_is_recursive_deterministic_and_paginated(): void
+	{
+		$local = $this->local();
+		$input = $this->temporary_directory . '/input.jpg';
+		file_put_contents($input, 'image');
+		foreach (['z.jpg', '7/71/a.jpg', 'a.jpg'] as $key)
+		{
+			$this->assertTrue($local->write(provider_interface::SOURCE, $key, $input));
+		}
+
+		$first = $local->list_objects(provider_interface::SOURCE, null, 2);
+		$this->assertSame(['7/71/a.jpg', 'a.jpg'], $first['keys']);
+		$this->assertSame('a.jpg', $first['cursor']);
+		$this->assertSame(['keys' => ['z.jpg'], 'cursor' => null], $local->list_objects(provider_interface::SOURCE, $first['cursor'], 2));
+	}
+
+	public function test_local_object_listing_rejects_an_invalid_cursor(): void
+	{
+		$this->expectException(\InvalidArgumentException::class);
+		$this->local()->list_objects(provider_interface::SOURCE, '../outside');
 	}
 
 	public function test_workspace_materializes_and_cleans_a_verified_remote_object(): void
@@ -350,6 +373,17 @@ final class memory_storage_provider implements provider_interface
 	public function modified_time(string $variant, string $key): ?int
 	{
 		return isset($this->objects[$key]) ? 1785945600 : null;
+	}
+
+	public function list_objects(string $variant, ?string $cursor = null, int $limit = 500): array
+	{
+		$keys = array_keys($this->objects);
+		sort($keys, SORT_STRING);
+		$keys = array_values(array_filter($keys, static fn (string $key): bool => $cursor === null || strcmp($key, $cursor) > 0));
+		$has_more = count($keys) > $limit;
+		$keys = array_slice($keys, 0, $limit);
+
+		return ['keys' => $keys, 'cursor' => $has_more ? (string) end($keys) : null];
 	}
 
 	public function checksum(string $variant, string $key, string $algorithm = 'sha256'): ?string

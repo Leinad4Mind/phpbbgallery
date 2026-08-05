@@ -95,6 +95,12 @@ final class workspace
 		return $this->storage->modified_time($variant, $key);
 	}
 
+	/** @return array{keys: list<string>, cursor: string|null} */
+	public function list_objects(string $variant, ?string $cursor = null, int $limit = 500): array
+	{
+		return $this->storage->list_objects($variant, $cursor, $limit);
+	}
+
 	/** Publish a new object and verify that the provider stored the complete file. */
 	public function publish(string $variant, string $key, string $local_file): void
 	{

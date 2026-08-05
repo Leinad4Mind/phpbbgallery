@@ -403,6 +403,11 @@ final class controller_storage_provider implements provider_interface
 		return $this->exists($variant, $key) ? 1785945600 : null;
 	}
 
+	public function list_objects(string $variant, ?string $cursor = null, int $limit = 500): array
+	{
+		return ['keys' => [], 'cursor' => null];
+	}
+
 	public function checksum(string $variant, string $key, string $algorithm = 'sha256'): ?string
 	{
 		return isset($this->objects[$variant][$key]) ? hash($algorithm, $this->objects[$variant][$key]) : null;

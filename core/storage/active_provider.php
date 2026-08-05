@@ -83,6 +83,11 @@ class active_provider implements provider_interface
 		return $this->provider()->modified_time($variant, $key);
 	}
 
+	public function list_objects(string $variant, ?string $cursor = null, int $limit = 500): array
+	{
+		return $this->provider()->list_objects($variant, $cursor, $limit);
+	}
+
 	public function checksum(string $variant, string $key, string $algorithm = 'sha256'): ?string
 	{
 		return $this->provider()->checksum($variant, $key, $algorithm);

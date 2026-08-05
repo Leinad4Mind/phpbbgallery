@@ -190,6 +190,50 @@ class local_provider implements provider_interface
 		return $modified_time === false ? null : (int) $modified_time;
 	}
 
+	public function list_objects(string $variant, ?string $cursor = null, int $limit = 500): array
+	{
+		if (!isset($this->roots[$variant]))
+		{
+			throw new \InvalidArgumentException('The Gallery storage variant is invalid.');
+		}
+		if ($cursor !== null && $this->normalize_key($cursor) === null)
+		{
+			throw new \InvalidArgumentException('The Gallery storage cursor is invalid.');
+		}
+
+		$limit = max(1, min(1000, $limit));
+		$root = rtrim($this->roots[$variant], DIRECTORY_SEPARATOR);
+		if (!is_dir($root) || is_link($root))
+		{
+			return ['keys' => [], 'cursor' => null];
+		}
+
+		$keys = [];
+		$iterator = new \RecursiveIteratorIterator(
+			new \RecursiveDirectoryIterator($root, \FilesystemIterator::SKIP_DOTS)
+		);
+		foreach ($iterator as $item)
+		{
+			if (!$item->isFile() || $item->isLink())
+			{
+				continue;
+			}
+			$key = str_replace('\\', '/', substr($item->getPathname(), strlen($root) + 1));
+			if ($this->normalize_key($key) !== null && ($cursor === null || strcmp($key, $cursor) > 0))
+			{
+				$keys[] = $key;
+			}
+		}
+		sort($keys, SORT_STRING);
+		$has_more = count($keys) > $limit;
+		$page = array_slice($keys, 0, $limit);
+
+		return [
+			'keys' => $page,
+			'cursor' => $has_more ? (string) end($page) : null,
+		];
+	}
+
 	public function checksum(string $variant, string $key, string $algorithm = 'sha256'): ?string
 	{
 		if (!in_array($algorithm, hash_algos(), true))
