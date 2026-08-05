@@ -114,6 +114,8 @@ class config
 
 		'search_display'		=> 45,
 		'storage_layout'		=> 'flat',
+		'storage_migration_source'	=> '',
+		'storage_migration_target'	=> '',
 		'storage_provider'		=> 'local',
 
 		//'thumbnail_cache'		=> true,

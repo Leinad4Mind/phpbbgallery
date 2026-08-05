@@ -19,8 +19,8 @@ class active_provider implements provider_interface
 	private \phpbbgallery\core\config $config;
 	private ContainerInterface $container;
 	private local_provider $local;
-	private ?provider_interface $resolved = null;
-	private string $resolved_id = '';
+	/** @var array<string, provider_interface> */
+	private array $providers = [];
 
 	public function __construct(
 		\phpbbgallery\core\config $config,
@@ -40,17 +40,42 @@ class active_provider implements provider_interface
 
 	public function prepare(string $variant, string $key): bool
 	{
-		return $this->provider()->prepare($variant, $key);
+		$primary = $this->provider();
+		$peer = $this->migration_peer($primary);
+
+		return $primary->prepare($variant, $key)
+			&& ($peer === null || $peer->prepare($variant, $key));
 	}
 
 	public function write(string $variant, string $key, string $local_file): bool
 	{
-		return $this->provider()->write($variant, $key, $local_file);
+		$primary = $this->provider();
+		$peer = $this->migration_peer($primary);
+		if (!$primary->write($variant, $key, $local_file))
+		{
+			return false;
+		}
+
+		if ($peer === null || $this->publish_peer($peer, $variant, $key, $local_file))
+		{
+			return true;
+		}
+
+		$primary->delete($variant, $key);
+
+		return false;
 	}
 
 	public function replace(string $variant, string $key, string $local_file): bool
 	{
-		return $this->provider()->replace($variant, $key, $local_file);
+		$primary = $this->provider();
+		$peer = $this->migration_peer($primary);
+		if ($peer !== null && !$this->replace_peer($peer, $variant, $key, $local_file))
+		{
+			return false;
+		}
+
+		return $primary->replace($variant, $key, $local_file);
 	}
 
 	public function open_stream(string $variant, string $key): mixed
@@ -70,7 +95,14 @@ class active_provider implements provider_interface
 
 	public function delete(string $variant, string $key): bool
 	{
-		return $this->provider()->delete($variant, $key);
+		$primary = $this->provider();
+		$peer = $this->migration_peer($primary);
+		if ($peer !== null && !$peer->delete($variant, $key))
+		{
+			return false;
+		}
+
+		return $primary->delete($variant, $key);
 	}
 
 	public function size(string $variant, string $key): ?int
@@ -96,22 +128,25 @@ class active_provider implements provider_interface
 	private function provider(): provider_interface
 	{
 		$provider_id = strtolower(trim((string) $this->config->get('storage_provider')));
+
+		return $this->resolve($provider_id);
+	}
+
+	private function resolve(string $provider_id): provider_interface
+	{
 		if (preg_match('/^[a-z][a-z0-9_.-]{0,63}$/D', $provider_id) !== 1)
 		{
 			throw new \RuntimeException('The configured Gallery storage provider identifier is invalid.');
 		}
 
-		if ($this->resolved !== null && $this->resolved_id === $provider_id)
+		if (isset($this->providers[$provider_id]))
 		{
-			return $this->resolved;
+			return $this->providers[$provider_id];
 		}
 
 		if ($provider_id === 'local')
 		{
-			$this->resolved = $this->local;
-			$this->resolved_id = $provider_id;
-
-			return $this->resolved;
+			return $this->providers[$provider_id] = $this->local;
 		}
 
 		$service_id = self::SERVICE_PREFIX . $provider_id;
@@ -126,9 +161,77 @@ class active_provider implements provider_interface
 			throw new \RuntimeException('The configured Gallery storage provider service is incompatible: ' . $provider_id);
 		}
 
-		$this->resolved = $provider;
-		$this->resolved_id = $provider_id;
+		return $this->providers[$provider_id] = $provider;
+	}
 
-		return $this->resolved;
+	private function migration_peer(provider_interface $primary): ?provider_interface
+	{
+		$source = strtolower(trim((string) $this->config->get('storage_migration_source')));
+		$target = strtolower(trim((string) $this->config->get('storage_migration_target')));
+		// Configuration rows are persisted separately. A request may observe the
+		// short transition while a migration is being started or completed.
+		if ($source === '' || $target === '')
+		{
+			return null;
+		}
+		if ($source === $target)
+		{
+			throw new \RuntimeException('The Gallery storage migration state is invalid.');
+		}
+
+		$primary_id = $primary->get_id();
+		if ($primary_id !== $source && $primary_id !== $target)
+		{
+			throw new \RuntimeException('The active Gallery storage provider does not match the migration state.');
+		}
+
+		return $this->resolve($primary_id === $source ? $target : $source);
+	}
+
+	private function publish_peer(
+		provider_interface $peer,
+		string $variant,
+		string $key,
+		string $local_file
+	): bool
+	{
+		if ($peer->exists($variant, $key))
+		{
+			return $this->matches_local($peer, $variant, $key, $local_file);
+		}
+
+		return $peer->prepare($variant, $key)
+			&& $peer->write($variant, $key, $local_file)
+			&& $this->matches_local($peer, $variant, $key, $local_file);
+	}
+
+	private function replace_peer(
+		provider_interface $peer,
+		string $variant,
+		string $key,
+		string $local_file
+	): bool
+	{
+		$updated = $peer->exists($variant, $key)
+			? $peer->replace($variant, $key, $local_file)
+			: $peer->prepare($variant, $key) && $peer->write($variant, $key, $local_file);
+
+		return $updated && $this->matches_local($peer, $variant, $key, $local_file);
+	}
+
+	private function matches_local(
+		provider_interface $provider,
+		string $variant,
+		string $key,
+		string $local_file
+	): bool
+	{
+		clearstatcache(true, $local_file);
+		$size = filesize($local_file);
+		$checksum = hash_file('sha256', $local_file);
+
+		return $size !== false && is_string($checksum)
+			&& $provider->size($variant, $key) === (int) $size
+			&& $provider->checksum($variant, $key) === $checksum;
 	}
 }
