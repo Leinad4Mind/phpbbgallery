@@ -68,6 +68,9 @@ class image
 	/** @var \phpbbgallery\core\file\file  */
 	protected \phpbbgallery\core\file\file $file;
 
+	/** Active-provider workspace for synchronous add-on processing. */
+	protected \phpbbgallery\core\storage\workspace $storage_workspace;
+
 	/** @var string */
 	protected string $table_images;
 
@@ -101,6 +104,7 @@ class image
 	 * @param \phpbbgallery\core\policy\image_visibility $image_visibility
 	 * @param \phpbbgallery\core\policy\album_operation $album_operation
 	 * @param \phpbbgallery\core\file\file           $file
+	 * @param \phpbbgallery\core\storage\workspace   $storage_workspace
 	 * @param string                                 $table_images
 	 */
 	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\language\language $language,
@@ -111,6 +115,7 @@ class image
 		\phpbbgallery\core\policy\image_visibility $image_visibility,
 		\phpbbgallery\core\policy\album_operation $album_operation,
 		\phpbbgallery\core\file\file $file,
+		\phpbbgallery\core\storage\workspace $storage_workspace,
 		string $table_images)
 	{
 		$this->db = $db;
@@ -131,6 +136,7 @@ class image
 		$this->image_visibility = $image_visibility;
 		$this->album_operation = $album_operation;
 		$this->file = $file;
+		$this->storage_workspace = $storage_workspace;
 		$this->table_images = $table_images;
 	}
 
@@ -926,7 +932,6 @@ class image
 			$this->gallery_log->add_log('moderator', 'approve', $album_id, $row['image_id'], ['LOG_GALLERY_APPROVED', $row['image_name']]);
 			$targets[] = $row['image_user_id'];
 			$row['image_status'] = \phpbbgallery\core\block::STATUS_APPROVED;
-			$row['source_path'] = $this->url->path('upload') . $row['image_filename'];
 			$approved_images[] = $row;
 			$last_img = $row['image_id'];
 		}
@@ -952,16 +957,54 @@ class image
 		$this->notify_state_change('approve', $approved_images, [$album_id]);
 		if ($approved_images)
 		{
+			$this->notify_approved_images($approved_images, $album_id);
+		}
+	}
+
+	/** Materialize approved sources only for the duration of synchronous listeners. */
+	private function notify_approved_images(array $approved_images, int $album_id): void
+	{
+		$source_objects = [];
+		foreach ($approved_images as &$image_data)
+		{
+			try
+			{
+				$source = $this->storage_workspace->materialize(
+					\phpbbgallery\core\storage\provider_interface::SOURCE,
+					(string) $image_data['image_filename']
+				);
+				$source_objects[] = $source;
+				$image_data['source_path'] = $source->get_path();
+			}
+			catch (\RuntimeException)
+			{
+				$image_data['source_path'] = '';
+			}
+		}
+		unset($image_data);
+
+		try
+		{
 			/**
 			 * Notify add-ons after images become approved.
 			 *
+			 * Source paths are verified workspace leases and are valid only while
+			 * the synchronous event is being dispatched.
+			 *
 			 * @event phpbbgallery.core.image.approve_after
-			 * @var array approved_images Approved rows with their source paths
+			 * @var array approved_images Approved rows with temporary source paths
 			 * @var int   album_id       Album used by the moderation action
 			 * @since 3.4.0
 			 */
 			$vars = ['approved_images', 'album_id'];
 			extract($this->phpbb_dispatcher->trigger_event('phpbbgallery.core.image.approve_after', compact($vars)));
+		}
+		finally
+		{
+			foreach ($source_objects as $source)
+			{
+				$source->release();
+			}
 		}
 	}
 
