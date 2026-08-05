@@ -182,6 +182,11 @@ $lang = array_merge($lang, [
 
 	'NEW_COMMENT'           => 'Nieuwe Reactie',
 	'NEW_IMAGES'            => 'Nieuwe afbeeldingen',
+	'GALLERY_NEW_IMAGES_COUNT' => [
+		0 => 'Geen nieuwe afbeeldingen',
+		1 => '%d nieuwe afbeelding',
+		2 => '%d nieuwe afbeeldingen',
+	],
 	'NEWEST_PGALLERY'       => 'Het nieuwste persoonlijke album %s',
 	'NO_ALBUMS'             => 'Er zijn geen albums in deze galerij.',
 	'NO_COMMENTS'           => 'Nog geen reacties',

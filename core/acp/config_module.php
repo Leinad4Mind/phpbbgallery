@@ -423,6 +423,7 @@ class config_module
 
 				'PHPBB_INTEGRATION'	=> [
 					'disp_gallery_icon'			=> ['lang' => 'DISP_GALLERY_ICON',				'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
+					'disp_new_image_count'		=> ['lang' => 'DISP_NEW_IMAGE_COUNT',			'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 					'disp_total_images'			=> ['lang' => 'DISP_TOTAL_IMAGES',				'validate' => 'bool',	'type' => 'radio:yes_no'],
 					'profile_user_images'		=> ['lang' => 'DISP_USER_IMAGES_PROFILE',		'validate' => 'bool',	'type' => 'radio:yes_no'],
 					'profile_pega'				=> ['lang' => 'DISP_PERSONAL_ALBUM_PROFILE',	'validate' => 'bool',	'type' => 'radio:yes_no'],

@@ -182,6 +182,11 @@ $lang = array_merge($lang, [
 
 	'NEW_COMMENT'           => 'Nuevo Comentario',
 	'NEW_IMAGES'            => 'Nuevas imágenes',
+	'GALLERY_NEW_IMAGES_COUNT' => [
+		0 => 'No hay imágenes nuevas',
+		1 => '%d imagen nueva',
+		2 => '%d imágenes nuevas',
+	],
 	'NEWEST_PGALLERY'       => 'Nuestra nueva galería personal %s',
 	'NO_ALBUMS'             => 'No hay álbumes en esta galería.',
 	'NO_COMMENTS'           => 'No hay comentarios todavía',

@@ -46,6 +46,9 @@ class main_listener implements EventSubscriberInterface
 
 	/** @var \phpbbgallery\core\online_location */
 	protected \phpbbgallery\core\online_location $online_location;
+
+	/** @var \phpbbgallery\core\unread_counter */
+	protected \phpbbgallery\core\unread_counter $unread_counter;
 	/** @var \phpbb\db\driver\driver_interface  */
 	protected \phpbb\db\driver\driver_interface $db;
 
@@ -64,11 +67,13 @@ class main_listener implements EventSubscriberInterface
 	 * @param \phpbb\db\driver\driver_interface $db
 	 * @param string $users_table
 	 * @param \phpbbgallery\core\online_location $online_location
+	 * @param \phpbbgallery\core\unread_counter $unread_counter
 	 */
 	public function __construct(\phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\user $user,
 								\phpbb\language\language $lang, \phpbbgallery\core\search $gallery_search,
 								\phpbbgallery\core\config $gallery_config, \phpbb\db\driver\driver_interface $db,
-								string $users_table, \phpbbgallery\core\online_location $online_location)
+								string $users_table, \phpbbgallery\core\online_location $online_location,
+								\phpbbgallery\core\unread_counter $unread_counter)
 	{
 		$this->helper = $helper;
 		$this->template = $template;
@@ -79,6 +84,7 @@ class main_listener implements EventSubscriberInterface
 		$this->db = $db;
 		$this->users_table = $users_table;
 		$this->online_location = $online_location;
+		$this->unread_counter = $unread_counter;
 	}
 
 	/**
@@ -143,9 +149,24 @@ class main_listener implements EventSubscriberInterface
 
 		if ($this->gallery_config->get('disp_gallery_icon') == 1)
 		{
-			$this->template->assign_vars([
-				'U_GALLERY'	=> $this->helper->route('phpbbgallery_core_index'),
-			]);
+			$template_vars = [
+				'U_GALLERY' => $this->helper->route('phpbbgallery_core_index'),
+			];
+
+			if ($this->gallery_config->get('disp_new_image_count') == 1)
+			{
+				$count = $this->unread_counter->count();
+				if ($count > 0)
+				{
+					$template_vars += [
+						'S_GALLERY_NEW_IMAGES' => true,
+						'GALLERY_NEW_IMAGES_DISPLAY' => $count >= 100 ? '99+' : (string) $count,
+						'GALLERY_NEW_IMAGES_LABEL' => $this->language->lang('GALLERY_NEW_IMAGES_COUNT', $count),
+					];
+				}
+			}
+
+			$this->template->assign_vars($template_vars);
 		}
 	}
 
