@@ -18,5 +18,5 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
-	'UCP_PM_SPY_INFO' => 'PM\'s can be read and/or deleted by an administrator</p>',
+	'ACL_A_PMSPY'	=> 'Can use PM Spy',
 ));

@@ -18,5 +18,5 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'UCP_PM_SPY_INFO' => 'MP\'s podem ser lidas e/ou eliminadas por um administrador</p>',
+	'ACL_A_PMSPY' => 'Pode utilizar o Espião de MP',
 ]);

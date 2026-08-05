@@ -20,7 +20,7 @@ class pmspy_info
 			'modes'		=> array(
 				'spy'	=> array(
 					'title'	=> 'ACP_PM_SPY',
-					'auth'	=> 'ext_forumhulp/pmspy && acl_a_viewlogs',
+					'auth'	=> 'ext_forumhulp/pmspy && acl_a_pmspy',
 					'cat'	=> array('ACP_MESSAGES')
 				),
 			),

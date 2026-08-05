@@ -1,0 +1,5 @@
+services:
+    forumhulp.pmspy.acp_listener:
+        class: forumhulp\pmspy\event\acp_listener
+        tags:
+            - { name: event.listener }

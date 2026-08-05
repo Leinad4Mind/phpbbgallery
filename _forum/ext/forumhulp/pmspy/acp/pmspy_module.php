@@ -19,12 +19,17 @@ use phpbb\pagination;
 class pmspy_module
 {
 	public $u_action;
+	public $tpl_name;
+	public $page_title;
 
 	private $config;
 	private $db;
 	private $user;
 	private $request;
 	private $template;
+	private $pagination;
+	private $phpbb_root_path;
+	private $php_ext;
 
 	private function setup(config $config, driver_interface $db, user $user, request_interface $request, template $template, pagination $pagination, $phpbb_root_path, $phpEx)
 	{
@@ -55,19 +60,21 @@ class pmspy_module
 		} else if ($this->request->variable('action', '') == 'keyword')
 		{
 			$return_ary = array();
+			$term = utf8_strtolower($this->request->variable('term', '', true));
+			$sql_lower = $this->db->sql_lower_text('x.username');
 			$sql = 'SELECT x.* FROM
 					(
 						SELECT p.user_id AS result, u.username
 						FROM ' . PRIVMSGS_TO_TABLE . ' p
 						LEFT JOIN ' . USERS_TABLE . ' u ON u.user_id = p.user_id
 						UNION DISTINCT
-						SELECT t.author_id, u.username 
+						SELECT t.author_id, u.username
 						FROM ' . PRIVMSGS_TO_TABLE . ' t
 						LEFT JOIN ' . USERS_TABLE . ' u ON u.user_id = t.author_id
-					) x				
-					WHERE LCASE(x.username) LIKE \'' . strtolower($this->request->variable('term', '')) . '%\' 
-					ORDER BY x.username LIMIT 10';
-			$result = $this->db->sql_query($sql);
+					) x
+					WHERE ' . $sql_lower . ' ' . $this->db->sql_like_expression($term . $this->db->get_any_char()) . '
+					ORDER BY x.username';
+			$result = $this->db->sql_query_limit($sql, 10);
 			while ($row = $this->db->sql_fetchrow($result))
 			{
 				$return_ary[] = array(
@@ -75,8 +82,10 @@ class pmspy_module
 					'label'		=> $row['username'],
 				);
 			}
-			echo json_encode($return_ary);
-			exit();
+			$this->db->sql_freeresult($result);
+
+			$json_response = new \phpbb\json_response();
+			$json_response->send($return_ary);
 		} else
 		{
 			// Start initial var setup
@@ -89,21 +98,34 @@ class pmspy_module
 			$userid			= $this->request->variable('userid', 0);
 			$sql_keywords	= $keywords_param = '';
 
+			add_form_key('forumhulp_pmspy');
+
 			if ($delete)
 			{
-				$pm_spy_list = $this->request->variable('mark', array(''));
-
-				// Restore the array to its correct format
-				$pm_spy_list = str_replace('#', '"', $pm_spy_list);
-
-				foreach ($pm_spy_list as $pm_msg_list)
+				if (!check_form_key('forumhulp_pmspy'))
 				{
-					$pm_list[] = unserialize($pm_msg_list);
+					trigger_error('FORM_INVALID');
 				}
 
-				if (!sizeof($pm_spy_list))
+				$pm_spy_list = $this->request->variable('mark', array(''));
+				$pm_list = array();
+
+				foreach ($pm_spy_list as $pm_id)
 				{
-					trigger_error('NO_PM_SELECTED');
+					$pm_id_ary = explode(':', $pm_id);
+
+					if (sizeof($pm_id_ary) !== 3)
+					{
+						continue;
+					}
+
+					list($msg_id, $pm_user_id, $folder_id) = array_map('intval', $pm_id_ary);
+					$pm_list[] = array('msg_ids' => $msg_id, 'user_id' => $pm_user_id, 'folder_id' => $folder_id);
+				}
+
+				if (!sizeof($pm_list))
+				{
+					trigger_error($this->user->lang['NO_PM_SELECTED']);
 				}
 
 				if (!function_exists('delete_pm'))
@@ -132,32 +154,27 @@ class pmspy_module
 			{
 				case 'b':
 					$order_by = 'u.username_clean' . $sort_dir;
-					$order_sql = ' AND t.user_id = u.user_id ';
-				break;
-
-				case 'd':
-					$order_by = 'p.message_time' . $sort_dir;
-					$order_sql = ' AND t.user_id = u.user_id ';
 				break;
 
 				case 'f':
 					$order_by = 'uu.username_clean' . $sort_dir;
-					$order_sql = ' AND t.author_id = u.user_id ';
 				break;
 
 				case 'i':
 					$order_by = 'p.author_ip' . $sort_dir. ', u.username_clean ASC';
-					$order_sql = ' AND t.user_id = u.user_id ';
 				break;
 
 				case 'p':
 					$order_by = 't.folder_id' . $sort_dir. ', u.username_clean ASC';
-					$order_sql = ' AND t.user_id = u.user_id ';
 				break;
 
 				case 't':
 					$order_by = 'u.username_clean' . $sort_dir;
-					$order_sql = ' AND t.user_id = u.user_id ';
+				break;
+
+				case 'd':
+				default:
+					$order_by = 'p.message_time' . $sort_dir;
 				break;
 			}
 
@@ -185,36 +202,56 @@ class pmspy_module
 					(($this->config['auth_smilies_pm']) ? OPTION_FLAG_SMILIES : 0) +
 					(($this->config['allow_post_links']) ? OPTION_FLAG_LINKS : 0);
 
+			$start = $this->pagination->validate_start($start, $this->config['topics_per_page'], $total_pm);
+
 			$sql = 'SELECT p.msg_id, p.message_subject, p.message_text, p.bbcode_uid, p.bbcode_bitfield, p.message_time, p.bcc_address, p.to_address, p.author_ip, t.user_id,
 					t.author_id, t.folder_id
 					FROM ' . PRIVMSGS_TO_TABLE . ' t
-					RIGHT  JOIN ' . PRIVMSGS_TABLE . ' p ON p.msg_id = t.msg_id 
+					RIGHT  JOIN ' . PRIVMSGS_TABLE . ' p ON p.msg_id = t.msg_id
 					LEFT JOIN ' . USERS_TABLE . ' u ON u.user_id = t.user_id
 					LEFT JOIN ' . USERS_TABLE . ' uu ON uu.user_id = t.author_id
-					' . $sql_keywords . ' ' .
-				//		$order_sql . '
-					' ORDER BY ' . $order_by;
+					' . $sql_keywords . '
+					ORDER BY ' . $order_by;
 			$result = $this->db->sql_query_limit($sql, $this->config['topics_per_page'], $start);
+
+			$rowset = array();
+			$pm_user_ids = array();
 			while ($row = $this->db->sql_fetchrow($result))
+			{
+				$rowset[] = $row;
+
+				if ($row['author_id'])
+				{
+					$pm_user_ids[] = (int) $row['author_id'];
+				}
+
+				if ($row['user_id'])
+				{
+					$pm_user_ids[] = (int) $row['user_id'];
+				}
+			}
+			$this->db->sql_freeresult($result);
+
+			$pm_user_data = $this->get_pm_user_data(array_unique($pm_user_ids));
+
+			foreach ($rowset as $row)
 			{
 				$this->template->assign_block_vars('pm_row', array(
 					'AUTHOR_IP'		=> $row['author_ip'],
-					'FROM'			=> $row['author_id'] ? $this->get_pm_user_data($row['author_id']) : '',
-					'TO'			=> ($row['to_address'] && ($row['folder_id'] < PRIVMSGS_OUTBOX || !$row['folder_id'])) ? ($row['user_id'] ? $this->get_pm_user_data($row['user_id']) : '') : '',
-					'BCC'			=> ($row['bcc_address'] && ($row['folder_id'] < PRIVMSGS_OUTBOX || !$row['folder_id'])) ? ($row['user_id'] ? $this->get_pm_user_data($row['user_id']) : '') : '',
+					'FROM'			=> ($row['author_id'] && isset($pm_user_data[$row['author_id']])) ? $pm_user_data[$row['author_id']] : '',
+					'TO'			=> ($row['to_address'] && ($row['folder_id'] < PRIVMSGS_OUTBOX || !$row['folder_id']) && $row['user_id'] && isset($pm_user_data[$row['user_id']])) ? $pm_user_data[$row['user_id']] : '',
+					'BCC'			=> ($row['bcc_address'] && ($row['folder_id'] < PRIVMSGS_OUTBOX || !$row['folder_id']) && $row['user_id'] && isset($pm_user_data[$row['user_id']])) ? $pm_user_data[$row['user_id']] : '',
 					'DATE'			=> $this->user->format_date($row['message_time']),
 					'FOLDER'		=> ($row['folder_id'] > PRIVMSGS_INBOX) ? $this->user->lang['PM_SAVED'] : $pm_box_ary[$row['folder_id']],
 					'IS_GROUP'		=> (strstr($row['to_address'], 'g')) ? $this->get_pm_group($row['to_address']) : '',
-					'PM_ID'			=> str_replace('"', '#', serialize(array('msg_ids' => $row['msg_id'], 'user_id' => $row['user_id'], 'folder_id' => $row['folder_id']))),
+					'PM_ID'			=> $row['msg_id'] . ':' . $row['user_id'] . ':' . $row['folder_id'],
 					'PM_KEY'		=> $row['msg_id'] . $row['user_id'],
 					'PM_SUBJECT'	=> $row['message_subject'],
 					'PM_TEXT'		=> generate_text_for_display($row['message_text'], $row['bbcode_uid'], $row['bbcode_bitfield'], $flags),
 				));
 			}
-			$this->db->sql_freeresult($result);
 
 			$base_url = $this->u_action . '&sk=' . $sk . '&sd=' . $sd . $keywords_param . (($userid) ? '&userid=' . $userid : '');
-			$start = $this->pagination->validate_start($start, 1, $total_pm);
 			$this->pagination->generate_template_pagination($base_url, 'pagination', 'start', $total_pm, $this->config['topics_per_page'], $start);
 
 			$this->template->assign_vars(array(
@@ -233,14 +270,21 @@ class pmspy_module
 	{
 		$group = str_replace('g_', '', $group);
 		$group = str_replace('u_', '', $group);
-		$group = explode(':', $group);
-		$sql = 'SELECT group_name FROM ' . GROUPS_TABLE . ' WHERE group_id IN (' . implode(',', $group) . ')';
+		$group = array_filter(array_map('intval', explode(':', $group)));
+
+		if (!sizeof($group))
+		{
+			return '';
+		}
+
+		$sql = 'SELECT group_name FROM ' . GROUPS_TABLE . ' WHERE ' . $this->db->sql_in_set('group_id', $group);
 		$result = $this->db->sql_query($sql);
 		$groupname = array();
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$groupname[] = (isset($this->user->lang['G_' . utf8_strtoupper($row['group_name'])])) ? $this->user->lang['G_' . utf8_strtoupper($row['group_name'])] : $row['group_name'];
 		}
+		$this->db->sql_freeresult($result);
 		return implode(', ', $groupname);
 	}
 
@@ -249,21 +293,42 @@ class pmspy_module
 		$sql = 'SELECT username FROM ' . USERS_TABLE . ' WHERE user_id = ' . $userid;
 		$result = $this->db->sql_query($sql);
 		$username = $this->db->sql_fetchfield('username');
+		$this->db->sql_freeresult($result);
 		return $username;
 	}
 
-	private function get_pm_user_data($pm_user)
+	/**
+	* Batch-loads last-online info for a set of PM participants (avoids one query per row)
+	*
+	* @param	array	$pm_user_ids	Unique user ids to look up
+	*
+	* @return	array	Map of user_id => formatted user info string
+	*/
+	private function get_pm_user_data(array $pm_user_ids)
 	{
-		$sql = 'SELECT username, user_colour, user_lastvisit, MAX(session_time) AS session_time FROM ' . USERS_TABLE . ' u
-				LEFT JOIN ' . SESSIONS_TABLE . ' s ON s.session_user_id = u.user_id
-				WHERE user_id = ' . $pm_user;
-		$result = $this->db->sql_query($sql);
-		$row = $this->db->sql_fetchrow($result);
+		$pm_user_data = array();
 
-		$user_info = get_username_string('full',(int) $pm_user, $row['username'], $row['user_colour']);
-		$last_visit = $this->user->format_date(max($row['user_lastvisit'], $row['session_time']));
-		$user_info = str_replace('<a href', '<a' . ((max($row['user_lastvisit'], $row['session_time'])) ? ' title="' . $this->user->lang['LAST_ONLINE'] . ' ' . $last_visit . '"' : '')  . ' href', $user_info);
-		return $user_info;
+		if (!sizeof($pm_user_ids))
+		{
+			return $pm_user_data;
+		}
+
+		$sql = 'SELECT u.user_id, u.username, u.user_colour, u.user_lastvisit, MAX(s.session_time) AS session_time
+				FROM ' . USERS_TABLE . ' u
+				LEFT JOIN ' . SESSIONS_TABLE . ' s ON s.session_user_id = u.user_id
+				WHERE ' . $this->db->sql_in_set('u.user_id', $pm_user_ids) . '
+				GROUP BY u.user_id, u.username, u.user_colour, u.user_lastvisit';
+		$result = $this->db->sql_query($sql);
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$user_info = get_username_string('full', (int) $row['user_id'], $row['username'], $row['user_colour']);
+			$last_visit = $this->user->format_date(max($row['user_lastvisit'], $row['session_time']));
+			$user_info = str_replace('<a href', '<a' . ((max($row['user_lastvisit'], $row['session_time'])) ? ' title="' . $this->user->lang['LAST_ONLINE'] . ' ' . $last_visit . '"' : '')  . ' href', $user_info);
+			$pm_user_data[(int) $row['user_id']] = $user_info;
+		}
+		$this->db->sql_freeresult($result);
+
+		return $pm_user_data;
 	}
 
 	/**

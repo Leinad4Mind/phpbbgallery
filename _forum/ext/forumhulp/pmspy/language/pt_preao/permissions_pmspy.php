@@ -4,7 +4,7 @@
  * @package PM SPy for phpBB.
  * @copyright (c) 2016 ForumHulp.com
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
- * @translation Leinad4Mind [Brazilian Portuguese [pt_br]] (2026)
+ * @translation Leinad4Mind [Portuguese [pt_preao]] (2026)
  */
 
 if (!defined('IN_PHPBB'))
@@ -18,5 +18,5 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
-	'UCP_PM_SPY_INFO' => 'MP\'s podem ser lidas e/ou excluídas por um administrador</p>',
+	'ACL_A_PMSPY' => 'Pode utilizar o Espião de MP',
 ]);

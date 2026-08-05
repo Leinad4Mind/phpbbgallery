@@ -1,8 +1,4 @@
-<!-- IF S_ALLOW_CDN -->
-<!-- INCLUDECSS //maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css -->
-<!-- ELSE -->
 <!-- INCLUDECSS {ROOT_PATH}ext/forumhulp/helper/css/font-awesome.min.css -->
-<!-- ENDIF -->
 <!-- INCLUDECSS css/pmspy.css -->
 <!-- INCLUDECSS css/jquery-ui.min.css -->
 <!-- INCLUDECSS {ROOT_PATH}ext/forumhulp/helper/css/jquery.simpledialog.css -->
@@ -18,6 +14,7 @@
 	<input name="keywords" type="text" value="{S_KEYWORDS}"/> 
 	<input id="autocomplete" type="text" name="userid" placeholder="User"  value="<!-- IF UNAME -->{UID}<!-- ENDIF -->" />
 	&nbsp;<input type="submit" class="button2" name="filter" value="{L_SEARCH}" /></p>
+{S_FORM_TOKEN}
 <!-- IF .pagination or TOTAL_POSTS -->
 	<div class="pagination">
 		<!-- IF .pagination -->
