@@ -1,0 +1,3 @@
+parameters:
+    forumhulp.faultylogins.tables.attempts: '%core.table_prefix%faultylogins_attempts'
+    forumhulp.faultylogins.tables.log: '%core.table_prefix%log'

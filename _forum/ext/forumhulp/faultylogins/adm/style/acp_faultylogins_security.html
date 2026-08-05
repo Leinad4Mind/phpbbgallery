@@ -1,0 +1,93 @@
+{% include 'overall_header.html' %}
+
+<a id="maincontent"></a>
+
+<h1>{{ lang('ACP_FAULTYLOGINS_SECURITY') }}</h1>
+<p>{{ lang('ACP_FAULTYLOGINS_SECURITY_EXPLAIN') }}</p>
+
+{% if S_ERROR %}<div class="errorbox"><p>{{ ERROR_MSG|e|nl2br }}</p></div>{% endif %}
+{% if S_MESSAGE %}<div class="successbox"><p>{{ MESSAGE|e }}</p></div>{% endif %}
+{% if not S_SODIUM_AVAILABLE %}<div class="errorbox"><p>{{ lang('FAULTYLOGINS_SODIUM_REQUIRED') }}</p></div>{% endif %}
+
+{% if RECOVERY_KEY %}
+	<div class="errorbox notice">
+		<h3>{{ lang('FAULTYLOGINS_RECOVERY_KEY') }}</h3>
+		<p>{{ lang('FAULTYLOGINS_RECOVERY_KEY_EXPLAIN') }}</p>
+		<textarea rows="4" cols="90" readonly>{{ RECOVERY_KEY|e }}</textarea>
+	</div>
+{% endif %}
+
+{% if not S_INITIALIZED %}
+	<form method="post" action="{{ U_ACTION|e('html_attr') }}">
+		<fieldset>
+			<legend>{{ lang('FAULTYLOGINS_INITIAL_SETUP') }}</legend>
+			<p>{{ lang('FAULTYLOGINS_INITIAL_SETUP_EXPLAIN') }}</p>
+			<dl><dt><label for="new_passphrase">{{ lang('FAULTYLOGINS_NEW_PASSPHRASE') }}</label></dt><dd><input type="password" id="new_passphrase" name="new_passphrase" size="40" maxlength="1024" autocomplete="new-password"></dd></dl>
+			<dl><dt><label for="confirm_passphrase">{{ lang('FAULTYLOGINS_CONFIRM_PASSPHRASE') }}</label></dt><dd><input type="password" id="confirm_passphrase" name="confirm_passphrase" size="40" maxlength="1024" autocomplete="new-password"></dd></dl>
+			<p class="submit-buttons"><input class="button1" type="submit" name="initialize" value="{{ lang('FAULTYLOGINS_INITIALIZE')|e('html_attr') }}"></p>
+			{{ S_FORM_TOKEN }}
+		</fieldset>
+	</form>
+{% else %}
+	<form method="post" action="{{ U_ACTION|e('html_attr') }}">
+		<fieldset>
+			<legend>{{ lang('FAULTYLOGINS_CHANGE_PASSPHRASE') }}</legend>
+			<p>{{ lang('FAULTYLOGINS_CHANGE_PASSPHRASE_EXPLAIN') }}</p>
+			<dl><dt><label for="current_passphrase">{{ lang('FAULTYLOGINS_CURRENT_PASSPHRASE') }}</label></dt><dd><input type="password" id="current_passphrase" name="current_passphrase" size="40" maxlength="1024" autocomplete="off"></dd></dl>
+			<dl><dt><label for="change_new_passphrase">{{ lang('FAULTYLOGINS_NEW_PASSPHRASE') }}</label></dt><dd><input type="password" id="change_new_passphrase" name="new_passphrase" size="40" maxlength="1024" autocomplete="new-password"></dd></dl>
+			<dl><dt><label for="change_confirm_passphrase">{{ lang('FAULTYLOGINS_CONFIRM_PASSPHRASE') }}</label></dt><dd><input type="password" id="change_confirm_passphrase" name="confirm_passphrase" size="40" maxlength="1024" autocomplete="new-password"></dd></dl>
+			<p class="submit-buttons"><input class="button1" type="submit" name="change_passphrase" value="{{ lang('FAULTYLOGINS_CHANGE_PASSPHRASE')|e('html_attr') }}"></p>
+			{{ S_FORM_TOKEN }}
+		</fieldset>
+	</form>
+
+	<form method="post" action="{{ U_ACTION|e('html_attr') }}">
+		<fieldset>
+			<legend>{{ lang('FAULTYLOGINS_EXPORT_RECOVERY') }}</legend>
+			<p>{{ lang('FAULTYLOGINS_EXPORT_RECOVERY_EXPLAIN') }}</p>
+			<dl><dt><label for="export_passphrase">{{ lang('FAULTYLOGINS_CURRENT_PASSPHRASE') }}</label></dt><dd><input type="password" id="export_passphrase" name="export_passphrase" size="40" maxlength="1024" autocomplete="off"></dd></dl>
+			<p class="submit-buttons"><input class="button2" type="submit" name="export_recovery" value="{{ lang('FAULTYLOGINS_EXPORT_RECOVERY')|e('html_attr') }}"></p>
+			{{ S_FORM_TOKEN }}
+		</fieldset>
+	</form>
+
+	<form method="post" action="{{ U_ACTION|e('html_attr') }}">
+		<fieldset>
+			<legend>{{ lang('FAULTYLOGINS_RECOVER_ACCESS') }}</legend>
+			<p>{{ lang('FAULTYLOGINS_RECOVER_ACCESS_EXPLAIN') }}</p>
+			<dl><dt><label for="recovery_key">{{ lang('FAULTYLOGINS_RECOVERY_KEY') }}</label></dt><dd><textarea id="recovery_key" name="recovery_key" rows="3" cols="80" autocomplete="off"></textarea></dd></dl>
+			<dl><dt><label for="recovery_new_passphrase">{{ lang('FAULTYLOGINS_NEW_PASSPHRASE') }}</label></dt><dd><input type="password" id="recovery_new_passphrase" name="new_passphrase" size="40" maxlength="1024" autocomplete="new-password"></dd></dl>
+			<dl><dt><label for="recovery_confirm_passphrase">{{ lang('FAULTYLOGINS_CONFIRM_PASSPHRASE') }}</label></dt><dd><input type="password" id="recovery_confirm_passphrase" name="confirm_passphrase" size="40" maxlength="1024" autocomplete="new-password"></dd></dl>
+			<p class="submit-buttons"><input class="button2" type="submit" name="recover" value="{{ lang('FAULTYLOGINS_RECOVER_ACCESS')|e('html_attr') }}"></p>
+			{{ S_FORM_TOKEN }}
+		</fieldset>
+	</form>
+{% endif %}
+
+<form method="post" action="{{ U_ACTION|e('html_attr') }}">
+	<fieldset>
+		<legend>{{ lang('FAULTYLOGINS_SETTINGS') }}</legend>
+		<dl><dt><label for="retention_days">{{ lang('FAULTYLOGINS_RETENTION_DAYS') }}</label><br><span>{{ lang('FAULTYLOGINS_RETENTION_DAYS_EXPLAIN') }}</span></dt><dd><input type="number" id="retention_days" name="retention_days" min="1" max="3650" value="{{ RETENTION_DAYS }}"></dd></dl>
+		<dl><dt><label for="throttle_seconds">{{ lang('FAULTYLOGINS_THROTTLE_SECONDS') }}</label><br><span>{{ lang('FAULTYLOGINS_THROTTLE_SECONDS_EXPLAIN') }}</span></dt><dd><input type="number" id="throttle_seconds" name="throttle_seconds" min="0" max="3600" value="{{ THROTTLE_SECONDS }}"></dd></dl>
+		<p class="submit-buttons"><input class="button1" type="submit" name="save_settings" value="{{ lang('SUBMIT')|e('html_attr') }}"></p>
+		{{ S_FORM_TOKEN }}
+	</fieldset>
+</form>
+
+{% if S_INITIALIZED and LEGACY_COUNT > 0 %}
+<form method="post" action="{{ U_ACTION|e('html_attr') }}">
+	<fieldset><legend>{{ lang('FAULTYLOGINS_LEGACY_LOGS') }}</legend><p>{{ lang('FAULTYLOGINS_LEGACY_LOGS_EXPLAIN', LEGACY_COUNT) }}</p><p class="submit-buttons"><input class="button2" type="submit" name="migrate_legacy" value="{{ lang('FAULTYLOGINS_MIGRATE_LEGACY')|e('html_attr') }}"></p>{{ S_FORM_TOKEN }}</fieldset>
+</form>
+{% endif %}
+
+<form method="post" action="{{ U_ACTION|e('html_attr') }}">
+	<fieldset>
+		<legend>{{ lang('FAULTYLOGINS_PURGE') }}</legend>
+		<p>{{ lang('FAULTYLOGINS_PURGE_EXPLAIN', TOTAL_ATTEMPTS) }}</p>
+		<label><input type="checkbox" name="confirm_purge" value="1"> {{ lang('FAULTYLOGINS_PURGE_CONFIRM') }}</label>
+		<p class="submit-buttons"><input class="button2" type="submit" name="purge_logs" value="{{ lang('FAULTYLOGINS_PURGE')|e('html_attr') }}"></p>
+		{{ S_FORM_TOKEN }}
+	</fieldset>
+</form>
+
+{% include 'overall_footer.html' %}

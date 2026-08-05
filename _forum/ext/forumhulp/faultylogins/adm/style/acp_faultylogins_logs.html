@@ -1,0 +1,71 @@
+{% include 'overall_header.html' %}
+
+<a id="maincontent"></a>
+
+<h1>{{ lang('ACP_FAULTYLOGINS_LOGS') }}</h1>
+<p>{{ lang('ACP_FAULTYLOGINS_LOGS_EXPLAIN') }}</p>
+
+{% if S_ERROR %}
+	<div class="errorbox"><p>{{ ERROR_MSG|e|nl2br }}</p></div>
+{% endif %}
+
+{% if not S_INITIALIZED %}
+	<div class="errorbox"><p>{{ lang('FAULTYLOGINS_NOT_INITIALIZED') }}</p></div>
+{% else %}
+	<form method="post" action="{{ U_ACTION|e('html_attr') }}">
+		<fieldset>
+			<legend>{{ lang('FAULTYLOGINS_UNLOCK') }}</legend>
+			<p>{{ lang('FAULTYLOGINS_UNLOCK_EXPLAIN') }}</p>
+			<dl>
+				<dt><label for="passphrase">{{ lang('FAULTYLOGINS_PASSPHRASE') }}</label></dt>
+				<dd><input type="password" id="passphrase" name="passphrase" value="" size="40" maxlength="1024" autocomplete="off"></dd>
+			</dl>
+			<p class="submit-buttons"><input class="button1" type="submit" name="unlock" value="{{ lang('FAULTYLOGINS_UNLOCK')|e('html_attr') }}"></p>
+			{{ S_FORM_TOKEN }}
+		</fieldset>
+	</form>
+{% endif %}
+
+<p>{{ lang('FAULTYLOGINS_TOTAL', TOTAL_ATTEMPTS) }}</p>
+
+{% if loops.pagination|length %}
+	<div class="pagination top-pagination">{% include 'pagination.html' %}</div>
+{% endif %}
+
+<table class="table1 zebra-table fixed-width-table">
+	<thead>
+		<tr>
+			<th>{{ lang('FAULTYLOGINS_DATE') }}</th>
+			<th>{{ lang('FAULTYLOGINS_USERNAME') }}</th>
+			<th>{{ lang('FAULTYLOGINS_IP') }}</th>
+			<th>{{ lang('FAULTYLOGINS_REASON') }}</th>
+			<th>{{ lang('FAULTYLOGINS_PASSWORD') }}</th>
+		</tr>
+	</thead>
+	<tbody>
+	{% for row in attempts %}
+		<tr>
+			<td>{{ row.DATE|e }}</td>
+			<td>{{ row.USERNAME|e }}</td>
+			<td>{{ row.IP|e }}</td>
+			<td>{{ row.REASON|e }}</td>
+			<td>
+			{% if row.S_PASSWORD_AVAILABLE %}
+				<code>{{ row.PASSWORD|e }}</code>
+				{% if row.S_PASSWORD_TRUNCATED %}<br><em>{{ lang('FAULTYLOGINS_PASSWORD_TRUNCATED') }}</em>{% endif %}
+			{% else %}
+				<code>••••••••</code>
+			{% endif %}
+			</td>
+		</tr>
+	{% else %}
+		<tr><td colspan="5">{{ lang('FAULTYLOGINS_NO_ATTEMPTS') }}</td></tr>
+	{% endfor %}
+	</tbody>
+</table>
+
+{% if loops.pagination|length %}
+	<div class="pagination">{% include 'pagination.html' %}</div>
+{% endif %}
+
+{% include 'overall_footer.html' %}

@@ -1,0 +1,90 @@
+<?php
+/**
+ *
+ * @package phpBB Extension - Faulty Logins
+ * @copyright (c) 2014 John Peskens (http://ForumHulp.com)
+ * @copyright (c) 2026 Leinad4Mind
+ * @license https://opensource.org/licenses/GPL-2.0 GNU General Public License v2
+ *
+ */
+
+if (!defined('IN_PHPBB'))
+{
+	exit;
+}
+
+$lang = array_merge($lang, [
+	'ACP_FAULTYLOGINS_TITLE' => 'Faulty Logins',
+	'ACP_FAULTYLOGINS_LOGS' => 'Encrypted login attempts',
+	'ACP_FAULTYLOGINS_LOGS_EXPLAIN' => 'Passwords are encrypted before storage and remain hidden until the passphrase is supplied. The passphrase is never stored.',
+	'ACP_FAULTYLOGINS_SECURITY' => 'Security and retention',
+	'ACP_FAULTYLOGINS_SECURITY_EXPLAIN' => 'Configure the encryption keys, recovery material and automatic retention policy.',
+	'FAULTYLOGINS_ALREADY_INITIALIZED' => 'Encryption has already been initialised.',
+	'FAULTYLOGINS_CHANGE_PASSPHRASE' => 'Change passphrase',
+	'FAULTYLOGINS_CHANGE_PASSPHRASE_EXPLAIN' => 'Changing the passphrase re-encrypts the same private key. Existing and future records remain accessible.',
+	'FAULTYLOGINS_CONFIRM_PASSPHRASE' => 'Confirm passphrase',
+	'FAULTYLOGINS_CRYPTO_FAILURE' => 'The cryptographic operation failed. No plaintext password was stored.',
+	'FAULTYLOGINS_CURRENT_PASSPHRASE' => 'Current passphrase',
+	'FAULTYLOGINS_DATE' => 'Date',
+	'FAULTYLOGINS_EXPORT_RECOVERY' => 'Export recovery key',
+	'FAULTYLOGINS_EXPORT_RECOVERY_EXPLAIN' => 'Enter the current passphrase to display the private recovery key. Store it offline and never send it by email.',
+	'FAULTYLOGINS_INITIALIZE' => 'Initialise encryption',
+	'FAULTYLOGINS_INITIALIZED' => 'Encryption initialised. %1$d legacy records were encrypted and %2$d unsafe legacy log entries were removed.',
+	'FAULTYLOGINS_INITIAL_SETUP' => 'Initial encryption setup',
+	'FAULTYLOGINS_INITIAL_SETUP_EXPLAIN' => 'Choose a strong passphrase. A public key will encrypt new attempts, while the private key will remain protected by this passphrase.',
+	'FAULTYLOGINS_INVALID_PASSPHRASE' => 'The passphrase is incorrect.',
+	'FAULTYLOGINS_INVALID_RECOVERY_KEY' => 'The recovery key is invalid or does not belong to this installation.',
+	'FAULTYLOGINS_IP' => 'IP address',
+	'FAULTYLOGINS_LEGACY_LOGS' => 'Unsafe legacy logs',
+	'FAULTYLOGINS_LEGACY_LOGS_EXPLAIN' => '%d old admin-log entries still require secure migration.',
+	'FAULTYLOGINS_LEGACY_MIGRATED' => '%1$d legacy records were encrypted and %2$d unsafe entries were removed.',
+	'FAULTYLOGINS_LEGACY_REASON' => 'Legacy login failure',
+	'FAULTYLOGINS_MIGRATE_LEGACY' => 'Encrypt and remove legacy logs',
+	'FAULTYLOGINS_NEW_PASSPHRASE' => 'New passphrase',
+	'FAULTYLOGINS_NOT_INITIALIZED' => 'Encryption has not been configured. Open the Security page before collecting new login attempts.',
+	'FAULTYLOGINS_NO_ATTEMPTS' => 'No encrypted login attempts are stored.',
+	'FAULTYLOGINS_PASSWORD' => 'Attempted password',
+	'FAULTYLOGINS_PASSWORD_TRUNCATED' => 'Input exceeded 4096 bytes and was safely truncated.',
+	'FAULTYLOGINS_PASSPHRASE' => 'Passphrase',
+	'FAULTYLOGINS_PASSPHRASE_CHANGED' => 'The passphrase was changed. All existing records remain accessible with the new passphrase.',
+	'FAULTYLOGINS_PASSPHRASE_MISMATCH' => 'The new passphrase and confirmation do not match.',
+	'FAULTYLOGINS_PASSPHRASE_REQUIREMENTS' => 'The passphrase must contain at least %d characters and must not be a short PIN.',
+	'FAULTYLOGINS_PURGE' => 'Delete encrypted logs',
+	'FAULTYLOGINS_PURGE_CONFIRM' => 'I understand that deleted passwords cannot be recovered.',
+	'FAULTYLOGINS_PURGE_CONFIRM_REQUIRED' => 'Confirm that you understand the permanent deletion.',
+	'FAULTYLOGINS_PURGE_EXPLAIN' => 'Permanently delete all %d encrypted attempts. The encryption keys are preserved.',
+	'FAULTYLOGINS_PURGED' => '%d encrypted login attempts were permanently deleted.',
+	'FAULTYLOGINS_REASON' => 'Reason',
+	'FAULTYLOGINS_REASON_ACTIVE' => 'Inactive or ignored account',
+	'FAULTYLOGINS_REASON_ATTEMPTS' => 'Too many attempts or CAPTCHA failure',
+	'FAULTYLOGINS_REASON_CONVERT' => 'Legacy password conversion required',
+	'FAULTYLOGINS_REASON_EXTERNAL' => 'External authentication failure',
+	'FAULTYLOGINS_REASON_PASSWORD' => 'Incorrect password',
+	'FAULTYLOGINS_REASON_UNKNOWN' => 'Unknown authentication failure',
+	'FAULTYLOGINS_REASON_USERNAME' => 'Unknown username',
+	'FAULTYLOGINS_RECOVER_ACCESS' => 'Recover access',
+	'FAULTYLOGINS_RECOVER_ACCESS_EXPLAIN' => 'Use the offline recovery key to protect the existing private key with a new passphrase.',
+	'FAULTYLOGINS_RECOVERED' => 'Access recovered. Existing and future records use the new passphrase.',
+	'FAULTYLOGINS_RECOVERY_EXPORTED' => 'The recovery key is displayed below. Copy it now and store it offline.',
+	'FAULTYLOGINS_RECOVERY_KEY' => 'Private recovery key',
+	'FAULTYLOGINS_RECOVERY_KEY_EXPLAIN' => 'This key can decrypt every stored password. Copy it to secure offline storage; it will not be automatically shown again.',
+	'FAULTYLOGINS_RETENTION_DAYS' => 'Retention period',
+	'FAULTYLOGINS_RETENTION_DAYS_EXPLAIN' => 'Encrypted attempts older than this number of days are deleted automatically (1–3650).',
+	'FAULTYLOGINS_SETTINGS' => 'Collection settings',
+	'FAULTYLOGINS_SETTINGS_SAVED' => 'The collection and retention settings were saved.',
+	'FAULTYLOGINS_SODIUM_REQUIRED' => 'The PHP Sodium extension is required. Encryption cannot operate without it.',
+	'FAULTYLOGINS_THROTTLE_SECONDS' => 'Minimum interval per IP',
+	'FAULTYLOGINS_THROTTLE_SECONDS_EXPLAIN' => 'Suppress repeated writes from the same IP for this many seconds (0–3600).',
+	'FAULTYLOGINS_TOTAL' => '%d encrypted attempts stored.',
+	'FAULTYLOGINS_UNLOCK' => 'Reveal passwords',
+	'FAULTYLOGINS_UNLOCK_EXPLAIN' => 'The passphrase reveals only the current page and is discarded immediately after rendering.',
+	'FAULTYLOGINS_UNLOCK_LOCKED' => 'Too many incorrect attempts. Passphrase verification is blocked for %d minutes.',
+	'FAULTYLOGINS_USERNAME' => 'Attempted username',
+	'LOG_FAULTYLOGINS_INITIALIZED' => '<strong>Initialised Faulty Logins encryption</strong>',
+	'LOG_FAULTYLOGINS_PASSPHRASE_CHANGED' => '<strong>Changed the Faulty Logins passphrase</strong>',
+	'LOG_FAULTYLOGINS_PURGED' => '<strong>Deleted Faulty Logins records</strong><br>» %d records',
+	'LOG_FAULTYLOGINS_RECOVERED' => '<strong>Recovered access to Faulty Logins encryption</strong>',
+	'LOG_FAULTYLOGINS_RECOVERY_EXPORTED' => '<strong>Exported the Faulty Logins recovery key</strong>',
+	'LOG_FAULTYLOGINS_SETTINGS_CHANGED' => '<strong>Changed Faulty Logins settings</strong>',
+	'LOG_FAULTYLOGINS_VIEWED' => '<strong>Revealed encrypted Faulty Logins passwords</strong><br>» %d records',
+]);

@@ -1,0 +1,33 @@
+{
+	"name": "forumhulp/faultylogins",
+	"type": "phpbb-extension",
+	"description": "Securely records failed login attempts with passphrase-protected password encryption.",
+	"homepage": "https://github.com/Leinad4Mind/gold-phpbb-ext",
+	"version": "3.2.0",
+	"time": "2026-08-05",
+	"keywords": ["phpbb", "security", "login", "audit", "encryption"],
+	"license": "GPL-2.0-only",
+	"authors": [
+		{
+			"name": "Leinad4Mind",
+			"role": "Extension Developer"
+		},
+		{
+			"name": "John Peskens",
+			"homepage": "https://forumhulp.com",
+			"role": "Original Developer"
+		}
+	],
+	"require": {
+		"php": ">=7.2.0",
+		"ext-sodium": "*",
+		"composer/installers": "~1.0",
+		"phpbb/phpbb": ">=3.3.0,<4.0.0@dev"
+	},
+	"extra": {
+		"display-name": "Faulty Logins",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.3.0,<4.0.0@dev"
+		}
+	}
+}

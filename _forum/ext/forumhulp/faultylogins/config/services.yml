@@ -1,0 +1,50 @@
+imports:
+    - { resource: 'tables.yml' }
+
+services:
+    forumhulp.faultylogins.crypto:
+        class: 'forumhulp\faultylogins\core\crypto_manager'
+        arguments:
+            - '@config'
+
+    forumhulp.faultylogins.attempts:
+        class: 'forumhulp\faultylogins\core\attempt_repository'
+        arguments:
+            - '@dbal.conn'
+            - '%forumhulp.faultylogins.tables.attempts%'
+            - '%forumhulp.faultylogins.tables.log%'
+
+    forumhulp.faultylogins.listener:
+        class: 'forumhulp\faultylogins\event\listener'
+        arguments:
+            - '@config'
+            - '@cache.driver'
+            - '@forumhulp.faultylogins.crypto'
+            - '@forumhulp.faultylogins.attempts'
+            - '@user'
+        tags:
+            - { name: event.listener }
+
+    forumhulp.faultylogins.admin.controller:
+        class: 'forumhulp\faultylogins\controller\admin_controller'
+        arguments:
+            - '@config'
+            - '@template'
+            - '@log'
+            - '@user'
+            - '@request'
+            - '@language'
+            - '@pagination'
+            - '@cache.driver'
+            - '@forumhulp.faultylogins.crypto'
+            - '@forumhulp.faultylogins.attempts'
+
+    forumhulp.faultylogins.cron.task.prune_attempts:
+        class: 'forumhulp\faultylogins\cron\task\prune_attempts'
+        arguments:
+            - '@config'
+            - '@forumhulp.faultylogins.attempts'
+        calls:
+            - [set_name, ['forumhulp.faultylogins.cron.task.prune_attempts']]
+        tags:
+            - { name: cron.task }
