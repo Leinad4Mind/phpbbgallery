@@ -1,11 +1,12 @@
 <?php
 /**
-*
-* @package phpBB Extension - Who Visited This Topic
-* @copyright (c) 2019 dmzx - https://www.dmzx-web.net
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ *
+ * @package phpBB Extension - Who Visited This Topic
+ * @copyright (c) 2019 dmzx - https://www.dmzx-web.net
+ * @copyright (c) 2026 Leinad4Mind
+ * @license https://opensource.org/licenses/GPL-2.0 GNU General Public License v2
+ *
+ */
 
 namespace dmzx\whovisitedthistopic;
 
@@ -15,8 +16,10 @@ class ext extends base
 {
 	public function is_enableable()
 	{
-		$config = $this->container->get('config');
+		$version = $this->container->get('config')['version'];
 
-		return phpbb_version_compare($config['version'], '3.2.0', '>=');
+		return PHP_VERSION_ID >= 70200
+			&& phpbb_version_compare($version, '3.3.0', '>=')
+			&& phpbb_version_compare($version, '4.0.0', '<');
 	}
 }

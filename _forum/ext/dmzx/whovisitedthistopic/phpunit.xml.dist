@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="tests/bootstrap.php" colors="true" cacheDirectory="../../../../../tmp/phpunit-whovisitedthistopic">
+	<testsuites>
+		<testsuite name="Who Visited This Topic">
+			<directory suffix="_test.php">tests</directory>
+		</testsuite>
+	</testsuites>
+	<source restrictDeprecations="true" restrictNotices="true" restrictWarnings="true">
+		<include>
+			<directory suffix=".php">.</directory>
+		</include>
+		<exclude>
+			<directory>tests</directory>
+		</exclude>
+	</source>
+</phpunit>

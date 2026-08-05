@@ -1,6 +1,41 @@
 imports:
     - { resource: 'tables.yml' }
+
 services:
+    dmzx.whovisitedthistopic.core.visit_repository:
+        class: 'dmzx\whovisitedthistopic\core\visit_repository'
+        arguments:
+            - '@dbal.conn'
+            - '%dmzx.whovisitedthistopic.tables.whovisitedthistopic%'
+
+    dmzx.whovisitedthistopic.core.forum_access:
+        class: 'dmzx\whovisitedthistopic\core\forum_access'
+        arguments:
+            - '@auth'
+            - '@dbal.conn'
+
+    dmzx.whovisitedthistopic.core.user_repository:
+        class: 'dmzx\whovisitedthistopic\core\user_repository'
+        arguments:
+            - '@dbal.conn'
+
+    dmzx.whovisitedthistopic.core.profile_view:
+        class: 'dmzx\whovisitedthistopic\core\profile_view'
+        arguments:
+            - '@config'
+            - '@template'
+            - '@dbal.conn'
+            - '@user'
+            - '@content.visibility'
+            - '@cache'
+            - '@pagination'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%dmzx.whovisitedthistopic.tables.whovisitedthistopic%'
+            - '@auth'
+            - '@language'
+            - '@dmzx.whovisitedthistopic.core.forum_access'
+
     dmzx.whovisitedthistopic.admin.controller:
         class: 'dmzx\whovisitedthistopic\controller\admin_controller'
         arguments:
@@ -9,8 +44,9 @@ services:
             - '@log'
             - '@user'
             - '@request'
-            - '%core.root_path%'
-            - '%core.php_ext%'
+            - '@language'
+            - '@dmzx.whovisitedthistopic.core.user_repository'
+
     dmzx.whovisitedthistopic.listener:
         class: 'dmzx\whovisitedthistopic\event\listener'
         arguments:
@@ -18,13 +54,27 @@ services:
             - '@template'
             - '@dbal.conn'
             - '@user'
-            - '@request'
-            - '@content.visibility'
-            - '@cache'
-            - '@pagination'
-            - '%core.root_path%'
-            - '%core.php_ext%'
             - '%dmzx.whovisitedthistopic.tables.whovisitedthistopic%'
             - '@auth'
+            - '@language'
+            - '@dmzx.whovisitedthistopic.core.visit_repository'
+            - '@dmzx.whovisitedthistopic.core.profile_view'
         tags:
-            - { name: 'event.listener' }
+            - { name: event.listener }
+
+    dmzx.whovisitedthistopic.language_listener:
+        class: 'dmzx\whovisitedthistopic\event\language_listener'
+        arguments:
+            - '@language'
+        tags:
+            - { name: event.listener }
+
+    dmzx.whovisitedthistopic.cron.task.prune_visits:
+        class: 'dmzx\whovisitedthistopic\cron\task\prune_visits'
+        arguments:
+            - '@config'
+            - '@dmzx.whovisitedthistopic.core.visit_repository'
+        calls:
+            - [set_name, ['dmzx.whovisitedthistopic.cron.task.prune_visits']]
+        tags:
+            - { name: cron.task }

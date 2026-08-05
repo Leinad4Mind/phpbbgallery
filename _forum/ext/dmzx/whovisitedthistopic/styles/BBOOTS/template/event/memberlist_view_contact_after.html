@@ -1,0 +1,25 @@
+{% if PERMISSION_PROFILE and whovisitedthistopic %}
+<div class="panel panel-forum">
+	<div class="panel-heading">{{ WHOVISITEDTHISTOPIC_VISIT_TITLE }}</div>
+	<div class="panel-inner">
+		<table class="footable table table-striped table-primary table-hover">
+			<thead><tr><th data-class="expand">{{ lang('TOPICS') }}</th><th class="posts" data-hide="phone">{{ lang('REPLIES') }}</th><th class="views" data-hide="phone">{{ lang('VIEWS') }}</th><th class="lastpost" data-hide="phone">{{ lang('LAST_POST') }}</th></tr></thead>
+			<tbody>
+			{% for topic in whovisitedthistopic %}
+				<tr id="topic-{{ topic.TOPIC_ID }}" class="topiclist topics">
+					<td title="{{ topic.TOPIC_FOLDER_IMG_ALT }}">
+						<a href="{{ topic.U_VIEW_TOPIC }}" class="topictitle">{{ topic.TOPIC_TITLE }}</a>
+						{% if topic.S_TOPIC_UNAPPROVED or topic.S_POSTS_UNAPPROVED %}<a href="{{ topic.U_MCP_QUEUE }}"><i class="icon fa-question fa-fw icon-blue" aria-hidden="true"></i><span class="sr-only">{{ lang('TOPIC_UNAPPROVED') }}</span></a>{% endif %}
+						{% if topic.S_TOPIC_REPORTED %}<a href="{{ topic.U_MCP_REPORT }}"><i class="icon fa-exclamation fa-fw icon-red" aria-hidden="true"></i><span class="sr-only">{{ lang('TOPIC_REPORTED') }}</span></a>{% endif %}
+						<br><span class="whovisitedthistopic-meta">{{ lang('POST_BY_AUTHOR') }} {{ topic.TOPIC_AUTHOR_FULL }} &raquo; {{ topic.FIRST_POST_TIME }} &raquo; {{ lang('IN') }} <a href="{{ topic.U_VIEW_FORUM }}">{{ topic.FORUM_TITLE }}</a> &middot; {{ lang('LAST_VISIT') }} {{ topic.LAST_VISIT }}</span>
+					</td>
+					<td class="posts">{{ topic.TOPIC_REPLIES }}</td>
+					<td class="views">{{ topic.TOPIC_VIEWS }}</td>
+					<td class="lastpost">{{ lang('POST_BY_AUTHOR') }} {{ topic.LAST_POST_AUTHOR_FULL }}<br><a href="{{ topic.U_LAST_POST }}" title="{{ lang('GOTO_LAST_POST') }}">{{ topic.LAST_POST_TIME }}</a></td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+{% endif %}

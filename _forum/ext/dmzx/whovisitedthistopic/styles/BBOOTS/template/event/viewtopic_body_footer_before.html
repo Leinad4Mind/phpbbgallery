@@ -1,0 +1,17 @@
+{% if PERMISSION_VIEW and whovisitedthistopic %}
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<div class="panel panel-forum panel-whois">
+				<div class="panel-heading"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;{{ WHOVISITEDTHISTOPIC_TITLE }}</div>
+				<div class="panel-body">
+					<p>
+					{% for visitor in whovisitedthistopic %}
+						{% if PERMISSION_SHOW_AVATAR and visitor.AVATAR %}<span class="whovisitedthistopic-avatar">{{ visitor.AVATAR }}</span>{% endif %}
+						<span title="{{ visitor.LAST_VISIT|e('html_attr') }}">{{ visitor.USERNAME_FULL }}</span>{% if PERMISSION_COUNT %} ({{ visitor.VISITS }}){% endif %}{% if not visitor.S_LAST_ROW %}, {% endif %}
+					{% endfor %}
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endif %}

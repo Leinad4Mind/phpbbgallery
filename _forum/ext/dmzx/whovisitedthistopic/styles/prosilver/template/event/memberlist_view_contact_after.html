@@ -1,10 +1,10 @@
-{% if PERMISSION_PROFILE and loops.whovisitedthistopic|length %}
+{% if PERMISSION_PROFILE and whovisitedthistopic %}
 <div class="forumbg">
 	<div class="inner">
 		<ul class="topiclist">
 			<li class="header">
 				<dl class="row-item">
-					<dt><span class="list-inner">{{ WHOVISITEDTHISTOPIC_VISIT_TITLE }}</span></dt>
+					<dt><div class="list-inner">{{ WHOVISITEDTHISTOPIC_VISIT_TITLE }}</div></dt>
 					<dd class="posts">{{ lang('REPLIES') }}</dd>
 					<dd class="views">{{ lang('VIEWS') }}</dd>
 					<dd class="lastpost"><span>{{ lang('LAST_POST') }}</span></dd>
@@ -12,73 +12,29 @@
 			</li>
 		</ul>
 		<ul class="topiclist topics">
-		{% for whovisitedthistopic in loops.whovisitedthistopic %}
-			<li class="row{% if whovisitedthistopic.S_ROW_COUNT is even %} bg1{% else %} bg2{% endif %}">
-				<dl class="row-item {{ whovisitedthistopic.TOPIC_IMG_STYLE }}">
-					<dt {% if whovisitedthistopic.TOPIC_ICON_IMG %}style="background-image: url({{ T_ICONS_PATH ~ whovisitedthistopic.TOPIC_ICON_IMG }}); background-repeat: no-repeat;"{% endif %} title="{{ whovisitedthistopic.TOPIC_FOLDER_IMG_ALT }}">
-						{% if whovisitedthistopic.S_UNREAD_TOPIC and not S_IS_BOT %}<a href="{{ whovisitedthistopic.U_NEWEST_POST }}" class="row-item-link"></a>{% endif %}
+		{% for topic in whovisitedthistopic %}
+			<li class="row{% if topic.S_ROW_COUNT is even %} bg1{% else %} bg2{% endif %}">
+				<dl class="row-item {{ topic.TOPIC_IMG_STYLE }}">
+					<dt title="{{ topic.TOPIC_FOLDER_IMG_ALT }}">
 						<div class="list-inner">
-							{% if whovisitedthistopic.S_UNREAD_TOPIC and not S_IS_BOT %}
-							<a href="{{ whovisitedthistopic.U_NEWEST_POST }}">
-								<i class="icon fa-file fa-fw icon-red icon-md" aria-hidden="true"></i><span class="sr-only">{{ NEW_POST }}</span>
-							</a>
-							{% endif %}
-							<a href="{{ whovisitedthistopic.U_VIEW_TOPIC }}" class="topictitle">{{ whovisitedthistopic.TOPIC_TITLE }}</a>
-							{% if whovisitedthistopic.S_TOPIC_UNAPPROVED or whovisitedthistopic.S_POSTS_UNAPPROVED %}
-							<a href="{{ whovisitedthistopic.U_MCP_QUEUE }}">
-								<i class="icon fa-question fa-fw icon-blue" aria-hidden="true"></i><span class="sr-only">{{ TOPIC_UNAPPROVED }}</span>
-							</a>
-							{% endif %}
-							{% if whovisitedthistopic.S_TOPIC_REPORTED %}
-							<a href="{{ whovisitedthistopic.U_MCP_REPORT }}">
-								<i class="icon fa-exclamation fa-fw icon-red" aria-hidden="true"></i><span class="sr-only">{{ TOPIC_REPORTED }}</span>
-							</a>
-							{% endif %}
+							{% if topic.S_UNREAD_TOPIC and not S_IS_BOT %}<a href="{{ topic.U_NEWEST_POST }}" class="row-item-link"></a>{% endif %}
+							<a href="{{ topic.U_VIEW_TOPIC }}" class="topictitle">{{ topic.TOPIC_TITLE }}</a>
+							{% if topic.S_TOPIC_UNAPPROVED or topic.S_POSTS_UNAPPROVED %}<a href="{{ topic.U_MCP_QUEUE }}"><i class="icon fa-question fa-fw icon-blue" aria-hidden="true"></i><span class="sr-only">{{ lang('TOPIC_UNAPPROVED') }}</span></a>{% endif %}
+							{% if topic.S_TOPIC_REPORTED %}<a href="{{ topic.U_MCP_REPORT }}"><i class="icon fa-exclamation fa-fw icon-red" aria-hidden="true"></i><span class="sr-only">{{ lang('TOPIC_REPORTED') }}</span></a>{% endif %}
 							<br>
-
-							{% if not S_IS_BOT %}
-							<div class="responsive-show" style="display: none;">
-								{{ lang('LAST_POST') }} {{ lang('POST_BY_AUTHOR') }} {{ whovisitedthistopic.LAST_POST_AUTHOR_FULL }} &laquo; <a href="{{ whovisitedthistopic.U_LAST_POST }}" title="{{ lang('GOTO_LAST_POST') }}">{{ whovisitedthistopic.LAST_POST_TIME }}</a>
-								<br>{{ lang('POSTED') }} {{ lang('IN') }} <a href="{{ whovisitedthistopic.U_VIEW_FORUM }}">{{ whovisitedthistopic.FORUM_TITLE }}</a>
-							</div>
-								{% if whovisitedthistopic.TOPIC_REPLIES %}
-								<span class="responsive-show left-box" style="display: none;">{{ lang('REPLIES') ~ lang('COLON') }} <strong>{{ whovisitedthistopic.TOPIC_REPLIES }}</strong></span>
-								{% endif %}
-							{% endif %}
-
-							<div class="topic-poster responsive-hide left-box">
-								{% if whovisitedthistopic.S_HAS_POLL %}<i class="icon fa-bar-chart fa-fw" aria-hidden="true"></i>{% endif %}
-								{% if whovisitedthistopic.ATTACH_ICON_IMG %}<i class="icon fa-paperclip fa-fw" aria-hidden="true"></i>{% endif %}
-								{{ lang('POST_BY_AUTHOR') }} {{ whovisitedthistopic.TOPIC_AUTHOR_FULL }} &raquo; {{ whovisitedthistopic.FIRST_POST_TIME }} &raquo; {{ lang('IN') }} <a href="{{ whovisitedthistopic.U_VIEW_FORUM }}">{{ whovisitedthistopic.FORUM_TITLE }}</a>
-							</div>
-
-							{% if whovisitedthistopic.pagination|length %}
-							<div class="pagination">
-								<span><i class="icon fa-clone fa-fw" aria-hidden="true"></i></span>
-								<ul>
-								{% for pagination in whovisitedthistopic.pagination %}
-									{% if pagination.S_IS_PREV %}
-									{% elseif pagination.S_IS_CURRENT %}<li class="active"><span>{{ pagination.PAGE_NUMBER }}</span></li>
-									{% elseif pagination.S_IS_ELLIPSIS %}<li class="ellipsis"><span>{{ lang('ELLIPSIS') }}</span></li>
-									{% elseif pagination.S_IS_NEXT %}
-									{% else %}<li><a class="button" href="{{ pagination.PAGE_URL }}">{{ pagination.PAGE_NUMBER }}</a></li>
-									{% endif %}
-								{% endfor %}
-								</ul>
-							</div>
+							<span class="whovisitedthistopic-meta">{{ lang('POST_BY_AUTHOR') }} {{ topic.TOPIC_AUTHOR_FULL }} &raquo; {{ topic.FIRST_POST_TIME }} &raquo; {{ lang('IN') }} <a href="{{ topic.U_VIEW_FORUM }}">{{ topic.FORUM_TITLE }}</a> &middot; {{ lang('LAST_VISIT') }} {{ topic.LAST_VISIT }}</span>
+							{% if topic.pagination %}
+							<div class="pagination"><ul>
+							{% for page in topic.pagination %}
+								{% if page.S_IS_CURRENT %}<li class="active"><span>{{ page.PAGE_NUMBER }}</span></li>{% elseif page.S_IS_ELLIPSIS %}<li class="ellipsis"><span>{{ lang('ELLIPSIS') }}</span></li>{% elseif not page.S_IS_PREV and not page.S_IS_NEXT %}<li><a class="button" href="{{ page.PAGE_URL }}">{{ page.PAGE_NUMBER }}</a></li>{% endif %}
+							{% endfor %}
+							</ul></div>
 							{% endif %}
 						</div>
 					</dt>
-					<dd class="posts">{{ whovisitedthistopic.TOPIC_REPLIES }} <dfn>{{ lang('REPLIES') }}</dfn></dd>
-					<dd class="views">{{ whovisitedthistopic.TOPIC_VIEWS }} <dfn>{{ lang('VIEWS') }}</dfn></dd>
-					<dd class="lastpost">
-						<span><dfn>{{ lang('LAST_POST') }} </dfn>{{ lang('POST_BY_AUTHOR') }} {{ whovisitedthistopic.LAST_POST_AUTHOR_FULL }}
-							{% if not S_IS_BOT %}
-							<a href="{{ whovisitedthistopic.U_LAST_POST }}" title="{{ lang('GOTO_LAST_POST') }}"><i class="icon fa-external-link-square fa-fw icon-lightgray icon-md" aria-hidden="true"></i><span class="sr-only">{{ VIEW_LATEST_POST }}</span></a>
-							{% endif %}
-							<br>{{ whovisitedthistopic.LAST_POST_TIME }}
-						</span>
-					</dd>
+					<dd class="posts">{{ topic.TOPIC_REPLIES }} <dfn>{{ lang('REPLIES') }}</dfn></dd>
+					<dd class="views">{{ topic.TOPIC_VIEWS }} <dfn>{{ lang('VIEWS') }}</dfn></dd>
+					<dd class="lastpost"><span>{{ lang('POST_BY_AUTHOR') }} {{ topic.LAST_POST_AUTHOR_FULL }}<br><a href="{{ topic.U_LAST_POST }}" title="{{ lang('GOTO_LAST_POST') }}">{{ topic.LAST_POST_TIME }}</a></span></dd>
 				</dl>
 			</li>
 		{% endfor %}
