@@ -21,8 +21,8 @@ class exif_listener implements EventSubscriberInterface
 {
 	protected \phpbb\user $user;
 	protected \phpbbgallery\core\config $gallery_config;
-	protected \phpbbgallery\core\url $gallery_url;
 	protected \phpbbgallery\core\user $gallery_user;
+	protected \phpbbgallery\core\storage\workspace $storage_workspace;
 
 	public static function getSubscribedEvents(): array
 	{
@@ -49,16 +49,21 @@ class exif_listener implements EventSubscriberInterface
 	*
 	* @param \phpbb\user					$user			User object
 	* @param \phpbbgallery\core\config		$gallery_config	Core gallery config object
-	* @param \phpbbgallery\core\url			$gallery_url	Core gallery url object
 	* @param \phpbbgallery\core\user		$gallery_user	Core gallery user wrapper
+	* @param \phpbbgallery\core\storage\workspace $storage_workspace Active storage workspace
 	*/
 
-	public function __construct(\phpbb\user $user, \phpbbgallery\core\config $gallery_config, \phpbbgallery\core\url $gallery_url, \phpbbgallery\core\user $gallery_user)
+	public function __construct(
+		\phpbb\user $user,
+		\phpbbgallery\core\config $gallery_config,
+		\phpbbgallery\core\user $gallery_user,
+		\phpbbgallery\core\storage\workspace $storage_workspace
+	)
 	{
 		$this->user = $user;
 		$this->gallery_config = $gallery_config;
-		$this->gallery_url	= $gallery_url;
 		$this->gallery_user = $gallery_user;
+		$this->storage_workspace = $storage_workspace;
 	}
 
 	/**
@@ -281,14 +286,32 @@ class exif_listener implements EventSubscriberInterface
 
 		if ($this->gallery_config->get('disp_exifdata') && ($event['image_data']['image_has_exif'] != \phpbbgallery\exif\exif::UNAVAILABLE) && $this->is_jpeg_filename($event['image_data']['image_filename']) && function_exists('exif_read_data') && !$event['hide_private_data'])
 		{
-			$exif = new \phpbbgallery\exif\exif($this->gallery_url->path('upload') . $event['image_data']['image_filename'], $event['image_id']);
-			$exif->interpret($event['image_data']['image_has_exif'], $event['image_data']['image_exif_data']);
-
-			if (!empty($exif->data['EXIF']))
+			$source = null;
+			try
 			{
-				$exif->send_to_template($this->gallery_user->get_data('user_viewexif'), 'exif_value', $this->get_enabled_fields());
+				$source = $this->storage_workspace->materialize(
+					\phpbbgallery\core\storage\provider_interface::SOURCE,
+					(string) $event['image_data']['image_filename']
+				);
+				$exif = new \phpbbgallery\exif\exif($source->get_path(), (int) $event['image_id']);
+				$exif->interpret($event['image_data']['image_has_exif'], $event['image_data']['image_exif_data']);
+
+				if (!empty($exif->data['EXIF']))
+				{
+					$exif->send_to_template($this->gallery_user->get_data('user_viewexif'), 'exif_value', $this->get_enabled_fields());
+				}
 			}
-			unset($exif);
+			catch (\RuntimeException)
+			{
+				// Missing or unavailable provider objects simply have no EXIF block.
+			}
+			finally
+			{
+				if ($source !== null)
+				{
+					$source->release();
+				}
+			}
 		}
 	}
 
