@@ -45,7 +45,13 @@ class key_generator
 			? strtolower(substr($filename, 0, 2))
 			: substr(hash('sha256', $filename), 0, 2);
 
-		return $prefix[0] . '/' . $prefix . '/' . $filename;
+		$key = $prefix[0] . '/' . $prefix . '/' . $filename;
+		if (strlen($key) > 255)
+		{
+			throw new \InvalidArgumentException('Gallery storage key exceeds the database limit.');
+		}
+
+		return $key;
 	}
 
 	public function get_layout(): string

@@ -79,6 +79,8 @@ class main_module
 
 		// init config
 		$phpbb_ext_gallery_config = $phpbb_container->get('phpbbgallery.core.config');
+		$storage_migrator = $phpbb_container->get('phpbbgallery.core.storage.layout_migrator');
+		$distributed_storage = $phpbb_ext_gallery_config->get('storage_layout') === \phpbbgallery\core\storage\key_generator::LAYOUT_DISTRIBUTED;
 
 		// init rating
 		$phpbb_gallery_rating = $phpbb_container->get('phpbbgallery.core.rating');
@@ -87,6 +89,20 @@ class main_module
 		$action = $request->variable('action', '');
 		$id = $request->variable('i', '');
 		$mode = 'overview';
+		if ($request->is_set_post('storage_migration_continue'))
+		{
+			if (!check_form_key('acp_gallery'))
+			{
+				trigger_error('FORM_INVALID');
+			}
+			if (!$auth->acl_get('a_board') || !$distributed_storage)
+			{
+				trigger_error($this->language->lang('NO_AUTH_OPERATION') . adm_back_link($this->u_action), E_USER_WARNING);
+			}
+
+			$this->run_storage_layout_migration($storage_migrator, $request, $template);
+			return;
+		}
 
 		// before we start let's check if directory structure is OK
 		if (!is_writable($phpbb_root_path . 'files'))
@@ -235,6 +251,14 @@ class main_module
 				case 'resync_albums_to_cpf':
 					$confirm = true;
 					$confirm_lang = 'GALLERY_RESYNC_ALBUMS_TO_CPF_CONFIRM';
+				break;
+				case 'storage_migrate':
+					if (!$auth->acl_get('a_board') || !$distributed_storage)
+					{
+						trigger_error($this->language->lang('NO_AUTH_OPERATION') . adm_back_link($this->u_action), E_USER_WARNING);
+					}
+					$confirm = true;
+					$confirm_lang = 'STORAGE_MIGRATION_CONFIRM';
 				break;
 				case 'create_pega':
 					$confirm = false;
@@ -568,6 +592,15 @@ class main_module
 				case 'resync_albums_to_cpf':
 					$resync_albums_to_cpf_stage = 'gather';
 				break;
+
+				case 'storage_migrate':
+					if (!$auth->acl_get('a_board') || !$distributed_storage)
+					{
+						trigger_error($this->language->lang('NO_AUTH_OPERATION') . adm_back_link($this->u_action), E_USER_WARNING);
+					}
+
+					$this->run_storage_layout_migration($storage_migrator, $request, $template);
+					return;
 			}
 		}
 
@@ -607,6 +640,7 @@ class main_module
 		$dir_sizes = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
+		$storage_status = $distributed_storage ? $storage_migrator->status() : [];
 		$template->assign_vars([
 			'S_GALLERY_OVERVIEW'			=> true,
 			'ACP_GALLERY_TITLE'				=> $this->language->lang('ACP_GALLERY_OVERVIEW'),
@@ -625,7 +659,38 @@ class main_module
 			'S_SELECT_ALBUM'		=> $phpbb_ext_gallery_core_album->get_albumbox(false, 'reset_album_id', false, false, false, (int) \phpbbgallery\core\block::PUBLIC_ALBUM, (int) \phpbbgallery\core\block::TYPE_UPLOAD),
 
 			'S_FOUNDER'				=> ($user->data['user_type'] == USER_FOUNDER) ? true : false,
+			'S_STORAGE_DISTRIBUTED'	=> $distributed_storage,
+			'S_STORAGE_MIGRATION_AVAILABLE' => $distributed_storage && $auth->acl_get('a_board') && (($storage_status['pending'] ?? 0) > 0),
+			'S_STORAGE_MIGRATION_ISSUES' => ($storage_status['invalid'] ?? 0) > 0,
+			'S_STORAGE_MIGRATION_PENDING' => (int) ($storage_status['pending'] ?? 0),
+			'S_STORAGE_MIGRATION_DISTRIBUTED' => (int) ($storage_status['distributed'] ?? 0),
+			'S_STORAGE_MIGRATION_INVALID' => (int) ($storage_status['invalid'] ?? 0),
 			'U_ACTION'				=> $this->u_action,
+		]);
+	}
+
+	private function run_storage_layout_migration(
+		\phpbbgallery\core\storage\layout_migrator $migrator,
+		\phpbb\request\request_interface $request,
+		\phpbb\template\template $template
+	): void
+	{
+		$summary = $migrator->migrate_batch($request->variable('storage_after_id', 0), 25);
+		$migrated = $request->variable('storage_migrated', 0) + $summary['migrated'];
+		$skipped = $request->variable('storage_skipped', 0) + $summary['skipped'];
+		$failed = $request->variable('storage_failed', 0) + $summary['failed'];
+
+		$template->assign_vars([
+			'ACP_GALLERY_TITLE' => $this->language->lang('STORAGE_MIGRATION'),
+			'ACP_GALLERY_TITLE_EXPLAIN' => $this->language->lang('STORAGE_MIGRATION_EXPLAIN'),
+			'S_STORAGE_MIGRATION_PROGRESS' => true,
+			'S_STORAGE_MIGRATION_MORE' => $summary['has_more'],
+			'S_STORAGE_MIGRATION_FAILED' => $failed > 0,
+			'S_STORAGE_MIGRATED' => $migrated,
+			'S_STORAGE_SKIPPED' => $skipped,
+			'S_STORAGE_FAILED' => $failed,
+			'S_STORAGE_AFTER_ID' => $summary['last_id'],
+			'U_ACTION' => $this->u_action,
 		]);
 	}
 

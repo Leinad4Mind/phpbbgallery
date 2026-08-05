@@ -25,6 +25,17 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'PERMISSION_I_MOVE' => 'Kann eigene Bilder verschieben',
+	'STORAGE_MIGRATION' => 'Migration zum verteilten Speicher',
+	'STORAGE_MIGRATION_EXPLAIN' => 'Verschiebt vorhandene lokale Bilddateien in die konfigurierte verteilte Verzeichnisstruktur, in geprüften und fortsetzbaren Stapeln.',
+	'STORAGE_MIGRATION_CONFIRM' => 'Möchtest du die vorhandenen Galerie-Dateien wirklich in die verteilte Struktur migrieren?',
+	'STORAGE_MIGRATION_STATUS' => 'Ausstehend: %1$d; bereits verteilt: %2$d; ungültige Schlüssel: %3$d.',
+	'STORAGE_MIGRATION_INVALID_EXPLAIN' => 'Ungültige Speicherschlüssel müssen manuell geprüft werden und werden nicht verschoben.',
+	'STORAGE_MIGRATION_RUN' => 'Vorhandene Dateien migrieren',
+	'STORAGE_MIGRATION_PROGRESS' => 'Migration läuft',
+	'STORAGE_MIGRATION_COMPLETE' => 'Migrationsdurchlauf abgeschlossen',
+	'STORAGE_MIGRATION_RESULT' => 'Migriert: %1$d; unverändert: %2$d; fehlgeschlagen: %3$d.',
+	'STORAGE_MIGRATION_FAILED_EXPLAIN' => 'Einige Datensätze konnten nicht migriert werden. Ihre ursprünglichen Schlüssel und Dateien wurden für einen sicheren erneuten Versuch beibehalten.',
+	'STORAGE_MIGRATION_CONTINUE' => 'Migration fortsetzen',
 ]);
 
 $lang = array_merge($lang, [

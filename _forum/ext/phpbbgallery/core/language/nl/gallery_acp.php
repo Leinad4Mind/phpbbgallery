@@ -25,6 +25,17 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'PERMISSION_I_MOVE' => 'Kan eigen afbeeldingen verplaatsen',
+	'STORAGE_MIGRATION' => 'Migratie naar gedistribueerde opslag',
+	'STORAGE_MIGRATION_EXPLAIN' => 'Verplaatst bestaande lokale afbeeldingsbestanden in gecontroleerde en hervatbare batches naar de ingestelde gedistribueerde mapstructuur.',
+	'STORAGE_MIGRATION_CONFIRM' => 'Weet je zeker dat je de bestaande Galerijbestanden naar de gedistribueerde structuur wilt migreren?',
+	'STORAGE_MIGRATION_STATUS' => 'In afwachting: %1$d; al gedistribueerd: %2$d; ongeldige sleutels: %3$d.',
+	'STORAGE_MIGRATION_INVALID_EXPLAIN' => 'Ongeldige opslagsleutels moeten handmatig worden gecontroleerd en worden niet verplaatst.',
+	'STORAGE_MIGRATION_RUN' => 'Bestaande bestanden migreren',
+	'STORAGE_MIGRATION_PROGRESS' => 'Migratie wordt uitgevoerd',
+	'STORAGE_MIGRATION_COMPLETE' => 'Migratieronde voltooid',
+	'STORAGE_MIGRATION_RESULT' => 'Gemigreerd: %1$d; ongewijzigd: %2$d; mislukt: %3$d.',
+	'STORAGE_MIGRATION_FAILED_EXPLAIN' => 'Sommige records konden niet worden gemigreerd. De oorspronkelijke sleutels en bestanden zijn bewaard zodat de bewerking veilig opnieuw kan worden uitgevoerd.',
+	'STORAGE_MIGRATION_CONTINUE' => 'Migratie voortzetten',
 ]);
 
 $lang = array_merge($lang, [
