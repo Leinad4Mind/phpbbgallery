@@ -11,6 +11,7 @@ parameters:
         - box
         - mediafire
         - pcloud
+        - koofr
 
 services:
     phpbbgallery.remotestorage.http:
@@ -86,6 +87,15 @@ services:
 
     phpbbgallery.remotestorage.provider_factory.pcloud:
         class: phpbbgallery\remotestorage\pcloud\configured_factory
+        arguments:
+            - '@phpbbgallery.remotestorage.http'
+            - '@config'
+            - '@request'
+        tags:
+            - { name: phpbbgallery.storage.provider_factory }
+
+    phpbbgallery.remotestorage.provider_factory.koofr:
+        class: phpbbgallery\remotestorage\koofr\configured_factory
         arguments:
             - '@phpbbgallery.remotestorage.http'
             - '@config'

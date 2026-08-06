@@ -47,4 +47,14 @@ final class http_response_test extends TestCase
 			'body' => [200, [], 'not a stream'],
 		];
 	}
+
+	public function test_http_boundary_allows_only_required_webdav_methods(): void
+	{
+		$client = (string) file_get_contents(dirname(__DIR__) . '/http/guzzle_client.php');
+
+		$this->assertStringContainsString(chr(39) . 'MKCOL' . chr(39), $client);
+		$this->assertStringContainsString(chr(39) . 'PROPFIND' . chr(39), $client);
+		$this->assertStringNotContainsString(chr(39) . 'CONNECT' . chr(39), $client);
+		$this->assertStringNotContainsString(chr(39) . 'TRACE' . chr(39), $client);
+	}
 }

@@ -1,5 +1,6 @@
 # Changelog
 
+- Added private Koofr storage over its official fixed HTTPS WebDAV endpoint using revocable application passwords, conditional writes, streamed transfers and strictly bounded metadata parsing.
 - Added private pCloud storage for European and United States data regions using OAuth bearer authentication, owned unshared folders, public-link rejection, streaming uploads and validated server-side downloads.
 - Added private MediaFire storage using the live Core API 1.5, serialized Session Token v2 signatures, private dedicated folders, SHA-256 Instant/resumable uploads and server-consumed validated direct-download links.
 - Added private Box storage with dedicated folders, atomic persistence of single-use rotating refresh tokens, secure signed downloads and simple or chunked uploads.
@@ -120,6 +121,9 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added pCloud as a Remote Storage provider with explicit EU/US region binding,
   private-ownership checks, public-link rejection, incomplete-upload prevention
   and server-consumed content links that never expose OAuth credentials.
+- Added Koofr as a Remote Storage provider through its official HTTPS WebDAV
+  endpoint, with dedicated application-password authentication, fixed-host
+  requests, conditional publication and bounded XML metadata validation.
 - Added verified Remote Storage ACP configuration in all supported languages,
   including environment-variable overrides, secret-safe forms and a complete
   write, checksum, read and delete connection test before settings are saved.

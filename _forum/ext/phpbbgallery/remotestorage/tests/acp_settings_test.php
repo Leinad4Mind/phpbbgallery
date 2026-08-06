@@ -201,6 +201,20 @@ final class acp_settings_test extends TestCase
 		$this->assertStringContainsString('- pcloud', $services);
 	}
 
+	public function test_koofr_migration_registers_fixed_tls_webdav_configuration(): void
+	{
+		$migration = (string) file_get_contents(dirname(__DIR__) . '/migrations/m10_koofr.php');
+		$services = (string) file_get_contents(dirname(__DIR__) . '/config/services.yml');
+
+		$this->assertStringContainsString('m9_pcloud', $migration);
+		foreach (['email', 'app_password', 'root_name'] as $field)
+		{
+			$this->assertStringContainsString('phpbb_gallery_koofr_' . $field, $migration);
+		}
+		$this->assertStringContainsString('phpbbgallery.remotestorage.provider_factory.koofr:', $services);
+		$this->assertStringContainsString('- koofr', $services);
+	}
+
 	public function test_all_gallery_language_catalogues_have_identical_keys_and_placeholders(): void
 	{
 		$english = $this->language(dirname(__DIR__) . '/language/en/info_acp_remotestorage.php');
