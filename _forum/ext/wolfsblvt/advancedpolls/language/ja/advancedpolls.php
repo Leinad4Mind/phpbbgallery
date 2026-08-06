@@ -4,6 +4,7 @@
  * Advanced Polls [Japanese]
  * Japanese translation by tk6904 (https://www.phpbb.com/community/memberlist.php?mode=viewprofile&u=1658156)*
  * @copyright (c) 2015 Wolfsblvt ( www.pinkes-forum.de )
+ * @copyright (c) 2026 Leinad4Mind
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  * @author Clemens Husung (Wolfsblvt)
  */
@@ -15,7 +16,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -34,7 +35,7 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ADVANCEDPOLLS_EXT_NAME'			=> 'Advanced Polls',
 
 // Viewtopic
@@ -50,18 +51,30 @@ $lang = array_merge($lang, array(
 	'AP_POLL_RESULTS_ARE_ORDERED'			=> '投票結果は得票数の多い順に並びます',
 	'AP_POLL_TYPE_MISMATCH'				=> '一貫性のない投票データのため内部エラーが発生しました',
 	'AP_VOTE_CHANGED'				=> '投票内容を変更する権限がありません。',
-	'AP_TOO_MANY_VOTES'				=> '投票オプション数が多すぎます。', // You have tried to assign too many votes.
+	'AP_TOO_MANY_VOTES'				=> '投票オプション数が多すぎます。',
+	'AP_ABSTAINERS' => '投票しないことを選択',
+	'AP_DELETE_VOTE' => '自分の投票を削除',
 
-	'AP_MAX_VOTES_SELECT'					=> array(
+	'AP_MAX_VOTES_SELECT'					=> [
 		1	=> '<strong>%1$d</strong> オプションに最大 <strong>%2$d</strong> 票を投じることができます',
 		2	=> '<strong>%1$d</strong> オプションの中から最大 <strong>%2$d</strong> 票を投じることができます',
-	),
-	'AP_GUEST_VOTES'						=> array(
+	],
+	'AP_GUEST_VOTES'						=> [
 		1	=> 'ゲスト票：%d 票', // %d vote from guest
 		2	=> 'ゲスト票：%d 票', // %d votes from guests
-	),
-
+	],
 // Posting
+	'AP_POLL_VISIBILITY' => '結果の表示タイミング',
+	'AP_POLL_VISIBILITY_EXPLAIN' => '投票結果の集計をいつ表示するか選択します。',
+	'AP_VISIBILITY_PUBLIC' => '公開 — 常に結果を表示',
+	'AP_VISIBILITY_DEFAULT' => '最初の投票後',
+	'AP_VISIBILITY_VOTE_COMPLETED' => '利用可能な票をすべて使用した後',
+	'AP_VISIBILITY_PRIVATE' => '非公開 — 投票終了後のみ表示',
+	'AP_POLL_VOTE_MODE' => '投票の変更',
+	'AP_POLL_VOTE_MODE_EXPLAIN' => '投票を確定とするか、段階的に送信できるか、投票受付中に変更できるかを選択します。',
+	'AP_VOTE_MODE_NO_CHANGE' => '変更不可',
+	'AP_VOTE_MODE_INCREMENTAL' => '段階的な投票',
+	'AP_VOTE_MODE_CHANGE' => '変更を許可',
 	'AP_POLL_VOTES_HIDE'				=> '投票結果を非表示にする',
 	'AP_POLL_VOTES_HIDE_EXPLAIN'			=> 'これを有効にすると、投票結果は投票が終了するまで非表示になります。この項目は特定の期限設定を持つ場合のみ動作します。',
 	'AP_POLL_VOTERS_SHOW'				=> '投票者を表示する',
@@ -89,4 +102,4 @@ $lang = array_merge($lang, array(
 	'AP_POLL_TOTAL_VALUE_EXPLAIN'			=> '投票者がすべてのオプションに分配する可能性のある投票の総数です',
 
 	'AP_VOTE_GREATER_THAN_MAXVALUE'			=> '許可されている最大値を超える投票数を割り当てることはできません',
-));
+]);

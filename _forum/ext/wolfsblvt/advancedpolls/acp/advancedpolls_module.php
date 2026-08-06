@@ -4,11 +4,14 @@
  * Advanced Polls
  *
  * @copyright (c) 2015 Wolfsblvt ( www.pinkes-forum.de )
+ * @copyright (c) 2026 Leinad4Mind
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  * @author Clemens Husung (Wolfsblvt)
  */
 
 namespace wolfsblvt\advancedpolls\acp;
+
+use wolfsblvt\advancedpolls\core\poll_options;
 
 class advancedpolls_module
 {
@@ -63,16 +66,16 @@ class advancedpolls_module
 			'title'	=> 'AP_TITLE_ACP',
 			'vars'	=> array(
 				'legend1'												=> 'AP_GLOBAL_SETTINGS',
-				'wolfsblvt.advancedpolls.activate_incremental_votes'	=> array('lang' => 'AP_ACT_INCREMENTAL_VOTES',	'validate' => 'bool',		'type' => 'radio:enabled_disabled',	'explain' => true),
 				'wolfsblvt.advancedpolls.activate_closed_voting'		=> array('lang' => 'AP_ACT_CLOSED_VOTING',		'validate' => 'bool',		'type' => 'radio:enabled_disabled',	'explain' => true),
 				'wolfsblvt.advancedpolls.activate_no_vote'				=> array('lang' => 'AP_ACT_POLL_NO_VOTE',		'validate' => 'bool',		'type' => 'radio:enabled_disabled',	'explain' => true),
+				'wolfsblvt.advancedpolls.activate_show_abstainers'		=> array('lang' => 'AP_ACT_SHOW_ABSTAINERS',	'validate' => 'bool',		'type' => 'radio:enabled_disabled',	'explain' => true),
+				'wolfsblvt.advancedpolls.activate_vote_delete'			=> array('lang' => 'AP_ACT_VOTE_DELETE',		'validate' => 'bool',		'type' => 'radio:enabled_disabled',	'explain' => true),
 				'wolfsblvt.advancedpolls.activate_poll_end'				=> array('lang' => 'AP_ACT_POLL_END',			'validate' => 'bool',		'type' => 'radio:enabled_disabled',	'explain' => true),
 				'wolfsblvt.advancedpolls.activate_notifications'		=> array('lang' => 'AP_ACT_POLL_NOTIFICATIONS',	'validate' => 'bool',		'type' => 'radio:enabled_disabled',	'explain' => true),
 				'legend2'												=> 'AP_PER_POLL_SETTINGS',
+				'wolfsblvt.advancedpolls.default_poll_visibility'		=> array('lang' => 'AP_DEFAULT_POLL_VISIBILITY',	'validate' => 'int:0:3',	'type' => 'select:1', 'method' => 'select_poll_visibility', 'explain' => true),
+				'wolfsblvt.advancedpolls.default_poll_vote_mode'		=> array('lang' => 'AP_DEFAULT_POLL_VOTE_MODE',	'validate' => 'int:0:2',	'type' => 'select:1', 'method' => 'select_poll_vote_mode', 'explain' => true),
 				'wolfsblvt.advancedpolls.activate_poll_scoring'			=> array('lang' => 'AP_ACT_POLL_SCORING',		'validate' => 'bool',		'type' => 'radio:enabled_disabled',	'explain' => true),
-				'wolfsblvt.advancedpolls.default_poll_votes_change'		=> array('lang' => 'AP_DEFAULT_VOTES_CHANGE',	'validate' => 'bool',		'type' => 'radio:yes_no',	'explain' => false),
-				'wolfsblvt.advancedpolls.activate_poll_votes_hide'		=> array('lang' => 'AP_ACT_VOTES_HIDE',			'validate' => 'bool',		'type' => 'radio:enabled_disabled',	'explain' => true),
-				'wolfsblvt.advancedpolls.default_poll_votes_hide'		=> array('lang' => 'AP_DEFAULT_VOTES_HIDE',		'validate' => 'bool',		'type' => 'radio:yes_no',	'explain' => false),
 				'wolfsblvt.advancedpolls.activate_poll_voters_show'		=> array('lang' => 'AP_ACT_VOTERS_SHOW',		'validate' => 'bool',		'type' => 'radio:enabled_disabled',	'explain' => true),
 				'wolfsblvt.advancedpolls.default_poll_voters_show'		=> array('lang' => 'AP_DEFAULT_VOTERS_SHOW',	'validate' => 'bool',		'type' => 'radio:yes_no',	'explain' => false),
 				'wolfsblvt.advancedpolls.activate_poll_voters_limit'	=> array('lang' => 'AP_ACT_VOTERS_LIMIT',		'validate' => 'bool',		'type' => 'radio:enabled_disabled',	'explain' => true),
@@ -103,6 +106,56 @@ class advancedpolls_module
 		$this->page_title = $this->user->lang($display_vars['title']);
 	}
 
+	/**
+	 * Build the default poll visibility selector.
+	 *
+	 * @param int    $value Current value
+	 * @param string $key Configuration key
+	 * @return string
+	 */
+	public function select_poll_visibility($value, $key)
+	{
+		return $this->select_options(array(
+			poll_options::VISIBILITY_PUBLIC => 'AP_VISIBILITY_PUBLIC',
+			poll_options::VISIBILITY_DEFAULT => 'AP_VISIBILITY_DEFAULT',
+			poll_options::VISIBILITY_VOTE_COMPLETED => 'AP_VISIBILITY_VOTE_COMPLETED',
+			poll_options::VISIBILITY_PRIVATE => 'AP_VISIBILITY_PRIVATE',
+		), $value);
+	}
+
+	/**
+	 * Build the default vote mode selector.
+	 *
+	 * @param int    $value Current value
+	 * @param string $key Configuration key
+	 * @return string
+	 */
+	public function select_poll_vote_mode($value, $key)
+	{
+		return $this->select_options(array(
+			poll_options::VOTE_MODE_NO_CHANGE => 'AP_VOTE_MODE_NO_CHANGE',
+			poll_options::VOTE_MODE_INCREMENTAL => 'AP_VOTE_MODE_INCREMENTAL',
+			poll_options::VOTE_MODE_CHANGE => 'AP_VOTE_MODE_CHANGE',
+		), $value);
+	}
+
+	/**
+	 * Build selector option markup from trusted language keys.
+	 *
+	 * @param array $options Value => language key
+	 * @param int   $selected Selected value
+	 * @return string
+	 */
+	protected function select_options(array $options, $selected)
+	{
+		$html = '';
+		foreach ($options as $value => $language_key)
+		{
+			$html .= '<option value="' . (int) $value . '"' . ((int) $selected === (int) $value ? ' selected="selected"' : '') . '>'
+				. htmlspecialchars($this->user->lang[$language_key], ENT_COMPAT, 'UTF-8') . '</option>';
+		}
+		return $html;
+	}
 	/**
 	 * Abstracted method to do the submit part of the acp. Checks values, saves them
 	 * and displays the message.

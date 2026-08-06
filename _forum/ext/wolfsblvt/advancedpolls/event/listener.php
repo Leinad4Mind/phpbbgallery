@@ -4,6 +4,7 @@
  * Advanced Polls
  *
  * @copyright (c) 2015 Wolfsblvt ( www.pinkes-forum.de )
+ * @copyright (c) 2026 Leinad4Mind
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  * @author Clemens Husung (Wolfsblvt)
  */
@@ -59,6 +60,7 @@ class listener implements EventSubscriberInterface
 			'core.posting_modify_template_vars'				=> 'config_for_polls_to_template',		// posting to template
 			'core.submit_post_modify_sql_data'				=> 'save_config_for_polls',				// posting to db
 			'core.viewtopic_modify_poll_data'				=> 'do_poll_voting_modifications',		// viewtopic to db
+			'core.viewtopic_modify_poll_ajax_data'		=> 'do_poll_ajax_modifications',			// redact hidden AJAX results
 			'core.viewtopic_modify_poll_template_data'		=> 'do_poll_template_modifications',	// viewtopic to template
 		);
 	}
@@ -166,16 +168,30 @@ class listener implements EventSubscriberInterface
 			$voted_id = $event['voted_id'];
 			$poll_info = $event['poll_info'];
 			$s_can_vote = $event['s_can_vote'];
+			$s_display_results = $event['s_display_results'];
 			$viewtopic_url = $event['viewtopic_url'];
-			$this->advancedpolls->do_poll_voting_modifications($topic_data, $vote_counts, $cur_voted_id, $voted_id, $poll_info, $s_can_vote, $viewtopic_url);
+			$this->advancedpolls->do_poll_voting_modifications($topic_data, $vote_counts, $cur_voted_id, $voted_id, $poll_info, $s_can_vote, $s_display_results, $viewtopic_url);
 			$event['vote_counts'] = $vote_counts;
 			$event['cur_voted_id'] = $cur_voted_id;
 			$event['voted_id'] = $voted_id;
 			$event['poll_info'] = $poll_info;
 			$event['s_can_vote'] = $s_can_vote;
+			$event['s_display_results'] = $s_display_results;
 		}
 	}
 
+	/**
+	 * Redacts aggregate vote values from AJAX responses for hidden polls.
+	 *
+	 * @param object $event Event data
+	 * @return void
+	 */
+	public function do_poll_ajax_modifications($event)
+	{
+		$data = $event['data'];
+		$this->advancedpolls->do_poll_ajax_modifications($event['topic_data'], $data);
+		$event['data'] = $data;
+	}
 	/**
 	 * Modifys the viewtopic template vars to match the advanced poll settings
 	 *

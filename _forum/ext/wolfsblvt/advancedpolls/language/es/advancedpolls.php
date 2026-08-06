@@ -4,6 +4,7 @@
  * Advanced Polls [Spanish]
  *
  * @copyright (c) 2015 Wolfsblvt ( www.pinkes-forum.de )
+ * @copyright (c) 2026 Leinad4Mind
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  * @author Clemens Husung (Wolfsblvt)
  * @author Initial translation by Raul [ThE KuKa] (https://github.com/phpbb-es)
@@ -18,7 +19,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,7 +38,7 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ADVANCEDPOLLS_EXT_NAME'				=> 'Encuestas Avanzadas',
 
 // Viewtopic
@@ -54,17 +55,29 @@ $lang = array_merge($lang, array(
 	'AP_POLL_TYPE_MISMATCH'					=> 'Datos inconsistentes en la encuesta, error interno.',
 	'AP_VOTE_CHANGED'						=> 'No tiene permiso para cambiar sus votos ya emitidos.',
 	'AP_TOO_MANY_VOTES'						=> 'Ha intentado otorgar demasiados votos.',
+	'AP_ABSTAINERS' => 'Eligieron no votar',
+	'AP_DELETE_VOTE' => 'Eliminar mi voto',
 
-	'AP_MAX_VOTES_SELECT'					=> array(
+	'AP_MAX_VOTES_SELECT'					=> [
 		1	=> 'Puede otorgar hasta <strong>%2$d</strong> votos a <strong>%1$d</strong> opción',
 		2	=> 'Puede otorgar hasta <strong>%2$d</strong> votos entre <strong>%1$d</strong> opciones',
-	),
-	'AP_GUEST_VOTES'						=> array(
+	],
+	'AP_GUEST_VOTES'						=> [
 		1	=> '%d voto de invitado',
 		2	=> '%d votos de invitados',
-	),
-
+	],
 // Posting
+	'AP_POLL_VISIBILITY' => 'Visibilidad de los resultados',
+	'AP_POLL_VISIBILITY_EXPLAIN' => 'Elige cuándo serán visibles los resultados totales de la encuesta.',
+	'AP_VISIBILITY_PUBLIC' => 'Pública — mostrar siempre los resultados',
+	'AP_VISIBILITY_DEFAULT' => 'Después del primer voto',
+	'AP_VISIBILITY_VOTE_COMPLETED' => 'Después de usar todos los votos disponibles',
+	'AP_VISIBILITY_PRIVATE' => 'Privada — solo después de finalizar la encuesta',
+	'AP_POLL_VOTE_MODE' => 'Cambios de voto',
+	'AP_POLL_VOTE_MODE_EXPLAIN' => 'Elige si los votos son definitivos, pueden enviarse de forma incremental o pueden cambiarse mientras la encuesta esté abierta.',
+	'AP_VOTE_MODE_NO_CHANGE' => 'Sin cambios',
+	'AP_VOTE_MODE_INCREMENTAL' => 'Votación incremental',
+	'AP_VOTE_MODE_CHANGE' => 'Permitir cambios',
 	'AP_POLL_VOTES_HIDE'					=> 'Ocultar votos',
 	'AP_POLL_VOTES_HIDE_EXPLAIN'			=> 'Si esta habilitado, los votos estarán ocultos hasta que la encuesta termine. Esta opción sólo funciona si la encuesta tiene un final determinado.',
 	'AP_POLL_VOTERS_SHOW'					=> 'Mostrar votantes de la encuesta',
@@ -90,5 +103,6 @@ $lang = array_merge($lang, array(
 	'AP_POLL_MAX_VALUE_EXPLAIN'				=> 'Este es el número máximo de votos que un votante puede otorgar a una misma opción.',
 	'AP_POLL_TOTAL_VALUE'					=> 'Votos totales',
 	'AP_POLL_TOTAL_VALUE_EXPLAIN'			=> 'Este es el número total de votos que un votante puede otorgar, repartidos entre las opciones posibles.',
+
 	'AP_VOTE_GREATER_THAN_MAXVALUE'			=> 'No puede otorgar un número de votos superior al máximo permitido.',
-));
+]);

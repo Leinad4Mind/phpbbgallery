@@ -4,6 +4,7 @@
  * Advanced Polls [Hebrew]
  *
  * @copyright (c) 2015 Wolfsblvt ( www.pinkes-forum.de )
+ * @copyright (c) 2026 Leinad4Mind
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  * @author Clemens Husung (Wolfsblvt)
  * @author Translation by koraldon (https://www.phpbb.com/community/memberlist.php?mode=viewprofile&u=336119)
@@ -16,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -35,9 +36,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ADVANCEDPOLLS_EXT_NAME'				=> 'סקרים מתקדמים',
 
+// Viewtopic
 	'AP_VOTES_HIDDEN'						=> 'הצבעות נסתרות',
 	'AP_POLL_RUN_TILL_APPEND'				=> ', עד אז  כל ההצבעות נסתרות.',
 	'AP_VOTERS'								=> 'מצביעים',
@@ -47,11 +49,58 @@ $lang = array_merge($lang, array(
 	'AP_POLL_REASON_NOT_POSTED'				=> 'לא כתבת הודעה בנושא זה',
 	'AP_POLL_VOTES_ARE_VISIBLE'				=> 'שים לב שההצבעה שלך גלויה.',
 	'AP_POLL_DONT_VOTE_SHOW_RESULTS'		=> 'הצג תוצאות מבלי להצביע',
+	'AP_POLL_RESULTS_ARE_ORDERED' => 'לתשומת לבך, התוצאות ממוינות לפי מספר הקולות בסדר יורד.',
+	'AP_POLL_TYPE_MISMATCH' => 'נתוני הסקר אינם עקביים, שגיאה פנימית.',
+	'AP_VOTE_CHANGED' => 'אין לך הרשאה לשנות את הקולות שכבר הצבעת.',
+	'AP_TOO_MANY_VOTES' => 'ניסית להקצות יותר מדי קולות.',
+	'AP_ABSTAINERS' => 'בחרו שלא להצביע',
+	'AP_DELETE_VOTE' => 'מחיקת ההצבעה שלי',
 
+	'AP_MAX_VOTES_SELECT' => [
+		1 => 'ניתן לתת עד <strong>%2$d</strong> קולות לאפשרות <strong>%1$d</strong>',
+		2 => 'ניתן לחלק עד <strong>%2$d</strong> קולות בין <strong>%1$d</strong> אפשרויות',
+	],
+	'AP_GUEST_VOTES' => [
+		1 => '%d קול מאורח',
+		2 => '%d קולות מאורחים',
+	],
+// Posting
+	'AP_POLL_VISIBILITY' => 'נראות התוצאות',
+	'AP_POLL_VISIBILITY_EXPLAIN' => 'בחר מתי התוצאות הכוללות של הסקר יהיו גלויות.',
+	'AP_VISIBILITY_PUBLIC' => 'ציבורי — להציג תמיד את התוצאות',
+	'AP_VISIBILITY_DEFAULT' => 'לאחר ההצבעה הראשונה',
+	'AP_VISIBILITY_VOTE_COMPLETED' => 'לאחר שימוש בכל הקולות הזמינים',
+	'AP_VISIBILITY_PRIVATE' => 'פרטי — רק לאחר סיום הסקר',
+	'AP_POLL_VOTE_MODE' => 'שינוי הצבעות',
+	'AP_POLL_VOTE_MODE_EXPLAIN' => 'בחר אם ההצבעות סופיות, ניתנות לשליחה בהדרגה או ניתנות לשינוי כל עוד הסקר פתוח.',
+	'AP_VOTE_MODE_NO_CHANGE' => 'ללא שינויים',
+	'AP_VOTE_MODE_INCREMENTAL' => 'הצבעה הדרגתית',
+	'AP_VOTE_MODE_CHANGE' => 'לאפשר שינויים',
 	'AP_POLL_VOTES_HIDE'					=> 'הסתר הצבעות',
 	'AP_POLL_VOTES_HIDE_EXPLAIN'			=> 'אם מופעל ההצבעות נסתרות עד סיום הסקר. אפשרות זו עובדת רק אם לסקר יש מועד סיום.',
 	'AP_POLL_VOTERS_SHOW'					=> 'הצג מצביעים',
 	'AP_POLL_VOTERS_SHOW_EXPLAIN'			=> 'אם מופעל בעלי הרשאות יוכלו לראות מי הצביע. שים לב שמצביעים עדיין יהיו נסתרים אם האפשרות מופעלות.',
 	'AP_POLL_VOTERS_LIMIT'					=> 'הגבל הצבעות',
 	'AP_POLL_VOTERS_LIMIT_EXPLAIN'			=> 'אם מופעל רק מי שכתב הודעה בנושא זה יכול להצביע.',
-));
+	'AP_POLL_SHOW_ORDERED' => 'הצגת תוצאות ממוינות',
+	'AP_POLL_SHOW_ORDERED_EXPLAIN' => 'כאשר התוצאות מוצגות, הן ממוינות לפי מספר הקולות בסדר יורד. אחרת נשמר סדר אפשרויות הסקר.',
+	'AP_RUN_POLL' => 'משך הסקר',
+	'AP_RUN_POLL_FOR' => 'למשך',
+	'AP_RUN_POLL_UNTIL' => 'עד',
+	'AP_RUN_POLL_INDEFINITELY' => 'ללא הגבלה',
+	'AP_POLL_END' => 'סיום הסקר',
+	'AP_POLL_END_EXPLAIN' => 'ציין את התאריך והשעה שבהם הסקר יסתיים. מילוי אחד מהשדות מחליף את משך הסקר. שדות תאריך ריקים ישתמשו בתאריך הסיום הנוכחי ושדות שעה ריקים ישתמשו ב־0. כדי לחזור לשימוש במשך הסקר יש לנקות את כל השדות.',
+
+	'AP_YYYY_MM_DD' => 'YYYY-MM-DD',
+	'AP_HH_MM' => 'HH:MM',
+	'AP_POLL_END_INVALID' => 'התאריך או השעה שצוינו אינם תקינים',
+	'AP_POLL_TOTAL_LOWER_MAX_VOTES' => 'מספר הקולות המרבי לאפשרות אחת אינו יכול להיות גדול ממספר הקולות הכולל לחלוקה',
+	'AP_POLL_TOTAL_LOWER_MAX_OPTS' => 'מספר האפשרויות המרבי לבחירה אינו יכול להיות גדול ממספר הקולות הכולל לחלוקה',
+
+	'AP_POLL_MAX_VALUE' => 'מספר קולות מרבי',
+	'AP_POLL_MAX_VALUE_EXPLAIN' => 'זהו מספר הקולות המרבי שמצביע יכול לתת לאפשרות אחת.',
+	'AP_POLL_TOTAL_VALUE' => 'סך כל הקולות',
+	'AP_POLL_TOTAL_VALUE_EXPLAIN' => 'זהו מספר הקולות הכולל שמצביע יכול לחלק בין כל האפשרויות.',
+
+	'AP_VOTE_GREATER_THAN_MAXVALUE' => 'לא ניתן להקצות מספר קולות גדול מהערך המרבי המותר.',
+]);

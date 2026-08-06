@@ -4,6 +4,7 @@
  * Advanced Polls [Polish]
  * Polish translation by Lech-u (https://www.phpbb.com/community/memberlist.php?mode=viewprofile&u=1616616)*
  * @copyright (c) 2015 Wolfsblvt ( www.pinkes-forum.de )
+ * @copyright (c) 2026 Leinad4Mind
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  * @author Clemens Husung (Wolfsblvt)
  */
@@ -15,7 +16,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -34,7 +35,7 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ADVANCEDPOLLS_EXT_NAME'				=> 'Zaawansowane głosowanie',
 
 // Viewtopic
@@ -51,17 +52,29 @@ $lang = array_merge($lang, array(
 	'AP_POLL_TYPE_MISMATCH'					=> 'Niespójne dane ankiety, błąd wewnętrzny.',
 	'AP_VOTE_CHANGED'						=> 'Nie masz uprawnień do zmiany oddanych głosów.',
 	'AP_TOO_MANY_VOTES'						=> 'Próbowałeś oddać zbyt wiele głosów.',
+	'AP_ABSTAINERS' => 'Wybrali brak głosu',
+	'AP_DELETE_VOTE' => 'Usuń mój głos',
 
-	'AP_MAX_VOTES_SELECT'					=> array(
+	'AP_MAX_VOTES_SELECT'					=> [
 		1	=> 'Możesz oddać maksymalnie do <strong>%2$d</strong> głos na <strong>%1$d</strong> opcję',
 		2	=> 'Możesz oddać maksymalnie do <strong>%2$d</strong> głosów wśród <strong>%1$d</strong> opcji',
-	),
-	'AP_GUEST_VOTES'						=> array(
+	],
+	'AP_GUEST_VOTES'						=> [
 		1	=> '%d głos od Gościa',
 		2	=> '%d głosy od Gości',
-	),
-
+	],
 // Posting
+	'AP_POLL_VISIBILITY' => 'Widoczność wyników',
+	'AP_POLL_VISIBILITY_EXPLAIN' => 'Wybierz, kiedy zbiorcze wyniki ankiety będą widoczne.',
+	'AP_VISIBILITY_PUBLIC' => 'Publiczne — zawsze pokazuj wyniki',
+	'AP_VISIBILITY_DEFAULT' => 'Po pierwszym głosie',
+	'AP_VISIBILITY_VOTE_COMPLETED' => 'Po wykorzystaniu wszystkich dostępnych głosów',
+	'AP_VISIBILITY_PRIVATE' => 'Prywatne — dopiero po zakończeniu ankiety',
+	'AP_POLL_VOTE_MODE' => 'Zmiana głosów',
+	'AP_POLL_VOTE_MODE_EXPLAIN' => 'Wybierz, czy głosy są ostateczne, mogą być oddawane stopniowo lub zmieniane, dopóki ankieta jest otwarta.',
+	'AP_VOTE_MODE_NO_CHANGE' => 'Bez zmian',
+	'AP_VOTE_MODE_INCREMENTAL' => 'Głosowanie stopniowe',
+	'AP_VOTE_MODE_CHANGE' => 'Zezwól na zmiany',
 	'AP_POLL_VOTES_HIDE'					=> 'Ukryj głosy',
 	'AP_POLL_VOTES_HIDE_EXPLAIN'			=> 'Jeśli włączone, głosy będą ukryte do końca głosowania. Ta opcja działa jeśli jest wyznaczony koniec ankiety.',
 	'AP_POLL_VOTERS_SHOW'					=> 'Pokaż głosy głosujących',
@@ -89,4 +102,4 @@ $lang = array_merge($lang, array(
 	'AP_POLL_TOTAL_VALUE_EXPLAIN'			=> 'To jest całkowita liczba głosów, jaką głosujący może rozdzielić na wszystkie opcje.',
 
 	'AP_VOTE_GREATER_THAN_MAXVALUE'			=> 'Nie możesz przydzielić liczby głosów większej niż maksymalna dozwolona wartość.',
-));
+]);

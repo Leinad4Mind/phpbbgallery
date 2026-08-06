@@ -5,6 +5,7 @@
 * French translation by Galixte (http://www.galixte.com) & Chouf (https://www.phpbb.com/community/memberlist.php?mode=viewprofile&u=1352822)
 *
 * @copyright (c) 2015 Clemens Husung (Wolfsblvt) <www.pinkes-forum.de>
+ * @copyright (c) 2026 Leinad4Mind
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
@@ -55,6 +56,8 @@ $lang = array_merge($lang, [
 	'AP_POLL_TYPE_MISMATCH'          => 'Erreur interne, les données du sondage sont incompatibles.',
 	'AP_VOTE_CHANGED'                => 'Vous n’avez pas l’autorisation de modifier vos votes.',
 	'AP_TOO_MANY_VOTES'              => 'Vous avez tenté de soumettre un nombre trop élevé de votes.',
+	'AP_ABSTAINERS' => 'Ont choisi de ne pas voter',
+	'AP_DELETE_VOTE' => 'Supprimer mon vote',
 
 	'AP_MAX_VOTES_SELECT' => [
 		1 => 'Vous pouvez soumettre jusqu’à <strong>%2$d</strong> votes pour <strong>%1$d</strong> option',
@@ -64,8 +67,18 @@ $lang = array_merge($lang, [
 		1 => '%d vote d’invité',
 		2 => '%d votes d’invités',
 	],
-
 // Posting
+	'AP_POLL_VISIBILITY' => 'Visibilité des résultats',
+	'AP_POLL_VISIBILITY_EXPLAIN' => 'Choisissez quand les résultats globaux du sondage deviennent visibles.',
+	'AP_VISIBILITY_PUBLIC' => 'Public — toujours afficher les résultats',
+	'AP_VISIBILITY_DEFAULT' => 'Après le premier vote',
+	'AP_VISIBILITY_VOTE_COMPLETED' => 'Après utilisation de tous les votes disponibles',
+	'AP_VISIBILITY_PRIVATE' => 'Privé — uniquement après la fin du sondage',
+	'AP_POLL_VOTE_MODE' => 'Modification des votes',
+	'AP_POLL_VOTE_MODE_EXPLAIN' => 'Choisissez si les votes sont définitifs, peuvent être envoyés progressivement ou modifiés tant que le sondage est ouvert.',
+	'AP_VOTE_MODE_NO_CHANGE' => 'Aucune modification',
+	'AP_VOTE_MODE_INCREMENTAL' => 'Vote progressif',
+	'AP_VOTE_MODE_CHANGE' => 'Autoriser les modifications',
 	'AP_POLL_VOTES_HIDE'           => 'Masquer les votes',
 	'AP_POLL_VOTES_HIDE_EXPLAIN'   => 'Si activé, les votes seront masqués jusqu’à la fin du sondage. Cette option fonctionne uniquement si le sondage possède une date d’échéance.',
 	'AP_POLL_VOTERS_SHOW'          => 'Afficher le nom des votants',
@@ -91,4 +104,6 @@ $lang = array_merge($lang, [
 	'AP_POLL_MAX_VALUE_EXPLAIN'   => 'Il s’agit du nombre maximum de votes qu’un votant peut soumettre à une seule option.',
 	'AP_POLL_TOTAL_VALUE'         => 'Nombre total de votes',
 	'AP_POLL_TOTAL_VALUE_EXPLAIN' => 'Il s’agit du nombre total de votes qu’un votant peut soumettre parmi toutes les options.',
+
+	'AP_VOTE_GREATER_THAN_MAXVALUE' => 'Vous ne pouvez pas attribuer un nombre de votes supérieur à la valeur maximale autorisée.',
 ]);

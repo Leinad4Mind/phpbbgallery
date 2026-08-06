@@ -4,6 +4,7 @@
  * Advanced Polls [Dutch]
  *
  * @copyright (c) 2015 Wolfsblvt ( www.pinkes-forum.de )
+ * @copyright (c) 2026 Leinad4Mind
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  * @author Clemens Husung (Wolfsblvt)
  * @author Translation by Beun12 (https://www.phpbb.com/community/memberlist.php?mode=viewprofile&u=1466206) & </Solidjeuh> (https://www.phpbb.com/community/memberlist.php?mode=viewprofile&u=1544706)
@@ -16,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -35,17 +36,27 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'AP_TITLE_ACP'					=> 'Geavanceerde Peilingen',
 	'AP_SETTINGS_ACP'				=> 'Instellingen',
 
 	'AP_TITLE'						=> 'Geavanceerde Peilingen',
 	'AP_TITLE_EXPLAIN'				=> 'Uitbreiding van de in phpBB aanwezige Peiling systeem met oa.stemmen verbergen tot einde peiling, stemmers tonen, beperken van de stemmers en meer.',
-	'AP_COPYRIGHT'					=> '© 2015 Wolfsblvt (www.pinkes-forum.de) [<a href="http://pinkes-forum.de/dev/find.php">Meer extensies van Wolfsblvt</a>]',
 
 	'AP_SETTINGS'					=> 'Geavanceerde instellingen Peilingen',
 	'AP_GLOBAL_SETTINGS'			=> 'Globale instellingen geavanceerde peilingen (geld voor alle peilingen)',
 	'AP_PER_POLL_SETTINGS'			=> 'Instellingen per peiling (per peiling te selecteren, standaard waarden)',
+	'AP_DEFAULT_POLL_VISIBILITY' => 'Standaard zichtbaarheid van resultaten',
+	'AP_DEFAULT_POLL_VISIBILITY_EXPLAIN' => 'De zichtbaarheidsmodus die aanvankelijk wordt geselecteerd bij het maken van een peiling.',
+	'AP_DEFAULT_POLL_VOTE_MODE' => 'Standaardmodus voor stemwijzigingen',
+	'AP_DEFAULT_POLL_VOTE_MODE_EXPLAIN' => 'De modus voor stemwijzigingen die aanvankelijk wordt geselecteerd bij het maken van een peiling.',
+	'AP_VISIBILITY_PUBLIC' => 'Openbaar — resultaten altijd tonen',
+	'AP_VISIBILITY_DEFAULT' => 'Na de eerste stem',
+	'AP_VISIBILITY_VOTE_COMPLETED' => 'Nadat alle beschikbare stemmen zijn gebruikt',
+	'AP_VISIBILITY_PRIVATE' => 'Privé — alleen nadat de peiling is afgelopen',
+	'AP_VOTE_MODE_NO_CHANGE' => 'Geen wijzigingen',
+	'AP_VOTE_MODE_INCREMENTAL' => 'Stapsgewijs stemmen',
+	'AP_VOTE_MODE_CHANGE' => 'Wijzigingen toestaan',
 
 	'AP_ACT_VOTES_HIDE'				=> 'Activeer stemmen verbergen',
 	'AP_ACT_VOTES_HIDE_EXPLAIN'		=> 'Activeren van deze optie verbergt de stemmen op Peilingen tot deze ten einde is.',
@@ -55,6 +66,10 @@ $lang = array_merge($lang, array(
 	'AP_ACT_VOTERS_LIMIT_EXPLAIN'	=> 'Door activering van deze optie kunnen alleen gebruikers stemmen die in het bewuste onderwerp geschreven hebben.',
 	'AP_ACT_POLL_NO_VOTE'			=> 'Activeer niet stemmen',
 	'AP_ACT_POLL_NO_VOTE_EXPLAIN'	=> 'Wijzig de standaard "Toon stemmen" link door een "Niet stemmen" link, dit staat niet toe om na het bekijken van de resultaten alsnog te kunnen stemmen tenzij "Stem wijzigen" is geselecteerd.',
+	'AP_ACT_SHOW_ABSTAINERS' => 'Aantal onthoudingen tonen',
+	'AP_ACT_SHOW_ABSTAINERS_EXPLAIN' => 'Toont hoeveel geregistreerde gebruikers uitdrukkelijk kozen om niet te stemmen. Namen worden alleen getoond als de kiezerslijst actief is en de gebruiker toestemming heeft.',
+	'AP_ACT_VOTE_DELETE' => 'Stem verwijderen toestaan',
+	'AP_ACT_VOTE_DELETE_EXPLAIN' => 'Staat geregistreerde gebruikers toe hun eigen stem te verwijderen zolang de peiling open is en wijzigingen toestaat.',
 	'AP_ACT_SHOW_ORDERED'			=> 'Activeer toon volgorde',
 	'AP_ACT_SHOW_ORDERED_EXPLAIN'	=> 'Activeer deze optie om de resultaten op aflopende volgorde van het aantal stemmen te tonen (hoogste aantal stemmen eerst).',
 	'AP_ACT_POLL_SCORING'			=> 'Activeer peiling score',
@@ -73,4 +88,6 @@ $lang = array_merge($lang, array(
 	'AP_DEFAULT_VOTERS_SHOW'		=> 'Selecteer standaard waarde voor het tonen van stemmers',
 	'AP_DEFAULT_VOTERS_LIMIT'		=> 'Selecteer standaard waarde voor het beperking van stemmers',
 	'AP_DEFAULT_SHOW_ORDERED'		=> 'Standaard waarden voor het tonen van de volgorde',
-));
+
+	'AP_ENABLE_NOTICE' => '<br /><br /><div class="phpinfo"><p><strong>Volgende stappen</strong></p><ol><li>Controleer de extensie-instellingen onder <strong>%1$s » %2$s » %3$s</strong> en stel de peilingfuncties en standaardwaarden in die je forum nodig heeft.</li><li>Controleer de rechten <strong>%8$s</strong> en <strong>%9$s</strong> onder <strong>%4$s » %5$s » %6$s</strong> (leden) en <strong>%4$s » %5$s » %7$s</strong> (moderators). Ken ze alleen toe aan rollen of groepen die de identiteit van stemmers mogen zien.</li></ol><p>Voor de overige peilingfuncties is geen aanvullende configuratie nodig.</p></div>',
+]);

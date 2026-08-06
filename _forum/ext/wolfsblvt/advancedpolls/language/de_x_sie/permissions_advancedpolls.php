@@ -4,6 +4,7 @@
  * Advanced Polls [Deutsch]
  *
  * @copyright (c) 2015 Wolfsblvt ( www.pinkes-forum.de )
+ * @copyright (c) 2026 Leinad4Mind
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  * @author Clemens Husung (Wolfsblvt)
  */
@@ -15,7 +16,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -41,7 +42,8 @@ if (empty($lang) || !is_array($lang))
 *	start with 'permissions_', so they are automatically loaded within the ACP.
 */
 
-// User Permissions
-$lang = array_merge($lang, array(
-	'ACL_U_SEE_VOTERS'			=> 'Kann die Benutzer sehen, die abgestimmt haben',
-));
+// Forum and moderator permissions
+$lang = array_merge($lang, [
+	'ACL_F_SEEVOTERS' => 'Kann Umfrageteilnehmer sehen',
+	'ACL_M_SEEVOTERS' => 'Kann Umfrageteilnehmer anzeigen',
+]);

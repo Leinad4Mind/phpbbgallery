@@ -4,6 +4,7 @@
  * Advanced Polls [English]
  *
  * @copyright (c) 2015 Wolfsblvt ( www.pinkes-forum.de )
+ * @copyright (c) 2026 Leinad4Mind
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  * @author Clemens Husung (Wolfsblvt)
  */
@@ -15,7 +16,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -34,7 +35,7 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ADVANCEDPOLLS_EXT_NAME'				=> 'Advanced Polls',
 
 // Viewtopic
@@ -51,17 +52,29 @@ $lang = array_merge($lang, array(
 	'AP_POLL_TYPE_MISMATCH'					=> 'Inconsistent poll data, internal error.',
 	'AP_VOTE_CHANGED'						=> 'You do not have permissions to change your casted votes.',
 	'AP_TOO_MANY_VOTES'						=> 'You have tried to assign too many votes.',
+	'AP_ABSTAINERS'							=> 'Chose not to vote',
+	'AP_DELETE_VOTE'						=> 'Delete my vote',
 
-	'AP_MAX_VOTES_SELECT'					=> array(
+	'AP_MAX_VOTES_SELECT'					=> [
 		1	=> 'You may give up to <strong>%2$d</strong> votes to <strong>%1$d</strong> option',
 		2	=> 'You may give up to <strong>%2$d</strong> votes amongst <strong>%1$d</strong> options',
-	),
-	'AP_GUEST_VOTES'						=> array(
+	],
+	'AP_GUEST_VOTES'						=> [
 		1	=> '%d vote from guest',
 		2	=> '%d votes from guests',
-	),
-
+	],
 // Posting
+	'AP_POLL_VISIBILITY'					=> 'Result visibility',
+	'AP_POLL_VISIBILITY_EXPLAIN'			=> 'Choose when aggregate poll results become visible.',
+	'AP_VISIBILITY_PUBLIC'					=> 'Public — always show results',
+	'AP_VISIBILITY_DEFAULT'					=> 'After first vote',
+	'AP_VISIBILITY_VOTE_COMPLETED'			=> 'After all available votes are used',
+	'AP_VISIBILITY_PRIVATE'					=> 'Private — only after the poll ends',
+	'AP_POLL_VOTE_MODE'						=> 'Vote changes',
+	'AP_POLL_VOTE_MODE_EXPLAIN'				=> 'Choose whether votes are final, may be submitted incrementally, or may be changed while the poll is open.',
+	'AP_VOTE_MODE_NO_CHANGE'				=> 'No change',
+	'AP_VOTE_MODE_INCREMENTAL'				=> 'Incremental voting',
+	'AP_VOTE_MODE_CHANGE'					=> 'Allow changes',
 	'AP_POLL_VOTES_HIDE'					=> 'Hide votes',
 	'AP_POLL_VOTES_HIDE_EXPLAIN'			=> 'If enabled votes will be hidden until the poll ends. This option only works if the poll has a specified end.',
 	'AP_POLL_VOTERS_SHOW'					=> 'Show poll voters',
@@ -89,4 +102,4 @@ $lang = array_merge($lang, array(
 	'AP_POLL_TOTAL_VALUE_EXPLAIN'			=> 'This is the total number of votes that a voter might distribute amongst all options.',
 
 	'AP_VOTE_GREATER_THAN_MAXVALUE'			=> 'You can’t assign a number of votes greater than the maximum value allowed.',
-));
+]);

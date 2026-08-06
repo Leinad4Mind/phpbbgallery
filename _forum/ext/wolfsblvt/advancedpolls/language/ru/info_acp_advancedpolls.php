@@ -4,6 +4,7 @@
  * Advanced Polls [Russian]
  *
  * @copyright (c) 2015 Wolfsblvt ( www.pinkes-forum.de )
+ * @copyright (c) 2026 Leinad4Mind
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  * @author Clemens Husung (Wolfsblvt)
  * @author Translation by edualla (https://github.com/edualla)
@@ -17,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -36,17 +37,27 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'AP_TITLE_ACP'					=> 'Расширенные опросы',
 	'AP_SETTINGS_ACP'				=> 'Настройки',
 
 	'AP_TITLE'						=> 'Расширенные опросы',
 	'AP_TITLE_EXPLAIN'				=> 'Расширяет систему опросов PHPBB новыми функциями, такими как скрытие голосований до конца опроса, просмотр пользователей, которые проголосовали, ограничение голосования и мн. др.',
-	'AP_COPYRIGHT'					=> '© 2015 Wolfsblvt (www.pinkes-forum.de) [<a href="http://pinkes-forum.de/dev/find.php">More extensions of Wolfsblvt</a>]',
 
 	'AP_SETTINGS'					=> 'Настройки расширенных опросов',
 	'AP_GLOBAL_SETTINGS'			=> 'Глобальные настройки Расширенных опросов (относятся ко всем опросам)',
 	'AP_PER_POLL_SETTINGS'			=> 'Персональные настройки Расширенных опросов (выбираются в опросе со значениями по умолчанию, установленными ниже)',
+	'AP_DEFAULT_POLL_VISIBILITY' => 'Видимость результатов по умолчанию',
+	'AP_DEFAULT_POLL_VISIBILITY_EXPLAIN' => 'Режим видимости, изначально выбранный при создании опроса.',
+	'AP_DEFAULT_POLL_VOTE_MODE' => 'Режим изменения голоса по умолчанию',
+	'AP_DEFAULT_POLL_VOTE_MODE_EXPLAIN' => 'Режим изменения голоса, изначально выбранный при создании опроса.',
+	'AP_VISIBILITY_PUBLIC' => 'Публичные — всегда показывать результаты',
+	'AP_VISIBILITY_DEFAULT' => 'После первого голоса',
+	'AP_VISIBILITY_VOTE_COMPLETED' => 'После использования всех доступных голосов',
+	'AP_VISIBILITY_PRIVATE' => 'Закрытые — только после завершения опроса',
+	'AP_VOTE_MODE_NO_CHANGE' => 'Без изменений',
+	'AP_VOTE_MODE_INCREMENTAL' => 'Постепенное голосование',
+	'AP_VOTE_MODE_CHANGE' => 'Разрешить изменения',
 
 	'AP_ACT_VOTES_HIDE'				=> 'Включить скрытие голосований',
 	'AP_ACT_VOTES_HIDE_EXPLAIN'		=> 'Включает опцию для выбора, чтобы голосования до конца опроса были скрыты.',
@@ -56,6 +67,10 @@ $lang = array_merge($lang, array(
 	'AP_ACT_VOTERS_LIMIT_EXPLAIN'	=> 'Включает опцию для выбора, чтобы могли голосовать только те пользователи, которые уже ответили в этой теме.',
 	'AP_ACT_POLL_NO_VOTE'			=> 'Разрешить не голосовать',
 	'AP_ACT_POLL_NO_VOTE_EXPLAIN'	=> 'Изменяет стандартное значение ссылки "Результаты голосования"  на "Не хочу  голосовать, посмотреть результаты", что не позволит голосовать после просмотра результатов, если "Переголосование" не выбрано.',
+	'AP_ACT_SHOW_ABSTAINERS' => 'Показывать число воздержавшихся',
+	'AP_ACT_SHOW_ABSTAINERS_EXPLAIN' => 'Показывает число зарегистрированных пользователей, явно решивших не голосовать. Имена отображаются только при включённом списке голосовавших и наличии разрешения.',
+	'AP_ACT_VOTE_DELETE' => 'Разрешить удаление голоса',
+	'AP_ACT_VOTE_DELETE_EXPLAIN' => 'Позволяет зарегистрированным пользователям удалить свой голос, пока опрос открыт и разрешает изменения.',
 	'AP_ACT_SHOW_ORDERED'			=> 'Включить порядок отображения результатов',
 	'AP_ACT_SHOW_ORDERED_EXPLAIN'	=> 'Включает возможность выбора результатов по порядку убывания полученных голосов (наибольшее количество голосов вверху).',
 	'AP_ACT_POLL_SCORING'			=> 'Включить вес вариантов опроса',
@@ -74,4 +89,6 @@ $lang = array_merge($lang, array(
 	'AP_DEFAULT_VOTERS_SHOW'		=> 'По умолчанию выбрано значение отображения проголосовавших',
 	'AP_DEFAULT_VOTERS_LIMIT'		=> 'По умолчанию выбрано значение ограничения проголосовавших',
 	'AP_DEFAULT_SHOW_ORDERED'		=> 'По умолчанию выбрано значение порядка отображения',
-));
+
+	'AP_ENABLE_NOTICE' => '<br /><br /><div class="phpinfo"><p><strong>Следующие шаги</strong></p><ol><li>Проверьте настройки расширения в <strong>%1$s » %2$s » %3$s</strong> и настройте функции опросов и значения по умолчанию, необходимые вашему форуму.</li><li>Проверьте разрешения <strong>%8$s</strong> и <strong>%9$s</strong> в <strong>%4$s » %5$s » %6$s</strong> (участники) и <strong>%4$s » %5$s » %7$s</strong> (модераторы). Назначайте их только ролям или группам, которым разрешено видеть личности голосовавших.</li></ol><p>Остальные функции опросов не требуют дополнительной настройки.</p></div>',
+]);

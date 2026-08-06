@@ -4,6 +4,7 @@
  * Advanced Polls [Italian]
  *
  * @copyright (c) 2015 Wolfsblvt ( www.pinkes-forum.de )
+ * @copyright (c) 2026 Leinad4Mind
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  * @author Clemens Husung (Wolfsblvt)
  * @author Translation by Mauron (https://github.com/Mauron)
@@ -16,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -35,7 +36,7 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'NOTIFICATION_AP_POLL_ENDED'		=> '<strong>Disponibili i risultati del sondaggio</strong>:',
 	'NOTIFICATION_TYPE_AP_POLL_ENDED'	=> 'I risultati del sondaggio in cui hai votato sono ora disponibili',
-));
+]);

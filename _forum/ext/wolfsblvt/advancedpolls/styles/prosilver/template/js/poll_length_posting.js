@@ -3,6 +3,7 @@
  * Advanced Polls - Poll Length Posting aids
  *
  * @copyright (c) 2015 javiexin ( www.exincastillos.es )
+ * @copyright (c) 2026 Leinad4Mind
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  * @author Javier Lopez (javiexin)
  */
@@ -83,7 +84,7 @@ function apUpdatePollEnd(fill)
 	apPollStart.setTime(apPollEnd.getTime() - apPollLength * 1000);
 
 	if (fill) {
-		document.getElementById('wolfsblvt_poll_end_label').innerHTML = apPollEnd.getFullYear() + "/" + (apPollEnd.getMonth() + 1) + "/" + apPollEnd.getDate() + "&nbsp;" + apPollEnd.getHours() + ":" + apPollEnd.getMinutes();
+		document.getElementById('wolfsblvt_poll_end_label').innerHTML = apPollEnd.getFullYear() + "/" + (apPollEnd.getMonth() + 1) + "/" + apPollEnd.getDate() + "&nbsp;" + ("0" + apPollEnd.getHours()).slice(-2) + ":" + ("0" + apPollEnd.getMinutes()).slice(-2);
 		document.getElementById('wolfsblvt_poll_end_year').value = apPollEnd.getFullYear();
 		document.getElementById('wolfsblvt_poll_end_mon').value = apPollEnd.getMonth() + 1;
 		document.getElementById('wolfsblvt_poll_end_mday').value = apPollEnd.getDate();

@@ -3,30 +3,36 @@
 	"type": "phpbb-extension",
 	"description": "Advances the core poll system of phpBB with new features like hiding votes till end, showing poll voters, limiting the votes and more.",
 	"homepage": "https://github.com/jasoloz/advancedpolls",
-	"version": "1.2.4.3",
-	"time": "2022-11-29",
-	"keywords": ["phpbb", "extension", "advancedpolls", "advanced", "poll"],
+	"version": "1.3.0",
+	"time": "2026-08-06",
+	"keywords": [
+		"phpbb",
+		"extension",
+		"advancedpolls",
+		"advanced",
+		"poll"
+	],
 	"license": "GPL-2.0",
 	"authors": [
 		{
-			"name": "Clemens Husung (Wolfsblvt)",
-			"homepage": "http://www.pinkes-forum.de/",
-			"email": "wolfsblvt@gmx.de",
-			"role": "Main Developer"
-		},
-		{
-			"name": "Javier Lopez (javiexin)",
-			"email": "javiexin@gmail.com",
-			"role": "Previous Developer"
+			"name": "Leinad4Mind",
+			"role": "Developer"
 		},
 		{
 			"name": "José Alfonso Solera (jasolo)",
-			"email": "jasolo.f@gmail.com",
 			"role": "Developer"
+		},
+		{
+			"name": "Javier Lopez (javiexin)",
+			"role": "Previous Developer"
+		},
+		{
+			"name": "Clemens Husung (Wolfsblvt)",
+			"role": "Main Developer"
 		}
 	],
 	"require": {
-		"php": ">=5.3.3"
+		"php": ">=7.1.3"
 	},
 	"require-dev": {
 		"phpbb/epv": "dev-master",
@@ -35,10 +41,10 @@
 	"extra": {
 		"display-name": "Advanced Polls",
 		"soft-require": {
-			"phpbb/phpbb": ">=3.2.*,<4.0.0@dev"
+			"phpbb/phpbb": ">=3.3.0,<4.0.0@dev"
 		},
 		"version-check": {
-			"host": "jasoloz.github.io",
+			"host": "leinad4mind.github.io",
 			"directory": "/advancedpolls",
 			"filename": "version.json",
 			"ssl": true

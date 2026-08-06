@@ -4,6 +4,7 @@
  * Advanced Polls Notification
  *
  * @copyright (c) 2015 javiexin ( www.exincastillos.es )
+ * @copyright (c) 2026 Leinad4Mind
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  * @author Javier Lopez (javiexin)
  */
@@ -87,10 +88,10 @@ class pollended extends \phpbb\notification\type\base
 		), $options);
 
 		// Grab all users that have voted in the poll
-		$sql = 'SELECT vote_user_id
+		$sql = 'SELECT DISTINCT vote_user_id
 			FROM ' . POLL_VOTES_TABLE . '
 			WHERE topic_id = ' . (int) $data['topic_id'] . '
-			GROUP BY vote_user_id';
+				AND vote_user_id <> ' . ANONYMOUS;
 		$result = $this->db->sql_query($sql);
 
 		$users = array();

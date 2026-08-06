@@ -4,6 +4,7 @@
  * Advanced Polls Cron Task
  *
  * @copyright (c) 2015 javiexin ( www.exincastillos.es )
+ * @copyright (c) 2026 Leinad4Mind
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  * @author Javier Lopez (javiexin)
  */
@@ -17,8 +18,6 @@ class pollend extends \phpbb\cron\task\base
 	protected $log;
 	protected $user;
 	protected $notification_manager;
-
-	protected $last_run, $this_run, $next_run;
 
 	/**
 	* Constructor.
@@ -41,41 +40,37 @@ class pollend extends \phpbb\cron\task\base
 	*/
 	public function run()
 	{
-		$this->last_run = (int) $this->config['wolfsblvt.advancedpolls.pollend_last_gc'];
-		$this->this_run = $this->last_run + (int) $this->config['wolfsblvt.advancedpolls.pollend_gc'];
-		$this->next_run = (int) 0;
+		$now = time();
 
-		// Grab all polls finished since the last execution of this task that were hidden
+		// Process every due poll once. The persisted marker makes the task
+		// recoverable after cache purges, poll edits and interrupted cron runs.
 		$sql = 'SELECT topic_id, forum_id, topic_poster, topic_title, poll_title, poll_start + poll_length as poll_end
 			FROM ' . TOPICS_TABLE . '
 			WHERE poll_start > 0 AND poll_length > 0
-			AND wolfsblvt_poll_votes_hide = 1
-			AND poll_start + poll_length > ' . $this->last_run . '
+			AND (wolfsblvt_poll_visibility IN (2, 3) OR wolfsblvt_poll_votes_hide = 1)
+			AND wolfsblvt_poll_notified = 0
+			AND poll_start + poll_length <= ' . $now . '
 			ORDER BY poll_start + poll_length ASC';
 		$result = $this->db->sql_query($sql);
 
-		$topics = array();
-		$this->this_run = time();
+		$polls = array();
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			if ((int) $row['poll_end'] > $this->this_run)
-			{
-				$this->next_run = (int) $row['poll_end'];
-				break;
-			}
-			$topics[] = $row;
+			$polls[] = $row;
 		}
 		$this->db->sql_freeresult($result);
 
-		// Send notifications for each poll that requires it
-		foreach ($topics as $topic_data)
+		foreach ($polls as $row)
 		{
-			$this->notification_manager->add_notifications('wolfsblvt.advancedpolls.notification.type.pollended', $topic_data);
+			$this->notification_manager->add_notifications('wolfsblvt.advancedpolls.notification.type.pollended', $row);
+
+			$sql = 'UPDATE ' . TOPICS_TABLE . '
+				SET wolfsblvt_poll_notified = 1
+				WHERE topic_id = ' . (int) $row['topic_id'];
+			$this->db->sql_query($sql);
 		}
 
-		// Setup the next run of this task
-		$this->config->set('wolfsblvt.advancedpolls.pollend_last_gc', $this->this_run);
-		$this->config->set('wolfsblvt.advancedpolls.pollend_gc', ($this->next_run) ? $this->next_run - $this->this_run : 0);
+		$this->config->set('wolfsblvt.advancedpolls.pollend_last_gc', $now, false);
 	}
 
 	/**
@@ -85,7 +80,7 @@ class pollend extends \phpbb\cron\task\base
 	*/
 	public function is_runnable()
 	{
-		return (bool) ($this->config['wolfsblvt.advancedpolls.activate_notifications'] && $this->config['wolfsblvt.advancedpolls.pollend_gc']);
+		return !empty($this->config['wolfsblvt.advancedpolls.activate_notifications']);
 	}
 
 	/**
@@ -96,6 +91,7 @@ class pollend extends \phpbb\cron\task\base
 	*/
 	public function should_run()
 	{
-		return (bool) ($this->config['wolfsblvt.advancedpolls.pollend_last_gc'] < time() - $this->config['wolfsblvt.advancedpolls.pollend_gc']);
+		$interval = max(60, (int) $this->config['wolfsblvt.advancedpolls.pollend_gc']);
+		return (int) $this->config['wolfsblvt.advancedpolls.pollend_last_gc'] < time() - $interval;
 	}
 }

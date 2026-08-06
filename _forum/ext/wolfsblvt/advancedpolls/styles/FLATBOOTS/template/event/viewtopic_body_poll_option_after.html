@@ -1,3 +1,8 @@
+<!--
+ Advanced Polls
+ Copyright (c) 2026 Leinad4Mind
+ GNU General Public License v2
+-->
 <!-- IF not $INCLUDED_WOLFSBLVTADVANCEDPOLLSJS -->
 	<!-- INCLUDEJS js/functions.js -->
 	<!-- INCLUDEJS js/onload.js -->
@@ -13,6 +18,24 @@
 <!-- IF AP_POLL_SHOW_VOTERS -->
 	<div class="poll_voters_box poll_total_votes<!-- IF not S_DISPLAY_RESULTS --> hidden<!-- ENDIF -->">
 		<div class="resultbar">{L_AP_VOTERS}{poll_option.AP_VOTERS}{L_COLON} <span class="poll_voters"><!-- IF poll_option.AP_VOTER_LIST -->{poll_option.AP_VOTER_LIST}<!-- ELSE --><span name="none">{L_AP_NONE}</span><!-- ENDIF --></span></div>
+		<div class="space10"></div>
+	</div>
+<!-- ENDIF -->
+<!-- IF poll_option.S_LAST_ROW and AP_SHOW_ABSTAINERS -->
+	<div class="poll_abstainers_box poll_total_votes">
+		<div class="resultbar">{L_AP_ABSTAINERS}{L_COLON} <strong>{AP_ABSTAINERS_COUNT}</strong><!-- IF AP_ABSTAINER_LIST --> — <span class="poll_voters">{AP_ABSTAINER_LIST}</span><!-- ENDIF --></div>
+		<div class="space10"></div>
+	</div>
+<!-- ENDIF -->
+<!-- IF poll_option.S_LAST_ROW and AP_SHOW_ALL_VOTERS -->
+	<div class="poll_all_voters poll_total_votes">
+		<div class="resultbar">{L_AP_VOTERS}{AP_ALL_VOTERS_COUNT}{L_COLON} <span class="poll_voters">{AP_ALL_VOTER_LIST}</span></div>
+		<div class="space10"></div>
+	</div>
+<!-- ENDIF -->
+<!-- IF poll_option.S_LAST_ROW and AP_CAN_DELETE_VOTE -->
+	<div class="poll_delete_vote">
+		<button type="button" class="btn btn-default ap-delete-vote">{L_AP_DELETE_VOTE}</button>
 		<div class="space10"></div>
 	</div>
 <!-- ENDIF -->

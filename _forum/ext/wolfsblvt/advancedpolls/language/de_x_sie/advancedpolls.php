@@ -4,6 +4,7 @@
  * Advanced Polls [Deutsch]
  *
  * @copyright (c) 2015 Wolfsblvt ( www.pinkes-forum.de )
+ * @copyright (c) 2026 Leinad4Mind
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  * @author Clemens Husung (Wolfsblvt)
  */
@@ -15,7 +16,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -34,9 +35,10 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ADVANCEDPOLLS_EXT_NAME'				=> 'Advanced Polls',
 
+// Viewtopic
 	'AP_VOTES_HIDDEN'						=> 'Abstimmungen verborgen',
 	'AP_POLL_RUN_TILL_APPEND'				=> ' Bis zu diesem Zeitpunkt werden alle Abstimmungen verborgen.',
 	'AP_VOTERS'								=> 'Benutzer, die abgestimmt haben',
@@ -50,17 +52,29 @@ $lang = array_merge($lang, array(
 	'AP_POLL_TYPE_MISMATCH'					=> 'Interner Fehler. Inkonsistente Abstimmungsdaten.',
 	'AP_VOTE_CHANGED'						=> 'Sie haben nicht die Berechtigung, Ihre abgegbenen Stimmen nachträglich zu ändern.',
 	'AP_TOO_MANY_VOTES'						=> 'Sie haben versucht, zuviele Stimmen abzugeben.',
+	'AP_ABSTAINERS' => 'Haben auf eine Stimmabgabe verzichtet',
+	'AP_DELETE_VOTE' => 'Meine Stimme löschen',
 
-	'AP_MAX_VOTES_SELECT'					=> array(
+	'AP_MAX_VOTES_SELECT'					=> [
 		1	=> 'Sie können bis zu <strong>%2$d</strong> Stimmen <strong>%1$d</strong>er Wahlmöglichkeit geben',
 		2	=> 'Sie können bis zu <strong>%2$d</strong> Stimmen auf <strong>%1$d</strong> Wahlmöglichkeiten verteilen',
-	),
-	'AP_GUEST_VOTES'						=> array(
+	],
+	'AP_GUEST_VOTES'						=> [
 		1	=> '%d Stimme von Gästen',
 		2	=> '%d Stimmen von Gästen',
-	),
-
+	],
 // Posting
+	'AP_POLL_VISIBILITY' => 'Sichtbarkeit der Ergebnisse',
+	'AP_POLL_VISIBILITY_EXPLAIN' => 'Wählen Sie aus, wann die Gesamtergebnisse der Umfrage sichtbar werden.',
+	'AP_VISIBILITY_PUBLIC' => 'Öffentlich — Ergebnisse immer anzeigen',
+	'AP_VISIBILITY_DEFAULT' => 'Nach der ersten Stimmabgabe',
+	'AP_VISIBILITY_VOTE_COMPLETED' => 'Nachdem alle verfügbaren Stimmen verwendet wurden',
+	'AP_VISIBILITY_PRIVATE' => 'Privat — erst nach Ende der Umfrage',
+	'AP_POLL_VOTE_MODE' => 'Stimmänderungen',
+	'AP_POLL_VOTE_MODE_EXPLAIN' => 'Legen Sie fest, ob Stimmen endgültig sind, schrittweise abgegeben oder während der offenen Umfrage geändert werden können.',
+	'AP_VOTE_MODE_NO_CHANGE' => 'Keine Änderungen',
+	'AP_VOTE_MODE_INCREMENTAL' => 'Schrittweise Abstimmung',
+	'AP_VOTE_MODE_CHANGE' => 'Änderungen erlauben',
 	'AP_POLL_VOTES_HIDE'					=> 'Abstimmungsergebnisse verbergen',
 	'AP_POLL_VOTES_HIDE_EXPLAIN'			=> 'Wenn diese Option aktiviert ist, werden die Abstimmungsergebnisse verborgen, bis die Umfrage beendet ist.<br />Diese Option funktioniert nur, wenn ein Endedatum für diese Umfrage gesetzt ist.',
 	'AP_POLL_VOTERS_SHOW'					=> 'Benutzer, die abgestimmt haben, anzeigen',
@@ -88,5 +102,4 @@ $lang = array_merge($lang, array(
 	'AP_POLL_TOTAL_VALUE_EXPLAIN'			=> 'Dies ist die gesamte Anzahl von Stimmen, die ein Benutzer auf alle Auswahlmöglichkeiten verteilen kann.',
 
 	'AP_VOTE_GREATER_THAN_MAXVALUE'			=> 'Sie können nicht mehr Stimmen vergeben, als maximal erlaubt sind.',
-));
-
+]);

@@ -4,6 +4,7 @@
  * Advanced Polls
  *
  * @copyright (c) 2015 Wolfsblvt ( www.pinkes-forum.de )
+ * @copyright (c) 2026 Leinad4Mind
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  * @author Clemens Husung (Wolfsblvt)
  */
@@ -19,7 +20,7 @@ class ext extends \phpbb\extension\base
 	*/
 	public function is_enableable()
 	{
-		return phpbb_version_compare(PHPBB_VERSION, '3.2.0', '>=') && phpbb_version_compare(PHPBB_VERSION, '4.0.0', '<');
+		return core\compatibility::supports(PHP_VERSION, PHPBB_VERSION);
 	}
 
 	/**
@@ -29,7 +30,7 @@ class ext extends \phpbb\extension\base
 	* @param mixed $old_state State returned by previous call of this method
 	* @return mixed Returns false after last step, otherwise temporary state
 	*/
-	function enable_step($old_state)
+	public function enable_step($old_state)
 	{
 		switch ($old_state)
 		{
@@ -46,10 +47,51 @@ class ext extends \phpbb\extension\base
 			default:
 
 				// Run parent enable step method
-				return parent::enable_step($old_state);
+				$state = parent::enable_step($old_state);
+				if ($state === false)
+				{
+					$this->append_enable_notice();
+				}
+
+				return $state;
 
 			break;
 		}
+	}
+
+	/**
+	 * Append the required next steps to phpBB's successful enable message.
+	 *
+	 * @return void
+	 */
+	protected function append_enable_notice()
+	{
+		$language = $this->container->get('language');
+		$language->add_lang(array('info_acp_advancedpolls', 'permissions_advancedpolls'), 'wolfsblvt/advancedpolls');
+
+		if (!$language->is_set('AP_ENABLE_NOTICE') || !$language->is_set('EXTENSION_ENABLE_SUCCESS'))
+		{
+			return;
+		}
+
+		$notice = $language->lang('AP_ENABLE_NOTICE',
+			$language->lang('ACP_CAT_DOT_MODS'),
+			$language->lang('AP_TITLE_ACP'),
+			$language->lang('AP_SETTINGS_ACP'),
+			$language->lang('ACP_CAT_PERMISSIONS'),
+			$language->lang('ACP_FORUM_BASED_PERMISSIONS'),
+			$language->lang('ACP_FORUM_PERMISSIONS'),
+			$language->lang('ACP_FORUM_MODERATORS'),
+			$language->lang('ACL_F_SEEVOTERS'),
+			$language->lang('ACL_M_SEEVOTERS')
+		);
+
+		// acp_ext_enable.html calls lang() directly, so update the loaded key.
+		$reflection = new \ReflectionProperty($language, 'lang');
+		$reflection->setAccessible(true);
+		$lang_array = $reflection->getValue($language);
+		$lang_array['EXTENSION_ENABLE_SUCCESS'] .= $notice;
+		$reflection->setValue($language, $lang_array);
 	}
 
 	/**
@@ -59,7 +101,7 @@ class ext extends \phpbb\extension\base
 	* @param mixed $old_state State returned by previous call of this method
 	* @return mixed Returns false after last step, otherwise temporary state
 	*/
-	function disable_step($old_state)
+	public function disable_step($old_state)
 	{
 		switch ($old_state)
 		{
@@ -89,7 +131,7 @@ class ext extends \phpbb\extension\base
 	* @param mixed $old_state State returned by previous call of this method
 	* @return mixed Returns false after last step, otherwise temporary state
 	*/
-	function purge_step($old_state)
+	public function purge_step($old_state)
 	{
 		switch ($old_state)
 		{

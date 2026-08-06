@@ -4,6 +4,7 @@
  * Advanced Polls
  *
  * @copyright (c) 2015 Wolfsblvt ( www.pinkes-forum.de )
+ * @copyright (c) 2026 Leinad4Mind
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  * @author Clemens Husung (Wolfsblvt)
  */
@@ -36,6 +37,9 @@ class advancedpolls
 	/** @var array */
 	protected $cur_voted_val;
 
+	/** @var array */
+	protected $abstaining_voters;
+
 	/**
 	 * Constructor
 	 *
@@ -58,6 +62,7 @@ class advancedpolls
 		$this->dispatcher = $dispatcher;
 
 		$this->cur_voted_val = array();
+		$this->abstaining_voters = array();
 	}
 
 	/**
@@ -68,6 +73,13 @@ class advancedpolls
 	 */
 	public function check_config_for_polls(&$poll)
 	{
+		$visibility = $this->request->variable('wolfsblvt_poll_visibility', poll_options::VISIBILITY_DEFAULT);
+		$vote_mode = $this->request->variable('wolfsblvt_poll_vote_mode', poll_options::VOTE_MODE_NO_CHANGE);
+		if (!poll_options::is_valid_visibility($visibility) || !poll_options::is_valid_vote_mode($vote_mode))
+		{
+			return array($this->user->lang['FORM_INVALID']);
+		}
+
 		// Check for poll scoring options to be consistent
 		if ($this->config['wolfsblvt.advancedpolls.activate_poll_scoring'])
 		{
@@ -165,20 +177,22 @@ class advancedpolls
 			}
 		}
 
-		// Check if this change affects the next run for notifications
-		if ($this->config['wolfsblvt.advancedpolls.activate_notifications'])
+		$visibility = (int) $sql_data[TOPICS_TABLE]['sql']['wolfsblvt_poll_visibility'];
+		$vote_mode = (int) $sql_data[TOPICS_TABLE]['sql']['wolfsblvt_poll_vote_mode'];
+		$sql_data[TOPICS_TABLE]['sql']['wolfsblvt_poll_votes_hide'] = ($visibility === poll_options::VISIBILITY_PRIVATE) ? 1 : 0;
+		$sql_data[TOPICS_TABLE]['sql']['poll_vote_change'] = ($vote_mode === poll_options::VOTE_MODE_CHANGE) ? 1 : 0;
+
+		// A new or reopened finite poll may need to emit a fresh end
+		// notification. Editing an already-ended poll must not notify twice.
+		$poll_start = isset($sql_data[TOPICS_TABLE]['sql']['poll_start'])
+			? (int) $sql_data[TOPICS_TABLE]['sql']['poll_start']
+			: 0;
+		$poll_length = isset($sql_data[TOPICS_TABLE]['sql']['poll_length'])
+			? (int) $sql_data[TOPICS_TABLE]['sql']['poll_length']
+			: 0;
+		if ($poll_start > 0 && $poll_length > 0 && $poll_start + $poll_length > time())
 		{
-			$hidden_poll = (isset($sql_data[TOPICS_TABLE]['sql']['wolfsblvt_poll_votes_hide']) && $sql_data[TOPICS_TABLE]['sql']['wolfsblvt_poll_votes_hide']) ? true : false;
-			if ($hidden_poll && $sql_data[TOPICS_TABLE]['sql']['poll_start'] > 0 && $sql_data[TOPICS_TABLE]['sql']['poll_length'] > 0)
-			{
-				$last_run = $this->config['wolfsblvt.advancedpolls.pollend_last_gc'];
-				$next_run_delay = $this->config['wolfsblvt.advancedpolls.pollend_gc'];
-				$poll_end = $sql_data[TOPICS_TABLE]['sql']['poll_start'] + $sql_data[TOPICS_TABLE]['sql']['poll_length'];
-				if ($poll_end > $last_run && (!$next_run_delay || $last_run > $poll_end - $next_run_delay))
-				{
-					$this->config->set('wolfsblvt.advancedpolls.pollend_gc', $poll_end - $last_run);
-				}
-			}
+			$sql_data[TOPICS_TABLE]['sql']['wolfsblvt_poll_notified'] = 0;
 		}
 	}
 
@@ -192,17 +206,12 @@ class advancedpolls
 	 */
 	public function config_for_polls_to_template($post_data, &$page_data, $preview = false)
 	{
-		// Check stuff for official poll setting "can change vote
-		if (empty($post_data['poll_title']) || (!isset($post_data['poll_vote_change']) && !$this->request->is_set('poll_vote_change')))
-		{
-			$page_data['VOTE_CHANGE_CHECKED'] = ($this->config['wolfsblvt.advancedpolls.default_poll_votes_change']) ? ' checked="checked"' : '';
-		}
+		// The extension exposes a single vote-mode control, so hide phpBB's
+		// overlapping change-vote checkbox.
 		if (isset($page_data['S_POLL_VOTE_CHANGE']) && $page_data['S_POLL_VOTE_CHANGE'])
 		{
 			$page_data['S_POLL_VOTE_CHANGE'] = false;
-			$page_data['S_AP_POLL_VOTE_CHANGE'] = true;
 		}
-
 		$options = $this->get_possible_options();
 
 		if ($post_data['poll_length'])
@@ -279,9 +288,44 @@ class advancedpolls
 				}
 			}
 		}
+
+		$visibility = isset($page_data['WOLFSBLVT_POLL_VISIBILITY'])
+			? (int) $page_data['WOLFSBLVT_POLL_VISIBILITY']
+			: poll_options::VISIBILITY_DEFAULT;
+		$vote_mode = isset($page_data['WOLFSBLVT_POLL_VOTE_MODE'])
+			? (int) $page_data['WOLFSBLVT_POLL_VOTE_MODE']
+			: poll_options::VOTE_MODE_NO_CHANGE;
+		$page_data['AP_POLL_VISIBILITY_OPTIONS'] = $this->build_select_options(array(
+			poll_options::VISIBILITY_PUBLIC => 'AP_VISIBILITY_PUBLIC',
+			poll_options::VISIBILITY_DEFAULT => 'AP_VISIBILITY_DEFAULT',
+			poll_options::VISIBILITY_VOTE_COMPLETED => 'AP_VISIBILITY_VOTE_COMPLETED',
+			poll_options::VISIBILITY_PRIVATE => 'AP_VISIBILITY_PRIVATE',
+		), $visibility);
+		$page_data['AP_POLL_VOTE_MODE_OPTIONS'] = $this->build_select_options(array(
+			poll_options::VOTE_MODE_NO_CHANGE => 'AP_VOTE_MODE_NO_CHANGE',
+			poll_options::VOTE_MODE_INCREMENTAL => 'AP_VOTE_MODE_INCREMENTAL',
+			poll_options::VOTE_MODE_CHANGE => 'AP_VOTE_MODE_CHANGE',
+		), $vote_mode);
 		return;
 	}
 
+	/**
+	 * Build trusted select options from extension language keys.
+	 *
+	 * @param array $options Value => language key
+	 * @param int   $selected Selected value
+	 * @return string
+	 */
+	protected function build_select_options(array $options, $selected)
+	{
+		$html = '';
+		foreach ($options as $value => $language_key)
+		{
+			$html .= '<option value="' . (int) $value . '"' . ((int) $selected === (int) $value ? ' selected="selected"' : '') . '>'
+				. htmlspecialchars($this->user->lang[$language_key], ENT_COMPAT, 'UTF-8') . '</option>';
+		}
+		return $html;
+	}
 	/**
 	 * Perform all poll related modifications
 	 *
@@ -291,10 +335,11 @@ class advancedpolls
 	 * @param array $voted_id						Array of votes, submitted in the form, updated here
 	 * @param array $poll_info						Array with poll options and details, updated here
 	 * @param bool $s_can_vote						May the user vote in this poll?  May be modified here
+	 * @param bool $s_display_results				Whether aggregate results may be displayed
 	 * @param string $viewtopic_url					URL with the return topic
 	 * @return void
 	 */
-	public function do_poll_voting_modifications($topic_data, &$vote_counts, &$cur_voted_id, &$voted_id, &$poll_info, &$s_can_vote, $viewtopic_url)
+	public function do_poll_voting_modifications($topic_data, &$vote_counts, &$cur_voted_id, &$voted_id, &$poll_info, &$s_can_vote, &$s_display_results, $viewtopic_url)
 	{
 		$options = $this->get_possible_options(true);
 		$options = array_keys($options);
@@ -305,15 +350,29 @@ class advancedpolls
 		// Get votes data
 		$sql = 'SELECT *
 				FROM ' . POLL_VOTES_TABLE . '
-				WHERE poll_option_id > 0
-					AND topic_id = ' . $topic_data['topic_id'];
+				WHERE topic_id = ' . (int) $topic_data['topic_id'];
 		$result = $this->db->sql_query($sql);
 
 		$option_voters = array_fill_keys($poll_options, array());
+		$this->abstaining_voters = array();
 		$cur_voted_val = array();
 		$cur_total_val = 0;
 		while ($row = $this->db->sql_fetchrow($result))
 		{
+			if ((int) $row['poll_option_id'] === 0)
+			{
+				if ((int) $row['vote_user_id'] !== ANONYMOUS)
+				{
+					$this->abstaining_voters[(int) $row['vote_user_id']] = true;
+				}
+				continue;
+			}
+
+			if (!isset($option_voters[(int) $row['poll_option_id']]))
+			{
+				continue;
+			}
+
 			$option_voters[$row['poll_option_id']][(int) $row['vote_user_id']] = (int) $row['wolfsblvt_poll_option_value'];
 			if ($this->user->data['is_registered'] && ($this->user->data['user_id'] == $row['vote_user_id']))
 			{
@@ -360,33 +419,100 @@ class advancedpolls
 
 		if (!in_array('wolfsblvt_no_vote', $options) && in_array(0, $cur_voted_id))
 		{
-			$sql = 'DELETE FROM ' . POLL_VOTES_TABLE . '
-				WHERE topic_id = ' . (int) $topic_data['topic_id'] . '
-					AND poll_option_id = ' . 0 . '
-					AND vote_user_id = ' . (int) $this->user->data['user_id'];
-			$this->db->sql_query($sql);
+			// Ignore legacy abstention rows without mutating data during a page view.
+			$cur_voted_val = array_diff_key($cur_voted_val, array(0 => true));
 			$cur_voted_id = array_keys($cur_voted_val);
 		}
-
-		$s_incremental = in_array('wolfsblvt_incremental_votes', $options);
+		$vote_mode = isset($topic_data['wolfsblvt_poll_vote_mode'])
+			? (int) $topic_data['wolfsblvt_poll_vote_mode']
+			: (!empty($topic_data['poll_vote_change'])
+				? poll_options::VOTE_MODE_CHANGE
+				: (in_array('wolfsblvt_incremental_votes', $options) ? poll_options::VOTE_MODE_INCREMENTAL : poll_options::VOTE_MODE_NO_CHANGE));
+		$s_incremental = ($vote_mode === poll_options::VOTE_MODE_INCREMENTAL);
 		$s_is_scoring = (in_array('wolfsblvt_poll_max_value', $options) && $topic_data['wolfsblvt_poll_max_value'] > 1) ? true : false;
 
-		$s_vote_incomplete = $s_incremental ? ($s_is_scoring ? $cur_total_val < $topic_data['wolfsblvt_poll_total_value'] : sizeof($cur_voted_id) < $topic_data['poll_max_options']) : !sizeof($cur_voted_id);
+		$has_abstained = in_array(0, array_map('intval', $cur_voted_id), true);
+		$s_vote_incomplete = !$has_abstained && ($s_incremental
+			? ($s_is_scoring ? $cur_total_val < $topic_data['wolfsblvt_poll_total_value'] : sizeof($cur_voted_val) < $topic_data['poll_max_options'])
+			: !sizeof($cur_voted_val));
 
-		$s_can_change_vote = ($this->auth->acl_get('f_votechg', $topic_data['forum_id']) && $topic_data['poll_vote_change']) ? true : false;
+		$s_can_change_vote = ($vote_mode === poll_options::VOTE_MODE_CHANGE && $this->auth->acl_get('f_votechg', $topic_data['forum_id']));
+		$can_cast_vote = $this->auth->acl_get('f_vote', $topic_data['forum_id']) &&
+			(($topic_data['poll_length'] != 0 && $topic_data['poll_start'] + $topic_data['poll_length'] > time()) || $topic_data['poll_length'] == 0) &&
+			($topic_data['topic_status'] != ITEM_LOCKED || in_array('wolfsblvt_closed_voting', $options)) &&
+			$topic_data['forum_status'] != ITEM_LOCKED &&
+			($s_vote_incomplete || $s_can_change_vote);
+		$s_can_vote = $s_can_vote || $can_cast_vote;
 
-		$s_can_vote = ($s_can_vote || (
-				$this->auth->acl_get('f_vote', $topic_data['forum_id']) &&
-				(($topic_data['poll_length'] != 0 && $topic_data['poll_start'] + $topic_data['poll_length'] > time()) || $topic_data['poll_length'] == 0) &&
-				($topic_data['topic_status'] != ITEM_LOCKED || in_array('wolfsblvt_closed_voting', $options)) &&
-				$topic_data['forum_status'] != ITEM_LOCKED &&
-				($s_vote_incomplete || $s_can_change_vote)
-			)) ? true : false;
+		$poll_ended = !empty($topic_data['poll_length'])
+			&& (int) $topic_data['poll_start'] + (int) $topic_data['poll_length'] <= time();
+		$has_participated = $has_abstained || !empty($cur_voted_val);
+		$vote_completed = $has_abstained || !$s_vote_incomplete;
+		$visibility = isset($topic_data['wolfsblvt_poll_visibility'])
+			? (int) $topic_data['wolfsblvt_poll_visibility']
+			: (!empty($topic_data['wolfsblvt_poll_votes_hide']) ? poll_options::VISIBILITY_PRIVATE : poll_options::VISIBILITY_DEFAULT);
+		$s_display_results = !poll_options::results_are_hidden($visibility, $poll_ended, $has_participated, $vote_completed);
+
+		if ($this->request->is_ajax() && $this->request->is_set_post('delete_vote'))
+		{
+			$can_delete_vote = !empty($this->config['wolfsblvt.advancedpolls.activate_vote_delete'])
+				&& $this->user->data['is_registered']
+				&& $s_can_change_vote
+				&& $s_can_vote
+				&& !empty($cur_voted_val)
+				&& check_form_key('posting');
+
+			if (!$can_delete_vote)
+			{
+				$json_response = new \phpbb\json_response;
+				$json_response->send(array(
+					'success' => false,
+					'error' => $this->user->lang['FORM_INVALID'],
+				));
+			}
+
+			$this->db->sql_transaction('begin');
+			try
+			{
+				foreach ($cur_voted_val as $option_id => $option_value)
+				{
+					$sql = 'UPDATE ' . POLL_OPTIONS_TABLE . '
+						SET poll_option_total = CASE
+							WHEN poll_option_total >= ' . (int) $option_value . ' THEN poll_option_total - ' . (int) $option_value . '
+							ELSE 0
+						END
+						WHERE poll_option_id = ' . (int) $option_id . '
+							AND topic_id = ' . (int) $topic_data['topic_id'];
+					$this->db->sql_query($sql);
+				}
+
+				$sql = 'DELETE FROM ' . POLL_VOTES_TABLE . '
+					WHERE topic_id = ' . (int) $topic_data['topic_id'] . '
+						AND vote_user_id = ' . (int) $this->user->data['user_id'] . '
+						AND poll_option_id > 0';
+				$this->db->sql_query($sql);
+
+				$sql = 'UPDATE ' . TOPICS_TABLE . '
+					SET poll_last_vote = ' . time() . '
+					WHERE topic_id = ' . (int) $topic_data['topic_id'];
+				$this->db->sql_query($sql);
+				$this->db->sql_transaction('commit');
+			}
+			catch (\Throwable $exception)
+			{
+				$this->db->sql_transaction('rollback');
+				throw $exception;
+			}
+
+			$json_response = new \phpbb\json_response;
+			$json_response->send(array('success' => true));
+		}
+		$invalid_voted_options = array_diff(array_map('intval', $voted_id), array_map('intval', $poll_options));
 
 		if ($update && $s_can_vote)
 		{
 			if (!sizeof($voted_id) || sizeof($voted_id) > $topic_data['poll_max_options'] ||
-				$scoring !== $s_is_scoring || (!$s_can_change_vote && sizeof(array_diff($cur_voted_id, $voted_id))) || !check_form_key('posting'))
+				$invalid_voted_options || $scoring !== $s_is_scoring || (!$s_can_change_vote && sizeof(array_diff($cur_voted_id, $voted_id))) || !check_form_key('posting'))
 			{
 				meta_refresh(5, $viewtopic_url);
 				if (!sizeof($voted_id))
@@ -397,7 +523,7 @@ class advancedpolls
 				{
 					$message = 'TOO_MANY_VOTE_OPTIONS';
 				}
-				else if ($scoring !== $s_is_scoring)
+				else if ($invalid_voted_options || $scoring !== $s_is_scoring)
 				{
 					$message = 'AP_POLL_TYPE_MISMATCH';
 				}
@@ -427,44 +553,24 @@ class advancedpolls
 
 		if ($update && $s_can_vote && $s_is_scoring)
 		{
-			$voted_total_val = 0;
-			$vote_changed = false;
-			$vote_exceeds_max = false;
-			foreach ($voted_id as $option)
-			{
-				$voted_total_val += $voted_val[$option];
-				if (isset($cur_voted_val[$option]) && $cur_voted_val[$option] > $voted_val[$option])
-				{
-					$vote_changed = true;
-				}
-				if ((int) $voted_val[$option] > $topic_data['wolfsblvt_poll_max_value'])
-				{
-					$vote_exceeds_max = true;
-				}
-			}
+			$validation_error = vote_validator::validate_scoring(
+				$voted_val,
+				$poll_options,
+				(int) $topic_data['wolfsblvt_poll_max_value'],
+				(int) $topic_data['wolfsblvt_poll_total_value'],
+				$s_can_change_vote,
+				$cur_voted_val
+			);
 
-			if ($vote_exceeds_max || $voted_total_val > $topic_data['wolfsblvt_poll_total_value'] || (!$s_can_change_vote && $vote_changed))
+			if ($validation_error)
 			{
 				meta_refresh(5, $viewtopic_url);
-
-				$message = '';
-				if ($vote_exceeds_max)
-				{
-					$message = 'AP_VOTE_GREATER_THAN_MAXVALUE';
-				}
-				else if (!$s_can_change_vote && $vote_changed)
-				{
-					$message = 'AP_VOTE_CHANGED';
-				}
-				else if ($voted_total_val > $topic_data['wolfsblvt_poll_total_value'])
-				{
-					$message = 'AP_TOO_MANY_VOTES';
-				}
-
-				$message = $this->user->lang[$message] . '<br /><br />' . sprintf($this->user->lang['RETURN_TOPIC'], '<a href="' . $viewtopic_url . '">', '</a>');
+				$message = $this->user->lang[$validation_error] . '<br /><br />' . sprintf($this->user->lang['RETURN_TOPIC'], '<a href="' . $viewtopic_url . '">', '</a>');
 				trigger_error($message);
 			}
 
+			$voted_total_val = array_sum($voted_val);
+			$this->db->sql_transaction('begin');
 			foreach ($cur_voted_id as $option)
 			{
 				if (!in_array($option, $voted_id) || (($cur_voted_val[$option] != $voted_val[$option])))
@@ -528,9 +634,9 @@ class advancedpolls
 
 			$sql = 'UPDATE ' . TOPICS_TABLE . '
 				SET poll_last_vote = ' . time() . '
-				WHERE topic_id = ' . $topic_data['topic_id'];
+				WHERE topic_id = ' . (int) $topic_data['topic_id'];
 			$this->db->sql_query($sql);
-
+			$this->db->sql_transaction('commit');
 			$message = $this->user->lang['VOTE_SUBMITTED'] . '<br /><br />' . sprintf($this->user->lang['RETURN_TOPIC'], '<a href="' . $viewtopic_url . '">', '</a>');
 
 			if ($this->request->is_ajax())
@@ -550,6 +656,7 @@ class advancedpolls
 					'total_votes'		=> array_sum($vote_counts),
 					'can_vote'			=> $s_vote_incomplete || $s_can_change_vote,
 				);
+				$this->hide_ajax_results($data, $topic_data, sizeof($valid_user_votes) > 0, !$data['can_vote']);
 				$json_response = new \phpbb\json_response();
 				$json_response->send($data);
 			}
@@ -559,29 +666,107 @@ class advancedpolls
 		}
 
 		// If we have ajax call here with no_vote, we exit save it here and return json_response
-		if (in_array('wolfsblvt_no_vote', $options) && $this->request->is_ajax() && $this->request->is_set('no_vote'))
+		if (in_array('wolfsblvt_no_vote', $options) && $this->request->is_ajax() && $this->request->is_set_post('no_vote'))
 		{
-			if ($this->user->data['is_registered'])
+			$existing_votes = array_filter($cur_voted_id, function ($option_id)
 			{
-				$sql_ary = array(
-					'topic_id'			=> (int) $topic_data['topic_id'],
-					'poll_option_id'	=> (int) 0,
-					'wolfsblvt_poll_option_value'	=> (int) 0,
-					'vote_user_id'		=> (int) $this->user->data['user_id'],
-					'vote_user_ip'		=> (string) $this->user->ip,
-				);
+				return (int) $option_id > 0;
+			});
 
-				$sql = 'INSERT INTO ' . POLL_VOTES_TABLE . ' ' . $this->db->sql_build_array('INSERT', $sql_ary);
-				$this->db->sql_query($sql);
+			$already_abstained = in_array(0, $cur_voted_id);
+			if ($this->user->data['is_registered'] && ($s_can_vote || $already_abstained) && !$existing_votes && check_form_key('posting'))
+			{
+				if (!in_array(0, $cur_voted_id))
+				{
+					$sql_ary = array(
+						'topic_id'			=> (int) $topic_data['topic_id'],
+						'poll_option_id'	=> 0,
+						'wolfsblvt_poll_option_value'	=> 0,
+						'vote_user_id'		=> (int) $this->user->data['user_id'],
+						'vote_user_ip'		=> (string) $this->user->ip,
+					);
+
+					$sql = 'INSERT INTO ' . POLL_VOTES_TABLE . ' ' . $this->db->sql_build_array('INSERT', $sql_ary);
+					$this->db->sql_query($sql);
+				}
 
 				$json_response = new \phpbb\json_response;
 				$json_response->send(array('success' => true));
 			}
-		}
 
+			$json_response = new \phpbb\json_response;
+			$json_response->send(array(
+				'success' => false,
+				'error' => $this->user->lang['FORM_INVALID'],
+			));
+		}
 		$this->cur_voted_val = $cur_voted_val;
 
 		return;
+	}
+
+	/**
+	 * Remove private aggregate values from phpBB's AJAX vote response.
+	 *
+	 * @param array $topic_data Topic data
+	 * @param array $data AJAX response data, modified here
+	 * @return void
+	 */
+	public function do_poll_ajax_modifications($topic_data, &$data)
+	{
+		$has_voted = !empty($data['user_votes']);
+		$vote_mode = isset($topic_data['wolfsblvt_poll_vote_mode'])
+			? (int) $topic_data['wolfsblvt_poll_vote_mode']
+			: (!empty($topic_data['poll_vote_change']) ? poll_options::VOTE_MODE_CHANGE : poll_options::VOTE_MODE_NO_CHANGE);
+
+		if ($vote_mode === poll_options::VOTE_MODE_CHANGE)
+		{
+			$data['can_vote'] = $this->auth->acl_get('f_votechg', $topic_data['forum_id']);
+		}
+		else if ($vote_mode === poll_options::VOTE_MODE_INCREMENTAL)
+		{
+			$data['can_vote'] = count($data['user_votes']) < (int) $topic_data['poll_max_options'];
+		}
+		else
+		{
+			$data['can_vote'] = false;
+		}
+
+		$vote_completed = !$data['can_vote'];
+		$this->hide_ajax_results($data, $topic_data, $has_voted, $vote_completed);
+	}
+
+	/**
+	 * Hide aggregate result values when the visibility policy requires it.
+	 *
+	 * The current user's own selections remain in the response so the UI can
+	 * acknowledge the vote without revealing other voters' results.
+	 *
+	 * @param array $data AJAX response data
+	 * @param array $topic_data Topic data
+	 * @param bool  $has_voted Viewer has voted
+	 * @param bool  $vote_completed Viewer has completed voting
+	 * @return void
+	 */
+	protected function hide_ajax_results(&$data, $topic_data, $has_voted, $vote_completed)
+	{
+		$visibility = isset($topic_data['wolfsblvt_poll_visibility'])
+			? (int) $topic_data['wolfsblvt_poll_visibility']
+			: (!empty($topic_data['wolfsblvt_poll_votes_hide']) ? poll_options::VISIBILITY_PRIVATE : poll_options::VISIBILITY_DEFAULT);
+		$poll_ended = !empty($topic_data['poll_length'])
+			&& (int) $topic_data['poll_start'] + (int) $topic_data['poll_length'] <= time();
+
+		if (!poll_options::results_are_hidden($visibility, $poll_ended, $has_voted, $vote_completed))
+		{
+			return;
+		}
+
+		if (isset($data['vote_counts']) && is_array($data['vote_counts']))
+		{
+			$data['vote_counts'] = array_fill_keys(array_keys($data['vote_counts']), 0);
+		}
+		$data['total_votes'] = 0;
+		$data['results_hidden'] = true;
 	}
 
 	/**
@@ -596,6 +781,9 @@ class advancedpolls
 	 */
 	public function do_poll_template_modifications($topic_data, $vote_counts, $poll_info, &$poll_template_data, &$poll_options_template_data)
 	{
+		$vote_mode = isset($topic_data['wolfsblvt_poll_vote_mode'])
+			? (int) $topic_data['wolfsblvt_poll_vote_mode']
+			: (!empty($topic_data['poll_vote_change']) ? poll_options::VOTE_MODE_CHANGE : poll_options::VOTE_MODE_NO_CHANGE);
 		$javascript_vars = array(
 			'wolfsblvt_poll_votes_hide_topic'		=> false,
 			'wolfsblvt_poll_voters_show_topic'		=> false,
@@ -603,7 +791,7 @@ class advancedpolls
 			'wolfsblvt_poll_show_ordered'			=> false,
 			'wolfsblvt_poll_scoring'				=> false,
 			'wolfsblvt_poll_no_vote'				=> false,
-			'can_change_vote'						=> ($this->auth->acl_get('f_votechg', $topic_data['forum_id']) && $topic_data['poll_vote_change']) ? true : false,
+			'can_change_vote'						=> ($vote_mode === poll_options::VOTE_MODE_CHANGE && $this->auth->acl_get('f_votechg', $topic_data['forum_id'])),
 			'username_clean'						=> $this->user->data['username_clean'],
 			'username_string'						=> get_username_string('full', $this->user->data['user_id'], $this->user->data['username'], $this->user->data['user_colour']),
 			'l_seperator'							=> $this->user->lang['COMMA_SEPARATOR'],
@@ -623,7 +811,7 @@ class advancedpolls
 		$view = $this->request->variable('view', '');
 		$poll_force_display_results = (($view === 'infopoll') && $this->auth->acl_get('m_seevoters', $topic_data['forum_id'])) ? true : false;
 
-		if (!$poll_force_display_results && $topic_data['wolfsblvt_poll_votes_hide'] == 1 && in_array('wolfsblvt_poll_votes_hide', $options) && $topic_data['poll_length'] > 0 && $poll_end > time())
+		if (!$poll_force_display_results && empty($poll_template_data['S_DISPLAY_RESULTS']))
 		{
 			$javascript_vars['wolfsblvt_poll_votes_hide_topic'] = true;
 
@@ -644,8 +832,10 @@ class advancedpolls
 				'AP_POLL_HIDE_VOTES'	=> true,
 				'TOTAL_VOTES'			=> '??',
 			));
-			$poll_template_data['L_POLL_LENGTH'] .= $this->user->lang['AP_POLL_RUN_TILL_APPEND'];
-
+			if ($topic_data['poll_length'] > 0 && $poll_end > time())
+			{
+				$poll_template_data['L_POLL_LENGTH'] .= $this->user->lang['AP_POLL_RUN_TILL_APPEND'];
+			}
 			$poll_votes_hidden = true;
 		}
 
@@ -677,6 +867,34 @@ class advancedpolls
 		}
 
 		$poll_votes_are_visible = ($topic_data['wolfsblvt_poll_voters_show'] == 1 && in_array('wolfsblvt_poll_voters_show', $options)) ? true : false;
+		$show_abstainers = !empty($this->config['wolfsblvt.advancedpolls.activate_show_abstainers'])
+			&& in_array('wolfsblvt_no_vote', $options)
+			&& !$poll_votes_hidden
+			&& !empty($this->abstaining_voters);
+
+		if ($show_abstainers)
+		{
+			$poll_template_data['AP_SHOW_ABSTAINERS'] = true;
+			$poll_template_data['AP_ABSTAINERS_COUNT'] = count($this->abstaining_voters);
+			$poll_template_data['AP_ABSTAINER_LIST'] = false;
+
+			$may_show_abstainer_names = $poll_force_display_results
+				|| ($poll_votes_are_visible && $this->auth->acl_get('f_seevoters', $topic_data['forum_id']));
+			if ($may_show_abstainer_names)
+			{
+				$abstainer_list = array();
+				$sql = 'SELECT user_id, username, user_colour
+					FROM ' . USERS_TABLE . '
+					WHERE ' . $this->db->sql_in_set('user_id', array_keys($this->abstaining_voters));
+				$result = $this->db->sql_query($sql);
+				while ($row = $this->db->sql_fetchrow($result))
+				{
+					$abstainer_list[] = get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']);
+				}
+				$this->db->sql_freeresult($result);
+				$poll_template_data['AP_ABSTAINER_LIST'] = implode($this->user->lang['COMMA_SEPARATOR'], $abstainer_list);
+			}
+		}
 
 		if ($poll_force_display_results || ($poll_votes_are_visible && !$poll_votes_hidden && $this->auth->acl_get('f_seevoters', $topic_data['forum_id'])))
 		{
@@ -744,12 +962,15 @@ class advancedpolls
 					$voter_list[] = '<span name="' . $voter_data['username_clean'] . '">' . $username . ($poll_multivalue ? ('(' . $voter_data['total_user_votes'] . ')') : '') . '</span>';
 				}
 				$poll_voters_count = !empty($voter_list) && $poll_multivalue ? (' (' . count($voter_list) . ')') : '';
-				$poll_template_data['TOTAL_VOTES'] .= '</span><br/><br/>' . $this->user->lang['AP_VOTERS'] . $poll_voters_count . $this->user->lang['COLON'] . ' <span class="poll_voters">';
 				if ($poll_total_guest_votes > 0)
 				{
 					$voter_list[] = '<span name="guestvotes">' . $this->user->lang('AP_GUEST_VOTES', $poll_total_guest_votes) . '</span>';
 				}
-				$poll_template_data['TOTAL_VOTES'] .= !empty($voter_list) ? implode($this->user->lang['COMMA_SEPARATOR'], $voter_list) : ('<span name="none">' . $this->user->lang['AP_NONE'] . '</span>');
+				$poll_template_data['AP_SHOW_ALL_VOTERS'] = true;
+				$poll_template_data['AP_ALL_VOTERS_COUNT'] = $poll_voters_count;
+				$poll_template_data['AP_ALL_VOTER_LIST'] = !empty($voter_list)
+					? implode($this->user->lang['COMMA_SEPARATOR'], $voter_list)
+					: '<span name="none">' . $this->user->lang['AP_NONE'] . '</span>';
 				$poll_template_data['S_CAN_VOTE'] = false;
 			}
 
@@ -826,6 +1047,12 @@ class advancedpolls
 			$poll_template_data['L_VIEW_RESULTS'] = $this->user->lang['AP_POLL_DONT_VOTE_SHOW_RESULTS'];
 		}
 
+		$poll_template_data['AP_CAN_DELETE_VOTE'] = !empty($this->config['wolfsblvt.advancedpolls.activate_vote_delete'])
+			&& $this->user->data['is_registered']
+			&& $vote_mode === poll_options::VOTE_MODE_CHANGE
+			&& $this->auth->acl_get('f_votechg', $topic_data['forum_id'])
+			&& !empty($this->cur_voted_val)
+			&& !empty($poll_template_data['S_CAN_VOTE']);
 		// Add the button to see poll results, if you have permissions
 		if ($this->auth->acl_get('m_seevoters', $topic_data['forum_id']))
 		{
@@ -880,6 +1107,12 @@ class advancedpolls
 		}
 
 		$valid_options = array();
+		$valid_options['wolfsblvt_poll_visibility'] = isset($this->config['wolfsblvt.advancedpolls.default_poll_visibility'])
+			? (int) $this->config['wolfsblvt.advancedpolls.default_poll_visibility']
+			: poll_options::VISIBILITY_DEFAULT;
+		$valid_options['wolfsblvt_poll_vote_mode'] = isset($this->config['wolfsblvt.advancedpolls.default_poll_vote_mode'])
+			? (int) $this->config['wolfsblvt.advancedpolls.default_poll_vote_mode']
+			: poll_options::VOTE_MODE_NO_CHANGE;
 		foreach ($options as $option)
 		{
 			$config_name = str_replace('wolfsblvt_', 'wolfsblvt.advancedpolls.activate_', $option);

@@ -4,6 +4,7 @@
  * Advanced Polls [Dutch]
  *
  * @copyright (c) 2015 Wolfsblvt ( www.pinkes-forum.de )
+ * @copyright (c) 2026 Leinad4Mind
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  * @author Clemens Husung (Wolfsblvt)
  * @author Translation by Beun12 (https://www.phpbb.com/community/memberlist.php?mode=viewprofile&u=1466206), </Solidjeuh> (https://www.phpbb.com/community/memberlist.php?mode=viewprofile&u=1544706) and dvoijen (https://www.phpbb.com/community/memberlist.php?mode=viewprofile&u=1947676)
@@ -16,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -35,7 +36,7 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ADVANCEDPOLLS_EXT_NAME'				=> 'Geavanceerde Peilingen',
 
 // Viewtopic
@@ -52,17 +53,29 @@ $lang = array_merge($lang, array(
 	'AP_POLL_TYPE_MISMATCH'					=> 'Inconsistente peiling gegevens, interne fout.',
 	'AP_VOTE_CHANGED'						=> 'U hoeft geen rechten om uw uitgebrachte stemmen te veranderen.',
 	'AP_TOO_MANY_VOTES'						=> 'U heeft geprobeerd om te veel te stemmen.',
+	'AP_ABSTAINERS' => 'Hebben ervoor gekozen niet te stemmen',
+	'AP_DELETE_VOTE' => 'Mijn stem verwijderen',
 
-	'AP_MAX_VOTES_SELECT'	=> array(
+	'AP_MAX_VOTES_SELECT'	=> [
 		1	=> 'U mag tot <strong>%2$d</strong> opties kiezen bij <strong>%1$d</strong> stemmen',
 		2	=> 'U mag tot <strong>%2$d</strong> opties kiezen onder <strong>%1$d</strong> stemmen',
-	),
-	'AP_GUEST_VOTES'	=> array(
+	],
+	'AP_GUEST_VOTES'	=> [
 		1	=> '%d stem van een gast',
 		2	=> '%d stemmen van gasten',
-	),
-
+	],
 // Posting
+	'AP_POLL_VISIBILITY' => 'Zichtbaarheid van resultaten',
+	'AP_POLL_VISIBILITY_EXPLAIN' => 'Kies wanneer de gezamenlijke peilingresultaten zichtbaar worden.',
+	'AP_VISIBILITY_PUBLIC' => 'Openbaar — resultaten altijd tonen',
+	'AP_VISIBILITY_DEFAULT' => 'Na de eerste stem',
+	'AP_VISIBILITY_VOTE_COMPLETED' => 'Nadat alle beschikbare stemmen zijn gebruikt',
+	'AP_VISIBILITY_PRIVATE' => 'Privé — alleen nadat de peiling is afgelopen',
+	'AP_POLL_VOTE_MODE' => 'Stemwijzigingen',
+	'AP_POLL_VOTE_MODE_EXPLAIN' => 'Kies of stemmen definitief zijn, stapsgewijs kunnen worden uitgebracht of tijdens een open peiling kunnen worden gewijzigd.',
+	'AP_VOTE_MODE_NO_CHANGE' => 'Geen wijzigingen',
+	'AP_VOTE_MODE_INCREMENTAL' => 'Stapsgewijs stemmen',
+	'AP_VOTE_MODE_CHANGE' => 'Wijzigingen toestaan',
 	'AP_POLL_VOTES_HIDE'					=> 'Verberg stemmen',
 	'AP_POLL_VOTES_HIDE_EXPLAIN'			=> 'Indien ingeschakeld zullen de stemmen tot het einde van de peiling verborgen zijn. Deze optie werkt alleen wanneer de peiling een specifieke einde heeft.',
 	'AP_POLL_VOTERS_SHOW'					=> 'Toon stemmers van deze peiling',
@@ -88,5 +101,6 @@ $lang = array_merge($lang, array(
 	'AP_POLL_MAX_VALUE_EXPLAIN'				=> 'Dit is het maximale aantal stemmen dat een gebruiker per optie mag geven.',
 	'AP_POLL_TOTAL_VALUE'					=> 'Totale stemmen',
 	'AP_POLL_TOTAL_VALUE_EXPLAIN'			=> 'Dit is het totale aantal stemmen dat een gebruiker voor alle opties mag vergeven.',
+
 	'AP_VOTE_GREATER_THAN_MAXVALUE' 		=> 'U kunt niet meer stemmen geven dan het opgegeven maximum.',
-));
+]);

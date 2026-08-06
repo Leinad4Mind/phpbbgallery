@@ -4,6 +4,7 @@
  * Advanced Polls [Japanese]
  * Japanese translation by tk6904 (https://www.phpbb.com/community/memberlist.php?mode=viewprofile&u=1658156)*
  * @copyright (c) 2015 Wolfsblvt ( www.pinkes-forum.de )
+ * @copyright (c) 2026 Leinad4Mind
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  * @author Clemens Husung (Wolfsblvt)
  */
@@ -15,7 +16,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -34,17 +35,27 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'AP_TITLE_ACP'				=> 'Advanced Polls',
 	'AP_SETTINGS_ACP'			=> '設定',
 
 	'AP_TITLE'				=> 'Advanced Polls',
 	'AP_TITLE_EXPLAIN'			=> 'phpBBのコア投票システムを、投票終了まで結果を非表示にする、投票したユーザーを表示する、投票可能ユーザーを制限するなどの新機能を使用して進化向上します。',
-	'AP_COPYRIGHT'				=> '© 2015 Wolfsblvt (www.pinkes-forum.de) [<a href="http://pinkes-forum.de/dev/find.php">Wolfsblvt が提供するその他の拡張モジュール</a>]',
 
 	'AP_SETTINGS'				=> 'Advanced Polls の設定',
 	'AP_GLOBAL_SETTINGS'			=> 'Advanced Polls のグローバル設定（全ての投票に適用されます）',
 	'AP_PER_POLL_SETTINGS'			=> 'Advanced Polls の投票ごとの設定（投票ごとに選択可能、デフォルト値はここで設定）',
+	'AP_DEFAULT_POLL_VISIBILITY' => '結果表示の初期設定',
+	'AP_DEFAULT_POLL_VISIBILITY_EXPLAIN' => '投票を作成するときに最初に選択される表示モードです。',
+	'AP_DEFAULT_POLL_VOTE_MODE' => '投票変更モードの初期設定',
+	'AP_DEFAULT_POLL_VOTE_MODE_EXPLAIN' => '投票を作成するときに最初に選択される投票変更モードです。',
+	'AP_VISIBILITY_PUBLIC' => '公開 — 常に結果を表示',
+	'AP_VISIBILITY_DEFAULT' => '最初の投票後',
+	'AP_VISIBILITY_VOTE_COMPLETED' => '利用可能な票をすべて使用した後',
+	'AP_VISIBILITY_PRIVATE' => '非公開 — 投票終了後のみ表示',
+	'AP_VOTE_MODE_NO_CHANGE' => '変更不可',
+	'AP_VOTE_MODE_INCREMENTAL' => '段階的な投票',
+	'AP_VOTE_MODE_CHANGE' => '変更を許可',
 
 	'AP_ACT_VOTES_HIDE'			=> '投票結果非表示を有効にする',
 	'AP_ACT_VOTES_HIDE_EXPLAIN'		=> '投票が終了するまで投票結果を非表示にすることを選択するオプションを有効化します。',
@@ -54,13 +65,17 @@ $lang = array_merge($lang, array(
 	'AP_ACT_VOTERS_LIMIT_EXPLAIN'		=> 'このトピックで既に投稿したユーザーにのみ投票を制限することを選択するオプションを有効化します。',
 	'AP_ACT_POLL_NO_VOTE'			=> '無投票を有効にする',
 	'AP_ACT_POLL_NO_VOTE_EXPLAIN'		=> '標準の「結果を表示する」リンクから「投票せずに結果を表示する」リンクに変更します。「投票を変更する」を選択しない限り、結果を表示した後に投票できません。',
+	'AP_ACT_SHOW_ABSTAINERS' => '棄権者数を表示',
+	'AP_ACT_SHOW_ABSTAINERS_EXPLAIN' => '明示的に投票しないことを選択した登録ユーザー数を表示します。名前は投票者一覧が有効で、閲覧権限がある場合にのみ表示されます。',
+	'AP_ACT_VOTE_DELETE' => '投票の削除を許可',
+	'AP_ACT_VOTE_DELETE_EXPLAIN' => '投票が受付中で変更可能な場合、登録ユーザーが自分の投票を削除できるようにします。',
 	'AP_ACT_SHOW_ORDERED'			=> '得票順表示を有効にする',
 	'AP_ACT_SHOW_ORDERED_EXPLAIN'		=> '得票の降順（得票数の高いもの順）で結果を表示することを選択するオプションを有効化します。',
 	'AP_ACT_POLL_SCORING'			=> '投票スコアリングを有効にする',
 	'AP_ACT_POLL_SCORING_EXPLAIN'		=> '投票オプションに異なるスコアを割り当てる可能性を有効化します。',
-	'AP_ACT_INCREMENTAL_VOTES'		=> '段階投票を有効にする', // Activate incremental voting
+	'AP_ACT_INCREMENTAL_VOTES'		=> '段階投票を有効にする',
 	'AP_ACT_INCREMENTAL_VOTES_EXPLAIN'	=> '利用可能な投票機能を使い果たしていない間、段階的に投票する可能性を有効化します。',
-	'AP_ACT_CLOSED_VOTING'			=> '閉鎖トピックの投票を有効にする', // Activate closed voting
+	'AP_ACT_CLOSED_VOTING'			=> '閉鎖トピックの投票を有効にする',
 	'AP_ACT_CLOSED_VOTING_EXPLAIN'		=> '対応するトピックが閉鎖されている場合でも、公開投票に投票する可能性を有効化します。',
 	'AP_ACT_POLL_END'			=> '投票終了設定を有効にする',
 	'AP_ACT_POLL_END_EXPLAIN'		=> '投票が開始されてから投票期間を指定するだけでなく、日付/時刻で投票が終了するタイミングを指定できます。',
@@ -72,4 +87,6 @@ $lang = array_merge($lang, array(
 	'AP_DEFAULT_VOTERS_SHOW'		=> '投票者表示の設定をデフォルトにする',
 	'AP_DEFAULT_VOTERS_LIMIT'		=> '投票者制限の設定をデフォルトにする',
 	'AP_DEFAULT_SHOW_ORDERED'		=> '得票順表示をデフォルトにする',
-));
+
+	'AP_ENABLE_NOTICE' => '<br /><br /><div class="phpinfo"><p><strong>次の手順</strong></p><ol><li><strong>%1$s » %2$s » %3$s</strong> で拡張機能の設定を確認し、フォーラムに必要な投票機能と初期値を設定してください。</li><li><strong>%4$s » %5$s » %6$s</strong>（メンバー）および <strong>%4$s » %5$s » %7$s</strong>（モデレーター）で、権限 <strong>%8$s</strong> と <strong>%9$s</strong> を確認してください。投票者の身元を閲覧できる役割またはグループにのみ付与してください。</li></ol><p>その他の投票機能に追加設定は必要ありません。</p></div>',
+]);

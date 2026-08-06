@@ -3,6 +3,7 @@
 /**
  * Advanced Polls [English]
  * @copyright (c) 2015 Wolfsblvt ( www.pinkes-forum.de )
+ * @copyright (c) 2026 Leinad4Mind
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  * @author Clemens Husung (Wolfsblvt)
  * @translation Leinad4Mind [Portuguese [pt_preao]] (2026)
@@ -41,7 +42,7 @@ if (empty($lang) || !is_array($lang))
  * start with 'permissions_', so they are automatically loaded within the ACP.
  */
 
-// User Permissions
+// Forum and moderator permissions
 $lang = array_merge($lang, [
 	'ACL_F_SEEVOTERS' => 'Pode ver os votantes da votação',
 	'ACL_M_SEEVOTERS' => 'Pode ver os votantes da votação',

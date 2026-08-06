@@ -4,6 +4,7 @@
  * Advanced Polls [Italian]
  *
  * @copyright (c) 2015 Wolfsblvt ( www.pinkes-forum.de )
+ * @copyright (c) 2026 Leinad4Mind
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  * @author Clemens Husung (Wolfsblvt)
  * @author Translation by Mauron (https://github.com/Mauron)
@@ -16,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -35,7 +36,7 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ADVANCEDPOLLS_EXT_NAME'				=> 'Sondaggi avanzati',
 
 // Viewtopic
@@ -52,17 +53,29 @@ $lang = array_merge($lang, array(
 	'AP_POLL_TYPE_MISMATCH'					=> 'Dati sondaggio inconsistenti, errore interno.',
 	'AP_VOTE_CHANGED'						=> 'Non hai i permessi per cambiare i voti espressi.',
 	'AP_TOO_MANY_VOTES'						=> 'Stai cercando di esprimere troppi voti.',
+	'AP_ABSTAINERS' => 'Hanno scelto di non votare',
+	'AP_DELETE_VOTE' => 'Elimina il mio voto',
 
-	'AP_MAX_VOTES_SELECT'					=> array(
+	'AP_MAX_VOTES_SELECT'					=> [
 		1	=> 'Puoi esprimere fino a <strong>%2$d</strong> voti per <strong>%1$d</strong> opzioni',
 		2	=> 'Puoi esprimere fino a <strong>%2$d</strong> voti fra <strong>%1$d</strong> opzioni',
-	),
-	'AP_GUEST_VOTES'						=> array(
+	],
+	'AP_GUEST_VOTES'						=> [
 		1	=> '%d voto da un ospite',
 		2	=> '%d voti da ospiti',
-	),
-
+	],
 // Posting
+	'AP_POLL_VISIBILITY' => 'Visibilità dei risultati',
+	'AP_POLL_VISIBILITY_EXPLAIN' => 'Scegli quando rendere visibili i risultati complessivi del sondaggio.',
+	'AP_VISIBILITY_PUBLIC' => 'Pubblico — mostra sempre i risultati',
+	'AP_VISIBILITY_DEFAULT' => 'Dopo il primo voto',
+	'AP_VISIBILITY_VOTE_COMPLETED' => 'Dopo aver utilizzato tutti i voti disponibili',
+	'AP_VISIBILITY_PRIVATE' => 'Privato — solo al termine del sondaggio',
+	'AP_POLL_VOTE_MODE' => 'Modifica dei voti',
+	'AP_POLL_VOTE_MODE_EXPLAIN' => 'Scegli se i voti sono definitivi, possono essere inviati progressivamente o modificati mentre il sondaggio è aperto.',
+	'AP_VOTE_MODE_NO_CHANGE' => 'Nessuna modifica',
+	'AP_VOTE_MODE_INCREMENTAL' => 'Votazione progressiva',
+	'AP_VOTE_MODE_CHANGE' => 'Consenti modifiche',
 	'AP_POLL_VOTES_HIDE'					=> 'Nascondi voti',
 	'AP_POLL_VOTES_HIDE_EXPLAIN'			=> 'Se abilitato, i votanti saranno nascosti fino al termine del sondaggio. Quest’opzione entra in funzione se viene specificata una durata massima per il sondaggio.',
 	'AP_POLL_VOTERS_SHOW'					=> 'Mostra votanti',
@@ -71,6 +84,10 @@ $lang = array_merge($lang, array(
 	'AP_POLL_VOTERS_LIMIT_EXPLAIN'			=> 'Se abilitato, gli utenti potranno votare dopo aver risposto al topic.',
 	'AP_POLL_SHOW_ORDERED'					=> 'Mostra risultati ordinati',
 	'AP_POLL_SHOW_ORDERED_EXPLAIN'			=> 'Quando vengono mostrati i risultati, le opzioni appariranno in ordine decrescente per numero di voti ricevuti (la più votata per prima); altrimenti, sarà mostrato l’ordine specificato per le opzioni.',
+	'AP_RUN_POLL' => 'Durata del sondaggio',
+	'AP_RUN_POLL_FOR' => 'per',
+	'AP_RUN_POLL_UNTIL' => 'fino a',
+	'AP_RUN_POLL_INDEFINITELY' => 'senza scadenza',
 	'AP_POLL_END'							=> 'Termine del sondaggio',
 	'AP_POLL_END_EXPLAIN'					=> 'Specifica data e ora per il termine del sondaggio. Se specificate, queste opzioni prevarranno sulla durata specificata per il sondaggio; per usare la durata in giorni, vuotare questi campi.',
 
@@ -84,4 +101,6 @@ $lang = array_merge($lang, array(
 	'AP_POLL_MAX_VALUE_EXPLAIN'				=> 'Il numero di voti massimi esprimibili da ogni votante per singola opzione.',
 	'AP_POLL_TOTAL_VALUE'					=> 'Voti totali',
 	'AP_POLL_TOTAL_VALUE_EXPLAIN'			=> 'Il numero di voti totali esprimibili da ogni votante per tutte le opzioni.',
-));
+
+	'AP_VOTE_GREATER_THAN_MAXVALUE' => 'Non puoi assegnare un numero di voti superiore al valore massimo consentito.',
+]);

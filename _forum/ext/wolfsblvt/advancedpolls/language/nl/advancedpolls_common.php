@@ -4,6 +4,7 @@
  * Advanced Polls [Dutch]
  *
  * @copyright (c) 2015 Wolfsblvt ( www.pinkes-forum.de )
+ * @copyright (c) 2026 Leinad4Mind
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  * @author Clemens Husung (Wolfsblvt)
  * @author Translation by Beun12 (https://www.phpbb.com/community/memberlist.php?mode=viewprofile&u=1466206) & </Solidjeuh> (https://www.phpbb.com/community/memberlist.php?mode=viewprofile&u=1544706)
@@ -16,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -35,7 +36,7 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'NOTIFICATION_AP_POLL_ENDED'		=> '<strong>Resultaten zijn zichtbaar voor de peiling</strong>:',
 	'NOTIFICATION_TYPE_AP_POLL_ENDED'	=> 'Resultaten voor de peiling waarop u heeft gestemd zijn nu zichtbaar',
-));
+]);

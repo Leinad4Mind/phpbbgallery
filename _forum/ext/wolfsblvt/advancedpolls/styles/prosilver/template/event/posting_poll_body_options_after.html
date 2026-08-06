@@ -1,3 +1,8 @@
+<!--
+ Advanced Polls
+ Copyright (c) 2026 Leinad4Mind
+ GNU General Public License v2
+-->
 <!-- IF S_SHOW_POLL_BOX -->
 <!-- IF WOLFSBLVT_POLL_END or WOLFSBLVT_POLL_SCORING -->
 <!-- IF not $INCLUDED_JXTOOLSJS -->
@@ -66,19 +71,20 @@
 	<hr class="dashed" />
 <!-- ENDIF -->
 
-<!-- IF S_AP_POLL_VOTE_CHANGE -->
 <dl>
-	<dt><label for="poll_vote_change">{L_POLL_VOTE_CHANGE}{L_COLON}</label></dt>
-	<dd><label for="poll_vote_change"><input type="checkbox" id="poll_vote_change" name="poll_vote_change"{VOTE_CHANGE_CHECKED} /> {L_POLL_VOTE_CHANGE_EXPLAIN}</label></dd>
+	<dt><label for="wolfsblvt_poll_visibility">{L_AP_POLL_VISIBILITY}{L_COLON}</label></dt>
+	<dd>
+		<select id="wolfsblvt_poll_visibility" name="wolfsblvt_poll_visibility">{AP_POLL_VISIBILITY_OPTIONS}</select>
+		<span>{L_AP_POLL_VISIBILITY_EXPLAIN}</span>
+	</dd>
 </dl>
-<!-- ENDIF -->
-
-<!-- IF WOLFSBLVT_POLL_VOTES_HIDE -->
 <dl>
-	<dt><label for="wolfsblvt_poll_votes_hide">{L_AP_POLL_VOTES_HIDE}{L_COLON}</label></dt>
-	<dd><label for="wolfsblvt_poll_votes_hide"><input type="checkbox" id="wolfsblvt_poll_votes_hide" name="wolfsblvt_poll_votes_hide"{WOLFSBLVT_POLL_VOTES_HIDE_CHECKED} /> {L_AP_POLL_VOTES_HIDE_EXPLAIN}</label></dd>
+	<dt><label for="wolfsblvt_poll_vote_mode">{L_AP_POLL_VOTE_MODE}{L_COLON}</label></dt>
+	<dd>
+		<select id="wolfsblvt_poll_vote_mode" name="wolfsblvt_poll_vote_mode">{AP_POLL_VOTE_MODE_OPTIONS}</select>
+		<span>{L_AP_POLL_VOTE_MODE_EXPLAIN}</span>
+	</dd>
 </dl>
-<!-- ENDIF -->
 <!-- IF WOLFSBLVT_POLL_VOTERS_LIMIT -->
 <dl>
 	<dt><label for="wolfsblvt_poll_voters_limit">{L_AP_POLL_VOTERS_LIMIT}{L_COLON}</label></dt>

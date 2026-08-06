@@ -4,6 +4,7 @@
  * Advanced Polls [Polish]
  * Polish translation by Lech-u (https://www.phpbb.com/community/memberlist.php?mode=viewprofile&u=1616616)*
  * @copyright (c) 2015 Wolfsblvt ( www.pinkes-forum.de )
+ * @copyright (c) 2026 Leinad4Mind
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  * @author Clemens Husung (Wolfsblvt)
  */
@@ -15,7 +16,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -34,17 +35,27 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'AP_TITLE_ACP'					=> 'Zaawansowane głosowanie',
 	'AP_SETTINGS_ACP'				=> 'Ustawienia',
 
 	'AP_TITLE'						=> 'Zaawansowane głosowanie',
 	'AP_TITLE_EXPLAIN'				=> 'Zaawansowane głosowanie to podstawowy system ankiet phpBB z nowymi funkcjami, takimi jak ukrywanie głosów do końca, pokazywanie wyborców, ograniczanie głosów i nie tylko.',
-	'AP_COPYRIGHT'					=> '© 2015 Wolfsblvt (www.pinkes-forum.de) [<a href="http://pinkes-forum.de/dev/find.php">Więcej rozszerzeń od Wolfsblvt</a>]',
 
 	'AP_SETTINGS'					=> 'Zaawansowane głosowanie - Ustawienia',
 	'AP_GLOBAL_SETTINGS'			=> 'Zaawansowane głosowanie - ustawienia ogólne (zastosowanie do wszystkich ankiet)',
 	'AP_PER_POLL_SETTINGS'			=> 'Zaawansowane głosowanie - ustawienia poszczególnych ankiet (do wyboru w każdej ankiecie, z ustawioną tutaj wartością domyślną)',
+	'AP_DEFAULT_POLL_VISIBILITY' => 'Domyślna widoczność wyników',
+	'AP_DEFAULT_POLL_VISIBILITY_EXPLAIN' => 'Tryb widoczności początkowo wybrany podczas tworzenia ankiety.',
+	'AP_DEFAULT_POLL_VOTE_MODE' => 'Domyślny tryb zmiany głosu',
+	'AP_DEFAULT_POLL_VOTE_MODE_EXPLAIN' => 'Tryb zmiany głosu początkowo wybrany podczas tworzenia ankiety.',
+	'AP_VISIBILITY_PUBLIC' => 'Publiczne — zawsze pokazuj wyniki',
+	'AP_VISIBILITY_DEFAULT' => 'Po pierwszym głosie',
+	'AP_VISIBILITY_VOTE_COMPLETED' => 'Po wykorzystaniu wszystkich dostępnych głosów',
+	'AP_VISIBILITY_PRIVATE' => 'Prywatne — dopiero po zakończeniu ankiety',
+	'AP_VOTE_MODE_NO_CHANGE' => 'Bez zmian',
+	'AP_VOTE_MODE_INCREMENTAL' => 'Głosowanie stopniowe',
+	'AP_VOTE_MODE_CHANGE' => 'Zezwól na zmiany',
 
 	'AP_ACT_VOTES_HIDE'				=> 'Pokazuj głosy',
 	'AP_ACT_VOTES_HIDE_EXPLAIN'		=> 'Wybierz tę opcję, żeby ukryć oddane głosy do końca głosowania.',
@@ -54,6 +65,10 @@ $lang = array_merge($lang, array(
 	'AP_ACT_VOTERS_LIMIT_EXPLAIN'	=> 'Wybierz tę opcję, żeby ograniczyć głosujących do użytkowników piszących w tym wątku.',
 	'AP_ACT_POLL_NO_VOTE'			=> 'Pokazuj Brak głosu',
 	'AP_ACT_POLL_NO_VOTE_EXPLAIN'	=> 'Zmienia standardowy link „Wyświetl wyniki” na link „Nie głosuj, wyświetl wyniki”, który nie zezwala na głosowanie po wyświetleniu wyników, chyba że wybrano opcję „Zmień głosy”.',
+	'AP_ACT_SHOW_ABSTAINERS' => 'Pokaż liczbę wstrzymujących się',
+	'AP_ACT_SHOW_ABSTAINERS_EXPLAIN' => 'Pokazuje liczbę zarejestrowanych użytkowników, którzy wyraźnie zrezygnowali z głosowania. Nazwy są widoczne tylko wtedy, gdy lista głosujących jest włączona i użytkownik ma uprawnienie.',
+	'AP_ACT_VOTE_DELETE' => 'Zezwól na usunięcie głosu',
+	'AP_ACT_VOTE_DELETE_EXPLAIN' => 'Pozwala zarejestrowanym użytkownikom usunąć własny głos, gdy ankieta jest otwarta i zezwala na zmiany.',
 	'AP_ACT_SHOW_ORDERED'			=> 'Pokazuj kolejność',
 	'AP_ACT_SHOW_ORDERED_EXPLAIN'	=> 'Aktywuje opcję pokazania wyników w kolejności malejącej liczby otrzymanych głosów (najpierw głosowano najwyżej).',
 	'AP_ACT_POLL_SCORING'			=> 'Pokazuj przewijanie głosowania',
@@ -72,4 +87,6 @@ $lang = array_merge($lang, array(
 	'AP_DEFAULT_VOTERS_SHOW'		=> 'Wybierz domyślne ustawienia ilości głosujących',
 	'AP_DEFAULT_VOTERS_LIMIT'		=> 'Wybierz domyślne ustawienia limitu głosujących',
 	'AP_DEFAULT_SHOW_ORDERED'		=> 'Wybierz domyślne dla pokazania kolejności',
-));
+
+	'AP_ENABLE_NOTICE' => '<br /><br /><div class="phpinfo"><p><strong>Następne kroki</strong></p><ol><li>Sprawdź ustawienia rozszerzenia w <strong>%1$s » %2$s » %3$s</strong> i skonfiguruj funkcje ankiet oraz wartości domyślne wymagane przez forum.</li><li>Sprawdź uprawnienia <strong>%8$s</strong> i <strong>%9$s</strong> w <strong>%4$s » %5$s » %6$s</strong> (użytkownicy) oraz <strong>%4$s » %5$s » %7$s</strong> (moderatorzy). Nadaj je wyłącznie rolom lub grupom, które mogą widzieć tożsamość głosujących.</li></ol><p>Pozostałe funkcje ankiet nie wymagają dodatkowej konfiguracji.</p></div>',
+]);

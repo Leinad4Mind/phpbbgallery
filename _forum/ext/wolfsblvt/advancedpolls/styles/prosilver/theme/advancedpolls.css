@@ -3,6 +3,7 @@
  * Advanced Polls
  * 
  * @copyright (c) 2015 Wolfsblvt ( www.pinkes-forum.de )
+ * @copyright (c) 2026 Leinad4Mind
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  * @author Clemens Husung (Wolfsblvt)
  */
@@ -15,6 +16,10 @@ fieldset.polls dl.poll_voters_box {
 }
 span.poll_vote_notice {
 	display: block;
+}
+
+.post-buttons .advancedpolls-info-button span {
+	font-size: 13px;
 }
 
 dd label {

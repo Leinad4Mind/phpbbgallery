@@ -3,6 +3,7 @@
 /**
  * Advanced Polls [English]
  * @copyright (c) 2015 Wolfsblvt ( www.pinkes-forum.de )
+ * @copyright (c) 2026 Leinad4Mind
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  * @author Clemens Husung (Wolfsblvt)
  * @translation Leinad4Mind [Portuguese [pt_preao]] (2026)
@@ -51,6 +52,8 @@ $lang = array_merge($lang, [
 	'AP_POLL_TYPE_MISMATCH'          => 'Dados inconsistentes na votação, erro interno.',
 	'AP_VOTE_CHANGED'                => 'Não tens permissão para alterar os votos já emitidos.',
 	'AP_TOO_MANY_VOTES'              => 'Tentaste adicionar demasiados votos.',
+	'AP_ABSTAINERS' => 'Optaram por não votar',
+	'AP_DELETE_VOTE' => 'Eliminar o meu voto',
 
 	'AP_MAX_VOTES_SELECT' => [
 		1 => 'Podes enviar até <strong>%2$d</strong> votos a <strong>%1$d</strong> opção',
@@ -60,8 +63,18 @@ $lang = array_merge($lang, [
 		1 => '%d voto de convidado',
 		2 => '%d votos de convidados',
 	],
-
 // Posting
+	'AP_POLL_VISIBILITY' => 'Visibilidade dos resultados',
+	'AP_POLL_VISIBILITY_EXPLAIN' => 'Escolhe quando os resultados agregados da votação ficam visíveis.',
+	'AP_VISIBILITY_PUBLIC' => 'Pública — mostrar sempre os resultados',
+	'AP_VISIBILITY_DEFAULT' => 'Após o primeiro voto',
+	'AP_VISIBILITY_VOTE_COMPLETED' => 'Após usar todos os votos disponíveis',
+	'AP_VISIBILITY_PRIVATE' => 'Privada — apenas após o fim da votação',
+	'AP_POLL_VOTE_MODE' => 'Alterações do voto',
+	'AP_POLL_VOTE_MODE_EXPLAIN' => 'Escolhe se os votos são definitivos, podem ser enviados de forma incremental ou alterados enquanto a votação estiver aberta.',
+	'AP_VOTE_MODE_NO_CHANGE' => 'Sem alterações',
+	'AP_VOTE_MODE_INCREMENTAL' => 'Votação incremental',
+	'AP_VOTE_MODE_CHANGE' => 'Permitir alterações',
 	'AP_POLL_VOTES_HIDE'           => 'Ocultar votos',
 	'AP_POLL_VOTES_HIDE_EXPLAIN'   => 'Se estiver ativado, os votos estarão ocultos até que a votação termine. Esta opção só funciona se a votação tiver um final determinado.',
 	'AP_POLL_VOTERS_SHOW'          => 'Mostrar votantes da votação',
@@ -87,5 +100,6 @@ $lang = array_merge($lang, [
 	'AP_POLL_MAX_VALUE_EXPLAIN'     => 'Este é o número máximo de votos que um votante pode escolher numa mesma opção.',
 	'AP_POLL_TOTAL_VALUE'           => 'Votos totais',
 	'AP_POLL_TOTAL_VALUE_EXPLAIN'   => 'Este é o número total de votos que um votante pode escolher, repartidos entre as opções possíveis.',
+
 	'AP_VOTE_GREATER_THAN_MAXVALUE' => 'Não podes escolher um número de votos superior ao máximo permitido.',
 ]);

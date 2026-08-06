@@ -4,6 +4,7 @@
  * Advanced Polls [Russian]
  *
  * @copyright (c) 2015 Wolfsblvt ( www.pinkes-forum.de )
+ * @copyright (c) 2026 Leinad4Mind
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  * @author Clemens Husung (Wolfsblvt)
  * @author Translation by edualla (https://github.com/edualla)
@@ -17,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -36,7 +37,7 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ADVANCEDPOLLS_EXT_NAME'				=> 'Расширенные опросы',
 
 // Viewtopic
@@ -53,18 +54,30 @@ $lang = array_merge($lang, array(
 	'AP_POLL_TYPE_MISMATCH'					=> 'Несоответствие данных голосования, внутренняя ошибка.',
 	'AP_VOTE_CHANGED'						=> 'У вас нет права для изменения результатов голосования.',
 	'AP_TOO_MANY_VOTES'						=> 'Вы пытались установить слишком много голосов.',
+	'AP_ABSTAINERS' => 'Решили не голосовать',
+	'AP_DELETE_VOTE' => 'Удалить мой голос',
 
-	'AP_MAX_VOTES_SELECT'					=> array(
+	'AP_MAX_VOTES_SELECT'					=> [
 		1	=> 'Вы можете выбрать до <strong>%2$d</strong> результатов из <strong>%1$d</strong> варианта',
 		2	=> 'Вы можете выбрать до <strong>%2$d</strong> среди <strong>%1$d</strong> вариантов',
-	),
-	'AP_GUEST_VOTES'						=> array(
+	],
+	'AP_GUEST_VOTES'						=> [
 		1	=> '%d голос от гостя',
 		2	=> '%d голоса от гостей',
 		3	=> '%d голосов от гостей',
-	),
-
+	],
 // Posting
+	'AP_POLL_VISIBILITY' => 'Видимость результатов',
+	'AP_POLL_VISIBILITY_EXPLAIN' => 'Выберите, когда будут видны общие результаты опроса.',
+	'AP_VISIBILITY_PUBLIC' => 'Публичные — всегда показывать результаты',
+	'AP_VISIBILITY_DEFAULT' => 'После первого голоса',
+	'AP_VISIBILITY_VOTE_COMPLETED' => 'После использования всех доступных голосов',
+	'AP_VISIBILITY_PRIVATE' => 'Закрытые — только после завершения опроса',
+	'AP_POLL_VOTE_MODE' => 'Изменение голосов',
+	'AP_POLL_VOTE_MODE_EXPLAIN' => 'Выберите, являются ли голоса окончательными, могут отправляться постепенно или изменяться, пока опрос открыт.',
+	'AP_VOTE_MODE_NO_CHANGE' => 'Без изменений',
+	'AP_VOTE_MODE_INCREMENTAL' => 'Постепенное голосование',
+	'AP_VOTE_MODE_CHANGE' => 'Разрешить изменения',
 	'AP_POLL_VOTES_HIDE'					=> 'Скрыть голосования',
 	'AP_POLL_VOTES_HIDE_EXPLAIN'			=> 'Если эта опция включена, голосования будут скрыты до тех пор, пока опрос не будет окончен<br />Эта опция работает только тогда, если в этом голосовании установлена дата окончания опроса.',
 	'AP_POLL_VOTERS_SHOW'					=> 'Показать список проголосовавших',
@@ -90,4 +103,6 @@ $lang = array_merge($lang, array(
 	'AP_POLL_MAX_VALUE_EXPLAIN'				=> 'Ограничение максимального количества голосов для одного варианта ответа.',
 	'AP_POLL_TOTAL_VALUE'					=> 'Всего голосов',
 	'AP_POLL_TOTAL_VALUE_EXPLAIN'			=> 'Ограничение общего количества голосов для всех вариантов опроса.',
-));
+
+	'AP_VOTE_GREATER_THAN_MAXVALUE' => 'Нельзя назначить число голосов больше максимально разрешённого значения.',
+]);

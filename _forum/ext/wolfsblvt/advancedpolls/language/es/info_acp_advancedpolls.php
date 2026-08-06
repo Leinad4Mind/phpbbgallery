@@ -4,6 +4,7 @@
  * Advanced Polls [Spanish]
  *
  * @copyright (c) 2015 Wolfsblvt ( www.pinkes-forum.de )
+ * @copyright (c) 2026 Leinad4Mind
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  * @author Clemens Husung (Wolfsblvt)
  * @author Translation by Raul [ThE KuKa] (https://github.com/phpbb-es)
@@ -16,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -35,17 +36,27 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'AP_TITLE_ACP'					=> 'Encuestas Avanzadas',
 	'AP_SETTINGS_ACP'				=> 'Configuración',
 
 	'AP_TITLE'						=> 'Encuestas Avanzadas',
 	'AP_TITLE_EXPLAIN'				=> 'Mejora el sistema de encuestas nativo de phpBB con nuevas posibilidades como ocultar votos hasta el final, mostrar los votantes de la encuesta, limitar los posibles votantes y más.',
-	'AP_COPYRIGHT'					=> '© 2015 Wolfsblvt (www.pinkes-forum.de) [<a href="http://pinkes-forum.de/dev/find.php">Más Extensiones de Wolfsblvt</a>]',
 
 	'AP_SETTINGS'					=> 'Configuración de Encuestas Avanzadas',
 	'AP_GLOBAL_SETTINGS'			=> 'Configuración Global de Encuestas Avanzadas (aplicables a todas las encuestas)',
 	'AP_PER_POLL_SETTINGS'			=> 'Configuración Por Encuesta de Encuestas Avanzadas (seleccionables por encuesta, con los valores por defecto indicados aquí)',
+	'AP_DEFAULT_POLL_VISIBILITY' => 'Visibilidad predeterminada de los resultados',
+	'AP_DEFAULT_POLL_VISIBILITY_EXPLAIN' => 'Modo de visibilidad seleccionado inicialmente al crear una encuesta.',
+	'AP_DEFAULT_POLL_VOTE_MODE' => 'Modo predeterminado de cambio de voto',
+	'AP_DEFAULT_POLL_VOTE_MODE_EXPLAIN' => 'Modo de cambio de voto seleccionado inicialmente al crear una encuesta.',
+	'AP_VISIBILITY_PUBLIC' => 'Pública — mostrar siempre los resultados',
+	'AP_VISIBILITY_DEFAULT' => 'Después del primer voto',
+	'AP_VISIBILITY_VOTE_COMPLETED' => 'Después de usar todos los votos disponibles',
+	'AP_VISIBILITY_PRIVATE' => 'Privada — solo después de finalizar la encuesta',
+	'AP_VOTE_MODE_NO_CHANGE' => 'Sin cambios',
+	'AP_VOTE_MODE_INCREMENTAL' => 'Votación incremental',
+	'AP_VOTE_MODE_CHANGE' => 'Permitir cambios',
 
 	'AP_ACT_VOTES_HIDE'				=> 'Activar votos ocultos',
 	'AP_ACT_VOTES_HIDE_EXPLAIN'		=> 'Activa la opción de que los votos de la encuesta estén ocultos hasta que termine la encuesta.',
@@ -55,6 +66,10 @@ $lang = array_merge($lang, array(
 	'AP_ACT_VOTERS_LIMIT_EXPLAIN'	=> 'Activa la opción de limitar los votantes para una encuesta a los usuarios que ya han escrito en ese tema.',
 	'AP_ACT_POLL_NO_VOTE'			=> 'Activar no votar',
 	'AP_ACT_POLL_NO_VOTE_EXPLAIN'	=> 'Cambia el enlace "Mostrar resultados" por un enlace "No quiero votar", que no permite votar después de ver los resultados a menos que "Cambiar el voto" esté seleccionado.',
+	'AP_ACT_SHOW_ABSTAINERS' => 'Mostrar el número de abstenciones',
+	'AP_ACT_SHOW_ABSTAINERS_EXPLAIN' => 'Muestra cuántos usuarios registrados decidieron explícitamente no votar. Los nombres solo aparecen cuando está activa la lista de votantes y el usuario tiene permiso.',
+	'AP_ACT_VOTE_DELETE' => 'Permitir eliminar el voto',
+	'AP_ACT_VOTE_DELETE_EXPLAIN' => 'Permite a los usuarios registrados eliminar su propio voto mientras la encuesta esté abierta y admita cambios.',
 	'AP_ACT_SHOW_ORDERED'			=> 'Activar ordenación',
 	'AP_ACT_SHOW_ORDERED_EXPLAIN'	=> 'Activa la opción de mostrar los resultados por orden descendente de votos recibidos (el más votado primero).',
 	'AP_ACT_POLL_SCORING'			=> 'Activar encuestas puntuables',
@@ -73,4 +88,6 @@ $lang = array_merge($lang, array(
 	'AP_DEFAULT_VOTERS_SHOW'		=> 'Valor por defecto para mostrar votantes',
 	'AP_DEFAULT_VOTERS_LIMIT'		=> 'Valor por defecto para limitar votos',
 	'AP_DEFAULT_SHOW_ORDERED'		=> 'Valor por defecto para ordenación',
-));
+
+	'AP_ENABLE_NOTICE' => '<br /><br /><div class="phpinfo"><p><strong>Próximos pasos</strong></p><ol><li>Revisa la configuración de la extensión en <strong>%1$s » %2$s » %3$s</strong> y configura las funciones y los valores predeterminados que necesite tu foro.</li><li>Revisa los permisos <strong>%8$s</strong> y <strong>%9$s</strong> en <strong>%4$s » %5$s » %6$s</strong> (miembros) y <strong>%4$s » %5$s » %7$s</strong> (moderadores). Concédelos solo a los roles o grupos que puedan ver la identidad de los votantes.</li></ol><p>Las demás funciones de las encuestas no necesitan configuración adicional.</p></div>',
+]);
