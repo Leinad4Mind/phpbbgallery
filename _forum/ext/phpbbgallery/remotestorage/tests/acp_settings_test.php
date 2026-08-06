@@ -169,6 +169,24 @@ final class acp_settings_test extends TestCase
 		$this->assertLessThan($error, $finalization);
 	}
 
+	public function test_mediafire_migration_registers_serialized_v2_session_configuration(): void
+	{
+		$migration = (string) file_get_contents(dirname(__DIR__) . '/migrations/m8_mediafire.php');
+		$services = (string) file_get_contents(dirname(__DIR__) . '/config/services.yml');
+
+		$this->assertStringContainsString('m7_box', $migration);
+		foreach ([
+			'application_id', 'api_key', 'email', 'password', 'root_name',
+			'session_token', 'secret_key', 'session_time', 'session_issued_at',
+		] as $field)
+		{
+			$this->assertStringContainsString('phpbb_gallery_mediafire_' . $field, $migration);
+		}
+		$this->assertStringContainsString('phpbbgallery.remotestorage.provider_factory.mediafire:', $services);
+		$this->assertStringContainsString('- mediafire', $services);
+		$this->assertStringContainsString('mediafire-session.lock', $services);
+	}
+
 	public function test_all_gallery_language_catalogues_have_identical_keys_and_placeholders(): void
 	{
 		$english = $this->language(dirname(__DIR__) . '/language/en/info_acp_remotestorage.php');

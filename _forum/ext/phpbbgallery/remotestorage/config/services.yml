@@ -9,6 +9,7 @@ parameters:
         - dropbox
         - google_drive
         - box
+        - mediafire
 
 services:
     phpbbgallery.remotestorage.http:
@@ -67,6 +68,18 @@ services:
             - '@dbal.conn'
             - '%core.table_prefix%config'
             - '%core.cache_dir%phpbbgallery/box-oauth.lock'
+        tags:
+            - { name: phpbbgallery.storage.provider_factory }
+
+    phpbbgallery.remotestorage.provider_factory.mediafire:
+        class: phpbbgallery\remotestorage\mediafire\configured_factory
+        arguments:
+            - '@phpbbgallery.remotestorage.http'
+            - '@config'
+            - '@request'
+            - '@dbal.conn'
+            - '%core.table_prefix%config'
+            - '%core.cache_dir%phpbbgallery/mediafire-session.lock'
         tags:
             - { name: phpbbgallery.storage.provider_factory }
 
