@@ -1,22 +1,5 @@
 # Changelog
 
-- Documented the credentials, security model, implementation and service limits
-  of every Remote Storage provider, with a complete Koofr installation and
-  controlled-migration guide.
-- Added private 4shared storage using OAuth 1.0 HMAC-SHA1, exclusively owned folders, owner-only objects, recoverable publication and simple or chunked uploads through the documented API v1_2 endpoints.
-- Added private Koofr storage over its official fixed HTTPS WebDAV endpoint using revocable application passwords, conditional writes, streamed transfers and strictly bounded metadata parsing.
-- Added private pCloud storage for European and United States data regions using OAuth bearer authentication, owned unshared folders, public-link rejection, streaming uploads and validated server-side downloads.
-- Added private MediaFire storage using the live Core API 1.5, serialized Session Token v2 signatures, private dedicated folders, SHA-256 Instant/resumable uploads and server-consumed validated direct-download links.
-- Added private Box storage with dedicated folders, atomic persistence of single-use rotating refresh tokens, secure signed downloads and simple or chunked uploads.
-- Added private Google Drive storage using the non-sensitive drive.file scope, dedicated app-managed folders, resumable chunk uploads and automatic OAuth token renewal.
-- Added private Dropbox App Folder storage with short-lived OAuth tokens, protected refresh credentials, resumable large-file upload sessions and controlled provider migration.
-- Added optional private SFTP storage with mandatory SSH host fingerprint pinning, atomic temporary uploads, resumable provider migrations and a real OpenSSH functional workflow.
-- Added private Azure Blob Storage support with Shared Key signing, ACP-managed connections, resumable remote-to-remote migrations, public-container rejection and an Azurite functional workflow.
-- Added a validated Remote Storage provider-factory catalogue so migrations and ACP connection tests can support additional backends without hard-coded resolver branches.
-- Expanded the complete phpBB functional lifecycle to SQLite, MySQL 8.4 LTS and MariaDB 11.4 LTS, including database-neutral purge assertions.
-- Added an end-to-end Export workflow covering ACP limits and batching, nested album paths, readable image names, manifests, protected downloads and member-owned UCP exports.
-- Added a functional MinIO workflow that validates ACP connection testing, resumable provider migration, remote source delivery with watermarking, temporary-file cleanup and migration back to local storage.
-
 All notable changes to the phpBB Gallery extension suite are documented in this file.
 
 ## [4.0.0] Unreleased
@@ -106,9 +89,84 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Made Export preserve the Gallery album/subalbum hierarchy and use stable
   IMAGEID_AUTHORID_IMAGENAME.ext filenames while reading source objects
   through the active provider.
+- Aligned the Core package and terminal migration with the 4.0.0 release line documented by this changelog.
+- Removed the dead Highslide, Lytebox and Shadowbox frontend integrations and language remnants, normalizing saved legacy link modes to supported destinations while retaining normal links and optional progressive AJAX navigation.
+- Labelled the public Gallery statistics independently from the forum statistics, placed the FLATBOOTS total-image counter in its responsive index statistics grid, and moved the AJAX image-navigation switch beside the related image navigation settings in the ACP.
+- Clarified the Portuguese ACP labels for per-album image limits, thumbnail metadata and thumbnail settings.
+- Moved Gallery statistics to the top of the ACP overview and clarified the JPG quality setting while constraining it to GD's supported 0–100 range.
+- Made [image]ID[/image] the canonical Gallery BBCode while retaining [album]ID[/album] as a hidden migration-backed compatibility alias for posts imported from the legacy MOD.
+- Raised the minimum runtime for all Gallery components to PHP 8.1 and phpBB 3.3, and moved the standalone test dependency from PHPUnit 7/9 to PHPUnit 10.5.
+- Replaced legacy and dynamic ACP/UCP module state with declared typed properties, preventing PHP 8.2 dynamic-property deprecations.
+- Added native property, parameter, and return types throughout the ACP Cleanup service API.
+- Added native property, parameter, union-return, and module-entry types throughout the ACP Import API.
+- Added native types throughout the EXIF model and event listener, including safe rejection and rebuilding of invalid or legacy metadata.
+- Added native types to the core configuration, cache, URL, authorization-value, authorization-level, and constants services.
+- Added native property, parameter, union-return, and operation types throughout the Core ACL service, with explicit public constants and fail-closed permission contracts.
+- Added an explicit array-or-false normalization contract to the image-authorization helper.
+- Added native module-entry and progress-rendering types to the ACP album manager.
+- Added native module-entry types to the ACP Gallery log viewer.
+- Added public array contracts to all Core ACP and UCP module metadata providers.
+- Added native dependency, schema, data, callback, and static configuration types throughout the Core migration chain while preserving phpBB profile-field property compatibility.
+- Added native dependency and data-step contracts to the ACP Cleanup migration.
+- Converted all remaining production PHP arrays across Core, ACP Cleanup, and EXIF to short-array syntax, with token-aware regression coverage.
+- Normalized every packaged text file to Unix LF endings with a final newline and added repository/test enforcement against regressions.
+- Added native property, parameter, and return types throughout the Core album, album-display, album-loader, and album-management services, with initialized request state and JSON parent caches.
+- Added native property, parameter, and return types throughout the Core image service, including stable no-op and missing-image results and instance-safe counter/filename calls.
+- Added native property, parameter, and return types throughout the Core comment service, with explicit invalid-mutation results and instance-safe identifier normalization.
+- Added native property, parameter, and return types throughout the Core moderation service, preserving the ACP Cleanup contract by normalizing a legacy false filename map before image deletion.
+- Added native property, parameter, and return types throughout the Core user service, with initialized nullable state and safe state resets when switching or destroying users.
+- Added native property, route-parameter, helper, and Symfony response types throughout the Gallery index controller.
+- Added native state, dependency, route, helper, and binary-response types throughout the Gallery file controller.
+- Added native dependency, route, pagination-helper, and Symfony response types throughout the Gallery search controller.
+- Added native dependency, route, display-helper, and nullable confirmation-response types throughout the Gallery album controller.
+- Added native dependency, route, filesystem-helper, and Symfony response types throughout the resumable upload controller.
+- Added native dependency, route, batch-authorization, pagination-helper, and response types throughout the Gallery moderation controller.
+- Added native dependency, route-identifier, and Symfony response types throughout the Gallery comment controller.
+- Added native dependency, request-state, route, display-helper, and response types throughout the Gallery image controller.
+- Added native dependency, event-payload, subscriber-map, and callback return types throughout the Core event listener.
+- Added native dependency, identifier-list, watcher-query, and operation return types throughout the Core notification services.
+- Added native service-property and presentation return types to all six Gallery notification event classes while preserving compatibility with phpBB's untyped notification interface.
+- Added native property, parameter, union-return, and operation types throughout the Core contest service, with deterministic handling for unknown steps and invalid tabulation modes.
+- Added native property, parameter, cached-value, and operation types throughout the Core rating service, with explicit submission results and request-local state reset whenever a new image is loaded.
+- Added native property, parameter, identifier-list, and operation types throughout the Core report service, with initialized queue state, safe empty-image results, and clamped pagination offsets.
+- Added native property, parameter, count-return, and rendering types throughout the Core search service, with initialized result state, safe missing-count handling, and deterministic fallback sorting.
+- Added native property, parameter, image-read, cache-response, and upload-collection types throughout the Core file services, with safe GD handle state, validated watermark metadata, and deterministic empty multipart uploads.
+- Normalized legacy PHPDoc annotations throughout Core, preserved informative service descriptions, removed stale parameter and function tags, and added regression coverage for unsupported formats.
+- Removed the obsolete commented favorite-module and BBCode stubs from the initial Core migration; those responsibilities now remain with the favorite add-on and the dedicated BBCode migration.
+- Converted the Gallery ACP, ACP Cleanup, ACP Import, and EXIF templates from deprecated phpBB comment tags to native Twig syntax.
+- Converted the shared and prosilver Gallery templates from deprecated phpBB comment tags and template variables to native Twig syntax.
+- Converted the BBOOTS Gallery templates from deprecated phpBB comment tags and template variables to native Twig syntax.
+- Converted the FLATBOOTS Gallery templates from deprecated phpBB comment tags and template variables to native Twig syntax, completing the migration of all packaged Gallery templates.
+- Reduced the packaged extension from approximately 8.2 MiB to 3.1 MiB by removing generated differences reports, backup files, source maps, unused upload plugins, and duplicate per-style JavaScript bundles.
+- Consolidated shared JavaScript under the phpbbgallery_core template namespace and corrected the polaroid asset reference for prosilver, BBOOTS, and FLATBOOTS.
+- Prefixed every Gallery-owned template event with `phpbbgallery_` and updated the EXIF listeners in all supported styles.
+- Added the missing prosilver template counterparts, split its monolithic UCP template into reusable partials, and retained the independent BBOOTS and FLATBOOTS layouts.
+- Moved Gallery theme assets into the shared `all` style, loaded them for every style, removed the unused `gallery-color.css`, and added native EXIF event coverage for BBOOTS.
+- Completed the Portuguese AO90/pre-AO90 separation, rewrote the Brazilian Portuguese catalogs for Brazilian usage, and added Spanish and Dutch translations to ACP Cleanup, ACP Import, and EXIF.
+- Reduced the legacy installation catalogs to the sole runtime uninstall message, removing obsolete `Gallery-MOD`, phpBB2 table-prefix, and converter-era text.
+- Made album nested-set boundaries, contest ranking, image-navigation visibility, and search-result filters explicit at their DBAL interpolation points, eliminating false-positive SQL-injection findings from the official validator.
+- Modernized all BBOOTS and FLATBOOTS Gallery and EXIF definition-list layouts with native Bootstrap tables, form controls, responsive grids, and accessible labels.
+- Reused the canonical Gallery posting form for legacy image editing instead of maintaining divergent per-style copies.
+- Redesigned the Bootstrap UCP subscription manager with media previews, responsive two-column metadata, inline last-comment content, and a single bulk action control.
+- Modernized Bootstrap personal-subalbum management with full-width controls, responsive parsing options, and a dedicated empty state instead of an empty table header.
+- Removed the obsolete EXIF configuration-set event listener whose event and target configuration class no longer exist.
+- Added generic Core image-file edit extension points, per-operation ZIP exclusion and exact cleanup of files created by an add-on operation, keeping revision storage and policy outside the Core extension.
 
 ### Added
 
+- Documented the credentials, security model, implementation and service limits
+  of every Remote Storage provider, with a complete Koofr installation and
+  controlled-migration guide.
+- Added private 4shared storage using OAuth 1.0 HMAC-SHA1, exclusively owned folders, owner-only objects, recoverable publication and simple or chunked uploads through the documented API v1_2 endpoints.
+- Added private Koofr storage over its official fixed HTTPS WebDAV endpoint using revocable application passwords, conditional writes, streamed transfers and strictly bounded metadata parsing.
+- Added private pCloud storage for European and United States data regions using OAuth bearer authentication, owned unshared folders, public-link rejection, streaming uploads and validated server-side downloads.
+- Added private MediaFire storage using the live Core API 1.5, serialized Session Token v2 signatures, private dedicated folders, SHA-256 Instant/resumable uploads and server-consumed validated direct-download links.
+- Added private Box storage with dedicated folders, atomic persistence of single-use rotating refresh tokens, secure signed downloads and simple or chunked uploads.
+- Added private Google Drive storage using the non-sensitive drive.file scope, dedicated app-managed folders, resumable chunk uploads and automatic OAuth token renewal.
+- Added private Dropbox App Folder storage with short-lived OAuth tokens, protected refresh credentials, resumable large-file upload sessions and controlled provider migration.
+- Added optional private SFTP storage with mandatory SSH host fingerprint pinning, atomic temporary uploads, resumable provider migrations and a real OpenSSH functional workflow.
+- Added private Azure Blob Storage support with Shared Key signing, ACP-managed connections, resumable remote-to-remote migrations, public-container rejection and an Azurite functional workflow.
+- Added a validated Remote Storage provider-factory catalogue so migrations and ACP connection tests can support additional backends without hard-coded resolver branches.
 - Added indexed EXIF DateTimeOriginal sorting with upload-date fallback across
   album listings, previous/next navigation and ACP defaults, including
   OffsetTimeOriginal handling and a confirmed resumable rebuild for old images.
@@ -247,71 +305,6 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Hid EXIF metadata for active contest entries from non-moderators while preserving access for users with album status-moderation permission.
 - Secured image replacement and rollback with the Core upload allowlist, explicit ZIP rejection, ownership checks for intermediate uploads, editor reauthorization, POST-only restoration, phpBB CSRF validation, storage-root path validation and optimistic concurrency protection.
 
-### Changed
-
-- Aligned the Core package and terminal migration with the 4.0.0 release line documented by this changelog.
-- Removed the dead Highslide, Lytebox and Shadowbox frontend integrations and language remnants, normalizing saved legacy link modes to supported destinations while retaining normal links and optional progressive AJAX navigation.
-- Labelled the public Gallery statistics independently from the forum statistics, placed the FLATBOOTS total-image counter in its responsive index statistics grid, and moved the AJAX image-navigation switch beside the related image navigation settings in the ACP.
-- Clarified the Portuguese ACP labels for per-album image limits, thumbnail metadata and thumbnail settings.
-- Moved Gallery statistics to the top of the ACP overview and clarified the JPG quality setting while constraining it to GD's supported 0–100 range.
-- Made [image]ID[/image] the canonical Gallery BBCode while retaining [album]ID[/album] as a hidden migration-backed compatibility alias for posts imported from the legacy MOD.
-- Raised the minimum runtime for all Gallery components to PHP 8.1 and phpBB 3.3, and moved the standalone test dependency from PHPUnit 7/9 to PHPUnit 10.5.
-- Replaced legacy and dynamic ACP/UCP module state with declared typed properties, preventing PHP 8.2 dynamic-property deprecations.
-- Added native property, parameter, and return types throughout the ACP Cleanup service API.
-- Added native property, parameter, union-return, and module-entry types throughout the ACP Import API.
-- Added native types throughout the EXIF model and event listener, including safe rejection and rebuilding of invalid or legacy metadata.
-- Added native types to the core configuration, cache, URL, authorization-value, authorization-level, and constants services.
-- Added native property, parameter, union-return, and operation types throughout the Core ACL service, with explicit public constants and fail-closed permission contracts.
-- Added an explicit array-or-false normalization contract to the image-authorization helper.
-- Added native module-entry and progress-rendering types to the ACP album manager.
-- Added native module-entry types to the ACP Gallery log viewer.
-- Added public array contracts to all Core ACP and UCP module metadata providers.
-- Added native dependency, schema, data, callback, and static configuration types throughout the Core migration chain while preserving phpBB profile-field property compatibility.
-- Added native dependency and data-step contracts to the ACP Cleanup migration.
-- Converted all remaining production PHP arrays across Core, ACP Cleanup, and EXIF to short-array syntax, with token-aware regression coverage.
-- Normalized every packaged text file to Unix LF endings with a final newline and added repository/test enforcement against regressions.
-- Added native property, parameter, and return types throughout the Core album, album-display, album-loader, and album-management services, with initialized request state and JSON parent caches.
-- Added native property, parameter, and return types throughout the Core image service, including stable no-op and missing-image results and instance-safe counter/filename calls.
-- Added native property, parameter, and return types throughout the Core comment service, with explicit invalid-mutation results and instance-safe identifier normalization.
-- Added native property, parameter, and return types throughout the Core moderation service, preserving the ACP Cleanup contract by normalizing a legacy false filename map before image deletion.
-- Added native property, parameter, and return types throughout the Core user service, with initialized nullable state and safe state resets when switching or destroying users.
-- Added native property, route-parameter, helper, and Symfony response types throughout the Gallery index controller.
-- Added native state, dependency, route, helper, and binary-response types throughout the Gallery file controller.
-- Added native dependency, route, pagination-helper, and Symfony response types throughout the Gallery search controller.
-- Added native dependency, route, display-helper, and nullable confirmation-response types throughout the Gallery album controller.
-- Added native dependency, route, filesystem-helper, and Symfony response types throughout the resumable upload controller.
-- Added native dependency, route, batch-authorization, pagination-helper, and response types throughout the Gallery moderation controller.
-- Added native dependency, route-identifier, and Symfony response types throughout the Gallery comment controller.
-- Added native dependency, request-state, route, display-helper, and response types throughout the Gallery image controller.
-- Added native dependency, event-payload, subscriber-map, and callback return types throughout the Core event listener.
-- Added native dependency, identifier-list, watcher-query, and operation return types throughout the Core notification services.
-- Added native service-property and presentation return types to all six Gallery notification event classes while preserving compatibility with phpBB's untyped notification interface.
-- Added native property, parameter, union-return, and operation types throughout the Core contest service, with deterministic handling for unknown steps and invalid tabulation modes.
-- Added native property, parameter, cached-value, and operation types throughout the Core rating service, with explicit submission results and request-local state reset whenever a new image is loaded.
-- Added native property, parameter, identifier-list, and operation types throughout the Core report service, with initialized queue state, safe empty-image results, and clamped pagination offsets.
-- Added native property, parameter, count-return, and rendering types throughout the Core search service, with initialized result state, safe missing-count handling, and deterministic fallback sorting.
-- Added native property, parameter, image-read, cache-response, and upload-collection types throughout the Core file services, with safe GD handle state, validated watermark metadata, and deterministic empty multipart uploads.
-- Normalized legacy PHPDoc annotations throughout Core, preserved informative service descriptions, removed stale parameter and function tags, and added regression coverage for unsupported formats.
-- Removed the obsolete commented favorite-module and BBCode stubs from the initial Core migration; those responsibilities now remain with the favorite add-on and the dedicated BBCode migration.
-- Converted the Gallery ACP, ACP Cleanup, ACP Import, and EXIF templates from deprecated phpBB comment tags to native Twig syntax.
-- Converted the shared and prosilver Gallery templates from deprecated phpBB comment tags and template variables to native Twig syntax.
-- Converted the BBOOTS Gallery templates from deprecated phpBB comment tags and template variables to native Twig syntax.
-- Converted the FLATBOOTS Gallery templates from deprecated phpBB comment tags and template variables to native Twig syntax, completing the migration of all packaged Gallery templates.
-- Reduced the packaged extension from approximately 8.2 MiB to 3.1 MiB by removing generated differences reports, backup files, source maps, unused upload plugins, and duplicate per-style JavaScript bundles.
-- Consolidated shared JavaScript under the phpbbgallery_core template namespace and corrected the polaroid asset reference for prosilver, BBOOTS, and FLATBOOTS.
-- Prefixed every Gallery-owned template event with `phpbbgallery_` and updated the EXIF listeners in all supported styles.
-- Added the missing prosilver template counterparts, split its monolithic UCP template into reusable partials, and retained the independent BBOOTS and FLATBOOTS layouts.
-- Moved Gallery theme assets into the shared `all` style, loaded them for every style, removed the unused `gallery-color.css`, and added native EXIF event coverage for BBOOTS.
-- Completed the Portuguese AO90/pre-AO90 separation, rewrote the Brazilian Portuguese catalogs for Brazilian usage, and added Spanish and Dutch translations to ACP Cleanup, ACP Import, and EXIF.
-- Reduced the legacy installation catalogs to the sole runtime uninstall message, removing obsolete `Gallery-MOD`, phpBB2 table-prefix, and converter-era text.
-- Made album nested-set boundaries, contest ranking, image-navigation visibility, and search-result filters explicit at their DBAL interpolation points, eliminating false-positive SQL-injection findings from the official validator.
-- Modernized all BBOOTS and FLATBOOTS Gallery and EXIF definition-list layouts with native Bootstrap tables, form controls, responsive grids, and accessible labels.
-- Reused the canonical Gallery posting form for legacy image editing instead of maintaining divergent per-style copies.
-- Redesigned the Bootstrap UCP subscription manager with media previews, responsive two-column metadata, inline last-comment content, and a single bulk action control.
-- Modernized Bootstrap personal-subalbum management with full-width controls, responsive parsing options, and a dedicated empty state instead of an empty table header.
-- Removed the obsolete EXIF configuration-set event listener whose event and target configuration class no longer exist.
-- Added generic Core image-file edit extension points, per-operation ZIP exclusion and exact cleanup of files created by an add-on operation, keeping revision storage and policy outside the Core extension.
-
 ### Fixed
 
 - Fixed Contest winner pagination using an undefined legacy configuration key
@@ -404,6 +397,9 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Tests
 
+- Expanded the complete phpBB functional lifecycle to SQLite, MySQL 8.4 LTS and MariaDB 11.4 LTS, including database-neutral purge assertions.
+- Added an end-to-end Export workflow covering ACP limits and batching, nested album paths, readable image names, manifests, protected downloads and member-owned UCP exports.
+- Added a functional MinIO workflow that validates ACP connection testing, resumable provider migration, remote source delivery with watermarking, temporary-file cleanup and migration back to local storage.
 - Extended the PHPUnit, EPV and manifest-validation matrices to every packaged Gallery component, and added functional installation/purge smoke coverage for Export and Feed.
 - Added a real phpBB reactivation workflow covering disabled add-ons, deleted images/albums, automatic orphan reconciliation, preserved BBPoints history and successful container recompilation.
 - Established GitHub Actions coverage for Core, ACP Cleanup, ACP Import and EXIF on PHP 8.1, 8.2, 8.4, and 8.5, plus manifest validation, PHP linting, production PHPCS checks, and official EPV package validation.
