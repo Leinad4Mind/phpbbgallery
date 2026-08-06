@@ -23,7 +23,8 @@ jQuery(function($) {
 	};
 
 	// Set initial notifications count
-	var unreadCount = parseInt($('em', '#notification_list_button').html());
+	// phpBB >= 3.2 renders the count as <strong class="badge">; older styles use <em>
+	var unreadCount = parseInt($('em, strong.badge', '#notification_list_button').html());
 	setUnreadNotificationsCount(unreadCount);
 
 	// Update notifications count when marking notifications read
