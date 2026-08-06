@@ -43,8 +43,9 @@ final class provider_migrator
 	{
 		$source_provider = strtolower(trim((string) $this->config['phpbb_gallery_storage_provider']));
 		$target_provider = strtolower(trim($target_provider));
-		if (!in_array($source_provider, ['local', 's3'], true)
-			|| !in_array($target_provider, ['local', 's3'], true)
+		$allowed_providers = array_merge(['local'], $this->providers->remote_provider_ids());
+		if (!in_array($source_provider, $allowed_providers, true)
+			|| !in_array($target_provider, $allowed_providers, true)
 			|| $source_provider === $target_provider)
 		{
 			throw new \InvalidArgumentException('The Gallery storage migration direction is invalid.');

@@ -68,6 +68,34 @@ final class provider_migrator_test extends TestCase
 		$this->assertSame('source-a', $local->contents(provider_interface::SOURCE, 'a.jpg'));
 	}
 
+	public function test_registered_non_s3_provider_can_become_active(): void
+	{
+		$local = new migration_memory_provider('local');
+		$local->put(provider_interface::SOURCE, 'a.jpg', 'source-a');
+		$dropbox = new migration_memory_provider('dropbox');
+		$config = $this->config('local');
+		$migrator = $this->migrator($config, $local, $dropbox);
+
+		$state = $migrator->start('dropbox');
+		for ($step = 0; $step < 5 && $state['status'] !== 'complete'; $step++)
+		{
+			$state = $migrator->process();
+		}
+
+		$this->assertSame('complete', $state['status']);
+		$this->assertSame('dropbox', $config['phpbb_gallery_storage_provider']);
+		$this->assertSame('source-a', $dropbox->contents(provider_interface::SOURCE, 'a.jpg'));
+	}
+
+	public function test_unregistered_provider_is_rejected(): void
+	{
+		$local = new migration_memory_provider('local');
+		$s3 = new migration_memory_provider('s3');
+
+		$this->expectException(\InvalidArgumentException::class);
+		$this->migrator($this->config('local'), $local, $s3)->start('unregistered');
+	}
+
 	public function test_failed_batch_preserves_cursor_and_can_be_retried(): void
 	{
 		$local = new migration_memory_provider('local');
@@ -164,13 +192,13 @@ final class provider_migrator_test extends TestCase
 	private function migrator(
 		config $config,
 		migration_memory_provider $local,
-		migration_memory_provider $s3,
+		migration_memory_provider $remote,
 		?migration_memory_state_store $states = null
 	): provider_migrator
 	{
 		return new provider_migrator(
 			$config,
-			new migration_provider_resolver(['local' => $local, 's3' => $s3]),
+			new migration_provider_resolver(['local' => $local, $remote->get_id() => $remote]),
 			$states ?? new migration_memory_state_store(),
 			$this->workspace
 		);
@@ -187,6 +215,11 @@ final class migration_provider_resolver implements provider_resolver_interface
 	public function resolve(string $provider_id): provider_interface
 	{
 		return $this->providers[$provider_id];
+	}
+
+	public function remote_provider_ids(): array
+	{
+		return array_values(array_filter(array_keys($this->providers), static fn (string $id): bool => $id !== 'local'));
 	}
 }
 
