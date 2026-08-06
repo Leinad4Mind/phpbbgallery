@@ -250,6 +250,37 @@ final class acp_settings_test extends TestCase
 		}
 	}
 
+	public function test_provider_guide_documents_every_registered_provider_and_installation_flow(): void
+	{
+		$guide = (string) file_get_contents(dirname(__DIR__) . '/PROVIDERS.md');
+
+		foreach ([
+			'S3 and S3-compatible storage', 'Azure Blob Storage', 'SFTP', 'Dropbox',
+			'Google Drive', 'Box', 'MediaFire', 'pCloud', 'Koofr', '4shared',
+		] as $provider)
+		{
+			$this->assertStringContainsString('## ' . $provider, $guide);
+		}
+		foreach ([
+			'https://docs.aws.amazon.com/',
+			'https://learn.microsoft.com/',
+			'https://developers.dropbox.com/',
+			'https://developers.google.com/',
+			'https://developer.box.com/',
+			'https://www.mediafire.com/developers/',
+			'https://docs.pcloud.com/',
+			'https://koofr.eu/help/',
+			'https://www.rfc-editor.org/info/rfc4918/',
+			'https://www.4shared.com/developer/docs/',
+		] as $official_documentation)
+		{
+			$this->assertStringContainsString($official_documentation, $guide);
+		}
+		$this->assertStringContainsString('## Installation example: Koofr', $guide);
+		$this->assertStringContainsString('Test connection and save', $guide);
+		$this->assertStringContainsString('Provider migration', $guide);
+	}
+
 	private function language(string $file): array
 	{
 		$lang = [];

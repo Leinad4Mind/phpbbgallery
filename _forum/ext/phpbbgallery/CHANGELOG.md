@@ -1,5 +1,8 @@
 # Changelog
 
+- Documented the credentials, security model, implementation and service limits
+  of every Remote Storage provider, with a complete Koofr installation and
+  controlled-migration guide.
 - Added private 4shared storage using OAuth 1.0 HMAC-SHA1, exclusively owned folders, owner-only objects, recoverable publication and simple or chunked uploads through the documented API v1_2 endpoints.
 - Added private Koofr storage over its official fixed HTTPS WebDAV endpoint using revocable application passwords, conditional writes, streamed transfers and strictly bounded metadata parsing.
 - Added private pCloud storage for European and United States data regions using OAuth bearer authentication, owned unshared folders, public-link rejection, streaming uploads and validated server-side downloads.
