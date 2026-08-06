@@ -326,6 +326,9 @@ class package_hygiene_test extends TestCase
 
 	public function test_every_packaged_component_contains_the_declared_license(): void
 	{
+		$declared_license = file_get_contents($this->extension_root . '/core/license.txt');
+		$this->assertNotFalse($declared_license);
+
 		foreach ([
 			'core',
 			'acpcleanup',
@@ -342,7 +345,9 @@ class package_hygiene_test extends TestCase
 			'tiff',
 		] as $extension)
 		{
-			$this->assertFileExists($this->extension_root . '/' . $extension . '/license.txt', $extension);
+			$license_path = $this->extension_root . '/' . $extension . '/license.txt';
+			$this->assertFileExists($license_path, $extension);
+			$this->assertSame($declared_license, file_get_contents($license_path), $extension);
 		}
 	}
 }
