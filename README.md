@@ -30,11 +30,6 @@ add-ons use sibling directories under `ext/phpbbgallery/`.
 | BBTags Images | 1.0.0 | Adds shared tags, moderation, autocomplete and multi-tag image search. |
 | Export | 1.0.0 | Exports Gallery images to controlled ZIP archives using their display names. |
 | Image Revisions | 1.0.0 | Retains bounded histories of replaced image files for preview and rollback. |
-
-## Storage add-ons
-
-| Add-on | Version | Description |
-| --- | --- | --- |
 | Remote Storage | 1.0.0 | Stores private Gallery objects in S3-compatible, Azure Blob, SFTP, Dropbox, Google Drive, Box, MediaFire, pCloud, Koofr or 4shared storage with verified provider migrations. |
 
 See the Remote Storage [provider requirements, limitations and installation
