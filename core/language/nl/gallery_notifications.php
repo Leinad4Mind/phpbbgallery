@@ -42,8 +42,12 @@ $lang = array_merge($lang, [
 	'NOTIFICATION_TYPE_PHPBBGALLERY_NEW_REPORT' => 'Nieuwe melding',
 	'NOTIFICATION_PHPBBGALLERY_NEW_REPORT'      => '<strong>%1$s</strong> heeft een afbeelding gemeld',
 	'NOTIFICATION_TYPE_PHPBBGALLERY_IMAGE_MODERATED'       => 'Moderatieacties in de galerij',
+	'NOTIFICATION_PHPBBGALLERY_IMAGE_MODERATED_APPROVED'   => '<strong>%1$s</strong> heeft afbeeldingen in album <strong>%2$s</strong> goedgekeurd',
+	'NOTIFICATION_PHPBBGALLERY_IMAGE_MODERATED_REJECTED'   => '<strong>%1$s</strong> heeft afbeeldingen in album <strong>%2$s</strong> afgewezen',
 	'NOTIFICATION_PHPBBGALLERY_IMAGE_MODERATED_LOCKED'     => '<strong>%1$s</strong> heeft afbeeldingen in album <strong>%2$s</strong> vergrendeld',
 	'NOTIFICATION_PHPBBGALLERY_IMAGE_MODERATED_UNLOCKED'   => '<strong>%1$s</strong> heeft afbeeldingen in album <strong>%2$s</strong> ontgrendeld',
 	'NOTIFICATION_PHPBBGALLERY_IMAGE_MODERATED_UNAPPROVED' => '<strong>%1$s</strong> heeft afbeeldingen uit album <strong>%2$s</strong> teruggezet in de goedkeuringswachtrij',
 	'NOTIFICATION_PHPBBGALLERY_IMAGE_MODERATED_DELETED'    => '<strong>%1$s</strong> heeft afbeeldingen uit album <strong>%2$s</strong> verwijderd',
+	'NOTIFICATION_TYPE_PHPBBGALLERY_IMAGE_REMOVED'         => 'Door moderatie verwijderde afbeeldingen',
+	'NOTIFICATION_PHPBBGALLERY_IMAGE_REMOVED'              => 'Afbeeldingen in album <strong>%1$s</strong> zijn door het moderatieteam verwijderd',
 ]);

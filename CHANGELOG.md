@@ -23,6 +23,10 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Separated neutral author outcomes from attributed internal moderation
+  notices: only album-authorized moderators see who approved, rejected or
+  removed an image, while ordinary authors never receive moderator or reporter
+  identities.
 - Routed Gallery notifications through album-scoped moderation permissions:
   status teams now share approval outcomes and state changes, comment
   moderators receive new-comment notices, report recipients remain restricted

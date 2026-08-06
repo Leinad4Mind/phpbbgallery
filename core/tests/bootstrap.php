@@ -294,6 +294,7 @@ namespace
 	require_once __DIR__ . '/stubs/symfony_container.php';
 	require_once dirname(__DIR__) . '/notification/helper.php';
 	require_once dirname(__DIR__) . '/notification/events/phpbbgallery_image_approved.php';
+	require_once dirname(__DIR__) . '/notification/events/phpbbgallery_image_removed.php';
 	require_once dirname(__DIR__) . '/notification/events/phpbbgallery_image_for_approval.php';
 	require_once dirname(__DIR__) . '/notification/events/phpbbgallery_image_moderated.php';
 	require_once dirname(__DIR__) . '/notification/events/phpbbgallery_image_not_approved.php';

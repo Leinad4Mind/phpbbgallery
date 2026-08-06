@@ -983,6 +983,10 @@ class image
 			$this->notification_helper->notify('approved', $data);
 			$this->notification_helper->new_image($data, false);
 		}
+		if ($approved_images)
+		{
+			$this->notification_helper->notify_moderation('approved', $approved_images, 'm_status');
+		}
 		$this->notify_state_change('approve', $approved_images, [$album_id]);
 		$this->notify_state_change('unlock', $unlocked_images, [$album_id]);
 		$this->notification_helper->notify_moderation('unlocked', $unlocked_images, 'm_status');

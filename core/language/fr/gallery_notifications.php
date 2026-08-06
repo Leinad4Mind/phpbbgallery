@@ -58,8 +58,12 @@ $lang = array_merge($lang, [
 	'NOTIFICATION_TYPE_PHPBBGALLERY_NEW_REPORT' => 'Nouvelle image rapportée',
 	'NOTIFICATION_PHPBBGALLERY_NEW_REPORT'      => 'L’image <strong>%1$s</strong> a été rapportée',
 	'NOTIFICATION_TYPE_PHPBBGALLERY_IMAGE_MODERATED'       => 'Actions de modération de la Galerie',
+	'NOTIFICATION_PHPBBGALLERY_IMAGE_MODERATED_APPROVED'   => '<strong>%1$s</strong> a approuvé des images dans l’album <strong>%2$s</strong>',
+	'NOTIFICATION_PHPBBGALLERY_IMAGE_MODERATED_REJECTED'   => '<strong>%1$s</strong> a rejeté des images dans l’album <strong>%2$s</strong>',
 	'NOTIFICATION_PHPBBGALLERY_IMAGE_MODERATED_LOCKED'     => '<strong>%1$s</strong> a verrouillé des images dans l’album <strong>%2$s</strong>',
 	'NOTIFICATION_PHPBBGALLERY_IMAGE_MODERATED_UNLOCKED'   => '<strong>%1$s</strong> a déverrouillé des images dans l’album <strong>%2$s</strong>',
 	'NOTIFICATION_PHPBBGALLERY_IMAGE_MODERATED_UNAPPROVED' => '<strong>%1$s</strong> a replacé des images de l’album <strong>%2$s</strong> dans la file d’approbation',
 	'NOTIFICATION_PHPBBGALLERY_IMAGE_MODERATED_DELETED'    => '<strong>%1$s</strong> a supprimé des images de l’album <strong>%2$s</strong>',
+	'NOTIFICATION_TYPE_PHPBBGALLERY_IMAGE_REMOVED'         => 'Images supprimées par la modération',
+	'NOTIFICATION_PHPBBGALLERY_IMAGE_REMOVED'              => 'Des images de l’album <strong>%1$s</strong> ont été supprimées par l’équipe de modération',
 ]);
