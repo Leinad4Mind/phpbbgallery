@@ -11,6 +11,7 @@ namespace phpbbgallery\core\tests;
 
 use phpbbgallery\core\notification\events\phpbbgallery_image_approved;
 use phpbbgallery\core\notification\events\phpbbgallery_image_for_approval;
+use phpbbgallery\core\notification\events\phpbbgallery_image_moderated;
 use phpbbgallery\core\notification\events\phpbbgallery_image_not_approved;
 use phpbbgallery\core\notification\events\phpbbgallery_new_comment;
 use phpbbgallery\core\notification\events\phpbbgallery_new_image;
@@ -40,6 +41,13 @@ final class notification_event_types_test extends TestCase
 			'item_id' => 23,
 			'parent_id' => 6,
 			'stored' => ['album_name' => 'Rejected', 'album_url' => '/album/6', 'album_id' => '6'],
+		],
+		phpbbgallery_image_moderated::class => [
+			'type' => 'phpbbgallery.core.notification.image_moderated',
+			'data' => ['last_image_id' => '25', 'album_id' => '8', 'album_name' => 'Moderated', 'album_url' => '/album/8', 'actor_id' => 11, 'action' => 'locked'],
+			'item_id' => 25,
+			'parent_id' => 8,
+			'stored' => ['album_name' => 'Moderated', 'album_url' => '/album/8', 'album_id' => '8', 'actor_id' => 11, 'action' => 'locked'],
 		],
 		phpbbgallery_new_comment::class => [
 			'type' => 'phpbbgallery.core.notification.new_comment',
@@ -155,6 +163,7 @@ final class notification_event_types_test extends TestCase
 			phpbbgallery_image_approved::class => ['album_url' => '/album/4'],
 			phpbbgallery_image_for_approval::class => ['album_url' => '/album/5'],
 			phpbbgallery_image_not_approved::class => ['album_url' => '/album/6'],
+			phpbbgallery_image_moderated::class => ['album_url' => '/album/8'],
 			phpbbgallery_new_comment::class => ['url' => '/image/31'],
 			phpbbgallery_new_image::class => ['album_url' => '/album/7'],
 			phpbbgallery_new_report::class => ['url' => '/moderate/32'],

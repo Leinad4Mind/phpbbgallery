@@ -35,4 +35,9 @@ $lang = array_merge($lang, [
 	'NOTIFICATION_PHPBBGALLERY_NEW_COMMENT'             => '<strong>%1$s</strong> прокомментировал фото',
 	'NOTIFICATION_TYPE_PHPBBGALLERY_NEW_REPORT'         => 'Новая жалоба',
 	'NOTIFICATION_PHPBBGALLERY_NEW_REPORT'              => '<strong>%1$s</strong> пожаловался на изображение',
+	'NOTIFICATION_TYPE_PHPBBGALLERY_IMAGE_MODERATED'       => 'Действия модераторов галереи',
+	'NOTIFICATION_PHPBBGALLERY_IMAGE_MODERATED_LOCKED'     => '<strong>%1$s</strong> заблокировал изображения в альбоме <strong>%2$s</strong>',
+	'NOTIFICATION_PHPBBGALLERY_IMAGE_MODERATED_UNLOCKED'   => '<strong>%1$s</strong> разблокировал изображения в альбоме <strong>%2$s</strong>',
+	'NOTIFICATION_PHPBBGALLERY_IMAGE_MODERATED_UNAPPROVED' => '<strong>%1$s</strong> вернул изображения из альбома <strong>%2$s</strong> на одобрение',
+	'NOTIFICATION_PHPBBGALLERY_IMAGE_MODERATED_DELETED'    => '<strong>%1$s</strong> удалил изображения из альбома <strong>%2$s</strong>',
 ]);

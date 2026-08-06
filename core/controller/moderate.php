@@ -1039,7 +1039,6 @@ class moderate
 		{
 			$image_id_ary = [$image_id];
 			$this->image->unapprove_images($image_id_ary, $album_data['album_id']);
-			// To DO - add notification
 			$message = sprintf($this->language->lang('WAITING_UNAPPROVED_IMAGE', 1));
 			meta_refresh($meta_refresh_time, $image_backlink);
 			trigger_error($message);
@@ -1173,7 +1172,6 @@ class moderate
 		{
 			$image_id_ary = [$image_id];
 			$this->image->lock_images($image_id_ary, $album_data['album_id']);
-			// To DO - add notification
 			$message = sprintf($this->language->lang('WAITING_LOCKED_IMAGE',1));
 			meta_refresh($meta_refresh_time, $image_backlink);
 			trigger_error($message);

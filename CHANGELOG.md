@@ -23,6 +23,12 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Routed Gallery notifications through album-scoped moderation permissions:
+  status teams now share approval outcomes and state changes, comment
+  moderators receive new-comment notices, report recipients remain restricted
+  to `m_report`, and duplicate/self notifications are suppressed. Moderated
+  deletion notices include the author without exposing reporters, while image
+  unlocking now restores counters and creates the missing moderator log/event.
 - Enforced watermarking for externally processed BMP/TIFF originals by first
   creating a bounded temporary WebP, cleaned all provider response leases and
   watermark derivatives after delivery, and disabled MIME sniffing on every

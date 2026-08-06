@@ -73,6 +73,7 @@ $lang = array_merge($lang, [
 	'LOG_GALLERY_DELETED'         => '<strong>Image supprimée</strong><br />» %s',
 	'LOG_GALLERY_EDITED'          => '<strong>Image modifiée</strong><br />» %s',
 	'LOG_GALLERY_LOCKED'          => '<strong>Image verrouillée</strong><br />» %s',
+	'LOG_GALLERY_UNLOCKED'        => '<strong>Image déverrouillée</strong><br />» %s',
 	'LOG_GALLERY_MOVED'           => '<strong>Image déplacée</strong><br />» from %1$s to %2$s',
 	'LOG_GALLERY_REPORT_CLOSED'   => '<strong>Rapport fermé</strong><br />» %s',
 	'LOG_GALLERY_REPORT_DELETED'  => '<strong>Rapport supprimé</strong><br />» %s',

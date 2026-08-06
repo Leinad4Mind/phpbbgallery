@@ -13,6 +13,7 @@ use phpbbgallery\core\comment;
 use phpbbgallery\core\image\image;
 use phpbbgallery\core\moderate;
 use phpbbgallery\core\notification;
+use phpbbgallery\core\notification\helper as notification_helper;
 use phpbbgallery\core\rating;
 use phpbbgallery\core\report;
 use PHPUnit\Framework\TestCase;
@@ -45,7 +46,12 @@ final class domain_moderate_types_test extends TestCase
 
 			if (!$method->isConstructor())
 			{
-				$expected_return = $method->getName() === 'delete_requested_images' ? 'int' : 'void';
+				$expected_return = match ($method->getName())
+				{
+					'delete_requested_images' => 'int',
+					'load_notification_rows' => 'array',
+					default => 'void',
+				};
 				$this->assertSame($expected_return, (string) $method->getReturnType(), moderate::class . '::' . $method->getName() . '()');
 			}
 		}
@@ -131,6 +137,45 @@ final class domain_moderate_types_test extends TestCase
 		$reflection->getProperty('image')->setValue($moderate, $image);
 
 		$this->assertSame(1, $moderate->delete_requested_images($requested));
+	}
+
+	public function test_moderated_deletion_notifies_author_and_delete_team_after_success(): void
+	{
+		$moderate = (new \ReflectionClass(moderate::class))->newInstanceWithoutConstructor();
+		$images = [11];
+		$row = [
+			'image_id' => 11,
+			'image_user_id' => 7,
+			'image_album_id' => 3,
+			'image_status' => \phpbbgallery\core\block::STATUS_APPROVED,
+		];
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->once())->method('sql_in_set')->with('image_id', $images)->willReturn('image_id IN (11)');
+		$db->expects($this->once())->method('sql_query')->willReturn('rows');
+		$db->expects($this->exactly(2))->method('sql_fetchrow')->with('rows')->willReturnOnConsecutiveCalls($row, false);
+		$db->expects($this->once())->method('sql_freeresult')->with('rows');
+		$image = $this->createMock(image::class);
+		$image->expects($this->once())->method('handle_counter')->with($images, false);
+		$image->expects($this->once())->method('delete_images')->with($images, [])->willReturn(true);
+		$helper = $this->createMock(notification_helper::class);
+		$helper->expects($this->once())->method('notify_moderation')->with('deleted', [$row], 'm_delete', true);
+
+		$reflection = new \ReflectionClass(moderate::class);
+		foreach ([
+			'db' => $db,
+			'images_table' => 'gallery_images',
+			'gallery_rating' => $this->createStub(rating::class),
+			'comment' => $this->createStub(comment::class),
+			'gallery_notification' => $this->createStub(notification::class),
+			'report' => $this->createStub(report::class),
+			'image' => $image,
+			'notification_helper' => $helper,
+		] as $property => $value)
+		{
+			$reflection->getProperty($property)->setValue($moderate, $value);
+		}
+
+		$moderate->delete_images($images);
 	}
 
 	public function test_waiting_queue_loads_album_names_in_the_listing_query(): void

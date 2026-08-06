@@ -88,6 +88,9 @@ class moderate
 	 */
 	protected \phpbbgallery\core\rating $gallery_rating;
 
+	/** @var \phpbbgallery\core\notification\helper|null Moderation notification service */
+	protected ?\phpbbgallery\core\notification\helper $notification_helper = null;
+
 	/**
 	 * @var string
 	 */
@@ -143,6 +146,11 @@ class moderate
 		$this->gallery_rating = $gallery_rating;
 		$this->images_table = $images_table;
 		$this->albums_table = $albums_table;
+	}
+
+	public function set_notification_helper(\phpbbgallery\core\notification\helper $notification_helper): void
+	{
+		$this->notification_helper = $notification_helper;
 	}
 
 	/**
@@ -485,6 +493,7 @@ class moderate
 	 */
 	public function delete_images(array $images, array|false $files = []): void
 	{
+		$notification_rows = $this->load_notification_rows($images);
 		if ($files === false)
 		{
 			$files = [];
@@ -500,7 +509,13 @@ class moderate
 		$this->comment->delete_images($images);
 		$this->gallery_notification->delete_images($images);
 		$this->report->delete_images($images);
-		$this->image->delete_images($images, $files);
+		if ($this->image->delete_images($images, $files) && $this->notification_helper !== null)
+		{
+			$moderated_rows = array_values(array_filter($notification_rows, static fn(array $row): bool =>
+				(int) $row['image_status'] !== (int) \phpbbgallery\core\block::STATUS_UNAPPROVED
+			));
+			$this->notification_helper->notify_moderation('deleted', $moderated_rows, 'm_delete', true);
+		}
 	}
 
 	/**
@@ -508,6 +523,7 @@ class moderate
 	 */
 	public function delete_requested_images(array $images): int
 	{
+		$notification_rows = $this->load_notification_rows($images);
 		$this->gallery_rating->loader(0);
 		$deleted = $this->image->delete_images_matching_status_ids(
 			$images,
@@ -522,7 +538,48 @@ class moderate
 		$this->comment->delete_images($deleted);
 		$this->gallery_notification->delete_images($deleted);
 		$this->report->delete_images($deleted);
+		if ($this->notification_helper !== null)
+		{
+			$deleted_lookup = array_fill_keys(array_map('intval', $deleted), true);
+			$deleted_rows = array_values(array_filter($notification_rows, static fn(array $row): bool =>
+				isset($deleted_lookup[(int) $row['image_id']])
+			));
+			$this->notification_helper->notify_moderation('deleted', $deleted_rows, 'm_delete', true);
+		}
 
 		return count($deleted);
+	}
+
+	/**
+	 * Load immutable notification data before image rows are removed.
+	 *
+	 * @param array $images Image identifiers
+	 * @return array
+	 */
+	private function load_notification_rows(array $images): array
+	{
+		if ($this->notification_helper === null)
+		{
+			return [];
+		}
+
+		$images = array_values(array_unique(array_filter(array_map('intval', $images))));
+		if (!$images)
+		{
+			return [];
+		}
+
+		$sql = 'SELECT image_id, image_user_id, image_album_id, image_status
+			FROM ' . $this->images_table . '
+			WHERE ' . $this->db->sql_in_set('image_id', $images);
+		$result = $this->db->sql_query($sql);
+		$rows = [];
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$rows[] = $row;
+		}
+		$this->db->sql_freeresult($result);
+
+		return $rows;
 	}
 }

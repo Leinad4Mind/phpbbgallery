@@ -291,9 +291,11 @@ namespace
 	require_once dirname(__DIR__) . '/report.php';
 	require_once dirname(__DIR__) . '/search.php';
 	require_once dirname(__DIR__) . '/notification.php';
+	require_once __DIR__ . '/stubs/symfony_container.php';
 	require_once dirname(__DIR__) . '/notification/helper.php';
 	require_once dirname(__DIR__) . '/notification/events/phpbbgallery_image_approved.php';
 	require_once dirname(__DIR__) . '/notification/events/phpbbgallery_image_for_approval.php';
+	require_once dirname(__DIR__) . '/notification/events/phpbbgallery_image_moderated.php';
 	require_once dirname(__DIR__) . '/notification/events/phpbbgallery_image_not_approved.php';
 	require_once dirname(__DIR__) . '/notification/events/phpbbgallery_new_comment.php';
 	require_once dirname(__DIR__) . '/notification/events/phpbbgallery_new_image.php';
