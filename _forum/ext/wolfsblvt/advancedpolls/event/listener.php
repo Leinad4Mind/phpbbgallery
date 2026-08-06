@@ -21,6 +21,9 @@ class listener implements EventSubscriberInterface
 	/** @var \wolfsblvt\advancedpolls\core\advancedpolls */
 	protected $advancedpolls;
 
+	/** @var \wolfsblvt\advancedpolls\core\vote_user_lifecycle */
+	protected $vote_user_lifecycle;
+
 	/** @var \phpbb\path_helper */
 	protected $path_helper;
 
@@ -34,13 +37,15 @@ class listener implements EventSubscriberInterface
 	 * Constructor of event listener
 	 *
 	 * @param \wolfsblvt\advancedpolls\core\advancedpolls	$advancedpolls		Advanced Polls
+	 * @param \wolfsblvt\advancedpolls\core\vote_user_lifecycle $vote_user_lifecycle Vote user lifecycle
 	 * @param \phpbb\path_helper							$path_helper		phpBB path helper
 	 * @param \phpbb\template\template						$template			Template object
 	 * @param \phpbb\user									$user				User object
 	 */
-	public function __construct(\wolfsblvt\advancedpolls\core\advancedpolls $advancedpolls, \phpbb\path_helper $path_helper, \phpbb\template\template $template, \phpbb\user $user)
+	public function __construct(\wolfsblvt\advancedpolls\core\advancedpolls $advancedpolls, \wolfsblvt\advancedpolls\core\vote_user_lifecycle $vote_user_lifecycle, \phpbb\path_helper $path_helper, \phpbb\template\template $template, \phpbb\user $user)
 	{
 		$this->advancedpolls = $advancedpolls;
+		$this->vote_user_lifecycle = $vote_user_lifecycle;
 		$this->path_helper = $path_helper;
 		$this->template = $template;
 		$this->user = $user;
@@ -56,12 +61,29 @@ class listener implements EventSubscriberInterface
 		return array(
 			'core.permissions'								=> 'adv_polls_permissions',				// permissions
 			'core.user_setup'								=> 'load_language_on_setup',			// language for notifications
+			'core.delete_user_before'						=> 'delete_user_before',				// retain or remove poll votes
 			'core.posting_modify_submission_errors'			=> 'check_config_for_polls',			// posting check before saving
 			'core.posting_modify_template_vars'				=> 'config_for_polls_to_template',		// posting to template
 			'core.submit_post_modify_sql_data'				=> 'save_config_for_polls',				// posting to db
 			'core.viewtopic_modify_poll_data'				=> 'do_poll_voting_modifications',		// viewtopic to db
 			'core.viewtopic_modify_poll_ajax_data'		=> 'do_poll_ajax_modifications',			// redact hidden AJAX results
 			'core.viewtopic_modify_poll_template_data'		=> 'do_poll_template_modifications',	// viewtopic to template
+		);
+	}
+
+	/**
+	 * Retain or remove votes according to phpBB's account deletion mode.
+	 *
+	 * @param object $event Event data
+	 * @return void
+	 */
+	public function delete_user_before($event)
+	{
+		$this->vote_user_lifecycle->handle(
+			$event['mode'],
+			$event['user_ids'],
+			$event['retain_username'],
+			$event['user_rows']
 		);
 	}
 

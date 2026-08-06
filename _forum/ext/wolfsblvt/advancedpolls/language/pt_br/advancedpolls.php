@@ -43,6 +43,7 @@ $lang = array_merge($lang, [
 	'AP_POLL_RUN_TILL_APPEND' => ', até que todos os votos estejam ocultos.',
 	'AP_VOTERS'               => 'Votantes',
 	'AP_NONE'                 => 'Ninguém',
+	'AP_DELETED_USER'         => 'Usuário excluído',
 
 	'AP_POLL_CANT_VOTE'              => 'Você não pode votar nesta votação. Razão',
 	'AP_POLL_REASON_NOT_POSTED'      => 'Você não escreveu neste tópico.',
@@ -62,6 +63,15 @@ $lang = array_merge($lang, [
 	'AP_GUEST_VOTES' => [
 		1 => '%d voto de convidado',
 		2 => '%d votos de convidados',
+	],
+	'AP_SCORE_TOTAL' => [
+		1 => '%d voto',
+		2 => '%d votos',
+	],
+	'AP_SCORE_BREAKDOWN' => 'Detalhamento dos votos',
+	'AP_SCORE_DISTRIBUTION_ENTRY' => [
+		1 => '%1$d voto de %2$d ponto',
+		2 => '%1$d votos de %2$d pontos',
 	],
 // Posting
 	'AP_POLL_VISIBILITY' => 'Visibilidade dos resultados',

@@ -43,6 +43,7 @@ $lang = array_merge($lang, [
 	'AP_POLL_RUN_TILL_APPEND'			=> '。終了まで投票結果は非表示となります。',
 	'AP_VOTERS'					=> '投票者',
 	'AP_NONE'					=> 'なし',
+	'AP_DELETED_USER'			=> '削除されたユーザー',
 
 	'AP_POLL_CANT_VOTE'				=> 'この投票には参加できません。理由：',
 	'AP_POLL_REASON_NOT_POSTED'			=> 'まだこのトピックで投稿を行っていません。',
@@ -62,6 +63,15 @@ $lang = array_merge($lang, [
 	'AP_GUEST_VOTES'						=> [
 		1	=> 'ゲスト票：%d 票', // %d vote from guest
 		2	=> 'ゲスト票：%d 票', // %d votes from guests
+	],
+	'AP_SCORE_TOTAL' => [
+		1 => '%d 票',
+		2 => '%d 票',
+	],
+	'AP_SCORE_BREAKDOWN' => '得点別の投票内訳',
+	'AP_SCORE_DISTRIBUTION_ENTRY' => [
+		1 => '%2$d 点：%1$d 票',
+		2 => '%2$d 点：%1$d 票',
 	],
 // Posting
 	'AP_POLL_VISIBILITY' => '結果の表示タイミング',

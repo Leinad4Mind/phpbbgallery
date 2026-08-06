@@ -1,8 +1,3 @@
-<!--
- Advanced Polls
- Copyright (c) 2026 Leinad4Mind
- GNU General Public License v2
--->
 <!-- IF S_DISPLAY_PREVIEW and WOLFSBLVT_POLL_SCORING -->
 <!-- IF not $INCLUDED_JXTOOLSJS -->
     <!-- INCLUDEJS lib/jxtools.js -->
@@ -18,7 +13,7 @@
 						<div class="poll_option_select pull-left">
 
 							<!-- IF AP_IS_SCORING -->
-								<select name="vote_id[{poll_option.POLL_OPTION_ID}]" id="vote_{poll_option.POLL_OPTION_ID}">{poll_option.AP_POLL_OPTION_OPTS}</select>
+								<select name="vote_id[{poll_option.POLL_OPTION_ID}]" id="vote_{poll_option.POLL_OPTION_ID}" class="form-control input-sm ap-score-select">{poll_option.AP_POLL_OPTION_OPTS}</select>
 							<!-- ELSE -->
 								<input type="<!-- IF S_IS_MULTI_CHOICE -->checkbox<!-- ELSE -->radio<!-- ENDIF -->" name="vote_id[]" id="vote_{poll_option.POLL_OPTION_ID}" value="{poll_option.POLL_OPTION_ID}" />
 							<!-- ENDIF -->

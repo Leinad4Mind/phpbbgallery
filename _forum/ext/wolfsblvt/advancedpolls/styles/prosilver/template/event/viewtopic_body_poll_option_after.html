@@ -1,8 +1,3 @@
-<!--
- Advanced Polls
- Copyright (c) 2026 Leinad4Mind
- GNU General Public License v2
--->
 <!-- IF not $INCLUDED_WOLFSBLVTADVANCEDPOLLSJS -->
 	<!-- INCLUDEJS js/functions.js -->
 	<!-- INCLUDEJS js/onload.js -->
@@ -13,6 +8,20 @@
     <!-- INCLUDEJS lib/jxtools.js -->
 	<!-- DEFINE $INCLUDED_JXTOOLSJS = true -->
 <!-- ENDIF -->
+<!-- ENDIF -->
+
+<!-- IF poll_option.AP_SCORE_BREAKDOWN -->
+	<span class="ap-score-breakdown-source hidden" data-score-option-id="{poll_option.POLL_OPTION_ID}">
+		<span class="ap-score-breakdown-widget">
+			<button type="button" class="ap-score-breakdown-trigger" aria-expanded="false" aria-label="{poll_option.AP_SCORE_TOTAL}. {L_AP_SCORE_BREAKDOWN}">
+				<span class="ap-score-total">{poll_option.AP_SCORE_TOTAL}</span>
+			</button>
+			<span class="ap-score-breakdown-popup" role="tooltip">
+				<strong>{L_AP_SCORE_BREAKDOWN}</strong>
+				<span class="ap-score-breakdown-list">{poll_option.AP_SCORE_BREAKDOWN}</span>
+			</span>
+		</span>
+	</span>
 <!-- ENDIF -->
 
 <!-- IF AP_POLL_SHOW_VOTERS -->

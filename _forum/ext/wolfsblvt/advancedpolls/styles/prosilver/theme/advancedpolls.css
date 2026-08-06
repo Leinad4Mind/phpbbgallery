@@ -25,3 +25,111 @@ span.poll_vote_notice {
 dd label {
 	white-space: normal !important;
 }
+
+.ap-score-breakdown-host {
+	overflow: visible !important;
+	position: relative;
+	z-index: 2;
+}
+
+.ap-score-breakdown-widget {
+	display: inline-block;
+	line-height: normal;
+	position: relative;
+}
+
+.ap-score-breakdown-trigger {
+	background: transparent;
+	border: 0;
+	border-bottom: 1px dotted currentColor;
+	color: inherit !important;
+	cursor: help;
+	font: inherit;
+	font-weight: bold;
+	line-height: inherit;
+	margin: 0;
+	padding: 0 2px;
+	white-space: nowrap;
+}
+
+.ap-score-breakdown-trigger:focus {
+	outline: 2px solid currentColor;
+	outline-offset: 2px;
+}
+
+.ap-score-breakdown-popup {
+	background: #fff;
+	border: 1px solid #777;
+	border-radius: 4px;
+	box-shadow: 0 3px 10px rgba(0, 0, 0, .25);
+	color: #222;
+	display: none;
+	font-size: 12px;
+	font-weight: normal;
+	left: 50%;
+	line-height: 1.45;
+	padding: 8px 10px;
+	position: absolute;
+	text-align: left;
+	top: calc(100% + 7px);
+	transform: translateX(-50%);
+	white-space: normal;
+	width: 220px;
+	z-index: 50;
+}
+
+.ap-score-breakdown-widget:hover .ap-score-breakdown-popup,
+.ap-score-breakdown-widget:focus-within .ap-score-breakdown-popup,
+.ap-score-breakdown-widget.is-open .ap-score-breakdown-popup {
+	display: block;
+}
+
+.ap-score-breakdown-list,
+.ap-score-breakdown-entry {
+	display: block;
+}
+
+@media (max-width: 700px) {
+	.ap-score-breakdown-popup {
+		left: 0;
+		max-width: calc(100vw - 40px);
+		transform: none;
+	}
+}
+
+.ap-infopoll {
+	max-height: 65vh;
+	overflow-y: auto;
+	padding-right: 4px;
+}
+
+.ap-infopoll-question {
+	font-size: 1.15em;
+	margin: 0 0 12px;
+}
+
+.ap-infopoll-option {
+	border-bottom: 1px solid rgba(127, 127, 127, .35);
+	padding: 9px 0;
+}
+
+.ap-infopoll-option:last-of-type {
+	border-bottom: 0;
+}
+
+.ap-infopoll-option-title,
+.ap-infopoll-option-total,
+.ap-infopoll-voters,
+.ap-infopoll-all-voters {
+	display: block;
+}
+
+.ap-infopoll-option-title {
+	font-weight: bold;
+}
+
+.ap-infopoll-all-voters {
+	border-top: 1px solid rgba(127, 127, 127, .55);
+	margin-top: 10px;
+	padding-top: 10px;
+}

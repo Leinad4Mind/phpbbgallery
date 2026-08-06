@@ -112,6 +112,7 @@ class advancedpolls_core_test extends TestCase
 			'user_votes' => array(4),
 			'vote_counts' => array(4 => 7, 5 => 2),
 			'total_votes' => 9,
+			'score_breakdowns' => array(4 => array('total' => '7 votes', 'detail' => 'secret')),
 		);
 
 		$core->do_poll_ajax_modifications($topic, $data);
@@ -120,7 +121,60 @@ class advancedpolls_core_test extends TestCase
 		$this->assertSame(array(4), $data['user_votes']);
 		$this->assertSame(array(4 => 0, 5 => 0), $data['vote_counts']);
 		$this->assertSame(0, $data['total_votes']);
+		$this->assertArrayNotHasKey('score_breakdowns', $data);
 		$this->assertTrue($data['results_hidden']);
+	}
+
+	public function test_scoring_distribution_query_and_formatting()
+	{
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->once())
+			->method('sql_query')
+			->with($this->stringContains('GROUP BY poll_option_id, wolfsblvt_poll_option_value'))
+			->willReturn(true);
+		$db->method('sql_fetchrow')->willReturnOnConsecutiveCalls(
+			array('poll_option_id' => 4, 'score_value' => 1, 'voter_count' => 2),
+			array('poll_option_id' => 4, 'score_value' => 2, 'voter_count' => 5),
+			array('poll_option_id' => 4, 'score_value' => 3, 'voter_count' => 10),
+			false
+		);
+		$db->expects($this->once())->method('sql_freeresult')->with(true);
+		$core = $this->create_core(array(), array(), false, null, $db);
+
+		$load = new \ReflectionMethod($core, 'get_score_distribution');
+		$load->setAccessible(true);
+		$distribution = $load->invoke($core, 12);
+		$this->assertSame(array(4 => array(1 => 2, 2 => 5, 3 => 10)), $distribution);
+
+		$format = new \ReflectionMethod($core, 'format_score_breakdowns');
+		$format->setAccessible(true);
+		$breakdowns = $format->invoke($core, $distribution, array(4 => 42));
+		$this->assertSame('42 votes', $breakdowns[4]['total']);
+		$this->assertStringContainsString('2 votes of 1 point', $breakdowns[4]['detail']);
+		$this->assertStringContainsString('5 votes of 2 points', $breakdowns[4]['detail']);
+		$this->assertStringContainsString('10 votes of 3 points', $breakdowns[4]['detail']);
+	}
+
+	public function test_missing_voters_use_retained_name_or_deleted_user_fallback()
+	{
+		$core = $this->create_core();
+		$retained_names = new \ReflectionProperty($core, 'retained_voter_names');
+		$retained_names->setAccessible(true);
+		$retained_names->setValue($core, array(7 => 'Former member'));
+		$complete = new \ReflectionMethod($core, 'complete_voter_cache');
+		$complete->setAccessible(true);
+
+		$cache = $complete->invoke($core, array(
+			7 => null,
+			8 => null,
+			9 => array('username' => 'Active', 'total_user_votes' => 2),
+		));
+
+		$this->assertSame('Former member', $cache[7]['username']);
+		$this->assertSame('Deleted user', $cache[8]['username']);
+		$this->assertTrue($cache[7]['is_deleted']);
+		$this->assertSame(0, $cache[7]['total_user_votes']);
+		$this->assertSame(array('username' => 'Active', 'total_user_votes' => 2), $cache[9]);
 	}
 
 	public function test_ajax_visibility_and_vote_modes_follow_policy()
@@ -175,9 +229,9 @@ class advancedpolls_core_test extends TestCase
 		);
 	}
 
-	private function create_core(array $request_values = array(), array $config_values = array(), $acl = false, $request = null)
+	private function create_core(array $request_values = array(), array $config_values = array(), $acl = false, $request = null, $db = null)
 	{
-		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db = $db ?: $this->createMock(\phpbb\db\driver\driver_interface::class);
 		$config = new \phpbb\config\config(array_merge(array(
 			'wolfsblvt.advancedpolls.default_poll_visibility' => poll_options::VISIBILITY_DEFAULT,
 			'wolfsblvt.advancedpolls.default_poll_vote_mode' => poll_options::VOTE_MODE_NO_CHANGE,
@@ -198,7 +252,21 @@ class advancedpolls_core_test extends TestCase
 			'AP_VOTE_MODE_NO_CHANGE' => 'No change',
 			'AP_VOTE_MODE_INCREMENTAL' => 'Incremental',
 			'AP_VOTE_MODE_CHANGE' => 'Change',
+			'AP_DELETED_USER' => 'Deleted user',
 		);
+		$user->method('lang')->willReturnCallback(function ($key) use ($user) {
+			$args = func_get_args();
+			if ($key === 'AP_SCORE_TOTAL')
+			{
+				return $args[1] . ($args[1] === 1 ? ' vote' : ' votes');
+			}
+			if ($key === 'AP_SCORE_DISTRIBUTION_ENTRY')
+			{
+				return $args[1] . ($args[1] === 1 ? ' vote' : ' votes') . ' of '
+					. $args[2] . ($args[2] === 1 ? ' point' : ' points');
+			}
+			return isset($user->lang[$key]) ? $user->lang[$key] : $key;
+		});
 		$auth = $this->createMock(\phpbb\auth\auth::class);
 		$auth->method('acl_get')->willReturn((bool) $acl);
 		if ($request === null)
@@ -209,7 +277,9 @@ class advancedpolls_core_test extends TestCase
 			});
 		}
 		$dispatcher = $this->createMock(\phpbb\event\dispatcher_interface::class);
+		$controller_helper = $this->createMock(\phpbb\controller\helper::class);
+		$controller_helper->method('route')->willReturn('/app.php/advancedpolls/infopoll/12');
 
-		return new advancedpolls($db, $config, $template, $user, $auth, $request, $dispatcher);
+		return new advancedpolls($db, $config, $template, $user, $auth, $request, $dispatcher, $controller_helper);
 	}
 }

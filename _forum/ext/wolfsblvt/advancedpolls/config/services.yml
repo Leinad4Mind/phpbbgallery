@@ -3,11 +3,16 @@ services:
         class: wolfsblvt\advancedpolls\event\listener
         arguments:
             - '@wolfsblvt.advancedpolls.advancedpolls'
+            - '@wolfsblvt.advancedpolls.vote_user_lifecycle'
             - '@path_helper'
             - '@template'
             - '@user'
         tags:
             - {name: event.listener}
+    wolfsblvt.advancedpolls.vote_user_lifecycle:
+        class: wolfsblvt\advancedpolls\core\vote_user_lifecycle
+        arguments:
+            - '@dbal.conn'
     wolfsblvt.advancedpolls.advancedpolls:
         class: wolfsblvt\advancedpolls\core\advancedpolls
         arguments:
@@ -18,6 +23,15 @@ services:
             - '@auth'
             - '@request'
             - '@dispatcher'
+            - '@controller.helper'
+
+    wolfsblvt.advancedpolls.controller.infopoll:
+        class: wolfsblvt\advancedpolls\controller\infopoll
+        arguments:
+            - '@dbal.conn'
+            - '@auth'
+            - '@user'
+            - '@request'
     wolfsblvt.advancedpolls.notification.type.pollended:
         class: wolfsblvt\advancedpolls\notification\pollended
         shared: false

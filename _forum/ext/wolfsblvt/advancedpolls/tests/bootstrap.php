@@ -33,15 +33,38 @@ if (!defined('POLL_VOTES_TABLE'))
 {
 	define('POLL_VOTES_TABLE', 'phpbb_poll_votes');
 }
+if (!defined('POLL_OPTIONS_TABLE'))
+{
+	define('POLL_OPTIONS_TABLE', 'phpbb_poll_options');
+}
+if (!defined('POSTS_TABLE'))
+{
+	define('POSTS_TABLE', 'phpbb_posts');
+}
+if (!defined('USERS_TABLE'))
+{
+	define('USERS_TABLE', 'phpbb_users');
+}
 if (!defined('ANONYMOUS'))
 {
 	define('ANONYMOUS', 1);
 }
+if (!defined('OPTION_FLAG_BBCODE'))
+{
+	define('OPTION_FLAG_BBCODE', 1);
+}
+if (!defined('OPTION_FLAG_SMILIES'))
+{
+	define('OPTION_FLAG_SMILIES', 2);
+}
 
 require_once __DIR__ . '/../core/poll_options.php';
 require_once __DIR__ . '/../core/vote_validator.php';
+require_once __DIR__ . '/../core/score_distribution.php';
+require_once __DIR__ . '/../core/vote_user_lifecycle.php';
 require_once __DIR__ . '/../core/compatibility.php';
 require_once __DIR__ . '/../core/advancedpolls.php';
+require_once __DIR__ . '/../controller/infopoll.php';
 require_once __DIR__ . '/../event/listener.php';
 require_once __DIR__ . '/../cron/task/pollend.php';
 require_once __DIR__ . '/../notification/pollended.php';

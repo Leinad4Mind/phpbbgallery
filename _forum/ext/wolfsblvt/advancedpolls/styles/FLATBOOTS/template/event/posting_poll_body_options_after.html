@@ -1,8 +1,3 @@
-<!--
- Advanced Polls
- Copyright (c) 2026 Leinad4Mind
- GNU General Public License v2
--->
 <!-- IF S_SHOW_POLL_BOX -->
 <!-- IF WOLFSBLVT_POLL_END or WOLFSBLVT_POLL_SCORING -->
 <!-- IF not $INCLUDED_JXTOOLSJS -->
@@ -18,14 +13,14 @@
 	<div class="control-group">
 		<label for="wolfsblvt_poll_duration">{L_AP_RUN_POLL}{L_COLON}</label>
 		<div class="controls controls-row">
-			<select name="wolfsblvt_poll_duration" id="wolfsblvt_poll_duration" onchange="apChangeDuration(this.value);">
+			<select name="wolfsblvt_poll_duration" id="wolfsblvt_poll_duration" class="form-control input-sm ap-config-select" onchange="apChangeDuration(this.value);">
 				<option value="" selected="selected">{L_AP_RUN_POLL_INDEFINITELY}</option>
 				<option value="wolfsblvt_poll_length">{L_AP_RUN_POLL_FOR}</option>
 				<option value="wolfsblvt_poll_end">{L_AP_RUN_POLL_UNTIL}</option>
 			</select>
 			<span id="wolfsblvt_poll_length" style="display: none; margin: 0px 10px;">
 				<input style="width: 4em !important;" id="poll_length" name="poll_length" size="3" maxlength="3" min="0" max="999" value="{POLL_LENGTH}" class="inputbox autowidth" type="number" onchange="apAdjustLength(this.value);">
-				<select name="wolfsblvt_poll_length_scale" onchange="apAdjustLengthScale(this.value);">
+				<select name="wolfsblvt_poll_length_scale" class="form-control input-sm ap-config-select" onchange="apAdjustLengthScale(this.value);">
 					<option value="1">{L_HOURS}</option>
 					<option value="24" selected="selected">{L_DAYS}</option>
 				</select>
@@ -80,14 +75,14 @@
 	<label class="control-label" for="wolfsblvt_poll_visibility">{L_AP_POLL_VISIBILITY}{L_COLON}</label>
 	<span class="help-block">{L_AP_POLL_VISIBILITY_EXPLAIN}</span>
 	<div class="controls controls-row">
-		<select id="wolfsblvt_poll_visibility" name="wolfsblvt_poll_visibility">{AP_POLL_VISIBILITY_OPTIONS}</select>
+		<select id="wolfsblvt_poll_visibility" name="wolfsblvt_poll_visibility" class="form-control input-sm ap-config-select">{AP_POLL_VISIBILITY_OPTIONS}</select>
 	</div>
 </div>
 <div class="control-group">
 	<label class="control-label" for="wolfsblvt_poll_vote_mode">{L_AP_POLL_VOTE_MODE}{L_COLON}</label>
 	<span class="help-block">{L_AP_POLL_VOTE_MODE_EXPLAIN}</span>
 	<div class="controls controls-row">
-		<select id="wolfsblvt_poll_vote_mode" name="wolfsblvt_poll_vote_mode">{AP_POLL_VOTE_MODE_OPTIONS}</select>
+		<select id="wolfsblvt_poll_vote_mode" name="wolfsblvt_poll_vote_mode" class="form-control input-sm ap-config-select">{AP_POLL_VOTE_MODE_OPTIONS}</select>
 	</div>
 </div>
 <!-- IF WOLFSBLVT_POLL_VOTERS_LIMIT -->

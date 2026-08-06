@@ -44,6 +44,7 @@ $lang = array_merge($lang, [
 	'AP_POLL_RUN_TILL_APPEND'				=> ', עד אז  כל ההצבעות נסתרות.',
 	'AP_VOTERS'								=> 'מצביעים',
 	'AP_NONE'								=> 'אין',
+	'AP_DELETED_USER'					=> 'משתמש שנמחק',
 
 	'AP_POLL_CANT_VOTE'						=> 'אתה לא יכול להשתתף בסקר זה. סיבה-',
 	'AP_POLL_REASON_NOT_POSTED'				=> 'לא כתבת הודעה בנושא זה',
@@ -63,6 +64,15 @@ $lang = array_merge($lang, [
 	'AP_GUEST_VOTES' => [
 		1 => '%d קול מאורח',
 		2 => '%d קולות מאורחים',
+	],
+	'AP_SCORE_TOTAL' => [
+		1 => '%d הצבעה',
+		2 => '%d הצבעות',
+	],
+	'AP_SCORE_BREAKDOWN' => 'פירוט ההצבעות',
+	'AP_SCORE_DISTRIBUTION_ENTRY' => [
+		1 => '%1$d הצבעה של %2$d נקודה',
+		2 => '%1$d הצבעות של %2$d נקודות',
 	],
 // Posting
 	'AP_POLL_VISIBILITY' => 'נראות התוצאות',

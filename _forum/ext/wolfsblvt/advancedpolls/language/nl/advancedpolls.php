@@ -44,6 +44,7 @@ $lang = array_merge($lang, [
 	'AP_POLL_RUN_TILL_APPEND'				=> ', tot, dan alle stemmen verbergen.',
 	'AP_VOTERS'								=> 'Stemmers',
 	'AP_NONE'								=> 'Geen',
+	'AP_DELETED_USER'					=> 'Verwijderde gebruiker',
 
 	'AP_POLL_CANT_VOTE'						=> 'U kunt op deze vraag niet stemmen omdat',
 	'AP_POLL_REASON_NOT_POSTED'				=> 'U heeft in dit onderwerp niets geschreven.',
@@ -63,6 +64,15 @@ $lang = array_merge($lang, [
 	'AP_GUEST_VOTES'	=> [
 		1	=> '%d stem van een gast',
 		2	=> '%d stemmen van gasten',
+	],
+	'AP_SCORE_TOTAL' => [
+		1 => '%d stem',
+		2 => '%d stemmen',
+	],
+	'AP_SCORE_BREAKDOWN' => 'Stemverdeling',
+	'AP_SCORE_DISTRIBUTION_ENTRY' => [
+		1 => '%1$d stem van %2$d punt',
+		2 => '%1$d stemmen van %2$d punten',
 	],
 // Posting
 	'AP_POLL_VISIBILITY' => 'Zichtbaarheid van resultaten',

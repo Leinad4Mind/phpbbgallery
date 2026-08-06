@@ -25,6 +25,7 @@ class integration_contract_test extends TestCase
 		$this->assertSame(array(
 			'core.permissions' => 'adv_polls_permissions',
 			'core.user_setup' => 'load_language_on_setup',
+			'core.delete_user_before' => 'delete_user_before',
 			'core.posting_modify_submission_errors' => 'check_config_for_polls',
 			'core.posting_modify_template_vars' => 'config_for_polls_to_template',
 			'core.submit_post_modify_sql_data' => 'save_config_for_polls',
@@ -32,6 +33,22 @@ class integration_contract_test extends TestCase
 			'core.viewtopic_modify_poll_ajax_data' => 'do_poll_ajax_modifications',
 			'core.viewtopic_modify_poll_template_data' => 'do_poll_template_modifications',
 		), listener::getSubscribedEvents());
+	}
+
+	public function test_listener_forwards_phpbb_user_deletion_policy()
+	{
+		$lifecycle = $this->createMock(\wolfsblvt\advancedpolls\core\vote_user_lifecycle::class);
+		$lifecycle->expects($this->once())
+			->method('handle')
+			->with('retain', array(7), 'Former user', array(7 => array('username' => 'Former user')));
+		$listener = $this->create_listener(null, $lifecycle);
+
+		$listener->delete_user_before(new \ArrayObject(array(
+			'mode' => 'retain',
+			'user_ids' => array(7),
+			'retain_username' => 'Former user',
+			'user_rows' => array(7 => array('username' => 'Former user')),
+		)));
 	}
 
 	public function test_listener_adds_permissions_and_language_catalogues()
@@ -103,10 +120,11 @@ class integration_contract_test extends TestCase
 		$this->assertSame(1, substr_count($vote_mode, 'selected="selected"'));
 	}
 
-	public function test_schema_migration_adds_and_reverts_portable_topic_columns()
+	public function test_schema_migration_adds_and_reverts_portable_columns()
 	{
 		$migration = $this->create_schema_migration();
-		$columns = $migration->update_schema()['add_columns']['phpbb_topics'];
+		$schema = $migration->update_schema()['add_columns'];
+		$columns = $schema['phpbb_topics'];
 
 		$this->assertSame(array('UINT:1', 1), $columns['wolfsblvt_poll_visibility']);
 		$this->assertSame(array('UINT:1', 0), $columns['wolfsblvt_poll_vote_mode']);
@@ -116,6 +134,11 @@ class integration_contract_test extends TestCase
 			$this->assertLessThanOrEqual(30, strlen($column), $column . ' exceeds phpBB portable identifier length');
 		}
 		$this->assertSame(array_keys($columns), $migration->revert_schema()['drop_columns']['phpbb_topics']);
+		$this->assertSame(array('VCHAR_UNI:255', ''), $schema['phpbb_poll_votes']['wolfsblvt_vote_user_name']);
+		$this->assertSame(
+			array('wolfsblvt_vote_user_name'),
+			$migration->revert_schema()['drop_columns']['phpbb_poll_votes']
+		);
 	}
 
 	public function test_data_migration_maps_legacy_options_and_initialises_cron()
@@ -204,10 +227,11 @@ class integration_contract_test extends TestCase
 		$this->assertSame('notifications', $extension->purge_step(''));
 	}
 
-	private function create_listener($advancedpolls = null)
+	private function create_listener($advancedpolls = null, $lifecycle = null)
 	{
 		return new listener(
 			$advancedpolls ?: $this->createMock(\wolfsblvt\advancedpolls\core\advancedpolls::class),
+			$lifecycle ?: $this->createMock(\wolfsblvt\advancedpolls\core\vote_user_lifecycle::class),
 			$this->createMock(\phpbb\path_helper::class),
 			$this->createMock(\phpbb\template\template::class),
 			$this->createMock(\phpbb\user::class)

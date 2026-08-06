@@ -29,6 +29,9 @@ class v1_3_0_schema extends \phpbb\db\migration\migration
 					'wolfsblvt_poll_vote_mode' => array('UINT:1', 0),
 					'wolfsblvt_poll_notified' => array('BOOL', 0),
 				),
+				$this->table_prefix . 'poll_votes' => array(
+					'wolfsblvt_vote_user_name' => array('VCHAR_UNI:255', ''),
+				),
 			),
 		);
 	}
@@ -41,6 +44,9 @@ class v1_3_0_schema extends \phpbb\db\migration\migration
 					'wolfsblvt_poll_visibility',
 					'wolfsblvt_poll_vote_mode',
 					'wolfsblvt_poll_notified',
+				),
+				$this->table_prefix . 'poll_votes' => array(
+					'wolfsblvt_vote_user_name',
 				),
 			),
 		);

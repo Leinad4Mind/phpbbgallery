@@ -24,17 +24,28 @@ class package_validation_test extends TestCase
 		$this->assertSame('>=3.3.0,<4.0.0@dev', $composer['extra']['soft-require']['phpbb/phpbb']);
 	}
 
-	public function test_services_register_listener_core_cron_and_notification()
+	public function test_services_register_listener_core_controller_cron_and_notification()
 	{
 		$services = file_get_contents($this->extension_root() . '/config/services.yml');
+		$routing = file_get_contents($this->extension_root() . '/config/routing.yml');
+		$parsed_services = \Symfony\Component\Yaml\Yaml::parse($services);
+		$parsed_routing = \Symfony\Component\Yaml\Yaml::parse($routing);
 
+		$this->assertArrayHasKey('wolfsblvt.advancedpolls.controller.infopoll', $parsed_services['services']);
+		$this->assertArrayHasKey('wolfsblvt_advancedpolls_infopoll', $parsed_routing);
 		$this->assertStringContainsString('wolfsblvt.advancedpolls.listener:', $services);
 		$this->assertStringContainsString('wolfsblvt.advancedpolls.advancedpolls:', $services);
+		$this->assertStringContainsString('wolfsblvt.advancedpolls.controller.infopoll:', $services);
+		$this->assertStringContainsString('wolfsblvt.advancedpolls.vote_user_lifecycle:', $services);
+		$this->assertStringContainsString("- '@controller.helper'", $services);
 		$this->assertStringContainsString('wolfsblvt.advancedpolls.notification.type.pollended:', $services);
 		$this->assertStringContainsString('wolfsblvt.advancedpolls.cron.task.pollend:', $services);
 		$this->assertStringContainsString('{name: event.listener}', $services);
 		$this->assertStringContainsString('{name: notification.type}', $services);
 		$this->assertStringContainsString('{name: cron.task}', $services);
+		$this->assertStringContainsString('wolfsblvt_advancedpolls_infopoll:', $routing);
+		$this->assertStringContainsString('/advancedpolls/infopoll/{topic_id}', $routing);
+		$this->assertStringContainsString('methods: [GET]', $routing);
 	}
 
 	public function test_english_and_portuguese_have_all_new_feature_language_keys()
@@ -50,6 +61,9 @@ class package_validation_test extends TestCase
 			'AP_VOTE_MODE_NO_CHANGE',
 			'AP_VOTE_MODE_INCREMENTAL',
 			'AP_VOTE_MODE_CHANGE',
+			'AP_SCORE_TOTAL',
+			'AP_SCORE_BREAKDOWN',
+			'AP_SCORE_DISTRIBUTION_ENTRY',
 		);
 		$acp_keys = array(
 			'AP_DEFAULT_POLL_VISIBILITY',
@@ -93,6 +107,7 @@ class package_validation_test extends TestCase
 			'template/js/scoring_preview.js',
 			'template/js/scoring_topic.js',
 			'template/lib/jxtools.js',
+			'theme/advancedpolls.css',
 		);
 
 		foreach ($styles as $style)
@@ -108,16 +123,40 @@ class package_validation_test extends TestCase
 			$this->assertStringContainsString('{AP_POLL_VISIBILITY_OPTIONS}', $posting);
 			$this->assertStringContainsString('name="wolfsblvt_poll_vote_mode"', $posting);
 			$this->assertStringContainsString('{AP_POLL_VOTE_MODE_OPTIONS}', $posting);
+			if ($style !== 'prosilver')
+			{
+				$this->assertStringContainsString('form-control input-sm ap-config-select', $posting);
+			}
 
 			$option = file_get_contents($root . 'template/event/viewtopic_body_poll_option_after.html');
 			$this->assertStringContainsString('AP_CAN_DELETE_VOTE', $option);
 			$this->assertStringContainsString('AP_DELETE_VOTE', $option);
+			$this->assertStringContainsString('AP_SCORE_BREAKDOWN', $option);
+			$this->assertStringContainsString('aria-expanded="false"', $option);
+			if ($style !== 'prosilver')
+			{
+				$this->assertStringContainsString('form-control input-sm ap-score-select', $option);
+			}
+
+			$info_file = $style === 'prosilver'
+				? 'template/event/viewtopic_body_poll_question_prepend.html'
+				: 'template/event/viewtopic_topic_tools_before.html';
+			$info = file_get_contents($root . $info_file);
+			$this->assertStringContainsString('class="', $info);
+			$this->assertStringContainsString('ap-infopoll-button', $info);
+			$this->assertStringContainsString('data-infopoll-url="{U_AP_POLL_INFO_AJAX}"', $info);
 
 			$onload = file_get_contents($root . 'template/js/onload.js');
 			$this->assertStringContainsString('res.results_hidden', $onload);
 			$this->assertMatchesRegularExpression('/no_vote:\s*true/', $onload);
 			$this->assertMatchesRegularExpression('/delete_vote:\s*true/', $onload);
 			$this->assertSame(2, substr_count($onload, 'form_token:'));
+			$this->assertStringContainsString('installScoreBreakdowns', $onload);
+			$this->assertStringContainsString('res.score_breakdowns', $onload);
+			$this->assertStringContainsString("$(document).on('click', '.ap-infopoll-button'", $onload);
+			$this->assertStringContainsString("type: 'GET'", $onload);
+			$this->assertStringContainsString('phpbb.alert(', $onload);
+			$this->assertStringContainsString('event.preventDefault()', $onload);
 
 			$date = file_get_contents($root . 'template/js/poll_length_posting.js');
 			$this->assertStringContainsString('apPollEnd.getHours()).slice(-2)', $date);
@@ -130,12 +169,22 @@ class package_validation_test extends TestCase
 		$core = file_get_contents($this->extension_root() . '/core/advancedpolls.php');
 		$notification = file_get_contents($this->extension_root() . '/notification/pollended.php');
 		$schema = file_get_contents($this->extension_root() . '/migrations/v1_3_0_schema.php');
+		$infopoll = file_get_contents($this->extension_root() . '/controller/infopoll.php');
+		$lifecycle = file_get_contents($this->extension_root() . '/core/vote_user_lifecycle.php');
 
 		$this->assertStringContainsString("is_set_post('delete_vote')", $core);
 		$this->assertStringContainsString("check_form_key('posting')", $core);
 		$this->assertStringContainsString("sql_transaction('rollback')", $core);
 		$this->assertStringContainsString("is_set_post('no_vote')", $core);
 		$this->assertStringContainsString('vote_user_id <> ' . "' . ANONYMOUS", $notification);
+		$this->assertStringContainsString("acl_get('f_read'", $infopoll);
+		$this->assertStringContainsString("acl_get('m_seevoters'", $infopoll);
+		$this->assertStringContainsString('is_ajax()', $infopoll);
+		$this->assertStringContainsString("'Cache-Control', 'private, no-store'", $infopoll);
+		$this->assertStringContainsString('LEFT JOIN ' . "' . USERS_TABLE", $infopoll);
+		$this->assertStringContainsString('$mode === \'retain\'', $lifecycle);
+		$this->assertStringContainsString('$mode === \'remove\'', $lifecycle);
+		$this->assertStringContainsString('SUM(wolfsblvt_poll_option_value)', $lifecycle);
 		$this->assertStringNotContainsString('order_items', $schema);
 		$this->assertStringNotContainsString('purchase', strtolower($schema));
 	}

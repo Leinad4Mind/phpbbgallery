@@ -34,11 +34,17 @@ class advancedpolls
 	/** @var \phpbb\event\dispatcher_interface */
 	protected $dispatcher;
 
+	/** @var \phpbb\controller\helper */
+	protected $controller_helper;
+
 	/** @var array */
 	protected $cur_voted_val;
 
 	/** @var array */
 	protected $abstaining_voters;
+
+	/** @var array */
+	protected $retained_voter_names;
 
 	/**
 	 * Constructor
@@ -50,8 +56,9 @@ class advancedpolls
 	 * @param \phpbb\auth\auth						$auth			Auth object
 	 * @param \phpbb\request\request				$request		Request object
 	 * @param \phpbb\event\dispatcher_interface		$dispatcher		The dispatcher object
+	 * @param \phpbb\controller\helper					$controller_helper Controller helper
 	 */
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\config\config $config, \phpbb\template\template $template, \phpbb\user $user, \phpbb\auth\auth $auth, \phpbb\request\request $request, \phpbb\event\dispatcher_interface $dispatcher)
+	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\config\config $config, \phpbb\template\template $template, \phpbb\user $user, \phpbb\auth\auth $auth, \phpbb\request\request $request, \phpbb\event\dispatcher_interface $dispatcher, \phpbb\controller\helper $controller_helper)
 	{
 		$this->db = $db;
 		$this->config = $config;
@@ -60,9 +67,11 @@ class advancedpolls
 		$this->auth = $auth;
 		$this->request = $request;
 		$this->dispatcher = $dispatcher;
+		$this->controller_helper = $controller_helper;
 
 		$this->cur_voted_val = array();
 		$this->abstaining_voters = array();
+		$this->retained_voter_names = array();
 	}
 
 	/**
@@ -355,10 +364,17 @@ class advancedpolls
 
 		$option_voters = array_fill_keys($poll_options, array());
 		$this->abstaining_voters = array();
+		$this->retained_voter_names = array();
 		$cur_voted_val = array();
 		$cur_total_val = 0;
 		while ($row = $this->db->sql_fetchrow($result))
 		{
+			$vote_user_id = (int) $row['vote_user_id'];
+			if ($vote_user_id !== ANONYMOUS && !empty($row['wolfsblvt_vote_user_name']))
+			{
+				$this->retained_voter_names[$vote_user_id] = $row['wolfsblvt_vote_user_name'];
+			}
+
 			if ((int) $row['poll_option_id'] === 0)
 			{
 				if ((int) $row['vote_user_id'] !== ANONYMOUS)
@@ -657,6 +673,13 @@ class advancedpolls
 					'can_vote'			=> $s_vote_incomplete || $s_can_change_vote,
 				);
 				$this->hide_ajax_results($data, $topic_data, sizeof($valid_user_votes) > 0, !$data['can_vote']);
+				if (empty($data['results_hidden']))
+				{
+					$data['score_breakdowns'] = $this->format_score_breakdowns(
+						$this->get_score_distribution((int) $topic_data['topic_id']),
+						$vote_counts
+					);
+				}
 				$json_response = new \phpbb\json_response();
 				$json_response->send($data);
 			}
@@ -766,6 +789,7 @@ class advancedpolls
 			$data['vote_counts'] = array_fill_keys(array_keys($data['vote_counts']), 0);
 		}
 		$data['total_votes'] = 0;
+		unset($data['score_breakdowns']);
 		$data['results_hidden'] = true;
 	}
 
@@ -866,6 +890,23 @@ class advancedpolls
 			}
 		}
 
+		if ($poll_scoring && !$poll_votes_hidden)
+		{
+			$score_breakdowns = $this->format_score_breakdowns(
+				$this->get_score_distribution((int) $topic_data['topic_id']),
+				$vote_counts
+			);
+			for ($i = 0; $i < $poll_options_count; $i++)
+			{
+				$option_id = (int) $poll_info[$i]['poll_option_id'];
+				if (isset($score_breakdowns[$option_id]))
+				{
+					$poll_options_template_data[$i]['AP_SCORE_TOTAL'] = $score_breakdowns[$option_id]['total'];
+					$poll_options_template_data[$i]['AP_SCORE_BREAKDOWN'] = $score_breakdowns[$option_id]['detail'];
+				}
+			}
+		}
+
 		$poll_votes_are_visible = ($topic_data['wolfsblvt_poll_voters_show'] == 1 && in_array('wolfsblvt_poll_voters_show', $options)) ? true : false;
 		$show_abstainers = !empty($this->config['wolfsblvt.advancedpolls.activate_show_abstainers'])
 			&& in_array('wolfsblvt_no_vote', $options)
@@ -882,16 +923,33 @@ class advancedpolls
 				|| ($poll_votes_are_visible && $this->auth->acl_get('f_seevoters', $topic_data['forum_id']));
 			if ($may_show_abstainer_names)
 			{
-				$abstainer_list = array();
+				$abstainer_users = array();
 				$sql = 'SELECT user_id, username, user_colour
 					FROM ' . USERS_TABLE . '
 					WHERE ' . $this->db->sql_in_set('user_id', array_keys($this->abstaining_voters));
 				$result = $this->db->sql_query($sql);
 				while ($row = $this->db->sql_fetchrow($result))
 				{
-					$abstainer_list[] = get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']);
+					$abstainer_users[(int) $row['user_id']] = $row;
 				}
 				$this->db->sql_freeresult($result);
+
+				$abstainer_list = array();
+				foreach (array_keys($this->abstaining_voters) as $abstainer_id)
+				{
+					if (isset($abstainer_users[$abstainer_id]))
+					{
+						$abstainer = $abstainer_users[$abstainer_id];
+						$abstainer_list[] = get_username_string('full', $abstainer_id, $abstainer['username'], $abstainer['user_colour']);
+					}
+					else
+					{
+						$name = isset($this->retained_voter_names[$abstainer_id])
+							? $this->retained_voter_names[$abstainer_id]
+							: $this->user->lang['AP_DELETED_USER'];
+						$abstainer_list[] = get_username_string('no_profile', ANONYMOUS, $name);
+					}
+				}
 				$poll_template_data['AP_ABSTAINER_LIST'] = implode($this->user->lang['COMMA_SEPARATOR'], $abstainer_list);
 			}
 		}
@@ -924,6 +982,8 @@ class advancedpolls
 				$this->db->sql_freeresult($result);
 			}
 
+			$user_cache = $this->complete_voter_cache($user_cache);
+
 			$poll_total_vote_value = $poll_total_guest_votes = 0;
 			for ($i = 0; $i < $poll_options_count; $i++)
 			{
@@ -931,7 +991,12 @@ class advancedpolls
 				$total_vote_value = 0;
 				foreach ($poll_info[$i]['option_voters'] as $voter_id => $vote_value)
 				{
-					$username = get_username_string('full', $voter_id, $user_cache[$voter_id]['username'], $user_cache[$voter_id]['user_colour']);
+					$username = get_username_string(
+						!empty($user_cache[$voter_id]['is_deleted']) ? 'no_profile' : 'full',
+						!empty($user_cache[$voter_id]['is_deleted']) ? ANONYMOUS : $voter_id,
+						$user_cache[$voter_id]['username'],
+						$user_cache[$voter_id]['user_colour']
+					);
 
 					$voter_list[] = '<span name="' . $user_cache[$voter_id]['username_clean'] . '">' . $username . ($poll_scoring ? ('(' . $vote_value . ')') : '') . '</span>';
 					$total_vote_value += ($poll_scoring ? $vote_value : 1);
@@ -958,7 +1023,12 @@ class advancedpolls
 				$poll_multivalue = $poll_scoring || $topic_data['poll_max_options'] > 1;
 				foreach ($user_cache as $voter_id => $voter_data)
 				{
-					$username = get_username_string('full', $voter_id, $voter_data['username'], $voter_data['user_colour']);
+					$username = get_username_string(
+						!empty($voter_data['is_deleted']) ? 'no_profile' : 'full',
+						!empty($voter_data['is_deleted']) ? ANONYMOUS : $voter_id,
+						$voter_data['username'],
+						$voter_data['user_colour']
+					);
 					$voter_list[] = '<span name="' . $voter_data['username_clean'] . '">' . $username . ($poll_multivalue ? ('(' . $voter_data['total_user_votes'] . ')') : '') . '</span>';
 				}
 				$poll_voters_count = !empty($voter_list) && $poll_multivalue ? (' (' . count($voter_list) . ')') : '';
@@ -1057,12 +1127,106 @@ class advancedpolls
 		if ($this->auth->acl_get('m_seevoters', $topic_data['forum_id']))
 		{
 			$poll_template_data['U_AP_POLL_INFO'] = $poll_template_data['S_POLL_ACTION'] . '&amp;view=infopoll';
+			$poll_template_data['U_AP_POLL_INFO_AJAX'] = $this->controller_helper->route('wolfsblvt_advancedpolls_infopoll', array(
+				'topic_id' => (int) $topic_data['topic_id'],
+			));
 		}
 
 		// Okay, lets push some of this information to the template
 		$poll_template_data['AP_JSON_DATA'] = 'var wolfsblvt_ap_json_data = ' . json_encode($javascript_vars, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) . ';';
 
 		return;
+	}
+
+	/**
+	 * Supply safe, unlinked display data for votes whose user no longer exists.
+	 *
+	 * @param array $user_cache User rows keyed by voter ID; missing rows are null
+	 * @return array
+	 */
+	protected function complete_voter_cache(array $user_cache)
+	{
+		foreach ($user_cache as $voter_id => $voter_data)
+		{
+			if ($voter_data !== null)
+			{
+				continue;
+			}
+
+			$user_cache[$voter_id] = array(
+				'username' => isset($this->retained_voter_names[$voter_id])
+					? $this->retained_voter_names[$voter_id]
+					: $this->user->lang['AP_DELETED_USER'],
+				'username_clean' => 'advancedpolls_deleted_' . (int) $voter_id,
+				'user_colour' => '',
+				'total_user_votes' => 0,
+				'is_deleted' => true,
+			);
+		}
+
+		return $user_cache;
+	}
+
+	/**
+	 * Load the number of voters who assigned each score to every poll option.
+	 *
+	 * @param int $topic_id Topic ID
+	 * @return array
+	 */
+	protected function get_score_distribution($topic_id)
+	{
+		$sql = 'SELECT poll_option_id,
+				wolfsblvt_poll_option_value AS score_value,
+				COUNT(*) AS voter_count
+			FROM ' . POLL_VOTES_TABLE . '
+			WHERE topic_id = ' . (int) $topic_id . '
+				AND poll_option_id > 0
+				AND wolfsblvt_poll_option_value > 0
+			GROUP BY poll_option_id, wolfsblvt_poll_option_value
+			ORDER BY poll_option_id ASC, wolfsblvt_poll_option_value ASC';
+		$result = $this->db->sql_query($sql);
+		$rows = array();
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$rows[] = $row;
+		}
+		$this->db->sql_freeresult($result);
+
+		return score_distribution::from_rows($rows);
+	}
+
+	/**
+	 * Format score distributions for templates and AJAX responses.
+	 *
+	 * @param array $distribution Option => score => voter count map
+	 * @param array $vote_counts Weighted totals by option
+	 * @return array
+	 */
+	protected function format_score_breakdowns(array $distribution, array $vote_counts)
+	{
+		$breakdowns = array();
+		foreach ($distribution as $option_id => $scores)
+		{
+			$entries = array();
+			foreach ($scores as $score => $voters)
+			{
+				$entries[] = '<span class="ap-score-breakdown-entry">'
+					. $this->user->lang('AP_SCORE_DISTRIBUTION_ENTRY', (int) $voters, (int) $score)
+					. '</span>';
+			}
+
+			if (!$entries || !isset($vote_counts[$option_id]))
+			{
+				continue;
+			}
+
+			$breakdowns[$option_id] = array(
+				'total' => $this->user->lang('AP_SCORE_TOTAL', (int) $vote_counts[$option_id]),
+				'detail' => implode('', $entries),
+			);
+		}
+
+		return $breakdowns;
 	}
 
 	/**

@@ -44,6 +44,7 @@ $lang = array_merge($lang, [
 	'AP_POLL_RUN_TILL_APPEND'				=> 'Alla omröstningar döljs fram till denna tidpunkt.',
 	'AP_VOTERS'								=> 'Medlemmar som har röstat',
 	'AP_NONE'								=> 'Inga',
+	'AP_DELETED_USER'					=> 'Borttagen användare',
 
 	'AP_POLL_CANT_VOTE'						=> 'Du kan ej rösta. Orsak',
 	'AP_POLL_REASON_NOT_POSTED'				=> 'du har ej skrivit något inlägg i denna tråd.',
@@ -63,6 +64,15 @@ $lang = array_merge($lang, [
 	'AP_GUEST_VOTES' => [
 		1 => '%d röst från en gäst',
 		2 => '%d röster från gäster',
+	],
+	'AP_SCORE_TOTAL' => [
+		1 => '%d röst',
+		2 => '%d röster',
+	],
+	'AP_SCORE_BREAKDOWN' => 'Röstfördelning',
+	'AP_SCORE_DISTRIBUTION_ENTRY' => [
+		1 => '%1$d röst med %2$d poäng',
+		2 => '%1$d röster med %2$d poäng',
 	],
 // Posting
 	'AP_POLL_VISIBILITY' => 'Resultatens synlighet',

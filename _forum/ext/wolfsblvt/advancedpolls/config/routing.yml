@@ -1,0 +1,6 @@
+wolfsblvt_advancedpolls_infopoll:
+    path: /advancedpolls/infopoll/{topic_id}
+    defaults: { _controller: wolfsblvt.advancedpolls.controller.infopoll:details }
+    requirements:
+        topic_id: '\d+'
+    methods: [GET]
