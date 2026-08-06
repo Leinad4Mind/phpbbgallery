@@ -116,8 +116,6 @@ $.wolfsblvt = $.extend({}, $.wolfsblvt, {
 			var spanval_begin = "<span " + spanname + ">" + $.wolfsblvt.advancedpoll_json_data.username_string;
 			var spanval_end = "</span>";
 
-			console.log("running the extended callback code");
-
 			// Update each option
 			poll.find('[data-poll-option-id]').each(function () {
 				var $this = $(this);

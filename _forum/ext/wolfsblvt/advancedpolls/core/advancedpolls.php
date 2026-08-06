@@ -164,24 +164,6 @@ class advancedpolls
 				$sql_data[TOPICS_TABLE]['sql'][$option] = $this->request->variable($option, $default_val);
 			}
 		}
-
-		// Check if this change affects the next run for notifications
-		/* mío
-		if ($this->config['wolfsblvt.advancedpolls.activate_notifications'])
-		{
-			$hidden_poll = (isset($sql_data[TOPICS_TABLE]['sql']['wolfsblvt_poll_votes_hide']) && $sql_data[TOPICS_TABLE]['sql']['wolfsblvt_poll_votes_hide']) ? true : false;
-			if ($hidden_poll && $sql_data[TOPICS_TABLE]['sql']['poll_start'] > 0 && $sql_data[TOPICS_TABLE]['sql']['poll_length'] > 0)
-			{
-				$last_run = $this->config['wolfsblvt.advancedpolls.pollend_last_gc'];
-				$next_run_delay = $this->config['wolfsblvt.advancedpolls.pollend_gc'];
-				$poll_end = $sql_data[TOPICS_TABLE]['sql']['poll_start'] + $sql_data[TOPICS_TABLE]['sql']['poll_length'];
-				if ($poll_end > $last_run && (!$next_run_delay || $last_run > $poll_end - $next_run_delay))
-				{
-					$this->config->set('wolfsblvt.advancedpolls.pollend_gc', $poll_end - $last_run);
-				}
-			}
-		}
-		*/
 	}
 
 	/**
@@ -339,8 +321,11 @@ class advancedpolls
 			{
 				$cur_voted_votes = explode(',', $this->request->variable($this->config['cookie_name'] . '_poll_votes_' . $topic_data['topic_id'], '', true, \phpbb\request\request_interface::COOKIE));
 				$cur_voted_votes = array_map('intval', $cur_voted_votes);
-				$cur_voted_val = array_combine($cur_voted_id, $cur_voted_votes);
-				$cur_total_val = array_sum($cur_voted_votes);
+				if (count($cur_voted_id) === count($cur_voted_votes))
+				{
+					$cur_voted_val = array_combine($cur_voted_id, $cur_voted_votes);
+					$cur_total_val = array_sum($cur_voted_votes);
+				}
 			}
 		}
 
@@ -428,6 +413,7 @@ class advancedpolls
 		{
 			$voted_total_val = 0;
 			$vote_changed = false;
+			$vote_exceeds_max = false;
 			foreach ($voted_id as $option)
 			{
 				$voted_total_val += $voted_val[$option];
@@ -435,14 +421,22 @@ class advancedpolls
 				{
 					$vote_changed = true;
 				}
+				if ((int) $voted_val[$option] > $topic_data['wolfsblvt_poll_max_value'])
+				{
+					$vote_exceeds_max = true;
+				}
 			}
 
-			if ($voted_total_val > $topic_data['wolfsblvt_poll_total_value'] || (!$s_can_change_vote && $vote_changed))
+			if ($vote_exceeds_max || $voted_total_val > $topic_data['wolfsblvt_poll_total_value'] || (!$s_can_change_vote && $vote_changed))
 			{
 				meta_refresh(5, $viewtopic_url);
 
 				$message = '';
-				if (!$s_can_change_vote && $vote_changed)
+				if ($vote_exceeds_max)
+				{
+					$message = 'AP_VOTE_GREATER_THAN_MAXVALUE';
+				}
+				else if (!$s_can_change_vote && $vote_changed)
 				{
 					$message = 'AP_VOTE_CHANGED';
 				}
@@ -484,13 +478,6 @@ class advancedpolls
 				if (in_array($option, $cur_voted_id) && ($cur_voted_val[$option] == $voted_val[$option]))
 				{
 					continue;
-				}
-
-				// the vote cannot be greater than the maximum value
-				if ( (int) $voted_val[$option] > $topic_data['wolfsblvt_poll_max_value'])
-				{
-					$message = 'AP_VOTE_GREATER_THAN_MAXVALUE';
-					trigger_error($message);
 				}
 
 				// updates the total number of votes for that option
@@ -830,7 +817,7 @@ class advancedpolls
 		}
 
 		// Okay, lets push some of this information to the template
-		$poll_template_data['AP_JSON_DATA'] = 'var wolfsblvt_ap_json_data = ' . json_encode($javascript_vars) . ';';
+		$poll_template_data['AP_JSON_DATA'] = 'var wolfsblvt_ap_json_data = ' . json_encode($javascript_vars, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) . ';';
 
 		return;
 	}

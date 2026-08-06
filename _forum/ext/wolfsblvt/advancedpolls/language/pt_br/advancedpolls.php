@@ -39,7 +39,7 @@ $lang = array_merge($lang, [
 
 // Viewtopic
 	'AP_VOTES_HIDDEN'         => 'Votos ocultos',
-	'AP_POLL_RUN_TILL_APPEND' => ', até que todos os votos estarão ocultos.',
+	'AP_POLL_RUN_TILL_APPEND' => ', até que todos os votos estejam ocultos.',
 	'AP_VOTERS'               => 'Votantes',
 	'AP_NONE'                 => 'Ninguém',
 

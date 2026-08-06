@@ -39,7 +39,7 @@ $lang = array_merge($lang, [
 
 // Viewtopic
 	'AP_VOTES_HIDDEN'         => 'Votos ocultos',
-	'AP_POLL_RUN_TILL_APPEND' => ', até que todos os votos estarão ocultos.',
+	'AP_POLL_RUN_TILL_APPEND' => ', até que todos os votos estejam ocultos.',
 	'AP_VOTERS'               => 'Votantes',
 	'AP_NONE'                 => 'Ninguém',
 
@@ -69,7 +69,7 @@ $lang = array_merge($lang, [
 	'AP_POLL_VOTERS_LIMIT'         => 'Limite de votos',
 	'AP_POLL_VOTERS_LIMIT_EXPLAIN' => 'Se estiver ativado, os utilizadores habilitados só podem votar se escreveram neste tópico.',
 	'AP_POLL_SHOW_ORDERED'         => 'Ordenar resultados',
-	'AP_POLL_SHOW_ORDERED_EXPLAIN' => 'Quando se mostram os resultados, estes se ordenam por número decrescente de votos recebidos (ou mais votado primeiro). Em caso contrário, usa-se a ordem de opções na votação.',
+	'AP_POLL_SHOW_ORDERED_EXPLAIN' => 'Quando se mostram os resultados, estes se ordenam por número decrescente de votos recebidos (o mais votado primeiro). Em caso contrário, usa-se a ordem de opções na votação.',
 	'AP_RUN_POLL'                  => 'Realizar votação',
 	'AP_RUN_POLL_FOR'              => 'durante',
 	'AP_RUN_POLL_UNTIL'            => 'até',
