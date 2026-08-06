@@ -23,6 +23,11 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Replaced the TIFF add-on's abbreviated license notice with the complete
+  GPL-2.0 text and made package hygiene tests require the declared license in
+  every release component.
+- Fixed Image Revisions reactivation after the Core disables all add-ons by
+  giving its reconciliation step the current storage workspace dependency.
 - Separated neutral author outcomes from attributed internal moderation
   notices: only album-authorized moderators see who approved, rejected or
   removed an image, while ordinary authors never receive moderator or reporter
