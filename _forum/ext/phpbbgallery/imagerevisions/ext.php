@@ -41,7 +41,7 @@ class ext extends \phpbb\extension\base
 			$revision = new revision(
 				$this->container->get('dbal.conn'),
 				$this->container->get('user'),
-				$this->container->get('phpbbgallery.core.url'),
+				$this->container->get('phpbbgallery.core.storage.workspace'),
 				$this->container->get('phpbbgallery.core.log'),
 				$this->container->get('phpbbgallery.core.cache'),
 				$this->container->get('phpbbgallery.core.file.tool'),
