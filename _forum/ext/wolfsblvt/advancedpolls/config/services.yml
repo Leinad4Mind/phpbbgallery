@@ -18,3 +18,21 @@ services:
             - '@auth'
             - '@request'
             - '@dispatcher'
+    wolfsblvt.advancedpolls.notification.type.pollended:
+        class: wolfsblvt\advancedpolls\notification\pollended
+        shared: false
+        parent: notification.type.base
+        calls:
+            - [set_config, ['@config']]
+        tags:
+            - {name: notification.type}
+    wolfsblvt.advancedpolls.cron.task.pollend:
+        class: wolfsblvt\advancedpolls\cron\task\pollend
+        arguments:
+            - '@config'
+            - '@dbal.conn'
+            - '@log'
+            - '@user'
+            - '@notification_manager'
+        tags:
+            - {name: cron.task}
