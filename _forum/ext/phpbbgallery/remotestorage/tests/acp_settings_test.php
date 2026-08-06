@@ -215,6 +215,21 @@ final class acp_settings_test extends TestCase
 		$this->assertStringContainsString('- koofr', $services);
 	}
 
+	public function test_fourshared_migration_registers_oauth_configuration_and_mutation_lock(): void
+	{
+		$migration = (string) file_get_contents(dirname(__DIR__) . '/migrations/m11_fourshared.php');
+		$services = (string) file_get_contents(dirname(__DIR__) . '/config/services.yml');
+
+		$this->assertStringContainsString('m10_koofr', $migration);
+		foreach (['consumer_key', 'consumer_secret', 'access_token', 'access_token_secret', 'root_name'] as $field)
+		{
+			$this->assertStringContainsString('phpbb_gallery_fourshared_' . $field, $migration);
+		}
+		$this->assertStringContainsString('phpbbgallery.remotestorage.provider_factory.fourshared:', $services);
+		$this->assertStringContainsString('- fourshared', $services);
+		$this->assertStringContainsString('4shared-storage.lock', $services);
+	}
+
 	public function test_all_gallery_language_catalogues_have_identical_keys_and_placeholders(): void
 	{
 		$english = $this->language(dirname(__DIR__) . '/language/en/info_acp_remotestorage.php');

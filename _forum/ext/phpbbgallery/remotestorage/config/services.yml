@@ -12,6 +12,7 @@ parameters:
         - mediafire
         - pcloud
         - koofr
+        - fourshared
 
 services:
     phpbbgallery.remotestorage.http:
@@ -100,6 +101,16 @@ services:
             - '@phpbbgallery.remotestorage.http'
             - '@config'
             - '@request'
+        tags:
+            - { name: phpbbgallery.storage.provider_factory }
+
+    phpbbgallery.remotestorage.provider_factory.fourshared:
+        class: phpbbgallery\remotestorage\fourshared\configured_factory
+        arguments:
+            - '@phpbbgallery.remotestorage.http'
+            - '@config'
+            - '@request'
+            - '%core.cache_dir%phpbbgallery/4shared-storage.lock'
         tags:
             - { name: phpbbgallery.storage.provider_factory }
 
