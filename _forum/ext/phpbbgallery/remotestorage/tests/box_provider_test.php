@@ -10,12 +10,12 @@
 namespace phpbbgallery\remotestorage\tests;
 
 use phpbbgallery\core\storage\provider_interface;
-use phpbbgallery\remotestorage\box\configuration;
-use phpbbgallery\remotestorage\box\config_token_store;
-use phpbbgallery\remotestorage\box\configured_factory;
-use phpbbgallery\remotestorage\box\memory_token_store;
-use phpbbgallery\remotestorage\box\provider;
-use phpbbgallery\remotestorage\box\token_manager;
+use phpbbgallery\remotestorage\providers\box\configuration;
+use phpbbgallery\remotestorage\providers\box\config_token_store;
+use phpbbgallery\remotestorage\providers\box\configured_factory;
+use phpbbgallery\remotestorage\providers\box\memory_token_store;
+use phpbbgallery\remotestorage\providers\box\provider;
+use phpbbgallery\remotestorage\providers\box\token_manager;
 use phpbbgallery\remotestorage\http\client_interface;
 use phpbbgallery\remotestorage\http\response;
 use PHPUnit\Framework\TestCase;

@@ -19,7 +19,7 @@ services:
         class: phpbbgallery\remotestorage\http\guzzle_client
 
     phpbbgallery.remotestorage.provider_factory.s3:
-        class: phpbbgallery\remotestorage\s3\configured_factory
+        class: phpbbgallery\remotestorage\providers\s3\configured_factory
         arguments:
             - '@phpbbgallery.remotestorage.http'
             - '@config'
@@ -28,7 +28,7 @@ services:
             - { name: phpbbgallery.storage.provider_factory }
 
     phpbbgallery.remotestorage.provider_factory.azure:
-        class: phpbbgallery\remotestorage\azure\configured_factory
+        class: phpbbgallery\remotestorage\providers\azure\configured_factory
         arguments:
             - '@phpbbgallery.remotestorage.http'
             - '@config'
@@ -37,7 +37,7 @@ services:
             - { name: phpbbgallery.storage.provider_factory }
 
     phpbbgallery.remotestorage.provider_factory.sftp:
-        class: phpbbgallery\remotestorage\sftp\configured_factory
+        class: phpbbgallery\remotestorage\providers\sftp\configured_factory
         arguments:
             - '@config'
             - '@request'
@@ -45,7 +45,7 @@ services:
             - { name: phpbbgallery.storage.provider_factory }
 
     phpbbgallery.remotestorage.provider_factory.dropbox:
-        class: phpbbgallery\remotestorage\dropbox\configured_factory
+        class: phpbbgallery\remotestorage\providers\dropbox\configured_factory
         arguments:
             - '@phpbbgallery.remotestorage.http'
             - '@config'
@@ -54,7 +54,7 @@ services:
             - { name: phpbbgallery.storage.provider_factory }
 
     phpbbgallery.remotestorage.provider_factory.google_drive:
-        class: phpbbgallery\remotestorage\google_drive\configured_factory
+        class: phpbbgallery\remotestorage\providers\google_drive\configured_factory
         arguments:
             - '@phpbbgallery.remotestorage.http'
             - '@config'
@@ -63,7 +63,7 @@ services:
             - { name: phpbbgallery.storage.provider_factory }
 
     phpbbgallery.remotestorage.provider_factory.box:
-        class: phpbbgallery\remotestorage\box\configured_factory
+        class: phpbbgallery\remotestorage\providers\box\configured_factory
         arguments:
             - '@phpbbgallery.remotestorage.http'
             - '@config'
@@ -75,7 +75,7 @@ services:
             - { name: phpbbgallery.storage.provider_factory }
 
     phpbbgallery.remotestorage.provider_factory.mediafire:
-        class: phpbbgallery\remotestorage\mediafire\configured_factory
+        class: phpbbgallery\remotestorage\providers\mediafire\configured_factory
         arguments:
             - '@phpbbgallery.remotestorage.http'
             - '@config'
@@ -87,7 +87,7 @@ services:
             - { name: phpbbgallery.storage.provider_factory }
 
     phpbbgallery.remotestorage.provider_factory.pcloud:
-        class: phpbbgallery\remotestorage\pcloud\configured_factory
+        class: phpbbgallery\remotestorage\providers\pcloud\configured_factory
         arguments:
             - '@phpbbgallery.remotestorage.http'
             - '@config'
@@ -96,7 +96,7 @@ services:
             - { name: phpbbgallery.storage.provider_factory }
 
     phpbbgallery.remotestorage.provider_factory.koofr:
-        class: phpbbgallery\remotestorage\koofr\configured_factory
+        class: phpbbgallery\remotestorage\providers\koofr\configured_factory
         arguments:
             - '@phpbbgallery.remotestorage.http'
             - '@config'
@@ -105,7 +105,7 @@ services:
             - { name: phpbbgallery.storage.provider_factory }
 
     phpbbgallery.remotestorage.provider_factory.fourshared:
-        class: phpbbgallery\remotestorage\fourshared\configured_factory
+        class: phpbbgallery\remotestorage\providers\fourshared\configured_factory
         arguments:
             - '@phpbbgallery.remotestorage.http'
             - '@config'

@@ -9,7 +9,7 @@
 
 namespace phpbbgallery\remotestorage\tests;
 
-use phpbbgallery\remotestorage\s3\signer;
+use phpbbgallery\remotestorage\providers\s3\signer;
 use PHPUnit\Framework\TestCase;
 
 final class signer_test extends TestCase

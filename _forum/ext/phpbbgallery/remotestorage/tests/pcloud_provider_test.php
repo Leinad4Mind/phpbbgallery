@@ -13,9 +13,9 @@ use PHPUnit\Framework\TestCase;
 use phpbbgallery\core\storage\provider_interface;
 use phpbbgallery\remotestorage\http\client_interface;
 use phpbbgallery\remotestorage\http\response;
-use phpbbgallery\remotestorage\pcloud\api_client;
-use phpbbgallery\remotestorage\pcloud\configuration;
-use phpbbgallery\remotestorage\pcloud\provider;
+use phpbbgallery\remotestorage\providers\pcloud\api_client;
+use phpbbgallery\remotestorage\providers\pcloud\configuration;
+use phpbbgallery\remotestorage\providers\pcloud\provider;
 
 final class pcloud_provider_test extends TestCase
 {

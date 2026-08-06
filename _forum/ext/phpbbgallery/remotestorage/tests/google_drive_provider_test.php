@@ -10,10 +10,10 @@
 namespace phpbbgallery\remotestorage\tests;
 
 use phpbbgallery\core\storage\provider_interface;
-use phpbbgallery\remotestorage\google_drive\configuration;
-use phpbbgallery\remotestorage\google_drive\configured_factory;
-use phpbbgallery\remotestorage\google_drive\provider;
-use phpbbgallery\remotestorage\google_drive\token_manager;
+use phpbbgallery\remotestorage\providers\google_drive\configuration;
+use phpbbgallery\remotestorage\providers\google_drive\configured_factory;
+use phpbbgallery\remotestorage\providers\google_drive\provider;
+use phpbbgallery\remotestorage\providers\google_drive\token_manager;
 use phpbbgallery\remotestorage\http\client_interface;
 use phpbbgallery\remotestorage\http\response;
 use PHPUnit\Framework\TestCase;

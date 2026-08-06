@@ -10,10 +10,10 @@
 namespace phpbbgallery\remotestorage\tests;
 
 use phpbbgallery\core\storage\provider_interface;
-use phpbbgallery\remotestorage\azure\configuration;
-use phpbbgallery\remotestorage\azure\configured_factory;
-use phpbbgallery\remotestorage\azure\provider;
-use phpbbgallery\remotestorage\azure\signer;
+use phpbbgallery\remotestorage\providers\azure\configuration;
+use phpbbgallery\remotestorage\providers\azure\configured_factory;
+use phpbbgallery\remotestorage\providers\azure\provider;
+use phpbbgallery\remotestorage\providers\azure\signer;
 use phpbbgallery\remotestorage\http\client_interface;
 use phpbbgallery\remotestorage\http\response;
 use PHPUnit\Framework\TestCase;

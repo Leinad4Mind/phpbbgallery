@@ -12,11 +12,11 @@ namespace phpbbgallery\remotestorage\tests;
 use phpbbgallery\core\storage\provider_interface;
 use phpbbgallery\remotestorage\http\client_interface;
 use phpbbgallery\remotestorage\http\response;
-use phpbbgallery\remotestorage\mediafire\api_client;
-use phpbbgallery\remotestorage\mediafire\configuration;
-use phpbbgallery\remotestorage\mediafire\config_session_store;
-use phpbbgallery\remotestorage\mediafire\memory_session_store;
-use phpbbgallery\remotestorage\mediafire\provider;
+use phpbbgallery\remotestorage\providers\mediafire\api_client;
+use phpbbgallery\remotestorage\providers\mediafire\configuration;
+use phpbbgallery\remotestorage\providers\mediafire\config_session_store;
+use phpbbgallery\remotestorage\providers\mediafire\memory_session_store;
+use phpbbgallery\remotestorage\providers\mediafire\provider;
 use PHPUnit\Framework\TestCase;
 
 final class mediafire_provider_test extends TestCase

@@ -14,9 +14,9 @@ use phpbb\request\request_interface;
 use phpbbgallery\core\storage\provider_interface;
 use phpbbgallery\remotestorage\http\client_interface;
 use phpbbgallery\remotestorage\http\response;
-use phpbbgallery\remotestorage\koofr\configuration;
-use phpbbgallery\remotestorage\koofr\configured_factory as koofr_configured_factory;
-use phpbbgallery\remotestorage\koofr\provider;
+use phpbbgallery\remotestorage\providers\koofr\configuration;
+use phpbbgallery\remotestorage\providers\koofr\configured_factory as koofr_configured_factory;
+use phpbbgallery\remotestorage\providers\koofr\provider;
 
 final class koofr_provider_test extends TestCase
 {

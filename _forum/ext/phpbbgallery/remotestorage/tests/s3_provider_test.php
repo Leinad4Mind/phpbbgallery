@@ -12,11 +12,11 @@ namespace phpbbgallery\remotestorage\tests;
 use phpbbgallery\core\storage\provider_interface;
 use phpbbgallery\remotestorage\http\client_interface;
 use phpbbgallery\remotestorage\http\response;
-use phpbbgallery\remotestorage\s3\configuration;
-use phpbbgallery\remotestorage\s3\configured_factory;
-use phpbbgallery\remotestorage\s3\factory;
-use phpbbgallery\remotestorage\s3\provider;
-use phpbbgallery\remotestorage\s3\signer;
+use phpbbgallery\remotestorage\providers\s3\configuration;
+use phpbbgallery\remotestorage\providers\s3\configured_factory;
+use phpbbgallery\remotestorage\providers\s3\factory;
+use phpbbgallery\remotestorage\providers\s3\provider;
+use phpbbgallery\remotestorage\providers\s3\signer;
 use PHPUnit\Framework\TestCase;
 
 final class s3_provider_test extends TestCase

@@ -10,9 +10,9 @@
 namespace phpbbgallery\remotestorage\tests;
 
 use phpbbgallery\core\storage\provider_interface;
-use phpbbgallery\remotestorage\sftp\client_interface;
-use phpbbgallery\remotestorage\sftp\configuration;
-use phpbbgallery\remotestorage\sftp\provider;
+use phpbbgallery\remotestorage\providers\sftp\client_interface;
+use phpbbgallery\remotestorage\providers\sftp\configuration;
+use phpbbgallery\remotestorage\providers\sftp\provider;
 use PHPUnit\Framework\TestCase;
 
 final class sftp_provider_test extends TestCase
@@ -91,7 +91,7 @@ final class sftp_provider_test extends TestCase
 		{
 			$this->markTestSkipped('The local PHP runtime has PECL SSH2 enabled.');
 		}
-		$client = new \phpbbgallery\remotestorage\sftp\native_client($this->configuration());
+		$client = new \phpbbgallery\remotestorage\providers\sftp\native_client($this->configuration());
 
 		$this->expectException(\RuntimeException::class);
 		$this->expectExceptionMessage('PECL SSH2');

@@ -210,6 +210,9 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Grouped every concrete Remote Storage implementation under a dedicated
+  `providers/` directory and namespace while keeping shared HTTP and migration
+  infrastructure provider-neutral.
 - Replaced the TIFF add-on's abbreviated license notice with the complete
   GPL-2.0 text and made package hygiene tests require the declared license in
   every release component.

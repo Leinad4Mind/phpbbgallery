@@ -10,7 +10,7 @@
 namespace phpbbgallery\remotestorage\tests;
 
 use phpbbgallery\core\storage\provider_interface;
-use phpbbgallery\remotestorage\s3\configuration;
+use phpbbgallery\remotestorage\providers\s3\configuration;
 use PHPUnit\Framework\TestCase;
 
 final class s3_configuration_test extends TestCase

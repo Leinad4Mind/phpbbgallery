@@ -12,12 +12,12 @@ namespace phpbbgallery\remotestorage\tests;
 use PHPUnit\Framework\TestCase;
 use phpbb\request\request_interface;
 use phpbbgallery\core\storage\provider_interface;
-use phpbbgallery\remotestorage\fourshared\api_client;
-use phpbbgallery\remotestorage\fourshared\configuration;
-use phpbbgallery\remotestorage\fourshared\configured_factory;
-use phpbbgallery\remotestorage\fourshared\oauth_signer;
-use phpbbgallery\remotestorage\fourshared\operation_lock;
-use phpbbgallery\remotestorage\fourshared\provider;
+use phpbbgallery\remotestorage\providers\fourshared\api_client;
+use phpbbgallery\remotestorage\providers\fourshared\configuration;
+use phpbbgallery\remotestorage\providers\fourshared\configured_factory;
+use phpbbgallery\remotestorage\providers\fourshared\oauth_signer;
+use phpbbgallery\remotestorage\providers\fourshared\operation_lock;
+use phpbbgallery\remotestorage\providers\fourshared\provider;
 use phpbbgallery\remotestorage\http\client_interface;
 use phpbbgallery\remotestorage\http\response;
 

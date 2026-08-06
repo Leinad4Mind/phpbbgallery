@@ -10,10 +10,10 @@
 namespace phpbbgallery\remotestorage\tests;
 
 use phpbbgallery\core\storage\provider_interface;
-use phpbbgallery\remotestorage\dropbox\configuration;
-use phpbbgallery\remotestorage\dropbox\configured_factory;
-use phpbbgallery\remotestorage\dropbox\provider;
-use phpbbgallery\remotestorage\dropbox\token_manager;
+use phpbbgallery\remotestorage\providers\dropbox\configuration;
+use phpbbgallery\remotestorage\providers\dropbox\configured_factory;
+use phpbbgallery\remotestorage\providers\dropbox\provider;
+use phpbbgallery\remotestorage\providers\dropbox\token_manager;
 use phpbbgallery\remotestorage\http\client_interface;
 use phpbbgallery\remotestorage\http\response;
 use PHPUnit\Framework\TestCase;
