@@ -81,6 +81,8 @@ $lang = array_merge($lang, [
 	'AP_ACT_POLL_END_EXPLAIN'		=> 'Allows specifying when a poll ends by date/time, instead of just specifying a poll duration since poll start.',
 	'AP_ACT_POLL_NOTIFICATIONS'				=> 'Activate poll notifications',
 	'AP_ACT_POLL_NOTIFICATIONS_EXPLAIN'		=> 'Activates sending notifications to all voters of a hidden poll when then poll has finished, and hence results are visible.',
+	'AP_ACT_POLL_COLLAPSIBLE'				=> 'Enable collapsible polls',
+	'AP_ACT_POLL_COLLAPSIBLE_EXPLAIN'		=> 'Shows the collapsible option when creating or editing a poll. On installation, this setting is enabled automatically if Collapsible Forum Categories is installed; administrators can always override it.',
 
 	'AP_DEFAULT_VOTES_CHANGE'		=> 'Selected default for change vote',
 	'AP_DEFAULT_VOTES_HIDE'			=> 'Selected default for hide votes',

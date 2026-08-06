@@ -18,6 +18,26 @@ span.poll_vote_notice {
 	display: block;
 }
 
+.ap-poll-collapse {
+	float: right;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: inherit;
+	cursor: pointer;
+	font-size: 16px;
+}
+
+.rtl .ap-poll-collapse {
+	float: left;
+}
+
+.ap-poll-collapse:focus,
+.ap-poll-collapse:hover {
+	color: #d31141;
+}
+
+
 .post-buttons .advancedpolls-info-button span {
 	font-size: 13px;
 }
@@ -172,4 +192,69 @@ dd label {
 	border-top: 1px solid rgba(127, 127, 127, .55);
 	margin-top: 10px;
 	padding-top: 10px;
+}
+
+
+.ap-multi-question-editor,
+.ap-question-card,
+.ap-multi-poll,
+.ap-poll-navigation {
+	margin-top: 12px;
+}
+
+.ap-question-card {
+	padding: 12px;
+	border: 1px solid rgba(128, 128, 128, 0.35);
+	border-radius: 4px;
+}
+
+.ap-question-card .ap-question-text,
+.ap-question-card .ap-question-options {
+	display: block;
+	width: 100%;
+	margin: 6px 0 10px;
+	box-sizing: border-box;
+}
+
+.ap-extra-page {
+	margin-bottom: 0;
+}
+
+.ap-poll-navigation {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 8px;
+	padding: 10px 0;
+}
+
+.ap-poll-progress {
+	margin-right: auto;
+	font-weight: 600;
+}
+
+.ap-required-mark,
+.ap-poll-message.error {
+	color: #d31141;
+}
+
+.ap-poll-message {
+	min-height: 1.5em;
+	margin-bottom: 10px;
+}
+
+.ap-extra-page .poll_option_select {
+	width: auto;
+}
+
+@media (max-width: 600px) {
+	.ap-poll-navigation {
+		flex-wrap: wrap;
+	}
+
+	.ap-poll-navigation .button1,
+	.ap-poll-navigation .button2,
+	.ap-poll-navigation .btn {
+		flex: 1 1 auto;
+	}
 }

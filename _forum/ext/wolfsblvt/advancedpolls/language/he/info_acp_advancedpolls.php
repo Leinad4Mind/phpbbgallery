@@ -82,6 +82,8 @@ $lang = array_merge($lang, [
 	'AP_ACT_POLL_END_EXPLAIN' => 'מאפשר לציין תאריך ושעה מדויקים לסיום הסקר במקום משך זמן מתחילת הסקר.',
 	'AP_ACT_POLL_NOTIFICATIONS' => 'הפעלת התראות סקר',
 	'AP_ACT_POLL_NOTIFICATIONS_EXPLAIN' => 'שולח התראה לכל מי שהצביע בסקר מוסתר כאשר הסקר מסתיים והתוצאות נעשות גלויות.',
+	'AP_ACT_POLL_COLLAPSIBLE' => 'הפעלת סקרים מתקפלים',
+	'AP_ACT_POLL_COLLAPSIBLE_EXPLAIN' => 'מציג את אפשרות הקיפול בעת יצירה או עריכה של סקר. בעת ההתקנה ההגדרה מופעלת אוטומטית אם „Collapsible Forum Categories” מותקנת; מנהלים יכולים לשנות אותה בכל עת.',
 
 	'AP_DEFAULT_VOTES_CHANGE'		=> 'ברירת המחדל עבור שינוי הצבעות',
 	'AP_DEFAULT_VOTES_HIDE'			=> 'ברירת המחדר עבור הסתרת מצביעים',

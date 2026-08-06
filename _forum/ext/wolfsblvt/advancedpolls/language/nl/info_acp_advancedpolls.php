@@ -82,6 +82,8 @@ $lang = array_merge($lang, [
 	'AP_ACT_POLL_END_EXPLAIN'		=> 'Staat het toe om een peiling op een bepaalde datum/tijd te sluiten in plaats van een tijdsduur vanaf dat de peiling gestart is.',
 	'AP_ACT_POLL_NOTIFICATIONS'		=> 'Activeer berichtgeving over een peiling',
 	'AP_ACT_POLL_NOTIFICATIONS_EXPLAIN'	=> 'Activeert het versturen van een bericht naar alle stemmers van een normale of verborgen peiling wanneer deze afgelopen is en de resultaten zichtbaar zijn.',
+	'AP_ACT_POLL_COLLAPSIBLE'			=> 'Inklapbare peilingen inschakelen',
+	'AP_ACT_POLL_COLLAPSIBLE_EXPLAIN'	=> 'Toont de inklapoptie bij het maken of bewerken van een peiling. Bij installatie wordt deze instelling automatisch ingeschakeld als ‘Collapsible Forum Categories’ is geïnstalleerd; beheerders kunnen haar altijd wijzigen.',
 
 	'AP_DEFAULT_VOTES_CHANGE'		=> 'Selecteer standaard waarde voor het wijzigen van stemmen',
 	'AP_DEFAULT_VOTES_HIDE'			=> 'Selecteer standaard waarde voor het verbergen van stemmen',

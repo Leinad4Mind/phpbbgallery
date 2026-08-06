@@ -81,6 +81,8 @@ $lang = array_merge($lang, [
 	'AP_ACT_POLL_END_EXPLAIN'		=> 'Pozwala określić, kiedy ankieta kończy się według daty / godziny, zamiast tylko określać czas trwania ankiety od jej rozpoczęcia.',
 	'AP_ACT_POLL_NOTIFICATIONS'				=> 'Pokazuj powiadomienia ankiety',
 	'AP_ACT_POLL_NOTIFICATIONS_EXPLAIN'		=> 'Aktywuje wysyłanie powiadomień do wszystkich wyborców o ukrytej ankiecie po zakończeniu ankiety, dzięki czemu wyniki są widoczne.',
+	'AP_ACT_POLL_COLLAPSIBLE'				=> 'Włącz zwijalne ankiety',
+	'AP_ACT_POLL_COLLAPSIBLE_EXPLAIN'		=> 'Wyświetla opcję zwijania podczas tworzenia lub edytowania ankiety. Przy instalacji ustawienie jest automatycznie włączane, jeśli zainstalowano „Collapsible Forum Categories”; administratorzy mogą je zawsze zmienić.',
 
 	'AP_DEFAULT_VOTES_CHANGE'		=> 'Wybierz domyślne ustawienia zmiany oddanego głosu',
 	'AP_DEFAULT_VOTES_HIDE'			=> 'Wybierz domyślne ustawienia ukrytych głosujących',

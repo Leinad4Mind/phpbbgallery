@@ -15,14 +15,31 @@ class vote_user_lifecycle
 	/** @var \phpbb\db\driver\driver_interface */
 	protected $db;
 
+	/** @var string */
+	protected $questions_table;
+
+	/** @var string */
+	protected $options_table;
+
+	/** @var string */
+	protected $votes_table;
+
+	/** @var string */
+	protected $ballots_table;
+
 	/**
 	 * Constructor.
 	 *
 	 * @param \phpbb\db\driver\driver_interface $db Database connection
+	 * @param string $table_prefix phpBB table prefix
 	 */
-	public function __construct(\phpbb\db\driver\driver_interface $db)
+	public function __construct(\phpbb\db\driver\driver_interface $db, $table_prefix = 'phpbb_')
 	{
 		$this->db = $db;
+		$this->questions_table = $table_prefix . 'advancedpolls_questions';
+		$this->options_table = $table_prefix . 'advancedpolls_options';
+		$this->votes_table = $table_prefix . 'advancedpolls_votes';
+		$this->ballots_table = $table_prefix . 'advancedpolls_ballots';
 	}
 
 	/**
@@ -88,6 +105,14 @@ class vote_user_lifecycle
 			END
 			WHERE ' . $this->db->sql_in_set('vote_user_id', $user_ids);
 		$this->db->sql_query($sql);
+
+		$sql = 'UPDATE ' . $this->votes_table . '
+			SET vote_user_name = CASE vote_user_id
+				' . implode("\n\t\t\t\t", $cases) . '
+				ELSE vote_user_name
+			END
+			WHERE ' . $this->db->sql_in_set('vote_user_id', $user_ids);
+		$this->db->sql_query($sql);
 	}
 
 	/**
@@ -129,6 +154,36 @@ class vote_user_lifecycle
 		}
 
 		$sql = 'DELETE FROM ' . POLL_VOTES_TABLE . '
+			WHERE ' . $user_where;
+		$this->db->sql_query($sql);
+
+		$sql = 'SELECT v.question_id, v.option_id, q.topic_id,
+				SUM(v.vote_value) AS removed_value
+			FROM ' . $this->votes_table . ' v
+			INNER JOIN ' . $this->questions_table . ' q ON q.question_id = v.question_id
+			WHERE ' . str_replace('vote_user_id', 'v.vote_user_id', $user_where) . '
+			GROUP BY v.question_id, v.option_id, q.topic_id';
+		$result = $this->db->sql_query($sql);
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$removed_value = max(0, (int) $row['removed_value']);
+			$sql = 'UPDATE ' . $this->options_table . '
+				SET option_total = CASE
+					WHEN option_total >= ' . $removed_value . ' THEN option_total - ' . $removed_value . '
+					ELSE 0
+				END
+				WHERE question_id = ' . (int) $row['question_id'] . '
+					AND option_id = ' . (int) $row['option_id'];
+			$this->db->sql_query($sql);
+			$topic_ids[(int) $row['topic_id']] = true;
+		}
+		$this->db->sql_freeresult($result);
+
+		$sql = 'DELETE FROM ' . $this->votes_table . '
+			WHERE ' . $user_where;
+		$this->db->sql_query($sql);
+
+		$sql = 'DELETE FROM ' . $this->ballots_table . '
 			WHERE ' . $user_where;
 		$this->db->sql_query($sql);
 

@@ -98,6 +98,7 @@ class advancedpolls
 		if ($this->config['wolfsblvt.advancedpolls.activate_poll_scoring'])
 		{
 			$poll_max_value = $this->request->variable('wolfsblvt_poll_max_value', 1);
+			$poll_min_value = $this->request->variable('wolfsblvt_poll_min_value', 1);
 			$poll_total_value = $this->request->variable('wolfsblvt_poll_total_value', 1);
 
 			if ((int) $poll_type === poll_options::TYPE_RANKING)
@@ -119,9 +120,10 @@ class advancedpolls
 				}
 
 				$this->request->overwrite('wolfsblvt_poll_max_value', max($rank_points));
+				$this->request->overwrite('wolfsblvt_poll_min_value', 1);
 				$this->request->overwrite('wolfsblvt_poll_total_value', array_sum($rank_points));
 			}
-			else if ((int) $poll_type === poll_options::TYPE_SCORING && ($poll_max_value < 1 || $poll_total_value < 1 || (int) $poll['poll_max_options'] < 1))
+			else if ((int) $poll_type === poll_options::TYPE_SCORING && ($poll_min_value < 1 || $poll_max_value < $poll_min_value || $poll_total_value < $poll_min_value || (int) $poll['poll_max_options'] < 1))
 			{
 				return array($this->user->lang['AP_POLL_VALUES_INVALID']);
 			}
@@ -305,7 +307,8 @@ class advancedpolls
 			}
 			else
 			{
-				$value_to_take = is_bool($default_val) ? (($this->config[str_replace('wolfsblvt_', 'wolfsblvt.advancedpolls.default_', $option)] == 1) ? true : false) : $default_val;
+				$default_config = str_replace('wolfsblvt_', 'wolfsblvt.advancedpolls.default_', $option);
+				$value_to_take = is_bool($default_val) ? (isset($this->config[$default_config]) && $this->config[$default_config] == 1) : $default_val;
 			}
 
 			if ($option == 'wolfsblvt_poll_max_value')
@@ -352,7 +355,7 @@ class advancedpolls
 			$option_eval_opts_txt = '<option value="0"></option>';
 			if ($page_data['AP_IS_SCORING'])
 			{
-				for ($i = 1; $i <= (int) $page_data['WOLFSBLVT_POLL_MAX_VALUE']; $i++)
+				for ($i = (int) $page_data['WOLFSBLVT_POLL_MIN_VALUE']; $i <= (int) $page_data['WOLFSBLVT_POLL_MAX_VALUE']; $i++)
 				{
 					$option_eval_opts_txt .= '<option value="' . $i . '">' . $i . '</option>';
 				}
@@ -454,9 +457,28 @@ class advancedpolls
 		$this->retained_voter_names = array();
 		$cur_voted_val = array();
 		$cur_total_val = 0;
+		$guest_token_hash = '';
+		if (!$this->user->data['is_registered'])
+		{
+			$guest_token = $this->request->variable(
+				$this->config['cookie_name'] . '_ap_multi_' . (int) $topic_data['topic_id'],
+				'',
+				true,
+				\phpbb\request\request_interface::COOKIE
+			);
+			if (preg_match('/^[a-f0-9]{64}$/D', $guest_token))
+			{
+				$guest_token_hash = hash('sha256', $guest_token);
+				$cur_voted_id = array();
+			}
+		}
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$vote_user_id = (int) $row['vote_user_id'];
+			$is_current_guest = $guest_token_hash !== ''
+				&& $vote_user_id === ANONYMOUS
+				&& !empty($row['wolfsblvt_vote_guest_token'])
+				&& hash_equals($guest_token_hash, $row['wolfsblvt_vote_guest_token']);
 			if ($vote_user_id !== ANONYMOUS && !empty($row['wolfsblvt_vote_user_name']))
 			{
 				$this->retained_voter_names[$vote_user_id] = $row['wolfsblvt_vote_user_name'];
@@ -464,6 +486,11 @@ class advancedpolls
 
 			if ((int) $row['poll_option_id'] === 0)
 			{
+				if ($is_current_guest)
+				{
+					$cur_voted_val[0] = 1;
+					$cur_voted_id[] = 0;
+				}
 				if ((int) $row['vote_user_id'] !== ANONYMOUS)
 				{
 					$this->abstaining_voters[(int) $row['vote_user_id']] = true;
@@ -477,10 +504,14 @@ class advancedpolls
 			}
 
 			$option_voters[$row['poll_option_id']][(int) $row['vote_user_id']] = (int) $row['wolfsblvt_poll_option_value'];
-			if ($this->user->data['is_registered'] && ($this->user->data['user_id'] == $row['vote_user_id']))
+			if (($this->user->data['is_registered'] && ($this->user->data['user_id'] == $row['vote_user_id'])) || $is_current_guest)
 			{
 				$cur_voted_val[(int) $row['poll_option_id']] = (int) $row['wolfsblvt_poll_option_value'];
 				$cur_total_val += (int) $row['wolfsblvt_poll_option_value'];
+				if ($is_current_guest)
+				{
+					$cur_voted_id[] = (int) $row['poll_option_id'];
+				}
 			}
 		}
 		$this->db->sql_freeresult($result);
@@ -490,7 +521,7 @@ class advancedpolls
 			$poll_info[$i]['option_voters'] = $option_voters[$poll_info[$i]['poll_option_id']];
 		}
 
-		if (!$this->user->data['is_registered'])
+		if (!$this->user->data['is_registered'] && !$cur_voted_val)
 		{
 			// Cookie based guest tracking ... I don't like this but hum ho
 			// it's oft requested. This relies on "nice" users who don't feel
@@ -689,7 +720,8 @@ class advancedpolls
 				(int) $topic_data['wolfsblvt_poll_max_value'],
 				(int) $topic_data['wolfsblvt_poll_total_value'],
 				$s_can_change_vote,
-				$cur_voted_val
+				$cur_voted_val,
+				isset($topic_data['wolfsblvt_poll_min_value']) ? (int) $topic_data['wolfsblvt_poll_min_value'] : 1
 			);
 
 			if ($validation_error)
@@ -998,7 +1030,7 @@ class advancedpolls
 					$poll_options_template_data[$j]['AP_POLL_OPTION_VALUE'] = $sel;
 					if ($poll_type === poll_options::TYPE_SCORING)
 					{
-						for ($i = 1; $i <= $topic_data['wolfsblvt_poll_max_value']; $i++)
+						for ($i = (isset($topic_data['wolfsblvt_poll_min_value']) ? (int) $topic_data['wolfsblvt_poll_min_value'] : 1); $i <= $topic_data['wolfsblvt_poll_max_value']; $i++)
 						{
 							$option_eval_opts_txt .= '<option value="' . $i . ((($i == $sel) && !$poll_force_display_results) ? '" selected="selected">' : '">') . $i . '</option>';
 						}
@@ -1260,6 +1292,10 @@ class advancedpolls
 			&& $this->auth->acl_get('f_votechg', $topic_data['forum_id'])
 			&& !empty($this->cur_voted_val)
 			&& !empty($poll_template_data['S_CAN_VOTE']);
+		$poll_template_data['AP_POLL_COLLAPSIBLE'] = !empty($this->config['wolfsblvt.advancedpolls.activate_poll_collapsible'])
+			&& !empty($topic_data['wolfsblvt_poll_collapsible']);
+		$poll_template_data['AP_POLL_TOPIC_ID'] = (int) $topic_data['topic_id'];
+
 		// Add the button to see poll results, if you have permissions
 		if ($this->auth->acl_get('m_seevoters', $topic_data['forum_id']))
 		{
@@ -1402,6 +1438,7 @@ class advancedpolls
 			'wolfsblvt_poll_voters_show',
 			'wolfsblvt_poll_voters_limit',
 			'wolfsblvt_poll_show_ordered',
+			'wolfsblvt_poll_collapsible',
 			'wolfsblvt_poll_scoring',
 			'wolfsblvt_poll_end',
 		);
@@ -1424,15 +1461,17 @@ class advancedpolls
 		$valid_options['wolfsblvt_poll_vote_mode'] = isset($this->config['wolfsblvt.advancedpolls.default_poll_vote_mode'])
 			? (int) $this->config['wolfsblvt.advancedpolls.default_poll_vote_mode']
 			: poll_options::VOTE_MODE_NO_CHANGE;
+		$valid_options['wolfsblvt_poll_required'] = true;
 		foreach ($options as $option)
 		{
 			$config_name = str_replace('wolfsblvt_', 'wolfsblvt.advancedpolls.activate_', $option);
 
-			if ($this->config[$config_name] == 1)
+			if (!empty($this->config[$config_name]))
 			{
 				if ($option == 'wolfsblvt_poll_scoring')
 				{
 					$valid_options['wolfsblvt_poll_type'] = poll_options::TYPE_CHOICE;
+					$valid_options['wolfsblvt_poll_min_value'] = 1;
 					$valid_options['wolfsblvt_poll_max_value'] = 1;
 					$valid_options['wolfsblvt_poll_total_value'] = 1;
 					$valid_options['wolfsblvt_poll_rank_points'] = '';

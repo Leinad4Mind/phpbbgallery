@@ -17,6 +17,8 @@ use wolfsblvt\advancedpolls\event\listener;
 use wolfsblvt\advancedpolls\ext;
 use wolfsblvt\advancedpolls\migrations\v1_3_0_data;
 use wolfsblvt\advancedpolls\migrations\v1_3_0_schema;
+use wolfsblvt\advancedpolls\migrations\v1_4_0_data;
+use wolfsblvt\advancedpolls\migrations\v1_4_0_schema;
 
 class integration_contract_test extends TestCase
 {
@@ -26,9 +28,11 @@ class integration_contract_test extends TestCase
 			'core.permissions' => 'adv_polls_permissions',
 			'core.user_setup' => 'load_language_on_setup',
 			'core.delete_user_before' => 'delete_user_before',
+			'core.delete_topics_before_query' => 'delete_topics_before',
 			'core.posting_modify_submission_errors' => 'check_config_for_polls',
 			'core.posting_modify_template_vars' => 'config_for_polls_to_template',
 			'core.submit_post_modify_sql_data' => 'save_config_for_polls',
+			'core.submit_post_end' => 'save_multi_questions',
 			'core.viewtopic_modify_poll_data' => 'do_poll_voting_modifications',
 			'core.viewtopic_modify_poll_ajax_data' => 'do_poll_ajax_modifications',
 			'core.viewtopic_modify_poll_template_data' => 'do_poll_template_modifications',
@@ -120,9 +124,9 @@ class integration_contract_test extends TestCase
 		$this->assertSame(1, substr_count($vote_mode, 'selected="selected"'));
 	}
 
-	public function test_schema_migration_adds_and_reverts_portable_columns()
+	public function test_released_v1_3_schema_remains_stable()
 	{
-		$migration = $this->create_schema_migration();
+		$migration = $this->create_schema_migration(v1_3_0_schema::class);
 		$schema = $migration->update_schema()['add_columns'];
 		$columns = $schema['phpbb_topics'];
 
@@ -131,16 +135,43 @@ class integration_contract_test extends TestCase
 		$this->assertSame(array('UINT:1', 0), $columns['wolfsblvt_poll_type']);
 		$this->assertSame(array('VCHAR:255', ''), $columns['wolfsblvt_poll_rank_points']);
 		$this->assertSame(array('BOOL', 0), $columns['wolfsblvt_poll_notified']);
+		$this->assertSame(array('VCHAR_UNI:255', ''), $schema['phpbb_poll_votes']['wolfsblvt_vote_user_name']);
+		$this->assertArrayNotHasKey('add_tables', $migration->update_schema());
+	}
+
+	public function test_v1_4_schema_adds_and_reverts_new_feature_storage()
+	{
+		$migration = $this->create_schema_migration(v1_4_0_schema::class);
+		$schema = $migration->update_schema()['add_columns'];
+		$columns = $schema['phpbb_topics'];
+
+		$this->assertSame(array('UINT:4', 1), $columns['wolfsblvt_poll_min_value']);
+		$this->assertSame(array('BOOL', 1), $columns['wolfsblvt_poll_required']);
+		$this->assertSame(array('BOOL', 0), $columns['wolfsblvt_poll_collapsible']);
 		foreach (array_keys($columns) as $column)
 		{
 			$this->assertLessThanOrEqual(30, strlen($column), $column . ' exceeds phpBB portable identifier length');
 		}
 		$this->assertSame(array_keys($columns), $migration->revert_schema()['drop_columns']['phpbb_topics']);
-		$this->assertSame(array('VCHAR_UNI:255', ''), $schema['phpbb_poll_votes']['wolfsblvt_vote_user_name']);
+		$this->assertSame(array('VCHAR:64', ''), $schema['phpbb_poll_votes']['wolfsblvt_vote_guest_token']);
 		$this->assertSame(
-			array('wolfsblvt_vote_user_name'),
+			array('wolfsblvt_vote_guest_token'),
 			$migration->revert_schema()['drop_columns']['phpbb_poll_votes']
 		);
+		$tables = $migration->update_schema()['add_tables'];
+		$this->assertArrayHasKey('phpbb_advancedpolls_ballots', $tables);
+		$this->assertArrayHasKey('phpbb_advancedpolls_questions', $tables);
+		$this->assertSame('question_id', $tables['phpbb_advancedpolls_questions']['PRIMARY_KEY']);
+	}
+
+	public function test_v1_4_data_enables_collapsible_polls_when_categories_extension_is_installed()
+	{
+		$this->assert_collapsible_migration_default(array('ext_name' => 'phpbb/collapsiblecategories'), 1);
+	}
+
+	public function test_v1_4_data_disables_collapsible_polls_without_categories_extension()
+	{
+		$this->assert_collapsible_migration_default(false, 0);
 	}
 
 	public function test_data_migration_maps_legacy_options_and_initialises_cron()
@@ -235,15 +266,20 @@ class integration_contract_test extends TestCase
 		return new listener(
 			$advancedpolls ?: $this->createMock(\wolfsblvt\advancedpolls\core\advancedpolls::class),
 			$lifecycle ?: $this->createMock(\wolfsblvt\advancedpolls\core\vote_user_lifecycle::class),
+			$this->createMock(\wolfsblvt\advancedpolls\core\multi_question_manager::class),
+			$this->createMock(\phpbb\request\request_interface::class),
+			$this->createMock(\phpbb\controller\helper::class),
+			new \phpbb\config\config(array('cookie_name' => 'phpbb')),
+			$this->createMock(\phpbb\auth\auth::class),
 			$this->createMock(\phpbb\path_helper::class),
 			$this->createMock(\phpbb\template\template::class),
 			$this->createMock(\phpbb\user::class)
 		);
 	}
 
-	private function create_schema_migration()
+	private function create_schema_migration($class)
 	{
-		return new v1_3_0_schema(
+		return new $class(
 			new \phpbb\config\config(array()),
 			$this->createMock(\phpbb\db\driver\driver_interface::class),
 			$this->createMock(\phpbb\db\tools\tools_interface::class),
@@ -251,5 +287,30 @@ class integration_contract_test extends TestCase
 			'php',
 			'phpbb_'
 		);
+	}
+
+	private function assert_collapsible_migration_default($installed_row, $expected)
+	{
+		$config = new \phpbb\config\config(array());
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->once())
+			->method('sql_query_limit')
+			->with($this->stringContains("ext_name = 'phpbb/collapsiblecategories'"), 1)
+			->willReturn('result');
+		$db->expects($this->once())->method('sql_fetchrow')->with('result')->willReturn($installed_row);
+		$db->expects($this->once())->method('sql_freeresult')->with('result');
+		$migration = new v1_4_0_data(
+			$config,
+			$db,
+			$this->createMock(\phpbb\db\tools\tools_interface::class),
+			'./',
+			'php',
+			'phpbb_'
+		);
+
+		$this->assertSame('wolfsblvt.advancedpolls.activate_poll_collapsible', $migration->update_data()[0][1][0]);
+		$migration->initialise_collapsible_default();
+		$this->assertSame($expected, (int) $config['wolfsblvt.advancedpolls.activate_poll_collapsible']);
+		$this->assertSame('wolfsblvt.advancedpolls.activate_poll_collapsible', $migration->revert_data()[0][1][0]);
 	}
 }

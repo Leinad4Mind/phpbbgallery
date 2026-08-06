@@ -16,6 +16,21 @@ use wolfsblvt\advancedpolls\core\poll_options;
 
 class advancedpolls_core_test extends TestCase
 {
+	public function test_collapsible_posting_option_follows_global_setting()
+	{
+		$method = new \ReflectionMethod(advancedpolls::class, 'get_possible_options');
+		$method->setAccessible(true);
+
+		$disabled = $method->invoke($this->create_core());
+		$this->assertArrayNotHasKey('wolfsblvt_poll_collapsible', $disabled);
+
+		$enabled = $method->invoke($this->create_core(array(), array(
+			'wolfsblvt.advancedpolls.activate_poll_collapsible' => 1,
+		)));
+		$this->assertArrayHasKey('wolfsblvt_poll_collapsible', $enabled);
+		$this->assertFalse($enabled['wolfsblvt_poll_collapsible']);
+	}
+
 	public function test_invalid_visibility_or_vote_mode_is_rejected()
 	{
 		$core = $this->create_core(array(
@@ -59,6 +74,16 @@ class advancedpolls_core_test extends TestCase
 		), array('wolfsblvt.advancedpolls.activate_poll_scoring' => 1));
 		$poll = array('poll_max_options' => 1);
 		$this->assertSame(array('Maximum exceeds total'), $core->check_config_for_polls($poll));
+
+		$core = $this->create_core(array(
+			'wolfsblvt_poll_visibility' => poll_options::VISIBILITY_DEFAULT,
+			'wolfsblvt_poll_vote_mode' => poll_options::VOTE_MODE_NO_CHANGE,
+			'wolfsblvt_poll_type' => poll_options::TYPE_SCORING,
+			'wolfsblvt_poll_min_value' => 5,
+			'wolfsblvt_poll_max_value' => 4,
+			'wolfsblvt_poll_total_value' => 10,
+		), array('wolfsblvt.advancedpolls.activate_poll_scoring' => 1));
+		$this->assertSame(array('Invalid scoring values'), $core->check_config_for_polls($poll));
 	}
 
 	public function test_ranking_configuration_sets_weighted_limits_and_rejects_incremental_mode()
@@ -74,7 +99,7 @@ class advancedpolls_core_test extends TestCase
 			return array_key_exists($name, $values) ? $values[$name] : $default;
 		});
 		$overwrites = array();
-		$request->expects($this->exactly(2))->method('overwrite')->willReturnCallback(function ($name, $value) use (&$overwrites) {
+		$request->expects($this->exactly(3))->method('overwrite')->willReturnCallback(function ($name, $value) use (&$overwrites) {
 			$overwrites[$name] = $value;
 		});
 		$core = $this->create_core(array(), array('wolfsblvt.advancedpolls.activate_poll_scoring' => 1), null, $request);
@@ -82,6 +107,7 @@ class advancedpolls_core_test extends TestCase
 		$this->assertSame(array(), $core->check_config_for_polls($poll));
 		$this->assertSame(array(
 			'wolfsblvt_poll_max_value' => 3,
+			'wolfsblvt_poll_min_value' => 1,
 			'wolfsblvt_poll_total_value' => 6,
 		), $overwrites);
 

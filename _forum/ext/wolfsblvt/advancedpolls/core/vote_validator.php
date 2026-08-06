@@ -24,9 +24,10 @@ final class vote_validator
 	 * @param int   $max_total Maximum total value
 	 * @param bool  $can_change Whether existing votes may be reduced/removed
 	 * @param array $current_votes Existing option => value map
+	 * @param int   $min_per_option Minimum value per option
 	 * @return string|false Language key on failure, false on success
 	 */
-	public static function validate_scoring(array $votes, array $valid_option_ids, $max_per_option, $max_total, $can_change, array $current_votes)
+	public static function validate_scoring(array $votes, array $valid_option_ids, $max_per_option, $max_total, $can_change, array $current_votes, $min_per_option = 1)
 	{
 		if (!$votes)
 		{
@@ -46,9 +47,9 @@ final class vote_validator
 				return 'FORM_INVALID';
 			}
 
-			if ($value < 1 || $value > (int) $max_per_option)
+			if ($value < (int) $min_per_option || $value > (int) $max_per_option)
 			{
-				return 'AP_VOTE_GREATER_THAN_MAXVALUE';
+				return 'AP_VOTE_OUTSIDE_RANGE';
 			}
 
 			$total += $value;

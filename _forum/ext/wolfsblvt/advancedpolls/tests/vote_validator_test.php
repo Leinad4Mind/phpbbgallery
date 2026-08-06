@@ -32,8 +32,9 @@ class vote_validator_test extends TestCase
 
 	public function test_negative_and_oversized_values_are_rejected()
 	{
-		$this->assertSame('AP_VOTE_GREATER_THAN_MAXVALUE', vote_validator::validate_scoring(array(10 => -1), array(10), 3, 3, false, array()));
-		$this->assertSame('AP_VOTE_GREATER_THAN_MAXVALUE', vote_validator::validate_scoring(array(10 => 4), array(10), 3, 4, false, array()));
+		$this->assertSame('AP_VOTE_OUTSIDE_RANGE', vote_validator::validate_scoring(array(10 => -1), array(10), 3, 3, false, array()));
+		$this->assertSame('AP_VOTE_OUTSIDE_RANGE', vote_validator::validate_scoring(array(10 => 4), array(10), 3, 4, false, array()));
+		$this->assertSame('AP_VOTE_OUTSIDE_RANGE', vote_validator::validate_scoring(array(10 => 1), array(10), 4, 4, false, array(), 2));
 	}
 
 	public function test_total_limit_is_enforced()

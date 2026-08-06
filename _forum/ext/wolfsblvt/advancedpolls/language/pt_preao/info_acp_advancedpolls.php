@@ -81,6 +81,8 @@ $lang = array_merge($lang, [
 	'AP_ACT_POLL_END_EXPLAIN'           => 'Permite especificar quando termina uma votação através de uma data/hora, em vez de apenas especificar uma duração a partir do início da votação.',
 	'AP_ACT_POLL_NOTIFICATIONS'         => 'Activar notificações de votações',
 	'AP_ACT_POLL_NOTIFICATIONS_EXPLAIN' => 'Activa o envio de notificações a todos os votantes de uma votação oculta quando esta terminar e os resultados se tornarem visíveis.',
+	'AP_ACT_POLL_COLLAPSIBLE' => 'Activar sondagens recolhíveis',
+	'AP_ACT_POLL_COLLAPSIBLE_EXPLAIN' => 'Mostra a opção de recolher ao criar ou editar uma sondagem. Na instalação, esta definição é activada automaticamente se a extensão «Collapsible Forum Categories» estiver instalada; os administradores podem sempre alterá-la.',
 
 	'AP_DEFAULT_VOTES_CHANGE' => 'Valor por defeito para alterar voto',
 	'AP_DEFAULT_VOTES_HIDE'   => 'Valor por defeito para ocultar votos',

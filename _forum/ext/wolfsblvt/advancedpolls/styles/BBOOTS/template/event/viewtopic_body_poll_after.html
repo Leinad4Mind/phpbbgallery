@@ -1,0 +1,46 @@
+<!-- IF AP_HAS_MULTI_QUESTIONS -->
+<div id="ap-multi-poll" class="ap-multi-poll" data-no-vote="<!-- IF AP_MULTI_NO_VOTE -->1<!-- ELSE -->0<!-- ENDIF -->" data-vote-url="{AP_MULTI_VOTE_URL}" data-type="{AP_MULTI_TYPE}" data-max-options="{AP_MULTI_MAX_OPTIONS}" data-total-value="{AP_MULTI_TOTAL_VALUE}" data-rank-points="{AP_MULTI_RANK_POINTS}" data-primary-required="<!-- IF AP_PRIMARY_REQUIRED -->1<!-- ELSE -->0<!-- ENDIF -->" data-required-error="{L_AP_REQUIRED_QUESTION_MISSING}" data-ranking-error="{L_AP_RANK_SELECTION_INCOMPLETE}" data-too-many-error="{L_TOO_MANY_VOTE_OPTIONS}" data-total-error="{L_AP_TOO_MANY_VOTES}" data-voters-label="{L_AP_VOTERS}{L_COLON}" data-none-label="{L_AP_NONE}">
+	<!-- BEGIN ap_question -->
+	<section class="ap-poll-page ap-extra-page panel" data-question-id="{ap_question.ID}" data-required="<!-- IF ap_question.REQUIRED -->1<!-- ELSE -->0<!-- ENDIF -->" hidden>
+		<div class="inner panel-body">
+			<h2 class="poll-title">{ap_question.TEXT}<!-- IF ap_question.REQUIRED --> <span class="ap-required-mark" aria-label="{L_AP_QUESTION_REQUIRED}">*</span><!-- ENDIF --></h2>
+			<fieldset class="polls">
+			<!-- BEGIN option -->
+				<dl data-poll-option-id="{ap_question.option.ID}">
+					<dt><label for="ap_vote_{ap_question.ID}_{ap_question.option.ID}">{ap_question.option.TEXT}</label></dt>
+					<!-- IF ap_question.S_CAN_VOTE -->
+					<dd class="poll_option_select">
+						<!-- IF AP_MULTI_TYPE == 1 -->
+						<select id="ap_vote_{ap_question.ID}_{ap_question.option.ID}" class="ap-multi-score form-control input-sm" data-option-id="{ap_question.option.ID}">{ap_question.option.SCORE_OPTIONS}</select>
+						<!-- ELSEIF AP_MULTI_TYPE == 2 -->
+						<label class="ap-ranking-choice"><input type="checkbox" id="ap_vote_{ap_question.ID}_{ap_question.option.ID}" class="ap-multi-rank" data-option-id="{ap_question.option.ID}" data-current-value="{ap_question.option.VALUE}"<!-- IF ap_question.option.SELECTED --> checked="checked"<!-- ENDIF --> /> <span class="ap-rank-badge"><!-- IF ap_question.option.RANK -->{ap_question.option.RANK}<!-- ENDIF --></span></label>
+						<!-- ELSE -->
+						<input type="<!-- IF AP_MULTI_MAX_OPTIONS > 1 -->checkbox<!-- ELSE -->radio<!-- ENDIF -->" id="ap_vote_{ap_question.ID}_{ap_question.option.ID}" class="ap-multi-choice" name="ap_question_{ap_question.ID}" data-option-id="{ap_question.option.ID}"<!-- IF ap_question.option.SELECTED --> checked="checked"<!-- ENDIF --> />
+						<!-- ENDIF -->
+					</dd>
+					<!-- ENDIF -->
+					<dd class="resultbar<!-- IF not ap_question.S_DISPLAY_RESULTS --> hidden<!-- ENDIF -->"><div class="pollbar ap-multi-result-bar" style="width:{ap_question.option.PERCENT}%;">{ap_question.option.TOTAL}</div></dd>
+					<dd class="poll_option_percent<!-- IF not ap_question.S_DISPLAY_RESULTS --> hidden<!-- ENDIF -->">{ap_question.option.PERCENT}%</dd>
+					<!-- IF ap_question.option.VOTERS --><dd class="poll_voters_box">{L_AP_VOTERS}{L_COLON} <span class="poll_voters">{ap_question.option.VOTERS}</span></dd><!-- ENDIF -->
+					<!-- IF ap_question.S_DISPLAY_RESULTS and ap_question.option.BREAKDOWN -->
+					<dd class="ap-score-breakdown-widget">
+						<button type="button" class="ap-score-breakdown-trigger" aria-expanded="false" aria-label="{ap_question.option.SCORE_TOTAL}. {ap_question.option.BREAKDOWN_LABEL}">{ap_question.option.SCORE_TOTAL}</button>
+						<span class="ap-score-breakdown-popup" role="tooltip"><strong>{ap_question.option.BREAKDOWN_LABEL}</strong><span class="ap-score-breakdown-list">{ap_question.option.BREAKDOWN}</span></span>
+					</dd>
+					<!-- ENDIF -->
+				</dl>
+			<!-- END option -->
+			</fieldset>
+		</div>
+	</section>
+	<!-- END ap_question -->
+	<nav class="ap-poll-navigation" aria-label="{L_AP_POLL_NAVIGATION}">
+		<span class="ap-poll-progress"></span>
+		<button type="button" class="button2 btn btn-default ap-poll-previous">{L_PREVIOUS}</button>
+		<button type="button" class="button2 btn btn-default ap-poll-next">{L_NEXT}</button>
+		<!-- IF S_CAN_VOTE --><button type="button" class="button1 btn btn-primary ap-poll-submit">{L_SUBMIT_VOTE}</button><!-- ENDIF -->
+	</nav>
+	<div class="ap-poll-message" role="status" aria-live="polite"></div>
+</div>
+<!-- INCLUDEJS js/multi_question_vote.js -->
+<!-- ENDIF -->

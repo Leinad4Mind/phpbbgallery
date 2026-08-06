@@ -4,6 +4,11 @@ services:
         arguments:
             - '@wolfsblvt.advancedpolls.advancedpolls'
             - '@wolfsblvt.advancedpolls.vote_user_lifecycle'
+            - '@wolfsblvt.advancedpolls.multi_question_manager'
+            - '@request'
+            - '@controller.helper'
+            - '@config'
+            - '@auth'
             - '@path_helper'
             - '@template'
             - '@user'
@@ -13,6 +18,12 @@ services:
         class: wolfsblvt\advancedpolls\core\vote_user_lifecycle
         arguments:
             - '@dbal.conn'
+            - '%core.table_prefix%'
+    wolfsblvt.advancedpolls.multi_question_manager:
+        class: wolfsblvt\advancedpolls\core\multi_question_manager
+        arguments:
+            - '@dbal.conn'
+            - '%core.table_prefix%'
     wolfsblvt.advancedpolls.advancedpolls:
         class: wolfsblvt\advancedpolls\core\advancedpolls
         arguments:
@@ -32,6 +43,16 @@ services:
             - '@auth'
             - '@user'
             - '@request'
+    wolfsblvt.advancedpolls.controller.multi_question:
+        class: wolfsblvt\advancedpolls\controller\multi_question
+        arguments:
+            - '@dbal.conn'
+            - '@auth'
+            - '@user'
+            - '@request'
+            - '@config'
+            - '@wolfsblvt.advancedpolls.multi_question_manager'
+            - '%core.table_prefix%'
     wolfsblvt.advancedpolls.notification.type.pollended:
         class: wolfsblvt\advancedpolls\notification\pollended
         shared: false

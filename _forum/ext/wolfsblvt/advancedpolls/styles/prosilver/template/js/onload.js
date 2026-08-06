@@ -206,6 +206,9 @@ $(document).ready(function () {
 	// Modify the "view results" link to set the "don't want to vote"
 	if ($.wolfsblvt.advancedpoll_json_data.wolfsblvt_poll_no_vote) {
 		$('.poll_view_results a').click(function (event) {
+			if ($('#ap-multi-poll').length) {
+				return;
+			}
 			var $poll = $(this).parents('.topic_poll');
 			var target = this.href;
 			event.preventDefault();
@@ -235,6 +238,9 @@ $(document).ready(function () {
 	}
 
 	$('.ap-delete-vote').click(function () {
+		if ($('#ap-multi-poll').length) {
+			return;
+		}
 		var $button = $(this);
 		var $poll = $button.parents('.topic_poll');
 		$button.prop('disabled', true);

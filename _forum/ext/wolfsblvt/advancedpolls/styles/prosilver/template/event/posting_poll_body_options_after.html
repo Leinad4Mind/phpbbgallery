@@ -61,6 +61,10 @@
 </dl>
 <div id="ap-scoring-settings">
 <dl>
+	<dt><label for="wolfsblvt_poll_min_value">{L_AP_POLL_MIN_VALUE}{L_COLON}</label></dt>
+	<dd><input type="number" min="1" max="999" style="width: 5em !important;" name="wolfsblvt_poll_min_value" id="wolfsblvt_poll_min_value" size="3" maxlength="3" value="{WOLFSBLVT_POLL_MIN_VALUE}" class="inputbox autowidth" />{L_AP_POLL_MIN_VALUE_EXPLAIN}</dd>
+</dl>
+<dl>
 	<dt><label for="wolfsblvt_poll_max_value">{L_AP_POLL_MAX_VALUE}{L_COLON}</label></dt>
 	<dd><input type="number" min="1" max="999" style="width: 5em !important;" name="wolfsblvt_poll_max_value" id="wolfsblvt_poll_max_value" size="3" maxlength="3" value="{WOLFSBLVT_POLL_MAX_VALUE}" class="inputbox autowidth" />{L_AP_POLL_MAX_VALUE_EXPLAIN}</dd>
 </dl>
@@ -115,4 +119,22 @@
 	<dd><label for="wolfsblvt_poll_show_ordered"><input type="checkbox" id="wolfsblvt_poll_show_ordered" name="wolfsblvt_poll_show_ordered"{WOLFSBLVT_POLL_SHOW_ORDERED_CHECKED} /> {L_AP_POLL_SHOW_ORDERED_EXPLAIN}</label></dd>
 </dl>
 <!-- ENDIF -->
+<!-- IF WOLFSBLVT_POLL_COLLAPSIBLE -->
+<dl>
+	<dt><label for="wolfsblvt_poll_collapsible">{L_AP_POLL_COLLAPSIBLE}{L_COLON}</label></dt>
+	<dd><label for="wolfsblvt_poll_collapsible"><input type="checkbox" id="wolfsblvt_poll_collapsible" name="wolfsblvt_poll_collapsible"{WOLFSBLVT_POLL_COLLAPSIBLE_CHECKED} /> {L_AP_POLL_COLLAPSIBLE_EXPLAIN}</label></dd>
+</dl>
+<!-- ENDIF -->
+<dl>
+	<dt><label for="wolfsblvt_poll_required">{L_AP_QUESTION_REQUIRED}{L_COLON}</label></dt>
+	<dd><label><input type="checkbox" id="wolfsblvt_poll_required" name="wolfsblvt_poll_required"{WOLFSBLVT_POLL_REQUIRED_CHECKED} /> {L_AP_PRIMARY_QUESTION_REQUIRED_EXPLAIN}</label></dd>
+</dl>
+<div class="ap-multi-question-editor" data-max-questions="20" data-question-label="{L_AP_QUESTION}" data-options-label="{L_POLL_OPTIONS}" data-required-label="{L_AP_QUESTION_REQUIRED}" data-remove-label="{L_REMOVE}">
+	<h3>{L_AP_ADDITIONAL_QUESTIONS}</h3>
+	<p>{L_AP_ADDITIONAL_QUESTIONS_EXPLAIN}</p>
+	<div class="ap-question-list"></div>
+	<button type="button" class="button2 ap-add-question">{L_AP_ADD_QUESTION}</button>
+	<input type="hidden" name="ap_multi_questions" id="ap_multi_questions" value="{AP_MULTI_QUESTIONS_JSON}" />
+</div>
+<!-- INCLUDEJS js/multi_question_posting.js -->
 <!-- ENDIF -->

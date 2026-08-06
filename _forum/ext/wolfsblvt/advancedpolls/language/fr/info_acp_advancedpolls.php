@@ -85,6 +85,8 @@ $lang = array_merge($lang, [
 	'AP_ACT_POLL_END_EXPLAIN'           => 'Permet de spécifier la date et l’heure de fin du sondage, en lieu et place d’une durée.',
 	'AP_ACT_POLL_NOTIFICATIONS'         => 'Activer les notifications de sondage',
 	'AP_ACT_POLL_NOTIFICATIONS_EXPLAIN' => 'Active l’envoi de notifications à tous les votants d’un sondage masqué lorsque celui-ci est terminé, indiquant que les résultats sont disponibles.',
+	'AP_ACT_POLL_COLLAPSIBLE' => 'Activer les sondages réductibles',
+	'AP_ACT_POLL_COLLAPSIBLE_EXPLAIN' => 'Affiche l’option réductible lors de la création ou de la modification d’un sondage. À l’installation, ce réglage est activé automatiquement si « Collapsible Forum Categories » est installé ; les administrateurs peuvent toujours le modifier.',
 
 	'AP_DEFAULT_VOTES_CHANGE' => 'Paramètre par défaut pour le changement des votes',
 	'AP_DEFAULT_VOTES_HIDE'   => 'Paramètre par défaut pour les votes masqués',

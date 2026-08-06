@@ -82,6 +82,8 @@ $lang = array_merge($lang, [
 	'AP_ACT_POLL_END_EXPLAIN'		=> 'Permite especificar cuando termina una encuesta en fecha y hora, en lugar de especificar tan solo una duración a partir del inicio de la encuesta.',
 	'AP_ACT_POLL_NOTIFICATIONS'				=> 'Activar notificaciones de encuestas',
 	'AP_ACT_POLL_NOTIFICATIONS_EXPLAIN'		=> 'Activa el envío de notificaciones a todos los votantes en encuestas ocultas cuando la encuenta ha finalizado, y por tanto los resultados son visibles.',
+	'AP_ACT_POLL_COLLAPSIBLE'				=> 'Activar encuestas contraíbles',
+	'AP_ACT_POLL_COLLAPSIBLE_EXPLAIN'		=> 'Muestra la opción contraíble al crear o editar una encuesta. Durante la instalación, esta opción se activa automáticamente si está instalada «Collapsible Forum Categories»; los administradores siempre pueden cambiarla.',
 
 	'AP_DEFAULT_VOTES_CHANGE'		=> 'Valor por defecto para cambiar el voto',
 	'AP_DEFAULT_VOTES_HIDE'			=> 'Valor por defecto para votos ocultos',

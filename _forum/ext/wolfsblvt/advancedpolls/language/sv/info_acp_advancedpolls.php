@@ -82,6 +82,8 @@ $lang = array_merge($lang, [
 	'AP_ACT_POLL_END_EXPLAIN' => 'Gör det möjligt att ange exakt datum och tid för omröstningens slut i stället för en längd från starttiden.',
 	'AP_ACT_POLL_NOTIFICATIONS' => 'Aktivera omröstningsaviseringar',
 	'AP_ACT_POLL_NOTIFICATIONS_EXPLAIN' => 'Skickar en avisering till alla som röstat i en dold omröstning när den avslutas och resultaten blir synliga.',
+	'AP_ACT_POLL_COLLAPSIBLE' => 'Aktivera hopfällbara omröstningar',
+	'AP_ACT_POLL_COLLAPSIBLE_EXPLAIN' => 'Visar hopfällningsalternativet när en omröstning skapas eller redigeras. Vid installation aktiveras inställningen automatiskt om ”Collapsible Forum Categories” är installerat; administratörer kan alltid ändra den.',
 
 	'AP_DEFAULT_VOTES_CHANGE'		=> 'Välj grundinställning för ändring av röstning',
 	'AP_DEFAULT_VOTES_HIDE'			=> 'Välj grundinställning för "Dölja omröstning"',

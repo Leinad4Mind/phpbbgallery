@@ -4,3 +4,10 @@ wolfsblvt_advancedpolls_infopoll:
     requirements:
         topic_id: '\d+'
     methods: [GET]
+
+wolfsblvt_advancedpolls_multi_question_vote:
+    path: /advancedpolls/vote/{topic_id}
+    defaults: { _controller: wolfsblvt.advancedpolls.controller.multi_question:submit }
+    requirements:
+        topic_id: '\d+'
+    methods: [POST]

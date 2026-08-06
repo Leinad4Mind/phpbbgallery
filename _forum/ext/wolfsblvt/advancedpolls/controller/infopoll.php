@@ -11,6 +11,7 @@
 namespace wolfsblvt\advancedpolls\controller;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
+use wolfsblvt\advancedpolls\core\poll_options;
 
 class infopoll
 {
@@ -49,7 +50,7 @@ class infopoll
 		}
 
 		$sql = 'SELECT topic_id, forum_id, topic_first_post_id, poll_title, poll_max_options,
-				wolfsblvt_poll_max_value
+				wolfsblvt_poll_type, wolfsblvt_poll_max_value
 			FROM ' . TOPICS_TABLE . '
 			WHERE topic_id = ' . (int) $topic_id;
 		$result = $this->db->sql_query($sql);
@@ -75,8 +76,11 @@ class infopoll
 		$question = $options['question'];
 		unset($options['question']);
 
-		$scoring = (int) $topic['wolfsblvt_poll_max_value'] > 1;
-		$voters = $this->load_voters((int) $topic_id, $scoring);
+		$type = isset($topic['wolfsblvt_poll_type']) && poll_options::is_valid_type($topic['wolfsblvt_poll_type'])
+			? (int) $topic['wolfsblvt_poll_type']
+			: ((int) $topic['wolfsblvt_poll_max_value'] > 1 ? poll_options::TYPE_SCORING : poll_options::TYPE_CHOICE);
+		$weighted = $type !== poll_options::TYPE_CHOICE;
+		$voters = $this->load_voters((int) $topic_id, $weighted);
 		$all_voters = array();
 		$registered_totals = array();
 
@@ -85,7 +89,7 @@ class infopoll
 			foreach ($option_voters as $voter)
 			{
 				$user_id = (int) $voter['user_id'];
-				$value = $scoring ? (int) $voter['value'] : 1;
+				$value = $weighted ? (int) $voter['value'] : 1;
 				$registered_totals[$option_id] = isset($registered_totals[$option_id])
 					? $registered_totals[$option_id] + $value
 					: $value;
@@ -104,7 +108,7 @@ class infopoll
 			{
 				foreach ($voters[$option_id] as $voter)
 				{
-					$voter_list[] = $voter['username'] . ($scoring ? ' (' . (int) $voter['value'] . ')' : '');
+				$voter_list[] = $voter['username'] . ($weighted ? ' (' . (int) $voter['value'] . ')' : '');
 				}
 			}
 
@@ -117,7 +121,7 @@ class infopoll
 
 			$response_options[] = array(
 				'caption' => $option['caption'],
-				'total' => $this->user->lang('AP_SCORE_TOTAL', (int) $option['total']),
+				'total' => $this->user->lang($type === poll_options::TYPE_RANKING ? 'AP_RANK_TOTAL' : 'AP_SCORE_TOTAL', (int) $option['total']),
 				'voters' => $voter_list
 					? implode($this->user->lang['COMMA_SEPARATOR'], $voter_list)
 					: '<span class="ap-infopoll-none">' . $this->user->lang['AP_NONE'] . '</span>',
@@ -127,7 +131,7 @@ class infopoll
 		$all_voter_list = array();
 		foreach ($this->unique_voters($voters) as $user_id => $voter)
 		{
-			$show_total = $scoring || (int) $topic['poll_max_options'] > 1;
+			$show_total = $weighted || (int) $topic['poll_max_options'] > 1;
 			$all_voter_list[] = $voter['username'] . ($show_total ? ' (' . $all_voters[$user_id] . ')' : '');
 		}
 		if ($total_guest_votes)
@@ -193,10 +197,10 @@ class infopoll
 	 * Load registered voters grouped by poll option.
 	 *
 	 * @param int  $topic_id Topic ID
-	 * @param bool $scoring Scoring poll
+	 * @param bool $weighted Scoring or ranking poll
 	 * @return array
 	 */
-	protected function load_voters($topic_id, $scoring)
+	protected function load_voters($topic_id, $weighted)
 	{
 		$sql = 'SELECT v.poll_option_id, v.vote_user_id, v.wolfsblvt_poll_option_value,
 				v.wolfsblvt_vote_user_name, u.user_id AS existing_user_id,
@@ -219,7 +223,7 @@ class infopoll
 				: $row['username'];
 			$voters[$option_id][] = array(
 				'user_id' => (int) $row['vote_user_id'],
-				'value' => $scoring ? (int) $row['wolfsblvt_poll_option_value'] : 1,
+				'value' => $weighted ? (int) $row['wolfsblvt_poll_option_value'] : 1,
 				'username' => get_username_string(
 					$deleted ? 'no_profile' : 'full',
 					$deleted ? ANONYMOUS : $row['vote_user_id'],

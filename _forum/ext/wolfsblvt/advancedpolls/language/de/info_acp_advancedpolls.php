@@ -81,6 +81,8 @@ $lang = array_merge($lang, [
 	'AP_ACT_POLL_END_EXPLAIN'		=> 'Aktiviert die Möglichkeit, eine Umfrgae zu einem Zeitpunkt zu beenden (Datum/ Uhrzeit), anstatt eine Umfragedauer festzulegen.',
 	'AP_ACT_POLL_NOTIFICATIONS'				=> 'Aktiviere Umfrage Benachrichtigungen',
 	'AP_ACT_POLL_NOTIFICATIONS_EXPLAIN'		=> 'Aktiviert das Versenden von Benachrichtigungen an alle Umfrageteilnehmer, sobald eine verborgene Umfrage beendet ist und die Ergebnisse sichtbar sind.',
+	'AP_ACT_POLL_COLLAPSIBLE'				=> 'Einklappbare Umfragen aktivieren',
+	'AP_ACT_POLL_COLLAPSIBLE_EXPLAIN'		=> 'Zeigt beim Erstellen oder Bearbeiten einer Umfrage die Option zum Einklappen an. Bei der Installation wird diese Einstellung automatisch aktiviert, wenn „Collapsible Forum Categories“ installiert ist; Administratoren können sie jederzeit ändern.',
 
 	'AP_DEFAULT_VOTES_CHANGE'			=> 'Standardeinstellung "Ändern der Abstimmung erlauben"',
 	'AP_DEFAULT_VOTES_HIDE'				=> 'Standardeinistellung "Verbergen der Abstimmungsergebnisse"',

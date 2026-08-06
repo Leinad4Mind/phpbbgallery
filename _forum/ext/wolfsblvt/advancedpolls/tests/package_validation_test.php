@@ -20,6 +20,7 @@ class package_validation_test extends TestCase
 
 		$this->assertSame(JSON_ERROR_NONE, json_last_error());
 		$this->assertSame('phpbb-extension', $composer['type']);
+		$this->assertSame('1.4.0', $composer['version']);
 		$this->assertSame('>=7.1.3', $composer['require']['php']);
 		$this->assertSame('>=3.3.0,<4.0.0@dev', $composer['extra']['soft-require']['phpbb/phpbb']);
 	}
@@ -32,7 +33,11 @@ class package_validation_test extends TestCase
 		$parsed_routing = \Symfony\Component\Yaml\Yaml::parse($routing);
 
 		$this->assertArrayHasKey('wolfsblvt.advancedpolls.controller.infopoll', $parsed_services['services']);
+		$this->assertArrayHasKey('wolfsblvt.advancedpolls.controller.multi_question', $parsed_services['services']);
+		$this->assertArrayHasKey('wolfsblvt.advancedpolls.multi_question_manager', $parsed_services['services']);
 		$this->assertArrayHasKey('wolfsblvt_advancedpolls_infopoll', $parsed_routing);
+		$this->assertArrayHasKey('wolfsblvt_advancedpolls_multi_question_vote', $parsed_routing);
+		$this->assertSame(array('POST'), $parsed_routing['wolfsblvt_advancedpolls_multi_question_vote']['methods']);
 		$this->assertStringContainsString('wolfsblvt.advancedpolls.listener:', $services);
 		$this->assertStringContainsString('wolfsblvt.advancedpolls.advancedpolls:', $services);
 		$this->assertStringContainsString('wolfsblvt.advancedpolls.controller.infopoll:', $services);
@@ -72,6 +77,13 @@ class package_validation_test extends TestCase
 			'AP_POLL_TYPE_RANKING',
 			'AP_RANK_POINTS',
 			'AP_RANK_SELECTION_INCOMPLETE',
+			'AP_ADDITIONAL_QUESTIONS',
+			'AP_REQUIRED_QUESTION_MISSING',
+			'AP_POLL_MIN_VALUE',
+			'AP_VOTE_OUTSIDE_RANGE',
+			'AP_POLL_COLLAPSIBLE',
+			'AP_COLLAPSE_POLL',
+			'AP_EXPAND_POLL',
 		);
 		$acp_keys = array(
 			'AP_DEFAULT_POLL_VISIBILITY',
@@ -79,6 +91,7 @@ class package_validation_test extends TestCase
 			'AP_ACT_SHOW_ABSTAINERS',
 			'AP_ACT_VOTE_DELETE',
 			'AP_ACT_POLL_NOTIFICATIONS',
+			'AP_ACT_POLL_COLLAPSIBLE',
 			'AP_ENABLE_NOTICE',
 		);
 
@@ -108,6 +121,8 @@ class package_validation_test extends TestCase
 			'template/event/posting_editor_subject_before.html',
 			'template/event/posting_poll_body_options_after.html',
 			'template/event/viewtopic_body_poll_option_after.html',
+			'template/event/viewtopic_body_poll_after.html',
+			'template/event/viewtopic_body_poll_question_append.html',
 			'template/js/functions.js',
 			'template/js/onload.js',
 			'template/js/poll_length_posting.js',
@@ -115,6 +130,9 @@ class package_validation_test extends TestCase
 			'template/js/scoring_preview.js',
 			'template/js/scoring_topic.js',
 			'template/js/poll_type_posting.js',
+			'template/js/multi_question_posting.js',
+			'template/js/multi_question_vote.js',
+			'template/js/poll_collapsible.js',
 			'template/lib/jxtools.js',
 			'theme/advancedpolls.css',
 		);
@@ -135,6 +153,11 @@ class package_validation_test extends TestCase
 			$this->assertStringContainsString('name="wolfsblvt_poll_type"', $posting);
 			$this->assertStringContainsString('{AP_POLL_TYPE_OPTIONS}', $posting);
 			$this->assertStringContainsString('{AP_RANK_POINT_INPUTS}', $posting);
+			$this->assertStringContainsString('name="wolfsblvt_poll_min_value"', $posting);
+			$this->assertStringContainsString('name="wolfsblvt_poll_required"', $posting);
+			$this->assertStringContainsString('WOLFSBLVT_POLL_COLLAPSIBLE', $posting);
+			$this->assertStringContainsString('name="wolfsblvt_poll_collapsible"', $posting);
+			$this->assertStringContainsString('name="ap_multi_questions"', $posting);
 			if ($style !== 'prosilver')
 			{
 				$this->assertStringContainsString('form-control input-sm ap-config-select', $posting);
@@ -177,6 +200,27 @@ class package_validation_test extends TestCase
 			$date = file_get_contents($root . 'template/js/poll_length_posting.js');
 			$this->assertStringContainsString('apPollEnd.getHours()).slice(-2)', $date);
 			$this->assertStringContainsString('apPollEnd.getMinutes()).slice(-2)', $date);
+
+			$multi_template = file_get_contents($root . 'template/event/viewtopic_body_poll_after.html');
+			$this->assertStringContainsString('data-vote-url="{AP_MULTI_VOTE_URL}"', $multi_template);
+			$this->assertStringContainsString('ap-poll-previous', $multi_template);
+			$this->assertStringContainsString('ap-poll-next', $multi_template);
+			$multi_vote = file_get_contents($root . 'template/js/multi_question_vote.js');
+			$this->assertStringContainsString("method: 'POST'", $multi_vote);
+			$this->assertStringContainsString('JSON.stringify(collectBallot())', $multi_vote);
+			$this->assertStringContainsString('updateBreakdowns', $multi_vote);
+			$this->assertStringContainsString('updateVoters', $multi_vote);
+			$this->assertStringContainsString("removeAttr('data-ajax').off('submit')", $multi_vote);
+			$this->assertStringNotContainsString('window.location.reload', $multi_vote);
+
+			$collapse_template = file_get_contents($root . 'template/event/viewtopic_body_poll_question_append.html');
+			$this->assertStringContainsString('AP_POLL_COLLAPSIBLE', $collapse_template);
+			$this->assertStringContainsString('aria-expanded="true"', $collapse_template);
+			$this->assertStringContainsString('data-topic-id="{AP_POLL_TOPIC_ID}"', $collapse_template);
+			$collapse = file_get_contents($root . 'template/js/poll_collapsible.js');
+			$this->assertStringContainsString('window.localStorage', $collapse);
+			$this->assertStringContainsString("window.jQuery(document).on('ajaxComplete', initialise)", $collapse);
+			$this->assertStringContainsString("document.getElementById('ap-multi-poll')", $collapse);
 		}
 	}
 
@@ -184,9 +228,11 @@ class package_validation_test extends TestCase
 	{
 		$core = file_get_contents($this->extension_root() . '/core/advancedpolls.php');
 		$notification = file_get_contents($this->extension_root() . '/notification/pollended.php');
-		$schema = file_get_contents($this->extension_root() . '/migrations/v1_3_0_schema.php');
+		$schema = file_get_contents($this->extension_root() . '/migrations/v1_4_0_schema.php');
 		$infopoll = file_get_contents($this->extension_root() . '/controller/infopoll.php');
 		$lifecycle = file_get_contents($this->extension_root() . '/core/vote_user_lifecycle.php');
+		$listener = file_get_contents($this->extension_root() . '/event/listener.php');
+		$multi_controller = file_get_contents($this->extension_root() . '/controller/multi_question.php');
 
 		$this->assertStringContainsString("is_set_post('delete_vote')", $core);
 		$this->assertStringContainsString("check_form_key('posting')", $core);
@@ -201,6 +247,12 @@ class package_validation_test extends TestCase
 		$this->assertStringContainsString('$mode === \'retain\'', $lifecycle);
 		$this->assertStringContainsString('$mode === \'remove\'', $lifecycle);
 		$this->assertStringContainsString('SUM(wolfsblvt_poll_option_value)', $lifecycle);
+		$this->assertStringContainsString("htmlspecialchars(\$json ?: '[]', ENT_COMPAT, 'UTF-8')", $listener);
+		$this->assertStringContainsString("htmlspecialchars(censor_text(\$question['text']), ENT_QUOTES, 'UTF-8')", $listener);
+		$this->assertSame(2, substr_count($listener, "raw_variable('ap_multi_questions'"));
+		$this->assertStringContainsString("raw_variable('answers'", $multi_controller);
+		$this->assertStringContainsString('AP_POLL_COLLAPSIBLE', $core);
+		$this->assertStringContainsString('activate_poll_collapsible', $core);
 		$this->assertStringNotContainsString('order_items', $schema);
 		$this->assertStringNotContainsString('purchase', strtolower($schema));
 	}
