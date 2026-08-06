@@ -1,5 +1,6 @@
 # Changelog
 
+- Added private 4shared storage using OAuth 1.0 HMAC-SHA1, exclusively owned folders, owner-only objects, recoverable publication and simple or chunked uploads through the documented API v1_2 endpoints.
 - Added private Koofr storage over its official fixed HTTPS WebDAV endpoint using revocable application passwords, conditional writes, streamed transfers and strictly bounded metadata parsing.
 - Added private pCloud storage for European and United States data regions using OAuth bearer authentication, owned unshared folders, public-link rejection, streaming uploads and validated server-side downloads.
 - Added private MediaFire storage using the live Core API 1.5, serialized Session Token v2 signatures, private dedicated folders, SHA-256 Instant/resumable uploads and server-consumed validated direct-download links.
@@ -124,6 +125,9 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added Koofr as a Remote Storage provider through its official HTTPS WebDAV
   endpoint, with dedicated application-password authentication, fixed-host
   requests, conditional publication and bounded XML metadata validation.
+- Added 4shared as a Remote Storage provider through the documented API v1_2,
+  with OAuth 1.0 request signing, verified private unshared folders, owner-only
+  files, resumable chunk transport and recoverable object replacement.
 - Added verified Remote Storage ACP configuration in all supported languages,
   including environment-variable overrides, secret-safe forms and a complete
   write, checksum, read and delete connection test before settings are saved.
