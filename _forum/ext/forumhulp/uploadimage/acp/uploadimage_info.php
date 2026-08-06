@@ -1,37 +1,22 @@
 <?php
-/**
-*
-* @package Upload Image
-* @copyright (c) 2014 John Peskens (http://ForumHulp.com)
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
 
 namespace forumhulp\uploadimage\acp;
 
 class uploadimage_info
 {
-	function module()
+	public function module(): array
 	{
-		return array(
-			'filename'    => 'forumhulp\uploadimage\acp\uploadimage_module',
-			'title'        => 'ACP_IMAGE_TITLE',
-			'version'    => '1.0.0',
-			'modes'        => array(
-				'main'		=> array(
-					'title'	=> 'ACP_IMAGE_TITLE',
-					'auth'	=> 'ext_forumhulp/uploadimage && acl_a_styles',
-					'cat'	=> array('ACP_UPLOAD_IMAGE_TITLE')
-				),
-			),
-		);
-	}
-
-	function install()
-	{
-	}
-
-	function uninstall()
-	{
+		return [
+			'filename' => '\\forumhulp\\uploadimage\\acp\\uploadimage_module',
+			'title' => 'ACP_IMAGE_TITLE',
+			'version' => '3.3.0',
+			'modes' => [
+				'main' => [
+					'title' => 'ACP_IMAGE_TITLE',
+					'auth' => 'ext_forumhulp/uploadimage && acl_a_styles',
+					'cat' => ['ACP_UPLOAD_IMAGE_TITLE'],
+				],
+			],
+		];
 	}
 }

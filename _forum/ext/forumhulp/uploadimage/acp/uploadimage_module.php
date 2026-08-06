@@ -1,91 +1,108 @@
 <?php
-/**
-*
-* @package Upload Image
-* @copyright (c) 2014 John Peskens (http://ForumHulp.com)
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
 
 namespace forumhulp\uploadimage\acp;
 
+use phpbb\request\request_interface;
+
 class uploadimage_module
 {
-	public $u_action;
+	private const FORM_KEY = 'acp_uploadimage';
 
-	function main($id, $mode)
+	public string $u_action = '';
+	public string $tpl_name = '';
+	public string $page_title = '';
+
+	public function main(string $id, string $mode): void
 	{
-		global $phpbb_container, $request, $user;
+		global $auth, $phpbb_container, $request, $user;
 
-		// Get an instance of the admin controller
-		$admin_controller = $phpbb_container->get('forumhulp.uploadimage.admin.controller');
+		$user->add_lang_ext('forumhulp/uploadimage', 'info_acp_uploadimage');
+		if (!$auth->acl_get('a_styles'))
+		{
+			trigger_error($user->lang['NO_AUTH_OPERATION'], E_USER_WARNING);
+		}
 
-		// Requests
+		$controller = $phpbb_container->get('forumhulp.uploadimage.admin.controller');
+		$controller->set_page_url($this->u_action);
+		$this->tpl_name = 'acp_uploadimage';
+		$this->page_title = 'ACP_UPLOAD_IMAGE_TITLE';
 		$action = $request->variable('action', '');
 
-		// Make the $u_action url available in the admin controller
-		$admin_controller->set_page_url($this->u_action);
-
-		// Load a template from adm/style for our ACP page
-		$this->tpl_name = 'acp_uploadimage';
-
-		// Set the page title for our ACP page
-		$this->page_title = $user->lang('ACP_UPLOAD_IMAGE_TITLE');
-
-		if ($request->is_set_post('imgfolder'))
+		if ($action === 'details')
 		{
-			$admin_controller->rename_folder();
+			$this->tpl_name = 'acp_ext_details';
+			$phpbb_container->get('forumhulp.helper')->detail('forumhulp/uploadimage');
+			return;
 		}
 
-		if ($request->is_set_post('delete_file'))
+		$rename_folder = $request->is_set_post('imgfolder');
+		$delete_file = $request->is_set_post('delete_file');
+		$add_file = $request->is_set_post('add_file');
+		if (($rename_folder || $delete_file || $add_file) && !check_form_key(self::FORM_KEY))
 		{
-			$index =  $request->variable('delete_file', array(0 => 0));
-
-			$files =  $request->variable('attachment_data', array(0 => array('' => '')), true, \phpbb\request\request_interface::POST);
-			$file = $files[key($index)];
-			$admin_controller->delete_image($file['real_filename']);
-
-			exit();
-			$action = '';
+			trigger_error($user->lang['FORM_INVALID'], E_USER_WARNING);
 		}
 
-		if ($request->is_set_post('add_file'))
+		if ($rename_folder)
 		{
-			$admin_controller->add_image();
+			$controller->rename_folder();
+			redirect($this->u_action);
 		}
 
-		// Perform any actions submitted by the user
-		switch ($action)
+		if ($delete_file)
 		{
-			case 'delete':
-				// Use a confirm box routine when deleting a image
-				if (confirm_box(true))
-				{
-					// Delete image on confirmation from the user
-					$admin_controller->delete_image($request->variable('image_id', ''));
-					$admin_controller->display_images();
-				}
-				else
-				{
-					// Request confirmation from the user to delete the page
-					confirm_box(false, $user->lang('ACP_IMAGE_DELETE_CONFIRM'), build_hidden_fields(array(
-						'page_id'	=> $request->variable('image_id', ''),
-						'mode'		=> $mode,
-						'action'	=> $action,
-					)));
-				}
-			break;
+			$indexes = $request->variable(
+				'delete_file',
+				[0 => 0],
+				false,
+				request_interface::POST
+			);
+			$files = $request->variable(
+				'attachment_data',
+				[0 => ['' => '']],
+				true,
+				request_interface::POST
+			);
+			$files = $controller->sanitise_attachment_data($files);
+			$index = array_key_first($indexes);
+			if ($index === null || !isset($files[$index]['real_filename']))
+			{
+				trigger_error($user->lang['FORM_INVALID'], E_USER_WARNING);
+			}
 
-			case 'details':
-				$user->add_lang_ext('forumhulp/uploadimage', 'info_acp_uploadimage');
-				$this->tpl_name = 'acp_ext_details';
-				$phpbb_container->get('forumhulp.helper')->detail('forumhulp/uploadimage');
-				return;
-			break;
-
-			default:
-				// Display images
-				$admin_controller->display_images();
+			$controller->delete_image((string) $files[$index]['real_filename']);
+			unset($files[$index]);
+			if ($request->is_ajax())
+			{
+				$response = new \phpbb\json_response();
+				$response->send(array_values($files));
+			}
+			redirect($this->u_action);
 		}
+
+		if ($add_file)
+		{
+			$controller->add_image();
+			redirect($this->u_action);
+		}
+
+		if ($action === 'delete')
+		{
+			$image_id = $request->variable('image_id', '');
+			if (confirm_box(true))
+			{
+				$controller->delete_image($image_id);
+				redirect($this->u_action);
+			}
+
+			confirm_box(false, $user->lang('ACP_IMAGE_DELETE_CONFIRM'), build_hidden_fields([
+				'i' => $id,
+				'mode' => $mode,
+				'action' => 'delete',
+				'image_id' => $image_id,
+			]));
+		}
+
+		$controller->display_images();
 	}
 }

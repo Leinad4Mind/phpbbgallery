@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="tests/bootstrap.php" colors="true" cacheResult="false">
+	<php>
+		<const name="IN_PHPBB" value="true" />
+	</php>
+	<testsuites>
+		<testsuite name="Upload Image">
+			<directory suffix="_test.php">tests</directory>
+		</testsuite>
+	</testsuites>
+</phpunit>

@@ -1,49 +1,35 @@
-Upload Images
-=================
-Upload Images enables you to upload images in your images folder of your board. The ui folder is used for the images and is created automatically when enabling this extension. Copy imagepath simply by clicking and use it wherever you want to show your image. Be careful with deleting images as there is no check if the image is still used.
+# Upload Image
 
-[![Build Status](https://travis-ci.org/ForumHulp/uploadimage.svg?branch=master)](https://travis-ci.org/ForumHulp/uploadimage)
+Upload Image lets authorised administrators upload, list, search, copy paths for, and delete GIF, JPEG, and PNG files in a dedicated directory under the board's `images/` folder.
 
 ## Requirements
-* phpBB 3.1.0-dev or higher
-* PHP 5.3.3 or higher
+
+- phpBB 3.3.12 or newer (before phpBB 4.0)
+- PHP 8.1 or newer
+- `forumhulp/helper` installed and enabled
 
 ## Installation
-You can install this extension on the latest copy of the develop branch ([phpBB 3.1-dev](https://github.com/phpbb/phpbb3)) by doing the following:
 
-1. Download the [latest ZIP-archive of `master` branch of this repository](https://github.com/ForumHulp/uploadimage/archive/master.zip).
-2. Check out the existing of the folder `/ext/forumhulp/uploadimage/` in the root of your board folder. Create folders if necessary.
-3. Copy the contents of the downloaded `upload-master` folder to `/ext/forumhulp/uploadimage/`.
-4. Navigate in the ACP to `Customise -> Extension Management -> Manage extensions -> Upload Image`.
-5. Click `Enable`.
-6. Or use our ([Upload Extensions](https://github.com/ForumHulp/upload)).
+1. Copy the extension to `ext/forumhulp/uploadimage/`.
+2. In the ACP, open **Customise → Manage extensions**.
+3. Enable **Upload Image**.
+4. Open **Customise → Upload Image**.
 
-Note: This extension is in development. Installation is only recommended for testing purposes and is not supported on live boards. This extension will be officially released following phpBB 3.1.0.
+The default upload directory is `images/ui/`; it is created when the management page is first opened. Folder names may contain ASCII letters, numbers, underscores, and hyphens. Existing files are never overwritten.
 
-## Usage
-### Upload Image
-To upload images navigate in the ACP to `Customise -> Upload image`.
-Choose your image(s) by clicking the add files button. The extension will upload your file(s) in the folder /images/ui.
+## Security behaviour
 
-### Delete image
-To delete image(s) from the server simply click delete in image list.
+- Upload, queued-file deletion, and folder rename requests require a valid phpBB form token.
+- Only GIF, JPEG, and PNG filenames are accepted, and file contents must match the extension.
+- File deletion is restricted to regular, non-symlink files directly inside the configured upload directory.
+- The upload limit is the lowest active limit from PHP and the phpBB attachment configuration.
 
-## Update
-1. Download the [latest ZIP-archive of `master` branch of this repository](https://github.com/ForumHulp/uploadimage/archive/master.zip).
-2. Navigate in the ACP to `Customise -> Extension Management -> Manage extensions -> Upload Image` and click `Disable`.
-3. Copy the contents of the downloaded `upload-master` folder to `/ext/forumhulp/uploadimage/`.
-4. Navigate in the ACP to `Customise -> Extension Management -> Manage extensions -> Upload Image` and click `Enable`.
-5. Click `Details` or `Re-Check all versions` link to follow updates.
+Deleting an image does not check whether posts or templates still reference it, so review usage before confirming deletion.
 
-## Uninstallation
-Navigate in the ACP to `Customise -> Extension Management -> Manage extensions -> Upload Image` and click `Disable`.
+## Updating and removal
 
-For permanent uninstallation click `Delete Data` and then you can safely delete the `/ext/forumhulp/uploadimage/` folder.
-Or use our ([Upload Extensions](https://github.com/ForumHulp/upload)).
-
-We feel sorry as our answers on phpbb sites are removed, so use github or our forum for answers.
+Disable the extension before replacing its files, then enable it again. To remove it permanently, disable it, choose **Delete data**, and then remove `ext/forumhulp/uploadimage/`.
 
 ## License
-[GNU General Public License v2](http://opensource.org/licenses/GPL-2.0)
 
-© 2014 - John Peskens (http://ForumHulp.com)
+[GNU General Public License v2](https://opensource.org/license/gpl-2-0)

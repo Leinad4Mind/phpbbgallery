@@ -1,40 +1,121 @@
-/* CSS Document */
-
-h1 {position: relative;}
-
-.table1 th {background:#DBDFE2;color:#536482;}
-.ruleractueel { background-color:#f6f6f6;}
-.column {background-color: ;}
-
-#ext_table{float:right; width:100%; margin-top:16px;}
-
-.test{
-width:205px;
-background-image:url('images/search.png');
-background-repeat:no-repeat;
-background-position:right;outline:0;
+.uploadimage-help {
+	float: left;
+	margin-left: 10px;
 }
 
-.test::-webkit-search-cancel-button{
-    position:relative;
-    right:10px;  
-  
-    -webkit-appearance: none;
+#attach-panel-basic {
+	clear: both;
 }
 
-form fieldset {border-radius:0;}
-
-input[type=text] { font-family: 'FontAwesome'; } /* This is for the placeholder */*/
-
-.keyword:before {
-    font-family: 'FontAwesome';
-    color:red;
-    position: relative;
-    left: -5px;
-    content: "\f007";
+.uploadimage-tools {
+	display: flex;
+	align-items: end;
+	justify-content: space-between;
+	gap: 20px;
+	margin: 15px 0;
 }
 
-.fa-arrow-up, .fa-arrow-down {float:right; color:#CECECE; padding: 0 2px;}
+.uploadimage-folder-form,
+.uploadimage-search-form {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
 
-#act-arrow {color:#000;}
+.uploadimage-folder-form label {
+	font-weight: bold;
+}
 
+.fa-arrow-up,
+.fa-arrow-down {
+	float: right;
+	padding: 0 2px;
+}
+
+.active-sort {
+	color: #cecece;
+}
+
+.uploadimage-row {
+	position: relative;
+}
+
+.uploadimage-thumbnail {
+	max-width: 32px;
+	max-height: 32px;
+}
+
+.uploadimage-preview {
+	display: none;
+	position: absolute;
+	z-index: 1000;
+	max-width: 320px;
+	max-height: 240px;
+	padding: 5px;
+	border: 1px solid #aaa;
+	background: #fff;
+}
+
+.hoverinfo:hover .uploadimage-preview {
+	display: block;
+}
+
+.uploadimage-path {
+	display: inline-block;
+	max-width: 260px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	vertical-align: middle;
+	white-space: nowrap;
+}
+
+.uploadimage-center {
+	text-align: center;
+}
+
+.uploadimage-copy-helper {
+	position: fixed;
+	left: -9999px;
+	top: 0;
+}
+
+.uploadimage-description {
+	width: 100%;
+}
+
+.uploadimage-description-split {
+	width: 48%;
+}
+
+.uploadimage-description-note,
+.uploadimage-requirement-right {
+	float: right;
+	width: 48%;
+}
+
+.uploadimage-details-heading {
+	color: #1e5c18;
+	background-color: #d7fdd3;
+}
+
+.uploadimage-notice-heading {
+	color: #103f53;
+	background-color: #e0f5fe;
+}
+
+.uploadimage-version-warning {
+	color: #bc2a4d;
+}
+
+@media (max-width: 700px) {
+	.uploadimage-tools {
+		align-items: stretch;
+		flex-direction: column;
+	}
+
+	.uploadimage-description-split,
+	.uploadimage-description-note {
+		float: none;
+		width: 100%;
+	}
+}

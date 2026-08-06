@@ -1,42 +1,59 @@
-; (function ($, window, document) {
-	// do stuff here and use $, window and document safely
-	// https://www.phpbb.com/community/viewtopic.php?p=13589106#p13589106
-	$("a.simpledialog").simpleDialog({
-	    opacity: 0.1,
-	    width: '650px',
-		closeLabel: '&times;'
+(function ($, document, navigator) {
+	'use strict';
+
+	function showCopied(text) {
+		var message = document.getElementById('clipboardmsg');
+
+		if (message) {
+			message.textContent = text;
+		}
+	}
+
+	function fallbackCopy(text) {
+		var input = document.createElement('textarea');
+
+		input.value = text;
+		input.setAttribute('readonly', '');
+		input.className = 'uploadimage-copy-helper';
+		document.body.appendChild(input);
+		input.select();
+		document.execCommand('copy');
+		input.remove();
+		showCopied(text);
+	}
+
+	$(function () {
+		$('a.simpledialog').simpleDialog({
+			opacity: 0.1,
+			width: '650px',
+			closeLabel: '&times;'
+		});
 	});
 
-	$('body').on('mouseenter', '.hoverinfo', function() {
-			var val = $(this).data('id');
-			$(".image").fadeOut();
-			$("#image"+val).fadeIn();
-	});
-	$('body').on('mouseleave', '.hoverinfo', function() {
-			$(".image").fadeOut();
-	});
+	document.addEventListener('click', function (event) {
+		var button = event.target.closest('[data-copy-target]');
+		var target;
+		var text;
 
-	var clipboard = new Clipboard('.fa-copy');
-	clipboard.on('success', function(e) {
-		$('#clipboardmsg').text('Clipboard action: ' + e.action);
-		e.clearSelection();
-	});
-	
-	clipboard.on('error', function(e) {
-		$('#clipboardmsg').text('Clipboard action: ' + e.action);
-	});
+		if (!button) {
+			return;
+		}
 
-	$('.unc_path').click(function (){
-		var text = $(this).text();
-		var $input = $('<input type=search class=test>');
-		$input.css('width', '205px');
-		$input.css('background-color', '#fff');
-		$input.css('border', 'none');
-		$input.prop('value', text);
-		$input.insertAfter($(this));
-		$input.focus();
-		$input.select();
-		$(this).hide();
-	});
-})(jQuery, window, document);
+		target = document.getElementById(button.getAttribute('data-copy-target'));
+		if (!target) {
+			return;
+		}
 
+		text = target.textContent;
+		if (navigator.clipboard && window.isSecureContext) {
+			navigator.clipboard.writeText(text).then(function () {
+				showCopied(text);
+			}).catch(function () {
+				fallbackCopy(text);
+			});
+			return;
+		}
+
+		fallbackCopy(text);
+	});
+})(jQuery, document, navigator);
