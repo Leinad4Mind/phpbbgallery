@@ -75,16 +75,10 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Security
 
-- Kept AVIF disabled on runtimes that cannot inspect dimensions before GD
-  decoding, applied the existing pixel limit before decode and verified every
-  encoded AVIF by size, MIME type and dimensions before publication.
-- Prevented configured remote storage from silently falling back to local
-  files, verified materialized and published objects by size and SHA-256 where
-  supported, and rejected malformed provider listings and stalled cursors.
-- Made every BBPoints Images identifier explicit at its SQL interpolation
-  boundary, allowing the add-on release package to pass EPV without suppressions.
-- Isolated inherited BBPoints policies by album owner so nested-set intervals
-  from personal galleries can never be treated as ancestors of public albums.
+- Kept AVIF disabled on runtimes that cannot inspect dimensions before GD decoding, applied the existing pixel limit before decode and verified every encoded AVIF by size, MIME type and dimensions before publication.
+- Prevented configured remote storage from silently falling back to local files, verified materialized and published objects by size and SHA-256 where supported, and rejected malformed provider listings and stalled cursors.
+- Made every BBPoints Images identifier explicit at its SQL interpolation boundary, allowing the add-on release package to pass EPV without suppressions.
+- Isolated inherited BBPoints policies by album owner so nested-set intervals from personal galleries can never be treated as ancestors of public albums.
 - Made resumable-upload cancellation and scheduled orphan pruning delete drafts only while their database row still has orphan status, preventing a concurrent finalization from losing the completed image or its files.
 - Made every dynamic numeric SQL boundary explicit with integer casts and routed the public Gallery title through phpBB's UTF-8 escaping helper, allowing the Core release package to pass EPV without suppressions.
 - Made BBTags Images and Image Revisions SQL boundaries explicit at interpolation time and fixed the Gallery search relation to its trusted outer image alias, allowing both add-on release packages to pass EPV without suppressions.
@@ -92,9 +86,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Centralized active-contest privacy so public image pages, album listings and reusable image blocks hide entrant identity, descriptions, ratings, comment history and private sort side channels while preserving explicit owner and moderator exceptions.
 - Extended active-contest privacy to search terms and sorting, profile lists and counts, recent comments, top-rated results, album summaries and latest-image attribution.
 - Protected feed descriptions, favorite attribution and UCP subscription comment history with the same active-contest identity and result policies.
-- Routed EXIF and Feed privacy through extension-neutral Core decisions, removing
-  their direct contest constants, helpers and storage-table dependencies while
-  retaining fail-closed protection when an optional provider is unavailable.
+- Routed EXIF and Feed privacy through extension-neutral Core decisions, removing their direct contest constants, helpers and storage-table dependencies while retaining fail-closed protection when an optional provider is unavailable.
 - Made contest finalization idempotent and deterministic, ranking only approved or locked images and allowing only authorized album views to trigger it.
 - Preserved completed-contest participant provenance so podium resynchronization cannot promote later images or alter an active contest.
 - Recalculated completed contest podiums when moderation changes a participant between approved, unapproved and locked states.
@@ -132,9 +124,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
-- Fixed Contest winner pagination using an undefined legacy configuration key
-  and made the shared search template reusable from add-on controllers through
-  explicit Core template paths.
+- Fixed Contest winner pagination using an undefined legacy configuration key and made the shared search template reusable from add-on controllers through explicit Core template paths.
 - Reconciled stale Favorite, Image Revisions, BBTags Images and BBPoints Images data after an add-on is re-enabled, removing missing image/album relations and revision files while preserving permanent financial history.
 - Removed per-user album read-tracking rows when public or personal albums are deleted, including the complete subtree of a deleted personal album.
 - Corrected contest-winner headings and links across every language so the three-place podium is consistently described in the plural.
@@ -210,92 +200,35 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
-- Grouped every concrete Remote Storage implementation under a dedicated
-  `providers/` directory and namespace while keeping shared HTTP and migration
-  infrastructure provider-neutral.
-- Replaced the TIFF add-on's abbreviated license notice with the complete
-  GPL-2.0 text and made package hygiene tests require the declared license in
-  every release component.
-- Fixed Image Revisions reactivation after the Core disables all add-ons by
-  giving its reconciliation step the current storage workspace dependency.
-- Separated neutral author outcomes from attributed internal moderation
-  notices: only album-authorized moderators see who approved, rejected or
-  removed an image, while ordinary authors never receive moderator or reporter
-  identities.
-- Added a real phpBB functional workflow for approval, rejection, removal and
-  reporting that verifies persisted recipients, private payloads and the UCP
-  presentation for ordinary authors and album moderators.
-- Routed Gallery notifications through album-scoped moderation permissions:
-  status teams now share approval outcomes and state changes, comment
-  moderators receive new-comment notices, report recipients remain restricted
-  to `m_report`, and duplicate/self notifications are suppressed. Moderated
-  deletion notices include the author without exposing reporters, while image
-  unlocking now restores counters and creates the missing moderator log/event.
-- Enforced watermarking for externally processed BMP/TIFF originals by first
-  creating a bounded temporary WebP, cleaned all provider response leases and
-  watermark derivatives after delivery, and disabled MIME sniffing on every
-  binary image response.
-- Made BBOOTS and FLATBOOTS album pagination use the themes' native list
-  structure so their standard page-jump control is displayed and initialized.
-- Clarified that the existing time sort uses the image upload date and exposed
-  neutral sort-option hooks so add-ons can keep album listings, previous/next
-  navigation and ACP defaults in the same indexed order.
-- Preserved the requested image after guest login, replaced relative permission
-  redirects, added album return links to initial quota errors and restored
-  administrator-only Whois actions without accepting IP addresses from URLs.
-- Batched album-tree content deletion so images, counters, permissions,
-  notifications, tracking rows and caches are processed once per deleted branch.
-- Replaced residual English fallback text in the Bulgarian, German, Spanish,
-  French, Italian, Dutch and Russian Core language catalogs.
-- Added functional coverage for inline original-source delivery, mandatory
-  watermarking without source mutation and BBPoints-protected downloads.
-- Open browser-compatible GIF, JPEG, PNG, WebP and AVIF originals inline when
-  no add-on requires a download, while retaining attachment delivery for BMP,
-  TIFF and unknown source formats.
-- Made the phpBB permission-test identity authoritative for Gallery album,
-  ownership and zebra checks, and hide the header link when that effective
-  identity cannot view or moderate any album.
-- Added a deterministic release builder that creates and validates all 13
-  component ZIPs from a committed Git ref, records their SHA-256 hashes and
-  publishes the verified package set as a CI artifact.
-- Made the functional CI install the generated ZIPs instead of source folders
-  and added a clean-board lifecycle covering all 13 components, automatic
-  add-on disablement, reactivation and ordered purge.
-- Fixed BBTags Images purging so phpBB no longer recreates the provisional ACP
-  module and block removal of the Gallery Core category.
-- Made the Contest add-on remove its owned table and columns when its data is
-  purged, avoiding orphaned storage.
-- Made all 13 component manifests expose their version-check configuration in
-  phpBB's supported `extra.version-check` location, added matching release
-  metadata files and documented the Core and add-on catalogue.
-- Replaced the archived Blueimp/jQuery quick-upload stack with a dependency-free
-  browser client using FormData and XMLHttpRequest, retaining drag-and-drop,
-  previews, bounded concurrent uploads, progress, cancellation and normal-form
-  fallback across prosilver, BBOOTS and FLATBOOTS.
-- Namespaced the Contests add-on's internal route identifiers and made its
-  album-lifecycle SQL boundary explicit, allowing its release package to pass
-  EPV while preserving the existing public URLs.
-- Documented every ACP album event variable and exposed explicitly named
-  visibility SQL builders while retaining the previous public aliases, allowing
-  Gallery Core to pass EPV without compatibility regressions.
-- Moved Image Revisions overrides into each album's ACP edit form and added a
-  read-only hierarchy showing inherited and effective enablement and retention
-  limits, while preserving global defaults.
-- Moved BBPoints image overrides into each album's ACP edit form and replaced
-  the bulk matrix with a read-only hierarchy showing direct and effective
-  values, edit links and confirmed contributor-assignment bulk actions.
-- Moved contest configuration, album/result storage and the contest album-type
-  label from Gallery Core into the independent Contests add-on, while retaining
-  the neutral fail-closed image marker and historical migration compatibility.
-- Moved the remaining contest-specific frontend presentation and translations
-  out of Gallery Core and into the independent Contests add-on.
-- Routed uploads, image delivery, editing, deletion, approval hooks, EXIF,
-  Image Revisions, BBPoints historical rewards, Export and ACP maintenance
-  through the selected storage provider instead of assuming local source,
-  medium and thumbnail paths.
-- Made Export preserve the Gallery album/subalbum hierarchy and use stable
-  IMAGEID_AUTHORID_IMAGENAME.ext filenames while reading source objects
-  through the active provider.
+- Grouped every concrete Remote Storage implementation under a dedicated `providers/` directory and namespace while keeping shared HTTP and migration infrastructure provider-neutral.
+- Replaced the TIFF add-on's abbreviated license notice with the complete GPL-2.0 text and made package hygiene tests require the declared license in every release component.
+- Fixed Image Revisions reactivation after the Core disables all add-ons by giving its reconciliation step the current storage workspace dependency.
+- Separated neutral author outcomes from attributed internal moderation notices: only album-authorized moderators see who approved, rejected or removed an image, while ordinary authors never receive moderator or reporter identities.
+- Added a real phpBB functional workflow for approval, rejection, removal and reporting that verifies persisted recipients, private payloads and the UCP presentation for ordinary authors and album moderators.
+- Routed Gallery notifications through album-scoped moderation permissions: status teams now share approval outcomes and state changes, comment moderators receive new-comment notices, report recipients remain restricted to `m_report`, and duplicate/self notifications are suppressed. Moderated deletion notices include the author without exposing reporters, while image unlocking now restores counters and creates the missing moderator log/event.
+- Enforced watermarking for externally processed BMP/TIFF originals by first creating a bounded temporary WebP, cleaned all provider response leases and watermark derivatives after delivery, and disabled MIME sniffing on every binary image response.
+- Made BBOOTS and FLATBOOTS album pagination use the themes' native list structure so their standard page-jump control is displayed and initialized.
+- Clarified that the existing time sort uses the image upload date and exposed neutral sort-option hooks so add-ons can keep album listings, previous/next navigation and ACP defaults in the same indexed order.
+- Preserved the requested image after guest login, replaced relative permission redirects, added album return links to initial quota errors and restored administrator-only Whois actions without accepting IP addresses from URLs.
+- Batched album-tree content deletion so images, counters, permissions, notifications, tracking rows and caches are processed once per deleted branch.
+- Replaced residual English fallback text in the Bulgarian, German, Spanish, French, Italian, Dutch and Russian Core language catalogs.
+- Added functional coverage for inline original-source delivery, mandatory watermarking without source mutation and BBPoints-protected downloads.
+- Open browser-compatible GIF, JPEG, PNG, WebP and AVIF originals inline when no add-on requires a download, while retaining attachment delivery for BMP, TIFF and unknown source formats.
+- Made the phpBB permission-test identity authoritative for Gallery album, ownership and zebra checks, and hide the header link when that effective identity cannot view or moderate any album.
+- Added a deterministic release builder that creates and validates all 13 component ZIPs from a committed Git ref, records their SHA-256 hashes and publishes the verified package set as a CI artifact.
+- Made the functional CI install the generated ZIPs instead of source folders and added a clean-board lifecycle covering all 13 components, automatic add-on disablement, reactivation and ordered purge.
+- Fixed BBTags Images purging so phpBB no longer recreates the provisional ACP module and block removal of the Gallery Core category.
+- Made the Contest add-on remove its owned table and columns when its data is purged, avoiding orphaned storage.
+- Made all 13 component manifests expose their version-check configuration in phpBB's supported `extra.version-check` location, added matching release metadata files and documented the Core and add-on catalogue.
+- Replaced the archived Blueimp/jQuery quick-upload stack with a dependency-free browser client using FormData and XMLHttpRequest, retaining drag-and-drop, previews, bounded concurrent uploads, progress, cancellation and normal-form fallback across prosilver, BBOOTS and FLATBOOTS.
+- Namespaced the Contests add-on's internal route identifiers and made its album-lifecycle SQL boundary explicit, allowing its release package to pass EPV while preserving the existing public URLs.
+- Documented every ACP album event variable and exposed explicitly named visibility SQL builders while retaining the previous public aliases, allowing Gallery Core to pass EPV without compatibility regressions.
+- Moved Image Revisions overrides into each album's ACP edit form and added a read-only hierarchy showing inherited and effective enablement and retention limits, while preserving global defaults.
+- Moved BBPoints image overrides into each album's ACP edit form and replaced the bulk matrix with a read-only hierarchy showing direct and effective values, edit links and confirmed contributor-assignment bulk actions.
+- Moved contest configuration, album/result storage and the contest album-type label from Gallery Core into the independent Contests add-on, while retaining the neutral fail-closed image marker and historical migration compatibility.
+- Moved the remaining contest-specific frontend presentation and translations out of Gallery Core and into the independent Contests add-on.
+- Routed uploads, image delivery, editing, deletion, approval hooks, EXIF, Image Revisions, BBPoints historical rewards, Export and ACP maintenance through the selected storage provider instead of assuming local source, medium and thumbnail paths.
+- Made Export preserve the Gallery album/subalbum hierarchy and use stable IMAGEID_AUTHORID_IMAGENAME.ext filenames while reading source objects through the active provider.
 - Aligned the Core package and terminal migration with the 4.0.0 release line documented by this changelog.
 - Removed the dead Highslide, Lytebox and Shadowbox frontend integrations and language remnants, normalizing saved legacy link modes to supported destinations while retaining normal links and optional progressive AJAX navigation.
 - Labelled the public Gallery statistics independently from the forum statistics, placed the FLATBOOTS total-image counter in its responsive index statistics grid, and moved the AJAX image-navigation switch beside the related image navigation settings in the ACP.
@@ -361,9 +294,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Added
 
-- Documented the credentials, security model, implementation and service limits
-  of every Remote Storage provider, with a complete Koofr installation and
-  controlled-migration guide.
+- Documented the credentials, security model, implementation and service limits of every Remote Storage provider, with a complete Koofr installation and controlled-migration guide.
 - Added private 4shared storage using OAuth 1.0 HMAC-SHA1, exclusively owned folders, owner-only objects, recoverable publication and simple or chunked uploads through the documented API v1_2 endpoints.
 - Added private Koofr storage over its official fixed HTTPS WebDAV endpoint using revocable application passwords, conditional writes, streamed transfers and strictly bounded metadata parsing.
 - Added private pCloud storage for European and United States data regions using OAuth bearer authentication, owned unshared folders, public-link rejection, streaming uploads and validated server-side downloads.
@@ -374,59 +305,23 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added optional private SFTP storage with mandatory SSH host fingerprint pinning, atomic temporary uploads, resumable provider migrations and a real OpenSSH functional workflow.
 - Added private Azure Blob Storage support with Shared Key signing, ACP-managed connections, resumable remote-to-remote migrations, public-container rejection and an Azurite functional workflow.
 - Added a validated Remote Storage provider-factory catalogue so migrations and ACP connection tests can support additional backends without hard-coded resolver branches.
-- Added indexed EXIF DateTimeOriginal sorting with upload-date fallback across
-  album listings, previous/next navigation and ACP defaults, including
-  OffsetTimeOriginal handling and a confirmed resumable rebuild for old images.
-- Added opt-in BMP uploads through native GD with complete decode validation,
-  preserved BMP originals and browser-safe WebP medium/thumbnail derivatives,
-  including ZIP uploads, ACP Import, replacements and converted album icons.
-- Added an optional, permission-filtered unread-image badge beside the Gallery
-  link, backed by the existing global and per-album read markers and capped at
-  99+ without an unbounded count query.
-- Added a fail-closed external image-processor contract and deterministic
-  browser-safe derivative keys, allowing add-ons to retain non-native originals
-  while serving, migrating and deleting their WebP medium/thumbnail variants.
-- Added opt-in AVIF uploads when PHP 8.2 or later and GD provide safe AVIF
-  inspection, decoding and encoding, including configurable output quality,
-  browser filters, ZIP uploads, ACP Import, album icons, derived images,
-  rotation, watermarks, cleanup and translations for every supported locale.
-- Added the independently packaged TIFF add-on with opt-in TIF/TIFF uploads,
-  bounded Imagick decoding, preserved originals, first-frame WebP derivatives,
-  ZIP and ACP Import support, and translations for every supported locale.
-- Added an optional distributed local filesystem layout, including a confirmed,
-  resumable and collision-checked migration from existing flat storage.
-- Added a fail-closed pluggable storage-provider contract with verified private
-  workspaces, atomic publication/replacement, checksums, metadata and paginated
-  object enumeration as the foundation for independently packaged remote
-  storage providers.
-- Added the independently packaged Remote Storage add-on with private S3 and
-  S3-compatible object storage, AWS Signature Version 4 requests, path-style
-  endpoint support and release-package, version-check and CI integration.
-- Added MediaFire as a Remote Storage provider with private folder enforcement,
-  state-safe Session Token v2 authentication, resumable SHA-256 uploads,
-  permanent deletion and download-host validation without exposing signed URLs.
-- Added pCloud as a Remote Storage provider with explicit EU/US region binding,
-  private-ownership checks, public-link rejection, incomplete-upload prevention
-  and server-consumed content links that never expose OAuth credentials.
-- Added Koofr as a Remote Storage provider through its official HTTPS WebDAV
-  endpoint, with dedicated application-password authentication, fixed-host
-  requests, conditional publication and bounded XML metadata validation.
-- Added 4shared as a Remote Storage provider through the documented API v1_2,
-  with OAuth 1.0 request signing, verified private unshared folders, owner-only
-  files, resumable chunk transport and recoverable object replacement.
-- Added verified Remote Storage ACP configuration in all supported languages,
-  including environment-variable overrides, secret-safe forms and a complete
-  write, checksum, read and delete connection test before settings are saved.
-- Added confirmed, resumable and abortable Local-to-S3 and S3-to-Local storage
-  migrations with bounded batches, mirrored writes during the transition,
-  size and SHA-256 verification, crash-safe final activation and retained
-  source copies for recovery.
-- Added recoverable image-deletion requests for ordinary authors, with a
-  dedicated moderation queue, exact status restoration, permanent moderator
-  deletion, fail-closed visibility across Core and Gallery add-ons, and
-  protection against bypassing review through personal-album deletion.
-- Added an authenticated Contest end-to-end workflow to the functional CI,
-  covering creation, uploads, privacy, disable/enable, voting and winners.
+- Added indexed EXIF DateTimeOriginal sorting with upload-date fallback across album listings, previous/next navigation and ACP defaults, including OffsetTimeOriginal handling and a confirmed resumable rebuild for old images.
+- Added opt-in BMP uploads through native GD with complete decode validation, preserved BMP originals and browser-safe WebP medium/thumbnail derivatives, including ZIP uploads, ACP Import, replacements and converted album icons.
+- Added an optional, permission-filtered unread-image badge beside the Gallery link, backed by the existing global and per-album read markers and capped at 99+ without an unbounded count query.
+- Added a fail-closed external image-processor contract and deterministic browser-safe derivative keys, allowing add-ons to retain non-native originals while serving, migrating and deleting their WebP medium/thumbnail variants.
+- Added opt-in AVIF uploads when PHP 8.2 or later and GD provide safe AVIF inspection, decoding and encoding, including configurable output quality, browser filters, ZIP uploads, ACP Import, album icons, derived images, rotation, watermarks, cleanup and translations for every supported locale.
+- Added the independently packaged TIFF add-on with opt-in TIF/TIFF uploads, bounded Imagick decoding, preserved originals, first-frame WebP derivatives, ZIP and ACP Import support, and translations for every supported locale.
+- Added an optional distributed local filesystem layout, including a confirmed, resumable and collision-checked migration from existing flat storage.
+- Added a fail-closed pluggable storage-provider contract with verified private workspaces, atomic publication/replacement, checksums, metadata and paginated object enumeration as the foundation for independently packaged remote storage providers.
+- Added the independently packaged Remote Storage add-on with private S3 and S3-compatible object storage, AWS Signature Version 4 requests, path-style endpoint support and release-package, version-check and CI integration.
+- Added MediaFire as a Remote Storage provider with private folder enforcement, state-safe Session Token v2 authentication, resumable SHA-256 uploads, permanent deletion and download-host validation without exposing signed URLs.
+- Added pCloud as a Remote Storage provider with explicit EU/US region binding, private-ownership checks, public-link rejection, incomplete-upload prevention and server-consumed content links that never expose OAuth credentials.
+- Added Koofr as a Remote Storage provider through its official HTTPS WebDAV endpoint, with dedicated application-password authentication, fixed-host requests, conditional publication and bounded XML metadata validation.
+- Added 4shared as a Remote Storage provider through the documented API v1_2, with OAuth 1.0 request signing, verified private unshared folders, owner-only files, resumable chunk transport and recoverable object replacement.
+- Added verified Remote Storage ACP configuration in all supported languages, including environment-variable overrides, secret-safe forms and a complete write, checksum, read and delete connection test before settings are saved.
+- Added confirmed, resumable and abortable Local-to-S3 and S3-to-Local storage migrations with bounded batches, mirrored writes during the transition, size and SHA-256 verification, crash-safe final activation and retained source copies for recovery.
+- Added recoverable image-deletion requests for ordinary authors, with a dedicated moderation queue, exact status restoration, permanent moderator deletion, fail-closed visibility across Core and Gallery add-ons, and protection against bypassing review through personal-album deletion.
+- Added an authenticated Contest end-to-end workflow to the functional CI, covering creation, uploads, privacy, disable/enable, voting and winners.
 - Added an ACP switch and a dedicated Core contest policy boundary that can prevent creation of new contest albums while keeping every existing contest active, editable and privacy-protected.
 - Added an optional plain-text image subtitle across resumable uploads and editing, with a permission-aware search link that removes display parentheses at request time without storing a duplicate cleaned column.
 - Added a generic authorization and accounting event before serving original image sources, while keeping medium images and thumbnails unaffected.
