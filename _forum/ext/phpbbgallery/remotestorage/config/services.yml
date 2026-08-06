@@ -7,6 +7,7 @@ parameters:
         - azure
         - sftp
         - dropbox
+        - google_drive
 
 services:
     phpbbgallery.remotestorage.http:
@@ -40,6 +41,15 @@ services:
 
     phpbbgallery.remotestorage.provider_factory.dropbox:
         class: phpbbgallery\remotestorage\dropbox\configured_factory
+        arguments:
+            - '@phpbbgallery.remotestorage.http'
+            - '@config'
+            - '@request'
+        tags:
+            - { name: phpbbgallery.storage.provider_factory }
+
+    phpbbgallery.remotestorage.provider_factory.google_drive:
+        class: phpbbgallery\remotestorage\google_drive\configured_factory
         arguments:
             - '@phpbbgallery.remotestorage.http'
             - '@config'

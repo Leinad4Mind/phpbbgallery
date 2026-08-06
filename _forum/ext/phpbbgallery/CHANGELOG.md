@@ -1,5 +1,6 @@
 # Changelog
 
+- Added private Google Drive storage using the non-sensitive drive.file scope, dedicated app-managed folders, resumable chunk uploads and automatic OAuth token renewal.
 - Added private Dropbox App Folder storage with short-lived OAuth tokens, protected refresh credentials, resumable large-file upload sessions and controlled provider migration.
 - Added optional private SFTP storage with mandatory SSH host fingerprint pinning, atomic temporary uploads, resumable provider migrations and a real OpenSSH functional workflow.
 - Added private Azure Blob Storage support with Shared Key signing, ACP-managed connections, resumable remote-to-remote migrations, public-container rejection and an Azurite functional workflow.

@@ -126,6 +126,22 @@ final class acp_settings_test extends TestCase
 		$this->assertStringContainsString('- dropbox', $services);
 	}
 
+	public function test_google_drive_migration_registers_least_privilege_oauth_configuration(): void
+	{
+		$migration = (string) file_get_contents(dirname(__DIR__) . '/migrations/m6_google_drive.php');
+		$services = (string) file_get_contents(dirname(__DIR__) . '/config/services.yml');
+		$language = (string) file_get_contents(dirname(__DIR__) . '/language/en/info_acp_remotestorage.php');
+
+		$this->assertStringContainsString('m5_dropbox', $migration);
+		foreach (['client_id', 'client_secret', 'refresh_token', 'root_name'] as $field)
+		{
+			$this->assertStringContainsString('phpbb_gallery_google_drive_' . $field, $migration);
+		}
+		$this->assertStringContainsString('phpbbgallery.remotestorage.provider_factory.google_drive:', $services);
+		$this->assertStringContainsString('- google_drive', $services);
+		$this->assertStringContainsString('drive.file', $language);
+	}
+
 	public function test_all_gallery_language_catalogues_have_identical_keys_and_placeholders(): void
 	{
 		$english = $this->language(dirname(__DIR__) . '/language/en/info_acp_remotestorage.php');

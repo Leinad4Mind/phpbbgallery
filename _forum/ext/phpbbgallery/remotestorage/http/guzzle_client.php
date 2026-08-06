@@ -22,7 +22,7 @@ final class guzzle_client implements client_interface
 	public function request(string $method, string $url, array $headers = [], mixed $body = null): response
 	{
 		$method = strtoupper($method);
-		if (!in_array($method, ['DELETE', 'GET', 'HEAD', 'POST', 'PUT'], true)
+		if (!in_array($method, ['DELETE', 'GET', 'HEAD', 'PATCH', 'POST', 'PUT'], true)
 			|| ($body !== null && !is_resource($body)))
 		{
 			throw new \InvalidArgumentException('The remote storage HTTP request is invalid.');
