@@ -29,6 +29,11 @@ if (!interface_exists(\phpbb\request\request_interface::class))
 	require_once dirname(__DIR__, 4) . '/phpbb/request/request_interface.php';
 }
 
+if (!interface_exists(\phpbb\db\driver\driver_interface::class))
+{
+	require_once dirname(__DIR__, 4) . '/phpbb/db/driver/driver_interface.php';
+}
+
 spl_autoload_register(static function (string $class_name): void
 {
 	$prefix = 'Twig\\';
@@ -55,6 +60,7 @@ require_once dirname(__DIR__) . '/s3/configuration.php';
 require_once dirname(__DIR__) . '/http/response.php';
 require_once dirname(__DIR__) . '/http/client_interface.php';
 require_once dirname(__DIR__) . '/configured_provider_factory_interface.php';
+require_once dirname(__DIR__) . '/rotating_credentials_factory_interface.php';
 require_once dirname(__DIR__) . '/s3/provider.php';
 require_once dirname(__DIR__) . '/s3/factory.php';
 require_once dirname(__DIR__) . '/s3/configured_factory.php';
@@ -79,6 +85,13 @@ require_once dirname(__DIR__) . '/google_drive/token_manager.php';
 require_once dirname(__DIR__) . '/google_drive/provider.php';
 require_once dirname(__DIR__) . '/google_drive/factory.php';
 require_once dirname(__DIR__) . '/google_drive/configured_factory.php';
+require_once dirname(__DIR__) . '/box/configuration.php';
+require_once dirname(__DIR__) . '/box/token_store_interface.php';
+require_once dirname(__DIR__) . '/box/memory_token_store.php';
+require_once dirname(__DIR__) . '/box/config_token_store.php';
+require_once dirname(__DIR__) . '/box/token_manager.php';
+require_once dirname(__DIR__) . '/box/provider.php';
+require_once dirname(__DIR__) . '/box/configured_factory.php';
 require_once dirname(__DIR__) . '/connection_tester.php';
 require_once dirname(__DIR__) . '/migration/provider_resolver_interface.php';
 require_once dirname(__DIR__) . '/migration/provider_resolver.php';

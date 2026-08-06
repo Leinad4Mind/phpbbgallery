@@ -8,6 +8,7 @@ parameters:
         - sftp
         - dropbox
         - google_drive
+        - box
 
 services:
     phpbbgallery.remotestorage.http:
@@ -54,6 +55,18 @@ services:
             - '@phpbbgallery.remotestorage.http'
             - '@config'
             - '@request'
+        tags:
+            - { name: phpbbgallery.storage.provider_factory }
+
+    phpbbgallery.remotestorage.provider_factory.box:
+        class: phpbbgallery\remotestorage\box\configured_factory
+        arguments:
+            - '@phpbbgallery.remotestorage.http'
+            - '@config'
+            - '@request'
+            - '@dbal.conn'
+            - '%core.table_prefix%config'
+            - '%core.cache_dir%phpbbgallery/box-oauth.lock'
         tags:
             - { name: phpbbgallery.storage.provider_factory }
 

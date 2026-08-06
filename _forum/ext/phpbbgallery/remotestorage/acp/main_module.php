@@ -11,6 +11,7 @@ namespace phpbbgallery\remotestorage\acp;
 
 use phpbb\request\request_interface;
 use phpbbgallery\remotestorage\configured_provider_factory_interface;
+use phpbbgallery\remotestorage\rotating_credentials_factory_interface;
 
 class main_module
 {
@@ -123,11 +124,33 @@ class main_module
 			{
 				$settings = $this->submitted_settings($request, $config, $factory);
 				$connection_tester->test($factory->create_from($settings));
+				if ($factory instanceof rotating_credentials_factory_interface)
+				{
+					$settings = $factory->finalize_tested_settings($settings);
+				}
 			}
 			catch (\Throwable $exception)
 			{
+				$rotated_credentials_preserved = false;
+				if ($factory instanceof rotating_credentials_factory_interface)
+				{
+					try
+					{
+						$settings = $factory->finalize_tested_settings($settings);
+						foreach ($settings as $field => $value)
+						{
+							$config->set($factory->config_key($field), $value);
+						}
+						$rotated_credentials_preserved = true;
+					}
+					catch (\Throwable)
+					{
+					}
+				}
 				trigger_error(
 					$user->lang('REMOTE_STORAGE_CONNECTION_FAILED', $exception->getMessage())
+					. ($rotated_credentials_preserved
+						? '<br>' . $user->lang('REMOTE_STORAGE_ROTATED_CREDENTIALS_PRESERVED') : '')
 					. adm_back_link($this->u_action),
 					E_USER_WARNING
 				);

@@ -142,6 +142,33 @@ final class acp_settings_test extends TestCase
 		$this->assertStringContainsString('drive.file', $language);
 	}
 
+	public function test_box_migration_registers_rotating_oauth_configuration(): void
+	{
+		$migration = (string) file_get_contents(dirname(__DIR__) . '/migrations/m7_box.php');
+		$services = (string) file_get_contents(dirname(__DIR__) . '/config/services.yml');
+		$module = (string) file_get_contents(dirname(__DIR__) . '/acp/main_module.php');
+
+		$this->assertStringContainsString('m6_google_drive', $migration);
+		foreach (['client_id', 'client_secret', 'refresh_token', 'access_token', 'access_expires', 'root_name'] as $field)
+		{
+			$this->assertStringContainsString('phpbb_gallery_box_' . $field, $migration);
+		}
+		$this->assertStringContainsString('phpbbgallery.remotestorage.provider_factory.box:', $services);
+		$this->assertStringContainsString('- box', $services);
+		$this->assertStringContainsString('box-oauth.lock', $services);
+		$this->assertStringContainsString('rotating_credentials_factory_interface', $module);
+		$this->assertStringContainsString('finalize_tested_settings($settings)', $module);
+		$this->assertStringContainsString('REMOTE_STORAGE_ROTATED_CREDENTIALS_PRESERVED', $module);
+		$failure_handler = strpos($module, '$rotated_credentials_preserved = false;');
+		$finalization = strpos($module, 'finalize_tested_settings($settings)', (int) $failure_handler);
+		$error = strpos($module, 'trigger_error(', (int) $finalization);
+		$this->assertIsInt($failure_handler);
+		$this->assertIsInt($finalization);
+		$this->assertIsInt($error);
+		$this->assertLessThan($finalization, $failure_handler);
+		$this->assertLessThan($error, $finalization);
+	}
+
 	public function test_all_gallery_language_catalogues_have_identical_keys_and_placeholders(): void
 	{
 		$english = $this->language(dirname(__DIR__) . '/language/en/info_acp_remotestorage.php');
