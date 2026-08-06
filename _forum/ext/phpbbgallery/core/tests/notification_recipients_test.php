@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\Container;
 
 final class notification_recipients_test extends TestCase
 {
-	public function test_status_outcomes_reach_author_and_status_team_without_duplicates_or_actor(): void
+	public function test_status_outcomes_separate_neutral_authors_from_attributed_status_team(): void
 	{
 		[$helper, $manager] = $this->create_helper([
 			'm_status' => [5, 7, 8, 8],
@@ -31,9 +31,18 @@ final class notification_recipients_test extends TestCase
 			'album_id' => 10,
 			'last_image' => 22,
 		]);
+		$helper->notify_moderation('approved', [
+			['image_id' => 21, 'image_album_id' => 10, 'image_user_id' => 6],
+			['image_id' => 22, 'image_album_id' => 10, 'image_user_id' => 7],
+		], 'm_status');
 
-		$this->assertSame([6, 7, 8], $manager->calls[0]['data']['user_ids']);
-		$this->assertSame([6, 7, 8], $manager->calls[1]['data']['user_ids']);
+		$this->assertSame([6], $manager->calls[0]['data']['user_ids']);
+		$this->assertArrayNotHasKey('actor_id', $manager->calls[0]['data']);
+		$this->assertSame([6], $manager->calls[1]['data']['user_ids']);
+		$this->assertArrayNotHasKey('actor_id', $manager->calls[1]['data']);
+		$this->assertSame([7, 8], $manager->calls[2]['data']['user_ids']);
+		$this->assertSame(5, $manager->calls[2]['data']['actor_id']);
+		$this->assertSame('approved', $manager->calls[2]['data']['action']);
 	}
 
 	public function test_pending_approval_and_reports_only_reach_the_relevant_permission_team(): void
@@ -108,17 +117,23 @@ final class notification_recipients_test extends TestCase
 			'm_delete' => [5, 8],
 		]);
 
-		$helper->notify_moderation('deleted', [
+		$rows = [
 			['image_id' => 21, 'image_album_id' => 10, 'image_user_id' => 6],
 			['image_id' => 22, 'image_album_id' => 10, 'image_user_id' => 7],
 			['image_id' => 23, 'image_album_id' => 10, 'image_user_id' => 7],
-		], 'm_delete', true);
+		];
+		$helper->notify_removed_authors($rows);
+		$helper->notify_moderation('deleted', $rows, 'm_delete');
 
-		$this->assertCount(1, $manager->calls);
-		$this->assertSame('phpbbgallery.core.notification.image_moderated', $manager->calls[0]['type']);
-		$this->assertSame([8, 6, 7], $manager->calls[0]['data']['user_ids']);
-		$this->assertSame(23, $manager->calls[0]['data']['last_image_id']);
-		$this->assertSame('deleted', $manager->calls[0]['data']['action']);
+		$this->assertCount(2, $manager->calls);
+		$this->assertSame('phpbbgallery.core.notification.image_removed', $manager->calls[0]['type']);
+		$this->assertSame([6, 7], $manager->calls[0]['data']['user_ids']);
+		$this->assertArrayNotHasKey('actor_id', $manager->calls[0]['data']);
+		$this->assertSame('phpbbgallery.core.notification.image_moderated', $manager->calls[1]['type']);
+		$this->assertSame([8], $manager->calls[1]['data']['user_ids']);
+		$this->assertSame(23, $manager->calls[1]['data']['last_image_id']);
+		$this->assertSame(5, $manager->calls[1]['data']['actor_id']);
+		$this->assertSame('deleted', $manager->calls[1]['data']['action']);
 	}
 
 	/**

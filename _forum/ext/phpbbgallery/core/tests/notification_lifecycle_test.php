@@ -19,6 +19,7 @@ class notification_lifecycle_test extends TestCase
 		'phpbbgallery.core.notification.image_approved',
 		'phpbbgallery.core.notification.image_not_approved',
 		'phpbbgallery.core.notification.image_moderated',
+		'phpbbgallery.core.notification.image_removed',
 		'phpbbgallery.core.notification.new_comment',
 		'phpbbgallery.core.notification.new_image',
 		'phpbbgallery.core.notification.new_report',

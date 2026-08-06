@@ -139,26 +139,38 @@ final class domain_moderate_types_test extends TestCase
 		$this->assertSame(1, $moderate->delete_requested_images($requested));
 	}
 
-	public function test_moderated_deletion_notifies_author_and_delete_team_after_success(): void
+	public function test_moderated_deletion_separates_rejection_removal_and_team_notices(): void
 	{
 		$moderate = (new \ReflectionClass(moderate::class))->newInstanceWithoutConstructor();
-		$images = [11];
-		$row = [
+		$images = [11, 12];
+		$approved_row = [
 			'image_id' => 11,
 			'image_user_id' => 7,
 			'image_album_id' => 3,
 			'image_status' => \phpbbgallery\core\block::STATUS_APPROVED,
 		];
+		$unapproved_row = [
+			'image_id' => 12,
+			'image_user_id' => 8,
+			'image_album_id' => 3,
+			'image_status' => \phpbbgallery\core\block::STATUS_UNAPPROVED,
+		];
 		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
-		$db->expects($this->once())->method('sql_in_set')->with('image_id', $images)->willReturn('image_id IN (11)');
+		$db->expects($this->once())->method('sql_in_set')->with('image_id', $images)->willReturn('image_id IN (11, 12)');
 		$db->expects($this->once())->method('sql_query')->willReturn('rows');
-		$db->expects($this->exactly(2))->method('sql_fetchrow')->with('rows')->willReturnOnConsecutiveCalls($row, false);
+		$db->expects($this->exactly(3))->method('sql_fetchrow')->with('rows')->willReturnOnConsecutiveCalls($approved_row, $unapproved_row, false);
 		$db->expects($this->once())->method('sql_freeresult')->with('rows');
 		$image = $this->createMock(image::class);
 		$image->expects($this->once())->method('handle_counter')->with($images, false);
 		$image->expects($this->once())->method('delete_images')->with($images, [])->willReturn(true);
 		$helper = $this->createMock(notification_helper::class);
-		$helper->expects($this->once())->method('notify_moderation')->with('deleted', [$row], 'm_delete', true);
+		$helper->expects($this->once())->method('notify_removed_authors')->with([$approved_row]);
+		$moderation_calls = [];
+		$helper->expects($this->exactly(2))->method('notify_moderation')
+			->willReturnCallback(static function (string $action, array $rows, string $permission) use (&$moderation_calls): void
+			{
+				$moderation_calls[] = [$action, $rows, $permission];
+			});
 
 		$reflection = new \ReflectionClass(moderate::class);
 		foreach ([
@@ -176,6 +188,10 @@ final class domain_moderate_types_test extends TestCase
 		}
 
 		$moderate->delete_images($images);
+		$this->assertSame([
+			['rejected', [$unapproved_row], 'm_status'],
+			['deleted', [$approved_row], 'm_delete'],
+		], $moderation_calls);
 	}
 
 	public function test_waiting_queue_loads_album_names_in_the_listing_query(): void

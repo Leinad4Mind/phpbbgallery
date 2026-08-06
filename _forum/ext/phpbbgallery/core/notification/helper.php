@@ -104,10 +104,8 @@ class helper
 				$phpbb_notifications->add_notifications('phpbbgallery.core.notification.image_for_approval', $notification_data);
 			break;
 			case 'approved':
-				$targets = $this->notification_targets(array_merge(
-					$target['targets'],
-					$this->gallery_auth->acl_users_ids('m_status', $target['album_id'])
-				));
+				$moderators = $this->gallery_auth->acl_users_ids('m_status', $target['album_id']);
+				$targets = $this->notification_targets(array_diff($target['targets'], $moderators));
 				$album_data = $this->album_load->get($target['album_id']);
 				$notification_data = [
 					'user_ids' => $targets,
@@ -119,10 +117,8 @@ class helper
 				$phpbb_notifications->add_notifications('phpbbgallery.core.notification.image_approved', $notification_data);
 			break;
 			case 'not_approved':
-				$targets = $this->notification_targets(array_merge(
-					$target['targets'],
-					$this->gallery_auth->acl_users_ids('m_status', $target['album_id'])
-				));
+				$moderators = $this->gallery_auth->acl_users_ids('m_status', $target['album_id']);
+				$targets = $this->notification_targets(array_diff($target['targets'], $moderators));
 				$album_data = $this->album_load->get($target['album_id']);
 				$notification_data = [
 					'user_ids' => $targets,
@@ -132,6 +128,17 @@ class helper
 					'album_url'	=> $this->url->get_uri($this->helper->route('phpbbgallery_core_album', ['album_id' => $target['album_id']])),
 				];
 				$phpbb_notifications->add_notifications('phpbbgallery.core.notification.image_not_approved', $notification_data);
+			break;
+			case 'removed':
+				$album_data = $this->album_load->get($target['album_id']);
+				$notification_data = [
+					'user_ids' => $this->notification_targets($target['targets']),
+					'album_id' => $target['album_id'],
+					'album_name' => $album_data['album_name'],
+					'last_image_id' => $target['last_image'],
+					'album_url' => $this->url->get_uri($this->helper->route('phpbbgallery_core_album', ['album_id' => $target['album_id']])),
+				];
+				$phpbb_notifications->add_notifications('phpbbgallery.core.notification.image_removed', $notification_data);
 			break;
 			case 'new_image':
 				$targets = $this->notification_targets($target['targets']);
@@ -198,18 +205,17 @@ class helper
 	}
 
 	/**
-	 * Notify the relevant Gallery team, and optionally the image authors, about
-	 * a moderation state change. Rows are grouped per album to keep batches
-	 * useful without flooding the notification centre.
+	 * Notify the relevant Gallery team about a moderation state change. Rows
+	 * are grouped per album to keep batches useful without flooding the
+	 * notification centre.
 	 *
 	 * @param string $action          Moderation action language suffix
 	 * @param array  $image_rows      Affected image rows
 	 * @param string $permission      Gallery moderator permission
-	 * @param bool   $include_authors Whether image authors also receive it
 	 */
-	public function notify_moderation(string $action, array $image_rows, string $permission, bool $include_authors = false): void
+	public function notify_moderation(string $action, array $image_rows, string $permission): void
 	{
-		if (!in_array($action, ['deleted', 'locked', 'unapproved', 'unlocked'], true))
+		if (!in_array($action, ['approved', 'deleted', 'locked', 'rejected', 'unapproved', 'unlocked'], true))
 		{
 			throw new \InvalidArgumentException('Unsupported Gallery moderation notification action.');
 		}
@@ -225,25 +231,51 @@ class helper
 			}
 
 			$grouped[$album_id]['last_image'] = $image_id;
-			if ($include_authors && (int) ($row['image_user_id'] ?? 0) > 0)
-			{
-				$grouped[$album_id]['authors'][] = (int) $row['image_user_id'];
-			}
 		}
 
 		foreach ($grouped as $album_id => $data)
 		{
 			$targets = $this->gallery_auth->acl_users_ids($permission, $album_id);
-			if ($include_authors)
-			{
-				$targets = array_merge($targets, $data['authors'] ?? []);
-			}
-
 			$this->notify('moderated', [
 				'targets' => $targets,
 				'album_id' => $album_id,
 				'last_image' => $data['last_image'],
 				'action' => $action,
+			]);
+		}
+	}
+
+	/**
+	 * Notify ordinary image authors of a moderated removal without revealing
+	 * the moderator. Authors who belong to the delete team receive only the
+	 * detailed internal moderation notification.
+	 *
+	 * @param array $image_rows Removed image rows
+	 */
+	public function notify_removed_authors(array $image_rows): void
+	{
+		$grouped = [];
+		foreach ($image_rows as $row)
+		{
+			$album_id = (int) ($row['image_album_id'] ?? 0);
+			$image_id = (int) ($row['image_id'] ?? 0);
+			$author_id = (int) ($row['image_user_id'] ?? 0);
+			if ($album_id <= 0 || $image_id <= 0 || $author_id <= 0)
+			{
+				continue;
+			}
+
+			$grouped[$album_id]['authors'][] = $author_id;
+			$grouped[$album_id]['last_image'] = $image_id;
+		}
+
+		foreach ($grouped as $album_id => $data)
+		{
+			$moderators = $this->gallery_auth->acl_users_ids('m_delete', $album_id);
+			$this->notify('removed', [
+				'targets' => array_diff($data['authors'], $moderators),
+				'album_id' => $album_id,
+				'last_image' => $data['last_image'],
 			]);
 		}
 	}

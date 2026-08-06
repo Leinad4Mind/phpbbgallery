@@ -41,8 +41,12 @@ $lang = array_merge($lang, [
 	'NOTIFICATION_TYPE_PHPBBGALLERY_NEW_REPORT' => 'New image report',
 	'NOTIFICATION_PHPBBGALLERY_NEW_REPORT'      => '<strong>%1$s</strong> reported image',
 	'NOTIFICATION_TYPE_PHPBBGALLERY_IMAGE_MODERATED'       => 'Gallery moderation actions',
+	'NOTIFICATION_PHPBBGALLERY_IMAGE_MODERATED_APPROVED'   => '<strong>%1$s</strong> approved images in album <strong>%2$s</strong>',
+	'NOTIFICATION_PHPBBGALLERY_IMAGE_MODERATED_REJECTED'   => '<strong>%1$s</strong> rejected images in album <strong>%2$s</strong>',
 	'NOTIFICATION_PHPBBGALLERY_IMAGE_MODERATED_LOCKED'     => '<strong>%1$s</strong> locked images in album <strong>%2$s</strong>',
 	'NOTIFICATION_PHPBBGALLERY_IMAGE_MODERATED_UNLOCKED'   => '<strong>%1$s</strong> unlocked images in album <strong>%2$s</strong>',
 	'NOTIFICATION_PHPBBGALLERY_IMAGE_MODERATED_UNAPPROVED' => '<strong>%1$s</strong> returned images in album <strong>%2$s</strong> to the approval queue',
 	'NOTIFICATION_PHPBBGALLERY_IMAGE_MODERATED_DELETED'    => '<strong>%1$s</strong> removed images from album <strong>%2$s</strong>',
+	'NOTIFICATION_TYPE_PHPBBGALLERY_IMAGE_REMOVED'         => 'Images removed by moderation',
+	'NOTIFICATION_PHPBBGALLERY_IMAGE_REMOVED'              => 'Images in album <strong>%1$s</strong> were removed by the moderation team',
 ]);

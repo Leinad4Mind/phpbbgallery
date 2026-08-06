@@ -39,6 +39,15 @@ services:
             - [set_config, ['@config']]
         tags:
             - { name: notification.type }
+    phpbbgallery.core.notification.image_removed:
+        class: phpbbgallery\core\notification\events\phpbbgallery_image_removed
+        shared: false
+        parent: notification.type.base
+        calls:
+            - [set_user_loader, ['@user_loader']]
+            - [set_config, ['@config']]
+        tags:
+            - { name: notification.type }
     phpbbgallery.core.notification.new_comment:
         class: phpbbgallery\core\notification\events\phpbbgallery_new_comment
         shared: false

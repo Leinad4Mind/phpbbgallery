@@ -511,10 +511,21 @@ class moderate
 		$this->report->delete_images($images);
 		if ($this->image->delete_images($images, $files) && $this->notification_helper !== null)
 		{
+			$rejected_rows = array_values(array_filter($notification_rows, static fn(array $row): bool =>
+				(int) $row['image_status'] === (int) \phpbbgallery\core\block::STATUS_UNAPPROVED
+			));
 			$moderated_rows = array_values(array_filter($notification_rows, static fn(array $row): bool =>
 				(int) $row['image_status'] !== (int) \phpbbgallery\core\block::STATUS_UNAPPROVED
 			));
-			$this->notification_helper->notify_moderation('deleted', $moderated_rows, 'm_delete', true);
+			if ($rejected_rows)
+			{
+				$this->notification_helper->notify_moderation('rejected', $rejected_rows, 'm_status');
+			}
+			if ($moderated_rows)
+			{
+				$this->notification_helper->notify_removed_authors($moderated_rows);
+				$this->notification_helper->notify_moderation('deleted', $moderated_rows, 'm_delete');
+			}
 		}
 	}
 
@@ -544,7 +555,8 @@ class moderate
 			$deleted_rows = array_values(array_filter($notification_rows, static fn(array $row): bool =>
 				isset($deleted_lookup[(int) $row['image_id']])
 			));
-			$this->notification_helper->notify_moderation('deleted', $deleted_rows, 'm_delete', true);
+			$this->notification_helper->notify_removed_authors($deleted_rows);
+			$this->notification_helper->notify_moderation('deleted', $deleted_rows, 'm_delete');
 		}
 
 		return count($deleted);
