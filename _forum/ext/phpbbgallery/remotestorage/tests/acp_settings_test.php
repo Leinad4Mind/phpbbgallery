@@ -187,6 +187,20 @@ final class acp_settings_test extends TestCase
 		$this->assertStringContainsString('mediafire-session.lock', $services);
 	}
 
+	public function test_pcloud_migration_registers_region_bound_oauth_configuration(): void
+	{
+		$migration = (string) file_get_contents(dirname(__DIR__) . '/migrations/m9_pcloud.php');
+		$services = (string) file_get_contents(dirname(__DIR__) . '/config/services.yml');
+
+		$this->assertStringContainsString('m8_mediafire', $migration);
+		foreach (['api_host', 'access_token', 'root_name'] as $field)
+		{
+			$this->assertStringContainsString('phpbb_gallery_pcloud_' . $field, $migration);
+		}
+		$this->assertStringContainsString('phpbbgallery.remotestorage.provider_factory.pcloud:', $services);
+		$this->assertStringContainsString('- pcloud', $services);
+	}
+
 	public function test_all_gallery_language_catalogues_have_identical_keys_and_placeholders(): void
 	{
 		$english = $this->language(dirname(__DIR__) . '/language/en/info_acp_remotestorage.php');

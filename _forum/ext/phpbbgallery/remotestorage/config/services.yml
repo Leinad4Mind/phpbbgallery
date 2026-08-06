@@ -10,6 +10,7 @@ parameters:
         - google_drive
         - box
         - mediafire
+        - pcloud
 
 services:
     phpbbgallery.remotestorage.http:
@@ -80,6 +81,15 @@ services:
             - '@dbal.conn'
             - '%core.table_prefix%config'
             - '%core.cache_dir%phpbbgallery/mediafire-session.lock'
+        tags:
+            - { name: phpbbgallery.storage.provider_factory }
+
+    phpbbgallery.remotestorage.provider_factory.pcloud:
+        class: phpbbgallery\remotestorage\pcloud\configured_factory
+        arguments:
+            - '@phpbbgallery.remotestorage.http'
+            - '@config'
+            - '@request'
         tags:
             - { name: phpbbgallery.storage.provider_factory }
 
