@@ -73,7 +73,25 @@ $lang = array_merge($lang, [
 		1	=> '%1$d vote of %2$d point',
 		2	=> '%1$d votes of %2$d points',
 	],
+	'AP_RANK_TOTAL'						=> [
+		1	=> '%d point',
+		2	=> '%d points',
+	],
+	'AP_RANK_BREAKDOWN'					=> 'Ranking breakdown',
+	'AP_RANK_DISTRIBUTION_ENTRY'			=> [
+		1	=> '%1$d vote in position %2$d',
+		2	=> '%1$d votes in position %2$d',
+	],
+	'AP_RANK_SELECT_EXACTLY'				=> [
+		1	=> 'Select exactly %d option in order of preference.',
+		2	=> 'Select exactly %d options in order of preference.',
+	],
 // Posting
+	'AP_POLL_TYPE'							=> 'Poll type',
+	'AP_POLL_TYPE_EXPLAIN'					=> 'Choose how users assign their votes or points.',
+	'AP_POLL_TYPE_CHOICE'					=> 'Choice',
+	'AP_POLL_TYPE_SCORING'					=> 'Numeric scoring',
+	'AP_POLL_TYPE_RANKING'					=> 'Ordered ranking',
 	'AP_POLL_VISIBILITY'					=> 'Result visibility',
 	'AP_POLL_VISIBILITY_EXPLAIN'			=> 'Choose when aggregate poll results become visible.',
 	'AP_VISIBILITY_PUBLIC'					=> 'Public — always show results',
@@ -110,6 +128,16 @@ $lang = array_merge($lang, [
 	'AP_POLL_MAX_VALUE_EXPLAIN'				=> 'This is the maximum number of votes that a voter might give to a single option.',
 	'AP_POLL_TOTAL_VALUE'					=> 'Total votes',
 	'AP_POLL_TOTAL_VALUE_EXPLAIN'			=> 'This is the total number of votes that a voter might distribute amongst all options.',
+	'AP_RANK_POINTS'						=> 'Points by position',
+	'AP_RANK_POINTS_EXPLAIN'				=> 'Set a positive, decreasing point value for each ranked position. The number of positions is controlled by Maximum options per user.',
+	'AP_RANK_POSITION'						=> 'Position %d',
 
 	'AP_VOTE_GREATER_THAN_MAXVALUE'			=> 'You can’t assign a number of votes greater than the maximum value allowed.',
+	'AP_POLL_VALUES_INVALID'				=> 'Maximum options, maximum score and total score must be greater than zero.',
+	'AP_RANK_POSITIONS_INVALID'				=> 'The number of ranked positions must be between 1 and the number of poll options.',
+	'AP_RANK_POINTS_INCOMPLETE'				=> 'Define one point value for every ranked position.',
+	'AP_RANK_POINTS_INVALID'				=> 'Every ranking point value must be between 1 and 999.',
+	'AP_RANK_POINTS_ORDER'					=> 'Ranking point values must strictly decrease from first to last position.',
+	'AP_RANK_INCREMENTAL_UNSUPPORTED'		=> 'Incremental voting cannot be used with ordered ranking.',
+	'AP_RANK_SELECTION_INCOMPLETE'			=> 'Select exactly the configured number of options in order of preference.',
 ]);

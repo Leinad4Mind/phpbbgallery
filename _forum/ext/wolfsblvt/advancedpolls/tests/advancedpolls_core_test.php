@@ -34,6 +34,7 @@ class advancedpolls_core_test extends TestCase
 			$values = array(
 				'wolfsblvt_poll_visibility' => poll_options::VISIBILITY_DEFAULT,
 				'wolfsblvt_poll_vote_mode' => poll_options::VOTE_MODE_NO_CHANGE,
+				'wolfsblvt_poll_type' => poll_options::TYPE_SCORING,
 				'wolfsblvt_poll_max_value' => 1,
 				'wolfsblvt_poll_total_value' => 1,
 			);
@@ -52,11 +53,44 @@ class advancedpolls_core_test extends TestCase
 		$core = $this->create_core(array(
 			'wolfsblvt_poll_visibility' => poll_options::VISIBILITY_DEFAULT,
 			'wolfsblvt_poll_vote_mode' => poll_options::VOTE_MODE_NO_CHANGE,
+			'wolfsblvt_poll_type' => poll_options::TYPE_SCORING,
 			'wolfsblvt_poll_max_value' => 4,
 			'wolfsblvt_poll_total_value' => 3,
 		), array('wolfsblvt.advancedpolls.activate_poll_scoring' => 1));
 		$poll = array('poll_max_options' => 1);
 		$this->assertSame(array('Maximum exceeds total'), $core->check_config_for_polls($poll));
+	}
+
+	public function test_ranking_configuration_sets_weighted_limits_and_rejects_incremental_mode()
+	{
+		$request = $this->createMock(\phpbb\request\request::class);
+		$request->method('variable')->willReturnCallback(function ($name, $default) {
+			$values = array(
+				'wolfsblvt_poll_visibility' => poll_options::VISIBILITY_DEFAULT,
+				'wolfsblvt_poll_vote_mode' => poll_options::VOTE_MODE_NO_CHANGE,
+				'wolfsblvt_poll_type' => poll_options::TYPE_RANKING,
+				'wolfsblvt_poll_rank_points' => array(3, 2, 1),
+			);
+			return array_key_exists($name, $values) ? $values[$name] : $default;
+		});
+		$overwrites = array();
+		$request->expects($this->exactly(2))->method('overwrite')->willReturnCallback(function ($name, $value) use (&$overwrites) {
+			$overwrites[$name] = $value;
+		});
+		$core = $this->create_core(array(), array('wolfsblvt.advancedpolls.activate_poll_scoring' => 1), null, $request);
+		$poll = array('poll_max_options' => 3, 'poll_options' => array('A', 'B', 'C', 'D'));
+		$this->assertSame(array(), $core->check_config_for_polls($poll));
+		$this->assertSame(array(
+			'wolfsblvt_poll_max_value' => 3,
+			'wolfsblvt_poll_total_value' => 6,
+		), $overwrites);
+
+		$core = $this->create_core(array(
+			'wolfsblvt_poll_visibility' => poll_options::VISIBILITY_DEFAULT,
+			'wolfsblvt_poll_vote_mode' => poll_options::VOTE_MODE_INCREMENTAL,
+			'wolfsblvt_poll_type' => poll_options::TYPE_RANKING,
+		), array('wolfsblvt.advancedpolls.activate_poll_scoring' => 1));
+		$this->assertSame(array('Ranking cannot be incremental'), $core->check_config_for_polls($poll));
 	}
 
 	public function test_save_maps_new_modes_to_legacy_fields_and_rearms_future_notification()
@@ -82,6 +116,27 @@ class advancedpolls_core_test extends TestCase
 		$this->assertSame(0, $sql_data[TOPICS_TABLE]['sql']['wolfsblvt_poll_notified']);
 	}
 
+	public function test_ranking_configuration_is_serialised_without_storing_frontend_positions()
+	{
+		$core = $this->create_core(array(
+			'wolfsblvt_poll_visibility' => poll_options::VISIBILITY_DEFAULT,
+			'wolfsblvt_poll_vote_mode' => poll_options::VOTE_MODE_CHANGE,
+			'wolfsblvt_poll_type' => poll_options::TYPE_RANKING,
+			'wolfsblvt_poll_rank_points' => array(5, 3, 1),
+			'wolfsblvt_poll_max_value' => 5,
+			'wolfsblvt_poll_total_value' => 9,
+		), array('wolfsblvt.advancedpolls.activate_poll_scoring' => 1));
+		$sql_data = array(TOPICS_TABLE => array('sql' => array()));
+
+		$core->save_config_for_polls($sql_data);
+
+		$topic = $sql_data[TOPICS_TABLE]['sql'];
+		$this->assertSame(poll_options::TYPE_RANKING, $topic['wolfsblvt_poll_type']);
+		$this->assertSame('5,3,1', $topic['wolfsblvt_poll_rank_points']);
+		$this->assertSame(5, $topic['wolfsblvt_poll_max_value']);
+		$this->assertSame(9, $topic['wolfsblvt_poll_total_value']);
+	}
+
 	public function test_posting_template_uses_single_visibility_and_vote_mode_controls()
 	{
 		$core = $this->create_core(array(), array(
@@ -102,6 +157,30 @@ class advancedpolls_core_test extends TestCase
 		$this->assertSame(poll_options::VOTE_MODE_CHANGE, $page_data['WOLFSBLVT_POLL_VOTE_MODE']);
 		$this->assertStringContainsString('<option value="3" selected="selected">Private</option>', $page_data['AP_POLL_VISIBILITY_OPTIONS']);
 		$this->assertStringContainsString('<option value="2" selected="selected">Change</option>', $page_data['AP_POLL_VOTE_MODE_OPTIONS']);
+	}
+
+	public function test_posting_template_restores_ranking_type_and_point_controls()
+	{
+		$core = $this->create_core(array(), array('wolfsblvt.advancedpolls.activate_poll_scoring' => 1));
+		$post_data = array(
+			'poll_length' => 0,
+			'poll_title' => 'Rank these',
+			'poll_options' => array('A', 'B', 'C'),
+			'wolfsblvt_poll_type' => poll_options::TYPE_RANKING,
+			'wolfsblvt_poll_max_value' => 3,
+			'wolfsblvt_poll_total_value' => 6,
+			'wolfsblvt_poll_rank_points' => '3,2,1',
+		);
+		$page_data = array();
+
+		$core->config_for_polls_to_template($post_data, $page_data);
+
+		$this->assertTrue($page_data['AP_IS_RANKING']);
+		$this->assertFalse($page_data['AP_IS_SCORING']);
+		$this->assertStringContainsString('<option value="2" selected="selected">Ranking</option>', $page_data['AP_POLL_TYPE_OPTIONS']);
+		$this->assertSame(3, substr_count($page_data['AP_RANK_POINT_INPUTS'], 'wolfsblvt_poll_rank_points[]'));
+		$this->assertStringContainsString('value="3"', $page_data['AP_RANK_POINT_INPUTS']);
+		$this->assertStringContainsString('value="1"', $page_data['AP_RANK_POINT_INPUTS']);
 	}
 
 	public function test_ajax_private_results_are_redacted_without_removing_own_votes()
@@ -153,6 +232,14 @@ class advancedpolls_core_test extends TestCase
 		$this->assertStringContainsString('2 votes of 1 point', $breakdowns[4]['detail']);
 		$this->assertStringContainsString('5 votes of 2 points', $breakdowns[4]['detail']);
 		$this->assertStringContainsString('10 votes of 3 points', $breakdowns[4]['detail']);
+		$this->assertSame('Vote breakdown', $breakdowns[4]['label']);
+
+		$ranked = $format->invoke($core, $distribution, array(4 => 42), array(3, 2, 1));
+		$this->assertSame('42 points', $ranked[4]['total']);
+		$this->assertStringContainsString('10 votes in position 1', $ranked[4]['detail']);
+		$this->assertStringContainsString('5 votes in position 2', $ranked[4]['detail']);
+		$this->assertStringContainsString('2 votes in position 3', $ranked[4]['detail']);
+		$this->assertSame('Ranking breakdown', $ranked[4]['label']);
 	}
 
 	public function test_missing_voters_use_retained_name_or_deleted_user_fallback()
@@ -253,6 +340,18 @@ class advancedpolls_core_test extends TestCase
 			'AP_VOTE_MODE_INCREMENTAL' => 'Incremental',
 			'AP_VOTE_MODE_CHANGE' => 'Change',
 			'AP_DELETED_USER' => 'Deleted user',
+			'AP_RANK_INCREMENTAL_UNSUPPORTED' => 'Ranking cannot be incremental',
+			'AP_RANK_POSITIONS_INVALID' => 'Invalid ranking positions',
+			'AP_RANK_POINTS_INCOMPLETE' => 'Incomplete ranking points',
+			'AP_RANK_POINTS_INVALID' => 'Invalid ranking points',
+			'AP_RANK_POINTS_ORDER' => 'Ranking points out of order',
+			'AP_POLL_VALUES_INVALID' => 'Invalid scoring values',
+			'AP_POLL_TYPE_CHOICE' => 'Choice',
+			'AP_POLL_TYPE_SCORING' => 'Scoring',
+			'AP_POLL_TYPE_RANKING' => 'Ranking',
+			'AP_SCORE_BREAKDOWN' => 'Vote breakdown',
+			'AP_RANK_BREAKDOWN' => 'Ranking breakdown',
+			'AP_RANK_POSITION' => 'Position %d',
 		);
 		$user->method('lang')->willReturnCallback(function ($key) use ($user) {
 			$args = func_get_args();
@@ -264,6 +363,18 @@ class advancedpolls_core_test extends TestCase
 			{
 				return $args[1] . ($args[1] === 1 ? ' vote' : ' votes') . ' of '
 					. $args[2] . ($args[2] === 1 ? ' point' : ' points');
+			}
+			if ($key === 'AP_RANK_TOTAL')
+			{
+				return $args[1] . ($args[1] === 1 ? ' point' : ' points');
+			}
+			if ($key === 'AP_RANK_DISTRIBUTION_ENTRY')
+			{
+				return $args[1] . ($args[1] === 1 ? ' vote' : ' votes') . ' in position ' . $args[2];
+			}
+			if ($key === 'AP_RANK_POSITION')
+			{
+				return 'Position ' . $args[1];
 			}
 			return isset($user->lang[$key]) ? $user->lang[$key] : $key;
 		});

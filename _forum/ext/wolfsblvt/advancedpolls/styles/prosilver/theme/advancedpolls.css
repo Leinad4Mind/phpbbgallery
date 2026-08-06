@@ -26,6 +26,46 @@ dd label {
 	white-space: normal !important;
 }
 
+.ap-ranking-choice {
+	align-items: center;
+	display: inline-flex;
+	gap: 6px;
+}
+
+.ap-rank-badge {
+	background: #105289;
+	border-radius: 50%;
+	color: #fff;
+	display: inline-block;
+	font-size: 11px;
+	font-weight: bold;
+	height: 20px;
+	line-height: 20px;
+	min-width: 20px;
+	text-align: center;
+}
+
+.ap-rank-badge:empty {
+	display: none;
+}
+
+#ap-rank-point-inputs {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px 12px;
+	margin-top: 8px;
+}
+
+.ap-rank-point {
+	align-items: center;
+	display: inline-flex;
+	gap: 5px;
+}
+
+.ap-rank-point input {
+	width: 5em !important;
+}
+
 .ap-score-breakdown-host {
 	overflow: visible !important;
 	position: relative;

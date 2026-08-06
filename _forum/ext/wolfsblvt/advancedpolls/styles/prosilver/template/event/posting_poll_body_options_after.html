@@ -44,20 +44,37 @@
 <!-- ENDIF -->
 
 <!-- IF WOLFSBLVT_POLL_SCORING -->
+<!-- INCLUDEJS js/poll_type_posting.js -->
 <span style="display:none;" jxdom-target="#poll_max_options" jxdom-closest="dl" jxdom-action="remove">
 <!-- Remove the #poll_max_options dl ancestor, to be replaced by the following dl block (in a different position in the DOM, closer to other similar options) -->
 </span>
 <dl>
-	<dt><label for="poll_max_options">{L_POLL_MAX_OPTIONS}{L_COLON}</label></dt>
-	<dd><input type="number" min="0" max="999" style="width: 5em !important;" name="poll_max_options" id="wolfsblvt_poll_max_options" size="3" maxlength="3" value="{POLL_MAX_OPTIONS}" class="inputbox autowidth" />{L_POLL_MAX_OPTIONS_EXPLAIN}</dd>
+	<dt><label for="wolfsblvt_poll_type">{L_AP_POLL_TYPE}{L_COLON}</label></dt>
+	<dd>
+		<select id="wolfsblvt_poll_type" name="wolfsblvt_poll_type">{AP_POLL_TYPE_OPTIONS}</select>
+		<span>{L_AP_POLL_TYPE_EXPLAIN}</span>
+	</dd>
 </dl>
 <dl>
+	<dt><label for="poll_max_options">{L_POLL_MAX_OPTIONS}{L_COLON}</label></dt>
+	<dd><input type="number" min="1" max="999" style="width: 5em !important;" name="poll_max_options" id="wolfsblvt_poll_max_options" size="3" maxlength="3" value="{POLL_MAX_OPTIONS}" class="inputbox autowidth" />{L_POLL_MAX_OPTIONS_EXPLAIN}</dd>
+</dl>
+<div id="ap-scoring-settings">
+<dl>
 	<dt><label for="wolfsblvt_poll_max_value">{L_AP_POLL_MAX_VALUE}{L_COLON}</label></dt>
-	<dd><input type="number" min="0" max="999" style="width: 5em !important;" name="wolfsblvt_poll_max_value" id="wolfsblvt_poll_max_value" size="3" maxlength="3" value="{WOLFSBLVT_POLL_MAX_VALUE}" class="inputbox autowidth" />{L_AP_POLL_MAX_VALUE_EXPLAIN}</dd>
+	<dd><input type="number" min="1" max="999" style="width: 5em !important;" name="wolfsblvt_poll_max_value" id="wolfsblvt_poll_max_value" size="3" maxlength="3" value="{WOLFSBLVT_POLL_MAX_VALUE}" class="inputbox autowidth" />{L_AP_POLL_MAX_VALUE_EXPLAIN}</dd>
 </dl>
 <dl>
 	<dt><label for="wolfsblvt_poll_total_value">{L_AP_POLL_TOTAL_VALUE}{L_COLON}</label></dt>
-	<dd><input type="number" min="0" max="999" style="width: 5em !important;" name="wolfsblvt_poll_total_value" id="wolfsblvt_poll_total_value" size="3" maxlength="3" value="{WOLFSBLVT_POLL_TOTAL_VALUE}" class="inputbox autowidth" />{L_AP_POLL_TOTAL_VALUE_EXPLAIN}</dd>
+	<dd><input type="number" min="1" max="999" style="width: 5em !important;" name="wolfsblvt_poll_total_value" id="wolfsblvt_poll_total_value" size="3" maxlength="3" value="{WOLFSBLVT_POLL_TOTAL_VALUE}" class="inputbox autowidth" />{L_AP_POLL_TOTAL_VALUE_EXPLAIN}</dd>
+</dl>
+</div>
+<dl id="ap-ranking-settings">
+	<dt><label>{L_AP_RANK_POINTS}{L_COLON}</label></dt>
+	<dd>
+		<span>{L_AP_RANK_POINTS_EXPLAIN}</span>
+		<div id="ap-rank-point-inputs" data-position-label="{L_AP_RANK_POSITION}">{AP_RANK_POINT_INPUTS}</div>
+	</dd>
 </dl>
 <hr class="dashed" />
 <!-- ENDIF -->

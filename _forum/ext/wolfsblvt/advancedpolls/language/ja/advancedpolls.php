@@ -73,7 +73,19 @@ $lang = array_merge($lang, [
 		1 => '%2$d 点：%1$d 票',
 		2 => '%2$d 点：%1$d 票',
 	],
+	'AP_RANK_TOTAL' => [1 => '%d 点', 2 => '%d 点'],
+	'AP_RANK_BREAKDOWN' => '順位の内訳',
+	'AP_RANK_DISTRIBUTION_ENTRY' => [1 => '%2$d 位が %1$d 票', 2 => '%2$d 位が %1$d 票'],
+	'AP_RANK_SELECT_EXACTLY' => [
+		1 => '希望順に正確に %d 個の選択肢を選んでください。',
+		2 => '希望順に正確に %d 個の選択肢を選んでください。',
+	],
 // Posting
+	'AP_POLL_TYPE' => 'アンケート形式',
+	'AP_POLL_TYPE_EXPLAIN' => 'ユーザーが票または点数を割り当てる方法を選択します。',
+	'AP_POLL_TYPE_CHOICE' => '選択',
+	'AP_POLL_TYPE_SCORING' => '数値評価',
+	'AP_POLL_TYPE_RANKING' => '順位付け',
 	'AP_POLL_VISIBILITY' => '結果の表示タイミング',
 	'AP_POLL_VISIBILITY_EXPLAIN' => '投票結果の集計をいつ表示するか選択します。',
 	'AP_VISIBILITY_PUBLIC' => '公開 — 常に結果を表示',
@@ -111,5 +123,16 @@ $lang = array_merge($lang, [
 	'AP_POLL_TOTAL_VALUE'				=> '投票者数',
 	'AP_POLL_TOTAL_VALUE_EXPLAIN'			=> '投票者がすべてのオプションに分配する可能性のある投票の総数です',
 
+	'AP_RANK_POINTS' => '順位ごとの点数',
+	'AP_RANK_POINTS_EXPLAIN' => '各順位に正の値を高い順で設定します。順位数はユーザーごとの最大選択肢数で決まります。',
+	'AP_RANK_POSITION' => '順位 %d',
+
 	'AP_VOTE_GREATER_THAN_MAXVALUE'			=> '許可されている最大値を超える投票数を割り当てることはできません',
+	'AP_POLL_VALUES_INVALID' => '最大選択肢数、最大点数、合計点数はゼロより大きい必要があります。',
+	'AP_RANK_POSITIONS_INVALID' => '順位数は 1 以上、アンケートの選択肢数以下でなければなりません。',
+	'AP_RANK_POINTS_INCOMPLETE' => '各順位の点数を設定してください。',
+	'AP_RANK_POINTS_INVALID' => '各順位の点数は 1 から 999 の範囲でなければなりません。',
+	'AP_RANK_POINTS_ORDER' => '点数は第1位から最下位まで厳密に減少させる必要があります。',
+	'AP_RANK_INCREMENTAL_UNSUPPORTED' => '順位付けでは追加投票を使用できません。',
+	'AP_RANK_SELECTION_INCOMPLETE' => '設定された数の選択肢を希望順に正確に選んでください。',
 ]);

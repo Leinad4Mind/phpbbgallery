@@ -72,6 +72,11 @@ class v1_3_0_data extends \phpbb\db\migration\migration
 					AND poll_vote_change = 0';
 			$this->db->sql_query($sql);
 		}
+
+		$sql = 'UPDATE ' . $this->table_prefix . 'topics
+			SET wolfsblvt_poll_type = ' . poll_options::TYPE_SCORING . '
+			WHERE wolfsblvt_poll_max_value > 1';
+		$this->db->sql_query($sql);
 	}
 
 	public function initialise_notification_cron()

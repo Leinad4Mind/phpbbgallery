@@ -74,7 +74,19 @@ $lang = array_merge($lang, [
 		1 => '%1$d röst med %2$d poäng',
 		2 => '%1$d röster med %2$d poäng',
 	],
+	'AP_RANK_TOTAL' => [1 => '%d poäng', 2 => '%d poäng'],
+	'AP_RANK_BREAKDOWN' => 'Rangordningsfördelning',
+	'AP_RANK_DISTRIBUTION_ENTRY' => [1 => '%1$d röst på position %2$d', 2 => '%1$d röster på position %2$d'],
+	'AP_RANK_SELECT_EXACTLY' => [
+		1 => 'Välj exakt %d alternativ i önskad ordning.',
+		2 => 'Välj exakt %d alternativ i önskad ordning.',
+	],
 // Posting
+	'AP_POLL_TYPE' => 'Omröstningstyp',
+	'AP_POLL_TYPE_EXPLAIN' => 'Välj hur användarna tilldelar sina röster eller poäng.',
+	'AP_POLL_TYPE_CHOICE' => 'Val',
+	'AP_POLL_TYPE_SCORING' => 'Numerisk poängsättning',
+	'AP_POLL_TYPE_RANKING' => 'Ordnad rangordning',
 	'AP_POLL_VISIBILITY' => 'Resultatens synlighet',
 	'AP_POLL_VISIBILITY_EXPLAIN' => 'Välj när omröstningens sammanlagda resultat ska bli synliga.',
 	'AP_VISIBILITY_PUBLIC' => 'Offentlig — visa alltid resultaten',
@@ -112,5 +124,16 @@ $lang = array_merge($lang, [
 	'AP_POLL_TOTAL_VALUE' => 'Totalt antal röster',
 	'AP_POLL_TOTAL_VALUE_EXPLAIN' => 'Det totala antal röster som en användare kan fördela mellan alla alternativ.',
 
+	'AP_RANK_POINTS' => 'Poäng per position',
+	'AP_RANK_POINTS_EXPLAIN' => 'Ange ett positivt, minskande poängvärde för varje position. Antalet positioner styrs av det högsta antalet alternativ per användare.',
+	'AP_RANK_POSITION' => 'Position %d',
+
 	'AP_VOTE_GREATER_THAN_MAXVALUE' => 'Du kan inte tilldela fler röster än det högsta tillåtna värdet.',
+	'AP_POLL_VALUES_INVALID' => 'Högsta antal alternativ, högsta poäng och totalpoäng måste vara större än noll.',
+	'AP_RANK_POSITIONS_INVALID' => 'Antalet positioner måste vara mellan 1 och antalet omröstningsalternativ.',
+	'AP_RANK_POINTS_INCOMPLETE' => 'Ange ett poängvärde för varje position.',
+	'AP_RANK_POINTS_INVALID' => 'Varje poängvärde måste vara mellan 1 och 999.',
+	'AP_RANK_POINTS_ORDER' => 'Poängen måste minska strikt från den första till den sista positionen.',
+	'AP_RANK_INCREMENTAL_UNSUPPORTED' => 'Inkrementell röstning kan inte användas med ordnad rangordning.',
+	'AP_RANK_SELECTION_INCOMPLETE' => 'Välj exakt det inställda antalet alternativ i önskad ordning.',
 ]);

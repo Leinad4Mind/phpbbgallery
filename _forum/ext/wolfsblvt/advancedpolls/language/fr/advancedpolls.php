@@ -77,7 +77,19 @@ $lang = array_merge($lang, [
 		1 => '%1$d vote à %2$d point',
 		2 => '%1$d votes à %2$d points',
 	],
+	'AP_RANK_TOTAL' => [1 => '%d point', 2 => '%d points'],
+	'AP_RANK_BREAKDOWN' => 'Détail du classement',
+	'AP_RANK_DISTRIBUTION_ENTRY' => [1 => '%1$d vote en position %2$d', 2 => '%1$d votes en position %2$d'],
+	'AP_RANK_SELECT_EXACTLY' => [
+		1 => 'Sélectionnez exactement %d option par ordre de préférence.',
+		2 => 'Sélectionnez exactement %d options par ordre de préférence.',
+	],
 // Posting
+	'AP_POLL_TYPE' => 'Type de sondage',
+	'AP_POLL_TYPE_EXPLAIN' => 'Choisissez comment les utilisateurs attribuent leurs votes ou leurs points.',
+	'AP_POLL_TYPE_CHOICE' => 'Choix',
+	'AP_POLL_TYPE_SCORING' => 'Notation numérique',
+	'AP_POLL_TYPE_RANKING' => 'Classement ordonné',
 	'AP_POLL_VISIBILITY' => 'Visibilité des résultats',
 	'AP_POLL_VISIBILITY_EXPLAIN' => 'Choisissez quand les résultats globaux du sondage deviennent visibles.',
 	'AP_VISIBILITY_PUBLIC' => 'Public — toujours afficher les résultats',
@@ -115,5 +127,16 @@ $lang = array_merge($lang, [
 	'AP_POLL_TOTAL_VALUE'         => 'Nombre total de votes',
 	'AP_POLL_TOTAL_VALUE_EXPLAIN' => 'Il s’agit du nombre total de votes qu’un votant peut soumettre parmi toutes les options.',
 
+	'AP_RANK_POINTS' => 'Points par position',
+	'AP_RANK_POINTS_EXPLAIN' => 'Définissez une valeur positive et décroissante pour chaque position. Le nombre de positions dépend du maximum d’options par utilisateur.',
+	'AP_RANK_POSITION' => 'Position %d',
+
 	'AP_VOTE_GREATER_THAN_MAXVALUE' => 'Vous ne pouvez pas attribuer un nombre de votes supérieur à la valeur maximale autorisée.',
+	'AP_POLL_VALUES_INVALID' => 'Le nombre maximal d’options, la note maximale et la note totale doivent être supérieurs à zéro.',
+	'AP_RANK_POSITIONS_INVALID' => 'Le nombre de positions doit être compris entre 1 et le nombre d’options du sondage.',
+	'AP_RANK_POINTS_INCOMPLETE' => 'Définissez une valeur en points pour chaque position.',
+	'AP_RANK_POINTS_INVALID' => 'Chaque valeur en points doit être comprise entre 1 et 999.',
+	'AP_RANK_POINTS_ORDER' => 'Les points doivent strictement diminuer de la première à la dernière position.',
+	'AP_RANK_INCREMENTAL_UNSUPPORTED' => 'Le vote incrémental ne peut pas être utilisé avec le classement ordonné.',
+	'AP_RANK_SELECTION_INCOMPLETE' => 'Sélectionnez exactement le nombre d’options configuré par ordre de préférence.',
 ]);

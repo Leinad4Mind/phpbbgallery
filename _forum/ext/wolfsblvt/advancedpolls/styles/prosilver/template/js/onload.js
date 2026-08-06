@@ -9,6 +9,62 @@
  */
 
 $(document).ready(function () {
+	function installRanking() {
+		if (!$.wolfsblvt.advancedpoll_json_data.wolfsblvt_poll_ranking) {
+			return;
+		}
+
+		var $poll = $('.topic_poll').first();
+		var $form = $poll.closest('form');
+		var $choices = $poll.find('.ap-rank-choice');
+		var points = $.map($.wolfsblvt.advancedpoll_json_data.rank_points || [], function (point) {
+			return parseInt(point, 10);
+		});
+		var limit = parseInt($.wolfsblvt.advancedpoll_json_data.rank_limit, 10) || points.length;
+		var ordered = [];
+
+		$choices.filter(':checked').each(function () {
+			var position = $.inArray(parseInt($(this).attr('data-current-value'), 10), points);
+			if (position >= 0) {
+				ordered[position] = this;
+			}
+		});
+		ordered = $.grep(ordered, function (choice) { return !!choice; });
+
+		function syncRanking() {
+			$form.find('input.ap-rank-value').remove();
+			$choices.prop('checked', false).closest('.ap-ranking-choice').find('.ap-rank-badge').empty();
+			$.each(ordered, function (index, choice) {
+				var $choice = $(choice);
+				var optionId = parseInt($choice.val(), 10);
+				$choice.prop('checked', true).closest('.ap-ranking-choice').find('.ap-rank-badge').text(index + 1);
+				$('<input type="hidden" class="ap-rank-value" />')
+					.attr('name', 'vote_id[' + optionId + ']')
+					.val(points[index])
+					.appendTo($form);
+			});
+		}
+
+		$choices.on('change', function () {
+			var choice = this;
+			if (choice.checked) {
+				if (ordered.length >= limit) {
+					choice.checked = false;
+					window.alert($.wolfsblvt.advancedpoll_json_data.l_rank_limit);
+					return;
+				}
+				ordered.push(choice);
+			} else {
+				ordered = $.grep(ordered, function (item) { return item !== choice; });
+			}
+			syncRanking();
+		});
+
+		syncRanking();
+	}
+
+	installRanking();
+
 	function installScoreBreakdowns() {
 		$('.ap-score-breakdown-source').each(function () {
 			var $source = $(this);

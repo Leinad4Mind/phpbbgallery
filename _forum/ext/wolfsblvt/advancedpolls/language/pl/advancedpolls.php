@@ -75,7 +75,19 @@ $lang = array_merge($lang, [
 		2 => '%1$d głosy o wartości %2$d punktów',
 		3 => '%1$d głosów o wartości %2$d punktów',
 	],
+	'AP_RANK_TOTAL' => [1 => '%d punkt', 2 => '%d punkty'],
+	'AP_RANK_BREAKDOWN' => 'Rozkład rankingu',
+	'AP_RANK_DISTRIBUTION_ENTRY' => [1 => '%1$d głos na pozycji %2$d', 2 => '%1$d głosy na pozycji %2$d'],
+	'AP_RANK_SELECT_EXACTLY' => [
+		1 => 'Wybierz dokładnie %d opcję w kolejności preferencji.',
+		2 => 'Wybierz dokładnie %d opcje w kolejności preferencji.',
+	],
 // Posting
+	'AP_POLL_TYPE' => 'Typ ankiety',
+	'AP_POLL_TYPE_EXPLAIN' => 'Wybierz sposób przydzielania głosów lub punktów przez użytkowników.',
+	'AP_POLL_TYPE_CHOICE' => 'Wybór',
+	'AP_POLL_TYPE_SCORING' => 'Ocena liczbowa',
+	'AP_POLL_TYPE_RANKING' => 'Ranking uporządkowany',
 	'AP_POLL_VISIBILITY' => 'Widoczność wyników',
 	'AP_POLL_VISIBILITY_EXPLAIN' => 'Wybierz, kiedy zbiorcze wyniki ankiety będą widoczne.',
 	'AP_VISIBILITY_PUBLIC' => 'Publiczne — zawsze pokazuj wyniki',
@@ -113,5 +125,16 @@ $lang = array_merge($lang, [
 	'AP_POLL_TOTAL_VALUE'					=> 'Razem głosów',
 	'AP_POLL_TOTAL_VALUE_EXPLAIN'			=> 'To jest całkowita liczba głosów, jaką głosujący może rozdzielić na wszystkie opcje.',
 
+	'AP_RANK_POINTS' => 'Punkty według pozycji',
+	'AP_RANK_POINTS_EXPLAIN' => 'Ustaw dodatnią, malejącą wartość punktową dla każdej pozycji. Liczbę pozycji określa maksymalna liczba opcji na użytkownika.',
+	'AP_RANK_POSITION' => 'Pozycja %d',
+
 	'AP_VOTE_GREATER_THAN_MAXVALUE'			=> 'Nie możesz przydzielić liczby głosów większej niż maksymalna dozwolona wartość.',
+	'AP_POLL_VALUES_INVALID' => 'Maksymalna liczba opcji, maksymalna ocena i łączna ocena muszą być większe od zera.',
+	'AP_RANK_POSITIONS_INVALID' => 'Liczba pozycji musi mieścić się między 1 a liczbą opcji ankiety.',
+	'AP_RANK_POINTS_INCOMPLETE' => 'Określ wartość punktową dla każdej pozycji.',
+	'AP_RANK_POINTS_INVALID' => 'Każda wartość punktowa musi mieścić się między 1 a 999.',
+	'AP_RANK_POINTS_ORDER' => 'Punkty muszą ściśle maleć od pierwszej do ostatniej pozycji.',
+	'AP_RANK_INCREMENTAL_UNSUPPORTED' => 'Głosowanie przyrostowe nie może być używane z rankingiem uporządkowanym.',
+	'AP_RANK_SELECTION_INCOMPLETE' => 'Wybierz dokładnie skonfigurowaną liczbę opcji w kolejności preferencji.',
 ]);

@@ -84,7 +84,12 @@ class advancedpolls
 	{
 		$visibility = $this->request->variable('wolfsblvt_poll_visibility', poll_options::VISIBILITY_DEFAULT);
 		$vote_mode = $this->request->variable('wolfsblvt_poll_vote_mode', poll_options::VOTE_MODE_NO_CHANGE);
-		if (!poll_options::is_valid_visibility($visibility) || !poll_options::is_valid_vote_mode($vote_mode))
+		$poll_type = $this->request->variable('wolfsblvt_poll_type', poll_options::TYPE_CHOICE);
+		if (!poll_options::is_valid_visibility($visibility) || !poll_options::is_valid_vote_mode($vote_mode) || !poll_options::is_valid_type($poll_type))
+		{
+			return array($this->user->lang['FORM_INVALID']);
+		}
+		if (empty($this->config['wolfsblvt.advancedpolls.activate_poll_scoring']) && (int) $poll_type !== poll_options::TYPE_CHOICE)
 		{
 			return array($this->user->lang['FORM_INVALID']);
 		}
@@ -95,16 +100,41 @@ class advancedpolls
 			$poll_max_value = $this->request->variable('wolfsblvt_poll_max_value', 1);
 			$poll_total_value = $this->request->variable('wolfsblvt_poll_total_value', 1);
 
-			if ($poll_max_value > $poll_total_value)
+			if ((int) $poll_type === poll_options::TYPE_RANKING)
+			{
+				if ((int) $vote_mode === poll_options::VOTE_MODE_INCREMENTAL)
+				{
+					return array($this->user->lang['AP_RANK_INCREMENTAL_UNSUPPORTED']);
+				}
+
+				$rank_points = ranked_vote::normalise_points($this->request->variable('wolfsblvt_poll_rank_points', array(0)));
+				$rank_error = ranked_vote::validate_configuration(
+					(int) $poll['poll_max_options'],
+					$rank_points,
+					isset($poll['poll_options']) ? count($poll['poll_options']) : 0
+				);
+				if ($rank_error)
+				{
+					return array($this->user->lang[$rank_error]);
+				}
+
+				$this->request->overwrite('wolfsblvt_poll_max_value', max($rank_points));
+				$this->request->overwrite('wolfsblvt_poll_total_value', array_sum($rank_points));
+			}
+			else if ((int) $poll_type === poll_options::TYPE_SCORING && ($poll_max_value < 1 || $poll_total_value < 1 || (int) $poll['poll_max_options'] < 1))
+			{
+				return array($this->user->lang['AP_POLL_VALUES_INVALID']);
+			}
+			else if ((int) $poll_type === poll_options::TYPE_SCORING && $poll_max_value > $poll_total_value)
 			{
 				return array($this->user->lang['AP_POLL_TOTAL_LOWER_MAX_VOTES']);
 			}
-			if ($poll_max_value === 1 && (int) $poll['poll_max_options'] > 1)
+			if ((int) $poll_type === poll_options::TYPE_SCORING && $poll_max_value === 1 && (int) $poll['poll_max_options'] > 1)
 			{
 				$poll_total_value = (int) $poll['poll_max_options'];
 				$this->request->overwrite('wolfsblvt_poll_total_value', (int) $poll['poll_max_options']);
 			}
-			if ((int) $poll['poll_max_options'] > $poll_total_value)
+			if ((int) $poll_type === poll_options::TYPE_SCORING && (int) $poll['poll_max_options'] > $poll_total_value)
 			{
 				return array($this->user->lang['AP_POLL_TOTAL_LOWER_MAX_OPTS']);
 			}
@@ -180,11 +210,20 @@ class advancedpolls
 			{
 				continue; // already processed
 			}
-			else
+			else if ($option !== 'wolfsblvt_poll_rank_points')
 			{
 				$sql_data[TOPICS_TABLE]['sql'][$option] = $this->request->variable($option, $default_val);
 			}
 		}
+
+		$poll_type = isset($sql_data[TOPICS_TABLE]['sql']['wolfsblvt_poll_type'])
+			? (int) $sql_data[TOPICS_TABLE]['sql']['wolfsblvt_poll_type']
+			: poll_options::TYPE_CHOICE;
+		$sql_data[TOPICS_TABLE]['sql']['wolfsblvt_poll_type'] = $poll_type;
+		$rank_points = $poll_type === poll_options::TYPE_RANKING
+			? ranked_vote::normalise_points($this->request->variable('wolfsblvt_poll_rank_points', array(0)))
+			: array();
+		$sql_data[TOPICS_TABLE]['sql']['wolfsblvt_poll_rank_points'] = implode(',', $rank_points);
 
 		$visibility = (int) $sql_data[TOPICS_TABLE]['sql']['wolfsblvt_poll_visibility'];
 		$vote_mode = (int) $sql_data[TOPICS_TABLE]['sql']['wolfsblvt_poll_vote_mode'];
@@ -241,7 +280,22 @@ class advancedpolls
 
 		foreach ($options as $option => $default_val)
 		{
-			if ($preview || $this->request->is_set($option))
+			if ($option === 'wolfsblvt_poll_rank_points')
+			{
+				if ($preview || $this->request->is_set($option))
+				{
+					$value_to_take = implode(',', ranked_vote::normalise_points($this->request->variable($option, array(0))));
+				}
+				else if (!empty($post_data['poll_title']) && isset($post_data[$option]))
+				{
+					$value_to_take = (string) $post_data[$option];
+				}
+				else
+				{
+					$value_to_take = '';
+				}
+			}
+			else if ($preview || $this->request->is_set($option))
 			{
 				$value_to_take = $this->request->variable($option, $default_val);
 			}
@@ -278,23 +332,38 @@ class advancedpolls
 				$page_data[strtoupper($option)] = $value_to_take;
 			}
 
-			if ($preview && ($option == 'wolfsblvt_poll_max_value') && ($value_to_take > 1))
-			{
-				$page_data['AP_IS_SCORING'] = true;
+		}
 
-				$option_eval_opts_txt = '<option value="0"></option>';
-				for ($i = 1; $i <= $value_to_take; $i++)
+		$poll_type = isset($page_data['WOLFSBLVT_POLL_TYPE'])
+			? (int) $page_data['WOLFSBLVT_POLL_TYPE']
+			: poll_options::TYPE_CHOICE;
+		$page_data['AP_POLL_TYPE_OPTIONS'] = $this->build_select_options(array(
+			poll_options::TYPE_CHOICE => 'AP_POLL_TYPE_CHOICE',
+			poll_options::TYPE_SCORING => 'AP_POLL_TYPE_SCORING',
+			poll_options::TYPE_RANKING => 'AP_POLL_TYPE_RANKING',
+		), $poll_type);
+		$rank_points = ranked_vote::normalise_points(isset($page_data['WOLFSBLVT_POLL_RANK_POINTS']) ? $page_data['WOLFSBLVT_POLL_RANK_POINTS'] : '');
+		$page_data['AP_RANK_POINT_INPUTS'] = $this->build_rank_point_inputs($rank_points);
+		$page_data['AP_IS_SCORING'] = $poll_type === poll_options::TYPE_SCORING;
+		$page_data['AP_IS_RANKING'] = $poll_type === poll_options::TYPE_RANKING;
+
+		if ($preview && ($page_data['AP_IS_SCORING'] || $page_data['AP_IS_RANKING']))
+		{
+			$option_eval_opts_txt = '<option value="0"></option>';
+			if ($page_data['AP_IS_SCORING'])
+			{
+				for ($i = 1; $i <= (int) $page_data['WOLFSBLVT_POLL_MAX_VALUE']; $i++)
 				{
 					$option_eval_opts_txt .= '<option value="' . $i . '">' . $i . '</option>';
 				}
-				$block_vars = array(
-					'AP_POLL_OPTION_VALUE'	=> 0,
-					'AP_POLL_OPTION_OPTS'	=> $option_eval_opts_txt,
-				);
-				for ($i = 0, $count = count($post_data['poll_options']); $i < $count; $i++)
-				{
-					$this->template->alter_block_array('poll_option', $block_vars, $i, 'change');
-				}
+			}
+			$block_vars = array(
+				'AP_POLL_OPTION_VALUE' => 0,
+				'AP_POLL_OPTION_OPTS' => $option_eval_opts_txt,
+			);
+			for ($i = 0, $count = count($post_data['poll_options']); $i < $count; $i++)
+			{
+				$this->template->alter_block_array('poll_option', $block_vars, $i, 'change');
 			}
 		}
 
@@ -316,6 +385,24 @@ class advancedpolls
 			poll_options::VOTE_MODE_CHANGE => 'AP_VOTE_MODE_CHANGE',
 		), $vote_mode);
 		return;
+	}
+
+	/**
+	 * Render trusted numeric point controls for ranking positions.
+	 *
+	 * @param array $points Points in rank order
+	 * @return string
+	 */
+	protected function build_rank_point_inputs(array $points)
+	{
+		$html = '';
+		foreach ($points as $index => $point)
+		{
+			$position = $index + 1;
+			$html .= '<label class="ap-rank-point"><span>' . $this->user->lang('AP_RANK_POSITION', $position) . '</span> '
+				. '<input type="number" min="1" max="999" name="wolfsblvt_poll_rank_points[]" value="' . (int) $point . '" class="inputbox autowidth" /></label>';
+		}
+		return $html;
 	}
 
 	/**
@@ -423,9 +510,22 @@ class advancedpolls
 		$voted_val = array();
 
 		$scoring = $this->request->variable('scoring', false);
+		$ranking = $this->request->variable('ranking', false);
 		$update = $this->request->variable('update', false);
 
-		if ($scoring)
+		$poll_type = $this->resolve_poll_type($topic_data);
+		$s_is_scoring = $poll_type === poll_options::TYPE_SCORING;
+		$s_is_ranking = $poll_type === poll_options::TYPE_RANKING;
+		$s_is_weighted = $s_is_scoring || $s_is_ranking;
+
+		if ($s_is_ranking && $ranking)
+		{
+			$voted_val = $this->request->variable('vote_id', array(0 => 0));
+			$voted_val = array_diff($voted_val, array(0));
+			$voted_id = array_keys($voted_val);
+			$voted_id = (sizeof($voted_id) > 1) ? array_unique($voted_id) : $voted_id;
+		}
+		else if ($scoring)
 		{
 			$voted_val	= $this->request->variable('vote_id', array(0 => 0));
 			$voted_val	= array_diff($voted_val, array(0));
@@ -445,11 +545,9 @@ class advancedpolls
 				? poll_options::VOTE_MODE_CHANGE
 				: (in_array('wolfsblvt_incremental_votes', $options) ? poll_options::VOTE_MODE_INCREMENTAL : poll_options::VOTE_MODE_NO_CHANGE));
 		$s_incremental = ($vote_mode === poll_options::VOTE_MODE_INCREMENTAL);
-		$s_is_scoring = (in_array('wolfsblvt_poll_max_value', $options) && $topic_data['wolfsblvt_poll_max_value'] > 1) ? true : false;
-
 		$has_abstained = in_array(0, array_map('intval', $cur_voted_id), true);
 		$s_vote_incomplete = !$has_abstained && ($s_incremental
-			? ($s_is_scoring ? $cur_total_val < $topic_data['wolfsblvt_poll_total_value'] : sizeof($cur_voted_val) < $topic_data['poll_max_options'])
+			? ($s_is_weighted ? $cur_total_val < $topic_data['wolfsblvt_poll_total_value'] : sizeof($cur_voted_val) < $topic_data['poll_max_options'])
 			: !sizeof($cur_voted_val));
 
 		$s_can_change_vote = ($vote_mode === poll_options::VOTE_MODE_CHANGE && $this->auth->acl_get('f_votechg', $topic_data['forum_id']));
@@ -528,7 +626,7 @@ class advancedpolls
 		if ($update && $s_can_vote)
 		{
 			if (!sizeof($voted_id) || sizeof($voted_id) > $topic_data['poll_max_options'] ||
-				$invalid_voted_options || $scoring !== $s_is_scoring || (!$s_can_change_vote && sizeof(array_diff($cur_voted_id, $voted_id))) || !check_form_key('posting'))
+				$invalid_voted_options || $scoring !== $s_is_weighted || $ranking !== $s_is_ranking || (!$s_can_change_vote && sizeof(array_diff($cur_voted_id, $voted_id))) || !check_form_key('posting'))
 			{
 				meta_refresh(5, $viewtopic_url);
 				if (!sizeof($voted_id))
@@ -539,7 +637,7 @@ class advancedpolls
 				{
 					$message = 'TOO_MANY_VOTE_OPTIONS';
 				}
-				else if ($invalid_voted_options || $scoring !== $s_is_scoring)
+				else if ($invalid_voted_options || $scoring !== $s_is_weighted || $ranking !== $s_is_ranking)
 				{
 					$message = 'AP_POLL_TYPE_MISMATCH';
 				}
@@ -567,7 +665,23 @@ class advancedpolls
 			}
 		}
 
-		if ($update && $s_can_vote && $s_is_scoring)
+		if ($update && $s_can_vote && $s_is_ranking)
+		{
+			$rank_error = ranked_vote::validate_vote(
+				$voted_val,
+				$poll_options,
+				ranked_vote::normalise_points($topic_data['wolfsblvt_poll_rank_points']),
+				(int) $topic_data['poll_max_options']
+			);
+			if ($rank_error)
+			{
+				meta_refresh(5, $viewtopic_url);
+				$message = $this->user->lang[$rank_error] . '<br /><br />' . sprintf($this->user->lang['RETURN_TOPIC'], '<a href="' . $viewtopic_url . '">', '</a>');
+				trigger_error($message);
+			}
+		}
+
+		if ($update && $s_can_vote && $s_is_weighted)
 		{
 			$validation_error = vote_validator::validate_scoring(
 				$voted_val,
@@ -589,7 +703,7 @@ class advancedpolls
 			$this->db->sql_transaction('begin');
 			foreach ($cur_voted_id as $option)
 			{
-				if (!in_array($option, $voted_id) || (($cur_voted_val[$option] != $voted_val[$option])))
+				if (!in_array($option, $voted_id) || $cur_voted_val[$option] != $voted_val[$option])
 				{
 					$sql = 'UPDATE ' . POLL_OPTIONS_TABLE . '
 						SET poll_option_total = poll_option_total - ' . (int) $cur_voted_val[$option] . '
@@ -613,7 +727,7 @@ class advancedpolls
 			foreach ($voted_id as $option)
 			{
 				// no changed vote, do nothing
-				if (in_array($option, $cur_voted_id) && ($cur_voted_val[$option] == $voted_val[$option]))
+				if (in_array($option, $cur_voted_id) && $cur_voted_val[$option] == $voted_val[$option])
 				{
 					continue;
 				}
@@ -660,12 +774,13 @@ class advancedpolls
 				// Filter out invalid options
 				$valid_user_votes = array_intersect(array_keys($vote_counts), $voted_id);
 				$s_vote_incomplete = $s_incremental ?
-						($s_is_scoring ? $voted_total_val < $topic_data['wolfsblvt_poll_total_value'] : sizeof($valid_user_votes) < $topic_data['poll_max_options']) : !sizeof($valid_user_votes);
+						($s_is_weighted ? $voted_total_val < $topic_data['wolfsblvt_poll_total_value'] : sizeof($valid_user_votes) < $topic_data['poll_max_options']) : !sizeof($valid_user_votes);
 
 				$data = array(
 					'NO_VOTES'			=> $this->user->lang['NO_VOTES'],
 					'success'			=> true,
 					'scoring'			=> true,
+					'ranking'			=> $s_is_ranking,
 					'user_votes'		=> array_flip($valid_user_votes),
 					'user_vote_counts'	=> $voted_val,
 					'vote_counts'		=> $vote_counts,
@@ -677,7 +792,8 @@ class advancedpolls
 				{
 					$data['score_breakdowns'] = $this->format_score_breakdowns(
 						$this->get_score_distribution((int) $topic_data['topic_id']),
-						$vote_counts
+						$vote_counts,
+						$s_is_ranking ? ranked_vote::normalise_points($topic_data['wolfsblvt_poll_rank_points']) : array()
 					);
 				}
 				$json_response = new \phpbb\json_response();
@@ -814,12 +930,16 @@ class advancedpolls
 			'wolfsblvt_poll_voters_limit_topic'		=> false,
 			'wolfsblvt_poll_show_ordered'			=> false,
 			'wolfsblvt_poll_scoring'				=> false,
+			'wolfsblvt_poll_ranking'				=> false,
 			'wolfsblvt_poll_no_vote'				=> false,
 			'can_change_vote'						=> ($vote_mode === poll_options::VOTE_MODE_CHANGE && $this->auth->acl_get('f_votechg', $topic_data['forum_id'])),
 			'username_clean'						=> $this->user->data['username_clean'],
 			'username_string'						=> get_username_string('full', $this->user->data['user_id'], $this->user->data['username'], $this->user->data['user_colour']),
 			'l_seperator'							=> $this->user->lang['COMMA_SEPARATOR'],
 			'l_none'								=> $this->user->lang['AP_NONE'],
+			'rank_limit'							=> (int) $topic_data['poll_max_options'],
+			'rank_points'						=> ranked_vote::normalise_points(isset($topic_data['wolfsblvt_poll_rank_points']) ? $topic_data['wolfsblvt_poll_rank_points'] : ''),
+			'l_rank_limit'						=> $this->user->lang('AP_RANK_SELECT_EXACTLY', (int) $topic_data['poll_max_options']),
 		);
 
 		$options = $this->get_possible_options(true);
@@ -831,6 +951,7 @@ class advancedpolls
 		$poll_end = ($topic_data['poll_start'] + $topic_data['poll_length']);
 
 		$poll_votes_hidden = $poll_scoring = false;
+		$poll_type = $this->resolve_poll_type($topic_data);
 
 		$view = $this->request->variable('view', '');
 		$poll_force_display_results = (($view === 'infopoll') && $this->auth->acl_get('m_seevoters', $topic_data['forum_id'])) ? true : false;
@@ -866,24 +987,38 @@ class advancedpolls
 		if (in_array('wolfsblvt_poll_max_value', $options))
 		{
 			$poll_template_data['WOLFSBLVT_POLL_SCORING'] = true;
-			if ($topic_data['wolfsblvt_poll_max_value'] > 1)
+			if ($poll_type === poll_options::TYPE_SCORING || $poll_type === poll_options::TYPE_RANKING)
 			{
 				$javascript_vars['wolfsblvt_poll_scoring'] = true;
+				$javascript_vars['wolfsblvt_poll_ranking'] = $poll_type === poll_options::TYPE_RANKING;
 				for ($j = 0; $j < $poll_options_count; $j++)
 				{
 					$option_eval_opts_txt = '<option value="0"></option>';
 					$sel = isset($this->cur_voted_val[(int) $poll_info[$j]['poll_option_id']]) ? $this->cur_voted_val[(int) $poll_info[$j]['poll_option_id']] : 0;
 					$poll_options_template_data[$j]['AP_POLL_OPTION_VALUE'] = $sel;
-					for ($i = 1; $i <= $topic_data['wolfsblvt_poll_max_value']; $i++)
+					if ($poll_type === poll_options::TYPE_SCORING)
 					{
-						$option_eval_opts_txt .= '<option value="' . $i . ((($i == $sel) && !$poll_force_display_results) ? '" selected="selected">' : '">') . $i . '</option>';
+						for ($i = 1; $i <= $topic_data['wolfsblvt_poll_max_value']; $i++)
+						{
+							$option_eval_opts_txt .= '<option value="' . $i . ((($i == $sel) && !$poll_force_display_results) ? '" selected="selected">' : '">') . $i . '</option>';
+						}
 					}
 					$poll_options_template_data[$j]['AP_POLL_OPTION_OPTS'] = $option_eval_opts_txt;
+					$rank_points = ranked_vote::normalise_points($topic_data['wolfsblvt_poll_rank_points']);
+					$rank_index = $poll_type === poll_options::TYPE_RANKING ? array_search((int) $sel, $rank_points, true) : false;
+					$poll_options_template_data[$j]['AP_POLL_OPTION_RANK'] = $rank_index === false ? 0 : $rank_index + 1;
 				}
-				$poll_template_data['L_MAX_VOTES'] = $this->user->lang('AP_MAX_VOTES_SELECT', (int) $topic_data['poll_max_options'], (int) $topic_data['wolfsblvt_poll_total_value']);
-				$poll_template_data['AP_IS_SCORING'] = true;
+				$poll_template_data['L_MAX_VOTES'] = $poll_type === poll_options::TYPE_RANKING
+					? $this->user->lang('AP_RANK_SELECT_EXACTLY', (int) $topic_data['poll_max_options'])
+					: $this->user->lang('AP_MAX_VOTES_SELECT', (int) $topic_data['poll_max_options'], (int) $topic_data['wolfsblvt_poll_total_value']);
+				$poll_template_data['AP_IS_SCORING'] = $poll_type === poll_options::TYPE_SCORING;
+				$poll_template_data['AP_IS_RANKING'] = $poll_type === poll_options::TYPE_RANKING;
+				$poll_template_data['AP_RANK_LIMIT'] = (int) $topic_data['poll_max_options'];
 
-				$scoring_hidden_fields = build_hidden_fields(array('scoring' => (int) 1));
+				$scoring_hidden_fields = build_hidden_fields(array(
+					'scoring' => (int) 1,
+					'ranking' => $poll_type === poll_options::TYPE_RANKING ? (int) 1 : (int) 0,
+				));
 				$poll_template_data['S_HIDDEN_FIELDS'] = (isset($poll_template_data['S_HIDDEN_FIELDS']) ? $poll_template_data['S_HIDDEN_FIELDS'] : '') . $scoring_hidden_fields;
 
 				$poll_scoring = true;
@@ -894,7 +1029,8 @@ class advancedpolls
 		{
 			$score_breakdowns = $this->format_score_breakdowns(
 				$this->get_score_distribution((int) $topic_data['topic_id']),
-				$vote_counts
+				$vote_counts,
+				$poll_type === poll_options::TYPE_RANKING ? ranked_vote::normalise_points($topic_data['wolfsblvt_poll_rank_points']) : array()
 			);
 			for ($i = 0; $i < $poll_options_count; $i++)
 			{
@@ -903,6 +1039,7 @@ class advancedpolls
 				{
 					$poll_options_template_data[$i]['AP_SCORE_TOTAL'] = $score_breakdowns[$option_id]['total'];
 					$poll_options_template_data[$i]['AP_SCORE_BREAKDOWN'] = $score_breakdowns[$option_id]['detail'];
+					$poll_options_template_data[$i]['AP_BREAKDOWN_LABEL'] = $score_breakdowns[$option_id]['label'];
 				}
 			}
 		}
@@ -1200,18 +1337,27 @@ class advancedpolls
 	 *
 	 * @param array $distribution Option => score => voter count map
 	 * @param array $vote_counts Weighted totals by option
+	 * @param array $rank_points Points in rank order; empty for numeric scoring
 	 * @return array
 	 */
-	protected function format_score_breakdowns(array $distribution, array $vote_counts)
+	protected function format_score_breakdowns(array $distribution, array $vote_counts, array $rank_points = array())
 	{
+		$is_ranking = !empty($rank_points);
 		$breakdowns = array();
 		foreach ($distribution as $option_id => $scores)
 		{
 			$entries = array();
 			foreach ($scores as $score => $voters)
 			{
+				$rank_index = $is_ranking ? array_search((int) $score, $rank_points, true) : false;
+				if ($is_ranking && $rank_index === false)
+				{
+					continue;
+				}
 				$entries[] = '<span class="ap-score-breakdown-entry">'
-					. $this->user->lang('AP_SCORE_DISTRIBUTION_ENTRY', (int) $voters, (int) $score)
+					. ($is_ranking
+						? $this->user->lang('AP_RANK_DISTRIBUTION_ENTRY', (int) $voters, $rank_index + 1)
+						: $this->user->lang('AP_SCORE_DISTRIBUTION_ENTRY', (int) $voters, (int) $score))
 					. '</span>';
 			}
 
@@ -1221,8 +1367,9 @@ class advancedpolls
 			}
 
 			$breakdowns[$option_id] = array(
-				'total' => $this->user->lang('AP_SCORE_TOTAL', (int) $vote_counts[$option_id]),
+				'total' => $this->user->lang($is_ranking ? 'AP_RANK_TOTAL' : 'AP_SCORE_TOTAL', (int) $vote_counts[$option_id]),
 				'detail' => implode('', $entries),
+				'label' => $this->user->lang[$is_ranking ? 'AP_RANK_BREAKDOWN' : 'AP_SCORE_BREAKDOWN'],
 			);
 		}
 
@@ -1285,8 +1432,10 @@ class advancedpolls
 			{
 				if ($option == 'wolfsblvt_poll_scoring')
 				{
+					$valid_options['wolfsblvt_poll_type'] = poll_options::TYPE_CHOICE;
 					$valid_options['wolfsblvt_poll_max_value'] = 1;
 					$valid_options['wolfsblvt_poll_total_value'] = 1;
+					$valid_options['wolfsblvt_poll_rank_points'] = '';
 				}
 				else if ($option == 'wolfsblvt_poll_end')
 				{
@@ -1304,5 +1453,23 @@ class advancedpolls
 		}
 
 		return $valid_options;
+	}
+
+	/**
+	 * Resolve explicit poll type while retaining compatibility with old rows.
+	 *
+	 * @param array $poll Poll or topic data
+	 * @return int
+	 */
+	protected function resolve_poll_type(array $poll)
+	{
+		if (isset($poll['wolfsblvt_poll_type']) && poll_options::is_valid_type($poll['wolfsblvt_poll_type']))
+		{
+			return (int) $poll['wolfsblvt_poll_type'];
+		}
+
+		return !empty($poll['wolfsblvt_poll_max_value']) && (int) $poll['wolfsblvt_poll_max_value'] > 1
+			? poll_options::TYPE_SCORING
+			: poll_options::TYPE_CHOICE;
 	}
 }

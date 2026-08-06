@@ -11,6 +11,8 @@
 				<dd style="width: auto;">
 				<!-- IF AP_IS_SCORING -->
 					<select name="vote_id[{poll_option.POLL_OPTION_ID}]" id="vote_{poll_option.POLL_OPTION_ID}">{poll_option.AP_POLL_OPTION_OPTS}</select>
+				<!-- ELSEIF AP_IS_RANKING -->
+					<label class="ap-ranking-choice"><input type="checkbox" name="vote_id[]" id="vote_{poll_option.POLL_OPTION_ID}" value="{poll_option.POLL_OPTION_ID}" /> <span class="ap-rank-badge" aria-hidden="true"></span></label>
 				<!-- ELSE -->
 					<input type="<!-- IF S_IS_MULTI_CHOICE -->checkbox<!-- ELSE -->radio<!-- ENDIF -->" name="vote_id[]" id="vote_{poll_option.POLL_OPTION_ID}" value="{poll_option.POLL_OPTION_ID}" />
 				<!-- ENDIF -->

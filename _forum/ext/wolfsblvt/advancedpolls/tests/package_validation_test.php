@@ -64,6 +64,14 @@ class package_validation_test extends TestCase
 			'AP_SCORE_TOTAL',
 			'AP_SCORE_BREAKDOWN',
 			'AP_SCORE_DISTRIBUTION_ENTRY',
+			'AP_RANK_SELECT_EXACTLY',
+			'AP_RANK_TOTAL',
+			'AP_RANK_BREAKDOWN',
+			'AP_RANK_DISTRIBUTION_ENTRY',
+			'AP_POLL_TYPE',
+			'AP_POLL_TYPE_RANKING',
+			'AP_RANK_POINTS',
+			'AP_RANK_SELECTION_INCOMPLETE',
 		);
 		$acp_keys = array(
 			'AP_DEFAULT_POLL_VISIBILITY',
@@ -106,6 +114,7 @@ class package_validation_test extends TestCase
 			'template/js/poll_length_reposition.js',
 			'template/js/scoring_preview.js',
 			'template/js/scoring_topic.js',
+			'template/js/poll_type_posting.js',
 			'template/lib/jxtools.js',
 			'theme/advancedpolls.css',
 		);
@@ -123,6 +132,9 @@ class package_validation_test extends TestCase
 			$this->assertStringContainsString('{AP_POLL_VISIBILITY_OPTIONS}', $posting);
 			$this->assertStringContainsString('name="wolfsblvt_poll_vote_mode"', $posting);
 			$this->assertStringContainsString('{AP_POLL_VOTE_MODE_OPTIONS}', $posting);
+			$this->assertStringContainsString('name="wolfsblvt_poll_type"', $posting);
+			$this->assertStringContainsString('{AP_POLL_TYPE_OPTIONS}', $posting);
+			$this->assertStringContainsString('{AP_RANK_POINT_INPUTS}', $posting);
 			if ($style !== 'prosilver')
 			{
 				$this->assertStringContainsString('form-control input-sm ap-config-select', $posting);
@@ -133,6 +145,8 @@ class package_validation_test extends TestCase
 			$this->assertStringContainsString('AP_DELETE_VOTE', $option);
 			$this->assertStringContainsString('AP_SCORE_BREAKDOWN', $option);
 			$this->assertStringContainsString('aria-expanded="false"', $option);
+			$this->assertStringContainsString('class="ap-rank-choice"', $option);
+			$this->assertStringContainsString('data-current-value=', $option);
 			if ($style !== 'prosilver')
 			{
 				$this->assertStringContainsString('form-control input-sm ap-score-select', $option);
@@ -157,6 +171,8 @@ class package_validation_test extends TestCase
 			$this->assertStringContainsString("type: 'GET'", $onload);
 			$this->assertStringContainsString('phpbb.alert(', $onload);
 			$this->assertStringContainsString('event.preventDefault()', $onload);
+			$this->assertStringContainsString('installRanking', $onload);
+			$this->assertStringContainsString("'vote_id[' + optionId + ']'", $onload);
 
 			$date = file_get_contents($root . 'template/js/poll_length_posting.js');
 			$this->assertStringContainsString('apPollEnd.getHours()).slice(-2)', $date);

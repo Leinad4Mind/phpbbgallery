@@ -74,7 +74,19 @@ $lang = array_merge($lang, [
 		1 => '%1$d voto da %2$d punto',
 		2 => '%1$d voti da %2$d punti',
 	],
+	'AP_RANK_TOTAL' => [1 => '%d punto', 2 => '%d punti'],
+	'AP_RANK_BREAKDOWN' => 'Dettaglio della classifica',
+	'AP_RANK_DISTRIBUTION_ENTRY' => [1 => '%1$d voto in posizione %2$d', 2 => '%1$d voti in posizione %2$d'],
+	'AP_RANK_SELECT_EXACTLY' => [
+		1 => 'Seleziona esattamente %d opzione in ordine di preferenza.',
+		2 => 'Seleziona esattamente %d opzioni in ordine di preferenza.',
+	],
 // Posting
+	'AP_POLL_TYPE' => 'Tipo di sondaggio',
+	'AP_POLL_TYPE_EXPLAIN' => 'Scegli come gli utenti assegnano voti o punti.',
+	'AP_POLL_TYPE_CHOICE' => 'Scelta',
+	'AP_POLL_TYPE_SCORING' => 'Punteggio numerico',
+	'AP_POLL_TYPE_RANKING' => 'Classifica ordinata',
 	'AP_POLL_VISIBILITY' => 'Visibilità dei risultati',
 	'AP_POLL_VISIBILITY_EXPLAIN' => 'Scegli quando rendere visibili i risultati complessivi del sondaggio.',
 	'AP_VISIBILITY_PUBLIC' => 'Pubblico — mostra sempre i risultati',
@@ -112,5 +124,16 @@ $lang = array_merge($lang, [
 	'AP_POLL_TOTAL_VALUE'					=> 'Voti totali',
 	'AP_POLL_TOTAL_VALUE_EXPLAIN'			=> 'Il numero di voti totali esprimibili da ogni votante per tutte le opzioni.',
 
+	'AP_RANK_POINTS' => 'Punti per posizione',
+	'AP_RANK_POINTS_EXPLAIN' => 'Imposta un valore positivo e decrescente per ogni posizione. Il numero di posizioni dipende dal massimo di opzioni per utente.',
+	'AP_RANK_POSITION' => 'Posizione %d',
+
 	'AP_VOTE_GREATER_THAN_MAXVALUE' => 'Non puoi assegnare un numero di voti superiore al valore massimo consentito.',
+	'AP_POLL_VALUES_INVALID' => 'Il numero massimo di opzioni, il punteggio massimo e il punteggio totale devono essere maggiori di zero.',
+	'AP_RANK_POSITIONS_INVALID' => 'Il numero di posizioni deve essere compreso tra 1 e il numero di opzioni del sondaggio.',
+	'AP_RANK_POINTS_INCOMPLETE' => 'Definisci un valore in punti per ogni posizione.',
+	'AP_RANK_POINTS_INVALID' => 'Ogni valore in punti deve essere compreso tra 1 e 999.',
+	'AP_RANK_POINTS_ORDER' => 'I punti devono diminuire rigorosamente dalla prima all’ultima posizione.',
+	'AP_RANK_INCREMENTAL_UNSUPPORTED' => 'Il voto incrementale non può essere utilizzato con la classifica ordinata.',
+	'AP_RANK_SELECTION_INCOMPLETE' => 'Seleziona esattamente il numero configurato di opzioni in ordine di preferenza.',
 ]);

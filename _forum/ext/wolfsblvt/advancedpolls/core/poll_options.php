@@ -15,6 +15,10 @@ namespace wolfsblvt\advancedpolls\core;
  */
 final class poll_options
 {
+	const TYPE_CHOICE = 0;
+	const TYPE_SCORING = 1;
+	const TYPE_RANKING = 2;
+
 	const VISIBILITY_PUBLIC = 0;
 	const VISIBILITY_DEFAULT = 1;
 	const VISIBILITY_VOTE_COMPLETED = 2;
@@ -23,6 +27,21 @@ final class poll_options
 	const VOTE_MODE_NO_CHANGE = 0;
 	const VOTE_MODE_INCREMENTAL = 1;
 	const VOTE_MODE_CHANGE = 2;
+
+	/**
+	 * Whether a poll type value is supported.
+	 *
+	 * @param int $type Poll type
+	 * @return bool
+	 */
+	public static function is_valid_type($type)
+	{
+		return in_array((int) $type, array(
+			self::TYPE_CHOICE,
+			self::TYPE_SCORING,
+			self::TYPE_RANKING,
+		), true);
+	}
 
 	/**
 	 * Whether a visibility value is supported.

@@ -74,7 +74,19 @@ $lang = array_merge($lang, [
 		1 => '%1$d הצבעה של %2$d נקודה',
 		2 => '%1$d הצבעות של %2$d נקודות',
 	],
+	'AP_RANK_TOTAL' => [1 => 'נקודה %d', 2 => '%d נקודות'],
+	'AP_RANK_BREAKDOWN' => 'פירוט הדירוג',
+	'AP_RANK_DISTRIBUTION_ENTRY' => [1 => 'קול %1$d במיקום %2$d', 2 => '%1$d קולות במיקום %2$d'],
+	'AP_RANK_SELECT_EXACTLY' => [
+		1 => 'יש לבחור בדיוק אפשרות %d לפי סדר העדיפות.',
+		2 => 'יש לבחור בדיוק %d אפשרויות לפי סדר העדיפות.',
+	],
 // Posting
+	'AP_POLL_TYPE' => 'סוג הסקר',
+	'AP_POLL_TYPE_EXPLAIN' => 'בחר כיצד משתמשים מקצים את הקולות או הנקודות שלהם.',
+	'AP_POLL_TYPE_CHOICE' => 'בחירה',
+	'AP_POLL_TYPE_SCORING' => 'ניקוד מספרי',
+	'AP_POLL_TYPE_RANKING' => 'דירוג לפי סדר',
 	'AP_POLL_VISIBILITY' => 'נראות התוצאות',
 	'AP_POLL_VISIBILITY_EXPLAIN' => 'בחר מתי התוצאות הכוללות של הסקר יהיו גלויות.',
 	'AP_VISIBILITY_PUBLIC' => 'ציבורי — להציג תמיד את התוצאות',
@@ -112,5 +124,16 @@ $lang = array_merge($lang, [
 	'AP_POLL_TOTAL_VALUE' => 'סך כל הקולות',
 	'AP_POLL_TOTAL_VALUE_EXPLAIN' => 'זהו מספר הקולות הכולל שמצביע יכול לחלק בין כל האפשרויות.',
 
+	'AP_RANK_POINTS' => 'נקודות לפי מיקום',
+	'AP_RANK_POINTS_EXPLAIN' => 'הגדר ערך חיובי ויורד לכל מיקום בדירוג. מספר המיקומים נקבע לפי מספר האפשרויות המרבי למשתמש.',
+	'AP_RANK_POSITION' => 'מיקום %d',
+
 	'AP_VOTE_GREATER_THAN_MAXVALUE' => 'לא ניתן להקצות מספר קולות גדול מהערך המרבי המותר.',
+	'AP_POLL_VALUES_INVALID' => 'מספר האפשרויות המרבי, הניקוד המרבי והניקוד הכולל חייבים להיות גדולים מאפס.',
+	'AP_RANK_POSITIONS_INVALID' => 'מספר מיקומי הדירוג חייב להיות בין 1 למספר אפשרויות הסקר.',
+	'AP_RANK_POINTS_INCOMPLETE' => 'יש להגדיר ערך נקודות לכל מיקום בדירוג.',
+	'AP_RANK_POINTS_INVALID' => 'כל ערך נקודות בדירוג חייב להיות בין 1 ל־999.',
+	'AP_RANK_POINTS_ORDER' => 'ערכי הנקודות חייבים לרדת מהדירוג הראשון לאחרון.',
+	'AP_RANK_INCREMENTAL_UNSUPPORTED' => 'לא ניתן להשתמש בהצבעה מצטברת עם דירוג לפי סדר.',
+	'AP_RANK_SELECTION_INCOMPLETE' => 'יש לבחור בדיוק את מספר האפשרויות שהוגדר, לפי סדר העדיפות.',
 ]);

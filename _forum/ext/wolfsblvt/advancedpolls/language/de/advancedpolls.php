@@ -73,7 +73,19 @@ $lang = array_merge($lang, [
 		1 => '%1$d Stimme mit %2$d Punkt',
 		2 => '%1$d Stimmen mit %2$d Punkten',
 	],
+	'AP_RANK_TOTAL' => [1 => '%d Punkt', 2 => '%d Punkte'],
+	'AP_RANK_BREAKDOWN' => 'Rangverteilung',
+	'AP_RANK_DISTRIBUTION_ENTRY' => [1 => '%1$d Stimme auf Position %2$d', 2 => '%1$d Stimmen auf Position %2$d'],
+	'AP_RANK_SELECT_EXACTLY' => [
+		1 => 'Wähle genau %d Option in der Reihenfolge deiner Präferenz aus.',
+		2 => 'Wähle genau %d Optionen in der Reihenfolge deiner Präferenz aus.',
+	],
 // Posting
+	'AP_POLL_TYPE' => 'Umfragetyp',
+	'AP_POLL_TYPE_EXPLAIN' => 'Lege fest, wie Benutzer ihre Stimmen oder Punkte vergeben.',
+	'AP_POLL_TYPE_CHOICE' => 'Auswahl',
+	'AP_POLL_TYPE_SCORING' => 'Numerische Bewertung',
+	'AP_POLL_TYPE_RANKING' => 'Geordnete Rangfolge',
 	'AP_POLL_VISIBILITY' => 'Sichtbarkeit der Ergebnisse',
 	'AP_POLL_VISIBILITY_EXPLAIN' => 'Wähle aus, wann die Gesamtergebnisse der Umfrage sichtbar werden.',
 	'AP_VISIBILITY_PUBLIC' => 'Öffentlich — Ergebnisse immer anzeigen',
@@ -111,5 +123,16 @@ $lang = array_merge($lang, [
 	'AP_POLL_TOTAL_VALUE'					=> 'Gesamtanzahl Stimmen',
 	'AP_POLL_TOTAL_VALUE_EXPLAIN'			=> 'Dies ist die gesamte Anzahl von Stimmen, die ein Benutzer auf alle Auswahlmöglichkeiten verteilen kann.',
 
+	'AP_RANK_POINTS' => 'Punkte je Position',
+	'AP_RANK_POINTS_EXPLAIN' => 'Lege für jede Rangposition einen positiven, abnehmenden Punktwert fest. Die Anzahl der Positionen wird durch die maximalen Optionen pro Benutzer bestimmt.',
+	'AP_RANK_POSITION' => 'Position %d',
+
 	'AP_VOTE_GREATER_THAN_MAXVALUE'			=> 'Du kannst nicht mehr Stimmen vergeben, als maximal erlaubt sind.',
+	'AP_POLL_VALUES_INVALID' => 'Maximale Optionen, maximale Punktzahl und Gesamtpunktzahl müssen größer als null sein.',
+	'AP_RANK_POSITIONS_INVALID' => 'Die Anzahl der Rangpositionen muss zwischen 1 und der Anzahl der Umfrageoptionen liegen.',
+	'AP_RANK_POINTS_INCOMPLETE' => 'Lege für jede Rangposition einen Punktwert fest.',
+	'AP_RANK_POINTS_INVALID' => 'Jeder Rangpunktwert muss zwischen 1 und 999 liegen.',
+	'AP_RANK_POINTS_ORDER' => 'Die Rangpunktwerte müssen von der ersten bis zur letzten Position strikt abnehmen.',
+	'AP_RANK_INCREMENTAL_UNSUPPORTED' => 'Inkrementelles Abstimmen kann nicht mit einer geordneten Rangfolge verwendet werden.',
+	'AP_RANK_SELECTION_INCOMPLETE' => 'Wähle genau die konfigurierte Anzahl von Optionen in der Reihenfolge deiner Präferenz aus.',
 ]);

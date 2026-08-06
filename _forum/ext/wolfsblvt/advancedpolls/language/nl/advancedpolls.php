@@ -74,7 +74,19 @@ $lang = array_merge($lang, [
 		1 => '%1$d stem van %2$d punt',
 		2 => '%1$d stemmen van %2$d punten',
 	],
+	'AP_RANK_TOTAL' => [1 => '%d punt', 2 => '%d punten'],
+	'AP_RANK_BREAKDOWN' => 'Rangschikkingsverdeling',
+	'AP_RANK_DISTRIBUTION_ENTRY' => [1 => '%1$d stem op positie %2$d', 2 => '%1$d stemmen op positie %2$d'],
+	'AP_RANK_SELECT_EXACTLY' => [
+		1 => 'Selecteer precies %d optie in volgorde van voorkeur.',
+		2 => 'Selecteer precies %d opties in volgorde van voorkeur.',
+	],
 // Posting
+	'AP_POLL_TYPE' => 'Peilingtype',
+	'AP_POLL_TYPE_EXPLAIN' => 'Kies hoe gebruikers hun stemmen of punten toekennen.',
+	'AP_POLL_TYPE_CHOICE' => 'Keuze',
+	'AP_POLL_TYPE_SCORING' => 'Numerieke score',
+	'AP_POLL_TYPE_RANKING' => 'Geordende rangschikking',
 	'AP_POLL_VISIBILITY' => 'Zichtbaarheid van resultaten',
 	'AP_POLL_VISIBILITY_EXPLAIN' => 'Kies wanneer de gezamenlijke peilingresultaten zichtbaar worden.',
 	'AP_VISIBILITY_PUBLIC' => 'Openbaar — resultaten altijd tonen',
@@ -112,5 +124,16 @@ $lang = array_merge($lang, [
 	'AP_POLL_TOTAL_VALUE'					=> 'Totale stemmen',
 	'AP_POLL_TOTAL_VALUE_EXPLAIN'			=> 'Dit is het totale aantal stemmen dat een gebruiker voor alle opties mag vergeven.',
 
+	'AP_RANK_POINTS' => 'Punten per positie',
+	'AP_RANK_POINTS_EXPLAIN' => 'Stel voor elke positie een positieve, afnemende puntenwaarde in. Het aantal posities wordt bepaald door het maximum aantal opties per gebruiker.',
+	'AP_RANK_POSITION' => 'Positie %d',
+
 	'AP_VOTE_GREATER_THAN_MAXVALUE' 		=> 'U kunt niet meer stemmen geven dan het opgegeven maximum.',
+	'AP_POLL_VALUES_INVALID' => 'Het maximum aantal opties, de maximale score en de totaalscore moeten groter zijn dan nul.',
+	'AP_RANK_POSITIONS_INVALID' => 'Het aantal posities moet tussen 1 en het aantal peilingopties liggen.',
+	'AP_RANK_POINTS_INCOMPLETE' => 'Definieer voor elke positie een puntenwaarde.',
+	'AP_RANK_POINTS_INVALID' => 'Elke puntenwaarde moet tussen 1 en 999 liggen.',
+	'AP_RANK_POINTS_ORDER' => 'De punten moeten strikt afnemen van de eerste tot de laatste positie.',
+	'AP_RANK_INCREMENTAL_UNSUPPORTED' => 'Incrementeel stemmen kan niet met een geordende rangschikking worden gebruikt.',
+	'AP_RANK_SELECTION_INCOMPLETE' => 'Selecteer precies het ingestelde aantal opties in volgorde van voorkeur.',
 ]);

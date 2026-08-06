@@ -128,6 +128,8 @@ class integration_contract_test extends TestCase
 
 		$this->assertSame(array('UINT:1', 1), $columns['wolfsblvt_poll_visibility']);
 		$this->assertSame(array('UINT:1', 0), $columns['wolfsblvt_poll_vote_mode']);
+		$this->assertSame(array('UINT:1', 0), $columns['wolfsblvt_poll_type']);
+		$this->assertSame(array('VCHAR:255', ''), $columns['wolfsblvt_poll_rank_points']);
 		$this->assertSame(array('BOOL', 0), $columns['wolfsblvt_poll_notified']);
 		foreach (array_keys($columns) as $column)
 		{
@@ -150,7 +152,7 @@ class integration_contract_test extends TestCase
 		));
 		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
 		$queries = array();
-		$db->expects($this->exactly(4))->method('sql_query')->willReturnCallback(function ($sql) use (&$queries) {
+		$db->expects($this->exactly(5))->method('sql_query')->willReturnCallback(function ($sql) use (&$queries) {
 			$queries[] = $sql;
 			return true;
 		});
@@ -172,7 +174,8 @@ class integration_contract_test extends TestCase
 		$this->assertStringContainsString('wolfsblvt_poll_visibility = 3', $queries[0]);
 		$this->assertStringContainsString('wolfsblvt_poll_vote_mode = 2', $queries[1]);
 		$this->assertStringContainsString('wolfsblvt_poll_vote_mode = 1', $queries[2]);
-		$this->assertStringContainsString('wolfsblvt_poll_notified = 1', $queries[3]);
+		$this->assertStringContainsString('wolfsblvt_poll_type = 1', $queries[3]);
+		$this->assertStringContainsString('wolfsblvt_poll_notified = 1', $queries[4]);
 		$this->assertSame(60, $config['wolfsblvt.advancedpolls.pollend_gc']);
 		$this->assertGreaterThan(0, (int) $config['wolfsblvt.advancedpolls.pollend_last_gc']);
 	}

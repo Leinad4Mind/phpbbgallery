@@ -13,11 +13,11 @@
 <!-- IF poll_option.AP_SCORE_BREAKDOWN -->
 	<span class="ap-score-breakdown-source hidden" data-score-option-id="{poll_option.POLL_OPTION_ID}">
 		<span class="ap-score-breakdown-widget">
-			<button type="button" class="ap-score-breakdown-trigger" aria-expanded="false" aria-label="{poll_option.AP_SCORE_TOTAL}. {L_AP_SCORE_BREAKDOWN}">
+			<button type="button" class="ap-score-breakdown-trigger" aria-expanded="false" aria-label="{poll_option.AP_SCORE_TOTAL}. {poll_option.AP_BREAKDOWN_LABEL}">
 				<span class="ap-score-total">{poll_option.AP_SCORE_TOTAL}</span>
 			</button>
 			<span class="ap-score-breakdown-popup" role="tooltip">
-				<strong>{L_AP_SCORE_BREAKDOWN}</strong>
+				<strong>{poll_option.AP_BREAKDOWN_LABEL}</strong>
 				<span class="ap-score-breakdown-list">{poll_option.AP_SCORE_BREAKDOWN}</span>
 			</span>
 		</span>
@@ -54,6 +54,8 @@
 		<dd style="width: auto;" class="poll_option_select">
 		<!-- IF AP_IS_SCORING -->
 			<select name="vote_id[{poll_option.POLL_OPTION_ID}]" id="vote_{poll_option.POLL_OPTION_ID}"<!-- IF not S_CAN_VOTE --> disabled="disabled"<!-- ENDIF -->>{poll_option.AP_POLL_OPTION_OPTS}</select>
+		<!-- ELSEIF AP_IS_RANKING -->
+			<label class="ap-ranking-choice"><input type="checkbox" class="ap-rank-choice" id="vote_{poll_option.POLL_OPTION_ID}" value="{poll_option.POLL_OPTION_ID}" data-current-value="{poll_option.AP_POLL_OPTION_VALUE}"<!-- IF poll_option.AP_POLL_OPTION_RANK --> checked="checked"<!-- ENDIF --><!-- IF not S_CAN_VOTE --> disabled="disabled"<!-- ENDIF --> /> <span class="ap-rank-badge" aria-hidden="true"><!-- IF poll_option.AP_POLL_OPTION_RANK -->{poll_option.AP_POLL_OPTION_RANK}<!-- ENDIF --></span></label>
 		<!-- ELSE -->
 			<input type="<!-- IF S_IS_MULTI_CHOICE -->checkbox<!-- ELSE -->radio<!-- ENDIF -->" name="vote_id[]" id="vote_{poll_option.POLL_OPTION_ID}" value="{poll_option.POLL_OPTION_ID}"<!-- IF poll_option.POLL_OPTION_VOTED --> checked="checked"<!-- ENDIF --><!-- IF not S_CAN_VOTE --> disabled="disabled"<!-- ENDIF --> />
 		<!-- ENDIF -->

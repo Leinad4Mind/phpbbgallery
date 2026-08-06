@@ -59,6 +59,7 @@ if (!defined('OPTION_FLAG_SMILIES'))
 }
 
 require_once __DIR__ . '/../core/poll_options.php';
+require_once __DIR__ . '/../core/ranked_vote.php';
 require_once __DIR__ . '/../core/vote_validator.php';
 require_once __DIR__ . '/../core/score_distribution.php';
 require_once __DIR__ . '/../core/vote_user_lifecycle.php';
