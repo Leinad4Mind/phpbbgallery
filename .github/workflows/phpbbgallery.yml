@@ -365,6 +365,15 @@ jobs:
           --bootstrap ./tests/bootstrap.php
           phpBB/ext/phpbbgallery/core/tests/functional/image_deletion_workflow.php
 
+      - name: Run Gallery moderation notification privacy workflow test
+        shell: bash
+        working-directory: .functional/phpBB3
+        run: >-
+          phpBB/vendor/bin/phpunit
+          --configuration $PHPBBGALLERY_FUNCTIONAL_CONFIG
+          --bootstrap ./tests/bootstrap.php
+          phpBB/ext/phpbbgallery/core/tests/functional/notification_privacy_workflow.php
+
       - name: Run complete packaged component lifecycle test
         shell: bash
         working-directory: .functional/phpBB3

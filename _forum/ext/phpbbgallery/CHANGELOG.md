@@ -27,6 +27,9 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
   notices: only album-authorized moderators see who approved, rejected or
   removed an image, while ordinary authors never receive moderator or reporter
   identities.
+- Added a real phpBB functional workflow for approval, rejection, removal and
+  reporting that verifies persisted recipients, private payloads and the UCP
+  presentation for ordinary authors and album moderators.
 - Routed Gallery notifications through album-scoped moderation permissions:
   status teams now share approval outcomes and state changes, comment
   moderators receive new-comment notices, report recipients remain restricted
