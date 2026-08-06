@@ -1,5 +1,6 @@
 # Changelog
 
+- Added private MediaFire storage using the live Core API 1.5, serialized Session Token v2 signatures, private dedicated folders, SHA-256 Instant/resumable uploads and server-consumed validated direct-download links.
 - Added private Box storage with dedicated folders, atomic persistence of single-use rotating refresh tokens, secure signed downloads and simple or chunked uploads.
 - Added private Google Drive storage using the non-sensitive drive.file scope, dedicated app-managed folders, resumable chunk uploads and automatic OAuth token renewal.
 - Added private Dropbox App Folder storage with short-lived OAuth tokens, protected refresh credentials, resumable large-file upload sessions and controlled provider migration.
@@ -112,6 +113,9 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added the independently packaged Remote Storage add-on with private S3 and
   S3-compatible object storage, AWS Signature Version 4 requests, path-style
   endpoint support and release-package, version-check and CI integration.
+- Added MediaFire as a Remote Storage provider with private folder enforcement,
+  state-safe Session Token v2 authentication, resumable SHA-256 uploads,
+  permanent deletion and download-host validation without exposing signed URLs.
 - Added verified Remote Storage ACP configuration in all supported languages,
   including environment-variable overrides, secret-safe forms and a complete
   write, checksum, read and delete connection test before settings are saved.
