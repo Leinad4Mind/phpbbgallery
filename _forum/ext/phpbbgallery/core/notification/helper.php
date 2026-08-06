@@ -89,7 +89,9 @@ class helper
 		switch ($type)
 		{
 			case 'approval':
-				$targets = $this->gallery_auth->acl_users_ids('m_status', $target['album_id']);
+				$targets = $this->notification_targets(
+					$this->gallery_auth->acl_users_ids('m_status', $target['album_id'])
+				);
 				$album_data = $this->album_load->get($target['album_id']);
 				$notification_data = [
 					'user_ids' => $targets,
@@ -102,7 +104,10 @@ class helper
 				$phpbb_notifications->add_notifications('phpbbgallery.core.notification.image_for_approval', $notification_data);
 			break;
 			case 'approved':
-				$targets = $target['targets'];
+				$targets = $this->notification_targets(array_merge(
+					$target['targets'],
+					$this->gallery_auth->acl_users_ids('m_status', $target['album_id'])
+				));
 				$album_data = $this->album_load->get($target['album_id']);
 				$notification_data = [
 					'user_ids' => $targets,
@@ -114,7 +119,10 @@ class helper
 				$phpbb_notifications->add_notifications('phpbbgallery.core.notification.image_approved', $notification_data);
 			break;
 			case 'not_approved':
-				$targets = $target['targets'];
+				$targets = $this->notification_targets(array_merge(
+					$target['targets'],
+					$this->gallery_auth->acl_users_ids('m_status', $target['album_id'])
+				));
 				$album_data = $this->album_load->get($target['album_id']);
 				$notification_data = [
 					'user_ids' => $targets,
@@ -126,7 +134,7 @@ class helper
 				$phpbb_notifications->add_notifications('phpbbgallery.core.notification.image_not_approved', $notification_data);
 			break;
 			case 'new_image':
-				$targets = $target['targets'];
+				$targets = $this->notification_targets($target['targets']);
 				$album_data = $this->album_load->get($target['album_id']);
 				$notification_data = [
 					'user_ids' => $targets,
@@ -138,8 +146,12 @@ class helper
 				$phpbb_notifications->add_notifications('phpbbgallery.core.notification.new_image', $notification_data);
 			break;
 			case 'new_comment':
+				$targets = array_merge(
+					$this->get_image_watchers($target['image_id']),
+					$this->gallery_auth->acl_users_ids('m_comments', $target['album_id'])
+				);
 				$notification_data = [
-					'user_ids'	=> array_diff($this->get_image_watchers($target['image_id']), [$target['poster_id']]),
+					'user_ids'	=> $this->notification_targets($targets, [$target['poster_id']]),
 					'image_id'	=> $target['image_id'],
 					'comment_id'	=> $target['comment_id'],
 					'poster'	=> $target['poster_id'],
@@ -158,7 +170,10 @@ class helper
 					$target['reported_album_id'] = $image_data['image_album_id'];
 				}
 				$notification_data = [
-					'user_ids'	=> array_diff($this->gallery_auth->acl_users_ids('m_report', $target['reported_album_id']), [$target['reporter_id']]),
+					'user_ids'	=> $this->notification_targets(
+						$this->gallery_auth->acl_users_ids('m_report', $target['reported_album_id']),
+						[$target['reporter_id']]
+					),
 					'item_id'	=> $target['report_id'],
 					'reporter'	=> $target['reporter_id'],
 					'reported_image_id' => $target['reported_image_id'],
@@ -166,7 +181,87 @@ class helper
 				];
 				$phpbb_notifications->add_notifications('phpbbgallery.core.notification.new_report', $notification_data);
 			break;
+			case 'moderated':
+				$album_data = $this->album_load->get($target['album_id']);
+				$notification_data = [
+					'user_ids' => $this->notification_targets($target['targets']),
+					'album_id' => $target['album_id'],
+					'album_name' => $album_data['album_name'],
+					'last_image_id' => $target['last_image'],
+					'actor_id' => (int) ($this->user->data['user_id'] ?? 0),
+					'action' => $target['action'],
+					'album_url' => $this->url->get_uri($this->helper->route('phpbbgallery_core_album', ['album_id' => $target['album_id']])),
+				];
+				$phpbb_notifications->add_notifications('phpbbgallery.core.notification.image_moderated', $notification_data);
+			break;
 		}
+	}
+
+	/**
+	 * Notify the relevant Gallery team, and optionally the image authors, about
+	 * a moderation state change. Rows are grouped per album to keep batches
+	 * useful without flooding the notification centre.
+	 *
+	 * @param string $action          Moderation action language suffix
+	 * @param array  $image_rows      Affected image rows
+	 * @param string $permission      Gallery moderator permission
+	 * @param bool   $include_authors Whether image authors also receive it
+	 */
+	public function notify_moderation(string $action, array $image_rows, string $permission, bool $include_authors = false): void
+	{
+		if (!in_array($action, ['deleted', 'locked', 'unapproved', 'unlocked'], true))
+		{
+			throw new \InvalidArgumentException('Unsupported Gallery moderation notification action.');
+		}
+
+		$grouped = [];
+		foreach ($image_rows as $row)
+		{
+			$album_id = (int) ($row['image_album_id'] ?? 0);
+			$image_id = (int) ($row['image_id'] ?? 0);
+			if ($album_id <= 0 || $image_id <= 0)
+			{
+				continue;
+			}
+
+			$grouped[$album_id]['last_image'] = $image_id;
+			if ($include_authors && (int) ($row['image_user_id'] ?? 0) > 0)
+			{
+				$grouped[$album_id]['authors'][] = (int) $row['image_user_id'];
+			}
+		}
+
+		foreach ($grouped as $album_id => $data)
+		{
+			$targets = $this->gallery_auth->acl_users_ids($permission, $album_id);
+			if ($include_authors)
+			{
+				$targets = array_merge($targets, $data['authors'] ?? []);
+			}
+
+			$this->notify('moderated', [
+				'targets' => $targets,
+				'album_id' => $album_id,
+				'last_image' => $data['last_image'],
+				'action' => $action,
+			]);
+		}
+	}
+
+	/**
+	 * Normalize recipient IDs, remove duplicates and prevent self-notifications.
+	 *
+	 * @param array $targets Candidate recipients
+	 * @param array $exclude Additional recipients to exclude
+	 * @return array
+	 */
+	private function notification_targets(array $targets, array $exclude = []): array
+	{
+		$exclude[] = (int) ($this->user->data['user_id'] ?? 0);
+		$exclude[] = defined('ANONYMOUS') ? (int) ANONYMOUS : 1;
+		$targets = array_values(array_unique(array_filter(array_map('intval', $targets))));
+
+		return array_values(array_diff($targets, array_unique(array_map('intval', $exclude))));
 	}
 	public function delete_notifications(string $type, mixed $target): void
 	{
@@ -332,11 +427,17 @@ class helper
 	 * New image in album
 	 * @param array $data
 	 */
-	public function new_image(array $data): void
+	public function new_image(array $data, bool $notify_moderators = true): void
 	{
 		$get_watchers = $this->get_album_watchers($data['album_id']);
-		// let's exclude all users that are uploading something and are approved
-		$targets = array_diff($get_watchers, $data['targets']);
+		$moderators = $this->gallery_auth->acl_users_ids('m_status', $data['album_id']);
+		// Authors never need a notification about their own upload. When approval
+		// generated a status notification, moderators are excluded here as well.
+		$targets = array_diff($get_watchers, $data['targets'], $notify_moderators ? [] : $moderators);
+		if ($notify_moderators)
+		{
+			$targets = array_merge($targets, $moderators);
+		}
 
 		$data['targets'] = $targets;
 		$this->notify('new_image', $data);

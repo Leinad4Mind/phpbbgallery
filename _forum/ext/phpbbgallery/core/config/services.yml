@@ -284,6 +284,8 @@ services:
             - '@phpbbgallery.core.rating'
             - '%phpbbgallery.tables.gallery_images%'
             - '%phpbbgallery.tables.gallery_albums%'
+        calls:
+            - [set_notification_helper, ['@phpbbgallery.core.notification.helper']]
     phpbbgallery.core.search:
         class: phpbbgallery\core\search
         arguments:

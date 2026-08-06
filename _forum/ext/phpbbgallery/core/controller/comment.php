@@ -351,6 +351,7 @@ class comment
 				}
 				$data = [
 					'image_id'	=> (int) $image_id,
+					'album_id'	=> (int) $album_data['album_id'],
 					'comment_id'	=> $comment_post_id,
 					'poster_id'		=> $this->user->data['user_id'],
 				];

@@ -56,6 +56,7 @@ $lang = array_merge($lang, [
 	'LOG_GALLERY_DELETED'         => '<strong>Deleted image</strong><br />» %s',
 	'LOG_GALLERY_EDITED'          => '<strong>Edited image</strong><br />» %s',
 	'LOG_GALLERY_LOCKED'          => '<strong>Locked image</strong><br />» %s',
+	'LOG_GALLERY_UNLOCKED'        => '<strong>Unlocked image</strong><br />» %s',
 	'LOG_GALLERY_MOVED'           => '<strong>Moved image</strong><br />» from %1$s to %2$s',
 	'LOG_GALLERY_REPORT_CLOSED'   => '<strong>Closed report</strong><br />» %s',
 	'LOG_GALLERY_REPORT_DELETED'  => '<strong>Deleted report</strong><br />» %s',

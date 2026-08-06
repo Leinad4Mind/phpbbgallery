@@ -483,7 +483,9 @@ class image
 			$resync_album_ids[] = (int) $row['image_album_id'];
 			if ($row['image_status'] == (int) \phpbbgallery\core\block::STATUS_UNAPPROVED)
 			{
-				$targets[$row['image_album_id']][$row['image_id']] = $row['image_user_id'];
+				$album_id = (int) $row['image_album_id'];
+				$targets[$album_id]['authors'][] = (int) $row['image_user_id'];
+				$targets[$album_id]['last_image'] = (int) $row['image_id'];
 			}
 			$deleted_views += (int) $row['image_view_count'];
 		}
@@ -493,11 +495,10 @@ class image
 		{
 			foreach ($targets as $album => $target)
 			{
-
 				$data = [
-					'targets'	=> [(int) current($target)],
+					'targets'	=> array_values(array_unique($target['authors'])),
 					'album_id'	=> $album,
-					'last_image'	=> key($target),
+					'last_image'	=> $target['last_image'],
 				];
 				$this->notification_helper->notify('not_approved', $data);
 			}
@@ -920,23 +921,59 @@ class image
 	public function approve_images(array $image_id_ary, int $album_id): void
 	{
 		$sql = 'SELECT image_id, image_name, image_user_id, image_album_id,
-				image_filename
+				image_filename, image_status AS previous_status
 			FROM ' . $this->table_images . ' 
-			WHERE image_status = 0
+			WHERE ' . $this->db->sql_in_set('image_status', [
+				\phpbbgallery\core\block::STATUS_UNAPPROVED,
+				\phpbbgallery\core\block::STATUS_LOCKED,
+			]) . '
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary);
 		$result = $this->db->sql_query($sql);
 		$targets = [];
 		$approved_images = [];
+		$unlocked_images = [];
+		$changed_ids = [];
+		$approved_ids = [];
+		$unlocked_ids = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$this->gallery_log->add_log('moderator', 'approve', $album_id, $row['image_id'], ['LOG_GALLERY_APPROVED', $row['image_name']]);
-			$targets[] = $row['image_user_id'];
+			$changed_ids[] = (int) $row['image_id'];
 			$row['image_status'] = \phpbbgallery\core\block::STATUS_APPROVED;
-			$approved_images[] = $row;
-			$last_img = $row['image_id'];
+			if ((int) $row['previous_status'] === (int) \phpbbgallery\core\block::STATUS_LOCKED)
+			{
+				$this->gallery_log->add_log('moderator', 'unlock', $album_id, $row['image_id'], ['LOG_GALLERY_UNLOCKED', $row['image_name']]);
+				$unlocked_images[] = $row;
+				$unlocked_ids[] = (int) $row['image_id'];
+			}
+			else
+			{
+				$this->gallery_log->add_log('moderator', 'approve', $album_id, $row['image_id'], ['LOG_GALLERY_APPROVED', $row['image_name']]);
+				$targets[] = $row['image_user_id'];
+				$approved_images[] = $row;
+				$approved_ids[] = (int) $row['image_id'];
+				$last_img = $row['image_id'];
+			}
 		}
 		$this->db->sql_freeresult($result);
-		if (!empty($targets))
+		if (!$changed_ids)
+		{
+			return;
+		}
+
+		if ($approved_ids)
+		{
+			$this->handle_counter($approved_ids, true, true);
+		}
+		if ($unlocked_ids)
+		{
+			$this->handle_counter($unlocked_ids, true);
+		}
+		$sql = 'UPDATE ' . $this->table_images . '
+			SET image_status = ' . (int) \phpbbgallery\core\block::STATUS_APPROVED . '
+			WHERE ' . $this->db->sql_in_set('image_id', $changed_ids);
+		$this->db->sql_query($sql);
+
+		if ($targets)
 		{
 			$data = [
 				'targets'	=> $targets,
@@ -944,17 +981,11 @@ class image
 				'last_image'	=> $last_img,
 			];
 			$this->notification_helper->notify('approved', $data);
-			$this->notification_helper->new_image($data);
+			$this->notification_helper->new_image($data, false);
 		}
-		$this->handle_counter($image_id_ary, true, true);
-
-		$sql = 'UPDATE ' . $this->table_images . '
-			SET image_status = ' . (int) \phpbbgallery\core\block::STATUS_APPROVED . '
-			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
-				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED . '
-				AND ' . $this->db->sql_in_set('image_id', $image_id_ary);
-		$this->db->sql_query($sql);
 		$this->notify_state_change('approve', $approved_images, [$album_id]);
+		$this->notify_state_change('unlock', $unlocked_images, [$album_id]);
+		$this->notification_helper->notify_moderation('unlocked', $unlocked_images, 'm_status');
 		if ($approved_images)
 		{
 			$this->notify_approved_images($approved_images, $album_id);
@@ -1025,7 +1056,7 @@ class image
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary);
 		$this->db->sql_query($sql);
 
-		$sql = 'SELECT image_id, image_name, image_album_id
+		$sql = 'SELECT image_id, image_name, image_user_id, image_album_id
 			FROM ' . $this->table_images .' 
 			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
 				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED . '
@@ -1039,6 +1070,7 @@ class image
 		}
 		$this->db->sql_freeresult($result);
 		$this->notify_state_change('unapprove', $changed_images, [$album_id]);
+		$this->notification_helper->notify_moderation('unapproved', $changed_images, 'm_status');
 	}
 
 	/**
@@ -1137,7 +1169,7 @@ class image
 				AND ' . $this->db->sql_in_set('image_id', $image_id_ary);
 		$this->db->sql_query($sql);
 
-		$sql = 'SELECT image_id, image_name, image_album_id
+		$sql = 'SELECT image_id, image_name, image_user_id, image_album_id
 			FROM ' . $this->table_images . ' 
 			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
 				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED . '
@@ -1151,6 +1183,7 @@ class image
 		}
 		$this->db->sql_freeresult($result);
 		$this->notify_state_change('lock', $changed_images, [$album_id]);
+		$this->notification_helper->notify_moderation('locked', $changed_images, 'm_status');
 	}
 
 	/**
