@@ -56,6 +56,12 @@ $lang = array_merge($lang, [
 	'AP_VOTE_MODE_NO_CHANGE'				=> 'No change',
 	'AP_VOTE_MODE_INCREMENTAL'				=> 'Incremental voting',
 	'AP_VOTE_MODE_CHANGE'					=> 'Allow changes',
+	'AP_DEFAULT_SCORE_RESULT'				=> 'Default scoring result',
+	'AP_DEFAULT_SCORE_RESULT_EXPLAIN'		=> 'Select whether new numeric scoring polls initially display accumulated points or the arithmetic average for each option.',
+	'AP_DEFAULT_SHOW_PERCENT'				=> 'Show percentages by default',
+	'AP_DEFAULT_SHOW_PERCENT_EXPLAIN'		=> 'The initial percentage visibility selected for new numeric scoring polls.',
+	'AP_SCORE_RESULT_TOTAL'					=> 'Accumulated points',
+	'AP_SCORE_RESULT_AVERAGE'				=> 'Average rating',
 
 	'AP_ACT_VOTES_HIDE'				=> 'Activate hide votes',
 	'AP_ACT_VOTES_HIDE_EXPLAIN'		=> 'Activates the option to choose that poll votes are hidden until the poll ends.',
@@ -83,6 +89,8 @@ $lang = array_merge($lang, [
 	'AP_ACT_POLL_NOTIFICATIONS_EXPLAIN'		=> 'Activates notifications when hidden poll results become visible and when new options are added to a poll in which a user has voted.',
 	'AP_ACT_POLL_COLLAPSIBLE'				=> 'Enable collapsible polls',
 	'AP_ACT_POLL_COLLAPSIBLE_EXPLAIN'		=> 'Shows the collapsible option when creating or editing a poll. On installation, this setting is enabled automatically if Collapsible Forum Categories is installed; administrators can always override it.',
+	'AP_SHOW_POLL_LIST_NAVBAR'				=> 'Show polls link in the navigation bar',
+	'AP_SHOW_POLL_LIST_NAVBAR_EXPLAIN'		=> 'Adds a link to the accessible polls list in the forum navigation bar.',
 
 	'AP_DEFAULT_VOTES_CHANGE'		=> 'Selected default for change vote',
 	'AP_DEFAULT_VOTES_HIDE'			=> 'Selected default for hide votes',

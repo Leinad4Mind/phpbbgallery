@@ -193,7 +193,16 @@ class multi_question
 			$data['results'] = $this->load_results($questions);
 			if ($rules['type'] === poll_options::TYPE_SCORING || $rules['type'] === poll_options::TYPE_RANKING)
 			{
-				$data['breakdowns'] = $this->load_breakdowns((int) $topic_id, $questions, $data['results'], $rules['type'], $rules['rank_points']);
+				$data['breakdowns'] = $this->load_breakdowns(
+					(int) $topic_id,
+					$questions,
+					$data['results'],
+					$rules['type'],
+					$rules['rank_points'],
+					isset($topic['wolfsblvt_poll_score_result']) ? (int) $topic['wolfsblvt_poll_score_result'] : poll_options::SCORE_RESULT_TOTAL,
+					(int) $topic['wolfsblvt_poll_max_value'],
+					!isset($topic['wolfsblvt_poll_show_percent']) || !empty($topic['wolfsblvt_poll_show_percent'])
+				);
 			}
 			if (!empty($this->config['wolfsblvt.advancedpolls.activate_poll_voters_show'])
 				&& !empty($topic['wolfsblvt_poll_voters_show'])
@@ -214,7 +223,8 @@ class multi_question
 			wolfsblvt_poll_total_value, wolfsblvt_poll_rank_points,
 			wolfsblvt_poll_vote_mode, wolfsblvt_poll_visibility,
 			wolfsblvt_poll_required, wolfsblvt_poll_voters_limit,
-			wolfsblvt_poll_voters_show
+			wolfsblvt_poll_voters_show, wolfsblvt_poll_score_result,
+			wolfsblvt_poll_show_percent
 			FROM ' . TOPICS_TABLE . '
 			WHERE topic_id = ' . (int) $topic_id;
 		$result = $this->db->sql_query($sql);
@@ -503,7 +513,7 @@ class multi_question
 		return $results;
 	}
 
-	protected function load_breakdowns($topic_id, array $questions, array $results, $type, array $rank_points)
+	protected function load_breakdowns($topic_id, array $questions, array $results, $type, array $rank_points, $score_result, $maximum_score, $show_percent)
 	{
 		$distribution = array();
 		if ($topic_id)
@@ -544,10 +554,27 @@ class multi_question
 						? $this->user->lang('AP_RANK_DISTRIBUTION_ENTRY', (int) $voters, $position + 1)
 						: $this->user->lang('AP_SCORE_DISTRIBUTION_ENTRY', (int) $voters, (int) $score);
 				}
+				$rating_count = array_sum($scores);
+				$average = poll_options::score_average((int) $total, $rating_count);
+				$formatted_average = rtrim(rtrim(number_format($average, 2, '.', ''), '0'), '.');
+				$average_mode = $type === poll_options::TYPE_SCORING
+					&& (int) $score_result === poll_options::SCORE_RESULT_AVERAGE;
+				$bar_percent = $average_mode && $maximum_score > 0
+					? min(100, max(0, (int) round(100 * $average / $maximum_score)))
+					: 0;
 				$formatted[(string) $question_id][(int) $option_id] = array(
-					'total' => $this->user->lang($type === poll_options::TYPE_RANKING ? 'AP_RANK_TOTAL' : 'AP_SCORE_TOTAL', (int) $total),
+					'total' => $average_mode
+						? $this->user->lang('AP_SCORE_AVERAGE', $formatted_average, (int) $maximum_score)
+						: $this->user->lang($type === poll_options::TYPE_RANKING ? 'AP_RANK_TOTAL' : 'AP_SCORE_TOTAL', (int) $total),
 					'label' => $this->user->lang[$type === poll_options::TYPE_RANKING ? 'AP_RANK_BREAKDOWN' : 'AP_SCORE_BREAKDOWN'],
 					'detail' => implode('<br />', $entries),
+					'average' => $formatted_average,
+					'rating_count' => $rating_count,
+					'weighted_total' => (int) $total,
+					'maximum_score' => (int) $maximum_score,
+					'bar_percent' => $bar_percent,
+					'average_mode' => $average_mode,
+					'show_percent' => !$average_mode || $show_percent,
 				);
 			}
 		}

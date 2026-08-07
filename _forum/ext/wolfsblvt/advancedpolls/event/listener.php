@@ -91,6 +91,7 @@ class listener implements EventSubscriberInterface
 		return array(
 			'core.permissions'								=> 'adv_polls_permissions',				// permissions
 			'core.user_setup'								=> 'load_language_on_setup',			// language for notifications
+			'core.page_header'								=> 'add_poll_list_link',				// global poll directory
 			'core.delete_user_before'						=> 'delete_user_before',				// retain or remove poll votes
 			'core.delete_topics_before_query'			=> 'delete_topics_before',				// remove multi-page data
 			'core.posting_modify_submission_errors'			=> 'check_config_for_polls',			// posting check before saving
@@ -101,6 +102,19 @@ class listener implements EventSubscriberInterface
 			'core.viewtopic_modify_poll_ajax_data'		=> 'do_poll_ajax_modifications',			// redact hidden AJAX results
 			'core.viewtopic_modify_poll_template_data'		=> 'do_poll_template_modifications',	// viewtopic to template
 		);
+	}
+
+	/**
+	 * Add the optional accessible-polls link to the navigation.
+	 *
+	 * @return void
+	 */
+	public function add_poll_list_link()
+	{
+		$this->template->assign_vars(array(
+			'S_AP_POLL_LIST_NAVBAR' => !empty($this->config['wolfsblvt.advancedpolls.show_poll_list_navbar']),
+			'U_AP_POLL_LIST' => $this->controller_helper->route('wolfsblvt_advancedpolls_poll_list'),
+		));
 	}
 
 	/**
@@ -466,12 +480,25 @@ class listener implements EventSubscriberInterface
 		$voters = $show_voters ? $this->multi_question_manager->load_voters(array_column($questions, 'id')) : array();
 		$type = isset($topic_data['wolfsblvt_poll_type']) ? (int) $topic_data['wolfsblvt_poll_type'] : \wolfsblvt\advancedpolls\core\poll_options::TYPE_CHOICE;
 		$rank_points = \wolfsblvt\advancedpolls\core\ranked_vote::normalise_points(isset($topic_data['wolfsblvt_poll_rank_points']) ? $topic_data['wolfsblvt_poll_rank_points'] : '');
+		$score_result = isset($topic_data['wolfsblvt_poll_score_result']) ? (int) $topic_data['wolfsblvt_poll_score_result'] : \wolfsblvt\advancedpolls\core\poll_options::SCORE_RESULT_TOTAL;
+		$show_percent = !isset($topic_data['wolfsblvt_poll_show_percent']) || !empty($topic_data['wolfsblvt_poll_show_percent']);
 		if (!empty($topic_data['wolfsblvt_poll_show_ordered']) && !empty($poll_template_data['S_DISPLAY_RESULTS']))
 		{
 			foreach ($questions as &$ordered_question)
 			{
-				usort($ordered_question['options'], function (array $left, array $right) {
-					return ((int) $right['total'] - (int) $left['total']) ?: ((int) $left['order'] - (int) $right['order']);
+				$question_id = (int) $ordered_question['id'];
+				usort($ordered_question['options'], function (array $left, array $right) use ($type, $score_result, $distributions, $question_id) {
+					$left_value = (int) $left['total'];
+					$right_value = (int) $right['total'];
+					if ($type === \wolfsblvt\advancedpolls\core\poll_options::TYPE_SCORING
+						&& $score_result === \wolfsblvt\advancedpolls\core\poll_options::SCORE_RESULT_AVERAGE)
+					{
+						$left_scores = isset($distributions[$question_id][$left['id']]) ? $distributions[$question_id][$left['id']] : array();
+						$right_scores = isset($distributions[$question_id][$right['id']]) ? $distributions[$question_id][$right['id']] : array();
+						$left_value = \wolfsblvt\advancedpolls\core\poll_options::score_average($left_value, array_sum($left_scores));
+						$right_value = \wolfsblvt\advancedpolls\core\poll_options::score_average($right_value, array_sum($right_scores));
+					}
+					return ($right_value <=> $left_value) ?: ((int) $left['order'] - (int) $right['order']);
 				});
 			}
 			unset($ordered_question);
@@ -481,6 +508,9 @@ class listener implements EventSubscriberInterface
 		$poll_template_data['AP_MULTI_TYPE'] = $type;
 		$poll_template_data['AP_MULTI_MAX_OPTIONS'] = (int) $topic_data['poll_max_options'];
 		$poll_template_data['AP_MULTI_TOTAL_VALUE'] = (int) $topic_data['wolfsblvt_poll_total_value'];
+		$poll_template_data['AP_MULTI_MAX_VALUE'] = (int) $topic_data['wolfsblvt_poll_max_value'];
+		$poll_template_data['AP_MULTI_SCORE_RESULT'] = $score_result;
+		$poll_template_data['AP_MULTI_SHOW_PERCENT'] = $show_percent;
 		$poll_template_data['AP_MULTI_RANK_POINTS'] = implode(',', $rank_points);
 		$poll_template_data['AP_PRIMARY_REQUIRED'] = !empty($topic_data['wolfsblvt_poll_required']);
 		$poll_template_data['AP_MULTI_NO_VOTE'] = !empty($this->config['wolfsblvt.advancedpolls.activate_no_vote']);
@@ -536,16 +566,28 @@ class listener implements EventSubscriberInterface
 						? $this->user->lang('AP_RANK_DISTRIBUTION_ENTRY', (int) $voters, $position + 1)
 						: $this->user->lang('AP_SCORE_DISTRIBUTION_ENTRY', (int) $voters, (int) $score);
 				}
+				$rating_count = array_sum($option_distribution);
+				$average = \wolfsblvt\advancedpolls\core\poll_options::score_average((int) $option['total'], $rating_count);
+				$formatted_average = rtrim(rtrim(number_format($average, 2, '.', ''), '0'), '.');
+				$average_mode = $type === \wolfsblvt\advancedpolls\core\poll_options::TYPE_SCORING
+					&& $score_result === \wolfsblvt\advancedpolls\core\poll_options::SCORE_RESULT_AVERAGE;
+				$bar_percent = $average_mode && (int) $topic_data['wolfsblvt_poll_max_value'] > 0
+					? min(100, max(0, (int) round(100 * $average / (int) $topic_data['wolfsblvt_poll_max_value'])))
+					: ($total ? round(100 * (int) $option['total'] / $total) : 0);
+				$display_total = $average_mode ? $formatted_average : (int) $option['total'];
 				$this->template->assign_block_vars('ap_question.option', array(
 					'ID' => (int) $option['id'],
 					'TEXT' => htmlspecialchars(censor_text($option['text']), ENT_QUOTES, 'UTF-8'),
-					'TOTAL' => (int) $option['total'],
-					'PERCENT' => $total ? round(100 * (int) $option['total'] / $total) : 0,
+					'TOTAL' => $display_total,
+					'PERCENT' => $bar_percent,
+					'SHOW_PERCENT' => !$average_mode || $show_percent,
 					'VALUE' => $value,
 					'SELECTED' => $value > 0,
 					'RANK' => $rank === false ? 0 : $rank + 1,
 					'SCORE_OPTIONS' => $score_options,
-					'SCORE_TOTAL' => $this->user->lang($type === \wolfsblvt\advancedpolls\core\poll_options::TYPE_RANKING ? 'AP_RANK_TOTAL' : 'AP_SCORE_TOTAL', (int) $option['total']),
+					'SCORE_TOTAL' => $average_mode
+						? $this->user->lang('AP_SCORE_AVERAGE', $formatted_average, (int) $topic_data['wolfsblvt_poll_max_value'])
+						: $this->user->lang($type === \wolfsblvt\advancedpolls\core\poll_options::TYPE_RANKING ? 'AP_RANK_TOTAL' : 'AP_SCORE_TOTAL', (int) $option['total']),
 					'BREAKDOWN_LABEL' => $this->user->lang[$type === \wolfsblvt\advancedpolls\core\poll_options::TYPE_RANKING ? 'AP_RANK_BREAKDOWN' : 'AP_SCORE_BREAKDOWN'],
 					'BREAKDOWN' => implode('<br />', $breakdown),
 					'VOTERS' => implode($this->user->lang['COMMA_SEPARATOR'], $voter_names),

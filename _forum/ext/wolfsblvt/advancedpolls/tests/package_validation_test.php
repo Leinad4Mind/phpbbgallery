@@ -20,7 +20,7 @@ class package_validation_test extends TestCase
 
 		$this->assertSame(JSON_ERROR_NONE, json_last_error());
 		$this->assertSame('phpbb-extension', $composer['type']);
-		$this->assertSame('1.4.0', $composer['version']);
+		$this->assertSame('1.6.0', $composer['version']);
 		$this->assertSame('>=7.1.3', $composer['require']['php']);
 		$this->assertSame('>=3.3.0,<4.0.0@dev', $composer['extra']['soft-require']['phpbb/phpbb']);
 	}
@@ -34,11 +34,13 @@ class package_validation_test extends TestCase
 
 		$this->assertArrayHasKey('wolfsblvt.advancedpolls.controller.infopoll', $parsed_services['services']);
 		$this->assertArrayHasKey('wolfsblvt.advancedpolls.controller.multi_question', $parsed_services['services']);
+		$this->assertArrayHasKey('wolfsblvt.advancedpolls.controller.poll_list', $parsed_services['services']);
 		$this->assertArrayHasKey('wolfsblvt.advancedpolls.multi_question_manager', $parsed_services['services']);
 		$this->assertArrayHasKey('wolfsblvt.advancedpolls.poll_option_appender', $parsed_services['services']);
 		$this->assertArrayHasKey('wolfsblvt.advancedpolls.notification.type.optionsadded', $parsed_services['services']);
 		$this->assertArrayHasKey('wolfsblvt_advancedpolls_infopoll', $parsed_routing);
 		$this->assertArrayHasKey('wolfsblvt_advancedpolls_multi_question_vote', $parsed_routing);
+		$this->assertArrayHasKey('wolfsblvt_advancedpolls_poll_list', $parsed_routing);
 		$this->assertSame(array('POST'), $parsed_routing['wolfsblvt_advancedpolls_multi_question_vote']['methods']);
 		$this->assertStringContainsString('wolfsblvt.advancedpolls.listener:', $services);
 		$this->assertStringContainsString('wolfsblvt.advancedpolls.advancedpolls:', $services);
@@ -52,6 +54,7 @@ class package_validation_test extends TestCase
 		$this->assertStringContainsString('{name: cron.task}', $services);
 		$this->assertStringContainsString('wolfsblvt_advancedpolls_infopoll:', $routing);
 		$this->assertStringContainsString('/advancedpolls/infopoll/{topic_id}', $routing);
+		$this->assertStringContainsString('/advancedpolls/polls', $routing);
 		$this->assertStringContainsString('methods: [GET]', $routing);
 	}
 
@@ -69,8 +72,14 @@ class package_validation_test extends TestCase
 			'AP_VOTE_MODE_INCREMENTAL',
 			'AP_VOTE_MODE_CHANGE',
 			'AP_SCORE_TOTAL',
+			'AP_SCORE_POINTS_TOTAL',
+			'AP_SCORE_AVERAGE',
+			'AP_SCORE_RATINGS',
+			'AP_SCORE_OVERALL_AVERAGE',
 			'AP_SCORE_BREAKDOWN',
 			'AP_SCORE_DISTRIBUTION_ENTRY',
+			'AP_POLL_LIST',
+			'AP_SCORE_RESULT',
 			'AP_RANK_SELECT_EXACTLY',
 			'AP_RANK_TOTAL',
 			'AP_RANK_BREAKDOWN',
@@ -99,6 +108,9 @@ class package_validation_test extends TestCase
 			'AP_ACT_POLL_NOTIFICATIONS',
 			'AP_ACT_POLL_COLLAPSIBLE',
 			'AP_ENABLE_NOTICE',
+			'AP_DEFAULT_SCORE_RESULT',
+			'AP_DEFAULT_SHOW_PERCENT',
+			'AP_SHOW_POLL_LIST_NAVBAR',
 		);
 
 		foreach ($catalogues as $catalogue)
@@ -120,6 +132,16 @@ class package_validation_test extends TestCase
 			$this->assertArrayHasKey('NOTIFICATION_TYPE_AP_POLL_OPTIONS_ADDED', $common);
 			$this->assertArrayHasKey('LOG_AP_POLL_OPTIONS_ADDED', $common);
 		}
+	}
+
+	public function test_phpbb_poll_title_limit_is_100_characters()
+	{
+		$parser = file_get_contents(dirname($this->extension_root(), 3) . '/includes/message_parser.php');
+
+		$this->assertMatchesRegularExpression(
+			"/utf8_strlen\\(preg_replace\\([^\\r\\n]+\\)\\) > 100\\)/",
+			$parser
+		);
 	}
 
 	public function test_all_three_themes_expose_each_interactive_feature_safely()
@@ -201,6 +223,9 @@ class package_validation_test extends TestCase
 			$this->assertSame(2, substr_count($onload, 'form_token:'));
 			$this->assertStringContainsString('installScoreBreakdowns', $onload);
 			$this->assertStringContainsString('res.score_breakdowns', $onload);
+			$this->assertStringContainsString("$('.topic_poll [data-poll-option-id=\"' + optionId + '\"]').first()", $onload);
+			$this->assertStringContainsString("\$option.find('.progress-bar').first().empty()", $onload);
+			$this->assertStringNotContainsString("\$source.closest('dl[data-poll-option-id]')", $onload);
 			$this->assertStringContainsString("$(document).on('click', '.ap-infopoll-button'", $onload);
 			$this->assertStringContainsString("type: 'GET'", $onload);
 			$this->assertStringContainsString('phpbb.alert(', $onload);
@@ -246,6 +271,7 @@ class package_validation_test extends TestCase
 		$multi_controller = file_get_contents($this->extension_root() . '/controller/multi_question.php');
 		$appender = file_get_contents($this->extension_root() . '/core/poll_option_appender.php');
 		$options_notification = file_get_contents($this->extension_root() . '/notification/optionsadded.php');
+		$poll_list = file_get_contents($this->extension_root() . '/controller/poll_list.php');
 
 		$this->assertStringContainsString("is_set_post('delete_vote')", $core);
 		$this->assertStringContainsString("check_form_key('posting')", $core);
@@ -272,6 +298,11 @@ class package_validation_test extends TestCase
 		$this->assertStringContainsString('poll_options::VOTE_MODE_CHANGE', $appender);
 		$this->assertStringContainsString("'poll_option_total' => 0", $appender);
 		$this->assertStringContainsString("'option_total' => 0", $appender);
+		$this->assertStringContainsString("acl_getf('f_read', true)", $poll_list);
+		$this->assertStringContainsString('t.topic_visibility = ' . "' . ITEM_APPROVED", $poll_list);
+		$this->assertStringContainsString("f.forum_password = ''", $poll_list);
+		$this->assertStringContainsString('poll_options::VISIBILITY_PUBLIC', $poll_list);
+		$this->assertStringContainsString('if ($ended || ', $poll_list);
 		$this->assertStringNotContainsString('order_items', $schema);
 		$this->assertStringNotContainsString('purchase', strtolower($schema));
 	}

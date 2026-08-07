@@ -57,6 +57,12 @@ $lang = array_merge($lang, [
 	'AP_VOTE_MODE_NO_CHANGE' => 'ללא שינויים',
 	'AP_VOTE_MODE_INCREMENTAL' => 'הצבעה הדרגתית',
 	'AP_VOTE_MODE_CHANGE' => 'לאפשר שינויים',
+	'AP_DEFAULT_SCORE_RESULT' => 'תוצאת ניקוד ברירת מחדל',
+	'AP_DEFAULT_SCORE_RESULT_EXPLAIN' => 'בחרו אם סקרי ניקוד מספרי חדשים יציגו בתחילה את סך הנקודות או את הממוצע החשבוני של כל אפשרות.',
+	'AP_DEFAULT_SHOW_PERCENT' => 'הצגת אחוזים כברירת מחדל',
+	'AP_DEFAULT_SHOW_PERCENT_EXPLAIN' => 'נראות האחוזים ההתחלתית בסקרי ניקוד מספרי חדשים.',
+	'AP_SCORE_RESULT_TOTAL' => 'סך נקודות',
+	'AP_SCORE_RESULT_AVERAGE' => 'דירוג ממוצע',
 
 	'AP_ACT_VOTES_HIDE'				=> 'הפעלת הסתרת מצביעים',
 	'AP_ACT_VOTES_HIDE_EXPLAIN'		=> 'מפעיל את האפשרות לבחר להסתיר את ההצבעות עד תום הסקר.',
@@ -84,6 +90,8 @@ $lang = array_merge($lang, [
 	'AP_ACT_POLL_NOTIFICATIONS_EXPLAIN' => 'מפעיל התראות כאשר תוצאות של סקר מוסתר נעשות גלויות וכאשר אפשרויות חדשות נוספות לסקר שבו משתמש הצביע.',
 	'AP_ACT_POLL_COLLAPSIBLE' => 'הפעלת סקרים מתקפלים',
 	'AP_ACT_POLL_COLLAPSIBLE_EXPLAIN' => 'מציג את אפשרות הקיפול בעת יצירה או עריכה של סקר. בעת ההתקנה ההגדרה מופעלת אוטומטית אם „Collapsible Forum Categories” מותקנת; מנהלים יכולים לשנות אותה בכל עת.',
+	'AP_SHOW_POLL_LIST_NAVBAR' => 'הצגת קישור לסקרים בסרגל הניווט',
+	'AP_SHOW_POLL_LIST_NAVBAR_EXPLAIN' => 'מוסיף לסרגל הניווט של הפורום קישור לרשימת הסקרים הנגישים.',
 
 	'AP_DEFAULT_VOTES_CHANGE'		=> 'ברירת המחדל עבור שינוי הצבעות',
 	'AP_DEFAULT_VOTES_HIDE'			=> 'ברירת המחדר עבור הסתרת מצביעים',

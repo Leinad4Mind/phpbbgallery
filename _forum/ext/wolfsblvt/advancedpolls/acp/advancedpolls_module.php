@@ -73,10 +73,13 @@ class advancedpolls_module
 				'wolfsblvt.advancedpolls.activate_poll_collapsible'	=> array('lang' => 'AP_ACT_POLL_COLLAPSIBLE',	'validate' => 'bool',		'type' => 'radio:enabled_disabled',	'explain' => true),
 				'wolfsblvt.advancedpolls.activate_poll_end'				=> array('lang' => 'AP_ACT_POLL_END',			'validate' => 'bool',		'type' => 'radio:enabled_disabled',	'explain' => true),
 				'wolfsblvt.advancedpolls.activate_notifications'		=> array('lang' => 'AP_ACT_POLL_NOTIFICATIONS',	'validate' => 'bool',		'type' => 'radio:enabled_disabled',	'explain' => true),
+				'wolfsblvt.advancedpolls.show_poll_list_navbar'		=> array('lang' => 'AP_SHOW_POLL_LIST_NAVBAR',	'validate' => 'bool',		'type' => 'radio:enabled_disabled',	'explain' => true),
 				'legend2'												=> 'AP_PER_POLL_SETTINGS',
 				'wolfsblvt.advancedpolls.default_poll_visibility'		=> array('lang' => 'AP_DEFAULT_POLL_VISIBILITY',	'validate' => 'int:0:3',	'type' => 'select:1', 'method' => 'select_poll_visibility', 'explain' => true),
 				'wolfsblvt.advancedpolls.default_poll_vote_mode'		=> array('lang' => 'AP_DEFAULT_POLL_VOTE_MODE',	'validate' => 'int:0:2',	'type' => 'select:1', 'method' => 'select_poll_vote_mode', 'explain' => true),
 				'wolfsblvt.advancedpolls.activate_poll_scoring'			=> array('lang' => 'AP_ACT_POLL_SCORING',		'validate' => 'bool',		'type' => 'radio:enabled_disabled',	'explain' => true),
+				'wolfsblvt.advancedpolls.default_poll_score_result'		=> array('lang' => 'AP_DEFAULT_SCORE_RESULT',	'validate' => 'int:0:1',	'type' => 'select:1', 'method' => 'select_score_result', 'explain' => true),
+				'wolfsblvt.advancedpolls.default_poll_show_percent'		=> array('lang' => 'AP_DEFAULT_SHOW_PERCENT',	'validate' => 'bool',		'type' => 'radio:yes_no',	'explain' => true),
 				'wolfsblvt.advancedpolls.activate_poll_voters_show'		=> array('lang' => 'AP_ACT_VOTERS_SHOW',		'validate' => 'bool',		'type' => 'radio:enabled_disabled',	'explain' => true),
 				'wolfsblvt.advancedpolls.default_poll_voters_show'		=> array('lang' => 'AP_DEFAULT_VOTERS_SHOW',	'validate' => 'bool',		'type' => 'radio:yes_no',	'explain' => false),
 				'wolfsblvt.advancedpolls.activate_poll_voters_limit'	=> array('lang' => 'AP_ACT_VOTERS_LIMIT',		'validate' => 'bool',		'type' => 'radio:enabled_disabled',	'explain' => true),
@@ -137,6 +140,21 @@ class advancedpolls_module
 			poll_options::VOTE_MODE_NO_CHANGE => 'AP_VOTE_MODE_NO_CHANGE',
 			poll_options::VOTE_MODE_INCREMENTAL => 'AP_VOTE_MODE_INCREMENTAL',
 			poll_options::VOTE_MODE_CHANGE => 'AP_VOTE_MODE_CHANGE',
+		), $value);
+	}
+
+	/**
+	 * Build the default scoring result selector.
+	 *
+	 * @param int    $value Current value
+	 * @param string $key Configuration key
+	 * @return string
+	 */
+	public function select_score_result($value, $key)
+	{
+		return $this->select_options(array(
+			poll_options::SCORE_RESULT_TOTAL => 'AP_SCORE_RESULT_TOTAL',
+			poll_options::SCORE_RESULT_AVERAGE => 'AP_SCORE_RESULT_AVERAGE',
 		), $value);
 	}
 

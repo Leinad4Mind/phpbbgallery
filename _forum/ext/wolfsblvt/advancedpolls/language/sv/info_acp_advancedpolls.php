@@ -57,6 +57,12 @@ $lang = array_merge($lang, [
 	'AP_VOTE_MODE_NO_CHANGE' => 'Inga ändringar',
 	'AP_VOTE_MODE_INCREMENTAL' => 'Stegvis röstning',
 	'AP_VOTE_MODE_CHANGE' => 'Tillåt ändringar',
+	'AP_DEFAULT_SCORE_RESULT' => 'Standardresultat för poäng',
+	'AP_DEFAULT_SCORE_RESULT_EXPLAIN' => 'Välj om nya numeriska poängomröstningar först ska visa samlade poäng eller det aritmetiska medelvärdet för varje alternativ.',
+	'AP_DEFAULT_SHOW_PERCENT' => 'Visa procent som standard',
+	'AP_DEFAULT_SHOW_PERCENT_EXPLAIN' => 'Den inledande synligheten för procenttal i nya numeriska poängomröstningar.',
+	'AP_SCORE_RESULT_TOTAL' => 'Samlade poäng',
+	'AP_SCORE_RESULT_AVERAGE' => 'Genomsnittligt betyg',
 
 	'AP_ACT_VOTES_HIDE'				=> 'Aktivera döljning av resultat',
 	'AP_ACT_VOTES_HIDE_EXPLAIN'		=> 'Aktiverar inställningen som döljer omröstningens resultat tills omröstningen har avslutats.',
@@ -84,6 +90,8 @@ $lang = array_merge($lang, [
 	'AP_ACT_POLL_NOTIFICATIONS_EXPLAIN' => 'Aktiverar aviseringar när resultaten i en dold omröstning blir synliga och när nya alternativ läggs till i en omröstning där en användare har röstat.',
 	'AP_ACT_POLL_COLLAPSIBLE' => 'Aktivera hopfällbara omröstningar',
 	'AP_ACT_POLL_COLLAPSIBLE_EXPLAIN' => 'Visar hopfällningsalternativet när en omröstning skapas eller redigeras. Vid installation aktiveras inställningen automatiskt om ”Collapsible Forum Categories” är installerat; administratörer kan alltid ändra den.',
+	'AP_SHOW_POLL_LIST_NAVBAR' => 'Visa omröstningslänk i navigeringsfältet',
+	'AP_SHOW_POLL_LIST_NAVBAR_EXPLAIN' => 'Lägger till en länk till listan över tillgängliga omröstningar i forumets navigeringsfält.',
 
 	'AP_DEFAULT_VOTES_CHANGE'		=> 'Välj grundinställning för ändring av röstning',
 	'AP_DEFAULT_VOTES_HIDE'			=> 'Välj grundinställning för "Dölja omröstning"',

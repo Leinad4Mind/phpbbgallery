@@ -56,6 +56,12 @@ $lang = array_merge($lang, [
 	'AP_VOTE_MODE_NO_CHANGE' => 'Sem alterações',
 	'AP_VOTE_MODE_INCREMENTAL' => 'Votação incremental',
 	'AP_VOTE_MODE_CHANGE' => 'Permitir alterações',
+	'AP_DEFAULT_SCORE_RESULT' => 'Resultado de pontuação padrão',
+	'AP_DEFAULT_SCORE_RESULT_EXPLAIN' => 'Selecione se as novas enquetes de pontuação numérica exibem inicialmente os pontos acumulados ou a média aritmética de cada opção.',
+	'AP_DEFAULT_SHOW_PERCENT' => 'Exibir porcentagens por padrão',
+	'AP_DEFAULT_SHOW_PERCENT_EXPLAIN' => 'Visibilidade inicial da porcentagem para novas enquetes de pontuação numérica.',
+	'AP_SCORE_RESULT_TOTAL' => 'Pontos acumulados',
+	'AP_SCORE_RESULT_AVERAGE' => 'Avaliação média',
 
 	'AP_ACT_VOTES_HIDE'                 => 'Ativar ocultação de votos',
 	'AP_ACT_VOTES_HIDE_EXPLAIN'         => 'Ativa a opção de ocultar os votos da votação até que ela termine.',
@@ -83,6 +89,8 @@ $lang = array_merge($lang, [
 	'AP_ACT_POLL_NOTIFICATIONS_EXPLAIN' => 'Ativa as notificações quando os resultados de uma votação oculta se tornam visíveis e quando novas opções são adicionadas a uma votação da qual um usuário participou.',
 	'AP_ACT_POLL_COLLAPSIBLE' => 'Ativar enquetes recolhíveis',
 	'AP_ACT_POLL_COLLAPSIBLE_EXPLAIN' => 'Mostra a opção de recolher ao criar ou editar uma enquete. Na instalação, esta configuração é ativada automaticamente se a extensão “Collapsible Forum Categories” estiver instalada; os administradores sempre podem alterá-la.',
+	'AP_SHOW_POLL_LIST_NAVBAR' => 'Exibir link de enquetes na barra de navegação',
+	'AP_SHOW_POLL_LIST_NAVBAR_EXPLAIN' => 'Adiciona um link para a lista de enquetes acessíveis na barra de navegação do fórum.',
 
 	'AP_DEFAULT_VOTES_CHANGE' => 'Valor padrão para alterar voto',
 	'AP_DEFAULT_VOTES_HIDE'   => 'Valor padrão para ocultar votos',

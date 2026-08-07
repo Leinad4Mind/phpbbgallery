@@ -19,6 +19,9 @@ use wolfsblvt\advancedpolls\migrations\v1_3_0_data;
 use wolfsblvt\advancedpolls\migrations\v1_3_0_schema;
 use wolfsblvt\advancedpolls\migrations\v1_4_0_data;
 use wolfsblvt\advancedpolls\migrations\v1_4_0_schema;
+use wolfsblvt\advancedpolls\migrations\v1_5_0_schema;
+use wolfsblvt\advancedpolls\migrations\v1_6_0_data;
+use wolfsblvt\advancedpolls\migrations\v1_6_0_schema;
 
 class integration_contract_test extends TestCase
 {
@@ -27,6 +30,7 @@ class integration_contract_test extends TestCase
 		$this->assertSame(array(
 			'core.permissions' => 'adv_polls_permissions',
 			'core.user_setup' => 'load_language_on_setup',
+			'core.page_header' => 'add_poll_list_link',
 			'core.delete_user_before' => 'delete_user_before',
 			'core.delete_topics_before_query' => 'delete_topics_before',
 			'core.posting_modify_submission_errors' => 'check_config_for_polls',
@@ -256,9 +260,49 @@ class integration_contract_test extends TestCase
 		$tables = $migration->update_schema()['add_tables'];
 		$this->assertArrayHasKey('phpbb_advancedpolls_ballots', $tables);
 		$this->assertArrayHasKey('phpbb_advancedpolls_questions', $tables);
-		$this->assertArrayHasKey('phpbb_advancedpolls_revisions', $tables);
 		$this->assertSame('question_id', $tables['phpbb_advancedpolls_questions']['PRIMARY_KEY']);
+		$this->assertArrayNotHasKey('phpbb_advancedpolls_revisions', $tables);
+	}
+
+	public function test_v1_5_schema_owns_option_revision_storage()
+	{
+		$migration = $this->create_schema_migration(v1_5_0_schema::class);
+		$tables = $migration->update_schema()['add_tables'];
+
+		$this->assertArrayHasKey('phpbb_advancedpolls_revisions', $tables);
 		$this->assertSame('revision_id', $tables['phpbb_advancedpolls_revisions']['PRIMARY_KEY']);
+		$this->assertSame(
+			array('phpbb_advancedpolls_revisions'),
+			$migration->revert_schema()['drop_tables']
+		);
+	}
+
+	public function test_v1_6_migrations_own_only_score_display_configuration()
+	{
+		$schema_migration = $this->create_schema_migration(v1_6_0_schema::class);
+		$columns = $schema_migration->update_schema()['add_columns']['phpbb_topics'];
+
+		$this->assertSame(
+			array('\wolfsblvt\advancedpolls\migrations\v1_5_0_schema'),
+			v1_6_0_schema::depends_on()
+		);
+		$this->assertSame(array('UINT:1', 0), $columns['wolfsblvt_poll_score_result']);
+		$this->assertSame(array('BOOL', 1), $columns['wolfsblvt_poll_show_percent']);
+		$this->assertSame(
+			array_keys($columns),
+			$schema_migration->revert_schema()['drop_columns']['phpbb_topics']
+		);
+
+		$data_migration = $this->create_schema_migration(v1_6_0_data::class);
+		$this->assertSame(
+			array('\wolfsblvt\advancedpolls\migrations\v1_6_0_schema'),
+			v1_6_0_data::depends_on()
+		);
+		$this->assertSame(array(
+			array('config.add', array('wolfsblvt.advancedpolls.default_poll_score_result', poll_options::SCORE_RESULT_TOTAL)),
+			array('config.add', array('wolfsblvt.advancedpolls.default_poll_show_percent', 1)),
+			array('config.add', array('wolfsblvt.advancedpolls.show_poll_list_navbar', 1)),
+		), $data_migration->update_data());
 	}
 
 	public function test_v1_4_data_enables_collapsible_polls_when_categories_extension_is_installed()

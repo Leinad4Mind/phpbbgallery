@@ -85,7 +85,8 @@ class advancedpolls
 		$visibility = $this->request->variable('wolfsblvt_poll_visibility', poll_options::VISIBILITY_DEFAULT);
 		$vote_mode = $this->request->variable('wolfsblvt_poll_vote_mode', poll_options::VOTE_MODE_NO_CHANGE);
 		$poll_type = $this->request->variable('wolfsblvt_poll_type', poll_options::TYPE_CHOICE);
-		if (!poll_options::is_valid_visibility($visibility) || !poll_options::is_valid_vote_mode($vote_mode) || !poll_options::is_valid_type($poll_type))
+		$score_result = $this->request->variable('wolfsblvt_poll_score_result', poll_options::SCORE_RESULT_TOTAL);
+		if (!poll_options::is_valid_visibility($visibility) || !poll_options::is_valid_vote_mode($vote_mode) || !poll_options::is_valid_type($poll_type) || !poll_options::is_valid_score_result($score_result))
 		{
 			return array($this->user->lang['FORM_INVALID']);
 		}
@@ -349,6 +350,13 @@ class advancedpolls
 		$page_data['AP_RANK_POINT_INPUTS'] = $this->build_rank_point_inputs($rank_points);
 		$page_data['AP_IS_SCORING'] = $poll_type === poll_options::TYPE_SCORING;
 		$page_data['AP_IS_RANKING'] = $poll_type === poll_options::TYPE_RANKING;
+		$score_result = isset($page_data['WOLFSBLVT_POLL_SCORE_RESULT'])
+			? (int) $page_data['WOLFSBLVT_POLL_SCORE_RESULT']
+			: poll_options::SCORE_RESULT_TOTAL;
+		$page_data['AP_SCORE_RESULT_OPTIONS'] = $this->build_select_options(array(
+			poll_options::SCORE_RESULT_TOTAL => 'AP_SCORE_RESULT_TOTAL',
+			poll_options::SCORE_RESULT_AVERAGE => 'AP_SCORE_RESULT_AVERAGE',
+		), $score_result);
 
 		if ($preview && ($page_data['AP_IS_SCORING'] || $page_data['AP_IS_RANKING']))
 		{
@@ -825,7 +833,9 @@ class advancedpolls
 					$data['score_breakdowns'] = $this->format_score_breakdowns(
 						$this->get_score_distribution((int) $topic_data['topic_id']),
 						$vote_counts,
-						$s_is_ranking ? ranked_vote::normalise_points($topic_data['wolfsblvt_poll_rank_points']) : array()
+						$s_is_ranking ? ranked_vote::normalise_points($topic_data['wolfsblvt_poll_rank_points']) : array(),
+						isset($topic_data['wolfsblvt_poll_score_result']) ? (int) $topic_data['wolfsblvt_poll_score_result'] : poll_options::SCORE_RESULT_TOTAL,
+						isset($topic_data['wolfsblvt_poll_max_value']) ? (int) $topic_data['wolfsblvt_poll_max_value'] : 1
 					);
 				}
 				$json_response = new \phpbb\json_response();
@@ -963,6 +973,7 @@ class advancedpolls
 			'wolfsblvt_poll_show_ordered'			=> false,
 			'wolfsblvt_poll_scoring'				=> false,
 			'wolfsblvt_poll_ranking'				=> false,
+			'wolfsblvt_poll_show_percent'			=> true,
 			'wolfsblvt_poll_no_vote'				=> false,
 			'can_change_vote'						=> ($vote_mode === poll_options::VOTE_MODE_CHANGE && $this->auth->acl_get('f_votechg', $topic_data['forum_id'])),
 			'username_clean'						=> $this->user->data['username_clean'],
@@ -984,6 +995,10 @@ class advancedpolls
 
 		$poll_votes_hidden = $poll_scoring = false;
 		$poll_type = $this->resolve_poll_type($topic_data);
+		$score_result = isset($topic_data['wolfsblvt_poll_score_result']) && poll_options::is_valid_score_result($topic_data['wolfsblvt_poll_score_result'])
+			? (int) $topic_data['wolfsblvt_poll_score_result']
+			: poll_options::SCORE_RESULT_TOTAL;
+		$show_percent = !isset($topic_data['wolfsblvt_poll_show_percent']) || !empty($topic_data['wolfsblvt_poll_show_percent']);
 
 		$view = $this->request->variable('view', '');
 		$poll_force_display_results = (($view === 'infopoll') && $this->auth->acl_get('m_seevoters', $topic_data['forum_id'])) ? true : false;
@@ -1023,6 +1038,7 @@ class advancedpolls
 			{
 				$javascript_vars['wolfsblvt_poll_scoring'] = true;
 				$javascript_vars['wolfsblvt_poll_ranking'] = $poll_type === poll_options::TYPE_RANKING;
+				$javascript_vars['wolfsblvt_poll_show_percent'] = $poll_type !== poll_options::TYPE_SCORING || $show_percent;
 				for ($j = 0; $j < $poll_options_count; $j++)
 				{
 					$option_eval_opts_txt = '<option value="0"></option>';
@@ -1062,7 +1078,9 @@ class advancedpolls
 			$score_breakdowns = $this->format_score_breakdowns(
 				$this->get_score_distribution((int) $topic_data['topic_id']),
 				$vote_counts,
-				$poll_type === poll_options::TYPE_RANKING ? ranked_vote::normalise_points($topic_data['wolfsblvt_poll_rank_points']) : array()
+				$poll_type === poll_options::TYPE_RANKING ? ranked_vote::normalise_points($topic_data['wolfsblvt_poll_rank_points']) : array(),
+				$score_result,
+				isset($topic_data['wolfsblvt_poll_max_value']) ? (int) $topic_data['wolfsblvt_poll_max_value'] : 1
 			);
 			for ($i = 0; $i < $poll_options_count; $i++)
 			{
@@ -1072,8 +1090,41 @@ class advancedpolls
 					$poll_options_template_data[$i]['AP_SCORE_TOTAL'] = $score_breakdowns[$option_id]['total'];
 					$poll_options_template_data[$i]['AP_SCORE_BREAKDOWN'] = $score_breakdowns[$option_id]['detail'];
 					$poll_options_template_data[$i]['AP_BREAKDOWN_LABEL'] = $score_breakdowns[$option_id]['label'];
+					$poll_options_template_data[$i]['AP_SCORE_ORDER_VALUE'] = $score_breakdowns[$option_id]['order_value'];
+					if ($poll_type === poll_options::TYPE_SCORING && $score_result === poll_options::SCORE_RESULT_AVERAGE)
+					{
+						$poll_options_template_data[$i]['POLL_OPTION_RESULT'] = $score_breakdowns[$option_id]['average'];
+						$poll_options_template_data[$i]['POLL_OPTION_PCT'] = $score_breakdowns[$option_id]['bar_percent'];
+						$poll_options_template_data[$i]['POLL_OPTION_PERCENT_REL'] = $score_breakdowns[$option_id]['bar_percent'] . '%';
+						$poll_options_template_data[$i]['POLL_OPTION_WIDTH'] = round(2.5 * $score_breakdowns[$option_id]['bar_percent']);
+						$poll_options_template_data[$i]['POLL_OPTION_PERCENT'] = $show_percent ? $score_breakdowns[$option_id]['bar_percent'] . '%' : '';
+					}
 				}
 			}
+			if ($poll_type === poll_options::TYPE_SCORING && $score_result === poll_options::SCORE_RESULT_AVERAGE)
+			{
+				$maximum_order = 0;
+				$weighted_total = 0;
+				$rating_count = 0;
+				foreach ($score_breakdowns as $breakdown)
+				{
+					$maximum_order = max($maximum_order, (float) $breakdown['order_value']);
+					$weighted_total += (int) $breakdown['weighted_total'];
+					$rating_count += (int) $breakdown['rating_count'];
+				}
+				foreach ($poll_options_template_data as &$average_option)
+				{
+					$average_option['POLL_OPTION_MOST_VOTES'] = $maximum_order > 0
+						&& isset($average_option['AP_SCORE_ORDER_VALUE'])
+						&& (float) $average_option['AP_SCORE_ORDER_VALUE'] === $maximum_order;
+				}
+				unset($average_option);
+				$overall_average = poll_options::score_average($weighted_total, $rating_count);
+				$poll_template_data['L_TOTAL_VOTES'] = $this->user->lang['AP_SCORE_OVERALL_AVERAGE'];
+				$poll_template_data['TOTAL_VOTES'] = rtrim(rtrim(number_format($overall_average, 2, '.', ''), '0'), '.')
+					. ' / ' . (int) $topic_data['wolfsblvt_poll_max_value'];
+			}
+			$poll_template_data['AP_SHOW_SCORE_PERCENT'] = $poll_type !== poll_options::TYPE_SCORING || $show_percent;
 		}
 
 		$poll_votes_are_visible = ($topic_data['wolfsblvt_poll_voters_show'] == 1 && in_array('wolfsblvt_poll_voters_show', $options)) ? true : false;
@@ -1374,9 +1425,11 @@ class advancedpolls
 	 * @param array $distribution Option => score => voter count map
 	 * @param array $vote_counts Weighted totals by option
 	 * @param array $rank_points Points in rank order; empty for numeric scoring
+	 * @param int   $score_result Numeric scoring result presentation
+	 * @param int   $maximum_score Maximum numeric score
 	 * @return array
 	 */
-	protected function format_score_breakdowns(array $distribution, array $vote_counts, array $rank_points = array())
+	protected function format_score_breakdowns(array $distribution, array $vote_counts, array $rank_points = array(), $score_result = poll_options::SCORE_RESULT_TOTAL, $maximum_score = 1)
 	{
 		$is_ranking = !empty($rank_points);
 		$breakdowns = array();
@@ -1402,10 +1455,27 @@ class advancedpolls
 				continue;
 			}
 
+			$rating_count = array_sum($scores);
+			$average = poll_options::score_average((int) $vote_counts[$option_id], $rating_count);
+			$formatted_average = rtrim(rtrim(number_format($average, 2, '.', ''), '0'), '.');
+			$use_average = !$is_ranking && (int) $score_result === poll_options::SCORE_RESULT_AVERAGE;
+			$bar_percent = $use_average && $maximum_score > 0
+				? min(100, max(0, (int) round(100 * $average / $maximum_score)))
+				: 0;
 			$breakdowns[$option_id] = array(
-				'total' => $this->user->lang($is_ranking ? 'AP_RANK_TOTAL' : 'AP_SCORE_TOTAL', (int) $vote_counts[$option_id]),
+				'total' => $use_average
+					? $this->user->lang('AP_SCORE_AVERAGE', $formatted_average, (int) $maximum_score)
+					: $this->user->lang($is_ranking ? 'AP_RANK_TOTAL' : 'AP_SCORE_TOTAL', (int) $vote_counts[$option_id]),
 				'detail' => implode('', $entries),
 				'label' => $this->user->lang[$is_ranking ? 'AP_RANK_BREAKDOWN' : 'AP_SCORE_BREAKDOWN'],
+				'average' => $formatted_average,
+				'rating_count' => $rating_count,
+				'weighted_total' => (int) $vote_counts[$option_id],
+				'maximum_score' => (int) $maximum_score,
+				'ratings' => $this->user->lang('AP_SCORE_RATINGS', $rating_count),
+				'bar_percent' => $bar_percent,
+				'order_value' => $use_average ? $average : (int) $vote_counts[$option_id],
+				'average_mode' => $use_average,
 			);
 		}
 
@@ -1421,6 +1491,11 @@ class advancedpolls
 	 */
 	protected function order_by_votes($a, $b)
 	{
+		if (isset($a['AP_SCORE_ORDER_VALUE'], $b['AP_SCORE_ORDER_VALUE']))
+		{
+			$score_order = (float) $b['AP_SCORE_ORDER_VALUE'] <=> (float) $a['AP_SCORE_ORDER_VALUE'];
+			return $score_order ?: ((int) $a['POLL_OPTION_ID'] - (int) $b['POLL_OPTION_ID']);
+		}
 		return (((int) $b['POLL_OPTION_RESULT'] - (int) $a['POLL_OPTION_RESULT']) ?: ((int) $a['POLL_OPTION_ID'] - (int) $b['POLL_OPTION_ID']));
 	}
 
@@ -1462,6 +1537,10 @@ class advancedpolls
 			? (int) $this->config['wolfsblvt.advancedpolls.default_poll_vote_mode']
 			: poll_options::VOTE_MODE_NO_CHANGE;
 		$valid_options['wolfsblvt_poll_required'] = true;
+		$valid_options['wolfsblvt_poll_score_result'] = isset($this->config['wolfsblvt.advancedpolls.default_poll_score_result'])
+			? (int) $this->config['wolfsblvt.advancedpolls.default_poll_score_result']
+			: poll_options::SCORE_RESULT_TOTAL;
+		$valid_options['wolfsblvt_poll_show_percent'] = false;
 		foreach ($options as $option)
 		{
 			$config_name = str_replace('wolfsblvt_', 'wolfsblvt.advancedpolls.activate_', $option);

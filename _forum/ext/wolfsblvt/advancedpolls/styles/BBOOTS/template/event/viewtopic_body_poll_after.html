@@ -1,5 +1,5 @@
 <!-- IF AP_HAS_MULTI_QUESTIONS -->
-<div id="ap-multi-poll" class="ap-multi-poll" data-no-vote="<!-- IF AP_MULTI_NO_VOTE -->1<!-- ELSE -->0<!-- ENDIF -->" data-vote-url="{AP_MULTI_VOTE_URL}" data-type="{AP_MULTI_TYPE}" data-max-options="{AP_MULTI_MAX_OPTIONS}" data-total-value="{AP_MULTI_TOTAL_VALUE}" data-rank-points="{AP_MULTI_RANK_POINTS}" data-primary-required="<!-- IF AP_PRIMARY_REQUIRED -->1<!-- ELSE -->0<!-- ENDIF -->" data-required-error="{L_AP_REQUIRED_QUESTION_MISSING}" data-ranking-error="{L_AP_RANK_SELECTION_INCOMPLETE}" data-too-many-error="{L_TOO_MANY_VOTE_OPTIONS}" data-total-error="{L_AP_TOO_MANY_VOTES}" data-voters-label="{L_AP_VOTERS}{L_COLON}" data-none-label="{L_AP_NONE}">
+<div id="ap-multi-poll" class="ap-multi-poll" data-no-vote="<!-- IF AP_MULTI_NO_VOTE -->1<!-- ELSE -->0<!-- ENDIF -->" data-vote-url="{AP_MULTI_VOTE_URL}" data-type="{AP_MULTI_TYPE}" data-max-options="{AP_MULTI_MAX_OPTIONS}" data-total-value="{AP_MULTI_TOTAL_VALUE}" data-max-value="{AP_MULTI_MAX_VALUE}" data-score-result="{AP_MULTI_SCORE_RESULT}" data-show-percent="<!-- IF AP_MULTI_SHOW_PERCENT -->1<!-- ELSE -->0<!-- ENDIF -->" data-rank-points="{AP_MULTI_RANK_POINTS}" data-primary-required="<!-- IF AP_PRIMARY_REQUIRED -->1<!-- ELSE -->0<!-- ENDIF -->" data-required-error="{L_AP_REQUIRED_QUESTION_MISSING}" data-ranking-error="{L_AP_RANK_SELECTION_INCOMPLETE}" data-too-many-error="{L_TOO_MANY_VOTE_OPTIONS}" data-total-error="{L_AP_TOO_MANY_VOTES}" data-voters-label="{L_AP_VOTERS}{L_COLON}" data-none-label="{L_AP_NONE}">
 	<!-- BEGIN ap_question -->
 	<section class="ap-poll-page ap-extra-page panel" data-question-id="{ap_question.ID}" data-required="<!-- IF ap_question.REQUIRED -->1<!-- ELSE -->0<!-- ENDIF -->" hidden>
 		<div class="inner panel-body">
@@ -20,7 +20,7 @@
 					</dd>
 					<!-- ENDIF -->
 					<dd class="resultbar<!-- IF not ap_question.S_DISPLAY_RESULTS --> hidden<!-- ENDIF -->"><div class="pollbar ap-multi-result-bar" style="width:{ap_question.option.PERCENT}%;">{ap_question.option.TOTAL}</div></dd>
-					<dd class="poll_option_percent<!-- IF not ap_question.S_DISPLAY_RESULTS --> hidden<!-- ENDIF -->">{ap_question.option.PERCENT}%</dd>
+					<dd class="poll_option_percent<!-- IF not ap_question.S_DISPLAY_RESULTS or not ap_question.option.SHOW_PERCENT --> hidden<!-- ENDIF -->">{ap_question.option.PERCENT}%</dd>
 					<!-- IF ap_question.option.VOTERS --><dd class="poll_voters_box">{L_AP_VOTERS}{L_COLON} <span class="poll_voters">{ap_question.option.VOTERS}</span></dd><!-- ENDIF -->
 					<!-- IF ap_question.S_DISPLAY_RESULTS and ap_question.option.BREAKDOWN -->
 					<dd class="ap-score-breakdown-widget">

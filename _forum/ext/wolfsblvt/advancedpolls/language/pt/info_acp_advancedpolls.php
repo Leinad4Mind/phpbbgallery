@@ -56,6 +56,12 @@ $lang = array_merge($lang, [
 	'AP_VOTE_MODE_NO_CHANGE'                => 'Sem alterações',
 	'AP_VOTE_MODE_INCREMENTAL'              => 'Votação incremental',
 	'AP_VOTE_MODE_CHANGE'                   => 'Permitir alterações',
+	'AP_DEFAULT_SCORE_RESULT'               => 'Resultado de pontuação predefinido',
+	'AP_DEFAULT_SCORE_RESULT_EXPLAIN'       => 'Seleciona se as novas votações de pontuação numérica mostram inicialmente os pontos acumulados ou a média aritmética de cada opção.',
+	'AP_DEFAULT_SHOW_PERCENT'               => 'Mostrar percentagens por predefinição',
+	'AP_DEFAULT_SHOW_PERCENT_EXPLAIN'       => 'Visibilidade inicial da percentagem selecionada para novas votações de pontuação numérica.',
+	'AP_SCORE_RESULT_TOTAL'                 => 'Pontos acumulados',
+	'AP_SCORE_RESULT_AVERAGE'               => 'Classificação média',
 
 	'AP_ACT_VOTES_HIDE'                 => 'Ativar ocultação de votos',
 	'AP_ACT_VOTES_HIDE_EXPLAIN'         => 'Ativa a opção de ocultar os votos da votação até que esta termine.',
@@ -83,6 +89,8 @@ $lang = array_merge($lang, [
 	'AP_ACT_POLL_NOTIFICATIONS_EXPLAIN' => 'Ativa as notificações quando os resultados de uma votação oculta se tornam visíveis e quando são adicionadas novas opções a uma votação em que um utilizador participou.',
 	'AP_ACT_POLL_COLLAPSIBLE' => 'Ativar sondagens recolhíveis',
 	'AP_ACT_POLL_COLLAPSIBLE_EXPLAIN' => 'Mostra a opção de recolher ao criar ou editar uma sondagem. Na instalação, esta definição é ativada automaticamente se a extensão «Collapsible Forum Categories» estiver instalada; os administradores podem sempre alterá-la.',
+	'AP_SHOW_POLL_LIST_NAVBAR' => 'Mostrar ligação para votações na barra de navegação',
+	'AP_SHOW_POLL_LIST_NAVBAR_EXPLAIN' => 'Adiciona uma ligação para a lista de votações acessíveis na barra de navegação do fórum.',
 
 	'AP_DEFAULT_VOTES_CHANGE' => 'Valor por defeito para alterar voto',
 	'AP_DEFAULT_VOTES_HIDE'   => 'Valor por defeito para ocultar votos',

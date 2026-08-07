@@ -176,6 +176,10 @@
 	function updateBreakdowns(breakdowns) {
 		$.each(breakdowns || {}, function (questionId, options) {
 			var $page = questionId === 'primary' ? $native : $container.find('[data-question-id="' + questionId + '"]');
+			var weightedTotal = 0;
+			var ratingCount = 0;
+			var maximumScore = 0;
+			var averageMode = false;
 			$.each(options, function (optionId, breakdown) {
 				var $option = $page.find('[data-poll-option-id="' + optionId + '"]');
 				var $widget = $option.find('.ap-score-breakdown-widget').first();
@@ -186,7 +190,20 @@
 				$widget.find('.ap-score-breakdown-trigger').text(breakdown.total).attr('aria-label', breakdown.total + '. ' + breakdown.label);
 				$widget.find('strong').text(breakdown.label);
 				$widget.find('.ap-score-breakdown-list').html(breakdown.detail);
+				if (breakdown.average_mode) {
+					averageMode = true;
+					weightedTotal += parseInt(breakdown.weighted_total, 10) || 0;
+					ratingCount += parseInt(breakdown.rating_count, 10) || 0;
+					maximumScore = parseInt(breakdown.maximum_score, 10) || maximumScore;
+					$option.find('.resultbar > div').css('width', breakdown.bar_percent + '%').text(breakdown.average);
+					$option.find('.badge').text(breakdown.average);
+					$option.find('.poll_option_percent').toggleClass('hidden', !breakdown.show_percent).text(breakdown.bar_percent + '%');
+				}
 			});
+			if (averageMode) {
+				var overall = ratingCount ? weightedTotal / ratingCount : 0;
+				$page.find('.poll_total_vote_cnt').text(parseFloat(overall.toFixed(2)) + ' / ' + maximumScore);
+			}
 		});
 	}
 

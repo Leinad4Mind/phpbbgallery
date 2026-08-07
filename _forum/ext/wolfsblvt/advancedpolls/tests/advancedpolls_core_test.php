@@ -268,6 +268,52 @@ class advancedpolls_core_test extends TestCase
 		$this->assertSame('Ranking breakdown', $ranked[4]['label']);
 	}
 
+	public function test_scoring_average_uses_only_submitted_ratings_and_normalises_bar()
+	{
+		$core = $this->create_core();
+		$format = new \ReflectionMethod($core, 'format_score_breakdowns');
+		$format->setAccessible(true);
+
+		$breakdowns = $format->invoke(
+			$core,
+			array(4 => array(3 => 1, 5 => 1)),
+			array(4 => 8),
+			array(),
+			poll_options::SCORE_RESULT_AVERAGE,
+			5
+		);
+
+		$this->assertSame('Average: 4 / 5', $breakdowns[4]['total']);
+		$this->assertSame('4', $breakdowns[4]['average']);
+		$this->assertSame(2, $breakdowns[4]['rating_count']);
+		$this->assertSame(80, $breakdowns[4]['bar_percent']);
+		$this->assertSame(4.0, $breakdowns[4]['order_value']);
+		$this->assertTrue($breakdowns[4]['average_mode']);
+	}
+
+	public function test_editing_existing_poll_restores_nonzero_end_year()
+	{
+		$core = $this->create_core(array(), array(
+			'wolfsblvt.advancedpolls.activate_poll_end' => 1,
+		));
+		$start = gmmktime(12, 30, 0, 11, 15, 2028);
+		$post_data = array(
+			'poll_start' => $start,
+			'poll_length' => 2,
+			'poll_title' => 'Scheduled poll',
+			'poll_options' => array('A', 'B'),
+		);
+		$page_data = array();
+
+		$core->config_for_polls_to_template($post_data, $page_data);
+
+		$this->assertSame(2028, $page_data['WOLFSBLVT_POLL_END_YEAR']);
+		$this->assertSame(11, $page_data['WOLFSBLVT_POLL_END_MON']);
+		$this->assertSame(17, $page_data['WOLFSBLVT_POLL_END_MDAY']);
+		$this->assertSame(12, $page_data['WOLFSBLVT_POLL_END_HOURS']);
+		$this->assertSame(30, $page_data['WOLFSBLVT_POLL_END_MINUTES']);
+	}
+
 	public function test_missing_voters_use_retained_name_or_deleted_user_fallback()
 	{
 		$core = $this->create_core();
@@ -376,6 +422,8 @@ class advancedpolls_core_test extends TestCase
 			'AP_POLL_TYPE_SCORING' => 'Scoring',
 			'AP_POLL_TYPE_RANKING' => 'Ranking',
 			'AP_SCORE_BREAKDOWN' => 'Vote breakdown',
+			'AP_SCORE_RESULT_TOTAL' => 'Total',
+			'AP_SCORE_RESULT_AVERAGE' => 'Average',
 			'AP_RANK_BREAKDOWN' => 'Ranking breakdown',
 			'AP_RANK_POSITION' => 'Position %d',
 		);
@@ -390,6 +438,14 @@ class advancedpolls_core_test extends TestCase
 				return $args[1] . ($args[1] === 1 ? ' vote' : ' votes') . ' of '
 					. $args[2] . ($args[2] === 1 ? ' point' : ' points');
 			}
+			if ($key === 'AP_SCORE_AVERAGE')
+			{
+				return 'Average: ' . $args[1] . ' / ' . $args[2];
+			}
+			if ($key === 'AP_SCORE_RATINGS')
+			{
+				return $args[1] . ($args[1] === 1 ? ' rating' : ' ratings');
+			}
 			if ($key === 'AP_RANK_TOTAL')
 			{
 				return $args[1] . ($args[1] === 1 ? ' point' : ' points');
@@ -403,6 +459,9 @@ class advancedpolls_core_test extends TestCase
 				return 'Position ' . $args[1];
 			}
 			return isset($user->lang[$key]) ? $user->lang[$key] : $key;
+		});
+		$user->method('format_date')->willReturnCallback(function ($timestamp, $format) {
+			return gmdate($format, $timestamp);
 		});
 		$auth = $this->createMock(\phpbb\auth\auth::class);
 		$auth->method('acl_get')->willReturn((bool) $acl);

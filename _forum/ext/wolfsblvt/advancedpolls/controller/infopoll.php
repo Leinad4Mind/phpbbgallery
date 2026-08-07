@@ -50,7 +50,8 @@ class infopoll
 		}
 
 		$sql = 'SELECT topic_id, forum_id, topic_first_post_id, poll_title, poll_max_options,
-				wolfsblvt_poll_type, wolfsblvt_poll_max_value
+				wolfsblvt_poll_type, wolfsblvt_poll_max_value,
+				wolfsblvt_poll_score_result
 			FROM ' . TOPICS_TABLE . '
 			WHERE topic_id = ' . (int) $topic_id;
 		$result = $this->db->sql_query($sql);
@@ -81,6 +82,9 @@ class infopoll
 			: ((int) $topic['wolfsblvt_poll_max_value'] > 1 ? poll_options::TYPE_SCORING : poll_options::TYPE_CHOICE);
 		$weighted = $type !== poll_options::TYPE_CHOICE;
 		$voters = $this->load_voters((int) $topic_id, $weighted);
+		$rating_counts = $type === poll_options::TYPE_SCORING
+			? $this->load_rating_counts((int) $topic_id)
+			: array();
 		$all_voters = array();
 		$registered_totals = array();
 
@@ -119,9 +123,18 @@ class infopoll
 				$total_guest_votes += $guest_votes;
 			}
 
+			$average_mode = $type === poll_options::TYPE_SCORING
+				&& isset($topic['wolfsblvt_poll_score_result'])
+				&& (int) $topic['wolfsblvt_poll_score_result'] === poll_options::SCORE_RESULT_AVERAGE;
+			$average = $average_mode
+				? poll_options::score_average((int) $option['total'], isset($rating_counts[$option_id]) ? $rating_counts[$option_id] : 0)
+				: 0;
+			$formatted_average = rtrim(rtrim(number_format($average, 2, '.', ''), '0'), '.');
 			$response_options[] = array(
 				'caption' => $option['caption'],
-				'total' => $this->user->lang($type === poll_options::TYPE_RANKING ? 'AP_RANK_TOTAL' : 'AP_SCORE_TOTAL', (int) $option['total']),
+				'total' => $average_mode
+					? $this->user->lang('AP_SCORE_AVERAGE', $formatted_average, (int) $topic['wolfsblvt_poll_max_value'])
+					: $this->user->lang($type === poll_options::TYPE_RANKING ? 'AP_RANK_TOTAL' : 'AP_SCORE_TOTAL', (int) $option['total']),
 				'voters' => $voter_list
 					? implode($this->user->lang['COMMA_SEPARATOR'], $voter_list)
 					: '<span class="ap-infopoll-none">' . $this->user->lang['AP_NONE'] . '</span>',
@@ -148,6 +161,30 @@ class infopoll
 				? implode($this->user->lang['COMMA_SEPARATOR'], $all_voter_list)
 				: '<span class="ap-infopoll-none">' . $this->user->lang['AP_NONE'] . '</span>',
 		), 200);
+	}
+
+	/**
+	 * Count all registered and guest ratings for each option.
+	 *
+	 * @param int $topic_id Topic ID
+	 * @return array
+	 */
+	protected function load_rating_counts($topic_id)
+	{
+		$sql = 'SELECT poll_option_id, COUNT(*) AS rating_count
+			FROM ' . POLL_VOTES_TABLE . '
+			WHERE topic_id = ' . (int) $topic_id . '
+				AND poll_option_id > 0
+				AND wolfsblvt_poll_option_value > 0
+			GROUP BY poll_option_id';
+		$result = $this->db->sql_query($sql);
+		$counts = array();
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$counts[(int) $row['poll_option_id']] = (int) $row['rating_count'];
+		}
+		$this->db->sql_freeresult($result);
+		return $counts;
 	}
 
 	/**

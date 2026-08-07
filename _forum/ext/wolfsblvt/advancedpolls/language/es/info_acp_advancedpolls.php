@@ -57,6 +57,12 @@ $lang = array_merge($lang, [
 	'AP_VOTE_MODE_NO_CHANGE' => 'Sin cambios',
 	'AP_VOTE_MODE_INCREMENTAL' => 'Votación incremental',
 	'AP_VOTE_MODE_CHANGE' => 'Permitir cambios',
+	'AP_DEFAULT_SCORE_RESULT' => 'Resultado de puntuación predeterminado',
+	'AP_DEFAULT_SCORE_RESULT_EXPLAIN' => 'Selecciona si las nuevas encuestas de puntuación numérica muestran inicialmente los puntos acumulados o la media aritmética de cada opción.',
+	'AP_DEFAULT_SHOW_PERCENT' => 'Mostrar porcentajes de forma predeterminada',
+	'AP_DEFAULT_SHOW_PERCENT_EXPLAIN' => 'Visibilidad inicial del porcentaje para las nuevas encuestas de puntuación numérica.',
+	'AP_SCORE_RESULT_TOTAL' => 'Puntos acumulados',
+	'AP_SCORE_RESULT_AVERAGE' => 'Valoración media',
 
 	'AP_ACT_VOTES_HIDE'				=> 'Activar votos ocultos',
 	'AP_ACT_VOTES_HIDE_EXPLAIN'		=> 'Activa la opción de que los votos de la encuesta estén ocultos hasta que termine la encuesta.',
@@ -84,6 +90,8 @@ $lang = array_merge($lang, [
 	'AP_ACT_POLL_NOTIFICATIONS_EXPLAIN'		=> 'Activa las notificaciones cuando se hacen visibles los resultados de una encuesta oculta y cuando se añaden nuevas opciones a una encuesta en la que ha votado un usuario.',
 	'AP_ACT_POLL_COLLAPSIBLE'				=> 'Activar encuestas contraíbles',
 	'AP_ACT_POLL_COLLAPSIBLE_EXPLAIN'		=> 'Muestra la opción contraíble al crear o editar una encuesta. Durante la instalación, esta opción se activa automáticamente si está instalada «Collapsible Forum Categories»; los administradores siempre pueden cambiarla.',
+	'AP_SHOW_POLL_LIST_NAVBAR' => 'Mostrar el enlace de encuestas en la barra de navegación',
+	'AP_SHOW_POLL_LIST_NAVBAR_EXPLAIN' => 'Añade un enlace a la lista de encuestas accesibles en la barra de navegación del foro.',
 
 	'AP_DEFAULT_VOTES_CHANGE'		=> 'Valor por defecto para cambiar el voto',
 	'AP_DEFAULT_VOTES_HIDE'			=> 'Valor por defecto para votos ocultos',

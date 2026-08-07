@@ -56,6 +56,12 @@ $lang = array_merge($lang, [
 	'AP_VOTE_MODE_NO_CHANGE' => 'Keine Änderungen',
 	'AP_VOTE_MODE_INCREMENTAL' => 'Schrittweise Abstimmung',
 	'AP_VOTE_MODE_CHANGE' => 'Änderungen erlauben',
+	'AP_DEFAULT_SCORE_RESULT' => 'Standard-Bewertungsergebnis',
+	'AP_DEFAULT_SCORE_RESULT_EXPLAIN' => 'Legt fest, ob neue numerische Bewertungsumfragen zunächst gesammelte Punkte oder den arithmetischen Mittelwert jeder Option anzeigen.',
+	'AP_DEFAULT_SHOW_PERCENT' => 'Prozentwerte standardmäßig anzeigen',
+	'AP_DEFAULT_SHOW_PERCENT_EXPLAIN' => 'Die anfängliche Sichtbarkeit der Prozentwerte für neue numerische Bewertungsumfragen.',
+	'AP_SCORE_RESULT_TOTAL' => 'Gesammelte Punkte',
+	'AP_SCORE_RESULT_AVERAGE' => 'Durchschnittliche Bewertung',
 
 	'AP_ACT_VOTES_HIDE'				=> 'Verbergen der Abstimmungsergebnisse',
 	'AP_ACT_VOTES_HIDE_EXPLAIN'		=> 'Aktiviert die Option, dass Abstimmungsergebnisse bis zum Ende der Umfrage verborgen werden.',
@@ -83,6 +89,8 @@ $lang = array_merge($lang, [
 	'AP_ACT_POLL_NOTIFICATIONS_EXPLAIN'		=> 'Aktiviert Benachrichtigungen, wenn die Ergebnisse einer verborgenen Umfrage sichtbar werden und wenn neue Optionen zu einer Umfrage hinzugefügt werden, an der ein Benutzer teilgenommen hat.',
 	'AP_ACT_POLL_COLLAPSIBLE'				=> 'Einklappbare Umfragen aktivieren',
 	'AP_ACT_POLL_COLLAPSIBLE_EXPLAIN'		=> 'Zeigt beim Erstellen oder Bearbeiten einer Umfrage die Option zum Einklappen an. Bei der Installation wird diese Einstellung automatisch aktiviert, wenn „Collapsible Forum Categories“ installiert ist; Administratoren können sie jederzeit ändern.',
+	'AP_SHOW_POLL_LIST_NAVBAR' => 'Umfragen-Link in der Navigationsleiste anzeigen',
+	'AP_SHOW_POLL_LIST_NAVBAR_EXPLAIN' => 'Fügt der Navigationsleiste des Forums einen Link zur Liste der zugänglichen Umfragen hinzu.',
 
 	'AP_DEFAULT_VOTES_CHANGE'			=> 'Standardeinstellung "Ändern der Abstimmung erlauben"',
 	'AP_DEFAULT_VOTES_HIDE'				=> 'Standardeinistellung "Verbergen der Abstimmungsergebnisse"',

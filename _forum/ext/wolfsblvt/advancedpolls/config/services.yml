@@ -64,6 +64,19 @@ services:
             - '@config'
             - '@wolfsblvt.advancedpolls.multi_question_manager'
             - '%core.table_prefix%'
+    wolfsblvt.advancedpolls.controller.poll_list:
+        class: wolfsblvt\advancedpolls\controller\poll_list
+        arguments:
+            - '@dbal.conn'
+            - '@auth'
+            - '@config'
+            - '@controller.helper'
+            - '@pagination'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
     wolfsblvt.advancedpolls.notification.type.pollended:
         class: wolfsblvt\advancedpolls\notification\pollended
         shared: false

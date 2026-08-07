@@ -1,0 +1,27 @@
+<!-- INCLUDE overall_header.html -->
+<div class="panel panel-default">
+	<div class="panel-heading"><h2 class="panel-title">{L_AP_POLL_LIST}</h2></div>
+	<div class="panel-body">
+		<div class="btn-group">
+			<a class="btn btn-default" href="{U_AP_POLL_LIST_ALL}">{L_AP_POLL_LIST_ALL}</a>
+			<a class="btn btn-default" href="{U_AP_POLL_LIST_OPEN}">{L_AP_POLL_LIST_OPEN}</a>
+			<a class="btn btn-default" href="{U_AP_POLL_LIST_CLOSED}">{L_AP_POLL_LIST_CLOSED}</a>
+		</div>
+		<!-- IF pagination --><div class="pull-right pagination">{AP_POLL_COUNT} <!-- INCLUDE pagination.html --></div><!-- ENDIF -->
+	</div>
+</div>
+<!-- BEGIN poll -->
+<div class="panel panel-default ap-poll-list-item">
+	<div class="panel-body">
+		<h3><a href="{poll.U_TOPIC}">{poll.POLL_TITLE}</a></h3>
+		<p><a href="{poll.U_FORUM}">{poll.FORUM_NAME}</a> &raquo; {poll.TOPIC_TITLE}</p>
+		<p><strong>{poll.STATUS}</strong><!-- IF poll.DATE_TEXT --> &middot; {poll.DATE_TEXT}<!-- ENDIF --></p>
+		<!-- IF poll.RESULT_SUMMARY --><p>{poll.RESULT_SUMMARY}</p><!-- ENDIF -->
+		<a class="btn btn-primary btn-sm" href="{poll.U_TOPIC}">{L_AP_POLL_LIST_VIEW}</a>
+	</div>
+</div>
+<!-- BEGINELSE -->
+<div class="alert alert-info">{L_AP_POLL_LIST_EMPTY}</div>
+<!-- END poll -->
+<!-- IF pagination --><div class="text-right pagination">{AP_POLL_COUNT} <!-- INCLUDE pagination.html --></div><!-- ENDIF -->
+<!-- INCLUDE overall_footer.html -->

@@ -11,3 +11,8 @@ wolfsblvt_advancedpolls_multi_question_vote:
     requirements:
         topic_id: '\d+'
     methods: [POST]
+
+wolfsblvt_advancedpolls_poll_list:
+    path: /advancedpolls/polls
+    defaults: { _controller: wolfsblvt.advancedpolls.controller.poll_list:handle }
+    methods: [GET]

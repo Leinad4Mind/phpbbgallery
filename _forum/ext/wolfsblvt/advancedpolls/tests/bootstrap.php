@@ -41,6 +41,10 @@ if (!defined('POSTS_TABLE'))
 {
 	define('POSTS_TABLE', 'phpbb_posts');
 }
+if (!defined('FORUMS_TABLE'))
+{
+	define('FORUMS_TABLE', 'phpbb_forums');
+}
 if (!defined('USERS_TABLE'))
 {
 	define('USERS_TABLE', 'phpbb_users');
@@ -57,6 +61,10 @@ if (!defined('OPTION_FLAG_SMILIES'))
 {
 	define('OPTION_FLAG_SMILIES', 2);
 }
+if (!defined('ITEM_APPROVED'))
+{
+	define('ITEM_APPROVED', 1);
+}
 
 require_once __DIR__ . '/../core/poll_options.php';
 require_once __DIR__ . '/../core/ranked_vote.php';
@@ -71,6 +79,7 @@ require_once __DIR__ . '/../core/compatibility.php';
 require_once __DIR__ . '/../core/advancedpolls.php';
 require_once __DIR__ . '/../controller/infopoll.php';
 require_once __DIR__ . '/../controller/multi_question.php';
+require_once __DIR__ . '/../controller/poll_list.php';
 require_once __DIR__ . '/../event/listener.php';
 require_once __DIR__ . '/../cron/task/pollend.php';
 require_once __DIR__ . '/../notification/pollended.php';
@@ -81,5 +90,8 @@ require_once __DIR__ . '/../migrations/v1_3_0_schema.php';
 require_once __DIR__ . '/../migrations/v1_3_0_data.php';
 require_once __DIR__ . '/../migrations/v1_4_0_schema.php';
 require_once __DIR__ . '/../migrations/v1_4_0_data.php';
+require_once __DIR__ . '/../migrations/v1_5_0_schema.php';
+require_once __DIR__ . '/../migrations/v1_6_0_schema.php';
+require_once __DIR__ . '/../migrations/v1_6_0_data.php';
 require_once __DIR__ . '/../acp/advancedpolls_module.php';
 require_once __DIR__ . '/../ext.php';

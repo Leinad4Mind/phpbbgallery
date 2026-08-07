@@ -19,6 +19,9 @@ final class poll_options
 	const TYPE_SCORING = 1;
 	const TYPE_RANKING = 2;
 
+	const SCORE_RESULT_TOTAL = 0;
+	const SCORE_RESULT_AVERAGE = 1;
+
 	const VISIBILITY_PUBLIC = 0;
 	const VISIBILITY_DEFAULT = 1;
 	const VISIBILITY_VOTE_COMPLETED = 2;
@@ -41,6 +44,32 @@ final class poll_options
 			self::TYPE_SCORING,
 			self::TYPE_RANKING,
 		), true);
+	}
+
+	/**
+	 * Whether a scoring result presentation is supported.
+	 *
+	 * @param int $mode Result presentation
+	 * @return bool
+	 */
+	public static function is_valid_score_result($mode)
+	{
+		return in_array((int) $mode, array(
+			self::SCORE_RESULT_TOTAL,
+			self::SCORE_RESULT_AVERAGE,
+		), true);
+	}
+
+	/**
+	 * Calculate an arithmetic mean without treating skipped options as zero.
+	 *
+	 * @param int $weighted_total Sum of all scores
+	 * @param int $rating_count Number of ratings submitted for the option
+	 * @return float
+	 */
+	public static function score_average($weighted_total, $rating_count)
+	{
+		return $rating_count > 0 ? (float) $weighted_total / (int) $rating_count : 0.0;
 	}
 
 	/**

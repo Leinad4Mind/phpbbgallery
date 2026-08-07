@@ -56,6 +56,12 @@ $lang = array_merge($lang, [
 	'AP_VOTE_MODE_NO_CHANGE' => '変更不可',
 	'AP_VOTE_MODE_INCREMENTAL' => '段階的な投票',
 	'AP_VOTE_MODE_CHANGE' => '変更を許可',
+	'AP_DEFAULT_SCORE_RESULT' => '既定の採点結果',
+	'AP_DEFAULT_SCORE_RESULT_EXPLAIN' => '新しい数値採点投票で、最初に累積ポイントと各選択肢の算術平均のどちらを表示するか選択します。',
+	'AP_DEFAULT_SHOW_PERCENT' => '既定で割合を表示',
+	'AP_DEFAULT_SHOW_PERCENT_EXPLAIN' => '新しい数値採点投票における割合の初期表示設定です。',
+	'AP_SCORE_RESULT_TOTAL' => '累積ポイント',
+	'AP_SCORE_RESULT_AVERAGE' => '平均評価',
 
 	'AP_ACT_VOTES_HIDE'			=> '投票結果非表示を有効にする',
 	'AP_ACT_VOTES_HIDE_EXPLAIN'		=> '投票が終了するまで投票結果を非表示にすることを選択するオプションを有効化します。',
@@ -83,6 +89,8 @@ $lang = array_merge($lang, [
 	'AP_ACT_POLL_NOTIFICATIONS_EXPLAIN'	=> '非表示の投票結果が表示されるようになったとき、およびユーザーが投票した投票に新しい選択肢が追加されたときの通知を有効にします。',
 	'AP_ACT_POLL_COLLAPSIBLE'			=> '折りたたみ可能な投票を有効にする',
 	'AP_ACT_POLL_COLLAPSIBLE_EXPLAIN'	=> '投票の作成時または編集時に折りたたみオプションを表示します。インストール時に「Collapsible Forum Categories」がインストール済みの場合は自動的に有効になりますが、管理者はいつでも変更できます。',
+	'AP_SHOW_POLL_LIST_NAVBAR' => 'ナビゲーションバーに投票リンクを表示',
+	'AP_SHOW_POLL_LIST_NAVBAR_EXPLAIN' => 'フォーラムのナビゲーションバーに、閲覧可能な投票一覧へのリンクを追加します。',
 
 	'AP_DEFAULT_VOTES_CHANGE'		=> '再投票許可の設定をデフォルトにする',
 	'AP_DEFAULT_VOTES_HIDE'			=> '投票結果非表示の設定をデフォルトにする',

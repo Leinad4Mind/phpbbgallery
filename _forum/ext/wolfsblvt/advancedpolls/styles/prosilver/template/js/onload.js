@@ -94,17 +94,50 @@ $(document).ready(function () {
 	}
 
 	function updateScoreBreakdowns(breakdowns) {
+		var weightedTotal = 0;
+		var ratingCount = 0;
+		var maximumScore = 0;
+		var averageMode = false;
+		var showPercent = !!$.wolfsblvt.advancedpoll_json_data.wolfsblvt_poll_show_percent;
 		$.each(breakdowns, function (optionId, breakdown) {
 			var $source = $('.ap-score-breakdown-source[data-score-option-id="' + optionId + '"]');
 			var title = $source.find('.ap-score-breakdown-popup strong').first().text();
 			$source.find('.ap-score-total').text(breakdown.total);
 			$source.find('.ap-score-breakdown-list').html(breakdown.detail);
 			$source.find('.ap-score-breakdown-trigger').attr('aria-label', breakdown.total + '. ' + title);
+			if (breakdown.average_mode) {
+				averageMode = true;
+				weightedTotal += parseInt(breakdown.weighted_total, 10) || 0;
+				ratingCount += parseInt(breakdown.rating_count, 10) || 0;
+				maximumScore = parseInt(breakdown.maximum_score, 10) || maximumScore;
+				var $option = $('.topic_poll [data-poll-option-id="' + optionId + '"]').first();
+				var $bar = $option.is('div') ? $option.find('.progress-bar').first() : $option.find('dd.resultbar > div').first();
+				$bar.css('width', breakdown.bar_percent + '%');
+				if ($option.is('div')) {
+					$bar.text(showPercent ? breakdown.bar_percent + '%' : '');
+				} else {
+					$option.find('.poll_option_percent').text(breakdown.bar_percent + '%').toggleClass('hidden', !showPercent);
+				}
+			}
 		});
+		if (averageMode) {
+			var overall = ratingCount ? weightedTotal / ratingCount : 0;
+			$('form.topic_poll .poll_total_vote_cnt').text(parseFloat(overall.toFixed(2)) + ' / ' + maximumScore);
+		}
 		installScoreBreakdowns();
 	}
 
 	installScoreBreakdowns();
+	if ($.wolfsblvt.advancedpoll_json_data.wolfsblvt_poll_scoring && !$.wolfsblvt.advancedpoll_json_data.wolfsblvt_poll_show_percent) {
+		$('form.topic_poll [data-poll-option-id]').each(function () {
+			var $option = $(this);
+			if ($option.is('div')) {
+				$option.find('.progress-bar').first().empty();
+			} else {
+				$option.find('.poll_option_percent').addClass('hidden');
+			}
+		});
+	}
 
 	$(document).on('click', '.ap-score-breakdown-trigger', function (event) {
 		event.stopPropagation();

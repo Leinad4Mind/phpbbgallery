@@ -57,6 +57,12 @@ $lang = array_merge($lang, [
 	'AP_VOTE_MODE_NO_CHANGE' => 'Nessuna modifica',
 	'AP_VOTE_MODE_INCREMENTAL' => 'Votazione progressiva',
 	'AP_VOTE_MODE_CHANGE' => 'Consenti modifiche',
+	'AP_DEFAULT_SCORE_RESULT' => 'Risultato del punteggio predefinito',
+	'AP_DEFAULT_SCORE_RESULT_EXPLAIN' => 'Scegli se i nuovi sondaggi con punteggio numerico mostrano inizialmente i punti accumulati o la media aritmetica di ogni opzione.',
+	'AP_DEFAULT_SHOW_PERCENT' => 'Mostra le percentuali per impostazione predefinita',
+	'AP_DEFAULT_SHOW_PERCENT_EXPLAIN' => 'Visibilità iniziale della percentuale per i nuovi sondaggi con punteggio numerico.',
+	'AP_SCORE_RESULT_TOTAL' => 'Punti accumulati',
+	'AP_SCORE_RESULT_AVERAGE' => 'Valutazione media',
 
 	'AP_ACT_VOTES_HIDE'				=> 'Attiva voti nascosti',
 	'AP_ACT_VOTES_HIDE_EXPLAIN'		=> 'Attiva l’opzione per nascondere il numero di voti fino al termine del sondaggio.',
@@ -84,6 +90,8 @@ $lang = array_merge($lang, [
 	'AP_ACT_POLL_NOTIFICATIONS_EXPLAIN'		=> 'Attiva le notifiche quando diventano visibili i risultati di un sondaggio nascosto e quando vengono aggiunte nuove opzioni a un sondaggio in cui un utente ha votato.',
 	'AP_ACT_POLL_COLLAPSIBLE'				=> 'Attiva sondaggi comprimibili',
 	'AP_ACT_POLL_COLLAPSIBLE_EXPLAIN'		=> 'Mostra l’opzione comprimibile durante la creazione o la modifica di un sondaggio. All’installazione questa impostazione viene attivata automaticamente se è installata «Collapsible Forum Categories»; gli amministratori possono sempre modificarla.',
+	'AP_SHOW_POLL_LIST_NAVBAR' => 'Mostra il collegamento ai sondaggi nella barra di navigazione',
+	'AP_SHOW_POLL_LIST_NAVBAR_EXPLAIN' => 'Aggiunge alla barra di navigazione del forum un collegamento all’elenco dei sondaggi accessibili.',
 
 	'AP_DEFAULT_VOTES_CHANGE'		=> 'Impostazione predefinita per cambio voto',
 	'AP_DEFAULT_VOTES_HIDE'			=> 'Impostazione predefinita per voti nascosti',

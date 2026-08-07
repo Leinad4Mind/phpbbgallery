@@ -57,6 +57,12 @@ $lang = array_merge($lang, [
 	'AP_VOTE_MODE_NO_CHANGE' => 'Geen wijzigingen',
 	'AP_VOTE_MODE_INCREMENTAL' => 'Stapsgewijs stemmen',
 	'AP_VOTE_MODE_CHANGE' => 'Wijzigingen toestaan',
+	'AP_DEFAULT_SCORE_RESULT' => 'Standaard scoreweergave',
+	'AP_DEFAULT_SCORE_RESULT_EXPLAIN' => 'Kies of nieuwe numerieke scorepeilingen aanvankelijk opgetelde punten of het rekenkundige gemiddelde per optie tonen.',
+	'AP_DEFAULT_SHOW_PERCENT' => 'Percentages standaard tonen',
+	'AP_DEFAULT_SHOW_PERCENT_EXPLAIN' => 'De aanvankelijke zichtbaarheid van percentages voor nieuwe numerieke scorepeilingen.',
+	'AP_SCORE_RESULT_TOTAL' => 'Opgetelde punten',
+	'AP_SCORE_RESULT_AVERAGE' => 'Gemiddelde beoordeling',
 
 	'AP_ACT_VOTES_HIDE'				=> 'Activeer stemmen verbergen',
 	'AP_ACT_VOTES_HIDE_EXPLAIN'		=> 'Activeren van deze optie verbergt de stemmen op Peilingen tot deze ten einde is.',
@@ -84,6 +90,8 @@ $lang = array_merge($lang, [
 	'AP_ACT_POLL_NOTIFICATIONS_EXPLAIN'	=> 'Activeert meldingen wanneer de resultaten van een verborgen peiling zichtbaar worden en wanneer nieuwe opties worden toegevoegd aan een peiling waarop een gebruiker heeft gestemd.',
 	'AP_ACT_POLL_COLLAPSIBLE'			=> 'Inklapbare peilingen inschakelen',
 	'AP_ACT_POLL_COLLAPSIBLE_EXPLAIN'	=> 'Toont de inklapoptie bij het maken of bewerken van een peiling. Bij installatie wordt deze instelling automatisch ingeschakeld als ‘Collapsible Forum Categories’ is geïnstalleerd; beheerders kunnen haar altijd wijzigen.',
+	'AP_SHOW_POLL_LIST_NAVBAR' => 'Peilingenlink in de navigatiebalk tonen',
+	'AP_SHOW_POLL_LIST_NAVBAR_EXPLAIN' => 'Voegt een link naar de lijst met toegankelijke peilingen toe aan de navigatiebalk van het forum.',
 
 	'AP_DEFAULT_VOTES_CHANGE'		=> 'Selecteer standaard waarde voor het wijzigen van stemmen',
 	'AP_DEFAULT_VOTES_HIDE'			=> 'Selecteer standaard waarde voor het verbergen van stemmen',

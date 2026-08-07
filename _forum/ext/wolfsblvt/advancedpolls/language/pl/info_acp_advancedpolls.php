@@ -56,6 +56,12 @@ $lang = array_merge($lang, [
 	'AP_VOTE_MODE_NO_CHANGE' => 'Bez zmian',
 	'AP_VOTE_MODE_INCREMENTAL' => 'Głosowanie stopniowe',
 	'AP_VOTE_MODE_CHANGE' => 'Zezwól na zmiany',
+	'AP_DEFAULT_SCORE_RESULT' => 'Domyślny wynik punktacji',
+	'AP_DEFAULT_SCORE_RESULT_EXPLAIN' => 'Wybierz, czy nowe ankiety z punktacją liczbową mają początkowo pokazywać sumę punktów, czy średnią arytmetyczną każdej opcji.',
+	'AP_DEFAULT_SHOW_PERCENT' => 'Domyślnie pokazuj procenty',
+	'AP_DEFAULT_SHOW_PERCENT_EXPLAIN' => 'Początkowa widoczność procentów w nowych ankietach z punktacją liczbową.',
+	'AP_SCORE_RESULT_TOTAL' => 'Suma punktów',
+	'AP_SCORE_RESULT_AVERAGE' => 'Średnia ocena',
 
 	'AP_ACT_VOTES_HIDE'				=> 'Pokazuj głosy',
 	'AP_ACT_VOTES_HIDE_EXPLAIN'		=> 'Wybierz tę opcję, żeby ukryć oddane głosy do końca głosowania.',
@@ -83,6 +89,8 @@ $lang = array_merge($lang, [
 	'AP_ACT_POLL_NOTIFICATIONS_EXPLAIN'		=> 'Włącza powiadomienia, gdy wyniki ukrytej ankiety stają się widoczne oraz gdy do ankiety, w której użytkownik głosował, zostają dodane nowe opcje.',
 	'AP_ACT_POLL_COLLAPSIBLE'				=> 'Włącz zwijalne ankiety',
 	'AP_ACT_POLL_COLLAPSIBLE_EXPLAIN'		=> 'Wyświetla opcję zwijania podczas tworzenia lub edytowania ankiety. Przy instalacji ustawienie jest automatycznie włączane, jeśli zainstalowano „Collapsible Forum Categories”; administratorzy mogą je zawsze zmienić.',
+	'AP_SHOW_POLL_LIST_NAVBAR' => 'Pokaż odnośnik do ankiet na pasku nawigacji',
+	'AP_SHOW_POLL_LIST_NAVBAR_EXPLAIN' => 'Dodaje na pasku nawigacji forum odnośnik do listy dostępnych ankiet.',
 
 	'AP_DEFAULT_VOTES_CHANGE'		=> 'Wybierz domyślne ustawienia zmiany oddanego głosu',
 	'AP_DEFAULT_VOTES_HIDE'			=> 'Wybierz domyślne ustawienia ukrytych głosujących',

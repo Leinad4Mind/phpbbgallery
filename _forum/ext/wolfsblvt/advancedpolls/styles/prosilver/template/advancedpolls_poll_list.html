@@ -1,0 +1,25 @@
+<!-- INCLUDE overall_header.html -->
+<h2 class="solo">{L_AP_POLL_LIST}</h2>
+<div class="action-bar bar-top">
+	<div class="buttons">
+		<a class="button" href="{U_AP_POLL_LIST_ALL}">{L_AP_POLL_LIST_ALL}</a>
+		<a class="button" href="{U_AP_POLL_LIST_OPEN}">{L_AP_POLL_LIST_OPEN}</a>
+		<a class="button" href="{U_AP_POLL_LIST_CLOSED}">{L_AP_POLL_LIST_CLOSED}</a>
+	</div>
+	<!-- IF pagination --><div class="pagination">{AP_POLL_COUNT} <!-- INCLUDE pagination.html --></div><!-- ENDIF -->
+</div>
+<!-- BEGIN poll -->
+<div class="panel ap-poll-list-item">
+	<div class="inner">
+		<h3><a href="{poll.U_TOPIC}">{poll.POLL_TITLE}</a></h3>
+		<p><a href="{poll.U_FORUM}">{poll.FORUM_NAME}</a> &raquo; {poll.TOPIC_TITLE}</p>
+		<p><strong>{poll.STATUS}</strong><!-- IF poll.DATE_TEXT --> &middot; {poll.DATE_TEXT}<!-- ENDIF --></p>
+		<!-- IF poll.RESULT_SUMMARY --><p>{poll.RESULT_SUMMARY}</p><!-- ENDIF -->
+		<p><a class="button" href="{poll.U_TOPIC}">{L_AP_POLL_LIST_VIEW}</a></p>
+	</div>
+</div>
+<!-- BEGINELSE -->
+<div class="panel"><div class="inner"><p>{L_AP_POLL_LIST_EMPTY}</p></div></div>
+<!-- END poll -->
+<!-- IF pagination --><div class="action-bar bar-bottom"><div class="pagination">{AP_POLL_COUNT} <!-- INCLUDE pagination.html --></div></div><!-- ENDIF -->
+<!-- INCLUDE overall_footer.html -->
