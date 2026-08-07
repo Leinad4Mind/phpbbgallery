@@ -121,6 +121,7 @@
 		}
 		textarea.dispatchEvent(new Event('input', { bubbles: true }));
 		setStatus(dialog.getAttribute('data-inserted-label'), false);
+		closeDialog();
 	}
 
 	function renderAlbums(albums, selectedAlbum)
