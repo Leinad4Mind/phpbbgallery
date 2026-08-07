@@ -38,4 +38,7 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, [
 	'NOTIFICATION_AP_POLL_ENDED'		=> '<strong>Die Ergebnisse sind nun sichtbar für die Umfrage</strong>:',
 	'NOTIFICATION_TYPE_AP_POLL_ENDED'	=> 'Die Ergebnisse für eine Umfrage, an der Sie teilgenommen haben, sind nun einsehbar.',
+	'NOTIFICATION_AP_POLL_OPTIONS_ADDED' => '<strong>Zu einer Umfrage, an der Sie teilgenommen haben, wurden neue Optionen hinzugefügt</strong>:',
+	'NOTIFICATION_TYPE_AP_POLL_OPTIONS_ADDED' => 'Zu einer Umfrage, an der Sie teilgenommen haben, werden neue Optionen hinzugefügt',
+	'LOG_AP_POLL_OPTIONS_ADDED' => '%1$d Option(en) zur Umfrage im Thema „%2$s“ hinzugefügt, ohne vorhandene Stimmen zurückzusetzen',
 ]);

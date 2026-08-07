@@ -5,6 +5,7 @@ services:
             - '@wolfsblvt.advancedpolls.advancedpolls'
             - '@wolfsblvt.advancedpolls.vote_user_lifecycle'
             - '@wolfsblvt.advancedpolls.multi_question_manager'
+            - '@wolfsblvt.advancedpolls.poll_option_appender'
             - '@request'
             - '@controller.helper'
             - '@config'
@@ -23,6 +24,16 @@ services:
         class: wolfsblvt\advancedpolls\core\multi_question_manager
         arguments:
             - '@dbal.conn'
+            - '%core.table_prefix%'
+    wolfsblvt.advancedpolls.poll_option_appender:
+        class: wolfsblvt\advancedpolls\core\poll_option_appender
+        arguments:
+            - '@dbal.conn'
+            - '@config'
+            - '@notification_manager'
+            - '@log'
+            - '@user'
+            - '@wolfsblvt.advancedpolls.multi_question_manager'
             - '%core.table_prefix%'
     wolfsblvt.advancedpolls.advancedpolls:
         class: wolfsblvt\advancedpolls\core\advancedpolls
@@ -59,6 +70,15 @@ services:
         parent: notification.type.base
         calls:
             - [set_config, ['@config']]
+        tags:
+            - {name: notification.type}
+    wolfsblvt.advancedpolls.notification.type.optionsadded:
+        class: wolfsblvt\advancedpolls\notification\optionsadded
+        shared: false
+        parent: notification.type.base
+        calls:
+            - [set_config, ['@config']]
+            - [set_table_prefix, ['%core.table_prefix%']]
         tags:
             - {name: notification.type}
     wolfsblvt.advancedpolls.cron.task.pollend:

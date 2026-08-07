@@ -38,7 +38,10 @@ class ext extends \phpbb\extension\base
 
 				// Enable advanced polls notifications
 				$phpbb_notifications = $this->container->get('notification_manager');
-				$phpbb_notifications->enable_notifications('wolfsblvt.advancedpolls.notification.type.pollended');
+				foreach ($this->notification_types() as $notification_type)
+				{
+					$phpbb_notifications->enable_notifications($notification_type);
+				}
 
 				return 'notifications';
 
@@ -109,7 +112,10 @@ class ext extends \phpbb\extension\base
 
 				// Disable advanced polls notifications
 				$phpbb_notifications = $this->container->get('notification_manager');
-				$phpbb_notifications->disable_notifications('wolfsblvt.advancedpolls.notification.type.pollended');
+				foreach ($this->notification_types() as $notification_type)
+				{
+					$phpbb_notifications->disable_notifications($notification_type);
+				}
 
 				return 'notifications';
 
@@ -139,7 +145,10 @@ class ext extends \phpbb\extension\base
 
 				// Purge advanced polls notifications
 				$phpbb_notifications = $this->container->get('notification_manager');
-				$phpbb_notifications->purge_notifications('wolfsblvt.advancedpolls.notification.type.pollended');
+				foreach ($this->notification_types() as $notification_type)
+				{
+					$phpbb_notifications->purge_notifications($notification_type);
+				}
 
 				return 'notifications';
 
@@ -152,5 +161,18 @@ class ext extends \phpbb\extension\base
 
 			break;
 		}
+	}
+
+	/**
+	 * Notification types owned by the extension.
+	 *
+	 * @return array
+	 */
+	protected function notification_types()
+	{
+		return array(
+			'wolfsblvt.advancedpolls.notification.type.pollended',
+			'wolfsblvt.advancedpolls.notification.type.optionsadded',
+		);
 	}
 }

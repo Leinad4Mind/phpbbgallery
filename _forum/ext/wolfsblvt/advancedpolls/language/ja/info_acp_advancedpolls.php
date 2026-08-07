@@ -80,7 +80,7 @@ $lang = array_merge($lang, [
 	'AP_ACT_POLL_END'			=> '投票終了設定を有効にする',
 	'AP_ACT_POLL_END_EXPLAIN'		=> '投票が開始されてから投票期間を指定するだけでなく、日付/時刻で投票が終了するタイミングを指定できます。',
 	'AP_ACT_POLL_NOTIFICATIONS'		=> '投票通知を有効にする',
-	'AP_ACT_POLL_NOTIFICATIONS_EXPLAIN'	=> '投票結果を非表示にした投票が終了したときに全ての投票者に通知を送る機能を有効にします。それに従い、投票結果が見えるようになります。',
+	'AP_ACT_POLL_NOTIFICATIONS_EXPLAIN'	=> '非表示の投票結果が表示されるようになったとき、およびユーザーが投票した投票に新しい選択肢が追加されたときの通知を有効にします。',
 	'AP_ACT_POLL_COLLAPSIBLE'			=> '折りたたみ可能な投票を有効にする',
 	'AP_ACT_POLL_COLLAPSIBLE_EXPLAIN'	=> '投票の作成時または編集時に折りたたみオプションを表示します。インストール時に「Collapsible Forum Categories」がインストール済みの場合は自動的に有効になりますが、管理者はいつでも変更できます。',
 

@@ -80,7 +80,7 @@ $lang = array_merge($lang, [
 	'AP_ACT_POLL_END'                   => 'Ativar data de término da votação',
 	'AP_ACT_POLL_END_EXPLAIN'           => 'Permite especificar quando termina uma votação através de uma data/hora, em vez de apenas especificar uma duração a partir do início da votação.',
 	'AP_ACT_POLL_NOTIFICATIONS'         => 'Ativar notificações de votações',
-	'AP_ACT_POLL_NOTIFICATIONS_EXPLAIN' => 'Ativa o envio de notificações a todos os votantes de uma votação oculta quando ela terminar e os resultados se tornarem visíveis.',
+	'AP_ACT_POLL_NOTIFICATIONS_EXPLAIN' => 'Ativa as notificações quando os resultados de uma votação oculta se tornam visíveis e quando novas opções são adicionadas a uma votação da qual um usuário participou.',
 	'AP_ACT_POLL_COLLAPSIBLE' => 'Ativar enquetes recolhíveis',
 	'AP_ACT_POLL_COLLAPSIBLE_EXPLAIN' => 'Mostra a opção de recolher ao criar ou editar uma enquete. Na instalação, esta configuração é ativada automaticamente se a extensão “Collapsible Forum Categories” estiver instalada; os administradores sempre podem alterá-la.',
 

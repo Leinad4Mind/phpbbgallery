@@ -81,7 +81,7 @@ $lang = array_merge($lang, [
 	'AP_ACT_POLL_END'				=> 'Attiva termine voto',
 	'AP_ACT_POLL_END_EXPLAIN'		=> 'Attiva l’opzione per specificate la data e/o l’ora di fine sondaggio, invece di specificarne la durata a partire dall’inizio del sondaggio.',
 	'AP_ACT_POLL_NOTIFICATIONS'				=> 'Attiva notifiche sondaggio',
-	'AP_ACT_POLL_NOTIFICATIONS_EXPLAIN'		=> 'Attiva l’invio di notifiche ai votanti alla scadenza di una votazione con voti nascosti per cui sono visibili i risultati.',
+	'AP_ACT_POLL_NOTIFICATIONS_EXPLAIN'		=> 'Attiva le notifiche quando diventano visibili i risultati di un sondaggio nascosto e quando vengono aggiunte nuove opzioni a un sondaggio in cui un utente ha votato.',
 	'AP_ACT_POLL_COLLAPSIBLE'				=> 'Attiva sondaggi comprimibili',
 	'AP_ACT_POLL_COLLAPSIBLE_EXPLAIN'		=> 'Mostra l’opzione comprimibile durante la creazione o la modifica di un sondaggio. All’installazione questa impostazione viene attivata automaticamente se è installata «Collapsible Forum Categories»; gli amministratori possono sempre modificarla.',
 

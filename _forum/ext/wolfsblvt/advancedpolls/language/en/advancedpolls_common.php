@@ -38,4 +38,7 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, [
 	'NOTIFICATION_AP_POLL_ENDED'		=> '<strong>Results are visible for poll</strong>:',
 	'NOTIFICATION_TYPE_AP_POLL_ENDED'	=> 'Results are now visible for a poll in which you have voted',
+	'NOTIFICATION_AP_POLL_OPTIONS_ADDED' => '<strong>New options were added to a poll in which you voted</strong>:',
+	'NOTIFICATION_TYPE_AP_POLL_OPTIONS_ADDED' => 'New options are added to a poll in which you have voted',
+	'LOG_AP_POLL_OPTIONS_ADDED' => 'Added %1$d option(s) to the poll in topic “%2$s” without resetting existing votes',
 ]);

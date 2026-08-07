@@ -39,4 +39,7 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, [
 	'NOTIFICATION_AP_POLL_ENDED'		=> '<strong>Resultaten zijn zichtbaar voor de peiling</strong>:',
 	'NOTIFICATION_TYPE_AP_POLL_ENDED'	=> 'Resultaten voor de peiling waarop u heeft gestemd zijn nu zichtbaar',
+	'NOTIFICATION_AP_POLL_OPTIONS_ADDED' => '<strong>Er zijn nieuwe opties toegevoegd aan een peiling waarop u hebt gestemd</strong>:',
+	'NOTIFICATION_TYPE_AP_POLL_OPTIONS_ADDED' => 'Er worden nieuwe opties toegevoegd aan een peiling waarop u hebt gestemd',
+	'LOG_AP_POLL_OPTIONS_ADDED' => '%1$d optie(s) toegevoegd aan de peiling in onderwerp “%2$s” zonder bestaande stemmen opnieuw in te stellen',
 ]);

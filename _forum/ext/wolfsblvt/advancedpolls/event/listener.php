@@ -27,6 +27,9 @@ class listener implements EventSubscriberInterface
 	/** @var \wolfsblvt\advancedpolls\core\multi_question_manager */
 	protected $multi_question_manager;
 
+	/** @var \wolfsblvt\advancedpolls\core\poll_option_appender */
+	protected $poll_option_appender;
+
 	/** @var \phpbb\request\request_interface */
 	protected $request;
 
@@ -54,6 +57,7 @@ class listener implements EventSubscriberInterface
 	 * @param \wolfsblvt\advancedpolls\core\advancedpolls	$advancedpolls		Advanced Polls
 	 * @param \wolfsblvt\advancedpolls\core\vote_user_lifecycle $vote_user_lifecycle Vote user lifecycle
 	 * @param \wolfsblvt\advancedpolls\core\multi_question_manager $multi_question_manager Multi-question persistence
+	 * @param \wolfsblvt\advancedpolls\core\poll_option_appender $poll_option_appender Safe live option appends
 	 * @param \phpbb\request\request_interface			$request			Request object
 	 * @param \phpbb\controller\helper				$controller_helper Controller helper
 	 * @param \phpbb\config\config					$config Config object
@@ -62,11 +66,12 @@ class listener implements EventSubscriberInterface
 	 * @param \phpbb\template\template						$template			Template object
 	 * @param \phpbb\user									$user				User object
 	 */
-	public function __construct(\wolfsblvt\advancedpolls\core\advancedpolls $advancedpolls, \wolfsblvt\advancedpolls\core\vote_user_lifecycle $vote_user_lifecycle, \wolfsblvt\advancedpolls\core\multi_question_manager $multi_question_manager, \phpbb\request\request_interface $request, \phpbb\controller\helper $controller_helper, \phpbb\config\config $config, \phpbb\auth\auth $auth, \phpbb\path_helper $path_helper, \phpbb\template\template $template, \phpbb\user $user)
+	public function __construct(\wolfsblvt\advancedpolls\core\advancedpolls $advancedpolls, \wolfsblvt\advancedpolls\core\vote_user_lifecycle $vote_user_lifecycle, \wolfsblvt\advancedpolls\core\multi_question_manager $multi_question_manager, \wolfsblvt\advancedpolls\core\poll_option_appender $poll_option_appender, \phpbb\request\request_interface $request, \phpbb\controller\helper $controller_helper, \phpbb\config\config $config, \phpbb\auth\auth $auth, \phpbb\path_helper $path_helper, \phpbb\template\template $template, \phpbb\user $user)
 	{
 		$this->advancedpolls = $advancedpolls;
 		$this->vote_user_lifecycle = $vote_user_lifecycle;
 		$this->multi_question_manager = $multi_question_manager;
+		$this->poll_option_appender = $poll_option_appender;
 		$this->request = $request;
 		$this->controller_helper = $controller_helper;
 		$this->config = $config;
@@ -123,6 +128,7 @@ class listener implements EventSubscriberInterface
 	public function delete_topics_before($event)
 	{
 		$this->multi_question_manager->delete_topics($event['topic_ids']);
+		$this->poll_option_appender->delete_topics($event['topic_ids']);
 	}
 
 	/**
@@ -176,6 +182,28 @@ class listener implements EventSubscriberInterface
 				{
 					$error[] = isset($this->user->lang[$multi['error']]) ? $this->user->lang[$multi['error']] : $this->user->lang['FORM_INVALID'];
 				}
+				else if ($this->request->is_set_post('ap_append_poll_options'))
+				{
+					if ($event['mode'] !== 'edit'
+						|| !isset($event['post_data']['topic_first_post_id'])
+						|| (int) $event['post_id'] !== (int) $event['post_data']['topic_first_post_id'])
+					{
+						$error[] = $this->user->lang['AP_APPEND_INVALID'];
+					}
+					else
+					{
+						$append = $this->poll_option_appender->validate(
+							(int) $event['topic_id'],
+							$poll,
+							$multi['questions'],
+							$this->request->variable('wolfsblvt_poll_vote_mode', \wolfsblvt\advancedpolls\core\poll_options::VOTE_MODE_NO_CHANGE)
+						);
+						if ($append['error'])
+						{
+							$error[] = isset($this->user->lang[$append['error']]) ? $this->user->lang[$append['error']] : $this->user->lang['FORM_INVALID'];
+						}
+					}
+				}
 			}
 			if (count($error))
 			{
@@ -210,6 +238,11 @@ class listener implements EventSubscriberInterface
 			$json = json_encode($topic_id ? $this->multi_question_manager->load($topic_id) : array());
 		}
 		$page_data['AP_MULTI_QUESTIONS_JSON'] = htmlspecialchars($json ?: '[]', ENT_COMPAT, 'UTF-8');
+		$page_data['AP_CAN_APPEND_OPTIONS'] = $event['mode'] === 'edit'
+			&& !empty($post_data['poll_title'])
+			&& isset($post_data['topic_first_post_id'])
+			&& (int) $event['post_id'] === (int) $post_data['topic_first_post_id'];
+		$page_data['AP_APPEND_OPTIONS_CHECKED'] = $this->request->is_set_post('ap_append_poll_options') ? ' checked="checked"' : '';
 		$event['page_data'] = $page_data;
 	}
 
@@ -221,6 +254,12 @@ class listener implements EventSubscriberInterface
 	 */
 	public function save_multi_questions($event)
 	{
+		if ($this->poll_option_appender->has_pending())
+		{
+			$this->poll_option_appender->commit();
+			return;
+		}
+
 		if (!$this->request->is_set_post('ap_multi_questions'))
 		{
 			return;
@@ -271,6 +310,26 @@ class listener implements EventSubscriberInterface
 	{
 		if (isset($event['poll']['poll_title']))
 		{
+			$poll = $event['poll'];
+			$editing_topic_poll = in_array($event['post_mode'], array('edit_first_post', 'edit_topic'), true)
+				&& isset($event['data']['post_id'], $event['data']['topic_first_post_id'])
+				&& (int) $event['data']['post_id'] === (int) $event['data']['topic_first_post_id'];
+			if ($this->request->is_set_post('ap_append_poll_options') && $editing_topic_poll)
+			{
+				$multi = $this->decode_multi_questions($poll);
+				$append = $this->poll_option_appender->prepare(
+					(int) $event['data']['topic_id'],
+					$poll,
+					$multi['error'] ? array() : $multi['questions'],
+					$this->request->variable('wolfsblvt_poll_vote_mode', \wolfsblvt\advancedpolls\core\poll_options::VOTE_MODE_NO_CHANGE)
+				);
+				if (!$append['error'])
+				{
+					$poll['poll_options'] = $append['existing_primary'];
+					$poll['poll_options_size'] = count($append['existing_primary']);
+					$event['poll'] = $poll;
+				}
+			}
 			$sql_data = $event['sql_data'];
 			$this->advancedpolls->save_config_for_polls($sql_data);
 			$event['sql_data'] = $sql_data;

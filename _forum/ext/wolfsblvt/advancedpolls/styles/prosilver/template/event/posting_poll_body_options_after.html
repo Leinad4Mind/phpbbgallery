@@ -129,6 +129,15 @@
 	<dt><label for="wolfsblvt_poll_required">{L_AP_QUESTION_REQUIRED}{L_COLON}</label></dt>
 	<dd><label><input type="checkbox" id="wolfsblvt_poll_required" name="wolfsblvt_poll_required"{WOLFSBLVT_POLL_REQUIRED_CHECKED} /> {L_AP_PRIMARY_QUESTION_REQUIRED_EXPLAIN}</label></dd>
 </dl>
+<!-- IF AP_CAN_APPEND_OPTIONS -->
+<dl class="ap-append-options">
+	<dt><label for="ap_append_poll_options">{L_AP_APPEND_OPTIONS}{L_COLON}</label></dt>
+	<dd>
+		<label><input type="checkbox" id="ap_append_poll_options" name="ap_append_poll_options"{AP_APPEND_OPTIONS_CHECKED} /> {L_AP_APPEND_OPTIONS_EXPLAIN}</label>
+		<p class="error">{L_AP_APPEND_OPTIONS_WARNING}</p>
+	</dd>
+</dl>
+<!-- ENDIF -->
 <div class="ap-multi-question-editor" data-max-questions="20" data-question-label="{L_AP_QUESTION}" data-options-label="{L_POLL_OPTIONS}" data-required-label="{L_AP_QUESTION_REQUIRED}" data-remove-label="{L_REMOVE}">
 	<h3>{L_AP_ADDITIONAL_QUESTIONS}</h3>
 	<p>{L_AP_ADDITIONAL_QUESTIONS_EXPLAIN}</p>

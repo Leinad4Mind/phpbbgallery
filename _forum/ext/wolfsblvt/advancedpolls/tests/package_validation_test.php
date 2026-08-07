@@ -35,6 +35,8 @@ class package_validation_test extends TestCase
 		$this->assertArrayHasKey('wolfsblvt.advancedpolls.controller.infopoll', $parsed_services['services']);
 		$this->assertArrayHasKey('wolfsblvt.advancedpolls.controller.multi_question', $parsed_services['services']);
 		$this->assertArrayHasKey('wolfsblvt.advancedpolls.multi_question_manager', $parsed_services['services']);
+		$this->assertArrayHasKey('wolfsblvt.advancedpolls.poll_option_appender', $parsed_services['services']);
+		$this->assertArrayHasKey('wolfsblvt.advancedpolls.notification.type.optionsadded', $parsed_services['services']);
 		$this->assertArrayHasKey('wolfsblvt_advancedpolls_infopoll', $parsed_routing);
 		$this->assertArrayHasKey('wolfsblvt_advancedpolls_multi_question_vote', $parsed_routing);
 		$this->assertSame(array('POST'), $parsed_routing['wolfsblvt_advancedpolls_multi_question_vote']['methods']);
@@ -84,6 +86,10 @@ class package_validation_test extends TestCase
 			'AP_POLL_COLLAPSIBLE',
 			'AP_COLLAPSE_POLL',
 			'AP_EXPAND_POLL',
+			'AP_APPEND_OPTIONS',
+			'AP_APPEND_OPTIONS_WARNING',
+			'AP_APPEND_REQUIRES_CHANGES',
+			'AP_APPEND_STRUCTURE_CHANGED',
 		);
 		$acp_keys = array(
 			'AP_DEFAULT_POLL_VISIBILITY',
@@ -110,6 +116,9 @@ class package_validation_test extends TestCase
 			}
 			$this->assertArrayHasKey('NOTIFICATION_AP_POLL_ENDED', $common);
 			$this->assertArrayHasKey('NOTIFICATION_TYPE_AP_POLL_ENDED', $common);
+			$this->assertArrayHasKey('NOTIFICATION_AP_POLL_OPTIONS_ADDED', $common);
+			$this->assertArrayHasKey('NOTIFICATION_TYPE_AP_POLL_OPTIONS_ADDED', $common);
+			$this->assertArrayHasKey('LOG_AP_POLL_OPTIONS_ADDED', $common);
 		}
 	}
 
@@ -158,6 +167,8 @@ class package_validation_test extends TestCase
 			$this->assertStringContainsString('WOLFSBLVT_POLL_COLLAPSIBLE', $posting);
 			$this->assertStringContainsString('name="wolfsblvt_poll_collapsible"', $posting);
 			$this->assertStringContainsString('name="ap_multi_questions"', $posting);
+			$this->assertStringContainsString('name="ap_append_poll_options"', $posting);
+			$this->assertStringContainsString('AP_CAN_APPEND_OPTIONS', $posting);
 			if ($style !== 'prosilver')
 			{
 				$this->assertStringContainsString('form-control input-sm ap-config-select', $posting);
@@ -233,6 +244,8 @@ class package_validation_test extends TestCase
 		$lifecycle = file_get_contents($this->extension_root() . '/core/vote_user_lifecycle.php');
 		$listener = file_get_contents($this->extension_root() . '/event/listener.php');
 		$multi_controller = file_get_contents($this->extension_root() . '/controller/multi_question.php');
+		$appender = file_get_contents($this->extension_root() . '/core/poll_option_appender.php');
+		$options_notification = file_get_contents($this->extension_root() . '/notification/optionsadded.php');
 
 		$this->assertStringContainsString("is_set_post('delete_vote')", $core);
 		$this->assertStringContainsString("check_form_key('posting')", $core);
@@ -253,6 +266,12 @@ class package_validation_test extends TestCase
 		$this->assertStringContainsString("raw_variable('answers'", $multi_controller);
 		$this->assertStringContainsString('AP_POLL_COLLAPSIBLE', $core);
 		$this->assertStringContainsString('activate_poll_collapsible', $core);
+		$this->assertStringContainsString('get_authorised_recipients($users', $options_notification);
+		$this->assertStringContainsString("vote_user_id <> ' . ANONYMOUS", $options_notification);
+		$this->assertStringContainsString("sql_transaction('rollback')", $appender);
+		$this->assertStringContainsString('poll_options::VOTE_MODE_CHANGE', $appender);
+		$this->assertStringContainsString("'poll_option_total' => 0", $appender);
+		$this->assertStringContainsString("'option_total' => 0", $appender);
 		$this->assertStringNotContainsString('order_items', $schema);
 		$this->assertStringNotContainsString('purchase', strtolower($schema));
 	}

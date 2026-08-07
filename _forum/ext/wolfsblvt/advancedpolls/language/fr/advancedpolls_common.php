@@ -41,4 +41,7 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, [
 	'NOTIFICATION_AP_POLL_ENDED'      => '<strong>Les résultats d’un sondage sont disponibles</strong> :',
 	'NOTIFICATION_TYPE_AP_POLL_ENDED' => 'Les résultats d’un sondage auquel vous avez participé sont disponibles',
+	'NOTIFICATION_AP_POLL_OPTIONS_ADDED' => '<strong>De nouvelles options ont été ajoutées à un sondage auquel vous avez participé</strong> :',
+	'NOTIFICATION_TYPE_AP_POLL_OPTIONS_ADDED' => 'De nouvelles options sont ajoutées à un sondage auquel vous avez participé',
+	'LOG_AP_POLL_OPTIONS_ADDED' => 'Ajout de %1$d option(s) au sondage du sujet « %2$s » sans réinitialiser les votes existants',
 ]);

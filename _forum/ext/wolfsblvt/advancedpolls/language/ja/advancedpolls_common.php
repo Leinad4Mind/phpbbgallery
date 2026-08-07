@@ -38,4 +38,7 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, [
 	'NOTIFICATION_AP_POLL_ENDED'		=> '<strong>投票結果が表示されます</strong>:',
 	'NOTIFICATION_TYPE_AP_POLL_ENDED'	=> '投票した結果が表示されるようになりました',
+	'NOTIFICATION_AP_POLL_OPTIONS_ADDED' => '<strong>投票した投票に新しい選択肢が追加されました</strong>:',
+	'NOTIFICATION_TYPE_AP_POLL_OPTIONS_ADDED' => '投票した投票に新しい選択肢が追加されたとき',
+	'LOG_AP_POLL_OPTIONS_ADDED' => 'トピック「%2$s」の投票に、既存の投票をリセットせず%1$d個の選択肢を追加しました',
 ]);

@@ -39,4 +39,7 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, [
 	'NOTIFICATION_AP_POLL_ENDED'		=> '<strong>Доступны результаты опроса</strong>:',
 	'NOTIFICATION_TYPE_AP_POLL_ENDED'	=> 'Результаты опроса, в котором вы голосовали, стали открыты для просмотра',
+	'NOTIFICATION_AP_POLL_OPTIONS_ADDED' => '<strong>В опрос, в котором вы голосовали, добавлены новые варианты</strong>:',
+	'NOTIFICATION_TYPE_AP_POLL_OPTIONS_ADDED' => 'В опрос, в котором вы голосовали, добавляются новые варианты',
+	'LOG_AP_POLL_OPTIONS_ADDED' => 'Добавлено вариантов: %1$d — в опрос темы «%2$s» без сброса существующих голосов',
 ]);

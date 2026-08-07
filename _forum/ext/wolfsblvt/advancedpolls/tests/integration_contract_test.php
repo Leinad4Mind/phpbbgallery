@@ -97,6 +97,101 @@ class integration_contract_test extends TestCase
 		$this->assertTrue($event['data']['results_hidden']);
 	}
 
+	public function test_listener_replaces_submitted_options_before_phpbb_can_reset_votes()
+	{
+		$core = $this->createMock(\wolfsblvt\advancedpolls\core\advancedpolls::class);
+		$core->expects($this->once())->method('save_config_for_polls');
+		$appender = $this->createMock(\wolfsblvt\advancedpolls\core\poll_option_appender::class);
+		$appender->expects($this->once())->method('prepare')
+			->with(42, $this->isType('array'), array(), poll_options::VOTE_MODE_CHANGE)
+			->willReturn(array(
+				'error' => false,
+				'existing_primary' => array('First', 'Second'),
+			));
+		$request = $this->createMock(\phpbb\request\request_interface::class);
+		$request->method('is_set_post')->willReturnCallback(function ($name) {
+			return $name === 'ap_append_poll_options';
+		});
+		$request->method('raw_variable')->willReturn('[]');
+		$request->method('variable')->willReturn(poll_options::VOTE_MODE_CHANGE);
+		$listener = $this->create_listener($core, null, null, $appender, $request);
+		$event = new \ArrayObject(array(
+			'poll' => array(
+				'poll_title' => 'Question',
+				'poll_options' => array('First', 'Second', 'Third'),
+				'poll_max_options' => 1,
+			),
+			'post_mode' => 'edit_first_post',
+			'data' => array(
+				'topic_id' => 42,
+				'post_id' => 10,
+				'topic_first_post_id' => 10,
+			),
+			'sql_data' => array(),
+		));
+
+		$listener->save_config_for_polls($event);
+
+		$this->assertSame(array('First', 'Second'), $event['poll']['poll_options']);
+		$this->assertSame(2, $event['poll']['poll_options_size']);
+	}
+
+	public function test_listener_commits_pending_append_instead_of_destructive_multi_question_sync()
+	{
+		$appender = $this->createMock(\wolfsblvt\advancedpolls\core\poll_option_appender::class);
+		$appender->method('has_pending')->willReturn(true);
+		$appender->expects($this->once())->method('commit');
+		$multi = $this->createMock(\wolfsblvt\advancedpolls\core\multi_question_manager::class);
+		$multi->expects($this->never())->method('sync');
+		$listener = $this->create_listener(null, null, $multi, $appender);
+
+		$listener->save_multi_questions(new \ArrayObject(array()));
+	}
+
+	public function test_listener_refuses_append_path_outside_the_topic_first_post()
+	{
+		$appender = $this->createMock(\wolfsblvt\advancedpolls\core\poll_option_appender::class);
+		$appender->expects($this->never())->method('prepare');
+		$request = $this->createMock(\phpbb\request\request_interface::class);
+		$request->method('is_set_post')->willReturn(true);
+		$listener = $this->create_listener(null, null, null, $appender, $request);
+		$event = new \ArrayObject(array(
+			'poll' => array('poll_title' => 'Question', 'poll_options' => array('First', 'Second')),
+			'post_mode' => 'edit',
+			'data' => array(
+				'topic_id' => 42,
+				'post_id' => 11,
+				'topic_first_post_id' => 10,
+			),
+			'sql_data' => array(),
+		));
+
+		$listener->save_config_for_polls($event);
+
+		$this->assertSame(array('First', 'Second'), $event['poll']['poll_options']);
+	}
+
+	public function test_append_option_is_available_when_editing_the_topic_poll()
+	{
+		$listener = $this->create_listener();
+		$event = new \ArrayObject(array(
+			'post_data' => array(
+				'topic_id' => 42,
+				'poll_title' => 'Question',
+				'poll_length' => 0,
+				'topic_first_post_id' => 10,
+			),
+			'page_data' => array(),
+			'preview' => false,
+			'mode' => 'edit',
+			'post_id' => 10,
+		));
+
+		$listener->config_for_polls_to_template($event);
+
+		$this->assertTrue($event['page_data']['AP_CAN_APPEND_OPTIONS']);
+	}
+
 	public function test_acp_selectors_escape_labels_and_select_only_requested_value()
 	{
 		$module = new advancedpolls_module();
@@ -161,7 +256,9 @@ class integration_contract_test extends TestCase
 		$tables = $migration->update_schema()['add_tables'];
 		$this->assertArrayHasKey('phpbb_advancedpolls_ballots', $tables);
 		$this->assertArrayHasKey('phpbb_advancedpolls_questions', $tables);
+		$this->assertArrayHasKey('phpbb_advancedpolls_revisions', $tables);
 		$this->assertSame('question_id', $tables['phpbb_advancedpolls_questions']['PRIMARY_KEY']);
+		$this->assertSame('revision_id', $tables['phpbb_advancedpolls_revisions']['PRIMARY_KEY']);
 	}
 
 	public function test_v1_4_data_enables_collapsible_polls_when_categories_extension_is_installed()
@@ -245,29 +342,45 @@ class integration_contract_test extends TestCase
 			'ext/wolfsblvt/advancedpolls/'
 		);
 
-		$notifications->expects($this->once())->method('enable_notifications')
-			->with('wolfsblvt.advancedpolls.notification.type.pollended');
+		$enabled = array();
+		$notifications->expects($this->exactly(2))->method('enable_notifications')
+			->willReturnCallback(function ($type) use (&$enabled) {
+				$enabled[] = $type;
+			});
 		$this->assertSame('notifications', $extension->enable_step(''));
+		$this->assertSame(array(
+			'wolfsblvt.advancedpolls.notification.type.pollended',
+			'wolfsblvt.advancedpolls.notification.type.optionsadded',
+		), $enabled);
 		$this->assertFalse($extension->enable_step('notifications'));
 		$loaded_language = $language_property->getValue($language);
 		$this->assertSame('Enabled<div>Next steps and permissions</div>', $loaded_language['EXTENSION_ENABLE_SUCCESS']);
 
-		$notifications->expects($this->once())->method('disable_notifications')
-			->with('wolfsblvt.advancedpolls.notification.type.pollended');
+		$disabled = array();
+		$notifications->expects($this->exactly(2))->method('disable_notifications')
+			->willReturnCallback(function ($type) use (&$disabled) {
+				$disabled[] = $type;
+			});
 		$this->assertSame('notifications', $extension->disable_step(''));
+		$this->assertSame($enabled, $disabled);
 
-		$notifications->expects($this->once())->method('purge_notifications')
-			->with('wolfsblvt.advancedpolls.notification.type.pollended');
+		$purged = array();
+		$notifications->expects($this->exactly(2))->method('purge_notifications')
+			->willReturnCallback(function ($type) use (&$purged) {
+				$purged[] = $type;
+			});
 		$this->assertSame('notifications', $extension->purge_step(''));
+		$this->assertSame($enabled, $purged);
 	}
 
-	private function create_listener($advancedpolls = null, $lifecycle = null)
+	private function create_listener($advancedpolls = null, $lifecycle = null, $multi = null, $appender = null, $request = null)
 	{
 		return new listener(
 			$advancedpolls ?: $this->createMock(\wolfsblvt\advancedpolls\core\advancedpolls::class),
 			$lifecycle ?: $this->createMock(\wolfsblvt\advancedpolls\core\vote_user_lifecycle::class),
-			$this->createMock(\wolfsblvt\advancedpolls\core\multi_question_manager::class),
-			$this->createMock(\phpbb\request\request_interface::class),
+			$multi ?: $this->createMock(\wolfsblvt\advancedpolls\core\multi_question_manager::class),
+			$appender ?: $this->createMock(\wolfsblvt\advancedpolls\core\poll_option_appender::class),
+			$request ?: $this->createMock(\phpbb\request\request_interface::class),
 			$this->createMock(\phpbb\controller\helper::class),
 			new \phpbb\config\config(array('cookie_name' => 'phpbb')),
 			$this->createMock(\phpbb\auth\auth::class),
