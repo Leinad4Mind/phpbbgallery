@@ -64,6 +64,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Reworked FLATBOOTS comment actions and profile contacts to follow the theme's native viewtopic toolbar, dropdown, quote-button and mini-profile contact patterns.
 - Moved the BBPoints original-download counter into the image metadata immediately below the view counter in prosilver, BBOOTS and FLATBOOTS.
 - Matched the FLATBOOTS image action and Favorite buttons to the larger button size used by the theme's viewtopic toolbar.
 - Hid the individual EXIF field switches in the Gallery ACP while EXIF display is disabled, preserving their saved values and restoring them immediately when it is enabled again.

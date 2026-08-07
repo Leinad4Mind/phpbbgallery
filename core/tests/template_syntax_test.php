@@ -614,6 +614,20 @@ final class template_syntax_test extends TestCase
 		}
 	}
 
+	public function test_flatboots_comments_reuse_viewtopic_actions_and_contacts(): void
+	{
+		$gallery = (string) file_get_contents(dirname(__DIR__) . '/styles/FLATBOOTS/template/gallery/viewimage_body.html');
+		$viewtopic = (string) file_get_contents(dirname(__DIR__, 4) . '/styles/FLATBOOTS/template/viewtopic_body.html');
+
+		foreach (['class="btn-group btn-group-sm"', 'class="btn btn-default dropdown-toggle"', 'class="dropdown-menu dropdown-menu-right"', 'class="btn btn-default btn-sm"', 'class="default-contact"', 'mini-profile-contact mini-profile-control list-unstyled text-center'] as $markup)
+		{
+			$this->assertStringContainsString($markup, $gallery);
+			$this->assertStringContainsString($markup === 'class="dropdown-menu dropdown-menu-right"' ? 'dropdown-menu' : $markup, $viewtopic);
+		}
+
+		$this->assertStringNotContainsString('class="btn btn-xs btn-default" href="{{ commentrow.', $gallery);
+	}
+
 	public function test_bootstrap_subscription_items_use_a_responsive_media_grid(): void
 	{
 		$core_root = dirname(__DIR__);
