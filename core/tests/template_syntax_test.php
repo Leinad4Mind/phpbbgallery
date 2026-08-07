@@ -22,7 +22,7 @@ final class template_syntax_test extends TestCase
 	public function test_modernized_templates_use_only_native_twig_syntax(): void
 	{
 		$template_paths = $this->template_paths();
-		$this->assertCount(167, $template_paths);
+		$this->assertCount(176, $template_paths);
 
 		foreach ($template_paths as $template_path)
 		{
@@ -231,6 +231,21 @@ final class template_syntax_test extends TestCase
 		$this->assertStringContainsString('window.location.assign(url)', $javascript);
 		$this->assertStringContainsString('phpbbgallery:imagechange', $javascript);
 		$this->assertStringContainsString('requestId !== requestSequence', $javascript);
+	}
+
+	public function test_viewimage_statistics_event_follows_the_view_counter(): void
+	{
+		$core_root = dirname(__DIR__);
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$template = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/viewimage_body.html');
+			$views = strpos($template, '{{ IMAGE_VIEW }}');
+			$statistics = strpos($template, '{% EVENT phpbbgallery_core_viewimage_statistics %}');
+
+			$this->assertNotFalse($views, $style);
+			$this->assertNotFalse($statistics, $style);
+			$this->assertGreaterThan($views, $statistics, $style);
+		}
 	}
 
 	public function test_quick_upload_uses_the_native_shared_client_and_server_configuration(): void
@@ -678,6 +693,7 @@ final class template_syntax_test extends TestCase
 			$core_root . '/styles/prosilver',
 			$gallery_root . '/acpcleanup/adm/style',
 			$gallery_root . '/acpimport/adm/style',
+			$gallery_root . '/bbpointsimages/styles',
 			$gallery_root . '/bbtagsimages/adm/style',
 			$gallery_root . '/bbtagsimages/styles',
 			$gallery_root . '/exif/adm/style',
