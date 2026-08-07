@@ -24,6 +24,23 @@
 	var currentAlbum = 0;
 	var requestController = null;
 
+	function placeToolbarTriggers()
+	{
+		triggers.forEach(function (trigger) {
+			if (!trigger.hasAttribute('data-gallery-selector-toolbar'))
+			{
+				return;
+			}
+
+			var form = trigger.closest('form');
+			var toolbar = form ? form.querySelector('#format-buttons, .posting-btns') : null;
+			if (toolbar && !toolbar.contains(trigger))
+			{
+				toolbar.appendChild(trigger);
+			}
+		});
+	}
+
 	function clearElement(element)
 	{
 		while (element.firstChild)
@@ -237,6 +254,8 @@
 				}
 			});
 	}
+
+	placeToolbarTriggers();
 
 	triggers.forEach(function (trigger) {
 		trigger.addEventListener('click', function (event) {

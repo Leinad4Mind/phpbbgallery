@@ -345,6 +345,13 @@ input.autowidth-gallery {
 	margin: 6px 4px 6px 0;
 }
 
+#format-buttons > .phpbbgallery-selector-launch,
+.posting-btns > .phpbbgallery-selector-launch
+{
+	margin: 0 0 0 4px;
+	vertical-align: middle;
+}
+
 .phpbbgallery-selector-dialog
 {
 	background: transparent;
