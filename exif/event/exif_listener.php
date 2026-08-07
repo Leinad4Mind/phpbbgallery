@@ -170,10 +170,13 @@ class exif_listener implements EventSubscriberInterface
 	{
 		if ($event['mode'] == 'main')
 		{
+			global $template;
+
 			$return_ary = $event['return_ary'];
 			if (isset($return_ary['vars']['IMAGE_SETTINGS']))
 			{
 				$this->user->add_lang_ext('phpbbgallery/exif', 'info_exif');
+				$template->assign_var('S_GALLERY_EXIF_CONFIG', true);
 
 				$return_ary['vars']['IMAGE_SETTINGS']['disp_exifdata'] = ['lang' => 'DISP_EXIF_DATA',		'validate' => 'bool',	'type' => 'radio:yes_no'];
 

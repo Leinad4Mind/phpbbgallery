@@ -149,6 +149,24 @@ class exif_display_filter_test extends TestCase
 			}
 		}
 	}
+
+	public function test_acp_field_switches_follow_the_master_exif_option(): void
+	{
+		$template_path = dirname(__DIR__) . '/adm/style/event/acp_overall_header_head_append.html';
+		$template = (string) file_get_contents($template_path);
+		$listener = (string) file_get_contents(dirname(__DIR__) . '/event/exif_listener.php');
+
+		$this->assertFileExists($template_path);
+		$this->assertStringContainsString("assign_var('S_GALLERY_EXIF_CONFIG', true)", $listener);
+		$this->assertStringContainsString('{% if S_GALLERY_EXIF_CONFIG %}', $template);
+		$this->assertStringContainsString("'config[disp_exifdata]'", $template);
+		$this->assertStringContainsString("'config[exif_show_'", $template);
+		$this->assertStringContainsString("closest('dl')", $template);
+		$this->assertStringContainsString('row.hidden = !visible', $template);
+		$this->assertStringContainsString("addEventListener('change', updateExifOptions)", $template);
+		$this->assertStringContainsString("addEventListener('reset'", $template);
+		$this->assertStringNotContainsString('.disabled', $template);
+	}
 }
 
 class filter_test_template

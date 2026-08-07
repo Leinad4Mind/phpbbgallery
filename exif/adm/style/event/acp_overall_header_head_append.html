@@ -1,0 +1,58 @@
+{% if S_GALLERY_EXIF_CONFIG %}
+	<script>
+		(function () {
+			'use strict';
+
+			document.addEventListener('DOMContentLoaded', function () {
+				var form = document.getElementById('acp_board');
+				var masterName = 'config[disp_exifdata]';
+				var dependentPrefix = 'config[exif_show_';
+
+				if (!form) {
+					return;
+				}
+
+				function exifDisplayEnabled() {
+					var fields = form.elements;
+
+					for (var index = 0; index < fields.length; index++) {
+						if (fields[index].name === masterName && fields[index].checked) {
+							return fields[index].value === '1';
+						}
+					}
+
+					return false;
+				}
+
+				function updateExifOptions() {
+					var visible = exifDisplayEnabled();
+					var fields = form.elements;
+
+					for (var index = 0; index < fields.length; index++) {
+						if (!fields[index].name || fields[index].name.indexOf(dependentPrefix) !== 0) {
+							continue;
+						}
+
+						var row = fields[index].closest ? fields[index].closest('dl') : null;
+						if (row) {
+							row.hidden = !visible;
+							row.setAttribute('aria-hidden', visible ? 'false' : 'true');
+						}
+					}
+				}
+
+				var fields = form.elements;
+				for (var index = 0; index < fields.length; index++) {
+					if (fields[index].name === masterName) {
+						fields[index].addEventListener('change', updateExifOptions);
+					}
+				}
+
+				form.addEventListener('reset', function () {
+					window.setTimeout(updateExifOptions, 0);
+				});
+				updateExifOptions();
+			});
+		}());
+	</script>
+{% endif %}
