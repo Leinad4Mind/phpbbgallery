@@ -60,15 +60,17 @@ class main_module
 			}
 
 			$legacy_migrator = $phpbb_container->get('phpbbgallery.acpcleanup.bbcode.legacy_migrator');
-			$remaining = $legacy_migrator->count_remaining();
-			if ($remaining === 0)
-			{
-				trigger_error($user->lang('GALLERY_LEGACY_BBCODE_MIGRATE_NONE') . adm_back_link($this->u_action));
-			}
-
 			if (confirm_box(true))
 			{
-				$result = $legacy_migrator->migrate_batch();
+				$remaining = $request->variable('legacy_remaining', 0);
+				if ($remaining < 1)
+				{
+					$remaining = $legacy_migrator->count_remaining();
+				}
+				$result = $legacy_migrator->migrate_batch(
+					\phpbbgallery\acpcleanup\bbcode\legacy_migrator::BATCH_SIZE,
+					$remaining
+				);
 				trigger_error($user->lang(
 					'GALLERY_LEGACY_BBCODE_MIGRATE_RESULT',
 					$result['migrated'],
@@ -77,12 +79,19 @@ class main_module
 				) . adm_back_link($this->u_action));
 			}
 
+			$remaining = $legacy_migrator->count_remaining();
+			if ($remaining === 0)
+			{
+				trigger_error($user->lang('GALLERY_LEGACY_BBCODE_MIGRATE_NONE') . adm_back_link($this->u_action));
+			}
+
 			confirm_box(false, $user->lang(
 				'GALLERY_LEGACY_BBCODE_MIGRATE_CONFIRM',
 				$remaining,
 				'[' . $gallery_config->get_bbcode_tag() . ']'
 			), build_hidden_fields([
 				'action' => $action,
+				'legacy_remaining' => $remaining,
 			]), 'confirm_body.html', $this->u_action);
 			return;
 		}
@@ -575,6 +584,7 @@ class main_module
 
 			'S_FOUNDER'				=> ($user->data['user_type'] == USER_FOUNDER) ? true : false,
 			'ACTIVE_BBCODE_TAG'		=> '[' . $gallery_config->get_bbcode_tag() . ']',
+			'LEGACY_BBCODE_BATCH_SIZE' => \phpbbgallery\acpcleanup\bbcode\legacy_migrator::BATCH_SIZE,
 		]);
 	}
 

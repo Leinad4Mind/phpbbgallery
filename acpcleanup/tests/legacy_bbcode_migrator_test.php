@@ -84,6 +84,29 @@ final class legacy_bbcode_migrator_test extends TestCase
 		$this->assertSame(['migrated' => 1, 'failed' => 0, 'remaining' => 0], $result);
 	}
 
+	public function test_known_remaining_avoids_a_second_full_count_after_the_batch(): void
+	{
+		$db = new legacy_migrator_db();
+		$db->bbcode_rows = [
+			['bbcode_id' => 10, 'bbcode_tag' => 'album'],
+			['bbcode_id' => 12, 'bbcode_tag' => 'image'],
+		];
+		$db->record_sets = [[[
+			'record_id' => 5,
+			'record_text' => '[album:uid]7[/album:uid]',
+			'record_bitfield' => '',
+		]], [], []];
+		$config = new \phpbbgallery\core\config();
+		$config->values['bbcode_tag'] = 'image';
+
+		$result = $this->migrator($db, $config)->migrate_batch(legacy_migrator::BATCH_SIZE, 8185);
+
+		$this->assertSame(25, legacy_migrator::BATCH_SIZE);
+		$this->assertSame(['migrated' => 1, 'failed' => 0, 'remaining' => 8184], $result);
+		$this->assertCount(5, $db->queries);
+		$this->assertStringNotContainsString('COUNT(', implode(chr(10), $db->queries));
+	}
+
 	public function test_action_is_confirmed_batched_and_owned_by_acp_cleanup(): void
 	{
 		$module = (string) file_get_contents(dirname(__DIR__) . '/acp/main_module.php');
@@ -92,8 +115,8 @@ final class legacy_bbcode_migrator_test extends TestCase
 
 		$this->assertStringContainsString("if (\$action === 'migrate_legacy_bbcodes')", $module);
 		$this->assertStringContainsString("'GALLERY_LEGACY_BBCODE_MIGRATE_CONFIRM'", $module);
-		$this->assertStringContainsString('$legacy_migrator->migrate_batch()', $module);
-		$this->assertStringContainsString("lang('GALLERY_LEGACY_BBCODE_MIGRATE_EXPLAIN', ACTIVE_BBCODE_TAG)", $template);
+		$this->assertStringContainsString('legacy_migrator::BATCH_SIZE', $module);
+		$this->assertStringContainsString("lang('GALLERY_LEGACY_BBCODE_MIGRATE_EXPLAIN', LEGACY_BBCODE_BATCH_SIZE, ACTIVE_BBCODE_TAG)", $template);
 		$this->assertStringContainsString('phpbbgallery.acpcleanup.bbcode.legacy_migrator:', $services);
 		$this->assertStringNotContainsString('generate_text_for_', (string) file_get_contents(dirname(__DIR__) . '/bbcode/legacy_migrator.php'));
 

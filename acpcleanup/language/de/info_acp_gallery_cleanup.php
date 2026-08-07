@@ -81,7 +81,7 @@ $lang = array_merge($lang, [
 	'CLEAN_USER_NOT_FOUND' => 'Der von Ihnen ausgewählte Benutzer existiert nicht!',
 
 	'GALLERY_LEGACY_BBCODE_MIGRATE' => 'Veraltete Galerie-BBCodes migrieren',
-	'GALLERY_LEGACY_BBCODE_MIGRATE_EXPLAIN' => 'Durchsucht Beiträge, private Nachrichten und Signaturen nach dem ausgeblendeten Alias [album]. Nach der Bestätigung verarbeitet jeder Durchlauf bis zu 250 Einträge neu als %s und hält die BBCode-Metadaten von phpBB konsistent. Wiederhole den Vorgang, bis keine Einträge verbleiben.',
+	'GALLERY_LEGACY_BBCODE_MIGRATE_EXPLAIN' => 'Durchsucht Beiträge, private Nachrichten und Signaturen nach dem ausgeblendeten Alias [album]. Nach der Bestätigung verarbeitet jeder Durchlauf bis zu %1$d Einträge neu als %2$s und hält die BBCode-Metadaten von phpBB konsistent. Wiederhole den Vorgang, bis keine Einträge verbleiben.',
 	'GALLERY_LEGACY_BBCODE_MIGRATE_CONFIRM' => 'Den nächsten Stapel von [album] nach %2$s konvertieren? Derzeit verbleiben %1$d Einträge.',
 	'GALLERY_LEGACY_BBCODE_MIGRATE_NONE' => 'Es sind keine veralteten [album]-Einträge mehr vorhanden.',
 	'GALLERY_LEGACY_BBCODE_MIGRATE_RESULT' => '%1$d Einträge wurden konvertiert. %2$d Einträge konnten nicht konvertiert werden. %3$d Einträge verbleiben.',

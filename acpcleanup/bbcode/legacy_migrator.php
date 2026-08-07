@@ -15,7 +15,7 @@ namespace phpbbgallery\acpcleanup\bbcode;
  */
 class legacy_migrator
 {
-	private const BATCH_SIZE = 250;
+	public const BATCH_SIZE = 25;
 
 	/** Gallery storage connection. */
 	private \phpbb\db\driver\driver_interface $db;
@@ -92,9 +92,10 @@ class legacy_migrator
 	/**
 	 * Convert one bounded batch. Running the action again safely resumes the work.
 	 *
+	 * @param int|null $known_remaining Count confirmed before this batch, when available
 	 * @return array{migrated: int, failed: int, remaining: int}
 	 */
-	public function migrate_batch(int $limit = self::BATCH_SIZE): array
+	public function migrate_batch(int $limit = self::BATCH_SIZE, ?int $known_remaining = null): array
 	{
 		$active_tag = $this->gallery_config->get_bbcode_tag();
 		$bbcode_ids = $this->get_bbcode_ids($active_tag);
@@ -126,7 +127,9 @@ class legacy_migrator
 		return [
 			'migrated' => $migrated,
 			'failed' => $failed,
-			'remaining' => $this->count_remaining(),
+			'remaining' => $known_remaining === null
+				? $this->count_remaining()
+				: max(0, $known_remaining - $migrated),
 		];
 	}
 

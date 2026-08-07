@@ -81,7 +81,7 @@ $lang = array_merge($lang, [
 	'CLEAN_USER_NOT_FOUND' => 'L\'utente selezionato non esiste!',
 
 	'GALLERY_LEGACY_BBCODE_MIGRATE' => 'Migra i BBCode precedenti della galleria',
-	'GALLERY_LEGACY_BBCODE_MIGRATE_EXPLAIN' => 'Cerca l’alias nascosto [album] nei messaggi, nei messaggi privati e nelle firme. Dopo la conferma, ogni esecuzione rielabora fino a 250 record come %s e mantiene coerenti i metadati BBCode di phpBB. Ripeti l’azione finché non rimangono record.',
+	'GALLERY_LEGACY_BBCODE_MIGRATE_EXPLAIN' => 'Cerca l’alias nascosto [album] nei messaggi, nei messaggi privati e nelle firme. Dopo la conferma, ogni esecuzione rielabora fino a %1$d record come %2$s e mantiene coerenti i metadati BBCode di phpBB. Ripeti l’azione finché non rimangono record.',
 	'GALLERY_LEGACY_BBCODE_MIGRATE_CONFIRM' => 'Convertire il prossimo gruppo da [album] a %2$s? Attualmente restano %1$d record.',
 	'GALLERY_LEGACY_BBCODE_MIGRATE_NONE' => 'Non restano record precedenti con [album].',
 	'GALLERY_LEGACY_BBCODE_MIGRATE_RESULT' => 'Sono stati convertiti %1$d record. Non è stato possibile convertire %2$d record. Restano %3$d record.',

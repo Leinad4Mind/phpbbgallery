@@ -80,7 +80,7 @@ $lang = array_merge($lang, [
 	'CLEAN_USER_NOT_FOUND' => 'De geselecteerde gebruiker bestaat niet.',
 
 	'GALLERY_LEGACY_BBCODE_MIGRATE' => 'Verouderde galerij-BBCodes migreren',
-	'GALLERY_LEGACY_BBCODE_MIGRATE_EXPLAIN' => 'Zoekt in berichten, privéberichten en handtekeningen naar de verborgen alias [album]. Na bevestiging verwerkt elke uitvoering maximaal 250 records opnieuw als %s en houdt de BBCode-metagegevens van phpBB consistent. Herhaal de actie totdat er geen records meer zijn.',
+	'GALLERY_LEGACY_BBCODE_MIGRATE_EXPLAIN' => 'Zoekt in berichten, privéberichten en handtekeningen naar de verborgen alias [album]. Na bevestiging verwerkt elke uitvoering maximaal %1$d records opnieuw als %2$s en houdt de BBCode-metagegevens van phpBB consistent. Herhaal de actie totdat er geen records meer zijn.',
 	'GALLERY_LEGACY_BBCODE_MIGRATE_CONFIRM' => 'De volgende batch van [album] naar %2$s converteren? Er zijn momenteel nog %1$d records.',
 	'GALLERY_LEGACY_BBCODE_MIGRATE_NONE' => 'Er zijn geen verouderde [album]-records meer.',
 	'GALLERY_LEGACY_BBCODE_MIGRATE_RESULT' => '%1$d records zijn geconverteerd. %2$d records konden niet worden geconverteerd. Er zijn nog %3$d records.',
