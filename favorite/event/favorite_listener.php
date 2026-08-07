@@ -76,6 +76,7 @@ class favorite_listener implements EventSubscriberInterface
 		return [
 			'core.delete_user_after'							=> 'delete_user_after',
 			'phpbbgallery.acpcleanup.cleanup_finished'			=> 'cleanup_finished',
+			'phpbbgallery.core.album.image_template_vars'		=> 'album_image_template_vars',
 			'phpbbgallery.core.image.delete_images'				=> 'image_delete_images',
 			'phpbbgallery.core.viewimage'						=> 'viewimage',
 			'phpbbgallery.core.ucp.set_settings_nosubmit'		=> 'ucp_set_settings_nosubmit',
@@ -115,13 +116,56 @@ class favorite_listener implements EventSubscriberInterface
 		// toggle always reflects what is actually stored.
 		$favorited = $this->favorite->is_favorited($image_id, $user_id);
 
-		$this->template->assign_vars([
-			'S_IMAGE_FAVORITED'		=> $favorited,
-			'S_FAVORITE_NAME'		=> $this->language->lang($favorited ? 'UNFAVORITE_IMAGE' : 'FAVORITE_IMAGE'),
-			'S_FAVORITE_NAME_TOGGLE'=> $this->language->lang($favorited ? 'FAVORITE_IMAGE' : 'UNFAVORITE_IMAGE'),
-			'U_FAVORITE_IMAGE'		=> $this->favorite_route($image_id, !$favorited),
-			'U_FAVORITE_IMAGE_TOGGLE'=> $this->favorite_route($image_id, $favorited),
-		]);
+		$this->template->assign_vars($this->favorite_template_vars($image_id, $favorited));
+	}
+
+	/**
+	 * Add favourite state and actions to a bounded album page in one query.
+	 *
+	 * @param \phpbb\event\data $event Event object
+	 * @return void
+	 */
+	public function album_image_template_vars(\phpbb\event\data $event): void
+	{
+		$user_id = (int) $this->user->data['user_id'];
+		$images = (array) $event['images'];
+		$album_data = (array) $event['album_data'];
+		$album_id = (int) ($album_data['album_id'] ?? 0);
+		$album_user_id = (int) ($album_data['album_user_id'] ?? 0);
+
+		if ($user_id === ANONYMOUS || !$images
+			|| !$this->gallery_auth->acl_check('i_favorite', $album_id, $album_user_id))
+		{
+			return;
+		}
+
+		$image_ids = [];
+		foreach ($images as $image)
+		{
+			$image_id = (int) ($image['image_id'] ?? 0);
+			if ($image_id > 0)
+			{
+				$image_ids[$image_id] = $image_id;
+			}
+		}
+		if (!$image_ids)
+		{
+			return;
+		}
+
+		$this->language->add_lang('info_favorite', 'phpbbgallery/favorite');
+		$favorited = array_fill_keys($this->favorite->get_favorited_ids(array_values($image_ids), $user_id), true);
+		$image_template_vars = (array) $event['image_template_vars'];
+		foreach ($image_ids as $image_id)
+		{
+			$current = $image_template_vars[$image_id] ?? [];
+			$image_template_vars[$image_id] = array_merge(
+				is_array($current) ? $current : [],
+				$this->favorite_template_vars($image_id, isset($favorited[$image_id]))
+			);
+		}
+
+		$event['image_template_vars'] = $image_template_vars;
 	}
 
 	/**
@@ -233,5 +277,23 @@ class favorite_listener implements EventSubscriberInterface
 			'image_id'	=> $image_id,
 			'hash'		=> generate_link_hash($mode . '_' . $image_id),
 		]);
+	}
+
+	/**
+	 * Build the current and inverse favourite actions for one image.
+	 *
+	 * @param int  $image_id Image being displayed
+	 * @param bool $favorited Whether the current member already favourited it
+	 * @return array
+	 */
+	protected function favorite_template_vars(int $image_id, bool $favorited): array
+	{
+		return [
+			'S_IMAGE_FAVORITED'		=> $favorited,
+			'S_FAVORITE_NAME'		=> $this->language->lang($favorited ? 'UNFAVORITE_IMAGE' : 'FAVORITE_IMAGE'),
+			'S_FAVORITE_NAME_TOGGLE'=> $this->language->lang($favorited ? 'FAVORITE_IMAGE' : 'UNFAVORITE_IMAGE'),
+			'U_FAVORITE_IMAGE'		=> $this->favorite_route($image_id, !$favorited),
+			'U_FAVORITE_IMAGE_TOGGLE'=> $this->favorite_route($image_id, $favorited),
+		];
 	}
 }

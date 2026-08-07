@@ -5,7 +5,8 @@
 
 {% else %}
 {% for image in imageblock.image %}
-<div  class="polaroid">
+<div class="polaroid gallery-image-card">
+	{% EVENT phpbbgallery_core_album_image_actions %}
 	{% if image.S_IMAGE_AWARD_RANK > 0 %}
 	<div class="trophy-container">
 		<i class="trophy-icon fa-trophy fa-stack-2x trophy-color-{{ image.S_IMAGE_AWARD_RANK }}"></i>

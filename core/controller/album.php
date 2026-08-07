@@ -384,6 +384,31 @@ class album
 				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
 			ORDER BY ' . $sql_sort_order . $sql_help_sort;
 		$result = $this->db->sql_query_limit($sql, $limit, $start);
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$images[] = $row;
+		}
+		$this->db->sql_freeresult($result);
+
+		/**
+		 * Allow add-ons to enrich the template variables of visible album images.
+		 *
+		 * Images contains only the bounded page already filtered by Core visibility
+		 * rules. Additions must be keyed by image ID and are merged immediately
+		 * before each image is assigned to the template.
+		 *
+		 * @event phpbbgallery.core.album.image_template_vars
+		 * @var array album_data         Current album row
+		 * @var array images             Visible image rows on the current page
+		 * @var array image_template_vars Additional variables keyed by image ID
+		 * @since 4.0.0
+		 */
+		$image_template_vars = [];
+		$vars = ['album_data', 'images', 'image_template_vars'];
+		extract($this->phpbb_dispatcher->trigger_event(
+			'phpbbgallery.core.album.image_template_vars',
+			compact($vars)
+		));
 
 		// Now let's get display options
 		$show_options = (int) $this->gallery_config->get('album_display');
@@ -396,7 +421,7 @@ class album
 		$show_comments = ($show_options & self::ALBUM_SHOW_COMMENTS) !== 0;
 		$show_album = ($show_options & self::ALBUM_SHOW_ALBUM) !== 0;
 
-		while ($row = $this->db->sql_fetchrow($result))
+		foreach ($images as $row)
 		{
 			// Assign the image to the template-block
 			$image_data = array_merge($album_data, $row);
@@ -447,7 +472,7 @@ class album
 			) : '';
 			$hide_results = $this->image_visibility->hides_results($image_data, $can_moderate);
 			$image_award = $this->image_visibility->award($image_data);
-			$this->template->assign_block_vars('imageblock.image', [
+			$template_vars = [
 				'IMAGE_ID'      => (int) $image_data['image_id'],
 				'U_IMAGE'       => $action_image,
 				'UC_IMAGE_NAME' => $show_imagename ? $image_data['image_name'] : false,
@@ -484,9 +509,14 @@ class album
 				'IMAGE_AWARD' => $image_award['label'],
 				'IMAGE_AWARD_TITLE' => $image_award['title'],
 				'S_IMAGE_AWARD_RANK' => $image_award['rank'],
-			]);
+			];
+			$image_id = (int) $image_data['image_id'];
+			if (isset($image_template_vars[$image_id]) && is_array($image_template_vars[$image_id]))
+			{
+				$template_vars = array_merge($template_vars, $image_template_vars[$image_id]);
+			}
+			$this->template->assign_block_vars('imageblock.image', $template_vars);
 		}
-		$this->db->sql_freeresult($result);
 
 		$this->pagination->generate_template_pagination([
 			'routes' => [

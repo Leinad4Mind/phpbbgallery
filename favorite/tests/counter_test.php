@@ -57,6 +57,16 @@ final class counter_test extends TestCase
 		$this->assertStringContainsString('image_id IN (43)', $increment[0]);
 	}
 
+	public function test_album_page_favourite_state_is_loaded_in_one_query(): void
+	{
+		[$favorite, $db] = $this->make([42, 44]);
+
+		$this->assertSame([42, 44], $favorite->get_favorited_ids([42, 43, 44], 7));
+		$selects = $db->matching('SELECT image_id');
+		$this->assertCount(1, $selects);
+		$this->assertStringContainsString('image_id IN (42,43,44)', $selects[0]);
+	}
+
 	public function test_image_deleted_while_being_favourited_leaves_no_relation(): void
 	{
 		[$favorite, $db] = $this->make([], []);

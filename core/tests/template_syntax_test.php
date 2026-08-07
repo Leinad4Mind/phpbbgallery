@@ -22,7 +22,7 @@ final class template_syntax_test extends TestCase
 	public function test_modernized_templates_use_only_native_twig_syntax(): void
 	{
 		$template_paths = $this->template_paths();
-		$this->assertCount(176, $template_paths);
+		$this->assertCount(187, $template_paths);
 
 		foreach ($template_paths as $template_path)
 		{
@@ -746,6 +746,7 @@ final class template_syntax_test extends TestCase
 			$gallery_root . '/bbtagsimages/styles',
 			$gallery_root . '/exif/adm/style',
 			$gallery_root . '/exif/styles',
+			$gallery_root . '/favorite/styles',
 		];
 		$template_paths = [];
 

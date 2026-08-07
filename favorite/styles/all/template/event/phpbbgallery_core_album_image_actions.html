@@ -1,0 +1,5 @@
+{% if image.U_FAVORITE_IMAGE %}
+<span class="gallery-favorite-action{% if image.S_IMAGE_FAVORITED %} is-favorited{% endif %}">
+	<a class="gallery-favorite-toggle" href="{{ image.U_FAVORITE_IMAGE }}" title="{{ image.S_FAVORITE_NAME }}" data-ajax="toggle_link" data-toggle-text="{{ image.S_FAVORITE_NAME_TOGGLE }}" data-toggle-url="{{ image.U_FAVORITE_IMAGE_TOGGLE }}" data-toggle-class="gallery-favorite-action{% if not image.S_IMAGE_FAVORITED %} is-favorited{% endif %}">{{ image.S_FAVORITE_NAME }}</a>
+</span>
+{% endif %}

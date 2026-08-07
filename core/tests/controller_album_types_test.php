@@ -92,6 +92,34 @@ final class controller_album_types_test extends TestCase
 		);
 	}
 
+	public function test_album_addons_enrich_only_the_bounded_visible_image_page(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/album.php');
+		$event = strpos($source, 'phpbbgallery.core.album.image_template_vars');
+		$fetch = strrpos(substr($source, 0, (int) $event), 'while ($row = $this->db->sql_fetchrow($result))');
+		$free = strrpos(substr($source, 0, (int) $event), '$this->db->sql_freeresult($result)');
+		$display = strpos($source, 'foreach ($images as $row)', (int) $event);
+		$merge = strpos($source, 'array_merge($template_vars, $image_template_vars[$image_id])', (int) $display);
+
+		$this->assertNotFalse($event);
+		$this->assertNotFalse($fetch);
+		$this->assertNotFalse($free);
+		$this->assertNotFalse($display);
+		$this->assertNotFalse($merge);
+		$this->assertTrue($fetch < $free && $free < $event && $event < $display && $display < $merge);
+		$this->assertStringContainsString('$image_template_vars = []', $source);
+		$this->assertStringContainsString('isset($image_template_vars[$image_id])', $source);
+
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$template = (string) file_get_contents(
+				dirname(__DIR__) . '/styles/' . $style . '/template/gallery/imageblock_polaroid.html'
+			);
+			$this->assertStringContainsString('gallery-image-card', $template, $style);
+			$this->assertStringContainsString('{% EVENT phpbbgallery_core_album_image_actions %}', $template, $style);
+		}
+	}
+
 	public function test_contest_finalization_runs_only_after_album_access_checks(): void
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/album.php');

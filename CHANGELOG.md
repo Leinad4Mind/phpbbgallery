@@ -6,6 +6,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Added
 
+- Added permission-aware AJAX favorite hearts to album image cards, loading the current page's favorite state in one bounded query through a neutral Core extension event.
 - Added a Unicode-aware live character counter to Gallery comment forms in every bundled style, driven by the ACP comment limit and reinitialized after AJAX image navigation.
 - Documented the credentials, security model, implementation and service limits of every Remote Storage provider, with a complete Koofr installation and controlled-migration guide.
 - Added private 4shared storage using OAuth 1.0 HMAC-SHA1, exclusively owned folders, owner-only objects, recoverable publication and simple or chunked uploads through the documented API v1_2 endpoints.
