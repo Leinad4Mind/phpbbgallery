@@ -538,6 +538,12 @@ input.autowidth-gallery {
 	}
 }
 
+.phpbbgallery-header-link
+{
+	display: inline-block;
+	margin-inline-end: 7px;
+}
+
 .phpbbgallery-new-images-badge
 {
 	align-items: center;

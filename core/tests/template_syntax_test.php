@@ -22,7 +22,7 @@ final class template_syntax_test extends TestCase
 	public function test_modernized_templates_use_only_native_twig_syntax(): void
 	{
 		$template_paths = $this->template_paths();
-		$this->assertCount(164, $template_paths);
+		$this->assertCount(165, $template_paths);
 
 		foreach ($template_paths as $template_path)
 		{
@@ -125,7 +125,7 @@ final class template_syntax_test extends TestCase
 	{
 		$core_root = dirname(__DIR__);
 		$templates = [
-			'prosilver/template/event/navbar_header_user_profile_prepend.html',
+			'prosilver/template/event/navbar_header_username_prepend.html',
 			'prosilver/template/event/overall_header_navigation_prepend.html',
 			'BBOOTS/template/event/overall_header_navigation_prepend.html',
 			'FLATBOOTS/template/event/overall_header_navigation_prepend.html',
@@ -140,6 +140,11 @@ final class template_syntax_test extends TestCase
 		}
 
 		$stylesheet = (string) file_get_contents($core_root . '/styles/all/theme/gallery.css');
+		$prosilver = (string) file_get_contents(
+			$core_root . '/styles/prosilver/template/event/navbar_header_username_prepend.html'
+		);
+		$this->assertStringContainsString('class="phpbbgallery-header-link"', $prosilver);
+		$this->assertStringNotContainsString('<li', $prosilver);
 		$this->assertStringContainsString('.phpbbgallery-new-images-badge', $stylesheet);
 	}
 
