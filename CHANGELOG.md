@@ -64,6 +64,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Matched the FLATBOOTS image action and Favorite buttons to the larger button size used by the theme's viewtopic toolbar.
 - Hid the individual EXIF field switches in the Gallery ACP while EXIF display is disabled, preserving their saved values and restoring them immediately when it is enabled again.
 - Grouped every concrete Remote Storage implementation under a dedicated `providers/` directory and namespace while keeping shared HTTP and migration infrastructure provider-neutral.
 - Replaced the TIFF add-on's abbreviated license notice with the complete GPL-2.0 text and made package hygiene tests require the declared license in every release component.

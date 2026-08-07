@@ -21,4 +21,12 @@ final class lifecycle_test extends TestCase
 		$this->assertStringContainsString('reconcile_orphans()', $extension);
 		$this->assertStringContainsString("parent::enable_step(\$old_state) ? 'migrations' : 'reconcile'", $extension);
 	}
+
+	public function test_flatboots_favorite_action_matches_the_viewtopic_button_size(): void
+	{
+		$template = (string) file_get_contents(dirname(__DIR__) . '/styles/FLATBOOTS/template/event/phpbbgallery_core_viewimage_actions.html');
+
+		$this->assertStringContainsString('class="btn btn-sm btn-default"', $template);
+		$this->assertStringNotContainsString('btn-xs', $template);
+	}
 }

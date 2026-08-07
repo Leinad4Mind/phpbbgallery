@@ -102,6 +102,17 @@ final class template_syntax_test extends TestCase
 		}
 	}
 
+	public function test_flatboots_image_actions_match_the_viewtopic_button_size(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/styles/FLATBOOTS/template/gallery/viewimage_body.html');
+		$start = strpos($source, '{% EVENT phpbbgallery_core_viewimage_actions %}');
+		$end = strpos($source, '</ul>', $start);
+		$actions = substr($source, $start, $end - $start);
+
+		$this->assertSame(5, substr_count($actions, 'class="btn btn-sm btn-default"'));
+		$this->assertStringNotContainsString('btn-xs', $actions);
+	}
+
 	public function test_gallery_and_forum_index_statistics_have_style_appropriate_labels_and_layouts(): void
 	{
 		$core_root = dirname(__DIR__);
