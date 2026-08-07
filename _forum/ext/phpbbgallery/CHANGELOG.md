@@ -2,7 +2,7 @@
 
 All notable changes to the phpBB Gallery extension suite are documented in this file.
 
-## [4.0.0] Unreleased
+## [4.0.0]
 
 ### Added
 
