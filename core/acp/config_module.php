@@ -358,7 +358,7 @@ class config_module
 				],
 
 				'STORAGE_SETTINGS'	=> [
-					'storage_layout'		=> ['lang' => 'STORAGE_LAYOUT',		'validate' => 'string',	'type' => 'select',			'explain' => true,	'method' => 'storage_layout_select'],
+					'storage_layout'		=> ['lang' => 'STORAGE_LAYOUT',		'validate' => 'string',	'type' => 'custom',			'explain' => true,	'method' => 'storage_layout_select'],
 				],
 
 				'IMAGE_SETTINGS'	=> [

@@ -95,6 +95,7 @@ final class acp_config_types_test extends TestCase
 		$this->assertArrayHasKey('forum_index_display', $display['vars']);
 		$this->assertArrayHasKey('forum_index_personal', $display['vars']);
 		$this->assertArrayHasKey('storage_layout', $display['vars']);
+		$this->assertSame('custom', $display['vars']['storage_layout']['type']);
 		$this->assertSame('storage_layout_select', $display['vars']['storage_layout']['method']);
 		$this->assertArrayNotHasKey('allow_contests', $display['vars']);
 		$config_keys = array_keys($display['vars']);
