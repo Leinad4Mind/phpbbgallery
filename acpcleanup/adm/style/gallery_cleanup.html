@@ -2,6 +2,18 @@
 
 <a name="maincontent"></a>
 
+{% if S_LEGACY_BBCODE_PROGRESS %}
+	<div class="successbox">
+		<h3>{{ lang('GALLERY_LEGACY_BBCODE_MIGRATE') }}</h3>
+		<p>
+			{{ lang('GALLERY_LEGACY_BBCODE_MIGRATE_RESULT', LEGACY_BBCODE_COMPLETED, LEGACY_BBCODE_FAILED, LEGACY_BBCODE_REMAINING) }}
+			<br />{{ lang('LOADING') }}
+			<br />
+			<progress value="{{ LEGACY_BBCODE_COMPLETED }}" max="{{ LEGACY_BBCODE_TOTAL }}" style="height: 2em; width: 20em;"></progress>
+			<br />{{ ((LEGACY_BBCODE_COMPLETED / LEGACY_BBCODE_TOTAL) * 100)|number_format(2) }} %
+		</p>
+	</div>
+{% else %}
 <h1>{{ ACP_GALLERY_TITLE }}</h1>
 <p>{{ ACP_GALLERY_TITLE_EXPLAIN }}</p>
 
@@ -166,5 +178,6 @@
 		</dl>
 	</fieldset>
 </form>
+{% endif %}
 
 {% include 'overall_footer.html' %}

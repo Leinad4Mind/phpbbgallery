@@ -60,35 +60,56 @@ class main_module
 			}
 
 			$legacy_migrator = $phpbb_container->get('phpbbgallery.acpcleanup.bbcode.legacy_migrator');
-			if (confirm_box(true))
+			$is_continuation = $request->variable('legacy_continue', 0) === 1;
+			if ($is_continuation && !check_link_hash(
+				$request->variable('hash', ''),
+				'acp_gallery_legacy_bbcodes'
+			))
+			{
+				trigger_error($user->lang('FORM_INVALID') . adm_back_link($this->u_action), E_USER_WARNING);
+			}
+
+			if ($is_continuation || confirm_box(true))
 			{
 				$remaining = $request->variable('legacy_remaining', 0);
 				if ($remaining < 1)
 				{
 					$remaining = $legacy_migrator->count_remaining();
 				}
+				$total = max($remaining, $request->variable('legacy_total', $remaining));
 				$result = $legacy_migrator->migrate_batch(
 					\phpbbgallery\acpcleanup\bbcode\legacy_migrator::BATCH_SIZE,
 					$remaining
 				);
 				if ($result['remaining'] > 0 && $result['migrated'] > 0)
 				{
-					redirect($this->u_action . '&amp;action=' . $action
-						. '&amp;legacy_remaining=' . $result['remaining']);
+					$next_url = append_sid($this->u_action
+						. '&amp;action=' . $action
+						. '&amp;legacy_continue=1'
+						. '&amp;legacy_remaining=' . $result['remaining']
+						. '&amp;legacy_total=' . $total
+						. '&amp;hash=' . generate_link_hash('acp_gallery_legacy_bbcodes'));
+					meta_refresh(1, $next_url);
+					$template->assign_vars([
+						'S_LEGACY_BBCODE_PROGRESS' => true,
+						'LEGACY_BBCODE_COMPLETED' => max(0, $total - $result['remaining']),
+						'LEGACY_BBCODE_FAILED' => $result['failed'],
+						'LEGACY_BBCODE_REMAINING' => $result['remaining'],
+						'LEGACY_BBCODE_TOTAL' => $total,
+					]);
+					return;
 				}
+
+				$completed = max(0, $total - $result['remaining']);
 				trigger_error($user->lang(
 					'GALLERY_LEGACY_BBCODE_MIGRATE_RESULT',
-					$result['migrated'],
+					$completed,
 					$result['failed'],
 					$result['remaining']
-				) . adm_back_link($this->u_action));
+				) . adm_back_link($this->u_action), $result['remaining'] > 0 ? E_USER_WARNING : E_USER_NOTICE);
 			}
 
-			$remaining = $request->variable('legacy_remaining', 0);
-			if ($remaining < 1)
-			{
-				$remaining = $legacy_migrator->count_remaining();
-			}
+			$remaining = $legacy_migrator->count_remaining();
 			if ($remaining === 0)
 			{
 				trigger_error($user->lang('GALLERY_LEGACY_BBCODE_MIGRATE_NONE') . adm_back_link($this->u_action));
@@ -101,6 +122,7 @@ class main_module
 			), build_hidden_fields([
 				'action' => $action,
 				'legacy_remaining' => $remaining,
+				'legacy_total' => $remaining,
 			]), 'confirm_body.html', $this->u_action);
 			return;
 		}

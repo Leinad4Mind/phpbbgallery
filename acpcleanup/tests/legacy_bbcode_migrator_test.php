@@ -117,11 +117,15 @@ final class legacy_bbcode_migrator_test extends TestCase
 		$this->assertStringContainsString("'GALLERY_LEGACY_BBCODE_MIGRATE_CONFIRM'", $module);
 		$this->assertStringContainsString('legacy_migrator::BATCH_SIZE', $module);
 		$this->assertStringContainsString("\$result['remaining'] > 0 && \$result['migrated'] > 0", $module);
-		$this->assertStringContainsString("'&amp;legacy_remaining=' . \$result['remaining']", $module);
-		$this->assertMatchesRegularExpression(
-			'/redirect\(\$this->u_action[\s\S]+?legacy_remaining/',
-			$module
-		);
+		$this->assertStringContainsString('meta_refresh(1, $next_url)', $module);
+		$this->assertStringContainsString("generate_link_hash('acp_gallery_legacy_bbcodes')", $module);
+		$this->assertStringContainsString('check_link_hash(', $module);
+		$this->assertStringContainsString("'S_LEGACY_BBCODE_PROGRESS' => true", $module);
+		$this->assertStringNotContainsString('redirect($this->u_action', $module);
+		$this->assertStringContainsString('{% if S_LEGACY_BBCODE_PROGRESS %}', $template);
+		$this->assertStringContainsString('<div class="successbox">', $template);
+		$this->assertStringContainsString('<progress value="{{ LEGACY_BBCODE_COMPLETED }}"', $template);
+		$this->assertStringContainsString("lang('LOADING')", $template);
 		$this->assertStringContainsString("lang('GALLERY_LEGACY_BBCODE_MIGRATE_EXPLAIN', LEGACY_BBCODE_BATCH_SIZE, ACTIVE_BBCODE_TAG)", $template);
 		$this->assertStringContainsString('phpbbgallery.acpcleanup.bbcode.legacy_migrator:', $services);
 		$this->assertStringNotContainsString('generate_text_for_', (string) file_get_contents(dirname(__DIR__) . '/bbcode/legacy_migrator.php'));
