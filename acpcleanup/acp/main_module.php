@@ -71,6 +71,11 @@ class main_module
 					\phpbbgallery\acpcleanup\bbcode\legacy_migrator::BATCH_SIZE,
 					$remaining
 				);
+				if ($result['remaining'] > 0 && $result['migrated'] > 0)
+				{
+					redirect($this->u_action . '&amp;action=' . $action
+						. '&amp;legacy_remaining=' . $result['remaining']);
+				}
 				trigger_error($user->lang(
 					'GALLERY_LEGACY_BBCODE_MIGRATE_RESULT',
 					$result['migrated'],
@@ -79,7 +84,11 @@ class main_module
 				) . adm_back_link($this->u_action));
 			}
 
-			$remaining = $legacy_migrator->count_remaining();
+			$remaining = $request->variable('legacy_remaining', 0);
+			if ($remaining < 1)
+			{
+				$remaining = $legacy_migrator->count_remaining();
+			}
 			if ($remaining === 0)
 			{
 				trigger_error($user->lang('GALLERY_LEGACY_BBCODE_MIGRATE_NONE') . adm_back_link($this->u_action));

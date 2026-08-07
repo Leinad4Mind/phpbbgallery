@@ -116,6 +116,12 @@ final class legacy_bbcode_migrator_test extends TestCase
 		$this->assertStringContainsString("if (\$action === 'migrate_legacy_bbcodes')", $module);
 		$this->assertStringContainsString("'GALLERY_LEGACY_BBCODE_MIGRATE_CONFIRM'", $module);
 		$this->assertStringContainsString('legacy_migrator::BATCH_SIZE', $module);
+		$this->assertStringContainsString("\$result['remaining'] > 0 && \$result['migrated'] > 0", $module);
+		$this->assertStringContainsString("'&amp;legacy_remaining=' . \$result['remaining']", $module);
+		$this->assertMatchesRegularExpression(
+			'/redirect\(\$this->u_action[\s\S]+?legacy_remaining/',
+			$module
+		);
 		$this->assertStringContainsString("lang('GALLERY_LEGACY_BBCODE_MIGRATE_EXPLAIN', LEGACY_BBCODE_BATCH_SIZE, ACTIVE_BBCODE_TAG)", $template);
 		$this->assertStringContainsString('phpbbgallery.acpcleanup.bbcode.legacy_migrator:', $services);
 		$this->assertStringNotContainsString('generate_text_for_', (string) file_get_contents(dirname(__DIR__) . '/bbcode/legacy_migrator.php'));
