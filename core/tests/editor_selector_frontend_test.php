@@ -45,6 +45,19 @@ final class editor_selector_frontend_test extends TestCase
 		$this->assertStringContainsString("{% INCLUDEJS '@phpbbgallery_core/js/editor_selector.js' %}", $template);
 	}
 
+	public function test_bootstrap_footers_keep_the_gallery_selector_runtime(): void
+	{
+		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$template = $this->read('styles/' . $style . '/template/event/overall_footer_after.html');
+
+			$this->assertStringContainsString('{% if S_GALLERY_SELECTOR %}', $template, $style);
+			$this->assertStringContainsString('<dialog id="phpbbgallery-selector-dialog"', $template, $style);
+			$this->assertStringContainsString('data-endpoint="{{ U_GALLERY_SELECTOR }}"', $template, $style);
+			$this->assertStringContainsString("{% INCLUDEJS '@phpbbgallery_core/js/editor_selector.js' %}", $template, $style);
+		}
+	}
+
 	public function test_javascript_inserts_only_numeric_image_bbcode_at_the_active_editor_cursor(): void
 	{
 		$javascript = $this->read('styles/all/template/js/editor_selector.js');
