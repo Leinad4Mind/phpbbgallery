@@ -233,6 +233,40 @@ final class template_syntax_test extends TestCase
 		$this->assertStringContainsString('requestId !== requestSequence', $javascript);
 	}
 
+	public function test_comment_forms_have_a_configured_unicode_aware_live_counter(): void
+	{
+		$core_root = dirname(__DIR__);
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			foreach (['comment_body.html', 'viewimage_body.html'] as $template_name)
+			{
+				$template = (string) file_get_contents(
+					$core_root . '/styles/' . $style . '/template/gallery/' . $template_name
+				);
+				$this->assertStringContainsString('data-gallery-comment-counter', $template, $style . '/' . $template_name);
+				$this->assertStringContainsString('data-comment-max-length="{{ COMMENT_MAX_LENGTH }}"', $template, $style . '/' . $template_name);
+				$this->assertStringContainsString('data-gallery-comment-counter-output', $template, $style . '/' . $template_name);
+				$this->assertStringContainsString("INCLUDEJS '@phpbbgallery_core/js/comment_counter.js'", $template, $style . '/' . $template_name);
+			}
+		}
+
+		$javascript = (string) file_get_contents($core_root . '/styles/all/template/js/comment_counter.js');
+		$this->assertStringContainsString('Array.from(value).length', $javascript);
+		$this->assertStringContainsString("textarea.addEventListener('input'", $javascript);
+		$this->assertStringContainsString('output.hidden = current === 0', $javascript);
+		$this->assertStringContainsString("document.addEventListener('phpbbgallery:imagechange'", $javascript);
+		$this->assertStringContainsString("textarea.setAttribute('aria-invalid', 'true')", $javascript);
+
+		$comment_controller = (string) file_get_contents($core_root . '/controller/comment.php');
+		$image_controller = (string) file_get_contents($core_root . '/controller/image.php');
+		$this->assertSame(3, substr_count($comment_controller, "'COMMENT_MAX_LENGTH'"));
+		$this->assertSame(1, substr_count($image_controller, "'COMMENT_MAX_LENGTH'"));
+
+		$stylesheet = (string) file_get_contents($core_root . '/styles/all/theme/gallery.css');
+		$this->assertStringContainsString('.gallery-comment-guidance', $stylesheet);
+		$this->assertStringContainsString('.gallery-comment-counter-exceeded', $stylesheet);
+	}
+
 	public function test_viewimage_statistics_event_follows_the_view_counter(): void
 	{
 		$core_root = dirname(__DIR__);

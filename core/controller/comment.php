@@ -399,6 +399,7 @@ class comment
 			'USERNAME'				=> (isset($comment_username)) ? $comment_username : '',
 			'REQ_USERNAME'			=> (!empty($comment_username_req)) ? true : false,
 			'L_COMMENT_LENGTH'		=> sprintf($this->language->lang('COMMENT_LENGTH'), $this->gallery_config->get('comment_length')),
+			'COMMENT_MAX_LENGTH'	=> (int) $this->gallery_config->get('comment_length'),
 
 			'IMAGE_RSZ_WIDTH'		=> $this->gallery_config->get('medium_width'),
 			'IMAGE_RSZ_HEIGHT'		=> $this->gallery_config->get('medium_height'),
@@ -614,6 +615,7 @@ class comment
 			'USERNAME'				=> (isset($comment_username)) ? $comment_username : '',
 			'REQ_USERNAME'			=> (!empty($comment_username_req)) ? true : false,
 			'L_COMMENT_LENGTH'		=> sprintf($this->language->lang('COMMENT_LENGTH'), $this->gallery_config->get('comment_length')),
+			'COMMENT_MAX_LENGTH'	=> (int) $this->gallery_config->get('comment_length'),
 
 			'IMAGE_RSZ_WIDTH'		=> $this->gallery_config->get('medium_width'),
 			'IMAGE_RSZ_HEIGHT'		=> $this->gallery_config->get('medium_height'),
@@ -779,6 +781,7 @@ class comment
 			'USERNAME'				=> (isset($comment_username)) ? $comment_username : '',
 			'REQ_USERNAME'			=> (!empty($comment_username_req)) ? true : false,
 			'L_COMMENT_LENGTH'		=> sprintf($this->language->lang('COMMENT_LENGTH'), $this->gallery_config->get('comment_length')),
+			'COMMENT_MAX_LENGTH'	=> (int) $this->gallery_config->get('comment_length'),
 
 			'IMAGE_RSZ_WIDTH'		=> $this->gallery_config->get('medium_width'),
 			'IMAGE_RSZ_HEIGHT'		=> $this->gallery_config->get('medium_height'),

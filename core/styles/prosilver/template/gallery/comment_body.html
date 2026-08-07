@@ -87,9 +87,12 @@
 				{% if S_DISPLAY_REVIEW %}<strong><a href="#review">{{ lang('TOPIC_REVIEW') }}</a></strong>{% endif %}
 			{% endif %}
 			</div>
-				{{ lang('COMMENT_LENGTH') }}
+			<div class="gallery-comment-guidance">
+				<span id="gallery-comment-limit">{{ lang('COMMENT_LENGTH') }}</span>
+				<output id="gallery-comment-counter" class="gallery-comment-counter" data-gallery-comment-counter-output hidden aria-live="polite" aria-atomic="true"></output>
+			</div>
 			<div id="message-box" class="message-box">
-				<textarea {% if S_UCP_ACTION and not S_PRIVMSGS and not S_EDIT_DRAFT %}name="signature" id="signature" style="height: 9em;"{% else %}name="message" id="message"{% endif %} rows="15" cols="76" tabindex="4" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onfocus="initInsertions();" class="inputbox">{{ MESSAGE }}{{ DRAFT_MESSAGE }}{{ SIGNATURE }}</textarea>
+				<textarea {% if S_UCP_ACTION and not S_PRIVMSGS and not S_EDIT_DRAFT %}name="signature" id="signature" style="height: 9em;"{% else %}name="message" id="message"{% endif %} rows="15" cols="76" tabindex="4" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onfocus="initInsertions();" class="inputbox" data-gallery-comment-counter data-comment-max-length="{{ COMMENT_MAX_LENGTH }}" aria-describedby="gallery-comment-limit gallery-comment-counter">{{ MESSAGE }}{{ DRAFT_MESSAGE }}{{ SIGNATURE }}</textarea>
 			</div>
 			<div><label for="attach_sig"><input type="checkbox" name="attach_sig" id="attach_sig"{{ S_SIGNATURE_CHECKED }} /> {{ lang('ATTACH_SIG') }}</label></div>
 
@@ -120,3 +123,4 @@
 </form>
 
 {% include 'gallery/gallery_footer.html' %}
+{% INCLUDEJS '@phpbbgallery_core/js/comment_counter.js' %}

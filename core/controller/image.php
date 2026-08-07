@@ -731,7 +731,8 @@ class image
 				'S_BBCODE_URL'      => $url_status,
 				'S_BBCODE_FLASH'    => $flash_status,
 				'S_BBCODE_QUOTE'    => $quote_status,
-				'L_COMMENT_LENGTH'  => sprintf($this->language->lang('COMMENT_LENGTH'), $this->gallery_config->get('comment_length')),
+				'L_COMMENT_LENGTH'   => sprintf($this->language->lang('COMMENT_LENGTH'), $this->gallery_config->get('comment_length')),
+				'COMMENT_MAX_LENGTH' => (int) $this->gallery_config->get('comment_length'),
 			]);
 
 			if ($this->misc->display_captcha('comment'))

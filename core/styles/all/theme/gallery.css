@@ -569,3 +569,29 @@ input.autowidth-gallery {
 	padding: 0 0.4em;
 	vertical-align: middle;
 }
+
+.gallery-comment-guidance
+{
+	align-items: baseline;
+	display: flex;
+	gap: 1em;
+	justify-content: space-between;
+	width: 100%;
+}
+
+.gallery-comment-counter
+{
+	font-weight: 700;
+	margin-inline-start: auto;
+	white-space: nowrap;
+}
+
+.gallery-comment-counter[hidden]
+{
+	display: none;
+}
+
+.gallery-comment-counter-exceeded
+{
+	color: #bc2a4d;
+}

@@ -367,7 +367,10 @@
 				<div class="inner">
 					<h2 class="quickreply-title">{{ lang('POST_COMMENT') }}</h2>
 					<fieldset class="fields1">
-						{{ lang('COMMENT_LENGTH') }}
+						<div class="gallery-comment-guidance">
+							<span id="gallery-comment-limit">{{ lang('COMMENT_LENGTH') }}</span>
+							<output id="gallery-comment-counter" class="gallery-comment-counter" data-gallery-comment-counter-output hidden aria-live="polite" aria-atomic="true"></output>
+						</div>
 						{% if not S_USER_LOGGED_IN %}
 							<dl>
 								<dt><label>{{ lang('USERNAME') }}{{ lang('COLON') }}</label></dt>
@@ -379,7 +382,7 @@
 						{% endif %}
 						{% EVENT quickreply_editor_message_before %}
 						<div id="message-box" class="message-box">
-							<textarea style="height: 9em;" name="message" rows="7" cols="76" tabindex="3" class="inputbox" name="message" id="message"></textarea>
+							<textarea style="height: 9em;" name="message" rows="7" cols="76" tabindex="3" class="inputbox" id="message" data-gallery-comment-counter data-comment-max-length="{{ COMMENT_MAX_LENGTH }}" aria-describedby="gallery-comment-limit gallery-comment-counter"></textarea>
 						</div>
 						<div><label for="attach_sig"><input type="checkbox" name="attach_sig" id="attach_sig"{{ S_SIGNATURE_CHECKED }} /> {{ lang('ATTACH_SIG') }}</label></div>
 						{% EVENT quickreply_editor_message_after %}
@@ -428,3 +431,4 @@
 {% include 'gallery/gallery_footer.html' %}
 </div>
 {% if S_AJAX_IMAGE_NAVIGATION %}{% INCLUDEJS '@phpbbgallery_core/js/image_navigation.js' %}{% endif %}
+{% INCLUDEJS '@phpbbgallery_core/js/comment_counter.js' %}
