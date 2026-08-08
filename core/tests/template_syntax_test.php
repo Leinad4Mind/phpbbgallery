@@ -386,6 +386,7 @@ final class template_syntax_test extends TestCase
 				$core_root . '/styles/' . $style . '/template/gallery/posting_body.html'
 			);
 			$this->assertStringContainsString('data-gallery-character-counter', $template, $style);
+			$this->assertStringContainsString('data-gallery-counter-output-id="description-counter-{{ image.S_ROW_COUNT }}"', $template, $style);
 			$this->assertStringContainsString('data-gallery-max-length="{{ DESCRIPTION_MAX_LENGTH }}"', $template, $style);
 			$this->assertStringContainsString('data-gallery-comment-guidance-text', $template, $style);
 			$this->assertStringContainsString('data-gallery-character-counter-output', $template, $style);
@@ -395,6 +396,11 @@ final class template_syntax_test extends TestCase
 			);
 			$this->assertStringContainsString("dispatchEvent(new Event('input'", $javascript, $style);
 		}
+
+		$counter_javascript = (string) file_get_contents($core_root . '/styles/all/template/js/comment_counter.js');
+		$this->assertStringContainsString("textarea.getAttribute('data-gallery-counter-output-id')", $counter_javascript);
+		$this->assertStringContainsString('document.getElementById(outputId)', $counter_javascript);
+		$this->assertStringContainsString("output.removeAttribute('hidden')", $counter_javascript);
 
 		$upload = (string) file_get_contents($core_root . '/controller/upload.php');
 		$image = (string) file_get_contents($core_root . '/controller/image.php');

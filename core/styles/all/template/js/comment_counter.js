@@ -11,7 +11,32 @@
 		return Array.from(value).length;
 	}
 
+	function isCounterOutput(element) {
+		return element && (
+			element.hasAttribute('data-gallery-character-counter-output')
+			|| element.hasAttribute('data-gallery-comment-counter-output')
+		);
+	}
+
+	function describedElements(textarea) {
+		var ids = (textarea.getAttribute('aria-describedby') || '').trim().split(/\s+/);
+		return ids.filter(Boolean).map(function (id) {
+			return document.getElementById(id);
+		}).filter(Boolean);
+	}
+
 	function findOutput(textarea) {
+		var outputId = textarea.getAttribute('data-gallery-counter-output-id');
+		var explicitOutput = outputId ? document.getElementById(outputId) : null;
+		if (isCounterOutput(explicitOutput)) {
+			return explicitOutput;
+		}
+
+		var describedOutput = describedElements(textarea).find(isCounterOutput);
+		if (describedOutput) {
+			return describedOutput;
+		}
+
 		var container = textarea.parentNode;
 		while (container && container !== document) {
 			var output = container.querySelector(
@@ -25,6 +50,14 @@
 		return null;
 	}
 
+	function findGuidanceText(textarea, output) {
+		var describedGuidance = describedElements(textarea).find(function (element) {
+			return element.hasAttribute('data-gallery-comment-guidance-text');
+		});
+		return describedGuidance
+			|| output.parentNode.querySelector('[data-gallery-comment-guidance-text]');
+	}
+
 	function update(textarea, output) {
 		var maximum = parseInt(
 			textarea.getAttribute('data-gallery-max-length')
@@ -33,7 +66,7 @@
 		);
 		var current = characterLength(textarea.value);
 		var exceeded = current > maximum;
-		var guidanceText = output.parentNode.querySelector('[data-gallery-comment-guidance-text]');
+		var guidanceText = findGuidanceText(textarea, output);
 
 		if (isNaN(maximum) || maximum < 0) {
 			output.hidden = true;
@@ -45,6 +78,9 @@
 
 		output.textContent = current + ' / ' + maximum;
 		output.hidden = current === 0;
+		if (current > 0) {
+			output.removeAttribute('hidden');
+		}
 		if (guidanceText) {
 			guidanceText.hidden = current > 0;
 		}
