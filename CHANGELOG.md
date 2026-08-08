@@ -6,6 +6,8 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Added
 
+- Added shareable GET-based Gallery searches with explicit query summaries, in-result refinement, safe state-preserving sort forms and a complete Forum index -> Gallery -> Search breadcrumb.
+- Added permission-checked, bounded username autocomplete to Gallery author search and moderator-only alternate-author uploads, while retaining the wildcard and phpBB member-search fallbacks.
 - Added a permission-filtered total-image statistic to member profiles, hidden when no images are visible and linked to a search for all visible images by that member; FLATBOOTS presents it beside its post and topic timeline statistics.
 - Added accessible ACP identities for settings supplied by installed add-ons: mixed Core forms now show a puzzle badge, a consistent per-add-on accent and a translated legend without relying on colour alone.
 - Added selectable image resolution to thumbnail metadata, persisted source dimensions for new uploads and imports, and a confirmed 25-image ACP resynchronisation for legacy or remote files; a neutral album-card metadata extension point lets BBPoints Images expose optional original-download counters without coupling the Core to the add-on.
@@ -13,9 +15,9 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added permission-aware inline AJAX rating stars to album cards; own images, previously rated images and images outside the effective rating permission show no rating link or control.
 - Added independent per-album permissions for original-file downloads and charge-free original access, with both denied by default.
 - Added accessible star-only AJAX rating controls to FLATBOOTS and prosilver, with CSRF-protected POST submission, permission revalidation and no page reload.
-- Made Favorite controls update their icon, label and inverse action over AJAX in album listings and image pages, including after progressive AJAX image navigation.
+- Made Favorite controls update their icon, label and inverse action over AJAX in album listings, Gallery search results and image pages, including after progressive AJAX image navigation.
 - Added responsive album information panels matching FLATBOOTS viewforum, with online users, effective album permissions and a neutral third-party rules area populated by BBPoints Images.
-- Added permission-aware AJAX favorite hearts to album image cards, loading the current page's favorite state in one bounded query through a neutral Core extension event.
+- Added permission-aware AJAX favorite hearts to album and search-result image cards, loading the current page's favorite state in one bounded query through neutral Core extension events and allowing administrators to keep listing controls disabled.
 - Added a Unicode-aware live character counter to Gallery comment forms in every bundled style, driven by the ACP comment limit and reinitialized after AJAX image navigation.
 - Documented the credentials, security model, implementation and service limits of every Remote Storage provider, with a complete Koofr installation and controlled-migration guide.
 - Added private 4shared storage using OAuth 1.0 HMAC-SHA1, exclusively owned folders, owner-only objects, recoverable publication and simple or chunked uploads through the documented API v1_2 endpoints.
@@ -28,7 +30,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added optional private SFTP storage with mandatory SSH host fingerprint pinning, atomic temporary uploads, resumable provider migrations and a real OpenSSH functional workflow.
 - Added private Azure Blob Storage support with Shared Key signing, ACP-managed connections, resumable remote-to-remote migrations, public-container rejection and an Azurite functional workflow.
 - Added a validated Remote Storage provider-factory catalogue so migrations and ACP connection tests can support additional backends without hard-coded resolver branches.
-- Added indexed EXIF DateTimeOriginal sorting with upload-date fallback across album listings, previous/next navigation and ACP defaults, including OffsetTimeOriginal handling and a confirmed resumable rebuild for old images.
+- Added indexed EXIF DateTimeOriginal sorting with upload-date fallback across album listings, Gallery searches, previous/next navigation and ACP defaults, including OffsetTimeOriginal handling and a confirmed resumable rebuild for old images.
 - Added opt-in BMP uploads through native GD with complete decode validation, preserved BMP originals and browser-safe WebP medium/thumbnail derivatives, including ZIP uploads, ACP Import, replacements and converted album icons.
 - Added an optional, permission-filtered unread-image badge beside the Gallery link, backed by the existing global and per-album read markers and capped at 99+ without an unbounded count query.
 - Added a fail-closed external image-processor contract and deterministic browser-safe derivative keys, allowing add-ons to retain non-native originals while serving, migrating and deleting their WebP medium/thumbnail variants.

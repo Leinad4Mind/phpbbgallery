@@ -24,6 +24,7 @@ services:
         class: phpbbgallery\favorite\event\favorite_listener
         arguments:
             - '@controller.helper'
+            - '@config'
             - '@language'
             - '@request'
             - '@template'

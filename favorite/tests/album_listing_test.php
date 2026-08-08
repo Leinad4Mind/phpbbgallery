@@ -18,18 +18,25 @@ final class album_listing_test extends TestCase
 		$source = (string) file_get_contents(dirname(__DIR__) . '/event/favorite_listener.php');
 		$method = strstr($source, 'public function album_image_template_vars(');
 		$method = strstr($method, '/**', true);
+		$enrich = strstr($source, 'private function enrich_listing(');
+		$enrich = strstr($enrich, '/**', true);
 
 		$this->assertStringContainsString(
 			"'phpbbgallery.core.album.image_template_vars'",
 			$source
 		);
-		$this->assertStringContainsString('$user_id === ANONYMOUS', $method);
-		$this->assertStringContainsString("acl_check('i_favorite'", $method);
-		$this->assertSame(1, substr_count($method, 'get_favorited_ids('));
-		$this->assertStringNotContainsString('is_favorited(', $method);
+		$this->assertStringContainsString(
+			"'phpbbgallery.core.search.image_template_vars'",
+			$source
+		);
+		$this->assertStringContainsString('$this->enrich_listing($event, $images)', $method);
+		$this->assertStringContainsString('$user_id === ANONYMOUS', $enrich);
+		$this->assertStringContainsString("acl_check('i_favorite'", $enrich);
+		$this->assertSame(1, substr_count($enrich, 'get_favorited_ids('));
+		$this->assertStringNotContainsString('is_favorited(', $enrich);
 		$this->assertStringContainsString(
 			'$event[' . "'image_template_vars'] = " . '$image_template_vars',
-			$method
+			$enrich
 		);
 	}
 
@@ -54,5 +61,18 @@ final class album_listing_test extends TestCase
 		$this->assertStringContainsString('.gallery-favorite-icon.fa-heart', $stylesheet);
 		$this->assertStringContainsString("INCLUDECSS '@phpbbgallery_favorite/favorite.css'", $head);
 		$this->assertStringContainsString("INCLUDEJS '@phpbbgallery_favorite/favorite.js'", $head);
+	}
+
+	public function test_search_hearts_are_configurable_and_the_service_contract_matches(): void
+	{
+		$root = dirname(__DIR__);
+		$listener = (string) file_get_contents($root . '/event/favorite_listener.php');
+		$services = (string) file_get_contents($root . '/config/services.yml');
+		$migration = (string) file_get_contents($root . '/migrations/m3_listing_setting.php');
+
+		$this->assertStringContainsString('phpbb_gallery_favorite_listings', $listener);
+		$this->assertStringContainsString("['IMAGE_SETTINGS']['favorite_listings']", $listener);
+		$this->assertStringContainsString("- '@controller.helper'\n            - '@config'\n            - '@language'", $services);
+		$this->assertStringContainsString("'phpbb_gallery_favorite_listings', 1", $migration);
 	}
 }

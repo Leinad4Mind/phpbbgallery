@@ -53,4 +53,6 @@ $lang = array_merge($lang, [
 
 	'GALLERY_CORE_NOT_FOUND'	=> 'L\'estensione phpBB Gallery Core deve essere prima installata e abilitata.',
 	'EXTENSION_ENABLE_SUCCESS'	=> 'L\'estensione è stata abilitata con successo.',
+	'FAVORITE_SHOW_IN_LISTINGS' => 'Mostra i controlli dei preferiti negli elenchi di immagini',
+	'FAVORITE_SHOW_IN_LISTINGS_EXPLAIN' => 'Mostra il cuore dei preferiti negli album e nei risultati di ricerca. Se disabilitato, i preferiti restano gestibili nella pagina di ogni immagine.',
 ]);

@@ -49,6 +49,8 @@ $lang = array_merge($lang, [
 
 	'WATCH_FAVO'				=> 'Subscribe to images I favorite',
 	'WATCH_FAVO_EXPLAIN'		=> 'If enabled, adding an image to your favorites also subscribes you to its new comments.',
+	'FAVORITE_SHOW_IN_LISTINGS' => 'Show favorite controls in image listings',
+	'FAVORITE_SHOW_IN_LISTINGS_EXPLAIN' => 'Shows the favorite heart in album and search-result listings. If disabled, members can still manage favorites from each image page.',
 
 	'GALLERY_CORE_NOT_FOUND'	=> 'phpBB Gallery Core is missing! Please download it and install it before this extension.',
 	'EXTENSION_ENABLE_SUCCESS'	=> 'The extension was enabled successfully.',

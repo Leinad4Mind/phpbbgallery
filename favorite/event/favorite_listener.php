@@ -21,6 +21,9 @@ class favorite_listener implements EventSubscriberInterface
 	/* @var \phpbb\controller\helper */
 	protected \phpbb\controller\helper $helper;
 
+	/* @var \phpbb\config\config */
+	protected \phpbb\config\config $config;
+
 	/* @var \phpbb\language\language */
 	protected \phpbb\language\language $language;
 
@@ -46,6 +49,7 @@ class favorite_listener implements EventSubscriberInterface
 	 * Constructor
 	 *
 	 * @param \phpbb\controller\helper        $helper       Controller helper object
+	 * @param \phpbb\config\config            $config       phpBB configuration
 	 * @param \phpbb\language\language        $language     Language object
 	 * @param \phpbb\request\request          $request      Request object
 	 * @param \phpbb\template\template        $template     Template object
@@ -54,11 +58,12 @@ class favorite_listener implements EventSubscriberInterface
 	 * @param \phpbbgallery\core\user         $gallery_user Gallery user object
 	 * @param \phpbbgallery\favorite\favorite $favorite     Gallery favorite object
 	 */
-	public function __construct(\phpbb\controller\helper $helper, \phpbb\language\language $language, \phpbb\request\request $request,
+	public function __construct(\phpbb\controller\helper $helper, \phpbb\config\config $config, \phpbb\language\language $language, \phpbb\request\request $request,
 		\phpbb\template\template $template, \phpbb\user $user, \phpbbgallery\core\auth\auth $gallery_auth,
 		\phpbbgallery\core\user $gallery_user, \phpbbgallery\favorite\favorite $favorite)
 	{
 		$this->helper = $helper;
+		$this->config = $config;
 		$this->language = $language;
 		$this->request = $request;
 		$this->template = $template;
@@ -75,8 +80,10 @@ class favorite_listener implements EventSubscriberInterface
 	{
 		return [
 			'core.delete_user_after'							=> 'delete_user_after',
+			'phpbbgallery.core.acp.config.get_display_vars'	=> 'acp_config_get_display_vars',
 			'phpbbgallery.acpcleanup.cleanup_finished'			=> 'cleanup_finished',
 			'phpbbgallery.core.album.image_template_vars'		=> 'album_image_template_vars',
+			'phpbbgallery.core.search.image_template_vars'		=> 'search_image_template_vars',
 			'phpbbgallery.core.image.delete_images'				=> 'image_delete_images',
 			'phpbbgallery.core.viewimage'						=> 'viewimage',
 			'phpbbgallery.core.ucp.set_settings_nosubmit'		=> 'ucp_set_settings_nosubmit',
@@ -127,14 +134,57 @@ class favorite_listener implements EventSubscriberInterface
 	 */
 	public function album_image_template_vars(\phpbb\event\data $event): void
 	{
-		$user_id = (int) $this->user->data['user_id'];
-		$images = (array) $event['images'];
 		$album_data = (array) $event['album_data'];
-		$album_id = (int) ($album_data['album_id'] ?? 0);
-		$album_user_id = (int) ($album_data['album_user_id'] ?? 0);
+		$images = array_map(static function (array $image) use ($album_data): array
+		{
+			return array_merge($album_data, $image);
+		}, (array) $event['images']);
+		$this->enrich_listing($event, $images);
+	}
 
-		if ($user_id === ANONYMOUS || !$images
-			|| !$this->gallery_auth->acl_check('i_favorite', $album_id, $album_user_id))
+	/**
+	 * Add favourite controls to visible Gallery search results.
+	 */
+	public function search_image_template_vars(\phpbb\event\data $event): void
+	{
+		$this->enrich_listing($event, (array) $event['images']);
+	}
+
+	/**
+	 * Add the add-on-owned listing switch to the Gallery ACP image settings.
+	 */
+	public function acp_config_get_display_vars(\phpbb\event\data $event): void
+	{
+		if ($event['mode'] !== 'main')
+		{
+			return;
+		}
+
+		$return_ary = $event['return_ary'];
+		if (!isset($return_ary['vars']['IMAGE_SETTINGS']))
+		{
+			return;
+		}
+
+		$this->language->add_lang('info_ucp_gallery_favorite', 'phpbbgallery/favorite');
+		$return_ary['vars']['IMAGE_SETTINGS']['favorite_listings'] = [
+			'lang'     => 'FAVORITE_SHOW_IN_LISTINGS',
+			'explain'  => true,
+			'validate' => 'bool',
+			'type'     => 'radio:yes_no',
+			'addon'    => [
+				'id'     => 'favorite',
+				'name'   => 'UCP_GALLERY_FAVORITES',
+				'accent' => '#b91c1c',
+			],
+		];
+		$event['return_ary'] = $return_ary;
+	}
+
+	private function enrich_listing(\phpbb\event\data $event, array $images): void
+	{
+		$user_id = (int) $this->user->data['user_id'];
+		if ($user_id === ANONYMOUS || !$images || !$this->listings_enabled())
 		{
 			return;
 		}
@@ -143,7 +193,10 @@ class favorite_listener implements EventSubscriberInterface
 		foreach ($images as $image)
 		{
 			$image_id = (int) ($image['image_id'] ?? 0);
-			if ($image_id > 0)
+			$album_id = (int) ($image['image_album_id'] ?? $image['album_id'] ?? 0);
+			$album_user_id = (int) ($image['album_user_id'] ?? 0);
+			if ($image_id > 0 && $album_id > 0
+				&& $this->gallery_auth->acl_check('i_favorite', $album_id, $album_user_id))
 			{
 				$image_ids[$image_id] = $image_id;
 			}
@@ -166,6 +219,12 @@ class favorite_listener implements EventSubscriberInterface
 		}
 
 		$event['image_template_vars'] = $image_template_vars;
+	}
+
+	private function listings_enabled(): bool
+	{
+		return !isset($this->config['phpbb_gallery_favorite_listings'])
+			|| (bool) $this->config['phpbb_gallery_favorite_listings'];
 	}
 
 	/**
