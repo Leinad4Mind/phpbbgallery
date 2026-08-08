@@ -158,12 +158,15 @@ final class controller_album_types_test extends TestCase
 		$this->assertStringContainsString('data-gallery-rating-remove-after-submit', $script);
 		$this->assertStringContainsString("closest('[data-gallery-rating-trigger]')", $script);
 		$this->assertStringContainsString('form.hidden = !opening', $script);
+		$this->assertStringContainsString('setAlbumRatingMetadata(form, opening)', $script);
+		$this->assertStringContainsString('item.hidden = voting && index >= 2', $script);
 
 		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
 		{
 			$card = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/imageblock_polaroid.html');
 			$album = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/album_body.html');
 			$this->assertStringContainsString('@phpbbgallery_core/gallery/album_rating_stars.html', $card, $style);
+			$this->assertStringContainsString('data-gallery-card-metadata', $card, $style);
 			$this->assertStringNotContainsString('image.U_RATINGS', $card, $style);
 			$this->assertStringContainsString("INCLUDEJS '@phpbbgallery_core/js/rating.js'", $album, $style);
 		}

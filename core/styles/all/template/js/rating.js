@@ -26,6 +26,22 @@
 		}
 	}
 
+	function setAlbumRatingMetadata(form, voting) {
+		var card = form.closest('.gallery-image-card');
+		var items;
+
+		if (!card) {
+			return;
+		}
+
+		items = Array.prototype.filter.call(card.querySelectorAll('[data-gallery-card-metadata]'), function (item) {
+			return item.textContent.trim() !== '' || item.children.length > 0;
+		});
+		items.forEach(function (item, index) {
+			item.hidden = voting && index >= 2;
+		});
+	}
+
 	function toggleAlbumRating(trigger) {
 		var formId = trigger.getAttribute('aria-controls');
 		var form = formId ? document.getElementById(formId) : null;
@@ -35,6 +51,7 @@
 
 		var opening = form.hidden;
 		form.hidden = !opening;
+		setAlbumRatingMetadata(form, opening);
 		trigger.setAttribute('aria-expanded', opening ? 'true' : 'false');
 		if (opening) {
 			var firstRating = form.querySelector('[data-rating-value]');
@@ -83,6 +100,9 @@
 				if (albumTrigger && albumTrigger.hasAttribute('data-gallery-rating-trigger')) {
 					albumTrigger.hidden = true;
 					albumTrigger.setAttribute('aria-expanded', 'false');
+				}
+				if (albumForm) {
+					setAlbumRatingMetadata(albumForm, false);
 				}
 			}
 			var status = container.querySelector('[data-gallery-rating-status]');

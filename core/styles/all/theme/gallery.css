@@ -842,6 +842,11 @@ input.autowidth-gallery {
 	margin: 4px 0 0;
 }
 
+.gallery-image-card-metadata-item[hidden]
+{
+	display: none !important;
+}
+
 .gallery-album-rating-trigger
 {
 	appearance: none;

@@ -40,18 +40,18 @@
 	{% endif %}
 	{% if image.IMAGE_SUBTITLE %}<p class="gallery-image-card-subtitle" title="{{ image.IMAGE_SUBTITLE }}">{{ image.IMAGE_SUBTITLE }}</p>{% endif %}
 	<hr />
-	{% if image.U_ALBUM %}{{ lang('ALBUM_NAME') }}{{ lang('COLON') }}<p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; margin-bottom: 0px;"><a href="{{ image.U_ALBUM }}" style="display: inline;">{% endif %} {{ image.ALBUM_NAME }}{% if image.U_ALBUM %}</a></p>{% endif %}
-	{% if image.POSTER %}{{ lang('UPLOADED_BY_USER') }}{{ lang('COLON') }} {{ image.POSTER }}<br />{% endif %}
-	{% if image.TIME %}&raquo; {{ image.TIME }}<br />{% endif %}
-	{% if image.IMAGE_RESOLUTION %}{{ lang('IMAGE_RESOLUTION') }}{{ lang('COLON') }} {{ image.IMAGE_RESOLUTION }}<br />{% endif %}
-	{% if image.IMAGE_VIEWS > -1 %}{{ lang('IMAGE_VIEWS') }}{{ lang('COLON') }} {{ image.IMAGE_VIEWS }}<br />{% endif %}
-	{% EVENT phpbbgallery_core_album_image_metadata %}
+	{% if image.U_ALBUM %}<div class="gallery-image-card-metadata-item" data-gallery-card-metadata>{{ lang('ALBUM_NAME') }}{{ lang('COLON') }} <a href="{{ image.U_ALBUM }}" title="{{ image.ALBUM_NAME }}"><strong>{{ image.ALBUM_NAME }}</strong></a></div>{% endif %}
+	{% if image.POSTER %}<div class="gallery-image-card-metadata-item" data-gallery-card-metadata>{{ lang('UPLOADED_BY_USER') }}{{ lang('COLON') }} {{ image.POSTER }}</div>{% endif %}
+	{% if image.TIME %}<div class="gallery-image-card-metadata-item" data-gallery-card-metadata>&raquo; {{ image.TIME }}</div>{% endif %}
+	{% if image.IMAGE_RESOLUTION %}<div class="gallery-image-card-metadata-item" data-gallery-card-metadata>{{ lang('IMAGE_RESOLUTION') }}{{ lang('COLON') }} {{ image.IMAGE_RESOLUTION }}</div>{% endif %}
+	{% if image.IMAGE_VIEWS > -1 %}<div class="gallery-image-card-metadata-item" data-gallery-card-metadata>{{ lang('IMAGE_VIEWS') }}{{ lang('COLON') }} {{ image.IMAGE_VIEWS }}</div>{% endif %}
+	<div class="gallery-image-card-metadata-item" data-gallery-card-metadata>{% EVENT phpbbgallery_core_album_image_metadata %}</div>
 	{% if image.S_RATINGS %}
-		{{ lang('RATING') }}{{ lang('COLON') }} {% include '@phpbbgallery_core/gallery/album_rating_stars.html' %}<br />
+		<div class="gallery-image-card-rating">{{ lang('RATING') }}{{ lang('COLON') }} {% include '@phpbbgallery_core/gallery/album_rating_stars.html' %}</div>
 	{% endif %}
-	{% if image.S_COMMENTS %}{{ image.L_COMMENTS }}{{ lang('COLON') }} <a href="{{ image.U_COMMENTS }}">{{ image.S_COMMENTS }}</a><br />{% endif %}
+	{% if image.S_COMMENTS %}<div class="gallery-image-card-metadata-item" data-gallery-card-metadata>{{ image.L_COMMENTS }}{{ lang('COLON') }} <a href="{{ image.U_COMMENTS }}">{{ image.S_COMMENTS }}</a></div>{% endif %}
 {% if U_ACP %}
-	{% if image.U_USER_IP %}{{ lang('IP') }}{{ lang('COLON') }} {% include '@phpbbgallery_core/gallery/ip_privacy_toggle.html' with { ip_value: image.U_USER_IP } %}<br />{% endif %}
+	{% if image.U_USER_IP %}<div class="gallery-image-card-metadata-item" data-gallery-card-metadata>{{ lang('IP') }}{{ lang('COLON') }} {% include '@phpbbgallery_core/gallery/ip_privacy_toggle.html' with { ip_value: image.U_USER_IP } %}</div>{% endif %}
 {% endif %}
 
 </div>
