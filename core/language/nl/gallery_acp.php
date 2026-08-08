@@ -26,7 +26,10 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, [
 	'PERMISSION_I_MOVE' => 'Kan eigen afbeeldingen verplaatsen',
 	'PERMISSION_I_DOWNLOAD' => 'Kan originele afbeeldingsbestanden downloaden (source)',
+	'PERMISSION_I_DOWNLOAD_EXPLAIN' => 'Geeft toegang tot het oorspronkelijke bronbestand. De toestemming om afbeeldingen te bekijken is ook vereist.',
 	'PERMISSION_I_DOWNLOAD_FREE' => 'Kan originele afbeeldingsbestanden zonder kosten downloaden (source)',
+	'PERMISSION_I_DOWNLOAD_FREE_EXPLAIN' => 'Omzeilt kosten die add-ons rekenen voor toegang tot het oorspronkelijke bronbestand. Toestemming voor bekijken en downloaden blijft vereist.',
+	'PERMISSION_I_VIEW_EXPLAIN' => 'Regelt toegang tot afbeeldingslijsten van albums, afzonderlijke afbeeldingspagina’s, miniaturen en middelgrote afbeeldingen. Geeft geen toegang tot het oorspronkelijke bronbestand.',
 	'STORAGE_MIGRATION' => 'Migratie naar gedistribueerde opslag',
 	'STORAGE_MIGRATION_EXPLAIN' => 'Verplaatst bestaande lokale afbeeldingsbestanden in gecontroleerde en hervatbare batches naar de ingestelde gedistribueerde mapstructuur.',
 	'STORAGE_MIGRATION_CONFIRM' => 'Weet je zeker dat je de bestaande Galerijbestanden naar de gedistribueerde structuur wilt migreren?',

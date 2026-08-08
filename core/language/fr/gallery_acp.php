@@ -26,7 +26,10 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, [
 	'PERMISSION_I_MOVE' => 'Peut déplacer ses propres images',
 	'PERMISSION_I_DOWNLOAD' => 'Peut télécharger les fichiers image originaux (source)',
+	'PERMISSION_I_DOWNLOAD_EXPLAIN' => 'Autorise l’accès au fichier source original. La permission de voir les images est également requise.',
 	'PERMISSION_I_DOWNLOAD_FREE' => 'Peut télécharger les fichiers originaux sans frais (source)',
+	'PERMISSION_I_DOWNLOAD_FREE_EXPLAIN' => 'Contourne les frais appliqués par les extensions lors de l’accès au fichier source original. Les permissions de consultation et de téléchargement restent requises.',
+	'PERMISSION_I_VIEW_EXPLAIN' => 'Contrôle l’accès aux listes d’images des albums, aux pages individuelles, aux miniatures et aux images moyennes. N’autorise pas l’accès au fichier source original.',
 	'STORAGE_MIGRATION' => 'Migration vers le stockage distribué',
 	'STORAGE_MIGRATION_EXPLAIN' => 'Déplace les fichiers image locaux existants vers la structure distribuée configurée, par lots vérifiés et reprenables.',
 	'STORAGE_MIGRATION_CONFIRM' => 'Voulez-vous vraiment migrer les fichiers existants de la Galerie vers la structure distribuée ?',

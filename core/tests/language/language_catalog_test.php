@@ -187,7 +187,18 @@ class language_catalog_test extends TestCase
 			$this->assertStringContainsString('(', $language['PERMISSION_I_VIEW'], $locale . ':PERMISSION_I_VIEW');
 			$this->assertStringContainsString('source', $language['PERMISSION_I_DOWNLOAD'], $locale . ':PERMISSION_I_DOWNLOAD');
 			$this->assertStringContainsString('source', $language['PERMISSION_I_DOWNLOAD_FREE'], $locale . ':PERMISSION_I_DOWNLOAD_FREE');
+			foreach (['PERMISSION_I_VIEW_EXPLAIN', 'PERMISSION_I_DOWNLOAD_EXPLAIN', 'PERMISSION_I_DOWNLOAD_FREE_EXPLAIN'] as $key)
+			{
+				$this->assertArrayHasKey($key, $language, $locale . ':' . $key);
+				$this->assertNotSame('', trim($language[$key]), $locale . ':' . $key);
+			}
 		}
+
+		$english = $this->load_language($language_root . '/en/gallery_acp.php');
+		$this->assertStringContainsString('album image listings', $english['PERMISSION_I_VIEW_EXPLAIN']);
+		$this->assertStringContainsString('individual image pages', $english['PERMISSION_I_VIEW_EXPLAIN']);
+		$this->assertStringContainsString('does not grant access to the original source file', $english['PERMISSION_I_VIEW_EXPLAIN']);
+		$this->assertStringContainsString('permission is also required', $english['PERMISSION_I_DOWNLOAD_EXPLAIN']);
 	}
 
 	public function test_brazilian_portuguese_catalog_uses_brazilian_vocabulary_and_register(): void

@@ -25,7 +25,10 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, [
 	'PERMISSION_I_MOVE' => 'Can move own images',
 	'PERMISSION_I_DOWNLOAD' => 'Can download original image files (source)',
+	'PERMISSION_I_DOWNLOAD_EXPLAIN' => 'Allows access to the original source file. The “Can view images” permission is also required.',
 	'PERMISSION_I_DOWNLOAD_FREE' => 'Can download original image files without charges (source)',
+	'PERMISSION_I_DOWNLOAD_FREE_EXPLAIN' => 'Bypasses charges imposed by add-ons when accessing the original source file. The view and download permissions are still required.',
+	'PERMISSION_I_VIEW_EXPLAIN' => 'Controls access to album image listings, individual image pages, thumbnails and medium images. It does not grant access to the original source file.',
 ]);
 
 $lang = array_merge($lang, [

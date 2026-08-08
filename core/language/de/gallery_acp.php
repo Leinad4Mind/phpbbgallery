@@ -26,7 +26,10 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, [
 	'PERMISSION_I_MOVE' => 'Kann eigene Bilder verschieben',
 	'PERMISSION_I_DOWNLOAD' => 'Kann Originalbilddateien herunterladen (source)',
+	'PERMISSION_I_DOWNLOAD_EXPLAIN' => 'Erlaubt den Zugriff auf die ursprüngliche Quelldatei (source). Die Berechtigung zum Anzeigen von Bildern ist ebenfalls erforderlich.',
 	'PERMISSION_I_DOWNLOAD_FREE' => 'Kann Originalbilddateien ohne Kosten herunterladen (source)',
+	'PERMISSION_I_DOWNLOAD_FREE_EXPLAIN' => 'Umgeht von Add-ons erhobene Kosten beim Zugriff auf die ursprüngliche Quelldatei. Anzeige- und Downloadberechtigung bleiben erforderlich.',
+	'PERMISSION_I_VIEW_EXPLAIN' => 'Steuert den Zugriff auf Bildlisten in Alben, einzelne Bildseiten, Vorschaubilder und mittelgroße Bilder. Gewährt keinen Zugriff auf die ursprüngliche Quelldatei.',
 	'STORAGE_MIGRATION' => 'Migration zum verteilten Speicher',
 	'STORAGE_MIGRATION_EXPLAIN' => 'Verschiebt vorhandene lokale Bilddateien in die konfigurierte verteilte Verzeichnisstruktur, in geprüften und fortsetzbaren Stapeln.',
 	'STORAGE_MIGRATION_CONFIRM' => 'Möchtest du die vorhandenen Galerie-Dateien wirklich in die verteilte Struktur migrieren?',
