@@ -130,7 +130,9 @@ class performance_and_cache_test extends TestCase
 		$this->assertStringNotContainsString('image_view_count = image_view_count + 1', $file_controller);
 		$this->assertStringContainsString('image_view_count = image_view_count + 1', $image_controller);
 		$this->assertStringContainsString("if (!\$this->user->data['is_bot']", $image_controller);
-		$this->assertStringContainsString("\$medium_url = \$this->url->show_image(\$image_id, 'medium');", $image_service);
+		$this->assertStringContainsString("\$image_url = \$this->helper->route('phpbbgallery_core_image_file_medium'", $image_service);
+		$this->assertStringContainsString("\$thumb_url = \$this->helper->route('phpbbgallery_core_image_file_mini'", $image_service);
+		$this->assertStringContainsString('$medium_url = $image_url;', $image_service);
 		$this->assertStringContainsString('modified_time($this->storage_variant', $file_controller);
 		$this->assertStringContainsString('@filemtime($this->tool->image_source)', $file_controller);
 		$this->assertStringContainsString('apply_browser_cache($response)', $file_controller);

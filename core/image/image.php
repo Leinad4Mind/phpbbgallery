@@ -565,9 +565,12 @@ class image
 	public function generate_link(string $content, string $mode, int $image_id, string $image_name, int $album_id, bool $is_gif = false, bool $count = true, string $additional_parameters = '', int $next_image = 0): string
 	{
 		$image_page_url = $this->helper->route('phpbbgallery_core_image', ['image_id' => (int) $image_id]);
-		$image_url = $this->url->show_image($image_id, 'medium');
-		$thumb_url = $this->url->show_image($image_id, 'mini');
-		$medium_url = $this->url->show_image($image_id, 'medium');
+		// Embedded files are private application resources, so keep phpBB's
+		// current session context for boards that transport the SID in URLs.
+		// Shareable URLs are built separately by url::get_uri(), which removes it.
+		$image_url = $this->helper->route('phpbbgallery_core_image_file_medium', ['image_id' => $image_id]);
+		$thumb_url = $this->helper->route('phpbbgallery_core_image_file_mini', ['image_id' => $image_id]);
+		$medium_url = $image_url;
 		switch ($content)
 		{
 			case 'image_name':
