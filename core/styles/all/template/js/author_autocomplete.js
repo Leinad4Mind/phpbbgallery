@@ -58,6 +58,7 @@
 		function close() {
 			suggestions.hidden = true;
 			suggestions.textContent = '';
+			container.classList.remove('is-open');
 			activeIndex = -1;
 			input.setAttribute('aria-expanded', 'false');
 			input.removeAttribute('aria-activedescendant');
@@ -93,6 +94,7 @@
 			});
 			if (suggestions.children.length) {
 				suggestions.hidden = false;
+				container.classList.add('is-open');
 				input.setAttribute('aria-expanded', 'true');
 			}
 		}

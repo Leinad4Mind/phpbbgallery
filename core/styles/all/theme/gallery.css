@@ -954,7 +954,13 @@ input.autowidth-gallery {
 
 .gallery-author-autocomplete
 {
+	overflow: visible;
 	position: relative;
+}
+
+.gallery-author-autocomplete.is-open
+{
+	z-index: 10050;
 }
 
 .gallery-author-suggestions
@@ -972,7 +978,7 @@ input.autowidth-gallery {
 	position: absolute;
 	top: 100%;
 	width: 100%;
-	z-index: 1050;
+	z-index: 10060;
 }
 
 .gallery-author-suggestions[hidden]

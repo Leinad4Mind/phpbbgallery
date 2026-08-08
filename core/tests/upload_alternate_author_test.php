@@ -118,6 +118,28 @@ final class upload_alternate_author_test extends TestCase
 		$this->assertStringNotContainsString("\$process->set_allow_comments(\$this->request->variable('allow_comments'", $source);
 	}
 
+	public function test_author_suggestions_are_layered_above_the_upload_form(): void
+	{
+		$root = dirname(__DIR__);
+		$stylesheet = (string) file_get_contents($root . '/styles/all/theme/gallery.css');
+		$javascript = (string) file_get_contents($root . '/styles/all/template/js/author_autocomplete.js');
+
+		$this->assertMatchesRegularExpression(
+			'/\.gallery-author-autocomplete\s*\{[^}]*overflow:\s*visible;[^}]*position:\s*relative;[^}]*\}/s',
+			$stylesheet
+		);
+		$this->assertMatchesRegularExpression(
+			'/\.gallery-author-autocomplete\.is-open\s*\{[^}]*z-index:\s*10050;[^}]*\}/s',
+			$stylesheet
+		);
+		$this->assertMatchesRegularExpression(
+			'/\.gallery-author-suggestions\s*\{[^}]*z-index:\s*10060;[^}]*\}/s',
+			$stylesheet
+		);
+		$this->assertStringContainsString("container.classList.add('is-open')", $javascript);
+		$this->assertStringContainsString("container.classList.remove('is-open')", $javascript);
+	}
+
 	private function property(upload $upload, string $name): mixed
 	{
 		return (new \ReflectionProperty(upload::class, $name))->getValue($upload);
