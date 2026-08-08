@@ -132,6 +132,7 @@ final class capture_index_test extends TestCase
 		foreach ([
 			'phpbbgallery.core.image.sort_options',
 			'phpbbgallery.core.image.sort_labels',
+			'phpbbgallery.core.search.sort_options',
 			'phpbbgallery.core.upload.update_image_after',
 			'phpbbgallery.acpimport.insert_image_after',
 			'phpbbgallery.core.image_edit_after',
@@ -142,6 +143,7 @@ final class capture_index_test extends TestCase
 		}
 
 		$this->assertStringContainsString('COALESCE(NULLIF(gallery_exif_sort.exif_taken_time, 0), image_time)', $listener);
+		$this->assertStringContainsString('COALESCE(NULLIF(gallery_exif_sort.exif_taken_time, 0), i.image_time)', $listener);
 		$this->assertStringContainsString("(string) \$event['sort_key'] === 'et'", $listener);
 		$this->assertStringContainsString('phpbbgallery.exif.capture_sync:', $services);
 		$this->assertStringContainsString("'exif_taken_time' => ['BINT', 0]", $migration);

@@ -844,3 +844,52 @@ input.autowidth-gallery {
 	left: auto;
 	right: -3px;
 }
+
+.gallery-author-autocomplete
+{
+	position: relative;
+}
+
+.gallery-author-suggestions
+{
+	background: #fff;
+	border: 1px solid #c7c7c7;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, .15);
+	box-sizing: border-box;
+	left: 0;
+	list-style: none;
+	margin: 2px 0 0;
+	max-height: 240px;
+	overflow-y: auto;
+	padding: 0;
+	position: absolute;
+	top: 100%;
+	width: 100%;
+	z-index: 1050;
+}
+
+.gallery-author-suggestions[hidden]
+{
+	display: none;
+}
+
+.gallery-author-suggestions button
+{
+	background: transparent;
+	border: 0;
+	box-shadow: none;
+	box-sizing: border-box;
+	color: #333;
+	cursor: pointer;
+	display: block;
+	font: inherit;
+	padding: 8px 10px;
+	text-align: left;
+	width: 100%;
+}
+
+.gallery-author-suggestions button:hover,
+.gallery-author-suggestions .is-active button
+{
+	background: #e8f1f8;
+}

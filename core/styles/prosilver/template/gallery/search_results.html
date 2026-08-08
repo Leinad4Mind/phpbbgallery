@@ -25,7 +25,7 @@ function toggleElement(oElement)
 }
 </script>
 {% if pagination|length or SEARCH_MATCHES or PAGE_NUMBER %}
-	<form method="post" action="{{ S_SEARCH_ACTION }}">
+	<form method="get" action="{{ S_SEARCH_ACTION }}">
 	<div class="topic-actions">
 
 	{% if SEARCH_MATCHES %}
@@ -33,6 +33,7 @@ function toggleElement(oElement)
 			{% if SEARCH_IN_RESULTS %}
 				<label for="add_keywords">{{ lang('SEARCH_IN_RESULTS') }}{{ lang('COLON') }} <input type="text" name="add_keywords" id="add_keywords" value="" class="inputbox narrow" /></label>
 				<input type="hidden" name="show_results" value="posts" />
+				{{ S_SEARCH_RESULT_HIDDEN_FIELDS }}
 				<input class="button2" type="submit" name="submit" value="{{ lang('SEARCH') }}" />
 			{% endif %}
 		</div>
@@ -60,6 +61,16 @@ function toggleElement(oElement)
 {% endif %}
 
 <h2>{% if SEARCH_TITLE %}{{ SEARCH_TITLE }}{% else %}{{ SEARCH_MATCHES }}{% endif %}{% if SEARCH_WORDS %}{{ lang('COLON') }} <a href="{{ U_SEARCH_WORDS }}">{{ SEARCH_WORDS }}</a>{% endif %}</h2>
+{% if SEARCH_KEYWORDS_VALUE or SEARCH_AUTHOR_VALUE %}
+<div class="panel">
+	<div class="inner">
+		<strong>{{ lang('SEARCH_QUERY') }}{{ lang('COLON') }}</strong>
+		{% if SEARCH_KEYWORDS_VALUE %}{{ lang('SEARCH_KEYWORDS') }}{{ lang('COLON') }} {{ SEARCH_KEYWORDS_VALUE }}{% endif %}
+		{% if SEARCH_KEYWORDS_VALUE and SEARCH_AUTHOR_VALUE %} &middot; {% endif %}
+		{% if SEARCH_AUTHOR_VALUE %}{{ lang('SEARCH_AUTHOR') }}{{ lang('COLON') }} {{ SEARCH_AUTHOR_VALUE }}{% endif %}
+	</div>
+</div>
+{% endif %}
 {% EVENT phpbbgallery_core_search_results_facets %}
 {% if IGNORED_WORDS %} <p>{{ lang('IGNORED_TERMS') }}{{ lang('COLON') }} <strong>{{ IGNORED_WORDS }}</strong></p>{% endif %}
 {% if U_GALLERY_SEARCH %}<p><a class="{{ S_CONTENT_FLOW_BEGIN }}" href="{{ U_GALLERY_SEARCH }}" title="{{ lang('SEARCH_ADV') }}">{{ lang('RETURN_TO_SEARCH_ADV') }}</a></p>{% endif %}
@@ -75,6 +86,7 @@ function toggleElement(oElement)
 <div class="polaroid gallery-image-award-placeholder" aria-hidden="true" style="visibility: hidden;"></div>
 {% else %}
 <div  class="polaroid">
+	{% EVENT phpbbgallery_core_album_image_actions %}
 	{% if image.S_IMAGE_AWARD_RANK > 0 %}
 	<div class="trophy-container">
 		<i class="trophy-icon fa-trophy fa-stack-2x trophy-color-{{ image.S_IMAGE_AWARD_RANK }}"></i>
@@ -162,7 +174,7 @@ function toggleElement(oElement)
 {% endif %}
 <hr />
 {% if PAGINATION or imageblock|length or ((S_SELECT_SORT_KEY or S_SELECT_SORT_DAYS) and SEARCH_IN_RESULTS) %}
-	<form method="post" action="{{ S_SEARCH_ACTION }}">
+	<form method="get" action="{{ S_SEARCH_ACTION }}">
 
 	<fieldset class="display-options">
 		{% if PREVIOUS_PAGE %}<a href="{{ PREVIOUS_PAGE }}" class="left-box {{ S_CONTENT_FLOW_BEGIN }}">{{ lang('PREVIOUS') }}</a>{% endif %}
@@ -171,6 +183,7 @@ function toggleElement(oElement)
 			<label>{{ lang('SORT_BY') }} {{ S_SELECT_SORT_KEY }}</label>
 			<label>{{ S_SELECT_SORT_DIR }} <input type="submit" name="sort" value="{{ lang('GO') }}" class="button2" /></label>
 		{% endif %}
+		{{ S_SEARCH_SORT_HIDDEN_FIELDS }}
 	</fieldset>
 
 	</form>

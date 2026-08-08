@@ -195,9 +195,10 @@ class upload
 		$upload_author_id = ($upload_author !== false) ? (int) $upload_author['user_id'] : (int) $this->user->data['user_id'];
 		$is_alternate_author = ($upload_author_id !== (int) $this->user->data['user_id']);
 		$this->template->assign_vars([
-			'S_CHANGE_AUTHOR' => $can_change_author,
-			'CHANGE_AUTHOR'   => $change_author,
-			'U_FIND_USERNAME' => $can_change_author ? $this->url->append_sid('phpbb', 'memberlist', 'mode=searchuser&amp;form=postform&amp;field=change_author&amp;select_single=true') : '',
+			'S_CHANGE_AUTHOR'              => $can_change_author,
+			'CHANGE_AUTHOR'                => $change_author,
+			'U_FIND_USERNAME'              => $can_change_author ? $this->url->append_sid('phpbb', 'memberlist', 'mode=searchuser&amp;form=postform&amp;field=change_author&amp;select_single=true') : '',
+			'U_CHANGE_AUTHOR_AUTOCOMPLETE' => $can_change_author ? $this->helper->route('phpbbgallery_core_album_author_autocomplete', ['album_id' => $album_id]) : '',
 		]);
 
 		if ($this->request->is_set_post('discard_pending'))

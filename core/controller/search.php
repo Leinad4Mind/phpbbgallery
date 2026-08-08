@@ -182,6 +182,18 @@ class search
 		}
 		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
 		$this->language->add_lang('search');
+		$this->template->assign_block_vars('navlinks', [
+			'FORUM_NAME'   => $this->gallery_config->get_title($this->language),
+			'U_VIEW_FORUM' => $this->helper->route('phpbbgallery_core_index'),
+		]);
+		$this->template->assign_block_vars('navlinks', [
+			'FORUM_NAME'   => $this->language->lang('SEARCH'),
+			'U_VIEW_FORUM' => $this->helper->route('phpbbgallery_core_search'),
+		]);
+		$this->template->assign_vars([
+			'S_SEARCH_ACTION'                 => $this->helper->route('phpbbgallery_core_search'),
+			'U_SEARCH_AUTHOR_AUTOCOMPLETE'   => $this->helper->route('phpbbgallery_core_search_author_autocomplete'),
+		]);
 		// Is user able to search? Has search been disabled?
 		if (!$this->auth->acl_get('u_search') || !$this->config['load_search'])
 		{
@@ -209,6 +221,22 @@ class search
 			$sort_by_text['lc'] = $this->language->lang('NEW_COMMENT');
 			$sort_by_sql['lc'] = 'image_last_comment';
 		}
+		$search_sort_joins = [];
+		/**
+		 * Allow add-ons to provide indexed sort methods for Gallery searches.
+		 *
+		 * @event phpbbgallery.core.search.sort_options
+		 * @var string sort_key          Requested sort key before validation
+		 * @var array  sort_by_text      Sort-key labels
+		 * @var array  sort_by_sql       Sort-key SQL expressions
+		 * @var array  search_sort_joins Portable DBAL LEFT JOIN definitions
+		 * @since 4.0.0
+		 */
+		$vars = ['sort_key', 'sort_by_text', 'sort_by_sql', 'search_sort_joins'];
+		extract($this->dispatcher->trigger_event(
+			'phpbbgallery.core.search.sort_options',
+			compact($vars)
+		));
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$moderated_album_ids = $this->gallery_auth->acl_album_ids('m_status');
 
@@ -241,6 +269,10 @@ class search
 		$sql_array['FROM'] = [
 			$this->images_table => 'i',
 		];
+		if ($search_sort_joins)
+		{
+			$sql_array['LEFT_JOIN'] = $search_sort_joins;
+		}
 		if ($keywords || $username || $user_id || $search_id || $submit || $additional_search_active)
 		{
 			$user_id_ary = [];
@@ -344,11 +376,9 @@ class search
 				trigger_error('NO_SEARCH_RESULTS');
 			}
 			$sql_array['SELECT'] = '*, a.album_name, a.album_status, a.album_user_id, a.album_id';
-			$sql_array['LEFT_JOIN']	= [
-				[
+			$sql_array['LEFT_JOIN'][] = [
 					'FROM'		=> [$this->albums_table => 'a'],
 					'ON'		=> 'a.album_id = i.image_album_id',
-				]
 			];
 			$sql_array['ORDER_BY'] = $sql_order;
 			$sql_array['GROUP_BY'] = $sort_by_sql[$sort_key] . ', i.image_id, a.album_id';
@@ -369,14 +399,33 @@ class search
 			$show_options = $this->gallery_config->get('search_display');
 			$thumbnail_link = $this->gallery_config->get('link_thumbnail');
 			$imagename_link = $this->gallery_config->get('link_image_name');
+			$image_template_vars = [];
+			/**
+			 * Allow add-ons to enrich a bounded page of visible search results.
+			 *
+			 * @event phpbbgallery.core.search.image_template_vars
+			 * @var array images              Visible image rows on the current page
+			 * @var array image_template_vars Additional variables keyed by image ID
+			 * @since 4.0.0
+			 */
+			$vars = ['images', 'image_template_vars'];
+			$images = $rowset;
+			extract($this->dispatcher->trigger_event(
+				'phpbbgallery.core.search.image_template_vars',
+				compact($vars)
+			));
 			foreach ($rowset as $row)
 			{
-				$this->image->assign_block('imageblock.image', $row, $show_options, $thumbnail_link, $imagename_link);
+				$image_id = (int) $row['image_id'];
+				$additional_vars = isset($image_template_vars[$image_id]) && is_array($image_template_vars[$image_id])
+					? $image_template_vars[$image_id]
+					: [];
+				$this->image->assign_block('imageblock.image', $row, $show_options, $thumbnail_link, $imagename_link, $additional_vars);
 			}
 			$pagination_params = array_merge([
 				'keywords' => $keywords,
 				'username' => $username,
-				'user_id' => $user_id,
+				'user_id' => $username !== '' ? [0] : $user_id,
 				'terms' => $search_terms,
 				'aid' => $search_album,
 				'sc' => $search_child,
@@ -409,19 +458,24 @@ class search
 			], 'pagination', 'page', $search_count, $this->gallery_config->get('items_per_page'), $start);
 
 			$this->template->assign_vars([
-				'SEARCH_MATCHES'	=> $this->language->lang('FOUND_SEARCH_MATCHES', $search_count),
+				'SEARCH_MATCHES'              => $this->language->lang('FOUND_SEARCH_MATCHES', $search_count),
+				'SEARCH_KEYWORDS_VALUE'       => $keywords,
+				'SEARCH_AUTHOR_VALUE'         => $username,
+				'SEARCH_IN_RESULTS'            => true,
+				'S_SELECT_SORT_DIR'            => $s_sort_dir,
+				'S_SELECT_SORT_KEY'            => $s_sort_key,
+				'S_SELECT_SORT_DAYS'           => $s_limit_days,
+				'S_SEARCH_RESULT_HIDDEN_FIELDS' => build_hidden_fields(array_merge($pagination_params, $this->search_context_params())),
+				'S_SEARCH_SORT_HIDDEN_FIELDS' => build_hidden_fields(array_merge(
+					array_diff_key($pagination_params, ['sk' => true, 'sd' => true]),
+					$this->search_context_params()
+				)),
 			]);
 			return $this->helper->render('gallery/search_results.html', $this->gallery_config->get_title($this->language));
 		}
-		$this->template->assign_block_vars('navlinks', [
-			'FORUM_NAME'	=> $this->language->lang('SEARCH'),
-			'U_VIEW_FORUM'	=> $this->helper->route('phpbbgallery_core_search'),
-		]);
-
 		$s_albums = $this->album->get_albumbox(false, false, false, 'i_view');
-		$s_hidden_fields = [];
+		$s_hidden_fields = $this->search_context_params();
 		$this->template->assign_vars([
-			'S_SEARCH_ACTION'		=> $this->helper->route('phpbbgallery_core_search'), // We force no ?sid= appending by using 0
 			'S_HIDDEN_FIELDS'		=> build_hidden_fields($s_hidden_fields),
 			'S_ALBUM_OPTIONS'		=> $s_albums,
 			'S_SELECT_SORT_DIR'		=> $s_sort_dir,
@@ -644,6 +698,31 @@ class search
 	protected function normalize_page(int $page): int
 	{
 		return max(1, $page);
+	}
+
+	/**
+	 * Preserve an explicitly selected style and a URL-based authenticated session
+	 * when a GET search form replaces the current query string.
+	 *
+	 * @return array Safe request context parameters
+	 */
+	protected function search_context_params(): array
+	{
+		$params = [];
+		$style = $this->request->variable('style', 0);
+		if ($style > 0)
+		{
+			$params['style'] = $style;
+		}
+
+		$sid = $this->request->variable('sid', '');
+		$session_id = (string) ($this->user->session_id ?? '');
+		if ($sid !== '' && $session_id !== '' && hash_equals($session_id, $sid))
+		{
+			$params['sid'] = $sid;
+		}
+
+		return $params;
 	}
 
 	/**

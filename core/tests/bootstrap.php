@@ -136,6 +136,14 @@ namespace
 	{
 		define('ANONYMOUS', 1);
 	}
+	if (!defined('USER_NORMAL'))
+	{
+		define('USER_NORMAL', 0);
+	}
+	if (!defined('USER_FOUNDER'))
+	{
+		define('USER_FOUNDER', 3);
+	}
 
 	// Load only packaged Twig classes so isolated tests do not initialize unrelated Composer file autoloaders.
 	spl_autoload_register(static function (string $class_name): void
@@ -191,6 +199,7 @@ namespace
 	require_once dirname(__DIR__, 4) . '/vendor/symfony/http-foundation/HeaderBag.php';
 	require_once dirname(__DIR__, 4) . '/vendor/symfony/http-foundation/ResponseHeaderBag.php';
 	require_once dirname(__DIR__, 4) . '/vendor/symfony/http-foundation/Response.php';
+	require_once dirname(__DIR__, 4) . '/vendor/symfony/http-foundation/JsonResponse.php';
 	require_once dirname(__DIR__, 4) . '/vendor/symfony/http-foundation/File/Exception/FileException.php';
 	require_once dirname(__DIR__, 4) . '/vendor/symfony/http-foundation/File/Exception/FileNotFoundException.php';
 	require_once dirname(__DIR__, 4) . '/vendor/symfony/http-foundation/File/File.php';
@@ -239,6 +248,7 @@ namespace
 	require_once dirname(__DIR__) . '/controller/search.php';
 	require_once dirname(__DIR__) . '/controller/album.php';
 	require_once dirname(__DIR__) . '/controller/upload.php';
+	require_once dirname(__DIR__) . '/controller/author_autocomplete.php';
 	require_once dirname(__DIR__) . '/controller/comment.php';
 	require_once dirname(__DIR__) . '/controller/image.php';
 	require_once dirname(__DIR__) . '/online_location.php';

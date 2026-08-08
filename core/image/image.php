@@ -1238,9 +1238,10 @@ class image
 	 * @param int    $display_option   Bitmask of IMAGE_SHOW_* options
 	 * @param string $thumbnail_link   Thumbnail destination mode
 	 * @param string $imagename_link   Image-name destination mode
+	 * @param array  $additional_vars Add-on template variables for this image
 	 * @return void
 	 */
-	public function assign_block(string $image_block_name, array $image_data, int $display_option = 0, string $thumbnail_link = 'image_page', string $imagename_link = 'image_page'): void
+	public function assign_block(string $image_block_name, array $image_data, int $display_option = 0, string $thumbnail_link = 'image_page', string $imagename_link = 'image_page', array $additional_vars = []): void
 	{
 		// Now let's get display options
 		$show_ip         = ($display_option & self::IMAGE_SHOW_IP) !== 0;
@@ -1296,7 +1297,7 @@ class image
 		$image_width = max(0, (int) ($image_data['image_width'] ?? 0));
 		$image_height = max(0, (int) ($image_data['image_height'] ?? 0));
 
-		$this->template->assign_block_vars($image_block_name, [
+		$template_vars = [
 			'IMAGE_ID'		=> $image_data['image_id'],
 			'U_IMAGE'		=> $show_imagename ? $action_image : false,
 			'UC_IMAGE_NAME'	=> $show_imagename ? $image_data['image_name'] : false,
@@ -1335,6 +1336,7 @@ class image
 			'U_REPORT'	=> ($this->gallery_auth->acl_check('m_report', $image_data['image_album_id'], $image_data['album_user_id']) && $image_data['image_reported']) ? $this->helper->route('phpbbgallery_core_moderate_image', ['image_id' => (int) $image_data['image_id']]) : '',
 			'U_STATUS'	=> $can_moderate ? $this->helper->route('phpbbgallery_core_moderate_image', ['image_id' => (int) $image_data['image_id']]) : '',
 			'L_STATUS'	=> ($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_UNAPPROVED) ? $this->language->lang('APPROVE_IMAGE') : (($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_APPROVED) ? $this->language->lang('CHANGE_IMAGE_STATUS') : $this->language->lang('UNLOCK_IMAGE')),
-		]);
+		];
+		$this->template->assign_block_vars($image_block_name, array_merge($template_vars, $additional_vars));
 	}
 }

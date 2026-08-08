@@ -48,8 +48,11 @@ final class upload_alternate_author_test extends TestCase
 
 		$this->assertStringContainsString("\$can_change_author = (bool) \$this->auth->acl_check('m_edit', \$album_id, \$album_data['album_user_id'])", $source);
 		$this->assertStringContainsString("\$change_author = \$can_change_author ? \$this->request->variable('change_author', '', true, request_interface::POST) : ''", $source);
-		$this->assertStringContainsString("'S_CHANGE_AUTHOR' => \$can_change_author", $source);
-		$this->assertStringContainsString("'CHANGE_AUTHOR'   => \$change_author", $source);
+		$this->assertStringContainsString("'S_CHANGE_AUTHOR'", $source);
+		$this->assertStringContainsString('=> $can_change_author', $source);
+		$this->assertStringContainsString("'CHANGE_AUTHOR'", $source);
+		$this->assertStringContainsString('=> $change_author', $source);
+		$this->assertStringContainsString("'U_CHANGE_AUTHOR_AUTOCOMPLETE'", $source);
 	}
 
 	public function test_invalid_ajax_author_is_rejected_before_upload(): void
@@ -87,6 +90,9 @@ final class upload_alternate_author_test extends TestCase
 
 			$this->assertStringContainsString('name="change_author"', $template, $style);
 			$this->assertStringContainsString('value="{{ CHANGE_AUTHOR }}"', $template, $style);
+			$this->assertStringContainsString('data-gallery-author-autocomplete', $template, $style);
+			$this->assertStringContainsString('U_CHANGE_AUTHOR_AUTOCOMPLETE', $template, $style);
+			$this->assertStringContainsString("INCLUDEJS '@phpbbgallery_core/js/author_autocomplete.js'", $template, $style);
 			$this->assertNotFalse($author, $style);
 			$this->assertNotFalse($file, $style);
 			if ($style !== 'prosilver')

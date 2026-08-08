@@ -44,6 +44,12 @@ phpbbgallery_core_album_upload:
     defaults: { _controller: phpbbgallery.core.controller.upload:main }
     requirements:
         album_id: \d+
+phpbbgallery_core_album_author_autocomplete:
+    path: /gallery/album/{album_id}/authors
+    defaults: { _controller: phpbbgallery.core.controller.author_autocomplete:search }
+    methods: [GET]
+    requirements:
+        album_id: \d+
 phpbbgallery_core_album_watch:
     path: /gallery/album/{album_id}/watch
     defaults: { _controller: phpbbgallery.core.controller.album:watch }
@@ -307,6 +313,10 @@ phpbbgallery_core_search_toprated_page:
 phpbbgallery_core_search:
     path: /gallery/search
     defaults: { _controller: phpbbgallery.core.controller.search:base, page: 1 }
+phpbbgallery_core_search_author_autocomplete:
+    path: /gallery/search/authors
+    defaults: { _controller: phpbbgallery.core.controller.author_autocomplete:global_search }
+    methods: [GET]
 phpbbgallery_core_search_page:
     path: /gallery/search/{page}
     defaults: { _controller: phpbbgallery.core.controller.search:base }

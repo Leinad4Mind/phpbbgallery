@@ -38,6 +38,7 @@ class exif_listener implements EventSubscriberInterface
 			'phpbbgallery.core.image.delete_images'			=> 'capture_deleted_images',
 			'phpbbgallery.core.image.sort_labels'			=> 'sort_labels',
 			'phpbbgallery.core.image.sort_options'			=> 'sort_options',
+			'phpbbgallery.core.search.sort_options'			=> 'search_sort_options',
 			'phpbbgallery.core.image_edit_after'				=> 'capture_after_edit',
 			'phpbbgallery.core.ucp.set_settings_submit'			=> 'ucp_set_settings_submit',
 			'phpbbgallery.core.ucp.set_settings_nosubmit'		=> 'ucp_set_settings_nosubmit',
@@ -105,6 +106,23 @@ class exif_listener implements EventSubscriberInterface
 		}
 		$event['sort_by_sql'] = $sort_by_sql;
 		$event['sort_from'] = $sort_from;
+	}
+
+	public function search_sort_options(\phpbb\event\data $event): void
+	{
+		$this->sort_labels($event);
+		$sort_by_sql = $event['sort_by_sql'];
+		$sort_by_sql['et'] = 'COALESCE(NULLIF(gallery_exif_sort.exif_taken_time, 0), i.image_time)';
+		$search_sort_joins = $event['search_sort_joins'];
+		if ((string) $event['sort_key'] === 'et')
+		{
+			$search_sort_joins[] = [
+				'FROM' => [$this->capture_table => 'gallery_exif_sort'],
+				'ON'   => 'gallery_exif_sort.exif_image_id = i.image_id',
+			];
+		}
+		$event['sort_by_sql'] = $sort_by_sql;
+		$event['search_sort_joins'] = $search_sort_joins;
 	}
 
 	public function capture_after_upload(\phpbb\event\data $event): void

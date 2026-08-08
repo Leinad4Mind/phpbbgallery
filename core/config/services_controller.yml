@@ -37,6 +37,17 @@ services:
             - '@phpbbgallery.core.policy.album_operation'
             - '%phpbbgallery.tables.gallery_images%'
             - '%core.root_path%'
+    phpbbgallery.core.controller.author_autocomplete:
+        class: phpbbgallery\core\controller\author_autocomplete
+        arguments:
+            - '@dbal.conn'
+            - '@request'
+            - '@user'
+            - '@phpbbgallery.core.auth'
+            - '@auth'
+            - '@config'
+            - '%tables.users%'
+            - '%phpbbgallery.tables.gallery_albums%'
     phpbbgallery.core.controller.album:
         class: phpbbgallery\core\controller\album
         arguments:

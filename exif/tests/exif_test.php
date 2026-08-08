@@ -118,6 +118,7 @@ final class exif_test extends TestCase
 			'phpbbgallery.core.image.delete_images' => 'capture_deleted_images',
 			'phpbbgallery.core.image.sort_labels' => 'sort_labels',
 			'phpbbgallery.core.image.sort_options' => 'sort_options',
+			'phpbbgallery.core.search.sort_options' => 'search_sort_options',
 			'phpbbgallery.core.image_edit_after' => 'capture_after_edit',
 			'phpbbgallery.core.ucp.set_settings_submit' => 'ucp_set_settings_submit',
 			'phpbbgallery.core.ucp.set_settings_nosubmit' => 'ucp_set_settings_nosubmit',

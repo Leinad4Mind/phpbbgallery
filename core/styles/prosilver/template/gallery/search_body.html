@@ -2,7 +2,7 @@
 
 <h2 class="solo">{{ lang('SEARCH') }}</h2>
 
-<form method="post" action="{{ S_SEARCH_ACTION }}">
+<form method="get" action="{{ S_SEARCH_ACTION }}">
 
 <div class="panel">
 	<div class="inner">
@@ -18,7 +18,7 @@
 	{% EVENT phpbbgallery_core_search_fields %}
 	<dl>
 		<dt><label for="username">{{ lang('SEARCH_AUTHOR') }}{{ lang('COLON') }}</label><br /><span>{{ lang('SEARCH_AUTHOR_EXPLAIN') }}</span></dt>
-		<dd><input type="text" class="inputbox" name="username" id="username" size="40" title="{{ lang('SEARCH_AUTHOR') }}" /></dd>
+		<dd><span class="gallery-author-autocomplete"><input type="text" class="inputbox" name="username" id="username" size="40" title="{{ lang('SEARCH_AUTHOR') }}" autocomplete="off" data-gallery-author-autocomplete data-autocomplete-url="{{ U_SEARCH_AUTHOR_AUTOCOMPLETE }}" /></span></dd>
 	</dl>
 	</fieldset>
 
@@ -81,3 +81,4 @@
 </form>
 
 {% include 'gallery/gallery_footer.html' %}
+{% INCLUDEJS '@phpbbgallery_core/js/author_autocomplete.js' %}

@@ -69,7 +69,7 @@
 			{% if S_CHANGE_AUTHOR and U_FIND_USERNAME %}
 				<dl>
 					<dt><label for="change_author">{{ lang('CHANGE_AUTHOR') }}{{ lang('COLON') }}</label></dt>
-					<dd><input type="text" class="inputbox" name="change_author" id="change_author" value="{{ CHANGE_AUTHOR }}" size="32" /><a href="{{ U_FIND_USERNAME }}" onclick="find_username(this.href); return false;">[ {{ lang('FIND_USERNAME') }} ]</a></dd>
+					<dd><span class="gallery-author-autocomplete"><input type="text" class="inputbox" name="change_author" id="change_author" value="{{ CHANGE_AUTHOR }}" size="32" autocomplete="off" data-gallery-author-autocomplete data-autocomplete-url="{{ U_CHANGE_AUTHOR_AUTOCOMPLETE }}" /></span><a href="{{ U_FIND_USERNAME }}" onclick="find_username(this.href); return false;">[ {{ lang('FIND_USERNAME') }} ]</a></dd>
 				</dl>
 			{% endif %}
 			{% if CAPTCHA_TEMPLATE or not S_USER_LOGGED_IN or S_COMMENTS_ENABLED or S_CHANGE_AUTHOR %}<hr />{% endif %}
@@ -226,7 +226,7 @@
 			{% if S_CHANGE_AUTHOR and U_FIND_USERNAME %}
 				<dl>
 					<dt><label for="change_author">{{ lang('CHANGE_AUTHOR') }}{{ lang('COLON') }}</label></dt>
-					<dd><input type="text" class="inputbox" name="change_author" id="change_author" value="{{ CHANGE_AUTHOR }}" size="32" /><a href="{{ U_FIND_USERNAME }}" onclick="find_username(this.href); return false;">[ {{ lang('FIND_USERNAME') }} ]</a></dd>
+					<dd><span class="gallery-author-autocomplete"><input type="text" class="inputbox" name="change_author" id="change_author" value="{{ CHANGE_AUTHOR }}" size="32" autocomplete="off" data-gallery-author-autocomplete data-autocomplete-url="{{ U_CHANGE_AUTHOR_AUTOCOMPLETE }}" /></span><a href="{{ U_FIND_USERNAME }}" onclick="find_username(this.href); return false;">[ {{ lang('FIND_USERNAME') }} ]</a></dd>
 				</dl>
 			{% endif %}
 		</fieldset>
@@ -257,3 +257,4 @@
 
 {% include 'gallery/gallery_footer.html' %}
 {% INCLUDEJS '@phpbbgallery_core/js/comment_counter.js' %}
+{% if S_CHANGE_AUTHOR %}{% INCLUDEJS '@phpbbgallery_core/js/author_autocomplete.js' %}{% endif %}

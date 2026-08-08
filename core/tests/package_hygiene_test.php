@@ -75,6 +75,7 @@ class package_hygiene_test extends TestCase
 	{
 		$asset_directory = $this->core_root . '/styles/all/template/js';
 		$expected = [
+			'author_autocomplete.js',
 			'comment_counter.js',
 			'editor_selector.js',
 			'gallery_polaroid.js',
