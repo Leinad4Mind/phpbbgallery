@@ -44,6 +44,7 @@ use phpbbgallery\core\migrations\bmp_support;
 use phpbbgallery\core\migrations\image_read_tracking;
 use phpbbgallery\core\migrations\source_access_policy;
 use phpbbgallery\core\migrations\source_download_permission;
+use phpbbgallery\core\migrations\inherit_source_download_permission;
 
 class migration_integrity_test extends TestCase
 {
@@ -82,6 +83,7 @@ class migration_integrity_test extends TestCase
 		image_read_tracking::class,
 		source_download_permission::class,
 		source_access_policy::class,
+		inherit_source_download_permission::class,
 	];
 
 	private array $temp_directories = [];
@@ -276,6 +278,41 @@ class migration_integrity_test extends TestCase
 				'phpbb_gallery_roles' => ['i_download_free'],
 			],
 		], $migration->revert_schema());
+	}
+
+	public function test_source_download_permission_inherits_existing_view_roles_without_charge_bypass(): void
+	{
+		$migration = (new \ReflectionClass(inherit_source_download_permission::class))->newInstanceWithoutConstructor();
+		(new \ReflectionProperty(\phpbb\db\migration\migration::class, 'table_prefix'))->setValue($migration, 'phpbb_');
+
+		$this->assertSame([
+			'\phpbbgallery\core\migrations\source_access_policy',
+		], inherit_source_download_permission::depends_on());
+		$this->assertSame([
+			['custom', [[$migration, 'inherit_view_permission']]],
+			['custom', [[$migration, 'clear_gallery_permission_cache']]],
+		], $migration->update_data());
+		$this->assertSame([], $migration->revert_data());
+
+		$queries = [];
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->exactly(2))
+			->method('sql_query')
+			->willReturnCallback(static function (string $sql) use (&$queries): bool
+			{
+				$queries[] = $sql;
+				return true;
+			});
+		(new \ReflectionProperty(\phpbb\db\migration\migration::class, 'db'))->setValue($migration, $db);
+
+		$this->assertTrue($migration->inherit_view_permission());
+		$this->assertTrue($migration->clear_gallery_permission_cache());
+		$this->assertCount(2, $queries);
+		$this->assertStringContainsString('UPDATE phpbb_gallery_roles', $queries[0]);
+		$this->assertStringContainsString('SET i_download = i_view', $queries[0]);
+		$this->assertStringNotContainsString('i_download_free', $queries[0]);
+		$this->assertStringContainsString('UPDATE phpbb_gallery_users', $queries[1]);
+		$this->assertStringContainsString('SET user_permissions = \'\'', $queries[1]);
 	}
 
 	public function test_local_storage_layout_defaults_to_flat_and_is_reversible(): void
@@ -996,6 +1033,7 @@ class migration_integrity_test extends TestCase
 			'image_read_tracking.php',
 			'source_download_permission.php',
 			'source_access_policy.php',
+			'inherit_source_download_permission.php',
 		] as $migration)
 		{
 			require_once dirname(__DIR__) . '/migrations/' . $migration;
