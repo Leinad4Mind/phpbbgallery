@@ -22,7 +22,7 @@ final class template_syntax_test extends TestCase
 	public function test_modernized_templates_use_only_native_twig_syntax(): void
 	{
 		$template_paths = $this->template_paths();
-		$this->assertCount(193, $template_paths);
+		$this->assertCount(194, $template_paths);
 
 		foreach ($template_paths as $template_path)
 		{
@@ -851,6 +851,55 @@ final class template_syntax_test extends TestCase
 			$this->assertStringNotContainsString('span12', $source, $style);
 			$this->assertStringNotContainsString('>Tools<', $source, $style);
 			$this->assertStringNotContainsString('placeholder="', $source, $style);
+		}
+	}
+
+	public function test_privileged_ip_values_are_blurred_and_share_a_persistent_toggle(): void
+	{
+		$core_root = dirname(__DIR__);
+		$partial = (string) file_get_contents($core_root . '/styles/all/template/gallery/ip_privacy_toggle.html');
+		$script = (string) file_get_contents($core_root . '/styles/all/template/js/ip_privacy.js');
+		$css = (string) file_get_contents($core_root . '/styles/all/theme/gallery.css');
+
+		$this->assertStringContainsString('data-gallery-ip-toggle', $partial);
+		$this->assertStringContainsString('class="gallery-sensitive-ip"', $partial);
+		$this->assertStringContainsString('aria-pressed="false"', $partial);
+		$this->assertStringContainsString("'phpbbgallery.ipVisibility'", $script);
+		$this->assertStringContainsString('window.localStorage.getItem(storageKey)', $script);
+		$this->assertStringContainsString('window.localStorage.setItem(storageKey', $script);
+		$this->assertStringContainsString('document.documentElement.classList.toggle(visibleClass, visible)', $script);
+		$this->assertStringContainsString("document.addEventListener('phpbbgallery:imagechange'", $script);
+		$this->assertStringContainsString('filter: blur(4px)', $css);
+		$this->assertStringContainsString('.gallery-ip-visible .gallery-sensitive-ip', $css);
+
+		$ip_templates = [
+			'prosilver/template/gallery/imageblock_polaroid.html',
+			'prosilver/template/gallery/imageblock_body.html',
+			'prosilver/template/gallery/search_results.html',
+			'prosilver/template/gallery/viewimage_body.html',
+			'prosilver/template/gallery/moderate_actions_queue.html',
+			'BBOOTS/template/gallery/imageblock_polaroid.html',
+			'BBOOTS/template/gallery/imageblock_body.html',
+			'BBOOTS/template/gallery/viewimage_body.html',
+			'BBOOTS/template/gallery/moderate_actions_queue.html',
+			'FLATBOOTS/template/gallery/imageblock_polaroid.html',
+			'FLATBOOTS/template/gallery/imageblock_body.html',
+			'FLATBOOTS/template/gallery/viewimage_body.html',
+			'FLATBOOTS/template/gallery/moderate_actions_queue.html',
+		];
+		$include_count = 0;
+		foreach ($ip_templates as $template_path)
+		{
+			$template = (string) file_get_contents($core_root . '/styles/' . $template_path);
+			$this->assertStringContainsString('@phpbbgallery_core/gallery/ip_privacy_toggle.html', $template, $template_path);
+			$include_count += substr_count($template, '@phpbbgallery_core/gallery/ip_privacy_toggle.html');
+		}
+		$this->assertSame(14, $include_count);
+
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$footer = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/gallery_footer.html');
+			$this->assertStringContainsString("INCLUDEJS '@phpbbgallery_core/js/ip_privacy.js'", $footer, $style);
 		}
 	}
 

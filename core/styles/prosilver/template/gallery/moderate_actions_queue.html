@@ -20,7 +20,7 @@
 					<tr class="{% if log.S_ROW_COUNT is odd %}bg1{% else %}bg2{% endif %}">
 						<td>{{ log.U_LOG_ACTION }}</td>
 						<td>{{ log.U_LOG_USER }}</td>
-						<td>{{ log.U_LOG_IP }}</td>
+						<td>{% include '@phpbbgallery_core/gallery/ip_privacy_toggle.html' with { ip_value: log.U_LOG_IP } %}</td>
 						<td>{% if log.U_ALBUM_LINK %}<a href="{{ log.U_ALBUM_LINK }}">{{ lang('LOGVIEW_VIEWALBUM') }}</a>{% else %}&nbsp;{% endif %}</td>
 						<td>{% if log.U_IMAGE_LINK %}<a href="{{ log.U_IMAGE_LINK }}">{{ lang('LOGVIEW_VIEWIMAGE') }}</a>{% else %}&nbsp;{% endif %}</td>
 						<td>{{ log.U_TIME }}</td>

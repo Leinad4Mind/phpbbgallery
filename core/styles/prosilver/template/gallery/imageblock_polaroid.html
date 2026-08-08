@@ -49,7 +49,7 @@
 	{% endif %}
 	{% if image.S_COMMENTS %}{{ image.L_COMMENTS }}{{ lang('COLON') }} <a href="{{ image.U_COMMENTS }}">{{ image.S_COMMENTS }}</a><br />{% endif %}
 {% if U_ACP %}
-	{% if image.U_USER_IP %}{{ lang('IP') }}{{ lang('COLON') }} {{ image.U_USER_IP }}<br />{% endif %}
+	{% if image.U_USER_IP %}{{ lang('IP') }}{{ lang('COLON') }} {% include '@phpbbgallery_core/gallery/ip_privacy_toggle.html' with { ip_value: image.U_USER_IP } %}<br />{% endif %}
 {% endif %}
 
 </div>

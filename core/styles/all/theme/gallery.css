@@ -766,6 +766,48 @@ input.autowidth-gallery {
 	display: none;
 }
 
+.gallery-ip-toggle
+{
+	appearance: none;
+	background: transparent;
+	border: 0;
+	box-shadow: none;
+	color: inherit;
+	cursor: pointer;
+	font: inherit;
+	line-height: inherit;
+	margin: 0;
+	padding: 0;
+}
+
+.gallery-sensitive-ip
+{
+	display: inline-block;
+	filter: blur(4px);
+	transition: filter .15s ease-in-out;
+	user-select: none;
+}
+
+.gallery-ip-visible .gallery-sensitive-ip
+{
+	filter: none;
+	user-select: text;
+}
+
+.gallery-ip-toggle:focus-visible
+{
+	outline: 2px solid currentColor;
+	outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce)
+{
+	.gallery-sensitive-ip
+	{
+		transition: none;
+	}
+}
+
 .phpbbgallery-image-page .gallery-avatar-online
 {
 	display: inline-block;

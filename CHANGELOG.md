@@ -6,6 +6,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Added
 
+- Added a privacy-first browser toggle for privileged Gallery IP displays: every visible IP starts blurred, one click reveals or hides all IPs, and the preference is retained in local storage.
 - Added permission-aware inline AJAX rating stars to album cards; own images, previously rated images and images outside the effective rating permission show no rating link or control.
 - Added independent per-album permissions for original-file downloads and charge-free original access, with both denied by default.
 - Added accessible star-only AJAX rating controls to FLATBOOTS and prosilver, with CSRF-protected POST submission, permission revalidation and no page reload.
