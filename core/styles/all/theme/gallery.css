@@ -609,8 +609,6 @@ input.autowidth-gallery {
 {
 	box-sizing: border-box;
 	height: 34px;
-	padding-inline: 0;
-	width: 38px;
 }
 
 .gallery-comment-counter-exceeded

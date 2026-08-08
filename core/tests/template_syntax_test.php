@@ -312,7 +312,14 @@ final class template_syntax_test extends TestCase
 		$this->assertStringContainsString('.gallery-comment-guidance', $stylesheet);
 		$this->assertStringContainsString('.gallery-comment-submit-guidance', $stylesheet);
 		$this->assertStringContainsString('.gallery-comment-counter-exceeded', $stylesheet);
-		$this->assertStringContainsString('#postingbox .posting-btns .btn-group > button.btn', $stylesheet);
+		$button_rule_start = strpos($stylesheet, '#postingbox .posting-btns .btn-group > button.btn');
+		$this->assertNotFalse($button_rule_start);
+		$button_rule_end = strpos($stylesheet, '}', $button_rule_start);
+		$this->assertNotFalse($button_rule_end);
+		$button_rule = substr($stylesheet, $button_rule_start, $button_rule_end - $button_rule_start);
+		$this->assertStringContainsString('height: 34px', $button_rule);
+		$this->assertStringNotContainsString('width:', $button_rule);
+		$this->assertStringNotContainsString('padding-inline:', $button_rule);
 	}
 
 	public function test_image_descriptions_share_the_unicode_aware_live_counter(): void

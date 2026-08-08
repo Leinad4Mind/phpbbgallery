@@ -171,6 +171,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Preserved the native content-driven width and horizontal padding of FLATBOOTS BBCode toolbar buttons while retaining their corrected uniform height.
 - Prevented the configured image-page click action from linking to an original file when the viewer lacks the original-download permission.
 - Fixed Contest winner pagination using an undefined legacy configuration key and made the shared search template reusable from add-on controllers through explicit Core template paths.
 - Reconciled stale Favorite, Image Revisions, BBTags Images and BBPoints Images data after an add-on is re-enabled, removing missing image/album relations and revision files while preserving permanent financial history.
