@@ -9,9 +9,56 @@
 
 .gallery-addon-legend__title {
 	display: block;
-	margin-bottom: 3px;
 	color: #263238;
 	font-weight: 700;
+}
+
+.gallery-addon-legend__header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	margin-bottom: 3px;
+}
+
+.gallery-addon-view-toggle {
+	display: inline-flex;
+	flex: 0 0 auto;
+}
+
+.gallery-addon-view-toggle__button {
+	margin: 0;
+	padding: 3px 8px;
+	border: 1px solid #aeb9c2;
+	background: #fff;
+	color: #263238;
+	cursor: pointer;
+	font-size: 10px;
+	font-weight: 700;
+	line-height: 1.4;
+}
+
+.gallery-addon-view-toggle__button:first-child {
+	border-radius: 3px 0 0 3px;
+}
+
+.gallery-addon-view-toggle__button:last-child {
+	margin-inline-start: -1px;
+	border-radius: 0 3px 3px 0;
+}
+
+.gallery-addon-view-toggle__button:hover,
+.gallery-addon-view-toggle__button:focus {
+	position: relative;
+	border-color: #536d7a;
+	outline: 0;
+}
+
+.gallery-addon-view-toggle__button.is-active {
+	z-index: 1;
+	border-color: #536d7a;
+	background: #536d7a;
+	color: #fff;
 }
 
 .gallery-addon-legend__items {
@@ -57,6 +104,19 @@ legend .gallery-addon-badge {
 
 .gallery-addon-section {
 	padding-inline-start: 12px;
+}
+
+html[data-gallery-addon-view="simple"] .gallery-addon-badge,
+html[data-gallery-addon-view="simple"] .gallery-addon-legend__explain,
+html[data-gallery-addon-view="simple"] .gallery-addon-legend__items {
+	display: none;
+}
+
+@media (max-width: 600px) {
+	.gallery-addon-legend__header {
+		align-items: flex-start;
+		flex-direction: column;
+	}
 }
 
 @media (prefers-contrast: more) {

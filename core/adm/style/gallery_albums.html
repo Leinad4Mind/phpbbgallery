@@ -1,4 +1,5 @@
 {% INCLUDECSS '@phpbbgallery_core/gallery_acp_addons.css' %}
+{% INCLUDEJS '@phpbbgallery_core/gallery_acp_addons.js' %}
 {% include 'overall_header.html' %}
 
 <a name="maincontent"></a>
@@ -71,9 +72,9 @@
 	{% EVENT phpbbgallery_core_adm_album_type_warnings %}
 
 	{% if gallery_acp_addons|length %}
-		<aside class="gallery-addon-legend" aria-label="{{ lang('GALLERY_ADDON_SETTINGS_LEGEND') }}">
+		<aside class="gallery-addon-legend" aria-label="{{ lang('GALLERY_ADDON_SETTINGS_LEGEND') }}" data-view-simple-label="{{ lang('GALLERY_ADDON_SETTINGS_VIEW_SIMPLE') }}" data-view-complete-label="{{ lang('GALLERY_ADDON_SETTINGS_VIEW_COMPLETE') }}">
 			<strong class="gallery-addon-legend__title">{{ lang('GALLERY_ADDON_SETTINGS_LEGEND') }}</strong>
-			<span>{{ lang('GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN') }}</span>
+			<span class="gallery-addon-legend__explain">{{ lang('GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN') }}</span>
 			<div class="gallery-addon-legend__items">
 			{% for addon in gallery_acp_addons %}
 				<span class="gallery-addon-badge" style="--gallery-addon-accent: {{ addon.ACCENT }}" data-gallery-addon="{{ addon.ID }}"><i class="icon fa-puzzle-piece fa-fw" aria-hidden="true"></i>{{ lang('GALLERY_ADDON_SETTING', addon.NAME) }}</span>

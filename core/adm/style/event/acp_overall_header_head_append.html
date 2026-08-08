@@ -1,5 +1,6 @@
 {% if S_GALLERY_ACP_ADDON_SETTINGS %}
 	{% INCLUDECSS '@phpbbgallery_core/gallery_acp_addons.css' %}
+	{% INCLUDEJS '@phpbbgallery_core/gallery_acp_addons.js' %}
 	<script>
 	(function () {
 		'use strict';
@@ -54,8 +55,11 @@
 				var items = document.createElement('div');
 				legend.className = 'gallery-addon-legend';
 				legend.setAttribute('aria-label', {{ lang('GALLERY_ADDON_SETTINGS_LEGEND')|json_encode|raw }});
+				legend.setAttribute('data-view-simple-label', {{ lang('GALLERY_ADDON_SETTINGS_VIEW_SIMPLE')|json_encode|raw }});
+				legend.setAttribute('data-view-complete-label', {{ lang('GALLERY_ADDON_SETTINGS_VIEW_COMPLETE')|json_encode|raw }});
 				title.className = 'gallery-addon-legend__title';
 				title.textContent = {{ lang('GALLERY_ADDON_SETTINGS_LEGEND')|json_encode|raw }};
+				explanation.className = 'gallery-addon-legend__explain';
 				explanation.textContent = {{ lang('GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN')|json_encode|raw }};
 				items.className = 'gallery-addon-legend__items';
 				Object.keys(addOns).forEach(function (id) {
@@ -65,6 +69,7 @@
 				legend.appendChild(explanation);
 				legend.appendChild(items);
 				form.parentNode.insertBefore(legend, form);
+				document.dispatchEvent(new CustomEvent('phpbbgallery:addonsettingsready'));
 			}
 		});
 	}());
