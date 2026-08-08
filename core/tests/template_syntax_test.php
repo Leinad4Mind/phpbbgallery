@@ -322,6 +322,16 @@ final class template_syntax_test extends TestCase
 		$stylesheet = (string) file_get_contents($core_root . '/styles/all/theme/gallery.css');
 		$this->assertStringContainsString('.gallery-comment-guidance', $stylesheet);
 		$this->assertStringContainsString('.gallery-comment-submit-guidance', $stylesheet);
+		$this->assertStringContainsString('.gallery-signature-option', $stylesheet);
+		$this->assertStringContainsString('gap: 8px;', $stylesheet);
+		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			foreach (['comment_body.html', 'viewimage_body.html'] as $template_name)
+			{
+				$template = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/' . $template_name);
+				$this->assertSame(1, substr_count($template, 'class="gallery-signature-option"'), $style . '/' . $template_name);
+			}
+		}
 		$this->assertMatchesRegularExpression(
 			'/\.gallery-comment-actions\s*\{[^}]*display:\s*flex;[^}]*justify-content:\s*space-between;[^}]*width:\s*100%;/s',
 			$stylesheet
@@ -415,7 +425,10 @@ final class template_syntax_test extends TestCase
 			$stylesheet
 		);
 		$this->assertStringContainsString('.gallery-checkbox-label', $stylesheet);
-		$this->assertStringContainsString('#attach_sig + label', $stylesheet);
+		$this->assertMatchesRegularExpression(
+			'/\.gallery-signature-option\s*\{[^}]*align-items:\s*center;[^}]*display:\s*flex;[^}]*gap:\s*8px;/s',
+			$stylesheet
+		);
 		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
 		{
 			foreach (['comment_body.html', 'viewimage_body.html'] as $template)

@@ -653,10 +653,31 @@ input.autowidth-gallery {
 	margin-bottom: 24px;
 }
 
-.gallery-checkbox-label,
-#attach_sig + label
+.gallery-checkbox-label
 {
 	margin-left: 7px;
+}
+
+.gallery-signature-option
+{
+	align-items: center;
+	display: flex;
+	gap: 8px;
+	min-height: 24px;
+}
+
+.gallery-signature-option .icheckbox_flat-aero
+{
+	flex: 0 0 20px;
+	margin: 0;
+}
+
+.gallery-signature-option .gallery-checkbox-label
+{
+	align-items: center;
+	display: inline-flex;
+	line-height: 20px;
+	margin: 0;
 }
 
 .gallery-upload-comments
