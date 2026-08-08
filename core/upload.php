@@ -72,6 +72,9 @@ class upload
 	/** Trusted image formats supplied by enabled Gallery add-ons. */
 	private ?\phpbbgallery\core\image\format_registry $format_registry = null;
 
+	/** Reads dimensions consistently for Core and add-on image formats. */
+	private ?\phpbbgallery\core\image\dimensions $image_dimensions = null;
+
 	/**
 	* @var string
 	*/
@@ -171,6 +174,8 @@ class upload
 	 * @param \phpbbgallery\core\url            $gallery_url    Gallery url
 	 * @param block                             $block
 	 * @param file\file                         $gallery_file
+	 * @param \phpbbgallery\core\image\format_registry $format_registry
+	 * @param \phpbbgallery\core\image\dimensions $image_dimensions
 	 * @param \phpbbgallery\core\storage\key_generator $storage_keys
 	 * @param \phpbbgallery\core\storage\local_provider $local_storage
 	 * @param \phpbbgallery\core\storage\workspace $storage_workspace
@@ -184,6 +189,7 @@ class upload
 		\phpbbgallery\core\image\image $gallery_image, \phpbbgallery\core\config $gallery_config, \phpbbgallery\core\url $gallery_url,
 		\phpbbgallery\core\block $block, \phpbbgallery\core\file\file $gallery_file,
 		\phpbbgallery\core\image\format_registry $format_registry,
+		\phpbbgallery\core\image\dimensions $image_dimensions,
 		\phpbbgallery\core\storage\key_generator $storage_keys, \phpbbgallery\core\storage\local_provider $local_storage,
 		\phpbbgallery\core\storage\workspace $storage_workspace,
 		\phpbbgallery\core\zip\extractor $zip_extractor,
@@ -205,6 +211,7 @@ class upload
 		$this->block = $block;
 		$this->tools = $gallery_file;
 		$this->format_registry = $format_registry;
+		$this->image_dimensions = $image_dimensions;
 		$this->images_table = $images_table;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
@@ -671,6 +678,15 @@ class upload
 			$vars = ['additional_sql_data'];
 			extract($this->phpbb_dispatcher->trigger_event('phpbbgallery.core.upload.update_image_nofilechange', compact($vars)));
 		}
+		$dimensions = $this->image_dimensions?->inspect_file(
+			(string) $this->image_data[$image_id]['image_filename'],
+			$file_link
+		);
+		if ($dimensions !== null)
+		{
+			$sql_ary['image_width'] = $dimensions['width'];
+			$sql_ary['image_height'] = $dimensions['height'];
+		}
 
 		$sql_ary = array_merge($sql_ary, $additional_sql_data);
 
@@ -1042,6 +1058,18 @@ class upload
 		$image_name = utf8_substr($this->file->get('uploadname'), 0, utf8_strrpos($this->file->get('uploadname'), '.'));
 		$stored_filesize = @filesize($this->file->get('destination_file'));
 		$storage_key = (string) $this->file->get('realname');
+		$dimensions = $this->image_dimensions?->inspect_file(
+			$storage_key,
+			(string) $this->file->get('destination_file')
+		);
+		if ($dimensions === null)
+		{
+			$image_size = @getimagesize((string) $this->file->get('destination_file'));
+			$dimensions = $image_size === false ? null : [
+				'width' => (int) ($image_size[0] ?? 0),
+				'height' => (int) ($image_size[1] ?? 0),
+			];
+		}
 		$published = false;
 		if ($this->staged_source_key !== '')
 		{
@@ -1066,6 +1094,8 @@ class upload
 			'image_name_clean'		=> utf8_clean_string($image_name),
 			'image_filename' 		=> $storage_key,
 			'filesize_upload'		=> $stored_filesize === false ? $this->file->get('filesize') : (int) $stored_filesize,
+			'image_width'			=> (int) ($dimensions['width'] ?? 0),
+			'image_height'			=> (int) ($dimensions['height'] ?? 0),
 			'image_time'			=> time() + $this->file_count,
 
 			'image_user_id'			=> $this->user->data['user_id'],

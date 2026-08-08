@@ -117,6 +117,8 @@ final class controller_album_types_test extends TestCase
 			);
 			$this->assertStringContainsString('gallery-image-card', $template, $style);
 			$this->assertStringContainsString('{% EVENT phpbbgallery_core_album_image_actions %}', $template, $style);
+			$this->assertStringContainsString('{% EVENT phpbbgallery_core_album_image_metadata %}', $template, $style);
+			$this->assertStringContainsString('image.IMAGE_RESOLUTION', $template, $style);
 		}
 	}
 
@@ -214,6 +216,7 @@ final class controller_album_types_test extends TestCase
 
 	public function test_album_display_flags_remain_stable(): void
 	{
+		$this->assertSame(256, album::ALBUM_SHOW_RESOLUTION);
 		$this->assertSame(128, album::ALBUM_SHOW_IP);
 		$this->assertSame(64, album::ALBUM_SHOW_RATINGS);
 		$this->assertSame(32, album::ALBUM_SHOW_USERNAME);

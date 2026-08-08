@@ -81,6 +81,7 @@ class main_module
 		$phpbb_ext_gallery_config = $phpbb_container->get('phpbbgallery.core.config');
 		$storage_migrator = $phpbb_container->get('phpbbgallery.core.storage.layout_migrator');
 		$active_storage = $phpbb_container->get('phpbbgallery.core.storage.active');
+		$image_dimensions = $phpbb_container->get('phpbbgallery.core.image.dimensions');
 		$file_tool = $phpbb_container->get('phpbbgallery.core.file.tool');
 		$distributed_storage = $phpbb_ext_gallery_config->get('storage_layout') === \phpbbgallery\core\storage\key_generator::LAYOUT_DISTRIBUTED;
 
@@ -103,6 +104,20 @@ class main_module
 			}
 
 			$this->run_storage_layout_migration($storage_migrator, $request, $template);
+			return;
+		}
+		if ($request->is_set_post('dimension_sync_continue'))
+		{
+			if (!check_form_key('acp_gallery'))
+			{
+				trigger_error('FORM_INVALID');
+			}
+			if (!$auth->acl_get('a_board'))
+			{
+				trigger_error($this->language->lang('NO_AUTH_OPERATION') . adm_back_link($this->u_action), E_USER_WARNING);
+			}
+
+			$this->run_image_dimension_sync($db, $image_dimensions, $images_table, $request, $template);
 			return;
 		}
 
@@ -235,6 +250,10 @@ class main_module
 				case 'stats':
 					$confirm = true;
 					$confirm_lang = 'CONFIRM_OPERATION';
+				break;
+				case 'image_dimensions':
+					$confirm = true;
+					$confirm_lang = 'RESYNC_IMAGE_DIMENSIONS_CONFIRM';
 				break;
 				case 'last_images':
 					$confirm = true;
@@ -447,6 +466,15 @@ class main_module
 					redirect($this->u_action);
 				break;
 
+				case 'image_dimensions':
+					if (!$auth->acl_get('a_board'))
+					{
+						trigger_error($this->language->lang('NO_AUTH_OPERATION') . adm_back_link($this->u_action), E_USER_WARNING);
+					}
+
+					$this->run_image_dimension_sync($db, $image_dimensions, $images_table, $request, $template);
+					return;
+
 				case 'last_images':
 					$sql = 'SELECT album_id
 						FROM ' . $albums_table;
@@ -627,6 +655,71 @@ class main_module
 			'S_STORAGE_SKIPPED' => $skipped,
 			'S_STORAGE_FAILED' => $failed,
 			'S_STORAGE_AFTER_ID' => $summary['last_id'],
+			'U_ACTION' => $this->u_action,
+		]);
+	}
+
+	private function run_image_dimension_sync(
+		\phpbb\db\driver\driver_interface $db,
+		\phpbbgallery\core\image\dimensions $dimensions,
+		string $images_table,
+		\phpbb\request\request_interface $request,
+		\phpbb\template\template $template
+	): void
+	{
+		$batch_size = 25;
+		$after_id = max(0, $request->variable('dimension_after_id', 0));
+		$sql = 'SELECT image_id, image_filename
+			FROM ' . $images_table . '
+			WHERE image_id > ' . (int) $after_id . '
+				AND (image_width = 0 OR image_height = 0)
+			ORDER BY image_id ASC';
+		$result = $db->sql_query_limit($sql, $batch_size + 1);
+		$rows = [];
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$rows[] = $row;
+		}
+		$db->sql_freeresult($result);
+
+		$has_more = count($rows) > $batch_size;
+		$rows = array_slice($rows, 0, $batch_size);
+		$updated = 0;
+		$failed = 0;
+		$last_id = $after_id;
+		foreach ($rows as $row)
+		{
+			$last_id = (int) $row['image_id'];
+			$image_size = $dimensions->inspect_source((string) $row['image_filename']);
+			if ($image_size === null)
+			{
+				$failed++;
+				continue;
+			}
+
+			$sql_ary = [
+				'image_width'  => $image_size['width'],
+				'image_height' => $image_size['height'],
+			];
+			$db->sql_query('UPDATE ' . $images_table . '
+				SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+				WHERE image_id = ' . (int) $row['image_id']);
+			$updated++;
+		}
+
+		$processed = $request->variable('dimension_processed', 0) + count($rows);
+		$updated += $request->variable('dimension_updated', 0);
+		$failed += $request->variable('dimension_failed', 0);
+		$template->assign_vars([
+			'ACP_GALLERY_TITLE' => $this->language->lang('RESYNC_IMAGE_DIMENSIONS'),
+			'ACP_GALLERY_TITLE_EXPLAIN' => $this->language->lang('RESYNC_IMAGE_DIMENSIONS_EXPLAIN'),
+			'S_DIMENSION_SYNC_PROGRESS' => true,
+			'S_DIMENSION_SYNC_MORE' => $has_more,
+			'S_DIMENSION_SYNC_FAILED' => $failed > 0,
+			'S_DIMENSION_PROCESSED' => $processed,
+			'S_DIMENSION_UPDATED' => $updated,
+			'S_DIMENSION_FAILED' => $failed,
+			'S_DIMENSION_AFTER_ID' => $last_id,
 			'U_ACTION' => $this->u_action,
 		]);
 	}

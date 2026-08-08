@@ -60,6 +60,7 @@ class main_module
 		$storage_keys = $phpbb_container->get('phpbbgallery.core.storage.key_generator');
 		$local_storage = $phpbb_container->get('phpbbgallery.core.storage.local');
 		$storage_workspace = $phpbb_container->get('phpbbgallery.core.storage.workspace');
+		$image_dimensions = $phpbb_container->get('phpbbgallery.core.image.dimensions');
 
 		// Unpacking an archive is its own action: it only fills the import folder, and
 		// the ordinary import below then treats the result like any hand-uploaded image.
@@ -263,6 +264,9 @@ class main_module
 						}
 					}
 					$file_updated = $external_processor !== null || (bool) $image_tools->resized;
+					$dimensions = $image_dimensions->inspect_file($image_filename, $file_link);
+					$sql_ary['image_width'] = (int) ($dimensions['width'] ?? 0);
+					$sql_ary['image_height'] = (int) ($dimensions['height'] ?? 0);
 
 					/**
 					* Event to trigger before mass update

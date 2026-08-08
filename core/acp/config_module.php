@@ -685,7 +685,7 @@ class config_module
 	 */
 	public function rrc_display(int $value, string $key): string
 	{
-		global $phpbb_container;
+		global $phpbb_container, $phpbb_dispatcher;
 		// Init gallery block class
 		$phpbb_ext_gallery_core_block = $phpbb_container->get('phpbbgallery.core.block');
 		$this->language = $phpbb_container->get('language');
@@ -697,10 +697,26 @@ class config_module
 		$rrc_display_options .= '<option' . (($value & $phpbb_ext_gallery_core_block::DISPLAY_COMMENTS) ? ' selected="selected"' : '') . " value='" . $phpbb_ext_gallery_core_block::DISPLAY_COMMENTS . "'>" . $this->language->lang('RRC_DISPLAY_COMMENTS') . '</option>';
 		$rrc_display_options .= '<option' . (($value & $phpbb_ext_gallery_core_block::DISPLAY_IMAGENAME) ? ' selected="selected"' : '') . " value='" . $phpbb_ext_gallery_core_block::DISPLAY_IMAGENAME . "'>" . $this->language->lang('RRC_DISPLAY_IMAGENAME') . '</option>';
 		$rrc_display_options .= '<option' . (($value & $phpbb_ext_gallery_core_block::DISPLAY_IMAGETIME) ? ' selected="selected"' : '') . " value='" . $phpbb_ext_gallery_core_block::DISPLAY_IMAGETIME . "'>" . $this->language->lang('RRC_DISPLAY_IMAGETIME') . '</option>';
+		$rrc_display_options .= '<option' . (($value & $phpbb_ext_gallery_core_block::DISPLAY_RESOLUTION) ? ' selected="selected"' : '') . " value='" . $phpbb_ext_gallery_core_block::DISPLAY_RESOLUTION . "'>" . $this->language->lang('RRC_DISPLAY_RESOLUTION') . '</option>';
 		$rrc_display_options .= '<option' . (($value & $phpbb_ext_gallery_core_block::DISPLAY_IMAGEVIEWS) ? ' selected="selected"' : '') . " value='" . $phpbb_ext_gallery_core_block::DISPLAY_IMAGEVIEWS . "'>" . $this->language->lang('RRC_DISPLAY_IMAGEVIEWS') . '</option>';
 		$rrc_display_options .= '<option' . (($value & $phpbb_ext_gallery_core_block::DISPLAY_USERNAME) ? ' selected="selected"' : '') . " value='" . $phpbb_ext_gallery_core_block::DISPLAY_USERNAME . "'>" . $this->language->lang('RRC_DISPLAY_USERNAME') . '</option>';
 		$rrc_display_options .= '<option' . (($value & $phpbb_ext_gallery_core_block::DISPLAY_RATINGS) ? ' selected="selected"' : '') . " value='" . $phpbb_ext_gallery_core_block::DISPLAY_RATINGS . "'>" . $this->language->lang('RRC_DISPLAY_RATINGS') . '</option>';
 		$rrc_display_options .= '<option' . (($value & $phpbb_ext_gallery_core_block::DISPLAY_IP) ? ' selected="selected"' : '') . " value='" . $phpbb_ext_gallery_core_block::DISPLAY_IP . "'>" . $this->language->lang('RRC_DISPLAY_IP') . '</option>';
+
+		/**
+		 * Allow add-ons to append display choices to Gallery image summaries.
+		 *
+		 * @event phpbbgallery.core.acp.config.rrc_display_options
+		 * @var int    value               Current display bitmask
+		 * @var string key                 Configuration key being rendered
+		 * @var string rrc_display_options Rendered option elements
+		 * @since 4.0.0
+		 */
+		$vars = ['value', 'key', 'rrc_display_options'];
+		extract($phpbb_dispatcher->trigger_event(
+			'phpbbgallery.core.acp.config.rrc_display_options',
+			compact($vars)
+		));
 
 		// Cheating is an evil-thing, but most times it's successful, that's why it is used.
 		return "<input type='hidden' name='config[$key]' value='$value' /><select name='" . $key . "[]' multiple='multiple' id='$key'>$rrc_display_options</select>";

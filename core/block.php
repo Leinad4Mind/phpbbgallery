@@ -156,5 +156,6 @@ class block
 	public const DISPLAY_IMAGEVIEWS = 16;
 	public const DISPLAY_USERNAME = 32;
 	public const DISPLAY_RATINGS = 64;
+	public const DISPLAY_RESOLUTION = 256;
 	public const DISPLAY_IP = 128;
 }

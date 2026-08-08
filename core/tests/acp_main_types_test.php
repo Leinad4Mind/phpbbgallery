@@ -88,4 +88,21 @@ final class acp_main_types_test extends TestCase
 		$this->assertStringContainsString('method=' . $quote . 'post' . $quote, $template);
 		$this->assertStringContainsString('{{ S_FORM_TOKEN }}', $template);
 	}
+
+	public function test_dimension_resync_is_confirmed_authorized_and_bounded(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/acp/main_module.php');
+		$template = (string) file_get_contents(dirname(__DIR__) . '/adm/style/gallery_main.html');
+
+		$this->assertStringContainsString("case 'image_dimensions':", $source);
+		$this->assertStringContainsString("'RESYNC_IMAGE_DIMENSIONS_CONFIRM'", $source);
+		$this->assertStringContainsString("is_set_post('dimension_sync_continue')", $source);
+		$this->assertStringContainsString("check_form_key('acp_gallery')", $source);
+		$this->assertStringContainsString("acl_get('a_board')", $source);
+		$this->assertStringContainsString('$batch_size = 25;', $source);
+		$this->assertStringContainsString('$db->sql_query_limit($sql, $batch_size + 1)', $source);
+		$this->assertStringContainsString('name="dimension_sync_continue"', $template);
+		$this->assertStringContainsString('dimension_sync_continue_form', $template);
+		$this->assertStringContainsString('{{ S_FORM_TOKEN }}', $template);
+	}
 }

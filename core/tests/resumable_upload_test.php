@@ -200,7 +200,12 @@ class resumable_upload_test extends TestCase
 		$update = $this->extract_section($source, "\n\tpublic function update_image(", "\n\t/**\n\t* Prepare file on upload");
 
 		$this->assertStringContainsString("'image_upload_session_hash'\t=> \$this->get_session_hash()", $insert);
+		$this->assertStringContainsString("'image_width'", $insert);
+		$this->assertStringContainsString("'image_height'", $insert);
 		$this->assertStringContainsString("'image_upload_session_hash'\t=> ''", $update);
+		$this->assertStringContainsString('$this->image_dimensions?->inspect_file(', $update);
+		$this->assertStringContainsString("\$sql_ary['image_width']", $update);
+		$this->assertStringContainsString("\$sql_ary['image_height']", $update);
 	}
 
 	public function test_session_fingerprint_does_not_store_the_session_identifier(): void

@@ -45,6 +45,7 @@ use phpbbgallery\core\migrations\image_read_tracking;
 use phpbbgallery\core\migrations\source_access_policy;
 use phpbbgallery\core\migrations\source_download_permission;
 use phpbbgallery\core\migrations\inherit_source_download_permission;
+use phpbbgallery\core\migrations\image_dimensions;
 
 class migration_integrity_test extends TestCase
 {
@@ -84,6 +85,7 @@ class migration_integrity_test extends TestCase
 		source_download_permission::class,
 		source_access_policy::class,
 		inherit_source_download_permission::class,
+		image_dimensions::class,
 	];
 
 	private array $temp_directories = [];
@@ -209,6 +211,30 @@ class migration_integrity_test extends TestCase
 			['\phpbbgallery\core\migrations\unread_image_badge'],
 			bmp_support::depends_on()
 		);
+		$this->assertSame(
+			['\phpbbgallery\core\migrations\inherit_source_download_permission'],
+			image_dimensions::depends_on()
+		);
+	}
+
+	public function test_image_dimensions_migration_is_reversible(): void
+	{
+		$migration = (new \ReflectionClass(image_dimensions::class))->newInstanceWithoutConstructor();
+		(new \ReflectionProperty(\phpbb\db\migration\migration::class, 'table_prefix'))->setValue($migration, 'phpbb_');
+
+		$this->assertSame([
+			'add_columns' => [
+				'phpbb_gallery_images' => [
+					'image_width' => ['UINT:11', 0],
+					'image_height' => ['UINT:11', 0],
+				],
+			],
+		], $migration->update_schema());
+		$this->assertSame([
+			'drop_columns' => [
+				'phpbb_gallery_images' => ['image_width', 'image_height'],
+			],
+		], $migration->revert_schema());
 	}
 
 	public function test_image_deletion_request_migration_is_reversible(): void
@@ -1034,6 +1060,7 @@ class migration_integrity_test extends TestCase
 			'source_download_permission.php',
 			'source_access_policy.php',
 			'inherit_source_download_permission.php',
+			'image_dimensions.php',
 		] as $migration)
 		{
 			require_once dirname(__DIR__) . '/migrations/' . $migration;

@@ -42,7 +42,9 @@
 	{% if image.U_ALBUM %}{{ lang('ALBUM_NAME') }}{{ lang('COLON') }}<p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; margin-bottom: 0px;"><a href="{{ image.U_ALBUM }}" style="display: inline;">{% endif %} {{ image.ALBUM_NAME }}{% if image.U_ALBUM %}</a></p>{% endif %}
 	{% if image.POSTER %}{{ lang('UPLOADED_BY_USER') }}{{ lang('COLON') }} {{ image.POSTER }}<br />{% endif %}
 	{% if image.TIME %}&raquo; {{ image.TIME }}<br />{% endif %}
+	{% if image.IMAGE_RESOLUTION %}{{ lang('IMAGE_RESOLUTION') }}{{ lang('COLON') }} {{ image.IMAGE_RESOLUTION }}<br />{% endif %}
 	{% if image.IMAGE_VIEWS > -1 %}{{ lang('IMAGE_VIEWS') }}{{ lang('COLON') }} {{ image.IMAGE_VIEWS }}<br />{% endif %}
+	{% EVENT phpbbgallery_core_album_image_metadata %}
 	{% if image.S_RATINGS %}
 		{{ lang('RATING') }}{{ lang('COLON') }} {{ image.S_RATINGS }}<br />
 		{% include '@phpbbgallery_core/gallery/album_rating_stars.html' %}

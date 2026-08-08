@@ -280,6 +280,7 @@ namespace
 	require_once dirname(__DIR__) . '/storage/active_provider.php';
 	require_once dirname(__DIR__) . '/storage/local_object.php';
 	require_once dirname(__DIR__) . '/storage/workspace.php';
+	require_once dirname(__DIR__) . '/image/dimensions.php';
 	require_once dirname(__DIR__) . '/storage/layout_migrator.php';
 	require_once dirname(__DIR__) . '/album/album.php';
 	require_once dirname(__DIR__) . '/album/display.php';

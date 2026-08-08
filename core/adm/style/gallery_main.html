@@ -33,6 +33,34 @@
 	{% endif %}
 {% endif %}
 
+{% if S_DIMENSION_SYNC_PROGRESS %}
+	<div class="successbox">
+		<h3>{% if S_DIMENSION_SYNC_MORE %}{{ lang('RESYNC_IMAGE_DIMENSIONS_PROGRESS') }}{% else %}{{ lang('RESYNC_IMAGE_DIMENSIONS_COMPLETE') }}{% endif %}</h3>
+		<p>{{ lang('RESYNC_IMAGE_DIMENSIONS_RESULT', S_DIMENSION_PROCESSED, S_DIMENSION_UPDATED, S_DIMENSION_FAILED) }}</p>
+	</div>
+	{% if S_DIMENSION_SYNC_FAILED %}
+		<div class="errorbox"><p>{{ lang('RESYNC_IMAGE_DIMENSIONS_FAILED_EXPLAIN') }}</p></div>
+	{% endif %}
+	{% if S_DIMENSION_SYNC_MORE %}
+		<form id="dimension_sync_continue_form" method="post" action="{{ U_ACTION }}">
+			<input type="hidden" name="dimension_sync_continue" value="1" />
+			<input type="hidden" name="dimension_after_id" value="{{ S_DIMENSION_AFTER_ID }}" />
+			<input type="hidden" name="dimension_processed" value="{{ S_DIMENSION_PROCESSED }}" />
+			<input type="hidden" name="dimension_updated" value="{{ S_DIMENSION_UPDATED }}" />
+			<input type="hidden" name="dimension_failed" value="{{ S_DIMENSION_FAILED }}" />
+			{{ S_FORM_TOKEN }}
+			<p class="submit-buttons"><input class="button1" type="submit" value="{{ lang('RESYNC_IMAGE_DIMENSIONS_CONTINUE') }}" /></p>
+		</form>
+		<script>
+			window.setTimeout(function () {
+				document.getElementById('dimension_sync_continue_form').submit();
+			}, 250);
+		</script>
+	{% else %}
+		<p><a href="{{ U_ACTION }}" class="button1">{{ lang('BACK') }}</a></p>
+	{% endif %}
+{% endif %}
+
 
 {% for mods in mods|default([]) %}
 	<fieldset>
@@ -214,6 +242,14 @@
 			<dl>
 				<dt><label for="action_stats">{{ lang('RESYNC_STATS') }}</label></dt>
 				<dd><input type="hidden" name="action" value="stats" /><input class="button2" type="submit" id="action_stats" name="action_stats" value="{{ lang('RUN') }}" /></dd>
+			</dl>
+		</form>
+
+		<form id="action_image_dimensions_form" method="post" action="{{ U_ACTION }}">
+			<dl>
+				<dt><label for="action_image_dimensions">{{ lang('RESYNC_IMAGE_DIMENSIONS') }}</label>
+					<br /><span>{{ lang('RESYNC_IMAGE_DIMENSIONS_EXPLAIN') }}</span></dt>
+				<dd><input type="hidden" name="action" value="image_dimensions" /><input class="button2" type="submit" id="action_image_dimensions" name="action_image_dimensions" value="{{ lang('RUN') }}" /></dd>
 			</dl>
 		</form>
 

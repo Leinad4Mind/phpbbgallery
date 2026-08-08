@@ -208,4 +208,16 @@ final class acp_config_types_test extends TestCase
 		$this->assertStringNotContainsString('readdir(', $source);
 		$this->assertStringContainsString('$file_tool->delete_wm($filenames);', $source);
 	}
+
+	public function test_image_summary_options_support_resolution_and_add_on_choices(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/acp/config_module.php');
+
+		$this->assertStringContainsString('DISPLAY_RESOLUTION', $source);
+		$this->assertStringContainsString('RRC_DISPLAY_RESOLUTION', $source);
+		$this->assertStringContainsString(
+			'phpbbgallery.core.acp.config.rrc_display_options',
+			$source
+		);
+	}
 }

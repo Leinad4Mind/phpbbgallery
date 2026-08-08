@@ -6,6 +6,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Added
 
+- Added selectable image resolution to thumbnail metadata, persisted source dimensions for new uploads and imports, and a confirmed 25-image ACP resynchronisation for legacy or remote files; a neutral album-card metadata extension point lets BBPoints Images expose optional original-download counters without coupling the Core to the add-on.
 - Added a privacy-first browser toggle for privileged Gallery IP displays: every visible IP starts blurred, one click reveals or hides all IPs, and the preference is retained in local storage.
 - Added permission-aware inline AJAX rating stars to album cards; own images, previously rated images and images outside the effective rating permission show no rating link or control.
 - Added independent per-album permissions for original-file downloads and charge-free original access, with both denied by default.

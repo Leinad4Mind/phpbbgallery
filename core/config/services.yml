@@ -194,6 +194,11 @@ services:
         arguments:
             - '@dispatcher'
             - '@service_container'
+    phpbbgallery.core.image.dimensions:
+        class: phpbbgallery\core\image\dimensions
+        arguments:
+            - '@phpbbgallery.core.image.format_registry'
+            - '@phpbbgallery.core.storage.workspace'
     phpbbgallery.core.image.bmp_processor:
         class: phpbbgallery\core\image\bmp_processor
     phpbbgallery.core.storage.local:
@@ -376,6 +381,7 @@ services:
             - '@phpbbgallery.core.block'
             - '@phpbbgallery.core.file.tool'
             - '@phpbbgallery.core.image.format_registry'
+            - '@phpbbgallery.core.image.dimensions'
             - '@phpbbgallery.core.storage.key_generator'
             - '@phpbbgallery.core.storage.local'
             - '@phpbbgallery.core.storage.workspace'

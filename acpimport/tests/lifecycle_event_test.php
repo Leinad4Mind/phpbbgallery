@@ -46,4 +46,14 @@ final class lifecycle_event_test extends TestCase
 		$this->assertStringContainsString('staging/', $source);
 		$this->assertStringContainsString('bin2hex(random_bytes(16))', $source);
 	}
+
+	public function test_import_persists_final_source_dimensions(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/acp/main_module.php');
+
+		$this->assertStringContainsString("get('phpbbgallery.core.image.dimensions')", $source);
+		$this->assertStringContainsString('$image_dimensions->inspect_file($image_filename, $file_link)', $source);
+		$this->assertStringContainsString("\$sql_ary['image_width']", $source);
+		$this->assertStringContainsString("\$sql_ary['image_height']", $source);
+	}
 }

@@ -570,7 +570,11 @@ class image
 			'IMAGE_URL'           => ($this->config['phpbb_gallery_disp_image_url']) ? $this->url->get_uri($this->helper->route('phpbbgallery_core_image_file_medium', ['image_id' => $image_id])) : '',
 			'IMAGE_TIME'          => $this->user->format_date($this->data['image_time']),
 			'IMAGE_VIEW'          => $this->data['image_view_count'],
-			'IMAGE_RESOLUTION'    => $this->get_image_resolution((string) $this->data['image_filename']),
+			'IMAGE_RESOLUTION'    => $this->get_image_resolution(
+				(string) $this->data['image_filename'],
+				(int) ($this->data['image_width'] ?? 0),
+				(int) ($this->data['image_height'] ?? 0)
+			),
 			'POSTER_IP'           => (!$hide_private_data && $this->auth->acl_get('a_')) ? $this->data['image_user_ip'] : '',
 			'U_POSTER_WHOIS'      => (!$hide_private_data && $this->auth->acl_get('a_') && $this->data['image_user_ip'] !== '')
 				? $this->helper->route('phpbbgallery_core_image_whois', ['image_id' => (int) $image_id]) : '',
@@ -832,18 +836,24 @@ class image
 	/**
 	 * Describe the stored image's pixel dimensions.
 	 *
-	 * The dimensions are read from the file rather than the database so they stay
-	 * true after the gallery resizes or rotates an image, and so they are available
-	 * for every format - unlike EXIF, which only JPEGs carry.
+	 * Persisted dimensions avoid materializing remote source files during ordinary
+	 * requests. The file-header fallback keeps legacy rows useful until the bounded
+	 * ACP resynchronisation has processed them.
 	 *
 	 * @param string $filename Stored image filename
+	 * @param int    $width    Persisted source width
+	 * @param int    $height   Persisted source height
 	 * @return string Formatted resolution, or an empty string when it is unavailable
 	 */
-	protected function get_image_resolution(string $filename): string
+	protected function get_image_resolution(string $filename, int $width = 0, int $height = 0): string
 	{
 		if (!$this->gallery_config->get('disp_resolution') || $filename === '')
 		{
 			return '';
+		}
+		if ($width > 0 && $height > 0)
+		{
+			return $this->language->lang('IMAGE_RESOLUTION_VALUE', $width, $height);
 		}
 
 		$source = null;

@@ -128,6 +128,11 @@ class image_resolution_test extends TestCase
 		$this->assertSame('', $this->resolution_for('gone.png'));
 	}
 
+	public function test_persisted_dimensions_avoid_reading_a_legacy_or_remote_file(): void
+	{
+		$this->assertSame('640 × 480 px', $this->resolution_for('remote.png', true, null, 640, 480));
+	}
+
 	public function test_a_file_that_is_not_an_image_is_ignored(): void
 	{
 		file_put_contents($this->upload_path . 'broken.png', 'this is not an image');
@@ -140,7 +145,8 @@ class image_resolution_test extends TestCase
 		$this->assertSame('', $this->resolution_for(''));
 	}
 
-	private function resolution_for(string $filename, bool $enabled = true, ?\phpbbgallery\core\storage\workspace $workspace = null): string
+	private function resolution_for(string $filename, bool $enabled = true, ?\phpbbgallery\core\storage\workspace $workspace = null,
+		int $width = 0, int $height = 0): string
 	{
 		$controller = (new \ReflectionClass(image::class))->newInstanceWithoutConstructor();
 
@@ -152,7 +158,7 @@ class image_resolution_test extends TestCase
 		$method = new \ReflectionMethod(image::class, 'get_image_resolution');
 		$this->make_accessible($method);
 
-		return $method->invoke($controller, $filename);
+		return $method->invoke($controller, $filename, $width, $height);
 	}
 
 	/**
