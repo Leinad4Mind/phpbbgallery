@@ -1,10 +1,15 @@
+.gallery-operation-help-actions {
+	display: inline-flex;
+	align-items: center;
+	gap: .4rem;
+}
+
 .gallery-operation-help-button {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
 	width: 1.35rem;
 	height: 1.35rem;
-	margin-left: .35rem;
 	padding: 0;
 	color: #fff;
 	font: 700 .85rem/1 sans-serif;

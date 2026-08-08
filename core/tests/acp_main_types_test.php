@@ -117,6 +117,7 @@ final class acp_main_types_test extends TestCase
 
 		$this->assertStringContainsString("'S_GALLERY_ACP_OPERATION_HELP'", $source);
 		$this->assertSame(7, substr_count($template, 'data-gallery-operation-help-open='));
+		$this->assertSame(7, substr_count($template, 'class="gallery-operation-help-actions"'));
 		$this->assertSame(7, substr_count($template, '<dialog class="gallery-operation-help-dialog"'));
 		$this->assertSame(7, substr_count($template, 'aria-haspopup="dialog"'));
 		$this->assertStringContainsString('GALLERY_PURGE_CACHE_HELP', $template);
