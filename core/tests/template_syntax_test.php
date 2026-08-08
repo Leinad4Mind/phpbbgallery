@@ -369,29 +369,30 @@ final class template_syntax_test extends TestCase
 
 	public function test_bootstrap_comment_profiles_keep_online_status_with_the_avatar(): void
 	{
-		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
-		{
-			$template = (string) file_get_contents(
-				dirname(__DIR__) . '/styles/' . $style . '/template/gallery/viewimage_body.html'
-			);
-			$comments = strpos($template, '{% for commentrow in commentrow %}');
-			$avatar = strpos($template, '<div class="user-profile-avatar">', $comments);
-			$online_anchor = strpos($template, '<div class="gallery-avatar-online">', $avatar);
-			$ribbon = strpos($template, '<div class="ribbon-wrapper small hidden-xs">', $avatar);
-			$image_frame = strpos($template, '<div class="imageframe ', $avatar);
-			$this->assertNotFalse($comments, $style);
-			$this->assertNotFalse($avatar, $style);
-			$this->assertNotFalse($online_anchor, $style);
-			$this->assertNotFalse($ribbon, $style);
-			$this->assertNotFalse($image_frame, $style);
-			$this->assertLessThan($ribbon, $online_anchor, $style);
-			$this->assertLessThan($image_frame, $ribbon, $style);
-			$this->assertStringNotContainsString(
-				'commentrow.S_POSTER_ONLINE',
-				substr($template, 0, $comments),
-				$style
-			);
-		}
+		$bboots = (string) file_get_contents(dirname(__DIR__) . '/styles/BBOOTS/template/gallery/viewimage_body.html');
+		$comments = strpos($bboots, '{% for commentrow in commentrow %}');
+		$avatar = strpos($bboots, '<div class="user-profile-avatar">', $comments);
+		$online_anchor = strpos($bboots, '<div class="gallery-avatar-online">', $avatar);
+		$ribbon = strpos($bboots, '<div class="ribbon-wrapper small hidden-xs">', $avatar);
+		$image_frame = strpos($bboots, '<div class="imageframe ', $avatar);
+		$this->assertNotFalse($comments);
+		$this->assertNotFalse($avatar);
+		$this->assertNotFalse($online_anchor);
+		$this->assertNotFalse($ribbon);
+		$this->assertNotFalse($image_frame);
+		$this->assertLessThan($ribbon, $online_anchor);
+		$this->assertLessThan($image_frame, $ribbon);
+		$this->assertStringNotContainsString('commentrow.S_POSTER_ONLINE', substr($bboots, 0, $comments));
+
+		$flatboots = (string) file_get_contents(dirname(__DIR__) . '/styles/FLATBOOTS/template/gallery/viewimage_body.html');
+		$flat_comments = strpos($flatboots, '{% for commentrow in commentrow %}');
+		$flat_avatar = strpos($flatboots, '<div class="avatar-over avatar-viewtopic">', $flat_comments);
+		$flat_status = strpos($flatboots, '<span class="status"', $flat_avatar);
+		$this->assertNotFalse($flat_comments);
+		$this->assertNotFalse($flat_avatar);
+		$this->assertNotFalse($flat_status);
+		$this->assertGreaterThan($flat_avatar, $flat_status);
+		$this->assertStringNotContainsString('ribbon-wrapper', substr($flatboots, $flat_comments));
 
 		$stylesheet = (string) file_get_contents(dirname(__DIR__) . '/styles/all/theme/gallery.css');
 		$this->assertStringContainsString('.phpbbgallery-image-page .gallery-avatar-online', $stylesheet);
@@ -798,7 +799,7 @@ final class template_syntax_test extends TestCase
 		$gallery = (string) file_get_contents(dirname(__DIR__) . '/styles/FLATBOOTS/template/gallery/viewimage_body.html');
 		$viewtopic = (string) file_get_contents(dirname(__DIR__, 4) . '/styles/FLATBOOTS/template/viewtopic_body.html');
 
-		foreach (['class="btn btn-default dropdown-toggle"', 'class="dropdown-menu dropdown-menu-right"', 'class="btn btn-default btn-sm"', 'class="default-contact"', 'mini-profile-contact mini-profile-control list-unstyled text-center'] as $markup)
+		foreach (['class="btn btn-default dropdown-toggle"', 'class="dropdown-menu dropdown-menu-right"', 'class="btn btn-default btn-sm"', 'class="default-contact"', 'mini-profile-contact mini-profile-control list-unstyled text-center', 'text-center hidden-xs hidden-sm nightpanel', 'class="panel-body user-profile-sep"', 'class="avatar-over avatar-viewtopic"', 'class="profile-rank text-center"', 'class="icon-list list-unstyled"'] as $markup)
 		{
 			$this->assertStringContainsString($markup, $gallery);
 			$this->assertStringContainsString($markup === 'class="dropdown-menu dropdown-menu-right"' ? 'dropdown-menu' : $markup, $viewtopic);
