@@ -361,6 +361,7 @@ final class template_syntax_test extends TestCase
 			);
 			$this->assertStringContainsString('data-gallery-character-counter', $template, $style);
 			$this->assertStringContainsString('data-gallery-max-length="{{ DESCRIPTION_MAX_LENGTH }}"', $template, $style);
+			$this->assertStringContainsString('data-gallery-comment-guidance-text', $template, $style);
 			$this->assertStringContainsString('data-gallery-character-counter-output', $template, $style);
 			$this->assertStringContainsString("INCLUDEJS '@phpbbgallery_core/js/comment_counter.js'", $template, $style);
 			$javascript = (string) file_get_contents(
