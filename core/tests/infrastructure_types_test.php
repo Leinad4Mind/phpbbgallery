@@ -169,23 +169,23 @@ final class infrastructure_types_test extends TestCase
 		$this->assertSame('void', (string) (new \ReflectionMethod(\phpbbgallery\core\auth\level::class, 'display'))->getReturnType());
 	}
 
-	public function test_shareable_gallery_urls_drop_session_ids_only(): void
+	public function test_shareable_gallery_urls_drop_session_and_style_context_only(): void
 	{
 		$reflection = new \ReflectionClass(url::class);
 		$gallery_url = $reflection->newInstanceWithoutConstructor();
-		$strip_session_id = $reflection->getMethod('strip_session_id');
+		$strip_share_context = $reflection->getMethod('strip_share_context');
 
 		$this->assertSame(
 			'/gallery/image/8960/medium',
-			$strip_session_id->invoke($gallery_url, '/gallery/image/8960/medium?sid=private-session')
+			$strip_share_context->invoke($gallery_url, '/gallery/image/8960/medium?style=2&sid=private-session')
 		);
 		$this->assertSame(
 			'/gallery/image/8960/mini?download=1&page=2#preview',
-			$strip_session_id->invoke($gallery_url, '/gallery/image/8960/mini?download=1&sid=private-session&page=2#preview')
+			$strip_share_context->invoke($gallery_url, '/gallery/image/8960/mini?download=1&style=2&sid=private-session&page=2#preview')
 		);
 		$this->assertSame(
 			'/gallery/image/8960?page=2',
-			$strip_session_id->invoke($gallery_url, '/gallery/image/8960?sid=private-session&page=2')
+			$strip_share_context->invoke($gallery_url, '/gallery/image/8960?sid=private-session&style=2&page=2')
 		);
 	}
 

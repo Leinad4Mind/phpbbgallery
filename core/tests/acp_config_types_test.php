@@ -152,9 +152,9 @@ final class acp_config_types_test extends TestCase
 			->disableOriginalConstructor()
 			->onlyMethods(['get_uri'])
 			->getMock();
-		$strip_session_id = (new \ReflectionClass(\phpbbgallery\core\url::class))->getMethod('strip_session_id');
+		$strip_share_context = (new \ReflectionClass(\phpbbgallery\core\url::class))->getMethod('strip_share_context');
 		$gallery_url->method('get_uri')->willReturnCallback(
-			static fn(string $route): string => 'https://example.test' . $strip_session_id->invoke($gallery_url, $route)
+			static fn(string $route): string => 'https://example.test' . $strip_share_context->invoke($gallery_url, $route)
 		);
 		$phpbb_container = new class($helper, $gallery_url)
 		{

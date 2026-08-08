@@ -295,7 +295,7 @@ class url
 	 */
 	public function get_uri(string $route): string
 	{
-		$route = $this->strip_session_id(html_entity_decode($route, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+		$route = $this->strip_share_context(html_entity_decode($route, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
 		$url = $this->config['server_name'];
 		if ($this->config['force_server_vars'] == 1)
 		{
@@ -321,12 +321,12 @@ class url
 	}
 
 	/**
-	 * Remove a phpBB session identifier from a shareable route.
+	 * Remove request-specific session and style values from a shareable route.
 	 *
 	 * @param string $route Route which may contain query parameters
 	 * @return string
 	 */
-	private function strip_session_id(string $route): string
+	private function strip_share_context(string $route): string
 	{
 		$fragment = '';
 		$fragment_position = strpos($route, '#');
@@ -336,7 +336,7 @@ class url
 			$route = substr($route, 0, $fragment_position);
 		}
 
-		$route = (string) preg_replace('#([?&])sid=[^&]*#i', '$1', $route);
+		$route = (string) preg_replace('#([?&])(?:sid|style)=[^&]*#i', '$1', $route);
 		$route = (string) preg_replace('#\?&+#', '?', $route);
 		$route = (string) preg_replace('#&{2,}#', '&', $route);
 
