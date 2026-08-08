@@ -43,6 +43,8 @@ final class acp_listener_test extends TestCase
 		);
 		$this->assertSame('CONTEST_CREATION', $settings['allow_contests']['lang']);
 		$this->assertSame('radio:yes_no', $settings['allow_contests']['type']);
+		$this->assertSame('contest', $settings['allow_contests']['addon']['id']);
+		$this->assertSame('#c2410c', $settings['allow_contests']['addon']['accent']);
 	}
 
 	public function test_listener_ignores_other_configuration_modes(): void

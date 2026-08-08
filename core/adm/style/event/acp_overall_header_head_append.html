@@ -1,0 +1,72 @@
+{% if S_GALLERY_ACP_ADDON_SETTINGS %}
+	{% INCLUDECSS '@phpbbgallery_core/gallery_acp_addons.css' %}
+	<script>
+	(function () {
+		'use strict';
+
+		document.addEventListener('DOMContentLoaded', function () {
+			var settings = {{ GALLERY_ACP_ADDON_SETTINGS_JSON|raw }};
+			var form = document.getElementById('acp_board');
+			var addOns = {};
+
+			if (!form || !Array.isArray(settings)) {
+				return;
+			}
+
+			function makeBadge(setting) {
+				var badge = document.createElement('span');
+				var icon = document.createElement('i');
+				badge.className = 'gallery-addon-badge';
+				badge.style.setProperty('--gallery-addon-accent', setting.accent);
+				badge.setAttribute('data-gallery-addon', setting.id);
+				badge.setAttribute('title', setting.badge);
+				icon.className = 'icon fa-puzzle-piece fa-fw';
+				icon.setAttribute('aria-hidden', 'true');
+				badge.appendChild(icon);
+				badge.appendChild(document.createTextNode(setting.badge));
+				return badge;
+			}
+
+			settings.forEach(function (setting) {
+				var field = form.elements['config[' + setting.key + ']'];
+				var firstField = field && typeof field.length === 'number' ? field[0] : field;
+				var row = firstField && firstField.closest ? firstField.closest('dl') : null;
+				var label;
+
+				if (!row) {
+					return;
+				}
+
+				row.classList.add('gallery-addon-setting');
+				row.style.setProperty('--gallery-addon-accent', setting.accent);
+				row.setAttribute('data-gallery-addon', setting.id);
+				label = row.querySelector('dt label');
+				if (label && !row.querySelector('.gallery-addon-badge')) {
+					label.insertAdjacentElement('afterend', makeBadge(setting));
+				}
+				addOns[setting.id] = setting;
+			});
+
+			if (Object.keys(addOns).length) {
+				var legend = document.createElement('aside');
+				var title = document.createElement('strong');
+				var explanation = document.createElement('span');
+				var items = document.createElement('div');
+				legend.className = 'gallery-addon-legend';
+				legend.setAttribute('aria-label', {{ lang('GALLERY_ADDON_SETTINGS_LEGEND')|json_encode|raw }});
+				title.className = 'gallery-addon-legend__title';
+				title.textContent = {{ lang('GALLERY_ADDON_SETTINGS_LEGEND')|json_encode|raw }};
+				explanation.textContent = {{ lang('GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN')|json_encode|raw }};
+				items.className = 'gallery-addon-legend__items';
+				Object.keys(addOns).forEach(function (id) {
+					items.appendChild(makeBadge(addOns[id]));
+				});
+				legend.appendChild(title);
+				legend.appendChild(explanation);
+				legend.appendChild(items);
+				form.parentNode.insertBefore(legend, form);
+			}
+		});
+	}());
+	</script>
+{% endif %}

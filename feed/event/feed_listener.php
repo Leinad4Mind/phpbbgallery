@@ -104,10 +104,11 @@ class feed_listener implements EventSubscriberInterface
 		{
 			$this->language->add_lang('info_feed', 'phpbbgallery/feed');
 
+			$addon = ['id' => 'feed', 'name' => 'FEED', 'accent' => '#2e7d32'];
 			$return_ary['vars']['FEED_SETTINGS'] = [
-				'feed_enable'		=> ['lang' => 'FEED_ENABLED', 'validate' => 'bool', 'type' => 'radio:yes_no', 'explain' => true],
-				'feed_enable_pegas'	=> ['lang' => 'FEED_ENABLED_PEGAS', 'validate' => 'bool', 'type' => 'radio:yes_no', 'explain' => true],
-				'feed_limit'		=> ['lang' => 'FEED_LIMIT', 'validate' => 'int:1:999', 'type' => 'text:7:3', 'explain' => true],
+				'feed_enable'		=> ['lang' => 'FEED_ENABLED', 'validate' => 'bool', 'type' => 'radio:yes_no', 'explain' => true, 'addon' => $addon],
+				'feed_enable_pegas'	=> ['lang' => 'FEED_ENABLED_PEGAS', 'validate' => 'bool', 'type' => 'radio:yes_no', 'explain' => true, 'addon' => $addon],
+				'feed_limit'		=> ['lang' => 'FEED_LIMIT', 'validate' => 'int:1:999', 'type' => 'text:7:3', 'explain' => true, 'addon' => $addon],
 			];
 
 			$event['return_ary'] = $return_ary;
@@ -154,6 +155,11 @@ class feed_listener implements EventSubscriberInterface
 
 		$this->template->assign_vars([
 			'S_ALBUM_FEED'	=> !empty($album_data['album_feed']),
+		]);
+		$this->template->assign_block_vars('gallery_acp_addons', [
+			'ID' => 'feed',
+			'NAME' => $this->language->lang('FEED'),
+			'ACCENT' => '#2e7d32',
 		]);
 	}
 }

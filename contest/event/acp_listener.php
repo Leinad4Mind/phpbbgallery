@@ -71,6 +71,7 @@ class acp_listener implements EventSubscriberInterface
 				'validate' => 'bool',
 				'type' => 'radio:yes_no',
 				'explain' => true,
+				'addon' => ['id' => 'contest', 'name' => 'ALBUM_TYPE_CONTEST', 'accent' => '#c2410c'],
 			],
 		];
 
@@ -137,6 +138,11 @@ class acp_listener implements EventSubscriberInterface
 			'S_CONTEST_START' => $this->user->format_date($start, 'Y-m-d H:i'),
 			'CONTEST_RATING' => $this->user->format_date($start + (int) ($type_data['contest_rating'] ?? 0), 'Y-m-d H:i'),
 			'CONTEST_END' => $this->user->format_date($start + (int) ($type_data['contest_end'] ?? 0), 'Y-m-d H:i'),
+		]);
+		$this->template->assign_block_vars('gallery_acp_addons', [
+			'ID' => 'contest',
+			'NAME' => $this->language->lang('ALBUM_TYPE_CONTEST'),
+			'ACCENT' => '#c2410c',
 		]);
 	}
 

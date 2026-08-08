@@ -1,6 +1,6 @@
 <div id="album_contest_options"{% if not S_ALBUM_CONTEST %} hidden{% endif %}>
-	<fieldset>
-		<legend>{{ lang('CONTEST_SETTINGS') }}</legend>
+	<fieldset class="gallery-addon-section" style="--gallery-addon-accent: #c2410c" data-gallery-addon="contest">
+		<legend>{{ lang('CONTEST_SETTINGS') }} <span class="gallery-addon-badge" style="--gallery-addon-accent: #c2410c"><i class="icon fa-puzzle-piece fa-fw" aria-hidden="true"></i>{{ lang('GALLERY_ADDON_SETTING', lang('ALBUM_TYPE_CONTEST')) }}</span></legend>
 		<dl>
 			<dt><label for="contest_start">{{ lang('CONTEST_START') }}{{ lang('COLON') }}</label><br /><span>{{ lang('CONTEST_START_EXPLAIN') }}</span><br /><span>{{ lang('CONTEST_DATE_EXPLAIN') }}</span></dt>
 			<dd><input class="text" type="text" id="contest_start" name="contest_start" value="{{ S_CONTEST_START }}" /></dd>

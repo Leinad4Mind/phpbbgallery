@@ -158,6 +158,9 @@ class exif_display_filter_test extends TestCase
 
 		$this->assertFileExists($template_path);
 		$this->assertStringContainsString("assign_var('S_GALLERY_EXIF_CONFIG', true)", $listener);
+		$this->assertStringContainsString("'id' => 'exif'", $listener);
+		$this->assertStringContainsString("'accent' => '#0f766e'", $listener);
+		$this->assertGreaterThanOrEqual(2, substr_count($listener, "'addon'"));
 		$this->assertStringContainsString('{% if S_GALLERY_EXIF_CONFIG %}', $template);
 		$this->assertStringContainsString("'config[disp_exifdata]'", $template);
 		$this->assertStringContainsString("'config[exif_show_'", $template);

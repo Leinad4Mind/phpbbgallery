@@ -191,6 +191,7 @@ class config_module
 		);
 
 		// Output relevant page
+		$addon_settings = [];
 		foreach ($vars['vars'] as $config_key => $vars)
 		{
 			if (!is_array($vars) && strpos($config_key, 'legend') === false)
@@ -260,7 +261,45 @@ class config_module
 				'CONTENT'		=> $content,
 			]);
 
+			$addon = $vars['addon'] ?? null;
+			if (is_array($addon))
+			{
+				$addon_id = preg_replace('/[^a-z0-9_-]/', '', strtolower((string) ($addon['id'] ?? '')));
+				$addon_name = trim((string) ($addon['name'] ?? ''));
+				$addon_accent = (string) ($addon['accent'] ?? '');
+				if ($this->language->is_set($addon_name))
+				{
+					$addon_name = $this->language->lang($addon_name);
+				}
+				if (!preg_match('/^#[0-9a-f]{6}$/i', $addon_accent))
+				{
+					$addon_accent = '#536d7a';
+				}
+
+				if ($addon_id !== '' && $addon_name !== '')
+				{
+					$addon_settings[] = [
+						'key' => (string) $config_key,
+						'id' => $addon_id,
+						'name' => $addon_name,
+						'accent' => strtolower($addon_accent),
+						'badge' => $this->language->lang('GALLERY_ADDON_SETTING', $addon_name),
+					];
+				}
+			}
+
 			unset($this->display_vars['vars'][$config_key]);
+		}
+
+		if ($addon_settings)
+		{
+			$template->assign_vars([
+				'S_GALLERY_ACP_ADDON_SETTINGS' => true,
+				'GALLERY_ACP_ADDON_SETTINGS_JSON' => json_encode(
+					$addon_settings,
+					JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE
+				),
+			]);
 		}
 	}
 
@@ -286,6 +325,7 @@ class config_module
 	*										- Custom template:		"custom" requires the key "function" or "method" to be set which provides the html code
 	*						@key function/method	Required when using type select and custom
 	*						@key append		A language string that is appended after the config type (e.g. You can append 'px' to a pixel size field)
+	*						@key addon		Optional add-on identity with id, translated name key and six-digit accent colour
 	* This last parameter is optional
 	*		@key	string	tpl			Name of the template file we use to display the configs
 	*

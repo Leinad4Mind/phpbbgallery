@@ -18,6 +18,18 @@ use phpbbgallery\feed\feed;
  */
 final class visibility_test extends TestCase
 {
+	public function test_acp_fields_identify_the_feed_as_an_addon(): void
+	{
+		$listener = (string) file_get_contents(dirname(__DIR__) . '/event/feed_listener.php');
+		$album_template = (string) file_get_contents(dirname(__DIR__) . '/adm/style/event/phpbbgallery_core_adm_album_upload_options.html');
+
+		$this->assertStringContainsString("'id' => 'feed'", $listener);
+		$this->assertStringContainsString("'addon' => $" . 'addon', $listener);
+		$this->assertStringContainsString("assign_block_vars('gallery_acp_addons'", $listener);
+		$this->assertStringContainsString('gallery-addon-setting', $album_template);
+		$this->assertStringContainsString('fa-puzzle-piece', $album_template);
+	}
+
 	/**
 	 * Build a feed service whose collaborators answer with fixed data.
 	 *

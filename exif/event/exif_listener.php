@@ -178,7 +178,8 @@ class exif_listener implements EventSubscriberInterface
 				$this->user->add_lang_ext('phpbbgallery/exif', 'info_exif');
 				$template->assign_var('S_GALLERY_EXIF_CONFIG', true);
 
-				$return_ary['vars']['IMAGE_SETTINGS']['disp_exifdata'] = ['lang' => 'DISP_EXIF_DATA',		'validate' => 'bool',	'type' => 'radio:yes_no'];
+				$addon = ['id' => 'exif', 'name' => 'ACP_GALLERY_EXIF', 'accent' => '#0f766e'];
+				$return_ary['vars']['IMAGE_SETTINGS']['disp_exifdata'] = ['lang' => 'DISP_EXIF_DATA',		'validate' => 'bool',	'type' => 'radio:yes_no', 'addon' => $addon];
 
 				// One switch per field, registered the same way as the master switch
 				// above, so the core config module reads and stores them natively.
@@ -188,6 +189,7 @@ class exif_listener implements EventSubscriberInterface
 						'lang'		=> 'DISP_' . strtoupper($field),
 						'validate'	=> 'bool',
 						'type'		=> 'radio:yes_no',
+						'addon'		=> $addon,
 					];
 				}
 
