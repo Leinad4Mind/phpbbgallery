@@ -131,6 +131,12 @@
 					<dd>{{ IMAGE_RESOLUTION }}</dd>
 				</dl>
 				{% endif %}
+				{% if IMAGE_FILE_TYPE %}
+				<dl>
+					<dt><label>{{ lang('IMAGE_FILE_TYPE') }}{{ lang('COLON') }}</label></dt>
+					<dd>{{ IMAGE_FILE_TYPE }}</dd>
+				</dl>
+				{% endif %}
 				{% if IMAGE_URL %}
 				<dl>
 					<dt><label>{{ lang('IMAGE_URL') }}{{ lang('COLON') }}</label></dt>

@@ -294,6 +294,7 @@ $lang = array_merge($lang, [
 	'UPLOADED_ON_DATE'          => 'Дата',
 	'IMAGE_RESOLUTION'          => 'Разрешение',
 	'IMAGE_RESOLUTION_VALUE'    => '%1$d × %2$d px',
+	'IMAGE_FILE_TYPE'           => 'Тип изображения',
 	'USE_SAME_NAME'             => 'Использовать единое название и описание для всех фотографий.',
 	'USE_NUM'                   => 'Впишите {NUM} для автоматической нумерации. Начать нумерацию с: ',
 	'USER_REACHED_QUOTA'        => [

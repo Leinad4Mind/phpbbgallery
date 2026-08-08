@@ -313,6 +313,7 @@ $lang = array_merge($lang, [
 	'UPLOADED_ON_DATE'          => 'Subido en',
 	'IMAGE_RESOLUTION'          => 'Resolución',
 	'IMAGE_RESOLUTION_VALUE'    => '%1$d × %2$d px',
+	'IMAGE_FILE_TYPE'           => 'Tipo de imagen',
 	'USE_SAME_NAME'             => 'Usar el mismo nombre de imagen y descripción para todas las imágenes.',
 	'USE_NUM'                   => 'Añadir {NUM} para números. Comienza contando en: ',
 	'USER_REACHED_QUOTA'        => [

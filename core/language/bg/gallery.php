@@ -312,6 +312,7 @@ $lang = array_merge($lang, [
 	'UPLOADED_ON_DATE'          => 'Качена на',
 	'IMAGE_RESOLUTION'          => 'Разделителна способност',
 	'IMAGE_RESOLUTION_VALUE'    => '%1$d × %2$d px',
+	'IMAGE_FILE_TYPE'           => 'Тип на изображението',
 	'USE_SAME_NAME'             => 'Използвай същото име и описание за всички изображения.',
 	'USE_NUM'                   => 'Добавете {NUM} за номера. Започни броенето от:',
 	'USER_REACHED_QUOTA'        => [

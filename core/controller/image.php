@@ -570,6 +570,7 @@ class image
 			'IMAGE_URL'           => ($this->config['phpbb_gallery_disp_image_url']) ? $this->url->get_uri($this->helper->route('phpbbgallery_core_image_file_medium', ['image_id' => $image_id])) : '',
 			'IMAGE_TIME'          => $this->user->format_date($this->data['image_time']),
 			'IMAGE_VIEW'          => $this->data['image_view_count'],
+			'IMAGE_FILE_TYPE'     => $this->get_image_file_type((string) $this->data['image_filename']),
 			'IMAGE_RESOLUTION'    => $this->get_image_resolution(
 				(string) $this->data['image_filename'],
 				(int) ($this->data['image_width'] ?? 0),
@@ -831,6 +832,23 @@ class image
 		}
 
 		return '<a href="' . $image_url . '">' . ($previous ? '&laquo;&laquo;&nbsp;' : '') . $image_name . ($previous ? '' : '&nbsp;&raquo;&raquo;') . '</a>';
+	}
+
+	/**
+	 * Return the stored original image extension for display in image details.
+	 *
+	 * Reading the validated storage key avoids materializing provider-backed files
+	 * and preserves distinctions such as JPG/JPEG and TIF/TIFF.
+	 */
+	protected function get_image_file_type(string $filename): string
+	{
+		$extension = strtolower((string) pathinfo(str_replace('\\', '/', $filename), PATHINFO_EXTENSION));
+		if (!in_array($extension, ['avif', 'bmp', 'gif', 'jpeg', 'jpg', 'png', 'tif', 'tiff', 'webp'], true))
+		{
+			return '';
+		}
+
+		return strtoupper($extension);
 	}
 
 	/**

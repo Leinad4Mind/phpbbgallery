@@ -312,6 +312,7 @@ $lang = array_merge($lang, [
 	'UPLOADED_ON_DATE'          => 'Geüpload op',
 	'IMAGE_RESOLUTION'          => 'Resolutie',
 	'IMAGE_RESOLUTION_VALUE'    => '%1$d × %2$d px',
+	'IMAGE_FILE_TYPE'           => 'Afbeeldingstype',
 	'USE_SAME_NAME'             => 'Gebruik de zelfde afbeeldingsnaam en omschrijving voor de andere afbeeldingen.',
 	'USE_NUM'                   => 'Voeg {NUM} toe voor nummers. Start het tellen bij:',
 	'USER_REACHED_QUOTA'        => [
