@@ -55,6 +55,8 @@ final class domain_auth_types_test extends TestCase
 	{
 		$core_auth = $this->constructed_auth(false);
 		$this->assertTrue($core_auth->has_permission('i_move'));
+		$this->assertTrue($core_auth->has_permission('i_download'));
+		$this->assertTrue($core_auth->has_permission('i_download_free'));
 		$this->assertFalse($core_auth->has_permission('i_favorite'));
 		$this->assertTrue($this->constructed_auth(true)->has_permission('i_favorite'));
 	}

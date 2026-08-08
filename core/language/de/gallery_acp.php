@@ -25,6 +25,8 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'PERMISSION_I_MOVE' => 'Kann eigene Bilder verschieben',
+	'PERMISSION_I_DOWNLOAD' => 'Kann Originalbilddateien herunterladen',
+	'PERMISSION_I_DOWNLOAD_FREE' => 'Kann Originalbilddateien ohne Kosten herunterladen',
 	'STORAGE_MIGRATION' => 'Migration zum verteilten Speicher',
 	'STORAGE_MIGRATION_EXPLAIN' => 'Verschiebt vorhandene lokale Bilddateien in die konfigurierte verteilte Verzeichnisstruktur, in geprüften und fortsetzbaren Stapeln.',
 	'STORAGE_MIGRATION_CONFIRM' => 'Möchtest du die vorhandenen Galerie-Dateien wirklich in die verteilte Struktur migrieren?',
@@ -425,9 +427,9 @@ $lang = array_merge($lang, [
 	'UC_IMAGE_NAME'      => 'Bildname',
 	'UC_IMAGE_ICON'      => '„Letztes Bild“-Icon',
 	'UC_IMAGEPAGE'       => 'Bild auf der Bild-Seite',
-	'UC_IMAGEPAGE_EXP'   => 'Das ist die Seite mit den Details und Kommentaren',
+	'UC_IMAGEPAGE_EXP'   => 'Legt fest, was beim Anklicken des mittleren Bildes geschieht. Das Öffnen der Originaldatei erfordert zusätzlich die Download-Berechtigung; Add-ons können eine weitere Bestätigung verlangen.',
 	'UC_LINK_CONFIG'     => 'Link Konfiguration',
-	'UC_LINK_IMAGE'      => 'Bild öffnen',
+	'UC_LINK_IMAGE'      => 'Originaldatei öffnen',
 	'UC_LINK_IMAGE_PAGE' => 'Image-page (mit Details und Kommentaren) öffnen',
 	'UC_LINK_NEXT'       => 'Nächstes Bild',
 	'UC_LINK_NEWTAB'     => 'Neuen Tab öffnen',

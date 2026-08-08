@@ -24,6 +24,8 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'PERMISSION_I_MOVE' => 'Can move own images',
+	'PERMISSION_I_DOWNLOAD' => 'Can download original image files',
+	'PERMISSION_I_DOWNLOAD_FREE' => 'Can download original image files without charges',
 ]);
 
 $lang = array_merge($lang, [
@@ -383,9 +385,9 @@ $lang = array_merge($lang, [
 	'UC_IMAGE_NAME'      => 'Imagename',
 	'UC_IMAGE_ICON'      => 'Lastimage icon',
 	'UC_IMAGEPAGE'       => 'Image on Image-page',
-	'UC_IMAGEPAGE_EXP'   => 'That’s the page with the image-details and comments.',
+	'UC_IMAGEPAGE_EXP'   => 'Controls what happens when the medium image is clicked. Opening the original file also requires the original-download permission; add-ons may require an additional confirmation.',
 	'UC_LINK_CONFIG'     => 'Link configuration',
-	'UC_LINK_IMAGE'      => 'Open Image',
+	'UC_LINK_IMAGE'      => 'Open original file',
 	'UC_LINK_IMAGE_PAGE' => 'Open Image-page (with details and comments)',
 	'UC_LINK_NEXT'       => 'Next Image',
 	'UC_LINK_NEWTAB'     => 'Open New Tab',

@@ -51,7 +51,7 @@ final class controller_file_types_test extends TestCase
 	{
 		$reflection = new \ReflectionClass(file::class);
 
-		foreach (['source', 'medium', 'mini'] as $method_name)
+		foreach (['source', 'source_download', 'medium', 'mini'] as $method_name)
 		{
 			$method = $reflection->getMethod($method_name);
 			$this->assertSame('int', (string) $method->getParameters()[0]->getType());
@@ -65,8 +65,14 @@ final class controller_file_types_test extends TestCase
 		$services = file_get_contents(dirname(__DIR__) . '/config/services_controller.yml');
 
 		$this->assertStringContainsString('phpbbgallery.core.file.source_access', $source);
-		$this->assertStringContainsString('$vars = [\'image_data\', \'source_path\', \'force_download\'];', $source);
+		$this->assertStringContainsString(
+			'$vars = [\'image_data\', \'source_path\', \'force_download\', \'delivery_mode\'];',
+			$source
+		);
 		$this->assertStringContainsString('$force_download || $this->source_requires_download', $source);
+		$this->assertStringContainsString("source_response(\$image_id, false, 'source')", $source);
+		$this->assertStringContainsString("source_response(\$image_id, true, 'download')", $source);
+		$this->assertStringContainsString('public function authorize_source(int $image_id): array', $source);
 		$this->assertStringContainsString('if ($attachment || empty($this->user->browser)', $source);
 		$this->assertStringContainsString('Original-source access may be user-specific', $source);
 		$this->assertStringContainsString('$this->tool->disable_browser_cache();', $source);

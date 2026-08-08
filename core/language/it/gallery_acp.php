@@ -25,6 +25,8 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'PERMISSION_I_MOVE' => 'Può spostare le proprie immagini',
+	'PERMISSION_I_DOWNLOAD' => 'Può scaricare i file immagine originali',
+	'PERMISSION_I_DOWNLOAD_FREE' => 'Può scaricare i file originali senza costi',
 	'STORAGE_MIGRATION' => 'Migrazione allo storage distribuito',
 	'STORAGE_MIGRATION_EXPLAIN' => 'Sposta i file immagine locali esistenti nella struttura distribuita configurata, in lotti verificati e riprendibili.',
 	'STORAGE_MIGRATION_CONFIRM' => 'Vuoi davvero migrare i file esistenti della Galleria nella struttura distribuita?',
@@ -423,9 +425,9 @@ $lang = array_merge($lang, [
 	'UC_IMAGE_NAME'      => 'Nome immagine',
 	'UC_IMAGE_ICON'      => 'Ultima icona immagine',
 	'UC_IMAGEPAGE'       => 'Immagine su pagina immagini (con commenti e voti)',
-	'UC_IMAGEPAGE_EXP'   => 'E’ la pagina con i dettagli delle immagini e i commenti',
+	'UC_IMAGEPAGE_EXP'   => 'Controlla cosa accade facendo clic sull’immagine media. L’apertura del file originale richiede anche il permesso di download; gli add-on possono richiedere un’ulteriore conferma.',
 	'UC_LINK_CONFIG'     => 'Link configurazione',
-	'UC_LINK_IMAGE'      => 'Apri immagini',
+	'UC_LINK_IMAGE'      => 'Apri file originale',
 	'UC_LINK_IMAGE_PAGE' => 'Apri pagina immagine (con commenti e voti)',
 	'UC_LINK_NEXT'       => 'Prossima Immagine',
 	'UC_LINK_NEWTAB'     => 'Aperto in una nuova scheda',

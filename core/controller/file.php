@@ -152,7 +152,53 @@ class file
 	*/
 	public function source(int $image_id): \Symfony\Component\HttpFoundation\BinaryFileResponse
 	{
-		$force_download = false;
+		return $this->source_response($image_id, false, 'source');
+	}
+
+	/**
+	 * Deliver an original explicitly as a download after an add-on has
+	 * completed its own access workflow.
+	 */
+	public function source_download(int $image_id): \Symfony\Component\HttpFoundation\BinaryFileResponse
+	{
+		return $this->source_response($image_id, true, 'download');
+	}
+
+	/**
+	 * Validate source permissions and existence before an add-on displays
+	 * access or purchase information.
+	 *
+	 * @return array Complete image and album row
+	 */
+	public function authorize_source(int $image_id): array
+	{
+		$this->auth->load_user_permissions($this->user->data['user_id']);
+		$this->path = $this->path_source;
+		$this->load_data($image_id);
+		$this->storage_variant = \phpbbgallery\core\storage\provider_interface::SOURCE;
+		$this->check_auth();
+		if ($this->error !== '')
+		{
+			throw new \phpbb\exception\http_exception(403, 'NOT_AUTHORISED');
+		}
+
+		$key = (string) $this->data['image_filename'];
+		$exists = $this->storage_workspace !== null
+			? $this->storage_workspace->exists(\phpbbgallery\core\storage\provider_interface::SOURCE, $key)
+			: file_exists($this->path_source . $key);
+		if (!$exists)
+		{
+			throw new \phpbb\exception\http_exception(404, 'IMAGE_NOT_EXIST');
+		}
+
+		return $this->data;
+	}
+
+	/**
+	 * Build the original-source response.
+	 */
+	protected function source_response(int $image_id, bool $force_download, string $delivery_mode): \Symfony\Component\HttpFoundation\BinaryFileResponse
+	{
 		$this->auth->load_user_permissions($this->user->data['user_id']);
 		$this->path = $this->path_source;
 		$this->load_data($image_id);
@@ -174,8 +220,9 @@ class file
 			 * @var array image_data Complete image and album row
 			 * @var string source_path Absolute original-source path
 			 * @var bool force_download Whether an add-on requires a download response
+			 * @var string delivery_mode Either source or an add-on-authorized download
 			 */
-			$vars = ['image_data', 'source_path', 'force_download'];
+			$vars = ['image_data', 'source_path', 'force_download', 'delivery_mode'];
 			extract($this->dispatcher->trigger_event(
 				'phpbbgallery.core.file.source_access',
 				compact($vars)
@@ -398,6 +445,10 @@ class file
 	public function check_auth(): void
 	{
 		$this->auth->load_user_permissions($this->user->data['user_id']);
+		if ($this->error !== '')
+		{
+			return;
+		}
 		$zebra_array = $this->auth->get_user_zebra($this->user->data['user_id']);
 		// Check permissions
 		if (($this->data['image_user_id'] != $this->user->data['user_id']) && ($this->data['image_status'] == (int) \phpbbgallery\core\block::STATUS_ORPHAN))
@@ -405,7 +456,10 @@ class file
 			// The image is currently being uploaded
 			$this->set_error_image('not_authorised.jpg', $this->language->lang('NOT_AUTHORISED'));
 		}
+		$can_download_source = $this->storage_variant !== \phpbbgallery\core\storage\provider_interface::SOURCE
+			|| $this->auth->acl_check('i_download', $this->data['album_id'], $this->data['album_user_id']);
 		if (!$this->auth->acl_check('i_view', $this->data['album_id'], $this->data['album_user_id'])
+			|| !$can_download_source
 			|| (!$this->auth->acl_check('m_status', $this->data['album_id'], $this->data['album_user_id'])
 				&& $this->data['image_status'] == (int) \phpbbgallery\core\block::STATUS_UNAPPROVED
 				&& $this->data['image_user_id'] != $this->user->data['user_id'])
@@ -460,7 +514,10 @@ class file
 			$this->data['image_filemissing'] = 0;
 		}
 
-		$this->check_hot_link();
+		if ($this->storage_variant !== \phpbbgallery\core\storage\provider_interface::SOURCE)
+		{
+			$this->check_hot_link();
+		}
 
 		// There was a reason to not display the image, so we send an error-image
 		if ($this->error)

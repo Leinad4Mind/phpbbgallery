@@ -41,6 +41,9 @@ use phpbbgallery\core\migrations\storage_provider;
 use phpbbgallery\core\migrations\avif_support;
 use phpbbgallery\core\migrations\unread_image_badge;
 use phpbbgallery\core\migrations\bmp_support;
+use phpbbgallery\core\migrations\image_read_tracking;
+use phpbbgallery\core\migrations\source_access_policy;
+use phpbbgallery\core\migrations\source_download_permission;
 
 class migration_integrity_test extends TestCase
 {
@@ -76,6 +79,9 @@ class migration_integrity_test extends TestCase
 		avif_support::class,
 		unread_image_badge::class,
 		bmp_support::class,
+		image_read_tracking::class,
+		source_download_permission::class,
+		source_access_policy::class,
 	];
 
 	private array $temp_directories = [];
@@ -247,6 +253,29 @@ class migration_integrity_test extends TestCase
 		$this->assertSame([
 			['config.update', ['phpbb_gallery_version', '4.0.0']],
 		], $migration->update_data());
+	}
+
+	public function test_source_access_policy_is_independent_and_defaults_to_no_bypass(): void
+	{
+		$migration = (new \ReflectionClass(source_access_policy::class))->newInstanceWithoutConstructor();
+		(new \ReflectionProperty(\phpbb\db\migration\migration::class, 'table_prefix'))->setValue($migration, 'phpbb_');
+
+		$this->assertSame([
+			'\phpbbgallery\core\migrations\source_download_permission',
+			'\phpbbgallery\core\migrations\bmp_support',
+		], source_access_policy::depends_on());
+		$this->assertSame([
+			'add_columns' => [
+				'phpbb_gallery_roles' => [
+					'i_download_free' => ['UINT:3', 0],
+				],
+			],
+		], $migration->update_schema());
+		$this->assertSame([
+			'drop_columns' => [
+				'phpbb_gallery_roles' => ['i_download_free'],
+			],
+		], $migration->revert_schema());
 	}
 
 	public function test_local_storage_layout_defaults_to_flat_and_is_reversible(): void
@@ -964,6 +993,9 @@ class migration_integrity_test extends TestCase
 			'avif_support.php',
 			'unread_image_badge.php',
 			'bmp_support.php',
+			'image_read_tracking.php',
+			'source_download_permission.php',
+			'source_access_policy.php',
 		] as $migration)
 		{
 			require_once dirname(__DIR__) . '/migrations/' . $migration;

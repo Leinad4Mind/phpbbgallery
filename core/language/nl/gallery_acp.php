@@ -25,6 +25,8 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'PERMISSION_I_MOVE' => 'Kan eigen afbeeldingen verplaatsen',
+	'PERMISSION_I_DOWNLOAD' => 'Kan originele afbeeldingsbestanden downloaden',
+	'PERMISSION_I_DOWNLOAD_FREE' => 'Kan originele afbeeldingsbestanden zonder kosten downloaden',
 	'STORAGE_MIGRATION' => 'Migratie naar gedistribueerde opslag',
 	'STORAGE_MIGRATION_EXPLAIN' => 'Verplaatst bestaande lokale afbeeldingsbestanden in gecontroleerde en hervatbare batches naar de ingestelde gedistribueerde mapstructuur.',
 	'STORAGE_MIGRATION_CONFIRM' => 'Weet je zeker dat je de bestaande Galerijbestanden naar de gedistribueerde structuur wilt migreren?',
@@ -425,9 +427,9 @@ $lang = array_merge($lang, [
 	'UC_IMAGE_NAME'      => 'Afbeeldingsnaam',
 	'UC_IMAGE_ICON'      => 'Icoon laatste afbeelding',
 	'UC_IMAGEPAGE'       => 'Afbeelding op afbeeldingspagina',
-	'UC_IMAGEPAGE_EXP'   => 'Dat is de pagina met afbeeldings-details en reacties.',
+	'UC_IMAGEPAGE_EXP'   => 'Bepaalt wat er gebeurt wanneer op de middelgrote afbeelding wordt geklikt. Voor het openen van het originele bestand is ook de downloadmachtiging nodig; add-ons kunnen extra bevestiging vragen.',
 	'UC_LINK_CONFIG'     => 'Link instellingen',
-	'UC_LINK_IMAGE'      => 'Open afbeelding',
+	'UC_LINK_IMAGE'      => 'Open origineel bestand',
 	'UC_LINK_IMAGE_PAGE' => 'Open afbeeldingspagina (met details en reacties)',
 	'UC_LINK_NEXT'       => 'Volgende afbelding',
 	'UC_LINK_NEWTAB'     => 'Open Nieuw tabblad',
