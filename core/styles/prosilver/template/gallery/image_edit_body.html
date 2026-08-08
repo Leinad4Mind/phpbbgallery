@@ -56,6 +56,7 @@
 						<input type="radio" name="rotate[{{ image.S_ROW_COUNT }}]" id="rotate_{{ image.S_ROW_COUNT }}_90" value="90" /> <label for="rotate_{{ image.S_ROW_COUNT }}_90">{{ lang('ROTATE_LEFT') }}</label></dd>
 					{% endif %}
 				</dl>
+				{% EVENT phpbbgallery_core_edit_image_addfields %}
 			{% endfor %}
 			{% EVENT phpbbgallery_core_edit_addfields %}
 

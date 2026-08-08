@@ -95,6 +95,33 @@ final class addon_lifecycle_events_test extends TestCase
 		);
 	}
 
+	public function test_image_edit_forms_expose_a_per_image_addon_field_hook(): void
+	{
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$template = (string) file_get_contents(
+				dirname(__DIR__) . '/styles/' . $style . '/template/gallery/posting_body.html'
+			);
+			$loop_start = strpos($template, '{% for image in image %}');
+			$hook = strpos($template, '{% EVENT phpbbgallery_core_edit_image_addfields %}', $loop_start);
+			$loop_end = strpos($template, '{% endfor %}', $hook);
+
+			$this->assertNotFalse($loop_start, $style);
+			$this->assertNotFalse($hook, $style);
+			$this->assertNotFalse($loop_end, $style);
+			$this->assertGreaterThan($loop_start, $hook, $style);
+			$this->assertGreaterThan($hook, $loop_end, $style);
+		}
+
+		$image_edit = (string) file_get_contents(
+			dirname(__DIR__) . '/styles/prosilver/template/gallery/image_edit_body.html'
+		);
+		$this->assertMatchesRegularExpression(
+			'/\{% for image in image %\}.*\{% EVENT phpbbgallery_core_edit_image_addfields %\}.*\{% endfor %\}/s',
+			$image_edit
+		);
+	}
+
 	private function extract_method(string $path, string $start_marker, string $end_marker): string
 	{
 		$source = (string) file_get_contents($path);
