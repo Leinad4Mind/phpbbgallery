@@ -102,6 +102,8 @@ final class workflow_regression_test extends TestCase
 		}
 		$this->assertStringContainsString('phpunit-${{ matrix.database }}-github.xml', $workflow);
 		$this->assertStringContainsString('setup-database.sh $DB 0', $workflow);
+		$this->assertStringContainsString('--health-cmd="mysqladmin ping --silent"', $workflow);
+		$this->assertStringNotContainsString("--health-cmd='mysqladmin ping --silent'", $workflow);
 		$this->assertStringNotContainsString('phpunit-sqlite3-github.xml', $workflow);
 	}
 }
