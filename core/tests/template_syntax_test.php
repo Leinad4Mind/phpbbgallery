@@ -721,6 +721,15 @@ final class template_syntax_test extends TestCase
 		}
 	}
 
+	public function test_flatboots_profile_image_count_uses_the_theme_statistic_weight(): void
+	{
+		$event = (string) file_get_contents(dirname(__DIR__) . '/styles/FLATBOOTS/template/event/memberlist_view_user_statistics_after.html');
+
+		$this->assertStringContainsString("{{ lang('GALLERY_IMAGES') }}", $event);
+		$this->assertStringContainsString('{{ U_GALLERY_IMAGES }}', $event);
+		$this->assertStringNotContainsString('<strong>{{ U_GALLERY_IMAGES }}</strong>', $event);
+	}
+
 	public function test_topic_and_private_message_profiles_use_style_appropriate_events(): void
 	{
 		$core_root = dirname(__DIR__);
