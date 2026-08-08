@@ -21,6 +21,7 @@ final class total_views_test extends TestCase
 		$acp_template = (string) file_get_contents($core_root . '/adm/style/gallery_main.html');
 
 		$this->assertStringContainsString("'TOTAL_VIEWS'", $index_controller);
+		$this->assertStringContainsString("'TOTAL_IMAGE_COUNT'", $index_controller);
 		$this->assertStringContainsString("'TOTAL_VIEWS'", $acp_controller);
 		$this->assertStringContainsString('SUM(image_view_count) AS num_views', $acp_controller);
 		$this->assertStringContainsString("lang('TOTAL_VIEWS')", $acp_template);
@@ -29,6 +30,10 @@ final class total_views_test extends TestCase
 		{
 			$template = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/index_body.html');
 			$this->assertStringContainsString("lang('TOTAL_VIEWS')", $template, $style);
+			$this->assertStringContainsString("lang('GALLERY_IMAGES')", $template, $style);
+			$this->assertStringContainsString('TOTAL_IMAGE_COUNT is not same as(false)', $template, $style);
+			$this->assertStringContainsString('<strong>{{ TOTAL_IMAGE_COUNT }}</strong>', $template, $style);
+			$this->assertStringNotContainsString('<p>{{ TOTAL_IMAGES }}', $template, $style);
 		}
 	}
 

@@ -332,6 +332,7 @@ class index
 		$show_recent   = (bool) ($show_options & self::RRC_MODE_RECENT_IMAGES);
 		$this->template->assign_vars([
 			'TOTAL_IMAGES'		=> ($this->gallery_config->get('disp_statistic')) ? $this->language->lang('TOTAL_IMAGES_SPRINTF', $this->gallery_config->get('num_images')) : '',
+			'TOTAL_IMAGE_COUNT'	=> ($this->gallery_config->get('disp_statistic')) ? (int) $this->gallery_config->get('num_images') : false,
 			'TOTAL_VIEWS'		=> ($this->gallery_config->get('disp_statistic')) ? $this->gallery_config->get('num_views') : false,
 			'TOTAL_COMMENTS'	=> ($this->gallery_config->get('allow_comments')) ? $this->language->lang('TOTAL_COMMENTS_SPRINTF', $this->gallery_config->get('num_comments')) : '',
 			'TOTAL_PGALLERIES'	=> ($this->gallery_auth->acl_check('a_list', \phpbbgallery\core\auth\auth::PERSONAL_ALBUM)) ? $this->language->lang('TOTAL_PEGAS_SPRINTF', $this->gallery_config->get('num_pegas')) : '',
