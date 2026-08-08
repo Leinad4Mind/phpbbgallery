@@ -72,6 +72,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Rendered album-moderation batch actions inside each style so FLATBOOTS and BBOOTS use their native Bootstrap select picker instead of an unstyled Core-generated dropdown.
 - Initialized the new original-download permission from each existing role's image-view permission, preserving historical source access while keeping the charge-bypass permission denied by default.
 - Clarified in every ACP language that image viewing covers album listings, individual pages and thumbnail/medium previews, while the download permissions govern original source files and require viewing access.
 - Added breathing room around the camera divider, separated checkbox labels, pinned the online ribbon to the comment avatar's top-right corner, placed quick-comment actions at opposite edges and extended the Unicode-aware live counter to image descriptions.

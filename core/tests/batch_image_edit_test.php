@@ -133,6 +133,28 @@ final class batch_image_edit_test extends TestCase
 		}
 	}
 
+	public function test_moderation_batch_actions_are_rendered_by_each_style(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/moderate.php');
+		$this->assertStringContainsString("assign_block_vars('overview_actions'", $source);
+		$this->assertStringContainsString("'U_ACTION_SELECT'", $source);
+
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$template = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/moderate_album_overview.html');
+			$this->assertStringContainsString('{% for action in overview_actions %}', $template, $style);
+			$this->assertStringContainsString('name="select_action" id="select_action"', $template, $style);
+			$this->assertStringNotContainsString('{{ U_ACTION_SELECT }}', $template, $style);
+		}
+
+		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$template = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/moderate_album_overview.html');
+			$this->assertStringContainsString('class="selectpicker"', $template, $style);
+			$this->assertStringContainsString('data-style="btn btn-default form-control"', $template, $style);
+		}
+	}
+
 	public function test_rename_action_is_translated_in_every_catalog(): void
 	{
 		foreach (glob(dirname(__DIR__) . '/language/*/gallery_mcp.php') as $catalog)

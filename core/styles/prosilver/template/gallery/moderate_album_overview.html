@@ -97,7 +97,10 @@
 				<input class="inputbox autowidth" type="text" id="change_author" name="change_author" size="24" />
 				<a href="{{ U_FIND_USERNAME }}" onclick="find_username(this.href); return false;">[ {{ lang('FIND_USERNAME') }} ]</a><br />
 			{% endif %}
-			{{ U_ACTION_SELECT }} &nbsp; <input class="button1" name="submit" value="{{ lang('GO') }}" type="submit" />
+			<select name="select_action" id="select_action">
+				{% for action in overview_actions %}<option value="{{ action.VALUE }}">{{ action.LABEL }}</option>{% endfor %}
+			</select>
+			&nbsp; <input class="button1" name="submit" value="{{ lang('GO') }}" type="submit" />
 			<div><a href="#" onclick="marklist('overview_action', 'action', true); return false;">{{ lang('MARK_ALL') }}</a> :: <a href="#" onclick="marklist('overview_action', 'action', false); return false;">{{ lang('UNMARK_ALL') }}</a></div>
 		</fieldset>
 		{% endif %}

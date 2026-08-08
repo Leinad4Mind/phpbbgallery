@@ -474,7 +474,12 @@ class moderate
 		$select = '<select name="select_action" id="select_action">';
 		foreach ($actions as $id => $var)
 		{
-			$select .= '<option value="' . $id . '">' . $this->lang->lang($var) . '</option>';
+			$label = $this->lang->lang($var);
+			$select .= '<option value="' . $id . '">' . $label . '</option>';
+			$this->template->assign_block_vars('overview_actions', [
+				'VALUE' => $id,
+				'LABEL' => $label,
+			]);
 		}
 		$select .= '</select>';
 		$this->template->assign_vars([
