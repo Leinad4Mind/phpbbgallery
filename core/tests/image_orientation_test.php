@@ -116,8 +116,28 @@ final class image_orientation_test extends TestCase
 			$this->assertStringContainsString('function change_read_write()', $javascript, $style);
 			$this->assertStringContainsString('id="desc_length_{{ image.S_ROW_COUNT }}"', $template, $style);
 			$this->assertLessThan(
+				strpos($template, 'for="image_num"'),
+				strpos($template, 'id="same_name"'),
+				$style
+			);
+			$this->assertLessThan(
 				strpos($template, 'for="image_name_{{ image.S_ROW_COUNT }}"'),
 				strpos($template, 'for="image_num"'),
+				$style
+			);
+		}
+	}
+
+	public function test_shared_name_controls_precede_each_style_image_name_field(): void
+	{
+		$root = dirname(__DIR__) . '/styles';
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$template = (string) file_get_contents($root . '/' . $style . '/template/gallery/posting_body.html');
+
+			$this->assertLessThan(
+				strpos($template, 'for="image_name_{{ image.S_ROW_COUNT }}"'),
+				strpos($template, 'id="same_name"'),
 				$style
 			);
 		}
