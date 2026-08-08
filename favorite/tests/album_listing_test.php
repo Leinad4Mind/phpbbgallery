@@ -57,7 +57,7 @@ final class album_listing_test extends TestCase
 		$this->assertStringContainsString('data-ajax="false"', $template);
 		$this->assertStringContainsString('data-favorited="', $template);
 		$this->assertStringContainsString('data-toggle-url="{{ image.U_FAVORITE_IMAGE_TOGGLE }}"', $template);
-		$this->assertStringContainsString('class="gallery-favorite-icon icon', $template);
+		$this->assertStringContainsString('class="gallery-favorite-icon icon fa ', $template);
 		$this->assertStringContainsString('.gallery-favorite-icon.fa-heart', $stylesheet);
 		$this->assertStringContainsString("INCLUDECSS '@phpbbgallery_favorite/favorite.css'", $head);
 		$this->assertStringContainsString("INCLUDEJS '@phpbbgallery_favorite/favorite.js'", $head);
