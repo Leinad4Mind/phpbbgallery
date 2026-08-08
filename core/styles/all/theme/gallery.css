@@ -10,8 +10,21 @@
 .phpbbgallery-image-page.is-loading
 {
 	cursor: progress;
-	opacity: 0.55;
+	opacity: 0.72;
 	pointer-events: none;
+}
+
+.phpbbgallery-image-page.is-entering
+{
+	opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce)
+{
+	.phpbbgallery-image-page
+	{
+		transition: none;
+	}
 }
 
 .phpbbgallery-image-subtitle

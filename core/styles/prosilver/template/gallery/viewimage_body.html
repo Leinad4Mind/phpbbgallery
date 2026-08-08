@@ -1,6 +1,6 @@
+{% include 'gallery/gallery_header.html' %}
 <div id="phpbbgallery-image-page" class="phpbbgallery-image-page" data-gallery-image-page data-ajax-navigation="{% if S_AJAX_IMAGE_NAVIGATION %}1{% else %}0{% endif %}" data-loading-label="{{ lang('LOADING') }}">
 <p class="phpbbgallery-image-navigation-status sr-only" role="status" aria-live="polite"></p>
-{% include 'gallery/gallery_header.html' %}
 <h2>{{ lang('IMAGE_NAME') }}{{ lang('COLON') }}<a href="{{ S_ALBUM_ACTION }}" style="display: inline;"> {{ IMAGE_NAME }}</a></h2>
 {% if IMAGE_SUBTITLE %}<p class="phpbbgallery-image-subtitle">{% if U_IMAGE_SUBTITLE_SEARCH %}<a href="{{ U_IMAGE_SUBTITLE_SEARCH }}" title="{{ lang('SEARCH') }}">{{ IMAGE_SUBTITLE }}</a>{% else %}{{ IMAGE_SUBTITLE }}{% endif %}</p>{% endif %}
 
@@ -409,8 +409,8 @@
 <br /><br />
 {% endif %}
 <br />
-{% include 'gallery/gallery_footer.html' %}
 </div>
+{% include 'gallery/gallery_footer.html' %}
 {% if S_AJAX_IMAGE_NAVIGATION %}{% INCLUDEJS '@phpbbgallery_core/js/image_navigation.js' %}{% endif %}
 {% INCLUDEJS '@phpbbgallery_core/js/comment_counter.js' %}
 {% INCLUDEJS '@phpbbgallery_core/js/rating.js' %}

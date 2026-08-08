@@ -249,8 +249,8 @@ final class template_syntax_test extends TestCase
 			$this->assertStringContainsString('data-gallery-image-navigation="previous"', $view_image, $style);
 			$this->assertStringContainsString('data-gallery-image-navigation="next"', $view_image, $style);
 			$this->assertStringContainsString("INCLUDEJS '@phpbbgallery_core/js/image_navigation.js'", $view_image, $style);
-			$this->assertLessThan(strpos($view_image, "include 'gallery/gallery_header.html'"), strpos($view_image, 'data-gallery-image-page'), $style);
-			$this->assertGreaterThan(strpos($view_image, "include 'gallery/gallery_footer.html'"), strrpos($view_image, '</div>'), $style);
+			$this->assertGreaterThan(strpos($view_image, "include 'gallery/gallery_header.html'"), strpos($view_image, 'data-gallery-image-page'), $style);
+			$this->assertLessThan(strpos($view_image, "include 'gallery/gallery_footer.html'"), strrpos($view_image, '</div>'), $style);
 		}
 
 		$javascript = (string) file_get_contents($core_root . '/styles/all/template/js/image_navigation.js');
@@ -262,7 +262,10 @@ final class template_syntax_test extends TestCase
 		$this->assertStringContainsString('window.location.assign(url)', $javascript);
 		$this->assertStringContainsString('phpbbgallery:imagechange', $javascript);
 		$this->assertStringContainsString('activateAjaxControls(importedRoot)', $javascript);
-		$this->assertStringContainsString('phpbb.ajaxify({', $javascript);
+		$this->assertStringContainsString('window.phpbb.ajaxify({', $javascript);
+		$this->assertStringContainsString('pageReplaced = true', $javascript);
+		$this->assertStringContainsString('if (!pageReplaced)', $javascript);
+		$this->assertStringContainsString("root.classList.add('is-entering')", $javascript);
 		$this->assertStringContainsString('requestId !== requestSequence', $javascript);
 	}
 

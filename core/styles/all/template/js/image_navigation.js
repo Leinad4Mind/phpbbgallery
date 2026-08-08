@@ -51,11 +51,29 @@
 			if (callback === 'false') {
 				return;
 			}
-			phpbb.ajaxify({
+			window.phpbb.ajaxify({
 				selector: this,
 				refresh: control.attr('data-refresh') !== undefined,
-				filter: filter !== undefined ? phpbb.getFunctionByName(filter) : null,
+				filter: filter !== undefined && typeof window.phpbb.getFunctionByName === 'function' ? window.phpbb.getFunctionByName(filter) : null,
 				callback: callback !== 'true' ? callback : null
+			});
+		});
+	}
+
+	function reportEnhancementError(error) {
+		if (window.console && typeof window.console.error === 'function') {
+			window.console.error('Gallery image navigation enhancement failed', error);
+		}
+	}
+
+	function revealRoot(root) {
+		if (typeof window.requestAnimationFrame !== 'function') {
+			return;
+		}
+		root.classList.add('is-entering');
+		window.requestAnimationFrame(function () {
+			window.requestAnimationFrame(function () {
+				root.classList.remove('is-entering');
 			});
 		});
 	}
@@ -68,6 +86,7 @@
 		}
 
 		var requestId = ++requestSequence;
+		var pageReplaced = false;
 		if (activeRequest && activeRequest.abort) {
 			activeRequest.abort();
 		}
@@ -99,6 +118,7 @@
 			var scrollPosition = window.pageYOffset;
 			var importedRoot = document.importNode(nextRoot, true);
 			liveRoot.parentNode.replaceChild(importedRoot, liveRoot);
+			pageReplaced = true;
 			if (parsedDocument.title) {
 				document.title = parsedDocument.title;
 			}
@@ -106,8 +126,13 @@
 				history.pushState({phpbbgalleryImageNavigation: true}, '', result.url);
 			}
 			window.scrollTo(0, scrollPosition);
-			activateAjaxControls(importedRoot);
-			notifyChange(importedRoot, result.url);
+			revealRoot(importedRoot);
+			try {
+				activateAjaxControls(importedRoot);
+				notifyChange(importedRoot, result.url);
+			} catch (error) {
+				reportEnhancementError(error);
+			}
 			activeRequest = null;
 		}).catch(function (error) {
 			if (requestId !== requestSequence || (error && error.name === 'AbortError')) {
@@ -117,7 +142,12 @@
 			if (liveRoot) {
 				setLoading(liveRoot, false);
 			}
-			window.location.assign(url);
+			activeRequest = null;
+			if (!pageReplaced) {
+				window.location.assign(url);
+			} else {
+				reportEnhancementError(error);
+			}
 		});
 	}
 
