@@ -82,12 +82,6 @@
 				<dl id="upload_field_{{ upload_image.S_ROW_COUNT }}">
 					<dt><label for="image_file_{{ upload_image.S_ROW_COUNT }}">{{ lang('FILE') }}{{ lang('COLON') }}</label></dt>
 					<dd><input class="inputbox" type="file" onchange="add_field();" tabindex="1{{ upload_image.S_ROW_COUNT }}" id="image_file_{{ upload_image.S_ROW_COUNT }}" name="image_file_{{ upload_image.S_ROW_COUNT }}" size="52" /></dd>
-					{% if S_ALLOW_ROTATE %}
-						<dd><input type="radio" name="rotate[{{ upload_image.S_ROW_COUNT }}]" id="rotate_{{ upload_image.S_ROW_COUNT }}_0" value="0" checked="checked" /> <label for="rotate_{{ upload_image.S_ROW_COUNT }}_0">{{ lang('ROTATE_NONE') }}</label> &nbsp;
-							<input type="radio" name="rotate[{{ upload_image.S_ROW_COUNT }}]" id="rotate_{{ upload_image.S_ROW_COUNT }}_270" value="270" /> <label for="rotate_{{ upload_image.S_ROW_COUNT }}_270">{{ lang('ROTATE_RIGHT') }}</label> &nbsp;
-						<input type="radio" name="rotate[{{ upload_image.S_ROW_COUNT }}]" id="rotate_{{ upload_image.S_ROW_COUNT }}_180" value="180" /> <label for="rotate_{{ upload_image.S_ROW_COUNT }}_180">{{ lang('ROTATE_UPSIDEDOWN') }}</label> &nbsp;
-							<input type="radio" name="rotate[{{ upload_image.S_ROW_COUNT }}]" id="rotate_{{ upload_image.S_ROW_COUNT }}_90" value="90" /> <label for="rotate_{{ upload_image.S_ROW_COUNT }}_90">{{ lang('ROTATE_LEFT') }}</label></dd>
-					{% endif %}
 				</dl>
 			{% endfor %}
 		</fieldset>
@@ -120,6 +114,7 @@
 {% else %}
 
 {% include 'gallery/posting_javascript.html' %}
+{% INCLUDEJS '@phpbbgallery_core/js/image_orientation.js' %}
 
 {% if U_VIEW_IMAGE %}<h2>{{ lang('IMAGE_NAME') }}{{ lang('COLON') }}<a href="{{ U_VIEW_IMAGE }}" style="display: inline;"> {{ IMAGE_NAME }}</a></h2>{% else %}<h2>{{ lang('ALBUM_NAME') }}{{ lang('COLON') }}<a href="{{ U_VIEW_ALBUM }}" style="display: inline;"> {{ ALBUM_NAME }}</a></h2>{% endif %}
 
@@ -154,8 +149,8 @@
 		</fieldset>
 		<fieldset class="fields1">
 			{% for image in image %}
-				<dl>
-					<dt{% if image.S_FIRST_ROW and (NUM_IMAGES > 1) %} class="first"{% endif %}><a href="{{ U_IMAGE_ACTION }}" style="max-width: 95%; max-height: 95%">{{ image.U_IMAGE }}</a></dt>
+				<dl data-gallery-orientation-item>
+					<dt{% if image.S_FIRST_ROW and (NUM_IMAGES > 1) %} class="first"{% endif %}><span class="gallery-orientation-preview" data-gallery-orientation-preview><a href="{{ U_IMAGE_ACTION }}" style="max-width: 95%; max-height: 95%">{{ image.U_IMAGE }}</a></span></dt>
 					<dd>
 						<dl>
 							<dt><label for="image_name_{{ image.S_ROW_COUNT }}">{{ lang('IMAGE_NAME') }}{{ lang('COLON') }}</label></dt>
@@ -174,16 +169,12 @@
 							<dd id="desc_length_{{ image.S_ROW_COUNT }}" class="gallery-comment-guidance"><span id="description-limit-{{ image.S_ROW_COUNT }}" data-gallery-comment-guidance-text>{{ lang('DESCRIPTION_LENGTH') }}</span><output id="description-counter-{{ image.S_ROW_COUNT }}" class="gallery-comment-counter" data-gallery-character-counter-output hidden aria-live="polite" aria-atomic="true"></output></dd>
 							<dd><textarea name="message[{{ image.S_ROW_COUNT }}]" id="message_{{ image.S_ROW_COUNT }}" rows="4" cols="76" tabindex="3" data-gallery-character-counter data-gallery-counter-output-id="description-counter-{{ image.S_ROW_COUNT }}" data-gallery-max-length="{{ DESCRIPTION_MAX_LENGTH }}" aria-describedby="description-limit-{{ image.S_ROW_COUNT }} description-counter-{{ image.S_ROW_COUNT }}" onchange="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %}" onselect="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %} storeCaret(this);" onclick="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %} storeCaret(this);" onkeyup="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %} storeCaret(this);" class="inputbox">{{ image.IMAGE_DESC }}</textarea></dd>
 						</dl>
+						{% if S_ALLOW_ROTATE %}
 						<dl>
-							{% if S_ALLOW_ROTATE %}
-							<dt><label for="rotate_{{ image.S_ROW_COUNT }}_0">{{ lang('ROTATE_IMAGE') }}{{ lang('COLON') }}</label></dt>
-							<dd><input type="radio" name="rotate[{{ image.S_ROW_COUNT }}]" id="rotate_{{ image.S_ROW_COUNT }}_0" value="0" checked="checked" /> <label for="rotate_{{ image.S_ROW_COUNT }}_0">{{ lang('ROTATE_NONE') }}</label> &nbsp;
-								<input type="radio" name="rotate[{{ image.S_ROW_COUNT }}]" id="rotate_{{ image.S_ROW_COUNT }}_270" value="270" /> <label for="rotate_{{ image.S_ROW_COUNT }}_270">{{ lang('ROTATE_RIGHT') }}</label> &nbsp;
-								<input type="radio" name="rotate[{{ image.S_ROW_COUNT }}]" id="rotate_{{ image.S_ROW_COUNT }}_180" value="180" /> <label for="rotate_{{ image.S_ROW_COUNT }}_180">{{ lang('ROTATE_UPSIDEDOWN') }}</label> &nbsp;
-								<input type="radio" name="rotate[{{ image.S_ROW_COUNT }}]" id="rotate_{{ image.S_ROW_COUNT }}_90" value="90" /> <label for="rotate_{{ image.S_ROW_COUNT }}_90">{{ lang('ROTATE_LEFT') }}</label>
-							</dd>
-							{% endif %}
+							<dt><label>{{ lang('TRANSFORM_IMAGE') }}{{ lang('COLON') }}</label></dt>
+							<dd>{% include '@phpbbgallery_core/gallery/image_orientation_controls.html' %}</dd>
 						</dl>
+						{% endif %}
 					</dd>
 				</dl>
 				{% EVENT phpbbgallery_core_edit_image_addfields %}

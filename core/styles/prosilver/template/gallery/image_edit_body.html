@@ -1,6 +1,7 @@
 {% include 'gallery/gallery_header.html' %}
 
 {% include 'gallery/posting_javascript.html' %}
+{% INCLUDEJS '@phpbbgallery_core/js/image_orientation.js' %}
 
 <h2>{% if U_VIEW_IMAGE %}<a href="{{ U_VIEW_IMAGE }}">{{ IMAGE_NAME }}</a>{% else %}<a href="{{ U_VIEW_ALBUM }}">{{ ALBUM_NAME }}</a>{% endif %}</h2>
 
@@ -35,8 +36,8 @@
 
 			{% for image in image %}
 				<hr />
-				<dl>
-					<dt class="simulate-dt{% if image.S_FIRST_ROW and (NUM_IMAGES > 1) %} first{% endif %}">{{ image.U_IMAGE }}</dt>
+				<dl data-gallery-orientation-item>
+					<dt class="simulate-dt gallery-orientation-preview{% if image.S_FIRST_ROW and (NUM_IMAGES > 1) %} first{% endif %}" data-gallery-orientation-preview>{{ image.U_IMAGE }}</dt>
 					<dd class="simulate-dt"><label for="image_name_{{ image.S_ROW_COUNT }}">{{ lang('IMAGE_NAME') }}{{ lang('COLON') }}</label></dd>
 					{% if image.S_FIRST_ROW and (NUM_IMAGES > 1) %}
 						<dd class="simulate-dd"><input type="checkbox" name="same_name" id="same_name" value="1" onchange="change_read_write();" /> <label for="same_name">{{ lang('USE_SAME_NAME') }}</label></dd>
@@ -49,11 +50,8 @@
 					<dd class="simulate-dd" id="desc_length_{{ image.S_ROW_COUNT }}">{{ lang('DESCRIPTION_LENGTH') }}</dd>
 					<dd class="simulate-dd"><textarea name="message[{{ image.S_ROW_COUNT }}]" id="message_{{ image.S_ROW_COUNT }}" rows="4" cols="76" tabindex="3" onchange="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %}" onselect="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %} storeCaret(this);" onclick="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %} storeCaret(this);" onkeyup="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %} storeCaret(this);" class="inputbox">{{ image.IMAGE_DESC }}</textarea></dd>
 					{% if S_ALLOW_ROTATE %}
-					<dd class="simulate-dt"><label for="rotate_{{ image.S_ROW_COUNT }}_0">{{ lang('ROTATE_IMAGE') }}{{ lang('COLON') }}</label></dd>
-					<dd class="simulate-dd"><input type="radio" name="rotate[{{ image.S_ROW_COUNT }}]" id="rotate_{{ image.S_ROW_COUNT }}_0" value="0" checked="checked" /> <label for="rotate_{{ image.S_ROW_COUNT }}_0">{{ lang('ROTATE_NONE') }}</label> &nbsp;
-						<input type="radio" name="rotate[{{ image.S_ROW_COUNT }}]" id="rotate_{{ image.S_ROW_COUNT }}_270" value="270" /> <label for="rotate_{{ image.S_ROW_COUNT }}_270">{{ lang('ROTATE_RIGHT') }}</label> &nbsp;
-						<input type="radio" name="rotate[{{ image.S_ROW_COUNT }}]" id="rotate_{{ image.S_ROW_COUNT }}_180" value="180" /> <label for="rotate_{{ image.S_ROW_COUNT }}_180">{{ lang('ROTATE_UPSIDEDOWN') }}</label> &nbsp;
-						<input type="radio" name="rotate[{{ image.S_ROW_COUNT }}]" id="rotate_{{ image.S_ROW_COUNT }}_90" value="90" /> <label for="rotate_{{ image.S_ROW_COUNT }}_90">{{ lang('ROTATE_LEFT') }}</label></dd>
+					<dd class="simulate-dt"><label>{{ lang('TRANSFORM_IMAGE') }}{{ lang('COLON') }}</label></dd>
+					<dd class="simulate-dd">{% include '@phpbbgallery_core/gallery/image_orientation_controls.html' %}</dd>
 					{% endif %}
 				</dl>
 				{% EVENT phpbbgallery_core_edit_image_addfields %}

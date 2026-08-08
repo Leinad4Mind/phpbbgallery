@@ -125,11 +125,12 @@ class orphan_upload_security_test extends TestCase
 		$this->assertStringContainsString("variable('message', [''], true, request_interface::POST)", $section);
 		$this->assertStringContainsString("variable('upload_ids', [''], false, request_interface::POST)", $section);
 		$this->assertStringContainsString("variable('rotate', [0], false, request_interface::POST)", $section);
+		$this->assertStringContainsString("variable('orientation', [], false, request_interface::POST)", $section);
 		$this->assertStringContainsString("variable('image_name', [''], true, request_interface::POST)", $section);
 		$this->assertStringContainsString("variable('image_subtitle', [''], true, request_interface::POST)", $section);
 		$this->assertStringContainsString("variable('image_num', 0, false, request_interface::POST)", $section);
 		$this->assertStringContainsString("variable('same_name', false, false, request_interface::POST)", $section);
-		$this->assertSame(7, substr_count($section, 'request_interface::POST'));
+		$this->assertSame(9, substr_count($section, 'request_interface::POST'));
 	}
 
 	public function test_every_upload_edit_form_submits_a_phpbb_form_token(): void

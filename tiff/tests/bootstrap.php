@@ -23,6 +23,7 @@ if (!class_exists('Imagick'))
 		private string $format = 'TIFF';
 		private int $width = 1;
 		private int $height = 1;
+		private int $frames = 1;
 
 		public static function queryFormats(string $pattern = '*'): array
 		{
@@ -74,6 +75,9 @@ if (!class_exists('Imagick'))
 			return true;
 		}
 
+		public function flopImage(): bool { return true; }
+		public function getNumberImages(): int { return $this->frames; }
+
 		public function thumbnailImage(int $max_width, int $max_height, bool $best_fit = false): bool
 		{
 			$scale = min(1, $max_width / $this->width, $max_height / $this->height);
@@ -113,13 +117,14 @@ if (!class_exists('Imagick'))
 		{
 			$source = preg_replace('/\[0\]$/D', '', $source);
 			$content = is_string($source) ? @file_get_contents($source) : false;
-			if (!is_string($content) || preg_match('/^FAKE:([A-Z]+):(\d+):(\d+)/D', $content, $matches) !== 1)
+			if (!is_string($content) || preg_match('/^FAKE:([A-Z]+):(\d+):(\d+)(?::(\d+))?/D', $content, $matches) !== 1)
 			{
 				throw new RuntimeException('Invalid fake image.');
 			}
 			$this->format = $matches[1];
 			$this->width = (int) $matches[2];
 			$this->height = (int) $matches[3];
+			$this->frames = isset($matches[4]) ? max(1, (int) $matches[4]) : 1;
 
 			return true;
 		}
@@ -133,6 +138,7 @@ if (!class_exists('Imagick'))
 	}
 }
 
+require_once dirname(__DIR__, 2) . '/core/image/orientation.php';
 require_once dirname(__DIR__) . '/processor.php';
 require_once dirname(__DIR__) . '/event/listener.php';
 require_once dirname(__DIR__, 2) . '/acpimport/acp/import_storage.php';

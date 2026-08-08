@@ -12,6 +12,8 @@
 
 namespace phpbbgallery\core\file;
 
+use phpbbgallery\core\image\orientation;
+
 /**
  * A little class for all the actions that the gallery does on images.
 *
@@ -630,14 +632,28 @@ class file
 	 */
 	public function rotate_image(int $angle, bool $ignore_dimensions): void
 	{
-		if (!function_exists('imagerotate'))
+		$this->transform_image(orientation::from_legacy_rotation($angle), $ignore_dimensions);
+	}
+
+	/**
+	 * Apply one of the eight EXIF-compatible right-angle orientations.
+	 */
+	public function transform_image(int $image_orientation, bool $ignore_dimensions): void
+	{
+		$image_orientation = orientation::normalize($image_orientation);
+		if ($image_orientation === orientation::ORIGINAL)
 		{
-			$this->errors[] = ['ROTATE_IMAGE_FUNCTION', $angle];
 			return;
 		}
-		if (($angle <= 0) || (($angle % 90) != 0))
+		if (!function_exists('imagerotate') || !function_exists('imageflip'))
 		{
-			$this->errors[] = ['ROTATE_IMAGE_ANGLE', $angle];
+			$this->errors[] = ['IMAGE_TRANSFORM_FUNCTION'];
+			return;
+		}
+		if (strtolower((string) pathinfo($this->image_source, PATHINFO_EXTENSION)) === 'gif'
+			&& orientation::is_animated_gif($this->image_source))
+		{
+			$this->errors[] = ['IMAGE_TRANSFORM_ANIMATED_UNSUPPORTED'];
 			return;
 		}
 
@@ -649,7 +665,7 @@ class file
 				return;
 			}
 		}
-		$swap_dimensions = (($angle / 90) % 2) == 1;
+		$swap_dimensions = orientation::swaps_dimensions($image_orientation);
 		if ($swap_dimensions)
 		{
 			// Left or Right, we need to switch the height and width
@@ -678,30 +694,46 @@ class file
 			$background_colour = imagecolorallocatealpha($this->image, 0, 0, 0, 127);
 		}
 
-		$source_image = $this->image;
-		$rotated_image = imagerotate($source_image, $angle, $background_colour);
-		if ($rotated_image === false)
+		$rotation = match ($image_orientation)
 		{
-			$this->errors[] = ['ROTATE_IMAGE_FUNCTION', $angle];
-			return;
+			orientation::ROTATE_180, orientation::MIRROR_VERTICAL => 180,
+			orientation::MIRROR_HORIZONTAL_ROTATE_LEFT, orientation::ROTATE_RIGHT => 270,
+			orientation::MIRROR_HORIZONTAL_ROTATE_RIGHT, orientation::ROTATE_LEFT => 90,
+			default => 0,
+		};
+		if ($rotation !== 0)
+		{
+			$rotated_image = imagerotate($this->image, $rotation, $background_colour);
+			if (!$rotated_image instanceof \GdImage)
+			{
+				$this->errors[] = ['IMAGE_TRANSFORM_FUNCTION'];
+				return;
+			}
+			$this->image = $rotated_image;
 		}
 
 		if ($preserve_alpha)
 		{
-			imagealphablending($rotated_image, false);
-			imagesavealpha($rotated_image, true);
+			imagealphablending($this->image, false);
+			imagesavealpha($this->image, true);
 		}
 
-		$this->image = $rotated_image;
-		unset($source_image);
-
-		if ($swap_dimensions)
+		$flip = match ($image_orientation)
 		{
-			$new_width = $this->image_size['height'];
-			$this->image_size['height'] = $this->image_size['width'];
-			$this->image_size['width'] = $new_width;
+			orientation::MIRROR_VERTICAL => IMG_FLIP_VERTICAL,
+			orientation::MIRROR_HORIZONTAL,
+			orientation::MIRROR_HORIZONTAL_ROTATE_LEFT,
+			orientation::MIRROR_HORIZONTAL_ROTATE_RIGHT => IMG_FLIP_HORIZONTAL,
+			default => null,
+		};
+		if ($flip !== null && !imageflip($this->image, $flip))
+		{
+			$this->errors[] = ['IMAGE_TRANSFORM_FUNCTION'];
+			return;
 		}
 
+		$this->image_size['width'] = imagesx($this->image);
+		$this->image_size['height'] = imagesy($this->image);
 		$this->rotated = true;
 	}
 

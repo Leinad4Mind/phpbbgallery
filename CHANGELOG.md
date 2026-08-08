@@ -6,6 +6,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Added
 
+- Added a visual second-step image transformation editor with live previews, composable left/right/180-degree rotation, horizontal/vertical flipping, batch application, automatic JPEG EXIF orientation correction and fail-closed protection for animated GIF and multipage TIFF sources.
 - Added a conditional Imagick diagnostic to the Core ACP whenever the TIFF add-on package is present, validating the PHP extension, bounded resource APIs, TIFF decoding and WebP encoding without presenting Imagick as a Core requirement.
 - Added accessible contextual-help dialogs to every Gallery ACP resynchronisation and cache operation, explaining what each repair changes, when it is appropriate and when routine Gallery behavior already keeps the data current.
 - Added a browser-persisted Simple/Complete ACP view switch for add-on-supplied settings: Simple keeps the compact top colour legend and a colour-only explanation while hiding repeated inline badges, while Complete also retains the inline puzzle badges and full explanatory text.

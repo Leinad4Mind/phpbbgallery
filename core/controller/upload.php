@@ -432,7 +432,6 @@ class upload
 					'S_UPLOAD_FILETYPES_AVAILABLE' => !empty($allowed_extensions),
 					'S_ALBUM_ACTION'      => $this->helper->route('phpbbgallery_core_album_upload', ['album_id' => $album_id]),
 					'S_UPLOAD'            => true,
-					'S_ALLOW_ROTATE'      => ($this->gallery_config->get('allow_rotate') && function_exists('imagerotate')),
 					'S_UPLOAD_LIMIT'      => $upload_files_limit,
 					'L_ALLOW_COMMENTS'    => $this->language->lang('ALLOW_COMMENTS_ARY', $upload_files_limit),
 				]);
@@ -520,7 +519,16 @@ class upload
 
 				$process = $this->gallery_upload;
 				$process->set_up($album_id, $upload_files_limit);
-				$process->set_rotating($this->request->variable('rotate', [0], false, request_interface::POST));
+				$orientations = $this->request->variable('orientation', [], false, request_interface::POST);
+				if ($orientations)
+				{
+					$process->set_orientations($orientations);
+				}
+				else
+				{
+					// Compatibility with old templates and resumable forms.
+					$process->set_rotating($this->request->variable('rotate', [0], false, request_interface::POST));
+				}
 				$process->get_images($upload_ids);
 				if (!$process->images)
 				{
@@ -576,10 +584,16 @@ class upload
 					}
 
 					$success = true;
+					$finalized_image_ids = [];
 					foreach ($process->images as $image_id)
 					{
-						$success = $success && $process->update_image($image_id, !$this->auth->acl_check('i_approve', $album_id, $album_data['album_user_id']), $album_data);
-						if (!$is_alternate_author && $this->gallery_user->get_data('watch_own'))
+						$image_success = $process->update_image($image_id, !$this->auth->acl_check('i_approve', $album_id, $album_data['album_user_id']), $album_data);
+						$success = $image_success && $success;
+						if ($image_success)
+						{
+							$finalized_image_ids[] = $image_id;
+						}
+						if ($image_success && !$is_alternate_author && $this->gallery_user->get_data('watch_own'))
 						{
 							$this->gallery_notification->add($image_id, $upload_author_id);
 						}
@@ -587,32 +601,40 @@ class upload
 
 					$message = '';
 					$error = implode('<br />', $process->errors);
-					if ($this->auth->acl_check('i_approve', $album_id, $album_data['album_user_id']))
+					if ($finalized_image_ids && $this->auth->acl_check('i_approve', $album_id, $album_data['album_user_id']))
 					{
 						$message .= (!$error) ? $this->language->lang('ALBUM_UPLOAD_SUCCESSFUL') : $this->language->lang('ALBUM_UPLOAD_SUCCESSFUL_ERROR', $error);
 						$meta_refresh_time = ($success) ? 3 : 20;
 						$data = [
 							'targets'    => [$upload_author_id],
 							'album_id'   => (int) $album_id,
-							'last_image' => end($process->images),
+							'last_image' => end($finalized_image_ids),
 						];
 						$this->notification_helper->new_image($data);
 					}
-					else
+					else if ($finalized_image_ids)
 					{
 						$target = [
 							'album_id'   => (int) $album_id,
-							'last_image' => end($process->images),
+							'last_image' => end($finalized_image_ids),
 							'uploader'   => $upload_author_id,
 						];
 						$this->notification_helper->notify('approval', $target);
 						$message .= (!$error) ? $this->language->lang('ALBUM_UPLOAD_NEED_APPROVAL') : $this->language->lang('ALBUM_UPLOAD_NEED_APPROVAL_ERROR', $error);
 						$meta_refresh_time = 20;
 					}
+					else
+					{
+						$message .= $error !== '' ? $error : $this->language->lang('GENERAL_ERROR');
+						$meta_refresh_time = 20;
+					}
 					$message .= '<br /><br />' . sprintf($this->language->lang('CLICK_RETURN_ALBUM'), '<a href="' . $album_backlink . '">', '</a>');
 
-					$this->image->handle_counter($process->images, true);
-					$this->album->update_info($album_id);
+					if ($finalized_image_ids)
+					{
+						$this->image->handle_counter($finalized_image_ids, true);
+						$this->album->update_info($album_id);
+					}
 
 					$this->url->meta_refresh($meta_refresh_time, $album_backlink);
 					trigger_error($message);
@@ -620,6 +642,7 @@ class upload
 			}
 
 			$num_images = 0;
+			$review_orientations = $this->request->variable('orientation', [], false, request_interface::POST);
 			foreach ($process->images as $image_id)
 			{
 				$data = $process->image_data[$image_id];
@@ -628,6 +651,7 @@ class upload
 					'IMAGE_NAME' => $data['image_name'],
 					'IMAGE_SUBTITLE' => $image_subtitles[$num_images] ?? ($data['image_subtitle'] ?? ''),
 					'IMAGE_DESC' => $description_array[$num_images] ?? $data['image_desc'],
+					'ORIENTATION' => \phpbbgallery\core\image\orientation::normalize((int) ($review_orientations[$num_images] ?? 1)),
 				];
 
 				/**
@@ -652,7 +676,7 @@ class upload
 				'upload_ids' => $process->generate_hidden_fields(),
 			]);
 
-			$s_can_rotate = ($this->gallery_config->get('allow_rotate') && function_exists('imagerotate'));
+			$s_can_rotate = ($this->gallery_config->get('allow_rotate') && function_exists('imagerotate') && function_exists('imageflip'));
 			$this->template->assign_vars([
 				'ERROR'          => $error,
 				'S_UPLOAD_EDIT'  => true,

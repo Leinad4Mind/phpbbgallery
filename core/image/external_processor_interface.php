@@ -22,7 +22,7 @@ interface external_processor_interface
 	/**
 	 * Apply requested source transformations in place and return verified metadata.
 	 *
-	 * @param array{max_width: int, max_height: int, max_filesize: int, allow_resize: bool, rotation: int} $options
+	 * @param array{max_width: int, max_height: int, max_filesize: int, allow_resize: bool, orientation?: int, rotation?: int} $options
 	 * @return array{extension: string, mime: string, width: int, height: int, filesize: int}|null
 	 */
 	public function prepare_source(string $source, array $options): ?array;

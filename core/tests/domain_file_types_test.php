@@ -11,6 +11,7 @@ namespace phpbbgallery\core\tests;
 
 use phpbbgallery\core\file\file;
 use phpbbgallery\core\file\types\multiform;
+use phpbbgallery\core\image\orientation;
 use PHPUnit\Framework\TestCase;
 
 final class domain_file_types_test extends TestCase
@@ -173,6 +174,32 @@ final class domain_file_types_test extends TestCase
 				unlink($destination);
 			}
 		}
+	}
+
+	public function test_horizontal_flip_moves_pixels_without_changing_dimensions(): void
+	{
+		if (!function_exists('imagecreatetruecolor') || !function_exists('imageflip'))
+		{
+			$this->markTestSkipped('The GD extension with image flipping support is required.');
+		}
+
+		$image = imagecreatetruecolor(2, 1);
+		$red = imagecolorallocate($image, 255, 0, 0);
+		$blue = imagecolorallocate($image, 0, 0, 255);
+		imagesetpixel($image, 0, 0, $red);
+		imagesetpixel($image, 1, 0, $blue);
+		$file = (new \ReflectionClass(file::class))->newInstanceWithoutConstructor();
+		$file->image = $image;
+		$file->image_type = 'png';
+		$file->image_size = ['width' => 2, 'height' => 1];
+
+		$file->transform_image(orientation::MIRROR_HORIZONTAL, true);
+
+		$this->assertTrue($file->rotated);
+		$this->assertSame(['width' => 2, 'height' => 1], $file->image_size);
+		$this->assertSame($blue, imagecolorat($file->image, 0, 0));
+		$this->assertSame($red, imagecolorat($file->image, 1, 0));
+		$file->image = null;
 	}
 
 	public function test_write_image_releases_gd_reference_when_requested(): void

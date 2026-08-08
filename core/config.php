@@ -30,6 +30,7 @@ class config
 		'allow_rates'		=> true,
 		'allow_resize'		=> true,
 		'allow_rotate'		=> true,
+		'auto_orient'		=> true,
 		'allow_zip'			=> false,
 		'ajax_navigation'	=> false,
 		'bbcode_tag'		=> 'image',

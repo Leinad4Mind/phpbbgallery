@@ -92,6 +92,11 @@ final class domain_upload_types_test extends TestCase
 		$this->assertSame(90, $upload->get_rotating());
 		$this->set_property($upload, 'file_count', 1);
 		$this->assertSame(0, $upload->get_rotating());
+		$upload->set_orientations([2, 6]);
+		$this->set_property($upload, 'file_count', 0);
+		$this->assertSame(2, $upload->get_orientation());
+		$this->set_property($upload, 'file_count', 1);
+		$this->assertSame(6, $upload->get_orientation());
 
 		$upload->images = [7, 9];
 		$upload->image_data = [

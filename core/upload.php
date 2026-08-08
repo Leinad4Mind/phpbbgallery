@@ -152,6 +152,7 @@ class upload
 	private array $file_names = [];
 	private array $file_subtitles = [];
 	private array $file_rotating = [];
+	private array $file_orientations = [];
 	private array $zip_file_data = [];
 	private bool $allow_zip = true;
 
@@ -666,8 +667,24 @@ class upload
 		$vars = ['additional_sql_data', 'image_data', 'album_data', 'file_link', 'image_id'];
 		extract($this->phpbb_dispatcher->trigger_event('phpbbgallery.core.upload.update_image_before', compact($vars)));
 
-		// Rotate image
-		if (!$this->prepare_file_update($image_id, $file_link))
+		$transform_requested = $this->gallery_config->get('allow_rotate')
+			&& $this->get_orientation() !== \phpbbgallery\core\image\orientation::ORIGINAL;
+		$file_changed = $this->prepare_file_update($image_id, $file_link);
+		if ($transform_requested && !$file_changed)
+		{
+			$source_object->release();
+			if ($this->tools->errors)
+			{
+				$this->new_error($this->language->lang($this->tools->errors[0][0]));
+			}
+			else
+			{
+				$this->new_error($this->language->lang('IMAGE_TRANSFORM_FAILED', $this->image_data[$image_id]['image_name']));
+			}
+			return false;
+		}
+
+		if (!$file_changed)
 		{
 			/**
 			* Event upload image update
@@ -771,7 +788,7 @@ class upload
 	}
 
 	/**
-	* Prepare file on upload: rotate and resize
+	* Prepare file on upload: orient, transform and resize
 	*/
 	public function prepare_file(): int|false
 	{
@@ -811,6 +828,7 @@ class upload
 			return false;
 		}
 
+		$this->tools->errors = [];
 		$this->tools->set_image_options($this->max_filesize, $this->gallery_config->get('max_height'), $this->gallery_config->get('max_width'));
 		$this->tools->set_image_data($this->file->get('destination_file'), '', $source_filesize, true);
 		$external_processor = $this->format_registry?->processor_for_filename($this->file->get('destination_file'));
@@ -826,7 +844,7 @@ class upload
 
 			$width = (int) $metadata['width'];
 			$height = (int) $metadata['height'];
-			$rotation = $this->gallery_config->get('allow_rotate') ? $this->get_rotating() : 0;
+			$image_orientation = $this->get_requested_orientation($this->file->get('destination_file'));
 			$oversized = $width > $this->gallery_config->get('max_width') || $height > $this->gallery_config->get('max_height');
 			if ($oversized && !$allow_resize)
 			{
@@ -835,14 +853,14 @@ class upload
 				return false;
 			}
 
-			if ($rotation || $oversized || $source_filesize > $this->max_filesize)
+			if ($image_orientation !== \phpbbgallery\core\image\orientation::ORIGINAL || $oversized || $source_filesize > $this->max_filesize)
 			{
 				$metadata = $external_processor->prepare_source($this->file->get('destination_file'), [
 					'max_width' => (int) $this->gallery_config->get('max_width'),
 					'max_height' => (int) $this->gallery_config->get('max_height'),
 					'max_filesize' => $this->max_filesize,
 					'allow_resize' => $allow_resize,
-					'rotation' => $rotation,
+					'orientation' => $image_orientation,
 				]);
 				if ($metadata === null
 					|| !$this->format_registry->accepts_metadata($this->file->get('destination_file'), $metadata)
@@ -875,10 +893,17 @@ class upload
 			return false;
 		}
 
-		// Rotate the image
-		if ($this->gallery_config->get('allow_rotate') && $this->get_rotating())
+		// Correct EXIF orientation or apply a requested right-angle transformation.
+		$image_orientation = $this->get_requested_orientation($this->file->get('destination_file'));
+		if ($image_orientation !== \phpbbgallery\core\image\orientation::ORIGINAL)
 		{
-			$this->tools->rotate_image($this->get_rotating(), $this->gallery_config->get('allow_resize'));
+			$this->tools->transform_image($image_orientation, $this->gallery_config->get('allow_resize'));
+			if ($this->tools->errors)
+			{
+				$this->file->remove();
+				$this->new_error($this->language->lang('UPLOAD_ERROR', $this->file->get('uploadname'), $this->language->lang($this->tools->errors[0][0])));
+				return false;
+			}
 			if ($this->tools->rotated)
 			{
 				$this->file->height = $this->tools->image_size['height'];
@@ -939,7 +964,7 @@ class upload
 
 	/**
 	 * Prepare file on second upload step.
-	 * You can still rotate the image there.
+	 * The image can still be rotated or flipped there.
 	 *
 	 * @param int $image_id
 	 * @param string $source_path Materialized source path, when already available
@@ -956,13 +981,16 @@ class upload
 			);
 			$source_path = $source_object->get_path();
 		}
+		$this->tools->errors = [];
 		$this->tools->set_image_options($this->max_filesize, $this->gallery_config->get('max_height'), $this->gallery_config->get('max_width'));
 		$this->tools->set_image_data($source_path, '', 0, true);
 		$external_processor = $this->format_registry?->processor_for_filename($this->image_data[$image_id]['image_filename']);
 		if ($external_processor !== null)
 		{
-			$rotation = $this->gallery_config->get('allow_rotate') ? $this->get_rotating() : 0;
-			if (!$rotation)
+			$image_orientation = $this->gallery_config->get('allow_rotate')
+				? $this->get_orientation()
+				: \phpbbgallery\core\image\orientation::ORIGINAL;
+			if ($image_orientation === \phpbbgallery\core\image\orientation::ORIGINAL)
 			{
 				if ($source_object !== null)
 				{
@@ -976,7 +1004,7 @@ class upload
 				'max_height' => (int) $this->gallery_config->get('max_height'),
 				'max_filesize' => $this->max_filesize,
 				'allow_resize' => (bool) $this->gallery_config->get('allow_resize'),
-				'rotation' => $rotation,
+				'orientation' => $image_orientation,
 			]);
 			if ($metadata === null
 				|| !$this->format_registry->accepts_metadata($this->image_data[$image_id]['image_filename'], $metadata)
@@ -1010,10 +1038,13 @@ class upload
 			return true;
 		}
 
-		// Rotate the image
-		if ($this->gallery_config->get('allow_rotate') && $this->get_rotating())
+		// Transform the image.
+		$image_orientation = $this->gallery_config->get('allow_rotate')
+			? $this->get_orientation()
+			: \phpbbgallery\core\image\orientation::ORIGINAL;
+		if ($image_orientation !== \phpbbgallery\core\image\orientation::ORIGINAL)
 		{
-			$this->tools->rotate_image($this->get_rotating(),$this->gallery_config->get('allow_resize'));
+			$this->tools->transform_image($image_orientation, $this->gallery_config->get('allow_resize'));
 			if ($this->tools->rotated)
 			{
 				if (!$this->tools->write_image($this->tools->image_source, $this->gallery_config->get('jpg_quality'), true))
@@ -1227,6 +1258,19 @@ class upload
 	public function set_rotating(array $data): void
 	{
 		$this->file_rotating = array_map('intval', $data);
+		$this->file_orientations = array_map(
+			static fn(int $angle): int => \phpbbgallery\core\image\orientation::from_legacy_rotation($angle),
+			$this->file_rotating
+		);
+	}
+
+	/** Set EXIF-compatible orientations for each reviewed image. */
+	public function set_orientations(array $data): void
+	{
+		$this->file_orientations = array_map(
+			static fn($value): int => \phpbbgallery\core\image\orientation::normalize((int) $value),
+			$data
+		);
 	}
 
 	public function set_allow_comments(bool $value): void
@@ -1272,16 +1316,40 @@ class upload
 
 	public function get_rotating(): int
 	{
+		return \phpbbgallery\core\image\orientation::to_legacy_rotation($this->get_orientation());
+	}
+
+	public function get_orientation(): int
+	{
+		if (isset($this->file_orientations[$this->file_count]))
+		{
+			return \phpbbgallery\core\image\orientation::normalize($this->file_orientations[$this->file_count]);
+		}
 		if (!isset($this->file_rotating[$this->file_count]))
 		{
-			// If the template is still outdated, you'd get an error here...
-			return 0;
+			return \phpbbgallery\core\image\orientation::ORIGINAL;
 		}
 		if (($this->file_rotating[$this->file_count] % 90) != 0)
 		{
-			return 0;
+			return \phpbbgallery\core\image\orientation::ORIGINAL;
 		}
-		return $this->file_rotating[$this->file_count];
+
+		return \phpbbgallery\core\image\orientation::from_legacy_rotation($this->file_rotating[$this->file_count]);
+	}
+
+	private function get_requested_orientation(string $source): int
+	{
+		$requested = $this->gallery_config->get('allow_rotate')
+			? $this->get_orientation()
+			: \phpbbgallery\core\image\orientation::ORIGINAL;
+		if ($requested !== \phpbbgallery\core\image\orientation::ORIGINAL)
+		{
+			return $requested;
+		}
+
+		return $this->gallery_config->get('auto_orient')
+			? \phpbbgallery\core\image\orientation::from_exif($source)
+			: \phpbbgallery\core\image\orientation::ORIGINAL;
 	}
 
 	public function get_name(): string

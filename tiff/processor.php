@@ -11,6 +11,7 @@ namespace phpbbgallery\tiff;
 
 use phpbbgallery\core\file\file;
 use phpbbgallery\core\image\external_processor_interface;
+use phpbbgallery\core\image\orientation;
 
 /** Decode TIFF originals with bounded Imagick resources and create WebP derivatives. */
 final class processor implements external_processor_interface
@@ -66,20 +67,28 @@ final class processor implements external_processor_interface
 		$max_height = max(1, (int) ($options['max_height'] ?? 0));
 		$max_filesize = max(1, min(self::MAX_SOURCE_FILESIZE, (int) ($options['max_filesize'] ?? 0)));
 		$allow_resize = !empty($options['allow_resize']);
-		$rotation = (int) ($options['rotation'] ?? 0);
-		if (!in_array($rotation, [0, 90, 180, 270], true))
+		$requested_orientation = $options['orientation'] ?? null;
+		if ($requested_orientation !== null && ((int) $requested_orientation < 1 || (int) $requested_orientation > 8))
 		{
 			return null;
 		}
+		$image_orientation = $requested_orientation !== null
+			? orientation::normalize((int) $requested_orientation)
+			: orientation::from_legacy_rotation((int) ($options['rotation'] ?? 0));
 
 		$oversized = $metadata['width'] > $max_width || $metadata['height'] > $max_height;
 		if (($oversized || $metadata['filesize'] > $max_filesize) && !$allow_resize)
 		{
 			return null;
 		}
-		if (!$rotation && !$oversized && $metadata['filesize'] <= $max_filesize)
+		if ($image_orientation === orientation::ORIGINAL && !$oversized && $metadata['filesize'] <= $max_filesize)
 		{
 			return $metadata;
+		}
+		if ($this->number_of_images($source) !== 1)
+		{
+			// Rewriting only frame zero would silently destroy a multipage TIFF.
+			return null;
 		}
 
 		$image = $this->read_first_frame($source);
@@ -97,9 +106,20 @@ final class processor implements external_processor_interface
 
 		try
 		{
-			if ($rotation)
+			if ($image_orientation !== orientation::ORIGINAL)
 			{
-				$image->rotateImage(new \ImagickPixel('none'), $rotation);
+				$rotation = orientation::clockwise_rotation($image_orientation);
+				if ($rotation !== 0)
+				{
+					$image->rotateImage(new \ImagickPixel('none'), $rotation);
+				}
+				if (orientation::is_mirrored($image_orientation))
+				{
+					if (!method_exists($image, 'flopImage') || !$image->flopImage())
+					{
+						return null;
+					}
+				}
 				$image->setImagePage(0, 0, 0, 0);
 			}
 			if ($image->getImageWidth() > $max_width || $image->getImageHeight() > $max_height)
@@ -295,6 +315,30 @@ final class processor implements external_processor_interface
 		{
 			$image->clear();
 			return null;
+		}
+	}
+
+	private function number_of_images(string $source): ?int
+	{
+		$image = new \Imagick();
+		try
+		{
+			$this->apply_resource_limits();
+			$image->pingImage($source);
+			if (!method_exists($image, 'getNumberImages'))
+			{
+				return null;
+			}
+
+			return max(0, (int) $image->getNumberImages());
+		}
+		catch (\Throwable)
+		{
+			return null;
+		}
+		finally
+		{
+			$image->clear();
 		}
 	}
 

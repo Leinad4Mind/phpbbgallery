@@ -80,6 +80,18 @@ final class processor_test extends TestCase
 		$this->assertSame('image/tiff', $metadata['mime']);
 	}
 
+	public function test_multipage_source_is_not_flattened_by_a_transformation(): void
+	{
+		$source = $this->directory . '/multipage.tiff';
+		file_put_contents($source, "FAKE:TIFF:120:80:3\n");
+		$before = hash_file('sha256', $source);
+		$options = $this->options();
+		$options['orientation'] = 2;
+
+		$this->assertNull((new processor(new \phpbb\config\config([])))->prepare_source($source, $options));
+		$this->assertSame($before, hash_file('sha256', $source));
+	}
+
 	public function test_oversized_source_is_rejected_without_resize_and_not_modified(): void
 	{
 		$source = $this->image('rejected.tiff', 1200, 800);

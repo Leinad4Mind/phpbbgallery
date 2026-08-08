@@ -1412,8 +1412,17 @@ class image
 				}
 			}
 
-			$rotate = $this->request->variable('rotate', [0]);
-			$rotate = (isset($rotate[0])) ? $rotate[0] : 0;
+			$orientations = $this->request->variable('orientation', []);
+			if ($orientations)
+			{
+				$orientation = \phpbbgallery\core\image\orientation::normalize((int) ($orientations[0] ?? 1));
+			}
+			else
+			{
+				$rotate_data = $this->request->variable('rotate', [0]);
+				$orientation = \phpbbgallery\core\image\orientation::from_legacy_rotation((int) ($rotate_data[0] ?? 0));
+			}
+			$rotate = \phpbbgallery\core\image\orientation::to_legacy_rotation($orientation);
 			$file_changed = false;
 
 			/**
@@ -1425,18 +1434,20 @@ class image
 			 * @var array image_data  Current image database row
 			 * @var array album_data  Current album database row
 			 * @var array errors      Validation errors; listeners may append messages
-			 * @var int   rotate      Requested rotation in degrees
+			 * @var int   orientation Requested EXIF-compatible orientation
+			 * @var int   rotate      Legacy requested rotation in degrees
 			 * @var bool  file_changed Set true when a listener replaced the source file
 			 * @since 3.4.0
 			 */
-			$vars = ['image_id', 'image_data', 'album_data', 'errors', 'rotate', 'file_changed'];
+			$vars = ['image_id', 'image_data', 'album_data', 'errors', 'orientation', 'rotate', 'file_changed'];
 			extract($this->dispatcher->trigger_event('phpbbgallery.core.image_edit_file', compact($vars)));
 
-			if (!$errors && !$file_changed && $this->gallery_config->get('allow_rotate') && ($rotate > 0) && (($rotate % 90) == 0))
+			if (!$errors && !$file_changed && $this->gallery_config->get('allow_rotate')
+				&& $orientation !== \phpbbgallery\core\image\orientation::ORIGINAL)
 			{
-				if (!$this->rotate_stored_image((string) $image_data['image_filename'], $rotate))
+				if (!$this->transform_stored_image((string) $image_data['image_filename'], $orientation))
 				{
-					$errors[] = $this->language->lang('GENERAL_ERROR');
+					$errors[] = $this->language->lang('IMAGE_TRANSFORM_FAILED', $image_data['image_name']);
 				}
 				else
 				{
@@ -1517,6 +1528,9 @@ class image
 			'IMAGE_NAME' => $disp_image_data['image_name'],
 			'IMAGE_SUBTITLE' => $disp_image_data['image_subtitle'] ?? '',
 			'IMAGE_DESC' => $message_parser->message,
+			'ORIENTATION' => isset($orientation)
+				? \phpbbgallery\core\image\orientation::normalize((int) $orientation)
+				: \phpbbgallery\core\image\orientation::ORIGINAL,
 		];
 
 		/**
@@ -1551,7 +1565,7 @@ class image
 			'S_ALLOW_COMMENTS'   => $image_data['image_allow_comments'],
 
 			'NUM_IMAGES'       => 1,
-			'S_ALLOW_ROTATE'   => ($this->gallery_config->get('allow_rotate') && function_exists('imagerotate')),
+			'S_ALLOW_ROTATE'   => ($this->gallery_config->get('allow_rotate') && function_exists('imagerotate') && function_exists('imageflip')),
 			//'S_MOVE_PERSONAL'	=> (($this->galley_auth->acl_check('i_upload', $this->galley_auth::OWN_ALBUM) || phpbb_gallery::$user->get_data('personal_album_id')) || ($user->data['user_id'] != $image_data['image_user_id'])) ? true : false,
 			'S_MOVE_MODERATOR' => ($this->user->data['user_id'] != $image_data['image_user_id']) ? true : false,
 		]);
@@ -1560,10 +1574,10 @@ class image
 	}
 
 	/**
-	 * Rotate a verified local copy, atomically replace the active source and
+	 * Transform a verified local copy, atomically replace the active source and
 	 * invalidate derivatives only after publication succeeds.
 	 */
-	protected function rotate_stored_image(string $filename, int $angle): bool
+	protected function transform_stored_image(string $filename, int $orientation): bool
 	{
 		if ($filename === '' || $this->storage_workspace === null || $this->image_tools === null)
 		{
@@ -1579,6 +1593,36 @@ class image
 				$filename
 			);
 			$output = $this->storage_workspace->create_temporary($filename);
+			$registry = isset($this->phpbb_container) && $this->phpbb_container->has('phpbbgallery.core.image.format_registry')
+				? $this->phpbb_container->get('phpbbgallery.core.image.format_registry')
+				: null;
+			$external_processor = $registry?->processor_for_filename($filename);
+			if ($external_processor !== null)
+			{
+				if (!@copy($source->get_path(), $output->get_path()))
+				{
+					return false;
+				}
+				$metadata = $external_processor->prepare_source($output->get_path(), [
+					'max_width' => (int) $this->gallery_config->get('max_width'),
+					'max_height' => (int) $this->gallery_config->get('max_height'),
+					'max_filesize' => (int) $this->gallery_config->get('max_filesize'),
+					'allow_resize' => (bool) $this->gallery_config->get('allow_resize'),
+					'orientation' => $orientation,
+				]);
+				if ($metadata === null || !$registry->accepts_metadata($filename, $metadata))
+				{
+					return false;
+				}
+				$this->storage_workspace->replace(
+					\phpbbgallery\core\storage\provider_interface::SOURCE,
+					$filename,
+					$output->get_path()
+				);
+				$this->image_tools->delete_cache($filename);
+
+				return true;
+			}
 
 			$this->image_tools->errors = [];
 			$this->image_tools->set_image_options(
@@ -1587,7 +1631,7 @@ class image
 				$this->gallery_config->get('max_width')
 			);
 			$this->image_tools->set_image_data($source->get_path(), '', 0, true);
-			$this->image_tools->rotate_image($angle, $this->gallery_config->get('allow_rotate'));
+			$this->image_tools->transform_image($orientation, $this->gallery_config->get('allow_resize'));
 			if (!$this->image_tools->rotated || $this->image_tools->errors)
 			{
 				return false;
@@ -1627,6 +1671,15 @@ class image
 				$source->release();
 			}
 		}
+	}
+
+	/** Backward-compatible helper for tests and third-party subclasses. */
+	protected function rotate_stored_image(string $filename, int $angle): bool
+	{
+		return $this->transform_stored_image(
+			$filename,
+			\phpbbgallery\core\image\orientation::from_legacy_rotation($angle)
+		);
 	}
 
 	// Delete image

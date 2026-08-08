@@ -30,6 +30,7 @@ final class bmp_processor implements external_processor_interface
 			&& function_exists('imagecreatetruecolor')
 			&& function_exists('imagecopyresampled')
 			&& function_exists('imagerotate')
+			&& function_exists('imageflip')
 			&& (imagetypes() & IMG_BMP) === IMG_BMP
 			&& (imagetypes() & IMG_WEBP) === IMG_WEBP;
 	}
@@ -72,18 +73,21 @@ final class bmp_processor implements external_processor_interface
 		$max_height = max(1, (int) ($options['max_height'] ?? 0));
 		$max_filesize = max(1, min(self::MAX_SOURCE_FILESIZE, (int) ($options['max_filesize'] ?? 0)));
 		$allow_resize = !empty($options['allow_resize']);
-		$rotation = (int) ($options['rotation'] ?? 0);
-		if (!in_array($rotation, [0, 90, 180, 270], true))
+		$requested_orientation = $options['orientation'] ?? null;
+		if ($requested_orientation !== null && ((int) $requested_orientation < 1 || (int) $requested_orientation > 8))
 		{
 			return null;
 		}
+		$image_orientation = $requested_orientation !== null
+			? orientation::normalize((int) $requested_orientation)
+			: orientation::from_legacy_rotation((int) ($options['rotation'] ?? 0));
 
 		$oversized = $metadata['width'] > $max_width || $metadata['height'] > $max_height;
 		if (($oversized || $metadata['filesize'] > $max_filesize) && !$allow_resize)
 		{
 			return null;
 		}
-		if (!$rotation && !$oversized && $metadata['filesize'] <= $max_filesize)
+		if ($image_orientation === orientation::ORIGINAL && !$oversized && $metadata['filesize'] <= $max_filesize)
 		{
 			return $metadata;
 		}
@@ -101,14 +105,9 @@ final class bmp_processor implements external_processor_interface
 
 		try
 		{
-			if ($rotation)
+			if (!$this->transform($image, $image_orientation))
 			{
-				$rotated = @imagerotate($image, $rotation, 0);
-				if (!$rotated instanceof \GdImage)
-				{
-					return null;
-				}
-				$image = $rotated;
+				return null;
 			}
 
 			$resized = $this->fit($image, $max_width, $max_height);
@@ -260,6 +259,37 @@ final class bmp_processor implements external_processor_interface
 		}
 
 		return $this->resample($image, max(1, (int) floor($width * $ratio)), max(1, (int) floor($height * $ratio)));
+	}
+
+	private function transform(\GdImage &$image, int $image_orientation): bool
+	{
+		$rotation = match ($image_orientation)
+		{
+			orientation::ROTATE_180, orientation::MIRROR_VERTICAL => 180,
+			orientation::MIRROR_HORIZONTAL_ROTATE_LEFT, orientation::ROTATE_RIGHT => 270,
+			orientation::MIRROR_HORIZONTAL_ROTATE_RIGHT, orientation::ROTATE_LEFT => 90,
+			default => 0,
+		};
+		if ($rotation !== 0)
+		{
+			$rotated = @imagerotate($image, $rotation, 0);
+			if (!$rotated instanceof \GdImage)
+			{
+				return false;
+			}
+			$image = $rotated;
+		}
+
+		$flip = match ($image_orientation)
+		{
+			orientation::MIRROR_VERTICAL => IMG_FLIP_VERTICAL,
+			orientation::MIRROR_HORIZONTAL,
+			orientation::MIRROR_HORIZONTAL_ROTATE_LEFT,
+			orientation::MIRROR_HORIZONTAL_ROTATE_RIGHT => IMG_FLIP_HORIZONTAL,
+			default => null,
+		};
+
+		return $flip === null || @imageflip($image, $flip);
 	}
 
 	private function resample(\GdImage $source, int $width, int $height): ?\GdImage

@@ -1,0 +1,24 @@
+<div class="gallery-orientation-editor" data-gallery-orientation-editor data-orientation="{{ image.ORIENTATION|default(1) }}">
+	<input type="hidden" name="orientation[{{ image.S_ROW_COUNT }}]" value="{{ image.ORIENTATION|default(1) }}" data-gallery-orientation-input>
+	<div class="gallery-orientation-toolbar" role="toolbar" aria-label="{{ lang('TRANSFORM_IMAGE') }}">
+		<button type="button" class="button2 btn btn-default" data-gallery-orientation-operation="reset" title="{{ lang('TRANSFORM_RESET') }}" aria-label="{{ lang('TRANSFORM_RESET') }}"><i class="fa fa-undo" aria-hidden="true"></i></button>
+		<button type="button" class="button2 btn btn-default" data-gallery-orientation-operation="8" title="{{ lang('ROTATE_LEFT') }}" aria-label="{{ lang('ROTATE_LEFT') }}"><i class="fa fa-rotate-left" aria-hidden="true"></i></button>
+		<button type="button" class="button2 btn btn-default" data-gallery-orientation-operation="3" title="{{ lang('ROTATE_UPSIDEDOWN') }}" aria-label="{{ lang('ROTATE_UPSIDEDOWN') }}">180°</button>
+		<button type="button" class="button2 btn btn-default" data-gallery-orientation-operation="6" title="{{ lang('ROTATE_RIGHT') }}" aria-label="{{ lang('ROTATE_RIGHT') }}"><i class="fa fa-rotate-right" aria-hidden="true"></i></button>
+		<button type="button" class="button2 btn btn-default" data-gallery-orientation-operation="2" title="{{ lang('FLIP_HORIZONTAL') }}" aria-label="{{ lang('FLIP_HORIZONTAL') }}"><i class="fa fa-arrows-h" aria-hidden="true"></i></button>
+		<button type="button" class="button2 btn btn-default" data-gallery-orientation-operation="4" title="{{ lang('FLIP_VERTICAL') }}" aria-label="{{ lang('FLIP_VERTICAL') }}"><i class="fa fa-arrows-v" aria-hidden="true"></i></button>
+	</div>
+	<output class="gallery-orientation-state" data-gallery-orientation-state aria-live="polite">{{ lang('ORIENTATION_1') }}</output>
+	{% if image.S_FIRST_ROW and NUM_IMAGES > 1 %}
+	<label class="gallery-orientation-apply-all"><input type="checkbox" data-gallery-orientation-apply-all> <span>{{ lang('APPLY_TRANSFORM_ALL') }}</span></label>
+	{% endif %}
+	<div hidden data-gallery-orientation-labels
+		data-orientation-1="{{ lang('ORIENTATION_1') }}"
+		data-orientation-2="{{ lang('ORIENTATION_2') }}"
+		data-orientation-3="{{ lang('ORIENTATION_3') }}"
+		data-orientation-4="{{ lang('ORIENTATION_4') }}"
+		data-orientation-5="{{ lang('ORIENTATION_5') }}"
+		data-orientation-6="{{ lang('ORIENTATION_6') }}"
+		data-orientation-7="{{ lang('ORIENTATION_7') }}"
+		data-orientation-8="{{ lang('ORIENTATION_8') }}"></div>
+</div>
