@@ -798,12 +798,22 @@ final class template_syntax_test extends TestCase
 		$gallery = (string) file_get_contents(dirname(__DIR__) . '/styles/FLATBOOTS/template/gallery/viewimage_body.html');
 		$viewtopic = (string) file_get_contents(dirname(__DIR__, 4) . '/styles/FLATBOOTS/template/viewtopic_body.html');
 
-		foreach (['class="btn-group btn-group-sm"', 'class="btn btn-default dropdown-toggle"', 'class="dropdown-menu dropdown-menu-right"', 'class="btn btn-default btn-sm"', 'class="default-contact"', 'mini-profile-contact mini-profile-control list-unstyled text-center'] as $markup)
+		foreach (['class="btn btn-default dropdown-toggle"', 'class="dropdown-menu dropdown-menu-right"', 'class="btn btn-default btn-sm"', 'class="default-contact"', 'mini-profile-contact mini-profile-control list-unstyled text-center'] as $markup)
 		{
 			$this->assertStringContainsString($markup, $gallery);
 			$this->assertStringContainsString($markup === 'class="dropdown-menu dropdown-menu-right"' ? 'dropdown-menu' : $markup, $viewtopic);
 		}
 
+		$this->assertStringContainsString('class="btn-group btn-group-sm visible-xs"', $gallery);
+		$desktop_start = strpos($gallery, 'class="btn-group btn-group-sm hidden-xs"');
+		$this->assertNotFalse($desktop_start);
+		$desktop_end = strpos($gallery, '</div>', $desktop_start);
+		$this->assertNotFalse($desktop_end);
+		$desktop_actions = substr($gallery, $desktop_start, $desktop_end - $desktop_start);
+		$this->assertSame(4, substr_count($desktop_actions, 'class="btn btn-default btn-sm"'));
+		$this->assertStringContainsString("lang('WHOIS')", $desktop_actions);
+		$this->assertStringContainsString('class="fa fa-info-circle"', $desktop_actions);
+		$this->assertStringNotContainsString("lang('IP')", $desktop_actions);
 		$this->assertStringNotContainsString('class="btn btn-xs btn-default" href="{{ commentrow.', $gallery);
 	}
 

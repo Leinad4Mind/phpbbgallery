@@ -73,7 +73,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Initialized the new original-download permission from each existing role's image-view permission, preserving historical source access while keeping the charge-bypass permission denied by default.
 - Clarified in every ACP language that image viewing covers album listings, individual pages and thumbnail/medium previews, while the download permissions govern original source files and require viewing access.
 - Added breathing room around the camera divider, separated checkbox labels, pinned the online ribbon to the comment avatar's top-right corner, placed quick-comment actions at opposite edges and extended the Unicode-aware live counter to image descriptions.
-- Reworked FLATBOOTS comment actions and profile contacts to follow the theme's native viewtopic toolbar, dropdown, quote-button and mini-profile contact patterns.
+- Reworked FLATBOOTS comment actions into an equal-height desktop toolbar and a mobile-only compact menu, labelled the Whois action correctly with a visible icon, and retained native mini-profile contact patterns.
 - Moved the BBPoints original-download counter into the image metadata immediately below the view counter in prosilver, BBOOTS and FLATBOOTS.
 - Matched the FLATBOOTS image action and Favorite buttons to the larger button size used by the theme's viewtopic toolbar.
 - Hid the individual EXIF field switches in the Gallery ACP while EXIF display is disabled, preserving their saved values and restoring them immediately when it is enabled again.

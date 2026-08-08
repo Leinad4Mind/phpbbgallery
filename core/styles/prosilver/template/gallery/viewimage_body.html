@@ -309,7 +309,7 @@
 					<ul class="post-buttons">
 						{% if commentrow.U_EDIT %}<li><a href="{{ commentrow.U_EDIT }}" title="{{ lang('EDIT_COMMENT') }}" class="button button-icon-only"><i class="icon fa-pencil fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('EDIT_COMMENT') }}</span></a></li>{% endif %}
 						{% if commentrow.U_DELETE %}<li><a href="{{ commentrow.U_DELETE }}" title="{{ lang('DELETE_COMMENT') }}" class="button button-icon-only"><i class="icon fa-times fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('DELETE_COMMENT') }}</span></a></li>{% endif %}
-						{% if commentrow.U_WHOIS %}<li><a href="{{ commentrow.U_WHOIS }}" title="{{ lang('IP') }}" onclick="popup(this.href, 750, 500); return false;" class="button button-icon-only"><i class="icon fa-info fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('IP') }}</span></a></li>{% endif %}
+						{% if commentrow.U_WHOIS %}<li><a href="{{ commentrow.U_WHOIS }}" title="{{ lang('WHOIS') }}" onclick="popup(this.href, 750, 500); return false;" class="button button-icon-only"><i class="icon fa-info-circle fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('WHOIS') }}</span></a></li>{% endif %}
 						{% if commentrow.U_QUOTE %}<li><a href="{{ commentrow.U_QUOTE }}" title="{{ lang('QUOTE_COMMENT') }}" class="button button-icon-only"><i class="icon fa-quote-left fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('QUOTE_COMMENT') }}</span></a></li>{% endif %}
 					</ul>
 				{% endif %}
