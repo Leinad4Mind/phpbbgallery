@@ -120,6 +120,17 @@ class exif
 					throw new \JsonException('EXIF data must decode to an array.');
 				}
 				$this->data = $decoded;
+				if (!self::has_supported_data($this->data))
+				{
+					// Older versions could persist an empty filtered cache as valid.
+					// Treat it as stale so the original is inspected again below.
+					$this->orig_status = null;
+					$this->status = self::UNKNOWN;
+					$this->data = [];
+					$this->serialized = '';
+					$this->read();
+					return;
+				}
 				$this->serialized = $data;
 			}
 			catch (\JsonException)
@@ -146,38 +157,30 @@ class exif
 			return;
 		}
 
-		$this->data = @exif_read_data($this->file, 0, true);
+		$read_data = @exif_read_data($this->file, 0, true);
 
-		if (!empty($this->data['EXIF']))
+		if (is_array($read_data))
 		{
-			// Unset invalid Exif's
-			foreach ($this->data as $key => $array)
-			{
-				if (!in_array($key, self::$allowed_groups))
-				{
-					unset($this->data[$key]);
-				}
-				else
-				{
-					foreach ($this->data[$key] as $subkey => $array)
-					{
-						if (!in_array($subkey, self::$allowed_keys))
-						{
-							unset($this->data[$key][$subkey]);
-						}
-					}
-				}
-			}
+			$this->data = self::filter_supported_data($read_data);
 
-			try
+			if (self::has_supported_data($this->data))
 			{
-				$this->serialized = json_encode(
-					$this->data,
-					JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE | JSON_THROW_ON_ERROR
-				);
-				$this->status = self::DBSAVED;
+				try
+				{
+					$this->serialized = json_encode(
+						$this->data,
+						JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE | JSON_THROW_ON_ERROR
+					);
+					$this->status = self::DBSAVED;
+				}
+				catch (\JsonException)
+				{
+					$this->data = [];
+					$this->serialized = '';
+					$this->status = self::UNAVAILABLE;
+				}
 			}
-			catch (\JsonException)
+			else
 			{
 				$this->data = [];
 				$this->serialized = '';
@@ -186,6 +189,8 @@ class exif
 		}
 		else
 		{
+			$this->data = [];
+			$this->serialized = '';
 			$this->status = self::UNAVAILABLE;
 		}
 
@@ -267,6 +272,25 @@ class exif
 		if (isset($this->data['IFD0']['Model']) && !is_array($this->data['IFD0']['Model']))
 		{
 			$this->prepared_data['exif_cam_model'] = ucwords($this->data['IFD0']['Model']);
+		}
+		if (isset($this->data['IFD0']['XResolution'], $this->data['IFD0']['YResolution']))
+		{
+			$x_resolution = self::rational_to_float($this->data['IFD0']['XResolution']);
+			$y_resolution = self::rational_to_float($this->data['IFD0']['YResolution']);
+			if ($x_resolution !== null && $y_resolution !== null)
+			{
+				$unit = match ((int) ($this->data['IFD0']['ResolutionUnit'] ?? 0))
+				{
+					2 => ' dpi',
+					3 => ' dpcm',
+					default => '',
+				};
+				$x_value = self::format_decimal($x_resolution);
+				$y_value = self::format_decimal($y_resolution);
+				$this->prepared_data['exif_resolution'] = ($x_value === $y_value)
+					? $x_value . $unit
+					: $x_value . ' × ' . $y_value . $unit;
+			}
 		}
 		if (isset($this->data['EXIF']['ExposureProgram']))
 		{
@@ -356,6 +380,85 @@ class exif
 	}
 
 	/**
+	 * Retain only metadata groups and keys that the Gallery can display.
+	 *
+	 * @param array $data Raw EXIF groups
+	 * @return array Filtered EXIF groups
+	 */
+	private static function filter_supported_data(array $data): array
+	{
+		$filtered = [];
+		foreach (self::$allowed_groups as $group)
+		{
+			if (!isset($data[$group]) || !is_array($data[$group]))
+			{
+				continue;
+			}
+
+			$filtered[$group] = array_intersect_key($data[$group], array_flip(self::$allowed_keys));
+		}
+
+		return $filtered;
+	}
+
+	/**
+	 * Whether at least one scalar metadata value can be presented.
+	 */
+	private static function has_supported_data(array $data): bool
+	{
+		foreach (self::$allowed_groups as $group)
+		{
+			foreach (($data[$group] ?? []) as $key => $value)
+			{
+				if (in_array($key, ['XResolution', 'YResolution', 'ResolutionUnit'], true))
+				{
+					continue;
+				}
+				if (in_array($key, self::$allowed_keys, true) && !is_array($value) && $value !== '')
+				{
+					return true;
+				}
+			}
+		}
+
+		return isset($data['IFD0']['XResolution'], $data['IFD0']['YResolution'])
+			&& self::rational_to_float($data['IFD0']['XResolution']) !== null
+			&& self::rational_to_float($data['IFD0']['YResolution']) !== null;
+	}
+
+	/**
+	 * Convert an EXIF rational number to a finite float.
+	 */
+	private static function rational_to_float(mixed $value): ?float
+	{
+		if (is_int($value) || is_float($value))
+		{
+			return is_finite((float) $value) ? (float) $value : null;
+		}
+		if (!is_string($value))
+		{
+			return null;
+		}
+
+		$parts = array_pad(explode('/', $value, 2), 2, '1');
+		if (!is_numeric($parts[0]) || !is_numeric($parts[1]) || (float) $parts[1] == 0.0)
+		{
+			return null;
+		}
+
+		$result = (float) $parts[0] / (float) $parts[1];
+		return is_finite($result) ? $result : null;
+	}
+
+	/**
+	 * Format a density without insignificant trailing zeroes.
+	 */
+	private static function format_decimal(float $value): string
+	{
+		return rtrim(rtrim(number_format($value, 2, '.', ''), '0'), '.');
+	}
+
+	/**
 	* There are lots of possible Exif Groups and Values.
 	* But you will never heard of the missing ones. so we just allow the most common ones.
 	*/
@@ -377,5 +480,8 @@ class exif
 		'ExposureProgram',
 		'ExposureBiasValue',
 		'MeteringMode',
+		'XResolution',
+		'YResolution',
+		'ResolutionUnit',
 	];
 }

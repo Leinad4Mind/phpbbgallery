@@ -182,6 +182,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Fixed EXIF images being treated as displayable while their filtered cache was empty: supported IFD0-only metadata is now rendered, resolution density is preserved, and stale caches are rebuilt from the original source on first view.
 - Neutralized prosilver's global icon padding inside Gallery Favorite hearts so the glyph remains visually centred in album and search-result buttons.
 - Made progressive image navigation replace only the Gallery image view instead of an invalid document-spanning container, added a smooth reduced-motion-aware transition and prevented post-swap enhancement errors from triggering a second full-page navigation.
 - Preserved phpBB's URL-session context on embedded medium images and thumbnails so protected images remain visible in the Favorite UCP and other internal listings on cookieless boards, without adding session IDs to shareable URLs.

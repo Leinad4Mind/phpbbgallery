@@ -171,6 +171,7 @@ class exif_listener implements EventSubscriberInterface
 		'exif_exposure_prog',
 		'exif_exposure_bias',
 		'exif_metering_mode',
+		'exif_resolution',
 	];
 
 	/**
@@ -389,10 +390,7 @@ class exif_listener implements EventSubscriberInterface
 				$exif = new \phpbbgallery\exif\exif($source->get_path(), (int) $event['image_id']);
 				$exif->interpret($event['image_data']['image_has_exif'], $event['image_data']['image_exif_data']);
 
-				if (!empty($exif->data['EXIF']))
-				{
-					$exif->send_to_template($this->gallery_user->get_data('user_viewexif'), 'exif_value', $this->get_enabled_fields());
-				}
+				$exif->send_to_template($this->gallery_user->get_data('user_viewexif'), 'exif_value', $this->get_enabled_fields());
 			}
 			catch (\RuntimeException)
 			{

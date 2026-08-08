@@ -68,6 +68,25 @@ class exif_display_filter_test extends TestCase
 		$this->assertSame(['EXIF_APERTURE', 'EXIF_CAM_MODEL'], $template->assigned_names());
 	}
 
+	public function test_resolution_density_is_presented_from_ifd0_without_a_photographic_exif_group(): void
+	{
+		global $template;
+
+		$handler = new exif('/missing/image.jpg');
+		$handler->data = [
+			'IFD0' => [
+				'XResolution' => '72/1',
+				'YResolution' => '72/1',
+				'ResolutionUnit' => 2,
+			],
+		];
+		$handler->send_to_template(true, 'exif_value', ['exif_resolution']);
+
+		$this->assertSame(['EXIF_RESOLUTION'], $template->assigned_names());
+		$this->assertSame('72 dpi', $template->blocks['exif_value'][0]['EXIF_VALUE']);
+		$this->assertTrue($template->vars['S_EXIF_DATA']);
+	}
+
 	public function test_disabling_every_field_hides_the_block_entirely(): void
 	{
 		global $template;
@@ -137,6 +156,7 @@ class exif_display_filter_test extends TestCase
 				'ACP_EXIF_SYNC_CONFIRM',
 				'ACP_EXIF_SYNC_PROGRESS',
 				'ACP_EXIF_SYNC_COMPLETE',
+				'EXIF_RESOLUTION',
 			];
 			foreach (exif_listener::DISPLAY_FIELDS as $field)
 			{
@@ -148,6 +168,14 @@ class exif_display_filter_test extends TestCase
 				$this->assertNotSame('', $lang[$key]);
 			}
 		}
+	}
+
+	public function test_resolution_density_migration_enables_the_new_field_for_existing_boards(): void
+	{
+		$migration = (string) file_get_contents(dirname(__DIR__) . '/migrations/m5_resolution_density.php');
+
+		$this->assertStringContainsString('m4_capture_sort', $migration);
+		$this->assertStringContainsString("'phpbb_gallery_exif_show_resolution', 1", $migration);
 	}
 
 	public function test_acp_field_switches_follow_the_master_exif_option(): void
@@ -203,6 +231,7 @@ class filter_test_user
 		'EXIF_ISO' => 'EXIF_ISO',
 		'EXIF_CAM_MODEL' => 'EXIF_CAM_MODEL',
 		'EXIF_FOCAL' => 'EXIF_FOCAL',
+		'EXIF_RESOLUTION' => 'EXIF_RESOLUTION',
 	];
 
 	public function add_lang_ext(string $extension, string $file): void

@@ -107,6 +107,41 @@ final class exif_test extends TestCase
 		$this->assertSame(0, preg_match('/(?<![a-zA-Z0-9_])unserialize\s*\(/', (string) file_get_contents(dirname(__DIR__) . '/exif.php')));
 	}
 
+	public function test_interpret_rebuilds_an_empty_legacy_cache(): void
+	{
+		$handler = new exif('/missing/image.jpg');
+		$handler->interpret(exif::DBSAVED, '{"IFD0":[],"EXIF":[]}');
+
+		$this->assertSame([], $handler->data);
+		$this->assertSame('', $handler->serialized);
+		$this->assertSame(exif::UNKNOWN, $handler->status);
+		$this->assertNull($handler->orig_status);
+	}
+
+	public function test_interpret_accepts_a_resolution_density_cache(): void
+	{
+		$metadata = [
+			'IFD0' => [
+				'XResolution' => '72/1',
+				'YResolution' => '72/1',
+				'ResolutionUnit' => 2,
+			],
+		];
+		$stored = json_encode($metadata, JSON_THROW_ON_ERROR);
+		$handler = new exif('/missing/image.jpg');
+		$handler->interpret(exif::DBSAVED, $stored);
+
+		$this->assertSame($metadata, $handler->data);
+		$this->assertSame($stored, $handler->serialized);
+		$this->assertSame(exif::DBSAVED, $handler->status);
+
+		$reflection = new \ReflectionClass(exif::class);
+		$allowed_keys = $reflection->getStaticPropertyValue('allowed_keys');
+		$this->assertContains('XResolution', $allowed_keys);
+		$this->assertContains('YResolution', $allowed_keys);
+		$this->assertContains('ResolutionUnit', $allowed_keys);
+	}
+
 	public function test_listener_registers_the_complete_event_map(): void
 	{
 		$this->assertSame([
@@ -164,6 +199,8 @@ final class exif_test extends TestCase
 		$this->assertStringContainsString('provider_interface::SOURCE', $source);
 		$this->assertStringContainsString('$source->release()', $source);
 		$this->assertStringNotContainsString('$this->gallery_url->path', $source);
+		$this->assertStringContainsString('$exif->send_to_template(', $source);
+		$this->assertStringNotContainsString("!empty(\$exif->data['EXIF'])", $source);
 		$this->assertStringContainsString('@phpbbgallery.core.storage.workspace', $services);
 	}
 
