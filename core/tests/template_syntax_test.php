@@ -22,7 +22,7 @@ final class template_syntax_test extends TestCase
 	public function test_modernized_templates_use_only_native_twig_syntax(): void
 	{
 		$template_paths = $this->template_paths();
-		$this->assertCount(196, $template_paths);
+		$this->assertCount(198, $template_paths);
 
 		foreach ($template_paths as $template_path)
 		{
@@ -571,7 +571,7 @@ final class template_syntax_test extends TestCase
 			}
 		}
 
-		$this->assertCount(92, $templates);
+		$this->assertCount(93, $templates);
 		foreach ($templates as $template)
 		{
 			$source = (string) file_get_contents($template);
@@ -721,13 +721,24 @@ final class template_syntax_test extends TestCase
 		}
 	}
 
-	public function test_flatboots_profile_image_count_uses_the_theme_statistic_weight(): void
+	public function test_profile_image_count_links_to_search_and_flatboots_uses_the_timeline(): void
 	{
-		$event = (string) file_get_contents(dirname(__DIR__) . '/styles/FLATBOOTS/template/event/memberlist_view_user_statistics_after.html');
+		$core_root = dirname(__DIR__);
+		$profile_card = (string) file_get_contents($core_root . '/styles/FLATBOOTS/template/event/memberlist_view_user_statistics_after.html');
+		$flatboots = (string) file_get_contents($core_root . '/styles/FLATBOOTS/template/event/ss_memberlist_view_timeline_item_middle.html');
 
-		$this->assertStringContainsString("{{ lang('GALLERY_IMAGES') }}", $event);
-		$this->assertStringContainsString('{{ U_GALLERY_IMAGES }}', $event);
-		$this->assertStringNotContainsString('<strong>{{ U_GALLERY_IMAGES }}</strong>', $event);
+		$this->assertStringNotContainsString('{{ U_GALLERY_IMAGES }}', $profile_card);
+		$this->assertStringContainsString("{{ lang('TOTAL_IMAGES') }}", $flatboots);
+		$this->assertStringContainsString('{{ U_GALLERY_IMAGES }}', $flatboots);
+		$this->assertStringContainsString('U_GALLERY_IMAGES_SEARCH', $flatboots);
+		$this->assertStringNotContainsString('<strong>{{ U_GALLERY_IMAGES }}</strong>', $flatboots);
+
+		foreach (['prosilver', 'BBOOTS'] as $style)
+		{
+			$event = (string) file_get_contents($core_root . '/styles/' . $style . '/template/event/memberlist_view_user_statistics_after.html');
+			$this->assertStringContainsString("lang('TOTAL_IMAGES')", $event, $style);
+			$this->assertStringContainsString('U_GALLERY_IMAGES_SEARCH', $event, $style);
+		}
 	}
 
 	public function test_topic_and_private_message_profiles_use_style_appropriate_events(): void

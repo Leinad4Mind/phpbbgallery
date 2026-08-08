@@ -1,1 +1,4 @@
-{% if U_GALLERY_IMAGES_ALLOW %}<dt>{{ lang('GALLERY_IMAGES') }}{{ lang('COLON') }}</dt> <dd><strong>{{ U_GALLERY_IMAGES }}</strong></dd>{% endif %}
+{% if U_GALLERY_IMAGES_ALLOW %}
+	<dt>{{ lang('TOTAL_IMAGES') }}{{ lang('COLON') }}</dt>
+	<dd>{{ U_GALLERY_IMAGES }}{% if S_DISPLAY_SEARCH and U_GALLERY_IMAGES_SEARCH %} | <strong><a href="{{ U_GALLERY_IMAGES_SEARCH }}">{{ lang('SEARCH_USER_IMAGES') }}</a></strong>{% endif %}</dd>
+{% endif %}

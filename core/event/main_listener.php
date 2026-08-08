@@ -281,9 +281,14 @@ class main_listener implements EventSubscriberInterface
 		// Now - do we show statistics
 		if ($this->gallery_config->get('profile_user_images') == 1)
 		{
+			$profile_user_id = (int) $event['member']['user_id'];
+			$image_count = $this->gallery_search->user_image_count($profile_user_id);
 			$this->template->assign_vars([
-				'U_GALLERY_IMAGES_ALLOW' => true,
-				'U_GALLERY_IMAGES'       => $this->gallery_search->user_image_count((int) $event['member']['user_id']),
+				'U_GALLERY_IMAGES_ALLOW'  => $image_count > 0,
+				'U_GALLERY_IMAGES'        => $image_count,
+				'U_GALLERY_IMAGES_SEARCH' => $image_count > 0
+					? $this->helper->route('phpbbgallery_core_search', ['user_id' => [$profile_user_id], 'submit' => 1])
+					: '',
 			]);
 		}
 	}

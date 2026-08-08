@@ -330,12 +330,46 @@ final class event_main_listener_types_test extends TestCase
 		$template->expects($this->once())->method('assign_vars')->with([
 			'U_GALLERY_IMAGES_ALLOW' => true,
 			'U_GALLERY_IMAGES' => 4,
+			'U_GALLERY_IMAGES_SEARCH' => '/gallery/search?user_id=12',
 		]);
+		$helper = $this->createMock(\phpbb\controller\helper::class);
+		$helper->expects($this->once())
+			->method('route')
+			->with('phpbbgallery_core_search', ['user_id' => [12], 'submit' => 1])
+			->willReturn('/gallery/search?user_id=12');
 		$listener = $this->listener($this->createStub(\phpbb\db\driver\driver_interface::class));
 		$this->set_property($listener, 'gallery_search', $gallery_search);
 		$this->set_property($listener, 'gallery_config', $config);
 		$this->set_property($listener, 'template', $template);
 		$this->set_property($listener, 'language', $this->createStub(\phpbb\language\language::class));
+		$this->set_property($listener, 'helper', $helper);
+
+		$listener->user_profile_galleries(new \phpbb\event\data(['member' => ['user_id' => 12]]));
+	}
+
+	public function test_profile_image_stat_is_hidden_and_unlinked_when_no_images_are_visible(): void
+	{
+		$gallery_search = $this->createMock(\phpbbgallery\core\search::class);
+		$gallery_search->expects($this->once())->method('user_image_count')->with(12)->willReturn(0);
+		$config = $this->createMock(\phpbbgallery\core\config::class);
+		$config->method('get')->willReturnMap([
+			['rrc_profile_mode', 0],
+			['profile_user_images', 1],
+		]);
+		$template = $this->createMock(\phpbb\template\template::class);
+		$template->expects($this->once())->method('assign_vars')->with([
+			'U_GALLERY_IMAGES_ALLOW' => false,
+			'U_GALLERY_IMAGES' => 0,
+			'U_GALLERY_IMAGES_SEARCH' => '',
+		]);
+		$helper = $this->createMock(\phpbb\controller\helper::class);
+		$helper->expects($this->never())->method('route');
+		$listener = $this->listener($this->createStub(\phpbb\db\driver\driver_interface::class));
+		$this->set_property($listener, 'gallery_search', $gallery_search);
+		$this->set_property($listener, 'gallery_config', $config);
+		$this->set_property($listener, 'template', $template);
+		$this->set_property($listener, 'language', $this->createStub(\phpbb\language\language::class));
+		$this->set_property($listener, 'helper', $helper);
 
 		$listener->user_profile_galleries(new \phpbb\event\data(['member' => ['user_id' => 12]]));
 	}
