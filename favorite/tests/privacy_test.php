@@ -42,4 +42,16 @@ final class privacy_test extends TestCase
 			$this->assertStringContainsString("'UCP_GALLERY_FAVORITES'", (string) file_get_contents($language_file), $language);
 		}
 	}
+
+	public function test_bootstrap_favorite_actions_keep_the_select_and_submit_button_together(): void
+	{
+		$root = dirname(__DIR__) . '/styles/';
+		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$template = (string) file_get_contents($root . $style . '/template/gallery/ucp_gallery_favorite.html');
+			$this->assertStringContainsString('class="input-group col-xs-12 col-sm-8 col-md-6"', $template, $style);
+			$this->assertStringContainsString('class="selectpicker" data-container="body" data-width="100%"', $template, $style);
+			$this->assertStringContainsString('class="input-group-btn"><button type="submit"', $template, $style);
+		}
+	}
 }
