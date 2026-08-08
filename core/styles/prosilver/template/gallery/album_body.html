@@ -116,4 +116,11 @@
 	<p>{% for rules in rules %}{{ rules.RULE }}<br />{% endfor %}</p>
 {% endif %}
 
+{% if not S_IN_GALLERY_POPUP %}
+	{% for information in gallery_album_information|default([]) %}
+		<h3>{{ information.TITLE }}</h3>
+		<p>{% for rule in information.rules %}{{ rule.RULE }}<br />{% else %}{{ lang('NOT_AVAILABLE') }}{% endfor %}</p>
+	{% endfor %}
+{% endif %}
+
 {% include 'gallery/gallery_footer.html' %}

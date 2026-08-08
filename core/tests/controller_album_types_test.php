@@ -243,4 +243,22 @@ final class controller_album_types_test extends TestCase
 			$this->assertStringNotContainsString('U_WATCH_TOGLE', $template, $style);
 		}
 	}
+
+	public function test_album_information_uses_native_responsive_panels_and_accepts_addon_rules(): void
+	{
+		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$template = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/album_body.html');
+			$this->assertStringContainsString('class="row gallery-album-information"', $template, $style);
+			$this->assertStringContainsString('class="panel panel-forum panel-whois"', $template, $style);
+			$this->assertStringContainsString("lang('ALBUM_PERMISSIONS')", $template, $style);
+			$this->assertStringContainsString('{% for information in gallery_album_information|default([]) %}', $template, $style);
+			$this->assertStringContainsString('{% for rule in information.rules %}', $template, $style);
+			$this->assertStringNotContainsString('<div class="side-segment"><h3>{{ lang(\'ALBUM_PERMISSIONS\') }}</h3></div>', $template, $style);
+		}
+
+		$prosilver = (string) file_get_contents(dirname(__DIR__) . '/styles/prosilver/template/gallery/album_body.html');
+		$this->assertStringContainsString('{% for information in gallery_album_information|default([]) %}', $prosilver);
+		$this->assertStringContainsString('{{ information.TITLE }}', $prosilver);
+	}
 }
