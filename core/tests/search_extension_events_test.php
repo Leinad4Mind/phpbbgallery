@@ -130,11 +130,17 @@ final class search_extension_events_test extends TestCase
 			$this->assertStringContainsString('input-group input-group-sm', $template, $style);
 			$this->assertSame(2, substr_count($template, '<li class="active"><a>{{ PAGE_NUMBER }}</a></li>'), $style);
 			$this->assertStringNotContainsString("{% else %}\n\t\t\t\t{{ PAGE_NUMBER }}", $template, $style);
+			$this->assertStringContainsString('class="gallery-search-results-footer-toolbar"', $template, $style);
+			$this->assertStringContainsString('class="gallery-search-results-sort"', $template, $style);
+			$this->assertStringContainsString('class="gallery-search-results-sort-controls"', $template, $style);
+			$this->assertStringNotContainsString('imagerow|length', $template, $style);
 		}
 
 		$css = (string) file_get_contents(dirname(__DIR__) . '/styles/all/theme/gallery.css');
 		$this->assertStringContainsString('.gallery-search-results-toolbar', $css);
 		$this->assertStringContainsString('max-width: 360px;', $css);
+		$this->assertStringContainsString('.gallery-search-results-footer-toolbar', $css);
+		$this->assertStringContainsString('max-width: 560px;', $css);
 	}
 
 	public function test_search_exposes_bounded_sort_and_result_enrichment_events(): void
