@@ -976,6 +976,14 @@ input.autowidth-gallery {
 	z-index: 10050;
 }
 
+fieldset dl.gallery-autocomplete-row-open
+{
+	display: flow-root;
+	overflow: visible;
+	position: relative;
+	z-index: 10040;
+}
+
 .gallery-author-suggestions
 {
 	background: #fff;

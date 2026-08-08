@@ -15,6 +15,7 @@
 		input.dataset.galleryAuthorReady = '1';
 
 		var container = input.closest('.input-group') || input.parentElement;
+		var row = container.closest('dl');
 		var suggestions = document.createElement('ul');
 		var searchTimer = 0;
 		var requestNumber = 0;
@@ -59,6 +60,9 @@
 			suggestions.hidden = true;
 			suggestions.textContent = '';
 			container.classList.remove('is-open');
+			if (row) {
+				row.classList.remove('gallery-autocomplete-row-open');
+			}
 			activeIndex = -1;
 			input.setAttribute('aria-expanded', 'false');
 			input.removeAttribute('aria-activedescendant');
@@ -73,7 +77,7 @@
 
 		function show(items) {
 			close();
-			items.forEach(function (item, index) {
+			items.slice(0, 10).forEach(function (item, index) {
 				var value = String(item.value || item.label || '').trim();
 				if (!value) {
 					return;
@@ -95,6 +99,9 @@
 			if (suggestions.children.length) {
 				suggestions.hidden = false;
 				container.classList.add('is-open');
+				if (row) {
+					row.classList.add('gallery-autocomplete-row-open');
+				}
 				input.setAttribute('aria-expanded', 'true');
 			}
 		}

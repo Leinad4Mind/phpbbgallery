@@ -136,8 +136,15 @@ final class upload_alternate_author_test extends TestCase
 			'/\.gallery-author-suggestions\s*\{[^}]*z-index:\s*10060;[^}]*\}/s',
 			$stylesheet
 		);
+		$this->assertMatchesRegularExpression(
+			'/fieldset dl\.gallery-autocomplete-row-open\s*\{[^}]*display:\s*flow-root;[^}]*overflow:\s*visible;[^}]*z-index:\s*10040;[^}]*\}/s',
+			$stylesheet
+		);
 		$this->assertStringContainsString("container.classList.add('is-open')", $javascript);
 		$this->assertStringContainsString("container.classList.remove('is-open')", $javascript);
+		$this->assertStringContainsString("row.classList.add('gallery-autocomplete-row-open')", $javascript);
+		$this->assertStringContainsString("row.classList.remove('gallery-autocomplete-row-open')", $javascript);
+		$this->assertStringContainsString('items.slice(0, 10).forEach', $javascript);
 	}
 
 	private function property(upload $upload, string $name): mixed
