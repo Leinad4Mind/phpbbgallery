@@ -135,6 +135,8 @@ class resumable_upload_test extends TestCase
 		$this->assertStringContainsString('if (!(value instanceof File))', $javascript);
 		$this->assertStringContainsString("data.append('files[]', task.file, task.file.name)", $javascript);
 		$this->assertStringContainsString("request.setRequestHeader('X-Requested-With', 'XMLHttpRequest')", $javascript);
+		$this->assertStringContainsString("mode.value = 'upload_edit'", $javascript);
+		$this->assertStringContainsString('window.HTMLFormElement.prototype.submit.call(form)', $javascript);
 		foreach ($this->posting_templates() as $template_path)
 		{
 			$template = file_get_contents($template_path);
@@ -142,6 +144,32 @@ class resumable_upload_test extends TestCase
 			$this->assertStringContainsString('data-gallery-quick-upload', $template, $template_path);
 			$this->assertStringContainsString('{{ S_FORM_TOKEN }}', $template, $template_path);
 		}
+	}
+
+	public function test_ajax_upload_stages_drafts_before_opening_the_metadata_review(): void
+	{
+		$source = $this->controller_source();
+		$start = strpos($source, "if (\$mode == 'upload' && \$is_ajax");
+		$end = strpos($source, "\n\t\tif (\$mode == 'upload')", $start + 1);
+		$this->assertNotFalse($start);
+		$this->assertNotFalse($end);
+		$ajax = substr($source, $start, $end - $start);
+
+		$this->assertStringContainsString('$process->load_pending_images()', $ajax);
+		$this->assertStringContainsString("'review_required' => true", $ajax);
+		$this->assertStringNotContainsString('$process->update_image(', $ajax);
+		$this->assertStringNotContainsString('$this->image->handle_counter(', $ajax);
+		$this->assertStringNotContainsString('$this->notification_helper->', $ajax);
+	}
+
+	public function test_metadata_review_preserves_and_finalizes_image_descriptions(): void
+	{
+		$section = $this->upload_edit_section();
+
+		$this->assertStringContainsString('$description_array = []', $section);
+		$this->assertStringContainsString("variable('message', [''], true, request_interface::POST)", $section);
+		$this->assertStringContainsString('$process->set_descriptions($description_array)', $section);
+		$this->assertStringContainsString("'IMAGE_DESC' => \$description_array[\$num_images] ?? \$data['image_desc']", $section);
 	}
 
 	public function test_empty_or_expired_draft_cannot_be_finalized(): void

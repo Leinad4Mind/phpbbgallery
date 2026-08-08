@@ -38,6 +38,8 @@
 		var active = 0;
 		var accepted = 0;
 		var dragTimeout = null;
+		var reviewRequired = false;
+		var reviewSubmitted = false;
 
 		function extensionOf(filename) {
 			var position = filename.lastIndexOf('.');
@@ -180,7 +182,23 @@
 
 			task.status = 'complete';
 			task.loaded = task.file.size;
+			reviewRequired = reviewRequired || response.review_required === true;
 			updateProgress();
+		}
+
+		function openMetadataReview() {
+			if (reviewSubmitted || !reviewRequired || active || queue.length) {
+				return;
+			}
+
+			var mode = form.querySelector('input[name="mode"]');
+			if (!mode) {
+				return;
+			}
+
+			reviewSubmitted = true;
+			mode.value = 'upload_edit';
+			window.HTMLFormElement.prototype.submit.call(form);
 		}
 
 		function upload(task) {
@@ -228,6 +246,7 @@
 			request.addEventListener('loadend', function () {
 				active--;
 				processQueue();
+				openMetadataReview();
 			});
 			request.send(data);
 		}
@@ -287,6 +306,7 @@
 
 			updateProgress();
 			processQueue();
+			openMetadataReview();
 		}
 
 		fileInput.addEventListener('change', function () {

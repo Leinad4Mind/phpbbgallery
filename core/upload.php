@@ -610,6 +610,7 @@ class upload
 		$sql_ary = [
 			'image_status'				=> ($needs_approval) ? $this->block->get_image_status_unapproved() : $this->block->get_image_status_approved(),
 			'image_upload_session_hash'	=> '',
+			'image_allow_comments'		=> $this->allow_comments,
 			'image_subtitle'			=> $this->get_subtitle(),
 			'image_desc'				=> $message_parser->message,
 			'image_desc_uid'			=> $message_parser->bbcode_uid,

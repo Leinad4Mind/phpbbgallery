@@ -194,11 +194,18 @@ class upload
 		$invalid_author = ($change_author !== '' && $upload_author === false);
 		$upload_author_id = ($upload_author !== false) ? (int) $upload_author['user_id'] : (int) $this->user->data['user_id'];
 		$is_alternate_author = ($upload_author_id !== (int) $this->user->data['user_id']);
+		$comments_enabled = (bool) $this->gallery_config->get('allow_comments') && (bool) $this->gallery_config->get('comment_user_control');
+		$allow_comments_default = !$this->request->is_set_post('mode');
+		$allow_comments = $comments_enabled
+			? $this->request->variable('allow_comments', $allow_comments_default, false, request_interface::POST)
+			: (bool) $this->gallery_config->get('allow_comments');
 		$this->template->assign_vars([
 			'S_CHANGE_AUTHOR'              => $can_change_author,
 			'CHANGE_AUTHOR'                => $change_author,
 			'U_FIND_USERNAME'              => $can_change_author ? $this->url->append_sid('phpbb', 'memberlist', 'mode=searchuser&amp;form=postform&amp;field=change_author&amp;select_single=true') : '',
 			'U_CHANGE_AUTHOR_AUTOCOMPLETE' => $can_change_author ? $this->helper->route('phpbbgallery_core_album_author_autocomplete', ['album_id' => $album_id]) : '',
+			'S_COMMENTS_ENABLED'           => $comments_enabled,
+			'S_ALLOW_COMMENTS'             => $allow_comments,
 		]);
 
 		if ($this->request->is_set_post('discard_pending'))
@@ -238,11 +245,12 @@ class upload
 			{
 				return $this->ajax_error($this->language->lang('INVALID_USERNAME'));
 			}
+			$pending_count = $process->load_pending_images();
 
-			// So we use ajax request to upload (so we are going to copy some functions from other upload
+			// Progressive uploads remain orphan drafts until the metadata review is submitted.
 			// Upload Quota Check
 			// 1. Check album-configuration Quota
-			if (($this->gallery_config->get('album_images') >= 0) && ($album_data['album_images'] >= $this->gallery_config->get('album_images')))
+			if (($this->gallery_config->get('album_images') >= 0) && (($album_data['album_images'] + $pending_count) >= $this->gallery_config->get('album_images')))
 			{
 				return $this->ajax_error($this->language->lang('ALBUM_REACHED_QUOTA'));
 			}
@@ -258,86 +266,47 @@ class upload
 				$result = $this->db->sql_query($sql);
 				$own_images = (int) $this->db->sql_fetchfield('count');
 				$this->db->sql_freeresult($result);
-				if ($own_images >= $this->auth->acl_check('i_count', $album_id, $album_data['album_user_id']))
+				if (($own_images + $pending_count) >= $this->auth->acl_check('i_count', $album_id, $album_data['album_user_id']))
 				{
 					return $this->ajax_error($this->language->lang('USER_REACHED_QUOTA', $this->auth->acl_check('i_count', $album_id, $album_data['album_user_id'])));
 				}
 			}
 
 			$upload_files_limit = ($this->auth->acl_check('i_unlimited', $album_id, $album_data['album_user_id'])) ? $this->gallery_config->get('num_uploads') : min(($this->auth->acl_check('i_count', $album_id, $album_data['album_user_id']) - $own_images), $this->gallery_config->get('num_uploads'));
-			$process = $this->gallery_upload;
-			$process->set_up($album_id, $upload_files_limit);
+			$remaining_uploads = max(0, $upload_files_limit - $pending_count);
+			if ($remaining_uploads === 0)
+			{
+				return $this->ajax_error($this->language->lang('QUICK_UPLOAD_LIMIT_REACHED', $upload_files_limit));
+			}
+			$existing_image_ids = $process->images;
+			$process->set_up($album_id, $remaining_uploads);
 			$process->set_username($this->user->data['username']);
-			$process->set_allow_comments(1);
+			$process->set_allow_comments($allow_comments);
 			$process->upload_file(1);
 			if (!empty($process->errors))
 			{
 				return $this->ajax_error(implode(', ', $process->errors));
 			}
-			$checks = $process->generate_hidden_fields();
-			$process->get_images($checks);
-			$image_names = [];
-			foreach ($process->images as $image_id)
+			$new_image_ids = array_values(array_diff($process->images, $existing_image_ids));
+			if (!$new_image_ids)
 			{
-				$image_names[] = $process->image_data[$image_id]['image_name'];
-			}
-			$process->set_names($image_names);
-			if ($upload_author !== false)
-			{
-				$process->set_author((int) $upload_author['user_id'], $upload_author['username'], $upload_author['user_colour']);
+				return $this->ajax_error($this->language->lang('UPLOAD_NO_FILE'));
 			}
 
-			$success = true;
-			if (!$this->album_operation->allows('upload', $album_data))
-			{
-				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
-			}
-			foreach ($process->images as $image_id)
-			{
-				$success = $success && $process->update_image($image_id, !$this->auth->acl_check('i_approve', $album_id, $album_data['album_user_id']), $album_data);
-				if (!$is_alternate_author && $this->gallery_user->get_data('watch_own'))
-				{
-					$this->gallery_notification->add($image_id, $upload_author_id);
-				}
-			}
-
-			if ($this->auth->acl_check('i_approve', $album_id, $album_data['album_user_id']))
-			{
-				$data = [
-					'targets'    => [$upload_author_id],
-					'album_id'   => $album_id,
-					'last_image' => end($process->images),
-				];
-				$this->notification_helper->new_image($data);
-			}
-			else
-			{
-				$target = [
-					'album_id'   => $album_id,
-					'last_image' => end($process->images),
-					'uploader'   => $upload_author_id,
-				];
-				$this->notification_helper->notify('approval', $target);
-			}
-			$this->image->handle_counter($process->images, true);
-			$this->album->update_info($album_id);
-
-			// So if all is fine let's prepare response
+			// Return a temporary preview; the browser opens the mandatory review after the batch.
 			$response = [];
-			foreach ($process->images as $image_id)
+			foreach ($new_image_ids as $image_id)
 			{
 				$response[] = [
-					'url'       => $this->helper->route('phpbbgallery_core_image', ['image_id' => $image_id]),
+					'url'       => $this->helper->route('phpbbgallery_core_album_upload', ['album_id' => $album_id]),
 					'thumbnail' => $this->helper->route('phpbbgallery_core_image_file_mini', ['image_id' => $image_id]),
 					'name'      => $process->image_data[$image_id]['image_name'],
-					//	'type'	=> $process->image_data[$process->images[0]]['image_name'],
 					'size' => $process->image_data[$image_id]['filesize_upload'],
-					//	'delete_url'	=> '',
-					//	'delete_type'	=> ''
 				];
 			}
 			return new \Symfony\Component\HttpFoundation\JsonResponse([
-				'files' => $response
+				'files' => $response,
+				'review_required' => true,
 			]);
 
 		}
@@ -465,8 +434,6 @@ class upload
 					'S_UPLOAD'            => true,
 					'S_ALLOW_ROTATE'      => ($this->gallery_config->get('allow_rotate') && function_exists('imagerotate')),
 					'S_UPLOAD_LIMIT'      => $upload_files_limit,
-					'S_COMMENTS_ENABLED'  => $this->gallery_config->get('allow_comments') && $this->gallery_config->get('comment_user_control'),
-					'S_ALLOW_COMMENTS'    => true,
 					'L_ALLOW_COMMENTS'    => $this->language->lang('ALLOW_COMMENTS_ARY', $upload_files_limit),
 				]);
 
@@ -483,6 +450,7 @@ class upload
 		if ($mode == 'upload_edit')
 		{
 			$image_subtitles = [];
+			$description_array = [];
 			if ($submit)
 			{
 				if (!check_form_key('gallery'))
@@ -573,6 +541,7 @@ class upload
 				$process->set_names($image_names);
 				$process->set_subtitles($image_subtitles);
 				$process->set_descriptions($description_array);
+				$process->set_allow_comments($allow_comments);
 				$process->set_image_num($this->request->variable('image_num', 0, false, request_interface::POST));
 				$process->use_same_name($this->request->variable('same_name', false, false, request_interface::POST));
 				if ($upload_author !== false)
@@ -658,7 +627,7 @@ class upload
 					'U_IMAGE'    => $this->image->generate_link('thumbnail', 'plugin', $image_id, $data['image_name'], $album_id),
 					'IMAGE_NAME' => $data['image_name'],
 					'IMAGE_SUBTITLE' => $image_subtitles[$num_images] ?? ($data['image_subtitle'] ?? ''),
-					'IMAGE_DESC' => $data['image_desc'],
+					'IMAGE_DESC' => $description_array[$num_images] ?? $data['image_desc'],
 				];
 
 				/**
