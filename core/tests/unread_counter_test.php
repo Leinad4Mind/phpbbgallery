@@ -25,12 +25,27 @@ class unread_counter_test extends TestCase
 		$this->assertStringContainsString("- '@phpbbgallery.core.unread_counter'", $services);
 		$this->assertStringContainsString("- '%phpbbgallery.tables.gallery_tracking%'", $services);
 		$this->assertMatchesRegularExpression(
-			"~phpbbgallery\\.core\\.unread_counter:\\R"
+			'~phpbbgallery\\.core\\.unread_counter:\\R'
 			. "\\s+class: phpbbgallery\\\\core\\\\unread_counter\\R"
-			. "\\s+arguments:(?:\\R\\s+- .+){7}\\R"
+			. '\\s+arguments:(?:\\R\\s+- .+){7}\\R'
 			. "\\s+- '%phpbbgallery\\.tables\\.gallery_image_tracking%'~",
 			$services
 		);
+	}
+
+	public function test_album_listing_marks_only_its_bounded_page_without_adding_views(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/album.php');
+		$query = strpos($source, '$this->db->sql_query_limit($sql, $limit, $start)');
+		$mark = strpos($source, '$this->unread_counter->mark_viewed_many($image_ids)', (int) $query);
+		$display = strpos($source, 'foreach ($images as $row)', (int) $mark);
+
+		$this->assertIsInt($query);
+		$this->assertIsInt($mark);
+		$this->assertIsInt($display);
+		$this->assertLessThan($mark, $query);
+		$this->assertLessThan($display, $mark);
+		$this->assertStringNotContainsString('SET image_view_count = image_view_count + 1', $source);
 	}
 
 	public function test_guests_and_bots_never_load_permissions_or_query_images(): void
@@ -132,6 +147,63 @@ class unread_counter_test extends TestCase
 			'is_registered' => true,
 			'is_bot' => false,
 		], $gallery_user, $visibility)->count(500));
+	}
+
+	public function test_album_listing_marks_only_new_unique_page_images_as_read(): void
+	{
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->once())
+			->method('sql_in_set')
+			->with('image_id', [8, 7])
+			->willReturn('image_id IN (8, 7)');
+		$db->expects($this->once())
+			->method('sql_query')
+			->with($this->callback(static function (string $sql): bool
+			{
+				TestCase::assertStringContainsString('FROM phpbb_gallery_images_track', $sql);
+				TestCase::assertStringContainsString('user_id = 42', $sql);
+				TestCase::assertStringContainsString('image_id IN (8, 7)', $sql);
+				return true;
+			}))
+			->willReturn('read-images');
+		$db->expects($this->exactly(2))
+			->method('sql_fetchrow')
+			->with('read-images')
+			->willReturnOnConsecutiveCalls(['image_id' => 7], false);
+		$db->expects($this->once())->method('sql_freeresult')->with('read-images');
+		$db->expects($this->once())
+			->method('sql_multi_insert')
+			->with('phpbb_gallery_images_track', $this->callback(static function (array $rows): bool
+			{
+				TestCase::assertCount(1, $rows);
+				TestCase::assertSame(42, $rows[0]['user_id']);
+				TestCase::assertSame(8, $rows[0]['image_id']);
+				TestCase::assertGreaterThan(0, $rows[0]['mark_time']);
+				return true;
+			}));
+
+		$counter = $this->counter($db, $this->createStub(album_access::class), [
+			'user_id' => 42,
+			'is_registered' => true,
+			'is_bot' => false,
+		]);
+		$counter->mark_viewed_many([8, 7, 8, 0, -2]);
+	}
+
+	public function test_album_listing_does_not_write_read_markers_for_guests_or_bots(): void
+	{
+		foreach ([
+			['user_id' => ANONYMOUS, 'is_registered' => false, 'is_bot' => false],
+			['user_id' => 42, 'is_registered' => true, 'is_bot' => true],
+		] as $user_data)
+		{
+			$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+			$db->expects($this->never())->method('sql_query');
+			$db->expects($this->never())->method('sql_multi_insert');
+
+			$this->counter($db, $this->createStub(album_access::class), $user_data)
+				->mark_viewed_many([7, 8]);
+		}
 	}
 
 	private function counter(

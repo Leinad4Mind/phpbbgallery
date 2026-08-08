@@ -77,6 +77,9 @@ class album
 	/** @var \phpbbgallery\core\rating */
 	protected \phpbbgallery\core\rating $gallery_rating;
 
+	/** @var \phpbbgallery\core\unread_counter */
+	protected \phpbbgallery\core\unread_counter $unread_counter;
+
 	/** @var string */
 	protected string $table_images;
 
@@ -115,6 +118,7 @@ class album
 	 * @param \phpbbgallery\core\policy\image_visibility                $image_visibility
 	 * @param \phpbbgallery\core\policy\album_operation                 $album_operation
 	 * @param \phpbbgallery\core\rating                                 $gallery_rating
+	 * @param \phpbbgallery\core\unread_counter                         $unread_counter
 	 * @param string                                                    $images_table Gallery image table
 	 */
 	public function __construct(\phpbb\config\config $config, \phpbb\auth\auth $phpbb_auth,
@@ -128,6 +132,7 @@ class album
 		\phpbb\event\dispatcher_interface $phpbb_dispatcher, \phpbbgallery\core\policy\image_visibility $image_visibility,
 		\phpbbgallery\core\policy\album_operation $album_operation,
 		\phpbbgallery\core\rating $gallery_rating,
+		\phpbbgallery\core\unread_counter $unread_counter,
 		string $images_table)
 	{
 		$this->config = $config;
@@ -151,6 +156,7 @@ class album
 		$this->image_visibility = $image_visibility;
 		$this->album_operation = $album_operation;
 		$this->gallery_rating = $gallery_rating;
+		$this->unread_counter = $unread_counter;
 		$this->table_images = $images_table;
 	}
 
@@ -432,6 +438,7 @@ class album
 		$show_subtitle = ($show_options & self::ALBUM_SHOW_SUBTITLE) !== 0;
 		$ratings_visible = (int) $this->gallery_config->get('allow_rates') === 1 && $show_ratings;
 		$image_ids = array_map(static fn (array $image): int => (int) $image['image_id'], $images);
+		$this->unread_counter->mark_viewed_many($image_ids);
 		$user_ratings = $ratings_visible
 			? $this->gallery_rating->get_user_ratings($image_ids, (int) $this->user->data['user_id'])
 			: [];

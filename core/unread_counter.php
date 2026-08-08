@@ -122,6 +122,48 @@ class unread_counter
 		$this->db->sql_query('INSERT INTO ' . $this->image_tracking_table . ' ' . $this->db->sql_build_array('INSERT', $sql_ary));
 	}
 
+	/** Record the images rendered in a listing as read for the current member. */
+	public function mark_viewed_many(array $image_ids): void
+	{
+		$user_id = (int) ($this->user->data['user_id'] ?? ANONYMOUS);
+		$image_ids = array_values(array_unique(array_filter(array_map('intval', $image_ids), static fn (int $image_id): bool => $image_id > 0)));
+		if (!$image_ids || $user_id === ANONYMOUS || !empty($this->user->data['is_bot']))
+		{
+			return;
+		}
+
+		$sql = 'SELECT image_id
+			FROM ' . $this->image_tracking_table . '
+			WHERE user_id = ' . $user_id . '
+				AND ' . $this->db->sql_in_set('image_id', $image_ids);
+		$result = $this->db->sql_query($sql);
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$position = array_search((int) $row['image_id'], $image_ids, true);
+			if ($position !== false)
+			{
+				unset($image_ids[$position]);
+			}
+		}
+		$this->db->sql_freeresult($result);
+		if (!$image_ids)
+		{
+			return;
+		}
+
+		$mark_time = time();
+		$rows = [];
+		foreach ($image_ids as $image_id)
+		{
+			$rows[] = [
+				'user_id' => $user_id,
+				'image_id' => $image_id,
+				'mark_time' => $mark_time,
+			];
+		}
+		$this->db->sql_multi_insert($this->image_tracking_table, $rows);
+	}
+
 	/** Remove per-image markers after images are deleted. */
 	public function remove_images(array $image_ids): void
 	{
