@@ -21,6 +21,7 @@ class unread_counter
 	private \phpbbgallery\core\policy\image_visibility $image_visibility;
 	private string $images_table;
 	private string $tracking_table;
+	private string $image_tracking_table;
 
 	public function __construct(
 		\phpbb\db\driver\driver_interface $db,
@@ -29,7 +30,8 @@ class unread_counter
 		\phpbbgallery\core\user $gallery_user,
 		\phpbbgallery\core\policy\image_visibility $image_visibility,
 		string $images_table,
-		string $tracking_table
+		string $tracking_table,
+		string $image_tracking_table
 	)
 	{
 		$this->db = $db;
@@ -39,6 +41,7 @@ class unread_counter
 		$this->image_visibility = $image_visibility;
 		$this->images_table = $images_table;
 		$this->tracking_table = $tracking_table;
+		$this->image_tracking_table = $image_tracking_table;
 	}
 
 	/**
@@ -68,7 +71,11 @@ class unread_counter
 			LEFT JOIN ' . $this->tracking_table . ' t
 				ON t.user_id = ' . (int) $viewer_id . '
 					AND t.album_id = i.image_album_id
+			LEFT JOIN ' . $this->image_tracking_table . ' it
+				ON it.user_id = ' . (int) $viewer_id . '
+					AND it.image_id = i.image_id
 			WHERE ' . $this->db->sql_in_set('i.image_album_id', $visible_album_ids) . '
+				AND it.image_id IS NULL
 				AND ' . $this->db->sql_in_set('i.image_status', [block::STATUS_APPROVED, block::STATUS_LOCKED]) . '
 				AND ' . $this->image_visibility->get_visibility_sql_for_results('i', $moderated_album_ids) . '
 				AND (
@@ -84,5 +91,47 @@ class unread_counter
 		$this->db->sql_freeresult($result);
 
 		return $count;
+	}
+
+	/** Record one visible image as read for the current member. */
+	public function mark_viewed(int $image_id): void
+	{
+		$user_id = (int) ($this->user->data['user_id'] ?? ANONYMOUS);
+		if ($image_id < 1 || $user_id === ANONYMOUS || !empty($this->user->data['is_bot']))
+		{
+			return;
+		}
+
+		$sql = 'SELECT image_id
+			FROM ' . $this->image_tracking_table . '
+			WHERE user_id = ' . $user_id . '
+				AND image_id = ' . $image_id;
+		$result = $this->db->sql_query($sql);
+		$exists = $this->db->sql_fetchfield('image_id', false, $result);
+		$this->db->sql_freeresult($result);
+		if ($exists !== false)
+		{
+			return;
+		}
+
+		$sql_ary = [
+			'user_id' => $user_id,
+			'image_id' => $image_id,
+			'mark_time' => time(),
+		];
+		$this->db->sql_query('INSERT INTO ' . $this->image_tracking_table . ' ' . $this->db->sql_build_array('INSERT', $sql_ary));
+	}
+
+	/** Remove per-image markers after images are deleted. */
+	public function remove_images(array $image_ids): void
+	{
+		$image_ids = array_values(array_unique(array_filter(array_map('intval', $image_ids))));
+		if (!$image_ids)
+		{
+			return;
+		}
+
+		$this->db->sql_query('DELETE FROM ' . $this->image_tracking_table . '
+			WHERE ' . $this->db->sql_in_set('image_id', $image_ids));
 	}
 }

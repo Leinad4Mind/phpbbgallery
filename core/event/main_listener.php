@@ -25,8 +25,22 @@ class main_listener implements EventSubscriberInterface
 			'core.memberlist_view_profile'	       => 'user_profile_galleries',
 			'core.ucp_profile_info_modify_sql_ary' => 'preserve_personal_album_profile_field',
 			'core.viewonline_overwrite_location'   => 'overwrite_viewonline_location',
+			'phpbbgallery.core.viewimage'           => 'mark_image_viewed',
+			'phpbbgallery.core.image.delete_images' => 'remove_image_read_markers',
 			//'core.generate_profile_fields_template_data_before'	       => 'profile_fields',
 		];
+	}
+
+	/** Mark the image page currently being displayed as read. */
+	public function mark_image_viewed(\phpbb\event\data $event): void
+	{
+		$this->unread_counter->mark_viewed((int) $event['image_id']);
+	}
+
+	/** Remove read markers belonging to deleted images. */
+	public function remove_image_read_markers(\phpbb\event\data $event): void
+	{
+		$this->unread_counter->remove_images((array) $event['images']);
 	}
 	/** @var \phpbb\controller\helper */
 	protected \phpbb\controller\helper $helper;

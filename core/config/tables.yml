@@ -13,6 +13,7 @@ parameters:
     phpbbgallery.tables.gallery_permissions: '%core.table_prefix%gallery_permissions'
     phpbbgallery.tables.gallery_roles: '%core.table_prefix%gallery_roles'
     phpbbgallery.tables.gallery_tracking: '%core.table_prefix%gallery_albums_track'
+    phpbbgallery.tables.gallery_image_tracking: '%core.table_prefix%gallery_images_track'
     phpbbgallery.tables.gallery_users: '%core.table_prefix%gallery_users'
     phpbbgallery.tables.gallery_comments: '%core.table_prefix%gallery_comments'
     phpbbgallery.tables.gallery_reports: '%core.table_prefix%gallery_reports'

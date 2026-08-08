@@ -55,6 +55,8 @@ final class event_main_listener_types_test extends TestCase
 			'core.memberlist_view_profile' => 'user_profile_galleries',
 			'core.ucp_profile_info_modify_sql_ary' => 'preserve_personal_album_profile_field',
 			'core.viewonline_overwrite_location' => 'overwrite_viewonline_location',
+			'phpbbgallery.core.viewimage' => 'mark_image_viewed',
+			'phpbbgallery.core.image.delete_images' => 'remove_image_read_markers',
 		], main_listener::getSubscribedEvents());
 	}
 

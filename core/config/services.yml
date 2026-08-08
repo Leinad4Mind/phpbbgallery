@@ -441,6 +441,7 @@ services:
             - '@phpbbgallery.core.policy.image_visibility'
             - '%phpbbgallery.tables.gallery_images%'
             - '%phpbbgallery.tables.gallery_tracking%'
+            - '%phpbbgallery.tables.gallery_image_tracking%'
     phpbbgallery.core.album_access:
         class: phpbbgallery\core\album_access
         arguments:

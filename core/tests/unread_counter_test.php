@@ -24,6 +24,13 @@ class unread_counter_test extends TestCase
 		$this->assertStringContainsString('class: phpbbgallery\core\unread_counter', $services);
 		$this->assertStringContainsString("- '@phpbbgallery.core.unread_counter'", $services);
 		$this->assertStringContainsString("- '%phpbbgallery.tables.gallery_tracking%'", $services);
+		$this->assertMatchesRegularExpression(
+			"~phpbbgallery\\.core\\.unread_counter:\\R"
+			. "\\s+class: phpbbgallery\\\\core\\\\unread_counter\\R"
+			. "\\s+arguments:(?:\\R\\s+- .+){7}\\R"
+			. "\\s+- '%phpbbgallery\\.tables\\.gallery_image_tracking%'~",
+			$services
+		);
 	}
 
 	public function test_guests_and_bots_never_load_permissions_or_query_images(): void
@@ -149,7 +156,8 @@ class unread_counter_test extends TestCase
 			$gallery_user ?? $this->createStub(\phpbbgallery\core\user::class),
 			$visibility ?? $this->createStub(image_visibility::class),
 			'phpbb_gallery_images',
-			'phpbb_gallery_albums_track'
+			'phpbb_gallery_albums_track',
+			'phpbb_gallery_images_track'
 		);
 	}
 }
