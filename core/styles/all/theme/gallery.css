@@ -1192,6 +1192,11 @@ fieldset dl.gallery-autocomplete-row-open
 
 .gallery-orientation-preview img
 {
+	background-color: #fff;
+	background-image: repeating-conic-gradient(#e2e5e8 0 25%, #fff 0 50%);
+	background-position: 0 0;
+	background-size: 16px 16px;
+	box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
 	max-height: 220px;
 	max-width: 100%;
 	transform-origin: center;
