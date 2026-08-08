@@ -213,6 +213,21 @@ class language_catalog_test extends TestCase
 		}
 	}
 
+	public function test_php_upload_limit_error_is_explained_in_every_language(): void
+	{
+		$language_root = $this->extension_root . '/core/language';
+		foreach ($this->language_directories($language_root) as $directory)
+		{
+			$catalog = $directory . '/gallery.php';
+			$language = $this->load_language($catalog);
+			$this->assertArrayHasKey('PHP_SIZE_OVERRUN', $language, basename($directory));
+			$this->assertSame(1, substr_count(file_get_contents($catalog), 'PHP_SIZE_OVERRUN'), basename($directory));
+			$this->assertStringContainsString('upload_max_filesize', $language['PHP_SIZE_OVERRUN'], basename($directory));
+			$this->assertStringContainsString('post_max_size', $language['PHP_SIZE_OVERRUN'], basename($directory));
+			$this->assertSame(['d', 's'], $this->placeholder_shape($language['PHP_SIZE_OVERRUN']), basename($directory));
+		}
+	}
+
 	public function test_brazilian_portuguese_catalog_uses_brazilian_vocabulary_and_register(): void
 	{
 		$patterns = [

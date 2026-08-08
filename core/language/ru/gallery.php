@@ -60,6 +60,7 @@ $lang = array_merge($lang, [
 	'ALBUM_VIEW_CAN'          => 'Вы <strong>можете</strong> просматривать фото',
 	'ALBUM_VIEW_CANNOT'       => 'Вы <strong>не можете</strong> просматривать фото',
 	'BAD_UPLOAD_FILE_SIZE'    => 'Загружаемый вами файл слишком большой',
+	'PHP_SIZE_OVERRUN'        => 'Сервер отклонил это изображение, поскольку размер файла превышает ограничение PHP на загрузку — %1$d %2$s. Администратору сервера следует увеличить <code>upload_max_filesize</code> и при необходимости <code>post_max_size</code> в <code>php.ini</code>.',
 	'BBCODES'                 => 'BBCodes',
 	'BROWSING_ALBUM'          => 'Сейчас этот альбом просматривают: %1$s',
 	'BROWSING_ALBUM_GUEST'    => 'Сейчас этот альбом просматривают %1$s пользователей и %2$d гость',

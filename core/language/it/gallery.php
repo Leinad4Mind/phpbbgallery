@@ -64,6 +64,7 @@ $lang = array_merge($lang, [
 	'ALBUM_VIEW_CANNOT'    => 'Tu <strong>non puoi</strong> vedere immagini in quest’album',
 
 	'BAD_UPLOAD_FILE_SIZE'  => 'Il tuo file caricato è troppo grande',
+	'PHP_SIZE_OVERRUN'      => 'Il server ha rifiutato questa immagine perché la dimensione del file supera il limite di caricamento PHP di %1$d %2$s. L’amministratore del server deve aumentare <code>upload_max_filesize</code> e, se necessario, <code>post_max_size</code> nel file <code>php.ini</code>.',
 	'BBCODES'               => 'BBCode',
 	'BROWSING_ALBUM'        => 'Utenti che navigano in quest’album: %1$s',
 	'BROWSING_ALBUM_GUEST'  => 'Utenti che navigano in quest’album: %1$s e %2$d ospite',

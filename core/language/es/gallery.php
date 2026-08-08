@@ -64,6 +64,7 @@ $lang = array_merge($lang, [
 	'ALBUM_VIEW_CANNOT'    => '<strong>No puedes</strong> ver imágenes en este álbum',
 
 	'BAD_UPLOAD_FILE_SIZE'  => 'Tu archivo subido es demasiado grande',
+	'PHP_SIZE_OVERRUN'      => 'El servidor rechazó esta imagen porque el tamaño del archivo supera el límite de carga de PHP de %1$d %2$s. El administrador del servidor debe aumentar <code>upload_max_filesize</code> y, si es necesario, <code>post_max_size</code> en <code>php.ini</code>.',
 	'BBCODES'               => 'BBCodes',
 	'BROWSING_ALBUM'        => 'Usuarios navegando por este álbum: %1$s',
 	'BROWSING_ALBUM_GUEST'  => 'Usuarios navegando por este álbum: %1$s y %2$d invitado',
