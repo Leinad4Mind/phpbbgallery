@@ -822,22 +822,22 @@ class moderate
 		switch ($quick_action)
 		{
 			case 'images_move':
-				$route = $this->helper->route('phpbbgallery_core_moderate_image_move', ['image_id'	=> $image_id]);
+				$route = $this->helper->route('phpbbgallery_core_moderate_image_move', ['image_id'	=> $image_id], false);
 				return new RedirectResponse($route);
 			case 'image_edit':
-				$route = $this->helper->route('phpbbgallery_core_image_edit', ['image_id'	=> $image_id]);
+				$route = $this->helper->route('phpbbgallery_core_image_edit', ['image_id'	=> $image_id], false);
 				return new RedirectResponse($route);
 			case 'images_unapprove':
-				$route = $this->helper->route('phpbbgallery_core_moderate_image_unapprove', ['image_id'	=> $image_id]);
+				$route = $this->helper->route('phpbbgallery_core_moderate_image_unapprove', ['image_id'	=> $image_id], false);
 				return new RedirectResponse($route);
 			case 'images_approve':
-				$route = $this->helper->route('phpbbgallery_core_moderate_image_approve', ['image_id'	=> $image_id]);
+				$route = $this->helper->route('phpbbgallery_core_moderate_image_approve', ['image_id'	=> $image_id], false);
 				return new RedirectResponse($route);
 			case 'images_lock':
-				$route = $this->helper->route('phpbbgallery_core_moderate_image_lock', ['image_id'	=> $image_id]);
+				$route = $this->helper->route('phpbbgallery_core_moderate_image_lock', ['image_id'	=> $image_id], false);
 				return new RedirectResponse($route);
 			case 'images_delete':
-				$route = $this->helper->route('phpbbgallery_core_image_delete', ['image_id'	=> $image_id]);
+				$route = $this->helper->route('phpbbgallery_core_image_delete', ['image_id'	=> $image_id], false);
 				return new RedirectResponse($route);
 			case 'reports_close':
 				$reports_close_album_data = $this->album->get_info($image_data['image_album_id']);
@@ -863,7 +863,7 @@ class moderate
 				}
 			break;
 			case 'reports_open':
-				$route = $this->helper->route('phpbbgallery_core_image_report', ['image_id'	=> $image_id]);
+				$route = $this->helper->route('phpbbgallery_core_image_report', ['image_id'	=> $image_id], false);
 				return new RedirectResponse($route);
 		}
 		$album_data = $this->album->get_info($image_data['image_album_id']);
@@ -976,7 +976,7 @@ class moderate
 
 		if ($action === 'disapprove')
 		{
-			return new RedirectResponse($this->helper->route('phpbbgallery_core_image_delete', ['image_id' => $image_id]));
+			return new RedirectResponse($this->helper->route('phpbbgallery_core_image_delete', ['image_id' => $image_id], false));
 		}
 		$show_notify = true;
 		$this->language->add_lang(['gallery_mcp', 'gallery'], 'phpbbgallery/core');
