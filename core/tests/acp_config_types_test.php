@@ -119,10 +119,32 @@ final class acp_config_types_test extends TestCase
 		$module->language = $language;
 
 		$html = $module->storage_layout_select('distributed', 'storage_layout');
+		$filename = '7127abfe9cf6b6d3eb0a523e6158e896.jpeg';
 
 		$this->assertStringContainsString('value=' . chr(34) . 'flat' . chr(34), $html);
 		$this->assertStringContainsString('value=' . chr(34) . 'distributed' . chr(34) . ' selected=' . chr(34) . 'selected' . chr(34), $html);
 		$this->assertStringContainsString('STORAGE_LAYOUT_DISTRIBUTED', $html);
+		$this->assertStringContainsString('data-gallery-storage-layout-help-open', $html);
+		$this->assertStringContainsString('<dialog', $html);
+		$this->assertStringContainsString('source/' . $filename, $html);
+		$this->assertStringContainsString('source/7/71/' . $filename, $html);
+		$this->assertStringContainsString('STORAGE_LAYOUT_HELP_CHANGE', $html);
+	}
+
+	public function test_storage_layout_help_assets_are_accessible_and_modal(): void
+	{
+		$root = dirname(__DIR__);
+		$event = (string) file_get_contents($root . '/adm/style/event/acp_overall_header_head_append.html');
+		$javascript = (string) file_get_contents($root . '/adm/style/gallery_acp_storage_layout_help.js');
+		$stylesheet = (string) file_get_contents($root . '/adm/style/gallery_acp_storage_layout_help.css');
+
+		$this->assertStringContainsString('S_GALLERY_ACP_STORAGE_LAYOUT_HELP', $event);
+		$this->assertStringContainsString('gallery_acp_storage_layout_help.css', $event);
+		$this->assertStringContainsString('gallery_acp_storage_layout_help.js', $event);
+		$this->assertStringContainsString('showModal', $javascript);
+		$this->assertStringContainsString("event.key !== 'Escape'", $javascript);
+		$this->assertStringContainsString('previousFocus.focus()', $javascript);
+		$this->assertStringContainsString('::backdrop', $stylesheet);
 	}
 
 	public function test_bbcode_templates_keep_the_selected_link_target_without_a_session_id(): void

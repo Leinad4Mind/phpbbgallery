@@ -183,6 +183,7 @@ class config_module
 		$template->assign_vars([
 			'L_TITLE'			=> $this->language->lang($vars['title']),
 			'L_TITLE_EXPLAIN'	=> $this->language->lang($vars['title'] . '_EXPLAIN'),
+			'S_GALLERY_ACP_STORAGE_LAYOUT_HELP' => isset($vars['vars']['storage_layout']),
 
 			'S_ERROR'			=> (sizeof($error)) ? true : false,
 			'ERROR_MSG'			=> implode('<br />', $error),
@@ -594,7 +595,87 @@ class config_module
 			$options .= '<option value=' . $quote . $layout . $quote . $selected . '>' . $this->language->lang($language_key) . '</option>';
 		}
 
-		return '<select name=' . $quote . 'config[' . $key . ']' . $quote . ' id=' . $quote . $key . $quote . '>' . $options . '</select>';
+		$help_id = 'gallery_storage_layout_help';
+		$example_filename = '7127abfe9cf6b6d3eb0a523e6158e896.jpeg';
+		$help_open = utf8_htmlspecialchars((string) $this->language->lang('STORAGE_LAYOUT_HELP_OPEN'));
+		$help_title = utf8_htmlspecialchars((string) $this->language->lang('STORAGE_LAYOUT_HELP_TITLE'));
+		$help_close = utf8_htmlspecialchars((string) $this->language->lang('STORAGE_LAYOUT_HELP_CLOSE'));
+		$html = '<span class=' . $quote . 'gallery-storage-layout-control' . $quote . '>';
+		$html .= '<select name=' . $quote . 'config[' . $key . ']' . $quote . ' id=' . $quote . $key . $quote . '>' . $options . '</select>';
+		$html .= '<button class=' . $quote . 'gallery-storage-layout-help-button' . $quote;
+		$html .= ' type=' . $quote . 'button' . $quote;
+		$html .= ' data-gallery-storage-layout-help-open=' . $quote . $help_id . $quote;
+		$html .= ' aria-controls=' . $quote . $help_id . $quote . ' aria-haspopup=' . $quote . 'dialog' . $quote;
+		$html .= ' aria-label=' . $quote . $help_open . $quote . ' title=' . $quote . $help_open . $quote . '>';
+		$html .= '<span aria-hidden=' . $quote . 'true' . $quote . '>i</span></button></span>';
+		$html .= '<dialog class=' . $quote . 'gallery-storage-layout-help-dialog' . $quote . ' id=' . $quote . $help_id . $quote;
+		$html .= ' aria-labelledby=' . $quote . $help_id . '_title' . $quote . '>';
+		$html .= '<header class=' . $quote . 'gallery-storage-layout-help-dialog__header' . $quote . '>';
+		$html .= '<h2 id=' . $quote . $help_id . '_title' . $quote . '>' . $help_title . '</h2>';
+		$html .= '<button type=' . $quote . 'button' . $quote;
+		$html .= ' class=' . $quote . 'gallery-storage-layout-help-dialog__close' . $quote;
+		$html .= ' data-gallery-storage-layout-help-close aria-label=' . $quote . $help_close . $quote . '>&times;</button>';
+		$html .= '</header>';
+		$html .= '<div class=' . $quote . 'gallery-storage-layout-help-dialog__body' . $quote . '>';
+		$html .= '<p>' . utf8_htmlspecialchars((string) $this->language->lang('STORAGE_LAYOUT_HELP_INTRO')) . '</p>';
+		$html .= $this->storage_layout_help_section(
+			'STORAGE_LAYOUT_FLAT',
+			'STORAGE_LAYOUT_HELP_FLAT',
+			$example_filename,
+			[
+				'files/phpbbgallery/core/source/' . $example_filename,
+				'files/phpbbgallery/core/medium/' . $example_filename,
+				'files/phpbbgallery/core/mini/' . $example_filename,
+			]
+		);
+		$html .= $this->storage_layout_help_section(
+			'STORAGE_LAYOUT_DISTRIBUTED',
+			'STORAGE_LAYOUT_HELP_DISTRIBUTED',
+			$example_filename,
+			[
+				'files/phpbbgallery/core/source/7/71/' . $example_filename,
+				'files/phpbbgallery/core/medium/7/71/' . $example_filename,
+				'files/phpbbgallery/core/mini/7/71/' . $example_filename,
+			]
+		);
+		$html .= '<p>' . utf8_htmlspecialchars((string) $this->language->lang('STORAGE_LAYOUT_HELP_URLS')) . '</p>';
+		$html .= '<div class=' . $quote . 'gallery-storage-layout-help-warning' . $quote . '>';
+		$html .= utf8_htmlspecialchars((string) $this->language->lang('STORAGE_LAYOUT_HELP_CHANGE')) . '</div>';
+		$html .= '<p class=' . $quote . 'submit-buttons' . $quote . '><button class=' . $quote . 'button2' . $quote;
+		$html .= ' type=' . $quote . 'button' . $quote . ' data-gallery-storage-layout-help-close>' . $help_close . '</button></p>';
+		$html .= '</div></dialog>';
+
+		return $html;
+	}
+
+	/**
+	 * Build one storage-layout explanation and its example paths.
+	 *
+	 * @param string       $title_key        Language key for the layout name
+	 * @param string       $explanation_key  Language key for the explanation
+	 * @param string       $example_filename Example storage filename
+	 * @param list<string> $paths            Example paths
+	 */
+	private function storage_layout_help_section(
+		string $title_key,
+		string $explanation_key,
+		string $example_filename,
+		array $paths
+	): string
+	{
+		$html = '<section class="gallery-storage-layout-help-section">';
+		$html .= '<h3>' . utf8_htmlspecialchars((string) $this->language->lang($title_key)) . '</h3>';
+		$html .= '<p>' . utf8_htmlspecialchars((string) $this->language->lang($explanation_key)) . '</p>';
+		$html .= '<p><strong>' . utf8_htmlspecialchars((string) $this->language->lang(
+			'STORAGE_LAYOUT_HELP_EXAMPLE',
+			$example_filename
+		)) . '</strong></p><ul class="gallery-storage-layout-help-paths">';
+		foreach ($paths as $path)
+		{
+			$html .= '<li><code>' . utf8_htmlspecialchars($path) . '</code></li>';
+		}
+
+		return $html . '</ul></section>';
 	}
 
 	/**
