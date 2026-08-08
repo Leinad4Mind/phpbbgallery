@@ -64,7 +64,7 @@ final class album_listing_test extends TestCase
 			$stylesheet
 		);
 		$this->assertMatchesRegularExpression(
-			'/\.gallery-favorite-icon::before\s*\{[^}]*display:\s*block;[^}]*line-height:\s*1;[^}]*\}/s',
+			'/\.gallery-favorite-icon::before\s*\{[^}]*display:\s*block;[^}]*line-height:\s*1;[^}]*padding:\s*0;[^}]*\}/s',
 			$stylesheet
 		);
 		$this->assertStringContainsString("INCLUDECSS '@phpbbgallery_favorite/favorite.css'", $head);
