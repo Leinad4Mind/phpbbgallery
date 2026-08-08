@@ -634,6 +634,12 @@ input.autowidth-gallery {
 	color: #bc2a4d;
 }
 
+.phpbbgallery-image-page [data-gallery-comment-profile] .panel-body.user-profile-sep
+{
+	border-left: 2px dashed #eee;
+	border-right: 0;
+}
+
 .gallery-sep .fa
 {
 	box-sizing: content-box;

@@ -393,6 +393,7 @@ final class template_syntax_test extends TestCase
 		$this->assertNotFalse($flat_status);
 		$this->assertGreaterThan($flat_avatar, $flat_status);
 		$this->assertStringNotContainsString('ribbon-wrapper', substr($flatboots, $flat_comments));
+		$this->assertStringContainsString('data-gallery-comment-profile', substr($flatboots, $flat_comments));
 
 		$stylesheet = (string) file_get_contents(dirname(__DIR__) . '/styles/all/theme/gallery.css');
 		$this->assertStringContainsString('.phpbbgallery-image-page .gallery-avatar-online', $stylesheet);
@@ -407,6 +408,10 @@ final class template_syntax_test extends TestCase
 		$this->assertStringContainsString('.gallery-sep .fa', $stylesheet);
 		$this->assertMatchesRegularExpression(
 			'/\.gallery-sep\s*\{[^}]*margin-top:\s*24px;[^}]*margin-bottom:\s*24px;/s',
+			$stylesheet
+		);
+		$this->assertMatchesRegularExpression(
+			'/\[data-gallery-comment-profile\] \.panel-body\.user-profile-sep\s*\{[^}]*border-left:\s*2px dashed #eee;[^}]*border-right:\s*0;/s',
 			$stylesheet
 		);
 		$this->assertStringContainsString('.gallery-checkbox-label', $stylesheet);
