@@ -6,6 +6,10 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Added
 
+- Added independent per-album permissions for original-file downloads and charge-free original access, with both denied by default.
+- Added accessible star-only AJAX rating controls to FLATBOOTS and prosilver, with CSRF-protected POST submission, permission revalidation and no page reload.
+- Made Favorite controls update their icon, label and inverse action over AJAX in album listings and image pages, including after progressive AJAX image navigation.
+- Added responsive album information panels matching FLATBOOTS viewforum, with online users, effective album permissions and a neutral third-party rules area populated by BBPoints Images.
 - Added permission-aware AJAX favorite hearts to album image cards, loading the current page's favorite state in one bounded query through a neutral Core extension event.
 - Added a Unicode-aware live character counter to Gallery comment forms in every bundled style, driven by the ACP comment limit and reinitialized after AJAX image navigation.
 - Documented the credentials, security model, implementation and service limits of every Remote Storage provider, with a complete Koofr installation and controlled-migration guide.
@@ -66,6 +70,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Added breathing room around the camera divider, separated checkbox labels, kept the online ribbon inside the comment avatar area and extended the Unicode-aware live counter to image descriptions.
 - Reworked FLATBOOTS comment actions and profile contacts to follow the theme's native viewtopic toolbar, dropdown, quote-button and mini-profile contact patterns.
 - Moved the BBPoints original-download counter into the image metadata immediately below the view counter in prosilver, BBOOTS and FLATBOOTS.
 - Matched the FLATBOOTS image action and Favorite buttons to the larger button size used by the theme's viewtopic toolbar.
@@ -164,6 +169,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Prevented the configured image-page click action from linking to an original file when the viewer lacks the original-download permission.
 - Fixed Contest winner pagination using an undefined legacy configuration key and made the shared search template reusable from add-on controllers through explicit Core template paths.
 - Reconciled stale Favorite, Image Revisions, BBTags Images and BBPoints Images data after an add-on is re-enabled, removing missing image/album relations and revision files while preserving permanent financial history.
 - Removed per-user album read-tracking rows when public or personal albums are deleted, including the complete subtree of a deleted personal album.
@@ -229,7 +235,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Built Gallery entrypoints from the configured phpBB root and PHP extension, and moved controller-visible fallback text into the language catalogs.
 - Removed unreachable import, album, multipart upload, and profile-listener branches left by the legacy implementation.
 - Resolved stored-image paths against the configured phpBB root so upload previews and generated image variants work consistently on Windows and Unix hosts.
-- Removed phpBB session identifiers from copyable full-image and BBCode share URLs.
+- Removed phpBB session identifiers and request-specific style overrides from copyable full-image and BBCode share URLs.
 - Corrected Bootstrap moderation empty states, the approval-queue block name, accessible selection controls, and authorization-gated approve/disapprove actions.
 - Restored Bootstrap comment authors, profile links, ranks, online state, edit information, signatures, and contact fields by aligning the templates with the image-controller contract.
 - Corrected Bootstrap Gallery search field names and sort-direction controls to match the controller request parameters.
