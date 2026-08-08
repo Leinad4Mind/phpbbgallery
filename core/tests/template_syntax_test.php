@@ -201,8 +201,15 @@ final class template_syntax_test extends TestCase
 		$this->assertStringNotContainsString('type="radio"', $stars);
 		$this->assertStringContainsString('input[name="creation_time"], input[name="form_token"]', $javascript);
 		$this->assertStringContainsString("headers: {'X-Requested-With': 'XMLHttpRequest'}", $javascript);
+		$this->assertStringContainsString('updateRatingSummary(container, data.rating_summary || data.rating)', $javascript);
+		$this->assertStringContainsString('window.phpbb.alert(data.MESSAGE_TITLE || message, message)', $javascript);
+		$this->assertStringNotContainsString('status.textContent = data.message', $javascript);
 		$this->assertStringContainsString("check_form_key('gallery')", $controller);
-		$this->assertStringContainsString("'rating' => \$rate_point", $controller);
+		$this->assertMatchesRegularExpression("~'rating'\\s*=>\\s*\\\$rate_point~", $controller);
+		$this->assertStringContainsString("'rating_summary' => \$rating->get_image_rating(\$rate_point)", $controller);
+		$this->assertStringContainsString("'MESSAGE_TITLE'  => \$this->language->lang('INFORMATION')", $controller);
+		$this->assertStringContainsString('data-gallery-rating-summary', $templates['FLATBOOTS']);
+		$this->assertStringContainsString('data-gallery-rating-summary', $templates['prosilver']);
 		$this->assertMatchesRegularExpression('~phpbbgallery_core_image_rate:.*?methods: \\[POST\\]~s', $routing);
 	}
 

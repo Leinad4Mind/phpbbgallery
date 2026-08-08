@@ -306,6 +306,12 @@ final class domain_rating_types_test extends TestCase
 		$reflection->getProperty('db')->setValue($rating, $db);
 		$reflection->getProperty('rates_table')->setValue($rating, 'gallery_rates');
 		$reflection->getProperty('images_table')->setValue($rating, 'gallery_images');
+		$reflection->getProperty('image_id')->setValue($rating, 4);
+		$reflection->getProperty('image_data')->setValue($rating, [
+			'image_rates'       => 0,
+			'image_rate_points' => 0,
+			'image_rate_avg'    => 0,
+		]);
 
 		$rating->recalc_image_rating([4, 7]);
 
@@ -313,6 +319,9 @@ final class domain_rating_types_test extends TestCase
 		$this->assertStringContainsString('image_rates = CASE image_id WHEN 4 THEN 2 WHEN 7 THEN 3 END', $queries[1]);
 		$this->assertStringContainsString('image_rate_points = CASE image_id WHEN 4 THEN 9 WHEN 7 THEN 11 END', $queries[1]);
 		$this->assertStringContainsString('image_rate_avg = CASE image_id WHEN 4 THEN 450 WHEN 7 THEN 367 END', $queries[1]);
+		$this->assertSame(2, $reflection->getMethod('image_data')->invoke($rating, 'image_rates'));
+		$this->assertSame(9, $reflection->getMethod('image_data')->invoke($rating, 'image_rate_points'));
+		$this->assertSame(450, $reflection->getMethod('image_data')->invoke($rating, 'image_rate_avg'));
 	}
 
 	public function test_submit_rating_contract_reports_success_and_rejection_explicitly(): void

@@ -864,9 +864,12 @@ class comment
 		if ($is_ajax)
 		{
 			return new JsonResponse([
-				'success' => true,
-				'rating' => $rate_point,
-				'message' => $this->language->lang('RATING_SUCCESSFUL'),
+				'success'        => true,
+				'rating'         => $rate_point,
+				'rating_summary' => $rating->get_image_rating($rate_point),
+				'message'        => $this->language->lang('RATING_SUCCESSFUL'),
+				'MESSAGE_TITLE'  => $this->language->lang('INFORMATION'),
+				'MESSAGE_TEXT'   => $this->language->lang('RATING_SUCCESSFUL'),
 			]);
 		}
 

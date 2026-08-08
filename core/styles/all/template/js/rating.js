@@ -26,6 +26,32 @@
 		}
 	}
 
+	function showSuccess(data) {
+		var message = data.MESSAGE_TEXT || data.message;
+		if (!message) {
+			return;
+		}
+
+		if (window.phpbb && typeof window.phpbb.alert === 'function') {
+			window.phpbb.alert(data.MESSAGE_TITLE || message, message);
+		} else {
+			window.alert(message);
+		}
+	}
+
+	function updateRatingSummary(container, summary) {
+		var status = container.querySelector('[data-gallery-rating-status]');
+		var card = container.closest('.gallery-image-card');
+		var visibleSummary = card ? null : document.querySelector('[data-gallery-rating-summary]');
+
+		if (status) {
+			status.textContent = summary;
+		}
+		if (visibleSummary) {
+			visibleSummary.textContent = summary;
+		}
+	}
+
 	function setAlbumRatingMetadata(form, voting) {
 		var card = form.closest('.gallery-image-card');
 		var items;
@@ -105,10 +131,8 @@
 					setAlbumRatingMetadata(albumForm, false);
 				}
 			}
-			var status = container.querySelector('[data-gallery-rating-status]');
-			if (status) {
-				status.textContent = data.message;
-			}
+			updateRatingSummary(container, data.rating_summary || data.rating);
+			showSuccess(data);
 			setBusy(container, false);
 		}).catch(function (error) {
 			setBusy(container, false);

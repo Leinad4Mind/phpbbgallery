@@ -472,6 +472,11 @@ class rating
 				image_rate_avg = ' . $average_case . '
 			WHERE ' . $this->db->sql_in_set('image_id', array_keys($resync));
 		$this->db->sql_query($sql);
+
+		if ($this->image_data !== null && isset($resync[$this->image_id]))
+		{
+			$this->image_data = array_replace($this->image_data, $resync[$this->image_id]);
+		}
 	}
 
 	/**
