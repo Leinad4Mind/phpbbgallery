@@ -90,12 +90,36 @@ final class image_orientation_test extends TestCase
 	public function test_review_templates_share_the_visual_transform_editor(): void
 	{
 		$root = dirname(__DIR__);
+		$controls = (string) file_get_contents($root . '/styles/all/template/gallery/image_orientation_controls.html');
+		$css = (string) file_get_contents($root . '/styles/all/theme/gallery.css');
+		$this->assertStringContainsString('icon fa fa-eraser fa-fw', $controls);
+		$this->assertStringContainsString('repeating-conic-gradient', $css);
+
 		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
 		{
 			$template = (string) file_get_contents($root . '/styles/' . $style . '/template/gallery/posting_body.html');
 			$this->assertStringContainsString('image_orientation_controls.html', $template);
 			$this->assertStringContainsString('data-gallery-orientation-preview', $template);
 			$this->assertStringNotContainsString('name="rotate[{{ upload_image.S_ROW_COUNT }}]"', $template);
+		}
+	}
+
+	public function test_sitesplat_upload_helpers_remain_globally_callable_and_match_prosilver_order(): void
+	{
+		$root = dirname(__DIR__) . '/styles';
+		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$javascript = (string) file_get_contents($root . '/' . $style . '/template/gallery/posting_javascript.html');
+			$template = (string) file_get_contents($root . '/' . $style . '/template/gallery/posting_body.html');
+
+			$this->assertStringNotContainsString('head.ready(function ()', $javascript, $style);
+			$this->assertStringContainsString('function change_read_write()', $javascript, $style);
+			$this->assertStringContainsString('id="desc_length_{{ image.S_ROW_COUNT }}"', $template, $style);
+			$this->assertLessThan(
+				strpos($template, 'for="image_name_{{ image.S_ROW_COUNT }}"'),
+				strpos($template, 'for="image_num"'),
+				$style
+			);
 		}
 	}
 }
