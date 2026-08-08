@@ -356,16 +356,35 @@ final class template_syntax_test extends TestCase
 			$template = (string) file_get_contents(
 				dirname(__DIR__) . '/styles/' . $style . '/template/gallery/viewimage_body.html'
 			);
-			$avatar = strpos($template, '<div class="user-profile-avatar">');
+			$comments = strpos($template, '{% for commentrow in commentrow %}');
+			$avatar = strpos($template, '<div class="user-profile-avatar">', $comments);
+			$online_anchor = strpos($template, '<div class="gallery-avatar-online">', $avatar);
 			$ribbon = strpos($template, '<div class="ribbon-wrapper small hidden-xs">', $avatar);
 			$image_frame = strpos($template, '<div class="imageframe ', $avatar);
+			$this->assertNotFalse($comments, $style);
 			$this->assertNotFalse($avatar, $style);
+			$this->assertNotFalse($online_anchor, $style);
 			$this->assertNotFalse($ribbon, $style);
 			$this->assertNotFalse($image_frame, $style);
+			$this->assertLessThan($ribbon, $online_anchor, $style);
 			$this->assertLessThan($image_frame, $ribbon, $style);
+			$this->assertStringNotContainsString(
+				'commentrow.S_POSTER_ONLINE',
+				substr($template, 0, $comments),
+				$style
+			);
 		}
 
 		$stylesheet = (string) file_get_contents(dirname(__DIR__) . '/styles/all/theme/gallery.css');
+		$this->assertStringContainsString('.phpbbgallery-image-page .gallery-avatar-online', $stylesheet);
+		$this->assertMatchesRegularExpression(
+			'/\.phpbbgallery-image-page \.gallery-avatar-online\s*\{[^}]*display:\s*inline-block;[^}]*position:\s*relative;/s',
+			$stylesheet
+		);
+		$this->assertMatchesRegularExpression(
+			'/\.phpbbgallery-image-page \.gallery-avatar-online > \.ribbon-wrapper\s*\{[^}]*left:\s*auto;[^}]*right:\s*-3px;/s',
+			$stylesheet
+		);
 		$this->assertStringContainsString('.gallery-sep .fa', $stylesheet);
 		$this->assertStringContainsString('.gallery-checkbox-label', $stylesheet);
 		$this->assertStringContainsString('#attach_sig + label', $stylesheet);

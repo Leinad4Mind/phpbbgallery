@@ -720,7 +720,15 @@ button[name=submit] + .gallery-comment-guidance
 	opacity: .65;
 }
 
-.phpbbgallery-image-page .user-profile-avatar
+.phpbbgallery-image-page .gallery-avatar-online
 {
+	display: inline-block;
 	position: relative;
+	vertical-align: top;
+}
+
+.phpbbgallery-image-page .gallery-avatar-online > .ribbon-wrapper
+{
+	left: auto;
+	right: -3px;
 }
