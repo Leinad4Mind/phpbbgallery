@@ -6,7 +6,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Added
 
-- Added a browser-persisted Simple/Complete ACP view switch for add-on-supplied settings: Simple keeps only their accent colours, while Complete retains the puzzle badges, add-on names and explanatory legend.
+- Added a browser-persisted Simple/Complete ACP view switch for add-on-supplied settings: Simple keeps the compact top colour legend while hiding repeated inline badges, while Complete also retains the inline puzzle badges and explanatory text.
 - Added shareable GET-based Gallery searches with explicit query summaries, in-result refinement, safe state-preserving sort forms and a complete Forum index -> Gallery -> Search breadcrumb.
 - Added permission-checked, bounded username autocomplete to Gallery author search and moderator-only alternate-author uploads, while retaining the wildcard and phpBB member-search fallbacks.
 - Added a permission-filtered total-image statistic to member profiles, hidden when no images are visible and linked to a search for all visible images by that member; FLATBOOTS presents it beside its post and topic timeline statistics.

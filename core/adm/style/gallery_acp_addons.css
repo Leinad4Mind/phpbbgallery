@@ -106,9 +106,9 @@ legend .gallery-addon-badge {
 	padding-inline-start: 12px;
 }
 
-html[data-gallery-addon-view="simple"] .gallery-addon-badge,
-html[data-gallery-addon-view="simple"] .gallery-addon-legend__explain,
-html[data-gallery-addon-view="simple"] .gallery-addon-legend__items {
+html[data-gallery-addon-view="simple"] .gallery-addon-setting .gallery-addon-badge,
+html[data-gallery-addon-view="simple"] .gallery-addon-section .gallery-addon-badge,
+html[data-gallery-addon-view="simple"] .gallery-addon-legend__explain {
 	display: none;
 }
 

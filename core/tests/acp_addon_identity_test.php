@@ -28,6 +28,9 @@ final class acp_addon_identity_test extends TestCase
 		$this->assertStringContainsString('GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN', $template);
 		$this->assertStringContainsString('border-inline-start', $stylesheet);
 		$this->assertStringContainsString('data-gallery-addon-view="simple"', $stylesheet);
+		$this->assertStringContainsString('html[data-gallery-addon-view="simple"] .gallery-addon-setting .gallery-addon-badge', $stylesheet);
+		$this->assertStringContainsString('html[data-gallery-addon-view="simple"] .gallery-addon-section .gallery-addon-badge', $stylesheet);
+		$this->assertStringNotContainsString('html[data-gallery-addon-view="simple"] .gallery-addon-legend__items', $stylesheet);
 		$this->assertStringContainsString('@media (prefers-contrast: more)', $stylesheet);
 		$this->assertStringContainsString("INCLUDEJS '@phpbbgallery_core/gallery_acp_addons.js'", $template);
 		$this->assertStringContainsString("'phpbbgallery.acp.addonSettingsView'", $javascript);
