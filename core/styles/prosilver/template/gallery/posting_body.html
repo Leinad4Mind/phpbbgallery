@@ -60,19 +60,7 @@
 				<dd id="username"><input class="inputbox" type="text" tabindex="1" name="username" value="{{ USERNAME }}" size="60" maxlength="32" /></dd>
 			</dl>
 			{% endif %}
-			{% if S_COMMENTS_ENABLED %}
-				<dl>
-					<dt><label for="allow_comments">{{ lang('COMMENTS') }}{{ lang('COLON') }}</label></dt>
-					<dd><input type="checkbox" class="checkbox" name="allow_comments" id="allow_comments"{% if S_ALLOW_COMMENTS %} checked="checked"{% endif %} value="1" /> <label for="allow_comments">{{ lang('ALLOW_COMMENTS') }}</label></dd>
-				</dl>
-			{% endif %}
-			{% if S_CHANGE_AUTHOR and U_FIND_USERNAME %}
-				<dl>
-					<dt><label for="change_author">{{ lang('CHANGE_AUTHOR') }}{{ lang('COLON') }}</label></dt>
-					<dd><span class="gallery-author-autocomplete"><input type="text" class="inputbox" name="change_author" id="change_author" value="{{ CHANGE_AUTHOR }}" size="32" autocomplete="off" data-gallery-author-autocomplete data-autocomplete-url="{{ U_CHANGE_AUTHOR_AUTOCOMPLETE }}" /></span><a href="{{ U_FIND_USERNAME }}" onclick="find_username(this.href); return false;">[ {{ lang('FIND_USERNAME') }} ]</a></dd>
-				</dl>
-			{% endif %}
-			{% if CAPTCHA_TEMPLATE or not S_USER_LOGGED_IN or S_COMMENTS_ENABLED or S_CHANGE_AUTHOR %}<hr />{% endif %}
+			{% if CAPTCHA_TEMPLATE or not S_USER_LOGGED_IN %}<hr />{% endif %}
 			<dl>
 				<dt><label>{{ lang('MAX_DIMENSIONS') }}{{ lang('COLON') }}</label></dt>
 				<dd>{{ lang('FILE_SIZE') }}{{ lang('COLON') }} {{ S_MAX_FILESIZE }}</dd>

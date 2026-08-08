@@ -189,15 +189,15 @@ class upload
 		$process = $this->gallery_upload;
 		$process->set_up($album_id);
 		$can_change_author = (bool) $this->auth->acl_check('m_edit', $album_id, $album_data['album_user_id']);
-		$change_author = $can_change_author ? $this->request->variable('change_author', '', true, request_interface::POST) : '';
+		$change_author = ($can_change_author && $mode === 'upload_edit') ? $this->request->variable('change_author', '', true, request_interface::POST) : '';
 		$upload_author = ($change_author !== '') ? $this->image->get_new_author_info($change_author) : false;
 		$invalid_author = ($change_author !== '' && $upload_author === false);
 		$upload_author_id = ($upload_author !== false) ? (int) $upload_author['user_id'] : (int) $this->user->data['user_id'];
 		$is_alternate_author = ($upload_author_id !== (int) $this->user->data['user_id']);
 		$comments_enabled = (bool) $this->gallery_config->get('allow_comments') && (bool) $this->gallery_config->get('comment_user_control');
-		$allow_comments_default = !$this->request->is_set_post('mode');
+		$allow_comments_default = $mode !== 'upload_edit' || !$this->request->is_set_post('mode');
 		$allow_comments = $comments_enabled
-			? $this->request->variable('allow_comments', $allow_comments_default, false, request_interface::POST)
+			? (($mode === 'upload_edit') ? $this->request->variable('allow_comments', $allow_comments_default, false, request_interface::POST) : true)
 			: (bool) $this->gallery_config->get('allow_comments');
 		$this->template->assign_vars([
 			'S_CHANGE_AUTHOR'              => $can_change_author,
@@ -363,7 +363,7 @@ class upload
 				{
 					$process->new_error($this->language->lang('INVALID_USERNAME'));
 				}
-				$process->set_allow_comments($this->request->variable('allow_comments', false, false, request_interface::POST));
+				$process->set_allow_comments($allow_comments);
 
 				if ($this->misc->display_captcha('upload'))
 				{

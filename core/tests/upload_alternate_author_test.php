@@ -47,7 +47,7 @@ final class upload_alternate_author_test extends TestCase
 		$source = $this->controller_source();
 
 		$this->assertStringContainsString("\$can_change_author = (bool) \$this->auth->acl_check('m_edit', \$album_id, \$album_data['album_user_id'])", $source);
-		$this->assertStringContainsString("\$change_author = \$can_change_author ? \$this->request->variable('change_author', '', true, request_interface::POST) : ''", $source);
+		$this->assertStringContainsString("\$change_author = (\$can_change_author && \$mode === 'upload_edit') ? \$this->request->variable('change_author', '', true, request_interface::POST) : ''", $source);
 		$this->assertStringContainsString("'S_CHANGE_AUTHOR'", $source);
 		$this->assertStringContainsString('=> $can_change_author', $source);
 		$this->assertStringContainsString("'CHANGE_AUTHOR'", $source);
@@ -80,31 +80,42 @@ final class upload_alternate_author_test extends TestCase
 		$this->assertSame(1, substr_count($source, '!$is_alternate_author && $this->gallery_user->get_data(\'watch_own\')'));
 	}
 
-	public function test_all_posting_templates_preserve_the_requested_author(): void
+	public function test_author_and_comments_are_present_only_during_upload_review(): void
 	{
 		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
 		{
 			$template = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/posting_body.html');
-			$author = strpos($template, 'name="change_author"');
-			$file = strpos($template, 'type="file"');
+			$upload_start = strpos($template, '{% elseif S_UPLOAD %}');
+			$review_start = strpos($template, '{% else %}', $upload_start);
+			$this->assertNotFalse($upload_start, $style);
+			$this->assertNotFalse($review_start, $style);
 
-			$this->assertStringContainsString('name="change_author"', $template, $style);
-			$this->assertStringContainsString('value="{{ CHANGE_AUTHOR }}"', $template, $style);
-			$this->assertStringContainsString('data-gallery-author-autocomplete', $template, $style);
-			$this->assertStringContainsString('U_CHANGE_AUTHOR_AUTOCOMPLETE', $template, $style);
+			$upload_form = substr($template, $upload_start, $review_start - $upload_start);
+			$review_form = substr($template, $review_start);
+
+			$this->assertStringNotContainsString('name="change_author"', $upload_form, $style);
+			$this->assertStringNotContainsString('name="allow_comments"', $upload_form, $style);
+			$this->assertStringContainsString('name="change_author"', $review_form, $style);
+			$this->assertStringContainsString('name="allow_comments"', $review_form, $style);
+			$this->assertStringContainsString('value="{{ CHANGE_AUTHOR }}"', $review_form, $style);
+			$this->assertStringContainsString('data-gallery-author-autocomplete', $review_form, $style);
+			$this->assertStringContainsString('U_CHANGE_AUTHOR_AUTOCOMPLETE', $review_form, $style);
 			$this->assertStringContainsString("INCLUDEJS '@phpbbgallery_core/js/author_autocomplete.js'", $template, $style);
-			$this->assertNotFalse($author, $style);
-			$this->assertNotFalse($file, $style);
 			if ($style !== 'prosilver')
 			{
-				$comments = strpos($template, 'name="allow_comments"');
-				$this->assertNotFalse($comments, $style);
-				$this->assertLessThan($author, $file, $style);
-				$this->assertLessThan($comments, $author, $style);
-				$this->assertStringContainsString('class="form-group gallery-upload-comments"', $template, $style);
-				$this->assertStringContainsString('class="checkbox-inline gallery-checkbox-label"', $template, $style);
+				$this->assertStringContainsString('class="gallery-checkbox-label"', $review_form, $style);
 			}
 		}
+	}
+
+	public function test_first_step_cannot_set_review_only_metadata(): void
+	{
+		$source = $this->controller_source();
+
+		$this->assertStringContainsString("\$allow_comments_default = \$mode !== 'upload_edit'", $source);
+		$this->assertStringContainsString("(\$mode === 'upload_edit') ? \$this->request->variable('allow_comments'", $source);
+		$this->assertStringContainsString('$process->set_allow_comments($allow_comments);', $source);
+		$this->assertStringNotContainsString("\$process->set_allow_comments(\$this->request->variable('allow_comments'", $source);
 	}
 
 	private function property(upload $upload, string $name): mixed
