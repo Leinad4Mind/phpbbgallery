@@ -828,6 +828,28 @@ input.autowidth-gallery {
 	margin: 4px 0 0;
 }
 
+.gallery-album-rating-trigger
+{
+	appearance: none;
+	background: transparent;
+	border: 0;
+	box-shadow: none;
+	color: inherit;
+	cursor: pointer;
+	font: inherit;
+	margin: 0;
+	padding: 0;
+	text-decoration: underline;
+	text-decoration-style: dotted;
+	text-underline-offset: 2px;
+}
+
+.gallery-album-rating-trigger:focus-visible
+{
+	outline: 2px solid currentColor;
+	outline-offset: 2px;
+}
+
 .gallery-album-rating-stars
 {
 	display: flex;

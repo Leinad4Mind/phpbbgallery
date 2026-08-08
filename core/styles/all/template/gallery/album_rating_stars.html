@@ -1,5 +1,6 @@
 {% if image.S_CAN_RATE and image.RATE_SCALE|default([])|length %}
-	<form class="gallery-album-rating-form" action="{{ image.U_RATE_ACTION }}" method="post">
+	<button type="button" class="gallery-album-rating-trigger" data-gallery-rating-trigger aria-expanded="false" aria-controls="gallery-album-rating-{{ image.IMAGE_ID }}">{{ image.S_RATINGS }}</button>
+	<form id="gallery-album-rating-{{ image.IMAGE_ID }}" class="gallery-album-rating-form" action="{{ image.U_RATE_ACTION }}" method="post" data-gallery-rating-form hidden>
 		<div class="gallery-rating-stars-ajax gallery-album-rating-stars" role="radiogroup" aria-label="{{ lang('YOUR_RATING') }}" data-gallery-rating data-rating-url="{{ image.U_RATE_ACTION }}" data-gallery-rating-remove-after-submit>
 			{% for rating_point in image.RATE_SCALE|reverse %}
 				<button type="button" class="gallery-rating-star" role="radio" aria-checked="false" data-rating-value="{{ rating_point }}" aria-label="{{ rating_point }} / {{ image.RATE_SCALE|length }}" title="{{ rating_point }} / {{ image.RATE_SCALE|length }}">
@@ -10,4 +11,6 @@
 		</div>
 		{{ S_FORM_TOKEN }}
 	</form>
+{% else %}
+	{{ image.S_RATINGS }}
 {% endif %}

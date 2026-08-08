@@ -146,12 +146,17 @@ final class controller_album_types_test extends TestCase
 
 		$partial = (string) file_get_contents(dirname(__DIR__) . '/styles/all/template/gallery/album_rating_stars.html');
 		$this->assertStringContainsString('data-gallery-rating-remove-after-submit', $partial);
+		$this->assertStringContainsString('data-gallery-rating-trigger', $partial);
+		$this->assertStringContainsString('data-gallery-rating-form hidden', $partial);
+		$this->assertStringContainsString('aria-controls="gallery-album-rating-{{ image.IMAGE_ID }}"', $partial);
 		$this->assertStringContainsString('image.U_RATE_ACTION', $partial);
 		$this->assertStringContainsString('type="button"', $partial);
 		$this->assertStringNotContainsString('<a ', $partial);
 
 		$script = (string) file_get_contents(dirname(__DIR__) . '/styles/all/template/js/rating.js');
 		$this->assertStringContainsString('data-gallery-rating-remove-after-submit', $script);
+		$this->assertStringContainsString("closest('[data-gallery-rating-trigger]')", $script);
+		$this->assertStringContainsString('form.hidden = !opening', $script);
 
 		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
 		{

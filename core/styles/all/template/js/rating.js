@@ -26,6 +26,24 @@
 		}
 	}
 
+	function toggleAlbumRating(trigger) {
+		var formId = trigger.getAttribute('aria-controls');
+		var form = formId ? document.getElementById(formId) : null;
+		if (!form) {
+			return;
+		}
+
+		var opening = form.hidden;
+		form.hidden = !opening;
+		trigger.setAttribute('aria-expanded', opening ? 'true' : 'false');
+		if (opening) {
+			var firstRating = form.querySelector('[data-rating-value]');
+			if (firstRating) {
+				firstRating.focus();
+			}
+		}
+	}
+
 	function submitRating(container, button) {
 		var form = container.closest('form');
 		var body = new FormData();
@@ -60,6 +78,12 @@
 					ratingButton.hidden = true;
 				});
 				container.removeAttribute('role');
+				var albumForm = container.closest('[data-gallery-rating-form]');
+				var albumTrigger = albumForm ? albumForm.previousElementSibling : null;
+				if (albumTrigger && albumTrigger.hasAttribute('data-gallery-rating-trigger')) {
+					albumTrigger.hidden = true;
+					albumTrigger.setAttribute('aria-expanded', 'false');
+				}
 			}
 			var status = container.querySelector('[data-gallery-rating-status]');
 			if (status) {
@@ -73,6 +97,13 @@
 	}
 
 	document.addEventListener('click', function (event) {
+		var trigger = event.target.closest('[data-gallery-rating-trigger]');
+		if (trigger) {
+			event.preventDefault();
+			toggleAlbumRating(trigger);
+			return;
+		}
+
 		var button = event.target.closest('[data-gallery-rating] [data-rating-value]');
 		if (!button || button.disabled) {
 			return;

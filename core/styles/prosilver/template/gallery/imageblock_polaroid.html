@@ -46,8 +46,7 @@
 	{% if image.IMAGE_VIEWS > -1 %}{{ lang('IMAGE_VIEWS') }}{{ lang('COLON') }} {{ image.IMAGE_VIEWS }}<br />{% endif %}
 	{% EVENT phpbbgallery_core_album_image_metadata %}
 	{% if image.S_RATINGS %}
-		{{ lang('RATING') }}{{ lang('COLON') }} {{ image.S_RATINGS }}<br />
-		{% include '@phpbbgallery_core/gallery/album_rating_stars.html' %}
+		{{ lang('RATING') }}{{ lang('COLON') }} {% include '@phpbbgallery_core/gallery/album_rating_stars.html' %}<br />
 	{% endif %}
 	{% if image.S_COMMENTS %}{{ image.L_COMMENTS }}{{ lang('COLON') }} <a href="{{ image.U_COMMENTS }}">{{ image.S_COMMENTS }}</a><br />{% endif %}
 {% if U_ACP %}
