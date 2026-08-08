@@ -27,7 +27,10 @@ final class album_listing_test extends TestCase
 		$this->assertStringContainsString("acl_check('i_favorite'", $method);
 		$this->assertSame(1, substr_count($method, 'get_favorited_ids('));
 		$this->assertStringNotContainsString('is_favorited(', $method);
-		$this->assertStringContainsString('$event[\'image_template_vars\'] = $image_template_vars', $method);
+		$this->assertStringContainsString(
+			'$event[' . "'image_template_vars'] = " . '$image_template_vars',
+			$method
+		);
 	}
 
 	public function test_album_heart_is_ajax_capable_with_a_normal_link_fallback(): void
@@ -43,11 +46,13 @@ final class album_listing_test extends TestCase
 
 		$this->assertStringContainsString('{% if image.U_FAVORITE_IMAGE %}', $template);
 		$this->assertStringContainsString('href="{{ image.U_FAVORITE_IMAGE }}"', $template);
-		$this->assertStringContainsString('data-ajax="toggle_link"', $template);
+		$this->assertStringContainsString('data-gallery-favorite-ajax', $template);
+		$this->assertStringContainsString('data-ajax="false"', $template);
+		$this->assertStringContainsString('data-favorited="', $template);
 		$this->assertStringContainsString('data-toggle-url="{{ image.U_FAVORITE_IMAGE_TOGGLE }}"', $template);
-		$this->assertStringContainsString('data-toggle-class="gallery-favorite-action', $template);
-		$this->assertStringContainsString('.gallery-favorite-action.is-favorited', $stylesheet);
-		$this->assertStringContainsString('content: "\\f004"', $stylesheet);
+		$this->assertStringContainsString('class="gallery-favorite-icon icon', $template);
+		$this->assertStringContainsString('.gallery-favorite-icon.fa-heart', $stylesheet);
 		$this->assertStringContainsString("INCLUDECSS '@phpbbgallery_favorite/favorite.css'", $head);
+		$this->assertStringContainsString("INCLUDEJS '@phpbbgallery_favorite/favorite.js'", $head);
 	}
 }

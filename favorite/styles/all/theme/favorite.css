@@ -12,7 +12,7 @@
 {
 	inset-inline-end: 8px;
 	position: absolute;
-	top: 8px;
+	top: 5px;
 	z-index: 2;
 }
 
@@ -33,18 +33,15 @@
 	width: 30px;
 }
 
-.gallery-favorite-toggle::before
+.gallery-favorite-icon
 {
-	content: "\f08a";
-	font-family: FontAwesome;
 	font-size: 16px;
 	line-height: 1;
 }
 
-.gallery-favorite-action.is-favorited .gallery-favorite-toggle::before
+.gallery-favorite-icon.fa-heart
 {
 	color: #d9534f;
-	content: "\f004";
 }
 
 .gallery-favorite-toggle:hover,
@@ -55,4 +52,11 @@
 	color: #d9534f;
 	outline: 0;
 	text-decoration: none;
+}
+
+[data-gallery-favorite-ajax].is-loading
+{
+	cursor: wait;
+	opacity: 0.6;
+	pointer-events: none;
 }

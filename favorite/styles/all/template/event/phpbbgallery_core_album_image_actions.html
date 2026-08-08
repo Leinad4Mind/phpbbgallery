@@ -1,5 +1,5 @@
 {% if image.U_FAVORITE_IMAGE %}
 <span class="gallery-favorite-action{% if image.S_IMAGE_FAVORITED %} is-favorited{% endif %}">
-	<a class="gallery-favorite-toggle" href="{{ image.U_FAVORITE_IMAGE }}" title="{{ image.S_FAVORITE_NAME }}" data-ajax="toggle_link" data-toggle-text="{{ image.S_FAVORITE_NAME_TOGGLE }}" data-toggle-url="{{ image.U_FAVORITE_IMAGE_TOGGLE }}" data-toggle-class="gallery-favorite-action{% if not image.S_IMAGE_FAVORITED %} is-favorited{% endif %}">{{ image.S_FAVORITE_NAME }}</a>
+	<a class="gallery-favorite-toggle" href="{{ image.U_FAVORITE_IMAGE }}" title="{{ image.S_FAVORITE_NAME }}" data-gallery-favorite-ajax data-favorited="{% if image.S_IMAGE_FAVORITED %}1{% else %}0{% endif %}" data-ajax="false" data-toggle-text="{{ image.S_FAVORITE_NAME_TOGGLE }}" data-toggle-url="{{ image.U_FAVORITE_IMAGE_TOGGLE }}"><i class="gallery-favorite-icon icon {% if image.S_IMAGE_FAVORITED %}fa-heart{% else %}fa-heart-o{% endif %} fa-fw" aria-hidden="true"></i><span class="sr-only">{{ image.S_FAVORITE_NAME }}</span></a>
 </span>
 {% endif %}
