@@ -177,6 +177,19 @@ class language_catalog_test extends TestCase
 		}
 	}
 
+	public function test_image_permissions_distinguish_previews_from_original_sources(): void
+	{
+		$language_root = $this->extension_root . '/core/language';
+		foreach (glob($language_root . '/*/gallery_acp.php') as $catalog)
+		{
+			$locale = basename(dirname($catalog));
+			$language = $this->load_language($catalog);
+			$this->assertStringContainsString('(', $language['PERMISSION_I_VIEW'], $locale . ':PERMISSION_I_VIEW');
+			$this->assertStringContainsString('source', $language['PERMISSION_I_DOWNLOAD'], $locale . ':PERMISSION_I_DOWNLOAD');
+			$this->assertStringContainsString('source', $language['PERMISSION_I_DOWNLOAD_FREE'], $locale . ':PERMISSION_I_DOWNLOAD_FREE');
+		}
+	}
+
 	public function test_brazilian_portuguese_catalog_uses_brazilian_vocabulary_and_register(): void
 	{
 		$patterns = [

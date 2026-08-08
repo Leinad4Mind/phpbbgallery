@@ -25,8 +25,8 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'PERMISSION_I_MOVE' => 'Kan eigen afbeeldingen verplaatsen',
-	'PERMISSION_I_DOWNLOAD' => 'Kan originele afbeeldingsbestanden downloaden',
-	'PERMISSION_I_DOWNLOAD_FREE' => 'Kan originele afbeeldingsbestanden zonder kosten downloaden',
+	'PERMISSION_I_DOWNLOAD' => 'Kan originele afbeeldingsbestanden downloaden (source)',
+	'PERMISSION_I_DOWNLOAD_FREE' => 'Kan originele afbeeldingsbestanden zonder kosten downloaden (source)',
 	'STORAGE_MIGRATION' => 'Migratie naar gedistribueerde opslag',
 	'STORAGE_MIGRATION_EXPLAIN' => 'Verplaatst bestaande lokale afbeeldingsbestanden in gecontroleerde en hervatbare batches naar de ingestelde gedistribueerde mapstructuur.',
 	'STORAGE_MIGRATION_CONFIRM' => 'Weet je zeker dat je de bestaande Galerijbestanden naar de gedistribueerde structuur wilt migreren?',
@@ -304,7 +304,7 @@ $lang = array_merge($lang, [
 	'PERMISSION_I_UNLIMITED'        => 'Kan ongelimiteerd aantal afbeeldingen uploaden',
 	'PERMISSION_I_UPLOAD'           => 'Kan afbeeldingen uploaden',
 	'PERMISSION_I_UPLOAD_EXPLAIN'   => 'Deze permissie bepaalt ook of een gebruiker eigen afbeeldingen naar dit album kan verplaatsen.',
-	'PERMISSION_I_VIEW'             => 'Kan afbeeldingen bekijken',
+	'PERMISSION_I_VIEW'             => 'Kan afbeeldingen bekijken (miniatuur en middelgroot)',
 	'PERMISSION_I_WATERMARK'        => 'Kan afbeelding zonder watermerk bekijken',
 	'PERMISSION_M'                  => 'Moderatie',
 	'PERMISSION_MISC'               => 'Misc', //Miscellaneous

@@ -70,6 +70,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Clarified in every ACP language that image viewing covers thumbnail/medium previews, while the download permissions govern original source files.
 - Added breathing room around the camera divider, separated checkbox labels, kept the online ribbon inside the comment avatar area and extended the Unicode-aware live counter to image descriptions.
 - Reworked FLATBOOTS comment actions and profile contacts to follow the theme's native viewtopic toolbar, dropdown, quote-button and mini-profile contact patterns.
 - Moved the BBPoints original-download counter into the image metadata immediately below the view counter in prosilver, BBOOTS and FLATBOOTS.

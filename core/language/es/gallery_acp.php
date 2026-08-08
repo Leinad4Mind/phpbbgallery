@@ -25,8 +25,8 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'PERMISSION_I_MOVE' => 'Puede mover sus propias imágenes',
-	'PERMISSION_I_DOWNLOAD' => 'Puede descargar los archivos de imagen originales',
-	'PERMISSION_I_DOWNLOAD_FREE' => 'Puede descargar los archivos originales sin cargos',
+	'PERMISSION_I_DOWNLOAD' => 'Puede descargar los archivos de imagen originales (source)',
+	'PERMISSION_I_DOWNLOAD_FREE' => 'Puede descargar los archivos originales sin cargos (source)',
 	'STORAGE_MIGRATION' => 'Migración al almacenamiento distribuido',
 	'STORAGE_MIGRATION_EXPLAIN' => 'Mueve los archivos de imagen locales existentes a la estructura distribuida configurada en lotes verificados y reanudables.',
 	'STORAGE_MIGRATION_CONFIRM' => '¿Seguro que quieres migrar los archivos existentes de la Galería a la estructura distribuida?',
@@ -304,7 +304,7 @@ $lang = array_merge($lang, [
 	'PERMISSION_I_UNLIMITED'      => 'Puede subir imágenes ilimitadas',
 	'PERMISSION_I_UPLOAD'         => 'Puede subir imágenes',
 	'PERMISSION_I_UPLOAD_EXPLAIN' => 'Este permiso también determina si el usuario puede mover sus propias imágenes a este álbum.',
-	'PERMISSION_I_VIEW'           => 'Puede ver imágenes',
+	'PERMISSION_I_VIEW'           => 'Puede ver imágenes (miniatura y tamaño medio)',
 	'PERMISSION_I_WATERMARK'      => 'Puede ver imágenes sin marca de agua',
 	'PERMISSION_M'                => 'Moderación',
 	'PERMISSION_MISC'             => 'Varios', //Miscellaneous

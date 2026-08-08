@@ -24,8 +24,8 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'PERMISSION_I_MOVE' => 'Can move own images',
-	'PERMISSION_I_DOWNLOAD' => 'Can download original image files',
-	'PERMISSION_I_DOWNLOAD_FREE' => 'Can download original image files without charges',
+	'PERMISSION_I_DOWNLOAD' => 'Can download original image files (source)',
+	'PERMISSION_I_DOWNLOAD_FREE' => 'Can download original image files without charges (source)',
 ]);
 
 $lang = array_merge($lang, [
@@ -262,7 +262,7 @@ $lang = array_merge($lang, [
 	'PERMISSION_I_UNLIMITED'        => 'Can upload unlimited images',
 	'PERMISSION_I_UPLOAD'           => 'Can upload images',
 	'PERMISSION_I_UPLOAD_EXPLAIN'   => 'This permission also determines whether the user can move their own images into this album.',
-	'PERMISSION_I_VIEW'             => 'Can view images',
+	'PERMISSION_I_VIEW'             => 'Can view images (thumbnail and medium)',
 	'PERMISSION_I_WATERMARK'        => 'Can view images without watermark',
 	'PERMISSION_M'                  => 'Moderation',
 	'PERMISSION_MISC'               => 'Misc', //Miscellaneous
