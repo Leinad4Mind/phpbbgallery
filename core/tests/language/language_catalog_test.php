@@ -201,6 +201,18 @@ class language_catalog_test extends TestCase
 		$this->assertStringContainsString('permission is also required', $english['PERMISSION_I_DOWNLOAD_EXPLAIN']);
 	}
 
+	public function test_download_source_tooltip_is_translated_in_every_language(): void
+	{
+		$language_root = $this->extension_root . '/core/language';
+		foreach ($this->language_directories($language_root) as $directory)
+		{
+			$language = $this->load_language($directory . '/gallery.php');
+			$this->assertArrayHasKey('DOWNLOAD_SOURCE', $language, basename($directory));
+			$this->assertNotSame('DOWNLOAD_SOURCE', $language['DOWNLOAD_SOURCE'], basename($directory));
+			$this->assertNotSame('', trim($language['DOWNLOAD_SOURCE']), basename($directory));
+		}
+	}
+
 	public function test_brazilian_portuguese_catalog_uses_brazilian_vocabulary_and_register(): void
 	{
 		$patterns = [

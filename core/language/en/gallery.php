@@ -94,6 +94,7 @@ $lang = array_merge($lang, [
 	'DELETE_IMAGE2'           => 'Delete image?',
 	'DELETE_IMAGE2_CONFIRM'   => 'Are you sure you want to delete the image?',
 	'REQUEST_IMAGE_DELETION'  => 'Request deletion',
+	'DOWNLOAD_SOURCE'         => 'Download original image',
 	'REQUEST_IMAGE_DELETION_CONFIRM' => 'Are you sure you want to submit this image for deletion?',
 	'IMAGE_DELETION_REQUESTED' => 'The image deletion request was submitted for moderation.',
 	'REQUEST_IMAGE_DELETION'  => 'Request deletion',

@@ -111,6 +111,7 @@ $lang = array_merge($lang, [
 	'DELETE_IMAGE2'           => 'Supprimer l’image ?',
 	'DELETE_IMAGE2_CONFIRM'   => 'Êtes-vous sûr de vouloir supprimer cette image ?',
 	'REQUEST_IMAGE_DELETION'  => 'Demander la suppression',
+	'DOWNLOAD_SOURCE'         => 'Télécharger l’image originale',
 	'REQUEST_IMAGE_DELETION_CONFIRM' => 'Voulez-vous vraiment demander la suppression de cette image ?',
 	'IMAGE_DELETION_REQUESTED' => 'La demande de suppression de l’image a été transmise à la modération.',
 	'DELETED_COMMENT'         => 'Commentaire supprimé',
