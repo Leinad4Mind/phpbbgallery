@@ -1,0 +1,13 @@
+{% if image.S_CAN_RATE and image.RATE_SCALE|default([])|length %}
+	<form class="gallery-album-rating-form" action="{{ image.U_RATE_ACTION }}" method="post">
+		<div class="gallery-rating-stars-ajax gallery-album-rating-stars" role="radiogroup" aria-label="{{ lang('YOUR_RATING') }}" data-gallery-rating data-rating-url="{{ image.U_RATE_ACTION }}" data-gallery-rating-remove-after-submit>
+			{% for rating_point in image.RATE_SCALE|reverse %}
+				<button type="button" class="gallery-rating-star" role="radio" aria-checked="false" data-rating-value="{{ rating_point }}" aria-label="{{ rating_point }} / {{ image.RATE_SCALE|length }}" title="{{ rating_point }} / {{ image.RATE_SCALE|length }}">
+					<span aria-hidden="true">&#9733;</span>
+				</button>
+			{% endfor %}
+			<output class="gallery-album-rating-status" data-gallery-rating-status aria-live="polite" aria-atomic="true"></output>
+		</div>
+		{{ S_FORM_TOKEN }}
+	</form>
+{% endif %}

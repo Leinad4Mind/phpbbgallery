@@ -55,6 +55,12 @@
 			container.classList.add('is-rated');
 			button.classList.add('is-selected');
 			button.setAttribute('aria-checked', 'true');
+			if (container.hasAttribute('data-gallery-rating-remove-after-submit')) {
+				Array.prototype.forEach.call(container.querySelectorAll('[data-rating-value]'), function (ratingButton) {
+					ratingButton.hidden = true;
+				});
+				container.removeAttribute('role');
+			}
 			var status = container.querySelector('[data-gallery-rating-status]');
 			if (status) {
 				status.textContent = data.message;

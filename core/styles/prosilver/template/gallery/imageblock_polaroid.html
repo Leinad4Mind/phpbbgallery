@@ -43,7 +43,10 @@
 	{% if image.POSTER %}{{ lang('UPLOADED_BY_USER') }}{{ lang('COLON') }} {{ image.POSTER }}<br />{% endif %}
 	{% if image.TIME %}&raquo; {{ image.TIME }}<br />{% endif %}
 	{% if image.IMAGE_VIEWS > -1 %}{{ lang('IMAGE_VIEWS') }}{{ lang('COLON') }} {{ image.IMAGE_VIEWS }}<br />{% endif %}
-	{% if image.S_RATINGS %}{{ lang('RATING') }}{{ lang('COLON') }} <a href="{{ image.U_RATINGS }}">{{ image.S_RATINGS }}</a><br />{% endif %}
+	{% if image.S_RATINGS %}
+		{{ lang('RATING') }}{{ lang('COLON') }} {{ image.S_RATINGS }}<br />
+		{% include '@phpbbgallery_core/gallery/album_rating_stars.html' %}
+	{% endif %}
 	{% if image.S_COMMENTS %}{{ image.L_COMMENTS }}{{ lang('COLON') }} <a href="{{ image.U_COMMENTS }}">{{ image.S_COMMENTS }}</a><br />{% endif %}
 {% if U_ACP %}
 	{% if image.U_USER_IP %}{{ lang('IP') }}{{ lang('COLON') }} {{ image.U_USER_IP }}<br />{% endif %}

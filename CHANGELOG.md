@@ -6,6 +6,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Added
 
+- Added permission-aware inline AJAX rating stars to album cards; own images, previously rated images and images outside the effective rating permission show no rating link or control.
 - Added independent per-album permissions for original-file downloads and charge-free original access, with both denied by default.
 - Added accessible star-only AJAX rating controls to FLATBOOTS and prosilver, with CSRF-protected POST submission, permission revalidation and no page reload.
 - Made Favorite controls update their icon, label and inverse action over AJAX in album listings and image pages, including after progressive AJAX image navigation.

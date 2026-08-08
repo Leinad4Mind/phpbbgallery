@@ -120,6 +120,47 @@ final class controller_album_types_test extends TestCase
 		}
 	}
 
+	public function test_album_cards_offer_ajax_rating_only_to_eligible_users(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/album.php');
+		$batch_lookup = strpos($source, '$this->gallery_rating->get_user_ratings(');
+		$image_loop = strpos($source, 'foreach ($images as $row)', (int) $batch_lookup);
+
+		$this->assertNotFalse($batch_lookup);
+		$this->assertNotFalse($image_loop);
+		$this->assertTrue($batch_lookup < $image_loop);
+		$this->assertStringContainsString('array_key_exists($image_id, $user_ratings)', $source);
+		$this->assertStringContainsString('$this->gallery_rating->is_able()', $source);
+		$this->assertStringContainsString("'S_CAN_RATE'", $source);
+		$this->assertStringContainsString("'U_RATE_ACTION'", $source);
+		$this->assertStringContainsString("add_form_key('gallery')", $source);
+		$this->assertStringNotContainsString("'#rating'", $source);
+		$this->assertStringNotContainsString("'U_RATINGS'", $source);
+
+		$services = (string) file_get_contents(dirname(__DIR__) . '/config/services_controller.yml');
+		$album_service = strstr($services, 'phpbbgallery.core.controller.album:');
+		$album_service = strstr($album_service, 'phpbbgallery.core.controller.file:', true);
+		$this->assertStringContainsString("- '@phpbbgallery.core.rating'", $album_service);
+
+		$partial = (string) file_get_contents(dirname(__DIR__) . '/styles/all/template/gallery/album_rating_stars.html');
+		$this->assertStringContainsString('data-gallery-rating-remove-after-submit', $partial);
+		$this->assertStringContainsString('image.U_RATE_ACTION', $partial);
+		$this->assertStringContainsString('type="button"', $partial);
+		$this->assertStringNotContainsString('<a ', $partial);
+
+		$script = (string) file_get_contents(dirname(__DIR__) . '/styles/all/template/js/rating.js');
+		$this->assertStringContainsString('data-gallery-rating-remove-after-submit', $script);
+
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$card = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/imageblock_polaroid.html');
+			$album = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/album_body.html');
+			$this->assertStringContainsString('@phpbbgallery_core/gallery/album_rating_stars.html', $card, $style);
+			$this->assertStringNotContainsString('image.U_RATINGS', $card, $style);
+			$this->assertStringContainsString("INCLUDEJS '@phpbbgallery_core/js/rating.js'", $album, $style);
+		}
+	}
+
 	public function test_contest_finalization_runs_only_after_album_access_checks(): void
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/album.php');

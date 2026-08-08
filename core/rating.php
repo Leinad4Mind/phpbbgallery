@@ -334,6 +334,45 @@ class rating
 	}
 
 	/**
+	 * Get the ratings submitted by one user for a bounded image set.
+	 *
+	 * @param int[] $image_ids Image identifiers from the current result page
+	 * @param int   $user_id   User identifier
+	 * @return array<int, int> Rating points keyed by image identifier
+	 */
+	public function get_user_ratings(array $image_ids, int $user_id): array
+	{
+		if ($user_id == ANONYMOUS)
+		{
+			return [];
+		}
+
+		$image_ids = array_values(array_unique(array_filter(
+			array_map('intval', $image_ids),
+			static fn (int $image_id): bool => $image_id > 0
+		)));
+		if (!$image_ids)
+		{
+			return [];
+		}
+
+		$sql = 'SELECT rate_image_id, rate_point
+			FROM ' . $this->rates_table . '
+			WHERE rate_user_id = ' . (int) $user_id . '
+				AND ' . $this->db->sql_in_set('rate_image_id', $image_ids);
+		$result = $this->db->sql_query($sql);
+
+		$ratings = [];
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$ratings[(int) $row['rate_image_id']] = (int) $row['rate_point'];
+		}
+		$this->db->sql_freeresult($result);
+
+		return $ratings;
+	}
+
+	/**
 	 * Submit rating for an image.
 	 *
 	 * @param bool|int $user_id

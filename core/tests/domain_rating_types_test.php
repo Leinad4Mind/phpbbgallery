@@ -73,6 +73,96 @@ final class domain_rating_types_test extends TestCase
 		$this->assertSame(4, $rating->get_user_rating(12));
 	}
 
+	public function test_user_ratings_for_an_album_page_are_loaded_in_one_bounded_query(): void
+	{
+		if (!defined('ANONYMOUS'))
+		{
+			define('ANONYMOUS', 1);
+		}
+
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->once())
+			->method('sql_in_set')
+			->with('rate_image_id', [4, 7])
+			->willReturn('rate_image_id IN (4, 7)');
+		$db->expects($this->once())
+			->method('sql_query')
+			->with($this->callback(static fn (string $sql): bool =>
+				str_contains($sql, 'FROM gallery_rates') &&
+				str_contains($sql, 'rate_user_id = 2') &&
+				str_contains($sql, 'rate_image_id IN (4, 7)')
+			))
+			->willReturn('result');
+		$db->expects($this->exactly(3))
+			->method('sql_fetchrow')
+			->with('result')
+			->willReturnOnConsecutiveCalls(
+				['rate_image_id' => 4, 'rate_point' => 8],
+				['rate_image_id' => 7, 'rate_point' => 3],
+				false
+			);
+		$db->expects($this->once())->method('sql_freeresult')->with('result');
+
+		$reflection = new \ReflectionClass(rating::class);
+		$rating = $reflection->newInstanceWithoutConstructor();
+		$reflection->getProperty('db')->setValue($rating, $db);
+		$reflection->getProperty('rates_table')->setValue($rating, 'gallery_rates');
+
+		$this->assertSame([4 => 8, 7 => 3], $rating->get_user_ratings([4, 0, 7, 4, -2], 2));
+	}
+
+	public function test_album_rating_lookup_skips_guests_and_empty_pages(): void
+	{
+		if (!defined('ANONYMOUS'))
+		{
+			define('ANONYMOUS', 1);
+		}
+
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->never())->method('sql_query');
+		$db->expects($this->never())->method('sql_in_set');
+		$reflection = new \ReflectionClass(rating::class);
+		$rating = $reflection->newInstanceWithoutConstructor();
+		$reflection->getProperty('db')->setValue($rating, $db);
+
+		$this->assertSame([], $rating->get_user_ratings([4, 7], ANONYMOUS));
+		$this->assertSame([], $rating->get_user_ratings([], 2));
+	}
+
+	public function test_rating_permission_rejects_the_owner_and_guest_but_accepts_an_authorized_peer(): void
+	{
+		if (!defined('ANONYMOUS'))
+		{
+			define('ANONYMOUS', 1);
+		}
+
+		$reflection = new \ReflectionClass(rating::class);
+		$rating = $reflection->newInstanceWithoutConstructor();
+		$gallery_auth = $this->createMock(\phpbbgallery\core\auth\auth::class);
+		$gallery_auth->expects($this->exactly(3))
+			->method('acl_check')
+			->with('i_rate', 4, 0)
+			->willReturn(true);
+		$user = new \phpbb\user();
+		$reflection->getProperty('gallery_auth')->setValue($rating, $gallery_auth);
+		$reflection->getProperty('user')->setValue($rating, $user);
+		$rating->loader(12, [
+			'image_user_id' => 2,
+			'image_status' => block::STATUS_APPROVED,
+		], [
+			'album_id' => 4,
+			'album_user_id' => 0,
+			'album_status' => block::ALBUM_OPEN,
+		]);
+
+		$user->data = ['user_id' => 2];
+		$this->assertFalse($rating->is_allowed());
+		$user->data = ['user_id' => ANONYMOUS];
+		$this->assertFalse($rating->is_allowed());
+		$user->data = ['user_id' => 7];
+		$this->assertTrue($rating->is_allowed());
+	}
+
 	public function test_rating_ability_respects_the_album_operation_policy(): void
 	{
 		$rating = $this->getMockBuilder(rating::class)

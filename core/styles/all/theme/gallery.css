@@ -737,6 +737,35 @@ input.autowidth-gallery {
 	opacity: .65;
 }
 
+.gallery-album-rating-form
+{
+	margin: 4px 0 0;
+}
+
+.gallery-album-rating-stars
+{
+	display: flex;
+	justify-content: center;
+}
+
+.gallery-album-rating-stars .gallery-rating-star
+{
+	font-size: 18px;
+	padding: 0;
+}
+
+.gallery-album-rating-status
+{
+	display: block;
+	font-weight: 600;
+	line-height: 1.3;
+}
+
+.gallery-album-rating-status:empty
+{
+	display: none;
+}
+
 .phpbbgallery-image-page .gallery-avatar-online
 {
 	display: inline-block;

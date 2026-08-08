@@ -123,4 +123,5 @@
 	{% endfor %}
 {% endif %}
 
+{% if S_ALBUM_INLINE_RATING %}{% INCLUDEJS '@phpbbgallery_core/js/rating.js' %}{% endif %}
 {% include 'gallery/gallery_footer.html' %}

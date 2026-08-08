@@ -74,6 +74,9 @@ class album
 	/** @var \phpbbgallery\core\policy\album_operation */
 	protected \phpbbgallery\core\policy\album_operation $album_operation;
 
+	/** @var \phpbbgallery\core\rating */
+	protected \phpbbgallery\core\rating $gallery_rating;
+
 	/** @var string */
 	protected string $table_images;
 
@@ -109,6 +112,7 @@ class album
 	 * @param \phpbb\event\dispatcher_interface                        $phpbb_dispatcher
 	 * @param \phpbbgallery\core\policy\image_visibility                $image_visibility
 	 * @param \phpbbgallery\core\policy\album_operation                 $album_operation
+	 * @param \phpbbgallery\core\rating                                 $gallery_rating
 	 * @param string                                                    $images_table Gallery image table
 	 */
 	public function __construct(\phpbb\config\config $config, \phpbb\auth\auth $phpbb_auth,
@@ -121,6 +125,7 @@ class album
 		\phpbbgallery\core\url $url, \phpbbgallery\core\image\image $image, \phpbb\request\request_interface $request,
 		\phpbb\event\dispatcher_interface $phpbb_dispatcher, \phpbbgallery\core\policy\image_visibility $image_visibility,
 		\phpbbgallery\core\policy\album_operation $album_operation,
+		\phpbbgallery\core\rating $gallery_rating,
 		string $images_table)
 	{
 		$this->config = $config;
@@ -143,6 +148,7 @@ class album
 		$this->phpbb_dispatcher = $phpbb_dispatcher;
 		$this->image_visibility = $image_visibility;
 		$this->album_operation = $album_operation;
+		$this->gallery_rating = $gallery_rating;
 		$this->table_images = $images_table;
 	}
 
@@ -420,6 +426,13 @@ class album
 		$show_imagename = ($show_options & self::ALBUM_SHOW_IMAGENAME) !== 0;
 		$show_comments = ($show_options & self::ALBUM_SHOW_COMMENTS) !== 0;
 		$show_album = ($show_options & self::ALBUM_SHOW_ALBUM) !== 0;
+		$ratings_visible = (int) $this->gallery_config->get('allow_rates') === 1 && $show_ratings;
+		$image_ids = array_map(static fn (array $image): int => (int) $image['image_id'], $images);
+		$user_ratings = $ratings_visible
+			? $this->gallery_rating->get_user_ratings($image_ids, (int) $this->user->data['user_id'])
+			: [];
+		$rate_scale = range(1, max(1, (int) $this->gallery_config->get('max_rating')));
+		$has_inline_rating = false;
 
 		foreach ($images as $row)
 		{
@@ -472,6 +485,15 @@ class album
 			) : '';
 			$hide_results = $this->image_visibility->hides_results($image_data, $can_moderate);
 			$image_award = $this->image_visibility->award($image_data);
+			$image_id = (int) $image_data['image_id'];
+			$has_user_rating = array_key_exists($image_id, $user_ratings);
+			$can_rate = false;
+			if ($ratings_visible && !$hide_results && !$has_user_rating)
+			{
+				$this->gallery_rating->loader($image_id, $image_data, $album_data);
+				$can_rate = $this->gallery_rating->is_able();
+			}
+			$has_inline_rating = $has_inline_rating || $can_rate;
 			$template_vars = [
 				'IMAGE_ID'      => (int) $image_data['image_id'],
 				'U_IMAGE'       => $action_image,
@@ -488,8 +510,11 @@ class album
 				'POSTER'              => ($show_username) ? (($s_username_hidden) ? $private_data_label : get_username_string('full', $image_data['image_user_id'], $image_data['image_username'], $image_data['image_user_colour'])) : false,
 				'TIME'                => $show_time ? $this->user->format_date($image_data['image_time']) : false,
 
-				'S_RATINGS'  => (!$hide_results && $this->config['phpbb_gallery_allow_rates'] == 1 && $show_ratings) ? ($image_data['image_rates'] > 0 ? $image_data['image_rate_avg'] / 100 : $this->language->lang('NOT_RATED')) : false,
-				'U_RATINGS'  => !$hide_results ? $this->helper->route('phpbbgallery_core_image', ['image_id' => $image_data['image_id']]) . '#rating' : false,
+				'S_RATINGS'       => (!$hide_results && $ratings_visible) ? ($image_data['image_rates'] > 0 ? $image_data['image_rate_avg'] / 100 : $this->language->lang('NOT_RATED')) : false,
+				'S_CAN_RATE'       => $can_rate,
+				'S_HAS_RATED'      => $has_user_rating,
+				'U_RATE_ACTION'     => $can_rate ? $this->helper->route('phpbbgallery_core_image_rate', ['image_id' => $image_id]) : '',
+				'RATE_SCALE'        => $can_rate ? $rate_scale : [],
 				'L_COMMENTS' => !$hide_results ? (($image_data['image_comments'] == 1) ? $this->language->lang('COMMENT') : $this->language->lang('COMMENTS')) : false,
 				'S_COMMENTS' => (!$hide_results && $this->config['phpbb_gallery_allow_comments'] && $this->auth->acl_check('c_read', $image_data['image_album_id'], $album_user_id) && $show_comments) ? (($image_data['image_comments']) ? $image_data['image_comments'] : $this->language->lang('NO_COMMENTS')) : false,
 				'U_COMMENTS' => !$hide_results ? $this->helper->route('phpbbgallery_core_image', ['image_id' => $image_data['image_id']]) . '#comments' : false,
@@ -510,12 +535,17 @@ class album
 				'IMAGE_AWARD_TITLE' => $image_award['title'],
 				'S_IMAGE_AWARD_RANK' => $image_award['rank'],
 			];
-			$image_id = (int) $image_data['image_id'];
 			if (isset($image_template_vars[$image_id]) && is_array($image_template_vars[$image_id]))
 			{
 				$template_vars = array_merge($template_vars, $image_template_vars[$image_id]);
 			}
 			$this->template->assign_block_vars('imageblock.image', $template_vars);
+		}
+
+		if ($has_inline_rating)
+		{
+			add_form_key('gallery');
+			$this->template->assign_var('S_ALBUM_INLINE_RATING', true);
 		}
 
 		$this->pagination->generate_template_pagination([
