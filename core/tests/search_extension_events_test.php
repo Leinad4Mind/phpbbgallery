@@ -119,6 +119,24 @@ final class search_extension_events_test extends TestCase
 		}
 	}
 
+	public function test_bootstrap_search_results_use_a_compact_flex_toolbar_and_valid_pagination(): void
+	{
+		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$template = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/search_results.html');
+
+			$this->assertStringContainsString('class="gallery-search-results-toolbar"', $template, $style);
+			$this->assertStringContainsString('class="gallery-search-results-refine"', $template, $style);
+			$this->assertStringContainsString('input-group input-group-sm', $template, $style);
+			$this->assertSame(2, substr_count($template, '<li class="active"><a>{{ PAGE_NUMBER }}</a></li>'), $style);
+			$this->assertStringNotContainsString("{% else %}\n\t\t\t\t{{ PAGE_NUMBER }}", $template, $style);
+		}
+
+		$css = (string) file_get_contents(dirname(__DIR__) . '/styles/all/theme/gallery.css');
+		$this->assertStringContainsString('.gallery-search-results-toolbar', $css);
+		$this->assertStringContainsString('max-width: 360px;', $css);
+	}
+
 	public function test_search_exposes_bounded_sort_and_result_enrichment_events(): void
 	{
 		$controller = (string) file_get_contents(dirname(__DIR__) . '/controller/search.php');
