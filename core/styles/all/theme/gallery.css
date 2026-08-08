@@ -653,6 +653,24 @@ input.autowidth-gallery {
 	margin-left: 7px;
 }
 
+.gallery-upload-comments
+{
+	align-items: center;
+	display: flex;
+	flex-wrap: wrap;
+	min-height: 34px;
+}
+
+.gallery-upload-comments .control-label
+{
+	margin: 0 10px 0 0;
+}
+
+.gallery-upload-comments .gallery-checkbox-label
+{
+	margin-bottom: 0;
+}
+
 .gallery-rating-stars
 {
 	display: inline-flex;

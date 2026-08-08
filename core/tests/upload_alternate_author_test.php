@@ -89,7 +89,15 @@ final class upload_alternate_author_test extends TestCase
 			$this->assertStringContainsString('value="{{ CHANGE_AUTHOR }}"', $template, $style);
 			$this->assertNotFalse($author, $style);
 			$this->assertNotFalse($file, $style);
-			$this->assertLessThan($file, $author, $style);
+			if ($style !== 'prosilver')
+			{
+				$comments = strpos($template, 'name="allow_comments"');
+				$this->assertNotFalse($comments, $style);
+				$this->assertLessThan($author, $file, $style);
+				$this->assertLessThan($comments, $author, $style);
+				$this->assertStringContainsString('class="form-group gallery-upload-comments"', $template, $style);
+				$this->assertStringContainsString('class="checkbox-inline gallery-checkbox-label"', $template, $style);
+			}
 		}
 	}
 

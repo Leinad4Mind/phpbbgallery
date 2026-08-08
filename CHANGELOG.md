@@ -75,6 +75,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Reordered the BBOOTS and FLATBOOTS upload form so image selection precedes the optional author and comment controls, and rendered the comment checkbox as one responsive theme-native row.
 - Kept the Favorite UCP bulk-action selector and submit button together in one responsive native Bootstrap control in BBOOTS and FLATBOOTS.
 - Rendered album-moderation batch actions inside each style so FLATBOOTS and BBOOTS use their native Bootstrap select picker instead of an unstyled Core-generated dropdown.
 - Initialized the new original-download permission from each existing role's image-view permission, preserving historical source access while keeping the charge-bypass permission denied by default.
