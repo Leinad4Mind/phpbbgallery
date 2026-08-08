@@ -6,6 +6,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Added
 
+- Added accessible contextual-help dialogs to every Gallery ACP resynchronisation and cache operation, explaining what each repair changes, when it is appropriate and when routine Gallery behavior already keeps the data current.
 - Added a browser-persisted Simple/Complete ACP view switch for add-on-supplied settings: Simple keeps the compact top colour legend and a colour-only explanation while hiding repeated inline badges, while Complete also retains the inline puzzle badges and full explanatory text.
 - Added shareable GET-based Gallery searches with explicit query summaries, in-result refinement, safe state-preserving sort forms and a complete Forum index -> Gallery -> Search breadcrumb.
 - Added permission-checked, bounded username autocomplete to Gallery author search and moderator-only alternate-author uploads, while retaining the wildcard and phpBB member-search fallbacks.

@@ -226,6 +226,7 @@
 		<form id="action_images_form" method="post" action="{{ U_ACTION }}">
 			<dl>
 				<dt><label for="action_images">{{ lang('RESYNC_IMAGECOUNTS') }}</label>
+					<button class="gallery-operation-help-button" type="button" data-gallery-operation-help-open="gallery_operation_help_image_counts" aria-controls="gallery_operation_help_image_counts" aria-haspopup="dialog" aria-label="{{ lang('INFORMATION') }}: {{ lang('RESYNC_IMAGECOUNTS') }}" title="{{ lang('INFORMATION') }}">i</button>
 					<br /><span>{{ lang('RESYNC_IMAGECOUNTS_EXPLAIN') }}</span></dt>
 				<dd><input type="hidden" name="action" value="images" /><input class="button2" type="submit" id="action_images" name="action_images" value="{{ lang('RUN') }}" /></dd>
 			</dl>
@@ -233,21 +234,21 @@
 
 		<form id="action_personals_form" method="post" action="{{ U_ACTION }}">
 			<dl>
-				<dt><label for="action_personals">{{ lang('RESYNC_PERSONALS') }}</label></dt>
+				<dt><label for="action_personals">{{ lang('RESYNC_PERSONALS') }}</label><button class="gallery-operation-help-button" type="button" data-gallery-operation-help-open="gallery_operation_help_personals" aria-controls="gallery_operation_help_personals" aria-haspopup="dialog" aria-label="{{ lang('INFORMATION') }}: {{ lang('RESYNC_PERSONALS') }}" title="{{ lang('INFORMATION') }}">i</button></dt>
 				<dd><input type="hidden" name="action" value="personals" /><input class="button2" type="submit" id="action_personals" name="action_personals" value="{{ lang('RUN') }}" /></dd>
 			</dl>
 		</form>
 
 		<form id="action_stats_form" method="post" action="{{ U_ACTION }}">
 			<dl>
-				<dt><label for="action_stats">{{ lang('RESYNC_STATS') }}</label></dt>
+				<dt><label for="action_stats">{{ lang('RESYNC_STATS') }}</label><button class="gallery-operation-help-button" type="button" data-gallery-operation-help-open="gallery_operation_help_stats" aria-controls="gallery_operation_help_stats" aria-haspopup="dialog" aria-label="{{ lang('INFORMATION') }}: {{ lang('RESYNC_STATS') }}" title="{{ lang('INFORMATION') }}">i</button></dt>
 				<dd><input type="hidden" name="action" value="stats" /><input class="button2" type="submit" id="action_stats" name="action_stats" value="{{ lang('RUN') }}" /></dd>
 			</dl>
 		</form>
 
 		<form id="action_image_dimensions_form" method="post" action="{{ U_ACTION }}">
 			<dl>
-				<dt><label for="action_image_dimensions">{{ lang('RESYNC_IMAGE_DIMENSIONS') }}</label>
+				<dt><label for="action_image_dimensions">{{ lang('RESYNC_IMAGE_DIMENSIONS') }}</label><button class="gallery-operation-help-button" type="button" data-gallery-operation-help-open="gallery_operation_help_image_dimensions" aria-controls="gallery_operation_help_image_dimensions" aria-haspopup="dialog" aria-label="{{ lang('INFORMATION') }}: {{ lang('RESYNC_IMAGE_DIMENSIONS') }}" title="{{ lang('INFORMATION') }}">i</button>
 					<br /><span>{{ lang('RESYNC_IMAGE_DIMENSIONS_EXPLAIN') }}</span></dt>
 				<dd><input type="hidden" name="action" value="image_dimensions" /><input class="button2" type="submit" id="action_image_dimensions" name="action_image_dimensions" value="{{ lang('RUN') }}" /></dd>
 			</dl>
@@ -255,7 +256,7 @@
 
 		<form id="action_last_images_form" method="post" action="{{ U_ACTION }}">
 			<dl>
-				<dt><label for="action_last_images">{{ lang('RESYNC_LAST_IMAGES') }}</label></dt>
+				<dt><label for="action_last_images">{{ lang('RESYNC_LAST_IMAGES') }}</label><button class="gallery-operation-help-button" type="button" data-gallery-operation-help-open="gallery_operation_help_last_images" aria-controls="gallery_operation_help_last_images" aria-haspopup="dialog" aria-label="{{ lang('INFORMATION') }}: {{ lang('RESYNC_LAST_IMAGES') }}" title="{{ lang('INFORMATION') }}">i</button></dt>
 				<dd><input type="hidden" name="action" value="last_images" /><input class="button2" type="submit" id="action_last_images" name="action_last_images" value="{{ lang('RUN') }}" /></dd>
 			</dl>
 		</form>
@@ -263,7 +264,7 @@
 		{% if S_FOUNDER %}
 		<form id="action_purge_cache_form" method="post" action="{{ U_ACTION }}">
 			<dl>
-				<dt><label for="action_purge_cache">{{ lang('PURGE_CACHE') }}</label>
+				<dt><label for="action_purge_cache">{{ lang('PURGE_CACHE') }}</label><button class="gallery-operation-help-button" type="button" data-gallery-operation-help-open="gallery_operation_help_purge_cache" aria-controls="gallery_operation_help_purge_cache" aria-haspopup="dialog" aria-label="{{ lang('INFORMATION') }}: {{ lang('PURGE_CACHE') }}" title="{{ lang('INFORMATION') }}">i</button>
 					<br /><span>{{ lang('GALLERY_PURGE_CACHE_EXPLAIN') }}</span></dt>
 				<dd><input type="hidden" name="action" value="purge_cache" /><input class="button2" type="submit" id="action_purge_cache" name="action_purge_cache" value="{{ lang('RUN') }}" /></dd>
 			</dl>
@@ -271,7 +272,7 @@
 		<form id="action_resync_albums_to_cpf_form" method="post" action="{{ U_ACTION }}">
 			<dl>
 				<dt>
-					<label for="action_resync_albums_to_cpf">{{ lang('GALLERY_RESYNC_ALBUMS_TO_CPF') }}</label>
+					<label for="action_resync_albums_to_cpf">{{ lang('GALLERY_RESYNC_ALBUMS_TO_CPF') }}</label><button class="gallery-operation-help-button" type="button" data-gallery-operation-help-open="gallery_operation_help_albums_to_cpf" aria-controls="gallery_operation_help_albums_to_cpf" aria-haspopup="dialog" aria-label="{{ lang('INFORMATION') }}: {{ lang('GALLERY_RESYNC_ALBUMS_TO_CPF') }}" title="{{ lang('INFORMATION') }}">i</button>
 					<br/>
 					<span>{{ lang('GALLERY_RESYNC_ALBUMS_TO_CPF_EXPLAIN') }}</span>
 				</dt>
@@ -283,6 +284,37 @@
 		</form>
 		{% endif %}
 	</fieldset>
+
+	<dialog class="gallery-operation-help-dialog" id="gallery_operation_help_image_counts" aria-labelledby="gallery_operation_help_image_counts_title">
+		<header class="gallery-operation-help-dialog__header"><h2 id="gallery_operation_help_image_counts_title">{{ lang('RESYNC_IMAGECOUNTS') }}</h2><button class="gallery-operation-help-dialog__close" type="button" data-gallery-operation-help-close aria-label="{{ lang('CLOSE_WINDOW') }}">&times;</button></header>
+		<div class="gallery-operation-help-dialog__body"><p>{{ lang('RESYNC_IMAGECOUNTS_HELP') }}</p></div>
+	</dialog>
+	<dialog class="gallery-operation-help-dialog" id="gallery_operation_help_personals" aria-labelledby="gallery_operation_help_personals_title">
+		<header class="gallery-operation-help-dialog__header"><h2 id="gallery_operation_help_personals_title">{{ lang('RESYNC_PERSONALS') }}</h2><button class="gallery-operation-help-dialog__close" type="button" data-gallery-operation-help-close aria-label="{{ lang('CLOSE_WINDOW') }}">&times;</button></header>
+		<div class="gallery-operation-help-dialog__body"><p>{{ lang('RESYNC_PERSONALS_HELP') }}</p></div>
+	</dialog>
+	<dialog class="gallery-operation-help-dialog" id="gallery_operation_help_stats" aria-labelledby="gallery_operation_help_stats_title">
+		<header class="gallery-operation-help-dialog__header"><h2 id="gallery_operation_help_stats_title">{{ lang('RESYNC_STATS') }}</h2><button class="gallery-operation-help-dialog__close" type="button" data-gallery-operation-help-close aria-label="{{ lang('CLOSE_WINDOW') }}">&times;</button></header>
+		<div class="gallery-operation-help-dialog__body"><p>{{ lang('RESYNC_STATS_HELP') }}</p></div>
+	</dialog>
+	<dialog class="gallery-operation-help-dialog" id="gallery_operation_help_image_dimensions" aria-labelledby="gallery_operation_help_image_dimensions_title">
+		<header class="gallery-operation-help-dialog__header"><h2 id="gallery_operation_help_image_dimensions_title">{{ lang('RESYNC_IMAGE_DIMENSIONS') }}</h2><button class="gallery-operation-help-dialog__close" type="button" data-gallery-operation-help-close aria-label="{{ lang('CLOSE_WINDOW') }}">&times;</button></header>
+		<div class="gallery-operation-help-dialog__body"><p>{{ lang('RESYNC_IMAGE_DIMENSIONS_HELP') }}</p></div>
+	</dialog>
+	<dialog class="gallery-operation-help-dialog" id="gallery_operation_help_last_images" aria-labelledby="gallery_operation_help_last_images_title">
+		<header class="gallery-operation-help-dialog__header"><h2 id="gallery_operation_help_last_images_title">{{ lang('RESYNC_LAST_IMAGES') }}</h2><button class="gallery-operation-help-dialog__close" type="button" data-gallery-operation-help-close aria-label="{{ lang('CLOSE_WINDOW') }}">&times;</button></header>
+		<div class="gallery-operation-help-dialog__body"><p>{{ lang('RESYNC_LAST_IMAGES_HELP') }}</p></div>
+	</dialog>
+	{% if S_FOUNDER %}
+	<dialog class="gallery-operation-help-dialog" id="gallery_operation_help_purge_cache" aria-labelledby="gallery_operation_help_purge_cache_title">
+		<header class="gallery-operation-help-dialog__header"><h2 id="gallery_operation_help_purge_cache_title">{{ lang('PURGE_CACHE') }}</h2><button class="gallery-operation-help-dialog__close" type="button" data-gallery-operation-help-close aria-label="{{ lang('CLOSE_WINDOW') }}">&times;</button></header>
+		<div class="gallery-operation-help-dialog__body"><p>{{ lang('GALLERY_PURGE_CACHE_HELP') }}</p></div>
+	</dialog>
+	<dialog class="gallery-operation-help-dialog" id="gallery_operation_help_albums_to_cpf" aria-labelledby="gallery_operation_help_albums_to_cpf_title">
+		<header class="gallery-operation-help-dialog__header"><h2 id="gallery_operation_help_albums_to_cpf_title">{{ lang('GALLERY_RESYNC_ALBUMS_TO_CPF') }}</h2><button class="gallery-operation-help-dialog__close" type="button" data-gallery-operation-help-close aria-label="{{ lang('CLOSE_WINDOW') }}">&times;</button></header>
+		<div class="gallery-operation-help-dialog__body"><p>{{ lang('GALLERY_RESYNC_ALBUMS_TO_CPF_HELP') }}</p></div>
+	</dialog>
+	{% endif %}
 
 	<fieldset>
 		<form id="action_reset_rating_form" method="post" action="{{ U_ACTION }}">

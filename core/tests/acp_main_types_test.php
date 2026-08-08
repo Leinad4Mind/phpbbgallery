@@ -105,4 +105,28 @@ final class acp_main_types_test extends TestCase
 		$this->assertStringContainsString('dimension_sync_continue_form', $template);
 		$this->assertStringContainsString('{{ S_FORM_TOKEN }}', $template);
 	}
+
+	public function test_overview_operations_offer_accessible_contextual_help(): void
+	{
+		$root = dirname(__DIR__);
+		$source = (string) file_get_contents($root . '/acp/main_module.php');
+		$template = (string) file_get_contents($root . '/adm/style/gallery_main.html');
+		$event = (string) file_get_contents($root . '/adm/style/event/acp_overall_header_head_append.html');
+		$javascript = (string) file_get_contents($root . '/adm/style/gallery_acp_operation_help.js');
+		$stylesheet = (string) file_get_contents($root . '/adm/style/gallery_acp_operation_help.css');
+
+		$this->assertStringContainsString("'S_GALLERY_ACP_OPERATION_HELP'", $source);
+		$this->assertSame(7, substr_count($template, 'data-gallery-operation-help-open='));
+		$this->assertSame(7, substr_count($template, '<dialog class="gallery-operation-help-dialog"'));
+		$this->assertSame(7, substr_count($template, 'aria-haspopup="dialog"'));
+		$this->assertStringContainsString('GALLERY_PURGE_CACHE_HELP', $template);
+		$this->assertStringContainsString('GALLERY_RESYNC_ALBUMS_TO_CPF_HELP', $template);
+		$this->assertStringContainsString('S_GALLERY_ACP_OPERATION_HELP', $event);
+		$this->assertStringContainsString('gallery_acp_operation_help.css', $event);
+		$this->assertStringContainsString('gallery_acp_operation_help.js', $event);
+		$this->assertStringContainsString('showModal', $javascript);
+		$this->assertStringContainsString("event.key !== 'Escape'", $javascript);
+		$this->assertStringContainsString('previousFocus.focus()', $javascript);
+		$this->assertStringContainsString('::backdrop', $stylesheet);
+	}
 }

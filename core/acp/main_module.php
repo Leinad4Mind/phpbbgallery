@@ -608,6 +608,7 @@ class main_module
 		$storage_status = $distributed_storage ? $storage_migrator->status() : [];
 		$template->assign_vars([
 			'S_GALLERY_OVERVIEW'			=> true,
+			'S_GALLERY_ACP_OPERATION_HELP'	=> true,
 			'ACP_GALLERY_TITLE'				=> $this->language->lang('ACP_GALLERY_OVERVIEW'),
 			'ACP_GALLERY_TITLE_EXPLAIN'		=> $this->language->lang('ACP_GALLERY_OVERVIEW_EXPLAIN'),
 
