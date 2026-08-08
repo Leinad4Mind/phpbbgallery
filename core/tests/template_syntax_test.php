@@ -367,6 +367,7 @@ final class template_syntax_test extends TestCase
 		$stylesheet = (string) file_get_contents(dirname(__DIR__) . '/styles/all/theme/gallery.css');
 		$this->assertStringContainsString('.gallery-sep .fa', $stylesheet);
 		$this->assertStringContainsString('.gallery-checkbox-label', $stylesheet);
+		$this->assertStringContainsString('#attach_sig + label', $stylesheet);
 	}
 
 	public function test_viewimage_statistics_event_follows_the_view_counter(): void

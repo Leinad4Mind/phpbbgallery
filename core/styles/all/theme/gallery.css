@@ -623,7 +623,8 @@ input.autowidth-gallery {
 	padding-right: 16px;
 }
 
-.gallery-checkbox-label
+.gallery-checkbox-label,
+#attach_sig + label
 {
 	margin-left: 7px;
 }
