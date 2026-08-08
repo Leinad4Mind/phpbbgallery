@@ -579,7 +579,8 @@ input.autowidth-gallery {
 	width: 100%;
 }
 
-.gallery-comment-submit-guidance
+.gallery-comment-submit-guidance,
+button[name=submit] + .gallery-comment-guidance
 {
 	display: inline-flex;
 	margin-inline-start: 0.75em;

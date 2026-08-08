@@ -311,6 +311,7 @@ final class template_syntax_test extends TestCase
 		$stylesheet = (string) file_get_contents($core_root . '/styles/all/theme/gallery.css');
 		$this->assertStringContainsString('.gallery-comment-guidance', $stylesheet);
 		$this->assertStringContainsString('.gallery-comment-submit-guidance', $stylesheet);
+		$this->assertStringContainsString('button[name=submit] + .gallery-comment-guidance', $stylesheet);
 		$this->assertStringContainsString('.gallery-comment-counter-exceeded', $stylesheet);
 		$button_rule_start = strpos($stylesheet, '#postingbox .posting-btns .btn-group > button.btn');
 		$this->assertNotFalse($button_rule_start);
