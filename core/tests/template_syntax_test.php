@@ -416,6 +416,14 @@ final class template_syntax_test extends TestCase
 		);
 		$this->assertStringContainsString('.gallery-checkbox-label', $stylesheet);
 		$this->assertStringContainsString('#attach_sig + label', $stylesheet);
+		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			foreach (['comment_body.html', 'viewimage_body.html'] as $template)
+			{
+				$source = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/' . $template);
+				$this->assertStringContainsString('class="gallery-checkbox-label" for="attach_sig"', $source, $style . '/' . $template);
+			}
+		}
 	}
 
 	public function test_viewimage_statistics_event_follows_the_view_counter(): void
