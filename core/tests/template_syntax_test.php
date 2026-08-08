@@ -156,6 +156,22 @@ final class template_syntax_test extends TestCase
 		);
 		$this->assertStringContainsString('class="phpbbgallery-header-link"', $prosilver);
 		$this->assertStringNotContainsString('<li', $prosilver);
+		foreach ([
+			'navbar_header_username_prepend.html',
+			'overall_header_navigation_prepend.html',
+		] as $template)
+		{
+			$source = (string) file_get_contents($core_root . '/styles/prosilver/template/event/' . $template);
+			$this->assertStringContainsString('<strong class="badge"', $source, $template);
+			$this->assertStringNotContainsString('phpbbgallery-new-images-badge', $source, $template);
+		}
+		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$source = (string) file_get_contents(
+				$core_root . '/styles/' . $style . '/template/event/overall_header_navigation_prepend.html'
+			);
+			$this->assertStringContainsString('phpbbgallery-new-images-badge', $source, $style);
+		}
 		$this->assertStringContainsString('.phpbbgallery-new-images-badge', $stylesheet);
 	}
 
