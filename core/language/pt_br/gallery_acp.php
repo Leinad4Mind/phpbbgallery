@@ -52,6 +52,7 @@ $lang = array_merge($lang, [
 	'GALLERY_REQUIREMENT_PHP'              => 'PHP %s ou superior é obrigatório',
 	'GALLERY_REQUIREMENT_OPTIONAL_ZIP'     => 'Opcional; permite carregar arquivos ZIP',
 	'GALLERY_REQUIREMENT_OPTIONAL_EXIF'    => 'Opcional; ativa o complemento de metadados EXIF',
+	'GALLERY_REQUIREMENT_TIFF_IMAGICK'     => 'Obrigatório para o add-on TIFF; o Imagick deve permitir a leitura de TIFF e a gravação de WebP',
 	'GALLERY_STATUS_NOT_AVAILABLE'         => 'Não disponível',
 	'GALLERY_ADDONS'                       => 'Complementos da Galeria',
 	'GALLERY_ADDON_SETTING'                => 'Complemento: %s',

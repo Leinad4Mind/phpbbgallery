@@ -796,7 +796,18 @@ class main_module
 	private function assign_environment_status(\phpbb\template\template $template, object $extension_manager): void
 	{
 		$environment = new environment();
-		foreach ($environment->runtime_checks() as $check)
+		$addons = $environment->addon_checks($extension_manager);
+		$tiff_status = null;
+		foreach ($addons as $addon)
+		{
+			if ($addon['extension'] === 'phpbbgallery/tiff' && $addon['status'] !== 'not_available')
+			{
+				$tiff_status = $addon['status'];
+				break;
+			}
+		}
+
+		foreach ($environment->runtime_checks($tiff_status) as $check)
 		{
 			$template->assign_block_vars('runtime_checks', [
 				'NAME' => $check['name'],
@@ -814,7 +825,7 @@ class main_module
 			'not_available' => 'GALLERY_ADDON_NOT_AVAILABLE',
 		];
 		$addon_groups = [];
-		foreach ($environment->addon_checks($extension_manager) as $addon)
+		foreach ($addons as $addon)
 		{
 			$addon_groups[$addon['tier']][] = $addon;
 		}

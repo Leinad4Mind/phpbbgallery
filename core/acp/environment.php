@@ -43,9 +43,10 @@ final class environment
 	/**
 	 * Detect the active PHP runtime and image-processing libraries.
 	 *
+	 * @param string|null $tiff_status TIFF add-on status, or null when its package is absent
 	 * @return array Runtime checks
 	 */
-	public function runtime_checks(): array
+	public function runtime_checks(?string $tiff_status = null): array
 	{
 		$extensions = [];
 		foreach (array_keys(self::EXTENSIONS) as $extension)
@@ -61,8 +62,12 @@ final class environment
 			$gd_info = gd_info();
 			$extensions['gd']['version'] = (string) ($gd_info['GD Version'] ?? $extensions['gd']['version']);
 		}
+		if ($tiff_status !== null)
+		{
+			$extensions['imagick'] = $this->imagick_runtime_check();
+		}
 
-		return $this->build_runtime_checks(PHP_VERSION_ID, PHP_VERSION, $extensions);
+		return $this->build_runtime_checks(PHP_VERSION_ID, PHP_VERSION, $extensions, $tiff_status);
 	}
 
 	/**
@@ -71,9 +76,10 @@ final class environment
 	 * @param int    $php_version_id PHP_VERSION_ID value
 	 * @param string $php_version    PHP_VERSION value
 	 * @param array  $extensions     Extension availability and version by name
+	 * @param string|null $tiff_status TIFF add-on status, or null when its package is absent
 	 * @return array Runtime checks
 	 */
-	public function build_runtime_checks(int $php_version_id, string $php_version, array $extensions): array
+	public function build_runtime_checks(int $php_version_id, string $php_version, array $extensions, ?string $tiff_status = null): array
 	{
 		$checks = [[
 			'name' => 'PHP',
@@ -93,8 +99,51 @@ final class environment
 				'requirement' => $requirement,
 			];
 		}
+		if ($tiff_status !== null)
+		{
+			$checks[] = [
+				'name' => 'Imagick (TIFF)',
+				'version' => (string) ($extensions['imagick']['version'] ?? ''),
+				'available' => (bool) ($extensions['imagick']['available'] ?? false),
+				'required' => $tiff_status === 'enabled',
+				'requirement' => 'GALLERY_REQUIREMENT_TIFF_IMAGICK',
+			];
+		}
 
 		return $checks;
+	}
+
+	/**
+	 * Detect the complete Imagick capability required by the TIFF add-on.
+	 *
+	 * @return array{available: bool, version: string}
+	 */
+	private function imagick_runtime_check(): array
+	{
+		$version = extension_loaded('imagick') ? (string) (phpversion('imagick') ?: '') : '';
+		$available = extension_loaded('imagick')
+			&& class_exists(\Imagick::class)
+			&& method_exists(\Imagick::class, 'queryFormats')
+			&& method_exists(\Imagick::class, 'setResourceLimit')
+			&& method_exists(\Imagick::class, 'getResourceLimit');
+
+		if ($available)
+		{
+			try
+			{
+				$available = \Imagick::queryFormats('TIFF*') !== []
+					&& \Imagick::queryFormats('WEBP') !== [];
+			}
+			catch (\Throwable)
+			{
+				$available = false;
+			}
+		}
+
+		return [
+			'available' => $available,
+			'version' => $version,
+		];
 	}
 
 	/**

@@ -34,6 +34,34 @@ final class acp_environment_test extends TestCase
 		$this->assertSame(['PHP', 'gd'], $diagnostics->missing_required_components($checks));
 	}
 
+	public function test_tiff_package_adds_its_complete_imagick_runtime_requirement(): void
+	{
+		$diagnostics = new environment();
+		$extensions = [
+			'gd' => ['available' => true, 'version' => '2.3.3'],
+			'mbstring' => ['available' => true, 'version' => '8.1.34'],
+			'zip' => ['available' => true, 'version' => '1.19.5'],
+			'exif' => ['available' => true, 'version' => '8.1.34'],
+			'imagick' => ['available' => false, 'version' => '3.7.0'],
+		];
+
+		$enabled = $diagnostics->build_runtime_checks(80134, '8.1.34', $extensions, 'enabled');
+		$disabled = $diagnostics->build_runtime_checks(80134, '8.1.34', $extensions, 'disabled');
+		$imagick = $enabled[5];
+
+		$this->assertCount(6, $enabled);
+		$this->assertSame('Imagick (TIFF)', $imagick['name']);
+		$this->assertSame('3.7.0', $imagick['version']);
+		$this->assertFalse($imagick['available']);
+		$this->assertTrue($imagick['required']);
+		$this->assertSame('GALLERY_REQUIREMENT_TIFF_IMAGICK', $imagick['requirement']);
+		$this->assertFalse($disabled[5]['required']);
+
+		$module = (string) file_get_contents(dirname(__DIR__) . '/acp/main_module.php');
+		$this->assertStringContainsString('$addon[\'extension\'] === \'phpbbgallery/tiff\'', $module);
+		$this->assertStringContainsString('$environment->runtime_checks($tiff_status)', $module);
+	}
+
 	public function test_addon_checks_report_all_packaged_addon_states(): void
 	{
 		$manager = new class {
