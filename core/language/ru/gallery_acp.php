@@ -57,6 +57,7 @@ $lang = array_merge($lang, [
 	'GALLERY_ADDON_SETTING'             => 'Дополнение: %s',
 	'GALLERY_ADDON_SETTINGS_LEGEND'     => 'Параметры, добавленные дополнениями',
 	'GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN' => 'Значок пазла и цветовой акцент отмечают параметры, добавленные вне ядра Галереи. Параметры ядра остаются без отметки.',
+	'GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN_SIMPLE' => 'Цветовой акцент отмечает параметры, добавленные вне ядра Галереи. Параметры ядра остаются без отметки.',
 	'GALLERY_ADDON_SETTINGS_VIEW_SIMPLE'   => 'Простой',
 	'GALLERY_ADDON_SETTINGS_VIEW_COMPLETE' => 'Полный',
 	'GALLERY_ADDON_FREE'                => 'Бесплатные',

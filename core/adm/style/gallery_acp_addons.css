@@ -107,8 +107,7 @@ legend .gallery-addon-badge {
 }
 
 html[data-gallery-addon-view="simple"] .gallery-addon-setting .gallery-addon-badge,
-html[data-gallery-addon-view="simple"] .gallery-addon-section .gallery-addon-badge,
-html[data-gallery-addon-view="simple"] .gallery-addon-legend__explain {
+html[data-gallery-addon-view="simple"] .gallery-addon-section .gallery-addon-badge {
 	display: none;
 }
 

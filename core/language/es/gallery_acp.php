@@ -57,6 +57,7 @@ $lang = array_merge($lang, [
 	'GALLERY_ADDON_SETTING'                  => 'Complemento: %s',
 	'GALLERY_ADDON_SETTINGS_LEGEND'          => 'Opciones proporcionadas por complementos',
 	'GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN'  => 'Una insignia de rompecabezas y un color identifican las opciones añadidas fuera del Core de la Galería. Las opciones del Core no llevan marca.',
+	'GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN_SIMPLE' => 'Un color de acento identifica las opciones añadidas fuera del Core de la Galería. Las opciones del Core no llevan marca.',
 	'GALLERY_ADDON_SETTINGS_VIEW_SIMPLE'     => 'Simple',
 	'GALLERY_ADDON_SETTINGS_VIEW_COMPLETE'   => 'Completa',
 	'GALLERY_ADDON_FREE'                     => 'Gratuitos',

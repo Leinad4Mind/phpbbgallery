@@ -73,6 +73,7 @@ $lang = array_merge($lang, [
 	'GALLERY_ADDON_SETTING'                  => 'Module complémentaire : %s',
 	'GALLERY_ADDON_SETTINGS_LEGEND'          => 'Options fournies par des modules complémentaires',
 	'GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN'  => 'Un badge en forme de puzzle et une couleur identifient les options ajoutées hors du Core de la Galerie. Les options du Core ne sont pas marquées.',
+	'GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN_SIMPLE' => 'Une couleur d’accent identifie les options ajoutées hors du Core de la Galerie. Les options du Core ne sont pas marquées.',
 	'GALLERY_ADDON_SETTINGS_VIEW_SIMPLE'     => 'Simple',
 	'GALLERY_ADDON_SETTINGS_VIEW_COMPLETE'   => 'Complète',
 	'GALLERY_ADDON_FREE'                     => 'Gratuits',

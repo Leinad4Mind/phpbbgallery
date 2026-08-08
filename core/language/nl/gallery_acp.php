@@ -57,6 +57,7 @@ $lang = array_merge($lang, [
 	'GALLERY_ADDON_SETTING'             => 'Add-on: %s',
 	'GALLERY_ADDON_SETTINGS_LEGEND'     => 'Opties geleverd door add-ons',
 	'GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN' => 'Een puzzelbadge en accentkleur markeren opties die buiten de Galerij-core zijn toegevoegd. Core-opties blijven ongemarkeerd.',
+	'GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN_SIMPLE' => 'Een accentkleur markeert opties die buiten de Galerij-core zijn toegevoegd. Core-opties blijven ongemarkeerd.',
 	'GALLERY_ADDON_SETTINGS_VIEW_SIMPLE'   => 'Eenvoudig',
 	'GALLERY_ADDON_SETTINGS_VIEW_COMPLETE' => 'Volledig',
 	'GALLERY_ADDON_FREE'                => 'Gratis',

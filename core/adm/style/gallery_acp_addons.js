@@ -24,6 +24,13 @@
 	function applyMode(mode) {
 		var selectedMode = mode === simpleMode ? simpleMode : completeMode;
 		document.documentElement.setAttribute('data-gallery-addon-view', selectedMode);
+		document.querySelectorAll('.gallery-addon-legend').forEach(function (legend) {
+			var explanation = legend.querySelector('.gallery-addon-legend__explain');
+			var text = legend.getAttribute(selectedMode === simpleMode ? 'data-view-simple-explain' : 'data-view-complete-explain');
+			if (explanation && text) {
+				explanation.textContent = text;
+			}
+		});
 		document.querySelectorAll('[data-gallery-addon-view-mode]').forEach(function (button) {
 			var active = button.getAttribute('data-gallery-addon-view-mode') === selectedMode;
 			button.classList.toggle('is-active', active);

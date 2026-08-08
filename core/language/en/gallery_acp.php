@@ -449,6 +449,7 @@ $lang = array_merge($lang, [
 	'GALLERY_ADDON_SETTING'             => 'Add-on: %s',
 	'GALLERY_ADDON_SETTINGS_LEGEND'     => 'Options supplied by add-ons',
 	'GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN' => 'A puzzle badge and accent colour identify settings added outside Gallery Core. Core settings remain unmarked.',
+	'GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN_SIMPLE' => 'An accent colour identifies settings added outside Gallery Core. Core settings remain unmarked.',
 	'GALLERY_ADDON_SETTINGS_VIEW_SIMPLE'   => 'Simple',
 	'GALLERY_ADDON_SETTINGS_VIEW_COMPLETE' => 'Complete',
 	'GALLERY_ADDON_FREE'                => 'Free',

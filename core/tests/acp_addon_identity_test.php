@@ -26,6 +26,7 @@ final class acp_addon_identity_test extends TestCase
 		$this->assertStringContainsString('fa-puzzle-piece', $template);
 		$this->assertStringContainsString('setting.badge', $template);
 		$this->assertStringContainsString('GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN', $template);
+		$this->assertStringContainsString('GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN_SIMPLE', $template);
 		$this->assertStringContainsString('border-inline-start', $stylesheet);
 		$this->assertStringContainsString('data-gallery-addon-view="simple"', $stylesheet);
 		$this->assertStringContainsString('html[data-gallery-addon-view="simple"] .gallery-addon-setting .gallery-addon-badge', $stylesheet);
@@ -36,6 +37,9 @@ final class acp_addon_identity_test extends TestCase
 		$this->assertStringContainsString("'phpbbgallery.acp.addonSettingsView'", $javascript);
 		$this->assertStringContainsString('window.localStorage.setItem(storageKey, mode)', $javascript);
 		$this->assertStringContainsString("button.setAttribute('aria-pressed'", $javascript);
+		$this->assertStringContainsString("'data-view-simple-explain'", $javascript);
+		$this->assertStringContainsString("'data-view-complete-explain'", $javascript);
+		$this->assertStringNotContainsString('html[data-gallery-addon-view="simple"] .gallery-addon-legend__explain', $stylesheet);
 	}
 
 	public function test_album_editor_has_a_shared_addon_legend(): void
@@ -47,6 +51,7 @@ final class acp_addon_identity_test extends TestCase
 		$this->assertStringContainsString('GALLERY_ADDON_SETTING', $template);
 		$this->assertStringContainsString('GALLERY_ADDON_SETTINGS_VIEW_SIMPLE', $template);
 		$this->assertStringContainsString('GALLERY_ADDON_SETTINGS_VIEW_COMPLETE', $template);
+		$this->assertStringContainsString('GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN_SIMPLE', $template);
 		$this->assertStringContainsString("INCLUDEJS '@phpbbgallery_core/gallery_acp_addons.js'", $template);
 	}
 }

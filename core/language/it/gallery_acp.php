@@ -57,6 +57,7 @@ $lang = array_merge($lang, [
 	'GALLERY_ADDON_SETTING'             => 'Componente aggiuntivo: %s',
 	'GALLERY_ADDON_SETTINGS_LEGEND'     => 'Opzioni fornite dai componenti aggiuntivi',
 	'GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN' => 'Un badge a forma di puzzle e un colore identificano le opzioni aggiunte fuori dal Core della Galleria. Le opzioni del Core restano senza contrassegno.',
+	'GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN_SIMPLE' => 'Un colore distintivo identifica le opzioni aggiunte fuori dal Core della Galleria. Le opzioni del Core restano senza contrassegno.',
 	'GALLERY_ADDON_SETTINGS_VIEW_SIMPLE'   => 'Semplice',
 	'GALLERY_ADDON_SETTINGS_VIEW_COMPLETE' => 'Completa',
 	'GALLERY_ADDON_FREE'                => 'Gratuiti',
