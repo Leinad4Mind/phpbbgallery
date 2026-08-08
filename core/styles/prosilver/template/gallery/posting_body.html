@@ -183,8 +183,8 @@
 						</dl>
 						<dl>
 							<dt><label for="message_{{ image.S_ROW_COUNT }}">{{ lang('IMAGE_DESC') }}{{ lang('COLON') }}</label></dt>
-							<dd id="desc_length_{{ image.S_ROW_COUNT }}">{{ lang('DESCRIPTION_LENGTH') }}</dd>
-							<dd><textarea name="message[{{ image.S_ROW_COUNT }}]" id="message_{{ image.S_ROW_COUNT }}" rows="4" cols="76" tabindex="3" onchange="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %}" onselect="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %} storeCaret(this);" onclick="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %} storeCaret(this);" onkeyup="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %} storeCaret(this);" class="inputbox">{{ image.IMAGE_DESC }}</textarea></dd>
+							<dd id="desc_length_{{ image.S_ROW_COUNT }}" class="gallery-comment-guidance"><span id="description-limit-{{ image.S_ROW_COUNT }}">{{ lang('DESCRIPTION_LENGTH') }}</span><output id="description-counter-{{ image.S_ROW_COUNT }}" class="gallery-comment-counter" data-gallery-character-counter-output hidden aria-live="polite" aria-atomic="true"></output></dd>
+							<dd><textarea name="message[{{ image.S_ROW_COUNT }}]" id="message_{{ image.S_ROW_COUNT }}" rows="4" cols="76" tabindex="3" data-gallery-character-counter data-gallery-max-length="{{ DESCRIPTION_MAX_LENGTH }}" aria-describedby="description-limit-{{ image.S_ROW_COUNT }} description-counter-{{ image.S_ROW_COUNT }}" onchange="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %}" onselect="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %} storeCaret(this);" onclick="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %} storeCaret(this);" onkeyup="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %} storeCaret(this);" class="inputbox">{{ image.IMAGE_DESC }}</textarea></dd>
 						</dl>
 						<dl>
 							{% if S_ALLOW_ROTATE %}
@@ -256,3 +256,4 @@
 {% endif %}
 
 {% include 'gallery/gallery_footer.html' %}
+{% INCLUDEJS '@phpbbgallery_core/js/comment_counter.js' %}

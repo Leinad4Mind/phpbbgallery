@@ -30,14 +30,7 @@
 				<dl>
 					<dt><label>{{ lang('YOUR_RATING') }}{{ lang('COLON') }}</label></dt>
 					<dd>
-					{% if rate_scale|length %}
-						<select name="rating">
-						{% for rate_scale in rate_scale %}
-							{% if rate_scale.RATE_POINT == 1 %}<option value="0">{{ lang('DO_NOT_RATE_IMAGE') }}</option>{% endif %}
-							<option value="{{ rate_scale.RATE_POINT }}">{{ rate_scale.RATE_POINT }}</option>
-						{% endfor %}
-						</select>
-					{% endif %}
+					{% include '@phpbbgallery_core/gallery/rating_stars.html' %}
 					</dd>
 				</dl>
 			{% endif %}

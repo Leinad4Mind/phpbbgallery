@@ -110,6 +110,7 @@ phpbbgallery_core_comment_delete:
 phpbbgallery_core_image_rate:
     path: /gallery/comment/{image_id}/rate
     defaults: { _controller: phpbbgallery.core.controller.comment:rate }
+    methods: [POST]
     requirements:
         image_id: \d+
 

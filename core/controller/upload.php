@@ -529,7 +529,7 @@ class upload
 				{
 					foreach ($description_array as $var)
 					{
-						if (strlen($var) > $this->gallery_config->get('description_length'))
+						if (utf8_strlen($var) > $this->gallery_config->get('description_length'))
 						{
 							$validation_error = $this->language->lang('DESC_TOO_LONG');
 							break;
@@ -693,6 +693,7 @@ class upload
 				'COLOUR_ROWSPAN' => ($s_can_rotate) ? $num_images * 3 : $num_images * 2,
 
 				'L_DESCRIPTION_LENGTH' => $this->language->lang('DESCRIPTION_LENGTH', $this->gallery_config->get('description_length')),
+				'DESCRIPTION_MAX_LENGTH' => (int) $this->gallery_config->get('description_length'),
 				'S_HIDDEN_FIELDS'      => $s_hidden_fields,
 			]);
 		}

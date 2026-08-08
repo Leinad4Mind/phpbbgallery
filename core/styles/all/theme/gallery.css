@@ -579,6 +579,14 @@ input.autowidth-gallery {
 	width: 100%;
 }
 
+.gallery-comment-submit-guidance
+{
+	display: inline-flex;
+	margin-inline-start: 0.75em;
+	vertical-align: middle;
+	width: auto;
+}
+
 .gallery-comment-counter
 {
 	font-weight: 700;
@@ -591,7 +599,128 @@ input.autowidth-gallery {
 	display: none;
 }
 
+.gallery-comment-guidance-text[hidden],
+[data-gallery-comment-guidance-text][hidden]
+{
+	display: none;
+}
+
+#postingbox .posting-btns .btn-group > button.btn
+{
+	box-sizing: border-box;
+	height: 34px;
+	padding-inline: 0;
+	width: 38px;
+}
+
 .gallery-comment-counter-exceeded
 {
 	color: #bc2a4d;
+}
+
+.gallery-sep .fa
+{
+	box-sizing: content-box;
+	padding-left: 16px;
+	padding-right: 16px;
+}
+
+.gallery-checkbox-label
+{
+	margin-left: 7px;
+}
+
+.gallery-rating-stars
+{
+	display: inline-flex;
+	flex-direction: row-reverse;
+	gap: 2px;
+	vertical-align: middle;
+}
+
+.gallery-rating-stars input
+{
+	opacity: 0;
+	pointer-events: none;
+	position: absolute;
+}
+
+.gallery-rating-stars label
+{
+	color: #b7bdc7;
+	cursor: pointer;
+	font-size: 22px;
+	line-height: 1;
+	margin: 0;
+	transition: color .12s ease-in-out, transform .12s ease-in-out;
+}
+
+.gallery-rating-stars input:checked ~ label,
+.gallery-rating-stars label:hover,
+.gallery-rating-stars label:hover ~ label
+{
+	color: #f0ad4e;
+}
+
+.gallery-rating-stars label:hover
+{
+	transform: translateY(-1px) scale(1.08);
+}
+
+.gallery-rating-stars input:focus-visible + label
+{
+	outline: 2px solid currentColor;
+	outline-offset: 2px;
+}
+
+.gallery-rating-stars-ajax
+{
+	display: inline-flex;
+	flex-direction: row-reverse;
+	gap: 3px;
+	vertical-align: middle;
+}
+
+.gallery-rating-stars-ajax .gallery-rating-star
+{
+	appearance: none;
+	background: transparent;
+	border: 0;
+	box-shadow: none;
+	color: #b7bdc7;
+	cursor: pointer;
+	font-size: 24px;
+	line-height: 1;
+	margin: 0;
+	padding: 1px;
+	transition: color .12s ease-in-out, transform .12s ease-in-out;
+}
+
+.gallery-rating-stars-ajax .gallery-rating-star:hover,
+.gallery-rating-stars-ajax .gallery-rating-star:hover ~ .gallery-rating-star,
+.gallery-rating-stars-ajax .gallery-rating-star.is-selected,
+.gallery-rating-stars-ajax .gallery-rating-star.is-selected ~ .gallery-rating-star
+{
+	color: #f0ad4e;
+}
+
+.gallery-rating-stars-ajax .gallery-rating-star:hover
+{
+	transform: translateY(-1px) scale(1.08);
+}
+
+.gallery-rating-stars-ajax .gallery-rating-star:focus-visible
+{
+	outline: 2px solid currentColor;
+	outline-offset: 2px;
+}
+
+.gallery-rating-stars-ajax.is-busy
+{
+	opacity: .65;
+}
+
+.phpbbgallery-image-page .user-profile-avatar
+{
+	position: relative;
 }

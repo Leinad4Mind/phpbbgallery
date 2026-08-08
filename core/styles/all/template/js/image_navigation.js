@@ -39,6 +39,27 @@
 		document.dispatchEvent(event);
 	}
 
+	function activateAjaxControls(root) {
+		if (!window.jQuery || !window.phpbb || typeof window.phpbb.ajaxify !== 'function') {
+			return;
+		}
+
+		window.jQuery(root).find('[data-ajax]').each(function () {
+			var control = window.jQuery(this);
+			var callback = control.attr('data-ajax');
+			var filter = control.attr('data-filter');
+			if (callback === 'false') {
+				return;
+			}
+			phpbb.ajaxify({
+				selector: this,
+				refresh: control.attr('data-refresh') !== undefined,
+				filter: filter !== undefined ? phpbb.getFunctionByName(filter) : null,
+				callback: callback !== 'true' ? callback : null
+			});
+		});
+	}
+
 	function replaceImagePage(url, pushHistory) {
 		var currentRoot = getRoot();
 		if (!isEnabled(currentRoot)) {
@@ -85,6 +106,7 @@
 				history.pushState({phpbbgalleryImageNavigation: true}, '', result.url);
 			}
 			window.scrollTo(0, scrollPosition);
+			activateAjaxControls(importedRoot);
 			notifyChange(importedRoot, result.url);
 			activeRequest = null;
 		}).catch(function (error) {

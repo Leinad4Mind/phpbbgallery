@@ -1,0 +1,10 @@
+{% if rate_scale|default([])|length %}
+	<div id='rating' class='gallery-rating-stars' role='radiogroup' aria-label='{{ lang('YOUR_RATING') }}'>
+		{% for rating_option in rate_scale|reverse %}
+			<input type='radio' name='rating' id='gallery-rating-{{ rating_option.RATE_POINT }}' value='{{ rating_option.RATE_POINT }}'{% if RATING_AUTO_SUBMIT|default(false) %} onchange='this.form.submit();'{% endif %}>
+			<label for='gallery-rating-{{ rating_option.RATE_POINT }}' title='{{ rating_option.RATE_POINT }} / {{ rate_scale|length }}'>
+				<span aria-hidden='true'>&#9733;</span><span class='sr-only'>{{ rating_option.RATE_POINT }} / {{ rate_scale|length }}</span>
+			</label>
+		{% endfor %}
+	</div>
+{% endif %}

@@ -22,7 +22,7 @@ final class template_syntax_test extends TestCase
 	public function test_modernized_templates_use_only_native_twig_syntax(): void
 	{
 		$template_paths = $this->template_paths();
-		$this->assertCount(187, $template_paths);
+		$this->assertCount(189, $template_paths);
 
 		foreach ($template_paths as $template_path)
 		{
@@ -109,7 +109,7 @@ final class template_syntax_test extends TestCase
 		$end = strpos($source, '</ul>', $start);
 		$actions = substr($source, $start, $end - $start);
 
-		$this->assertSame(5, substr_count($actions, 'class="btn btn-sm btn-default"'));
+		$this->assertSame(6, substr_count($actions, 'class="btn btn-sm btn-default"'));
 		$this->assertStringNotContainsString('btn-xs', $actions);
 	}
 
@@ -159,7 +159,7 @@ final class template_syntax_test extends TestCase
 		$this->assertStringContainsString('.phpbbgallery-new-images-badge', $stylesheet);
 	}
 
-	public function test_all_rating_selectors_use_the_defined_do_not_rate_language_key(): void
+	public function test_all_rating_selectors_use_the_shared_star_controls(): void
 	{
 		$core_root = dirname(__DIR__);
 		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
@@ -169,10 +169,41 @@ final class template_syntax_test extends TestCase
 				$source = (string) file_get_contents(
 					$core_root . '/styles/' . $style . '/template/gallery/' . $template
 				);
-				$this->assertStringContainsString("lang('DO_NOT_RATE_IMAGE')", $source, $style . '/' . $template);
 				$this->assertStringNotContainsString("lang('DONT_RATE_IMAGE')", $source, $style . '/' . $template);
+				$partial = (($style === 'FLATBOOTS' || $style === 'prosilver') && $template === 'viewimage_body.html')
+					? 'rating_stars_ajax.html'
+					: 'rating_stars.html';
+				$this->assertStringContainsString($partial, $source, $style . '/' . $template);
 			}
 		}
+	}
+
+	public function test_flatboots_and_prosilver_rating_is_a_star_only_csrf_protected_ajax_control(): void
+	{
+		$core_root = dirname(__DIR__);
+		$templates = [
+			'FLATBOOTS' => (string) file_get_contents($core_root . '/styles/FLATBOOTS/template/gallery/viewimage_body.html'),
+			'prosilver' => (string) file_get_contents($core_root . '/styles/prosilver/template/gallery/viewimage_body.html'),
+		];
+		$stars = (string) file_get_contents($core_root . '/styles/all/template/gallery/rating_stars_ajax.html');
+		$javascript = (string) file_get_contents($core_root . '/styles/all/template/js/rating.js');
+		$controller = (string) file_get_contents($core_root . '/controller/comment.php');
+		$routing = (string) file_get_contents($core_root . '/config/routing.yml');
+
+		foreach ($templates as $style => $template)
+		{
+			$this->assertStringContainsString("include '@phpbbgallery_core/gallery/rating_stars_ajax.html'", $template, $style);
+			$this->assertStringContainsString("INCLUDEJS '@phpbbgallery_core/js/rating.js'", $template, $style);
+			$this->assertStringNotContainsString('RATING_AUTO_SUBMIT', $template, $style);
+		}
+		$this->assertStringContainsString('data-gallery-rating', $stars);
+		$this->assertStringContainsString('data-rating-value=', $stars);
+		$this->assertStringNotContainsString('type="radio"', $stars);
+		$this->assertStringContainsString('input[name="creation_time"], input[name="form_token"]', $javascript);
+		$this->assertStringContainsString("headers: {'X-Requested-With': 'XMLHttpRequest'}", $javascript);
+		$this->assertStringContainsString("check_form_key('gallery')", $controller);
+		$this->assertStringContainsString("'rating' => \$rate_point", $controller);
+		$this->assertMatchesRegularExpression('~phpbbgallery_core_image_rate:.*?methods: \\[POST\\]~s', $routing);
 	}
 
 	public function test_optional_acp_blocks_default_to_empty_arrays(): void
@@ -230,6 +261,8 @@ final class template_syntax_test extends TestCase
 		$this->assertStringContainsString('window.scrollTo(0, scrollPosition)', $javascript);
 		$this->assertStringContainsString('window.location.assign(url)', $javascript);
 		$this->assertStringContainsString('phpbbgallery:imagechange', $javascript);
+		$this->assertStringContainsString('activateAjaxControls(importedRoot)', $javascript);
+		$this->assertStringContainsString('phpbb.ajaxify({', $javascript);
 		$this->assertStringContainsString('requestId !== requestSequence', $javascript);
 	}
 
@@ -247,6 +280,18 @@ final class template_syntax_test extends TestCase
 				$this->assertStringContainsString('data-comment-max-length="{{ COMMENT_MAX_LENGTH }}"', $template, $style . '/' . $template_name);
 				$this->assertStringContainsString('data-gallery-comment-counter-output', $template, $style . '/' . $template_name);
 				$this->assertStringContainsString("INCLUDEJS '@phpbbgallery_core/js/comment_counter.js'", $template, $style . '/' . $template_name);
+				if ($style !== 'prosilver')
+				{
+					$this->assertStringContainsString('data-gallery-comment-guidance-text', $template, $style . '/' . $template_name);
+					if ($template_name === 'comment_body.html')
+					{
+						$submit = strpos($template, 'name="submit"');
+						$guidance = strpos($template, 'gallery-comment-submit-guidance');
+						$this->assertNotFalse($submit, $style);
+						$this->assertNotFalse($guidance, $style);
+						$this->assertGreaterThan($submit, $guidance, $style);
+					}
+				}
 			}
 		}
 
@@ -254,6 +299,7 @@ final class template_syntax_test extends TestCase
 		$this->assertStringContainsString('Array.from(value).length', $javascript);
 		$this->assertStringContainsString("textarea.addEventListener('input'", $javascript);
 		$this->assertStringContainsString('output.hidden = current === 0', $javascript);
+		$this->assertStringContainsString('guidanceText.hidden = current > 0', $javascript);
 		$this->assertStringContainsString("document.addEventListener('phpbbgallery:imagechange'", $javascript);
 		$this->assertStringContainsString("textarea.setAttribute('aria-invalid', 'true')", $javascript);
 
@@ -264,7 +310,56 @@ final class template_syntax_test extends TestCase
 
 		$stylesheet = (string) file_get_contents($core_root . '/styles/all/theme/gallery.css');
 		$this->assertStringContainsString('.gallery-comment-guidance', $stylesheet);
+		$this->assertStringContainsString('.gallery-comment-submit-guidance', $stylesheet);
 		$this->assertStringContainsString('.gallery-comment-counter-exceeded', $stylesheet);
+		$this->assertStringContainsString('#postingbox .posting-btns .btn-group > button.btn', $stylesheet);
+	}
+
+	public function test_image_descriptions_share_the_unicode_aware_live_counter(): void
+	{
+		$core_root = dirname(__DIR__);
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$template = (string) file_get_contents(
+				$core_root . '/styles/' . $style . '/template/gallery/posting_body.html'
+			);
+			$this->assertStringContainsString('data-gallery-character-counter', $template, $style);
+			$this->assertStringContainsString('data-gallery-max-length="{{ DESCRIPTION_MAX_LENGTH }}"', $template, $style);
+			$this->assertStringContainsString('data-gallery-character-counter-output', $template, $style);
+			$this->assertStringContainsString("INCLUDEJS '@phpbbgallery_core/js/comment_counter.js'", $template, $style);
+			$javascript = (string) file_get_contents(
+				$core_root . '/styles/' . $style . '/template/gallery/posting_javascript.html'
+			);
+			$this->assertStringContainsString("dispatchEvent(new Event('input'", $javascript, $style);
+		}
+
+		$upload = (string) file_get_contents($core_root . '/controller/upload.php');
+		$image = (string) file_get_contents($core_root . '/controller/image.php');
+		$this->assertStringContainsString("'DESCRIPTION_MAX_LENGTH'", $upload);
+		$this->assertStringContainsString("'DESCRIPTION_MAX_LENGTH'", $image);
+		$this->assertStringContainsString('utf8_strlen($var)', $upload);
+		$this->assertStringContainsString('utf8_strlen($image_desc)', $image);
+	}
+
+	public function test_bootstrap_comment_profiles_keep_online_status_with_the_avatar(): void
+	{
+		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$template = (string) file_get_contents(
+				dirname(__DIR__) . '/styles/' . $style . '/template/gallery/viewimage_body.html'
+			);
+			$avatar = strpos($template, '<div class="user-profile-avatar">');
+			$ribbon = strpos($template, '<div class="ribbon-wrapper small hidden-xs">', $avatar);
+			$image_frame = strpos($template, '<div class="imageframe ', $avatar);
+			$this->assertNotFalse($avatar, $style);
+			$this->assertNotFalse($ribbon, $style);
+			$this->assertNotFalse($image_frame, $style);
+			$this->assertLessThan($image_frame, $ribbon, $style);
+		}
+
+		$stylesheet = (string) file_get_contents(dirname(__DIR__) . '/styles/all/theme/gallery.css');
+		$this->assertStringContainsString('.gallery-sep .fa', $stylesheet);
+		$this->assertStringContainsString('.gallery-checkbox-label', $stylesheet);
 	}
 
 	public function test_viewimage_statistics_event_follows_the_view_counter(): void
@@ -507,9 +602,13 @@ final class template_syntax_test extends TestCase
 			$this->assertStringContainsString('name="album_id" id="album_id"', $posting, $style);
 			$this->assertStringContainsString('for="files"', $posting, $style);
 			$this->assertStringContainsString('for="rrc_zebra1"', $settings, $style);
-			$this->assertStringContainsString('name="rating" id="rating"', $view_image, $style);
+			$this->assertStringContainsString('for="rating"', $view_image, $style);
 			$this->assertStringNotContainsString('alert-error', $posting . $view_image, $style);
 		}
+
+		$rating_partials = (string) file_get_contents($core_root . '/styles/all/template/gallery/rating_stars.html')
+			. (string) file_get_contents($core_root . '/styles/all/template/gallery/rating_stars_ajax.html');
+		$this->assertSame(2, substr_count(str_replace("'", '"', $rating_partials), 'id="rating"'));
 	}
 
 	public function test_bootstrap_upload_preview_uses_packaged_placeholder(): void

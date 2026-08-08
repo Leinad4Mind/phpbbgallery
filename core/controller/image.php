@@ -524,7 +524,8 @@ class image
 		$display_navigation_thumbnails = (bool) $this->gallery_config->get('disp_nextprev_thumbnail');
 		$next_url = $next ? $this->helper->route('phpbbgallery_core_image', ['image_id' => (int) $next['image_id']]) : '';
 		$previous_url = $prev ? $this->helper->route('phpbbgallery_core_image', ['image_id' => (int) $prev['image_id']]) : '';
-		$image_action = $this->get_image_action((int) $image_id, $next);
+		$can_download_source = $this->gallery_auth->acl_check('i_download', $album_id, $album_data['album_user_id']);
+		$image_action = $this->get_image_action((int) $image_id, $next, $can_download_source);
 
 		$this->template->assign_vars([
 			// Deprecated compatibility variables for third-party styles. Core styles
@@ -542,6 +543,7 @@ class image
 			'UC_IMAGE_ACTION' => $image_action,
 			'S_AJAX_IMAGE_NAVIGATION' => (bool) $this->gallery_config->get('ajax_navigation'),
 			'S_IMAGE_ACTION_NEXT' => $image_action !== '' && $image_action === $next_url,
+			'S_IMAGE_ACTION_SOURCE' => $image_action !== '' && $image_action === $this->helper->route('phpbbgallery_core_image_file_source', ['image_id' => (int) $image_id]),
 
 			'U_DELETE' => ($s_allowed_delete) ? $this->helper->route('phpbbgallery_core_image_delete', ['image_id' => $image_id]) : '',
 			'L_DELETE_IMAGE' => $this->gallery_auth->acl_check('m_delete', $album_id, $album_data['album_user_id'])
@@ -552,6 +554,8 @@ class image
 				&& $this->gallery_auth->acl_check('i_report', $album_id, $album_data['album_user_id'])
 				&& $this->data['image_user_id'] != $this->user->data['user_id'])
 				? $this->helper->route('phpbbgallery_core_image_report', ['image_id' => $image_id]) : '',
+			'U_DOWNLOAD_SOURCE' => $can_download_source
+				? $this->helper->route('phpbbgallery_core_image_file_source', ['image_id' => $image_id]) : '',
 			'U_STATUS' => ($s_allowed_status) ? $this->helper->route('phpbbgallery_core_moderate_image', ['image_id' => $image_id]) : '',
 
 			'IMAGE_AWARD'         => $image_award['label'],
@@ -887,9 +891,10 @@ class image
 	 *
 	 * @param int         $image_id Current image identifier
 	 * @param array|false $next     Next visible image, when one exists
+	 * @param bool        $can_download_source Whether the viewer may access the original file
 	 * @return string Click destination, or an empty string when no link is wanted
 	 */
-	protected function get_image_action(int $image_id, array|false $next): string
+	protected function get_image_action(int $image_id, array|false $next, bool $can_download_source): string
 	{
 		switch ($this->gallery_config->get('link_imagepage'))
 		{
@@ -903,7 +908,9 @@ class image
 
 			case 'image':
 			default:
-				return $this->helper->route('phpbbgallery_core_image_file_source', ['image_id' => $image_id]);
+				return $can_download_source
+					? $this->helper->route('phpbbgallery_core_image_file_source', ['image_id' => $image_id])
+					: '';
 		}
 	}
 
@@ -1271,7 +1278,7 @@ class image
 			$image_name = $image_name[0];
 			$image_subtitle = $this->request->variable('image_subtitle', [''], true);
 			$image_subtitle = trim(utf8_normalize_nfc((string) $image_subtitle[0]));
-			if (strlen($image_desc) > $this->gallery_config->get('description_length'))
+			if (utf8_strlen($image_desc) > $this->gallery_config->get('description_length'))
 			{
 				trigger_error($this->language->lang('DESC_TOO_LONG'));
 			}
@@ -1501,6 +1508,7 @@ class image
 
 		$this->template->assign_vars([
 			'L_DESCRIPTION_LENGTH' => $this->language->lang('DESCRIPTION_LENGTH', $this->gallery_config->get('description_length')),
+			'DESCRIPTION_MAX_LENGTH' => (int) $this->gallery_config->get('description_length'),
 			'S_EDIT'               => true,
 			'S_ALBUM_ACTION'       => $this->helper->route('phpbbgallery_core_image_edit', ['image_id' => $image_id]),
 			'ERROR'                => (isset($error)) ? $error : '',

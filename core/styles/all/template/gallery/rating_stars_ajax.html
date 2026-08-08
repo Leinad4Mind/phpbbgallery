@@ -1,0 +1,10 @@
+{% if rate_scale|default([])|length %}
+	<div id="rating" class="gallery-rating-stars-ajax" role="radiogroup" aria-label="{{ lang('YOUR_RATING') }}" data-gallery-rating data-rating-url="{{ S_RATE_ACTION }}">
+		{% for rating_option in rate_scale|reverse %}
+			<button type="button" class="gallery-rating-star" role="radio" aria-checked="false" data-rating-value="{{ rating_option.RATE_POINT }}" aria-label="{{ rating_option.RATE_POINT }} / {{ rate_scale|length }}" title="{{ rating_option.RATE_POINT }} / {{ rate_scale|length }}">
+				<span aria-hidden="true">&#9733;</span>
+			</button>
+		{% endfor %}
+		<output class="sr-only" data-gallery-rating-status aria-live="polite" aria-atomic="true"></output>
+	</div>
+{% endif %}

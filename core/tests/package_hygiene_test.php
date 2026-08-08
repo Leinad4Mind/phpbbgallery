@@ -80,6 +80,7 @@ class package_hygiene_test extends TestCase
 			'gallery_polaroid.js',
 			'image_navigation.js',
 			'quick_upload.js',
+			'rating.js',
 		];
 		$actual = array_values(array_filter(scandir($asset_directory), function (string $name) use ($asset_directory): bool
 		{

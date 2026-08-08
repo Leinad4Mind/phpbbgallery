@@ -101,14 +101,16 @@ final class controller_image_types_test extends TestCase
 		require_once dirname(__DIR__, 4) . '/vendor/symfony/routing/Generator/UrlGeneratorInterface.php';
 		require_once dirname(__DIR__, 4) . '/phpbb/controller/helper.php';
 		$cases = [
-			['none', ['image_id' => 88], ''],
-			['image', ['image_id' => 88], 'phpbbgallery_core_image_file_source:77'],
-			['next', ['image_id' => 88], 'phpbbgallery_core_image:88'],
-			['next', false, ''],
-			['highslide', ['image_id' => 88], 'phpbbgallery_core_image_file_source:77'],
+			['none', ['image_id' => 88], true, ''],
+			['image', ['image_id' => 88], true, 'phpbbgallery_core_image_file_source:77'],
+			['image', ['image_id' => 88], false, ''],
+			['next', ['image_id' => 88], false, 'phpbbgallery_core_image:88'],
+			['next', false, true, ''],
+			['highslide', ['image_id' => 88], true, 'phpbbgallery_core_image_file_source:77'],
+			['highslide', ['image_id' => 88], false, ''],
 		];
 
-		foreach ($cases as [$mode, $next, $expected])
+		foreach ($cases as [$mode, $next, $can_download_source, $expected])
 		{
 			$reflection = new \ReflectionClass(image::class);
 			$controller = $reflection->newInstanceWithoutConstructor();
@@ -122,7 +124,7 @@ final class controller_image_types_test extends TestCase
 			$reflection->getProperty('gallery_config')->setValue($controller, $gallery_config);
 			$reflection->getProperty('helper')->setValue($controller, $helper);
 
-			$this->assertSame($expected, $reflection->getMethod('get_image_action')->invoke($controller, 77, $next), $mode);
+			$this->assertSame($expected, $reflection->getMethod('get_image_action')->invoke($controller, 77, $next, $can_download_source), $mode);
 		}
 	}
 

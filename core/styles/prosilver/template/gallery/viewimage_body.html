@@ -17,7 +17,7 @@
 <div class="post bg2{% if S_IMAGE_REPORTED %} reported{% endif %}">
 	<div class="inner">
 		<div class="postbody_album" id="image">
-			{% if UC_IMAGE_ACTION %}<a href="{{ UC_IMAGE_ACTION }}"{% if S_IMAGE_ACTION_NEXT %} data-gallery-image-navigation="next"{% endif %}>{% endif %}<img src="{{ UC_IMAGE }}" alt="{{ IMAGE_NAME }}" class="postimage"/>{% if UC_IMAGE_ACTION %}</a>{% endif %}
+			{% if UC_IMAGE_ACTION %}<a href="{{ UC_IMAGE_ACTION }}"{% if S_IMAGE_ACTION_NEXT %} data-gallery-image-navigation="next"{% endif %}{% if S_IMAGE_ACTION_SOURCE %} title="{{ DOWNLOAD_SOURCE_TITLE|default(lang('DOWNLOAD_SOURCE')) }}"{% endif %}>{% endif %}<img src="{{ UC_IMAGE }}" alt="{{ IMAGE_NAME }}" class="postimage"/>{% if UC_IMAGE_ACTION %}</a>{% endif %}
 			{% if S_IMAGE_REPORTED %}<br /><br /><a href="{{ U_IMAGE_REPORTED }}"><span class="error">{{ lang('IMAGE_REPORTED') }}</span></a>{% endif %}
 		</div>
 	</div>
@@ -120,6 +120,7 @@
 		<div class="postbody">
 			<ul class="post-buttons">
 				{% EVENT phpbbgallery_core_viewimage_actions %}
+				{% if U_DOWNLOAD_SOURCE %}<li><a href="{{ U_DOWNLOAD_SOURCE }}" title="{{ DOWNLOAD_SOURCE_TITLE|default(lang('DOWNLOAD_SOURCE')) }}" class="button button-icon-only"><i class="icon fa-download fa-fw" aria-hidden="true"></i><span class="sr-only">{{ DOWNLOAD_SOURCE_TITLE|default(lang('DOWNLOAD_SOURCE')) }}</span></a></li>{% endif %}
 				<!--<li><a href="{{ U_EDIT }}" title="{{ lang('EDIT_IMAGE') }}" class="button icon-button icon-notification"><span>{{ lang('EDIT_IMAGE') }}</span></a></li>-->
 				{% if U_EDIT %}<li><a href="{{ U_EDIT }}" title="{{ lang('EDIT_IMAGE') }}" class="button button-icon-only"><i class="icon fa-pencil fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('EDIT_IMAGE') }}</span></a></li>{% endif %}
 				{% if U_DELETE %}<li><a href="{{ U_DELETE }}" title="{{ L_DELETE_IMAGE }}" class="button button-icon-only"><i class="icon fa-times fa-fw" aria-hidden="true"></i><span class="sr-only">{{ L_DELETE_IMAGE }}</span></a></li>{% endif %}
@@ -170,18 +171,11 @@
 				</dl>
 				{% endif %}
 				{% if S_ALLOWED_TO_RATE %}
-				<form id="postform" action="{{ S_RATE_ACTION }}" method="post">
+				<form id="gallery-rating-form" action="{{ S_RATE_ACTION }}" method="post">
 				<dl>
 					<dt><label>{{ lang('YOUR_RATING') }}{{ lang('COLON') }}</label></dt>
 					<dd>
-						{% if rate_scale|length %}
-							<select name="rating" onchange="this.form.submit();">
-							{% for rate_scale in rate_scale %}
-								{% if rate_scale.RATE_POINT == 1 %}<option value="0">{{ lang('DO_NOT_RATE_IMAGE') }}</option>{% endif %}
-								<option value="{{ rate_scale.RATE_POINT }}">{{ rate_scale.RATE_POINT }}</option>
-							{% endfor %}
-							</select>
-						{% endif %}
+						{% include '@phpbbgallery_core/gallery/rating_stars_ajax.html' %}
 					</dd>
 				</dl>
 				{{ S_FORM_TOKEN }}
@@ -432,3 +426,4 @@
 </div>
 {% if S_AJAX_IMAGE_NAVIGATION %}{% INCLUDEJS '@phpbbgallery_core/js/image_navigation.js' %}{% endif %}
 {% INCLUDEJS '@phpbbgallery_core/js/comment_counter.js' %}
+{% INCLUDEJS '@phpbbgallery_core/js/rating.js' %}

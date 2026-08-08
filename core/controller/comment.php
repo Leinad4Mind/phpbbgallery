@@ -12,6 +12,8 @@
 namespace phpbbgallery\core\controller;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class comment
 {
@@ -805,23 +807,17 @@ class comment
 		return $this->helper->render('gallery/comment_body.html', $page_title);
 	}
 
-	public function rate(int $image_id): \Symfony\Component\HttpFoundation\Response
+	public function rate(int $image_id): Response
 	{
 		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
 		add_form_key('gallery');
-
-		$submit = $this->request->variable('submit', false);
-		$error = $message = '';
-		// load Image Data
+		$is_ajax = $this->request->is_ajax();
 		$image_data = $this->image->get_image_data_or_fail($image_id);
 		$this->assert_image_is_mutable($image_data);
 		$album_id = (int) $image_data['image_album_id'];
 		$album_data = $this->loader->get($album_id);
-		$this->display->generate_navigation($album_data);
-		$page_title = $image_data['image_name'];
 
 		$image_backlink = $this->helper->route('phpbbgallery_core_image', ['image_id' => $image_id]);
-		$album_backlink = $this->helper->route('phpbbgallery_core_album', ['album_id' => $album_id]);
 		$image_loginlink = $this->url->append_sid('relative', 'image_page', "album_id=$album_id&amp;image_id=$image_id");
 
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
@@ -829,73 +825,53 @@ class comment
 		$rating->loader($image_id, $image_data, $album_data);
 		if (!($this->gallery_config->get('allow_rates') && $rating->is_able()))
 		{
-			// The user is unable to rate.
+			if ($is_ajax)
+			{
+				return new JsonResponse(['message' => $this->language->lang('NOT_AUTHORISED')], Response::HTTP_FORBIDDEN);
+			}
 			$this->misc->not_authorised($image_backlink, $image_loginlink);
 		}
 
-		$this->language->add_lang('posting');
-
-		if (!function_exists('generate_smilies'))
+		$rate_point = $this->request->variable('rating', 0);
+		$max_rating = (int) $this->gallery_config->get('max_rating');
+		if ($rate_point < 1 || $rate_point > $max_rating)
 		{
-			include_once($this->phpbb_root_path . 'includes/functions_posting.' . $this->php_ext);
-		}
-
-		$bbcode_status	= ($this->config['allow_bbcode']) ? true : false;
-		$smilies_status	= ($this->config['allow_smilies']) ? true : false;
-		$img_status		= ($bbcode_status) ? true : false;
-		$url_status		= ($this->config['allow_post_links']) ? true : false;
-		$flash_status	= false;
-		$quote_status	= true;
-
-		if (!function_exists('display_custom_bbcodes'))
-		{
-			include_once($this->phpbb_root_path . 'includes/functions_display.' . $this->php_ext);
-		}// Build custom bbcodes array
-		display_custom_bbcodes();
-
-		// Build smilies array
-		generate_smilies('inline', 0);
-
-		/**
-		* Rating-System: now you can comment and rate in one form
-		*/
-		$s_user_rated = false;
-		if ($this->gallery_config->get('allow_rates'))
-		{
-			$user_rating = $rating->get_user_rating($this->user->data['user_id']);
-
-			// Check: User didn't rate yet, has permissions, it's not the users own image and the user is logged in
-			if (!$user_rating && $rating->is_able())
+			if ($is_ajax)
 			{
-				$rating->display_box();
-
-				// User just rated the image, so we store it
-				$rate_point = $this->request->variable('rating', 0);
-				if ($rating->rating_enabled && $rate_point > 0)
-				{
-					if (!check_form_key('gallery'))
-					{
-						trigger_error('FORM_INVALID');
-					}
-					$rating->submit_rating();
-					$s_user_rated = true;
-
-					$message .= $this->language->lang('RATING_SUCCESSFUL') . '<br />';
-				}
-				$this->template->assign_vars([
-					'S_ALLOWED_TO_RATE'			=> $rating->is_able(),
-				]);
+				return new JsonResponse(['message' => $this->language->lang('FORM_INVALID')], Response::HTTP_BAD_REQUEST);
 			}
-
+			throw new \phpbb\exception\http_exception(Response::HTTP_BAD_REQUEST, 'FORM_INVALID');
 		}
 
-		$message .= '<br />' . sprintf($this->language->lang('CLICK_RETURN_IMAGE'), '<a href="' . $image_backlink . '">', '</a>');
-		$message .= '<br />' . sprintf($this->language->lang('CLICK_RETURN_ALBUM'), '<a href="' . $album_backlink . '">', '</a>');
+		if (!check_form_key('gallery'))
+		{
+			if ($is_ajax)
+			{
+				return new JsonResponse(['message' => $this->language->lang('FORM_INVALID')], Response::HTTP_FORBIDDEN);
+			}
+			throw new \phpbb\exception\http_exception(Response::HTTP_FORBIDDEN, 'FORM_INVALID');
+		}
+
+		if (!$rating->submit_rating((int) $this->user->data['user_id'], $rate_point))
+		{
+			if ($is_ajax)
+			{
+				return new JsonResponse(['message' => $this->language->lang('NOT_AUTHORISED')], Response::HTTP_CONFLICT);
+			}
+			throw new \phpbb\exception\http_exception(Response::HTTP_CONFLICT, 'NOT_AUTHORISED');
+		}
+
+		if ($is_ajax)
+		{
+			return new JsonResponse([
+				'success' => true,
+				'rating' => $rate_point,
+				'message' => $this->language->lang('RATING_SUCCESSFUL'),
+			]);
+		}
 
 		$this->url->meta_refresh(3, $image_backlink);
-		trigger_error($message);
-
-		return $this->helper->render('gallery/comment_body.html', $page_title);
+		return $this->helper->message('RATING_SUCCESSFUL');
 	}
 
 	private function assert_image_is_mutable(array $image_data): void
