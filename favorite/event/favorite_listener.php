@@ -110,7 +110,7 @@ class favorite_listener implements EventSubscriberInterface
 			return;
 		}
 
-		$this->language->add_lang('info_favorite', 'phpbbgallery/favorite');
+		$this->language->add_lang('info_ucp_gallery_favorite', 'phpbbgallery/favorite');
 
 		// The state is read here rather than joined onto the image query, so the
 		// toggle always reflects what is actually stored.
@@ -153,7 +153,7 @@ class favorite_listener implements EventSubscriberInterface
 			return;
 		}
 
-		$this->language->add_lang('info_favorite', 'phpbbgallery/favorite');
+		$this->language->add_lang('info_ucp_gallery_favorite', 'phpbbgallery/favorite');
 		$favorited = array_fill_keys($this->favorite->get_favorited_ids(array_values($image_ids), $user_id), true);
 		$image_template_vars = (array) $event['image_template_vars'];
 		foreach ($image_ids as $image_id)
@@ -207,7 +207,7 @@ class favorite_listener implements EventSubscriberInterface
 	 */
 	public function ucp_set_settings_nosubmit(): void
 	{
-		$this->language->add_lang('info_favorite', 'phpbbgallery/favorite');
+		$this->language->add_lang('info_ucp_gallery_favorite', 'phpbbgallery/favorite');
 
 		$this->template->assign_var('S_WATCH_FAVO', (bool) $this->gallery_user->get_data('watch_favo'));
 	}

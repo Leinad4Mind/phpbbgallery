@@ -177,6 +177,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Restored the Favorite UCP module after the Contest extraction by using the Core privacy-policy boundary, loading its navigation title in every supported language and rendering favorites inside the complete UCP layout.
 - Kept the member image-export screen inside the complete phpBB UCP layout in prosilver, BBOOTS and FLATBOOTS instead of rendering the module body as a detached page fragment.
 - Matched the FLATBOOTS member-profile image count to the theme's normal statistic weight instead of rendering the numeric value in bold.
 - Rebased BBTags Images rules throughout an album branch whenever an ancestor policy is saved, immediately removing descendant overrides that became redundant while preserving every effective child selection and unrelated branch.

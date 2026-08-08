@@ -23,7 +23,7 @@ if (empty($lang) || !is_array($lang))
 }
 
 /**
-* Language for the gallery favorites
+* Language for the Gallery favorites and UCP module
 */
 $lang = array_merge($lang, [
 	'UCP_GALLERY_FAVORITES'		=> 'Manage favorites',

@@ -110,7 +110,7 @@ class main
 	protected function toggle(int $image_id, bool $favorite): Response
 	{
 		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
-		$this->language->add_lang(['info_favorite'], 'phpbbgallery/favorite');
+		$this->language->add_lang(['info_ucp_gallery_favorite'], 'phpbbgallery/favorite');
 
 		$user_id = (int) $this->user->data['user_id'];
 

@@ -34,12 +34,13 @@ class main_module
 
 		$language = $phpbb_container->get('language');
 		$language->add_lang(['gallery'], 'phpbbgallery/core');
-		$language->add_lang(['info_favorite'], 'phpbbgallery/favorite');
+		$language->add_lang(['info_ucp_gallery_favorite'], 'phpbbgallery/favorite');
 
 		$favorite = $phpbb_container->get('phpbbgallery.favorite');
 		$gallery_auth = $phpbb_container->get('phpbbgallery.core.auth');
 		$gallery_config = $phpbb_container->get('phpbbgallery.core.config');
 		$gallery_image = $phpbb_container->get('phpbbgallery.core.image');
+		$image_visibility = $phpbb_container->get('phpbbgallery.core.policy.image_visibility');
 		$gallery_url = $phpbb_container->get('phpbbgallery.core.url');
 		$pagination = $phpbb_container->get('pagination');
 
@@ -108,19 +109,30 @@ class main_module
 
 		foreach ($rowset as $row)
 		{
-			$hide_contest_private_data = \phpbbgallery\core\contest::hides_private_data(
+			$can_moderate = $gallery_auth->acl_check(
+				'm_status',
+				(int) $row['image_album_id'],
+				(int) $row['album_user_id']
+			);
+			$hide_private_data = $image_visibility->hides_private_data(
 				$row,
 				(int) $user->data['user_id'],
-				$gallery_auth->acl_check('m_status', (int) $row['image_album_id'], (int) $row['album_user_id'])
+				$can_moderate
 			);
+			$uploader = $hide_private_data
+				? $image_visibility->private_data_label(
+					$row,
+					(int) $user->data['user_id'],
+					$can_moderate,
+					$language->lang('GALLERY_PRIVATE_USER')
+				)
+				: get_username_string('full', $row['image_user_id'], $row['image_username'], $row['image_user_colour']);
 
 			$template->assign_block_vars('image_row', [
 				'IMAGE_ID'			=> (int) $row['image_id'],
 				'ALBUM_NAME'		=> $row['album_name'],
 				'IMAGE_TIME'		=> $user->format_date($row['image_time']),
-				'UPLOADER'			=> $hide_contest_private_data
-					? $language->lang('CONTEST_USERNAME')
-					: get_username_string('full', $row['image_user_id'], $row['image_username'], $row['image_user_colour']),
+				'UPLOADER'			=> $uploader,
 				'UC_IMAGE_NAME'		=> $gallery_image->generate_link('image_name', $gallery_config->get('link_image_name'), $row['image_id'], $row['image_name'], $row['album_id']),
 				'UC_FAKE_THUMBNAIL'	=> $gallery_image->generate_link('fake_thumbnail', $gallery_config->get('link_thumbnail'), $row['image_id'], $row['image_name'], $row['album_id']),
 				'U_VIEW_ALBUM'		=> $gallery_url->show_album((int) $row['image_album_id']),

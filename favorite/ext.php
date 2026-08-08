@@ -32,7 +32,7 @@ class ext extends \phpbb\extension\base
 
 		if (!$manager->is_enabled($core_ext))
 		{
-			$user->add_lang_ext('phpbbgallery/favorite', 'info_favorite');
+			$user->add_lang_ext('phpbbgallery/favorite', 'info_ucp_gallery_favorite');
 			trigger_error($user->lang('GALLERY_CORE_NOT_FOUND'), E_USER_WARNING);
 			return false;
 		}
@@ -62,7 +62,7 @@ class ext extends \phpbb\extension\base
 		}
 		if (empty($old_state))
 		{
-			$this->container->get('user')->add_lang_ext('phpbbgallery/favorite', 'info_favorite');
+			$this->container->get('user')->add_lang_ext('phpbbgallery/favorite', 'info_ucp_gallery_favorite');
 			$this->container->get('template')->assign_var('L_EXTENSION_ENABLE_SUCCESS', $this->container->get('user')->lang['EXTENSION_ENABLE_SUCCESS']);
 		}
 
