@@ -579,12 +579,29 @@ input.autowidth-gallery {
 	width: 100%;
 }
 
-.gallery-comment-submit-guidance,
-button[name=submit] + .gallery-comment-guidance
+.gallery-comment-submit-guidance
 {
 	display: inline-flex;
 	margin-inline-start: 0.75em;
 	vertical-align: middle;
+	width: auto;
+}
+
+.gallery-comment-actions
+{
+	align-items: center;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1em;
+	justify-content: space-between;
+	width: 100%;
+}
+
+.gallery-comment-actions .gallery-comment-guidance
+{
+	display: inline-flex;
+	margin-inline-start: auto;
+	text-align: end;
 	width: auto;
 }
 

@@ -283,7 +283,18 @@ final class template_syntax_test extends TestCase
 				if ($style !== 'prosilver')
 				{
 					$this->assertStringContainsString('data-gallery-comment-guidance-text', $template, $style . '/' . $template_name);
-					if ($template_name === 'comment_body.html')
+					if ($template_name === 'viewimage_body.html')
+					{
+						$actions = strpos($template, 'class="gallery-comment-actions"');
+						$submit = strpos($template, 'name="submit"', $actions);
+						$guidance = strpos($template, 'class="gallery-comment-guidance"', $submit);
+						$this->assertNotFalse($actions, $style);
+						$this->assertNotFalse($submit, $style);
+						$this->assertNotFalse($guidance, $style);
+						$this->assertGreaterThan($actions, $submit, $style);
+						$this->assertGreaterThan($submit, $guidance, $style);
+					}
+					else
 					{
 						$submit = strpos($template, 'name="submit"');
 						$guidance = strpos($template, 'gallery-comment-submit-guidance');
@@ -311,7 +322,14 @@ final class template_syntax_test extends TestCase
 		$stylesheet = (string) file_get_contents($core_root . '/styles/all/theme/gallery.css');
 		$this->assertStringContainsString('.gallery-comment-guidance', $stylesheet);
 		$this->assertStringContainsString('.gallery-comment-submit-guidance', $stylesheet);
-		$this->assertStringContainsString('button[name=submit] + .gallery-comment-guidance', $stylesheet);
+		$this->assertMatchesRegularExpression(
+			'/\.gallery-comment-actions\s*\{[^}]*display:\s*flex;[^}]*justify-content:\s*space-between;[^}]*width:\s*100%;/s',
+			$stylesheet
+		);
+		$this->assertMatchesRegularExpression(
+			'/\.gallery-comment-actions \.gallery-comment-guidance\s*\{[^}]*margin-inline-start:\s*auto;[^}]*text-align:\s*end;/s',
+			$stylesheet
+		);
 		$this->assertStringContainsString('.gallery-comment-counter-exceeded', $stylesheet);
 		$button_rule_start = strpos($stylesheet, '#postingbox .posting-btns .btn-group > button.btn');
 		$this->assertNotFalse($button_rule_start);
