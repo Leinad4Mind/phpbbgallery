@@ -148,9 +148,10 @@ final class controller_image_types_test extends TestCase
 		$this->assertStringContainsString('grid-template-columns: minmax(0, 1fr) minmax(260px, 1.6fr) minmax(0, 1fr);', $css);
 		$this->assertStringContainsString('object-fit: contain;', $css);
 
-		$this->assertSame(1, preg_match('/\.gallery-image-navigation-side img\s*\{[^}]*width:\s*clamp\((\d+)px,[^,]+,\s*(\d+)px\);/s', $css, $side_sizes));
-		$this->assertSame(1, preg_match('/\.gallery-image-navigation-current img\s*\{[^}]*width:\s*clamp\((\d+)px,[^,]+,\s*(\d+)px\);/s', $css, $current_sizes));
-		$this->assertGreaterThan((int) $side_sizes[2], (int) $current_sizes[1]);
+		$this->assertSame(1, preg_match('/\.gallery-image-navigation-side img\s*\{[^}]*width:\s*auto;[^}]*max-width:\s*min\(100%,\s*(\d+)px\);/s', $css, $side_sizes));
+		$this->assertSame(1, preg_match('/\.gallery-image-navigation-current img\s*\{[^}]*width:\s*auto;[^}]*max-width:\s*min\(100%,\s*(\d+)px\);/s', $css, $current_sizes));
+		$this->assertGreaterThan((int) $side_sizes[1], (int) $current_sizes[1]);
+		$this->assertStringNotContainsString('width: clamp(', $css);
 	}
 
 	public function test_legacy_navigation_links_escape_stored_image_names(): void
