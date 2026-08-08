@@ -405,6 +405,10 @@ final class template_syntax_test extends TestCase
 			$stylesheet
 		);
 		$this->assertStringContainsString('.gallery-sep .fa', $stylesheet);
+		$this->assertMatchesRegularExpression(
+			'/\.gallery-sep\s*\{[^}]*margin-top:\s*24px;[^}]*margin-bottom:\s*24px;/s',
+			$stylesheet
+		);
 		$this->assertStringContainsString('.gallery-checkbox-label', $stylesheet);
 		$this->assertStringContainsString('#attach_sig + label', $stylesheet);
 	}

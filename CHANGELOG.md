@@ -174,6 +174,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Kept content above and below the Bootstrap camera divider clear of its icon with symmetric vertical spacing.
 - Translated the original-image download tooltip in every supported language instead of exposing the raw `DOWNLOAD_SOURCE` key.
 - Labelled the Gallery index image statistic explicitly as “Images: count” instead of displaying the ambiguous “count images” phrase before total views.
 - Kept the Bootstrap comment-length guidance and live counter inline to the right of the submit button on both full and quick comment forms.
