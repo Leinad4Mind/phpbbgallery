@@ -128,9 +128,9 @@ final class controller_image_types_test extends TestCase
 		}
 	}
 
-	public function test_bootstrap_image_templates_keep_the_current_image_centred_at_navigation_edges(): void
+	public function test_image_templates_keep_the_current_image_centred_at_navigation_edges(): void
 	{
-		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
 		{
 			$template = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/viewimage_body.html');
 			$this->assertStringContainsString('<ul class="gallery-image-navigation">', $template, $style);
@@ -140,6 +140,17 @@ final class controller_image_types_test extends TestCase
 			$this->assertSame(2, substr_count($template, 'gallery-image-navigation-placeholder'), $style);
 			$this->assertStringContainsString('{% if UC_IMAGE_ACTION %}</a>{% endif %}</li>', $template, $style);
 		}
+	}
+
+	public function test_image_navigation_keeps_the_current_image_larger_than_side_previews(): void
+	{
+		$css = (string) file_get_contents(dirname(__DIR__) . '/styles/all/theme/gallery.css');
+		$this->assertStringContainsString('grid-template-columns: minmax(0, 1fr) minmax(260px, 1.6fr) minmax(0, 1fr);', $css);
+		$this->assertStringContainsString('object-fit: contain;', $css);
+
+		$this->assertSame(1, preg_match('/\.gallery-image-navigation-side img\s*\{[^}]*width:\s*clamp\((\d+)px,[^,]+,\s*(\d+)px\);/s', $css, $side_sizes));
+		$this->assertSame(1, preg_match('/\.gallery-image-navigation-current img\s*\{[^}]*width:\s*clamp\((\d+)px,[^,]+,\s*(\d+)px\);/s', $css, $current_sizes));
+		$this->assertGreaterThan((int) $side_sizes[2], (int) $current_sizes[1]);
 	}
 
 	public function test_legacy_navigation_links_escape_stored_image_names(): void
