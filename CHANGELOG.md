@@ -176,6 +176,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Rebased BBTags Images rules throughout an album branch whenever an ancestor policy is saved, immediately removing descendant overrides that became redundant while preserving every effective child selection and unrelated branch.
 - Kept content above and below the Bootstrap camera divider clear of its icon with symmetric vertical spacing.
 - Translated the original-image download tooltip in every supported language instead of exposing the raw `DOWNLOAD_SOURCE` key.
 - Labelled the Gallery index image statistic explicitly as “Images: count” instead of displaying the ambiguous “count images” phrase before total views.
