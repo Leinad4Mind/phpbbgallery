@@ -21,7 +21,7 @@ function change_read_write()
 	same_name = document.getElementById('same_name').checked;
 	if (!same_name)
 	{
-		{% for image in image %}
+		{% for image in image|default([]) %}
 			{% if not image.S_FIRST_ROW %}
 		make_writable('{{ image.S_ROW_COUNT }}')
 			{% endif %}
@@ -32,7 +32,7 @@ function change_read_write()
 		update_all('message');
 		update_all('image_name');
 		update_all('image_subtitle');
-		{% for image in image %}
+		{% for image in image|default([]) %}
 			{% if not image.S_FIRST_ROW %}
 		make_readonly('{{ image.S_ROW_COUNT }}');
 			{% endif %}
@@ -99,7 +99,9 @@ function update_all(what)
 		}
 		{% for image in image %}
 			{% if not image.S_FIRST_ROW %}
-		document.getElementById(what + '_{{ image.S_ROW_COUNT }}').value = content.split('{' + 'NUM' + '}').join(({{ image.S_ROW_COUNT }} + count));
+		var target = document.getElementById(what + '_{{ image.S_ROW_COUNT }}');
+		target.value = content.split('{' + 'NUM' + '}').join(({{ image.S_ROW_COUNT }} + count));
+		target.dispatchEvent(new Event('input', { bubbles: true }));
 			{% endif %}
 		{% endfor %}
 	}
