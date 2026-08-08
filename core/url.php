@@ -280,7 +280,8 @@ class url
 	*/
 	public function meta_refresh(int $time, string $route): void
 	{
-		// For XHTML compatibility we change back & to &amp;
+		// Route helpers may already return XHTML-safe separators. Normalize first so they are encoded exactly once.
+		$route = str_replace('&amp;', '&', $route);
 		$route = str_replace('&', '&amp;', $route);
 		$this->template->assign_vars([
 			'META' => '<meta http-equiv="refresh" content="' . $time . '; url=' . $route . '" />']

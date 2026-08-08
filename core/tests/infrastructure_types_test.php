@@ -189,6 +189,22 @@ final class infrastructure_types_test extends TestCase
 		);
 	}
 
+	public function test_meta_refresh_encodes_route_separators_exactly_once(): void
+	{
+		$template = $this->createMock(\phpbb\template\template::class);
+		$template->expects($this->once())
+			->method('assign_vars')
+			->with([
+				'META' => '<meta http-equiv="refresh" content="3; url=/gallery/album/4?style=1&amp;sid=private-session" />',
+			]);
+
+		$reflection = new \ReflectionClass(url::class);
+		$gallery_url = $reflection->newInstanceWithoutConstructor();
+		$reflection->getProperty('template')->setValue($gallery_url, $template);
+
+		$gallery_url->meta_refresh(3, '/gallery/album/4?style=1&amp;sid=private-session');
+	}
+
 	private function image_row(int $image_id, string $filename): array
 	{
 		$row = array_fill_keys([
