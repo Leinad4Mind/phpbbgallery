@@ -75,6 +75,7 @@ class image
 	protected string $table_images;
 
 	public const IMAGE_SHOW_RESOLUTION = 256;
+	public const IMAGE_SHOW_SUBTITLE = 512;
 	public const IMAGE_SHOW_IP = 128;
 	public const IMAGE_SHOW_RATINGS = 64;
 	public const IMAGE_SHOW_USERNAME = 32;
@@ -1253,6 +1254,7 @@ class image
 		$show_comments   = ($display_option & self::IMAGE_SHOW_COMMENTS) !== 0;
 		$show_album      = ($display_option & self::IMAGE_SHOW_ALBUM) !== 0;
 		$show_resolution = ($display_option & self::IMAGE_SHOW_RESOLUTION) !== 0;
+		$show_subtitle   = ($display_option & self::IMAGE_SHOW_SUBTITLE) !== 0;
 
 		switch ($thumbnail_link)
 		{
@@ -1312,6 +1314,7 @@ class image
 			'S_REPORTED'	=> ($this->gallery_auth->acl_check('m_report', $image_data['image_album_id'], $image_data['album_user_id']) && $image_data['image_reported']) ? true : false,
 			'POSTER'		=> $show_username ? ($hide_private_data ? $private_data_label : get_username_string('full', $image_data['image_user_id'], $image_data['image_username'], $image_data['image_user_colour'])) : false,
 			'TIME'			=> $show_time ? $this->user->format_date($image_data['image_time']) : false,
+			'IMAGE_SUBTITLE' => $show_subtitle ? trim((string) ($image_data['image_subtitle'] ?? '')) : false,
 			'IMAGE_RESOLUTION' => ($show_resolution && $image_width > 0 && $image_height > 0)
 				? $this->language->lang('IMAGE_RESOLUTION_VALUE', $image_width, $image_height)
 				: false,

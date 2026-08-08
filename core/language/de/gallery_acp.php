@@ -390,6 +390,7 @@ $lang = array_merge($lang, [
 	'RRC_DISPLAY_IMAGENAME'  => 'Name des Bildes',
 	'RRC_DISPLAY_IMAGETIME'  => 'Hochlade-Zeitpunkt',
 	'RRC_DISPLAY_RESOLUTION' => 'Bildauflösung',
+	'RRC_DISPLAY_SUBTITLE'   => 'Bilduntertitel',
 	'RRC_DISPLAY_IMAGEVIEWS' => 'Anzahl der Bild-Betrachtungen',
 	'RRC_DISPLAY_IP'         => 'Benutzer-IP',
 	'RRC_DISPLAY_NONE'       => 'Nichts',

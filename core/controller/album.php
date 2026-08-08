@@ -81,6 +81,7 @@ class album
 	protected string $table_images;
 
 	public const ALBUM_SHOW_RESOLUTION = 256;
+	public const ALBUM_SHOW_SUBTITLE = 512;
 	public const ALBUM_SHOW_IP = 128;
 	public const ALBUM_SHOW_RATINGS = 64;
 	public const ALBUM_SHOW_USERNAME = 32;
@@ -428,6 +429,7 @@ class album
 		$show_comments = ($show_options & self::ALBUM_SHOW_COMMENTS) !== 0;
 		$show_album = ($show_options & self::ALBUM_SHOW_ALBUM) !== 0;
 		$show_resolution = ($show_options & self::ALBUM_SHOW_RESOLUTION) !== 0;
+		$show_subtitle = ($show_options & self::ALBUM_SHOW_SUBTITLE) !== 0;
 		$ratings_visible = (int) $this->gallery_config->get('allow_rates') === 1 && $show_ratings;
 		$image_ids = array_map(static fn (array $image): int => (int) $image['image_id'], $images);
 		$user_ratings = $ratings_visible
@@ -513,6 +515,7 @@ class album
 				'S_REPORTED'          => ($this->auth->acl_check('m_report', $image_data['image_album_id'], $album_user_id) && $image_data['image_reported']) ? true : false,
 				'POSTER'              => ($show_username) ? (($s_username_hidden) ? $private_data_label : get_username_string('full', $image_data['image_user_id'], $image_data['image_username'], $image_data['image_user_colour'])) : false,
 				'TIME'                => $show_time ? $this->user->format_date($image_data['image_time']) : false,
+				'IMAGE_SUBTITLE'      => $show_subtitle ? trim((string) ($image_data['image_subtitle'] ?? '')) : false,
 				'IMAGE_RESOLUTION'    => ($show_resolution && $image_width > 0 && $image_height > 0)
 					? $this->language->lang('IMAGE_RESOLUTION_VALUE', $image_width, $image_height)
 					: false,

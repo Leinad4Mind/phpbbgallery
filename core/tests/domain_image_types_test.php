@@ -214,6 +214,7 @@ final class domain_image_types_test extends TestCase
 
 	public function test_image_display_bitmask_values_remain_stable(): void
 	{
+		$this->assertSame(512, image::IMAGE_SHOW_SUBTITLE);
 		$this->assertSame(128, image::IMAGE_SHOW_IP);
 		$this->assertSame(64, image::IMAGE_SHOW_RATINGS);
 		$this->assertSame(32, image::IMAGE_SHOW_USERNAME);

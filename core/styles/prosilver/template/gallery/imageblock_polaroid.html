@@ -38,6 +38,7 @@
 				{% if image.UC_THUMBNAIL_ACTION %}<a href="{{ image.UC_THUMBNAIL_ACTION }}" class="polaroid_img_container">{% endif %}<img src="{{ image.UC_THUMBNAIL }}" alt="{{ image.UC_IMAGE_NAME }}" title="{{ lang('VIEW_IMAGE') }}{{ lang('COLON') }} {{ image.UC_IMAGE_NAME }}" />{% if image.UC_THUMBNAIL_ACTION %}</a>{% endif %}
 			</div>
 	{% endif %}
+	{% if image.IMAGE_SUBTITLE %}<p class="gallery-image-card-subtitle" title="{{ image.IMAGE_SUBTITLE }}">{{ image.IMAGE_SUBTITLE }}</p>{% endif %}
 	<hr />
 	{% if image.U_ALBUM %}{{ lang('ALBUM_NAME') }}{{ lang('COLON') }}<p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; margin-bottom: 0px;"><a href="{{ image.U_ALBUM }}" style="display: inline;">{% endif %} {{ image.ALBUM_NAME }}{% if image.U_ALBUM %}</a></p>{% endif %}
 	{% if image.POSTER %}{{ lang('UPLOADED_BY_USER') }}{{ lang('COLON') }} {{ image.POSTER }}<br />{% endif %}

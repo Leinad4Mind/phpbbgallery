@@ -215,6 +215,8 @@ final class acp_config_types_test extends TestCase
 
 		$this->assertStringContainsString('DISPLAY_RESOLUTION', $source);
 		$this->assertStringContainsString('RRC_DISPLAY_RESOLUTION', $source);
+		$this->assertStringContainsString('DISPLAY_SUBTITLE', $source);
+		$this->assertStringContainsString('RRC_DISPLAY_SUBTITLE', $source);
 		$this->assertStringContainsString(
 			'phpbbgallery.core.acp.config.rrc_display_options',
 			$source

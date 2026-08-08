@@ -373,6 +373,7 @@ $lang = array_merge($lang, [
 	'RRC_DISPLAY_IMAGENAME'      => 'Название фото',
 	'RRC_DISPLAY_IMAGETIME'      => 'Дата загрузки',
 	'RRC_DISPLAY_RESOLUTION'     => 'Разрешение изображения',
+	'RRC_DISPLAY_SUBTITLE'       => 'Подзаголовок изображения',
 	'RRC_DISPLAY_IMAGEVIEWS'     => 'Количество просмотров фото',
 	'RRC_DISPLAY_IP'             => 'IP пользователя',
 	'RRC_DISPLAY_NONE'           => 'Нет',

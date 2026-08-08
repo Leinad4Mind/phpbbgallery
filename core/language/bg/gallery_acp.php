@@ -390,6 +390,7 @@ $lang = array_merge($lang, [
 	'RRC_DISPLAY_IMAGENAME'  => 'Име на изобранието',
 	'RRC_DISPLAY_IMAGETIME'  => 'Време на качване',
 	'RRC_DISPLAY_RESOLUTION' => 'Резолюция на изображението',
+	'RRC_DISPLAY_SUBTITLE'   => 'Подзаглавие на изображението',
 	'RRC_DISPLAY_IMAGEVIEWS' => 'Брой прегледи на изображението',
 	'RRC_DISPLAY_IP'         => 'Потребителски IP',
 	'RRC_DISPLAY_NONE'       => 'Нищо',

@@ -26,6 +26,20 @@
 	margin: -0.35em 0 0.85em;
 }
 
+.gallery-image-card-subtitle
+{
+	display: -webkit-box;
+	margin: 0.55em 0 0;
+	overflow: hidden;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	font-size: 0.95em;
+	font-style: italic;
+	line-height: 1.35;
+	text-align: center;
+	overflow-wrap: anywhere;
+}
+
 ul.profile-icons li.gallery-icon {
 	width: 20px; height: 20px;
 }

@@ -10,6 +10,7 @@
 namespace phpbbgallery\core\tests;
 
 use phpbbgallery\core\controller\image as image_controller;
+use phpbbgallery\core\image\image as image_service;
 use phpbbgallery\core\upload;
 use PHPUnit\Framework\TestCase;
 
@@ -69,13 +70,24 @@ final class image_subtitle_test extends TestCase
 		{
 			$posting = (string) file_get_contents($root . '/' . $style . '/template/gallery/posting_body.html');
 			$view = (string) file_get_contents($root . '/' . $style . '/template/gallery/viewimage_body.html');
+			$card = (string) file_get_contents($root . '/' . $style . '/template/gallery/imageblock_polaroid.html');
 			$javascript = (string) file_get_contents($root . '/' . $style . '/template/gallery/posting_javascript.html');
 
 			$this->assertStringContainsString('name="image_subtitle[{{ image.S_ROW_COUNT }}]"', $posting, $style);
 			$this->assertStringContainsString('maxlength="255"', $posting, $style);
 			$this->assertStringContainsString('U_IMAGE_SUBTITLE_SEARCH', $view, $style);
+			$this->assertStringContainsString('gallery-image-card-subtitle', $card, $style);
 			$this->assertStringContainsString("update_all('image_subtitle')", $javascript, $style);
 		}
+	}
+
+	public function test_reusable_thumbnail_blocks_only_expose_enabled_subtitles(): void
+	{
+		$this->assertSame(
+			'Dragon Ball (1985)',
+			$this->assign_image_block_subtitle(image_service::IMAGE_SHOW_SUBTITLE)
+		);
+		$this->assertFalse($this->assign_image_block_subtitle(0));
 	}
 
 	public function test_every_language_defines_the_subtitle_messages(): void
@@ -85,10 +97,77 @@ final class image_subtitle_test extends TestCase
 		{
 			$lang = [];
 			include $directory . '/gallery.php';
+			include $directory . '/gallery_acp.php';
 
 			$this->assertNotSame('', $lang['IMAGE_SUBTITLE'] ?? '', basename($directory));
 			$this->assertNotSame('', $lang['IMAGE_SUBTITLE_EXPLAIN'] ?? '', basename($directory));
 			$this->assertStringContainsString('%d', $lang['IMAGE_SUBTITLE_TOO_LONG'] ?? '', basename($directory));
+			$this->assertNotSame('', $lang['RRC_DISPLAY_SUBTITLE'] ?? '', basename($directory));
 		}
+	}
+
+	private function assign_image_block_subtitle(int $display_options): mixed
+	{
+		$reflection = new \ReflectionClass(image_service::class);
+		$service = $reflection->newInstanceWithoutConstructor();
+		$assigned = [];
+		$template = $this->createMock(\phpbb\template\template::class);
+		$template->expects($this->once())
+			->method('assign_block_vars')
+			->with('images', $this->callback(function (array $row) use (&$assigned): bool
+			{
+				$assigned = $row;
+				return true;
+			}));
+
+		$gallery_auth = $this->createStub(\phpbbgallery\core\auth\auth::class);
+		$gallery_auth->method('acl_check')->willReturn(false);
+		$helper = $this->createStub(\phpbb\controller\helper::class);
+		$helper->method('route')->willReturnArgument(0);
+		$gallery_config = $this->createStub(\phpbbgallery\core\config::class);
+		$gallery_config->method('get')->willReturn(false);
+		$image_visibility = $this->createStub(\phpbbgallery\core\policy\image_visibility::class);
+		$image_visibility->method('hides_private_data')->willReturn(false);
+		$image_visibility->method('hides_results')->willReturn(false);
+		$image_visibility->method('award')->willReturn(['rank' => 0, 'label' => '', 'title' => '']);
+		$language = $this->createStub(\phpbb\language\language::class);
+		$user = new \phpbb\user();
+		$user->data = ['user_id' => 2];
+
+		foreach ([
+			'template' => $template,
+			'gallery_auth' => $gallery_auth,
+			'helper' => $helper,
+			'gallery_config' => $gallery_config,
+			'image_visibility' => $image_visibility,
+			'language' => $language,
+			'user' => $user,
+		] as $property => $value)
+		{
+			$reflection->getProperty($property)->setValue($service, $value);
+		}
+
+		$service->assign_block('images', [
+			'image_id' => 12,
+			'image_album_id' => 4,
+			'album_id' => 4,
+			'album_user_id' => 0,
+			'album_name' => 'Anime',
+			'image_name' => 'Cover',
+			'image_subtitle' => '  Dragon Ball (1985)  ',
+			'image_view_count' => 10,
+			'image_status' => \phpbbgallery\core\block::STATUS_APPROVED,
+			'image_reported' => 0,
+			'image_user_id' => 2,
+			'image_username' => 'Author',
+			'image_user_colour' => '',
+			'image_time' => 100,
+			'image_rates' => 0,
+			'image_rate_avg' => 0,
+			'image_comments' => 0,
+			'image_user_ip' => '192.0.2.1',
+		], $display_options);
+
+		return $assigned['IMAGE_SUBTITLE'];
 	}
 }
