@@ -1439,7 +1439,15 @@ class image
 			 * @var bool  file_changed Set true when a listener replaced the source file
 			 * @since 3.4.0
 			 */
-			$vars = ['image_id', 'image_data', 'album_data', 'errors', 'orientation', 'rotate', 'file_changed'];
+			$vars = [
+				'image_id',
+				'image_data',
+				'album_data',
+				'errors',
+				'orientation',
+				'rotate',
+				'file_changed',
+			];
 			extract($this->dispatcher->trigger_event('phpbbgallery.core.image_edit_file', compact($vars)));
 
 			if (!$errors && !$file_changed && $this->gallery_config->get('allow_rotate')

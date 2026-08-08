@@ -104,8 +104,8 @@ class unread_counter
 
 		$sql = 'SELECT image_id
 			FROM ' . $this->image_tracking_table . '
-			WHERE user_id = ' . $user_id . '
-				AND image_id = ' . $image_id;
+			WHERE user_id = ' . (int) $user_id . '
+				AND image_id = ' . (int) $image_id;
 		$result = $this->db->sql_query($sql);
 		$exists = $this->db->sql_fetchfield('image_id', false, $result);
 		$this->db->sql_freeresult($result);
@@ -134,7 +134,7 @@ class unread_counter
 
 		$sql = 'SELECT image_id
 			FROM ' . $this->image_tracking_table . '
-			WHERE user_id = ' . $user_id . '
+			WHERE user_id = ' . (int) $user_id . '
 				AND ' . $this->db->sql_in_set('image_id', $image_ids);
 		$result = $this->db->sql_query($sql);
 		while ($row = $this->db->sql_fetchrow($result))

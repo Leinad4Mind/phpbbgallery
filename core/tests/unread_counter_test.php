@@ -16,6 +16,14 @@ use PHPUnit\Framework\TestCase;
 
 class unread_counter_test extends TestCase
 {
+	public function test_read_marker_identifiers_are_cast_at_the_sql_boundary(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/unread_counter.php');
+
+		$this->assertSame(2, substr_count($source, "WHERE user_id = ' . (int) \$user_id"));
+		$this->assertStringContainsString("AND image_id = ' . (int) \$image_id", $source);
+	}
+
 	public function test_counter_is_wired_into_the_page_header_listener(): void
 	{
 		$services = (string) file_get_contents(dirname(__DIR__) . '/config/services.yml');

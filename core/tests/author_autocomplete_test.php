@@ -20,6 +20,22 @@ use PHPUnit\Framework\TestCase;
 
 final class author_autocomplete_test extends TestCase
 {
+	public function test_dynamic_search_predicate_is_escaped_at_the_sql_boundary(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/author_autocomplete.php');
+
+		$this->assertStringNotContainsString('$like =', $source);
+		$this->assertStringContainsString(
+			"'WHERE'    => \$this->get_sql_where(\$term)",
+			$source
+		);
+		$this->assertStringContainsString('private function get_sql_where(string $term): string', $source);
+		$this->assertStringContainsString(
+			'$this->db->sql_escape($term) . $this->db->get_any_char()',
+			$source
+		);
+	}
+
 	public function test_visitor_cannot_enumerate_upload_authors(): void
 	{
 		$db = $this->database();

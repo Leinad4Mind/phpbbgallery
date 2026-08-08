@@ -85,14 +85,10 @@ final class author_autocomplete
 			return $this->response([]);
 		}
 
-		$like = $this->db->sql_like_expression(
-			$this->db->sql_escape($term) . $this->db->get_any_char()
-		);
 		$sql_ary = [
 			'SELECT'   => 'u.username',
 			'FROM'     => [$this->users_table => 'u'],
-			'WHERE'    => 'u.username_clean ' . $like . '
-				AND ' . $this->db->sql_in_set('u.user_type', [USER_NORMAL, USER_FOUNDER]),
+			'WHERE'    => $this->get_sql_where($term),
 			'ORDER_BY' => 'u.username_clean ASC',
 		];
 		$result = $this->db->sql_query_limit($this->db->sql_build_query('SELECT', $sql_ary), 10);
@@ -105,6 +101,17 @@ final class author_autocomplete
 		$this->db->sql_freeresult($result);
 
 		return $this->response($users);
+	}
+
+	/**
+	 * Build the escaped username predicate at one explicit SQL boundary.
+	 */
+	private function get_sql_where(string $term): string
+	{
+		return 'u.username_clean ' . $this->db->sql_like_expression(
+			$this->db->sql_escape($term) . $this->db->get_any_char()
+		) . '
+			AND ' . $this->db->sql_in_set('u.user_type', [USER_NORMAL, USER_FOUNDER]);
 	}
 
 	private function response(array $data, int $status = 200): JsonResponse
