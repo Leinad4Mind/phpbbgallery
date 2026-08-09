@@ -93,6 +93,105 @@ final class domain_notification_types_test extends TestCase
 		$this->assertSame([4, 9], $helper->get_album_watchers(11));
 	}
 
+	public function test_watched_album_ids_are_bounded_deduplicated_and_user_scoped(): void
+	{
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->once())
+			->method('sql_in_set')
+			->with('album_id', [3, 4])
+			->willReturn('album_id IN (3, 4)');
+		$db->expects($this->once())
+			->method('sql_query')
+			->with($this->callback(static function (string $sql): bool
+			{
+				return str_contains($sql, 'FROM gallery_watch')
+					&& str_contains($sql, 'user_id = 5')
+					&& str_contains($sql, 'album_id IN (3, 4)');
+			}))
+			->willReturn('result');
+		$db->expects($this->exactly(4))
+			->method('sql_fetchrow')
+			->with('result')
+			->willReturnOnConsecutiveCalls(
+				['album_id' => '3'],
+				['album_id' => 3],
+				['album_id' => 4],
+				false
+			);
+		$db->expects($this->once())->method('sql_freeresult')->with('result');
+		$user = new \phpbb\user();
+		$user->data['user_id'] = 5;
+
+		$reflection = new \ReflectionClass(notification_helper::class);
+		$helper = $reflection->newInstanceWithoutConstructor();
+		$reflection->getProperty('db')->setValue($helper, $db);
+		$reflection->getProperty('user')->setValue($helper, $user);
+		$reflection->getProperty('watch_table')->setValue($helper, 'gallery_watch');
+
+		$this->assertSame([3, 4], $helper->get_watched_album_ids(['3', 4, 3]));
+	}
+
+	public function test_empty_watched_album_candidate_set_avoids_database_queries(): void
+	{
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->never())->method('sql_query');
+		$reflection = new \ReflectionClass(notification_helper::class);
+		$helper = $reflection->newInstanceWithoutConstructor();
+		$reflection->getProperty('db')->setValue($helper, $db);
+
+		$this->assertSame([], $helper->get_watched_album_ids([]));
+	}
+
+	public function test_watched_album_reads_are_limited_to_batches_of_250(): void
+	{
+		$batches = [];
+		$query_number = 0;
+		$fetch_calls = [];
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->exactly(3))
+			->method('sql_in_set')
+			->willReturnCallback(static function (string $field, array $ids) use (&$batches): string
+			{
+				TestCase::assertSame('album_id', $field);
+				$batches[] = $ids;
+				return 'album_id IN (' . implode(', ', $ids) . ')';
+			});
+		$db->expects($this->exactly(3))
+			->method('sql_query')
+			->willReturnCallback(static function () use (&$query_number): string
+			{
+				return 'result_' . ++$query_number;
+			});
+		$db->expects($this->exactly(6))
+			->method('sql_fetchrow')
+			->willReturnCallback(static function (string $result) use (&$fetch_calls): array|false
+			{
+				$fetch_calls[$result] = ($fetch_calls[$result] ?? 0) + 1;
+				if ($fetch_calls[$result] > 1)
+				{
+					return false;
+				}
+
+				return ['album_id' => match ($result)
+				{
+					'result_1' => 1,
+					'result_2' => 251,
+					default => 501,
+				}];
+			});
+		$db->expects($this->exactly(3))->method('sql_freeresult');
+		$user = new \phpbb\user();
+		$user->data['user_id'] = 5;
+		$reflection = new \ReflectionClass(notification_helper::class);
+		$helper = $reflection->newInstanceWithoutConstructor();
+		$reflection->getProperty('db')->setValue($helper, $db);
+		$reflection->getProperty('user')->setValue($helper, $user);
+		$reflection->getProperty('watch_table')->setValue($helper, 'gallery_watch');
+
+		$this->assertSame([1, 251, 501], $helper->get_watched_album_ids(range(1, 501)));
+		$this->assertSame([250, 250, 1], array_map('count', $batches));
+	}
+
 	public function test_notification_watch_additions_use_multi_insert(): void
 	{
 		$this->assert_notification_watch_additions_are_batched('add', 'image_id');

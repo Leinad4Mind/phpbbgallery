@@ -52,6 +52,8 @@ final class controller_index_types_test extends TestCase
 		$this->assertSame('Symfony\\Component\\HttpFoundation\\Response', (string) $reflection->getMethod('base')->getReturnType());
 		$this->assertSame('Symfony\\Component\\HttpFoundation\\Response', (string) $reflection->getMethod('personal')->getReturnType());
 		$this->assertSame('int', (string) $reflection->getMethod('personal')->getParameters()[0]->getType());
+		$this->assertSame('?Symfony\\Component\\HttpFoundation\\Response', (string) $reflection->getMethod('watch_all')->getReturnType());
+		$this->assertSame('string', (string) $reflection->getMethod('watch_all')->getParameters()[0]->getType());
 	}
 
 	public function test_personal_gallery_pages_are_clamped_to_the_first_page(): void
@@ -112,5 +114,97 @@ final class controller_index_types_test extends TestCase
 		$this->assertStringContainsString('$this->template->assign_vars($dropdown_links)', $source);
 		$this->assertStringNotContainsString('has_visible_contest_winners()', $source);
 		$this->assertStringNotContainsString("'U_G_SEARCH_CONTESTS'", $source);
+	}
+
+	public function test_bulk_subscriptions_only_include_visible_viewable_real_albums(): void
+	{
+		$reflection = new \ReflectionClass(index::class);
+		$controller = $reflection->newInstanceWithoutConstructor();
+		$gallery_auth = $this->createMock(\phpbbgallery\core\auth\auth::class);
+		$gallery_auth->expects($this->exactly(2))
+			->method('acl_album_ids')
+			->willReturnCallback(static function (string $permission, string $return, bool $rrc, bool $personal): array
+			{
+				TestCase::assertSame('array', $return);
+				TestCase::assertFalse($rrc);
+				TestCase::assertFalse($personal);
+				return $permission === 'a_list' ? [2, 3, 4, 5] : [3, 4, 5, 6];
+			});
+		$gallery_auth->expects($this->once())->method('get_exclude_zebra')->willReturn([4]);
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->once())
+			->method('sql_in_set')
+			->with('album_id', [3, 5])
+			->willReturn('album_id IN (3, 5)');
+		$db->expects($this->once())
+			->method('sql_query')
+			->with($this->callback(static function (string $sql): bool
+			{
+				return str_contains($sql, 'FROM gallery_albums')
+					&& str_contains($sql, 'album_id IN (3, 5)')
+					&& str_contains($sql, 'album_type <> 0');
+			}))
+			->willReturn('result');
+		$db->expects($this->exactly(3))
+			->method('sql_fetchrow')
+			->with('result')
+			->willReturnOnConsecutiveCalls(['album_id' => '5'], ['album_id' => 3], false);
+		$db->expects($this->once())->method('sql_freeresult')->with('result');
+		$reflection->getProperty('gallery_auth')->setValue($controller, $gallery_auth);
+		$reflection->getProperty('db')->setValue($controller, $db);
+		$reflection->getProperty('table_albums')->setValue($controller, 'gallery_albums');
+
+		$this->assertSame([5, 3], $reflection->getMethod('get_watchable_album_ids')->invoke($controller, false));
+	}
+
+	public function test_bulk_subscription_writes_are_limited_to_batches_of_250(): void
+	{
+		$reflection = new \ReflectionClass(index::class);
+		$controller = $reflection->newInstanceWithoutConstructor();
+		$album_ids = range(1, 501);
+
+		foreach (['subscribe' => 'add_albums', 'unsubscribe' => 'remove_albums'] as $mode => $method)
+		{
+			$batches = [];
+			$notifications = $this->createMock(\phpbbgallery\core\notification\helper::class);
+			$notifications->expects($this->exactly(3))
+				->method($method)
+				->willReturnCallback(static function (array $batch) use (&$batches): void
+				{
+					$batches[] = $batch;
+				});
+			$reflection->getProperty('notifications_helper')->setValue($controller, $notifications);
+
+			$reflection->getMethod('update_album_subscriptions')->invoke($controller, $mode, $album_ids);
+
+			$this->assertSame([250, 250, 1], array_map('count', $batches), $mode);
+			$this->assertSame($album_ids, array_merge(...$batches), $mode);
+		}
+	}
+
+	public function test_bulk_subscription_route_is_confirmed_and_present_in_every_index_style(): void
+	{
+		$root = dirname(__DIR__);
+		$routing = (string) file_get_contents($root . '/config/routing.yml');
+		$services = (string) file_get_contents($root . '/config/services_controller.yml');
+		$source = (string) file_get_contents($root . '/controller/index.php');
+
+		$this->assertStringContainsString('phpbbgallery_core_index_watch_all:', $routing);
+		$this->assertStringContainsString('mode: subscribe|unsubscribe', $routing);
+		$this->assertStringContainsString("- '@phpbbgallery.core.notification.helper'", $services);
+		$this->assertStringContainsString("- '%phpbbgallery.tables.gallery_albums%'", $services);
+		$this->assertStringContainsString('if (confirm_box(true))', $source);
+		$this->assertStringContainsString("'a_list', 'array', false, \$include_personal", $source);
+		$this->assertStringContainsString("'i_view', 'array', false, \$include_personal", $source);
+		$this->assertStringContainsString('get_exclude_zebra()', $source);
+		$this->assertSame(2, substr_count($source, 'array_chunk($album_ids, 250)'));
+
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$template = (string) file_get_contents($root . '/styles/' . $style . '/template/gallery/index_body.html');
+			$this->assertStringContainsString('{% if U_WATCH_ALL_ALBUMS %}', $template, $style);
+			$this->assertStringContainsString('{{ WATCH_ALL_ALBUMS_LABEL }}', $template, $style);
+			$this->assertStringContainsString('S_WATCHING_ALL_ALBUMS', $template, $style);
+		}
 	}
 }

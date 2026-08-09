@@ -7,6 +7,11 @@ phpbbgallery_core_index:
 phpbbgallery_core_index_slash:
     path: /gallery/
     defaults: { _controller: phpbbgallery.core.controller.index:base }
+phpbbgallery_core_index_watch_all:
+    path: /gallery/watch/{mode}
+    defaults: { _controller: phpbbgallery.core.controller.index:watch_all }
+    requirements:
+        mode: subscribe|unsubscribe
 phpbbgallery_core_personal:
     path: /gallery/users
     defaults: { _controller: phpbbgallery.core.controller.index:personal, page: 1 }

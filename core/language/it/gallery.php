@@ -368,6 +368,12 @@ $lang = array_merge($lang, [
 	'UPLOADING_TO_ALBUM'    => 'Carica immagini nell’album %s',
 
 	'WATCH_ALBUM'    => 'Iscriviti all’album',
+	'WATCH_ALL_ALBUMS' => 'Iscriviti a tutti gli album visibili',
+	'UNWATCH_ALL_ALBUMS' => 'Annulla l’iscrizione a tutti gli album visibili',
+	'WATCH_ALL_ALBUMS_CONFIRM' => 'Vuoi davvero iscriverti a tutti gli album attualmente visibili?',
+	'UNWATCH_ALL_ALBUMS_CONFIRM' => 'Vuoi davvero annullare l’iscrizione a tutti gli album attualmente visibili?',
+	'WATCHING_ALL_ALBUMS' => 'Ora riceverai notifiche sulle nuove immagini in tutti gli album visibili.',
+	'UNWATCHED_ALL_ALBUMS' => 'Non riceverai più notifiche sulle nuove immagini negli album visibili.',
 	'WATCH_IMAGE'    => 'Iscriviti all’immagine',
 	'WATCH_PEGAS'    => 'Iscriviti alle nuove gallerie personali',
 	'WATCHING_ALBUM' => 'Sarai ora informato sulle nuove immagini in quest’album.',

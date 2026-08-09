@@ -154,6 +154,8 @@ services:
             - '@phpbbgallery.core.search'
             - '@pagination'
             - '@dispatcher'
+            - '@phpbbgallery.core.notification.helper'
+            - '%phpbbgallery.tables.gallery_albums%'
             - '%core.root_path%'
             - '%core.php_ext%'
     phpbbgallery.core.controller.search:

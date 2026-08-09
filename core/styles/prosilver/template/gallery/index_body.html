@@ -47,6 +47,14 @@ function toggleElement(oElement)
 						</a>
 					</li>
 					{% endif %}
+					{% if U_WATCH_ALL_ALBUMS %}
+					<li>
+						<a href="{{ U_WATCH_ALL_ALBUMS }}">
+							<i class="icon {% if S_WATCHING_ALL_ALBUMS %}fa-bell-slash{% else %}fa-bell{% endif %} fa-fw icon-blue" aria-hidden="true"></i>
+							<span>{{ WATCH_ALL_ALBUMS_LABEL }}</span>
+						</a>
+					</li>
+					{% endif %}
 					<li>
 						<a href="{{ U_GALLERY_SEARCH }}">
 							<i class="icon fa-search fa-fw icon-blue" aria-hidden="true"></i>

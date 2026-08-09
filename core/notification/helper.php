@@ -339,6 +339,40 @@ class helper
 	}
 
 	/**
+	 * Return the albums watched by one user from a bounded candidate set.
+	 *
+	 * @param array<int> $album_ids Candidate album identifiers
+	 * @param int|false  $user_id   User to check, or false for the current user
+	 * @return array<int>
+	 */
+	public function get_watched_album_ids(array $album_ids, int|false $user_id = false): array
+	{
+		$album_ids = $this->cast_mixed_int2array($album_ids);
+		if (!$album_ids)
+		{
+			return [];
+		}
+
+		$user_id = (int) ($user_id ?: $this->user->data['user_id']);
+		$watched_ids = [];
+		foreach (array_chunk($album_ids, 250) as $album_id_batch)
+		{
+			$sql = 'SELECT album_id
+				FROM ' . $this->watch_table . '
+				WHERE user_id = ' . (int) $user_id . '
+					AND ' . $this->db->sql_in_set('album_id', $album_id_batch);
+			$result = $this->db->sql_query($sql);
+			while ($row = $this->db->sql_fetchrow($result))
+			{
+				$watched_ids[] = (int) $row['album_id'];
+			}
+			$this->db->sql_freeresult($result);
+		}
+
+		return array_values(array_unique($watched_ids));
+	}
+
+	/**
 	 * Get album watchers
 	 * @param int $album_id
 	 * @return array

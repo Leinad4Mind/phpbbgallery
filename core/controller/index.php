@@ -56,6 +56,12 @@ class index
 	/** @var \phpbb\event\dispatcher_interface */
 	protected \phpbb\event\dispatcher_interface $dispatcher;
 
+	/** @var \phpbbgallery\core\notification\helper */
+	protected \phpbbgallery\core\notification\helper $notifications_helper;
+
+	/** @var string */
+	protected string $table_albums;
+
 	/** @var string */
 	protected string $root_path;
 
@@ -84,6 +90,8 @@ class index
 	 * @param \phpbb\pagination                                         $pagination
 	 * @param \phpbbgallery\core\search                                 $gallery_search
 	 * @param \phpbb\event\dispatcher_interface                        $dispatcher
+	 * @param \phpbbgallery\core\notification\helper                   $notifications_helper
+	 * @param string                                                    $table_albums
 	 * @param string                                                    $root_path Root path
 	 * @param string                                                    $php_ext   php file extension
 	 */
@@ -91,8 +99,8 @@ class index
 		\phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, \phpbb\language\language $language,
 		\phpbb\controller\helper $helper, \phpbbgallery\core\album\display $display, \phpbbgallery\core\config $gallery_config,
 		\phpbbgallery\core\auth\auth $gallery_auth, \phpbbgallery\core\search $gallery_search, \phpbb\pagination $pagination,
-		\phpbb\event\dispatcher_interface $dispatcher,
-		string $root_path, string $php_ext)
+		\phpbb\event\dispatcher_interface $dispatcher, \phpbbgallery\core\notification\helper $notifications_helper,
+		string $table_albums, string $root_path, string $php_ext)
 	{
 		$this->auth = $auth;
 		$this->config = $config;
@@ -108,6 +116,8 @@ class index
 		$this->gallery_search = $gallery_search;
 		$this->pagination = $pagination;
 		$this->dispatcher = $dispatcher;
+		$this->notifications_helper = $notifications_helper;
+		$this->table_albums = $table_albums;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
 	}
@@ -208,6 +218,7 @@ class index
 		$this->display_legend();
 		$this->display_birthdays();
 		$this->assign_dropdown_links('phpbbgallery_core_index', $show_personal_albums);
+		$this->assign_watch_all_link($show_personal_albums);
 
 		$this->template->assign_block_vars('navlinks', [
 			'FORUM_NAME'	=> $this->gallery_config->get_title($this->language),
@@ -281,6 +292,153 @@ class index
 		]);
 
 		return $this->helper->render('gallery/index_body.html', $this->language->lang('PERSONAL_ALBUMS'));
+	}
+
+	/**
+	 * Subscribe to or unsubscribe from every currently visible album.
+	 *
+	 * @param string $mode subscribe or unsubscribe
+	 * @return \Symfony\Component\HttpFoundation\Response|null
+	 */
+	public function watch_all(string $mode): \Symfony\Component\HttpFoundation\Response|null
+	{
+		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
+		if (!$this->can_watch_albums() || !in_array($mode, ['subscribe', 'unsubscribe'], true))
+		{
+			trigger_error($this->language->lang('NOT_AUTHORISED'));
+		}
+
+		$this->gallery_auth->load_user_permissions((int) $this->user->data['user_id']);
+		$album_ids = $this->get_watchable_album_ids((bool) $this->gallery_config->get('pegas_index_album'));
+		if (!$album_ids)
+		{
+			trigger_error($this->language->lang('NOT_AUTHORISED'));
+		}
+
+		$confirm_key = $mode === 'subscribe' ? 'WATCH_ALL_ALBUMS_CONFIRM' : 'UNWATCH_ALL_ALBUMS_CONFIRM';
+		if (confirm_box(true))
+		{
+			$this->update_album_subscriptions($mode, $album_ids);
+			$back_link = $this->helper->route('phpbbgallery_core_index');
+			meta_refresh(3, $back_link);
+			$this->template->assign_var(
+				'INFORMATION',
+				$this->language->lang($mode === 'subscribe' ? 'WATCHING_ALL_ALBUMS' : 'UNWATCHED_ALL_ALBUMS')
+			);
+
+			return $this->helper->render(
+				'gallery/message.html',
+				$this->gallery_config->get_title($this->language)
+			);
+		}
+
+		confirm_box(
+			false,
+			$this->language->lang($confirm_key),
+			'',
+			'confirm_body.html',
+			$this->helper->route('phpbbgallery_core_index_watch_all', ['mode' => $mode])
+		);
+		return null;
+	}
+
+	/**
+	 * Expose the appropriate bulk-subscription action on the Gallery index.
+	 *
+	 * @param bool $include_personal Include personal albums displayed on the index
+	 * @return void
+	 */
+	protected function assign_watch_all_link(bool $include_personal): void
+	{
+		if (!$this->can_watch_albums())
+		{
+			return;
+		}
+
+		$album_ids = $this->get_watchable_album_ids($include_personal);
+		if (!$album_ids)
+		{
+			return;
+		}
+
+		$watched_ids = $this->notifications_helper->get_watched_album_ids($album_ids);
+		$all_watched = !array_diff($album_ids, $watched_ids);
+		$mode = $all_watched ? 'unsubscribe' : 'subscribe';
+		$this->template->assign_vars([
+			'U_WATCH_ALL_ALBUMS' => $this->helper->route(
+				'phpbbgallery_core_index_watch_all',
+				['mode' => $mode]
+			),
+			'WATCH_ALL_ALBUMS_LABEL' => $this->language->lang(
+				$all_watched ? 'UNWATCH_ALL_ALBUMS' : 'WATCH_ALL_ALBUMS'
+			),
+			'S_WATCHING_ALL_ALBUMS' => $all_watched,
+		]);
+	}
+
+	/**
+	 * Find real albums the current user may both list and view.
+	 *
+	 * @param bool $include_personal Include personal albums
+	 * @return array<int>
+	 */
+	protected function get_watchable_album_ids(bool $include_personal): array
+	{
+		$listable = $this->gallery_auth->acl_album_ids('a_list', 'array', false, $include_personal);
+		$viewable = $this->gallery_auth->acl_album_ids('i_view', 'array', false, $include_personal);
+		$excluded = $this->gallery_auth->get_exclude_zebra();
+		$album_ids = array_values(array_diff(array_intersect($listable, $viewable), $excluded));
+		if (!$album_ids)
+		{
+			return [];
+		}
+
+		$watchable_ids = [];
+		foreach (array_chunk($album_ids, 250) as $album_id_batch)
+		{
+			$sql = 'SELECT album_id
+				FROM ' . $this->table_albums . '
+				WHERE ' . $this->db->sql_in_set('album_id', $album_id_batch) . '
+					AND album_type <> ' . (int) \phpbbgallery\core\block::TYPE_CAT;
+			$result = $this->db->sql_query($sql);
+			while ($row = $this->db->sql_fetchrow($result))
+			{
+				$watchable_ids[] = (int) $row['album_id'];
+			}
+			$this->db->sql_freeresult($result);
+		}
+
+		return array_values(array_unique($watchable_ids));
+	}
+
+	/**
+	 * Keep bulk subscription queries bounded on large galleries.
+	 *
+	 * @param string     $mode      subscribe or unsubscribe
+	 * @param array<int> $album_ids Album identifiers
+	 * @return void
+	 */
+	protected function update_album_subscriptions(string $mode, array $album_ids): void
+	{
+		foreach (array_chunk($album_ids, 250) as $album_id_batch)
+		{
+			if ($mode === 'subscribe')
+			{
+				$this->notifications_helper->add_albums($album_id_batch);
+			}
+			else
+			{
+				$this->notifications_helper->remove_albums($album_id_batch);
+			}
+		}
+	}
+
+	/**
+	 * Check whether the current identity may create Gallery subscriptions.
+	 */
+	protected function can_watch_albums(): bool
+	{
+		return !empty($this->user->data['is_registered']) && empty($this->user->data['is_bot']);
 	}
 
 	protected function assign_dropdown_links(string $base_route, bool $include_personal_statistics = true): void

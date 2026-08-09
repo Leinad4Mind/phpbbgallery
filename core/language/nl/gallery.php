@@ -367,6 +367,12 @@ $lang = array_merge($lang, [
 	'UPLOADING_TO_ALBUM'    => 'Uploadt afbeeldingen naar album %s',
 
 	'WATCH_ALBUM'    => 'Abonneer album',
+	'WATCH_ALL_ALBUMS' => 'Abonneer op alle zichtbare albums',
+	'UNWATCH_ALL_ALBUMS' => 'Zeg alle zichtbare albums op',
+	'WATCH_ALL_ALBUMS_CONFIRM' => 'Weet je zeker dat je je wilt abonneren op alle albums die je momenteel kunt zien?',
+	'UNWATCH_ALL_ALBUMS_CONFIRM' => 'Weet je zeker dat je alle albums die je momenteel kunt zien wilt opzeggen?',
+	'WATCHING_ALL_ALBUMS' => 'Je ontvangt nu meldingen over nieuwe afbeeldingen in alle zichtbare albums.',
+	'UNWATCHED_ALL_ALBUMS' => 'Je ontvangt geen meldingen meer over nieuwe afbeeldingen in de zichtbare albums.',
 	'WATCH_IMAGE'    => 'Abonneer afbeelding',
 	'WATCH_PEGAS'    => 'Abonneer op nieuwe persoonlijke albums',
 	'WATCHING_ALBUM' => 'Je hebt je geabonneerd om op de hoogte gehouden te worden van nieuwe afbeeldingen in dit album.',

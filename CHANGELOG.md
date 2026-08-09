@@ -6,6 +6,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Added
 
+- Added a confirmed Gallery-index toggle to subscribe to or unsubscribe from every currently visible real album, including subalbums, with permission, personal-album and zebra filtering plus bounded writes for large galleries.
 - Added canonical Open Graph and Twitter Card metadata to permission-checked image pages, using the public medium image and share-safe URLs without session or style context.
 - Added a consolidated Gallery-index image-block selector with independent limits for recent, random, most-viewed and top-rated images, permission-safe ranked queries and neutral extension points for add-on modes.
 - Added a selectable Gallery-index album presentation shared by PROSILVER, BBOOTS and FLATBOOTS, offering each style its native classic forum list, a new responsive modern list and the existing card layout without changing album data or permissions.

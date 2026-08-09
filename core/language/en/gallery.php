@@ -377,6 +377,12 @@ $lang = array_merge($lang, [
 	'UPLOADING_TO_ALBUM'    => 'Uploading images to album %s',
 
 	'WATCH_ALBUM'    => 'Subscribe album',
+	'WATCH_ALL_ALBUMS' => 'Subscribe to all visible albums',
+	'UNWATCH_ALL_ALBUMS' => 'Unsubscribe from all visible albums',
+	'WATCH_ALL_ALBUMS_CONFIRM' => 'Are you sure you want to subscribe to every album you can currently view?',
+	'UNWATCH_ALL_ALBUMS_CONFIRM' => 'Are you sure you want to unsubscribe from every album you can currently view?',
+	'WATCHING_ALL_ALBUMS' => 'You are now informed about new images in all visible albums.',
+	'UNWATCHED_ALL_ALBUMS' => 'You are no longer informed about new images in the visible albums.',
 	'WATCH_IMAGE'    => 'Subscribe image',
 	'WATCH_PEGAS'    => 'Subscribe to new personal galleries',
 	'WATCHING_ALBUM' => 'You are now informed about new images in this album.',
