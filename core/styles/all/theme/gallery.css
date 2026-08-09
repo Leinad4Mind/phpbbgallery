@@ -1148,6 +1148,35 @@ fieldset dl.gallery-autocomplete-row-open
 	}
 }
 
+/* Keep every upload-review image and all of its add-on fields visually grouped. */
+.gallery-image-review-row
+{
+	background-color: rgba(255, 255, 255, 0.52);
+	border: 1px solid rgba(70, 100, 120, 0.16);
+	border-radius: 5px;
+	box-sizing: border-box;
+	margin-bottom: 14px;
+	padding: 14px;
+}
+
+.gallery-image-review-row:nth-of-type(even)
+{
+	background-color: rgba(92, 143, 171, 0.1);
+}
+
+.gallery-image-review-row:nth-of-type(odd)
+{
+	background-color: rgba(255, 255, 255, 0.58);
+}
+
+@media (max-width: 700px)
+{
+	.gallery-image-review-row
+	{
+		padding: 10px;
+	}
+}
+
 .gallery-orientation-editor
 {
 	display: flex;

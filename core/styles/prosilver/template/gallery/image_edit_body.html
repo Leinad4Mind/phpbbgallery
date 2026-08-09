@@ -35,8 +35,8 @@
 			{% endif %}
 
 			{% for image in image %}
-				<hr />
-				<dl data-gallery-orientation-item>
+				<div class="gallery-image-review-row" data-gallery-orientation-item>
+				<dl>
 					<dt class="simulate-dt gallery-orientation-preview{% if image.S_FIRST_ROW and (NUM_IMAGES > 1) %} first{% endif %}" data-gallery-orientation-preview>{{ image.U_IMAGE }}</dt>
 					<dd class="simulate-dt"><label for="image_name_{{ image.S_ROW_COUNT }}">{{ lang('IMAGE_NAME') }}{{ lang('COLON') }}</label></dd>
 					{% if image.S_FIRST_ROW and (NUM_IMAGES > 1) %}
@@ -61,6 +61,7 @@
 					<dd>{% include '@phpbbgallery_core/gallery/image_orientation_controls.html' %}</dd>
 				</dl>
 				{% endif %}
+				</div>
 			{% endfor %}
 			{% EVENT phpbbgallery_core_edit_addfields %}
 

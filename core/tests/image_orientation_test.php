@@ -105,6 +105,7 @@ final class image_orientation_test extends TestCase
 			$template = (string) file_get_contents($root . '/styles/' . $style . '/template/gallery/posting_body.html');
 			$this->assertStringContainsString('image_orientation_controls.html', $template);
 			$this->assertStringContainsString('data-gallery-orientation-preview', $template);
+			$this->assertStringContainsString('gallery-image-review-row', $template, $style);
 			$hook = strpos($template, '{% EVENT phpbbgallery_core_edit_image_addfields %}');
 			$apply_all = strpos($template, 'data-gallery-orientation-apply-all', (int) $hook);
 			$transform = strpos($template, "lang('TRANSFORM_IMAGE')", (int) $apply_all);
@@ -116,10 +117,13 @@ final class image_orientation_test extends TestCase
 		}
 
 		$image_edit = (string) file_get_contents($root . '/styles/prosilver/template/gallery/image_edit_body.html');
+		$this->assertStringContainsString('class="gallery-image-review-row" data-gallery-orientation-item', $image_edit);
 		$hook = strpos($image_edit, '{% EVENT phpbbgallery_core_edit_image_addfields %}');
 		$apply_all = strpos($image_edit, 'data-gallery-orientation-apply-all', (int) $hook);
 		$transform = strpos($image_edit, "lang('TRANSFORM_IMAGE')", (int) $apply_all);
 		$this->assertTrue($hook < $apply_all && $apply_all < $transform);
+		$this->assertStringContainsString('.gallery-image-review-row:nth-of-type(even)', $css);
+		$this->assertStringContainsString('.gallery-image-review-row:nth-of-type(odd)', $css);
 	}
 
 	public function test_sitesplat_upload_helpers_remain_globally_callable_and_match_prosilver_order(): void

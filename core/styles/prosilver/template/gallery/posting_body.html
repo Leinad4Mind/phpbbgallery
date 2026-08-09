@@ -150,7 +150,7 @@
 		</fieldset>
 		<fieldset class="fields1">
 			{% for image in image %}
-				<dl data-gallery-orientation-item>
+				<dl class="gallery-image-review-row" data-gallery-orientation-item>
 					<dt{% if image.S_FIRST_ROW and (NUM_IMAGES > 1) %} class="first"{% endif %}><span class="gallery-orientation-preview" data-gallery-orientation-preview>{% if image.U_IMAGE_PREVIEW %}<a href="{{ image.U_IMAGE_PREVIEW }}" data-gallery-upload-preview data-image-name="{{ image.IMAGE_NAME }}" data-close-label="{{ lang('CLOSE') }}" aria-label="{{ lang('PREVIEW') }}{{ lang('COLON') }} {{ image.IMAGE_NAME }}">{{ image.U_IMAGE }}</a>{% else %}{{ image.U_IMAGE }}{% endif %}</span></dt>
 					<dd>
 						{% if image.S_FIRST_ROW and (NUM_IMAGES > 1) %}
