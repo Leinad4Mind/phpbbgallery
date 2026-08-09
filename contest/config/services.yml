@@ -49,6 +49,7 @@ services:
         arguments:
             - '@language'
             - '@user'
+            - '@controller.helper'
         tags:
             - { name: event.listener }
     phpbbgallery.contest.policy_listener:

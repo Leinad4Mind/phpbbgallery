@@ -16,11 +16,17 @@ class presentation_listener implements EventSubscriberInterface
 {
 	private \phpbb\language\language $language;
 	private \phpbb\user $user;
+	private \phpbb\controller\helper $helper;
 
-	public function __construct(\phpbb\language\language $language, \phpbb\user $user)
+	public function __construct(
+		\phpbb\language\language $language,
+		\phpbb\user $user,
+		\phpbb\controller\helper $helper
+	)
 	{
 		$this->language = $language;
 		$this->user = $user;
+		$this->helper = $helper;
 		$this->language->add_lang('contest', 'phpbbgallery/contest');
 	}
 
@@ -132,6 +138,12 @@ class presentation_listener implements EventSubscriberInterface
 	public function enrich_album_template_vars(\phpbb\event\data $event): void
 	{
 		$album_data = (array) $event['album_data'];
+		if ((string) $event['context'] === 'album_list')
+		{
+			$this->use_winner_thumbnail($event, $album_data);
+			return;
+		}
+
 		if ((string) $event['context'] !== 'navigation'
 			|| (int) ($album_data['album_type'] ?? -1) !== (int) manager::ALBUM_TYPE
 			|| !isset($album_data['contest_start'], $album_data['contest_rating'], $album_data['contest_end']))
@@ -150,6 +162,30 @@ class presentation_listener implements EventSubscriberInterface
 			'ALBUM_CONTEST_RATING' => $this->phase_text('CONTEST_RATING_START', $rating_start, $now),
 			'ALBUM_CONTEST_END' => $this->phase_text('CONTEST_END', $end, $now),
 		];
+		$event['template_vars'] = $template_vars;
+	}
+
+	private function use_winner_thumbnail(\phpbb\event\data $event, array $album_data): void
+	{
+		$image_id = (int) ($album_data['contest_thumbnail_image_id'] ?? 0);
+		$template_vars = (array) $event['template_vars'];
+		if ($image_id <= 0
+			|| !empty($album_data['album_image'])
+			|| empty($template_vars['UC_THUMBNAIL']))
+		{
+			return;
+		}
+
+		$thumbnail = $this->helper->route(
+			'phpbbgallery_core_image_file_mini',
+			['image_id' => $image_id]
+		);
+		$template_vars['UC_THUMBNAIL'] = $thumbnail;
+		$template_vars['UC_FAKE_THUMBNAIL'] = $thumbnail;
+		$template_vars['UC_IMAGE_URL'] = $this->helper->route(
+			'phpbbgallery_core_image',
+			['image_id' => $image_id]
+		);
 		$event['template_vars'] = $template_vars;
 	}
 

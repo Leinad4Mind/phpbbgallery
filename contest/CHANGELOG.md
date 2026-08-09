@@ -6,6 +6,9 @@ All notable changes to the phpBB Gallery Contest add-on are documented in this f
 
 ### Added
 
+- Added an optional global and per-contest presentation policy that replaces an
+  ended contest album's list thumbnail with its validated first-place image,
+  while preserving manual album images and latest-image chronology.
 - Created the independent Contest add-on package and its safe dependency lifecycle.
 - Added add-on-owned migrations for contest configuration, album state, result
   columns and the contest table, adopting historical Core storage in place

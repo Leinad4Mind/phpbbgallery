@@ -75,6 +75,7 @@ final class album_lifecycle_listener_test extends TestCase
 				'contest_start' => 1_000,
 				'contest_rating' => 200,
 				'contest_end' => 500,
+				'contest_winner_thumbnail' => \phpbbgallery\contest\manager::THUMBNAIL_WINNER,
 				'contest_marked' => \phpbbgallery\contest\manager::STATE_ACTIVE,
 			])
 			->willReturn('contest_fields');
@@ -94,6 +95,7 @@ final class album_lifecycle_listener_test extends TestCase
 				'contest_start' => 1_000,
 				'contest_rating' => 200,
 				'contest_end' => 500,
+				'contest_winner_thumbnail' => \phpbbgallery\contest\manager::THUMBNAIL_WINNER,
 				'contest_marked' => \phpbbgallery\contest\manager::STATE_ACTIVE,
 			],
 			'album_type_state' => ['reset_marked_images' => true],

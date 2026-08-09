@@ -103,12 +103,17 @@ class policy_listener implements EventSubscriberInterface
 		}
 
 		$contest_rows = $this->contest->get_contests_by_album_ids($contest_album_ids);
+		$winner_thumbnails = $this->contest->get_winner_thumbnails($contest_rows);
 		foreach ($album_rows as $index => $row)
 		{
 			$album_id = (int) ($row['album_id'] ?? 0);
 			if (isset($contest_rows[$album_id]))
 			{
 				$album_rows[$index] = array_merge($row, $contest_rows[$album_id]);
+				if (isset($winner_thumbnails[$album_id]))
+				{
+					$album_rows[$index]['contest_thumbnail_image_id'] = $winner_thumbnails[$album_id];
+				}
 			}
 			else if ((int) ($row['album_type'] ?? -1) === (int) manager::ALBUM_TYPE)
 			{

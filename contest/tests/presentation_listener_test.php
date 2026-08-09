@@ -34,7 +34,11 @@ final class presentation_listener_test extends TestCase
 			'template_vars' => ['ALBUM_ID' => 7],
 		]);
 
-		(new presentation_listener($language, $user))->enrich_album_template_vars($event);
+		(new presentation_listener(
+			$language,
+			$user,
+			$this->createStub(\phpbb\controller\helper::class)
+		))->enrich_album_template_vars($event);
 
 		$template_vars = (array) $event['template_vars'];
 		$this->assertTrue($template_vars['S_ALBUM_TYPE_DETAILS']);
@@ -52,7 +56,8 @@ final class presentation_listener_test extends TestCase
 		]);
 		$listener = new presentation_listener(
 			$this->createStub(\phpbb\language\language::class),
-			$this->createStub(\phpbb\user::class)
+			$this->createStub(\phpbb\user::class),
+			$this->createStub(\phpbb\controller\helper::class)
 		);
 
 		$listener->enrich_album_template_vars($event);
@@ -60,11 +65,81 @@ final class presentation_listener_test extends TestCase
 		$this->assertSame(['ALBUM_ID' => 8], $event['template_vars']);
 	}
 
+	public function test_album_list_uses_the_validated_winner_without_changing_chronology(): void
+	{
+		$helper = $this->createMock(\phpbb\controller\helper::class);
+		$helper->expects($this->exactly(2))
+			->method('route')
+			->willReturnMap([
+				['phpbbgallery_core_image_file_mini', ['image_id' => 71], '/gallery/image/71/mini'],
+				['phpbbgallery_core_image', ['image_id' => 71], '/gallery/image/71'],
+			]);
+		$event = new \phpbb\event\data([
+			'context' => 'album_list',
+			'album_data' => [
+				'album_type' => \phpbbgallery\contest\manager::ALBUM_TYPE,
+				'contest_thumbnail_image_id' => 71,
+				'album_image' => '',
+			],
+			'template_vars' => [
+				'UC_THUMBNAIL' => '/gallery/image/99/mini',
+				'UC_FAKE_THUMBNAIL' => '/gallery/image/99/mini',
+				'UC_IMAGE_URL' => '/gallery/image/99',
+				'LAST_IMAGE_TIME' => 'Yesterday',
+				'LAST_USER_FULL' => 'Latest author',
+			],
+		]);
+		$listener = new presentation_listener(
+			$this->createStub(\phpbb\language\language::class),
+			$this->createStub(\phpbb\user::class),
+			$helper
+		);
+
+		$listener->enrich_album_template_vars($event);
+
+		$this->assertSame('/gallery/image/71/mini', $event['template_vars']['UC_THUMBNAIL']);
+		$this->assertSame('/gallery/image/71/mini', $event['template_vars']['UC_FAKE_THUMBNAIL']);
+		$this->assertSame('/gallery/image/71', $event['template_vars']['UC_IMAGE_URL']);
+		$this->assertSame('Yesterday', $event['template_vars']['LAST_IMAGE_TIME']);
+		$this->assertSame('Latest author', $event['template_vars']['LAST_USER_FULL']);
+	}
+
+	public function test_manual_album_image_and_disabled_thumbnails_keep_core_presentation(): void
+	{
+		$helper = $this->createMock(\phpbb\controller\helper::class);
+		$helper->expects($this->never())->method('route');
+		$listener = new presentation_listener(
+			$this->createStub(\phpbb\language\language::class),
+			$this->createStub(\phpbb\user::class),
+			$helper
+		);
+		foreach ([
+			['album_image' => 'images/custom.png', 'UC_THUMBNAIL' => '/custom.png'],
+			['album_image' => '', 'UC_THUMBNAIL' => ''],
+		] as $case)
+		{
+			$event = new \phpbb\event\data([
+				'context' => 'album_list',
+				'album_data' => [
+					'contest_thumbnail_image_id' => 71,
+					'album_image' => $case['album_image'],
+				],
+				'template_vars' => ['UC_THUMBNAIL' => $case['UC_THUMBNAIL']],
+			]);
+			$listener->enrich_album_template_vars($event);
+			$this->assertSame($case['UC_THUMBNAIL'], $event['template_vars']['UC_THUMBNAIL']);
+		}
+	}
+
 	public function test_private_contest_identity_receives_contest_label(): void
 	{
 		$language = $this->createStub(\phpbb\language\language::class);
 		$language->method('lang')->with('CONTEST_USERNAME')->willReturn('<strong>Contest</strong>');
-		$listener = new presentation_listener($language, $this->createStub(\phpbb\user::class));
+		$listener = new presentation_listener(
+			$language,
+			$this->createStub(\phpbb\user::class),
+			$this->createStub(\phpbb\controller\helper::class)
+		);
 		$event = new \phpbb\event\data([
 			'image_data' => [
 				'image_contest' => \phpbbgallery\contest\manager::STATE_ACTIVE,
@@ -88,7 +163,11 @@ final class presentation_listener_test extends TestCase
 		);
 		$user = $this->createStub(\phpbb\user::class);
 		$user->method('format_date')->willReturnCallback(static fn(int $timestamp): string => (string) $timestamp);
-		$listener = new presentation_listener($language, $user);
+		$listener = new presentation_listener(
+			$language,
+			$user,
+			$this->createStub(\phpbb\controller\helper::class)
+		);
 		$event = new \phpbb\event\data([
 			'image_data' => [
 				'image_contest' => \phpbbgallery\contest\manager::STATE_ACTIVE,
@@ -113,7 +192,11 @@ final class presentation_listener_test extends TestCase
 		);
 		$user = $this->createStub(\phpbb\user::class);
 		$user->method('format_date')->willReturnCallback(static fn(int $timestamp): string => (string) $timestamp);
-		$listener = new presentation_listener($language, $user);
+		$listener = new presentation_listener(
+			$language,
+			$user,
+			$this->createStub(\phpbb\controller\helper::class)
+		);
 		$base = [
 			'image_data' => ['image_contest' => \phpbbgallery\contest\manager::STATE_ACTIVE],
 			'album_data' => ['contest_start' => 1_000, 'contest_end' => 300],
@@ -149,7 +232,11 @@ final class presentation_listener_test extends TestCase
 			'message' => 'Comments unavailable',
 		]);
 
-		(new presentation_listener($language, $user))->album_operation_message($event);
+		(new presentation_listener(
+			$language,
+			$user,
+			$this->createStub(\phpbb\controller\helper::class)
+		))->album_operation_message($event);
 
 		$this->assertSame('CONTEST_COMMENTS_STARTS:1300', $event['message']);
 	}
@@ -165,7 +252,11 @@ final class presentation_listener_test extends TestCase
 			'title' => '',
 		]);
 
-		(new presentation_listener($language, $this->createStub(\phpbb\user::class)))->image_award($event);
+		(new presentation_listener(
+			$language,
+			$this->createStub(\phpbb\user::class),
+			$this->createStub(\phpbb\controller\helper::class)
+		))->image_award($event);
 
 		$this->assertSame(2, $event['rank']);
 		$this->assertSame('CONTEST_RESULT_2', $event['label']);

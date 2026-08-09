@@ -38,13 +38,15 @@ final class acp_listener_test extends TestCase
 
 		$settings = $event['return_ary']['vars']['GALLERY_CONFIG'];
 		$this->assertSame(
-			['title', 'items_per_page', 'allow_contests', 'allow_comments'],
+			['title', 'items_per_page', 'allow_contests', 'contest_winner_thumbnail', 'allow_comments'],
 			array_keys($settings)
 		);
 		$this->assertSame('CONTEST_CREATION', $settings['allow_contests']['lang']);
 		$this->assertSame('radio:yes_no', $settings['allow_contests']['type']);
 		$this->assertSame('contest', $settings['allow_contests']['addon']['id']);
 		$this->assertSame('#c2410c', $settings['allow_contests']['addon']['accent']);
+		$this->assertSame('CONTEST_WINNER_THUMBNAIL', $settings['contest_winner_thumbnail']['lang']);
+		$this->assertSame('radio:yes_no', $settings['contest_winner_thumbnail']['type']);
 	}
 
 	public function test_listener_ignores_other_configuration_modes(): void
@@ -69,12 +71,45 @@ final class acp_listener_test extends TestCase
 
 		$this->assertStringContainsString("variable('contest_start', '')", $source);
 		$this->assertStringContainsString("'contest_rating' => 3 * 86400", $source);
+		$this->assertStringContainsString("'contest_winner_thumbnail' => manager::THUMBNAIL_INHERIT", $source);
 		$this->assertStringContainsString("get_contest((int) \$album_data['album_id'], 'album')", $source);
 		$this->assertStringContainsString("'S_ALBUM_CONTEST'", $source);
 		$this->assertGreaterThanOrEqual(4, substr_count($source, '$this->load_acp_language();'));
 		$this->assertStringContainsString("'album_type_data'", $core);
 		$this->assertStringNotContainsString("variable('contest_start', '')", $core);
 		$this->assertStringNotContainsString("get('phpbbgallery.core.contest')", $core);
+	}
+
+	public function test_album_thumbnail_policy_request_is_normalized_and_defaults_to_inherit(): void
+	{
+		$request = $this->createStub(\phpbb\request\request_interface::class);
+		$request->method('variable')->willReturnMap([
+			['contest_start', '', '2026-08-01 10:00'],
+			['contest_rating', '', '2026-08-02 10:00'],
+			['contest_end', '', '2026-08-03 10:00'],
+			['contest_winner_thumbnail', \phpbbgallery\contest\manager::THUMBNAIL_INHERIT, 99],
+		]);
+		$listener = new acp_listener(
+			$this->createStub(\phpbb\language\language::class),
+			$request,
+			$this->createStub(\phpbb\template\template::class),
+			$this->createStub(\phpbb\user::class),
+			$this->createStub(\phpbbgallery\contest\manager::class)
+		);
+		$request_event = new \phpbb\event\data(['album_type_data' => []]);
+		$default_event = new \phpbb\event\data(['album_type_data' => []]);
+
+		$listener->request_album_type_data($request_event);
+		$listener->default_album_type_data($default_event);
+
+		$this->assertSame(
+			\phpbbgallery\contest\manager::THUMBNAIL_INHERIT,
+			$request_event['album_type_data']['contest_winner_thumbnail']
+		);
+		$this->assertSame(
+			\phpbbgallery\contest\manager::THUMBNAIL_INHERIT,
+			$default_event['album_type_data']['contest_winner_thumbnail']
+		);
 	}
 
 	public function test_listener_resyncs_contest_after_album_ratings_are_reset(): void

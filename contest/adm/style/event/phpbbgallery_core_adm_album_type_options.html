@@ -13,5 +13,15 @@
 			<dt><label for="contest_end">{{ lang('CONTEST_END') }}{{ lang('COLON') }}</label><br /><span>{{ lang('CONTEST_END_EXPLAIN') }}</span><br /><span>{{ lang('CONTEST_DATE_EXPLAIN') }}</span></dt>
 			<dd><input class="text" type="text" id="contest_end" name="contest_end" value="{{ CONTEST_END }}" /></dd>
 		</dl>
+		<dl>
+			<dt><label for="contest_winner_thumbnail">{{ lang('CONTEST_THUMBNAIL_POLICY') }}{{ lang('COLON') }}</label><br /><span>{{ lang('CONTEST_THUMBNAIL_POLICY_EXPLAIN') }}</span></dt>
+			<dd>
+				<select id="contest_winner_thumbnail" name="contest_winner_thumbnail">
+					<option value="{{ CONTEST_THUMBNAIL_INHERIT }}"{% if CONTEST_WINNER_THUMBNAIL == CONTEST_THUMBNAIL_INHERIT %} selected{% endif %}>{{ lang('CONTEST_THUMBNAIL_INHERIT') }}</option>
+					<option value="{{ CONTEST_THUMBNAIL_LAST }}"{% if CONTEST_WINNER_THUMBNAIL == CONTEST_THUMBNAIL_LAST %} selected{% endif %}>{{ lang('CONTEST_THUMBNAIL_LAST') }}</option>
+					<option value="{{ CONTEST_THUMBNAIL_WINNER }}"{% if CONTEST_WINNER_THUMBNAIL == CONTEST_THUMBNAIL_WINNER %} selected{% endif %}>{{ lang('CONTEST_THUMBNAIL_WINNER') }}</option>
+				</select>
+			</dd>
+		</dl>
 	</fieldset>
 </div>

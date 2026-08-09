@@ -15,6 +15,7 @@ use phpbbgallery\contest\migrations\m3_album_storage;
 use phpbbgallery\contest\migrations\m4_image_end_storage;
 use phpbbgallery\contest\migrations\m5_image_rank_storage;
 use phpbbgallery\contest\migrations\m6_contest_storage;
+use phpbbgallery\contest\migrations\m7_winner_thumbnail;
 use PHPUnit\Framework\TestCase;
 
 final class package_test extends TestCase
@@ -47,6 +48,22 @@ final class package_test extends TestCase
 		$this->assertSame(['\phpbbgallery\contest\migrations\m3_album_storage'], m4_image_end_storage::depends_on());
 		$this->assertSame(['\phpbbgallery\contest\migrations\m4_image_end_storage'], m5_image_rank_storage::depends_on());
 		$this->assertSame(['\phpbbgallery\contest\migrations\m5_image_rank_storage'], m6_contest_storage::depends_on());
+		$this->assertSame(['\phpbbgallery\contest\migrations\m6_contest_storage'], m7_winner_thumbnail::depends_on());
+
+		$winner_thumbnail = (new \ReflectionClass(m7_winner_thumbnail::class))->newInstanceWithoutConstructor();
+		(new \ReflectionProperty(\phpbb\db\migration\migration::class, 'table_prefix'))->setValue($winner_thumbnail, 'phpbb_');
+		$this->assertSame([
+			['config.add', ['phpbb_gallery_contest_winner_thumbnail', 0]],
+		], $winner_thumbnail->update_data());
+		$this->assertSame(
+			['INT:11', -1],
+			$winner_thumbnail->update_schema()['add_columns']['phpbb_gallery_contests']['contest_winner_thumbnail']
+		);
+		$this->assertSame([
+			'drop_columns' => [
+				'phpbb_gallery_contests' => ['contest_winner_thumbnail'],
+			],
+		], $winner_thumbnail->revert_schema());
 
 		$settings = (new \ReflectionClass(m2_settings::class))->newInstanceWithoutConstructor();
 		$this->assertSame([
@@ -180,6 +197,13 @@ final class package_test extends TestCase
 				'CONTEST_RATING_EXPLAIN',
 				'CONTEST_RATING_INVALID',
 				'CONTEST_SETTINGS',
+				'CONTEST_WINNER_THUMBNAIL',
+				'CONTEST_WINNER_THUMBNAIL_EXPLAIN',
+				'CONTEST_THUMBNAIL_POLICY',
+				'CONTEST_THUMBNAIL_POLICY_EXPLAIN',
+				'CONTEST_THUMBNAIL_INHERIT',
+				'CONTEST_THUMBNAIL_LAST',
+				'CONTEST_THUMBNAIL_WINNER',
 				'CONTEST_START',
 				'CONTEST_START_EXPLAIN',
 				'CONTEST_START_INVALID',
@@ -238,6 +262,7 @@ final class package_test extends TestCase
 		$this->assertStringContainsString('name="contest_start"', $template);
 		$this->assertStringContainsString('name="contest_rating"', $template);
 		$this->assertStringContainsString('name="contest_end"', $template);
+		$this->assertStringContainsString('name="contest_winner_thumbnail"', $template);
 
 		$display = (string) file_get_contents(
 			dirname(__DIR__) . '/adm/style/event/phpbbgallery_core_adm_album_display_options.html'

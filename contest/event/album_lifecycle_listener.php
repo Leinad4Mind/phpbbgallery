@@ -164,6 +164,9 @@ class album_lifecycle_listener implements EventSubscriberInterface
 			'contest_start' => (int) $data['contest_start'],
 			'contest_rating' => (int) $data['contest_rating'],
 			'contest_end' => (int) $data['contest_end'],
+			'contest_winner_thumbnail' => manager::normalize_thumbnail_policy(
+				(int) ($data['contest_winner_thumbnail'] ?? manager::THUMBNAIL_INHERIT)
+			),
 		];
 		if (isset($data['contest_marked']))
 		{

@@ -68,6 +68,10 @@ final class policy_listener_test extends TestCase
 			->willReturn([
 				7 => ['contest_id' => 11, 'contest_album_id' => 7],
 			]);
+		$manager->expects($this->once())
+			->method('get_winner_thumbnails')
+			->with([7 => ['contest_id' => 11, 'contest_album_id' => 7]])
+			->willReturn([7 => 71]);
 		$event = new \phpbb\event\data(['album_rows' => [
 			['album_id' => 7, 'album_type' => \phpbbgallery\contest\manager::ALBUM_TYPE],
 			['album_id' => 8, 'album_type' => \phpbbgallery\core\block::TYPE_UPLOAD],
@@ -77,6 +81,7 @@ final class policy_listener_test extends TestCase
 		(new policy_listener($manager))->enrich_album_rows($event);
 
 		$this->assertSame(11, $event['album_rows'][0]['contest_id']);
+		$this->assertSame(71, $event['album_rows'][0]['contest_thumbnail_image_id']);
 		$this->assertArrayNotHasKey('contest_id', $event['album_rows'][1]);
 		$this->assertArrayNotHasKey('contest_id', $event['album_rows'][2]);
 		$this->assertSame(\phpbbgallery\contest\manager::STATE_ACTIVE, $event['album_rows'][2]['contest_marked']);

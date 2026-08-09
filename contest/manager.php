@@ -47,6 +47,15 @@ class manager
 	/** Active contest state persisted on contest and image rows. */
 	public const STATE_ACTIVE = 1;
 
+	/** Inherit the global contest-thumbnail preference. */
+	public const THUMBNAIL_INHERIT = -1;
+
+	/** Keep the Gallery Core's latest-image thumbnail. */
+	public const THUMBNAIL_LAST = 0;
+
+	/** Present the validated first-place image after finalization. */
+	public const THUMBNAIL_WINNER = 1;
+
 	/**
 	 * Recoverable intermediate state while a selected podium is published.
 	 */
@@ -139,6 +148,76 @@ class manager
 		$this->db->sql_freeresult($result);
 
 		return $contests;
+	}
+
+	/**
+	 * Return validated winning-image IDs keyed by contest album ID.
+	 *
+	 * @param array $contests Contest rows keyed by album ID
+	 * @return array<int, int>
+	 */
+	public function get_winner_thumbnails(array $contests): array
+	{
+		$candidates = [];
+		$global_policy = (bool) $this->gallery_config->get('contest_winner_thumbnail', false)
+			? self::THUMBNAIL_WINNER
+			: self::THUMBNAIL_LAST;
+		foreach ($contests as $album_id => $contest)
+		{
+			$album_id = (int) $album_id;
+			$policy = self::normalize_thumbnail_policy(
+				(int) ($contest['contest_winner_thumbnail'] ?? self::THUMBNAIL_INHERIT)
+			);
+			if ($policy === self::THUMBNAIL_INHERIT)
+			{
+				$policy = $global_policy;
+			}
+
+			$image_id = (int) ($contest['contest_first'] ?? 0);
+			if ($album_id <= 0
+				|| $policy !== self::THUMBNAIL_WINNER
+				|| (int) ($contest['contest_marked'] ?? self::STATE_ACTIVE) !== self::STATE_INACTIVE
+				|| $image_id <= 0)
+			{
+				continue;
+			}
+			$candidates[$image_id] = $album_id;
+		}
+
+		if (!$candidates)
+		{
+			return [];
+		}
+
+		$sql = 'SELECT image_id, image_album_id
+			FROM ' . $this->images_table . '
+			WHERE ' . $this->db->sql_in_set('image_id', array_keys($candidates)) . '
+				AND ' . $this->eligible_status_sql('image_status') . '
+				AND image_contest = ' . self::STATE_INACTIVE . '
+				AND image_contest_rank = 1';
+		$result = $this->db->sql_query($sql);
+		$thumbnails = [];
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$image_id = (int) $row['image_id'];
+			$album_id = (int) $row['image_album_id'];
+			if (($candidates[$image_id] ?? 0) === $album_id)
+			{
+				$thumbnails[$album_id] = $image_id;
+			}
+		}
+		$this->db->sql_freeresult($result);
+
+		return $thumbnails;
+	}
+
+	public static function normalize_thumbnail_policy(int $policy): int
+	{
+		return in_array($policy, [
+			self::THUMBNAIL_INHERIT,
+			self::THUMBNAIL_LAST,
+			self::THUMBNAIL_WINNER,
+		], true) ? $policy : self::THUMBNAIL_INHERIT;
 	}
 
 	private function get_tabulation(string $alias = ''): string

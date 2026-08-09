@@ -41,4 +41,5 @@ namespace
 	require_once dirname(__DIR__) . '/migrations/m4_image_end_storage.php';
 	require_once dirname(__DIR__) . '/migrations/m5_image_rank_storage.php';
 	require_once dirname(__DIR__) . '/migrations/m6_contest_storage.php';
+	require_once dirname(__DIR__) . '/migrations/m7_winner_thumbnail.php';
 }

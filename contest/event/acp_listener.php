@@ -73,6 +73,13 @@ class acp_listener implements EventSubscriberInterface
 				'explain' => true,
 				'addon' => ['id' => 'contest', 'name' => 'ALBUM_TYPE_CONTEST', 'accent' => '#c2410c'],
 			],
+			'contest_winner_thumbnail' => [
+				'lang' => 'CONTEST_WINNER_THUMBNAIL',
+				'validate' => 'bool',
+				'type' => 'radio:yes_no',
+				'explain' => true,
+				'addon' => ['id' => 'contest', 'name' => 'ALBUM_TYPE_CONTEST', 'accent' => '#c2410c'],
+			],
 		];
 
 		$position = array_search('items_per_page', array_keys($settings), true);
@@ -99,6 +106,9 @@ class acp_listener implements EventSubscriberInterface
 			'contest_start' => $this->request->variable('contest_start', ''),
 			'contest_rating' => $this->request->variable('contest_rating', ''),
 			'contest_end' => $this->request->variable('contest_end', ''),
+			'contest_winner_thumbnail' => manager::normalize_thumbnail_policy(
+				$this->request->variable('contest_winner_thumbnail', manager::THUMBNAIL_INHERIT)
+			),
 		];
 	}
 
@@ -109,6 +119,7 @@ class acp_listener implements EventSubscriberInterface
 			'contest_start' => time(),
 			'contest_rating' => 3 * 86400,
 			'contest_end' => 7 * 86400,
+			'contest_winner_thumbnail' => manager::THUMBNAIL_INHERIT,
 		];
 	}
 
@@ -138,6 +149,12 @@ class acp_listener implements EventSubscriberInterface
 			'S_CONTEST_START' => $this->user->format_date($start, 'Y-m-d H:i'),
 			'CONTEST_RATING' => $this->user->format_date($start + (int) ($type_data['contest_rating'] ?? 0), 'Y-m-d H:i'),
 			'CONTEST_END' => $this->user->format_date($start + (int) ($type_data['contest_end'] ?? 0), 'Y-m-d H:i'),
+			'CONTEST_WINNER_THUMBNAIL' => manager::normalize_thumbnail_policy(
+				(int) ($type_data['contest_winner_thumbnail'] ?? manager::THUMBNAIL_INHERIT)
+			),
+			'CONTEST_THUMBNAIL_INHERIT' => manager::THUMBNAIL_INHERIT,
+			'CONTEST_THUMBNAIL_LAST' => manager::THUMBNAIL_LAST,
+			'CONTEST_THUMBNAIL_WINNER' => manager::THUMBNAIL_WINNER,
 		]);
 		$this->template->assign_block_vars('gallery_acp_addons', [
 			'ID' => 'contest',
