@@ -9,9 +9,6 @@
 		<button type="button" class="button button-secondary btn btn-default" data-gallery-orientation-operation="4" title="{{ lang('FLIP_VERTICAL') }}" aria-label="{{ lang('FLIP_VERTICAL') }}"><i class="icon fa fa-arrows-v fa-fw" aria-hidden="true"></i></button>
 	</div>
 	<output class="gallery-orientation-state" data-gallery-orientation-state aria-live="polite">{{ lang('ORIENTATION_1') }}</output>
-	{% if image.S_FIRST_ROW and NUM_IMAGES > 1 %}
-	<label class="gallery-orientation-apply-all"><input type="checkbox" data-gallery-orientation-apply-all> <span>{{ lang('APPLY_TRANSFORM_ALL') }}</span></label>
-	{% endif %}
 	<div hidden data-gallery-orientation-labels
 		data-orientation-1="{{ lang('ORIENTATION_1') }}"
 		data-orientation-2="{{ lang('ORIENTATION_2') }}"

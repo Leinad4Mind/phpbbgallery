@@ -49,12 +49,18 @@
 					<dd class="simulate-dt"><label for="message_{{ image.S_ROW_COUNT }}">{{ lang('IMAGE_DESC') }}{{ lang('COLON') }}</label></dd>
 					<dd class="simulate-dd" id="desc_length_{{ image.S_ROW_COUNT }}">{{ lang('DESCRIPTION_LENGTH') }}</dd>
 					<dd class="simulate-dd"><textarea name="message[{{ image.S_ROW_COUNT }}]" id="message_{{ image.S_ROW_COUNT }}" rows="4" cols="76" tabindex="3" onchange="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %}" onselect="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %} storeCaret(this);" onclick="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %} storeCaret(this);" onkeyup="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %} storeCaret(this);" class="inputbox">{{ image.IMAGE_DESC }}</textarea></dd>
-					{% if S_ALLOW_ROTATE %}
-					<dd class="simulate-dt"><label>{{ lang('TRANSFORM_IMAGE') }}{{ lang('COLON') }}</label></dd>
-					<dd class="simulate-dd">{% include '@phpbbgallery_core/gallery/image_orientation_controls.html' %}</dd>
-					{% endif %}
 				</dl>
 				{% EVENT phpbbgallery_core_edit_image_addfields %}
+				{% if S_ALLOW_ROTATE %}
+				<dl>
+					{% if image.S_FIRST_ROW and NUM_IMAGES > 1 %}
+					<dt></dt>
+					<dd><label class="gallery-orientation-apply-all"><input type="checkbox" data-gallery-orientation-apply-all> <span>{{ lang('APPLY_TRANSFORM_ALL') }}</span></label></dd>
+					{% endif %}
+					<dt><label>{{ lang('TRANSFORM_IMAGE') }}{{ lang('COLON') }}</label></dt>
+					<dd>{% include '@phpbbgallery_core/gallery/image_orientation_controls.html' %}</dd>
+				</dl>
+				{% endif %}
 			{% endfor %}
 			{% EVENT phpbbgallery_core_edit_addfields %}
 

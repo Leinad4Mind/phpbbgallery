@@ -97,6 +97,7 @@ final class image_orientation_test extends TestCase
 		$this->assertStringNotContainsString('class="button2 btn btn-default"', $controls);
 		$this->assertStringContainsString('data-gallery-orientation-value=', $controls);
 		$this->assertStringNotContainsString(' data-orientation=', $controls);
+		$this->assertStringNotContainsString('data-gallery-orientation-apply-all', $controls);
 		$this->assertStringContainsString('repeating-conic-gradient', $css);
 
 		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
@@ -104,8 +105,21 @@ final class image_orientation_test extends TestCase
 			$template = (string) file_get_contents($root . '/styles/' . $style . '/template/gallery/posting_body.html');
 			$this->assertStringContainsString('image_orientation_controls.html', $template);
 			$this->assertStringContainsString('data-gallery-orientation-preview', $template);
+			$hook = strpos($template, '{% EVENT phpbbgallery_core_edit_image_addfields %}');
+			$apply_all = strpos($template, 'data-gallery-orientation-apply-all', (int) $hook);
+			$transform = strpos($template, "lang('TRANSFORM_IMAGE')", (int) $apply_all);
+			$this->assertNotFalse($hook, $style);
+			$this->assertNotFalse($apply_all, $style);
+			$this->assertNotFalse($transform, $style);
+			$this->assertTrue($hook < $apply_all && $apply_all < $transform, $style);
 			$this->assertStringNotContainsString('name="rotate[{{ upload_image.S_ROW_COUNT }}]"', $template);
 		}
+
+		$image_edit = (string) file_get_contents($root . '/styles/prosilver/template/gallery/image_edit_body.html');
+		$hook = strpos($image_edit, '{% EVENT phpbbgallery_core_edit_image_addfields %}');
+		$apply_all = strpos($image_edit, 'data-gallery-orientation-apply-all', (int) $hook);
+		$transform = strpos($image_edit, "lang('TRANSFORM_IMAGE')", (int) $apply_all);
+		$this->assertTrue($hook < $apply_all && $apply_all < $transform);
 	}
 
 	public function test_sitesplat_upload_helpers_remain_globally_callable_and_match_prosilver_order(): void

@@ -172,13 +172,19 @@
 							<dd><textarea name="message[{{ image.S_ROW_COUNT }}]" id="message_{{ image.S_ROW_COUNT }}" rows="4" cols="76" tabindex="3" data-gallery-character-counter data-gallery-counter-output-id="description-counter-{{ image.S_ROW_COUNT }}" data-gallery-max-length="{{ DESCRIPTION_MAX_LENGTH }}" aria-describedby="description-limit-{{ image.S_ROW_COUNT }} description-counter-{{ image.S_ROW_COUNT }}" onchange="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %}" onselect="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %} storeCaret(this);" onclick="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %} storeCaret(this);" onkeyup="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %} storeCaret(this);" class="inputbox">{{ image.IMAGE_DESC }}</textarea></dd>
 							<dd id="desc_length_{{ image.S_ROW_COUNT }}" class="gallery-comment-guidance"><span id="description-limit-{{ image.S_ROW_COUNT }}" data-gallery-comment-guidance-text>{{ lang('DESCRIPTION_LENGTH') }}</span><output id="description-counter-{{ image.S_ROW_COUNT }}" class="gallery-comment-counter" data-gallery-character-counter-output hidden aria-live="polite" aria-atomic="true"></output></dd>
 						</dl>
+						{% EVENT phpbbgallery_core_edit_image_addfields %}
 						{% if S_ALLOW_ROTATE %}
+						{% if image.S_FIRST_ROW and NUM_IMAGES > 1 %}
+						<dl>
+							<dt></dt>
+							<dd><label class="gallery-orientation-apply-all"><input type="checkbox" data-gallery-orientation-apply-all> <span>{{ lang('APPLY_TRANSFORM_ALL') }}</span></label></dd>
+						</dl>
+						{% endif %}
 						<dl>
 							<dt><label>{{ lang('TRANSFORM_IMAGE') }}{{ lang('COLON') }}</label></dt>
 							<dd>{% include '@phpbbgallery_core/gallery/image_orientation_controls.html' %}</dd>
 						</dl>
 						{% endif %}
-						{% EVENT phpbbgallery_core_edit_image_addfields %}
 					</dd>
 				</dl>
 			{% endfor %}
