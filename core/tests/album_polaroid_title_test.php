@@ -53,7 +53,15 @@ final class album_polaroid_title_test extends TestCase
 				$this->assertStringContainsString("lang('PUBLIC_ALBUMS')", $template, $style . '/' . $filename);
 				$this->assertStringContainsString("lang('PERSONAL_ALBUMS')", $template, $style . '/' . $filename);
 				$this->assertStringContainsString('gallery-personal-album', $template, $style . '/' . $filename);
+				if ($style !== 'prosilver')
+				{
+					$this->assertStringContainsString('gallery-album-section-title-sitesplat', $template, $style . '/' . $filename);
+				}
 			}
 		}
+
+		$css = (string) file_get_contents(dirname(__DIR__) . '/styles/all/theme/gallery.css');
+		$this->assertStringContainsString('.gallery-album-section-title-sitesplat h3', $css);
+		$this->assertStringContainsString('color: #2880b2;', $css);
 	}
 }

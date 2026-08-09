@@ -176,6 +176,12 @@ input.autowidth-gallery {
 	margin-top: 1em;
 }
 
+.gallery-album-section-title-sitesplat,
+.gallery-album-section-title-sitesplat h3
+{
+	color: #2880b2;
+}
+
 .gallery-personal-album
 {
 	border-color: rgba(73, 126, 157, 0.42) !important;
