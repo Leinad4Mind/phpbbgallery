@@ -648,6 +648,7 @@ class upload
 				$data = $process->image_data[$image_id];
 				$image_template_vars = [
 					'U_IMAGE'    => $this->image->generate_link('thumbnail', 'plugin', $image_id, $data['image_name'], $album_id),
+					'U_IMAGE_PREVIEW' => $this->image->generate_review_preview_url($image_id, $data['image_filename'], $album_id, (int) $data['image_user_id']),
 					'IMAGE_NAME' => $data['image_name'],
 					'IMAGE_SUBTITLE' => $image_subtitles[$num_images] ?? ($data['image_subtitle'] ?? ''),
 					'IMAGE_DESC' => $description_array[$num_images] ?? $data['image_desc'],

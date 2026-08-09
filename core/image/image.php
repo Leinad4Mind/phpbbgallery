@@ -658,6 +658,25 @@ class image
 	}
 
 	/**
+	 * Build a safe review preview URL without bypassing source permissions or
+	 * unexpectedly starting a paid download for somebody else's image.
+	 */
+	public function generate_review_preview_url(int $image_id, string $filename, int $album_id, int $owner_id): string
+	{
+		$extension = strtolower((string) pathinfo($filename, PATHINFO_EXTENSION));
+		$browser_can_display_source = in_array($extension, ['gif', 'jpg', 'jpeg', 'png', 'webp', 'avif'], true);
+		$can_open_source = $browser_can_display_source
+			&& $this->gallery_auth->acl_check('i_download', $album_id, $owner_id)
+			&& ((int) $this->user->data['user_id'] === $owner_id
+				|| $this->gallery_auth->acl_check('i_download_free', $album_id, $owner_id));
+
+		return $this->helper->route(
+			$can_open_source ? 'phpbbgallery_core_image_file_source' : 'phpbbgallery_core_image_file_medium',
+			['image_id' => $image_id]
+		);
+	}
+
+	/**
 	* Handle user- & total image_counter
 	*
 	* @param	array	$image_id_ary	array with the image_ids which changed their status

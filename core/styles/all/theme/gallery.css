@@ -1208,6 +1208,71 @@ fieldset dl.gallery-autocomplete-row-open
 	transition: transform 180ms ease;
 }
 
+.gallery-orientation-preview [data-gallery-upload-preview]
+{
+	cursor: zoom-in;
+}
+
+.gallery-upload-preview-dialog
+{
+	background: transparent;
+	border: 0;
+	color: #fff;
+	max-height: calc(100vh - 32px);
+	max-width: calc(100vw - 32px);
+	padding: 0;
+}
+
+.gallery-upload-preview-dialog::backdrop
+{
+	background: rgba(0, 0, 0, 0.82);
+}
+
+.gallery-upload-preview-frame
+{
+	background: #111;
+	border-radius: 6px;
+	box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+	overflow: hidden;
+	position: relative;
+}
+
+.gallery-upload-preview-frame figure
+{
+	margin: 0;
+}
+
+.gallery-upload-preview-frame img
+{
+	display: block;
+	height: auto;
+	max-height: calc(100vh - 96px);
+	max-width: calc(100vw - 48px);
+	width: auto;
+}
+
+.gallery-upload-preview-frame figcaption
+{
+	padding: 10px 48px 10px 14px;
+}
+
+.gallery-upload-preview-close
+{
+	background: rgba(0, 0, 0, 0.68);
+	border: 0;
+	border-radius: 50%;
+	color: #fff;
+	cursor: pointer;
+	font-size: 24px;
+	height: 36px;
+	line-height: 32px;
+	position: absolute;
+	right: 8px;
+	top: 8px;
+	width: 36px;
+	z-index: 1;
+}
+
 @media (prefers-reduced-motion: reduce)
 {
 	.gallery-orientation-preview img

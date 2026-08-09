@@ -84,6 +84,7 @@ class package_hygiene_test extends TestCase
 			'ip_privacy.js',
 			'quick_upload.js',
 			'rating.js',
+			'upload_preview.js',
 		];
 		$actual = array_values(array_filter(scandir($asset_directory), function (string $name) use ($asset_directory): bool
 		{

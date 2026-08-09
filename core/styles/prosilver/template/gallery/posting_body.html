@@ -115,6 +115,7 @@
 
 {% include 'gallery/posting_javascript.html' %}
 {% INCLUDEJS '@phpbbgallery_core/js/image_orientation.js' %}
+{% INCLUDEJS '@phpbbgallery_core/js/upload_preview.js' %}
 
 {% if U_VIEW_IMAGE %}<h2>{{ lang('IMAGE_NAME') }}{{ lang('COLON') }}<a href="{{ U_VIEW_IMAGE }}" style="display: inline;"> {{ IMAGE_NAME }}</a></h2>{% else %}<h2>{{ lang('ALBUM_NAME') }}{{ lang('COLON') }}<a href="{{ U_VIEW_ALBUM }}" style="display: inline;"> {{ ALBUM_NAME }}</a></h2>{% endif %}
 
@@ -150,7 +151,7 @@
 		<fieldset class="fields1">
 			{% for image in image %}
 				<dl data-gallery-orientation-item>
-					<dt{% if image.S_FIRST_ROW and (NUM_IMAGES > 1) %} class="first"{% endif %}><span class="gallery-orientation-preview" data-gallery-orientation-preview><a href="{{ U_IMAGE_ACTION }}" style="max-width: 95%; max-height: 95%">{{ image.U_IMAGE }}</a></span></dt>
+					<dt{% if image.S_FIRST_ROW and (NUM_IMAGES > 1) %} class="first"{% endif %}><span class="gallery-orientation-preview" data-gallery-orientation-preview>{% if image.U_IMAGE_PREVIEW %}<a href="{{ image.U_IMAGE_PREVIEW }}" data-gallery-upload-preview data-image-name="{{ image.IMAGE_NAME }}" data-close-label="{{ lang('CLOSE') }}" aria-label="{{ lang('PREVIEW') }}{{ lang('COLON') }} {{ image.IMAGE_NAME }}">{{ image.U_IMAGE }}</a>{% else %}{{ image.U_IMAGE }}{% endif %}</span></dt>
 					<dd>
 						{% if image.S_FIRST_ROW and (NUM_IMAGES > 1) %}
 						<dl>

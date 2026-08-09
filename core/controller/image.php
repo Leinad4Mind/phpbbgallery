@@ -1533,6 +1533,7 @@ class image
 
 		$template_vars = [
 			'U_IMAGE'    => $this->image->generate_link('thumbnail', 'plugin', $image_id, $image_data['image_name'], $album_id),
+			'U_IMAGE_PREVIEW' => $this->image->generate_review_preview_url($image_id, $image_data['image_filename'], $album_id, (int) $image_data['image_user_id']),
 			'IMAGE_NAME' => $disp_image_data['image_name'],
 			'IMAGE_SUBTITLE' => $disp_image_data['image_subtitle'] ?? '',
 			'IMAGE_DESC' => $message_parser->message,
