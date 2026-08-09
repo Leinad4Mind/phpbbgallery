@@ -144,6 +144,14 @@ namespace
 	{
 		define('USER_FOUNDER', 3);
 	}
+	if (!defined('USERS_TABLE'))
+	{
+		define('USERS_TABLE', 'phpbb_users');
+	}
+	if (!defined('GROUPS_TABLE'))
+	{
+		define('GROUPS_TABLE', 'phpbb_groups');
+	}
 
 	// Load only packaged Twig classes so isolated tests do not initialize unrelated Composer file autoloaders.
 	spl_autoload_register(static function (string $class_name): void
@@ -234,6 +242,7 @@ namespace
 	require_once dirname(__DIR__) . '/upload.php';
 	require_once dirname(__DIR__) . '/auth/image_authorization.php';
 	require_once dirname(__DIR__) . '/auth/auth.php';
+	require_once dirname(__DIR__) . '/auth/permission_trace.php';
 	require_once dirname(__DIR__) . '/ext.php';
 	require_once dirname(__DIR__, 2) . '/acpcleanup/ext.php';
 	require_once dirname(__DIR__, 2) . '/acpimport/ext.php';

@@ -108,6 +108,13 @@ services:
             - '%phpbbgallery.tables.gallery_users%'
             - '%phpbbgallery.tables.gallery_albums%'
             - '@ext.manager'
+    phpbbgallery.core.auth.permission_trace:
+        class: phpbbgallery\core\auth\permission_trace
+        arguments:
+            - '@dbal.conn'
+            - '@phpbbgallery.core.auth'
+            - '%phpbbgallery.tables.gallery_permissions%'
+            - '%phpbbgallery.tables.gallery_roles%'
     phpbbgallery.core.auth.image_authorization:
         class: phpbbgallery\core\auth\image_authorization
     phpbbgallery.core.auth.level:

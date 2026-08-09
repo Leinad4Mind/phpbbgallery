@@ -96,6 +96,10 @@ class permissions_module
 			case 'manage':
 				switch ($action)
 				{
+					case 'trace':
+						$this->permission_trace();
+					break;
+
 					case 'set':
 						$this->permissions_set();
 					break;
@@ -125,6 +129,123 @@ class permissions_module
 				trigger_error('NO_MODE', E_USER_ERROR);
 			break;
 		}
+	}
+
+	private function permission_trace(): void
+	{
+		global $template, $request, $permissions, $phpbb_container, $gallery_auth, $gallery_cache;
+
+		$this->language->add_lang('acp/permissions');
+		$user_id = $request->variable('user_id', 0);
+		$album_id = $request->variable('album_id', 0);
+		$p_system = $request->variable('p_system', 0);
+		$permission = $request->variable('auth', '');
+		$is_count = str_ends_with($permission, '_count');
+
+		$is_public_album = $p_system === $gallery_auth::PUBLIC_ALBUM && $album_id > 0;
+		$is_personal_scope = $album_id === 0 && in_array($p_system, [$gallery_auth::OWN_ALBUM, $gallery_auth::PERSONAL_ALBUM], true);
+		$scope_permissions = $permissions->p_masks[$is_public_album ? $gallery_auth::PUBLIC_ALBUM : $p_system] ?? [];
+		if ($user_id <= 0 || $is_count || !$gallery_auth->has_permission($permission) || !in_array($permission, $scope_permissions, true) || (!$is_public_album && !$is_personal_scope))
+		{
+			trigger_error('WRONG_PERMISSION_TYPE', E_USER_WARNING);
+			return;
+		}
+
+		if ($is_public_album)
+		{
+			$album_list = $gallery_cache->get('albums');
+			if (!isset($album_list[$album_id]) || (int) $album_list[$album_id]['album_user_id'] !== $gallery_auth::PUBLIC_ALBUM)
+			{
+				trigger_error('NO_ALBUM', E_USER_WARNING);
+				return;
+			}
+			$scope_name = (string) $album_list[$album_id]['album_name'];
+		}
+		else
+		{
+			$scope_name = $p_system === $gallery_auth::OWN_ALBUM
+				? $this->language->lang('OWN_PERSONAL_ALBUMS')
+				: $this->language->lang('PERSONAL_ALBUMS');
+		}
+
+		try
+		{
+			$trace = $phpbb_container->get('phpbbgallery.core.auth.permission_trace')->trace($user_id, $permission, $album_id, $p_system);
+		}
+		catch (\OutOfBoundsException $exception)
+		{
+			trigger_error('NO_USERS', E_USER_WARNING);
+			return;
+		}
+		catch (\InvalidArgumentException $exception)
+		{
+			trigger_error('WRONG_PERMISSION_TYPE', E_USER_WARNING);
+			return;
+		}
+
+		$this->tpl_name = 'permission_trace';
+		$this->page_title = $this->language->lang('TRACE_PERMISSION', $this->language->lang('PERMISSION_' . strtoupper($permission)));
+		$template->assign_vars([
+			'PERMISSION' => $this->language->lang('PERMISSION_' . strtoupper($permission)),
+			'PERMISSION_USERNAME' => $trace['username'],
+			'FORUM_NAME' => $scope_name,
+			'U_BACK' => '',
+		]);
+
+		$this->assign_trace_row($this->language->lang('DEFAULT'), $gallery_auth::ACL_NO, $gallery_auth::ACL_NO, $this->language->lang('TRACE_DEFAULT'));
+		foreach ($trace['rows'] as $row)
+		{
+			$name = $row['name'];
+			if ($row['source'] === \phpbbgallery\core\auth\permission_trace::SOURCE_GROUP && $row['group_type'] === GROUP_SPECIAL)
+			{
+				$group_language_key = 'G_' . $name;
+				$name = $this->language->lang_raw($group_language_key) !== $group_language_key ? $this->language->lang($group_language_key) : $name;
+			}
+
+			$information = $this->trace_information($row['source'], $row['setting'], $row['previous_total']);
+			$this->assign_trace_row($name, $row['setting'], $row['total'], $information);
+		}
+
+		$template->assign_vars([
+			'S_RESULT_NEVER' => $trace['total'] === $gallery_auth::ACL_NEVER,
+			'S_RESULT_YES' => $trace['total'] === $gallery_auth::ACL_YES,
+			'S_RESULT_NO' => $trace['total'] === $gallery_auth::ACL_NO,
+		]);
+	}
+
+	private function assign_trace_row(string $name, int $setting, int $total, string $information): void
+	{
+		global $template;
+
+		$template->assign_block_vars('trace', [
+			'WHO' => $name,
+			'INFORMATION' => $information,
+			'S_SETTING_NEVER' => $setting === \phpbbgallery\core\auth\auth::ACL_NEVER,
+			'S_SETTING_YES' => $setting === \phpbbgallery\core\auth\auth::ACL_YES,
+			'S_SETTING_NO' => $setting === \phpbbgallery\core\auth\auth::ACL_NO,
+			'S_TOTAL_NEVER' => $total === \phpbbgallery\core\auth\auth::ACL_NEVER,
+			'S_TOTAL_YES' => $total === \phpbbgallery\core\auth\auth::ACL_YES,
+			'S_TOTAL_NO' => $total === \phpbbgallery\core\auth\auth::ACL_NO,
+		]);
+	}
+
+	private function trace_information(string $source, int $setting, int $previous_total): string
+	{
+		if ($setting === \phpbbgallery\core\auth\auth::ACL_NO)
+		{
+			return $this->language->lang($source === \phpbbgallery\core\auth\permission_trace::SOURCE_GROUP ? 'TRACE_GROUP_NO' : 'TRACE_USER_KEPT');
+		}
+
+		$source_key = $source === \phpbbgallery\core\auth\permission_trace::SOURCE_GROUP ? 'TRACE_GROUP_' : 'TRACE_USER_';
+		$setting_key = $setting === \phpbbgallery\core\auth\auth::ACL_NEVER ? 'NEVER' : 'YES';
+		$total_key = $previous_total === \phpbbgallery\core\auth\auth::ACL_NEVER ? 'NEVER' : ($previous_total === \phpbbgallery\core\auth\auth::ACL_YES ? 'YES' : 'NO');
+
+		return $this->language->lang($source_key . $setting_key . '_TOTAL_' . $total_key);
+	}
+
+	private function permission_trace_url(int $user_id, int $album_id, int $p_system, string $permission): string
+	{
+		return $this->u_action . '&amp;action=trace&amp;user_id=' . $user_id . '&amp;album_id=' . $album_id . '&amp;p_system=' . $p_system . '&amp;auth=' . rawurlencode($permission);
 	}
 
 	public function permissions_c_mask(): void
@@ -603,6 +724,7 @@ class permissions_module
 								'S_NEVER'				=> ((isset($roles[$role_id][$permission]) && ($roles[$role_id][$permission] == $phpbb_ext_gallery_core_auth::ACL_NEVER)) ? true : false),
 								'S_VALUE'				=> ((isset($roles[$role_id][$permission])) ? $roles[$role_id][$permission] : 0),
 								'S_COUNT_FIELD'			=> (substr($permission, -6, 6) == '_count') ? true : false,
+								'U_TRACE'				=> $victim_mode === 'user' && !str_ends_with($permission, '_count') ? $this->permission_trace_url((int) $victim_row['victim_id'], (int) $album_row['album_id'], $phpbb_ext_gallery_core_auth::PUBLIC_ALBUM, $permission) : '',
 							]);
 						}
 					}
@@ -643,6 +765,7 @@ class permissions_module
 							'S_NEVER'				=> ((isset($roles[$role_id][$permission]) && ($roles[$role_id][$permission] == $phpbb_ext_gallery_core_auth::ACL_NEVER)) ? true : false),
 							'S_VALUE'				=> ((isset($roles[$role_id][$permission])) ? $roles[$role_id][$permission] : 0),
 							'S_COUNT_FIELD'			=> (substr($permission, -6, 6) == '_count') ? true : false,
+							'U_TRACE'				=> $victim_mode === 'user' && !str_ends_with($permission, '_count') ? $this->permission_trace_url((int) $victim_row['victim_id'], 0, $p_system, $permission) : '',
 						]);
 					}
 				}

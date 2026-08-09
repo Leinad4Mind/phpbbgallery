@@ -110,4 +110,17 @@ final class acp_permissions_types_test extends TestCase
 		$this->assertStringContainsString("'ORDER_BY'\t\t=> 'g.group_type DESC, g.group_name ASC'", $source);
 		$this->assertStringContainsString('ORDER BY group_type DESC, group_name ASC', $source);
 	}
+
+	public function test_user_permission_masks_expose_native_trace_links_only_for_boolean_permissions(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/acp/permissions_module.php');
+		$template = (string) file_get_contents(dirname(__DIR__) . '/adm/style/gallery_permissions.html');
+
+		$this->assertStringContainsString("case 'trace':", $source);
+		$this->assertSame(2, substr_count($source, "'U_TRACE'"));
+		$this->assertStringContainsString('$' . "victim_mode === 'user'", $source);
+		$this->assertStringContainsString('!str_ends_with($' . "permission, '_count')", $source);
+		$this->assertStringContainsString("mask.U_TRACE|default('')", $template);
+		$this->assertStringContainsString("popup(this.href, 750, 515, '_trace')", $template);
+	}
 }
