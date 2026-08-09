@@ -114,6 +114,10 @@ final class image_orientation_test extends TestCase
 			$this->assertNotFalse($transform, $style);
 			$this->assertTrue($hook < $apply_all && $apply_all < $transform, $style);
 			$this->assertStringNotContainsString('name="rotate[{{ upload_image.S_ROW_COUNT }}]"', $template);
+			if ($style !== 'prosilver')
+			{
+				$this->assertSame(2, substr_count($template, 'class="form-group gallery-transform-group"'), $style);
+			}
 		}
 
 		$image_edit = (string) file_get_contents($root . '/styles/prosilver/template/gallery/image_edit_body.html');
