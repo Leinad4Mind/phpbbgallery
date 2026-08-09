@@ -65,6 +65,8 @@ class index
 	public const RRC_MODE_RECENT_COMMENTS = 4;
 	public const RRC_MODE_RANDOM_IMAGES   = 2;
 	public const RRC_MODE_RECENT_IMAGES   = 1;
+	public const RRC_MODE_MOST_VIEWED     = 8;
+	public const RRC_MODE_TOP_RATED       = 16;
 	/**
 	 * Constructor
 	 *
@@ -144,6 +146,8 @@ class index
 			$recent_comments = ($config_value & self::RRC_MODE_RECENT_COMMENTS) !== 0;
 			$random_images   = ($config_value & self::RRC_MODE_RANDOM_IMAGES) !== 0;
 			$recent_images   = ($config_value & self::RRC_MODE_RECENT_IMAGES) !== 0;
+			$most_viewed     = ($config_value & self::RRC_MODE_MOST_VIEWED) !== 0;
+			$top_rated       = ($config_value & self::RRC_MODE_TOP_RATED) !== 0;
 
 			// Now before build random and recent ... let's check if we have images that can build it
 			if ($recent_images)
@@ -160,6 +164,24 @@ class index
 				]);
 				$this->gallery_search->random($this->gallery_config->get('pegas_index_rnd_count'));
 			}
+			if ($most_viewed)
+			{
+				$this->gallery_search->featured(
+					(int) $this->gallery_config->get('pegas_index_viewed_count'),
+					'most_viewed',
+					null,
+					false
+				);
+			}
+			if ($top_rated && $this->gallery_config->get('allow_rates'))
+			{
+				$this->gallery_search->featured(
+					(int) $this->gallery_config->get('pegas_index_rated_count'),
+					'top_rated',
+					null,
+					false
+				);
+			}
 			if ($recent_comments)
 			{
 				$this->template->assign_vars([
@@ -169,6 +191,19 @@ class index
 				]);
 				$this->gallery_search->recent_comments($this->gallery_config->get('items_per_page'), 0, false);
 			}
+
+			/**
+			 * Allow add-ons to render additional permission-filtered image blocks.
+			 *
+			 * @event phpbbgallery.core.index.image_blocks
+			 * @var int config_value Selected Gallery-index mode bitmask
+			 * @since 4.0.0
+			 */
+			$vars = ['config_value'];
+			extract($this->dispatcher->trigger_event(
+				'phpbbgallery.core.index.image_blocks',
+				compact($vars)
+			));
 		}
 		$this->display_legend();
 		$this->display_birthdays();

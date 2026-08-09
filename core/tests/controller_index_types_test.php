@@ -70,6 +70,19 @@ final class controller_index_types_test extends TestCase
 		$this->assertSame(4, index::RRC_MODE_RECENT_COMMENTS);
 		$this->assertSame(2, index::RRC_MODE_RANDOM_IMAGES);
 		$this->assertSame(1, index::RRC_MODE_RECENT_IMAGES);
+		$this->assertSame(8, index::RRC_MODE_MOST_VIEWED);
+		$this->assertSame(16, index::RRC_MODE_TOP_RATED);
+	}
+
+	public function test_ranked_index_blocks_are_bounded_and_extensible(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/index.php');
+
+		$this->assertStringContainsString("'pegas_index_viewed_count'", $source);
+		$this->assertStringContainsString("'pegas_index_rated_count'", $source);
+		$this->assertStringContainsString("'most_viewed'", $source);
+		$this->assertStringContainsString("'top_rated'", $source);
+		$this->assertStringContainsString('phpbbgallery.core.index.image_blocks', $source);
 	}
 
 	public function test_personal_albums_are_only_emitted_when_enabled_on_the_index(): void

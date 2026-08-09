@@ -48,6 +48,7 @@ use phpbbgallery\core\migrations\inherit_source_download_permission;
 use phpbbgallery\core\migrations\image_dimensions;
 use phpbbgallery\core\migrations\image_orientation;
 use phpbbgallery\core\migrations\index_album_layout;
+use phpbbgallery\core\migrations\gallery_index_featured_modes;
 
 class migration_integrity_test extends TestCase
 {
@@ -90,6 +91,7 @@ class migration_integrity_test extends TestCase
 		image_dimensions::class,
 		image_orientation::class,
 		index_album_layout::class,
+		gallery_index_featured_modes::class,
 	];
 
 	private array $temp_directories = [];
@@ -511,6 +513,22 @@ class migration_integrity_test extends TestCase
 		$this->assertSame([
 			['config.remove', ['phpbb_gallery_index_album_layout']],
 		], $migration->revert_data());
+	}
+
+	public function test_gallery_index_featured_modes_add_bounded_defaults_and_rank_indexes(): void
+	{
+		$migration = (new \ReflectionClass(gallery_index_featured_modes::class))->newInstanceWithoutConstructor();
+		(new \ReflectionProperty(\phpbb\db\migration\migration::class, 'table_prefix'))->setValue($migration, 'phpbb_');
+
+		$this->assertSame([
+			'\\phpbbgallery\\core\\migrations\\index_album_layout',
+		], gallery_index_featured_modes::depends_on());
+		$this->assertSame([
+			['config.add', ['phpbb_gallery_pegas_index_viewed_count', 4]],
+			['config.add', ['phpbb_gallery_pegas_index_rated_count', 4]],
+		], $migration->update_data());
+		$this->assertArrayHasKey('status_views_rank', $migration->update_schema()['add_index']['phpbb_gallery_images']);
+		$this->assertArrayHasKey('status_rating_rank', $migration->update_schema()['add_index']['phpbb_gallery_images']);
 	}
 
 	public function test_viewtopic_profile_migration_restores_reversible_switches(): void
@@ -1083,6 +1101,7 @@ class migration_integrity_test extends TestCase
 			'image_dimensions.php',
 			'image_orientation.php',
 			'index_album_layout.php',
+			'gallery_index_featured_modes.php',
 		] as $migration)
 		{
 			require_once dirname(__DIR__) . '/migrations/' . $migration;

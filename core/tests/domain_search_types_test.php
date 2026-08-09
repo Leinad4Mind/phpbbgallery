@@ -52,6 +52,7 @@ final class domain_search_types_test extends TestCase
 
 		$this->assertNull($search->random(0));
 		$this->assertNull($search->recent(0));
+		$this->assertNull($search->featured(0, 'most_viewed'));
 	}
 
 	public function test_count_and_rendering_contracts_are_explicit(): void
@@ -60,10 +61,18 @@ final class domain_search_types_test extends TestCase
 		$this->assertSame('int', (string) (new \ReflectionMethod(search::class, 'user_image_count'))->getReturnType());
 		$this->assertSame('array', (string) (new \ReflectionMethod(search::class, 'user_image_counts'))->getReturnType());
 
-		foreach (['random', 'recent_comments', 'recent', 'rating'] as $method_name)
+		foreach (['random', 'recent_comments', 'recent', 'featured', 'rating'] as $method_name)
 		{
 			$this->assertSame('void', (string) (new \ReflectionMethod(search::class, $method_name))->getReturnType());
 		}
+	}
+
+	public function test_featured_search_rejects_unknown_ordering_modes_before_querying(): void
+	{
+		$search = (new \ReflectionClass(search::class))->newInstanceWithoutConstructor();
+
+		$this->expectException(\InvalidArgumentException::class);
+		$search->featured(4, 'caller_supplied_sql');
 	}
 
 	public function test_profile_image_count_applies_permissions_and_contest_identity_boundary(): void

@@ -224,6 +224,7 @@ $lang = array_merge($lang, [
 	'QUICK_MOD'     => 'Schnellmoderation',
 
 	'RANDOM_IMAGES'  => 'Zufällige Bilder',
+	'MOST_VIEWED_IMAGES' => 'Meistgesehene Bilder',
 	'RATE_IMAGE'     => 'Bild bewerten',
 	'RATES_COUNT'    => 'Anzahl der Bewertungen',
 	'RATING'         => 'Bewertung',

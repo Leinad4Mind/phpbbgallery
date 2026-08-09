@@ -225,6 +225,7 @@ $lang = array_merge($lang, [
 	'QUOTE_COMMENT' => 'Quote comment',
 
 	'RANDOM_IMAGES'  => 'Random images',
+	'MOST_VIEWED_IMAGES' => 'Most viewed images',
 	'RATE_IMAGE'     => 'Rate the image',
 	'RATES_COUNT'    => 'Number of ratings',
 	'RATING'         => 'Rating',

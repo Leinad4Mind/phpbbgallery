@@ -6,6 +6,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Added
 
+- Added a consolidated Gallery-index image-block selector with independent limits for recent, random, most-viewed and top-rated images, permission-safe ranked queries and neutral extension points for add-on modes.
 - Added a selectable Gallery-index album presentation shared by PROSILVER, BBOOTS and FLATBOOTS, offering each style its native classic forum list, a new responsive modern list and the existing card layout without changing album data or permissions.
 - Added a visual second-step image transformation editor with live previews, composable left/right/180-degree rotation, horizontal/vertical flipping, batch application, automatic JPEG EXIF orientation correction and fail-closed protection for animated GIF and multipage TIFF sources.
 - Added a conditional Imagick diagnostic to the Core ACP whenever the TIFF add-on package is present, validating the PHP extension, bounded resource APIs, TIFF decoding and WebP encoding without presenting Imagick as a Core requirement.

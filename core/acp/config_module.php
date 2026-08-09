@@ -459,7 +459,6 @@ class config_module
 				],
 
 				'RRC_GINDEX'	=> [
-					'rrc_gindex_mode'		=> ['lang' => 'RRC_GINDEX_MODE',		'validate' => 'int',	'type' => 'custom',			'explain' => true,	'method' => 'rrc_modes'],
 					'rrc_gindex_comments'	=> ['lang' => 'RRC_GINDEX_COMMENTS',	'validate' => 'bool',	'type' => 'radio:yes_no'],
 					'rrc_gindex_display'	=> ['lang' => 'RRC_DISPLAY_OPTIONS',	'validate' => '',		'type' => 'custom',			'method' => 'rrc_display'],
 					'rrc_gindex_pegas'		=> ['lang' => 'RRC_GINDEX_PGALLERIES',	'validate' => 'bool',	'type' => 'radio:yes_no'],
@@ -491,10 +490,13 @@ class config_module
 				'INDEX_SETTINGS'	=> [
 					'index_album_layout'	=> ['lang' => 'INDEX_ALBUM_LAYOUT',	'validate' => 'string',	'type' => 'custom',	'explain' => true,	'method' => 'index_album_layout_select'],
 					'pegas_index_album'		=> ['lang' => 'PERSONAL_ALBUM_INDEX',	'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
+					'rrc_gindex_mode'		=> ['lang' => 'RRC_GINDEX_MODE',	'validate' => 'int',	'type' => 'custom',	'explain' => true,	'method' => 'rrc_modes'],
 					//'pegas_index_random'	=> ['lang'	=> 'RANDOM_ON_INDEX',		'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 					'pegas_index_rnd_count'	=> ['lang'	=> 'RANDOM_ON_INDEX_COUNT',	'validate' => 'int',	'type' => 'text:7:3'],
 					//'pegas_index_recent'	=> ['lang'	=> 'RECENT_ON_INDEX',		'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 					'pegas_index_rct_count'	=> ['lang'	=> 'RECENT_ON_INDEX_COUNT',	'validate' => 'int',	'type' => 'text:7:3'],
+					'pegas_index_viewed_count' => ['lang' => 'VIEWED_ON_INDEX_COUNT',	'validate' => 'int',	'type' => 'text:7:3'],
+					'pegas_index_rated_count'	=> ['lang' => 'RATED_ON_INDEX_COUNT',	'validate' => 'int',	'type' => 'text:7:3'],
 					'disp_login'			=> ['lang' => 'DISP_LOGIN',			'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 					'disp_whoisonline'		=> ['lang' => 'DISP_WHOISONLINE',		'validate' => 'bool',	'type' => 'radio:yes_no'],
 					'disp_birthdays'		=> ['lang' => 'DISP_BIRTHDAYS',		'validate' => 'bool',	'type' => 'radio:yes_no'],
@@ -813,7 +815,7 @@ class config_module
 	 */
 	public function rrc_modes(int $value, string $key): string
 	{
-		global $phpbb_container;
+		global $phpbb_container, $phpbb_dispatcher;
 
 		$phpbb_ext_gallery_core_block = $phpbb_container->get('phpbbgallery.core.block');
 		$this->language = $phpbb_container->get('language');
@@ -823,10 +825,30 @@ class config_module
 		$rrc_mode_options .= "<option value='" . $phpbb_ext_gallery_core_block::MODE_NONE . "'>" . $this->language->lang('RRC_MODE_NONE') . '</option>';
 		$rrc_mode_options .= '<option' . (($value & $phpbb_ext_gallery_core_block::MODE_RECENT) ? ' selected="selected"' : '') . " value='" . $phpbb_ext_gallery_core_block::MODE_RECENT . "'>" . $this->language->lang('RRC_MODE_RECENT') . '</option>';
 		$rrc_mode_options .= '<option' . (($value & $phpbb_ext_gallery_core_block::MODE_RANDOM) ? ' selected="selected"' : '') . " value='" . $phpbb_ext_gallery_core_block::MODE_RANDOM . "'>" . $this->language->lang('RRC_MODE_RANDOM') . '</option>';
+		if ($key === 'rrc_gindex_mode')
+		{
+			$rrc_mode_options .= '<option' . (($value & $phpbb_ext_gallery_core_block::MODE_MOST_VIEWED) ? ' selected="selected"' : '') . " value='" . $phpbb_ext_gallery_core_block::MODE_MOST_VIEWED . "'>" . $this->language->lang('RRC_MODE_MOST_VIEWED') . '</option>';
+			$rrc_mode_options .= '<option' . (($value & $phpbb_ext_gallery_core_block::MODE_TOP_RATED) ? ' selected="selected"' : '') . " value='" . $phpbb_ext_gallery_core_block::MODE_TOP_RATED . "'>" . $this->language->lang('RRC_MODE_TOP_RATED') . '</option>';
+		}
 		if (!in_array($key, ['rrc_profile_mode', 'forum_index_mode'], true))
 		{
 			$rrc_mode_options .= '<option' . (($value & $phpbb_ext_gallery_core_block::MODE_COMMENT) ? ' selected="selected"' : '') . " value='" . $phpbb_ext_gallery_core_block::MODE_COMMENT . "'>" . $this->language->lang('RRC_MODE_COMMENTS') . '</option>';
 		}
+
+		/**
+		 * Allow add-ons to append Gallery-index image block modes.
+		 *
+		 * @event phpbbgallery.core.acp.config.rrc_mode_options
+		 * @var int    value            Current mode bitmask
+		 * @var string key              Configuration key being rendered
+		 * @var string rrc_mode_options Rendered option elements
+		 * @since 4.0.0
+		 */
+		$vars = ['value', 'key', 'rrc_mode_options'];
+		extract($phpbb_dispatcher->trigger_event(
+			'phpbbgallery.core.acp.config.rrc_mode_options',
+			compact($vars)
+		));
 
 		// Cheating is an evil-thing, but most times it's successful, that's why it is used.
 		return "<input type='hidden' name='config[$key]' value='$value' /><select name='" . $key . "[]' multiple='multiple' id='$key'>$rrc_mode_options</select>";

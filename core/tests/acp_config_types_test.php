@@ -100,6 +100,9 @@ final class acp_config_types_test extends TestCase
 		$this->assertArrayHasKey('index_album_layout', $display['vars']);
 		$this->assertSame('custom', $display['vars']['index_album_layout']['type']);
 		$this->assertSame('index_album_layout_select', $display['vars']['index_album_layout']['method']);
+		$this->assertArrayHasKey('rrc_gindex_mode', $display['vars']);
+		$this->assertArrayHasKey('pegas_index_viewed_count', $display['vars']);
+		$this->assertArrayHasKey('pegas_index_rated_count', $display['vars']);
 		$this->assertArrayNotHasKey('allow_contests', $display['vars']);
 		$config_keys = array_keys($display['vars']);
 		$this->assertGreaterThan(
@@ -149,6 +152,72 @@ final class acp_config_types_test extends TestCase
 		$this->assertStringContainsString('INDEX_ALBUM_LAYOUT_CLASSIC', $html);
 		$this->assertStringContainsString('INDEX_ALBUM_LAYOUT_MODERN', $html);
 		$this->assertStringContainsString('INDEX_ALBUM_LAYOUT_CARDS', $html);
+	}
+
+	public function test_gallery_index_mode_selector_supports_ranked_and_add_on_modes(): void
+	{
+		global $phpbb_container, $phpbb_dispatcher;
+		$had_container = isset($phpbb_container);
+		$previous_container = $phpbb_container ?? null;
+		$had_dispatcher = isset($phpbb_dispatcher);
+		$previous_dispatcher = $phpbb_dispatcher ?? null;
+
+		$language = $this->createMock(\phpbb\language\language::class);
+		$language->method('lang')->willReturnCallback(static fn(string $key): string => $key);
+		$block = new \phpbbgallery\core\block();
+		$phpbb_container = new class($language, $block)
+		{
+			public function __construct(private object $language, private object $block)
+			{
+			}
+
+			public function get(string $service): object
+			{
+				return $service === 'language' ? $this->language : $this->block;
+			}
+		};
+		$phpbb_dispatcher = new class
+		{
+			public function trigger_event(string $event_name, array $data): array
+			{
+				if ($event_name === 'phpbbgallery.core.acp.config.rrc_mode_options')
+				{
+					$data['rrc_mode_options'] .= '<option value="32">ADD_ON_MODE</option>';
+				}
+				return $data;
+			}
+		};
+
+		try
+		{
+			$html = (new config_module())->rrc_modes(
+				\phpbbgallery\core\block::MODE_MOST_VIEWED | \phpbbgallery\core\block::MODE_TOP_RATED,
+				'rrc_gindex_mode'
+			);
+
+			$this->assertStringContainsString('RRC_MODE_MOST_VIEWED', $html);
+			$this->assertStringContainsString('RRC_MODE_TOP_RATED', $html);
+			$this->assertStringContainsString('ADD_ON_MODE', $html);
+		}
+		finally
+		{
+			if ($had_container)
+			{
+				$phpbb_container = $previous_container;
+			}
+			else
+			{
+				unset($phpbb_container);
+			}
+			if ($had_dispatcher)
+			{
+				$phpbb_dispatcher = $previous_dispatcher;
+			}
+			else
+			{
+				unset($phpbb_dispatcher);
+			}
+		}
 	}
 
 	public function test_storage_layout_help_assets_are_accessible_and_modal(): void

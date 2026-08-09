@@ -223,6 +223,7 @@ $lang = array_merge($lang, [
 	'QUOTE_COMMENT' => 'Цитирай коментара',
 
 	'RANDOM_IMAGES'  => 'Случайни изображения',
+	'MOST_VIEWED_IMAGES' => 'Най-преглеждани изображения',
 	'RATE_IMAGE'     => 'Оцени изображението',
 	'RATES_COUNT'    => 'Брой оценки',
 	'RATING'         => 'Оценка',

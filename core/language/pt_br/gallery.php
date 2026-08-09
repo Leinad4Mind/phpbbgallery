@@ -209,6 +209,7 @@ $lang = array_merge($lang, [
 	'QUOTA_REACHED'                => 'Você atingiu o número máximo de imagens que pode enviar.',
 	'QUOTE_COMMENT'                => 'Citar o Comentário',
 	'RANDOM_IMAGES'                => 'Imagens Aleatórias',
+	'MOST_VIEWED_IMAGES'           => 'Imagens Mais Vistas',
 	'RATE_IMAGE'                   => 'Classificar a Imagem',
 	'RATES_COUNT'                  => 'Número de Classificações',
 	'RATING'                       => 'Classificação',

@@ -231,7 +231,7 @@ function toggleElement(oElement)
 	</div>
 {% endif %}
 
-{% if U_RECENT or U_RANDOM %}
+{% if imageblock|length %}
 	{% include 'gallery/imageblock_polaroid.html' %}
 {% endif %}
 {% if U_RECENT_COMMENTS %}

@@ -710,6 +710,123 @@ class search
 	}
 
 	/**
+	 * Populate a bounded Gallery-index block ordered by a trusted Core metric.
+	 *
+	 * @param int       $limit            Maximum number of images
+	 * @param string    $mode             Either most_viewed or top_rated
+	 * @param bool|null $include_personal Override the Gallery-index personal-album setting
+	 * @param bool      $show_empty       Whether to render an empty block
+	 * @return void
+	 */
+	public function featured(int $limit, string $mode, ?bool $include_personal = null, bool $show_empty = true): void
+	{
+		$limit = max(0, min(50, $limit));
+		if ($limit === 0)
+		{
+			return;
+		}
+
+		switch ($mode)
+		{
+			case 'most_viewed':
+				$order_by = 'i.image_view_count DESC, i.image_id DESC';
+				$block_name = $this->language->lang('MOST_VIEWED_IMAGES');
+				$block_url = $this->helper->route('phpbbgallery_core_search', [
+					'filtered' => 1,
+					'sk' => 'vc',
+					'sd' => 'd',
+				]);
+				$require_rating = false;
+				break;
+
+			case 'top_rated':
+				$order_by = 'i.image_rate_avg DESC, i.image_rates DESC, i.image_id DESC';
+				$block_name = $this->language->lang('SEARCH_TOPRATED');
+				$block_url = $this->helper->route('phpbbgallery_core_search_toprated');
+				$require_rating = true;
+				break;
+
+			default:
+				throw new \InvalidArgumentException('Unknown Gallery featured-image mode.');
+		}
+
+		$this->gallery_auth->load_user_permissions((int) $this->user->data['user_id']);
+		$include_personal ??= (bool) $this->gallery_config->get('rrc_gindex_pegas');
+		$exclude_albums = $this->gallery_auth->get_exclude_zebra();
+		if (!$include_personal)
+		{
+			$sql = 'SELECT album_id
+				FROM ' . $this->albums_table . '
+				WHERE album_user_id > 0';
+			$result = $this->db->sql_query($sql);
+			while ($row = $this->db->sql_fetchrow($result))
+			{
+				$exclude_albums[] = (int) $row['album_id'];
+			}
+			$this->db->sql_freeresult($result);
+		}
+
+		$view_albums = array_diff($this->gallery_auth->acl_album_ids('i_view'), $exclude_albums);
+		$moderated_albums = array_diff($this->gallery_auth->acl_album_ids('m_status'), $exclude_albums);
+		$viewer_id = (int) $this->user->data['user_id'];
+		$where = 'i.image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
+			AND i.image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED . '
+			AND ((' . $this->db->sql_in_set('i.image_album_id', $view_albums, false, true) . '
+				AND (i.image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . '
+					OR i.image_user_id = ' . $viewer_id . '))
+				OR ' . $this->db->sql_in_set('i.image_album_id', $moderated_albums, false, true) . ')';
+		if ($require_rating)
+		{
+			$where .= ' AND i.image_rate_avg <> 0
+				AND ' . $this->image_visibility->get_visibility_sql_for_results('i', $moderated_albums);
+		}
+
+		$sql_array = [
+			'SELECT' => 'i.*, a.album_name, a.album_status, a.album_user_id, a.album_id',
+			'FROM' => [$this->images_table => 'i'],
+			'LEFT_JOIN' => [[
+				'FROM' => [$this->albums_table => 'a'],
+				'ON' => 'a.album_id = i.image_album_id',
+			]],
+			'WHERE' => $where,
+			'ORDER_BY' => $order_by,
+		];
+		$sql = $this->db->sql_build_query('SELECT', $sql_array);
+		$result = $this->db->sql_query_limit($sql, $limit);
+		$rows = [];
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$rows[] = $row;
+		}
+		$this->db->sql_freeresult($result);
+
+		if (!$rows && !$show_empty)
+		{
+			return;
+		}
+
+		$this->template->assign_block_vars('imageblock', [
+			'BLOCK_NAME' => $block_name,
+			'U_BLOCK' => $block_url,
+		]);
+		if (!$rows)
+		{
+			$this->template->assign_block_vars('imageblock', [
+				'ERROR' => $this->language->lang('NO_SEARCH_RESULTS'),
+			]);
+			return;
+		}
+
+		$show_options = (int) $this->gallery_config->get('rrc_gindex_display');
+		$thumbnail_link = (string) $this->gallery_config->get('link_thumbnail');
+		$imagename_link = (string) $this->gallery_config->get('link_image_name');
+		foreach ($rows as $row)
+		{
+			$this->image->assign_block('imageblock.image', $row, $show_options, $thumbnail_link, $imagename_link);
+		}
+	}
+
+	/**
 	 * Get top rated image
 	 * @param int $limit
 	 * @param int $start

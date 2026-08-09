@@ -144,6 +144,8 @@ class block
 	public const MODE_RECENT = 1;
 	public const MODE_RANDOM = 2;
 	public const MODE_COMMENT = 4;
+	public const MODE_MOST_VIEWED = 8;
+	public const MODE_TOP_RATED = 16;
 
 	/**
 	 * Options which details of the images you want to view on the block.
