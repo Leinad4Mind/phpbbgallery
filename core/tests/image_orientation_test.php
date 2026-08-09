@@ -93,6 +93,8 @@ final class image_orientation_test extends TestCase
 		$controls = (string) file_get_contents($root . '/styles/all/template/gallery/image_orientation_controls.html');
 		$css = (string) file_get_contents($root . '/styles/all/theme/gallery.css');
 		$this->assertStringContainsString('icon fa fa-eraser fa-fw', $controls);
+		$this->assertSame(6, substr_count($controls, 'class="button button-secondary btn btn-default"'));
+		$this->assertStringNotContainsString('class="button2 btn btn-default"', $controls);
 		$this->assertStringContainsString('repeating-conic-gradient', $css);
 
 		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
