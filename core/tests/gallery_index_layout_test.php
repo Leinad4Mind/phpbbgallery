@@ -61,4 +61,22 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertStringContainsString('GALLERY_PUBLIC_ALBUMS_LABEL', $template);
 		$this->assertStringContainsString("lang('PERSONAL_ALBUMS')", $template);
 	}
+
+	public function test_bootstrap_card_layouts_are_self_contained_responsive_grids(): void
+	{
+		$core_root = dirname(__DIR__);
+		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$template = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/albumlist_polaroid.html');
+
+			$this->assertStringContainsString('class="row gallery-album-card-grid"', $template, $style);
+			$this->assertStringContainsString('gallery-album-card-column', $template, $style);
+			$this->assertStringContainsString('gallery-album-grid-heading', $template, $style);
+			$this->assertStringNotContainsString('<span class="clear"></span>', $template, $style);
+		}
+
+		$css = (string) file_get_contents($core_root . '/styles/all/theme/gallery.css');
+		$this->assertMatchesRegularExpression('/\.gallery-album-card-grid\s*\{[^}]*display:\s*flex;[^}]*flex-wrap:\s*wrap;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-album-card-column\s*\{[^}]*display:\s*flex;[^}]*float:\s*none;/s', $css);
+	}
 }

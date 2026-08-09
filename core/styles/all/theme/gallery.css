@@ -182,6 +182,36 @@ input.autowidth-gallery {
 	color: #2880b2;
 }
 
+.gallery-album-card-grid
+{
+	clear: both;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.gallery-album-grid-heading,
+.gallery-album-grid-break
+{
+	flex: 0 0 100%;
+	max-width: 100%;
+}
+
+.gallery-album-grid-heading
+{
+	padding: 0 15px;
+}
+
+.gallery-album-card-column
+{
+	display: flex;
+	float: none;
+}
+
+.gallery-album-card-column > .well
+{
+	width: 100%;
+}
+
 .gallery-personal-album
 {
 	border-color: rgba(73, 126, 157, 0.42) !important;
