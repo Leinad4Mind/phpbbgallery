@@ -73,6 +73,7 @@ class notification_lifecycle_test extends TestCase
 			'phpbbgallery/export',
 			'phpbbgallery/favorite',
 			'phpbbgallery/feed',
+			'phpbbgallery/imagefields',
 			'phpbbgallery/imagerevisions',
 			'phpbbgallery/bbtagsimages',
 			'phpbbgallery/bbpointsimages',

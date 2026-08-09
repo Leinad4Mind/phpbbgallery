@@ -26,6 +26,7 @@ class package_lifecycle extends \phpbb_functional_test_case
 		'phpbbgallery/export' => '1.0.0',
 		'phpbbgallery/favorite' => '1.0.0',
 		'phpbbgallery/feed' => '1.0.0',
+		'phpbbgallery/imagefields' => '1.0.0',
 		'phpbbgallery/imagerevisions' => '1.0.0',
 		'phpbbgallery/remotestorage' => '1.0.0',
 		'phpbbgallery/tiff' => '1.0.0',

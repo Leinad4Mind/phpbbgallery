@@ -81,6 +81,7 @@ $lang = array_merge($lang, [
 	'GALLERY_ADDON_EXPORT_EXPLAIN'      => 'Bundelt de afbeeldingen van de galerij in een ZIP-archief met de namen die het forum toont.',
 	'GALLERY_ADDON_FAVORITE_EXPLAIN'    => 'Laat leden afbeeldingen als favoriet opslaan en ze terugvinden via het Persoonlijke Instellingen paneel.',
 	'GALLERY_ADDON_FEED_EXPLAIN'        => 'Publiceert de nieuwste afbeeldingen als een ATOM-feed waarop men zich kan abonneren.',
+	'GALLERY_ADDON_IMAGE_FIELDS_EXPLAIN' => 'Voegt vertaalde, door beheerders gedefinieerde metagegevensvelden toe met albumbereiken, validatie, zoeken, import en export.',
 	'ACP_GALLERY_OVERVIEW'              => 'phpBB Galerij',
 	'ACP_GALLERY_OVERVIEW_EXPLAIN'      => 'Hier zijn een aantal statistieken van je gelerij.',
 

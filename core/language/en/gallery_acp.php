@@ -503,6 +503,7 @@ $lang = array_merge($lang, [
 	'GALLERY_ADDON_EXPORT_EXPLAIN'      => 'Packs the gallery images into a ZIP archive named the way the board shows them.',
 	'GALLERY_ADDON_FAVORITE_EXPLAIN'    => 'Lets members bookmark images and find them again from their User Control Panel.',
 	'GALLERY_ADDON_FEED_EXPLAIN'        => 'Publishes the newest images as an ATOM feed readers can subscribe to.',
+	'GALLERY_ADDON_IMAGE_FIELDS_EXPLAIN' => 'Adds translated administrator-defined metadata fields with album scopes, validation, search, Import and Export integration.',
 ]);
 
 /**

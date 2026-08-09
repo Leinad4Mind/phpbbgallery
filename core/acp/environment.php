@@ -32,6 +32,7 @@ final class environment
 		'phpbbgallery/exif' => ['Exif', '1.4.0', 'free', 'GALLERY_ADDON_EXIF_EXPLAIN'],
 		'phpbbgallery/favorite' => ['Favorite', '1.0.0', 'free', 'GALLERY_ADDON_FAVORITE_EXPLAIN'],
 		'phpbbgallery/feed' => ['Feed', '1.0.0', 'free', 'GALLERY_ADDON_FEED_EXPLAIN'],
+		'phpbbgallery/imagefields' => ['Image Fields', '1.0.0', 'free', 'GALLERY_ADDON_IMAGE_FIELDS_EXPLAIN'],
 		'phpbbgallery/tiff' => ['TIFF', '1.0.0', 'free', 'GALLERY_ADDON_TIFF_EXPLAIN'],
 		'phpbbgallery/bbpointsimages' => ['BBPoints Images', '1.0.0', 'premium', 'GALLERY_ADDON_BBPOINTS_IMAGES_EXPLAIN'],
 		'phpbbgallery/bbtagsimages' => ['BBTags Images', '1.0.0', 'premium', 'GALLERY_ADDON_BBTAGS_IMAGES_EXPLAIN'],

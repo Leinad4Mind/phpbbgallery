@@ -24,6 +24,7 @@ final class version_check_metadata_test extends TestCase
 		'export' => 'gallery-export.json',
 		'favorite' => 'gallery-favorite.json',
 		'feed' => 'gallery-feed.json',
+		'imagefields' => 'gallery-imagefields.json',
 		'imagerevisions' => 'gallery-imagerevisions.json',
 		'remotestorage' => 'gallery-remotestorage.json',
 		'tiff' => 'gallery-tiff.json',

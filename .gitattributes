@@ -23,6 +23,10 @@
 /feed/phpunit.xml.dist export-ignore
 /feed/tests export-ignore
 /feed/tests/** export-ignore
+/imagefields/phpunit.xml.dist export-ignore
+/imagefields/.gitignore export-ignore
+/imagefields/tests export-ignore
+/imagefields/tests/** export-ignore
 /bbtagsimages/phpunit.xml.dist export-ignore
 /bbtagsimages/tests export-ignore
 /bbtagsimages/tests/** export-ignore

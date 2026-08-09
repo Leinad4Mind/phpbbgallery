@@ -25,6 +25,7 @@ final class package_builder
 		'export',
 		'favorite',
 		'feed',
+		'imagefields',
 		'imagerevisions',
 		'remotestorage',
 		'tiff',

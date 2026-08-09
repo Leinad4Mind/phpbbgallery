@@ -21,6 +21,7 @@ class addon_reconciliation extends \phpbb_functional_test_case
 		'phpbbgallery/imagerevisions',
 		'phpbbgallery/bbtagsimages',
 		'phpbbgallery/bbpointsimages',
+		'phpbbgallery/imagefields',
 	];
 
 	protected static function setup_extensions(): array

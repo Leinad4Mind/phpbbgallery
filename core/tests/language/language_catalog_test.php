@@ -369,7 +369,7 @@ class language_catalog_test extends TestCase
 
 	private function components(): array
 	{
-		return ['core', 'acpcleanup', 'acpimport', 'exif', 'imagerevisions', 'tiff'];
+		return ['core', 'acpcleanup', 'acpimport', 'exif', 'imagefields', 'imagerevisions', 'tiff'];
 	}
 
 	private function php_files(string $directory): array

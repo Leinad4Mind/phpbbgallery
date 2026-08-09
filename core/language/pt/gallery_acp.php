@@ -81,6 +81,7 @@ $lang = array_merge($lang, [
 	'GALLERY_ADDON_EXPORT_EXPLAIN'         => 'Reúne as imagens da galeria num arquivo ZIP com os nomes que o fórum mostra.',
 	'GALLERY_ADDON_FAVORITE_EXPLAIN'       => 'Permite aos membros guardar imagens nos favoritos e reencontrá-las no Painel de Controlo.',
 	'GALLERY_ADDON_FEED_EXPLAIN'           => 'Publica as imagens mais recentes num feed ATOM que pode ser subscrito.',
+	'GALLERY_ADDON_IMAGE_FIELDS_EXPLAIN'   => 'Adiciona campos de metadados traduzidos e definidos pelo administrador, com âmbitos por álbum, validação, pesquisa, Import e Export.',
 	'ACP_GALLERY_OVERVIEW'                 => 'phpBB Galeria',
 	'ACP_GALLERY_OVERVIEW_EXPLAIN'         => 'Este é o Painel de Administração da Galeria.',
 	'ACP_FILES_DIR_STATE'                  => 'Estado de <strong>./files/</strong>',
