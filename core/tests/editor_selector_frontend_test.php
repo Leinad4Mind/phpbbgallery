@@ -22,6 +22,7 @@ final class editor_selector_frontend_test extends TestCase
 			$this->assertStringContainsString('{% if S_GALLERY_SELECTOR %}', $template, $template_name);
 			$this->assertStringContainsString('href="{{ U_GALLERY_SELECTOR_FALLBACK }}"', $template, $template_name);
 			$this->assertStringContainsString('data-gallery-selector-open', $template, $template_name);
+			$this->assertStringContainsString('data-gallery-selector-target="{{ GALLERY_SELECTOR_TEXT_NAME|default(\'message\') }}"', $template, $template_name);
 			$this->assertStringContainsString('aria-haspopup="dialog"', $template, $template_name);
 			$this->assertStringContainsString('aria-controls="phpbbgallery-selector-dialog"', $template, $template_name);
 			$this->assertStringNotContainsString('window.open', $template, $template_name);
@@ -66,13 +67,36 @@ final class editor_selector_frontend_test extends TestCase
 		$this->assertStringContainsString("dialog.getAttribute('data-bbcode-tag') || 'image'", $javascript);
 		$this->assertStringContainsString("var bbcode = '[' + bbcodeTag + ']' + imageId + '[/' + bbcodeTag + ']'", $javascript);
 		$this->assertStringContainsString("activeTrigger.closest('form')", $javascript);
-		$this->assertStringContainsString("form.querySelector('textarea[name=\"message\"]')", $javascript);
+		$this->assertStringContainsString("targetName !== 'message' && targetName !== 'signature'", $javascript);
+		$this->assertStringContainsString("activeTrigger.getAttribute('data-gallery-selector-target')", $javascript);
+		$this->assertStringContainsString("form.querySelector('textarea[name=\"' + targetName + '\"]')", $javascript);
+		$this->assertStringContainsString("window.text_name === 'signature'", $javascript);
 		$this->assertStringContainsString('window.insert_text(bbcode, true)', $javascript);
+		$this->assertStringContainsString('window.text_name === targetName', $javascript);
 		$this->assertStringContainsString('textarea.setRangeText(', $javascript);
 		$this->assertStringContainsString("textarea.dispatchEvent(new Event('input', { bubbles: true }))", $javascript);
 		$this->assertStringNotContainsString('[album]', $javascript);
 		$this->assertStringNotContainsString('window.opener', $javascript);
 		$this->assertStringNotContainsString('window.open(', $javascript);
+	}
+
+	public function test_all_styles_route_the_signature_selector_to_the_signature_textarea(): void
+	{
+		$forum_root = dirname(__DIR__, 4);
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$buttons = (string) file_get_contents($forum_root . '/styles/' . $style . '/template/posting_buttons.html');
+			$editor = (string) file_get_contents($forum_root . '/styles/' . $style . '/template/posting_editor.html');
+
+			$this->assertStringContainsString("'signature'<!-- ELSE -->'message'", $buttons, $style);
+			$this->assertStringContainsString('posting_editor_buttons_after', $buttons, $style);
+			$this->assertStringContainsString('name="signature"', $editor, $style);
+		}
+
+		$launcher = $this->read('styles/all/template/event/posting_editor_buttons_after.html');
+		$javascript = $this->read('styles/all/template/js/editor_selector.js');
+		$this->assertStringContainsString('GALLERY_SELECTOR_TEXT_NAME', $launcher);
+		$this->assertStringContainsString("targetName !== 'message' && targetName !== 'signature'", $javascript);
 	}
 
 	public function test_javascript_uses_same_origin_json_and_escapes_database_text_through_dom_properties(): void
@@ -117,6 +141,7 @@ final class editor_selector_frontend_test extends TestCase
 		$this->assertStringContainsString('phpbbgallery.core.image.selector:', $services);
 		$this->assertStringContainsString("- '@phpbbgallery.core.auth'", $services);
 		$this->assertStringContainsString('phpbbgallery.core.editor_listener:', $services);
+		$this->assertStringContainsString("- '@template'", $services);
 		$this->assertStringContainsString('- { name: event.listener }', $services);
 		$this->assertStringContainsString('phpbbgallery.core.controller.editor:', $controllers);
 		$this->assertStringContainsString("- '@phpbbgallery.core.image.selector'", $controllers);

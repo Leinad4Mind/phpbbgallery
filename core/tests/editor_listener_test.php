@@ -47,6 +47,7 @@ final class editor_listener_test extends TestCase
 		$this->assertSame([
 			'core.posting_modify_template_vars' => 'posting_editor',
 			'core.ucp_pm_compose_template' => 'private_message_editor',
+			'core.ucp_profile_modify_signature' => 'signature_editor',
 			'core.viewtopic_modify_quick_reply_template_vars' => 'quick_reply_editor',
 		], editor_listener::getSubscribedEvents());
 	}
@@ -81,6 +82,7 @@ final class editor_listener_test extends TestCase
 		$this->assertTrue($variables['S_GALLERY_SELECTOR']);
 		$this->assertSame('/phpbbgallery_core_editor_images', $variables['U_GALLERY_SELECTOR']);
 		$this->assertSame('/phpbbgallery_core_search_egosearch', $variables['U_GALLERY_SELECTOR_FALLBACK']);
+		$this->assertSame('message', $variables['GALLERY_SELECTOR_TEXT_NAME']);
 	}
 
 	public static function available_editor_provider(): array
@@ -131,6 +133,73 @@ final class editor_listener_test extends TestCase
 		$this->listener($selector, $helper)->private_message_editor($event);
 
 		$this->assertArrayNotHasKey('S_GALLERY_SELECTOR', $event['template_ary']);
+	}
+
+	public function test_available_signature_editor_targets_the_signature_textarea(): void
+	{
+		$selector = $this->createMock(selector::class);
+		$selector->expects($this->once())->method('has_images')->with(7)->willReturn(true);
+		$helper = $this->createMock(\phpbb\controller\helper::class);
+		$helper->expects($this->exactly(2))
+			->method('route')
+			->willReturnCallback(static fn (string $route): string => '/' . $route);
+		$phpbb_auth = $this->createMock(\phpbb\auth\auth::class);
+		$phpbb_auth->expects($this->once())->method('acl_get')->with('u_sig')->willReturn(true);
+		$template = $this->createMock(\phpbb\template\template::class);
+		$template->expects($this->once())->method('assign_vars')->with([
+			'S_GALLERY_SELECTOR' => true,
+			'U_GALLERY_SELECTOR' => '/phpbbgallery_core_editor_images',
+			'U_GALLERY_SELECTOR_FALLBACK' => '/phpbbgallery_core_search_egosearch',
+			'GALLERY_SELECTOR_TEXT_NAME' => 'signature',
+		]);
+
+		$event = new \phpbb\event\data(['enable_bbcode' => true]);
+		$this->listener(
+			$selector,
+			$helper,
+			phpbb_auth: $phpbb_auth,
+			template: $template
+		)->signature_editor($event);
+	}
+
+	/** @dataProvider unavailable_signature_policy_provider */
+	public function test_signature_editor_respects_bbcode_image_and_user_permissions(
+		bool $allow_sig_bbcode,
+		bool $allow_sig_img,
+		bool $allow_signature
+	): void
+	{
+		$selector = $this->createMock(selector::class);
+		$selector->expects($this->never())->method('has_images');
+		$helper = $this->createMock(\phpbb\controller\helper::class);
+		$helper->expects($this->never())->method('route');
+		$phpbb_auth = $this->createMock(\phpbb\auth\auth::class);
+		$acl_calls = $allow_sig_bbcode && $allow_sig_img ? 1 : 0;
+		$phpbb_auth->expects($this->exactly($acl_calls))
+			->method('acl_get')
+			->with('u_sig')
+			->willReturn($allow_signature);
+		$template = $this->createMock(\phpbb\template\template::class);
+		$template->expects($this->never())->method('assign_vars');
+
+		$event = new \phpbb\event\data(['enable_bbcode' => true]);
+		$this->listener(
+			$selector,
+			$helper,
+			phpbb_auth: $phpbb_auth,
+			template: $template,
+			allow_sig_bbcode: $allow_sig_bbcode,
+			allow_sig_img: $allow_sig_img
+		)->signature_editor($event);
+	}
+
+	public static function unavailable_signature_policy_provider(): array
+	{
+		return [
+			'signature BBCode disabled' => [false, true, true],
+			'signature images disabled' => [true, false, true],
+			'user cannot edit a signature' => [true, true, false],
+		];
 	}
 
 	public function test_selector_is_hidden_until_the_image_bbcode_is_ready(): void
@@ -272,7 +341,9 @@ final class editor_listener_test extends TestCase
 
 	private function listener(selector $selector, \phpbb\controller\helper $helper, bool $allow_bbcode = true,
 		bool $registered = true, bool $bot = false, bool $user_bbcode = true,
-		?\phpbb\auth\auth $phpbb_auth = null, bool $gallery_bbcode_ready = true): editor_listener
+		?\phpbb\auth\auth $phpbb_auth = null, bool $gallery_bbcode_ready = true,
+		?\phpbb\template\template $template = null, bool $allow_sig_bbcode = true,
+		bool $allow_sig_img = true): editor_listener
 	{
 		$user = new class($user_bbcode) extends \phpbb\user
 		{
@@ -299,10 +370,13 @@ final class editor_listener_test extends TestCase
 			$user,
 			new \phpbb\config\config([
 				'allow_bbcode' => $allow_bbcode,
+				'allow_sig_bbcode' => $allow_sig_bbcode,
+				'allow_sig_img' => $allow_sig_img,
 				'phpbb_gallery_bbcode_ready' => $gallery_bbcode_ready,
 			]),
 			$phpbb_auth ?? $this->createMock(\phpbb\auth\auth::class),
-			$selector
+			$selector,
+			$template ?? $this->createMock(\phpbb\template\template::class)
 		);
 	}
 }

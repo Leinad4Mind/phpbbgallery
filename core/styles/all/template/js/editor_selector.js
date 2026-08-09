@@ -114,7 +114,14 @@
 		}
 
 		var form = activeTrigger.closest('form');
-		var textarea = form ? form.querySelector('textarea[name="message"]') : null;
+		var targetName = activeTrigger.getAttribute('data-gallery-selector-target');
+		if (targetName !== 'message' && targetName !== 'signature')
+		{
+			targetName = typeof window.text_name === 'string' && window.text_name === 'signature'
+				? 'signature'
+				: 'message';
+		}
+		var textarea = form ? form.querySelector('textarea[name="' + targetName + '"]') : null;
 		if (!textarea)
 		{
 			setStatus(dialog.getAttribute('data-error-label'), true);
@@ -124,7 +131,9 @@
 		var bbcodeTag = dialog.getAttribute('data-bbcode-tag') || 'image';
 		var bbcode = '[' + bbcodeTag + ']' + imageId + '[/' + bbcodeTag + ']';
 		textarea.focus();
-		if (form.id === 'postform' && typeof window.insert_text === 'function')
+		if (form.id === 'postform'
+			&& typeof window.insert_text === 'function'
+			&& (typeof window.text_name !== 'string' || window.text_name === targetName))
 		{
 			window.insert_text(bbcode, true);
 		}

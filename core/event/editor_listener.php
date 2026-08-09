@@ -32,15 +32,19 @@ class editor_listener implements EventSubscriberInterface
 	/** @var \phpbbgallery\core\image\selector Permission-filtered image selector */
 	protected \phpbbgallery\core\image\selector $selector;
 
+	/** @var \phpbb\template\template phpBB template service */
+	protected \phpbb\template\template $template;
+
 	public function __construct(\phpbb\controller\helper $helper, \phpbb\user $user,
 		\phpbb\config\config $config, \phpbb\auth\auth $auth,
-		\phpbbgallery\core\image\selector $selector)
+		\phpbbgallery\core\image\selector $selector, \phpbb\template\template $template)
 	{
 		$this->helper = $helper;
 		$this->user = $user;
 		$this->config = $config;
 		$this->auth = $auth;
 		$this->selector = $selector;
+		$this->template = $template;
 	}
 
 	public static function getSubscribedEvents(): array
@@ -48,6 +52,7 @@ class editor_listener implements EventSubscriberInterface
 		return [
 			'core.posting_modify_template_vars'               => 'posting_editor',
 			'core.ucp_pm_compose_template'                    => 'private_message_editor',
+			'core.ucp_profile_modify_signature'               => 'signature_editor',
 			'core.viewtopic_modify_quick_reply_template_vars' => 'quick_reply_editor',
 		];
 	}
@@ -97,6 +102,20 @@ class editor_listener implements EventSubscriberInterface
 		$event['tpl_ary'] = $tpl_ary;
 	}
 
+	/** Expose the selector while editing a signature that permits image BBCodes. */
+	public function signature_editor(\phpbb\event\data $event): void
+	{
+		if (empty($this->config['allow_sig_bbcode'])
+			|| empty($this->config['allow_sig_img'])
+			|| !$this->auth->acl_get('u_sig')
+			|| !$this->is_available())
+		{
+			return;
+		}
+
+		$this->template->assign_vars($this->template_variables('signature'));
+	}
+
 	private function is_available(): bool
 	{
 		if (empty($this->config['phpbb_gallery_bbcode_ready'])
@@ -109,12 +128,13 @@ class editor_listener implements EventSubscriberInterface
 		return $this->selector->has_images((int) $this->user->data['user_id']);
 	}
 
-	private function template_variables(): array
+	private function template_variables(string $text_name = 'message'): array
 	{
 		return [
 			'S_GALLERY_SELECTOR'          => true,
 			'U_GALLERY_SELECTOR'          => $this->helper->route('phpbbgallery_core_editor_images'),
 			'U_GALLERY_SELECTOR_FALLBACK' => $this->helper->route('phpbbgallery_core_search_egosearch'),
+			'GALLERY_SELECTOR_TEXT_NAME'  => $text_name,
 		];
 	}
 }
