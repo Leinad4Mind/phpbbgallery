@@ -79,7 +79,7 @@
 					<strong>{{ lang('CONTACT') }}{{ lang('COLON') }}</strong>
 					<div class="dropdown-container dropdown-left">
 						<a href="#" class="dropdown-trigger" title="{{ POSTER_USERNAME }}">
-							<i class="icon fa-commenting-o fa-fw icon-lg" aria-hidden="true"></i><span class="sr-only">POSTER_USERNAME}</span>
+							<i class="icon fa-commenting-o fa-fw icon-lg" aria-hidden="true"></i><span class="sr-only">{{ POSTER_USERNAME }}</span>
 						</a>
 						<div class="dropdown">
 							<div class="pointer"><div class="pointer-inner"></div></div>
@@ -90,7 +90,7 @@
 									{% if REMAINDER == 0 %}
 									<div>
 										{% endif %}
-										<a href="{% if contact.U_CONTACT %}{{ contact.U_CONTACT }}{% else %}{{ U_POST_AUTHOR }}{% endif %}" title="{{ contact.NAME }}"{% if S_LAST_CELL %} class="last-cell"{% endif %}{% if contact.ID == 'jabber' %} onclick="popup(this.href, 750, 320); return false;"{% endif %}>
+									<a href="{% if contact.U_CONTACT %}{{ contact.U_CONTACT }}{% else %}{{ U_POSTER }}{% endif %}" title="{{ contact.NAME }}"{% if S_LAST_CELL %} class="last-cell"{% endif %}{% if contact.ID == 'jabber' %} onclick="popup(this.href, 750, 320); return false;"{% endif %}>
 										<span class="contact-icon {{ contact.ID }}-icon">{{ contact.NAME }}</span>
 										</a>
 										{% if REMAINDER == 3 or contact.S_LAST_ROW %}
@@ -282,7 +282,7 @@
 								{% if REMAINDER == 0 %}
 								<div>
 									{% endif %}
-									<a href="{% if contact.U_CONTACT %}{{ contact.U_CONTACT }}{% else %}{{ commentrow.U_POST_AUTHOR }}{% endif %}" title="{{ contact.NAME }}"{% if S_LAST_CELL %} class="last-cell"{% endif %}{% if contact.ID == 'jabber' %} onclick="popup(this.href, 750, 320); return false;"{% endif %}>
+									<a href="{% if contact.U_CONTACT %}{{ contact.U_CONTACT }}{% else %}{{ commentrow.U_POSTER }}{% endif %}" title="{{ contact.NAME }}"{% if S_LAST_CELL %} class="last-cell"{% endif %}{% if contact.ID == 'jabber' %} onclick="popup(this.href, 750, 320); return false;"{% endif %}>
 									<span class="contact-icon {{ contact.ID }}-icon">{{ contact.NAME }}</span>
 									</a>
 									{% if REMAINDER == 3 or contact.S_LAST_ROW %}

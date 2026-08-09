@@ -634,7 +634,10 @@ class image
 			$user_id = $this->data['image_user_id'];
 			$this->users_data_array[$user_id]['username'] = ($this->data['image_username']) ? $this->data['image_username'] : $this->language->lang('GUEST');
 			$user_data = $this->users_data_array[$user_id] ?? [];
-			$this->assign_image_poster_profile_fields((int) $user_id);
+			$u_poster_pm = ($user_id != ANONYMOUS && $this->config['allow_privmsg'] && $this->auth->acl_get('u_sendpm') && (($user_data['allow_pm'] ?? false) || $this->auth->acl_gets('a_', 'm_')))
+				? $this->url->append_sid('phpbb', 'ucp', 'i=pm&amp;mode=compose&amp;u=' . $user_id) : '';
+			$u_poster_email = (string) ($user_data['email'] ?? '');
+			$u_poster_jabber = (string) ($user_data['jabber'] ?? '');
 			$this->template->assign_vars([
 				'POSTER_FULL'     => get_username_string('full', $user_id, $user_data['username'] ?? '', $user_data['user_colour'] ?? ''),
 				'POSTER_COLOUR'   => get_username_string('colour', $user_id, $user_data['username'] ?? '', $user_data['user_colour'] ?? ''),
@@ -656,10 +659,12 @@ class image
 
 				//'U_POSTER_PROFILE'		=> $user_data['profile'] ?? '',
 				'U_POSTER_SEARCH' => $user_data['search'] ?? '',
-				'U_POSTER_PM'     => ($user_id != ANONYMOUS && $this->config['allow_privmsg'] && $this->auth->acl_get('u_sendpm') && (($user_data['allow_pm'] ?? false) || $this->auth->acl_gets('a_', 'm_'))) ? $this->url->append_sid('phpbb', 'ucp', 'i=pm&amp;mode=compose&amp;u=' . $user_id) : '',
-				'U_POSTER_EMAIL'  => ($this->auth->acl_gets('a_') || !$this->config['board_hide_emails']) ? ($user_data['email'] ?? false) : false,
-				'U_POSTER_JABBER' => $user_data['jabber'] ?? '',
+				'U_POSTER_PM'     => $u_poster_pm,
+				'U_POSTER_EMAIL'  => $u_poster_email,
+				'U_POSTER_JABBER' => $u_poster_jabber,
 			]);
+			$this->assign_standard_contact_fields('contact', $u_poster_pm, $u_poster_email, $u_poster_jabber);
+			$this->assign_image_poster_profile_fields((int) $user_id);
 		}
 
 		$canonical_url = $this->url->get_uri($this->helper->route(
@@ -1028,6 +1033,46 @@ class image
 	}
 
 	/**
+	 * Assign phpBB's standard contact methods to a root or nested template block.
+	 *
+	 * The URLs are prepared by the Gallery user cache, which applies phpBB's
+	 * privacy and contact permissions before this method receives them.
+	 *
+	 * @param string $block    Template block name
+	 * @param string $u_pm     Private message URL
+	 * @param string $u_email  Email or board email form URL
+	 * @param string $u_jabber Jabber contact URL
+	 */
+	private function assign_standard_contact_fields(string $block, string $u_pm, string $u_email, string $u_jabber): void
+	{
+		$contact_fields = [
+			[
+				'ID'        => 'pm',
+				'NAME'      => $this->language->lang('SEND_PRIVATE_MESSAGE'),
+				'U_CONTACT' => $u_pm,
+			],
+			[
+				'ID'        => 'email',
+				'NAME'      => $this->language->lang('SEND_EMAIL'),
+				'U_CONTACT' => $u_email,
+			],
+			[
+				'ID'        => 'jabber',
+				'NAME'      => $this->language->lang('JABBER'),
+				'U_CONTACT' => $u_jabber,
+			],
+		];
+
+		foreach ($contact_fields as $field)
+		{
+			if ($field['U_CONTACT'] !== '')
+			{
+				$this->template->assign_block_vars($block, $field);
+			}
+		}
+	}
+
+	/**
 	 * Assign an anonymous poster shell for data protected by an add-on policy.
 	 *
 	 * Every profile and contact variable used by the bundled styles is cleared so
@@ -1182,7 +1227,7 @@ class image
 				$u_pm = '';
 				if ($this->config['allow_privmsg'] && $this->auth->acl_get('u_sendpm') && $can_receive_pm)
 				{
-					$u_pm = append_sid("{$this->phpbb_root_path}ucp.$this->php_ext", 'i=pm&amp;mode=compose');
+					$u_pm = append_sid("{$this->phpbb_root_path}ucp.$this->php_ext", 'i=pm&amp;mode=compose&amp;u=' . $display_poster_id);
 				}
 
 				$comment_row = [
@@ -1227,31 +1272,12 @@ class image
 				}
 				$this->template->assign_block_vars('commentrow', $comment_row);
 
-				$contact_fields = [
-					[
-						'ID'        => 'pm',
-						'NAME'      => $this->language->lang('SEND_PRIVATE_MESSAGE'),
-						'U_CONTACT' => $u_pm,
-					],
-					[
-						'ID'        => 'email',
-						'NAME'      => $this->language->lang('SEND_EMAIL'),
-						'U_CONTACT' => $user_data['email'] ?? '',
-					],
-					[
-						'ID'        => 'jabber',
-						'NAME'      => $this->language->lang('JABBER'),
-						'U_CONTACT' => $user_data['jabber'] ?? '',
-					],
-				];
-
-				foreach ($contact_fields as $field)
-				{
-					if ($field['U_CONTACT'])
-					{
-						$this->template->assign_block_vars('commentrow.contact', $field);
-					}
-				}
+				$this->assign_standard_contact_fields(
+					'commentrow.contact',
+					$u_pm,
+					(string) ($user_data['email'] ?? ''),
+					(string) ($user_data['jabber'] ?? '')
+				);
 
 				if (!empty($cp_row['blockrow']))
 				{

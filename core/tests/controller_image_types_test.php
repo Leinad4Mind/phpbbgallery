@@ -322,6 +322,51 @@ final class controller_image_types_test extends TestCase
 		$this->assertSame('https://example.test', $assigned_blocks['contact'][0]['U_CONTACT']);
 	}
 
+	public function test_standard_contacts_are_filtered_and_support_root_and_comment_blocks(): void
+	{
+		$reflection = new \ReflectionClass(image::class);
+		$controller = $reflection->newInstanceWithoutConstructor();
+		$assigned_blocks = [];
+		$template = $this->createMock(\phpbb\template\template::class);
+		$template->method('assign_block_vars')->willReturnCallback(function (string $block, array $vars) use (&$assigned_blocks): void
+		{
+			$assigned_blocks[$block][] = $vars;
+		});
+		$language = $this->createMock(\phpbb\language\language::class);
+		$language->method('lang')->willReturnCallback(static fn(string $key): string => $key);
+		$reflection->getProperty('template')->setValue($controller, $template);
+		$reflection->getProperty('language')->setValue($controller, $language);
+
+		$assign_contacts = $reflection->getMethod('assign_standard_contact_fields');
+		$assign_contacts->invoke($controller, 'contact', '/ucp.php?i=pm&amp;u=42', '/memberlist.php?mode=email&amp;u=42', '');
+		$assign_contacts->invoke($controller, 'commentrow.contact', '', '', '/memberlist.php?mode=contact&amp;u=42');
+
+		$this->assertSame([
+			[
+				'ID' => 'pm',
+				'NAME' => 'SEND_PRIVATE_MESSAGE',
+				'U_CONTACT' => '/ucp.php?i=pm&amp;u=42',
+			],
+			[
+				'ID' => 'email',
+				'NAME' => 'SEND_EMAIL',
+				'U_CONTACT' => '/memberlist.php?mode=email&amp;u=42',
+			],
+		], $assigned_blocks['contact']);
+		$this->assertSame([
+			[
+				'ID' => 'jabber',
+				'NAME' => 'JABBER',
+				'U_CONTACT' => '/memberlist.php?mode=contact&amp;u=42',
+			],
+		], $assigned_blocks['commentrow.contact']);
+
+		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/image.php');
+		$this->assertStringContainsString('assign_standard_contact_fields(\'contact\'', $source);
+		$this->assertStringContainsString('\'commentrow.contact\'', $source);
+		$this->assertStringContainsString('\'i=pm&amp;mode=compose&amp;u=\' . $display_poster_id', $source);
+	}
+
 	public function test_hidden_poster_clears_every_profile_surface(): void
 	{
 		$reflection = new \ReflectionClass(image::class);

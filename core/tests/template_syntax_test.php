@@ -890,6 +890,24 @@ final class template_syntax_test extends TestCase
 		}
 	}
 
+	public function test_viewimage_contacts_use_the_modern_phpbb_contract_in_every_style(): void
+	{
+		$core_root = dirname(__DIR__);
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$source = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/viewimage_body.html');
+			$this->assertStringContainsString('{% for contact in contact %}', $source, $style);
+			$this->assertStringContainsString('contact.U_CONTACT', $source, $style);
+			$this->assertStringContainsString('{{ U_POSTER }}', $source, $style);
+			$this->assertStringContainsString('{% for contact in commentrow.contact %}', $source, $style);
+			$this->assertStringContainsString('{{ commentrow.U_POSTER }}', $source, $style);
+			$this->assertDoesNotMatchRegularExpression('/\bU_POSTER_(?:PM|EMAIL|WWW|MSN|ICQ|YIM|AIM|JABBER)\b/', $source, $style);
+			$this->assertStringNotContainsString('postrow.U_WWW', $source, $style);
+			$this->assertStringNotContainsString('U_POST_AUTHOR', $source, $style);
+			$this->assertStringNotContainsString('>POSTER_USERNAME}</span>', $source, $style);
+		}
+	}
+
 	public function test_flatboots_comments_reuse_viewtopic_actions_and_contacts(): void
 	{
 		$gallery = (string) file_get_contents(dirname(__DIR__) . '/styles/FLATBOOTS/template/gallery/viewimage_body.html');
