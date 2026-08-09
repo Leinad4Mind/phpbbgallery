@@ -685,22 +685,31 @@ class image
 		]);
 
 		// Add ratings
+		$this->template->assign_vars([
+			'S_RATING_VISIBLE' => false,
+			'S_VIEW_RATE' => false,
+			'S_ALLOWED_TO_RATE' => false,
+			'S_RATE_ACTION' => '',
+		]);
 		if ($this->gallery_config->get('allow_rates'))
 		{
 			$rating = $this->gallery_rating;
 			$rating->loader($image_id, $image_data, $album_data);
 
 			$user_rating = $rating->get_user_rating($this->user->data['user_id']);
+			$can_rate = !$user_rating && $rating->is_able();
 
 			// Check: User didn't rate yet, has permissions, it's not the users own image and the user is logged in
-			if (!$user_rating && $rating->is_able())
+			if ($can_rate)
 			{
 				$rating->display_box();
 			}
 			$this->template->assign_vars([
 				'IMAGE_RATING'      => $rating->get_image_rating($user_rating),
-				'S_ALLOWED_TO_RATE' => (!$user_rating && $rating->is_able()),
-				'S_VIEW_RATE'       => ($this->gallery_auth->acl_check('i_rate', $album_id, $album_data['album_user_id'])) ? true : false,
+				'S_ALLOWED_TO_RATE' => $can_rate,
+				// Viewing a published result is independent from permission to cast a vote.
+				'S_RATING_VISIBLE'  => !$hide_results,
+				'S_VIEW_RATE'       => !$hide_results, // Compatibility for third-party styles.
 				'S_RATE_ACTION'     => $this->helper->route('phpbbgallery_core_image_rate', ['image_id' => $image_id]),
 			]);
 			unset($rating);

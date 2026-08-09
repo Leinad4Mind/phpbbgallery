@@ -194,6 +194,19 @@ final class template_syntax_test extends TestCase
 		}
 	}
 
+	public function test_image_rating_results_do_not_require_the_vote_permission_in_templates(): void
+	{
+		$core_root = dirname(__DIR__);
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$template = (string) file_get_contents(
+				$core_root . '/styles/' . $style . '/template/gallery/viewimage_body.html'
+			);
+			$this->assertStringContainsString('{% if S_RATING_VISIBLE %}', $template, $style);
+			$this->assertStringNotContainsString('{% if S_VIEW_RATE %}', $template, $style);
+		}
+	}
+
 	public function test_flatboots_and_prosilver_rating_is_a_star_only_csrf_protected_ajax_control(): void
 	{
 		$core_root = dirname(__DIR__);

@@ -374,6 +374,17 @@ final class controller_image_types_test extends TestCase
 		$this->assertStringNotContainsString('core\\contest::', $source);
 	}
 
+	public function test_rating_result_visibility_is_independent_from_permission_to_vote(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/image.php');
+
+		$this->assertStringContainsString("'S_RATING_VISIBLE'  => !\$hide_results", $source);
+		$this->assertStringContainsString('$can_rate = !$user_rating && $rating->is_able()', $source);
+		$this->assertStringContainsString("'S_ALLOWED_TO_RATE' => \$can_rate", $source);
+		$this->assertStringContainsString("'S_VIEW_RATE'       => !\$hide_results", $source);
+		$this->assertStringNotContainsString("'S_VIEW_RATE'       => (\$this->gallery_auth->acl_check('i_rate'", $source);
+	}
+
 	public function test_comment_operation_message_uses_extension_boundary_and_safe_fallback(): void
 	{
 		$reflection = new \ReflectionClass(image::class);

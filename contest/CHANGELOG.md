@@ -68,6 +68,7 @@ All notable changes to the phpBB Gallery Contest add-on are documented in this f
 
 ### Fixed
 
+- Kept completed contest ratings visible to image viewers who cannot vote, while preserving hidden results before finalization and phase-based voting restrictions.
 - Used the configured Gallery items-per-page limit for winner pagination.
 - Rendered the shared Core search results through its explicit template
   namespace so the winners page remains available from the add-on controller.
