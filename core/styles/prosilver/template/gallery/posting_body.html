@@ -154,8 +154,7 @@
 					<dd>
 						{% if image.S_FIRST_ROW and (NUM_IMAGES > 1) %}
 						<dl>
-							<dt><label for="same_name">{{ lang('USE_SAME_NAME') }}</label></dt>
-							<dd><input type="checkbox" name="same_name" id="same_name" value="1" onchange="change_read_write();" /></dd>
+							<dd><input type="checkbox" name="same_name" id="same_name" value="1" onchange="change_read_write();" /> <label for="same_name">{{ lang('USE_SAME_NAME') }}</label></dd>
 							<dd>{{ lang('USE_NUM') }} <input class="inputbox" type="text" id="image_num" name="image_num" size="5" onchange="update_all('image_name'); update_all('image_subtitle'); update_all('message');" onkeyup="update_all('image_name'); update_all('image_subtitle'); update_all('message');" value="1" /></dd>
 						</dl>
 						{% endif %}

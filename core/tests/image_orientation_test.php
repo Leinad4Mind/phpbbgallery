@@ -142,4 +142,17 @@ final class image_orientation_test extends TestCase
 			);
 		}
 	}
+
+	public function test_prosilver_shared_name_text_follows_its_checkbox(): void
+	{
+		$template = (string) file_get_contents(
+			dirname(__DIR__) . '/styles/prosilver/template/gallery/posting_body.html'
+		);
+
+		$this->assertStringContainsString(
+			'<dd><input type="checkbox" name="same_name" id="same_name" value="1" onchange="change_read_write();" /> <label for="same_name">',
+			$template
+		);
+		$this->assertStringNotContainsString('<dt><label for="same_name">', $template);
+	}
 }
