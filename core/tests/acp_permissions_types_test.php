@@ -101,4 +101,13 @@ final class acp_permissions_types_test extends TestCase
 		$this->assertStringContainsString('$converted_victims = [];', $source);
 		$this->assertSame(6, substr_count($source, 'is_set_post('));
 	}
+
+	public function test_system_groups_use_the_native_acp_separator_style_and_order(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/acp/permissions_module.php');
+
+		$this->assertSame(2, substr_count($source, "? ' class=\"sep\"' : ''"));
+		$this->assertStringContainsString("'ORDER_BY'\t\t=> 'g.group_type DESC, g.group_name ASC'", $source);
+		$this->assertStringContainsString('ORDER BY group_type DESC, group_name ASC', $source);
+	}
 }

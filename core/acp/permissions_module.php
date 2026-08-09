@@ -319,6 +319,7 @@ class permissions_module
 
 			'WHERE'			=> ((!$p_system) ? $db->sql_in_set('p.perm_album_id', $album_id, false, true) : $db->sql_in_set('p.perm_system', $p_system, false, true)),
 			'GROUP_BY'		=> 'g.group_id, g.group_type, g.group_name',
+			'ORDER_BY'		=> 'g.group_type DESC, g.group_name ASC',
 		];
 		$sql = $db->sql_build_query('SELECT', $sql_array);
 		$result = $db->sql_query($sql);
@@ -328,20 +329,21 @@ class permissions_module
 		while ($row = $db->sql_fetchrow($result))
 		{
 			$set_groups[] = $row['group_id'];
-			$s_defined_group_options .= '<option value="' . $row['group_id'] . '">' . (($row['group_type'] == GROUP_SPECIAL) ? $this->language->lang('G_' . $row['group_name']) : $row['group_name']) . '</option>';
+			$s_defined_group_options .= '<option' . (($row['group_type'] == GROUP_SPECIAL) ? ' class="sep"' : '') . ' value="' . $row['group_id'] . '">' . (($row['group_type'] == GROUP_SPECIAL) ? $this->language->lang('G_' . $row['group_name']) : $row['group_name']) . '</option>';
 		}
 		$db->sql_freeresult($result);
 
 		// Get the other groups, so that the user can add them
 		$sql = 'SELECT group_name, group_id, group_type
 			FROM ' . GROUPS_TABLE . '
-			WHERE ' . $db->sql_in_set('group_id', $set_groups, true, true);
+			WHERE ' . $db->sql_in_set('group_id', $set_groups, true, true) . '
+			ORDER BY group_type DESC, group_name ASC';
 		$result = $db->sql_query($sql);
 
 		$s_add_group_options = '';
 		while ($row = $db->sql_fetchrow($result))
 		{
-			$s_add_group_options .= '<option value="' . $row['group_id'] . '">' . (($row['group_type'] == GROUP_SPECIAL) ? $this->language->lang('G_' . $row['group_name']) : $row['group_name']) . '</option>';
+			$s_add_group_options .= '<option' . (($row['group_type'] == GROUP_SPECIAL) ? ' class="sep"' : '') . ' value="' . $row['group_id'] . '">' . (($row['group_type'] == GROUP_SPECIAL) ? $this->language->lang('G_' . $row['group_name']) : $row['group_name']) . '</option>';
 		}
 		$db->sql_freeresult($result);
 
