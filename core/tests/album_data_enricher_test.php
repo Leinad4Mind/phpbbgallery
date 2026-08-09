@@ -111,6 +111,8 @@ final class album_data_enricher_test extends TestCase
 		$display_service = strstr($display_service, 'phpbbgallery.core.album.loader:', true);
 
 		$this->assertStringContainsString('$this->data_enricher->enrich_many($rows)', $display);
+		$this->assertStringContainsString("'album_list',", $display);
+		$this->assertStringContainsString("assign_block_vars('albumrow', \$album_template_vars)", $display);
 		$this->assertStringNotContainsString('table_contests', $display);
 		$this->assertStringNotContainsString('gallery_contests', $display_service);
 	}

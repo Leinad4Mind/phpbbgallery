@@ -743,7 +743,7 @@ class display
 				$this->language->lang('GALLERY_PRIVATE_USER')
 			) : '';
 
-			$this->template->assign_block_vars('albumrow', [
+			$album_template_vars = [
 				'S_IS_CAT'			=> false,
 				'S_PERSONAL_ALBUM'	=> (int) $row['album_user_id'] > (int) \phpbbgallery\core\block::PUBLIC_ALBUM,
 				'S_PUBLIC_SECTION_START'	=> $section_start_pending && $index_section === 'public',
@@ -779,7 +779,13 @@ class display
 				'L_MODERATOR_STR'		=> $l_moderator,
 
 				'U_VIEWALBUM'			=> $this->helper->route('phpbbgallery_core_album', ['album_id' => (int) $row['album_id']]),
-			]);
+			];
+			$album_template_vars = $this->data_enricher->enrich_template_vars(
+				'album_list',
+				$row,
+				$album_template_vars
+			);
+			$this->template->assign_block_vars('albumrow', $album_template_vars);
 			$section_start_pending = false;
 
 			// Assign subforums loop for style authors
