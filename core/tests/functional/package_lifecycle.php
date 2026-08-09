@@ -32,7 +32,7 @@ class package_lifecycle extends \phpbb_functional_test_case
 	];
 
 	private const COMPONENTS = [
-		'phpbbgallery/core' => '4.0.0',
+		'phpbbgallery/core' => '4.1.0',
 		...self::ADDONS,
 	];
 

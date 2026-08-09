@@ -197,7 +197,7 @@ class index
 			 *
 			 * @event phpbbgallery.core.index.image_blocks
 			 * @var int config_value Selected Gallery-index mode bitmask
-			 * @since 4.0.0
+			 * @since 4.1.0
 			 */
 			$vars = ['config_value'];
 			extract($this->dispatcher->trigger_event(

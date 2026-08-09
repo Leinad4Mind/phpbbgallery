@@ -578,7 +578,7 @@ class config_module
 		 *
 		 * @event phpbbgallery.core.image.sort_labels
 		 * @var array sort_by_text Sort-key labels
-		 * @since 4.0.0
+		 * @since 4.1.0
 		 */
 		$vars = ['sort_by_text'];
 		extract($phpbb_dispatcher->trigger_event(
@@ -842,7 +842,7 @@ class config_module
 		 * @var int    value            Current mode bitmask
 		 * @var string key              Configuration key being rendered
 		 * @var string rrc_mode_options Rendered option elements
-		 * @since 4.0.0
+		 * @since 4.1.0
 		 */
 		$vars = ['value', 'key', 'rrc_mode_options'];
 		extract($phpbb_dispatcher->trigger_event(
@@ -888,7 +888,7 @@ class config_module
 		 * @var int    value               Current display bitmask
 		 * @var string key                 Configuration key being rendered
 		 * @var string rrc_display_options Rendered option elements
-		 * @since 4.0.0
+		 * @since 4.1.0
 		 */
 		$vars = ['value', 'key', 'rrc_display_options'];
 		extract($phpbb_dispatcher->trigger_event(

@@ -498,7 +498,7 @@ class albums_module
 				 *
 				 * @event phpbbgallery.core.image.sort_labels
 				 * @var array sort_by_text Sort-key labels
-				 * @since 4.0.0
+				 * @since 4.1.0
 				 */
 				$vars = ['sort_by_text'];
 				extract($phpbb_dispatcher->trigger_event(

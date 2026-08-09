@@ -230,7 +230,7 @@ class search
 		 * @var array  sort_by_text      Sort-key labels
 		 * @var array  sort_by_sql       Sort-key SQL expressions
 		 * @var array  search_sort_joins Portable DBAL LEFT JOIN definitions
-		 * @since 4.0.0
+		 * @since 4.1.0
 		 */
 		$vars = ['sort_key', 'sort_by_text', 'sort_by_sql', 'search_sort_joins'];
 		extract($this->dispatcher->trigger_event(
@@ -406,7 +406,7 @@ class search
 			 * @event phpbbgallery.core.search.image_template_vars
 			 * @var array images              Visible image rows on the current page
 			 * @var array image_template_vars Additional variables keyed by image ID
-			 * @since 4.0.0
+			 * @since 4.1.0
 			 */
 			$vars = ['images', 'image_template_vars'];
 			$images = $rowset;

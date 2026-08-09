@@ -2,7 +2,7 @@
 
 All notable changes to the phpBB Gallery extension suite are documented in this file.
 
-## [4.0.0]
+## [4.1.0] Unreleased
 
 ### Added
 
@@ -19,12 +19,52 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added selectable image resolution to thumbnail metadata, persisted source dimensions for new uploads and imports, and a confirmed 25-image ACP resynchronisation for legacy or remote files; a neutral album-card metadata extension point lets BBPoints Images expose optional original-download counters without coupling the Core to the add-on.
 - Added a privacy-first browser toggle for privileged Gallery IP displays: every visible IP starts blurred, one click reveals or hides all IPs, and the preference is retained in local storage.
 - Added permission-aware inline AJAX rating stars to album cards; own images, previously rated images and images outside the effective rating permission show no rating link or control.
-- Added independent per-album permissions for original-file downloads and charge-free original access, with both denied by default.
+- Added independent per-album permissions for original-file downloads and charge-free original access, initialized from existing image-view roles during the upgrade while keeping the charge bypass denied.
 - Added accessible star-only AJAX rating controls to FLATBOOTS and prosilver, with CSRF-protected POST submission, permission revalidation and no page reload.
 - Made Favorite controls update their icon, label and inverse action over AJAX in album listings, Gallery search results and image pages, including after progressive AJAX image navigation.
 - Added responsive album information panels matching FLATBOOTS viewforum, with online users, effective album permissions and a neutral third-party rules area populated by BBPoints Images.
 - Added permission-aware AJAX favorite hearts to album and search-result image cards, loading the current page's favorite state in one bounded query through neutral Core extension events and allowing administrators to keep listing controls disabled.
 - Added a Unicode-aware live character counter to Gallery comment forms in every bundled style, driven by the ACP comment limit and reinitialized after AJAX image navigation.
+- Extended indexed EXIF DateTimeOriginal sorting to Gallery searches while retaining upload-date fallback, previous/next navigation and ACP defaults.
+- Added an optional multi-image upload control that applies the first image's BBPoints contributors to the complete batch, with synchronized locked editors and server-side enforcement.
+
+### Changed
+
+- Closed the complete post-4.0 Core migration graph with a 4.1.0 terminal marker and aligned the package, version-check metadata and installed Gallery version for direct 4.0.0 upgrades.
+- Made the personal-album index switch authoritative: disabling it now removes personal albums, their fallback link and their statistics from the Gallery index, while the remaining section is labelled simply as Albums.
+- Reordered the BBOOTS and FLATBOOTS upload form so image selection precedes the optional author and comment controls, and rendered the comment checkbox as one responsive theme-native row.
+- Kept the Favorite UCP bulk-action selector and submit button together in one responsive native Bootstrap control in BBOOTS and FLATBOOTS.
+- Rendered album-moderation batch actions inside each style so FLATBOOTS and BBOOTS use their native Bootstrap select picker instead of an unstyled Core-generated dropdown.
+- Clarified in every ACP language that image viewing covers album listings, individual pages and thumbnail/medium previews, while the download permissions govern original source files and require viewing access.
+- Added breathing room around the camera divider, separated checkbox labels, pinned the online ribbon to the comment avatar's top-right corner, placed quick-comment actions at opposite edges and extended the Unicode-aware live counter to image descriptions.
+- Reworked FLATBOOTS comments to use the theme's native viewtopic mini-profile, avatar, online-status, metadata and contact layout, with an equal-height desktop action toolbar, a mobile-only compact menu and a correctly labelled Whois icon.
+- Moved the BBPoints original-download counter into the image metadata immediately below the view counter in prosilver, BBOOTS and FLATBOOTS.
+- Matched the FLATBOOTS image action and Favorite buttons to the larger button size used by the theme's viewtopic toolbar.
+- Hid the individual EXIF field switches in the Gallery ACP while EXIF display is disabled, preserving their saved values and restoring them immediately when it is enabled again.
+
+### Fixed
+
+- Fixed EXIF images being treated as displayable while their filtered cache was empty: supported IFD0-only metadata is now rendered, resolution density is preserved, and stale caches are rebuilt from the original source on first view.
+- Neutralized prosilver's global icon padding inside Gallery Favorite hearts so the glyph remains visually centred in album and search-result buttons.
+- Made progressive image navigation replace only the Gallery image view instead of an invalid document-spanning container, added a smooth reduced-motion-aware transition and prevented post-swap enhancement errors from triggering a second full-page navigation.
+- Preserved phpBB's URL-session context on embedded medium images and thumbnails so protected images remain visible in the Favorite UCP and other internal listings on cookieless boards, without adding session IDs to shareable URLs.
+- Restored the Favorite UCP module after the Contest extraction by using the Core privacy-policy boundary, loading its navigation title in every supported language and rendering favorites inside the complete UCP layout.
+- Kept the member image-export screen inside the complete phpBB UCP layout in prosilver, BBOOTS and FLATBOOTS instead of rendering the module body as a detached page fragment.
+- Matched the FLATBOOTS member-profile image count to the theme's normal statistic weight instead of rendering the numeric value in bold.
+- Rebased BBTags Images rules throughout an album branch whenever an ancestor policy is saved, immediately removing descendant overrides that became redundant while preserving every effective child selection and unrelated branch.
+- Kept content above and below the Bootstrap camera divider clear of its icon with symmetric vertical spacing.
+- Translated the original-image download tooltip in every supported language instead of exposing the raw DOWNLOAD_SOURCE key.
+- Labelled the Gallery index image statistic explicitly as Images: count instead of displaying the ambiguous count images phrase before total views.
+- Kept the Bootstrap comment-length guidance and live counter inline to the right of the submit button on both full and quick comment forms.
+- Added the missing spacing between Bootstrap signature checkboxes and their labels in both Gallery comment forms.
+- Preserved the native content-driven width and horizontal padding of FLATBOOTS BBCode toolbar buttons while retaining their corrected uniform height.
+- Prevented the configured image-page click action from linking to an original file when the viewer lacks the original-download permission.
+- Removed request-specific style overrides from copyable full-image and BBCode share URLs.
+
+## [4.0.0]
+
+### Added
+
 - Documented the credentials, security model, implementation and service limits of every Remote Storage provider, with a complete Koofr installation and controlled-migration guide.
 - Added private 4shared storage using OAuth 1.0 HMAC-SHA1, exclusively owned folders, owner-only objects, recoverable publication and simple or chunked uploads through the documented API v1_2 endpoints.
 - Added private Koofr storage over its official fixed HTTPS WebDAV endpoint using revocable application passwords, conditional writes, streamed transfers and strictly bounded metadata parsing.
@@ -36,7 +76,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added optional private SFTP storage with mandatory SSH host fingerprint pinning, atomic temporary uploads, resumable provider migrations and a real OpenSSH functional workflow.
 - Added private Azure Blob Storage support with Shared Key signing, ACP-managed connections, resumable remote-to-remote migrations, public-container rejection and an Azurite functional workflow.
 - Added a validated Remote Storage provider-factory catalogue so migrations and ACP connection tests can support additional backends without hard-coded resolver branches.
-- Added indexed EXIF DateTimeOriginal sorting with upload-date fallback across album listings, Gallery searches, previous/next navigation and ACP defaults, including OffsetTimeOriginal handling and a confirmed resumable rebuild for old images.
+- Added indexed EXIF DateTimeOriginal sorting with upload-date fallback across album listings, previous/next navigation and ACP defaults, including OffsetTimeOriginal handling and a confirmed resumable rebuild for old images.
 - Added opt-in BMP uploads through native GD with complete decode validation, preserved BMP originals and browser-safe WebP medium/thumbnail derivatives, including ZIP uploads, ACP Import, replacements and converted album icons.
 - Added an optional, permission-filtered unread-image badge beside the Gallery link, backed by the existing global and per-album read markers and capped at 99+ without an unbounded count query.
 - Added a fail-closed external image-processor contract and deterministic browser-safe derivative keys, allowing add-ons to retain non-native originals while serving, migrating and deleting their WebP medium/thumbnail variants.
@@ -57,7 +97,6 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added an optional plain-text image subtitle across resumable uploads and editing, with a permission-aware search link that removes display parentheses at request time without storing a duplicate cleaned column.
 - Added a generic authorization and accounting event before serving original image sources, while keeping medium images and thumbnails unaffected.
 - Added permanent BBPoints purchases for original image files, including confirmation, direct-link enforcement, atomic contributor shares and download counters.
-- Added an optional multi-image upload control that applies the first image's BBPoints contributors to the complete batch, with synchronized locked editors and server-side enforcement.
 - Added an ACP editor for global and inherited per-album BBPoints image policies plus a confirmed, resumable and idempotent historical reward synchronization.
 - Added BBPoints image-reward lifecycle hooks for finalized uploads, ACP imports, moderation approvals and author changes without coupling Gallery Core to BBPoints.
 - Added the independent BBPoints Images add-on foundation with inherited per-album upload rewards and source costs plus dedicated contributor, reward, purchase, source-hash and download-counter storage.
@@ -84,17 +123,6 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
-- Made the personal-album index switch authoritative: disabling it now removes personal albums, their fallback link and their statistics from the Gallery index, while the remaining section is labelled simply as Albums.
-- Reordered the BBOOTS and FLATBOOTS upload form so image selection precedes the optional author and comment controls, and rendered the comment checkbox as one responsive theme-native row.
-- Kept the Favorite UCP bulk-action selector and submit button together in one responsive native Bootstrap control in BBOOTS and FLATBOOTS.
-- Rendered album-moderation batch actions inside each style so FLATBOOTS and BBOOTS use their native Bootstrap select picker instead of an unstyled Core-generated dropdown.
-- Initialized the new original-download permission from each existing role's image-view permission, preserving historical source access while keeping the charge-bypass permission denied by default.
-- Clarified in every ACP language that image viewing covers album listings, individual pages and thumbnail/medium previews, while the download permissions govern original source files and require viewing access.
-- Added breathing room around the camera divider, separated checkbox labels, pinned the online ribbon to the comment avatar's top-right corner, placed quick-comment actions at opposite edges and extended the Unicode-aware live counter to image descriptions.
-- Reworked FLATBOOTS comments to use the theme's native viewtopic mini-profile, avatar, online-status, metadata and contact layout, with an equal-height desktop action toolbar, a mobile-only compact menu and a correctly labelled Whois icon.
-- Moved the BBPoints original-download counter into the image metadata immediately below the view counter in prosilver, BBOOTS and FLATBOOTS.
-- Matched the FLATBOOTS image action and Favorite buttons to the larger button size used by the theme's viewtopic toolbar.
-- Hid the individual EXIF field switches in the Gallery ACP while EXIF display is disabled, preserving their saved values and restoring them immediately when it is enabled again.
 - Grouped every concrete Remote Storage implementation under a dedicated `providers/` directory and namespace while keeping shared HTTP and migration infrastructure provider-neutral.
 - Replaced the TIFF add-on's abbreviated license notice with the complete GPL-2.0 text and made package hygiene tests require the declared license in every release component.
 - Fixed Image Revisions reactivation after the Core disables all add-ons by giving its reconciliation step the current storage workspace dependency.
@@ -189,21 +217,6 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
-- Fixed EXIF images being treated as displayable while their filtered cache was empty: supported IFD0-only metadata is now rendered, resolution density is preserved, and stale caches are rebuilt from the original source on first view.
-- Neutralized prosilver's global icon padding inside Gallery Favorite hearts so the glyph remains visually centred in album and search-result buttons.
-- Made progressive image navigation replace only the Gallery image view instead of an invalid document-spanning container, added a smooth reduced-motion-aware transition and prevented post-swap enhancement errors from triggering a second full-page navigation.
-- Preserved phpBB's URL-session context on embedded medium images and thumbnails so protected images remain visible in the Favorite UCP and other internal listings on cookieless boards, without adding session IDs to shareable URLs.
-- Restored the Favorite UCP module after the Contest extraction by using the Core privacy-policy boundary, loading its navigation title in every supported language and rendering favorites inside the complete UCP layout.
-- Kept the member image-export screen inside the complete phpBB UCP layout in prosilver, BBOOTS and FLATBOOTS instead of rendering the module body as a detached page fragment.
-- Matched the FLATBOOTS member-profile image count to the theme's normal statistic weight instead of rendering the numeric value in bold.
-- Rebased BBTags Images rules throughout an album branch whenever an ancestor policy is saved, immediately removing descendant overrides that became redundant while preserving every effective child selection and unrelated branch.
-- Kept content above and below the Bootstrap camera divider clear of its icon with symmetric vertical spacing.
-- Translated the original-image download tooltip in every supported language instead of exposing the raw `DOWNLOAD_SOURCE` key.
-- Labelled the Gallery index image statistic explicitly as “Images: count” instead of displaying the ambiguous “count images” phrase before total views.
-- Kept the Bootstrap comment-length guidance and live counter inline to the right of the submit button on both full and quick comment forms.
-- Added the missing spacing between Bootstrap signature checkboxes and their labels in both Gallery comment forms.
-- Preserved the native content-driven width and horizontal padding of FLATBOOTS BBCode toolbar buttons while retaining their corrected uniform height.
-- Prevented the configured image-page click action from linking to an original file when the viewer lacks the original-download permission.
 - Fixed Contest winner pagination using an undefined legacy configuration key and made the shared search template reusable from add-on controllers through explicit Core template paths.
 - Reconciled stale Favorite, Image Revisions, BBTags Images and BBPoints Images data after an add-on is re-enabled, removing missing image/album relations and revision files while preserving permanent financial history.
 - Removed per-user album read-tracking rows when public or personal albums are deleted, including the complete subtree of a deleted personal album.
@@ -269,7 +282,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Built Gallery entrypoints from the configured phpBB root and PHP extension, and moved controller-visible fallback text into the language catalogs.
 - Removed unreachable import, album, multipart upload, and profile-listener branches left by the legacy implementation.
 - Resolved stored-image paths against the configured phpBB root so upload previews and generated image variants work consistently on Windows and Unix hosts.
-- Removed phpBB session identifiers and request-specific style overrides from copyable full-image and BBCode share URLs.
+- Removed phpBB session identifiers from copyable full-image and BBCode share URLs.
 - Corrected Bootstrap moderation empty states, the approval-queue block name, accessible selection controls, and authorization-gated approve/disapprove actions.
 - Restored Bootstrap comment authors, profile links, ranks, online state, edit information, signatures, and contact fields by aligning the templates with the image-controller contract.
 - Corrected Bootstrap Gallery search field names and sort-direction controls to match the controller request parameters.

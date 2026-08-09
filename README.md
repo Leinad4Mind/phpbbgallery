@@ -8,7 +8,7 @@ add-ons use sibling directories under `ext/phpbbgallery/`.
 
 | Component | Version | Description |
 | --- | --- | --- |
-| phpBB Gallery | 4.0.0 | Albums, images, comments, ratings, moderation, search and personal galleries. |
+| phpBB Gallery | 4.1.0 | Albums, images, comments, ratings, moderation, search and personal galleries. |
 
 ## Free add-ons
 

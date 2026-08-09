@@ -363,7 +363,7 @@ class album
 		 * @var array  sort_by_text Sort-key labels
 		 * @var array  sort_by_sql  Sort-key SQL expressions
 		 * @var string sort_from    SQL FROM expression for the image query
-		 * @since 4.0.0
+		 * @since 4.1.0
 		 */
 		$vars = ['album_data', 'sort_key', 'sort_by_text', 'sort_by_sql', 'sort_from'];
 		extract($this->phpbb_dispatcher->trigger_event(
@@ -415,7 +415,7 @@ class album
 		 * @var array album_data         Current album row
 		 * @var array images             Visible image rows on the current page
 		 * @var array image_template_vars Additional variables keyed by image ID
-		 * @since 4.0.0
+		 * @since 4.1.0
 		 */
 		$image_template_vars = [];
 		$vars = ['album_data', 'images', 'image_template_vars'];

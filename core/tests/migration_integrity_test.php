@@ -19,6 +19,7 @@ use phpbbgallery\core\migrations\release_3_2_1_1;
 use phpbbgallery\core\migrations\release_3_3_0;
 use phpbbgallery\core\migrations\release_3_4_0;
 use phpbbgallery\core\migrations\release_4_0_0;
+use phpbbgallery\core\migrations\release_4_1_0;
 use phpbbgallery\core\migrations\resumable_uploads;
 use phpbbgallery\core\migrations\performance_indexes;
 use phpbbgallery\core\migrations\protect_personal_album_profile_field;
@@ -92,6 +93,7 @@ class migration_integrity_test extends TestCase
 		image_orientation::class,
 		index_album_layout::class,
 		gallery_index_featured_modes::class,
+		release_4_1_0::class,
 	];
 
 	private array $temp_directories = [];
@@ -286,6 +288,18 @@ class migration_integrity_test extends TestCase
 
 		$this->assertSame([
 			['config.update', ['phpbb_gallery_version', '4.0.0']],
+		], $migration->update_data());
+	}
+
+	public function test_release_4_1_0_closes_the_post_4_0_chain_and_updates_the_version(): void
+	{
+		$migration = (new \ReflectionClass(release_4_1_0::class))->newInstanceWithoutConstructor();
+
+		$this->assertSame([
+			'\\phpbbgallery\\core\\migrations\\gallery_index_featured_modes',
+		], release_4_1_0::depends_on());
+		$this->assertSame([
+			['config.update', ['phpbb_gallery_version', '4.1.0']],
 		], $migration->update_data());
 	}
 
@@ -790,6 +804,18 @@ class migration_integrity_test extends TestCase
 		$this->assertSame([], $remaining);
 	}
 
+	public function test_release_4_1_0_is_the_terminal_core_migration(): void
+	{
+		$graph = $this->migration_graph();
+		foreach (self::MIGRATIONS as $migration)
+		{
+			$this->assertTrue(
+				$this->depends_on(release_4_1_0::class, $migration, $graph),
+				$migration . ' is outside the 4.1.0 terminal migration chain.'
+			);
+		}
+	}
+
 	public function test_purge_archives_gallery_files_instead_of_deleting_them(): void
 	{
 		$root = $this->create_gallery_tree();
@@ -1102,6 +1128,7 @@ class migration_integrity_test extends TestCase
 			'image_orientation.php',
 			'index_album_layout.php',
 			'gallery_index_featured_modes.php',
+			'release_4_1_0.php',
 		] as $migration)
 		{
 			require_once dirname(__DIR__) . '/migrations/' . $migration;

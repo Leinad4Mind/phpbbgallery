@@ -120,7 +120,7 @@ class gallery_lifecycle extends \phpbb_functional_test_case
 		$this->assertSame(count(self::COMPONENTS), (int) $db->sql_fetchfield('total'));
 		$db->sql_freeresult($result);
 
-		$this->assertSame('4.0.0', $this->config_value('phpbb_gallery_version'));
+		$this->assertSame('4.1.0', $this->config_value('phpbb_gallery_version'));
 		$this->assertSame('45', $this->config_value('phpbb_gallery_forum_index_display'));
 		$this->assertSame('0', $this->config_value('phpbb_gallery_forum_index_mode'));
 		$this->assertSame('0', $this->config_value('phpbb_gallery_forum_index_personal'));
@@ -405,19 +405,19 @@ class gallery_lifecycle extends \phpbb_functional_test_case
 	}
 
 	/**
-	 * Re-run the terminal 4.0.0 migration from a simulated 3.4.0 installation.
+	 * Re-run the terminal 4.1.0 migration from a simulated 4.0.0 installation.
 	 */
 	private function run_update(): void
 	{
-		$migration = '\\phpbbgallery\\core\\migrations\\release_4_0_0';
+		$migration = '\\phpbbgallery\\core\\migrations\\release_4_1_0';
 		$this->disable_ext('phpbbgallery/core');
 
 		$db = $this->get_db();
 		$db->sql_query("DELETE FROM phpbb_migrations WHERE migration_name = '" . $db->sql_escape($migration) . "'");
-		$db->sql_query('UPDATE ' . CONFIG_TABLE . " SET config_value = '3.4.0' WHERE config_name = 'phpbb_gallery_version'");
+		$db->sql_query('UPDATE ' . CONFIG_TABLE . " SET config_value = '4.0.0' WHERE config_name = 'phpbb_gallery_version'");
 
 		$this->install_ext('phpbbgallery/core');
-		$this->assertSame('4.0.0', $this->config_value('phpbb_gallery_version'));
+		$this->assertSame('4.1.0', $this->config_value('phpbb_gallery_version'));
 
 		$sql = "SELECT COUNT(migration_name) AS total
 			FROM phpbb_migrations

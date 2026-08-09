@@ -466,7 +466,7 @@ class image
 		 * @var array  sort_by_text Sort-key labels
 		 * @var array  sort_by_sql  Sort-key SQL expressions
 		 * @var string sort_from    SQL FROM expression for the image query
-		 * @since 4.0.0
+		 * @since 4.1.0
 		 */
 		$vars = ['album_data', 'sort_key', 'sort_by_text', 'sort_by_sql', 'sort_from'];
 		extract($this->dispatcher->trigger_event(
