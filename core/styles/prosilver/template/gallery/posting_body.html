@@ -155,7 +155,7 @@
 						{% if image.S_FIRST_ROW and (NUM_IMAGES > 1) %}
 						<dl>
 							<dd><input type="checkbox" name="same_name" id="same_name" value="1" onchange="change_read_write();" /> <label for="same_name">{{ lang('USE_SAME_NAME') }}</label></dd>
-							<dd>{{ lang('USE_NUM') }} <input class="inputbox" type="text" id="image_num" name="image_num" size="5" onchange="update_all('image_name'); update_all('image_subtitle'); update_all('message');" onkeyup="update_all('image_name'); update_all('image_subtitle'); update_all('message');" value="1" /></dd>
+							<dd><label for="image_num">{{ lang('USE_NUM') }}</label><br><input class="inputbox" type="text" id="image_num" name="image_num" size="5" onchange="update_all('image_name'); update_all('image_subtitle'); update_all('message');" onkeyup="update_all('image_name'); update_all('image_subtitle'); update_all('message');" value="1" /></dd>
 						</dl>
 						{% endif %}
 						<dl>
@@ -163,13 +163,13 @@
 							<dd><input class="inputbox" type="text" tabindex="1{{ image.S_ROW_COUNT }}" id="image_name_{{ image.S_ROW_COUNT }}" name="image_name[{{ image.S_ROW_COUNT }}]" value="{{ image.IMAGE_NAME }}"{% if image.S_FIRST_ROW %} onchange="update_all('image_name');" onselect="update_all('image_name');" onclick="update_all('image_name');" onkeyup="update_all('image_name');"{% endif %} size="60"/></dd>
 						</dl>
 						<dl>
-							<dt><label for="image_subtitle_{{ image.S_ROW_COUNT }}">{{ lang('IMAGE_SUBTITLE') }}{{ lang('COLON') }}</label><br><span>{{ lang('IMAGE_SUBTITLE_EXPLAIN') }}</span></dt>
-							<dd><input class="inputbox" type="text" tabindex="2{{ image.S_ROW_COUNT }}" id="image_subtitle_{{ image.S_ROW_COUNT }}" name="image_subtitle[{{ image.S_ROW_COUNT }}]" value="{{ image.IMAGE_SUBTITLE }}"{% if image.S_FIRST_ROW %} onchange="update_all('image_subtitle');" onselect="update_all('image_subtitle');" onclick="update_all('image_subtitle');" onkeyup="update_all('image_subtitle');"{% endif %} maxlength="255"></dd>
+							<dt><label for="image_subtitle_{{ image.S_ROW_COUNT }}">{{ lang('IMAGE_SUBTITLE') }}{{ lang('COLON') }}</label></dt>
+							<dd><input class="inputbox" type="text" tabindex="2{{ image.S_ROW_COUNT }}" id="image_subtitle_{{ image.S_ROW_COUNT }}" name="image_subtitle[{{ image.S_ROW_COUNT }}]" value="{{ image.IMAGE_SUBTITLE }}"{% if image.S_FIRST_ROW %} onchange="update_all('image_subtitle');" onselect="update_all('image_subtitle');" onclick="update_all('image_subtitle');" onkeyup="update_all('image_subtitle');"{% endif %} maxlength="255"><br><span>{{ lang('IMAGE_SUBTITLE_EXPLAIN') }}</span></dd>
 						</dl>
 						<dl>
 							<dt><label for="message_{{ image.S_ROW_COUNT }}">{{ lang('IMAGE_DESC') }}{{ lang('COLON') }}</label></dt>
-							<dd id="desc_length_{{ image.S_ROW_COUNT }}" class="gallery-comment-guidance"><span id="description-limit-{{ image.S_ROW_COUNT }}" data-gallery-comment-guidance-text>{{ lang('DESCRIPTION_LENGTH') }}</span><output id="description-counter-{{ image.S_ROW_COUNT }}" class="gallery-comment-counter" data-gallery-character-counter-output hidden aria-live="polite" aria-atomic="true"></output></dd>
 							<dd><textarea name="message[{{ image.S_ROW_COUNT }}]" id="message_{{ image.S_ROW_COUNT }}" rows="4" cols="76" tabindex="3" data-gallery-character-counter data-gallery-counter-output-id="description-counter-{{ image.S_ROW_COUNT }}" data-gallery-max-length="{{ DESCRIPTION_MAX_LENGTH }}" aria-describedby="description-limit-{{ image.S_ROW_COUNT }} description-counter-{{ image.S_ROW_COUNT }}" onchange="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %}" onselect="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %} storeCaret(this);" onclick="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %} storeCaret(this);" onkeyup="set_text_field({{ image.S_ROW_COUNT }});{% if image.S_FIRST_ROW %} update_all('message');{% endif %} storeCaret(this);" class="inputbox">{{ image.IMAGE_DESC }}</textarea></dd>
+							<dd id="desc_length_{{ image.S_ROW_COUNT }}" class="gallery-comment-guidance"><span id="description-limit-{{ image.S_ROW_COUNT }}" data-gallery-comment-guidance-text>{{ lang('DESCRIPTION_LENGTH') }}</span><output id="description-counter-{{ image.S_ROW_COUNT }}" class="gallery-comment-counter" data-gallery-character-counter-output hidden aria-live="polite" aria-atomic="true"></output></dd>
 						</dl>
 						{% if S_ALLOW_ROTATE %}
 						<dl>

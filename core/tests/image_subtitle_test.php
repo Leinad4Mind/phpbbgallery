@@ -81,6 +81,27 @@ final class image_subtitle_test extends TestCase
 		}
 	}
 
+	public function test_prosilver_upload_guidance_follows_the_related_fields(): void
+	{
+		$template = (string) file_get_contents(
+			dirname(__DIR__) . '/styles/prosilver/template/gallery/posting_body.html'
+		);
+		$number_label = strpos($template, '<label for="image_num">');
+		$number_input = strpos($template, 'id="image_num"', (int) $number_label);
+		$subtitle_input = strpos($template, 'id="image_subtitle_{{ image.S_ROW_COUNT }}"');
+		$subtitle_explain = strpos($template, "{{ lang('IMAGE_SUBTITLE_EXPLAIN') }}", (int) $subtitle_input);
+		$description = strpos($template, '<textarea name="message[{{ image.S_ROW_COUNT }}]"');
+		$description_guidance = strpos($template, 'id="desc_length_{{ image.S_ROW_COUNT }}"', (int) $description);
+
+		foreach ([$number_label, $number_input, $subtitle_input, $subtitle_explain, $description, $description_guidance] as $position)
+		{
+			$this->assertNotFalse($position);
+		}
+		$this->assertTrue($number_label < $number_input);
+		$this->assertTrue($subtitle_input < $subtitle_explain);
+		$this->assertTrue($description < $description_guidance);
+	}
+
 	public function test_reusable_thumbnail_blocks_only_expose_enabled_subtitles(): void
 	{
 		$this->assertSame(
