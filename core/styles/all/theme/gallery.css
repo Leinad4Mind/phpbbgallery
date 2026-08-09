@@ -468,6 +468,42 @@ input.autowidth-gallery {
 	border-radius: 7px;
 }
 
+/* Keep cards aligned when optional metadata makes one card taller. */
+.gallery-image-card-grid
+{
+	align-items: stretch;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.gallery-image-card-grid::before,
+.gallery-image-card-grid::after
+{
+	display: none;
+}
+
+.gallery-image-card-grid .gallery-image-card
+{
+	display: flex;
+	flex-direction: column;
+}
+
+.gallery-image-card-grid--prosilver > .gallery-image-card
+{
+	float: none;
+}
+
+.gallery-image-card-grid--bootstrap > [class*="col-"]
+{
+	display: flex;
+	float: none;
+}
+
+.gallery-image-card-grid--bootstrap > [class*="col-"] > .gallery-image-card
+{
+	width: 100%;
+}
+
 .image_unapproved,
 .image_reported
 {

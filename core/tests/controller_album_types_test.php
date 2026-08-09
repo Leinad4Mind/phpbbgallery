@@ -131,7 +131,7 @@ final class controller_album_types_test extends TestCase
 				dirname(__DIR__) . '/styles/' . $style . '/template/gallery/imageblock_polaroid.html'
 			);
 			$clearfix = strpos($template, '<div class="clearfix">');
-			$row = strpos($template, '<div class="row">', (int) $clearfix);
+			$row = strpos($template, '<div class="row gallery-image-card-grid gallery-image-card-grid--bootstrap">', (int) $clearfix);
 			$column = strpos($template, '<div class="col-xs-12 col-sm-6 ', (int) $row);
 
 			$this->assertNotFalse($clearfix, $style);
@@ -139,6 +139,7 @@ final class controller_album_types_test extends TestCase
 			$this->assertNotFalse($column, $style);
 			$this->assertTrue($clearfix < $row && $row < $column, $style);
 			$this->assertStringNotContainsString('class="clearfix row"', $template, $style);
+			$this->assertStringNotContainsString('image.S_LAST_ROW', $template, $style);
 		}
 	}
 

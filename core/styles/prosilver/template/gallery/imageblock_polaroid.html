@@ -4,6 +4,7 @@
 {% if imageblock.ERROR %}<h2>{{ imageblock.ERROR }}</h2>
 
 {% else %}
+<div class="gallery-image-card-grid gallery-image-card-grid--prosilver">
 {% for image in imageblock.image %}
 <div class="polaroid gallery-image-card">
 	{% EVENT phpbbgallery_core_album_image_actions %}
@@ -56,9 +57,7 @@
 
 </div>
 
-{% if image.S_LAST_ROW %}
-	<span class="clear"></span>
-{% endif %}
 {% endfor %}
+</div>
 {% endif %}
 {% endfor %}

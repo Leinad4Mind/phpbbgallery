@@ -81,6 +81,27 @@ final class image_subtitle_test extends TestCase
 		}
 	}
 
+	public function test_optional_subtitles_do_not_break_card_row_alignment(): void
+	{
+		$root = dirname(__DIR__);
+		$styles = $root . '/styles';
+
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$card = (string) file_get_contents($styles . '/' . $style . '/template/gallery/imageblock_polaroid.html');
+
+			$this->assertStringContainsString('gallery-image-card-grid', $card, $style);
+			$this->assertStringNotContainsString('image.S_LAST_ROW', $card, $style);
+		}
+
+		$css = (string) file_get_contents($styles . '/all/theme/gallery.css');
+		$this->assertStringContainsString('.gallery-image-card-grid', $css);
+		$this->assertStringContainsString('align-items: stretch;', $css);
+		$this->assertStringContainsString('flex-wrap: wrap;', $css);
+		$this->assertStringContainsString('.gallery-image-card-grid--bootstrap > [class*="col-"]', $css);
+		$this->assertStringContainsString('width: 100%;', $css);
+	}
+
 	public function test_prosilver_upload_guidance_follows_the_related_fields(): void
 	{
 		$template = (string) file_get_contents(
