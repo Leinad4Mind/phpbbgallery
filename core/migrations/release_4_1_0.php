@@ -16,7 +16,7 @@ class release_4_1_0 extends migration
 {
 	public static function depends_on(): array
 	{
-		return ['\phpbbgallery\core\migrations\gallery_index_featured_modes'];
+		return ['\phpbbgallery\core\migrations\group_leader_permissions'];
 	}
 
 	public function update_data(): array

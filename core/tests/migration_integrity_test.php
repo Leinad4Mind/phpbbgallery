@@ -50,6 +50,7 @@ use phpbbgallery\core\migrations\image_dimensions;
 use phpbbgallery\core\migrations\image_orientation;
 use phpbbgallery\core\migrations\index_album_layout;
 use phpbbgallery\core\migrations\gallery_index_featured_modes;
+use phpbbgallery\core\migrations\group_leader_permissions;
 
 class migration_integrity_test extends TestCase
 {
@@ -93,6 +94,7 @@ class migration_integrity_test extends TestCase
 		image_orientation::class,
 		index_album_layout::class,
 		gallery_index_featured_modes::class,
+		group_leader_permissions::class,
 		release_4_1_0::class,
 	];
 
@@ -296,11 +298,33 @@ class migration_integrity_test extends TestCase
 		$migration = (new \ReflectionClass(release_4_1_0::class))->newInstanceWithoutConstructor();
 
 		$this->assertSame([
-			'\\phpbbgallery\\core\\migrations\\gallery_index_featured_modes',
+			'\\phpbbgallery\\core\\migrations\\group_leader_permissions',
 		], release_4_1_0::depends_on());
 		$this->assertSame([
 			['config.update', ['phpbb_gallery_version', '4.1.0']],
 		], $migration->update_data());
+	}
+
+	public function test_group_leader_permission_fix_invalidates_stale_gallery_acl_snapshots(): void
+	{
+		$migration = (new \ReflectionClass(group_leader_permissions::class))->newInstanceWithoutConstructor();
+		(new \ReflectionProperty(\phpbb\db\migration\migration::class, 'table_prefix'))->setValue($migration, 'phpbb_');
+
+		$this->assertSame([
+			'\\phpbbgallery\\core\\migrations\\gallery_index_featured_modes',
+		], group_leader_permissions::depends_on());
+		$this->assertSame([
+			['custom', [[$migration, 'clear_gallery_permission_cache']]],
+		], $migration->update_data());
+		$this->assertSame([], $migration->revert_data());
+
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->once())
+			->method('sql_query')
+			->with("UPDATE phpbb_gallery_users\n\t\t\tSET user_permissions = ''");
+		(new \ReflectionProperty(\phpbb\db\migration\migration::class, 'db'))->setValue($migration, $db);
+
+		$this->assertTrue($migration->clear_gallery_permission_cache());
 	}
 
 	public function test_source_access_policy_is_independent_and_defaults_to_no_bypass(): void
@@ -1128,6 +1152,7 @@ class migration_integrity_test extends TestCase
 			'image_orientation.php',
 			'index_album_layout.php',
 			'gallery_index_featured_modes.php',
+			'group_leader_permissions.php',
 			'release_4_1_0.php',
 		] as $migration)
 		{

@@ -603,13 +603,14 @@ class auth
 	{
 		$groups_ary = [];
 
+		// Match phpBB: skip a group's permissions only for an excluded group leader.
 		$sql = 'SELECT ug.group_id
 			FROM ' . USER_GROUP_TABLE . ' ug
 			LEFT JOIN ' . GROUPS_TABLE . ' g
 				ON (ug.group_id = g.group_id)
 			WHERE ug.user_id = ' . (int) $user_id . '
 				AND ug.user_pending = 0
-				AND g.group_skip_auth = 0';
+				AND NOT (ug.group_leader = 1 AND g.group_skip_auth = 1)';
 		$result = $this->db->sql_query($sql);
 
 		while ($row = $this->db->sql_fetchrow($result))

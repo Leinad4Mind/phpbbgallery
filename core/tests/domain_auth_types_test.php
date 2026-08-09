@@ -164,6 +164,65 @@ final class domain_auth_types_test extends TestCase
 		$this->assertStringContainsString('user_id IN (7, 9)', $queries[1]);
 	}
 
+	public function test_group_skip_auth_excludes_leaders_without_excluding_ordinary_members(): void
+	{
+		if (!extension_loaded('sqlite3'))
+		{
+			$this->markTestSkipped('The SQLite3 extension is required for the group membership query test.');
+		}
+		if (!defined('USER_GROUP_TABLE'))
+		{
+			define('USER_GROUP_TABLE', 'phpbb_user_group');
+		}
+		if (!class_exists('\phpbb\db\driver\driver', false))
+		{
+			require_once dirname(__DIR__, 4) . '/phpbb/db/driver/driver.php';
+		}
+		if (!class_exists('\phpbb\db\driver\sqlite3', false))
+		{
+			require_once dirname(__DIR__, 4) . '/phpbb/db/driver/sqlite3.php';
+		}
+
+		$db = new class extends \phpbb\db\driver\sqlite3
+		{
+			public string $last_query_text = '';
+		};
+		$db->sql_connect(':memory:', '', '', '');
+		try
+		{
+			$db->sql_query('CREATE TABLE ' . GROUPS_TABLE . ' (
+				group_id INTEGER PRIMARY KEY,
+				group_skip_auth INTEGER NOT NULL
+			)');
+			$db->sql_query('CREATE TABLE ' . USER_GROUP_TABLE . ' (
+				group_id INTEGER NOT NULL,
+				user_id INTEGER NOT NULL,
+				group_leader INTEGER NOT NULL,
+				user_pending INTEGER NOT NULL
+			)');
+			$db->sql_query('INSERT INTO ' . GROUPS_TABLE . ' (group_id, group_skip_auth) VALUES
+				(10, 1), (11, 1), (12, 0), (13, 0)');
+			$db->sql_query('INSERT INTO ' . USER_GROUP_TABLE . ' (group_id, user_id, group_leader, user_pending) VALUES
+				(10, 42, 0, 0),
+				(11, 42, 1, 0),
+				(12, 42, 1, 0),
+				(13, 42, 0, 1)');
+
+			$service = $this->new_auth();
+			$this->set_property($service, 'db', $db);
+			$groups = array_map('intval', $service->get_usergroups(42));
+			sort($groups);
+
+			$this->assertSame([10, 12], $groups);
+			$this->assertContains(10, $groups, 'An ordinary member must inherit a skip-auth group.');
+			$this->assertNotContains(11, $groups, 'Only the leader is excluded from a skip-auth group.');
+		}
+		finally
+		{
+			$db->sql_close();
+		}
+	}
+
 	public function test_empty_permission_invalidation_avoids_database_queries(): void
 	{
 		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
