@@ -129,9 +129,10 @@ final class addon_lifecycle_events_test extends TestCase
 		);
 
 		$this->assertMatchesRegularExpression(
-			'/<dd>.*<div class="gallery-image-addon-fields">\s*\{% EVENT phpbbgallery_core_edit_image_addfields %\}\s*<\/div>\s*<\/dd>/s',
+			'/<dd>.*\{% EVENT phpbbgallery_core_edit_image_addfields %\}\s*<\/dd>/s',
 			$template
 		);
+		$this->assertStringNotContainsString('gallery-image-addon-fields', $template);
 	}
 
 	private function extract_method(string $path, string $start_marker, string $end_marker): string
