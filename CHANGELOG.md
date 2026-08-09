@@ -55,6 +55,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added an optional plain-text image subtitle across resumable uploads and editing, with a permission-aware search link that removes display parentheses at request time without storing a duplicate cleaned column.
 - Added a generic authorization and accounting event before serving original image sources, while keeping medium images and thumbnails unaffected.
 - Added permanent BBPoints purchases for original image files, including confirmation, direct-link enforcement, atomic contributor shares and download counters.
+- Added an optional multi-image upload control that applies the first image's BBPoints contributors to the complete batch, with synchronized locked editors and server-side enforcement.
 - Added an ACP editor for global and inherited per-album BBPoints image policies plus a confirmed, resumable and idempotent historical reward synchronization.
 - Added BBPoints image-reward lifecycle hooks for finalized uploads, ACP imports, moderation approvals and author changes without coupling Gallery Core to BBPoints.
 - Added the independent BBPoints Images add-on foundation with inherited per-album upload rewards and source costs plus dedicated contributor, reward, purchase, source-hash and download-counter storage.
