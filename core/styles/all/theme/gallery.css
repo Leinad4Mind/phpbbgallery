@@ -170,6 +170,24 @@ input.autowidth-gallery {
 	white-space: nowrap;
 }
 
+.gallery-album-section-title
+{
+	clear: both;
+	margin-top: 1em;
+}
+
+.gallery-personal-album
+{
+	border-color: rgba(73, 126, 157, 0.42) !important;
+	box-shadow: inset 3px 0 0 rgba(73, 126, 157, 0.32);
+}
+
+.gallery-personal-album-icon
+{
+	margin-right: 3px;
+	opacity: 0.72;
+}
+
 .polaroid_img_container {
 	height: 120px;
 	width: 242px;

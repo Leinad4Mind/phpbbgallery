@@ -1,13 +1,16 @@
 {% for albumrow in albumrow %}
 
-	{% if (albumrow.S_IS_CAT and not albumrow.S_FIRST_ROW) or albumrow.S_NO_CAT %}
+	{% if (albumrow.S_IS_CAT and not albumrow.S_FIRST_ROW) or albumrow.S_NO_CAT or (albumrow.S_PERSONAL_SECTION_START and not albumrow.S_FIRST_ROW) %}
 			</ul>
 
 			</div>
 		</div>
 	{% endif %}
+	{% if albumrow.S_PUBLIC_SECTION_START or albumrow.S_PERSONAL_SECTION_START %}
+		<h2 class="gallery-album-section-title"><i class="icon fa {% if albumrow.S_PERSONAL_SECTION_START %}fa-user{% else %}fa-folder-open{% endif %} fa-fw" aria-hidden="true"></i> {% if albumrow.S_PERSONAL_SECTION_START %}{{ lang('PERSONAL_ALBUMS') }}{% else %}{{ lang('PUBLIC_ALBUMS') }}{% endif %}</h2>
+	{% endif %}
 
-	{% if albumrow.S_IS_CAT or albumrow.S_FIRST_ROW or albumrow.S_NO_CAT %}
+	{% if albumrow.S_IS_CAT or albumrow.S_FIRST_ROW or albumrow.S_NO_CAT or albumrow.S_PERSONAL_SECTION_START %}
 		<div class="forabg">
 			<div class="inner">
 			<ul class="topiclist">
@@ -23,7 +26,7 @@
 	{% endif %}
 
 	{% if not albumrow.S_IS_CAT %}
-		<li class="row">{{ albumrow.ALBUM_FOLDER_IMG_SRC }}
+		<li class="row{% if albumrow.S_PERSONAL_ALBUM %} gallery-personal-album{% endif %}">{{ albumrow.ALBUM_FOLDER_IMG_SRC }}
 			<dl class="row-item {{ albumrow.ALBUM_IMG_STYLE }}">
 				<dt title="{{ albumrow.ALBUM_FOLDER_IMG_ALT }}">
 					{% if albumrow.ALBUM_IMAGE %}<span class="forum-image"><img src="{{ T_IMAGES_PATH }}{{ albumrow.ALBUM_IMAGE }}" alt="{{ albumrow.ALBUM_NAME }}" /></span>{% endif %}

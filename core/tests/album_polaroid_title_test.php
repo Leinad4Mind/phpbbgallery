@@ -34,4 +34,26 @@ final class album_polaroid_title_test extends TestCase
 		);
 		$this->assertStringContainsString('text-overflow: ellipsis;', $css);
 	}
+
+	public function test_gallery_index_separates_public_and_personal_albums(): void
+	{
+		$display = (string) file_get_contents(dirname(__DIR__) . '/album/display.php');
+		$this->assertStringContainsString('$index_section = !$root_data ? \'public\'', $display);
+		$this->assertStringContainsString("'S_PUBLIC_SECTION_START'", $display);
+		$this->assertStringContainsString("'S_PERSONAL_SECTION_START'", $display);
+		$this->assertStringContainsString("'S_PERSONAL_ALBUM'", $display);
+
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			foreach (['albumlist_polaroid.html', 'albumlist_body.html'] as $filename)
+			{
+				$template = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/' . $filename);
+				$this->assertStringContainsString('S_PUBLIC_SECTION_START', $template, $style . '/' . $filename);
+				$this->assertStringContainsString('S_PERSONAL_SECTION_START', $template, $style . '/' . $filename);
+				$this->assertStringContainsString("lang('PUBLIC_ALBUMS')", $template, $style . '/' . $filename);
+				$this->assertStringContainsString("lang('PERSONAL_ALBUMS')", $template, $style . '/' . $filename);
+				$this->assertStringContainsString('gallery-personal-album', $template, $style . '/' . $filename);
+			}
+		}
+	}
 }

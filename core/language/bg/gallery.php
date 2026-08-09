@@ -211,7 +211,9 @@ $lang = array_merge($lang, [
 	'OWN_IMAGES'         => 'Вашите изображения',
 
 	'PERCENT'                 => '%',
+	'PERSONAL_ALBUM'          => 'Личен албум',
 	'PERSONAL_ALBUMS'         => 'Лични албуми',
+	'PUBLIC_ALBUMS'           => 'Публични албуми',
 	'PLUGIN_CLASS_MISSING'    => 'Грешка в добавката на галерията: класът „%s“ не беше намерен!',
 	'POST_COMMENT'            => 'Публикувай коментар',
 	'POST_COMMENT_RATE_IMAGE' => 'Публикувай коментар и оцени изображението',

@@ -376,6 +376,8 @@ class display
 		$album_rows = $subalbums = $album_ids = $album_ids_moderator = $album_moderators = $active_album_ary = [];
 		$parent_id = $visible_albums = 0;
 		$mode = $this->album_mode;
+		$index_section = !$root_data ? 'public' : (($root_data === 'personal' && $mode !== 'personal') ? 'personal' : '');
+		$section_start_pending = $index_section !== '';
 		// Mark albums read?
 		$mark_read = $this->request->variable('mark', '');
 
@@ -630,6 +632,9 @@ class display
 			{
 				$this->template->assign_block_vars('albumrow', [
 					'S_IS_CAT'				=> true,
+					'S_PERSONAL_ALBUM'		=> (int) $row['album_user_id'] > (int) \phpbbgallery\core\block::PUBLIC_ALBUM,
+					'S_PUBLIC_SECTION_START'	=> $section_start_pending && $index_section === 'public',
+					'S_PERSONAL_SECTION_START'	=> $section_start_pending && $index_section === 'personal',
 					'ALBUM_ID'				=> $row['album_id'],
 					'ALBUM_NAME'			=> $row['album_name'],
 					'ALBUM_DESC'			=> generate_text_for_display($row['album_desc'], $row['album_desc_uid'], $row['album_desc_bitfield'], $row['album_desc_options']),
@@ -638,6 +643,7 @@ class display
 					'ALBUM_IMAGE'			=> ($row['album_image']) ? $row['album_image'] : '',
 					'U_VIEWALBUM'			=> $this->helper->route('phpbbgallery_core_album', ['album_id' => (int) $row['album_id']]),
 				]);
+				$section_start_pending = false;
 
 				continue;
 			}
@@ -758,6 +764,9 @@ class display
 
 			$this->template->assign_block_vars('albumrow', [
 				'S_IS_CAT'			=> false,
+				'S_PERSONAL_ALBUM'	=> (int) $row['album_user_id'] > (int) \phpbbgallery\core\block::PUBLIC_ALBUM,
+				'S_PUBLIC_SECTION_START'	=> $section_start_pending && $index_section === 'public',
+				'S_PERSONAL_SECTION_START'	=> $section_start_pending && $index_section === 'personal',
 				'S_NO_CAT'			=> $catless && !$last_catless,
 				'S_LOCKED_ALBUM'	=> ($row['album_status'] == (int) \phpbbgallery\core\block::ALBUM_LOCKED) ? true : false,
 				'S_UNREAD_ALBUM'	=> ($album_unread) ? true : false,
@@ -790,6 +799,7 @@ class display
 
 				'U_VIEWALBUM'			=> $this->helper->route('phpbbgallery_core_album', ['album_id' => (int) $row['album_id']]),
 			]);
+			$section_start_pending = false;
 
 			// Assign subforums loop for style authors
 			foreach ($subalbums_list as $subalbum)

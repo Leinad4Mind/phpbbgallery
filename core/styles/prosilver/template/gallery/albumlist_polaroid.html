@@ -1,17 +1,22 @@
 {% for albumrow in albumrow %}
+	{% if albumrow.S_PUBLIC_SECTION_START or albumrow.S_PERSONAL_SECTION_START %}
+		<span class="clear"></span>
+		<h2 class="gallery-album-section-title"><i class="icon fa {% if albumrow.S_PERSONAL_SECTION_START %}fa-user{% else %}fa-folder-open{% endif %} fa-fw" aria-hidden="true"></i> {% if albumrow.S_PERSONAL_SECTION_START %}{{ lang('PERSONAL_ALBUMS') }}{% else %}{{ lang('PUBLIC_ALBUMS') }}{% endif %}</h2>
+	{% endif %}
 	{% if (albumrow.S_IS_CAT and not albumrow.S_FIRST_ROW) or albumrow.S_NO_CAT %}
 		<span class="clear"></span>
 	{% endif %}
 
-	{% if albumrow.S_IS_CAT or albumrow.S_FIRST_ROW or albumrow.S_NO_CAT %}
+	{% if albumrow.S_IS_CAT or ((albumrow.S_FIRST_ROW or albumrow.S_NO_CAT) and not albumrow.S_PUBLIC_SECTION_START and not albumrow.S_PERSONAL_SECTION_START) %}
 		<span class="clear"></span>
 		<br />
 		<h2{% if albumrow.S_FIRST_ROW %} class="invade-linklist"{% endif %}>{% if albumrow.S_IS_CAT %}<a href="{{ albumrow.U_VIEWALBUM }}">{{ albumrow.ALBUM_NAME }}</a>{% else %}{{ lang('ALBUM') }}{% endif %}</h2>
 	{% endif %}
 
 	{% if not albumrow.S_IS_CAT %}
-		<div class="polaroid">
+		<div class="polaroid{% if albumrow.S_PERSONAL_ALBUM %} gallery-personal-album{% endif %}">
 			<p class="gallery-album-title">
+				{% if albumrow.S_PERSONAL_ALBUM %}<i class="icon fa fa-user fa-fw gallery-personal-album-icon" title="{{ lang('PERSONAL_ALBUM') }}" aria-hidden="true"></i><span class="sr-only">{{ lang('PERSONAL_ALBUM') }}{{ lang('COLON') }}</span>{% endif %}
 				<a href="{{ albumrow.U_VIEWALBUM }}"{% if S_PERSONAL_GALLERY and albumrow.ALBUM_COLOUR %} style="color: {{ albumrow.ALBUM_COLOUR }};"{% endif %}>{{ albumrow.ALBUM_NAME }}</a>
 			</p>
 			<hr />

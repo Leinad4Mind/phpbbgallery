@@ -211,7 +211,9 @@ $lang = array_merge($lang, [
 	'OWN_IMAGES'         => 'Je eigen afbeeldingen',
 
 	'PERCENT'                 => '%',
+	'PERSONAL_ALBUM'          => 'Persoonlijk album',
 	'PERSONAL_ALBUMS'         => 'Persoonlijke albums',
+	'PUBLIC_ALBUMS'           => 'Openbare albums',
 	'PLUGIN_CLASS_MISSING'    => 'Galerij Plugin fout: Class “%s“ kan niet gevonden worden!',
 	'POST_COMMENT'            => 'Plaats een reactie',
 	'POST_COMMENT_RATE_IMAGE' => 'Plaats een reactie en beoordeel de afbeelding',
