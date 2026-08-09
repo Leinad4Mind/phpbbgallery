@@ -662,6 +662,28 @@ class image
 			]);
 		}
 
+		$canonical_url = $this->url->get_uri($this->helper->route(
+			'phpbbgallery_core_image',
+			['image_id' => (int) $image_id]
+		));
+		$this->template->assign_vars([
+			'S_GALLERY_OPEN_GRAPH' => true,
+			'U_CANONICAL' => $canonical_url,
+			'GALLERY_OG_URL' => $canonical_url,
+			'GALLERY_OG_TITLE' => (string) $this->data['image_name'],
+			'GALLERY_OG_DESCRIPTION' => $this->build_open_graph_description(
+				$hide_private_data ? '' : $image_desc,
+				$hide_private_data ? '' : $image_subtitle,
+				(string) $this->data['image_name'],
+				(string) $album_data['album_name']
+			),
+			'GALLERY_OG_IMAGE' => $this->url->get_uri($this->helper->route(
+				'phpbbgallery_core_image_file_medium',
+				['image_id' => (int) $image_id]
+			)),
+			'GALLERY_OG_IMAGE_ALT' => (string) $this->data['image_name'],
+		]);
+
 		// Add ratings
 		if ($this->gallery_config->get('allow_rates'))
 		{
@@ -2004,5 +2026,36 @@ class image
 	protected function normalize_sort_key(string $sort_key, array $sort_by_sql): string
 	{
 		return isset($sort_by_sql[$sort_key]) ? $sort_key : 't';
+	}
+
+	/**
+	 * Build bounded plain-text metadata without leaking hidden image details.
+	 */
+	private function build_open_graph_description(
+		string $description,
+		string $subtitle,
+		string $image_name,
+		string $album_name
+	): string
+	{
+		foreach ([$description, $subtitle, $image_name, $album_name] as $candidate)
+		{
+			$plain_text = html_entity_decode(
+				(string) preg_replace('#<[^>]*>#u', ' ', $candidate),
+				ENT_QUOTES | ENT_HTML5,
+				'UTF-8'
+			);
+			$plain_text = trim((string) preg_replace('#\s+#u', ' ', $plain_text));
+			if ($plain_text === '')
+			{
+				continue;
+			}
+
+			return mb_strlen($plain_text, 'UTF-8') > 300
+				? mb_substr($plain_text, 0, 297, 'UTF-8') . '...'
+				: $plain_text;
+		}
+
+		return '';
 	}
 }

@@ -95,6 +95,63 @@ final class controller_image_types_test extends TestCase
 		$this->assertSame('n', $normalizer->invoke($controller, 'n', $sort_columns));
 	}
 
+	public function test_open_graph_description_is_plain_bounded_and_uses_safe_fallbacks(): void
+	{
+		$reflection = new \ReflectionClass(image::class);
+		$controller = $reflection->newInstanceWithoutConstructor();
+		$builder = $reflection->getMethod('build_open_graph_description');
+
+		$this->assertSame(
+			'Gallery description & details',
+			$builder->invoke($controller, '<strong>Gallery</strong>  description &amp; details', '', 'Image name', 'Album')
+		);
+		$this->assertSame(
+			'Private image name',
+			$builder->invoke($controller, '', '', 'Private image name', 'Private album')
+		);
+		$this->assertSame(
+			'Album fallback',
+			$builder->invoke($controller, '', '', '', 'Album fallback')
+		);
+
+		$bounded = $builder->invoke($controller, str_repeat("\u{00E1}", 400), '', '', '');
+		$this->assertSame(300, mb_strlen($bounded, 'UTF-8'));
+		$this->assertStringEndsWith('...', $bounded);
+	}
+
+	public function test_image_pages_assign_share_safe_open_graph_metadata_after_privacy_checks(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/image.php');
+		$privacy_position = strpos($source, '$hide_private_data = $hide_private_data ||');
+		$metadata_position = strpos($source, "'S_GALLERY_OPEN_GRAPH' => true");
+
+		$this->assertNotFalse($privacy_position);
+		$this->assertNotFalse($metadata_position);
+		$this->assertGreaterThan($privacy_position, $metadata_position);
+		$this->assertStringContainsString("'U_CANONICAL' => \$canonical_url", $source);
+		$this->assertStringContainsString("'phpbbgallery_core_image_file_medium'", $source);
+		$this->assertStringContainsString("\$hide_private_data ? '' : \$image_desc", $source);
+		$this->assertStringContainsString("\$hide_private_data ? '' : \$image_subtitle", $source);
+	}
+
+	public function test_gallery_open_graph_template_declares_required_social_metadata(): void
+	{
+		$template = (string) file_get_contents(
+			dirname(__DIR__) . '/styles/all/template/event/overall_header_head_append.html'
+		);
+
+		$this->assertStringContainsString('{% if S_GALLERY_OPEN_GRAPH %}', $template);
+		foreach (['og:url', 'og:title', 'og:description', 'og:image', 'og:image:alt'] as $property)
+		{
+			$this->assertStringContainsString('property="' . $property . '"', $template, $property);
+		}
+		foreach (['twitter:card', 'twitter:title', 'twitter:description', 'twitter:image'] as $name)
+		{
+			$this->assertStringContainsString('name="' . $name . '"', $template, $name);
+		}
+		$this->assertGreaterThanOrEqual(8, substr_count($template, "|e('html_attr')"));
+	}
+
 	public function test_image_click_action_is_deterministic_for_every_configuration(): void
 	{
 		require_once dirname(__DIR__, 4) . '/vendor/symfony/routing/RequestContextAwareInterface.php';

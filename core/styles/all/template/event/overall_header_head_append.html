@@ -1,2 +1,14 @@
 {% INCLUDECSS '@phpbbgallery_core/gallery.css' %}
 {% INCLUDECSS '@phpbbgallery_core/default.css' %}
+{% if S_GALLERY_OPEN_GRAPH %}
+<meta property="og:type" content="article">
+<meta property="og:url" content="{{ GALLERY_OG_URL|e('html_attr') }}">
+<meta property="og:title" content="{{ GALLERY_OG_TITLE|e('html_attr') }}">
+{% if GALLERY_OG_DESCRIPTION %}<meta property="og:description" content="{{ GALLERY_OG_DESCRIPTION|e('html_attr') }}">{% endif %}
+<meta property="og:image" content="{{ GALLERY_OG_IMAGE|e('html_attr') }}">
+<meta property="og:image:alt" content="{{ GALLERY_OG_IMAGE_ALT|e('html_attr') }}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ GALLERY_OG_TITLE|e('html_attr') }}">
+{% if GALLERY_OG_DESCRIPTION %}<meta name="twitter:description" content="{{ GALLERY_OG_DESCRIPTION|e('html_attr') }}">{% endif %}
+<meta name="twitter:image" content="{{ GALLERY_OG_IMAGE|e('html_attr') }}">
+{% endif %}
