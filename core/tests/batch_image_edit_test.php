@@ -201,6 +201,8 @@ final class batch_image_edit_test extends TestCase
 		$this->assertStringContainsString('batch_editor::apply_sequence', $source);
 		$this->assertStringContainsString('parse_image_description(', $source);
 		$this->assertStringContainsString('if ($album_id < 1)', $source);
+		$this->assertStringContainsString('phpbbgallery.core.image.batch_edit_validate', $source);
+		$this->assertStringContainsString('phpbbgallery.core.image.batch_edit_display', $source);
 	}
 
 	public function test_controller_validates_complete_posts_limits_and_bbcode_before_persisting(): void
@@ -246,6 +248,7 @@ final class batch_image_edit_test extends TestCase
 			$this->assertStringContainsString('name="image_num"', $editor, $style);
 			$this->assertStringContainsString('S_FORM_TOKEN', $editor, $style);
 			$this->assertStringContainsString('data-gallery-character-counter', $editor, $style);
+			$this->assertStringContainsString('phpbbgallery_core_moderate_batch_edit_image_fields', $editor, $style);
 		}
 	}
 

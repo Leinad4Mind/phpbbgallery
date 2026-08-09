@@ -831,6 +831,27 @@ class moderate
 			];
 		}
 
+		if ($submit)
+		{
+			$validation_error = $error;
+			/**
+			 * Allow add-ons to validate their fields before a batch image edit is persisted.
+			 *
+			 * @event phpbbgallery.core.image.batch_edit_validate
+			 * @var string validation_error Existing validation error or an empty string
+			 * @var array  image_ids        Authorized image identifiers in display order
+			 * @var array  images_by_album  Authorized image identifiers grouped by album
+			 * @var array  editable_rows    Submitted and normalized Core values keyed by image ID
+			 * @since 4.1.0
+			 */
+			$vars = ['validation_error', 'image_ids', 'images_by_album', 'editable_rows'];
+			extract($this->dispatcher->trigger_event(
+				'phpbbgallery.core.image.batch_edit_validate',
+				compact($vars)
+			));
+			$error = (string) $validation_error;
+		}
+
 		if ($submit && $error === '')
 		{
 			$image_updates = [];
@@ -869,16 +890,33 @@ class moderate
 		}
 
 		add_form_key('gallery');
-		foreach ($editable_rows as $image_id => $editable_row)
+		foreach ($editable_rows as $image_index => $editable_row)
 		{
+			$image_id = (int) $image_index;
 			$image_data = $editable_row['data'];
-			$this->template->assign_block_vars('batch_image', [
+			$image_template_vars = [
 				'IMAGE_ID'       => $image_id,
 				'IMAGE_NAME'     => $editable_row['name'],
 				'IMAGE_SUBTITLE' => $editable_row['subtitle'],
 				'IMAGE_DESC'     => $editable_row['description'],
 				'U_IMAGE'        => $this->helper->route('phpbbgallery_core_image_file_mini', ['image_id' => $image_id]),
-			]);
+			];
+
+			/**
+			 * Allow add-ons to enrich one authorized row in the batch image editor.
+			 *
+			 * @event phpbbgallery.core.image.batch_edit_display
+			 * @var int   image_id           Image identifier
+			 * @var array image_data         Current image database row
+			 * @var array image_template_vars Values assigned to the batch image template block
+			 * @since 4.1.0
+			 */
+			$vars = ['image_id', 'image_data', 'image_template_vars'];
+			extract($this->dispatcher->trigger_event(
+				'phpbbgallery.core.image.batch_edit_display',
+				compact($vars)
+			));
+			$this->template->assign_block_vars('batch_image', $image_template_vars);
 		}
 
 		$this->template->assign_vars([
