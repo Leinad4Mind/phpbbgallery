@@ -46,6 +46,8 @@ use phpbbgallery\core\migrations\source_access_policy;
 use phpbbgallery\core\migrations\source_download_permission;
 use phpbbgallery\core\migrations\inherit_source_download_permission;
 use phpbbgallery\core\migrations\image_dimensions;
+use phpbbgallery\core\migrations\image_orientation;
+use phpbbgallery\core\migrations\index_album_layout;
 
 class migration_integrity_test extends TestCase
 {
@@ -86,6 +88,8 @@ class migration_integrity_test extends TestCase
 		source_access_policy::class,
 		inherit_source_download_permission::class,
 		image_dimensions::class,
+		image_orientation::class,
+		index_album_layout::class,
 	];
 
 	private array $temp_directories = [];
@@ -491,6 +495,22 @@ class migration_integrity_test extends TestCase
 			['config.remove', ['phpbb_gallery_ajax_navigation']],
 		], $migration->revert_data());
 		$this->assertStringContainsString("'ajax_navigation'", (string) file_get_contents(dirname(__DIR__) . '/config.php'));
+	}
+
+	public function test_index_album_layout_migration_adds_a_reversible_card_default(): void
+	{
+		$migration = (new \ReflectionClass(index_album_layout::class))->newInstanceWithoutConstructor();
+
+		$this->assertSame([
+			'\\phpbbgallery\\core\\migrations\\image_dimensions',
+			'\\phpbbgallery\\core\\migrations\\image_orientation',
+		], index_album_layout::depends_on());
+		$this->assertSame([
+			['config.add', ['phpbb_gallery_index_album_layout', 'cards']],
+		], $migration->update_data());
+		$this->assertSame([
+			['config.remove', ['phpbb_gallery_index_album_layout']],
+		], $migration->revert_data());
 	}
 
 	public function test_viewtopic_profile_migration_restores_reversible_switches(): void
@@ -1061,6 +1081,8 @@ class migration_integrity_test extends TestCase
 			'source_access_policy.php',
 			'inherit_source_download_permission.php',
 			'image_dimensions.php',
+			'image_orientation.php',
+			'index_album_layout.php',
 		] as $migration)
 		{
 			require_once dirname(__DIR__) . '/migrations/' . $migration;

@@ -1,0 +1,62 @@
+<div class="gallery-modern-album-list">
+{% for albumrow in albumrow %}
+	{% if albumrow.S_PUBLIC_SECTION_START or albumrow.S_PERSONAL_SECTION_START %}
+		<h2 class="gallery-modern-section-title"><i class="icon fa {% if albumrow.S_PERSONAL_SECTION_START %}fa-user{% else %}fa-folder-open{% endif %} fa-fw" aria-hidden="true"></i> {% if albumrow.S_PERSONAL_SECTION_START %}{{ lang('PERSONAL_ALBUMS') }}{% else %}{{ lang('PUBLIC_ALBUMS') }}{% endif %}</h2>
+	{% endif %}
+
+	{% if albumrow.S_IS_CAT %}
+		<section class="gallery-modern-category">
+			<h3><i class="icon fa fa-folder-open fa-fw" aria-hidden="true"></i> <a href="{{ albumrow.U_VIEWALBUM }}">{{ albumrow.ALBUM_NAME }}</a></h3>
+			{% if albumrow.ALBUM_DESC %}<div class="gallery-modern-category-description">{{ albumrow.ALBUM_DESC }}</div>{% endif %}
+		</section>
+	{% else %}
+		<article class="gallery-modern-album{% if albumrow.S_PERSONAL_ALBUM %} gallery-personal-album{% endif %}{% if albumrow.S_UNREAD_ALBUM %} gallery-modern-album-unread{% endif %}">
+			<div class="gallery-modern-album-main">
+				<a class="gallery-modern-album-visual" href="{{ albumrow.U_VIEWALBUM }}" aria-label="{{ lang('VIEW_ALBUM') }}{{ lang('COLON') }} {{ albumrow.ALBUM_NAME }}">
+					{% if albumrow.ALBUM_IMAGE %}
+						<img src="{{ T_IMAGES_PATH }}{{ albumrow.ALBUM_IMAGE }}" alt="">
+					{% elseif albumrow.LAST_IMAGE_TIME and albumrow.UC_THUMBNAIL %}
+						<img src="{{ albumrow.UC_THUMBNAIL }}" alt="">
+					{% else %}
+						<i class="icon fa {% if albumrow.S_LOCKED_ALBUM %}fa-lock{% elseif albumrow.S_UNREAD_ALBUM %}fa-folder-open{% else %}fa-folder{% endif %} fa-fw" aria-hidden="true"></i>
+					{% endif %}
+				</a>
+				<div class="gallery-modern-album-content">
+					<a href="{{ albumrow.U_VIEWALBUM }}" class="gallery-modern-album-title"{% if S_PERSONAL_GALLERY and albumrow.ALBUM_COLOUR %} style="color: {{ albumrow.ALBUM_COLOUR }};"{% endif %}>{{ albumrow.ALBUM_NAME }}</a>
+					{% if albumrow.ALBUM_DESC %}<div class="gallery-modern-album-description">{{ albumrow.ALBUM_DESC }}</div>{% endif %}
+					{% if albumrow.MODERATORS %}
+						<div class="gallery-modern-album-details"><span><i class="icon fa fa-user fa-fw" aria-hidden="true"></i> <strong>{{ albumrow.L_MODERATOR_STR }}{{ lang('COLON') }}</strong> {{ albumrow.MODERATORS }}</span></div>
+					{% endif %}
+					{% if albumrow.subalbum|length and albumrow.S_LIST_SUBALBUMS %}
+						<div class="gallery-modern-subalbums">
+							{% for subalbum in albumrow.subalbum %}
+								<a href="{{ subalbum.U_SUBALBUM }}" class="subforum{% if subalbum.S_UNREAD %} unread{% else %} read{% endif %}" title="{% if subalbum.S_UNREAD %}{{ lang('NEW_IMAGES') }}{% else %}{{ lang('NO_NEW_IMAGES') }}{% endif %}"><i class="icon fa fa-folder fa-fw" aria-hidden="true"></i> {{ subalbum.SUBALBUM_NAME }}</a>
+							{% endfor %}
+						</div>
+					{% endif %}
+				</div>
+			</div>
+			<div class="gallery-modern-album-summary">
+				<div class="gallery-modern-image-count">
+					<strong>{{ albumrow.IMAGES }}{% if albumrow.UNAPPROVED_IMAGES %}<span class="reported-images-number"> + {{ albumrow.UNAPPROVED_IMAGES }}</span>{% endif %}</strong>
+					<span>{{ lang('IMAGES') }}</span>
+				</div>
+				<div class="gallery-modern-last-image">
+					{% if albumrow.LAST_IMAGE_TIME %}
+						{% if albumrow.UC_FAKE_THUMBNAIL %}<a href="{{ albumrow.UC_IMAGE_URL }}"><img src="{{ albumrow.UC_FAKE_THUMBNAIL }}" alt=""></a>{% endif %}
+						<div class="gallery-modern-last-image-details">
+							<strong>{{ lang('LAST_IMAGE') }}</strong>
+							<span>{{ lang('POST_BY_AUTHOR') }} {{ albumrow.LAST_USER_FULL }}</span><br>
+							<time>{{ albumrow.LAST_IMAGE_TIME }}</time>
+						</div>
+					{% else %}
+						<span>{{ lang('NO_IMAGES') }}</span>
+					{% endif %}
+				</div>
+			</div>
+		</article>
+	{% endif %}
+{% else %}
+	<div class="panel"><div class="inner"><strong>{{ lang('NO_ALBUMS') }}</strong></div></div>
+{% endfor %}
+</div>

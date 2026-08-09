@@ -130,7 +130,13 @@ function toggleElement(oElement)
 	</div>
 {% endif %}
 
-{% include 'gallery/albumlist_polaroid.html' %}
+{% if GALLERY_INDEX_ALBUM_LAYOUT == 'classic' %}
+	{% include 'gallery/albumlist_body.html' %}
+{% elseif GALLERY_INDEX_ALBUM_LAYOUT == 'modern' %}
+	{% include '@phpbbgallery_core/gallery/albumlist_modern.html' %}
+{% else %}
+	{% include 'gallery/albumlist_polaroid.html' %}
+{% endif %}
 
 
 {% if pagination|length or TOTAL_ALBUMS %}

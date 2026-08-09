@@ -97,6 +97,9 @@ final class acp_config_types_test extends TestCase
 		$this->assertArrayHasKey('storage_layout', $display['vars']);
 		$this->assertSame('custom', $display['vars']['storage_layout']['type']);
 		$this->assertSame('storage_layout_select', $display['vars']['storage_layout']['method']);
+		$this->assertArrayHasKey('index_album_layout', $display['vars']);
+		$this->assertSame('custom', $display['vars']['index_album_layout']['type']);
+		$this->assertSame('index_album_layout_select', $display['vars']['index_album_layout']['method']);
 		$this->assertArrayNotHasKey('allow_contests', $display['vars']);
 		$config_keys = array_keys($display['vars']);
 		$this->assertGreaterThan(
@@ -129,6 +132,23 @@ final class acp_config_types_test extends TestCase
 		$this->assertStringContainsString('source/' . $filename, $html);
 		$this->assertStringContainsString('source/7/71/' . $filename, $html);
 		$this->assertStringContainsString('STORAGE_LAYOUT_HELP_CHANGE', $html);
+	}
+
+	public function test_index_album_layout_selector_exposes_all_three_layouts(): void
+	{
+		$language = $this->createMock(\phpbb\language\language::class);
+		$language->method('lang')->willReturnCallback(static fn(string $key): string => $key);
+		$module = new config_module();
+		$module->language = $language;
+
+		$html = $module->index_album_layout_select('modern', 'index_album_layout');
+
+		$this->assertStringContainsString('value="classic"', $html);
+		$this->assertStringContainsString('value="modern" selected="selected"', $html);
+		$this->assertStringContainsString('value="cards"', $html);
+		$this->assertStringContainsString('INDEX_ALBUM_LAYOUT_CLASSIC', $html);
+		$this->assertStringContainsString('INDEX_ALBUM_LAYOUT_MODERN', $html);
+		$this->assertStringContainsString('INDEX_ALBUM_LAYOUT_CARDS', $html);
 	}
 
 	public function test_storage_layout_help_assets_are_accessible_and_modal(): void

@@ -194,6 +194,214 @@ input.autowidth-gallery {
 	opacity: 0.72;
 }
 
+.gallery-modern-album-list
+{
+	clear: both;
+	display: grid;
+	gap: 12px;
+	margin: 0 0 18px;
+}
+
+.gallery-modern-section-title
+{
+	clear: both;
+	color: #2880b2;
+	margin: 18px 0 10px;
+}
+
+.gallery-modern-category
+{
+	border-bottom: 2px solid rgba(40, 128, 178, 0.38);
+	margin-top: 6px;
+	padding: 8px 4px 6px;
+}
+
+.gallery-modern-category h3,
+.gallery-modern-album h3
+{
+	margin: 0;
+}
+
+.gallery-modern-category-description
+{
+	margin-top: 4px;
+}
+
+.gallery-modern-album
+{
+	background: rgba(255, 255, 255, 0.58);
+	border: 1px solid rgba(93, 116, 132, 0.24);
+	border-radius: 5px;
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(245px, 32%);
+	overflow: hidden;
+}
+
+.gallery-modern-album-main
+{
+	align-items: center;
+	display: grid;
+	gap: 14px;
+	grid-template-columns: 76px minmax(0, 1fr);
+	min-width: 0;
+	padding: 14px;
+}
+
+.gallery-modern-album-visual
+{
+	align-items: center;
+	background: rgba(40, 128, 178, 0.08);
+	border-radius: 4px;
+	display: flex;
+	height: 68px;
+	justify-content: center;
+	overflow: hidden;
+	width: 76px;
+}
+
+.gallery-modern-album-visual img
+{
+	max-height: 68px;
+	max-width: 76px;
+	object-fit: contain;
+}
+
+.gallery-modern-album-visual .fa
+{
+	color: #2880b2;
+	font-size: 30px;
+}
+
+.gallery-modern-album-unread .gallery-modern-album-visual
+{
+	background: rgba(40, 128, 178, 0.18);
+}
+
+.gallery-modern-album-content
+{
+	min-width: 0;
+}
+
+.gallery-modern-album-title
+{
+	display: inline-block;
+	font-size: 1.18em;
+	font-weight: bold;
+	margin-bottom: 3px;
+}
+
+.gallery-modern-album-description
+{
+	margin: 2px 0 0;
+}
+
+.gallery-modern-album-details
+{
+	display: flex;
+	flex-wrap: wrap;
+	gap: 5px 14px;
+	margin-top: 7px;
+}
+
+.gallery-modern-subalbums
+{
+	display: flex;
+	flex-wrap: wrap;
+	gap: 5px 10px;
+	margin-top: 8px;
+}
+
+.gallery-modern-subalbums a
+{
+	white-space: nowrap;
+}
+
+.gallery-modern-album-summary
+{
+	align-items: center;
+	border-inline-start: 1px solid rgba(93, 116, 132, 0.2);
+	display: grid;
+	gap: 12px;
+	grid-template-columns: auto minmax(0, 1fr);
+	padding: 12px 14px;
+}
+
+.gallery-modern-image-count
+{
+	min-width: 62px;
+	text-align: center;
+}
+
+.gallery-modern-image-count strong
+{
+	display: block;
+	font-size: 1.45em;
+	line-height: 1;
+}
+
+.gallery-modern-last-image
+{
+	align-items: center;
+	display: flex;
+	gap: 9px;
+	min-width: 0;
+}
+
+.gallery-modern-last-image img
+{
+	border-radius: 3px;
+	max-height: 50px;
+	max-width: 50px;
+	object-fit: contain;
+}
+
+.gallery-modern-last-image-details
+{
+	line-height: 1.35;
+	min-width: 0;
+}
+
+.gallery-modern-last-image-details strong
+{
+	display: block;
+}
+
+@media (max-width: 700px)
+{
+	.gallery-modern-album
+	{
+		grid-template-columns: 1fr;
+	}
+
+	.gallery-modern-album-summary
+	{
+		border-inline-start: 0;
+		border-top: 1px solid rgba(93, 116, 132, 0.2);
+	}
+}
+
+@media (max-width: 420px)
+{
+	.gallery-modern-album-main
+	{
+		align-items: start;
+		grid-template-columns: 52px minmax(0, 1fr);
+		padding: 11px;
+	}
+
+	.gallery-modern-album-visual
+	{
+		height: 48px;
+		width: 52px;
+	}
+
+	.gallery-modern-album-visual img
+	{
+		max-height: 48px;
+		max-width: 52px;
+	}
+}
+
 .polaroid_img_container {
 	height: 120px;
 	width: 242px;

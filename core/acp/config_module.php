@@ -69,6 +69,11 @@ class config_module
 		{
 			$error[] = $this->language->lang('INVALID_STORAGE_LAYOUT');
 		}
+		if (isset($cfg_array['index_album_layout'])
+			&& !in_array($cfg_array['index_album_layout'], \phpbbgallery\core\config::index_album_layouts(), true))
+		{
+			$error[] = $this->language->lang('INVALID_INDEX_ALBUM_LAYOUT');
+		}
 		if (!empty($cfg_array['allow_avif']) && !\phpbbgallery\core\file\file::supports_avif())
 		{
 			$error[] = $this->language->lang('AVIF_NOT_SUPPORTED');
@@ -484,6 +489,7 @@ class config_module
 				],
 
 				'INDEX_SETTINGS'	=> [
+					'index_album_layout'	=> ['lang' => 'INDEX_ALBUM_LAYOUT',	'validate' => 'string',	'type' => 'custom',	'explain' => true,	'method' => 'index_album_layout_select'],
 					'pegas_index_album'		=> ['lang' => 'PERSONAL_ALBUM_INDEX',	'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 					//'pegas_index_random'	=> ['lang'	=> 'RANDOM_ON_INDEX',		'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 					'pegas_index_rnd_count'	=> ['lang'	=> 'RANDOM_ON_INDEX_COUNT',	'validate' => 'int',	'type' => 'text:7:3'],
@@ -515,6 +521,33 @@ class config_module
 		$tpl .= "<label><input type=\"radio\" id=\"$key\" name=\"config[$key]\" value=\"0\" checked=\"checked\" disabled=\"disabled\"  class=\"radio\" /> " . $this->language->lang('NO') . '</label>';
 
 		return $tpl;
+	}
+
+	/**
+	 * Build the Gallery index album layout selector.
+	 */
+	public function index_album_layout_select(string $value, string $key): string
+	{
+		if (!isset($this->language))
+		{
+			global $phpbb_container;
+			$this->language = $phpbb_container->get('language');
+		}
+
+		if (!in_array($value, \phpbbgallery\core\config::index_album_layouts(), true))
+		{
+			$value = \phpbbgallery\core\config::INDEX_ALBUM_LAYOUT_CARDS;
+		}
+
+		$options = '';
+		foreach (\phpbbgallery\core\config::index_album_layouts() as $layout)
+		{
+			$selected = $layout === $value ? ' selected="selected"' : '';
+			$options .= '<option value="' . $layout . '"' . $selected . '>'
+				. $this->language->lang('INDEX_ALBUM_LAYOUT_' . strtoupper($layout)) . '</option>';
+		}
+
+		return '<select name="config[' . $key . ']" id="' . $key . '">' . $options . '</select>';
 	}
 
 	/**

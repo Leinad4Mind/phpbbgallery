@@ -13,6 +13,10 @@ namespace phpbbgallery\core;
 
 class config
 {
+	public const INDEX_ALBUM_LAYOUT_CLASSIC = 'classic';
+	public const INDEX_ALBUM_LAYOUT_MODERN = 'modern';
+	public const INDEX_ALBUM_LAYOUT_CARDS = 'cards';
+
 	private \phpbb\config\config $config;
 
 	private array $configs_array = [
@@ -67,6 +71,7 @@ class config
 		'hotlinking_domains'	=> 'anavaro.com',
 
 		'items_per_page'		=> 15,
+		'index_album_layout'	=> self::INDEX_ALBUM_LAYOUT_CARDS,
 
 		'jpg_quality'			=> 100,
 		'avif_quality'			=> 75,
@@ -187,6 +192,32 @@ class config
 		$tag = strtolower(trim((string) $this->get('bbcode_tag')));
 
 		return in_array($tag, ['image', 'galleryimage'], true) ? $tag : 'image';
+	}
+
+	/**
+	 * Return the supported Gallery index album layouts in ACP order.
+	 *
+	 * @return string[]
+	 */
+	public static function index_album_layouts(): array
+	{
+		return [
+			self::INDEX_ALBUM_LAYOUT_CLASSIC,
+			self::INDEX_ALBUM_LAYOUT_MODERN,
+			self::INDEX_ALBUM_LAYOUT_CARDS,
+		];
+	}
+
+	/**
+	 * Return a safe Gallery index album layout.
+	 */
+	public function get_index_album_layout(): string
+	{
+		$layout = (string) $this->get('index_album_layout');
+
+		return in_array($layout, self::index_album_layouts(), true)
+			? $layout
+			: self::INDEX_ALBUM_LAYOUT_CARDS;
 	}
 
 	/**

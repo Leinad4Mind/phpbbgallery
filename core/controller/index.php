@@ -142,6 +142,7 @@ class index
 			login_box();
 		}
 		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
+		$this->template->assign_var('GALLERY_INDEX_ALBUM_LAYOUT', $this->gallery_config->get_index_album_layout());
 		$this->display->display_albums(false, $this->config['load_moderators']);
 
 		if ($this->gallery_config->get('pegas_index_album'))
@@ -274,6 +275,7 @@ class index
 			login_box();
 		}
 		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
+		$this->template->assign_var('GALLERY_INDEX_ALBUM_LAYOUT', $this->gallery_config->get_index_album_layout());
 		$this->display->album_start = ($page - 1) * $this->gallery_config->get('items_per_page');
 		$this->display->album_limit = $this->gallery_config->get('items_per_page');
 		$this->display->album_mode = 'personal';
