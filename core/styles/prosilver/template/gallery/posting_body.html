@@ -177,9 +177,11 @@
 							<dd>{% include '@phpbbgallery_core/gallery/image_orientation_controls.html' %}</dd>
 						</dl>
 						{% endif %}
+						<div class="gallery-image-addon-fields">
+							{% EVENT phpbbgallery_core_edit_image_addfields %}
+						</div>
 					</dd>
 				</dl>
-				{% EVENT phpbbgallery_core_edit_image_addfields %}
 			{% endfor %}
 			{% EVENT phpbbgallery_core_edit_addfields %}
 		</fieldset>

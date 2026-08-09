@@ -122,6 +122,18 @@ final class addon_lifecycle_events_test extends TestCase
 		);
 	}
 
+	public function test_prosilver_upload_addon_fields_share_the_image_details_column(): void
+	{
+		$template = (string) file_get_contents(
+			dirname(__DIR__) . '/styles/prosilver/template/gallery/posting_body.html'
+		);
+
+		$this->assertMatchesRegularExpression(
+			'/<dd>.*<div class="gallery-image-addon-fields">\s*\{% EVENT phpbbgallery_core_edit_image_addfields %\}\s*<\/div>\s*<\/dd>/s',
+			$template
+		);
+	}
+
 	private function extract_method(string $path, string $start_marker, string $end_marker): string
 	{
 		$source = (string) file_get_contents($path);
