@@ -119,6 +119,15 @@ class main_module
 			$images = $state['images'];
 			$this->import_errors = $state['errors'];
 
+			$validation_error = '';
+			$vars = ['album_id', 'user_data', 'validation_error'];
+			extract($phpbb_dispatcher->trigger_event('phpbbgallery.acpimport.validate_import', compact($vars)));
+			if ($validation_error !== '')
+			{
+				trigger_error($validation_error . adm_back_link($this->u_action), E_USER_WARNING);
+				return;
+			}
+
 			$allowed_extensions = $this->get_allowed_extensions();
 			$available_images = $this->import_storage->get_images($allowed_extensions);
 			$images_loop = 0;
@@ -490,13 +499,34 @@ class main_module
 				return;
 			}
 
+			$validation_error = '';
+			/**
+			 * Allow add-ons to reject an import before its resumable state is
+			 * created and before any source file is copied.
+			 *
+			 * @event phpbbgallery.acpimport.validate_import
+			 * @var int    album_id        Validated destination album
+			 * @var array  user_data       Validated final image author
+			 * @var string validation_error Empty string or a user-facing error
+			 * @since 1.4.0
+			 */
+			$album_id = (int) $album_row['album_id'];
+			$user_data = $user_row;
+			$vars = ['album_id', 'user_data', 'validation_error'];
+			extract($phpbb_dispatcher->trigger_event('phpbbgallery.acpimport.validate_import', compact($vars)));
+			if ($validation_error !== '')
+			{
+				trigger_error($validation_error . adm_back_link($this->u_action), E_USER_WARNING);
+				return;
+			}
+
 			$start_time = time();
 			$import_schema = $this->import_storage->create_schema_id();
 			$filename = ($request->variable('filename', '') == 'filename') ? true : false;
 			$image_name = $request->variable('image_name', '', true);
 			$num_offset = max(0, $request->variable('image_num', 0));
 
-			if (!$this->create_import_schema($import_schema, $album_row['album_id'], $user_row, $start_time, $num_offset, 0, count($images), $image_name, $filename, $images))
+			if (!$this->create_import_schema($import_schema, $album_id, $user_data, $start_time, $num_offset, 0, count($images), $image_name, $filename, $images))
 			{
 				trigger_error('IMPORT_SCHEMA_WRITE_FAILED', E_USER_WARNING);
 				return;

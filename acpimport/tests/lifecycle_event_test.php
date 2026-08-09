@@ -56,4 +56,20 @@ final class lifecycle_event_test extends TestCase
 		$this->assertStringContainsString("\$sql_ary['image_width']", $source);
 		$this->assertStringContainsString("\$sql_ary['image_height']", $source);
 	}
+
+	public function test_import_can_be_rejected_before_resumable_state_or_file_work(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/acp/main_module.php');
+		$event = strpos($source, 'phpbbgallery.acpimport.validate_import');
+		$schema = strpos($source, '$this->import_storage->create_schema_id()', $event ?: 0);
+		$state = strpos($source, '$this->create_import_schema(', $schema ?: 0);
+
+		$this->assertIsInt($event);
+		$this->assertIsInt($schema);
+		$this->assertIsInt($state);
+		$this->assertLessThan($schema, $event);
+		$this->assertLessThan($state, $schema);
+		$this->assertStringContainsString("if (\$validation_error !== '')", $source);
+		$this->assertSame(2, substr_count($source, "trigger_event('phpbbgallery.acpimport.validate_import'"));
+	}
 }
