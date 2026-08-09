@@ -155,4 +155,25 @@ final class image_orientation_test extends TestCase
 		);
 		$this->assertStringNotContainsString('<dt><label for="same_name">', $template);
 	}
+
+	public function test_shared_upload_fields_look_disabled_while_remaining_submittable(): void
+	{
+		$root = dirname(__DIR__) . '/styles';
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$template = (string) file_get_contents($root . '/' . $style . '/template/gallery/posting_body.html');
+
+			$this->assertSame(1, substr_count($template, 'class="gallery-upload-details-form"'), $style);
+		}
+
+		$javascript = (string) file_get_contents($root . '/prosilver/template/gallery/posting_javascript.html');
+		$css = (string) file_get_contents($root . '/all/theme/gallery.css');
+
+		$this->assertStringContainsString('element.readOnly = true;', $javascript);
+		$this->assertStringContainsString('.gallery-upload-details-form input.readonly', $css);
+		$this->assertStringContainsString('.gallery-upload-details-form textarea.readonly', $css);
+		$this->assertStringContainsString('background-color: #eef0f3 !important;', $css);
+		$this->assertStringContainsString('cursor: not-allowed;', $css);
+		$this->assertStringContainsString('opacity: .68;', $css);
+	}
 }

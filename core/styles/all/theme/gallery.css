@@ -107,8 +107,13 @@ fieldset.gallery #format-buttons {
 	margin-top: 0;
 }
 
-fieldset.gallery input.readonly, fieldset.gallery textarea.readonly {
-	background: #DCDCDC;
+fieldset.gallery input.readonly,
+fieldset.gallery textarea.readonly,
+.gallery-upload-details-form input.readonly,
+.gallery-upload-details-form textarea.readonly {
+	background-color: #eef0f3 !important;
+	cursor: not-allowed;
+	opacity: .68;
 }
 
 dd.g_lastimage {
