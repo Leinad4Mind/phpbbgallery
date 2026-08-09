@@ -235,5 +235,6 @@ services:
             - '@phpbbgallery.core.log'
             - '@phpbbgallery.core.report'
             - '@user_loader'
+            - '@dispatcher'
             - '%core.root_path%'
             - '%core.php_ext%'

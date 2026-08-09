@@ -74,6 +74,9 @@ class moderate
 	/** @var \phpbb\user_loader  */
 	protected \phpbb\user_loader $user_loader;
 
+	/** @var \phpbb\event\dispatcher_interface */
+	protected \phpbb\event\dispatcher_interface $dispatcher;
+
 	/** @var string */
 	protected string $root_path;
 
@@ -102,6 +105,7 @@ class moderate
 	 * @param \phpbbgallery\core\log                 $gallery_log
 	 * @param \phpbbgallery\core\report              $report
 	 * @param \phpbb\user_loader                     $user_loader
+	 * @param \phpbb\event\dispatcher_interface      $dispatcher
 	 * @param string                                 $root_path Root path
 	 * @param string                                 $php_ext   php file extension
 	 */
@@ -113,6 +117,7 @@ class moderate
 		\phpbbgallery\core\misc $misc, \phpbbgallery\core\album\album $album, \phpbbgallery\core\image\image $image,
 		\phpbbgallery\core\notification\helper $notification_helper, \phpbbgallery\core\url $url, \phpbbgallery\core\log $gallery_log,
 		\phpbbgallery\core\report $report, \phpbb\user_loader $user_loader,
+		\phpbb\event\dispatcher_interface $dispatcher,
 		string $root_path, string $php_ext)
 	{
 		$this->config = $config;
@@ -134,6 +139,7 @@ class moderate
 		$this->gallery_log = $gallery_log;
 		$this->report = $report;
 		$this->user_loader = $user_loader;
+		$this->dispatcher = $dispatcher;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
 	}

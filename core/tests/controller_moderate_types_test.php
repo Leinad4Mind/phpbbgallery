@@ -82,6 +82,21 @@ final class controller_moderate_types_test extends TestCase
 		$this->assertSame(8, $normalizer->invoke($controller, 8));
 	}
 
+	public function test_extension_events_receive_the_registered_dispatcher(): void
+	{
+		$reflection = new \ReflectionClass(moderate::class);
+		$parameter = $reflection->getConstructor()->getParameters()[19];
+
+		$this->assertSame('dispatcher', $parameter->getName());
+		$this->assertSame('phpbb\\event\\dispatcher_interface', (string) $parameter->getType());
+
+		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/moderate.php');
+		$this->assertStringContainsString('$this->dispatcher = $dispatcher;', $source);
+
+		$service = (string) file_get_contents(dirname(__DIR__) . '/config/services_controller.yml');
+		$this->assertStringContainsString('- ' . chr(39) . '@dispatcher' . chr(39), $service);
+	}
+
 	public function test_redirect_actions_return_responses_without_sending_them_directly(): void
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/moderate.php');
