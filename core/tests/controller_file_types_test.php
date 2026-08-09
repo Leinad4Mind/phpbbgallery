@@ -51,7 +51,7 @@ final class controller_file_types_test extends TestCase
 	{
 		$reflection = new \ReflectionClass(file::class);
 
-		foreach (['source', 'source_download', 'medium', 'mini'] as $method_name)
+		foreach (['source', 'source_download', 'upload_preview', 'medium', 'mini'] as $method_name)
 		{
 			$method = $reflection->getMethod($method_name);
 			$this->assertSame('int', (string) $method->getParameters()[0]->getType());

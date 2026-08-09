@@ -658,8 +658,21 @@ class image
 	}
 
 	/**
-	 * Build a safe review preview URL without bypassing source permissions or
-	 * unexpectedly starting a paid download for somebody else's image.
+	 * Build the private preview URL used while an owned upload is still pending.
+	 * Authorization and browser-safe fallback are enforced by that dedicated
+	 * endpoint without entering the published-source or BBPoints workflow.
+	 */
+	public function generate_upload_preview_url(int $image_id): string
+	{
+		return $this->helper->route(
+			'phpbbgallery_core_image_file_upload_preview',
+			['image_id' => $image_id]
+		);
+	}
+
+	/**
+	 * Build a safe preview URL while editing an already published image without
+	 * bypassing source permissions or unexpectedly starting a paid download.
 	 */
 	public function generate_review_preview_url(int $image_id, string $filename, int $album_id, int $owner_id): string
 	{

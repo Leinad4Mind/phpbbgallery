@@ -123,6 +123,11 @@ phpbbgallery_core_image_rate:
 ############################
 #### Image file routes #####
 ############################
+phpbbgallery_core_image_file_upload_preview:
+    path: /gallery/image/{image_id}/upload-preview
+    defaults: { _controller: phpbbgallery.core.controller.file:upload_preview }
+    requirements:
+        image_id: \d+
 phpbbgallery_core_image_file_source:
     path: /gallery/image/{image_id}/source
     defaults: { _controller: phpbbgallery.core.controller.file:source }

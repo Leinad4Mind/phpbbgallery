@@ -165,6 +165,63 @@ class file
 	}
 
 	/**
+	 * Display an owned orphan during the resumable upload review.
+	 *
+	 * This deliberately does not use i_download or dispatch the published-source
+	 * access event. The file has not been submitted yet and still belongs to the
+	 * authenticated uploader. Browser-unsafe originals use the medium derivative.
+	 */
+	public function upload_preview(int $image_id): \Symfony\Component\HttpFoundation\BinaryFileResponse
+	{
+		$this->path = $this->path_source;
+		$this->load_data($image_id);
+		if (!$this->can_preview_pending_upload())
+		{
+			throw new \phpbb\exception\http_exception(403, 'NOT_AUTHORISED');
+		}
+
+		$use_medium = $this->source_requires_download($this->data['image_filename']);
+		$this->storage_variant = $use_medium
+			? \phpbbgallery\core\storage\provider_interface::MEDIUM
+			: \phpbbgallery\core\storage\provider_interface::SOURCE;
+		$this->path = $use_medium ? $this->path_medium : $this->path_source;
+		$this->generate_image_src();
+
+		if ($use_medium && !file_exists($this->image_src))
+		{
+			$this->resize(
+				$image_id,
+				$this->config['phpbb_gallery_medium_width'],
+				$this->config['phpbb_gallery_medium_height'],
+				'filesize_medium'
+			);
+		}
+		if ($this->error !== '' || !file_exists($this->image_src))
+		{
+			throw new \phpbb\exception\http_exception(404, 'IMAGE_NOT_EXIST');
+		}
+
+		$this->tool->set_image_options(
+			$this->config['phpbb_gallery_max_filesize'],
+			$this->config['phpbb_gallery_max_height'],
+			$this->config['phpbb_gallery_max_width']
+		);
+		$this->tool->set_image_data($this->image_src, $this->data['image_name']);
+		$this->tool->disable_browser_cache();
+
+		return $this->display();
+	}
+
+	/** Check that the current user owns an upload which has not been submitted. */
+	protected function can_preview_pending_upload(): bool
+	{
+		return $this->error === ''
+			&& !empty($this->user->data['is_registered'])
+			&& (int) $this->data['image_user_id'] === (int) $this->user->data['user_id']
+			&& (int) $this->data['image_status'] === (int) \phpbbgallery\core\block::STATUS_ORPHAN;
+	}
+
+	/**
 	 * Validate source permissions and existence before an add-on displays
 	 * access or purchase information.
 	 *
