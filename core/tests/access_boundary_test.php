@@ -156,11 +156,12 @@ class access_boundary_test extends TestCase
 		$this->assertStringNotContainsString('$this->display->get_branch(', $album_controller);
 		$this->assertStringContainsString("acl_check('i_view', \$album_id, \$album_owner_id)", $album_controller);
 
-		$zebra_check = strpos($album_display, 'get_zebra_state($zebra_array');
-		$active_album = strpos($album_display, '$active_album_ary[]', $zebra_check);
-		$this->assertNotFalse($zebra_check);
+		$hierarchy_filter = strpos($album_display, '$this->filter_visible_hierarchy_rows(');
+		$active_album = strpos($album_display, '$active_album_ary[]', $hierarchy_filter);
+		$this->assertNotFalse($hierarchy_filter);
 		$this->assertNotFalse($active_album);
-		$this->assertGreaterThan($zebra_check, $active_album);
+		$this->assertGreaterThan($hierarchy_filter, $active_album);
+		$this->assertStringContainsString('get_zebra_state($zebra_array, $owner_id, $album_id)', $album_display);
 
 		$this->assertStringContainsString('parse_url($referrer, PHP_URL_HOST)', $file_controller);
 		$this->assertStringNotContainsString('strpos($referrer, $var)', $file_controller);

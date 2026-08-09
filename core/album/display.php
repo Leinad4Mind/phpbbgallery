@@ -374,7 +374,7 @@ class display
 	public function display_albums(array|string|false $root_data = '', bool $display_moderators = true, bool $return_moderators = false): array
 	{
 		$album_rows = $subalbums = $album_ids = $album_ids_moderator = $album_moderators = $active_album_ary = [];
-		$parent_id = $visible_albums = 0;
+		$visible_albums = 0;
 		$mode = $this->album_mode;
 		$index_section = !$root_data ? 'public' : (($root_data === 'personal' && $mode !== 'personal') ? 'personal' : '');
 		$section_start_pending = $index_section !== '';
@@ -475,7 +475,7 @@ class display
 				'FROM'	=> [USERS_TABLE => 'u'],
 				'ON'	=> 'u.user_id = a.album_user_id',
 			];
-			$sql_array['ORDER_BY'] = 'u.username_clean, a.left_id';
+			$sql_array['ORDER_BY'] = 'u.username_clean, a.album_user_id, a.left_id';
 		}
 
 		$sql = $this->db->sql_build_query('SELECT', [
@@ -497,17 +497,13 @@ class display
 		$rows = $this->data_enricher->enrich_many($rows);
 
 		$album_tracking_info = [];
-		$branch_root_id = $root_data['album_id'];
 		$zebra_array = $this->gallery_auth->get_user_zebra($this->user->data['user_id']);
 		$listable = $this->gallery_auth->acl_album_ids('a_list');
+		$rows = $this->filter_visible_hierarchy_rows($rows, $listable, $zebra_array, (int) $root_data['album_id']);
+		$owner_states = [];
 		foreach ($rows as $row)
 		{
-			$album_id = $row['album_id'];
-			//if user has no right to see the album - skip it here!
-			if (!in_array($album_id, $listable))
-			{
-				continue;
-			}
+			$album_id = (int) $row['album_id'];
 			// Mark albums read?
 			if ($mark_read == 'albums' || $mark_read == 'all')
 			{
@@ -518,18 +514,8 @@ class display
 				}
 			}
 
-			// Skip branch
-			if (isset($right_id))
-			{
-				if ($row['left_id'] < $right_id)
-				{
-					continue;
-				}
-				unset($right_id);
-			}
-
-			// if this is invisible due zebra ... make it go away
-			if ($this->gallery_auth->get_zebra_state($zebra_array, (int) $row['album_user_id'], (int) $row['album_id']) < (int) $row['album_auth_access'])
+			$display_parent_id = $this->resolve_album_display_parent($row, (int) $root_data['album_id'], $owner_states);
+			if ($display_parent_id === false)
 			{
 				continue;
 			}
@@ -538,7 +524,7 @@ class display
 
 			$album_tracking_info[$album_id] = (!empty($row['mark_time'])) ? $row['mark_time'] : $this->gallery_user->get_data('user_lastmark');
 
-			if ($row['parent_id'] == $root_data['album_id'] || $row['parent_id'] == $branch_root_id)
+			if ($display_parent_id === $album_id)
 			{
 				if ($row['album_type'])
 				{
@@ -546,19 +532,14 @@ class display
 				}
 
 				// Direct child of current branch
-				$parent_id = $album_id;
 				$album_rows[$album_id] = $row;
-
-				if (!$row['album_type'] && $row['parent_id'] == $root_data['album_id'])
-				{
-					$branch_root_id = $album_id;
-				}
-				$album_rows[$parent_id]['album_id_last_image'] = $row['album_id'];
-				$album_rows[$parent_id][$last_image_projection] = (int) ($row[$last_image_projection] ?? 0);
-				$album_rows[$parent_id]['orig_album_last_image_time'] = $row['album_last_image_time'];
+				$album_rows[$album_id]['album_id_last_image'] = $row['album_id'];
+				$album_rows[$album_id][$last_image_projection] = (int) ($row[$last_image_projection] ?? 0);
+				$album_rows[$album_id]['orig_album_last_image_time'] = $row['album_last_image_time'];
 			}
 			else if ($row['album_type'])
 			{
+				$parent_id = $display_parent_id;
 				$subalbums[$parent_id][$album_id]['display'] = ($row['display_on_index']) ? true : false;
 				$subalbums[$parent_id][$album_id]['name'] = $row['album_name'];
 				$subalbums[$parent_id][$album_id]['orig_album_last_image_time'] = $row['album_last_image_time'];
@@ -830,5 +811,80 @@ class display
 		$this->albums_total = $visible_albums;
 
 		return [$active_album_ary, []];
+	}
+
+	/**
+	 * Keep only albums whose complete same-owner parent chain is visible.
+	 *
+	 * @param array $rows          Ordered album rows
+	 * @param array $listable      Album IDs granted by the Gallery ACL
+	 * @param array $zebra_array   Friendship state for the current viewer
+	 * @param int   $root_album_id Root outside the selected result set
+	 * @return array Visible rows with no orphaned descendants
+	 */
+	protected function filter_visible_hierarchy_rows(array $rows, array $listable, array $zebra_array, int $root_album_id): array
+	{
+		$listable_lookup = array_fill_keys(array_map('intval', $listable), true);
+		$visible_album_ids = [];
+		$visible_rows = [];
+
+		foreach ($rows as $row)
+		{
+			$album_id = (int) $row['album_id'];
+			$owner_id = (int) $row['album_user_id'];
+			$parent_id = (int) $row['parent_id'];
+			$parent_is_visible = $parent_id === $root_album_id
+				|| isset($visible_album_ids[$owner_id][$parent_id]);
+
+			if (!$parent_is_visible
+				|| !isset($listable_lookup[$album_id])
+				|| $this->gallery_auth->get_zebra_state($zebra_array, $owner_id, $album_id) < (int) $row['album_auth_access'])
+			{
+				continue;
+			}
+
+			$visible_album_ids[$owner_id][$album_id] = true;
+			$visible_rows[] = $row;
+		}
+
+		return $visible_rows;
+	}
+
+	/**
+	 * Resolve the displayed card that owns an album without crossing owners.
+	 *
+	 * @param array $row           Visible album row
+	 * @param int   $root_album_id Root outside the selected result set
+	 * @param array $owner_states  Mutable display state isolated by owner ID
+	 * @return int|false Album card ID, or false when no safe card exists
+	 */
+	protected function resolve_album_display_parent(array $row, int $root_album_id, array &$owner_states): int|false
+	{
+		$album_id = (int) $row['album_id'];
+		$owner_id = (int) $row['album_user_id'];
+		$parent_id = (int) $row['parent_id'];
+
+		if (!isset($owner_states[$owner_id]))
+		{
+			$owner_states[$owner_id] = [
+				'card_id' => 0,
+				'branch_root_id' => $root_album_id,
+			];
+		}
+
+		if ($parent_id === $root_album_id || $parent_id === $owner_states[$owner_id]['branch_root_id'])
+		{
+			$owner_states[$owner_id]['card_id'] = $album_id;
+			if (!(int) $row['album_type'] && $parent_id === $root_album_id)
+			{
+				$owner_states[$owner_id]['branch_root_id'] = $album_id;
+			}
+
+			return $album_id;
+		}
+
+		return $owner_states[$owner_id]['card_id'] > 0
+			? (int) $owner_states[$owner_id]['card_id']
+			: false;
 	}
 }
