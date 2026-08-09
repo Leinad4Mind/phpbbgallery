@@ -209,7 +209,7 @@
 			{% if S_COMMENTS_ENABLED %}
 				<dl>
 					<dt><label for="allow_comments">{{ lang('COMMENTS') }}{{ lang('COLON') }}</label></dt>
-					<dd><input type="checkbox" class="checkbox" name="allow_comments" id="allow_comments"{% if S_ALLOW_COMMENTS %} checked="checked"{% endif %} value="1" /> <label for="allow_comments">{{ lang('ALLOW_COMMENTS') }}</label></dd>
+					<dd><input type="checkbox" class="checkbox" name="allow_comments" id="allow_comments"{% if S_ALLOW_COMMENTS %} checked="checked"{% endif %} value="1" /> <label for="allow_comments">{% if NUM_IMAGES > 1 %}{{ lang('ALLOW_COMMENTS_ALL') }}{% else %}{{ lang('ALLOW_COMMENTS') }}{% endif %}</label></dd>
 				</dl>
 			{% endif %}
 			{% if S_CHANGE_AUTHOR and U_FIND_USERNAME %}

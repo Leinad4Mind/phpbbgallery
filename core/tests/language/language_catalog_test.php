@@ -213,6 +213,26 @@ class language_catalog_test extends TestCase
 		}
 	}
 
+	public function test_upload_comment_option_distinguishes_one_image_from_a_batch(): void
+	{
+		$language_root = $this->extension_root . '/core/language';
+		foreach ($this->language_directories($language_root) as $directory)
+		{
+			$language = $this->load_language($directory . '/gallery.php');
+			$this->assertArrayHasKey('ALLOW_COMMENTS', $language, basename($directory));
+			$this->assertArrayHasKey('ALLOW_COMMENTS_ALL', $language, basename($directory));
+			$this->assertNotSame($language['ALLOW_COMMENTS'], $language['ALLOW_COMMENTS_ALL'], basename($directory));
+		}
+
+		$styles_root = $this->extension_root . '/core/styles';
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$template = (string) file_get_contents($styles_root . '/' . $style . '/template/gallery/posting_body.html');
+			$this->assertStringContainsString('NUM_IMAGES > 1', $template, $style);
+			$this->assertStringContainsString("lang('ALLOW_COMMENTS_ALL')", $template, $style);
+		}
+	}
+
 	public function test_php_upload_limit_error_is_explained_in_every_language(): void
 	{
 		$language_root = $this->extension_root . '/core/language';

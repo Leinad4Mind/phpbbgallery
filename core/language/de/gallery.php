@@ -41,6 +41,7 @@ $lang = array_merge($lang, [
 	'ALL'                              => 'Alle',
 	'ALL_IMAGES'                       => 'Alle Bilder',
 	'ALLOW_COMMENTS'                   => 'Kommentare für dieses Bild erlauben.',
+	'ALLOW_COMMENTS_ALL'               => 'Kommentare für alle Bilder erlauben.',
 	'ALLOW_COMMENTS_ARY'               => [
 		0 => 'Kommentare für dieses Bild erlauben.',
 		2 => 'Kommentare für diese Bilder erlauben.',
