@@ -41,7 +41,7 @@
 		var image = preview ? preview.querySelector('[data-gallery-orientation-preview] img') : null;
 		var matrix = matrices[value] || matrices[1];
 
-		editor.setAttribute('data-orientation', String(value));
+		editor.setAttribute('data-gallery-orientation-value', String(value));
 		input.value = String(value);
 		if (state && labels) {
 			state.textContent = labels.getAttribute('data-orientation-' + value) || '';
@@ -65,7 +65,7 @@
 					return;
 				}
 				var operation = button.getAttribute('data-gallery-orientation-operation');
-				var current = parseInt(editor.getAttribute('data-orientation'), 10) || 1;
+				var current = parseInt(editor.getAttribute('data-gallery-orientation-value'), 10) || 1;
 				var value = operation === 'reset'
 					? 1
 					: orientationFor(multiply(matrices[parseInt(operation, 10)], matrices[current]));

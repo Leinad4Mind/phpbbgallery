@@ -1,4 +1,4 @@
-<div class="gallery-orientation-editor" data-gallery-orientation-editor data-orientation="{{ image.ORIENTATION|default(1) }}">
+<div class="gallery-orientation-editor" data-gallery-orientation-editor data-gallery-orientation-value="{{ image.ORIENTATION|default(1) }}">
 	<input type="hidden" name="orientation[{{ image.S_ROW_COUNT }}]" value="{{ image.ORIENTATION|default(1) }}" data-gallery-orientation-input>
 	<div class="gallery-orientation-toolbar" role="toolbar" aria-label="{{ lang('TRANSFORM_IMAGE') }}">
 		<button type="button" class="button button-secondary btn btn-default" data-gallery-orientation-operation="reset" title="{{ lang('TRANSFORM_RESET') }}" aria-label="{{ lang('TRANSFORM_RESET') }}"><i class="icon fa fa-eraser fa-fw" aria-hidden="true"></i></button>

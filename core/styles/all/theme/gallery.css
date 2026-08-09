@@ -1171,12 +1171,6 @@ fieldset dl.gallery-autocomplete-row-open
 	min-width: 38px;
 }
 
-.gallery-orientation-toolbar .gallery-orientation-prosilver-control
-{
-	display: inline-block;
-	min-height: 34px;
-}
-
 .gallery-orientation-state
 {
 	color: inherit;
