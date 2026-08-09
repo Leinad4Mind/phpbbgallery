@@ -91,10 +91,14 @@ final class image_orientation_test extends TestCase
 	{
 		$root = dirname(__DIR__);
 		$controls = (string) file_get_contents($root . '/styles/all/template/gallery/image_orientation_controls.html');
+		$prosilver_controls = (string) file_get_contents($root . '/styles/prosilver/template/gallery/image_orientation_controls.html');
 		$css = (string) file_get_contents($root . '/styles/all/theme/gallery.css');
 		$this->assertStringContainsString('icon fa fa-eraser fa-fw', $controls);
 		$this->assertSame(6, substr_count($controls, 'class="button button-secondary btn btn-default"'));
 		$this->assertStringNotContainsString('class="button2 btn btn-default"', $controls);
+		$this->assertSame(6, substr_count($prosilver_controls, 'type="button" class="button2 gallery-orientation-prosilver-control"'));
+		$this->assertStringNotContainsString('<button', $prosilver_controls);
+		$this->assertStringContainsString('.gallery-orientation-toolbar .gallery-orientation-prosilver-control', $css);
 		$this->assertStringContainsString('repeating-conic-gradient', $css);
 
 		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
