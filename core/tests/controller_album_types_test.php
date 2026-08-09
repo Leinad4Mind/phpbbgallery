@@ -123,6 +123,25 @@ final class controller_album_types_test extends TestCase
 		}
 	}
 
+	public function test_bootstrap_album_cards_use_one_row_for_the_responsive_columns(): void
+	{
+		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$template = (string) file_get_contents(
+				dirname(__DIR__) . '/styles/' . $style . '/template/gallery/imageblock_polaroid.html'
+			);
+			$clearfix = strpos($template, '<div class="clearfix">');
+			$row = strpos($template, '<div class="row">', (int) $clearfix);
+			$column = strpos($template, '<div class="col-xs-12 col-sm-6 ', (int) $row);
+
+			$this->assertNotFalse($clearfix, $style);
+			$this->assertNotFalse($row, $style);
+			$this->assertNotFalse($column, $style);
+			$this->assertTrue($clearfix < $row && $row < $column, $style);
+			$this->assertStringNotContainsString('class="clearfix row"', $template, $style);
+		}
+	}
+
 	public function test_album_cards_offer_ajax_rating_only_to_eligible_users(): void
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/album.php');
