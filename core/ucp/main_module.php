@@ -543,135 +543,65 @@ class main_module
 			];
 
 			generate_text_for_storage($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_bitfield'], $album_data['album_desc_options'], $request->variable('desc_parse_bbcode', false), $request->variable('desc_parse_urls', false), $request->variable('desc_parse_smilies', false));
-			$row = $phpbb_ext_gallery_core_album->get_info($album_id);
-			$parent_id = (int) $album_data['parent_id'];
-			if (!$row['parent_id'])
+			$old_data = $phpbb_ext_gallery_core_album->get_info($album_id);
+			if (!$old_data['parent_id'])
 			{
 				// do not allow to restrict access on the base-album
 				$album_data['album_auth_access'] = 0;
 			}
 
-			// Ensure that no child is selected as parent
-			$exclude_albums = [$album_id];
-			foreach ($phpbb_ext_gallery_core_album_display->get_branch($row['album_user_id'], $album_id, 'children') as $loop)
+			$owner_id = (int) $old_data['album_user_id'];
+			$personal_root_id = (int) $phpbb_ext_gallery_user->get_data('personal_album_id');
+			$requested_parent_id = (int) $album_data['parent_id'];
+			$parent_id = (int) $old_data['parent_id'];
+			$phpbb_ext_gallery_core_album->check_user($personal_root_id, $owner_id);
+
+			// Neither a second root nor a cycle may be introduced into a personal tree.
+			$invalid_parent_ids = [0, $album_id];
+			foreach ($phpbb_ext_gallery_core_album_display->get_branch($owner_id, $album_id, 'children') as $loop)
 			{
-				$exclude_albums[] = (int) $loop['album_id'];
-			}
-			if (in_array($parent_id, $exclude_albums))
-			{
-				$parent_id = (int) $row['parent_id'];
+				$invalid_parent_ids[] = (int) $loop['album_id'];
 			}
 
-			if ($parent_id > 0 && $parent_id != $row['parent_id'])
+			$personal_album_ids = [];
+			foreach ($phpbb_ext_gallery_core_album_display->get_branch($owner_id, $personal_root_id, 'children') as $loop)
 			{
-				// Make sure the new parent actually belongs to this user before the nested-set
-				// moves below mix its left_id/right_id bounds into this user's own album tree.
-				$phpbb_ext_gallery_core_album->check_user($parent_id);
+				$personal_album_ids[] = (int) $loop['album_id'];
 			}
+
+			if ($requested_parent_id !== $parent_id && !in_array($requested_parent_id, $invalid_parent_ids, true))
+			{
+				// Reject foreign or missing albums before considering the selected destination.
+				$phpbb_ext_gallery_core_album->check_user($requested_parent_id, $owner_id);
+				if (in_array($requested_parent_id, $personal_album_ids, true))
+				{
+					$parent_id = $requested_parent_id;
+				}
+			}
+			$album_data['parent_id'] = $parent_id;
 
 			// If the parent is different, the left_id and right_id have changed.
-			if ($row['parent_id'] != $parent_id)
+			if ((int) $old_data['parent_id'] !== $parent_id)
 			{
-				if ($parent_id > 0)
+				$album_manage = $phpbb_container->get('phpbbgallery.core.album.manage');
+				$album_manage->set_user($owner_id);
+				$errors = $album_manage->move_album($album_id, $parent_id);
+				if ($errors)
 				{
-					// Get the parent album now, so it throws an error when it does not exist, before we change the database.
-					$parent = $phpbb_ext_gallery_core_album->get_info($parent_id);
-				}
-
-				// How many do we have to move and how far.
-				$moving_ids = ($row['right_id'] - $row['left_id']) + 1;
-				$sql = 'SELECT MAX(right_id) right_id
-					FROM ' . $albums_table . '
-					WHERE album_user_id = ' . (int) $row['album_user_id'];
-				$result = $db->sql_query($sql);
-				$moving_distance = ($db->sql_fetchfield('right_id') - $row['left_id']) + 1;
-				$db->sql_freeresult($result);
-
-				$stop_updating = $moving_distance + $row['left_id'];
-
-				// Update the moving albums... move them to the end.
-				$sql = 'UPDATE ' . $albums_table . '
-					SET right_id = right_id + ' . $moving_distance . ',
-						left_id = left_id + ' . $moving_distance . '
-					WHERE album_user_id = ' . (int) $row['album_user_id'] . '
-						AND left_id >= ' . (int) $row['left_id'] . '
-						AND right_id <= ' . (int) $row['right_id'];
-				$db->sql_query($sql);
-
-				$new['left_id'] = $row['left_id'] + $moving_distance;
-				$new['right_id'] = $row['right_id'] + $moving_distance;
-
-				// Close the gap, we produced through moving.
-				if ($parent_id == 0)
-				{
-					$sql = 'UPDATE ' . $albums_table . '
-						SET left_id = left_id - ' . $moving_ids . '
-						WHERE album_user_id = ' . (int) $row['album_user_id'] . '
-							AND left_id >= ' . (int) $row['left_id'];
-					$db->sql_query($sql);
-
-					$sql = 'UPDATE ' . $albums_table . '
-						SET right_id = right_id - ' . $moving_ids . '
-						WHERE album_user_id = ' . (int) $row['album_user_id'] . '
-							AND right_id >= ' . (int) $row['left_id'];
-					$db->sql_query($sql);
-				}
-				else
-				{
-					$sql = 'UPDATE ' . $albums_table . '
-						SET left_id = left_id - ' . $moving_ids . '
-						WHERE album_user_id = ' . (int) $row['album_user_id'] . '
-							AND left_id >= ' . (int) $row['left_id'] . '
-							AND right_id <= ' . (int) $stop_updating;
-					$db->sql_query($sql);
-
-					$sql = 'UPDATE ' . $albums_table . '
-						SET right_id = right_id - ' . $moving_ids . '
-						WHERE album_user_id = ' . (int) $row['album_user_id'] . '
-							AND right_id >= ' . (int) $row['left_id'] . '
-							AND right_id <= ' . (int) $stop_updating;
-					$db->sql_query($sql);
-
-					// We should get new parent again for the case if it has been changed
-					$parent = $phpbb_ext_gallery_core_album->get_info($parent_id);
-
-					$sql = 'UPDATE ' . $albums_table . '
-						SET left_id = left_id + ' . $moving_ids . '
-						WHERE album_user_id = ' . (int) $row['album_user_id'] . '
-							AND left_id >= ' . (int) $parent['right_id'] . '
-							AND right_id <= ' . (int) $stop_updating;
-					$db->sql_query($sql);
-
-					$sql = 'UPDATE ' . $albums_table . '
-						SET right_id = right_id + ' . $moving_ids . '
-						WHERE album_user_id = ' . (int) $row['album_user_id'] . '
-							AND right_id >= ' . (int) $parent['right_id'] . '
-							AND right_id <= ' . (int) $stop_updating;
-					$db->sql_query($sql);
-
-					// We should get new parent again for the case if it has been changed
-					$parent = $phpbb_ext_gallery_core_album->get_info($parent_id);
-
-					// Move the albums to the suggested gap.
-					$move_back = ($new['right_id'] - $parent['right_id']) + 1;
-					$sql = 'UPDATE ' . $albums_table . '
-						SET left_id = left_id - ' . $move_back . ',
-							right_id = right_id - ' . $move_back . '
-						WHERE album_user_id = ' . (int) $row['album_user_id'] . '
-							AND left_id >= ' . (int) $stop_updating;
-					$db->sql_query($sql);
+					$album_data['parent_id'] = (int) $old_data['parent_id'];
 				}
 			}
 
 			// The album name has changed, clear the parents list of all albums.
 			if ($album_data['album_name'] == '')
 			{
-				$album_data['album_name'] = $row['album_name'];
+				$album_data['album_name'] = $old_data['album_name'];
 			}
-			else if ($row['album_name'] != $album_data['album_name'])
+			else if ($old_data['album_name'] != $album_data['album_name'])
 			{
 				$sql = 'UPDATE ' . $albums_table . "
-					SET album_parents = ''";
+					SET album_parents = ''
+					WHERE album_user_id = " . $owner_id;
 				$db->sql_query($sql);
 			}
 
@@ -684,14 +614,15 @@ class main_module
 			{
 				$album_data['album_auth_access'] = min(3, max(0, $album_data['album_auth_access']));
 			}
-			if ($row['album_auth_access'] != $album_data['album_auth_access'])
+			if ($old_data['album_auth_access'] != $album_data['album_auth_access'])
 			{
 				$phpbb_ext_gallery_core_auth->set_user_permissions('all', '');
 			}
 
 			$sql = 'UPDATE ' . $albums_table . ' 
 					SET ' . $db->sql_build_array('UPDATE', $album_data) . '
-					WHERE album_id  = ' . (int) $album_id;
+					WHERE album_id  = ' . (int) $album_id . '
+						AND album_user_id = ' . $owner_id;
 			$db->sql_query($sql);
 
 			$cache->destroy('sql', $albums_table);
