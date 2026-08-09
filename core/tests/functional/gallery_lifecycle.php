@@ -92,6 +92,7 @@ class gallery_lifecycle extends \phpbb_functional_test_case
 		$this->assertStringContainsString('Functional Album', $crawler->filter('body')->text());
 
 		$this->admin_login();
+		$this->assert_image_view_counter_isolated($album_id, $phpbb_root_path);
 		$this->run_import($album_id, $phpbb_root_path);
 		[$imported_image_id, $imported_filename] = $this->imported_image();
 		$this->assert_source_delivery($album_id, $imported_image_id, $imported_filename, $phpbb_root_path);
@@ -187,6 +188,98 @@ class gallery_lifecycle extends \phpbb_functional_test_case
 		$this->purge_cache();
 
 		return $album_id;
+	}
+
+	/**
+	 * Ensure rendering and refreshing one image never increments its neighbours.
+	 */
+	private function assert_image_view_counter_isolated(int $album_id, string $phpbb_root_path): void
+	{
+		$db = $this->get_db();
+		$image_ids = [];
+		$fixture_paths = [];
+		$base_time = time() - 10;
+
+		foreach (['previous', 'central', 'next'] as $offset => $position)
+		{
+			$filename = 'functional-view-counter-' . $position . '.png';
+			foreach (['source', 'medium', 'mini'] as $directory)
+			{
+				$path = $phpbb_root_path . 'files/phpbbgallery/core/' . $directory . '/' . $filename;
+				$this->write_test_png($path);
+				$fixture_paths[] = $path;
+			}
+
+			$db->sql_query('INSERT INTO phpbb_gallery_images ' . $db->sql_build_array('INSERT', [
+				'image_filename'       => $filename,
+				'image_name'           => 'View counter ' . $position,
+				'image_name_clean'     => 'view counter ' . $position,
+				'image_user_id'        => 2,
+				'image_username'       => 'admin',
+				'image_username_clean' => 'admin',
+				'image_user_ip'        => '127.0.0.1',
+				'image_time'           => $base_time + $offset,
+				'image_album_id'       => $album_id,
+				'image_status'         => \phpbbgallery\core\block::STATUS_APPROVED,
+				'image_view_count'     => 0,
+				'filesize_upload'      => (int) filesize($fixture_paths[count($fixture_paths) - 1]),
+			]));
+			$image_ids[] = (int) $db->sql_nextid();
+		}
+
+		$expected = array_fill_keys($image_ids, 0);
+		$this->assertSame($expected, $this->image_view_counts($image_ids));
+
+		$central_id = $image_ids[1];
+		$crawler = self::request('GET', 'app.php/gallery/image/' . $central_id . '?sid=' . $this->sid);
+		self::assert_response_html(200);
+		$this->assertStringContainsString('View counter central', $crawler->filter('body')->text());
+		$expected[$central_id] = 1;
+		$this->assertSame($expected, $this->image_view_counts($image_ids));
+
+		$crawler = self::request('GET', 'app.php/gallery/image/' . $central_id . '?sid=' . $this->sid);
+		self::assert_response_html(200);
+		$this->assertStringContainsString('View counter central', $crawler->filter('body')->text());
+		$expected[$central_id] = 2;
+		$this->assertSame($expected, $this->image_view_counts($image_ids));
+
+		$db->sql_query('DELETE FROM phpbb_gallery_images WHERE ' . $db->sql_in_set('image_id', $image_ids));
+		foreach ($fixture_paths as $path)
+		{
+			if (is_file($path))
+			{
+				unlink($path);
+			}
+		}
+	}
+
+	/**
+	 * Read view counters keyed by image ID in the requested order.
+	 *
+	 * @param int[] $image_ids
+	 * @return array<int, int>
+	 */
+	private function image_view_counts(array $image_ids): array
+	{
+		$db = $this->get_db();
+		$sql = 'SELECT image_id, image_view_count
+			FROM phpbb_gallery_images
+			WHERE ' . $db->sql_in_set('image_id', $image_ids);
+		$result = $db->sql_query($sql);
+		$counts = [];
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$counts[(int) $row['image_id']] = (int) $row['image_view_count'];
+		}
+		$db->sql_freeresult($result);
+
+		$ordered = [];
+		foreach ($image_ids as $image_id)
+		{
+			$ordered[$image_id] = $counts[$image_id];
+		}
+
+		return $ordered;
 	}
 
 	/**
