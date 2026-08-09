@@ -318,6 +318,7 @@ final class acp_config_types_test extends TestCase
 		$this->assertStringNotContainsString('opendir(', $source);
 		$this->assertStringNotContainsString('readdir(', $source);
 		$this->assertStringContainsString('$file_tool->delete_wm($filenames);', $source);
+		$this->assertStringContainsString('$vars[\'default\'] ?? null', $source);
 	}
 
 	public function test_image_summary_options_support_resolution_and_add_on_choices(): void

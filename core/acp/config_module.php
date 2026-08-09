@@ -233,7 +233,10 @@ class config_module
 				}
 			}
 
-			$this->new_config[$config_key] = $phpbb_gallery_configs->get($config_key);
+			$this->new_config[$config_key] = $phpbb_gallery_configs->get(
+				$config_key,
+				$vars['default'] ?? null
+			);
 
 			$type = explode(':', $vars['type']);
 

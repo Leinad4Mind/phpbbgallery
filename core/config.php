@@ -177,16 +177,16 @@ class config
 		return $config_ary;
 	}
 
-	public function get(string $key): mixed
+	public function get(string $key, mixed $default = null): mixed
 	{
 		if (isset($this->config['phpbb_gallery_' . $key]))
 		{
 			return $this->config['phpbb_gallery_' . $key];
 		}
-		else
-		{
-			return $this->configs_array[$key];
-		}
+
+		return array_key_exists($key, $this->configs_array)
+			? $this->configs_array[$key]
+			: $default;
 	}
 
 	public function get_bbcode_tag(): string

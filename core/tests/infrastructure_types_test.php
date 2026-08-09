@@ -36,6 +36,8 @@ final class infrastructure_types_test extends TestCase
 		$this->assertSame('cards', $gallery_config->get_index_album_layout());
 		$this->assertSame(['classic', 'modern', 'cards'], gallery_config::index_album_layouts());
 		$this->assertSame(25, $gallery_config->get_all()['items_per_page']);
+		$this->assertNull($gallery_config->get('missing_addon_option'));
+		$this->assertSame(4, $gallery_config->get('missing_addon_option', 4));
 
 		$gallery_config->set('allow_zip', true);
 		$gallery_config->inc('num_images', 2);
