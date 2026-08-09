@@ -11,6 +11,7 @@
 namespace phpbbgallery\core\tests;
 
 use phpbbgallery\core\cache;
+use phpbbgallery\core\image\batch_editor;
 use phpbbgallery\core\image\image;
 use phpbbgallery\core\log;
 use PHPUnit\Framework\TestCase;
@@ -52,44 +53,120 @@ final class batch_image_edit_test extends TestCase
 		$this->assertSame(['begin', 'commit'], $database_state->transactions);
 	}
 
-	public function test_batch_rename_updates_each_selected_name_and_logs_it(): void
+	public function test_batch_edit_updates_all_metadata_fields_and_logs_each_image(): void
 	{
 		$queries = [];
 		[$db, $database_state] = $this->database([
-			['image_id' => 5, 'image_album_id' => 2, 'image_name' => 'Old first'],
-			['image_id' => 7, 'image_album_id' => 3, 'image_name' => 'Old second'],
+			['image_id' => 5, 'image_album_id' => 2, 'image_name' => 'Old first', 'image_status' => 1],
+			['image_id' => 7, 'image_album_id' => 3, 'image_name' => 'Old second', 'image_status' => 1],
 		], $queries);
 		$log = $this->createMock(log::class);
 		$log->expects($this->exactly(2))->method('add_log');
 		$cache = $this->createMock(cache::class);
 		$cache->expects($this->once())->method('destroy_images');
-		$image = $this->image_service($db, $log, $cache);
+		$dispatcher = $this->createMock(\phpbb\event\dispatcher_interface::class);
+		$dispatcher->expects($this->exactly(2))
+			->method('trigger_event')
+			->with('phpbbgallery.core.image.batch_edit_after', $this->anything())
+			->willReturnArgument(1);
+		$image = $this->image_service($db, $log, $cache, $dispatcher);
 
-		$this->assertSame(2, $image->rename_images([5 => 'New first', 7 => 'New second']));
+		$this->assertSame(2, $image->edit_images([
+			5 => [
+				'image_name' => 'New first',
+				'image_subtitle' => 'Subtitle 1',
+				'image_desc' => 'Stored first',
+				'image_desc_uid' => 'uid1',
+				'image_desc_bitfield' => 'bf1',
+			],
+			7 => [
+				'image_name' => 'New second',
+				'image_subtitle' => 'Subtitle 2',
+				'image_desc' => 'Stored second',
+				'image_desc_uid' => 'uid2',
+				'image_desc_bitfield' => 'bf2',
+			],
+		]));
 		$sql = implode("\n", $queries);
 		$this->assertStringContainsString("image_name = 'New first'", $sql);
+		$this->assertStringContainsString("image_subtitle = 'Subtitle 1'", $sql);
+		$this->assertStringContainsString("image_desc = 'Stored first'", $sql);
+		$this->assertStringContainsString("image_desc_uid = 'uid1'", $sql);
+		$this->assertStringContainsString("image_desc_bitfield = 'bf1'", $sql);
 		$this->assertStringContainsString('WHERE image_id = 5', $sql);
 		$this->assertStringContainsString("image_name = 'New second'", $sql);
 		$this->assertStringContainsString('WHERE image_id = 7', $sql);
 		$this->assertSame(['begin', 'commit'], $database_state->transactions);
 	}
 
-	public function test_batch_rename_rejects_missing_and_oversized_names_before_querying(): void
+	public function test_batch_edit_rejects_incomplete_and_oversized_values_before_querying(): void
 	{
 		$image = (new \ReflectionClass(image::class))->newInstanceWithoutConstructor();
+		$valid = [
+			'image_name' => 'Valid',
+			'image_subtitle' => '',
+			'image_desc' => '',
+			'image_desc_uid' => '',
+			'image_desc_bitfield' => '',
+		];
+		$invalid_updates = [
+			array_replace($valid, ['image_name' => '']),
+			array_replace($valid, ['image_name' => str_repeat('x', 256)]),
+			array_replace($valid, ['image_subtitle' => str_repeat('x', 256)]),
+			array_diff_key($valid, ['image_desc_bitfield' => true]),
+		];
 
-		foreach (['', str_repeat('x', 256)] as $invalid_name)
+		foreach ($invalid_updates as $invalid_update)
 		{
 			try
 			{
-				$image->rename_images([5 => $invalid_name]);
-				$this->fail('Invalid image name accepted.');
+				$image->edit_images([5 => $invalid_update]);
+				$this->fail('Invalid batch image update accepted.');
 			}
 			catch (\InvalidArgumentException)
 			{
 				$this->addToAssertionCount(1);
 			}
 		}
+	}
+
+	public function test_batch_edit_does_not_partially_update_when_a_selected_row_disappears(): void
+	{
+		$queries = [];
+		[$db, $database_state] = $this->database([
+			['image_id' => 5, 'image_album_id' => 2, 'image_name' => 'First', 'image_status' => 1],
+		], $queries);
+		$image = $this->image_service(
+			$db,
+			$this->createMock(log::class),
+			$this->createMock(cache::class)
+		);
+		$update = [
+			'image_name' => 'Updated',
+			'image_subtitle' => '',
+			'image_desc' => '',
+			'image_desc_uid' => '',
+			'image_desc_bitfield' => '',
+		];
+
+		$this->expectException(\RuntimeException::class);
+		try
+		{
+			$image->edit_images([5 => $update, 7 => $update]);
+		}
+		finally
+		{
+			$this->assertSame([], $database_state->transactions);
+			$this->assertStringNotContainsString('UPDATE gallery_images', implode("\n", $queries));
+		}
+	}
+
+	public function test_batch_sequence_only_replaces_explicit_num_tokens(): void
+	{
+		$this->assertSame('Cover 8 / 8', batch_editor::apply_sequence('Cover {NUM} / {NUM}', 8));
+		$this->assertSame('[b]Keep {OTHER}[/b]', batch_editor::apply_sequence('[b]Keep {OTHER}[/b]', 9));
+		$this->assertSame('Zero 0', batch_editor::apply_sequence('Zero {NUM}', 0));
+		$this->assertSame('Bounded 999999999', batch_editor::apply_sequence('Bounded {NUM}', PHP_INT_MAX));
 	}
 
 	public function test_batch_author_change_rejects_untrusted_identity_without_querying(): void
@@ -101,35 +178,74 @@ final class batch_image_edit_test extends TestCase
 		$this->assertSame(0, $image->change_author([-5, 0], ['user_id' => 42, 'username' => 'Target']));
 	}
 
-	public function test_controller_reauthorizes_batch_edits_and_preserves_confirmation_data(): void
+	public function test_controller_reauthorizes_batch_edits_and_requires_csrf_before_persisting(): void
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/moderate.php');
 		$authorization = strpos($source, '$authorized_action = $this->authorize_action_images($actions_array');
 		$change = strpos($source, '$this->image->change_author(', $authorization);
-		$rename = strpos($source, '$this->image->rename_images(', $authorization);
+		$batch_form = strpos($source, '$this->batch_edit_images(', $authorization);
+		$batch_persist = strpos($source, '$this->image->edit_images(', $batch_form);
 
 		$this->assertStringContainsString("'change_author' => 'm_edit'", $source);
-		$this->assertStringContainsString("'rename'\t=> 'm_edit'", $source);
+		$this->assertStringContainsString("'edit'\t\t=> 'm_edit'", $source);
 		$this->assertNotFalse($authorization);
 		$this->assertNotFalse($change);
-		$this->assertNotFalse($rename);
+		$this->assertNotFalse($batch_form);
+		$this->assertNotFalse($batch_persist);
 		$this->assertLessThan($change, $authorization);
-		$this->assertLessThan($rename, $authorization);
+		$this->assertLessThan($batch_form, $authorization);
+		$this->assertLessThan($batch_persist, $batch_form);
 		$this->assertStringContainsString("\$hidden_data['change_author'] = \$change_author", $source);
-		$this->assertStringContainsString("\$hidden_data['image_name'] = \$renamed_images", $source);
 		$this->assertStringContainsString('$s_hidden_fields = build_hidden_fields($hidden_data)', $source);
+		$this->assertStringContainsString("if (\$submit && !check_form_key('gallery'))", $source);
+		$this->assertStringContainsString('batch_editor::apply_sequence', $source);
+		$this->assertStringContainsString('parse_image_description(', $source);
+		$this->assertStringContainsString('if ($album_id < 1)', $source);
 	}
 
-	public function test_all_moderation_templates_expose_per_image_names_and_new_author(): void
+	public function test_controller_validates_complete_posts_limits_and_bbcode_before_persisting(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/moderate.php');
+		$method = strstr($source, 'private function batch_edit_images');
+		$this->assertIsString($method);
+		$method = strstr($method, 'private function decode_image_description', true);
+
+		$this->assertStringContainsString('array_key_exists($image_id, $image_names)', $method);
+		$this->assertStringContainsString('array_key_exists($image_id, $image_subtitles)', $method);
+		$this->assertStringContainsString('array_key_exists($image_id, $image_descriptions)', $method);
+		$this->assertStringContainsString('utf8_strlen($image_name) > 255', $method);
+		$this->assertStringContainsString('IMAGE_SUBTITLE_MAX_LENGTH', $method);
+		$this->assertStringContainsString('utf8_strlen($image_description) > $description_max_length', $method);
+		$this->assertLessThan(
+			strpos($method, '$this->image->edit_images('),
+			strpos($method, '$this->parse_image_description(')
+		);
+
+		$parser = strstr($source, 'private function parse_image_description');
+		$this->assertIsString($parser);
+		$this->assertStringContainsString('$message_parser->parse(true, true, true, true, false, true, true, true)', $parser);
+		$this->assertStringContainsString("'image_desc_uid'", (string) file_get_contents(dirname(__DIR__) . '/image/image.php'));
+		$this->assertStringContainsString("'image_desc_bitfield'", (string) file_get_contents(dirname(__DIR__) . '/image/image.php'));
+	}
+
+	public function test_all_moderation_templates_use_a_dedicated_batch_editor(): void
 	{
 		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
 		{
-			$template = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/moderate_album_overview.html');
+			$overview = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/moderate_album_overview.html');
+			$editor = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/moderate_batch_edit.html');
 
-			$this->assertStringContainsString('S_CAN_EDIT_IMAGES', $template, $style);
-			$this->assertStringContainsString('name="image_name[{{ overview.U_IMAGE_ID }}]"', $template, $style);
-			$this->assertStringContainsString('name="change_author"', $template, $style);
-			$this->assertStringContainsString('U_FIND_USERNAME', $template, $style);
+			$this->assertStringContainsString('S_CAN_EDIT_IMAGES', $overview, $style);
+			$this->assertStringNotContainsString('name="image_name[{{ overview.U_IMAGE_ID }}]"', $overview, $style);
+			$this->assertStringContainsString('name="change_author"', $overview, $style);
+			$this->assertStringContainsString('U_FIND_USERNAME', $overview, $style);
+			$this->assertStringContainsString('name="action[]"', $editor, $style);
+			$this->assertStringContainsString('name="image_name[{{ batch_image.IMAGE_ID }}]"', $editor, $style);
+			$this->assertStringContainsString('name="image_subtitle[{{ batch_image.IMAGE_ID }}]"', $editor, $style);
+			$this->assertStringContainsString('name="message[{{ batch_image.IMAGE_ID }}]"', $editor, $style);
+			$this->assertStringContainsString('name="image_num"', $editor, $style);
+			$this->assertStringContainsString('S_FORM_TOKEN', $editor, $style);
+			$this->assertStringContainsString('data-gallery-character-counter', $editor, $style);
 		}
 	}
 
@@ -155,11 +271,15 @@ final class batch_image_edit_test extends TestCase
 		}
 	}
 
-	public function test_rename_action_is_translated_in_every_catalog(): void
+	public function test_batch_edit_action_is_translated_in_every_catalog(): void
 	{
 		foreach (glob(dirname(__DIR__) . '/language/*/gallery_mcp.php') as $catalog)
 		{
-			$this->assertStringContainsString("'RENAME_IMAGES'", (string) file_get_contents($catalog), $catalog);
+			$language = (string) file_get_contents($catalog);
+			$this->assertStringContainsString("'EDIT_SELECTED_IMAGES'", $language, $catalog);
+			$this->assertStringContainsString("'BATCH_EDIT_IMAGES'", $language, $catalog);
+			$this->assertStringContainsString("'BATCH_EDIT_NUMBERING_EXPLAIN'", $language, $catalog);
+			$this->assertStringNotContainsString("'RENAME_IMAGES'", $language, $catalog);
 		}
 	}
 

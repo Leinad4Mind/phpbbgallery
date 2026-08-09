@@ -383,7 +383,7 @@ class moderate
 		if ($this->gallery_auth->acl_check('m_edit', $album['album_id'], $album['album_user_id']))
 		{
 			$actions['change_author'] = 'CHANGE_AUTHOR';
-			$actions['rename'] = 'RENAME_IMAGES';
+			$actions['edit'] = 'EDIT_SELECTED_IMAGES';
 		}
 		if ($this->gallery_auth->acl_check('m_report', $album['album_id'], $album['album_user_id']))
 		{

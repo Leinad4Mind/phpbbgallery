@@ -6,6 +6,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Added
 
+- Added a moderator-only batch image editor for the current MCP album page, with per-image title, subtitle and BBCode description fields, bounded {NUM} sequencing, CSRF protection, complete-post validation and atomic fail-closed persistence.
 - Added phpBB-style user permission tracing to the Gallery ACP, showing each effective group and direct-user contribution, the running Yes/No/Never result and the final permission for public or personal album scopes.
 - Added a confirmed Gallery-index toggle to subscribe to or unsubscribe from every currently visible real album, including subalbums, with permission, personal-album and zebra filtering plus bounded writes for large galleries.
 - Added canonical Open Graph and Twitter Card metadata to permission-checked image pages, using the public medium image and share-safe URLs without session or style context.

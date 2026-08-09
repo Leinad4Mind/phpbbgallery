@@ -25,7 +25,11 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'CHOOSE_ACTION'                => 'Selecionar ação pretendida',
-	'RENAME_IMAGES'                => 'Renomear imagens selecionadas',
+	'EDIT_SELECTED_IMAGES'         => 'Editar imagens selecionadas',
+	'BATCH_EDIT_IMAGES'            => 'Editar imagens selecionadas',
+	'BATCH_EDIT_EXPLAIN'           => 'Revê o título, o subtítulo e a descrição de cada imagem selecionada antes de guardar.',
+	'BATCH_EDIT_NUMBERING'         => 'Começar a numeração em',
+	'BATCH_EDIT_NUMBERING_EXPLAIN' => 'Cada marcador {NUM} num título, subtítulo ou descrição é substituído pelo respetivo número sequencial.',
 	'GALLERY_MCP_MAIN'             => 'Principal',
 	'GALLERY_MCP_OVERVIEW'         => 'Visão Geral',
 	'GALLERY_MCP_QUEUE'            => 'Fila de Imagens',

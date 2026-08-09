@@ -517,12 +517,11 @@ class moderate
 		$this->language->add_lang(['gallery_mcp', 'gallery'], 'phpbbgallery/core');
 		$this->language->add_lang('mcp');
 
-		$actions_array = $this->request->variable('action', [0]);
+		$actions_array = $this->request->variable('action', [0], false, request_interface::POST);
 		$action = $this->request->variable('select_action', '');
 		$back_link = $this->request->variable('back_link', $this->helper->route('phpbbgallery_core_moderate_view', ['album_id' => $album_id]));
 		$moving_target = $this->request->variable('moving_target', '');
 		$change_author = $this->request->variable('change_author', '', true, request_interface::POST);
-		$image_names = $this->request->variable('image_name', ['' => ''], true, request_interface::POST);
 
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$album_backlink = $album_id === 0 ? $this->helper->route('phpbbgallery_core_moderate') : $this->helper->route('phpbbgallery_core_moderate_album', ['album_id'	=> $album_id]);
@@ -558,7 +557,7 @@ class moderate
 				'move'		=> 'm_move',
 				'report'	=> 'm_report',
 				'change_author' => 'm_edit',
-				'rename'	=> 'm_edit',
+				'edit'		=> 'm_edit',
 			];
 			if (!isset($action_permission[$action]))
 			{
@@ -574,8 +573,19 @@ class moderate
 			}
 			$actions_array = $authorized_action['image_ids'];
 			$actions_by_album = $authorized_action['images_by_album'];
+			if ($action === 'edit')
+			{
+				if ($album_id < 1)
+				{
+					$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
+					return null;
+				}
+
+				$batch_back_link = $this->helper->route('phpbbgallery_core_moderate_view', ['album_id' => $album_id]);
+				return $this->batch_edit_images($album_id, $album, $actions_array, $actions_by_album, $batch_back_link);
+			}
+
 			$new_author = false;
-			$renamed_images = [];
 			if ($action === 'change_author')
 			{
 				$new_author = $this->image->get_new_author_info($change_author);
@@ -584,23 +594,6 @@ class moderate
 					trigger_error('INVALID_USERNAME');
 				}
 			}
-			else if ($action === 'rename')
-			{
-				foreach ($actions_array as $image_id)
-				{
-					$image_name = utf8_normalize_nfc(trim($image_names[$image_id] ?? ''));
-					if (utf8_clean_string($image_name) === '')
-					{
-						trigger_error('MISSING_IMAGE_NAME');
-					}
-					if (utf8_strlen($image_name) > 255)
-					{
-						trigger_error('TOO_LONG');
-					}
-					$renamed_images[$image_id] = $image_name;
-				}
-			}
-
 			if ($action == 'move' && $moving_target)
 			{
 				$moving_target = (int) $moving_target;
@@ -688,14 +681,6 @@ class moderate
 						$message = $this->language->lang('IMAGES_UPDATED_SUCCESSFULLY');
 					break;
 
-					case 'rename':
-						$this->image->rename_images($renamed_images);
-						foreach (array_keys($actions_by_album) as $source_album_id)
-						{
-							$this->album->update_info($source_album_id);
-						}
-						$message = $this->language->lang('IMAGES_UPDATED_SUCCESSFULLY');
-					break;
 				}
 
 				if (!empty($message))
@@ -715,10 +700,6 @@ class moderate
 				{
 					$hidden_data['change_author'] = $change_author;
 				}
-				else if ($action === 'rename')
-				{
-					$hidden_data['image_name'] = $renamed_images;
-				}
 				$s_hidden_fields = build_hidden_fields($hidden_data);
 				if ($action == 'report')
 				{
@@ -737,7 +718,7 @@ class moderate
 				}
 				else
 				{
-					$confirm_message = in_array($action, ['change_author', 'rename'], true) ? 'CONFIRM_OPERATION' : 'QUEUES_A_' . strtoupper($action) . '2_CONFIRM';
+					$confirm_message = $action === 'change_author' ? 'CONFIRM_OPERATION' : 'QUEUES_A_' . strtoupper($action) . '2_CONFIRM';
 					confirm_box(false, $this->language->lang($confirm_message), $s_hidden_fields);
 				}
 			}
@@ -754,6 +735,210 @@ class moderate
 		]);
 		$this->moderate->album_overview($album_id, $page);
 		return $this->helper->render('gallery/moderate_album_overview.html', $this->gallery_config->get_title($this->language));
+	}
+
+	/**
+	 * Render and process the metadata editor for the selected images.
+	 */
+	private function batch_edit_images(int $album_id, array $album_data, array $image_ids, array $images_by_album,
+		string $back_link): \Symfony\Component\HttpFoundation\Response
+	{
+		$submit = $this->request->variable('batch_edit_submit', false, false, request_interface::POST);
+		$image_names = $this->request->variable('image_name', [0 => ''], true, request_interface::POST);
+		$image_subtitles = $this->request->variable('image_subtitle', [0 => ''], true, request_interface::POST);
+		$image_descriptions = $this->request->variable('message', [0 => ''], true, request_interface::POST);
+		$image_num_max = max(
+			0,
+			\phpbbgallery\core\image\batch_editor::MAX_SEQUENCE - max(0, count($image_ids) - 1)
+		);
+		$image_num = min(
+			$image_num_max,
+			max(0, $this->request->variable('image_num', 1, false, request_interface::POST))
+		);
+		$description_max_length = (int) $this->gallery_config->get('description_length');
+		$error = '';
+		$editable_rows = [];
+
+		if (count($image_ids) > max(1, (int) $this->gallery_config->get('items_per_page')))
+		{
+			trigger_error('FORM_INVALID');
+		}
+
+		if ($submit && !check_form_key('gallery'))
+		{
+			trigger_error('FORM_INVALID');
+		}
+
+		foreach (array_values($image_ids) as $position => $image_id)
+		{
+			$image_data = $this->image->get_image_data($image_id);
+			if (!is_array($image_data)
+				|| !in_array((int) ($image_data['image_status'] ?? -1), [
+					\phpbbgallery\core\block::STATUS_UNAPPROVED,
+					\phpbbgallery\core\block::STATUS_APPROVED,
+					\phpbbgallery\core\block::STATUS_LOCKED,
+				], true))
+			{
+				trigger_error('FORM_INVALID');
+			}
+
+			if ($submit)
+			{
+				if (!array_key_exists($image_id, $image_names)
+					|| !array_key_exists($image_id, $image_subtitles)
+					|| !array_key_exists($image_id, $image_descriptions))
+				{
+					trigger_error('FORM_INVALID');
+				}
+
+				$sequence = $image_num + $position;
+				$image_name = utf8_normalize_nfc(trim(\phpbbgallery\core\image\batch_editor::apply_sequence((string) $image_names[$image_id], $sequence)));
+				$image_subtitle = utf8_normalize_nfc(trim(\phpbbgallery\core\image\batch_editor::apply_sequence((string) $image_subtitles[$image_id], $sequence)));
+				$image_description = utf8_normalize_nfc(\phpbbgallery\core\image\batch_editor::apply_sequence((string) $image_descriptions[$image_id], $sequence));
+
+				if ($error === '' && utf8_clean_string($image_name) === '')
+				{
+					$error = $this->language->lang('MISSING_IMAGE_NAME');
+				}
+				else if ($error === '' && utf8_strlen($image_name) > 255)
+				{
+					$error = $this->language->lang('TOO_LONG');
+				}
+				else if ($error === '' && utf8_strlen($image_subtitle) > \phpbbgallery\core\upload::IMAGE_SUBTITLE_MAX_LENGTH)
+				{
+					$error = $this->language->lang('IMAGE_SUBTITLE_TOO_LONG', \phpbbgallery\core\upload::IMAGE_SUBTITLE_MAX_LENGTH);
+				}
+				else if ($error === '' && utf8_strlen($image_description) > $description_max_length)
+				{
+					$error = $this->language->lang('DESC_TOO_LONG');
+				}
+			}
+			else
+			{
+				$image_name = (string) $image_data['image_name'];
+				$image_subtitle = (string) ($image_data['image_subtitle'] ?? '');
+				$image_description = $this->decode_image_description(
+					(string) ($image_data['image_desc'] ?? ''),
+					(string) ($image_data['image_desc_uid'] ?? '')
+				);
+			}
+
+			$editable_rows[$image_id] = [
+				'data'        => $image_data,
+				'name'        => $image_name,
+				'subtitle'    => $image_subtitle,
+				'description' => $image_description,
+			];
+		}
+
+		if ($submit && $error === '')
+		{
+			$image_updates = [];
+			foreach ($editable_rows as $image_id => $editable_row)
+			{
+				$parsed_description = $this->parse_image_description($editable_row['description']);
+				$image_updates[$image_id] = [
+					'image_name'          => $editable_row['name'],
+					'image_subtitle'      => $editable_row['subtitle'],
+					'image_desc'          => $parsed_description['message'],
+					'image_desc_uid'      => $parsed_description['uid'],
+					'image_desc_bitfield' => $parsed_description['bitfield'],
+				];
+			}
+
+			try
+			{
+				$updated = 0;
+				$updated = $this->image->edit_images($image_updates);
+			}
+			catch (\InvalidArgumentException | \RuntimeException)
+			{
+				trigger_error('FORM_INVALID');
+			}
+			if ($updated !== count($image_ids))
+			{
+				trigger_error('FORM_INVALID');
+			}
+			foreach (array_keys($images_by_album) as $source_album_id)
+			{
+				$this->album->update_info($source_album_id);
+			}
+
+			$this->url->meta_refresh(3, $back_link);
+			trigger_error($this->language->lang('IMAGES_UPDATED_SUCCESSFULLY'));
+		}
+
+		add_form_key('gallery');
+		foreach ($editable_rows as $image_id => $editable_row)
+		{
+			$image_data = $editable_row['data'];
+			$this->template->assign_block_vars('batch_image', [
+				'IMAGE_ID'       => $image_id,
+				'IMAGE_NAME'     => $editable_row['name'],
+				'IMAGE_SUBTITLE' => $editable_row['subtitle'],
+				'IMAGE_DESC'     => $editable_row['description'],
+				'U_IMAGE'        => $this->helper->route('phpbbgallery_core_image_file_mini', ['image_id' => $image_id]),
+			]);
+		}
+
+		$this->template->assign_vars([
+			'ERROR'                       => $error,
+			'U_ALBUM_NAME'                => $album_data['album_name'],
+			'U_ALBUM_OVERVIEW'            => $back_link,
+			'U_GALLERY_MODERATE_OVERVIEW' => $this->helper->route('phpbbgallery_core_moderate_album', ['album_id' => $album_id]),
+			'U_GALLERY_MODERATE_APPROVE'  => $this->helper->route('phpbbgallery_core_moderate_queue_approve_album', ['album_id' => $album_id]),
+			'U_GALLERY_MODERATE_REPORT'   => $this->helper->route('phpbbgallery_core_moderate_reports_album', ['album_id' => $album_id]),
+			'U_GALLERY_MCP_LOGS'          => $this->helper->route('phpbbgallery_core_moderate_action_log_album', ['album_id' => $album_id]),
+			'S_GALLERY_BATCH_EDIT_ACTION' => $this->helper->route('phpbbgallery_core_moderate_view', ['album_id' => $album_id]),
+			'IMAGE_NUM'                   => $image_num,
+			'DESCRIPTION_MAX_LENGTH'      => $description_max_length,
+			'L_DESCRIPTION_LENGTH'        => $this->language->lang('DESCRIPTION_LENGTH', $description_max_length),
+			'IMAGE_SUBTITLE_MAX_LENGTH'   => \phpbbgallery\core\upload::IMAGE_SUBTITLE_MAX_LENGTH,
+			'IMAGE_NUM_MAX'               => $image_num_max,
+		]);
+
+		return $this->helper->render('gallery/moderate_batch_edit.html', $this->language->lang('BATCH_EDIT_IMAGES'));
+	}
+
+	/**
+	 * Decode a stored image description for a textarea.
+	 */
+	private function decode_image_description(string $description, string $uid): string
+	{
+		if (!class_exists('parse_message'))
+		{
+			include_once($this->root_path . 'includes/message_parser.' . $this->php_ext);
+		}
+		$message_parser = new \parse_message();
+		$message_parser->message = $description;
+		$message_parser->decode_message($uid);
+
+		return $message_parser->message;
+	}
+
+	/**
+	 * Parse an edited image description for database storage.
+	 *
+	 * @return array{message: string, uid: string, bitfield: string}
+	 */
+	private function parse_image_description(string $description): array
+	{
+		if (!class_exists('parse_message'))
+		{
+			include_once($this->root_path . 'includes/message_parser.' . $this->php_ext);
+		}
+		$message_parser = new \parse_message();
+		$message_parser->message = $description;
+		if ($message_parser->message !== '')
+		{
+			$message_parser->parse(true, true, true, true, false, true, true, true);
+		}
+
+		return [
+			'message'  => $message_parser->message,
+			'uid'      => $message_parser->bbcode_uid,
+			'bitfield' => $message_parser->bbcode_bitfield,
+		];
 	}
 
 	/**

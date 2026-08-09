@@ -65,10 +65,6 @@
 										{% if overview.U_IS_LOCKED %}<span class="image_locked" title="{{ lang('QUEUE_STATUS_2') }}">{{ lang('QUEUE_STATUS_2') }}</span>{% endif %}
 										{{ overview.U_IMAGE_NAME }}
 									</a><br />
-									{% if S_CAN_EDIT_IMAGES %}
-										<label for="image_name_{{ overview.U_IMAGE_ID }}">{{ lang('IMAGE_NAME') }}{{ lang('COLON') }}</label>
-										<input class="inputbox" type="text" id="image_name_{{ overview.U_IMAGE_ID }}" name="image_name[{{ overview.U_IMAGE_ID }}]" value="{{ overview.U_IMAGE_NAME }}" maxlength="255" />
-									{% endif %}
 									{{ lang('UPLOADED_BY_USER') }}{{ lang('COLON') }} {{ overview.IMAGE_AUTHOR }}<br />
 									&raquo; {{ overview.IMAGE_TIME }}<br /><br />
 								</div> <br />

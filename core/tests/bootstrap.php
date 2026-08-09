@@ -231,6 +231,7 @@ namespace
 	require_once __DIR__ . '/stubs/phpbb_config.php';
 	require_once __DIR__ . '/stubs/phpbb_user.php';
 	require_once __DIR__ . '/stubs/template_noop_token_parser.php';
+	require_once dirname(__DIR__) . '/image/batch_editor.php';
 	require_once dirname(__DIR__) . '/image/orientation.php';
 	require_once dirname(__DIR__) . '/image/external_processor_interface.php';
 	require_once dirname(__DIR__) . '/image/bmp_processor.php';

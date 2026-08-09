@@ -25,7 +25,11 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'CHOOSE_ACTION' => 'Изберете желаното действие',
-	'RENAME_IMAGES' => 'Преименуване на избраните изображения',
+	'EDIT_SELECTED_IMAGES'         => 'Редактиране на избраните изображения',
+	'BATCH_EDIT_IMAGES'            => 'Редактиране на избраните изображения',
+	'BATCH_EDIT_EXPLAIN'           => 'Прегледайте заглавието, подзаглавието и описанието на всяко избрано изображение преди запис.',
+	'BATCH_EDIT_NUMBERING'         => 'Начало на номерирането от',
+	'BATCH_EDIT_NUMBERING_EXPLAIN' => 'Всеки маркер {NUM} в заглавие, подзаглавие или описание се заменя с поредния номер.',
 
 	'GALLERY_MCP_MAIN'           => 'Основно',
 	'GALLERY_MCP_OVERVIEW'       => 'Преглед',

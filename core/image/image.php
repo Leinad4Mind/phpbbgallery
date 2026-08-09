@@ -283,62 +283,94 @@ class image
 	}
 
 	/**
-	 * Rename multiple images using an image-id-to-name map.
+	 * Persist prepared title, subtitle and description values for multiple images.
 	 *
+	 * @param array $image_updates Image-id-to-fields map. Descriptions must already be parsed for storage.
 	 * @return int Number of updated images
 	 */
-	public function rename_images(array $image_names): int
+	public function edit_images(array $image_updates): int
 	{
-		$normalized_names = [];
-		foreach ($image_names as $image_id => $image_name)
+		$normalized_updates = [];
+		foreach ($image_updates as $image_id => $image_update)
 		{
 			$image_id = (int) $image_id;
-			$image_name = utf8_normalize_nfc(trim((string) $image_name));
-			if ($image_id < 1 || utf8_clean_string($image_name) === '' || utf8_strlen($image_name) > 255)
+			if (!is_array($image_update))
 			{
-				throw new \InvalidArgumentException('Invalid image name.');
+				throw new \InvalidArgumentException('Invalid image update.');
 			}
-			$normalized_names[$image_id] = $image_name;
+
+			$image_name = utf8_normalize_nfc(trim((string) ($image_update['image_name'] ?? '')));
+			$image_subtitle = utf8_normalize_nfc(trim((string) ($image_update['image_subtitle'] ?? '')));
+			if ($image_id < 1
+				|| utf8_clean_string($image_name) === ''
+				|| utf8_strlen($image_name) > 255
+				|| utf8_strlen($image_subtitle) > \phpbbgallery\core\upload::IMAGE_SUBTITLE_MAX_LENGTH
+				|| !isset($image_update['image_desc'], $image_update['image_desc_uid'], $image_update['image_desc_bitfield']))
+			{
+				throw new \InvalidArgumentException('Invalid image update.');
+			}
+			$normalized_updates[$image_id] = [
+				'image_name'          => $image_name,
+				'image_name_clean'    => utf8_clean_string($image_name),
+				'image_subtitle'      => $image_subtitle,
+				'image_desc'          => (string) $image_update['image_desc'],
+				'image_desc_uid'      => (string) $image_update['image_desc_uid'],
+				'image_desc_bitfield' => (string) $image_update['image_desc_bitfield'],
+			];
 		}
-		if (!$normalized_names)
+		if (!$normalized_updates)
 		{
 			return 0;
 		}
 
-		$sql = 'SELECT image_id, image_album_id, image_name
+		$sql = 'SELECT *
 			FROM ' . $this->table_images . '
-			WHERE image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED . '
-				AND ' . $this->db->sql_in_set('image_id', array_keys($normalized_names));
+			WHERE ' . $this->db->sql_in_set('image_status', [
+				\phpbbgallery\core\block::STATUS_UNAPPROVED,
+				\phpbbgallery\core\block::STATUS_APPROVED,
+				\phpbbgallery\core\block::STATUS_LOCKED,
+			]) . '
+				AND ' . $this->db->sql_in_set('image_id', array_keys($normalized_updates));
 		$result = $this->db->sql_query($sql);
-		$image_data = [];
+		$image_rows = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$image_data[(int) $row['image_id']] = $row;
+			$image_rows[(int) $row['image_id']] = $row;
 		}
 		$this->db->sql_freeresult($result);
-		if (!$image_data)
+		if (count($image_rows) !== count($normalized_updates))
 		{
-			return 0;
+			throw new \RuntimeException('One or more selected images are no longer editable.');
 		}
 
 		$this->db->sql_transaction('begin');
 		try
 		{
-			foreach ($normalized_names as $image_id => $image_name)
+			foreach ($normalized_updates as $image_id => $sql_ary)
 			{
-				if (!isset($image_data[$image_id]))
-				{
-					continue;
-				}
-				$sql_ary = [
-					'image_name'       => $image_name,
-					'image_name_clean' => utf8_clean_string($image_name),
-				];
 				$sql = 'UPDATE ' . $this->table_images . '
 					SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . '
 					WHERE image_id = ' . (int) $image_id;
 				$this->db->sql_query($sql);
-				$this->gallery_log->add_log('moderator', 'edit', (int) $image_data[$image_id]['image_album_id'], $image_id, ['LOG_GALLERY_EDITED', $image_name]);
+
+				$image_data = $image_rows[$image_id];
+				$updated_image_data = array_merge($image_data, $sql_ary);
+				$file_changed = false;
+				/**
+				 * Notify add-ons after an authorized batch image edit has been persisted.
+				 *
+				 * @event phpbbgallery.core.image.batch_edit_after
+				 * @var int   image_id           Edited image identifier
+				 * @var array image_data         Image row before the edit
+				 * @var array updated_image_data Image row after applying the edit
+				 * @var array sql_ary            Values persisted by this edit
+				 * @var bool  file_changed       Always false for metadata-only batch edits
+				 * @since 4.1.0
+				 */
+				$vars = ['image_id', 'image_data', 'updated_image_data', 'sql_ary', 'file_changed'];
+				extract($this->phpbb_dispatcher->trigger_event('phpbbgallery.core.image.batch_edit_after', compact($vars)));
+
+				$this->gallery_log->add_log('moderator', 'edit', (int) $image_rows[$image_id]['image_album_id'], $image_id, ['LOG_GALLERY_EDITED', $normalized_updates[$image_id]['image_name']]);
 			}
 			$this->db->sql_transaction('commit');
 		}
@@ -350,7 +382,7 @@ class image
 
 		$this->gallery_cache->destroy_images();
 
-		return count(array_intersect_key($normalized_names, $image_data));
+		return count($normalized_updates);
 	}
 
 	/**

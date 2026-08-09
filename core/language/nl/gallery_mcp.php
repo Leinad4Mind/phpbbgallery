@@ -25,7 +25,11 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	'CHOOSE_ACTION' => 'Selecteer de gewenste actie',
-	'RENAME_IMAGES' => 'Geselecteerde afbeeldingen hernoemen',
+	'EDIT_SELECTED_IMAGES'         => 'Geselecteerde afbeeldingen bewerken',
+	'BATCH_EDIT_IMAGES'            => 'Geselecteerde afbeeldingen bewerken',
+	'BATCH_EDIT_EXPLAIN'           => 'Controleer de titel, ondertitel en beschrijving van elke geselecteerde afbeelding voordat je opslaat.',
+	'BATCH_EDIT_NUMBERING'         => 'Nummering beginnen bij',
+	'BATCH_EDIT_NUMBERING_EXPLAIN' => 'Elke markering {NUM} in een titel, ondertitel of beschrijving wordt vervangen door het volgnummer.',
 
 	'GALLERY_MCP_MAIN'           => 'Begin',
 	'GALLERY_MCP_OVERVIEW'       => 'Overzicht',

@@ -1,0 +1,72 @@
+{% include 'gallery/gallery_header.html' %}
+
+<h2>{{ lang('MCP') }} - {{ U_ALBUM_NAME }}</h2>
+
+<div id="tabs" class="tabs">
+	<ul>
+		<li class="tab"><a href="{{ U_GALLERY_MODERATE_OVERVIEW }}">{{ lang('GALLERY_MCP_MAIN') }}</a></li>
+		<li class="tab activetab"><a href="{{ U_ALBUM_OVERVIEW }}">{{ lang('GALLERY_MCP_ALBUM_OVERVIEW') }}</a></li>
+		<li class="tab"><a href="{{ U_GALLERY_MODERATE_APPROVE }}">{{ lang('GALLERY_MCP_QUEUE') }}</a></li>
+		<li class="tab"><a href="{{ U_GALLERY_MODERATE_REPORT }}">{{ lang('GALLERY_MCP_REPORTED') }}</a></li>
+		<li class="tab"><a href="{{ U_GALLERY_MCP_LOGS }}">{{ lang('MCP_LOGS') }}</a></li>
+	</ul>
+</div>
+
+<form id="gallery-batch-edit" method="post" action="{{ S_GALLERY_BATCH_EDIT_ACTION }}">
+	<div class="panel bg3">
+		<div class="inner">
+			<h2>{{ lang('BATCH_EDIT_IMAGES') }}</h2>
+			<p>{{ lang('BATCH_EDIT_EXPLAIN') }}</p>
+			{% if ERROR %}<p class="error">{{ ERROR }}</p>{% endif %}
+
+			<fieldset class="fields2">
+				<dl>
+					<dt><label for="image_num">{{ lang('BATCH_EDIT_NUMBERING') }}</label><br><span>{{ lang('BATCH_EDIT_NUMBERING_EXPLAIN') }}</span></dt>
+					<dd><input class="inputbox autowidth" type="number" id="image_num" name="image_num" value="{{ IMAGE_NUM }}" min="0" max="{{ IMAGE_NUM_MAX }}"></dd>
+				</dl>
+			</fieldset>
+
+			{% for batch_image in batch_image %}
+			<fieldset class="panel {% if batch_image.S_ROW_COUNT is odd %}bg1{% else %}bg2{% endif %}">
+				<div class="inner" style="display: flex; gap: 16px; align-items: flex-start;">
+					<div style="flex: 0 0 120px; text-align: center;">
+						<img src="{{ batch_image.U_IMAGE }}" alt="{{ batch_image.IMAGE_NAME }}" style="max-width: 120px; max-height: 120px;">
+					</div>
+					<div style="flex: 1 1 auto; min-width: 0;">
+						<input type="hidden" name="action[]" value="{{ batch_image.IMAGE_ID }}">
+						<dl>
+							<dt><label for="image_name_{{ batch_image.IMAGE_ID }}">{{ lang('IMAGE_NAME') }}</label></dt>
+							<dd><input class="inputbox" type="text" id="image_name_{{ batch_image.IMAGE_ID }}" name="image_name[{{ batch_image.IMAGE_ID }}]" value="{{ batch_image.IMAGE_NAME }}" maxlength="255" required></dd>
+						</dl>
+						<dl>
+							<dt><label for="image_subtitle_{{ batch_image.IMAGE_ID }}">{{ lang('IMAGE_SUBTITLE') }}</label></dt>
+							<dd>
+								<input class="inputbox" type="text" id="image_subtitle_{{ batch_image.IMAGE_ID }}" name="image_subtitle[{{ batch_image.IMAGE_ID }}]" value="{{ batch_image.IMAGE_SUBTITLE }}" maxlength="{{ IMAGE_SUBTITLE_MAX_LENGTH }}">
+								<span>{{ lang('IMAGE_SUBTITLE_EXPLAIN') }}</span>
+							</dd>
+						</dl>
+						<dl>
+							<dt><label for="message_{{ batch_image.IMAGE_ID }}">{{ lang('IMAGE_DESC') }}</label></dt>
+							<dd>
+								<textarea class="inputbox" id="message_{{ batch_image.IMAGE_ID }}" name="message[{{ batch_image.IMAGE_ID }}]" rows="6" maxlength="{{ DESCRIPTION_MAX_LENGTH }}" data-gallery-character-counter data-gallery-counter-output-id="description-counter-{{ batch_image.IMAGE_ID }}" data-gallery-max-length="{{ DESCRIPTION_MAX_LENGTH }}" aria-describedby="description-limit-{{ batch_image.IMAGE_ID }} description-counter-{{ batch_image.IMAGE_ID }}">{{ batch_image.IMAGE_DESC }}</textarea>
+								<span id="description-limit-{{ batch_image.IMAGE_ID }}" class="gallery-comment-guidance" data-gallery-comment-guidance-text>{{ L_DESCRIPTION_LENGTH }}</span>
+								<output id="description-counter-{{ batch_image.IMAGE_ID }}" class="gallery-comment-counter" data-gallery-character-counter-output hidden aria-live="polite" aria-atomic="true"></output>
+							</dd>
+						</dl>
+					</div>
+				</div>
+			</fieldset>
+			{% endfor %}
+
+			<fieldset class="submit-buttons">
+				<input type="hidden" name="select_action" value="edit">
+				<input class="button1" type="submit" name="batch_edit_submit" value="{{ lang('SUBMIT') }}">
+				<a class="button2" href="{{ U_ALBUM_OVERVIEW }}">{{ lang('CANCEL') }}</a>
+				{{ S_FORM_TOKEN }}
+			</fieldset>
+		</div>
+	</div>
+</form>
+
+{% INCLUDEJS '@phpbbgallery_core/js/comment_counter.js' %}
+{% include 'gallery/gallery_footer.html' %}
