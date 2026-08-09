@@ -50,7 +50,7 @@ final class album_polaroid_title_test extends TestCase
 				$template = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/' . $filename);
 				$this->assertStringContainsString('S_PUBLIC_SECTION_START', $template, $style . '/' . $filename);
 				$this->assertStringContainsString('S_PERSONAL_SECTION_START', $template, $style . '/' . $filename);
-				$this->assertStringContainsString("lang('PUBLIC_ALBUMS')", $template, $style . '/' . $filename);
+				$this->assertStringContainsString('GALLERY_PUBLIC_ALBUMS_LABEL', $template, $style . '/' . $filename);
 				$this->assertStringContainsString("lang('PERSONAL_ALBUMS')", $template, $style . '/' . $filename);
 				$this->assertStringContainsString('gallery-personal-album', $template, $style . '/' . $filename);
 				if ($style !== 'prosilver')

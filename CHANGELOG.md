@@ -83,6 +83,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Made the personal-album index switch authoritative: disabling it now removes personal albums, their fallback link and their statistics from the Gallery index, while the remaining section is labelled simply as Albums.
 - Reordered the BBOOTS and FLATBOOTS upload form so image selection precedes the optional author and comment controls, and rendered the comment checkbox as one responsive theme-native row.
 - Kept the Favorite UCP bulk-action selector and submit button together in one responsive native Bootstrap control in BBOOTS and FLATBOOTS.
 - Rendered album-moderation batch actions inside each style so FLATBOOTS and BBOOTS use their native Bootstrap select picker instead of an unstyled Core-generated dropdown.

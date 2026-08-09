@@ -50,7 +50,15 @@ final class gallery_index_layout_test extends TestCase
 	{
 		$controller = (string) file_get_contents(dirname(__DIR__) . '/controller/index.php');
 
-		$this->assertSame(2, substr_count($controller, "assign_var('GALLERY_INDEX_ALBUM_LAYOUT', \$this->gallery_config->get_index_album_layout())"));
+		$this->assertSame(2, substr_count($controller, '$this->gallery_config->get_index_album_layout()'));
 		$this->assertStringNotContainsString("get('index_album_layout')", $controller);
+	}
+
+	public function test_modern_layout_uses_the_context_aware_public_album_label(): void
+	{
+		$template = (string) file_get_contents(dirname(__DIR__) . '/styles/all/template/gallery/albumlist_modern.html');
+
+		$this->assertStringContainsString('GALLERY_PUBLIC_ALBUMS_LABEL', $template);
+		$this->assertStringContainsString("lang('PERSONAL_ALBUMS')", $template);
 	}
 }

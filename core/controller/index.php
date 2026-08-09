@@ -53,15 +53,6 @@ class index
 	/** @var \phpbb\pagination  */
 	protected \phpbb\pagination $pagination;
 
-	/** @var \phpbbgallery\core\user  */
-	protected \phpbbgallery\core\user $gallery_user;
-
-	/** @var \phpbbgallery\core\image\image  */
-	protected \phpbbgallery\core\image\image $image;
-
-	/** @var \phpbbgallery\core\policy\image_visibility */
-	protected \phpbbgallery\core\policy\image_visibility $image_visibility;
-
 	/** @var \phpbb\event\dispatcher_interface */
 	protected \phpbb\event\dispatcher_interface $dispatcher;
 
@@ -89,10 +80,7 @@ class index
 	 * @param \phpbbgallery\core\config                                 $gallery_config
 	 * @param \phpbbgallery\core\auth\auth                              $gallery_auth
 	 * @param \phpbb\pagination                                         $pagination
-	 * @param \phpbbgallery\core\user                                   $gallery_user
 	 * @param \phpbbgallery\core\search                                 $gallery_search
-	 * @param \phpbbgallery\core\image\image                            $image
-	 * @param \phpbbgallery\core\policy\image_visibility                $image_visibility
 	 * @param \phpbb\event\dispatcher_interface                        $dispatcher
 	 * @param string                                                    $root_path Root path
 	 * @param string                                                    $php_ext   php file extension
@@ -101,8 +89,7 @@ class index
 		\phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, \phpbb\language\language $language,
 		\phpbb\controller\helper $helper, \phpbbgallery\core\album\display $display, \phpbbgallery\core\config $gallery_config,
 		\phpbbgallery\core\auth\auth $gallery_auth, \phpbbgallery\core\search $gallery_search, \phpbb\pagination $pagination,
-		\phpbbgallery\core\user $gallery_user, \phpbbgallery\core\image\image $image,
-		\phpbbgallery\core\policy\image_visibility $image_visibility, \phpbb\event\dispatcher_interface $dispatcher,
+		\phpbb\event\dispatcher_interface $dispatcher,
 		string $root_path, string $php_ext)
 	{
 		$this->auth = $auth;
@@ -118,9 +105,6 @@ class index
 		$this->gallery_auth = $gallery_auth;
 		$this->gallery_search = $gallery_search;
 		$this->pagination = $pagination;
-		$this->gallery_user = $gallery_user;
-		$this->image = $image;
-		$this->image_visibility = $image_visibility;
 		$this->dispatcher = $dispatcher;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
@@ -142,75 +126,17 @@ class index
 			login_box();
 		}
 		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
-		$this->template->assign_var('GALLERY_INDEX_ALBUM_LAYOUT', $this->gallery_config->get_index_album_layout());
+		$show_personal_albums = (bool) $this->gallery_config->get('pegas_index_album');
+		$this->template->assign_vars([
+			'GALLERY_INDEX_ALBUM_LAYOUT' => $this->gallery_config->get_index_album_layout(),
+			'GALLERY_PUBLIC_ALBUMS_LABEL' => $this->language->lang($show_personal_albums ? 'PUBLIC_ALBUMS' : 'ALBUMS'),
+		]);
 		$this->display->display_albums(false, $this->config['load_moderators']);
 
-		if ($this->gallery_config->get('pegas_index_album'))
+		if ($show_personal_albums)
 		{
 			$this->display->display_albums('personal', $this->config['load_moderators']);
 		}
-		else
-		{
-			$last_image = $this->normalize_last_image($this->image->get_last_image());
-			$hide_last_image_uploader = $last_image['image_id'] > 0 && $this->image_visibility->hides_private_data(
-				$last_image,
-				(int) $this->user->data['user_id'],
-				$this->gallery_auth->acl_check('m_status', (int) $last_image['image_album_id'])
-			);
-			$last_image_uploader_label = $hide_last_image_uploader ? $this->image_visibility->private_data_label(
-				$last_image,
-				(int) $this->user->data['user_id'],
-				$this->gallery_auth->acl_check('m_status', (int) $last_image['image_album_id']),
-				$this->language->lang('GALLERY_PRIVATE_USER')
-			) : '';
-			switch ($this->gallery_config->get('link_image_icon'))
-			{
-				case 'image_page':
-					$action_image = $this->helper->route('phpbbgallery_core_image', ['image_id' => $last_image['image_id']]);
-				break;
-				case 'image':
-					$action_image = $this->helper->route('phpbbgallery_core_image_file_source', ['image_id' => $last_image['image_id']]);
-				break;
-				default:
-					$action_image = false;
-				break;
-			}
-
-			$alphabet = range('a', 'z');
-			$alpha_links = [];
-			foreach ($alphabet as $char)
-			{
-				$alpha_links[] = '<a href="' . append_sid($this->helper->route('phpbbgallery_core_personal'), 'first_char=' . $char) . '">' . strtoupper($char) . '</a>';
-			}
-			$alpha_links[] = '<a href="' . append_sid($this->helper->route('phpbbgallery_core_personal'), 'first_char=other') . '">#</a>';
-
-			$this->template->assign_vars([
-				'S_USERS_PERSONAL_GALLERIES'	=> true,
-				'U_USERS_PERSONAL_GALLERIES' => $this->helper->route('phpbbgallery_core_personal'),
-				'U_PERSONAL_GALLERIES_IMAGES'	=> $this->gallery_config->get('num_images'),
-				'U_PERSONAL_GALLERIES_LAST_IMAGE'	=> $this->helper->route('phpbbgallery_core_image_file_mini', ['image_id' => $last_image['image_id']]),
-				'U_IMAGENAME'	=> ($last_image['image_id'] > 0) ? $last_image['image_name'] : false,
-				'U_IMAGE_ACTION'	=> $action_image,
-				'U_IMAGENAME_ACTION'	=> $this->helper->route('phpbbgallery_core_image', ['image_id' => $last_image['image_id']]),
-				'U_TIME'	=> ($last_image['image_id'] > 0) ?  $this->user->format_date($last_image['image_time']) : false,
-				'U_UPLOADER'	=> ($last_image['image_id'] > 0)
-					? ($hide_last_image_uploader ? $last_image_uploader_label : get_username_string('full', $last_image['image_user_id'], $last_image['image_username'], $last_image['image_user_colour']))
-					: false,
-				'ALPHABET_NAVIGATION' => implode('&nbsp;', $alpha_links),
-			]);
-			$this->gallery_user->set_user_id($this->user->data['user_id']);
-			$personal_album = $this->gallery_user->get_own_root_album();
-			if ($personal_album > 0)
-			{
-				$this->template->assign_vars([
-					'S_PERSONAL_ALBUM'	=> true,
-					'U_PERSONAL_ALBUM'	=> $this->helper->route('phpbbgallery_core_album', ['album_id' => $personal_album]),
-					'U_PERSONAL_ALBUM_USER'	=> $this->user->data['username'],
-					'U_PERSONAL_ALBUM_COLOR'	=> $this->user->data['user_colour'],
-				]);
-			}
-		}
-
 		if ($this->gallery_config->get('rrc_gindex_mode'))
 		{
 			$config_value = $this->gallery_config->get('rrc_gindex_mode');
@@ -246,7 +172,7 @@ class index
 		}
 		$this->display_legend();
 		$this->display_birthdays();
-		$this->assign_dropdown_links('phpbbgallery_core_index');
+		$this->assign_dropdown_links('phpbbgallery_core_index', $show_personal_albums);
 
 		$this->template->assign_block_vars('navlinks', [
 			'FORUM_NAME'	=> $this->gallery_config->get_title($this->language),
@@ -322,7 +248,7 @@ class index
 		return $this->helper->render('gallery/index_body.html', $this->language->lang('PERSONAL_ALBUMS'));
 	}
 
-	protected function assign_dropdown_links(string $base_route): void
+	protected function assign_dropdown_links(string $base_route, bool $include_personal_statistics = true): void
 	{
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 
@@ -332,13 +258,15 @@ class index
 		$show_comments = (bool) ($show_options & self::RRC_MODE_RECENT_COMMENTS);
 		$show_random   = (bool) ($show_options & self::RRC_MODE_RANDOM_IMAGES);
 		$show_recent   = (bool) ($show_options & self::RRC_MODE_RECENT_IMAGES);
+		$can_list_personal_albums = $include_personal_statistics
+			&& $this->gallery_auth->acl_check('a_list', \phpbbgallery\core\auth\auth::PERSONAL_ALBUM);
 		$this->template->assign_vars([
 			'TOTAL_IMAGES'		=> ($this->gallery_config->get('disp_statistic')) ? $this->language->lang('TOTAL_IMAGES_SPRINTF', $this->gallery_config->get('num_images')) : '',
 			'TOTAL_IMAGE_COUNT'	=> ($this->gallery_config->get('disp_statistic')) ? (int) $this->gallery_config->get('num_images') : false,
 			'TOTAL_VIEWS'		=> ($this->gallery_config->get('disp_statistic')) ? $this->gallery_config->get('num_views') : false,
 			'TOTAL_COMMENTS'	=> ($this->gallery_config->get('allow_comments')) ? $this->language->lang('TOTAL_COMMENTS_SPRINTF', $this->gallery_config->get('num_comments')) : '',
-			'TOTAL_PGALLERIES'	=> ($this->gallery_auth->acl_check('a_list', \phpbbgallery\core\auth\auth::PERSONAL_ALBUM)) ? $this->language->lang('TOTAL_PEGAS_SPRINTF', $this->gallery_config->get('num_pegas')) : '',
-			'NEWEST_PGALLERIES'	=> ($this->gallery_config->get('num_pegas')) ? sprintf($this->language->lang('NEWEST_PGALLERY'), '<a href="' . $this->helper->route('phpbbgallery_core_album', ['album_id' => $this->gallery_config->get('newest_pega_album_id')]) . '" '. ($this->gallery_config->get('newest_pega_user_colour') ? 'class="username-coloured" style="color: #' . $this->gallery_config->get('newest_pega_user_colour') . ';"' : 'class="username"') . '>' . $this->gallery_config->get('newest_pega_username') . '</a>') : '',
+			'TOTAL_PGALLERIES'	=> $can_list_personal_albums ? $this->language->lang('TOTAL_PEGAS_SPRINTF', $this->gallery_config->get('num_pegas')) : '',
+			'NEWEST_PGALLERIES'	=> ($can_list_personal_albums && $this->gallery_config->get('num_pegas')) ? sprintf($this->language->lang('NEWEST_PGALLERY'), '<a href="' . $this->helper->route('phpbbgallery_core_album', ['album_id' => $this->gallery_config->get('newest_pega_album_id')]) . '" '. ($this->gallery_config->get('newest_pega_user_colour') ? 'class="username-coloured" style="color: #' . $this->gallery_config->get('newest_pega_user_colour') . ';"' : 'class="username"') . '>' . $this->gallery_config->get('newest_pega_username') . '</a>') : '',
 		]);
 
 		$dropdown_links = [
@@ -461,22 +389,6 @@ class index
 			}
 			$this->db->sql_freeresult($result);
 		}
-	}
-
-	/**
-	 * Normalize the latest-image result for an empty gallery.
-	 *
-	 * @param array|false $last_image Latest image data, or false when none exists
-	 * @return array Latest image data with a stable image identifier
-	 */
-	protected function normalize_last_image(array|false $last_image): array
-	{
-		if (empty($last_image))
-		{
-			return ['image_id' => 0];
-		}
-
-		return $last_image;
 	}
 
 	/**

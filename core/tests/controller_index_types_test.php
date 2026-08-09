@@ -54,17 +54,6 @@ final class controller_index_types_test extends TestCase
 		$this->assertSame('int', (string) $reflection->getMethod('personal')->getParameters()[0]->getType());
 	}
 
-	public function test_empty_latest_image_results_have_a_stable_identifier(): void
-	{
-		$reflection = new \ReflectionClass(index::class);
-		$controller = $reflection->newInstanceWithoutConstructor();
-		$normalizer = $reflection->getMethod('normalize_last_image');
-
-		$this->assertSame(['image_id' => 0], $normalizer->invoke($controller, false));
-		$this->assertSame(['image_id' => 0], $normalizer->invoke($controller, []));
-		$this->assertSame(['image_id' => 17, 'image_name' => 'Example'], $normalizer->invoke($controller, ['image_id' => 17, 'image_name' => 'Example']));
-	}
-
 	public function test_personal_gallery_pages_are_clamped_to_the_first_page(): void
 	{
 		$reflection = new \ReflectionClass(index::class);
@@ -83,23 +72,23 @@ final class controller_index_types_test extends TestCase
 		$this->assertSame(1, index::RRC_MODE_RECENT_IMAGES);
 	}
 
-	public function test_latest_image_summary_uses_the_neutral_identity_policy(): void
+	public function test_personal_albums_are_only_emitted_when_enabled_on_the_index(): void
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/index.php');
 
-		$this->assertStringContainsString('$hide_last_image_uploader', $source);
-		$this->assertStringContainsString('$this->image_visibility->hides_private_data(', $source);
-		$this->assertStringContainsString('$this->image_visibility->private_data_label(', $source);
-		$this->assertStringNotContainsString('core\\contest::', $source);
-		$this->assertStringNotContainsString('CONTEST_USERNAME', $source);
+		$this->assertStringContainsString('$show_personal_albums = (bool) $this->gallery_config->get(\'pegas_index_album\')', $source);
+		$this->assertStringContainsString('if ($show_personal_albums)', $source);
+		$this->assertStringContainsString('$this->assign_dropdown_links(\'phpbbgallery_core_index\', $show_personal_albums)', $source);
+		$this->assertStringContainsString('$show_personal_albums ? \'PUBLIC_ALBUMS\' : \'ALBUMS\'', $source);
+		$this->assertStringNotContainsString("'S_USERS_PERSONAL_GALLERIES'", $source);
+		$this->assertStringNotContainsString('normalize_last_image', $source);
 
 		$services = (string) file_get_contents(dirname(__DIR__) . '/config/services_controller.yml');
 		$index_service = strstr($services, 'phpbbgallery.core.controller.index:');
 		$index_service = strstr($index_service, 'phpbbgallery.core.controller.search:', true);
-		$this->assertStringContainsString(
-			"- '@phpbbgallery.core.policy.image_visibility'",
-			$index_service
-		);
+		$this->assertStringNotContainsString("- '@phpbbgallery.core.user'", $index_service);
+		$this->assertStringNotContainsString("- '@phpbbgallery.core.image'", $index_service);
+		$this->assertStringNotContainsString("- '@phpbbgallery.core.policy.image_visibility'", $index_service);
 	}
 
 	public function test_optional_index_links_are_added_through_neutral_event(): void
