@@ -32,7 +32,7 @@ final class image_edit_file_extension_test extends TestCase
 		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/image.php');
 		$this->assertStringContainsString('if (!$errors && !$file_changed && $this->gallery_config->get(\'allow_rotate\')', $source);
 		$this->assertStringContainsString("\$error = implode('<br />', \$errors);", $source);
-		$this->assertStringContainsString("\$vars = ['image_id', 'image_data', 'album_data', 'errors', 'orientation', 'rotate', 'file_changed'];", $source);
+		$this->assertStringContainsString("'file_changed',\n\t\t\t\t'sql_ary',", $source);
 	}
 
 	public function test_display_event_exposes_only_the_context_an_addon_needs(): void

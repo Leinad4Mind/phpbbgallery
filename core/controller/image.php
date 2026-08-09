@@ -1494,6 +1494,7 @@ class image
 			 * @var int   orientation Requested EXIF-compatible orientation
 			 * @var int   rotate      Legacy requested rotation in degrees
 			 * @var bool  file_changed Set true when a listener replaced the source file
+			 * @var array sql_ary      Normalized image values, including a destination album when moved
 			 * @since 3.4.0
 			 */
 			$vars = [
@@ -1504,6 +1505,7 @@ class image
 				'orientation',
 				'rotate',
 				'file_changed',
+				'sql_ary',
 			];
 			extract($this->dispatcher->trigger_event('phpbbgallery.core.image_edit_file', compact($vars)));
 
