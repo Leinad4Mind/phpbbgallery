@@ -25,17 +25,24 @@ function toggleElement(oElement)
 }
 </script>
 {% if pagination|length or SEARCH_MATCHES or PAGE_NUMBER %}
-	<form method="get" action="{{ S_SEARCH_ACTION }}">
-	<div class="topic-actions">
-
-	{% if SEARCH_MATCHES %}
-		<div class="search-box">
-			{% if SEARCH_IN_RESULTS %}
-				<label for="add_keywords">{{ lang('SEARCH_IN_RESULTS') }}{{ lang('COLON') }} <input type="text" name="add_keywords" id="add_keywords" value="" class="inputbox narrow" /></label>
+	<div class="action-bar bar-top">
+	{% if SEARCH_MATCHES and SEARCH_IN_RESULTS %}
+		<div class="search-box" role="search">
+			<form method="get" action="{{ S_SEARCH_ACTION }}">
+			<fieldset>
+				<input class="inputbox search tiny" type="search" name="add_keywords" id="add_keywords" value="" placeholder="{{ lang('SEARCH_IN_RESULTS') }}" aria-label="{{ lang('SEARCH_IN_RESULTS') }}" />
+				<button class="button button-search" type="submit" name="submit" value="1" title="{{ lang('SEARCH') }}">
+					<i class="icon fa-search fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('SEARCH') }}</span>
+				</button>
+				{% if U_GALLERY_SEARCH %}
+				<a href="{{ U_GALLERY_SEARCH }}" class="button button-search-end" title="{{ lang('SEARCH_ADV') }}">
+					<i class="icon fa-cog fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('SEARCH_ADV') }}</span>
+				</a>
+				{% endif %}
 				<input type="hidden" name="show_results" value="posts" />
 				{{ S_SEARCH_RESULT_HIDDEN_FIELDS }}
-				<input class="button2" type="submit" name="submit" value="{{ lang('SEARCH') }}" />
-			{% endif %}
+			</fieldset>
+			</form>
 		</div>
 	{% endif %}
 
@@ -49,8 +56,7 @@ function toggleElement(oElement)
 			{% endif %}
 		</div>
 	{% endif %}
-		</div>
-	</form>
+	</div>
 	{% else %}
 		<div class="panel">
 			<div class="inner" style="text-align: center;">
@@ -190,8 +196,8 @@ function toggleElement(oElement)
 {% endif %}
 
 {% if pagination|length or SEARCH_MATCHES %}
-	<div class="topic-actions">
-		<div class="pagination" style="margin-bottom: 1em;">
+	<div class="action-bar bar-bottom">
+		<div class="pagination">
 			{{ SEARCH_MATCHES }}
 			{% if pagination|length %}
 				{% include 'pagination.html' %}

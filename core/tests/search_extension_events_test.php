@@ -143,6 +143,22 @@ final class search_extension_events_test extends TestCase
 		$this->assertStringContainsString('max-width: 560px;', $css);
 	}
 
+	public function test_prosilver_search_results_reuse_the_native_search_toolbar(): void
+	{
+		$template = (string) file_get_contents(dirname(__DIR__) . '/styles/prosilver/template/gallery/search_results.html');
+
+		$this->assertStringContainsString('class="action-bar bar-top"', $template);
+		$this->assertStringContainsString('class="search-box" role="search"', $template);
+		$this->assertStringContainsString('class="inputbox search tiny" type="search"', $template);
+		$this->assertStringContainsString('class="button button-search"', $template);
+		$this->assertStringContainsString('name="submit" value="1"', $template);
+		$this->assertStringContainsString('class="button button-search-end"', $template);
+		$this->assertStringContainsString('icon fa-search fa-fw', $template);
+		$this->assertStringContainsString('icon fa-cog fa-fw', $template);
+		$this->assertStringNotContainsString('class="topic-actions"', $template);
+		$this->assertStringNotContainsString('<label for="add_keywords">', $template);
+	}
+
 	public function test_search_exposes_bounded_sort_and_result_enrichment_events(): void
 	{
 		$controller = (string) file_get_contents(dirname(__DIR__) . '/controller/search.php');
