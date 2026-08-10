@@ -246,34 +246,44 @@ class upload
 				return $this->ajax_error($this->language->lang('INVALID_USERNAME'));
 			}
 			$pending_count = $process->load_pending_images();
+			$album_limit = (int) $this->gallery_config->get('album_images');
+			$album_image_count = (int) ($album_data['album_images_real'] ?? $album_data['album_images']);
+			$batch_limit = max(0, (int) $this->gallery_config->get('num_uploads'));
+			$user_unlimited = (bool) $this->auth->acl_check('i_unlimited', $album_id, $album_data['album_user_id']);
+			$user_limit = max(0, (int) $this->auth->acl_check('i_count', $album_id, $album_data['album_user_id']));
+			$own_images = $user_unlimited ? 0 : $this->count_user_images($upload_author_id, $album_id);
 
 			// Progressive uploads remain orphan drafts until the metadata review is submitted.
 			// Upload Quota Check
 			// 1. Check album-configuration Quota
-			if (($this->gallery_config->get('album_images') >= 0) && (($album_data['album_images'] + $pending_count) >= $this->gallery_config->get('album_images')))
+			if ($album_limit >= 0 && ($album_image_count + $pending_count) >= $album_limit)
 			{
 				return $this->ajax_error($this->language->lang('ALBUM_REACHED_QUOTA'));
 			}
 
 			// 2. Check user-limit, if he is not allowed to go unlimited
-			if (!$this->auth->acl_check('i_unlimited', $album_id, $album_data['album_user_id']))
+			if (!$user_unlimited && ($own_images + $pending_count) >= $user_limit)
 			{
-				$sql = 'SELECT COUNT(image_id) count
-					FROM ' . $this->images_table . '
-					WHERE image_user_id = ' . (int) $upload_author_id . '
-						AND image_status <> ' . (int) $this->block->get_image_status_orphan() . '
-						AND image_album_id = ' . (int) $album_id;
-				$result = $this->db->sql_query($sql);
-				$own_images = (int) $this->db->sql_fetchfield('count');
-				$this->db->sql_freeresult($result);
-				if (($own_images + $pending_count) >= $this->auth->acl_check('i_count', $album_id, $album_data['album_user_id']))
-				{
-					return $this->ajax_error($this->language->lang('USER_REACHED_QUOTA', $this->auth->acl_check('i_count', $album_id, $album_data['album_user_id'])));
-				}
+				return $this->ajax_error($this->language->lang('USER_REACHED_QUOTA', $user_limit));
 			}
 
-			$upload_files_limit = ($this->auth->acl_check('i_unlimited', $album_id, $album_data['album_user_id'])) ? $this->gallery_config->get('num_uploads') : min(($this->auth->acl_check('i_count', $album_id, $album_data['album_user_id']) - $own_images), $this->gallery_config->get('num_uploads'));
-			$remaining_uploads = max(0, $upload_files_limit - $pending_count);
+			$upload_files_limit = self::effective_upload_limit(
+				$batch_limit,
+				$album_limit,
+				$album_image_count,
+				$user_unlimited,
+				$user_limit,
+				$own_images
+			);
+			$remaining_uploads = self::effective_upload_limit(
+				$batch_limit,
+				$album_limit,
+				$album_image_count,
+				$user_unlimited,
+				$user_limit,
+				$own_images,
+				$pending_count
+			);
 			if ($remaining_uploads === 0)
 			{
 				return $this->ajax_error($this->language->lang('QUICK_UPLOAD_LIMIT_REACHED', $upload_files_limit));
@@ -312,30 +322,29 @@ class upload
 		}
 		if ($mode == 'upload')
 		{
+			$album_limit = (int) $this->gallery_config->get('album_images');
+			$album_image_count = (int) ($album_data['album_images_real'] ?? $album_data['album_images']);
+			$batch_limit = max(0, (int) $this->gallery_config->get('num_uploads'));
+			$user_unlimited = (bool) $this->auth->acl_check('i_unlimited', $album_id, $album_data['album_user_id']);
+			$user_limit = max(0, (int) $this->auth->acl_check('i_count', $album_id, $album_data['album_user_id']));
+			$defer_user_quota = $can_change_author;
+			$own_images = (!$user_unlimited && !$defer_user_quota)
+				? $this->count_user_images($upload_author_id, $album_id)
+				: 0;
+
 			// Upload Quota Check
 			// 1. Check album-configuration Quota
-			if (($this->gallery_config->get('album_images') >= 0) && ($album_data['album_images'] >= $this->gallery_config->get('album_images')))
+			if ($album_limit >= 0 && $album_image_count >= $album_limit)
 			{
 				trigger_error($this->language->lang('ALBUM_REACHED_QUOTA') . '<br /><br />'
 					. $this->language->lang('CLICK_RETURN_ALBUM', '<a href="' . $album_backlink . '">', '</a>'));
 			}
 
 			// 2. Check user-limit, if he is not allowed to go unlimited
-			if (!$this->auth->acl_check('i_unlimited', $album_id, $album_data['album_user_id']))
+			if (!$user_unlimited && !$defer_user_quota && $own_images >= $user_limit)
 			{
-				$sql = 'SELECT COUNT(image_id) count
-					FROM ' . $this->images_table . '
-					WHERE image_user_id = ' . (int) $upload_author_id . '
-						AND image_status <> ' . (int) $this->block->get_image_status_orphan() . '
-						AND image_album_id = ' . (int) $album_id;
-				$result = $this->db->sql_query($sql);
-				$own_images = (int) $this->db->sql_fetchfield('count');
-				$this->db->sql_freeresult($result);
-				if (!$invalid_author && (!$can_change_author || $submit) && $own_images >= $this->auth->acl_check('i_count', $album_id, $album_data['album_user_id']))
-				{
-					trigger_error($this->language->lang('USER_REACHED_QUOTA', $this->auth->acl_check('i_count', $album_id, $album_data['album_user_id']))
-						. '<br /><br />' . $this->language->lang('CLICK_RETURN_ALBUM', '<a href="' . $album_backlink . '">', '</a>'));
-				}
+				trigger_error($this->language->lang('USER_REACHED_QUOTA', $user_limit)
+					. '<br /><br />' . $this->language->lang('CLICK_RETURN_ALBUM', '<a href="' . $album_backlink . '">', '</a>'));
 			}
 
 			if ($this->misc->display_captcha('upload'))
@@ -350,7 +359,14 @@ class upload
 
 			}
 
-			$upload_files_limit = ($this->auth->acl_check('i_unlimited', $album_id, $album_data['album_user_id']) || ($can_change_author && (!$submit || $invalid_author))) ? $this->gallery_config->get('num_uploads') : min(($this->auth->acl_check('i_count', $album_id, $album_data['album_user_id']) - $own_images), $this->gallery_config->get('num_uploads'));
+			$upload_files_limit = self::effective_upload_limit(
+				$batch_limit,
+				$album_limit,
+				$album_image_count,
+				$user_unlimited || $defer_user_quota,
+				$user_limit,
+				$own_images
+			);
 			$process = $this->gallery_upload;
 			$process->set_up($album_id, $upload_files_limit);
 			if ($submit)
@@ -400,9 +416,13 @@ class upload
 					{
 						$process->upload_file($count);
 					}
+					else
+					{
+						$process->new_error($this->language->lang('QUICK_UPLOAD_LIMIT_REACHED', $upload_files_limit));
+					}
 				}
 
-				if (!$process->uploaded_files)
+				if (!$process->uploaded_files && !$process->errors)
 				{
 					$process->new_error($this->language->lang('UPLOAD_NO_FILE'));
 				}
@@ -468,28 +488,26 @@ class upload
 				// the user can correct it without losing the already-uploaded files.
 				$validation_error = $invalid_author ? $this->language->lang('INVALID_USERNAME') : '';
 				$own_images = 0;
+				$album_limit = (int) $this->gallery_config->get('album_images');
+				$album_image_count = (int) ($album_data['album_images_real'] ?? $album_data['album_images']);
+				$batch_limit = max(0, (int) $this->gallery_config->get('num_uploads'));
+				$user_unlimited = (bool) $this->auth->acl_check('i_unlimited', $album_id, $album_data['album_user_id']);
+				$user_limit = max(0, (int) $this->auth->acl_check('i_count', $album_id, $album_data['album_user_id']));
 
 				// Upload Quota Check
 				// 1. Check album-configuration Quota
-				if (($this->gallery_config->get('album_images') >= 0) && ($album_data['album_images'] >= $this->gallery_config->get('album_images')))
+				if ($album_limit >= 0 && $album_image_count >= $album_limit)
 				{
 					$validation_error = $this->language->lang('ALBUM_REACHED_QUOTA');
 				}
 
 				// 2. Check user-limit, if he is not allowed to go unlimited
-				if (!$this->auth->acl_check('i_unlimited', $album_id, $album_data['album_user_id']))
+				if (!$user_unlimited)
 				{
-					$sql = 'SELECT COUNT(image_id) count
-						FROM ' . $this->images_table . '
-						WHERE image_user_id = ' . (int) $upload_author_id . '
-							AND image_status <> ' . (int) $this->block->get_image_status_orphan() . '
-							AND image_album_id = ' . (int) $album_id;
-					$result = $this->db->sql_query($sql);
-					$own_images = (int) $this->db->sql_fetchfield('count');
-					$this->db->sql_freeresult($result);
-					if (!$validation_error && $own_images >= $this->auth->acl_check('i_count', $album_id, $album_data['album_user_id']))
+					$own_images = $this->count_user_images($upload_author_id, $album_id);
+					if (!$validation_error && $own_images >= $user_limit)
 					{
-						$validation_error = $this->language->lang('USER_REACHED_QUOTA', $this->auth->acl_check('i_count', $album_id, $album_data['album_user_id']));
+						$validation_error = $this->language->lang('USER_REACHED_QUOTA', $user_limit);
 					}
 				}
 				$description_array = $this->request->variable('message', [''], true, request_interface::POST);
@@ -513,7 +531,14 @@ class upload
 						$validation_error = $this->language->lang('IMAGE_SUBTITLE_TOO_LONG', \phpbbgallery\core\upload::IMAGE_SUBTITLE_MAX_LENGTH);
 					}
 				}
-				$upload_files_limit = ($this->auth->acl_check('i_unlimited', $album_id, $album_data['album_user_id'])) ? $this->gallery_config->get('num_uploads') : min(($this->auth->acl_check('i_count', $album_id, $album_data['album_user_id']) - $own_images), $this->gallery_config->get('num_uploads'));
+				$upload_files_limit = self::effective_upload_limit(
+					$batch_limit,
+					$album_limit,
+					$album_image_count,
+					$user_unlimited,
+					$user_limit,
+					$own_images
+				);
 
 				$upload_ids = $this->request->variable('upload_ids', [''], false, request_interface::POST);
 
@@ -536,13 +561,17 @@ class upload
 				}
 
 				$pending_count = count($process->images);
-				if (!$validation_error && $this->gallery_config->get('album_images') >= 0 && ($album_data['album_images'] + $pending_count) > $this->gallery_config->get('album_images'))
+				if (!$validation_error && $album_limit >= 0 && ($album_image_count + $pending_count) > $album_limit)
 				{
 					$validation_error = $this->language->lang('ALBUM_REACHED_QUOTA');
 				}
+				if (!$validation_error && !$user_unlimited && ($own_images + $pending_count) > $user_limit)
+				{
+					$validation_error = $this->language->lang('USER_REACHED_QUOTA', $user_limit);
+				}
 				if (!$validation_error && $pending_count > $upload_files_limit)
 				{
-					$validation_error = $this->language->lang('USER_REACHED_QUOTA', $upload_files_limit);
+					$validation_error = $this->language->lang('QUICK_UPLOAD_LIMIT_REACHED', $upload_files_limit);
 				}
 
 				$image_names = $this->request->variable('image_name', [''], true, request_interface::POST);
@@ -704,6 +733,44 @@ class upload
 				],
 			],
 		], $status);
+	}
+
+	private function count_user_images(int $user_id, int $album_id): int
+	{
+		$sql = 'SELECT COUNT(image_id) count
+			FROM ' . $this->images_table . '
+			WHERE image_user_id = ' . (int) $user_id . '
+				AND image_status <> ' . (int) $this->block->get_image_status_orphan() . '
+				AND image_album_id = ' . (int) $album_id;
+		$result = $this->db->sql_query($sql);
+		$count = (int) $this->db->sql_fetchfield('count');
+		$this->db->sql_freeresult($result);
+
+		return $count;
+	}
+
+	private static function effective_upload_limit(
+		int $batch_limit,
+		int $album_limit,
+		int $album_image_count,
+		bool $user_unlimited,
+		int $user_limit,
+		int $user_image_count,
+		int $pending_count = 0
+	): int
+	{
+		$pending_count = max(0, $pending_count);
+		$limits = [max(0, $batch_limit - $pending_count)];
+		if ($album_limit >= 0)
+		{
+			$limits[] = max(0, $album_limit - max(0, $album_image_count) - $pending_count);
+		}
+		if (!$user_unlimited)
+		{
+			$limits[] = max(0, $user_limit - max(0, $user_image_count) - $pending_count);
+		}
+
+		return min($limits);
 	}
 
 	private function check_fs(): bool

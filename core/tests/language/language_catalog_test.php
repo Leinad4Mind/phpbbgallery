@@ -245,6 +245,16 @@ class language_catalog_test extends TestCase
 			$this->assertStringContainsString('upload_max_filesize', $language['PHP_SIZE_OVERRUN'], basename($directory));
 			$this->assertStringContainsString('post_max_size', $language['PHP_SIZE_OVERRUN'], basename($directory));
 			$this->assertSame(['d', 's'], $this->placeholder_shape($language['PHP_SIZE_OVERRUN']), basename($directory));
+
+			$this->assertArrayHasKey('RESIZE_SOURCE_FILESIZE_EXPLAIN', $language, basename($directory));
+			$this->assertSame(1, substr_count(file_get_contents($catalog), 'RESIZE_SOURCE_FILESIZE_EXPLAIN'), basename($directory));
+			$this->assertStringContainsString('upload_max_filesize', $language['RESIZE_SOURCE_FILESIZE_EXPLAIN'], basename($directory));
+			$this->assertStringContainsString('post_max_size', $language['RESIZE_SOURCE_FILESIZE_EXPLAIN'], basename($directory));
+			$this->assertSame(['s', 's'], $this->placeholder_shape($language['RESIZE_SOURCE_FILESIZE_EXPLAIN']), basename($directory));
+
+			$this->assertArrayHasKey('UPLOAD_EFFECTIVE_LIMIT', $language, basename($directory));
+			$this->assertSame(1, substr_count(file_get_contents($catalog), 'UPLOAD_EFFECTIVE_LIMIT'), basename($directory));
+			$this->assertSame(['d'], $this->placeholder_shape($language['UPLOAD_EFFECTIVE_LIMIT']), basename($directory));
 		}
 	}
 

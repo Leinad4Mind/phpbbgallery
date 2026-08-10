@@ -104,18 +104,22 @@ class orphan_upload_security_test extends TestCase
 		$section = $this->upload_edit_section($source);
 		$post_submit = strpos($source, "\$submit = \$this->request->is_set_post('submit');");
 		$guard = strpos($section, "check_form_key('gallery')");
-		$query = strpos($section, '$this->db->sql_query($sql)');
+		$quota = strpos($section, '$this->count_user_images($upload_author_id, $album_id)');
 		$load = strpos($section, '$process->get_images($upload_ids)');
 		$update = strpos($section, '$process->update_image(');
 
 		$this->assertNotFalse($post_submit);
 		$this->assertNotFalse($guard);
-		$this->assertNotFalse($query);
+		$this->assertNotFalse($quota);
 		$this->assertNotFalse($load);
 		$this->assertNotFalse($update);
-		$this->assertLessThan($query, $guard);
+		$this->assertLessThan($quota, $guard);
 		$this->assertLessThan($load, $guard);
 		$this->assertLessThan($update, $guard);
+		$this->assertMatchesRegularExpression(
+			'/private function count_user_images\(.*?WHERE image_user_id = \' \. \(int\) \$user_id.*?AND image_album_id = \' \. \(int\) \$album_id.*?\$this->db->sql_query\(\$sql\)/s',
+			$source
+		);
 	}
 
 	public function test_upload_edit_reads_every_mutating_field_from_post(): void
@@ -140,8 +144,14 @@ class orphan_upload_security_test extends TestCase
 			$template = file_get_contents($template_path);
 			$album_action = str_contains($template, '{{ S_ALBUM_ACTION }}') ? '{{ S_ALBUM_ACTION }}' : '{S_ALBUM_ACTION}';
 			$form_token = str_contains($template, '{{ S_FORM_TOKEN }}') ? '{{ S_FORM_TOKEN }}' : '{S_FORM_TOKEN}';
-			$form_start = strpos($template, '<form id="postform" action="' . $album_action . '" method="post" enctype="multipart/form-data">');
+			$form_start = strpos($template, '<form id="postform" class="gallery-upload-details-form"');
 			$this->assertNotFalse($form_start, $template_path);
+			$form_header_end = strpos($template, '>', $form_start);
+			$this->assertNotFalse($form_header_end, $template_path);
+			$form_header = substr($template, $form_start, $form_header_end - $form_start);
+			$this->assertStringContainsString('action="' . $album_action . '"', $form_header, $template_path);
+			$this->assertStringContainsString('method="post"', $form_header, $template_path);
+			$this->assertStringContainsString('enctype="multipart/form-data"', $form_header, $template_path);
 			$form_end = strpos($template, '</form>', $form_start);
 			$this->assertNotFalse($form_end, $template_path);
 			$form = substr($template, $form_start, $form_end - $form_start);

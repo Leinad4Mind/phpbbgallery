@@ -122,4 +122,28 @@ final class controller_upload_types_test extends TestCase
 		$this->assertSame(2, substr_count($source, '$this->album_operation->allows(\'upload\', $album_data)'));
 		$this->assertStringNotContainsString('core\\contest', $source);
 	}
+
+	public function test_effective_upload_limit_uses_the_strictest_remaining_quota(): void
+	{
+		$method = (new \ReflectionClass(upload::class))->getMethod('effective_upload_limit');
+
+		$this->assertSame(10, $method->invoke(null, 10, -1, 500, true, 0, 500));
+		$this->assertSame(3, $method->invoke(null, 10, 100, 97, true, 0, 500));
+		$this->assertSame(2, $method->invoke(null, 10, -1, 500, false, 12, 10));
+		$this->assertSame(1, $method->invoke(null, 10, 100, 97, false, 12, 7, 2));
+		$this->assertSame(0, $method->invoke(null, 10, 100, 100, true, 0, 0));
+		$this->assertSame(6, $method->invoke(null, 10, -1, 500, true, 0, 500, 4));
+	}
+
+	public function test_all_upload_paths_use_real_album_counts_and_specific_limit_errors(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/upload.php');
+
+		$this->assertGreaterThanOrEqual(3, substr_count($source, "['album_images_real']"));
+		$this->assertStringContainsString(
+			"new_error(\$this->language->lang('QUICK_UPLOAD_LIMIT_REACHED', \$upload_files_limit))",
+			$source
+		);
+		$this->assertStringContainsString('if (!$process->uploaded_files && !$process->errors)', $source);
+	}
 }

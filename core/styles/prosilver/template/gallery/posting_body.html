@@ -64,6 +64,7 @@
 			<dl>
 				<dt><label>{{ lang('MAX_DIMENSIONS') }}{{ lang('COLON') }}</label></dt>
 				<dd>{{ lang('FILE_SIZE') }}{{ lang('COLON') }} {{ S_MAX_FILESIZE }}</dd>
+				<dd>{{ lang('UPLOAD_EFFECTIVE_LIMIT', S_UPLOAD_LIMIT) }}</dd>
 				{% if S_RESIZE_LARGE_FILES %}<dd>{{ lang('RESIZE_SOURCE_FILESIZE_EXPLAIN', S_SOURCE_MAX_FILESIZE, S_MAX_FILESIZE) }}</dd>{% endif %}
 				<dd>{{ lang('IMAGE_WIDTH') }}{{ lang('COLON') }} {{ S_MAX_WIDTH }}</dd>
 				<dd>{{ lang('IMAGE_HEIGHT') }}{{ lang('COLON') }} {{ S_MAX_HEIGHT }}</dd>

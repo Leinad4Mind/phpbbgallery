@@ -171,7 +171,7 @@ $lang = array_merge($lang, [
 	'MARK_ALBUMS_READ'         => 'Alle Alben als gelesen markieren',
 	'MAX_DIMENSIONS'           => 'Maximale Größe',
 	'MAX_FILE_SIZE'            => 'Maximale Dateigröße',
-	'RESIZE_SOURCE_FILESIZE_EXPLAIN' => 'Wenn die Größenanpassung aktiviert ist, werden Quelldateien bis %1$s akzeptiert; das gespeicherte Bild darf höchstens %2$s groß sein.',
+	'RESIZE_SOURCE_FILESIZE_EXPLAIN' => 'Bei aktivierter Größenanpassung akzeptiert die Gallery eine Originaldatei bis %1$s. Das gespeicherte, angepasste Bild darf %2$s nicht überschreiten. Die PHP-Einstellungen <code>upload_max_filesize</code> und <code>post_max_size</code> können einen niedrigeren Grenzwert festlegen.',
 	'MAX_HEIGHT'               => 'Maximale Bildhöhe',
 	'MAX_WIDTH'                => 'Maximale Bildbreite',
 	'MISSING_COMMENT'          => 'Keinen Text eingegeben',
@@ -399,4 +399,5 @@ $lang = array_merge($lang, [
 	'IMAGE_SUBTITLE'          => 'Bilduntertitel',
 	'IMAGE_SUBTITLE_EXPLAIN'  => 'Optional. Auf der Bildseite kann über den Untertitel nach denselben Wörtern in der Galerie gesucht werden.',
 	'IMAGE_SUBTITLE_TOO_LONG' => 'Der Bilduntertitel darf nicht länger als %d Zeichen sein.',
+	'UPLOAD_EFFECTIVE_LIMIT' => 'In diesem Durchgang können bis zu %d Bilder hochgeladen werden. Dabei sind Upload-, Album- und Benutzerlimit bereits berücksichtigt.',
 ]);

@@ -171,7 +171,7 @@ $lang = array_merge($lang, [
 	'MARK_ALBUMS_READ'         => 'Marcar los álbumes',
 	'MAX_DIMENSIONS'           => 'Dimensiones máximas',
 	'MAX_FILE_SIZE'            => 'Tamaño máximo del archivo',
-	'RESIZE_SOURCE_FILESIZE_EXPLAIN' => 'Con el redimensionado activado, se aceptan imágenes de origen de hasta %1$s; la imagen guardada no puede superar %2$s.',
+	'RESIZE_SOURCE_FILESIZE_EXPLAIN' => 'Con el redimensionado activado, Gallery acepta un archivo original de hasta %1$s. La imagen redimensionada guardada no puede superar %2$s. Los ajustes de PHP <code>upload_max_filesize</code> y <code>post_max_size</code> pueden imponer un límite inferior.',
 	'MAX_HEIGHT'               => 'Altura máxima de la imagen',
 	'MAX_WIDTH'                => 'Ancho máximo de la imagen',
 	'MISSING_COMMENT'          => 'No se ha introducido ningún mensaje',
@@ -399,4 +399,5 @@ $lang = array_merge($lang, [
 	'IMAGE_SUBTITLE'          => 'Subtítulo de la imagen',
 	'IMAGE_SUBTITLE_EXPLAIN'  => 'Opcional. En la página de la imagen, el subtítulo permite buscar las mismas palabras en la Galería.',
 	'IMAGE_SUBTITLE_TOO_LONG' => 'El subtítulo de la imagen no puede superar los %d caracteres.',
+	'UPLOAD_EFFECTIVE_LIMIT' => 'Puedes subir hasta %d imágenes en este lote. Este valor ya tiene en cuenta los límites por envío, álbum y usuario.',
 ]);

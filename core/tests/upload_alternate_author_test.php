@@ -73,7 +73,8 @@ final class upload_alternate_author_test extends TestCase
 	{
 		$source = $this->controller_source();
 
-		$this->assertSame(3, substr_count($source, "WHERE image_user_id = ' . (int) \$upload_author_id"));
+		$this->assertSame(3, substr_count($source, '$this->count_user_images($upload_author_id, $album_id)'));
+		$this->assertStringContainsString("WHERE image_user_id = ' . (int) \$user_id", $source);
 		$this->assertSame(1, substr_count($source, '$process->set_author('));
 		$this->assertSame(1, substr_count($source, "'targets'    => [\$upload_author_id]"));
 		$this->assertSame(1, substr_count($source, "'uploader'   => \$upload_author_id"));

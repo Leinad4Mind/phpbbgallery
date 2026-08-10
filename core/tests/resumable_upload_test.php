@@ -189,7 +189,7 @@ class resumable_upload_test extends TestCase
 	{
 		$section = $this->upload_edit_section();
 		$count = strpos($section, '$pending_count = count($process->images)');
-		$album_quota = strpos($section, '$album_data[\'album_images\'] + $pending_count', $count);
+		$album_quota = strpos($section, '$album_image_count + $pending_count', $count);
 		$user_quota = strpos($section, '$pending_count > $upload_files_limit', $count);
 		$update = strpos($section, '$process->update_image(', $count);
 
@@ -209,8 +209,14 @@ class resumable_upload_test extends TestCase
 			$album_action = str_contains($template, '{{ S_ALBUM_ACTION }}') ? '{{ S_ALBUM_ACTION }}' : '{S_ALBUM_ACTION}';
 			$cancel = str_contains($template, "{{ lang('CANCEL') }}") ? "{{ lang('CANCEL') }}" : '{L_CANCEL}';
 			$form_token = str_contains($template, '{{ S_FORM_TOKEN }}') ? '{{ S_FORM_TOKEN }}' : '{S_FORM_TOKEN}';
-			$form_start = strpos($template, '<form id="postform" action="' . $album_action . '" method="post" enctype="multipart/form-data">');
+			$form_start = strpos($template, '<form id="postform" class="gallery-upload-details-form"');
 			$this->assertNotFalse($form_start, $template_path);
+			$form_header_end = strpos($template, '>', $form_start);
+			$this->assertNotFalse($form_header_end, $template_path);
+			$form_header = substr($template, $form_start, $form_header_end - $form_start);
+			$this->assertStringContainsString('action="' . $album_action . '"', $form_header, $template_path);
+			$this->assertStringContainsString('method="post"', $form_header, $template_path);
+			$this->assertStringContainsString('enctype="multipart/form-data"', $form_header, $template_path);
 			$form_end = strpos($template, '</form>', $form_start);
 			$this->assertNotFalse($form_end, $template_path);
 			$form = substr($template, $form_start, $form_end - $form_start);

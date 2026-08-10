@@ -171,7 +171,7 @@ $lang = array_merge($lang, [
 	'MARK_ALBUMS_READ'         => 'Markeer albums als gelezen',
 	'MAX_DIMENSIONS'           => 'Maximale afmetingen',
 	'MAX_FILE_SIZE'            => 'Maximale bestandsgrootte (bytes)',
-	'RESIZE_SOURCE_FILESIZE_EXPLAIN' => 'Wanneer formaatwijziging is ingeschakeld, worden bronafbeeldingen tot %1$s geaccepteerd; de opgeslagen afbeelding mag niet groter zijn dan %2$s.',
+	'RESIZE_SOURCE_FILESIZE_EXPLAIN' => 'Als formaatwijziging is ingeschakeld, accepteert Gallery een origineel bronbestand tot %1$s. De opgeslagen, aangepaste afbeelding mag niet groter zijn dan %2$s. De PHP-instellingen <code>upload_max_filesize</code> en <code>post_max_size</code> kunnen een lagere limiet opleggen.',
 	'MAX_HEIGHT'               => 'Maximale afbeeldinghoogte (beeldpunten)',
 	'MAX_WIDTH'                => 'Maximale afbeeldingbreedte (beeldpunten)',
 	'MISSING_COMMENT'          => 'Geen bericht ingevoerd',
@@ -399,4 +399,5 @@ $lang = array_merge($lang, [
 	'IMAGE_SUBTITLE'          => 'Ondertitel van afbeelding',
 	'IMAGE_SUBTITLE_EXPLAIN'  => 'Optioneel. Op de afbeeldingspagina kan met de ondertitel naar dezelfde woorden in de galerij worden gezocht.',
 	'IMAGE_SUBTITLE_TOO_LONG' => 'De ondertitel van de afbeelding mag niet langer zijn dan %d tekens.',
+	'UPLOAD_EFFECTIVE_LIMIT' => 'Je kunt maximaal %d afbeeldingen in deze batch uploaden. Hierbij zijn de upload-, album- en gebruikerslimieten al verwerkt.',
 ]);

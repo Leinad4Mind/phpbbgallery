@@ -49,6 +49,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Enforced the strictest effective upload allowance across the configured batch size, remaining album capacity and selected author's quota in both progressive and fallback uploads, counting unapproved images and resumable drafts while displaying the real remaining allowance before selection.
 - Matched phpBB's native ACP permission selectors by grouping system groups first and displaying them in bold in both managed and available Gallery group lists.
 - Separated published rating-result visibility from permission to submit ratings, so completed contest scores remain visible to every image viewer while active contest results stay protected.
 - Fixed EXIF images being treated as displayable while their filtered cache was empty: supported IFD0-only metadata is now rendered, resolution density is preserved, and stale caches are rebuilt from the original source on first view.
