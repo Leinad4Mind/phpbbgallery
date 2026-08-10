@@ -888,9 +888,9 @@ class permissions_module
 				}
 			}
 			/**
-			* Inherit the permissions
+			* Copy the selected permission masks once.
 			*/
-			$inherit = $request->variable('setting', [0 => ['' => 0]]);
+			$inherit = $this->requested_inheritance($request);
 			foreach ($inherit as $c_mask => $v_sets)
 			{
 				$c_mask = (int) $c_mask;
@@ -1116,6 +1116,14 @@ class permissions_module
 			trigger_error($this->language->lang('PERMISSIONS_STORED') . adm_back_link($this->u_action));
 		}
 		trigger_error('HACKING_ATTEMPT', E_USER_WARNING);
+	}
+
+	/**
+	 * Read the permission-mask copy selections from their dedicated form field.
+	 */
+	private function requested_inheritance(\phpbb\request\request_interface $request): array
+	{
+		return $request->variable('inherit', [0 => ['' => 0]]);
 	}
 
 	/**

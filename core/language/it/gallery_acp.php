@@ -254,8 +254,9 @@ $lang = array_merge($lang, [
 	'INDEX_ALBUM_LAYOUT_CARDS'   => 'Schede moderne',
 	'INVALID_INDEX_ALBUM_LAYOUT' => 'La disposizione degli album selezionata non è valida.',
 	'INFO_LINE'                  => 'Visualizza dimensione-file su anteprima',
-	'INHERIT_PERMISSIONS_ALBUM'  => 'Ereditano le autorizzazioni di un altro album',
-	'INHERIT_PERMISSIONS_VICTIM' => 'Ereditano le autorizzazioni di un altra configurazione',
+	'INHERIT_PERMISSIONS_ALBUM'  => 'Copia i permessi da un altro album',
+	'INHERIT_PERMISSIONS_VICTIM' => 'Copia i permessi da un’altra configurazione',
+	'COPY_PERMISSION_MASK_EXPLAIN' => 'Copia una sola volta i valori correnti. Le modifiche successive all’origine non vengono propagate automaticamente.',
 
 	'JPG_ALLOWED'     => 'Consenti il caricamento di file JPG',
 	'JPG_QUALITY'     => 'Qualità JPG',

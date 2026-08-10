@@ -255,8 +255,9 @@ $lang = array_merge($lang, [
 	'INDEX_ALBUM_LAYOUT_CARDS'   => 'Модерни карти',
 	'INVALID_INDEX_ALBUM_LAYOUT' => 'Избраният изглед на албумите е невалиден.',
 	'INFO_LINE'                  => 'Покажи размера в thumbnail',
-	'INHERIT_PERMISSIONS_ALBUM'  => 'Наследи права от друг албум',
-	'INHERIT_PERMISSIONS_VICTIM' => 'Наследи права от друга настройка',
+	'INHERIT_PERMISSIONS_ALBUM'  => 'Копирай права от друг албум',
+	'INHERIT_PERMISSIONS_VICTIM' => 'Копирай права от друга настройка',
+	'COPY_PERMISSION_MASK_EXPLAIN' => 'Копира текущите стойности еднократно. По-късните промени в източника не се прилагат автоматично.',
 
 	'JPG_ALLOWED'     => 'Позволи качването на JPG файлове',
 	'JPG_QUALITY'     => 'Качество на JPG',

@@ -255,8 +255,9 @@ $lang = array_merge($lang, [
 	'INDEX_ALBUM_LAYOUT_CARDS'   => 'Moderne kaarten',
 	'INVALID_INDEX_ALBUM_LAYOUT' => 'De geselecteerde albumweergave is ongeldig.',
 	'INFO_LINE'                  => 'Bestandgrootte op miniatuur weergeven',
-	'INHERIT_PERMISSIONS_ALBUM'  => 'Leent permissies van een ander album',
-	'INHERIT_PERMISSIONS_VICTIM' => 'Leent permissies van een andere instelling',
+	'INHERIT_PERMISSIONS_ALBUM'  => 'Kopieer permissies van een ander album',
+	'INHERIT_PERMISSIONS_VICTIM' => 'Kopieer permissies van een andere instelling',
+	'COPY_PERMISSION_MASK_EXPLAIN' => 'Kopieert de huidige waarden eenmalig. Latere wijzigingen aan de bron worden niet automatisch overgenomen.',
 
 	'JPG_ALLOWED'     => 'Toegestaan om JPG-bestanden te uploaden',
 	'JPG_QUALITY'     => 'JPG-Kwaliteit',

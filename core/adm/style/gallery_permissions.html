@@ -188,7 +188,7 @@ function gallery_init_colours(block_id, quick)
 
 {% for c_mask in c_mask %}
 	<h3>{{ c_mask.C_MASK_NAME }}</h3>
-	{% if c_mask.INHERIT_C_MASKS %}<p>{{ lang('INHERIT_PERMISSIONS_ALBUM') }}{{ lang('COLON') }} <select name="inherit[{{ c_mask.C_MASK_ID }}][full]" id="inherit[{{ c_mask.C_MASK_ID }}][full]" onchange="inherit_album({{ c_mask.S_ROW_COUNT }}, this.options[this.selectedIndex].value);">{{ c_mask.INHERIT_C_MASKS }}</select></p>{% endif %}
+	{% if c_mask.INHERIT_C_MASKS %}<p>{{ lang('INHERIT_PERMISSIONS_ALBUM') }}{{ lang('COLON') }} <select name="inherit[{{ c_mask.C_MASK_ID }}][full]" id="inherit[{{ c_mask.C_MASK_ID }}][full]" onchange="inherit_album({{ c_mask.S_ROW_COUNT }}, this.options[this.selectedIndex].value);">{{ c_mask.INHERIT_C_MASKS }}</select><br><span>{{ lang('COPY_PERMISSION_MASK_EXPLAIN') }}</span></p>{% endif %}
 
 	<div id="c_mask{{ c_mask.S_ROW_COUNT }}">
 	{% for v_mask in c_mask.v_mask %}

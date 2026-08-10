@@ -257,6 +257,7 @@ $lang = array_merge($lang, [
 	'INFO_LINE'                  => 'Dateigröße auf dem Thumbnail anzeigen',
 	'INHERIT_PERMISSIONS_ALBUM'  => 'Berechtigung von einem anderem Album übernehmen',
 	'INHERIT_PERMISSIONS_VICTIM' => 'Berechtigung aus einer anderen Einstellung übernehmen',
+	'COPY_PERMISSION_MASK_EXPLAIN' => 'Kopiert die aktuellen Werte einmalig. Spätere Änderungen an der Quelle werden nicht automatisch übernommen.',
 
 	'JPG_ALLOWED'     => 'Es ist erlaubt JPG-Dateien hochzuladen',
 	'JPG_QUALITY'     => 'JPG-Qualität',

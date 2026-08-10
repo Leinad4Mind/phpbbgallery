@@ -10,6 +10,7 @@
 namespace phpbbgallery\core\tests;
 
 use phpbbgallery\core\acp\permissions_module;
+use phpbb\request\request_interface;
 use PHPUnit\Framework\TestCase;
 
 final class acp_permissions_types_test extends TestCase
@@ -49,6 +50,19 @@ final class acp_permissions_types_test extends TestCase
 			$type = (string) (new \ReflectionMethod(permissions_module::class, $method_name))->getReturnType();
 			$this->assertContains($type, ['string|bool', 'bool|string'], $method_name);
 		}
+	}
+
+	public function test_permission_copy_reads_the_dedicated_inherit_field(): void
+	{
+		$expected = [31 => ['full' => 4, 2 => '4_7']];
+		$request = $this->createMock(request_interface::class);
+		$request->expects($this->once())
+			->method('variable')
+			->with('inherit', [0 => ['' => 0]])
+			->willReturn($expected);
+
+		$method = new \ReflectionMethod(permissions_module::class, 'requested_inheritance');
+		$this->assertSame($expected, $method->invoke(new permissions_module(), $request));
 	}
 
 	public function test_system_victim_validation_initializes_the_converted_list(): void

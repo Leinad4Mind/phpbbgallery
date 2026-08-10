@@ -271,8 +271,9 @@ $lang = array_merge($lang, [
 	'INDEX_ALBUM_LAYOUT_CARDS'   => 'Cartes modernes',
 	'INVALID_INDEX_ALBUM_LAYOUT' => 'La présentation d’albums sélectionnée n’est pas valide.',
 	'INFO_LINE'                  => 'Afficher la taille du fichier sur la miniature',
-	'INHERIT_PERMISSIONS_ALBUM'  => 'Hériter des permissions d’un autre album',
-	'INHERIT_PERMISSIONS_VICTIM' => 'Hériter des permissions d’un autre paramètre',
+	'INHERIT_PERMISSIONS_ALBUM'  => 'Copier les permissions d’un autre album',
+	'INHERIT_PERMISSIONS_VICTIM' => 'Copier les permissions d’un autre paramètre',
+	'COPY_PERMISSION_MASK_EXPLAIN' => 'Copie une seule fois les valeurs actuelles. Les modifications ultérieures de la source ne sont pas propagées automatiquement.',
 
 	'JPG_ALLOWED'     => 'Autoriser à envoyer des fichiers JPG',
 	'JPG_QUALITY'     => 'Qualité des JPG',

@@ -205,8 +205,9 @@ $lang = array_merge($lang, [
 	'INDEX_ALBUM_LAYOUT_CARDS'   => 'Modern cards',
 	'INVALID_INDEX_ALBUM_LAYOUT' => 'The selected Gallery album layout is invalid.',
 	'INFO_LINE'                  => 'Display file-size on thumbnail',
-	'INHERIT_PERMISSIONS_ALBUM'  => 'Inherit permissions of an other album',
-	'INHERIT_PERMISSIONS_VICTIM' => 'Inherit permissions of an other setting',
+	'INHERIT_PERMISSIONS_ALBUM'  => 'Copy permissions from another album',
+	'INHERIT_PERMISSIONS_VICTIM' => 'Copy permissions from another setting',
+	'COPY_PERMISSION_MASK_EXPLAIN' => 'Copies the current values once. Later changes to the source are not propagated automatically.',
 
 	'JPG_ALLOWED'     => 'Allowed to upload JPG files',
 	'JPG_QUALITY'     => 'JPG-Quality',
