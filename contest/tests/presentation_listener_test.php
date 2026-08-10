@@ -19,14 +19,18 @@ final class presentation_listener_test extends TestCase
 		$start = time() + 3600;
 		$language = $this->createMock(\phpbb\language\language::class);
 		$language->method('lang')
-			->willReturnCallback(static fn(string $key, string $date): string => $key . ':' . $date);
+			->willReturnCallback(
+				static fn(string $key, string $value = ''): string => $key . ($value !== '' ? ':' . $value : '')
+		);
 		$user = $this->createMock(\phpbb\user::class);
+		$user->data['user_timezone'] = 'Europe/Lisbon';
 		$user->method('format_date')
 			->willReturnCallback(static fn(int $timestamp): string => (string) $timestamp);
 		$event = new \phpbb\event\data([
 			'context' => 'navigation',
 			'album_data' => [
 				'album_type' => \phpbbgallery\contest\manager::ALBUM_TYPE,
+				'contest_id' => 7,
 				'contest_start' => $start,
 				'contest_rating' => 600,
 				'contest_end' => 1200,
@@ -42,6 +46,17 @@ final class presentation_listener_test extends TestCase
 
 		$template_vars = (array) $event['template_vars'];
 		$this->assertTrue($template_vars['S_ALBUM_TYPE_DETAILS']);
+		$this->assertTrue($template_vars['S_CONTEST_PHASE_UPCOMING']);
+		$this->assertFalse($template_vars['S_CONTEST_PHASE_UPLOAD']);
+		$this->assertSame('CONTEST_PHASE_UPCOMING', $template_vars['CONTEST_PHASE_LABEL']);
+		$this->assertSame(
+			'CONTEST_PHASE_UPCOMING_EXPLAIN:' . $start,
+			$template_vars['CONTEST_PHASE_EXPLAIN']
+		);
+		$this->assertSame(
+			'CONTEST_SCHEDULE_TIMEZONE:Europe/Lisbon',
+			$template_vars['CONTEST_TIMEZONE']
+		);
 		$this->assertSame('CONTEST_STARTS:' . $start, $template_vars['ALBUM_CONTEST_START']);
 		$this->assertSame('CONTEST_RATING_STARTS:' . ($start + 600), $template_vars['ALBUM_CONTEST_RATING']);
 		$this->assertSame('CONTEST_ENDS:' . ($start + 1200), $template_vars['ALBUM_CONTEST_END']);

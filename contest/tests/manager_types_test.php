@@ -106,6 +106,13 @@ final class manager_types_test extends TestCase
 
 		$this->assertFalse(contest::is_step('comment', $album_data, 149));
 		$this->assertTrue(contest::is_step('comment', $album_data, 150));
+
+		$this->assertSame(contest::PHASE_UPCOMING, contest::phase($album_data, 99));
+		$this->assertSame(contest::PHASE_UPLOAD, contest::phase($album_data, 100));
+		$this->assertSame(contest::PHASE_UPLOAD, contest::phase($album_data, 119));
+		$this->assertSame(contest::PHASE_RATING, contest::phase($album_data, 120));
+		$this->assertSame(contest::PHASE_RATING, contest::phase($album_data, 149));
+		$this->assertSame(contest::PHASE_FINISHED, contest::phase($album_data, 150));
 	}
 
 	public function test_broken_contest_configuration_fails_closed(): void
@@ -126,6 +133,14 @@ final class manager_types_test extends TestCase
 			$this->assertFalse(contest::is_step($mode, $incomplete_row, 100));
 			$this->assertFalse(contest::is_step($mode, $invalid_window, 100));
 		}
+
+		$this->assertSame(contest::PHASE_INVALID, contest::phase($missing_row, 100));
+		$this->assertSame(contest::PHASE_INVALID, contest::phase($incomplete_row, 100));
+		$this->assertSame(contest::PHASE_INVALID, contest::phase($invalid_window, 100));
+		$this->assertSame(
+			contest::PHASE_REGULAR,
+			contest::phase(['album_type' => block::TYPE_UPLOAD], 100)
+		);
 	}
 
 	public function test_active_contest_privacy_preserves_only_registered_owner_and_moderator_exceptions(): void

@@ -155,9 +155,46 @@ class presentation_listener implements EventSubscriberInterface
 		$rating_start = $start + (int) $album_data['contest_rating'];
 		$end = $start + (int) $album_data['contest_end'];
 		$now = time();
+		$phase = manager::phase($album_data, $now);
+		if ($phase === manager::PHASE_INVALID)
+		{
+			return;
+		}
+
+		$phase_language_key = match ($phase)
+		{
+			manager::PHASE_UPCOMING => 'CONTEST_PHASE_UPCOMING',
+			manager::PHASE_UPLOAD => 'CONTEST_PHASE_UPLOAD',
+			manager::PHASE_RATING => 'CONTEST_PHASE_RATING',
+			default => 'CONTEST_PHASE_FINISHED',
+		};
+		$phase_help_key = $phase_language_key . '_EXPLAIN';
+		$phase_boundary = match ($phase)
+		{
+			manager::PHASE_UPCOMING => $start,
+			manager::PHASE_UPLOAD => $rating_start,
+			manager::PHASE_RATING => $end,
+			default => 0,
+		};
+		$timezone = (string) ($this->user->data['user_timezone'] ?? 'UTC');
 		$template_vars = (array) $event['template_vars'];
 		$template_vars += [
 			'S_ALBUM_TYPE_DETAILS' => true,
+			'S_CONTEST_PHASE_UPCOMING' => $phase === manager::PHASE_UPCOMING,
+			'S_CONTEST_PHASE_UPLOAD' => $phase === manager::PHASE_UPLOAD,
+			'S_CONTEST_PHASE_RATING' => $phase === manager::PHASE_RATING,
+			'S_CONTEST_PHASE_FINISHED' => $phase === manager::PHASE_FINISHED,
+			'CONTEST_PHASE_LABEL' => $this->language->lang($phase_language_key),
+			'CONTEST_PHASE_EXPLAIN' => $phase_boundary > 0
+				? $this->language->lang(
+					$phase_help_key,
+					$this->user->format_date($phase_boundary, false, true)
+				)
+				: $this->language->lang($phase_help_key),
+			'CONTEST_START_DATE' => $this->user->format_date($start, false, true),
+			'CONTEST_RATING_DATE' => $this->user->format_date($rating_start, false, true),
+			'CONTEST_END_DATE' => $this->user->format_date($end, false, true),
+			'CONTEST_TIMEZONE' => $this->language->lang('CONTEST_SCHEDULE_TIMEZONE', $timezone),
 			'ALBUM_CONTEST_START' => $this->phase_text('CONTEST_START', $start, $now),
 			'ALBUM_CONTEST_RATING' => $this->phase_text('CONTEST_RATING_START', $rating_start, $now),
 			'ALBUM_CONTEST_END' => $this->phase_text('CONTEST_END', $end, $now),

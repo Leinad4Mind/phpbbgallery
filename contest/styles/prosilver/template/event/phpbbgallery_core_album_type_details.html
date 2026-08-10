@@ -1,3 +1,23 @@
-{% if ALBUM_CONTEST_START %}<span>{{ ALBUM_CONTEST_START }}<br /></span>{% endif %}
-{% if ALBUM_CONTEST_RATING %}<span>{{ ALBUM_CONTEST_RATING }}<br /></span>{% endif %}
-{% if ALBUM_CONTEST_END %}<span>{{ ALBUM_CONTEST_END }}<br /><br /></span>{% endif %}
+{% if S_ALBUM_TYPE_DETAILS and not S_IN_GALLERY_POPUP %}
+<div class="panel bg1 gallery-contest-phase">
+	<div class="inner">
+		<h3><i class="icon fa-trophy fa-fw" aria-hidden="true"></i> {{ lang('CONTEST_STATUS') }}{{ lang('COLON') }} {{ CONTEST_PHASE_LABEL }}</h3>
+		<p>{{ CONTEST_PHASE_EXPLAIN }}</p>
+		<ol class="gallery-contest-timeline">
+			<li class="{% if S_CONTEST_PHASE_UPLOAD %}current{% elseif S_CONTEST_PHASE_RATING or S_CONTEST_PHASE_FINISHED %}complete{% endif %}">
+				<strong>{{ lang('CONTEST_PHASE_UPLOAD') }}</strong>
+				<span>{{ CONTEST_START_DATE }}</span>
+			</li>
+			<li class="{% if S_CONTEST_PHASE_RATING %}current{% elseif S_CONTEST_PHASE_FINISHED %}complete{% endif %}">
+				<strong>{{ lang('CONTEST_PHASE_RATING') }}</strong>
+				<span>{{ CONTEST_RATING_DATE }}</span>
+			</li>
+			<li class="{% if S_CONTEST_PHASE_FINISHED %}current complete{% endif %}">
+				<strong>{{ lang('CONTEST_PHASE_FINISHED') }}</strong>
+				<span>{{ CONTEST_END_DATE }}</span>
+			</li>
+		</ol>
+		<p class="gallery-contest-timezone"><i class="icon fa-clock-o fa-fw" aria-hidden="true"></i> {{ CONTEST_TIMEZONE }}</p>
+	</div>
+</div>
+{% endif %}

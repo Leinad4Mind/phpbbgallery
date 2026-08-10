@@ -56,6 +56,24 @@ class manager
 	/** Present the validated first-place image after finalization. */
 	public const THUMBNAIL_WINNER = 1;
 
+	/** The row does not describe a valid contest schedule. */
+	public const PHASE_INVALID = 'invalid';
+
+	/** The album is not a contest and is not subject to contest phases. */
+	public const PHASE_REGULAR = 'regular';
+
+	/** The contest has been scheduled but submissions have not opened. */
+	public const PHASE_UPCOMING = 'upcoming';
+
+	/** Contest entries may be submitted. */
+	public const PHASE_UPLOAD = 'upload';
+
+	/** Submissions are closed and ratings may be submitted. */
+	public const PHASE_RATING = 'rating';
+
+	/** The contest has ended and comments and results are available. */
+	public const PHASE_FINISHED = 'finished';
+
 	/**
 	 * Recoverable intermediate state while a selected podium is published.
 	 */
@@ -248,13 +266,36 @@ class manager
 			return false;
 		}
 
+		$phase = self::phase($album_data, $now);
+		if ($phase === self::PHASE_REGULAR)
+		{
+			return true;
+		}
+
+		return match ($mode)
+		{
+			'upload' => $phase === self::PHASE_UPLOAD,
+			'rate' => $phase === self::PHASE_RATING,
+			'comment' => $phase === self::PHASE_FINISHED,
+		};
+	}
+
+	/**
+	 * Resolve the current phase of an album using explicit, contiguous boundaries.
+	 *
+	 * @param array    $album_data Album data, including the contest row
+	 * @param int|null $now        Current timestamp, injectable for tests
+	 * @return string One of the PHASE_* constants
+	 */
+	public static function phase(array $album_data, ?int $now = null): string
+	{
 		$is_contest = isset($album_data['album_type'])
 			? (int) $album_data['album_type'] === self::ALBUM_TYPE
 			: !empty($album_data['contest_id']);
 
 		if (!$is_contest)
 		{
-			return true;
+			return self::PHASE_REGULAR;
 		}
 
 		$required_fields = ['contest_id', 'contest_start', 'contest_rating', 'contest_end'];
@@ -262,7 +303,7 @@ class manager
 		{
 			if (!isset($album_data[$field]) || !is_numeric($album_data[$field]))
 			{
-				return false;
+				return self::PHASE_INVALID;
 			}
 		}
 
@@ -272,19 +313,26 @@ class manager
 		$duration = (int) $album_data['contest_end'];
 		if ($contest_id <= 0 || $start < 0 || $rating_delay < 0 || $duration < $rating_delay)
 		{
-			return false;
+			return self::PHASE_INVALID;
 		}
 
 		$now ??= time();
-		$rating_start = $start + $rating_delay;
-		$end = $start + $duration;
-
-		return match ($mode)
+		if ($now < $start)
 		{
-			'upload' => $start <= $now && $now < $rating_start,
-			'rate' => $rating_start <= $now && $now < $end,
-			'comment' => $now >= $end,
-		};
+			return self::PHASE_UPCOMING;
+		}
+
+		if ($now < $start + $rating_delay)
+		{
+			return self::PHASE_UPLOAD;
+		}
+
+		if ($now < $start + $duration)
+		{
+			return self::PHASE_RATING;
+		}
+
+		return self::PHASE_FINISHED;
 	}
 
 	/**
