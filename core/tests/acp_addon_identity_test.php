@@ -135,6 +135,8 @@ final class acp_addon_identity_test extends TestCase
 		$this->assertStringContainsString('multiple="multiple"', $template);
 		$this->assertStringContainsString('data-album-image-path="{{ iconrow.ICON_PATH }}"', $template);
 		$this->assertStringContainsString("INCLUDEJS '@phpbbgallery_core/gallery_album_icons.js'", $template);
+		$this->assertStringContainsString("INCLUDECSS '@phpbbgallery_core/gallery_album_icons.css'", $template);
+		$this->assertStringContainsString('class="gallery-icon-picker-image"', $template);
 		$this->assertStringContainsString("private const ICON_PICK_NONE = '__none__';", $module);
 		$this->assertStringContainsString('$album_icon_pick === self::ICON_PICK_NONE', $module);
 		$this->assertStringContainsString("\$album_data['album_image'] = '';", $module);
@@ -147,5 +149,11 @@ final class acp_addon_identity_test extends TestCase
 		$this->assertStringContainsString("preview.hidden = source === '';", $javascript);
 		$this->assertStringContainsString("albumImage.addEventListener('input'", $javascript);
 		$this->assertStringContainsString("choice.checked = choice.getAttribute('data-album-image-path') === albumImage.value;", $javascript);
+
+		$css = (string) file_get_contents(dirname(__DIR__) . '/adm/style/gallery_album_icons.css');
+		$this->assertMatchesRegularExpression('/\.gallery-icon-picker-image,\s*\.gallery-icon-picker-none\s*\{[^}]*height:\s*48px;[^}]*width:\s*48px;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-icon-picker-image\s*\{[^}]*object-fit:\s*contain;/s', $css);
+		$this->assertStringContainsString('transform: scale(3);', $css);
+		$this->assertStringContainsString('label:focus-within .gallery-icon-picker-image', $css);
 	}
 }

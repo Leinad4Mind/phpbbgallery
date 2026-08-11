@@ -1,4 +1,5 @@
 {% INCLUDECSS '@phpbbgallery_core/gallery_acp_addons.css' %}
+{% INCLUDECSS '@phpbbgallery_core/gallery_album_icons.css' %}
 {% INCLUDEJS '@phpbbgallery_core/gallery_acp_addons.js' %}
 {% INCLUDEJS '@phpbbgallery_core/gallery_album_icons.js' %}
 {% include 'overall_header.html' %}
@@ -125,22 +126,22 @@
 				<br /><span>{{ L_ICON_UPLOAD_LIMITS }}</span>
 			</dd>
 			<dd>
-			<ul class="gallery-icon-picker" style="list-style: none; margin: 0; padding: 0;">
-				<li style="display: inline-block; margin: 0 8px 8px 0; vertical-align: top;">
-					<label style="display: block; text-align: center; cursor: pointer;">
+			<ul class="gallery-icon-picker">
+				<li class="gallery-icon-picker-option">
+					<label>
 						<input type="radio" name="album_icon_pick" value="{{ ICON_PICK_NONE }}" data-album-image-path="" data-album-icon-src=""{% if S_NO_ICON_SELECTED %} checked="checked"{% endif %} /><br />
-						<span style="align-items: center; border: 1px dashed #aaa; box-sizing: border-box; display: inline-flex; height: 48px; justify-content: center; width: 48px;"><i class="icon fa-ban fa-fw" aria-hidden="true"></i></span><br />
+						<span class="gallery-icon-picker-none"><i class="icon fa-ban fa-fw" aria-hidden="true"></i></span><br />
 						{{ lang('NONE') }}
 					</label>
 				</li>
 			{% if S_NO_ICONS_AVAILABLE %}
-				<li style="display: inline-block; margin: 0 8px 8px 0; vertical-align: top;">{{ lang('NO_ICONS_AVAILABLE') }}</li>
+				<li class="gallery-icon-picker-option">{{ lang('NO_ICONS_AVAILABLE') }}</li>
 			{% else %}
 				{% for iconrow in iconrow %}
-					<li style="display: inline-block; margin: 0 8px 8px 0; vertical-align: top;">
-						<label style="display: block; text-align: center; cursor: pointer;">
+					<li class="gallery-icon-picker-option">
+						<label>
 							<input type="radio" name="album_icon_pick" value="{{ iconrow.ICON_FILE }}" data-album-image-path="{{ iconrow.ICON_PATH }}" data-album-icon-src="{{ iconrow.ICON_SRC }}"{% if iconrow.S_SELECTED %} checked="checked"{% endif %} /><br />
-							<img src="{{ iconrow.ICON_SRC }}" alt="{{ iconrow.ICON_FILE }}" style="max-width: 48px; max-height: 48px;" />
+							<img class="gallery-icon-picker-image" src="{{ iconrow.ICON_SRC }}" alt="{{ iconrow.ICON_FILE }}" />
 						</label>
 					</li>
 				{% endfor %}

@@ -1,0 +1,63 @@
+.gallery-icon-picker
+{
+	list-style: none;
+	margin: 0;
+	overflow: visible;
+	padding: 0;
+}
+
+.gallery-icon-picker-option
+{
+	display: inline-block;
+	margin: 0 8px 8px 0;
+	position: relative;
+	vertical-align: top;
+}
+
+.gallery-icon-picker-option label
+{
+	cursor: pointer;
+	display: block;
+	text-align: center;
+}
+
+.gallery-icon-picker-image,
+.gallery-icon-picker-none
+{
+	box-sizing: border-box;
+	display: inline-flex;
+	height: 48px;
+	position: relative;
+	transform-origin: center;
+	width: 48px;
+	z-index: 1;
+}
+
+.gallery-icon-picker-image
+{
+	object-fit: contain;
+	transition: box-shadow 160ms ease, transform 160ms ease;
+}
+
+.gallery-icon-picker-none
+{
+	align-items: center;
+	border: 1px dashed #aaa;
+	justify-content: center;
+}
+
+.gallery-icon-picker-option label:hover .gallery-icon-picker-image,
+.gallery-icon-picker-option label:focus-within .gallery-icon-picker-image
+{
+	box-shadow: 0 4px 14px rgba(0, 0, 0, .3);
+	transform: scale(3);
+	z-index: 10;
+}
+
+@media (prefers-reduced-motion: reduce)
+{
+	.gallery-icon-picker-image
+	{
+		transition: none;
+	}
+}
