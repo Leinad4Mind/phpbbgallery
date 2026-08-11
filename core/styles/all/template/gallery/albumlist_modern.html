@@ -27,13 +27,7 @@
 					{% if albumrow.MODERATORS %}
 						<div class="gallery-modern-album-details"><span><i class="icon fa fa-user fa-fw" aria-hidden="true"></i> <strong>{{ albumrow.L_MODERATOR_STR }}{{ lang('COLON') }}</strong> {{ albumrow.MODERATORS }}</span></div>
 					{% endif %}
-					{% if albumrow.subalbum|length and albumrow.S_LIST_SUBALBUMS %}
-						<div class="gallery-modern-subalbums">
-							{% for subalbum in albumrow.subalbum %}
-								<a href="{{ subalbum.U_SUBALBUM }}" class="subforum{% if subalbum.S_UNREAD %} unread{% else %} read{% endif %}" title="{% if subalbum.S_UNREAD %}{{ lang('NEW_IMAGES') }}{% else %}{{ lang('NO_NEW_IMAGES') }}{% endif %}"><i class="icon fa fa-folder fa-fw" aria-hidden="true"></i> {{ subalbum.SUBALBUM_NAME }}</a>
-							{% endfor %}
-						</div>
-					{% endif %}
+					{% include '@phpbbgallery_core/gallery/subalbum_links.html' %}
 				</div>
 			</div>
 			<div class="gallery-modern-album-summary">

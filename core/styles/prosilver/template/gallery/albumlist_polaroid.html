@@ -46,23 +46,7 @@
 				<br />
 			{% endif %}
 
-			{% if albumrow.subalbum|length and albumrow.S_LIST_SUBALBUMS %}
-				<div class="dropdown-container"><i class="icon fa-sitemap fa-fw icon-md" aria-hidden="true"></i>
-					<a href="#" class="responsive-menu-link dropdown-trigger">{{ albumrow.L_SUBALBUM_STR }}</a>
-					<div class="dropdown" style="display: none;">
-						<div class="pointer"><div class="pointer-inner"></div></div>
-						<div class="dropdown-contents">
-							{% for subalbum in albumrow.subalbum %}
-							<li>
-								<a href="{{ subalbum.U_SUBALBUM }}" class="subforum{% if subalbum.S_UNREAD %} unread{% else %} read{% endif %}" title="{% if subalbum.UNREAD %}{{ lang('UNREAD_IMAGES') }}{% else %}{{ lang('NO_UNREAD_IMAGES') }}{% endif %}"><i class="icon fa-image fa-fw icon-md" aria-hidden="true"></i> {{ subalbum.SUBALBUM_NAME }}</a>{% if not subalbum.S_LAST_ROW %}{% endif %}
-							</li>
-						{% endfor %}
-						</div>
-					</div>
-				</div>
-			{% else %}
-			<br />
-			{% endif %}
+			{% include '@phpbbgallery_core/gallery/subalbum_links.html' %}
 		</div>
 	{% endif %}
 

@@ -735,13 +735,12 @@ class display
 			}
 
 			$s_subalbums_list = [];
-			$has_subalbum_icons = false;
 			foreach ($subalbums_list as $subalbum)
 			{
-				$has_subalbum_icons = $has_subalbum_icons || $subalbum['image_src'] !== '';
 				$s_subalbums_list[] = '<a href="' . $subalbum['link'] . '" class="subforum ' . (($subalbum['unread']) ? 'unread' : 'read') . '" title="' . (($subalbum['unread']) ? $this->language->lang('NEW_IMAGES') : $this->language->lang('NO_NEW_IMAGES')) . '">' . $subalbum['name'] . '</a>';
 			}
 			$s_subalbums_list = (string) implode(', ', $s_subalbums_list);
+			$subalbum_display_mode = \phpbbgallery\core\block::normalise_subalbum_display_mode((int) $row['display_subalbum_list']);
 			$catless = ($row['parent_id'] == $root_data['album_id']) ? true : false;
 
 			$last_image_data = $this->image_visibility->projected_data($row, $last_image_projection, [
@@ -768,9 +767,11 @@ class display
 				'S_NO_CAT'			=> $catless && !$last_catless,
 				'S_LOCKED_ALBUM'	=> ($row['album_status'] == (int) \phpbbgallery\core\block::ALBUM_LOCKED) ? true : false,
 				'S_UNREAD_ALBUM'	=> ($album_unread) ? true : false,
-				'S_LIST_SUBALBUMS'	=> ($row['display_subalbum_list']) ? true : false,
+				'S_LIST_SUBALBUMS'	=> $subalbum_display_mode !== (int) \phpbbgallery\core\block::SUBALBUM_DISPLAY_HIDDEN,
+				'S_SUBALBUMS_AS_TEXT'	=> $subalbum_display_mode === (int) \phpbbgallery\core\block::SUBALBUM_DISPLAY_TEXT,
+				'S_SUBALBUMS_AS_ICONS'	=> $subalbum_display_mode === (int) \phpbbgallery\core\block::SUBALBUM_DISPLAY_ICONS,
+				'SUBALBUM_DISPLAY_MODE'	=> $subalbum_display_mode,
 				'S_SUBALBUMS'		=> (sizeof($subalbums_list)) ? true : false,
-				'S_HAS_SUBALBUM_ICONS' => $has_subalbum_icons,
 				'S_ALBUM_VISUAL_IS_LAST_IMAGE' => !$row['album_image'] && (int) $row['album_last_image_id'] > 0,
 
 				'ALBUM_ID'				=> (int) $row['album_id'],
@@ -828,7 +829,6 @@ class display
 		$this->template->assign_vars([
 			'U_MARK_ALBUMS'		=> ($this->user->data['is_registered']) ? $this->helper->route('phpbbgallery_core_album', ['album_id' => (int) $root_data['album_id'], 'hash' => generate_link_hash('global'), 'mark' => 'albums']) : '',
 			'S_HAS_SUBALBUM'	=> ($visible_albums) ? true : false,
-			'S_DISPLAY_SUBALBUM_ICONS' => (bool) $this->gallery_config->get('disp_subalbum_icons'),
 			'L_SUBFORUM'		=> ($visible_albums == 1) ? $this->language->lang('SUBALBUM') : $this->language->lang('SUBALBUMS'),
 			'LAST_POST_IMG'		=> $this->user->img('icon_topic_latest', 'VIEW_LATEST_POST'),
 			'FAKE_THUMB_SIZE'	=> $this->config['phpbb_gallery_mini_thumbnail_size'],

@@ -133,7 +133,7 @@ class albums_module
 						'album_watermark'		=> $request->variable('album_watermark', false),
 						'album_sort_key'		=> $request->variable('album_sort_key', ''),
 						'album_sort_dir'		=> $request->variable('album_sort_dir', ''),
-						'display_subalbum_list'	=> $request->variable('display_subalbum_list', false),
+						'display_subalbum_list'	=> \phpbbgallery\core\block::normalise_subalbum_display_mode($request->variable('display_subalbum_list', (int) \phpbbgallery\core\block::SUBALBUM_DISPLAY_HIDDEN)),
 						'display_on_index'		=> $request->variable('display_on_index', false),
 						'display_in_rrc'		=> $request->variable('display_in_rrc', false),
 						/*
@@ -447,7 +447,7 @@ class albums_module
 							'album_watermark'		=> true,
 							'album_sort_key'		=> '',
 							'album_sort_dir'		=> '',
-							'display_subalbum_list'	=> true,
+							'display_subalbum_list'	=> (int) \phpbbgallery\core\block::SUBALBUM_DISPLAY_ICONS,
 							'display_on_index'		=> true,
 							'display_in_rrc'		=> true,
 							/*
@@ -573,6 +573,10 @@ class albums_module
 				}
 				$db->sql_freeresult($result);
 
+				$has_subalbums = $action === 'edit'
+					&& isset($album_data['right_id'], $album_data['left_id'])
+					&& (int) $album_data['right_id'] - (int) $album_data['left_id'] > 1;
+
 				// Subalbum move options
 				if ($action == 'edit' && $album_type_registry->accepts_images((int) $album_data['album_type']))
 				{
@@ -594,7 +598,7 @@ class albums_module
 					}
 
 					$template->assign_vars([
-						'S_HAS_SUBALBUMS'		=> ($album_data['right_id'] - $album_data['left_id'] > 1) ? true : false,
+						'S_HAS_SUBALBUMS'		=> $has_subalbums,
 						'S_ALBUMS_LIST'			=> $albums_list,
 					]);
 				}
@@ -634,6 +638,8 @@ class albums_module
 					'S_PARENT_ID'		=> $this->parent_id,
 					'S_ALBUM_PARENT_ID'	=> $album_data['parent_id'],
 					'S_ADD_ACTION'		=> ($action == 'add') ? true : false,
+					'S_HAS_SUBALBUMS'	=> $has_subalbums,
+					'S_HAS_PARENT_ALBUM'	=> (int) $album_data['parent_id'] > (int) \phpbbgallery\core\block::PUBLIC_ALBUM,
 
 					'U_BACK'			=> $this->u_action . '&amp;parent_id=' . $this->parent_id,
 					'U_EDIT_ACTION'		=> $this->u_action . "&amp;parent_id={$this->parent_id}&amp;action=$action&amp;a=$album_id",
@@ -671,7 +677,10 @@ class albums_module
 					'S_ALBUM_WATERMARK'			=> ($album_data['album_watermark']) ? true : false,
 					'ALBUM_SORT_KEY_OPTIONS'	=> $album_sort_key_options,
 					'ALBUM_SORT_DIR_OPTIONS'	=> $album_sort_dir_options,
-					'S_DISPLAY_SUBALBUM_LIST'	=> ($album_data['display_subalbum_list']) ? true : false,
+					'SUBALBUM_DISPLAY_MODE'	=> \phpbbgallery\core\block::normalise_subalbum_display_mode((int) $album_data['display_subalbum_list']),
+					'SUBALBUM_DISPLAY_HIDDEN'	=> (int) \phpbbgallery\core\block::SUBALBUM_DISPLAY_HIDDEN,
+					'SUBALBUM_DISPLAY_TEXT'	=> (int) \phpbbgallery\core\block::SUBALBUM_DISPLAY_TEXT,
+					'SUBALBUM_DISPLAY_ICONS'	=> (int) \phpbbgallery\core\block::SUBALBUM_DISPLAY_ICONS,
 					'S_DISPLAY_ON_INDEX'		=> ($album_data['display_on_index']) ? true : false,
 					'S_DISPLAY_IN_RRC'			=> ($album_data['display_in_rrc']) ? true : false,
 				]);

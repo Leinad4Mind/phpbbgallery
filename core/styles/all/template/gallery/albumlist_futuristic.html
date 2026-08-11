@@ -36,17 +36,7 @@
 					{% if albumrow.MODERATORS %}
 						<div class="gallery-futuristic-album-details"><i class="icon fa fa-shield fa-fw" aria-hidden="true"></i> <strong>{{ albumrow.L_MODERATOR_STR }}{{ lang('COLON') }}</strong> {{ albumrow.MODERATORS }}</div>
 					{% endif %}
-					{% if albumrow.subalbum|length and (albumrow.S_LIST_SUBALBUMS or (S_DISPLAY_SUBALBUM_ICONS and albumrow.S_HAS_SUBALBUM_ICONS)) %}
-						<div class="gallery-futuristic-subalbums{% if S_DISPLAY_SUBALBUM_ICONS %} gallery-futuristic-subalbums--icons{% endif %}">
-						{% for subalbum in albumrow.subalbum %}
-							{% if S_DISPLAY_SUBALBUM_ICONS and subalbum.SUBALBUM_IMAGE_SRC %}
-							<a href="{{ subalbum.U_SUBALBUM }}" class="gallery-futuristic-subalbum-icon {% if subalbum.S_UNREAD %}unread{% else %}read{% endif %}" title="{{ subalbum.SUBALBUM_NAME }} — {% if subalbum.S_UNREAD %}{{ lang('NEW_IMAGES') }}{% else %}{{ lang('NO_NEW_IMAGES') }}{% endif %}" aria-label="{{ subalbum.SUBALBUM_NAME }}"><img src="{{ subalbum.SUBALBUM_IMAGE_SRC }}" alt=""><span class="sr-only">{{ subalbum.SUBALBUM_NAME }}</span></a>
-							{% elseif albumrow.S_LIST_SUBALBUMS %}
-							<a href="{{ subalbum.U_SUBALBUM }}" class="{% if subalbum.S_UNREAD %}unread{% else %}read{% endif %}" title="{% if subalbum.S_UNREAD %}{{ lang('NEW_IMAGES') }}{% else %}{{ lang('NO_NEW_IMAGES') }}{% endif %}"><i class="icon fa fa-folder fa-fw" aria-hidden="true"></i> {{ subalbum.SUBALBUM_NAME }}</a>
-							{% endif %}
-						{% endfor %}
-						</div>
-					{% endif %}
+					{% include '@phpbbgallery_core/gallery/subalbum_links.html' %}
 				</div>
 			</div>
 

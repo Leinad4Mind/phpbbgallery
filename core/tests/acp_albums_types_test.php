@@ -52,6 +52,22 @@ final class acp_albums_types_test extends TestCase
 		$this->assertStringNotContainsString('$' . '_POST', $source);
 	}
 
+	public function test_subalbum_controls_follow_the_album_role(): void
+	{
+		$template = (string) file_get_contents(dirname(__DIR__) . '/adm/style/gallery_albums.html');
+		$source = (string) file_get_contents(dirname(__DIR__) . '/acp/albums_module.php');
+
+		$this->assertStringContainsString('{% if S_HAS_SUBALBUMS %}', $template);
+		$this->assertStringContainsString('{% if S_HAS_PARENT_ALBUM %}', $template);
+		$this->assertStringContainsString("lang('SUBALBUM_DISPLAY_MODE')", $template);
+		$this->assertStringContainsString('SUBALBUM_DISPLAY_HIDDEN', $template);
+		$this->assertStringContainsString('SUBALBUM_DISPLAY_TEXT', $template);
+		$this->assertStringContainsString('SUBALBUM_DISPLAY_ICONS', $template);
+		$this->assertStringContainsString("'S_HAS_PARENT_ALBUM'", $source);
+		$this->assertStringContainsString("'S_HAS_SUBALBUMS'\t=> \$has_subalbums", $source);
+		$this->assertStringContainsString('normalise_subalbum_display_mode', $source);
+	}
+
 	public function test_image_capability_comes_from_the_album_type_registry(): void
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/acp/albums_module.php');

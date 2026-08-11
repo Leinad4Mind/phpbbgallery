@@ -1,0 +1,11 @@
+{% if albumrow.subalbum|length and albumrow.S_LIST_SUBALBUMS %}
+<div class="gallery-subalbum-links{% if albumrow.S_SUBALBUMS_AS_ICONS %} gallery-subalbum-links--icons{% else %} gallery-subalbum-links--text{% endif %}">
+	{% for subalbum in albumrow.subalbum %}
+		{% if albumrow.S_SUBALBUMS_AS_ICONS and subalbum.SUBALBUM_IMAGE_SRC %}
+		<a href="{{ subalbum.U_SUBALBUM }}" class="gallery-subalbum-link gallery-subalbum-link--icon{% if subalbum.S_UNREAD %} unread{% else %} read{% endif %}" title="{{ subalbum.SUBALBUM_NAME }} — {% if subalbum.S_UNREAD %}{{ lang('NEW_IMAGES') }}{% else %}{{ lang('NO_NEW_IMAGES') }}{% endif %}" aria-label="{{ subalbum.SUBALBUM_NAME }}"><img src="{{ subalbum.SUBALBUM_IMAGE_SRC }}" alt=""><span class="sr-only">{{ subalbum.SUBALBUM_NAME }}</span></a>
+		{% else %}
+		<a href="{{ subalbum.U_SUBALBUM }}" class="gallery-subalbum-link gallery-subalbum-link--text{% if subalbum.S_UNREAD %} unread{% else %} read{% endif %}" title="{% if subalbum.S_UNREAD %}{{ lang('NEW_IMAGES') }}{% else %}{{ lang('NO_NEW_IMAGES') }}{% endif %}"><i class="icon fa fa-folder fa-fw" aria-hidden="true"></i> <span>{{ subalbum.SUBALBUM_NAME }}</span></a>
+		{% endif %}
+	{% endfor %}
+</div>
+{% endif %}

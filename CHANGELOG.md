@@ -6,7 +6,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Added
 
-- Added an ACP-controlled subalbum icon strip to supported album layouts, reusing the existing permission-filtered subalbum tree without extra queries and retaining text links whenever a visible subalbum has no configured icon.
+- Added per-parent Hide, Text and Icons presentation modes for eligible direct subalbums, applied consistently to Classic, Modern, Cards and Futuristic layouts without extra queries and retaining text links for subalbums without a configured icon.
 - Added an optional ACP-controlled real image-ID badge to every Gallery card layout; selecting it copies the installation's canonical `[image]` or `[galleryimage]` BBCode with accessible visual confirmation and an HTTP-compatible clipboard fallback.
 - Added a fourth Futuristic Gallery presentation with shared permission-safe album and image components, responsive glass-style grids, accessible focus and reduced-motion behavior, and distinct restrained variants for PROSILVER, BBOOTS and FLATBOOTS while preserving Favorite, rating, moderation and add-on metadata events.
 - Added large, responsive and keyboard-accessible Font Awesome previous/next controls when navigation thumbnails are disabled, while retaining the adjacent image names for tooltips and assistive technology.
@@ -42,6 +42,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Made the album editor role-aware: the parent presentation mode is shown only for albums that contain subalbums, while the child eligibility switch is shown only when editing or creating a real subalbum; intermediate albums correctly expose both controls.
 - Limited the selected ACP album-image preview to a proportional 256-pixel bounding box without changing the stored icon.
 - Enlarged ACP album-icon choices to a real 48-pixel preview and added a keyboard-accessible three-times hover/focus zoom while preserving each icon's aspect ratio.
 - Centred the Font Awesome glyph inside the circular Futuristic album-section marker independently of inherited icon sizing and spacing rules.
@@ -64,7 +65,8 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 - Displayed each configured album icon in the ACP album tree's visual column, falling back to phpBB's folder icon only when no custom image is configured.
 - Prevented the enlarged ACP album-icon preview from being clipped by phpBB's default hidden overflow on form rows.
-- Allowed the optional Futuristic subalbum-icon strip to render independently of the legacy per-album textual subalbum-list setting.
+- Replaced the conflicting global subalbum-icon switch and ambiguous legacy legend labels with an explicit per-parent presentation mode, preserving existing hidden parents and migrating visible parents to text or icons according to their previous global setting.
+- Removed the Classic folder-circle background whenever an album has a custom icon and kept transparent SVG artwork transparent, so the configured icon fully replaces the default visual.
 - Added an explicit “None” choice, live album-image path/preview updates, reordered controls and validated multi-file uploads to the ACP album icon picker.
 - Displayed ACP-configured album icons in a consistent 30 px square with a non-disruptive three-times hover and keyboard-focus preview across every Gallery layout.
 - Corrected uploaded album icons in every Gallery layout to resolve from the phpBB board root instead of being incorrectly prefixed with the active style or CDN image path.

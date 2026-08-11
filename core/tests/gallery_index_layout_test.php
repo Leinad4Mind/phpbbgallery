@@ -46,7 +46,7 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertStringContainsString('albumrow.S_LOCKED_ALBUM', $template);
 		$this->assertStringContainsString('albumrow.ALBUM_DESC', $template);
 		$this->assertStringContainsString('albumrow.MODERATORS', $template);
-		$this->assertStringContainsString('albumrow.subalbum|length', $template);
+		$this->assertStringContainsString("{% include '@phpbbgallery_core/gallery/subalbum_links.html' %}", $template);
 		$this->assertStringContainsString('albumrow.UNAPPROVED_IMAGES', $template);
 		$this->assertStringContainsString('albumrow.LAST_USER_FULL', $template);
 		$this->assertStringContainsString('albumrow.UC_LAST_IMAGE_THUMBNAIL and not albumrow.S_ALBUM_VISUAL_IS_LAST_IMAGE', $template);
@@ -121,7 +121,7 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertStringContainsString('albumrow.S_PERSONAL_SECTION_START', $albums);
 		$this->assertStringContainsString('albumrow.S_UNREAD_ALBUM', $albums);
 		$this->assertStringContainsString('albumrow.S_LOCKED_ALBUM', $albums);
-		$this->assertStringContainsString('albumrow.subalbum|length', $albums);
+		$this->assertStringContainsString("{% include '@phpbbgallery_core/gallery/subalbum_links.html' %}", $albums);
 		$this->assertStringContainsString('albumrow.UNAPPROVED_IMAGES', $albums);
 		$this->assertStringContainsString('albumrow.LAST_USER_FULL', $albums);
 		$this->assertStringContainsString('gallery-futuristic-album-main--without-visual', $albums);
@@ -130,13 +130,24 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertStringContainsString('{% if albumrow.UC_LAST_IMAGE_THUMBNAIL %}', $albums);
 		$this->assertStringNotContainsString('albumrow.UC_LAST_IMAGE_THUMBNAIL and not albumrow.S_ALBUM_VISUAL_IS_LAST_IMAGE', $albums);
 		$this->assertStringContainsString('albumrow.U_LAST_IMAGE', $albums);
-		$this->assertStringContainsString('albumrow.S_LIST_SUBALBUMS or (S_DISPLAY_SUBALBUM_ICONS and albumrow.S_HAS_SUBALBUM_ICONS)', $albums);
-		$this->assertStringContainsString('S_DISPLAY_SUBALBUM_ICONS and subalbum.SUBALBUM_IMAGE_SRC', $albums);
-		$this->assertStringContainsString('{% elseif albumrow.S_LIST_SUBALBUMS %}', $albums);
-		$this->assertStringContainsString('gallery-futuristic-subalbum-icon', $albums);
+		$this->assertStringContainsString("{% include '@phpbbgallery_core/gallery/subalbum_links.html' %}", $albums);
+		$subalbums = (string) file_get_contents($core_root . '/styles/all/template/gallery/subalbum_links.html');
+		$this->assertStringContainsString('albumrow.S_SUBALBUMS_AS_ICONS and subalbum.SUBALBUM_IMAGE_SRC', $subalbums);
+		$this->assertStringContainsString('gallery-subalbum-link--text', $subalbums);
+		$this->assertStringContainsString('gallery-subalbum-link--icon', $subalbums);
 		$this->assertStringContainsString("'SUBALBUM_IMAGE_SRC' => \$subalbum['image_src']", (string) file_get_contents($core_root . '/album/display.php'));
-		$this->assertStringContainsString("'S_HAS_SUBALBUM_ICONS' => \$has_subalbum_icons", (string) file_get_contents($core_root . '/album/display.php'));
-		$this->assertStringContainsString("'S_DISPLAY_SUBALBUM_ICONS' => (bool) \$this->gallery_config->get('disp_subalbum_icons')", (string) file_get_contents($core_root . '/album/display.php'));
+		$this->assertStringContainsString("'S_SUBALBUMS_AS_TEXT'", (string) file_get_contents($core_root . '/album/display.php'));
+		$this->assertStringContainsString("'S_SUBALBUMS_AS_ICONS'", (string) file_get_contents($core_root . '/album/display.php'));
+		$this->assertStringNotContainsString('S_DISPLAY_SUBALBUM_ICONS', $albums . $subalbums);
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			foreach (['albumlist_body.html', 'albumlist_polaroid.html'] as $template)
+			{
+				$this->assertStringContainsString("{% include '@phpbbgallery_core/gallery/subalbum_links.html' %}", (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/' . $template), $style . '/' . $template);
+			}
+		}
+		$this->assertStringContainsString("{% include '@phpbbgallery_core/gallery/subalbum_links.html' %}", (string) file_get_contents($core_root . '/styles/all/template/gallery/albumlist_modern.html'));
+		$this->assertMatchesRegularExpression('/\.gallery-classic-album-custom-visual\s*\{[^}]*background-image:\s*none !important;/s', $css);
 		$this->assertMatchesRegularExpression(
 			'/\.gallery-futuristic-album-visual\.gallery-album-custom-icon-frame \.gallery-album-custom-icon\s*\{[^}]*background:\s*transparent;[^}]*height:\s*100%;[^}]*width:\s*100%;/s',
 			$css

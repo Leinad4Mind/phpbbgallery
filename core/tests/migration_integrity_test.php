@@ -55,6 +55,7 @@ use phpbbgallery\core\migrations\relocate_personal_album_profile_field;
 use phpbbgallery\core\migrations\gallery_album_bbcode;
 use phpbbgallery\core\migrations\image_card_bbcode_id;
 use phpbbgallery\core\migrations\subalbum_icon_display;
+use phpbbgallery\core\migrations\subalbum_display_modes;
 
 class migration_integrity_test extends TestCase
 {
@@ -103,6 +104,7 @@ class migration_integrity_test extends TestCase
 		gallery_album_bbcode::class,
 		image_card_bbcode_id::class,
 		subalbum_icon_display::class,
+		subalbum_display_modes::class,
 		release_4_1_0::class,
 	];
 
@@ -306,7 +308,7 @@ class migration_integrity_test extends TestCase
 		$migration = (new \ReflectionClass(release_4_1_0::class))->newInstanceWithoutConstructor();
 
 		$this->assertSame([
-			'\\phpbbgallery\\core\\migrations\\subalbum_icon_display',
+			'\\phpbbgallery\\core\\migrations\\subalbum_display_modes',
 		], release_4_1_0::depends_on());
 		$this->assertSame([
 			['config.update', ['phpbb_gallery_version', '4.1.0']],
@@ -340,6 +342,23 @@ class migration_integrity_test extends TestCase
 		], $migration->update_data());
 		$this->assertSame([
 			['config.remove', ['phpbb_gallery_disp_subalbum_icons']],
+		], $migration->revert_data());
+	}
+
+	public function test_subalbum_display_modes_replace_the_global_icon_switch(): void
+	{
+		$migration = (new \ReflectionClass(subalbum_display_modes::class))->newInstanceWithoutConstructor();
+
+		$this->assertSame([
+			'\\phpbbgallery\\core\\migrations\\subalbum_icon_display',
+		], subalbum_display_modes::depends_on());
+		$this->assertSame([
+			['custom', [[$migration, 'migrate_display_modes']]],
+			['config.remove', ['phpbb_gallery_disp_subalbum_icons']],
+		], $migration->update_data());
+		$this->assertSame([
+			['config.add', ['phpbb_gallery_disp_subalbum_icons', 1]],
+			['custom', [[$migration, 'restore_boolean_modes']]],
 		], $migration->revert_data());
 	}
 
@@ -1226,6 +1245,7 @@ class migration_integrity_test extends TestCase
 			'gallery_album_bbcode.php',
 			'image_card_bbcode_id.php',
 			'subalbum_icon_display.php',
+			'subalbum_display_modes.php',
 			'release_4_1_0.php',
 		] as $migration)
 		{

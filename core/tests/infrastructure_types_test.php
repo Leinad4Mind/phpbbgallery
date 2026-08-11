@@ -33,13 +33,18 @@ final class infrastructure_types_test extends TestCase
 		$this->assertSame('local', $gallery_config->get('storage_provider'));
 		$this->assertTrue($gallery_config->get('disp_new_image_count'));
 		$this->assertFalse($gallery_config->get('disp_image_id'));
-		$this->assertTrue($gallery_config->get('disp_subalbum_icons'));
+		$this->assertNull($gallery_config->get('disp_subalbum_icons'));
 		$this->assertSame('image', $gallery_config->get_bbcode_tag());
 		$this->assertSame('album', $gallery_config->get_album_bbcode_tag());
 		$this->assertSame('cards', $gallery_config->get_index_album_layout());
 		$this->assertSame(['classic', 'modern', 'cards', 'futuristic'], gallery_config::index_album_layouts());
 		$this->assertSame(25, $gallery_config->get_all()['items_per_page']);
 		$this->assertNull($gallery_config->get('missing_addon_option'));
+		$this->assertSame(0, \phpbbgallery\core\block::normalise_subalbum_display_mode(-1));
+		$this->assertSame(0, \phpbbgallery\core\block::normalise_subalbum_display_mode(0));
+		$this->assertSame(1, \phpbbgallery\core\block::normalise_subalbum_display_mode(1));
+		$this->assertSame(2, \phpbbgallery\core\block::normalise_subalbum_display_mode(2));
+		$this->assertSame(0, \phpbbgallery\core\block::normalise_subalbum_display_mode(3));
 		$this->assertSame(4, $gallery_config->get('missing_addon_option', 4));
 
 		$gallery_config->set('allow_zip', true);

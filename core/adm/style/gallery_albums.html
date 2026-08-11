@@ -207,16 +207,27 @@
 			<dd><label><input type="radio" class="radio" name="display_in_rrc" value="1"{% if S_DISPLAY_IN_RRC %} id="display_in_rrc" checked="checked"{% endif %} /> {{ lang('YES') }}</label>
 				<label><input type="radio" class="radio" name="display_in_rrc" value="0"{% if not S_DISPLAY_IN_RRC %} id="display_in_rrc" checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
 		</dl>
+		{% if S_HAS_SUBALBUMS %}
 		<dl>
-			<dt><label for="display_subalbum_list">{{ lang('LIST_SUBALBUMS') }}{{ lang('COLON') }}</label><br /><span>{{ lang('LIST_SUBALBUMS_EXPLAIN') }}</span></dt>
-			<dd><label><input type="radio" class="radio" name="display_subalbum_list" value="1"{% if S_DISPLAY_SUBALBUM_LIST %} id="display_subalbum_list" checked="checked"{% endif %} /> {{ lang('YES') }}</label>
-				<label><input type="radio" class="radio" name="display_subalbum_list" value="0"{% if not S_DISPLAY_SUBALBUM_LIST %} id="display_subalbum_list" checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
+			<dt><label for="display_subalbum_list">{{ lang('SUBALBUM_DISPLAY_MODE') }}{{ lang('COLON') }}</label><br /><span>{{ lang('SUBALBUM_DISPLAY_MODE_EXPLAIN') }}</span></dt>
+			<dd><select id="display_subalbum_list" name="display_subalbum_list">
+				<option value="{{ SUBALBUM_DISPLAY_HIDDEN }}"{% if SUBALBUM_DISPLAY_MODE == SUBALBUM_DISPLAY_HIDDEN %} selected="selected"{% endif %}>{{ lang('SUBALBUM_DISPLAY_HIDDEN') }}</option>
+				<option value="{{ SUBALBUM_DISPLAY_TEXT }}"{% if SUBALBUM_DISPLAY_MODE == SUBALBUM_DISPLAY_TEXT %} selected="selected"{% endif %}>{{ lang('SUBALBUM_DISPLAY_TEXT') }}</option>
+				<option value="{{ SUBALBUM_DISPLAY_ICONS }}"{% if SUBALBUM_DISPLAY_MODE == SUBALBUM_DISPLAY_ICONS %} selected="selected"{% endif %}>{{ lang('SUBALBUM_DISPLAY_ICONS') }}</option>
+			</select></dd>
 		</dl>
+		{% else %}
+		<input type="hidden" name="display_subalbum_list" value="{{ SUBALBUM_DISPLAY_MODE }}" />
+		{% endif %}
+		{% if S_HAS_PARENT_ALBUM %}
 		<dl>
 			<dt><label for="display_on_index">{{ lang('LIST_INDEX') }}{{ lang('COLON') }}</label><br /><span>{{ lang('LIST_INDEX_EXPLAIN') }}</span></dt>
 			<dd><label><input type="radio" class="radio" name="display_on_index" value="1"{% if S_DISPLAY_ON_INDEX %} id="display_on_index" checked="checked"{% endif %} /> {{ lang('YES') }}</label>
 				<label><input type="radio" class="radio" name="display_on_index" value="0"{% if not S_DISPLAY_ON_INDEX %} id="display_on_index" checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
 		</dl>
+		{% else %}
+		<input type="hidden" name="display_on_index" value="{% if S_DISPLAY_ON_INDEX %}1{% else %}0{% endif %}" />
+		{% endif %}
 		{% EVENT phpbbgallery_core_adm_album_upload_options %}
 		</fieldset>
 	</div>

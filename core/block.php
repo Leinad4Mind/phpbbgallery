@@ -37,6 +37,27 @@ class block
 	public const ALBUM_OPEN = 0;
 	public const ALBUM_LOCKED = 1;
 
+	/** Do not expose direct subalbums in this album's summary. */
+	public const SUBALBUM_DISPLAY_HIDDEN = 0;
+
+	/** Expose eligible direct subalbums as text links. */
+	public const SUBALBUM_DISPLAY_TEXT = 1;
+
+	/** Expose eligible direct subalbums using their configured icons. */
+	public const SUBALBUM_DISPLAY_ICONS = 2;
+
+	/**
+	 * Normalise a persisted or submitted subalbum presentation mode.
+	 */
+	public static function normalise_subalbum_display_mode(int $mode): int
+	{
+		return in_array($mode, [
+			self::SUBALBUM_DISPLAY_HIDDEN,
+			self::SUBALBUM_DISPLAY_TEXT,
+			self::SUBALBUM_DISPLAY_ICONS,
+		], true) ? $mode : self::SUBALBUM_DISPLAY_HIDDEN;
+	}
+
 	/**
 	 * Get locked
 	 */

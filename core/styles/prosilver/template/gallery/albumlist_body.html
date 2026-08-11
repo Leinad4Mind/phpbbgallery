@@ -27,14 +27,14 @@
 
 	{% if not albumrow.S_IS_CAT %}
 		<li class="row{% if albumrow.S_PERSONAL_ALBUM %} gallery-personal-album{% endif %}">{{ albumrow.ALBUM_FOLDER_IMG_SRC }}
-			<dl class="row-item {{ albumrow.ALBUM_IMG_STYLE }}">
+			<dl class="row-item{% if albumrow.ALBUM_IMAGE_SRC %} gallery-classic-album-custom-visual{% else %} {{ albumrow.ALBUM_IMG_STYLE }}{% endif %}">
 				<dt title="{{ albumrow.ALBUM_FOLDER_IMG_ALT }}">
 					{% if albumrow.ALBUM_IMAGE_SRC %}<a class="forum-image gallery-album-custom-icon-frame" href="{{ albumrow.U_VIEWALBUM }}" aria-label="{{ lang('VIEW_ALBUM') }}{{ lang('COLON') }} {{ albumrow.ALBUM_NAME }}"><img class="gallery-album-custom-icon" src="{{ albumrow.ALBUM_IMAGE_SRC }}" alt="" /></a>{% endif %}
 					<div class="list-inner">
 						<a href="{{ albumrow.U_VIEWALBUM }}" class="forumtitle"{% if S_PERSONAL_GALLERY and albumrow.ALBUM_COLOUR %} style="color: {{ albumrow.ALBUM_COLOUR }};"{% endif %}>{{ albumrow.ALBUM_NAME }}</a><br />
 						{{ albumrow.ALBUM_DESC }}
 						{% if albumrow.MODERATORS %}<br /><strong>{{ albumrow.L_MODERATOR_STR }}{{ lang('COLON') }}</strong> {{ albumrow.MODERATORS }}{% endif %}
-						{% if albumrow.SUBALBUMS and albumrow.S_LIST_SUBALBUMS %}<br /><strong>{{ albumrow.L_SUBALBUM_STR }}</strong> {{ albumrow.SUBALBUMS }}{% endif %}
+						{% include '@phpbbgallery_core/gallery/subalbum_links.html' %}
 					</div>
 				</dt>
 				<dd class="posts">{{ albumrow.IMAGES }} {% if albumrow.UNAPPROVED_IMAGES %} + <span class="reported-images-number">{{ albumrow.UNAPPROVED_IMAGES }}</span>{% endif %} <dfn>{{ lang('IMAGES') }}</dfn></dd>
