@@ -62,7 +62,10 @@ class main_module
 
 		// Favourites may point at albums the member has since lost access to,
 		// so the listing is bounded by what they can still view.
-		$visible_albums = $gallery_auth->acl_album_ids('i_view');
+		$visible_albums = array_values(array_diff(
+			$gallery_auth->acl_album_ids('i_view'),
+			$gallery_auth->get_exclude_zebra()
+		));
 
 		$total_images = 0;
 		$rowset = [];

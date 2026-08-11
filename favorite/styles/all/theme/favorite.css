@@ -73,3 +73,34 @@
 	opacity: 0.6;
 	pointer-events: none;
 }
+
+.gallery-favorite-ucp-row
+{
+	align-items: center;
+	display: flex;
+	gap: 12px;
+}
+
+.gallery-favorite-ucp-thumbnail
+{
+	flex: 0 0 auto;
+	max-width: 35%;
+	text-align: center;
+}
+
+.gallery-favorite-ucp-thumbnail img
+{
+	display: block;
+	height: auto;
+	max-width: 100%;
+}
+
+.gallery-favorite-ucp-details
+{
+	min-width: 0;
+}
+
+.gallery-favorite-pagination
+{
+	margin-top: 10px;
+}

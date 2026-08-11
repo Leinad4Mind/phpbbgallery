@@ -23,6 +23,8 @@ final class privacy_test extends TestCase
 		$this->assertStringContainsString("lang('GALLERY_PRIVATE_USER')", $source);
 		$this->assertStringNotContainsString('phpbbgallery\\core\\contest', $source);
 		$this->assertStringNotContainsString('CONTEST_USERNAME', $source);
+		$this->assertStringContainsString('$gallery_auth->get_exclude_zebra()', $source);
+		$this->assertStringContainsString('array_values(array_diff(', $source);
 	}
 
 	public function test_favorites_are_rendered_inside_the_ucp_and_have_navigation_language(): void
@@ -52,6 +54,28 @@ final class privacy_test extends TestCase
 			$this->assertStringContainsString('class="input-group col-xs-12 col-sm-8 col-md-6"', $template, $style);
 			$this->assertStringContainsString('class="selectpicker" data-container="body" data-width="100%"', $template, $style);
 			$this->assertStringContainsString('class="input-group-btn"><button type="submit"', $template, $style);
+		}
+	}
+
+	public function test_favorite_pagination_uses_each_style_native_container(): void
+	{
+		$root = dirname(__DIR__) . '/styles/';
+		$prosilver = (string) file_get_contents($root . 'prosilver/template/gallery/ucp_gallery_favorite.html');
+		$this->assertMatchesRegularExpression(
+			'/<div class="pagination">.*\{% include \'pagination.html\' %\}.*<\/div>/s',
+			$prosilver
+		);
+		$this->assertStringContainsString('<dl class="row-item">', $prosilver);
+		$this->assertStringContainsString('class="list-inner gallery-favorite-ucp-row"', $prosilver);
+
+		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$template = (string) file_get_contents($root . $style . '/template/gallery/ucp_gallery_favorite.html');
+			$this->assertMatchesRegularExpression(
+				'/<ul class="pagination pagination-sm pull-right">.*\{% include \'pagination.html\' %\}.*<\/ul>/s',
+				$template,
+				$style
+			);
 		}
 	}
 }
