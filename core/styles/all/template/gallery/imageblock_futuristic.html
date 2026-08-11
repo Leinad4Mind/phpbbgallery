@@ -20,7 +20,7 @@
 			{% EVENT phpbbgallery_core_album_image_actions %}
 			<header class="gallery-futuristic-image-header">
 				<h3 class="gallery-futuristic-image-title">{% if image.U_IMAGE %}<a href="{{ image.U_IMAGE }}">{% endif %}{{ image.UC_IMAGE_NAME }}{% if image.U_IMAGE %}</a>{% endif %}</h3>
-				<span class="gallery-futuristic-image-index" aria-hidden="true">{{ loop.index }}</span>
+				{% include '@phpbbgallery_core/gallery/image_bbcode_copy.html' %}
 			</header>
 
 			<div class="gallery-futuristic-thumbnail">

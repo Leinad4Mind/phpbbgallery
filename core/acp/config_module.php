@@ -24,6 +24,7 @@ class config_module
 		'allow_bmp',
 		'ajax_navigation',
 		'disp_resolution',
+		'disp_image_id',
 		'forum_index_mode',
 		'forum_index_recent_count',
 		'forum_index_random_count',
@@ -540,6 +541,7 @@ class config_module
 
 				'INDEX_SETTINGS'	=> [
 					'index_album_layout'	=> ['lang' => 'INDEX_ALBUM_LAYOUT',	'validate' => 'string',	'type' => 'custom',	'explain' => true,	'method' => 'index_album_layout_select'],
+					'disp_image_id'		=> ['lang' => 'DISP_IMAGE_ID',		'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 					'pegas_index_album'		=> ['lang' => 'PERSONAL_ALBUM_INDEX',	'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 					'rrc_gindex_mode'		=> ['lang' => 'RRC_GINDEX_MODE',	'validate' => 'int',	'type' => 'custom',	'explain' => true,	'method' => 'rrc_modes'],
 					//'pegas_index_random'	=> ['lang'	=> 'RANDOM_ON_INDEX',		'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],

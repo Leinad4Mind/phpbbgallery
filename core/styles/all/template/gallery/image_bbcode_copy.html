@@ -1,0 +1,5 @@
+{% if S_GALLERY_IMAGE_ID_BBCODE and image.IMAGE_ID %}
+<button type="button" class="gallery-image-bbcode-copy{% if GALLERY_BBCODE_COPY_OVERLAY %} gallery-image-bbcode-copy--overlay{% endif %}" data-gallery-copy-bbcode="[{{ GALLERY_BBCODE_TAG|default('image') }}]{{ image.IMAGE_ID }}[/{{ GALLERY_BBCODE_TAG|default('image') }}]" data-copy-label="{{ lang('COPY_IMAGE_BBCODE') }}" data-copied-label="{{ lang('IMAGE_BBCODE_COPIED') }}" title="{{ lang('COPY_IMAGE_BBCODE') }}" aria-label="{{ lang('COPY_IMAGE_BBCODE') }}">
+	<i class="icon fa fa-clipboard fa-fw" aria-hidden="true"></i><span>#{{ image.IMAGE_ID }}</span>
+</button>
+{% endif %}

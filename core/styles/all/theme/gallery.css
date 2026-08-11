@@ -1001,12 +1001,68 @@ input.autowidth-gallery {
 	color: inherit;
 }
 
-.gallery-futuristic-image-index
+.gallery-image-bbcode-copy
 {
-	color: var(--gallery-futuristic-muted);
-	font-size: .75em;
+	align-items: center;
+	background: rgba(255, 255, 255, .9);
+	border: 1px solid rgba(40, 128, 178, .28);
+	border-radius: 999px;
+	color: #2880b2;
+	cursor: pointer;
+	display: inline-flex;
+	font-size: 11px;
 	font-variant-numeric: tabular-nums;
-	letter-spacing: .08em;
+	font-weight: bold;
+	gap: 2px;
+	line-height: 1;
+	min-height: 25px;
+	padding: 5px 7px;
+	white-space: nowrap;
+}
+
+.gallery-image-bbcode-copy:hover,
+.gallery-image-bbcode-copy:focus
+{
+	background: #fff;
+	border-color: #2880b2;
+	color: #105289;
+	outline: none;
+}
+
+.gallery-image-bbcode-copy.is-copied
+{
+	border-color: #3c9a5f;
+	color: #287a47;
+}
+
+.gallery-image-bbcode-copy--overlay
+{
+	inset-inline-start: 7px;
+	position: absolute;
+	top: 7px;
+	z-index: 3;
+}
+
+.gallery-image-card > .gallery-image-bbcode-copy--overlay ~ p:first-of-type,
+.gallery-classic-image > .gallery-image-bbcode-copy--overlay ~ .gallery-classic-image-title
+{
+	padding-inline-start: 62px;
+}
+
+.gallery-futuristic-image-header .gallery-image-bbcode-copy
+{
+	background: rgba(255, 255, 255, .08);
+	border-color: rgba(255, 255, 255, .18);
+	color: var(--gallery-futuristic-muted);
+	flex: none;
+}
+
+.gallery-futuristic-image-header .gallery-image-bbcode-copy:hover,
+.gallery-futuristic-image-header .gallery-image-bbcode-copy:focus,
+.gallery-futuristic-image-header .gallery-image-bbcode-copy.is-copied
+{
+	background: rgba(255, 255, 255, .16);
+	color: var(--gallery-futuristic-accent);
 }
 
 .gallery-futuristic-thumbnail

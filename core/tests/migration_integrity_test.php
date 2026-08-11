@@ -53,6 +53,7 @@ use phpbbgallery\core\migrations\gallery_index_featured_modes;
 use phpbbgallery\core\migrations\group_leader_permissions;
 use phpbbgallery\core\migrations\relocate_personal_album_profile_field;
 use phpbbgallery\core\migrations\gallery_album_bbcode;
+use phpbbgallery\core\migrations\image_card_bbcode_id;
 
 class migration_integrity_test extends TestCase
 {
@@ -99,6 +100,7 @@ class migration_integrity_test extends TestCase
 		group_leader_permissions::class,
 		relocate_personal_album_profile_field::class,
 		gallery_album_bbcode::class,
+		image_card_bbcode_id::class,
 		release_4_1_0::class,
 	];
 
@@ -302,11 +304,26 @@ class migration_integrity_test extends TestCase
 		$migration = (new \ReflectionClass(release_4_1_0::class))->newInstanceWithoutConstructor();
 
 		$this->assertSame([
-			'\\phpbbgallery\\core\\migrations\\gallery_album_bbcode',
+			'\\phpbbgallery\\core\\migrations\\image_card_bbcode_id',
 		], release_4_1_0::depends_on());
 		$this->assertSame([
 			['config.update', ['phpbb_gallery_version', '4.1.0']],
 		], $migration->update_data());
+	}
+
+	public function test_image_card_id_control_is_optional_and_reversible(): void
+	{
+		$migration = (new \ReflectionClass(image_card_bbcode_id::class))->newInstanceWithoutConstructor();
+
+		$this->assertSame([
+			'\\phpbbgallery\\core\\migrations\\gallery_album_bbcode',
+		], image_card_bbcode_id::depends_on());
+		$this->assertSame([
+			['config.add', ['phpbb_gallery_disp_image_id', 0]],
+		], $migration->update_data());
+		$this->assertSame([
+			['config.remove', ['phpbb_gallery_disp_image_id']],
+		], $migration->revert_data());
 	}
 
 	public function test_group_leader_permission_fix_invalidates_stale_gallery_acl_snapshots(): void
@@ -1190,6 +1207,7 @@ class migration_integrity_test extends TestCase
 			'group_leader_permissions.php',
 			'relocate_personal_album_profile_field.php',
 			'gallery_album_bbcode.php',
+			'image_card_bbcode_id.php',
 			'release_4_1_0.php',
 		] as $migration)
 		{

@@ -52,6 +52,7 @@ class config
 		'default_sort_key'	=> 't',
 		'description_length'=> 2000,
 		'disp_birthdays'			=> false,
+		'disp_image_id'			=> false,
 		'disp_image_url'			=> true,
 		'disp_login'				=> true,
 		'disp_nextprev_thumbnail'	=> false,

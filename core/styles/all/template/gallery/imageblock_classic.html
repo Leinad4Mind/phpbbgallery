@@ -18,6 +18,7 @@
 			{% else %}
 			<article class="gallery-classic-image{% if image.S_STATUS_UNAPPROVED or image.S_UNAPPROVED %} gallery-classic-image--unapproved{% endif %}{% if image.S_LOCKED %} gallery-classic-image--locked{% endif %}{% if image.S_REPORTED %} gallery-classic-image--reported{% endif %}">
 				{% EVENT phpbbgallery_core_album_image_actions %}
+				{% include '@phpbbgallery_core/gallery/image_bbcode_copy.html' with { GALLERY_BBCODE_COPY_OVERLAY: true } %}
 				{% if image.S_IMAGE_AWARD_RANK > 0 %}
 				<div class="trophy-container">
 					<i class="trophy-icon fa-trophy fa-stack-2x trophy-color-{{ image.S_IMAGE_AWARD_RANK }}"></i>

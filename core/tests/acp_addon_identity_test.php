@@ -63,8 +63,8 @@ final class acp_addon_identity_test extends TestCase
 		$this->assertStringNotContainsString('html[data-gallery-addon-view="hidden"] .gallery-addon-legend__title', $stylesheet);
 		$this->assertStringContainsString('.gallery-addon-legend__items', $stylesheet);
 		$this->assertStringContainsString('populateLegendSources(legend)', $javascript);
-		$this->assertStringContainsString("clone = badge.cloneNode(true)", $javascript);
-		$this->assertStringContainsString("items.appendChild(clone)", $javascript);
+		$this->assertStringContainsString('clone = badge.cloneNode(true)', $javascript);
+		$this->assertStringContainsString('items.appendChild(clone)', $javascript);
 		$this->assertStringContainsString("'data-view-simple-explain'", $javascript);
 		$this->assertStringContainsString("'data-view-complete-explain'", $javascript);
 		$this->assertStringNotContainsString('html[data-gallery-addon-view="simple"] .gallery-addon-legend__explain', $stylesheet);
@@ -84,6 +84,7 @@ final class acp_addon_identity_test extends TestCase
 			'allow_bmp',
 			'ajax_navigation',
 			'disp_resolution',
+			'disp_image_id',
 			'forum_index_mode',
 			'forum_index_recent_count',
 			'forum_index_random_count',

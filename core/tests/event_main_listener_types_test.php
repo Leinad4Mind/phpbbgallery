@@ -60,6 +60,36 @@ final class event_main_listener_types_test extends TestCase
 		], main_listener::getSubscribedEvents());
 	}
 
+	public function test_user_setup_exposes_the_active_image_bbcode_and_optional_id_control(): void
+	{
+		$template = $this->createMock(\phpbb\template\template::class);
+		$template->expects($this->once())
+			->method('assign_vars')
+			->with([
+				'GALLERY_BBCODE_TAG' => 'galleryimage',
+				'S_GALLERY_IMAGE_ID_BBCODE' => true,
+			]);
+		$config = $this->createMock(\phpbbgallery\core\config::class);
+		$config->expects($this->once())
+			->method('get_bbcode_tag')
+			->willReturn('galleryimage');
+		$config->method('get')->willReturnMap([
+			['disp_image_id', null, true],
+			['disp_total_images', null, false],
+		]);
+		$listener = $this->listener($this->createStub(\phpbb\db\driver\driver_interface::class));
+		$this->set_property($listener, 'template', $template);
+		$this->set_property($listener, 'gallery_config', $config);
+		$event = new \phpbb\event\data(['lang_set_ext' => []]);
+
+		$listener->load_language_on_setup($event);
+
+		$this->assertSame([[
+			'ext_name' => 'phpbbgallery/core',
+			'lang_set' => ['info_acp_gallery', 'gallery', 'gallery_notifications'],
+		]], $event['lang_set_ext']);
+	}
+
 	public function test_viewonline_location_is_delegated_without_touching_unrelated_event_data(): void
 	{
 		$online_location = $this->createMock(\phpbbgallery\core\online_location::class);

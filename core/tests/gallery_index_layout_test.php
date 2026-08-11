@@ -134,6 +134,39 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertStringContainsString('@media (prefers-reduced-motion', str_replace('(hover: hover) and ', '', $css));
 	}
 
+	public function test_optional_real_image_id_copies_the_active_bbcode_in_every_card_layout(): void
+	{
+		$core_root = dirname(__DIR__);
+		$classic = (string) file_get_contents($core_root . '/styles/all/template/gallery/imageblock_classic.html');
+		$futuristic = (string) file_get_contents($core_root . '/styles/all/template/gallery/imageblock_futuristic.html');
+		$control = (string) file_get_contents($core_root . '/styles/all/template/gallery/image_bbcode_copy.html');
+		$javascript = (string) file_get_contents($core_root . '/styles/all/template/js/image_bbcode_copy.js');
+
+		$this->assertStringNotContainsString('loop.index', $futuristic);
+		$this->assertStringNotContainsString('gallery-futuristic-image-index', $futuristic);
+		$this->assertStringContainsString('image_bbcode_copy.html', $classic);
+		$this->assertStringContainsString('image_bbcode_copy.html', $futuristic);
+
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$cards = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/imageblock_polaroid.html');
+			$this->assertStringContainsString('image_bbcode_copy.html', $cards, $style);
+		}
+		foreach (['all', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$footer = (string) file_get_contents($core_root . '/styles/' . $style . '/template/event/overall_footer_after.html');
+			$this->assertStringContainsString('image_bbcode_copy.js', $footer, $style);
+		}
+
+		$this->assertStringContainsString('S_GALLERY_IMAGE_ID_BBCODE', $control);
+		$this->assertStringContainsString('image.IMAGE_ID', $control);
+		$this->assertStringContainsString("GALLERY_BBCODE_TAG|default('image')", $control);
+		$this->assertStringContainsString('data-gallery-copy-bbcode', $control);
+		$this->assertStringContainsString('navigator.clipboard.writeText', $javascript);
+		$this->assertStringContainsString("document.execCommand('copy')", $javascript);
+		$this->assertStringContainsString('is-copied', $javascript);
+	}
+
 	public function test_album_list_distinguishes_its_main_visual_from_the_latest_image(): void
 	{
 		$display = (string) file_get_contents(dirname(__DIR__) . '/album/display.php');
