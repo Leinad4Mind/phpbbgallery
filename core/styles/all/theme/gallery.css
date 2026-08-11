@@ -559,11 +559,11 @@ input.autowidth-gallery {
 
 .gallery-futuristic--prosilver
 {
-	--gallery-futuristic-accent: #287eb5;
-	--gallery-futuristic-accent-soft: rgba(40, 126, 181, .15);
-	--gallery-futuristic-secondary: #6d63c9;
-	--gallery-futuristic-secondary-soft: rgba(109, 99, 201, .12);
-	--gallery-futuristic-border: rgba(68, 105, 132, .22);
+	--gallery-futuristic-accent: #1596c8;
+	--gallery-futuristic-accent-soft: rgba(21, 150, 200, .16);
+	--gallery-futuristic-secondary: #078bc3;
+	--gallery-futuristic-secondary-soft: rgba(7, 139, 195, .13);
+	--gallery-futuristic-border: rgba(17, 132, 180, .24);
 	--gallery-futuristic-radius: 8px;
 }
 

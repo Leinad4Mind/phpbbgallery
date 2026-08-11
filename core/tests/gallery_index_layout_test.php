@@ -130,6 +130,11 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertStringContainsString('phpbbgallery_core_album_image_metadata', $images);
 		$this->assertStringContainsString('album_rating_stars.html', $images);
 		$this->assertStringContainsString('S_STATUS_UNAPPROVED_ACTION', $images);
+		$this->assertMatchesRegularExpression(
+			'/\.gallery-futuristic--prosilver\s*\{[^}]*--gallery-futuristic-accent:\s*#1596c8;[^}]*--gallery-futuristic-secondary:\s*#078bc3;/s',
+			$css
+		);
+		$this->assertStringNotContainsString('--gallery-futuristic-secondary: #6d63c9;', $css);
 		$this->assertStringContainsString('grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr));', $css);
 		$this->assertStringContainsString('@media (prefers-reduced-motion', str_replace('(hover: hover) and ', '', $css));
 	}
