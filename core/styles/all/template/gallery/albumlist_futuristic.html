@@ -21,8 +21,8 @@
 			<div class="gallery-futuristic-album-main">
 				<a class="gallery-futuristic-album-visual" href="{{ albumrow.U_VIEWALBUM }}" aria-label="{{ lang('VIEW_ALBUM') }}{{ lang('COLON') }} {{ albumrow.ALBUM_NAME }}">
 					<span class="gallery-futuristic-visual-glow" aria-hidden="true"></span>
-					{% if albumrow.ALBUM_IMAGE %}
-						<img src="{{ T_IMAGES_PATH }}{{ albumrow.ALBUM_IMAGE }}" alt="">
+					{% if albumrow.ALBUM_IMAGE_SRC %}
+						<img src="{{ albumrow.ALBUM_IMAGE_SRC }}" alt="">
 					{% elseif albumrow.LAST_IMAGE_TIME and albumrow.UC_THUMBNAIL %}
 						<img src="{{ albumrow.UC_THUMBNAIL }}" alt="">
 					{% else %}

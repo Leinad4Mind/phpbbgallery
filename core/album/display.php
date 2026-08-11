@@ -20,6 +20,7 @@ class display
 	protected \phpbb\controller\helper $helper;
 	protected \phpbb\pagination $pagination;
 	protected \phpbb\request\request $request;
+	protected \phpbb\symfony_request $symfony_request;
 	protected \phpbb\template\template $template;
 	protected \phpbb\user $user;
 	protected \phpbbgallery\core\auth\auth $gallery_auth;
@@ -58,7 +59,8 @@ class display
 
 	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\controller\helper $helper,
 								\phpbb\db\driver\driver_interface $db, \phpbb\pagination $pagination,
-								\phpbb\request\request $request, \phpbb\template\template $template,
+								\phpbb\request\request $request, \phpbb\symfony_request $symfony_request,
+								\phpbb\template\template $template,
 								\phpbb\user $user, \phpbb\language\language $language, \phpbbgallery\core\auth\auth $gallery_auth,
 								\phpbbgallery\core\config $gallery_config,
 								\phpbbgallery\core\user $gallery_user, \phpbbgallery\core\misc $misc,
@@ -73,6 +75,7 @@ class display
 		$this->db = $db;
 		$this->pagination = $pagination;
 		$this->request = $request;
+		$this->symfony_request = $symfony_request;
 		$this->template = $template;
 		$this->user = $user;
 		$this->language = $language;
@@ -605,9 +608,15 @@ class display
 		}
 
 		// Used to tell whatever we have to create a dummy category or not.
+		$board_path = rtrim($this->symfony_request->getBasePath(), '/');
 		$last_catless = true;
 		foreach ($album_rows as $row)
 		{
+			$album_image = trim((string) ($row['album_image'] ?? ''));
+			$album_image_src = $album_image !== ''
+				? $board_path . '/' . ltrim($album_image, '/')
+				: '';
+
 			// Empty category
 			if (($row['parent_id'] == $root_data['album_id']) && ($row['album_type'] == (int) \phpbbgallery\core\block::TYPE_CAT))
 			{
@@ -621,7 +630,8 @@ class display
 					'ALBUM_DESC'			=> generate_text_for_display($row['album_desc'], $row['album_desc_uid'], $row['album_desc_bitfield'], $row['album_desc_options']),
 					'ALBUM_FOLDER_IMG'		=> '',
 					'ALBUM_FOLDER_IMG_SRC'	=> '',
-					'ALBUM_IMAGE'			=> ($row['album_image']) ? $row['album_image'] : '',
+					'ALBUM_IMAGE'			=> $album_image,
+					'ALBUM_IMAGE_SRC'		=> $album_image_src,
 					'U_VIEWALBUM'			=> $this->helper->route('phpbbgallery_core_album', ['album_id' => (int) $row['album_id']]),
 				]);
 				$section_start_pending = false;
@@ -700,9 +710,9 @@ class display
 				$lastimage_time = $this->user->format_date($row['album_last_image_time']);
 				$lastimage_uc_last_thumbnail = $this->helper->route('phpbbgallery_core_image_file_mini', ['image_id' => $row['album_last_image_id']]);
 				$lastimage_u_last_image = $this->helper->route('phpbbgallery_core_image', ['image_id' => $row['album_last_image_id']]);
-				$lastimage_uc_fake_thumbnail = $row['album_image'] ? generate_board_url() . '/' . $row['album_image'] : $lastimage_uc_last_thumbnail;
-				$lastimage_uc_fake_thumbnail_url = $row['album_image'] ? generate_board_url() . '/' . $row['album_image'] : $lastimage_u_last_image;
-				$lastimage_uc_thumbnail = $row['album_image'] ? generate_board_url() . '/' . $row['album_image'] : $lastimage_uc_last_thumbnail;
+				$lastimage_uc_fake_thumbnail = $album_image_src ?: $lastimage_uc_last_thumbnail;
+				$lastimage_uc_fake_thumbnail_url = $album_image_src ?: $lastimage_u_last_image;
+				$lastimage_uc_thumbnail = $album_image_src ?: $lastimage_uc_last_thumbnail;
 				$lastimage_uc_name = '';
 				$lastimage_uc_icon = '';
 			}
@@ -766,7 +776,8 @@ class display
 				'ALBUM_IMG_STYLE'		=> $folder_image,
 				'ALBUM_FOLDER_IMG'		=> $this->user->img($folder_image, $folder_alt),
 				'ALBUM_FOLDER_IMG_ALT'	=> $this->language->lang($folder_alt) ? $this->language->lang($folder_alt) : '',
-				'ALBUM_IMAGE'			=> ($row['album_image']) ? $row['album_image'] : '',
+				'ALBUM_IMAGE'			=> $album_image,
+				'ALBUM_IMAGE_SRC'		=> $album_image_src,
 				'LAST_IMAGE_ID'			=> (int) $row['album_last_image_id'],
 				'LAST_IMAGE_TIME'		=> $lastimage_time,
 				'LAST_USER_FULL'		=> ($s_username_hidden) ? $last_image_label : get_username_string('full', $row['album_last_user_id'], $row['album_last_username'], $row['album_last_user_colour']),

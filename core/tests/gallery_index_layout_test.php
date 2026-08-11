@@ -178,6 +178,34 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertStringContainsString("['image_id' => \$row['album_last_image_id']]", $display);
 	}
 
+	public function test_uploaded_album_icons_use_the_board_root_in_every_layout(): void
+	{
+		$core_root = dirname(__DIR__);
+		$display = (string) file_get_contents($core_root . '/album/display.php');
+
+		$this->assertStringContainsString("rtrim(\$this->symfony_request->getBasePath(), '/')", $display);
+		$this->assertStringContainsString("\$board_path . '/' . ltrim(\$album_image, '/')", $display);
+		$this->assertSame(2, substr_count($display, "'ALBUM_IMAGE_SRC'"));
+		$services = (string) file_get_contents($core_root . '/config/services.yml');
+		$display_service = strstr($services, 'phpbbgallery.core.album.display:');
+		$display_service = strstr($display_service, 'phpbbgallery.core.album.loader:', true);
+		$this->assertStringContainsString("- '@symfony_request'", $display_service);
+
+		$templates = [
+			$core_root . '/styles/prosilver/template/gallery/albumlist_body.html',
+			$core_root . '/styles/BBOOTS/template/gallery/albumlist_body.html',
+			$core_root . '/styles/FLATBOOTS/template/gallery/albumlist_body.html',
+			$core_root . '/styles/all/template/gallery/albumlist_modern.html',
+			$core_root . '/styles/all/template/gallery/albumlist_futuristic.html',
+		];
+		foreach ($templates as $template_path)
+		{
+			$template = (string) file_get_contents($template_path);
+			$this->assertStringContainsString('albumrow.ALBUM_IMAGE_SRC', $template, $template_path);
+			$this->assertStringNotContainsString('T_IMAGES_PATH }}{{ albumrow.ALBUM_IMAGE', $template, $template_path);
+		}
+	}
+
 	public function test_album_recent_random_and_search_grids_use_the_layout_selector_in_every_style(): void
 	{
 		$core_root = dirname(__DIR__);
