@@ -46,6 +46,16 @@
 	justify-content: center;
 }
 
+#gallery-album-image-preview-src
+{
+	display: block;
+	height: auto;
+	max-height: 256px;
+	max-width: 256px;
+	object-fit: contain;
+	width: auto;
+}
+
 .gallery-icon-picker-option label:hover .gallery-icon-picker-image,
 .gallery-icon-picker-option label:focus-within .gallery-icon-picker-image
 {

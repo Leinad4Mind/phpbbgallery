@@ -42,6 +42,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Limited the selected ACP album-image preview to a proportional 256-pixel bounding box without changing the stored icon.
 - Enlarged ACP album-icon choices to a real 48-pixel preview and added a keyboard-accessible three-times hover/focus zoom while preserving each icon's aspect ratio.
 - Centred the Font Awesome glyph inside the circular Futuristic album-section marker independently of inherited icon sizing and spacing rules.
 - Kept recent-image thumbnails in the Futuristic album footer beside the last-image details instead of duplicating them as the album's main visual; explicitly configured transparent album icons now fill their dedicated frame.

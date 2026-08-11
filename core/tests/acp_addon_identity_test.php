@@ -155,5 +155,6 @@ final class acp_addon_identity_test extends TestCase
 		$this->assertMatchesRegularExpression('/\.gallery-icon-picker-image\s*\{[^}]*object-fit:\s*contain;/s', $css);
 		$this->assertStringContainsString('transform: scale(3);', $css);
 		$this->assertStringContainsString('label:focus-within .gallery-icon-picker-image', $css);
+		$this->assertMatchesRegularExpression('/#gallery-album-image-preview-src\s*\{[^}]*max-height:\s*256px;[^}]*max-width:\s*256px;[^}]*object-fit:\s*contain;/s', $css);
 	}
 }
