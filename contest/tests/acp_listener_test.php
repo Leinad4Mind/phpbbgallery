@@ -74,6 +74,7 @@ final class acp_listener_test extends TestCase
 		$this->assertStringContainsString("'contest_winner_thumbnail' => manager::THUMBNAIL_INHERIT", $source);
 		$this->assertStringContainsString("get_contest((int) \$album_data['album_id'], 'album')", $source);
 		$this->assertStringContainsString("'S_ALBUM_CONTEST'", $source);
+		$this->assertSame(3, substr_count($source, "'Y-m-d\\TH:i'"));
 		$this->assertGreaterThanOrEqual(4, substr_count($source, '$this->load_acp_language();'));
 		$this->assertStringContainsString("'album_type_data'", $core);
 		$this->assertStringNotContainsString("variable('contest_start', '')", $core);

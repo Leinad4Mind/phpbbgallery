@@ -228,10 +228,11 @@ class album_lifecycle_listener implements EventSubscriberInterface
 
 	private function parse_date(string $value): int|false
 	{
-		if (!preg_match('#\A\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{2}\z#', $value))
+		if (!preg_match('#\A\d{4}-\d{1,2}-\d{1,2}[T ]\d{1,2}:\d{2}\z#', $value))
 		{
 			return false;
 		}
+		$value = str_replace('T', ' ', $value);
 		try
 		{
 			$timezone = new \DateTimeZone($this->user->data['user_timezone'] ?: 'UTC');

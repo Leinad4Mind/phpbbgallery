@@ -146,9 +146,9 @@ class acp_listener implements EventSubscriberInterface
 			'S_ALBUM_ORIG_CONTEST' => (int) ($event['old_album_type'] ?? -1) === (int) manager::ALBUM_TYPE,
 			'S_ALBUM_CONTEST' => (int) ($album_data['album_type'] ?? -1) === (int) manager::ALBUM_TYPE,
 			'ALBUM_CONTEST' => (int) manager::ALBUM_TYPE,
-			'S_CONTEST_START' => $this->user->format_date($start, 'Y-m-d H:i'),
-			'CONTEST_RATING' => $this->user->format_date($start + (int) ($type_data['contest_rating'] ?? 0), 'Y-m-d H:i'),
-			'CONTEST_END' => $this->user->format_date($start + (int) ($type_data['contest_end'] ?? 0), 'Y-m-d H:i'),
+			'S_CONTEST_START' => $this->user->format_date($start, 'Y-m-d\TH:i'),
+			'CONTEST_RATING' => $this->user->format_date($start + (int) ($type_data['contest_rating'] ?? 0), 'Y-m-d\TH:i'),
+			'CONTEST_END' => $this->user->format_date($start + (int) ($type_data['contest_end'] ?? 0), 'Y-m-d\TH:i'),
 			'CONTEST_WINNER_THUMBNAIL' => manager::normalize_thumbnail_policy(
 				(int) ($type_data['contest_winner_thumbnail'] ?? manager::THUMBNAIL_INHERIT)
 			),

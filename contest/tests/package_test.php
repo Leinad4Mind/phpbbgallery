@@ -274,6 +274,8 @@ final class package_test extends TestCase
 		$this->assertStringContainsString('name="contest_start"', $template);
 		$this->assertStringContainsString('name="contest_rating"', $template);
 		$this->assertStringContainsString('name="contest_end"', $template);
+		$this->assertSame(3, substr_count($template, 'type="datetime-local"'));
+		$this->assertSame(3, substr_count($template, 'step="60"'));
 		$this->assertStringContainsString('name="contest_winner_thumbnail"', $template);
 
 		$display = (string) file_get_contents(

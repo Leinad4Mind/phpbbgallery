@@ -109,6 +109,7 @@ class contest_workflow extends \phpbb_functional_test_case
 		$this->assertSame(1, $crawler->filter('input[name="contest_start"]')->count());
 		$this->assertSame(1, $crawler->filter('input[name="contest_rating"]')->count());
 		$this->assertSame(1, $crawler->filter('input[name="contest_end"]')->count());
+		$this->assertSame(3, $crawler->filter('input[type="datetime-local"][step="60"]')->count());
 
 		$timezone = new \DateTimeZone('UTC');
 		$start = new \DateTimeImmutable('-5 minutes', $timezone);
@@ -124,9 +125,9 @@ class contest_workflow extends \phpbb_functional_test_case
 			'display_in_rrc' => 1,
 			'display_subalbum_list' => 1,
 			'display_on_index' => 1,
-			'contest_start' => $start->format('Y-n-j G:i'),
-			'contest_rating' => $rating->format('Y-n-j G:i'),
-			'contest_end' => $end->format('Y-n-j G:i'),
+			'contest_start' => $start->format('Y-m-d\TH:i'),
+			'contest_rating' => $rating->format('Y-m-d\TH:i'),
+			'contest_end' => $end->format('Y-m-d\TH:i'),
 		]);
 		$this->assertStringContainsString($this->lang('ALBUM_CREATED'), $crawler->filter('body')->text());
 

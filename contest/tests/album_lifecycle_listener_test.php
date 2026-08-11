@@ -22,9 +22,9 @@ final class album_lifecycle_listener_test extends TestCase
 		$event = new \phpbb\event\data([
 			'album_data' => ['album_type' => \phpbbgallery\contest\manager::ALBUM_TYPE],
 			'album_type_data' => [
-				'contest_start' => '2026-01-15 12:00',
-				'contest_rating' => '2026-07-15 12:00',
-				'contest_end' => '2026-07-16 12:00',
+				'contest_start' => '2026-01-15T12:00',
+				'contest_rating' => '2026-07-15T12:00',
+				'contest_end' => '2026-07-16T12:00',
 			],
 			'errors' => [],
 		]);
@@ -42,6 +42,30 @@ final class album_lifecycle_listener_test extends TestCase
 			$data['contest_rating']
 		);
 		$this->assertSame([], $event['errors']);
+	}
+
+	public function test_legacy_space_separated_dates_remain_accepted(): void
+	{
+		$user = new \phpbb\user();
+		$user->data = ['user_timezone' => 'UTC'];
+		$listener = $this->listener($user, true);
+		$event = new \phpbb\event\data([
+			'album_data' => ['album_type' => \phpbbgallery\contest\manager::ALBUM_TYPE],
+			'album_type_data' => [
+				'contest_start' => '2026-08-11 08:41',
+				'contest_rating' => '2026-08-14 08:41',
+				'contest_end' => '2026-08-18 08:41',
+			],
+			'errors' => [],
+		]);
+
+		$listener->validate($event);
+
+		$this->assertSame([], $event['errors']);
+		$this->assertSame(
+			(new \DateTimeImmutable('2026-08-11 08:41', new \DateTimeZone('UTC')))->getTimestamp(),
+			$event['album_type_data']['contest_start']
+		);
 	}
 
 	public function test_disabled_creation_and_invalid_dates_fail_server_side(): void
