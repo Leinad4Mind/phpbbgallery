@@ -73,6 +73,7 @@ All notable changes to the phpBB Gallery Contest add-on are documented in this f
 
 ### Fixed
 
+- Kept the real latest-image thumbnail distinct from an ended contest's winner thumbnail in Modern and Futuristic album lists, suppressing it only when the winner is also the latest image.
 - Locked the album-type selector when editing an existing contest, removed Contest from the selector when editing a regular album, preserved the submitted immutable type through a hidden field and removed permanent transition warnings while retaining server-side tamper protection.
 - Kept completed contest ratings visible to image viewers who cannot vote, while preserving hidden results before finalization and phase-based voting restrictions.
 - Used the configured Gallery items-per-page limit for winner pagination.

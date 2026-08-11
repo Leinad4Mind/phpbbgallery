@@ -55,6 +55,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Prevented Futuristic and Modern responsive album lists from repeating the same latest-image thumbnail as both the album visual and Last image, while retaining a distinct latest thumbnail for manual covers and contest winners.
 - Left-aligned Classic image titles in PROSILVER while preserving clearance for the right-side Favorite control, without changing the centred BBOOTS and FLATBOOTS presentation.
 - Restored the non-interactive source legend beneath the ACP New Core and add-on explanation, deduplicating the origins present on each page without reintroducing per-source filtering.
 - Allowed ACP permission masks to copy from any other selected album or user setting regardless of display order, disabling only the exact target and resolving reciprocal selections from an immutable snapshot.

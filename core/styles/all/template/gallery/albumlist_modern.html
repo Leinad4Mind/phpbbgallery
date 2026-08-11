@@ -43,7 +43,7 @@
 				</div>
 				<div class="gallery-modern-last-image">
 					{% if albumrow.LAST_IMAGE_TIME %}
-						{% if albumrow.UC_FAKE_THUMBNAIL %}<a href="{{ albumrow.UC_IMAGE_URL }}"><img src="{{ albumrow.UC_FAKE_THUMBNAIL }}" alt=""></a>{% endif %}
+						{% if albumrow.UC_LAST_IMAGE_THUMBNAIL and not albumrow.S_ALBUM_VISUAL_IS_LAST_IMAGE %}<a href="{{ albumrow.U_LAST_IMAGE }}"><img src="{{ albumrow.UC_LAST_IMAGE_THUMBNAIL }}" alt=""></a>{% endif %}
 						<div class="gallery-modern-last-image-details">
 							<strong>{{ lang('LAST_IMAGE') }}</strong>
 							<span>{{ lang('POST_BY_AUTHOR') }} {{ albumrow.LAST_USER_FULL }}</span><br>

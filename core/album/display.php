@@ -698,15 +698,18 @@ class display
 			if ($row['album_last_image_id'])
 			{
 				$lastimage_time = $this->user->format_date($row['album_last_image_time']);
-				$lastimage_uc_fake_thumbnail = $row['album_image'] ? generate_board_url() . '/' . $row['album_image'] : $this->helper->route('phpbbgallery_core_image_file_mini', ['image_id' => $row['album_last_image_id']]);
-				$lastimage_uc_fake_thumbnail_url = $row['album_image'] ? generate_board_url() . '/' . $row['album_image'] : $this->helper->route('phpbbgallery_core_image', ['image_id' => $row['album_last_image_id']]);
-				$lastimage_uc_thumbnail = $row['album_image'] ? generate_board_url() . '/' . $row['album_image'] : $this->helper->route('phpbbgallery_core_image_file_mini', ['image_id' => $row['album_last_image_id']]);
+				$lastimage_uc_last_thumbnail = $this->helper->route('phpbbgallery_core_image_file_mini', ['image_id' => $row['album_last_image_id']]);
+				$lastimage_u_last_image = $this->helper->route('phpbbgallery_core_image', ['image_id' => $row['album_last_image_id']]);
+				$lastimage_uc_fake_thumbnail = $row['album_image'] ? generate_board_url() . '/' . $row['album_image'] : $lastimage_uc_last_thumbnail;
+				$lastimage_uc_fake_thumbnail_url = $row['album_image'] ? generate_board_url() . '/' . $row['album_image'] : $lastimage_u_last_image;
+				$lastimage_uc_thumbnail = $row['album_image'] ? generate_board_url() . '/' . $row['album_image'] : $lastimage_uc_last_thumbnail;
 				$lastimage_uc_name = '';
 				$lastimage_uc_icon = '';
 			}
 			else
 			{
 				$lastimage_time = 0;
+				$lastimage_uc_last_thumbnail = $lastimage_u_last_image = '';
 				$lastimage_uc_fake_thumbnail = $lastimage_uc_fake_thumbnail_url = $lastimage_uc_thumbnail = $lastimage_uc_name = $lastimage_uc_icon = '';
 				$lastimage_uc_fake_thumbnail = $lastimage_uc_fake_thumbnail_url = $lastimage_uc_thumbnail = $this->helper->route('phpbbgallery_core_image_file_mini', ['image_id' => 0]);
 			}
@@ -753,6 +756,7 @@ class display
 				'S_UNREAD_ALBUM'	=> ($album_unread) ? true : false,
 				'S_LIST_SUBALBUMS'	=> ($row['display_subalbum_list']) ? true : false,
 				'S_SUBALBUMS'		=> (sizeof($subalbums_list)) ? true : false,
+				'S_ALBUM_VISUAL_IS_LAST_IMAGE' => !$row['album_image'] && (int) $row['album_last_image_id'] > 0,
 
 				'ALBUM_ID'				=> (int) $row['album_id'],
 				'ALBUM_NAME'			=> $row['album_name'],
@@ -763,11 +767,14 @@ class display
 				'ALBUM_FOLDER_IMG'		=> $this->user->img($folder_image, $folder_alt),
 				'ALBUM_FOLDER_IMG_ALT'	=> $this->language->lang($folder_alt) ? $this->language->lang($folder_alt) : '',
 				'ALBUM_IMAGE'			=> ($row['album_image']) ? $row['album_image'] : '',
+				'LAST_IMAGE_ID'			=> (int) $row['album_last_image_id'],
 				'LAST_IMAGE_TIME'		=> $lastimage_time,
 				'LAST_USER_FULL'		=> ($s_username_hidden) ? $last_image_label : get_username_string('full', $row['album_last_user_id'], $row['album_last_username'], $row['album_last_user_colour']),
 				'UC_THUMBNAIL'			=> $this->config['phpbb_gallery_mini_thumbnail_disp'] ? $lastimage_uc_thumbnail : '',
 				'UC_FAKE_THUMBNAIL'		=> $this->config['phpbb_gallery_mini_thumbnail_disp'] ? $lastimage_uc_fake_thumbnail : '',
 				'UC_IMAGE_URL'			=> $this->config['phpbb_gallery_mini_thumbnail_disp'] ? $lastimage_uc_fake_thumbnail_url : '',
+				'UC_LAST_IMAGE_THUMBNAIL' => $this->config['phpbb_gallery_mini_thumbnail_disp'] ? $lastimage_uc_last_thumbnail : '',
+				'U_LAST_IMAGE'			=> $this->config['phpbb_gallery_mini_thumbnail_disp'] ? $lastimage_u_last_image : '',
 				'UC_IMAGE_NAME'			=> $lastimage_uc_name,
 				'UC_LASTIMAGE_ICON'		=> $lastimage_uc_icon,
 				'ALBUM_COLOUR'			=> get_username_string('colour', $row['album_last_user_id'], $row['album_last_username'], $row['album_last_user_colour']),

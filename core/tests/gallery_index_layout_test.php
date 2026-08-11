@@ -49,6 +49,8 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertStringContainsString('albumrow.subalbum|length', $template);
 		$this->assertStringContainsString('albumrow.UNAPPROVED_IMAGES', $template);
 		$this->assertStringContainsString('albumrow.LAST_USER_FULL', $template);
+		$this->assertStringContainsString('albumrow.UC_LAST_IMAGE_THUMBNAIL and not albumrow.S_ALBUM_VISUAL_IS_LAST_IMAGE', $template);
+		$this->assertStringContainsString('albumrow.U_LAST_IMAGE', $template);
 		$this->assertStringContainsString('grid-template-columns: minmax(0, 1fr) minmax(245px, 32%);', $css);
 		$this->assertStringContainsString('@media (max-width: 700px)', $css);
 	}
@@ -122,12 +124,25 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertStringContainsString('albumrow.subalbum|length', $albums);
 		$this->assertStringContainsString('albumrow.UNAPPROVED_IMAGES', $albums);
 		$this->assertStringContainsString('albumrow.LAST_USER_FULL', $albums);
+		$this->assertStringContainsString('albumrow.UC_LAST_IMAGE_THUMBNAIL and not albumrow.S_ALBUM_VISUAL_IS_LAST_IMAGE', $albums);
+		$this->assertStringContainsString('albumrow.U_LAST_IMAGE', $albums);
 		$this->assertStringContainsString('phpbbgallery_core_album_image_actions', $images);
 		$this->assertStringContainsString('phpbbgallery_core_album_image_metadata', $images);
 		$this->assertStringContainsString('album_rating_stars.html', $images);
 		$this->assertStringContainsString('S_STATUS_UNAPPROVED_ACTION', $images);
 		$this->assertStringContainsString('grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr));', $css);
 		$this->assertStringContainsString('@media (prefers-reduced-motion', str_replace('(hover: hover) and ', '', $css));
+	}
+
+	public function test_album_list_distinguishes_its_main_visual_from_the_latest_image(): void
+	{
+		$display = (string) file_get_contents(dirname(__DIR__) . '/album/display.php');
+
+		$this->assertStringContainsString("'S_ALBUM_VISUAL_IS_LAST_IMAGE' => !\$row['album_image']", $display);
+		$this->assertStringContainsString("'LAST_IMAGE_ID'", $display);
+		$this->assertStringContainsString("'UC_LAST_IMAGE_THUMBNAIL'", $display);
+		$this->assertStringContainsString("'U_LAST_IMAGE'", $display);
+		$this->assertStringContainsString("['image_id' => \$row['album_last_image_id']]", $display);
 	}
 
 	public function test_album_recent_random_and_search_grids_use_the_layout_selector_in_every_style(): void

@@ -95,8 +95,10 @@ final class presentation_listener_test extends TestCase
 				'album_type' => \phpbbgallery\contest\manager::ALBUM_TYPE,
 				'contest_thumbnail_image_id' => 71,
 				'album_image' => '',
+				'album_last_image_id' => 99,
 			],
 			'template_vars' => [
+				'LAST_IMAGE_ID' => 99,
 				'UC_THUMBNAIL' => '/gallery/image/99/mini',
 				'UC_FAKE_THUMBNAIL' => '/gallery/image/99/mini',
 				'UC_IMAGE_URL' => '/gallery/image/99',
@@ -115,8 +117,37 @@ final class presentation_listener_test extends TestCase
 		$this->assertSame('/gallery/image/71/mini', $event['template_vars']['UC_THUMBNAIL']);
 		$this->assertSame('/gallery/image/71/mini', $event['template_vars']['UC_FAKE_THUMBNAIL']);
 		$this->assertSame('/gallery/image/71', $event['template_vars']['UC_IMAGE_URL']);
+		$this->assertFalse($event['template_vars']['S_ALBUM_VISUAL_IS_LAST_IMAGE']);
 		$this->assertSame('Yesterday', $event['template_vars']['LAST_IMAGE_TIME']);
 		$this->assertSame('Latest author', $event['template_vars']['LAST_USER_FULL']);
+	}
+
+	public function test_winner_thumbnail_is_marked_as_duplicate_when_it_is_also_the_latest_image(): void
+	{
+		$helper = $this->createMock(\phpbb\controller\helper::class);
+		$helper->method('route')->willReturnCallback(
+			static fn(string $route): string => $route === 'phpbbgallery_core_image_file_mini' ? '/gallery/image/71/mini' : '/gallery/image/71'
+		);
+		$event = new \phpbb\event\data([
+			'context' => 'album_list',
+			'album_data' => [
+				'contest_thumbnail_image_id' => 71,
+				'album_last_image_id' => 71,
+				'album_image' => '',
+			],
+			'template_vars' => [
+				'LAST_IMAGE_ID' => 71,
+				'UC_THUMBNAIL' => '/gallery/image/71/mini',
+			],
+		]);
+
+		(new presentation_listener(
+			$this->createStub(\phpbb\language\language::class),
+			$this->createStub(\phpbb\user::class),
+			$helper
+		))->enrich_album_template_vars($event);
+
+		$this->assertTrue($event['template_vars']['S_ALBUM_VISUAL_IS_LAST_IMAGE']);
 	}
 
 	public function test_manual_album_image_and_disabled_thumbnails_keep_core_presentation(): void

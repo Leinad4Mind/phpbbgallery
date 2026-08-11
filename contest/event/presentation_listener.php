@@ -219,6 +219,7 @@ class presentation_listener implements EventSubscriberInterface
 		);
 		$template_vars['UC_THUMBNAIL'] = $thumbnail;
 		$template_vars['UC_FAKE_THUMBNAIL'] = $thumbnail;
+		$template_vars['S_ALBUM_VISUAL_IS_LAST_IMAGE'] = $image_id === (int) ($template_vars['LAST_IMAGE_ID'] ?? $album_data['album_last_image_id'] ?? 0);
 		$template_vars['UC_IMAGE_URL'] = $this->helper->route(
 			'phpbbgallery_core_image',
 			['image_id' => $image_id]
