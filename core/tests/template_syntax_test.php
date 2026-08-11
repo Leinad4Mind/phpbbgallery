@@ -500,6 +500,29 @@ final class template_syntax_test extends TestCase
 		}
 	}
 
+	public function test_viewimage_addon_details_precede_the_final_sharing_fields(): void
+	{
+		$core_root = dirname(__DIR__);
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$template = (string) file_get_contents(
+				$core_root . '/styles/' . $style . '/template/gallery/viewimage_body.html'
+			);
+			$details = strpos($template, '{% EVENT phpbbgallery_core_viewimage_details %}');
+			$sharing = strpos($template, 'gallery-image-sharing-fields');
+			$image_url = strpos($template, "lang('IMAGE_URL')", (int) $sharing);
+			$image_bbcode = strpos($template, "lang('IMAGE_BBCODE')", (int) $sharing);
+
+			$this->assertNotFalse($details, $style);
+			$this->assertNotFalse($sharing, $style);
+			$this->assertNotFalse($image_url, $style);
+			$this->assertNotFalse($image_bbcode, $style);
+			$this->assertGreaterThan($details, $sharing, $style);
+			$this->assertGreaterThan($sharing, $image_url, $style);
+			$this->assertGreaterThan($sharing, $image_bbcode, $style);
+		}
+	}
+
 	public function test_quick_upload_uses_the_native_shared_client_and_server_configuration(): void
 	{
 		$core_root = dirname(__DIR__);

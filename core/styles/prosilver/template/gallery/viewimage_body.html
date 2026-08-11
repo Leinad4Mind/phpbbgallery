@@ -138,26 +138,11 @@
 					<dd>{{ IMAGE_FILE_TYPE }}</dd>
 				</dl>
 				{% endif %}
-				{% if IMAGE_URL %}
-				<dl>
-					<dt><label>{{ lang('IMAGE_URL') }}{{ lang('COLON') }}</label></dt>
-					<dd><input type="text" size="28" value="{{ IMAGE_URL }}" class="inputbox" onclick="this.focus();this.select();" /></dd>
-				</dl>
-				{% endif %}
 				<dl>
 					<dt><label>{{ lang('GALLERY_VIEWS') }}{{ lang('COLON') }}</label></dt>
 					<dd>{{ IMAGE_VIEW }}</dd>
 				</dl>
 				{% EVENT phpbbgallery_core_viewimage_statistics %}
-				{% if IMAGE_BBCODE %}
-				<dl>
-					<dt><label>{{ lang('IMAGE_BBCODE') }}{{ lang('COLON') }}</label></dt>
-					<dd><input type="text" size="28" value="{{ IMAGE_BBCODE }}" class="inputbox" onclick="this.focus();this.select();" /></dd>
-					{% if IMAGE_IMGURL_BBCODE %}
-						<dd><input type="text" size="28" value="{{ IMAGE_IMGURL_BBCODE }}" class="inputbox" onclick="this.focus();this.select();" /></dd>
-					{% endif %}
-				</dl>
-				{% endif %}
 				{% if S_RATING_VISIBLE %}
 				<dl>
 					<dt><label>{{ lang('RATING') }}{{ lang('COLON') }}</label></dt>
@@ -177,6 +162,28 @@
 				{% endif %}
 			</fieldset>
 			{% EVENT phpbbgallery_core_viewimage_details %}
+			{% if IMAGE_URL or IMAGE_BBCODE %}
+			<fieldset class="fields1 anti-postbody gallery-image-sharing-fields">
+				{% if IMAGE_URL %}
+				<dl>
+					<dt><label>{{ lang('IMAGE_URL') }}{{ lang('COLON') }}</label></dt>
+					<dd><input type="text" size="28" value="{{ IMAGE_URL }}" class="inputbox" onclick="this.focus();this.select();" /></dd>
+				</dl>
+				{% endif %}
+				{% if IMAGE_BBCODE %}
+				<dl>
+					<dt><label>{{ lang('IMAGE_BBCODE') }}{{ lang('COLON') }}</label></dt>
+					<dd><input type="text" size="28" value="{{ IMAGE_BBCODE }}" class="inputbox" onclick="this.focus();this.select();" /></dd>
+				</dl>
+				{% endif %}
+				{% if IMAGE_IMGURL_BBCODE %}
+				<dl>
+					<dt><label>{{ lang('IMAGE_URL') }} (BBCode){{ lang('COLON') }}</label></dt>
+					<dd><input type="text" size="28" value="{{ IMAGE_IMGURL_BBCODE }}" class="inputbox" onclick="this.focus();this.select();" /></dd>
+				</dl>
+				{% endif %}
+			</fieldset>
+			{% endif %}
 		</div>
 	</div>
 	{% if S_QUICK_MOD %}

@@ -50,6 +50,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Moved image-sharing URLs and BBCodes to the end of the image details in every supported style, after add-on metadata such as EXIF data and BBPoints contributors, and restored the missing PROSILVER label for the URL BBCode.
 - Made progressive-upload Cancel remove failed or queued entries and release their batch slot, while Reset now aborts the active queue, clears every dynamic field and securely discards the current album's unfinished server drafts.
 - Restored the native UCP Favorites layout and pagination containers in PROSILVER, BBOOTS and FLATBOOTS, and stopped favourites from excluded personal albums leaking into the listing after relationship changes.
 - Bounded ACP album-icon uploads to 512 KiB and 512 x 512 pixels for raster, BMP and SVG sources, and exposed those limits beside the upload control before an administrator selects a replacement.
