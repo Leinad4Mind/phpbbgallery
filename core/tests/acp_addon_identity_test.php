@@ -95,6 +95,7 @@ final class acp_addon_identity_test extends TestCase
 			'viewtopic_images',
 			'viewtopic_link',
 			'index_album_layout',
+			'disp_subalbum_icons',
 			'pegas_index_viewed_count',
 			'pegas_index_rated_count',
 		], $new_core_settings);

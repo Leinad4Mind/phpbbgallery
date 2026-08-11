@@ -708,6 +708,11 @@ input.autowidth-gallery {
 	padding: 18px 16px 14px;
 }
 
+.gallery-futuristic-album-main--without-visual
+{
+	grid-template-columns: minmax(0, 1fr);
+}
+
 .gallery-futuristic-album-visual
 {
 	align-items: center;
@@ -823,6 +828,38 @@ input.autowidth-gallery {
 .gallery-futuristic-subalbums a.unread
 {
 	border-color: var(--gallery-futuristic-accent);
+}
+
+.gallery-futuristic-subalbums--icons
+{
+	align-items: center;
+	gap: 10px;
+}
+
+.gallery-futuristic-subalbums--icons .gallery-futuristic-subalbum-icon
+{
+	align-items: center;
+	background: transparent;
+	border: 0;
+	border-radius: 4px;
+	display: inline-flex;
+	height: 54px;
+	justify-content: center;
+	padding: 0;
+	width: 62px;
+}
+
+.gallery-futuristic-subalbums--icons .gallery-futuristic-subalbum-icon.unread
+{
+	box-shadow: 0 0 0 2px var(--gallery-futuristic-accent-soft);
+}
+
+.gallery-futuristic-subalbum-icon img
+{
+	display: block;
+	max-height: 100%;
+	max-width: 100%;
+	object-fit: contain;
 }
 
 .gallery-futuristic-album-summary
@@ -2645,6 +2682,23 @@ fieldset dl.gallery-autocomplete-row-open
 	box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
 	transform: scale(3);
 	z-index: 10;
+}
+
+.gallery-futuristic-album-visual.gallery-album-custom-icon-frame .gallery-album-custom-icon
+{
+	background: transparent;
+	border-radius: 0;
+	height: 100%;
+	max-height: 100%;
+	max-width: 100%;
+	width: 100%;
+}
+
+.gallery-futuristic-album-visual.gallery-album-custom-icon-frame .gallery-album-custom-icon:hover,
+.gallery-futuristic-album-visual.gallery-album-custom-icon-frame:focus .gallery-album-custom-icon
+{
+	box-shadow: none;
+	transform: none;
 }
 
 @media (prefers-reduced-motion: reduce)

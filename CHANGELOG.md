@@ -6,6 +6,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Added
 
+- Added an ACP-controlled subalbum icon strip to supported album layouts, reusing the existing permission-filtered subalbum tree without extra queries and retaining text links whenever a visible subalbum has no configured icon.
 - Added an optional ACP-controlled real image-ID badge to every Gallery card layout; selecting it copies the installation's canonical `[image]` or `[galleryimage]` BBCode with accessible visual confirmation and an HTTP-compatible clipboard fallback.
 - Added a fourth Futuristic Gallery presentation with shared permission-safe album and image components, responsive glass-style grids, accessible focus and reduced-motion behavior, and distinct restrained variants for PROSILVER, BBOOTS and FLATBOOTS while preserving Favorite, rating, moderation and add-on metadata events.
 - Added large, responsive and keyboard-accessible Font Awesome previous/next controls when navigation thumbnails are disabled, while retaining the adjacent image names for tooltips and assistive technology.
@@ -41,6 +42,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Kept recent-image thumbnails in the Futuristic album footer beside the last-image details instead of duplicating them as the album's main visual; explicitly configured transparent album icons now fill their dedicated frame.
 - Refined the PROSILVER Futuristic palette with a restrained phpBB blue-to-cyan gradient instead of the previous blue-to-purple treatment.
 - Rebuilt album quick search with each bundled style's native compact controls: a magnifying-glass button searches the current album, while a separate cog opens advanced Gallery search with that album preselected and descendant searching enabled.
 - Closed the complete post-4.0 Core migration graph with a 4.1.0 terminal marker and aligned the package, version-check metadata and installed Gallery version for direct 4.0.0 upgrades.

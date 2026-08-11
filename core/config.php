@@ -62,6 +62,7 @@ class config
 		'disp_whoisonline'			=> true,
 		'disp_gallery_icon'			=> true,
 		'disp_new_image_count'		=> true,
+		'disp_subalbum_icons'		=> true,
 
 		'gdlib_version'		=> 2,
 

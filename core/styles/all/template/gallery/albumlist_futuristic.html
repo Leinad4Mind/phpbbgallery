@@ -18,18 +18,14 @@
 		</section>
 	{% else %}
 		<article class="gallery-futuristic-album{% if albumrow.S_PERSONAL_ALBUM %} gallery-personal-album{% endif %}{% if albumrow.S_UNREAD_ALBUM %} gallery-futuristic-album--unread{% endif %}{% if albumrow.S_LOCKED_ALBUM %} gallery-futuristic-album--locked{% endif %}">
-			<div class="gallery-futuristic-album-main">
-				<a class="gallery-futuristic-album-visual{% if albumrow.ALBUM_IMAGE_SRC %} gallery-album-custom-icon-frame{% endif %}" href="{{ albumrow.U_VIEWALBUM }}" aria-label="{{ lang('VIEW_ALBUM') }}{{ lang('COLON') }} {{ albumrow.ALBUM_NAME }}">
+			<div class="gallery-futuristic-album-main{% if not albumrow.ALBUM_IMAGE_SRC %} gallery-futuristic-album-main--without-visual{% endif %}">
+			{% if albumrow.ALBUM_IMAGE_SRC %}
+				<a class="gallery-futuristic-album-visual gallery-album-custom-icon-frame" href="{{ albumrow.U_VIEWALBUM }}" aria-label="{{ lang('VIEW_ALBUM') }}{{ lang('COLON') }} {{ albumrow.ALBUM_NAME }}">
 					<span class="gallery-futuristic-visual-glow" aria-hidden="true"></span>
-					{% if albumrow.ALBUM_IMAGE_SRC %}
-						<img class="gallery-album-custom-icon" src="{{ albumrow.ALBUM_IMAGE_SRC }}" alt="">
-					{% elseif albumrow.LAST_IMAGE_TIME and albumrow.UC_THUMBNAIL %}
-						<img src="{{ albumrow.UC_THUMBNAIL }}" alt="">
-					{% else %}
-						<i class="icon fa {% if albumrow.S_LOCKED_ALBUM %}fa-lock{% elseif albumrow.S_UNREAD_ALBUM %}fa-folder-open{% else %}fa-folder{% endif %} fa-fw gallery-futuristic-placeholder-icon" aria-hidden="true"></i>
-					{% endif %}
+					<img class="gallery-album-custom-icon" src="{{ albumrow.ALBUM_IMAGE_SRC }}" alt="">
 					{% if albumrow.S_UNREAD_ALBUM %}<span class="gallery-futuristic-unread-signal" title="{{ lang('NEW_IMAGES') }}"><span class="sr-only">{{ lang('NEW_IMAGES') }}</span></span>{% endif %}
 				</a>
+			{% endif %}
 
 				<div class="gallery-futuristic-album-content">
 					<div class="gallery-futuristic-album-heading">
@@ -41,9 +37,13 @@
 						<div class="gallery-futuristic-album-details"><i class="icon fa fa-shield fa-fw" aria-hidden="true"></i> <strong>{{ albumrow.L_MODERATOR_STR }}{{ lang('COLON') }}</strong> {{ albumrow.MODERATORS }}</div>
 					{% endif %}
 					{% if albumrow.subalbum|length and albumrow.S_LIST_SUBALBUMS %}
-						<div class="gallery-futuristic-subalbums">
+						<div class="gallery-futuristic-subalbums{% if S_DISPLAY_SUBALBUM_ICONS %} gallery-futuristic-subalbums--icons{% endif %}">
 						{% for subalbum in albumrow.subalbum %}
+							{% if S_DISPLAY_SUBALBUM_ICONS and subalbum.SUBALBUM_IMAGE_SRC %}
+							<a href="{{ subalbum.U_SUBALBUM }}" class="gallery-futuristic-subalbum-icon {% if subalbum.S_UNREAD %}unread{% else %}read{% endif %}" title="{{ subalbum.SUBALBUM_NAME }} — {% if subalbum.S_UNREAD %}{{ lang('NEW_IMAGES') }}{% else %}{{ lang('NO_NEW_IMAGES') }}{% endif %}" aria-label="{{ subalbum.SUBALBUM_NAME }}"><img src="{{ subalbum.SUBALBUM_IMAGE_SRC }}" alt=""><span class="sr-only">{{ subalbum.SUBALBUM_NAME }}</span></a>
+							{% else %}
 							<a href="{{ subalbum.U_SUBALBUM }}" class="{% if subalbum.S_UNREAD %}unread{% else %}read{% endif %}" title="{% if subalbum.S_UNREAD %}{{ lang('NEW_IMAGES') }}{% else %}{{ lang('NO_NEW_IMAGES') }}{% endif %}"><i class="icon fa fa-folder fa-fw" aria-hidden="true"></i> {{ subalbum.SUBALBUM_NAME }}</a>
+							{% endif %}
 						{% endfor %}
 						</div>
 					{% endif %}
@@ -57,7 +57,7 @@
 				</div>
 				<div class="gallery-futuristic-last-image">
 				{% if albumrow.LAST_IMAGE_TIME %}
-					{% if albumrow.UC_LAST_IMAGE_THUMBNAIL and not albumrow.S_ALBUM_VISUAL_IS_LAST_IMAGE %}<a class="gallery-futuristic-last-image-visual" href="{{ albumrow.U_LAST_IMAGE }}"><img src="{{ albumrow.UC_LAST_IMAGE_THUMBNAIL }}" alt=""></a>{% endif %}
+					{% if albumrow.UC_LAST_IMAGE_THUMBNAIL %}<a class="gallery-futuristic-last-image-visual" href="{{ albumrow.U_LAST_IMAGE }}"><img src="{{ albumrow.UC_LAST_IMAGE_THUMBNAIL }}" alt=""></a>{% endif %}
 					<div class="gallery-futuristic-last-image-details">
 						<strong>{{ lang('LAST_IMAGE') }}</strong>
 						<span>{{ lang('POST_BY_AUTHOR') }} {{ albumrow.LAST_USER_FULL }}</span>

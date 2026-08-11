@@ -124,8 +124,20 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertStringContainsString('albumrow.subalbum|length', $albums);
 		$this->assertStringContainsString('albumrow.UNAPPROVED_IMAGES', $albums);
 		$this->assertStringContainsString('albumrow.LAST_USER_FULL', $albums);
-		$this->assertStringContainsString('albumrow.UC_LAST_IMAGE_THUMBNAIL and not albumrow.S_ALBUM_VISUAL_IS_LAST_IMAGE', $albums);
+		$this->assertStringContainsString('gallery-futuristic-album-main--without-visual', $albums);
+		$this->assertStringContainsString('{% if albumrow.ALBUM_IMAGE_SRC %}', $albums);
+		$this->assertStringNotContainsString('albumrow.UC_THUMBNAIL', $albums);
+		$this->assertStringContainsString('{% if albumrow.UC_LAST_IMAGE_THUMBNAIL %}', $albums);
+		$this->assertStringNotContainsString('albumrow.UC_LAST_IMAGE_THUMBNAIL and not albumrow.S_ALBUM_VISUAL_IS_LAST_IMAGE', $albums);
 		$this->assertStringContainsString('albumrow.U_LAST_IMAGE', $albums);
+		$this->assertStringContainsString('S_DISPLAY_SUBALBUM_ICONS and subalbum.SUBALBUM_IMAGE_SRC', $albums);
+		$this->assertStringContainsString('gallery-futuristic-subalbum-icon', $albums);
+		$this->assertStringContainsString("'SUBALBUM_IMAGE_SRC' => \$subalbum['image_src']", (string) file_get_contents($core_root . '/album/display.php'));
+		$this->assertStringContainsString("'S_DISPLAY_SUBALBUM_ICONS' => (bool) \$this->gallery_config->get('disp_subalbum_icons')", (string) file_get_contents($core_root . '/album/display.php'));
+		$this->assertMatchesRegularExpression(
+			'/\.gallery-futuristic-album-visual\.gallery-album-custom-icon-frame \.gallery-album-custom-icon\s*\{[^}]*background:\s*transparent;[^}]*height:\s*100%;[^}]*width:\s*100%;/s',
+			$css
+		);
 		$this->assertStringContainsString('phpbbgallery_core_album_image_actions', $images);
 		$this->assertStringContainsString('phpbbgallery_core_album_image_metadata', $images);
 		$this->assertStringContainsString('album_rating_stars.html', $images);

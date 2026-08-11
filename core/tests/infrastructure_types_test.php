@@ -33,6 +33,7 @@ final class infrastructure_types_test extends TestCase
 		$this->assertSame('local', $gallery_config->get('storage_provider'));
 		$this->assertTrue($gallery_config->get('disp_new_image_count'));
 		$this->assertFalse($gallery_config->get('disp_image_id'));
+		$this->assertTrue($gallery_config->get('disp_subalbum_icons'));
 		$this->assertSame('image', $gallery_config->get_bbcode_tag());
 		$this->assertSame('album', $gallery_config->get_album_bbcode_tag());
 		$this->assertSame('cards', $gallery_config->get_index_album_layout());

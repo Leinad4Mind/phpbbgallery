@@ -54,6 +54,7 @@ use phpbbgallery\core\migrations\group_leader_permissions;
 use phpbbgallery\core\migrations\relocate_personal_album_profile_field;
 use phpbbgallery\core\migrations\gallery_album_bbcode;
 use phpbbgallery\core\migrations\image_card_bbcode_id;
+use phpbbgallery\core\migrations\subalbum_icon_display;
 
 class migration_integrity_test extends TestCase
 {
@@ -101,6 +102,7 @@ class migration_integrity_test extends TestCase
 		relocate_personal_album_profile_field::class,
 		gallery_album_bbcode::class,
 		image_card_bbcode_id::class,
+		subalbum_icon_display::class,
 		release_4_1_0::class,
 	];
 
@@ -304,7 +306,7 @@ class migration_integrity_test extends TestCase
 		$migration = (new \ReflectionClass(release_4_1_0::class))->newInstanceWithoutConstructor();
 
 		$this->assertSame([
-			'\\phpbbgallery\\core\\migrations\\image_card_bbcode_id',
+			'\\phpbbgallery\\core\\migrations\\subalbum_icon_display',
 		], release_4_1_0::depends_on());
 		$this->assertSame([
 			['config.update', ['phpbb_gallery_version', '4.1.0']],
@@ -323,6 +325,21 @@ class migration_integrity_test extends TestCase
 		], $migration->update_data());
 		$this->assertSame([
 			['config.remove', ['phpbb_gallery_disp_image_id']],
+		], $migration->revert_data());
+	}
+
+	public function test_subalbum_icon_display_is_enabled_by_default_and_reversible(): void
+	{
+		$migration = (new \ReflectionClass(subalbum_icon_display::class))->newInstanceWithoutConstructor();
+
+		$this->assertSame([
+			'\\phpbbgallery\\core\\migrations\\image_card_bbcode_id',
+		], subalbum_icon_display::depends_on());
+		$this->assertSame([
+			['config.add', ['phpbb_gallery_disp_subalbum_icons', 1]],
+		], $migration->update_data());
+		$this->assertSame([
+			['config.remove', ['phpbb_gallery_disp_subalbum_icons']],
 		], $migration->revert_data());
 	}
 
@@ -1208,6 +1225,7 @@ class migration_integrity_test extends TestCase
 			'relocate_personal_album_profile_field.php',
 			'gallery_album_bbcode.php',
 			'image_card_bbcode_id.php',
+			'subalbum_icon_display.php',
 			'release_4_1_0.php',
 		] as $migration)
 		{

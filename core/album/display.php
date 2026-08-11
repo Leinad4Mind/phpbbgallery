@@ -545,6 +545,7 @@ class display
 				$parent_id = $display_parent_id;
 				$subalbums[$parent_id][$album_id]['display'] = ($row['display_on_index']) ? true : false;
 				$subalbums[$parent_id][$album_id]['name'] = $row['album_name'];
+				$subalbums[$parent_id][$album_id]['image'] = trim((string) ($row['album_image'] ?? ''));
 				$subalbums[$parent_id][$album_id]['orig_album_last_image_time'] = $row['album_last_image_time'];
 				$subalbums[$parent_id][$album_id]['children'] = [];
 
@@ -677,6 +678,7 @@ class display
 							'link'		=> $this->helper->route('phpbbgallery_core_album', ['album_id' => (int) $subalbum_id]),
 							'name'		=> $subalbum_row['name'],
 							'unread'	=> $subalbum_unread,
+							'image_src'	=> $subalbum_row['image'] !== '' ? $board_path . '/' . ltrim($subalbum_row['image'], '/') : '',
 						];
 					}
 					else
@@ -812,6 +814,7 @@ class display
 				$this->template->assign_block_vars('albumrow.subalbum', [
 					'U_SUBALBUM'	=> $subalbum['link'],
 					'SUBALBUM_NAME'	=> $subalbum['name'],
+					'SUBALBUM_IMAGE_SRC' => $subalbum['image_src'],
 					'S_UNREAD'		=> $subalbum['unread'],
 				]);
 			}
@@ -822,6 +825,7 @@ class display
 		$this->template->assign_vars([
 			'U_MARK_ALBUMS'		=> ($this->user->data['is_registered']) ? $this->helper->route('phpbbgallery_core_album', ['album_id' => (int) $root_data['album_id'], 'hash' => generate_link_hash('global'), 'mark' => 'albums']) : '',
 			'S_HAS_SUBALBUM'	=> ($visible_albums) ? true : false,
+			'S_DISPLAY_SUBALBUM_ICONS' => (bool) $this->gallery_config->get('disp_subalbum_icons'),
 			'L_SUBFORUM'		=> ($visible_albums == 1) ? $this->language->lang('SUBALBUM') : $this->language->lang('SUBALBUMS'),
 			'LAST_POST_IMG'		=> $this->user->img('icon_topic_latest', 'VIEW_LATEST_POST'),
 			'FAKE_THUMB_SIZE'	=> $this->config['phpbb_gallery_mini_thumbnail_size'],

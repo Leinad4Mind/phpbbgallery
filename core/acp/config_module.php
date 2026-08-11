@@ -35,6 +35,7 @@ class config_module
 		'viewtopic_images',
 		'viewtopic_link',
 		'index_album_layout',
+		'disp_subalbum_icons',
 		'pegas_index_viewed_count',
 		'pegas_index_rated_count',
 	];
@@ -541,6 +542,7 @@ class config_module
 
 				'INDEX_SETTINGS'	=> [
 					'index_album_layout'	=> ['lang' => 'INDEX_ALBUM_LAYOUT',	'validate' => 'string',	'type' => 'custom',	'explain' => true,	'method' => 'index_album_layout_select'],
+					'disp_subalbum_icons'	=> ['lang' => 'DISPLAY_SUBALBUM_ICONS',	'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 					'disp_image_id'		=> ['lang' => 'DISP_IMAGE_ID',		'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 					'pegas_index_album'		=> ['lang' => 'PERSONAL_ALBUM_INDEX',	'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 					'rrc_gindex_mode'		=> ['lang' => 'RRC_GINDEX_MODE',	'validate' => 'int',	'type' => 'custom',	'explain' => true,	'method' => 'rrc_modes'],

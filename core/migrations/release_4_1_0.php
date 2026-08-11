@@ -16,7 +16,7 @@ class release_4_1_0 extends migration
 {
 	public static function depends_on(): array
 	{
-		return ['\phpbbgallery\core\migrations\image_card_bbcode_id'];
+		return ['\phpbbgallery\core\migrations\subalbum_icon_display'];
 	}
 
 	public function update_data(): array

@@ -100,6 +100,9 @@ final class acp_config_types_test extends TestCase
 		$this->assertArrayHasKey('index_album_layout', $display['vars']);
 		$this->assertSame('custom', $display['vars']['index_album_layout']['type']);
 		$this->assertSame('index_album_layout_select', $display['vars']['index_album_layout']['method']);
+		$this->assertArrayHasKey('disp_subalbum_icons', $display['vars']);
+		$this->assertSame('radio:yes_no', $display['vars']['disp_subalbum_icons']['type']);
+		$this->assertTrue($display['vars']['disp_subalbum_icons']['explain']);
 		$this->assertArrayHasKey('disp_image_id', $display['vars']);
 		$this->assertSame('radio:yes_no', $display['vars']['disp_image_id']['type']);
 		$this->assertTrue($display['vars']['disp_image_id']['explain']);
