@@ -24,7 +24,13 @@ class manager
 	private const ALLOWED_EXTENSIONS = ['svg', 'png', 'gif', 'jpg', 'jpeg', 'webp', 'avif'];
 
 	/** Icons are small, curated assets; there is no reason to allow more than this. */
-	private const MAX_FILESIZE = 524288;
+	public const MAX_FILESIZE = 524288;
+
+	/** Maximum intrinsic width accepted for an album icon. */
+	public const MAX_WIDTH = 512;
+
+	/** Maximum intrinsic height accepted for an album icon. */
+	public const MAX_HEIGHT = 512;
 
 	/** @var \phpbb\files\upload */
 	private object $file_upload;
@@ -220,15 +226,15 @@ class manager
 			return $this->convert_bmp_icon($destination, $filename);
 		}
 
-		$valid = ($extension === 'svg')
+		$validation_error = ($extension === 'svg')
 			? $this->sanitize_svg($destination)
-			: $this->is_allowed_raster_image($destination, $extension);
+			: $this->validate_raster_image($destination, $extension);
 
-		if (!$valid)
+		if ($validation_error !== null)
 		{
 			@unlink($destination);
 
-			return ['error' => $this->language->lang('ICON_INVALID_TYPE'), 'filename' => null];
+			return ['error' => $this->icon_validation_error($validation_error), 'filename' => null];
 		}
 
 		return ['error' => null, 'filename' => $filename];
@@ -238,6 +244,12 @@ class manager
 	private function convert_bmp_icon(string $source, string $filename): array
 	{
 		$metadata = $this->bmp_processor->inspect($source);
+		if ($metadata !== null && !$this->dimensions_are_allowed((int) $metadata['width'], (int) $metadata['height']))
+		{
+			@unlink($source);
+
+			return ['error' => $this->icon_validation_error('ICON_DIMENSIONS_TOO_LARGE'), 'filename' => null];
+		}
 		$webp_filename = pathinfo($filename, PATHINFO_FILENAME) . '.webp';
 		$destination = dirname($source) . DIRECTORY_SEPARATOR . $webp_filename;
 		if ($metadata === null || $this->bmp_processor->create_derivative(
@@ -322,12 +334,12 @@ class manager
 	 * @param string $extension Claimed extension
 	 * @return bool
 	 */
-	private function is_allowed_raster_image(string $path, string $extension): bool
+	private function validate_raster_image(string $path, string $extension): ?string
 	{
 		$image_info = @getimagesize($path);
 		if ($image_info === false || !isset($image_info[2]))
 		{
-			return false;
+			return 'ICON_INVALID_TYPE';
 		}
 
 		$image_types = [
@@ -338,7 +350,14 @@ class manager
 			IMAGETYPE_AVIF => ['avif'],
 		];
 
-		return isset($image_types[$image_info[2]]) && in_array($extension, $image_types[$image_info[2]], true);
+		if (!isset($image_types[$image_info[2]]) || !in_array($extension, $image_types[$image_info[2]], true))
+		{
+			return 'ICON_INVALID_TYPE';
+		}
+
+		return $this->dimensions_are_allowed((int) $image_info[0], (int) $image_info[1])
+			? null
+			: 'ICON_DIMENSIONS_TOO_LARGE';
 	}
 
 	/**
@@ -348,14 +367,14 @@ class manager
 	 * A file that does not even parse as XML is treated as invalid rather than saved.
 	 *
 	 * @param string $path Path to the saved file
-	 * @return bool
+	 * @return string|null Language key on failure, or null when accepted
 	 */
-	private function sanitize_svg(string $path): bool
+	private function sanitize_svg(string $path): ?string
 	{
 		$contents = @file_get_contents($path);
 		if ($contents === false || trim($contents) === '')
 		{
-			return false;
+			return 'ICON_INVALID_TYPE';
 		}
 
 		$previous_errors = libxml_use_internal_errors(true);
@@ -366,7 +385,15 @@ class manager
 
 		if (!$loaded || $document->documentElement === null || strtolower($document->documentElement->localName) !== 'svg')
 		{
-			return false;
+			return 'ICON_INVALID_TYPE';
+		}
+
+		$root = $document->documentElement;
+		$width = $this->svg_length_in_pixels($root->getAttribute('width')) ?? 300.0;
+		$height = $this->svg_length_in_pixels($root->getAttribute('height')) ?? 150.0;
+		if (!$this->dimensions_are_allowed((int) ceil($width), (int) ceil($height)))
+		{
+			return 'ICON_DIMENSIONS_TOO_LARGE';
 		}
 
 		foreach (['script', 'foreignObject'] as $tag_name)
@@ -393,6 +420,45 @@ class manager
 
 		$sanitized = $document->saveXML();
 
-		return $sanitized !== false && @file_put_contents($path, $sanitized) !== false;
+		return $sanitized !== false && @file_put_contents($path, $sanitized) !== false
+			? null
+			: 'ICON_INVALID_TYPE';
+	}
+
+	/** Whether dimensions fit the deliberately small album-icon envelope. */
+	private function dimensions_are_allowed(int $width, int $height): bool
+	{
+		return $width > 0 && $height > 0 && $width <= self::MAX_WIDTH && $height <= self::MAX_HEIGHT;
+	}
+
+	/** Convert an absolute SVG length to CSS pixels; relative units use browser defaults. */
+	private function svg_length_in_pixels(string $value): ?float
+	{
+		if (!preg_match('/^([0-9]+(?:\.[0-9]+)?)\s*(px|pt|pc|in|cm|mm|q)?$/i', trim($value), $matches))
+		{
+			return null;
+		}
+
+		$unit_factors = [
+			'' => 1.0,
+			'px' => 1.0,
+			'pt' => 96 / 72,
+			'pc' => 16.0,
+			'in' => 96.0,
+			'cm' => 96 / 2.54,
+			'mm' => 96 / 25.4,
+			'q' => 96 / 101.6,
+		];
+		$unit = strtolower($matches[2] ?? '');
+
+		return (float) $matches[1] * $unit_factors[$unit];
+	}
+
+	/** Translate an icon validation failure without exposing storage paths. */
+	private function icon_validation_error(string $language_key): string
+	{
+		return $language_key === 'ICON_DIMENSIONS_TOO_LARGE'
+			? $this->language->lang($language_key, self::MAX_WIDTH, self::MAX_HEIGHT)
+			: $this->language->lang($language_key);
 	}
 }

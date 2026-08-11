@@ -49,6 +49,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Bounded ACP album-icon uploads to 512 KiB and 512 x 512 pixels for raster, BMP and SVG sources, and exposed those limits beside the upload control before an administrator selects a replacement.
 - Reclassified the Gallery-managed personal-album profile field so it is no longer presented as contact data, and exposed visible personal albums as dedicated permission- and zebra-filtered profile links for image and comment authors.
 - Enforced the strictest effective upload allowance across the configured batch size, remaining album capacity and selected author's quota in both progressive and fallback uploads, counting unapproved images and resumable drafts while displaying the real remaining allowance before selection.
 - Matched phpBB's native ACP permission selectors by grouping system groups first and displaying them in bold in both managed and available Gallery group lists.

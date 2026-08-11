@@ -135,8 +135,10 @@
 			{% endif %}
 			</dd>
 			<dd>
+				<input type="hidden" name="MAX_FILE_SIZE" value="{{ S_ICON_MAX_FILESIZE }}" />
 				<input type="file" name="icon_file" accept="{{ S_ICON_ACCEPT }}" />
 				<input class="button2" type="submit" name="upload_icon" value="{{ lang('UPLOAD_ICON') }}" />
+				<br /><span>{{ L_ICON_UPLOAD_LIMITS }}</span>
 			</dd>
 		</dl>
 		<dl>

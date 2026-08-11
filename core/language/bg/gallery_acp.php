@@ -24,6 +24,11 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
+	'ICON_UPLOAD_LIMITS' => 'Иконите могат да бъдат най-много %1$d × %2$d пиксела и %3$s.',
+	'ICON_DIMENSIONS_TOO_LARGE' => 'Иконата надвишава максималните размери от %1$d × %2$d пиксела.',
+]);
+
+$lang = array_merge($lang, [
 	'PERMISSION_I_MOVE' => 'Може да премества собствените си изображения',
 	'PERMISSION_I_DOWNLOAD' => 'Може да изтегля оригиналните файлове на изображенията (source)',
 	'PERMISSION_I_DOWNLOAD_EXPLAIN' => 'Позволява достъп до оригиналния файл (source). Необходимо е и разрешение за преглед на изображения.',

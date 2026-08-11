@@ -278,6 +278,50 @@ class icon_manager_test extends TestCase
 		$this->assertNull($result['filename']);
 	}
 
+	public function test_upload_rejects_a_raster_icon_above_the_dimension_limit(): void
+	{
+		$image = imagecreatetruecolor(manager::MAX_WIDTH + 1, 8);
+		$source = $this->write_source_file('wide.png', '');
+		$this->assertTrue(imagepng($image, $source));
+		$image = null;
+		$file_upload = new icon_manager_test_file_upload();
+		$file_upload->next_upload = [
+			'source' => $source,
+			'realname' => 'wide.png',
+			'size' => (int) filesize($source),
+		];
+
+		$result = $this->new_manager($file_upload)->upload('icon_file');
+
+		$this->assertSame(
+			'ICON_DIMENSIONS_TOO_LARGE:' . manager::MAX_WIDTH . ',' . manager::MAX_HEIGHT,
+			$result['error']
+		);
+		$this->assertNull($result['filename']);
+		$this->assertFileDoesNotExist($this->icons_path . 'wide.png');
+	}
+
+	public function test_upload_rejects_an_svg_icon_above_the_dimension_limit(): void
+	{
+		$svg = '<svg xmlns="http://www.w3.org/2000/svg" width="513px" height="32"><rect width="100%" height="100%" /></svg>';
+		$source = $this->write_source_file('wide.svg', $svg);
+		$file_upload = new icon_manager_test_file_upload();
+		$file_upload->next_upload = [
+			'source' => $source,
+			'realname' => 'wide.svg',
+			'size' => strlen($svg),
+		];
+
+		$result = $this->new_manager($file_upload)->upload('icon_file');
+
+		$this->assertSame(
+			'ICON_DIMENSIONS_TOO_LARGE:' . manager::MAX_WIDTH . ',' . manager::MAX_HEIGHT,
+			$result['error']
+		);
+		$this->assertNull($result['filename']);
+		$this->assertFileDoesNotExist($this->icons_path . 'wide.svg');
+	}
+
 	public function test_upload_rejects_content_that_does_not_match_its_claimed_extension(): void
 	{
 		// A renamed non-image file passes phpBB's own extension check (it only looks

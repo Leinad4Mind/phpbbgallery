@@ -39,7 +39,11 @@ final class acp_album_type_extension_points_test extends TestCase
 		$module = (string) file_get_contents(dirname(__DIR__) . '/acp/albums_module.php');
 
 		$this->assertStringContainsString('accept="{{ S_ICON_ACCEPT }}"', $template);
+		$this->assertStringContainsString('name="MAX_FILE_SIZE" value="{{ S_ICON_MAX_FILESIZE }}"', $template);
+		$this->assertStringContainsString('{{ L_ICON_UPLOAD_LIMITS }}', $template);
 		$this->assertStringContainsString("'S_ICON_ACCEPT'", $module);
+		$this->assertStringContainsString("'S_ICON_MAX_FILESIZE'", $module);
+		$this->assertStringContainsString("'L_ICON_UPLOAD_LIMITS'", $module);
 		$this->assertStringContainsString('file::supports_avif()', $module);
 	}
 }

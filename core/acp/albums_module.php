@@ -582,6 +582,13 @@ class albums_module
 					'S_NO_ICONS_AVAILABLE'	=> empty($gallery_icons),
 					'S_ICON_ACCEPT'		=> 'image/svg+xml,image/png,image/gif,image/jpeg,image/webp'
 						. (\phpbbgallery\core\file\file::supports_avif() ? ',image/avif' : ''),
+					'S_ICON_MAX_FILESIZE'	=> \phpbbgallery\core\icon\manager::MAX_FILESIZE,
+					'L_ICON_UPLOAD_LIMITS'	=> $user->lang(
+						'ICON_UPLOAD_LIMITS',
+						\phpbbgallery\core\icon\manager::MAX_WIDTH,
+						\phpbbgallery\core\icon\manager::MAX_HEIGHT,
+						get_formatted_filesize(\phpbbgallery\core\icon\manager::MAX_FILESIZE)
+					),
 					'S_ERROR'			=> (sizeof($errors)) ? true : false,
 					'S_PARENT_ID'		=> $this->parent_id,
 					'S_ALBUM_PARENT_ID'	=> $album_data['parent_id'],
