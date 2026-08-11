@@ -167,7 +167,8 @@ final class acp_addon_identity_test extends TestCase
 		$this->assertMatchesRegularExpression('/\.gallery-icon-picker-row\s*\{[^}]*overflow:\s*visible;[^}]*position:\s*relative;[^}]*z-index:\s*2;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-icon-picker-option:hover,[^{]+\.gallery-icon-picker-option:focus-within\s*\{[^}]*z-index:\s*20;/s', $css);
 		$this->assertMatchesRegularExpression('/#gallery-album-image-preview-src\s*\{[^}]*max-height:\s*256px;[^}]*max-width:\s*256px;[^}]*object-fit:\s*contain;/s', $css);
-		$this->assertMatchesRegularExpression('/\.gallery-acp-album-list-icon-link\s*\{[^}]*height:\s*30px;[^}]*width:\s*30px;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-acp-album-list-icon-link\s*\{[^}]*height:\s*48px;[^}]*width:\s*48px;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-acp-album-list-visual\s*\{[^}]*vertical-align:\s*middle;/s', $css);
 		$this->assertStringContainsString('.gallery-acp-album-list-icon-link:hover .gallery-acp-album-list-icon', $css);
 	}
 }

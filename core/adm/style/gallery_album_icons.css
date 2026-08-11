@@ -68,15 +68,18 @@
 	overflow: visible;
 	position: relative;
 	text-align: center;
+	vertical-align: middle;
 	width: 5%;
 }
 
 .gallery-acp-album-list-icon-link
 {
+	align-items: center;
 	display: inline-flex;
-	height: 30px;
+	height: 48px;
+	justify-content: center;
 	position: relative;
-	width: 30px;
+	width: 48px;
 	z-index: 1;
 }
 
