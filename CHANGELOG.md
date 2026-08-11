@@ -62,6 +62,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Prevented the enlarged ACP album-icon preview from being clipped by phpBB's default hidden overflow on form rows.
 - Allowed the optional Futuristic subalbum-icon strip to render independently of the legacy per-album textual subalbum-list setting.
 - Added an explicit “None” choice, live album-image path/preview updates, reordered controls and validated multi-file uploads to the ACP album icon picker.
 - Displayed ACP-configured album icons in a consistent 30 px square with a non-disruptive three-times hover and keyboard-focus preview across every Gallery layout.

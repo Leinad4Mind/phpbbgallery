@@ -1,3 +1,10 @@
+.gallery-icon-picker-row
+{
+	overflow: visible;
+	position: relative;
+	z-index: 2;
+}
+
 .gallery-icon-picker
 {
 	list-style: none;
@@ -62,6 +69,12 @@
 	box-shadow: 0 4px 14px rgba(0, 0, 0, .3);
 	transform: scale(3);
 	z-index: 10;
+}
+
+.gallery-icon-picker-option:hover,
+.gallery-icon-picker-option:focus-within
+{
+	z-index: 20;
 }
 
 @media (prefers-reduced-motion: reduce)

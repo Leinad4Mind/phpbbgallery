@@ -137,12 +137,15 @@ final class acp_addon_identity_test extends TestCase
 		$this->assertStringContainsString("INCLUDEJS '@phpbbgallery_core/gallery_album_icons.js'", $template);
 		$this->assertStringContainsString("INCLUDECSS '@phpbbgallery_core/gallery_album_icons.css'", $template);
 		$this->assertStringContainsString('class="gallery-icon-picker-image"', $template);
+		$this->assertStringContainsString('gallery-addon-setting gallery-icon-picker-row', $template);
 		$this->assertStringContainsString("private const ICON_PICK_NONE = '__none__';", $module);
 		$this->assertStringContainsString('$album_icon_pick === self::ICON_PICK_NONE', $module);
 		$this->assertStringContainsString("\$album_data['album_image'] = '';", $module);
 		$this->assertStringContainsString('private function upload_icons(', $module);
-		$this->assertLessThan(strpos($template, 'gallery-icon-picker'), strpos($template, 'name="icon_file[]"'));
-		$this->assertLessThan(strpos($template, 'id="album_image"'), strpos($template, 'gallery-icon-picker'));
+		$picker_position = strpos($template, '<ul class="gallery-icon-picker">');
+		$this->assertIsInt($picker_position);
+		$this->assertLessThan($picker_position, strpos($template, 'name="icon_file[]"'));
+		$this->assertLessThan(strpos($template, 'id="album_image"'), $picker_position);
 
 		$javascript = (string) file_get_contents(dirname(__DIR__) . '/adm/style/gallery_album_icons.js');
 		$this->assertStringContainsString("albumImage.value = choice.getAttribute('data-album-image-path') || '';", $javascript);
@@ -155,6 +158,8 @@ final class acp_addon_identity_test extends TestCase
 		$this->assertMatchesRegularExpression('/\.gallery-icon-picker-image\s*\{[^}]*object-fit:\s*contain;/s', $css);
 		$this->assertStringContainsString('transform: scale(3);', $css);
 		$this->assertStringContainsString('label:focus-within .gallery-icon-picker-image', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-icon-picker-row\s*\{[^}]*overflow:\s*visible;[^}]*position:\s*relative;[^}]*z-index:\s*2;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-icon-picker-option:hover,[^{]+\.gallery-icon-picker-option:focus-within\s*\{[^}]*z-index:\s*20;/s', $css);
 		$this->assertMatchesRegularExpression('/#gallery-album-image-preview-src\s*\{[^}]*max-height:\s*256px;[^}]*max-width:\s*256px;[^}]*object-fit:\s*contain;/s', $css);
 	}
 }
