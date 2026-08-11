@@ -16,22 +16,16 @@
 		document.addEventListener('DOMContentLoaded', function () {
 			var settings = {{ GALLERY_ACP_ADDON_SETTINGS_JSON|raw }};
 			var form = document.getElementById('acp_board');
-			var sources = {};
+			var hasSettings = false;
 
 			if (!form || !Array.isArray(settings)) {
 				return;
 			}
 
-			function makeBadge(setting, interactive) {
-				var badge = document.createElement(interactive ? 'button' : 'span');
+			function makeBadge(setting) {
+				var badge = document.createElement('span');
 				var icon = document.createElement('i');
 				badge.className = 'gallery-addon-badge';
-				if (interactive) {
-					badge.type = 'button';
-					badge.classList.add('gallery-addon-source-toggle');
-					badge.setAttribute('data-gallery-source-toggle', setting.id);
-					badge.setAttribute('aria-pressed', 'true');
-				}
 				badge.style.setProperty('--gallery-addon-accent', setting.accent);
 				badge.setAttribute('data-gallery-setting-source', setting.id);
 				badge.setAttribute('data-gallery-setting-kind', setting.kind);
@@ -65,16 +59,15 @@
 				}
 				label = row.querySelector('dt label');
 				if (label && !row.querySelector('.gallery-addon-badge')) {
-					label.insertAdjacentElement('afterend', makeBadge(setting, false));
+					label.insertAdjacentElement('afterend', makeBadge(setting));
 				}
-				sources[setting.id] = setting;
+				hasSettings = true;
 			});
 
-			if (Object.keys(sources).length) {
+			if (hasSettings) {
 				var legend = document.createElement('aside');
 				var title = document.createElement('strong');
 				var explanation = document.createElement('span');
-				var items = document.createElement('div');
 				legend.className = 'gallery-addon-legend';
 				legend.setAttribute('aria-label', {{ lang('GALLERY_ADDON_SETTINGS_LEGEND')|json_encode|raw }});
 				legend.setAttribute('data-view-simple-label', {{ lang('GALLERY_ADDON_SETTINGS_VIEW_SIMPLE')|json_encode|raw }});
@@ -87,13 +80,8 @@
 				title.textContent = {{ lang('GALLERY_ADDON_SETTINGS_LEGEND')|json_encode|raw }};
 				explanation.className = 'gallery-addon-legend__explain';
 				explanation.textContent = {{ lang('GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN')|json_encode|raw }};
-				items.className = 'gallery-addon-legend__items';
-				Object.keys(sources).forEach(function (id) {
-					items.appendChild(makeBadge(sources[id], true));
-				});
 				legend.appendChild(title);
 				legend.appendChild(explanation);
-				legend.appendChild(items);
 				form.parentNode.insertBefore(legend, form);
 				document.dispatchEvent(new CustomEvent('phpbbgallery:addonsettingsready'));
 			}

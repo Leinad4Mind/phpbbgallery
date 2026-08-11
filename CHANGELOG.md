@@ -7,8 +7,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 ### Added
 
 - Added large, responsive and keyboard-accessible Font Awesome previous/next controls when navigation thumbnails are disabled, while retaining the adjacent image names for tooltips and assistive technology.
-- Added persistent, accessible source filters to the New Core and add-on ACP legend, allowing administrators to show or hide each source's settings without changing their stored values or enabling state.
-- Added a persistent Off mode beside the Simple and Complete ACP provenance views, removing in-field badges, accent colours and setting markers while keeping the neutral guide and per-source visibility filters available.
+- Added a persistent Off mode beside the Simple and Complete ACP provenance views, removing in-field badges, accent colours and setting markers while keeping every effective setting visible.
 - Added a distinct New Core ACP provenance marker for every configuration introduced after Gallery 3.4.0 and for the new album-icon selector, using a star and Core accent while preserving puzzle identities for add-ons in both Simple and Complete views.
 - Added permission-filtered, lazily loaded album BBCodes with in-post pagination: clean boards use `[album]`, while boards whose legacy or unrelated `[album]` definition must be preserved use `[galleryalbum]` and receive an explicit activation notice.
 - Added the independently packaged free Image Fields add-on with translated administrator-defined metadata, seven validated field types, inherited album scopes, public/author/moderator visibility, multi-value search, resumable upload and edit integration, MCP Mass Edit support, ACP Import defaults, Export manifests and permanent-deletion cleanup.

@@ -74,12 +74,6 @@
 		<aside class="gallery-addon-legend" aria-label="{{ lang('GALLERY_ADDON_SETTINGS_LEGEND') }}" data-view-simple-label="{{ lang('GALLERY_ADDON_SETTINGS_VIEW_SIMPLE') }}" data-view-complete-label="{{ lang('GALLERY_ADDON_SETTINGS_VIEW_COMPLETE') }}" data-view-hidden-label="{{ lang('GALLERY_ADDON_SETTINGS_VIEW_HIDDEN') }}" data-view-simple-explain="{{ lang('GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN_SIMPLE') }}" data-view-complete-explain="{{ lang('GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN') }}" data-view-hidden-explain="{{ lang('GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN_HIDDEN') }}">
 			<strong class="gallery-addon-legend__title">{{ lang('GALLERY_ADDON_SETTINGS_LEGEND') }}</strong>
 			<span class="gallery-addon-legend__explain">{{ lang('GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN') }}</span>
-			<div class="gallery-addon-legend__items">
-				<button type="button" class="gallery-addon-badge gallery-addon-source-toggle" style="--gallery-addon-accent: #0076b1" data-gallery-source-toggle="new-core" data-gallery-setting-source="new-core" data-gallery-setting-kind="core" aria-pressed="true"><i class="icon fa-star fa-fw" aria-hidden="true"></i>{{ lang('GALLERY_NEW_CORE_SETTING') }}</button>
-			{% for addon in gallery_acp_addons|default([]) %}
-				<button type="button" class="gallery-addon-badge gallery-addon-source-toggle" style="--gallery-addon-accent: {{ addon.ACCENT }}" data-gallery-source-toggle="{{ addon.ID }}" data-gallery-setting-source="{{ addon.ID }}" data-gallery-addon="{{ addon.ID }}" aria-pressed="true"><i class="icon fa-puzzle-piece fa-fw" aria-hidden="true"></i>{{ lang('GALLERY_ADDON_SETTING', addon.NAME) }}</button>
-			{% endfor %}
-			</div>
 		</aside>
 
 	<form id="acp_gallery" method="post" action="{{ U_EDIT_ACTION }}" enctype="multipart/form-data">

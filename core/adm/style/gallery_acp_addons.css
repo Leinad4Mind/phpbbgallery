@@ -64,13 +64,6 @@
 	color: #fff;
 }
 
-.gallery-addon-legend__items {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 6px;
-	margin-top: 8px;
-}
-
 .gallery-addon-badge {
 	--gallery-addon-accent: #536d7a;
 	display: inline-flex;
@@ -88,26 +81,8 @@
 	vertical-align: middle;
 }
 
-.gallery-addon-legend__items .gallery-addon-badge,
 legend .gallery-addon-badge {
 	margin-inline-start: 0;
-}
-
-.gallery-addon-source-toggle {
-	cursor: pointer;
-	font-family: inherit;
-}
-
-.gallery-addon-source-toggle:hover,
-.gallery-addon-source-toggle:focus {
-	box-shadow: 0 0 0 2px color-mix(in srgb, var(--gallery-addon-accent) 25%, transparent);
-	outline: 0;
-}
-
-.gallery-addon-source-toggle.is-source-disabled {
-	opacity: .45;
-	text-decoration: line-through;
-	filter: grayscale(1);
 }
 
 .gallery-addon-setting,
