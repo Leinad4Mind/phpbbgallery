@@ -61,7 +61,10 @@ final class acp_addon_identity_test extends TestCase
 		$this->assertStringContainsString('data-gallery-addon-view="hidden"', $stylesheet);
 		$this->assertStringContainsString('border-inline-start: 0 !important', $stylesheet);
 		$this->assertStringNotContainsString('html[data-gallery-addon-view="hidden"] .gallery-addon-legend__title', $stylesheet);
-		$this->assertStringNotContainsString('.gallery-addon-legend__items', $stylesheet);
+		$this->assertStringContainsString('.gallery-addon-legend__items', $stylesheet);
+		$this->assertStringContainsString('populateLegendSources(legend)', $javascript);
+		$this->assertStringContainsString("clone = badge.cloneNode(true)", $javascript);
+		$this->assertStringContainsString("items.appendChild(clone)", $javascript);
 		$this->assertStringContainsString("'data-view-simple-explain'", $javascript);
 		$this->assertStringContainsString("'data-view-complete-explain'", $javascript);
 		$this->assertStringNotContainsString('html[data-gallery-addon-view="simple"] .gallery-addon-legend__explain', $stylesheet);
@@ -99,6 +102,7 @@ final class acp_addon_identity_test extends TestCase
 	public function test_album_editor_has_a_shared_addon_legend(): void
 	{
 		$template = (string) file_get_contents(dirname(__DIR__) . '/adm/style/gallery_albums.html');
+		$javascript = (string) file_get_contents(dirname(__DIR__) . '/adm/style/gallery_acp_addons.js');
 
 		$this->assertStringContainsString('gallery_acp_addons', $template);
 		$this->assertStringContainsString('gallery-addon-legend', $template);
@@ -114,6 +118,7 @@ final class acp_addon_identity_test extends TestCase
 		$this->assertStringContainsString('data-view-hidden-explain', $template);
 		$this->assertStringNotContainsString('data-gallery-source-toggle', $template);
 		$this->assertStringNotContainsString('gallery-addon-source-toggle', $template);
+		$this->assertStringContainsString('populateLegendSources(legend)', $javascript);
 		$this->assertStringContainsString("INCLUDEJS '@phpbbgallery_core/gallery_acp_addons.js'", $template);
 	}
 }

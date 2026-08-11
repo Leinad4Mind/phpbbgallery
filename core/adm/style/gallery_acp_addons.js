@@ -91,8 +91,43 @@
 		header.appendChild(toggle);
 	}
 
+	function populateLegendSources(legend) {
+		var items = legend.querySelector('.gallery-addon-legend__items');
+		var seen = {};
+
+		if (!items) {
+			items = document.createElement('div');
+			items.className = 'gallery-addon-legend__items';
+			legend.appendChild(items);
+		} else {
+			items.textContent = '';
+		}
+
+		document.querySelectorAll('.gallery-addon-setting, .gallery-addon-section').forEach(function (row) {
+			var source = row.getAttribute('data-gallery-setting-source') || row.getAttribute('data-gallery-addon');
+			var badge = row.querySelector('.gallery-addon-badge');
+			var clone;
+
+			if (!source || seen[source] || !badge) {
+				return;
+			}
+
+			seen[source] = true;
+			clone = badge.cloneNode(true);
+			clone.removeAttribute('data-gallery-setting-source');
+			clone.removeAttribute('data-gallery-setting-kind');
+			clone.removeAttribute('data-gallery-addon');
+			items.appendChild(clone);
+		});
+
+		items.hidden = !items.children.length;
+	}
+
 	function initialize() {
-		document.querySelectorAll('.gallery-addon-legend').forEach(addToggle);
+		document.querySelectorAll('.gallery-addon-legend').forEach(function (legend) {
+			addToggle(legend);
+			populateLegendSources(legend);
+		});
 		applyMode(readMode());
 	}
 

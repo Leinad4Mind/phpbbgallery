@@ -53,6 +53,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Restored the non-interactive source legend beneath the ACP New Core and add-on explanation, deduplicating the origins present on each page without reintroducing per-source filtering.
 - Allowed ACP permission masks to copy from any other selected album or user setting regardless of display order, disabling only the exact target and resolving reciprocal selections from an immutable snapshot.
 - Locked the album-type selector when editing an existing contest and removed Contest when editing a regular album, so the ACP no longer offers unsupported conversions while preserving the immutable type and server-side validation.
 - Centred thumbnail-free previous and next chevrons within their navigation columns and removed the circular border, background and shadow so only the accessible directional control remains visible.

@@ -21,6 +21,17 @@
 	margin-bottom: 3px;
 }
 
+.gallery-addon-legend__items {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin-top: 9px;
+}
+
+.gallery-addon-legend__items .gallery-addon-badge {
+	margin-inline-start: 0;
+}
+
 .gallery-addon-view-toggle {
 	display: inline-flex;
 	flex: 0 0 auto;
