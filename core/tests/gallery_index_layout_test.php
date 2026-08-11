@@ -130,9 +130,12 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertStringContainsString('{% if albumrow.UC_LAST_IMAGE_THUMBNAIL %}', $albums);
 		$this->assertStringNotContainsString('albumrow.UC_LAST_IMAGE_THUMBNAIL and not albumrow.S_ALBUM_VISUAL_IS_LAST_IMAGE', $albums);
 		$this->assertStringContainsString('albumrow.U_LAST_IMAGE', $albums);
+		$this->assertStringContainsString('albumrow.S_LIST_SUBALBUMS or (S_DISPLAY_SUBALBUM_ICONS and albumrow.S_HAS_SUBALBUM_ICONS)', $albums);
 		$this->assertStringContainsString('S_DISPLAY_SUBALBUM_ICONS and subalbum.SUBALBUM_IMAGE_SRC', $albums);
+		$this->assertStringContainsString('{% elseif albumrow.S_LIST_SUBALBUMS %}', $albums);
 		$this->assertStringContainsString('gallery-futuristic-subalbum-icon', $albums);
 		$this->assertStringContainsString("'SUBALBUM_IMAGE_SRC' => \$subalbum['image_src']", (string) file_get_contents($core_root . '/album/display.php'));
+		$this->assertStringContainsString("'S_HAS_SUBALBUM_ICONS' => \$has_subalbum_icons", (string) file_get_contents($core_root . '/album/display.php'));
 		$this->assertStringContainsString("'S_DISPLAY_SUBALBUM_ICONS' => (bool) \$this->gallery_config->get('disp_subalbum_icons')", (string) file_get_contents($core_root . '/album/display.php'));
 		$this->assertMatchesRegularExpression(
 			'/\.gallery-futuristic-album-visual\.gallery-album-custom-icon-frame \.gallery-album-custom-icon\s*\{[^}]*background:\s*transparent;[^}]*height:\s*100%;[^}]*width:\s*100%;/s',

@@ -735,8 +735,10 @@ class display
 			}
 
 			$s_subalbums_list = [];
+			$has_subalbum_icons = false;
 			foreach ($subalbums_list as $subalbum)
 			{
+				$has_subalbum_icons = $has_subalbum_icons || $subalbum['image_src'] !== '';
 				$s_subalbums_list[] = '<a href="' . $subalbum['link'] . '" class="subforum ' . (($subalbum['unread']) ? 'unread' : 'read') . '" title="' . (($subalbum['unread']) ? $this->language->lang('NEW_IMAGES') : $this->language->lang('NO_NEW_IMAGES')) . '">' . $subalbum['name'] . '</a>';
 			}
 			$s_subalbums_list = (string) implode(', ', $s_subalbums_list);
@@ -768,6 +770,7 @@ class display
 				'S_UNREAD_ALBUM'	=> ($album_unread) ? true : false,
 				'S_LIST_SUBALBUMS'	=> ($row['display_subalbum_list']) ? true : false,
 				'S_SUBALBUMS'		=> (sizeof($subalbums_list)) ? true : false,
+				'S_HAS_SUBALBUM_ICONS' => $has_subalbum_icons,
 				'S_ALBUM_VISUAL_IS_LAST_IMAGE' => !$row['album_image'] && (int) $row['album_last_image_id'] > 0,
 
 				'ALBUM_ID'				=> (int) $row['album_id'],
