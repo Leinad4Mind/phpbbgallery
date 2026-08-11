@@ -10,6 +10,8 @@
 namespace phpbbgallery\core\tests;
 
 use phpbbgallery\core\acp\albums_module;
+use phpbbgallery\core\icon\manager;
+use phpbb\request\request_interface;
 use PHPUnit\Framework\TestCase;
 
 final class acp_albums_types_test extends TestCase
@@ -56,5 +58,51 @@ final class acp_albums_types_test extends TestCase
 
 		$this->assertSame(2, substr_count($source, '$album_type_registry->accepts_images('));
 		$this->assertStringNotContainsString('block::TYPE_CONTEST', $source);
+	}
+
+	public function test_multiple_icon_uploads_are_validated_individually(): void
+	{
+		$icon_manager = $this->getMockBuilder(manager::class)
+			->disableOriginalConstructor()
+			->onlyMethods(['upload'])
+			->getMock();
+		$icon_manager->expects($this->exactly(2))
+			->method('upload')
+			->with('icon_file_single')
+			->willReturnOnConsecutiveCalls(
+				['error' => null, 'filename' => 'one.svg'],
+				['error' => 'INVALID', 'filename' => null]
+			);
+
+		$request = $this->createMock(request_interface::class);
+		$request->expects($this->once())
+			->method('variable')
+			->with('icon_file', ['name' => 'none'], true, request_interface::FILES)
+			->willReturn([
+				'name' => ['One.svg', 'Two.png'],
+				'type' => ['image/svg+xml', 'image/png'],
+				'tmp_name' => ['first.tmp', 'second.tmp'],
+				'error' => [0, 0],
+				'size' => [100, 200],
+			]);
+
+		$overwrites = [];
+		$request->expects($this->exactly(3))
+			->method('overwrite')
+			->willReturnCallback(static function (string $name, mixed $value, int $scope) use (&$overwrites): void
+			{
+				$overwrites[] = [$name, $value, $scope];
+			});
+
+		$method = new \ReflectionMethod(albums_module::class, 'upload_icons');
+		$results = $method->invoke(new albums_module(), $icon_manager, $request, 'icon_file');
+
+		$this->assertSame([
+			['error' => null, 'filename' => 'one.svg'],
+			['error' => 'INVALID', 'filename' => null],
+		], $results);
+		$this->assertSame('One.svg', $overwrites[0][1]['name']);
+		$this->assertSame('Two.png', $overwrites[1][1]['name']);
+		$this->assertSame(['icon_file_single', null, request_interface::FILES], $overwrites[2]);
 	}
 }

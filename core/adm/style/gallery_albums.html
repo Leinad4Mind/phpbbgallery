@@ -1,5 +1,6 @@
 {% INCLUDECSS '@phpbbgallery_core/gallery_acp_addons.css' %}
 {% INCLUDEJS '@phpbbgallery_core/gallery_acp_addons.js' %}
+{% INCLUDEJS '@phpbbgallery_core/gallery_album_icons.js' %}
 {% include 'overall_header.html' %}
 
 <a name="maincontent"></a>
@@ -118,34 +119,39 @@
 			<dt><label>{{ lang('ALBUM_ICON_PICKER') }}{{ lang('COLON') }}</label><span class="gallery-addon-badge" style="--gallery-addon-accent: #0076b1"><i class="icon fa-star fa-fw" aria-hidden="true"></i>{{ lang('GALLERY_NEW_CORE_SETTING') }}</span><br /><span>{{ lang('ALBUM_ICON_PICKER_EXPLAIN') }}</span></dt>
 			<dd>
 			{% if L_ICON_UPLOADED %}<p class="confirmbox">{{ L_ICON_UPLOADED }}</p>{% endif %}
+				<input type="hidden" name="MAX_FILE_SIZE" value="{{ S_ICON_MAX_FILESIZE }}" />
+				<input type="file" name="icon_file[]" accept="{{ S_ICON_ACCEPT }}" multiple="multiple" />
+				<input class="button2" type="submit" name="upload_icon" value="{{ lang('UPLOAD_ICON') }}" />
+				<br /><span>{{ L_ICON_UPLOAD_LIMITS }}</span>
+			</dd>
+			<dd>
+			<ul class="gallery-icon-picker" style="list-style: none; margin: 0; padding: 0;">
+				<li style="display: inline-block; margin: 0 8px 8px 0; vertical-align: top;">
+					<label style="display: block; text-align: center; cursor: pointer;">
+						<input type="radio" name="album_icon_pick" value="{{ ICON_PICK_NONE }}" data-album-image-path="" data-album-icon-src=""{% if S_NO_ICON_SELECTED %} checked="checked"{% endif %} /><br />
+						<span style="align-items: center; border: 1px dashed #aaa; box-sizing: border-box; display: inline-flex; height: 48px; justify-content: center; width: 48px;"><i class="icon fa-ban fa-fw" aria-hidden="true"></i></span><br />
+						{{ lang('NONE') }}
+					</label>
+				</li>
 			{% if S_NO_ICONS_AVAILABLE %}
-				{{ lang('NO_ICONS_AVAILABLE') }}
+				<li style="display: inline-block; margin: 0 8px 8px 0; vertical-align: top;">{{ lang('NO_ICONS_AVAILABLE') }}</li>
 			{% else %}
-				<ul class="gallery-icon-picker" style="list-style: none; margin: 0; padding: 0;">
 				{% for iconrow in iconrow %}
-					<li style="display: inline-block; margin: 0 8px 8px 0;">
+					<li style="display: inline-block; margin: 0 8px 8px 0; vertical-align: top;">
 						<label style="display: block; text-align: center; cursor: pointer;">
-							<input type="radio" name="album_icon_pick" value="{{ iconrow.ICON_FILE }}"{% if iconrow.S_SELECTED %} checked="checked"{% endif %} /><br />
+							<input type="radio" name="album_icon_pick" value="{{ iconrow.ICON_FILE }}" data-album-image-path="{{ iconrow.ICON_PATH }}" data-album-icon-src="{{ iconrow.ICON_SRC }}"{% if iconrow.S_SELECTED %} checked="checked"{% endif %} /><br />
 							<img src="{{ iconrow.ICON_SRC }}" alt="{{ iconrow.ICON_FILE }}" style="max-width: 48px; max-height: 48px;" />
 						</label>
 					</li>
 				{% endfor %}
-				</ul>
 			{% endif %}
-			</dd>
-			<dd>
-				<input type="hidden" name="MAX_FILE_SIZE" value="{{ S_ICON_MAX_FILESIZE }}" />
-				<input type="file" name="icon_file" accept="{{ S_ICON_ACCEPT }}" />
-				<input class="button2" type="submit" name="upload_icon" value="{{ lang('UPLOAD_ICON') }}" />
-				<br /><span>{{ L_ICON_UPLOAD_LIMITS }}</span>
+			</ul>
 			</dd>
 		</dl>
 		<dl>
 			<dt><label for="album_image">{{ lang('ALBUM_IMAGE') }}{{ lang('COLON') }}</label><br /><span>{{ lang('ALBUM_IMAGE_EXPLAIN') }}</span></dt>
 			<dd><input class="text medium" type="text" id="album_image" name="album_image" value="{{ ALBUM_IMAGE }}" maxlength="255" /></dd>
-		{% if ALBUM_IMAGE_SRC %}
-			<dd><img src="{{ ALBUM_IMAGE_SRC }}" alt="{{ lang('ALBUM_IMAGE') }}" /></dd>
-		{% endif %}
+			<dd id="gallery-album-image-preview"{% if not ALBUM_IMAGE_SRC %} hidden="hidden"{% endif %}><img id="gallery-album-image-preview-src"{% if ALBUM_IMAGE_SRC %} src="{{ ALBUM_IMAGE_SRC }}"{% endif %} alt="{{ lang('ALBUM_IMAGE') }}" /></dd>
 		</dl>
 		{% if ALBUM_PASSWORD_OPTION_IS_INCLUDED %}
 		<dl>

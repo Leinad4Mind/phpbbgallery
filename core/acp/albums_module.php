@@ -24,6 +24,9 @@ namespace phpbbgallery\core\acp;
 */
 class albums_module
 {
+	/** Sentinel used by the icon picker to remove a configured album image. */
+	private const ICON_PICK_NONE = '__none__';
+
 	public string $u_action = '';
 	public int $parent_id = 0;
 	public \phpbb\language\language $language;
@@ -145,23 +148,37 @@ class albums_module
 					// admin was mid-typing in the rest of this form.
 					if ($request->is_set_post('upload_icon'))
 					{
-						$upload_result = $icon_manager->upload('icon_file');
+						$uploaded_icons = [];
+						foreach ($this->upload_icons($icon_manager, $request, 'icon_file') as $upload_result)
+						{
+							if ($upload_result['error'])
+							{
+								$errors[] = $upload_result['error'];
+								continue;
+							}
 
-						if ($upload_result['error'])
-						{
-							$errors[] = $upload_result['error'];
+							$uploaded_icons[] = $upload_result['filename'];
 						}
-						else
+
+						if (count($uploaded_icons) === 1)
 						{
-							$album_data['album_image'] = $icon_manager->relative_path($upload_result['filename']);
+							$album_data['album_image'] = $icon_manager->relative_path($uploaded_icons[0]);
 							$template->assign_var('L_ICON_UPLOADED', $this->language->lang('ICON_UPLOADED'));
+						}
+						else if (count($uploaded_icons) > 1)
+						{
+							$template->assign_var('L_ICON_UPLOADED', $this->language->lang('ICONS_UPLOADED', count($uploaded_icons)));
 						}
 
 					break;
 					}
 
 					$album_icon_pick = $request->variable('album_icon_pick', '');
-					if ($album_icon_pick !== '')
+					if ($album_icon_pick === self::ICON_PICK_NONE)
+					{
+						$album_data['album_image'] = '';
+					}
+					else if ($album_icon_pick !== '')
 					{
 						if ($icon_manager->is_valid_icon($album_icon_pick))
 						{
@@ -593,6 +610,7 @@ class albums_module
 				{
 					$template->assign_block_vars('iconrow', [
 						'ICON_FILE'		=> $icon_filename,
+						'ICON_PATH'		=> $icon_manager->relative_path($icon_filename),
 						'ICON_SRC'		=> $phpbb_ext_gallery_core_url->path('phpbb') . $icon_manager->relative_path($icon_filename),
 						'S_SELECTED'	=> ($album_data['album_image'] === $icon_manager->relative_path($icon_filename)),
 					]);
@@ -600,6 +618,8 @@ class albums_module
 
 				$template->assign_vars([
 					'S_EDIT_ALBUM'		=> true,
+					'ICON_PICK_NONE'		=> self::ICON_PICK_NONE,
+					'S_NO_ICON_SELECTED'	=> $album_data['album_image'] === '',
 					'S_NO_ICONS_AVAILABLE'	=> empty($gallery_icons),
 					'S_ICON_ACCEPT'		=> 'image/svg+xml,image/png,image/gif,image/jpeg,image/webp'
 						. (\phpbbgallery\core\file\file::supports_avif() ? ',image/avif' : ''),
@@ -839,6 +859,49 @@ class albums_module
 
 			'U_PROGRESS_BAR'	=> $this->u_action . '&amp;action=progress_bar',
 		]);
+	}
+
+	/**
+	 * Pass every file from a multiple input through the existing validated upload pipeline.
+	 *
+	 * @param \phpbbgallery\core\icon\manager $icon_manager Icon upload manager
+	 * @param \phpbb\request\request_interface $request Request object
+	 * @param string $form_field Multiple file input name
+	 * @return array Upload results in request order
+	 */
+	private function upload_icons(\phpbbgallery\core\icon\manager $icon_manager, \phpbb\request\request_interface $request, string $form_field): array
+	{
+		$upload = $request->variable($form_field, ['name' => 'none'], true, \phpbb\request\request_interface::FILES);
+		if (!isset($upload['name']) || !is_array($upload['name']))
+		{
+			return [$icon_manager->upload($form_field)];
+		}
+
+		$results = [];
+		$temporary_field = $form_field . '_single';
+		try
+		{
+			foreach (array_keys($upload['name']) as $index)
+			{
+				$file = [];
+				foreach ($upload as $key => $values)
+				{
+					if (is_array($values) && array_key_exists($index, $values))
+					{
+						$file[$key] = $values[$index];
+					}
+				}
+
+				$request->overwrite($temporary_field, $file, \phpbb\request\request_interface::FILES);
+				$results[] = $icon_manager->upload($temporary_field);
+			}
+		}
+		finally
+		{
+			$request->overwrite($temporary_field, null, \phpbb\request\request_interface::FILES);
+		}
+
+		return $results ?: [$icon_manager->upload($form_field)];
 	}
 
 	/**

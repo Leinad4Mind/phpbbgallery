@@ -122,4 +122,29 @@ final class acp_addon_identity_test extends TestCase
 		$this->assertStringContainsString('populateLegendSources(legend)', $javascript);
 		$this->assertStringContainsString("INCLUDEJS '@phpbbgallery_core/gallery_acp_addons.js'", $template);
 	}
+
+	public function test_album_icon_picker_can_remove_the_configured_icon(): void
+	{
+		$template = (string) file_get_contents(dirname(__DIR__) . '/adm/style/gallery_albums.html');
+		$module = (string) file_get_contents(dirname(__DIR__) . '/acp/albums_module.php');
+
+		$this->assertStringContainsString('value="{{ ICON_PICK_NONE }}"', $template);
+		$this->assertStringContainsString('S_NO_ICON_SELECTED', $template);
+		$this->assertStringContainsString('name="icon_file[]"', $template);
+		$this->assertStringContainsString('multiple="multiple"', $template);
+		$this->assertStringContainsString('data-album-image-path="{{ iconrow.ICON_PATH }}"', $template);
+		$this->assertStringContainsString("INCLUDEJS '@phpbbgallery_core/gallery_album_icons.js'", $template);
+		$this->assertStringContainsString("private const ICON_PICK_NONE = '__none__';", $module);
+		$this->assertStringContainsString('$album_icon_pick === self::ICON_PICK_NONE', $module);
+		$this->assertStringContainsString("\$album_data['album_image'] = '';", $module);
+		$this->assertStringContainsString('private function upload_icons(', $module);
+		$this->assertLessThan(strpos($template, 'gallery-icon-picker'), strpos($template, 'name="icon_file[]"'));
+		$this->assertLessThan(strpos($template, 'id="album_image"'), strpos($template, 'gallery-icon-picker'));
+
+		$javascript = (string) file_get_contents(dirname(__DIR__) . '/adm/style/gallery_album_icons.js');
+		$this->assertStringContainsString("albumImage.value = choice.getAttribute('data-album-image-path') || '';", $javascript);
+		$this->assertStringContainsString("preview.hidden = source === '';", $javascript);
+		$this->assertStringContainsString("albumImage.addEventListener('input'", $javascript);
+		$this->assertStringContainsString("choice.checked = choice.getAttribute('data-album-image-path') === albumImage.value;", $javascript);
+	}
 }

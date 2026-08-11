@@ -56,6 +56,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Added an explicit “None” choice, live album-image path/preview updates, reordered controls and validated multi-file uploads to the ACP album icon picker.
 - Displayed ACP-configured album icons in a consistent 30 px square with a non-disruptive three-times hover and keyboard-focus preview across every Gallery layout.
 - Corrected uploaded album icons in every Gallery layout to resolve from the phpBB board root instead of being incorrectly prefixed with the active style or CDN image path.
 - Prevented Futuristic and Modern responsive album lists from repeating the same latest-image thumbnail as both the album visual and Last image, while retaining a distinct latest thumbnail for manual covers and contest winners.
