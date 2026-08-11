@@ -138,6 +138,13 @@ final class acp_addon_identity_test extends TestCase
 		$this->assertStringContainsString("INCLUDECSS '@phpbbgallery_core/gallery_album_icons.css'", $template);
 		$this->assertStringContainsString('class="gallery-icon-picker-image"', $template);
 		$this->assertStringContainsString('gallery-addon-setting gallery-icon-picker-row', $template);
+		$this->assertStringContainsString('class="gallery-acp-album-list-visual"', $template);
+		$this->assertStringContainsString('class="gallery-acp-album-list-icon-link"', $template);
+		$this->assertStringContainsString('class="gallery-acp-album-list-icon" src="{{ albums.ALBUM_IMAGE_SRC }}"', $template);
+		$this->assertStringContainsString('{% else %}', strstr($template, 'class="gallery-acp-album-list-visual"'));
+		$this->assertStringContainsString('{{ albums.FOLDER_IMAGE }}', strstr($template, 'class="gallery-acp-album-list-visual"'));
+		$this->assertStringNotContainsString('float: {{ S_CONTENT_FLOW_BEGIN }}', $template);
+		$this->assertStringNotContainsString("'ALBUM_IMAGE'\t\t=>", $module);
 		$this->assertStringContainsString("private const ICON_PICK_NONE = '__none__';", $module);
 		$this->assertStringContainsString('$album_icon_pick === self::ICON_PICK_NONE', $module);
 		$this->assertStringContainsString("\$album_data['album_image'] = '';", $module);
@@ -161,5 +168,7 @@ final class acp_addon_identity_test extends TestCase
 		$this->assertMatchesRegularExpression('/\.gallery-icon-picker-row\s*\{[^}]*overflow:\s*visible;[^}]*position:\s*relative;[^}]*z-index:\s*2;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-icon-picker-option:hover,[^{]+\.gallery-icon-picker-option:focus-within\s*\{[^}]*z-index:\s*20;/s', $css);
 		$this->assertMatchesRegularExpression('/#gallery-album-image-preview-src\s*\{[^}]*max-height:\s*256px;[^}]*max-width:\s*256px;[^}]*object-fit:\s*contain;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-acp-album-list-icon-link\s*\{[^}]*height:\s*30px;[^}]*width:\s*30px;/s', $css);
+		$this->assertStringContainsString('.gallery-acp-album-list-icon-link:hover .gallery-acp-album-list-icon', $css);
 	}
 }

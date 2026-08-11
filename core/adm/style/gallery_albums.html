@@ -312,9 +312,14 @@
 		<tbody>
 		{% for albums in albums %}
 			<tr>
-				<td style="width: 5%; text-align: center;">{{ albums.FOLDER_IMAGE }}</td>
+				<td class="gallery-acp-album-list-visual">
+				{% if albums.ALBUM_IMAGE_SRC %}
+					<a class="gallery-acp-album-list-icon-link" href="{{ albums.U_ALBUM }}" title="{{ albums.ALBUM_NAME }}"><img class="gallery-acp-album-list-icon" src="{{ albums.ALBUM_IMAGE_SRC }}" alt="{{ albums.ALBUM_NAME }}" /></a>
+				{% else %}
+					{{ albums.FOLDER_IMAGE }}
+				{% endif %}
+				</td>
 				<td>
-					{% if albums.ALBUM_IMAGE_SRC %}<div style="float: {{ S_CONTENT_FLOW_BEGIN }}; margin-right: 5px;"><img src="{{ albums.ALBUM_IMAGE_SRC }}" alt="{{ albums.ALBUM_NAME }}" /></div>{% endif %}
 					<strong><a href="{{ albums.U_ALBUM }}">{{ albums.ALBUM_NAME }}</a></strong>
 					{% if albums.ALBUM_DESCRIPTION %}<br /><span>{{ albums.ALBUM_DESCRIPTION }}</span>{% endif %}
 					{% if albums.S_ALBUM_POST %}<br /><br /><span>{{ lang('IMAGES') }}{{ lang('COLON') }} <strong>{{ albums.ALBUM_IMAGES }}</strong></span>{% endif %}

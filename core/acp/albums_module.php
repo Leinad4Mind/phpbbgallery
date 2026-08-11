@@ -816,7 +816,6 @@ class albums_module
 
 				$template->assign_block_vars('albums', [
 					'FOLDER_IMAGE'		=> $folder_image,
-					'ALBUM_IMAGE'		=> ($row['album_image']) ? '<img src="' . $phpbb_ext_gallery_core_url->path('phpbb') . $row['album_image'] . '" alt="" />' : '',
 					'ALBUM_IMAGE_SRC'	=> ($row['album_image']) ? $phpbb_ext_gallery_core_url->path('phpbb') . $row['album_image'] : '',
 					'ALBUM_NAME'		=> $row['album_name'],
 					'ALBUM_DESCRIPTION'	=> generate_text_for_display($row['album_desc'], $row['album_desc_uid'], $row['album_desc_bitfield'], $row['album_desc_options']),

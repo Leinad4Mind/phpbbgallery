@@ -63,6 +63,44 @@
 	width: auto;
 }
 
+.gallery-acp-album-list-visual
+{
+	overflow: visible;
+	position: relative;
+	text-align: center;
+	width: 5%;
+}
+
+.gallery-acp-album-list-icon-link
+{
+	display: inline-flex;
+	height: 30px;
+	position: relative;
+	width: 30px;
+	z-index: 1;
+}
+
+.gallery-acp-album-list-icon
+{
+	height: 100%;
+	object-fit: contain;
+	transition: filter 160ms ease, transform 160ms ease;
+	width: 100%;
+}
+
+.gallery-acp-album-list-icon-link:hover,
+.gallery-acp-album-list-icon-link:focus
+{
+	z-index: 20;
+}
+
+.gallery-acp-album-list-icon-link:hover .gallery-acp-album-list-icon,
+.gallery-acp-album-list-icon-link:focus .gallery-acp-album-list-icon
+{
+	filter: drop-shadow(0 4px 7px rgba(0, 0, 0, .3));
+	transform: scale(3);
+}
+
 .gallery-icon-picker-option label:hover .gallery-icon-picker-image,
 .gallery-icon-picker-option label:focus-within .gallery-icon-picker-image
 {
@@ -79,7 +117,8 @@
 
 @media (prefers-reduced-motion: reduce)
 {
-	.gallery-icon-picker-image
+	.gallery-icon-picker-image,
+	.gallery-acp-album-list-icon
 	{
 		transition: none;
 	}
