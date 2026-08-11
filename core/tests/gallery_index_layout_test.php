@@ -126,8 +126,11 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertStringContainsString('albumrow.U_LAST_IMAGE', $albums);
 		$this->assertStringContainsString("{% include '@phpbbgallery_core/gallery/subalbum_links.html' %}", $albums);
 		$subalbums = (string) file_get_contents($core_root . '/styles/all/template/gallery/subalbum_links.html');
+		$css = (string) file_get_contents($core_root . '/styles/all/theme/gallery.css');
 		$this->assertStringContainsString('albumrow.S_SUBALBUMS_AS_ICONS and subalbum.SUBALBUM_IMAGE_SRC', $subalbums);
 		$this->assertStringContainsString('gallery-subalbum-link--text', $subalbums);
+		$this->assertMatchesRegularExpression('/\.gallery-subalbum-link--text\s*\{[^}]*align-items:\s*center;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-subalbum-link--text \.icon\s*\{[^}]*line-height:\s*1;/s', $css);
 		$this->assertStringContainsString('gallery-subalbum-link--icon', $subalbums);
 		$this->assertStringContainsString("'SUBALBUM_IMAGE_SRC' => \$subalbum['image_src']", (string) file_get_contents($core_root . '/album/display.php'));
 		$this->assertStringContainsString("'S_SUBALBUMS_AS_TEXT'", (string) file_get_contents($core_root . '/album/display.php'));

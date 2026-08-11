@@ -701,10 +701,17 @@ input.autowidth-gallery {
 
 .gallery-subalbum-link--text
 {
+	align-items: center;
 	display: inline-flex;
 	gap: 3px;
 	overflow: hidden;
 	text-overflow: ellipsis;
+}
+
+.gallery-subalbum-link--text .icon
+{
+	flex: 0 0 auto;
+	line-height: 1;
 }
 
 .gallery-subalbum-link--icon
