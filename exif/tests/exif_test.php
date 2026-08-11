@@ -208,7 +208,7 @@ final class exif_test extends TestCase
 	{
 		$events = [
 			'phpbbgallery_core_ucp_settings_fieldset.html',
-			'phpbbgallery_core_viewimage_details.html',
+			'phpbbgallery_core_viewimage_details_after.html',
 		];
 
 		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
@@ -226,7 +226,7 @@ final class exif_test extends TestCase
 		{
 			$root = dirname(__DIR__) . '/styles/' . $style . '/template/event/';
 			$settings = (string) file_get_contents($root . 'phpbbgallery_core_ucp_settings_fieldset.html');
-			$details = (string) file_get_contents($root . 'phpbbgallery_core_viewimage_details.html');
+			$details = (string) file_get_contents($root . 'phpbbgallery_core_viewimage_details_after.html');
 
 			$this->assertStringContainsString('class="control-group"', $settings, $style);
 			$this->assertStringContainsString('class="table-responsive"', $details, $style);

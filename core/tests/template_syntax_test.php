@@ -508,18 +508,39 @@ final class template_syntax_test extends TestCase
 			$template = (string) file_get_contents(
 				$core_root . '/styles/' . $style . '/template/gallery/viewimage_body.html'
 			);
+			$metadata = strpos($template, '{% EVENT phpbbgallery_core_viewimage_metadata %}');
 			$details = strpos($template, '{% EVENT phpbbgallery_core_viewimage_details %}');
+			$details_after = strpos($template, '{% EVENT phpbbgallery_core_viewimage_details_after %}');
 			$sharing = strpos($template, 'gallery-image-sharing-fields');
 			$image_url = strpos($template, "lang('IMAGE_URL')", (int) $sharing);
 			$image_bbcode = strpos($template, "lang('IMAGE_BBCODE')", (int) $sharing);
 
+			$this->assertNotFalse($metadata, $style);
 			$this->assertNotFalse($details, $style);
+			$this->assertNotFalse($details_after, $style);
 			$this->assertNotFalse($sharing, $style);
 			$this->assertNotFalse($image_url, $style);
 			$this->assertNotFalse($image_bbcode, $style);
-			$this->assertGreaterThan($details, $sharing, $style);
+			$this->assertGreaterThan($metadata, $details, $style);
+			$this->assertGreaterThan($details, $details_after, $style);
+			$this->assertGreaterThan($details_after, $sharing, $style);
 			$this->assertGreaterThan($sharing, $image_url, $style);
 			$this->assertGreaterThan($sharing, $image_bbcode, $style);
+
+			if ($style === 'prosilver')
+			{
+				$metadata_fieldset_close = strpos($template, '</fieldset>', $metadata);
+				$this->assertNotFalse($metadata_fieldset_close, $style);
+				$this->assertGreaterThan($metadata, $metadata_fieldset_close, $style);
+				$this->assertGreaterThan($metadata_fieldset_close, $details, $style);
+			}
+			else
+			{
+				$metadata_list_close = strpos($template, '</ul>', $metadata);
+				$this->assertNotFalse($metadata_list_close, $style);
+				$this->assertGreaterThan($metadata, $metadata_list_close, $style);
+				$this->assertGreaterThan($metadata_list_close, $details, $style);
+			}
 		}
 	}
 

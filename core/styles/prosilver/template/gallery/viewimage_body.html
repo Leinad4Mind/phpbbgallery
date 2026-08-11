@@ -160,8 +160,10 @@
 				{{ S_FORM_TOKEN }}
 				</form>
 				{% endif %}
+				{% EVENT phpbbgallery_core_viewimage_metadata %}
 			</fieldset>
 			{% EVENT phpbbgallery_core_viewimage_details %}
+			{% EVENT phpbbgallery_core_viewimage_details_after %}
 			{% if IMAGE_URL or IMAGE_BBCODE %}
 			<fieldset class="fields1 anti-postbody gallery-image-sharing-fields">
 				{% if IMAGE_URL %}
