@@ -67,6 +67,14 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertStringContainsString('album_rating_stars.html', $classic);
 		$this->assertStringContainsString('S_STATUS_UNAPPROVED_ACTION', $classic);
 		$this->assertStringContainsString('grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr));', $css);
+		$this->assertMatchesRegularExpression(
+			'/\\.gallery-classic-thumbnail\\s*\\{[^}]*box-sizing:\\s*border-box;[^}]*overflow:\\s*hidden;/s',
+			$css
+		);
+		$this->assertMatchesRegularExpression(
+			'/\\.gallery-classic-thumbnail img\\s*\\{[^}]*max-width:\\s*100%;[^}]*max-height:\\s*calc\\(var\\(--gallery-classic-thumbnail-size\\) - 16px\\);[^}]*object-fit:\\s*contain;/s',
+			$css
+		);
 	}
 
 	public function test_album_recent_random_and_search_grids_use_the_layout_selector_in_every_style(): void
