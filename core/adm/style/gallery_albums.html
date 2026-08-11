@@ -82,7 +82,13 @@
 		<legend>{{ lang('ALBUM_SETTINGS') }}</legend>
 		<dl>
 			<dt><label for="album_type">{{ lang('ALBUM_TYPE') }}{{ lang('COLON') }}</label></dt>
-			<dd><select id="album_type" name="album_type" onchange="display_options(this.options[this.selectedIndex].value);">{{ S_ALBUM_TYPE_OPTIONS }}</select></dd>
+			<dd>
+				<select id="album_type"{% if not S_ALBUM_TYPE_LOCKED %} name="album_type" onchange="display_options(this.options[this.selectedIndex].value);"{% else %} disabled="disabled" aria-describedby="album_type_lock_explain"{% endif %}>{{ S_ALBUM_TYPE_OPTIONS }}</select>
+				{% if S_ALBUM_TYPE_LOCKED %}
+					<input type="hidden" name="album_type" value="{{ ALBUM_TYPE_VALUE }}" />
+					<br /><span id="album_type_lock_explain">{{ ALBUM_TYPE_LOCK_EXPLAIN }}</span>
+				{% endif %}
+			</dd>
 		</dl>
 	{% if not S_ADD_ACTION and S_ALBUM_ORIG_UPLOAD %}
 	<div id="type_actions">

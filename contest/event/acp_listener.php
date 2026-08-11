@@ -141,12 +141,18 @@ class acp_listener implements EventSubscriberInterface
 		$this->load_acp_language();
 		$album_data = (array) $event['album_data'];
 		$type_data = (array) $event['album_type_data'];
+		$is_existing_contest = (int) ($event['old_album_type'] ?? -1) === (int) manager::ALBUM_TYPE;
+		if ($is_existing_contest)
+		{
+			$event['album_type_locked'] = true;
+			$event['album_type_lock_explain'] = $this->language->lang('ALBUM_WITH_CONTEST_NO_TYPE_CHANGE');
+		}
 		$start = (int) ($type_data['contest_start'] ?? time());
 		$rating = $start + (int) ($type_data['contest_rating'] ?? 0);
 		$end = $start + (int) ($type_data['contest_end'] ?? 0);
 		$now = time();
 		$this->template->assign_vars([
-			'S_ALBUM_ORIG_CONTEST' => (int) ($event['old_album_type'] ?? -1) === (int) manager::ALBUM_TYPE,
+			'S_ALBUM_ORIG_CONTEST' => $is_existing_contest,
 			'S_ALBUM_CONTEST' => (int) ($album_data['album_type'] ?? -1) === (int) manager::ALBUM_TYPE,
 			'S_CONTEST_START_PAST' => $start <= $now,
 			'S_CONTEST_RATING_PAST' => $rating <= $now,

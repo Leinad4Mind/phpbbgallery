@@ -614,6 +614,7 @@ class albums_module
 					'S_DESC_URLS_CHECKED'		=> ($album_desc_data['allow_urls']) ? true : false,
 
 					'S_ALBUM_TYPE_OPTIONS'		=> $album_type_options,
+					'ALBUM_TYPE_VALUE'			=> (int) $album_data['album_type'],
 					'S_STATUS_OPTIONS'			=> $statuslist,
 					'S_PARENT_OPTIONS'			=> $parents_list,
 					'S_ALBUM_OPTIONS'			=> $phpbb_ext_gallery_core_album->get_albumbox(true, '', ($action == 'add') ? $album_data['parent_id'] : false, false, ($action == 'edit') ? $album_data['album_id'] : false),
@@ -641,11 +642,26 @@ class albums_module
 				* @var	action	action		Action taken
 				* @var	array	album_data	Album data array
 				* @var	array	album_type_data	Validated data owned by the selected album type
-				* @var	int|null	old_album_type	Previous album type when editing
+				* @var	int|null	old_album_type			Previous album type when editing
+				* @var	bool		album_type_locked		Whether the selected album type is immutable
+				* @var	string		album_type_lock_explain	Explanation shown beside an immutable album type
 				* @since 1.2.0
 				*/
-				$vars = ['action', 'album_data', 'album_type_data', 'old_album_type'];
+				$album_type_locked = false;
+				$album_type_lock_explain = '';
+				$vars = [
+					'action',
+					'album_data',
+					'album_type_data',
+					'old_album_type',
+					'album_type_locked',
+					'album_type_lock_explain',
+				];
 				extract($phpbb_dispatcher->trigger_event('phpbbgallery.core.acp.albums.send_to_template', compact($vars)));
+				$template->assign_vars([
+					'S_ALBUM_TYPE_LOCKED' => $album_type_locked,
+					'ALBUM_TYPE_LOCK_EXPLAIN' => $album_type_lock_explain,
+				]);
 
 				return;
 

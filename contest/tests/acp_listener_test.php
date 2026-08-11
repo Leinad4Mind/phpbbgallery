@@ -118,6 +118,46 @@ final class acp_listener_test extends TestCase
 		$this->assertSame(0, $default_event['album_type_data']['contest_start'] % 60);
 	}
 
+	public function test_existing_contest_locks_the_album_type_selector(): void
+	{
+		$language = $this->createStub(\phpbb\language\language::class);
+		$language->method('lang')->willReturnCallback(static fn(string $key): string => $key);
+		$template = $this->createMock(\phpbb\template\template::class);
+		$template->expects($this->once())
+			->method('assign_vars')
+			->with($this->callback(static function (array $vars): bool
+			{
+				return $vars['S_ALBUM_ORIG_CONTEST'] === true
+					&& $vars['S_ALBUM_CONTEST'] === true;
+			}));
+		$template->expects($this->once())->method('assign_block_vars');
+		$user = $this->createStub(\phpbb\user::class);
+		$user->method('format_date')->willReturn('2026-08-20T12:00');
+		$listener = new acp_listener(
+			$language,
+			$this->createStub(\phpbb\request\request_interface::class),
+			$template,
+			$user,
+			$this->createStub(\phpbbgallery\contest\manager::class)
+		);
+		$event = new \phpbb\event\data([
+			'album_data' => ['album_type' => \phpbbgallery\contest\manager::ALBUM_TYPE],
+			'album_type_data' => [
+				'contest_start' => time() + 3600,
+				'contest_rating' => 3600,
+				'contest_end' => 7200,
+			],
+			'old_album_type' => \phpbbgallery\contest\manager::ALBUM_TYPE,
+			'album_type_locked' => false,
+			'album_type_lock_explain' => '',
+		]);
+
+		$listener->send_album_type_to_template($event);
+
+		$this->assertTrue($event['album_type_locked']);
+		$this->assertSame('ALBUM_WITH_CONTEST_NO_TYPE_CHANGE', $event['album_type_lock_explain']);
+	}
+
 	public function test_listener_resyncs_contest_after_album_ratings_are_reset(): void
 	{
 		$manager = $this->createMock(\phpbbgallery\contest\manager::class);

@@ -33,6 +33,20 @@ final class acp_album_type_extension_points_test extends TestCase
 		$this->assertStringNotContainsString('onload = function()', $template);
 	}
 
+	public function test_album_types_can_be_locked_without_losing_the_submitted_value(): void
+	{
+		$template = (string) file_get_contents(dirname(__DIR__) . '/adm/style/gallery_albums.html');
+		$module = (string) file_get_contents(dirname(__DIR__) . '/acp/albums_module.php');
+
+		$this->assertStringContainsString('{% if not S_ALBUM_TYPE_LOCKED %}', $template);
+		$this->assertStringContainsString('disabled="disabled" aria-describedby="album_type_lock_explain"', $template);
+		$this->assertStringContainsString('<input type="hidden" name="album_type" value="{{ ALBUM_TYPE_VALUE }}" />', $template);
+		$this->assertStringContainsString('{{ ALBUM_TYPE_LOCK_EXPLAIN }}', $template);
+		$this->assertStringContainsString("'album_type_locked'", $module);
+		$this->assertStringContainsString("'album_type_lock_explain'", $module);
+		$this->assertStringContainsString("'S_ALBUM_TYPE_LOCKED' => \$album_type_locked", $module);
+	}
+
 	public function test_album_icon_accept_filter_is_runtime_capability_aware(): void
 	{
 		$template = (string) file_get_contents(dirname(__DIR__) . '/adm/style/gallery_albums.html');
