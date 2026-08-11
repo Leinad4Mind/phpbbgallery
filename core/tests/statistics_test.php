@@ -61,6 +61,55 @@ final class statistics_test extends TestCase
 		$this->assertSame([], $state->queries);
 	}
 
+	public function test_legacy_period_preserves_historical_totals_without_assigning_them_to_old_years(): void
+	{
+		$tracking_start = (new \DateTimeImmutable('2026-08-11 12:00:00', new \DateTimeZone('Europe/Lisbon')))->getTimestamp();
+		$first_image = (new \DateTimeImmutable('2007-03-04 09:00:00', new \DateTimeZone('Europe/Lisbon')))->getTimestamp();
+		[$db, $state] = $this->dashboard_database($first_image, $tracking_start);
+		$config = new \phpbb\config\config([
+			'board_timezone' => 'Europe/Lisbon',
+			'phpbb_gallery_statistics_tracking_start' => $tracking_start,
+		]);
+		$statistics = new statistics($db, $config, 'images', 'statistics', 'users');
+
+		// Direct links to an untracked old year resolve to the single honest
+		// historical period instead of showing an artificial annual result.
+		$data = $statistics->dashboard([4], 2025);
+
+		$this->assertSame(statistics::PERIOD_LEGACY, $data['year']);
+		$this->assertSame($first_image, $data['legacy_start']);
+		$this->assertContains(2026, $data['years']);
+		$this->assertNotContains(2025, $data['years']);
+		$this->assertSame([
+			'image_count' => 2,
+			'uploader_count' => 2,
+			'view_count' => 96,
+			'download_count' => 17,
+		], $data['summary']);
+
+		$sql = implode("\n", $state->queries);
+		$this->assertStringContainsString('s.stat_year > 0', $sql);
+		$this->assertStringContainsString('CASE WHEN i.image_view_count > COALESCE(SUM(s.stat_count), 0)', $sql);
+		$this->assertStringContainsString('CASE WHEN i.image_download_count > COALESCE(SUM(s.stat_count), 0)', $sql);
+		$this->assertStringContainsString('s.stat_year = 0', $sql);
+		$this->assertStringContainsString('i.image_time < ' . $tracking_start, $sql);
+	}
+
+	public function test_tracking_year_starts_at_the_exact_migration_timestamp(): void
+	{
+		$tracking_start = (new \DateTimeImmutable('2026-08-11 12:00:00', new \DateTimeZone('Europe/Lisbon')))->getTimestamp();
+		[$db, $state] = $this->dashboard_database($tracking_start - 1000, $tracking_start);
+		$statistics = new statistics($db, new \phpbb\config\config([
+			'board_timezone' => 'Europe/Lisbon',
+			'phpbb_gallery_statistics_tracking_start' => $tracking_start,
+		]), 'images', 'statistics', 'users');
+
+		$data = $statistics->dashboard([4], 2026);
+
+		$this->assertSame(2026, $data['year']);
+		$this->assertStringContainsString('i.image_time >= ' . $tracking_start, implode("\n", $state->queries));
+	}
+
 	public function test_page_is_routed_permission_filtered_and_linked_from_all_styles(): void
 	{
 		$core = dirname(__DIR__);
@@ -80,6 +129,11 @@ final class statistics_test extends TestCase
 		$this->assertStringContainsString('class="selectpicker"', $template);
 		$this->assertStringContainsString('class="button1 btn btn-default"', $template);
 		$this->assertStringContainsString('S_STATISTICS_HIDDEN_FIELDS', $template);
+		$this->assertStringContainsString('period.VALUE', $template);
+		$this->assertStringContainsString('period.LABEL', $template);
+		$this->assertStringContainsString('STATISTICS_LEGACY_TRACKING_NOTICE', $template);
+		$this->assertStringContainsString('STATISTICS_LEGACY_PERIOD', $controller);
+		$this->assertStringContainsString('STATISTICS_PARTIAL_YEAR', $controller);
 		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
 		{
 			$index = (string) file_get_contents($core . '/styles/' . $style . '/template/gallery/index_body.html');
@@ -162,6 +216,71 @@ final class statistics_test extends TestCase
 		$db->method('sql_in_set')->willReturnCallback(static fn (string $field, array $values): string => $field . ' IN (' . implode(',', array_map('intval', $values)) . ')');
 		$db->method('sql_affectedrows')->willReturnCallback(static fn (): int => $state->affected);
 		$db->method('get_sql_error_triggered')->willReturn(false);
+
+		return [$db, $state];
+	}
+
+	/** @return array{0: \phpbb\db\driver\driver_interface, 1: object} */
+	private function dashboard_database(int $first_image, int $tracking_start): array
+	{
+		$state = (object) [
+			'queries' => [],
+			'results' => [],
+			'next_result' => 0,
+		];
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$make_result = static function (string $sql, array $rows) use ($state): string
+		{
+			$state->queries[] = $sql;
+			$result = 'result_' . ++$state->next_result;
+			$state->results[$result] = $rows;
+
+			return $result;
+		};
+		$db->method('sql_query')->willReturnCallback(static function (string $sql) use ($make_result, $first_image, $tracking_start): string
+		{
+			if (str_contains($sql, 'MIN(i.image_time) AS first_time'))
+			{
+				return $make_result($sql, [['first_time' => $first_image, 'last_time' => $tracking_start + 1000]]);
+			}
+			if (str_contains($sql, 'SELECT DISTINCT s.stat_year'))
+			{
+				return $make_result($sql, [['stat_year' => 2026]]);
+			}
+			if (str_contains($sql, 'COUNT(i.image_id) AS image_count'))
+			{
+				return $make_result($sql, [[
+					'image_count' => 2,
+					'uploader_count' => 2,
+					'lifetime_views' => 100,
+					'lifetime_downloads' => 20,
+				]]);
+			}
+			if (str_contains($sql, 'SELECT s.stat_type, SUM(s.stat_count) AS total'))
+			{
+				return $make_result($sql, [
+					['stat_type' => statistics::TYPE_VIEW, 'total' => 4],
+					['stat_type' => statistics::TYPE_DOWNLOAD, 'total' => 3],
+				]);
+			}
+
+			return $make_result($sql, []);
+		});
+		$db->method('sql_query_limit')->willReturnCallback(static fn (string $sql): string => $make_result($sql, []));
+		$db->method('sql_fetchrow')->willReturnCallback(static function (string $result) use ($state): array|false
+		{
+			if (empty($state->results[$result]))
+			{
+				return false;
+			}
+
+			return array_shift($state->results[$result]);
+		});
+		$db->method('sql_freeresult')->willReturnCallback(static function (string $result) use ($state): void
+		{
+			unset($state->results[$result]);
+		});
+		$db->method('sql_in_set')->willReturnCallback(static fn (string $field, array $values): string => $field . ' IN (' . implode(',', array_map('intval', $values)) . ')');
 
 		return [$db, $state];
 	}

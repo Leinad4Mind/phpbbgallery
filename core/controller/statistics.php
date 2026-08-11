@@ -20,7 +20,6 @@ final class statistics
 		private \phpbb\controller\helper $helper,
 		private \phpbbgallery\core\auth\auth $gallery_auth,
 		private \phpbbgallery\core\statistics $statistics,
-		private \phpbb\config\config $config,
 		private \phpbbgallery\core\config $gallery_config
 	)
 	{
@@ -50,12 +49,16 @@ final class statistics
 		$data = $this->statistics->dashboard($album_ids, $year);
 		$year = (int) $data['year'];
 		$summary = (array) $data['summary'];
-		$tracking_start = (int) ($this->config['phpbb_gallery_statistics_tracking_start'] ?? 0);
+		$tracking_start = (int) ($data['tracking_start'] ?? 0);
+		$tracking_year = (int) ($data['tracking_year'] ?? 0);
+		$legacy_start = (int) ($data['legacy_start'] ?? 0);
+		$tracking_date = $tracking_start > 0 ? $this->user->format_date($tracking_start, false, true) : '';
 		$statistics_action = $this->helper->route('phpbbgallery_core_statistics');
 
 		$this->template->assign_vars([
 			'S_STATISTICS_YEAR' => $year,
-			'S_STATISTICS_ALL_TIME' => $year === 0,
+			'S_STATISTICS_ALL_TIME' => $year === \phpbbgallery\core\statistics::PERIOD_ALL_TIME,
+			'S_STATISTICS_LEGACY_PERIOD' => $year === \phpbbgallery\core\statistics::PERIOD_LEGACY,
 			'S_STATISTICS_ACTION' => $statistics_action,
 			'S_STATISTICS_HIDDEN_FIELDS' => build_hidden_fields($this->get_query_fields($statistics_action)),
 			'U_STATISTICS_ALL_TIME' => $this->helper->route('phpbbgallery_core_statistics'),
@@ -64,16 +67,32 @@ final class statistics
 			'SUMMARY_DOWNLOADS' => (int) ($summary['download_count'] ?? 0),
 			'SUMMARY_UPLOADERS' => (int) ($summary['uploader_count'] ?? 0),
 			'S_STATISTICS_TRACKING_START' => $tracking_start > 0,
-			'STATISTICS_TRACKING_START' => $tracking_start > 0 ? $this->user->format_date($tracking_start, 'Y-m-d') : '',
+			'STATISTICS_TRACKING_START' => $tracking_date,
 		]);
 
 		foreach ((array) $data['years'] as $available_year)
 		{
 			$available_year = (int) $available_year;
 			$this->template->assign_block_vars('statistics_years', [
-				'YEAR' => $available_year,
+				'VALUE' => $available_year,
+				'LABEL' => $available_year === $tracking_year && $tracking_start > 0
+					? $this->language->lang('STATISTICS_PARTIAL_YEAR', $available_year, $tracking_date)
+					: (string) $available_year,
 				'S_SELECTED' => $available_year === $year,
 				'U_YEAR' => $this->helper->route('phpbbgallery_core_statistics', ['year' => $available_year]),
+			]);
+		}
+		if ($legacy_start > 0 && $tracking_start > 0)
+		{
+			$this->template->assign_block_vars('statistics_years', [
+				'VALUE' => \phpbbgallery\core\statistics::PERIOD_LEGACY,
+				'LABEL' => $this->language->lang(
+					'STATISTICS_LEGACY_PERIOD',
+					$this->user->format_date($legacy_start, 'Y', true),
+					$tracking_date
+				),
+				'S_SELECTED' => $year === \phpbbgallery\core\statistics::PERIOD_LEGACY,
+				'U_YEAR' => $this->helper->route('phpbbgallery_core_statistics', ['year' => \phpbbgallery\core\statistics::PERIOD_LEGACY]),
 			]);
 		}
 
@@ -89,7 +108,7 @@ final class statistics
 		]);
 		$this->template->assign_block_vars('navlinks', [
 			'FORUM_NAME' => $this->language->lang('GALLERY_STATISTICS'),
-			'U_VIEW_FORUM' => $this->helper->route('phpbbgallery_core_statistics', $year > 0 ? ['year' => $year] : []),
+			'U_VIEW_FORUM' => $this->helper->route('phpbbgallery_core_statistics', $year !== \phpbbgallery\core\statistics::PERIOD_ALL_TIME ? ['year' => $year] : []),
 		]);
 
 		return $this->helper->render(

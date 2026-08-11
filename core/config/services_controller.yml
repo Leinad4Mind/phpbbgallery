@@ -162,7 +162,6 @@ services:
             - '@controller.helper'
             - '@phpbbgallery.core.auth'
             - '@phpbbgallery.core.statistics'
-            - '@config'
             - '@phpbbgallery.core.config'
     phpbbgallery.core.controller.index:
         class: phpbbgallery\core\controller\index

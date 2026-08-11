@@ -15,6 +15,8 @@ final class statistics
 	public const TYPE_VIEW = 1;
 	public const TYPE_DOWNLOAD = 2;
 	public const DEFAULT_LIMIT = 10;
+	public const PERIOD_ALL_TIME = 0;
+	public const PERIOD_LEGACY = -1;
 
 	public function __construct(
 		private \phpbb\db\driver\driver_interface $db,
@@ -87,6 +89,9 @@ final class statistics
 			return [
 				'year' => $year,
 				'years' => [],
+				'legacy_start' => 0,
+				'tracking_start' => $this->tracking_start(),
+				'tracking_year' => $this->tracking_year(),
 				'summary' => $this->empty_summary(),
 				'top_viewed' => [],
 				'top_downloaded' => [],
@@ -95,9 +100,14 @@ final class statistics
 			];
 		}
 
+		$periods = $this->available_periods($album_ids);
+
 		return [
 			'year' => $year,
-			'years' => $this->available_years($album_ids),
+			'years' => $periods['years'],
+			'legacy_start' => $periods['legacy_start'],
+			'tracking_start' => $this->tracking_start(),
+			'tracking_year' => $this->tracking_year(),
 			'summary' => $this->summary($album_ids, $year),
 			'top_viewed' => $this->top_images($album_ids, $year, self::TYPE_VIEW, $limit),
 			'top_downloaded' => $this->top_images($album_ids, $year, self::TYPE_DOWNLOAD, $limit),
@@ -110,9 +120,13 @@ final class statistics
 	private function summary(array $album_ids, int $year): array
 	{
 		$where = $this->get_sql_where($album_ids, 'i');
-		if ($year > 0)
+		if ($year === self::PERIOD_LEGACY)
 		{
-			[$start, $end] = $this->year_bounds($year);
+			$where .= ' AND i.image_time < ' . $this->tracking_start();
+		}
+		else if ($year > 0)
+		{
+			[$start, $end] = $this->period_bounds($year);
 			$where .= ' AND i.image_time >= ' . $start . ' AND i.image_time < ' . $end;
 		}
 
@@ -129,11 +143,34 @@ final class statistics
 		$summary = [
 			'image_count' => (int) ($row['image_count'] ?? 0),
 			'uploader_count' => (int) ($row['uploader_count'] ?? 0),
-			'view_count' => $year === 0 ? (int) ($row['lifetime_views'] ?? 0) : 0,
-			'download_count' => $year === 0 ? (int) ($row['lifetime_downloads'] ?? 0) : 0,
+			'view_count' => $year <= self::PERIOD_ALL_TIME ? (int) ($row['lifetime_views'] ?? 0) : 0,
+			'download_count' => $year <= self::PERIOD_ALL_TIME ? (int) ($row['lifetime_downloads'] ?? 0) : 0,
 		];
 
-		if ($year > 0)
+		if ($year === self::PERIOD_LEGACY)
+		{
+			$sql = 'SELECT s.stat_type, SUM(s.stat_count) AS total
+				FROM ' . $this->statistics_table . ' s
+				INNER JOIN ' . $this->images_table . ' i ON i.image_id = s.image_id
+				WHERE s.stat_year > 0
+					AND i.image_time < ' . $this->tracking_start() . '
+					AND ' . $this->get_sql_where($album_ids, 'i') . '
+				GROUP BY s.stat_type';
+			$result = $this->db->sql_query($sql);
+			while ($stat = $this->db->sql_fetchrow($result))
+			{
+				if ((int) $stat['stat_type'] === self::TYPE_VIEW)
+				{
+					$summary['view_count'] = max(0, $summary['view_count'] - (int) $stat['total']);
+				}
+				else if ((int) $stat['stat_type'] === self::TYPE_DOWNLOAD)
+				{
+					$summary['download_count'] = max(0, $summary['download_count'] - (int) $stat['total']);
+				}
+			}
+			$this->db->sql_freeresult($result);
+		}
+		else if ($year > 0)
 		{
 			$sql = 'SELECT s.stat_type, SUM(s.stat_count) AS total
 				FROM ' . $this->statistics_table . ' s
@@ -163,7 +200,7 @@ final class statistics
 	private function top_images(array $album_ids, int $year, int $type, int $limit): array
 	{
 		$metric_column = $type === self::TYPE_VIEW ? 'image_view_count' : 'image_download_count';
-		if ($year === 0)
+		if ($year === self::PERIOD_ALL_TIME)
 		{
 			$sql = 'SELECT i.image_id, i.image_name, i.image_user_id, i.image_username,
 					i.image_user_colour, i.image_album_id, i.' . $metric_column . ' AS metric
@@ -171,6 +208,24 @@ final class statistics
 				WHERE ' . $this->get_sql_where($album_ids, 'i') . '
 					AND i.' . $metric_column . ' > 0
 				ORDER BY i.' . $metric_column . ' DESC, i.image_id DESC';
+		}
+		else if ($year === self::PERIOD_LEGACY)
+		{
+			$sql = 'SELECT i.image_id, i.image_name, i.image_user_id, i.image_username,
+					i.image_user_colour, i.image_album_id,
+					CASE WHEN i.' . $metric_column . ' > COALESCE(SUM(s.stat_count), 0)
+						THEN i.' . $metric_column . ' - COALESCE(SUM(s.stat_count), 0)
+						ELSE 0 END AS metric
+				FROM ' . $this->images_table . ' i
+				LEFT JOIN ' . $this->statistics_table . ' s ON s.image_id = i.image_id
+					AND s.stat_type = ' . (int) $type . '
+					AND s.stat_year > 0
+				WHERE ' . $this->get_sql_where($album_ids, 'i') . '
+					AND i.image_time < ' . $this->tracking_start() . '
+				GROUP BY i.image_id, i.image_name, i.image_user_id, i.image_username,
+					i.image_user_colour, i.image_album_id, i.' . $metric_column . '
+				HAVING i.' . $metric_column . ' > COALESCE(SUM(s.stat_count), 0)
+				ORDER BY metric DESC, i.image_id DESC';
 		}
 		else if ($type === self::TYPE_VIEW)
 		{
@@ -208,9 +263,13 @@ final class statistics
 	{
 		$where = $this->get_sql_where($album_ids, 'i') . '
 			AND u.user_id > ' . $this->anonymous_user_id();
-		if ($year > 0)
+		if ($year === self::PERIOD_LEGACY)
 		{
-			[$start, $end] = $this->year_bounds($year);
+			$where .= ' AND i.image_time < ' . $this->tracking_start();
+		}
+		else if ($year > 0)
+		{
+			[$start, $end] = $this->period_bounds($year);
 			$where .= ' AND i.image_time >= ' . $start . ' AND i.image_time < ' . $end;
 		}
 
@@ -231,7 +290,12 @@ final class statistics
 			AND s.user_id > ' . $this->anonymous_user_id() . '
 			AND s.stat_count > 0
 			AND ' . $this->get_sql_where($album_ids, 'i');
-		if ($year > 0)
+		if ($year === self::PERIOD_LEGACY)
+		{
+			$where .= ' AND s.stat_year = 0
+				AND i.image_time < ' . $this->tracking_start();
+		}
+		else if ($year > 0)
 		{
 			$where .= ' AND s.stat_year = ' . (int) $year;
 		}
@@ -247,8 +311,8 @@ final class statistics
 		return $this->fetch_rows($sql, $limit);
 	}
 
-	/** @param array<int> $album_ids @return array<int> */
-	private function available_years(array $album_ids): array
+	/** @param array<int> $album_ids @return array{years: array<int>, legacy_start: int} */
+	private function available_periods(array $album_ids): array
 	{
 		$sql = 'SELECT MIN(i.image_time) AS first_time, MAX(i.image_time) AS last_time
 			FROM ' . $this->images_table . ' i
@@ -260,7 +324,17 @@ final class statistics
 		$years = [];
 		$first_time = (int) ($row['first_time'] ?? 0);
 		$last_time = (int) ($row['last_time'] ?? 0);
-		if ($first_time > 0 && $last_time >= $first_time)
+		$tracking_start = $this->tracking_start();
+		$tracking_year = $this->tracking_year();
+		$current_year = $this->year_for_timestamp(time());
+		if ($tracking_start > 0)
+		{
+			for ($year = $current_year; $year >= $tracking_year; $year--)
+			{
+				$years[] = $year;
+			}
+		}
+		else if ($first_time > 0 && $last_time >= $first_time)
 		{
 			$first_year = $this->year_for_timestamp($first_time);
 			$last_year = $this->year_for_timestamp($last_time);
@@ -279,7 +353,7 @@ final class statistics
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$stat_year = (int) $row['stat_year'];
-			if ($stat_year >= 1970)
+			if ($stat_year >= max(1970, $tracking_year))
 			{
 				$years[] = $stat_year;
 			}
@@ -288,7 +362,10 @@ final class statistics
 		$years = array_values(array_unique($years));
 		rsort($years, SORT_NUMERIC);
 
-		return $years;
+		return [
+			'years' => $years,
+			'legacy_start' => $tracking_start > 0 && $first_time > 0 && $first_time < $tracking_start ? $first_time : 0,
+		];
 	}
 
 	/** @return array<int, array<string, mixed>> */
@@ -345,11 +422,16 @@ final class statistics
 	}
 
 	/** @return array{0: int, 1: int} */
-	private function year_bounds(int $year): array
+	private function period_bounds(int $year): array
 	{
 		$timezone = $this->board_timezone();
 		$start = new \DateTimeImmutable($year . '-01-01 00:00:00', $timezone);
 		$end = $start->modify('+1 year');
+		$tracking_start = $this->tracking_start();
+		if ($year === $this->tracking_year() && $tracking_start > $start->getTimestamp())
+		{
+			return [$tracking_start, $end->getTimestamp()];
+		}
 
 		return [$start->getTimestamp(), $end->getTimestamp()];
 	}
@@ -376,8 +458,26 @@ final class statistics
 	private function normalise_year(int $year): int
 	{
 		$current_year = $this->year_for_timestamp(time());
+		$tracking_start = $this->tracking_start();
+		$tracking_year = $this->tracking_year();
+		if ($tracking_start > 0 && ($year === self::PERIOD_LEGACY || ($year >= 1970 && $year < $tracking_year)))
+		{
+			return self::PERIOD_LEGACY;
+		}
 
-		return $year >= 1970 && $year <= $current_year ? $year : 0;
+		return $year >= max(1970, $tracking_year) && $year <= $current_year ? $year : self::PERIOD_ALL_TIME;
+	}
+
+	private function tracking_start(): int
+	{
+		return max(0, (int) ($this->config['phpbb_gallery_statistics_tracking_start'] ?? 0));
+	}
+
+	private function tracking_year(): int
+	{
+		$tracking_start = $this->tracking_start();
+
+		return $tracking_start > 0 ? $this->year_for_timestamp($tracking_start) : 1970;
 	}
 
 	/** @param array<int> $ids @return array<int> */

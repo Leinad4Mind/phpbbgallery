@@ -12,7 +12,7 @@
 			<select id="gallery-statistics-year" name="year" class="selectpicker" data-container="body" data-width="auto" data-style="btn btn-default form-control">
 				<option value="0"{% if S_STATISTICS_ALL_TIME %} selected="selected"{% endif %}>{{ lang('STATISTICS_ALL_TIME') }}</option>
 				{% for period in statistics_years %}
-					<option value="{{ period.YEAR }}"{% if period.S_SELECTED %} selected="selected"{% endif %}>{{ period.YEAR }}</option>
+					<option value="{{ period.VALUE }}"{% if period.S_SELECTED %} selected="selected"{% endif %}>{{ period.LABEL }}</option>
 				{% endfor %}
 			</select>
 			<button type="submit" class="button1 btn btn-default">{{ lang('GO') }}</button>
@@ -45,7 +45,11 @@
 	{% if S_STATISTICS_TRACKING_START %}
 		<div class="gallery-statistics-notice">
 			<span class="fa fa-info-circle" aria-hidden="true"></span>
-			{{ lang('STATISTICS_ANNUAL_TRACKING_NOTICE', STATISTICS_TRACKING_START) }}
+			{% if S_STATISTICS_LEGACY_PERIOD %}
+				{{ lang('STATISTICS_LEGACY_TRACKING_NOTICE', STATISTICS_TRACKING_START) }}
+			{% else %}
+				{{ lang('STATISTICS_ANNUAL_TRACKING_NOTICE', STATISTICS_TRACKING_START) }}
+			{% endif %}
 		</div>
 	{% endif %}
 
