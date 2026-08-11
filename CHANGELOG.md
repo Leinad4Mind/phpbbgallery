@@ -49,6 +49,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Reclassified the Gallery-managed personal-album profile field so it is no longer presented as contact data, and exposed visible personal albums as dedicated permission- and zebra-filtered profile links for image and comment authors.
 - Enforced the strictest effective upload allowance across the configured batch size, remaining album capacity and selected author's quota in both progressive and fallback uploads, counting unapproved images and resumable drafts while displaying the real remaining allowance before selection.
 - Matched phpBB's native ACP permission selectors by grouping system groups first and displaying them in bold in both managed and available Gallery group lists.
 - Separated published rating-result visibility from permission to submit ratings, so completed contest scores remain visible to every image viewer while active contest results stay protected.

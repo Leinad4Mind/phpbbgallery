@@ -51,6 +51,7 @@ use phpbbgallery\core\migrations\image_orientation;
 use phpbbgallery\core\migrations\index_album_layout;
 use phpbbgallery\core\migrations\gallery_index_featured_modes;
 use phpbbgallery\core\migrations\group_leader_permissions;
+use phpbbgallery\core\migrations\relocate_personal_album_profile_field;
 
 class migration_integrity_test extends TestCase
 {
@@ -95,6 +96,7 @@ class migration_integrity_test extends TestCase
 		index_album_layout::class,
 		gallery_index_featured_modes::class,
 		group_leader_permissions::class,
+		relocate_personal_album_profile_field::class,
 		release_4_1_0::class,
 	];
 
@@ -298,7 +300,7 @@ class migration_integrity_test extends TestCase
 		$migration = (new \ReflectionClass(release_4_1_0::class))->newInstanceWithoutConstructor();
 
 		$this->assertSame([
-			'\\phpbbgallery\\core\\migrations\\group_leader_permissions',
+			'\\phpbbgallery\\core\\migrations\\relocate_personal_album_profile_field',
 		], release_4_1_0::depends_on());
 		$this->assertSame([
 			['config.update', ['phpbb_gallery_version', '4.1.0']],
@@ -325,6 +327,37 @@ class migration_integrity_test extends TestCase
 		(new \ReflectionProperty(\phpbb\db\migration\migration::class, 'db'))->setValue($migration, $db);
 
 		$this->assertTrue($migration->clear_gallery_permission_cache());
+	}
+
+	public function test_personal_album_profile_field_is_no_longer_a_contact_method(): void
+	{
+		$migration = (new \ReflectionClass(relocate_personal_album_profile_field::class))->newInstanceWithoutConstructor();
+		(new \ReflectionProperty(\phpbb\db\migration\migration::class, 'table_prefix'))->setValue($migration, 'phpbb_');
+
+		$this->assertSame([
+			'\\phpbbgallery\\core\\migrations\\group_leader_permissions',
+		], relocate_personal_album_profile_field::depends_on());
+		$this->assertSame([
+			['custom', [[$migration, 'hide_legacy_contact_field']]],
+		], $migration->update_data());
+		$this->assertSame([], $migration->revert_data());
+
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->method('sql_escape')->with('gallery_palbum')->willReturn('gallery_palbum');
+		$db->expects($this->once())
+			->method('sql_query')
+			->with($this->callback(static function (string $sql): bool
+			{
+				return str_contains($sql, 'UPDATE phpbb_profile_fields')
+					&& str_contains($sql, 'field_show_on_vt = 0')
+					&& str_contains($sql, 'field_show_on_pm = 0')
+					&& str_contains($sql, 'field_show_profile = 0')
+					&& str_contains($sql, 'field_is_contact = 0')
+					&& str_contains($sql, "field_ident = 'gallery_palbum'");
+			}));
+		(new \ReflectionProperty(\phpbb\db\migration\migration::class, 'db'))->setValue($migration, $db);
+
+		$this->assertTrue($migration->hide_legacy_contact_field());
 	}
 
 	public function test_source_access_policy_is_independent_and_defaults_to_no_bypass(): void
@@ -1153,6 +1186,7 @@ class migration_integrity_test extends TestCase
 			'index_album_layout.php',
 			'gallery_index_featured_modes.php',
 			'group_leader_permissions.php',
+			'relocate_personal_album_profile_field.php',
 			'release_4_1_0.php',
 		] as $migration)
 		{

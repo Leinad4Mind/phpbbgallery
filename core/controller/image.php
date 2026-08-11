@@ -16,6 +16,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class image
 {
+	private const PERSONAL_ALBUM_PROFILE_FIELD = 'gallery_palbum';
+
 	/** @var \phpbb\request\request_interface */
 	protected \phpbb\request\request_interface $request;
 
@@ -138,6 +140,9 @@ class image
 
 	/** @var array */
 	protected array $can_receive_pm_list = [];
+
+	/** Personal albums excluded by the active viewer's zebra rules. */
+	protected ?array $excluded_personal_album_ids = null;
 
 	/** @var string */
 	protected string $table_albums;
@@ -659,6 +664,7 @@ class image
 
 				//'U_POSTER_PROFILE'		=> $user_data['profile'] ?? '',
 				'U_POSTER_SEARCH' => $user_data['search'] ?? '',
+				'U_POSTER_PERSONAL_ALBUM' => $this->visible_personal_album_url($user_data),
 				'U_POSTER_PM'     => $u_poster_pm,
 				'U_POSTER_EMAIL'  => $u_poster_email,
 				'U_POSTER_JABBER' => $u_poster_jabber,
@@ -1017,6 +1023,10 @@ class image
 
 		foreach ($profile_fields['blockrow'] ?? [] as $field_data)
 		{
+			if (($field_data['PROFILE_FIELD_IDENT'] ?? '') === self::PERSONAL_ALBUM_PROFILE_FIELD)
+			{
+				continue;
+			}
 			if ($field_data['S_PROFILE_CONTACT'])
 			{
 				$this->template->assign_block_vars('contact', [
@@ -1073,6 +1083,34 @@ class image
 	}
 
 	/**
+	 * Resolve a visible personal-album link independently from the legacy
+	 * custom profile field that incorrectly classified it as contact data.
+	 *
+	 * @param array $user_data Cached phpBB and Gallery user row
+	 * @return string Permission-filtered personal-album URL
+	 */
+	private function visible_personal_album_url(array $user_data): string
+	{
+		$album_id = (int) ($user_data['personal_album_id'] ?? 0);
+		$user_id = (int) ($user_data['user_id'] ?? 0);
+		if ($album_id <= 0 || $user_id <= (int) ANONYMOUS)
+		{
+			return '';
+		}
+		if ($this->excluded_personal_album_ids === null)
+		{
+			$this->excluded_personal_album_ids = array_map('intval', $this->gallery_auth->get_exclude_zebra());
+		}
+		if (!$this->gallery_auth->acl_check('i_view', $album_id, $user_id)
+			|| in_array($album_id, $this->excluded_personal_album_ids, true))
+		{
+			return '';
+		}
+
+		return $this->helper->route('phpbbgallery_core_album', ['album_id' => $album_id]);
+	}
+
+	/**
 	 * Assign an anonymous poster shell for data protected by an add-on policy.
 	 *
 	 * Every profile and contact variable used by the bundled styles is cleared so
@@ -1114,6 +1152,7 @@ class image
 			'U_POSTER_JABBER'           => '',
 			'U_POSTER_GALLERY'          => '',
 			'U_POSTER_GALLERY_SEARCH'   => '',
+			'U_POSTER_PERSONAL_ALBUM'   => '',
 			'U_POSTER_WHOIS'            => '',
 			'S_POSTER_ONLINE'           => false,
 			'S_CUSTOM_FIELDS'           => false,
@@ -1246,6 +1285,7 @@ class image
 					'POSTER_COLOUR'   => get_username_string('colour', $display_poster_id, $poster_username, $poster_colour),
 					'POSTER_USERNAME' => get_username_string('username', $display_poster_id, $poster_username, $poster_colour),
 					'U_POSTER'        => get_username_string('profile', $display_poster_id, $poster_username, $poster_colour),
+					'U_POSTER_PERSONAL_ALBUM' => $user_deleted ? '' : $this->visible_personal_album_url($user_data),
 					'POSTER_IP'       => ($this->auth->acl_get('a_')) ? $row['comment_user_ip'] : '',
 
 					'SIGNATURE'              => ($row['comment_signature'] && !$user_deleted) ? ($user_data['sig'] ?? '') : '',
@@ -1283,6 +1323,10 @@ class image
 				{
 					foreach ($cp_row['blockrow'] as $field_data)
 					{
+						if (($field_data['PROFILE_FIELD_IDENT'] ?? '') === self::PERSONAL_ALBUM_PROFILE_FIELD)
+						{
+							continue;
+						}
 						if ($field_data['S_PROFILE_CONTACT'])
 						{
 							$this->template->assign_block_vars('commentrow.contact', [
@@ -2051,6 +2095,7 @@ class image
 		$this->users_data_array = [];
 		$this->profile_fields_data = [];
 		$this->can_receive_pm_list = [];
+		$this->excluded_personal_album_ids = null;
 	}
 
 	/**

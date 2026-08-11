@@ -75,6 +75,7 @@ final class controller_image_types_test extends TestCase
 		{
 			$reflection->getProperty($property_name)->setValue($controller, ['stale' => true]);
 		}
+		$reflection->getProperty('excluded_personal_album_ids')->setValue($controller, [9]);
 
 		$reflection->getMethod('reset_request_state')->invoke($controller);
 
@@ -82,6 +83,7 @@ final class controller_image_types_test extends TestCase
 		{
 			$this->assertSame([], $reflection->getProperty($property_name)->getValue($controller));
 		}
+		$this->assertNull($reflection->getProperty('excluded_personal_album_ids')->getValue($controller));
 	}
 
 	public function test_invalid_sort_keys_fall_back_to_time(): void
@@ -297,6 +299,12 @@ final class controller_image_types_test extends TestCase
 						'PROFILE_FIELD_NAME' => 'Website',
 						'PROFILE_FIELD_CONTACT' => 'https://example.test',
 					],
+					[
+						'S_PROFILE_CONTACT' => true,
+						'PROFILE_FIELD_IDENT' => 'gallery_palbum',
+						'PROFILE_FIELD_NAME' => 'Gallery',
+						'PROFILE_FIELD_CONTACT' => 'https://example.test/gallery/album/7',
+					],
 				],
 			]);
 		$assigned_vars = [];
@@ -319,7 +327,44 @@ final class controller_image_types_test extends TestCase
 
 		$this->assertSame(['PROFILE_CAMERA_VALUE' => 'Camera'], $assigned_vars);
 		$this->assertSame('camera', $assigned_blocks['custom_fields'][0]['PROFILE_FIELD_IDENT']);
+		$this->assertCount(1, $assigned_blocks['contact']);
 		$this->assertSame('https://example.test', $assigned_blocks['contact'][0]['U_CONTACT']);
+	}
+
+	public function test_personal_album_link_is_permission_filtered_and_zebra_list_is_loaded_once(): void
+	{
+		$reflection = new \ReflectionClass(image::class);
+		$controller = $reflection->newInstanceWithoutConstructor();
+		$gallery_auth = $this->createMock(\phpbbgallery\core\auth\auth::class);
+		$gallery_auth->expects($this->once())->method('get_exclude_zebra')->willReturn([99]);
+		$gallery_auth->expects($this->exactly(2))->method('acl_check')->willReturn(true);
+		$helper = $this->createMock(\phpbb\controller\helper::class);
+		$helper->expects($this->once())
+			->method('route')
+			->with('phpbbgallery_core_album', ['album_id' => 12])
+			->willReturn('/gallery/album/12');
+		$reflection->getProperty('gallery_auth')->setValue($controller, $gallery_auth);
+		$reflection->getProperty('helper')->setValue($controller, $helper);
+
+		$method = $reflection->getMethod('visible_personal_album_url');
+		$this->assertSame('/gallery/album/12', $method->invoke($controller, ['user_id' => 42, 'personal_album_id' => 12]));
+		$this->assertSame('', $method->invoke($controller, ['user_id' => 43, 'personal_album_id' => 99]));
+		$this->assertSame('', $method->invoke($controller, ['user_id' => 44, 'personal_album_id' => 0]));
+	}
+
+	public function test_personal_album_is_presented_separately_from_contacts_in_every_style(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/image.php');
+		$this->assertStringContainsString('=== self::PERSONAL_ALBUM_PROFILE_FIELD', $source);
+		$this->assertStringContainsString("'U_POSTER_PERSONAL_ALBUM' => \$this->visible_personal_album_url(\$user_data)", $source);
+
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$template = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/viewimage_body.html');
+			$this->assertStringContainsString('U_POSTER_PERSONAL_ALBUM', $template, $style);
+			$this->assertStringContainsString('commentrow.U_POSTER_PERSONAL_ALBUM', $template, $style);
+			$this->assertStringContainsString("lang('PERSONAL_ALBUM')", $template, $style);
+		}
 	}
 
 	public function test_standard_contacts_are_filtered_and_support_root_and_comment_blocks(): void

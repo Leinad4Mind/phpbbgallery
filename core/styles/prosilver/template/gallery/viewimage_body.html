@@ -58,6 +58,7 @@
 
 			{% if POSTER_POSTS != '' %}<dd class="profile-posts"><strong>{{ lang('POSTS') }}{{ lang('COLON') }}</strong> {{ POSTER_POSTS }}</dd>{% endif %}
 			{% if POSTER_GALLERY_IMAGES != '' %}<dd><strong>{{ lang('IMAGES') }}{{ lang('COLON') }}</strong> {% if U_POSTER_GALLERY_SEARCH %}<a href="{{ U_POSTER_GALLERY_SEARCH }}">{{ POSTER_GALLERY_IMAGES }}</a>{% else %}{{ POSTER_GALLERY_IMAGES }}{% endif %}</dd>{% endif %}
+			{% if U_POSTER_PERSONAL_ALBUM %}<dd class="profile-gallery-album"><strong>{{ lang('PERSONAL_ALBUM') }}{{ lang('COLON') }}</strong> <a href="{{ U_POSTER_PERSONAL_ALBUM }}"><i class="icon fa-camera fa-fw" aria-hidden="true"></i><span>{{ lang('PERSONAL_ALBUM') }}</span></a></dd>{% endif %}
 			{% if POSTER_JOINED %}<dd class="profile-joined"><strong>{{ lang('JOINED') }}{{ lang('COLON') }} </strong><span style="white-space: nowrap;"> {{ POSTER_JOINED }}</span></dd>{% endif %}
 			{% if POSTER_WARNINGS %}<dd class="profile-warnings"><strong>{{ lang('WARNINGS') }}{{ lang('COLON') }}</strong> {{ POSTER_WARNINGS }}</dd>{% endif %}
 			{% if U_ACP and POSTER_IP %}<dd><strong>{{ lang('IP') }}{{ lang('COLON') }}</strong> {% include '@phpbbgallery_core/gallery/ip_privacy_toggle.html' with { ip_value: POSTER_IP } %}{% if U_POSTER_WHOIS %} [ <a href="{{ U_POSTER_WHOIS }}" onclick="popup(this.href, 750, 500); return false;">{{ lang('WHOIS') }}</a> ]{% endif %}</dd>{% endif %}
@@ -250,6 +251,7 @@
 
 				{% if commentrow.POSTER_POSTS != '' %}<dd class="profile-posts"><strong>{{ lang('POSTS') }}{{ lang('COLON') }}</strong> {{ commentrow.POSTER_POSTS }}</dd>{% endif %}
 				{% if commentrow.POSTER_GALLERY_IMAGES != '' %}<dd><strong>{{ lang('IMAGES') }}{{ lang('COLON') }}</strong> {% if commentrow.U_POSTER_GALLERY_SEARCH %}<a href="{{ commentrow.U_POSTER_GALLERY_SEARCH }}">{{ POSTER_GALLERY_IMAGES }}</a>{% else %}{{ POSTER_GALLERY_IMAGES }}{% endif %}</dd>{% endif %}
+				{% if commentrow.U_POSTER_PERSONAL_ALBUM %}<dd class="profile-gallery-album"><strong>{{ lang('PERSONAL_ALBUM') }}{{ lang('COLON') }}</strong> <a href="{{ commentrow.U_POSTER_PERSONAL_ALBUM }}"><i class="icon fa-camera fa-fw" aria-hidden="true"></i><span>{{ lang('PERSONAL_ALBUM') }}</span></a></dd>{% endif %}
 				{% if commentrow.POSTER_JOINED %}<dd class="profile-joined"><strong>{{ lang('JOINED') }}{{ lang('COLON') }} </strong><span style="white-space: nowrap;"> {{ commentrow.POSTER_JOINED }}</span></dd>{% endif %}
 				{% if commentrow.POSTER_WARNINGS %}<dd class="profile-warnings"><strong>{{ lang('WARNINGS') }}{{ lang('COLON') }}</strong> {{ commentrow.POSTER_WARNINGS }}</dd>{% endif %}
 				{% if U_ACP and commentrow.POSTER_IP %}<dd><strong>{{ lang('IP') }}{{ lang('COLON') }}</strong> {% include '@phpbbgallery_core/gallery/ip_privacy_toggle.html' with { ip_value: commentrow.POSTER_IP } %}{% if commentrow.U_WHOIS %} [ <a href="{{ commentrow.U_WHOIS }}" onclick="popup(this.href, 750, 500); return false;">{{ lang('WHOIS') }}</a> ]{% endif %}</dd>{% endif %}

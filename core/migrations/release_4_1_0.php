@@ -16,7 +16,7 @@ class release_4_1_0 extends migration
 {
 	public static function depends_on(): array
 	{
-		return ['\phpbbgallery\core\migrations\group_leader_permissions'];
+		return ['\phpbbgallery\core\migrations\relocate_personal_album_profile_field'];
 	}
 
 	public function update_data(): array
