@@ -18,9 +18,9 @@
 		{% else %}
 		<article class="gallery-image-card gallery-futuristic-image{% if image.S_STATUS_UNAPPROVED or image.S_UNAPPROVED %} gallery-futuristic-image--unapproved image_unapproved{% endif %}{% if image.S_LOCKED %} gallery-futuristic-image--locked{% endif %}{% if image.S_REPORTED %} gallery-futuristic-image--reported image_reported{% endif %}">
 			{% EVENT phpbbgallery_core_album_image_actions %}
-			<header class="gallery-futuristic-image-header">
-				<h3 class="gallery-futuristic-image-title">{% if image.U_IMAGE %}<a href="{{ image.U_IMAGE }}">{% endif %}{{ image.UC_IMAGE_NAME }}{% if image.U_IMAGE %}</a>{% endif %}</h3>
+			<header class="gallery-image-card-heading gallery-futuristic-image-header">
 				{% include '@phpbbgallery_core/gallery/image_bbcode_copy.html' %}
+				<h3 class="gallery-futuristic-image-title">{% if image.U_IMAGE %}<a href="{{ image.U_IMAGE }}">{% endif %}{{ image.UC_IMAGE_NAME }}{% if image.U_IMAGE %}</a>{% endif %}</h3>
 			</header>
 
 			<div class="gallery-futuristic-thumbnail">

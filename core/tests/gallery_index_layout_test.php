@@ -81,25 +81,19 @@ final class gallery_index_layout_test extends TestCase
 		);
 	}
 
-	public function test_prosilver_classic_titles_align_to_the_start_without_changing_bootstrap_styles(): void
+	public function test_classic_titles_are_centred_consistently(): void
 	{
 		$core_root = dirname(__DIR__);
 		$selector = (string) file_get_contents($core_root . '/styles/prosilver/template/gallery/imageblock_layout.html');
-		$bboots_selector = (string) file_get_contents($core_root . '/styles/BBOOTS/template/gallery/imageblock_layout.html');
-		$flatboots_selector = (string) file_get_contents($core_root . '/styles/FLATBOOTS/template/gallery/imageblock_layout.html');
 		$search = (string) file_get_contents($core_root . '/styles/prosilver/template/gallery/search_results.html');
 		$classic = (string) file_get_contents($core_root . '/styles/all/template/gallery/imageblock_classic.html');
 		$css = (string) file_get_contents($core_root . '/styles/all/theme/gallery.css');
 
-		$this->assertStringContainsString('GALLERY_CLASSIC_TITLE_ALIGN_START: true', $selector);
-		$this->assertStringContainsString('GALLERY_CLASSIC_TITLE_ALIGN_START: true', $search);
-		$this->assertStringContainsString('gallery-classic-image-block--title-start', $classic);
+		$this->assertStringNotContainsString('GALLERY_CLASSIC_TITLE_ALIGN_START', $selector . $search . $classic);
 		$this->assertMatchesRegularExpression(
-			'/\.gallery-classic-image-block--title-start \.gallery-classic-image-title\s*\{[^}]*justify-content:\s*flex-start;[^}]*text-align:\s*start;/s',
+			'/\.gallery-classic-image-title\s*\{[^}]*justify-content:\s*center;[^}]*text-align:\s*center;/s',
 			$css
 		);
-		$this->assertStringNotContainsString('GALLERY_CLASSIC_TITLE_ALIGN_START', $bboots_selector);
-		$this->assertStringNotContainsString('GALLERY_CLASSIC_TITLE_ALIGN_START', $flatboots_selector);
 	}
 
 	public function test_futuristic_layout_preserves_gallery_contracts_and_has_a_theme_variant(): void
@@ -181,11 +175,16 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertStringNotContainsString('gallery-futuristic-image-index', $futuristic);
 		$this->assertStringContainsString('image_bbcode_copy.html', $classic);
 		$this->assertStringContainsString('image_bbcode_copy.html', $futuristic);
+		$this->assertLessThan(strpos($classic, 'gallery-classic-image-title'), strpos($classic, 'image_bbcode_copy.html'));
+		$this->assertLessThan(strpos($futuristic, 'gallery-futuristic-image-title'), strpos($futuristic, 'image_bbcode_copy.html'));
+		$this->assertStringNotContainsString('GALLERY_BBCODE_COPY_OVERLAY: true', $classic . $futuristic);
 
 		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
 		{
 			$cards = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/imageblock_polaroid.html');
 			$this->assertStringContainsString('image_bbcode_copy.html', $cards, $style);
+			$this->assertLessThan(strpos($cards, 'gallery-image-card-title'), strpos($cards, 'image_bbcode_copy.html'), $style);
+			$this->assertStringNotContainsString('GALLERY_BBCODE_COPY_OVERLAY: true', $cards, $style);
 		}
 		foreach (['all', 'BBOOTS', 'FLATBOOTS'] as $style)
 		{
@@ -200,6 +199,8 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertStringContainsString('navigator.clipboard.writeText', $javascript);
 		$this->assertStringContainsString("document.execCommand('copy')", $javascript);
 		$this->assertStringContainsString('is-copied', $javascript);
+		$css = (string) file_get_contents($core_root . '/styles/all/theme/gallery.css');
+		$this->assertMatchesRegularExpression('/\.gallery-image-card-heading\s*\{[^}]*align-items:\s*center;[^}]*flex-direction:\s*column;[^}]*text-align:\s*center;/s', $css);
 	}
 
 	public function test_album_list_distinguishes_its_main_visual_from_the_latest_image(): void

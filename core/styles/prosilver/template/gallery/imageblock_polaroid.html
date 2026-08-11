@@ -8,16 +8,18 @@
 {% for image in imageblock.image %}
 <div class="polaroid gallery-image-card">
 	{% EVENT phpbbgallery_core_album_image_actions %}
-	{% include '@phpbbgallery_core/gallery/image_bbcode_copy.html' with { GALLERY_BBCODE_COPY_OVERLAY: true } %}
 	{% if image.S_IMAGE_AWARD_RANK > 0 %}
 	<div class="trophy-container">
 		<i class="trophy-icon fa-trophy fa-stack-2x trophy-color-{{ image.S_IMAGE_AWARD_RANK }}"></i>
 		<strong class="fa-stack-1x trophy-text">{{ image.S_IMAGE_AWARD_RANK }}</strong>
 	</div>
 	{% endif %}
-	<p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 1.2em; margin-bottom: 1em;">
-		{% if image.U_IMAGE %}<a href="{{ image.U_IMAGE }}" style="display: inline;">{% endif %}{{ image.UC_IMAGE_NAME }}{% if image.U_IMAGE %}</a>{% endif %}
-	</p>
+	<header class="gallery-image-card-heading gallery-polaroid-image-heading">
+		{% include '@phpbbgallery_core/gallery/image_bbcode_copy.html' %}
+		<p class="gallery-image-card-title">
+			{% if image.U_IMAGE %}<a href="{{ image.U_IMAGE }}">{% endif %}{{ image.UC_IMAGE_NAME }}{% if image.U_IMAGE %}</a>{% endif %}
+		</p>
+	</header>
 	<hr />
 	{% if image.S_STATUS_UNAPPROVED or image.S_UNAPPROVED %}
 		<form method="post" action="{{ image.S_STATUS_UNAPPROVED_ACTION }}" class="polaroid_img_container">

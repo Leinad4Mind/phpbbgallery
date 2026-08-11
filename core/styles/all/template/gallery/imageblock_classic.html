@@ -1,5 +1,5 @@
 {% for imageblock in imageblock|default([]) %}
-<section class="gallery-classic-image-block{% if GALLERY_CLASSIC_TITLE_ALIGN_START %} gallery-classic-image-block--title-start{% endif %}">
+<section class="gallery-classic-image-block">
 	{% if imageblock.BLOCK_NAME %}
 	<h2 class="gallery-image-block-title">
 		{% if imageblock.U_BLOCK %}<a href="{{ imageblock.U_BLOCK }}">{{ imageblock.BLOCK_NAME }}</a>{% else %}{{ imageblock.BLOCK_NAME }}{% endif %}
@@ -18,7 +18,6 @@
 			{% else %}
 			<article class="gallery-classic-image{% if image.S_STATUS_UNAPPROVED or image.S_UNAPPROVED %} gallery-classic-image--unapproved{% endif %}{% if image.S_LOCKED %} gallery-classic-image--locked{% endif %}{% if image.S_REPORTED %} gallery-classic-image--reported{% endif %}">
 				{% EVENT phpbbgallery_core_album_image_actions %}
-				{% include '@phpbbgallery_core/gallery/image_bbcode_copy.html' with { GALLERY_BBCODE_COPY_OVERLAY: true } %}
 				{% if image.S_IMAGE_AWARD_RANK > 0 %}
 				<div class="trophy-container">
 					<i class="trophy-icon fa-trophy fa-stack-2x trophy-color-{{ image.S_IMAGE_AWARD_RANK }}"></i>
@@ -26,11 +25,14 @@
 				</div>
 				{% endif %}
 
-				{% if image.UC_IMAGE_NAME %}
-				<h3 class="gallery-classic-image-title">
-					{% if image.U_IMAGE %}<a href="{{ image.U_IMAGE }}">{% endif %}{{ image.UC_IMAGE_NAME }}{% if image.U_IMAGE %}</a>{% endif %}
-				</h3>
-				{% endif %}
+				<header class="gallery-image-card-heading gallery-classic-image-heading">
+					{% include '@phpbbgallery_core/gallery/image_bbcode_copy.html' %}
+					{% if image.UC_IMAGE_NAME %}
+					<h3 class="gallery-classic-image-title">
+						{% if image.U_IMAGE %}<a href="{{ image.U_IMAGE }}">{% endif %}{{ image.UC_IMAGE_NAME }}{% if image.U_IMAGE %}</a>{% endif %}
+					</h3>
+					{% endif %}
+				</header>
 
 				<div class="gallery-classic-thumbnail">
 					{% if image.UC_THUMBNAIL_ACTION %}<a href="{{ image.UC_THUMBNAIL_ACTION }}">{% endif %}
