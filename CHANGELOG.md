@@ -6,6 +6,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Added
 
+- Added a fourth Futuristic Gallery presentation with shared permission-safe album and image components, responsive glass-style grids, accessible focus and reduced-motion behavior, and distinct restrained variants for PROSILVER, BBOOTS and FLATBOOTS while preserving Favorite, rating, moderation and add-on metadata events.
 - Added large, responsive and keyboard-accessible Font Awesome previous/next controls when navigation thumbnails are disabled, while retaining the adjacent image names for tooltips and assistive technology.
 - Added a persistent Off mode beside the Simple and Complete ACP provenance views, removing in-field badges, accent colours and setting markers while keeping every effective setting visible.
 - Added a distinct New Core ACP provenance marker for every configuration introduced after Gallery 3.4.0 and for the new album-icon selector, using a star and Core accent while preserving puzzle identities for add-ons in both Simple and Complete views.

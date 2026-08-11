@@ -22,6 +22,8 @@
 		{% include 'gallery/albumlist_body.html' %}
 	{% elseif GALLERY_INDEX_ALBUM_LAYOUT == 'modern' %}
 		{% include '@phpbbgallery_core/gallery/albumlist_modern.html' %}
+	{% elseif GALLERY_INDEX_ALBUM_LAYOUT == 'futuristic' %}
+		{% include '@phpbbgallery_core/gallery/albumlist_futuristic.html' with { GALLERY_FUTURISTIC_VARIANT: 'prosilver' } %}
 	{% else %}
 		{% include 'gallery/albumlist_polaroid.html' %}
 	{% endif %}

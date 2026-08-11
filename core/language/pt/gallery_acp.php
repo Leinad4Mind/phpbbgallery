@@ -248,6 +248,7 @@ $lang = array_merge($lang, [
 	'INDEX_ALBUM_LAYOUT_CLASSIC'           => 'Clássico inspirado no MOD',
 	'INDEX_ALBUM_LAYOUT_MODERN'            => 'Lista moderna e responsiva',
 	'INDEX_ALBUM_LAYOUT_CARDS'             => 'Cartões modernos',
+	'INDEX_ALBUM_LAYOUT_FUTURISTIC'        => 'Grelha futurista translúcida',
 	'INVALID_INDEX_ALBUM_LAYOUT'           => 'A apresentação da Galeria selecionada não é válida.',
 	'INFO_LINE'                            => 'Linhas/Quantidade (Ficheiros da Galeria Otimizados: Limite Imagens, Permissão, Permissões/Exclusão do Fórum)',
 	'INHERIT_PERMISSIONS_ALBUM'            => 'Copiar permissões de outro álbum',

@@ -83,6 +83,14 @@ final class album_listing_test extends TestCase
 			'/\.gallery-classic-image \.gallery-favorite-toggle\s*\{[^}]*width:\s*26px;[^}]*height:\s*26px;[^}]*\}/s',
 			$stylesheet
 		);
+		$this->assertMatchesRegularExpression(
+			'/\.gallery-futuristic-image > \.gallery-favorite-action\s*\{[^}]*inset-inline-end:\s*11px;[^}]*top:\s*10px;[^}]*\}/s',
+			$stylesheet
+		);
+		$this->assertMatchesRegularExpression(
+			'/\.gallery-futuristic-image > \.gallery-favorite-action ~ \.gallery-futuristic-image-header\s*\{[^}]*padding-inline-end:\s*50px;[^}]*\}/s',
+			$stylesheet
+		);
 		$this->assertStringContainsString("INCLUDECSS '@phpbbgallery_favorite/favorite.css'", $head);
 		$this->assertStringContainsString("INCLUDEJS '@phpbbgallery_favorite/favorite.js'", $head);
 	}

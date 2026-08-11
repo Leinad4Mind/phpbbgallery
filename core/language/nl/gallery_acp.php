@@ -258,6 +258,7 @@ $lang = array_merge($lang, [
 	'INDEX_ALBUM_LAYOUT_CLASSIC' => 'Klassieke MOD-stijl',
 	'INDEX_ALBUM_LAYOUT_MODERN'  => 'Moderne responsieve lijst',
 	'INDEX_ALBUM_LAYOUT_CARDS'   => 'Moderne kaarten',
+	'INDEX_ALBUM_LAYOUT_FUTURISTIC' => 'Futuristisch transparant raster',
 	'INVALID_INDEX_ALBUM_LAYOUT' => 'De geselecteerde Galerieweergave is ongeldig.',
 	'INFO_LINE'                  => 'Bestandgrootte op miniatuur weergeven',
 	'INHERIT_PERMISSIONS_ALBUM'  => 'Kopieer permissies van een ander album',

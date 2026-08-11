@@ -261,6 +261,7 @@ $lang = array_merge($lang, [
 	'INDEX_ALBUM_LAYOUT_CLASSIC' => 'Класически стил на MOD',
 	'INDEX_ALBUM_LAYOUT_MODERN'  => 'Модерен адаптивен списък',
 	'INDEX_ALBUM_LAYOUT_CARDS'   => 'Модерни карти',
+	'INDEX_ALBUM_LAYOUT_FUTURISTIC' => 'Футуристична прозрачна мрежа',
 	'INVALID_INDEX_ALBUM_LAYOUT' => 'Избраният изглед на Галерията е невалиден.',
 	'INFO_LINE'                  => 'Покажи размера в thumbnail',
 	'INHERIT_PERMISSIONS_ALBUM'  => 'Копирай права от друг албум',

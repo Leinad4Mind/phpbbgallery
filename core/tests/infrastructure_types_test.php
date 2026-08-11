@@ -35,7 +35,7 @@ final class infrastructure_types_test extends TestCase
 		$this->assertSame('image', $gallery_config->get_bbcode_tag());
 		$this->assertSame('album', $gallery_config->get_album_bbcode_tag());
 		$this->assertSame('cards', $gallery_config->get_index_album_layout());
-		$this->assertSame(['classic', 'modern', 'cards'], gallery_config::index_album_layouts());
+		$this->assertSame(['classic', 'modern', 'cards', 'futuristic'], gallery_config::index_album_layouts());
 		$this->assertSame(25, $gallery_config->get_all()['items_per_page']);
 		$this->assertNull($gallery_config->get('missing_addon_option'));
 		$this->assertSame(4, $gallery_config->get('missing_addon_option', 4));
@@ -60,6 +60,8 @@ final class infrastructure_types_test extends TestCase
 		$this->assertSame('album', $gallery_config->get_album_bbcode_tag());
 		$gallery_config->set('index_album_layout', 'classic');
 		$this->assertSame('classic', $gallery_config->get_index_album_layout());
+		$gallery_config->set('index_album_layout', 'futuristic');
+		$this->assertSame('futuristic', $gallery_config->get_index_album_layout());
 		$gallery_config->set('index_album_layout', '../template');
 		$this->assertSame('cards', $gallery_config->get_index_album_layout());
 	}

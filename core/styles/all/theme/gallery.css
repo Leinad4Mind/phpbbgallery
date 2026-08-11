@@ -540,6 +540,661 @@ input.autowidth-gallery {
 	}
 }
 
+/* Futuristic presentation: one semantic layout with a considered accent for each bundled style. */
+.gallery-futuristic
+{
+	--gallery-futuristic-accent: #2587c8;
+	--gallery-futuristic-accent-soft: rgba(37, 135, 200, .16);
+	--gallery-futuristic-secondary: #6e63d9;
+	--gallery-futuristic-secondary-soft: rgba(110, 99, 217, .13);
+	--gallery-futuristic-border: rgba(57, 92, 119, .24);
+	--gallery-futuristic-muted: #667887;
+	--gallery-futuristic-surface: rgba(255, 255, 255, .9);
+	--gallery-futuristic-surface-strong: #fff;
+	--gallery-futuristic-shadow: 0 10px 26px rgba(32, 61, 82, .11);
+	--gallery-futuristic-radius: 10px;
+	clear: both;
+	color: #35404a;
+}
+
+.gallery-futuristic--prosilver
+{
+	--gallery-futuristic-accent: #287eb5;
+	--gallery-futuristic-accent-soft: rgba(40, 126, 181, .15);
+	--gallery-futuristic-secondary: #6d63c9;
+	--gallery-futuristic-secondary-soft: rgba(109, 99, 201, .12);
+	--gallery-futuristic-border: rgba(68, 105, 132, .22);
+	--gallery-futuristic-radius: 8px;
+}
+
+.gallery-futuristic--bboots
+{
+	--gallery-futuristic-accent: #159bd3;
+	--gallery-futuristic-accent-soft: rgba(21, 155, 211, .16);
+	--gallery-futuristic-secondary: #506ee5;
+	--gallery-futuristic-secondary-soft: rgba(80, 110, 229, .13);
+	--gallery-futuristic-border: rgba(35, 115, 151, .23);
+	--gallery-futuristic-radius: 11px;
+}
+
+.gallery-futuristic--flatboots
+{
+	--gallery-futuristic-accent: #cf981d;
+	--gallery-futuristic-accent-soft: rgba(207, 152, 29, .17);
+	--gallery-futuristic-secondary: #2b83b6;
+	--gallery-futuristic-secondary-soft: rgba(43, 131, 182, .14);
+	--gallery-futuristic-border: rgba(137, 113, 56, .24);
+	--gallery-futuristic-radius: 6px;
+}
+
+.gallery-futuristic a
+{
+	text-decoration: none;
+}
+
+.gallery-futuristic-album-list
+{
+	display: grid;
+	gap: 14px;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	margin: 0 0 22px;
+}
+
+.gallery-futuristic-section-title,
+.gallery-futuristic-category,
+.gallery-futuristic-empty-state
+{
+	grid-column: 1 / -1;
+}
+
+.gallery-futuristic-section-title
+{
+	align-items: center;
+	color: var(--gallery-futuristic-accent);
+	display: flex;
+	font-size: 20px;
+	font-weight: 500;
+	gap: 9px;
+	line-height: 1.35;
+	margin: 18px 0 0;
+	min-width: 0;
+}
+
+.gallery-futuristic-section-title a
+{
+	color: inherit;
+}
+
+.gallery-futuristic-section-icon
+{
+	align-items: center;
+	background: linear-gradient(135deg, var(--gallery-futuristic-accent-soft), var(--gallery-futuristic-secondary-soft));
+	border: 1px solid var(--gallery-futuristic-border);
+	border-radius: 50%;
+	display: inline-flex;
+	flex: 0 0 34px;
+	height: 34px;
+	justify-content: center;
+}
+
+.gallery-futuristic-category
+{
+	align-items: center;
+	background: linear-gradient(90deg, var(--gallery-futuristic-accent-soft), transparent 62%);
+	border: 1px solid var(--gallery-futuristic-border);
+	border-radius: var(--gallery-futuristic-radius);
+	display: grid;
+	gap: 11px;
+	grid-template-columns: 4px minmax(0, 1fr);
+	overflow: hidden;
+	padding: 10px 14px 10px 0;
+}
+
+.gallery-futuristic-category-marker
+{
+	align-self: stretch;
+	background: linear-gradient(180deg, var(--gallery-futuristic-accent), var(--gallery-futuristic-secondary));
+	border-radius: 999px;
+}
+
+.gallery-futuristic-category h3
+{
+	font-size: 1.12em;
+	margin: 0;
+}
+
+.gallery-futuristic-category-description
+{
+	color: var(--gallery-futuristic-muted);
+	margin-top: 3px;
+}
+
+.gallery-futuristic-album
+{
+	background: linear-gradient(145deg, var(--gallery-futuristic-surface-strong), var(--gallery-futuristic-surface));
+	border: 1px solid var(--gallery-futuristic-border);
+	border-radius: var(--gallery-futuristic-radius);
+	box-shadow: var(--gallery-futuristic-shadow);
+	display: flex;
+	flex-direction: column;
+	isolation: isolate;
+	min-width: 0;
+	overflow: hidden;
+	position: relative;
+}
+
+.gallery-futuristic-album::before,
+.gallery-futuristic-image::before
+{
+	background: linear-gradient(90deg, var(--gallery-futuristic-accent), var(--gallery-futuristic-secondary));
+	content: "";
+	height: 3px;
+	inset: 0 0 auto;
+	position: absolute;
+	z-index: 1;
+}
+
+.gallery-futuristic-album--unread::before
+{
+	height: 5px;
+}
+
+.gallery-futuristic-album-main
+{
+	align-items: center;
+	display: grid;
+	gap: 14px;
+	grid-template-columns: 104px minmax(0, 1fr);
+	padding: 18px 16px 14px;
+}
+
+.gallery-futuristic-album-visual
+{
+	align-items: center;
+	background: linear-gradient(145deg, var(--gallery-futuristic-accent-soft), var(--gallery-futuristic-secondary-soft));
+	border: 1px solid var(--gallery-futuristic-border);
+	border-radius: calc(var(--gallery-futuristic-radius) - 2px);
+	display: flex;
+	height: 82px;
+	isolation: isolate;
+	justify-content: center;
+	overflow: hidden;
+	position: relative;
+}
+
+.gallery-futuristic-visual-glow
+{
+	background: radial-gradient(circle, var(--gallery-futuristic-secondary-soft), transparent 68%);
+	inset: -20%;
+	position: absolute;
+	z-index: -1;
+}
+
+.gallery-futuristic-album-visual img
+{
+	display: block;
+	max-height: 82px;
+	max-width: 104px;
+	object-fit: contain;
+}
+
+.gallery-futuristic-placeholder-icon
+{
+	color: var(--gallery-futuristic-accent);
+	font-size: 34px;
+}
+
+.gallery-futuristic-unread-signal
+{
+	background: var(--gallery-futuristic-accent);
+	border: 3px solid var(--gallery-futuristic-surface-strong);
+	border-radius: 50%;
+	box-shadow: 0 0 0 3px var(--gallery-futuristic-accent-soft);
+	height: 9px;
+	inset: 8px 8px auto auto;
+	position: absolute;
+	width: 9px;
+}
+
+.gallery-futuristic-album-content
+{
+	min-width: 0;
+}
+
+.gallery-futuristic-album-heading
+{
+	align-items: center;
+	display: flex;
+	gap: 7px;
+	min-width: 0;
+}
+
+.gallery-futuristic-album-title
+{
+	display: block;
+	font-size: 1.2em;
+	font-weight: bold;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.gallery-futuristic-state
+{
+	color: var(--gallery-futuristic-muted);
+	flex: 0 0 auto;
+}
+
+.gallery-futuristic-album-description
+{
+	color: var(--gallery-futuristic-muted);
+	line-height: 1.45;
+	margin-top: 5px;
+}
+
+.gallery-futuristic-album-details
+{
+	color: var(--gallery-futuristic-muted);
+	font-size: .92em;
+	margin-top: 7px;
+}
+
+.gallery-futuristic-subalbums
+{
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin-top: 9px;
+}
+
+.gallery-futuristic-subalbums a
+{
+	background: var(--gallery-futuristic-accent-soft);
+	border: 1px solid transparent;
+	border-radius: 999px;
+	font-size: .88em;
+	max-width: 100%;
+	overflow: hidden;
+	padding: 3px 8px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.gallery-futuristic-subalbums a.unread
+{
+	border-color: var(--gallery-futuristic-accent);
+}
+
+.gallery-futuristic-album-summary
+{
+	align-items: center;
+	background: linear-gradient(90deg, var(--gallery-futuristic-accent-soft), var(--gallery-futuristic-secondary-soft));
+	border-top: 1px solid var(--gallery-futuristic-border);
+	display: grid;
+	gap: 12px;
+	grid-template-columns: minmax(105px, auto) minmax(0, 1fr);
+	margin-top: auto;
+	padding: 11px 14px;
+}
+
+.gallery-futuristic-image-count
+{
+	align-items: center;
+	display: flex;
+	gap: 7px;
+	white-space: nowrap;
+}
+
+.gallery-futuristic-image-count > .fa
+{
+	color: var(--gallery-futuristic-accent);
+	font-size: 18px;
+}
+
+.gallery-futuristic-image-count strong
+{
+	font-size: 1.18em;
+}
+
+.gallery-futuristic-last-image
+{
+	align-items: center;
+	display: flex;
+	gap: 8px;
+	justify-content: flex-end;
+	min-width: 0;
+}
+
+.gallery-futuristic-last-image-visual
+{
+	align-items: center;
+	background: var(--gallery-futuristic-surface-strong);
+	border: 1px solid var(--gallery-futuristic-border);
+	border-radius: 5px;
+	display: flex;
+	flex: 0 0 44px;
+	height: 44px;
+	justify-content: center;
+	overflow: hidden;
+}
+
+.gallery-futuristic-last-image img
+{
+	max-height: 44px;
+	max-width: 44px;
+	object-fit: contain;
+}
+
+.gallery-futuristic-last-image-details
+{
+	font-size: .88em;
+	line-height: 1.35;
+	min-width: 0;
+}
+
+.gallery-futuristic-last-image-details strong,
+.gallery-futuristic-last-image-details span,
+.gallery-futuristic-last-image-details time
+{
+	display: block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.gallery-futuristic-last-image-details time,
+.gallery-futuristic-empty
+{
+	color: var(--gallery-futuristic-muted);
+}
+
+.gallery-futuristic-empty-state
+{
+	background: var(--gallery-futuristic-accent-soft);
+	border: 1px dashed var(--gallery-futuristic-border);
+	border-radius: var(--gallery-futuristic-radius);
+	color: var(--gallery-futuristic-muted);
+	padding: 16px;
+	text-align: center;
+}
+
+.gallery-futuristic-image-block
+{
+	margin: 0 0 22px;
+}
+
+.gallery-futuristic-image-section-title
+{
+	margin-bottom: 12px;
+}
+
+.gallery-futuristic-image-grid
+{
+	display: grid;
+	gap: 14px;
+	grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr));
+}
+
+.gallery-futuristic-image,
+.gallery-futuristic-image-placeholder
+{
+	min-width: 0;
+}
+
+.gallery-futuristic-image
+{
+	background: linear-gradient(155deg, var(--gallery-futuristic-surface-strong), var(--gallery-futuristic-surface));
+	border: 1px solid var(--gallery-futuristic-border);
+	border-radius: var(--gallery-futuristic-radius);
+	box-shadow: var(--gallery-futuristic-shadow);
+	display: flex;
+	flex-direction: column;
+	isolation: isolate;
+	overflow: hidden;
+	position: relative;
+}
+
+.gallery-futuristic-image--unapproved
+{
+	border-color: #daa520;
+}
+
+.gallery-futuristic-image--unapproved::before
+{
+	background: linear-gradient(90deg, #daa520, #e9bd4b);
+}
+
+.gallery-futuristic-image--reported
+{
+	border-color: #d9534f;
+}
+
+.gallery-futuristic-image--locked
+{
+	box-shadow: inset 0 0 0 2px rgba(90, 99, 107, .18), var(--gallery-futuristic-shadow);
+}
+
+.gallery-futuristic-image-header
+{
+	align-items: center;
+	display: flex;
+	gap: 8px;
+	min-height: 48px;
+	padding: 10px 12px 8px;
+}
+
+.gallery-futuristic-image-title
+{
+	flex: 1;
+	font-size: 1em;
+	font-weight: bold;
+	line-height: 1.35;
+	margin: 0;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.gallery-futuristic-image-title a
+{
+	color: inherit;
+}
+
+.gallery-futuristic-image-index
+{
+	color: var(--gallery-futuristic-muted);
+	font-size: .75em;
+	font-variant-numeric: tabular-nums;
+	letter-spacing: .08em;
+}
+
+.gallery-futuristic-thumbnail
+{
+	align-items: center;
+	background: linear-gradient(145deg, rgba(20, 29, 38, .94), rgba(37, 49, 63, .88));
+	display: flex;
+	height: clamp(180px, calc(var(--gallery-futuristic-thumbnail-size) + 24px), 280px);
+	justify-content: center;
+	overflow: hidden;
+	position: relative;
+}
+
+.gallery-futuristic-thumbnail-grid
+{
+	background-image: linear-gradient(rgba(255, 255, 255, .035) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .035) 1px, transparent 1px);
+	background-size: 22px 22px;
+	inset: 0;
+	mask-image: linear-gradient(to bottom, black, transparent 90%);
+	opacity: .55;
+	pointer-events: none;
+	position: absolute;
+}
+
+.gallery-futuristic-thumbnail a
+{
+	align-items: center;
+	display: flex;
+	height: 100%;
+	justify-content: center;
+	width: 100%;
+}
+
+.gallery-futuristic-thumbnail img
+{
+	display: block;
+	height: auto;
+	max-height: calc(100% - 20px);
+	max-width: calc(100% - 20px);
+	object-fit: contain;
+	position: relative;
+	z-index: 1;
+}
+
+.gallery-futuristic-status
+{
+	background: rgba(218, 165, 32, .94);
+	border-radius: 999px;
+	bottom: 8px;
+	color: #fff;
+	font-size: .8em;
+	inset-inline-end: 8px;
+	padding: 3px 8px;
+	position: absolute;
+	z-index: 2;
+}
+
+.gallery-futuristic-image-details
+{
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	padding: 11px 12px 13px;
+}
+
+.gallery-futuristic-image-subtitle
+{
+	border-bottom: 1px solid var(--gallery-futuristic-border);
+	color: var(--gallery-futuristic-muted);
+	font-style: italic;
+	margin: 0 0 9px;
+	overflow: hidden;
+	padding-bottom: 8px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.gallery-futuristic-metadata
+{
+	display: grid;
+	gap: 6px;
+}
+
+.gallery-futuristic-metadata-item
+{
+	align-items: flex-start;
+	display: flex;
+	gap: 5px;
+	line-height: 1.35;
+	min-width: 0;
+	overflow-wrap: anywhere;
+}
+
+.gallery-futuristic-metadata-item > .fa
+{
+	color: var(--gallery-futuristic-accent);
+	flex: 0 0 16px;
+	margin-top: 2px;
+}
+
+.gallery-futuristic-event-metadata:empty
+{
+	display: none;
+}
+
+.gallery-futuristic-rating
+{
+	flex-wrap: wrap;
+}
+
+.gallery-futuristic-approval
+{
+	background: var(--gallery-futuristic-accent-soft);
+	border-top: 1px solid var(--gallery-futuristic-border);
+	display: flex;
+	gap: 7px;
+	justify-content: center;
+	padding: 9px 12px;
+}
+
+.gallery-futuristic :focus-visible
+{
+	outline: 2px solid var(--gallery-futuristic-accent);
+	outline-offset: 2px;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference)
+{
+	.gallery-futuristic-album,
+	.gallery-futuristic-image
+	{
+		transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+	}
+
+	.gallery-futuristic-album:hover,
+	.gallery-futuristic-image:hover
+	{
+		border-color: var(--gallery-futuristic-accent);
+		box-shadow: 0 15px 34px rgba(32, 61, 82, .17);
+		transform: translateY(-2px);
+	}
+}
+
+@media (max-width: 860px)
+{
+	.gallery-futuristic-album-list
+	{
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (max-width: 520px)
+{
+	.gallery-futuristic-album-main
+	{
+		align-items: start;
+		grid-template-columns: 72px minmax(0, 1fr);
+		padding: 15px 12px 12px;
+	}
+
+	.gallery-futuristic-album-visual
+	{
+		height: 66px;
+	}
+
+	.gallery-futuristic-album-visual img
+	{
+		max-height: 66px;
+		max-width: 72px;
+	}
+
+	.gallery-futuristic-album-summary
+	{
+		align-items: start;
+		grid-template-columns: 1fr;
+	}
+
+	.gallery-futuristic-last-image
+	{
+		justify-content: flex-start;
+	}
+
+	.gallery-futuristic-image-grid
+	{
+		grid-template-columns: repeat(auto-fill, minmax(min(100%, 180px), 1fr));
+	}
+}
+
 .polaroid_img_container {
 	height: 120px;
 	width: 242px;

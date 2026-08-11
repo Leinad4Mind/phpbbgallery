@@ -137,7 +137,7 @@ final class acp_config_types_test extends TestCase
 		$this->assertStringContainsString('STORAGE_LAYOUT_HELP_CHANGE', $html);
 	}
 
-	public function test_index_album_layout_selector_exposes_all_three_layouts(): void
+	public function test_index_album_layout_selector_exposes_all_four_layouts(): void
 	{
 		$language = $this->createMock(\phpbb\language\language::class);
 		$language->method('lang')->willReturnCallback(static fn(string $key): string => $key);
@@ -149,9 +149,11 @@ final class acp_config_types_test extends TestCase
 		$this->assertStringContainsString('value="classic"', $html);
 		$this->assertStringContainsString('value="modern" selected="selected"', $html);
 		$this->assertStringContainsString('value="cards"', $html);
+		$this->assertStringContainsString('value="futuristic"', $html);
 		$this->assertStringContainsString('INDEX_ALBUM_LAYOUT_CLASSIC', $html);
 		$this->assertStringContainsString('INDEX_ALBUM_LAYOUT_MODERN', $html);
 		$this->assertStringContainsString('INDEX_ALBUM_LAYOUT_CARDS', $html);
+		$this->assertStringContainsString('INDEX_ALBUM_LAYOUT_FUTURISTIC', $html);
 	}
 
 	public function test_gallery_index_mode_selector_supports_ranked_and_add_on_modes(): void

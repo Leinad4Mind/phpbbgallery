@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 
 final class gallery_index_layout_test extends TestCase
 {
-	public function test_every_style_exposes_classic_modern_and_card_layouts_on_index_and_inside_albums(): void
+	public function test_every_style_exposes_classic_modern_card_and_futuristic_layouts_on_index_and_inside_albums(): void
 	{
 		$core_root = dirname(__DIR__);
 		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
@@ -26,8 +26,10 @@ final class gallery_index_layout_test extends TestCase
 				$message = $style . '/' . $context;
 				$this->assertStringContainsString("GALLERY_INDEX_ALBUM_LAYOUT == 'classic'", $template, $message);
 				$this->assertStringContainsString("GALLERY_INDEX_ALBUM_LAYOUT == 'modern'", $template, $message);
+				$this->assertStringContainsString("GALLERY_INDEX_ALBUM_LAYOUT == 'futuristic'", $template, $message);
 				$this->assertStringContainsString("{% include 'gallery/albumlist_body.html' %}", $template, $message);
 				$this->assertStringContainsString("{% include '@phpbbgallery_core/gallery/albumlist_modern.html' %}", $template, $message);
+				$this->assertStringContainsString('@phpbbgallery_core/gallery/albumlist_futuristic.html', $template, $message);
 				$this->assertStringContainsString("{% include 'gallery/albumlist_polaroid.html' %}", $template, $message);
 			}
 		}
@@ -81,6 +83,8 @@ final class gallery_index_layout_test extends TestCase
 	{
 		$core_root = dirname(__DIR__);
 		$selector = (string) file_get_contents($core_root . '/styles/prosilver/template/gallery/imageblock_layout.html');
+		$bboots_selector = (string) file_get_contents($core_root . '/styles/BBOOTS/template/gallery/imageblock_layout.html');
+		$flatboots_selector = (string) file_get_contents($core_root . '/styles/FLATBOOTS/template/gallery/imageblock_layout.html');
 		$search = (string) file_get_contents($core_root . '/styles/prosilver/template/gallery/search_results.html');
 		$classic = (string) file_get_contents($core_root . '/styles/all/template/gallery/imageblock_classic.html');
 		$css = (string) file_get_contents($core_root . '/styles/all/theme/gallery.css');
@@ -92,8 +96,38 @@ final class gallery_index_layout_test extends TestCase
 			'/\.gallery-classic-image-block--title-start \.gallery-classic-image-title\s*\{[^}]*justify-content:\s*flex-start;[^}]*text-align:\s*start;/s',
 			$css
 		);
-		$this->assertFileDoesNotExist($core_root . '/styles/BBOOTS/template/gallery/imageblock_layout.html');
-		$this->assertFileDoesNotExist($core_root . '/styles/FLATBOOTS/template/gallery/imageblock_layout.html');
+		$this->assertStringNotContainsString('GALLERY_CLASSIC_TITLE_ALIGN_START', $bboots_selector);
+		$this->assertStringNotContainsString('GALLERY_CLASSIC_TITLE_ALIGN_START', $flatboots_selector);
+	}
+
+	public function test_futuristic_layout_preserves_gallery_contracts_and_has_a_theme_variant(): void
+	{
+		$core_root = dirname(__DIR__);
+		$albums = (string) file_get_contents($core_root . '/styles/all/template/gallery/albumlist_futuristic.html');
+		$images = (string) file_get_contents($core_root . '/styles/all/template/gallery/imageblock_futuristic.html');
+		$css = (string) file_get_contents($core_root . '/styles/all/theme/gallery.css');
+
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$variant = strtolower($style);
+			$selector = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/imageblock_layout.html');
+			$this->assertStringContainsString("GALLERY_INDEX_ALBUM_LAYOUT == 'futuristic'", $selector, $style);
+			$this->assertStringContainsString("GALLERY_FUTURISTIC_VARIANT: '" . $variant . "'", $selector, $style);
+			$this->assertStringContainsString('.gallery-futuristic--' . $variant, $css, $style);
+		}
+
+		$this->assertStringContainsString('albumrow.S_PERSONAL_SECTION_START', $albums);
+		$this->assertStringContainsString('albumrow.S_UNREAD_ALBUM', $albums);
+		$this->assertStringContainsString('albumrow.S_LOCKED_ALBUM', $albums);
+		$this->assertStringContainsString('albumrow.subalbum|length', $albums);
+		$this->assertStringContainsString('albumrow.UNAPPROVED_IMAGES', $albums);
+		$this->assertStringContainsString('albumrow.LAST_USER_FULL', $albums);
+		$this->assertStringContainsString('phpbbgallery_core_album_image_actions', $images);
+		$this->assertStringContainsString('phpbbgallery_core_album_image_metadata', $images);
+		$this->assertStringContainsString('album_rating_stars.html', $images);
+		$this->assertStringContainsString('S_STATUS_UNAPPROVED_ACTION', $images);
+		$this->assertStringContainsString('grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr));', $css);
+		$this->assertStringContainsString('@media (prefers-reduced-motion', str_replace('(hover: hover) and ', '', $css));
 	}
 
 	public function test_album_recent_random_and_search_grids_use_the_layout_selector_in_every_style(): void

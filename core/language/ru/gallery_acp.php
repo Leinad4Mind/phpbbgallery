@@ -251,6 +251,7 @@ $lang = array_merge($lang, [
 	'INDEX_ALBUM_LAYOUT_CLASSIC'           => 'Классический стиль MOD',
 	'INDEX_ALBUM_LAYOUT_MODERN'            => 'Современный адаптивный список',
 	'INDEX_ALBUM_LAYOUT_CARDS'             => 'Современные карточки',
+	'INDEX_ALBUM_LAYOUT_FUTURISTIC'        => 'Футуристическая прозрачная сетка',
 	'INVALID_INDEX_ALBUM_LAYOUT'           => 'Выбранное представление Галереи недействительно.',
 	'INFO_LINE'                            => 'Выводить размер файла на миниатюре',
 	'INHERIT_PERMISSIONS_ALBUM'            => 'Копировать права доступа из другого альбома',

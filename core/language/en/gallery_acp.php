@@ -205,6 +205,7 @@ $lang = array_merge($lang, [
 	'INDEX_ALBUM_LAYOUT_CLASSIC' => 'Classic MOD-inspired',
 	'INDEX_ALBUM_LAYOUT_MODERN'  => 'Modern responsive list',
 	'INDEX_ALBUM_LAYOUT_CARDS'   => 'Modern cards',
+	'INDEX_ALBUM_LAYOUT_FUTURISTIC' => 'Futuristic glass grid',
 	'INVALID_INDEX_ALBUM_LAYOUT' => 'The selected Gallery layout is invalid.',
 	'INFO_LINE'                  => 'Display file-size on thumbnail',
 	'INHERIT_PERMISSIONS_ALBUM'  => 'Copy permissions from another album',

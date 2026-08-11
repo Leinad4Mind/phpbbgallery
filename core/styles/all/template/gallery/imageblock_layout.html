@@ -1,5 +1,7 @@
 {% if GALLERY_INDEX_ALBUM_LAYOUT == 'classic' %}
 	{% include '@phpbbgallery_core/gallery/imageblock_classic.html' %}
+{% elseif GALLERY_INDEX_ALBUM_LAYOUT == 'futuristic' %}
+	{% include '@phpbbgallery_core/gallery/imageblock_futuristic.html' %}
 {% else %}
 	{% include 'gallery/imageblock_polaroid.html' %}
 {% endif %}

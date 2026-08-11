@@ -16,6 +16,7 @@ class config
 	public const INDEX_ALBUM_LAYOUT_CLASSIC = 'classic';
 	public const INDEX_ALBUM_LAYOUT_MODERN = 'modern';
 	public const INDEX_ALBUM_LAYOUT_CARDS = 'cards';
+	public const INDEX_ALBUM_LAYOUT_FUTURISTIC = 'futuristic';
 
 	private \phpbb\config\config $config;
 
@@ -215,6 +216,7 @@ class config
 			self::INDEX_ALBUM_LAYOUT_CLASSIC,
 			self::INDEX_ALBUM_LAYOUT_MODERN,
 			self::INDEX_ALBUM_LAYOUT_CARDS,
+			self::INDEX_ALBUM_LAYOUT_FUTURISTIC,
 		];
 	}
 

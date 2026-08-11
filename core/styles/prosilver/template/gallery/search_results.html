@@ -83,6 +83,8 @@ function toggleElement(oElement)
 {% if SEARCH_MATCHES %}
 {% if GALLERY_INDEX_ALBUM_LAYOUT == 'classic' %}
 	{% include '@phpbbgallery_core/gallery/imageblock_classic.html' with { GALLERY_CLASSIC_TITLE_ALIGN_START: true } %}
+{% elseif GALLERY_INDEX_ALBUM_LAYOUT == 'futuristic' %}
+	{% include '@phpbbgallery_core/gallery/imageblock_futuristic.html' with { GALLERY_FUTURISTIC_VARIANT: 'prosilver' } %}
 {% else %}
 {% for imageblock in imageblock %}
 <span class="clear"></span>

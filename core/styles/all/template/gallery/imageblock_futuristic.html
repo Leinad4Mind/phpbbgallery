@@ -1,0 +1,65 @@
+{% set futuristic_variant = GALLERY_FUTURISTIC_VARIANT|default('generic') %}
+{% for imageblock in imageblock|default([]) %}
+<section class="gallery-futuristic gallery-futuristic--{{ futuristic_variant }} gallery-futuristic-image-block">
+	{% if imageblock.BLOCK_NAME %}
+	<h2 class="gallery-futuristic-section-title gallery-futuristic-image-section-title">
+		<span class="gallery-futuristic-section-icon" aria-hidden="true"><i class="icon fa fa-picture-o fa-fw"></i></span>
+		{% if imageblock.U_BLOCK %}<a href="{{ imageblock.U_BLOCK }}">{{ imageblock.BLOCK_NAME }}</a>{% else %}{{ imageblock.BLOCK_NAME }}{% endif %}
+	</h2>
+	{% endif %}
+
+	{% if imageblock.ERROR %}
+		<div class="gallery-futuristic-empty-state"><i class="icon fa fa-exclamation-circle fa-fw" aria-hidden="true"></i> {{ imageblock.ERROR }}</div>
+	{% else %}
+	<div class="gallery-futuristic-image-grid" style="--gallery-futuristic-thumbnail-size: {{ S_THUMBNAIL_SIZE|default(180) }}px;">
+	{% for image in imageblock.image %}
+		{% if image.S_IMAGE_AWARD_PLACEHOLDER %}
+			<div class="gallery-futuristic-image-placeholder" aria-hidden="true"></div>
+		{% else %}
+		<article class="gallery-image-card gallery-futuristic-image{% if image.S_STATUS_UNAPPROVED or image.S_UNAPPROVED %} gallery-futuristic-image--unapproved image_unapproved{% endif %}{% if image.S_LOCKED %} gallery-futuristic-image--locked{% endif %}{% if image.S_REPORTED %} gallery-futuristic-image--reported image_reported{% endif %}">
+			{% EVENT phpbbgallery_core_album_image_actions %}
+			<header class="gallery-futuristic-image-header">
+				<h3 class="gallery-futuristic-image-title">{% if image.U_IMAGE %}<a href="{{ image.U_IMAGE }}">{% endif %}{{ image.UC_IMAGE_NAME }}{% if image.U_IMAGE %}</a>{% endif %}</h3>
+				<span class="gallery-futuristic-image-index" aria-hidden="true">{{ loop.index }}</span>
+			</header>
+
+			<div class="gallery-futuristic-thumbnail">
+				<span class="gallery-futuristic-thumbnail-grid" aria-hidden="true"></span>
+				{% if image.UC_THUMBNAIL_ACTION %}<a href="{{ image.UC_THUMBNAIL_ACTION }}">{% endif %}<img src="{{ image.UC_THUMBNAIL }}" alt="{{ image.UC_IMAGE_NAME }}" title="{{ lang('VIEW_IMAGE') }}{{ lang('COLON') }} {{ image.UC_IMAGE_NAME }}" loading="lazy">{% if image.UC_THUMBNAIL_ACTION %}</a>{% endif %}
+				{% if image.S_IMAGE_AWARD_RANK > 0 %}
+				<div class="trophy-container">
+					<i class="trophy-icon fa-trophy fa-stack-2x trophy-color-{{ image.S_IMAGE_AWARD_RANK }}"></i>
+					<strong class="fa-stack-1x trophy-text">{{ image.S_IMAGE_AWARD_RANK }}</strong>
+				</div>
+				{% endif %}
+				{% if image.S_STATUS_UNAPPROVED or image.S_UNAPPROVED %}<span class="gallery-futuristic-status">{{ lang('IMAGE_NOT_APPROVED') }}</span>{% endif %}
+			</div>
+
+			<div class="gallery-futuristic-image-details">
+				{% if image.IMAGE_SUBTITLE %}<p class="gallery-futuristic-image-subtitle" title="{{ image.IMAGE_SUBTITLE }}">{{ image.IMAGE_SUBTITLE }}</p>{% endif %}
+				<div class="gallery-futuristic-metadata">
+					{% if image.U_ALBUM %}<div class="gallery-image-card-metadata-item gallery-futuristic-metadata-item" data-gallery-card-metadata><i class="icon fa fa-folder-open fa-fw" aria-hidden="true"></i> <span>{{ lang('ALBUM_NAME') }}{{ lang('COLON') }} <a href="{{ image.U_ALBUM }}" title="{{ image.ALBUM_NAME }}"><strong>{{ image.ALBUM_NAME }}</strong></a></span></div>{% endif %}
+					{% if image.POSTER %}<div class="gallery-image-card-metadata-item gallery-futuristic-metadata-item" data-gallery-card-metadata><i class="icon fa fa-user fa-fw" aria-hidden="true"></i> <span>{{ lang('UPLOADED_BY_USER') }}{{ lang('COLON') }} {{ image.POSTER }}</span></div>{% endif %}
+					{% if image.TIME %}<div class="gallery-image-card-metadata-item gallery-futuristic-metadata-item" data-gallery-card-metadata><i class="icon fa fa-clock-o fa-fw" aria-hidden="true"></i> <span>{{ image.TIME }}</span></div>{% endif %}
+					{% if image.IMAGE_RESOLUTION %}<div class="gallery-image-card-metadata-item gallery-futuristic-metadata-item" data-gallery-card-metadata><i class="icon fa fa-expand fa-fw" aria-hidden="true"></i> <span>{{ lang('IMAGE_RESOLUTION') }}{{ lang('COLON') }} {{ image.IMAGE_RESOLUTION }}</span></div>{% endif %}
+					{% if image.IMAGE_VIEWS > -1 %}<div class="gallery-image-card-metadata-item gallery-futuristic-metadata-item" data-gallery-card-metadata><i class="icon fa fa-eye fa-fw" aria-hidden="true"></i> <span>{{ lang('IMAGE_VIEWS') }}{{ lang('COLON') }} {{ image.IMAGE_VIEWS }}</span></div>{% endif %}
+					<div class="gallery-image-card-metadata-item gallery-futuristic-metadata-item gallery-futuristic-event-metadata" data-gallery-card-metadata>{% EVENT phpbbgallery_core_album_image_metadata %}</div>
+					{% if image.S_RATINGS %}<div class="gallery-image-card-rating gallery-futuristic-metadata-item gallery-futuristic-rating"><i class="icon fa fa-star fa-fw" aria-hidden="true"></i> <span>{{ lang('RATING') }}{{ lang('COLON') }} {% include '@phpbbgallery_core/gallery/album_rating_stars.html' %}</span></div>{% endif %}
+					{% if image.S_COMMENTS %}<div class="gallery-image-card-metadata-item gallery-futuristic-metadata-item" data-gallery-card-metadata><i class="icon fa fa-comments fa-fw" aria-hidden="true"></i> <span>{{ image.L_COMMENTS }}{{ lang('COLON') }} <a href="{{ image.U_COMMENTS }}">{{ image.S_COMMENTS }}</a></span></div>{% endif %}
+					{% if image.U_USER_IP %}<div class="gallery-image-card-metadata-item gallery-futuristic-metadata-item" data-gallery-card-metadata><i class="icon fa fa-info-circle fa-fw" aria-hidden="true"></i> <span>{{ lang('IP') }}{{ lang('COLON') }} {% include '@phpbbgallery_core/gallery/ip_privacy_toggle.html' with { ip_value: image.U_USER_IP } %}</span></div>{% endif %}
+				</div>
+			</div>
+
+			{% if image.S_STATUS_UNAPPROVED_ACTION %}
+			<form method="post" class="gallery-futuristic-approval" action="{{ image.S_STATUS_UNAPPROVED_ACTION }}">
+				<input class="button2 btn btn-danger" type="submit" value="{{ lang('DISAPPROVE') }}" name="action[disapprove]">
+				<input class="button1 btn btn-success" type="submit" value="{{ lang('APPROVE') }}" name="action[approve]">
+			</form>
+			{% endif %}
+		</article>
+		{% endif %}
+	{% endfor %}
+	</div>
+	{% endif %}
+</section>
+{% endfor %}

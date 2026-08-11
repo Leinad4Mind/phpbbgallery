@@ -1,0 +1,76 @@
+{% set futuristic_variant = GALLERY_FUTURISTIC_VARIANT|default('generic') %}
+<div class="gallery-futuristic gallery-futuristic--{{ futuristic_variant }} gallery-futuristic-album-list">
+{% for albumrow in albumrow %}
+	{% if albumrow.S_PUBLIC_SECTION_START or albumrow.S_PERSONAL_SECTION_START %}
+		<h2 class="gallery-futuristic-section-title">
+			<span class="gallery-futuristic-section-icon" aria-hidden="true"><i class="icon fa {% if albumrow.S_PERSONAL_SECTION_START %}fa-user{% else %}fa-folder-open{% endif %} fa-fw"></i></span>
+			{% if albumrow.S_PERSONAL_SECTION_START %}{{ lang('PERSONAL_ALBUMS') }}{% else %}{{ GALLERY_PUBLIC_ALBUMS_LABEL }}{% endif %}
+		</h2>
+	{% endif %}
+
+	{% if albumrow.S_IS_CAT %}
+		<section class="gallery-futuristic-category">
+			<span class="gallery-futuristic-category-marker" aria-hidden="true"></span>
+			<div>
+				<h3><i class="icon fa fa-folder-open fa-fw" aria-hidden="true"></i> <a href="{{ albumrow.U_VIEWALBUM }}">{{ albumrow.ALBUM_NAME }}</a></h3>
+				{% if albumrow.ALBUM_DESC %}<div class="gallery-futuristic-category-description">{{ albumrow.ALBUM_DESC }}</div>{% endif %}
+			</div>
+		</section>
+	{% else %}
+		<article class="gallery-futuristic-album{% if albumrow.S_PERSONAL_ALBUM %} gallery-personal-album{% endif %}{% if albumrow.S_UNREAD_ALBUM %} gallery-futuristic-album--unread{% endif %}{% if albumrow.S_LOCKED_ALBUM %} gallery-futuristic-album--locked{% endif %}">
+			<div class="gallery-futuristic-album-main">
+				<a class="gallery-futuristic-album-visual" href="{{ albumrow.U_VIEWALBUM }}" aria-label="{{ lang('VIEW_ALBUM') }}{{ lang('COLON') }} {{ albumrow.ALBUM_NAME }}">
+					<span class="gallery-futuristic-visual-glow" aria-hidden="true"></span>
+					{% if albumrow.ALBUM_IMAGE %}
+						<img src="{{ T_IMAGES_PATH }}{{ albumrow.ALBUM_IMAGE }}" alt="">
+					{% elseif albumrow.LAST_IMAGE_TIME and albumrow.UC_THUMBNAIL %}
+						<img src="{{ albumrow.UC_THUMBNAIL }}" alt="">
+					{% else %}
+						<i class="icon fa {% if albumrow.S_LOCKED_ALBUM %}fa-lock{% elseif albumrow.S_UNREAD_ALBUM %}fa-folder-open{% else %}fa-folder{% endif %} fa-fw gallery-futuristic-placeholder-icon" aria-hidden="true"></i>
+					{% endif %}
+					{% if albumrow.S_UNREAD_ALBUM %}<span class="gallery-futuristic-unread-signal" title="{{ lang('NEW_IMAGES') }}"><span class="sr-only">{{ lang('NEW_IMAGES') }}</span></span>{% endif %}
+				</a>
+
+				<div class="gallery-futuristic-album-content">
+					<div class="gallery-futuristic-album-heading">
+						<a href="{{ albumrow.U_VIEWALBUM }}" class="gallery-futuristic-album-title"{% if S_PERSONAL_GALLERY and albumrow.ALBUM_COLOUR %} style="color: {{ albumrow.ALBUM_COLOUR }};"{% endif %}>{{ albumrow.ALBUM_NAME }}</a>
+						{% if albumrow.S_LOCKED_ALBUM %}<span class="gallery-futuristic-state" title="{{ lang('ALBUM_LOCKED') }}"><i class="icon fa fa-lock fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('ALBUM_LOCKED') }}</span></span>{% endif %}
+					</div>
+					{% if albumrow.ALBUM_DESC %}<div class="gallery-futuristic-album-description">{{ albumrow.ALBUM_DESC }}</div>{% endif %}
+					{% if albumrow.MODERATORS %}
+						<div class="gallery-futuristic-album-details"><i class="icon fa fa-shield fa-fw" aria-hidden="true"></i> <strong>{{ albumrow.L_MODERATOR_STR }}{{ lang('COLON') }}</strong> {{ albumrow.MODERATORS }}</div>
+					{% endif %}
+					{% if albumrow.subalbum|length and albumrow.S_LIST_SUBALBUMS %}
+						<div class="gallery-futuristic-subalbums">
+						{% for subalbum in albumrow.subalbum %}
+							<a href="{{ subalbum.U_SUBALBUM }}" class="{% if subalbum.S_UNREAD %}unread{% else %}read{% endif %}" title="{% if subalbum.S_UNREAD %}{{ lang('NEW_IMAGES') }}{% else %}{{ lang('NO_NEW_IMAGES') }}{% endif %}"><i class="icon fa fa-folder fa-fw" aria-hidden="true"></i> {{ subalbum.SUBALBUM_NAME }}</a>
+						{% endfor %}
+						</div>
+					{% endif %}
+				</div>
+			</div>
+
+			<footer class="gallery-futuristic-album-summary">
+				<div class="gallery-futuristic-image-count">
+					<i class="icon fa fa-picture-o fa-fw" aria-hidden="true"></i>
+					<span><strong>{{ albumrow.IMAGES }}{% if albumrow.UNAPPROVED_IMAGES %}<span class="reported-images-number"> + {{ albumrow.UNAPPROVED_IMAGES }}</span>{% endif %}</strong> {{ lang('IMAGES') }}</span>
+				</div>
+				<div class="gallery-futuristic-last-image">
+				{% if albumrow.LAST_IMAGE_TIME %}
+					{% if albumrow.UC_FAKE_THUMBNAIL %}<a class="gallery-futuristic-last-image-visual" href="{{ albumrow.UC_IMAGE_URL }}"><img src="{{ albumrow.UC_FAKE_THUMBNAIL }}" alt=""></a>{% endif %}
+					<div class="gallery-futuristic-last-image-details">
+						<strong>{{ lang('LAST_IMAGE') }}</strong>
+						<span>{{ lang('POST_BY_AUTHOR') }} {{ albumrow.LAST_USER_FULL }}</span>
+						<time><i class="icon fa fa-clock-o fa-fw" aria-hidden="true"></i> {{ albumrow.LAST_IMAGE_TIME }}</time>
+					</div>
+				{% else %}
+					<span class="gallery-futuristic-empty"><i class="icon fa fa-circle-o fa-fw" aria-hidden="true"></i> {{ lang('NO_IMAGES') }}</span>
+				{% endif %}
+				</div>
+			</footer>
+		</article>
+	{% endif %}
+{% else %}
+	<div class="gallery-futuristic-empty-state"><i class="icon fa fa-folder-open-o fa-fw" aria-hidden="true"></i> <strong>{{ lang('NO_ALBUMS') }}</strong></div>
+{% endfor %}
+</div>

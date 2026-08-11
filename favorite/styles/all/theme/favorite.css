@@ -80,6 +80,17 @@
 	font-size: 14px;
 }
 
+.gallery-futuristic-image > .gallery-favorite-action
+{
+	inset-inline-end: 11px;
+	top: 10px;
+}
+
+.gallery-futuristic-image > .gallery-favorite-action ~ .gallery-futuristic-image-header
+{
+	padding-inline-end: 50px;
+}
+
 .gallery-favorite-icon.fa-heart
 {
 	color: #d9534f;
