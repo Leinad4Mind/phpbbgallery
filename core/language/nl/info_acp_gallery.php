@@ -24,6 +24,11 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
+	'GALLERY_HELPLINE_ALBUM_EMBED' => 'Galerijalbum: [album]album_id[/album] sluit een gepagineerd en op rechten gefilterd album in het bericht in.',
+	'GALLERY_HELPLINE_GALLERYALBUM' => 'Galerijalbum: [galleryalbum]album_id[/galleryalbum], gebruikt omdat [album] bij een andere of verouderde BBCode hoort.',
+]);
+
+$lang = array_merge($lang, [
 	'ACP_GALLERY_ALBUM_MANAGEMENT'       => 'Beheer album',
 	'ACP_GALLERY_ALBUM_PERMISSIONS'      => 'Permissies',
 	'ACP_GALLERY_ALBUM_PERMISSIONS_COPY' => 'Kopieer permissies',

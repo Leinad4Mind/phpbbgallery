@@ -24,6 +24,8 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
+	'GALLERY_HELPLINE_ALBUM_EMBED'  => 'Албум от галерията: [album]album_id[/album] вгражда в публикацията албум със страници и филтриране според правата.',
+	'GALLERY_HELPLINE_GALLERYALBUM' => 'Албум от галерията: [galleryalbum]album_id[/galleryalbum], използва се, когато [album] принадлежи на друг или наследен BBCode.',
 	'ACP_GALLERY_ALBUM_MANAGEMENT'       => 'Оправление на албуми',
 	'ACP_GALLERY_ALBUM_PERMISSIONS'      => 'Права',
 	'ACP_GALLERY_ALBUM_PERMISSIONS_COPY' => 'Копиране на права',

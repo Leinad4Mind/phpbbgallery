@@ -53,7 +53,29 @@ class notification_lifecycle_test extends TestCase
 		$extension->enable_step('');
 		$this->assertFalse($extension->enable_step('notifications'));
 
-		$this->assertSame('GALLERY_CORE_ENABLE_BBCODE_FALLBACK', $manager->success_message);
+		$this->assertSame('GALLERY_CORE_ENABLE_IMAGE_BBCODE_FALLBACK', $manager->success_message);
+	}
+
+	public function test_enable_reports_when_galleryalbum_preserves_an_existing_album_bbcode(): void
+	{
+		$manager = $this->create_notification_manager();
+		$extension = $this->create_extension($manager, null, 'image', 'galleryalbum');
+
+		$extension->enable_step('');
+		$this->assertFalse($extension->enable_step('notifications'));
+
+		$this->assertSame('GALLERY_CORE_ENABLE_ALBUM_BBCODE_FALLBACK', $manager->success_message);
+	}
+
+	public function test_enable_reports_both_bbcode_fallbacks_together(): void
+	{
+		$manager = $this->create_notification_manager();
+		$extension = $this->create_extension($manager, null, 'galleryimage', 'galleryalbum');
+
+		$extension->enable_step('');
+		$this->assertFalse($extension->enable_step('notifications'));
+
+		$this->assertSame('GALLERY_CORE_ENABLE_BBCODE_FALLBACK_BOTH', $manager->success_message);
 	}
 
 	public function test_disable_uses_the_same_types_and_disables_sub_extensions(): void
@@ -144,14 +166,15 @@ class notification_lifecycle_test extends TestCase
 	 * @param object|null $extension_manager
 	 * @return gallery_extension
 	 */
-	private function create_extension($notification_manager, $extension_manager = null, string $bbcode_tag = 'image')
+	private function create_extension($notification_manager, $extension_manager = null, string $bbcode_tag = 'image',
+		string $album_bbcode_tag = 'album')
 	{
 		if ($extension_manager === null)
 		{
 			$extension_manager = $this->create_extension_manager();
 		}
 
-		$container = new class($notification_manager, $extension_manager, $bbcode_tag) {
+		$container = new class($notification_manager, $extension_manager, $bbcode_tag, $album_bbcode_tag) {
 			/** @var object */
 			private $notification_manager;
 
@@ -159,12 +182,15 @@ class notification_lifecycle_test extends TestCase
 			private $extension_manager;
 
 			private string $bbcode_tag;
+			private string $album_bbcode_tag;
 
-			public function __construct($notification_manager, $extension_manager, string $bbcode_tag)
+			public function __construct($notification_manager, $extension_manager, string $bbcode_tag,
+				string $album_bbcode_tag)
 			{
 				$this->notification_manager = $notification_manager;
 				$this->extension_manager = $extension_manager;
 				$this->bbcode_tag = $bbcode_tag;
+				$this->album_bbcode_tag = $album_bbcode_tag;
 			}
 
 			public function get($service)
@@ -181,7 +207,10 @@ class notification_lifecycle_test extends TestCase
 
 				if ($service === 'config')
 				{
-					return new \ArrayObject(['phpbb_gallery_bbcode_tag' => $this->bbcode_tag]);
+					return new \ArrayObject([
+						'phpbb_gallery_bbcode_tag' => $this->bbcode_tag,
+						'phpbb_gallery_album_bbcode_tag' => $this->album_bbcode_tag,
+					]);
 				}
 
 				if ($service === 'user')

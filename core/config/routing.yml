@@ -44,6 +44,12 @@ phpbbgallery_core_album_page:
     requirements:
         album_id: \d+
         page: \d+
+phpbbgallery_core_album_embed:
+    path: /gallery/album/{album_id}/embed
+    defaults: { _controller: phpbbgallery.core.controller.album_embed:page }
+    methods: [GET]
+    requirements:
+        album_id: \d+
 phpbbgallery_core_album_upload:
     path: /gallery/album/{album_id}/upload
     defaults: { _controller: phpbbgallery.core.controller.upload:main }

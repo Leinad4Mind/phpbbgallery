@@ -66,7 +66,7 @@ namespace phpbbgallery\core\tests
 					$built_arrays,
 					static fn(array $entry): bool => $entry['operation'] === 'INSERT'
 				));
-				$this->assertCount(2, $inserts);
+				$this->assertCount(1, $inserts);
 				$by_tag = [];
 				foreach ($inserts as $insert)
 				{
@@ -74,16 +74,12 @@ namespace phpbbgallery\core\tests
 				}
 
 				$this->assertSame(NUM_CORE_BBCODES + 1, $by_tag['image']['bbcode_id']);
-				$this->assertSame(NUM_CORE_BBCODES + 2, $by_tag['album']['bbcode_id']);
-				$this->assertNotSame($by_tag['image']['bbcode_id'], $by_tag['album']['bbcode_id']);
 				$this->assertSame(1, $by_tag['image']['display_on_posting']);
-				$this->assertSame(0, $by_tag['album']['display_on_posting']);
 				$this->assertSame('GALLERY_HELPLINE_IMAGE', $by_tag['image']['bbcode_helpline']);
-				$this->assertSame('GALLERY_HELPLINE_IMAGE_LEGACY', $by_tag['album']['bbcode_helpline']);
 				$this->assertStringContainsString($expected_base_url . '{NUMBER}/source', $by_tag['image']['bbcode_tpl']);
 				$this->assertStringContainsString($expected_base_url . '${1}/source', $by_tag['image']['second_pass_replace']);
 				$this->assertStringNotContainsString('sid=', serialize($inserts));
-				$this->assertSame(2, $this->query_count($queries, 'INSERT INTO phpbb_bbcodes'));
+				$this->assertSame(1, $this->query_count($queries, 'INSERT INTO phpbb_bbcodes'));
 				$this->assertSame(1, $this->query_count($queries, 'MAX(bbcode_id)'));
 			}
 		}

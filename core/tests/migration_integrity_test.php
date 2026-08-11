@@ -52,6 +52,7 @@ use phpbbgallery\core\migrations\index_album_layout;
 use phpbbgallery\core\migrations\gallery_index_featured_modes;
 use phpbbgallery\core\migrations\group_leader_permissions;
 use phpbbgallery\core\migrations\relocate_personal_album_profile_field;
+use phpbbgallery\core\migrations\gallery_album_bbcode;
 
 class migration_integrity_test extends TestCase
 {
@@ -97,6 +98,7 @@ class migration_integrity_test extends TestCase
 		gallery_index_featured_modes::class,
 		group_leader_permissions::class,
 		relocate_personal_album_profile_field::class,
+		gallery_album_bbcode::class,
 		release_4_1_0::class,
 	];
 
@@ -300,7 +302,7 @@ class migration_integrity_test extends TestCase
 		$migration = (new \ReflectionClass(release_4_1_0::class))->newInstanceWithoutConstructor();
 
 		$this->assertSame([
-			'\\phpbbgallery\\core\\migrations\\relocate_personal_album_profile_field',
+			'\\phpbbgallery\\core\\migrations\\gallery_album_bbcode',
 		], release_4_1_0::depends_on());
 		$this->assertSame([
 			['config.update', ['phpbb_gallery_version', '4.1.0']],
@@ -1187,6 +1189,7 @@ class migration_integrity_test extends TestCase
 			'gallery_index_featured_modes.php',
 			'group_leader_permissions.php',
 			'relocate_personal_album_profile_field.php',
+			'gallery_album_bbcode.php',
 			'release_4_1_0.php',
 		] as $migration)
 		{

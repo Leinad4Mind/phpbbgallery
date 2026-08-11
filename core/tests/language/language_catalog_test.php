@@ -365,6 +365,9 @@ class language_catalog_test extends TestCase
 		{
 			$language = $this->load_language($directory . '/install_gallery.php');
 			$this->assertSame([
+				'GALLERY_CORE_ENABLE_IMAGE_BBCODE_FALLBACK',
+				'GALLERY_CORE_ENABLE_ALBUM_BBCODE_FALLBACK',
+				'GALLERY_CORE_ENABLE_BBCODE_FALLBACK_BOTH',
 				'GALLERY_BBCODE_CONFLICT',
 				'GALLERY_BBCODE_LIMIT_REACHED',
 				'GALLERY_CORE_ENABLE_SUCCESS',
@@ -374,6 +377,10 @@ class language_catalog_test extends TestCase
 			], array_keys($language), basename($directory));
 			$this->assertSame(['s'], $this->placeholder_shape($language['GALLERY_BBCODE_CONFLICT']), basename($directory));
 			$this->assertSame(['s'], $this->placeholder_shape($language['GALLERY_BBCODE_LIMIT_REACHED']), basename($directory));
+			$this->assertStringContainsString('[galleryimage]', $language['GALLERY_CORE_ENABLE_IMAGE_BBCODE_FALLBACK'], basename($directory));
+			$this->assertStringContainsString('[galleryalbum]', $language['GALLERY_CORE_ENABLE_ALBUM_BBCODE_FALLBACK'], basename($directory));
+			$this->assertStringContainsString('[galleryimage]', $language['GALLERY_CORE_ENABLE_BBCODE_FALLBACK_BOTH'], basename($directory));
+			$this->assertStringContainsString('[galleryalbum]', $language['GALLERY_CORE_ENABLE_BBCODE_FALLBACK_BOTH'], basename($directory));
 		}
 	}
 

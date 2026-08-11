@@ -74,6 +74,19 @@ services:
             - '@phpbbgallery.core.rating'
             - '@phpbbgallery.core.unread_counter'
             - '%phpbbgallery.tables.gallery_images%'
+    phpbbgallery.core.controller.album_embed:
+        class: phpbbgallery\core\controller\album_embed
+        arguments:
+            - '@dbal.conn'
+            - '@request'
+            - '@user'
+            - '@language'
+            - '@controller.helper'
+            - '@phpbbgallery.core.album.loader'
+            - '@phpbbgallery.core.auth'
+            - '@phpbbgallery.core.config'
+            - '@phpbbgallery.core.unread_counter'
+            - '%phpbbgallery.tables.gallery_images%'
     phpbbgallery.core.controller.file:
         class: phpbbgallery\core\controller\file
         arguments:

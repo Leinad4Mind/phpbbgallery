@@ -23,6 +23,11 @@ if (empty($lang) || !is_array($lang))
 	$lang = [];
 }
 
+$lang = array_merge($lang, [
+	'GALLERY_HELPLINE_ALBUM_EMBED' => 'Album de la Galerie : [album]id_album[/album] intègre dans le message un album paginé et filtré selon les permissions.',
+	'GALLERY_HELPLINE_GALLERYALBUM' => 'Album de la Galerie : [galleryalbum]id_album[/galleryalbum], utilisé car [album] appartient à un autre BBCode ou à l’alias historique.',
+]);
+
 // DEVELOPERS PLEASE NOTE
 //
 // All language files should use UTF-8 as their encoding and the files must not contain a BOM.

@@ -33,6 +33,7 @@ final class infrastructure_types_test extends TestCase
 		$this->assertSame('local', $gallery_config->get('storage_provider'));
 		$this->assertTrue($gallery_config->get('disp_new_image_count'));
 		$this->assertSame('image', $gallery_config->get_bbcode_tag());
+		$this->assertSame('album', $gallery_config->get_album_bbcode_tag());
 		$this->assertSame('cards', $gallery_config->get_index_album_layout());
 		$this->assertSame(['classic', 'modern', 'cards'], gallery_config::index_album_layouts());
 		$this->assertSame(25, $gallery_config->get_all()['items_per_page']);
@@ -53,6 +54,10 @@ final class infrastructure_types_test extends TestCase
 		$this->assertSame('galleryimage', $gallery_config->get_bbcode_tag());
 		$gallery_config->set('bbcode_tag', 'invalid');
 		$this->assertSame('image', $gallery_config->get_bbcode_tag());
+		$gallery_config->set('album_bbcode_tag', 'galleryalbum');
+		$this->assertSame('galleryalbum', $gallery_config->get_album_bbcode_tag());
+		$gallery_config->set('album_bbcode_tag', 'invalid');
+		$this->assertSame('album', $gallery_config->get_album_bbcode_tag());
 		$gallery_config->set('index_album_layout', 'classic');
 		$this->assertSame('classic', $gallery_config->get_index_album_layout());
 		$gallery_config->set('index_album_layout', '../template');

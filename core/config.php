@@ -38,6 +38,7 @@ class config
 		'allow_zip'			=> false,
 		'ajax_navigation'	=> false,
 		'bbcode_tag'		=> 'image',
+		'album_bbcode_tag'	=> 'album',
 
 		'captcha_comment'		=> true,
 		'captcha_upload'		=> true,
@@ -194,6 +195,13 @@ class config
 		$tag = strtolower(trim((string) $this->get('bbcode_tag')));
 
 		return in_array($tag, ['image', 'galleryimage'], true) ? $tag : 'image';
+	}
+
+	public function get_album_bbcode_tag(): string
+	{
+		$tag = strtolower(trim((string) $this->get('album_bbcode_tag')));
+
+		return in_array($tag, ['album', 'galleryalbum'], true) ? $tag : 'album';
 	}
 
 	/**

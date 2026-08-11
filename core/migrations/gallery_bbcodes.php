@@ -51,7 +51,7 @@ class gallery_bbcodes extends migration
 		$definitions = [$image_tag => true];
 		$rows = [$image_tag => $image_row];
 		$album_row = $this->get_bbcode(self::LEGACY_IMAGE_TAG);
-		if (!$album_row || $this->is_gallery_bbcode($album_row, self::LEGACY_IMAGE_TAG))
+		if ($album_row && $this->is_gallery_bbcode($album_row, self::LEGACY_IMAGE_TAG))
 		{
 			$definitions[self::LEGACY_IMAGE_TAG] = false;
 			$rows[self::LEGACY_IMAGE_TAG] = $album_row;

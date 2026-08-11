@@ -93,15 +93,25 @@ class ext extends \phpbb\extension\base
 			default:
 				// Run parent enable step method
 				$next_state = parent::enable_step($old_state);
-				if ($next_state === false
-					&& ($this->container->get('config')['phpbb_gallery_bbcode_tag'] ?? 'image') === 'galleryimage')
+				if ($next_state === false)
 				{
-					$user = $this->container->get('user');
-					$user->add_lang_ext('phpbbgallery/core', 'install_gallery');
-					$this->container->get('template')->assign_var(
-						'L_EXTENSION_ENABLE_SUCCESS',
-						$user->lang('GALLERY_CORE_ENABLE_BBCODE_FALLBACK')
-					);
+					$config = $this->container->get('config');
+					$image_fallback = ($config['phpbb_gallery_bbcode_tag'] ?? 'image') === 'galleryimage';
+					$album_fallback = ($config['phpbb_gallery_album_bbcode_tag'] ?? 'album') === 'galleryalbum';
+					if ($image_fallback || $album_fallback)
+					{
+						$user = $this->container->get('user');
+						$user->add_lang_ext('phpbbgallery/core', 'install_gallery');
+						$key = $image_fallback && $album_fallback
+							? 'GALLERY_CORE_ENABLE_BBCODE_FALLBACK_BOTH'
+							: ($image_fallback
+								? 'GALLERY_CORE_ENABLE_IMAGE_BBCODE_FALLBACK'
+								: 'GALLERY_CORE_ENABLE_ALBUM_BBCODE_FALLBACK');
+						$this->container->get('template')->assign_var(
+							'L_EXTENSION_ENABLE_SUCCESS',
+							$user->lang($key)
+						);
+					}
 				}
 				return $next_state;
 			break;

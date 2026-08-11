@@ -23,6 +23,11 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, [
+	'GALLERY_HELPLINE_ALBUM_EMBED' => 'Gallery album: [album]album_id[/album], embeds a permission-filtered, paginated album in the post.',
+	'GALLERY_HELPLINE_GALLERYALBUM' => 'Gallery album: [galleryalbum]album_id[/galleryalbum], used because [album] belongs to another or legacy BBCode.',
+]);
+
+$lang = array_merge($lang, [
 	'ACP_GALLERY_ALBUM_MANAGEMENT'       => 'Album management',
 	'ACP_GALLERY_ALBUM_PERMISSIONS'      => 'Permissions',
 	'ACP_GALLERY_ALBUM_PERMISSIONS_COPY' => 'Copy permissions',

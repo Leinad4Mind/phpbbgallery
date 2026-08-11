@@ -22,6 +22,8 @@ if (empty($lang) || !is_array($lang))
 	$lang = [];
 }
 $lang = array_merge($lang, [
+	'GALLERY_HELPLINE_ALBUM_EMBED'  => 'Альбом галереи: [album]ID_альбома[/album] встраивает в сообщение постраничный альбом с учётом прав доступа.',
+	'GALLERY_HELPLINE_GALLERYALBUM' => 'Альбом галереи: [galleryalbum]ID_альбома[/galleryalbum], используется, когда [album] принадлежит другому или устаревшему BBCode.',
 	'ACP_GALLERY_ALBUM_MANAGEMENT'       => 'Управление альбомом',
 	'ACP_GALLERY_ALBUM_PERMISSIONS'      => 'Права доступа',
 	'ACP_GALLERY_ALBUM_PERMISSIONS_COPY' => 'Копирование прав доступа',

@@ -135,28 +135,11 @@ namespace phpbbgallery\core\tests
 
 		public static function exhausted_bbcode_provider(): array
 		{
-			$gallery_image = [
-				'bbcode_id'           => 31,
-				'bbcode_match'        => '[image]{NUMBER}[/image]',
-				'bbcode_helpline'     => 'GALLERY_HELPLINE_ALBUM',
-				'second_pass_replace' => '/gallery/image/${1}/mini',
-			];
-
 			return [
 				'image capacity' => ['image', [
 					'image' => [false],
 					'album' => [false],
 					'max'   => [['max_bbcode_id' => BBCODE_LIMIT]],
-				]],
-				'album capacity' => ['album', [
-					'image' => [$gallery_image],
-					'album' => [false],
-					'max'   => [['max_bbcode_id' => BBCODE_LIMIT]],
-				]],
-				'only one free ID for two tags' => ['album', [
-					'image' => [false],
-					'album' => [false],
-					'max'   => [['max_bbcode_id' => BBCODE_LIMIT - 1]],
 				]],
 			];
 		}

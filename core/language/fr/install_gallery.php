@@ -40,6 +40,9 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
+	'GALLERY_CORE_ENABLE_IMAGE_BBCODE_FALLBACK' => 'phpBB Gallery Core a été activée. Le BBCode [image] existant a été conservé, car il appartient à une autre définition ; la galerie utilisera [galleryimage] pour les nouvelles images.',
+	'GALLERY_CORE_ENABLE_ALBUM_BBCODE_FALLBACK' => 'phpBB Gallery Core a été activée. Le BBCode [album] existant a été conservé, car il appartient à une autre définition ou à l’alias historique ; la galerie utilisera [galleryalbum] pour les albums intégrés.',
+	'GALLERY_CORE_ENABLE_BBCODE_FALLBACK_BOTH' => 'phpBB Gallery Core a été activée. Les BBCodes [image] et [album] existants ont été conservés ; la galerie utilisera [galleryimage] pour les images et [galleryalbum] pour les albums intégrés.',
 	'GALLERY_BBCODE_CONFLICT' => 'Le BBCode %s ne peut pas être installé, car cette balise appartient à un BBCode personnalisé incompatible. Renommez ou supprimez le BBCode personnalisé, puis réessayez.',
 	'GALLERY_BBCODE_LIMIT_REACHED' => 'Le BBCode %s ne peut pas être installé, car la limite de BBCodes a été atteinte. Supprimez un BBCode, puis réessayez.',
 	'GALLERY_CORE_ENABLE_SUCCESS' => 'phpBB Gallery Core a été activée. Les modules facultatifs ACP Cleanup, ACP Import et EXIF sont également disponibles.',
