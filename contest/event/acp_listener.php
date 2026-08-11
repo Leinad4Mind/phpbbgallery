@@ -116,7 +116,7 @@ class acp_listener implements EventSubscriberInterface
 	{
 		$this->load_acp_language();
 		$event['album_type_data'] = [
-			'contest_start' => time(),
+			'contest_start' => $this->next_minute(),
 			'contest_rating' => 3 * 86400,
 			'contest_end' => 7 * 86400,
 			'contest_winner_thumbnail' => manager::THUMBNAIL_INHERIT,
@@ -142,13 +142,20 @@ class acp_listener implements EventSubscriberInterface
 		$album_data = (array) $event['album_data'];
 		$type_data = (array) $event['album_type_data'];
 		$start = (int) ($type_data['contest_start'] ?? time());
+		$rating = $start + (int) ($type_data['contest_rating'] ?? 0);
+		$end = $start + (int) ($type_data['contest_end'] ?? 0);
+		$now = time();
 		$this->template->assign_vars([
 			'S_ALBUM_ORIG_CONTEST' => (int) ($event['old_album_type'] ?? -1) === (int) manager::ALBUM_TYPE,
 			'S_ALBUM_CONTEST' => (int) ($album_data['album_type'] ?? -1) === (int) manager::ALBUM_TYPE,
+			'S_CONTEST_START_PAST' => $start <= $now,
+			'S_CONTEST_RATING_PAST' => $rating <= $now,
+			'S_CONTEST_END_PAST' => $end <= $now,
 			'ALBUM_CONTEST' => (int) manager::ALBUM_TYPE,
 			'S_CONTEST_START' => $this->user->format_date($start, 'Y-m-d\TH:i'),
-			'CONTEST_RATING' => $this->user->format_date($start + (int) ($type_data['contest_rating'] ?? 0), 'Y-m-d\TH:i'),
-			'CONTEST_END' => $this->user->format_date($start + (int) ($type_data['contest_end'] ?? 0), 'Y-m-d\TH:i'),
+			'CONTEST_RATING' => $this->user->format_date($rating, 'Y-m-d\TH:i'),
+			'CONTEST_END' => $this->user->format_date($end, 'Y-m-d\TH:i'),
+			'CONTEST_MIN_DATE' => $this->user->format_date($this->next_minute(), 'Y-m-d\TH:i'),
 			'CONTEST_WINNER_THUMBNAIL' => manager::normalize_thumbnail_policy(
 				(int) ($type_data['contest_winner_thumbnail'] ?? manager::THUMBNAIL_INHERIT)
 			),
@@ -166,5 +173,10 @@ class acp_listener implements EventSubscriberInterface
 	private function load_acp_language(): void
 	{
 		$this->language->add_lang('contest_acp', 'phpbbgallery/contest');
+	}
+
+	private function next_minute(): int
+	{
+		return (intdiv(time(), 60) + 1) * 60;
 	}
 }

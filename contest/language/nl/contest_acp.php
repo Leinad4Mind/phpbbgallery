@@ -21,6 +21,7 @@ $lang = array_merge($lang, [
 	'ALBUM_NO_TYPE_CHANGE_TO_CONTEST'   => 'Een Niet-Wedstrijd-Album kan niet veranderd worden naar Wedstrijd-Album.',
 	'ALBUM_WITH_CONTEST_NO_TYPE_CHANGE' => 'Wedstrijd-Albums kunnen niet veranderd worden naar Niet-Wedstrijd-Album.',
 	'CONTEST_DATE_EXPLAIN'                => 'Selecteer de datum en tijd. De tijdzone uit je phpBB-profiel wordt gebruikt.',
+	'CONTEST_DATE_MUST_BE_FUTURE'         => '%s moet in de toekomst liggen.',
 	'CONTEST_END'                         => 'Einde wedstrijd',
 	'CONTEST_END_BEFORE_RATING'           => 'Het einde van de wedstrijd kan niet voor het begin van de wedstrijd beoordelingsperiode liggen.',
 	'CONTEST_END_BEFORE_START'            => 'Het einde van de wedstrijd kan niet voor het begin van de wedstrijd liggen.',

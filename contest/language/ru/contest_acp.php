@@ -21,6 +21,7 @@ $lang = array_merge($lang, [
 	'ALBUM_NO_TYPE_CHANGE_TO_CONTEST'      => 'Неконкурсный альбом не может быть переделан в конкурсный.',
 	'ALBUM_WITH_CONTEST_NO_TYPE_CHANGE'    => 'Конкурсный альбом не может быть переделан в обычный.',
 	'CONTEST_DATE_EXPLAIN'                 => 'Выберите дату и время. Используется часовой пояс, указанный в вашем профиле phpBB.',
+	'CONTEST_DATE_MUST_BE_FUTURE'          => '%s должно быть в будущем.',
 	'CONTEST_END'                          => 'Конкурс завершён',
 	'CONTEST_END_BEFORE_RATING'            => 'Окончание конкурса не может быть раньше, чем начало голосования.',
 	'CONTEST_END_BEFORE_START'             => 'Окончание конкурса не может быть раньше, чем его начало.',

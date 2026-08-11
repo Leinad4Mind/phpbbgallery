@@ -110,11 +110,12 @@ class contest_workflow extends \phpbb_functional_test_case
 		$this->assertSame(1, $crawler->filter('input[name="contest_rating"]')->count());
 		$this->assertSame(1, $crawler->filter('input[name="contest_end"]')->count());
 		$this->assertSame(3, $crawler->filter('input[type="datetime-local"][step="60"]')->count());
+		$this->assertSame(3, $crawler->filter('input[type="datetime-local"][min]')->count());
 
 		$timezone = new \DateTimeZone('UTC');
-		$start = new \DateTimeImmutable('-5 minutes', $timezone);
-		$rating = new \DateTimeImmutable('+30 minutes', $timezone);
-		$end = new \DateTimeImmutable('+60 minutes', $timezone);
+		$start = new \DateTimeImmutable('+5 minutes', $timezone);
+		$rating = new \DateTimeImmutable('+35 minutes', $timezone);
+		$end = new \DateTimeImmutable('+65 minutes', $timezone);
 		$form = $crawler->selectButton($this->lang('SUBMIT'))->form();
 		$crawler = self::submit($form, [
 			'album_type' => \phpbbgallery\contest\manager::ALBUM_TYPE,
@@ -144,6 +145,13 @@ class contest_workflow extends \phpbb_functional_test_case
 		$this->assertIsArray($row);
 		$this->assertSame((int) $row['contest_id'], (int) $row['album_contest']);
 		$this->assertSame(\phpbbgallery\contest\manager::STATE_ACTIVE, (int) $row['contest_marked']);
+
+		$active_start = time() - 300;
+		$db->sql_query('UPDATE ' . $this->table('gallery_contests') . '
+			SET contest_start = ' . (int) $active_start . ',
+				contest_rating = 2100,
+				contest_end = 3900
+			WHERE contest_id = ' . (int) $row['contest_id']);
 
 		return [(int) $row['album_id'], (int) $row['contest_id']];
 	}

@@ -6,7 +6,7 @@ All notable changes to the phpBB Gallery Contest add-on are documented in this f
 
 ### Added
 
-- Added native date-and-time pickers to contest creation and editing while preserving the administrator's phpBB timezone and accepting legacy text-form submissions.
+- Added native date-and-time pickers to contest creation and editing while preserving the administrator's phpBB timezone, accepting legacy text-form submissions and preventing new or changed schedule dates from being in the past.
 - Added a responsive album timeline that explains the scheduled, submission, voting and completed contest phases using the viewer's phpBB timezone.
 - Added an optional global and per-contest presentation policy that replaces an
   ended contest album's list thumbnail with its validated first-place image,

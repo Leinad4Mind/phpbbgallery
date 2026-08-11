@@ -199,6 +199,7 @@ final class package_test extends TestCase
 				'CONTEST_CREATION_DISABLED',
 				'CONTEST_SCHEMA_OUTDATED',
 				'CONTEST_DATE_EXPLAIN',
+				'CONTEST_DATE_MUST_BE_FUTURE',
 				'CONTEST_END',
 				'CONTEST_END_BEFORE_RATING',
 				'CONTEST_END_BEFORE_START',
@@ -276,6 +277,7 @@ final class package_test extends TestCase
 		$this->assertStringContainsString('name="contest_end"', $template);
 		$this->assertSame(3, substr_count($template, 'type="datetime-local"'));
 		$this->assertSame(3, substr_count($template, 'step="60"'));
+		$this->assertSame(3, substr_count($template, 'min="{{ CONTEST_MIN_DATE }}"'));
 		$this->assertStringContainsString('name="contest_winner_thumbnail"', $template);
 
 		$display = (string) file_get_contents(

@@ -21,6 +21,7 @@ $lang = array_merge($lang, [
 	'ALBUM_NO_TYPE_CHANGE_TO_CONTEST'   => 'Ein Album ohne Wettbewerb kann nicht in ein Album mit Wettbewerb geändert werden.',
 	'ALBUM_WITH_CONTEST_NO_TYPE_CHANGE' => 'Ein Album mit Wettbewerb kann nicht in ein Album ohne Wettbewerb geändert werden.',
 	'CONTEST_DATE_EXPLAIN'                => 'Wähle Datum und Uhrzeit aus. Es gilt die in deinem phpBB-Profil eingestellte Zeitzone.',
+	'CONTEST_DATE_MUST_BE_FUTURE'         => '%s muss in der Zukunft liegen.',
 	'CONTEST_END'                         => 'Ende des Wettbewerbs',
 	'CONTEST_END_BEFORE_RATING'           => 'Das Ende des Wettbewerbs darf nicht vor dem Beginn der Bewertungen liegen.',
 	'CONTEST_END_BEFORE_START'            => 'Das Ende des Wettbewerbs darf nicht vor dem Beginn des Wettbewerbs liegen.',

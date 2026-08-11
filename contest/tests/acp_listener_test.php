@@ -74,7 +74,8 @@ final class acp_listener_test extends TestCase
 		$this->assertStringContainsString("'contest_winner_thumbnail' => manager::THUMBNAIL_INHERIT", $source);
 		$this->assertStringContainsString("get_contest((int) \$album_data['album_id'], 'album')", $source);
 		$this->assertStringContainsString("'S_ALBUM_CONTEST'", $source);
-		$this->assertSame(3, substr_count($source, "'Y-m-d\\TH:i'"));
+		$this->assertSame(4, substr_count($source, "'Y-m-d\\TH:i'"));
+		$this->assertStringContainsString('(intdiv(time(), 60) + 1) * 60', $source);
 		$this->assertGreaterThanOrEqual(4, substr_count($source, '$this->load_acp_language();'));
 		$this->assertStringContainsString("'album_type_data'", $core);
 		$this->assertStringNotContainsString("variable('contest_start', '')", $core);
@@ -99,6 +100,7 @@ final class acp_listener_test extends TestCase
 		);
 		$request_event = new \phpbb\event\data(['album_type_data' => []]);
 		$default_event = new \phpbb\event\data(['album_type_data' => []]);
+		$before = time();
 
 		$listener->request_album_type_data($request_event);
 		$listener->default_album_type_data($default_event);
@@ -111,6 +113,9 @@ final class acp_listener_test extends TestCase
 			\phpbbgallery\contest\manager::THUMBNAIL_INHERIT,
 			$default_event['album_type_data']['contest_winner_thumbnail']
 		);
+		$this->assertGreaterThan($before, $default_event['album_type_data']['contest_start']);
+		$this->assertLessThanOrEqual($before + 60, $default_event['album_type_data']['contest_start']);
+		$this->assertSame(0, $default_event['album_type_data']['contest_start'] % 60);
 	}
 
 	public function test_listener_resyncs_contest_after_album_ratings_are_reset(): void

@@ -3,15 +3,15 @@
 		<legend>{{ lang('CONTEST_SETTINGS') }} <span class="gallery-addon-badge" style="--gallery-addon-accent: #c2410c"><i class="icon fa-puzzle-piece fa-fw" aria-hidden="true"></i>{{ lang('GALLERY_ADDON_SETTING', lang('ALBUM_TYPE_CONTEST')) }}</span></legend>
 		<dl>
 			<dt><label for="contest_start">{{ lang('CONTEST_START') }}{{ lang('COLON') }}</label><br /><span>{{ lang('CONTEST_START_EXPLAIN') }}</span><br /><span>{{ lang('CONTEST_DATE_EXPLAIN') }}</span></dt>
-			<dd><input class="text" type="datetime-local" id="contest_start" name="contest_start" value="{{ S_CONTEST_START }}" step="60" /></dd>
+			<dd><input class="text" type="datetime-local" id="contest_start" name="contest_start" value="{{ S_CONTEST_START }}" step="60"{% if not S_ALBUM_ORIG_CONTEST or not S_CONTEST_START_PAST %} min="{{ CONTEST_MIN_DATE }}"{% endif %} /></dd>
 		</dl>
 		<dl>
 			<dt><label for="contest_rating">{{ lang('CONTEST_RATING') }}{{ lang('COLON') }}</label><br /><span>{{ lang('CONTEST_RATING_EXPLAIN') }}</span><br /><span>{{ lang('CONTEST_DATE_EXPLAIN') }}</span></dt>
-			<dd><input class="text" type="datetime-local" id="contest_rating" name="contest_rating" value="{{ CONTEST_RATING }}" step="60" /></dd>
+			<dd><input class="text" type="datetime-local" id="contest_rating" name="contest_rating" value="{{ CONTEST_RATING }}" step="60"{% if not S_ALBUM_ORIG_CONTEST or not S_CONTEST_RATING_PAST %} min="{{ CONTEST_MIN_DATE }}"{% endif %} /></dd>
 		</dl>
 		<dl>
 			<dt><label for="contest_end">{{ lang('CONTEST_END') }}{{ lang('COLON') }}</label><br /><span>{{ lang('CONTEST_END_EXPLAIN') }}</span><br /><span>{{ lang('CONTEST_DATE_EXPLAIN') }}</span></dt>
-			<dd><input class="text" type="datetime-local" id="contest_end" name="contest_end" value="{{ CONTEST_END }}" step="60" /></dd>
+			<dd><input class="text" type="datetime-local" id="contest_end" name="contest_end" value="{{ CONTEST_END }}" step="60"{% if not S_ALBUM_ORIG_CONTEST or not S_CONTEST_END_PAST %} min="{{ CONTEST_MIN_DATE }}"{% endif %} /></dd>
 		</dl>
 		<dl>
 			<dt><label for="contest_winner_thumbnail">{{ lang('CONTEST_THUMBNAIL_POLICY') }}{{ lang('COLON') }}</label><br /><span>{{ lang('CONTEST_THUMBNAIL_POLICY_EXPLAIN') }}</span></dt>

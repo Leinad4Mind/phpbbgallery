@@ -21,6 +21,7 @@ $lang = array_merge($lang, [
 	'ALBUM_NO_TYPE_CHANGE_TO_CONTEST'   => 'Un álbum sin concurso no puede convertirse en un álbum de concurso.',
 	'ALBUM_WITH_CONTEST_NO_TYPE_CHANGE' => 'Los álbumes del concurso no pueden convertirse en un álbum sin concurso.',
 	'CONTEST_DATE_EXPLAIN'                => 'Seleccione la fecha y la hora. Se utilizará la zona horaria configurada en su perfil de phpBB.',
+	'CONTEST_DATE_MUST_BE_FUTURE'         => '%s debe estar en el futuro.',
 	'CONTEST_END'                         => 'Final del concurso',
 	'CONTEST_END_BEFORE_RATING'           => 'El final del concurso no debe ser antes de la clasificación del concurso.',
 	'CONTEST_END_BEFORE_START'            => 'El final del concurso no debe ser antes del inicio del concurso.',

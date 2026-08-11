@@ -16,15 +16,16 @@ final class album_lifecycle_listener_test extends TestCase
 {
 	public function test_validation_uses_the_offset_at_the_selected_date(): void
 	{
+		$year = (int) gmdate('Y') + 1;
 		$user = new \phpbb\user();
 		$user->data = ['user_timezone' => 'Europe/Amsterdam'];
 		$listener = $this->listener($user, true);
 		$event = new \phpbb\event\data([
 			'album_data' => ['album_type' => \phpbbgallery\contest\manager::ALBUM_TYPE],
 			'album_type_data' => [
-				'contest_start' => '2026-01-15T12:00',
-				'contest_rating' => '2026-07-15T12:00',
-				'contest_end' => '2026-07-16T12:00',
+				'contest_start' => $year . '-01-15T12:00',
+				'contest_rating' => $year . '-07-15T12:00',
+				'contest_end' => $year . '-07-16T12:00',
 			],
 			'errors' => [],
 		]);
@@ -33,11 +34,11 @@ final class album_lifecycle_listener_test extends TestCase
 
 		$data = $event['album_type_data'];
 		$this->assertSame(
-			(new \DateTimeImmutable('2026-01-15 12:00', new \DateTimeZone('Europe/Amsterdam')))->getTimestamp(),
+			(new \DateTimeImmutable($year . '-01-15 12:00', new \DateTimeZone('Europe/Amsterdam')))->getTimestamp(),
 			$data['contest_start']
 		);
 		$this->assertSame(
-			(new \DateTimeImmutable('2026-07-15 12:00', new \DateTimeZone('Europe/Amsterdam')))->getTimestamp()
+			(new \DateTimeImmutable($year . '-07-15 12:00', new \DateTimeZone('Europe/Amsterdam')))->getTimestamp()
 				- $data['contest_start'],
 			$data['contest_rating']
 		);
@@ -46,15 +47,16 @@ final class album_lifecycle_listener_test extends TestCase
 
 	public function test_legacy_space_separated_dates_remain_accepted(): void
 	{
+		$start = new \DateTimeImmutable('+1 year', new \DateTimeZone('UTC'));
 		$user = new \phpbb\user();
 		$user->data = ['user_timezone' => 'UTC'];
 		$listener = $this->listener($user, true);
 		$event = new \phpbb\event\data([
 			'album_data' => ['album_type' => \phpbbgallery\contest\manager::ALBUM_TYPE],
 			'album_type_data' => [
-				'contest_start' => '2026-08-11 08:41',
-				'contest_rating' => '2026-08-14 08:41',
-				'contest_end' => '2026-08-18 08:41',
+				'contest_start' => $start->format('Y-m-d H:i'),
+				'contest_rating' => $start->modify('+3 days')->format('Y-m-d H:i'),
+				'contest_end' => $start->modify('+7 days')->format('Y-m-d H:i'),
 			],
 			'errors' => [],
 		]);
@@ -63,9 +65,97 @@ final class album_lifecycle_listener_test extends TestCase
 
 		$this->assertSame([], $event['errors']);
 		$this->assertSame(
-			(new \DateTimeImmutable('2026-08-11 08:41', new \DateTimeZone('UTC')))->getTimestamp(),
+			\DateTimeImmutable::createFromFormat('Y-m-d H:i', $start->format('Y-m-d H:i'), new \DateTimeZone('UTC'))->getTimestamp(),
 			$event['album_type_data']['contest_start']
 		);
+	}
+
+	public function test_new_contest_rejects_every_past_schedule_date(): void
+	{
+		$start = new \DateTimeImmutable('-3 days', new \DateTimeZone('UTC'));
+		$user = new \phpbb\user();
+		$user->data = ['user_timezone' => 'UTC'];
+		$listener = $this->listener($user, true);
+		$event = new \phpbb\event\data([
+			'album_data' => ['album_type' => \phpbbgallery\contest\manager::ALBUM_TYPE],
+			'album_type_data' => [
+				'contest_start' => $start->format('Y-m-d\TH:i'),
+				'contest_rating' => $start->modify('+1 hour')->format('Y-m-d\TH:i'),
+				'contest_end' => $start->modify('+2 hours')->format('Y-m-d\TH:i'),
+			],
+			'errors' => [],
+		]);
+
+		$listener->validate($event);
+
+		$this->assertSame([
+			'CONTEST_DATE_MUST_BE_FUTURE',
+			'CONTEST_DATE_MUST_BE_FUTURE',
+			'CONTEST_DATE_MUST_BE_FUTURE',
+		], $event['errors']);
+	}
+
+	public function test_unchanged_historical_dates_remain_valid_when_editing(): void
+	{
+		$stored_start = intdiv(time() - 3 * 86400, 60) * 60 + 37;
+		$contest = [
+			'contest_start' => $stored_start,
+			'contest_rating' => 3600,
+			'contest_end' => 7200,
+		];
+		$user = new \phpbb\user();
+		$user->data = ['user_timezone' => 'UTC'];
+		$listener = $this->listener($user, true, null, null, $contest);
+		$event = new \phpbb\event\data([
+			'album_data' => [
+				'album_id' => 17,
+				'album_type' => \phpbbgallery\contest\manager::ALBUM_TYPE,
+			],
+			'album_type_data' => [
+				'contest_start' => gmdate('Y-m-d\TH:i', $stored_start),
+				'contest_rating' => gmdate('Y-m-d\TH:i', $stored_start + 3600),
+				'contest_end' => gmdate('Y-m-d\TH:i', $stored_start + 7200),
+			],
+			'errors' => [],
+		]);
+
+		$listener->validate($event);
+
+		$this->assertSame([], $event['errors']);
+	}
+
+	public function test_changed_historical_dates_are_rejected_when_editing(): void
+	{
+		$stored_start = intdiv(time() - 3 * 86400, 60) * 60;
+		$changed_start = $stored_start - 86400;
+		$contest = [
+			'contest_start' => $stored_start,
+			'contest_rating' => 3600,
+			'contest_end' => 7200,
+		];
+		$user = new \phpbb\user();
+		$user->data = ['user_timezone' => 'UTC'];
+		$listener = $this->listener($user, true, null, null, $contest);
+		$event = new \phpbb\event\data([
+			'album_data' => [
+				'album_id' => 17,
+				'album_type' => \phpbbgallery\contest\manager::ALBUM_TYPE,
+			],
+			'album_type_data' => [
+				'contest_start' => gmdate('Y-m-d\TH:i', $changed_start),
+				'contest_rating' => gmdate('Y-m-d\TH:i', $changed_start + 3600),
+				'contest_end' => gmdate('Y-m-d\TH:i', $changed_start + 7200),
+			],
+			'errors' => [],
+		]);
+
+		$listener->validate($event);
+
+		$this->assertSame([
+			'CONTEST_DATE_MUST_BE_FUTURE',
+			'CONTEST_DATE_MUST_BE_FUTURE',
+			'CONTEST_DATE_MUST_BE_FUTURE',
+		], $event['errors']);
 	}
 
 	public function test_disabled_creation_and_invalid_dates_fail_server_side(): void
@@ -199,13 +289,15 @@ final class album_lifecycle_listener_test extends TestCase
 		\phpbb\user $user,
 		bool $can_create,
 		?\phpbb\db\driver\driver_interface $db = null,
-		?\phpbb\db\tools\tools_interface $db_tools = null
+		?\phpbb\db\tools\tools_interface $db_tools = null,
+		array|false $existing_contest = false
 	): album_lifecycle_listener
 	{
 		$language = $this->createStub(\phpbb\language\language::class);
 		$language->method('lang')->willReturnCallback(static fn(string $key): string => $key);
 		$contest = $this->createMock(\phpbbgallery\contest\manager::class);
 		$contest->method('can_create')->willReturn($can_create);
+		$contest->method('get_contest')->willReturn($existing_contest);
 		if ($db_tools === null)
 		{
 			$db_tools = $this->createStub(\phpbb\db\tools\tools_interface::class);

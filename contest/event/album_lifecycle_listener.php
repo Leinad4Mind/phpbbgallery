@@ -66,15 +66,24 @@ class album_lifecycle_listener implements EventSubscriberInterface
 		$start = $this->parse_date((string) ($data['contest_start'] ?? ''));
 		$rating = $this->parse_date((string) ($data['contest_rating'] ?? ''));
 		$end = $this->parse_date((string) ($data['contest_end'] ?? ''));
+		$existing_dates = $this->existing_dates($album_data);
+		$now = time();
 		foreach ([
-			[$start, 'CONTEST_START_INVALID', 'contest_start'],
-			[$rating, 'CONTEST_RATING_INVALID', 'contest_rating'],
-			[$end, 'CONTEST_END_INVALID', 'contest_end'],
-		] as [$timestamp, $lang, $field])
+			[$start, 'CONTEST_START_INVALID', 'contest_start', 'CONTEST_START'],
+			[$rating, 'CONTEST_RATING_INVALID', 'contest_rating', 'CONTEST_RATING'],
+			[$end, 'CONTEST_END_INVALID', 'contest_end', 'CONTEST_END'],
+		] as [$timestamp, $lang, $field, $label])
 		{
 			if ($timestamp === false)
 			{
 				$errors[] = $this->language->lang($lang, $data[$field] ?? '');
+			}
+			else if ($timestamp <= $now && !$this->is_existing_date($timestamp, $existing_dates[$field] ?? null))
+			{
+				$errors[] = $this->language->lang(
+					'CONTEST_DATE_MUST_BE_FUTURE',
+					$this->language->lang($label)
+				);
 			}
 		}
 
@@ -246,5 +255,38 @@ class album_lifecycle_listener implements EventSubscriberInterface
 		return $date !== false && ($errors === false || (!$errors['warning_count'] && !$errors['error_count']))
 			? $date->getTimestamp()
 			: false;
+	}
+
+	/**
+	 * Return the absolute dates already stored for an existing contest.
+	 *
+	 * @param array $album_data Album data being validated
+	 * @return array<string, int>
+	 */
+	private function existing_dates(array $album_data): array
+	{
+		$album_id = (int) ($album_data['album_id'] ?? 0);
+		if ($album_id <= 0)
+		{
+			return [];
+		}
+
+		$contest = $this->contest->get_contest($album_id, 'album', false);
+		if (!$contest)
+		{
+			return [];
+		}
+
+		$start = (int) ($contest['contest_start'] ?? 0);
+		return [
+			'contest_start' => $start,
+			'contest_rating' => $start + (int) ($contest['contest_rating'] ?? 0),
+			'contest_end' => $start + (int) ($contest['contest_end'] ?? 0),
+		];
+	}
+
+	private function is_existing_date(int $timestamp, ?int $existing): bool
+	{
+		return $existing !== null && intdiv($timestamp, 60) === intdiv($existing, 60);
 	}
 }
