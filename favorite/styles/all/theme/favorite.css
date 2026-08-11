@@ -52,6 +52,28 @@
 	padding: 0;
 }
 
+.gallery-classic-image > .gallery-favorite-action
+{
+	inset-inline-end: 7px;
+	top: 7px;
+}
+
+.gallery-classic-image > .gallery-favorite-action ~ .gallery-classic-image-title
+{
+	padding-inline: 38px;
+}
+
+.gallery-classic-image .gallery-favorite-toggle
+{
+	width: 26px;
+	height: 26px;
+}
+
+.gallery-classic-image .gallery-favorite-icon
+{
+	font-size: 14px;
+}
+
 .gallery-favorite-icon.fa-heart
 {
 	color: #d9534f;

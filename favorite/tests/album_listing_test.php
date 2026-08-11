@@ -67,6 +67,18 @@ final class album_listing_test extends TestCase
 			'/\.gallery-favorite-icon::before\s*\{[^}]*display:\s*block;[^}]*line-height:\s*1;[^}]*padding:\s*0;[^}]*\}/s',
 			$stylesheet
 		);
+		$this->assertMatchesRegularExpression(
+			'/\.gallery-classic-image > \.gallery-favorite-action\s*\{[^}]*inset-inline-end:\s*7px;[^}]*top:\s*7px;[^}]*\}/s',
+			$stylesheet
+		);
+		$this->assertMatchesRegularExpression(
+			'/\.gallery-classic-image > \.gallery-favorite-action ~ \.gallery-classic-image-title\s*\{[^}]*padding-inline:\s*38px;[^}]*\}/s',
+			$stylesheet
+		);
+		$this->assertMatchesRegularExpression(
+			'/\.gallery-classic-image \.gallery-favorite-toggle\s*\{[^}]*width:\s*26px;[^}]*height:\s*26px;[^}]*\}/s',
+			$stylesheet
+		);
 		$this->assertStringContainsString("INCLUDECSS '@phpbbgallery_favorite/favorite.css'", $head);
 		$this->assertStringContainsString("INCLUDEJS '@phpbbgallery_favorite/favorite.js'", $head);
 	}

@@ -54,6 +54,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Kept the Favorite heart fully inside the Classic image header, reduced it to the compact scale of that presentation and reserved balanced title space so long image names remain centred and unobscured.
 - Kept portrait and unusually tall thumbnails inside their configured Classic image cells by giving the flex viewport a definite border-box, clipping overflow and applying an explicit aspect-preserving height limit.
 - Prevented contest creation and editing against an outdated Contests schema, replacing a late SQL failure and orphaned album with an actionable pre-save validation error.
 - Moved image-sharing URLs and BBCodes to the end of the image details in every supported style, integrated BBPoints contributors into the primary metadata list before EXIF through deterministic extension slots, emphasized FLATBOOTS metadata labels, and restored the missing PROSILVER label for the URL BBCode.
