@@ -6,6 +6,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Added
 
+- Added large, responsive and keyboard-accessible Font Awesome previous/next controls when navigation thumbnails are disabled, while retaining the adjacent image names for tooltips and assistive technology.
 - Added persistent, accessible source filters to the New Core and add-on ACP legend, allowing administrators to show or hide each source's settings without changing their stored values or enabling state.
 - Added a persistent Off mode beside the Simple and Complete ACP provenance views, hiding the guide, badges, accent colours and setting markers until the administrator re-enables them.
 - Added a distinct New Core ACP provenance marker for every configuration introduced after Gallery 3.4.0 and for the new album-icon selector, using a star and Core accent while preserving puzzle identities for add-ons in both Simple and Complete views.

@@ -197,6 +197,11 @@ final class controller_image_types_test extends TestCase
 			$this->assertStringContainsString('gallery-image-navigation-current">{% if UC_IMAGE_ACTION %}<a', $template, $style);
 			$this->assertStringContainsString('gallery-image-navigation-next">{% if U_NEXT_IMAGE %}', $template, $style);
 			$this->assertSame(2, substr_count($template, 'gallery-image-navigation-placeholder'), $style);
+			$this->assertSame(2, substr_count($template, 'gallery-image-navigation-icon-link'), $style);
+			$this->assertStringContainsString('fa-chevron-left', $template, $style);
+			$this->assertStringContainsString('fa-chevron-right', $template, $style);
+			$this->assertStringContainsString('<span class="sr-only">{{ PREV_IMAGE_NAME }}</span>', $template, $style);
+			$this->assertStringContainsString('<span class="sr-only">{{ NEXT_IMAGE_NAME }}</span>', $template, $style);
 			$this->assertStringContainsString('{% if UC_IMAGE_ACTION %}</a>{% endif %}</li>', $template, $style);
 		}
 	}
@@ -206,11 +211,15 @@ final class controller_image_types_test extends TestCase
 		$css = (string) file_get_contents(dirname(__DIR__) . '/styles/all/theme/gallery.css');
 		$this->assertStringContainsString('grid-template-columns: minmax(0, 1fr) minmax(260px, 1.6fr) minmax(0, 1fr);', $css);
 		$this->assertStringContainsString('object-fit: contain;', $css);
+		$this->assertStringContainsString('.gallery-image-navigation-icon-link {', $css);
+		$this->assertStringContainsString('border-radius: 50%;', $css);
+		$this->assertStringContainsString('.gallery-image-navigation-chevron {', $css);
 
 		$this->assertSame(1, preg_match('/\.gallery-image-navigation-side img\s*\{[^}]*width:\s*auto;[^}]*max-width:\s*min\(100%,\s*(\d+)px\);/s', $css, $side_sizes));
 		$this->assertSame(1, preg_match('/\.gallery-image-navigation-current img\s*\{[^}]*width:\s*auto;[^}]*max-width:\s*min\(100%,\s*(\d+)px\);/s', $css, $current_sizes));
 		$this->assertGreaterThan((int) $side_sizes[1], (int) $current_sizes[1]);
-		$this->assertStringNotContainsString('width: clamp(', $css);
+		$this->assertStringNotContainsString('width: clamp(', $side_sizes[0]);
+		$this->assertStringNotContainsString('width: clamp(', $current_sizes[0]);
 	}
 
 	public function test_legacy_navigation_links_escape_stored_image_names(): void
