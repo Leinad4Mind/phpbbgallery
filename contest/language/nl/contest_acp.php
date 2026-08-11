@@ -17,6 +17,7 @@ $lang = array_merge($lang, [
 	'CONTEST_CREATION'                    => 'Nieuwe wedstrijden toestaan',
 	'CONTEST_CREATION_EXPLAIN'            => 'Staat beheerders toe nieuwe wedstrijdalbums te maken. Bestaande wedstrijden blijven actief en bewerkbaar wanneer deze optie is uitgeschakeld.',
 	'CONTEST_CREATION_DISABLED'           => 'Het maken van nieuwe wedstrijdalbums is uitgeschakeld in de Galerijconfiguratie.',
+	'CONTEST_SCHEMA_OUTDATED'             => 'Het databaseschema van de Wedstrijden-add-on is verouderd. Voer de phpBB-databasemigraties uit of schakel de add-on uit en weer in voordat je een wedstrijd maakt of bewerkt.',
 	'ALBUM_NO_TYPE_CHANGE_TO_CONTEST'   => 'Een Niet-Wedstrijd-Album kan niet veranderd worden naar Wedstrijd-Album.',
 	'ALBUM_WITH_CONTEST_NO_TYPE_CHANGE' => 'Wedstrijd-Albums kunnen niet veranderd worden naar Niet-Wedstrijd-Album.',
 	'CONTEST_DATE_EXPLAIN'                => 'Voer een datum in in: YYYY-MM-DD HH:MM formaat.',

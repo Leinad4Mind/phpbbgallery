@@ -17,6 +17,7 @@ $lang = array_merge($lang, [
 	'CONTEST_CREATION'                    => 'Allow new contests',
 	'CONTEST_CREATION_EXPLAIN'            => 'Allows administrators to create new contest albums. Existing contests remain active and editable when this is disabled.',
 	'CONTEST_CREATION_DISABLED'           => 'Creating new contest albums is disabled in the Gallery configuration.',
+	'CONTEST_SCHEMA_OUTDATED'             => 'The Contests database schema is outdated. Run the phpBB database migrations or disable and re-enable the Contests add-on before creating or editing a contest.',
 	'ALBUM_NO_TYPE_CHANGE_TO_CONTEST'   => 'A Non-Contest-Album can not be turned into a Contest-Albums.',
 	'ALBUM_WITH_CONTEST_NO_TYPE_CHANGE' => 'Contest-Albums can not be turned into a Non-Contest-Album.',
 	'CONTEST_DATE_EXPLAIN'                => 'Please enter date in YYYY-MM-DD HH:MM format.',

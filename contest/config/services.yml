@@ -72,6 +72,7 @@ services:
         class: phpbbgallery\contest\event\album_lifecycle_listener
         arguments:
             - '@dbal.conn'
+            - '@dbal.tools'
             - '@language'
             - '@user'
             - '@phpbbgallery.contest.manager'

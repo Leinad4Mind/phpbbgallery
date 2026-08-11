@@ -52,6 +52,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Prevented contest creation and editing against an outdated Contests schema, replacing a late SQL failure and orphaned album with an actionable pre-save validation error.
 - Moved image-sharing URLs and BBCodes to the end of the image details in every supported style, integrated BBPoints contributors into the primary metadata list before EXIF through deterministic extension slots, emphasized FLATBOOTS metadata labels, and restored the missing PROSILVER label for the URL BBCode.
 - Made progressive-upload Cancel remove failed or queued entries and release their batch slot, while Reset now aborts the active queue, clears every dynamic field and securely discards the current album's unfinished server drafts.
 - Restored the native UCP Favorites layout and pagination containers in PROSILVER, BBOOTS and FLATBOOTS, and stopped favourites from excluded personal albums leaking into the listing after relationship changes.

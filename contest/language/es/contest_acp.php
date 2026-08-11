@@ -17,6 +17,7 @@ $lang = array_merge($lang, [
 	'CONTEST_CREATION'                    => 'Permitir nuevos concursos',
 	'CONTEST_CREATION_EXPLAIN'            => 'Permite a los administradores crear nuevos álbumes de concurso. Los concursos existentes permanecen activos y editables cuando esta opción está desactivada.',
 	'CONTEST_CREATION_DISABLED'           => 'La creación de nuevos álbumes de concurso está desactivada en la configuración de la Galería.',
+	'CONTEST_SCHEMA_OUTDATED'             => 'El esquema de la base de datos del complemento Concursos está desactualizado. Ejecuta las migraciones de phpBB o desactiva y vuelve a activar el complemento antes de crear o editar un concurso.',
 	'ALBUM_NO_TYPE_CHANGE_TO_CONTEST'   => 'Un álbum sin concurso no puede convertirse en un álbum de concurso.',
 	'ALBUM_WITH_CONTEST_NO_TYPE_CHANGE' => 'Los álbumes del concurso no pueden convertirse en un álbum sin concurso.',
 	'CONTEST_DATE_EXPLAIN'                => 'Por favor, introduzca la fecha en formato AAAA-MM-DD HH:MM',

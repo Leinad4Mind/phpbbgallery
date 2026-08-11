@@ -16,6 +16,7 @@ class album_lifecycle_listener implements EventSubscriberInterface
 {
 	public function __construct(
 		private \phpbb\db\driver\driver_interface $db,
+		private \phpbb\db\tools\tools_interface $db_tools,
 		private \phpbb\language\language $language,
 		private \phpbb\user $user,
 		private \phpbbgallery\contest\manager $contest,
@@ -50,6 +51,13 @@ class album_lifecycle_listener implements EventSubscriberInterface
 		$this->language->add_lang('contest_acp', 'phpbbgallery/contest');
 		$errors = (array) $event['errors'];
 		$data = (array) $event['album_type_data'];
+		if (!$this->schema_ready())
+		{
+			$errors[] = $this->language->lang('CONTEST_SCHEMA_OUTDATED');
+			$event['errors'] = $errors;
+			return;
+		}
+
 		if (!isset($album_data['album_id']) && !$this->contest->can_create())
 		{
 			$errors[] = $this->language->lang('CONTEST_CREATION_DISABLED');
@@ -210,6 +218,12 @@ class album_lifecycle_listener implements EventSubscriberInterface
 	{
 		$this->db->sql_query('DELETE FROM ' . $this->contests_table . '
 			WHERE contest_album_id = ' . (int) $album_id);
+	}
+
+	private function schema_ready(): bool
+	{
+		return $this->db_tools->sql_table_exists($this->contests_table)
+			&& $this->db_tools->sql_column_exists($this->contests_table, 'contest_winner_thumbnail');
 	}
 
 	private function parse_date(string $value): int|false

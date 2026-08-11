@@ -65,6 +65,33 @@ final class album_lifecycle_listener_test extends TestCase
 		$this->assertContains('CONTEST_END_INVALID', $event['errors']);
 	}
 
+	public function test_outdated_schema_is_rejected_before_album_creation(): void
+	{
+		$db_tools = $this->createMock(\phpbb\db\tools\tools_interface::class);
+		$db_tools->expects($this->once())
+			->method('sql_table_exists')
+			->with('gallery_contests')
+			->willReturn(true);
+		$db_tools->expects($this->once())
+			->method('sql_column_exists')
+			->with('gallery_contests', 'contest_winner_thumbnail')
+			->willReturn(false);
+		$listener = $this->listener(new \phpbb\user(), true, null, $db_tools);
+		$event = new \phpbb\event\data([
+			'album_data' => ['album_type' => \phpbbgallery\contest\manager::ALBUM_TYPE],
+			'album_type_data' => [
+				'contest_start' => '2026-08-11 12:00',
+				'contest_rating' => '2026-08-12 12:00',
+				'contest_end' => '2026-08-13 12:00',
+			],
+			'errors' => [],
+		]);
+
+		$listener->validate($event);
+
+		$this->assertSame(['CONTEST_SCHEMA_OUTDATED'], $event['errors']);
+	}
+
 	public function test_listener_owns_creation_edit_and_reopen_persistence(): void
 	{
 		$queries = [];
@@ -147,16 +174,24 @@ final class album_lifecycle_listener_test extends TestCase
 	private function listener(
 		\phpbb\user $user,
 		bool $can_create,
-		?\phpbb\db\driver\driver_interface $db = null
+		?\phpbb\db\driver\driver_interface $db = null,
+		?\phpbb\db\tools\tools_interface $db_tools = null
 	): album_lifecycle_listener
 	{
 		$language = $this->createStub(\phpbb\language\language::class);
 		$language->method('lang')->willReturnCallback(static fn(string $key): string => $key);
 		$contest = $this->createMock(\phpbbgallery\contest\manager::class);
 		$contest->method('can_create')->willReturn($can_create);
+		if ($db_tools === null)
+		{
+			$db_tools = $this->createStub(\phpbb\db\tools\tools_interface::class);
+			$db_tools->method('sql_table_exists')->willReturn(true);
+			$db_tools->method('sql_column_exists')->willReturn(true);
+		}
 
 		return new album_lifecycle_listener(
 			$db ?? $this->createStub(\phpbb\db\driver\driver_interface::class),
+			$db_tools,
 			$language,
 			$user,
 			$contest,

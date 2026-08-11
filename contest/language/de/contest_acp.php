@@ -17,6 +17,7 @@ $lang = array_merge($lang, [
 	'CONTEST_CREATION'                    => 'Neue Wettbewerbe erlauben',
 	'CONTEST_CREATION_EXPLAIN'            => 'Erlaubt Administratoren, neue Wettbewerbsalben zu erstellen. Bestehende Wettbewerbe bleiben aktiv und bearbeitbar, wenn diese Option deaktiviert ist.',
 	'CONTEST_CREATION_DISABLED'           => 'Das Erstellen neuer Wettbewerbsalben ist in der Galerie-Konfiguration deaktiviert.',
+	'CONTEST_SCHEMA_OUTDATED'             => 'Das Datenbankschema des Wettbewerbs-Add-ons ist veraltet. Führe die phpBB-Datenbankmigrationen aus oder deaktiviere und aktiviere das Add-on erneut, bevor du einen Wettbewerb erstellst oder bearbeitest.',
 	'ALBUM_NO_TYPE_CHANGE_TO_CONTEST'   => 'Ein Album ohne Wettbewerb kann nicht in ein Album mit Wettbewerb geändert werden.',
 	'ALBUM_WITH_CONTEST_NO_TYPE_CHANGE' => 'Ein Album mit Wettbewerb kann nicht in ein Album ohne Wettbewerb geändert werden.',
 	'CONTEST_DATE_EXPLAIN'                => 'Das Datum bitte im Format JJJJ-MM-TT SS:MM angeben.',

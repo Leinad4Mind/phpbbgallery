@@ -136,6 +136,7 @@ final class package_test extends TestCase
 		$this->assertStringContainsString('class: phpbbgallery\\contest\\event\\acp_listener', $services);
 		$this->assertStringContainsString('phpbbgallery.contest.album_lifecycle_listener:', $services);
 		$this->assertStringContainsString('class: phpbbgallery\\contest\\event\\album_lifecycle_listener', $services);
+		$this->assertStringContainsString("- '@dbal.tools'", $services);
 		$this->assertStringContainsString('- { name: event.listener }', $services);
 
 		$listener = (string) file_get_contents(dirname(__DIR__) . '/event/album_lifecycle_listener.php');
@@ -196,6 +197,7 @@ final class package_test extends TestCase
 				'CONTEST_CREATION',
 				'CONTEST_CREATION_EXPLAIN',
 				'CONTEST_CREATION_DISABLED',
+				'CONTEST_SCHEMA_OUTDATED',
 				'CONTEST_DATE_EXPLAIN',
 				'CONTEST_END',
 				'CONTEST_END_BEFORE_RATING',

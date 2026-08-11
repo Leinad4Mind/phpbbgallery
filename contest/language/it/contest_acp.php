@@ -17,6 +17,7 @@ $lang = array_merge($lang, [
 	'CONTEST_CREATION'                    => 'Consenti nuovi concorsi',
 	'CONTEST_CREATION_EXPLAIN'            => 'Consente agli amministratori di creare nuovi album concorso. I concorsi esistenti rimangono attivi e modificabili quando questa opzione è disattivata.',
 	'CONTEST_CREATION_DISABLED'           => 'La creazione di nuovi album concorso è disattivata nella configurazione della Galleria.',
+	'CONTEST_SCHEMA_OUTDATED'             => 'Lo schema del database del componente Concorsi non è aggiornato. Esegui le migrazioni di phpBB oppure disattiva e riattiva il componente prima di creare o modificare un concorso.',
 	'ALBUM_NO_TYPE_CHANGE_TO_CONTEST'   => 'Un album non-concorso non può essere trasformato in un album concorso.',
 	'ALBUM_WITH_CONTEST_NO_TYPE_CHANGE' => 'Un album-concorso non può essere trasformato in un album-non-concorso.',
 	'CONTEST_DATE_EXPLAIN'                => 'Aggiungi data nel formato YYYY-MM-DD HH:MM.',

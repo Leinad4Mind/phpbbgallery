@@ -26,6 +26,7 @@ namespace
 	}
 
 	require_once dirname(__DIR__, 2) . '/core/tests/bootstrap.php';
+	require_once dirname(__DIR__, 4) . '/phpbb/db/tools/tools_interface.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/pagination.php';
 	require_once dirname(__DIR__) . '/manager.php';
 	require_once dirname(__DIR__) . '/winner_search.php';
