@@ -12,9 +12,9 @@
 	{% else %}
 		<article class="gallery-modern-album{% if albumrow.S_PERSONAL_ALBUM %} gallery-personal-album{% endif %}{% if albumrow.S_UNREAD_ALBUM %} gallery-modern-album-unread{% endif %}">
 			<div class="gallery-modern-album-main">
-				<a class="gallery-modern-album-visual" href="{{ albumrow.U_VIEWALBUM }}" aria-label="{{ lang('VIEW_ALBUM') }}{{ lang('COLON') }} {{ albumrow.ALBUM_NAME }}">
+				<a class="gallery-modern-album-visual{% if albumrow.ALBUM_IMAGE_SRC %} gallery-album-custom-icon-frame{% endif %}" href="{{ albumrow.U_VIEWALBUM }}" aria-label="{{ lang('VIEW_ALBUM') }}{{ lang('COLON') }} {{ albumrow.ALBUM_NAME }}">
 					{% if albumrow.ALBUM_IMAGE_SRC %}
-						<img src="{{ albumrow.ALBUM_IMAGE_SRC }}" alt="">
+						<img class="gallery-album-custom-icon" src="{{ albumrow.ALBUM_IMAGE_SRC }}" alt="">
 					{% elseif albumrow.LAST_IMAGE_TIME and albumrow.UC_THUMBNAIL %}
 						<img src="{{ albumrow.UC_THUMBNAIL }}" alt="">
 					{% else %}
