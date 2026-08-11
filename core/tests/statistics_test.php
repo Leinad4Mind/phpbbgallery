@@ -79,11 +79,27 @@ final class statistics_test extends TestCase
 		$this->assertStringContainsString('statistics_top_downloaders', $template);
 		$this->assertStringContainsString('class="selectpicker"', $template);
 		$this->assertStringContainsString('class="button1 btn btn-default"', $template);
+		$this->assertStringContainsString('S_STATISTICS_HIDDEN_FIELDS', $template);
 		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
 		{
 			$index = (string) file_get_contents($core . '/styles/' . $style . '/template/gallery/index_body.html');
 			$this->assertStringContainsString('U_GALLERY_STATISTICS', $index, $style);
 		}
+	}
+
+	public function test_get_filter_preserves_phpbb_session_and_style_query_fields(): void
+	{
+		require_once dirname(__DIR__) . '/controller/statistics.php';
+		$reflection = new \ReflectionClass(\phpbbgallery\core\controller\statistics::class);
+		$controller = $reflection->newInstanceWithoutConstructor();
+		$fields = $reflection->getMethod('get_query_fields')->invoke(
+			$controller,
+			'/gallery/statistics?style=2&amp;sid=session123&amp;year=2025'
+		);
+
+		$this->assertSame(['style' => '2', 'sid' => 'session123'], $fields);
+		$this->assertArrayNotHasKey('year', $fields);
+		$this->assertSame([], $reflection->getMethod('get_query_fields')->invoke($controller, '/gallery/statistics'));
 	}
 
 	/** @return array{0: \phpbb\db\driver\driver_interface, 1: object} */

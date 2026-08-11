@@ -51,11 +51,13 @@ final class statistics
 		$year = (int) $data['year'];
 		$summary = (array) $data['summary'];
 		$tracking_start = (int) ($this->config['phpbb_gallery_statistics_tracking_start'] ?? 0);
+		$statistics_action = $this->helper->route('phpbbgallery_core_statistics');
 
 		$this->template->assign_vars([
 			'S_STATISTICS_YEAR' => $year,
 			'S_STATISTICS_ALL_TIME' => $year === 0,
-			'S_STATISTICS_ACTION' => $this->helper->route('phpbbgallery_core_statistics'),
+			'S_STATISTICS_ACTION' => $statistics_action,
+			'S_STATISTICS_HIDDEN_FIELDS' => build_hidden_fields($this->get_query_fields($statistics_action)),
 			'U_STATISTICS_ALL_TIME' => $this->helper->route('phpbbgallery_core_statistics'),
 			'SUMMARY_IMAGES' => (int) ($summary['image_count'] ?? 0),
 			'SUMMARY_VIEWS' => (int) ($summary['view_count'] ?? 0),
@@ -94,6 +96,31 @@ final class statistics
 			'gallery/statistics_body.html',
 			$this->language->lang('GALLERY_STATISTICS')
 		);
+	}
+
+	/**
+	 * Preserve phpBB's cookie fallback and style parameters in the GET filter.
+	 *
+	 * Browsers replace the action query string when submitting GET forms, so
+	 * parameters appended by phpBB must also be represented as form fields.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function get_query_fields(string $url): array
+	{
+		$query = (string) parse_url(
+			html_entity_decode($url, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+			PHP_URL_QUERY
+		);
+		if ($query === '')
+		{
+			return [];
+		}
+
+		parse_str($query, $fields);
+		unset($fields['year']);
+
+		return $fields;
 	}
 
 	/** @param array<int, array<string, mixed>> $rows */
