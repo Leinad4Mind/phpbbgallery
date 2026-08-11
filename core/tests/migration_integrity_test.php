@@ -56,6 +56,7 @@ use phpbbgallery\core\migrations\gallery_album_bbcode;
 use phpbbgallery\core\migrations\image_card_bbcode_id;
 use phpbbgallery\core\migrations\subalbum_icon_display;
 use phpbbgallery\core\migrations\subalbum_display_modes;
+use phpbbgallery\core\migrations\statistics_dashboard;
 
 class migration_integrity_test extends TestCase
 {
@@ -105,6 +106,7 @@ class migration_integrity_test extends TestCase
 		image_card_bbcode_id::class,
 		subalbum_icon_display::class,
 		subalbum_display_modes::class,
+		statistics_dashboard::class,
 		release_4_1_0::class,
 	];
 
@@ -308,11 +310,28 @@ class migration_integrity_test extends TestCase
 		$migration = (new \ReflectionClass(release_4_1_0::class))->newInstanceWithoutConstructor();
 
 		$this->assertSame([
-			'\\phpbbgallery\\core\\migrations\\subalbum_display_modes',
+			'\\phpbbgallery\\core\\migrations\\statistics_dashboard',
 		], release_4_1_0::depends_on());
 		$this->assertSame([
 			['config.update', ['phpbb_gallery_version', '4.1.0']],
 		], $migration->update_data());
+	}
+
+	public function test_statistics_dashboard_adds_bounded_annual_aggregates(): void
+	{
+		$migration = (new \ReflectionClass(statistics_dashboard::class))->newInstanceWithoutConstructor();
+		(new \ReflectionProperty(\phpbb\db\migration\migration::class, 'table_prefix'))->setValue($migration, 'phpbb_');
+
+		$this->assertSame([
+			'\\phpbbgallery\\core\\migrations\\subalbum_display_modes',
+		], statistics_dashboard::depends_on());
+		$schema = $migration->update_schema();
+		$this->assertSame(['UINT:20', 0], $schema['add_columns']['phpbb_gallery_images']['image_download_count']);
+		$this->assertSame(
+			['stat_type', 'stat_year', 'image_id', 'user_id'],
+			$schema['add_tables']['phpbb_gallery_statistics']['PRIMARY_KEY']
+		);
+		$this->assertArrayHasKey('stat_user', $schema['add_tables']['phpbb_gallery_statistics']['KEYS']);
 	}
 
 	public function test_image_card_id_control_is_optional_and_reversible(): void
@@ -1246,6 +1265,7 @@ class migration_integrity_test extends TestCase
 			'image_card_bbcode_id.php',
 			'subalbum_icon_display.php',
 			'subalbum_display_modes.php',
+			'statistics_dashboard.php',
 			'release_4_1_0.php',
 		] as $migration)
 		{

@@ -65,6 +65,9 @@ class file
 	/** Resolve source keys to the concrete key used by each variant. */
 	protected ?\phpbbgallery\core\storage\variant_key $variant_key = null;
 
+	/** Gallery engagement statistics. */
+	protected \phpbbgallery\core\statistics $statistics;
+
 	/** Lease for the provider object currently used by the response. */
 	protected ?\phpbbgallery\core\storage\local_object $image_object = null;
 
@@ -108,6 +111,7 @@ class file
 	 * @param \phpbb\request\request_interface $request
 	 * @param \phpbb\event\dispatcher_interface $dispatcher
 	 * @param \phpbbgallery\core\storage\workspace $storage_workspace
+	 * @param \phpbbgallery\core\statistics $statistics
 	 * @param string $source_path
 	 * @param string $medium_path
 	 * @param string $mini_path
@@ -119,6 +123,7 @@ class file
 	\phpbbgallery\core\user $gallery_user, \phpbbgallery\core\file\file $tool, \phpbb\request\request_interface $request,
 	\phpbb\event\dispatcher_interface $dispatcher, \phpbbgallery\core\storage\workspace $storage_workspace,
 	\phpbbgallery\core\image\format_registry $format_registry, \phpbbgallery\core\storage\variant_key $variant_key,
+	\phpbbgallery\core\statistics $statistics,
 	string $source_path, string $medium_path, string $mini_path,
 	string $watermark_file, string $albums_table, string $images_table)
 	{
@@ -134,6 +139,7 @@ class file
 		$this->storage_workspace = $storage_workspace;
 		$this->format_registry = $format_registry;
 		$this->variant_key = $variant_key;
+		$this->statistics = $statistics;
 		$this->path_source = $this->resolve_gallery_path($source_path);
 		$this->path_medium = $this->resolve_gallery_path($medium_path);
 		$this->path_mini = $this->resolve_gallery_path($mini_path);
@@ -318,9 +324,15 @@ class file
 		$this->tool->disable_browser_cache();
 
 		// The image-page controller owns view counting; browsers may repeat binary requests.
-		return $this->display(
+		$response = $this->display(
 			$force_download || $this->source_requires_download($this->data['image_filename'])
 		);
+		if ($this->error === '')
+		{
+			$this->statistics->record_download((int) $image_id, (int) $this->user->data['user_id']);
+		}
+
+		return $response;
 	}
 
 	/** Determine whether a source format is unsuitable for inline browser display. */

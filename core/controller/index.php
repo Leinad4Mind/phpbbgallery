@@ -468,6 +468,7 @@ class index
 			'S_LOGIN_ACTION'			=> append_sid($this->root_path . 'ucp.' . $this->php_ext, 'mode=login&amp;redirect=' . urlencode($this->helper->route($base_route))),
 
 			'U_GALLERY_SEARCH'				=> $this->helper->route('phpbbgallery_core_search'),
+			'U_GALLERY_STATISTICS'			=> $this->helper->route('phpbbgallery_core_statistics'),
 			'U_G_SEARCH_COMMENTED'			=> $this->config['phpbb_gallery_allow_comments'] && $show_comments ? $this->helper->route('phpbbgallery_core_search_commented') : false,
 			'U_G_SEARCH_RECENT'				=> $show_recent ? $this->helper->route('phpbbgallery_core_search_recent') : false,
 			'U_G_SEARCH_RANDOM'				=> $show_random ? $this->helper->route('phpbbgallery_core_search_random') : false,

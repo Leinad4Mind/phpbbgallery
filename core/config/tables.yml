@@ -20,3 +20,4 @@ parameters:
     phpbbgallery.tables.gallery_rates: '%core.table_prefix%gallery_rates'
     phpbbgallery.tables.gallery_log: '%core.table_prefix%gallery_log'
     phpbbgallery.tables.gallery_watch: '%core.table_prefix%gallery_watch'
+    phpbbgallery.tables.gallery_statistics: '%core.table_prefix%gallery_statistics'

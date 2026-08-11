@@ -191,6 +191,14 @@ services:
         class: phpbbgallery\core\config
         arguments:
             - '@config'
+    phpbbgallery.core.statistics:
+        class: phpbbgallery\core\statistics
+        arguments:
+            - '@dbal.conn'
+            - '@config'
+            - '%phpbbgallery.tables.gallery_images%'
+            - '%phpbbgallery.tables.gallery_statistics%'
+            - '%tables.users%'
     phpbbgallery.core.storage.key_generator:
         class: phpbbgallery\core\storage\key_generator
         arguments:
@@ -443,6 +451,7 @@ services:
             - '@phpbbgallery.core.online_location'
             - '@phpbbgallery.core.album_access'
             - '@phpbbgallery.core.unread_counter'
+            - '@phpbbgallery.core.statistics'
         tags:
             - { name: event.listener }
     phpbbgallery.core.unread_counter:

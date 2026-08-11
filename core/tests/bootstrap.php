@@ -328,6 +328,7 @@ namespace
 	require_once dirname(__DIR__) . '/user.php';
 	require_once dirname(__DIR__) . '/album_access.php';
 	require_once dirname(__DIR__) . '/unread_counter.php';
+	require_once dirname(__DIR__) . '/statistics.php';
 	require_once dirname(__DIR__) . '/log.php';
 	require_once dirname(__DIR__) . '/misc.php';
 	require_once dirname(__DIR__) . '/cron/cron_cleaner.php';

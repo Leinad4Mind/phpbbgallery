@@ -40,7 +40,9 @@ class main_listener implements EventSubscriberInterface
 	/** Remove read markers belonging to deleted images. */
 	public function remove_image_read_markers(\phpbb\event\data $event): void
 	{
-		$this->unread_counter->remove_images((array) $event['images']);
+		$image_ids = (array) $event['images'];
+		$this->unread_counter->remove_images($image_ids);
+		$this->statistics->remove_images($image_ids);
 	}
 	/** @var \phpbb\controller\helper */
 	protected \phpbb\controller\helper $helper;
@@ -64,6 +66,9 @@ class main_listener implements EventSubscriberInterface
 	/** @var \phpbbgallery\core\unread_counter */
 	protected \phpbbgallery\core\unread_counter $unread_counter;
 
+	/** Gallery engagement statistics. */
+	protected \phpbbgallery\core\statistics $statistics;
+
 	/** @var \phpbbgallery\core\album_access */
 	protected \phpbbgallery\core\album_access $album_access;
 	/** @var \phpbb\db\driver\driver_interface  */
@@ -86,13 +91,15 @@ class main_listener implements EventSubscriberInterface
 	 * @param \phpbbgallery\core\online_location $online_location
 	 * @param \phpbbgallery\core\album_access $album_access
 	 * @param \phpbbgallery\core\unread_counter $unread_counter
+	 * @param \phpbbgallery\core\statistics $statistics
 	 */
 	public function __construct(\phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\user $user,
 								\phpbb\language\language $lang, \phpbbgallery\core\search $gallery_search,
 								\phpbbgallery\core\config $gallery_config, \phpbb\db\driver\driver_interface $db,
 								string $users_table, \phpbbgallery\core\online_location $online_location,
 								\phpbbgallery\core\album_access $album_access,
-								\phpbbgallery\core\unread_counter $unread_counter)
+								\phpbbgallery\core\unread_counter $unread_counter,
+								\phpbbgallery\core\statistics $statistics)
 	{
 		$this->helper = $helper;
 		$this->template = $template;
@@ -105,6 +112,7 @@ class main_listener implements EventSubscriberInterface
 		$this->online_location = $online_location;
 		$this->album_access = $album_access;
 		$this->unread_counter = $unread_counter;
+		$this->statistics = $statistics;
 	}
 
 	/**

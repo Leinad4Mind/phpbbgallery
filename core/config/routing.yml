@@ -12,6 +12,10 @@ phpbbgallery_core_index_watch_all:
     defaults: { _controller: phpbbgallery.core.controller.index:watch_all }
     requirements:
         mode: subscribe|unsubscribe
+phpbbgallery_core_statistics:
+    path: /gallery/statistics
+    defaults: { _controller: phpbbgallery.core.controller.statistics:page }
+    methods: [GET]
 phpbbgallery_core_personal:
     path: /gallery/users
     defaults: { _controller: phpbbgallery.core.controller.index:personal, page: 1 }

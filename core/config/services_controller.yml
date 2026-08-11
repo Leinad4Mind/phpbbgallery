@@ -102,6 +102,7 @@ services:
             - '@phpbbgallery.core.storage.workspace'
             - '@phpbbgallery.core.image.format_registry'
             - '@phpbbgallery.core.storage.variant_key'
+            - '@phpbbgallery.core.statistics'
             - '%phpbbgallery.core.file.source%'
             - '%phpbbgallery.core.file.medium%'
             - '%phpbbgallery.core.file.mini%'
@@ -141,6 +142,7 @@ services:
             - '@phpbbgallery.core.rating'
             - '@phpbbgallery.core.block'
             - '@phpbbgallery.core.policy.image_visibility'
+            - '@phpbbgallery.core.statistics'
             - '@phpbbgallery.core.storage.workspace'
             - '@phpbbgallery.core.file.tool'
             - '@service_container'
@@ -150,6 +152,18 @@ services:
             - '%phpbbgallery.tables.gallery_comments%'
             - '%core.root_path%'
             - '%core.php_ext%'
+    phpbbgallery.core.controller.statistics:
+        class: phpbbgallery\core\controller\statistics
+        arguments:
+            - '@request'
+            - '@template'
+            - '@user'
+            - '@language'
+            - '@controller.helper'
+            - '@phpbbgallery.core.auth'
+            - '@phpbbgallery.core.statistics'
+            - '@config'
+            - '@phpbbgallery.core.config'
     phpbbgallery.core.controller.index:
         class: phpbbgallery\core\controller\index
         arguments:

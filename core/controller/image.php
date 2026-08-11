@@ -108,6 +108,9 @@ class image
 	/** @var \phpbbgallery\core\policy\image_visibility */
 	protected \phpbbgallery\core\policy\image_visibility $image_visibility;
 
+	/** Gallery engagement statistics. */
+	protected \phpbbgallery\core\statistics $statistics;
+
 	/** Active-provider workspace used for local image processing. */
 	protected ?\phpbbgallery\core\storage\workspace $storage_workspace = null;
 
@@ -186,6 +189,7 @@ class image
 	 * @param \phpbbgallery\core\rating                                 $gallery_rating
 	 * @param \phpbbgallery\core\block                                  $block
 	 * @param \phpbbgallery\core\policy\image_visibility                $image_visibility
+	 * @param \phpbbgallery\core\statistics                            $statistics
 	 * @param \phpbbgallery\core\storage\workspace                      $storage_workspace
 	 * @param \phpbbgallery\core\file\file                              $image_tools
 	 * @param ContainerInterface                                        $phpbb_container
@@ -210,6 +214,7 @@ class image
 		\phpbbgallery\core\notification\helper $notification_helper, \phpbbgallery\core\log $gallery_log,
 		\phpbbgallery\core\moderate $moderate, \phpbbgallery\core\rating $gallery_rating,
 		\phpbbgallery\core\block $block, \phpbbgallery\core\policy\image_visibility $image_visibility,
+		\phpbbgallery\core\statistics $statistics,
 		\phpbbgallery\core\storage\workspace $storage_workspace, \phpbbgallery\core\file\file $image_tools,
 		ContainerInterface $phpbb_container,
 		string $albums_table, string $images_table, string $users_table, string $table_comments, string $phpbb_root_path, string $php_ext)
@@ -244,6 +249,7 @@ class image
 		$this->gallery_rating = $gallery_rating;
 		$this->block = $block;
 		$this->image_visibility = $image_visibility;
+		$this->statistics = $statistics;
 		$this->storage_workspace = $storage_workspace;
 		$this->image_tools = $image_tools;
 		$this->phpbb_container = $phpbb_container;
@@ -372,6 +378,7 @@ class image
 				WHERE image_id = ' . (int) $image_id;
 			$this->db->sql_query($sql);
 			$this->gallery_config->inc('num_views', 1, false);
+			$this->statistics->record_view((int) $image_id);
 		}
 
 		// Do stuff here
