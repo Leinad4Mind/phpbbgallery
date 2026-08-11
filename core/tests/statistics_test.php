@@ -75,6 +75,8 @@ final class statistics_test extends TestCase
 		$this->assertStringContainsString('statistics_top_downloaded', $template);
 		$this->assertStringContainsString('statistics_top_uploaders', $template);
 		$this->assertStringContainsString('statistics_top_downloaders', $template);
+		$this->assertStringContainsString('class="selectpicker"', $template);
+		$this->assertStringContainsString('class="button1 btn btn-default"', $template);
 		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
 		{
 			$index = (string) file_get_contents($core . '/styles/' . $style . '/template/gallery/index_body.html');
