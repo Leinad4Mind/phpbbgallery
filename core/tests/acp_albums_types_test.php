@@ -66,6 +66,9 @@ final class acp_albums_types_test extends TestCase
 		$this->assertStringContainsString("'S_HAS_PARENT_ALBUM'", $source);
 		$this->assertStringContainsString("'S_HAS_SUBALBUMS'\t=> \$has_subalbums", $source);
 		$this->assertStringContainsString('normalise_subalbum_display_mode', $source);
+		$this->assertStringContainsString("\$db->sql_in_set('parent_id', \$subalbum_parent_ids)", $source);
+		$this->assertStringContainsString('AND display_on_index = 1', $source);
+		$this->assertStringContainsString("assign_block_vars('albums.subalbum'", $source);
 	}
 
 	public function test_image_capability_comes_from_the_album_type_registry(): void

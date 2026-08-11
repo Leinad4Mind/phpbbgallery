@@ -333,6 +333,17 @@
 				<td>
 					<strong><a href="{{ albums.U_ALBUM }}">{{ albums.ALBUM_NAME }}</a></strong>
 					{% if albums.ALBUM_DESCRIPTION %}<br /><span>{{ albums.ALBUM_DESCRIPTION }}</span>{% endif %}
+					{% if albums.S_LIST_SUBALBUMS and albums.subalbum|length %}
+					<div class="gallery-acp-subalbum-list{% if albums.S_SUBALBUMS_AS_ICONS %} gallery-acp-subalbum-list--icons{% else %} gallery-acp-subalbum-list--text{% endif %}">
+						{% for subalbum in albums.subalbum %}
+							{% if albums.S_SUBALBUMS_AS_ICONS and subalbum.ALBUM_IMAGE_SRC %}
+							<a class="gallery-acp-album-list-icon-link gallery-acp-subalbum-link gallery-acp-subalbum-link--icon" href="{{ subalbum.U_ALBUM }}" title="{{ subalbum.ALBUM_NAME }}"><img class="gallery-acp-album-list-icon" src="{{ subalbum.ALBUM_IMAGE_SRC }}" alt="{{ subalbum.ALBUM_NAME }}" /></a>
+							{% else %}
+							<a class="gallery-acp-subalbum-link gallery-acp-subalbum-link--text" href="{{ subalbum.U_ALBUM }}">{{ subalbum.ALBUM_NAME }}</a>
+							{% endif %}
+						{% endfor %}
+					</div>
+					{% endif %}
 					{% if albums.S_ALBUM_POST %}<br /><br /><span>{{ lang('IMAGES') }}{{ lang('COLON') }} <strong>{{ albums.ALBUM_IMAGES }}</strong></span>{% endif %}
 				</td>
 				<td style="vertical-align: top; width: 100px; text-align: right; white-space: nowrap;">

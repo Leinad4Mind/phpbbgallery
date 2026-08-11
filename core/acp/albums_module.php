@@ -805,12 +805,49 @@ class albums_module
 				AND album_user_id = " . (int) \phpbbgallery\core\block::PUBLIC_ALBUM . '
 			ORDER BY left_id';
 		$result = $db->sql_query($sql);
+		$album_rows = [];
 
-		if ($row = $db->sql_fetchrow($result))
+		while ($row = $db->sql_fetchrow($result))
 		{
-			do
+			$album_rows[] = $row;
+		}
+		$db->sql_freeresult($result);
+
+		if ($album_rows)
+		{
+			$subalbum_parent_ids = [];
+			foreach ($album_rows as $row)
 			{
-				$album_type = $row['album_type'];
+				$subalbum_display_mode = \phpbbgallery\core\block::normalise_subalbum_display_mode((int) $row['display_subalbum_list']);
+				if ($subalbum_display_mode !== (int) \phpbbgallery\core\block::SUBALBUM_DISPLAY_HIDDEN)
+				{
+					$subalbum_parent_ids[] = (int) $row['album_id'];
+				}
+			}
+
+			$subalbums_by_parent = [];
+			if ($subalbum_parent_ids)
+			{
+				$sql = 'SELECT album_id, parent_id, album_name, album_image
+					FROM ' . $table_prefix . 'gallery_albums
+					WHERE ' . $db->sql_in_set('parent_id', $subalbum_parent_ids) . '
+						AND album_user_id = ' . (int) \phpbbgallery\core\block::PUBLIC_ALBUM . '
+						AND display_on_index = 1
+					ORDER BY left_id';
+				$result = $db->sql_query($sql);
+
+				while ($subalbum = $db->sql_fetchrow($result))
+				{
+					$subalbums_by_parent[(int) $subalbum['parent_id']][] = $subalbum;
+				}
+				$db->sql_freeresult($result);
+			}
+
+			foreach ($album_rows as $row)
+			{
+				$album_type = (int) $row['album_type'];
+				$album_id = (int) $row['album_id'];
+				$subalbum_display_mode = \phpbbgallery\core\block::normalise_subalbum_display_mode((int) $row['display_subalbum_list']);
 
 				if ($row['album_status'] == (int) \phpbbgallery\core\block::ALBUM_LOCKED)
 				{
@@ -821,7 +858,7 @@ class albums_module
 					$folder_image = ($row['left_id'] + 1 != $row['right_id']) ? '<img src="images/icon_subfolder.gif" alt="' . $user->lang['SUBALBUM'] . '" />' : '<img src="images/icon_folder.gif" alt="' . $user->lang['FOLDER'] . '" />';
 				}
 
-				$url = $this->u_action . "&amp;parent_id=$this->parent_id&amp;a={$row['album_id']}";
+				$url = $this->u_action . "&amp;parent_id=$this->parent_id&amp;a=$album_id";
 
 				$template->assign_block_vars('albums', [
 					'FOLDER_IMAGE'		=> $folder_image,
@@ -831,16 +868,27 @@ class albums_module
 					'ALBUM_IMAGES'		=> $row['album_images'],
 
 					'S_ALBUM_POST'		=> ($album_type != (int) \phpbbgallery\core\block::TYPE_CAT) ? true : false,
+					'S_LIST_SUBALBUMS'	=> $subalbum_display_mode !== (int) \phpbbgallery\core\block::SUBALBUM_DISPLAY_HIDDEN,
+					'S_SUBALBUMS_AS_TEXT'	=> $subalbum_display_mode === (int) \phpbbgallery\core\block::SUBALBUM_DISPLAY_TEXT,
+					'S_SUBALBUMS_AS_ICONS'	=> $subalbum_display_mode === (int) \phpbbgallery\core\block::SUBALBUM_DISPLAY_ICONS,
 
-					'U_ALBUM'			=> $this->u_action . '&amp;parent_id=' . $row['album_id'],
+					'U_ALBUM'			=> $this->u_action . '&amp;parent_id=' . $album_id,
 					'U_MOVE_UP'			=> $url . '&amp;action=move_up',
 					'U_MOVE_DOWN'		=> $url . '&amp;action=move_down',
 					'U_EDIT'			=> $url . '&amp;action=edit',
 					'U_DELETE'			=> $url . '&amp;action=delete',
 					'U_SYNC'			=> $url . '&amp;action=sync']
 				);
+
+				foreach ($subalbums_by_parent[$album_id] ?? [] as $subalbum)
+				{
+					$template->assign_block_vars('albums.subalbum', [
+						'ALBUM_NAME'		=> $subalbum['album_name'],
+						'ALBUM_IMAGE_SRC'	=> ($subalbum['album_image']) ? $phpbb_ext_gallery_core_url->path('phpbb') . $subalbum['album_image'] : '',
+						'U_ALBUM'			=> $this->u_action . '&amp;parent_id=' . (int) $subalbum['album_id'],
+					]);
+				}
 			}
-			while ($row = $db->sql_fetchrow($result));
 		}
 		else if ($this->parent_id)
 		{
@@ -856,8 +904,6 @@ class albums_module
 				'U_SYNC'			=> $url . '&amp;action=sync',
 			]);
 		}
-		$db->sql_freeresult($result);
-
 		$template->assign_vars([
 			'ERROR_MSG'		=> (sizeof($errors)) ? implode('<br />', $errors) : '',
 			'NAVIGATION'	=> $navigation,

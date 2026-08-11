@@ -140,6 +140,9 @@ final class acp_addon_identity_test extends TestCase
 		$this->assertStringContainsString('class="gallery-acp-album-list-visual"', $template);
 		$this->assertStringContainsString('class="gallery-acp-album-list-icon-link"', $template);
 		$this->assertStringContainsString('class="gallery-acp-album-list-icon" src="{{ albums.ALBUM_IMAGE_SRC }}"', $template);
+		$this->assertStringContainsString('albums.S_LIST_SUBALBUMS and albums.subalbum|length', $template);
+		$this->assertStringContainsString('albums.S_SUBALBUMS_AS_ICONS and subalbum.ALBUM_IMAGE_SRC', $template);
+		$this->assertStringContainsString('class="gallery-acp-album-list-icon" src="{{ subalbum.ALBUM_IMAGE_SRC }}"', $template);
 		$this->assertStringContainsString('{% else %}', strstr($template, 'class="gallery-acp-album-list-visual"'));
 		$this->assertStringContainsString('{{ albums.FOLDER_IMAGE }}', strstr($template, 'class="gallery-acp-album-list-visual"'));
 		$this->assertStringNotContainsString('float: {{ S_CONTENT_FLOW_BEGIN }}', $template);
@@ -169,6 +172,7 @@ final class acp_addon_identity_test extends TestCase
 		$this->assertMatchesRegularExpression('/#gallery-album-image-preview-src\s*\{[^}]*max-height:\s*256px;[^}]*max-width:\s*256px;[^}]*object-fit:\s*contain;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-acp-album-list-icon-link\s*\{[^}]*height:\s*48px;[^}]*width:\s*48px;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-acp-album-list-visual\s*\{[^}]*vertical-align:\s*middle;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-acp-subalbum-list\s*\{[^}]*display:\s*flex;[^}]*flex-wrap:\s*wrap;/s', $css);
 		$this->assertStringContainsString('.gallery-acp-album-list-icon-link:hover .gallery-acp-album-list-icon', $css);
 	}
 }

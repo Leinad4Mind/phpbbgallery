@@ -66,6 +66,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 - Vertically centred folder icons with their labels in text-mode subalbum links across every Gallery presentation and bundled style.
 - Displayed each configured album icon in a centred 48-pixel square in the ACP album tree's visual column, falling back to phpBB's folder icon only when no custom image is configured.
+- Mirrored each parent's configured visible subalbum links or icons in the ACP album tree, using one bounded query for all displayed parent rows.
 - Prevented the enlarged ACP album-icon preview from being clipped by phpBB's default hidden overflow on form rows.
 - Replaced the conflicting global subalbum-icon switch and ambiguous legacy legend labels with an explicit per-parent presentation mode, preserving existing hidden parents and migrating visible parents to text or icons according to their previous global setting.
 - Removed the Classic folder-circle background whenever an album has a custom icon and kept transparent SVG artwork transparent, so the configured icon fully replaces the default visual.

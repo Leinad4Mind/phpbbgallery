@@ -91,6 +91,22 @@
 	width: 100%;
 }
 
+.gallery-acp-subalbum-list
+{
+	align-items: center;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-top: 8px;
+	overflow: visible;
+}
+
+.gallery-acp-subalbum-link--text
+{
+	display: inline-flex;
+	line-height: 1.4;
+}
+
 .gallery-acp-album-list-icon-link:hover,
 .gallery-acp-album-list-icon-link:focus
 {
