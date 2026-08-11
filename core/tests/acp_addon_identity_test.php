@@ -42,13 +42,14 @@ final class acp_addon_identity_test extends TestCase
 		$this->assertStringContainsString("'phpbbgallery.acp.addonSettingsView'", $javascript);
 		$this->assertStringContainsString("'phpbbgallery.acp.addonSettingsLegend'", $javascript);
 		$this->assertStringContainsString('window.localStorage.setItem(storageKey, mode)', $javascript);
-		$this->assertStringContainsString("window.localStorage.setItem(legendStorageKey, visible ? 'visible' : 'hidden')", $javascript);
+		$this->assertStringContainsString('window.localStorage.setItem(storageKey, hiddenMode)', $javascript);
+		$this->assertStringContainsString('window.localStorage.removeItem(legacyLegendStorageKey)', $javascript);
 		$this->assertStringContainsString("button.setAttribute('aria-pressed'", $javascript);
-		$this->assertStringContainsString("legend.classList.toggle('is-collapsed', !visible)", $javascript);
-		$this->assertStringContainsString('GALLERY_ADDON_SETTINGS_LEGEND_CLOSE', $template);
-		$this->assertStringContainsString('GALLERY_ADDON_SETTINGS_LEGEND_SHOW', $template);
-		$this->assertStringContainsString('.gallery-addon-legend.is-collapsed', $stylesheet);
-		$this->assertStringContainsString('.gallery-addon-legend__show', $stylesheet);
+		$this->assertStringContainsString("var hiddenMode = 'hidden'", $javascript);
+		$this->assertStringContainsString('data-view-hidden-label', $template);
+		$this->assertStringContainsString('GALLERY_ADDON_SETTINGS_VIEW_HIDDEN', $template);
+		$this->assertStringContainsString('data-gallery-addon-view="hidden"', $stylesheet);
+		$this->assertStringContainsString('border-inline-start: 0 !important', $stylesheet);
 		$this->assertStringContainsString("'data-view-simple-explain'", $javascript);
 		$this->assertStringContainsString("'data-view-complete-explain'", $javascript);
 		$this->assertStringNotContainsString('html[data-gallery-addon-view="simple"] .gallery-addon-legend__explain', $stylesheet);
@@ -97,8 +98,7 @@ final class acp_addon_identity_test extends TestCase
 		$this->assertStringContainsString('GALLERY_ADDON_SETTINGS_VIEW_SIMPLE', $template);
 		$this->assertStringContainsString('GALLERY_ADDON_SETTINGS_VIEW_COMPLETE', $template);
 		$this->assertStringContainsString('GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN_SIMPLE', $template);
-		$this->assertStringContainsString('GALLERY_ADDON_SETTINGS_LEGEND_CLOSE', $template);
-		$this->assertStringContainsString('GALLERY_ADDON_SETTINGS_LEGEND_SHOW', $template);
+		$this->assertStringContainsString('GALLERY_ADDON_SETTINGS_VIEW_HIDDEN', $template);
 		$this->assertStringContainsString("INCLUDEJS '@phpbbgallery_core/gallery_acp_addons.js'", $template);
 	}
 }
