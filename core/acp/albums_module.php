@@ -365,11 +365,20 @@ class albums_module
 
 				// Show form to create/modify a album
 				$old_album_type = null;
+				$album_type_locked = false;
+				$album_type_lock_explain = '';
+				$album_type_definitions = [];
 				if ($action == 'edit')
 				{
 					$this->page_title = 'EDIT_ALBUM';
 					$row = $phpbb_ext_gallery_core_album->get_info($album_id);
-					$old_album_type = $row['album_type'];
+					$old_album_type = (int) $row['album_type'];
+					$album_type_definitions = $album_type_registry->get_types([
+						'action' => 'edit',
+						'current_type' => (int) ($album_data['album_type'] ?? $old_album_type),
+						'original_type' => $old_album_type,
+					]);
+					$album_type_locked = !empty($album_type_definitions[$old_album_type]['immutable']);
 
 					if (!$update)
 					{
@@ -379,6 +388,10 @@ class albums_module
 					{
 						$album_data['left_id'] = $row['left_id'];
 						$album_data['right_id'] = $row['right_id'];
+						if ($album_type_locked || !isset($album_type_definitions[(int) $album_data['album_type']]))
+						{
+							$album_data['album_type'] = $old_album_type;
+						}
 					}
 					$album_type_data = [];
 					$vars = ['action', 'album_data', 'album_type_data'];
@@ -468,7 +481,15 @@ class albums_module
 				$album_type_options = '';
 				$album_type_ary = [];
 				$current_album_type = (int) $album_data['album_type'];
-				foreach ($album_type_registry->get_types(['current_type' => $current_album_type]) as $value => $definition)
+				if (!$album_type_definitions)
+				{
+					$album_type_definitions = $album_type_registry->get_types([
+						'action' => $action,
+						'current_type' => $current_album_type,
+						'original_type' => $old_album_type,
+					]);
+				}
+				foreach ($album_type_definitions as $value => $definition)
 				{
 					if (!$definition['can_create'] && (int) $value !== $current_album_type)
 					{
@@ -647,8 +668,6 @@ class albums_module
 				* @var	string		album_type_lock_explain	Explanation shown beside an immutable album type
 				* @since 1.2.0
 				*/
-				$album_type_locked = false;
-				$album_type_lock_explain = '';
 				$vars = [
 					'action',
 					'album_data',

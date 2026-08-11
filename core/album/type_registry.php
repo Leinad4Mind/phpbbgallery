@@ -25,10 +25,11 @@ class type_registry
 	 * Return every album type available for the current operation.
 	 *
 	 * Definitions contain a language suffix, whether images are accepted and
-	 * whether new albums of the type may currently be created.
+	 * whether new albums of the type may currently be created and whether an
+	 * existing album may leave that type.
 	 *
 	 * @param array $context Operation-specific context
-	 * @return array<int, array{lang: string, accepts_images: bool, can_create: bool}>
+	 * @return array<int, array{lang: string, accepts_images: bool, can_create: bool, immutable: bool}>
 	 */
 	public function get_types(array $context = []): array
 	{
@@ -37,11 +38,13 @@ class type_registry
 				'lang' => 'CAT',
 				'accepts_images' => false,
 				'can_create' => true,
+				'immutable' => false,
 			],
 			(int) \phpbbgallery\core\block::TYPE_UPLOAD => [
 				'lang' => 'UPLOAD',
 				'accepts_images' => true,
 				'can_create' => true,
+				'immutable' => false,
 			],
 		];
 
@@ -75,6 +78,7 @@ class type_registry
 				'lang' => $lang,
 				'accepts_images' => (bool) ($definition['accepts_images'] ?? false),
 				'can_create' => (bool) ($definition['can_create'] ?? true),
+				'immutable' => (bool) ($definition['immutable'] ?? false),
 			];
 		}
 

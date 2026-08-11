@@ -194,10 +194,19 @@ class policy_listener implements EventSubscriberInterface
 	public function register_album_type(\phpbb\event\data $event): void
 	{
 		$types = (array) $event['types'];
+		$context = (array) $event['context'];
+		if ((string) ($context['action'] ?? '') === 'edit'
+			&& isset($context['original_type'])
+			&& (int) $context['original_type'] !== (int) manager::ALBUM_TYPE)
+		{
+			$event['types'] = $types;
+			return;
+		}
 		$types[(int) manager::ALBUM_TYPE] = [
 			'lang' => 'CONTEST',
 			'accepts_images' => true,
 			'can_create' => $this->contest->can_create(),
+			'immutable' => true,
 		];
 		$event['types'] = $types;
 	}

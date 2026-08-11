@@ -288,8 +288,8 @@ final class package_test extends TestCase
 		);
 		$this->assertStringContainsString('contest_options.hidden', $display);
 		$this->assertStringContainsString("dE('album_upload_options', 1)", $display);
-		$this->assertStringContainsString('cat_to_contest_actions', $warnings);
-		$this->assertStringNotContainsString('contest_change_type_actions', $warnings);
+		$this->assertStringNotContainsString('errorbox', $warnings);
+		$this->assertStringContainsString('rejected server-side', $warnings);
 	}
 
 	private function load_language(string $path): array

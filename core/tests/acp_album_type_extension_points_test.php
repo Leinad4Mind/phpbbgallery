@@ -45,6 +45,9 @@ final class acp_album_type_extension_points_test extends TestCase
 		$this->assertStringContainsString("'album_type_locked'", $module);
 		$this->assertStringContainsString("'album_type_lock_explain'", $module);
 		$this->assertStringContainsString("'S_ALBUM_TYPE_LOCKED' => \$album_type_locked", $module);
+		$this->assertStringContainsString("'original_type' => \$old_album_type", $module);
+		$this->assertStringContainsString("!empty(\$album_type_definitions[\$old_album_type]['immutable'])", $module);
+		$this->assertStringContainsString("\$album_data['album_type'] = \$old_album_type", $module);
 	}
 
 	public function test_album_icon_accept_filter_is_runtime_capability_aware(): void

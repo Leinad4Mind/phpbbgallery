@@ -53,7 +53,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
-- Locked the album-type selector when editing an existing contest so the ACP no longer offers an unsupported conversion, while preserving the contest type in the submitted form and retaining server-side validation.
+- Locked the album-type selector when editing an existing contest and removed Contest when editing a regular album, so the ACP no longer offers unsupported conversions while preserving the immutable type and server-side validation.
 - Centred thumbnail-free previous and next chevrons within their navigation columns and removed the circular border, background and shadow so only the accessible directional control remains visible.
 - Kept the Favorite heart fully inside the Classic image header, reduced it to the compact scale of that presentation and reserved balanced title space so long image names remain centred and unobscured.
 - Kept portrait and unusually tall thumbnails inside their configured Classic image cells by giving the flex viewport a definite border-box, clipping overflow and applying an explicit aspect-preserving height limit.

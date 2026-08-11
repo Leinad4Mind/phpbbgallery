@@ -27,6 +27,46 @@ final class policy_listener_test extends TestCase
 		$this->assertSame('CONTEST', $type['lang']);
 		$this->assertTrue($type['accepts_images']);
 		$this->assertFalse($type['can_create']);
+		$this->assertTrue($type['immutable']);
+	}
+
+	public function test_listener_hides_contest_when_editing_a_regular_album(): void
+	{
+		$listener = new policy_listener($this->manager(true));
+		$event = new \phpbb\event\data([
+			'types' => [],
+			'context' => [
+				'action' => 'edit',
+				'current_type' => \phpbbgallery\core\block::TYPE_UPLOAD,
+				'original_type' => \phpbbgallery\core\block::TYPE_UPLOAD,
+			],
+		]);
+
+		$listener->register_album_type($event);
+
+		$this->assertArrayNotHasKey(manager::ALBUM_TYPE, $event['types']);
+	}
+
+	public function test_listener_keeps_contest_available_for_creation_and_existing_contests(): void
+	{
+		$listener = new policy_listener($this->manager(true));
+		$create = new \phpbb\event\data([
+			'types' => [],
+			'context' => ['action' => 'add'],
+		]);
+		$edit = new \phpbb\event\data([
+			'types' => [],
+			'context' => [
+				'action' => 'edit',
+				'original_type' => manager::ALBUM_TYPE,
+			],
+		]);
+
+		$listener->register_album_type($create);
+		$listener->register_album_type($edit);
+
+		$this->assertArrayHasKey(manager::ALBUM_TYPE, $create['types']);
+		$this->assertArrayHasKey(manager::ALBUM_TYPE, $edit['types']);
 	}
 
 	public function test_listener_enriches_only_contest_album_rows(): void

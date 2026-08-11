@@ -1,14 +1,1 @@
-{% if not S_ADD_ACTION %}
-	{% if S_ALBUM_ORIG_CAT %}
-	<div class="errorbox" id="cat_to_contest_actions">
-		<h3>{{ lang('WARNING') }}</h3>
-		<p>{{ lang('ALBUM_NO_TYPE_CHANGE_TO_CONTEST') }}</p>
-	</div>
-	{% endif %}
-	{% if S_ALBUM_ORIG_UPLOAD %}
-	<div class="errorbox" id="album_to_contest_actions">
-		<h3>{{ lang('WARNING') }}</h3>
-		<p>{{ lang('ALBUM_NO_TYPE_CHANGE_TO_CONTEST') }}</p>
-	</div>
-	{% endif %}
-{% endif %}
+{# Unsupported Contest transitions are removed from the selector and still rejected server-side. #}

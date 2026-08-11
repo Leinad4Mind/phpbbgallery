@@ -99,9 +99,12 @@ final class extension_policy_boundaries_test extends TestCase
 
 		$this->assertSame([0, 1, 2], array_keys($types));
 		$this->assertFalse($types[0]['accepts_images']);
+		$this->assertFalse($types[0]['immutable']);
 		$this->assertTrue($types[1]['accepts_images']);
+		$this->assertFalse($types[1]['immutable']);
 		$this->assertSame('CONTEST', $types[2]['lang']);
 		$this->assertFalse($types[2]['can_create']);
+		$this->assertFalse($types[2]['immutable']);
 		$this->assertTrue($registry->is_available(2));
 		$this->assertTrue($registry->accepts_images(2));
 		$this->assertFalse($registry->is_available(99));
