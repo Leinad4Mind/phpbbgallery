@@ -42,6 +42,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Centred the Font Awesome glyph inside the circular Futuristic album-section marker independently of inherited icon sizing and spacing rules.
 - Kept recent-image thumbnails in the Futuristic album footer beside the last-image details instead of duplicating them as the album's main visual; explicitly configured transparent album icons now fill their dedicated frame.
 - Refined the PROSILVER Futuristic palette with a restrained phpBB blue-to-cyan gradient instead of the previous blue-to-purple treatment.
 - Rebuilt album quick search with each bundled style's native compact controls: a magnifying-glass button searches the current album, while a separate cog opens advanced Gallery search with that album preselected and descendant searching enabled.

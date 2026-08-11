@@ -637,6 +637,18 @@ input.autowidth-gallery {
 	justify-content: center;
 }
 
+.gallery-futuristic-section-icon > .icon
+{
+	align-items: center;
+	display: inline-flex;
+	height: 100%;
+	justify-content: center;
+	line-height: 1;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+}
+
 .gallery-futuristic-category
 {
 	align-items: center;
