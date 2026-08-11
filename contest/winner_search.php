@@ -123,6 +123,7 @@ class winner_search
 			2 => 'contest_second',
 			3 => 'contest_third',
 		];
+		$image_template_vars = $this->image->enrich_block_template_vars(array_values($winner_rows));
 
 		foreach ($contests as $contest)
 		{
@@ -154,12 +155,16 @@ class winner_search
 
 				$used_winner_ids[$image_id] = true;
 				$winner_rows[$image_id]['image_contest_rank'] = $rank;
+				$additional_vars = isset($image_template_vars[$image_id]) && is_array($image_template_vars[$image_id])
+					? $image_template_vars[$image_id]
+					: [];
 				$this->image->assign_block(
 					'imageblock.image',
 					$winner_rows[$image_id],
 					$show_options,
 					$thumbnail_link,
-					$imagename_link
+					$imagename_link,
+					$additional_vars
 				);
 			}
 		}

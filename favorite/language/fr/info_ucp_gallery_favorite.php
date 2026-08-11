@@ -54,5 +54,5 @@ $lang = array_merge($lang, [
 	'GALLERY_CORE_NOT_FOUND'	=> 'L’extension phpBB Gallery Core doit d’abord être installée et activée.',
 	'EXTENSION_ENABLE_SUCCESS'	=> 'L’extension a été activée avec succès.',
 	'FAVORITE_SHOW_IN_LISTINGS' => 'Afficher les contrôles des favoris dans les listes d’images',
-	'FAVORITE_SHOW_IN_LISTINGS_EXPLAIN' => 'Affiche le cœur des favoris dans les albums et les résultats de recherche. Si cette option est désactivée, les favoris restent disponibles sur la page de chaque image.',
+	'FAVORITE_SHOW_IN_LISTINGS_EXPLAIN' => 'Affiche le cœur des favoris dans les albums, les résultats de recherche et les blocs d’images récentes, aléatoires ou mises en avant. Si cette option est désactivée, les favoris restent disponibles sur la page de chaque image.',
 ]);

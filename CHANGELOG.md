@@ -33,7 +33,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added accessible star-only AJAX rating controls to FLATBOOTS and prosilver, with CSRF-protected POST submission, permission revalidation and no page reload.
 - Made Favorite controls update their icon, label and inverse action over AJAX in album listings, Gallery search results and image pages, including after progressive AJAX image navigation.
 - Added responsive album information panels matching FLATBOOTS viewforum, with online users, effective album permissions and a neutral third-party rules area populated by BBPoints Images.
-- Added permission-aware AJAX favorite hearts to album and search-result image cards, loading the current page's favorite state in one bounded query through neutral Core extension events and allowing administrators to keep listing controls disabled.
+- Added permission-aware AJAX favorite hearts to every bounded image-card listing, including albums, search results, recent, random, featured, top-rated, most-downloaded and contest-winner blocks, loading each result set's favorite state in one query through a neutral Core extension event and allowing administrators to keep listing controls disabled.
 - Added a Unicode-aware live character counter to Gallery comment forms in every bundled style, driven by the ACP comment limit and reinitialized after AJAX image navigation.
 - Extended indexed EXIF DateTimeOriginal sorting to Gallery searches while retaining upload-date fallback, previous/next navigation and ACP defaults.
 - Added an optional multi-image upload control that applies the first image's BBPoints contributors to the complete batch, with synchronized locked editors and server-side enforcement.

@@ -54,5 +54,5 @@ $lang = array_merge($lang, [
 	'GALLERY_CORE_NOT_FOUND'	=> 'Primero debe instalar y activar la extensión principal phpBB Gallery.',
 	'EXTENSION_ENABLE_SUCCESS'	=> 'La extensión se activó correctamente.',
 	'FAVORITE_SHOW_IN_LISTINGS' => 'Mostrar los controles de favoritos en las listas de imágenes',
-	'FAVORITE_SHOW_IN_LISTINGS_EXPLAIN' => 'Muestra el corazón de favoritos en los álbumes y resultados de búsqueda. Si se desactiva, los favoritos aún se pueden gestionar en la página de cada imagen.',
+	'FAVORITE_SHOW_IN_LISTINGS_EXPLAIN' => 'Muestra el corazón de favoritos en álbumes, resultados de búsqueda y bloques de imágenes recientes, aleatorias o destacadas. Si se desactiva, los favoritos aún se pueden gestionar en la página de cada imagen.',
 ]);

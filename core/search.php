@@ -231,12 +231,13 @@ class search
 		$thumbnail_link = $this->gallery_config->get('link_thumbnail');
 		$imagename_link = $this->gallery_config->get('link_image_name');
 
+		$rows = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$this->image->assign_block('imageblock.image', $row, $show_options, $thumbnail_link, $imagename_link);
+			$rows[] = $row;
 		}
-
 		$this->db->sql_freeresult($result);
+		$this->assign_image_rows($rows, $show_options, $thumbnail_link, $imagename_link);
 	}
 
 	/**
@@ -658,11 +659,13 @@ class search
 		$thumbnail_link = $this->gallery_config->get('link_thumbnail');
 		$imagename_link = $this->gallery_config->get('link_image_name');
 
+		$rows = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$this->image->assign_block('imageblock.image', $row, $show_options, $thumbnail_link, $imagename_link);
+			$rows[] = $row;
 		}
 		$this->db->sql_freeresult($result);
+		$this->assign_image_rows($rows, $show_options, $thumbnail_link, $imagename_link);
 
 		if ($user > 0)
 		{
@@ -820,9 +823,29 @@ class search
 		$show_options = (int) $this->gallery_config->get('rrc_gindex_display');
 		$thumbnail_link = (string) $this->gallery_config->get('link_thumbnail');
 		$imagename_link = (string) $this->gallery_config->get('link_image_name');
-		foreach ($rows as $row)
+		$this->assign_image_rows($rows, $show_options, $thumbnail_link, $imagename_link);
+	}
+
+	/**
+	 * Assign a bounded image result set after optional add-ons enrich its cards.
+	 *
+	 * @param array  $images         Image and album rows
+	 * @param int    $show_options   Bitmask of image details to display
+	 * @param string $thumbnail_link Thumbnail destination mode
+	 * @param string $imagename_link Image-name destination mode
+	 * @return void
+	 */
+	private function assign_image_rows(array $images, int $show_options, string $thumbnail_link, string $imagename_link): void
+	{
+		$image_template_vars = $this->image->enrich_block_template_vars($images);
+
+		foreach ($images as $row)
 		{
-			$this->image->assign_block('imageblock.image', $row, $show_options, $thumbnail_link, $imagename_link);
+			$image_id = (int) ($row['image_id'] ?? 0);
+			$additional_vars = isset($image_template_vars[$image_id]) && is_array($image_template_vars[$image_id])
+				? $image_template_vars[$image_id]
+				: [];
+			$this->image->assign_block('imageblock.image', $row, $show_options, $thumbnail_link, $imagename_link, $additional_vars);
 		}
 	}
 
@@ -884,10 +907,7 @@ class search
 		$show_options = $this->gallery_config->get('rrc_gindex_display');
 		$thumbnail_link = $this->gallery_config->get('link_thumbnail');
 		$imagename_link = $this->gallery_config->get('link_image_name');
-		foreach ($rowset as $row)
-		{
-			$this->image->assign_block('imageblock.image', $row, $show_options, $thumbnail_link, $imagename_link);
-		}
+		$this->assign_image_rows($rowset, $show_options, $thumbnail_link, $imagename_link);
 
 		$this->template->assign_vars([
 			'SEARCH_MATCHES'	=> $this->language->lang('TOTAL_IMAGES_SPRINTF', $count),

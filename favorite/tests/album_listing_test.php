@@ -29,6 +29,10 @@ final class album_listing_test extends TestCase
 			"'phpbbgallery.core.search.image_template_vars'",
 			$source
 		);
+		$this->assertStringContainsString(
+			"'phpbbgallery.core.imageblock.image_template_vars'",
+			$source
+		);
 		$this->assertStringContainsString('$this->enrich_listing($event, $images)', $method);
 		$this->assertStringContainsString('$user_id === ANONYMOUS', $enrich);
 		$this->assertStringContainsString("acl_check('i_favorite'", $enrich);
@@ -38,6 +42,20 @@ final class album_listing_test extends TestCase
 			'$event[' . "'image_template_vars'] = " . '$image_template_vars',
 			$enrich
 		);
+	}
+
+	public function test_recent_random_and_featured_blocks_use_the_bulk_favorite_contract(): void
+	{
+		$core_image = (string) file_get_contents(dirname(__DIR__, 2) . '/core/image/image.php');
+		$core_search = (string) file_get_contents(dirname(__DIR__, 2) . '/core/search.php');
+		$listener = (string) file_get_contents(dirname(__DIR__) . '/event/favorite_listener.php');
+		$method = strstr($listener, 'public function imageblock_image_template_vars(');
+		$method = strstr($method, '/**', true);
+
+		$this->assertStringContainsString('phpbbgallery.core.imageblock.image_template_vars', $core_image);
+		$this->assertSame(4, substr_count($core_search, '$this->assign_image_rows('));
+		$this->assertStringContainsString('$this->enrich_listing($event, (array) $event[' . "'images']", $method);
+		$this->assertSame(1, substr_count($method, 'enrich_listing('));
 	}
 
 	public function test_album_heart_is_ajax_capable_with_a_normal_link_fallback(): void

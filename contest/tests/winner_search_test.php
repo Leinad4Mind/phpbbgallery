@@ -110,14 +110,19 @@ final class winner_search_test extends TestCase
 			});
 
 		$assigned_ranks = [];
+		$assigned_additional_vars = [];
 		$image = $this->getMockBuilder(\phpbbgallery\core\image\image::class)
 			->disableOriginalConstructor()
-			->onlyMethods(['assign_block'])
+			->onlyMethods(['assign_block', 'enrich_block_template_vars'])
 			->getMock();
+		$image->expects($this->once())
+			->method('enrich_block_template_vars')
+			->willReturn([101 => ['U_FAVORITE_IMAGE' => '/favorite/101']]);
 		$image->method('assign_block')
-			->willReturnCallback(static function(string $block, array $row) use (&$assigned_ranks): void
+			->willReturnCallback(static function(string $block, array $row, int $display, string $thumbnail, string $name, array $additional) use (&$assigned_ranks, &$assigned_additional_vars): void
 			{
 				$assigned_ranks[] = (int) $row['image_contest_rank'];
+				$assigned_additional_vars[] = $additional;
 			});
 
 		$language = $this->createMock(\phpbb\language\language::class);
@@ -165,6 +170,8 @@ final class winner_search_test extends TestCase
 		$search->display(2);
 
 		$this->assertSame([1, 3], $assigned_ranks);
+		$this->assertSame(['U_FAVORITE_IMAGE' => '/favorite/101'], $assigned_additional_vars[0]);
+		$this->assertSame([], $assigned_additional_vars[1]);
 		$placeholders = array_values(array_filter(
 			$assigned_blocks,
 			static fn(array $assignment): bool => $assignment[0] === 'imageblock.image'

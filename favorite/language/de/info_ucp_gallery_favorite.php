@@ -54,5 +54,5 @@ $lang = array_merge($lang, [
 	'GALLERY_CORE_NOT_FOUND'	=> 'Die phpBB Gallery Core-Erweiterung muss zuerst installiert und aktiviert werden.',
 	'EXTENSION_ENABLE_SUCCESS'	=> 'Die Erweiterung wurde erfolgreich aktiviert.',
 	'FAVORITE_SHOW_IN_LISTINGS' => 'Favoriten-Steuerelemente in Bildlisten anzeigen',
-	'FAVORITE_SHOW_IN_LISTINGS_EXPLAIN' => 'Zeigt das Favoriten-Herz in Alben und Suchergebnissen. Wenn deaktiviert, können Favoriten weiterhin auf der jeweiligen Bildseite verwaltet werden.',
+	'FAVORITE_SHOW_IN_LISTINGS_EXPLAIN' => 'Zeigt das Favoriten-Herz in Alben, Suchergebnissen sowie Blöcken mit aktuellen, zufälligen oder hervorgehobenen Bildern. Wenn deaktiviert, können Favoriten weiterhin auf der jeweiligen Bildseite verwaltet werden.',
 ]);

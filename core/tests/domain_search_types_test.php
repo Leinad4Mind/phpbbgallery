@@ -67,6 +67,53 @@ final class domain_search_types_test extends TestCase
 		}
 	}
 
+	public function test_image_blocks_are_enriched_once_before_each_card_is_assigned(): void
+	{
+		$images = [
+			['image_id' => 7, 'image_album_id' => 2],
+			['image_id' => 8, 'image_album_id' => 3],
+		];
+		$assignments = [];
+		$image = $this->createMock(\phpbbgallery\core\image\image::class);
+		$image->expects($this->once())
+			->method('enrich_block_template_vars')
+			->with($images)
+			->willReturn([7 => ['U_FAVORITE_IMAGE' => '/favorite/7']]);
+		$image->expects($this->exactly(2))
+			->method('assign_block')
+			->willReturnCallback(static function (...$arguments) use (&$assignments): void
+			{
+				$assignments[] = $arguments;
+			});
+
+		$reflection = new \ReflectionClass(search::class);
+		$search = $reflection->newInstanceWithoutConstructor();
+		$reflection->getProperty('image')->setValue($search, $image);
+		$reflection->getMethod('assign_image_rows')->invoke($search, $images, 5, 'image_page', 'image_page');
+
+		$this->assertSame(['U_FAVORITE_IMAGE' => '/favorite/7'], $assignments[0][5]);
+		$this->assertSame([], $assignments[1][5]);
+	}
+
+	public function test_image_service_exposes_the_neutral_bulk_enrichment_event(): void
+	{
+		$images = [['image_id' => 7, 'image_album_id' => 2]];
+		$expected = [7 => ['U_FAVORITE_IMAGE' => '/favorite/7']];
+		$dispatcher = $this->createMock(\phpbb\event\dispatcher_interface::class);
+		$dispatcher->expects($this->once())
+			->method('trigger_event')
+			->with(
+				'phpbbgallery.core.imageblock.image_template_vars',
+				['images' => $images, 'image_template_vars' => []]
+			)
+			->willReturn(['images' => $images, 'image_template_vars' => $expected]);
+		$reflection = new \ReflectionClass(\phpbbgallery\core\image\image::class);
+		$image = $reflection->newInstanceWithoutConstructor();
+		$reflection->getProperty('phpbb_dispatcher')->setValue($image, $dispatcher);
+
+		$this->assertSame($expected, $image->enrich_block_template_vars($images));
+	}
+
 	public function test_featured_search_rejects_unknown_ordering_modes_before_querying(): void
 	{
 		$search = (new \ReflectionClass(search::class))->newInstanceWithoutConstructor();

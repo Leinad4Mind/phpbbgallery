@@ -83,6 +83,7 @@ class favorite_listener implements EventSubscriberInterface
 			'phpbbgallery.core.acp.config.get_display_vars'	=> 'acp_config_get_display_vars',
 			'phpbbgallery.acpcleanup.cleanup_finished'			=> 'cleanup_finished',
 			'phpbbgallery.core.album.image_template_vars'		=> 'album_image_template_vars',
+			'phpbbgallery.core.imageblock.image_template_vars'	=> 'imageblock_image_template_vars',
 			'phpbbgallery.core.search.image_template_vars'		=> 'search_image_template_vars',
 			'phpbbgallery.core.image.delete_images'				=> 'image_delete_images',
 			'phpbbgallery.core.viewimage'						=> 'viewimage',
@@ -146,6 +147,14 @@ class favorite_listener implements EventSubscriberInterface
 	 * Add favourite controls to visible Gallery search results.
 	 */
 	public function search_image_template_vars(\phpbb\event\data $event): void
+	{
+		$this->enrich_listing($event, (array) $event['images']);
+	}
+
+	/**
+	 * Add favourite controls to recent, random, featured and top-rated blocks.
+	 */
+	public function imageblock_image_template_vars(\phpbb\event\data $event): void
 	{
 		$this->enrich_listing($event, (array) $event['images']);
 	}

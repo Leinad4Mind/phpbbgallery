@@ -54,5 +54,5 @@ $lang = array_merge($lang, [
 	'GALLERY_CORE_NOT_FOUND'	=> 'De phpBB Gallery Core-extensie moet eerst worden geïnstalleerd en ingeschakeld.',
 	'EXTENSION_ENABLE_SUCCESS'	=> 'De extensie is ingeschakeld.',
 	'FAVORITE_SHOW_IN_LISTINGS' => 'Favorietknoppen in afbeeldingslijsten tonen',
-	'FAVORITE_SHOW_IN_LISTINGS_EXPLAIN' => 'Toont het favorietenhart in albums en zoekresultaten. Indien uitgeschakeld blijven favorieten beschikbaar op de pagina van elke afbeelding.',
+	'FAVORITE_SHOW_IN_LISTINGS_EXPLAIN' => 'Toont het favorietenhart in albums, zoekresultaten en blokken met recente, willekeurige of uitgelichte afbeeldingen. Indien uitgeschakeld blijven favorieten beschikbaar op de pagina van elke afbeelding.',
 ]);

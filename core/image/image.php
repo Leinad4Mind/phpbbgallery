@@ -1296,6 +1296,33 @@ class image
 	}
 
 	/**
+	 * Let optional add-ons enrich a bounded set of image cards in one operation.
+	 *
+	 * @param array $images Image and album rows
+	 * @return array Additional template variables keyed by image ID
+	 */
+	public function enrich_block_template_vars(array $images): array
+	{
+		$image_template_vars = [];
+
+		/**
+		 * Enrich image cards rendered by bounded Gallery and add-on blocks.
+		 *
+		 * @event phpbbgallery.core.imageblock.image_template_vars
+		 * @var array images              Image and album rows in the bounded result set
+		 * @var array image_template_vars Additional variables keyed by image ID
+		 * @since 4.1.0
+		 */
+		$vars = ['images', 'image_template_vars'];
+		extract($this->phpbb_dispatcher->trigger_event(
+			'phpbbgallery.core.imageblock.image_template_vars',
+			compact($vars)
+		));
+
+		return is_array($image_template_vars) ? $image_template_vars : [];
+	}
+
+	/**
 	 * Assign an image summary to a template block.
 	 *
 	 * @param string $image_block_name Template block name

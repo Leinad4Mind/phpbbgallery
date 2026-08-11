@@ -51,7 +51,7 @@ $lang = array_merge($lang, [
 	'WATCH_FAVO'				=> 'Subscrever as imagens que marco como favoritas',
 	'WATCH_FAVO_EXPLAIN'		=> 'Se ativado, ao adicionares uma imagem aos favoritos passas também a ser notificado dos novos comentários dela.',
 	'FAVORITE_SHOW_IN_LISTINGS' => 'Mostrar os controlos de favoritos nas listagens de imagens',
-	'FAVORITE_SHOW_IN_LISTINGS_EXPLAIN' => 'Mostra o coração dos favoritos nos álbuns e nos resultados da pesquisa. Se estiver desativado, os membros continuam a poder gerir os favoritos na página de cada imagem.',
+	'FAVORITE_SHOW_IN_LISTINGS_EXPLAIN' => 'Mostra o coração dos favoritos nos álbuns, resultados da pesquisa e blocos de imagens recentes, aleatórias ou em destaque. Se estiver desativado, os membros continuam a poder gerir os favoritos na página de cada imagem.',
 
 	'GALLERY_CORE_NOT_FOUND'	=> 'A extensão phpBB Gallery Core deve ser instalada e ativada primeiro.',
 	'EXTENSION_ENABLE_SUCCESS'	=> 'A extensão foi ativada com sucesso.',
