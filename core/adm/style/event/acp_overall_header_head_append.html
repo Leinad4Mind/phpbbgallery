@@ -22,10 +22,16 @@
 				return;
 			}
 
-			function makeBadge(setting) {
-				var badge = document.createElement('span');
+			function makeBadge(setting, interactive) {
+				var badge = document.createElement(interactive ? 'button' : 'span');
 				var icon = document.createElement('i');
 				badge.className = 'gallery-addon-badge';
+				if (interactive) {
+					badge.type = 'button';
+					badge.classList.add('gallery-addon-source-toggle');
+					badge.setAttribute('data-gallery-source-toggle', setting.id);
+					badge.setAttribute('aria-pressed', 'true');
+				}
 				badge.style.setProperty('--gallery-addon-accent', setting.accent);
 				badge.setAttribute('data-gallery-setting-source', setting.id);
 				badge.setAttribute('data-gallery-setting-kind', setting.kind);
@@ -59,7 +65,7 @@
 				}
 				label = row.querySelector('dt label');
 				if (label && !row.querySelector('.gallery-addon-badge')) {
-					label.insertAdjacentElement('afterend', makeBadge(setting));
+					label.insertAdjacentElement('afterend', makeBadge(setting, false));
 				}
 				sources[setting.id] = setting;
 			});
@@ -82,7 +88,7 @@
 				explanation.textContent = {{ lang('GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN')|json_encode|raw }};
 				items.className = 'gallery-addon-legend__items';
 				Object.keys(sources).forEach(function (id) {
-					items.appendChild(makeBadge(sources[id]));
+					items.appendChild(makeBadge(sources[id], true));
 				});
 				legend.appendChild(title);
 				legend.appendChild(explanation);

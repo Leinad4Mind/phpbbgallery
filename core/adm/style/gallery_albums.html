@@ -75,9 +75,9 @@
 			<strong class="gallery-addon-legend__title">{{ lang('GALLERY_ADDON_SETTINGS_LEGEND') }}</strong>
 			<span class="gallery-addon-legend__explain">{{ lang('GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN') }}</span>
 			<div class="gallery-addon-legend__items">
-				<span class="gallery-addon-badge" style="--gallery-addon-accent: #0076b1" data-gallery-setting-source="new-core" data-gallery-setting-kind="core"><i class="icon fa-star fa-fw" aria-hidden="true"></i>{{ lang('GALLERY_NEW_CORE_SETTING') }}</span>
+				<button type="button" class="gallery-addon-badge gallery-addon-source-toggle" style="--gallery-addon-accent: #0076b1" data-gallery-source-toggle="new-core" data-gallery-setting-source="new-core" data-gallery-setting-kind="core" aria-pressed="true"><i class="icon fa-star fa-fw" aria-hidden="true"></i>{{ lang('GALLERY_NEW_CORE_SETTING') }}</button>
 			{% for addon in gallery_acp_addons|default([]) %}
-				<span class="gallery-addon-badge" style="--gallery-addon-accent: {{ addon.ACCENT }}" data-gallery-addon="{{ addon.ID }}"><i class="icon fa-puzzle-piece fa-fw" aria-hidden="true"></i>{{ lang('GALLERY_ADDON_SETTING', addon.NAME) }}</span>
+				<button type="button" class="gallery-addon-badge gallery-addon-source-toggle" style="--gallery-addon-accent: {{ addon.ACCENT }}" data-gallery-source-toggle="{{ addon.ID }}" data-gallery-setting-source="{{ addon.ID }}" data-gallery-addon="{{ addon.ID }}" aria-pressed="true"><i class="icon fa-puzzle-piece fa-fw" aria-hidden="true"></i>{{ lang('GALLERY_ADDON_SETTING', addon.NAME) }}</button>
 			{% endfor %}
 			</div>
 		</aside>

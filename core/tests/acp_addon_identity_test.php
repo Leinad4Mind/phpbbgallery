@@ -40,14 +40,22 @@ final class acp_addon_identity_test extends TestCase
 		$this->assertStringContainsString('@media (prefers-contrast: more)', $stylesheet);
 		$this->assertStringContainsString("INCLUDEJS '@phpbbgallery_core/gallery_acp_addons.js'", $template);
 		$this->assertStringContainsString("'phpbbgallery.acp.addonSettingsView'", $javascript);
+		$this->assertStringContainsString("'phpbbgallery.acp.addonSettingsSources'", $javascript);
 		$this->assertStringContainsString("'phpbbgallery.acp.addonSettingsLegend'", $javascript);
 		$this->assertStringContainsString('window.localStorage.setItem(storageKey, mode)', $javascript);
 		$this->assertStringContainsString('window.localStorage.setItem(storageKey, hiddenMode)', $javascript);
 		$this->assertStringContainsString('window.localStorage.removeItem(legacyLegendStorageKey)', $javascript);
+		$this->assertStringContainsString('JSON.stringify(hiddenSources)', $javascript);
+		$this->assertStringContainsString('data-gallery-source-toggle', $javascript);
+		$this->assertStringContainsString('setting.hidden = filtersEnabled', $javascript);
+		$this->assertStringContainsString("button.setAttribute('aria-pressed', active ? 'true' : 'false')", $javascript);
+		$this->assertStringContainsString('.gallery-addon-source-toggle.is-source-disabled', $stylesheet);
+		$this->assertStringContainsString('makeBadge(setting, interactive)', $template);
 		$this->assertStringContainsString("button.setAttribute('aria-pressed'", $javascript);
 		$this->assertStringContainsString("var hiddenMode = 'hidden'", $javascript);
 		$this->assertStringContainsString('data-view-hidden-label', $template);
 		$this->assertStringContainsString('GALLERY_ADDON_SETTINGS_VIEW_HIDDEN', $template);
+		$this->assertStringContainsString('gallery-addon-source-toggle', $template);
 		$this->assertStringContainsString('data-gallery-addon-view="hidden"', $stylesheet);
 		$this->assertStringContainsString('border-inline-start: 0 !important', $stylesheet);
 		$this->assertStringContainsString("'data-view-simple-explain'", $javascript);
@@ -99,6 +107,8 @@ final class acp_addon_identity_test extends TestCase
 		$this->assertStringContainsString('GALLERY_ADDON_SETTINGS_VIEW_COMPLETE', $template);
 		$this->assertStringContainsString('GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN_SIMPLE', $template);
 		$this->assertStringContainsString('GALLERY_ADDON_SETTINGS_VIEW_HIDDEN', $template);
+		$this->assertStringContainsString('data-gallery-source-toggle="new-core"', $template);
+		$this->assertStringContainsString('gallery-addon-source-toggle', $template);
 		$this->assertStringContainsString("INCLUDEJS '@phpbbgallery_core/gallery_acp_addons.js'", $template);
 	}
 }
