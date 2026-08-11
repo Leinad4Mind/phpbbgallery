@@ -212,8 +212,13 @@ final class controller_image_types_test extends TestCase
 		$this->assertStringContainsString('grid-template-columns: minmax(0, 1fr) minmax(260px, 1.6fr) minmax(0, 1fr);', $css);
 		$this->assertStringContainsString('object-fit: contain;', $css);
 		$this->assertStringContainsString('.gallery-image-navigation-icon-link {', $css);
-		$this->assertStringContainsString('border-radius: 50%;', $css);
+		$this->assertStringContainsString(".gallery-image-navigation-previous,\n.gallery-image-navigation-next {\n\tjustify-content: center;", $css);
 		$this->assertStringContainsString('.gallery-image-navigation-chevron {', $css);
+		$this->assertSame(1, preg_match('/\.gallery-image-navigation-icon-link\s*\{([^}]*)\}/s', $css, $icon_link_styles));
+		$this->assertStringNotContainsString('border', $icon_link_styles[1]);
+		$this->assertStringNotContainsString('border-radius', $icon_link_styles[1]);
+		$this->assertStringNotContainsString('box-shadow', $icon_link_styles[1]);
+		$this->assertStringNotContainsString('aspect-ratio', $icon_link_styles[1]);
 
 		$this->assertSame(1, preg_match('/\.gallery-image-navigation-side img\s*\{[^}]*width:\s*auto;[^}]*max-width:\s*min\(100%,\s*(\d+)px\);/s', $css, $side_sizes));
 		$this->assertSame(1, preg_match('/\.gallery-image-navigation-current img\s*\{[^}]*width:\s*auto;[^}]*max-width:\s*min\(100%,\s*(\d+)px\);/s', $css, $current_sizes));
