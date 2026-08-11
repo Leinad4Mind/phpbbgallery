@@ -601,7 +601,7 @@ class main_module
 			{
 				$sql = 'UPDATE ' . $albums_table . "
 					SET album_parents = ''
-					WHERE album_user_id = " . $owner_id;
+					WHERE " . $db->sql_in_set('album_user_id', [$owner_id]);
 				$db->sql_query($sql);
 			}
 
@@ -622,7 +622,7 @@ class main_module
 			$sql = 'UPDATE ' . $albums_table . ' 
 					SET ' . $db->sql_build_array('UPDATE', $album_data) . '
 					WHERE album_id  = ' . (int) $album_id . '
-						AND album_user_id = ' . $owner_id;
+						AND ' . $db->sql_in_set('album_user_id', [$owner_id]);
 			$db->sql_query($sql);
 
 			$cache->destroy('sql', $albums_table);
