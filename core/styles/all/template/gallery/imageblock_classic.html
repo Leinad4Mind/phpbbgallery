@@ -1,5 +1,5 @@
 {% for imageblock in imageblock|default([]) %}
-<section class="gallery-classic-image-block">
+<section class="gallery-classic-image-block{% if GALLERY_CLASSIC_TITLE_ALIGN_START %} gallery-classic-image-block--title-start{% endif %}">
 	{% if imageblock.BLOCK_NAME %}
 	<h2 class="gallery-image-block-title">
 		{% if imageblock.U_BLOCK %}<a href="{{ imageblock.U_BLOCK }}">{{ imageblock.BLOCK_NAME }}</a>{% else %}{{ imageblock.BLOCK_NAME }}{% endif %}

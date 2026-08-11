@@ -63,6 +63,12 @@
 	padding-inline: 38px;
 }
 
+.gallery-classic-image-block--title-start .gallery-classic-image > .gallery-favorite-action ~ .gallery-classic-image-title
+{
+	padding-inline-start: 9px;
+	padding-inline-end: 38px;
+}
+
 .gallery-classic-image .gallery-favorite-toggle
 {
 	width: 26px;

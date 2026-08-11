@@ -77,6 +77,25 @@ final class gallery_index_layout_test extends TestCase
 		);
 	}
 
+	public function test_prosilver_classic_titles_align_to_the_start_without_changing_bootstrap_styles(): void
+	{
+		$core_root = dirname(__DIR__);
+		$selector = (string) file_get_contents($core_root . '/styles/prosilver/template/gallery/imageblock_layout.html');
+		$search = (string) file_get_contents($core_root . '/styles/prosilver/template/gallery/search_results.html');
+		$classic = (string) file_get_contents($core_root . '/styles/all/template/gallery/imageblock_classic.html');
+		$css = (string) file_get_contents($core_root . '/styles/all/theme/gallery.css');
+
+		$this->assertStringContainsString('GALLERY_CLASSIC_TITLE_ALIGN_START: true', $selector);
+		$this->assertStringContainsString('GALLERY_CLASSIC_TITLE_ALIGN_START: true', $search);
+		$this->assertStringContainsString('gallery-classic-image-block--title-start', $classic);
+		$this->assertMatchesRegularExpression(
+			'/\.gallery-classic-image-block--title-start \.gallery-classic-image-title\s*\{[^}]*justify-content:\s*flex-start;[^}]*text-align:\s*start;/s',
+			$css
+		);
+		$this->assertFileDoesNotExist($core_root . '/styles/BBOOTS/template/gallery/imageblock_layout.html');
+		$this->assertFileDoesNotExist($core_root . '/styles/FLATBOOTS/template/gallery/imageblock_layout.html');
+	}
+
 	public function test_album_recent_random_and_search_grids_use_the_layout_selector_in_every_style(): void
 	{
 		$core_root = dirname(__DIR__);

@@ -76,6 +76,10 @@ final class album_listing_test extends TestCase
 			$stylesheet
 		);
 		$this->assertMatchesRegularExpression(
+			'/\.gallery-classic-image-block--title-start \.gallery-classic-image > \.gallery-favorite-action ~ \.gallery-classic-image-title\s*\{[^}]*padding-inline-start:\s*9px;[^}]*padding-inline-end:\s*38px;[^}]*\}/s',
+			$stylesheet
+		);
+		$this->assertMatchesRegularExpression(
 			'/\.gallery-classic-image \.gallery-favorite-toggle\s*\{[^}]*width:\s*26px;[^}]*height:\s*26px;[^}]*\}/s',
 			$stylesheet
 		);

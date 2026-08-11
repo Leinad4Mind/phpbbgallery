@@ -685,6 +685,12 @@ input.autowidth-gallery {
 	white-space: nowrap;
 }
 
+.gallery-classic-image-block--title-start .gallery-classic-image-title
+{
+	justify-content: flex-start;
+	text-align: start;
+}
+
 .gallery-classic-thumbnail
 {
 	position: relative;
