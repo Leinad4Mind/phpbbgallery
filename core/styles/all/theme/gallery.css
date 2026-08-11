@@ -931,6 +931,11 @@ input.autowidth-gallery {
 	width: 100%;
 }
 
+.gallery-futuristic-section-icon > .icon::before
+{
+	padding: 0;
+}
+
 .gallery-futuristic-category
 {
 	align-items: center;

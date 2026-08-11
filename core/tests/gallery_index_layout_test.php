@@ -161,6 +161,10 @@ final class gallery_index_layout_test extends TestCase
 			'/\.gallery-futuristic-section-icon > \.icon\s*\{[^}]*align-items:\s*center;[^}]*justify-content:\s*center;[^}]*width:\s*100%;/s',
 			$css
 		);
+		$this->assertMatchesRegularExpression(
+			'/\.gallery-futuristic-section-icon > \.icon::before\s*\{[^}]*padding:\s*0;/s',
+			$css
+		);
 		$this->assertStringNotContainsString('--gallery-futuristic-secondary: #6d63c9;', $css);
 		$this->assertStringContainsString('grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr));', $css);
 		$this->assertStringContainsString('@media (prefers-reduced-motion', str_replace('(hover: hover) and ', '', $css));
