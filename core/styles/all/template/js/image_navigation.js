@@ -60,6 +60,38 @@
 		});
 	}
 
+	function activateDropdownControls(root) {
+		if (!window.jQuery || !window.phpbb || typeof window.phpbb.registerDropdown !== 'function') {
+			return;
+		}
+
+		window.jQuery(root).find('.dropdown-container').each(function () {
+			var container = window.jQuery(this);
+			var trigger = container.find('.dropdown-trigger:first');
+			var dropdown = container.find('.dropdown:first');
+			var options = {
+				direction: 'auto',
+				verticalDirection: 'auto'
+			};
+
+			if (!trigger.length || !dropdown.length || trigger.data('dropdown-options')) {
+				return;
+			}
+			if (container.hasClass('dropdown-up')) {
+				options.verticalDirection = 'up';
+			} else if (container.hasClass('dropdown-down')) {
+				options.verticalDirection = 'down';
+			}
+			if (container.hasClass('dropdown-left')) {
+				options.direction = 'left';
+			} else if (container.hasClass('dropdown-right')) {
+				options.direction = 'right';
+			}
+
+			window.phpbb.registerDropdown(trigger, dropdown, options);
+		});
+	}
+
 	function reportEnhancementError(error) {
 		if (window.console && typeof window.console.error === 'function') {
 			window.console.error('Gallery image navigation enhancement failed', error);
@@ -129,6 +161,7 @@
 			revealRoot(importedRoot);
 			try {
 				activateAjaxControls(importedRoot);
+				activateDropdownControls(importedRoot);
 				notifyChange(importedRoot, result.url);
 			} catch (error) {
 				reportEnhancementError(error);

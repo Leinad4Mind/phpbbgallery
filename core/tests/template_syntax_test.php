@@ -299,6 +299,9 @@ final class template_syntax_test extends TestCase
 		$this->assertStringContainsString('phpbbgallery:imagechange', $javascript);
 		$this->assertStringContainsString('activateAjaxControls(importedRoot)', $javascript);
 		$this->assertStringContainsString('window.phpbb.ajaxify({', $javascript);
+		$this->assertStringContainsString('activateDropdownControls(importedRoot)', $javascript);
+		$this->assertStringContainsString('window.phpbb.registerDropdown(trigger, dropdown, options)', $javascript);
+		$this->assertStringContainsString("trigger.data('dropdown-options')", $javascript);
 		$this->assertStringContainsString('pageReplaced = true', $javascript);
 		$this->assertStringContainsString('if (!pageReplaced)', $javascript);
 		$this->assertStringContainsString("root.classList.add('is-entering')", $javascript);
