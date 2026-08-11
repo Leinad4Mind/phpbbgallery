@@ -891,6 +891,7 @@ class permissions_module
 			* Copy the selected permission masks once.
 			*/
 			$inherit = $this->requested_inheritance($request);
+			$original_auth_settings = $auth_settings;
 			foreach ($inherit as $c_mask => $v_sets)
 			{
 				$c_mask = (int) $c_mask;
@@ -900,17 +901,16 @@ class permissions_module
 					{
 						$i_mask = (int) $i_mask;
 						// Inherit all permissions of an other c_mask
-						if (isset($auth_settings[$i_mask]))
+						if (isset($original_auth_settings[$i_mask]))
 						{
 							if ($this->inherit_albums($coal, $c_mask_storage, $c_mask, $i_mask))
 							{
-								foreach ($auth_settings[$c_mask] as $v_mask => $p_mask)
+								foreach (array_keys($auth_settings[$c_mask]) as $v_mask)
 								{
-									// You are not able to inherit a later c_mask, so we can remove the p_mask from the storage,
-									// and just use the same p_mask
-									unset($p_mask_storage[$auth_settings[$c_mask][$v_mask]]);
-									$auth_settings[$c_mask][$v_mask] = $auth_settings[$i_mask][$v_mask];
-									$p_mask_storage[$auth_settings[$c_mask][$v_mask]]['usage'][] = ['c_mask' => $c_mask, 'v_mask' => $v_mask];
+									if (!$this->copy_permission_mask($auth_settings, $p_mask_storage, $original_auth_settings, $c_mask, (int) $v_mask, $i_mask, (int) $v_mask))
+									{
+										trigger_error('HACKING_ATTEMPT', E_USER_WARNING);
+									}
 								}
 								// We take all permissions of another c_mask, so:
 								break;
@@ -929,20 +929,15 @@ class permissions_module
 						list($ci_mask, $vi_mask) = explode('_', $i_mask);
 						$ci_mask = (int) $ci_mask;
 						$vi_mask = (int) $vi_mask;
-						if (isset($auth_settings[$ci_mask][$vi_mask]))
+						if (isset($original_auth_settings[$ci_mask][$vi_mask]))
 						{
 							$no_hacking_attempt = ((!$p_system) ? $this->inherit_victims($coal, $c_mask_storage, $v_mask_storage, $c_mask, $v_mask, $ci_mask, $vi_mask) : $this->p_system_inherit_victims($p_system, $v_mask_storage, $v_mask, $vi_mask));
 							if ($no_hacking_attempt)
 							{
-								// You are not able to inherit a later c_mask, so we can remove the p_mask from the storage,
-								// and just use the same p_mask
-								if (isset($auth_settings[$c_mask][$v_mask]))
+								if (!$this->copy_permission_mask($auth_settings, $p_mask_storage, $original_auth_settings, $c_mask, $v_mask, $ci_mask, $vi_mask))
 								{
-									// Should exist, but didn't on testing so only do it, when it does exist
-									unset($p_mask_storage[$auth_settings[$c_mask][$v_mask]]);
+									trigger_error('HACKING_ATTEMPT', E_USER_WARNING);
 								}
-								$auth_settings[$c_mask][$v_mask] = $auth_settings[$ci_mask][$vi_mask];
-								$p_mask_storage[$auth_settings[$c_mask][$v_mask]]['usage'][] = ['c_mask' => $c_mask, 'v_mask' => $v_mask];
 							}
 							else
 							{
@@ -953,6 +948,10 @@ class permissions_module
 					}
 				}
 			}
+			$p_mask_storage = array_filter(
+				$p_mask_storage,
+				static fn (array $p_set): bool => !empty($p_set['usage'])
+			);
 			unset($auth_settings);
 
 			// Get the possible outdated p_masks
@@ -1127,6 +1126,41 @@ class permissions_module
 	}
 
 	/**
+	 * Reassign one target to an original permission mask without depending on
+	 * the visual or processing order of the albums.
+	 */
+	private function copy_permission_mask(array &$auth_settings, array &$p_mask_storage, array $original_auth_settings, int $target_album, int $target_victim, int $source_album, int $source_victim): bool
+	{
+		if (!isset(
+			$auth_settings[$target_album][$target_victim],
+			$original_auth_settings[$source_album][$source_victim]
+		))
+		{
+			return false;
+		}
+
+		$target_mask = (int) $auth_settings[$target_album][$target_victim];
+		$source_mask = (int) $original_auth_settings[$source_album][$source_victim];
+		if (!isset($p_mask_storage[$target_mask], $p_mask_storage[$source_mask]))
+		{
+			return false;
+		}
+
+		$target_usage = ['c_mask' => $target_album, 'v_mask' => $target_victim];
+		$p_mask_storage[$target_mask]['usage'] = array_values(array_filter(
+			$p_mask_storage[$target_mask]['usage'],
+			static fn (array $usage): bool => $usage !== $target_usage
+		));
+		$auth_settings[$target_album][$target_victim] = $source_mask;
+		if (!in_array($target_usage, $p_mask_storage[$source_mask]['usage'], true))
+		{
+			$p_mask_storage[$source_mask]['usage'][] = $target_usage;
+		}
+
+		return true;
+	}
+
+	/**
 	* Handles copying permissions from one album to others
 	*/
 	private function copy_album_permissions(): void
@@ -1262,8 +1296,6 @@ class permissions_module
 		global $user, $phpbb_container;
 
 		$this->language = $phpbb_container->get('language');
-		$disabled = false;
-
 		$return = '';
 		$return .= '<option value="0" selected="selected">' . $this->language->lang('NO_INHERIT') . '</option>';
 		foreach ($cache_obtain_album_list as $album)
@@ -1273,17 +1305,9 @@ class permissions_module
 				// We found the requested album: return true!
 				if ($check_inherit_album && ($album['album_id'] == $check_inherit_album))
 				{
-					return true;
+					return (int) $album['album_id'] !== $album_id;
 				}
-				if ($album['album_id'] == $album_id)
-				{
-					$disabled = true;
-					// Could we find the requested album so far? No? Hacking attempt?!
-					if ($check_inherit_album)
-					{
-						return false;
-					}
-				}
+				$disabled = (int) $album['album_id'] === $album_id;
 				$return .= '<option value="' . $album['album_id'] . '"';
 				if ($disabled)
 				{
@@ -1317,7 +1341,6 @@ class permissions_module
 	{
 		global $user;
 
-		$disabled = false;
 		// We submit a "wrong" array on the check (to make it more easy) so we convert it here
 		if ($check_inherit_album && $check_inherit_victim)
 		{
@@ -1345,17 +1368,9 @@ class permissions_module
 					// We found the requested album_group: return true!
 					if ($check_inherit_album && $check_inherit_victim && (($album['album_id'] == $check_inherit_album) && ($victim['victim_id'] == $check_inherit_victim)))
 					{
-						return true;
+						return (int) $album['album_id'] !== $album_id || (int) $victim['victim_id'] !== $victim_id;
 					}
-					if (($album['album_id'] == $album_id) && ($victim['victim_id'] == $victim_id))
-					{
-						$disabled = true;
-						// Could we find the requested album_victim so far? No? Hacking attempt?!
-						if ($check_inherit_album && $check_inherit_victim)
-						{
-							return false;
-						}
-					}
+					$disabled = (int) $album['album_id'] === $album_id && (int) $victim['victim_id'] === $victim_id;
 					$return .= '<option value="' . $album['album_id'] . '_' . $victim['victim_id'] . '"';
 					if ($disabled)
 					{
@@ -1389,7 +1404,6 @@ class permissions_module
 
 		$phpbb_ext_gallery_core_auth =  $phpbb_container->get('phpbbgallery.core.auth');
 
-		$disabled = false;
 		// We submit a "wrong" array on the check (to make it more easy) so we convert it here
 		if ($check_inherit_victim)
 		{
@@ -1412,17 +1426,9 @@ class permissions_module
 			// We found the requested {$p_system}_victim: return true!
 			if ($check_inherit_victim && ($victim['victim_id'] == $check_inherit_victim))
 			{
-				return true;
+				return (int) $victim['victim_id'] !== $victim_id;
 			}
-			if ($victim['victim_id'] == $victim_id)
-			{
-				$disabled = true;
-				// Could we find the requested {$p_system}_victim so far? No? Hacking attempt?!
-				if ($check_inherit_victim)
-				{
-					return false;
-				}
-			}
+			$disabled = (int) $victim['victim_id'] === $victim_id;
 			$return .= '<option value="' . $p_system . '_' . $victim['victim_id'] . '"';
 			if ($disabled)
 			{
