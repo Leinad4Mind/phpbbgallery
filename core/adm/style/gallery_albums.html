@@ -71,17 +71,16 @@
 
 	{% EVENT phpbbgallery_core_adm_album_type_warnings %}
 
-	{% if gallery_acp_addons|length %}
 		<aside class="gallery-addon-legend" aria-label="{{ lang('GALLERY_ADDON_SETTINGS_LEGEND') }}" data-view-simple-label="{{ lang('GALLERY_ADDON_SETTINGS_VIEW_SIMPLE') }}" data-view-complete-label="{{ lang('GALLERY_ADDON_SETTINGS_VIEW_COMPLETE') }}" data-view-simple-explain="{{ lang('GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN_SIMPLE') }}" data-view-complete-explain="{{ lang('GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN') }}">
 			<strong class="gallery-addon-legend__title">{{ lang('GALLERY_ADDON_SETTINGS_LEGEND') }}</strong>
 			<span class="gallery-addon-legend__explain">{{ lang('GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN') }}</span>
 			<div class="gallery-addon-legend__items">
-			{% for addon in gallery_acp_addons %}
+				<span class="gallery-addon-badge" style="--gallery-addon-accent: #0076b1" data-gallery-setting-source="new-core" data-gallery-setting-kind="core"><i class="icon fa-star fa-fw" aria-hidden="true"></i>{{ lang('GALLERY_NEW_CORE_SETTING') }}</span>
+			{% for addon in gallery_acp_addons|default([]) %}
 				<span class="gallery-addon-badge" style="--gallery-addon-accent: {{ addon.ACCENT }}" data-gallery-addon="{{ addon.ID }}"><i class="icon fa-puzzle-piece fa-fw" aria-hidden="true"></i>{{ lang('GALLERY_ADDON_SETTING', addon.NAME) }}</span>
 			{% endfor %}
 			</div>
 		</aside>
-	{% endif %}
 
 	<form id="acp_gallery" method="post" action="{{ U_EDIT_ACTION }}" enctype="multipart/form-data">
 
@@ -115,8 +114,8 @@
 			<label><input type="checkbox" class="radio" name="desc_parse_smilies"{% if S_DESC_SMILIES_CHECKED %} checked="checked"{% endif %} /> {{ lang('PARSE_SMILIES') }}</label>
 			<label><input type="checkbox" class="radio" name="desc_parse_urls"{% if S_DESC_URLS_CHECKED %} checked="checked"{% endif %} /> {{ lang('PARSE_URLS') }}</label></dd>
 		</dl>
-		<dl>
-			<dt><label>{{ lang('ALBUM_ICON_PICKER') }}{{ lang('COLON') }}</label><br /><span>{{ lang('ALBUM_ICON_PICKER_EXPLAIN') }}</span></dt>
+		<dl class="gallery-addon-setting" style="--gallery-addon-accent: #0076b1" data-gallery-setting-source="new-core" data-gallery-setting-kind="core">
+			<dt><label>{{ lang('ALBUM_ICON_PICKER') }}{{ lang('COLON') }}</label><span class="gallery-addon-badge" style="--gallery-addon-accent: #0076b1"><i class="icon fa-star fa-fw" aria-hidden="true"></i>{{ lang('GALLERY_NEW_CORE_SETTING') }}</span><br /><span>{{ lang('ALBUM_ICON_PICKER_EXPLAIN') }}</span></dt>
 			<dd>
 			{% if L_ICON_UPLOADED %}<p class="confirmbox">{{ L_ICON_UPLOADED }}</p>{% endif %}
 			{% if S_NO_ICONS_AVAILABLE %}

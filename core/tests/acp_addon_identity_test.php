@@ -23,7 +23,12 @@ final class acp_addon_identity_test extends TestCase
 		$this->assertStringContainsString('$vars[\'addon\']', $module);
 		$this->assertStringContainsString("preg_match('/^#[0-9a-f]{6}$/i'", $module);
 		$this->assertStringContainsString('JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT', $module);
-		$this->assertStringContainsString('fa-puzzle-piece', $template);
+		$this->assertStringContainsString("'icon' => 'fa-puzzle-piece'", $module);
+		$this->assertStringContainsString('setting.icon', $template);
+		$this->assertStringContainsString("'kind' => 'addon'", $module);
+		$this->assertStringContainsString("'kind' => 'core'", $module);
+		$this->assertStringContainsString("'icon' => 'fa-star'", $module);
+		$this->assertStringContainsString('data-gallery-setting-source', $template);
 		$this->assertStringContainsString('setting.badge', $template);
 		$this->assertStringContainsString('GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN', $template);
 		$this->assertStringContainsString('GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN_SIMPLE', $template);
@@ -42,6 +47,35 @@ final class acp_addon_identity_test extends TestCase
 		$this->assertStringNotContainsString('html[data-gallery-addon-view="simple"] .gallery-addon-legend__explain', $stylesheet);
 	}
 
+	public function test_every_post_3_4_core_setting_has_a_distinct_identity(): void
+	{
+		$reflection = new \ReflectionClass(\phpbbgallery\core\acp\config_module::class);
+		$new_core_settings = $reflection->getReflectionConstant('NEW_CORE_SETTINGS')->getValue();
+
+		$this->assertSame([
+			'title',
+			'storage_layout',
+			'auto_orient',
+			'avif_quality',
+			'allow_avif',
+			'allow_bmp',
+			'ajax_navigation',
+			'disp_resolution',
+			'forum_index_mode',
+			'forum_index_recent_count',
+			'forum_index_random_count',
+			'forum_index_display',
+			'forum_index_personal',
+			'disp_new_image_count',
+			'viewtopic_icon',
+			'viewtopic_images',
+			'viewtopic_link',
+			'index_album_layout',
+			'pegas_index_viewed_count',
+			'pegas_index_rated_count',
+		], $new_core_settings);
+	}
+
 	public function test_album_editor_has_a_shared_addon_legend(): void
 	{
 		$template = (string) file_get_contents(dirname(__DIR__) . '/adm/style/gallery_albums.html');
@@ -49,6 +83,10 @@ final class acp_addon_identity_test extends TestCase
 		$this->assertStringContainsString('gallery_acp_addons', $template);
 		$this->assertStringContainsString('gallery-addon-legend', $template);
 		$this->assertStringContainsString('GALLERY_ADDON_SETTING', $template);
+		$this->assertStringContainsString('GALLERY_NEW_CORE_SETTING', $template);
+		$this->assertStringContainsString('data-gallery-setting-source="new-core"', $template);
+		$this->assertStringContainsString('fa-star', $template);
+		$this->assertStringContainsString('ALBUM_ICON_PICKER', $template);
 		$this->assertStringContainsString('GALLERY_ADDON_SETTINGS_VIEW_SIMPLE', $template);
 		$this->assertStringContainsString('GALLERY_ADDON_SETTINGS_VIEW_COMPLETE', $template);
 		$this->assertStringContainsString('GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN_SIMPLE', $template);

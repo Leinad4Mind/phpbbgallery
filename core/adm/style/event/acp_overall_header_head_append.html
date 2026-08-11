@@ -16,7 +16,7 @@
 		document.addEventListener('DOMContentLoaded', function () {
 			var settings = {{ GALLERY_ACP_ADDON_SETTINGS_JSON|raw }};
 			var form = document.getElementById('acp_board');
-			var addOns = {};
+			var sources = {};
 
 			if (!form || !Array.isArray(settings)) {
 				return;
@@ -27,9 +27,13 @@
 				var icon = document.createElement('i');
 				badge.className = 'gallery-addon-badge';
 				badge.style.setProperty('--gallery-addon-accent', setting.accent);
-				badge.setAttribute('data-gallery-addon', setting.id);
+				badge.setAttribute('data-gallery-setting-source', setting.id);
+				badge.setAttribute('data-gallery-setting-kind', setting.kind);
+				if (setting.kind === 'addon') {
+					badge.setAttribute('data-gallery-addon', setting.id);
+				}
 				badge.setAttribute('title', setting.badge);
-				icon.className = 'icon fa-puzzle-piece fa-fw';
+				icon.className = 'icon ' + setting.icon + ' fa-fw';
 				icon.setAttribute('aria-hidden', 'true');
 				badge.appendChild(icon);
 				badge.appendChild(document.createTextNode(setting.badge));
@@ -48,15 +52,19 @@
 
 				row.classList.add('gallery-addon-setting');
 				row.style.setProperty('--gallery-addon-accent', setting.accent);
-				row.setAttribute('data-gallery-addon', setting.id);
+				row.setAttribute('data-gallery-setting-source', setting.id);
+				row.setAttribute('data-gallery-setting-kind', setting.kind);
+				if (setting.kind === 'addon') {
+					row.setAttribute('data-gallery-addon', setting.id);
+				}
 				label = row.querySelector('dt label');
 				if (label && !row.querySelector('.gallery-addon-badge')) {
 					label.insertAdjacentElement('afterend', makeBadge(setting));
 				}
-				addOns[setting.id] = setting;
+				sources[setting.id] = setting;
 			});
 
-			if (Object.keys(addOns).length) {
+			if (Object.keys(sources).length) {
 				var legend = document.createElement('aside');
 				var title = document.createElement('strong');
 				var explanation = document.createElement('span');
@@ -72,8 +80,8 @@
 				explanation.className = 'gallery-addon-legend__explain';
 				explanation.textContent = {{ lang('GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN')|json_encode|raw }};
 				items.className = 'gallery-addon-legend__items';
-				Object.keys(addOns).forEach(function (id) {
-					items.appendChild(makeBadge(addOns[id]));
+				Object.keys(sources).forEach(function (id) {
+					items.appendChild(makeBadge(sources[id]));
 				});
 				legend.appendChild(title);
 				legend.appendChild(explanation);

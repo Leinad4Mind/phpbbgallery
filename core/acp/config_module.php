@@ -14,6 +14,32 @@ namespace phpbbgallery\core\acp;
 
 class config_module
 {
+	/** ACP settings that were not active in the imported Gallery 3.4.0 configuration. */
+	private const NEW_CORE_SETTINGS = [
+		'title',
+		'storage_layout',
+		'auto_orient',
+		'avif_quality',
+		'allow_avif',
+		'allow_bmp',
+		'ajax_navigation',
+		'disp_resolution',
+		'forum_index_mode',
+		'forum_index_recent_count',
+		'forum_index_random_count',
+		'forum_index_display',
+		'forum_index_personal',
+		'disp_new_image_count',
+		'viewtopic_icon',
+		'viewtopic_images',
+		'viewtopic_link',
+		'index_album_layout',
+		'pegas_index_viewed_count',
+		'pegas_index_rated_count',
+	];
+
+	private const NEW_CORE_ACCENT = '#0076b1';
+
 	public string $u_action = '';
 	public string $tpl_name = '';
 	public string $page_title = '';
@@ -270,6 +296,7 @@ class config_module
 				'CONTENT'		=> $content,
 			]);
 
+			$setting_identity = null;
 			$addon = $vars['addon'] ?? null;
 			if (is_array($addon))
 			{
@@ -287,14 +314,34 @@ class config_module
 
 				if ($addon_id !== '' && $addon_name !== '')
 				{
-					$addon_settings[] = [
+					$setting_identity = [
 						'key' => (string) $config_key,
 						'id' => $addon_id,
 						'name' => $addon_name,
 						'accent' => strtolower($addon_accent),
 						'badge' => $this->language->lang('GALLERY_ADDON_SETTING', $addon_name),
+						'kind' => 'addon',
+						'icon' => 'fa-puzzle-piece',
 					];
 				}
+			}
+			else if (in_array($config_key, self::NEW_CORE_SETTINGS, true))
+			{
+				$new_core_name = $this->language->lang('GALLERY_NEW_CORE_SETTING');
+				$setting_identity = [
+					'key' => (string) $config_key,
+					'id' => 'new-core',
+					'name' => $new_core_name,
+					'accent' => self::NEW_CORE_ACCENT,
+					'badge' => $new_core_name,
+					'kind' => 'core',
+					'icon' => 'fa-star',
+				];
+			}
+
+			if ($setting_identity !== null)
+			{
+				$addon_settings[] = $setting_identity;
 			}
 
 			unset($this->display_vars['vars'][$config_key]);
@@ -335,6 +382,7 @@ class config_module
 	*						@key function/method	Required when using type select and custom
 	*						@key append		A language string that is appended after the config type (e.g. You can append 'px' to a pixel size field)
 	*						@key addon		Optional add-on identity with id, translated name key and six-digit accent colour
+	* New Core identities are assigned centrally to settings absent from the active 3.4.0 ACP configuration.
 	* This last parameter is optional
 	*		@key	string	tpl			Name of the template file we use to display the configs
 	*
