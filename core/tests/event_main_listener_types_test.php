@@ -145,8 +145,8 @@ final class event_main_listener_types_test extends TestCase
 			->willReturn('100 new images');
 		$config = $this->createMock(\phpbbgallery\core\config::class);
 		$config->method('get')->willReturnMap([
-			['disp_gallery_icon', 1],
-			['disp_new_image_count', 1],
+			['disp_gallery_icon', null, 1],
+			['disp_new_image_count', null, 1],
 		]);
 		$config->method('get_title')->with($language)->willReturn('Gallery');
 		$helper = $this->createMock(\phpbb\controller\helper::class);
@@ -178,8 +178,8 @@ final class event_main_listener_types_test extends TestCase
 		$language = $this->createStub(\phpbb\language\language::class);
 		$config = $this->createMock(\phpbbgallery\core\config::class);
 		$config->method('get')->willReturnMap([
-			['disp_gallery_icon', 1],
-			['disp_new_image_count', 0],
+			['disp_gallery_icon', null, 1],
+			['disp_new_image_count', null, 0],
 		]);
 		$config->method('get_title')->with($language)->willReturn('Gallery');
 		$helper = $this->createStub(\phpbb\controller\helper::class);
@@ -211,8 +211,8 @@ final class event_main_listener_types_test extends TestCase
 		$language = $this->createStub(\phpbb\language\language::class);
 		$config = $this->createMock(\phpbbgallery\core\config::class);
 		$config->method('get')->willReturnMap([
-			['disp_gallery_icon', 1],
-			['disp_new_image_count', 1],
+			['disp_gallery_icon', null, 1],
+			['disp_new_image_count', null, 1],
 		]);
 		$config->method('get_title')->with($language)->willReturn('Gallery');
 		$helper = $this->createStub(\phpbb\controller\helper::class);
@@ -293,10 +293,10 @@ final class event_main_listener_types_test extends TestCase
 			->with(1, 0, 'forum_index_display', false, false, false, false);
 		$config = $this->createMock(\phpbbgallery\core\config::class);
 		$config->method('get')->willReturnMap([
-			['forum_index_mode', \phpbbgallery\core\block::MODE_RECENT | \phpbbgallery\core\block::MODE_RANDOM],
-			['forum_index_personal', false],
-			['forum_index_recent_count', 99],
-			['forum_index_random_count', 0],
+			['forum_index_mode', null, \phpbbgallery\core\block::MODE_RECENT | \phpbbgallery\core\block::MODE_RANDOM],
+			['forum_index_personal', null, false],
+			['forum_index_recent_count', null, 99],
+			['forum_index_random_count', null, 0],
 		]);
 		$language = $this->createMock(\phpbb\language\language::class);
 		$language->expects($this->once())
@@ -323,8 +323,8 @@ final class event_main_listener_types_test extends TestCase
 		$gallery_search->expects($this->never())->method('random');
 		$config = $this->createMock(\phpbbgallery\core\config::class);
 		$config->method('get')->willReturnMap([
-			['rrc_profile_mode', 0],
-			['profile_user_images', 1],
+			['rrc_profile_mode', null, 0],
+			['profile_user_images', null, 1],
 		]);
 		$template = $this->createMock(\phpbb\template\template::class);
 		$template->expects($this->once())->method('assign_vars')->with([
@@ -353,8 +353,8 @@ final class event_main_listener_types_test extends TestCase
 		$gallery_search->expects($this->once())->method('user_image_count')->with(12)->willReturn(0);
 		$config = $this->createMock(\phpbbgallery\core\config::class);
 		$config->method('get')->willReturnMap([
-			['rrc_profile_mode', 0],
-			['profile_user_images', 1],
+			['rrc_profile_mode', null, 0],
+			['profile_user_images', null, 1],
 		]);
 		$template = $this->createMock(\phpbb\template\template::class);
 		$template->expects($this->once())->method('assign_vars')->with([

@@ -128,10 +128,17 @@ final class addon_lifecycle_events_test extends TestCase
 			dirname(__DIR__) . '/styles/prosilver/template/gallery/posting_body.html'
 		);
 
-		$this->assertMatchesRegularExpression(
-			'/<dd>.*\{% EVENT phpbbgallery_core_edit_image_addfields %\}\s*<\/dd>/s',
-			$template
-		);
+		$loop = strpos($template, '{% for image in image %}');
+		$details = strpos($template, '<dd>', $loop);
+		$hook = strpos($template, '{% EVENT phpbbgallery_core_edit_image_addfields %}', $details);
+		$details_end = strpos($template, "\t\t\t\t</dl>", $hook);
+
+		$this->assertNotFalse($loop);
+		$this->assertNotFalse($details);
+		$this->assertNotFalse($hook);
+		$this->assertNotFalse($details_end);
+		$this->assertGreaterThan($details, $hook);
+		$this->assertGreaterThan($hook, $details_end);
 		$this->assertStringNotContainsString('gallery-image-addon-fields', $template);
 	}
 

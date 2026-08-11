@@ -195,7 +195,7 @@ final class domain_image_types_test extends TestCase
 
 		$this->assertSame(0, substr_count((string) file_get_contents($controller_root . 'image.php'), '->get_image_data('));
 		$this->assertSame(0, substr_count((string) file_get_contents($controller_root . 'comment.php'), '->get_image_data('));
-		$this->assertSame(1, substr_count((string) file_get_contents($controller_root . 'moderate.php'), '->get_image_data('));
+		$this->assertSame(2, substr_count((string) file_get_contents($controller_root . 'moderate.php'), '->get_image_data('));
 	}
 
 	public function test_report_notification_handles_an_image_deleted_during_dispatch(): void

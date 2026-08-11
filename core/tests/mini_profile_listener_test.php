@@ -67,9 +67,9 @@ final class mini_profile_listener_test extends TestCase
 		$gallery_auth->expects($this->once())->method('get_exclude_zebra')->willReturn([]);
 		$gallery_config = $this->createMock(\phpbbgallery\core\config::class);
 		$gallery_config->method('get')->willReturnMap([
-			['viewtopic_images', 1],
-			['viewtopic_icon', 1],
-			['viewtopic_link', 1],
+			['viewtopic_images', null, 1],
+			['viewtopic_icon', null, 1],
+			['viewtopic_link', null, 1],
 		]);
 		$gallery_search = $this->createMock(\phpbbgallery\core\search::class);
 		$gallery_search->expects($this->once())->method('user_image_counts')->with([2, 3])->willReturn([2 => 5, 3 => 0]);
@@ -109,9 +109,9 @@ final class mini_profile_listener_test extends TestCase
 		$phpbb_auth->method('acl_get')->with('u_search')->willReturn(true);
 		$gallery_config = $this->createMock(\phpbbgallery\core\config::class);
 		$gallery_config->method('get')->willReturnMap([
-			['viewtopic_images', 1],
-			['viewtopic_icon', 0],
-			['viewtopic_link', 1],
+			['viewtopic_images', null, 1],
+			['viewtopic_icon', null, 0],
+			['viewtopic_link', null, 1],
 		]);
 		$gallery_search = $this->createMock(\phpbbgallery\core\search::class);
 		$gallery_search->expects($this->once())->method('user_image_counts')->with([4])->willReturn([4 => 2]);
@@ -134,8 +134,8 @@ final class mini_profile_listener_test extends TestCase
 	{
 		$gallery_config = $this->createMock(\phpbbgallery\core\config::class);
 		$gallery_config->method('get')->willReturnMap([
-			['viewtopic_images', 0],
-			['viewtopic_icon', 0],
+			['viewtopic_images', null, 0],
+			['viewtopic_icon', null, 0],
 		]);
 		$gallery_search = $this->createMock(\phpbbgallery\core\search::class);
 		$gallery_search->expects($this->never())->method('user_image_counts');
