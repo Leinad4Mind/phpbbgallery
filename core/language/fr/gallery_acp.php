@@ -76,6 +76,7 @@ $lang = array_merge($lang, [
 	'GALLERY_ADDON_SETTINGS_LEGEND'          => 'Nouvelles options du Core et des modules complémentaires',
 	'GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN'  => 'Un badge étoile identifie les options du Core de la Galerie ajoutées après la 3.4.0 ; un badge puzzle identifie les options fournies par des modules complémentaires. Les couleurs renforcent les deux origines. Les anciennes options du Core ne sont pas marquées. Sélectionnez un badge de source pour afficher ou masquer ses options.',
 	'GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN_SIMPLE' => 'Les couleurs identifient les options du Core de la Galerie ajoutées après la 3.4.0 et celles fournies par des modules complémentaires. Les anciennes options du Core ne sont pas marquées. Sélectionnez un badge de source pour afficher ou masquer ses options.',
+	'GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN_HIDDEN' => 'Les badges, couleurs et repères d’origine des champs sont désactivés. Utilisez les badges de source ci-dessous pour afficher ou masquer les options de chaque source, ou choisissez Simple ou Complet pour rétablir leur identification visuelle.',
 	'GALLERY_ADDON_SETTINGS_VIEW_HIDDEN' => 'Désactivé',
 	'GALLERY_ADDON_SETTINGS_VIEW_SIMPLE'     => 'Simple',
 	'GALLERY_ADDON_SETTINGS_VIEW_COMPLETE'   => 'Complète',

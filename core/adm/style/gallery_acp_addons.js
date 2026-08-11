@@ -64,11 +64,9 @@
 	}
 
 	function applySourceFilters() {
-		var filtersEnabled = document.documentElement.getAttribute('data-gallery-addon-view') !== hiddenMode;
-
 		document.querySelectorAll('.gallery-addon-setting, .gallery-addon-section').forEach(function (setting) {
 			var source = getSource(setting);
-			setting.hidden = filtersEnabled && hiddenSources.indexOf(source) !== -1;
+			setting.hidden = hiddenSources.indexOf(source) !== -1;
 		});
 		document.querySelectorAll('[data-gallery-source-toggle]').forEach(function (button) {
 			var source = button.getAttribute('data-gallery-source-toggle');
@@ -110,7 +108,10 @@
 		document.documentElement.setAttribute('data-gallery-addon-view', selectedMode);
 		document.querySelectorAll('.gallery-addon-legend').forEach(function (legend) {
 			var explanation = legend.querySelector('.gallery-addon-legend__explain');
-			var text = legend.getAttribute(selectedMode === simpleMode ? 'data-view-simple-explain' : 'data-view-complete-explain');
+			var explanationAttribute = selectedMode === simpleMode
+				? 'data-view-simple-explain'
+				: (selectedMode === hiddenMode ? 'data-view-hidden-explain' : 'data-view-complete-explain');
+			var text = legend.getAttribute(explanationAttribute);
 			if (explanation && text) {
 				explanation.textContent = text;
 			}

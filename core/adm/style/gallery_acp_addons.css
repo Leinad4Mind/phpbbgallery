@@ -144,20 +144,8 @@ html[data-gallery-addon-view="hidden"] .gallery-addon-section .gallery-addon-bad
 }
 
 html[data-gallery-addon-view="hidden"] .gallery-addon-legend {
-	padding: 4px 6px;
 	border-inline-start-width: 1px;
-	background: transparent;
-}
-
-html[data-gallery-addon-view="hidden"] .gallery-addon-legend__title,
-html[data-gallery-addon-view="hidden"] .gallery-addon-legend__explain,
-html[data-gallery-addon-view="hidden"] .gallery-addon-legend__items {
-	display: none;
-}
-
-html[data-gallery-addon-view="hidden"] .gallery-addon-legend__header {
-	justify-content: flex-end;
-	margin-bottom: 0;
+	background: #f7f9fa;
 }
 
 @media (max-width: 600px) {

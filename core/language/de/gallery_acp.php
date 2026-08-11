@@ -60,6 +60,7 @@ $lang = array_merge($lang, [
 	'GALLERY_ADDON_SETTINGS_LEGEND'     => 'Neue Core- und Add-on-Optionen',
 	'GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN' => 'Ein Stern-Abzeichen kennzeichnet seit 3.4.0 hinzugefügte Galerie-Core-Optionen; ein Puzzle-Abzeichen kennzeichnet von Add-ons bereitgestellte Optionen. Akzentfarben verdeutlichen beide Quellen. Ältere Core-Optionen bleiben unmarkiert. Wähle ein Quellen-Abzeichen, um dessen Optionen ein- oder auszublenden.',
 	'GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN_SIMPLE' => 'Akzentfarben kennzeichnen seit 3.4.0 hinzugefügte Galerie-Core-Optionen und von Add-ons bereitgestellte Optionen. Ältere Core-Optionen bleiben unmarkiert. Wähle ein Quellen-Abzeichen, um dessen Optionen ein- oder auszublenden.',
+	'GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN_HIDDEN' => 'Herkunfts-Abzeichen, Akzentfarben und Markierungen an den Feldern sind ausgeschaltet. Mit den Quellen-Abzeichen unten kannst du die Optionen jeder Quelle ein- oder ausblenden; mit Einfach oder Vollständig stellst du die visuelle Kennzeichnung wieder her.',
 	'GALLERY_ADDON_SETTINGS_VIEW_HIDDEN' => 'Aus',
 	'GALLERY_ADDON_SETTINGS_VIEW_SIMPLE'   => 'Einfach',
 	'GALLERY_ADDON_SETTINGS_VIEW_COMPLETE' => 'Vollständig',
