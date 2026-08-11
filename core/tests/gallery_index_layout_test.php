@@ -13,18 +13,23 @@ use PHPUnit\Framework\TestCase;
 
 final class gallery_index_layout_test extends TestCase
 {
-	public function test_every_style_exposes_classic_modern_and_card_layouts(): void
+	public function test_every_style_exposes_classic_modern_and_card_layouts_on_index_and_inside_albums(): void
 	{
 		$core_root = dirname(__DIR__);
 		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
 		{
 			$index = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/index_body.html');
+			$album = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/album_body.html');
 
-			$this->assertStringContainsString("GALLERY_INDEX_ALBUM_LAYOUT == 'classic'", $index, $style);
-			$this->assertStringContainsString("GALLERY_INDEX_ALBUM_LAYOUT == 'modern'", $index, $style);
-			$this->assertStringContainsString("{% include 'gallery/albumlist_body.html' %}", $index, $style);
-			$this->assertStringContainsString("{% include '@phpbbgallery_core/gallery/albumlist_modern.html' %}", $index, $style);
-			$this->assertStringContainsString("{% include 'gallery/albumlist_polaroid.html' %}", $index, $style);
+			foreach (['index' => $index, 'album' => $album] as $context => $template)
+			{
+				$message = $style . '/' . $context;
+				$this->assertStringContainsString("GALLERY_INDEX_ALBUM_LAYOUT == 'classic'", $template, $message);
+				$this->assertStringContainsString("GALLERY_INDEX_ALBUM_LAYOUT == 'modern'", $template, $message);
+				$this->assertStringContainsString("{% include 'gallery/albumlist_body.html' %}", $template, $message);
+				$this->assertStringContainsString("{% include '@phpbbgallery_core/gallery/albumlist_modern.html' %}", $template, $message);
+				$this->assertStringContainsString("{% include 'gallery/albumlist_polaroid.html' %}", $template, $message);
+			}
 		}
 	}
 
@@ -46,11 +51,86 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertStringContainsString('@media (max-width: 700px)', $css);
 	}
 
+	public function test_classic_layout_controls_image_grids_without_duplicating_style_markup(): void
+	{
+		$core_root = dirname(__DIR__);
+		$selector = (string) file_get_contents($core_root . '/styles/all/template/gallery/imageblock_layout.html');
+		$classic = (string) file_get_contents($core_root . '/styles/all/template/gallery/imageblock_classic.html');
+		$css = (string) file_get_contents($core_root . '/styles/all/theme/gallery.css');
+
+		$this->assertStringContainsString("GALLERY_INDEX_ALBUM_LAYOUT == 'classic'", $selector);
+		$this->assertStringContainsString('@phpbbgallery_core/gallery/imageblock_classic.html', $selector);
+		$this->assertStringContainsString('gallery/imageblock_polaroid.html', $selector);
+		$this->assertStringContainsString('gallery-classic-image-grid', $classic);
+		$this->assertStringContainsString('phpbbgallery_core_album_image_actions', $classic);
+		$this->assertStringContainsString('phpbbgallery_core_album_image_metadata', $classic);
+		$this->assertStringContainsString('album_rating_stars.html', $classic);
+		$this->assertStringContainsString('S_STATUS_UNAPPROVED_ACTION', $classic);
+		$this->assertStringContainsString('grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr));', $css);
+	}
+
+	public function test_album_recent_random_and_search_grids_use_the_layout_selector_in_every_style(): void
+	{
+		$core_root = dirname(__DIR__);
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			foreach (['album_body.html', 'recent_body.html', 'search_recent.html', 'search_random.html'] as $filename)
+			{
+				$template = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/' . $filename);
+				$this->assertStringContainsString(
+					'@phpbbgallery_core/gallery/imageblock_layout.html',
+					$template,
+					$style . '/' . $filename
+				);
+			}
+
+			$search_results = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/search_results.html');
+			$this->assertTrue(
+				str_contains($search_results, '@phpbbgallery_core/gallery/imageblock_layout.html')
+					|| str_contains($search_results, '@phpbbgallery_core/gallery/imageblock_classic.html'),
+				$style . '/search_results.html'
+			);
+		}
+	}
+
+	public function test_album_and_image_section_titles_share_the_same_visual_hierarchy(): void
+	{
+		$css = (string) file_get_contents(dirname(__DIR__) . '/styles/all/theme/gallery.css');
+
+		$this->assertStringContainsString('.gallery-album-section-title h3,', $css);
+		$this->assertStringContainsString('.gallery-image-block-title', $css);
+		$this->assertMatchesRegularExpression(
+			'/\\.gallery-album-section-title,[^{]+\\.gallery-image-block-title\\s*\\{[^}]*color:\\s*#2880b2;[^}]*font-size:\\s*20px;/s',
+			$css
+		);
+	}
+
 	public function test_index_controller_assigns_only_a_normalized_layout(): void
 	{
 		$controller = (string) file_get_contents(dirname(__DIR__) . '/controller/index.php');
 
 		$this->assertSame(2, substr_count($controller, '$this->gallery_config->get_index_album_layout()'));
+		$this->assertStringNotContainsString("get('index_album_layout')", $controller);
+	}
+
+	public function test_album_controller_assigns_the_same_normalized_layout_to_subalbum_lists(): void
+	{
+		$controller = (string) file_get_contents(dirname(__DIR__) . '/controller/album.php');
+
+		$this->assertSame(1, substr_count($controller, '$this->gallery_config->get_index_album_layout()'));
+		$this->assertStringContainsString("'GALLERY_INDEX_ALBUM_LAYOUT' => \$this->gallery_config->get_index_album_layout()", $controller);
+		$this->assertStringNotContainsString("get('index_album_layout')", $controller);
+	}
+
+	public function test_search_controller_assigns_the_same_normalized_layout_to_image_results(): void
+	{
+		$controller = (string) file_get_contents(dirname(__DIR__) . '/controller/search.php');
+
+		$this->assertSame(1, substr_count($controller, '$this->gallery_config->get_index_album_layout()'));
+		$this->assertStringContainsString(
+			"\$this->template->assign_var('GALLERY_INDEX_ALBUM_LAYOUT', \$this->gallery_config->get_index_album_layout())",
+			$controller
+		);
 		$this->assertStringNotContainsString("get('index_album_layout')", $controller);
 	}
 

@@ -1,4 +1,4 @@
-{% include 'gallery/imageblock_body.html' %}
+{% include '@phpbbgallery_core/gallery/imageblock_layout.html' %}
 
 {% if commentrow|length %}
 	<h4>{% if not COLLAPSE_COMMENTS %}{% if U_G_SEARCH_COMMENTED %}<a href="{{ U_G_SEARCH_COMMENTED }}">{{ lang('RECENT_COMMENTS') }}</a>{% else %}{{ lang('RECENT_COMMENTS') }}{% endif %}{% else %}{{ lang('RECENT_COMMENTS') }}{% endif %}</h4>

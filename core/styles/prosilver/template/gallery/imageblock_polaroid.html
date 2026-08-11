@@ -1,6 +1,6 @@
 {% for imageblock in imageblock|default([]) %}
 
-{% if imageblock.U_BLOCK %}<h2><a href="{{ imageblock.U_BLOCK }}">{{ imageblock.BLOCK_NAME }}</a></h2>{% endif %}
+{% if imageblock.U_BLOCK %}<h2 class="gallery-image-block-title"><a href="{{ imageblock.U_BLOCK }}">{{ imageblock.BLOCK_NAME }}</a></h2>{% endif %}
 {% if imageblock.ERROR %}<h2>{{ imageblock.ERROR }}</h2>
 
 {% else %}

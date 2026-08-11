@@ -1,0 +1,71 @@
+{% for imageblock in imageblock|default([]) %}
+<section class="gallery-classic-image-block">
+	{% if imageblock.BLOCK_NAME %}
+	<h2 class="gallery-image-block-title">
+		{% if imageblock.U_BLOCK %}<a href="{{ imageblock.U_BLOCK }}">{{ imageblock.BLOCK_NAME }}</a>{% else %}{{ imageblock.BLOCK_NAME }}{% endif %}
+	</h2>
+	{% endif %}
+
+	{% if imageblock.ERROR %}
+	<div class="panel">
+		<div class="inner"><strong>{{ imageblock.ERROR }}</strong></div>
+	</div>
+	{% else %}
+	<div class="gallery-classic-image-grid" style="--gallery-classic-thumbnail-size: {{ S_THUMBNAIL_SIZE|default(160) }}px;">
+		{% for image in imageblock.image %}
+			{% if image.S_IMAGE_AWARD_PLACEHOLDER %}
+			<div class="gallery-classic-image-placeholder" aria-hidden="true"></div>
+			{% else %}
+			<article class="gallery-classic-image{% if image.S_STATUS_UNAPPROVED or image.S_UNAPPROVED %} gallery-classic-image--unapproved{% endif %}{% if image.S_LOCKED %} gallery-classic-image--locked{% endif %}{% if image.S_REPORTED %} gallery-classic-image--reported{% endif %}">
+				{% EVENT phpbbgallery_core_album_image_actions %}
+				{% if image.S_IMAGE_AWARD_RANK > 0 %}
+				<div class="trophy-container">
+					<i class="trophy-icon fa-trophy fa-stack-2x trophy-color-{{ image.S_IMAGE_AWARD_RANK }}"></i>
+					<strong class="fa-stack-1x trophy-text">{{ image.S_IMAGE_AWARD_RANK }}</strong>
+				</div>
+				{% endif %}
+
+				{% if image.UC_IMAGE_NAME %}
+				<h3 class="gallery-classic-image-title">
+					{% if image.U_IMAGE %}<a href="{{ image.U_IMAGE }}">{% endif %}{{ image.UC_IMAGE_NAME }}{% if image.U_IMAGE %}</a>{% endif %}
+				</h3>
+				{% endif %}
+
+				<div class="gallery-classic-thumbnail">
+					{% if image.UC_THUMBNAIL_ACTION %}<a href="{{ image.UC_THUMBNAIL_ACTION }}">{% endif %}
+						<img src="{{ image.UC_THUMBNAIL }}" alt="{{ image.UC_IMAGE_NAME }}" title="{{ lang('VIEW_IMAGE') }}{{ lang('COLON') }} {{ image.UC_IMAGE_NAME }}" />
+					{% if image.UC_THUMBNAIL_ACTION %}</a>{% endif %}
+					{% if image.S_STATUS_UNAPPROVED or image.S_UNAPPROVED %}
+						<span class="gallery-classic-status">{{ lang('IMAGE_NOT_APPROVED') }}</span>
+					{% endif %}
+				</div>
+
+				<div class="gallery-classic-image-details">
+					{% if image.IMAGE_AWARD %}<div>{{ image.IMAGE_AWARD_TITLE }}{{ lang('COLON') }} <strong>{{ image.IMAGE_AWARD }}</strong></div>{% endif %}
+					{% if image.IMAGE_SUBTITLE %}<div class="gallery-classic-image-subtitle" title="{{ image.IMAGE_SUBTITLE }}">{{ image.IMAGE_SUBTITLE }}</div>{% endif %}
+					{% if image.U_ALBUM %}<div>{{ lang('ALBUM_NAME') }}{{ lang('COLON') }} <a href="{{ image.U_ALBUM }}" title="{{ image.ALBUM_NAME }}"><strong>{{ image.ALBUM_NAME }}</strong></a></div>{% endif %}
+					{% if image.POSTER %}<div>{{ lang('UPLOADED_BY_USER') }}{{ lang('COLON') }} {{ image.POSTER }}</div>{% endif %}
+					{% if image.TIME %}<div>{{ lang('UPLOADED_ON_DATE') }}{{ lang('COLON') }} {{ image.TIME }}</div>{% endif %}
+					{% if image.IMAGE_RESOLUTION %}<div>{{ lang('IMAGE_RESOLUTION') }}{{ lang('COLON') }} {{ image.IMAGE_RESOLUTION }}</div>{% endif %}
+					{% if image.IMAGE_VIEWS > -1 %}<div>{{ lang('IMAGE_VIEWS') }}{{ lang('COLON') }} {{ image.IMAGE_VIEWS }}</div>{% endif %}
+					<div>{% EVENT phpbbgallery_core_album_image_metadata %}</div>
+					{% if image.S_RATINGS %}
+						<div class="gallery-classic-image-rating">{{ lang('RATING') }}{{ lang('COLON') }} {% include '@phpbbgallery_core/gallery/album_rating_stars.html' %}</div>
+					{% endif %}
+					{% if image.S_COMMENTS %}<div>{{ image.L_COMMENTS }}{{ lang('COLON') }} <a href="{{ image.U_COMMENTS }}">{{ image.S_COMMENTS }}</a></div>{% endif %}
+					{% if U_ACP and image.U_USER_IP %}<div>{{ lang('IP') }}{{ lang('COLON') }} {% include '@phpbbgallery_core/gallery/ip_privacy_toggle.html' with { ip_value: image.U_USER_IP } %}</div>{% endif %}
+				</div>
+
+				{% if image.S_STATUS_UNAPPROVED_ACTION %}
+				<form method="post" class="gallery-classic-approval" action="{{ image.S_STATUS_UNAPPROVED_ACTION }}">
+					<input class="button2 btn btn-danger" type="submit" value="{{ lang('DISAPPROVE') }}" name="action[disapprove]" />
+					<input class="button1 btn btn-success" type="submit" value="{{ lang('APPROVE') }}" name="action[approve]" />
+				</form>
+				{% endif %}
+			</article>
+			{% endif %}
+		{% endfor %}
+	</div>
+	{% endif %}
+</section>
+{% endfor %}

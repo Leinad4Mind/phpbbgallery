@@ -240,7 +240,7 @@ function toggleElement(oElement)
 {% endif %}
 
 {% if imageblock|length %}
-	{% include 'gallery/imageblock_polaroid.html' %}
+	{% include '@phpbbgallery_core/gallery/imageblock_layout.html' %}
 {% endif %}
 {% if U_RECENT_COMMENTS %}
 	<h2><a href="javascript: toggleElement( getElement('recent-comments'));">{{ lang('SEARCH_RECENT_COMMENTS') }}</a> </h2>

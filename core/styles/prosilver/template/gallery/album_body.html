@@ -18,7 +18,13 @@
 		<li class="rightside"><a href="{{ U_MARK_ALBUMS }}">{{ lang('MARK_ALBUMS_READ') }}</a></li>
 	</ul>
 	{% endif %}
-	{% include 'gallery/albumlist_polaroid.html' %}
+	{% if GALLERY_INDEX_ALBUM_LAYOUT == 'classic' %}
+		{% include 'gallery/albumlist_body.html' %}
+	{% elseif GALLERY_INDEX_ALBUM_LAYOUT == 'modern' %}
+		{% include '@phpbbgallery_core/gallery/albumlist_modern.html' %}
+	{% else %}
+		{% include 'gallery/albumlist_polaroid.html' %}
+	{% endif %}
 {% endif %}
 
 {% if (not S_IN_GALLERY_POPUP and S_DISPLAY_SEARCHBOX) or (S_IS_POSTABLE and (U_UPLOAD_IMAGE or U_WATCH_TOGGLE or PAGINATION or TOTAL_IMAGES or (U_SLIDE_SHOW and not S_IS_BOT))) %}
@@ -55,7 +61,7 @@
 	{% if S_IN_GALLERY_POPUP %}
 		{% include 'gallery/imageblock_popup.html' %}
 	{% else %}
-		{% include 'gallery/imageblock_polaroid.html' %}
+		{% include '@phpbbgallery_core/gallery/imageblock_layout.html' %}
 	{% endif %}
 {% else %}
 	{% if S_IS_POSTABLE %}

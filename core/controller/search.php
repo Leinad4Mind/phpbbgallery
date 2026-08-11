@@ -146,6 +146,7 @@ class search
 		$this->comments_table = $comments_table;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
+		$this->template->assign_var('GALLERY_INDEX_ALBUM_LAYOUT', $this->gallery_config->get_index_album_layout());
 	}
 
 	/**

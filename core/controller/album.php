@@ -251,6 +251,7 @@ class album
 			'S_IS_POSTABLE'      => $album_data['album_type'] != (int) \phpbbgallery\core\block::TYPE_CAT,
 			'S_IS_LOCKED'        => $album_data['album_status'] == (int) \phpbbgallery\core\block::ALBUM_LOCKED,
 			'S_DISPLAY_SEARCHBOX' => $this->can_search_album(),
+			'GALLERY_INDEX_ALBUM_LAYOUT' => $this->gallery_config->get_index_album_layout(),
 
 			'ALBUM_ID'           => $album_id,
 			'U_RETURN_LINK'       => $this->helper->route('phpbbgallery_core_index'),
