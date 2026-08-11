@@ -212,10 +212,23 @@ class upload
 		{
 			if (!check_form_key('gallery'))
 			{
+				if ($is_ajax)
+				{
+					return $this->ajax_error($this->language->lang('FORM_INVALID'));
+				}
+
 				trigger_error('FORM_INVALID');
 			}
 
-			$process->discard_pending_images();
+			$discarded = $process->discard_pending_images();
+			if ($is_ajax)
+			{
+				return new \Symfony\Component\HttpFoundation\JsonResponse([
+					'success'   => true,
+					'discarded' => $discarded,
+				]);
+			}
+
 			redirect($this->helper->route('phpbbgallery_core_album_upload', ['album_id' => $album_id]));
 		}
 

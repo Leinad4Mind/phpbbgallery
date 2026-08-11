@@ -112,6 +112,8 @@ class resumable_upload_test extends TestCase
 		$this->assertNotFalse($redirect);
 		$this->assertLessThan($delete, $guard);
 		$this->assertLessThan($redirect, $delete);
+		$this->assertStringContainsString('if ($is_ajax)', substr($source, $post, $redirect - $post));
+		$this->assertStringContainsString("'discarded' => \$discarded", substr($source, $post, $redirect - $post));
 	}
 
 	public function test_ajax_checks_csrf_before_uploading(): void
@@ -135,6 +137,7 @@ class resumable_upload_test extends TestCase
 		$this->assertStringContainsString('if (!(value instanceof File))', $javascript);
 		$this->assertStringContainsString("data.append('files[]', task.file, task.file.name)", $javascript);
 		$this->assertStringContainsString("request.setRequestHeader('X-Requested-With', 'XMLHttpRequest')", $javascript);
+		$this->assertStringContainsString('response.success !== true', $javascript);
 		$this->assertStringContainsString("mode.value = 'upload_edit'", $javascript);
 		$this->assertStringContainsString('window.HTMLFormElement.prototype.submit.call(form)', $javascript);
 		foreach ($this->posting_templates() as $template_path)
@@ -143,6 +146,39 @@ class resumable_upload_test extends TestCase
 
 			$this->assertStringContainsString('data-gallery-quick-upload', $template, $template_path);
 			$this->assertStringContainsString('{{ S_FORM_TOKEN }}', $template, $template_path);
+		}
+	}
+
+	public function test_quick_upload_cancel_removes_failed_entries_and_frees_their_slot(): void
+	{
+		$javascript = (string) file_get_contents(dirname(__DIR__) . '/styles/all/template/js/quick_upload.js');
+		$listener = strpos($javascript, "elements.cancel.addEventListener('click'");
+		$validation = strpos($javascript, 'accepted >= uploadLimit');
+
+		$this->assertNotFalse($listener);
+		$this->assertNotFalse($validation);
+		$this->assertLessThan($validation, $listener);
+		$this->assertStringContainsString('task.elements.cancel.hidden = false;', $javascript);
+		$this->assertStringContainsString('function removeTask(task)', $javascript);
+		$this->assertStringContainsString('accepted = Math.max(0, accepted - 1);', $javascript);
+		$this->assertStringContainsString("task.status === 'failed'", $javascript);
+	}
+
+	public function test_quick_upload_reset_clears_the_client_and_server_draft(): void
+	{
+		$javascript = (string) file_get_contents(dirname(__DIR__) . '/styles/all/template/js/quick_upload.js');
+
+		$this->assertStringContainsString("form.addEventListener('reset', resetUpload)", $javascript);
+		$this->assertStringContainsString("data.append('discard_pending', '1')", $javascript);
+		$this->assertStringContainsString("request.setRequestHeader('X-Requested-With', 'XMLHttpRequest')", $javascript);
+		$this->assertStringContainsString("outputItems.textContent = ''", $javascript);
+		$this->assertStringContainsString("output.classList.add('hidden')", $javascript);
+		$this->assertStringContainsString('fileInput.disabled = true;', $javascript);
+
+		foreach ($this->posting_templates() as $template_path)
+		{
+			$template = (string) file_get_contents($template_path);
+			$this->assertStringContainsString('data-gallery-quick-upload-reset', $template, $template_path);
 		}
 	}
 
