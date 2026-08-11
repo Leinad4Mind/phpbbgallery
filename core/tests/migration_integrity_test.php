@@ -57,6 +57,7 @@ use phpbbgallery\core\migrations\image_card_bbcode_id;
 use phpbbgallery\core\migrations\subalbum_icon_display;
 use phpbbgallery\core\migrations\subalbum_display_modes;
 use phpbbgallery\core\migrations\statistics_dashboard;
+use phpbbgallery\core\migrations\statistics_permission;
 
 class migration_integrity_test extends TestCase
 {
@@ -107,6 +108,7 @@ class migration_integrity_test extends TestCase
 		subalbum_icon_display::class,
 		subalbum_display_modes::class,
 		statistics_dashboard::class,
+		statistics_permission::class,
 		release_4_1_0::class,
 	];
 
@@ -310,7 +312,7 @@ class migration_integrity_test extends TestCase
 		$migration = (new \ReflectionClass(release_4_1_0::class))->newInstanceWithoutConstructor();
 
 		$this->assertSame([
-			'\\phpbbgallery\\core\\migrations\\statistics_dashboard',
+			'\\phpbbgallery\\core\\migrations\\statistics_permission',
 		], release_4_1_0::depends_on());
 		$this->assertSame([
 			['config.update', ['phpbb_gallery_version', '4.1.0']],
@@ -332,6 +334,39 @@ class migration_integrity_test extends TestCase
 			$schema['add_tables']['phpbb_gallery_statistics']['PRIMARY_KEY']
 		);
 		$this->assertArrayHasKey('stat_user', $schema['add_tables']['phpbb_gallery_statistics']['KEYS']);
+	}
+
+	public function test_statistics_permission_inherits_view_access_and_invalidates_cached_bits(): void
+	{
+		$migration = (new \ReflectionClass(statistics_permission::class))->newInstanceWithoutConstructor();
+		(new \ReflectionProperty(\phpbb\db\migration\migration::class, 'table_prefix'))->setValue($migration, 'phpbb_');
+
+		$this->assertSame([
+			'\\phpbbgallery\\core\\migrations\\statistics_dashboard',
+		], statistics_permission::depends_on());
+		$this->assertSame([
+			'add_columns' => [
+				'phpbb_gallery_roles' => [
+					'i_statistics' => ['UINT:3', 0],
+				],
+			],
+		], $migration->update_schema());
+
+		$queries = [];
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->exactly(2))
+			->method('sql_query')
+			->willReturnCallback(static function (string $sql) use (&$queries): bool
+			{
+				$queries[] = $sql;
+				return true;
+			});
+		(new \ReflectionProperty(\phpbb\db\migration\migration::class, 'db'))->setValue($migration, $db);
+
+		$this->assertTrue($migration->inherit_view_permission());
+		$this->assertTrue($migration->clear_gallery_permission_cache());
+		$this->assertStringContainsString('SET i_statistics = i_view', $queries[0]);
+		$this->assertStringContainsString("SET user_permissions = ''", $queries[1]);
 	}
 
 	public function test_image_card_id_control_is_optional_and_reversible(): void
@@ -1266,6 +1301,7 @@ class migration_integrity_test extends TestCase
 			'subalbum_icon_display.php',
 			'subalbum_display_modes.php',
 			'statistics_dashboard.php',
+			'statistics_permission.php',
 			'release_4_1_0.php',
 		] as $migration)
 		{

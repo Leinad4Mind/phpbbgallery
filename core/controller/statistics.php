@@ -31,7 +31,10 @@ final class statistics
 		$this->language->add_lang('gallery', 'phpbbgallery/core');
 		$this->gallery_auth->load_user_permissions((int) $this->user->data['user_id']);
 		$album_ids = array_values(array_diff(
-			(array) $this->gallery_auth->acl_album_ids('i_view'),
+			array_intersect(
+				(array) $this->gallery_auth->acl_album_ids('i_view'),
+				(array) $this->gallery_auth->acl_album_ids('i_statistics')
+			),
 			(array) $this->gallery_auth->get_exclude_zebra()
 		));
 		if (!$album_ids)

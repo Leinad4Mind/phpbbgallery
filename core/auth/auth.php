@@ -39,7 +39,7 @@ class auth
 	 * Core permissions introduced after the original serialized bit layout.
 	 * Keep these appended after every legacy permission.
 	 */
-	protected static array $_permission_core_additions = ['i_move', 'i_download', 'i_download_free'];
+	protected static array $_permission_core_additions = ['i_move', 'i_download', 'i_download_free', 'i_statistics'];
 
 	/**
 	 * Permissions contributed by add-ons, always merged last when their owner

@@ -453,10 +453,16 @@ class index
 		$show_recent   = (bool) ($show_options & self::RRC_MODE_RECENT_IMAGES);
 		$can_list_personal_albums = $include_personal_statistics
 			&& $this->gallery_auth->acl_check('a_list', \phpbbgallery\core\auth\auth::PERSONAL_ALBUM);
+		$statistics_albums = array_intersect(
+			(array) $this->gallery_auth->acl_album_ids('i_view', 'array', false, $include_personal_statistics),
+			(array) $this->gallery_auth->acl_album_ids('i_statistics', 'array', false, $include_personal_statistics)
+		);
+		$can_view_statistics = (bool) array_diff($statistics_albums, (array) $this->gallery_auth->get_exclude_zebra());
+		$show_statistics = $can_view_statistics && (bool) $this->gallery_config->get('disp_statistic');
 		$this->template->assign_vars([
-			'TOTAL_IMAGES'		=> ($this->gallery_config->get('disp_statistic')) ? $this->language->lang('TOTAL_IMAGES_SPRINTF', $this->gallery_config->get('num_images')) : '',
-			'TOTAL_IMAGE_COUNT'	=> ($this->gallery_config->get('disp_statistic')) ? (int) $this->gallery_config->get('num_images') : false,
-			'TOTAL_VIEWS'		=> ($this->gallery_config->get('disp_statistic')) ? $this->gallery_config->get('num_views') : false,
+			'TOTAL_IMAGES'		=> $show_statistics ? $this->language->lang('TOTAL_IMAGES_SPRINTF', $this->gallery_config->get('num_images')) : '',
+			'TOTAL_IMAGE_COUNT'	=> $show_statistics ? (int) $this->gallery_config->get('num_images') : false,
+			'TOTAL_VIEWS'		=> $show_statistics ? $this->gallery_config->get('num_views') : false,
 			'TOTAL_COMMENTS'	=> ($this->gallery_config->get('allow_comments')) ? $this->language->lang('TOTAL_COMMENTS_SPRINTF', $this->gallery_config->get('num_comments')) : '',
 			'TOTAL_PGALLERIES'	=> $can_list_personal_albums ? $this->language->lang('TOTAL_PEGAS_SPRINTF', $this->gallery_config->get('num_pegas')) : '',
 			'NEWEST_PGALLERIES'	=> ($can_list_personal_albums && $this->gallery_config->get('num_pegas')) ? sprintf($this->language->lang('NEWEST_PGALLERY'), '<a href="' . $this->helper->route('phpbbgallery_core_album', ['album_id' => $this->gallery_config->get('newest_pega_album_id')]) . '" '. ($this->gallery_config->get('newest_pega_user_colour') ? 'class="username-coloured" style="color: #' . $this->gallery_config->get('newest_pega_user_colour') . ';"' : 'class="username"') . '>' . $this->gallery_config->get('newest_pega_username') . '</a>') : '',
@@ -468,7 +474,7 @@ class index
 			'S_LOGIN_ACTION'			=> append_sid($this->root_path . 'ucp.' . $this->php_ext, 'mode=login&amp;redirect=' . urlencode($this->helper->route($base_route))),
 
 			'U_GALLERY_SEARCH'				=> $this->helper->route('phpbbgallery_core_search'),
-			'U_GALLERY_STATISTICS'			=> $this->helper->route('phpbbgallery_core_statistics'),
+			'U_GALLERY_STATISTICS'			=> $can_view_statistics ? $this->helper->route('phpbbgallery_core_statistics') : '',
 			'U_G_SEARCH_COMMENTED'			=> $this->config['phpbb_gallery_allow_comments'] && $show_comments ? $this->helper->route('phpbbgallery_core_search_commented') : false,
 			'U_G_SEARCH_RECENT'				=> $show_recent ? $this->helper->route('phpbbgallery_core_search_recent') : false,
 			'U_G_SEARCH_RANDOM'				=> $show_random ? $this->helper->route('phpbbgallery_core_search_random') : false,

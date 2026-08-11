@@ -29,6 +29,7 @@ $lang = array_merge($lang, [
 	'PERMISSION_I_DOWNLOAD_FREE' => 'Can download original image files without charges (source)',
 	'PERMISSION_I_DOWNLOAD_FREE_EXPLAIN' => 'Bypasses charges imposed by add-ons when accessing the original source file. The view and download permissions are still required.',
 	'PERMISSION_I_VIEW_EXPLAIN' => 'Controls access to album image listings, individual image pages, thumbnails and medium images. It does not grant access to the original source file.',
+	'PERMISSION_I_STATISTICS_EXPLAIN' => 'Allows access to the Gallery statistics page. Only albums where this permission and “Can view images” are granted are included.',
 ]);
 
 $lang = array_merge($lang, [
@@ -293,6 +294,7 @@ $lang = array_merge($lang, [
 	'PERMISSION_I_UPLOAD'           => 'Can upload images',
 	'PERMISSION_I_UPLOAD_EXPLAIN'   => 'This permission also determines whether the user can move their own images into this album.',
 	'PERMISSION_I_VIEW'             => 'Can view images (thumbnail and medium)',
+	'PERMISSION_I_STATISTICS'       => 'Can view Gallery statistics',
 	'PERMISSION_I_WATERMARK'        => 'Can view images without watermark',
 	'PERMISSION_M'                  => 'Moderation',
 	'PERMISSION_MISC'               => 'Misc', //Miscellaneous

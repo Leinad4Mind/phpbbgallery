@@ -116,6 +116,17 @@ final class controller_index_types_test extends TestCase
 		$this->assertStringNotContainsString("'U_G_SEARCH_CONTESTS'", $source);
 	}
 
+	public function test_statistics_summary_and_link_require_view_and_statistics_permissions(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/index.php');
+
+		$this->assertStringContainsString("acl_album_ids('i_view', 'array', false, \$include_personal_statistics)", $source);
+		$this->assertStringContainsString("acl_album_ids('i_statistics', 'array', false, \$include_personal_statistics)", $source);
+		$this->assertStringContainsString('$show_statistics = $can_view_statistics', $source);
+		$this->assertStringContainsString("'U_GALLERY_STATISTICS'", $source);
+		$this->assertStringContainsString('$can_view_statistics ?', $source);
+	}
+
 	public function test_bulk_subscriptions_only_include_visible_viewable_real_albums(): void
 	{
 		$reflection = new \ReflectionClass(index::class);

@@ -70,6 +70,8 @@ final class statistics_test extends TestCase
 
 		$this->assertStringContainsString('phpbbgallery_core_statistics:', $routing);
 		$this->assertStringContainsString("acl_album_ids('i_view')", $controller);
+		$this->assertStringContainsString("acl_album_ids('i_statistics')", $controller);
+		$this->assertStringContainsString('array_intersect(', $controller);
 		$this->assertStringContainsString('get_exclude_zebra()', $controller);
 		$this->assertStringContainsString('statistics_top_viewed', $template);
 		$this->assertStringContainsString('statistics_top_downloaded', $template);
