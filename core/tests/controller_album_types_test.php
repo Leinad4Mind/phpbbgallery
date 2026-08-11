@@ -304,8 +304,22 @@ final class controller_album_types_test extends TestCase
 			$this->assertStringContainsString('method="get" id="album-search"', $template, $style);
 			$this->assertStringContainsString('name="aid[]"', $template, $style);
 			$this->assertStringContainsString('name="sc"', $template, $style);
+			$this->assertStringContainsString('U_GALLERY_SEARCH_ADVANCED', $template, $style);
+			$this->assertStringContainsString('fa-search', $template, $style);
+			$this->assertStringContainsString('fa-cog', $template, $style);
 			$this->assertSame(1, substr_count($template, 'id="search_keywords"'), $style);
 		}
+
+		$prosilver = (string) file_get_contents(dirname(__DIR__) . '/styles/prosilver/template/gallery/album_body.html');
+		$this->assertStringContainsString('class="search-box" role="search"', $prosilver);
+		$this->assertStringContainsString('class="button button-search"', $prosilver);
+		$this->assertStringContainsString('class="button button-search-end"', $prosilver);
+
+		$album_controller = (string) file_get_contents(dirname(__DIR__) . '/controller/album.php');
+		$search_controller = (string) file_get_contents(dirname(__DIR__) . '/controller/search.php');
+		$this->assertStringContainsString("'U_GALLERY_SEARCH_ADVANCED'", $album_controller);
+		$this->assertStringContainsString("'aid' => [(int) \$album_id]", $album_controller);
+		$this->assertStringContainsString('$search_album ?: false', $search_controller);
 	}
 
 	public function test_watch_action_is_not_coupled_to_upload_permission_in_any_style(): void

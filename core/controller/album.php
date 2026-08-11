@@ -258,6 +258,10 @@ class album
 			'L_RETURN_LINK'       => $this->language->lang('RETURN_TO_GALLERY'),
 			'S_ALBUM_ACTION'      => $this->helper->route('phpbbgallery_core_album', ['album_id' => (int) $album_id]),
 			'S_SEARCHBOX_ACTION'  => $this->helper->route('phpbbgallery_core_search'),
+			'U_GALLERY_SEARCH_ADVANCED' => $this->helper->route('phpbbgallery_core_search', [
+				'aid' => [(int) $album_id],
+				'sc' => 1,
+			]),
 			'S_IS_WATCHED'        => $this->notifications_helper->get_watched_album($album_id) ? true : false,
 			'U_WATCH_TOGGLE'      => $watch_url,
 		]);

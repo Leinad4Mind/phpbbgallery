@@ -40,6 +40,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Rebuilt album quick search with each bundled style's native compact controls: a magnifying-glass button searches the current album, while a separate cog opens advanced Gallery search with that album preselected and descendant searching enabled.
 - Closed the complete post-4.0 Core migration graph with a 4.1.0 terminal marker and aligned the package, version-check metadata and installed Gallery version for direct 4.0.0 upgrades.
 - Made the personal-album index switch authoritative: disabling it now removes personal albums, their fallback link and their statistics from the Gallery index, while the remaining section is labelled simply as Albums.
 - Reordered the BBOOTS and FLATBOOTS upload form so image selection precedes the optional author and comment controls, and rendered the comment checkbox as one responsive theme-native row.

@@ -38,11 +38,16 @@
 	{% if not S_IN_GALLERY_POPUP and U_WATCH_TOGGLE %}<a href="{{ U_WATCH_TOGGLE }}" title="{% if S_IS_WATCHED %}{{ lang('UNWATCH_ALBUM') }}{% else %}{{ lang('WATCH_ALBUM') }}{% endif %}" class="button"><i class="icon {% if S_IS_WATCHED %}fa-square-o{% else %}fa-check-square-o{% endif %} fa-fw" aria-hidden="true"></i> {% if S_IS_WATCHED %}<span>{{ lang('UNWATCH_ALBUM') }}</span>{% else %}<span>{{ lang('WATCH_ALBUM') }}</span>{% endif %}</a>{% endif %}
 
 	{% if not S_IN_GALLERY_POPUP and S_DISPLAY_SEARCHBOX %}
-		<div class="search-box">
+		<div class="search-box" role="search">
 			<form method="get" id="album-search" action="{{ S_SEARCHBOX_ACTION }}">
 			<fieldset>
 				<input class="inputbox search tiny" type="search" name="keywords" id="search_keywords" size="20" placeholder="{{ lang('SEARCH_ALBUM') }}" aria-label="{{ lang('SEARCH_ALBUM') }}" required />
-				<input class="button2" type="submit" value="{{ lang('SEARCH') }}" />
+				<button class="button button-search" type="submit" title="{{ lang('SEARCH') }}">
+					<i class="icon fa-search fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('SEARCH') }}</span>
+				</button>
+				<a href="{{ U_GALLERY_SEARCH_ADVANCED }}" class="button button-search-end" title="{{ lang('SEARCH_ADV') }}">
+					<i class="icon fa-cog fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('SEARCH_ADV') }}</span>
+				</a>
 				<input type="hidden" value="{{ ALBUM_ID }}" name="aid[]" />
 				<input type="hidden" value="1" name="sc" />
 			</fieldset>

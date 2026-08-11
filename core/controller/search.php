@@ -474,7 +474,7 @@ class search
 			]);
 			return $this->helper->render('gallery/search_results.html', $this->gallery_config->get_title($this->language));
 		}
-		$s_albums = $this->album->get_albumbox(false, false, false, 'i_view');
+		$s_albums = $this->album->get_albumbox(false, false, $search_album ?: false, 'i_view');
 		$s_hidden_fields = $this->search_context_params();
 		$this->template->assign_vars([
 			'S_HIDDEN_FIELDS'		=> build_hidden_fields($s_hidden_fields),
