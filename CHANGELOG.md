@@ -64,6 +64,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Restored Image Revisions activation by keeping its manual lifecycle reconciler aligned with the current revision service dependencies.
 - Vertically centred folder icons with their labels in text-mode subalbum links across every Gallery presentation and bundled style.
 - Displayed each configured album icon in a centred 48-pixel square in the ACP album tree's visual column, falling back to phpBB's folder icon only when no custom image is configured.
 - Mirrored each parent's configured visible subalbum links or icons in the ACP album tree, using one bounded query for all displayed parent rows.
