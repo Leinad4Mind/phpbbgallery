@@ -208,7 +208,8 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertStringContainsString('is-copied', $javascript);
 		$css = (string) file_get_contents($core_root . '/styles/all/theme/gallery.css');
 		$this->assertMatchesRegularExpression('/\.gallery-image-card-heading\s*\{[^}]*align-items:\s*center;[^}]*flex-direction:\s*column;[^}]*text-align:\s*center;/s', $css);
-		$this->assertMatchesRegularExpression('/\.gallery-image-bbcode-copy\s*\{[^}]*align-self:\s*flex-start;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-image-bbcode-copy\s*\{[^}]*align-self:\s*flex-start;[^}]*padding:\s*0;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-futuristic-image-header\s*\{[^}]*flex-direction:\s*column;(?:(?!gap:)[^}])*padding:\s*2px 10px 6px;[^}]*text-align:\s*left;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-classic-image-heading > \.gallery-image-bbcode-copy\s*\{[^}]*margin-inline-start:\s*7px;/s', $css);
 	}
 

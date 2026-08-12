@@ -75,7 +75,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Displayed ACP-configured album icons in a consistent 30 px square with a non-disruptive three-times hover and keyboard-focus preview across every Gallery layout.
 - Corrected uploaded album icons in every Gallery layout to resolve from the phpBB board root instead of being incorrectly prefixed with the active style or CDN image path.
 - Prevented Futuristic and Modern responsive album lists from repeating the same latest-image thumbnail as both the album visual and Last image, while retaining a distinct latest thumbnail for manual covers and contest winners.
-- Stacked the optional copyable image ID at the upper left above each Gallery card title in Classic, Cards and Futuristic layouts; when IDs are disabled, the title remains centred on its own without reserved space.
+- Stacked the compact, padding-free optional copyable image ID at the upper left above each Gallery card title in Classic, Cards and Futuristic layouts; the Futuristic header now uses tighter spacing and left-aligned content, while disabling IDs reserves no space.
 - Restored the non-interactive source legend beneath the ACP New Core and add-on explanation, deduplicating the origins present on each page without reintroducing per-source filtering.
 - Allowed ACP permission masks to copy from any other selected album or user setting regardless of display order, disabling only the exact target and resolving reciprocal selections from an immutable snapshot.
 - Locked the album-type selector when editing an existing contest and removed Contest when editing a regular album, so the ACP no longer offers unsupported conversions while preserving the immutable type and server-side validation.
