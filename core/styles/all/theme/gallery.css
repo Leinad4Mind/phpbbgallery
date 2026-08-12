@@ -1333,6 +1333,7 @@ input.autowidth-gallery {
 .gallery-image-bbcode-copy
 {
 	align-items: center;
+	align-self: flex-start;
 	background: rgba(255, 255, 255, .9);
 	border: 1px solid rgba(40, 128, 178, .28);
 	border-radius: 999px;
@@ -1724,6 +1725,7 @@ input.autowidth-gallery {
 
 .gallery-classic-image-heading > .gallery-image-bbcode-copy
 {
+	margin-inline-start: 7px;
 	margin-top: 7px;
 }
 

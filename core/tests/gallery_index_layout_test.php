@@ -208,6 +208,8 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertStringContainsString('is-copied', $javascript);
 		$css = (string) file_get_contents($core_root . '/styles/all/theme/gallery.css');
 		$this->assertMatchesRegularExpression('/\.gallery-image-card-heading\s*\{[^}]*align-items:\s*center;[^}]*flex-direction:\s*column;[^}]*text-align:\s*center;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-image-bbcode-copy\s*\{[^}]*align-self:\s*flex-start;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-classic-image-heading > \.gallery-image-bbcode-copy\s*\{[^}]*margin-inline-start:\s*7px;/s', $css);
 	}
 
 	public function test_album_list_distinguishes_its_main_visual_from_the_latest_image(): void
