@@ -165,6 +165,7 @@ final class domain_auth_types_test extends TestCase
 		$this->assertStringContainsString('user_id IN (7, 9)', $queries[1]);
 	}
 
+	#[\PHPUnit\Framework\Attributes\WithoutErrorHandler]
 	public function test_group_skip_auth_excludes_leaders_without_excluding_ordinary_members(): void
 	{
 		if (!extension_loaded('sqlite3'))
@@ -175,13 +176,23 @@ final class domain_auth_types_test extends TestCase
 		{
 			define('USER_GROUP_TABLE', 'phpbb_user_group');
 		}
-		if (!class_exists('\phpbb\db\driver\driver', false))
+		$error_level = error_reporting();
+		error_reporting($error_level & ~E_DEPRECATED);
+		try
 		{
-			require_once dirname(__DIR__, 4) . '/phpbb/db/driver/driver.php';
+			// phpBB 3.3 itself contains syntax deprecated by PHP 8.5; this test only needs its SQLite driver.
+			if (!class_exists('\phpbb\db\driver\driver', false))
+			{
+				require_once dirname(__DIR__, 4) . '/phpbb/db/driver/driver.php';
+			}
+			if (!class_exists('\phpbb\db\driver\sqlite3', false))
+			{
+				require_once dirname(__DIR__, 4) . '/phpbb/db/driver/sqlite3.php';
+			}
 		}
-		if (!class_exists('\phpbb\db\driver\sqlite3', false))
+		finally
 		{
-			require_once dirname(__DIR__, 4) . '/phpbb/db/driver/sqlite3.php';
+			error_reporting($error_level);
 		}
 
 		$db = new class extends \phpbb\db\driver\sqlite3
