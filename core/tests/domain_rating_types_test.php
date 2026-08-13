@@ -297,8 +297,8 @@ final class domain_rating_types_test extends TestCase
 			->method('sql_fetchrow')
 			->with('rating_result')
 			->willReturnOnConsecutiveCalls(
-				['rate_image_id' => 4, 'image_rates' => 2, 'image_rate_points' => 9, 'image_rate_avg' => 4.5],
-				['rate_image_id' => 7, 'image_rates' => 3, 'image_rate_points' => 11, 'image_rate_avg' => 3.666],
+				['rate_image_id' => 4, 'image_rates' => 2, 'image_rate_points' => 9],
+				['rate_image_id' => 7, 'image_rates' => 3, 'image_rate_points' => 11],
 				false
 			);
 		$db->expects($this->once())->method('sql_freeresult')->with('rating_result');
@@ -316,6 +316,8 @@ final class domain_rating_types_test extends TestCase
 		$rating->recalc_image_rating([4, 7]);
 
 		$this->assertCount(2, $queries);
+		$this->assertStringNotContainsString('AVG(', $queries[0]);
+		$this->assertStringContainsString('COUNT(rate_user_ip) image_rates, SUM(rate_point) image_rate_points', $queries[0]);
 		$this->assertStringContainsString('image_rates = CASE image_id WHEN 4 THEN 2 WHEN 7 THEN 3 END', $queries[1]);
 		$this->assertStringContainsString('image_rate_points = CASE image_id WHEN 4 THEN 9 WHEN 7 THEN 11 END', $queries[1]);
 		$this->assertStringContainsString('image_rate_avg = CASE image_id WHEN 4 THEN 450 WHEN 7 THEN 367 END', $queries[1]);

@@ -433,7 +433,7 @@ class rating
 			$image_ids = (int) $image_ids;
 		}
 
-		$sql = 'SELECT rate_image_id, COUNT(rate_user_ip) image_rates, AVG(rate_point) image_rate_avg, SUM(rate_point) image_rate_points
+		$sql = 'SELECT rate_image_id, COUNT(rate_user_ip) image_rates, SUM(rate_point) image_rate_points
 			FROM ' . $this->rates_table . '
 			WHERE ' . $this->db->sql_in_set('rate_image_id', $image_ids, false, true) . '
 			GROUP BY rate_image_id';
@@ -442,10 +442,14 @@ class rating
 		$resync = [];
 		while ($row = $this->db->sql_fetchrow($result))
 		{
+			$image_rates = (int) $row['image_rates'];
+			$image_rate_points = (int) $row['image_rate_points'];
 			$resync[(int) $row['rate_image_id']] = [
-				'image_rates' => (int) $row['image_rates'],
-				'image_rate_points' => (int) $row['image_rate_points'],
-				'image_rate_avg' => (int) (round((float) $row['image_rate_avg'], 2) * 100),
+				'image_rates' => $image_rates,
+				'image_rate_points' => $image_rate_points,
+				'image_rate_avg' => $image_rates > 0
+					? (int) (round($image_rate_points / $image_rates, 2) * 100)
+					: 0,
 			];
 		}
 		$this->db->sql_freeresult($result);
