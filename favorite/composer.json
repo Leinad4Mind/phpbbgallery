@@ -11,6 +11,10 @@
 			"name": "Leinad4Mind",
 			"homepage": "https://www.leinad4mind.top/forum",
 			"role": "Extension Developer"
+		},
+		{
+			"name": "Joas Schilling",
+			"role": "Main MOD Author"
 		}
 	],
 	"require": {
