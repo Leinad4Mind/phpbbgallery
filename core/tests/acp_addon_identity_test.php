@@ -65,7 +65,11 @@ final class acp_addon_identity_test extends TestCase
 		$this->assertStringNotContainsString('html[data-gallery-addon-view="hidden"] .gallery-addon-legend__title', $stylesheet);
 		$this->assertStringContainsString('.gallery-addon-legend__items', $stylesheet);
 		$this->assertStringContainsString('populateLegendSources(legend)', $javascript);
-		$this->assertStringContainsString('clone = badge.cloneNode(true)', $javascript);
+		$this->assertStringContainsString("source === 'new-core' ? 0", $javascript);
+		$this->assertStringContainsString("source === 'updated-core' ? 1", $javascript);
+		$this->assertStringContainsString("kind === 'core' ? 2 : 3", $javascript);
+		$this->assertStringContainsString('left.priority - right.priority || left.order - right.order', $javascript);
+		$this->assertStringContainsString('clone = source.badge.cloneNode(true)', $javascript);
 		$this->assertStringContainsString('items.appendChild(clone)', $javascript);
 		$this->assertStringContainsString("'data-view-simple-explain'", $javascript);
 		$this->assertStringContainsString("'data-view-complete-explain'", $javascript);

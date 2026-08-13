@@ -94,6 +94,7 @@
 	function populateLegendSources(legend) {
 		var items = legend.querySelector('.gallery-addon-legend__items');
 		var seen = {};
+		var sources = [];
 
 		if (!items) {
 			items = document.createElement('div');
@@ -106,14 +107,27 @@
 		document.querySelectorAll('.gallery-addon-setting, .gallery-addon-section').forEach(function (row) {
 			var source = row.getAttribute('data-gallery-setting-source') || row.getAttribute('data-gallery-addon');
 			var badge = row.querySelector('.gallery-addon-badge');
-			var clone;
+			var kind;
+			var priority;
 
 			if (!source || seen[source] || !badge) {
 				return;
 			}
 
 			seen[source] = true;
-			clone = badge.cloneNode(true);
+			kind = row.getAttribute('data-gallery-setting-kind') || badge.getAttribute('data-gallery-setting-kind');
+			priority = source === 'new-core' ? 0 : (source === 'updated-core' ? 1 : (kind === 'core' ? 2 : 3));
+			sources.push({
+				badge: badge,
+				order: sources.length,
+				priority: priority
+			});
+		});
+
+		sources.sort(function (left, right) {
+			return left.priority - right.priority || left.order - right.order;
+		}).forEach(function (source) {
+			var clone = source.badge.cloneNode(true);
 			clone.removeAttribute('data-gallery-setting-source');
 			clone.removeAttribute('data-gallery-setting-kind');
 			clone.removeAttribute('data-gallery-addon');
