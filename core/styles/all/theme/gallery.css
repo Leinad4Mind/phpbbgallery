@@ -3034,6 +3034,27 @@ fieldset dl.gallery-autocomplete-row-open
 	transform: none;
 }
 
+.gallery-modern-album-visual.gallery-album-custom-icon-frame
+{
+	overflow: hidden;
+}
+
+.gallery-modern-album-visual.gallery-album-custom-icon-frame .gallery-album-custom-icon
+{
+	height: calc(100% - 8px);
+	max-height: calc(100% - 8px);
+	max-width: calc(100% - 8px);
+	transition: none;
+	width: calc(100% - 8px);
+}
+
+.gallery-modern-album-visual.gallery-album-custom-icon-frame .gallery-album-custom-icon:hover,
+.gallery-modern-album-visual.gallery-album-custom-icon-frame:focus .gallery-album-custom-icon
+{
+	box-shadow: none;
+	transform: none;
+}
+
 .gallery-futuristic-album-visual.gallery-album-custom-icon-frame .gallery-album-custom-icon
 {
 	background: transparent;

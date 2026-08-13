@@ -291,6 +291,14 @@ final class gallery_index_layout_test extends TestCase
 			'/\\.gallery-classic-album-icon-frame \\.gallery-album-custom-icon:hover,[^{]+\\.gallery-classic-album-icon-frame:focus \\.gallery-album-custom-icon\\s*\\{[^}]*box-shadow:\\s*none;[^}]*transform:\\s*none;/s',
 			$css
 		);
+		$this->assertMatchesRegularExpression(
+			'/\\.gallery-modern-album-visual\\.gallery-album-custom-icon-frame \\.gallery-album-custom-icon\\s*\\{[^}]*height:\\s*calc\\(100% - 8px\\);[^}]*max-height:\\s*calc\\(100% - 8px\\);[^}]*max-width:\\s*calc\\(100% - 8px\\);[^}]*transition:\\s*none;[^}]*width:\\s*calc\\(100% - 8px\\);/s',
+			$css
+		);
+		$this->assertMatchesRegularExpression(
+			'/\\.gallery-modern-album-visual\\.gallery-album-custom-icon-frame \\.gallery-album-custom-icon:hover,[^{]+\\.gallery-modern-album-visual\\.gallery-album-custom-icon-frame:focus \\.gallery-album-custom-icon\\s*\\{[^}]*box-shadow:\\s*none;[^}]*transform:\\s*none;/s',
+			$css
+		);
 	}
 
 	public function test_album_recent_random_and_search_grids_use_the_layout_selector_in_every_style(): void
