@@ -376,14 +376,12 @@ class search
 			{
 				trigger_error('NO_SEARCH_RESULTS');
 			}
-			$sql_array['SELECT'] = '*, a.album_name, a.album_status, a.album_user_id, a.album_id';
+			$sql_array['SELECT'] = 'i.*, a.album_name, a.album_status, a.album_user_id, a.album_id';
 			$sql_array['LEFT_JOIN'][] = [
 					'FROM'		=> [$this->albums_table => 'a'],
 					'ON'		=> 'a.album_id = i.image_album_id',
 			];
 			$sql_array['ORDER_BY'] = $sql_order;
-			$sql_array['GROUP_BY'] = $sort_by_sql[$sort_key] . ', i.image_id, a.album_id';
-
 			$sql = $this->db->sql_build_query('SELECT', $sql_array);
 			$result = $this->db->sql_query_limit($sql, $this->gallery_config->get('items_per_page'), $start);
 			$rowset = [];

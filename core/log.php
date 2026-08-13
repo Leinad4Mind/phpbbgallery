@@ -144,6 +144,7 @@ class log
 
 		$this->gallery_auth->load_user_permissions($this->user->data['user_id']);
 		$sql_array = [
+			'SELECT' => 'l.log_id, l.log_type, l.log_action, l.log_time, l.log_user, l.log_ip, l.album, l.image, l.description',
 			'FROM'	=> [
 				$this->log_table	=> 'l'
 			],
@@ -201,29 +202,24 @@ class log
 			{
 				case 'u':
 					$sql_array['ORDER_BY'] = 'l.log_user ' . $sort_direction;
-					$sql_array['GROUP_BY'] = 'l.log_user, l.log_id, i.image_id, i.image_album_id';
 				break;
 				case 'i':
 					$sql_array['ORDER_BY'] = 'l.log_ip ' . $sort_direction;
-					$sql_array['GROUP_BY'] = 'l.log_ip, l.log_id, i.image_id, i.image_album_id';
 				break;
 				case 'o':
 					$sql_array['ORDER_BY'] = 'l.description ' . $sort_direction;
-					$sql_array['GROUP_BY'] = 'l.description, l.log_id, i.image_id, i.image_album_id';
 				break;
 			}
 		}
 		else
 		{
 			$sql_array['ORDER_BY'] = 'l.log_time ' . $sort_direction;
-			$sql_array['GROUP_BY'] = 'l.log_time, l.log_id, i.image_id, i.image_album_id';
 		}
 		// So we need count - so define SELECT
 		$count_sql_array = $sql_array;
 
 		// Remove SELECT for correct count
 		$count_sql_array['SELECT'] = 'COUNT(DISTINCT l.log_id) as count';
-		unset($count_sql_array['GROUP_BY']);
 		unset($count_sql_array['ORDER_BY']);
 		$filtering_on_image_album = false;
 		foreach ($sql_where as $where_clause)
@@ -246,7 +242,6 @@ class log
 
 		$count = $row ? $row['count'] : 0;
 
-		$sql_array['SELECT'] = '*';
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
 		$result = $this->db->sql_query_limit($sql, $limit, ($page - 1) * $limit);
 

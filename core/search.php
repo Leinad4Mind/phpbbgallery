@@ -221,7 +221,6 @@ class search
 			],
 
 			'WHERE'			=> $sql_where,
-			'GROUP_BY'	=> 'i.image_id, a.album_name, a.album_status, a.album_user_id, a.album_id',
 			'ORDER_BY'		=> $sql_order,
 		];
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
@@ -396,7 +395,6 @@ class search
 				$this->comments_table => 'c',
 			],
 			'WHERE'	=> 'i.image_id = c.comment_image_id and ' . $this->db->sql_in_set('image_album_id', $this->gallery_auth->acl_album_ids('c_read'), false, true),
-			'GROUP_BY'	=> 'c.comment_id, c.comment_time, i.image_id',
 			'ORDER_BY'	=> 'comment_time DESC'
 		];
 		$sql_array['WHERE'] .= ' AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED . '
@@ -409,7 +407,7 @@ class search
 
 		$sql_array_count = $sql_array;
 		$sql_array_count['SELECT'] = 'COUNT(c.comment_id) as count';
-		unset($sql_array_count['GROUP_BY'], $sql_array_count['ORDER_BY']);
+		unset($sql_array_count['ORDER_BY']);
 		$sql = $this->db->sql_build_query('SELECT', $sql_array_count);
 		$result = $this->db->sql_query($sql);
 		$row = $this->db->sql_fetchrow($result);
@@ -417,7 +415,7 @@ class search
 
 		$count = ($row) ? (int) $row['count'] : 0;
 
-		$sql_array['SELECT'] = '*';
+		$sql_array['SELECT'] = 'i.*, c.*';
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
 		$result = $this->db->sql_query_limit($sql, $sql_limit, $start);
 		$rowset = [];
