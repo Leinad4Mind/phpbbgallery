@@ -842,7 +842,7 @@ final class template_syntax_test extends TestCase
 
 		$css = (string) file_get_contents($core_root . '/styles/all/theme/gallery.css');
 		$this->assertMatchesRegularExpression(
-			'/\.phpbbgallery-online-users img\s*\{[^}]*max-height:\s*20px;[^}]*max-width:\s*20px;[^}]*object-fit:\s*cover;/s',
+			'/\.phpbbgallery-online-users img\s*\{[^}]*height:\s*20px\s*!important;[^}]*max-height:\s*20px\s*!important;[^}]*max-width:\s*20px\s*!important;[^}]*object-fit:\s*cover;[^}]*width:\s*20px\s*!important;/s',
 			$css
 		);
 	}

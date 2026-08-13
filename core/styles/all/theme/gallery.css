@@ -2271,13 +2271,13 @@ input.autowidth-gallery {
 
 .phpbbgallery-online-users img
 {
-	height: auto;
+	height: 20px !important;
 	margin: 2px;
-	max-height: 20px;
-	max-width: 20px;
+	max-height: 20px !important;
+	max-width: 20px !important;
 	object-fit: cover;
 	vertical-align: middle;
-	width: auto;
+	width: 20px !important;
 }
 
 .phpbbgallery-new-images-badge
