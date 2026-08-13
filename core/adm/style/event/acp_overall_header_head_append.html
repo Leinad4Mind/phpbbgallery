@@ -8,7 +8,7 @@
 {% endif %}
 {% if S_GALLERY_ACP_ADDON_SETTINGS %}
 	{% INCLUDECSS '@phpbbgallery_core/gallery_acp_addons.css' %}
-	{% INCLUDEJS '@phpbbgallery_core/gallery_acp_addons.js' %}
+	{% INCLUDEJS '@phpbbgallery_core/gallery_acp_addons.js?v=4102' %}
 	<script>
 	(function () {
 		'use strict';
@@ -29,6 +29,7 @@
 				badge.style.setProperty('--gallery-addon-accent', setting.accent);
 				badge.setAttribute('data-gallery-setting-source', setting.id);
 				badge.setAttribute('data-gallery-setting-kind', setting.kind);
+				badge.setAttribute('data-gallery-setting-tier', setting.tier || 'free');
 				if (setting.kind === 'addon') {
 					badge.setAttribute('data-gallery-addon', setting.id);
 				}
@@ -54,6 +55,7 @@
 				row.style.setProperty('--gallery-addon-accent', setting.accent);
 				row.setAttribute('data-gallery-setting-source', setting.id);
 				row.setAttribute('data-gallery-setting-kind', setting.kind);
+				row.setAttribute('data-gallery-setting-tier', setting.tier || 'free');
 				if (setting.kind === 'addon') {
 					row.setAttribute('data-gallery-addon', setting.id);
 				}

@@ -6,7 +6,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Added
 
-- Added a distinct Updated Core ACP provenance marker for Gallery 3.4.0 settings whose choices or behaviour were expanded by the modern Core, using a refresh badge and separate accent while keeping entirely new Core settings and add-on settings independently identifiable.
+- Added a distinct Updated Core ACP provenance marker for Gallery 3.4.0 settings whose choices or behaviour were expanded by the modern Core, using a refresh badge and separate accent; provenance legends now group New Core and Updated Core first, followed by alphabetised free add-ons and then alphabetised premium add-ons.
 - Added a permission-filtered Gallery statistics page linked from the index, with lifetime and tracked annual summaries plus an explicit pre-tracking historical period and rankings for most-viewed images, most-downloaded originals, users with the most images and users with the most downloads; bounded yearly aggregates avoid individual access logs, and BBPoints Images imports recoverable historical counters without inventing unavailable yearly attribution.
 - Added per-parent Hide, Text and Icons presentation modes for eligible direct subalbums, applied consistently to Classic, Modern, Cards and Futuristic layouts without extra queries and retaining text links for subalbums without a configured icon.
 - Added an optional ACP-controlled real image-ID badge to every Gallery card layout; selecting it copies the installation's canonical `[image]` or `[galleryimage]` BBCode with accessible visual confirmation and an HTTP-compatible clipboard fallback.

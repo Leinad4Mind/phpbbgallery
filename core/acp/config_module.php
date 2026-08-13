@@ -52,6 +52,13 @@ class config_module
 
 	private const NEW_CORE_ACCENT = '#0076b1';
 	private const UPDATED_CORE_ACCENT = '#8a5a00';
+	private const PREMIUM_ADDON_IDS = [
+		'bbpointsimages',
+		'bbtagsimages',
+		'export',
+		'imagerevisions',
+		'remotestorage',
+	];
 
 	public string $u_action = '';
 	public string $tpl_name = '';
@@ -335,6 +342,7 @@ class config_module
 						'badge' => $this->language->lang('GALLERY_ADDON_SETTING', $addon_name),
 						'kind' => 'addon',
 						'icon' => 'fa-puzzle-piece',
+						'tier' => in_array($addon_id, self::PREMIUM_ADDON_IDS, true) ? 'premium' : 'free',
 					];
 				}
 			}
@@ -349,6 +357,7 @@ class config_module
 					'badge' => $new_core_name,
 					'kind' => 'core',
 					'icon' => 'fa-star',
+					'tier' => 'core',
 				];
 			}
 			else if (in_array($config_key, self::UPDATED_CORE_SETTINGS, true))
@@ -362,6 +371,7 @@ class config_module
 					'badge' => $updated_core_name,
 					'kind' => 'core',
 					'icon' => 'fa-refresh',
+					'tier' => 'core',
 				];
 			}
 

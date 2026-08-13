@@ -1,4 +1,4 @@
-<dl class="gallery-addon-setting" style="--gallery-addon-accent: #2e7d32" data-gallery-addon="feed">
+<dl class="gallery-addon-setting" style="--gallery-addon-accent: #2e7d32" data-gallery-addon="feed" data-gallery-setting-kind="addon" data-gallery-setting-tier="free">
 	<dt><label for="album_feed_yes">{{ lang('ALBUM_FEED') }}{{ lang('COLON') }}</label><span class="gallery-addon-badge" style="--gallery-addon-accent: #2e7d32"><i class="icon fa-puzzle-piece fa-fw" aria-hidden="true"></i>{{ lang('GALLERY_ADDON_SETTING', lang('FEED')) }}</span><br /><span>{{ lang('ALBUM_FEED_EXPLAIN') }}</span></dt>
 	<dd><label for="album_feed_yes"><input type="radio" class="radio" id="album_feed_yes" name="album_feed" value="1"{% if S_ALBUM_FEED %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
 		<label for="album_feed_no"><input type="radio" class="radio" id="album_feed_no" name="album_feed" value="0"{% if not S_ALBUM_FEED %} checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>

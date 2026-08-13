@@ -30,7 +30,10 @@ final class acp_addon_identity_test extends TestCase
 		$this->assertStringContainsString("'icon' => 'fa-star'", $module);
 		$this->assertStringContainsString("'icon' => 'fa-refresh'", $module);
 		$this->assertStringContainsString("'id' => 'updated-core'", $module);
+		$this->assertStringContainsString('PREMIUM_ADDON_IDS', $module);
+		$this->assertStringContainsString("'tier' => in_array(\$addon_id, self::PREMIUM_ADDON_IDS, true) ? 'premium' : 'free'", $module);
 		$this->assertStringContainsString('data-gallery-setting-source', $template);
+		$this->assertStringContainsString('data-gallery-setting-tier', $template);
 		$this->assertStringContainsString('setting.badge', $template);
 		$this->assertStringContainsString('GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN', $template);
 		$this->assertStringContainsString('GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN_SIMPLE', $template);
@@ -40,7 +43,7 @@ final class acp_addon_identity_test extends TestCase
 		$this->assertStringContainsString('html[data-gallery-addon-view="simple"] .gallery-addon-section .gallery-addon-badge', $stylesheet);
 		$this->assertStringNotContainsString('html[data-gallery-addon-view="simple"] .gallery-addon-legend__items', $stylesheet);
 		$this->assertStringContainsString('@media (prefers-contrast: more)', $stylesheet);
-		$this->assertStringContainsString("INCLUDEJS '@phpbbgallery_core/gallery_acp_addons.js'", $template);
+		$this->assertStringContainsString("INCLUDEJS '@phpbbgallery_core/gallery_acp_addons.js?v=4102'", $template);
 		$this->assertStringContainsString("'phpbbgallery.acp.addonSettingsView'", $javascript);
 		$this->assertStringContainsString("'phpbbgallery.acp.addonSettingsSources'", $javascript);
 		$this->assertStringContainsString("'phpbbgallery.acp.addonSettingsLegend'", $javascript);
@@ -67,8 +70,8 @@ final class acp_addon_identity_test extends TestCase
 		$this->assertStringContainsString('populateLegendSources(legend)', $javascript);
 		$this->assertStringContainsString("source === 'new-core' ? 0", $javascript);
 		$this->assertStringContainsString("source === 'updated-core' ? 1", $javascript);
-		$this->assertStringContainsString("kind === 'core' ? 2 : 3", $javascript);
-		$this->assertStringContainsString('left.priority - right.priority || left.order - right.order', $javascript);
+		$this->assertStringContainsString("kind === 'core' ? 2 : (tier === 'premium' ? 4 : 3)", $javascript);
+		$this->assertStringContainsString('left.label.localeCompare(right.label)', $javascript);
 		$this->assertStringContainsString('clone = source.badge.cloneNode(true)', $javascript);
 		$this->assertStringContainsString('items.appendChild(clone)', $javascript);
 		$this->assertStringContainsString("'data-view-simple-explain'", $javascript);
@@ -142,7 +145,28 @@ final class acp_addon_identity_test extends TestCase
 		$this->assertStringNotContainsString('data-gallery-source-toggle', $template);
 		$this->assertStringNotContainsString('gallery-addon-source-toggle', $template);
 		$this->assertStringContainsString('populateLegendSources(legend)', $javascript);
-		$this->assertStringContainsString("INCLUDEJS '@phpbbgallery_core/gallery_acp_addons.js'", $template);
+		$this->assertStringContainsString("INCLUDEJS '@phpbbgallery_core/gallery_acp_addons.js?v=4102'", $template);
+	}
+
+	public function test_album_editor_sources_identify_free_and_premium_addons(): void
+	{
+		$core_root = dirname(__DIR__, 2);
+		$tiers = [
+			'contest/adm/style/event/phpbbgallery_core_adm_album_type_options.html' => 'free',
+			'feed/adm/style/event/phpbbgallery_core_adm_album_upload_options.html' => 'free',
+			'imagerevisions/adm/style/event/phpbbgallery_core_adm_album_type_options.html' => 'premium',
+			'bbpointsimages/adm/style/event/phpbbgallery_core_adm_album_type_options.html' => 'premium',
+			'bbtagsimages/adm/style/event/phpbbgallery_core_adm_album_type_options.html' => 'premium',
+		];
+
+		foreach ($tiers as $path => $tier)
+		{
+			$template = (string) file_get_contents($core_root . '/' . $path);
+			$this->assertStringContainsString('data-gallery-setting-kind=', $template, $path);
+			$tier_attribute = strstr($template, 'data-gallery-setting-tier=');
+			$this->assertIsString($tier_attribute, $path);
+			$this->assertStringContainsString($tier, $tier_attribute, $path);
+		}
 	}
 
 	public function test_album_icon_picker_can_remove_the_configured_icon(): void

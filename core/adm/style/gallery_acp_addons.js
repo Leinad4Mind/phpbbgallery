@@ -104,11 +104,12 @@
 			items.textContent = '';
 		}
 
-		document.querySelectorAll('.gallery-addon-setting, .gallery-addon-section').forEach(function (row) {
+			document.querySelectorAll('.gallery-addon-setting, .gallery-addon-section').forEach(function (row) {
 			var source = row.getAttribute('data-gallery-setting-source') || row.getAttribute('data-gallery-addon');
 			var badge = row.querySelector('.gallery-addon-badge');
 			var kind;
 			var priority;
+			var tier;
 
 			if (!source || seen[source] || !badge) {
 				return;
@@ -116,20 +117,31 @@
 
 			seen[source] = true;
 			kind = row.getAttribute('data-gallery-setting-kind') || badge.getAttribute('data-gallery-setting-kind');
-			priority = source === 'new-core' ? 0 : (source === 'updated-core' ? 1 : (kind === 'core' ? 2 : 3));
+			tier = row.getAttribute('data-gallery-setting-tier') || badge.getAttribute('data-gallery-setting-tier');
+			priority = source === 'new-core' ? 0 : (source === 'updated-core' ? 1 : (kind === 'core' ? 2 : (tier === 'premium' ? 4 : 3)));
 			sources.push({
 				badge: badge,
+				label: badge.textContent.trim().toLocaleLowerCase(),
 				order: sources.length,
 				priority: priority
 			});
 		});
 
 		sources.sort(function (left, right) {
-			return left.priority - right.priority || left.order - right.order;
+			var priorityDifference = left.priority - right.priority;
+
+			if (priorityDifference) {
+				return priorityDifference;
+			}
+			if (left.priority >= 3) {
+				return left.label.localeCompare(right.label) || left.order - right.order;
+			}
+			return left.order - right.order;
 		}).forEach(function (source) {
 			var clone = source.badge.cloneNode(true);
 			clone.removeAttribute('data-gallery-setting-source');
 			clone.removeAttribute('data-gallery-setting-kind');
+			clone.removeAttribute('data-gallery-setting-tier');
 			clone.removeAttribute('data-gallery-addon');
 			items.appendChild(clone);
 		});
