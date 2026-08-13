@@ -334,8 +334,11 @@ final class event_main_listener_types_test extends TestCase
 			->with(['gallery'], 'phpbbgallery/core');
 		$template = $this->createMock(\phpbb\template\template::class);
 		$template->expects($this->once())
-			->method('assign_var')
-			->with('PHPBBGALLERY_FORUM_INDEX_IMAGES', true);
+			->method('assign_vars')
+			->with([
+				'PHPBBGALLERY_FORUM_INDEX_IMAGES' => true,
+				'GALLERY_INDEX_ALBUM_LAYOUT' => '',
+			]);
 		$listener = $this->listener($this->createStub(\phpbb\db\driver\driver_interface::class));
 		$this->set_property($listener, 'gallery_search', $gallery_search);
 		$this->set_property($listener, 'gallery_config', $config);
