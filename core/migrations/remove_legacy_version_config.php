@@ -11,18 +11,18 @@ namespace phpbbgallery\core\migrations;
 
 use phpbb\db\migration\migration;
 
-/** Mark the completed 4.1.0 migration chain. */
-class release_4_1_0 extends migration
+/** Remove the redundant Gallery version configuration after the 4.1.0 chain. */
+class remove_legacy_version_config extends migration
 {
 	public static function depends_on(): array
 	{
-		return ['\phpbbgallery\core\migrations\statistics_permission'];
+		return ['\phpbbgallery\core\migrations\release_4_1_0'];
 	}
 
 	public function update_data(): array
 	{
 		return [
-			['config.update', ['phpbb_gallery_version', '4.1.0']],
+			['config.remove', ['phpbb_gallery_version']],
 		];
 	}
 }

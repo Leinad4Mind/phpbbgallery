@@ -498,17 +498,17 @@ class gallery_lifecycle extends \phpbb_functional_test_case
 	}
 
 	/**
-	 * Re-run the terminal 4.1.0 migration from a simulated 4.0.0 installation.
+	 * Run the post-4.1 cleanup from a simulated preliminary 4.1.0 installation.
 	 */
 	private function run_update(): void
 	{
-		$migration = '\\phpbbgallery\\core\\migrations\\release_4_1_0';
+		$migration = '\\phpbbgallery\\core\\migrations\\remove_legacy_version_config';
 		$this->disable_ext('phpbbgallery/core');
 
 		$db = $this->get_db();
-		set_config('phpbb_gallery_version', '4.0.0');
+		set_config('phpbb_gallery_version', '4.1.0');
 		$db->sql_query("DELETE FROM phpbb_migrations WHERE migration_name = '" . $db->sql_escape($migration) . "'");
-		$db->sql_query('UPDATE ' . CONFIG_TABLE . " SET config_value = '4.0.0' WHERE config_name = 'phpbb_gallery_version'");
+		$db->sql_query('UPDATE ' . CONFIG_TABLE . " SET config_value = '4.1.0' WHERE config_name = 'phpbb_gallery_version'");
 
 		$this->install_ext('phpbbgallery/core');
 		$this->assertFalse($this->config_exists('phpbb_gallery_version'));

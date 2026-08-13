@@ -20,6 +20,7 @@ use phpbbgallery\core\migrations\release_3_3_0;
 use phpbbgallery\core\migrations\release_3_4_0;
 use phpbbgallery\core\migrations\release_4_0_0;
 use phpbbgallery\core\migrations\release_4_1_0;
+use phpbbgallery\core\migrations\remove_legacy_version_config;
 use phpbbgallery\core\migrations\resumable_uploads;
 use phpbbgallery\core\migrations\performance_indexes;
 use phpbbgallery\core\migrations\protect_personal_album_profile_field;
@@ -110,6 +111,7 @@ class migration_integrity_test extends TestCase
 		statistics_dashboard::class,
 		statistics_permission::class,
 		release_4_1_0::class,
+		remove_legacy_version_config::class,
 	];
 
 	private array $temp_directories = [];
@@ -307,13 +309,25 @@ class migration_integrity_test extends TestCase
 		], $migration->update_data());
 	}
 
-	public function test_release_4_1_0_closes_the_post_4_0_chain_and_removes_the_legacy_version_config(): void
+	public function test_release_4_1_0_closes_the_post_4_0_feature_chain_and_updates_the_version(): void
 	{
 		$migration = (new \ReflectionClass(release_4_1_0::class))->newInstanceWithoutConstructor();
 
 		$this->assertSame([
 			'\\phpbbgallery\\core\\migrations\\statistics_permission',
 		], release_4_1_0::depends_on());
+		$this->assertSame([
+			['config.update', ['phpbb_gallery_version', '4.1.0']],
+		], $migration->update_data());
+	}
+
+	public function test_post_4_1_cleanup_removes_the_legacy_version_config(): void
+	{
+		$migration = (new \ReflectionClass(remove_legacy_version_config::class))->newInstanceWithoutConstructor();
+
+		$this->assertSame([
+			'\phpbbgallery\core\migrations\release_4_1_0',
+		], remove_legacy_version_config::depends_on());
 		$this->assertSame([
 			['config.remove', ['phpbb_gallery_version']],
 		], $migration->update_data());
@@ -970,14 +984,14 @@ class migration_integrity_test extends TestCase
 		$this->assertSame([], $remaining);
 	}
 
-	public function test_release_4_1_0_is_the_terminal_core_migration(): void
+	public function test_legacy_version_cleanup_is_the_terminal_core_migration(): void
 	{
 		$graph = $this->migration_graph();
 		foreach (self::MIGRATIONS as $migration)
 		{
 			$this->assertTrue(
-				$this->depends_on(release_4_1_0::class, $migration, $graph),
-				$migration . ' is outside the 4.1.0 terminal migration chain.'
+				$this->depends_on(remove_legacy_version_config::class, $migration, $graph),
+				$migration . ' is outside the terminal migration chain.'
 			);
 		}
 	}
@@ -1303,6 +1317,7 @@ class migration_integrity_test extends TestCase
 			'statistics_dashboard.php',
 			'statistics_permission.php',
 			'release_4_1_0.php',
+			'remove_legacy_version_config.php',
 		] as $migration)
 		{
 			require_once dirname(__DIR__) . '/migrations/' . $migration;
