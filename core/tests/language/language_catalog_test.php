@@ -177,6 +177,20 @@ class language_catalog_test extends TestCase
 		}
 	}
 
+	public function test_album_description_help_describes_the_supported_processors(): void
+	{
+		$language_root = $this->extension_root . '/core/language';
+		foreach ($this->language_directories($language_root) as $directory)
+		{
+			$locale = basename($directory);
+			$language = $this->load_language($directory . '/gallery_acp.php');
+
+			$this->assertArrayHasKey('ALBUM_DESC_EXPLAIN', $language, $locale);
+			$this->assertStringContainsString('BBCode', $language['ALBUM_DESC_EXPLAIN'], $locale);
+			$this->assertStringNotContainsString('HTML', $language['ALBUM_DESC_EXPLAIN'], $locale);
+		}
+	}
+
 	public function test_image_permissions_distinguish_previews_from_original_sources(): void
 	{
 		$language_root = $this->extension_root . '/core/language';
