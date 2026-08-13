@@ -88,6 +88,10 @@ class main_module
 		// init rating
 		$phpbb_gallery_rating = $phpbb_container->get('phpbbgallery.core.rating');
 		$phpbb_dispatcher = $phpbb_container->get('dispatcher');
+		$gallery_version = (string) $phpbb_container
+			->get('ext.manager')
+			->create_extension_metadata_manager('phpbbgallery/core')
+			->get_metadata('version');
 
 		$action = $request->variable('action', '');
 		$id = $request->variable('i', '');
@@ -620,7 +624,7 @@ class main_module
 			'GUPLOAD_DIR_SIZE'	=> get_formatted_filesize($dir_sizes['stat']),
 			'MEDIUM_DIR_SIZE'		=> get_formatted_filesize($dir_sizes['stat_medium']),
 			'CACHE_DIR_SIZE'		=> get_formatted_filesize($dir_sizes['stat_cache']),
-			'GALLERY_VERSION'		=> $config['phpbb_gallery_version'],
+			'GALLERY_VERSION'		=> $gallery_version,
 			'U_FIND_USERNAME'		=> $gallery_url->append_sid('phpbb', 'memberlist', 'mode=searchuser&amp;form=action_create_pega_form&amp;field=username&amp;select_single=true'),
 			'S_SELECT_ALBUM'		=> $phpbb_ext_gallery_core_album->get_albumbox(false, 'reset_album_id', false, false, false, (int) \phpbbgallery\core\block::PUBLIC_ALBUM, (int) \phpbbgallery\core\block::TYPE_UPLOAD),
 

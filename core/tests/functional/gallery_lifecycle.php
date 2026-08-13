@@ -121,7 +121,7 @@ class gallery_lifecycle extends \phpbb_functional_test_case
 		$this->assertSame(count(self::COMPONENTS), (int) $db->sql_fetchfield('total'));
 		$db->sql_freeresult($result);
 
-		$this->assertSame('4.1.0', $this->config_value('phpbb_gallery_version'));
+		$this->assertFalse($this->config_exists('phpbb_gallery_version'));
 		$this->assertSame('45', $this->config_value('phpbb_gallery_forum_index_display'));
 		$this->assertSame('0', $this->config_value('phpbb_gallery_forum_index_mode'));
 		$this->assertSame('0', $this->config_value('phpbb_gallery_forum_index_personal'));
@@ -506,11 +506,12 @@ class gallery_lifecycle extends \phpbb_functional_test_case
 		$this->disable_ext('phpbbgallery/core');
 
 		$db = $this->get_db();
+		set_config('phpbb_gallery_version', '4.0.0');
 		$db->sql_query("DELETE FROM phpbb_migrations WHERE migration_name = '" . $db->sql_escape($migration) . "'");
 		$db->sql_query('UPDATE ' . CONFIG_TABLE . " SET config_value = '4.0.0' WHERE config_name = 'phpbb_gallery_version'");
 
 		$this->install_ext('phpbbgallery/core');
-		$this->assertSame('4.1.0', $this->config_value('phpbb_gallery_version'));
+		$this->assertFalse($this->config_exists('phpbb_gallery_version'));
 
 		$sql = "SELECT COUNT(migration_name) AS total
 			FROM phpbb_migrations
@@ -595,6 +596,11 @@ class gallery_lifecycle extends \phpbb_functional_test_case
 		$db->sql_freeresult($result);
 
 		return $value;
+	}
+
+	private function config_exists(string $name): bool
+	{
+		return $this->config_value($name) !== '';
 	}
 
 	/**

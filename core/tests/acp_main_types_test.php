@@ -48,6 +48,17 @@ final class acp_main_types_test extends TestCase
 		$this->assertSame('void', (string) (new \ReflectionMethod(main_module::class, 'overview'))->getReturnType());
 	}
 
+	public function test_overview_reads_the_gallery_version_from_extension_metadata(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/acp/main_module.php');
+		$quote = chr(39);
+
+		$this->assertStringContainsString('create_extension_metadata_manager(' . $quote . 'phpbbgallery/core' . $quote . ')', $source);
+		$this->assertStringContainsString('get_metadata(' . $quote . 'version' . $quote . ')', $source);
+		$this->assertStringContainsString(chr(36) . 'gallery_version', $source);
+		$this->assertStringNotContainsString(chr(36) . 'config[' . $quote . 'phpbb_gallery_version' . $quote . ']', $source);
+	}
+
 	public function test_cache_purge_uses_the_active_storage_file_tool(): void
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/acp/main_module.php');

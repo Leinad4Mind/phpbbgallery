@@ -307,7 +307,7 @@ class migration_integrity_test extends TestCase
 		], $migration->update_data());
 	}
 
-	public function test_release_4_1_0_closes_the_post_4_0_chain_and_updates_the_version(): void
+	public function test_release_4_1_0_closes_the_post_4_0_chain_and_removes_the_legacy_version_config(): void
 	{
 		$migration = (new \ReflectionClass(release_4_1_0::class))->newInstanceWithoutConstructor();
 
@@ -315,7 +315,7 @@ class migration_integrity_test extends TestCase
 			'\\phpbbgallery\\core\\migrations\\statistics_permission',
 		], release_4_1_0::depends_on());
 		$this->assertSame([
-			['config.update', ['phpbb_gallery_version', '4.1.0']],
+			['config.remove', ['phpbb_gallery_version']],
 		], $migration->update_data());
 	}
 

@@ -22,7 +22,7 @@ class release_4_1_0 extends migration
 	public function update_data(): array
 	{
 		return [
-			['config.update', ['phpbb_gallery_version', '4.1.0']],
+			['config.remove', ['phpbb_gallery_version']],
 		];
 	}
 }
