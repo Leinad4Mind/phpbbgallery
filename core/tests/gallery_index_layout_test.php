@@ -261,12 +261,20 @@ final class gallery_index_layout_test extends TestCase
 			$this->assertStringContainsString('gallery-album-custom-icon', $template, $template_path);
 			$this->assertStringNotContainsString('T_IMAGES_PATH }}{{ albumrow.ALBUM_IMAGE', $template, $template_path);
 		}
+		foreach (array_slice($templates, 0, 3) as $template_path)
+		{
+			$this->assertStringContainsString('gallery-classic-album-icon-frame', (string) file_get_contents($template_path), $template_path);
+		}
 
 		$css = (string) file_get_contents($core_root . '/styles/all/theme/gallery.css');
 		$this->assertStringContainsString('height: 30px;', $css);
 		$this->assertStringContainsString('width: 30px;', $css);
 		$this->assertStringContainsString('transform: scale(3);', $css);
 		$this->assertStringContainsString('.gallery-album-custom-icon-frame:focus .gallery-album-custom-icon', $css);
+		$this->assertMatchesRegularExpression(
+			'/\\.gallery-classic-album-icon-frame \\.gallery-album-custom-icon:hover,[^{]+\\.gallery-classic-album-icon-frame:focus \\.gallery-album-custom-icon\\s*\\{[^}]*box-shadow:\\s*none;[^}]*transform:\\s*none;/s',
+			$css
+		);
 	}
 
 	public function test_album_recent_random_and_search_grids_use_the_layout_selector_in_every_style(): void

@@ -3001,6 +3001,18 @@ fieldset dl.gallery-autocomplete-row-open
 	z-index: 10;
 }
 
+.gallery-classic-album-icon-frame .gallery-album-custom-icon
+{
+	transition: none;
+}
+
+.gallery-classic-album-icon-frame .gallery-album-custom-icon:hover,
+.gallery-classic-album-icon-frame:focus .gallery-album-custom-icon
+{
+	box-shadow: none;
+	transform: none;
+}
+
 .gallery-futuristic-album-visual.gallery-album-custom-icon-frame .gallery-album-custom-icon
 {
 	background: transparent;

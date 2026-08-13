@@ -29,7 +29,7 @@
 		<li class="row{% if albumrow.S_PERSONAL_ALBUM %} gallery-personal-album{% endif %}">{{ albumrow.ALBUM_FOLDER_IMG_SRC }}
 			<dl class="row-item{% if albumrow.ALBUM_IMAGE_SRC %} gallery-classic-album-custom-visual{% else %} {{ albumrow.ALBUM_IMG_STYLE }}{% endif %}">
 				<dt title="{{ albumrow.ALBUM_FOLDER_IMG_ALT }}">
-					{% if albumrow.ALBUM_IMAGE_SRC %}<a class="forum-image gallery-album-custom-icon-frame" href="{{ albumrow.U_VIEWALBUM }}" aria-label="{{ lang('VIEW_ALBUM') }}{{ lang('COLON') }} {{ albumrow.ALBUM_NAME }}"><img class="gallery-album-custom-icon" src="{{ albumrow.ALBUM_IMAGE_SRC }}" alt="" /></a>{% endif %}
+					{% if albumrow.ALBUM_IMAGE_SRC %}<a class="forum-image gallery-album-custom-icon-frame gallery-classic-album-icon-frame" href="{{ albumrow.U_VIEWALBUM }}" aria-label="{{ lang('VIEW_ALBUM') }}{{ lang('COLON') }} {{ albumrow.ALBUM_NAME }}"><img class="gallery-album-custom-icon" src="{{ albumrow.ALBUM_IMAGE_SRC }}" alt="" /></a>{% endif %}
 					<div class="list-inner">
 						<a href="{{ albumrow.U_VIEWALBUM }}" class="forumtitle"{% if S_PERSONAL_GALLERY and albumrow.ALBUM_COLOUR %} style="color: {{ albumrow.ALBUM_COLOUR }};"{% endif %}>{{ albumrow.ALBUM_NAME }}</a><br />
 						{{ albumrow.ALBUM_DESC }}
