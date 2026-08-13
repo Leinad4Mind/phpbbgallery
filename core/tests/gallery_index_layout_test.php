@@ -79,6 +79,10 @@ final class gallery_index_layout_test extends TestCase
 			'/\\.gallery-classic-thumbnail img\\s*\\{[^}]*max-width:\\s*100%;[^}]*max-height:\\s*calc\\(var\\(--gallery-classic-thumbnail-size\\) - 16px\\);[^}]*object-fit:\\s*contain;/s',
 			$css
 		);
+		$this->assertMatchesRegularExpression(
+			'/\\.gallery-classic-image\\s*\\{(?:(?!border:)[^}])*border-radius:\\s*3px;/s',
+			$css
+		);
 	}
 
 	public function test_classic_titles_are_centred_consistently(): void

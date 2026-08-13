@@ -1678,14 +1678,13 @@ input.autowidth-gallery {
 	display: flex;
 	flex-direction: column;
 	overflow: hidden;
-	border: 1px solid rgba(127, 127, 127, .28);
 	border-radius: 3px;
 	background: rgba(255, 255, 255, .45);
 }
 
 .gallery-classic-image--unapproved
 {
-	border-color: #daa520;
+	box-shadow: inset 0 0 0 1px #daa520;
 }
 
 .gallery-classic-image--locked
@@ -1695,7 +1694,7 @@ input.autowidth-gallery {
 
 .gallery-classic-image--reported
 {
-	border-color: #d9534f;
+	box-shadow: inset 0 0 0 1px #d9534f;
 }
 
 .gallery-classic-image-title
