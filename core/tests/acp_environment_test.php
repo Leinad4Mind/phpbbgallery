@@ -109,18 +109,18 @@ final class acp_environment_test extends TestCase
 				'phpbbgallery/exif',
 				'phpbbgallery/favorite',
 				'phpbbgallery/feed',
-				'phpbbgallery/imagefields',
 				'phpbbgallery/tiff',
 				'phpbbgallery/bbpointsimages',
 				'phpbbgallery/bbtagsimages',
 				'phpbbgallery/export',
+				'phpbbgallery/imagefields',
 				'phpbbgallery/imagerevisions',
 				'phpbbgallery/remotestorage',
 			],
 			array_column($checks, 'extension')
 		);
 		$this->assertSame(
-			['free', 'free', 'free', 'free', 'free', 'free', 'free', 'free', 'premium', 'premium', 'premium', 'premium', 'premium'],
+			['free', 'free', 'free', 'free', 'free', 'free', 'free', 'premium', 'premium', 'premium', 'premium', 'premium', 'premium'],
 			array_column($checks, 'tier')
 		);
 		$this->assertSame(
@@ -128,12 +128,12 @@ final class acp_environment_test extends TestCase
 			array_column($checks, 'version')
 		);
 		$this->assertSame('phpBB Gallery Add-on: ACP Cleanup', $checks[0]['name']);
-		$this->assertSame('phpBB Gallery Add-on: Image Fields', $checks[6]['name']);
-		$this->assertSame('phpBB Gallery Add-on: TIFF', $checks[7]['name']);
+		$this->assertSame('phpBB Gallery Add-on: TIFF', $checks[6]['name']);
+		$this->assertSame('phpBB Gallery Add-on: Image Fields', $checks[10]['name']);
 		$this->assertSame('phpBB Gallery Add-on: Image Revisions', $checks[11]['name']);
 		$this->assertSame('phpBB Gallery Add-on: Remote Storage', $checks[12]['name']);
 		$this->assertSame('GALLERY_ADDON_CONTEST_EXPLAIN', $checks[2]['description']);
-		$this->assertSame('GALLERY_ADDON_IMAGE_FIELDS_EXPLAIN', $checks[6]['description']);
+		$this->assertSame('GALLERY_ADDON_IMAGE_FIELDS_EXPLAIN', $checks[10]['description']);
 		$this->assertSame('GALLERY_ADDON_IMAGE_REVISIONS_EXPLAIN', $checks[11]['description']);
 		$this->assertSame('GALLERY_ADDON_REMOTE_STORAGE_EXPLAIN', $checks[12]['description']);
 	}
