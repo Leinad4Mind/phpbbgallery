@@ -119,9 +119,10 @@ class main_module
 			$images = $state['images'];
 			$this->import_errors = $state['errors'];
 
-			$validation_error = '';
-			$vars = ['album_id', 'user_data', 'validation_error'];
-			extract($phpbb_dispatcher->trigger_event('phpbbgallery.acpimport.validate_import', compact($vars)));
+			$validation = $this->validate_import((int) $album_id, $user_data);
+			$album_id = $validation['album_id'];
+			$user_data = $validation['user_data'];
+			$validation_error = $validation['validation_error'];
 			if ($validation_error !== '')
 			{
 				trigger_error($validation_error . adm_back_link($this->u_action), E_USER_WARNING);
@@ -499,21 +500,12 @@ class main_module
 				return;
 			}
 
-			$validation_error = '';
-			/**
-			 * Allow add-ons to reject an import before its resumable state is
-			 * created and before any source file is copied.
-			 *
-			 * @event phpbbgallery.acpimport.validate_import
-			 * @var int    album_id        Validated destination album
-			 * @var array  user_data       Validated final image author
-			 * @var string validation_error Empty string or a user-facing error
-			 * @since 1.4.0
-			 */
 			$album_id = (int) $album_row['album_id'];
 			$user_data = $user_row;
-			$vars = ['album_id', 'user_data', 'validation_error'];
-			extract($phpbb_dispatcher->trigger_event('phpbbgallery.acpimport.validate_import', compact($vars)));
+			$validation = $this->validate_import($album_id, $user_data);
+			$album_id = $validation['album_id'];
+			$user_data = $validation['user_data'];
+			$validation_error = $validation['validation_error'];
 			if ($validation_error !== '')
 			{
 				trigger_error($validation_error . adm_back_link($this->u_action), E_USER_WARNING);
@@ -642,6 +634,31 @@ class main_module
 
 		meta_refresh(1, $forward_url);
 		trigger_error($user->lang('IMPORT_ZIP_EXTRACTED', $extracted, utf8_htmlspecialchars($name)));
+	}
+
+	/**
+	 * Let add-ons validate the final import destination and author.
+	 *
+	 * @param int   $album_id Validated destination album
+	 * @param array $user_data Validated final image author
+	 * @return array{album_id:int, user_data:array, validation_error:string}
+	 */
+	private function validate_import(int $album_id, array $user_data): array
+	{
+		global $phpbb_dispatcher;
+
+		$validation_error = '';
+		/**
+		 * Allow add-ons to reject an import before any source file is processed.
+		 *
+		 * @event phpbbgallery.acpimport.validate_import
+		 * @var int    album_id        Validated destination album
+		 * @var array  user_data       Validated final image author
+		 * @var string validation_error Empty string or a user-facing error
+		 * @since 1.4.0
+		 */
+		$vars = ['album_id', 'user_data', 'validation_error'];
+		return $phpbb_dispatcher->trigger_event('phpbbgallery.acpimport.validate_import', compact($vars));
 	}
 
 	/**

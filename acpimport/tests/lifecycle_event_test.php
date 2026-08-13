@@ -60,7 +60,7 @@ final class lifecycle_event_test extends TestCase
 	public function test_import_can_be_rejected_before_resumable_state_or_file_work(): void
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/acp/main_module.php');
-		$event = strpos($source, 'phpbbgallery.acpimport.validate_import');
+		$event = strpos($source, '$this->validate_import(');
 		$schema = strpos($source, '$this->import_storage->create_schema_id()', $event ?: 0);
 		$state = strpos($source, '$this->create_import_schema(', $schema ?: 0);
 
@@ -69,7 +69,13 @@ final class lifecycle_event_test extends TestCase
 		$this->assertIsInt($state);
 		$this->assertLessThan($schema, $event);
 		$this->assertLessThan($state, $schema);
+		$this->assertSame(2, substr_count($source, '$this->validate_import('));
+		$this->assertSame(1, substr_count($source, '@event phpbbgallery.acpimport.validate_import'));
+		$this->assertSame(1, substr_count($source, '@var int    album_id'));
+		$this->assertSame(1, substr_count($source, '@var array  user_data'));
+		$this->assertSame(1, substr_count($source, '@var string validation_error'));
+		$this->assertSame(1, substr_count($source, '@since 1.4.0'));
 		$this->assertStringContainsString("if (\$validation_error !== '')", $source);
-		$this->assertSame(2, substr_count($source, "trigger_event('phpbbgallery.acpimport.validate_import'"));
+		$this->assertSame(1, substr_count($source, "trigger_event('phpbbgallery.acpimport.validate_import'"));
 	}
 }
