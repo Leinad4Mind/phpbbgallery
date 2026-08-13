@@ -39,16 +39,19 @@
 				</dt>
 				<dd class="posts">{{ albumrow.IMAGES }} {% if albumrow.UNAPPROVED_IMAGES %} + <span class="reported-images-number">{{ albumrow.UNAPPROVED_IMAGES }}</span>{% endif %} <dfn>{{ lang('IMAGES') }}</dfn></dd>
 				<dd class="lastpost g_lastimage" style="padding-left: 5px;">
-					<span style="float: left; margin-right: 15px;">
-						{% if albumrow.LAST_IMAGE_TIME %}
-						{% if albumrow.UC_FAKE_THUMBNAIL %}
-						<dfn>{{ lang('LAST_IMAGE') }}</dfn> {{ albumrow.UC_IMAGE_NAME }}<br />
-						<img src="{{ albumrow.UC_THUMBNAIL }}" alt="{{ albumrow.UC_IMAGE_NAME }}" title="{{ albumrow.UC_IMAGE_NAME }}" style="max-width: 50px; max-height: 50px;" />
-					</span>{% endif %}
-					<span style="width: 150px;">
-						{{ lang('POST_BY_AUTHOR') }} {{ albumrow.LAST_USER_FULL }} {{ albumrow.UC_LASTIMAGE_ICON }}<br />
-						{{ albumrow.LAST_IMAGE_TIME }}{% else %}{{ lang('NO_IMAGES') }}{% endif %}
-					</span>
+					{% if albumrow.LAST_IMAGE_TIME %}
+					<div class="gallery-classic-last-image">
+						{% if albumrow.UC_LAST_IMAGE_THUMBNAIL %}
+						<a class="gallery-classic-last-image-thumbnail" href="{{ albumrow.U_LAST_IMAGE }}"><img src="{{ albumrow.UC_LAST_IMAGE_THUMBNAIL }}" alt="{{ albumrow.UC_IMAGE_NAME }}" /></a>
+						{% endif %}
+						<span class="gallery-classic-last-image-details">
+							{{ lang('POST_BY_AUTHOR') }} {{ albumrow.LAST_USER_FULL }} {{ albumrow.UC_LASTIMAGE_ICON }}<br />
+							{{ albumrow.LAST_IMAGE_TIME }}
+						</span>
+					</div>
+					{% else %}
+						{{ lang('NO_IMAGES') }}
+					{% endif %}
 				</dd>
 			</dl>
 		</li>

@@ -91,6 +91,33 @@ final class gallery_index_layout_test extends TestCase
 		);
 	}
 
+	public function test_prosilver_classic_has_bordered_cards_borderless_ids_and_last_image_thumbnails(): void
+	{
+		$core_root = dirname(__DIR__);
+		$classic = (string) file_get_contents($core_root . '/styles/all/template/gallery/imageblock_classic.html');
+		$selector = (string) file_get_contents($core_root . '/styles/prosilver/template/gallery/imageblock_layout.html');
+		$search = (string) file_get_contents($core_root . '/styles/prosilver/template/gallery/search_results.html');
+		$albums = (string) file_get_contents($core_root . '/styles/prosilver/template/gallery/albumlist_body.html');
+		$css = (string) file_get_contents($core_root . '/styles/all/theme/gallery.css');
+
+		$this->assertStringContainsString("GALLERY_CLASSIC_VARIANT|default('default')", $classic);
+		$this->assertStringContainsString("GALLERY_CLASSIC_VARIANT: 'prosilver'", $selector);
+		$this->assertStringContainsString("GALLERY_CLASSIC_VARIANT: 'prosilver'", $search);
+		$this->assertStringContainsString('border: 1px solid #cadceb;', $css);
+		$prosilver_copy_style = strstr($css, '.gallery-classic-image-block--prosilver .gallery-image-bbcode-copy,');
+		$this->assertIsString($prosilver_copy_style);
+		$prosilver_copy_style = strstr($prosilver_copy_style, '}', true);
+		$this->assertIsString($prosilver_copy_style);
+		$this->assertStringContainsString('border: 0;', $prosilver_copy_style);
+
+		$this->assertStringContainsString('gallery-classic-last-image', $albums);
+		$this->assertStringContainsString('albumrow.UC_LAST_IMAGE_THUMBNAIL', $albums);
+		$this->assertStringContainsString('albumrow.U_LAST_IMAGE', $albums);
+		$this->assertStringNotContainsString('albumrow.UC_FAKE_THUMBNAIL', $albums);
+		$this->assertLessThan(strpos($albums, 'gallery-classic-last-image-details'), strpos($albums, 'gallery-classic-last-image-thumbnail'));
+		$this->assertStringContainsString('display: flex;', strstr($css, '.gallery-classic-last-image'));
+	}
+
 	public function test_classic_titles_are_centred_consistently(): void
 	{
 		$core_root = dirname(__DIR__);

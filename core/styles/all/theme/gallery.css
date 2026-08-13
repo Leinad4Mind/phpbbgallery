@@ -1698,6 +1698,55 @@ input.autowidth-gallery {
 	background: rgba(255, 255, 255, .45);
 }
 
+.gallery-classic-image-block--prosilver .gallery-classic-image
+{
+	background: #fff;
+	border: 1px solid #cadceb;
+	box-sizing: border-box;
+}
+
+.gallery-classic-image-block--prosilver .gallery-image-bbcode-copy,
+.gallery-classic-image-block--prosilver .gallery-image-bbcode-copy:hover,
+.gallery-classic-image-block--prosilver .gallery-image-bbcode-copy:focus,
+.gallery-classic-image-block--prosilver .gallery-image-bbcode-copy.is-copied
+{
+	background: transparent;
+	border: 0;
+	border-radius: 0;
+}
+
+.gallery-classic-last-image
+{
+	align-items: center;
+	display: flex;
+	gap: 10px;
+	min-width: 0;
+}
+
+.gallery-classic-last-image-thumbnail
+{
+	display: flex;
+	flex: 0 0 50px;
+	height: 50px;
+	justify-content: center;
+}
+
+.gallery-classic-last-image-thumbnail img
+{
+	display: block;
+	height: auto;
+	max-height: 50px;
+	max-width: 50px;
+	object-fit: contain;
+	width: auto;
+}
+
+.gallery-classic-last-image-details
+{
+	min-width: 0;
+	overflow-wrap: anywhere;
+}
+
 .gallery-classic-image--unapproved
 {
 	box-shadow: inset 0 0 0 1px #daa520;

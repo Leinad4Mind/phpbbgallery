@@ -30,7 +30,7 @@
 {% endif %}
 
 {% if (not S_IN_GALLERY_POPUP and S_DISPLAY_SEARCHBOX) or (S_IS_POSTABLE and (U_UPLOAD_IMAGE or U_WATCH_TOGGLE or PAGINATION or TOTAL_IMAGES or (U_SLIDE_SHOW and not S_IS_BOT))) %}
-	<div class="action-bar bar-top gallery-album-top-actions" {% if S_HAS_SUBALBUM %}style="margin-top: 2em;"{% endif %}><br />
+	<div class="action-bar bar-top gallery-album-top-actions" {% if S_HAS_SUBALBUM %}style="margin-top: 2em;"{% endif %}>
 
 	{% if not S_IN_GALLERY_POPUP and U_UPLOAD_IMAGE and not S_IS_BOT %}
 		<a href="{% if S_IS_LOCKED %} {% else %}{{ U_UPLOAD_IMAGE }}{% endif %}" title="{% if S_IS_LOCKED %}{{ lang('ALBUM_LOCKED') }}{% else %}{{ lang('UPLOAD_IMAGE') }}{% endif %}" class="button">{% if S_IS_LOCKED %}<i class="icon fa-lock fa-fw" aria-hidden="true"></i> <span>{{ lang('ALBUM_LOCKED') }}</span>{% else %}<i class="icon fa-upload fa-fw" aria-hidden="true"></i> <span>{{ lang('UPLOAD_IMAGE') }}</span>{% endif %}</a>
