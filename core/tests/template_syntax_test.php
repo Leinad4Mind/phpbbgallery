@@ -815,7 +815,8 @@ final class template_syntax_test extends TestCase
 		foreach ([$prosilver_event, $shared_event] as $template)
 		{
 			$this->assertStringContainsString('{% if PHPBBGALLERY_FORUM_INDEX_IMAGES %}', $template);
-			$this->assertStringContainsString("{% include 'gallery/imageblock_polaroid.html' %}", $template);
+			$this->assertStringContainsString("{% include 'gallery/imageblock_layout.html' %}", $template);
+			$this->assertStringNotContainsString("{% include 'gallery/imageblock_polaroid.html' %}", $template);
 		}
 
 		$prosilver_index = (string) file_get_contents($board_root . '/styles/prosilver/template/index_body.html');

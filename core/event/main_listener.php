@@ -220,7 +220,10 @@ class main_listener implements EventSubscriberInterface
 
 		$include_personal = (bool) $this->gallery_config->get('forum_index_personal');
 		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
-		$this->template->assign_var('PHPBBGALLERY_FORUM_INDEX_IMAGES', true);
+		$this->template->assign_vars([
+			'PHPBBGALLERY_FORUM_INDEX_IMAGES' => true,
+			'GALLERY_INDEX_ALBUM_LAYOUT' => $this->gallery_config->get_index_album_layout(),
+		]);
 
 		if (($mode & \phpbbgallery\core\block::MODE_RECENT) !== 0)
 		{

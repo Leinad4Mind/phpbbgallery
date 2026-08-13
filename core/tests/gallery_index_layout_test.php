@@ -326,6 +326,26 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertStringNotContainsString("get('index_album_layout')", $controller);
 	}
 
+	public function test_forum_index_image_blocks_use_the_selected_normalized_layout(): void
+	{
+		$core_root = dirname(__DIR__);
+		$listener = (string) file_get_contents($core_root . '/event/main_listener.php');
+
+		$this->assertStringContainsString(
+			"'GALLERY_INDEX_ALBUM_LAYOUT' => \$this->gallery_config->get_index_album_layout()",
+			$listener
+		);
+		foreach ([
+			'all/template/event/index_body_forumlist_body_before.html',
+			'prosilver/template/event/index_body_markforums_before.html',
+		] as $template_path)
+		{
+			$template = (string) file_get_contents($core_root . '/styles/' . $template_path);
+			$this->assertStringContainsString("{% include 'gallery/imageblock_layout.html' %}", $template, $template_path);
+			$this->assertStringNotContainsString('imageblock_polaroid.html', $template, $template_path);
+		}
+	}
+
 	public function test_modern_layout_uses_the_context_aware_public_album_label(): void
 	{
 		$template = (string) file_get_contents(dirname(__DIR__) . '/styles/all/template/gallery/albumlist_modern.html');
