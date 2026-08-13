@@ -302,16 +302,19 @@ final class controller_album_types_test extends TestCase
 		{
 			$template = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/album_body.html');
 			$this->assertStringContainsString('method="get" id="album-search"', $template, $style);
+			$this->assertStringContainsString('gallery-album-top-actions', $template, $style);
+			$this->assertStringContainsString('gallery-album-inline-search', $template, $style);
 			$this->assertStringContainsString('name="aid[]"', $template, $style);
 			$this->assertStringContainsString('name="sc"', $template, $style);
 			$this->assertStringContainsString('U_GALLERY_SEARCH_ADVANCED', $template, $style);
 			$this->assertStringContainsString('fa-search', $template, $style);
 			$this->assertStringContainsString('fa-cog', $template, $style);
+			$this->assertSame(1, substr_count($template, 'id="album-search"'), $style);
 			$this->assertSame(1, substr_count($template, 'id="search_keywords"'), $style);
 		}
 
 		$prosilver = (string) file_get_contents(dirname(__DIR__) . '/styles/prosilver/template/gallery/album_body.html');
-		$this->assertStringContainsString('class="search-box" role="search"', $prosilver);
+		$this->assertStringContainsString('class="search-box gallery-album-inline-search" role="search"', $prosilver);
 		$this->assertStringContainsString('class="button button-search"', $prosilver);
 		$this->assertStringContainsString('class="button button-search-end"', $prosilver);
 

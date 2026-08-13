@@ -2721,6 +2721,55 @@ fieldset dl.gallery-autocomplete-row-open
 	margin: 10px 0 16px;
 }
 
+.gallery-album-top-actions
+{
+	min-height: 34px;
+	position: relative;
+}
+
+.gallery-album-inline-search
+{
+	float: none;
+	left: 50%;
+	margin: 0;
+	max-width: 50%;
+	position: absolute;
+	top: 0;
+	transform: translateX(-50%);
+	width: 50%;
+}
+
+.gallery-album-inline-search form,
+.gallery-album-inline-search fieldset,
+.gallery-album-inline-search .input-group
+{
+	margin: 0;
+	width: 100%;
+}
+
+@media (max-width: 1000px)
+{
+	.gallery-album-bootstrap-actions
+	{
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+		justify-content: space-between;
+	}
+
+	.gallery-album-inline-search
+	{
+		clear: both;
+		flex: 0 0 100%;
+		left: auto;
+		max-width: none;
+		order: 10;
+		position: static;
+		transform: none;
+		width: 100%;
+	}
+}
+
 .gallery-search-results-refine
 {
 	flex: 0 1 360px;
