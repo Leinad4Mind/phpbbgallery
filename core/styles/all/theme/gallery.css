@@ -1651,6 +1651,7 @@ input.autowidth-gallery {
 	display: grid;
 	gap: 18px;
 	grid-template-columns: repeat(4, minmax(0, 1fr));
+	margin-bottom: 18px;
 	padding-inline: 9px;
 	width: 100%;
 }

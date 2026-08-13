@@ -98,6 +98,7 @@ final class image_subtitle_test extends TestCase
 		$this->assertStringContainsString('.gallery-image-card-grid', $css);
 		$this->assertStringContainsString('align-items: stretch;', $css);
 		$this->assertStringContainsString('grid-template-columns: repeat(4, minmax(0, 1fr));', $css);
+		$this->assertStringContainsString('margin-bottom: 18px;', $css);
 		$this->assertStringContainsString('padding-inline: 9px;', $css);
 		$this->assertStringContainsString('.gallery-image-card-grid--three-columns', $css);
 		$this->assertStringContainsString('.gallery-image-card-grid--bootstrap > [class*="col-"]', $css);
