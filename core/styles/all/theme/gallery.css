@@ -626,6 +626,11 @@ input.autowidth-gallery {
 	padding: 14px;
 }
 
+.gallery-modern-album-main--without-visual
+{
+	grid-template-columns: minmax(0, 1fr);
+}
+
 .gallery-modern-album-visual
 {
 	align-items: center;
@@ -775,6 +780,12 @@ input.autowidth-gallery {
 	object-fit: contain;
 }
 
+.gallery-modern-last-image-thumbnail
+{
+	flex: 0 0 auto;
+	margin-inline-start: auto;
+}
+
 .gallery-modern-last-image-details
 {
 	line-height: 1.35;
@@ -807,6 +818,11 @@ input.autowidth-gallery {
 		align-items: start;
 		grid-template-columns: 52px minmax(0, 1fr);
 		padding: 11px;
+	}
+
+	.gallery-modern-album-main--without-visual
+	{
+		grid-template-columns: minmax(0, 1fr);
 	}
 
 	.gallery-modern-album-visual
