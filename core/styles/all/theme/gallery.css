@@ -3003,7 +3003,12 @@ fieldset dl.gallery-autocomplete-row-open
 
 .gallery-classic-album-icon-frame .gallery-album-custom-icon
 {
+	height: 50px;
+	max-height: 50px;
+	max-width: 50px;
+	object-fit: contain;
 	transition: none;
+	width: 50px;
 }
 
 .gallery-classic-album-icon-frame .gallery-album-custom-icon:hover,

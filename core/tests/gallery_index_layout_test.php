@@ -265,12 +265,22 @@ final class gallery_index_layout_test extends TestCase
 		{
 			$this->assertStringContainsString('gallery-classic-album-icon-frame', (string) file_get_contents($template_path), $template_path);
 		}
+		foreach (array_slice($templates, 1, 2) as $template_path)
+		{
+			$template = (string) file_get_contents($template_path);
+			$this->assertStringNotContainsString('> Thumbnail</th>', $template, $template_path);
+			$this->assertStringNotContainsString('albumrow.UC_FAKE_THUMBNAIL', $template, $template_path);
+		}
 
 		$css = (string) file_get_contents($core_root . '/styles/all/theme/gallery.css');
 		$this->assertStringContainsString('height: 30px;', $css);
 		$this->assertStringContainsString('width: 30px;', $css);
 		$this->assertStringContainsString('transform: scale(3);', $css);
 		$this->assertStringContainsString('.gallery-album-custom-icon-frame:focus .gallery-album-custom-icon', $css);
+		$this->assertMatchesRegularExpression(
+			'/\\.gallery-classic-album-icon-frame \\.gallery-album-custom-icon\\s*\\{[^}]*height:\\s*50px;[^}]*max-height:\\s*50px;[^}]*max-width:\\s*50px;[^}]*object-fit:\\s*contain;[^}]*width:\\s*50px;/s',
+			$css
+		);
 		$this->assertMatchesRegularExpression(
 			'/\\.gallery-classic-album-icon-frame \\.gallery-album-custom-icon:hover,[^{]+\\.gallery-classic-album-icon-frame:focus \\.gallery-album-custom-icon\\s*\\{[^}]*box-shadow:\\s*none;[^}]*transform:\\s*none;/s',
 			$css
