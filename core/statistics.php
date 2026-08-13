@@ -120,9 +120,10 @@ final class statistics
 	private function summary(array $album_ids, int $year): array
 	{
 		$where = $this->get_sql_where($album_ids, 'i');
+		$tracking_start = (int) $this->tracking_start();
 		if ($year === self::PERIOD_LEGACY)
 		{
-			$where .= ' AND i.image_time < ' . $this->tracking_start();
+			$where .= ' AND i.image_time < ' . $tracking_start;
 		}
 		else if ($year > 0)
 		{
@@ -149,12 +150,13 @@ final class statistics
 
 		if ($year === self::PERIOD_LEGACY)
 		{
+			$legacy_where = 's.stat_year > 0
+				AND i.image_time < ' . $tracking_start . '
+				AND ' . $this->get_sql_where($album_ids, 'i');
 			$sql = 'SELECT s.stat_type, SUM(s.stat_count) AS total
 				FROM ' . $this->statistics_table . ' s
 				INNER JOIN ' . $this->images_table . ' i ON i.image_id = s.image_id
-				WHERE s.stat_year > 0
-					AND i.image_time < ' . $this->tracking_start() . '
-					AND ' . $this->get_sql_where($album_ids, 'i') . '
+				WHERE ' . $legacy_where . '
 				GROUP BY s.stat_type';
 			$result = $this->db->sql_query($sql);
 			while ($stat = $this->db->sql_fetchrow($result))

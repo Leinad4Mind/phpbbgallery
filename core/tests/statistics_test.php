@@ -14,6 +14,15 @@ use PHPUnit\Framework\TestCase;
 
 final class statistics_test extends TestCase
 {
+	public function test_legacy_summary_uses_an_explicit_integer_tracking_boundary(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/statistics.php');
+
+		$this->assertStringContainsString('$tracking_start = (int) $this->tracking_start();', $source);
+		$this->assertStringContainsString('$legacy_where =', $source);
+		$this->assertGreaterThanOrEqual(3, substr_count($source, '$tracking_start'));
+	}
+
 	public function test_views_and_downloads_are_aggregated_by_board_year(): void
 	{
 		[$db, $state] = $this->database();
