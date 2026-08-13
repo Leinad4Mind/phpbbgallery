@@ -486,7 +486,7 @@ class image
 
 		$sql = 'SELECT image_id
 			FROM ' . $this->table_images . '
-			WHERE image_album_id = ' . $album_id . '
+			WHERE image_album_id = ' . (int) $album_id . '
 				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
 				AND ' . $this->db->sql_in_set('image_id', $image_ids);
 		$result = $this->db->sql_query($sql);
