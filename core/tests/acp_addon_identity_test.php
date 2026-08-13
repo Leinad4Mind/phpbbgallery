@@ -28,6 +28,8 @@ final class acp_addon_identity_test extends TestCase
 		$this->assertStringContainsString("'kind' => 'addon'", $module);
 		$this->assertStringContainsString("'kind' => 'core'", $module);
 		$this->assertStringContainsString("'icon' => 'fa-star'", $module);
+		$this->assertStringContainsString("'icon' => 'fa-refresh'", $module);
+		$this->assertStringContainsString("'id' => 'updated-core'", $module);
 		$this->assertStringContainsString('data-gallery-setting-source', $template);
 		$this->assertStringContainsString('setting.badge', $template);
 		$this->assertStringContainsString('GALLERY_ADDON_SETTINGS_LEGEND_EXPLAIN', $template);
@@ -98,6 +100,22 @@ final class acp_addon_identity_test extends TestCase
 			'pegas_index_viewed_count',
 			'pegas_index_rated_count',
 		], $new_core_settings);
+	}
+
+	public function test_enhanced_3_4_core_settings_have_an_updated_identity(): void
+	{
+		$reflection = new \ReflectionClass(\phpbbgallery\core\acp\config_module::class);
+		$updated_core_settings = $reflection->getReflectionConstant('UPDATED_CORE_SETTINGS')->getValue();
+
+		$this->assertSame([
+			'album_display',
+			'default_sort_key',
+			'search_display',
+			'allow_rotate',
+			'rrc_gindex_display',
+			'rrc_gindex_mode',
+			'rrc_profile_display',
+		], $updated_core_settings);
 	}
 
 	public function test_album_editor_has_a_shared_addon_legend(): void

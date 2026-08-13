@@ -39,7 +39,19 @@ class config_module
 		'pegas_index_rated_count',
 	];
 
+	/** Existing 3.4.0 ACP settings whose choices or behaviour were expanded by the modern Core. */
+	private const UPDATED_CORE_SETTINGS = [
+		'album_display',
+		'default_sort_key',
+		'search_display',
+		'allow_rotate',
+		'rrc_gindex_display',
+		'rrc_gindex_mode',
+		'rrc_profile_display',
+	];
+
 	private const NEW_CORE_ACCENT = '#0076b1';
+	private const UPDATED_CORE_ACCENT = '#8a5a00';
 
 	public string $u_action = '';
 	public string $tpl_name = '';
@@ -339,6 +351,19 @@ class config_module
 					'icon' => 'fa-star',
 				];
 			}
+			else if (in_array($config_key, self::UPDATED_CORE_SETTINGS, true))
+			{
+				$updated_core_name = $this->language->lang('GALLERY_UPDATED_CORE_SETTING');
+				$setting_identity = [
+					'key' => (string) $config_key,
+					'id' => 'updated-core',
+					'name' => $updated_core_name,
+					'accent' => self::UPDATED_CORE_ACCENT,
+					'badge' => $updated_core_name,
+					'kind' => 'core',
+					'icon' => 'fa-refresh',
+				];
+			}
 
 			if ($setting_identity !== null)
 			{
@@ -383,7 +408,7 @@ class config_module
 	*						@key function/method	Required when using type select and custom
 	*						@key append		A language string that is appended after the config type (e.g. You can append 'px' to a pixel size field)
 	*						@key addon		Optional add-on identity with id, translated name key and six-digit accent colour
-	* New Core identities are assigned centrally to settings absent from the active 3.4.0 ACP configuration.
+	* New and Updated Core identities are assigned centrally by comparison with the active 3.4.0 ACP configuration.
 	* This last parameter is optional
 	*		@key	string	tpl			Name of the template file we use to display the configs
 	*
