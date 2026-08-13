@@ -131,7 +131,7 @@ final class controller_album_types_test extends TestCase
 				dirname(__DIR__) . '/styles/' . $style . '/template/gallery/imageblock_polaroid.html'
 			);
 			$clearfix = strpos($template, '<div class="clearfix">');
-			$row = strpos($template, '<div class="row gallery-image-card-grid gallery-image-card-grid--bootstrap">', (int) $clearfix);
+			$row = strpos($template, '<div class="row gallery-image-card-grid gallery-image-card-grid--bootstrap{% if imageblock.S_IMAGE_AWARD_BLOCK %} gallery-image-card-grid--three-columns{% endif %}">', (int) $clearfix);
 			$column = strpos($template, '<div class="col-xs-12 col-sm-6 ', (int) $row);
 
 			$this->assertNotFalse($clearfix, $style);

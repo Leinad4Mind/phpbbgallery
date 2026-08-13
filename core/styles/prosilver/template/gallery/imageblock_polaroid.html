@@ -4,7 +4,7 @@
 {% if imageblock.ERROR %}<h2>{{ imageblock.ERROR }}</h2>
 
 {% else %}
-<div class="gallery-image-card-grid gallery-image-card-grid--prosilver">
+<div class="gallery-image-card-grid gallery-image-card-grid--prosilver{% if imageblock.S_IMAGE_AWARD_BLOCK %} gallery-image-card-grid--three-columns{% endif %}">
 {% for image in imageblock.image %}
 <div class="polaroid gallery-image-card">
 	{% EVENT phpbbgallery_core_album_image_actions %}

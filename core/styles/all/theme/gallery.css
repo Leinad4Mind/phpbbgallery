@@ -1636,14 +1636,33 @@ input.autowidth-gallery {
 .gallery-image-card-grid
 {
 	align-items: stretch;
-	display: flex;
-	flex-wrap: wrap;
 }
 
 .gallery-image-card-grid::before,
 .gallery-image-card-grid::after
 {
 	display: none;
+}
+
+.gallery-image-card-grid--prosilver,
+.gallery-image-card-grid--bootstrap
+{
+	box-sizing: border-box;
+	display: grid;
+	gap: 18px;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	padding-inline: 9px;
+	width: 100%;
+}
+
+.gallery-image-card-grid--bootstrap.row
+{
+	margin-inline: 0;
+}
+
+.gallery-image-card-grid--three-columns
+{
+	grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .gallery-image-card-grid .gallery-image-card
@@ -1654,18 +1673,43 @@ input.autowidth-gallery {
 
 .gallery-image-card-grid--prosilver > .gallery-image-card
 {
+	box-sizing: border-box;
 	float: none;
+	margin: 0;
+	width: 100%;
 }
 
 .gallery-image-card-grid--bootstrap > [class*="col-"]
 {
 	display: flex;
 	float: none;
+	padding-inline: 0;
+	width: auto;
 }
 
 .gallery-image-card-grid--bootstrap > [class*="col-"] > .gallery-image-card
 {
 	width: 100%;
+}
+
+@media (max-width: 991px)
+{
+	.gallery-image-card-grid--prosilver,
+	.gallery-image-card-grid--bootstrap,
+	.gallery-image-card-grid--three-columns
+	{
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 575px)
+{
+	.gallery-image-card-grid--prosilver,
+	.gallery-image-card-grid--bootstrap,
+	.gallery-image-card-grid--three-columns
+	{
+		grid-template-columns: minmax(0, 1fr);
+	}
 }
 
 /* Legacy MOD-inspired presentation, rebuilt as a responsive CSS grid. */
