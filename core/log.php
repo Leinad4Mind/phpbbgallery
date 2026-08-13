@@ -94,13 +94,13 @@ class log
 
 		$sql_array = array(
 			'log_time'		=> (int) $time,
-			'log_type'		=> $this->db->sql_escape($log_type),
-			'log_action'	=> $this->db->sql_escape($log_action),
+			'log_type'		=> $log_type,
+			'log_action'	=> $log_action,
 			'log_user'		=> (int) $user,
-			'log_ip'		=> $this->db->sql_escape($this->user->ip),
+			'log_ip'		=> $this->user->ip,
 			'album'			=> (int) $album,
 			'image'			=> (int) $image,
-			'description'	=> $this->db->sql_escape(json_encode($description))
+			'description'	=> json_encode($description, JSON_UNESCAPED_UNICODE)
 		);
 		$sql = 'INSERT INTO ' . $this->log_table . ' ' . $this->db->sql_build_array('INSERT', $sql_array);
 		$this->db->sql_query($sql);
@@ -256,7 +256,7 @@ class log
 				'ip'	=> $row['log_ip'],
 				'album'	=> $row['album'],
 				'image'	=> $row['image'],
-				'description'	=> json_decode(stripslashes($row['description']))
+				'description'	=> json_decode($row['description'], true)
 			);
 			$users_array[$row['log_user']] = array('');
 		}

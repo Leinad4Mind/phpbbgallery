@@ -270,7 +270,7 @@ class image
 		else
 		{
 			$user_id = (int) $this->user->data['user_id'];
-			$image_status_check = ' AND (image_status = ' . (int) \phpbbgallery\core\block::STATUS_APPROVED . ' OR image_user_id = ' . $user_id . ')';
+			$image_status_check = '(image_status = ' . (int) \phpbbgallery\core\block::STATUS_APPROVED . ' OR image_user_id = ' . $user_id . ')';
 		}
 
 		if (!$this->user->data['is_bot'] && isset($this->user->data['session_page']) && (strpos($this->user->data['session_page'], '&image_id=' . $image_id) === false || isset($this->user->data['session_created'])))
@@ -321,15 +321,6 @@ class image
 		$sort_key = $this->request->variable('sk', ($album_data['album_sort_key']) ? $album_data['album_sort_key'] : $this->config['phpbb_gallery_default_sort_key']);
 		$sort_dir = $this->request->variable('sd', ($album_data['album_sort_dir']) ? $album_data['album_sort_dir'] : $this->config['phpbb_gallery_default_sort_dir']);
 
-		if (in_array($sort_key, array('r', 'ra')))
-		{
-			$sql_help_sort = ', image_id ' . (($sort_dir == 'd') ? 'ASC' : 'DESC');
-		}
-		else
-		{
-			$sql_help_sort = ', image_id ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
-		}
-
 		$limit_days = array();
 		$sort_by_text = array(
 			't'  => $this->language->lang('TIME'),
@@ -358,17 +349,42 @@ class image
 			$sort_by_text['lc'] = $this->language->lang('NEW_COMMENT');
 			$sort_by_sql['lc'] = 'image_last_comment';
 		}
+		if (!isset($sort_by_sql[$sort_key]))
+		{
+			$sort_key = 't';
+		}
+		if (!in_array($sort_dir, array('a', 'd'), true))
+		{
+			$sort_dir = 'd';
+		}
+		if (in_array($sort_key, array('r', 'ra'), true))
+		{
+			$sql_help_sort = ', image_id ' . (($sort_dir == 'd') ? 'ASC' : 'DESC');
+		}
+		else
+		{
+			$sql_help_sort = ', image_id ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
+		}
 		gen_sort_selects($limit_days, $sort_by_text, $sort_days, $sort_key, $sort_dir, $s_limit_days, $s_sort_key, $s_sort_dir, $u_sort_param);
 		$sql_sort_order = $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
 		$sql_sort_order .= $sql_help_sort;
 
 		// Let's see if there is previous image
-		$sql = 'SELECT *
-			FROM ' . $this->table_images . '
-			WHERE image_album_id = ' . (int) $album_id . '
-				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
-				' . $image_status_check . '
-			ORDER BY ' . $sql_sort_order . $sql_help_sort;
+		$sql_conditions = array(
+			'image_album_id = ' . (int) $album_id,
+			'image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN,
+		);
+		if ($image_status_check)
+		{
+			$sql_conditions[] = $image_status_check;
+		}
+		$sql_array = array(
+			'SELECT' => '*',
+			'FROM' => array($this->table_images => 'i'),
+			'WHERE' => implode(' AND ', $sql_conditions),
+			'ORDER_BY' => $sql_sort_order,
+		);
+		$sql = $this->db->sql_build_query('SELECT', $sql_array);
 		$result = $this->db->sql_query($sql);
 		$images_array = [];
 		while ($row = $this->db->sql_fetchrow($result))

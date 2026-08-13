@@ -239,7 +239,7 @@ class upload
 			include_once($this->root_path . 'includes/functions_compress.' . $this->php_ext);
 		}
 
-		$tmp_dir = $this->gallery_url->path('import') . 'tmp_' . md5(unique_id()) . '/';
+		$tmp_dir = $this->gallery_url->path('import') . 'tmp_' . unique_id() . '/';
 
 		$this->zip_file->clean_filename('unique_ext');
 		$this->zip_file->move_file(substr($this->gallery_url->path('import_noroot'), 0, -1), false, false, CHMOD_ALL);
