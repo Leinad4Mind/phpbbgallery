@@ -14,6 +14,13 @@ namespace phpbbgallery\core\acp;
 
 class config_module
 {
+	/** @var \phpbb\language\language */
+	public $language;
+	public $new_config;
+	public $tpl_name;
+	public $page_title;
+	public $u_action;
+
 	/**
 	* This function is called, when the main() function is called.
 	* You can use this function to add your language files, check for a valid mode, unset config options and more.

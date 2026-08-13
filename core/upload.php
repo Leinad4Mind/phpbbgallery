@@ -748,12 +748,14 @@ class upload
 		$sql = 'SELECT *
 			FROM ' . $this->images_table . '
 			WHERE image_status = ' . (int) $this->block->get_image_status_orphan() . '
+				AND image_user_id = ' . (int) $this->user->data['user_id'] . '
+				AND image_album_id = ' . (int) $this->album_id . '
 				AND ' . $this->db->sql_in_set('image_id', $image_ids);
 		$result = $this->db->sql_query($sql);
 
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			if ($filenames[$row['image_id']] == substr($row['image_filename'], 0, 8))
+			if (isset($filenames[$row['image_id']]) && $filenames[$row['image_id']] == substr($row['image_filename'], 0, 8))
 			{
 				$this->images[] = (int) $row['image_id'];
 				$this->image_data[(int) $row['image_id']] = $row;

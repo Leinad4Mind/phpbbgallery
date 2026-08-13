@@ -782,7 +782,11 @@ class comment
 		$this->language->add_lang(array('gallery'), 'phpbbgallery/core');
 		add_form_key('gallery');
 
-		$submit = $this->request->variable('submit', false);
+		$rate_submitted = $this->request->is_set_post('rating');
+		if ($rate_submitted && !check_form_key('gallery'))
+		{
+			trigger_error('FORM_INVALID');
+		}
 		$error = $message = '';
 		// load Image Data
 		$image_data = $this->image->get_image_data($image_id);
@@ -842,7 +846,7 @@ class comment
 
 				// User just rated the image, so we store it
 				$rate_point = $this->request->variable('rating', 0);
-				if ($rating->rating_enabled && $rate_point > 0)
+				if ($rate_submitted && $rating->rating_enabled && $rate_point > 0)
 				{
 					$rating->submit_rating();
 					$s_user_rated = true;
