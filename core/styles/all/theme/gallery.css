@@ -877,10 +877,10 @@ input.autowidth-gallery {
 
 .gallery-futuristic--flatboots
 {
-	--gallery-futuristic-accent: #cf981d;
-	--gallery-futuristic-accent-soft: rgba(207, 152, 29, .17);
-	--gallery-futuristic-secondary: #2b83b6;
-	--gallery-futuristic-secondary-soft: rgba(43, 131, 182, .14);
+	--gallery-futuristic-accent: #9e7233;
+	--gallery-futuristic-accent-soft: rgba(158, 114, 51, .17);
+	--gallery-futuristic-secondary: #daa520;
+	--gallery-futuristic-secondary-soft: rgba(218, 165, 32, .14);
 	--gallery-futuristic-border: rgba(137, 113, 56, .24);
 	--gallery-futuristic-radius: 6px;
 }

@@ -172,6 +172,10 @@ final class gallery_index_layout_test extends TestCase
 			$css
 		);
 		$this->assertMatchesRegularExpression(
+			'/\.gallery-futuristic--flatboots\s*\{[^}]*--gallery-futuristic-accent:\s*#9e7233;[^}]*--gallery-futuristic-accent-soft:\s*rgba\(158, 114, 51, \.17\);[^}]*--gallery-futuristic-secondary:\s*#daa520;[^}]*--gallery-futuristic-secondary-soft:\s*rgba\(218, 165, 32, \.14\);/s',
+			$css
+		);
+		$this->assertMatchesRegularExpression(
 			'/\.gallery-futuristic-section-icon > \.icon\s*\{[^}]*align-items:\s*center;[^}]*justify-content:\s*center;[^}]*width:\s*100%;/s',
 			$css
 		);
