@@ -263,6 +263,14 @@ final class batch_image_edit_test extends TestCase
 			$template = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/moderate_album_overview.html');
 			$this->assertStringContainsString('{% for action in overview_actions %}', $template, $style);
 			$this->assertStringContainsString('name="select_action" id="select_action"', $template, $style);
+			$this->assertStringContainsString('class="gallery-mcp-action-row"', $template, $style);
+			$this->assertStringContainsString('class="gallery-mcp-bulk-action"', $template, $style);
+			$this->assertStringContainsString('gallery-mcp-change-author', $template, $style);
+			$this->assertLessThan(
+				strpos($template, 'gallery-mcp-change-author'),
+				strpos($template, 'gallery-mcp-bulk-action'),
+				$style
+			);
 			$this->assertStringNotContainsString('{{ U_ACTION_SELECT }}', $template, $style);
 		}
 

@@ -3072,6 +3072,50 @@ fieldset dl.gallery-autocomplete-row-open
 	transform: none;
 }
 
+.gallery-mcp-action-row
+{
+	align-items: flex-start;
+	display: flex;
+	gap: 12px 24px;
+	justify-content: space-between;
+	text-align: left;
+}
+
+.gallery-mcp-bulk-action
+{
+	flex: 0 1 auto;
+}
+
+.gallery-mcp-change-author
+{
+	align-items: center;
+	display: flex;
+	flex: 0 1 auto;
+	gap: 6px;
+	margin-inline-start: auto;
+}
+
+.gallery-mcp-change-author input
+{
+	max-width: 100%;
+}
+
+@media (max-width: 700px)
+{
+	.gallery-mcp-action-row
+	{
+		align-items: stretch;
+		flex-direction: column;
+	}
+
+	.gallery-mcp-change-author
+	{
+		align-items: flex-start;
+		flex-wrap: wrap;
+		margin-inline-start: 0;
+	}
+}
+
 @media (prefers-reduced-motion: reduce)
 {
 	.gallery-orientation-preview img,

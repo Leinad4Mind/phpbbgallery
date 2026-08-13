@@ -87,17 +87,23 @@
 			</div>
 		</div>
 		{% if overview|length %}
-		<fieldset class="display-actions">
-			{% if S_CAN_EDIT_IMAGES %}
-				<label for="change_author">{{ lang('CHANGE_AUTHOR') }}{{ lang('COLON') }}</label>
-				<input class="inputbox autowidth" type="text" id="change_author" name="change_author" size="24" />
-				<a href="{{ U_FIND_USERNAME }}" onclick="find_username(this.href); return false;">[ {{ lang('FIND_USERNAME') }} ]</a><br />
-			{% endif %}
-			<select name="select_action" id="select_action">
-				{% for action in overview_actions %}<option value="{{ action.VALUE }}">{{ action.LABEL }}</option>{% endfor %}
-			</select>
-			&nbsp; <input class="button1" name="submit" value="{{ lang('GO') }}" type="submit" />
-			<div><a href="#" onclick="marklist('overview_action', 'action', true); return false;">{{ lang('MARK_ALL') }}</a> :: <a href="#" onclick="marklist('overview_action', 'action', false); return false;">{{ lang('UNMARK_ALL') }}</a></div>
+		<fieldset class="display-actions gallery-mcp-actions">
+			<div class="gallery-mcp-action-row">
+				<div class="gallery-mcp-bulk-action">
+					<select name="select_action" id="select_action">
+						{% for action in overview_actions %}<option value="{{ action.VALUE }}">{{ action.LABEL }}</option>{% endfor %}
+					</select>
+					&nbsp; <input class="button1" name="submit" value="{{ lang('GO') }}" type="submit" />
+					<div><a href="#" onclick="marklist('overview_action', 'action', true); return false;">{{ lang('MARK_ALL') }}</a> :: <a href="#" onclick="marklist('overview_action', 'action', false); return false;">{{ lang('UNMARK_ALL') }}</a></div>
+				</div>
+				{% if S_CAN_EDIT_IMAGES %}
+				<div class="gallery-mcp-change-author">
+					<label for="change_author">{{ lang('CHANGE_AUTHOR') }}{{ lang('COLON') }}</label>
+					<input class="inputbox autowidth" type="text" id="change_author" name="change_author" size="24" />
+					<a href="{{ U_FIND_USERNAME }}" onclick="find_username(this.href); return false;">[ {{ lang('FIND_USERNAME') }} ]</a>
+				</div>
+				{% endif %}
+			</div>
 		</fieldset>
 		{% endif %}
 	</form>
