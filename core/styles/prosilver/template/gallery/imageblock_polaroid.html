@@ -14,7 +14,7 @@
 		<strong class="fa-stack-1x trophy-text">{{ image.S_IMAGE_AWARD_RANK }}</strong>
 	</div>
 	{% endif %}
-	<header class="gallery-image-card-heading gallery-polaroid-image-heading">
+	<header class="gallery-image-card-heading gallery-polaroid-image-heading{% if S_GALLERY_IMAGE_ID_BBCODE and image.IMAGE_ID %} gallery-polaroid-image-heading--with-copy{% endif %}">
 		{% include '@phpbbgallery_core/gallery/image_bbcode_copy.html' %}
 		<p class="gallery-image-card-title">
 			{% if image.U_IMAGE %}<a href="{{ image.U_IMAGE }}">{% endif %}{{ image.UC_IMAGE_NAME }}{% if image.U_IMAGE %}</a>{% endif %}

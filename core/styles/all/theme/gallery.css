@@ -1302,6 +1302,37 @@ input.autowidth-gallery {
 	padding: 5px 9px 0;
 }
 
+.gallery-polaroid-image-heading--with-copy
+{
+	padding-top: 35px;
+}
+
+.gallery-polaroid-image-heading > .gallery-image-bbcode-copy
+{
+	background: transparent;
+	border: 0;
+	border-radius: 0;
+	inset-inline-start: 9px;
+	min-height: 30px;
+	position: absolute;
+	top: 5px;
+}
+
+.gallery-polaroid-image-heading > .gallery-image-bbcode-copy:hover,
+.gallery-polaroid-image-heading > .gallery-image-bbcode-copy.is-copied
+{
+	background: transparent;
+	border: 0;
+}
+
+.gallery-polaroid-image-heading > .gallery-image-bbcode-copy:focus
+{
+	background: transparent;
+	border: 0;
+	outline: 2px solid currentColor;
+	outline-offset: 2px;
+}
+
 .gallery-image-card-title
 {
 	box-sizing: border-box;
@@ -1670,6 +1701,7 @@ input.autowidth-gallery {
 {
 	display: flex;
 	flex-direction: column;
+	position: relative;
 }
 
 .gallery-image-card-grid--prosilver > .gallery-image-card

@@ -243,6 +243,7 @@ final class gallery_index_layout_test extends TestCase
 		{
 			$cards = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/imageblock_polaroid.html');
 			$this->assertStringContainsString('image_bbcode_copy.html', $cards, $style);
+			$this->assertStringContainsString('gallery-polaroid-image-heading--with-copy', $cards, $style);
 			$this->assertLessThan(strpos($cards, 'gallery-image-card-title'), strpos($cards, 'image_bbcode_copy.html'), $style);
 			$this->assertStringNotContainsString('GALLERY_BBCODE_COPY_OVERLAY: true', $cards, $style);
 		}
@@ -263,6 +264,8 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertMatchesRegularExpression('/\.gallery-image-card-heading\s*\{[^}]*align-items:\s*center;[^}]*flex-direction:\s*column;[^}]*text-align:\s*center;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-image-bbcode-copy\s*\{[^}]*align-self:\s*flex-start;[^}]*padding:\s*0;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-polaroid-image-heading\s*\{[^}]*padding:\s*5px 9px 0;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-polaroid-image-heading--with-copy\s*\{[^}]*padding-top:\s*35px;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-polaroid-image-heading > \.gallery-image-bbcode-copy\s*\{[^}]*border:\s*0;[^}]*inset-inline-start:\s*9px;[^}]*min-height:\s*30px;[^}]*position:\s*absolute;[^}]*top:\s*5px;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-futuristic-image-header\s*\{[^}]*flex-direction:\s*column;(?:(?!gap:)[^}])*padding:\s*2px 10px 6px;[^}]*text-align:\s*left;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-classic-image-heading > \.gallery-image-bbcode-copy\s*\{[^}]*margin-inline-start:\s*7px;/s', $css);
 	}
