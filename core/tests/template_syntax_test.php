@@ -828,6 +828,25 @@ final class template_syntax_test extends TestCase
 		}
 	}
 
+	public function test_online_user_avatars_are_bounded_in_every_supported_style(): void
+	{
+		$core_root = dirname(__DIR__);
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			foreach (['index_body.html', 'album_body.html'] as $filename)
+			{
+				$template = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/' . $filename);
+				$this->assertStringContainsString('class="phpbbgallery-online-users"', $template, $style . '/' . $filename);
+			}
+		}
+
+		$css = (string) file_get_contents($core_root . '/styles/all/theme/gallery.css');
+		$this->assertMatchesRegularExpression(
+			'/\.phpbbgallery-online-users img\s*\{[^}]*max-height:\s*20px;[^}]*max-width:\s*20px;[^}]*object-fit:\s*cover;/s',
+			$css
+		);
+	}
+
 	public function test_profile_image_blocks_are_safe_when_the_feature_is_disabled(): void
 	{
 		$core_root = dirname(__DIR__);

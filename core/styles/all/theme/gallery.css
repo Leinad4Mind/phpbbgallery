@@ -2269,6 +2269,17 @@ input.autowidth-gallery {
 	margin-inline-end: 7px;
 }
 
+.phpbbgallery-online-users img
+{
+	height: auto;
+	margin: 2px;
+	max-height: 20px;
+	max-width: 20px;
+	object-fit: cover;
+	vertical-align: middle;
+	width: auto;
+}
+
 .phpbbgallery-new-images-badge
 {
 	align-items: center;

@@ -308,7 +308,7 @@ function toggleElement(oElement)
 
 {% if S_DISPLAY_ONLINE_LIST %}
 	{% if U_VIEWONLINE %}<h3><a href="{{ U_VIEWONLINE }}">{{ lang('WHO_IS_ONLINE') }}</a></h3>{% else %}<h3>{{ lang('WHO_IS_ONLINE') }}</h3>{% endif %}
-	<p>{{ TOTAL_USERS_ONLINE }} ({{ lang('ONLINE_EXPLAIN') }})<br />{{ RECORD_USERS }}<br /> <br />{{ LOGGED_IN_USER_LIST }}
+	<p class="phpbbgallery-online-users">{{ TOTAL_USERS_ONLINE }} ({{ lang('ONLINE_EXPLAIN') }})<br />{{ RECORD_USERS }}<br /> <br />{{ LOGGED_IN_USER_LIST }}
 	{% if LEGEND %}<br /><em>{{ lang('LEGEND') }}{{ lang('COLON') }} {{ LEGEND }}</em>{% endif %}</p>
 {% endif %}
 
