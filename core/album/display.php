@@ -27,6 +27,7 @@ class display
 	protected \phpbbgallery\core\config $gallery_config;
 	protected \phpbbgallery\core\user $gallery_user;
 	protected \phpbbgallery\core\misc $misc;
+	protected \phpbbgallery\core\unread_counter $unread_counter;
 	protected \phpbbgallery\core\policy\image_visibility $image_visibility;
 	protected data_enricher $data_enricher;
 	protected string $root_path;
@@ -34,7 +35,6 @@ class display
 	protected string $table_albums;
 	protected string $table_images;
 	protected string $table_moderators;
-	protected string $table_tracking;
 	protected \phpbb\language\language $language;
 
 	/**
@@ -64,10 +64,11 @@ class display
 								\phpbb\user $user, \phpbb\language\language $language, \phpbbgallery\core\auth\auth $gallery_auth,
 								\phpbbgallery\core\config $gallery_config,
 								\phpbbgallery\core\user $gallery_user, \phpbbgallery\core\misc $misc,
+								\phpbbgallery\core\unread_counter $unread_counter,
 								\phpbbgallery\core\policy\image_visibility $image_visibility,
 								data_enricher $data_enricher,
 								string $root_path, string $php_ext, string $albums_table, string $images_table,
-								string $tracking_table, string $moderators_table)
+								string $moderators_table)
 	{
 		$this->auth = $auth;
 		$this->config = $config;
@@ -83,13 +84,13 @@ class display
 		$this->gallery_config = $gallery_config;
 		$this->gallery_user = $gallery_user;
 		$this->misc = $misc;
+		$this->unread_counter = $unread_counter;
 		$this->image_visibility = $image_visibility;
 		$this->data_enricher = $data_enricher;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
 		$this->table_albums = $albums_table;
 		$this->table_images = $images_table;
-		$this->table_tracking = $tracking_table;
 		$this->table_moderators = $moderators_table;
 	}
 
@@ -455,14 +456,10 @@ class display
 
 		$last_image_projection = 'last_image_visibility_marker';
 		$sql_array = [
-			'SELECT'	=> 'a.*, at.mark_time, ' . $this->image_visibility->projection_sql('li', $last_image_projection),
+			'SELECT'	=> 'a.*, ' . $this->image_visibility->projection_sql('li', $last_image_projection),
 			'FROM'		=> [$this->table_albums => 'a'],
 
 			'LEFT_JOIN'	=> [
-				[
-					'FROM'	=> [$this->table_tracking => 'at'],
-					'ON'	=> 'at.user_id = ' . (int) $this->user->data['user_id'] . ' AND a.album_id = at.album_id'
-				],
 				[
 					'FROM'	=> [$this->table_images => 'li'],
 					'ON'	=> 'li.image_id = a.album_last_image_id',
@@ -499,10 +496,10 @@ class display
 		$this->db->sql_freeresult($result);
 		$rows = $this->data_enricher->enrich_many($rows);
 
-		$album_tracking_info = [];
 		$zebra_array = $this->gallery_auth->get_user_zebra($this->user->data['user_id']);
 		$listable = $this->gallery_auth->acl_album_ids('a_list');
 		$rows = $this->filter_visible_hierarchy_rows($rows, $listable, $zebra_array, (int) $root_data['album_id']);
+		$unread_album_ids = array_fill_keys($this->unread_counter->album_ids(array_column($rows, 'album_id')), true);
 		$owner_states = [];
 		foreach ($rows as $row)
 		{
@@ -524,8 +521,6 @@ class display
 			}
 
 			$active_album_ary[] = (int) $album_id;
-
-			$album_tracking_info[$album_id] = (!empty($row['mark_time'])) ? $row['mark_time'] : $this->gallery_user->get_data('user_lastmark');
 
 			if ($display_parent_id === $album_id)
 			{
@@ -647,7 +642,7 @@ class display
 			}
 
 			$album_id = $row['album_id'];
-			$album_unread = (isset($album_tracking_info[$album_id]) && ($row['orig_album_last_image_time'] > $album_tracking_info[$album_id]) && ($this->user->data['user_id'] != ANONYMOUS)) ? true : false;
+			$album_unread = isset($unread_album_ids[$album_id]);
 
 			$folder_alt = $l_subalbums = '';
 			$subalbums_list = [];
@@ -657,13 +652,13 @@ class display
 			{
 				foreach ($subalbums[$album_id] as $subalbum_id => $subalbum_row)
 				{
-					$subalbum_unread = (isset($album_tracking_info[$subalbum_id]) && $subalbum_row['orig_album_last_image_time'] > $album_tracking_info[$subalbum_id] && ($this->user->data['user_id'] != ANONYMOUS)) ? true : false;
+					$subalbum_unread = isset($unread_album_ids[$subalbum_id]);
 
 					if (!$subalbum_unread && !empty($subalbum_row['children']) && ($this->user->data['user_id'] != ANONYMOUS))
 					{
 						foreach ($subalbum_row['children'] as $child_id)
 						{
-							if (isset($album_tracking_info[$child_id]) && $subalbums[$album_id][$child_id]['orig_album_last_image_time'] > $album_tracking_info[$child_id])
+							if (isset($unread_album_ids[$child_id]))
 							{
 								// Once we found an unread child album, we can drop out of this loop
 								$subalbum_unread = true;

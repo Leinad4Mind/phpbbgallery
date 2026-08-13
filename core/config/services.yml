@@ -38,13 +38,13 @@ services:
             - '@phpbbgallery.core.config'
             - '@phpbbgallery.core.user'
             - '@phpbbgallery.core.misc'
+            - '@phpbbgallery.core.unread_counter'
             - '@phpbbgallery.core.policy.image_visibility'
             - '@phpbbgallery.core.album.data_enricher'
             - '%core.root_path%'
             - '%core.php_ext%'
             - '%phpbbgallery.tables.gallery_albums%'
             - '%phpbbgallery.tables.gallery_images%'
-            - '%phpbbgallery.tables.gallery_tracking%'
             - '%phpbbgallery.tables.gallery_moderators%'
     phpbbgallery.core.album.loader:
         class: phpbbgallery\core\album\loader

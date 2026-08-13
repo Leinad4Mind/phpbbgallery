@@ -93,6 +93,61 @@ class unread_counter
 		return $count;
 	}
 
+	/**
+	 * Return the requested albums that still contain visible unread images.
+	 *
+	 * @param array $album_ids Album identifiers already eligible for display
+	 * @return array<int>
+	 */
+	public function album_ids(array $album_ids): array
+	{
+		$album_ids = array_values(array_unique(array_filter(array_map('intval', $album_ids), static fn (int $album_id): bool => $album_id > 0)));
+		if (!$album_ids || empty($this->user->data['is_registered']) || !empty($this->user->data['is_bot']))
+		{
+			return [];
+		}
+
+		$access = $this->album_access->resolve();
+		$album_ids = array_values(array_intersect($album_ids, $access['visible']));
+		if (!$album_ids)
+		{
+			return [];
+		}
+
+		$moderated_album_ids = array_values(array_intersect($album_ids, $access['moderated']));
+		$viewer_id = (int) $this->gallery_user->user_id;
+		$global_mark_time = max(0, (int) $this->gallery_user->get_data('user_lastmark'));
+		$sql = 'SELECT DISTINCT i.image_album_id
+			FROM ' . $this->images_table . ' i
+			LEFT JOIN ' . $this->tracking_table . ' t
+				ON t.user_id = ' . (int) $viewer_id . '
+					AND t.album_id = i.image_album_id
+			LEFT JOIN ' . $this->image_tracking_table . ' it
+				ON it.user_id = ' . (int) $viewer_id . '
+					AND it.image_id = i.image_id
+			WHERE ' . $this->db->sql_in_set('i.image_album_id', $album_ids) . '
+				AND it.image_id IS NULL
+				AND ' . $this->db->sql_in_set('i.image_status', [block::STATUS_APPROVED, block::STATUS_LOCKED]) . '
+				AND ' . $this->image_visibility->get_visibility_sql_for_results('i', $moderated_album_ids) . '
+				AND (
+					((t.mark_time IS NULL OR t.mark_time = 0) AND i.image_time > ' . (int) $global_mark_time . ')
+					OR (t.mark_time > 0 AND i.image_time > t.mark_time)
+				)';
+		$result = $this->db->sql_query($sql);
+		$unread_album_ids = [];
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$album_id = (int) $row['image_album_id'];
+			if ($album_id > 0)
+			{
+				$unread_album_ids[$album_id] = $album_id;
+			}
+		}
+		$this->db->sql_freeresult($result);
+
+		return array_values($unread_album_ids);
+	}
+
 	/** Record one visible image as read for the current member. */
 	public function mark_viewed(int $image_id): void
 	{

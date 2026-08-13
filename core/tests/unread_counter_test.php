@@ -157,6 +157,102 @@ class unread_counter_test extends TestCase
 		], $gallery_user, $visibility)->count(500));
 	}
 
+	public function test_album_ids_returns_only_requested_visible_albums_with_unread_images(): void
+	{
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->exactly(2))
+			->method('sql_in_set')
+			->willReturnCallback(static function (string $field, array $values): string
+			{
+				if ($field === 'i.image_album_id')
+				{
+					TestCase::assertSame([6, 4], $values);
+					return 'i.image_album_id IN (6, 4)';
+				}
+
+				TestCase::assertSame('i.image_status', $field);
+				TestCase::assertSame([1, 2], $values);
+				return 'i.image_status IN (1, 2)';
+			});
+		$db->expects($this->once())
+			->method('sql_query')
+			->with($this->callback(static function (string $sql): bool
+			{
+				TestCase::assertStringContainsString('SELECT DISTINCT i.image_album_id', $sql);
+				TestCase::assertStringContainsString('i.image_album_id IN (6, 4)', $sql);
+				TestCase::assertStringContainsString('i.image_status IN (1, 2)', $sql);
+				TestCase::assertStringContainsString('(i.image_contest = 0)', $sql);
+				TestCase::assertStringContainsString('i.image_time > 1234', $sql);
+				return true;
+			}))
+			->willReturn('unread-albums');
+		$db->expects($this->exactly(4))
+			->method('sql_fetchrow')
+			->with('unread-albums')
+			->willReturnOnConsecutiveCalls(
+				['image_album_id' => 6],
+				['image_album_id' => 4],
+				['image_album_id' => 6],
+				false
+			);
+		$db->expects($this->once())->method('sql_freeresult')->with('unread-albums');
+
+		$access = $this->createMock(album_access::class);
+		$access->expects($this->once())->method('resolve')->willReturn([
+			'viewable' => [4],
+			'moderated' => [6],
+			'visible' => [4, 6, 8],
+		]);
+		$gallery_user = $this->createMock(\phpbbgallery\core\user::class);
+		$gallery_user->user_id = 42;
+		$gallery_user->expects($this->once())->method('get_data')->with('user_lastmark')->willReturn(1234);
+		$visibility = $this->createMock(image_visibility::class);
+		$visibility->expects($this->once())
+			->method('get_visibility_sql_for_results')
+			->with('i', [6])
+			->willReturn('(i.image_contest = 0)');
+
+		$this->assertSame([6, 4], $this->counter($db, $access, [
+			'user_id' => 42,
+			'is_registered' => true,
+			'is_bot' => false,
+		], $gallery_user, $visibility)->album_ids([6, 4, 3, 6, 0]));
+	}
+
+	public function test_album_ids_avoids_permission_and_database_work_for_guests_bots_and_empty_input(): void
+	{
+		foreach ([
+			[[], ['user_id' => 42, 'is_registered' => true, 'is_bot' => false]],
+			[[4], ['user_id' => ANONYMOUS, 'is_registered' => false, 'is_bot' => false]],
+			[[4], ['user_id' => 42, 'is_registered' => true, 'is_bot' => true]],
+		] as [$album_ids, $user_data])
+		{
+			$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+			$db->expects($this->never())->method('sql_query');
+			$access = $this->createMock(album_access::class);
+			$access->expects($this->never())->method('resolve');
+
+			$this->assertSame([], $this->counter($db, $access, $user_data)->album_ids($album_ids));
+		}
+	}
+
+	public function test_album_display_uses_per_image_unread_state_for_albums_and_descendants(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/album/display.php');
+		$services = (string) file_get_contents(dirname(__DIR__) . '/config/services.yml');
+		$display_service = strstr($services, 'phpbbgallery.core.album.display:');
+		$display_service = strstr($display_service, 'phpbbgallery.core.album.loader:', true);
+
+		$this->assertStringContainsString('$this->unread_counter->album_ids(array_column($rows, \'album_id\'))', $source);
+		$this->assertStringContainsString('$album_unread = isset($unread_album_ids[$album_id])', $source);
+		$this->assertStringContainsString('$subalbum_unread = isset($unread_album_ids[$subalbum_id])', $source);
+		$this->assertStringContainsString('isset($unread_album_ids[$child_id])', $source);
+		$this->assertStringNotContainsString('$album_tracking_info', $source);
+		$this->assertStringNotContainsString('at.mark_time', $source);
+		$this->assertStringContainsString("- '@phpbbgallery.core.unread_counter'", $display_service);
+		$this->assertStringNotContainsString("'%phpbbgallery.tables.gallery_tracking%'", $display_service);
+	}
+
 	public function test_album_listing_marks_only_new_unique_page_images_as_read(): void
 	{
 		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
