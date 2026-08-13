@@ -95,7 +95,11 @@ final class gallery_index_layout_test extends TestCase
 
 		$this->assertStringNotContainsString('GALLERY_CLASSIC_TITLE_ALIGN_START', $selector . $search . $classic);
 		$this->assertMatchesRegularExpression(
-			'/\.gallery-classic-image-title\s*\{[^}]*justify-content:\s*center;[^}]*text-align:\s*center;/s',
+			'/\.gallery-classic-image-title\s*\{[^}]*justify-content:\s*center;[^}]*max-width:\s*100%;[^}]*text-align:\s*center;[^}]*text-overflow:\s*ellipsis;[^}]*width:\s*100%;/s',
+			$css
+		);
+		$this->assertMatchesRegularExpression(
+			'/\.gallery-classic-image-title a\s*\{[^}]*display:\s*block;[^}]*max-width:\s*100%;[^}]*overflow:\s*hidden;[^}]*text-overflow:\s*ellipsis;[^}]*white-space:\s*nowrap;[^}]*width:\s*100%;/s',
 			$css
 		);
 	}

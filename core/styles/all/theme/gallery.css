@@ -1711,9 +1711,11 @@ input.autowidth-gallery {
 	font-size: 1em;
 	font-weight: bold;
 	line-height: 1.35;
+	max-width: 100%;
 	text-align: center;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+	width: 100%;
 }
 
 .gallery-classic-image-heading
@@ -1729,10 +1731,13 @@ input.autowidth-gallery {
 
 .gallery-classic-image-title a
 {
+	display: block;
+	max-width: 100%;
 	min-width: 0;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+	width: 100%;
 }
 
 .gallery-classic-thumbnail
