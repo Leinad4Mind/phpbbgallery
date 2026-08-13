@@ -1678,8 +1678,8 @@ input.autowidth-gallery {
 .gallery-classic-image-grid
 {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr));
 	gap: 10px;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .gallery-classic-image,
@@ -1884,11 +1884,19 @@ input.autowidth-gallery {
 	padding: 0 9px 9px;
 }
 
+@media (max-width: 900px)
+{
+	.gallery-classic-image-grid
+	{
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
 @media (max-width: 520px)
 {
 	.gallery-classic-image-grid
 	{
-		grid-template-columns: repeat(auto-fill, minmax(min(100%, 160px), 1fr));
+		grid-template-columns: minmax(0, 1fr);
 	}
 }
 

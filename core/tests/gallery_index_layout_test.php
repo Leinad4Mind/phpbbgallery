@@ -76,7 +76,15 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertStringContainsString('phpbbgallery_core_album_image_metadata', $classic);
 		$this->assertStringContainsString('album_rating_stars.html', $classic);
 		$this->assertStringContainsString('S_STATUS_UNAPPROVED_ACTION', $classic);
-		$this->assertStringContainsString('grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr));', $css);
+		$this->assertStringContainsString('grid-template-columns: repeat(4, minmax(0, 1fr));', $css);
+		$this->assertMatchesRegularExpression(
+			'/@media \(max-width:\s*900px\)\s*\{[^}]*\.gallery-classic-image-grid\s*\{[^}]*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\);/s',
+			$css
+		);
+		$this->assertMatchesRegularExpression(
+			'/@media \(max-width:\s*520px\)\s*\{[^}]*\.gallery-classic-image-grid\s*\{[^}]*grid-template-columns:\s*minmax\(0, 1fr\);/s',
+			$css
+		);
 		$this->assertMatchesRegularExpression(
 			'/\\.gallery-classic-thumbnail\\s*\\{[^}]*box-sizing:\\s*border-box;[^}]*overflow:\\s*hidden;/s',
 			$css
