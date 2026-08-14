@@ -11,6 +11,7 @@ namespace phpbbgallery\acpcleanup\tests;
 
 use phpbbgallery\acpcleanup\acp\main_module;
 use PHPUnit\Framework\TestCase;
+use ReflectionMethod;
 
 final class main_module_test extends TestCase
 {
@@ -67,9 +68,27 @@ final class main_module_test extends TestCase
 
 		$this->assertStringNotContainsString('opendir(', $source);
 		$this->assertStringNotContainsString('readdir(', $source);
-		$this->assertStringContainsString('$storage_workspace->exists(', $source);
+		$this->assertStringContainsString('check_link_hash(', $source);
+		$this->assertStringContainsString("'acp_gallery_source_check'", $source);
+		$this->assertStringContainsString('$source_diagnostic->scan_batch($after_id, $batch_size)', $source);
+		$this->assertStringContainsString('$source_diagnostic->missing_page($source_start, $source_per_page)', $source);
+		$this->assertStringContainsString('$batch_size = 25;', $source);
+		$this->assertStringContainsString('$source_per_page = 25;', $source);
 		$this->assertStringContainsString('$storage_workspace->list_objects(', $source);
 		$this->assertStringContainsString('$storage_workspace->materialize(', $source);
+	}
+
+	public function test_missing_source_statuses_have_explicit_labels(): void
+	{
+		$module = new main_module();
+		$method = new ReflectionMethod($module, 'missing_source_status_key');
+
+		$this->assertSame('MISSING_SOURCE_STATUS_UNAPPROVED', $method->invoke($module, 0));
+		$this->assertSame('MISSING_SOURCE_STATUS_APPROVED', $method->invoke($module, 1));
+		$this->assertSame('MISSING_SOURCE_STATUS_LOCKED', $method->invoke($module, 2));
+		$this->assertSame('MISSING_SOURCE_STATUS_ORPHAN', $method->invoke($module, 3));
+		$this->assertSame('MISSING_SOURCE_STATUS_DELETE_REQUESTED', $method->invoke($module, 4));
+		$this->assertSame('MISSING_SOURCE_STATUS_UNKNOWN', $method->invoke($module, 99));
 	}
 
 	public function test_orphan_scan_supports_distributed_keys_and_filters_non_sources(): void

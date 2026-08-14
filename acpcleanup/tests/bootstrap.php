@@ -79,6 +79,12 @@ namespace phpbbgallery\core
 {
 	class block
 	{
+		public const STATUS_UNAPPROVED = 0;
+		public const STATUS_APPROVED = 1;
+		public const STATUS_LOCKED = 2;
+		public const STATUS_ORPHAN = 3;
+		public const STATUS_DELETE_REQUESTED = 4;
+
 		public function get_image_status_unapproved(): int
 		{
 			return 0;
@@ -236,6 +242,7 @@ namespace
 	require_once $gallery_root . '/core/storage/workspace.php';
 	require_once dirname(__DIR__) . '/event/main_listener.php';
 	require_once dirname(__DIR__) . '/cleanup.php';
+	require_once dirname(__DIR__) . '/source_diagnostic.php';
 	require_once dirname(__DIR__) . '/bbcode/legacy_migrator.php';
 	require_once dirname(__DIR__) . '/acp/main_module.php';
 	require_once dirname(__DIR__) . '/migrations/m1_init.php';

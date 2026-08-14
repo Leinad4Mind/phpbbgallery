@@ -25,6 +25,14 @@ services:
             - '%phpbbgallery.tables.gallery_albums%'
             - '%phpbbgallery.tables.gallery_images%'
 
+    phpbbgallery.acpcleanup.source_diagnostic:
+        class: phpbbgallery\acpcleanup\source_diagnostic
+        arguments:
+            - '@dbal.conn'
+            - '@phpbbgallery.core.storage.workspace'
+            - '%phpbbgallery.tables.gallery_images%'
+            - '%phpbbgallery.tables.gallery_albums%'
+
     phpbbgallery.acpcleanup.bbcode.legacy_migrator:
         class: phpbbgallery\acpcleanup\bbcode\legacy_migrator
         arguments:

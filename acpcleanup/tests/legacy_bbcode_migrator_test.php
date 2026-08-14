@@ -122,7 +122,7 @@ final class legacy_bbcode_migrator_test extends TestCase
 		$this->assertStringContainsString('check_link_hash(', $module);
 		$this->assertStringContainsString("'S_LEGACY_BBCODE_PROGRESS' => true", $module);
 		$this->assertStringNotContainsString('redirect($this->u_action', $module);
-		$this->assertStringContainsString('{% if S_LEGACY_BBCODE_PROGRESS %}', $template);
+		$this->assertStringContainsString('{% elseif S_LEGACY_BBCODE_PROGRESS %}', $template);
 		$this->assertStringContainsString('<div class="successbox">', $template);
 		$this->assertStringContainsString('<progress value="{{ LEGACY_BBCODE_COMPLETED }}"', $template);
 		$this->assertStringContainsString("lang('LOADING')", $template);

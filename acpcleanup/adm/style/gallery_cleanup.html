@@ -2,7 +2,18 @@
 
 <a name="maincontent"></a>
 
-{% if S_LEGACY_BBCODE_PROGRESS %}
+{% if S_SOURCE_CHECK_PROGRESS %}
+	<div class="successbox">
+		<h3>{{ lang('SOURCE_CHECK_PROGRESS') }}</h3>
+		<p>
+			{{ lang('SOURCE_CHECK_RESULT', SOURCE_CHECKED, SOURCE_MISSING) }}
+			<br />{{ lang('LOADING') }}
+			<br />
+			<progress value="{{ SOURCE_CHECKED }}" max="{{ SOURCE_TOTAL }}" style="height: 2em; width: 20em;"></progress>
+			<br />{{ ((SOURCE_CHECKED / SOURCE_TOTAL) * 100)|number_format(2) }} %
+		</p>
+	</div>
+{% elseif S_LEGACY_BBCODE_PROGRESS %}
 	<div class="successbox">
 		<h3>{{ lang('GALLERY_LEGACY_BBCODE_MIGRATE') }}</h3>
 		<p>
@@ -16,21 +27,49 @@
 {% else %}
 <h1>{{ ACP_GALLERY_TITLE }}</h1>
 <p>{{ ACP_GALLERY_TITLE_EXPLAIN }}</p>
+{% if S_SOURCE_CHECK_COMPLETE %}
+	<div class="successbox">
+		<h3>{{ lang('SOURCE_CHECK_COMPLETE') }}</h3>
+		<p>{{ lang('SOURCE_CHECK_RESULT', SOURCE_CHECKED, SOURCE_MISSING) }}</p>
+	</div>
+{% endif %}
 
 <form id="acp_gallery" method="post" action="{{ U_ACTION }}">
 	<fieldset>
 		<legend>{{ lang('MANAGE_CRASHED_IMAGES') }}</legend>
-		<dl>
-			<dt><label{% if sourcerow|length %} for="source"{% endif %}>{{ lang('MISSING_SOURCE') }}{{ lang('COLON') }}</label>
-				<br /><span><a href="{{ CHECK_SOURCE }}">{{ lang('CHECK') }}</a></span></dt>
-			<dd>{% if not sourcerow|length %}
-				{{ lang('CHECK_SOURCE_EXPLAIN') }}
-			{% else %}
-				<select id="source" name="source[]" multiple="multiple" size="10">
-					{% for sourcerow in sourcerow %}<option value="{{ sourcerow.IMAGE_ID }}">{{ lang('IMAGE_ID') }}{{ lang('COLON') }} {{ sourcerow.IMAGE_ID }} - {{ sourcerow.IMAGE_NAME }}</option>{% endfor %}
-				</select>
-			{% endif %}</dd>
-		</dl>
+		<p>{{ lang('MISSING_SOURCE_DIAGNOSTIC_EXPLAIN') }}</p>
+		<p><a class="button2" href="{{ CHECK_SOURCE }}">{{ lang('SOURCE_CHECK_RUN') }}</a></p>
+		{% if not sourcerow|length %}
+			<p>{{ lang('CHECK_SOURCE_EXPLAIN') }}</p>
+		{% else %}
+			<p>{{ lang('MISSING_SOURCE_SUMMARY', TOTAL_MISSING_SOURCES, SOURCE_PROVIDER) }}</p>
+			<table class="table1 zebra-table">
+				<thead>
+					<tr>
+						<th>{{ lang('SELECT') }}</th>
+						<th>{{ lang('IMAGE') }}</th>
+						<th>{{ lang('MISSING_SOURCE_CONTEXT') }}</th>
+						<th>{{ lang('IMAGE_STATUS') }}</th>
+						<th>{{ lang('MISSING_SOURCE_EXPECTED_KEY') }}</th>
+						<th>{{ lang('MISSING_SOURCE_DERIVATIVES') }}</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for sourcerow in sourcerow %}
+						<tr>
+							<td><input id="source_{{ sourcerow.IMAGE_ID }}" name="source[]" type="checkbox" value="{{ sourcerow.IMAGE_ID }}" /></td>
+							<td><label for="source_{{ sourcerow.IMAGE_ID }}"><strong>#{{ sourcerow.IMAGE_ID }} — {{ sourcerow.IMAGE_NAME }}</strong></label></td>
+							<td>{{ lang('ALBUM') }}{{ lang('COLON') }} {{ sourcerow.ALBUM_NAME }}<br />{{ lang('AUTHOR') }}{{ lang('COLON') }} {{ sourcerow.AUTHOR_NAME }}</td>
+							<td>{{ sourcerow.STATUS }}</td>
+							<td><code>{{ SOURCE_PROVIDER }}/source/{{ sourcerow.IMAGE_KEY }}</code></td>
+							<td>{{ lang('MISSING_SOURCE_MEDIUM') }}{{ lang('COLON') }} {% if sourcerow.S_MEDIUM_EXISTS %}{{ lang('YES') }}{% else %}{{ lang('NO') }}{% endif %}<br />{{ lang('MISSING_SOURCE_MINI') }}{{ lang('COLON') }} {% if sourcerow.S_MINI_EXISTS %}{{ lang('YES') }}{% else %}{{ lang('NO') }}{% endif %}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			{% if pagination|length %}{% include 'pagination.html' %}{% endif %}
+			<p>{{ lang('MISSING_SOURCE_RESTORE_EXPLAIN') }}</p>
+		{% endif %}
 		<dl>
 			<dt><label{% if entryrow|length %} for="entry"{% endif %}>{{ lang('MISSING_ENTRY') }}{{ lang('COLON') }}</label>
 				<br /><span><a href="{{ CHECK_ENTRY }}">{{ lang('CHECK') }}</a></span></dt>

@@ -156,6 +156,7 @@ class main_module
 		$gallery_auth = $phpbb_container->get('phpbbgallery.core.auth');
 		$gallery_url = $phpbb_container->get('phpbbgallery.core.url');
 		$storage_workspace = $phpbb_container->get('phpbbgallery.core.storage.workspace');
+		$source_diagnostic = $phpbb_container->get('phpbbgallery.acpcleanup.source_diagnostic');
 
 		// Lets detect if ACP Import exists (find if directory is with RW access)
 		$acp_import_installed = false;
@@ -433,6 +434,53 @@ class main_module
 			}
 		}
 
+		$check_mode = $request->variable('check_mode', '');
+		$source_check_complete = false;
+		$source_checked = 0;
+		$source_missing_count = 0;
+		if ($check_mode === 'source')
+		{
+			if (!$auth->acl_get('a_gallery_cleanup'))
+			{
+				trigger_error($user->lang('NO_AUTH_OPERATION') . adm_back_link($this->u_action), E_USER_WARNING);
+			}
+			if (!check_link_hash($request->variable('hash', ''), 'acp_gallery_source_check'))
+			{
+				trigger_error($user->lang('FORM_INVALID') . adm_back_link($this->u_action), E_USER_WARNING);
+			}
+
+			$batch_size = 25;
+			$after_id = max(0, $request->variable('source_after_id', 0));
+			$source_checked = max(0, $request->variable('source_checked', 0));
+			$source_missing_count = max(0, $request->variable('source_missing', 0));
+			$source_total = $source_diagnostic->count_all();
+
+			$scan = $source_diagnostic->scan_batch($after_id, $batch_size);
+			$after_id = $scan['last_id'];
+			$source_checked += $scan['checked'];
+			$source_missing_count += $scan['missing'];
+			if ($scan['has_more'])
+			{
+				$next_url = append_sid($this->u_action
+					. '&amp;check_mode=source'
+					. '&amp;source_after_id=' . $after_id
+					. '&amp;source_checked=' . $source_checked
+					. '&amp;source_missing=' . $source_missing_count
+					. '&amp;hash=' . generate_link_hash('acp_gallery_source_check'));
+				meta_refresh(1, $next_url);
+				$template->assign_vars([
+					'S_SOURCE_CHECK_PROGRESS' => true,
+					'SOURCE_CHECKED' => $source_checked,
+					'SOURCE_MISSING' => $source_missing_count,
+					'SOURCE_TOTAL' => max(1, $source_total),
+				]);
+				return;
+			}
+			$source_checked = $source_total;
+			$source_missing_count = $source_diagnostic->count_missing();
+			$source_check_complete = true;
+		}
+
 		$requested_source = [];
 		$sql_array = [
 			'SELECT'		=> 'i.image_id, i.image_name, i.image_filemissing, i.image_filename, i.image_username, u.user_id',
@@ -449,13 +497,6 @@ class main_module
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result))
 		{
-			if ($row['image_filemissing'])
-			{
-				$template->assign_block_vars('sourcerow', [
-					'IMAGE_ID'		=> $row['image_id'],
-					'IMAGE_NAME'	=> $row['image_name'],
-				]);
-			}
 			if (!$row['user_id'])
 			{
 				$template->assign_block_vars('authorrow', [
@@ -467,35 +508,37 @@ class main_module
 		}
 		$db->sql_freeresult($result);
 
-		$check_mode = $request->variable('check_mode', '');
-		if ($check_mode == 'source')
+		$total_missing_sources = $source_diagnostic->count_missing();
+		$source_per_page = 25;
+		$source_start = max(0, $request->variable('source_start', 0));
+		if ($source_start >= $total_missing_sources && $total_missing_sources > 0)
 		{
-			$source_missing = [];
-
-			// Reset the status: a image might have been viewed without file but the file is back
-			$sql = 'UPDATE ' . $table_prefix . 'gallery_images
-				SET image_filemissing = 0';
-			$db->sql_query($sql);
-
-			$sql = 'SELECT image_id, image_filename, image_filemissing
-				FROM ' . $table_prefix . 'gallery_images';
-			$result = $db->sql_query($sql);
-			while ($row = $db->sql_fetchrow($result))
-			{
-				if (!$storage_workspace->exists(\phpbbgallery\core\storage\provider_interface::SOURCE, (string) $row['image_filename']))
-				{
-					$source_missing[] = $row['image_id'];
-				}
-			}
-			$db->sql_freeresult($result);
-
-			if ($source_missing)
-			{
-				$sql = 'UPDATE ' . $table_prefix . 'gallery_images
-					SET image_filemissing = 1
-					WHERE ' . $db->sql_in_set('image_id', $source_missing);
-				$db->sql_query($sql);
-			}
+			$source_start = (int) (floor(($total_missing_sources - 1) / $source_per_page) * $source_per_page);
+		}
+		foreach ($source_diagnostic->missing_page($source_start, $source_per_page) as $row)
+		{
+			$key = (string) $row['image_filename'];
+			$template->assign_block_vars('sourcerow', [
+				'IMAGE_ID' => (int) $row['image_id'],
+				'IMAGE_NAME' => (string) $row['image_name'],
+				'IMAGE_KEY' => $key,
+				'ALBUM_NAME' => (string) ($row['album_name'] ?? ''),
+				'AUTHOR_NAME' => (string) $row['image_username'],
+				'STATUS' => $user->lang($this->missing_source_status_key((int) $row['image_status'])),
+				'S_MEDIUM_EXISTS' => (bool) $row['medium_exists'],
+				'S_MINI_EXISTS' => (bool) $row['mini_exists'],
+			]);
+		}
+		if ($total_missing_sources > $source_per_page)
+		{
+			$phpbb_container->get('pagination')->generate_template_pagination(
+				$this->u_action,
+				'pagination',
+				'source_start',
+				$total_missing_sources,
+				$source_per_page,
+				$source_start
+			);
 		}
 
 		if ($check_mode == 'entry')
@@ -607,8 +650,13 @@ class main_module
 			'ACP_GALLERY_TITLE'				=> $user->lang['ACP_GALLERY_CLEANUP'],
 			'ACP_GALLERY_TITLE_EXPLAIN'		=> $user->lang['ACP_GALLERY_CLEANUP_EXPLAIN'],
 			'ACP_IMPORT_INSTALLED'	=> $acp_import_installed,
-			'CHECK_SOURCE'			=> $this->u_action . '&amp;check_mode=source',
+			'CHECK_SOURCE'			=> $this->u_action . '&amp;check_mode=source&amp;hash=' . generate_link_hash('acp_gallery_source_check'),
 			'CHECK_ENTRY'			=> $this->u_action . '&amp;check_mode=entry',
+			'S_SOURCE_CHECK_COMPLETE' => $source_check_complete,
+			'SOURCE_CHECKED' => $source_checked,
+			'SOURCE_MISSING' => $source_missing_count,
+			'SOURCE_PROVIDER' => $phpbb_container->get('phpbbgallery.core.storage.active')->get_id(),
+			'TOTAL_MISSING_SOURCES' => $total_missing_sources,
 
 			'U_FIND_USERNAME'		=> $gallery_url->append_sid('phpbb', 'memberlist', 'mode=searchuser&amp;form=acp_gallery&amp;field=prune_usernames'),
 			'S_SELECT_ALBUM'		=> $gallery_album->get_albumbox(false, '', false, false, false, (int) \phpbbgallery\core\block::PUBLIC_ALBUM, (int) \phpbbgallery\core\block::TYPE_UPLOAD),
@@ -617,6 +665,19 @@ class main_module
 			'ACTIVE_BBCODE_TAG'		=> '[' . $gallery_config->get_bbcode_tag() . ']',
 			'LEGACY_BBCODE_BATCH_SIZE' => \phpbbgallery\acpcleanup\bbcode\legacy_migrator::BATCH_SIZE,
 		]);
+	}
+
+	private function missing_source_status_key(int $status): string
+	{
+		return match ($status)
+		{
+			\phpbbgallery\core\block::STATUS_UNAPPROVED => 'MISSING_SOURCE_STATUS_UNAPPROVED',
+			\phpbbgallery\core\block::STATUS_APPROVED => 'MISSING_SOURCE_STATUS_APPROVED',
+			\phpbbgallery\core\block::STATUS_LOCKED => 'MISSING_SOURCE_STATUS_LOCKED',
+			\phpbbgallery\core\block::STATUS_ORPHAN => 'MISSING_SOURCE_STATUS_ORPHAN',
+			\phpbbgallery\core\block::STATUS_DELETE_REQUESTED => 'MISSING_SOURCE_STATUS_DELETE_REQUESTED',
+			default => 'MISSING_SOURCE_STATUS_UNKNOWN',
+		};
 	}
 
 	/** @return list<string> */
