@@ -104,6 +104,22 @@ final class acp_main_types_test extends TestCase
 		$this->assertSame(2, substr_count($template, 'continueButton.disabled = false;'));
 	}
 
+	public function test_storage_migration_separates_missing_sources_and_links_optional_cleanup(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/acp/main_module.php');
+		$template = (string) file_get_contents(dirname(__DIR__) . '/adm/style/gallery_main.html');
+		$quote = chr(39);
+
+		$this->assertStringContainsString('$storage_status[' . $quote . 'migratable' . $quote . ']', $source);
+		$this->assertStringContainsString('$storage_status[' . $quote . 'missing_source' . $quote . ']', $source);
+		$this->assertStringContainsString('is_enabled(' . $quote . 'phpbbgallery/acpcleanup' . $quote . ')', $source);
+		$this->assertStringContainsString('acl_get(' . $quote . 'a_gallery_cleanup' . $quote . ')', $source);
+		$this->assertStringContainsString('check_mode=source', $source);
+		$this->assertStringContainsString('STORAGE_MIGRATION_MISSING_SOURCE_EXPLAIN', $template);
+		$this->assertStringContainsString('S_STORAGE_CLEANUP_AVAILABLE', $template);
+		$this->assertStringNotContainsString('S_STORAGE_MIGRATION_PENDING', $template);
+	}
+
 	public function test_dimension_resync_is_confirmed_authorized_and_bounded(): void
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/acp/main_module.php');

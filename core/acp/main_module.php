@@ -88,8 +88,8 @@ class main_module
 		// init rating
 		$phpbb_gallery_rating = $phpbb_container->get('phpbbgallery.core.rating');
 		$phpbb_dispatcher = $phpbb_container->get('dispatcher');
-		$gallery_version = (string) $phpbb_container
-			->get('ext.manager')
+		$extension_manager = $phpbb_container->get('ext.manager');
+		$gallery_version = (string) $extension_manager
 			->create_extension_metadata_manager('phpbbgallery/core')
 			->get_metadata('version');
 
@@ -236,7 +236,7 @@ class main_module
 				]);
 			}
 		}
-		$this->assign_environment_status($template, $phpbb_container->get('ext.manager'));
+		$this->assign_environment_status($template, $extension_manager);
 		if (!confirm_box(true))
 		{
 			$confirm = false;
@@ -610,6 +610,10 @@ class main_module
 		$db->sql_freeresult($result);
 
 		$storage_status = $distributed_storage ? $storage_migrator->status() : [];
+		$missing_sources = (int) ($storage_status['missing_source'] ?? 0);
+		$cleanup_available = $missing_sources > 0
+			&& $extension_manager->is_enabled('phpbbgallery/acpcleanup')
+			&& $auth->acl_get('a_gallery_cleanup');
 		$template->assign_vars([
 			'S_GALLERY_OVERVIEW'			=> true,
 			'S_GALLERY_ACP_OPERATION_HELP'	=> true,
@@ -630,11 +634,19 @@ class main_module
 
 			'S_FOUNDER'				=> ($user->data['user_type'] == USER_FOUNDER) ? true : false,
 			'S_STORAGE_DISTRIBUTED'	=> $distributed_storage,
-			'S_STORAGE_MIGRATION_AVAILABLE' => $distributed_storage && $auth->acl_get('a_board') && (($storage_status['pending'] ?? 0) > 0),
+			'S_STORAGE_MIGRATION_AVAILABLE' => $distributed_storage && $auth->acl_get('a_board') && (($storage_status['migratable'] ?? 0) > 0),
 			'S_STORAGE_MIGRATION_ISSUES' => ($storage_status['invalid'] ?? 0) > 0,
-			'S_STORAGE_MIGRATION_PENDING' => (int) ($storage_status['pending'] ?? 0),
+			'S_STORAGE_MIGRATION_MISSING' => $missing_sources > 0,
+			'S_STORAGE_CLEANUP_AVAILABLE' => $cleanup_available,
+			'S_STORAGE_MIGRATION_MIGRATABLE' => (int) ($storage_status['migratable'] ?? 0),
+			'S_STORAGE_MIGRATION_MISSING_SOURCE' => $missing_sources,
 			'S_STORAGE_MIGRATION_DISTRIBUTED' => (int) ($storage_status['distributed'] ?? 0),
 			'S_STORAGE_MIGRATION_INVALID' => (int) ($storage_status['invalid'] ?? 0),
+			'U_STORAGE_CLEANUP' => $cleanup_available ? $gallery_url->append_sid(
+				'admin',
+				'index',
+				'i=-phpbbgallery-acpcleanup-acp-main_module&amp;mode=cleanup&amp;check_mode=source&amp;hash=' . generate_link_hash('acp_gallery_source_check')
+			) : '',
 			'U_ACTION'				=> $this->u_action,
 		]);
 	}
@@ -648,6 +660,7 @@ class main_module
 		$summary = $migrator->migrate_batch($request->variable('storage_after_id', 0), 25);
 		$migrated = $request->variable('storage_migrated', 0) + $summary['migrated'];
 		$skipped = $request->variable('storage_skipped', 0) + $summary['skipped'];
+		$missing_source = $request->variable('storage_missing_source', 0) + $summary['missing_source'];
 		$failed = $request->variable('storage_failed', 0) + $summary['failed'];
 
 		$template->assign_vars([
@@ -658,6 +671,7 @@ class main_module
 			'S_STORAGE_MIGRATION_FAILED' => $failed > 0,
 			'S_STORAGE_MIGRATED' => $migrated,
 			'S_STORAGE_SKIPPED' => $skipped,
+			'S_STORAGE_MISSING_SOURCE' => $missing_source,
 			'S_STORAGE_FAILED' => $failed,
 			'S_STORAGE_AFTER_ID' => $summary['last_id'],
 			'U_ACTION' => $this->u_action,

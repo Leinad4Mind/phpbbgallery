@@ -37,18 +37,34 @@ final class storage_layout_migrator_test extends TestCase
 
 	public function test_status_distinguishes_pending_distributed_and_invalid_keys(): void
 	{
-		[$migrator] = $this->migrator([
+		[$migrator, $storage] = $this->migrator([
 			['image_id' => 1, 'image_filename' => '7127abfe.jpeg'],
 			['image_id' => 2, 'image_filename' => '7/71/7127abfe.jpeg'],
 			['image_id' => 3, 'image_filename' => 'unexpected/path.jpeg'],
+			['image_id' => 4, 'image_filename' => 'abcdef12.jpg'],
 		]);
+		$this->put($storage, provider_interface::SOURCE, '7127abfe.jpeg', 'source');
 
 		$this->assertSame([
-			'total' => 3,
+			'total' => 4,
 			'distributed' => 1,
-			'pending' => 1,
+			'migratable' => 1,
+			'missing_source' => 1,
 			'invalid' => 1,
 		], $migrator->status());
+	}
+
+	public function test_status_becomes_migratable_after_the_source_is_restored(): void
+	{
+		[$migrator, $storage] = $this->migrator([
+			['image_id' => 7, 'image_filename' => 'abcdef12.jpg'],
+		]);
+
+		$this->assertSame(1, $migrator->status()['missing_source']);
+		$this->put($storage, provider_interface::SOURCE, 'abcdef12.jpg', 'restored');
+		$status = $migrator->status();
+		$this->assertSame(1, $status['migratable']);
+		$this->assertSame(0, $status['missing_source']);
 	}
 
 	public function test_migration_verifies_and_moves_every_existing_variant(): void
@@ -86,7 +102,8 @@ final class storage_layout_migrator_test extends TestCase
 
 		$result = $migrator->migrate_batch();
 
-		$this->assertSame(1, $result['failed']);
+		$this->assertSame(1, $result['missing_source']);
+		$this->assertSame(0, $result['failed']);
 		$this->assertSame([], $state->queries);
 		$this->assertFalse($storage->exists(provider_interface::SOURCE, 'a/ab/abcdef12.jpg'));
 	}

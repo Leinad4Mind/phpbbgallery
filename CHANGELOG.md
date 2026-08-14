@@ -65,6 +65,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Split distributed-storage status into files ready to migrate, missing source files, already distributed files and invalid keys; migration now processes only actionable files, reports missing sources separately and links authorized administrators to ACP Cleanup without making it a Core dependency.
 - Fixed automatic distributed-layout migration and image-dimension synchronization batches being rejected by phpBB when they resubmitted a newly created CSRF form token within the same second.
 - Derived album and ancestor new-image indicators from the permission-filtered per-image read tracker, so they now clear automatically after every visible new image has been shown without prematurely marking unseen pagination pages as read.
 - Restored Image Revisions activation by keeping its manual lifecycle reconciler aligned with the current revision service dependencies.

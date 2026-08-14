@@ -36,14 +36,15 @@ class layout_migrator
 	/**
 	 * Count database keys by layout without changing files.
 	 *
-	 * @return array{total: int, distributed: int, pending: int, invalid: int}
+	 * @return array{total: int, distributed: int, migratable: int, missing_source: int, invalid: int}
 	 */
 	public function status(): array
 	{
 		$status = [
 			'total' => 0,
 			'distributed' => 0,
-			'pending' => 0,
+			'migratable' => 0,
+			'missing_source' => 0,
 			'invalid' => 0,
 		];
 		$sql = 'SELECT image_filename
@@ -52,7 +53,15 @@ class layout_migrator
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$status['total']++;
-			$status[$this->classify((string) $row['image_filename'])]++;
+			$key = (string) $row['image_filename'];
+			$classification = $this->classify($key);
+			if ($classification === 'pending')
+			{
+				$classification = $this->storage->exists(provider_interface::SOURCE, $key)
+					? 'migratable'
+					: 'missing_source';
+			}
+			$status[$classification]++;
 		}
 		$this->db->sql_freeresult($result);
 
@@ -62,7 +71,7 @@ class layout_migrator
 	/**
 	 * Migrate one bounded page of image records.
 	 *
-	 * @return array{processed: int, migrated: int, skipped: int, failed: int, last_id: int, has_more: bool}
+	 * @return array{processed: int, migrated: int, skipped: int, missing_source: int, failed: int, last_id: int, has_more: bool}
 	 */
 	public function migrate_batch(int $after_id = 0, int $limit = 25): array
 	{
@@ -83,6 +92,7 @@ class layout_migrator
 			'processed' => count($rows),
 			'migrated' => 0,
 			'skipped' => 0,
+			'missing_source' => 0,
 			'failed' => 0,
 			'last_id' => $after_id,
 			'has_more' => count($rows) === $limit,
@@ -139,7 +149,7 @@ class layout_migrator
 
 		if (!$this->storage->exists(provider_interface::SOURCE, $old_key))
 		{
-			return 'failed';
+			return 'missing_source';
 		}
 
 		$created = [];

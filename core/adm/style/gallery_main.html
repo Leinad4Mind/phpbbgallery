@@ -8,7 +8,7 @@
 {% if S_STORAGE_MIGRATION_PROGRESS %}
 	<div class='successbox'>
 		<h3>{% if S_STORAGE_MIGRATION_MORE %}{{ lang('STORAGE_MIGRATION_PROGRESS') }}{% else %}{{ lang('STORAGE_MIGRATION_COMPLETE') }}{% endif %}</h3>
-		<p>{{ lang('STORAGE_MIGRATION_RESULT', S_STORAGE_MIGRATED, S_STORAGE_SKIPPED, S_STORAGE_FAILED) }}</p>
+		<p>{{ lang('STORAGE_MIGRATION_RESULT', S_STORAGE_MIGRATED, S_STORAGE_SKIPPED, S_STORAGE_MISSING_SOURCE, S_STORAGE_FAILED) }}</p>
 	</div>
 	{% if S_STORAGE_MIGRATION_FAILED %}
 		<div class='errorbox'><p>{{ lang('STORAGE_MIGRATION_FAILED_EXPLAIN') }}</p></div>
@@ -19,6 +19,7 @@
 			<input type='hidden' name='storage_after_id' value='{{ S_STORAGE_AFTER_ID }}' />
 			<input type='hidden' name='storage_migrated' value='{{ S_STORAGE_MIGRATED }}' />
 			<input type='hidden' name='storage_skipped' value='{{ S_STORAGE_SKIPPED }}' />
+			<input type='hidden' name='storage_missing_source' value='{{ S_STORAGE_MISSING_SOURCE }}' />
 			<input type='hidden' name='storage_failed' value='{{ S_STORAGE_FAILED }}' />
 			{{ S_FORM_TOKEN }}
 			<p class='submit-buttons'><input class='button1' type='submit' value='{{ lang('STORAGE_MIGRATION_CONTINUE') }}' /></p>
@@ -223,7 +224,13 @@
 	{% if S_STORAGE_DISTRIBUTED %}
 	<fieldset>
 		<legend>{{ lang('STORAGE_MIGRATION') }}</legend>
-		<p>{{ lang('STORAGE_MIGRATION_STATUS', S_STORAGE_MIGRATION_PENDING, S_STORAGE_MIGRATION_DISTRIBUTED, S_STORAGE_MIGRATION_INVALID) }}</p>
+		<p>{{ lang('STORAGE_MIGRATION_STATUS', S_STORAGE_MIGRATION_MIGRATABLE, S_STORAGE_MIGRATION_MISSING_SOURCE, S_STORAGE_MIGRATION_DISTRIBUTED, S_STORAGE_MIGRATION_INVALID) }}</p>
+		{% if S_STORAGE_MIGRATION_MISSING %}
+			<div class='errorbox'>
+				<p>{{ lang('STORAGE_MIGRATION_MISSING_SOURCE_EXPLAIN', S_STORAGE_MIGRATION_MISSING_SOURCE) }}</p>
+				{% if S_STORAGE_CLEANUP_AVAILABLE %}<p><a class='button2' href='{{ U_STORAGE_CLEANUP }}'>{{ lang('STORAGE_MIGRATION_REVIEW_CLEANUP') }}</a></p>{% else %}<p>{{ lang('STORAGE_MIGRATION_CLEANUP_UNAVAILABLE') }}</p>{% endif %}
+			</div>
+		{% endif %}
 		{% if S_STORAGE_MIGRATION_ISSUES %}<p class='errorbox'>{{ lang('STORAGE_MIGRATION_INVALID_EXPLAIN') }}</p>{% endif %}
 		{% if S_STORAGE_MIGRATION_AVAILABLE %}
 		<form id='action_storage_migrate_form' method='post' action='{{ U_ACTION }}'>
