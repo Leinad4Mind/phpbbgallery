@@ -59,6 +59,7 @@ use phpbbgallery\core\migrations\subalbum_icon_display;
 use phpbbgallery\core\migrations\subalbum_display_modes;
 use phpbbgallery\core\migrations\statistics_dashboard;
 use phpbbgallery\core\migrations\statistics_permission;
+use phpbbgallery\core\migrations\disp_image_type;
 
 class migration_integrity_test extends TestCase
 {
@@ -110,6 +111,7 @@ class migration_integrity_test extends TestCase
 		subalbum_display_modes::class,
 		statistics_dashboard::class,
 		statistics_permission::class,
+		disp_image_type::class,
 		release_4_1_0::class,
 		remove_legacy_version_config::class,
 	];
@@ -314,7 +316,7 @@ class migration_integrity_test extends TestCase
 		$migration = (new \ReflectionClass(release_4_1_0::class))->newInstanceWithoutConstructor();
 
 		$this->assertSame([
-			'\\phpbbgallery\\core\\migrations\\statistics_permission',
+			'\\phpbbgallery\\core\\migrations\\disp_image_type',
 		], release_4_1_0::depends_on());
 		$this->assertSame([
 			['config.update', ['phpbb_gallery_version', '4.1.0']],
@@ -381,6 +383,21 @@ class migration_integrity_test extends TestCase
 		$this->assertTrue($migration->clear_gallery_permission_cache());
 		$this->assertStringContainsString('SET i_statistics = i_view', $queries[0]);
 		$this->assertStringContainsString("SET user_permissions = ''", $queries[1]);
+	}
+
+	public function test_image_type_migration_adds_a_reversible_display_switch(): void
+	{
+		$migration = (new \ReflectionClass(disp_image_type::class))->newInstanceWithoutConstructor();
+
+		$this->assertSame([
+			'\\phpbbgallery\\core\\migrations\\statistics_permission',
+		], disp_image_type::depends_on());
+		$this->assertSame([
+			['config.add', ['phpbb_gallery_disp_image_type', 1]],
+		], $migration->update_data());
+		$this->assertSame([
+			['config.remove', ['phpbb_gallery_disp_image_type']],
+		], $migration->revert_data());
 	}
 
 	public function test_image_card_id_control_is_optional_and_reversible(): void
@@ -1316,6 +1333,7 @@ class migration_integrity_test extends TestCase
 			'subalbum_display_modes.php',
 			'statistics_dashboard.php',
 			'statistics_permission.php',
+			'disp_image_type.php',
 			'release_4_1_0.php',
 			'remove_legacy_version_config.php',
 		] as $migration)

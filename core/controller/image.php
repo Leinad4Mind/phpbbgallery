@@ -891,6 +891,11 @@ class image
 	 */
 	protected function get_image_file_type(string $filename): string
 	{
+		if (!$this->gallery_config->get('disp_image_type') || $filename === '')
+		{
+			return '';
+		}
+
 		$extension = strtolower((string) pathinfo(str_replace('\\', '/', $filename), PATHINFO_EXTENSION));
 		if (!in_array($extension, ['avif', 'bmp', 'gif', 'jpeg', 'jpg', 'png', 'tif', 'tiff', 'webp'], true))
 		{

@@ -35,6 +35,12 @@ final class image_file_type_test extends TestCase
 		$this->assertSame('', $this->file_type_for('stored-image'));
 	}
 
+	public function test_display_switch_hides_the_image_type(): void
+	{
+		$this->assertSame('', $this->file_type_for('stored-image.png', false));
+		$this->assertSame('PNG', $this->file_type_for('stored-image.png', true));
+	}
+
 	public function test_all_view_image_styles_render_the_type_only_in_image_details(): void
 	{
 		$root = dirname(__DIR__);
@@ -53,9 +59,13 @@ final class image_file_type_test extends TestCase
 		}
 	}
 
-	private function file_type_for(string $filename): string
+	private function file_type_for(string $filename, bool $enabled = true): string
 	{
 		$controller = (new \ReflectionClass(image::class))->newInstanceWithoutConstructor();
+		$gallery_config = new \phpbbgallery\core\config(new \phpbb\config\config([
+			'phpbb_gallery_disp_image_type' => $enabled ? 1 : 0,
+		]));
+		(new \ReflectionProperty(image::class, 'gallery_config'))->setValue($controller, $gallery_config);
 		$method = new \ReflectionMethod(image::class, 'get_image_file_type');
 
 		return $method->invoke($controller, $filename);

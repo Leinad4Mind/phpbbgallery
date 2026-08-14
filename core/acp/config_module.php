@@ -24,6 +24,7 @@ class config_module
 		'allow_bmp',
 		'ajax_navigation',
 		'disp_resolution',
+		'disp_image_type',
 		'disp_image_id',
 		'forum_index_mode',
 		'forum_index_recent_count',
@@ -519,6 +520,7 @@ class config_module
 					'ajax_navigation'		=> ['lang' => 'AJAX_IMAGE_NAVIGATION',	'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 					'disp_image_url'		=> ['lang' => 'VIEW_IMAGE_URL',		'validate' => 'bool',	'type' => 'radio:yes_no'],
 					'disp_resolution'		=> ['lang' => 'DISP_RESOLUTION',		'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
+					'disp_image_type'		=> ['lang' => 'DISP_IMAGE_TYPE',		'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 				],
 
 				'THUMBNAIL_SETTINGS'	=> [
