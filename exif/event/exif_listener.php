@@ -378,31 +378,51 @@ class exif_listener implements EventSubscriberInterface
 	{
 		$this->user->add_lang_ext('phpbbgallery/exif', 'info_exif');
 
-		if ($this->gallery_config->get('disp_exifdata') && ($event['image_data']['image_has_exif'] != \phpbbgallery\exif\exif::UNAVAILABLE) && $this->is_jpeg_filename($event['image_data']['image_filename']) && function_exists('exif_read_data') && !$event['hide_private_data'])
+		if ($this->gallery_config->get('disp_exifdata') && ($event['image_data']['image_has_exif'] != \phpbbgallery\exif\exif::UNAVAILABLE) && $this->is_jpeg_filename($event['image_data']['image_filename']) && !$event['hide_private_data'])
 		{
-			$source = null;
 			try
 			{
-				$source = $this->storage_workspace->materialize(
-					\phpbbgallery\core\storage\provider_interface::SOURCE,
+				$exif = $this->load_display_exif(
+					(int) $event['image_id'],
+					(int) $event['image_data']['image_has_exif'],
+					(string) $event['image_data']['image_exif_data'],
 					(string) $event['image_data']['image_filename']
 				);
-				$exif = new \phpbbgallery\exif\exif($source->get_path(), (int) $event['image_id']);
-				$exif->interpret($event['image_data']['image_has_exif'], $event['image_data']['image_exif_data']);
-
 				$exif->send_to_template($this->gallery_user->get_data('user_viewexif'), 'exif_value', $this->get_enabled_fields());
 			}
 			catch (\RuntimeException)
 			{
 				// Missing or unavailable provider objects simply have no EXIF block.
 			}
-			finally
-			{
-				if ($source !== null)
-				{
-					$source->release();
-				}
-			}
+		}
+	}
+
+	/**
+	 * Restore cached EXIF first and materialize the original only for a rebuild.
+	 */
+	protected function load_display_exif(int $image_id, int $status, string $data, string $filename): \phpbbgallery\exif\exif
+	{
+		$exif = new \phpbbgallery\exif\exif('', $image_id);
+		$exif->interpret($status, $data);
+		if ($exif->status === \phpbbgallery\exif\exif::DBSAVED || !\phpbbgallery\exif\exif::$function_exists)
+		{
+			return $exif;
+		}
+
+		$source = $this->storage_workspace->materialize(
+			\phpbbgallery\core\storage\provider_interface::SOURCE,
+			$filename
+		);
+		try
+		{
+			$exif = new \phpbbgallery\exif\exif($source->get_path(), $image_id);
+			$exif->interpret($status, $data);
+
+			return $exif;
+		}
+		finally
+		{
+			$source->release();
 		}
 	}
 

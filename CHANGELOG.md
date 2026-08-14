@@ -66,6 +66,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Prevented a first-view HTTP 500 after rebuilding legacy or unknown EXIF metadata by completing the nullable status-update return contract; valid cached EXIF now also renders without materializing local or remote originals, while source access occurs only when metadata must be rebuilt.
 - Made ACP Cleanup source diagnosis CSRF-protected and resumable in 25-record batches, with paginated provider, key, album, author, publication-state and derivative context plus an explicit restore-before-delete workflow.
 - Split distributed-storage status into files ready to migrate, missing source files, already distributed files and invalid keys; migration now processes only actionable files, reports missing sources separately and links authorized administrators to ACP Cleanup without making it a Core dependency.
 - Fixed automatic distributed-layout migration and image-dimension synchronization batches being rejected by phpBB when they resubmitted a newly created CSRF form token within the same second.

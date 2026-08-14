@@ -377,6 +377,8 @@ class exif
 			SET image_has_exif = ' . $this->status . $update_data . '
 			WHERE image_id = ' . (int) $this->image_id;
 		$db->sql_query($sql);
+
+		return null;
 	}
 
 	/**

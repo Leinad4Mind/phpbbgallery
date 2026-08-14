@@ -204,6 +204,73 @@ final class exif_test extends TestCase
 		$this->assertStringContainsString('@phpbbgallery.core.storage.workspace', $services);
 	}
 
+	public function test_valid_database_cache_does_not_materialize_the_source(): void
+	{
+		$listener = (new \ReflectionClass(exif_listener::class))->newInstanceWithoutConstructor();
+		$method = new \ReflectionMethod(exif_listener::class, 'load_display_exif');
+		$stored = json_encode(['EXIF' => ['FNumber' => '28/10']], JSON_THROW_ON_ERROR);
+
+		$handler = $method->invoke($listener, 42, exif::DBSAVED, $stored, 'remote-image.jpg');
+
+		$this->assertSame(exif::DBSAVED, $handler->status);
+		$this->assertSame(['EXIF' => ['FNumber' => '28/10']], $handler->data);
+	}
+
+	public function test_missing_reader_does_not_materialize_an_unknown_source(): void
+	{
+		$function_exists = exif::$function_exists;
+		exif::$function_exists = false;
+		try
+		{
+			$listener = (new \ReflectionClass(exif_listener::class))->newInstanceWithoutConstructor();
+			$method = new \ReflectionMethod(exif_listener::class, 'load_display_exif');
+			$handler = $method->invoke($listener, 42, exif::UNKNOWN, '', 'remote-image.jpg');
+
+			$this->assertSame(exif::UNKNOWN, $handler->status);
+			$this->assertSame([], $handler->data);
+		}
+		finally
+		{
+			exif::$function_exists = $function_exists;
+		}
+	}
+
+	public function test_unknown_cache_materializes_and_releases_the_source_for_rebuild(): void
+	{
+		$source_path = tempnam(sys_get_temp_dir(), 'gallery_exif_source_');
+		$this->assertNotFalse($source_path);
+		file_put_contents($source_path, 'not a JPEG');
+		$provider = new exif_tracking_provider($source_path);
+		$workspace = new \phpbbgallery\core\storage\workspace($provider, sys_get_temp_dir() . '/gallery_exif_workspace');
+		$listener = (new \ReflectionClass(exif_listener::class))->newInstanceWithoutConstructor();
+		(new \ReflectionProperty(exif_listener::class, 'storage_workspace'))->setValue($listener, $workspace);
+		$method = new \ReflectionMethod(exif_listener::class, 'load_display_exif');
+		$function_exists = exif::$function_exists;
+		exif::$function_exists = true;
+		global $db, $table_prefix;
+		$previous_db = $db ?? null;
+		$previous_table_prefix = $table_prefix ?? null;
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->once())->method('sql_query')->willReturn(true);
+		$table_prefix = 'phpbb_';
+
+		try
+		{
+			$handler = $method->invoke($listener, 42, exif::UNKNOWN, '', 'remote-image.jpg');
+
+			$this->assertSame(1, $provider->local_path_calls);
+			$this->assertSame(exif::UNAVAILABLE, $handler->status);
+			$this->assertFileExists($source_path);
+		}
+		finally
+		{
+			exif::$function_exists = $function_exists;
+			$db = $previous_db;
+			$table_prefix = $previous_table_prefix;
+			@unlink($source_path);
+		}
+	}
+
 	public function test_template_events_cover_every_supported_style(): void
 	{
 		$events = [
