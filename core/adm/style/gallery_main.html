@@ -24,9 +24,15 @@
 			<p class='submit-buttons'><input class='button1' type='submit' value='{{ lang('STORAGE_MIGRATION_CONTINUE') }}' /></p>
 		</form>
 		<script>
-			window.setTimeout(function () {
-				document.getElementById('storage_migration_continue_form').submit();
-			}, 250);
+			(function () {
+				var continueForm = document.getElementById('storage_migration_continue_form');
+				var continueButton = continueForm.querySelector('input[type="submit"]');
+				continueButton.disabled = true;
+				window.setTimeout(function () {
+					continueButton.disabled = false;
+					continueForm.submit();
+				}, 1250);
+			})();
 		</script>
 	{% else %}
 		<p><a href='{{ U_ACTION }}' class='button1'>{{ lang('BACK') }}</a></p>
@@ -52,9 +58,15 @@
 			<p class="submit-buttons"><input class="button1" type="submit" value="{{ lang('RESYNC_IMAGE_DIMENSIONS_CONTINUE') }}" /></p>
 		</form>
 		<script>
-			window.setTimeout(function () {
-				document.getElementById('dimension_sync_continue_form').submit();
-			}, 250);
+			(function () {
+				var continueForm = document.getElementById('dimension_sync_continue_form');
+				var continueButton = continueForm.querySelector('input[type="submit"]');
+				continueButton.disabled = true;
+				window.setTimeout(function () {
+					continueButton.disabled = false;
+					continueForm.submit();
+				}, 1250);
+			})();
 		</script>
 	{% else %}
 		<p><a href="{{ U_ACTION }}" class="button1">{{ lang('BACK') }}</a></p>

@@ -98,6 +98,10 @@ final class acp_main_types_test extends TestCase
 		$this->assertStringContainsString('name=' . $quote . 'storage_migration_continue' . $quote, $template);
 		$this->assertStringContainsString('method=' . $quote . 'post' . $quote, $template);
 		$this->assertStringContainsString('{{ S_FORM_TOKEN }}', $template);
+		$this->assertSame(2, substr_count($template, '}, 1250);'));
+		$this->assertStringNotContainsString('}, 250);', $template);
+		$this->assertSame(2, substr_count($template, 'continueButton.disabled = true;'));
+		$this->assertSame(2, substr_count($template, 'continueButton.disabled = false;'));
 	}
 
 	public function test_dimension_resync_is_confirmed_authorized_and_bounded(): void

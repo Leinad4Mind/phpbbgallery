@@ -65,6 +65,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Fixed automatic distributed-layout migration and image-dimension synchronization batches being rejected by phpBB when they resubmitted a newly created CSRF form token within the same second.
 - Derived album and ancestor new-image indicators from the permission-filtered per-image read tracker, so they now clear automatically after every visible new image has been shown without prematurely marking unseen pagination pages as read.
 - Restored Image Revisions activation by keeping its manual lifecycle reconciler aligned with the current revision service dependencies.
 - Vertically centred folder icons with their labels in text-mode subalbum links across every Gallery presentation and bundled style.
