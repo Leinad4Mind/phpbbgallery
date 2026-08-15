@@ -4,6 +4,16 @@
 	gap: .4rem;
 }
 
+.errorbox a.gallery-storage-cleanup-link,
+.errorbox a.gallery-storage-cleanup-link:link,
+.errorbox a.gallery-storage-cleanup-link:visited,
+.errorbox a.gallery-storage-cleanup-link:active,
+.errorbox a.gallery-storage-cleanup-link:hover,
+.errorbox a.gallery-storage-cleanup-link:focus {
+	color: #000;
+	text-decoration: none;
+}
+
 .gallery-operation-help-button {
 	display: inline-flex;
 	align-items: center;

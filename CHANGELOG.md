@@ -66,6 +66,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Kept the ACP Cleanup missing-source review button readable inside the red storage warning by preserving its black button text across link states.
 - Made ACP Import preserve EXIF metadata captured from the original source before resize or conversion instead of discarding it for unmodified imports and rebuilding it on first view.
 - Prevented a first-view HTTP 500 after rebuilding legacy or unknown EXIF metadata by completing the nullable status-update return contract; valid cached EXIF now also renders without materializing local or remote originals, while source access occurs only when metadata must be rebuilt.
 - Made ACP Cleanup source diagnosis CSRF-protected and resumable in 25-record batches, with paginated provider, key, album, author, publication-state and derivative context plus an explicit restore-before-delete workflow.

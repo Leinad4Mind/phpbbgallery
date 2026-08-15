@@ -228,7 +228,7 @@
 		{% if S_STORAGE_MIGRATION_MISSING %}
 			<div class='errorbox'>
 				<p>{{ lang('STORAGE_MIGRATION_MISSING_SOURCE_EXPLAIN', S_STORAGE_MIGRATION_MISSING_SOURCE) }}</p>
-				{% if S_STORAGE_CLEANUP_AVAILABLE %}<p><a class='button2' href='{{ U_STORAGE_CLEANUP }}'>{{ lang('STORAGE_MIGRATION_REVIEW_CLEANUP') }}</a></p>{% else %}<p>{{ lang('STORAGE_MIGRATION_CLEANUP_UNAVAILABLE') }}</p>{% endif %}
+				{% if S_STORAGE_CLEANUP_AVAILABLE %}<p><a class='button2 gallery-storage-cleanup-link' href='{{ U_STORAGE_CLEANUP }}'>{{ lang('STORAGE_MIGRATION_REVIEW_CLEANUP') }}</a></p>{% else %}<p>{{ lang('STORAGE_MIGRATION_CLEANUP_UNAVAILABLE') }}</p>{% endif %}
 			</div>
 		{% endif %}
 		{% if S_STORAGE_MIGRATION_ISSUES %}<p class='errorbox'>{{ lang('STORAGE_MIGRATION_INVALID_EXPLAIN') }}</p>{% endif %}

@@ -117,6 +117,10 @@ final class acp_main_types_test extends TestCase
 		$this->assertStringContainsString('check_mode=source', $source);
 		$this->assertStringContainsString('STORAGE_MIGRATION_MISSING_SOURCE_EXPLAIN', $template);
 		$this->assertStringContainsString('S_STORAGE_CLEANUP_AVAILABLE', $template);
+		$this->assertStringContainsString('gallery-storage-cleanup-link', $template);
+		$stylesheet = (string) file_get_contents(dirname(__DIR__) . '/adm/style/gallery_acp_operation_help.css');
+		$this->assertStringContainsString('.errorbox a.gallery-storage-cleanup-link', $stylesheet);
+		$this->assertStringContainsString('color: #000;', $stylesheet);
 		$this->assertStringNotContainsString('S_STORAGE_MIGRATION_PENDING', $template);
 	}
 
