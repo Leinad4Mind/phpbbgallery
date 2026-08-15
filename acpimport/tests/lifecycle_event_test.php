@@ -57,6 +57,15 @@ final class lifecycle_event_test extends TestCase
 		$this->assertStringContainsString("\$sql_ary['image_height']", $source);
 	}
 
+	public function test_post_processing_event_exposes_the_final_source_path(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/acp/main_module.php');
+		$event_vars = '$vars = [\'additional_sql_data\', \'file_updated\', \'file_link\'];';
+
+		$this->assertStringContainsString($event_vars, $source);
+		$this->assertStringContainsString('@var' . chr(9) . 'string' . chr(9) . 'file_link', $source);
+	}
+
 	public function test_import_can_be_rejected_before_resumable_state_or_file_work(): void
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/acp/main_module.php');

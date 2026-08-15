@@ -284,9 +284,11 @@ class main_module
 					* @event phpbbgallery.acpimport.update_image
 					* @var	array	additional_sql_data		array of additional sql_data
 					* @var	bool	file_updated			is file resized
+					* @var	string	file_link				absolute path to the processed source
 					* @since 1.2.0
+					* @changed 4.1.0 Added file_link
 					*/
-					$vars = ['additional_sql_data', 'file_updated'];
+					$vars = ['additional_sql_data', 'file_updated', 'file_link'];
 					extract($phpbb_dispatcher->trigger_event('phpbbgallery.acpimport.update_image', compact($vars)));
 
 					$sql_ary = array_merge($sql_ary, $additional_sql_data);

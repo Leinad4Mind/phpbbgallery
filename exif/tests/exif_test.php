@@ -146,7 +146,6 @@ final class exif_test extends TestCase
 	{
 		$this->assertSame([
 			'phpbbgallery.core.acp.config.get_display_vars' => 'acp_config_get_display_vars',
-			'phpbbgallery.acpimport.update_image_before' => 'massimport_update_image_before',
 			'phpbbgallery.acpimport.update_image' => 'massimport_update_image',
 			'phpbbgallery.acpimport.insert_image_after' => 'capture_after_import',
 			'phpbbgallery.core.posting.edit_before_rotate' => 'posting_edit_before_rotate',
@@ -202,6 +201,25 @@ final class exif_test extends TestCase
 		$this->assertStringContainsString('$exif->send_to_template(', $source);
 		$this->assertStringNotContainsString("!empty(\$exif->data['EXIF'])", $source);
 		$this->assertStringContainsString('@phpbbgallery.core.storage.workspace', $services);
+	}
+
+	public function test_acp_import_reads_exif_only_after_final_file_processing(): void
+	{
+		$listener = (string) file_get_contents(dirname(__DIR__) . '/event/exif_listener.php');
+		$importer = (string) file_get_contents(dirname(__DIR__, 2) . '/acpimport/acp/main_module.php');
+		$handler = new \ReflectionMethod(exif_listener::class, 'massimport_update_image');
+		$start = $handler->getStartLine();
+		$length = $handler->getEndLine() - $start + 1;
+		$handler_source = implode(chr(10), array_slice(file($handler->getFileName()), $start - 1, $length));
+
+		$this->assertStringNotContainsString('phpbbgallery.acpimport.update_image_before', $listener);
+		$this->assertStringContainsString('(string) $event[\'file_link\']', $handler_source);
+		$this->assertStringNotContainsString('!$event[\'file_updated\']', $handler_source);
+		$this->assertStringNotContainsString('exif::UNKNOWN', $handler_source);
+		$this->assertStringContainsString(
+			'$vars = [\'additional_sql_data\', \'file_updated\', \'file_link\'];',
+			$importer
+		);
 	}
 
 	public function test_valid_database_cache_does_not_materialize_the_source(): void
