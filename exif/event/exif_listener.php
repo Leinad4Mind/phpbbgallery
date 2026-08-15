@@ -31,7 +31,7 @@ class exif_listener implements EventSubscriberInterface
 	{
 		return [
 			'phpbbgallery.core.acp.config.get_display_vars'		=> 'acp_config_get_display_vars',
-			'phpbbgallery.acpimport.update_image'			=> 'massimport_update_image',
+			'phpbbgallery.acpimport.update_image_before'	=> 'massimport_update_image_before',
 			'phpbbgallery.acpimport.insert_image_after'		=> 'capture_after_import',
 			'phpbbgallery.core.posting.edit_before_rotate'		=> 'posting_edit_before_rotate',
 			'phpbbgallery.core.image.delete_images'			=> 'capture_deleted_images',
@@ -235,14 +235,16 @@ class exif_listener implements EventSubscriberInterface
 		return $enabled;
 	}
 
-	public function massimport_update_image(\phpbb\event\data $event): void
+	public function massimport_update_image_before(\phpbb\event\data $event): void
 	{
 		$additional_sql_data = $event['additional_sql_data'];
-		$exif = new \phpbbgallery\exif\exif((string) $event['file_link']);
+		$exif = new \phpbbgallery\exif\exif($event['file_link']);
 		$exif->read();
 		$additional_sql_data['image_exif_data'] = $exif->serialized;
 		$additional_sql_data['image_has_exif'] = $exif->status;
+
 		$event['additional_sql_data'] = $additional_sql_data;
+		unset($exif);
 	}
 
 	public function posting_edit_before_rotate(\phpbb\event\data $event): void
