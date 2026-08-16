@@ -67,6 +67,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Prevented image pages from passing an empty user list to phpBB's permission SQL when an image author or comment author no longer has a matching users-table row, retaining the stored Gallery identity fallback instead of returning HTTP 500 on MySQL.
 - Kept the ACP Cleanup missing-source review button readable inside the red storage warning by preserving its black button text across link states.
 - Made ACP Import preserve EXIF metadata captured from the original source before resize or conversion instead of discarding it for unmodified imports and rebuilding it on first view.
 - Prevented a first-view HTTP 500 after rebuilding legacy or unknown EXIF metadata by completing the nullable status-update return contract; valid cached EXIF now also renders without materializing local or remote originals, while source access occurs only when metadata must be rebuilt.

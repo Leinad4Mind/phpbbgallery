@@ -2032,6 +2032,11 @@ class image
 
 	protected function load_users_data(): void
 	{
+		if (!$this->users_id_array)
+		{
+			$this->can_receive_pm_list = [];
+			return;
+		}
 
 		$sql = $this->db->sql_build_query('SELECT', [
 			'SELECT' => 'u.*, gu.personal_album_id, gu.user_images',
@@ -2071,9 +2076,10 @@ class image
 
 		// Get the list of users who can receive private messages
 		$this->can_receive_pm_list = [];
-		if (is_array($this->users_data_array))
+		$user_ids = array_keys($this->users_data_array);
+		if ($user_ids)
 		{
-			$this->can_receive_pm_list = $this->auth->acl_get_list(array_keys($this->users_data_array), 'u_readpm');
+			$this->can_receive_pm_list = $this->auth->acl_get_list($user_ids, 'u_readpm');
 		}
 		$this->can_receive_pm_list = (empty($this->can_receive_pm_list) || !isset($this->can_receive_pm_list[0]['u_readpm'])) ? [] : $this->can_receive_pm_list[0]['u_readpm'];
 

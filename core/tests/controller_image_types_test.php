@@ -86,6 +86,49 @@ final class controller_image_types_test extends TestCase
 		$this->assertNull($reflection->getProperty('excluded_personal_album_ids')->getValue($controller));
 	}
 
+	public function test_empty_user_collection_never_reaches_the_database_or_acl_layer(): void
+	{
+		$reflection = new \ReflectionClass(image::class);
+		$controller = $reflection->newInstanceWithoutConstructor();
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->never())->method('sql_in_set');
+		$auth = $this->createMock(\phpbb\auth\auth::class);
+		$auth->expects($this->never())->method('acl_get_list');
+		$reflection->getProperty('db')->setValue($controller, $db);
+		$reflection->getProperty('auth')->setValue($controller, $auth);
+
+		$reflection->getMethod('load_users_data')->invoke($controller);
+
+		$this->assertSame([], $reflection->getProperty('can_receive_pm_list')->getValue($controller));
+	}
+
+	public function test_deleted_image_author_never_creates_an_empty_acl_in_query(): void
+	{
+		$reflection = new \ReflectionClass(image::class);
+		$controller = $reflection->newInstanceWithoutConstructor();
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->once())->method('sql_in_set')->with('u.user_id', [42 => 42])->willReturn('u.user_id IN (42)');
+		$db->expects($this->once())->method('sql_build_query')->willReturn('users-query');
+		$db->expects($this->once())->method('sql_query')->with('users-query')->willReturn('users-result');
+		$db->expects($this->once())->method('sql_fetchrow')->with('users-result')->willReturn(false);
+		$db->expects($this->once())->method('sql_freeresult')->with('users-result');
+		$auth = $this->createMock(\phpbb\auth\auth::class);
+		$auth->expects($this->never())->method('acl_get_list');
+		$profile_fields = $this->createMock(\phpbb\profilefields\manager::class);
+		$profile_fields->expects($this->once())->method('grab_profile_fields_data')->with([42 => 42])->willReturn([]);
+		$reflection->getProperty('users_id_array')->setValue($controller, [42 => 42]);
+		$reflection->getProperty('db')->setValue($controller, $db);
+		$reflection->getProperty('auth')->setValue($controller, $auth);
+		$reflection->getProperty('cpf_manager')->setValue($controller, $profile_fields);
+		$reflection->getProperty('config')->setValue($controller, new \phpbb\config\config(['load_onlinetrack' => false]));
+		$reflection->getProperty('table_users')->setValue($controller, 'gallery_users');
+
+		$reflection->getMethod('load_users_data')->invoke($controller);
+
+		$this->assertSame([], $reflection->getProperty('users_data_array')->getValue($controller));
+		$this->assertSame([], $reflection->getProperty('can_receive_pm_list')->getValue($controller));
+	}
+
 	public function test_invalid_sort_keys_fall_back_to_time(): void
 	{
 		$reflection = new \ReflectionClass(image::class);
