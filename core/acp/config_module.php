@@ -29,6 +29,7 @@ class config_module
 		'forum_index_mode',
 		'forum_index_recent_count',
 		'forum_index_random_count',
+		'forum_index_personal_count',
 		'forum_index_display',
 		'forum_index_personal',
 		'disp_new_image_count',
@@ -557,8 +558,9 @@ class config_module
 					'forum_index_mode'			=> ['lang' => 'RRC_GINDEX_MODE',			'validate' => 'int',		'type' => 'custom',			'explain' => true,	'method' => 'rrc_modes'],
 					'forum_index_recent_count'	=> ['lang' => 'RECENT_ON_INDEX_COUNT',	'validate' => 'int:1:12',	'type' => 'text:7:2'],
 					'forum_index_random_count'	=> ['lang' => 'RANDOM_ON_INDEX_COUNT',	'validate' => 'int:1:12',	'type' => 'text:7:2'],
+					'forum_index_personal_count'	=> ['lang' => 'PERSONAL_ON_INDEX_COUNT',	'validate' => 'int:1:12',	'type' => 'text:7:2'],
 					'forum_index_display'		=> ['lang' => 'RRC_DISPLAY_OPTIONS',		'validate' => 'int',		'type' => 'custom',			'method' => 'rrc_display'],
-					'forum_index_personal'		=> ['lang' => 'RRC_GINDEX_PGALLERIES',	'validate' => 'bool',		'type' => 'radio:yes_no'],
+					'forum_index_personal'		=> ['lang' => 'FORUM_INDEX_INCLUDE_PERSONAL', 'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 				],
 
 				'PHPBB_INTEGRATION'	=> [
@@ -915,6 +917,10 @@ class config_module
 		$rrc_mode_options .= "<option value='" . $phpbb_ext_gallery_core_block::MODE_NONE . "'>" . $this->language->lang('RRC_MODE_NONE') . '</option>';
 		$rrc_mode_options .= '<option' . (($value & $phpbb_ext_gallery_core_block::MODE_RECENT) ? ' selected="selected"' : '') . " value='" . $phpbb_ext_gallery_core_block::MODE_RECENT . "'>" . $this->language->lang('RRC_MODE_RECENT') . '</option>';
 		$rrc_mode_options .= '<option' . (($value & $phpbb_ext_gallery_core_block::MODE_RANDOM) ? ' selected="selected"' : '') . " value='" . $phpbb_ext_gallery_core_block::MODE_RANDOM . "'>" . $this->language->lang('RRC_MODE_RANDOM') . '</option>';
+		if ($key === 'forum_index_mode')
+		{
+			$rrc_mode_options .= '<option' . (($value & $phpbb_ext_gallery_core_block::MODE_PERSONAL) ? ' selected=\'selected\'' : '') . ' value=\'' . $phpbb_ext_gallery_core_block::MODE_PERSONAL . '\'>' . $this->language->lang('RRC_MODE_PERSONAL') . '</option>';
+		}
 		if ($key === 'rrc_gindex_mode')
 		{
 			$rrc_mode_options .= '<option' . (($value & $phpbb_ext_gallery_core_block::MODE_MOST_VIEWED) ? ' selected="selected"' : '') . " value='" . $phpbb_ext_gallery_core_block::MODE_MOST_VIEWED . "'>" . $this->language->lang('RRC_MODE_MOST_VIEWED') . '</option>';

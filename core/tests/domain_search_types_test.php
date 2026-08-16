@@ -61,7 +61,7 @@ final class domain_search_types_test extends TestCase
 		$this->assertSame('int', (string) (new \ReflectionMethod(search::class, 'user_image_count'))->getReturnType());
 		$this->assertSame('array', (string) (new \ReflectionMethod(search::class, 'user_image_counts'))->getReturnType());
 
-		foreach (['random', 'recent_comments', 'recent', 'featured', 'rating'] as $method_name)
+		foreach (['random', 'recent_comments', 'recent', 'recent_personal', 'featured', 'rating'] as $method_name)
 		{
 			$this->assertSame('void', (string) (new \ReflectionMethod(search::class, $method_name))->getReturnType());
 		}
@@ -216,6 +216,78 @@ final class domain_search_types_test extends TestCase
 		$this->assertStringContainsString("acl_album_ids('m_status')", $random);
 		$this->assertStringNotContainsString("acl_album_ids('a_list')", $random);
 		$this->assertStringContainsString('if (!$id_ary && !$show_empty)', $random);
+	}
+
+	public function test_personal_album_block_derives_its_scope_from_visible_acl_albums(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/search.php');
+		$start = strpos($source, 'public function recent(');
+		$end = strpos($source, 'public function featured(', $start ?: 0);
+		$recent = substr($source, $start, $end - $start);
+
+		$this->assertStringContainsString('if ($personal_only)', $recent);
+		$this->assertStringContainsString('acl_album_ids(' . chr(39) . 'i_view' . chr(39) . ', ' . chr(39) . 'array' . chr(39) . ', false, false)', $recent);
+		$this->assertStringContainsString('acl_album_ids(' . chr(39) . 'm_status' . chr(39) . ', ' . chr(39) . 'array' . chr(39) . ', false, false)', $recent);
+		$this->assertStringContainsString('get_exclude_zebra()', $recent);
+		$this->assertStringNotContainsString('WHERE album_user_id > 0', $recent);
+	}
+
+	public function test_personal_album_query_keeps_only_visible_non_excluded_personal_albums(): void
+	{
+		$album_calls = [];
+		$gallery_auth = $this->createMock(\phpbbgallery\core\auth\auth::class);
+		$gallery_auth->expects($this->once())->method('load_user_permissions')->with(7);
+		$gallery_auth->expects($this->exactly(4))
+			->method('acl_album_ids')
+			->willReturnCallback(static function (string $permission, string $return = 'array', bool $rrc = false, bool $personal = true) use (&$album_calls): array
+			{
+				$album_calls[] = [$permission, $return, $rrc, $personal];
+				if ($permission === 'i_view')
+				{
+					return $personal ? [10, 20, 30] : [10];
+				}
+
+				return $personal ? [11, 21, 31] : [11];
+			});
+		$gallery_auth->expects($this->once())->method('get_exclude_zebra')->willReturn([30, 31]);
+		$sets = [];
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->exactly(2))
+			->method('sql_in_set')
+			->willReturnCallback(static function (string $field, array $ids) use (&$sets): string
+			{
+				$sets[] = $ids;
+				return $field . ' IN (' . implode(', ', $ids) . ')';
+			});
+		$db->expects($this->exactly(2))->method('sql_build_query')->willReturn('query');
+		$db->expects($this->once())->method('sql_query')->with('query')->willReturn('count');
+		$db->expects($this->once())->method('sql_query_limit')->with('query', 4, 0)->willReturn('images');
+		$db->expects($this->exactly(2))->method('sql_fetchrow')->willReturnOnConsecutiveCalls(['count' => 0], false);
+		$db->expects($this->exactly(2))->method('sql_freeresult');
+		$config = $this->createMock(\phpbbgallery\core\config::class);
+		$config->method('get')->willReturnMap([
+			['default_sort_key', null, 't'],
+			['default_sort_dir', null, 'd'],
+		]);
+		$user = new \phpbb\user();
+		$user->data = ['user_id' => 7];
+		$reflection = new \ReflectionClass(search::class);
+		$search = $reflection->newInstanceWithoutConstructor();
+		$reflection->getProperty('gallery_auth')->setValue($search, $gallery_auth);
+		$reflection->getProperty('gallery_config')->setValue($search, $config);
+		$reflection->getProperty('db')->setValue($search, $db);
+		$reflection->getProperty('user')->setValue($search, $user);
+		$reflection->getProperty('images_table')->setValue($search, 'gallery_images');
+
+		$search->recent(4, -1, 0, 'forum_index_display', false, false, true, false, true);
+
+		$this->assertSame([
+			['i_view', 'array', false, true],
+			['m_status', 'array', false, true],
+			['i_view', 'array', false, false],
+			['m_status', 'array', false, false],
+		], $album_calls);
+		$this->assertSame([[20], [21]], $sets);
 	}
 
 	public function test_image_result_filter_normalizes_ids_and_excludes_orphans(): void

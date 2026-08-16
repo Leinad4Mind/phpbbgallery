@@ -21,6 +21,7 @@ use phpbbgallery\core\migrations\release_3_4_0;
 use phpbbgallery\core\migrations\release_4_0_0;
 use phpbbgallery\core\migrations\release_4_1_0;
 use phpbbgallery\core\migrations\remove_legacy_version_config;
+use phpbbgallery\core\migrations\forum_index_personal_images;
 use phpbbgallery\core\migrations\resumable_uploads;
 use phpbbgallery\core\migrations\performance_indexes;
 use phpbbgallery\core\migrations\protect_personal_album_profile_field;
@@ -114,6 +115,7 @@ class migration_integrity_test extends TestCase
 		disp_image_type::class,
 		release_4_1_0::class,
 		remove_legacy_version_config::class,
+		forum_index_personal_images::class,
 	];
 
 	private array $temp_directories = [];
@@ -333,6 +335,21 @@ class migration_integrity_test extends TestCase
 		$this->assertSame([
 			['config.remove', ['phpbb_gallery_version']],
 		], $migration->update_data());
+	}
+
+	public function test_forum_index_personal_image_block_adds_a_reversible_bounded_default(): void
+	{
+		$migration = (new \ReflectionClass(forum_index_personal_images::class))->newInstanceWithoutConstructor();
+
+		$this->assertSame([
+			'\phpbbgallery\core\migrations\remove_legacy_version_config',
+		], forum_index_personal_images::depends_on());
+		$this->assertSame([
+			['config.add', ['phpbb_gallery_forum_index_personal_count', 4]],
+		], $migration->update_data());
+		$this->assertSame([
+			['config.remove', ['phpbb_gallery_forum_index_personal_count']],
+		], $migration->revert_data());
 	}
 
 	public function test_statistics_dashboard_adds_bounded_annual_aggregates(): void
@@ -1001,13 +1018,13 @@ class migration_integrity_test extends TestCase
 		$this->assertSame([], $remaining);
 	}
 
-	public function test_legacy_version_cleanup_is_the_terminal_core_migration(): void
+	public function test_personal_forum_index_block_is_the_terminal_core_migration(): void
 	{
 		$graph = $this->migration_graph();
 		foreach (self::MIGRATIONS as $migration)
 		{
 			$this->assertTrue(
-				$this->depends_on(remove_legacy_version_config::class, $migration, $graph),
+				$this->depends_on(forum_index_personal_images::class, $migration, $graph),
 				$migration . ' is outside the terminal migration chain.'
 			);
 		}
@@ -1336,6 +1353,7 @@ class migration_integrity_test extends TestCase
 			'disp_image_type.php',
 			'release_4_1_0.php',
 			'remove_legacy_version_config.php',
+			'forum_index_personal_images.php',
 		] as $migration)
 		{
 			require_once dirname(__DIR__) . '/migrations/' . $migration;

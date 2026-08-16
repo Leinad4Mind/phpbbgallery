@@ -6,6 +6,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Added
 
+- Added an independently bounded forum-index block that aggregates recent images from every visible personal album, preserving Gallery permissions, friendship restrictions, moderation visibility and ignored-user exclusions without listing each personal album separately.
 - Added an independent ACP switch for displaying the original image file type on individual image pages, enabled by default to preserve existing behavior.
 - Added a distinct Updated Core ACP provenance marker for Gallery 3.4.0 settings whose choices or behaviour were expanded by the modern Core, using a refresh badge and separate accent; provenance legends now group New Core and Updated Core first, followed by alphabetised free add-ons and then alphabetised premium add-ons.
 - Added a permission-filtered Gallery statistics page linked from the index, with lifetime and tracked annual summaries plus an explicit pre-tracking historical period and rankings for most-viewed images, most-downloaded originals, users with the most images and users with the most downloads; bounded yearly aggregates avoid individual access logs, and BBPoints Images imports recoverable historical counters without inventing unavailable yearly attribution.

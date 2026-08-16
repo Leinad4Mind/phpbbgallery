@@ -69,6 +69,7 @@ class config
 		'forum_index_display'		=> 45,
 		'forum_index_mode'			=> 0,
 		'forum_index_personal'		=> false,
+		'forum_index_personal_count'	=> 4,
 		'forum_index_random_count'	=> 4,
 		'forum_index_recent_count'	=> 4,
 

@@ -127,6 +127,7 @@ class gallery_lifecycle extends \phpbb_functional_test_case
 		$this->assertSame('0', $this->config_value('phpbb_gallery_forum_index_personal'));
 		$this->assertSame('4', $this->config_value('phpbb_gallery_forum_index_random_count'));
 		$this->assertSame('4', $this->config_value('phpbb_gallery_forum_index_recent_count'));
+		$this->assertSame('4', $this->config_value('phpbb_gallery_forum_index_personal_count'));
 		$this->assertSame('0', $this->config_value('phpbb_gallery_ajax_navigation'));
 		$this->assertSame('flat', $this->config_value('phpbb_gallery_storage_layout'));
 		$result = $db->sql_query('SELECT image_subtitle FROM phpbb_gallery_images WHERE 1 = 0');

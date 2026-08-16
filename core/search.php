@@ -474,6 +474,28 @@ class search
 	}
 
 	/**
+	 * Populate one aggregated block with recent images from visible personal albums.
+	 *
+	 * @param int    $limit      Maximum number of images
+	 * @param string $fields     Display-options configuration key
+	 * @param bool   $show_empty Whether an empty result should create a message block
+	 */
+	public function recent_personal(int $limit, string $fields = 'rrc_gindex_display', bool $show_empty = true): void
+	{
+		$this->recent(
+			$limit,
+			-1,
+			0,
+			$fields,
+			$this->language->lang('PERSONAL_ALBUM_IMAGES'),
+			false,
+			true,
+			$show_empty,
+			true
+		);
+	}
+
+	/**
 	 * Generate recent images and populate template
 	 * @param int $limit How many images to query
 	 * @param int $start
@@ -483,8 +505,9 @@ class search
 	 * @param string|false $u_block
 	 * @param bool|null    $include_personal Override the Gallery-index personal-album setting
 	 * @param bool         $show_empty       Whether an empty result should create a message block
+	 * @param bool         $personal_only    Restrict results to personal albums
 	 */
-	public function recent(int $limit, int $start = 0, int $user = 0, string $fields = 'rrc_gindex_display', string|false $block_name = false, string|false $u_block = false, ?bool $include_personal = null, bool $show_empty = true): void
+	public function recent(int $limit, int $start = 0, int $user = 0, string $fields = 'rrc_gindex_display', string|false $block_name = false, string|false $u_block = false, ?bool $include_personal = null, bool $show_empty = true, bool $personal_only = false): void
 	{
 		// We will do small escape for not devising by 0
 		if ($limit == 0)
@@ -536,19 +559,22 @@ class search
 		}
 		$sql_order = $sql_order . ($this->gallery_config->get('default_sort_dir') == 'd' ? ' DESC' : ' ASC');
 		$sql_limit = $limit;
-		$exclude_albums = [];
 		$include_personal ??= (bool) $this->gallery_config->get('rrc_gindex_pegas');
-		if (!$include_personal)
+		$view_album_ids = $this->gallery_auth->acl_album_ids('i_view');
+		$moderator_album_ids = $this->gallery_auth->acl_album_ids('m_status');
+		if ($personal_only)
 		{
-			$sql_no_user = 'SELECT album_id FROM ' . $this->albums_table . ' WHERE album_user_id > 0';
-			$result = $this->db->sql_query($sql_no_user);
-			while ($row = $this->db->sql_fetchrow($result))
-			{
-				$exclude_albums[] = (int) $row['album_id'];
-			}
-			$this->db->sql_freeresult($result);
+			$view_album_ids = array_diff($view_album_ids, $this->gallery_auth->acl_album_ids('i_view', 'array', false, false));
+			$moderator_album_ids = array_diff($moderator_album_ids, $this->gallery_auth->acl_album_ids('m_status', 'array', false, false));
 		}
-		$exclude_albums = array_merge($exclude_albums, $this->gallery_auth->get_exclude_zebra());
+		else if (!$include_personal)
+		{
+			$view_album_ids = $this->gallery_auth->acl_album_ids('i_view', 'array', false, false);
+			$moderator_album_ids = $this->gallery_auth->acl_album_ids('m_status', 'array', false, false);
+		}
+		$excluded_albums = $this->gallery_auth->get_exclude_zebra();
+		$view_album_ids = array_values(array_diff($view_album_ids, $excluded_albums));
+		$moderator_album_ids = array_values(array_diff($moderator_album_ids, $excluded_albums));
 		$sql_ary = [
 			'FROM'	=>	[
 				$this->images_table	=> 'i'
@@ -581,8 +607,8 @@ class search
 			);
 		}
 		$user_id = (int) $this->user->data['user_id'];
-		$sql_ary['WHERE'] .= ' AND ((' . $this->db->sql_in_set('image_album_id', array_diff($this->gallery_auth->acl_album_ids('i_view'), $exclude_albums), false, true) . ' AND (image_status <> ' . \phpbbgallery\core\block::STATUS_UNAPPROVED . ' OR image_user_id = ' . $user_id . '))
-					OR ' . $this->db->sql_in_set('image_album_id', array_diff($this->gallery_auth->acl_album_ids('m_status'), $exclude_albums), false, true) . ')';
+		$sql_ary['WHERE'] .= ' AND ((' . $this->db->sql_in_set('image_album_id', $view_album_ids, false, true) . ' AND (image_status <> ' . \phpbbgallery\core\block::STATUS_UNAPPROVED . ' OR image_user_id = ' . $user_id . '))
+					OR ' . $this->db->sql_in_set('image_album_id', $moderator_album_ids, false, true) . ')';
 
 		$sql_ary['SELECT'] = 'COUNT(image_id) as count';
 		$sql = $this->db->sql_build_query('SELECT', $sql_ary);
@@ -621,7 +647,7 @@ class search
 		{
 			$this->template->assign_block_vars('imageblock', [
 				'BLOCK_NAME'	=>  $block_name ? $block_name : $this->language->lang('RECENT_IMAGES'),
-				'U_BLOCK'	=> $u_block ? $u_block : $this->helper->route('phpbbgallery_core_search_recent'),
+				'U_BLOCK'	=> $u_block ? $u_block : ($personal_only ? false : $this->helper->route('phpbbgallery_core_search_recent')),
 			]);
 		}
 

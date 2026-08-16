@@ -98,6 +98,7 @@ final class acp_addon_identity_test extends TestCase
 			'forum_index_mode',
 			'forum_index_recent_count',
 			'forum_index_random_count',
+			'forum_index_personal_count',
 			'forum_index_display',
 			'forum_index_personal',
 			'disp_new_image_count',

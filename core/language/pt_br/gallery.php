@@ -246,6 +246,7 @@ $lang = array_merge($lang, [
 	'READ_REPORT'                       => 'Ver a denúncia',
 	'RECENT_COMMENTS'                   => 'Comentários Recentes',
 	'RECENT_IMAGES'                     => 'Imagens Recentes',
+	'PERSONAL_ALBUM_IMAGES'              => 'Imagens de álbuns pessoais',
 	'REPORT_IMAGE'                      => 'Denunciar imagem',
 	'RETURN_ALBUM'                      => '%sVoltar ao último álbum visitado%s',
 	'APPLY_TRANSFORM_ALL'                 => 'Aplicar esta transformação a todas as imagens',

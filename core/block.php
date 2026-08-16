@@ -167,6 +167,7 @@ class block
 	public const MODE_COMMENT = 4;
 	public const MODE_MOST_VIEWED = 8;
 	public const MODE_TOP_RATED = 16;
+	public const MODE_PERSONAL = 32;
 
 	/**
 	 * Options which details of the images you want to view on the block.

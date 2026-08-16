@@ -245,6 +245,7 @@ $lang = array_merge($lang, [
 	'READ_REPORT'                       => 'Читать жалобу',
 	'RECENT_COMMENTS'                   => 'Последние комментарии',
 	'RECENT_IMAGES'                     => 'Последние фото',
+	'PERSONAL_ALBUM_IMAGES'              => 'Изображения из личных альбомов',
 	'REPORT_IMAGE'                      => 'Обжаловать фото',
 	'RETURN_ALBUM'                      => '%sВернуться в альбом%s',
 	'APPLY_TRANSFORM_ALL' => 'Применить это преобразование ко всем изображениям',

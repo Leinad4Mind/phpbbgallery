@@ -212,7 +212,7 @@ class main_listener implements EventSubscriberInterface
 	public function display_forum_index_images(\phpbb\event\data $event): void
 	{
 		$mode = (int) $this->gallery_config->get('forum_index_mode');
-		$mode &= \phpbbgallery\core\block::MODE_RECENT | \phpbbgallery\core\block::MODE_RANDOM;
+		$mode &= \phpbbgallery\core\block::MODE_RECENT | \phpbbgallery\core\block::MODE_RANDOM | \phpbbgallery\core\block::MODE_PERSONAL;
 		if ($mode === \phpbbgallery\core\block::MODE_NONE)
 		{
 			return;
@@ -235,6 +235,12 @@ class main_listener implements EventSubscriberInterface
 		{
 			$limit = max(1, min(12, (int) $this->gallery_config->get('forum_index_random_count')));
 			$this->gallery_search->random($limit, 0, 'forum_index_display', false, false, $include_personal, false);
+		}
+
+		if (($mode & \phpbbgallery\core\block::MODE_PERSONAL) !== 0)
+		{
+			$limit = max(1, min(12, (int) $this->gallery_config->get('forum_index_personal_count')));
+			$this->gallery_search->recent_personal($limit, 'forum_index_display', false);
 		}
 	}
 

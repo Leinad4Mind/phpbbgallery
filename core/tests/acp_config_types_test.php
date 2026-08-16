@@ -92,8 +92,12 @@ final class acp_config_types_test extends TestCase
 		$this->assertArrayHasKey('forum_index_mode', $display['vars']);
 		$this->assertArrayHasKey('forum_index_recent_count', $display['vars']);
 		$this->assertArrayHasKey('forum_index_random_count', $display['vars']);
+		$this->assertArrayHasKey('forum_index_personal_count', $display['vars']);
+		$this->assertSame('int:1:12', $display['vars']['forum_index_personal_count']['validate']);
 		$this->assertArrayHasKey('forum_index_display', $display['vars']);
 		$this->assertArrayHasKey('forum_index_personal', $display['vars']);
+		$this->assertSame('FORUM_INDEX_INCLUDE_PERSONAL', $display['vars']['forum_index_personal']['lang']);
+		$this->assertTrue($display['vars']['forum_index_personal']['explain']);
 		$this->assertArrayHasKey('storage_layout', $display['vars']);
 		$this->assertSame('custom', $display['vars']['storage_layout']['type']);
 		$this->assertSame('storage_layout_select', $display['vars']['storage_layout']['method']);
@@ -200,10 +204,17 @@ final class acp_config_types_test extends TestCase
 				\phpbbgallery\core\block::MODE_MOST_VIEWED | \phpbbgallery\core\block::MODE_TOP_RATED,
 				'rrc_gindex_mode'
 			);
+			$forum_html = (new config_module())->rrc_modes(
+				\phpbbgallery\core\block::MODE_PERSONAL,
+				'forum_index_mode'
+			);
 
 			$this->assertStringContainsString('RRC_MODE_MOST_VIEWED', $html);
 			$this->assertStringContainsString('RRC_MODE_TOP_RATED', $html);
 			$this->assertStringContainsString('ADD_ON_MODE', $html);
+			$this->assertStringNotContainsString('RRC_MODE_PERSONAL', $html);
+			$this->assertStringContainsString('RRC_MODE_PERSONAL', $forum_html);
+			$this->assertStringContainsString('value=' . chr(39) . '32' . chr(39), $forum_html);
 		}
 		finally
 		{

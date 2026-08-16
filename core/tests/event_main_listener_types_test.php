@@ -300,6 +300,7 @@ final class event_main_listener_types_test extends TestCase
 		$gallery_search = $this->createMock(\phpbbgallery\core\search::class);
 		$gallery_search->expects($this->never())->method('recent');
 		$gallery_search->expects($this->never())->method('random');
+		$gallery_search->expects($this->never())->method('recent_personal');
 		$config = $this->createMock(\phpbbgallery\core\config::class);
 		$config->expects($this->once())
 			->method('get')
@@ -327,6 +328,41 @@ final class event_main_listener_types_test extends TestCase
 			['forum_index_personal', null, false],
 			['forum_index_recent_count', null, 99],
 			['forum_index_random_count', null, 0],
+		]);
+		$language = $this->createMock(\phpbb\language\language::class);
+		$language->expects($this->once())
+			->method('add_lang')
+			->with(['gallery'], 'phpbbgallery/core');
+		$template = $this->createMock(\phpbb\template\template::class);
+		$template->expects($this->once())
+			->method('assign_vars')
+			->with([
+				'PHPBBGALLERY_FORUM_INDEX_IMAGES' => true,
+				'GALLERY_INDEX_ALBUM_LAYOUT' => '',
+			]);
+		$listener = $this->listener($this->createStub(\phpbb\db\driver\driver_interface::class));
+		$this->set_property($listener, 'gallery_search', $gallery_search);
+		$this->set_property($listener, 'gallery_config', $config);
+		$this->set_property($listener, 'language', $language);
+		$this->set_property($listener, 'template', $template);
+
+		$listener->display_forum_index_images(new \phpbb\event\data([]));
+	}
+
+	public function test_forum_index_personal_images_use_an_independent_bounded_block(): void
+	{
+		$this->assertSame(32, \phpbbgallery\core\block::MODE_PERSONAL);
+		$gallery_search = $this->createMock(\phpbbgallery\core\search::class);
+		$gallery_search->expects($this->never())->method('recent');
+		$gallery_search->expects($this->never())->method('random');
+		$gallery_search->expects($this->once())
+			->method('recent_personal')
+			->with(12, 'forum_index_display', false);
+		$config = $this->createMock(\phpbbgallery\core\config::class);
+		$config->method('get')->willReturnMap([
+			['forum_index_mode', null, \phpbbgallery\core\block::MODE_PERSONAL],
+			['forum_index_personal', null, false],
+			['forum_index_personal_count', null, 99],
 		]);
 		$language = $this->createMock(\phpbb\language\language::class);
 		$language->expects($this->once())
