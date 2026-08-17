@@ -29,7 +29,7 @@ add-ons use sibling directories under `ext/phpbbgallery/`.
 | BBPoints Images | 1.0.0 | Adds upload rewards and paid original-file downloads through BBPoints. |
 | BBTags Images | 1.0.0 | Adds shared tags, moderation, autocomplete and multi-tag image search. |
 | Export | 1.0.0 | Exports Gallery images to controlled ZIP archives using their display names. |
-| Image Fields | 1.0.0 | Adds administrator-defined, translated and album-aware metadata fields to images. |
+| Image Fields | 1.1.0 | Adds administrator-defined, translated and album-aware metadata fields to images. |
 | Image Revisions | 1.0.0 | Retains bounded histories of replaced image files for preview and rollback. |
 | Remote Storage | 1.0.0 | Stores private Gallery objects in S3-compatible, Azure Blob, SFTP, Dropbox, Google Drive, Box, MediaFire, pCloud, Koofr or 4shared storage with verified provider migrations. |
 
