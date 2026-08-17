@@ -1704,6 +1704,79 @@ input.autowidth-gallery {
 	position: relative;
 }
 
+.gallery-image-card-media
+{
+	align-items: stretch;
+	box-sizing: border-box;
+	display: flex;
+	flex: 0 0 180px;
+	flex-direction: column;
+	min-height: 180px;
+	width: 100%;
+}
+
+.gallery-image-card-thumbnail
+{
+	align-items: center;
+	display: flex;
+	flex: 1 1 auto;
+	justify-content: center;
+	min-height: 0;
+	min-width: 0;
+	width: 100%;
+}
+
+.gallery-image-card-thumbnail > a
+{
+	align-items: center;
+	display: flex;
+	height: 100%;
+	justify-content: center;
+	min-height: 0;
+	width: 100%;
+}
+
+.gallery-image-card-thumbnail img
+{
+	display: block;
+	margin: auto;
+	max-height: 170px;
+	max-width: 100%;
+	object-fit: contain;
+}
+
+.gallery-image-card-media--with-approval .gallery-image-card-thumbnail img
+{
+	max-height: 118px;
+}
+
+.gallery-image-card-approval
+{
+	box-sizing: border-box;
+	flex: 0 0 auto;
+	margin: 6px 0 0;
+	width: 100%;
+}
+
+.gallery-image-card-approval .post-notice,
+p.gallery-image-card-approval.post-notice
+{
+	align-items: center;
+	box-sizing: border-box;
+	display: flex;
+	gap: 6px;
+	justify-content: center;
+	margin: 0;
+	min-height: 46px;
+	padding: 7px;
+	width: 100%;
+}
+
+.gallery-image-card-approval input
+{
+	margin: 0;
+}
+
 .gallery-image-card-grid--prosilver > .gallery-image-card
 {
 	box-sizing: border-box;

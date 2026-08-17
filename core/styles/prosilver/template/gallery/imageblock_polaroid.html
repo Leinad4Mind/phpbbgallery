@@ -21,27 +21,25 @@
 		</p>
 	</header>
 	<hr />
-	{% if image.S_STATUS_UNAPPROVED or image.S_UNAPPROVED %}
-		<form method="post" action="{{ image.S_STATUS_UNAPPROVED_ACTION }}" class="polaroid_img_container">
-			<div id="thumbnail">
-				{% if image.UC_THUMBNAIL_ACTION %}<a href="{{ image.UC_THUMBNAIL_ACTION }}" class="polaroid_img_container" style="height: 80px;">{% endif %}<img src="{{ image.UC_THUMBNAIL }}" alt="{{ image.UC_IMAGE_NAME }}" title="{{ lang('VIEW_IMAGE') }}{{ lang('COLON') }} {{ image.UC_IMAGE_NAME }}" style="max-height: 65px;"/>{% if image.UC_THUMBNAIL_ACTION %}</a>{% endif %}
-					<p class="post-notice unapproved" style="margin-bottom: -5px; margin-top: 4px;">
-						{% if image.S_STATUS_UNAPPROVED and not image.S_UNAPPROVED %}
-							<span>
-								{{ lang('IMAGE_NOT_APPROVED') }}
-							</span>
-						{% else %}
-							<input class="button2" type="submit" value="{{ lang('DISAPPROVE') }}" name="action[disapprove]" style="border-radius: 5px;" />
-							<input class="button1" type="submit" value="{{ lang('APPROVE') }}" name="action[approve]" style="border-radius: 5px;" />
-						{% endif %}
-					</p>
+	<div class="gallery-image-card-media{% if image.S_STATUS_UNAPPROVED or image.S_UNAPPROVED %} gallery-image-card-media--with-approval{% endif %}">
+		<div id="thumbnail" class="gallery-image-card-thumbnail">
+			{% if image.UC_THUMBNAIL_ACTION %}<a href="{{ image.UC_THUMBNAIL_ACTION }}" class="polaroid_img_container">{% endif %}<img src="{{ image.UC_THUMBNAIL }}" alt="{{ image.UC_IMAGE_NAME }}" title="{{ lang('VIEW_IMAGE') }}{{ lang('COLON') }} {{ image.UC_IMAGE_NAME }}" />{% if image.UC_THUMBNAIL_ACTION %}</a>{% endif %}
+		</div>
+		{% if image.S_STATUS_UNAPPROVED or image.S_UNAPPROVED %}
+			<div class="gallery-image-card-approval">
+				{% if image.S_STATUS_UNAPPROVED and not image.S_UNAPPROVED %}
+					<p class="post-notice unapproved"><span>{{ lang('IMAGE_NOT_APPROVED') }}</span></p>
+				{% else %}
+					<form method="post" action="{{ image.S_STATUS_UNAPPROVED_ACTION }}">
+						<p class="post-notice unapproved">
+							<input class="button2" type="submit" value="{{ lang('DISAPPROVE') }}" name="action[disapprove]" />
+							<input class="button1" type="submit" value="{{ lang('APPROVE') }}" name="action[approve]" />
+						</p>
+					</form>
+				{% endif %}
 			</div>
-		</form>
-	{% else %}
-			<div id="thumbnail">
-				{% if image.UC_THUMBNAIL_ACTION %}<a href="{{ image.UC_THUMBNAIL_ACTION }}" class="polaroid_img_container">{% endif %}<img src="{{ image.UC_THUMBNAIL }}" alt="{{ image.UC_IMAGE_NAME }}" title="{{ lang('VIEW_IMAGE') }}{{ lang('COLON') }} {{ image.UC_IMAGE_NAME }}" />{% if image.UC_THUMBNAIL_ACTION %}</a>{% endif %}
-			</div>
-	{% endif %}
+		{% endif %}
+	</div>
 	{% if image.IMAGE_SUBTITLE %}<p class="gallery-image-card-subtitle" title="{{ image.IMAGE_SUBTITLE }}">{{ image.IMAGE_SUBTITLE }}</p>{% endif %}
 	<hr />
 	{% if image.U_ALBUM %}<div class="gallery-image-card-metadata-item" data-gallery-card-metadata>{{ lang('ALBUM_NAME') }}{{ lang('COLON') }} <a href="{{ image.U_ALBUM }}" title="{{ image.ALBUM_NAME }}"><strong>{{ image.ALBUM_NAME }}</strong></a></div>{% endif %}

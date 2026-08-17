@@ -458,4 +458,22 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertMatchesRegularExpression('/\.gallery-album-card-grid\s*\{[^}]*display:\s*flex;[^}]*flex-wrap:\s*wrap;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-album-card-column\s*\{[^}]*display:\s*flex;[^}]*float:\s*none;/s', $css);
 	}
+	public function test_polaroid_cards_center_thumbnails_and_reserve_approval_space(): void
+	{
+		$core_root = dirname(__DIR__);
+		foreach (\gallery_test_existing_styles($core_root, ['prosilver', 'BBOOTS', 'FLATBOOTS'], $this) as $style)
+		{
+			$template = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/imageblock_polaroid.html');
+
+			$this->assertStringContainsString('gallery-image-card-media', $template, $style);
+			$this->assertStringContainsString('gallery-image-card-thumbnail', $template, $style);
+			$this->assertStringContainsString('gallery-image-card-approval', $template, $style);
+			$this->assertStringNotContainsString('class="mcp_approve"', $template, $style);
+		}
+
+		$css = (string) file_get_contents($core_root . '/styles/all/theme/gallery.css');
+		$this->assertMatchesRegularExpression('/\.gallery-image-card-media\s*\{[^}]*display:\s*flex;[^}]*flex-direction:\s*column;[^}]*min-height:\s*180px;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-image-card-thumbnail\s*\{[^}]*align-items:\s*center;[^}]*display:\s*flex;[^}]*justify-content:\s*center;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-image-card-approval \.post-notice,[^{]+\{[^}]*display:\s*flex;[^}]*justify-content:\s*center;[^}]*min-height:\s*46px;/s', $css);
+	}
 }
