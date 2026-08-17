@@ -925,7 +925,7 @@ class albums_module
 	 */
 	private function upload_icons(\phpbbgallery\core\icon\manager $icon_manager, \phpbb\request\request_interface $request, string $form_field): array
 	{
-		$upload = $request->variable($form_field, ['name' => 'none'], true, \phpbb\request\request_interface::FILES);
+		$upload = $request->raw_variable($form_field, [], \phpbb\request\request_interface::FILES);
 		if (!isset($upload['name']) || !is_array($upload['name']))
 		{
 			return [$icon_manager->upload($form_field)];

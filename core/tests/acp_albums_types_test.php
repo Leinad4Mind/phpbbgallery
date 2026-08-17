@@ -79,7 +79,7 @@ final class acp_albums_types_test extends TestCase
 		$this->assertStringNotContainsString('block::TYPE_CONTEST', $source);
 	}
 
-	public function test_multiple_icon_uploads_are_validated_individually(): void
+	public function test_multiple_icon_uploads_use_raw_files_payload_and_are_validated_individually(): void
 	{
 		$icon_manager = $this->getMockBuilder(manager::class)
 			->disableOriginalConstructor()
@@ -94,9 +94,11 @@ final class acp_albums_types_test extends TestCase
 			);
 
 		$request = $this->createMock(request_interface::class);
+		$request->expects($this->never())
+			->method('variable');
 		$request->expects($this->once())
-			->method('variable')
-			->with('icon_file', ['name' => 'none'], true, request_interface::FILES)
+			->method('raw_variable')
+			->with('icon_file', [], request_interface::FILES)
 			->willReturn([
 				'name' => ['One.svg', 'Two.png'],
 				'type' => ['image/svg+xml', 'image/png'],
