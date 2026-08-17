@@ -76,7 +76,7 @@ final class search_extension_events_test extends TestCase
 
 	public function test_every_style_exposes_the_tag_neutral_search_field_event(): void
 	{
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$template = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/search_body.html');
 			$this->assertSame(1, substr_count($template, '{% EVENT phpbbgallery_core_search_fields %}'), $style);
@@ -102,7 +102,7 @@ final class search_extension_events_test extends TestCase
 
 	public function test_search_forms_use_get_and_offer_author_autocomplete(): void
 	{
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$root = dirname(__DIR__) . '/styles/' . $style . '/template/gallery/';
 			$form = (string) file_get_contents($root . 'search_body.html');
@@ -121,7 +121,7 @@ final class search_extension_events_test extends TestCase
 
 	public function test_bootstrap_search_results_use_a_compact_flex_toolbar_and_valid_pagination(): void
 	{
-		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['BBOOTS', 'FLATBOOTS'], $this) as $style)
 		{
 			$template = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/search_results.html');
 

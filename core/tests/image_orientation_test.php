@@ -100,7 +100,7 @@ final class image_orientation_test extends TestCase
 		$this->assertStringNotContainsString('data-gallery-orientation-apply-all', $controls);
 		$this->assertStringContainsString('repeating-conic-gradient', $css);
 
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$template = (string) file_get_contents($root . '/styles/' . $style . '/template/gallery/posting_body.html');
 			$this->assertStringContainsString('image_orientation_controls.html', $template);
@@ -133,7 +133,7 @@ final class image_orientation_test extends TestCase
 	public function test_sitesplat_upload_helpers_remain_globally_callable_and_match_prosilver_order(): void
 	{
 		$root = dirname(__DIR__) . '/styles';
-		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['BBOOTS', 'FLATBOOTS'], $this) as $style)
 		{
 			$javascript = (string) file_get_contents($root . '/' . $style . '/template/gallery/posting_javascript.html');
 			$template = (string) file_get_contents($root . '/' . $style . '/template/gallery/posting_body.html');
@@ -157,7 +157,7 @@ final class image_orientation_test extends TestCase
 	public function test_shared_name_controls_precede_each_style_image_name_field(): void
 	{
 		$root = dirname(__DIR__) . '/styles';
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$template = (string) file_get_contents($root . '/' . $style . '/template/gallery/posting_body.html');
 
@@ -185,7 +185,7 @@ final class image_orientation_test extends TestCase
 	public function test_shared_upload_fields_look_disabled_while_remaining_submittable(): void
 	{
 		$root = dirname(__DIR__) . '/styles';
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$template = (string) file_get_contents($root . '/' . $style . '/template/gallery/posting_body.html');
 

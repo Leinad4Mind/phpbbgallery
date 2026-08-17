@@ -96,6 +96,8 @@ namespace phpbbgallery\core
 
 namespace
 {
+	require_once __DIR__ . '/style_matrix.php';
+
 	if (!function_exists('utf8_clean_string'))
 	{
 		function utf8_clean_string(string $value): string

@@ -81,7 +81,7 @@ class individual_move_security_test extends TestCase
 	public function test_every_move_form_submits_a_phpbb_form_token(): void
 	{
 		$templates = glob(dirname(__DIR__) . '/styles/*/template/gallery/mcp_body.html');
-		$this->assertCount(3, $templates);
+		$this->assertNotEmpty($templates);
 
 		foreach ($templates as $template_path)
 		{

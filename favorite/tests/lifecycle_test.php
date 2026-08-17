@@ -24,7 +24,10 @@ final class lifecycle_test extends TestCase
 
 	public function test_flatboots_favorite_action_matches_the_viewtopic_button_size(): void
 	{
-		$template = (string) file_get_contents(dirname(__DIR__) . '/styles/FLATBOOTS/template/event/phpbbgallery_core_viewimage_actions.html');
+		$template = (string) file_get_contents(\gallery_test_existing_file(
+			dirname(__DIR__) . '/styles/FLATBOOTS/template/event/phpbbgallery_core_viewimage_actions.html',
+			$this
+		));
 
 		$this->assertStringContainsString('class="btn btn-sm btn-default"', $template);
 		$this->assertStringNotContainsString('btn-xs', $template);
@@ -33,7 +36,7 @@ final class lifecycle_test extends TestCase
 	public function test_every_image_page_favorite_action_toggles_over_ajax(): void
 	{
 		$root = dirname(__DIR__) . '/styles/';
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$template = (string) file_get_contents($root . $style . '/template/event/phpbbgallery_core_viewimage_actions.html');
 			$this->assertStringContainsString('data-gallery-favorite-ajax', $template, $style);
@@ -47,7 +50,7 @@ final class lifecycle_test extends TestCase
 		$javascript = (string) file_get_contents(dirname(__DIR__) . '/styles/all/template/favorite.js');
 		$this->assertStringContainsString("document.addEventListener('click'", $javascript);
 		$this->assertStringContainsString("request.setRequestHeader('X-Requested-With', 'XMLHttpRequest')", $javascript);
-		$this->assertStringContainsString("request.withCredentials = true", $javascript);
+		$this->assertStringContainsString('request.withCredentials = true', $javascript);
 		$this->assertStringContainsString("toggle.getAttribute('aria-busy') === 'true'", $javascript);
 		$this->assertStringContainsString("icon.classList.toggle('fa-heart', favorited)", $javascript);
 		$this->assertStringContainsString("icon.classList.toggle('fa-star', favorited)", $javascript);

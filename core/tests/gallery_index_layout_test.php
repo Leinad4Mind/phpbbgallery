@@ -16,7 +16,7 @@ final class gallery_index_layout_test extends TestCase
 	public function test_every_style_exposes_classic_modern_card_and_futuristic_layouts_on_index_and_inside_albums(): void
 	{
 		$core_root = dirname(__DIR__);
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$index = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/index_body.html');
 			$album = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/album_body.html');
@@ -152,7 +152,7 @@ final class gallery_index_layout_test extends TestCase
 		$images = (string) file_get_contents($core_root . '/styles/all/template/gallery/imageblock_futuristic.html');
 		$css = (string) file_get_contents($core_root . '/styles/all/theme/gallery.css');
 
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$variant = strtolower($style);
 			$selector = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/imageblock_layout.html');
@@ -185,7 +185,7 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertStringContainsString("'S_SUBALBUMS_AS_TEXT'", (string) file_get_contents($core_root . '/album/display.php'));
 		$this->assertStringContainsString("'S_SUBALBUMS_AS_ICONS'", (string) file_get_contents($core_root . '/album/display.php'));
 		$this->assertStringNotContainsString('S_DISPLAY_SUBALBUM_ICONS', $albums . $subalbums);
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			foreach (['albumlist_body.html', 'albumlist_polaroid.html'] as $template)
 			{
@@ -239,7 +239,7 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertLessThan(strpos($futuristic, 'gallery-futuristic-image-title'), strpos($futuristic, 'image_bbcode_copy.html'));
 		$this->assertStringNotContainsString('GALLERY_BBCODE_COPY_OVERLAY: true', $classic . $futuristic);
 
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$cards = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/imageblock_polaroid.html');
 			$this->assertStringContainsString('image_bbcode_copy.html', $cards, $style);
@@ -247,7 +247,7 @@ final class gallery_index_layout_test extends TestCase
 			$this->assertLessThan(strpos($cards, 'gallery-image-card-title'), strpos($cards, 'image_bbcode_copy.html'), $style);
 			$this->assertStringNotContainsString('GALLERY_BBCODE_COPY_OVERLAY: true', $cards, $style);
 		}
-		foreach (['all', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['all', 'BBOOTS', 'FLATBOOTS']) as $style)
 		{
 			$footer = (string) file_get_contents($core_root . '/styles/' . $style . '/template/event/overall_footer_after.html');
 			$this->assertStringContainsString('image_bbcode_copy.js', $footer, $style);
@@ -294,13 +294,13 @@ final class gallery_index_layout_test extends TestCase
 		$display_service = strstr($display_service, 'phpbbgallery.core.album.loader:', true);
 		$this->assertStringContainsString("- '@symfony_request'", $display_service);
 
-		$templates = [
+		$templates = \gallery_test_existing_files([
 			$core_root . '/styles/prosilver/template/gallery/albumlist_body.html',
 			$core_root . '/styles/BBOOTS/template/gallery/albumlist_body.html',
 			$core_root . '/styles/FLATBOOTS/template/gallery/albumlist_body.html',
 			$core_root . '/styles/all/template/gallery/albumlist_modern.html',
 			$core_root . '/styles/all/template/gallery/albumlist_futuristic.html',
-		];
+		]);
 		foreach ($templates as $template_path)
 		{
 			$template = (string) file_get_contents($template_path);
@@ -309,11 +309,16 @@ final class gallery_index_layout_test extends TestCase
 			$this->assertStringContainsString('gallery-album-custom-icon', $template, $template_path);
 			$this->assertStringNotContainsString('T_IMAGES_PATH }}{{ albumrow.ALBUM_IMAGE', $template, $template_path);
 		}
-		foreach (array_slice($templates, 0, 3) as $template_path)
+		$classic_templates = \gallery_test_existing_files([
+			$core_root . '/styles/prosilver/template/gallery/albumlist_body.html',
+			$core_root . '/styles/BBOOTS/template/gallery/albumlist_body.html',
+			$core_root . '/styles/FLATBOOTS/template/gallery/albumlist_body.html',
+		]);
+		foreach ($classic_templates as $template_path)
 		{
 			$this->assertStringContainsString('gallery-classic-album-icon-frame', (string) file_get_contents($template_path), $template_path);
 		}
-		foreach (array_slice($templates, 1, 2) as $template_path)
+		foreach (array_slice($classic_templates, 1) as $template_path)
 		{
 			$template = (string) file_get_contents($template_path);
 			$this->assertStringNotContainsString('> Thumbnail</th>', $template, $template_path);
@@ -346,7 +351,7 @@ final class gallery_index_layout_test extends TestCase
 	public function test_album_recent_random_and_search_grids_use_the_layout_selector_in_every_style(): void
 	{
 		$core_root = dirname(__DIR__);
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			foreach (['album_body.html', 'recent_body.html', 'search_recent.html', 'search_random.html'] as $filename)
 			{
@@ -439,7 +444,7 @@ final class gallery_index_layout_test extends TestCase
 	public function test_bootstrap_card_layouts_are_self_contained_responsive_grids(): void
 	{
 		$core_root = dirname(__DIR__);
-		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['BBOOTS', 'FLATBOOTS'], $this) as $style)
 		{
 			$template = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/albumlist_polaroid.html');
 

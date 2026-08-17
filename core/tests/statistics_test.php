@@ -143,7 +143,7 @@ final class statistics_test extends TestCase
 		$this->assertStringContainsString('STATISTICS_LEGACY_TRACKING_NOTICE', $template);
 		$this->assertStringContainsString('STATISTICS_LEGACY_PERIOD', $controller);
 		$this->assertStringContainsString('STATISTICS_PARTIAL_YEAR', $controller);
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$index = (string) file_get_contents($core . '/styles/' . $style . '/template/gallery/index_body.html');
 			$this->assertStringContainsString('U_GALLERY_STATISTICS', $index, $style);

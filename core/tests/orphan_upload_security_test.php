@@ -315,10 +315,10 @@ class orphan_upload_security_test extends TestCase
 
 	private function posting_templates(): array
 	{
-		return [
+		return \gallery_test_existing_files([
 			dirname(__DIR__) . '/styles/prosilver/template/gallery/posting_body.html',
 			dirname(__DIR__) . '/styles/BBOOTS/template/gallery/posting_body.html',
 			dirname(__DIR__) . '/styles/FLATBOOTS/template/gallery/posting_body.html',
-		];
+		]);
 	}
 }

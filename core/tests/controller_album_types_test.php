@@ -110,7 +110,7 @@ final class controller_album_types_test extends TestCase
 		$this->assertStringContainsString('$image_template_vars = []', $source);
 		$this->assertStringContainsString('isset($image_template_vars[$image_id])', $source);
 
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$template = (string) file_get_contents(
 				dirname(__DIR__) . '/styles/' . $style . '/template/gallery/imageblock_polaroid.html'
@@ -125,7 +125,7 @@ final class controller_album_types_test extends TestCase
 
 	public function test_bootstrap_album_cards_use_one_row_for_the_responsive_columns(): void
 	{
-		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['BBOOTS', 'FLATBOOTS'], $this) as $style)
 		{
 			$template = (string) file_get_contents(
 				dirname(__DIR__) . '/styles/' . $style . '/template/gallery/imageblock_polaroid.html'
@@ -181,7 +181,7 @@ final class controller_album_types_test extends TestCase
 		$this->assertStringContainsString('setAlbumRatingMetadata(form, opening)', $script);
 		$this->assertStringContainsString('item.hidden = voting && index >= 2', $script);
 
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$card = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/imageblock_polaroid.html');
 			$album = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/album_body.html');
@@ -298,7 +298,7 @@ final class controller_album_types_test extends TestCase
 
 	public function test_album_search_forms_keep_the_album_scope_in_every_style(): void
 	{
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$template = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/album_body.html');
 			$this->assertStringContainsString('method="get" id="album-search"', $template, $style);
@@ -328,7 +328,7 @@ final class controller_album_types_test extends TestCase
 
 	public function test_watch_action_is_not_coupled_to_upload_permission_in_any_style(): void
 	{
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$template = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/album_body.html');
 			$this->assertStringContainsString('{% if not S_IN_GALLERY_POPUP and U_WATCH_TOGGLE %}', $template, $style);
@@ -338,7 +338,7 @@ final class controller_album_types_test extends TestCase
 
 	public function test_album_information_uses_native_responsive_panels_and_accepts_addon_rules(): void
 	{
-		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['BBOOTS', 'FLATBOOTS'], $this) as $style)
 		{
 			$template = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/album_body.html');
 			$this->assertStringContainsString('class="row gallery-album-information"', $template, $style);

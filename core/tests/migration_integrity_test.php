@@ -907,7 +907,7 @@ class migration_integrity_test extends TestCase
 		$this->assertStringContainsString('SET field_show_profile = 0', $new_migration);
 		$this->assertStringContainsString("sql_escape('gallery_palbum')", $new_migration);
 
-		foreach (['all', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['all', 'BBOOTS', 'FLATBOOTS']) as $style)
 		{
 			$template = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/event/overall_footer_after.html');
 			$this->assertStringNotContainsString("prop('disabled', true)", $template, $style);

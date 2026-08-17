@@ -26,7 +26,7 @@ final class total_views_test extends TestCase
 		$this->assertStringContainsString('SUM(image_view_count) AS num_views', $acp_controller);
 		$this->assertStringContainsString("lang('TOTAL_VIEWS')", $acp_template);
 
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$template = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/index_body.html');
 			$this->assertStringContainsString("lang('TOTAL_VIEWS')", $template, $style);

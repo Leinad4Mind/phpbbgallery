@@ -210,7 +210,7 @@ final class controller_index_types_test extends TestCase
 		$this->assertStringContainsString('get_exclude_zebra()', $source);
 		$this->assertSame(2, substr_count($source, 'array_chunk($album_ids, 250)'));
 
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$template = (string) file_get_contents($root . '/styles/' . $style . '/template/gallery/index_body.html');
 			$this->assertStringContainsString('{% if U_WATCH_ALL_ALBUMS %}', $template, $style);

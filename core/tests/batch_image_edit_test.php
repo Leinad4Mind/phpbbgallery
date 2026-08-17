@@ -232,7 +232,7 @@ final class batch_image_edit_test extends TestCase
 
 	public function test_all_moderation_templates_use_a_dedicated_batch_editor(): void
 	{
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$overview = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/moderate_album_overview.html');
 			$editor = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/moderate_batch_edit.html');
@@ -258,7 +258,7 @@ final class batch_image_edit_test extends TestCase
 		$this->assertStringContainsString("assign_block_vars('overview_actions'", $source);
 		$this->assertStringContainsString("'U_ACTION_SELECT'", $source);
 
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$template = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/moderate_album_overview.html');
 			$this->assertStringContainsString('{% for action in overview_actions %}', $template, $style);
@@ -274,7 +274,7 @@ final class batch_image_edit_test extends TestCase
 			$this->assertStringNotContainsString('{{ U_ACTION_SELECT }}', $template, $style);
 		}
 
-		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['BBOOTS', 'FLATBOOTS'], $this) as $style)
 		{
 			$template = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/moderate_album_overview.html');
 			$this->assertStringContainsString('class="selectpicker"', $template, $style);

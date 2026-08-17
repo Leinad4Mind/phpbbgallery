@@ -19,6 +19,8 @@ namespace phpbb\db\driver
 
 namespace
 {
+	require_once dirname(__DIR__, 2) . '/core/tests/style_matrix.php';
+
 	if (!defined('IN_PHPBB'))
 	{
 		define('IN_PHPBB', true);

@@ -83,7 +83,7 @@ final class upload_alternate_author_test extends TestCase
 
 	public function test_author_and_comments_are_present_only_during_upload_review(): void
 	{
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$template = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/posting_body.html');
 			$upload_start = strpos($template, '{% elseif S_UPLOAD %}');

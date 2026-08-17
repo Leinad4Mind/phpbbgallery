@@ -44,7 +44,7 @@ final class template_syntax_test extends TestCase
 		$twig = new Environment(new ArrayLoader());
 		$twig->addFunction(new TwigFunction('lang', static fn (): string => ''));
 
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$directory = dirname(__DIR__) . '/styles/' . $style . '/template/event';
 			foreach ([

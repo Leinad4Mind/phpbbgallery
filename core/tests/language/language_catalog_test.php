@@ -239,7 +239,7 @@ class language_catalog_test extends TestCase
 		}
 
 		$styles_root = $this->extension_root . '/core/styles';
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__, 2)) as $style)
 		{
 			$template = (string) file_get_contents($styles_root . '/' . $style . '/template/gallery/posting_body.html');
 			$this->assertStringContainsString('NUM_IMAGES > 1', $template, $style);

@@ -51,7 +51,7 @@ final class navigation_and_whois_test extends TestCase
 
 	public function test_all_gallery_styles_keep_the_whois_action(): void
 	{
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$template = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/viewimage_body.html');
 			$this->assertStringContainsString('commentrow.U_WHOIS', $template, $style);

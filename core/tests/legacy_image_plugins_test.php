@@ -16,7 +16,7 @@ class legacy_image_plugins_test extends TestCase
 	public function test_obsolete_plugin_templates_and_template_variables_are_removed(): void
 	{
 		$styles_root = dirname(__DIR__) . '/styles';
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$this->assertFileDoesNotExist($styles_root . '/' . $style . '/template/gallery/plugins_header.html');
 		}

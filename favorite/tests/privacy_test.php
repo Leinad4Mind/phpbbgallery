@@ -30,7 +30,7 @@ final class privacy_test extends TestCase
 	public function test_favorites_are_rendered_inside_the_ucp_and_have_navigation_language(): void
 	{
 		$root = dirname(__DIR__);
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$template = trim((string) file_get_contents($root . '/styles/' . $style . '/template/gallery/ucp_gallery_favorite.html'));
 			$this->assertStringStartsWith("{% include 'ucp_header.html' %}", $template, $style);
@@ -48,7 +48,7 @@ final class privacy_test extends TestCase
 	public function test_bootstrap_favorite_actions_keep_the_select_and_submit_button_together(): void
 	{
 		$root = dirname(__DIR__) . '/styles/';
-		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['BBOOTS', 'FLATBOOTS'], $this) as $style)
 		{
 			$template = (string) file_get_contents($root . $style . '/template/gallery/ucp_gallery_favorite.html');
 			$this->assertStringContainsString('class="input-group col-xs-12 col-sm-8 col-md-6"', $template, $style);
@@ -68,7 +68,7 @@ final class privacy_test extends TestCase
 		$this->assertStringContainsString('<dl class="row-item">', $prosilver);
 		$this->assertStringContainsString('class="list-inner gallery-favorite-ucp-row"', $prosilver);
 
-		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['BBOOTS', 'FLATBOOTS'], $this) as $style)
 		{
 			$template = (string) file_get_contents($root . $style . '/template/gallery/ucp_gallery_favorite.html');
 			$this->assertMatchesRegularExpression(

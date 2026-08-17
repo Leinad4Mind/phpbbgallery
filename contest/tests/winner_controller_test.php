@@ -59,18 +59,18 @@ final class winner_controller_test extends TestCase
 		$search_service = substr($core_services, $service_start, $service_end - $service_start);
 		$this->assertStringNotContainsString('gallery_contests', $search_service);
 
-		foreach ([
+		foreach (\gallery_test_existing_files([
 			$core_root . '/styles/prosilver/template/gallery/search_results.html',
 			$core_root . '/styles/BBOOTS/template/gallery/imageblock_polaroid.html',
 			$core_root . '/styles/FLATBOOTS/template/gallery/imageblock_polaroid.html',
-		] as $template)
+		]) as $template)
 		{
 			$source = (string) file_get_contents($template);
 			$this->assertStringContainsString('S_IMAGE_AWARD_PLACEHOLDER', $source, $template);
 			$this->assertStringContainsString('gallery-image-award-placeholder', $source, $template);
 		}
 
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles($core_root) as $style)
 		{
 			$results = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/search_results.html');
 			$this->assertStringContainsString("'@phpbbgallery_core/gallery/gallery_header.html'", $results, $style);

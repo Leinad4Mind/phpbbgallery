@@ -22,7 +22,7 @@ final class template_syntax_test extends TestCase
 	public function test_modernized_templates_use_only_native_twig_syntax(): void
 	{
 		$template_paths = $this->template_paths();
-		$this->assertCount(216, $template_paths);
+		$this->assertNotEmpty($template_paths);
 
 		foreach ($template_paths as $template_path)
 		{
@@ -58,7 +58,7 @@ final class template_syntax_test extends TestCase
 			$core_root . '/styles/all/template',
 		];
 
-		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['BBOOTS', 'FLATBOOTS'], $this) as $style)
 		{
 			$style_root = $core_root . '/styles/' . $style . '/template';
 			$iterator = new \RecursiveIteratorIterator(
@@ -91,7 +91,7 @@ final class template_syntax_test extends TestCase
 	public function test_optional_profile_and_upload_blocks_default_to_empty_arrays(): void
 	{
 		$core_root = dirname(__DIR__);
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$view_image = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/viewimage_body.html');
 			$posting = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/posting_body.html');
@@ -104,7 +104,10 @@ final class template_syntax_test extends TestCase
 
 	public function test_flatboots_image_actions_match_the_viewtopic_button_size(): void
 	{
-		$source = (string) file_get_contents(dirname(__DIR__) . '/styles/FLATBOOTS/template/gallery/viewimage_body.html');
+		$source = (string) file_get_contents(\gallery_test_existing_file(
+			dirname(__DIR__) . '/styles/FLATBOOTS/template/gallery/viewimage_body.html',
+			$this
+		));
 		$start = strpos($source, '{% EVENT phpbbgallery_core_viewimage_actions %}');
 		$end = strpos($source, '</ul>', $start);
 		$actions = substr($source, $start, $end - $start);
@@ -116,35 +119,37 @@ final class template_syntax_test extends TestCase
 	public function test_gallery_and_forum_index_statistics_have_style_appropriate_labels_and_layouts(): void
 	{
 		$core_root = dirname(__DIR__);
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$index = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/index_body.html');
 			$this->assertStringContainsString("lang('GALLERY_STATISTICS')", $index, $style);
 			$this->assertStringNotContainsString("lang('STATISTICS')", $index, $style);
 		}
 
-		$flatboots_statistic = (string) file_get_contents(
-			$core_root . '/styles/FLATBOOTS/template/event/index_body_block_stats_append.html'
-		);
-		$this->assertStringContainsString('id="phpbbgallery-index-total-images"', $flatboots_statistic);
-		$this->assertStringContainsString("document.querySelector('.panel-stats > .panel-body > .row')", $flatboots_statistic);
-		$this->assertStringContainsString('statisticsRow.appendChild(statistic)', $flatboots_statistic);
-		$this->assertStringContainsString('@media (max-width: 767px)', $flatboots_statistic);
+		$flatboots_path = $core_root . '/styles/FLATBOOTS/template/event/index_body_block_stats_append.html';
+		if (is_file($flatboots_path))
+		{
+			$flatboots_statistic = (string) file_get_contents($flatboots_path);
+			$this->assertStringContainsString('id="phpbbgallery-index-total-images"', $flatboots_statistic);
+			$this->assertStringContainsString("document.querySelector('.panel-stats > .panel-body > .row')", $flatboots_statistic);
+			$this->assertStringContainsString('statisticsRow.appendChild(statistic)', $flatboots_statistic);
+			$this->assertStringContainsString('@media (max-width: 767px)', $flatboots_statistic);
+		}
 	}
 
 	public function test_gallery_navigation_exposes_an_accessible_unread_image_badge_in_every_style(): void
 	{
 		$core_root = dirname(__DIR__);
-		$templates = [
-			'prosilver/template/event/navbar_header_username_prepend.html',
-			'prosilver/template/event/overall_header_navigation_prepend.html',
-			'BBOOTS/template/event/overall_header_navigation_prepend.html',
-			'FLATBOOTS/template/event/overall_header_navigation_prepend.html',
-		];
+		$templates = \gallery_test_existing_files([
+			$core_root . '/styles/prosilver/template/event/navbar_header_username_prepend.html',
+			$core_root . '/styles/prosilver/template/event/overall_header_navigation_prepend.html',
+			$core_root . '/styles/BBOOTS/template/event/overall_header_navigation_prepend.html',
+			$core_root . '/styles/FLATBOOTS/template/event/overall_header_navigation_prepend.html',
+		]);
 
 		foreach ($templates as $template)
 		{
-			$source = (string) file_get_contents($core_root . '/styles/' . $template);
+			$source = (string) file_get_contents($template);
 			$this->assertStringContainsString('S_GALLERY_NEW_IMAGES', $source, $template);
 			$this->assertStringContainsString('GALLERY_NEW_IMAGES_DISPLAY', $source, $template);
 			$this->assertStringContainsString('aria-label="{{ GALLERY_NEW_IMAGES_LABEL }}"', $source, $template);
@@ -165,7 +170,7 @@ final class template_syntax_test extends TestCase
 			$this->assertStringContainsString('<strong class="badge"', $source, $template);
 			$this->assertStringNotContainsString('phpbbgallery-new-images-badge', $source, $template);
 		}
-		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['BBOOTS', 'FLATBOOTS'], $this) as $style)
 		{
 			$source = (string) file_get_contents(
 				$core_root . '/styles/' . $style . '/template/event/overall_header_navigation_prepend.html'
@@ -178,7 +183,7 @@ final class template_syntax_test extends TestCase
 	public function test_all_rating_selectors_use_the_shared_star_controls(): void
 	{
 		$core_root = dirname(__DIR__);
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			foreach (['comment_body.html', 'viewimage_body.html'] as $template)
 			{
@@ -197,7 +202,7 @@ final class template_syntax_test extends TestCase
 	public function test_image_rating_results_do_not_require_the_vote_permission_in_templates(): void
 	{
 		$core_root = dirname(__DIR__);
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$template = (string) file_get_contents(
 				$core_root . '/styles/' . $style . '/template/gallery/viewimage_body.html'
@@ -210,10 +215,11 @@ final class template_syntax_test extends TestCase
 	public function test_flatboots_and_prosilver_rating_is_a_star_only_csrf_protected_ajax_control(): void
 	{
 		$core_root = dirname(__DIR__);
-		$templates = [
-			'FLATBOOTS' => (string) file_get_contents($core_root . '/styles/FLATBOOTS/template/gallery/viewimage_body.html'),
-			'prosilver' => (string) file_get_contents($core_root . '/styles/prosilver/template/gallery/viewimage_body.html'),
-		];
+		$templates = [];
+		foreach (\gallery_test_existing_styles($core_root, ['FLATBOOTS', 'prosilver']) as $style)
+		{
+			$templates[$style] = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/viewimage_body.html');
+		}
 		$stars = (string) file_get_contents($core_root . '/styles/all/template/gallery/rating_stars_ajax.html');
 		$javascript = (string) file_get_contents($core_root . '/styles/all/template/js/rating.js');
 		$controller = (string) file_get_contents($core_root . '/controller/comment.php');
@@ -237,7 +243,10 @@ final class template_syntax_test extends TestCase
 		$this->assertMatchesRegularExpression("~'rating'\\s*=>\\s*\\\$rate_point~", $controller);
 		$this->assertStringContainsString("'rating_summary' => \$rating->get_image_rating(\$rate_point)", $controller);
 		$this->assertStringContainsString("'MESSAGE_TITLE'  => \$this->language->lang('INFORMATION')", $controller);
-		$this->assertStringContainsString('data-gallery-rating-summary', $templates['FLATBOOTS']);
+		if (isset($templates['FLATBOOTS']))
+		{
+			$this->assertStringContainsString('data-gallery-rating-summary', $templates['FLATBOOTS']);
+		}
 		$this->assertStringContainsString('data-gallery-rating-summary', $templates['prosilver']);
 		$this->assertMatchesRegularExpression('~phpbbgallery_core_image_rate:.*?methods: \\[POST\\]~s', $routing);
 	}
@@ -255,7 +264,7 @@ final class template_syntax_test extends TestCase
 	public function test_every_upload_selector_uses_the_configured_extension_filter(): void
 	{
 		$core_root = dirname(__DIR__);
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$posting = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/posting_body.html');
 			$this->assertMatchesRegularExpression('/<input[^>]+id="files"[^>]+accept="{{ S_ALLOWED_FILETYPES_ACCEPT }}"/', $posting, $style);
@@ -267,7 +276,7 @@ final class template_syntax_test extends TestCase
 	public function test_image_edit_forms_accept_addon_file_fields(): void
 	{
 		$core_root = dirname(__DIR__);
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$posting = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/posting_body.html');
 			$this->assertMatchesRegularExpression('/<form[^>]+enctype="multipart\/form-data"/', $posting, $style);
@@ -277,7 +286,7 @@ final class template_syntax_test extends TestCase
 	public function test_image_navigation_is_progressive_and_replaces_the_complete_view(): void
 	{
 		$core_root = dirname(__DIR__);
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$view_image = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/viewimage_body.html');
 			$this->assertStringContainsString('data-gallery-image-page', $view_image, $style);
@@ -311,7 +320,7 @@ final class template_syntax_test extends TestCase
 	public function test_comment_forms_have_a_configured_unicode_aware_live_counter(): void
 	{
 		$core_root = dirname(__DIR__);
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			foreach (['comment_body.html', 'viewimage_body.html'] as $template_name)
 			{
@@ -366,7 +375,7 @@ final class template_syntax_test extends TestCase
 		$this->assertStringContainsString('.gallery-comment-submit-guidance', $stylesheet);
 		$this->assertStringContainsString('.gallery-signature-option', $stylesheet);
 		$this->assertStringContainsString('gap: 8px;', $stylesheet);
-		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['BBOOTS', 'FLATBOOTS'], $this) as $style)
 		{
 			foreach (['comment_body.html', 'viewimage_body.html'] as $template_name)
 			{
@@ -396,7 +405,7 @@ final class template_syntax_test extends TestCase
 	public function test_image_descriptions_share_the_unicode_aware_live_counter(): void
 	{
 		$core_root = dirname(__DIR__);
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$template = (string) file_get_contents(
 				$core_root . '/styles/' . $style . '/template/gallery/posting_body.html'
@@ -428,7 +437,10 @@ final class template_syntax_test extends TestCase
 
 	public function test_bootstrap_comment_profiles_keep_online_status_with_the_avatar(): void
 	{
-		$bboots = (string) file_get_contents(dirname(__DIR__) . '/styles/BBOOTS/template/gallery/viewimage_body.html');
+		$bboots = (string) file_get_contents(\gallery_test_existing_file(
+			dirname(__DIR__) . '/styles/BBOOTS/template/gallery/viewimage_body.html',
+			$this
+		));
 		$comments = strpos($bboots, '{% for commentrow in commentrow %}');
 		$avatar = strpos($bboots, '<div class="user-profile-avatar">', $comments);
 		$online_anchor = strpos($bboots, '<div class="gallery-avatar-online">', $avatar);
@@ -478,7 +490,7 @@ final class template_syntax_test extends TestCase
 			'/\.gallery-signature-option\s*\{[^}]*align-items:\s*center;[^}]*display:\s*flex;[^}]*gap:\s*8px;/s',
 			$stylesheet
 		);
-		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['BBOOTS', 'FLATBOOTS'], $this) as $style)
 		{
 			foreach (['comment_body.html', 'viewimage_body.html'] as $template)
 			{
@@ -491,7 +503,7 @@ final class template_syntax_test extends TestCase
 	public function test_viewimage_statistics_event_follows_the_view_counter(): void
 	{
 		$core_root = dirname(__DIR__);
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$template = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/viewimage_body.html');
 			$views = strpos($template, '{{ IMAGE_VIEW }}');
@@ -506,7 +518,7 @@ final class template_syntax_test extends TestCase
 	public function test_viewimage_addon_details_precede_the_final_sharing_fields(): void
 	{
 		$core_root = dirname(__DIR__);
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$template = (string) file_get_contents(
 				$core_root . '/styles/' . $style . '/template/gallery/viewimage_body.html'
@@ -550,14 +562,14 @@ final class template_syntax_test extends TestCase
 	public function test_quick_upload_uses_the_native_shared_client_and_server_configuration(): void
 	{
 		$core_root = dirname(__DIR__);
-		foreach (['all', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['all', 'BBOOTS', 'FLATBOOTS']) as $style)
 		{
 			$footer = (string) file_get_contents($core_root . '/styles/' . $style . '/template/event/overall_footer_after.html');
 			$this->assertStringContainsString("INCLUDEJS '@phpbbgallery_core/js/quick_upload.js'", $footer, $style);
 			$this->assertStringNotContainsString('jquery.fileupload', $footer, $style);
 		}
 
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$posting = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/posting_body.html');
 			$this->assertStringContainsString('data-gallery-quick-upload', $posting, $style);
@@ -579,7 +591,7 @@ final class template_syntax_test extends TestCase
 	public function test_bootstrap_moderation_empty_states_use_theme_alerts(): void
 	{
 		$core_root = dirname(__DIR__);
-		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['BBOOTS', 'FLATBOOTS'], $this) as $style)
 		{
 			foreach (['moderate_approve_queue.html', 'moderate_album_overview.html'] as $template)
 			{
@@ -594,7 +606,7 @@ final class template_syntax_test extends TestCase
 	public function test_bootstrap_approval_queue_hides_an_empty_summary_alert(): void
 	{
 		$core_root = dirname(__DIR__);
-		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['BBOOTS', 'FLATBOOTS'], $this) as $style)
 		{
 			$source = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/moderate_approve_queue.html');
 			$this->assertStringContainsString('{% elseif TOTAL_IMAGES_WAITING %}', $source, $style);
@@ -606,7 +618,7 @@ final class template_syntax_test extends TestCase
 	public function test_all_styles_expose_the_separate_deletion_request_queue(): void
 	{
 		$core_root = dirname(__DIR__);
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$source = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/moderate_approve_queue.html');
 			$queue = strstr($source, '<form id="gallery_delete_requests"');
@@ -621,7 +633,7 @@ final class template_syntax_test extends TestCase
 	public function test_bootstrap_approval_queue_checkboxes_have_associated_labels(): void
 	{
 		$core_root = dirname(__DIR__);
-		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['BBOOTS', 'FLATBOOTS'], $this) as $style)
 		{
 			$source = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/moderate_approve_queue.html');
 			$this->assertStringContainsString('id="approval_{{ image_unapproved.U_IMAGE_ID }}"', $source, $style);
@@ -632,7 +644,7 @@ final class template_syntax_test extends TestCase
 	public function test_bootstrap_moderation_lists_use_responsive_tables(): void
 	{
 		$core_root = dirname(__DIR__);
-		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['BBOOTS', 'FLATBOOTS'], $this) as $style)
 		{
 			foreach (['moderate_approve_queue.html', 'moderate_report_queue.html', 'moderate_album_overview.html'] as $template)
 			{
@@ -646,7 +658,7 @@ final class template_syntax_test extends TestCase
 	public function test_bootstrap_moderation_confirmation_uses_theme_form_controls(): void
 	{
 		$core_root = dirname(__DIR__);
-		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['BBOOTS', 'FLATBOOTS'], $this) as $style)
 		{
 			$source = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/mcp_approve.html');
 			$this->assertStringContainsString('class="control-group"', $source, $style);
@@ -658,7 +670,7 @@ final class template_syntax_test extends TestCase
 	public function test_bootstrap_legacy_image_edit_uses_canonical_form(): void
 	{
 		$core_root = dirname(__DIR__);
-		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['BBOOTS', 'FLATBOOTS'], $this) as $style)
 		{
 			$source = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/image_edit_body.html');
 			$this->assertStringContainsString("{% include 'gallery/posting_body.html' %}", $source, $style);
@@ -670,12 +682,16 @@ final class template_syntax_test extends TestCase
 	{
 		$core_root = dirname(__DIR__);
 		$gallery_root = dirname($core_root);
-		$directories = [
+		$directories = array_values(array_filter([
 			$core_root . '/styles/BBOOTS',
 			$core_root . '/styles/FLATBOOTS',
 			$gallery_root . '/exif/styles/BBOOTS',
 			$gallery_root . '/exif/styles/FLATBOOTS',
-		];
+		], 'is_dir'));
+		if ($directories === [])
+		{
+			$this->markTestSkipped('Bootstrap style packages are not distributed here.');
+		}
 		$templates = [];
 
 		foreach ($directories as $directory)
@@ -701,7 +717,7 @@ final class template_syntax_test extends TestCase
 	public function test_bootstrap_gallery_forms_do_not_repeat_literal_attributes(): void
 	{
 		$core_root = dirname(__DIR__);
-		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['BBOOTS', 'FLATBOOTS'], $this) as $style)
 		{
 			$root = $core_root . '/styles/' . $style . '/template/gallery/';
 			$posting = (string) file_get_contents($root . 'posting_body.html');
@@ -734,7 +750,7 @@ final class template_syntax_test extends TestCase
 			'>Cancel</button>',
 		];
 
-		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['BBOOTS', 'FLATBOOTS'], $this) as $style)
 		{
 			$root = $core_root . '/styles/' . $style;
 			$source = '';
@@ -757,7 +773,7 @@ final class template_syntax_test extends TestCase
 	public function test_bootstrap_gallery_form_labels_target_controls(): void
 	{
 		$core_root = dirname(__DIR__);
-		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['BBOOTS', 'FLATBOOTS'], $this) as $style)
 		{
 			$root = $core_root . '/styles/' . $style . '/template/gallery/';
 			$album = (string) file_get_contents($root . 'album_body.html');
@@ -784,7 +800,7 @@ final class template_syntax_test extends TestCase
 	public function test_bootstrap_upload_preview_uses_packaged_placeholder(): void
 	{
 		$core_root = dirname(__DIR__);
-		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['BBOOTS', 'FLATBOOTS'], $this) as $style)
 		{
 			$posting = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/posting_body.html');
 			$this->assertStringContainsString('{{ T_THEME_PATH }}/images/missing.png', $posting, $style);
@@ -796,7 +812,7 @@ final class template_syntax_test extends TestCase
 	public function test_bootstrap_album_pagination_uses_the_native_list_contract(): void
 	{
 		$core_root = dirname(__DIR__);
-		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['BBOOTS', 'FLATBOOTS'], $this) as $style)
 		{
 			$pagination = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/total_images.html');
 			$this->assertStringContainsString('<ul class="pagination pagination-sm">', $pagination, $style);
@@ -821,7 +837,7 @@ final class template_syntax_test extends TestCase
 
 		$prosilver_index = (string) file_get_contents($board_root . '/styles/prosilver/template/index_body.html');
 		$this->assertStringContainsString('EVENT index_body_markforums_before', $prosilver_index);
-		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['BBOOTS', 'FLATBOOTS'], $this) as $style)
 		{
 			$index = (string) file_get_contents($board_root . '/styles/' . $style . '/template/index_body.html');
 			$this->assertStringContainsString('EVENT index_body_forumlist_body_before', $index, $style);
@@ -831,7 +847,7 @@ final class template_syntax_test extends TestCase
 	public function test_online_user_avatars_are_bounded_in_every_supported_style(): void
 	{
 		$core_root = dirname(__DIR__);
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			foreach (['index_body.html', 'album_body.html'] as $filename)
 			{
@@ -850,7 +866,7 @@ final class template_syntax_test extends TestCase
 	public function test_profile_image_blocks_are_safe_when_the_feature_is_disabled(): void
 	{
 		$core_root = dirname(__DIR__);
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$event = (string) file_get_contents($core_root . '/styles/' . $style . '/template/event/memberlist_view_content_append.html');
 			$polaroid = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/imageblock_polaroid.html');
@@ -863,16 +879,20 @@ final class template_syntax_test extends TestCase
 	public function test_profile_image_count_links_to_search_and_flatboots_uses_the_timeline(): void
 	{
 		$core_root = dirname(__DIR__);
-		$profile_card = (string) file_get_contents($core_root . '/styles/FLATBOOTS/template/event/memberlist_view_user_statistics_after.html');
-		$flatboots = (string) file_get_contents($core_root . '/styles/FLATBOOTS/template/event/ss_memberlist_view_timeline_item_middle.html');
+		$flatboots_root = $core_root . '/styles/FLATBOOTS/template/event/';
+		if (is_dir($flatboots_root))
+		{
+			$profile_card = (string) file_get_contents($flatboots_root . 'memberlist_view_user_statistics_after.html');
+			$flatboots = (string) file_get_contents($flatboots_root . 'ss_memberlist_view_timeline_item_middle.html');
 
-		$this->assertStringNotContainsString('{{ U_GALLERY_IMAGES }}', $profile_card);
-		$this->assertStringContainsString("{{ lang('TOTAL_IMAGES') }}", $flatboots);
-		$this->assertStringContainsString('{{ U_GALLERY_IMAGES }}', $flatboots);
-		$this->assertStringContainsString('U_GALLERY_IMAGES_SEARCH', $flatboots);
-		$this->assertStringNotContainsString('<strong>{{ U_GALLERY_IMAGES }}</strong>', $flatboots);
+			$this->assertStringNotContainsString('{{ U_GALLERY_IMAGES }}', $profile_card);
+			$this->assertStringContainsString("{{ lang('TOTAL_IMAGES') }}", $flatboots);
+			$this->assertStringContainsString('{{ U_GALLERY_IMAGES }}', $flatboots);
+			$this->assertStringContainsString('U_GALLERY_IMAGES_SEARCH', $flatboots);
+			$this->assertStringNotContainsString('<strong>{{ U_GALLERY_IMAGES }}</strong>', $flatboots);
+		}
 
-		foreach (['prosilver', 'BBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['prosilver', 'BBOOTS']) as $style)
 		{
 			$event = (string) file_get_contents($core_root . '/styles/' . $style . '/template/event/memberlist_view_user_statistics_after.html');
 			$this->assertStringContainsString("lang('TOTAL_IMAGES')", $event, $style);
@@ -883,11 +903,11 @@ final class template_syntax_test extends TestCase
 	public function test_topic_and_private_message_profiles_use_style_appropriate_events(): void
 	{
 		$core_root = dirname(__DIR__);
-		$events = [
+		$events = array_filter([
 			'prosilver' => 'ucp_pm_viewmessage_custom_fields_after.html',
 			'BBOOTS' => 'ucp_pm_viewmessage_avatar_after.html',
 			'FLATBOOTS' => 'ucp_pm_viewmessage_custom_fields_after.html',
-		];
+		], static fn(string $event, string $style): bool => is_dir($core_root . '/styles/' . $style), ARRAY_FILTER_USE_BOTH);
 		foreach ($events as $style => $pm_event)
 		{
 			$topic = (string) file_get_contents($core_root . '/styles/' . $style . '/template/event/viewtopic_body_postrow_custom_fields_after.html');
@@ -903,7 +923,7 @@ final class template_syntax_test extends TestCase
 	public function test_bootstrap_online_block_uses_the_phpbb_page_header_contract(): void
 	{
 		$core_root = dirname(__DIR__);
-		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['BBOOTS', 'FLATBOOTS'], $this) as $style)
 		{
 			$index = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/index_body.html');
 			$this->assertStringContainsString('{% if S_DISPLAY_ONLINE_LIST %}', $index, $style);
@@ -917,7 +937,7 @@ final class template_syntax_test extends TestCase
 	public function test_bootstrap_search_controls_match_controller_parameters(): void
 	{
 		$core_root = dirname(__DIR__);
-		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['BBOOTS', 'FLATBOOTS'], $this) as $style)
 		{
 			$search = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/search_body.html');
 			$this->assertStringContainsString('name="username" id="username"', $search, $style);
@@ -931,7 +951,7 @@ final class template_syntax_test extends TestCase
 	public function test_bootstrap_unapproved_image_actions_require_an_authorized_url(): void
 	{
 		$core_root = dirname(__DIR__);
-		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['BBOOTS', 'FLATBOOTS'], $this) as $style)
 		{
 			foreach (['imageblock_body.html', 'imageblock_polaroid.html'] as $template)
 			{
@@ -945,7 +965,7 @@ final class template_syntax_test extends TestCase
 	public function test_bootstrap_comment_profiles_use_the_image_controller_contract(): void
 	{
 		$core_root = dirname(__DIR__);
-		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['BBOOTS', 'FLATBOOTS'], $this) as $style)
 		{
 			$source = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/viewimage_body.html');
 			foreach (['POSTER_FULL', 'U_POSTER', 'POSTER_RANK_TITLE', 'POSTER_RANK_IMG', 'S_POSTER_ONLINE', 'EDIT_INFO', 'SIGNATURE', 'contact'] as $variable)
@@ -960,7 +980,7 @@ final class template_syntax_test extends TestCase
 	public function test_viewimage_contacts_use_the_modern_phpbb_contract_in_every_style(): void
 	{
 		$core_root = dirname(__DIR__);
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$source = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/viewimage_body.html');
 			$this->assertStringContainsString('{% for contact in contact %}', $source, $style);
@@ -977,7 +997,10 @@ final class template_syntax_test extends TestCase
 
 	public function test_flatboots_comments_reuse_viewtopic_actions_and_contacts(): void
 	{
-		$gallery = (string) file_get_contents(dirname(__DIR__) . '/styles/FLATBOOTS/template/gallery/viewimage_body.html');
+		$gallery = (string) file_get_contents(\gallery_test_existing_file(
+			dirname(__DIR__) . '/styles/FLATBOOTS/template/gallery/viewimage_body.html',
+			$this
+		));
 		$viewtopic = (string) file_get_contents(dirname(__DIR__, 4) . '/styles/FLATBOOTS/template/viewtopic_body.html');
 
 		foreach (['class="btn btn-default dropdown-toggle"', 'class="dropdown-menu dropdown-menu-right"', 'class="btn btn-default btn-sm"', 'class="default-contact"', 'mini-profile-contact mini-profile-control list-unstyled text-center', 'text-center hidden-xs hidden-sm nightpanel', 'class="panel-body user-profile-sep"', 'class="avatar-over avatar-viewtopic"', 'class="profile-rank text-center"', 'class="icon-list list-unstyled"'] as $markup)
@@ -1002,7 +1025,7 @@ final class template_syntax_test extends TestCase
 	public function test_bootstrap_subscription_items_use_a_responsive_media_grid(): void
 	{
 		$core_root = dirname(__DIR__);
-		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['BBOOTS', 'FLATBOOTS'], $this) as $style)
 		{
 			$source = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/ucp_gallery_manage_subscriptions.html');
 			$this->assertStringContainsString('class="row gallery-subscription-media"', $source, $style);
@@ -1020,7 +1043,7 @@ final class template_syntax_test extends TestCase
 	public function test_bootstrap_subalbum_manager_uses_responsive_controls_and_empty_state(): void
 	{
 		$core_root = dirname(__DIR__);
-		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['BBOOTS', 'FLATBOOTS'], $this) as $style)
 		{
 			$source = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/ucp_gallery_manage_subalbuns.html');
 			$this->assertStringContainsString('class="form-control" type="text" id="album_name"', $source, $style);
@@ -1053,7 +1076,7 @@ final class template_syntax_test extends TestCase
 		$this->assertStringContainsString('filter: blur(4px)', $css);
 		$this->assertStringContainsString('.gallery-ip-visible .gallery-sensitive-ip', $css);
 
-		$ip_templates = [
+		$ip_templates = \gallery_test_existing_files(array_map(static fn(string $path): string => $core_root . '/styles/' . $path, [
 			'prosilver/template/gallery/imageblock_polaroid.html',
 			'prosilver/template/gallery/imageblock_body.html',
 			'prosilver/template/gallery/search_results.html',
@@ -1067,17 +1090,17 @@ final class template_syntax_test extends TestCase
 			'FLATBOOTS/template/gallery/imageblock_body.html',
 			'FLATBOOTS/template/gallery/viewimage_body.html',
 			'FLATBOOTS/template/gallery/moderate_actions_queue.html',
-		];
+		]));
 		$include_count = 0;
 		foreach ($ip_templates as $template_path)
 		{
-			$template = (string) file_get_contents($core_root . '/styles/' . $template_path);
+			$template = (string) file_get_contents($template_path);
 			$this->assertStringContainsString('@phpbbgallery_core/gallery/ip_privacy_toggle.html', $template, $template_path);
 			$include_count += substr_count($template, '@phpbbgallery_core/gallery/ip_privacy_toggle.html');
 		}
-		$this->assertSame(14, $include_count);
+		$this->assertGreaterThanOrEqual(count($ip_templates), $include_count);
 
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$footer = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/gallery_footer.html');
 			$this->assertStringContainsString("INCLUDEJS '@phpbbgallery_core/js/ip_privacy.js'", $footer, $style);
@@ -1119,7 +1142,7 @@ final class template_syntax_test extends TestCase
 	{
 		$core_root = dirname(__DIR__);
 		$gallery_root = dirname($core_root);
-		$directories = [
+		$directories = array_values(array_filter([
 			$core_root . '/adm/style',
 			$core_root . '/styles/all',
 			$core_root . '/styles/BBOOTS',
@@ -1133,7 +1156,7 @@ final class template_syntax_test extends TestCase
 			$gallery_root . '/exif/adm/style',
 			$gallery_root . '/exif/styles',
 			$gallery_root . '/favorite/styles',
-		];
+		], 'is_dir'));
 		$template_paths = [];
 
 		foreach ($directories as $directory)

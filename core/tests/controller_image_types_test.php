@@ -259,7 +259,7 @@ final class controller_image_types_test extends TestCase
 
 	public function test_image_templates_keep_the_current_image_centred_at_navigation_edges(): void
 	{
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$template = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/viewimage_body.html');
 			$this->assertStringContainsString('<ul class="gallery-image-navigation">', $template, $style);
@@ -442,7 +442,7 @@ final class controller_image_types_test extends TestCase
 		$this->assertStringContainsString('=== self::PERSONAL_ALBUM_PROFILE_FIELD', $source);
 		$this->assertStringContainsString("'U_POSTER_PERSONAL_ALBUM' => \$this->visible_personal_album_url(\$user_data)", $source);
 
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$template = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/viewimage_body.html');
 			$this->assertStringContainsString('U_POSTER_PERSONAL_ALBUM', $template, $style);

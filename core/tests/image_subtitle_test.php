@@ -66,7 +66,7 @@ final class image_subtitle_test extends TestCase
 	public function test_every_style_exposes_editing_and_searchable_presentation(): void
 	{
 		$root = dirname(__DIR__) . '/styles';
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$posting = (string) file_get_contents($root . '/' . $style . '/template/gallery/posting_body.html');
 			$view = (string) file_get_contents($root . '/' . $style . '/template/gallery/viewimage_body.html');
@@ -86,7 +86,7 @@ final class image_subtitle_test extends TestCase
 		$root = dirname(__DIR__);
 		$styles = $root . '/styles';
 
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$card = (string) file_get_contents($styles . '/' . $style . '/template/gallery/imageblock_polaroid.html');
 

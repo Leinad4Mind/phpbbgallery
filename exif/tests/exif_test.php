@@ -298,7 +298,7 @@ final class exif_test extends TestCase
 			'phpbbgallery_core_viewimage_details_after.html',
 		];
 
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			foreach ($events as $event)
 			{
@@ -309,7 +309,7 @@ final class exif_test extends TestCase
 
 	public function test_bootstrap_template_events_use_theme_markup(): void
 	{
-		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['BBOOTS', 'FLATBOOTS'], $this) as $style)
 		{
 			$root = dirname(__DIR__) . '/styles/' . $style . '/template/event/';
 			$settings = (string) file_get_contents($root . 'phpbbgallery_core_ucp_settings_fieldset.html');

@@ -95,7 +95,7 @@ class package_hygiene_test extends TestCase
 		sort($actual);
 
 		$this->assertSame($expected, $actual);
-		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['BBOOTS', 'FLATBOOTS'], $this) as $style)
 		{
 			$this->assertSame([], glob($this->core_root . '/styles/' . $style . '/js/*.js') ?: []);
 		}
@@ -170,7 +170,7 @@ class package_hygiene_test extends TestCase
 
 	public function test_polaroid_layout_uses_the_shared_asset_in_every_style(): void
 	{
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$template = file_get_contents(
 				$this->core_root . '/styles/' . $style . '/template/gallery/albumlist_polaroid.html'

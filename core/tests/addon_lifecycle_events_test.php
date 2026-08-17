@@ -97,7 +97,7 @@ final class addon_lifecycle_events_test extends TestCase
 
 	public function test_image_edit_forms_expose_a_per_image_addon_field_hook(): void
 	{
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$template = (string) file_get_contents(
 				dirname(__DIR__) . '/styles/' . $style . '/template/gallery/posting_body.html'

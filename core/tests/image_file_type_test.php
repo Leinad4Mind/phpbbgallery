@@ -48,7 +48,7 @@ final class image_file_type_test extends TestCase
 		$this->assertStringContainsString("'IMAGE_FILE_TYPE'", $controller);
 		$this->assertStringContainsString('get_image_file_type', $controller);
 
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$style_root = $root . '/styles/' . $style . '/template/gallery/';
 			$template = (string) file_get_contents($style_root . 'viewimage_body.html');

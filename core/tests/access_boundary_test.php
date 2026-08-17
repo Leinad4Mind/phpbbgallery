@@ -173,7 +173,7 @@ class access_boundary_test extends TestCase
 		$this->assertStringNotContainsString("left_id'] + 1 == \$row['right_id']", $album_display);
 		$this->assertStringContainsString("'S_IS_CAT'", $album_display);
 
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$template = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/albumlist_body.html');
 			$this->assertStringContainsString('albumrow.S_IS_CAT', $template, $style);

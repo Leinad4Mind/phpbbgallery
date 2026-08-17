@@ -15,7 +15,7 @@ final class album_polaroid_title_test extends TestCase
 {
 	public function test_every_style_uses_the_shared_album_title_layout(): void
 	{
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$template = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/albumlist_polaroid.html');
 
@@ -43,7 +43,7 @@ final class album_polaroid_title_test extends TestCase
 		$this->assertStringContainsString("'S_PERSONAL_SECTION_START'", $display);
 		$this->assertStringContainsString("'S_PERSONAL_ALBUM'", $display);
 
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			foreach (['albumlist_polaroid.html', 'albumlist_body.html'] as $filename)
 			{

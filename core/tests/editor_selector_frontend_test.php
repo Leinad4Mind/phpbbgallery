@@ -48,7 +48,7 @@ final class editor_selector_frontend_test extends TestCase
 
 	public function test_bootstrap_footers_keep_the_gallery_selector_runtime(): void
 	{
-		foreach (['BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['BBOOTS', 'FLATBOOTS'], $this) as $style)
 		{
 			$template = $this->read('styles/' . $style . '/template/event/overall_footer_after.html');
 
@@ -83,7 +83,7 @@ final class editor_selector_frontend_test extends TestCase
 	public function test_all_styles_route_the_signature_selector_to_the_signature_textarea(): void
 	{
 		$forum_root = dirname(__DIR__, 4);
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$buttons = (string) file_get_contents($forum_root . '/styles/' . $style . '/template/posting_buttons.html');
 			$editor = (string) file_get_contents($forum_root . '/styles/' . $style . '/template/posting_editor.html');

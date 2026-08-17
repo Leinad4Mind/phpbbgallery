@@ -132,7 +132,7 @@ final class upload_review_preview_test extends TestCase
 	public function test_all_review_styles_open_the_preview_without_an_empty_legacy_link(): void
 	{
 		$root = dirname(__DIR__) . '/styles';
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$template = (string) file_get_contents($root . '/' . $style . '/template/gallery/posting_body.html');
 			$this->assertStringContainsString('@phpbbgallery_core/js/upload_preview.js', $template, $style);

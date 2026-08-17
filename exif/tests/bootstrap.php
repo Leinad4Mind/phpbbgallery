@@ -17,6 +17,8 @@ namespace Symfony\Component\EventDispatcher
 
 namespace
 {
+	require_once dirname(__DIR__, 2) . '/core/tests/style_matrix.php';
+
 	// Language files bail out with exit; when this is missing, which would kill the
 	// whole test run rather than fail a single test.
 	if (!defined('IN_PHPBB'))
