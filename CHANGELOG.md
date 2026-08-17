@@ -68,6 +68,8 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Centred every Gallery ACP contextual-help dialog in the viewport while retaining responsive size limits and fallback browser support.
+
 - Prevented images owned by the anonymous Guest account from entering registered-user profile, private-message permission and online-session lookups, avoiding MySQL errors while preserving the stored guest identity.
 - Prevented image pages from passing an empty user list to phpBB's permission SQL when an image author or comment author no longer has a matching users-table row, retaining the stored Gallery identity fallback instead of returning HTTP 500 on MySQL.
 - Kept the ACP Cleanup missing-source review button readable inside the red storage warning by preserving its black button text across link states.

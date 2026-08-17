@@ -27,9 +27,12 @@
 }
 
 .gallery-storage-layout-help-dialog {
+	position: fixed;
+	inset: 0;
 	box-sizing: border-box;
 	width: min(52rem, calc(100% - 2rem));
 	max-height: calc(100vh - 2rem);
+	margin: auto;
 	padding: 0;
 	overflow: auto;
 	color: #333;

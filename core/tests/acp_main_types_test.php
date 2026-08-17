@@ -164,5 +164,8 @@ final class acp_main_types_test extends TestCase
 		$this->assertStringContainsString("event.key !== 'Escape'", $javascript);
 		$this->assertStringContainsString('previousFocus.focus()', $javascript);
 		$this->assertStringContainsString('::backdrop', $stylesheet);
+		$this->assertStringContainsString('position: fixed;', $stylesheet);
+		$this->assertStringContainsString('inset: 0;', $stylesheet);
+		$this->assertStringContainsString('margin: auto;', $stylesheet);
 	}
 }

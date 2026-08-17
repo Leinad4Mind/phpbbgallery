@@ -251,6 +251,9 @@ final class acp_config_types_test extends TestCase
 		$this->assertStringContainsString("event.key !== 'Escape'", $javascript);
 		$this->assertStringContainsString('previousFocus.focus()', $javascript);
 		$this->assertStringContainsString('::backdrop', $stylesheet);
+		$this->assertStringContainsString('position: fixed;', $stylesheet);
+		$this->assertStringContainsString('inset: 0;', $stylesheet);
+		$this->assertStringContainsString('margin: auto;', $stylesheet);
 	}
 
 	public function test_bbcode_templates_keep_the_selected_link_target_without_a_session_id(): void
