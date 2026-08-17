@@ -7,14 +7,13 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 ### Added
 
 - Added composable Image Fields validation rules for textual metadata: minimum/maximum or exact character counts, required beginnings/endings, common Unicode-aware formats and bounded custom PCRE expressions enforced consistently across upload, editing, import and MCP Mass Edit.
-
 - Added an independently bounded forum-index block that aggregates recent images from every visible personal album, preserving Gallery permissions, friendship restrictions, moderation visibility and ignored-user exclusions without listing each personal album separately.
-- Added an independent ACP switch for displaying the original image file type on individual image pages, enabled by default to preserve existing behavior.
+- Added an independent ACP switch for displaying the original image file type on individual image pages, enabled by default to preserve existing behaviour.
 - Added a distinct Updated Core ACP provenance marker for Gallery 3.4.0 settings whose choices or behaviour were expanded by the modern Core, using a refresh badge and separate accent; provenance legends now group New Core and Updated Core first, followed by alphabetised free add-ons and then alphabetised premium add-ons.
 - Added a permission-filtered Gallery statistics page linked from the index, with lifetime and tracked annual summaries plus an explicit pre-tracking historical period and rankings for most-viewed images, most-downloaded originals, users with the most images and users with the most downloads; bounded yearly aggregates avoid individual access logs, and BBPoints Images imports recoverable historical counters without inventing unavailable yearly attribution.
 - Added per-parent Hide, Text and Icons presentation modes for eligible direct subalbums, applied consistently to Classic, Modern, Cards and Futuristic layouts without extra queries and retaining text links for subalbums without a configured icon.
 - Added an optional ACP-controlled real image-ID badge to every Gallery card layout; selecting it copies the installation's canonical `[image]` or `[galleryimage]` BBCode with accessible visual confirmation and an HTTP-compatible clipboard fallback.
-- Added a fourth Futuristic Gallery presentation with shared permission-safe album and image components, responsive glass-style grids, accessible focus and reduced-motion behavior, and distinct restrained variants for PROSILVER, BBOOTS and FLATBOOTS while preserving Favorite, rating, moderation and add-on metadata events.
+- Added a fourth Futuristic Gallery presentation with shared permission-safe album and image components, responsive glass-style grids, accessible focus and reduced-motion behaviour, and distinct restrained variants for PROSILVER, BBOOTS and FLATBOOTS while preserving Favorite, rating, moderation and add-on metadata events.
 - Added large, responsive and keyboard-accessible Font Awesome previous/next controls when navigation thumbnails are disabled, while retaining the adjacent image names for tooltips and assistive technology.
 - Added a persistent Off mode beside the Simple and Complete ACP provenance views, removing in-field badges, accent colours and setting markers while keeping every effective setting visible.
 - Added a distinct New Core ACP provenance marker for every configuration introduced after Gallery 3.4.0 and for the new album-icon selector, using a star and Core accent while preserving puzzle identities for add-ons in both Simple and Complete views.
@@ -28,7 +27,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added a selectable Gallery presentation shared by PROSILVER, BBOOTS and FLATBOOTS, applying the classic MOD-inspired layout, the responsive modern list or modern cards consistently to the Gallery index, nested subalbums and image grids such as recent, random and search results without changing album data or permissions.
 - Added a visual second-step image transformation editor with live previews, composable left/right/180-degree rotation, horizontal/vertical flipping, batch application, automatic JPEG EXIF orientation correction and fail-closed protection for animated GIF and multipage TIFF sources.
 - Added a conditional Imagick diagnostic to the Core ACP whenever the TIFF add-on package is present, validating the PHP extension, bounded resource APIs, TIFF decoding and WebP encoding without presenting Imagick as a Core requirement.
-- Added accessible contextual-help dialogs to every Gallery ACP resynchronisation and cache operation, explaining what each repair changes, when it is appropriate and when routine Gallery behavior already keeps the data current.
+- Added accessible contextual-help dialogs to every Gallery ACP resynchronisation and cache operation, explaining what each repair changes, when it is appropriate and when routine Gallery behaviour already keeps the data current.
 - Added a browser-persisted Simple/Complete ACP view switch for add-on-supplied settings: Simple keeps the compact top colour legend and a colour-only explanation while hiding repeated inline badges, while Complete also retains the inline puzzle badges and full explanatory text.
 - Added shareable GET-based Gallery searches with explicit query summaries, in-result refinement, safe state-preserving sort forms and a complete Forum index -> Gallery -> Search breadcrumb.
 - Added permission-checked, bounded username autocomplete to Gallery author search and moderator-only alternate-author uploads, while retaining the wildcard and phpBB member-search fallbacks.
@@ -37,12 +36,12 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added selectable image resolution to thumbnail metadata, persisted source dimensions for new uploads and imports, and a confirmed 25-image ACP resynchronisation for legacy or remote files; a neutral album-card metadata extension point lets BBPoints Images expose optional original-download counters without coupling the Core to the add-on.
 - Added a privacy-first browser toggle for privileged Gallery IP displays: every visible IP starts blurred, one click reveals or hides all IPs, and the preference is retained in local storage.
 - Added permission-aware inline AJAX rating stars to album cards; own images, previously rated images and images outside the effective rating permission show no rating link or control.
-- Added independent per-album permissions for original-file downloads and charge-free original access, initialized from existing image-view roles during the upgrade while keeping the charge bypass denied.
+- Added independent per-album permissions for original-file downloads and charge-free original access, initialised from existing image-view roles during the upgrade while keeping the charge bypass denied.
 - Added accessible star-only AJAX rating controls to FLATBOOTS and prosilver, with CSRF-protected POST submission, permission revalidation and no page reload.
 - Made Favorite controls update their icon, label and inverse action over AJAX in album listings, Gallery search results and image pages, including after progressive AJAX image navigation.
 - Added responsive album information panels matching FLATBOOTS viewforum, with online users, effective album permissions and a neutral third-party rules area populated by BBPoints Images.
 - Added permission-aware AJAX favorite hearts to every bounded image-card listing, including albums, search results, recent, random, featured, top-rated, most-downloaded and contest-winner blocks, loading each result set's favorite state in one query through a neutral Core extension event and allowing administrators to keep listing controls disabled.
-- Added a Unicode-aware live character counter to Gallery comment forms in every bundled style, driven by the ACP comment limit and reinitialized after AJAX image navigation.
+- Added a Unicode-aware live character counter to Gallery comment forms in every bundled style, driven by the ACP comment limit and reinitialised after AJAX image navigation.
 - Extended indexed EXIF DateTimeOriginal sorting to Gallery searches while retaining upload-date fallback, previous/next navigation and ACP defaults.
 - Added an optional multi-image upload control that applies the first image's BBPoints contributors to the complete batch, with synchronized locked editors and server-side enforcement.
 
@@ -73,7 +72,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Prevented image pages from passing an empty user list to phpBB's permission SQL when an image author or comment author no longer has a matching users-table row, retaining the stored Gallery identity fallback instead of returning HTTP 500 on MySQL.
 - Kept the ACP Cleanup missing-source review button readable inside the red storage warning by preserving its black button text across link states.
 - Made ACP Import preserve EXIF metadata captured from the original source before resize or conversion instead of discarding it for unmodified imports and rebuilding it on first view.
-- Prevented a first-view HTTP 500 after rebuilding legacy or unknown EXIF metadata by completing the nullable status-update return contract; valid cached EXIF now also renders without materializing local or remote originals, while source access occurs only when metadata must be rebuilt.
+- Prevented a first-view HTTP 500 after rebuilding legacy or unknown EXIF metadata by completing the nullable status-update return contract; valid cached EXIF metadata now also renders without materialising local or remote originals, while source access occurs only when metadata must be rebuilt.
 - Made ACP Cleanup source diagnosis CSRF-protected and resumable in 25-record batches, with paginated provider, key, album, author, publication-state and derivative context plus an explicit restore-before-delete workflow.
 - Split distributed-storage status into files ready to migrate, missing source files, already distributed files and invalid keys; migration now processes only actionable files, reports missing sources separately and links authorized administrators to ACP Cleanup without making it a Core dependency.
 - Fixed automatic distributed-layout migration and image-dimension synchronization batches being rejected by phpBB when they resubmitted a newly created CSRF form token within the same second.
@@ -86,7 +85,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Replaced the conflicting global subalbum-icon switch and ambiguous legacy legend labels with an explicit per-parent presentation mode, preserving existing hidden parents and migrating visible parents to text or icons according to their previous global setting.
 - Removed the Classic folder-circle background whenever an album has a custom icon and kept transparent SVG artwork transparent, so the configured icon fully replaces the default visual.
 - Added an explicit “None” choice, live album-image path/preview updates, reordered controls and validated multi-file uploads to the ACP album icon picker.
-- Displayed ACP-configured album icons in a consistent 30 px square with a non-disruptive three-times hover and keyboard-focus preview across every Gallery layout.
+- Displayed ACP-configured album icons in a consistent 30-pixel square with a non-disruptive three-times hover and keyboard-focus preview across every Gallery layout.
 - Corrected uploaded album icons in every Gallery layout to resolve from the phpBB board root instead of being incorrectly prefixed with the active style or CDN image path.
 - Prevented Futuristic and Modern responsive album lists from repeating the same latest-image thumbnail as both the album visual and Last image, while retaining a distinct latest thumbnail for manual covers and contest winners.
 - Stacked the compact, padding-free optional copyable image ID at the upper left above each Gallery card title in Classic, Cards and Futuristic layouts; the Futuristic header now uses tighter spacing and left-aligned content, while disabling IDs reserves no space.
@@ -146,10 +145,6 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added an optional distributed local filesystem layout, including a confirmed, resumable and collision-checked migration from existing flat storage.
 - Added a fail-closed pluggable storage-provider contract with verified private workspaces, atomic publication/replacement, checksums, metadata and paginated object enumeration as the foundation for independently packaged remote storage providers.
 - Added the independently packaged Remote Storage add-on with private S3 and S3-compatible object storage, AWS Signature Version 4 requests, path-style endpoint support and release-package, version-check and CI integration.
-- Added MediaFire as a Remote Storage provider with private folder enforcement, state-safe Session Token v2 authentication, resumable SHA-256 uploads, permanent deletion and download-host validation without exposing signed URLs.
-- Added pCloud as a Remote Storage provider with explicit EU/US region binding, private-ownership checks, public-link rejection, incomplete-upload prevention and server-consumed content links that never expose OAuth credentials.
-- Added Koofr as a Remote Storage provider through its official HTTPS WebDAV endpoint, with dedicated application-password authentication, fixed-host requests, conditional publication and bounded XML metadata validation.
-- Added 4shared as a Remote Storage provider through the documented API v1_2, with OAuth 1.0 request signing, verified private unshared folders, owner-only files, resumable chunk transport and recoverable object replacement.
 - Added verified Remote Storage ACP configuration in all supported languages, including environment-variable overrides, secret-safe forms and a complete write, checksum, read and delete connection test before settings are saved.
 - Added confirmed, resumable and abortable Local-to-S3 and S3-to-Local storage migrations with bounded batches, mirrored writes during the transition, size and SHA-256 verification, crash-safe final activation and retained source copies for recovery.
 - Added recoverable image-deletion requests for ordinary authors, with a dedicated moderation queue, exact status restoration, permanent moderator deletion, fail-closed visibility across Core and Gallery add-ons, and protection against bypassing review through personal-album deletion.
@@ -197,8 +192,8 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Batched album-tree content deletion so images, counters, permissions, notifications, tracking rows and caches are processed once per deleted branch.
 - Replaced residual English fallback text in the Bulgarian, German, Spanish, French, Italian, Dutch and Russian Core language catalogs.
 - Added functional coverage for inline original-source delivery, mandatory watermarking without source mutation and BBPoints-protected downloads.
-- Open browser-compatible GIF, JPEG, PNG, WebP and AVIF originals inline when no add-on requires a download, while retaining attachment delivery for BMP, TIFF and unknown source formats.
-- Made the phpBB permission-test identity authoritative for Gallery album, ownership and zebra checks, and hide the header link when that effective identity cannot view or moderate any album.
+- Opened browser-compatible GIF, JPEG, PNG, WebP and AVIF originals inline when no add-on requires a download, while retaining attachment delivery for BMP, TIFF and unknown source formats.
+- Made the phpBB permission-test identity authoritative for Gallery album, ownership and zebra checks, and hid the header link when that effective identity cannot view or moderate any album.
 - Added a deterministic release builder that creates and validates all 13 component ZIPs from a committed Git ref, records their SHA-256 hashes and publishes the verified package set as a CI artifact.
 - Made the functional CI install the generated ZIPs instead of source folders and added a clean-board lifecycle covering all 13 components, automatic add-on disablement, reactivation and ordered purge.
 - Fixed BBTags Images purging so phpBB no longer recreates the provisional ACP module and block removal of the Gallery Core category.
@@ -620,31 +615,31 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Rename newcomment_notify to newcomment_notify.txt
 - Rename newimage_notify to newimage_notify.txt
 - Update gallery.php
-- Some code inspection and DocBlock
+- Performed code inspection and improved DocBlocks
 - Set revision to Big Buck Bunny
 
 ### Fixed
-- Fix security issue!
-- Fix ACL issue wit recent comment showing images that should not be accessible
-- Forgot to define array so the system wont spew error
+- Fixed a security issue
+- Fixed an ACL issue where recent comments exposed images that should not be accessible
+- Defined a missing array to prevent runtime errors
 - Added missing variable
 - This fixes topic 165786
 - This fixes topic 166736
 - This fixes topic 166176
-- This fixes topic 166386 and close #120
-- Fix sniffing issues
+- Fixed topic 166386 and closed #120
+- Fixed sniffing issues
 - This fixes topic 166526
-- Fix path
-- Fix post 166976
-- Fix old variables
-- Fix \phpbbgallery\core\file\file dependancy
-- Fix sniff error
-- Validation issues before acp/config_module.php except for handling file system issues
-- Fix URL error
-- Fix validation issues before controller/comment.php
-- Fix all revision critics
-- Fix some styling issues
-- Fix Sniffing issue
+- Fixed a path
+- Fixed post 166976
+- Fixed legacy variables
+- Fixed the `\phpbbgallery\core\file\file` dependency
+- Fixed a sniff error
+- Fixed validation issues before `acp/config_module.php`, except for filesystem handling
+- Fixed a URL error
+- Fixed validation issues before `controller/comment.php`
+- Addressed all review feedback
+- Fixed styling issues
+- Fixed a sniffing issue
 
 ## [1.1.6] - 2012-04-13
 ### Fixed
@@ -679,7 +674,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Undefined offset: 0 while editing when rotating is disabled (Bug #920)
 - Fix various xHTML issues (Bug #916)
 - Fix version tag set to phpbb_gallery_dev (Bug #915)
-- Load gallery button everytime the bbcodes are displayed (Bug #912)
+- Load the Gallery button every time the BBCodes are displayed (Bug #912)
 - Gallery user info not visible in PM view (Bug #905)
 - Model not displayed in EXIF data (Bug #913)
 - Handle transparency on unresized images correctly (Bug #792)
@@ -733,7 +728,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Populate path and ext variables for MODs that added include() (Bug #845)
 
 ### Fixed
-- Fix also display BBCodes for images, when comments are disabled (Bug #860)
+- Display image BBCodes when comments are disabled (Bug #860)
 - Fix various errors in the new upload process (Bug #859)
 - Do not display "Add more upload fields" link for limit=1 (Bug #858)
 - Add option for displaying the thumbnail for next/prev image links (Bug #857)
@@ -785,7 +780,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Add option to create personal gallery for users in ACP (Feature #714)
 - Add option for uploader to disable comment for images (Feature #704)
 - Add option to prune albums manually in the ACP (Feature #680)
-- Add recently reported and unapproved iamges to MCP-Index (Feature #437, #658)
+- Add recently reported and unapproved images to the MCP index (Feature #437, #658)
 - Add RSS/Atom Feed for new images (Feature #312)
 
 ### Changed
@@ -824,13 +819,13 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 ### Fixed
 - "Duplicate entry '1'" on resync image counter (SVN) (Report #399)
 - Unable to completely disable Rating and Comments - wrong variables (Report #397)
-- Images stays reported, when report is closed (Report #393)
+- Images remain reported when the report is closed (Report #393)
 - Undefined index: comment_comment_username (Report #396)
 - Not viewing rates on own images (Report #391)
-- Animate and Transpate gif's unsopported on image_page
+- Animated and transparent GIFs unsupported on the image page
 - Timestamp-Fix for 3.0.4
 - Save files with correct name, when downloading
-- resync doens't create entry for p_g_users-table (Report #388)
+- Resync doesn't create an entry in the p_g_users table (Report #388)
 - invisible comments after editing comment (Report #382)
 - double checks for same auth => made static (Report #381)
 - deleted Mod-Group still shows up (Report #369)
@@ -844,7 +839,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Undefined variable: lastimage_uc_thumbnail (Report #384)
 - installation and conversion missing "module_auth" (Report #385)
 - Call to a member function bbcode_second_pass() on a non-object in gallery/image_page.php
-- Missed to use gallery_root_path on add-on
+- Failed to use gallery_root_path in the add-on
 
 ## [0.4.0] - 2008-11-20
 ### Added
@@ -853,7 +848,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Show newest comments and a random picture on index page (Report #144)
 - Image URL on gallery_page_body.html (Report #266)
 - disable watermark by permissions (Report #317)
-- Show "Personal galleries" as an category on index page (Report #142)
+- Show "Personal galleries" as a category on the index page (Report #142)
 - Slide/Dia Show (Report #303)
 - Automatically resize uploaded images (Report #95)
 - New permission: "See album" (Report #320)
@@ -873,18 +868,18 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Searchcode for total-images changed (Report #354)
 
 ### Fixed
-- Cut down long albumnames in recent/random and in search
+- Shorten long album names in recent/random listings and search
 - Install-Script misses Constants like GALLERY_ROOT_PATH (Report #363)
 - Moderator-link visible without permissions (Report #359)
 - wrong headline for "manage subscription"
 - .JPG-images from conversion are not visible (Report #358)
-- Pagination on manage subscription leeds to favorites (Report #361)
+- Pagination in Manage subscriptions leads to Favorites (Report #361)
 - Add Custom BBCode-Buttons (prosilver) (Report #356)
 - installer not working on version compare for mysql (Report #360)
 - SQL-Error when user is in no group => copy phpBB solution (Report #348)
 - BBCode colorPalette needs images/spacer.gif (Report #351)
 - install/install_*.php Undefined variable: exists (Report #355)
-- U_GALLERY_MOD not usign GALLERY_ROOT_PATH on install (Report #352)
+- U_GALLERY_MOD not using GALLERY_ROOT_PATH during installation (Report #352)
 - Missing update of session, after unset($sql_ary['session_album_id']); (Report #353)
 - STAGE_COPY_TABLE_EXPLAIN is german (Topic #883)
 
@@ -909,8 +904,8 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - PostgreSQL: sql_query using hard LIMIT (Report #341)
 - SQL-Injection on sort-method (Report #i337)
 - Meta-Refresh after rating is phpBB2-Style
-- ACP Import multiple pages loose image-name (Report #332)
-- Long file names with _ making out of templates problem (Report #322)
+- ACP Import loses the image name across multiple pages (Report #332)
+- Long filenames containing underscores cause template problems (Report #322)
 - Wrong labels for config values in ACP
 - error in SQL syntax (Report #319)
 - uploading multiple files cheats on quota (Report #326)
@@ -926,7 +921,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Exif Data: Exposure bias, Exposure program & Metering mode
 
 ### Changed
-- After upload an image into a approval album, the redirect is too fast (Report #283)
+- Redirect is too fast after uploading an image to an approval album (Report #283)
 - Login on and redirect to gallery/index.php (Report #297)
 - Module handle on installation
 
@@ -934,7 +929,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Display of users online in the album
 - highslide moved to template (Report #307)
 - user_images not updated if it was empty (Report #306)
-- Empty posintg.php No values specified for SQL IN comparison (Report #305)
+- Empty posting.php: no values specified for SQL IN comparison (Report #305)
 - some bugs in subsilver2 only (Report #290)
 - Blank image_page.php page (Report #289)
 - [phpBB Debug] PHP Notice: in file /includes/acp/acp_gallery.php on line 296 (Report #304)
@@ -942,10 +937,10 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Lang missing in search (Report #286)
 - Missing information for new approval images (Report #302)
 - Unknown column 'g.view_personal_albums' in viewonline.php (Report #288)
-- wrong permissions used on viewing personal-gallerys link (Report #301)
+- Wrong permissions used when viewing the personal galleries link (Report #301)
 - some language typos (Report #285)
 - "NV Exif data" security risk (Report #i295)
-- [album] wrong url for thumbnail (Report #300)
+- [album] uses the wrong URL for thumbnails (Report #300)
 - Posting Comment/Image: No values specified for SQL IN (Report #296)
 - array_merge(): Argument #2 is not an array (Report #284)
 - Undefined index: album_approval (Report #282)
@@ -961,7 +956,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Meta refresh on Moderating (Report #185)
 - Report Image (Report #241)
 - Display Exif-Data if available (Report #280)
-- Red-Image-Counter for MOderators (unapproved images)
+- Red image counter for moderators (unapproved images)
 - Cleanup-Page, idea on DB after delete of a user (Report #239)
 - MOD supports "MOD Version Check" by handyman
 - Filled the Statistic-Page in the ACP
@@ -975,7 +970,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Rewrote ACP-Import (Report #181, #165, #233)
 - Moved some Variables to _albums and -images to increase SQL-Speed and reduce number of SQLs
 - Reject album deletion leads to 'empty' UserCP page (Report #263)
-- Rewrote the hole MCP
+- Rewrote the whole MCP
 
 ### Fixed
 - Repeat Bug 228: 0.2.3 to 0.3.0 upgrade won't update version (Report #258)
@@ -984,10 +979,10 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - bbcode is missing GALLERY_ROOT_PATH (Report #262)
 - posting.php != S_IN_GALLERY (Report #264)
 - Anonymous comments possible at private albums (Report #254)
-- icon buged on rtl (Report #265)
+- Icon bugged in RTL layouts (Report #265)
 - don't create albums without names
 - utf8 in file name on Import (Report #179)
-- wrong permissions on testing user-premissions (Report #128)
+- Wrong permissions when testing user permissions (Report #128)
 - Comment Char limit (Report #191)
 - bbcode [list] bugged in image_page.php
 - Add option to disable watermark for small images
@@ -1015,11 +1010,11 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - rel="lightbox" in subsilver2 (Report #235)
 - Undefined variable: sort_new_comment_option (Report #251)
 - Undefined index: cat_approval (Report #256)
-- Sessionhandling of 3.0.1 (Report #253)
+- Session handling in 3.0.1 (Report #253)
 - Old Link in Installer Footer (Report #242)
-- non strict sql (Report #243)
-- Misspelled Information after successful Installation (Report #244)
-- image size on massimport when disabled (Report #248)
+- Non-strict SQL (Report #243)
+- Misspelled information after successful installation (Report #244)
+- Image size during mass import when disabled (Report #248)
 - Potential exposure of real path when unlinking files (Report #250)
 - When deleting album in subsilver2, language not shown (Report #240)
 - When editing image 'Title' box isn't populated (Report #249)
@@ -1042,7 +1037,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Move images are not working anymore (Report #175)
 - Deutsche Sprache: Gallery/Galerie (Report #163)
 - View the last MESSAGE? (Report #182)
-- Album categorie - don't show "no pictures" (Report #176)
+- Album category - don't show "no pictures" (Report #176)
 - Comment (Report #190)
 - no personal images in recent images (Report #194)
 - MCP link 2 times (Report #188)
@@ -1061,7 +1056,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Also show new personal images on index page (Report #143)
 - permissions for creating subalbums (Report #208)
 - display nav-link when using recent_image addon (Report #207)
-- personal albums - ucp - move subulbums error (Report #210)
+- Personal albums - UCP - error moving subalbums (Report #210)
 - Multiple Upload (Report #212)
 - imagecreatefromjpeg(./..//gallery/upload/.jpg) (Report #178)
 - SQL Error on convert (guest comments) (Report #205)
@@ -1076,7 +1071,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Persönliche Galerie verlinken (Report #168)
 - Album BBcode - mark in one click (Report #216)
 - move pic from private subalbum not possible (Report #213)
-- categorie - last image are not shown if disapproved (Report #177)
+- Category - last image is not shown if disapproved (Report #177)
 - Seitenauflistung in der "Wer ist online?"-Liste (Report #211)
 - Optional black info line at bottom (Report #126)
 
@@ -1088,13 +1083,13 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Browsing Gallery while [ Test out user’s permissions ] (Report #102)
 - styles/prosilver/imageset/icon_topic_latest.gif (Report #120)
 - missing upload-line in subsilver2 (Report #121)
-- missing mass-upload modul (Report #122)
+- Missing mass-upload module (Report #122)
 - Better remove thumbs.db (Report #124)
 - pers. album: default sort gives error messages (Report #125)
 - missing {S_FORM_TOKEN} in subsilver2 (Report #127)
 - missing "yes" in subsilver2 on delete-confirm (Report #130)
 - UTF is absent (Report #131)
-- Wrong premission to Anonymus (Report #132)
+- Wrong permission for Anonymous users (Report #132)
 - Unknown column 'username' in album_personal.php (Report #135)
 - Gallery is open when board is disabled (Report #137)
 - not valid (Report #139)
@@ -1105,7 +1100,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Missing form around rating in subsilver2 (Report #153)
 - Last image sorting not working (Report #157)
 - colour username on personal gallery empty (Report #158)
-- english typo: Thias file type is not allowed (Report #159)
+- English typo: This file type is not allowed (Report #159)
 - dead link on image comment (Report #160)
 - empty error message on gallery/album.php (Report #161)
 
@@ -1117,10 +1112,10 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Album permissions not saved (Report #67)
 - Subalbums not visible (Report #68)
 - Images in subalbums not counted (Report #69)
-- modcp - old var "cat_id" (Report #70)
-- lock / move links to modcp are using not image_id (Report #71)
-- modcp : moving images not possible (Report #72)
-- lang var error : MOVE_TO_CATEGORY not exists (Report #73)
+- ModCP - old variable "cat_id" (Report #70)
+- Lock/move links to ModCP do not use image_id (Report #71)
+- ModCP: moving images is not possible (Report #72)
+- Language variable error: MOVE_TO_CATEGORY does not exist (Report #73)
 - lang var missing: LOGIN_EXPLAIN_UPLOAD (Report #74)
 - Update: Column 'comment_edit_time' cannot be null (Report #75)
 - PIC_TITLE not defined (Report #76)
@@ -1129,28 +1124,28 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Gäste Berechtigung wird nicht gespeichert (Report #79)
 - value "array()" on bbcode-texts (Report #80)
 - last edit username is not coloured (Report #81)
-- Upload Button is not showing correct in RC8 (Report #82)
+- Upload button is not displayed correctly in RC8 (Report #82)
 - Remove personal gallery link when logged out (Report #83)
-- There is no more categories which you have permisson to move images to (Report #84)
-- Error message when deleting a image (Report #85)
+- There are no more categories to which you have permission to move images (Report #84)
+- Error message when deleting an image (Report #85)
 - Album Permissions 0.2.1 (Report #86)
 - Undefined variable: tot_unapproved on album.php (Report #91)
-- Incorrect cuting symbols in album_personal_index.php (Report #94)
+- Incorrectly cutting symbols in album_personal_index.php (Report #94)
 - $sort_new_comment_option = ''; missing (Report #96)
 - Mass-upload in ACP (Report #99)
 - subsilver2 (Report #101)
 - album.php missing $ (Report #103)
 - last_pic in personal_album on sort (Report #105)
-- Errormessage when trying to approve Pictures (Report #106)
+- Error message when trying to approve pictures (Report #106)
 - next and previous image (Report #107)
 - thumbnails error if cache is deleted (Report #108)
 - Links to Albums on Gallery Index are not shown (Report #109)
-- Image_page.php throws out some php notices... (Report #110)
-- Open the latest picture of a album: php notice error (Report #111)
+- image_page.php raises PHP notices (Report #110)
+- Opening the latest picture in an album raises a PHP notice (Report #111)
 - image_page.php : next/previous error with disapproved pics (Report #112)
 - Undefined variable: auth_data (Report #113)
 - Images are not counted on gallery index and sub-album index (Report #114)
-- MCP - double breadcrumps, wrong usernames of pers. galleries (Report #115)
+- MCP - duplicate breadcrumbs and wrong usernames in personal galleries (Report #115)
 - Subalbums not included in recent pictures? (Report #116)
 - Upload-Button shows no info text (Report #117)
 - missing breadcrumbs on empty comment (Report #118)
@@ -1173,7 +1168,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - includes/acp/acp_gallery.php: Cannot use a scalar value as an array (Report #56)
 - Deleting last album error (Report #57)
 - Personal Album - Undefined index: pic_desc_bbcode_uid (Report #58)
-- Installer forgot to activate the new modul "personal album permission" (Report #59)
+- Installer forgot to activate the new "personal album permission" module (Report #59)
 - MySQL-Fehler wenn man im ACP Alben managen will (Report #60)
 - [HARD] 'U_GALLERY' (Report #61)
 
@@ -1194,9 +1189,9 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - edit the text on a photo (Report #14)
 - $board_config is no more.... (Report #16)
 - Image details on thumbnails (Report #17)
-- wrong redirect to album_cat if image aproval enabled (Report #18)
+- Wrong redirect to album_cat when image approval is enabled (Report #18)
 - ACP permissions.... (Report #19)
-- Groupname of Special Groups are "wrong" (Report #20)
+- Group names of special groups are "wrong" (Report #20)
 - UTF8 support in acp_gallery and addslashes... (Report #21)
 - Better Coding guidelines.... (Report #22)
 - personal album not working if set permission to "privat" (Report #23)
@@ -1205,7 +1200,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Logical error in album_personal.php (Report #26)
 - ACP - gallery permission bug (Report #27)
 - acp_gallery.php missing language vars (Report #28)
-- its the otherway round with "L_" (Report #29)
+- It's the other way around with "L_" (Report #29)
 - wrong links on "album_personal_index.php" (Report #30)
 - watermark (Report #32)
 - Manage Album - Error on submit (Report #33)
@@ -1217,8 +1212,8 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - the updater (Report #40)
 - Missing the Keys on the Installation (Report #41)
 - Comments and Rating of Images are not possible! (Report #42)
-- reparse bbcodes on image edit (Report #43)
-- smiles in pic description brakes the style on gallery/album.php (Report #44)
-- same as Report44 but on recent pics and personal album (Report #45)
+- Reparse BBCodes when editing images (Report #43)
+- Smilies in picture descriptions break the layout in gallery/album.php (Report #44)
+- Same as Report #44, but for recent pictures and personal albums (Report #45)
 - colour the usernames (Report #46)
 - UTF-8 compatible? (Report #53)
