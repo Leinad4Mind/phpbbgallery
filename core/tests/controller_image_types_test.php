@@ -102,6 +102,33 @@ final class controller_image_types_test extends TestCase
 		$this->assertSame([], $reflection->getProperty('can_receive_pm_list')->getValue($controller));
 	}
 
+	public function test_anonymous_image_author_never_reaches_user_profile_acl_or_session_queries(): void
+	{
+		if (!defined('ANONYMOUS'))
+		{
+			define('ANONYMOUS', 1);
+		}
+
+		$reflection = new \ReflectionClass(image::class);
+		$controller = $reflection->newInstanceWithoutConstructor();
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->never())->method('sql_in_set');
+		$auth = $this->createMock(\phpbb\auth\auth::class);
+		$auth->expects($this->never())->method('acl_get_list');
+		$profile_fields = $this->createMock(\phpbb\profilefields\manager::class);
+		$profile_fields->expects($this->never())->method('grab_profile_fields_data');
+		$reflection->getProperty('users_id_array')->setValue($controller, [ANONYMOUS => ANONYMOUS]);
+		$reflection->getProperty('users_data_array')->setValue($controller, [ANONYMOUS => ['username' => 'Guest']]);
+		$reflection->getProperty('db')->setValue($controller, $db);
+		$reflection->getProperty('auth')->setValue($controller, $auth);
+		$reflection->getProperty('cpf_manager')->setValue($controller, $profile_fields);
+		$reflection->getProperty('config')->setValue($controller, new \phpbb\config\config(['load_onlinetrack' => true]));
+
+		$reflection->getMethod('load_users_data')->invoke($controller);
+
+		$this->assertSame([], $reflection->getProperty('can_receive_pm_list')->getValue($controller));
+	}
+
 	public function test_deleted_image_author_never_creates_an_empty_acl_in_query(): void
 	{
 		$reflection = new \ReflectionClass(image::class);

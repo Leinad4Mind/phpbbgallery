@@ -2032,7 +2032,12 @@ class image
 
 	protected function load_users_data(): void
 	{
-		if (!$this->users_id_array)
+		$user_ids_to_load = array_filter(
+			$this->users_id_array,
+			static fn ($user_id): bool => (int) $user_id > (int) ANONYMOUS
+		);
+
+		if (!$user_ids_to_load)
 		{
 			$this->can_receive_pm_list = [];
 			return;
@@ -2049,7 +2054,7 @@ class image
 				],
 			],
 
-			'WHERE' => $this->db->sql_in_set('u.user_id', $this->users_id_array),
+			'WHERE' => $this->db->sql_in_set('u.user_id', $user_ids_to_load),
 		]);
 		$result = $this->db->sql_query($sql);
 
@@ -2060,7 +2065,7 @@ class image
 		$this->db->sql_freeresult($result);
 
 		// Load CPF's
-		$profile_fields_tmp = $this->cpf_manager->grab_profile_fields_data($this->users_id_array);
+		$profile_fields_tmp = $this->cpf_manager->grab_profile_fields_data($user_ids_to_load);
 		foreach ($profile_fields_tmp as $profile_user_id => $profile_fields)
 		{
 			$this->profile_fields_data[$profile_user_id] = [];
@@ -2076,7 +2081,10 @@ class image
 
 		// Get the list of users who can receive private messages
 		$this->can_receive_pm_list = [];
-		$user_ids = array_keys($this->users_data_array);
+		$user_ids = array_filter(
+			array_keys($this->users_data_array),
+			static fn ($user_id): bool => (int) $user_id > (int) ANONYMOUS
+		);
 		if ($user_ids)
 		{
 			$this->can_receive_pm_list = $this->auth->acl_get_list($user_ids, 'u_readpm');
@@ -2084,11 +2092,11 @@ class image
 		$this->can_receive_pm_list = (empty($this->can_receive_pm_list) || !isset($this->can_receive_pm_list[0]['u_readpm'])) ? [] : $this->can_receive_pm_list[0]['u_readpm'];
 
 		// Load online-information
-		if ($this->config['load_onlinetrack'] && sizeof($this->users_id_array))
+		if ($this->config['load_onlinetrack'] && $user_ids)
 		{
 			$sql = 'SELECT session_user_id, MAX(session_time) as online_time, MIN(session_viewonline) AS viewonline
 				FROM ' . SESSIONS_TABLE . '
-				WHERE ' . $this->db->sql_in_set('session_user_id', $this->users_id_array) . '
+				WHERE ' . $this->db->sql_in_set('session_user_id', $user_ids) . '
 				GROUP BY session_user_id';
 			$result = $this->db->sql_query($sql);
 
