@@ -71,7 +71,7 @@ final class controller_image_types_test extends TestCase
 	{
 		$reflection = new \ReflectionClass(image::class);
 		$controller = $reflection->newInstanceWithoutConstructor();
-		foreach (['data', 'users_id_array', 'users_data_array', 'profile_fields_data', 'can_receive_pm_list'] as $property_name)
+		foreach (['data', 'users_id_array', 'users_data_array', 'profile_fields_data', 'can_receive_pm_list', 'album_origin'] as $property_name)
 		{
 			$reflection->getProperty($property_name)->setValue($controller, ['stale' => true]);
 		}
@@ -79,7 +79,7 @@ final class controller_image_types_test extends TestCase
 
 		$reflection->getMethod('reset_request_state')->invoke($controller);
 
-		foreach (['data', 'users_id_array', 'users_data_array', 'profile_fields_data', 'can_receive_pm_list'] as $property_name)
+		foreach (['data', 'users_id_array', 'users_data_array', 'profile_fields_data', 'can_receive_pm_list', 'album_origin'] as $property_name)
 		{
 			$this->assertSame([], $reflection->getProperty($property_name)->getValue($controller));
 		}
@@ -167,6 +167,48 @@ final class controller_image_types_test extends TestCase
 		$this->assertSame('n', $normalizer->invoke($controller, 'n', $sort_columns));
 	}
 
+	public function test_album_origin_is_preserved_in_navigation_and_backlinks(): void
+	{
+		require_once dirname(__DIR__, 4) . '/vendor/symfony/routing/RequestContextAwareInterface.php';
+		require_once dirname(__DIR__, 4) . '/vendor/symfony/routing/Generator/UrlGeneratorInterface.php';
+		require_once dirname(__DIR__, 4) . '/phpbb/controller/helper.php';
+		$reflection = new \ReflectionClass(image::class);
+		$controller = $reflection->newInstanceWithoutConstructor();
+		$helper = $this->createStub(\phpbb\controller\helper::class);
+		$helper->method('route')->willReturnCallback(static function (string $route, array $parameters): string
+		{
+			return $route . ':' . http_build_query($parameters);
+		});
+		$reflection->getProperty('helper')->setValue($controller, $helper);
+		$reflection->getProperty('album_origin')->setValue($controller, [
+			'album_page' => 5,
+			'sk' => 't',
+			'sd' => 'd',
+			'st' => 0,
+		]);
+
+		$this->assertSame([
+			'image_id' => 42,
+			'album_page' => 5,
+			'sk' => 't',
+			'sd' => 'd',
+			'st' => 0,
+		], $reflection->getMethod('build_image_route_parameters')->invoke($controller, 42));
+		$this->assertSame(
+			'phpbbgallery_core_album_page:album_id=16&page=5&sk=t&sd=d&st=0',
+			$reflection->getMethod('build_album_return_url')->invoke($controller, 16)
+		);
+
+		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/image.php');
+		$this->assertStringContainsString("'U_RETURN_LINK' => \$this->build_album_return_url(\$album_id)", $source);
+
+		$reflection->getProperty('album_origin')->setValue($controller, []);
+		$this->assertSame(['image_id' => 42], $reflection->getMethod('build_image_route_parameters')->invoke($controller, 42));
+		$this->assertSame(
+			'phpbbgallery_core_album:album_id=16',
+			$reflection->getMethod('build_album_return_url')->invoke($controller, 16)
+		);
+	}
 	public function test_open_graph_description_is_plain_bounded_and_uses_safe_fallbacks(): void
 	{
 		$reflection = new \ReflectionClass(image::class);

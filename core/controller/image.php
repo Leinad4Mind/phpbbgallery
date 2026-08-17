@@ -144,6 +144,9 @@ class image
 	/** @var array */
 	protected array $can_receive_pm_list = [];
 
+	/** Validated album page and sorting context supplied by an album listing. */
+	protected array $album_origin = [];
+
 	/** Personal albums excluded by the active viewer's zebra rules. */
 	protected ?array $excluded_personal_album_ids = null;
 
@@ -427,8 +430,8 @@ class image
 
 		// Let's see if we can get next end prev
 		$sort_key = $this->request->variable('sk', ($album_data['album_sort_key']) ? $album_data['album_sort_key'] : $this->config['phpbb_gallery_default_sort_key']);
-		$sort_dir = $this->request->variable('sd', ($album_data['album_sort_dir']) ? $album_data['album_sort_dir'] : $this->config['phpbb_gallery_default_sort_dir']);
-		$sort_days = $this->request->variable('st', 0);
+		$sort_dir = $this->normalize_sort_direction($this->request->variable('sd', ($album_data['album_sort_dir']) ? $album_data['album_sort_dir'] : $this->config['phpbb_gallery_default_sort_dir']));
+		$sort_days = max(0, $this->request->variable('st', 0));
 
 		if (in_array($sort_key, ['r', 'ra']))
 		{
@@ -493,6 +496,15 @@ class image
 			}
 		}
 		$sort_key = $this->normalize_sort_key($sort_key, $sort_by_sql);
+		if ($this->request->is_set('album_page'))
+		{
+			$this->album_origin = [
+				'album_page' => max(1, $this->request->variable('album_page', 1)),
+				'sk' => $sort_key,
+				'sd' => $sort_dir,
+				'st' => $sort_days,
+			];
+		}
 		gen_sort_selects($limit_days, $sort_by_text, $sort_days, $sort_key, $sort_dir, $s_limit_days, $s_sort_key, $s_sort_dir, $u_sort_param);
 		$sql_sort_order = $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
 		$sql_sort_order .= $sql_help_sort;
@@ -534,8 +546,8 @@ class image
 		}
 		$this->db->sql_freeresult($result);
 		$display_navigation_thumbnails = (bool) $this->gallery_config->get('disp_nextprev_thumbnail');
-		$next_url = $next ? $this->helper->route('phpbbgallery_core_image', ['image_id' => (int) $next['image_id']]) : '';
-		$previous_url = $prev ? $this->helper->route('phpbbgallery_core_image', ['image_id' => (int) $prev['image_id']]) : '';
+		$next_url = $next ? $this->helper->route('phpbbgallery_core_image', $this->build_image_route_parameters((int) $next['image_id'])) : '';
+		$previous_url = $prev ? $this->helper->route('phpbbgallery_core_image', $this->build_image_route_parameters((int) $prev['image_id'])) : '';
 		$can_download_source = $this->gallery_auth->acl_check('i_download', $album_id, $album_data['album_user_id']);
 		$image_action = $this->get_image_action((int) $image_id, $next, $can_download_source);
 
@@ -550,7 +562,7 @@ class image
 			'U_PREV_IMAGE_THUMB' => ($prev && $display_navigation_thumbnails) ? $this->helper->route('phpbbgallery_core_image_file_mini', ['image_id' => (int) $prev['image_id']]) : '',
 			'NEXT_IMAGE_NAME' => $next ? (string) $next['image_name'] : '',
 			'PREV_IMAGE_NAME' => $prev ? (string) $prev['image_name'] : '',
-			'U_VIEW_ALBUM'  => $this->helper->route('phpbbgallery_core_album', ['album_id' => $album_id]),
+			'U_VIEW_ALBUM'  => $this->build_album_return_url($album_id),
 			'UC_IMAGE'      => $this->helper->route('phpbbgallery_core_image_file_medium', ['image_id' => (int) $image_id]),
 			'UC_IMAGE_ACTION' => $image_action,
 			'S_AJAX_IMAGE_NAVIGATION' => (bool) $this->gallery_config->get('ajax_navigation'),
@@ -594,7 +606,7 @@ class image
 
 			'S_ALBUM_ACTION' => $this->helper->route('phpbbgallery_core_image', ['image_id' => $image_id]),
 
-			'U_RETURN_LINK' => $this->helper->route('phpbbgallery_core_album', ['album_id' => $album_id]),
+			'U_RETURN_LINK' => $this->build_album_return_url($album_id),
 			'S_RETURN_LINK' => $this->language->lang('RETURN_TO', $album_data['album_name']),
 		]);
 
@@ -873,7 +885,7 @@ class image
 
 		$image_id = (int) $image['image_id'];
 		$image_name = utf8_htmlspecialchars((string) $image['image_name']);
-		$image_url = utf8_htmlspecialchars($this->helper->route('phpbbgallery_core_image', ['image_id' => $image_id]));
+		$image_url = utf8_htmlspecialchars($this->helper->route('phpbbgallery_core_image', $this->build_image_route_parameters($image_id)));
 		if ($thumbnail)
 		{
 			$thumbnail_url = utf8_htmlspecialchars($this->helper->route('phpbbgallery_core_image_file_mini', ['image_id' => $image_id]));
@@ -985,7 +997,7 @@ class image
 
 			case 'next':
 				return $next
-					? $this->helper->route('phpbbgallery_core_image', ['image_id' => (int) $next['image_id']])
+					? $this->helper->route('phpbbgallery_core_image', $this->build_image_route_parameters((int) $next['image_id']))
 					: '';
 
 			case 'image':
@@ -1360,9 +1372,7 @@ class image
 					'phpbbgallery_core_image',
 					'phpbbgallery_core_image_page',
 				],
-				'params' => [
-					'image_id' => (int) $image_id,
-				],
+				'params' => $this->build_image_route_parameters((int) $image_id),
 			], 'pagination', 'page', $image_data['image_comments'], $limit, $start);
 
 			$this->template->assign_vars([
@@ -2121,6 +2131,7 @@ class image
 		$this->users_data_array = [];
 		$this->profile_fields_data = [];
 		$this->can_receive_pm_list = [];
+		$this->album_origin = [];
 		$this->excluded_personal_album_ids = null;
 	}
 
@@ -2134,6 +2145,39 @@ class image
 	protected function normalize_sort_key(string $sort_key, array $sort_by_sql): string
 	{
 		return isset($sort_by_sql[$sort_key]) ? $sort_key : 't';
+	}
+
+	/** Restrict the requested sort direction to phpBB's supported values. */
+	protected function normalize_sort_direction(string $sort_direction): string
+	{
+		return $sort_direction === 'a' ? 'a' : 'd';
+	}
+
+	/**
+	 * Add a validated album origin to an image route when one was supplied.
+	 *
+	 * @return array<string, int|string>
+	 */
+	protected function build_image_route_parameters(int $image_id): array
+	{
+		return ['image_id' => $image_id] + $this->album_origin;
+	}
+
+	/** Build the album backlink matching the page and sorting used to open an image. */
+	protected function build_album_return_url(int $album_id): string
+	{
+		if (!$this->album_origin)
+		{
+			return $this->helper->route('phpbbgallery_core_album', ['album_id' => $album_id]);
+		}
+
+		return $this->helper->route('phpbbgallery_core_album_page', [
+			'album_id' => $album_id,
+			'page' => (int) $this->album_origin['album_page'],
+			'sk' => (string) $this->album_origin['sk'],
+			'sd' => (string) $this->album_origin['sd'],
+			'st' => (int) $this->album_origin['st'],
+		]);
 	}
 
 	/**

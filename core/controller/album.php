@@ -381,6 +381,7 @@ class album
 			unset($sort_by_text[$private_sort_key], $sort_by_sql[$private_sort_key]);
 		}
 		$sort_key = $this->normalize_sort_key($sort_key, $sort_by_sql);
+		$image_page_context = $this->build_image_page_context($start, $limit, $sort_key, $sort_dir, $sort_days);
 		if (in_array($sort_key, ['r', 'ra'], true))
 		{
 			$sql_help_sort = ', image_id ' . (($sort_dir == 'd') ? 'ASC' : 'DESC');
@@ -452,6 +453,7 @@ class album
 
 		foreach ($images as $row)
 		{
+			$image_page_url = $this->helper->route('phpbbgallery_core_image', ['image_id' => (int) $row['image_id']] + $image_page_context);
 			// Assign the image to the template-block
 			$image_data = array_merge($album_data, $row);
 			$album_status = $image_data['album_status'];
@@ -464,7 +466,7 @@ class album
 			switch ($this->gallery_config->get('link_thumbnail'))
 			{
 				case 'image_page':
-					$action = $this->helper->route('phpbbgallery_core_image', ['image_id' => $row['image_id']]);
+					$action = $image_page_url;
 				break;
 				case 'image':
 					$action = $this->helper->route('phpbbgallery_core_image_file_source', ['image_id' => $row['image_id']]);
@@ -476,7 +478,7 @@ class album
 			switch ($this->gallery_config->get('link_image_name'))
 			{
 				case 'image_page':
-					$action_image = $this->helper->route('phpbbgallery_core_image', ['image_id' => $row['image_id']]);
+					$action_image = $image_page_url;
 				break;
 				case 'image':
 					$action_image = $this->helper->route('phpbbgallery_core_image_file_source', ['image_id' => $row['image_id']]);
@@ -539,7 +541,7 @@ class album
 				'RATE_SCALE'        => $can_rate ? $rate_scale : [],
 				'L_COMMENTS' => !$hide_results ? (($image_data['image_comments'] == 1) ? $this->language->lang('COMMENT') : $this->language->lang('COMMENTS')) : false,
 				'S_COMMENTS' => (!$hide_results && $this->config['phpbb_gallery_allow_comments'] && $this->auth->acl_check('c_read', $image_data['image_album_id'], $album_user_id) && $show_comments) ? (($image_data['image_comments']) ? $image_data['image_comments'] : $this->language->lang('NO_COMMENTS')) : false,
-				'U_COMMENTS' => !$hide_results ? $this->helper->route('phpbbgallery_core_image', ['image_id' => $image_data['image_id']]) . '#comments' : false,
+				'U_COMMENTS' => !$hide_results ? $image_page_url . '#comments' : false,
 
 				'U_USER_IP'                  => $show_ip && $can_moderate ? $image_data['image_user_ip'] : false,
 				'S_IMAGE_REPORTED'           => $image_data['image_reported'],
@@ -770,6 +772,23 @@ class album
 	protected function normalize_sort_direction(string $sort_direction): string
 	{
 		return $sort_direction === 'a' ? 'a' : 'd';
+	}
+
+	/**
+	 * Build a bounded origin context for links from an album page to its images.
+	 *
+	 * @return array<string, int|string>
+	 */
+	protected function build_image_page_context(int $start, int $limit, string $sort_key, string $sort_direction, int $sort_days): array
+	{
+		$limit = max(1, $limit);
+
+		return [
+			'album_page' => intdiv(max(0, $start), $limit) + 1,
+			'sk' => $sort_key,
+			'sd' => $this->normalize_sort_direction($sort_direction),
+			'st' => max(0, $sort_days),
+		];
 	}
 
 	/**

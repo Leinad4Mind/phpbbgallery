@@ -243,6 +243,24 @@ final class controller_album_types_test extends TestCase
 		$this->assertSame('d', $normalizer->invoke($controller, 'd../../../../tmp'));
 	}
 
+	public function test_image_links_preserve_the_album_page_and_sorting_context(): void
+	{
+		$reflection = new \ReflectionClass(album::class);
+		$controller = $reflection->newInstanceWithoutConstructor();
+		$context = $reflection->getMethod('build_image_page_context');
+
+		$this->assertSame([
+			'album_page' => 5,
+			'sk' => 't',
+			'sd' => 'd',
+			'st' => 30,
+		], $context->invoke($controller, 80, 20, 't', 'd', 30));
+		$this->assertSame(1, $context->invoke($controller, -20, 0, 'n', 'invalid', -1)['album_page']);
+
+		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/album.php');
+		$this->assertStringContainsString("'album_page' => intdiv(max(0, \$start), \$limit) + 1", $source);
+		$this->assertStringContainsString("'U_COMMENTS' => !\$hide_results ? \$image_page_url . '#comments'", $source);
+	}
 	public function test_album_display_flags_remain_stable(): void
 	{
 		$this->assertSame(512, album::ALBUM_SHOW_SUBTITLE);
