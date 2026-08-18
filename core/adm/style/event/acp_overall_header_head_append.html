@@ -6,6 +6,9 @@
 	{% INCLUDECSS '@phpbbgallery_core/gallery_acp_operation_help.css' %}
 	{% INCLUDEJS '@phpbbgallery_core/gallery_acp_operation_help.js' %}
 {% endif %}
+{% if S_GALLERY_ACP_HOTLINK_SETTINGS %}
+	{% INCLUDEJS '@phpbbgallery_core/gallery_acp_hotlink_settings.js?v=4100' %}
+{% endif %}
 {% if S_GALLERY_ACP_ADDON_SETTINGS %}
 	{% INCLUDECSS '@phpbbgallery_core/gallery_acp_addons.css' %}
 	{% INCLUDEJS '@phpbbgallery_core/gallery_acp_addons.js?v=4102' %}

@@ -238,9 +238,10 @@ $lang = array_merge($lang, [
 	'HACKING_ATTEMPT'     => 'Hackerangriff !',
 	'HANDLE_IMAGES'       => 'Was soll mit Bildern passieren',
 	'HANDLE_SUBS'         => 'Was soll mit angehängten Alben passieren',
-	'HOTLINK_ALLOWED'     => 'Link Whitelist',
-	'HOTLINK_ALLOWED_EXP' => 'Links auf Bilder von diesen Seiten sind immer erlaubt. Die Domains müssen mit Kommata getrennt werden (keine Leerzeichen). Beispiel: „leinad4mind.top, phpbb.com“',
-	'HOTLINK_PREVENT'     => 'Links auf Bilder von allen Seiten aus erlauben',
+	'HOTLINK_ALLOWED'                     => 'Erlaubte Domains zum Einbetten',
+	'HOTLINK_ALLOWED_EXP'                 => 'Wird nur verwendet, wenn „Allen Websites das Einbetten von Galerie-Bildern erlauben“ auf „Nein“ steht. Zusätzliche Domains, die Galerie-Bilder einbetten dürfen, durch Kommas getrennt eingeben. Die eigene Board-Domain ist immer erlaubt; passende Subdomains werden ebenfalls akzeptiert. Beispiel: leinad4mind.top,phpbb.com',
+	'HOTLINK_PREVENT'                     => 'Allen Websites das Einbetten von Galerie-Bildern erlauben',
+	'HOTLINK_PREVENT_EXPLAIN'             => '„Ja“ deaktiviert den Hotlink-Schutz, sodass jede Website Galerie-Bilder einbetten darf und die Domainliste darunter ignoriert wird. „Nein“ beschränkt das Einbetten auf dieses Board und die erlaubten Domains; Anfragen ohne gültigen HTTP(S)-Referrer werden blockiert.',
 
 	'IMAGE_DESC_MAX_LENGTH'      => 'Maximale Länge für Beschreibungen',
 	'IMAGE_ID'                   => 'Bild-ID',

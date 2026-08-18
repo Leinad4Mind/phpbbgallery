@@ -237,9 +237,10 @@ $lang = array_merge($lang, [
 	'HACKING_ATTEMPT'     => 'Tentativo di hacking!',
 	'HANDLE_IMAGES'       => 'Che cosa fare con le immagini',
 	'HANDLE_SUBS'         => 'Che cosa fare con i sotto-albums',
-	'HOTLINK_ALLOWED'     => 'Link consentiti',
-	'HOTLINK_ALLOWED_EXP' => 'Link immagini provenienti da questo dominio sono sempre consentiti. I domini devono essere separati da una virgola (no spazi). Es: “leinad4mind.top, phpbb.com“',
-	'HOTLINK_PREVENT'     => 'Abilita links alle immagini di tutti i siti',
+	'HOTLINK_ALLOWED'                     => 'Domini autorizzati a incorporare immagini',
+	'HOTLINK_ALLOWED_EXP'                 => 'Utilizzato solo quando “Consenti a tutti i siti di incorporare immagini della Galleria” è impostato su No. Inserisci i domini aggiuntivi autorizzati a incorporare immagini della Galleria, separati da virgole. Il dominio del forum è sempre autorizzato; sono accettati anche i sottodomini corrispondenti. Esempio: leinad4mind.top,phpbb.com',
+	'HOTLINK_PREVENT'                     => 'Consenti a tutti i siti di incorporare immagini della Galleria',
+	'HOTLINK_PREVENT_EXPLAIN'             => 'Sì disattiva la protezione hotlink, quindi qualsiasi sito può incorporare immagini della Galleria e l’elenco dei domini autorizzati viene ignorato. No limita l’incorporamento a questo forum e ai domini autorizzati; le richieste senza un referrer HTTP(S) valido vengono bloccate.',
 
 	'IMAGE_DESC_MAX_LENGTH'      => 'Lunghezza massima descrizione/commento (bytes)',
 	'IMAGE_ID'                   => 'ID-immagine',

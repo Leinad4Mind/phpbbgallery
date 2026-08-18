@@ -238,9 +238,10 @@ $lang = array_merge($lang, [
 	'HACKING_ATTEMPT'     => 'Hack-poging!',
 	'HANDLE_IMAGES'       => 'Wat te doen met de afbeeldingen',
 	'HANDLE_SUBS'         => 'Wat te doen met de subalbums',
-	'HOTLINK_ALLOWED'     => 'Lijst met toegestane links',
-	'HOTLINK_ALLOWED_EXP' => 'Verwijzingen naar afbeeldingen vanaf deze domeinen zijn altijd toegestaan. De domeinnamen moeten met een komma (zonder spatie) gescheiden worden. Bijv: “leinad4mind.top, phpbb.com“',
-	'HOTLINK_PREVENT'     => 'Sta verwijzingen vanaf alle sites toe',
+	'HOTLINK_ALLOWED'                     => 'Domeinen die afbeeldingen mogen insluiten',
+	'HOTLINK_ALLOWED_EXP'                 => 'Wordt alleen gebruikt wanneer “Alle sites toestaan Galerijafbeeldingen in te sluiten” op Nee staat. Voer extra domeinen in die Galerijafbeeldingen mogen insluiten, gescheiden door komma’s. Het eigen forumdomein is altijd toegestaan; overeenkomende subdomeinen worden ook geaccepteerd. Voorbeeld: leinad4mind.top,phpbb.com',
+	'HOTLINK_PREVENT'                     => 'Alle sites toestaan Galerijafbeeldingen in te sluiten',
+	'HOTLINK_PREVENT_EXPLAIN'             => 'Ja schakelt hotlinkbeveiliging uit, zodat elke website Galerijafbeeldingen mag insluiten en de lijst met toegestane domeinen hieronder wordt genegeerd. Nee beperkt insluiten tot dit forum en de toegestane domeinen; verzoeken zonder geldige HTTP(S)-referrer worden geblokkeerd.',
 
 	'IMAGE_DESC_MAX_LENGTH'      => 'Maximale lengte voor omschrijvingen',
 	'IMAGE_ID'                   => 'Afbeelding-ID',

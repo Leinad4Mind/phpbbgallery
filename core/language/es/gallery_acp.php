@@ -238,9 +238,10 @@ $lang = array_merge($lang, [
 	'HACKING_ATTEMPT'     => '¡Intento de hackeo!',
 	'HANDLE_IMAGES'       => 'Qué hacer con las imágenes',
 	'HANDLE_SUBS'         => 'Qué hacer con los subalbums',
-	'HOTLINK_ALLOWED'     => 'Enlace de lista blanca',
-	'HOTLINK_ALLOWED_EXP' => 'Los enlaces a imágenes de estos dominios siempre están permitidos. Los dominios deben estar separados por coma solamente (sin espacio). Ej: "flying-bits.org, phpbb.com" ',
-	'HOTLINK_PREVENT'     => 'Permitir enlaces a imágenes de todos los sitios',
+	'HOTLINK_ALLOWED'                     => 'Dominios autorizados para insertar imágenes',
+	'HOTLINK_ALLOWED_EXP'                 => 'Se utiliza solo cuando “Permitir que todos los sitios inserten imágenes de la Galería” está en No. Introduce dominios adicionales que puedan insertar imágenes de la Galería, separados por comas. El dominio del foro siempre está permitido; también se aceptan los subdominios correspondientes. Ejemplo: leinad4mind.top,phpbb.com',
+	'HOTLINK_PREVENT'                     => 'Permitir que todos los sitios inserten imágenes de la Galería',
+	'HOTLINK_PREVENT_EXPLAIN'             => 'Sí desactiva la protección contra hotlinking, por lo que cualquier sitio puede insertar imágenes de la Galería y se ignora la lista de dominios permitidos. No limita la inserción a este foro y a los dominios permitidos; se bloquean las solicitudes sin un referente HTTP(S) válido.',
 
 	'IMAGE_DESC_MAX_LENGTH'      => 'Longitud máxima de las descripciones',
 	'IMAGE_ID'                   => 'ID de imagen',

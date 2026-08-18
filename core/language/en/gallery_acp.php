@@ -181,9 +181,10 @@ $lang = array_merge($lang, [
 	'HACKING_ATTEMPT'     => 'Hacking attempt!',
 	'HANDLE_IMAGES'       => 'What to do with the images',
 	'HANDLE_SUBS'         => 'What to do with the subalbums',
-	'HOTLINK_ALLOWED'     => 'Link whitelist',
-	'HOTLINK_ALLOWED_EXP' => 'Links to images from this domains are always allowed. The domains must be separated by comma only (no space). Exp: “leinad4mind.top, phpbb.com“',
-	'HOTLINK_PREVENT'     => 'Allow links to images from all sites',
+	'HOTLINK_ALLOWED'                     => 'Allowed embedding domains',
+	'HOTLINK_ALLOWED_EXP'                 => 'Used only when “Allow all sites to embed Gallery images” is set to No. Enter additional referrer domains that may embed Gallery images, separated by commas. The board domain is always allowed; matching subdomains are also accepted. Example: leinad4mind.top,phpbb.com',
+	'HOTLINK_PREVENT'                     => 'Allow all sites to embed Gallery images',
+	'HOTLINK_PREVENT_EXPLAIN'             => 'Yes disables hotlink protection, so any website may embed Gallery images and the allowed-domain list below is ignored. No restricts embedding to this board and the allowed domains below; requests without a valid HTTP(S) referrer are blocked.',
 
 	'IMAGE_DESC_MAX_LENGTH'      => 'Maximum length for descriptions',
 	'IMAGE_ID'                   => 'Image-ID',

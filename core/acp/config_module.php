@@ -237,6 +237,7 @@ class config_module
 			'L_TITLE'			=> $this->language->lang($vars['title']),
 			'L_TITLE_EXPLAIN'	=> $this->language->lang($vars['title'] . '_EXPLAIN'),
 			'S_GALLERY_ACP_STORAGE_LAYOUT_HELP' => isset($vars['vars']['storage_layout']),
+			'S_GALLERY_ACP_HOTLINK_SETTINGS' => isset($vars['vars']['allow_hotlinking'], $vars['vars']['hotlinking_domains']),
 
 			'S_ERROR'			=> (sizeof($error)) ? true : false,
 			'ERROR_MSG'			=> implode('<br />', $error),
@@ -475,7 +476,7 @@ class config_module
 					'comment_length'		=> ['lang' => 'COMMENT_MAX_LENGTH',	'validate' => 'int',	'type' => 'text:7:5',		'append' => 'CHARACTERS'],
 					'allow_rates'			=> ['lang' => 'RATE_SYSTEM',			'validate' => 'bool',	'type' => 'radio:yes_no'],
 					'max_rating'			=> ['lang' => 'RATE_SCALE',			'validate' => 'int',	'type' => 'text:7:2'],
-					'allow_hotlinking'		=> ['lang' => 'HOTLINK_PREVENT',		'validate' => 'bool',	'type' => 'radio:yes_no'],
+					'allow_hotlinking'		=> ['lang' => 'HOTLINK_PREVENT',		'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 					'hotlinking_domains'	=> ['lang' => 'HOTLINK_ALLOWED',		'validate' => 'string',	'type' => 'text:40:255',	'explain' => true],
 				],
 

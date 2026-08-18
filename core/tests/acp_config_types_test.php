@@ -81,6 +81,10 @@ final class acp_config_types_test extends TestCase
 		$this->assertArrayHasKey('allow_comments', $display['vars']);
 		$this->assertSame('COMMENT_SYSTEM', $display['vars']['allow_comments']['lang']);
 		$this->assertTrue($display['vars']['allow_comments']['explain']);
+		$this->assertArrayHasKey('allow_hotlinking', $display['vars']);
+		$this->assertTrue($display['vars']['allow_hotlinking']['explain']);
+		$this->assertArrayHasKey('hotlinking_domains', $display['vars']);
+		$this->assertTrue($display['vars']['hotlinking_domains']['explain']);
 		$this->assertArrayHasKey('watermark_enabled', $display['vars']);
 		$this->assertSame('int:0:100', $display['vars']['jpg_quality']['validate']);
 		$this->assertSame('number:0:100', $display['vars']['jpg_quality']['type']);
@@ -292,6 +296,22 @@ final class acp_config_types_test extends TestCase
 		$this->assertStringContainsString('position: fixed;', $stylesheet);
 		$this->assertStringContainsString('inset: 0;', $stylesheet);
 		$this->assertStringContainsString('margin: auto;', $stylesheet);
+	}
+
+	public function test_hotlink_whitelist_is_shown_only_when_protection_is_enabled(): void
+	{
+		$root = dirname(__DIR__);
+		$module = (string) file_get_contents($root . '/acp/config_module.php');
+		$event = (string) file_get_contents($root . '/adm/style/event/acp_overall_header_head_append.html');
+		$javascript = (string) file_get_contents($root . '/adm/style/gallery_acp_hotlink_settings.js');
+
+		$this->assertStringContainsString("'S_GALLERY_ACP_HOTLINK_SETTINGS'", $module);
+		$this->assertStringContainsString('S_GALLERY_ACP_HOTLINK_SETTINGS', $event);
+		$this->assertStringContainsString('gallery_acp_hotlink_settings.js', $event);
+		$this->assertStringContainsString("form.elements['config[allow_hotlinking]']", $javascript);
+		$this->assertStringContainsString("form.elements['config[hotlinking_domains]']", $javascript);
+		$this->assertStringContainsString("selected.value === '1'", $javascript);
+		$this->assertStringContainsString("field.addEventListener('change'", $javascript);
 	}
 
 	public function test_bbcode_templates_keep_the_selected_link_target_without_a_session_id(): void
