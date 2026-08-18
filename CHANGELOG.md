@@ -412,6 +412,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Tests
 
+- Kept functional album fixtures portable under strict MySQL and MariaDB by explicitly supplying the required cached parent path.
 - Expanded the complete phpBB functional lifecycle to SQLite, MySQL 8.4 LTS and MariaDB 11.4 LTS, including database-neutral purge assertions.
 - Added an end-to-end Export workflow covering ACP limits and batching, nested album paths, readable image names, manifests, protected downloads and member-owned UCP exports.
 - Added a functional MinIO workflow that validates ACP connection testing, resumable provider migration, remote source delivery with watermarking, temporary-file cleanup and migration back to local storage.

@@ -127,6 +127,7 @@ class profile_fields_workflow extends \phpbb_functional_test_case
 		$db->sql_freeresult($result);
 		$db->sql_query('INSERT INTO phpbb_gallery_albums ' . $db->sql_build_array('INSERT', [
 			'parent_id' => 0,
+			'album_parents' => '',
 			'left_id' => $left_id,
 			'right_id' => $left_id + 1,
 			'album_type' => \phpbbgallery\core\block::TYPE_UPLOAD,

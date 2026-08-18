@@ -124,6 +124,7 @@ class addon_reconciliation extends \phpbb_functional_test_case
 		$db = $this->get_db();
 		$album = [
 			'parent_id' => 0,
+			'album_parents' => '',
 			'left_id' => 1,
 			'right_id' => 2,
 			'album_type' => \phpbbgallery\core\block::TYPE_UPLOAD,
