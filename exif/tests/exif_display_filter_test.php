@@ -223,6 +223,7 @@ class exif_display_filter_test extends TestCase
 		$this->assertGreaterThanOrEqual(2, substr_count($listener, "'addon'"));
 		$this->assertStringContainsString("'explain_lang' => 'DISP_EXIF_DATA'", $listener);
 		$this->assertStringContainsString("'explain_lang' => 'EXIF_IMAGE_PAGE_FIELD'", $listener);
+		$this->assertStringContainsString('>EXIF: " . $this->user->lang(strtoupper($field))', $listener);
 		$this->assertStringContainsString('{% if S_GALLERY_EXIF_CONFIG %}', $template);
 		$this->assertStringContainsString("'config[disp_exifdata]'", $template);
 		$this->assertStringContainsString("'config[exif_show_'", $template);

@@ -249,7 +249,7 @@ class exif_listener implements EventSubscriberInterface
 		foreach (\phpbbgallery\exif\listing_options::FIELDS as $field => $bit)
 		{
 			$options .= '<option' . (($value & $bit) ? ' selected="selected"' : '')
-				. " value='" . $bit . "'>" . $this->user->lang(strtoupper($field)) . '</option>';
+				. " value='" . $bit . "'>EXIF: " . $this->user->lang(strtoupper($field)) . '</option>';
 		}
 
 		$event['rrc_display_options'] = $options;

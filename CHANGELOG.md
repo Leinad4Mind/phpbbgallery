@@ -6,6 +6,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Added
 
+- Prefixed every EXIF entry in mixed card-information selectors with `EXIF:` so add-on metadata remains immediately distinguishable from Core image properties.
 - Added independently selectable image type and cached EXIF values to the contextual card-information settings for album listings, searches, Gallery-index blocks, forum-index blocks and user profiles; individual image-page switches remain separate, and private metadata continues to follow the Core visibility policy.
 - Added an independently configurable WebP encoding quality, defaulting to 80 and applied to existing WebP transformations and Core-generated WebP derivatives; WebP and AVIF quality controls remain available when new uploads of those formats are disabled.
 - Added composable Image Fields validation rules for textual metadata: minimum/maximum or exact character counts, required beginnings/endings, common Unicode-aware formats and bounded custom PCRE expressions enforced consistently across upload, editing, import and MCP Mass Edit.
