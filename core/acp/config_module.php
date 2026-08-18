@@ -241,7 +241,9 @@ class config_module
 				$vars['vars']['allow_hotlinking'],
 				$vars['vars']['hotlinking_domains'],
 				$vars['vars']['allow_rates'],
-				$vars['vars']['max_rating']
+				$vars['vars']['max_rating'],
+				$vars['vars']['allow_avif'],
+				$vars['vars']['avif_quality']
 			),
 
 			'S_ERROR'			=> (sizeof($error)) ? true : false,
@@ -511,7 +513,6 @@ class config_module
 					'allow_rotate'			=> ['lang' => 'TRANSFORM_IMAGES',		'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 					'auto_orient'			=> ['lang' => 'AUTO_ORIENT_IMAGES',	'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 					'jpg_quality'			=> ['lang' => 'JPG_QUALITY',			'validate' => 'int:0:100',	'type' => 'number:0:100',	'explain' => true],
-					'avif_quality'			=> ['lang' => 'AVIF_QUALITY',			'validate' => 'int:0:100',	'type' => 'number:0:100',	'explain' => true],
 					//'medium_cache'			=> ['lang' => 'MEDIUM_CACHE',			'validate' => 'bool',	'type' => 'radio:yes_no'],
 					'medium_width'			=> ['lang' => 'RSZ_WIDTH',				'validate' => 'int',	'type' => 'text:7:4',		'append' => 'PIXELS'],
 					'medium_height'			=> ['lang' => 'RSZ_HEIGHT',			'validate' => 'int',	'type' => 'text:7:4',		'append' => 'PIXELS'],
@@ -520,6 +521,7 @@ class config_module
 					'allow_png'				=> ['lang' => 'PNG_ALLOWED',			'validate' => 'bool',	'type' => 'radio:yes_no'],
 					'allow_webp'			=> ['lang' => 'WEBP_ALLOWED',			'validate' => 'bool',	'type' => 'radio:yes_no'],
 					'allow_avif'			=> ['lang' => 'AVIF_ALLOWED',			'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
+					'avif_quality'			=> ['lang' => 'AVIF_QUALITY',			'validate' => 'int:0:100',	'type' => 'number:0:100',	'explain' => true],
 					'allow_bmp'			=> ['lang' => 'BMP_ALLOWED',			'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 					'allow_zip'				=> ['lang' => 'ZIP_ALLOWED',			'validate' => 'bool',	'type' => 'radio:yes_no'],
 					'description_length'	=> ['lang' => 'IMAGE_DESC_MAX_LENGTH',	'validate' => 'int',	'type' => 'text:7:5',		'append' => 'CHARACTERS'],
