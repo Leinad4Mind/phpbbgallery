@@ -552,9 +552,9 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertMatchesRegularExpression('/\.gallery-image-card-media\s*\{[^}]*display:\s*flex;[^}]*flex-direction:\s*column;[^}]*min-height:\s*calc\(var\(--gallery-thumbnail-size, 70px\) \+ 10px\);/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-image-card-thumbnail\s*\{[^}]*align-items:\s*center;[^}]*display:\s*flex;[^}]*justify-content:\s*center;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-image-card-approval \.post-notice,[^{]+\{[^}]*display:\s*flex;[^}]*justify-content:\s*center;[^}]*min-height:\s*46px;/s', $css);
-		$this->assertMatchesRegularExpression('/\.gallery-approval-button\s*\{[^}]*border-radius:\s*6px;[^}]*display:\s*inline-flex;[^}]*min-height:\s*34px;[^}]*padding:\s*7px 13px;/s', $css);
-		$this->assertMatchesRegularExpression('/\.gallery-approval-button--approve\s*\{[^}]*linear-gradient[^}]*color:\s*#fff;/s', $css);
-		$this->assertMatchesRegularExpression('/\.gallery-approval-button--reject\s*\{[^}]*border-color:\s*#d9534f;[^}]*color:\s*#a94442;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-approval-button\s*\{[^}]*border-radius:\s*4px;[^}]*display:\s*inline-flex;[^}]*min-height:\s*30px;[^}]*padding:\s*5px 10px;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-approval-button--approve\s*\{[^}]*background-color:\s*#2f8f55;[^}]*color:\s*#fff;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-approval-button--reject\s*\{[^}]*border-color:\s*#d9534f;[^}]*color:\s*#bc2a4d;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-image-card-details\s*\{[^}]*display:\s*flex;[^}]*flex-direction:\s*column;[^}]*width:\s*100%;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-futuristic-approval\s*\{[^}]*display:\s*flex;[^}]*justify-content:\s*center;[^}]*width:\s*100%;/s', $css);
 	}
