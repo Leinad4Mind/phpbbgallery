@@ -132,6 +132,7 @@ class image_deletion_workflow extends \phpbb_functional_test_case
 		$db->sql_query('INSERT INTO phpbb_gallery_users ' . $db->sql_build_array('INSERT', [
 			'user_id' => $author_id,
 			'user_images' => 1,
+			'user_permissions' => '',
 		]));
 		$db->sql_query("UPDATE phpbb_config
 			SET config_value = '1'

@@ -23,6 +23,7 @@ final class functional_fixture_portability_test extends TestCase
 		$requirements = [
 			'gallery_albums' => ['album_parents', 'album_desc'],
 			'gallery_images' => ['image_desc'],
+			'gallery_users' => ['user_permissions'],
 		];
 		$iterator = new RecursiveIteratorIterator(
 			new RecursiveDirectoryIterator($extension_root, FilesystemIterator::SKIP_DOTS)
