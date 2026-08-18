@@ -32,8 +32,8 @@
 	{% if image.S_STATUS_UNAPPROVED_ACTION %}
 		<form method="post" class="gallery-image-card-approval" action="{{ image.S_STATUS_UNAPPROVED_ACTION }}">
 			<p class="post-notice unapproved">
-				<input class="button2 gallery-approval-button gallery-approval-button--reject" type="submit" value="{{ lang('DISAPPROVE') }}" name="action[disapprove]" />
-				<input class="button1 gallery-approval-button gallery-approval-button--approve" type="submit" value="{{ lang('APPROVE') }}" name="action[approve]" />
+				<button class="button2 gallery-approval-button gallery-approval-button--reject" type="submit" value="{{ lang('DISAPPROVE') }}" name="action[disapprove]"><i class="icon fa fa-times fa-fw" aria-hidden="true"></i><span>{{ lang('DISAPPROVE') }}</span></button>
+				<button class="button1 gallery-approval-button gallery-approval-button--approve" type="submit" value="{{ lang('APPROVE') }}" name="action[approve]"><i class="icon fa fa-check fa-fw" aria-hidden="true"></i><span>{{ lang('APPROVE') }}</span></button>
 			</p>
 		</form>
 	{% elseif image.S_STATUS_UNAPPROVED or image.S_UNAPPROVED %}

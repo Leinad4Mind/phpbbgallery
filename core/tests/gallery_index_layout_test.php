@@ -537,12 +537,24 @@ final class gallery_index_layout_test extends TestCase
 
 		$css = (string) file_get_contents($core_root . '/styles/all/theme/gallery.css');
 		$prosilver = (string) file_get_contents($core_root . '/styles/prosilver/template/gallery/imageblock_polaroid.html');
+		$classic = (string) file_get_contents($core_root . '/styles/all/template/gallery/imageblock_classic.html');
+		$futuristic = (string) file_get_contents($core_root . '/styles/all/template/gallery/imageblock_futuristic.html');
+		$search = (string) file_get_contents($core_root . '/styles/prosilver/template/gallery/search_results.html');
 		$this->assertStringContainsString('gallery-approval-button--reject', $prosilver);
 		$this->assertStringContainsString('gallery-approval-button--approve', $prosilver);
+		foreach ([$prosilver, $classic, $futuristic, $search] as $template)
+		{
+			$this->assertStringContainsString('<button class="button2 gallery-approval-button gallery-approval-button--reject"', $template);
+			$this->assertStringContainsString('<button class="button1 gallery-approval-button gallery-approval-button--approve"', $template);
+			$this->assertStringContainsString('fa fa-times fa-fw', $template);
+			$this->assertStringContainsString('fa fa-check fa-fw', $template);
+		}
 		$this->assertMatchesRegularExpression('/\.gallery-image-card-media\s*\{[^}]*display:\s*flex;[^}]*flex-direction:\s*column;[^}]*min-height:\s*calc\(var\(--gallery-thumbnail-size, 70px\) \+ 10px\);/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-image-card-thumbnail\s*\{[^}]*align-items:\s*center;[^}]*display:\s*flex;[^}]*justify-content:\s*center;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-image-card-approval \.post-notice,[^{]+\{[^}]*display:\s*flex;[^}]*justify-content:\s*center;[^}]*min-height:\s*46px;/s', $css);
-		$this->assertMatchesRegularExpression('/\.gallery-image-card-grid--prosilver \.gallery-image-card-approval \.gallery-approval-button\s*\{[^}]*border-radius:\s*4px;[^}]*min-height:\s*32px;[^}]*padding:\s*6px 12px;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-approval-button\s*\{[^}]*border-radius:\s*6px;[^}]*display:\s*inline-flex;[^}]*min-height:\s*34px;[^}]*padding:\s*7px 13px;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-approval-button--approve\s*\{[^}]*linear-gradient[^}]*color:\s*#fff;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-approval-button--reject\s*\{[^}]*border-color:\s*#d9534f;[^}]*color:\s*#a94442;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-image-card-details\s*\{[^}]*display:\s*flex;[^}]*flex-direction:\s*column;[^}]*width:\s*100%;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-futuristic-approval\s*\{[^}]*display:\s*flex;[^}]*justify-content:\s*center;[^}]*width:\s*100%;/s', $css);
 	}
