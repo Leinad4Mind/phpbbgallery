@@ -457,6 +457,19 @@ final class controller_image_types_test extends TestCase
 		$this->assertSame('https://example.test', $assigned_blocks['contact'][0]['U_CONTACT']);
 	}
 
+	public function test_profile_integration_events_expose_distinct_mutable_template_rows(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/image.php');
+
+		$this->assertStringContainsString('@event phpbbgallery.core.viewimage.author_profile', $source);
+		$this->assertStringContainsString("['user_id', 'user_data', 'poster_row', 'image_data', 'album_data']", $source);
+		$this->assertStringContainsString("trigger_event('phpbbgallery.core.viewimage.author_profile'", $source);
+		$this->assertStringContainsString('$this->template->assign_vars($poster_row)', $source);
+		$this->assertStringContainsString('@event phpbbgallery.core.viewimage.comment_profile', $source);
+		$this->assertStringContainsString("['poster_id', 'user_data', 'comment_data', 'comment_row', 'image_data', 'album_data']", $source);
+		$this->assertStringContainsString("trigger_event('phpbbgallery.core.viewimage.comment_profile'", $source);
+		$this->assertStringContainsString('$this->template->assign_block_vars(\'commentrow\', $comment_row)', $source);
+	}
 	public function test_personal_album_link_is_permission_filtered_and_zebra_list_is_loaded_once(): void
 	{
 		$reflection = new \ReflectionClass(image::class);

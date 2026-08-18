@@ -68,11 +68,11 @@
 				<dd><strong>{{ PROFILE_FIELD1_NAME }}{{ lang('COLON') }}</strong> {{ PROFILE_FIELD1_VALUE }}</dd>
 			{% endif %}
 
-			{% EVENT viewtopic_body_postrow_custom_fields_before %}
+			{% EVENT phpbbgallery_core_viewimage_author_profile_fields_before %}
 			{% for custom_fields in custom_fields|default([]) %}
 				<dd class="profile-custom-field profile-{{ custom_fields.PROFILE_FIELD_IDENT }}"><strong>{{ custom_fields.PROFILE_FIELD_NAME }}{{ lang('COLON') }}</strong> {{ custom_fields.PROFILE_FIELD_VALUE }}</dd>
 			{% endfor %}
-			{% EVENT viewtopic_body_postrow_custom_fields_after %}
+			{% EVENT phpbbgallery_core_viewimage_author_profile_fields_after %}
 
 			{% EVENT viewtopic_body_contact_fields_before %}
 			{% if not S_IS_BOT and contact|length %}
@@ -270,11 +270,11 @@
 				<dd><strong>{{ commentrow.PROFILE_FIELD1_NAME }}{{ lang('COLON') }}</strong> {{ commentrow.PROFILE_FIELD1_VALUE }}</dd>
 				{% endif %}
 
-				{% EVENT viewtopic_body_postrow_custom_fields_before %}
+				{% EVENT phpbbgallery_core_viewimage_comment_profile_fields_before %}
 				{% for custom_fields in commentrow.custom_fields|default([]) %}
 					<dd class="profile-custom-field profile-{{ custom_fields.PROFILE_FIELD_IDENT }}"><strong>{{ custom_fields.PROFILE_FIELD_NAME }}{{ lang('COLON') }}</strong> {{ custom_fields.PROFILE_FIELD_VALUE }}</dd>
 				{% endfor %}
-				{% EVENT viewtopic_body_postrow_custom_fields_after %}
+				{% EVENT phpbbgallery_core_viewimage_comment_profile_fields_after %}
 
 				{% EVENT viewtopic_body_contact_fields_before %}
 				{% if not S_IS_BOT and commentrow.contact|length %}

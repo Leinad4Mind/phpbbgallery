@@ -152,6 +152,17 @@ final class domain_user_types_test extends TestCase
 		$this->assertSame(41, $gallery_user->get_own_root_album());
 	}
 
+	public function test_profile_integration_identity_fields_are_retained_in_page_cache(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/user.php');
+
+		$this->assertStringContainsString('\'user_id\'               => (int) $user_id', $source);
+		$this->assertStringContainsString('\'user_last_active\'      => (int) ($row[\'user_last_active\'] ?? 0)', $source);
+		$this->assertStringContainsString('\'user_allow_viewonline\' => (bool) $row[\'user_allow_viewonline\']', $source);
+		$this->assertStringContainsString('\'user_last_active\'      => 0', $source);
+		$this->assertStringContainsString('\'user_allow_viewonline\' => false', $source);
+	}
+
 	public function test_destroy_restores_safe_empty_state(): void
 	{
 		$reflection = new \ReflectionClass(user::class);

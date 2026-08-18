@@ -977,6 +977,27 @@ final class template_syntax_test extends TestCase
 		}
 	}
 
+	public function test_viewimage_profile_extension_points_are_gallery_scoped_in_every_distributed_style(): void
+	{
+		$core_root = dirname(__DIR__);
+		$events = [
+			'phpbbgallery_core_viewimage_author_profile_fields_before',
+			'phpbbgallery_core_viewimage_author_profile_fields_after',
+			'phpbbgallery_core_viewimage_comment_profile_fields_before',
+			'phpbbgallery_core_viewimage_comment_profile_fields_after',
+		];
+
+		foreach (\gallery_test_existing_styles($core_root, ['prosilver', 'BBOOTS', 'FLATBOOTS'], $this) as $style)
+		{
+			$source = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/viewimage_body.html');
+			foreach ($events as $event)
+			{
+				$this->assertSame(1, substr_count($source, '{% EVENT ' . $event . ' %}'), $style . ': ' . $event);
+			}
+			$this->assertStringNotContainsString('viewtopic_body_postrow_custom_fields_before', $source, $style);
+			$this->assertStringNotContainsString('viewtopic_body_postrow_custom_fields_after', $source, $style);
+		}
+	}
 	public function test_viewimage_contacts_use_the_modern_phpbb_contract_in_every_style(): void
 	{
 		$core_root = dirname(__DIR__);

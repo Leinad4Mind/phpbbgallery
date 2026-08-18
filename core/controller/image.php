@@ -662,7 +662,7 @@ class image
 				? $this->url->append_sid('phpbb', 'ucp', 'i=pm&amp;mode=compose&amp;u=' . $user_id) : '';
 			$u_poster_email = (string) ($user_data['email'] ?? '');
 			$u_poster_jabber = (string) ($user_data['jabber'] ?? '');
-			$this->template->assign_vars([
+			$poster_row = [
 				'POSTER_FULL'     => get_username_string('full', $user_id, $user_data['username'] ?? '', $user_data['user_colour'] ?? ''),
 				'POSTER_COLOUR'   => get_username_string('colour', $user_id, $user_data['username'] ?? '', $user_data['user_colour'] ?? ''),
 				'POSTER_USERNAME' => get_username_string('username', $user_id, $user_data['username'] ?? '', $user_data['user_colour'] ?? ''),
@@ -687,7 +687,23 @@ class image
 				'U_POSTER_PM'     => $u_poster_pm,
 				'U_POSTER_EMAIL'  => $u_poster_email,
 				'U_POSTER_JABBER' => $u_poster_jabber,
-			]);
+			];
+
+			/**
+			 * Allow extensions to enrich the visible image-author profile.
+			 *
+			 * @event phpbbgallery.core.viewimage.author_profile
+			 * @var int   user_id    Image-author user ID
+			 * @var array user_data  Normalized phpBB user data for the author
+			 * @var array poster_row Template variables assigned for the author
+			 * @var array image_data Data for the displayed image
+			 * @var array album_data Data for the image's album
+			 * @since 4.1.0
+			 */
+			$vars = ['user_id', 'user_data', 'poster_row', 'image_data', 'album_data'];
+			extract($this->dispatcher->trigger_event('phpbbgallery.core.viewimage.author_profile', compact($vars)));
+
+			$this->template->assign_vars($poster_row);
 			$this->assign_standard_contact_fields('contact', $u_poster_pm, $u_poster_email, $u_poster_jabber);
 			$this->assign_image_poster_profile_fields((int) $user_id);
 		}
@@ -1334,6 +1350,23 @@ class image
 				{
 					$comment_row = array_merge($comment_row, $cp_row['row']);
 				}
+				$comment_data = $row;
+
+				/**
+				 * Allow extensions to enrich a visible comment-author profile.
+				 *
+				 * @event phpbbgallery.core.viewimage.comment_profile
+				 * @var int   poster_id    Comment-author user ID
+				 * @var array user_data    Normalized phpBB user data for the author
+				 * @var array comment_data Data for the displayed comment
+				 * @var array comment_row  Template variables assigned for the comment
+				 * @var array image_data   Data for the displayed image
+				 * @var array album_data   Data for the image's album
+				 * @since 4.1.0
+				 */
+				$vars = ['poster_id', 'user_data', 'comment_data', 'comment_row', 'image_data', 'album_data'];
+				extract($this->dispatcher->trigger_event('phpbbgallery.core.viewimage.comment_profile', compact($vars)));
+
 				$this->template->assign_block_vars('commentrow', $comment_row);
 
 				$this->assign_standard_contact_fields(

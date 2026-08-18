@@ -69,6 +69,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Replaced the PROSILVER-only replay of phpBB viewtopic custom-field events on image pages with dedicated Gallery author and comment profile events shared by all bundled styles; optional integrations can now enrich the correct profile context without rendering empty viewtopic-only fragments.
 - Restored the native horizontal ACP pagination for the resumable missing-source review in ACP Cleanup instead of rendering its page links as an unstyled vertical list.
 - Reset binary image-reader metadata for every source, preview, medium and thumbnail response so persistent workers cannot reuse a previous image's MIME type.
 - Centred every Gallery ACP contextual-help dialog in the viewport while retaining responsive size limits and fallback browser support.

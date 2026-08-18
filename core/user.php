@@ -598,7 +598,10 @@ class user
 			if ($user_id == ANONYMOUS)
 			{
 				$user_cache_data = [
-					'user_type'           => USER_IGNORE,
+					'user_id'               => (int) $user_id,
+					'user_last_active'      => 0,
+					'user_allow_viewonline' => false,
+					'user_type'             => USER_IGNORE,
 					'joined'              => '',
 					'posts'               => '',
 					'sig'                 => '',
@@ -630,7 +633,10 @@ class user
 					$user_sig = $row['user_sig'];
 				}
 				$user_cache_data = [
-					'user_type'            => $row['user_type'],
+					'user_id'               => (int) $user_id,
+					'user_last_active'      => (int) ($row['user_last_active'] ?? 0),
+					'user_allow_viewonline' => (bool) $row['user_allow_viewonline'],
+					'user_type'             => $row['user_type'],
 					'user_inactive_reason' => $row['user_inactive_reason'],
 					'joined'               => $this->user->format_date($row['user_regdate']),
 					'posts'                => $row['user_posts'],
