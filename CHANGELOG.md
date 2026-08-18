@@ -47,6 +47,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Clarified that disabling the global Gallery comment system hides comment posting, existing comments, counts, comment-based discovery and per-image controls without deleting stored comments.
 - Clarified that the forum-index display selector applies to every card in all enabled Recent, Random and Personal-album Gallery blocks.
 - Reorganized the Gallery-index ACP settings into adjacent album/layout and image/comment-block sections while keeping forum-index image blocks separate and preserving all existing configuration keys.
 - Clarified that the shared items-per-page limit covers paginated Gallery lists and the recent-comment block on the Gallery index.

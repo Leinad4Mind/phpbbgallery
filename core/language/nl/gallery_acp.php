@@ -159,6 +159,7 @@ $lang = array_merge($lang, [
 	'COMMENT_ID'                          => 'Reactie-ID',
 	'COMMENT_MAX_LENGTH'                  => 'Maximale lengte voor reacties',
 	'COMMENT_SYSTEM'                      => 'Reactiesysteem inschakelen',
+	'COMMENT_SYSTEM_EXPLAIN'              => 'Schakelt het plaatsen van reacties uit en verbergt bestaande reacties, reactietellingen, zoek- en sorteeropties op basis van reacties en reactie-instellingen per afbeelding in de hele Galerij. Bestaande reacties blijven bewaard en worden opnieuw beschikbaar wanneer het systeem weer wordt ingeschakeld.',
 	'COMMENT_USER_CONTROL'                => 'Gebruikers kunnen reacties regelen',
 	'COMMENT_USER_CONTROL_EXP'            => 'Sta gebruikers toe om te bepalen of andere gebruikers kunnen reageren op hun afbeeldingen.',
 	'COPY_PERMISSIONS'                    => 'Kopieer permissies van',

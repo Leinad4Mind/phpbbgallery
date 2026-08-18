@@ -102,6 +102,7 @@ $lang = array_merge($lang, [
 	'COMMENT_ID'                          => 'Comment-ID',
 	'COMMENT_MAX_LENGTH'                  => 'Maximum length for comments',
 	'COMMENT_SYSTEM'                      => 'Enable comment system',
+	'COMMENT_SYSTEM_EXPLAIN'              => 'Disables comment posting and hides existing comments, comment counts, comment-based search and sorting options, and per-image comment controls throughout the Gallery. Existing comments are preserved and become available again when the system is re-enabled.',
 	'COMMENT_USER_CONTROL'                => 'Users can control comments',
 	'COMMENT_USER_CONTROL_EXP'            => 'Allow users to select, whether other users can comment on their images.',
 	'COPY_PERMISSIONS'                    => 'Copy Permissions from',

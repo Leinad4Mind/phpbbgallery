@@ -159,6 +159,7 @@ $lang = array_merge($lang, [
 	'COMMENT_ID'                          => 'Kommentar-ID',
 	'COMMENT_MAX_LENGTH'                  => 'Maximale Länge für Kommentare',
 	'COMMENT_SYSTEM'                      => 'Kommentar System aktivieren',
+	'COMMENT_SYSTEM_EXPLAIN'              => 'Deaktiviert das Verfassen von Kommentaren und blendet vorhandene Kommentare, Kommentarzähler, kommentarbasierte Such- und Sortieroptionen sowie bildbezogene Kommentarsteuerungen in der gesamten Galerie aus. Vorhandene Kommentare bleiben erhalten und sind nach der erneuten Aktivierung wieder verfügbar.',
 	'COMMENT_USER_CONTROL'                => 'Benutzer können Kommentare einstellen',
 	'COMMENT_USER_CONTROL_EXP'            => 'Mit dieser Option erlauben sie Benutzern einzustellen, ob andere Benutzer ihre Bilder kommentieren dürfen.',
 	'COPY_PERMISSIONS'                    => 'Kopiere Berechtigungen von',

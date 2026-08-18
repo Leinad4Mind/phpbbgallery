@@ -159,6 +159,7 @@ $lang = array_merge($lang, [
 	'COMMENT_ID'                          => 'ID-Commento',
 	'COMMENT_MAX_LENGTH'                  => 'Lunghezza massima per commenti',
 	'COMMENT_SYSTEM'                      => 'Attiva sistema commenti',
+	'COMMENT_SYSTEM_EXPLAIN'              => 'Disattiva la pubblicazione dei commenti e nasconde i commenti esistenti, i relativi conteggi, le opzioni di ricerca e ordinamento basate sui commenti e i controlli dei commenti per immagine in tutta la Galleria. I commenti esistenti vengono conservati e tornano disponibili quando il sistema viene riattivato.',
 	'COMMENT_USER_CONTROL'                => 'Gli utenti possono controllare i commenti',
 	'COMMENT_USER_CONTROL_EXP'            => 'Permetti agli utenti di scegliere, se gli altri utenti possono aggiungere commenti alle loro immagini.',
 	'COPY_PERMISSIONS'                    => 'Copia permessi da',
