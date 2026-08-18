@@ -168,6 +168,7 @@ class language_catalog_test extends TestCase
 			'ITEMS_PER_PAGE_EXP' => 'Número predefinido de entradas apresentadas nas páginas da Galeria, incluindo álbuns, imagens, comentários, resultados de pesquisa e listas de moderação. Também limita os comentários recentes apresentados no índice da Galeria.',
 			'RATE_SCALE' => 'Escala de classificação',
 		];
+		$expected['RRC_GINDEX_MODE'] = 'Blocos';
 		$language_root = $this->extension_root . '/core/language';
 
 		foreach (['pt', 'pt_preao'] as $locale)

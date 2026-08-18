@@ -50,6 +50,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Renamed the Gallery-index image and comment selector from "Mode" to "Blocks" because multiple blocks can be enabled simultaneously.
 - Expanded the automatic-resize help to explain proportional dimension reduction, enforcement of the stored-file size limit and the PHP upload and image-decoding limits that resizing cannot bypass.
 - Renamed the multiple-upload setting to “Maximum images per upload” and clarified that it limits one upload operation rather than the total number of images in the album.
 - Reworded the random-image performance notice to explain its possible page-loading impact on galleries with many images.
