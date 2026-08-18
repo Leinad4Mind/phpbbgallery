@@ -397,7 +397,7 @@ $lang = array_merge($lang, [
 	'RECENT_ON_INDEX'          => 'Mostra immagini recenti',
 	'RECENT_ON_INDEX_EXP'      => 'Dovrebbero esserci immagini recenti nell’index',
 	'RECENT_ON_INDEX_COUNT'    => 'Conteggio immagini recenti',
-	'FORUM_INDEX_IMAGES'       => 'Immagini della galleria nell\'indice del forum',
+	'FORUM_INDEX_IMAGES'       => 'Indice del forum — Blocchi immagini della galleria',
 
 	'PHPBB_INTEGRATION' => 'integrazione phpBB',
 	'PNG_ALLOWED'       => 'Consenti invio di files PNG',

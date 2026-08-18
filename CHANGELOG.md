@@ -47,6 +47,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Renamed the forum-index Gallery image section so its host page is identified before the block content.
 - Hidden the inactive rating-scale field whenever the global Gallery rating system is disabled, while preserving its stored value for later reactivation.
 - Clarified the Gallery hotlink-protection switch and conditionally hides its allowed-domain list whenever unrestricted external embedding makes that list inactive.
 - Clarified that disabling the global Gallery comment system hides comment posting, existing comments, counts, comment-based discovery and per-image controls without deleting stored comments.

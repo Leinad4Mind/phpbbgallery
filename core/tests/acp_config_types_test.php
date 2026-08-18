@@ -298,6 +298,13 @@ final class acp_config_types_test extends TestCase
 		$this->assertStringContainsString('margin: auto;', $stylesheet);
 	}
 
+	public function test_forum_index_image_section_names_its_host_context_first(): void
+	{
+		$language = (string) file_get_contents(dirname(__DIR__) . '/language/en/gallery_acp.php');
+
+		$this->assertStringContainsString('Forum index — Gallery image blocks', $language);
+	}
+
 	public function test_dependent_settings_follow_their_global_switches(): void
 	{
 		$root = dirname(__DIR__);

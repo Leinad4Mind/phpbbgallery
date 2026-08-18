@@ -384,7 +384,7 @@ $lang = array_merge($lang, [
 	'RECENT_ON_INDEX'                      => 'Включить последние фото',
 	'RECENT_ON_INDEX_EXP'                  => 'Отображение последних фотографий на главной странице галереи',
 	'RECENT_ON_INDEX_COUNT'                => 'Количество последних фото',
-	'FORUM_INDEX_IMAGES'                   => 'Изображения галереи на главной странице форума',
+	'FORUM_INDEX_IMAGES'                   => 'Главная страница форума — Блоки изображений галереи',
 
 	'PHPBB_INTEGRATION'          => 'Интеграция в phpBB',
 	'PNG_ALLOWED'                => 'PNG разрешён',
