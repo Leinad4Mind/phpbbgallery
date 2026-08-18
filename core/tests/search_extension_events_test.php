@@ -166,7 +166,7 @@ final class search_extension_events_test extends TestCase
 		$this->assertStringContainsString("trigger_event(\n\t\t\t'phpbbgallery.core.search.sort_options'", $controller);
 		$this->assertStringContainsString("['sort_key', 'sort_by_text', 'sort_by_sql', 'search_sort_joins']", $controller);
 		$this->assertStringContainsString("trigger_event(\n\t\t\t\t'phpbbgallery.core.search.image_template_vars'", $controller);
-		$this->assertStringContainsString("['images', 'image_template_vars']", $controller);
+		$this->assertStringContainsString("['images', 'image_template_vars', 'display_options']", $controller);
 		$this->assertStringContainsString("'SEARCH_IN_RESULTS'            => true", $controller);
 		$this->assertStringContainsString("'S_SELECT_SORT_KEY'            => \$s_sort_key", $controller);
 	}

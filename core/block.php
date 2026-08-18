@@ -183,4 +183,5 @@ class block
 	public const DISPLAY_RESOLUTION = 256;
 	public const DISPLAY_IP = 128;
 	public const DISPLAY_SUBTITLE = 512;
+	public const DISPLAY_IMAGE_TYPE = 1024;
 }

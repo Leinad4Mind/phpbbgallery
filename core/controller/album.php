@@ -87,6 +87,7 @@ class album
 	public const ALBUM_SHOW_SUBTITLE = 512;
 	public const ALBUM_SHOW_IP = 128;
 	public const ALBUM_SHOW_RATINGS = 64;
+	public const ALBUM_SHOW_IMAGE_TYPE = 1024;
 	public const ALBUM_SHOW_USERNAME = 32;
 	public const ALBUM_SHOW_VIEWS = 16;
 	public const ALBUM_SHOW_TIME = 8;
@@ -421,10 +422,12 @@ class album
 		 * @var array album_data         Current album row
 		 * @var array images             Visible image rows on the current page
 		 * @var array image_template_vars Additional variables keyed by image ID
+		 * @var int display_options       Selected image-card information bitmask
 		 * @since 4.1.0
 		 */
+		$display_options = (int) $this->gallery_config->get('album_display');
 		$image_template_vars = [];
-		$vars = ['album_data', 'images', 'image_template_vars'];
+		$vars = ['album_data', 'images', 'image_template_vars', 'display_options'];
 		extract($this->phpbb_dispatcher->trigger_event(
 			'phpbbgallery.core.album.image_template_vars',
 			compact($vars)
@@ -443,6 +446,7 @@ class album
 		$show_resolution = ($show_options & self::ALBUM_SHOW_RESOLUTION) !== 0;
 		$show_subtitle = ($show_options & self::ALBUM_SHOW_SUBTITLE) !== 0;
 		$ratings_visible = (int) $this->gallery_config->get('allow_rates') === 1 && $show_ratings;
+		$show_image_type = ($show_options & self::ALBUM_SHOW_IMAGE_TYPE) !== 0;
 		$image_ids = array_map(static fn (array $image): int => (int) $image['image_id'], $images);
 		$this->unread_counter->mark_viewed_many($image_ids);
 		$user_ratings = $ratings_visible
@@ -534,6 +538,7 @@ class album
 					? $this->language->lang('IMAGE_RESOLUTION_VALUE', $image_width, $image_height)
 					: false,
 
+				'IMAGE_FILE_TYPE'      => $show_image_type ? $this->image->format_file_type((string) ($image_data['image_filename'] ?? '')) : false,
 				'S_RATINGS'       => (!$hide_results && $ratings_visible) ? ($image_data['image_rates'] > 0 ? $image_data['image_rate_avg'] / 100 : $this->language->lang('NOT_RATED')) : false,
 				'S_CAN_RATE'       => $can_rate,
 				'S_HAS_RATED'      => $has_user_rating,

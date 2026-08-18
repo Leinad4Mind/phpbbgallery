@@ -44,6 +44,7 @@
 	{% if image.POSTER %}<div class="gallery-image-card-metadata-item" data-gallery-card-metadata>{{ lang('UPLOADED_BY_USER') }}{{ lang('COLON') }} {{ image.POSTER }}</div>{% endif %}
 	{% if image.TIME %}<div class="gallery-image-card-metadata-item" data-gallery-card-metadata>&raquo; {{ image.TIME }}</div>{% endif %}
 	{% if image.IMAGE_RESOLUTION %}<div class="gallery-image-card-metadata-item" data-gallery-card-metadata>{{ lang('IMAGE_RESOLUTION') }}{{ lang('COLON') }} {{ image.IMAGE_RESOLUTION }}</div>{% endif %}
+	{% if image.IMAGE_FILE_TYPE %}<div class="gallery-image-card-metadata-item" data-gallery-card-metadata>{{ lang('IMAGE_FILE_TYPE') }}{{ lang('COLON') }} {{ image.IMAGE_FILE_TYPE }}</div>{% endif %}
 	{% if image.IMAGE_VIEWS > -1 %}<div class="gallery-image-card-metadata-item" data-gallery-card-metadata>{{ lang('IMAGE_VIEWS') }}{{ lang('COLON') }} {{ image.IMAGE_VIEWS }}</div>{% endif %}
 	<div class="gallery-image-card-metadata-item" data-gallery-card-metadata>{% EVENT phpbbgallery_core_album_image_metadata %}</div>
 	{% if image.S_RATINGS %}

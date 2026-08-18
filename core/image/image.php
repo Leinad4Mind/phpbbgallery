@@ -76,6 +76,7 @@ class image
 
 	public const IMAGE_SHOW_RESOLUTION = 256;
 	public const IMAGE_SHOW_SUBTITLE = 512;
+	public const IMAGE_SHOW_IMAGE_TYPE = 1024;
 	public const IMAGE_SHOW_IP = 128;
 	public const IMAGE_SHOW_RATINGS = 64;
 	public const IMAGE_SHOW_USERNAME = 32;
@@ -1299,9 +1300,11 @@ class image
 	 * Let optional add-ons enrich a bounded set of image cards in one operation.
 	 *
 	 * @param array $images Image and album rows
+	 * @param int $display_options Selected image-card information bitmask
+	 * @param string $context Rendering context for add-ons
 	 * @return array Additional template variables keyed by image ID
 	 */
-	public function enrich_block_template_vars(array $images): array
+	public function enrich_block_template_vars(array $images, int $display_options = 0, string $context = ''): array
 	{
 		$image_template_vars = [];
 
@@ -1311,9 +1314,11 @@ class image
 		 * @event phpbbgallery.core.imageblock.image_template_vars
 		 * @var array images              Image and album rows in the bounded result set
 		 * @var array image_template_vars Additional variables keyed by image ID
+		 * @var int display_options       Selected image-card information bitmask
+		 * @var string context            Rendering context for add-ons
 		 * @since 4.1.0
 		 */
-		$vars = ['images', 'image_template_vars'];
+		$vars = ['images', 'image_template_vars', 'display_options', 'context'];
 		extract($this->phpbb_dispatcher->trigger_event(
 			'phpbbgallery.core.imageblock.image_template_vars',
 			compact($vars)
@@ -1347,6 +1352,7 @@ class image
 		$show_resolution = ($display_option & self::IMAGE_SHOW_RESOLUTION) !== 0;
 		$show_subtitle   = ($display_option & self::IMAGE_SHOW_SUBTITLE) !== 0;
 
+		$show_image_type = ($display_option & self::IMAGE_SHOW_IMAGE_TYPE) !== 0;
 		switch ($thumbnail_link)
 		{
 			case 'image_page':
@@ -1410,6 +1416,7 @@ class image
 				? $this->language->lang('IMAGE_RESOLUTION_VALUE', $image_width, $image_height)
 				: false,
 			'IMAGE_AWARD'	=> $image_award['label'],
+			'IMAGE_FILE_TYPE' => $show_image_type ? $this->format_file_type((string) ($image_data['image_filename'] ?? '')) : false,
 			'IMAGE_AWARD_TITLE' => $image_award['title'],
 			'S_IMAGE_AWARD_RANK' => $image_award['rank'],
 
@@ -1432,5 +1439,21 @@ class image
 			'L_STATUS'	=> ($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_UNAPPROVED) ? $this->language->lang('APPROVE_IMAGE') : (($image_data['image_status'] == (int) \phpbbgallery\core\block::STATUS_APPROVED) ? $this->language->lang('CHANGE_IMAGE_STATUS') : $this->language->lang('UNLOCK_IMAGE')),
 		];
 		$this->template->assign_block_vars($image_block_name, array_merge($template_vars, $additional_vars));
+	}
+
+	/**
+	 * Format a validated Gallery storage filename as a public image type.
+	 *
+	 * No file access is required, so this is safe for local and remote listings.
+	 */
+	public function format_file_type(string $filename): string
+	{
+		$extension = strtolower((string) pathinfo(str_replace('\\', '/', $filename), PATHINFO_EXTENSION));
+		if (!in_array($extension, ['avif', 'bmp', 'gif', 'jpeg', 'jpg', 'png', 'tif', 'tiff', 'webp'], true))
+		{
+			return '';
+		}
+
+		return strtoupper($extension);
 	}
 }

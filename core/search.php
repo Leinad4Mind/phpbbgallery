@@ -861,7 +861,7 @@ class search
 	 */
 	private function assign_image_rows(array $images, int $show_options, string $thumbnail_link, string $imagename_link): void
 	{
-		$image_template_vars = $this->image->enrich_block_template_vars($images);
+		$image_template_vars = $this->image->enrich_block_template_vars($images, $show_options);
 
 		foreach ($images as $row)
 		{

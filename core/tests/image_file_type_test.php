@@ -59,6 +59,24 @@ final class image_file_type_test extends TestCase
 		}
 	}
 
+	public function test_image_type_can_be_selected_independently_for_all_card_layouts(): void
+	{
+		$root = dirname(__DIR__);
+		$this->assertSame(1024, \phpbbgallery\core\block::DISPLAY_IMAGE_TYPE);
+		$this->assertSame(1024, \phpbbgallery\core\image\image::IMAGE_SHOW_IMAGE_TYPE);
+
+		foreach ([
+			$root . '/styles/all/template/gallery/imageblock_classic.html',
+			$root . '/styles/all/template/gallery/imageblock_futuristic.html',
+			$root . '/styles/prosilver/template/gallery/imageblock_polaroid.html',
+		] as $template_path)
+		{
+			$template = (string) file_get_contents($template_path);
+			$this->assertStringContainsString('IMAGE_FILE_TYPE', $template, $template_path);
+			$this->assertStringContainsString("lang('IMAGE_FILE_TYPE')", $template, $template_path);
+		}
+	}
+
 	private function file_type_for(string $filename, bool $enabled = true): string
 	{
 		$controller = (new \ReflectionClass(image::class))->newInstanceWithoutConstructor();
@@ -66,6 +84,9 @@ final class image_file_type_test extends TestCase
 			'phpbb_gallery_disp_image_type' => $enabled ? 1 : 0,
 		]));
 		(new \ReflectionProperty(image::class, 'gallery_config'))->setValue($controller, $gallery_config);
+		$domain_image = (new \ReflectionClass(\phpbbgallery\core\image\image::class))->newInstanceWithoutConstructor();
+		(new \ReflectionProperty(image::class, 'image'))->setValue($controller, $domain_image);
+
 		$method = new \ReflectionMethod(image::class, 'get_image_file_type');
 
 		return $method->invoke($controller, $filename);

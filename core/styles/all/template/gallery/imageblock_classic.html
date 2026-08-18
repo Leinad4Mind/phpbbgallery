@@ -50,6 +50,7 @@
 					{% if image.POSTER %}<div>{{ lang('UPLOADED_BY_USER') }}{{ lang('COLON') }} {{ image.POSTER }}</div>{% endif %}
 					{% if image.TIME %}<div>{{ lang('UPLOADED_ON_DATE') }}{{ lang('COLON') }} {{ image.TIME }}</div>{% endif %}
 					{% if image.IMAGE_RESOLUTION %}<div>{{ lang('IMAGE_RESOLUTION') }}{{ lang('COLON') }} {{ image.IMAGE_RESOLUTION }}</div>{% endif %}
+					{% if image.IMAGE_FILE_TYPE %}<div>{{ lang('IMAGE_FILE_TYPE') }}{{ lang('COLON') }} {{ image.IMAGE_FILE_TYPE }}</div>{% endif %}
 					{% if image.IMAGE_VIEWS > -1 %}<div>{{ lang('IMAGE_VIEWS') }}{{ lang('COLON') }} {{ image.IMAGE_VIEWS }}</div>{% endif %}
 					<div>{% EVENT phpbbgallery_core_album_image_metadata %}</div>
 					{% if image.S_RATINGS %}

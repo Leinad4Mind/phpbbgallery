@@ -405,9 +405,11 @@ class search
 			 * @event phpbbgallery.core.search.image_template_vars
 			 * @var array images              Visible image rows on the current page
 			 * @var array image_template_vars Additional variables keyed by image ID
+			 * @var int display_options       Selected image-card information bitmask
 			 * @since 4.1.0
 			 */
-			$vars = ['images', 'image_template_vars'];
+			$display_options = (int) $show_options;
+			$vars = ['images', 'image_template_vars', 'display_options'];
 			$images = $rowset;
 			extract($this->dispatcher->trigger_event(
 				'phpbbgallery.core.search.image_template_vars',

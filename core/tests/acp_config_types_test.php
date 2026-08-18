@@ -490,6 +490,9 @@ final class acp_config_types_test extends TestCase
 		$this->assertStringContainsString('RRC_DISPLAY_RESOLUTION', $source);
 		$this->assertStringContainsString('DISPLAY_SUBTITLE', $source);
 		$this->assertStringContainsString('RRC_DISPLAY_SUBTITLE', $source);
+		$this->assertStringContainsString('DISPLAY_IMAGE_TYPE', $source);
+		$this->assertStringContainsString('RRC_DISPLAY_IMAGE_TYPE', $source);
+		$this->assertStringContainsString("\$vars['explain_lang']", $source);
 		$this->assertStringContainsString(
 			'phpbbgallery.core.acp.config.rrc_display_options',
 			$source

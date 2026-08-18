@@ -77,7 +77,7 @@ final class domain_search_types_test extends TestCase
 		$image = $this->createMock(\phpbbgallery\core\image\image::class);
 		$image->expects($this->once())
 			->method('enrich_block_template_vars')
-			->with($images)
+			->with($images, 5, '')
 			->willReturn([7 => ['U_FAVORITE_IMAGE' => '/favorite/7']]);
 		$image->expects($this->exactly(2))
 			->method('assign_block')
@@ -104,14 +104,14 @@ final class domain_search_types_test extends TestCase
 			->method('trigger_event')
 			->with(
 				'phpbbgallery.core.imageblock.image_template_vars',
-				['images' => $images, 'image_template_vars' => []]
+				['images' => $images, 'image_template_vars' => [], 'display_options' => 5, 'context' => 'album_display']
 			)
-			->willReturn(['images' => $images, 'image_template_vars' => $expected]);
+			->willReturn(['images' => $images, 'image_template_vars' => $expected, 'display_options' => 5, 'context' => 'album_display']);
 		$reflection = new \ReflectionClass(\phpbbgallery\core\image\image::class);
 		$image = $reflection->newInstanceWithoutConstructor();
 		$reflection->getProperty('phpbb_dispatcher')->setValue($image, $dispatcher);
 
-		$this->assertSame($expected, $image->enrich_block_template_vars($images));
+		$this->assertSame($expected, $image->enrich_block_template_vars($images, 5, 'album_display'));
 	}
 
 	public function test_featured_search_rejects_unknown_ordering_modes_before_querying(): void

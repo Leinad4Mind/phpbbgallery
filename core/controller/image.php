@@ -924,13 +924,7 @@ class image
 			return '';
 		}
 
-		$extension = strtolower((string) pathinfo(str_replace('\\', '/', $filename), PATHINFO_EXTENSION));
-		if (!in_array($extension, ['avif', 'bmp', 'gif', 'jpeg', 'jpg', 'png', 'tif', 'tiff', 'webp'], true))
-		{
-			return '';
-		}
-
-		return strtoupper($extension);
+		return $this->image->format_file_type($filename);
 	}
 
 	/**

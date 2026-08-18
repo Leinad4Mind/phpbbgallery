@@ -299,8 +299,9 @@ class config_module
 			if (isset($vars['explain']))
 			{
 				// lang() echoes the key back when it is missing, so ask before
+				$explain_lang = (string) ($vars['explain_lang'] ?? $vars['lang']);
 				// translating, otherwise a raw key ends up on the settings page.
-				foreach ([$vars['lang'] . '_EXPLAIN', $vars['lang'] . '_EXP'] as $explain_key)
+				foreach ([$explain_lang . '_EXPLAIN', $explain_lang . '_EXP'] as $explain_key)
 				{
 					if ($this->language->is_set($explain_key))
 					{
@@ -487,7 +488,7 @@ class config_module
 				],
 
 				'ALBUM_SETTINGS'	=> [
-					'album_display'			=> ['lang' => 'RRC_DISPLAY_OPTIONS',	'validate' => 'int',	'type' => 'custom',			'method' => 'rrc_display'],
+					'album_display'			=> ['lang' => 'RRC_DISPLAY_OPTIONS',	'validate' => 'int',	'type' => 'custom',			'method' => 'rrc_display', 'explain' => true],
 					'default_sort_key'		=> ['lang' => 'DEFAULT_SORT_METHOD',	'validate' => 'string',	'type' => 'custom',			'method' => 'sort_method_select'],
 					'default_sort_dir'		=> ['lang' => 'DEFAULT_SORT_ORDER',	'validate' => 'string',	'type' => 'custom',			'method' => 'sort_order_select'],
 					'album_images'			=> ['lang' => 'MAX_IMAGES_PER_ALBUM',	'validate' => 'int',	'type' => 'text:7:7',		'explain' => true],
@@ -496,7 +497,7 @@ class config_module
 				],
 
 				'SEARCH_SETTINGS'	=> [
-					'search_display'		=> ['lang' => 'RRC_DISPLAY_OPTIONS',	'validate' => 'int',	'type' => 'custom',			'method' => 'rrc_display'],
+					'search_display'		=> ['lang' => 'RRC_DISPLAY_OPTIONS',	'validate' => 'int',	'type' => 'custom',			'method' => 'rrc_display', 'explain' => true],
 				],
 
 				'STORAGE_SETTINGS'	=> [
@@ -571,7 +572,7 @@ class config_module
 					'pegas_index_rnd_count'	=> ['lang'	=> 'RANDOM_ON_INDEX_COUNT',	'validate' => 'int',	'type' => 'text:7:3'],
 					'pegas_index_viewed_count' => ['lang' => 'VIEWED_ON_INDEX_COUNT',	'validate' => 'int',	'type' => 'text:7:3'],
 					'pegas_index_rated_count'	=> ['lang' => 'RATED_ON_INDEX_COUNT',	'validate' => 'int',	'type' => 'text:7:3'],
-					'rrc_gindex_display'	=> ['lang' => 'RRC_DISPLAY_OPTIONS',	'validate' => '',		'type' => 'custom',			'method' => 'rrc_display'],
+					'rrc_gindex_display'	=> ['lang' => 'RRC_DISPLAY_OPTIONS',	'validate' => '',		'type' => 'custom',			'method' => 'rrc_display', 'explain' => true],
 					'rrc_gindex_pegas'		=> ['lang' => 'RRC_GINDEX_PGALLERIES',	'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 					'rrc_gindex_comments'	=> ['lang' => 'RRC_GINDEX_COMMENTS',	'validate' => 'bool',	'type' => 'radio:yes_no'],
 				],
@@ -581,7 +582,7 @@ class config_module
 					'forum_index_recent_count'	=> ['lang' => 'RECENT_ON_INDEX_COUNT',	'validate' => 'int:1:12',	'type' => 'text:7:2'],
 					'forum_index_random_count'	=> ['lang' => 'RANDOM_ON_INDEX_COUNT',	'validate' => 'int:1:12',	'type' => 'text:7:2'],
 					'forum_index_personal_count'	=> ['lang' => 'PERSONAL_ON_INDEX_COUNT',	'validate' => 'int:1:12',	'type' => 'text:7:2'],
-					'forum_index_display'		=> ['lang' => 'FORUM_INDEX_DISPLAY_OPTIONS',		'validate' => 'int',		'type' => 'custom',			'method' => 'rrc_display'],
+					'forum_index_display'		=> ['lang' => 'FORUM_INDEX_DISPLAY_OPTIONS',		'validate' => 'int',		'type' => 'custom',			'method' => 'rrc_display', 'explain' => true, 'explain_lang' => 'RRC_DISPLAY_OPTIONS'],
 					'forum_index_personal'		=> ['lang' => 'FORUM_INDEX_INCLUDE_PERSONAL', 'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 				],
 
@@ -593,7 +594,7 @@ class config_module
 					'profile_pega'				=> ['lang' => 'DISP_PERSONAL_ALBUM_PROFILE',	'validate' => 'bool',	'type' => 'radio:yes_no'],
 					'rrc_profile_mode'			=> ['lang' => 'RRC_PROFILE_MODE',				'validate' => 'int',	'type' => 'custom',			'explain' => true,	'method' => 'rrc_modes'],
 					'rrc_profile_items'			=> ['lang' => 'RRC_PROFILE_ITEMS',				'validate' => 'int',	'type' => 'text:7:3'],
-					'rrc_profile_display'		=> ['lang' => 'RRC_PROFILE_DISPLAY_OPTIONS',			'validate' => 'int',	'type' => 'custom',			'method' => 'rrc_display'],
+					'rrc_profile_display'		=> ['lang' => 'RRC_PROFILE_DISPLAY_OPTIONS',			'validate' => 'int',	'type' => 'custom',			'method' => 'rrc_display', 'explain' => true, 'explain_lang' => 'RRC_DISPLAY_OPTIONS'],
 					//'rrc_profile_pegas'			=> ['lang' => 'RRC_GINDEX_PGALLERIES',			'validate' => 'bool',	'type' => 'radio:yes_no'],
 					'viewtopic_icon'			=> ['lang' => 'DISP_VIEWTOPIC_ICON',			'validate' => 'bool',	'type' => 'radio:yes_no'],
 					'viewtopic_images'			=> ['lang' => 'DISP_VIEWTOPIC_IMAGES',			'validate' => 'bool',	'type' => 'radio:yes_no'],
@@ -957,6 +958,7 @@ class config_module
 		$rrc_display_options .= '<option' . (($value & $phpbb_ext_gallery_core_block::DISPLAY_IMAGETIME) ? ' selected="selected"' : '') . " value='" . $phpbb_ext_gallery_core_block::DISPLAY_IMAGETIME . "'>" . $this->language->lang('RRC_DISPLAY_IMAGETIME') . '</option>';
 		$rrc_display_options .= '<option' . (($value & $phpbb_ext_gallery_core_block::DISPLAY_RESOLUTION) ? ' selected="selected"' : '') . " value='" . $phpbb_ext_gallery_core_block::DISPLAY_RESOLUTION . "'>" . $this->language->lang('RRC_DISPLAY_RESOLUTION') . '</option>';
 		$rrc_display_options .= '<option' . (($value & $phpbb_ext_gallery_core_block::DISPLAY_SUBTITLE) ? ' selected="selected"' : '') . " value='" . $phpbb_ext_gallery_core_block::DISPLAY_SUBTITLE . "'>" . $this->language->lang('RRC_DISPLAY_SUBTITLE') . '</option>';
+		$rrc_display_options .= '<option' . (($value & $phpbb_ext_gallery_core_block::DISPLAY_IMAGE_TYPE) ? ' selected="selected"' : '') . " value='" . $phpbb_ext_gallery_core_block::DISPLAY_IMAGE_TYPE . "'>" . $this->language->lang('RRC_DISPLAY_IMAGE_TYPE') . '</option>';
 		$rrc_display_options .= '<option' . (($value & $phpbb_ext_gallery_core_block::DISPLAY_IMAGEVIEWS) ? ' selected="selected"' : '') . " value='" . $phpbb_ext_gallery_core_block::DISPLAY_IMAGEVIEWS . "'>" . $this->language->lang('RRC_DISPLAY_IMAGEVIEWS') . '</option>';
 		$rrc_display_options .= '<option' . (($value & $phpbb_ext_gallery_core_block::DISPLAY_USERNAME) ? ' selected="selected"' : '') . " value='" . $phpbb_ext_gallery_core_block::DISPLAY_USERNAME . "'>" . $this->language->lang('RRC_DISPLAY_USERNAME') . '</option>';
 		$rrc_display_options .= '<option' . (($value & $phpbb_ext_gallery_core_block::DISPLAY_RATINGS) ? ' selected="selected"' : '') . " value='" . $phpbb_ext_gallery_core_block::DISPLAY_RATINGS . "'>" . $this->language->lang('RRC_DISPLAY_RATINGS') . '</option>';
