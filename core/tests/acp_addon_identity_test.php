@@ -88,6 +88,7 @@ final class acp_addon_identity_test extends TestCase
 			'title',
 			'storage_layout',
 			'auto_orient',
+			'webp_quality',
 			'avif_quality',
 			'allow_avif',
 			'allow_bmp',

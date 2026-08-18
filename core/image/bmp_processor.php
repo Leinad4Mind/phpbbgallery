@@ -182,7 +182,7 @@ final class bmp_processor implements external_processor_interface
 		try
 		{
 			$resized = $this->fit($image, max(1, $max_width), max(1, $max_height));
-			if ($resized === null || !@imagewebp($resized, $destination, max(1, min(100, $quality))))
+			if ($resized === null || !@imagewebp($resized, $destination, max(0, min(100, $quality))))
 			{
 				return null;
 			}

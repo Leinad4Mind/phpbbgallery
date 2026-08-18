@@ -372,7 +372,7 @@ class file
 				$temporary->get_path(),
 				(int) ($metadata['width'] ?? 0),
 				(int) ($metadata['height'] ?? 0),
-				(int) $this->config['phpbb_gallery_jpg_quality']
+				max(0, min(100, (int) ($this->config['phpbb_gallery_webp_quality'] ?? 80)))
 			);
 			if ($derived === null
 				|| strtolower((string) ($derived['extension'] ?? '')) !== 'webp'
@@ -735,6 +735,7 @@ class file
 
 	protected function resize(int $image_id, int $resize_width, int $resize_height, string $store_filesize = '', bool $put_details = false): void
 	{
+		$external_derivative_quality = max(0, min(100, (int) ($this->config['phpbb_gallery_webp_quality'] ?? 80)));
 		$derivative_quality = $this->storage_variant === \phpbbgallery\core\storage\provider_interface::MINI
 			? (int) $this->config['phpbb_gallery_thumbnail_quality']
 			: (int) $this->config['phpbb_gallery_jpg_quality'];
@@ -771,7 +772,7 @@ class file
 						$output_path,
 						$resize_width,
 						$resize_height,
-						$derivative_quality
+						$external_derivative_quality
 					);
 					if ($metadata === null
 						|| ($metadata['extension'] ?? '') !== 'webp'

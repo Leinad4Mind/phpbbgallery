@@ -78,6 +78,7 @@ class config
 		'index_album_layout'	=> self::INDEX_ALBUM_LAYOUT_CARDS,
 
 		'jpg_quality'			=> 100,
+		'webp_quality'			=> 80,
 		'avif_quality'			=> 75,
 
 		'link_thumbnail'		=> 'image_page',

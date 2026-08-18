@@ -91,6 +91,39 @@ final class domain_file_types_test extends TestCase
 		}
 	}
 
+	public function test_webp_round_trips_with_the_configured_encoder_quality(): void
+	{
+		if (!function_exists('imagewebp') || !function_exists('imagecreatefromwebp'))
+		{
+			$this->markTestSkipped('This PHP/GD build does not support WebP processing.');
+		}
+
+		$writer = (new \ReflectionClass(file::class))->newInstanceWithoutConstructor();
+		$writer->gallery_config = new \phpbbgallery\core\config(new \phpbb\config\config([
+			'phpbb_gallery_webp_quality' => 67,
+		]));
+		$writer->image = imagecreatetruecolor(3, 2);
+		$writer->image_type = 'webp';
+		$writer->image_size = ['width' => 3, 'height' => 2];
+		$destination = tempnam(sys_get_temp_dir(), 'gallery-webp-');
+
+		try
+		{
+			$this->assertTrue($writer->write_image($destination, 12, true));
+			$this->assertNull($writer->image);
+			$this->assertGreaterThan(0, filesize($destination));
+			$this->assertSame('image/webp', getimagesize($destination)['mime']);
+		}
+		finally
+		{
+			$writer->image = null;
+			if ($destination !== false && file_exists($destination))
+			{
+				unlink($destination);
+			}
+		}
+	}
+
 	public function test_image_state_can_be_reset_before_reusing_the_service(): void
 	{
 		$reflection = new \ReflectionClass(file::class);

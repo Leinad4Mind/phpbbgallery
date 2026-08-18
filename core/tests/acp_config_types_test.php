@@ -91,15 +91,22 @@ final class acp_config_types_test extends TestCase
 		$this->assertSame('number:1:600', $display['vars']['mini_thumbnail_size']['type']);
 		$this->assertSame('int:0:100', $display['vars']['jpg_quality']['validate']);
 		$this->assertSame('number:0:100', $display['vars']['jpg_quality']['type']);
+		$this->assertSame('int:0:100', $display['vars']['webp_quality']['validate']);
+		$this->assertSame('number:0:100', $display['vars']['webp_quality']['type']);
 		$this->assertSame('int:0:100', $display['vars']['avif_quality']['validate']);
 		$this->assertSame('number:0:100', $display['vars']['avif_quality']['type']);
 		$this->assertSame('AVIF_ALLOWED', $display['vars']['allow_avif']['lang']);
 		$this->assertTrue($display['vars']['allow_avif']['explain']);
 		$config_keys = array_keys($display['vars']);
 		$this->assertSame(
-			array_search('allow_avif', $config_keys, true) + 1,
+			array_search('jpg_quality', $config_keys, true) + 1,
+			array_search('webp_quality', $config_keys, true),
+			'WebP quality must immediately follow JPEG quality.'
+		);
+		$this->assertSame(
+			array_search('webp_quality', $config_keys, true) + 1,
 			array_search('avif_quality', $config_keys, true),
-			'AVIF quality must immediately follow the AVIF upload switch.'
+			'AVIF quality must immediately follow WebP quality.'
 		);
 		$this->assertSame('BMP_ALLOWED', $display['vars']['allow_bmp']['lang']);
 		$this->assertTrue($display['vars']['allow_bmp']['explain']);
@@ -377,7 +384,8 @@ final class acp_config_types_test extends TestCase
 		$this->assertStringContainsString('gallery_acp_dependencies.js', $event);
 		$this->assertStringContainsString("bindBooleanDependency(form, 'allow_hotlinking', 'hotlinking_domains', '0')", $javascript);
 		$this->assertStringContainsString("bindBooleanDependency(form, 'allow_rates', 'max_rating', '1')", $javascript);
-		$this->assertStringContainsString("bindBooleanDependency(form, 'allow_avif', 'avif_quality', '1')", $javascript);
+		$this->assertStringNotContainsString("bindBooleanDependency(form, 'allow_webp', 'webp_quality', '1')", $javascript);
+		$this->assertStringNotContainsString("bindBooleanDependency(form, 'allow_avif', 'avif_quality', '1')", $javascript);
 		$this->assertStringContainsString('selected.value !== visibleValue', $javascript);
 		$this->assertStringContainsString("field.addEventListener('change'", $javascript);
 	}

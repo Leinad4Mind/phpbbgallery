@@ -23,6 +23,8 @@ use phpbbgallery\core\migrations\release_4_1_0;
 use phpbbgallery\core\migrations\remove_legacy_version_config;
 use phpbbgallery\core\migrations\forum_index_personal_images;
 use phpbbgallery\core\migrations\gallery_permission_masks;
+use phpbbgallery\core\migrations\remove_gdlib_version;
+use phpbbgallery\core\migrations\webp_quality;
 use phpbbgallery\core\migrations\resumable_uploads;
 use phpbbgallery\core\migrations\performance_indexes;
 use phpbbgallery\core\migrations\protect_personal_album_profile_field;
@@ -117,6 +119,9 @@ class migration_integrity_test extends TestCase
 		release_4_1_0::class,
 		remove_legacy_version_config::class,
 		forum_index_personal_images::class,
+		gallery_permission_masks::class,
+		remove_gdlib_version::class,
+		webp_quality::class,
 	];
 
 	private array $temp_directories = [];
@@ -353,6 +358,21 @@ class migration_integrity_test extends TestCase
 				'module_auth' => 'ext_phpbbgallery/core && acl_a_viewauth',
 			]]],
 		], $migration->update_data());
+	}
+
+	public function test_webp_quality_follows_the_latest_core_migration_and_has_a_safe_default(): void
+	{
+		$migration = (new \ReflectionClass(webp_quality::class))->newInstanceWithoutConstructor();
+
+		$this->assertSame([
+			'\phpbbgallery\core\migrations\remove_gdlib_version',
+		], webp_quality::depends_on());
+		$this->assertSame([
+			['config.add', ['phpbb_gallery_webp_quality', 80]],
+		], $migration->update_data());
+		$this->assertSame([
+			['config.remove', ['phpbb_gallery_webp_quality']],
+		], $migration->revert_data());
 	}
 
 	public function test_forum_index_personal_image_block_adds_a_reversible_bounded_default(): void
@@ -925,7 +945,7 @@ class migration_integrity_test extends TestCase
 		$this->assertStringContainsString('SET field_show_profile = 0', $new_migration);
 		$this->assertStringContainsString("sql_escape('gallery_palbum')", $new_migration);
 
-		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['all', 'BBOOTS', 'FLATBOOTS']) as $style)
+		foreach (['all', 'BBOOTS', 'FLATBOOTS'] as $style)
 		{
 			$template = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/event/overall_footer_after.html');
 			$this->assertStringNotContainsString("prop('disabled', true)", $template, $style);
@@ -1036,13 +1056,13 @@ class migration_integrity_test extends TestCase
 		$this->assertSame([], $remaining);
 	}
 
-	public function test_personal_forum_index_block_is_the_terminal_core_migration(): void
+	public function test_webp_quality_is_the_terminal_core_migration(): void
 	{
 		$graph = $this->migration_graph();
 		foreach (self::MIGRATIONS as $migration)
 		{
 			$this->assertTrue(
-				$this->depends_on(forum_index_personal_images::class, $migration, $graph),
+				$this->depends_on(webp_quality::class, $migration, $graph),
 				$migration . ' is outside the terminal migration chain.'
 			);
 		}
@@ -1373,6 +1393,8 @@ class migration_integrity_test extends TestCase
 			'remove_legacy_version_config.php',
 			'forum_index_personal_images.php',
 			'gallery_permission_masks.php',
+			'remove_gdlib_version.php',
+			'webp_quality.php',
 		] as $migration)
 		{
 			require_once dirname(__DIR__) . '/migrations/' . $migration;

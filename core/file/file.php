@@ -289,7 +289,7 @@ class file
 	/**
 	 * Write image to disk
 	 * @param string $destination Destination path
-	 * @param int $quality JPEG quality
+	 * @param int $quality JPEG or generic derivative quality
 	 * @param bool $destroy_image Whether to release the in-memory image after writing
 	 * @return bool Whether a non-empty image of the expected type was written
 	 */
@@ -313,7 +313,8 @@ class file
 				$written = imagepng($this->image, $destination);
 			break;
 			case 'webp':
-				$written = imagewebp($this->image, $destination);
+				$webp_quality = max(0, min(100, (int) $this->gallery_config->get('webp_quality')));
+				$written = imagewebp($this->image, $destination, $webp_quality);
 			break;
 			case 'avif':
 				if (!self::supports_avif())

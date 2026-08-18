@@ -435,15 +435,17 @@ final class controller_file_types_test extends TestCase
 		$reflection->getProperty('image_src')->setValue($controller, $source);
 		$reflection->getProperty('config')->setValue($controller, new \phpbb\config\config([
 			'phpbb_gallery_jpg_quality' => 85,
+			'phpbb_gallery_webp_quality' => 73,
 		]));
 		$tool = (new \ReflectionClass(\phpbbgallery\core\file\file::class))->newInstanceWithoutConstructor();
 		$reflection->getProperty('tool')->setValue($controller, $tool);
 
 		try
 		{
+			$processor = new controller_external_processor(true);
 			$prepared = $reflection->getMethod('prepare_external_watermark_source')->invoke(
 				$controller,
-				new controller_external_processor(true),
+				$processor,
 				['extension' => 'tiff', 'mime' => 'image/tiff', 'width' => 320, 'height' => 240, 'filesize' => 14]
 			);
 			$object = $reflection->getProperty('response_object')->getValue($controller);
@@ -455,6 +457,7 @@ final class controller_file_types_test extends TestCase
 			$this->assertSame($object->get_path(), $tool->image_source);
 			$this->assertSame('image/webp', $tool->image_content_type);
 			$this->assertSame('webp', $tool->image_type);
+			$this->assertSame(73, $processor->quality);
 			$object->release();
 		}
 		finally
@@ -694,6 +697,8 @@ final class controller_storage_provider implements provider_interface
 
 final class controller_external_processor implements \phpbbgallery\core\image\external_processor_interface
 {
+	public int $quality = -1;
+
 	public function __construct(private bool $valid)
 	{
 	}
@@ -710,6 +715,7 @@ final class controller_external_processor implements \phpbbgallery\core\image\ex
 
 	public function create_derivative(string $source, string $destination, int $max_width, int $max_height, int $quality): ?array
 	{
+		$this->quality = $quality;
 		if (!$this->valid)
 		{
 			return null;

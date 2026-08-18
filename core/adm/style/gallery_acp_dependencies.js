@@ -30,7 +30,6 @@
 
 		bindBooleanDependency(form, 'allow_hotlinking', 'hotlinking_domains', '0');
 		bindBooleanDependency(form, 'allow_rates', 'max_rating', '1');
-		bindBooleanDependency(form, 'allow_avif', 'avif_quality', '1');
 	}
 
 	if (document.readyState === 'loading') {
