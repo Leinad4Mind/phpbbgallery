@@ -26,17 +26,7 @@
 			<hr />
 			{{ lang('IMAGES') }}{{ lang('COLON') }} <strong>{{ albumrow.IMAGES }} {% if albumrow.UNAPPROVED_IMAGES %} + <span class="reported-images-number">{{ albumrow.UNAPPROVED_IMAGES }}</span>{% endif %}</strong><br />
 
-			{% if albumrow.LAST_IMAGE_TIME %}
-				<span>
-					<div style="height: 23px; padding-top: 2px;">
-						{% if albumrow.UC_IMAGE_NAME %}{{ albumrow.UC_IMAGE_NAME }}<br />{% endif %}
-						<p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px;">{{ lang('LAST_IMAGE_BY') }}{{ lang('COLON') }} {{ albumrow.LAST_USER_FULL }} {{ albumrow.UC_LASTIMAGE_ICON }}</p>
-						<p>&raquo; {{ albumrow.LAST_IMAGE_TIME }}</p>
-					</div>
-				</span>
-			{% else %}
-			<span><div style="height: 23px; padding-top: 2px;"></div></span>
-			{% endif %}
+			{% include '@phpbbgallery_core/gallery/albumlist_polaroid_last_image.html' %}
 
 			{% if EXTENDED_POLAROID and albumrow.MODERATORS %}
 				<hr />

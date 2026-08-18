@@ -782,7 +782,7 @@ class display
 				'LAST_IMAGE_ID'			=> (int) $row['album_last_image_id'],
 				'LAST_IMAGE_TIME'		=> $lastimage_time,
 				'LAST_USER_FULL'		=> ($s_username_hidden) ? $last_image_label : get_username_string('full', $row['album_last_user_id'], $row['album_last_username'], $row['album_last_user_colour']),
-				'UC_THUMBNAIL'			=> $this->config['phpbb_gallery_mini_thumbnail_disp'] ? $lastimage_uc_thumbnail : '',
+				'UC_THUMBNAIL'			=> $lastimage_uc_thumbnail,
 				'UC_FAKE_THUMBNAIL'		=> $this->config['phpbb_gallery_mini_thumbnail_disp'] ? $lastimage_uc_fake_thumbnail : '',
 				'UC_IMAGE_URL'			=> $this->config['phpbb_gallery_mini_thumbnail_disp'] ? $lastimage_uc_fake_thumbnail_url : '',
 				'UC_LAST_IMAGE_THUMBNAIL' => $this->config['phpbb_gallery_mini_thumbnail_disp'] ? $lastimage_uc_last_thumbnail : '',

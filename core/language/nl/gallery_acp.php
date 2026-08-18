@@ -186,7 +186,8 @@ $lang = array_merge($lang, [
 	'DELETE_PERMISSIONS'           => 'Verwijder permissies',
 	'DELETE_SUBALBUMS'             => 'Verwijder subalbums en hun afbeeldingen',
 	'DISP_BIRTHDAYS'               => 'Laat verjaardagen zien',
-	'DISP_FAKE_THUMB'              => 'Bekijk miniatuur in albumlijst',
+	'DISP_FAKE_THUMB'              => 'Miniatuur van de nieuwste afbeelding in albumlijsten tonen',
+	'DISP_FAKE_THUMB_EXPLAIN'      => 'Toont in albumlijsten een compacte miniatuur van de nieuwste afbeelding naast de bijbehorende gegevens. De hoofdafbeelding van het album en aangepaste album- of subalbumpictogrammen worden niet beïnvloed.',
 	'DISP_LOGIN'                   => 'Aanmeld-veld weergeven',
 	'DISP_LOGIN_EXP'               => 'Alleen gasten',
 	'AJAX_IMAGE_NAVIGATION'        => 'Tussen afbeeldingen navigeren zonder de pagina opnieuw te laden',
@@ -216,7 +217,7 @@ $lang = array_merge($lang, [
 	'EDIT_ALBUM' => 'Wijzig album',
 
 	'FAKE_THUMB_SIZE'                      => 'Weergavegrootte van miniaturen',
-	'FAKE_THUMB_SIZE_EXP'                  => 'Maximale zichtbare breedte en hoogte van miniaturen in Galerijkaarten, zoekresultaten, profielen en paneellijsten. Hiermee worden opgeslagen afbeeldingsbestanden niet aangepast.',
+	'FAKE_THUMB_SIZE_EXP'                  => 'Maximale zichtbare breedte en hoogte van miniaturen op afbeeldingskaarten in albumpagina’s, Galerijblokken, zoekresultaten, profielen en paneellijsten. Dit beïnvloedt de compacte voorbeeldweergave van de nieuwste afbeelding in albumlijsten niet en past opgeslagen afbeeldingsbestanden niet aan.',
 
 	'GALLERY_ALBUMS_TITLE'                 => 'Galerij Albums Beheer',
 	'GALLERY_CONFIG'                       => 'Galerij-instellingen',

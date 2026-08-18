@@ -129,7 +129,8 @@ $lang = array_merge($lang, [
 	'DELETE_PERMISSIONS'           => 'Delete permissions',
 	'DELETE_SUBALBUMS'             => 'Delete subalbums and their images',
 	'DISP_BIRTHDAYS'               => 'Show birthdays',
-	'DISP_FAKE_THUMB'              => 'View thumbnail in albumlist',
+	'DISP_FAKE_THUMB'              => 'Display latest-image thumbnail in album lists',
+	'DISP_FAKE_THUMB_EXPLAIN'      => 'Displays a compact thumbnail of the latest image beside its details in album listings. The album’s main image and custom album or subalbum icons are not affected.',
 	'DISP_LOGIN'                   => 'Show login-field',
 	'DISP_LOGIN_EXP'               => 'Guest only',
 	'AJAX_IMAGE_NAVIGATION'        => 'Navigate between images without reloading the page',
@@ -159,7 +160,7 @@ $lang = array_merge($lang, [
 	'EDIT_ALBUM' => 'Edit album',
 
 	'FAKE_THUMB_SIZE'                      => 'Displayed thumbnail size',
-	'FAKE_THUMB_SIZE_EXP'                  => 'Maximum visual width and height of thumbnails in Gallery card layouts, searches, profiles and control-panel lists. This does not resize stored image files.',
+	'FAKE_THUMB_SIZE_EXP'                  => 'Maximum visual width and height of image-card thumbnails on album pages, in Gallery blocks, searches, profiles and control-panel lists. This does not affect the compact latest-image preview in album listings and does not resize stored image files.',
 
 	'GALLERY_ALBUMS_TITLE'                 => 'Gallery Albums Control',
 	'GALLERY_CONFIG'                       => 'Gallery Configuration',

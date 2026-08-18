@@ -1643,6 +1643,57 @@ input.autowidth-gallery {
 	max-width: 230px;
 }
 
+.gallery-polaroid-last-image
+{
+	align-items: center;
+	display: flex;
+	gap: 7px;
+	justify-content: center;
+	min-height: 48px;
+	padding-top: 3px;
+}
+
+.gallery-polaroid-last-image-thumbnail
+{
+	align-items: center;
+	display: flex;
+	flex: 0 0 44px;
+	height: 44px;
+	justify-content: center;
+	overflow: hidden;
+}
+
+.gallery-polaroid-last-image-thumbnail img
+{
+	max-height: 44px;
+	max-width: 44px;
+	object-fit: contain;
+}
+
+.gallery-polaroid-last-image-details
+{
+	min-width: 0;
+	overflow: hidden;
+}
+
+.gallery-polaroid-last-image-details p
+{
+	margin: 0 0 2px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.gallery-polaroid-last-image-name
+{
+	font-weight: 600;
+}
+
+.gallery-polaroid-last-image--without-thumbnail .gallery-polaroid-last-image-details
+{
+	max-width: 100%;
+}
+
 .polaroid
 {
 	width: 242px;

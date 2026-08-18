@@ -186,7 +186,8 @@ $lang = array_merge($lang, [
 	'DELETE_PERMISSIONS'           => 'Berechtigungen löschen',
 	'DELETE_SUBALBUMS'             => 'Lösche Subalben und deren Bilder',
 	'DISP_BIRTHDAYS'               => 'Geburtstage anzeigen',
-	'DISP_FAKE_THUMB'              => 'Thumbnail in der Album-Liste anzeigen',
+	'DISP_FAKE_THUMB'              => 'Vorschaubild des neuesten Bildes in Albumlisten anzeigen',
+	'DISP_FAKE_THUMB_EXPLAIN'      => 'Zeigt in Albumlisten neben den Details ein kompaktes Vorschaubild des neuesten Bildes an. Das Hauptbild des Albums und benutzerdefinierte Album- oder Unteralbum-Symbole sind davon nicht betroffen.',
 	'DISP_LOGIN'                   => 'Login-Feld anzeigen',
 	'DISP_LOGIN_EXP'               => 'Nur für Gäste',
 	'AJAX_IMAGE_NAVIGATION'        => 'Zwischen Bildern navigieren, ohne die Seite neu zu laden',
@@ -216,7 +217,7 @@ $lang = array_merge($lang, [
 	'EDIT_ALBUM' => 'Album bearbeiten',
 
 	'FAKE_THUMB_SIZE'                      => 'Anzeigegröße der Vorschaubilder',
-	'FAKE_THUMB_SIZE_EXP'                  => 'Maximale sichtbare Breite und Höhe der Vorschaubilder in Galerie-Karten, Suchen, Profilen und Bedienfeldlisten. Gespeicherte Bilddateien werden dadurch nicht verändert.',
+	'FAKE_THUMB_SIZE_EXP'                  => 'Maximale sichtbare Breite und Höhe der Bildkarten-Vorschaubilder auf Albumseiten, in Galerie-Blöcken, Suchen, Profilen und Bedienfeldlisten. Die kompakte Vorschau des neuesten Bildes in Albumlisten und gespeicherte Bilddateien werden dadurch nicht verändert.',
 
 	'GALLERY_ALBUMS_TITLE'                 => 'Galerie Alben Kontrolle',
 	'GALLERY_CONFIG'                       => 'Galerie Konfiguration',

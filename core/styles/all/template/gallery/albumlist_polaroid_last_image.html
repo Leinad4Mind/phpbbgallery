@@ -1,0 +1,16 @@
+{% if albumrow.LAST_IMAGE_TIME %}
+	<div class="gallery-polaroid-last-image{% if not albumrow.UC_LAST_IMAGE_THUMBNAIL %} gallery-polaroid-last-image--without-thumbnail{% endif %}">
+		{% if albumrow.UC_LAST_IMAGE_THUMBNAIL %}
+		<a href="{{ albumrow.U_LAST_IMAGE }}" class="gallery-polaroid-last-image-thumbnail">
+			<img src="{{ albumrow.UC_LAST_IMAGE_THUMBNAIL }}" alt="" loading="lazy" />
+		</a>
+		{% endif %}
+		<div class="gallery-polaroid-last-image-details">
+			{% if albumrow.UC_IMAGE_NAME %}<p class="gallery-polaroid-last-image-name">{{ albumrow.UC_IMAGE_NAME }}</p>{% endif %}
+			<p>{{ lang('LAST_IMAGE_BY') }}{{ lang('COLON') }} {{ albumrow.LAST_USER_FULL }} {{ albumrow.UC_LASTIMAGE_ICON }}</p>
+			<p>&raquo; {{ albumrow.LAST_IMAGE_TIME }}</p>
+		</div>
+	</div>
+{% else %}
+	<div class="gallery-polaroid-last-image gallery-polaroid-last-image--empty" aria-hidden="true"></div>
+{% endif %}

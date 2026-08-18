@@ -186,7 +186,8 @@ $lang = array_merge($lang, [
 	'DELETE_PERMISSIONS'           => 'Cancella permessi',
 	'DELETE_SUBALBUMS'             => 'Cancella sotto-albums e le loro immagini',
 	'DISP_BIRTHDAYS'               => 'Mostra compleanni',
-	'DISP_FAKE_THUMB'              => 'Mostra anteprime nella lista album',
+	'DISP_FAKE_THUMB'              => 'Mostra la miniatura dell’ultima immagine negli elenchi degli album',
+	'DISP_FAKE_THUMB_EXPLAIN'      => 'Mostra una miniatura compatta dell’immagine più recente accanto ai relativi dettagli negli elenchi degli album. L’immagine principale dell’album e le icone personalizzate di album o sottoalbum non vengono modificate.',
 	'DISP_LOGIN'                   => 'Mostra campo login',
 	'DISP_LOGIN_EXP'               => 'Solo ospiti',
 	'AJAX_IMAGE_NAVIGATION'        => 'Naviga tra le immagini senza ricaricare la pagina',
@@ -215,7 +216,7 @@ $lang = array_merge($lang, [
 
 	'EDIT_ALBUM'          => 'Modifica album',
 	'FAKE_THUMB_SIZE'                      => 'Dimensione di visualizzazione delle miniature',
-	'FAKE_THUMB_SIZE_EXP'                  => 'Larghezza e altezza visive massime delle miniature nelle schede della Galleria, nelle ricerche, nei profili e negli elenchi dei pannelli. Questa opzione non ridimensiona i file immagine memorizzati.',
+	'FAKE_THUMB_SIZE_EXP'                  => 'Larghezza e altezza visive massime delle miniature delle schede immagine nelle pagine degli album, nei blocchi della Galleria, nelle ricerche, nei profili e negli elenchi dei pannelli. Non modifica l’anteprima compatta dell’ultima immagine negli elenchi degli album né ridimensiona i file memorizzati.',
 
 	'GALLERY_ALBUMS_TITLE'                 => 'Controllo albums galleria',
 	'GALLERY_CONFIG'                       => 'Configurazione galleria',

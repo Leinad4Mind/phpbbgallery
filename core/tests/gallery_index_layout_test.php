@@ -287,13 +287,25 @@ final class gallery_index_layout_test extends TestCase
 
 	public function test_album_list_distinguishes_its_main_visual_from_the_latest_image(): void
 	{
-		$display = (string) file_get_contents(dirname(__DIR__) . '/album/display.php');
+		$core_root = dirname(__DIR__);
+		$display = (string) file_get_contents($core_root . '/album/display.php');
+		$last_image = (string) file_get_contents($core_root . '/styles/all/template/gallery/albumlist_polaroid_last_image.html');
 
 		$this->assertStringContainsString("'S_ALBUM_VISUAL_IS_LAST_IMAGE' => !\$row['album_image']", $display);
 		$this->assertStringContainsString("'LAST_IMAGE_ID'", $display);
-		$this->assertStringContainsString("'UC_LAST_IMAGE_THUMBNAIL'", $display);
+		$this->assertStringContainsString("'UC_THUMBNAIL'\t\t\t=> \$lastimage_uc_thumbnail", $display);
+		$this->assertStringContainsString("'UC_LAST_IMAGE_THUMBNAIL' => \$this->config['phpbb_gallery_mini_thumbnail_disp'] ? \$lastimage_uc_last_thumbnail : ''", $display);
 		$this->assertStringContainsString("'U_LAST_IMAGE'", $display);
 		$this->assertStringContainsString("['image_id' => \$row['album_last_image_id']]", $display);
+		$this->assertStringContainsString('albumrow.UC_LAST_IMAGE_THUMBNAIL', $last_image);
+		$this->assertStringContainsString('albumrow.U_LAST_IMAGE', $last_image);
+
+		foreach (\gallery_test_existing_styles($core_root) as $style)
+		{
+			$polaroid = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/albumlist_polaroid.html');
+			$this->assertStringContainsString('albumrow.UC_THUMBNAIL', $polaroid, $style);
+			$this->assertStringContainsString("{% include '@phpbbgallery_core/gallery/albumlist_polaroid_last_image.html' %}", $polaroid, $style);
+		}
 	}
 
 	public function test_uploaded_album_icons_use_the_board_root_in_every_layout(): void

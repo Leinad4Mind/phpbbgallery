@@ -202,7 +202,8 @@ $lang = array_merge($lang, [
 	'DELETE_PERMISSIONS'           => 'Supprimer les permissions',
 	'DELETE_SUBALBUMS'             => 'Supprimer les sous-albums et leurs images',
 	'DISP_BIRTHDAYS'               => 'Afficher les anniversaires',
-	'DISP_FAKE_THUMB'              => 'Afficher les miniatures dans la liste des albums',
+	'DISP_FAKE_THUMB'              => 'Afficher la miniature de la dernière image dans les listes d’albums',
+	'DISP_FAKE_THUMB_EXPLAIN'      => 'Affiche une miniature compacte de l’image la plus récente à côté de ses informations dans les listes d’albums. L’image principale de l’album et les icônes personnalisées des albums ou sous-albums ne sont pas modifiées.',
 	'DISP_LOGIN'                   => 'Afficher les champs de connexion',
 	'DISP_LOGIN_EXP'               => 'invités uniquement',
 	'AJAX_IMAGE_NAVIGATION'        => 'Parcourir les images sans recharger la page',
@@ -232,7 +233,7 @@ $lang = array_merge($lang, [
 	'EDIT_ALBUM' => 'Modifier l’album',
 
 	'FAKE_THUMB_SIZE'                      => 'Taille d’affichage des miniatures',
-	'FAKE_THUMB_SIZE_EXP'                  => 'Largeur et hauteur visuelles maximales des miniatures dans les cartes de la Galerie, les recherches, les profils et les listes des panneaux. Cette option ne redimensionne pas les fichiers image stockés.',
+	'FAKE_THUMB_SIZE_EXP'                  => 'Largeur et hauteur visuelles maximales des miniatures de cartes d’images dans les pages d’albums, les blocs de la Galerie, les recherches, les profils et les listes des panneaux. Cette option ne modifie ni l’aperçu compact de la dernière image dans les listes d’albums ni les fichiers image stockés.',
 
 	'GALLERY_ALBUMS_TITLE'                 => 'Contrôle des Albums de la Galerie',
 	'GALLERY_CONFIG'                       => 'Configuration de la Galerie',
