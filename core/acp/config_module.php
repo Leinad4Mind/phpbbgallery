@@ -596,7 +596,7 @@ class config_module
 					//'rrc_profile_pegas'			=> ['lang' => 'RRC_GINDEX_PGALLERIES',			'validate' => 'bool',	'type' => 'radio:yes_no'],
 					'viewtopic_icon'			=> ['lang' => 'DISP_VIEWTOPIC_ICON',			'validate' => 'bool',	'type' => 'radio:yes_no'],
 					'viewtopic_images'			=> ['lang' => 'DISP_VIEWTOPIC_IMAGES',			'validate' => 'bool',	'type' => 'radio:yes_no'],
-					'viewtopic_link'			=> ['lang' => 'DISP_VIEWTOPIC_LINK',			'validate' => 'bool',	'type' => 'radio:yes_no'],
+					'viewtopic_link'			=> ['lang' => 'DISP_VIEWTOPIC_LINK',			'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 				],
 
 			],

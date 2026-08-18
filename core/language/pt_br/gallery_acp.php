@@ -203,6 +203,7 @@ $lang = array_merge($lang, [
 	'DISP_VIEWTOPIC_ICON'                  => 'Mostrar o link para o álbum pessoal em tópicos e mensagens privadas',
 	'DISP_VIEWTOPIC_IMAGES'                => 'Mostrar o contador de imagens visíveis em tópicos e mensagens privadas',
 	'DISP_VIEWTOPIC_LINK'                  => 'Vincular o contador às imagens visíveis do usuário na Galeria',
+	'DISP_VIEWTOPIC_LINK_EXP'      => 'Quando habilitada, a contagem de imagens exibida em tópicos e mensagens privadas se torna um link para os resultados de pesquisa da Gallery com as imagens desse membro visíveis ao visitante atual. O link só é exibido se a pesquisa do phpBB estiver habilitada e o visitante tiver permissão para pesquisar.',
 	'DISP_WHOISONLINE'                     => 'Exibir estado online ou offline dos usuários, nas zonas da Galeria',
 	'DISPLAY_IN_RRC'                       => 'Exibir imagens deste álbum nas imagens recentes e aleatórias',
 	'DO_NOT_COPY_PERMISSIONS'              => 'Não copiar permissões',

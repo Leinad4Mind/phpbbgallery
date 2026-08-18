@@ -224,6 +224,7 @@ $lang = array_merge($lang, [
 	'DISP_VIEWTOPIC_ICON'          => 'Afficher le lien vers l’album personnel dans les sujets et messages privés',
 	'DISP_VIEWTOPIC_IMAGES'        => 'Afficher le nombre d’images visibles dans les sujets et messages privés',
 	'DISP_VIEWTOPIC_LINK'          => 'Lier le compteur aux images visibles du membre dans la Galerie',
+	'DISP_VIEWTOPIC_LINK_EXP'      => 'Si cette option est activée, le compteur d\'images affiché dans les sujets et messages privés devient un lien vers les résultats de recherche de la Galerie contenant les images de ce membre visibles par le visiteur actuel. Le lien apparaît uniquement si la recherche phpBB est activée et si le visiteur est autorisé à effectuer des recherches.',
 	'DISP_WHOISONLINE'             => 'Afficher « Qui est en ligne ? »',
 	'DISPLAY_IN_RRC'               => 'Afficher les images de cet album dans les « Dernières Images/Images aléatoires »',
 	'DO_NOT_COPY_PERMISSIONS'      => 'Ne pas copier les permissions',

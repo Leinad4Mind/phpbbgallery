@@ -97,6 +97,7 @@ final class acp_config_types_test extends TestCase
 		$this->assertArrayHasKey('viewtopic_icon', $display['vars']);
 		$this->assertArrayHasKey('viewtopic_images', $display['vars']);
 		$this->assertArrayHasKey('viewtopic_link', $display['vars']);
+		$this->assertTrue($display['vars']['viewtopic_link']['explain']);
 		$this->assertArrayHasKey('forum_index_mode', $display['vars']);
 		$this->assertSame('FORUM_INDEX_BLOCKS', $display['vars']['forum_index_mode']['lang']);
 		$this->assertArrayHasKey('forum_index_recent_count', $display['vars']);
@@ -307,6 +308,16 @@ final class acp_config_types_test extends TestCase
 		$this->assertMatchesRegularExpression("/'rrc_gindex_pegas'.*'explain' => true/", $module);
 		$this->assertStringContainsString("'RRC_GINDEX_PGALLERIES_EXPLAIN'", $language);
 		$this->assertStringContainsString('Only images the current visitor is allowed to view are included.', $language);
+	}
+
+	public function test_linked_image_count_has_contextual_explanation(): void
+	{
+		$language = (string) file_get_contents(dirname(__DIR__) . '/language/en/gallery_acp.php');
+
+		$this->assertStringContainsString("'DISP_VIEWTOPIC_LINK_EXP'", $language);
+		$this->assertStringContainsString('topics and private messages', $language);
+		$this->assertStringContainsString('visible to the current visitor', $language);
+		$this->assertStringContainsString('permission to search', $language);
 	}
 
 	public function test_profile_image_selector_is_named_as_blocks(): void

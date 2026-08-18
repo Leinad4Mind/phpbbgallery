@@ -208,6 +208,7 @@ $lang = array_merge($lang, [
 	'DISP_VIEWTOPIC_ICON'          => 'Link naar het persoonlijke album tonen in onderwerpen en privéberichten',
 	'DISP_VIEWTOPIC_IMAGES'        => 'Aantal zichtbare afbeeldingen tonen in onderwerpen en privéberichten',
 	'DISP_VIEWTOPIC_LINK'          => 'De teller koppelen aan de zichtbare galerijafbeeldingen van het lid',
+	'DISP_VIEWTOPIC_LINK_EXP'      => 'Indien ingeschakeld, wordt de afbeeldingsteller in onderwerpen en privéberichten een link naar galerijzoekresultaten met de afbeeldingen van dat lid die voor de huidige bezoeker zichtbaar zijn. De link wordt alleen getoond als zoeken in phpBB is ingeschakeld en de bezoeker zoekrechten heeft.',
 	'DISP_WHOISONLINE'             => '“Wie is online“ weergeven',
 	'DISPLAY_IN_RRC'               => 'Laat afbeeldingen uit dit album zien in de “Recente-Willikeurige“-afbeeldingen',
 	'DO_NOT_COPY_PERMISSIONS'      => 'Permissies niet kopiëren',

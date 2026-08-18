@@ -47,6 +47,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Explained that linking a member image count affects topics and private messages, opens permission-filtered Gallery search results, and requires phpBB search permission.
 - Clarified that the profile item count applies independently to every enabled profile image block.
 - Renamed the profile image selector from “Mode” to “Profile image blocks” and scoped its random-query performance notice to members with exceptionally large galleries.
 - Clarified that the optional total-image count is displayed in the forum-index statistics rather than an ambiguous `index.php` page.

@@ -151,6 +151,7 @@ $lang = array_merge($lang, [
 	'DISP_VIEWTOPIC_ICON'          => 'Show the personal-album link in topics and private messages',
 	'DISP_VIEWTOPIC_IMAGES'        => 'Show the visible image count in topics and private messages',
 	'DISP_VIEWTOPIC_LINK'          => 'Link the image count to the member’s visible Gallery images',
+	'DISP_VIEWTOPIC_LINK_EXP'      => 'When enabled, the image count shown in topics and private messages links to Gallery search results containing images belonging to that member that are visible to the current visitor. The link is shown only when phpBB search is enabled and the visitor has permission to search.',
 	'DISP_WHOISONLINE'             => 'Show “Who is online“',
 	'DISPLAY_IN_RRC'               => 'Display images of this album in “Recent-Random“-images',
 	'DO_NOT_COPY_PERMISSIONS'      => 'Do not copy permissions',

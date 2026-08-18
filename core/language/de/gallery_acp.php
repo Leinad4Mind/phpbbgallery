@@ -208,6 +208,7 @@ $lang = array_merge($lang, [
 	'DISP_VIEWTOPIC_ICON'          => 'Link zum persönlichen Album in Themen und privaten Nachrichten anzeigen',
 	'DISP_VIEWTOPIC_IMAGES'        => 'Anzahl der sichtbaren Bilder in Themen und privaten Nachrichten anzeigen',
 	'DISP_VIEWTOPIC_LINK'          => 'Bildanzahl mit den sichtbaren Galerie-Bildern des Mitglieds verlinken',
+	'DISP_VIEWTOPIC_LINK_EXP'      => 'Wenn aktiviert, wird die in Themen und privaten Nachrichten angezeigte Bildanzahl zu einem Link auf die Galerie-Suchergebnisse mit den für den aktuellen Besucher sichtbaren Bildern dieses Mitglieds. Der Link wird nur angezeigt, wenn die phpBB-Suche aktiviert ist und der Besucher suchen darf.',
 	'DISP_WHOISONLINE'             => '„Wer ist online“ anzeigen',
 	'DISPLAY_IN_RRC'               => 'Bilder aus diesem Album in den „Neusten &amp; Zufälligen“-Bildern anzeigen',
 	'DO_NOT_COPY_PERMISSIONS'      => 'Berechtigungen nicht kopieren',
