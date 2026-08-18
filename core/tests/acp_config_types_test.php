@@ -78,6 +78,12 @@ final class acp_config_types_test extends TestCase
 		$this->assertArrayHasKey('title', $display['vars']);
 		$this->assertArrayHasKey('items_per_page', $display['vars']);
 		$this->assertTrue($display['vars']['items_per_page']['explain']);
+		$this->assertArrayHasKey('albums_per_page', $display['vars']);
+		$this->assertSame('int:1:999', $display['vars']['albums_per_page']['validate']);
+		$this->assertTrue($display['vars']['albums_per_page']['explain']);
+		$this->assertArrayHasKey('ajax_list_navigation', $display['vars']);
+		$this->assertSame('radio:yes_no', $display['vars']['ajax_list_navigation']['type']);
+		$this->assertTrue($display['vars']['ajax_list_navigation']['explain']);
 		$this->assertArrayHasKey('allow_comments', $display['vars']);
 		$this->assertSame('COMMENT_SYSTEM', $display['vars']['allow_comments']['lang']);
 		$this->assertTrue($display['vars']['allow_comments']['explain']);
@@ -174,6 +180,8 @@ final class acp_config_types_test extends TestCase
 		$this->assertSame(['INDEX_SETTINGS', 'RRC_GINDEX', 'FORUM_INDEX_IMAGES'], $gallery_index_sections);
 		$this->assertSame([
 			'index_album_layout',
+			'albums_per_page',
+			'ajax_list_navigation',
 			'pegas_index_album',
 			'disp_image_id',
 			'disp_login',

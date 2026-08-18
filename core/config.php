@@ -38,6 +38,7 @@ class config
 		'auto_orient'		=> true,
 		'allow_zip'			=> false,
 		'ajax_navigation'	=> false,
+		'ajax_list_navigation'	=> false,
 		'bbcode_tag'		=> 'image',
 		'album_bbcode_tag'	=> 'album',
 
@@ -75,6 +76,7 @@ class config
 		'hotlinking_domains'	=> 'anavaro.com',
 
 		'items_per_page'		=> 15,
+		'albums_per_page'		=> 15,
 		'index_album_layout'	=> self::INDEX_ALBUM_LAYOUT_CARDS,
 
 		'jpg_quality'			=> 100,

@@ -164,8 +164,10 @@ class language_catalog_test extends TestCase
 			'IMAGE_DESC_MAX_LENGTH' => 'Comprimento máximo das descrições das imagens',
 			'INDEX_SETTINGS' => 'Índice da Galeria — Álbuns e disposição',
 			'ITEMS_PER_PAGE' => 'Itens por página',
+			'ALBUMS_PER_PAGE' => 'Álbuns por página',
 			'RRC_GINDEX' => 'Índice da Galeria — Blocos de imagens e comentários',
-			'ITEMS_PER_PAGE_EXP' => 'Número predefinido de entradas apresentadas nas páginas da Galeria, incluindo álbuns, imagens, comentários, resultados de pesquisa e listas de moderação. Também limita os comentários recentes apresentados no índice da Galeria.',
+			'ITEMS_PER_PAGE_EXP' => 'Número predefinido de imagens, comentários, resultados de pesquisa e entradas de moderação ou dos painéis de controlo apresentados nas páginas da Galeria. Também limita os comentários recentes apresentados no índice da Galeria.',
+			'ALBUMS_PER_PAGE_EXP' => 'Número máximo de entradas de álbuns visíveis em cada lista de álbuns públicos, pessoais ou subálbuns. Os descendentes permanecem associados ao álbum pai apresentado.',
 			'RATE_SCALE' => 'Escala de classificação',
 		];
 		$expected['RRC_GINDEX_MODE'] = 'Blocos';

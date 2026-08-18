@@ -24,6 +24,8 @@ class config_module
 		'allow_avif',
 		'allow_bmp',
 		'ajax_navigation',
+		'albums_per_page',
+		'ajax_list_navigation',
 		'disp_resolution',
 		'disp_image_type',
 		'disp_image_id',
@@ -558,6 +560,8 @@ class config_module
 
 				'INDEX_SETTINGS'	=> [
 					'index_album_layout'	=> ['lang' => 'INDEX_ALBUM_LAYOUT',	'validate' => 'string',	'type' => 'custom',	'explain' => true,	'method' => 'index_album_layout_select'],
+					'albums_per_page'		=> ['lang' => 'ALBUMS_PER_PAGE',	'validate' => 'int:1:999',	'type' => 'number:1:999',	'explain' => true],
+					'ajax_list_navigation'	=> ['lang' => 'AJAX_LIST_NAVIGATION',	'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 					'pegas_index_album'		=> ['lang' => 'PERSONAL_ALBUM_INDEX',	'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 					'disp_image_id'		=> ['lang' => 'DISP_IMAGE_ID',		'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 					'disp_login'			=> ['lang' => 'DISP_LOGIN',			'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],

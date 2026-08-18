@@ -25,6 +25,7 @@ use phpbbgallery\core\migrations\forum_index_personal_images;
 use phpbbgallery\core\migrations\gallery_permission_masks;
 use phpbbgallery\core\migrations\remove_gdlib_version;
 use phpbbgallery\core\migrations\webp_quality;
+use phpbbgallery\core\migrations\album_list_pagination;
 use phpbbgallery\core\migrations\resumable_uploads;
 use phpbbgallery\core\migrations\performance_indexes;
 use phpbbgallery\core\migrations\protect_personal_album_profile_field;
@@ -122,6 +123,7 @@ class migration_integrity_test extends TestCase
 		gallery_permission_masks::class,
 		remove_gdlib_version::class,
 		webp_quality::class,
+		album_list_pagination::class,
 	];
 
 	private array $temp_directories = [];
@@ -372,6 +374,24 @@ class migration_integrity_test extends TestCase
 		], $migration->update_data());
 		$this->assertSame([
 			['config.remove', ['phpbb_gallery_webp_quality']],
+		], $migration->revert_data());
+	}
+
+	public function test_album_list_pagination_follows_webp_quality_and_is_reversible(): void
+	{
+		$migration = (new \ReflectionClass(album_list_pagination::class))->newInstanceWithoutConstructor();
+
+		$this->assertSame([
+			'\phpbbgallery\core\migrations\webp_quality',
+		], album_list_pagination::depends_on());
+		$this->assertSame([
+			['config.add', ['phpbb_gallery_albums_per_page', 15]],
+			['custom', [[$migration, 'inherit_existing_page_size']]],
+			['config.add', ['phpbb_gallery_ajax_list_navigation', 0]],
+		], $migration->update_data());
+		$this->assertSame([
+			['config.remove', ['phpbb_gallery_ajax_list_navigation']],
+			['config.remove', ['phpbb_gallery_albums_per_page']],
 		], $migration->revert_data());
 	}
 
@@ -1056,13 +1076,13 @@ class migration_integrity_test extends TestCase
 		$this->assertSame([], $remaining);
 	}
 
-	public function test_webp_quality_is_the_terminal_core_migration(): void
+	public function test_album_list_pagination_is_the_terminal_core_migration(): void
 	{
 		$graph = $this->migration_graph();
 		foreach (self::MIGRATIONS as $migration)
 		{
 			$this->assertTrue(
-				$this->depends_on(webp_quality::class, $migration, $graph),
+				$this->depends_on(album_list_pagination::class, $migration, $graph),
 				$migration . ' is outside the terminal migration chain.'
 			);
 		}
@@ -1395,6 +1415,7 @@ class migration_integrity_test extends TestCase
 			'gallery_permission_masks.php',
 			'remove_gdlib_version.php',
 			'webp_quality.php',
+			'album_list_pagination.php',
 		] as $migration)
 		{
 			require_once dirname(__DIR__) . '/migrations/' . $migration;

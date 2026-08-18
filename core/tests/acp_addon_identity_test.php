@@ -93,6 +93,8 @@ final class acp_addon_identity_test extends TestCase
 			'allow_avif',
 			'allow_bmp',
 			'ajax_navigation',
+			'albums_per_page',
+			'ajax_list_navigation',
 			'disp_resolution',
 			'disp_image_type',
 			'disp_image_id',
