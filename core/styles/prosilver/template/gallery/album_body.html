@@ -25,7 +25,7 @@
 	{% include '@phpbbgallery_core/gallery/albumlist_layout.html' with { albumrow: subalbumrow, GALLERY_FUTURISTIC_VARIANT: 'prosilver' } %}
 	{% if SUBALBUM_TOTAL %}
 	<div class="pagination gallery-album-list-pagination">
-		{{ SUBALBUM_TOTAL }}
+		<span class="gallery-album-list-total">{{ SUBALBUM_TOTAL }}</span>
 		{% if subalbum_pagination|length %}
 			{% include 'pagination.html' with { pagination: subalbum_pagination, BASE_URL: SUBALBUM_BASE_URL, TOTAL_PAGES: SUBALBUM_TOTAL_PAGES, PAGE_NUMBER: SUBALBUM_PAGE_NUMBER, PER_PAGE: SUBALBUM_PER_PAGE, START_NAME: SUBALBUM_START_NAME } %}
 		{% endif %}

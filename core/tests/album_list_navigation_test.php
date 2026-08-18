@@ -60,8 +60,12 @@ final class album_list_navigation_test extends TestCase
 			$this->assertStringContainsString('albumrow: subalbumrow', $album, $style);
 			$this->assertStringContainsString('subalbum_pagination', $album, $style);
 			$this->assertStringContainsString('S_AJAX_LIST_NAVIGATION', $footer, $style);
+			$this->assertStringContainsString('gallery-album-list-total', $album, $style);
 			$this->assertStringContainsString('list_navigation.js', $footer, $style);
 		}
+		$css = $this->read('styles/all/theme/gallery.css');
+		$this->assertMatchesRegularExpression('/\.gallery-album-list-pagination\s*\{[^}]*clear:\s*both;[^}]*display:\s*flex;[^}]*float:\s*none !important;[^}]*margin:\s*8px 0 12px;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-album-list-pagination \.gallery-album-list-total\s*\{[^}]*margin-right:\s*10px;/s', $css);
 	}
 
 	public function test_progressive_navigation_preserves_history_and_has_a_normal_fallback(): void

@@ -3543,6 +3543,24 @@ fieldset dl.gallery-autocomplete-row-open
 	}
 }
 
+.gallery-album-list-pagination
+{
+	align-items: center;
+	box-sizing: border-box;
+	clear: both;
+	display: flex;
+	float: none !important;
+	justify-content: flex-end;
+	margin: 8px 0 12px;
+	width: 100%;
+}
+
+.gallery-album-list-pagination .gallery-album-list-total
+{
+	flex: 0 0 auto;
+	margin-right: 10px;
+}
+
 .gallery-paginated-list
 {
 	transition: opacity 120ms ease-in-out;
