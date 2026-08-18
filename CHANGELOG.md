@@ -47,6 +47,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Clarified that the optional total-image count is displayed in the forum-index statistics rather than an ambiguous `index.php` page.
 - Renamed the forum-index image selector from "Mode" to "Blocks" because multiple blocks can be enabled simultaneously.
 - Explained that the Gallery-index personal-album switch includes only permission-visible images in its enabled image and comment blocks.
 - Renamed the forum-index Gallery image section so its host page is identified before the block content.

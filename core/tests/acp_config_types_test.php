@@ -309,6 +309,15 @@ final class acp_config_types_test extends TestCase
 		$this->assertStringContainsString('Only images the current visitor is allowed to view are included.', $language);
 	}
 
+	public function test_total_images_label_names_the_forum_index(): void
+	{
+		$language = (string) file_get_contents(dirname(__DIR__) . '/language/en/gallery_acp.php');
+
+		$this->assertStringContainsString("'DISP_TOTAL_IMAGES'", $language);
+		$this->assertStringContainsString('Show “Total images” in the forum-index statistics', $language);
+		$this->assertStringNotContainsString('Show “Total images“ on index.php', $language);
+	}
+
 	public function test_forum_index_image_section_names_its_host_context_first(): void
 	{
 		$language = (string) file_get_contents(dirname(__DIR__) . '/language/en/gallery_acp.php');
