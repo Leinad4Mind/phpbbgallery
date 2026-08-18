@@ -430,8 +430,8 @@ $lang = array_merge($lang, [
 	'RRC_MODE_RECENT'        => 'Recent images',
 	'RRC_MODE_PERSONAL'      => 'Personal album images',
 	'RRC_PROFILE_COLUMNS'    => 'Columns',
-	'RRC_PROFILE_MODE'       => 'Mode of “Recent- &amp; Random-Images“-Feature in the profile',
-	'RRC_PROFILE_MODE_EXP'   => '“Random images“ may take some time to load, on large databases!',
+	'RRC_PROFILE_MODE'       => 'Profile image blocks',
+	'RRC_PROFILE_MODE_EXP'   => 'Random images may take longer to load for members with a very large number of Gallery images.',
 	'RRC_PROFILE_ROWS'       => 'Rows',
 	'RRC_PROFILE_ITEMS'      => 'Items in user profile',
 

@@ -501,8 +501,8 @@ $lang = array_merge($lang, [
 	'RRC_MODE_RECENT'        => 'Dernières images',
 	'RRC_MODE_PERSONAL'      => 'Images des albums personnels',
 	'RRC_PROFILE_COLUMNS'    => 'Colonnes',
-	'RRC_PROFILE_MODE'       => 'Fonctions dans le profil « Dernières images/Images aléatoires »',
-	'RRC_PROFILE_MODE_EXP'   => 'Le système « Images aléatoires » peut mettre un certain temps à se charger, surtout sur les grandes base de données !',
+	'RRC_PROFILE_MODE'       => 'Blocs d\'images dans le profil',
+	'RRC_PROFILE_MODE_EXP'   => 'Les images aléatoires peuvent prendre plus de temps à charger pour les membres possédant un très grand nombre d\'images dans la Galerie.',
 	'RRC_PROFILE_ROWS'       => 'Lignes',
 	'RRC_PROFILE_ITEMS'      => 'Objets dans le profil de l’utilisateur',
 

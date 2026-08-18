@@ -309,6 +309,16 @@ final class acp_config_types_test extends TestCase
 		$this->assertStringContainsString('Only images the current visitor is allowed to view are included.', $language);
 	}
 
+	public function test_profile_image_selector_is_named_as_blocks(): void
+	{
+		$language = (string) file_get_contents(dirname(__DIR__) . '/language/en/gallery_acp.php');
+
+		$this->assertStringContainsString("'RRC_PROFILE_MODE'", $language);
+		$this->assertStringContainsString("'RRC_PROFILE_MODE'       => 'Profile image blocks'", $language);
+		$this->assertStringContainsString('members with a very large number of Gallery images', $language);
+		$this->assertStringNotContainsString('Mode of “Recent-', $language);
+	}
+
 	public function test_total_images_label_names_the_forum_index(): void
 	{
 		$language = (string) file_get_contents(dirname(__DIR__) . '/language/en/gallery_acp.php');

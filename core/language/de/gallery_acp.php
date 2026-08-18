@@ -487,8 +487,8 @@ $lang = array_merge($lang, [
 	'RRC_MODE_RECENT'        => 'Neueste Bilder',
 	'RRC_MODE_PERSONAL'      => 'Bilder aus persönlichen Alben',
 	'RRC_PROFILE_COLUMNS'    => 'Spalten',
-	'RRC_PROFILE_MODE'       => 'Modus des „Neueste &amp; zufällige Bilder“-Features im Profil',
-	'RRC_PROFILE_MODE_EXP'   => '„Zufällige Bilder“ kann bei großen Datenbanken einige Ladezeit in Anspruch nehmen!',
+	'RRC_PROFILE_MODE'       => 'Bilderblöcke im Profil',
+	'RRC_PROFILE_MODE_EXP'   => 'Zufällige Bilder können bei Mitgliedern mit sehr vielen Galerie-Bildern länger laden.',
 	'RRC_PROFILE_ROWS'       => 'Zeilen',
 	'RRC_PROFILE_ITEMS'      => 'Anzahl',
 

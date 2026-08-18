@@ -485,8 +485,8 @@ $lang = array_merge($lang, [
 	'RRC_MODE_RECENT'        => 'immagini recenti',
 	'RRC_MODE_PERSONAL'      => 'Immagini degli album personali',
 	'RRC_PROFILE_COLUMNS'    => 'Colonne',
-	'RRC_PROFILE_MODE'       => 'Modo “Recenti- &amp; immagini Casuali“-Funzionalità nel profilo',
-	'RRC_PROFILE_MODE_EXP'   => '“immagini casuali“ può richiedere maggior carico su database di grandi dimensioni!',
+	'RRC_PROFILE_MODE'       => 'Blocchi di immagini nel profilo',
+	'RRC_PROFILE_MODE_EXP'   => 'Le immagini casuali possono richiedere più tempo per caricarsi nei profili dei membri con un numero molto elevato di immagini nella Galleria.',
 	'RRC_PROFILE_ROWS'       => 'Righe',
 	'RRC_PROFILE_ITEMS'      => 'Oggetti nel profilo utente',
 

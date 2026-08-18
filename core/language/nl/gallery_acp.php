@@ -487,8 +487,8 @@ $lang = array_merge($lang, [
 	'RRC_MODE_RECENT'        => 'Recente afbeeldingen',
 	'RRC_MODE_PERSONAL'      => 'Afbeeldingen uit persoonlijke albums',
 	'RRC_PROFILE_COLUMNS'    => 'Kolommen',
-	'RRC_PROFILE_MODE'       => 'Modus van “Recente &amp; willekeurige afbeeldingen“-opties in het profiel',
-	'RRC_PROFILE_MODE_EXP'   => 'Het laden van de “Willekeurige afbeeldingen“ kan enkele minuten duren bij grote databases!',
+	'RRC_PROFILE_MODE'       => 'Afbeeldingsblokken in het profiel',
+	'RRC_PROFILE_MODE_EXP'   => 'Willekeurige afbeeldingen kunnen langer laden bij leden met een zeer groot aantal galerijafbeeldingen.',
 	'RRC_PROFILE_ROWS'       => 'Rijen',
 	'RRC_PROFILE_ITEMS'      => 'Items in gebruikersprofiel',
 
