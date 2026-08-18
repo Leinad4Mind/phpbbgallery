@@ -536,9 +536,13 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertStringNotContainsString(' image_reported', $futuristic);
 
 		$css = (string) file_get_contents($core_root . '/styles/all/theme/gallery.css');
+		$prosilver = (string) file_get_contents($core_root . '/styles/prosilver/template/gallery/imageblock_polaroid.html');
+		$this->assertStringContainsString('gallery-approval-button--reject', $prosilver);
+		$this->assertStringContainsString('gallery-approval-button--approve', $prosilver);
 		$this->assertMatchesRegularExpression('/\.gallery-image-card-media\s*\{[^}]*display:\s*flex;[^}]*flex-direction:\s*column;[^}]*min-height:\s*calc\(var\(--gallery-thumbnail-size, 70px\) \+ 10px\);/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-image-card-thumbnail\s*\{[^}]*align-items:\s*center;[^}]*display:\s*flex;[^}]*justify-content:\s*center;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-image-card-approval \.post-notice,[^{]+\{[^}]*display:\s*flex;[^}]*justify-content:\s*center;[^}]*min-height:\s*46px;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-image-card-grid--prosilver \.gallery-image-card-approval \.gallery-approval-button\s*\{[^}]*border-radius:\s*4px;[^}]*min-height:\s*32px;[^}]*padding:\s*6px 12px;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-image-card-details\s*\{[^}]*display:\s*flex;[^}]*flex-direction:\s*column;[^}]*width:\s*100%;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-futuristic-approval\s*\{[^}]*display:\s*flex;[^}]*justify-content:\s*center;[^}]*width:\s*100%;/s', $css);
 	}
