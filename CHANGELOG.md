@@ -47,6 +47,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Clarified that the profile item count applies independently to every enabled profile image block.
 - Renamed the profile image selector from “Mode” to “Profile image blocks” and scoped its random-query performance notice to members with exceptionally large galleries.
 - Clarified that the optional total-image count is displayed in the forum-index statistics rather than an ambiguous `index.php` page.
 - Renamed the forum-index image selector from "Mode" to "Blocks" because multiple blocks can be enabled simultaneously.

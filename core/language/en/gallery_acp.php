@@ -433,7 +433,7 @@ $lang = array_merge($lang, [
 	'RRC_PROFILE_MODE'       => 'Profile image blocks',
 	'RRC_PROFILE_MODE_EXP'   => 'Random images may take longer to load for members with a very large number of Gallery images.',
 	'RRC_PROFILE_ROWS'       => 'Rows',
-	'RRC_PROFILE_ITEMS'      => 'Items in user profile',
+	'RRC_PROFILE_ITEMS'      => 'Images per enabled profile block',
 
 	'RSZ_HEIGHT' => 'Maximum-height on viewing image',
 	'RSZ_WIDTH'  => 'Maximum-width on viewing image',

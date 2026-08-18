@@ -315,6 +315,7 @@ final class acp_config_types_test extends TestCase
 
 		$this->assertStringContainsString("'RRC_PROFILE_MODE'", $language);
 		$this->assertStringContainsString("'RRC_PROFILE_MODE'       => 'Profile image blocks'", $language);
+		$this->assertStringContainsString("'RRC_PROFILE_ITEMS'      => 'Images per enabled profile block'", $language);
 		$this->assertStringContainsString('members with a very large number of Gallery images', $language);
 		$this->assertStringNotContainsString('Mode of “Recent-', $language);
 	}

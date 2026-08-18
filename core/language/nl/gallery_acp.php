@@ -490,7 +490,7 @@ $lang = array_merge($lang, [
 	'RRC_PROFILE_MODE'       => 'Afbeeldingsblokken in het profiel',
 	'RRC_PROFILE_MODE_EXP'   => 'Willekeurige afbeeldingen kunnen langer laden bij leden met een zeer groot aantal galerijafbeeldingen.',
 	'RRC_PROFILE_ROWS'       => 'Rijen',
-	'RRC_PROFILE_ITEMS'      => 'Items in gebruikersprofiel',
+	'RRC_PROFILE_ITEMS'      => 'Afbeeldingen per ingeschakeld profielblok',
 
 	'RSZ_HEIGHT' => 'Maximum-hoogte bij het bekijken van de afbeelding',
 	'RSZ_WIDTH'  => 'Maximum-breedte bij het bekijken van de afbeelding',

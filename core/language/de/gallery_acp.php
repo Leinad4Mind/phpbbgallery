@@ -490,7 +490,7 @@ $lang = array_merge($lang, [
 	'RRC_PROFILE_MODE'       => 'Bilderblöcke im Profil',
 	'RRC_PROFILE_MODE_EXP'   => 'Zufällige Bilder können bei Mitgliedern mit sehr vielen Galerie-Bildern länger laden.',
 	'RRC_PROFILE_ROWS'       => 'Zeilen',
-	'RRC_PROFILE_ITEMS'      => 'Anzahl',
+	'RRC_PROFILE_ITEMS'      => 'Bilder pro aktiviertem Profilblock',
 
 	'RSZ_HEIGHT' => 'Maximale Höhe beim Anzeigen eines Bildes',
 	'RSZ_WIDTH'  => 'Maximale Breite beim Anzeigen eines Bildes',

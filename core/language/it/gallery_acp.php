@@ -488,7 +488,7 @@ $lang = array_merge($lang, [
 	'RRC_PROFILE_MODE'       => 'Blocchi di immagini nel profilo',
 	'RRC_PROFILE_MODE_EXP'   => 'Le immagini casuali possono richiedere più tempo per caricarsi nei profili dei membri con un numero molto elevato di immagini nella Galleria.',
 	'RRC_PROFILE_ROWS'       => 'Righe',
-	'RRC_PROFILE_ITEMS'      => 'Oggetti nel profilo utente',
+	'RRC_PROFILE_ITEMS'      => 'Immagini per ogni blocco del profilo abilitato',
 
 	'RSZ_HEIGHT' => 'Altezza massima sulla visualizzazione immagini',
 	'RSZ_WIDTH'  => 'Larghezza massima sulla visualizzazione immagini',
