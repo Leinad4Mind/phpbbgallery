@@ -16,10 +16,14 @@ use RecursiveIteratorIterator;
 
 final class functional_fixture_portability_test extends TestCase
 {
-	public function test_album_fixtures_supply_required_parent_cache(): void
+	public function test_fixtures_supply_required_text_fields(): void
 	{
 		$extension_root = dirname(__DIR__, 2);
 		$files_checked = [];
+		$requirements = [
+			'gallery_albums' => ['album_parents', 'album_desc'],
+			'gallery_images' => ['image_desc'],
+		];
 		$iterator = new RecursiveIteratorIterator(
 			new RecursiveDirectoryIterator($extension_root, FilesystemIterator::SKIP_DOTS)
 		);
@@ -33,17 +37,23 @@ final class functional_fixture_portability_test extends TestCase
 			}
 
 			$source = (string) file_get_contents($file->getPathname());
-			if (!preg_match('/INSERT INTO[^\r\n]*gallery_albums/', $source))
+			foreach ($requirements as $table => $required_fields)
 			{
-				continue;
-			}
+				if (!preg_match('/INSERT INTO[^\r\n]*' . $table . '/', $source))
+				{
+					continue;
+				}
 
-			$files_checked[] = $path;
-			$this->assertStringContainsString(
-				'album_parents',
-				$source,
-				$path . ' must explicitly populate album_parents for strict MySQL/MariaDB.'
-			);
+				$files_checked[] = $path . ':' . $table;
+				foreach ($required_fields as $required_field)
+				{
+					$this->assertStringContainsString(
+						$required_field,
+						$source,
+						$path . ' must explicitly populate ' . $required_field . ' for strict MySQL/MariaDB.'
+					);
+				}
+			}
 		}
 
 		$this->assertNotEmpty($files_checked, 'No functional album fixtures were checked.');

@@ -125,6 +125,7 @@ class addon_reconciliation extends \phpbb_functional_test_case
 		$album = [
 			'parent_id' => 0,
 			'album_parents' => '',
+			'album_desc' => '',
 			'left_id' => 1,
 			'right_id' => 2,
 			'album_type' => \phpbbgallery\core\block::TYPE_UPLOAD,
@@ -161,6 +162,7 @@ class addon_reconciliation extends \phpbb_functional_test_case
 			'image_filename' => $filename,
 			'image_name' => 'Addon reconciliation image',
 			'image_name_clean' => 'addon reconciliation image',
+			'image_desc' => '',
 			'image_user_id' => 2,
 			'image_username' => 'admin',
 			'image_username_clean' => 'admin',

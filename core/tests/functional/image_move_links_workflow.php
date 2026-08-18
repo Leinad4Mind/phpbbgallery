@@ -86,6 +86,7 @@ class image_move_links_workflow extends \phpbb_functional_test_case
 			'image_filename' => $filename,
 			'image_name' => 'Functional moved image',
 			'image_name_clean' => 'functional moved image',
+			'image_desc' => '',
 			'image_user_id' => 2,
 			'image_username' => 'admin',
 			'image_username_clean' => 'admin',
@@ -114,6 +115,7 @@ class image_move_links_workflow extends \phpbb_functional_test_case
 		$db->sql_query('INSERT INTO phpbb_gallery_albums ' . $db->sql_build_array('INSERT', [
 			'parent_id' => 0,
 			'album_parents' => '',
+			'album_desc' => '',
 			'left_id' => $left_id,
 			'right_id' => $left_id + 1,
 			'album_type' => \phpbbgallery\core\block::TYPE_UPLOAD,

@@ -155,6 +155,7 @@ class gallery_lifecycle extends \phpbb_functional_test_case
 		$sql_ary = [
 			'parent_id'        => 0,
 			'album_parents'    => '',
+			'album_desc'       => '',
 			'left_id'          => 1,
 			'right_id'         => 2,
 			'album_type'       => \phpbbgallery\core\block::TYPE_UPLOAD,
@@ -216,6 +217,7 @@ class gallery_lifecycle extends \phpbb_functional_test_case
 				'image_filename'       => $filename,
 				'image_name'           => 'View counter ' . $position,
 				'image_name_clean'     => 'view counter ' . $position,
+				'image_desc'           => '',
 				'image_user_id'        => 2,
 				'image_username'       => 'admin',
 				'image_username_clean' => 'admin',
@@ -453,6 +455,7 @@ class gallery_lifecycle extends \phpbb_functional_test_case
 			'image_filename'            => $filename,
 			'image_name'                => 'Resumable draft',
 			'image_name_clean'          => 'resumable draft',
+			'image_desc'                => '',
 			'image_user_id'             => 2,
 			'image_username'            => 'admin',
 			'image_username_clean'      => 'admin',
