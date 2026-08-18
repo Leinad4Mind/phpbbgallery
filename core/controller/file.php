@@ -735,6 +735,10 @@ class file
 
 	protected function resize(int $image_id, int $resize_width, int $resize_height, string $store_filesize = '', bool $put_details = false): void
 	{
+		$derivative_quality = $this->storage_variant === \phpbbgallery\core\storage\provider_interface::MINI
+			? (int) $this->config['phpbb_gallery_thumbnail_quality']
+			: (int) $this->config['phpbb_gallery_jpg_quality'];
+
 		if (!file_exists($this->image_src))
 		{
 			$source_object = null;
@@ -767,7 +771,7 @@ class file
 						$output_path,
 						$resize_width,
 						$resize_height,
-						(int) $this->config['phpbb_gallery_jpg_quality']
+						$derivative_quality
 					);
 					if ($metadata === null
 						|| ($metadata['extension'] ?? '') !== 'webp'
@@ -801,7 +805,7 @@ class file
 						$this->tool->create_thumbnail($resize_width, $resize_height, $put_details, \phpbbgallery\core\file\file::THUMBNAIL_INFO_HEIGHT, $image_size);
 					}
 
-					if (!$this->tool->write_image($output_path, $this->config['phpbb_gallery_jpg_quality'], false)
+					if (!$this->tool->write_image($output_path, $derivative_quality, false)
 						|| !is_file($output_path) || is_link($output_path))
 					{
 						throw new \RuntimeException('The Gallery derived image could not be generated.');

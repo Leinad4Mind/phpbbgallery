@@ -366,6 +366,56 @@ final class controller_file_types_test extends TestCase
 		}
 	}
 
+	public function test_mini_derivative_uses_thumbnail_quality(): void
+	{
+		$provider = new controller_storage_provider();
+		$source = tempnam(sys_get_temp_dir(), 'gallery-source-');
+		$workspace_root = sys_get_temp_dir() . '/gallery-controller-' . bin2hex(random_bytes(6));
+		file_put_contents($source, 'source-image');
+		$this->assertTrue($provider->write(provider_interface::SOURCE, 'image.jpg', $source));
+
+		$tool = $this->createMock(\phpbbgallery\core\file\file::class);
+		$tool->method('read_image')->willReturnCallback(function () use ($tool): bool
+		{
+			$tool->image_size = ['file' => 12, 'width' => 100, 'height' => 100];
+			return true;
+		});
+		$tool->expects($this->once())->method('create_thumbnail');
+		$tool->expects($this->once())->method('write_image')
+			->with($this->anything(), 45, false)
+			->willReturnCallback(static function (string $path): bool
+			{
+				file_put_contents($path, 'mini-image');
+				return true;
+			});
+
+		$reflection = new \ReflectionClass(file::class);
+		$controller = $reflection->newInstanceWithoutConstructor();
+		$reflection->getProperty('storage_workspace')->setValue($controller, new workspace($provider, $workspace_root));
+		$reflection->getProperty('storage_variant')->setValue($controller, provider_interface::MINI);
+		$reflection->getProperty('data')->setValue($controller, ['image_filename' => 'image.jpg']);
+		$reflection->getProperty('image_src')->setValue($controller, '');
+		$reflection->getProperty('tool')->setValue($controller, $tool);
+		$reflection->getProperty('config')->setValue($controller, new \phpbb\config\config([
+			'phpbb_gallery_jpg_quality' => 85,
+			'phpbb_gallery_thumbnail_quality' => 45,
+		]));
+
+		try
+		{
+			$reflection->getMethod('resize')->invoke($controller, 28, 50, 50);
+			$this->assertTrue($provider->exists(provider_interface::MINI, 'image.jpg'));
+			$this->assertSame('mini-image', $provider->contents(provider_interface::MINI, 'image.jpg'));
+			$object = $reflection->getProperty('image_object')->getValue($controller);
+			$this->assertNotNull($object);
+			$object->release();
+		}
+		finally
+		{
+			@unlink($source);
+			@rmdir($workspace_root);
+		}
+	}
 	public function test_external_source_is_converted_to_a_temporary_webp_before_watermarking(): void
 	{
 		$workspace_root = sys_get_temp_dir() . '/gallery-controller-' . bin2hex(random_bytes(6));
