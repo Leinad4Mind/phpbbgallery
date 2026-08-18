@@ -84,6 +84,7 @@ class package_hygiene_test extends TestCase
 			'image_navigation.js',
 			'image_orientation.js',
 			'ip_privacy.js',
+			'list_navigation.js',
 			'quick_upload.js',
 			'rating.js',
 			'upload_preview.js',

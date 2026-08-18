@@ -3520,3 +3520,15 @@ fieldset dl.gallery-autocomplete-row-open
 		transition: none;
 	}
 }
+
+.gallery-paginated-list
+{
+	transition: opacity 120ms ease-in-out;
+}
+
+.gallery-paginated-list[aria-busy="true"]
+{
+	cursor: progress;
+	opacity: 0.55;
+	pointer-events: none;
+}
