@@ -248,7 +248,7 @@ function toggleElement(oElement)
 	<h2><a href="javascript: toggleElement( getElement('recent-comments'));">{{ lang('SEARCH_RECENT_COMMENTS') }}</a> </h2>
 	{% if ERROR %}<h2>{{ ERROR }}</h2>
 	{% else %}
-	<div id="recent-comments" {% if COMMENTS_EXPAND %}{% else %}style="display: none;"{% endif %}>
+	<div id="recent-comments"{% if COLLAPSE_COMMENTS %} style="display: none;"{% endif %}>
 		<br />
 		{% for commentrow in commentrow %}
 		<div class="post {% if commentrow.S_ROW_COUNT is odd %}bg1{% else %}bg2{% endif %}">

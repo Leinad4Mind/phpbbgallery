@@ -197,7 +197,7 @@ class index
 				$this->template->assign_vars([
 					'U_RECENT_COMMENTS'	=> true,
 					'S_RECENT_COMMENTS' => $this->helper->route('phpbbgallery_core_search_commented'),
-					'COMMENTS_EXPAND'	=> $this->gallery_config->get('rrc_gindex_comments') ? true : false,
+					'COLLAPSE_COMMENTS'	=> (bool) $this->gallery_config->get('rrc_gindex_comments'),
 				]);
 				$this->gallery_search->recent_comments($this->gallery_config->get('items_per_page'), 0, false);
 			}

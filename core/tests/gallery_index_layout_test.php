@@ -372,6 +372,24 @@ final class gallery_index_layout_test extends TestCase
 		}
 	}
 
+	public function test_recent_comments_are_hidden_only_when_collapse_is_enabled(): void
+	{
+		$core_root = dirname(__DIR__);
+
+		foreach (\gallery_test_existing_styles($core_root) as $style)
+		{
+			$template = $style === 'prosilver' ? 'index_body.html' : 'recent_body.html';
+			$source = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/' . $template);
+
+			$this->assertStringContainsString(
+				'{% if COLLAPSE_COMMENTS %} style="display: none;"{% endif %}',
+				$source,
+				$style
+			);
+			$this->assertStringNotContainsString('COMMENTS_EXPAND', $source, $style);
+		}
+	}
+
 	public function test_album_and_image_section_titles_share_the_same_visual_hierarchy(): void
 	{
 		$css = (string) file_get_contents(dirname(__DIR__) . '/styles/all/theme/gallery.css');

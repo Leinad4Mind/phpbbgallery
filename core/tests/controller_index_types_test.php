@@ -76,6 +76,17 @@ final class controller_index_types_test extends TestCase
 		$this->assertSame(16, index::RRC_MODE_TOP_RATED);
 	}
 
+	public function test_collapse_comments_setting_is_not_exposed_as_expand(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/index.php');
+
+		$this->assertStringContainsString(
+			"'COLLAPSE_COMMENTS'\t=> (bool) \$this->gallery_config->get('rrc_gindex_comments')",
+			$source
+		);
+		$this->assertStringNotContainsString("'COMMENTS_EXPAND'", $source);
+	}
+
 	public function test_ranked_index_blocks_are_bounded_and_extensible(): void
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/index.php');
