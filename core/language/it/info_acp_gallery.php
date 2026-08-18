@@ -32,6 +32,7 @@ $lang = array_merge($lang, [
 	'ACP_GALLERY_ALBUM_MANAGEMENT'       => 'Gestione Album',
 	'ACP_GALLERY_ALBUM_PERMISSIONS'      => 'Permessi',
 	'ACP_GALLERY_ALBUM_PERMISSIONS_COPY' => 'Copia permessi',
+	'ACP_VIEW_GALLERY_PERMISSIONS'       => 'Visualizza permessi Galleria',
 	'ACP_GALLERY_CONFIGURE_GALLERY'      => 'Configura galleria',
 	'ACP_GALLERY_LOGS'                   => 'Log Galleria',
 	'ACP_GALLERY_LOGS_EXPLAIN'           => 'Lista di tutte le azioni di moderazione della galleria, come approvazioni, disapprovazioni, chiusure, riaperture, chiusura delle segnalazioni e cancellazione immagini.',

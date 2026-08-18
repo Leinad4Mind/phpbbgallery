@@ -32,6 +32,7 @@ $lang = array_merge($lang, [
 	'ACP_GALLERY_ALBUM_MANAGEMENT'       => 'Album-Verwaltung',
 	'ACP_GALLERY_ALBUM_PERMISSIONS'      => 'Berechtigungen',
 	'ACP_GALLERY_ALBUM_PERMISSIONS_COPY' => 'Berechtigungen kopieren',
+	'ACP_VIEW_GALLERY_PERMISSIONS'       => 'Galerie-Berechtigungen anzeigen',
 	'ACP_GALLERY_CONFIGURE_GALLERY'      => 'Galerie konfigurieren',
 	'ACP_GALLERY_LOGS'                   => 'Galerie-Protokoll',
 	'ACP_GALLERY_LOGS_EXPLAIN'           => 'Diese Liste zeigt alle Vorgänge, die von Moderatoren an Bildern und Kommentaren durchgeführt wurden.',

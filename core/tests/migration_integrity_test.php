@@ -22,6 +22,7 @@ use phpbbgallery\core\migrations\release_4_0_0;
 use phpbbgallery\core\migrations\release_4_1_0;
 use phpbbgallery\core\migrations\remove_legacy_version_config;
 use phpbbgallery\core\migrations\forum_index_personal_images;
+use phpbbgallery\core\migrations\gallery_permission_masks;
 use phpbbgallery\core\migrations\resumable_uploads;
 use phpbbgallery\core\migrations\performance_indexes;
 use phpbbgallery\core\migrations\protect_personal_album_profile_field;
@@ -334,6 +335,23 @@ class migration_integrity_test extends TestCase
 		], remove_legacy_version_config::depends_on());
 		$this->assertSame([
 			['config.remove', ['phpbb_gallery_version']],
+		], $migration->update_data());
+	}
+
+	public function test_gallery_permission_masks_adds_the_read_only_acp_module(): void
+	{
+		$migration = (new \ReflectionClass(gallery_permission_masks::class))->newInstanceWithoutConstructor();
+
+		$this->assertSame([
+			'\phpbbgallery\core\migrations\forum_index_personal_images',
+		], gallery_permission_masks::depends_on());
+		$this->assertSame([
+			['module.add', ['acp', 'ACP_PERMISSION_MASKS', [
+				'module_basename' => '\phpbbgallery\core\acp\permissions_module',
+				'module_langname' => 'ACP_VIEW_GALLERY_PERMISSIONS',
+				'module_mode' => 'masks',
+				'module_auth' => 'ext_phpbbgallery/core && acl_a_viewauth',
+			]]],
 		], $migration->update_data());
 	}
 
@@ -1354,6 +1372,7 @@ class migration_integrity_test extends TestCase
 			'release_4_1_0.php',
 			'remove_legacy_version_config.php',
 			'forum_index_personal_images.php',
+			'gallery_permission_masks.php',
 		] as $migration)
 		{
 			require_once dirname(__DIR__) . '/migrations/' . $migration;

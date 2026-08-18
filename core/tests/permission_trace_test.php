@@ -99,6 +99,35 @@ final class permission_trace_test extends TestCase
 		$this->assertStringContainsString('p.perm_system = -3', $queries[1]);
 	}
 
+	public function test_mask_resolves_boolean_precedence_and_numeric_limits_in_one_query(): void
+	{
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$gallery_auth = $this->createMock(auth::class);
+		$gallery_auth->expects($this->exactly(2))->method('has_permission')->willReturn(true);
+		$gallery_auth->expects($this->once())->method('get_usergroups')->with(42)->willReturn([2, 3]);
+		$db->method('sql_in_set')->willReturnCallback(static fn (string $field, array $values): string => $field . ' IN (' . implode(',', $values) . ')');
+		$db->expects($this->once())->method('sql_query_limit')->with($this->stringContains('user_id = 42'), 1)->willReturn('user_result');
+		$db->expects($this->once())->method('sql_query')->willReturn('assignment_result');
+		$rows = [
+			'user_result' => [['user_id' => 42, 'username' => 'Alice']],
+			'assignment_result' => [
+				['i_view' => auth::ACL_YES, 'i_count' => 5],
+				['i_view' => auth::ACL_NEVER, 'i_count' => 3],
+				['i_view' => auth::ACL_NO, 'i_count' => 10],
+			],
+		];
+		$db->method('sql_fetchrow')->willReturnCallback(static function (string $result) use (&$rows): array|false
+		{
+			return $rows[$result] ? array_shift($rows[$result]) : false;
+		});
+
+		$result = (new permission_trace($db, $gallery_auth, 'gallery_permissions', 'gallery_roles'))
+			->mask(42, ['i_view', 'i_count'], 7, auth::PUBLIC_ALBUM);
+
+		$this->assertSame('Alice', $result['username']);
+		$this->assertSame(['i_view' => auth::ACL_NEVER, 'i_count' => 10], $result['values']);
+	}
+
 	/** @dataProvider invalid_request_provider */
 	public function test_trace_rejects_invalid_permissions_and_scopes(int $user_id, string $permission, int $album_id, int $permission_system): void
 	{

@@ -198,7 +198,7 @@ final class acp_permissions_types_test extends TestCase
 
 		$this->assertStringNotContainsString('$' . '_POST', $source);
 		$this->assertStringContainsString('$converted_victims = [];', $source);
-		$this->assertSame(6, substr_count($source, 'is_set_post('));
+		$this->assertSame(8, substr_count($source, 'is_set_post('));
 	}
 
 	public function test_system_groups_use_the_native_acp_separator_style_and_order(): void
@@ -216,7 +216,7 @@ final class acp_permissions_types_test extends TestCase
 		$template = (string) file_get_contents(dirname(__DIR__) . '/adm/style/gallery_permissions.html');
 
 		$this->assertStringContainsString("case 'trace':", $source);
-		$this->assertSame(2, substr_count($source, "'U_TRACE'"));
+		$this->assertSame(3, substr_count($source, "'U_TRACE'"));
 		$this->assertStringContainsString('$' . "victim_mode === 'user'", $source);
 		$this->assertStringContainsString('!str_ends_with($' . "permission, '_count')", $source);
 		$this->assertStringContainsString("mask.U_TRACE|default('')", $template);
@@ -233,6 +233,18 @@ final class acp_permissions_types_test extends TestCase
 		$this->assertStringContainsString('data-gallery-operation-help-open="gallery_permissions_setting_copy_help"', $template);
 		$this->assertStringContainsString("lang('COPY_PERMISSIONS_ALBUM_HELP')", $template);
 		$this->assertStringContainsString("lang('COPY_PERMISSIONS_SETTING_HELP')", $template);
+	}
+
+	public function test_standalone_permission_masks_are_read_only_and_reuse_trace_links(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/acp/permissions_module.php');
+		$template = (string) file_get_contents(dirname(__DIR__) . '/adm/style/gallery_permission_masks.html');
+
+		$this->assertStringContainsString('case \'masks\':', $source);
+		$this->assertStringContainsString('permission_trace', $source);
+		$this->assertStringContainsString('S_PERMISSION_MASK_RESULT', $template);
+		$this->assertStringContainsString('permission.U_TRACE', $template);
+		$this->assertStringNotContainsString('name=\'setting[', $template);
 	}
 
 	private function with_permission_services(callable $callback): void

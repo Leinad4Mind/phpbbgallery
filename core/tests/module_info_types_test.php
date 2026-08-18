@@ -18,7 +18,7 @@ final class module_info_types_test extends TestCase
 		\phpbbgallery\core\acp\config_info::class => ['main'],
 		\phpbbgallery\core\acp\gallery_logs_info::class => ['main'],
 		\phpbbgallery\core\acp\main_info::class => ['overview'],
-		\phpbbgallery\core\acp\permissions_info::class => ['manage', 'copy'],
+		\phpbbgallery\core\acp\permissions_info::class => ['manage', 'copy', 'masks'],
 		\phpbbgallery\core\ucp\main_info::class => ['manage_albums', 'manage_subscriptions'],
 		\phpbbgallery\core\ucp\settings_info::class => ['manage'],
 	];
@@ -44,11 +44,14 @@ final class module_info_types_test extends TestCase
 			$this->assertNotSame('', $metadata['title'] ?? '', $class_name);
 			$this->assertNotSame('', $metadata['version'] ?? '', $class_name);
 			$this->assertSame($expected_modes, array_keys($metadata['modes'] ?? []), $class_name);
-			foreach ($metadata['modes'] as $mode)
+			foreach ($metadata['modes'] as $mode_name => $mode)
 			{
 				$this->assertNotSame('', $mode['title'] ?? '', $class_name);
 				$this->assertStringContainsString('ext_phpbbgallery/core', $mode['auth'] ?? '', $class_name);
-				$this->assertContains('PHPBB_GALLERY', $mode['cat'] ?? [], $class_name);
+				$expected_category = $class_name === \phpbbgallery\core\acp\permissions_info::class && $mode_name === 'masks'
+					? 'ACP_PERMISSION_MASKS'
+					: 'PHPBB_GALLERY';
+				$this->assertContains($expected_category, $mode['cat'] ?? [], $class_name . '::' . $mode_name);
 			}
 		}
 	}

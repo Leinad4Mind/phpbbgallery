@@ -1,0 +1,59 @@
+{% include 'overall_header.html' %}
+<a name='maincontent'></a>
+<h1>{{ lang('ACP_VIEW_GALLERY_PERMISSIONS') }}</h1>
+<p>{{ lang('ACP_VIEW_GALLERY_PERMISSIONS_EXPLAIN') }}</p>
+<form id='gallery_permission_masks' method='post' action='{{ U_ACTION }}'>
+	<fieldset>
+		<legend>{{ lang('GALLERY_PERMISSION_MASK_USER') }}</legend>
+		<dl>
+			<dt><label for='username'>{{ lang('USERNAME') }}{{ lang('COLON') }}</label><br /><span>{{ lang('GALLERY_PERMISSION_MASK_USER_EXPLAIN') }}</span></dt>
+			<dd><input class='text medium' type='text' id='username' name='username' value='{{ USERNAME }}' /></dd>
+			<dd>[ <a href='{{ U_FIND_USERNAME }}' onclick='find_username(this.href); return false;'>{{ lang('FIND_USERNAME') }}</a> ]</dd>
+			<dd><label><input type='checkbox' class='radio' name='anonymous' value='{{ ANONYMOUS_USER_ID }}'{% if S_ANONYMOUS %} checked='checked'{% endif %} /> {{ lang('SELECT_ANONYMOUS') }}</label></dd>
+		</dl>
+	</fieldset>
+	<fieldset>
+		<legend>{{ lang('GALLERY_PERMISSION_MASK_SCOPE') }}</legend>
+		<dl>
+			<dt><label for='p_system_public'><input id='p_system_public' name='p_system' class='radio' type='radio' value='{{ C_PUBLIC_ALBUMS }}'{% if S_PUBLIC_ALBUMS %} checked='checked'{% endif %} /> {{ lang('ALBUM') }}</label></dt>
+			<dd><select id='album_id' name='album_id'>{{ ALBUM_LIST }}</select></dd>
+		</dl>
+		<dl>
+			<dt><label for='p_system_own'><input id='p_system_own' name='p_system' class='radio' type='radio' value='{{ C_OWN_PERSONAL_ALBUMS }}'{% if S_OWN_PERSONAL_ALBUMS %} checked='checked'{% endif %} /> {{ lang('OWN_PERSONAL_ALBUMS') }}</label><br /><span>{{ lang('OWN_PERSONAL_ALBUMS_EXPLAIN') }}</span></dt>
+		</dl>
+		<dl>
+			<dt><label for='p_system_personal'><input id='p_system_personal' name='p_system' class='radio' type='radio' value='{{ C_PERSONAL_ALBUMS }}'{% if S_PERSONAL_ALBUMS %} checked='checked'{% endif %} /> {{ lang('PERSONAL_ALBUMS') }}</label><br /><span>{{ lang('PERSONAL_ALBUMS_EXPLAIN') }}</span></dt>
+		</dl>
+	</fieldset>
+	<fieldset class='submit-buttons'>
+		<legend>{{ lang('SUBMIT') }}</legend>
+		{{ S_FORM_TOKEN }}
+		<input class='button1' type='submit' name='submit' value='{{ lang('VIEW_PERMISSIONS') }}' />
+	</fieldset>
+</form>
+{% if S_PERMISSION_MASK_RESULT %}
+	<h2>{{ lang('GALLERY_EFFECTIVE_PERMISSIONS') }}</h2>
+	<p><strong>{{ lang('USERNAME') }}{{ lang('COLON') }}</strong> {{ PERMISSION_USERNAME }}<br /><strong>{{ lang('GALLERY_PERMISSION_MASK_SCOPE') }}{{ lang('COLON') }}</strong> {{ PERMISSION_SCOPE }}</p>
+	{% for category in mask_category %}
+		<fieldset class='permissions'>
+			<legend>{{ category.NAME }}</legend>
+			<table class='table1 zebra-table'>
+				<thead>
+					<tr>
+						<th>{{ lang('PERMISSION') }}</th>
+						<th style='width: 20%;'>{{ lang('GALLERY_EFFECTIVE_VALUE') }}</th>
+					</tr>
+				</thead>
+				<tbody>
+				{% for permission in category.permission %}
+					<tr>
+						<td>{% if permission.U_TRACE %}<a href='{{ permission.U_TRACE }}' class='trace' onclick='popup(this.href, 750, 515, &quot;_trace&quot;); return false;' title='{{ lang('TRACE_SETTING') }}'><img src='images/icon_trace.gif' alt='{{ lang('TRACE_SETTING') }}' /></a> {% endif %}<strong>{{ permission.NAME }}</strong>{% if permission.EXPLAIN %}<br /><em>{{ permission.EXPLAIN }}</em>{% endif %}</td>
+						<td class='{% if permission.S_YES %}permissions-yes{% elseif permission.S_NEVER %}permissions-never{% else %}permissions-no{% endif %}'>{% if permission.S_COUNT %}{{ permission.VALUE }}{% elseif permission.S_YES %}{{ lang('PERMISSION_YES') }}{% elseif permission.S_NEVER %}{{ lang('PERMISSION_NEVER') }}{% else %}{{ lang('PERMISSION_NO') }}{% endif %}</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		</fieldset>
+	{% endfor %}
+{% endif %}
+{% include 'overall_footer.html' %}

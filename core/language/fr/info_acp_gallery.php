@@ -48,6 +48,7 @@ $lang = array_merge($lang, [
 	'ACP_GALLERY_ALBUM_MANAGEMENT'       => 'Gestion des albums',
 	'ACP_GALLERY_ALBUM_PERMISSIONS'      => 'Permissions',
 	'ACP_GALLERY_ALBUM_PERMISSIONS_COPY' => 'Copier les permissions',
+	'ACP_VIEW_GALLERY_PERMISSIONS'       => 'Voir les permissions de la Galerie',
 	'ACP_GALLERY_CONFIGURE_GALLERY'      => 'Configuration de la Galerie',
 	'ACP_GALLERY_LOGS'                   => 'Journal de la Galerie',
 	'ACP_GALLERY_LOGS_EXPLAIN'           => 'Liste toutes les actions des modérateurs de la galerie, comme les validations, les refus, les albums/images verrouillé(e)s, déverrouillé(e)s, les rapports fermés, les images supprimées…',

@@ -28,6 +28,11 @@ class permissions_info
 					'auth' => 'ext_phpbbgallery/core && acl_a_gallery_albums',
 					'cat' => ['PHPBB_GALLERY']
 				],
+				'masks'		=> [
+					'title' => 'ACP_VIEW_GALLERY_PERMISSIONS',
+					'auth' => 'ext_phpbbgallery/core && acl_a_viewauth',
+					'cat' => ['ACP_PERMISSION_MASKS']
+				],
 			],
 		];
 	}

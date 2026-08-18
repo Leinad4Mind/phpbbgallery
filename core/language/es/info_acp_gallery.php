@@ -32,6 +32,7 @@ $lang = array_merge($lang, [
 	'ACP_GALLERY_ALBUM_MANAGEMENT'       => 'Gestión de álbumes',
 	'ACP_GALLERY_ALBUM_PERMISSIONS'      => 'Permisos',
 	'ACP_GALLERY_ALBUM_PERMISSIONS_COPY' => 'Copiar permisos',
+	'ACP_VIEW_GALLERY_PERMISSIONS'       => 'Ver permisos de la Galería',
 	'ACP_GALLERY_CONFIGURE_GALLERY'      => 'Configurar galería',
 	'ACP_GALLERY_LOGS'                   => 'Registro de la galería',
 	'ACP_GALLERY_LOGS_EXPLAIN'           => 'Esto enumera todas las acciones del moderador de la galería como aprobar desaprobar bloquear desbloquear cerrar informes y eliminar imágenes.',

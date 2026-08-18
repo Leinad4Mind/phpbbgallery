@@ -27,6 +27,7 @@ $lang = array_merge($lang, [
 	'ACP_GALLERY_ALBUM_MANAGEMENT'       => 'Управление альбомом',
 	'ACP_GALLERY_ALBUM_PERMISSIONS'      => 'Права доступа',
 	'ACP_GALLERY_ALBUM_PERMISSIONS_COPY' => 'Копирование прав доступа',
+	'ACP_VIEW_GALLERY_PERMISSIONS'       => 'Просмотр прав Галереи',
 	'ACP_GALLERY_CONFIGURE_GALLERY'      => 'Настройка галереи',
 	'ACP_GALLERY_LOGS'                   => 'Лог галереи',
 	'ACP_GALLERY_LOGS_EXPLAIN'           => 'Список действий, выполненных в галерее, таких как одобрение, отклонение, блокировка и разблокировка, закрытие жалоб и удаление фотографий.',

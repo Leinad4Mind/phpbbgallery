@@ -95,6 +95,85 @@ final class permission_trace
 		return ['username' => (string) $user_row['username'], 'rows' => $rows, 'total' => $total];
 	}
 
+	/**
+	 * Resolve the effective values of several Gallery permissions in one scope.
+	 *
+	 * This mirrors the MAX aggregation used by the Gallery authorization cache:
+	 * ACL_NEVER wins over ACL_YES and ACL_NO, while numeric limits use the
+	 * greatest value assigned by the user or any of their groups.
+	 *
+	 * @param list<string> $permissions
+	 * @return array{username:string, values:array<string, int>}
+	 */
+	public function mask(int $user_id, array $permissions, int $album_id, int $permission_system): array
+	{
+		if ($user_id <= 0 || !$permissions)
+		{
+			throw new \InvalidArgumentException('Invalid Gallery permission mask request.');
+		}
+
+		foreach ($permissions as $permission)
+		{
+			if (!is_string($permission) || !preg_match('/^[a-z][a-z0-9_]*$/D', $permission) || !$this->gallery_auth->has_permission($permission))
+			{
+				throw new \InvalidArgumentException('Invalid Gallery permission mask request.');
+			}
+		}
+
+		$is_public_album = $permission_system === auth::PUBLIC_ALBUM && $album_id > 0;
+		$is_personal_scope = $album_id === 0 && in_array($permission_system, [auth::OWN_ALBUM, auth::PERSONAL_ALBUM], true);
+		if (!$is_public_album && !$is_personal_scope)
+		{
+			throw new \InvalidArgumentException('Invalid Gallery permission scope.');
+		}
+
+		$sql = 'SELECT user_id, username
+			FROM ' . USERS_TABLE . '
+			WHERE user_id = ' . (int) $user_id;
+		$result = $this->db->sql_query_limit($sql, 1);
+		$user_row = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+		if (!$user_row)
+		{
+			throw new \OutOfBoundsException('The Gallery permission mask user does not exist.');
+		}
+
+		$group_ids = array_values(array_unique(array_map('intval', $this->gallery_auth->get_usergroups($user_id))));
+		$assignment_where = 'p.perm_user_id = ' . (int) $user_id;
+		if ($group_ids)
+		{
+			$assignment_where .= ' OR ' . $this->db->sql_in_set('p.perm_group_id', $group_ids);
+		}
+		$scope_where = $permission_system === auth::PUBLIC_ALBUM
+			? 'p.perm_system = 0 AND p.perm_album_id = ' . (int) $album_id
+			: 'p.perm_system = ' . (int) $permission_system;
+		$sql = 'SELECT pr.*
+			FROM ' . $this->permissions_table . ' p
+			LEFT JOIN ' . $this->roles_table . ' pr
+				ON p.perm_role_id = pr.role_id
+			WHERE ' . $scope_where . '
+				AND (' . $assignment_where . ')';
+		$result = $this->db->sql_query($sql);
+		$values = array_fill_keys($permissions, auth::ACL_NO);
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			foreach ($permissions as $permission)
+			{
+				$setting = (int) ($row[$permission] ?? auth::ACL_NO);
+				if (str_ends_with($permission, '_count'))
+				{
+					$values[$permission] = max($values[$permission], $setting);
+					continue;
+				}
+
+				$values[$permission] = $this->merge_setting($values[$permission], $this->normalize_setting($setting));
+			}
+		}
+		$this->db->sql_freeresult($result);
+
+		return ['username' => (string) $user_row['username'], 'values' => $values];
+	}
+
 	/** @return array<int, array{name:string, group_type:int}> */
 	private function load_groups(array $group_ids): array
 	{

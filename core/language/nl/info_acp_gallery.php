@@ -32,6 +32,7 @@ $lang = array_merge($lang, [
 	'ACP_GALLERY_ALBUM_MANAGEMENT'       => 'Beheer album',
 	'ACP_GALLERY_ALBUM_PERMISSIONS'      => 'Permissies',
 	'ACP_GALLERY_ALBUM_PERMISSIONS_COPY' => 'Kopieer permissies',
+	'ACP_VIEW_GALLERY_PERMISSIONS'       => 'Gallery-permissies bekijken',
 	'ACP_GALLERY_CONFIGURE_GALLERY'      => 'Configureer galerij',
 	'ACP_GALLERY_LOGS'                   => 'Galerij log',
 	'ACP_GALLERY_LOGS_EXPLAIN'           => 'Toont alle moderator-acties van de galerij, zoals goed e/of afkeuren, sluiten, heropenen, gesloten meldingen en verwijderde afbeeldingen.',

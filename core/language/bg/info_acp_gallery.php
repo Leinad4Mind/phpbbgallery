@@ -29,6 +29,7 @@ $lang = array_merge($lang, [
 	'ACP_GALLERY_ALBUM_MANAGEMENT'       => 'Оправление на албуми',
 	'ACP_GALLERY_ALBUM_PERMISSIONS'      => 'Права',
 	'ACP_GALLERY_ALBUM_PERMISSIONS_COPY' => 'Копиране на права',
+	'ACP_VIEW_GALLERY_PERMISSIONS'       => 'Преглед на правата в Галерията',
 	'ACP_GALLERY_CONFIGURE_GALLERY'      => 'Настройка на галерията',
 	'ACP_GALLERY_LOGS'                   => 'Лог на галерията',
 	'ACP_GALLERY_LOGS_EXPLAIN'           => 'Тук виждате всички модераторски действия като одобрение, отхвърляне, заключване, и тн.',
