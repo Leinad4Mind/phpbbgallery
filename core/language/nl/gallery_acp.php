@@ -400,6 +400,7 @@ $lang = array_merge($lang, [
 	'RECENT_ON_INDEX_EXP'      => 'Wil je recente afbeeldingen op de galerij index weergeven',
 	'RECENT_ON_INDEX_COUNT'    => 'Recente afbeeldingsteller',
 	'FORUM_INDEX_IMAGES'       => 'Forumindex — Galerijafbeeldingsblokken',
+	'FORUM_INDEX_BLOCKS'                   => 'Blokken',
 
 	'PHPBB_INTEGRATION' => 'phpBB integratie',
 	'PNG_ALLOWED'       => 'Bevoegt om PNG bestanden te uploaden',

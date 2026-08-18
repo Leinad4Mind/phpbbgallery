@@ -382,6 +382,7 @@ $lang = array_merge($lang, [
 	'RECENT_ON_INDEX_EXP'                  => 'Deverão ser exibidas imagens recentes no índice',
 	'RECENT_ON_INDEX_COUNT'                => 'Contagem de imagens recentes',
 	'FORUM_INDEX_IMAGES'                   => 'Índice do fórum — Blocos de imagens da galeria',
+	'FORUM_INDEX_BLOCKS'                   => 'Blocos',
 
 	'PHPBB_INTEGRATION'          => 'Integração phpBB',
 	'PNG_ALLOWED'                => 'Permitido fazer upload de ficheiros PNG',

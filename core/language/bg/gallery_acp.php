@@ -403,6 +403,7 @@ $lang = array_merge($lang, [
 	'RECENT_ON_INDEX_EXP'      => 'Дали да показва последните качени картиники на началната страница.',
 	'RECENT_ON_INDEX_COUNT'    => 'Брой последни изображения',
 	'FORUM_INDEX_IMAGES'       => 'Начална страница на форума — Блокове с изображения от галерията',
+	'FORUM_INDEX_BLOCKS'                   => 'Блокове',
 
 	'PHPBB_INTEGRATION'        => 'Интеграция в phpBB',
 	'PNG_ALLOWED'              => 'Разрешено качването на PNG файлове',

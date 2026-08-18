@@ -576,7 +576,7 @@ class config_module
 				],
 
 				'FORUM_INDEX_IMAGES'	=> [
-					'forum_index_mode'			=> ['lang' => 'RRC_GINDEX_MODE',			'validate' => 'int',		'type' => 'custom',			'explain' => true,	'method' => 'rrc_modes'],
+					'forum_index_mode'			=> ['lang' => 'FORUM_INDEX_BLOCKS',			'validate' => 'int',		'type' => 'custom',			'explain' => true,	'method' => 'rrc_modes'],
 					'forum_index_recent_count'	=> ['lang' => 'RECENT_ON_INDEX_COUNT',	'validate' => 'int:1:12',	'type' => 'text:7:2'],
 					'forum_index_random_count'	=> ['lang' => 'RANDOM_ON_INDEX_COUNT',	'validate' => 'int:1:12',	'type' => 'text:7:2'],
 					'forum_index_personal_count'	=> ['lang' => 'PERSONAL_ON_INDEX_COUNT',	'validate' => 'int:1:12',	'type' => 'text:7:2'],

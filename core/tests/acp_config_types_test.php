@@ -98,6 +98,7 @@ final class acp_config_types_test extends TestCase
 		$this->assertArrayHasKey('viewtopic_images', $display['vars']);
 		$this->assertArrayHasKey('viewtopic_link', $display['vars']);
 		$this->assertArrayHasKey('forum_index_mode', $display['vars']);
+		$this->assertSame('FORUM_INDEX_BLOCKS', $display['vars']['forum_index_mode']['lang']);
 		$this->assertArrayHasKey('forum_index_recent_count', $display['vars']);
 		$this->assertArrayHasKey('forum_index_random_count', $display['vars']);
 		$this->assertArrayHasKey('forum_index_personal_count', $display['vars']);
