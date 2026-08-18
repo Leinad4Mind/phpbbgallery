@@ -212,7 +212,7 @@ class file
 			$this->config['phpbb_gallery_max_height'],
 			$this->config['phpbb_gallery_max_width']
 		);
-		$this->tool->set_image_data($this->image_src, $this->data['image_name']);
+		$this->tool->set_image_data($this->image_src, $this->data['image_name'], 0, true);
 		$this->tool->disable_browser_cache();
 
 		return $this->display();
@@ -296,7 +296,7 @@ class file
 		$this->use_watermark = $this->config['phpbb_gallery_watermark_enabled'] && $this->data['album_watermark'] && !$this->auth->acl_check('i_watermark', $this->data['album_id'], $this->data['album_user_id']);
 
 		$this->tool->set_image_options($this->config['phpbb_gallery_max_filesize'], $this->config['phpbb_gallery_max_height'], $this->config['phpbb_gallery_max_width']);
-		$this->tool->set_image_data($this->image_src, $this->data['image_name']);
+		$this->tool->set_image_data($this->image_src, $this->data['image_name'], 0, true);
 		$external_processor = $this->format_registry?->processor_for_filename($this->data['image_filename']);
 		if ($this->error === '' && $external_processor !== null)
 		{
@@ -433,7 +433,7 @@ class file
 		$this->auth->load_user_permissions($this->user->data['user_id']);
 		$this->use_watermark = $this->config['phpbb_gallery_watermark_enabled'] && $this->data['album_watermark'] && !$this->auth->acl_check('i_watermark', $this->data['album_id'], $this->data['album_user_id']);
 		$this->tool->set_image_options($this->config['phpbb_gallery_max_filesize'], $this->config['phpbb_gallery_max_height'], $this->config['phpbb_gallery_max_width']);
-		$this->tool->set_image_data($this->image_src, $this->data['image_name']);
+		$this->tool->set_image_data($this->image_src, $this->data['image_name'], 0, true);
 		if ($this->error || !$this->user->data['is_registered'])
 		{
 			$this->tool->disable_browser_cache();
@@ -465,7 +465,7 @@ class file
 			$this->generate_image_src();
 		}
 		$this->tool->set_image_options($this->config['phpbb_gallery_max_filesize'], $this->config['phpbb_gallery_max_height'], $this->config['phpbb_gallery_max_width']);
-		$this->tool->set_image_data($this->image_src, $this->data['image_name']);
+		$this->tool->set_image_data($this->image_src, $this->data['image_name'], 0, true);
 		if ($this->error || !$this->user->data['is_registered'])
 		{
 			$this->tool->disable_browser_cache();

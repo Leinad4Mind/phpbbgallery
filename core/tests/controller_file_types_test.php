@@ -59,6 +59,30 @@ final class controller_file_types_test extends TestCase
 		}
 	}
 
+	public function test_binary_routes_reset_shared_image_metadata_before_delivery(): void
+	{
+		$reflection = new \ReflectionClass(file::class);
+		$source = file(dirname(__DIR__) . '/controller/file.php');
+		$this->assertIsArray($source);
+
+		foreach (['upload_preview', 'source_response', 'medium', 'mini'] as $method_name)
+		{
+			$method = $reflection->getMethod($method_name);
+			$method_source = implode('', array_slice(
+				$source,
+				$method->getStartLine() - 1,
+				$method->getEndLine() - $method->getStartLine() + 1
+			));
+
+			$this->assertStringContainsString('set_image_data', $method_source, $method_name);
+			$this->assertStringContainsString(
+				', 0, true);',
+				$method_source,
+				$method_name . ' must not reuse MIME metadata from an earlier response.'
+			);
+		}
+	}
+
 	public function test_original_source_has_an_extension_gate_and_addon_download_override(): void
 	{
 		$source = file_get_contents(dirname(__DIR__) . '/controller/file.php');
