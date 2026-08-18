@@ -310,6 +310,14 @@ final class acp_config_types_test extends TestCase
 		$this->assertStringContainsString('Only images the current visitor is allowed to view are included.', $language);
 	}
 
+	public function test_random_gallery_block_warning_describes_query_cost(): void
+	{
+		$language = (string) file_get_contents(dirname(__DIR__) . '/language/en/gallery_acp.php');
+
+		$this->assertStringContainsString('Selecting random images may increase page-loading time on galleries with a large number of images.', $language);
+		$this->assertStringNotContainsString('may take some time to load, on large databases', $language);
+	}
+
 	public function test_linked_image_count_has_contextual_explanation(): void
 	{
 		$language = (string) file_get_contents(dirname(__DIR__) . '/language/en/gallery_acp.php');
