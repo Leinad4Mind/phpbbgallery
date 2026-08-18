@@ -310,7 +310,11 @@ final class gallery_index_layout_test extends TestCase
 			$polaroid = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/albumlist_polaroid.html');
 			$this->assertStringContainsString('albumrow.ALBUM_IMAGE_SRC or albumrow.UC_LAST_IMAGE_THUMBNAIL', $polaroid, $style);
 			$this->assertStringContainsString("{% include '@phpbbgallery_core/gallery/albumlist_polaroid_last_image.html' %}", $polaroid, $style);
+			$this->assertStringContainsString('class="gallery-polaroid-image-count"', $polaroid, $style);
 		}
+
+		$css = (string) file_get_contents($core_root . '/styles/all/theme/gallery.css');
+		$this->assertMatchesRegularExpression('/\.gallery-polaroid-image-count\s*\{[^}]*text-align:\s*center;/s', $css);
 	}
 
 	public function test_uploaded_album_icons_use_the_board_root_in_every_layout(): void

@@ -24,7 +24,7 @@
 			<a href="{{ albumrow.U_VIEWALBUM }}" class="polaroid_img_container"><img src="{{ albumrow.UC_THUMBNAIL }}" alt="{{ albumrow.UC_IMAGE_NAME }}" title="{{ lang('VIEW_ALBUM') }}{{ albumrow.UC_IMAGE_NAME }}" /></a>
 			<hr />
 			{% endif %}
-			{{ lang('IMAGES') }}{{ lang('COLON') }} <strong>{{ albumrow.IMAGES }} {% if albumrow.UNAPPROVED_IMAGES %} + <span class="reported-images-number">{{ albumrow.UNAPPROVED_IMAGES }}</span>{% endif %}</strong><br />
+			<div class="gallery-polaroid-image-count">{{ lang('IMAGES') }}{{ lang('COLON') }} <strong>{{ albumrow.IMAGES }} {% if albumrow.UNAPPROVED_IMAGES %} + <span class="reported-images-number">{{ albumrow.UNAPPROVED_IMAGES }}</span>{% endif %}</strong></div>
 
 			{% include '@phpbbgallery_core/gallery/albumlist_polaroid_last_image.html' %}
 

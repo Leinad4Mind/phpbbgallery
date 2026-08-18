@@ -89,6 +89,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Centred each album card's image count with its latest-image metadata across the bundled card layouts.
 - Kept album pagination totals scoped to the directly listed images and moved the permission-filtered total including subalbums into a separately labelled album-heading summary.
 - Corrected the inverted Gallery-index "Collapse comments" option so Yes now starts recent comments collapsed and No leaves them visible in every bundled style.
 - Replaced the PROSILVER-only replay of phpBB viewtopic custom-field events on image pages with dedicated Gallery author and comment profile events shared by all bundled styles; optional integrations can now enrich the correct profile context without rendering empty viewtopic-only fragments.

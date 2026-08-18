@@ -1681,6 +1681,11 @@ input.autowidth-gallery {
 	padding-top: 3px;
 }
 
+.gallery-polaroid-image-count
+{
+	text-align: center;
+}
+
 .gallery-polaroid-last-image-thumbnail
 {
 	align-items: center;
