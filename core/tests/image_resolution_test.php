@@ -97,7 +97,6 @@ class image_resolution_test extends TestCase
 			$this->createMock(\phpbb\request\request_interface::class),
 			$this->new_url(),
 			$config,
-			2,
 			$provider
 		);
 		$controller = (new \ReflectionClass(image::class))->newInstanceWithoutConstructor();
