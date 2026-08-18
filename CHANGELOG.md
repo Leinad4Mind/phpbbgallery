@@ -47,6 +47,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Added distinct accessible help dialogs to the album-level and per-user/group permission-copy selectors, explaining their batch and individual scopes, one-time behaviour and precedence in every supported language.
 - Made the album editor role-aware: the parent presentation mode is shown only for albums that contain subalbums, while the child eligibility switch is shown only when editing or creating a real subalbum; intermediate albums correctly expose both controls.
 - Limited the selected ACP album-image preview to a proportional 256-pixel bounding box without changing the stored icon.
 - Enlarged ACP album-icon choices to a real 48-pixel preview and added a keyboard-accessible three-times hover/focus zoom while preserving each icon's aspect ratio.

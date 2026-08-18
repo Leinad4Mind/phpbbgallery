@@ -290,6 +290,10 @@ $lang = array_merge($lang, [
 	'INHERIT_PERMISSIONS_ALBUM'  => 'Copier les permissions d’un autre album',
 	'INHERIT_PERMISSIONS_VICTIM' => 'Copier les permissions d’un autre paramètre',
 	'COPY_PERMISSION_MASK_EXPLAIN' => 'Copie une seule fois les valeurs actuelles. Les modifications ultérieures de la source ne sont pas propagées automatiquement.',
+	'COPY_PERMISSIONS_ALBUM_HELP_TITLE' => 'Copier toutes les permissions affichées depuis un autre album',
+	'COPY_PERMISSIONS_ALBUM_HELP' => 'Cette option au niveau de l’album copie les permissions de chaque utilisateur ou groupe affiché dans ce formulaire depuis le même utilisateur ou groupe de l’album source sélectionné. Il s’agit d’une copie unique. Lorsqu’elle est sélectionnée, elle est prioritaire sur les contrôles de copie individuels ci-dessous.',
+	'COPY_PERMISSIONS_SETTING_HELP_TITLE' => 'Copier la configuration des permissions d’un utilisateur ou groupe',
+	'COPY_PERMISSIONS_SETTING_HELP' => 'Ce contrôle affecte uniquement l’utilisateur ou le groupe indiqué dans cette section. Il copie le masque de permissions complet depuis une configuration Album → Utilisateur/Groupe précise, qui peut appartenir à un autre utilisateur ou groupe. Il s’agit d’une copie unique.',
 
 	'JPG_ALLOWED'     => 'Autoriser à envoyer des fichiers JPG',
 	'JPG_QUALITY'     => 'Qualité des JPG',

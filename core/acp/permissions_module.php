@@ -784,6 +784,7 @@ class permissions_module
 			'S_HIDDEN_FIELDS'			=> $s_hidden_fields,
 			'U_ACTION'					=> $this->u_action . '&amp;action=set',
 			'S_PERMISSION_P_MASK'		=> true,
+			'S_GALLERY_ACP_OPERATION_HELP' => true,
 		]);
 	}
 

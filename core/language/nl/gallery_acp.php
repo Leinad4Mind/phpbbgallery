@@ -274,6 +274,10 @@ $lang = array_merge($lang, [
 	'INHERIT_PERMISSIONS_ALBUM'  => 'Kopieer permissies van een ander album',
 	'INHERIT_PERMISSIONS_VICTIM' => 'Kopieer permissies van een andere instelling',
 	'COPY_PERMISSION_MASK_EXPLAIN' => 'Kopieert de huidige waarden eenmalig. Latere wijzigingen aan de bron worden niet automatisch overgenomen.',
+	'COPY_PERMISSIONS_ALBUM_HELP_TITLE' => 'Alle weergegeven permissies uit een ander album kopiëren',
+	'COPY_PERMISSIONS_ALBUM_HELP' => 'Deze optie op albumniveau kopieert de permissies van iedere gebruiker of groep in dit formulier van dezelfde gebruiker of groep in het geselecteerde bronalbum. Dit is een eenmalige kopie. Indien geselecteerd, heeft deze optie voorrang op de afzonderlijke kopieeropties hieronder.',
+	'COPY_PERMISSIONS_SETTING_HELP_TITLE' => 'De permissie-instelling van één gebruiker of groep kopiëren',
+	'COPY_PERMISSIONS_SETTING_HELP' => 'Dit besturingselement geldt alleen voor de gebruiker of groep die in dit gedeelte wordt genoemd. Het kopieert het volledige permissiemasker uit een specifieke instelling Album → Gebruiker/Groep, die van een andere gebruiker of groep mag zijn. Dit is een eenmalige kopie.',
 
 	'JPG_ALLOWED'     => 'Toegestaan om JPG-bestanden te uploaden',
 	'JPG_QUALITY'     => 'JPG-Kwaliteit',

@@ -223,6 +223,18 @@ final class acp_permissions_types_test extends TestCase
 		$this->assertStringContainsString("popup(this.href, 750, 515, '_trace')", $template);
 	}
 
+	public function test_permission_copy_controls_explain_their_distinct_scopes(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/acp/permissions_module.php');
+		$template = (string) file_get_contents(dirname(__DIR__) . '/adm/style/gallery_permissions.html');
+
+		$this->assertStringContainsString("'S_GALLERY_ACP_OPERATION_HELP' => true", $source);
+		$this->assertStringContainsString('data-gallery-operation-help-open="gallery_permissions_album_copy_help"', $template);
+		$this->assertStringContainsString('data-gallery-operation-help-open="gallery_permissions_setting_copy_help"', $template);
+		$this->assertStringContainsString("lang('COPY_PERMISSIONS_ALBUM_HELP')", $template);
+		$this->assertStringContainsString("lang('COPY_PERMISSIONS_SETTING_HELP')", $template);
+	}
+
 	private function with_permission_services(callable $callback): void
 	{
 		global $phpbb_container;

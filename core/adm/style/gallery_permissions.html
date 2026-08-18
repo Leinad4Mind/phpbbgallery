@@ -188,7 +188,16 @@ function gallery_init_colours(block_id, quick)
 
 {% for c_mask in c_mask %}
 	<h3>{{ c_mask.C_MASK_NAME }}</h3>
-	{% if c_mask.INHERIT_C_MASKS %}<p>{{ lang('INHERIT_PERMISSIONS_ALBUM') }}{{ lang('COLON') }} <select name="inherit[{{ c_mask.C_MASK_ID }}][full]" id="inherit[{{ c_mask.C_MASK_ID }}][full]" onchange="inherit_album({{ c_mask.S_ROW_COUNT }}, this.options[this.selectedIndex].value);">{{ c_mask.INHERIT_C_MASKS }}</select><br><span>{{ lang('COPY_PERMISSION_MASK_EXPLAIN') }}</span></p>{% endif %}
+	{% if c_mask.INHERIT_C_MASKS %}
+		<p>
+			{{ lang('INHERIT_PERMISSIONS_ALBUM') }}{{ lang('COLON') }}
+			<span class="gallery-operation-help-actions">
+				<select name="inherit[{{ c_mask.C_MASK_ID }}][full]" id="inherit[{{ c_mask.C_MASK_ID }}][full]" onchange="inherit_album({{ c_mask.S_ROW_COUNT }}, this.options[this.selectedIndex].value);">{{ c_mask.INHERIT_C_MASKS }}</select>
+				<button class="gallery-operation-help-button" type="button" data-gallery-operation-help-open="gallery_permissions_album_copy_help" aria-controls="gallery_permissions_album_copy_help" aria-haspopup="dialog" aria-label="{{ lang('INFORMATION') }}: {{ lang('COPY_PERMISSIONS_ALBUM_HELP_TITLE') }}" title="{{ lang('INFORMATION') }}">i</button>
+			</span>
+			<br><span>{{ lang('COPY_PERMISSION_MASK_EXPLAIN') }}</span>
+		</p>
+	{% endif %}
 
 	<div id="c_mask{{ c_mask.S_ROW_COUNT }}">
 	{% for v_mask in c_mask.v_mask %}
@@ -203,7 +212,7 @@ function gallery_init_colours(block_id, quick)
 		</div>
 		<dl class="permissions-simple">
 			<dt style="width: 20%"><label for="inherit[{{ c_mask.C_MASK_ID }}][{{ v_mask.VICTIM_ID }}]">{{ lang('INHERIT_PERMISSIONS_VICTIM') }}{{ lang('COLON') }}</label></dt>
-			<dd><select name="inherit[{{ c_mask.C_MASK_ID }}][{{ v_mask.VICTIM_ID }}]" id="inherit[{{ c_mask.C_MASK_ID }}][{{ v_mask.VICTIM_ID }}]" onchange="inherit_victim({{ c_mask.S_ROW_COUNT }}, {{ v_mask.S_ROW_COUNT }}, this.options[this.selectedIndex].value);">{{ v_mask.INHERIT_VICTIMS }}</select></dd>
+			<dd><span class="gallery-operation-help-actions"><select name="inherit[{{ c_mask.C_MASK_ID }}][{{ v_mask.VICTIM_ID }}]" id="inherit[{{ c_mask.C_MASK_ID }}][{{ v_mask.VICTIM_ID }}]" onchange="inherit_victim({{ c_mask.S_ROW_COUNT }}, {{ v_mask.S_ROW_COUNT }}, this.options[this.selectedIndex].value);">{{ v_mask.INHERIT_VICTIMS }}</select><button class="gallery-operation-help-button" type="button" data-gallery-operation-help-open="gallery_permissions_setting_copy_help" aria-controls="gallery_permissions_setting_copy_help" aria-haspopup="dialog" aria-label="{{ lang('INFORMATION') }}: {{ lang('COPY_PERMISSIONS_SETTING_HELP_TITLE') }}" title="{{ lang('INFORMATION') }}">i</button></span></dd>
 		</dl>
 		<div class="permissions-advanced" id="advanced{{ c_mask.S_ROW_COUNT }}{{ v_mask.S_ROW_COUNT }}">
 		<div class="permissions-category">
@@ -272,6 +281,15 @@ function gallery_init_colours(block_id, quick)
 		<input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}" />
 	</fieldset>
 </form>
+
+<dialog class="gallery-operation-help-dialog" id="gallery_permissions_album_copy_help" aria-labelledby="gallery_permissions_album_copy_help_title">
+	<header class="gallery-operation-help-dialog__header"><h2 id="gallery_permissions_album_copy_help_title">{{ lang('COPY_PERMISSIONS_ALBUM_HELP_TITLE') }}</h2><button class="gallery-operation-help-dialog__close" type="button" data-gallery-operation-help-close aria-label="{{ lang('CLOSE_WINDOW') }}">&times;</button></header>
+	<div class="gallery-operation-help-dialog__body"><p>{{ lang('COPY_PERMISSIONS_ALBUM_HELP') }}</p></div>
+</dialog>
+<dialog class="gallery-operation-help-dialog" id="gallery_permissions_setting_copy_help" aria-labelledby="gallery_permissions_setting_copy_help_title">
+	<header class="gallery-operation-help-dialog__header"><h2 id="gallery_permissions_setting_copy_help_title">{{ lang('COPY_PERMISSIONS_SETTING_HELP_TITLE') }}</h2><button class="gallery-operation-help-dialog__close" type="button" data-gallery-operation-help-close aria-label="{{ lang('CLOSE_WINDOW') }}">&times;</button></header>
+	<div class="gallery-operation-help-dialog__body"><p>{{ lang('COPY_PERMISSIONS_SETTING_HELP') }}</p></div>
+</dialog>
 
 {% elseif S_COPY_PERMISSIONS %}
 

@@ -274,6 +274,10 @@ $lang = array_merge($lang, [
 	'INHERIT_PERMISSIONS_ALBUM'  => 'Berechtigung von einem anderem Album übernehmen',
 	'INHERIT_PERMISSIONS_VICTIM' => 'Berechtigung aus einer anderen Einstellung übernehmen',
 	'COPY_PERMISSION_MASK_EXPLAIN' => 'Kopiert die aktuellen Werte einmalig. Spätere Änderungen an der Quelle werden nicht automatisch übernommen.',
+	'COPY_PERMISSIONS_ALBUM_HELP_TITLE' => 'Alle angezeigten Berechtigungen aus einem anderen Album kopieren',
+	'COPY_PERMISSIONS_ALBUM_HELP' => 'Diese Option auf Albumebene kopiert die Berechtigungen jedes in diesem Formular angezeigten Benutzers bzw. jeder Gruppe vom selben Benutzer bzw. derselben Gruppe im ausgewählten Quellalbum. Es handelt sich um eine einmalige Kopie. Wenn sie ausgewählt ist, hat sie Vorrang vor den einzelnen Kopieroptionen darunter.',
+	'COPY_PERMISSIONS_SETTING_HELP_TITLE' => 'Eine Benutzer- oder Gruppenberechtigung kopieren',
+	'COPY_PERMISSIONS_SETTING_HELP' => 'Dieses Steuerelement betrifft nur den in diesem Abschnitt genannten Benutzer bzw. die Gruppe. Es kopiert die vollständige Berechtigungsmaske aus einer bestimmten Album → Benutzer/Gruppe-Einstellung, die auch zu einem anderen Benutzer oder einer anderen Gruppe gehören kann. Es handelt sich um eine einmalige Kopie.',
 
 	'JPG_ALLOWED'     => 'Es ist erlaubt JPG-Dateien hochzuladen',
 	'JPG_QUALITY'     => 'JPG-Qualität',
