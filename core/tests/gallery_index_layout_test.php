@@ -50,13 +50,18 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertStringContainsString('albumrow.UNAPPROVED_IMAGES', $template);
 		$this->assertStringContainsString('albumrow.LAST_USER_FULL', $template);
 		$this->assertStringContainsString('gallery-modern-album-main--without-visual', $template);
+		$this->assertStringContainsString('S_ALBUM_LIST_HAS_CUSTOM_ICONS', $template);
+		$this->assertStringContainsString('gallery-modern-album-list--with-custom-icons', $template);
+		$this->assertStringContainsString('gallery-modern-album-visual--placeholder', $template);
 		$this->assertStringContainsString('gallery-modern-last-image-thumbnail', $template);
 		$this->assertStringContainsString('albumrow.UC_LAST_IMAGE_THUMBNAIL', $template);
 		$this->assertStringNotContainsString('not albumrow.S_ALBUM_VISUAL_IS_LAST_IMAGE', $template);
 		$this->assertTrue(strpos($template, 'gallery-modern-last-image-details') < strpos($template, 'gallery-modern-last-image-thumbnail'));
 		$this->assertStringContainsString('albumrow.U_LAST_IMAGE', $template);
 		$this->assertStringContainsString('grid-template-columns: minmax(0, 1fr) minmax(245px, 32%);', $css);
+		$this->assertStringContainsString("'S_ALBUM_LIST_HAS_CUSTOM_ICONS' => \$has_album_custom_icons", (string) file_get_contents($core_root . '/album/display.php'));
 		$this->assertMatchesRegularExpression('/\\.gallery-modern-album-main--without-visual\\s*\\{[^}]*grid-template-columns:\\s*minmax\\(0, 1fr\\);/s', $css);
+		$this->assertMatchesRegularExpression('/\\.gallery-modern-album-visual--placeholder\\s*\\{[^}]*background:\\s*transparent;[^}]*pointer-events:\\s*none;/s', $css);
 		$this->assertMatchesRegularExpression('/\\.gallery-modern-last-image-thumbnail\\s*\\{[^}]*margin-inline-start:\\s*auto;/s', $css);
 		$this->assertStringContainsString('@media (max-width: 700px)', $css);
 	}

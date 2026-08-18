@@ -606,6 +606,7 @@ class display
 		// Used to tell whatever we have to create a dummy category or not.
 		$board_path = rtrim($this->symfony_request->getBasePath(), '/');
 		$last_catless = true;
+		$has_album_custom_icons = false;
 		foreach ($album_rows as $row)
 		{
 			$album_image = trim((string) ($row['album_image'] ?? ''));
@@ -804,6 +805,7 @@ class display
 				$row,
 				$album_template_vars
 			);
+			$has_album_custom_icons = $has_album_custom_icons || $album_image_src !== '';
 			$this->template->assign_block_vars('albumrow', $album_template_vars);
 			$section_start_pending = false;
 
@@ -823,6 +825,7 @@ class display
 
 		$this->template->assign_vars([
 			'U_MARK_ALBUMS'		=> ($this->user->data['is_registered']) ? $this->helper->route('phpbbgallery_core_album', ['album_id' => (int) $root_data['album_id'], 'hash' => generate_link_hash('global'), 'mark' => 'albums']) : '',
+			'S_ALBUM_LIST_HAS_CUSTOM_ICONS' => $has_album_custom_icons,
 			'S_HAS_SUBALBUM'	=> ($visible_albums) ? true : false,
 			'L_SUBFORUM'		=> ($visible_albums == 1) ? $this->language->lang('SUBALBUM') : $this->language->lang('SUBALBUMS'),
 			'LAST_POST_IMG'		=> $this->user->img('icon_topic_latest', 'VIEW_LATEST_POST'),

@@ -643,6 +643,12 @@ input.autowidth-gallery {
 	width: 76px;
 }
 
+.gallery-modern-album-visual--placeholder
+{
+	background: transparent;
+	pointer-events: none;
+}
+
 .gallery-modern-album-visual img
 {
 	max-height: 68px;

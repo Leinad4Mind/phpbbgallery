@@ -1,4 +1,4 @@
-<div class="gallery-modern-album-list">
+<div class="gallery-modern-album-list{% if S_ALBUM_LIST_HAS_CUSTOM_ICONS %} gallery-modern-album-list--with-custom-icons{% endif %}">
 {% for albumrow in albumrow %}
 	{% if albumrow.S_PUBLIC_SECTION_START or albumrow.S_PERSONAL_SECTION_START %}
 		<h2 class="gallery-modern-section-title"><i class="icon fa {% if albumrow.S_PERSONAL_SECTION_START %}fa-user{% else %}fa-folder-open{% endif %} fa-fw" aria-hidden="true"></i> {% if albumrow.S_PERSONAL_SECTION_START %}{{ lang('PERSONAL_ALBUMS') }}{% else %}{{ GALLERY_PUBLIC_ALBUMS_LABEL }}{% endif %}</h2>
@@ -11,11 +11,13 @@
 		</section>
 	{% else %}
 		<article class="gallery-modern-album{% if albumrow.S_PERSONAL_ALBUM %} gallery-personal-album{% endif %}{% if albumrow.S_UNREAD_ALBUM %} gallery-modern-album-unread{% endif %}">
-			<div class="gallery-modern-album-main{% if not albumrow.ALBUM_IMAGE_SRC %} gallery-modern-album-main--without-visual{% endif %}">
+			<div class="gallery-modern-album-main{% if not S_ALBUM_LIST_HAS_CUSTOM_ICONS %} gallery-modern-album-main--without-visual{% endif %}">
 				{% if albumrow.ALBUM_IMAGE_SRC %}
 				<a class="gallery-modern-album-visual gallery-album-custom-icon-frame" href="{{ albumrow.U_VIEWALBUM }}" aria-label="{{ lang('VIEW_ALBUM') }}{{ lang('COLON') }} {{ albumrow.ALBUM_NAME }}">
 						<img class="gallery-album-custom-icon" src="{{ albumrow.ALBUM_IMAGE_SRC }}" alt="">
 				</a>
+				{% elseif S_ALBUM_LIST_HAS_CUSTOM_ICONS %}
+				<span class="gallery-modern-album-visual gallery-modern-album-visual--placeholder" aria-hidden="true"></span>
 				{% endif %}
 				<div class="gallery-modern-album-content">
 					<a href="{{ albumrow.U_VIEWALBUM }}" class="gallery-modern-album-title"{% if S_PERSONAL_GALLERY and albumrow.ALBUM_COLOUR %} style="color: {{ albumrow.ALBUM_COLOUR }};"{% endif %}>{% if albumrow.S_LOCKED_ALBUM %}<i class="icon fa fa-lock fa-fw" aria-hidden="true"></i> {% endif %}{{ albumrow.ALBUM_NAME }}</a>
