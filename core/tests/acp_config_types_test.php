@@ -81,6 +81,9 @@ final class acp_config_types_test extends TestCase
 		$this->assertArrayHasKey('allow_comments', $display['vars']);
 		$this->assertSame('COMMENT_SYSTEM', $display['vars']['allow_comments']['lang']);
 		$this->assertTrue($display['vars']['allow_comments']['explain']);
+		$this->assertSame('UPLOAD_IMAGES', $display['vars']['num_uploads']['lang']);
+		$this->assertTrue($display['vars']['num_uploads']['explain']);
+		$this->assertSame('int', $display['vars']['num_uploads']['validate']);
 		$this->assertArrayHasKey('allow_hotlinking', $display['vars']);
 		$this->assertTrue($display['vars']['allow_hotlinking']['explain']);
 		$this->assertArrayHasKey('hotlinking_domains', $display['vars']);

@@ -534,7 +534,8 @@ $lang = array_merge($lang, [
 	'UC_THUMBNAIL_EXP'   => 'Ook gebruikt voor de BBcode.',
 	'UNLOCKED'           => 'Geopend',
 	'UPDATE_BBCODE'      => 'BBCode bijwerken',
-	'UPLOAD_IMAGES'      => 'Upload meerdere afbeeldingen',
+	'UPLOAD_IMAGES'      => 'Maximumaantal afbeeldingen per upload',
+	'UPLOAD_IMAGES_EXPLAIN' => 'Het maximale aantal afbeeldingsbestanden dat in één upload kan worden geselecteerd en verzonden. Dit beperkt niet het totale aantal afbeeldingen in het album.',
 
 	'VIEW_IMAGE_URL' => 'Laat afbeeldingslink zien op afbeeldingspagina',
 

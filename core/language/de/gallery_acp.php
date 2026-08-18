@@ -534,7 +534,8 @@ $lang = array_merge($lang, [
 	'UC_THUMBNAIL_EXP'   => 'Wird auch für den BBCode benutzt.',
 	'UNLOCKED'           => 'Entsperrt',
 	'UPDATE_BBCODE'      => 'BBCode aktualisieren',
-	'UPLOAD_IMAGES'      => 'Mehrere Bilder auf einmal hochladen',
+	'UPLOAD_IMAGES'      => 'Maximale Bilder pro Upload',
+	'UPLOAD_IMAGES_EXPLAIN' => 'Maximale Anzahl von Bilddateien, die in einem einzelnen Upload ausgewählt und gesendet werden können. Dies begrenzt nicht die Gesamtzahl der Bilder im Album.',
 
 	'VIEW_IMAGE_URL' => 'Link zum Bild auf der Imagepage anzeigen',
 

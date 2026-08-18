@@ -477,7 +477,8 @@ $lang = array_merge($lang, [
 	'UC_THUMBNAIL_EXP'   => 'Also used for the BBCode.',
 	'UNLOCKED'           => 'Unlocked',
 	'UPDATE_BBCODE'      => 'Update BBCode',
-	'UPLOAD_IMAGES'      => 'Upload multiple images',
+	'UPLOAD_IMAGES'      => 'Maximum images per upload',
+	'UPLOAD_IMAGES_EXPLAIN' => 'Maximum number of image files that can be selected and submitted in one upload operation. This does not limit the total number of images in the album.',
 
 	'VIEW_IMAGE_URL' => 'View Image-URL on imagepage',
 
