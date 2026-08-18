@@ -231,7 +231,6 @@ $lang = array_merge($lang, [
 	'GALLERY_RESYNC_ALBUMS_TO_CPF_CONFIRM' => 'Weet je zeker dat je alle persoonlijke hoofdalbums opnieuw wilt synchroniseren als contactprofielvelden?',
 	'GALLERY_STATS'                        => 'Galerijstatistieken',
 	'GALLERY_VERSION'                      => 'Galerijversie',
-	'GD_VERSION'                           => 'Optimaliseer voor GD versie',
 	'GENERAL_ALBUM_SETTINGS'               => 'Algemene albuminstellingen',
 	'GIF_ALLOWED'                          => 'Toegestaan om GIF-bestanden te uploaden',
 	'GUPLOAD_DIR_SIZE'                     => 'upload/-map grootte',

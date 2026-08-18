@@ -90,7 +90,6 @@ final class storage_deletion_test extends TestCase
 			$this->createMock(\phpbb\request\request_interface::class),
 			$this->createMock(\phpbbgallery\core\url::class),
 			new config(new \phpbb\config\config([])),
-			file::GDLIB2,
 			$this->storage
 		);
 	}

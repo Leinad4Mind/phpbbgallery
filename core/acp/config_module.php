@@ -532,7 +532,6 @@ class config_module
 
 				'THUMBNAIL_SETTINGS'	=> [
 					//'thumbnail_cache'		=> ['lang' => 'THUMBNAIL_CACHE',		'validate' => 'bool',	'type' => 'radio:yes_no'],
-					'gdlib_version'			=> ['lang' => 'GD_VERSION',			'validate' => 'int',	'type' => 'custom',			'method' => 'gd_radio'],
 					'thumbnail_width'		=> ['lang' => 'THUMBNAIL_WIDTH',		'validate' => 'int',	'type' => 'text:7:3',		'append' => 'PIXELS'],
 					'thumbnail_height'		=> ['lang' => 'THUMBNAIL_HEIGHT',		'validate' => 'int',	'type' => 'text:7:3',		'append' => 'PIXELS'],
 					'thumbnail_quality'		=> ['lang' => 'THUMBNAIL_QUALITY',		'validate' => 'int',	'type' => 'text:7:3',		'explain' => true,	'append' => 'PERCENT'],
@@ -809,27 +808,6 @@ class config_module
 		}
 
 		return $html . '</ul></section>';
-	}
-
-	/**
-	 * Radio Buttons for GD library
-	 * @param int    $value
-	 * @param string $key
-	 * @return string
-	 */
-	public function gd_radio(int $value, string $key): string
-	{
-		global $phpbb_container;
-		$phpbb_ext_gallery_core_file = $phpbb_container->get('phpbbgallery.core.file.tool');
-		$key_gd1	= ($value == $phpbb_ext_gallery_core_file::GDLIB1) ? ' checked="checked"' : '';
-		$key_gd2	= ($value == $phpbb_ext_gallery_core_file::GDLIB2) ? ' checked="checked"' : '';
-
-		$tpl = '';
-
-		$tpl .= "<label><input type=\"radio\" name=\"config[$key]\" value=\"" . $phpbb_ext_gallery_core_file::GDLIB1 . "\" $key_gd1 class=\"radio\" /> GD1</label>";
-		$tpl .= "<label><input type=\"radio\" id=\"$key\" name=\"config[$key]\" value=\"" . $phpbb_ext_gallery_core_file::GDLIB2 . "\" $key_gd2  class=\"radio\" /> GD2</label>";
-
-		return $tpl;
 	}
 
 	/**

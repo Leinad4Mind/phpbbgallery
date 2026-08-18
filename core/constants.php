@@ -16,10 +16,6 @@ namespace phpbbgallery\core;
 
 class constants
 {
-	// GD library
-	const GDLIB1 = 1;
-	const GDLIB2 = 2;
-
 	// Watermark positions
 	const WATERMARK_TOP = 1;
 	const WATERMARK_MIDDLE = 2;

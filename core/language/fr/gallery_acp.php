@@ -247,7 +247,6 @@ $lang = array_merge($lang, [
 	'GALLERY_RESYNC_ALBUMS_TO_CPF_CONFIRM' => 'Confirmer la resynchronisation de tous les albums personnels principaux comme contacts basés sur les champs de profils personnalisés ?',
 	'GALLERY_STATS'                        => 'Statistiques de la Galerie',
 	'GALLERY_VERSION'                      => 'Version de la Galerie phpBB',
-	'GD_VERSION'                           => 'Optimiser pour la version GD',
 	'GENERAL_ALBUM_SETTINGS'               => 'Paramètres généraux de l’album',
 	'GIF_ALLOWED'                          => 'Autoriser à envoyer des fichiers GIF',
 	'GUPLOAD_DIR_SIZE'                     => 'Taille du répertoire « upload/ »',

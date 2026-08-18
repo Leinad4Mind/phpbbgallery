@@ -23,8 +23,6 @@ use phpbbgallery\core\image\orientation;
 class file
 {
 	public const THUMBNAIL_INFO_HEIGHT = 16;
-	public const GDLIB1 = 1;
-	public const GDLIB2 = 2;
 	// Decompression-bomb guard: GD must allocate the full pixel buffer before it can resize
 	// anything down, so a file whose declared dimensions exceed this is rejected before decode,
 	// regardless of the configured max_width/max_height (which only bound the *output* size).
@@ -47,7 +45,6 @@ class file
 	/** Active Gallery storage; null only for legacy direct construction. */
 	private ?\phpbbgallery\core\storage\provider_interface $storage;
 
-	public int $gd_version = 0;
 
 	/** @var \phpbbgallery\core\config */
 	public \phpbbgallery\core\config $gallery_config;
@@ -83,15 +80,13 @@ class file
 	 * @param \phpbb\request\request_interface $request
 	 * @param \phpbbgallery\core\url $url
 	 * @param \phpbbgallery\core\config $gallery_config
-	 * @param int $gd_version
 	 * @param \phpbbgallery\core\storage\provider_interface|null $storage
 	 */
-	public function __construct(\phpbb\request\request_interface $request, \phpbbgallery\core\url $url, \phpbbgallery\core\config $gallery_config, int $gd_version, ?\phpbbgallery\core\storage\provider_interface $storage = null)
+	public function __construct(\phpbb\request\request_interface $request, \phpbbgallery\core\url $url, \phpbbgallery\core\config $gallery_config, ?\phpbbgallery\core\storage\provider_interface $storage = null)
 	{
 		$this->request = $request;
 		$this->url = $url;
 		$this->gallery_config = $gallery_config;
-		$this->gd_version = $gd_version;
 		$this->storage = $storage;
 	}
 
@@ -601,7 +596,7 @@ class file
 			$this->thumb_width	= $max_width;
 		}
 
-		$image_copy = (($this->gd_version == self::GDLIB1) ? @imagecreate($this->thumb_width, $this->thumb_height + $additional_height) : @imagecreatetruecolor($this->thumb_width, $this->thumb_height + $additional_height));
+		$image_copy = @imagecreatetruecolor($this->thumb_width, $this->thumb_height + $additional_height);
 		if ($this->image_type != 'jpeg')
 		{
 			imagealphablending($image_copy, false);
@@ -610,8 +605,7 @@ class file
 			imagefilledrectangle($image_copy, 0, 0, $this->thumb_width, $this->thumb_height + $additional_height, $transparent);
 		}
 
-		$resize_function = ($this->gd_version == self::GDLIB1) ? 'imagecopyresized' : 'imagecopyresampled';
-		$resize_function($image_copy, $this->image, 0, 0, 0, 0, $this->thumb_width, $this->thumb_height, $this->image_size['width'], $this->image_size['height']);
+		imagecopyresampled($image_copy, $this->image, 0, 0, 0, 0, $this->thumb_width, $this->thumb_height, $this->image_size['width'], $this->image_size['height']);
 
 		imagealphablending($image_copy, true);
 		imagesavealpha($image_copy, true);

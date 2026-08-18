@@ -64,7 +64,6 @@ class config
 		'disp_gallery_icon'			=> true,
 		'disp_new_image_count'		=> true,
 
-		'gdlib_version'		=> 2,
 
 		'forum_index_display'		=> 45,
 		'forum_index_mode'			=> 0,

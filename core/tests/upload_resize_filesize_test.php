@@ -58,7 +58,6 @@ final class upload_resize_filesize_test extends TestCase
 
 		$destination = $this->create_noisy_jpeg();
 		$file = (new \ReflectionClass(file::class))->newInstanceWithoutConstructor();
-		$file->gd_version = file::GDLIB2;
 		$file->set_image_data($destination, '', (int) filesize($destination), true);
 
 		try
@@ -95,7 +94,6 @@ final class upload_resize_filesize_test extends TestCase
 		$destination = $this->create_noisy_jpeg();
 		$original_hash = hash_file('sha256', $destination);
 		$file = (new \ReflectionClass(file::class))->newInstanceWithoutConstructor();
-		$file->gd_version = file::GDLIB2;
 		$file->set_image_data($destination, '', (int) filesize($destination), true);
 
 		try

@@ -223,7 +223,6 @@ $lang = array_merge($lang, [
 	'GALLERY_RESYNC_ALBUMS_TO_CPF_CONFIRM' => 'Tem certeza de que deseja ressincronizar todos os álbuns pessoais de nível superior como CPFs de contato?',
 	'GALLERY_STATS'                        => 'Estatísticas da galeria',
 	'GALLERY_VERSION'                      => 'Versão da galeria',
-	'GD_VERSION'                           => 'Versão do GD',
 	'GENERAL_ALBUM_SETTINGS'               => 'Configurações gerais dos álbuns',
 	'GIF_ALLOWED'                          => 'Permitir envio de arquivos GIF',
 	'GUPLOAD_DIR_SIZE'                     => 'Tamanho do diretório upload/',

@@ -150,7 +150,6 @@ services:
             - '@request'
             - '@phpbbgallery.core.url'
             - '@phpbbgallery.core.config'
-            - '2'
             - '@phpbbgallery.core.storage.active'
     phpbbgallery.core.image:
         class: phpbbgallery\core\image\image

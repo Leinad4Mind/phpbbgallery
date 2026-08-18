@@ -231,7 +231,6 @@ $lang = array_merge($lang, [
 	'GALLERY_RESYNC_ALBUMS_TO_CPF_CONFIRM' => 'Bist Du sicher, dass Du den Resync aller persönlichen Alben auf dem Toplevel als kontaktbasierte selbsterstellte Profilfelder durchführen willst?',
 	'GALLERY_STATS'                        => 'Galerie Statistik',
 	'GALLERY_VERSION'                      => 'Version der phpBB Gallery',//ja mit ll und y, da es sich um den MOD-Namen handelt
-	'GD_VERSION'                           => 'GD Version optimieren',
 	'GENERAL_ALBUM_SETTINGS'               => 'Allgemeine Albumseinstellungen',
 	'GIF_ALLOWED'                          => 'Es ist erlaubt GIF-Dateien hochzuladen',
 	'GUPLOAD_DIR_SIZE'                     => 'Größe des upload/-Ordners',

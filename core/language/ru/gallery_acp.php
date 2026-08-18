@@ -226,7 +226,6 @@ $lang = array_merge($lang, [
 	'GALLERY_RESYNC_ALBUMS_TO_CPF_CONFIRM' => 'Вы уверены, что хотите синхронизировать все личные альбомы верхнего уровня как контактные поля профиля?',
 	'GALLERY_STATS'                        => 'Статистика галереи',
 	'GALLERY_VERSION'                      => 'Версия галереи',
-	'GD_VERSION'                           => 'Версия GD',
 	'GENERAL_ALBUM_SETTINGS'               => 'Общие свойства альбома',
 	'GIF_ALLOWED'                          => 'GIF разрешён',
 	'GUPLOAD_DIR_SIZE'                     => 'Размер папки <em>upload</em>',

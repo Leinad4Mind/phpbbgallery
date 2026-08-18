@@ -230,7 +230,6 @@ $lang = array_merge($lang, [
 	'GALLERY_RESYNC_ALBUMS_TO_CPF_CONFIRM' => 'Sei sicuro di voler risincronizzare tutti gli album personali di livello piu\' alto come campi personalizzati di profilo?',
 	'GALLERY_STATS'                        => 'Statictiche galleria',
 	'GALLERY_VERSION'                      => 'Versione galleria',
-	'GD_VERSION'                           => 'Ottimizza per versione GD',
 	'GENERAL_ALBUM_SETTINGS'               => 'Configurazione generale album',
 	'GIF_ALLOWED'                          => 'Permetti il caricamento di file GIF',
 	'GUPLOAD_DIR_SIZE'                     => 'Dimensione directory/-caricamento',

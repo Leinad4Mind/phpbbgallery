@@ -174,7 +174,6 @@ $lang = array_merge($lang, [
 	'GALLERY_RESYNC_ALBUMS_TO_CPF_CONFIRM' => 'Are you sure that you want to resync all top level personal albums as contact CPFs?',
 	'GALLERY_STATS'                        => 'Gallery statistics',
 	'GALLERY_VERSION'                      => 'Gallery version',
-	'GD_VERSION'                           => 'Optimize for GD version',
 	'GENERAL_ALBUM_SETTINGS'               => 'General album settings',
 	'GIF_ALLOWED'                          => 'Allowed to upload GIF files',
 	'GUPLOAD_DIR_SIZE'                     => 'upload/-directory size',
