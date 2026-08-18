@@ -168,7 +168,8 @@ class gallery_lifecycle extends \phpbb_functional_test_case
 		$album_id = (int) $db->sql_nextid();
 
 		$role = array_fill_keys([
-			'a_list', 'i_view', 'i_watermark', 'i_upload', 'i_edit', 'i_delete',
+			'a_list', 'i_view', 'i_download', 'i_download_free', 'i_statistics',
+			'i_watermark', 'i_upload', 'i_edit', 'i_delete',
 			'i_rate', 'i_approve', 'i_lock', 'i_report', 'i_unlimited', 'c_read',
 			'c_post', 'c_edit', 'c_delete', 'm_comments', 'm_delete', 'm_edit',
 			'm_move', 'm_report', 'm_status', 'i_move', 'a_unlimited',

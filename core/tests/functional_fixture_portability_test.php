@@ -16,6 +16,16 @@ use RecursiveIteratorIterator;
 
 final class functional_fixture_portability_test extends TestCase
 {
+	public function test_lifecycle_complete_role_tracks_modern_core_permissions(): void
+	{
+		$source = (string) file_get_contents(__DIR__ . '/functional/gallery_lifecycle.php');
+
+		foreach (['i_download', 'i_download_free', 'i_statistics'] as $permission)
+		{
+			$this->assertStringContainsString($permission, $source);
+		}
+	}
+
 	public function test_fixtures_supply_required_text_fields(): void
 	{
 		$extension_root = dirname(__DIR__, 2);
