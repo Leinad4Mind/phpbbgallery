@@ -215,8 +215,8 @@ $lang = array_merge($lang, [
 
 	'EDIT_ALBUM' => 'Wijzig album',
 
-	'FAKE_THUMB_SIZE'     => 'Miniatuurgrootte',
-	'FAKE_THUMB_SIZE_EXP' => 'Als je de orginele grootte wilt behouden, hou dan rekening met de 16-beeldpunten voor de zwarte informatie-regel',
+	'FAKE_THUMB_SIZE'                      => 'Weergavegrootte van miniaturen',
+	'FAKE_THUMB_SIZE_EXP'                  => 'Maximale zichtbare breedte en hoogte van miniaturen in Galerijkaarten, zoekresultaten, profielen en paneellijsten. Hiermee worden opgeslagen afbeeldingsbestanden niet aangepast.',
 
 	'GALLERY_ALBUMS_TITLE'                 => 'Galerij Albums Beheer',
 	'GALLERY_CONFIG'                       => 'Galerij-instellingen',

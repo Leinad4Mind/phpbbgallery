@@ -87,6 +87,8 @@ final class acp_config_types_test extends TestCase
 		$this->assertTrue($display['vars']['hotlinking_domains']['explain']);
 		$this->assertArrayHasKey('watermark_enabled', $display['vars']);
 		$this->assertArrayNotHasKey('gdlib_version', $display['vars']);
+		$this->assertSame('int:1:600', $display['vars']['mini_thumbnail_size']['validate']);
+		$this->assertSame('number:1:600', $display['vars']['mini_thumbnail_size']['type']);
 		$this->assertSame('int:0:100', $display['vars']['jpg_quality']['validate']);
 		$this->assertSame('number:0:100', $display['vars']['jpg_quality']['type']);
 		$this->assertSame('int:0:100', $display['vars']['avif_quality']['validate']);

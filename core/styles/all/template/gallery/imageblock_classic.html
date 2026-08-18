@@ -11,7 +11,7 @@
 		<div class="inner"><strong>{{ imageblock.ERROR }}</strong></div>
 	</div>
 	{% else %}
-	<div class="gallery-classic-image-grid" style="--gallery-classic-thumbnail-size: {{ S_THUMBNAIL_SIZE|default(160) }}px;">
+	<div class="gallery-classic-image-grid" style="--gallery-classic-thumbnail-size: {{ S_THUMBNAIL_SIZE|default(70) }}px;">
 		{% for image in imageblock.image %}
 			{% if image.S_IMAGE_AWARD_PLACEHOLDER %}
 			<div class="gallery-classic-image-placeholder" aria-hidden="true"></div>

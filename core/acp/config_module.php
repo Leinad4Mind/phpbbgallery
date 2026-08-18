@@ -491,7 +491,7 @@ class config_module
 					'default_sort_dir'		=> ['lang' => 'DEFAULT_SORT_ORDER',	'validate' => 'string',	'type' => 'custom',			'method' => 'sort_order_select'],
 					'album_images'			=> ['lang' => 'MAX_IMAGES_PER_ALBUM',	'validate' => 'int',	'type' => 'text:7:7',		'explain' => true],
 					'mini_thumbnail_disp'	=> ['lang' => 'DISP_FAKE_THUMB',		'validate' => 'bool',	'type' => 'radio:yes_no'],
-					'mini_thumbnail_size'	=> ['lang' => 'FAKE_THUMB_SIZE',		'validate' => 'int',	'type' => 'text:7:4',		'explain' => true,	'append' => 'PIXELS'],
+					'mini_thumbnail_size'	=> ['lang' => 'FAKE_THUMB_SIZE',		'validate' => 'int:1:600',	'type' => 'number:1:600',	'explain' => true,	'append' => 'PIXELS'],
 				],
 
 				'SEARCH_SETTINGS'	=> [

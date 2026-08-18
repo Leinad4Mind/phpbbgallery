@@ -214,8 +214,8 @@ $lang = array_merge($lang, [
 	'DO_NOT_COPY_PERMISSIONS'      => 'Non copiare permessi',
 
 	'EDIT_ALBUM'          => 'Modifica album',
-	'FAKE_THUMB_SIZE'     => 'Dimensione anteprima',
-	'FAKE_THUMB_SIZE_EXP' => 'Se vuoi ridimensionare all’immagine originale, ricorda 16 pixels per la black-info-line',
+	'FAKE_THUMB_SIZE'                      => 'Dimensione di visualizzazione delle miniature',
+	'FAKE_THUMB_SIZE_EXP'                  => 'Larghezza e altezza visive massime delle miniature nelle schede della Galleria, nelle ricerche, nei profili e negli elenchi dei pannelli. Questa opzione non ridimensiona i file immagine memorizzati.',
 
 	'GALLERY_ALBUMS_TITLE'                 => 'Controllo albums galleria',
 	'GALLERY_CONFIG'                       => 'Configurazione galleria',

@@ -90,7 +90,7 @@ final class gallery_index_layout_test extends TestCase
 			$css
 		);
 		$this->assertMatchesRegularExpression(
-			'/\\.gallery-classic-thumbnail img\\s*\\{[^}]*max-width:\\s*100%;[^}]*max-height:\\s*calc\\(var\\(--gallery-classic-thumbnail-size\\) - 16px\\);[^}]*object-fit:\\s*contain;/s',
+			'/\\.gallery-classic-thumbnail img\\s*\\{[^}]*max-width:\\s*min\\(100%, var\\(--gallery-classic-thumbnail-size, 70px\\)\\);[^}]*max-height:\\s*var\\(--gallery-classic-thumbnail-size, 70px\\);[^}]*object-fit:\\s*contain;/s',
 			$css
 		);
 		$this->assertMatchesRegularExpression(
@@ -99,6 +99,21 @@ final class gallery_index_layout_test extends TestCase
 		);
 	}
 
+	public function test_displayed_thumbnail_size_is_shared_by_every_public_card_layout(): void
+	{
+		$core_root = dirname(__DIR__);
+		$classic = (string) file_get_contents($core_root . '/styles/all/template/gallery/imageblock_classic.html');
+		$futuristic = (string) file_get_contents($core_root . '/styles/all/template/gallery/imageblock_futuristic.html');
+		$cards = (string) file_get_contents($core_root . '/styles/prosilver/template/gallery/imageblock_polaroid.html');
+		$css = (string) file_get_contents($core_root . '/styles/all/theme/gallery.css');
+
+		$this->assertStringContainsString('--gallery-classic-thumbnail-size: {{ S_THUMBNAIL_SIZE|default(70) }}px;', $classic);
+		$this->assertStringContainsString('--gallery-futuristic-thumbnail-size: {{ S_THUMBNAIL_SIZE|default(70) }}px;', $futuristic);
+		$this->assertStringContainsString('--gallery-thumbnail-size: {{ S_THUMBNAIL_SIZE|default(70) }}px;', $cards);
+		$this->assertStringContainsString('var(--gallery-classic-thumbnail-size, 70px)', $css);
+		$this->assertStringContainsString('var(--gallery-futuristic-thumbnail-size, 70px)', $css);
+		$this->assertStringContainsString('var(--gallery-thumbnail-size, 70px)', $css);
+	}
 	public function test_prosilver_classic_has_bordered_cards_borderless_ids_and_last_image_thumbnails(): void
 	{
 		$core_root = dirname(__DIR__);
@@ -500,7 +515,7 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertStringNotContainsString(' image_reported', $futuristic);
 
 		$css = (string) file_get_contents($core_root . '/styles/all/theme/gallery.css');
-		$this->assertMatchesRegularExpression('/\.gallery-image-card-media\s*\{[^}]*display:\s*flex;[^}]*flex-direction:\s*column;[^}]*min-height:\s*180px;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-image-card-media\s*\{[^}]*display:\s*flex;[^}]*flex-direction:\s*column;[^}]*min-height:\s*calc\(var\(--gallery-thumbnail-size, 70px\) \+ 10px\);/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-image-card-thumbnail\s*\{[^}]*align-items:\s*center;[^}]*display:\s*flex;[^}]*justify-content:\s*center;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-image-card-approval \.post-notice,[^{]+\{[^}]*display:\s*flex;[^}]*justify-content:\s*center;[^}]*min-height:\s*46px;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-image-card-details\s*\{[^}]*display:\s*flex;[^}]*flex-direction:\s*column;[^}]*width:\s*100%;/s', $css);

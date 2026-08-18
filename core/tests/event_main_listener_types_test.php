@@ -68,6 +68,7 @@ final class event_main_listener_types_test extends TestCase
 			->with([
 				'GALLERY_BBCODE_TAG' => 'galleryimage',
 				'S_GALLERY_IMAGE_ID_BBCODE' => true,
+				'S_THUMBNAIL_SIZE' => 70,
 			]);
 		$config = $this->createMock(\phpbbgallery\core\config::class);
 		$config->expects($this->once())
@@ -75,6 +76,7 @@ final class event_main_listener_types_test extends TestCase
 			->willReturn('galleryimage');
 		$config->method('get')->willReturnMap([
 			['disp_image_id', null, true],
+			['mini_thumbnail_size', null, 70],
 			['disp_total_images', null, false],
 		]);
 		$listener = $this->listener($this->createStub(\phpbb\db\driver\driver_interface::class));

@@ -215,8 +215,8 @@ $lang = array_merge($lang, [
 
 	'EDIT_ALBUM' => 'Album bearbeiten',
 
-	'FAKE_THUMB_SIZE'     => 'Thumbnailgröße',
-	'FAKE_THUMB_SIZE_EXP' => 'Wenn du die volle Größe willst, denke an die 16 Pixel für die schwarze Info-Zeile',
+	'FAKE_THUMB_SIZE'                      => 'Anzeigegröße der Vorschaubilder',
+	'FAKE_THUMB_SIZE_EXP'                  => 'Maximale sichtbare Breite und Höhe der Vorschaubilder in Galerie-Karten, Suchen, Profilen und Bedienfeldlisten. Gespeicherte Bilddateien werden dadurch nicht verändert.',
 
 	'GALLERY_ALBUMS_TITLE'                 => 'Galerie Alben Kontrolle',
 	'GALLERY_CONFIG'                       => 'Galerie Konfiguration',

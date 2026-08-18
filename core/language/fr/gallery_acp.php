@@ -231,8 +231,8 @@ $lang = array_merge($lang, [
 
 	'EDIT_ALBUM' => 'Modifier l’album',
 
-	'FAKE_THUMB_SIZE'     => 'Taille de la miniature',
-	'FAKE_THUMB_SIZE_EXP' => 'Si vous souhaitez conserver la taille originale, n’oubliez pas les 16 pixels de la ligne noire d’informations.',
+	'FAKE_THUMB_SIZE'                      => 'Taille d’affichage des miniatures',
+	'FAKE_THUMB_SIZE_EXP'                  => 'Largeur et hauteur visuelles maximales des miniatures dans les cartes de la Galerie, les recherches, les profils et les listes des panneaux. Cette option ne redimensionne pas les fichiers image stockés.',
 
 	'GALLERY_ALBUMS_TITLE'                 => 'Contrôle des Albums de la Galerie',
 	'GALLERY_CONFIG'                       => 'Configuration de la Galerie',

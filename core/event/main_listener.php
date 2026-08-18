@@ -164,8 +164,9 @@ class main_listener implements EventSubscriberInterface
 		];
 		$event['lang_set_ext'] = $lang_set_ext;
 		$this->template->assign_vars([
-			'GALLERY_BBCODE_TAG' => $this->gallery_config->get_bbcode_tag(),
-			'S_GALLERY_IMAGE_ID_BBCODE' => (bool) $this->gallery_config->get('disp_image_id'),
+			'GALLERY_BBCODE_TAG'            => $this->gallery_config->get_bbcode_tag(),
+			'S_GALLERY_IMAGE_ID_BBCODE'     => (bool) $this->gallery_config->get('disp_image_id'),
+			'S_THUMBNAIL_SIZE'              => max(1, min(600, (int) $this->gallery_config->get('mini_thumbnail_size'))),
 		]);
 		if ($this->gallery_config->get('disp_total_images') == 1)
 		{

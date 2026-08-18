@@ -158,8 +158,8 @@ $lang = array_merge($lang, [
 
 	'EDIT_ALBUM' => 'Edit album',
 
-	'FAKE_THUMB_SIZE'     => 'Thumbnail-size',
-	'FAKE_THUMB_SIZE_EXP' => 'If you want to keep the original size, remember 16 pixels for the black-info-line',
+	'FAKE_THUMB_SIZE'                      => 'Displayed thumbnail size',
+	'FAKE_THUMB_SIZE_EXP'                  => 'Maximum visual width and height of thumbnails in Gallery card layouts, searches, profiles and control-panel lists. This does not resize stored image files.',
 
 	'GALLERY_ALBUMS_TITLE'                 => 'Gallery Albums Control',
 	'GALLERY_CONFIG'                       => 'Gallery Configuration',

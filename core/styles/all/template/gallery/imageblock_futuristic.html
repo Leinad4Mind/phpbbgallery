@@ -11,7 +11,7 @@
 	{% if imageblock.ERROR %}
 		<div class="gallery-futuristic-empty-state"><i class="icon fa fa-exclamation-circle fa-fw" aria-hidden="true"></i> {{ imageblock.ERROR }}</div>
 	{% else %}
-	<div class="gallery-futuristic-image-grid" style="--gallery-futuristic-thumbnail-size: {{ S_THUMBNAIL_SIZE|default(180) }}px;">
+	<div class="gallery-futuristic-image-grid" style="--gallery-futuristic-thumbnail-size: {{ S_THUMBNAIL_SIZE|default(70) }}px;">
 	{% for image in imageblock.image %}
 		{% if image.S_IMAGE_AWARD_PLACEHOLDER %}
 			<div class="gallery-futuristic-image-placeholder" aria-hidden="true"></div>

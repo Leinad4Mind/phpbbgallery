@@ -1446,7 +1446,7 @@ input.autowidth-gallery {
 	align-items: center;
 	background: linear-gradient(145deg, rgba(20, 29, 38, .94), rgba(37, 49, 63, .88));
 	display: flex;
-	height: clamp(180px, calc(var(--gallery-futuristic-thumbnail-size) + 24px), 280px);
+	height: calc(var(--gallery-futuristic-thumbnail-size, 70px) + 24px);
 	justify-content: center;
 	overflow: hidden;
 	position: relative;
@@ -1476,8 +1476,8 @@ input.autowidth-gallery {
 {
 	display: block;
 	height: auto;
-	max-height: calc(100% - 20px);
-	max-width: calc(100% - 20px);
+	max-height: min(calc(100% - 20px), var(--gallery-futuristic-thumbnail-size, 70px));
+	max-width: min(calc(100% - 20px), var(--gallery-futuristic-thumbnail-size, 70px));
 	object-fit: contain;
 	position: relative;
 	z-index: 1;
@@ -1713,9 +1713,9 @@ input.autowidth-gallery {
 	align-items: stretch;
 	box-sizing: border-box;
 	display: flex;
-	flex: 0 0 180px;
+	flex: 0 0 calc(var(--gallery-thumbnail-size, 70px) + 10px);
 	flex-direction: column;
-	min-height: 180px;
+	min-height: calc(var(--gallery-thumbnail-size, 70px) + 10px);
 	width: 100%;
 }
 
@@ -1744,8 +1744,8 @@ input.autowidth-gallery {
 {
 	display: block;
 	margin: auto;
-	max-height: 170px;
-	max-width: 100%;
+	max-height: var(--gallery-thumbnail-size, 70px);
+	max-width: min(100%, var(--gallery-thumbnail-size, 70px));
 	object-fit: contain;
 }
 
@@ -1970,8 +1970,7 @@ p.gallery-image-card-approval.post-notice
 	align-items: center;
 	justify-content: center;
 	box-sizing: border-box;
-	height: var(--gallery-classic-thumbnail-size);
-	min-height: 100px;
+	height: calc(var(--gallery-classic-thumbnail-size, 70px) + 16px);
 	overflow: hidden;
 	padding: 8px;
 	background: rgba(127, 127, 127, .06);
@@ -1993,8 +1992,8 @@ p.gallery-image-card-approval.post-notice
 	display: block;
 	width: auto;
 	height: auto;
-	max-width: 100%;
-	max-height: calc(var(--gallery-classic-thumbnail-size) - 16px);
+	max-width: min(100%, var(--gallery-classic-thumbnail-size, 70px));
+	max-height: var(--gallery-classic-thumbnail-size, 70px);
 	object-fit: contain;
 }
 
