@@ -441,6 +441,7 @@ $lang = array_merge($lang, [
 	'RESET_RATING_CONFIRM'       => 'Voulez-vous vraiment supprimer toutes les notes des images de cet album « %s » ?',
 	'RESET_RATING_EXPLAIN'       => 'Cette option supprime toutes les notes des images de l’album spécifié.',
 	'RESIZE_IMAGES'              => 'Redimensionner les grandes images',
+	'RESIZE_IMAGES_EXPLAIN'      => 'Réduit automatiquement les images prises en charge dont les dimensions dépassent la largeur ou la hauteur maximale configurée, tout en conservant leurs proportions. Gallery peut les réduire davantage afin que le fichier stocké respecte la taille maximale. Cette option ne contourne pas les limites PHP <code>upload_max_filesize</code> ou <code>post_max_size</code>, ni les limites de sécurité du décodage.',
 	'RESYNC_IMAGECOUNTS'         => 'Resynchroniser les compteurs d’images',
 	'RESYNC_IMAGECOUNTS_CONFIRM' => 'Êtes-vous sûr de vouloir resynchroniser les compteurs d’images ?',
 	'RESYNC_IMAGECOUNTS_EXPLAIN' => 'Seules les images existantes seront prises en considération.',

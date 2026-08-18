@@ -427,6 +427,7 @@ $lang = array_merge($lang, [
 	'RESET_RATING_CONFIRM'       => 'Möchtest du wirklich die Bewertungen aller Bilder aus dem Album „%s“ löschen?',
 	'RESET_RATING_EXPLAIN'       => 'Löscht alle Bewertungen zu Bildern eines Albums.',
 	'RESIZE_IMAGES'              => 'Größere Bilder verkleinern',
+	'RESIZE_IMAGES_EXPLAIN'      => 'Verkleinert unterstützte hochgeladene Bilder automatisch, wenn sie die konfigurierte maximale Breite oder Höhe überschreiten, und behält dabei das Seitenverhältnis bei. Die Gallery kann sie weiter verkleinern, damit die gespeicherte Datei die maximale Dateigröße einhält. PHP-Limits wie <code>upload_max_filesize</code> und <code>post_max_size</code> sowie Sicherheitsgrenzen beim Dekodieren werden dadurch nicht umgangen.',
 	'RESYNC_IMAGECOUNTS'         => 'Anzahl der hochgeladenen Bilder resynchronisieren',
 	'RESYNC_IMAGECOUNTS_CONFIRM' => 'Bist du sicher, dass du die Anzahl der hochgeladenen Bilder resynchronisieren willst?',
 	'RESYNC_IMAGECOUNTS_EXPLAIN' => 'Es werden nur Bilder mitgezählt, die noch existieren.',

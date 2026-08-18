@@ -508,7 +508,7 @@ class config_module
 					'max_filesize'			=> ['lang' => 'MAX_FILE_SIZE',			'validate' => 'int',	'type' => 'text:12:9',		'append' => 'BYTES'],
 					'max_width'				=> ['lang' => 'MAX_WIDTH',				'validate' => 'int',	'type' => 'text:7:5',		'append' => 'PIXELS'],
 					'max_height'			=> ['lang' => 'MAX_HEIGHT',			'validate' => 'int',	'type' => 'text:7:5',		'append' => 'PIXELS'],
-					'allow_resize'			=> ['lang' => 'RESIZE_IMAGES',			'validate' => 'bool',	'type' => 'radio:yes_no'],
+					'allow_resize'			=> ['lang' => 'RESIZE_IMAGES',			'validate' => 'bool',	'type' => 'radio:yes_no',		'explain' => true],
 					'allow_rotate'			=> ['lang' => 'TRANSFORM_IMAGES',		'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 					'auto_orient'			=> ['lang' => 'AUTO_ORIENT_IMAGES',	'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 					'jpg_quality'			=> ['lang' => 'JPG_QUALITY',			'validate' => 'int:0:100',	'type' => 'number:0:100',	'explain' => true],

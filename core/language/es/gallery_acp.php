@@ -427,6 +427,7 @@ $lang = array_merge($lang, [
 	'RESET_RATING_CONFIRM'       => '¿Realmente desea eliminar todas las calificaciones de las imágenes del álbum “%s“?',
 	'RESET_RATING_EXPLAIN'       => 'Elimina todas las calificaciones de las imágenes del álbum específico.',
 	'RESIZE_IMAGES'              => 'Cambiar el tamaño de las imágenes más grandes',
+	'RESIZE_IMAGES_EXPLAIN'      => 'Reduce automáticamente las imágenes compatibles que superen la anchura o altura máximas configuradas, conservando la proporción. Gallery también puede reducirlas más para cumplir el tamaño máximo del archivo almacenado. Esta opción no evita los límites <code>upload_max_filesize</code> o <code>post_max_size</code> de PHP ni los límites de seguridad de decodificación.',
 	'RESYNC_IMAGECOUNTS'         => 'Resincronizar los recuentos de imágenes',
 	'RESYNC_IMAGECOUNTS_CONFIRM' => '¿Está seguro de que desea volver a sincronizar los conteos de imágenes?',
 	'RESYNC_IMAGECOUNTS_EXPLAIN' => 'Sólo se tendrán en cuenta las imágenes existentes.',

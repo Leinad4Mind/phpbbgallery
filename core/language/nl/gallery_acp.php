@@ -427,6 +427,7 @@ $lang = array_merge($lang, [
 	'RESET_RATING_CONFIRM'       => 'Weet je zeker dat je de beoordelingen van de afbeeldingen in het album “%s“ wilt verwijderen?',
 	'RESET_RATING_EXPLAIN'       => 'Verwijderd alle beoordelingen van afbeeldingen in het gespecificeerde album.',
 	'RESIZE_IMAGES'              => 'Grotere afbeldingen schalen',
+	'RESIZE_IMAGES_EXPLAIN'      => 'Verkleint ondersteunde geüploade afbeeldingen automatisch wanneer zij de ingestelde maximale breedte of hoogte overschrijden, met behoud van de verhoudingen. Gallery kan ze verder verkleinen zodat het opgeslagen bestand aan de maximale bestandsgrootte voldoet. Dit omzeilt de PHP-limieten <code>upload_max_filesize</code> of <code>post_max_size</code> en beveiligingslimieten voor decodering niet.',
 	'RESYNC_IMAGECOUNTS'         => 'Afbeeldingsteller synchroniseren',
 	'RESYNC_IMAGECOUNTS_CONFIRM' => 'Weet je zeker dat je de afbeeldingsteller wilt synchroniseren?',
 	'RESYNC_IMAGECOUNTS_EXPLAIN' => 'Alleen bestaande afbeeldingen komen hiervoor in aanmerking.',
