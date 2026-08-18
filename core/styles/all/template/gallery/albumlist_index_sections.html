@@ -9,12 +9,12 @@
 			{% if GALLERY_FUTURISTIC_VARIANT == 'bboots' or GALLERY_FUTURISTIC_VARIANT == 'flatboots' %}
 				<ul class="pagination pagination-sm pull-right gallery-album-list-pagination">
 					<li class="active"><a>{{ PUBLIC_ALBUM_TOTAL }}</a></li>
-					{% if public_pagination|length %}{% include 'pagination.html' with { pagination: public_pagination, BASE_URL: PUBLIC_BASE_URL, TOTAL_PAGES: PUBLIC_TOTAL_PAGES, PAGE_NUMBER: PUBLIC_PAGE_NUMBER, PER_PAGE: PUBLIC_PER_PAGE, START_NAME: PUBLIC_START_NAME } %}{% endif %}
+					{% if public_pagination|length %}{% include '@phpbbgallery_core/gallery/list_pagination.html' with { pagination: public_pagination, GALLERY_BOOTSTRAP_PAGINATION: true } %}{% endif %}
 				</ul>
 			{% else %}
 				<div class="pagination gallery-album-list-pagination">
 					{{ PUBLIC_ALBUM_TOTAL }}
-					{% if public_pagination|length %}{% include 'pagination.html' with { pagination: public_pagination, BASE_URL: PUBLIC_BASE_URL, TOTAL_PAGES: PUBLIC_TOTAL_PAGES, PAGE_NUMBER: PUBLIC_PAGE_NUMBER, PER_PAGE: PUBLIC_PER_PAGE, START_NAME: PUBLIC_START_NAME } %}{% endif %}
+					{% if public_pagination|length %}{% include '@phpbbgallery_core/gallery/list_pagination.html' with { pagination: public_pagination, GALLERY_BOOTSTRAP_PAGINATION: false } %}{% endif %}
 				</div>
 			{% endif %}
 		{% endif %}
@@ -27,12 +27,12 @@
 			{% if GALLERY_FUTURISTIC_VARIANT == 'bboots' or GALLERY_FUTURISTIC_VARIANT == 'flatboots' %}
 				<ul class="pagination pagination-sm pull-right gallery-album-list-pagination">
 					<li class="active"><a>{{ PERSONAL_ALBUM_TOTAL }}</a></li>
-					{% if personal_pagination|length %}{% include 'pagination.html' with { pagination: personal_pagination, BASE_URL: PERSONAL_BASE_URL, TOTAL_PAGES: PERSONAL_TOTAL_PAGES, PAGE_NUMBER: PERSONAL_PAGE_NUMBER, PER_PAGE: PERSONAL_PER_PAGE, START_NAME: PERSONAL_START_NAME } %}{% endif %}
+					{% if personal_pagination|length %}{% include '@phpbbgallery_core/gallery/list_pagination.html' with { pagination: personal_pagination, GALLERY_BOOTSTRAP_PAGINATION: true } %}{% endif %}
 				</ul>
 			{% else %}
 				<div class="pagination gallery-album-list-pagination">
 					{{ PERSONAL_ALBUM_TOTAL }}
-					{% if personal_pagination|length %}{% include 'pagination.html' with { pagination: personal_pagination, BASE_URL: PERSONAL_BASE_URL, TOTAL_PAGES: PERSONAL_TOTAL_PAGES, PAGE_NUMBER: PERSONAL_PAGE_NUMBER, PER_PAGE: PERSONAL_PER_PAGE, START_NAME: PERSONAL_START_NAME } %}{% endif %}
+					{% if personal_pagination|length %}{% include '@phpbbgallery_core/gallery/list_pagination.html' with { pagination: personal_pagination, GALLERY_BOOTSTRAP_PAGINATION: false } %}{% endif %}
 				</div>
 			{% endif %}
 		{% endif %}

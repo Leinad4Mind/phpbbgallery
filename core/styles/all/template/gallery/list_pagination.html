@@ -1,0 +1,23 @@
+{% if not GALLERY_BOOTSTRAP_PAGINATION %}<ul>{% endif %}
+{% for page in pagination %}
+	{% if page.S_IS_PREV %}
+		{% if GALLERY_BOOTSTRAP_PAGINATION %}
+			<li><a href="{{ page.PAGE_URL }}" rel="prev" role="button">{{ lang('PREVIOUS') }}</a></li>
+		{% else %}
+			<li class="arrow previous"><a class="button button-icon-only" href="{{ page.PAGE_URL }}" rel="prev" role="button"><i class="icon fa-chevron-{{ S_CONTENT_FLOW_BEGIN }} fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('PREVIOUS') }}</span></a></li>
+		{% endif %}
+	{% elseif page.S_IS_CURRENT %}
+		{% if GALLERY_BOOTSTRAP_PAGINATION %}<li class="active"><a aria-current="page">{{ page.PAGE_NUMBER }}</a></li>{% else %}<li class="active"><span aria-current="page">{{ page.PAGE_NUMBER }}</span></li>{% endif %}
+	{% elseif page.S_IS_ELLIPSIS %}
+		{% if GALLERY_BOOTSTRAP_PAGINATION %}<li class="ellipsis" role="separator"><a>{{ lang('ELLIPSIS') }}</a></li>{% else %}<li class="ellipsis" role="separator"><span>{{ lang('ELLIPSIS') }}</span></li>{% endif %}
+	{% elseif page.S_IS_NEXT %}
+		{% if GALLERY_BOOTSTRAP_PAGINATION %}
+			<li><a href="{{ page.PAGE_URL }}" rel="next" role="button">{{ lang('NEXT') }}</a></li>
+		{% else %}
+			<li class="arrow next"><a class="button button-icon-only" href="{{ page.PAGE_URL }}" rel="next" role="button"><i class="icon fa-chevron-{{ S_CONTENT_FLOW_END }} fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('NEXT') }}</span></a></li>
+		{% endif %}
+	{% else %}
+		{% if GALLERY_BOOTSTRAP_PAGINATION %}<li><a href="{{ page.PAGE_URL }}" role="button">{{ page.PAGE_NUMBER }}</a></li>{% else %}<li><a class="button" href="{{ page.PAGE_URL }}" role="button">{{ page.PAGE_NUMBER }}</a></li>{% endif %}
+	{% endif %}
+{% endfor %}
+{% if not GALLERY_BOOTSTRAP_PAGINATION %}</ul>{% endif %}

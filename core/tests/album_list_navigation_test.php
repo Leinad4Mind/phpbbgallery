@@ -45,6 +45,14 @@ final class album_list_navigation_test extends TestCase
 		$index_sections = $this->read('styles/all/template/gallery/albumlist_index_sections.html');
 		$this->assertStringContainsString('data-gallery-list-section="public-albums"', $index_sections);
 		$this->assertStringContainsString('data-gallery-list-section="personal-albums"', $index_sections);
+		$this->assertStringContainsString('pagination: public_pagination', $index_sections);
+		$this->assertStringContainsString('pagination: personal_pagination', $index_sections);
+		$this->assertStringNotContainsString("include 'pagination.html'", $index_sections);
+
+		$pagination = $this->read('styles/all/template/gallery/list_pagination.html');
+		$this->assertStringContainsString('{% for page in pagination %}', $pagination);
+		$this->assertStringContainsString('page.PAGE_URL', $pagination);
+		$this->assertStringNotContainsString('BEGIN pagination', $pagination);
 		$this->assertStringContainsString('data-gallery-list-section="personal-directory"', $index_sections);
 		$this->assertStringContainsString('albumrow: public_albumrow', $index_sections);
 		$this->assertStringContainsString('albumrow: personal_albumrow', $index_sections);
@@ -59,6 +67,7 @@ final class album_list_navigation_test extends TestCase
 			$this->assertStringContainsString('data-gallery-list-section="subalbums"', $album, $style);
 			$this->assertStringContainsString('albumrow: subalbumrow', $album, $style);
 			$this->assertStringContainsString('subalbum_pagination', $album, $style);
+			$this->assertStringContainsString('list_pagination.html', $album, $style);
 			$this->assertStringContainsString('S_AJAX_LIST_NAVIGATION', $footer, $style);
 			$this->assertStringContainsString('gallery-album-list-total', $album, $style);
 			$this->assertStringContainsString('list_navigation.js', $footer, $style);
