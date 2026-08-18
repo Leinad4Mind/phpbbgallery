@@ -1552,11 +1552,15 @@ input.autowidth-gallery {
 .gallery-futuristic-approval
 {
 	background: var(--gallery-futuristic-accent-soft);
-	border-top: 1px solid var(--gallery-futuristic-border);
+	border: 1px solid var(--gallery-futuristic-border);
+	border-radius: 4px;
+	box-sizing: border-box;
 	display: flex;
 	gap: 7px;
 	justify-content: center;
 	padding: 9px 12px;
+	margin-bottom: 2px;
+	width: 100%;
 }
 
 .gallery-futuristic :focus-visible
@@ -1745,16 +1749,20 @@ input.autowidth-gallery {
 	object-fit: contain;
 }
 
-.gallery-image-card-media--with-approval .gallery-image-card-thumbnail img
+.gallery-image-card-details
 {
-	max-height: 118px;
+	display: flex;
+	flex: 1 1 auto;
+	flex-direction: column;
+	min-width: 0;
+	width: 100%;
 }
 
 .gallery-image-card-approval
 {
 	box-sizing: border-box;
 	flex: 0 0 auto;
-	margin: 6px 0 0;
+	margin: 0 0 8px;
 	width: 100%;
 }
 

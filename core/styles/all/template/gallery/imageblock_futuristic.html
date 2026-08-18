@@ -16,7 +16,7 @@
 		{% if image.S_IMAGE_AWARD_PLACEHOLDER %}
 			<div class="gallery-futuristic-image-placeholder" aria-hidden="true"></div>
 		{% else %}
-		<article class="gallery-image-card gallery-futuristic-image{% if image.S_STATUS_UNAPPROVED or image.S_UNAPPROVED %} gallery-futuristic-image--unapproved image_unapproved{% endif %}{% if image.S_LOCKED %} gallery-futuristic-image--locked{% endif %}{% if image.S_REPORTED %} gallery-futuristic-image--reported image_reported{% endif %}">
+		<article class="gallery-image-card gallery-futuristic-image{% if image.S_STATUS_UNAPPROVED or image.S_UNAPPROVED %} gallery-futuristic-image--unapproved{% endif %}{% if image.S_LOCKED %} gallery-futuristic-image--locked{% endif %}{% if image.S_REPORTED %} gallery-futuristic-image--reported{% endif %}">
 			{% EVENT phpbbgallery_core_album_image_actions %}
 			<header class="gallery-image-card-heading gallery-futuristic-image-header">
 				{% include '@phpbbgallery_core/gallery/image_bbcode_copy.html' %}
@@ -38,6 +38,12 @@
 			<div class="gallery-futuristic-image-details">
 				{% if image.IMAGE_SUBTITLE %}<p class="gallery-futuristic-image-subtitle" title="{{ image.IMAGE_SUBTITLE }}">{{ image.IMAGE_SUBTITLE }}</p>{% endif %}
 				<div class="gallery-futuristic-metadata">
+					{% if image.S_STATUS_UNAPPROVED_ACTION %}
+					<form method="post" class="gallery-futuristic-approval" action="{{ image.S_STATUS_UNAPPROVED_ACTION }}">
+						<input class="button2 btn btn-danger" type="submit" value="{{ lang('DISAPPROVE') }}" name="action[disapprove]">
+						<input class="button1 btn btn-success" type="submit" value="{{ lang('APPROVE') }}" name="action[approve]">
+					</form>
+					{% endif %}
 					{% if image.U_ALBUM %}<div class="gallery-image-card-metadata-item gallery-futuristic-metadata-item" data-gallery-card-metadata><i class="icon fa fa-folder-open fa-fw" aria-hidden="true"></i> <span>{{ lang('ALBUM_NAME') }}{{ lang('COLON') }} <a href="{{ image.U_ALBUM }}" title="{{ image.ALBUM_NAME }}"><strong>{{ image.ALBUM_NAME }}</strong></a></span></div>{% endif %}
 					{% if image.POSTER %}<div class="gallery-image-card-metadata-item gallery-futuristic-metadata-item" data-gallery-card-metadata><i class="icon fa fa-user fa-fw" aria-hidden="true"></i> <span>{{ lang('UPLOADED_BY_USER') }}{{ lang('COLON') }} {{ image.POSTER }}</span></div>{% endif %}
 					{% if image.TIME %}<div class="gallery-image-card-metadata-item gallery-futuristic-metadata-item" data-gallery-card-metadata><i class="icon fa fa-clock-o fa-fw" aria-hidden="true"></i> <span>{{ image.TIME }}</span></div>{% endif %}
@@ -50,12 +56,6 @@
 				</div>
 			</div>
 
-			{% if image.S_STATUS_UNAPPROVED_ACTION %}
-			<form method="post" class="gallery-futuristic-approval" action="{{ image.S_STATUS_UNAPPROVED_ACTION }}">
-				<input class="button2 btn btn-danger" type="submit" value="{{ lang('DISAPPROVE') }}" name="action[disapprove]">
-				<input class="button1 btn btn-success" type="submit" value="{{ lang('APPROVE') }}" name="action[approve]">
-			</form>
-			{% endif %}
 		</article>
 		{% endif %}
 	{% endfor %}

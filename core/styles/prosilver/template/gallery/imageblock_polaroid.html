@@ -21,27 +21,25 @@
 		</p>
 	</header>
 	<hr />
-	<div class="gallery-image-card-media{% if image.S_STATUS_UNAPPROVED or image.S_UNAPPROVED %} gallery-image-card-media--with-approval{% endif %}">
+	<div class="gallery-image-card-media">
 		<div id="thumbnail" class="gallery-image-card-thumbnail">
 			{% if image.UC_THUMBNAIL_ACTION %}<a href="{{ image.UC_THUMBNAIL_ACTION }}" class="polaroid_img_container">{% endif %}<img src="{{ image.UC_THUMBNAIL }}" alt="{{ image.UC_IMAGE_NAME }}" title="{{ lang('VIEW_IMAGE') }}{{ lang('COLON') }} {{ image.UC_IMAGE_NAME }}" />{% if image.UC_THUMBNAIL_ACTION %}</a>{% endif %}
 		</div>
-		{% if image.S_STATUS_UNAPPROVED or image.S_UNAPPROVED %}
-			<div class="gallery-image-card-approval">
-				{% if image.S_STATUS_UNAPPROVED and not image.S_UNAPPROVED %}
-					<p class="post-notice unapproved"><span>{{ lang('IMAGE_NOT_APPROVED') }}</span></p>
-				{% else %}
-					<form method="post" action="{{ image.S_STATUS_UNAPPROVED_ACTION }}">
-						<p class="post-notice unapproved">
-							<input class="button2" type="submit" value="{{ lang('DISAPPROVE') }}" name="action[disapprove]" />
-							<input class="button1" type="submit" value="{{ lang('APPROVE') }}" name="action[approve]" />
-						</p>
-					</form>
-				{% endif %}
-			</div>
-		{% endif %}
 	</div>
 	{% if image.IMAGE_SUBTITLE %}<p class="gallery-image-card-subtitle" title="{{ image.IMAGE_SUBTITLE }}">{{ image.IMAGE_SUBTITLE }}</p>{% endif %}
 	<hr />
+	<div class="gallery-image-card-details">
+	{% if image.S_STATUS_UNAPPROVED_ACTION %}
+		<form method="post" class="gallery-image-card-approval" action="{{ image.S_STATUS_UNAPPROVED_ACTION }}">
+			<p class="post-notice unapproved">
+				<input class="button2" type="submit" value="{{ lang('DISAPPROVE') }}" name="action[disapprove]" />
+				<input class="button1" type="submit" value="{{ lang('APPROVE') }}" name="action[approve]" />
+			</p>
+		</form>
+	{% elseif image.S_STATUS_UNAPPROVED or image.S_UNAPPROVED %}
+		<p class="gallery-image-card-approval post-notice unapproved">{{ lang('IMAGE_NOT_APPROVED') }}</p>
+	{% endif %}
+
 	{% if image.U_ALBUM %}<div class="gallery-image-card-metadata-item" data-gallery-card-metadata>{{ lang('ALBUM_NAME') }}{{ lang('COLON') }} <a href="{{ image.U_ALBUM }}" title="{{ image.ALBUM_NAME }}"><strong>{{ image.ALBUM_NAME }}</strong></a></div>{% endif %}
 	{% if image.POSTER %}<div class="gallery-image-card-metadata-item" data-gallery-card-metadata>{{ lang('UPLOADED_BY_USER') }}{{ lang('COLON') }} {{ image.POSTER }}</div>{% endif %}
 	{% if image.TIME %}<div class="gallery-image-card-metadata-item" data-gallery-card-metadata>&raquo; {{ image.TIME }}</div>{% endif %}
@@ -56,6 +54,7 @@
 	{% if image.U_USER_IP %}<div class="gallery-image-card-metadata-item" data-gallery-card-metadata>{{ lang('IP') }}{{ lang('COLON') }} {% include '@phpbbgallery_core/gallery/ip_privacy_toggle.html' with { ip_value: image.U_USER_IP } %}</div>{% endif %}
 {% endif %}
 
+	</div>
 </div>
 
 {% endfor %}
