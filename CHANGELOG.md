@@ -47,6 +47,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Explained that the Gallery-index personal-album switch includes only permission-visible images in its enabled image and comment blocks.
 - Renamed the forum-index Gallery image section so its host page is identified before the block content.
 - Hidden the inactive rating-scale field whenever the global Gallery rating system is disabled, while preserving its stored value for later reactivation.
 - Clarified the Gallery hotlink-protection switch and conditionally hides its allowed-domain list whenever unrestricted external embedding makes that list inactive.

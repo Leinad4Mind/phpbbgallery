@@ -298,6 +298,16 @@ final class acp_config_types_test extends TestCase
 		$this->assertStringContainsString('margin: auto;', $stylesheet);
 	}
 
+	public function test_personal_album_gallery_index_blocks_have_contextual_explanation(): void
+	{
+		$module = (string) file_get_contents(dirname(__DIR__) . '/acp/config_module.php');
+		$language = (string) file_get_contents(dirname(__DIR__) . '/language/en/gallery_acp.php');
+
+		$this->assertMatchesRegularExpression("/'rrc_gindex_pegas'.*'explain' => true/", $module);
+		$this->assertStringContainsString("'RRC_GINDEX_PGALLERIES_EXPLAIN'", $language);
+		$this->assertStringContainsString('Only images the current visitor is allowed to view are included.', $language);
+	}
+
 	public function test_forum_index_image_section_names_its_host_context_first(): void
 	{
 		$language = (string) file_get_contents(dirname(__DIR__) . '/language/en/gallery_acp.php');

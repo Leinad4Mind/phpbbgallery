@@ -474,6 +474,7 @@ $lang = array_merge($lang, [
 	'RRC_GINDEX_MODE'        => 'Mode',
 	'RRC_GINDEX_MODE_EXP'    => 'Het laden van de “Willekeurige afbeeldingen“ kan enkele minuten duren bij grote databases!',
 	'RRC_GINDEX_PGALLERIES'  => 'Laat afbeeldingen van persoonlijke albums zien',
+	'RRC_GINDEX_PGALLERIES_EXPLAIN' => 'Indien ingeschakeld, kunnen afbeeldingen uit persoonlijke albums verschijnen in de ingeschakelde afbeeldings- en reactieblokken op de galerij-index. Alleen afbeeldingen die de huidige bezoeker mag bekijken, worden opgenomen.',
 	'FORUM_INDEX_INCLUDE_PERSONAL' => 'Afbeeldingen uit persoonlijke albums opnemen in Recente/Willekeurige blokken',
 	'FORUM_INDEX_INCLUDE_PERSONAL_EXPLAIN' => 'Indien ingeschakeld kunnen afbeeldingen uit persoonlijke albums ook verschijnen in de blokken Recente afbeeldingen en Willekeurige afbeeldingen. De onafhankelijke modus “Afbeeldingen uit persoonlijke albums” en het aantal ervan worden afzonderlijk ingesteld.',
 	'RRC_GINDEX_ROWS'        => 'Rijen',

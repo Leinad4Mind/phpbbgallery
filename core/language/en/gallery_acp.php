@@ -417,6 +417,7 @@ $lang = array_merge($lang, [
 	'RRC_GINDEX_MODE'        => 'Mode',
 	'RRC_GINDEX_MODE_EXP'    => '“Random images“ may take some time to load, on large databases!',
 	'RRC_GINDEX_PGALLERIES'  => 'View images of personal albums',
+	'RRC_GINDEX_PGALLERIES_EXPLAIN' => 'When enabled, personal-album images may appear in the enabled image and comment blocks on the Gallery index. Only images the current visitor is allowed to view are included.',
 	'FORUM_INDEX_INCLUDE_PERSONAL' => 'Include personal-album images in Recent/Random blocks',
 	'FORUM_INDEX_INCLUDE_PERSONAL_EXPLAIN' => 'When enabled, personal-album images may also appear inside the Recent and Random blocks. The independent “Personal album images” mode and its count are configured separately.',
 	'RRC_GINDEX_ROWS'        => 'Rows',

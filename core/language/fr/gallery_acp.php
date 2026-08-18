@@ -488,6 +488,7 @@ $lang = array_merge($lang, [
 	'RRC_GINDEX_MODE'        => 'Mode',
 	'RRC_GINDEX_MODE_EXP'    => 'Le système « Images aléatoires » peut mettre un certain temps à se charger, surtout sur les grandes base de données !',
 	'RRC_GINDEX_PGALLERIES'  => 'Afficher les images des albums personnels',
+	'RRC_GINDEX_PGALLERIES_EXPLAIN' => 'Lorsque cette option est activée, les images des albums personnels peuvent apparaître dans les blocs d’images et de commentaires activés sur l’index de la Galerie. Seules les images que le visiteur actuel est autorisé à voir sont incluses.',
 	'FORUM_INDEX_INCLUDE_PERSONAL' => 'Inclure les images des albums personnels dans les blocs récents/aléatoires',
 	'FORUM_INDEX_INCLUDE_PERSONAL_EXPLAIN' => 'Lorsque cette option est activée, les images des albums personnels peuvent également apparaître dans les blocs Images récentes et Images aléatoires. Le mode indépendant « Images des albums personnels » et son nombre sont configurés séparément.',
 	'RRC_GINDEX_ROWS'        => 'Lignes',

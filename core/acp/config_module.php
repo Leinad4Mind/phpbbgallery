@@ -571,7 +571,7 @@ class config_module
 					'pegas_index_viewed_count' => ['lang' => 'VIEWED_ON_INDEX_COUNT',	'validate' => 'int',	'type' => 'text:7:3'],
 					'pegas_index_rated_count'	=> ['lang' => 'RATED_ON_INDEX_COUNT',	'validate' => 'int',	'type' => 'text:7:3'],
 					'rrc_gindex_display'	=> ['lang' => 'RRC_DISPLAY_OPTIONS',	'validate' => '',		'type' => 'custom',			'method' => 'rrc_display'],
-					'rrc_gindex_pegas'		=> ['lang' => 'RRC_GINDEX_PGALLERIES',	'validate' => 'bool',	'type' => 'radio:yes_no'],
+					'rrc_gindex_pegas'		=> ['lang' => 'RRC_GINDEX_PGALLERIES',	'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 					'rrc_gindex_comments'	=> ['lang' => 'RRC_GINDEX_COMMENTS',	'validate' => 'bool',	'type' => 'radio:yes_no'],
 				],
 

@@ -472,6 +472,7 @@ $lang = array_merge($lang, [
 	'RRC_GINDEX_MODE'        => 'Modo',
 	'RRC_GINDEX_MODE_EXP'    => '“immagini casuali“ può richiedere maggior carico su database di grandi dimensioni!',
 	'RRC_GINDEX_PGALLERIES'  => 'Visulizzazione immagini di albums personali',
+	'RRC_GINDEX_PGALLERIES_EXPLAIN' => 'Quando l’opzione è attiva, le immagini degli album personali possono apparire nei blocchi di immagini e commenti abilitati nell’indice della Galleria. Sono incluse solo le immagini che il visitatore attuale è autorizzato a vedere.',
 	'FORUM_INDEX_INCLUDE_PERSONAL' => 'Includi le immagini degli album personali nei blocchi recenti/casuali',
 	'FORUM_INDEX_INCLUDE_PERSONAL_EXPLAIN' => 'Se abilitata, le immagini degli album personali possono apparire anche nei blocchi Immagini recenti e Immagini casuali. La modalità indipendente “Immagini degli album personali” e il relativo numero vengono configurati separatamente.',
 	'RRC_GINDEX_ROWS'        => 'Righe',

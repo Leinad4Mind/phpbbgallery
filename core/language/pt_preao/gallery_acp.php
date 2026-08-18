@@ -454,6 +454,7 @@ $lang = array_merge($lang, [
 	'RRC_GINDEX_MODE'            => 'Modo',
 	'RRC_GINDEX_MODE_EXP'        => '"Imagens aleatórias" podem levar algum tempo a carregar em bases de dados grandes!',
 	'RRC_GINDEX_PGALLERIES'      => 'Ver imagens de álbuns pessoais',
+	'RRC_GINDEX_PGALLERIES_EXPLAIN' => 'Quando activada, as imagens dos álbuns pessoais podem aparecer nos blocos de imagens e comentários activados no índice da galeria. Apenas são incluídas imagens que o visitante actual tem permissão para ver.',
 	'FORUM_INDEX_INCLUDE_PERSONAL' => 'Incluir imagens de álbuns pessoais nos blocos Recentes/Aleatórias',
 	'FORUM_INDEX_INCLUDE_PERSONAL_EXPLAIN' => 'Quando activo, as imagens de álbuns pessoais também podem aparecer nos blocos Imagens Recentes e Imagens Aleatórias. O modo independente “Imagens de álbuns pessoais” e a respectiva quantidade são configurados separadamente.',
 	'RRC_GINDEX_ROWS'            => 'Linhas',

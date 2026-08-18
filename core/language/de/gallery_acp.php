@@ -474,6 +474,7 @@ $lang = array_merge($lang, [
 	'RRC_GINDEX_MODE'        => 'Modus',
 	'RRC_GINDEX_MODE_EXP'    => '„Zufällige Bilder“ kann bei großen Datenbanken einige Ladezeit in Anspruch nehmen!',
 	'RRC_GINDEX_PGALLERIES'  => 'Bilder aus persönlichen Alben anzeigen',
+	'RRC_GINDEX_PGALLERIES_EXPLAIN' => 'Wenn aktiviert, können Bilder aus persönlichen Alben in den aktivierten Bild- und Kommentarblöcken auf der Galerie-Startseite erscheinen. Es werden nur Bilder einbezogen, die der aktuelle Besucher sehen darf.',
 	'FORUM_INDEX_INCLUDE_PERSONAL' => 'Bilder aus persönlichen Alben in Neueste/Zufällige einbeziehen',
 	'FORUM_INDEX_INCLUDE_PERSONAL_EXPLAIN' => 'Wenn aktiviert, können Bilder aus persönlichen Alben auch in den Blöcken Neueste Bilder und Zufällige Bilder erscheinen. Der unabhängige Modus „Bilder aus persönlichen Alben“ und dessen Anzahl werden separat konfiguriert.',
 	'RRC_GINDEX_ROWS'        => 'Zeilen',
