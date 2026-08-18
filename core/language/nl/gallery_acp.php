@@ -462,6 +462,7 @@ $lang = array_merge($lang, [
 	'RRC_DISPLAY_NONE'       => 'Geen',
 	'RRC_DISPLAY_OPTIONS'    => 'Welke waardes moeten er onder de miniaturen worden weergegeven',
 	'RRC_PROFILE_DISPLAY_OPTIONS' => 'Informatie onder de miniaturen Recente/Willekeurige galerijafbeeldingen in gebruikersprofielen',
+	'FORUM_INDEX_DISPLAY_OPTIONS' => 'Informatie onder de miniaturen in alle ingeschakelde Galerijblokken op de forumindex',
 	'RRC_DISPLAY_USERNAME'   => 'Gebruikersnaam',
 	'RRC_DISPLAY_RATINGS'    => 'Beoordelingen',
 	'RRC_GINDEX'             => 'Galerij-index — Afbeeldings- en reactieblokken',

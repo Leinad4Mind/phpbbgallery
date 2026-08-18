@@ -574,7 +574,7 @@ class config_module
 					'forum_index_recent_count'	=> ['lang' => 'RECENT_ON_INDEX_COUNT',	'validate' => 'int:1:12',	'type' => 'text:7:2'],
 					'forum_index_random_count'	=> ['lang' => 'RANDOM_ON_INDEX_COUNT',	'validate' => 'int:1:12',	'type' => 'text:7:2'],
 					'forum_index_personal_count'	=> ['lang' => 'PERSONAL_ON_INDEX_COUNT',	'validate' => 'int:1:12',	'type' => 'text:7:2'],
-					'forum_index_display'		=> ['lang' => 'RRC_DISPLAY_OPTIONS',		'validate' => 'int',		'type' => 'custom',			'method' => 'rrc_display'],
+					'forum_index_display'		=> ['lang' => 'FORUM_INDEX_DISPLAY_OPTIONS',		'validate' => 'int',		'type' => 'custom',			'method' => 'rrc_display'],
 					'forum_index_personal'		=> ['lang' => 'FORUM_INDEX_INCLUDE_PERSONAL', 'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
 				],
 

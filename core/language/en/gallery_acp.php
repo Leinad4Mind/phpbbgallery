@@ -405,6 +405,7 @@ $lang = array_merge($lang, [
 	'RRC_DISPLAY_NONE'       => 'None',
 	'RRC_DISPLAY_OPTIONS'    => 'Which values should be displayed underneath the thumbnails',
 	'RRC_PROFILE_DISPLAY_OPTIONS' => 'Information displayed beneath Recent/Random Gallery thumbnails in user profiles',
+	'FORUM_INDEX_DISPLAY_OPTIONS' => 'Information displayed beneath thumbnails in all enabled forum-index Gallery blocks',
 	'RRC_DISPLAY_USERNAME'   => 'Username',
 	'RRC_DISPLAY_RATINGS'    => 'Ratings',
 	'RRC_GINDEX'             => 'Gallery index — Image and comment blocks',

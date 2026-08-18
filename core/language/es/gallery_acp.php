@@ -462,6 +462,7 @@ $lang = array_merge($lang, [
 	'RRC_DISPLAY_NONE'       => 'Ninguno',
 	'RRC_DISPLAY_OPTIONS'    => 'Qué valores deben mostrarse debajo de las miniaturas',
 	'RRC_PROFILE_DISPLAY_OPTIONS' => 'Información mostrada debajo de las miniaturas Recientes/Aleatorias de la Galería en los perfiles de usuario',
+	'FORUM_INDEX_DISPLAY_OPTIONS' => 'Información mostrada debajo de las miniaturas en todos los bloques de la Galería activados en el índice del foro',
 	'RRC_DISPLAY_USERNAME'   => 'Nombre de usuario',
 	'RRC_DISPLAY_RATINGS'    => 'Calificaciones',
 	'RRC_GINDEX'             => 'Índice de la Galería — Bloques de imágenes y comentarios',

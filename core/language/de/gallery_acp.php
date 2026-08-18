@@ -462,6 +462,7 @@ $lang = array_merge($lang, [
 	'RRC_DISPLAY_NONE'       => 'Nichts',
 	'RRC_DISPLAY_OPTIONS'    => 'Welche Werte sollen unter dem Thumbnail angezeigt werden',
 	'RRC_PROFILE_DISPLAY_OPTIONS' => 'Informationen unter den Galerie-Vorschaubildern „Neueste/Zufällige“ in Benutzerprofilen',
+	'FORUM_INDEX_DISPLAY_OPTIONS' => 'Informationen unter den Vorschaubildern in allen aktivierten Galerieblöcken auf der Foren-Startseite',
 	'RRC_DISPLAY_USERNAME'   => 'Benutzername',
 	'RRC_DISPLAY_RATINGS'    => 'Bewertungen',
 	'RRC_GINDEX'             => 'Galerie-Startseite — Bild- und Kommentarblöcke',
