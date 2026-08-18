@@ -136,11 +136,12 @@ final class acp_config_types_test extends TestCase
 		$config_keys = array_keys($display['vars']);
 		$this->assertGreaterThan(
 			array_search('disp_nextprev_thumbnail', $config_keys, true),
-			array_search('ajax_navigation', $config_keys, true)
+			array_search('disp_image_url', $config_keys, true)
 		);
-		$this->assertLessThan(
-			array_search('disp_image_url', $config_keys, true),
-			array_search('ajax_navigation', $config_keys, true)
+		$this->assertSame(
+			array_search('disp_image_url', $config_keys, true) + 1,
+			array_search('ajax_navigation', $config_keys, true),
+			'The image URL setting must immediately precede AJAX navigation.'
 		);
 		$display_vars = $display['vars'];
 		$this->assertSame('', end($display_vars));
