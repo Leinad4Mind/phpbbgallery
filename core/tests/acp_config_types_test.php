@@ -77,6 +77,7 @@ final class acp_config_types_test extends TestCase
 		$this->assertSame('GALLERY_CONFIG', $display['vars']['legend2']);
 		$this->assertArrayHasKey('title', $display['vars']);
 		$this->assertArrayHasKey('items_per_page', $display['vars']);
+		$this->assertTrue($display['vars']['items_per_page']['explain']);
 		$this->assertArrayHasKey('watermark_enabled', $display['vars']);
 		$this->assertSame('int:0:100', $display['vars']['jpg_quality']['validate']);
 		$this->assertSame('number:0:100', $display['vars']['jpg_quality']['type']);

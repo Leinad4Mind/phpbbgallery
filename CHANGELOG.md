@@ -47,6 +47,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Clarified that the shared items-per-page limit covers paginated Gallery lists and the recent-comment block on the Gallery index.
 - Clarified that the profile display-options selector controls information beneath Recent/Random Gallery thumbnails in user profiles, without renaming the shared selectors used by other image blocks.
 - Added distinct accessible help dialogs to the album-level and per-user/group permission-copy selectors, explaining their batch and individual scopes, one-time behaviour and precedence in every supported language.
 - Made the album editor role-aware: the parent presentation mode is shown only for albums that contain subalbums, while the child eligibility switch is shown only when editing or creating a real subalbum; intermediate albums correctly expose both controls.
