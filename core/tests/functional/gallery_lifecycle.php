@@ -75,6 +75,9 @@ class gallery_lifecycle extends \phpbb_functional_test_case
 	public function test_gallery_end_to_end_lifecycle(): void
 	{
 		global $phpbb_root_path;
+		// phpBB binds sessions to the browser identity. Set the browser before
+		// login so the later inline-source request keeps the authenticated session.
+		self::$client->setServerParameter('HTTP_USER_AGENT', 'Mozilla/5.0');
 
 		$this->add_lang_ext('phpbbgallery/core', 'gallery');
 		$this->add_lang_ext('phpbbgallery/acpimport', 'info_acp_gallery_import');
@@ -363,7 +366,6 @@ class gallery_lifecycle extends \phpbb_functional_test_case
 
 	private function assert_source_delivery(int $album_id, int $image_id, string $filename, string $phpbb_root_path): void
 	{
-		self::$client->setServerParameter('HTTP_USER_AGENT', 'Mozilla/5.0');
 		$path = 'app.php/gallery/image/' . $image_id . '/source?sid=' . $this->sid;
 		self::request('GET', $path, [], false);
 		self::assert_response_status_code(200);
@@ -515,6 +517,8 @@ class gallery_lifecycle extends \phpbb_functional_test_case
 		set_config('phpbb_gallery_version', '4.1.0');
 		$db->sql_query("DELETE FROM phpbb_migrations WHERE migration_name = '" . $db->sql_escape($migration) . "'");
 		$db->sql_query('UPDATE ' . CONFIG_TABLE . " SET config_value = '4.1.0' WHERE config_name = 'phpbb_gallery_version'");
+
+		$this->purge_cache();
 
 		$this->install_ext('phpbbgallery/core');
 		$this->assertFalse($this->config_exists('phpbb_gallery_version'));
