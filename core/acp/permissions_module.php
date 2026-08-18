@@ -155,7 +155,10 @@ class permissions_module
 
 		$gallery_album = $phpbb_container->get('phpbbgallery.core.album');
 		$p_system = $request->variable('p_system', $gallery_auth::PUBLIC_ALBUM);
-		$album_id = $request->variable('album_id', 0);
+		$album_ids = array_values(array_unique(array_filter(
+			array_map('intval', $request->variable('album_id', [0])),
+			static fn (int $album_id): bool => $album_id > 0
+		)));
 		$username = trim($request->variable('username', '', true));
 		$anonymous = $request->is_set_post('anonymous');
 		$submit = $request->is_set_post('submit');
@@ -163,7 +166,7 @@ class permissions_module
 		$template->assign_vars([
 			'U_ACTION' => $this->u_action,
 			'U_FIND_USERNAME' => $gallery_url->append_sid('phpbb', 'memberlist', 'mode=searchuser&amp;form=gallery_permission_masks&amp;field=username&amp;select_single=true'),
-			'ALBUM_LIST' => $gallery_album->get_albumbox(true, '', $gallery_auth::SETTING_PERMISSIONS),
+			'ALBUM_LIST' => $gallery_album->get_albumbox(true, '', $album_ids ?: $gallery_auth::SETTING_PERMISSIONS),
 			'C_PUBLIC_ALBUMS' => $gallery_auth::PUBLIC_ALBUM,
 			'C_OWN_PERSONAL_ALBUMS' => $gallery_auth::OWN_ALBUM,
 			'C_PERSONAL_ALBUMS' => $gallery_auth::PERSONAL_ALBUM,
@@ -207,20 +210,28 @@ class permissions_module
 			trigger_error($this->language->lang('SELECTED_USER_NOT_EXIST') . adm_back_link($this->u_action), E_USER_WARNING);
 		}
 
+		$scope_definitions = [];
 		if ($p_system === $gallery_auth::PUBLIC_ALBUM)
 		{
 			$album_list = $gallery_cache->get('albums');
-			if ($album_id <= 0 || !isset($album_list[$album_id]) || (int) $album_list[$album_id]['album_user_id'] !== $gallery_auth::PUBLIC_ALBUM)
+			foreach ($album_ids as $album_id)
+			{
+				if (!isset($album_list[$album_id]) || (int) $album_list[$album_id]['album_user_id'] !== $gallery_auth::PUBLIC_ALBUM)
+				{
+					trigger_error($this->language->lang('NO_ALBUM') . adm_back_link($this->u_action), E_USER_WARNING);
+				}
+				$scope_definitions[$album_id] = (string) $album_list[$album_id]['album_name'];
+			}
+			if (!$scope_definitions)
 			{
 				trigger_error($this->language->lang('NO_ALBUM') . adm_back_link($this->u_action), E_USER_WARNING);
 			}
-			$scope_name = (string) $album_list[$album_id]['album_name'];
 			$scope_permissions = $permissions->p_masks[$gallery_auth::PUBLIC_ALBUM];
 		}
 		else if (in_array($p_system, [$gallery_auth::OWN_ALBUM, $gallery_auth::PERSONAL_ALBUM], true))
 		{
-			$album_id = 0;
-			$scope_name = $p_system === $gallery_auth::OWN_ALBUM
+			$album_ids = [0];
+			$scope_definitions[0] = $p_system === $gallery_auth::OWN_ALBUM
 				? $this->language->lang('OWN_PERSONAL_ALBUMS')
 				: $this->language->lang('PERSONAL_ALBUMS');
 			$scope_permissions = $permissions->p_masks[$p_system];
@@ -232,7 +243,7 @@ class permissions_module
 
 		try
 		{
-			$mask = $phpbb_container->get('phpbbgallery.core.auth.permission_trace')->mask($user_id, $scope_permissions, $album_id, $p_system);
+			$masks = $phpbb_container->get('phpbbgallery.core.auth.permission_trace')->masks($user_id, $scope_permissions, $album_ids, $p_system);
 		}
 		catch (\OutOfBoundsException $exception)
 		{
@@ -245,34 +256,71 @@ class permissions_module
 			return;
 		}
 
-		foreach ($permissions->cats[$p_system] as $category => $permission_values)
+		$mask_index = 0;
+		foreach ($scope_definitions as $album_id => $scope_name)
 		{
-			$template->assign_block_vars('mask_category', [
-				'NAME' => $this->language->lang('PERMISSION_' . strtoupper($category)),
+			$template->assign_block_vars('permission_mask', [
+				'ID' => $mask_index,
+				'NAME' => $scope_name,
 			]);
-			foreach ($permission_values as $permission)
+			$values = $masks['values'][$album_id] ?? array_fill_keys($scope_permissions, $gallery_auth::ACL_NO);
+			$category_index = 0;
+			foreach ($permissions->cats[$p_system] as $category => $permission_values)
 			{
-				$key = 'PERMISSION_' . strtoupper($permission);
-				$key_explain = $key . '_EXPLAIN';
-				$value = (int) ($mask['values'][$permission] ?? $gallery_auth::ACL_NO);
-				$is_count = str_ends_with($permission, '_count');
-				$template->assign_block_vars('mask_category.permission', [
-					'NAME' => $this->language->lang($key),
-					'EXPLAIN' => $this->language->lang_raw($key_explain) !== $key_explain ? $this->language->lang($key_explain) : '',
-					'VALUE' => $is_count ? (string) $value : '',
-					'S_COUNT' => $is_count,
-					'S_YES' => !$is_count && $value === $gallery_auth::ACL_YES,
-					'S_NEVER' => !$is_count && $value === $gallery_auth::ACL_NEVER,
-					'S_NO' => !$is_count && $value === $gallery_auth::ACL_NO,
-					'U_TRACE' => $is_count ? '' : $this->permission_trace_url($user_id, $album_id, $p_system, $permission),
+				$boolean_values = [];
+				$has_count = false;
+				foreach ($permission_values as $permission)
+				{
+					if (str_ends_with($permission, '_count'))
+					{
+						$has_count = true;
+					}
+					else
+					{
+						$boolean_values[] = (int) ($values[$permission] ?? $gallery_auth::ACL_NO);
+					}
+				}
+				$all_yes = !$has_count && $boolean_values && count(array_filter(
+					$boolean_values,
+					static fn (int $value): bool => $value === $gallery_auth::ACL_YES
+				)) === count($boolean_values);
+				$all_denied = !$has_count && $boolean_values && count(array_filter(
+					$boolean_values,
+					static fn (int $value): bool => $value !== $gallery_auth::ACL_YES
+				)) === count($boolean_values);
+				$template->assign_block_vars('permission_mask.category', [
+					'ID' => $category_index,
+					'NAME' => $this->language->lang('PERMISSION_' . strtoupper($category)),
+					'S_FIRST' => $category_index === 0,
+					'S_HAS_COUNT' => $has_count,
+					'S_YES' => $all_yes,
+					'S_NEVER' => $all_denied,
+					'S_CUSTOM' => !$all_yes && !$all_denied,
 				]);
+				foreach ($permission_values as $permission)
+				{
+					$key = 'PERMISSION_' . strtoupper($permission);
+					$key_explain = $key . '_EXPLAIN';
+					$value = (int) ($values[$permission] ?? $gallery_auth::ACL_NO);
+					$is_count = str_ends_with($permission, '_count');
+					$template->assign_block_vars('permission_mask.category.permission', [
+						'NAME' => $this->language->lang($key),
+						'EXPLAIN' => $this->language->lang_raw($key_explain) !== $key_explain ? $this->language->lang($key_explain) : '',
+						'VALUE' => $is_count ? (string) $value : '',
+						'S_COUNT' => $is_count,
+						'S_YES' => !$is_count && $value === $gallery_auth::ACL_YES,
+						'S_DENIED' => !$is_count && $value !== $gallery_auth::ACL_YES,
+						'U_TRACE' => $is_count ? '' : $this->permission_trace_url($user_id, (int) $album_id, $p_system, $permission),
+					]);
+				}
+				$category_index++;
 			}
+			$mask_index++;
 		}
 
 		$template->assign_vars([
 			'S_PERMISSION_MASK_RESULT' => true,
-			'PERMISSION_USERNAME' => $mask['username'],
-			'PERMISSION_SCOPE' => $scope_name,
+			'PERMISSION_USERNAME' => $masks['username'],
 		]);
 	}
 

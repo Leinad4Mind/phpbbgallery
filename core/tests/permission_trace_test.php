@@ -128,6 +128,42 @@ final class permission_trace_test extends TestCase
 		$this->assertSame(['i_view' => auth::ACL_NEVER, 'i_count' => 10], $result['values']);
 	}
 
+	public function test_masks_resolve_multiple_public_albums_in_one_assignment_query(): void
+	{
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$gallery_auth = $this->createMock(auth::class);
+		$gallery_auth->expects($this->once())->method('has_permission')->with('i_view')->willReturn(true);
+		$gallery_auth->expects($this->once())->method('get_usergroups')->with(42)->willReturn([2]);
+		$db->method('sql_in_set')->willReturnCallback(static fn (string $field, array $values): string => $field . ' IN (' . implode(',', $values) . ')');
+		$db->expects($this->once())->method('sql_query_limit')->with($this->stringContains('user_id = 42'), 1)->willReturn('user_result');
+		$assignment_sql = '';
+		$db->expects($this->once())->method('sql_query')->willReturnCallback(static function (string $sql) use (&$assignment_sql): string
+		{
+			$assignment_sql = $sql;
+			return 'assignment_result';
+		});
+		$rows = [
+			'user_result' => [['user_id' => 42, 'username' => 'Alice']],
+			'assignment_result' => [
+				['scope_album_id' => 4, 'i_view' => auth::ACL_YES],
+				['scope_album_id' => 7, 'i_view' => auth::ACL_NEVER],
+			],
+		];
+		$db->method('sql_fetchrow')->willReturnCallback(static function (string $result) use (&$rows): array|false
+		{
+			return $rows[$result] ? array_shift($rows[$result]) : false;
+		});
+
+		$result = (new permission_trace($db, $gallery_auth, 'gallery_permissions', 'gallery_roles'))
+			->masks(42, ['i_view'], [4, 7, 4], auth::PUBLIC_ALBUM);
+
+		$this->assertSame('Alice', $result['username']);
+		$this->assertSame([
+			4 => ['i_view' => auth::ACL_YES],
+			7 => ['i_view' => auth::ACL_NEVER],
+		], $result['values']);
+		$this->assertStringContainsString('p.perm_album_id IN (4,7)', $assignment_sql);
+	}
 	/** @dataProvider invalid_request_provider */
 	public function test_trace_rejects_invalid_permissions_and_scopes(int $user_id, string $permission, int $album_id, int $permission_system): void
 	{

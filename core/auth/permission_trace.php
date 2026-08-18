@@ -98,14 +98,31 @@ final class permission_trace
 	/**
 	 * Resolve the effective values of several Gallery permissions in one scope.
 	 *
-	 * This mirrors the MAX aggregation used by the Gallery authorization cache:
-	 * ACL_NEVER wins over ACL_YES and ACL_NO, while numeric limits use the
-	 * greatest value assigned by the user or any of their groups.
-	 *
 	 * @param list<string> $permissions
 	 * @return array{username:string, values:array<string, int>}
 	 */
 	public function mask(int $user_id, array $permissions, int $album_id, int $permission_system): array
+	{
+		$result = $this->masks($user_id, $permissions, [$album_id], $permission_system);
+
+		return [
+			'username' => $result['username'],
+			'values' => $result['values'][$album_id] ?? array_fill_keys($permissions, auth::ACL_NO),
+		];
+	}
+
+	/**
+	 * Resolve an effective permission mask for several public albums in one query.
+	 *
+	 * Personal-album systems use the single synthetic scope ID 0. Boolean values
+	 * retain the Gallery Yes/No/Never precedence; numeric limits use the greatest
+	 * value assigned directly or through any of the user's groups.
+	 *
+	 * @param list<string> $permissions
+	 * @param list<int> $album_ids
+	 * @return array{username:string, values:array<int, array<string, int>>}
+	 */
+	public function masks(int $user_id, array $permissions, array $album_ids, int $permission_system): array
 	{
 		if ($user_id <= 0 || !$permissions)
 		{
@@ -120,9 +137,22 @@ final class permission_trace
 			}
 		}
 
-		$is_public_album = $permission_system === auth::PUBLIC_ALBUM && $album_id > 0;
-		$is_personal_scope = $album_id === 0 && in_array($permission_system, [auth::OWN_ALBUM, auth::PERSONAL_ALBUM], true);
-		if (!$is_public_album && !$is_personal_scope)
+		if ($permission_system === auth::PUBLIC_ALBUM)
+		{
+			$scope_ids = array_values(array_unique(array_filter(
+				array_map('intval', $album_ids),
+				static fn (int $album_id): bool => $album_id > 0
+			)));
+			if (!$scope_ids)
+			{
+				throw new \InvalidArgumentException('Invalid Gallery permission scope.');
+			}
+		}
+		else if (in_array($permission_system, [auth::OWN_ALBUM, auth::PERSONAL_ALBUM], true))
+		{
+			$scope_ids = [0];
+		}
+		else
 		{
 			throw new \InvalidArgumentException('Invalid Gallery permission scope.');
 		}
@@ -145,28 +175,37 @@ final class permission_trace
 			$assignment_where .= ' OR ' . $this->db->sql_in_set('p.perm_group_id', $group_ids);
 		}
 		$scope_where = $permission_system === auth::PUBLIC_ALBUM
-			? 'p.perm_system = 0 AND p.perm_album_id = ' . (int) $album_id
+			? 'p.perm_system = 0 AND ' . $this->db->sql_in_set('p.perm_album_id', $scope_ids)
 			: 'p.perm_system = ' . (int) $permission_system;
-		$sql = 'SELECT pr.*
+		$sql = 'SELECT p.perm_album_id AS scope_album_id, pr.*
 			FROM ' . $this->permissions_table . ' p
 			LEFT JOIN ' . $this->roles_table . ' pr
 				ON p.perm_role_id = pr.role_id
 			WHERE ' . $scope_where . '
 				AND (' . $assignment_where . ')';
 		$result = $this->db->sql_query($sql);
-		$values = array_fill_keys($permissions, auth::ACL_NO);
+		$values = [];
+		foreach ($scope_ids as $scope_id)
+		{
+			$values[$scope_id] = array_fill_keys($permissions, auth::ACL_NO);
+		}
 		while ($row = $this->db->sql_fetchrow($result))
 		{
+			$scope_id = $permission_system === auth::PUBLIC_ALBUM ? (int) ($row['scope_album_id'] ?? $scope_ids[0]) : 0;
+			if (!isset($values[$scope_id]))
+			{
+				continue;
+			}
 			foreach ($permissions as $permission)
 			{
 				$setting = (int) ($row[$permission] ?? auth::ACL_NO);
 				if (str_ends_with($permission, '_count'))
 				{
-					$values[$permission] = max($values[$permission], $setting);
+					$values[$scope_id][$permission] = max($values[$scope_id][$permission], $setting);
 					continue;
 				}
 
-				$values[$permission] = $this->merge_setting($values[$permission], $this->normalize_setting($setting));
+				$values[$scope_id][$permission] = $this->merge_setting($values[$scope_id][$permission], $this->normalize_setting($setting));
 			}
 		}
 		$this->db->sql_freeresult($result);

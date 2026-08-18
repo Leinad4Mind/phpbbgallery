@@ -242,9 +242,19 @@ final class acp_permissions_types_test extends TestCase
 
 		$this->assertStringContainsString('case \'masks\':', $source);
 		$this->assertStringContainsString('permission_trace', $source);
+		$this->assertStringContainsString("variable('album_id', [0])", $source);
+		$this->assertStringContainsString('->masks(', $source);
 		$this->assertStringContainsString('S_PERMISSION_MASK_RESULT', $template);
+		$this->assertStringContainsString('name="album_id[]"', $template);
+		$this->assertStringContainsString('multiple', $template);
+		$this->assertStringContainsString('permission_mask', $template);
 		$this->assertStringContainsString('permission.U_TRACE', $template);
-		$this->assertStringNotContainsString('name=\'setting[', $template);
+		$this->assertStringContainsString('permission.S_DENIED', $template);
+		$this->assertStringContainsString("lang('PERMISSION_YES')", $template);
+		$this->assertStringContainsString("lang('PERMISSION_NEVER')", $template);
+		$this->assertStringNotContainsString("lang('PERMISSION_NO')", $template);
+		$this->assertStringNotContainsString('name="setting[', $template);
+		$this->assertStringNotContainsString("name='setting[", $template);
 	}
 
 	private function with_permission_services(callable $callback): void
