@@ -162,7 +162,9 @@ class language_catalog_test extends TestCase
 		$expected = [
 			'COMMENT_MAX_LENGTH' => 'Comprimento máximo dos comentários',
 			'IMAGE_DESC_MAX_LENGTH' => 'Comprimento máximo das descrições das imagens',
+			'INDEX_SETTINGS' => 'Índice da Galeria — Álbuns e disposição',
 			'ITEMS_PER_PAGE' => 'Itens por página',
+			'RRC_GINDEX' => 'Índice da Galeria — Blocos de imagens e comentários',
 			'ITEMS_PER_PAGE_EXP' => 'Número predefinido de entradas apresentadas nas páginas da Galeria, incluindo álbuns, imagens, comentários, resultados de pesquisa e listas de moderação. Também limita os comentários recentes apresentados no índice da Galeria.',
 			'RATE_SCALE' => 'Escala de classificação',
 		];

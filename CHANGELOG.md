@@ -47,6 +47,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Reorganized the Gallery-index ACP settings into adjacent album/layout and image/comment-block sections while keeping forum-index image blocks separate and preserving all existing configuration keys.
 - Clarified that the shared items-per-page limit covers paginated Gallery lists and the recent-comment block on the Gallery index.
 - Clarified that the profile display-options selector controls information beneath Recent/Random Gallery thumbnails in user profiles, without renaming the shared selectors used by other image blocks.
 - Added distinct accessible help dialogs to the album-level and per-user/group permission-copy selectors, explaining their batch and individual scopes, one-time behaviour and precedence in every supported language.

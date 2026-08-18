@@ -548,10 +548,25 @@ class config_module
 					'link_image_icon'		=> ['lang' => 'UC_IMAGE_ICON',			'validate' => 'string',	'type' => 'custom',			'method' => 'uc_select'],
 				],
 
+				'INDEX_SETTINGS'	=> [
+					'index_album_layout'	=> ['lang' => 'INDEX_ALBUM_LAYOUT',	'validate' => 'string',	'type' => 'custom',	'explain' => true,	'method' => 'index_album_layout_select'],
+					'pegas_index_album'		=> ['lang' => 'PERSONAL_ALBUM_INDEX',	'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
+					'disp_image_id'		=> ['lang' => 'DISP_IMAGE_ID',		'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
+					'disp_login'			=> ['lang' => 'DISP_LOGIN',			'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
+					'disp_whoisonline'		=> ['lang' => 'DISP_WHOISONLINE',		'validate' => 'bool',	'type' => 'radio:yes_no'],
+					'disp_birthdays'		=> ['lang' => 'DISP_BIRTHDAYS',		'validate' => 'bool',	'type' => 'radio:yes_no'],
+					'disp_statistic'		=> ['lang' => 'DISP_STATISTIC',		'validate' => 'bool',	'type' => 'radio:yes_no'],
+				],
+
 				'RRC_GINDEX'	=> [
-					'rrc_gindex_comments'	=> ['lang' => 'RRC_GINDEX_COMMENTS',	'validate' => 'bool',	'type' => 'radio:yes_no'],
+					'rrc_gindex_mode'		=> ['lang' => 'RRC_GINDEX_MODE',		'validate' => 'int',	'type' => 'custom',	'explain' => true,	'method' => 'rrc_modes'],
+					'pegas_index_rct_count'	=> ['lang'	=> 'RECENT_ON_INDEX_COUNT',	'validate' => 'int',	'type' => 'text:7:3'],
+					'pegas_index_rnd_count'	=> ['lang'	=> 'RANDOM_ON_INDEX_COUNT',	'validate' => 'int',	'type' => 'text:7:3'],
+					'pegas_index_viewed_count' => ['lang' => 'VIEWED_ON_INDEX_COUNT',	'validate' => 'int',	'type' => 'text:7:3'],
+					'pegas_index_rated_count'	=> ['lang' => 'RATED_ON_INDEX_COUNT',	'validate' => 'int',	'type' => 'text:7:3'],
 					'rrc_gindex_display'	=> ['lang' => 'RRC_DISPLAY_OPTIONS',	'validate' => '',		'type' => 'custom',			'method' => 'rrc_display'],
 					'rrc_gindex_pegas'		=> ['lang' => 'RRC_GINDEX_PGALLERIES',	'validate' => 'bool',	'type' => 'radio:yes_no'],
+					'rrc_gindex_comments'	=> ['lang' => 'RRC_GINDEX_COMMENTS',	'validate' => 'bool',	'type' => 'radio:yes_no'],
 				],
 
 				'FORUM_INDEX_IMAGES'	=> [
@@ -578,22 +593,6 @@ class config_module
 					'viewtopic_link'			=> ['lang' => 'DISP_VIEWTOPIC_LINK',			'validate' => 'bool',	'type' => 'radio:yes_no'],
 				],
 
-				'INDEX_SETTINGS'	=> [
-					'index_album_layout'	=> ['lang' => 'INDEX_ALBUM_LAYOUT',	'validate' => 'string',	'type' => 'custom',	'explain' => true,	'method' => 'index_album_layout_select'],
-					'disp_image_id'		=> ['lang' => 'DISP_IMAGE_ID',		'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
-					'pegas_index_album'		=> ['lang' => 'PERSONAL_ALBUM_INDEX',	'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
-					'rrc_gindex_mode'		=> ['lang' => 'RRC_GINDEX_MODE',	'validate' => 'int',	'type' => 'custom',	'explain' => true,	'method' => 'rrc_modes'],
-					//'pegas_index_random'	=> ['lang'	=> 'RANDOM_ON_INDEX',		'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
-					'pegas_index_rnd_count'	=> ['lang'	=> 'RANDOM_ON_INDEX_COUNT',	'validate' => 'int',	'type' => 'text:7:3'],
-					//'pegas_index_recent'	=> ['lang'	=> 'RECENT_ON_INDEX',		'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
-					'pegas_index_rct_count'	=> ['lang'	=> 'RECENT_ON_INDEX_COUNT',	'validate' => 'int',	'type' => 'text:7:3'],
-					'pegas_index_viewed_count' => ['lang' => 'VIEWED_ON_INDEX_COUNT',	'validate' => 'int',	'type' => 'text:7:3'],
-					'pegas_index_rated_count'	=> ['lang' => 'RATED_ON_INDEX_COUNT',	'validate' => 'int',	'type' => 'text:7:3'],
-					'disp_login'			=> ['lang' => 'DISP_LOGIN',			'validate' => 'bool',	'type' => 'radio:yes_no',	'explain' => true],
-					'disp_whoisonline'		=> ['lang' => 'DISP_WHOISONLINE',		'validate' => 'bool',	'type' => 'radio:yes_no'],
-					'disp_birthdays'		=> ['lang' => 'DISP_BIRTHDAYS',		'validate' => 'bool',	'type' => 'radio:yes_no'],
-					'disp_statistic'		=> ['lang' => 'DISP_STATISTIC',		'validate' => 'bool',	'type' => 'radio:yes_no'],
-				],
 			],
 		],
 	];

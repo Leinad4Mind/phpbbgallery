@@ -128,6 +128,38 @@ final class acp_config_types_test extends TestCase
 		$this->assertSame('', end($display_vars));
 	}
 
+	public function test_gallery_index_options_are_grouped_by_context(): void
+	{
+		$property = new \ReflectionProperty(config_module::class, 'display_vars');
+		$property->setAccessible(true);
+		$sections = $property->getValue(new config_module())['main']['vars'];
+
+		$gallery_index_sections = array_values(array_filter(
+			array_keys($sections),
+			static fn(string $section): bool => in_array($section, ['INDEX_SETTINGS', 'RRC_GINDEX', 'FORUM_INDEX_IMAGES'], true)
+		));
+		$this->assertSame(['INDEX_SETTINGS', 'RRC_GINDEX', 'FORUM_INDEX_IMAGES'], $gallery_index_sections);
+		$this->assertSame([
+			'index_album_layout',
+			'pegas_index_album',
+			'disp_image_id',
+			'disp_login',
+			'disp_whoisonline',
+			'disp_birthdays',
+			'disp_statistic',
+		], array_keys($sections['INDEX_SETTINGS']));
+		$this->assertSame([
+			'rrc_gindex_mode',
+			'pegas_index_rct_count',
+			'pegas_index_rnd_count',
+			'pegas_index_viewed_count',
+			'pegas_index_rated_count',
+			'rrc_gindex_display',
+			'rrc_gindex_pegas',
+			'rrc_gindex_comments',
+		], array_keys($sections['RRC_GINDEX']));
+	}
+
 	public function test_storage_layout_selector_marks_the_current_layout(): void
 	{
 		$language = $this->createMock(\phpbb\language\language::class);
