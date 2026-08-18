@@ -298,19 +298,19 @@ final class acp_config_types_test extends TestCase
 		$this->assertStringContainsString('margin: auto;', $stylesheet);
 	}
 
-	public function test_hotlink_whitelist_is_shown_only_when_protection_is_enabled(): void
+	public function test_dependent_settings_follow_their_global_switches(): void
 	{
 		$root = dirname(__DIR__);
 		$module = (string) file_get_contents($root . '/acp/config_module.php');
 		$event = (string) file_get_contents($root . '/adm/style/event/acp_overall_header_head_append.html');
-		$javascript = (string) file_get_contents($root . '/adm/style/gallery_acp_hotlink_settings.js');
+		$javascript = (string) file_get_contents($root . '/adm/style/gallery_acp_dependencies.js');
 
-		$this->assertStringContainsString("'S_GALLERY_ACP_HOTLINK_SETTINGS'", $module);
-		$this->assertStringContainsString('S_GALLERY_ACP_HOTLINK_SETTINGS', $event);
-		$this->assertStringContainsString('gallery_acp_hotlink_settings.js', $event);
-		$this->assertStringContainsString("form.elements['config[allow_hotlinking]']", $javascript);
-		$this->assertStringContainsString("form.elements['config[hotlinking_domains]']", $javascript);
-		$this->assertStringContainsString("selected.value === '1'", $javascript);
+		$this->assertStringContainsString("'S_GALLERY_ACP_DEPENDENT_SETTINGS'", $module);
+		$this->assertStringContainsString('S_GALLERY_ACP_DEPENDENT_SETTINGS', $event);
+		$this->assertStringContainsString('gallery_acp_dependencies.js', $event);
+		$this->assertStringContainsString("bindBooleanDependency(form, 'allow_hotlinking', 'hotlinking_domains', '0')", $javascript);
+		$this->assertStringContainsString("bindBooleanDependency(form, 'allow_rates', 'max_rating', '1')", $javascript);
+		$this->assertStringContainsString('selected.value !== visibleValue', $javascript);
 		$this->assertStringContainsString("field.addEventListener('change'", $javascript);
 	}
 

@@ -237,7 +237,12 @@ class config_module
 			'L_TITLE'			=> $this->language->lang($vars['title']),
 			'L_TITLE_EXPLAIN'	=> $this->language->lang($vars['title'] . '_EXPLAIN'),
 			'S_GALLERY_ACP_STORAGE_LAYOUT_HELP' => isset($vars['vars']['storage_layout']),
-			'S_GALLERY_ACP_HOTLINK_SETTINGS' => isset($vars['vars']['allow_hotlinking'], $vars['vars']['hotlinking_domains']),
+			'S_GALLERY_ACP_DEPENDENT_SETTINGS' => isset(
+				$vars['vars']['allow_hotlinking'],
+				$vars['vars']['hotlinking_domains'],
+				$vars['vars']['allow_rates'],
+				$vars['vars']['max_rating']
+			),
 
 			'S_ERROR'			=> (sizeof($error)) ? true : false,
 			'ERROR_MSG'			=> implode('<br />', $error),
