@@ -26,5 +26,7 @@ services:
             - '@phpbbgallery.exif.capture_index'
             - '@phpbbgallery.exif.capture_sync'
             - '%phpbbgallery.exif.tables.capture_index%'
+            - '@phpbbgallery.core.auth'
+            - '@phpbbgallery.core.policy.image_visibility'
         tags:
             - { name: event.listener }

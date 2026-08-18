@@ -117,6 +117,8 @@ $lang = array_merge($lang, [
 	'ACP_EXIF_INDEXED_IMAGES'    => 'Images with an indexed capture date',
 	'ACP_EXIF_SYNC_EXPLAIN'      => 'Rebuild the index from cached EXIF metadata and, when necessary, from the original JPEG files. The operation runs in small resumable batches.',
 	'ACP_EXIF_SYNC_CONFIRM'      => 'Are you sure you want to rebuild the EXIF capture-date index?',
+	'DISP_EXIF_DATA_EXPLAIN' => 'Enables EXIF presentation globally. When disabled, EXIF selections for both the individual image page and thumbnail cards are ignored.',
+	'EXIF_IMAGE_PAGE_FIELD_EXPLAIN' => 'Controls this value only on the individual image page. To show it beneath thumbnails, select it separately in the relevant card-information setting.',
 	'ACP_EXIF_SYNC_PROGRESS'     => 'EXIF synchronization in progress: %1$d images scanned, %2$d capture dates indexed and %3$d source files temporarily unavailable.',
 	'ACP_EXIF_SYNC_COMPLETE'     => 'EXIF synchronization complete: %1$d images scanned, %2$d capture dates indexed and %3$d source files unavailable.',
 ]);

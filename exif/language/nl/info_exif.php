@@ -117,5 +117,7 @@ $lang = array_merge($lang, [
 	'ACP_EXIF_SYNC_EXPLAIN'      => 'Bouwt de index opnieuw op uit opgeslagen EXIF-metadata en zo nodig uit de originele JPEG-bestanden. De bewerking gebruikt kleine hervatbare batches.',
 	'ACP_EXIF_SYNC_CONFIRM'      => 'Weet je zeker dat je de EXIF-opnamedatumindex opnieuw wilt opbouwen?',
 	'ACP_EXIF_SYNC_PROGRESS'     => 'EXIF-synchronisatie bezig: %1$d afbeeldingen gecontroleerd, %2$d datums geïndexeerd en %3$d bronbestanden tijdelijk niet beschikbaar.',
+	'DISP_EXIF_DATA_EXPLAIN' => 'Schakelt de EXIF-weergave overal in. Wanneer dit is uitgeschakeld, worden EXIF-keuzes voor zowel de afzonderlijke afbeeldingspagina als miniatuurkaarten genegeerd.',
+	'EXIF_IMAGE_PAGE_FIELD_EXPLAIN' => 'Bepaalt deze waarde alleen op de afzonderlijke afbeeldingspagina. Selecteer deze apart in de relevante kaartinformatie-instelling om haar onder miniaturen te tonen.',
 	'ACP_EXIF_SYNC_COMPLETE'     => 'EXIF-synchronisatie voltooid: %1$d afbeeldingen gecontroleerd, %2$d datums geïndexeerd en %3$d bronbestanden niet beschikbaar.',
 ]);

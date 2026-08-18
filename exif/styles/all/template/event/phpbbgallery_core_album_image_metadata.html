@@ -1,0 +1,3 @@
+{% for field in image.EXIF_CARD_FIELDS %}
+	<span class="gallery-exif-card-field">{{ field.LABEL }}{{ lang('COLON') }} {{ field.VALUE }}</span>{% if not loop.last %}<br>{% endif %}
+{% endfor %}

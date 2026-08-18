@@ -13,6 +13,7 @@ namespace phpbbgallery\exif\tests;
 use PHPUnit\Framework\TestCase;
 use phpbbgallery\exif\exif;
 use phpbbgallery\exif\event\exif_listener;
+use phpbbgallery\exif\listing_options;
 
 class exif_display_filter_test extends TestCase
 {
@@ -68,6 +69,15 @@ class exif_display_filter_test extends TestCase
 		$this->assertSame(['EXIF_APERTURE', 'EXIF_CAM_MODEL'], $template->assigned_names());
 	}
 
+	public function test_prepared_data_can_be_reused_without_assigning_a_template(): void
+	{
+		global $template;
+
+		$fields = $this->new_handler()->get_prepared_data(['exif_iso', 'exif_cam_model']);
+		$this->assertSame(['exif_iso' => 400, 'exif_cam_model' => 'Canon Eos'], $fields);
+		$this->assertSame([], $template->blocks);
+	}
+
 	public function test_resolution_density_is_presented_from_ifd0_without_a_photographic_exif_group(): void
 	{
 		global $template;
@@ -119,6 +129,26 @@ class exif_display_filter_test extends TestCase
 		$this->assertSame('exif_show_date', exif_listener::display_config_name('exif_date'));
 	}
 
+	public function test_every_exif_listing_field_has_a_unique_reserved_bit(): void
+	{
+		$this->assertSame(exif_listener::DISPLAY_FIELDS, array_keys(listing_options::FIELDS));
+		$this->assertSame(count(listing_options::FIELDS), count(array_unique(listing_options::FIELDS)));
+		$this->assertSame(2048, min(listing_options::FIELDS));
+		$this->assertSame(4194304, max(listing_options::FIELDS));
+		$this->assertLessThan(8388608, max(listing_options::FIELDS));
+	}
+
+	public function test_listing_fields_are_selected_independently(): void
+	{
+		$selected = listing_options::EXIF_DATE | listing_options::EXIF_ISO | listing_options::EXIF_RESOLUTION;
+
+		$this->assertSame(
+			['exif_date', 'exif_iso', 'exif_resolution'],
+			listing_options::selected_fields($selected)
+		);
+		$this->assertSame([], listing_options::selected_fields(0));
+	}
+
 	public function test_the_display_fields_match_what_prepare_data_can_produce(): void
 	{
 		// A field listed but never produced would show a dead switch in the ACP; one
@@ -157,6 +187,8 @@ class exif_display_filter_test extends TestCase
 				'ACP_EXIF_SYNC_PROGRESS',
 				'ACP_EXIF_SYNC_COMPLETE',
 				'EXIF_RESOLUTION',
+				'DISP_EXIF_DATA_EXPLAIN',
+				'EXIF_IMAGE_PAGE_FIELD_EXPLAIN',
 			];
 			foreach (exif_listener::DISPLAY_FIELDS as $field)
 			{
@@ -189,6 +221,8 @@ class exif_display_filter_test extends TestCase
 		$this->assertStringContainsString("'id' => 'exif'", $listener);
 		$this->assertStringContainsString("'accent' => '#0f766e'", $listener);
 		$this->assertGreaterThanOrEqual(2, substr_count($listener, "'addon'"));
+		$this->assertStringContainsString("'explain_lang' => 'DISP_EXIF_DATA'", $listener);
+		$this->assertStringContainsString("'explain_lang' => 'EXIF_IMAGE_PAGE_FIELD'", $listener);
 		$this->assertStringContainsString('{% if S_GALLERY_EXIF_CONFIG %}', $template);
 		$this->assertStringContainsString("'config[disp_exifdata]'", $template);
 		$this->assertStringContainsString("'config[exif_show_'", $template);

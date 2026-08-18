@@ -117,5 +117,7 @@ $lang = array_merge($lang, [
 	'ACP_EXIF_SYNC_EXPLAIN'      => 'Reconstrói o índice a partir dos metadados EXIF guardados e, quando necessário, dos ficheiros JPEG originais. A operação decorre em pequenos lotes retomáveis.',
 	'ACP_EXIF_SYNC_CONFIRM'      => 'Tens a certeza de que pretendes reconstruir o índice de datas de captura EXIF?',
 	'ACP_EXIF_SYNC_PROGRESS'     => 'Sincronização EXIF em curso: %1$d imagens verificadas, %2$d datas de captura indexadas e %3$d ficheiros source temporariamente indisponíveis.',
+	'DISP_EXIF_DATA_EXPLAIN' => 'Ativa globalmente a apresentação de EXIF. Quando desativada, as escolhas EXIF da página individual da imagem e dos cartões de miniaturas são ignoradas.',
+	'EXIF_IMAGE_PAGE_FIELD_EXPLAIN' => 'Controla este valor apenas na página individual da imagem. Para o apresentar sob miniaturas, seleciona-o separadamente na definição de informações dos cartões correspondente.',
 	'ACP_EXIF_SYNC_COMPLETE'     => 'Sincronização EXIF concluída: %1$d imagens verificadas, %2$d datas de captura indexadas e %3$d ficheiros source indisponíveis.',
 ]);

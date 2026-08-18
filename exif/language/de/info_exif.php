@@ -120,4 +120,6 @@ $lang = array_merge($lang, [
 	'ACP_EXIF_SYNC_CONFIRM'      => 'Möchtest du den EXIF-Aufnahmedatum-Index wirklich neu erstellen?',
 	'ACP_EXIF_SYNC_PROGRESS'     => 'EXIF-Synchronisierung läuft: %1$d Bilder geprüft, %2$d Aufnahmedaten indexiert und %3$d Quelldateien vorübergehend nicht verfügbar.',
 	'ACP_EXIF_SYNC_COMPLETE'     => 'EXIF-Synchronisierung abgeschlossen: %1$d Bilder geprüft, %2$d Aufnahmedaten indexiert und %3$d Quelldateien nicht verfügbar.',
+	'DISP_EXIF_DATA_EXPLAIN' => 'Aktiviert die EXIF-Anzeige global. Wenn diese Option deaktiviert ist, werden EXIF-Auswahlen sowohl für die einzelne Bildseite als auch für Miniaturkarten ignoriert.',
+	'EXIF_IMAGE_PAGE_FIELD_EXPLAIN' => 'Steuert diesen Wert nur auf der einzelnen Bildseite. Um ihn unter Miniaturen anzuzeigen, wähle ihn separat in der entsprechenden Einstellung für Karteninformationen aus.',
 ]);

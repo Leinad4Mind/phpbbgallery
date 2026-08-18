@@ -40,6 +40,7 @@ final class exif_test extends TestCase
 			'interpret' => 'void',
 			'read' => 'void',
 			'prepare_data' => 'void',
+			'get_prepared_data' => 'array',
 			'send_to_template' => 'void',
 			'set_status' => '?bool',
 		];
@@ -60,6 +61,8 @@ final class exif_test extends TestCase
 			'capture_index' => 'phpbbgallery\\exif\\capture_index',
 			'capture_sync' => 'phpbbgallery\\exif\\capture_sync',
 			'capture_table' => 'string',
+			'gallery_auth' => 'phpbbgallery\\core\\auth\\auth',
+			'image_visibility' => 'phpbbgallery\\core\\policy\\image_visibility',
 		];
 
 		foreach ($expected_properties as $property_name => $expected_type)
@@ -146,6 +149,10 @@ final class exif_test extends TestCase
 	{
 		$this->assertSame([
 			'phpbbgallery.core.acp.config.get_display_vars' => 'acp_config_get_display_vars',
+			'phpbbgallery.core.acp.config.rrc_display_options' => 'listing_display_options',
+			'phpbbgallery.core.album.image_template_vars' => 'listing_image_template_vars',
+			'phpbbgallery.core.search.image_template_vars' => 'listing_image_template_vars',
+			'phpbbgallery.core.imageblock.image_template_vars' => 'listing_image_template_vars',
 			'phpbbgallery.acpimport.update_image_before' => 'massimport_update_image_before',
 			'phpbbgallery.acpimport.insert_image_after' => 'capture_after_import',
 			'phpbbgallery.core.posting.edit_before_rotate' => 'posting_edit_before_rotate',
@@ -186,7 +193,8 @@ final class exif_test extends TestCase
 		$this->assertStringNotContainsString('core\\block::IN_CONTEST', $source);
 
 		$services = (string) file_get_contents(dirname(__DIR__) . '/config/services.yml');
-		$this->assertStringNotContainsString('@phpbbgallery.core.auth', $services);
+		$this->assertStringContainsString('@phpbbgallery.core.auth', $services);
+		$this->assertStringContainsString('@phpbbgallery.core.policy.image_visibility', $services);
 	}
 
 	public function test_viewimage_materializes_and_releases_the_active_source(): void
@@ -305,6 +313,8 @@ final class exif_test extends TestCase
 				$this->assertFileExists(dirname(__DIR__) . '/styles/' . $style . '/template/event/' . $event);
 			}
 		}
+
+		$this->assertFileExists(dirname(__DIR__) . '/styles/all/template/event/phpbbgallery_core_album_image_metadata.html');
 	}
 
 	public function test_bootstrap_template_events_use_theme_markup(): void
@@ -328,5 +338,23 @@ final class exif_test extends TestCase
 
 		$this->assertStringContainsString('utf8_htmlspecialchars($value)', $source);
 		$this->assertSame(0, preg_match('/(?<![a-zA-Z0-9_])htmlspecialchars\s*\(/', $source));
+	}
+
+	public function test_listing_enrichment_uses_cached_exif_and_core_privacy_policy(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/event/exif_listener.php');
+		$start = strpos($source, 'public function listing_image_template_vars');
+		$end = strpos($source, 'protected function get_enabled_fields', (int) $start);
+		$this->assertIsInt($start);
+		$this->assertIsInt($end);
+		$method = substr($source, (int) $start, (int) $end - (int) $start);
+
+		$this->assertStringContainsString('exif::DBSAVED', $method);
+		$this->assertStringContainsString('image_exif_data', $method);
+		$this->assertStringContainsString('hides_private_data', $method);
+		$this->assertStringContainsString('get_prepared_data($selected_fields)', $method);
+		$this->assertStringNotContainsString('storage_workspace', $method);
+		$this->assertStringNotContainsString('materialize(', $method);
+		$this->assertStringNotContainsString('provider_interface::SOURCE', $method);
 	}
 }

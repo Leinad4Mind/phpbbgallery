@@ -26,11 +26,17 @@ class exif_listener implements EventSubscriberInterface
 	protected \phpbbgallery\exif\capture_index $capture_index;
 	protected \phpbbgallery\exif\capture_sync $capture_sync;
 	protected string $capture_table;
+	protected \phpbbgallery\core\auth\auth $gallery_auth;
+	protected \phpbbgallery\core\policy\image_visibility $image_visibility;
 
 	public static function getSubscribedEvents(): array
 	{
 		return [
 			'phpbbgallery.core.acp.config.get_display_vars'		=> 'acp_config_get_display_vars',
+			'phpbbgallery.core.acp.config.rrc_display_options'	=> 'listing_display_options',
+			'phpbbgallery.core.album.image_template_vars'		=> 'listing_image_template_vars',
+			'phpbbgallery.core.search.image_template_vars'		=> 'listing_image_template_vars',
+			'phpbbgallery.core.imageblock.image_template_vars'	=> 'listing_image_template_vars',
 			'phpbbgallery.acpimport.update_image_before'	=> 'massimport_update_image_before',
 			'phpbbgallery.acpimport.insert_image_after'		=> 'capture_after_import',
 			'phpbbgallery.core.posting.edit_before_rotate'		=> 'posting_edit_before_rotate',
@@ -63,6 +69,8 @@ class exif_listener implements EventSubscriberInterface
 	* @param \phpbbgallery\exif\capture_index $capture_index Capture-date index
 	* @param \phpbbgallery\exif\capture_sync $capture_sync Capture-date synchronizer
 	* @param string $capture_table EXIF capture index table
+	* @param \phpbbgallery\core\auth\auth $gallery_auth Gallery permission service
+	* @param \phpbbgallery\core\policy\image_visibility $image_visibility Private-data policy
 	*/
 
 	public function __construct(
@@ -72,7 +80,9 @@ class exif_listener implements EventSubscriberInterface
 		\phpbbgallery\core\storage\workspace $storage_workspace,
 		\phpbbgallery\exif\capture_index $capture_index,
 		\phpbbgallery\exif\capture_sync $capture_sync,
-		string $capture_table
+		string $capture_table,
+		\phpbbgallery\core\auth\auth $gallery_auth,
+		\phpbbgallery\core\policy\image_visibility $image_visibility
 	)
 	{
 		$this->user = $user;
@@ -82,6 +92,8 @@ class exif_listener implements EventSubscriberInterface
 		$this->capture_index = $capture_index;
 		$this->capture_sync = $capture_sync;
 		$this->capture_table = $capture_table;
+		$this->gallery_auth = $gallery_auth;
+		$this->image_visibility = $image_visibility;
 	}
 
 	public function sort_labels(\phpbb\event\data $event): void
@@ -197,7 +209,14 @@ class exif_listener implements EventSubscriberInterface
 				$template->assign_var('S_GALLERY_EXIF_CONFIG', true);
 
 				$addon = ['id' => 'exif', 'name' => 'ACP_GALLERY_EXIF', 'accent' => '#0f766e'];
-				$return_ary['vars']['IMAGE_SETTINGS']['disp_exifdata'] = ['lang' => 'DISP_EXIF_DATA',		'validate' => 'bool',	'type' => 'radio:yes_no', 'addon' => $addon];
+				$return_ary['vars']['IMAGE_SETTINGS']['disp_exifdata'] = [
+					'lang' => 'DISP_EXIF_DATA',
+					'validate' => 'bool',
+					'type' => 'radio:yes_no',
+					'explain' => true,
+					'explain_lang' => 'DISP_EXIF_DATA',
+					'addon' => $addon,
+				];
 
 				// One switch per field, registered the same way as the master switch
 				// above, so the core config module reads and stores them natively.
@@ -207,6 +226,8 @@ class exif_listener implements EventSubscriberInterface
 						'lang'		=> 'DISP_' . strtoupper($field),
 						'validate'	=> 'bool',
 						'type'		=> 'radio:yes_no',
+						'explain'	=> true,
+						'explain_lang' => 'EXIF_IMAGE_PAGE_FIELD',
 						'addon'		=> $addon,
 					];
 				}
@@ -214,6 +235,93 @@ class exif_listener implements EventSubscriberInterface
 				$event['return_ary'] = $return_ary;
 			}
 		}
+	}
+
+	/**
+	 * Add EXIF fields to every contextual card-information selector.
+	 */
+	public function listing_display_options(\phpbb\event\data $event): void
+	{
+		$this->user->add_lang_ext('phpbbgallery/exif', 'info_exif');
+		$value = (int) $event['value'];
+		$options = (string) $event['rrc_display_options'];
+
+		foreach (\phpbbgallery\exif\listing_options::FIELDS as $field => $bit)
+		{
+			$options .= '<option' . (($value & $bit) ? ' selected="selected"' : '')
+				. " value='" . $bit . "'>" . $this->user->lang(strtoupper($field)) . '</option>';
+		}
+
+		$event['rrc_display_options'] = $options;
+	}
+
+	/**
+	 * Enrich bounded image-card result sets from cached database EXIF only.
+	 */
+	public function listing_image_template_vars(\phpbb\event\data $event): void
+	{
+		$selected_fields = \phpbbgallery\exif\listing_options::selected_fields((int) $event['display_options']);
+		if (!$this->gallery_config->get('disp_exifdata') || empty($selected_fields))
+		{
+			return;
+		}
+
+		$this->user->add_lang_ext('phpbbgallery/exif', 'info_exif');
+		$image_template_vars = is_array($event['image_template_vars']) ? $event['image_template_vars'] : [];
+		$album_data = isset($event['album_data']) && is_array($event['album_data'])
+			? $event['album_data']
+			: [];
+
+		foreach ((array) $event['images'] as $image_data)
+		{
+			$image_id = (int) ($image_data['image_id'] ?? 0);
+			$album_id = (int) ($image_data['image_album_id'] ?? $image_data['album_id'] ?? $album_data['album_id'] ?? 0);
+			$album_user_id = (int) ($image_data['album_user_id'] ?? $album_data['album_user_id'] ?? 0);
+			if ($image_id <= 0
+				|| !$this->is_jpeg_filename((string) ($image_data['image_filename'] ?? ''))
+				|| (int) ($image_data['image_has_exif'] ?? 0) !== \phpbbgallery\exif\exif::DBSAVED
+				|| trim((string) ($image_data['image_exif_data'] ?? '')) === '')
+			{
+				continue;
+			}
+
+			$can_moderate = $this->gallery_auth->acl_check('m_status', $album_id, $album_user_id);
+			if ($this->image_visibility->hides_private_data(
+				$image_data,
+				(int) ($this->user->data['user_id'] ?? 0),
+				(bool) $can_moderate
+			))
+			{
+				continue;
+			}
+
+			$exif = new \phpbbgallery\exif\exif('');
+			$exif->interpret(\phpbbgallery\exif\exif::DBSAVED, (string) $image_data['image_exif_data']);
+			$prepared = $exif->get_prepared_data($selected_fields);
+			if (empty($prepared))
+			{
+				continue;
+			}
+
+			$fields = [];
+			foreach ($prepared as $field => $value)
+			{
+				$fields[] = [
+					'LABEL' => $this->user->lang(strtoupper($field)),
+					'VALUE' => utf8_htmlspecialchars((string) $value),
+				];
+			}
+
+			$existing_vars = isset($image_template_vars[$image_id]) && is_array($image_template_vars[$image_id])
+				? $image_template_vars[$image_id]
+				: [];
+			$image_template_vars[$image_id] = array_merge(
+				$existing_vars,
+				['EXIF_CARD_FIELDS' => $fields]
+			);
+		}
+
+		$event['image_template_vars'] = $image_template_vars;
 	}
 
 	/**

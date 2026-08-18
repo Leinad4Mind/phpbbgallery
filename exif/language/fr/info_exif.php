@@ -120,4 +120,6 @@ $lang = array_merge($lang, [
 	'ACP_EXIF_SYNC_CONFIRM'      => 'Voulez-vous vraiment reconstruire l’index des dates de prise de vue EXIF ?',
 	'ACP_EXIF_SYNC_PROGRESS'     => 'Synchronisation EXIF en cours : %1$d images analysées, %2$d dates indexées et %3$d fichiers source temporairement indisponibles.',
 	'ACP_EXIF_SYNC_COMPLETE'     => 'Synchronisation EXIF terminée : %1$d images analysées, %2$d dates indexées et %3$d fichiers source indisponibles.',
+	'DISP_EXIF_DATA_EXPLAIN' => 'Active globalement la présentation EXIF. Si cette option est désactivée, les sélections EXIF de la page individuelle et des cartes de miniatures sont ignorées.',
+	'EXIF_IMAGE_PAGE_FIELD_EXPLAIN' => 'Contrôle cette valeur uniquement sur la page individuelle de l’image. Pour l’afficher sous les miniatures, sélectionnez-la séparément dans le réglage d’informations de cartes concerné.',
 ]);

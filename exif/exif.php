@@ -325,6 +325,27 @@ class exif
 	}
 
 	/**
+	 * Return prepared display values without assigning a template block.
+	 *
+	 * @param array $enabled_fields Prepared fields to retain; empty keeps all.
+	 * @return array Prepared values keyed by EXIF field name
+	 */
+	public function get_prepared_data(array $enabled_fields = []): array
+	{
+		$this->prepare_data();
+
+		if (empty($enabled_fields))
+		{
+			return $this->prepared_data;
+		}
+
+		return array_intersect_key(
+			$this->prepared_data,
+			array_flip($enabled_fields)
+		);
+	}
+
+	/**
 	* Sends the Exif into the template
 	*
 	* @param	bool	$expand_view	Shall we expand the Exif data on page view or collapse?
@@ -334,11 +355,7 @@ class exif
 	*/
 	public function send_to_template(bool $expand_view = true, string $block = 'exif_value', array $enabled_fields = []): void
 	{
-		$this->prepare_data();
-
-		$fields = empty($enabled_fields)
-			? $this->prepared_data
-			: array_intersect_key($this->prepared_data, array_flip($enabled_fields));
+		$fields = $this->get_prepared_data($enabled_fields);
 
 		if (!empty($fields))
 		{
