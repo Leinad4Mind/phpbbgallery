@@ -501,6 +501,28 @@ input.autowidth-gallery {
 	white-space: nowrap;
 }
 
+.gallery-album-page-title
+{
+	align-items: baseline;
+	display: flex;
+	flex-wrap: wrap;
+	gap: .25em 1em;
+	justify-content: space-between;
+}
+
+.gallery-album-branch-total
+{
+	font-size: .65em;
+	font-weight: normal;
+	margin-inline-start: auto;
+	white-space: nowrap;
+}
+
+@media (max-width: 700px)
+{
+	.gallery-album-branch-total { flex-basis: 100%; margin-inline-start: 0; }
+}
+
 .gallery-album-section-title
 {
 	clear: both;

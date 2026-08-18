@@ -21,6 +21,75 @@ require_once dirname(__DIR__) . '/controller/file.php';
 
 class access_boundary_test extends TestCase
 {
+	public function test_direct_album_count_uses_real_count_for_moderators_without_querying(): void
+	{
+		$controller = (new \ReflectionClass(album_controller::class))->newInstanceWithoutConstructor();
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->never())->method('sql_query');
+		$auth = $this->createMock(\phpbbgallery\core\auth\auth::class);
+		$auth->expects($this->once())->method('acl_check')->with('m_status', 5, 42)->willReturn(true);
+
+		$set_dependencies = \Closure::bind(function ($db, $auth): void
+		{
+			$this->db = $db;
+			$this->auth = $auth;
+		}, $controller, album_controller::class);
+		$set_dependencies($db, $auth);
+
+		$visibility = \Closure::bind(function (): array
+		{
+			return $this->get_direct_image_visibility(5, [
+				'album_user_id' => 42,
+				'album_images_real' => 9,
+			]);
+		}, $controller, album_controller::class);
+
+		$this->assertSame(['', 9], $visibility());
+	}
+
+	public function test_direct_album_count_includes_only_images_visible_to_a_non_moderator(): void
+	{
+		$controller = (new \ReflectionClass(album_controller::class))->newInstanceWithoutConstructor();
+		$query = '';
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->once())->method('sql_query')->willReturnCallback(static function (string $sql) use (&$query): bool
+		{
+			$query = $sql;
+
+			return true;
+		});
+		$db->expects($this->once())->method('sql_fetchfield')->with('total_images')->willReturn(3);
+		$db->expects($this->once())->method('sql_freeresult')->with(true);
+		$auth = $this->createMock(\phpbbgallery\core\auth\auth::class);
+		$auth->expects($this->once())->method('acl_check')->with('m_status', 5, 42)->willReturn(false);
+		$user = $this->createMock(\phpbb\user::class);
+		$user->data = ['user_id' => 99];
+
+		$set_dependencies = \Closure::bind(function ($db, $auth, $user): void
+		{
+			$this->db = $db;
+			$this->auth = $auth;
+			$this->user = $user;
+			$this->table_images = 'gallery_images';
+		}, $controller, album_controller::class);
+		$set_dependencies($db, $auth, $user);
+
+		$visibility = \Closure::bind(function (): array
+		{
+			return $this->get_direct_image_visibility(5, [
+				'album_user_id' => 42,
+				'album_images_real' => 9,
+			]);
+		}, $controller, album_controller::class);
+
+		[$status_check, $count] = $visibility();
+		$this->assertSame(3, $count);
+		$this->assertStringContainsString('image_status <> ' . \phpbbgallery\core\block::STATUS_UNAPPROVED . ' OR image_user_id = 99', $status_check);
+		$this->assertStringContainsString('image_album_id = 5', $query);
+		$this->assertStringContainsString('image_status <> ' . \phpbbgallery\core\block::STATUS_ORPHAN, $query);
+		$this->assertStringContainsString('image_status <> ' . \phpbbgallery\core\block::STATUS_DELETE_REQUESTED, $query);
+	}
+
 	public function test_descendant_count_applies_view_and_moderator_permissions_per_album(): void
 	{
 		$controller = (new \ReflectionClass(album_controller::class))->newInstanceWithoutConstructor();

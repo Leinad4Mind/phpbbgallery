@@ -1,6 +1,9 @@
 {% include 'gallery/gallery_header.html' %}
 
-<h2>{{ lang('ALBUM_NAME') }}{{ lang('COLON') }}<a href="{{ U_VIEW_ALBUM }}" style="display: inline;"> {{ ALBUM_NAME }}</a></h2>
+<h2 class="gallery-album-page-title">
+	<span>{{ lang('ALBUM_NAME') }}{{ lang('COLON') }}<a href="{{ U_VIEW_ALBUM }}" style="display: inline;"> {{ ALBUM_NAME }}</a></span>
+	{% if not S_IN_GALLERY_POPUP and ALBUM_TOTAL_IMAGES %}<small class="gallery-album-branch-total">{{ ALBUM_TOTAL_IMAGES }} ({{ lang('INCLUDING_SUBALBUMS') }})</small>{% endif %}
+</h2>
 
 {% if not S_IN_GALLERY_POPUP and ALBUM_DESC or MODERATORS or U_MCP or S_ALBUM_TYPE_DETAILS %}
 <div>

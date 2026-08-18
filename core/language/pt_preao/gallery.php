@@ -296,6 +296,7 @@ $lang = array_merge($lang, [
 	'SORT_DESCENDING'                   => 'Descendente',
 	'STATUS'                            => 'Estado',
 	'SUBALBUMS'                         => 'Sub-álbuns',
+	'INCLUDING_SUBALBUMS'               => 'incluindo subálbuns',
 	'SUBALBUM'                          => 'Sub-álbum',
 	'THUMBNAIL_SIZE'                    => 'Tamanho da miniatura (pixeis)',
 	'TOTAL_COMMENTS_SPRINTF'            => [

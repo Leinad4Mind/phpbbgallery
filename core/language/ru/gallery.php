@@ -287,6 +287,7 @@ $lang = array_merge($lang, [
 	'SORT_DESCENDING'                   => 'По убыванию',
 	'STATUS'                            => 'Статус',
 	'SUBALBUMS'                         => 'Вложенные альбомы',
+	'INCLUDING_SUBALBUMS'               => 'включая вложенные альбомы',
 	'SUBALBUM'                          => 'Вложенный альбом',
 	'THUMBNAIL_SIZE'                    => 'Размер миниатюры (точек)',
 	'TOTAL_COMMENTS_SPRINTF'            => [

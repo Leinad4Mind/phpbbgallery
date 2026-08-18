@@ -261,6 +261,27 @@ final class controller_album_types_test extends TestCase
 		$this->assertStringContainsString("'album_page' => intdiv(max(0, \$start), \$limit) + 1", $source);
 		$this->assertStringContainsString("'U_COMMENTS' => !\$hide_results ? \$image_page_url . '#comments'", $source);
 	}
+
+	public function test_album_pagination_uses_direct_images_and_labels_the_descendant_total_separately(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/album.php');
+		$this->assertStringContainsString("'TOTAL_IMAGES'      => \$this->language->lang('VIEW_ALBUM_IMAGES', \$image_counter)", $source);
+		$this->assertStringContainsString("assign_var('ALBUM_TOTAL_IMAGES', \$this->language->lang('VIEW_ALBUM_IMAGES', \$branch_image_count))", $source);
+		$this->assertStringContainsString("'page', \$image_counter, \$limit, \$start", $source);
+		$this->assertStringContainsString('get_direct_image_visibility', $source);
+		$this->assertTrue(strpos($source, "assign_var('ALBUM_TOTAL_IMAGES'") < strpos($source, 'display_images($album_id'));
+
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
+		{
+			$template = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/album_body.html');
+			$this->assertStringContainsString('gallery-album-page-title', $template, $style);
+			$this->assertStringContainsString('ALBUM_TOTAL_IMAGES', $template, $style);
+			$this->assertStringContainsString("lang('INCLUDING_SUBALBUMS')", $template, $style);
+		}
+
+		$theme = (string) file_get_contents(dirname(__DIR__) . '/styles/all/theme/gallery.css');
+		$this->assertStringContainsString('.gallery-album-branch-total', $theme);
+	}
 	public function test_album_display_flags_remain_stable(): void
 	{
 		$this->assertSame(512, album::ALBUM_SHOW_SUBTITLE);

@@ -304,6 +304,7 @@ $lang = array_merge($lang, [
 	'SORT_DESCENDING'                   => 'Discendente',
 	'STATUS'                            => 'Stato',
 	'SUBALBUMS'                         => 'Sotto album',
+	'INCLUDING_SUBALBUMS'               => 'inclusi i sottoalbum',
 	'SUBALBUM'                          => 'Sotto album',
 
 	'THUMBNAIL_SIZE'         => 'Dimensioni anteprima (pixel)',

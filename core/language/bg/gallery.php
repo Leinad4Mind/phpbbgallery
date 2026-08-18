@@ -303,6 +303,7 @@ $lang = array_merge($lang, [
 	'SORT_DESCENDING'                   => 'Намаляващ',
 	'STATUS'                            => 'Състояние',
 	'SUBALBUMS'                         => 'Подалбуми',
+	'INCLUDING_SUBALBUMS'               => 'включително подалбумите',
 	'SUBALBUM'                          => 'Подалбум',
 
 	'THUMBNAIL_SIZE'         => 'Размер на миниатюрата (пиксели)',

@@ -248,8 +248,9 @@ class album
 		$watch_url = $this->can_watch_album()
 			? $this->helper->route('phpbbgallery_core_album_watch', ['album_id' => (int) $album_id])
 			: '';
+		$is_postable = $album_data['album_type'] != (int) \phpbbgallery\core\block::TYPE_CAT;
 		$this->template->assign_vars([
-			'S_IS_POSTABLE'      => $album_data['album_type'] != (int) \phpbbgallery\core\block::TYPE_CAT,
+			'S_IS_POSTABLE'      => $is_postable,
 			'S_IS_LOCKED'        => $album_data['album_status'] == (int) \phpbbgallery\core\block::ALBUM_LOCKED,
 			'S_DISPLAY_SEARCHBOX' => $this->can_search_album(),
 			'GALLERY_INDEX_ALBUM_LAYOUT' => $this->gallery_config->get_index_album_layout(),
@@ -267,10 +268,23 @@ class album
 			'U_WATCH_TOGGLE'      => $watch_url,
 		]);
 
-		if ($album_data['album_type'] != (int) \phpbbgallery\core\block::TYPE_CAT
-			&& $album_data['album_images_real'] > 0)
+		$image_status_check = '';
+		$image_counter = 0;
+		if ($is_postable)
 		{
-			$this->display_images($album_id, $album_data, ($page - 1) * (int) $this->config['phpbb_gallery_items_per_page'], (int) $this->config['phpbb_gallery_items_per_page'], $album_display[0]);
+			[$image_status_check, $image_counter] = $this->get_direct_image_visibility($album_id, $album_data);
+		}
+
+		$has_visible_descendants = $album_data['right_id'] > $album_data['left_id'] + 1 && !empty($album_display[0]);
+		if ($has_visible_descendants)
+		{
+			$branch_image_count = $image_counter + $this->get_descendant_image_count($album_display[0], (int) $album_data['album_user_id']);
+			$this->template->assign_var('ALBUM_TOTAL_IMAGES', $this->language->lang('VIEW_ALBUM_IMAGES', $branch_image_count));
+		}
+
+		if ($is_postable && $image_counter > 0)
+		{
+			$this->display_images($album_id, $album_data, ($page - 1) * (int) $this->config['phpbb_gallery_items_per_page'], (int) $this->config['phpbb_gallery_items_per_page'], $image_status_check, $image_counter);
 		}
 
 		return $this->helper->render('gallery/album_body.html', $page_title);
@@ -281,52 +295,17 @@ class album
 	 * @param array $album_data
 	 * @param int   $start
 	 * @param int   $limit
-	 * @param array $descendant_album_ids
+	 * @param string $image_status_check
+	 * @param int    $image_counter
 	 * @return void
 	 */
-	protected function display_images(int $album_id, array $album_data, int $start, int $limit, array $descendant_album_ids): void
+	protected function display_images(int $album_id, array $album_data, int $start, int $limit, string $image_status_check, int $image_counter): void
 	{
 		$sort_days = $this->request->variable('st', 0);
 		$sort_key = $this->request->variable('sk', ($album_data['album_sort_key']) ? $album_data['album_sort_key'] : $this->config['phpbb_gallery_default_sort_key']);
 		$sort_dir = $this->normalize_sort_direction($this->request->variable('sd', ($album_data['album_sort_dir']) ? $album_data['album_sort_dir'] : $this->config['phpbb_gallery_default_sort_dir']));
 
-		$image_status_check = ' AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED .
-			' AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED;
-
-		$image_counter = $album_data['album_images'];
-
-		$user_id = (int) $this->user->data['user_id'];
 		$album_owner_id = (int) $album_data['album_user_id'];
-
-		if ($this->auth->acl_check('m_status', $album_id, $album_owner_id))
-		{
-			$image_status_check = '';
-			$image_counter = $album_data['album_images_real'];
-		}
-		else
-		{
-			$image_status_check = ' AND (image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . " OR image_user_id = $user_id)" .
-				' AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED;
-
-			$sql = 'SELECT COUNT(*) AS total_images
-				FROM ' . $this->table_images . '
-				WHERE image_album_id = ' . (int) $album_id . '
-					AND (image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . " OR image_user_id = $user_id)" . '
-					AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
-					AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED;
-			$result = $this->db->sql_query($sql);
-			$image_counter = (int) $this->db->sql_fetchfield('total_images');
-			$this->db->sql_freeresult($result);
-		}
-
-		// Keep pagination scoped to this album, but include images from individually
-		// authorized descendants in the header total. display_albums() has already loaded
-		// the branch and removed albums hidden by list/zebra rules, avoiding another tree query.
-		$total_images_display = $image_counter;
-		if ($album_data['right_id'] > $album_data['left_id'] + 1 && !empty($descendant_album_ids))
-		{
-			$total_images_display += $this->get_descendant_image_count($descendant_album_ids, $album_owner_id);
-		}
 
 		$limit_days = [];
 		$sort_by_text = [
@@ -591,10 +570,42 @@ class album
 		], 'pagination', 'page', $image_counter, $limit, $start);
 
 		$this->template->assign_vars([
-			'TOTAL_IMAGES'      => $this->language->lang('VIEW_ALBUM_IMAGES', $total_images_display),
+			// TOTAL_IMAGES belongs to the directly listed and paginated result set.
+			'TOTAL_IMAGES'      => $this->language->lang('VIEW_ALBUM_IMAGES', $image_counter),
 			'S_SELECT_SORT_DIR' => $s_sort_dir,
 			'S_SELECT_SORT_KEY' => $s_sort_key,
 		]);
+	}
+
+	/**
+	 * Resolve the query filter and visible image count for the current album only.
+	 *
+	 * @param int   $album_id
+	 * @param array $album_data
+	 * @return array{0: string, 1: int}
+	 */
+	protected function get_direct_image_visibility(int $album_id, array $album_data): array
+	{
+		$album_owner_id = (int) $album_data['album_user_id'];
+		if ($this->auth->acl_check('m_status', $album_id, $album_owner_id))
+		{
+			return ['', (int) $album_data['album_images_real']];
+		}
+
+		$user_id = (int) $this->user->data['user_id'];
+		$image_status_check = ' AND (image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . " OR image_user_id = $user_id)" .
+			' AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED;
+		$sql = 'SELECT COUNT(*) AS total_images
+			FROM ' . $this->table_images . '
+			WHERE image_album_id = ' . (int) $album_id . '
+				AND (image_status <> ' . (int) \phpbbgallery\core\block::STATUS_UNAPPROVED . " OR image_user_id = $user_id)" . '
+				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN . '
+				AND image_status <> ' . (int) \phpbbgallery\core\block::STATUS_DELETE_REQUESTED;
+		$result = $this->db->sql_query($sql);
+		$image_counter = (int) $this->db->sql_fetchfield('total_images');
+		$this->db->sql_freeresult($result);
+
+		return [$image_status_check, $image_counter];
 	}
 
 	/**
