@@ -95,6 +95,8 @@ final class acp_config_types_test extends TestCase
 		$this->assertArrayHasKey('forum_index_personal_count', $display['vars']);
 		$this->assertSame('int:1:12', $display['vars']['forum_index_personal_count']['validate']);
 		$this->assertArrayHasKey('forum_index_display', $display['vars']);
+		$this->assertSame('RRC_DISPLAY_OPTIONS', $display['vars']['forum_index_display']['lang']);
+		$this->assertSame('RRC_PROFILE_DISPLAY_OPTIONS', $display['vars']['rrc_profile_display']['lang']);
 		$this->assertArrayHasKey('forum_index_personal', $display['vars']);
 		$this->assertSame('FORUM_INDEX_INCLUDE_PERSONAL', $display['vars']['forum_index_personal']['lang']);
 		$this->assertTrue($display['vars']['forum_index_personal']['explain']);

@@ -464,6 +464,7 @@ $lang = array_merge($lang, [
 	'RRC_DISPLAY_IP'         => 'Потребителски IP',
 	'RRC_DISPLAY_NONE'       => 'Нищо',
 	'RRC_DISPLAY_OPTIONS'    => 'Кои полета трябва да се изобразява под thumbnail-ите',
+	'RRC_PROFILE_DISPLAY_OPTIONS' => 'Информация под миниатюрите „Скорошни/Случайни изображения“ на Галерията в потребителските профили',
 	'RRC_DISPLAY_USERNAME'   => 'Потребителско име',
 	'RRC_DISPLAY_RATINGS'    => 'Оценки',
 	'RRC_GINDEX'             => 'Скорошни- &amp; Случайни Изображение &amp; Коментари - възможности',

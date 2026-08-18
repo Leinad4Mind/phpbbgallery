@@ -441,6 +441,7 @@ $lang = array_merge($lang, [
 	'RRC_DISPLAY_IP'             => 'IP do usuário',
 	'RRC_DISPLAY_NONE'           => 'Nenhum',
 	'RRC_DISPLAY_OPTIONS'        => 'Informações exibidas abaixo das miniaturas',
+	'RRC_PROFILE_DISPLAY_OPTIONS' => 'Informações exibidas abaixo das miniaturas Recentes/Aleatórias da Galeria nos perfis de usuário',
 	'RRC_DISPLAY_USERNAME'       => 'Nome de usuário',
 	'RRC_DISPLAY_RATINGS'        => 'Avaliações',
 	'RRC_GINDEX'                 => 'Recurso de imagens recentes, aleatórias e comentários',

@@ -461,6 +461,7 @@ $lang = array_merge($lang, [
 	'RRC_DISPLAY_IP'         => 'Gebruikers-IP',
 	'RRC_DISPLAY_NONE'       => 'Geen',
 	'RRC_DISPLAY_OPTIONS'    => 'Welke waardes moeten er onder de miniaturen worden weergegeven',
+	'RRC_PROFILE_DISPLAY_OPTIONS' => 'Informatie onder de miniaturen Recente/Willekeurige galerijafbeeldingen in gebruikersprofielen',
 	'RRC_DISPLAY_USERNAME'   => 'Gebruikersnaam',
 	'RRC_DISPLAY_RATINGS'    => 'Beoordelingen',
 	'RRC_GINDEX'             => 'Recente en willekeurige afbeeldingen en reacties',

@@ -459,6 +459,7 @@ $lang = array_merge($lang, [
 	'RRC_DISPLAY_IP'         => 'Ip utente',
 	'RRC_DISPLAY_NONE'       => 'Nessuno',
 	'RRC_DISPLAY_OPTIONS'    => 'I valori che devono essere visualizzati sotto le anteprime',
+	'RRC_PROFILE_DISPLAY_OPTIONS' => 'Informazioni mostrate sotto le miniature Recenti/Casuali della Galleria nei profili utente',
 	'RRC_DISPLAY_USERNAME'   => 'Nome utente',
 	'RRC_DISPLAY_RATINGS'    => 'Voti',
 	'RRC_GINDEX'             => 'Recenti- & immagini Casuali &amp; Commenti - Funzionalità',

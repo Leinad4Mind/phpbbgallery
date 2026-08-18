@@ -404,6 +404,7 @@ $lang = array_merge($lang, [
 	'RRC_DISPLAY_IP'         => 'User ip',
 	'RRC_DISPLAY_NONE'       => 'None',
 	'RRC_DISPLAY_OPTIONS'    => 'Which values should be displayed underneath the thumbnails',
+	'RRC_PROFILE_DISPLAY_OPTIONS' => 'Information displayed beneath Recent/Random Gallery thumbnails in user profiles',
 	'RRC_DISPLAY_USERNAME'   => 'Username',
 	'RRC_DISPLAY_RATINGS'    => 'Ratings',
 	'RRC_GINDEX'             => 'Recent- &amp; Random-Images &amp; Comment - Feature',

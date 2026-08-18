@@ -461,6 +461,7 @@ $lang = array_merge($lang, [
 	'RRC_DISPLAY_IP'         => 'Benutzer-IP',
 	'RRC_DISPLAY_NONE'       => 'Nichts',
 	'RRC_DISPLAY_OPTIONS'    => 'Welche Werte sollen unter dem Thumbnail angezeigt werden',
+	'RRC_PROFILE_DISPLAY_OPTIONS' => 'Informationen unter den Galerie-Vorschaubildern „Neueste/Zufällige“ in Benutzerprofilen',
 	'RRC_DISPLAY_USERNAME'   => 'Benutzername',
 	'RRC_DISPLAY_RATINGS'    => 'Bewertungen',
 	'RRC_GINDEX'             => 'Neueste &amp; zufällige Bilder &amp; Kommentare - Feature',

@@ -444,6 +444,7 @@ $lang = array_merge($lang, [
 	'RRC_DISPLAY_IP'             => 'IP пользователя',
 	'RRC_DISPLAY_NONE'           => 'Нет',
 	'RRC_DISPLAY_OPTIONS'        => 'Информация, отображаемая под миниатюрами',
+	'RRC_PROFILE_DISPLAY_OPTIONS' => 'Информация под миниатюрами «Последние/Случайные изображения» Галереи в профилях пользователей',
 	'RRC_DISPLAY_USERNAME'       => 'Пользователь',
 	'RRC_DISPLAY_RATINGS'        => 'Оценки',
 	'RRC_GINDEX'                 => 'Последние и случайные фото, комментарии',

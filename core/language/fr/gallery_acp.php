@@ -475,6 +475,7 @@ $lang = array_merge($lang, [
 	'RRC_DISPLAY_IP'         => 'IP de l’utilisateur',
 	'RRC_DISPLAY_NONE'       => 'Aucun',
 	'RRC_DISPLAY_OPTIONS'    => 'Quelles valeurs doivent être affichées sous les miniatures ?',
+	'RRC_PROFILE_DISPLAY_OPTIONS' => 'Informations affichées sous les miniatures Récentes/Aléatoires de la Galerie dans les profils utilisateur',
 	'RRC_DISPLAY_USERNAME'   => 'Nom d’utilisateur',
 	'RRC_DISPLAY_RATINGS'    => 'Notes',
 	'RRC_GINDEX'             => 'Fonctions Dernières Images/Commentaires & Images aléatoires',
