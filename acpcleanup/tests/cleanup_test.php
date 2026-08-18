@@ -126,6 +126,18 @@ final class cleanup_test extends TestCase
 		$this->assertMatchesRegularExpression('/\{% endif %\}\s*\{\{ S_FORM_TOKEN \}\}\s*<\/form>/', $template);
 	}
 
+	public function test_missing_source_pagination_uses_the_native_acp_container(): void
+	{
+		$template = (string) file_get_contents(dirname(__DIR__) . '/adm/style/gallery_cleanup.html');
+		$pagination_start = strpos($template, '{% if pagination|length %}');
+		$pagination_end = strpos($template, '{% endif %}', $pagination_start);
+		$pagination = substr($template, $pagination_start, $pagination_end - $pagination_start);
+
+		$this->assertStringContainsString('<div class="pagination">', $pagination);
+		$this->assertStringContainsString("{% include 'pagination.html' %}", $pagination);
+		$this->assertStringContainsString('<div class="clearfix"></div>', $pagination);
+	}
+
 	public function test_database_cleanup_delegates_to_the_domain_services(): void
 	{
 		$dependencies = $this->create_service();

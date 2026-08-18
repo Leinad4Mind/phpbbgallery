@@ -67,7 +67,12 @@
 					{% endfor %}
 				</tbody>
 			</table>
-			{% if pagination|length %}{% include 'pagination.html' %}{% endif %}
+			{% if pagination|length %}
+				<div class="pagination">
+					{% include 'pagination.html' %}
+				</div>
+				<div class="clearfix"></div>
+			{% endif %}
 			<p>{{ lang('MISSING_SOURCE_RESTORE_EXPLAIN') }}</p>
 		{% endif %}
 		<dl>

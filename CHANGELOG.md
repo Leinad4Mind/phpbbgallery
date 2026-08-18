@@ -68,6 +68,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Restored the native horizontal ACP pagination for the resumable missing-source review in ACP Cleanup instead of rendering its page links as an unstyled vertical list.
 - Reset binary image-reader metadata for every source, preview, medium and thumbnail response so persistent workers cannot reuse a previous image's MIME type.
 - Centred every Gallery ACP contextual-help dialog in the viewport while retaining responsive size limits and fallback browser support.
 - Kept approval and disapproval controls inside each Modern and Futuristic card's metadata area before the album details, preserving centred thumbnails, equal card heights and full-width unapproved cards.
