@@ -20,10 +20,10 @@
 				<a href="{{ albumrow.U_VIEWALBUM }}"{% if S_PERSONAL_GALLERY and albumrow.ALBUM_COLOUR %} style="color: {{ albumrow.ALBUM_COLOUR }};"{% endif %}>{{ albumrow.ALBUM_NAME }}</a>
 			</p>
 			<hr />
-			{% if albumrow.UC_THUMBNAIL %}
+			{% if albumrow.ALBUM_IMAGE_SRC or albumrow.UC_LAST_IMAGE_THUMBNAIL %}
 			<a href="{{ albumrow.U_VIEWALBUM }}" class="polaroid_img_container"><img src="{{ albumrow.UC_THUMBNAIL }}" alt="{{ albumrow.UC_IMAGE_NAME }}" title="{{ lang('VIEW_ALBUM') }}{{ albumrow.UC_IMAGE_NAME }}" /></a>
-			{% endif %}
 			<hr />
+			{% endif %}
 			{{ lang('IMAGES') }}{{ lang('COLON') }} <strong>{{ albumrow.IMAGES }} {% if albumrow.UNAPPROVED_IMAGES %} + <span class="reported-images-number">{{ albumrow.UNAPPROVED_IMAGES }}</span>{% endif %}</strong><br />
 
 			{% include '@phpbbgallery_core/gallery/albumlist_polaroid_last_image.html' %}

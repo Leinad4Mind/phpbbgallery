@@ -308,7 +308,7 @@ final class gallery_index_layout_test extends TestCase
 		foreach (\gallery_test_existing_styles($core_root) as $style)
 		{
 			$polaroid = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/albumlist_polaroid.html');
-			$this->assertStringContainsString('albumrow.UC_THUMBNAIL', $polaroid, $style);
+			$this->assertStringContainsString('albumrow.ALBUM_IMAGE_SRC or albumrow.UC_LAST_IMAGE_THUMBNAIL', $polaroid, $style);
 			$this->assertStringContainsString("{% include '@phpbbgallery_core/gallery/albumlist_polaroid_last_image.html' %}", $polaroid, $style);
 		}
 	}
