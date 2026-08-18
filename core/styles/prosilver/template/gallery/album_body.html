@@ -15,21 +15,23 @@
 </div>
 {% endif %}
 
-{% if albumrow|length %}
+{% if subalbumrow|length %}
+<section class="gallery-paginated-list" data-gallery-list-section="subalbums">
 	{% if not S_IS_BOT and U_MARK_ALBUMS %}
 	<ul class="linklist">
 		<li class="rightside"><a href="{{ U_MARK_ALBUMS }}">{{ lang('MARK_ALBUMS_READ') }}</a></li>
 	</ul>
 	{% endif %}
-	{% if GALLERY_INDEX_ALBUM_LAYOUT == 'classic' %}
-		{% include 'gallery/albumlist_body.html' %}
-	{% elseif GALLERY_INDEX_ALBUM_LAYOUT == 'modern' %}
-		{% include '@phpbbgallery_core/gallery/albumlist_modern.html' %}
-	{% elseif GALLERY_INDEX_ALBUM_LAYOUT == 'futuristic' %}
-		{% include '@phpbbgallery_core/gallery/albumlist_futuristic.html' with { GALLERY_FUTURISTIC_VARIANT: 'prosilver' } %}
-	{% else %}
-		{% include 'gallery/albumlist_polaroid.html' %}
+	{% include '@phpbbgallery_core/gallery/albumlist_layout.html' with { albumrow: subalbumrow, GALLERY_FUTURISTIC_VARIANT: 'prosilver' } %}
+	{% if SUBALBUM_TOTAL %}
+	<div class="pagination gallery-album-list-pagination">
+		{{ SUBALBUM_TOTAL }}
+		{% if subalbum_pagination|length %}
+			{% include 'pagination.html' with { pagination: subalbum_pagination, BASE_URL: SUBALBUM_BASE_URL, TOTAL_PAGES: SUBALBUM_TOTAL_PAGES, PAGE_NUMBER: SUBALBUM_PAGE_NUMBER, PER_PAGE: SUBALBUM_PER_PAGE, START_NAME: SUBALBUM_START_NAME } %}
+		{% endif %}
+	</div>
 	{% endif %}
+</section>
 {% endif %}
 
 {% if (not S_IN_GALLERY_POPUP and S_DISPLAY_SEARCHBOX) or (S_IS_POSTABLE and (U_UPLOAD_IMAGE or U_WATCH_TOGGLE or PAGINATION or TOTAL_IMAGES or (U_SLIDE_SHOW and not S_IS_BOT))) %}

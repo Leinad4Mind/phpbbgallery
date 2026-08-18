@@ -172,6 +172,7 @@ class album
 	public function base(int $album_id, int $page = 1): \Symfony\Component\HttpFoundation\Response
 	{
 		$page = $this->normalize_page($page);
+		$subalbum_page = $this->normalize_page($this->request->variable('subalbum_page', 1));
 		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
 
 		try
@@ -205,7 +206,40 @@ class album
 		));
 
 		$this->display->generate_navigation($album_data);
-		$album_display = $this->display->display_albums($album_data, $this->config['load_moderators']);
+		$subalbum_limit = max(1, (int) $this->gallery_config->get('albums_per_page'));
+		$this->display->album_start = ($subalbum_page - 1) * $subalbum_limit;
+		$this->display->album_limit = $subalbum_limit;
+		$album_display = $this->display->display_albums($album_data, $this->config['load_moderators'], false, 'subalbumrow');
+
+		$subalbum_route = $page > 1 ? 'phpbbgallery_core_album_page' : 'phpbbgallery_core_album';
+		$subalbum_params = ['album_id' => (int) $album_id];
+		if ($page > 1)
+		{
+			$subalbum_params['page'] = $page;
+		}
+		$requested_sort_key = $this->request->variable('sk', '');
+		$requested_sort_direction = $this->request->variable('sd', '');
+		$requested_sort_days = $this->request->variable('st', 0);
+		if ($requested_sort_key !== '')
+		{
+			$subalbum_params['sk'] = $requested_sort_key;
+		}
+		if ($requested_sort_direction !== '')
+		{
+			$subalbum_params['sd'] = $requested_sort_direction;
+		}
+		if ($requested_sort_days > 0)
+		{
+			$subalbum_params['st'] = $requested_sort_days;
+		}
+		$this->pagination->generate_template_pagination([
+			'routes' => [$subalbum_route, $subalbum_route],
+			'params' => $subalbum_params,
+		], 'subalbum_pagination', 'subalbum_page', $this->display->albums_total, $subalbum_limit, $this->display->album_start);
+		$this->template->assign_vars([
+			'SUBALBUM_TOTAL' => $this->display->albums_total . ' ' . $this->language->lang($this->display->albums_total === 1 ? 'SUBALBUM' : 'SUBALBUMS'),
+			'S_AJAX_LIST_NAVIGATION' => (bool) $this->gallery_config->get('ajax_list_navigation'),
+		]);
 
 		$page_title = $album_data['album_name'];
 		if ($page > 1)
@@ -556,17 +590,24 @@ class album
 			$this->template->assign_var('S_ALBUM_INLINE_RATING', true);
 		}
 
+		$image_pagination_params = [
+			'album_id' => (int) $album_id,
+			'sk'       => $sort_key,
+			'sd'       => $sort_dir,
+			'st'       => $sort_days,
+		];
+		$current_subalbum_page = $this->normalize_page($this->request->variable('subalbum_page', 1));
+		if ($current_subalbum_page > 1)
+		{
+			$image_pagination_params['subalbum_page'] = $current_subalbum_page;
+		}
+
 		$this->pagination->generate_template_pagination([
 			'routes' => [
 				'phpbbgallery_core_album',
 				'phpbbgallery_core_album_page',
 			],
-			'params' => [
-				'album_id' => (int) $album_id,
-				'sk'       => $sort_key,
-				'sd'       => $sort_dir,
-				'st'       => $sort_days,
-			],
+			'params' => $image_pagination_params,
 		], 'pagination', 'page', $image_counter, $limit, $start);
 
 		$this->template->assign_vars([

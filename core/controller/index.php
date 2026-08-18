@@ -139,16 +139,44 @@ class index
 		}
 		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
 		$show_personal_albums = (bool) $this->gallery_config->get('pegas_index_album');
+		$album_limit = max(1, (int) $this->gallery_config->get('albums_per_page'));
+		$public_page = $this->normalize_page($this->request->variable('public_page', 1));
+		$personal_page = $this->normalize_page($this->request->variable('personal_page', 1));
 		$this->template->assign_vars([
 			'GALLERY_INDEX_ALBUM_LAYOUT' => $this->gallery_config->get_index_album_layout(),
 			'GALLERY_PUBLIC_ALBUMS_LABEL' => $this->language->lang($show_personal_albums ? 'PUBLIC_ALBUMS' : 'ALBUMS'),
+			'S_AJAX_LIST_NAVIGATION' => (bool) $this->gallery_config->get('ajax_list_navigation'),
+			'S_SHOW_PERSONAL_ALBUMS' => $show_personal_albums,
 		]);
-		$this->display->display_albums(false, $this->config['load_moderators']);
 
+		$this->display->album_start = ($public_page - 1) * $album_limit;
+		$this->display->album_limit = $album_limit;
+		$this->display->display_albums(false, $this->config['load_moderators'], false, 'public_albumrow');
+		$public_total = $this->display->albums_total;
+		$this->pagination->generate_template_pagination([
+			'routes' => ['phpbbgallery_core_index', 'phpbbgallery_core_index'],
+			'params' => $personal_page > 1 ? ['personal_page' => $personal_page] : [],
+		], 'public_pagination', 'public_page', $public_total, $album_limit, $this->display->album_start);
+
+		$personal_total = 0;
 		if ($show_personal_albums)
 		{
-			$this->display->display_albums('personal', $this->config['load_moderators']);
+			$this->display->album_start = ($personal_page - 1) * $album_limit;
+			$this->display->album_limit = $album_limit;
+			$this->display->display_albums('personal', $this->config['load_moderators'], false, 'personal_albumrow');
+			$personal_total = $this->display->albums_total;
+			$this->pagination->generate_template_pagination([
+				'routes' => ['phpbbgallery_core_index', 'phpbbgallery_core_index'],
+				'params' => $public_page > 1 ? ['public_page' => $public_page] : [],
+			], 'personal_pagination', 'personal_page', $personal_total, $album_limit, $this->display->album_start);
 		}
+
+		$this->template->assign_vars([
+			'PUBLIC_ALBUM_TOTAL' => $public_total . ' ' . $this->language->lang($public_total === 1 ? 'ALBUM' : 'ALBUMS'),
+			'PERSONAL_ALBUM_TOTAL' => $this->language->lang('TOTAL_PEGAS_SHORT_SPRINTF', $personal_total),
+			'S_HAS_PUBLIC_ALBUMS' => $public_total > 0,
+			'S_HAS_PERSONAL_ALBUMS' => $personal_total > 0,
+		]);
 		if ($this->gallery_config->get('rrc_gindex_mode'))
 		{
 			$config_value = $this->gallery_config->get('rrc_gindex_mode');
@@ -247,17 +275,21 @@ class index
 			login_box();
 		}
 		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
-		$this->template->assign_var('GALLERY_INDEX_ALBUM_LAYOUT', $this->gallery_config->get_index_album_layout());
-		$this->display->album_start = ($page - 1) * $this->gallery_config->get('items_per_page');
-		$this->display->album_limit = $this->gallery_config->get('items_per_page');
+		$this->template->assign_vars([
+			'GALLERY_INDEX_ALBUM_LAYOUT' => $this->gallery_config->get_index_album_layout(),
+			'S_AJAX_LIST_NAVIGATION' => (bool) $this->gallery_config->get('ajax_list_navigation'),
+		]);
+		$this->display->album_start = ($page - 1) * $this->gallery_config->get('albums_per_page');
+		$this->display->album_limit = $this->gallery_config->get('albums_per_page');
 		$this->display->album_mode = 'personal';
 		$this->display->display_albums('personal', $this->config['load_moderators']);
+		$first_char = $this->request->variable('first_char', '');
 
 		$this->pagination->generate_template_pagination([
 			'routes' => [
 				'phpbbgallery_core_personal',
 				'phpbbgallery_core_personal_page',],
-				'params' => []], 'pagination', 'page', $this->display->albums_total, $this->display->album_limit, $this->display->album_start
+				'params' => $first_char !== '' ? ['first_char' => $first_char] : []], 'pagination', 'page', $this->display->albums_total, $this->display->album_limit, $this->display->album_start
 		);
 
 		$this->template->assign_vars([
@@ -269,7 +301,6 @@ class index
 			$this->assign_dropdown_links('phpbbgallery_core_personal');
 		}
 
-		$first_char = $this->request->variable('first_char', '');
 		$s_char_options = '<option value=""' . ((!$first_char) ? ' selected="selected"' : '') . '>' . $this->user->lang('ALL') . '</option>';
 		// Loop the ASCII: a-z
 		for ($i = 97; $i < 123; $i++)

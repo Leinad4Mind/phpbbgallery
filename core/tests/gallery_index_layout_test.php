@@ -16,22 +16,22 @@ final class gallery_index_layout_test extends TestCase
 	public function test_every_style_exposes_classic_modern_card_and_futuristic_layouts_on_index_and_inside_albums(): void
 	{
 		$core_root = dirname(__DIR__);
+		$selector = (string) file_get_contents($core_root . '/styles/all/template/gallery/albumlist_layout.html');
+
+		$this->assertStringContainsString("GALLERY_INDEX_ALBUM_LAYOUT == 'classic'", $selector);
+		$this->assertStringContainsString("GALLERY_INDEX_ALBUM_LAYOUT == 'modern'", $selector);
+		$this->assertStringContainsString("GALLERY_INDEX_ALBUM_LAYOUT == 'futuristic'", $selector);
+		$this->assertStringContainsString("{% include 'gallery/albumlist_body.html' %}", $selector);
+		$this->assertStringContainsString("{% include '@phpbbgallery_core/gallery/albumlist_modern.html' %}", $selector);
+		$this->assertStringContainsString('@phpbbgallery_core/gallery/albumlist_futuristic.html', $selector);
+		$this->assertStringContainsString("{% include 'gallery/albumlist_polaroid.html' %}", $selector);
 		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
 			$index = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/index_body.html');
 			$album = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/album_body.html');
 
-			foreach (['index' => $index, 'album' => $album] as $context => $template)
-			{
-				$message = $style . '/' . $context;
-				$this->assertStringContainsString("GALLERY_INDEX_ALBUM_LAYOUT == 'classic'", $template, $message);
-				$this->assertStringContainsString("GALLERY_INDEX_ALBUM_LAYOUT == 'modern'", $template, $message);
-				$this->assertStringContainsString("GALLERY_INDEX_ALBUM_LAYOUT == 'futuristic'", $template, $message);
-				$this->assertStringContainsString("{% include 'gallery/albumlist_body.html' %}", $template, $message);
-				$this->assertStringContainsString("{% include '@phpbbgallery_core/gallery/albumlist_modern.html' %}", $template, $message);
-				$this->assertStringContainsString('@phpbbgallery_core/gallery/albumlist_futuristic.html', $template, $message);
-				$this->assertStringContainsString("{% include 'gallery/albumlist_polaroid.html' %}", $template, $message);
-			}
+			$this->assertStringContainsString('albumlist_index_sections.html', $index, $style . '/index');
+			$this->assertStringContainsString('albumlist_layout.html', $album, $style . '/album');
 		}
 	}
 
@@ -59,7 +59,7 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertTrue(strpos($template, 'gallery-modern-last-image-details') < strpos($template, 'gallery-modern-last-image-thumbnail'));
 		$this->assertStringContainsString('albumrow.U_LAST_IMAGE', $template);
 		$this->assertStringContainsString('grid-template-columns: minmax(0, 1fr) minmax(245px, 32%);', $css);
-		$this->assertStringContainsString("'S_ALBUM_LIST_HAS_CUSTOM_ICONS' => \$has_album_custom_icons", (string) file_get_contents($core_root . '/album/display.php'));
+		$this->assertStringContainsString("'S_ALBUM_LIST_HAS_CUSTOM_ICONS' => \$this->has_album_custom_icons", (string) file_get_contents($core_root . '/album/display.php'));
 		$this->assertMatchesRegularExpression('/\\.gallery-modern-album-main--without-visual\\s*\\{[^}]*grid-template-columns:\\s*minmax\\(0, 1fr\\);/s', $css);
 		$this->assertMatchesRegularExpression('/\\.gallery-modern-album-visual--placeholder\\s*\\{[^}]*background:\\s*transparent;[^}]*pointer-events:\\s*none;/s', $css);
 		$this->assertMatchesRegularExpression('/\\.gallery-modern-last-image-thumbnail\\s*\\{[^}]*margin-inline-start:\\s*auto;/s', $css);

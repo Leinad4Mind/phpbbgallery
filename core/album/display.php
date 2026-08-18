@@ -38,12 +38,12 @@ class display
 	protected \phpbb\language\language $language;
 
 	/**
-	 * Pagination offset for personal albums.
+	 * Pagination offset for the current album list.
 	 */
 	public int $album_start = 0;
 
 	/**
-	 * Pagination limit for personal albums.
+	 * Pagination limit for the current album list.
 	 */
 	public int $album_limit = 0;
 
@@ -51,6 +51,11 @@ class display
 	 * Total number of visible albums from the last display operation.
 	 */
 	public int $albums_total = 0;
+
+	/**
+	 * Whether any rendered album list in this request uses a custom icon.
+	 */
+	public bool $has_album_custom_icons = false;
 
 	/**
 	 * Album listing mode selected by the controller.
@@ -373,9 +378,10 @@ class display
 	 * @param array|string|false $root_data
 	 * @param bool $display_moderators
 	 * @param bool $return_moderators
+	 * @param string $block_name Template block that receives the album rows
 	 * @return array
 	 */
-	public function display_albums(array|string|false $root_data = '', bool $display_moderators = true, bool $return_moderators = false): array
+	public function display_albums(array|string|false $root_data = '', bool $display_moderators = true, bool $return_moderators = false, string $block_name = 'albumrow'): array
 	{
 		$album_rows = $subalbums = $album_ids = $album_ids_moderator = $album_moderators = $active_album_ary = [];
 		$visible_albums = 0;
@@ -446,8 +452,6 @@ class display
 			}
 
 			$mode_personal = true;
-			$start = $this->album_start;
-			$limit = $this->album_limit;
 		}
 		else
 		{
@@ -602,6 +606,7 @@ class display
 			}
 			$album_moderators = $this->get_moderators($album_ids_moderator);
 		}
+		[$album_rows, $visible_albums] = $this->paginate_album_rows($album_rows, (int) $root_data['album_id']);
 
 		// Used to tell whatever we have to create a dummy category or not.
 		$board_path = rtrim($this->symfony_request->getBasePath(), '/');
@@ -617,7 +622,7 @@ class display
 			// Empty category
 			if (($row['parent_id'] == $root_data['album_id']) && ($row['album_type'] == (int) \phpbbgallery\core\block::TYPE_CAT))
 			{
-				$this->template->assign_block_vars('albumrow', [
+				$this->template->assign_block_vars($block_name, [
 					'S_IS_CAT'				=> true,
 					'S_PERSONAL_ALBUM'		=> (int) $row['album_user_id'] > (int) \phpbbgallery\core\block::PUBLIC_ALBUM,
 					'S_PUBLIC_SECTION_START'	=> $section_start_pending && $index_section === 'public',
@@ -633,12 +638,6 @@ class display
 				]);
 				$section_start_pending = false;
 
-				continue;
-			}
-
-			$visible_albums++;
-			if (($mode == 'personal') && (($visible_albums <= $start) || ($visible_albums > ($start + $limit))))
-			{
 				continue;
 			}
 
@@ -806,13 +805,13 @@ class display
 				$album_template_vars
 			);
 			$has_album_custom_icons = $has_album_custom_icons || $album_image_src !== '';
-			$this->template->assign_block_vars('albumrow', $album_template_vars);
+			$this->template->assign_block_vars($block_name, $album_template_vars);
 			$section_start_pending = false;
 
 			// Assign subforums loop for style authors
 			foreach ($subalbums_list as $subalbum)
 			{
-				$this->template->assign_block_vars('albumrow.subalbum', [
+				$this->template->assign_block_vars($block_name . '.subalbum', [
 					'U_SUBALBUM'	=> $subalbum['link'],
 					'SUBALBUM_NAME'	=> $subalbum['name'],
 					'SUBALBUM_IMAGE_SRC' => $subalbum['image_src'],
@@ -823,9 +822,11 @@ class display
 			$last_catless = $catless;
 		}
 
+		$this->has_album_custom_icons = $this->has_album_custom_icons || $has_album_custom_icons;
+
 		$this->template->assign_vars([
 			'U_MARK_ALBUMS'		=> ($this->user->data['is_registered']) ? $this->helper->route('phpbbgallery_core_album', ['album_id' => (int) $root_data['album_id'], 'hash' => generate_link_hash('global'), 'mark' => 'albums']) : '',
-			'S_ALBUM_LIST_HAS_CUSTOM_ICONS' => $has_album_custom_icons,
+			'S_ALBUM_LIST_HAS_CUSTOM_ICONS' => $this->has_album_custom_icons,
 			'S_HAS_SUBALBUM'	=> ($visible_albums) ? true : false,
 			'L_SUBFORUM'		=> ($visible_albums == 1) ? $this->language->lang('SUBALBUM') : $this->language->lang('SUBALBUMS'),
 			'LAST_POST_IMG'		=> $this->user->img('icon_topic_latest', 'VIEW_LATEST_POST'),
@@ -840,6 +841,75 @@ class display
 		$this->albums_total = $visible_albums;
 
 		return [$active_album_ary, []];
+	}
+
+	/**
+	 * Select one bounded page of displayed album cards without separating category headings.
+	 *
+	 * Nested descendants are already attached to their displayed card and therefore never
+	 * consume a second slot. A category heading is repeated when one of its cards appears
+	 * on the requested page.
+	 *
+	 * @param array $album_rows Ordered displayed rows
+	 * @param int   $root_album_id Root album outside the selected rows
+	 * @return array{0: array, 1: int} Selected rows and total visible cards
+	 */
+	protected function paginate_album_rows(array $album_rows, int $root_album_id): array
+	{
+		$total = 0;
+		foreach ($album_rows as $row)
+		{
+			if (!$this->is_album_category_heading($row, $root_album_id))
+			{
+				$total++;
+			}
+		}
+
+		$limit = max(0, $this->album_limit);
+		if ($limit === 0)
+		{
+			return [$album_rows, $total];
+		}
+
+		$start = max(0, $this->album_start);
+		$position = 0;
+		$current_category = null;
+		$selected = [];
+		foreach ($album_rows as $album_id => $row)
+		{
+			if ($this->is_album_category_heading($row, $root_album_id))
+			{
+				$current_category = [$album_id => $row];
+				continue;
+			}
+
+			if ((int) $row['parent_id'] === $root_album_id)
+			{
+				$current_category = null;
+			}
+
+			$position++;
+			if ($position <= $start || $position > $start + $limit)
+			{
+				continue;
+			}
+
+			if ($current_category !== null)
+			{
+				$selected += $current_category;
+				$current_category = null;
+			}
+			$selected[$album_id] = $row;
+		}
+
+		return [$selected, $total];
+	}
+
+	/** Whether a row is a direct category heading rather than a paginated album card. */
+	protected function is_album_category_heading(array $row, int $root_album_id): bool
+	{
+		return (int) $row['parent_id'] === $root_album_id
+			&& (int) $row['album_type'] === (int) \phpbbgallery\core\block::TYPE_CAT;
 	}
 
 	/**
