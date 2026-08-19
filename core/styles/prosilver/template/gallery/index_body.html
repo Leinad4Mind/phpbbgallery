@@ -127,30 +127,8 @@ function toggleElement(oElement)
 	</div>
 {% endif %}
 
-{% if pagination|length or TOTAL_ALBUMS %}
-	<div class="pagination">
-		{{ TOTAL_ALBUMS }}
-		{% if pagination|length %}
-			{% include 'pagination.html' %}
-		{% else %}
-			 &bull; {{ PAGE_NUMBER }}
-		{% endif %}
-	</div>
-{% endif %}
-
 {% include '@phpbbgallery_core/gallery/albumlist_index_sections.html' with { GALLERY_FUTURISTIC_VARIANT: 'prosilver' } %}
 
-
-{% if pagination|length or TOTAL_ALBUMS %}
-	<div class="pagination">
-		{{ TOTAL_ALBUMS }}
-		{% if pagination|length %}
-			{% include 'pagination.html' %}
-		{% else %}
-			 &bull; {{ PAGE_NUMBER }}
-		{% endif %}
-	</div>
-{% endif %}
 <br />
 {% if S_PERSONAL_GALLERY %}
 	<div class="topic-actions">

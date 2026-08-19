@@ -421,12 +421,12 @@ class display
 				// Loop the ASCII: a-z
 				for ($i = 97; $i < 123; $i++)
 				{
-					$sql_where .= ' AND u.username_clean NOT ' . $this->db->sql_like_expression(chr($i) . $this->db->any_char);
+					$sql_where .= ' AND u.username_clean NOT ' . $this->db->sql_like_expression(chr($i) . $this->db->get_any_char());
 				}
 			}
 			else if ($first_char)
 			{
-				$sql_where .= ' AND u.username_clean ' . $this->db->sql_like_expression(substr($first_char, 0, 1) . $this->db->any_char);
+				$sql_where .= ' AND u.username_clean ' . $this->db->sql_like_expression(substr($first_char, 0, 1) . $this->db->get_any_char());
 			}
 
 			if ($first_char)

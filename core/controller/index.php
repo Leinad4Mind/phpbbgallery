@@ -275,12 +275,14 @@ class index
 			login_box();
 		}
 		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
+		$album_limit = max(1, (int) $this->gallery_config->get('albums_per_page'));
 		$this->template->assign_vars([
 			'GALLERY_INDEX_ALBUM_LAYOUT' => $this->gallery_config->get_index_album_layout(),
 			'S_AJAX_LIST_NAVIGATION' => (bool) $this->gallery_config->get('ajax_list_navigation'),
+			'S_PERSONAL_GALLERY' => true,
 		]);
-		$this->display->album_start = ($page - 1) * $this->gallery_config->get('albums_per_page');
-		$this->display->album_limit = $this->gallery_config->get('albums_per_page');
+		$this->display->album_start = ($page - 1) * $album_limit;
+		$this->display->album_limit = $album_limit;
 		$this->display->album_mode = 'personal';
 		$this->display->display_albums('personal', $this->config['load_moderators']);
 		$first_char = $this->request->variable('first_char', '');

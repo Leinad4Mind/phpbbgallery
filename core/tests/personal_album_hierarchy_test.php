@@ -87,6 +87,8 @@ final class personal_album_hierarchy_test extends TestCase
 
 		$source = (string) file_get_contents(dirname(__DIR__) . '/album/display.php');
 		$this->assertStringContainsString('u.username_clean, a.album_user_id, a.left_id', $source);
+		$this->assertStringContainsString('$this->db->get_any_char()', $source);
+		$this->assertStringNotContainsString('$this->db->any_char', $source);
 		$this->assertStringNotContainsString('isset($right_id)', $source);
 	}
 

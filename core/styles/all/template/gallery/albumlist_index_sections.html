@@ -1,6 +1,19 @@
 {% if S_PERSONAL_GALLERY %}
 	<section class="gallery-paginated-list" data-gallery-list-section="personal-directory">
-		{% include '@phpbbgallery_core/gallery/albumlist_layout.html' %}
+		{% include '@phpbbgallery_core/gallery/albumlist_layout.html' with { albumrow: albumrow } %}
+		{% if TOTAL_ALBUMS %}
+			{% if GALLERY_FUTURISTIC_VARIANT == 'bboots' or GALLERY_FUTURISTIC_VARIANT == 'flatboots' %}
+				<ul class="pagination pagination-sm pull-right gallery-album-list-pagination">
+					<li class="active gallery-album-list-total"><a>{{ TOTAL_ALBUMS }}</a></li>
+					{% if pagination|length %}{% include '@phpbbgallery_core/gallery/list_pagination.html' with { pagination: pagination, GALLERY_BOOTSTRAP_PAGINATION: true } %}{% endif %}
+				</ul>
+			{% else %}
+				<div class="pagination gallery-album-list-pagination">
+					<span class="gallery-album-list-total">{{ TOTAL_ALBUMS }}</span>
+					{% if pagination|length %}{% include '@phpbbgallery_core/gallery/list_pagination.html' with { pagination: pagination, GALLERY_BOOTSTRAP_PAGINATION: false } %}{% endif %}
+				</div>
+			{% endif %}
+		{% endif %}
 	</section>
 {% else %}
 	<section class="gallery-paginated-list" data-gallery-list-section="public-albums">
