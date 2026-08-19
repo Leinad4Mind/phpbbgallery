@@ -29,11 +29,11 @@ final class album_list_navigation_test extends TestCase
 		$this->assertStringContainsString("['first_char' => \$first_char]", $source);
 	}
 
-	public function test_personal_directory_uses_the_album_limit_and_personal_rendering_mode(): void
+	public function test_personal_directory_uses_the_general_item_limit_and_personal_rendering_mode(): void
 	{
 		$source = $this->read('controller/index.php');
 
-		$this->assertStringContainsString("max(1, (int) \$this->gallery_config->get('albums_per_page'))", $source);
+		$this->assertStringContainsString("max(1, (int) \$this->gallery_config->get('items_per_page'))", $source);
 		$this->assertStringContainsString("'S_PERSONAL_GALLERY' => true", $source);
 		$this->assertStringContainsString("\$this->display->album_mode = 'personal'", $source);
 		$this->assertStringContainsString("'pagination', 'page'", $source);
