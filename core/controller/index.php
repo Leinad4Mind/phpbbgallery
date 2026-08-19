@@ -298,10 +298,7 @@ class index
 			'TOTAL_ALBUMS'	=> $this->language->lang('TOTAL_PEGAS_SHORT_SPRINTF', $this->display->albums_total),
 		]);
 
-		if (!$this->gallery_config->get('pegas_index_album'))
-		{
-			$this->assign_dropdown_links('phpbbgallery_core_personal');
-		}
+		$this->assign_dropdown_links('phpbbgallery_core_personal');
 
 		$s_char_options = '<option value=""' . ((!$first_char) ? ' selected="selected"' : '') . '>' . $this->user->lang('ALL') . '</option>';
 		// Loop the ASCII: a-z

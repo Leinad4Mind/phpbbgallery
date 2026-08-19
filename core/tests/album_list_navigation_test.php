@@ -37,6 +37,8 @@ final class album_list_navigation_test extends TestCase
 		$this->assertStringContainsString("'S_PERSONAL_GALLERY' => true", $source);
 		$this->assertStringContainsString("\$this->display->album_mode = 'personal'", $source);
 		$this->assertStringContainsString("'pagination', 'page'", $source);
+		$this->assertStringContainsString("\$this->assign_dropdown_links('phpbbgallery_core_personal');", $source);
+		$this->assertStringNotContainsString("if (!\$this->gallery_config->get('pegas_index_album'))", $source);
 	}
 
 	public function test_album_keeps_subalbum_and_image_pages_independent(): void
