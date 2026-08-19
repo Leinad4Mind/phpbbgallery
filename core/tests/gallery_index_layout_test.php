@@ -95,7 +95,7 @@ final class gallery_index_layout_test extends TestCase
 			$css
 		);
 		$this->assertMatchesRegularExpression(
-			'/\\.gallery-classic-thumbnail img\\s*\\{[^}]*max-width:\\s*min\\(100%, var\\(--gallery-classic-thumbnail-size, 70px\\)\\);[^}]*max-height:\\s*var\\(--gallery-classic-thumbnail-size, 70px\\);[^}]*object-fit:\\s*contain;/s',
+			'/\\.gallery-classic-thumbnail img\\s*\\{[^}]*height:\\s*var\\(--gallery-classic-thumbnail-size, 70px\\);[^}]*object-fit:\\s*contain;[^}]*width:\\s*min\\(100%, var\\(--gallery-classic-thumbnail-size, 70px\\)\\);/s',
 			$css
 		);
 		$this->assertMatchesRegularExpression(
@@ -118,6 +118,19 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertStringContainsString('var(--gallery-classic-thumbnail-size, 70px)', $css);
 		$this->assertStringContainsString('var(--gallery-futuristic-thumbnail-size, 70px)', $css);
 		$this->assertStringContainsString('var(--gallery-thumbnail-size, 70px)', $css);
+
+		$this->assertMatchesRegularExpression(
+			'/\\.gallery-image-card-thumbnail img\\s*\\{[^}]*height:\\s*var\\(--gallery-thumbnail-size, 70px\\);[^}]*object-fit:\\s*contain;[^}]*width:\\s*min\\(100%, var\\(--gallery-thumbnail-size, 70px\\)\\);/s',
+			$css
+		);
+		$this->assertMatchesRegularExpression(
+			'/\\.gallery-futuristic-thumbnail img\\s*\\{[^}]*height:\\s*min\\(calc\\(100% - 20px\\), var\\(--gallery-futuristic-thumbnail-size, 70px\\)\\);[^}]*object-fit:\\s*contain;[^}]*width:\\s*min\\(calc\\(100% - 20px\\), var\\(--gallery-futuristic-thumbnail-size, 70px\\)\\);/s',
+			$css
+		);
+		$this->assertMatchesRegularExpression(
+			'/\\.gallery-classic-thumbnail img\\s*\\{[^}]*height:\\s*var\\(--gallery-classic-thumbnail-size, 70px\\);[^}]*object-fit:\\s*contain;[^}]*width:\\s*min\\(100%, var\\(--gallery-classic-thumbnail-size, 70px\\)\\);/s',
+			$css
+		);
 	}
 	public function test_prosilver_classic_has_bordered_cards_borderless_ids_and_last_image_thumbnails(): void
 	{

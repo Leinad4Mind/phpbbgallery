@@ -1503,11 +1503,10 @@ input.autowidth-gallery {
 .gallery-futuristic-thumbnail img
 {
 	display: block;
-	height: auto;
-	max-height: min(calc(100% - 20px), var(--gallery-futuristic-thumbnail-size, 70px));
-	max-width: min(calc(100% - 20px), var(--gallery-futuristic-thumbnail-size, 70px));
+	height: min(calc(100% - 20px), var(--gallery-futuristic-thumbnail-size, 70px));
 	object-fit: contain;
 	position: relative;
+	width: min(calc(100% - 20px), var(--gallery-futuristic-thumbnail-size, 70px));
 	z-index: 1;
 }
 
@@ -1827,10 +1826,12 @@ input.autowidth-gallery {
 .gallery-image-card-thumbnail img
 {
 	display: block;
+	height: var(--gallery-thumbnail-size, 70px);
 	margin: auto;
-	max-height: var(--gallery-thumbnail-size, 70px);
-	max-width: min(100%, var(--gallery-thumbnail-size, 70px));
+	max-height: 100%;
+	max-width: 100%;
 	object-fit: contain;
+	width: min(100%, var(--gallery-thumbnail-size, 70px));
 }
 
 .gallery-image-card-details
@@ -2145,11 +2146,11 @@ p.gallery-image-card-approval.post-notice
 .gallery-classic-thumbnail img
 {
 	display: block;
-	width: auto;
-	height: auto;
-	max-width: min(100%, var(--gallery-classic-thumbnail-size, 70px));
-	max-height: var(--gallery-classic-thumbnail-size, 70px);
+	height: var(--gallery-classic-thumbnail-size, 70px);
+	max-height: 100%;
+	max-width: 100%;
 	object-fit: contain;
+	width: min(100%, var(--gallery-classic-thumbnail-size, 70px));
 }
 
 .gallery-classic-status
