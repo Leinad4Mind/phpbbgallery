@@ -1,6 +1,6 @@
 {% if albumrow.LAST_IMAGE_TIME %}
-	<div class="gallery-polaroid-last-image{% if not albumrow.UC_LAST_IMAGE_THUMBNAIL %} gallery-polaroid-last-image--without-thumbnail{% endif %}">
-		{% if albumrow.UC_LAST_IMAGE_THUMBNAIL %}
+	<div class="gallery-polaroid-last-image{% if not albumrow.UC_LAST_IMAGE_THUMBNAIL or albumrow.S_ALBUM_VISUAL_IS_LAST_IMAGE %} gallery-polaroid-last-image--without-thumbnail{% endif %}">
+		{% if albumrow.UC_LAST_IMAGE_THUMBNAIL and not albumrow.S_ALBUM_VISUAL_IS_LAST_IMAGE %}
 		<a href="{{ albumrow.U_LAST_IMAGE }}" class="gallery-polaroid-last-image-thumbnail">
 			<img src="{{ albumrow.UC_LAST_IMAGE_THUMBNAIL }}" alt="" loading="lazy" />
 		</a>

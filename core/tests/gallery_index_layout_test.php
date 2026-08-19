@@ -315,8 +315,10 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertStringContainsString("'UC_LAST_IMAGE_THUMBNAIL' => \$this->config['phpbb_gallery_mini_thumbnail_disp'] ? \$lastimage_uc_last_thumbnail : ''", $display);
 		$this->assertStringContainsString("'U_LAST_IMAGE'", $display);
 		$this->assertStringContainsString("['image_id' => \$row['album_last_image_id']]", $display);
-		$this->assertStringContainsString('albumrow.UC_LAST_IMAGE_THUMBNAIL', $last_image);
-		$this->assertStringContainsString('albumrow.U_LAST_IMAGE', $last_image);
+		$this->assertStringContainsString('albumrow.UC_LAST_IMAGE_THUMBNAIL and not albumrow.S_ALBUM_VISUAL_IS_LAST_IMAGE', $last_image);
+		$this->assertStringContainsString('not albumrow.UC_LAST_IMAGE_THUMBNAIL or albumrow.S_ALBUM_VISUAL_IS_LAST_IMAGE', $last_image);
+		$this->assertSame(1, substr_count($last_image, 'albumrow.U_LAST_IMAGE'));
+		$this->assertSame(2, substr_count($last_image, 'albumrow.S_ALBUM_VISUAL_IS_LAST_IMAGE'));
 
 		foreach (\gallery_test_existing_styles($core_root) as $style)
 		{
