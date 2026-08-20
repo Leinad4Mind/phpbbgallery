@@ -3699,6 +3699,12 @@ fieldset dl.gallery-autocomplete-row-open
 	padding: 4px 12px 0;
 }
 
+.gallery-paginated-list > .gallery-root-album-pagination--prosilver-classic
+{
+	margin: 8px 0 17px;
+	padding: 0;
+}
+
 .gallery-futuristic-album-list > .gallery-category-album-pagination,
 .gallery-futuristic-album-list > .gallery-root-album-pagination,
 .gallery-modern-album-list > .gallery-root-album-pagination,

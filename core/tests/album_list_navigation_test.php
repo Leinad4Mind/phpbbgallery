@@ -118,6 +118,7 @@ final class album_list_navigation_test extends TestCase
 			$this->assertStringContainsString('root_album_pagination.html', $polaroid, $style . ' polaroid');
 		}
 		$prosilver_classic = $this->read('styles/prosilver/template/gallery/albumlist_body.html');
+		$this->assertStringContainsString('GALLERY_PROSILVER_CLASSIC_PAGINATION: true', $prosilver_classic);
 		$this->assertMatchesRegularExpression(
 			'/<\/div>\s*<\/div>\s*{% if category_pagination_row %}{% include \'@phpbbgallery_core\/gallery\/category_album_pagination\.html\'/s',
 			$prosilver_classic
@@ -149,6 +150,7 @@ final class album_list_navigation_test extends TestCase
 		$this->assertMatchesRegularExpression('/\.gallery-category-album-pagination-cell\s*\{[^}]*padding:\s*0 !important;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-root-album-pagination\s*\{[^}]*clear:\s*none;[^}]*justify-content:\s*flex-end;[^}]*margin:\s*6px 0 0;[^}]*padding:\s*8px 12px 10px;[^}]*width:\s*auto;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-paginated-list > \.gallery-root-album-pagination\s*\{[^}]*margin:\s*-17px 0 17px;[^}]*padding:\s*4px 12px 0;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-paginated-list > \.gallery-root-album-pagination--prosilver-classic\s*\{[^}]*margin:\s*8px 0 17px;[^}]*padding:\s*0;/s', $css);
 	}
 
 	public function test_progressive_navigation_preserves_history_and_has_a_normal_fallback(): void
