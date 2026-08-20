@@ -120,7 +120,7 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertStringContainsString('var(--gallery-thumbnail-size, 70px)', $css);
 
 		$this->assertMatchesRegularExpression(
-			'/\\.gallery-image-card-thumbnail img\\s*\\{[^}]*height:\\s*var\\(--gallery-thumbnail-size, 70px\\);[^}]*object-fit:\\s*contain;[^}]*width:\\s*min\\(100%, var\\(--gallery-thumbnail-size, 70px\\)\\);/s',
+			'/\\.gallery-image-card-thumbnail img\\s*\\{[^}]*height:\\s*auto;[^}]*max-height:\\s*var\\(--gallery-thumbnail-size, 70px\\);[^}]*object-fit:\\s*contain;[^}]*width:\\s*min\\(100%, var\\(--gallery-thumbnail-size, 70px\\)\\);/s',
 			$css
 		);
 		$this->assertMatchesRegularExpression(
@@ -564,7 +564,7 @@ final class gallery_index_layout_test extends TestCase
 			$this->assertStringContainsString('fa fa-times fa-fw', $template);
 			$this->assertStringContainsString('fa fa-check fa-fw', $template);
 		}
-		$this->assertMatchesRegularExpression('/\.gallery-image-card-media\s*\{[^}]*display:\s*flex;[^}]*flex-direction:\s*column;[^}]*min-height:\s*calc\(var\(--gallery-thumbnail-size, 70px\) \+ 10px\);/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-image-card-media\s*\{[^}]*display:\s*flex;[^}]*flex:\s*0 0 auto;[^}]*flex-direction:\s*column;[^}]*min-height:\s*0;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-image-card-thumbnail\s*\{[^}]*align-items:\s*center;[^}]*display:\s*flex;[^}]*justify-content:\s*center;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-image-card-approval \.post-notice,[^{]+\{[^}]*display:\s*flex;[^}]*justify-content:\s*center;[^}]*min-height:\s*46px;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-approval-button\s*\{[^}]*border-radius:\s*4px;[^}]*display:\s*inline-flex;[^}]*min-height:\s*30px;[^}]*padding:\s*5px 10px;/s', $css);

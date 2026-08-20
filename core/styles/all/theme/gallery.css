@@ -1796,9 +1796,9 @@ input.autowidth-gallery {
 	align-items: stretch;
 	box-sizing: border-box;
 	display: flex;
-	flex: 0 0 calc(var(--gallery-thumbnail-size, 70px) + 10px);
+	flex: 0 0 auto;
 	flex-direction: column;
-	min-height: calc(var(--gallery-thumbnail-size, 70px) + 10px);
+	min-height: 0;
 	width: 100%;
 }
 
@@ -1826,9 +1826,9 @@ input.autowidth-gallery {
 .gallery-image-card-thumbnail img
 {
 	display: block;
-	height: var(--gallery-thumbnail-size, 70px);
+	height: auto;
 	margin: auto;
-	max-height: 100%;
+	max-height: var(--gallery-thumbnail-size, 70px);
 	max-width: 100%;
 	object-fit: contain;
 	width: min(100%, var(--gallery-thumbnail-size, 70px));
