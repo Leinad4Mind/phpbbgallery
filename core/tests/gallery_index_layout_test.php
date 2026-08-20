@@ -515,6 +515,7 @@ final class gallery_index_layout_test extends TestCase
 
 		$this->assertStringContainsString('GALLERY_PUBLIC_ALBUMS_LABEL', $template);
 		$this->assertStringContainsString("lang('PERSONAL_ALBUMS')", $template);
+		$this->assertStringContainsString('albumrow.S_PUBLIC_SECTION_START and not albumrow.S_SECTION_HAS_CATEGORIES', $template);
 	}
 
 	public function test_bootstrap_card_layouts_are_self_contained_responsive_grids(): void

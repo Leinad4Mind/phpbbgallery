@@ -5,7 +5,7 @@
 		{% include '@phpbbgallery_core/gallery/category_album_pagination.html' with { albumrow: category_pagination_row } %}
 		{% set category_pagination_row = false %}
 	{% endif %}
-	{% if albumrow.S_PUBLIC_SECTION_START or albumrow.S_PERSONAL_SECTION_START %}
+	{% if albumrow.S_PERSONAL_SECTION_START or (albumrow.S_PUBLIC_SECTION_START and not albumrow.S_SECTION_HAS_CATEGORIES) %}
 		<h2 class="gallery-modern-section-title"><i class="icon fa {% if albumrow.S_PERSONAL_SECTION_START %}fa-user{% else %}fa-folder-open{% endif %} fa-fw" aria-hidden="true"></i> {% if albumrow.S_PERSONAL_SECTION_START %}{{ lang('PERSONAL_ALBUMS') }}{% else %}{{ GALLERY_PUBLIC_ALBUMS_LABEL }}{% endif %}</h2>
 	{% endif %}
 
