@@ -393,3 +393,14 @@ final class controller_album_types_test extends TestCase
 		$this->assertStringContainsString('{{ information.TITLE }}', $prosilver);
 	}
 }
+
+	public function test_album_editor_uses_the_context_specific_permission_copy_explanation(): void
+	{
+		$template = (string) file_get_contents(dirname(__DIR__) . '/adm/style/gallery_albums.html');
+		$controller = (string) file_get_contents(dirname(__DIR__) . '/acp/albums_module.php');
+
+		$this->assertStringContainsString('{{ L_COPY_PERMISSIONS_EXPLAIN }}', $template);
+		$this->assertStringNotContainsString("lang('COPY_PERMISSIONS_EXPLAIN')", $template);
+		$this->assertStringContainsString("'L_COPY_PERMISSIONS_EXPLAIN'", $controller);
+		$this->assertStringContainsString("'COPY_PERMISSIONS_' . strtoupper(\$action) . '_EXPLAIN'", $controller);
+	}

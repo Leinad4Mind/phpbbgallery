@@ -169,6 +169,8 @@ class language_catalog_test extends TestCase
 			'ITEMS_PER_PAGE_EXP' => 'Número predefinido de imagens, comentários, resultados de pesquisa e entradas de moderação ou dos painéis de controlo apresentados nas páginas da Galeria. Também limita os comentários recentes apresentados no índice da Galeria.',
 			'ALBUMS_PER_PAGE_EXP' => 'Número máximo de entradas de álbuns visíveis em cada lista de álbuns públicos, pessoais ou subálbuns. Os descendentes permanecem associados ao álbum pai apresentado.',
 			'RATE_SCALE' => 'Escala de classificação',
+			'COPY_PERMISSIONS_ADD_EXPLAIN' => 'Se copiares as permissões, o novo álbum ou categoria terá as mesmas permissões do álbum selecionado. Se não selecionares nenhum, terás de configurar as permissões depois. As categorias também precisam de permissão de visualização para que os álbuns dentro delas fiquem visíveis.',
+			'COPY_PERMISSIONS_EDIT_EXPLAIN' => 'Se copiares as permissões, as permissões atuais deste álbum ou categoria serão substituídas pelas do álbum selecionado. Se não selecionares nenhum, as permissões atuais serão mantidas, mesmo que alteres o tipo entre álbum e categoria.',
 		];
 		$expected['RRC_GINDEX_MODE'] = 'Blocos';
 		$language_root = $this->extension_root . '/core/language';
@@ -176,6 +178,11 @@ class language_catalog_test extends TestCase
 		foreach (['pt', 'pt_preao'] as $locale)
 		{
 			$language = $this->load_language($language_root . '/' . $locale . '/gallery_acp.php');
+			if ($locale === 'pt_preao')
+			{
+				$expected['COPY_PERMISSIONS_ADD_EXPLAIN'] = str_replace(['selecionado', 'selecionares'], ['seleccionado', 'seleccionares'], $expected['COPY_PERMISSIONS_ADD_EXPLAIN']);
+				$expected['COPY_PERMISSIONS_EDIT_EXPLAIN'] = str_replace(['atuais', 'selecionado', 'selecionares'], ['actuais', 'seleccionado', 'seleccionares'], $expected['COPY_PERMISSIONS_EDIT_EXPLAIN']);
+			}
 			foreach ($expected as $key => $value)
 			{
 				$this->assertSame($value, $language[$key], $locale . ':' . $key);

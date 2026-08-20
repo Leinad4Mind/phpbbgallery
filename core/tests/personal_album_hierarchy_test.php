@@ -10,6 +10,7 @@
 namespace phpbbgallery\core\tests;
 
 use phpbbgallery\core\album\display;
+use phpbbgallery\core\block;
 use PHPUnit\Framework\TestCase;
 
 final class personal_album_hierarchy_test extends TestCase
@@ -50,6 +51,19 @@ final class personal_album_hierarchy_test extends TestCase
 
 		$this->assertSame([20], array_column($visible, 'album_id'));
 		$this->assertSame([20 => 20], $this->display_parent_mapping($display, $visible));
+	}
+
+	public function test_visible_album_is_hidden_when_its_category_parent_is_not_listable(): void
+	{
+		$display = $this->display_with_zebra_states([10 => 5, 11 => 5]);
+		$rows = [
+			$this->row(10, 0, 0, 0, 'public', block::TYPE_CAT),
+			$this->row(11, 0, 10, 0, 'public', block::TYPE_UPLOAD),
+		];
+
+		$visible = $this->visible_rows($display, $rows, [11]);
+
+		$this->assertSame([], $visible);
 	}
 
 	/** @dataProvider friendship_access_provider */
@@ -127,14 +141,14 @@ final class personal_album_hierarchy_test extends TestCase
 		return $mapping;
 	}
 
-	private function row(int $album_id, int $owner_id, int $parent_id, int $access, string $username_prefix): array
+	private function row(int $album_id, int $owner_id, int $parent_id, int $access, string $username_prefix, int $album_type = block::TYPE_UPLOAD): array
 	{
 		return [
 			'album_id' => $album_id,
 			'album_user_id' => $owner_id,
 			'parent_id' => $parent_id,
 			'album_auth_access' => $access,
-			'album_type' => 1,
+			'album_type' => $album_type,
 			'username_clean' => $username_prefix,
 		];
 	}

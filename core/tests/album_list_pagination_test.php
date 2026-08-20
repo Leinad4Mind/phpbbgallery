@@ -32,6 +32,36 @@ class album_list_pagination_test extends TestCase
 		$this->assertSame([10, 13, 20], array_keys($selected));
 	}
 
+	public function test_single_album_inside_category_keeps_its_heading_and_counts_as_visible(): void
+	{
+		$display = $this->display(0, 15);
+		$rows = [
+			10 => ['album_id' => 10, 'parent_id' => 0, 'album_type' => block::TYPE_CAT],
+			11 => ['album_id' => 11, 'parent_id' => 10, 'album_type' => block::TYPE_UPLOAD],
+		];
+
+		[$selected, $total] = $this->paginate($display, $rows, 0);
+
+		$this->assertSame(1, $total);
+		$this->assertSame([10, 11], array_keys($selected));
+	}
+
+	public function test_page_starting_in_second_category_uses_its_own_heading(): void
+	{
+		$display = $this->display(1, 1);
+		$rows = [
+			10 => ['album_id' => 10, 'parent_id' => 0, 'album_type' => block::TYPE_CAT],
+			11 => ['album_id' => 11, 'parent_id' => 10, 'album_type' => block::TYPE_UPLOAD],
+			20 => ['album_id' => 20, 'parent_id' => 0, 'album_type' => block::TYPE_CAT],
+			21 => ['album_id' => 21, 'parent_id' => 20, 'album_type' => block::TYPE_UPLOAD],
+		];
+
+		[$selected, $total] = $this->paginate($display, $rows, 0);
+
+		$this->assertSame(2, $total);
+		$this->assertSame([20, 21], array_keys($selected));
+	}
+
 	public function test_descendants_do_not_consume_slots_separately_from_their_displayed_parent(): void
 	{
 		$display = $this->display(1, 1);
