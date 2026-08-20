@@ -2012,6 +2012,21 @@ p.gallery-image-card-approval.post-notice
 	background: rgba(255, 255, 255, .45);
 }
 
+.phpbbgallery-forum-index .gallery-classic-image
+{
+	border: 1px solid rgba(127, 127, 127, .22);
+	box-sizing: border-box;
+}
+
+.phpbbgallery-forum-index .gallery-image-bbcode-copy,
+.phpbbgallery-forum-index .gallery-image-bbcode-copy:hover,
+.phpbbgallery-forum-index .gallery-image-bbcode-copy:focus,
+.phpbbgallery-forum-index .gallery-image-bbcode-copy.is-copied
+{
+	border: 0;
+	box-shadow: none;
+}
+
 .gallery-classic-image-block--prosilver .gallery-classic-image
 {
 	background: #fff;

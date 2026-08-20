@@ -306,6 +306,8 @@ final class gallery_index_layout_test extends TestCase
 	public function test_album_list_distinguishes_its_main_visual_from_the_latest_image(): void
 	{
 		$core_root = dirname(__DIR__);
+		$this->assertMatchesRegularExpression('/\.phpbbgallery-forum-index \.gallery-classic-image\s*\{[^}]*border:\s*1px solid rgba\(127, 127, 127, \.22\);[^}]*box-sizing:\s*border-box;/s', $css);
+		$this->assertMatchesRegularExpression('/\.phpbbgallery-forum-index \.gallery-image-bbcode-copy,[^{]*\.phpbbgallery-forum-index \.gallery-image-bbcode-copy\.is-copied\s*\{[^}]*border:\s*0;[^}]*box-shadow:\s*none;/s', $css);
 		$display = (string) file_get_contents($core_root . '/album/display.php');
 		$last_image = (string) file_get_contents($core_root . '/styles/all/template/gallery/albumlist_polaroid_last_image.html');
 
