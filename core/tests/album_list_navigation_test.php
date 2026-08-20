@@ -80,12 +80,16 @@ final class album_list_navigation_test extends TestCase
 		$this->assertStringContainsString('albumrow.pagination|default([])', $category_pagination);
 		$this->assertStringContainsString('pagination: category_pagination', $category_pagination);
 		$this->assertStringContainsString('{% if category_pagination|length %}', $category_pagination);
+		$this->assertStringContainsString("GALLERY_FUTURISTIC_VARIANT == 'flatboots'", $category_pagination);
+		$this->assertStringContainsString('gallery-album-list-pagination--flatboots', $category_pagination);
 
 		$root_pagination = $this->read('styles/all/template/gallery/root_album_pagination.html');
 		$this->assertStringContainsString('PUBLIC_ALBUM_TOTAL', $root_pagination);
 		$this->assertStringContainsString('public_pagination|default([])', $root_pagination);
 		$this->assertStringContainsString('pagination: root_pagination', $root_pagination);
 		$this->assertStringContainsString('gallery-root-album-pagination', $root_pagination);
+		$this->assertStringContainsString('gallery-album-list-pagination--flatboots', $root_pagination);
+		$this->assertStringContainsString('gallery-album-list-pagination--without-pages', $root_pagination);
 
 		foreach (['albumlist_modern.html', 'albumlist_futuristic.html'] as $template)
 		{
@@ -149,6 +153,9 @@ final class album_list_navigation_test extends TestCase
 		$this->assertMatchesRegularExpression('/\.gallery-category-album-pagination\s*\{[^}]*clear:\s*none;[^}]*justify-content:\s*flex-end;[^}]*margin:\s*6px 0 0;[^}]*padding:\s*8px 12px 10px;[^}]*width:\s*auto;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-category-album-pagination-cell\s*\{[^}]*padding:\s*0 !important;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-root-album-pagination\s*\{[^}]*clear:\s*none;[^}]*justify-content:\s*flex-end;[^}]*margin:\s*6px 0 0;[^}]*padding:\s*8px 12px 10px;[^}]*width:\s*auto;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-album-list-pagination\.gallery-album-list-pagination--flatboots\s*\{[^}]*padding:\s*8px 0 10px;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-album-list-pagination--flatboots\.gallery-album-list-pagination--without-pages\s*\{[^}]*margin:\s*0;[^}]*padding:\s*0;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-album-list-pagination--without-pages \.gallery-album-list-total\s*\{[^}]*margin-right:\s*0;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-paginated-list > \.gallery-root-album-pagination\s*\{[^}]*margin:\s*-17px 0 17px;[^}]*padding:\s*4px 12px 0;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-paginated-list > \.gallery-root-album-pagination--prosilver-classic\s*\{[^}]*margin:\s*8px 0 17px;[^}]*padding:\s*0;/s', $css);
 	}

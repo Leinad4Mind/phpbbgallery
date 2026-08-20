@@ -1,9 +1,10 @@
 {% if albumrow.S_CATEGORY_ALBUM_LIST %}
 	{% set category_bootstrap = GALLERY_FUTURISTIC_VARIANT == 'bboots' or GALLERY_FUTURISTIC_VARIANT == 'flatboots' %}
+	{% set category_flatboots = GALLERY_FUTURISTIC_VARIANT == 'flatboots' %}
 	{% set category_pagination = albumrow.pagination|default([]) %}
 	{% if category_pagination|length %}
 		{% if category_bootstrap %}
-	<ul class="pagination pagination-sm gallery-album-list-pagination gallery-category-album-pagination">
+	<ul class="pagination pagination-sm gallery-album-list-pagination gallery-category-album-pagination{% if category_flatboots %} gallery-album-list-pagination--flatboots{% endif %}">
 		<li class="active gallery-album-list-total"><a>{{ albumrow.CATEGORY_ALBUM_TOTAL }}</a></li>
 		{% include '@phpbbgallery_core/gallery/list_pagination.html' with { pagination: category_pagination, GALLERY_BOOTSTRAP_PAGINATION: true } %}
 	</ul>

@@ -3705,6 +3705,22 @@ fieldset dl.gallery-autocomplete-row-open
 	padding: 0;
 }
 
+.gallery-album-list-pagination.gallery-album-list-pagination--flatboots
+{
+	padding: 8px 0 10px;
+}
+
+.gallery-album-list-pagination--flatboots.gallery-album-list-pagination--without-pages
+{
+	margin: 0;
+	padding: 0;
+}
+
+.gallery-album-list-pagination--without-pages .gallery-album-list-total
+{
+	margin-right: 0;
+}
+
 .gallery-futuristic-album-list > .gallery-category-album-pagination,
 .gallery-futuristic-album-list > .gallery-root-album-pagination,
 .gallery-modern-album-list > .gallery-root-album-pagination,

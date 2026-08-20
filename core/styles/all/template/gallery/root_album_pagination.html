@@ -1,8 +1,9 @@
 {% set root_bootstrap = GALLERY_FUTURISTIC_VARIANT == 'bboots' or GALLERY_FUTURISTIC_VARIANT == 'flatboots' %}
+{% set root_flatboots = GALLERY_FUTURISTIC_VARIANT == 'flatboots' %}
 {% set root_pagination = public_pagination|default([]) %}
 {% if PUBLIC_ALBUM_TOTAL %}
 	{% if root_bootstrap %}
-	<ul class="pagination pagination-sm gallery-album-list-pagination gallery-root-album-pagination">
+	<ul class="pagination pagination-sm gallery-album-list-pagination gallery-root-album-pagination{% if root_flatboots %} gallery-album-list-pagination--flatboots{% if not root_pagination|length %} gallery-album-list-pagination--without-pages{% endif %}{% endif %}">
 		<li class="active gallery-album-list-total"><a>{{ PUBLIC_ALBUM_TOTAL }}</a></li>
 		{% if root_pagination|length %}{% include '@phpbbgallery_core/gallery/list_pagination.html' with { pagination: root_pagination, GALLERY_BOOTSTRAP_PAGINATION: true } %}{% endif %}
 	</ul>
