@@ -3,12 +3,12 @@
 {% set root_pagination = public_pagination|default([]) %}
 {% if PUBLIC_ALBUM_TOTAL %}
 	{% if root_bootstrap %}
-	<ul class="pagination pagination-sm gallery-album-list-pagination gallery-root-album-pagination{% if root_flatboots %} gallery-album-list-pagination--flatboots{% if not root_pagination|length %} gallery-album-list-pagination--without-pages{% endif %}{% endif %}">
+	<ul class="pagination pagination-sm gallery-album-list-pagination gallery-root-album-pagination{% if root_flatboots %} gallery-album-list-pagination--flatboots{% endif %}{% if not root_pagination|length %} gallery-album-list-pagination--without-pages{% endif %}">
 		<li class="active gallery-album-list-total"><a>{{ PUBLIC_ALBUM_TOTAL }}</a></li>
 		{% if root_pagination|length %}{% include '@phpbbgallery_core/gallery/list_pagination.html' with { pagination: root_pagination, GALLERY_BOOTSTRAP_PAGINATION: true } %}{% endif %}
 	</ul>
 	{% else %}
-	<div class="pagination gallery-album-list-pagination gallery-root-album-pagination{% if GALLERY_PROSILVER_CLASSIC_PAGINATION %} gallery-root-album-pagination--prosilver-classic{% endif %}">
+	<div class="pagination gallery-album-list-pagination gallery-root-album-pagination{% if GALLERY_PROSILVER_CLASSIC_PAGINATION %} gallery-root-album-pagination--prosilver-classic{% endif %}{% if not root_pagination|length %} gallery-album-list-pagination--without-pages{% endif %}">
 		<span class="gallery-album-list-total">{{ PUBLIC_ALBUM_TOTAL }}</span>
 		{% if root_pagination|length %}{% include '@phpbbgallery_core/gallery/list_pagination.html' with { pagination: root_pagination, GALLERY_BOOTSTRAP_PAGINATION: false } %}{% endif %}
 	</div>

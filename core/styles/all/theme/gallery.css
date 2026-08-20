@@ -3721,6 +3721,17 @@ fieldset dl.gallery-autocomplete-row-open
 	margin-right: 0;
 }
 
+.gallery-modern-album-list > .gallery-album-list-pagination
+{
+	padding: 8px 0 10px;
+}
+
+.gallery-modern-album-list > .gallery-album-list-pagination--without-pages
+{
+	margin: 0;
+	padding: 0;
+}
+
 .gallery-futuristic-album-list > .gallery-category-album-pagination,
 .gallery-futuristic-album-list > .gallery-root-album-pagination,
 .gallery-modern-album-list > .gallery-root-album-pagination,

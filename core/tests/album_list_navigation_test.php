@@ -90,6 +90,7 @@ final class album_list_navigation_test extends TestCase
 		$this->assertStringContainsString('gallery-root-album-pagination', $root_pagination);
 		$this->assertStringContainsString('gallery-album-list-pagination--flatboots', $root_pagination);
 		$this->assertStringContainsString('gallery-album-list-pagination--without-pages', $root_pagination);
+		$this->assertSame(2, substr_count($root_pagination, 'gallery-album-list-pagination--without-pages'));
 
 		foreach (['albumlist_modern.html', 'albumlist_futuristic.html'] as $template)
 		{
@@ -156,6 +157,8 @@ final class album_list_navigation_test extends TestCase
 		$this->assertMatchesRegularExpression('/\.gallery-album-list-pagination\.gallery-album-list-pagination--flatboots\s*\{[^}]*padding:\s*8px 0 10px;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-album-list-pagination--flatboots\.gallery-album-list-pagination--without-pages\s*\{[^}]*margin:\s*0;[^}]*padding:\s*0;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-album-list-pagination--without-pages \.gallery-album-list-total\s*\{[^}]*margin-right:\s*0;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-modern-album-list > \.gallery-album-list-pagination\s*\{[^}]*padding:\s*8px 0 10px;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-modern-album-list > \.gallery-album-list-pagination--without-pages\s*\{[^}]*margin:\s*0;[^}]*padding:\s*0;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-paginated-list > \.gallery-root-album-pagination\s*\{[^}]*margin:\s*-17px 0 17px;[^}]*padding:\s*4px 12px 0;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-paginated-list > \.gallery-root-album-pagination--prosilver-classic\s*\{[^}]*margin:\s*8px 0 17px;[^}]*padding:\s*0;/s', $css);
 	}
