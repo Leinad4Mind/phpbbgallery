@@ -17,12 +17,12 @@
 		{% set category_pagination_row = albumrow %}
 	{% else %}
 		<article class="gallery-modern-album{% if albumrow.S_PERSONAL_ALBUM %} gallery-personal-album{% endif %}{% if albumrow.S_UNREAD_ALBUM %} gallery-modern-album-unread{% endif %}">
-			<div class="gallery-modern-album-main{% if not S_ALBUM_LIST_HAS_CUSTOM_ICONS %} gallery-modern-album-main--without-visual{% endif %}">
+			<div class="gallery-modern-album-main{% if not albumrow.S_ALBUM_GROUP_HAS_CUSTOM_ICONS %} gallery-modern-album-main--without-visual{% endif %}">
 				{% if albumrow.ALBUM_IMAGE_SRC %}
 				<a class="gallery-modern-album-visual gallery-album-custom-icon-frame" href="{{ albumrow.U_VIEWALBUM }}" aria-label="{{ lang('VIEW_ALBUM') }}{{ lang('COLON') }} {{ albumrow.ALBUM_NAME }}">
 						<img class="gallery-album-custom-icon" src="{{ albumrow.ALBUM_IMAGE_SRC }}" alt="">
 				</a>
-				{% elseif S_ALBUM_LIST_HAS_CUSTOM_ICONS %}
+				{% elseif albumrow.S_ALBUM_GROUP_HAS_CUSTOM_ICONS %}
 				<span class="gallery-modern-album-visual gallery-modern-album-visual--placeholder" aria-hidden="true"></span>
 				{% endif %}
 				<div class="gallery-modern-album-content">

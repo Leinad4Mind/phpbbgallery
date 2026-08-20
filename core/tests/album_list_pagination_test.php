@@ -163,6 +163,35 @@ class album_list_pagination_test extends TestCase
 		$this->assertSame(30, $display->last_root_album_id);
 	}
 
+	public function test_icon_space_is_not_reserved_when_a_group_has_no_icons(): void
+	{
+		$display = $this->display(0, 10);
+		$rows = [
+			10 => ['album_id' => 10, 'parent_id' => 0, 'album_type' => block::TYPE_CAT],
+			11 => ['album_id' => 11, 'parent_id' => 10, 'album_type' => block::TYPE_UPLOAD, 'album_image' => ''],
+			12 => ['album_id' => 12, 'parent_id' => 10, 'album_type' => block::TYPE_UPLOAD],
+			20 => ['album_id' => 20, 'parent_id' => 0, 'album_type' => block::TYPE_UPLOAD, 'album_image' => ''],
+		];
+
+		$this->assertSame([0 => false, 10 => false], $this->icon_groups($display, $rows, 0));
+	}
+
+	public function test_icon_space_is_reserved_only_inside_groups_with_icons(): void
+	{
+		$display = $this->display(0, 10);
+		$rows = [
+			10 => ['album_id' => 10, 'parent_id' => 0, 'album_type' => block::TYPE_CAT],
+			11 => ['album_id' => 11, 'parent_id' => 10, 'album_type' => block::TYPE_UPLOAD, 'album_image' => ''],
+			12 => ['album_id' => 12, 'parent_id' => 10, 'album_type' => block::TYPE_UPLOAD, 'album_image' => 'images/galleryicons/dvd.svg'],
+			20 => ['album_id' => 20, 'parent_id' => 0, 'album_type' => block::TYPE_CAT],
+			21 => ['album_id' => 21, 'parent_id' => 20, 'album_type' => block::TYPE_UPLOAD, 'album_image' => ''],
+			30 => ['album_id' => 30, 'parent_id' => 0, 'album_type' => block::TYPE_UPLOAD, 'album_image' => 'images/galleryicons/root.svg'],
+			31 => ['album_id' => 31, 'parent_id' => 0, 'album_type' => block::TYPE_UPLOAD, 'album_image' => ''],
+		];
+
+		$this->assertSame([0 => true, 10 => true, 20 => false], $this->icon_groups($display, $rows, 0));
+	}
+
 	private function display(int $start, int $limit): display
 	{
 		$display = (new \ReflectionClass(display::class))->newInstanceWithoutConstructor();
@@ -175,6 +204,14 @@ class album_list_pagination_test extends TestCase
 	private function paginate(display $display, array $rows, int $root_album_id): array
 	{
 		$method = new \ReflectionMethod(display::class, 'paginate_album_rows');
+		$method->setAccessible(true);
+
+		return $method->invoke($display, $rows, $root_album_id);
+	}
+
+	private function icon_groups(display $display, array $rows, int $root_album_id): array
+	{
+		$method = new \ReflectionMethod(display::class, 'album_icon_groups');
 		$method->setAccessible(true);
 
 		return $method->invoke($display, $rows, $root_album_id);

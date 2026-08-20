@@ -656,11 +656,13 @@ class display
 		}
 		$this->has_album_rows = !empty($album_rows);
 		[$album_rows, $visible_albums] = $this->paginate_album_rows($album_rows, (int) $root_data['album_id']);
+		$album_icon_groups = $this->album_icon_groups($album_rows, (int) $root_data['album_id']);
 
 		// Used to tell whatever we have to create a dummy category or not.
 		$board_path = rtrim($this->symfony_request->getBasePath(), '/');
 		$last_catless = true;
 		$has_album_custom_icons = false;
+		$current_icon_group = 0;
 		foreach ($album_rows as $row)
 		{
 			$album_image = trim((string) ($row['album_image'] ?? ''));
@@ -671,6 +673,7 @@ class display
 			// Empty category
 			if (($row['parent_id'] == $root_data['album_id']) && ($row['album_type'] == (int) \phpbbgallery\core\block::TYPE_CAT))
 			{
+				$current_icon_group = (int) $row['album_id'];
 				$category_pagination = $this->category_pagination[(int) $row['album_id']] ?? null;
 				$category_total = $category_pagination !== null ? $category_pagination['total'] : 0;
 				$category_total_label = $category_total . ' ' . $this->language->lang(
@@ -798,6 +801,10 @@ class display
 			$s_subalbums_list = (string) implode(', ', $s_subalbums_list);
 			$subalbum_display_mode = \phpbbgallery\core\block::normalise_subalbum_display_mode((int) $row['display_subalbum_list']);
 			$catless = ($row['parent_id'] == $root_data['album_id']) ? true : false;
+			if ($catless)
+			{
+				$current_icon_group = 0;
+			}
 
 			$last_image_data = $this->image_visibility->projected_data($row, $last_image_projection, [
 				'image_user_id' => (int) $row['album_last_user_id'],
@@ -829,6 +836,7 @@ class display
 				'S_SUBALBUMS_AS_ICONS'	=> $subalbum_display_mode === (int) \phpbbgallery\core\block::SUBALBUM_DISPLAY_ICONS,
 				'SUBALBUM_DISPLAY_MODE'	=> $subalbum_display_mode,
 				'S_SUBALBUMS'		=> (sizeof($subalbums_list)) ? true : false,
+				'S_ALBUM_GROUP_HAS_CUSTOM_ICONS' => !empty($album_icon_groups[$current_icon_group]),
 				'S_ALBUM_VISUAL_IS_LAST_IMAGE' => !$row['album_image'] && (int) $row['album_last_image_id'] > 0,
 
 				'ALBUM_ID'				=> (int) $row['album_id'],
@@ -903,6 +911,46 @@ class display
 		$this->albums_total = $visible_albums;
 
 		return [$active_album_ary, []];
+	}
+
+	/**
+	 * Find the independently displayed album groups which need an icon column.
+	 *
+	 * Root albums form one group. Each category and its visible albums form a
+	 * separate group, so an icon in one category does not add empty space to
+	 * unrelated categories.
+	 *
+	 * @param array $album_rows Ordered, visible album rows
+	 * @param int   $root_album_id Root album outside the selected rows
+	 * @return array<int, bool>
+	 */
+	protected function album_icon_groups(array $album_rows, int $root_album_id): array
+	{
+		$groups = [0 => false];
+		$current_group = 0;
+
+		foreach ($album_rows as $album_id => $row)
+		{
+			if ((int) ($row['parent_id'] ?? 0) === $root_album_id
+				&& (int) ($row['album_type'] ?? 0) === (int) \phpbbgallery\core\block::TYPE_CAT)
+			{
+				$current_group = (int) $album_id;
+				$groups[$current_group] = false;
+				continue;
+			}
+
+			if ((int) ($row['parent_id'] ?? 0) === $root_album_id)
+			{
+				$current_group = 0;
+			}
+
+			if (trim((string) ($row['album_image'] ?? '')) !== '')
+			{
+				$groups[$current_group] = true;
+			}
+		}
+
+		return $groups;
 	}
 
 	/**
