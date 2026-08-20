@@ -197,6 +197,9 @@ final class gallery_index_layout_test extends TestCase
 		}
 
 		$this->assertStringContainsString('albumrow.S_PERSONAL_SECTION_START', $albums);
+		$this->assertStringContainsString('{% set public_album_title_shown = false %}', $albums);
+		$this->assertStringContainsString('albumrow.S_PUBLIC_SECTION_START and not albumrow.S_IS_CAT', $albums);
+		$this->assertStringContainsString('albumrow.S_NO_CAT and not albumrow.S_PERSONAL_ALBUM and not public_album_title_shown', $albums);
 		$this->assertStringContainsString('albumrow.S_UNREAD_ALBUM', $albums);
 		$this->assertStringContainsString('albumrow.S_LOCKED_ALBUM', $albums);
 		$this->assertStringContainsString("{% include '@phpbbgallery_core/gallery/subalbum_links.html' %}", $albums);

@@ -1,16 +1,25 @@
 {% set futuristic_variant = GALLERY_FUTURISTIC_VARIANT|default('generic') %}
 <div class="gallery-futuristic gallery-futuristic--{{ futuristic_variant }} gallery-futuristic-album-list">
 {% set category_pagination_row = false %}
+{% set public_album_title_shown = false %}
 {% for albumrow in albumrow %}
 	{% if ((albumrow.S_IS_CAT and not albumrow.S_FIRST_ROW) or albumrow.S_NO_CAT or (albumrow.S_PERSONAL_SECTION_START and not albumrow.S_FIRST_ROW)) and category_pagination_row %}
 		{% include '@phpbbgallery_core/gallery/category_album_pagination.html' with { albumrow: category_pagination_row } %}
 		{% set category_pagination_row = false %}
 	{% endif %}
-	{% if albumrow.S_PUBLIC_SECTION_START or albumrow.S_PERSONAL_SECTION_START %}
+	{% if albumrow.S_PERSONAL_SECTION_START or (albumrow.S_PUBLIC_SECTION_START and not albumrow.S_IS_CAT) %}
 		<h2 class="gallery-futuristic-section-title">
 			<span class="gallery-futuristic-section-icon" aria-hidden="true"><i class="icon fa {% if albumrow.S_PERSONAL_SECTION_START %}fa-user{% else %}fa-folder-open{% endif %} fa-fw"></i></span>
 			{% if albumrow.S_PERSONAL_SECTION_START %}{{ lang('PERSONAL_ALBUMS') }}{% else %}{{ GALLERY_PUBLIC_ALBUMS_LABEL }}{% endif %}
 		</h2>
+		{% if albumrow.S_PUBLIC_SECTION_START %}{% set public_album_title_shown = true %}{% endif %}
+	{% endif %}
+	{% if albumrow.S_NO_CAT and not albumrow.S_PERSONAL_ALBUM and not public_album_title_shown %}
+		<h2 class="gallery-futuristic-section-title">
+			<span class="gallery-futuristic-section-icon" aria-hidden="true"><i class="icon fa fa-folder-open fa-fw"></i></span>
+			{{ GALLERY_PUBLIC_ALBUMS_LABEL }}
+		</h2>
+		{% set public_album_title_shown = true %}
 	{% endif %}
 
 	{% if albumrow.S_IS_CAT %}
