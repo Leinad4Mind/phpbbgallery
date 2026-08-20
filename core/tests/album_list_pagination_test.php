@@ -192,6 +192,21 @@ class album_list_pagination_test extends TestCase
 		$this->assertSame([0 => true, 10 => true, 20 => false], $this->icon_groups($display, $rows, 0));
 	}
 
+	public function test_album_group_totals_keep_categories_and_root_albums_independent(): void
+	{
+		$display = $this->display(0, 2);
+		$rows = [
+			10 => ['album_id' => 10, 'parent_id' => 0, 'album_type' => block::TYPE_CAT],
+			11 => ['album_id' => 11, 'parent_id' => 10, 'album_type' => block::TYPE_UPLOAD],
+			12 => ['album_id' => 12, 'parent_id' => 10, 'album_type' => block::TYPE_UPLOAD],
+			20 => ['album_id' => 20, 'parent_id' => 0, 'album_type' => block::TYPE_CAT],
+			21 => ['album_id' => 21, 'parent_id' => 20, 'album_type' => block::TYPE_UPLOAD],
+			30 => ['album_id' => 30, 'parent_id' => 0, 'album_type' => block::TYPE_UPLOAD],
+		];
+
+		$this->assertSame([0 => 1, 10 => 2, 20 => 1], $this->group_totals($display, $rows, 0));
+	}
+
 	private function display(int $start, int $limit): display
 	{
 		$display = (new \ReflectionClass(display::class))->newInstanceWithoutConstructor();
@@ -212,6 +227,14 @@ class album_list_pagination_test extends TestCase
 	private function icon_groups(display $display, array $rows, int $root_album_id): array
 	{
 		$method = new \ReflectionMethod(display::class, 'album_icon_groups');
+		$method->setAccessible(true);
+
+		return $method->invoke($display, $rows, $root_album_id);
+	}
+
+	private function group_totals(display $display, array $rows, int $root_album_id): array
+	{
+		$method = new \ReflectionMethod(display::class, 'album_group_totals');
 		$method->setAccessible(true);
 
 		return $method->invoke($display, $rows, $root_album_id);

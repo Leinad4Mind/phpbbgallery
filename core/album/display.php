@@ -655,6 +655,8 @@ class display
 			$album_moderators = $this->get_moderators($album_ids_moderator);
 		}
 		$this->has_album_rows = !empty($album_rows);
+		$album_group_totals = $this->album_group_totals($album_rows, (int) $root_data['album_id']);
+		$section_has_categories = count($album_group_totals) > 1;
 		[$album_rows, $visible_albums] = $this->paginate_album_rows($album_rows, (int) $root_data['album_id']);
 		$album_icon_groups = $this->album_icon_groups($album_rows, (int) $root_data['album_id']);
 
@@ -676,6 +678,7 @@ class display
 				$current_icon_group = (int) $row['album_id'];
 				$category_pagination = $this->category_pagination[(int) $row['album_id']] ?? null;
 				$category_total = $category_pagination !== null ? $category_pagination['total'] : 0;
+				$album_group_total = (int) ($album_group_totals[(int) $row['album_id']] ?? 0);
 				$category_total_label = $category_total . ' ' . $this->language->lang(
 					$category_total === 1 ? 'ALBUM' : 'ALBUMS'
 				);
@@ -683,10 +686,13 @@ class display
 				$this->template->assign_block_vars($block_name, [
 					'S_IS_CAT'				=> true,
 					'S_PERSONAL_ALBUM'		=> (int) $row['album_user_id'] > (int) \phpbbgallery\core\block::PUBLIC_ALBUM,
+					'S_SECTION_HAS_CATEGORIES' => $section_has_categories,
 					'S_PUBLIC_SECTION_START'	=> $section_start_pending && $index_section === 'public',
 					'S_PERSONAL_SECTION_START'	=> $section_start_pending && $index_section === 'personal',
 					'S_CATEGORY_ALBUM_LIST'	=> $category_pagination !== null,
 					'CATEGORY_ALBUM_TOTAL'	=> $category_total_label,
+					'ALBUM_GROUP_TOTAL'		=> $album_group_total,
+					'ALBUM_GROUP_LABEL'		=> $this->language->lang($album_group_total === 1 ? 'ALBUM' : 'ALBUMS'),
 					'ALBUM_ID'				=> $row['album_id'],
 					'ALBUM_NAME'			=> $row['album_name'],
 					'ALBUM_DESC'			=> generate_text_for_display($row['album_desc'], $row['album_desc_uid'], $row['album_desc_bitfield'], $row['album_desc_options']),
@@ -805,6 +811,7 @@ class display
 			{
 				$current_icon_group = 0;
 			}
+			$album_group_total = (int) ($album_group_totals[$current_icon_group] ?? 0);
 
 			$last_image_data = $this->image_visibility->projected_data($row, $last_image_projection, [
 				'image_user_id' => (int) $row['album_last_user_id'],
@@ -825,6 +832,7 @@ class display
 			$album_template_vars = [
 				'S_IS_CAT'			=> false,
 				'S_PERSONAL_ALBUM'	=> (int) $row['album_user_id'] > (int) \phpbbgallery\core\block::PUBLIC_ALBUM,
+				'S_SECTION_HAS_CATEGORIES' => $section_has_categories,
 				'S_PUBLIC_SECTION_START'	=> $section_start_pending && $index_section === 'public',
 				'S_PERSONAL_SECTION_START'	=> $section_start_pending && $index_section === 'personal',
 				'S_LAST_ROOT_ALBUM'	=> (int) $row['album_id'] === $this->last_root_album_id,
@@ -837,6 +845,8 @@ class display
 				'SUBALBUM_DISPLAY_MODE'	=> $subalbum_display_mode,
 				'S_SUBALBUMS'		=> (sizeof($subalbums_list)) ? true : false,
 				'S_ALBUM_GROUP_HAS_CUSTOM_ICONS' => !empty($album_icon_groups[$current_icon_group]),
+				'ALBUM_GROUP_TOTAL'	=> $album_group_total,
+				'ALBUM_GROUP_LABEL'	=> $this->language->lang($album_group_total === 1 ? 'ALBUM' : 'ALBUMS'),
 				'S_ALBUM_VISUAL_IS_LAST_IMAGE' => !$row['album_image'] && (int) $row['album_last_image_id'] > 0,
 
 				'ALBUM_ID'				=> (int) $row['album_id'],
@@ -951,6 +961,38 @@ class display
 		}
 
 		return $groups;
+	}
+
+	/**
+	 * Count the albums rendered in each independent category or root group.
+	 *
+	 * @param array $album_rows Ordered, visible album rows before pagination
+	 * @param int   $root_album_id Root album outside the selected rows
+	 * @return array<int, int>
+	 */
+	protected function album_group_totals(array $album_rows, int $root_album_id): array
+	{
+		$totals = [0 => 0];
+		$current_group = 0;
+
+		foreach ($album_rows as $album_id => $row)
+		{
+			if ($this->is_album_category_heading($row, $root_album_id))
+			{
+				$current_group = (int) $album_id;
+				$totals[$current_group] = 0;
+				continue;
+			}
+
+			if ((int) ($row['parent_id'] ?? 0) === $root_album_id)
+			{
+				$current_group = 0;
+			}
+
+			$totals[$current_group]++;
+		}
+
+		return $totals;
 	}
 
 	/**

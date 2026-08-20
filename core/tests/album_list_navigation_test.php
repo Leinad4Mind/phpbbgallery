@@ -111,10 +111,17 @@ final class album_list_navigation_test extends TestCase
 			$this->assertStringContainsString('albumrow.S_LAST_ROOT_ALBUM', $classic, $style . ' classic');
 			$this->assertStringContainsString('root_album_pagination.html', $classic, $style . ' classic');
 			$this->assertStringContainsString('root_section_closed', $classic, $style . ' classic');
+			$this->assertStringContainsString('albumrow.S_PUBLIC_SECTION_START and not albumrow.S_SECTION_HAS_CATEGORIES', $classic, $style . ' classic');
+			$this->assertStringContainsString('albumrow.ALBUM_GROUP_LABEL', $classic, $style . ' classic');
 			$this->assertStringNotContainsString('gallery-root-album-pagination-row', $classic, $style . ' classic');
 			$this->assertStringContainsString('albumrow.S_LAST_ROOT_ALBUM', $polaroid, $style . ' polaroid');
 			$this->assertStringContainsString('root_album_pagination.html', $polaroid, $style . ' polaroid');
 		}
+		$prosilver_classic = $this->read('styles/prosilver/template/gallery/albumlist_body.html');
+		$this->assertMatchesRegularExpression(
+			'/<\/div>\s*<\/div>\s*{% if category_pagination_row %}{% include \'@phpbbgallery_core\/gallery\/category_album_pagination\.html\'/s',
+			$prosilver_classic
+		);
 
 		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{

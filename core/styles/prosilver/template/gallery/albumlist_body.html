@@ -5,15 +5,14 @@
 	{% if (albumrow.S_IS_CAT and not albumrow.S_FIRST_ROW) or albumrow.S_NO_CAT or (albumrow.S_PERSONAL_SECTION_START and not albumrow.S_FIRST_ROW) %}
 		{% if not root_section_closed %}
 			</ul>
-			{% if category_pagination_row %}{% include '@phpbbgallery_core/gallery/category_album_pagination.html' with { albumrow: category_pagination_row } %}{% endif %}
-
 			</div>
 		</div>
+			{% if category_pagination_row %}{% include '@phpbbgallery_core/gallery/category_album_pagination.html' with { albumrow: category_pagination_row } %}{% endif %}
 		{% endif %}
 			{% set category_pagination_row = false %}
 			{% set root_section_closed = false %}
 	{% endif %}
-	{% if albumrow.S_PUBLIC_SECTION_START or albumrow.S_PERSONAL_SECTION_START %}
+	{% if albumrow.S_PERSONAL_SECTION_START or (albumrow.S_PUBLIC_SECTION_START and not albumrow.S_SECTION_HAS_CATEGORIES) %}
 		<h2 class="gallery-album-section-title"><i class="icon fa {% if albumrow.S_PERSONAL_SECTION_START %}fa-user{% else %}fa-folder-open{% endif %} fa-fw" aria-hidden="true"></i> {% if albumrow.S_PERSONAL_SECTION_START %}{{ lang('PERSONAL_ALBUMS') }}{% else %}{{ GALLERY_PUBLIC_ALBUMS_LABEL }}{% endif %}</h2>
 	{% endif %}
 
@@ -24,7 +23,7 @@
 				<li class="header">
 					<dl class="row-item">
 						<dt>
-							{% if albumrow.S_IS_CAT %}<a href="{{ albumrow.U_VIEWALBUM }}">{{ albumrow.ALBUM_NAME }}</a>{% else %}{{ lang('ALBUM') }}{% endif %}
+							{% if albumrow.S_IS_CAT %}<a href="{{ albumrow.U_VIEWALBUM }}">{{ albumrow.ALBUM_NAME }}</a>{% else %}{{ albumrow.ALBUM_GROUP_LABEL }}{% endif %}
 						</dt>
 						<dd class="posts">{{ lang('IMAGES') }}</dd>
 						<dd class="g_lastimage" style="padding-left: 5px;"><span>{{ lang('LAST_IMAGE') }}</span></dd>
@@ -78,10 +77,9 @@
 	{% if albumrow.S_LAST_ROW %}
 		{% if not root_section_closed %}
 			</ul>
-			{% if category_pagination_row %}{% include '@phpbbgallery_core/gallery/category_album_pagination.html' with { albumrow: category_pagination_row } %}{% endif %}
-
 			</div>
 		</div>
+			{% if category_pagination_row %}{% include '@phpbbgallery_core/gallery/category_album_pagination.html' with { albumrow: category_pagination_row } %}{% endif %}
 		{% endif %}
 	{% endif %}
 
