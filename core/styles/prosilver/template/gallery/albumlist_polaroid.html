@@ -1,11 +1,12 @@
 {% set category_pagination_row = false %}
 {% for albumrow in albumrow %}
 	{% if ((albumrow.S_IS_CAT and not albumrow.S_FIRST_ROW) or albumrow.S_NO_CAT or (albumrow.S_PERSONAL_SECTION_START and not albumrow.S_FIRST_ROW)) and category_pagination_row %}
-		<span class="clear"></span>
+		</div>
 		{% include '@phpbbgallery_core/gallery/category_album_pagination.html' with { albumrow: category_pagination_row } %}
+		</section>
 		{% set category_pagination_row = false %}
 	{% endif %}
-	{% if albumrow.S_PUBLIC_SECTION_START or albumrow.S_PERSONAL_SECTION_START %}
+	{% if albumrow.S_PERSONAL_SECTION_START or (albumrow.S_PUBLIC_SECTION_START and not albumrow.S_IS_CAT) %}
 		<span class="clear"></span>
 		<h2 class="gallery-album-section-title"><i class="icon fa {% if albumrow.S_PERSONAL_SECTION_START %}fa-user{% else %}fa-folder-open{% endif %} fa-fw" aria-hidden="true"></i> {% if albumrow.S_PERSONAL_SECTION_START %}{{ lang('PERSONAL_ALBUMS') }}{% else %}{{ GALLERY_PUBLIC_ALBUMS_LABEL }}{% endif %}</h2>
 	{% endif %}
@@ -14,9 +15,11 @@
 	{% endif %}
 
 	{% if albumrow.S_IS_CAT or ((albumrow.S_FIRST_ROW or albumrow.S_NO_CAT) and not albumrow.S_PUBLIC_SECTION_START and not albumrow.S_PERSONAL_SECTION_START) %}
+		{% if albumrow.S_IS_CAT %}<section class="gallery-album-card-category gallery-album-card-category--prosilver">{% endif %}
 		<span class="clear"></span>
-		<br />
-		<h2{% if albumrow.S_FIRST_ROW %} class="invade-linklist"{% endif %}>{% if albumrow.S_IS_CAT %}<a href="{{ albumrow.U_VIEWALBUM }}">{{ albumrow.ALBUM_NAME }}</a>{% else %}{{ lang('ALBUM') }}{% endif %}</h2>
+		<h2 class="{% if albumrow.S_IS_CAT %}gallery-album-category-title{% else %}gallery-root-album-title{% endif %}">{% if albumrow.S_IS_CAT %}<a href="{{ albumrow.U_VIEWALBUM }}">{{ albumrow.ALBUM_NAME }}</a>{% else %}{{ lang('ALBUM') }}{% endif %}</h2>
+		{% if albumrow.S_IS_CAT and albumrow.ALBUM_DESC %}<div class="gallery-album-category-description">{{ albumrow.ALBUM_DESC }}</div>{% endif %}
+		{% if albumrow.S_IS_CAT %}<div class="gallery-album-category-card-grid">{% endif %}
 	{% endif %}
 	{% if albumrow.S_IS_CAT %}{% set category_pagination_row = albumrow %}{% endif %}
 
@@ -46,13 +49,17 @@
 			{% include '@phpbbgallery_core/gallery/subalbum_links.html' %}
 		</div>
 		{% if albumrow.S_LAST_ROOT_ALBUM %}
+			<span class="clear"></span>
 			{% include '@phpbbgallery_core/gallery/root_album_pagination.html' %}
 		{% endif %}
 	{% endif %}
 
 	{% if albumrow.S_LAST_ROW %}
-		<span class="clear"></span>
-		{% if category_pagination_row %}{% include '@phpbbgallery_core/gallery/category_album_pagination.html' with { albumrow: category_pagination_row } %}{% endif %}
+		{% if category_pagination_row %}
+			</div>
+			{% include '@phpbbgallery_core/gallery/category_album_pagination.html' with { albumrow: category_pagination_row } %}
+			</section>
+		{% endif %}
 	{% endif %}
 
 {% else %}

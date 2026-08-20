@@ -583,6 +583,89 @@ input.autowidth-gallery {
 	width: 100%;
 }
 
+.gallery-album-card-category
+{
+	box-sizing: border-box;
+	clear: both;
+	flex: 0 0 calc(100% - 30px);
+	margin: 10px 15px 22px;
+	max-width: calc(100% - 30px);
+}
+
+.gallery-album-card-category--prosilver
+{
+	background: #f5f7fa;
+	border: 1px solid #cadceb;
+	border-radius: 4px;
+	margin: 12px 0 22px;
+	max-width: 100%;
+	padding: 12px;
+}
+
+.gallery-album-card-category--bboots,
+.gallery-album-card-category--flatboots
+{
+	background: rgba(255, 255, 255, .46);
+	border: 1px solid #d8dde3;
+	border-radius: 4px;
+	padding: 10px 0 4px;
+}
+
+.gallery-album-card-category--bboots
+{
+	border-top: 3px solid #2880b2;
+}
+
+.gallery-album-card-category--flatboots
+{
+	border-top: 3px solid #daa520;
+}
+
+.gallery-album-category-card-grid
+{
+	align-items: stretch;
+	display: flex;
+	flex-wrap: wrap;
+	margin-left: 0;
+	margin-right: 0;
+	width: 100%;
+}
+
+.gallery-album-category-title,
+.gallery-root-album-title
+{
+	margin: 0 0 10px;
+}
+
+.gallery-album-card-category--prosilver .gallery-album-category-title
+{
+	border-bottom: 1px solid #cadceb;
+	padding: 0 2px 7px;
+}
+
+.gallery-album-card-category--bboots .gallery-album-category-title,
+.gallery-album-card-category--flatboots .gallery-album-category-title
+{
+	padding: 0 15px;
+}
+
+.gallery-album-category-description
+{
+	margin: -5px 0 12px;
+}
+
+.gallery-album-card-category--bboots .gallery-album-category-description,
+.gallery-album-card-category--flatboots .gallery-album-category-description
+{
+	padding: 0 15px;
+}
+
+.gallery-root-album-title
+{
+	clear: both;
+	margin-top: 20px;
+}
+
 .gallery-personal-album
 {
 	border-color: rgba(73, 126, 157, 0.42) !important;

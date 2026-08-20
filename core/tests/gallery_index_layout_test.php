@@ -524,12 +524,27 @@ final class gallery_index_layout_test extends TestCase
 			$this->assertStringContainsString('class="row gallery-album-card-grid"', $template, $style);
 			$this->assertStringContainsString('gallery-album-card-column', $template, $style);
 			$this->assertStringContainsString('gallery-album-grid-heading', $template, $style);
+			$this->assertStringContainsString('gallery-album-card-category', $template, $style);
+			$this->assertStringContainsString('gallery-album-category-card-grid', $template, $style);
+			$this->assertStringContainsString('albumrow.S_PUBLIC_SECTION_START and not albumrow.S_IS_CAT', $template, $style);
 			$this->assertStringNotContainsString('<span class="clear"></span>', $template, $style);
 		}
+
+		$prosilver = (string) file_get_contents($core_root . '/styles/prosilver/template/gallery/albumlist_polaroid.html');
+		$this->assertStringContainsString('gallery-album-card-category--prosilver', $prosilver);
+		$this->assertStringContainsString('gallery-album-category-card-grid', $prosilver);
+		$this->assertStringContainsString('albumrow.S_PUBLIC_SECTION_START and not albumrow.S_IS_CAT', $prosilver);
+		$this->assertLessThan(
+			strpos($prosilver, "root_album_pagination.html'"),
+			strpos($prosilver, '<span class="clear"></span>', strpos($prosilver, 'albumrow.S_LAST_ROOT_ALBUM'))
+		);
 
 		$css = (string) file_get_contents($core_root . '/styles/all/theme/gallery.css');
 		$this->assertMatchesRegularExpression('/\.gallery-album-card-grid\s*\{[^}]*display:\s*flex;[^}]*flex-wrap:\s*wrap;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-album-card-column\s*\{[^}]*display:\s*flex;[^}]*float:\s*none;/s', $css);
+		$this->assertStringContainsString('.gallery-album-card-category--prosilver', $css);
+		$this->assertStringContainsString('.gallery-album-card-category--flatboots', $css);
+		$this->assertStringContainsString('border-top: 3px solid #daa520;', $css);
 	}
 	public function test_image_cards_center_thumbnails_and_keep_approval_inside_metadata(): void
 	{
