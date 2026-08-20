@@ -1,10 +1,17 @@
+{% set category_pagination_row = false %}
+{% set root_section_closed = false %}
 {% for albumrow in albumrow %}
 
 	{% if (albumrow.S_IS_CAT and not albumrow.S_FIRST_ROW) or albumrow.S_NO_CAT or (albumrow.S_PERSONAL_SECTION_START and not albumrow.S_FIRST_ROW) %}
+		{% if not root_section_closed %}
 			</ul>
+			{% if category_pagination_row %}{% include '@phpbbgallery_core/gallery/category_album_pagination.html' with { albumrow: category_pagination_row } %}{% endif %}
 
 			</div>
 		</div>
+		{% endif %}
+			{% set category_pagination_row = false %}
+			{% set root_section_closed = false %}
 	{% endif %}
 	{% if albumrow.S_PUBLIC_SECTION_START or albumrow.S_PERSONAL_SECTION_START %}
 		<h2 class="gallery-album-section-title"><i class="icon fa {% if albumrow.S_PERSONAL_SECTION_START %}fa-user{% else %}fa-folder-open{% endif %} fa-fw" aria-hidden="true"></i> {% if albumrow.S_PERSONAL_SECTION_START %}{{ lang('PERSONAL_ALBUMS') }}{% else %}{{ GALLERY_PUBLIC_ALBUMS_LABEL }}{% endif %}</h2>
@@ -18,7 +25,6 @@
 					<dl class="row-item">
 						<dt>
 							{% if albumrow.S_IS_CAT %}<a href="{{ albumrow.U_VIEWALBUM }}">{{ albumrow.ALBUM_NAME }}</a>{% else %}{{ lang('ALBUM') }}{% endif %}
-							{% if albumrow.S_IS_CAT %}{% include '@phpbbgallery_core/gallery/category_album_pagination.html' %}{% endif %}
 						</dt>
 						<dd class="posts">{{ lang('IMAGES') }}</dd>
 						<dd class="g_lastimage" style="padding-left: 5px;"><span>{{ lang('LAST_IMAGE') }}</span></dd>
@@ -27,6 +33,7 @@
 			</ul>
 			<ul class="topiclist forums">
 	{% endif %}
+	{% if albumrow.S_IS_CAT %}{% set category_pagination_row = albumrow %}{% endif %}
 
 	{% if not albumrow.S_IS_CAT %}
 		<li class="row{% if albumrow.S_PERSONAL_ALBUM %} gallery-personal-album{% endif %}">{{ albumrow.ALBUM_FOLDER_IMG_SRC }}
@@ -58,13 +65,24 @@
 				</dd>
 			</dl>
 		</li>
-	{% endif %}
-
-	{% if albumrow.S_LAST_ROW %}
+		{% if albumrow.S_LAST_ROOT_ALBUM %}
 			</ul>
 
 			</div>
 		</div>
+			{% include '@phpbbgallery_core/gallery/root_album_pagination.html' %}
+			{% set root_section_closed = true %}
+		{% endif %}
+	{% endif %}
+
+	{% if albumrow.S_LAST_ROW %}
+		{% if not root_section_closed %}
+			</ul>
+			{% if category_pagination_row %}{% include '@phpbbgallery_core/gallery/category_album_pagination.html' with { albumrow: category_pagination_row } %}{% endif %}
+
+			</div>
+		</div>
+		{% endif %}
 	{% endif %}
 
 {% else %}

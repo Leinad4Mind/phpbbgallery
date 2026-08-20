@@ -113,6 +113,7 @@ class album_list_pagination_test extends TestCase
 		$this->assertSame(8, $total);
 		$this->assertSame(3, $display->album_root_total);
 		$this->assertSame([10, 11, 12, 20, 21, 22, 30, 31], array_keys($selected));
+		$this->assertSame(31, $display->last_root_album_id);
 	}
 
 	public function test_one_category_page_does_not_change_its_siblings_or_root_page(): void
@@ -140,6 +141,26 @@ class album_list_pagination_test extends TestCase
 
 		$this->assertSame([10, 12, 20, 21, 31], array_keys($selected));
 		$this->assertSame(['category_page_10' => 2], $display->category_page_params());
+		$this->assertSame(31, $display->last_root_album_id);
+	}
+
+	public function test_last_root_album_is_identified_before_later_categories(): void
+	{
+		$display = $this->display(0, 10);
+		$display->configure_category_pagination(['routes' => 'gallery']);
+		$rows = [
+			30 => ['album_id' => 30, 'parent_id' => 0, 'album_type' => block::TYPE_UPLOAD],
+			10 => ['album_id' => 10, 'parent_id' => 0, 'album_type' => block::TYPE_CAT],
+			11 => ['album_id' => 11, 'parent_id' => 10, 'album_type' => block::TYPE_UPLOAD],
+			20 => ['album_id' => 20, 'parent_id' => 0, 'album_type' => block::TYPE_CAT],
+			21 => ['album_id' => 21, 'parent_id' => 20, 'album_type' => block::TYPE_UPLOAD],
+		];
+
+		[$selected, $total] = $this->paginate($display, $rows, 0);
+
+		$this->assertSame(3, $total);
+		$this->assertSame([30, 10, 11, 20, 21], array_keys($selected));
+		$this->assertSame(30, $display->last_root_album_id);
 	}
 
 	private function display(int $start, int $limit): display

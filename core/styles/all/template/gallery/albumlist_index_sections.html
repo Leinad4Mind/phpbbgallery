@@ -18,19 +18,6 @@
 {% else %}
 	<section class="gallery-paginated-list" data-gallery-list-section="public-albums">
 		{% include '@phpbbgallery_core/gallery/albumlist_layout.html' with { albumrow: public_albumrow } %}
-		{% if PUBLIC_ALBUM_TOTAL %}
-			{% if GALLERY_FUTURISTIC_VARIANT == 'bboots' or GALLERY_FUTURISTIC_VARIANT == 'flatboots' %}
-				<ul class="pagination pagination-sm pull-right gallery-album-list-pagination">
-					<li class="active"><a>{{ PUBLIC_ALBUM_TOTAL }}</a></li>
-					{% if public_pagination|length %}{% include '@phpbbgallery_core/gallery/list_pagination.html' with { pagination: public_pagination, GALLERY_BOOTSTRAP_PAGINATION: true } %}{% endif %}
-				</ul>
-			{% else %}
-				<div class="pagination gallery-album-list-pagination">
-					{{ PUBLIC_ALBUM_TOTAL }}
-					{% if public_pagination|length %}{% include '@phpbbgallery_core/gallery/list_pagination.html' with { pagination: public_pagination, GALLERY_BOOTSTRAP_PAGINATION: false } %}{% endif %}
-				</div>
-			{% endif %}
-		{% endif %}
 	</section>
 
 	{% if S_SHOW_PERSONAL_ALBUMS and S_HAS_PERSONAL_ALBUMS %}

@@ -55,6 +55,9 @@ class display
 	/** Number of direct, uncategorised albums in the current root scope. */
 	public int $album_root_total = 0;
 
+	/** Last direct root album rendered on the selected independent root page. */
+	public int $last_root_album_id = 0;
+
 	/** Whether the last display operation found any visible album or category row. */
 	public bool $has_album_rows = false;
 
@@ -817,6 +820,7 @@ class display
 				'S_PERSONAL_ALBUM'	=> (int) $row['album_user_id'] > (int) \phpbbgallery\core\block::PUBLIC_ALBUM,
 				'S_PUBLIC_SECTION_START'	=> $section_start_pending && $index_section === 'public',
 				'S_PERSONAL_SECTION_START'	=> $section_start_pending && $index_section === 'personal',
+				'S_LAST_ROOT_ALBUM'	=> (int) $row['album_id'] === $this->last_root_album_id,
 				'S_NO_CAT'			=> $catless && !$last_catless,
 				'S_LOCKED_ALBUM'	=> ($row['album_status'] == (int) \phpbbgallery\core\block::ALBUM_LOCKED) ? true : false,
 				'S_UNREAD_ALBUM'	=> ($album_unread) ? true : false,
@@ -915,6 +919,7 @@ class display
 	protected function paginate_album_rows(array $album_rows, int $root_album_id): array
 	{
 		$this->album_root_total = 0;
+		$this->last_root_album_id = 0;
 		$this->category_pagination = [];
 		if ($this->paginate_categories)
 		{
@@ -1041,6 +1046,10 @@ class display
 			if ($limit > 0)
 			{
 				$group_ids = array_slice($group_ids, $start, $limit);
+			}
+			if ($category_id === 0 && $group_ids)
+			{
+				$this->last_root_album_id = (int) $group_ids[array_key_last($group_ids)];
 			}
 			foreach ($group_ids as $album_id)
 			{

@@ -60,7 +60,7 @@ final class album_list_navigation_test extends TestCase
 		$index_sections = $this->read('styles/all/template/gallery/albumlist_index_sections.html');
 		$this->assertStringContainsString('data-gallery-list-section="public-albums"', $index_sections);
 		$this->assertStringContainsString('data-gallery-list-section="personal-albums"', $index_sections);
-		$this->assertStringContainsString('pagination: public_pagination', $index_sections);
+		$this->assertStringNotContainsString('pagination: public_pagination', $index_sections);
 		$this->assertStringContainsString('data-gallery-list-section="personal-directory"', $index_sections);
 		$this->assertStringContainsString('albumrow: albumrow', $index_sections);
 		$this->assertStringContainsString('pagination: pagination', $index_sections);
@@ -79,16 +79,41 @@ final class album_list_navigation_test extends TestCase
 		$this->assertStringContainsString('albumrow.CATEGORY_ALBUM_TOTAL', $category_pagination);
 		$this->assertStringContainsString('albumrow.pagination|default([])', $category_pagination);
 		$this->assertStringContainsString('pagination: category_pagination', $category_pagination);
+		$this->assertStringContainsString('{% if category_pagination|length %}', $category_pagination);
+
+		$root_pagination = $this->read('styles/all/template/gallery/root_album_pagination.html');
+		$this->assertStringContainsString('PUBLIC_ALBUM_TOTAL', $root_pagination);
+		$this->assertStringContainsString('public_pagination|default([])', $root_pagination);
+		$this->assertStringContainsString('pagination: root_pagination', $root_pagination);
+		$this->assertStringContainsString('gallery-root-album-pagination', $root_pagination);
 
 		foreach (['albumlist_modern.html', 'albumlist_futuristic.html'] as $template)
 		{
-			$this->assertStringContainsString('category_album_pagination.html', $this->read('styles/all/template/gallery/' . $template), $template);
+			$template_source = $this->read('styles/all/template/gallery/' . $template);
+			$this->assertStringContainsString('category_album_pagination.html', $template_source, $template);
+			$this->assertStringContainsString('category_pagination_row', $template_source, $template);
+			$this->assertStringContainsString('albumrow.S_LAST_ROOT_ALBUM', $template_source, $template);
+			$this->assertStringContainsString('root_album_pagination.html', $template_source, $template);
 		}
 
 		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
 		{
-			$this->assertStringContainsString('category_album_pagination.html', $this->read('styles/' . $style . '/template/gallery/albumlist_body.html'), $style . ' classic');
-			$this->assertStringContainsString('category_album_pagination.html', $this->read('styles/' . $style . '/template/gallery/albumlist_polaroid.html'), $style . ' polaroid');
+			$classic = $this->read('styles/' . $style . '/template/gallery/albumlist_body.html');
+			$polaroid = $this->read('styles/' . $style . '/template/gallery/albumlist_polaroid.html');
+			$this->assertStringContainsString('category_album_pagination.html', $classic, $style . ' classic');
+			$this->assertStringContainsString('category_pagination_row', $classic, $style . ' classic');
+			if ($style !== 'prosilver')
+			{
+				$this->assertStringContainsString('gallery-category-album-pagination-cell', $classic, $style . ' classic');
+			}
+			$this->assertStringContainsString('category_album_pagination.html', $polaroid, $style . ' polaroid');
+			$this->assertStringContainsString('category_pagination_row', $polaroid, $style . ' polaroid');
+			$this->assertStringContainsString('albumrow.S_LAST_ROOT_ALBUM', $classic, $style . ' classic');
+			$this->assertStringContainsString('root_album_pagination.html', $classic, $style . ' classic');
+			$this->assertStringContainsString('root_section_closed', $classic, $style . ' classic');
+			$this->assertStringNotContainsString('gallery-root-album-pagination-row', $classic, $style . ' classic');
+			$this->assertStringContainsString('albumrow.S_LAST_ROOT_ALBUM', $polaroid, $style . ' polaroid');
+			$this->assertStringContainsString('root_album_pagination.html', $polaroid, $style . ' polaroid');
 		}
 
 		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
@@ -113,7 +138,10 @@ final class album_list_navigation_test extends TestCase
 		$css = $this->read('styles/all/theme/gallery.css');
 		$this->assertMatchesRegularExpression('/\.gallery-album-list-pagination\s*\{[^}]*clear:\s*both;[^}]*display:\s*flex;[^}]*float:\s*none !important;[^}]*margin:\s*8px 0 12px;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-album-list-pagination \.gallery-album-list-total\s*\{[^}]*margin-right:\s*10px;/s', $css);
-		$this->assertMatchesRegularExpression('/\.gallery-category-album-pagination\s*\{[^}]*clear:\s*none;[^}]*justify-content:\s*flex-start;[^}]*margin:\s*6px 0 0;[^}]*width:\s*auto;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-category-album-pagination\s*\{[^}]*clear:\s*none;[^}]*justify-content:\s*flex-end;[^}]*margin:\s*6px 0 0;[^}]*padding:\s*8px 12px 10px;[^}]*width:\s*auto;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-category-album-pagination-cell\s*\{[^}]*padding:\s*0 !important;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-root-album-pagination\s*\{[^}]*clear:\s*none;[^}]*justify-content:\s*flex-end;[^}]*margin:\s*6px 0 0;[^}]*padding:\s*8px 12px 10px;[^}]*width:\s*auto;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-paginated-list > \.gallery-root-album-pagination\s*\{[^}]*margin:\s*-17px 0 17px;[^}]*padding:\s*4px 12px 0;/s', $css);
 	}
 
 	public function test_progressive_navigation_preserves_history_and_has_a_normal_fallback(): void

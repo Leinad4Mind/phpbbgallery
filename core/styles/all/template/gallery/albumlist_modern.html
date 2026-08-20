@@ -1,5 +1,10 @@
 <div class="gallery-modern-album-list{% if S_ALBUM_LIST_HAS_CUSTOM_ICONS %} gallery-modern-album-list--with-custom-icons{% endif %}">
+{% set category_pagination_row = false %}
 {% for albumrow in albumrow %}
+	{% if ((albumrow.S_IS_CAT and not albumrow.S_FIRST_ROW) or albumrow.S_NO_CAT or (albumrow.S_PERSONAL_SECTION_START and not albumrow.S_FIRST_ROW)) and category_pagination_row %}
+		{% include '@phpbbgallery_core/gallery/category_album_pagination.html' with { albumrow: category_pagination_row } %}
+		{% set category_pagination_row = false %}
+	{% endif %}
 	{% if albumrow.S_PUBLIC_SECTION_START or albumrow.S_PERSONAL_SECTION_START %}
 		<h2 class="gallery-modern-section-title"><i class="icon fa {% if albumrow.S_PERSONAL_SECTION_START %}fa-user{% else %}fa-folder-open{% endif %} fa-fw" aria-hidden="true"></i> {% if albumrow.S_PERSONAL_SECTION_START %}{{ lang('PERSONAL_ALBUMS') }}{% else %}{{ GALLERY_PUBLIC_ALBUMS_LABEL }}{% endif %}</h2>
 	{% endif %}
@@ -8,8 +13,8 @@
 		<section class="gallery-modern-category">
 			<h3><i class="icon fa fa-folder-open fa-fw" aria-hidden="true"></i> <a href="{{ albumrow.U_VIEWALBUM }}">{{ albumrow.ALBUM_NAME }}</a></h3>
 			{% if albumrow.ALBUM_DESC %}<div class="gallery-modern-category-description">{{ albumrow.ALBUM_DESC }}</div>{% endif %}
-			{% include '@phpbbgallery_core/gallery/category_album_pagination.html' %}
 		</section>
+		{% set category_pagination_row = albumrow %}
 	{% else %}
 		<article class="gallery-modern-album{% if albumrow.S_PERSONAL_ALBUM %} gallery-personal-album{% endif %}{% if albumrow.S_UNREAD_ALBUM %} gallery-modern-album-unread{% endif %}">
 			<div class="gallery-modern-album-main{% if not S_ALBUM_LIST_HAS_CUSTOM_ICONS %} gallery-modern-album-main--without-visual{% endif %}">
@@ -48,6 +53,12 @@
 				</div>
 			</div>
 		</article>
+		{% if albumrow.S_LAST_ROOT_ALBUM %}
+			{% include '@phpbbgallery_core/gallery/root_album_pagination.html' %}
+		{% endif %}
+	{% endif %}
+	{% if albumrow.S_LAST_ROW and category_pagination_row %}
+		{% include '@phpbbgallery_core/gallery/category_album_pagination.html' with { albumrow: category_pagination_row } %}
 	{% endif %}
 {% else %}
 	<div class="panel"><div class="inner"><strong>{{ lang('NO_ALBUMS') }}</strong></div></div>
