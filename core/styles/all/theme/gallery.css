@@ -3577,6 +3577,25 @@ fieldset dl.gallery-autocomplete-row-open
 	margin-right: 10px;
 }
 
+.gallery-category-album-pagination
+{
+	clear: none;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	margin: 6px 0 0;
+	width: auto;
+}
+
+.gallery-category-album-pagination ul
+{
+	margin: 0;
+}
+
+.gallery-category-album-pagination .gallery-album-list-total
+{
+	white-space: nowrap;
+}
+
 .gallery-paginated-list
 {
 	transition: opacity 120ms ease-in-out;

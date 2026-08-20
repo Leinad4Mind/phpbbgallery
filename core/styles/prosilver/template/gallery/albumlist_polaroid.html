@@ -11,6 +11,7 @@
 		<span class="clear"></span>
 		<br />
 		<h2{% if albumrow.S_FIRST_ROW %} class="invade-linklist"{% endif %}>{% if albumrow.S_IS_CAT %}<a href="{{ albumrow.U_VIEWALBUM }}">{{ albumrow.ALBUM_NAME }}</a>{% else %}{{ lang('ALBUM') }}{% endif %}</h2>
+		{% if albumrow.S_IS_CAT %}{% include '@phpbbgallery_core/gallery/category_album_pagination.html' %}{% endif %}
 	{% endif %}
 
 	{% if not albumrow.S_IS_CAT %}

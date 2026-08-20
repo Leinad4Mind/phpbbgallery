@@ -19,7 +19,7 @@ class display
 	protected \phpbb\db\driver\driver_interface $db;
 	protected \phpbb\controller\helper $helper;
 	protected \phpbb\pagination $pagination;
-	protected \phpbb\request\request $request;
+	protected \phpbb\request\request_interface $request;
 	protected \phpbb\symfony_request $symfony_request;
 	protected \phpbb\template\template $template;
 	protected \phpbb\user $user;
@@ -52,6 +52,21 @@ class display
 	 */
 	public int $albums_total = 0;
 
+	/** Number of direct, uncategorised albums in the current root scope. */
+	public int $album_root_total = 0;
+
+	/** Whether the last display operation found any visible album or category row. */
+	public bool $has_album_rows = false;
+
+	/** Enable independent pagination for every direct category on the Gallery index. */
+	protected bool $paginate_categories = false;
+
+	/** @var array<string, mixed> Route definition for category album pages. */
+	protected array $category_pagination_base_url = [];
+
+	/** @var array<int, array{param: string, page: int, start: int, total: int}> */
+	protected array $category_pagination = [];
+
 	/**
 	 * Whether any rendered album list in this request uses a custom icon.
 	 */
@@ -64,7 +79,7 @@ class display
 
 	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\controller\helper $helper,
 								\phpbb\db\driver\driver_interface $db, \phpbb\pagination $pagination,
-								\phpbb\request\request $request, \phpbb\symfony_request $symfony_request,
+								\phpbb\request\request_interface $request, \phpbb\symfony_request $symfony_request,
 								\phpbb\template\template $template,
 								\phpbb\user $user, \phpbb\language\language $language, \phpbbgallery\core\auth\auth $gallery_auth,
 								\phpbbgallery\core\config $gallery_config,
@@ -97,6 +112,36 @@ class display
 		$this->table_albums = $albums_table;
 		$this->table_images = $images_table;
 		$this->table_moderators = $moderators_table;
+	}
+
+	/** Enable per-category pagination for the next public album list. */
+	public function configure_category_pagination(array $base_url): void
+	{
+		$this->paginate_categories = true;
+		$this->category_pagination_base_url = $base_url;
+	}
+
+	/** Restore the regular single-list pagination behaviour. */
+	public function disable_category_pagination(): void
+	{
+		$this->paginate_categories = false;
+		$this->category_pagination_base_url = [];
+		$this->category_pagination = [];
+	}
+
+	/** @return array<string, int> Active category pages retained by sibling pagers. */
+	public function category_page_params(): array
+	{
+		$params = [];
+		foreach ($this->category_pagination as $pagination)
+		{
+			if ($pagination['page'] > 1)
+			{
+				$params[$pagination['param']] = $pagination['page'];
+			}
+		}
+
+		return $params;
 	}
 
 	/**
@@ -606,6 +651,7 @@ class display
 			}
 			$album_moderators = $this->get_moderators($album_ids_moderator);
 		}
+		$this->has_album_rows = !empty($album_rows);
 		[$album_rows, $visible_albums] = $this->paginate_album_rows($album_rows, (int) $root_data['album_id']);
 
 		// Used to tell whatever we have to create a dummy category or not.
@@ -622,11 +668,19 @@ class display
 			// Empty category
 			if (($row['parent_id'] == $root_data['album_id']) && ($row['album_type'] == (int) \phpbbgallery\core\block::TYPE_CAT))
 			{
+				$category_pagination = $this->category_pagination[(int) $row['album_id']] ?? null;
+				$category_total = $category_pagination !== null ? $category_pagination['total'] : 0;
+				$category_total_label = $category_total . ' ' . $this->language->lang(
+					$category_total === 1 ? 'ALBUM' : 'ALBUMS'
+				);
+
 				$this->template->assign_block_vars($block_name, [
 					'S_IS_CAT'				=> true,
 					'S_PERSONAL_ALBUM'		=> (int) $row['album_user_id'] > (int) \phpbbgallery\core\block::PUBLIC_ALBUM,
 					'S_PUBLIC_SECTION_START'	=> $section_start_pending && $index_section === 'public',
 					'S_PERSONAL_SECTION_START'	=> $section_start_pending && $index_section === 'personal',
+					'S_CATEGORY_ALBUM_LIST'	=> $category_pagination !== null,
+					'CATEGORY_ALBUM_TOTAL'	=> $category_total_label,
 					'ALBUM_ID'				=> $row['album_id'],
 					'ALBUM_NAME'			=> $row['album_name'],
 					'ALBUM_DESC'			=> generate_text_for_display($row['album_desc'], $row['album_desc_uid'], $row['album_desc_bitfield'], $row['album_desc_options']),
@@ -636,6 +690,10 @@ class display
 					'ALBUM_IMAGE_SRC'		=> $album_image_src,
 					'U_VIEWALBUM'			=> $this->helper->route('phpbbgallery_core_album', ['album_id' => (int) $row['album_id']]),
 				]);
+				if ($category_pagination !== null)
+				{
+					$this->generate_category_pagination($block_name, $category_pagination);
+				}
 				$section_start_pending = false;
 
 				continue;
@@ -856,6 +914,13 @@ class display
 	 */
 	protected function paginate_album_rows(array $album_rows, int $root_album_id): array
 	{
+		$this->album_root_total = 0;
+		$this->category_pagination = [];
+		if ($this->paginate_categories)
+		{
+			return $this->paginate_category_album_rows($album_rows, $root_album_id);
+		}
+
 		$total = 0;
 		foreach ($album_rows as $row)
 		{
@@ -864,6 +929,7 @@ class display
 				$total++;
 			}
 		}
+		$this->album_root_total = $total;
 
 		$limit = max(0, $this->album_limit);
 		if ($limit === 0)
@@ -903,6 +969,120 @@ class display
 		}
 
 		return [$selected, $total];
+	}
+
+	/**
+	 * Apply the configured limit independently to root albums and every category.
+	 *
+	 * @param array $album_rows Ordered category headings and displayed album cards
+	 * @param int   $root_album_id Root album outside the selected rows
+	 * @return array{0: array, 1: int} Selected rows and total cards across all groups
+	 */
+	protected function paginate_category_album_rows(array $album_rows, int $root_album_id): array
+	{
+		$groups = [0 => []];
+		$current_group = 0;
+		foreach ($album_rows as $album_id => $row)
+		{
+			if ($this->is_album_category_heading($row, $root_album_id))
+			{
+				$current_group = (int) $album_id;
+				$groups[$current_group] = [];
+				continue;
+			}
+
+			if ((int) $row['parent_id'] === $root_album_id)
+			{
+				$current_group = 0;
+			}
+
+			$groups[$current_group][$album_id] = $row;
+		}
+
+		$limit = max(0, $this->album_limit);
+		$selected_ids = [];
+		$total = 0;
+		foreach ($groups as $category_id => $rows)
+		{
+			$group_total = count($rows);
+			$total += $group_total;
+
+			if ($category_id === 0)
+			{
+				$this->album_root_total = $group_total;
+				$start = max(0, $this->album_start);
+			}
+			else
+			{
+				$param = 'category_page_' . $category_id;
+				$page = 1;
+				if (isset($this->request))
+				{
+					$page = max(1, $this->request->variable($param, 1));
+				}
+				if ($limit > 0 && $group_total > 0)
+				{
+					$page = min($page, (int) ceil($group_total / $limit));
+				}
+				else
+				{
+					$page = 1;
+				}
+				$start = $limit > 0 ? ($page - 1) * $limit : 0;
+				$this->category_pagination[$category_id] = [
+					'param' => $param,
+					'page' => $page,
+					'start' => $start,
+					'total' => $group_total,
+				];
+			}
+
+			$group_ids = array_keys($rows);
+			if ($limit > 0)
+			{
+				$group_ids = array_slice($group_ids, $start, $limit);
+			}
+			foreach ($group_ids as $album_id)
+			{
+				$selected_ids[(int) $album_id] = true;
+			}
+		}
+
+		$selected = [];
+		foreach ($album_rows as $album_id => $row)
+		{
+			if ($this->is_album_category_heading($row, $root_album_id)
+				|| isset($selected_ids[(int) $album_id]))
+			{
+				$selected[$album_id] = $row;
+			}
+		}
+
+		return [$selected, $total];
+	}
+
+	/** Add a nested phpBB pagination block to the current category heading. */
+	protected function generate_category_pagination(string $block_name, array $pagination): void
+	{
+		if (empty($this->category_pagination_base_url))
+		{
+			return;
+		}
+
+		$base_url = $this->category_pagination_base_url;
+		$params = $base_url['params'] ?? [];
+		$params = array_merge($params, $this->category_page_params());
+		unset($params[$pagination['param']]);
+		$base_url['params'] = $params;
+
+		$this->pagination->generate_template_pagination(
+			$base_url,
+			$block_name . '.pagination',
+			$pagination['param'],
+			$pagination['total'],
+			max(1, $this->album_limit),
+			$pagination['start']
+		);
 	}
 
 	/** Whether a row is a direct category heading rather than a paginated album card. */

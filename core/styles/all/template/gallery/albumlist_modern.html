@@ -8,6 +8,7 @@
 		<section class="gallery-modern-category">
 			<h3><i class="icon fa fa-folder-open fa-fw" aria-hidden="true"></i> <a href="{{ albumrow.U_VIEWALBUM }}">{{ albumrow.ALBUM_NAME }}</a></h3>
 			{% if albumrow.ALBUM_DESC %}<div class="gallery-modern-category-description">{{ albumrow.ALBUM_DESC }}</div>{% endif %}
+			{% include '@phpbbgallery_core/gallery/category_album_pagination.html' %}
 		</section>
 	{% else %}
 		<article class="gallery-modern-album{% if albumrow.S_PERSONAL_ALBUM %} gallery-personal-album{% endif %}{% if albumrow.S_UNREAD_ALBUM %} gallery-modern-album-unread{% endif %}">

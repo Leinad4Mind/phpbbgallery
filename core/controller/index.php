@@ -149,32 +149,61 @@ class index
 			'S_SHOW_PERSONAL_ALBUMS' => $show_personal_albums,
 		]);
 
+		$category_base_params = [];
+		if ($public_page > 1)
+		{
+			$category_base_params['public_page'] = $public_page;
+		}
+		if ($personal_page > 1)
+		{
+			$category_base_params['personal_page'] = $personal_page;
+		}
+		$this->display->configure_category_pagination([
+			'routes' => ['phpbbgallery_core_index', 'phpbbgallery_core_index'],
+			'params' => $category_base_params,
+		]);
 		$this->display->album_start = ($public_page - 1) * $album_limit;
 		$this->display->album_limit = $album_limit;
 		$this->display->display_albums(false, $this->config['load_moderators'], false, 'public_albumrow');
-		$public_total = $this->display->albums_total;
+		$public_total = $this->display->album_root_total;
+		$public_visible_total = $this->display->albums_total;
+		$public_has_rows = $this->display->has_album_rows;
+		$public_pagination_params = $this->display->category_page_params();
+		if ($personal_page > 1)
+		{
+			$public_pagination_params['personal_page'] = $personal_page;
+		}
 		$this->pagination->generate_template_pagination([
 			'routes' => ['phpbbgallery_core_index', 'phpbbgallery_core_index'],
-			'params' => $personal_page > 1 ? ['personal_page' => $personal_page] : [],
+			'params' => $public_pagination_params,
 		], 'public_pagination', 'public_page', $public_total, $album_limit, $this->display->album_start);
 
 		$personal_total = 0;
 		if ($show_personal_albums)
 		{
+			$this->display->disable_category_pagination();
 			$this->display->album_start = ($personal_page - 1) * $album_limit;
 			$this->display->album_limit = $album_limit;
 			$this->display->display_albums('personal', $this->config['load_moderators'], false, 'personal_albumrow');
 			$personal_total = $this->display->albums_total;
+			$personal_pagination_params = $public_pagination_params;
+			unset($personal_pagination_params['personal_page']);
+			if ($public_page > 1)
+			{
+				$personal_pagination_params['public_page'] = $public_page;
+			}
 			$this->pagination->generate_template_pagination([
 				'routes' => ['phpbbgallery_core_index', 'phpbbgallery_core_index'],
-				'params' => $public_page > 1 ? ['public_page' => $public_page] : [],
+				'params' => $personal_pagination_params,
 			], 'personal_pagination', 'personal_page', $personal_total, $album_limit, $this->display->album_start);
 		}
 
 		$this->template->assign_vars([
-			'PUBLIC_ALBUM_TOTAL' => $public_total . ' ' . $this->language->lang($public_total === 1 ? 'ALBUM' : 'ALBUMS'),
+			'PUBLIC_ALBUM_TOTAL' => $public_total > 0
+				? $public_total . ' ' . $this->language->lang($public_total === 1 ? 'ALBUM' : 'ALBUMS')
+				: '',
 			'PERSONAL_ALBUM_TOTAL' => $this->language->lang('TOTAL_PEGAS_SHORT_SPRINTF', $personal_total),
-			'S_HAS_PUBLIC_ALBUMS' => $public_total > 0,
+			'S_HAS_PUBLIC_ALBUMS' => $public_has_rows || $public_visible_total > 0,
 			'S_HAS_PERSONAL_ALBUMS' => $personal_total > 0,
 		]);
 		if ($this->gallery_config->get('rrc_gindex_mode'))

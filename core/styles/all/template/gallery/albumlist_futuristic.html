@@ -14,6 +14,7 @@
 			<div>
 				<h3><i class="icon fa fa-folder-open fa-fw" aria-hidden="true"></i> <a href="{{ albumrow.U_VIEWALBUM }}">{{ albumrow.ALBUM_NAME }}</a></h3>
 				{% if albumrow.ALBUM_DESC %}<div class="gallery-futuristic-category-description">{{ albumrow.ALBUM_DESC }}</div>{% endif %}
+				{% include '@phpbbgallery_core/gallery/category_album_pagination.html' %}
 			</div>
 		</section>
 	{% else %}

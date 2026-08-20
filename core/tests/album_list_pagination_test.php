@@ -91,6 +91,57 @@ class album_list_pagination_test extends TestCase
 		$this->assertSame($rows, $selected);
 	}
 
+	public function test_categories_and_root_albums_receive_independent_limits(): void
+	{
+		$display = $this->display(0, 2);
+		$display->configure_category_pagination(['routes' => 'gallery']);
+		$rows = [
+			10 => ['album_id' => 10, 'parent_id' => 0, 'album_type' => block::TYPE_CAT],
+			11 => ['album_id' => 11, 'parent_id' => 10, 'album_type' => block::TYPE_UPLOAD],
+			12 => ['album_id' => 12, 'parent_id' => 10, 'album_type' => block::TYPE_UPLOAD],
+			13 => ['album_id' => 13, 'parent_id' => 10, 'album_type' => block::TYPE_UPLOAD],
+			20 => ['album_id' => 20, 'parent_id' => 0, 'album_type' => block::TYPE_CAT],
+			21 => ['album_id' => 21, 'parent_id' => 20, 'album_type' => block::TYPE_UPLOAD],
+			22 => ['album_id' => 22, 'parent_id' => 20, 'album_type' => block::TYPE_UPLOAD],
+			30 => ['album_id' => 30, 'parent_id' => 0, 'album_type' => block::TYPE_UPLOAD],
+			31 => ['album_id' => 31, 'parent_id' => 0, 'album_type' => block::TYPE_UPLOAD],
+			32 => ['album_id' => 32, 'parent_id' => 0, 'album_type' => block::TYPE_UPLOAD],
+		];
+
+		[$selected, $total] = $this->paginate($display, $rows, 0);
+
+		$this->assertSame(8, $total);
+		$this->assertSame(3, $display->album_root_total);
+		$this->assertSame([10, 11, 12, 20, 21, 22, 30, 31], array_keys($selected));
+	}
+
+	public function test_one_category_page_does_not_change_its_siblings_or_root_page(): void
+	{
+		$display = $this->display(1, 1);
+		$display->configure_category_pagination(['routes' => 'gallery']);
+		$request = $this->createMock(\phpbb\request\request_interface::class);
+		$request->method('variable')->willReturnCallback(
+			static fn (string $name, mixed $default): mixed => $name === 'category_page_10' ? 2 : $default
+		);
+		$request_property = new \ReflectionProperty(display::class, 'request');
+		$request_property->setValue($display, $request);
+		$rows = [
+			10 => ['album_id' => 10, 'parent_id' => 0, 'album_type' => block::TYPE_CAT],
+			11 => ['album_id' => 11, 'parent_id' => 10, 'album_type' => block::TYPE_UPLOAD],
+			12 => ['album_id' => 12, 'parent_id' => 10, 'album_type' => block::TYPE_UPLOAD],
+			20 => ['album_id' => 20, 'parent_id' => 0, 'album_type' => block::TYPE_CAT],
+			21 => ['album_id' => 21, 'parent_id' => 20, 'album_type' => block::TYPE_UPLOAD],
+			22 => ['album_id' => 22, 'parent_id' => 20, 'album_type' => block::TYPE_UPLOAD],
+			30 => ['album_id' => 30, 'parent_id' => 0, 'album_type' => block::TYPE_UPLOAD],
+			31 => ['album_id' => 31, 'parent_id' => 0, 'album_type' => block::TYPE_UPLOAD],
+		];
+
+		[$selected] = $this->paginate($display, $rows, 0);
+
+		$this->assertSame([10, 12, 20, 21, 31], array_keys($selected));
+		$this->assertSame(['category_page_10' => 2], $display->category_page_params());
+	}
+
 	private function display(int $start, int $limit): display
 	{
 		$display = (new \ReflectionClass(display::class))->newInstanceWithoutConstructor();
