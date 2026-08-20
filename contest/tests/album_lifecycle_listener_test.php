@@ -280,6 +280,14 @@ final class album_lifecycle_listener_test extends TestCase
 
 		$listener->moved_album_content(new \phpbb\event\data(['from_id' => 12]));
 		$listener->deleted_album_content(new \phpbb\event\data(['album_id' => 36]));
+		$listener->moved_album_content(new \phpbb\event\data([
+			'from_id' => 48,
+			'preserve_album_state' => true,
+		]));
+		$listener->deleted_album_content(new \phpbb\event\data([
+			'album_id' => 49,
+			'preserve_album_state' => true,
+		]));
 
 		$this->assertStringContainsString('WHERE contest_album_id = 12', $queries[0]);
 		$this->assertStringContainsString('WHERE contest_album_id = 36', $queries[1]);

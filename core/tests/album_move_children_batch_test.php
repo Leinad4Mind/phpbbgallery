@@ -181,6 +181,153 @@ final class album_move_children_batch_test extends TestCase
 		$this->assertStringContainsString('album_id IN (4, 5)', $queries[4]);
 	}
 
+	public function test_category_conversion_deletes_images_but_preserves_album_state(): void
+	{
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$queries = [];
+		$db->expects($this->exactly(3))
+			->method('sql_query')
+			->willReturnCallback(function (string $sql) use (&$queries): int
+			{
+				$queries[] = $sql;
+
+				return count($queries);
+			});
+		$db->method('sql_in_set')
+			->willReturnCallback(function (string $field, array $values): string
+			{
+				return $field . ' IN (' . implode(', ', $values) . ')';
+			});
+		$rows = [
+			1 => [false],
+			2 => [['image_id' => 11, 'image_filename' => 'first.jpg', 'image_album_id' => 4], false],
+			3 => [['num_images' => 6, 'num_comments' => 2]],
+		];
+		$db->method('sql_fetchrow')
+			->willReturnCallback(function (int $result) use (&$rows)
+			{
+				return array_shift($rows[$result]);
+			});
+
+		$image = $this->createMock(\phpbbgallery\core\image\image::class);
+		$image->expects($this->once())
+			->method('delete_images')
+			->with([11], [11 => 'first.jpg'], false);
+		$gallery_user = $this->createMock(\phpbbgallery\core\user::class);
+		$gallery_user->expects($this->never())->method('update_images');
+		$config = $this->createMock(\phpbbgallery\core\config::class);
+		$config->expects($this->exactly(2))->method('set');
+		$notification = $this->createMock(\phpbbgallery\core\notification::class);
+		$notification->expects($this->never())->method('delete_albums');
+		$cache = $this->createMock(\phpbbgallery\core\cache::class);
+		$cache->expects($this->never())->method('destroy');
+		$cache->expects($this->once())->method('destroy_albums');
+		$dispatcher = $this->createMock(\phpbb\event\dispatcher::class);
+		$dispatcher->expects($this->once())
+			->method('trigger_event')
+			->with(
+				'phpbbgallery.core.album.manage.delete_album_content',
+				$this->callback(static function (array $data): bool
+				{
+					return $data['album_id'] === 4 && $data['preserve_album_state'] === true;
+				})
+			)
+			->willReturnArgument(1);
+
+		$manager = (new \ReflectionClass(manage::class))->newInstanceWithoutConstructor();
+		$initialize = \Closure::bind(function ($database, $image_service, $user_service, $config_service, $notification_service, $cache_service, $event_dispatcher): void
+		{
+			$this->db = $database;
+			$this->gallery_image = $image_service;
+			$this->gallery_user = $user_service;
+			$this->gallery_config = $config_service;
+			$this->gallery_notification = $notification_service;
+			$this->gallery_cache = $cache_service;
+			$this->dispatcher = $event_dispatcher;
+			$this->images_table = 'gallery_images';
+			$this->permissions_table = 'gallery_permissions';
+			$this->moderators_table = 'gallery_moderators';
+			$this->tracking_table = 'gallery_tracking';
+		}, $manager, manage::class);
+		$initialize($db, $image, $gallery_user, $config, $notification, $cache, $dispatcher);
+
+		$this->assertSame([], $manager->delete_album_content(4, true));
+		$this->assertStringNotContainsString('gallery_permissions', implode(PHP_EOL, $queries));
+		$this->assertStringNotContainsString('gallery_moderators', implode(PHP_EOL, $queries));
+		$this->assertStringNotContainsString('gallery_tracking', implode(PHP_EOL, $queries));
+	}
+
+	public function test_category_conversion_moves_images_but_preserves_album_state(): void
+	{
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$queries = [];
+		$db->expects($this->once())
+			->method('sql_query')
+			->willReturnCallback(function (string $sql) use (&$queries): int
+			{
+				$queries[] = $sql;
+
+				return 1;
+			});
+		$db->method('sql_build_array')->willReturn('image_album_id = 8');
+
+		$report = $this->createMock(\phpbbgallery\core\report::class);
+		$report->expects($this->once())->method('move_album_content')->with(4, 8);
+		$notification = $this->createMock(\phpbbgallery\core\notification::class);
+		$notification->expects($this->never())->method('delete_albums');
+		$cache = $this->createMock(\phpbbgallery\core\cache::class);
+		$cache->expects($this->never())->method('destroy');
+		$cache->expects($this->once())->method('destroy_albums');
+		$album = $this->createMock(\phpbbgallery\core\album\album::class);
+		$album->expects($this->exactly(2))->method('update_info');
+		$dispatcher = $this->createMock(\phpbb\event\dispatcher::class);
+		$dispatcher->expects($this->exactly(2))
+			->method('trigger_event')
+			->willReturnCallback(function (string $name, array $data): array
+			{
+				if ($name === 'phpbbgallery.core.album.manage.move_album_content')
+				{
+					$this->assertTrue($data['preserve_album_state']);
+				}
+
+				return $data;
+			});
+
+		$manager = (new \ReflectionClass(manage::class))->newInstanceWithoutConstructor();
+		$initialize = \Closure::bind(function ($database, $report_service, $notification_service, $cache_service, $album_service, $event_dispatcher): void
+		{
+			$this->db = $database;
+			$this->gallery_report = $report_service;
+			$this->gallery_notification = $notification_service;
+			$this->gallery_cache = $cache_service;
+			$this->gallery_album = $album_service;
+			$this->dispatcher = $event_dispatcher;
+			$this->images_table = 'gallery_images';
+			$this->permissions_table = 'gallery_permissions';
+			$this->moderators_table = 'gallery_moderators';
+		}, $manager, manage::class);
+		$initialize($db, $report, $notification, $cache, $album, $dispatcher);
+
+		$this->assertSame([], $manager->move_album_content(4, 8, true, true));
+		$this->assertCount(1, $queries);
+		$this->assertStringNotContainsString('gallery_permissions', $queries[0]);
+		$this->assertStringNotContainsString('gallery_moderators', $queries[0]);
+	}
+
+	public function test_album_to_category_conversion_requests_state_preservation(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/album/manage.php');
+
+		$this->assertStringContainsString(
+			'$this->move_album_content($album_data_sql[\'album_id\'], $to_album_id, true, true)',
+			$source
+		);
+		$this->assertStringContainsString(
+			'$this->delete_album_content($album_data_sql[\'album_id\'], true)',
+			$source
+		);
+	}
+
 	public function test_descendant_destination_is_rejected_before_tree_changes(): void
 	{
 		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);

@@ -366,7 +366,7 @@ class manage
 
 					if ($to_album_id)
 					{
-						$errors = $this->move_album_content($album_data_sql['album_id'], $to_album_id);
+						$errors = $this->move_album_content($album_data_sql['album_id'], $to_album_id, true, true);
 					}
 					else
 					{
@@ -375,7 +375,7 @@ class manage
 				}
 				else if ($album_data_sql['type_action'] == 'delete')
 				{
-					$errors = $this->delete_album_content($album_data_sql['album_id']);
+					$errors = $this->delete_album_content($album_data_sql['album_id'], true);
 				}
 				else
 				{
@@ -806,9 +806,11 @@ class manage
 	 * @param int $from_id
 	 * @param int $to_id
 	 * @param bool $sync
+	 * @param bool $preserve_album_state Keep permissions, moderators, subscriptions and
+	 *                                  add-on settings when the album itself is retained.
 	 * @return array
 	 */
-	public function move_album_content(int $from_id, int $to_id, bool $sync = true): array
+	public function move_album_content(int $from_id, int $to_id, bool $sync = true, bool $preserve_album_state = false): array
 	{
 		$image_move_data = ['image_album_id' => (int) $to_id];
 		/**
@@ -833,16 +835,19 @@ class manage
 
 		$this->gallery_report->move_album_content($from_id, $to_id);
 
-		$sql = 'DELETE FROM ' . $this->permissions_table . ' 
-			WHERE perm_album_id = ' . (int) $from_id;
-		$this->db->sql_query($sql);
+		if (!$preserve_album_state)
+		{
+			$sql = 'DELETE FROM ' . $this->permissions_table . '
+				WHERE perm_album_id = ' . (int) $from_id;
+			$this->db->sql_query($sql);
 
-		$sql = 'DELETE FROM ' . $this->moderators_table . ' 
-			WHERE album_id = ' . (int) $from_id;
-		$this->db->sql_query($sql);
-		$this->gallery_cache->destroy('sql', $this->moderators_table);
+			$sql = 'DELETE FROM ' . $this->moderators_table . '
+				WHERE album_id = ' . (int) $from_id;
+			$this->db->sql_query($sql);
+			$this->gallery_cache->destroy('sql', $this->moderators_table);
 
-		$this->gallery_notification->delete_albums($from_id);
+			$this->gallery_notification->delete_albums($from_id);
+		}
 
 		/**
 		* Event related to moving album content
@@ -851,9 +856,10 @@ class manage
 		* @var	int	from_id		Album we are moving from
 		* @var	int	to_id		Album we are moving to
 		* @var	bool	sync	Should we sync the albums data
+		* @var	bool	preserve_album_state	Whether album-scoped state must be retained
 		* @since 1.2.0
 		*/
-		$vars = ['from_id', 'to_id', 'sync'];
+		$vars = ['from_id', 'to_id', 'sync', 'preserve_album_state'];
 		extract($this->dispatcher->trigger_event('phpbbgallery.core.album.manage.move_album_content', compact($vars)));
 
 		$this->gallery_cache->destroy_albums();
@@ -872,9 +878,11 @@ class manage
 	 * Delete album content:
 	 * Deletes all images, comments, rates, image-files, etc.
 	 * @param array<int>|int $album_id
+	 * @param bool $preserve_album_state Keep permissions, moderators, subscriptions,
+	 *                                  tracking and add-on settings for retained albums.
 	 * @return array
 	 */
-	public function delete_album_content(array|int $album_id): array
+	public function delete_album_content(array|int $album_id, bool $preserve_album_state = false): array
 	{
 		$album_ids = array_values(array_unique(array_map('intval', (array) $album_id)));
 		if (!$album_ids)
@@ -917,19 +925,22 @@ class manage
 			$this->gallery_image->delete_images($deleted_images, $filenames, false);
 		}
 
-		$sql = 'DELETE FROM ' . $this->permissions_table . ' 
-			WHERE ' . $this->db->sql_in_set('perm_album_id', $album_ids);
-		$this->db->sql_query($sql);
-		$sql = 'DELETE FROM ' . $this->moderators_table . ' 
-			WHERE ' . $this->db->sql_in_set('album_id', $album_ids);
-		$this->db->sql_query($sql);
-		$this->gallery_cache->destroy('sql', $this->moderators_table);
+		if (!$preserve_album_state)
+		{
+			$sql = 'DELETE FROM ' . $this->permissions_table . '
+				WHERE ' . $this->db->sql_in_set('perm_album_id', $album_ids);
+			$this->db->sql_query($sql);
+			$sql = 'DELETE FROM ' . $this->moderators_table . '
+				WHERE ' . $this->db->sql_in_set('album_id', $album_ids);
+			$this->db->sql_query($sql);
+			$this->gallery_cache->destroy('sql', $this->moderators_table);
 
-		$sql = 'DELETE FROM ' . $this->tracking_table . '
-			WHERE ' . $this->db->sql_in_set('album_id', $album_ids);
-		$this->db->sql_query($sql);
+			$sql = 'DELETE FROM ' . $this->tracking_table . '
+				WHERE ' . $this->db->sql_in_set('album_id', $album_ids);
+			$this->db->sql_query($sql);
 
-		$this->gallery_notification->delete_albums($album_ids);
+			$this->gallery_notification->delete_albums($album_ids);
+		}
 
 		// Adjust users image counts
 		if (!empty($image_counts))
@@ -959,11 +970,12 @@ class manage
 		*
 		* @event phpbbgallery.core.album.manage.delete_album_content
 		* @var	int	album_id		Album we are deleting
+		* @var	bool	preserve_album_state	Whether album-scoped state must be retained
 		* @since 1.2.0
 		*/
 		foreach ($album_ids as $album_id)
 		{
-			$vars = ['album_id'];
+			$vars = ['album_id', 'preserve_album_state'];
 			extract($this->dispatcher->trigger_event('phpbbgallery.core.album.manage.delete_album_content', compact($vars)));
 		}
 

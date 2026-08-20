@@ -215,11 +215,21 @@ class album_lifecycle_listener implements EventSubscriberInterface
 
 	public function moved_album_content(\phpbb\event\data $event): void
 	{
+		if (!empty($event['preserve_album_state']))
+		{
+			return;
+		}
+
 		$this->delete_contest((int) $event['from_id']);
 	}
 
 	public function deleted_album_content(\phpbb\event\data $event): void
 	{
+		if (!empty($event['preserve_album_state']))
+		{
+			return;
+		}
+
 		$this->delete_contest((int) $event['album_id']);
 	}
 
