@@ -221,7 +221,7 @@ $lang = array_merge($lang, [
 	'NO_NEW_IMAGES'         => 'No hay nuevas imágenes',
 	'NO_IMAGES_LONG'        => 'No hay imágenes en este álbum.',
 	'NOT_ALLOWED_FILE_TYPE' => 'Este tipo de archivo no está permitido',
-	'NOT_RATED'             => 'no calificado',
+	'NOT_RATED'             => 'No calificado',
 
 	'NO_WRITE_ACCESS' => 'Falta el directorio de carga o phpBB no tiene acceso de escritura.<br>Por favor, póngase en contacto con el administrador del foro!',
 
@@ -249,7 +249,7 @@ $lang = array_merge($lang, [
 	'RATES_COUNT'    => 'Número de calificaciones',
 	'RATING'         => 'Calificación',
 	'RATING_STRINGS' => [
-		0 => 'no calificado',
+		0 => 'No calificado',
 		1 => '%2$s (1 calificación)',
 		2 => '%2$s (%1$s calificaciones)',
 	],

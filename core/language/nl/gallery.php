@@ -248,7 +248,7 @@ $lang = array_merge($lang, [
 	'RATES_COUNT'    => 'Aantal beoordelingen',
 	'RATING'         => 'Beoordeling',
 	'RATING_STRINGS' => [
-		0 => 'niet beoordeeld',
+		0 => 'Niet beoordeeld',
 		1 => '%2$s (1 beoordeling)',
 		2 => '%2$s (%1$s beoordelingen)',
 	],

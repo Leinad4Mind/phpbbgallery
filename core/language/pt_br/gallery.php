@@ -212,7 +212,7 @@ $lang = array_merge($lang, [
 	'NO_NEW_IMAGES'                => 'Nenhuma Nova Imagem',
 	'NO_IMAGES_LONG'               => 'Não existem imagens na galeria.',
 	'NOT_ALLOWED_FILE_TYPE'        => 'Este tipo de arquivo não é permitido',
-	'NOT_RATED'                    => 'não classificado',
+	'NOT_RATED'                    => 'Não classificado',
 	'NO_WRITE_ACCESS'              => 'O diretório de envio não existe ou o phpBB não tem permissão para gravar nele.<br />Entre em contato com o administrador do fórum.',
 	'ORDER'                        => 'Ordem',
 	'ORIG_FILENAME'                => 'Nome Original do Arquivo',
@@ -234,7 +234,7 @@ $lang = array_merge($lang, [
 	'RATES_COUNT'                  => 'Número de Classificações',
 	'RATING'                       => 'Classificação',
 	'RATING_STRINGS'               => [
-		'não classificado',
+		'Não classificado',
 		'%2$s (1 avaliação)',
 		'%2$s (%1$s avaliações)',
 	],

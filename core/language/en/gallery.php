@@ -223,7 +223,7 @@ $lang = array_merge($lang, [
 	'NO_NEW_IMAGES'         => 'No new images',
 	'NO_IMAGES_LONG'        => 'There are no images in this album.',
 	'NOT_ALLOWED_FILE_TYPE' => 'This file type is not allowed',
-	'NOT_RATED'             => 'not rated',
+	'NOT_RATED'             => 'Not rated',
 
 	'NO_WRITE_ACCESS' => 'The upload directory is missing or phpBB has no write access to it.<br>Please contact the board admin!',
 
@@ -250,7 +250,7 @@ $lang = array_merge($lang, [
 	'RATES_COUNT'    => 'Number of ratings',
 	'RATING'         => 'Rating',
 	'RATING_STRINGS' => [
-		0 => 'not rated',
+		0 => 'Not rated',
 		1 => '%2$s (1 rating)',
 		2 => '%2$s (%1$s ratings)',
 	],
