@@ -702,8 +702,7 @@ input.autowidth-gallery {
 	padding: 0 2px 7px;
 }
 
-.gallery-album-card-category--bboots .gallery-album-category-title,
-.gallery-album-card-category--flatboots .gallery-album-category-title
+.gallery-album-card-category--bboots .gallery-album-category-title
 {
 	padding: 0 15px;
 }
@@ -713,8 +712,7 @@ input.autowidth-gallery {
 	margin: -5px 0 12px;
 }
 
-.gallery-album-card-category--bboots .gallery-album-category-description,
-.gallery-album-card-category--flatboots .gallery-album-category-description
+.gallery-album-card-category--bboots .gallery-album-category-description
 {
 	padding: 0 15px;
 }
