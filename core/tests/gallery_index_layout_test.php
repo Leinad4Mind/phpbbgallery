@@ -549,6 +549,7 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertMatchesRegularExpression('/\.gallery-album-card-column\s*\{[^}]*display:\s*flex;[^}]*float:\s*none;/s', $css);
 		$this->assertStringContainsString('.gallery-album-card-category--prosilver', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-album-polaroid-card\s*\{[^}]*background:\s*#fff;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-album-card-category--prosilver \.polaroid\s*\{[^}]*background:\s*#fff;/s', $css);
 		$this->assertStringContainsString('.gallery-album-card-category--flatboots', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-album-card-category--flatboots > \.gallery-category-album-pagination\.gallery-album-list-pagination--flatboots\s*\{[^}]*padding:\s*8px 12px 10px;/s', $css);
 		$this->assertStringContainsString('border-top: 3px solid #daa520;', $css);

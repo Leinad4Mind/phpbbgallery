@@ -607,6 +607,12 @@ input.autowidth-gallery {
 	background: #fff;
 }
 
+/* Also cover a previously compiled template without the explicit card marker. */
+.gallery-album-card-category--prosilver .polaroid
+{
+	background: #fff;
+}
+
 .gallery-album-card-category--bboots,
 .gallery-album-card-category--flatboots
 {
