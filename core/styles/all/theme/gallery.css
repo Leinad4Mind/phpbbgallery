@@ -599,7 +599,7 @@ input.autowidth-gallery {
 	border-radius: 4px;
 	margin: 12px 0 22px;
 	max-width: 100%;
-	padding: 12px;
+	padding: 10px;
 }
 
 .gallery-album-polaroid-card
@@ -632,6 +632,24 @@ input.autowidth-gallery {
 	border-top: 3px solid #daa520;
 }
 
+.gallery-album-card-root--flatboots
+{
+	box-sizing: border-box;
+	clear: both;
+	display: flex;
+	flex: 0 0 calc(100% - 30px);
+	flex-wrap: wrap;
+	margin: 10px 15px 22px;
+	max-width: calc(100% - 30px);
+	width: 100%;
+}
+
+.gallery-album-card-root--flatboots > .gallery-album-grid-heading,
+.gallery-album-card-root--flatboots > .gallery-root-album-pagination
+{
+	flex: 0 0 100%;
+}
+
 .gallery-album-category-card-grid
 {
 	align-items: stretch;
@@ -639,6 +657,36 @@ input.autowidth-gallery {
 	flex-wrap: wrap;
 	margin-left: 0;
 	margin-right: 0;
+	width: 100%;
+}
+
+.gallery-root-album-card-grid,
+.gallery-album-card-category--prosilver .gallery-album-category-card-grid
+{
+	box-sizing: border-box;
+	clear: both;
+	display: grid;
+	gap: 18px;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	padding: 0 9px;
+	width: 100%;
+}
+
+.gallery-root-album-card-grid > .polaroid,
+.gallery-album-card-category--prosilver .gallery-album-category-card-grid > .polaroid
+{
+	box-sizing: border-box;
+	float: none;
+	margin: 0;
+	width: 100%;
+}
+
+.gallery-root-album-card-grid .polaroid_img_container,
+.gallery-album-card-category--prosilver .gallery-album-category-card-grid .polaroid_img_container
+{
+	align-items: center;
+	display: flex;
+	justify-content: center;
 	width: 100%;
 }
 
@@ -3695,6 +3743,11 @@ fieldset dl.gallery-autocomplete-row-open
 	padding: 0 !important;
 }
 
+.gallery-category-album-pagination-cell--separated
+{
+	border-top: 4px solid #ecf0f1 !important;
+}
+
 .gallery-root-album-pagination
 {
 	clear: none;
@@ -3708,6 +3761,31 @@ fieldset dl.gallery-autocomplete-row-open
 {
 	margin: -17px 0 17px;
 	padding: 4px 12px 0;
+}
+
+.gallery-paginated-list > .gallery-root-album-card-grid + .gallery-root-album-pagination
+{
+	margin: 8px 0 17px;
+	padding: 0 9px;
+}
+
+@media (max-width: 900px)
+{
+	.gallery-root-album-card-grid,
+	.gallery-album-card-category--prosilver .gallery-album-category-card-grid
+	{
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 520px)
+{
+	.gallery-root-album-card-grid,
+	.gallery-album-card-category--prosilver .gallery-album-category-card-grid
+	{
+		grid-template-columns: minmax(0, 1fr);
+		padding: 0;
+	}
 }
 
 .gallery-paginated-list > .gallery-root-album-pagination--prosilver-classic

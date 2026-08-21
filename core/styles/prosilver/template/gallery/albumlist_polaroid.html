@@ -1,4 +1,5 @@
 {% set category_pagination_row = false %}
+{% set polaroid_grid_open = false %}
 {% for albumrow in albumrow %}
 	{% if ((albumrow.S_IS_CAT and not albumrow.S_FIRST_ROW) or albumrow.S_NO_CAT or (albumrow.S_PERSONAL_SECTION_START and not albumrow.S_FIRST_ROW)) and category_pagination_row %}
 		</div>
@@ -9,6 +10,8 @@
 	{% if albumrow.S_PERSONAL_SECTION_START or (albumrow.S_PUBLIC_SECTION_START and not albumrow.S_IS_CAT) %}
 		<span class="clear"></span>
 		<h2 class="gallery-album-section-title"><i class="icon fa {% if albumrow.S_PERSONAL_SECTION_START %}fa-user{% else %}fa-folder-open{% endif %} fa-fw" aria-hidden="true"></i> {% if albumrow.S_PERSONAL_SECTION_START %}{{ lang('PERSONAL_ALBUMS') }}{% else %}{{ GALLERY_PUBLIC_ALBUMS_LABEL }}{% endif %}</h2>
+		<div class="gallery-root-album-card-grid">
+		{% set polaroid_grid_open = true %}
 	{% endif %}
 	{% if (albumrow.S_IS_CAT and not albumrow.S_FIRST_ROW) or albumrow.S_NO_CAT %}
 		<span class="clear"></span>
@@ -19,7 +22,12 @@
 		<span class="clear"></span>
 		<h2 class="{% if albumrow.S_IS_CAT %}gallery-album-category-title{% else %}gallery-root-album-title{% endif %}">{% if albumrow.S_IS_CAT %}<a href="{{ albumrow.U_VIEWALBUM }}">{{ albumrow.ALBUM_NAME }}</a>{% else %}{{ lang('ALBUM') }}{% endif %}</h2>
 		{% if albumrow.S_IS_CAT and albumrow.ALBUM_DESC %}<div class="gallery-album-category-description">{{ albumrow.ALBUM_DESC }}</div>{% endif %}
-		{% if albumrow.S_IS_CAT %}<div class="gallery-album-category-card-grid">{% endif %}
+		{% if albumrow.S_IS_CAT %}
+			<div class="gallery-album-category-card-grid">
+		{% else %}
+			<div class="gallery-root-album-card-grid">
+			{% set polaroid_grid_open = true %}
+		{% endif %}
 	{% endif %}
 	{% if albumrow.S_IS_CAT %}{% set category_pagination_row = albumrow %}{% endif %}
 
@@ -49,12 +57,13 @@
 			{% include '@phpbbgallery_core/gallery/subalbum_links.html' %}
 		</div>
 		{% if albumrow.S_LAST_ROOT_ALBUM %}
-			<span class="clear"></span>
+			{% if polaroid_grid_open %}</div>{% set polaroid_grid_open = false %}{% endif %}
 			{% include '@phpbbgallery_core/gallery/root_album_pagination.html' %}
 		{% endif %}
 	{% endif %}
 
 	{% if albumrow.S_LAST_ROW %}
+		{% if polaroid_grid_open %}</div>{% set polaroid_grid_open = false %}{% endif %}
 		{% if category_pagination_row %}
 			</div>
 			{% include '@phpbbgallery_core/gallery/category_album_pagination.html' with { albumrow: category_pagination_row } %}

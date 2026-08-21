@@ -538,10 +538,11 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertStringContainsString('gallery-album-card-category--prosilver', $prosilver);
 		$this->assertStringContainsString('gallery-album-polaroid-card', $prosilver);
 		$this->assertStringContainsString('gallery-album-category-card-grid', $prosilver);
+		$this->assertStringContainsString('gallery-root-album-card-grid', $prosilver);
 		$this->assertStringContainsString('albumrow.S_PUBLIC_SECTION_START and not albumrow.S_IS_CAT', $prosilver);
-		$this->assertLessThan(
-			strpos($prosilver, "root_album_pagination.html'"),
-			strpos($prosilver, '<span class="clear"></span>', strpos($prosilver, 'albumrow.S_LAST_ROOT_ALBUM'))
+		$this->assertMatchesRegularExpression(
+			'/albumrow\.S_LAST_ROOT_ALBUM %}\s*{% if polaroid_grid_open %}<\/div>.*root_album_pagination\.html/s',
+			$prosilver
 		);
 
 		$css = (string) file_get_contents($core_root . '/styles/all/theme/gallery.css');
@@ -550,6 +551,9 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertStringContainsString('.gallery-album-card-category--prosilver', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-album-polaroid-card\s*\{[^}]*background:\s*#fff;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-album-card-category--prosilver \.polaroid\s*\{[^}]*background:\s*#fff;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-root-album-card-grid,\s*\.gallery-album-card-category--prosilver \.gallery-album-category-card-grid\s*\{[^}]*display:\s*grid;[^}]*gap:\s*18px;[^}]*grid-template-columns:\s*repeat\(4, minmax\(0, 1fr\)\);/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-paginated-list > \.gallery-root-album-card-grid \+ \.gallery-root-album-pagination\s*\{[^}]*margin:\s*8px 0 17px;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-album-card-root--flatboots\s*\{(?:(?!background).)*\}/s', $css, 'The FLATBOOTS root section must remain transparent.');
 		$this->assertStringContainsString('.gallery-album-card-category--flatboots', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-album-card-category--flatboots > \.gallery-category-album-pagination\.gallery-album-list-pagination--flatboots\s*\{[^}]*padding:\s*8px 12px 10px;/s', $css);
 		$this->assertStringContainsString('border-top: 3px solid #daa520;', $css);
