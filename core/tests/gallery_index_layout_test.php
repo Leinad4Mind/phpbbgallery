@@ -654,6 +654,7 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertStringContainsString('text-overflow: ellipsis;', $css);
 		$this->assertStringContainsString('@keyframes gallery-title-pan', $css);
 		$this->assertStringContainsString('@media (prefers-reduced-motion: reduce)', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-scrolling-title\.is-overflowing:hover,[^{]+\{[^}]*justify-content:\s*flex-start;[^}]*text-align:\s*left;/s', $css);
 		$this->assertStringContainsString('Math.max(text.scrollWidth, content.scrollWidth) - availableWidth(title)', $javascript);
 		$this->assertStringContainsString("title.classList.add('is-overflowing')", $javascript);
 		$this->assertStringContainsString("document.addEventListener('focusin'", $javascript);

@@ -1547,6 +1547,7 @@ input.autowidth-gallery {
 .gallery-scrolling-title.is-overflowing:hover,
 .gallery-scrolling-title.is-overflowing:focus-within
 {
+	justify-content: flex-start;
 	text-align: left;
 }
 
