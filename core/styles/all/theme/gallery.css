@@ -1519,6 +1519,91 @@ input.autowidth-gallery {
 	width: 100%;
 }
 
+.gallery-scrolling-title
+{
+	min-width: 0;
+	overflow: hidden;
+}
+
+.gallery-scrolling-title-text
+{
+	display: inline-block;
+	max-width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	vertical-align: top;
+	white-space: nowrap;
+}
+
+.gallery-scrolling-title-text > a
+{
+	display: block;
+	max-width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.gallery-scrolling-title.is-overflowing:hover,
+.gallery-scrolling-title.is-overflowing:focus-within
+{
+	text-align: left;
+}
+
+.gallery-scrolling-title.is-overflowing:hover .gallery-scrolling-title-text,
+.gallery-scrolling-title.is-overflowing:focus-within .gallery-scrolling-title-text
+{
+	animation: gallery-title-pan var(--gallery-title-scroll-duration, 6s) ease-in-out .25s infinite alternate;
+	max-width: none;
+	overflow: visible;
+	text-overflow: clip;
+	will-change: transform;
+}
+
+.gallery-scrolling-title.is-overflowing:hover .gallery-scrolling-title-text > a,
+.gallery-scrolling-title.is-overflowing:focus-within .gallery-scrolling-title-text > a
+{
+	max-width: none;
+	overflow: visible;
+	text-overflow: clip;
+	width: auto;
+}
+
+@keyframes gallery-title-pan
+{
+	from
+	{
+		transform: translateX(0);
+	}
+
+	to
+	{
+		transform: translateX(calc(-1 * var(--gallery-title-overflow, 0px)));
+	}
+}
+
+@media (prefers-reduced-motion: reduce)
+{
+	.gallery-scrolling-title.is-overflowing:hover .gallery-scrolling-title-text,
+	.gallery-scrolling-title.is-overflowing:focus-within .gallery-scrolling-title-text
+	{
+		animation: none;
+		max-width: 100%;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		will-change: auto;
+	}
+
+	.gallery-scrolling-title.is-overflowing:hover .gallery-scrolling-title-text > a,
+	.gallery-scrolling-title.is-overflowing:focus-within .gallery-scrolling-title-text > a
+	{
+		max-width: 100%;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		width: auto;
+	}
+}
+
 .gallery-futuristic-image-header
 {
 	align-items: center;

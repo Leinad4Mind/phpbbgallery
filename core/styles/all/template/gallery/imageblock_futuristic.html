@@ -20,7 +20,7 @@
 			{% EVENT phpbbgallery_core_album_image_actions %}
 			<header class="gallery-image-card-heading gallery-futuristic-image-header">
 				{% include '@phpbbgallery_core/gallery/image_bbcode_copy.html' %}
-				<h3 class="gallery-futuristic-image-title">{% if image.U_IMAGE %}<a href="{{ image.U_IMAGE }}">{% endif %}{{ image.UC_IMAGE_NAME }}{% if image.U_IMAGE %}</a>{% endif %}</h3>
+				<h3 class="gallery-futuristic-image-title gallery-scrolling-title" title="{{ image.UC_IMAGE_NAME }}" data-gallery-scrolling-title><span class="gallery-scrolling-title-text">{% if image.U_IMAGE %}<a href="{{ image.U_IMAGE }}">{% endif %}{{ image.UC_IMAGE_NAME }}{% if image.U_IMAGE %}</a>{% endif %}</span></h3>
 			</header>
 
 			<div class="gallery-futuristic-thumbnail">

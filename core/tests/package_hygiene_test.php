@@ -81,6 +81,7 @@ class package_hygiene_test extends TestCase
 			'editor_selector.js',
 			'gallery_polaroid.js',
 			'image_bbcode_copy.js',
+			'image_card_title.js',
 			'image_navigation.js',
 			'image_orientation.js',
 			'ip_privacy.js',

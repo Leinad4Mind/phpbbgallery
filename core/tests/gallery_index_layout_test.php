@@ -606,4 +606,48 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertMatchesRegularExpression('/\.gallery-image-card-details\s*\{[^}]*display:\s*flex;[^}]*flex-direction:\s*column;[^}]*width:\s*100%;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-futuristic-approval\s*\{[^}]*display:\s*flex;[^}]*justify-content:\s*center;[^}]*width:\s*100%;/s', $css);
 	}
+
+	public function test_long_image_card_titles_use_ellipsis_and_accessible_overflow_panning(): void
+	{
+		$core_root = dirname(__DIR__);
+		$templates = [
+			$core_root . '/styles/all/template/gallery/imageblock_classic.html',
+			$core_root . '/styles/all/template/gallery/imageblock_futuristic.html',
+		];
+
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$template = $core_root . '/styles/' . $style . '/template/gallery/imageblock_polaroid.html';
+			if (is_file($template))
+			{
+				$templates[] = $template;
+			}
+		}
+
+		foreach ($templates as $template)
+		{
+			$contents = (string) file_get_contents($template);
+			$this->assertStringContainsString('data-gallery-scrolling-title', $contents, $template);
+			$this->assertStringContainsString('gallery-scrolling-title-text', $contents, $template);
+			$this->assertStringContainsString('title="{{ image.UC_IMAGE_NAME }}"', $contents, $template);
+		}
+
+		$css = (string) file_get_contents($core_root . '/styles/all/theme/gallery.css');
+		$javascript = (string) file_get_contents($core_root . '/styles/all/template/js/image_card_title.js');
+		$this->assertStringContainsString('text-overflow: ellipsis;', $css);
+		$this->assertStringContainsString('@keyframes gallery-title-pan', $css);
+		$this->assertStringContainsString('@media (prefers-reduced-motion: reduce)', $css);
+		$this->assertStringContainsString('Math.max(text.scrollWidth, content.scrollWidth) - availableWidth(title)', $javascript);
+		$this->assertStringContainsString("title.classList.add('is-overflowing')", $javascript);
+		$this->assertStringContainsString("document.addEventListener('focusin'", $javascript);
+
+		foreach (['all', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$footer = $core_root . '/styles/' . $style . '/template/event/overall_footer_after.html';
+			if (is_file($footer))
+			{
+				$this->assertStringContainsString('image_card_title.js', (string) file_get_contents($footer), $style);
+			}
+		}
+	}
 }

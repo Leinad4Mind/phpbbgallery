@@ -16,8 +16,8 @@
 	{% endif %}
 	<header class="gallery-image-card-heading gallery-polaroid-image-heading{% if S_GALLERY_IMAGE_ID_BBCODE and image.IMAGE_ID %} gallery-polaroid-image-heading--with-copy{% endif %}">
 		{% include '@phpbbgallery_core/gallery/image_bbcode_copy.html' %}
-		<p class="gallery-image-card-title">
-			{% if image.U_IMAGE %}<a href="{{ image.U_IMAGE }}">{% endif %}{{ image.UC_IMAGE_NAME }}{% if image.U_IMAGE %}</a>{% endif %}
+		<p class="gallery-image-card-title gallery-scrolling-title" title="{{ image.UC_IMAGE_NAME }}" data-gallery-scrolling-title>
+			<span class="gallery-scrolling-title-text">{% if image.U_IMAGE %}<a href="{{ image.U_IMAGE }}">{% endif %}{{ image.UC_IMAGE_NAME }}{% if image.U_IMAGE %}</a>{% endif %}</span>
 		</p>
 	</header>
 	<hr />
