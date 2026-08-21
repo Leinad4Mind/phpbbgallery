@@ -35,7 +35,7 @@ final class acp_confirmation_action_test extends TestCase
 	{
 		return [
 			['core/acp/main_module.php', 1],
-			['core/acp/albums_module.php', 2],
+			['core/acp/albums_module.php', 1],
 			['core/acp/gallery_logs_module.php', 1],
 			['core/acp/permissions_module.php', 1],
 			['acpcleanup/acp/main_module.php', 2],
@@ -47,6 +47,25 @@ final class acp_confirmation_action_test extends TestCase
 		$source = (string) file_get_contents(dirname(__DIR__) . '/acp/gallery_logs_module.php');
 
 		$this->assertStringNotContainsString("'action'\t\t=> \$this->u_action", $source);
+	}
+
+	public function test_album_reordering_is_immediate_but_link_hash_protected(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/acp/albums_module.php');
+		$move_start = strpos($source, "case 'move_up':");
+		$sync_start = strpos($source, "case 'sync':", $move_start);
+		$move_block = substr($source, $move_start, $sync_start - $move_start);
+
+		$this->assertStringNotContainsString('confirm_box(', $move_block);
+		$this->assertStringContainsString("check_link_hash(\$request->variable('hash', ''), \$move_hash_name)", $move_block);
+		$this->assertStringContainsString("generate_link_hash('gallery_album_move_up_' . \$row['album_id'])", $source);
+		$this->assertStringContainsString("generate_link_hash('gallery_album_move_down_' . \$row['album_id'])", $source);
+
+		$sync_end = strpos($source, "case 'add':", $sync_start);
+		$sync_block = substr($source, $sync_start, $sync_end - $sync_start);
+		$this->assertStringContainsString('confirm_box(false,', $sync_block);
+		$this->assertStringContainsString("case 'delete':", $source);
+		$this->assertStringContainsString("'S_DELETE_ALBUM'", $source);
 	}
 
 	/**

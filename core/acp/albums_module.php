@@ -308,13 +308,10 @@ class albums_module
 					trigger_error($this->language->lang('NO_ALBUM') . adm_back_link($this->u_action . '&amp;parent_id=' . $this->parent_id), E_USER_WARNING);
 				}
 
-				if (!confirm_box(true))
+				$move_hash_name = 'gallery_album_' . $action . '_' . $album_id;
+				if (!check_link_hash($request->variable('hash', ''), $move_hash_name))
 				{
-					confirm_box(false, $this->language->lang('CONFIRM_OPERATION'), build_hidden_fields([
-						'a'			=> $album_id,
-						'action'	=> $action,
-						'parent_id'	=> $this->parent_id,
-					]), 'confirm_body.html', $this->u_action);
+					trigger_error($this->language->lang('FORM_INVALID') . adm_back_link($this->u_action . '&amp;parent_id=' . $this->parent_id), E_USER_WARNING);
 				}
 
 				$sql = 'SELECT *
@@ -873,8 +870,8 @@ class albums_module
 					'S_SUBALBUMS_AS_ICONS'	=> $subalbum_display_mode === (int) \phpbbgallery\core\block::SUBALBUM_DISPLAY_ICONS,
 
 					'U_ALBUM'			=> $this->u_action . '&amp;parent_id=' . $album_id,
-					'U_MOVE_UP'			=> $url . '&amp;action=move_up',
-					'U_MOVE_DOWN'		=> $url . '&amp;action=move_down',
+					'U_MOVE_UP'			=> $url . '&amp;action=move_up&amp;hash=' . generate_link_hash('gallery_album_move_up_' . $row['album_id']),
+					'U_MOVE_DOWN'		=> $url . '&amp;action=move_down&amp;hash=' . generate_link_hash('gallery_album_move_down_' . $row['album_id']),
 					'U_EDIT'			=> $url . '&amp;action=edit',
 					'U_DELETE'			=> $url . '&amp;action=delete',
 					'U_SYNC'			=> $url . '&amp;action=sync']
