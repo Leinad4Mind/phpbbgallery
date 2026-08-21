@@ -2273,6 +2273,29 @@ p.gallery-image-card-approval.post-notice
 	border-radius: 0;
 }
 
+.gallery-classic-image-block--flatboots .gallery-classic-image
+{
+	border: 1px solid #ecf0f1;
+	box-sizing: border-box;
+}
+
+.gallery-classic-image-block--flatboots .gallery-image-bbcode-copy,
+.gallery-classic-image-block--flatboots .gallery-image-bbcode-copy:hover,
+.gallery-classic-image-block--flatboots .gallery-image-bbcode-copy:focus,
+.gallery-classic-image-block--flatboots .gallery-image-bbcode-copy.is-copied
+{
+	background: transparent;
+	border: 0;
+	border-radius: 0;
+	box-shadow: none;
+}
+
+.gallery-classic-image-block--flatboots .gallery-image-bbcode-copy:focus
+{
+	outline: 2px solid currentColor;
+	outline-offset: 2px;
+}
+
 .gallery-classic-last-image
 {
 	align-items: center;

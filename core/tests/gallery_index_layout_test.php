@@ -134,7 +134,7 @@ final class gallery_index_layout_test extends TestCase
 			$css
 		);
 	}
-	public function test_prosilver_classic_has_bordered_cards_borderless_ids_and_last_image_thumbnails(): void
+	public function test_classic_style_variants_have_bordered_cards_borderless_ids_and_last_image_thumbnails(): void
 	{
 		$core_root = dirname(__DIR__);
 		$classic = (string) file_get_contents($core_root . '/styles/all/template/gallery/imageblock_classic.html');
@@ -152,6 +152,21 @@ final class gallery_index_layout_test extends TestCase
 		$prosilver_copy_style = strstr($prosilver_copy_style, '}', true);
 		$this->assertIsString($prosilver_copy_style);
 		$this->assertStringContainsString('border: 0;', $prosilver_copy_style);
+
+		$flatboots_selector = $core_root . '/styles/FLATBOOTS/template/gallery/imageblock_layout.html';
+		if (is_file($flatboots_selector))
+		{
+			$this->assertStringContainsString("GALLERY_CLASSIC_VARIANT: 'flatboots'", (string) file_get_contents($flatboots_selector));
+		}
+		$this->assertStringContainsString('.gallery-classic-image-block--flatboots .gallery-classic-image', $css);
+		$this->assertStringContainsString('border: 1px solid #ecf0f1;', $css);
+		$flatboots_copy_style = strstr($css, '.gallery-classic-image-block--flatboots .gallery-image-bbcode-copy,');
+		$this->assertIsString($flatboots_copy_style);
+		$flatboots_copy_style = strstr($flatboots_copy_style, '}', true);
+		$this->assertIsString($flatboots_copy_style);
+		$this->assertStringContainsString('background: transparent;', $flatboots_copy_style);
+		$this->assertStringContainsString('border: 0;', $flatboots_copy_style);
+		$this->assertStringContainsString('box-shadow: none;', $flatboots_copy_style);
 
 		$this->assertStringContainsString('gallery-classic-last-image', $albums);
 		$this->assertStringContainsString('albumrow.UC_LAST_IMAGE_THUMBNAIL', $albums);
