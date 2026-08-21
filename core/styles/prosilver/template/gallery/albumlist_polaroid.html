@@ -24,7 +24,7 @@
 	{% if albumrow.S_IS_CAT %}{% set category_pagination_row = albumrow %}{% endif %}
 
 	{% if not albumrow.S_IS_CAT %}
-		<div class="polaroid{% if albumrow.S_PERSONAL_ALBUM %} gallery-personal-album{% endif %}">
+		<div class="polaroid gallery-album-polaroid-card{% if albumrow.S_PERSONAL_ALBUM %} gallery-personal-album{% endif %}">
 			<p class="gallery-album-title">
 				{% if albumrow.S_PERSONAL_ALBUM %}<i class="icon fa fa-user fa-fw gallery-personal-album-icon" title="{{ lang('PERSONAL_ALBUM') }}" aria-hidden="true"></i><span class="sr-only">{{ lang('PERSONAL_ALBUM') }}{{ lang('COLON') }}</span>{% endif %}
 				<a href="{{ albumrow.U_VIEWALBUM }}"{% if S_PERSONAL_GALLERY and albumrow.ALBUM_COLOUR %} style="color: {{ albumrow.ALBUM_COLOUR }};"{% endif %}>{{ albumrow.ALBUM_NAME }}</a>

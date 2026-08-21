@@ -602,6 +602,11 @@ input.autowidth-gallery {
 	padding: 12px;
 }
 
+.gallery-album-polaroid-card
+{
+	background: #fff;
+}
+
 .gallery-album-card-category--bboots,
 .gallery-album-card-category--flatboots
 {
@@ -3708,6 +3713,11 @@ fieldset dl.gallery-autocomplete-row-open
 .gallery-album-list-pagination.gallery-album-list-pagination--flatboots
 {
 	padding: 8px 0 10px;
+}
+
+.gallery-album-card-category--flatboots > .gallery-category-album-pagination.gallery-album-list-pagination--flatboots
+{
+	padding: 8px 12px 10px;
 }
 
 .gallery-album-list-pagination--flatboots.gallery-album-list-pagination--without-pages

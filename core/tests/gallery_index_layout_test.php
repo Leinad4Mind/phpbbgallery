@@ -536,6 +536,7 @@ final class gallery_index_layout_test extends TestCase
 
 		$prosilver = (string) file_get_contents($core_root . '/styles/prosilver/template/gallery/albumlist_polaroid.html');
 		$this->assertStringContainsString('gallery-album-card-category--prosilver', $prosilver);
+		$this->assertStringContainsString('gallery-album-polaroid-card', $prosilver);
 		$this->assertStringContainsString('gallery-album-category-card-grid', $prosilver);
 		$this->assertStringContainsString('albumrow.S_PUBLIC_SECTION_START and not albumrow.S_IS_CAT', $prosilver);
 		$this->assertLessThan(
@@ -547,7 +548,9 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertMatchesRegularExpression('/\.gallery-album-card-grid\s*\{[^}]*display:\s*flex;[^}]*flex-wrap:\s*wrap;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-album-card-column\s*\{[^}]*display:\s*flex;[^}]*float:\s*none;/s', $css);
 		$this->assertStringContainsString('.gallery-album-card-category--prosilver', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-album-polaroid-card\s*\{[^}]*background:\s*#fff;/s', $css);
 		$this->assertStringContainsString('.gallery-album-card-category--flatboots', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-album-card-category--flatboots > \.gallery-category-album-pagination\.gallery-album-list-pagination--flatboots\s*\{[^}]*padding:\s*8px 12px 10px;/s', $css);
 		$this->assertStringContainsString('border-top: 3px solid #daa520;', $css);
 	}
 	public function test_image_cards_center_thumbnails_and_keep_approval_inside_metadata(): void
