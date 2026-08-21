@@ -160,6 +160,7 @@ final class gallery_index_layout_test extends TestCase
 		}
 		$this->assertStringContainsString('.gallery-classic-image-block--flatboots .gallery-classic-image', $css);
 		$this->assertStringContainsString('border: 1px solid #ecf0f1;', $css);
+		$this->assertStringContainsString('box-shadow: inset 0 0 0 1px #ecf0f1;', $css);
 		$flatboots_copy_style = strstr($css, '.gallery-classic-image-block--flatboots .gallery-image-bbcode-copy,');
 		$this->assertIsString($flatboots_copy_style);
 		$flatboots_copy_style = strstr($flatboots_copy_style, '}', true);
