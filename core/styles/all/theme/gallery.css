@@ -2275,9 +2275,8 @@ p.gallery-image-card-approval.post-notice
 
 .gallery-classic-image-block--flatboots .gallery-classic-image
 {
-	border: 1px solid #ecf0f1;
+	border: 1px solid #d5dde1;
 	box-sizing: border-box;
-	box-shadow: inset 0 0 0 1px #ecf0f1;
 }
 
 .gallery-classic-image-block--flatboots .gallery-image-bbcode-copy,
@@ -2341,6 +2340,24 @@ p.gallery-image-card-approval.post-notice
 
 .gallery-classic-image--reported
 {
+	box-shadow: inset 0 0 0 1px #d9534f;
+}
+
+.gallery-classic-image-block--flatboots .gallery-classic-image--locked
+{
+	border-color: rgba(127, 127, 127, .45);
+	box-shadow: inset 0 0 0 1px rgba(127, 127, 127, .3);
+}
+
+.gallery-classic-image-block--flatboots .gallery-classic-image--unapproved
+{
+	border-color: #daa520;
+	box-shadow: inset 0 0 0 1px #daa520;
+}
+
+.gallery-classic-image-block--flatboots .gallery-classic-image--reported
+{
+	border-color: #d9534f;
 	box-shadow: inset 0 0 0 1px #d9534f;
 }
 

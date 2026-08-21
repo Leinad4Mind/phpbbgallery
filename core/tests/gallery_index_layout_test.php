@@ -159,8 +159,9 @@ final class gallery_index_layout_test extends TestCase
 			$this->assertStringContainsString("GALLERY_CLASSIC_VARIANT: 'flatboots'", (string) file_get_contents($flatboots_selector));
 		}
 		$this->assertStringContainsString('.gallery-classic-image-block--flatboots .gallery-classic-image', $css);
-		$this->assertStringContainsString('border: 1px solid #ecf0f1;', $css);
-		$this->assertStringContainsString('box-shadow: inset 0 0 0 1px #ecf0f1;', $css);
+		$this->assertStringContainsString('border: 1px solid #d5dde1;', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-classic-image-block--flatboots \.gallery-classic-image--unapproved\s*\{[^}]*border-color:\s*#daa520;[^}]*box-shadow:\s*inset 0 0 0 1px #daa520;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-classic-image-block--flatboots \.gallery-classic-image--reported\s*\{[^}]*border-color:\s*#d9534f;[^}]*box-shadow:\s*inset 0 0 0 1px #d9534f;/s', $css);
 		$flatboots_copy_style = strstr($css, '.gallery-classic-image-block--flatboots .gallery-image-bbcode-copy,');
 		$this->assertIsString($flatboots_copy_style);
 		$flatboots_copy_style = strstr($flatboots_copy_style, '}', true);
