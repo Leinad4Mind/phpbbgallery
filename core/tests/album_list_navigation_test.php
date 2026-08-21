@@ -137,10 +137,12 @@ final class album_list_navigation_test extends TestCase
 
 			$this->assertStringContainsString('albumlist_index_sections.html', $index, $style);
 			$this->assertStringContainsString('data-gallery-list-section="subalbums"', $album, $style);
+			$this->assertStringContainsString('data-gallery-ajax-navigation=', $album, $style);
 			$this->assertStringContainsString('albumrow: subalbumrow', $album, $style);
 			$this->assertStringContainsString('subalbum_pagination', $album, $style);
 			$this->assertStringContainsString('list_pagination.html', $album, $style);
-			$this->assertStringContainsString('S_AJAX_LIST_NAVIGATION', $footer, $style);
+			$this->assertStringContainsString("INCLUDEJS '@phpbbgallery_core/js/list_navigation.js'", $footer, $style);
+			$this->assertStringNotContainsString('{% if S_AJAX_LIST_NAVIGATION %}', $footer, $style);
 			$this->assertStringContainsString('gallery-album-list-total', $album, $style);
 			$this->assertStringContainsString('list_navigation.js', $footer, $style);
 			if ($style === 'prosilver')
@@ -171,7 +173,22 @@ final class album_list_navigation_test extends TestCase
 		$this->assertStringContainsString("credentials: 'same-origin'", $script);
 		$this->assertStringContainsString("'X-Requested-With': 'XMLHttpRequest'", $script);
 		$this->assertStringContainsString('window.history.pushState', $script);
+		$this->assertStringContainsString('window.history.replaceState', $script);
+		$this->assertStringContainsString('listHistoryState(scrollPosition, window.history.state)', $script);
 		$this->assertStringContainsString("window.addEventListener('popstate'", $script);
+		$this->assertStringContainsString('phpbbgalleryScrollX', $script);
+		$this->assertStringContainsString('phpbbgalleryScrollY', $script);
+		$this->assertStringContainsString('restoreScrollPosition(scrollPosition)', $script);
+		$this->assertStringContainsString('window.scrollTo(position.x, position.y)', $script);
+		$this->assertStringContainsString('window.requestAnimationFrame(restore)', $script);
+		$this->assertStringContainsString('stateScrollPosition(event.state) || getScrollPosition()', $script);
+		$this->assertStringContainsString("'phpbbgallery.listScrollPosition'", $script);
+		$this->assertStringContainsString('window.sessionStorage.setItem', $script);
+		$this->assertStringContainsString('window.sessionStorage.removeItem', $script);
+		$this->assertStringContainsString("section.getAttribute('data-gallery-ajax-navigation') === '1'", $script);
+		$this->assertStringContainsString('rememberFullPageNavigation(url, getScrollPosition())', $script);
+		$this->assertStringContainsString('rememberFullPageNavigation(url, scrollPosition)', $script);
+		$this->assertStringContainsString("window.addEventListener('load'", $script);
 		$this->assertStringContainsString('window.location.assign(url.href)', $script);
 		$this->assertStringContainsString('window.location.reload()', $script);
 		$this->assertStringContainsString('aria-busy', $script);

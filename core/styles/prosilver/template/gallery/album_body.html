@@ -16,7 +16,7 @@
 {% endif %}
 
 {% if subalbumrow|length %}
-<section class="gallery-paginated-list" data-gallery-list-section="subalbums">
+<section class="gallery-paginated-list" data-gallery-list-section="subalbums" data-gallery-ajax-navigation="{% if S_AJAX_LIST_NAVIGATION %}1{% else %}0{% endif %}">
 	{% if not S_IS_BOT and U_MARK_ALBUMS %}
 	<ul class="linklist">
 		<li class="rightside"><a href="{{ U_MARK_ALBUMS }}">{{ lang('MARK_ALBUMS_READ') }}</a></li>

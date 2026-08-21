@@ -1,5 +1,5 @@
 {% if S_PERSONAL_GALLERY %}
-	<section class="gallery-paginated-list" data-gallery-list-section="personal-directory">
+	<section class="gallery-paginated-list" data-gallery-list-section="personal-directory" data-gallery-ajax-navigation="{% if S_AJAX_LIST_NAVIGATION %}1{% else %}0{% endif %}">
 		{% include '@phpbbgallery_core/gallery/albumlist_layout.html' with { albumrow: albumrow } %}
 		{% if TOTAL_ALBUMS %}
 			{% if GALLERY_FUTURISTIC_VARIANT == 'bboots' or GALLERY_FUTURISTIC_VARIANT == 'flatboots' %}
@@ -16,12 +16,12 @@
 		{% endif %}
 	</section>
 {% else %}
-	<section class="gallery-paginated-list" data-gallery-list-section="public-albums">
+	<section class="gallery-paginated-list" data-gallery-list-section="public-albums" data-gallery-ajax-navigation="{% if S_AJAX_LIST_NAVIGATION %}1{% else %}0{% endif %}">
 		{% include '@phpbbgallery_core/gallery/albumlist_layout.html' with { albumrow: public_albumrow } %}
 	</section>
 
 	{% if S_SHOW_PERSONAL_ALBUMS and S_HAS_PERSONAL_ALBUMS %}
-	<section class="gallery-paginated-list" data-gallery-list-section="personal-albums">
+	<section class="gallery-paginated-list" data-gallery-list-section="personal-albums" data-gallery-ajax-navigation="{% if S_AJAX_LIST_NAVIGATION %}1{% else %}0{% endif %}">
 		{% include '@phpbbgallery_core/gallery/albumlist_layout.html' with { albumrow: personal_albumrow } %}
 		{% if PERSONAL_ALBUM_TOTAL %}
 			{% if GALLERY_FUTURISTIC_VARIANT == 'bboots' or GALLERY_FUTURISTIC_VARIANT == 'flatboots' %}

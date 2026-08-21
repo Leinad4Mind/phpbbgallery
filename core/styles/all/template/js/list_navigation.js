@@ -1,12 +1,16 @@
 (function () {
 	'use strict';
 
-	if (!window.fetch || !window.DOMParser || !window.history || !window.history.pushState) {
-		return;
-	}
-
 	var sectionSelector = '[data-gallery-list-section]';
 	var activeRequest = null;
+	var storageKey = 'phpbbgallery.listScrollPosition';
+	var ajaxSupported = !!(
+		window.fetch &&
+		window.DOMParser &&
+		window.AbortController &&
+		window.history &&
+		window.history.pushState
+	);
 
 	function escapeAttribute(value) {
 		return String(value).replace(/\\/g, '\\\\').replace(/"/g, '\\"');
@@ -20,6 +24,110 @@
 
 	function parsePage(markup) {
 		return new window.DOMParser().parseFromString(markup, 'text/html');
+	}
+
+	function getScrollPosition() {
+		return {
+			x: window.pageXOffset || document.documentElement.scrollLeft || 0,
+			y: window.pageYOffset || document.documentElement.scrollTop || 0
+		};
+	}
+
+	function restoreScrollPosition(position) {
+		if (!position) {
+			return;
+		}
+
+		var restore = function () {
+			window.scrollTo(position.x, position.y);
+		};
+
+		restore();
+		if (window.requestAnimationFrame) {
+			window.requestAnimationFrame(restore);
+		}
+	}
+
+	function comparableUrl(url) {
+		var comparable = new URL(url.href, window.location.href);
+		comparable.hash = '';
+		return comparable.href;
+	}
+
+	function rememberFullPageNavigation(url, position) {
+		try {
+			window.sessionStorage.setItem(storageKey, JSON.stringify({
+				url: comparableUrl(url),
+				x: position.x,
+				y: position.y,
+				created: Date.now()
+			}));
+		} catch (error) {
+			// Storage can be unavailable in restricted browser modes; normal navigation remains usable.
+		}
+	}
+
+	function restoreFullPageNavigation() {
+		var stored;
+		try {
+			stored = JSON.parse(window.sessionStorage.getItem(storageKey) || 'null');
+		} catch (error) {
+			stored = null;
+		}
+
+		if (!stored) {
+			return;
+		}
+
+		var expired = !stored.created || Date.now() - Number(stored.created) > 600000;
+		if (expired || stored.url !== comparableUrl(new URL(window.location.href))) {
+			try {
+				window.sessionStorage.removeItem(storageKey);
+			} catch (error) {
+				// Ignore unavailable storage.
+			}
+			return;
+		}
+
+		try {
+			window.sessionStorage.removeItem(storageKey);
+		} catch (error) {
+			// Ignore unavailable storage.
+		}
+
+		var position = {
+			x: Number(stored.x) || 0,
+			y: Number(stored.y) || 0
+		};
+		restoreScrollPosition(position);
+		window.addEventListener('load', function () {
+			restoreScrollPosition(position);
+		}, {once: true});
+	}
+
+	function listHistoryState(position, currentState) {
+		var state = {};
+		if (currentState && typeof currentState === 'object') {
+			Object.keys(currentState).forEach(function (key) {
+				state[key] = currentState[key];
+			});
+		}
+
+		state.phpbbgalleryList = true;
+		state.phpbbgalleryScrollX = position.x;
+		state.phpbbgalleryScrollY = position.y;
+		return state;
+	}
+
+	function stateScrollPosition(state) {
+		if (!state || !state.phpbbgalleryList) {
+			return null;
+		}
+
+		return {
+			x: Number(state.phpbbgalleryScrollX) || 0,
+			y: Number(state.phpbbgalleryScrollY) || 0
+		};
 	}
 
 	function replaceSection(currentSection, nextSection) {
@@ -61,6 +169,7 @@
 
 	function navigateSection(section, url, updateHistory) {
 		var name = section.getAttribute('data-gallery-list-section');
+		var scrollPosition = getScrollPosition();
 		section.setAttribute('aria-busy', 'true');
 
 		return requestPage(url).then(function (nextDocument) {
@@ -72,19 +181,22 @@
 			var replacement = replaceSection(section, nextSection);
 			document.title = nextDocument.title || document.title;
 			if (updateHistory) {
-				window.history.pushState({phpbbgalleryList: true}, '', url.href);
+				window.history.replaceState(listHistoryState(scrollPosition, window.history.state), '', window.location.href);
+				window.history.pushState(listHistoryState(scrollPosition), '', url.href);
 			}
+			restoreScrollPosition(scrollPosition);
 
 		}).catch(function (error) {
 			if (error.name === 'AbortError') {
 				return;
 			}
 
+			rememberFullPageNavigation(url, scrollPosition);
 			window.location.assign(url.href);
 		});
 	}
 
-	function refreshVisibleSections() {
+	function refreshVisibleSections(scrollPosition) {
 		var url = new URL(window.location.href);
 		var currentSections = Array.prototype.slice.call(document.querySelectorAll(sectionSelector));
 		currentSections.forEach(function (section) {
@@ -100,6 +212,7 @@
 				}
 			});
 			document.title = nextDocument.title || document.title;
+			restoreScrollPosition(scrollPosition);
 		}).catch(function (error) {
 			if (error.name !== 'AbortError') {
 				window.location.reload();
@@ -127,13 +240,21 @@
 			return;
 		}
 
+		var ajaxEnabled = section.getAttribute('data-gallery-ajax-navigation') === '1';
+		if (!ajaxEnabled || !ajaxSupported) {
+			rememberFullPageNavigation(url, getScrollPosition());
+			return;
+		}
+
 		event.preventDefault();
 		navigateSection(section, url, true);
 	});
 
-	window.addEventListener('popstate', function () {
-		if (document.querySelector(sectionSelector)) {
-			refreshVisibleSections();
+	window.addEventListener('popstate', function (event) {
+		if (ajaxSupported && document.querySelector(sectionSelector)) {
+			refreshVisibleSections(stateScrollPosition(event.state) || getScrollPosition());
 		}
 	});
+
+	restoreFullPageNavigation();
 }());
