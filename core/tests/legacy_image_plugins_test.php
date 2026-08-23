@@ -33,7 +33,7 @@ class legacy_image_plugins_test extends TestCase
 			}
 
 			$template = (string) file_get_contents($file->getPathname());
-			$this->assertDoesNotMatchRegularExpression('/S_GP_(?:HIGHSLIDE|LYTEBOX|SHADOWBOX)/', $template, $file->getPathname());
+			$this->assertDoesNotMatchRegularExpression('/S_GP_(?:HIGHSLIDE|LYTEBOX|SHADOWBOX)|U_SLIDE_SHOW/', $template, $file->getPathname());
 		}
 	}
 
@@ -47,6 +47,8 @@ class legacy_image_plugins_test extends TestCase
 			'SLIDE_SHOW_HIGHSLIDE',
 			'SLIDE_SHOW_LYTEBOX',
 			'SLIDE_SHOW_SHADOWBOX',
+			'MISSING_SLIDESHOW_PLUGIN',
+			'SLIDE_SHOW',
 		];
 		foreach (glob($language_root . '/*', GLOB_ONLYDIR) as $locale)
 		{

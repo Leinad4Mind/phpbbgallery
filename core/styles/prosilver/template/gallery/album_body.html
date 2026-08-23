@@ -34,7 +34,7 @@
 </section>
 {% endif %}
 
-{% if (not S_IN_GALLERY_POPUP and S_DISPLAY_SEARCHBOX) or (S_IS_POSTABLE and (U_UPLOAD_IMAGE or U_WATCH_TOGGLE or PAGINATION or TOTAL_IMAGES or (U_SLIDE_SHOW and not S_IS_BOT))) %}
+{% if (not S_IN_GALLERY_POPUP and S_DISPLAY_SEARCHBOX) or (S_IS_POSTABLE and (U_UPLOAD_IMAGE or U_WATCH_TOGGLE or PAGINATION or TOTAL_IMAGES)) %}
 	<div class="action-bar bar-top gallery-album-top-actions" {% if S_HAS_SUBALBUM %}style="margin-top: 2em;"{% endif %}>
 
 	{% if not S_IN_GALLERY_POPUP and U_UPLOAD_IMAGE and not S_IS_BOT %}
@@ -62,9 +62,6 @@
 
 	{% include 'gallery/total_images.html' %}
 
-	{% if not S_IN_GALLERY_POPUP and S_IS_POSTABLE and U_SLIDE_SHOW and not S_IS_BOT %}
-		<div class="pagination"><a href="{{ U_SLIDE_SHOW }}">{{ lang('SLIDE_SHOW') }}</a>{% if PAGINATION or TOTAL_IMAGES or U_SLIDE_SHOW %} &bull;&nbsp;{% endif %}</div>
-	{% endif %}
 
 	</div>
 {% endif %}
