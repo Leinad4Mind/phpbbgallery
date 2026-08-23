@@ -2,10 +2,14 @@
 
 All notable changes to the phpBB Gallery extension suite are documented in this file.
 
-## [4.1.0] Unreleased
+## [4.2.0] Unreleased
+
+## [4.1.0] - 2026-08-24
 
 ### Added
 
+- Added provider selection per stored image variant, allowing source, medium and mini files to remain local or use the enabled Remote Storage provider independently, with resumable migrations preserving the previous global assignment by default.
+- Added independent, parent-scoped pagination for root albums, each category, subalbums and the personal-album directory, with optional progressive navigation, History API support, scroll preservation and phpBB-native page-jump controls.
 - Prefixed every EXIF entry in mixed card-information selectors with `EXIF:` so add-on metadata remains immediately distinguishable from Core image properties.
 - Added independently selectable image type and cached EXIF values to the contextual card-information settings for album listings, searches, Gallery-index blocks, forum-index blocks and user profiles; individual image-page switches remain separate, and private metadata continues to follow the Core visibility policy.
 - Added an independently configurable WebP encoding quality, defaulting to 80 and applied to existing WebP transformations and Core-generated WebP derivatives; WebP and AVIF quality controls remain available when new uploads of those formats are disabled.
@@ -50,6 +54,10 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Reworked mixed category/album indexes so each parent owns its album limit and pagination, category conversions preserve existing Gallery permissions and premium album policies, and every bundled layout keeps totals and controls beside the group they describe.
+- Unified Gallery pagination with phpBB's native pagination semantics and controls across Core, moderation, search, UCP Favorites and Contests while retaining non-JavaScript navigation as the baseline.
+- Removed the unused legacy slideshow template and language contract; a future slideshow will be implemented as a permission-aware feature instead of reviving the dead `U_SLIDE_SHOW` placeholder.
+- Corrected the ACP album-management introduction to describe real categories, albums and nested subalbums, including upload behaviour and the need to configure permissions for newly created albums.
 - Renamed the Gallery-index image and comment selector from "Mode" to "Blocks" because multiple blocks can be enabled simultaneously.
 - Expanded the automatic-resize help to explain proportional dimension reduction, enforcement of the stored-file size limit and the PHP upload and image-decoding limits that resizing cannot bypass.
 - Renamed the multiple-upload setting to “Maximum images per upload” and clarified that it limits one upload operation rather than the total number of images in the album.
@@ -90,6 +98,10 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Made Gallery search return a normal empty result when the current user cannot see any albums instead of passing an empty set into the database abstraction layer.
+- Fixed personal-album directory rendering, menu links, page jumps and page-size handling, including cookieless sessions and progressive navigation.
+- Preserved album permissions and add-on policies when converting between categories and albums, and allowed ACP move-up/move-down actions to complete directly while retaining confirmation for destructive or resynchronisation actions.
+- Corrected remaining card-grid, category-group, thumbnail sizing, long-title, approval-state, MCP navigation and pagination placement regressions across PROSILVER, BBOOTS and FLATBOOTS.
 - Centred each album card's image count with its latest-image metadata across the bundled card layouts.
 - Kept album pagination totals scoped to the directly listed images and moved the permission-filtered total including subalbums into a separately labelled album-heading summary.
 - Corrected the inverted Gallery-index "Collapse comments" option so Yes now starts recent comments collapsed and No leaves them visible in every bundled style.
@@ -150,6 +162,22 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Preserved the native content-driven width and horizontal padding of FLATBOOTS BBCode toolbar buttons while retaining their corrected uniform height.
 - Prevented the configured image-page click action from linking to an original file when the viewer lacks the original-download permission.
 - Removed request-specific style overrides from copyable full-image and BBCode share URLs.
+
+### Security
+
+- Enforced declared Gallery Core and add-on version ranges before activation, failing closed with translated dependency errors instead of allowing incompatible service contracts to compile at runtime.
+
+### Performance
+
+- Limited album-index work to the visible page of each direct parent group while preserving complete permission filtering, descendant relationships and exact totals, preventing unrelated categories from consuming one shared album limit.
+- Kept progressive list navigation bounded to the replaced Gallery section and reused phpBB pagination metadata without introducing an additional client framework.
+
+### Tests
+
+- Added real phpBB functional workflows for ACP Cleanup, ACP Import, EXIF, Favorite, Feed and TIFF on SQLite, MySQL and MariaDB CI jobs.
+- Expanded language regression coverage across Core and every packaged add-on, including placeholder parity, forbidden fallbacks and dependency messages in every bundled locale.
+- Added regression coverage for the complete 4.1.0 migration graph, per-variant storage routing, native page jumps, parent-scoped pagination, empty visible-album searches and add-on version validation.
+- Kept the complete Core unit suite clean on PHP 8.1, 8.2, 8.4 and 8.5, including removal of test-only PHP 8.5 reflection deprecations.
 
 ## [4.0.0]
 
