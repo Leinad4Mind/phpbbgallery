@@ -16,7 +16,10 @@ class forum_index_personal_images extends migration
 {
 	public static function depends_on(): array
 	{
-		return ['\phpbbgallery\core\migrations\remove_legacy_version_config'];
+		return [
+			'\phpbbgallery\core\migrations\remove_legacy_version_config',
+			'\phpbbgallery\core\migrations\variant_storage_providers',
+		];
 	}
 
 	public function update_data(): array

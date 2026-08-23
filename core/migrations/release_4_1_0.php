@@ -16,13 +16,11 @@ class release_4_1_0 extends migration
 {
 	public static function depends_on(): array
 	{
-		return ['\phpbbgallery\core\migrations\disp_image_type'];
+		return ['\phpbbgallery\core\migrations\album_list_pagination'];
 	}
 
 	public function update_data(): array
 	{
-		return [
-			['config.update', ['phpbb_gallery_version', '4.1.0']],
-		];
+		return [];
 	}
 }

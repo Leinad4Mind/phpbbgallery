@@ -26,6 +26,7 @@ use phpbbgallery\core\migrations\gallery_permission_masks;
 use phpbbgallery\core\migrations\remove_gdlib_version;
 use phpbbgallery\core\migrations\webp_quality;
 use phpbbgallery\core\migrations\album_list_pagination;
+use phpbbgallery\core\migrations\variant_storage_providers;
 use phpbbgallery\core\migrations\resumable_uploads;
 use phpbbgallery\core\migrations\performance_indexes;
 use phpbbgallery\core\migrations\protect_personal_album_profile_field;
@@ -97,6 +98,7 @@ class migration_integrity_test extends TestCase
 		release_4_0_0::class,
 		local_storage_layout::class,
 		storage_provider::class,
+		variant_storage_providers::class,
 		avif_support::class,
 		unread_image_badge::class,
 		bmp_support::class,
@@ -117,13 +119,13 @@ class migration_integrity_test extends TestCase
 		statistics_dashboard::class,
 		statistics_permission::class,
 		disp_image_type::class,
-		release_4_1_0::class,
 		remove_legacy_version_config::class,
 		forum_index_personal_images::class,
 		gallery_permission_masks::class,
 		remove_gdlib_version::class,
 		webp_quality::class,
 		album_list_pagination::class,
+		release_4_1_0::class,
 	];
 
 	private array $temp_directories = [];
@@ -321,16 +323,14 @@ class migration_integrity_test extends TestCase
 		], $migration->update_data());
 	}
 
-	public function test_release_4_1_0_closes_the_post_4_0_feature_chain_and_updates_the_version(): void
+	public function test_release_4_1_0_closes_the_complete_post_4_0_feature_chain(): void
 	{
 		$migration = (new \ReflectionClass(release_4_1_0::class))->newInstanceWithoutConstructor();
 
 		$this->assertSame([
-			'\\phpbbgallery\\core\\migrations\\disp_image_type',
+			'\\phpbbgallery\\core\\migrations\\album_list_pagination',
 		], release_4_1_0::depends_on());
-		$this->assertSame([
-			['config.update', ['phpbb_gallery_version', '4.1.0']],
-		], $migration->update_data());
+		$this->assertSame([], $migration->update_data());
 	}
 
 	public function test_post_4_1_cleanup_removes_the_legacy_version_config(): void
@@ -338,7 +338,7 @@ class migration_integrity_test extends TestCase
 		$migration = (new \ReflectionClass(remove_legacy_version_config::class))->newInstanceWithoutConstructor();
 
 		$this->assertSame([
-			'\phpbbgallery\core\migrations\release_4_1_0',
+			'\phpbbgallery\core\migrations\disp_image_type',
 		], remove_legacy_version_config::depends_on());
 		$this->assertSame([
 			['config.remove', ['phpbb_gallery_version']],
@@ -401,6 +401,7 @@ class migration_integrity_test extends TestCase
 
 		$this->assertSame([
 			'\phpbbgallery\core\migrations\remove_legacy_version_config',
+			'\phpbbgallery\core\migrations\variant_storage_providers',
 		], forum_index_personal_images::depends_on());
 		$this->assertSame([
 			['config.add', ['phpbb_gallery_forum_index_personal_count', 4]],
@@ -1076,13 +1077,13 @@ class migration_integrity_test extends TestCase
 		$this->assertSame([], $remaining);
 	}
 
-	public function test_album_list_pagination_is_the_terminal_core_migration(): void
+	public function test_release_4_1_0_is_the_terminal_core_migration(): void
 	{
 		$graph = $this->migration_graph();
 		foreach (self::MIGRATIONS as $migration)
 		{
 			$this->assertTrue(
-				$this->depends_on(album_list_pagination::class, $migration, $graph),
+				$this->depends_on(release_4_1_0::class, $migration, $graph),
 				$migration . ' is outside the terminal migration chain.'
 			);
 		}
@@ -1389,6 +1390,7 @@ class migration_integrity_test extends TestCase
 			'release_4_0_0.php',
 			'local_storage_layout.php',
 			'storage_provider.php',
+			'variant_storage_providers.php',
 			'avif_support.php',
 			'unread_image_badge.php',
 			'bmp_support.php',
@@ -1409,13 +1411,13 @@ class migration_integrity_test extends TestCase
 			'statistics_dashboard.php',
 			'statistics_permission.php',
 			'disp_image_type.php',
-			'release_4_1_0.php',
 			'remove_legacy_version_config.php',
 			'forum_index_personal_images.php',
 			'gallery_permission_masks.php',
 			'remove_gdlib_version.php',
 			'webp_quality.php',
 			'album_list_pagination.php',
+			'release_4_1_0.php',
 		] as $migration)
 		{
 			require_once dirname(__DIR__) . '/migrations/' . $migration;
