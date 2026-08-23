@@ -414,7 +414,13 @@ class language_catalog_test extends TestCase
 
 	private function components(): array
 	{
-		return ['core', 'acpcleanup', 'acpimport', 'exif', 'imagefields', 'imagerevisions', 'tiff'];
+		$components = array_map(static function (string $directory): string
+		{
+			return basename(dirname(dirname($directory)));
+		}, glob($this->extension_root . '/*/language/en', GLOB_ONLYDIR) ?: []);
+		sort($components);
+
+		return $components;
 	}
 
 	private function php_files(string $directory): array
@@ -476,13 +482,15 @@ class language_catalog_test extends TestCase
 	{
 		if (is_array($value))
 		{
-			$shape = [];
-			foreach ($value as $key => $item)
+			$shapes = [];
+			foreach ($value as $item)
 			{
-				$shape[$key] = $this->placeholder_shape($item);
+				$shape = $this->placeholder_shape($item);
+				$shapes[serialize($shape)] = $shape;
 			}
+			ksort($shapes);
 
-			return $shape;
+			return array_values($shapes);
 		}
 
 		preg_match_all('/(?<!%)%(?!%)(?:\d+\$)?([bcdeEfFgGosuxXdi])/', (string) $value, $matches);
