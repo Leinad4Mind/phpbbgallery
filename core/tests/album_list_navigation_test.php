@@ -70,15 +70,25 @@ final class album_list_navigation_test extends TestCase
 		$pagination = $this->read('styles/all/template/gallery/list_pagination.html');
 		$this->assertStringContainsString('{% for page in pagination %}', $pagination);
 		$this->assertStringContainsString('page.PAGE_URL', $pagination);
+		$this->assertStringContainsString('page_jump.html', $pagination);
 		$this->assertStringNotContainsString('BEGIN pagination', $pagination);
+
+		$page_jump = $this->read('styles/all/template/gallery/page_jump.html');
+		$this->assertStringContainsString('GALLERY_JUMP_URL and TOTAL_PAGES > 6', $page_jump);
+		$this->assertStringContainsString('data-gallery-page-jump-form', $page_jump);
+		$this->assertStringContainsString('data-url-template', $page_jump);
+		$this->assertStringContainsString('data-url-token', $page_jump);
+		$this->assertStringContainsString('data-page-mode', $page_jump);
 		$this->assertStringContainsString('albumrow: public_albumrow', $index_sections);
 		$this->assertStringContainsString('albumrow: personal_albumrow', $index_sections);
+		$this->assertStringContainsString('PERSONAL_PAGINATION_GALLERY_JUMP_URL', $index_sections);
 
 		$category_pagination = $this->read('styles/all/template/gallery/category_album_pagination.html');
 		$this->assertStringContainsString('albumrow.S_CATEGORY_ALBUM_LIST', $category_pagination);
 		$this->assertStringContainsString('albumrow.CATEGORY_ALBUM_TOTAL', $category_pagination);
 		$this->assertStringContainsString('albumrow.pagination|default([])', $category_pagination);
 		$this->assertStringContainsString('pagination: category_pagination', $category_pagination);
+		$this->assertStringContainsString('albumrow.GALLERY_JUMP_URL', $category_pagination);
 		$this->assertStringContainsString('{% if category_pagination|length %}', $category_pagination);
 		$this->assertStringContainsString("GALLERY_FUTURISTIC_VARIANT == 'flatboots'", $category_pagination);
 		$this->assertStringContainsString('gallery-album-list-pagination--flatboots', $category_pagination);
@@ -87,6 +97,7 @@ final class album_list_navigation_test extends TestCase
 		$this->assertStringContainsString('PUBLIC_ALBUM_TOTAL', $root_pagination);
 		$this->assertStringContainsString('public_pagination|default([])', $root_pagination);
 		$this->assertStringContainsString('pagination: root_pagination', $root_pagination);
+		$this->assertStringContainsString('PUBLIC_PAGINATION_GALLERY_JUMP_URL', $root_pagination);
 		$this->assertStringContainsString('gallery-root-album-pagination', $root_pagination);
 		$this->assertStringContainsString('gallery-album-list-pagination--flatboots', $root_pagination);
 		$this->assertStringContainsString('gallery-album-list-pagination--without-pages', $root_pagination);
@@ -140,6 +151,7 @@ final class album_list_navigation_test extends TestCase
 			$this->assertStringContainsString('data-gallery-ajax-navigation=', $album, $style);
 			$this->assertStringContainsString('albumrow: subalbumrow', $album, $style);
 			$this->assertStringContainsString('subalbum_pagination', $album, $style);
+			$this->assertStringContainsString('SUBALBUM_PAGINATION_GALLERY_JUMP_URL', $album, $style);
 			$this->assertStringContainsString('list_pagination.html', $album, $style);
 			$this->assertStringContainsString("INCLUDEJS '@phpbbgallery_core/js/list_navigation.js'", $footer, $style);
 			$this->assertStringNotContainsString('{% if S_AJAX_LIST_NAVIGATION %}', $footer, $style);
@@ -193,6 +205,9 @@ final class album_list_navigation_test extends TestCase
 		$this->assertStringContainsString('window.location.reload()', $script);
 		$this->assertStringContainsString('aria-busy', $script);
 		$this->assertStringContainsString('phpbbgallery:list-updated', $script);
+		$this->assertStringContainsString('data-gallery-page-jump-form', $script);
+		$this->assertStringContainsString("form.getAttribute('data-page-mode') === 'offset'", $script);
+		$this->assertStringContainsString('navigateSection(section, url, true)', $script);
 		$this->assertStringNotContainsString('jQuery', $script);
 		$this->assertStringNotContainsString('Vue', $script);
 	}

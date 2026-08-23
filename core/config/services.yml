@@ -6,6 +6,14 @@ imports:
 
 
 services:
+    phpbbgallery.core.pagination:
+        class: phpbbgallery\core\pagination
+        arguments:
+            - '@template'
+            - '@user'
+            - '@controller.helper'
+            - '@dispatcher'
+
     phpbbgallery.core.album:
         class: phpbbgallery\core\album\album
         arguments:
@@ -28,7 +36,7 @@ services:
             - '@config'
             - '@controller.helper'
             - '@dbal.conn'
-            - '@pagination'
+            - '@phpbbgallery.core.pagination'
             - '@request'
             - '@symfony_request'
             - '@template'
@@ -261,7 +269,7 @@ services:
             - '@template'
             - '@controller.helper'
             - '@phpbbgallery.core.config'
-            - '@pagination'
+            - '@phpbbgallery.core.pagination'
             - '@phpbbgallery.core.notification.helper'
             - '%phpbbgallery.tables.gallery_images%'
             - '%phpbbgallery.tables.gallery_reports%'
@@ -295,7 +303,7 @@ services:
             - '@user_loader'
             - '@phpbbgallery.core.album'
             - '@phpbbgallery.core.auth'
-            - '@pagination'
+            - '@phpbbgallery.core.pagination'
             - '@phpbbgallery.core.comment'
             - '@phpbbgallery.core.report'
             - '@phpbbgallery.core.image'
@@ -319,7 +327,7 @@ services:
             - '@phpbbgallery.core.album'
             - '@phpbbgallery.core.image'
             - '@phpbbgallery.core.policy.image_visibility'
-            - '@pagination'
+            - '@phpbbgallery.core.pagination'
             - '@user_loader'
             - '%phpbbgallery.tables.gallery_images%'
             - '%phpbbgallery.tables.gallery_albums%'
@@ -365,7 +373,7 @@ services:
             - '@user_loader'
             - '@template'
             - '@controller.helper'
-            - '@pagination'
+            - '@phpbbgallery.core.pagination'
             - '@phpbbgallery.core.auth'
             - '@phpbbgallery.core.config'
             - '%phpbbgallery.tables.gallery_log%'

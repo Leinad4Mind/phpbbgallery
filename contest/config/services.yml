@@ -20,7 +20,7 @@ services:
             - '@phpbbgallery.core.config'
             - '@phpbbgallery.core.auth'
             - '@phpbbgallery.core.image'
-            - '@pagination'
+            - '@phpbbgallery.core.pagination'
             - '%phpbbgallery.tables.gallery_images%'
             - '%phpbbgallery.tables.gallery_albums%'
             - '%phpbbgallery.contest.tables.contests%'

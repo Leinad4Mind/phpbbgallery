@@ -61,21 +61,14 @@ final class privacy_test extends TestCase
 	{
 		$root = dirname(__DIR__) . '/styles/';
 		$prosilver = (string) file_get_contents($root . 'prosilver/template/gallery/ucp_gallery_favorite.html');
-		$this->assertMatchesRegularExpression(
-			'/<div class="pagination">.*\{% include \'pagination.html\' %\}.*<\/div>/s',
-			$prosilver
-		);
+		$this->assertStringContainsString('GALLERY_BOOTSTRAP_PAGINATION: false', $prosilver);
 		$this->assertStringContainsString('<dl class="row-item">', $prosilver);
 		$this->assertStringContainsString('class="list-inner gallery-favorite-ucp-row"', $prosilver);
 
 		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['BBOOTS', 'FLATBOOTS'], $this) as $style)
 		{
 			$template = (string) file_get_contents($root . $style . '/template/gallery/ucp_gallery_favorite.html');
-			$this->assertMatchesRegularExpression(
-				'/<ul class="pagination pagination-sm pull-right">.*\{% include \'pagination.html\' %\}.*<\/ul>/s',
-				$template,
-				$style
-			);
+			$this->assertStringContainsString('GALLERY_BOOTSTRAP_PAGINATION: true', $template, $style);
 		}
 	}
 }

@@ -14,6 +14,52 @@
 	pointer-events: none;
 }
 
+.gallery-page-jump
+{
+	position: relative;
+}
+
+.gallery-page-jump-toggle
+{
+	cursor: pointer;
+}
+
+.gallery-page-jump-form
+{
+	background: #fff;
+	border: 1px solid #b9b9b9;
+	border-radius: 4px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+	color: #333;
+	font-size: 12px;
+	padding: 8px;
+	position: absolute;
+	right: 0;
+	top: calc(100% + 4px);
+	white-space: nowrap;
+	z-index: 1050;
+}
+
+.gallery-page-jump-form[hidden]
+{
+	display: none !important;
+}
+
+.gallery-page-jump-controls
+{
+	display: flex;
+	gap: 4px;
+	margin-top: 4px;
+}
+
+.gallery-page-jump-controls input
+{
+	box-sizing: border-box;
+	max-width: 82px;
+	min-height: 28px;
+	width: 82px;
+}
+
 .phpbbgallery-image-page.is-entering
 {
 	opacity: 0;

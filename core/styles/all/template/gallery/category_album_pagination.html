@@ -6,12 +6,12 @@
 		{% if category_bootstrap %}
 	<ul class="pagination pagination-sm gallery-album-list-pagination gallery-category-album-pagination{% if category_flatboots %} gallery-album-list-pagination--flatboots{% endif %}">
 		<li class="active gallery-album-list-total"><a>{{ albumrow.CATEGORY_ALBUM_TOTAL }}</a></li>
-		{% include '@phpbbgallery_core/gallery/list_pagination.html' with { pagination: category_pagination, GALLERY_BOOTSTRAP_PAGINATION: true } %}
+		{% include '@phpbbgallery_core/gallery/list_pagination.html' with { pagination: category_pagination, GALLERY_BOOTSTRAP_PAGINATION: true, GALLERY_JUMP_URL: albumrow.GALLERY_JUMP_URL, GALLERY_JUMP_TOKEN: albumrow.GALLERY_JUMP_TOKEN, GALLERY_JUMP_MODE: albumrow.GALLERY_JUMP_MODE, GALLERY_JUMP_PER_PAGE: albumrow.GALLERY_JUMP_PER_PAGE, TOTAL_PAGES: albumrow.TOTAL_PAGES, CURRENT_PAGE: albumrow.CURRENT_PAGE } %}
 	</ul>
 		{% else %}
 	<div class="pagination gallery-album-list-pagination gallery-category-album-pagination">
 		<span class="gallery-album-list-total">{{ albumrow.CATEGORY_ALBUM_TOTAL }}</span>
-		{% include '@phpbbgallery_core/gallery/list_pagination.html' with { pagination: category_pagination, GALLERY_BOOTSTRAP_PAGINATION: false } %}
+		{% include '@phpbbgallery_core/gallery/list_pagination.html' with { pagination: category_pagination, GALLERY_BOOTSTRAP_PAGINATION: false, GALLERY_JUMP_URL: albumrow.GALLERY_JUMP_URL, GALLERY_JUMP_TOKEN: albumrow.GALLERY_JUMP_TOKEN, GALLERY_JUMP_MODE: albumrow.GALLERY_JUMP_MODE, GALLERY_JUMP_PER_PAGE: albumrow.GALLERY_JUMP_PER_PAGE, TOTAL_PAGES: albumrow.TOTAL_PAGES, CURRENT_PAGE: albumrow.CURRENT_PAGE } %}
 	</div>
 		{% endif %}
 	{% endif %}

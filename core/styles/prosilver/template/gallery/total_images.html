@@ -2,7 +2,7 @@
 	<div class="pagination">
 		{{ TOTAL_IMAGES }}
 		{% if pagination|length %}
-			{% include 'pagination.html' %}
+				{% include '@phpbbgallery_core/gallery/list_pagination.html' with { pagination: pagination, GALLERY_BOOTSTRAP_PAGINATION: false } %}
 		{% else %}
 			 &bull; {{ PAGE_NUMBER }}
 		{% endif %}

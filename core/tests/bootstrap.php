@@ -216,6 +216,8 @@ namespace
 	require_once dirname(__DIR__, 4) . '/vendor/symfony/http-foundation/BinaryFileResponse.php';
 	error_reporting($error_level);
 	require_once dirname(__DIR__, 4) . '/phpbb/controller/helper.php';
+	require_once dirname(__DIR__, 4) . '/phpbb/pagination.php';
+	require_once dirname(__DIR__) . '/pagination.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/cron/task/task.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/cron/task/base.php';
 	require_once dirname(__DIR__, 4) . '/phpbb/request/request_interface.php';

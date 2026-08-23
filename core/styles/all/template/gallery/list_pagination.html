@@ -1,4 +1,5 @@
 {% if not GALLERY_BOOTSTRAP_PAGINATION %}<ul>{% endif %}
+{% include '@phpbbgallery_core/gallery/page_jump.html' %}
 {% for page in pagination %}
 	{% if page.S_IS_PREV %}
 		{% if GALLERY_BOOTSTRAP_PAGINATION %}

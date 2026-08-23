@@ -1,0 +1,15 @@
+{% if GALLERY_JUMP_URL and TOTAL_PAGES > 6 %}
+<li class='gallery-page-jump'>
+	<button type='button' class='{% if GALLERY_BOOTSTRAP_PAGINATION %}btn btn-default btn-sm{% else %}button button-icon-only{% endif %} gallery-page-jump-toggle' data-gallery-page-jump-toggle aria-expanded='false' title='{{ lang('JUMP_TO_PAGE') }}'>
+		<i class='icon fa-level-down fa-fw' aria-hidden='true'></i><span class='sr-only'>{{ lang('JUMP_TO_PAGE') }}</span>
+	</button>
+	<form class='gallery-page-jump-form' data-gallery-page-jump-form data-url-template='{{ GALLERY_JUMP_URL }}' data-url-token='{{ GALLERY_JUMP_TOKEN }}' data-page-mode='{{ GALLERY_JUMP_MODE }}' data-per-page='{{ GALLERY_JUMP_PER_PAGE }}' hidden>
+		<label>{{ lang('JUMP_TO_PAGE') }}{{ lang('COLON') }}
+			<span class='gallery-page-jump-controls'>
+				<input type='number' min='1' max='{{ TOTAL_PAGES }}' value='{{ CURRENT_PAGE }}' required aria-label='{{ lang('PAGE_NUMBER') }}'>
+				<button type='submit' class='{% if GALLERY_BOOTSTRAP_PAGINATION %}btn btn-default btn-sm{% else %}button2{% endif %}'>{{ lang('GO') }}</button>
+			</span>
+		</label>
+	</form>
+</li>
+{% endif %}

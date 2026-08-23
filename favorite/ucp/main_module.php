@@ -42,7 +42,7 @@ class main_module
 		$gallery_image = $phpbb_container->get('phpbbgallery.core.image');
 		$image_visibility = $phpbb_container->get('phpbbgallery.core.policy.image_visibility');
 		$gallery_url = $phpbb_container->get('phpbbgallery.core.url');
-		$pagination = $phpbb_container->get('pagination');
+		$pagination = $phpbb_container->get('phpbbgallery.core.pagination');
 
 		$favorites_table = $phpbb_container->getParameter('phpbbgallery.tables.gallery_favorites');
 		$images_table = $phpbb_container->getParameter('phpbbgallery.tables.gallery_images');
