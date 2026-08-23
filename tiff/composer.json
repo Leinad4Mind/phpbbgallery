@@ -26,7 +26,8 @@
 	"extra": {
 		"display-name": "phpBB Gallery Add-on: TIFF",
 		"soft-require": {
-			"phpbb/phpbb": ">=3.3.0,<4.0.0@dev"
+			"phpbb/phpbb": ">=3.3.0,<4.0.0@dev",
+			"phpbbgallery/core": ">=4.1.0,<5.0.0@dev"
 		},
 		"version-check": {
 			"host": "raw.githubusercontent.com",

@@ -31,6 +31,7 @@ $lang = array_merge($lang, [
 	'GALLERY_BBCODE_LIMIT_REACHED' => 'BBCode %s не може да бъде инсталиран, защото е достигнат лимитът за BBCode. Премахнете един BBCode и опитайте отново.',
 	'GALLERY_CORE_ENABLE_SUCCESS' => 'phpBB Gallery Core е активирано. Налични са и незадължителните добавки ACP Cleanup, ACP Import и EXIF.',
 	'GALLERY_CORE_ENABLE_BBCODE_FALLBACK' => 'phpBB Gallery Core е активирано. Съществуващият BBCode [image] беше запазен, защото принадлежи на друга дефиниция; галерията ще използва [galleryimage] за ново съдържание. [album] остава скрит само за показване на стари публикации и никога не се генерира.',
+	'GALLERY_DEPENDENCY_VERSION_UNSUPPORTED' => 'Добавката не може да бъде активирана. Версиите на зависимостите са несъвместими: %s.',
 	'GALLERY_REQUIREMENTS_MISSING' => 'phpBB Gallery не може да бъде активирано. Липсват задължителни компоненти: %s.',
 	'GALLERY_SUB_EXT_UNINSTALL' => [
 		1 => 'Трябва да деинсталирате разширението: <br /><strong>%s</strong><br /> преди да деинсталирате основното разширение.',

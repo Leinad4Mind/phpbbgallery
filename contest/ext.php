@@ -32,6 +32,8 @@ class ext extends \phpbb\extension\base
 			return false;
 		}
 
-		return true;
+		return \phpbbgallery\core\dependency\version_validator::validate($manager, $user, [
+			'phpbbgallery/core' => ['4.1.0', '5.0.0'],
+		]);
 	}
 }

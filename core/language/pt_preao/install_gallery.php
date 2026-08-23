@@ -31,6 +31,7 @@ $lang = array_merge($lang, [
 	'GALLERY_BBCODE_LIMIT_REACHED' => 'Não é possível instalar o BBCode %s porque foi atingido o limite de BBCodes. Remove um BBCode e tenta novamente.',
 	'GALLERY_CORE_ENABLE_SUCCESS' => 'A phpBB Gallery Core foi activada. Também estão disponíveis os add-ons opcionais ACP Cleanup, ACP Import e EXIF.',
 	'GALLERY_CORE_ENABLE_BBCODE_FALLBACK' => 'A phpBB Gallery Core foi activada. O BBCode [image] existente foi preservado por pertencer a outra definição; a Galeria utilizará [galleryimage] em conteúdo novo. [album] permanece oculto apenas para apresentar mensagens antigas e nunca será gerado.',
+	'GALLERY_DEPENDENCY_VERSION_UNSUPPORTED' => 'O add-on não pode ser activado. Existem dependências com versões incompatíveis: %s.',
 	'GALLERY_REQUIREMENTS_MISSING' => 'Não é possível activar a phpBB Gallery. Faltam componentes obrigatórios: %s.',
 	'GALLERY_SUB_EXT_UNINSTALL'      => [
 		1 => 'Tem de desinstalar a extensão: <br /><strong>%s</strong><br /> antes de desinstalar a extensão principal.',

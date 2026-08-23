@@ -47,6 +47,7 @@ $lang = array_merge($lang, [
 	'GALLERY_BBCODE_LIMIT_REACHED' => 'Le BBCode %s ne peut pas être installé, car la limite de BBCodes a été atteinte. Supprimez un BBCode, puis réessayez.',
 	'GALLERY_CORE_ENABLE_SUCCESS' => 'phpBB Gallery Core a été activée. Les modules facultatifs ACP Cleanup, ACP Import et EXIF sont également disponibles.',
 	'GALLERY_CORE_ENABLE_BBCODE_FALLBACK' => 'phpBB Gallery Core a été activée. Le BBCode [image] existant a été conservé, car il appartient à une autre définition ; la galerie utilisera [galleryimage] pour les nouveaux contenus. [album] reste masqué uniquement pour afficher les anciens messages et n’est jamais généré.',
+	'GALLERY_DEPENDENCY_VERSION_UNSUPPORTED' => 'Le module complémentaire ne peut pas être activé. Les versions des dépendances sont incompatibles : %s.',
 	'GALLERY_REQUIREMENTS_MISSING' => 'phpBB Gallery ne peut pas être activée. Des composants obligatoires sont absents : %s.',
 	'GALLERY_SUB_EXT_UNINSTALL' => [
 		1 => 'Vous devez désinstaller l’extension: <br /><strong>%s</strong><br /> avant de désinstaller l’extension principale.',
