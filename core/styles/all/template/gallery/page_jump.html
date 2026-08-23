@@ -1,6 +1,6 @@
 {% if GALLERY_JUMP_URL and TOTAL_PAGES > 6 %}
 	{% if GALLERY_BOOTSTRAP_PAGINATION %}
-		<li class='gallery-page-jump'>
+		<li class='gallery-page-jump gallery-page-jump--bootstrap'>
 			<a href='#' class='gallery-page-jump-toggle' data-gallery-page-jump-toggle aria-expanded='false' title='{{ lang('JUMP_TO_PAGE_CLICK') }}'>{{ lang('PAGE_OF', CURRENT_PAGE, TOTAL_PAGES) }}</a>
 			<form class='gallery-page-jump-form' data-gallery-page-jump-form data-url-template='{{ GALLERY_JUMP_URL }}' data-url-token='{{ GALLERY_JUMP_TOKEN }}' data-page-mode='{{ GALLERY_JUMP_MODE }}' data-per-page='{{ GALLERY_JUMP_PER_PAGE }}' hidden>
 				<span class='gallery-page-jump-arrow' aria-hidden='true'></span>

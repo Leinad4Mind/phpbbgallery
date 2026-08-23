@@ -81,6 +81,7 @@ final class album_list_navigation_test extends TestCase
 		$this->assertStringContainsString('data-page-mode', $page_jump);
 		$this->assertStringContainsString("lang('PAGE_OF', CURRENT_PAGE, TOTAL_PAGES)", $page_jump);
 		$this->assertStringContainsString("class='gallery-page-jump-toggle'", $page_jump);
+		$this->assertStringContainsString('gallery-page-jump--bootstrap', $page_jump);
 		$this->assertStringContainsString('dropdown-container dropdown-button-control dropdown-page-jump page-jump', $page_jump);
 		$this->assertStringContainsString('fa-rotate-270', $page_jump);
 		$this->assertStringContainsString('gallery-native-page-jump-form', $page_jump);
@@ -223,7 +224,8 @@ final class album_list_navigation_test extends TestCase
 		$this->assertStringNotContainsString('Vue', $script);
 
 		$css = $this->read('styles/all/theme/gallery.css');
-		$this->assertMatchesRegularExpression('/\.pagination > \.gallery-page-jump,[^{]*\{[^}]*position:\s*relative !important;/s', $css);
+		$this->assertMatchesRegularExpression('/\.pagination > \.gallery-page-jump--bootstrap\s*\{[^}]*display:\s*block;[^}]*float:\s*left;[^}]*position:\s*relative !important;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-page-jump--bootstrap > \.gallery-page-jump-toggle\s*\{[^}]*display:\s*block;[^}]*float:\s*none !important;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-page-jump-content \.input-group\s*\{[^}]*display:\s*flex !important;[^}]*width:\s*100%;/s', $css);
 	}
 

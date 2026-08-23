@@ -14,10 +14,22 @@
 	pointer-events: none;
 }
 
-.pagination > .gallery-page-jump,
 .gallery-page-jump
 {
 	position: relative !important;
+}
+
+.pagination > .gallery-page-jump--bootstrap
+{
+	display: block;
+	float: left;
+	position: relative !important;
+}
+
+.pagination > .gallery-page-jump--bootstrap > .gallery-page-jump-toggle
+{
+	display: block;
+	float: none !important;
 }
 
 .gallery-page-jump-toggle
