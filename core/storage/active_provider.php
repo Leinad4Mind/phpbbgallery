@@ -38,14 +38,22 @@ class active_provider implements provider_interface
 
 	public function get_id(): string
 	{
-		return $this->provider()->get_id();
+		// The storage contract predates variant routing. Keep its identifier
+		// compatible by exposing the provider of the original source file.
+		return $this->provider(provider_interface::SOURCE)->get_id();
+	}
+
+	/** Return the provider assigned to one Gallery file variant. */
+	public function get_variant_provider_id(string $variant): string
+	{
+		return $this->provider($variant)->get_id();
 	}
 
 	public function prepare(string $variant, string $key): bool
 	{
 		$key = $this->variant_key->resolve($variant, $key);
-		$primary = $this->provider();
-		$peer = $this->migration_peer($primary);
+		$primary = $this->provider($variant);
+		$peer = $this->migration_peer($primary, $variant);
 
 		return $primary->prepare($variant, $key)
 			&& ($peer === null || $peer->prepare($variant, $key));
@@ -54,8 +62,8 @@ class active_provider implements provider_interface
 	public function write(string $variant, string $key, string $local_file): bool
 	{
 		$key = $this->variant_key->resolve($variant, $key);
-		$primary = $this->provider();
-		$peer = $this->migration_peer($primary);
+		$primary = $this->provider($variant);
+		$peer = $this->migration_peer($primary, $variant);
 		if (!$primary->write($variant, $key, $local_file))
 		{
 			return false;
@@ -74,8 +82,8 @@ class active_provider implements provider_interface
 	public function replace(string $variant, string $key, string $local_file): bool
 	{
 		$key = $this->variant_key->resolve($variant, $key);
-		$primary = $this->provider();
-		$peer = $this->migration_peer($primary);
+		$primary = $this->provider($variant);
+		$peer = $this->migration_peer($primary, $variant);
 		if ($peer !== null && !$this->replace_peer($peer, $variant, $key, $local_file))
 		{
 			return false;
@@ -87,26 +95,26 @@ class active_provider implements provider_interface
 	public function open_stream(string $variant, string $key): mixed
 	{
 		$key = $this->variant_key->resolve($variant, $key);
-		return $this->provider()->open_stream($variant, $key);
+		return $this->provider($variant)->open_stream($variant, $key);
 	}
 
 	public function local_path(string $variant, string $key): ?string
 	{
 		$key = $this->variant_key->resolve($variant, $key);
-		return $this->provider()->local_path($variant, $key);
+		return $this->provider($variant)->local_path($variant, $key);
 	}
 
 	public function exists(string $variant, string $key): bool
 	{
 		$key = $this->variant_key->resolve($variant, $key);
-		return $this->provider()->exists($variant, $key);
+		return $this->provider($variant)->exists($variant, $key);
 	}
 
 	public function delete(string $variant, string $key): bool
 	{
 		$key = $this->variant_key->resolve($variant, $key);
-		$primary = $this->provider();
-		$peer = $this->migration_peer($primary);
+		$primary = $this->provider($variant);
+		$peer = $this->migration_peer($primary, $variant);
 		if ($peer !== null && !$peer->delete($variant, $key))
 		{
 			return false;
@@ -118,31 +126,48 @@ class active_provider implements provider_interface
 	public function size(string $variant, string $key): ?int
 	{
 		$key = $this->variant_key->resolve($variant, $key);
-		return $this->provider()->size($variant, $key);
+		return $this->provider($variant)->size($variant, $key);
 	}
 
 	public function modified_time(string $variant, string $key): ?int
 	{
 		$key = $this->variant_key->resolve($variant, $key);
-		return $this->provider()->modified_time($variant, $key);
+		return $this->provider($variant)->modified_time($variant, $key);
 	}
 
 	public function list_objects(string $variant, ?string $cursor = null, int $limit = 500): array
 	{
-		return $this->provider()->list_objects($variant, $cursor, $limit);
+		return $this->provider($variant)->list_objects($variant, $cursor, $limit);
 	}
 
 	public function checksum(string $variant, string $key, string $algorithm = 'sha256'): ?string
 	{
 		$key = $this->variant_key->resolve($variant, $key);
-		return $this->provider()->checksum($variant, $key, $algorithm);
+		return $this->provider($variant)->checksum($variant, $key, $algorithm);
 	}
 
-	private function provider(): provider_interface
+	private function provider(string $variant): provider_interface
 	{
-		$provider_id = strtolower(trim((string) $this->config->get('storage_provider')));
+		$this->validate_variant($variant);
+		$provider_id = strtolower(trim((string) $this->config->get('storage_provider_' . $variant, '')));
+		if ($provider_id === '')
+		{
+			$provider_id = strtolower(trim((string) $this->config->get('storage_provider')));
+		}
 
 		return $this->resolve($provider_id);
+	}
+
+	private function validate_variant(string $variant): void
+	{
+		if (!in_array($variant, [
+			provider_interface::SOURCE,
+			provider_interface::MEDIUM,
+			provider_interface::MINI,
+		], true))
+		{
+			throw new \InvalidArgumentException('The Gallery storage variant is invalid.');
+		}
 	}
 
 	private function resolve(string $provider_id): provider_interface
@@ -207,13 +232,20 @@ class active_provider implements provider_interface
 		$this->provider_factories_loaded = true;
 	}
 
-	private function migration_peer(provider_interface $primary): ?provider_interface
+	private function migration_peer(provider_interface $primary, string $variant): ?provider_interface
 	{
 		$source = strtolower(trim((string) $this->config->get('storage_migration_source')));
 		$target = strtolower(trim((string) $this->config->get('storage_migration_target')));
+		$migration_variant = strtolower(trim((string) $this->config->get('storage_migration_variant', '')));
 		// Configuration rows are persisted separately. A request may observe the
 		// short transition while a migration is being started or completed.
 		if ($source === '' || $target === '')
+		{
+			return null;
+		}
+		// An empty value belongs to migrations started by an older add-on
+		// release and deliberately retains its former all-variant mirroring.
+		if ($migration_variant !== '' && $migration_variant !== $variant)
 		{
 			return null;
 		}

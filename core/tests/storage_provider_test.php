@@ -60,6 +60,30 @@ final class storage_provider_test extends TestCase
 		fclose($stream);
 	}
 
+	public function test_each_file_variant_can_use_a_different_provider(): void
+	{
+		$s3 = new memory_storage_provider('s3', ['source.jpg' => 'source']);
+		$azure = new memory_storage_provider('azure', ['medium.jpg' => 'medium']);
+		$storage = $this->active('local', [$s3, $azure], '', '', [
+			provider_interface::SOURCE => 's3',
+			provider_interface::MEDIUM => 'azure',
+			provider_interface::MINI => 'local',
+		]);
+		$mini = $this->temporary_directory . '/mini.jpg';
+		file_put_contents($mini, 'mini');
+		$this->assertTrue($storage->write(provider_interface::MINI, 'mini.jpg', $mini));
+
+		$this->assertSame('s3', $storage->get_id());
+		$this->assertSame('s3', $storage->get_variant_provider_id(provider_interface::SOURCE));
+		$this->assertSame('azure', $storage->get_variant_provider_id(provider_interface::MEDIUM));
+		$this->assertSame('local', $storage->get_variant_provider_id(provider_interface::MINI));
+		$this->assertTrue($storage->exists(provider_interface::SOURCE, 'source.jpg'));
+		$this->assertTrue($storage->exists(provider_interface::MEDIUM, 'medium.jpg'));
+		$this->assertTrue($storage->exists(provider_interface::MINI, 'mini.jpg'));
+		$this->assertFalse($s3->exists(provider_interface::SOURCE, 'mini.jpg'));
+		$this->assertFalse($azure->exists(provider_interface::MINI, 'mini.jpg'));
+	}
+
 	public function test_unselected_provider_factory_is_never_created(): void
 	{
 		$s3 = new memory_storage_factory(new memory_storage_provider('s3'));
@@ -139,6 +163,34 @@ final class storage_provider_test extends TestCase
 		$this->assertTrue($storage->delete(provider_interface::SOURCE, 'image.jpg'));
 		$this->assertFalse($remote->exists(provider_interface::SOURCE, 'image.jpg'));
 		$this->assertFalse($storage->exists(provider_interface::SOURCE, 'image.jpg'));
+	}
+
+	public function test_migration_mirrors_only_the_selected_variant(): void
+	{
+		$remote = new memory_storage_provider('s3');
+		$storage = $this->active(
+			'local',
+			[$remote],
+			'local',
+			's3',
+			[],
+			provider_interface::MEDIUM
+		);
+		$file = $this->temporary_directory . '/migration-variant.jpg';
+		file_put_contents($file, 'image');
+
+		$this->assertTrue($storage->write(provider_interface::SOURCE, 'source.jpg', $file));
+		$this->assertFalse($remote->exists(provider_interface::SOURCE, 'source.jpg'));
+		$this->assertTrue($storage->write(provider_interface::MEDIUM, 'medium.jpg', $file));
+		$this->assertTrue($remote->exists(provider_interface::MEDIUM, 'medium.jpg'));
+		$this->assertTrue($storage->write(provider_interface::MINI, 'mini.jpg', $file));
+		$this->assertFalse($remote->exists(provider_interface::MINI, 'mini.jpg'));
+	}
+
+	public function test_unknown_file_variant_is_rejected(): void
+	{
+		$this->expectException(\InvalidArgumentException::class);
+		$this->active('local')->get_variant_provider_id('preview');
 	}
 
 	public function test_failed_mirror_creation_removes_the_new_primary_object(): void
@@ -335,7 +387,9 @@ final class storage_provider_test extends TestCase
 		string $provider_id,
 		iterable $providers = [],
 		string $migration_source = '',
-		string $migration_target = ''
+		string $migration_target = '',
+		array $variant_providers = [],
+		string $migration_variant = ''
 	): active_provider
 	{
 		$factories = [];
@@ -345,11 +399,17 @@ final class storage_provider_test extends TestCase
 				? new memory_storage_factory($provider)
 				: $provider;
 		}
-		$gallery_config = new config(new \phpbb\config\config([
+		$settings = [
 			'phpbb_gallery_storage_provider' => $provider_id,
 			'phpbb_gallery_storage_migration_source' => $migration_source,
 			'phpbb_gallery_storage_migration_target' => $migration_target,
-		]));
+			'phpbb_gallery_storage_migration_variant' => $migration_variant,
+		];
+		foreach ($variant_providers as $variant => $variant_provider)
+		{
+			$settings['phpbb_gallery_storage_provider_' . $variant] = $variant_provider;
+		}
+		$gallery_config = new config(new \phpbb\config\config($settings));
 
 		return new active_provider($gallery_config, $factories, $this->local());
 	}

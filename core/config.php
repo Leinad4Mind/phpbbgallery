@@ -135,7 +135,11 @@ class config
 		'storage_layout'		=> 'flat',
 		'storage_migration_source'	=> '',
 		'storage_migration_target'	=> '',
+		'storage_migration_variant'	=> '',
 		'storage_provider'		=> 'local',
+		'storage_provider_source'	=> '',
+		'storage_provider_medium'	=> '',
+		'storage_provider_mini'	=> '',
 
 		//'thumbnail_cache'		=> true,
 		'thumbnail_height'		=> 160,
