@@ -361,6 +361,10 @@ class search
 			$sql_where[] = $search_query;
 
 			$search_album = $this->get_search_album_ids($search_album);
+			if (!$search_album)
+			{
+				trigger_error('NO_SEARCH_RESULTS');
+			}
 			$sql_where[] = $this->db->sql_in_set('i.image_album_id', $search_album);
 			$sql_where[] = $this->get_image_visibility_sql();
 			$sql_where = array_merge($sql_where, array_filter($additional_search_where, 'is_string'));

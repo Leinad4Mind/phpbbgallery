@@ -99,6 +99,33 @@ final class controller_search_types_test extends TestCase
 		$this->assertSame([2, 4, 7], $restrict->invoke($controller, []));
 	}
 
+	public function test_search_stops_before_building_an_empty_album_in_clause(): void
+	{
+		$gallery_auth = $this->getMockBuilder(\phpbbgallery\core\auth\auth::class)
+			->disableOriginalConstructor()
+			->onlyMethods(['acl_album_ids'])
+			->getMock();
+		$gallery_auth->expects($this->once())
+			->method('acl_album_ids')
+			->with('i_view')
+			->willReturn([]);
+
+		$controller = (new \ReflectionClass(search::class))->newInstanceWithoutConstructor();
+		$this->set_controller_property($controller, 'gallery_auth', $gallery_auth);
+		$restrict = new \ReflectionMethod(search::class, 'get_search_album_ids');
+
+		$this->assertSame([], $restrict->invoke($controller, []));
+
+		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/search.php');
+		$empty_guard = strpos($source, 'if (!$search_album)');
+		$album_clause = strpos($source, 'sql_in_set(\'i.image_album_id\', $search_album)');
+
+		$this->assertNotFalse($empty_guard);
+		$this->assertNotFalse($album_clause);
+		$this->assertLessThan($album_clause, $empty_guard);
+		$this->assertStringContainsString("trigger_error('NO_SEARCH_RESULTS')", $source);
+	}
+
 	public function test_image_visibility_excludes_orphans_and_limits_unapproved_images(): void
 	{
 		$gallery_auth = $this->getMockBuilder(\phpbbgallery\core\auth\auth::class)
