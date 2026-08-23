@@ -219,7 +219,6 @@ class album_list_pagination_test extends TestCase
 	private function paginate(display $display, array $rows, int $root_album_id): array
 	{
 		$method = new \ReflectionMethod(display::class, 'paginate_album_rows');
-		$method->setAccessible(true);
 
 		return $method->invoke($display, $rows, $root_album_id);
 	}
@@ -227,7 +226,6 @@ class album_list_pagination_test extends TestCase
 	private function icon_groups(display $display, array $rows, int $root_album_id): array
 	{
 		$method = new \ReflectionMethod(display::class, 'album_icon_groups');
-		$method->setAccessible(true);
 
 		return $method->invoke($display, $rows, $root_album_id);
 	}
@@ -235,7 +233,6 @@ class album_list_pagination_test extends TestCase
 	private function group_totals(display $display, array $rows, int $root_album_id): array
 	{
 		$method = new \ReflectionMethod(display::class, 'album_group_totals');
-		$method->setAccessible(true);
 
 		return $method->invoke($display, $rows, $root_album_id);
 	}

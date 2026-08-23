@@ -170,7 +170,6 @@ final class acp_config_types_test extends TestCase
 	public function test_gallery_index_options_are_grouped_by_context(): void
 	{
 		$property = new \ReflectionProperty(config_module::class, 'display_vars');
-		$property->setAccessible(true);
 		$sections = $property->getValue(new config_module())['main']['vars'];
 
 		$gallery_index_sections = array_values(array_filter(
