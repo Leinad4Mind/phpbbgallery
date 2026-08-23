@@ -81,7 +81,10 @@ final class album_list_navigation_test extends TestCase
 		$this->assertStringContainsString('data-page-mode', $page_jump);
 		$this->assertStringContainsString('albumrow: public_albumrow', $index_sections);
 		$this->assertStringContainsString('albumrow: personal_albumrow', $index_sections);
-		$this->assertStringContainsString('PERSONAL_PAGINATION_GALLERY_JUMP_URL', $index_sections);
+		$this->assertSame(2, substr_count($index_sections, 'PERSONAL_PAGINATION_GALLERY_JUMP_URL'));
+		$this->assertSame(2, substr_count($index_sections, 'PERSONAL_PAGINATION_TOTAL_PAGES'));
+		$this->assertStringNotContainsString('PERSONAL_GALLERY_JUMP_', $index_sections);
+		$this->assertStringNotContainsString('PERSONAL_TOTAL_PAGES', $index_sections);
 
 		$category_pagination = $this->read('styles/all/template/gallery/category_album_pagination.html');
 		$this->assertStringContainsString('albumrow.S_CATEGORY_ALBUM_LIST', $category_pagination);
