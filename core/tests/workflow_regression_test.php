@@ -106,4 +106,15 @@ final class workflow_regression_test extends TestCase
 		$this->assertStringNotContainsString("--health-cmd='mysqladmin ping --silent'", $workflow);
 		$this->assertStringNotContainsString('phpunit-sqlite3-github.xml', $workflow);
 	}
+
+	public function test_functional_ci_covers_every_gallery_component(): void
+	{
+		$workflow = (string) file_get_contents(dirname(__DIR__, 5) . '/.github/workflows/phpbbgallery.yml');
+
+		foreach (['acpcleanup', 'acpimport', 'bbpointsimages', 'bbtagsimages', 'contest', 'exif', 'export',
+			'favorite', 'feed', 'imagefields', 'imagerevisions', 'remotestorage', 'tiff'] as $component)
+		{
+			$this->assertStringContainsString($component . '/', $workflow, $component);
+		}
+	}
 }
