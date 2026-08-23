@@ -358,6 +358,12 @@ final class controller_album_types_test extends TestCase
 		$this->assertStringContainsString('class="button button-search"', $prosilver);
 		$this->assertStringContainsString('class="button button-search-end"', $prosilver);
 
+		$css = (string) file_get_contents(dirname(__DIR__) . '/styles/all/theme/gallery.css');
+		$this->assertMatchesRegularExpression('/\.gallery-album-bootstrap-actions\s*\{[^}]*display:\s*flex;[^}]*gap:\s*10px;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-album-bootstrap-actions > \.gallery-album-inline-search\s*\{[^}]*flex:\s*1 1 50%;[^}]*max-width:\s*50%;[^}]*min-width:\s*0;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-album-bootstrap-actions > \.pull-right\s*\{[^}]*margin-left:\s*auto;/s', $css);
+		$this->assertStringContainsString('@media (max-width: 700px)', $css);
+
 		$album_controller = (string) file_get_contents(dirname(__DIR__) . '/controller/album.php');
 		$search_controller = (string) file_get_contents(dirname(__DIR__) . '/controller/search.php');
 		$this->assertStringContainsString("'U_GALLERY_SEARCH_ADVANCED'", $album_controller);
