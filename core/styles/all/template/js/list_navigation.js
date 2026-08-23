@@ -133,11 +133,33 @@
 	function replaceSection(currentSection, nextSection) {
 		var replacement = document.importNode(nextSection, true);
 		currentSection.replaceWith(replacement);
+		initializeNativePageJumps(replacement);
 		replacement.dispatchEvent(new window.CustomEvent('phpbbgallery:list-updated', {
 			bubbles: true
 		}));
 
 		return replacement;
+	}
+
+	function initializeNativePageJumps(root) {
+		if (!window.phpbb || typeof window.phpbb.registerDropdown !== 'function' || typeof window.$ !== 'function') {
+			return;
+		}
+
+		Array.prototype.forEach.call(root.querySelectorAll('.gallery-page-jump .dropdown-trigger'), function (trigger) {
+			var toggle = window.$(trigger);
+			if (toggle.data('dropdown-options')) {
+				return;
+			}
+
+			var dropdown = trigger.parentElement.querySelector('.dropdown');
+			if (dropdown) {
+				window.phpbb.registerDropdown(toggle, window.$(dropdown), {
+					direction: 'auto',
+					verticalDirection: 'auto'
+				});
+			}
+		});
 	}
 
 	function requestPage(url) {
@@ -226,9 +248,10 @@
 				return;
 			}
 
-			form.hidden = true;
-			var toggle = form.parentElement.querySelector('[data-gallery-page-jump-toggle]');
+			var container = form.closest('.gallery-page-jump');
+			var toggle = container ? container.querySelector('[data-gallery-page-jump-toggle]') : null;
 			if (toggle) {
+				form.hidden = true;
 				toggle.setAttribute('aria-expanded', 'false');
 			}
 		});
@@ -282,6 +305,10 @@
 			if (open) {
 				jumpForm.querySelector('input[type=number]').focus();
 			}
+			return;
+		}
+
+		if (event.target.closest('.gallery-page-jump .dropdown-trigger')) {
 			return;
 		}
 

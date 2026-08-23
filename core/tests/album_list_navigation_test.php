@@ -79,6 +79,11 @@ final class album_list_navigation_test extends TestCase
 		$this->assertStringContainsString('data-url-template', $page_jump);
 		$this->assertStringContainsString('data-url-token', $page_jump);
 		$this->assertStringContainsString('data-page-mode', $page_jump);
+		$this->assertStringContainsString("lang('PAGE_OF', CURRENT_PAGE, TOTAL_PAGES)", $page_jump);
+		$this->assertStringContainsString("class='gallery-page-jump-toggle'", $page_jump);
+		$this->assertStringContainsString('dropdown-container dropdown-button-control dropdown-page-jump page-jump', $page_jump);
+		$this->assertStringContainsString('fa-rotate-270', $page_jump);
+		$this->assertStringContainsString('gallery-native-page-jump-form', $page_jump);
 		$this->assertStringContainsString('albumrow: public_albumrow', $index_sections);
 		$this->assertStringContainsString('albumrow: personal_albumrow', $index_sections);
 		$this->assertSame(2, substr_count($index_sections, 'PERSONAL_PAGINATION_GALLERY_JUMP_URL'));
@@ -211,8 +216,15 @@ final class album_list_navigation_test extends TestCase
 		$this->assertStringContainsString('data-gallery-page-jump-form', $script);
 		$this->assertStringContainsString("form.getAttribute('data-page-mode') === 'offset'", $script);
 		$this->assertStringContainsString('navigateSection(section, url, true)', $script);
+		$this->assertStringContainsString('initializeNativePageJumps(replacement)', $script);
+		$this->assertStringContainsString('window.phpbb.registerDropdown', $script);
+		$this->assertStringContainsString("form.closest('.gallery-page-jump')", $script);
 		$this->assertStringNotContainsString('jQuery', $script);
 		$this->assertStringNotContainsString('Vue', $script);
+
+		$css = $this->read('styles/all/theme/gallery.css');
+		$this->assertMatchesRegularExpression('/\.pagination > \.gallery-page-jump,[^{]*\{[^}]*position:\s*relative !important;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-page-jump-content \.input-group\s*\{[^}]*display:\s*flex !important;[^}]*width:\s*100%;/s', $css);
 	}
 
 	private function read(string $path): string

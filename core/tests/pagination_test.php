@@ -56,6 +56,8 @@ class pagination_test extends TestCase
 		$this->assertStringContainsString("'@phpbbgallery.core.pagination'", $controller_services);
 		$this->assertStringContainsString("'@phpbbgallery.core.pagination'", $contest_services);
 		$this->assertStringContainsString("get('phpbbgallery.core.pagination')", $favorite_module);
+		$this->assertStringNotContainsString("'@pagination'", $core_services);
+		$this->assertStringNotContainsString("'@pagination'", $controller_services);
 	}
 
 	private function pagination(): array
