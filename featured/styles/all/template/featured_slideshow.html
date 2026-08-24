@@ -3,18 +3,20 @@
 <section class="gallery-featured gallery-featured--{{ featured_style|default('prosilver') }}" data-gallery-featured data-autoplay="{% if S_FEATURED_AUTOPLAY %}1{% else %}0{% endif %}" data-interval="{{ FEATURED_INTERVAL_MS }}" aria-roledescription="carousel" aria-label="{{ block.BLOCK_NAME }}">
 	<header class="gallery-featured-header"><h2>{{ block.BLOCK_NAME }}</h2></header>
 	<div class="gallery-featured-stage" aria-live="polite">
+		<div class="gallery-featured-track" data-gallery-featured-track>
 	{% for image in block.image %}
-		<article class="gallery-featured-slide{% if loop.first %} is-active{% endif %}" data-gallery-featured-slide{% if not loop.first %} hidden{% endif %} aria-label="{{ loop.index }} / {{ loop.length }}">
+		<article class="gallery-featured-slide" data-gallery-featured-slide aria-label="{{ loop.index }} / {{ loop.length }}">
 			<a href="{{ image.UC_THUMBNAIL_ACTION }}" class="gallery-featured-image-link">
 				<img src="{{ image.U_MEDIUM_IMAGE }}" alt="{{ image.UC_IMAGE_NAME }}" loading="{% if loop.first %}eager{% else %}lazy{% endif %}" />
 			</a>
 			<div class="gallery-featured-caption">
-				{% if image.UC_IMAGE_NAME %}<h3><a href="{{ image.UC_THUMBNAIL_ACTION }}">{{ image.UC_IMAGE_NAME }}</a></h3>{% endif %}
+				{% if image.UC_IMAGE_NAME %}<h3><a href="{{ image.UC_THUMBNAIL_ACTION }}" title="{{ image.UC_IMAGE_NAME }}">{{ image.UC_IMAGE_NAME }}</a></h3>{% endif %}
 				{% if image.IMAGE_SUBTITLE %}<p>{{ image.IMAGE_SUBTITLE }}</p>{% endif %}
 				{% if image.U_ALBUM %}<p>{{ lang('ALBUM_NAME') }}{{ lang('COLON') }} <a href="{{ image.U_ALBUM }}">{{ image.ALBUM_NAME }}</a></p>{% endif %}
 			</div>
 		</article>
 	{% endfor %}
+		</div>
 	</div>
 	{% if block.image|length > 1 %}
 	<nav class="gallery-featured-controls" aria-label="{{ lang('FEATURED_SLIDESHOW_CONTROLS') }}">

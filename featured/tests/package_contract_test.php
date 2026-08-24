@@ -47,6 +47,11 @@ class package_contract_test extends TestCase
 		$this->assertStringContainsString('touchstart', $script);
 		$this->assertStringContainsString("document.addEventListener('visibilitychange'", $script);
 		$this->assertStringContainsString('label.textContent = playing', $script);
+		$this->assertStringContainsString("root.classList.add('is-enhanced')", $script);
+		$this->assertStringContainsString("getPropertyValue('--gallery-featured-visible')", $script);
+		$this->assertStringContainsString("slide.setAttribute('aria-hidden'", $script);
+		$this->assertStringContainsString("slide.style.flexBasis = width + 'px'", $script);
+		$this->assertStringContainsString('data-gallery-featured-track', $template);
 		$this->assertStringContainsString('payload.S_CONFIRM_ACTION', $script);
 		$this->assertStringNotContainsString('The request could not be completed.', $script);
 		$this->assertStringContainsString('class="icon fa fa-chevron-left', $template);

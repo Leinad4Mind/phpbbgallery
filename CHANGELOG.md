@@ -18,6 +18,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Translated every Featured Images control, setting, result and dependency message across all eleven bundled Gallery languages, with regression protection against untranslated English catalogue copies.
 - Expanded Featured Images integration coverage across slideshow and card presentation, anonymous permission filtering and all three bundled styles; autoplay now pauses while the page is hidden and its accessible play/pause name stays synchronized with the visible state.
 - Refined the Featured Images slideshow for PROSILVER, BBOOTS and FLATBOOTS with theme-specific panels, a neutral transparency-safe image stage, balanced captions and fully visible Font Awesome controls.
+- Changed the Featured Images slideshow into a responsive multi-card carousel showing four images on desktop, three on intermediate screens, two on tablets and one on mobile, while retaining autoplay, keyboard, touch and no-JavaScript fallback behaviour.
 
 ### Fixed
 

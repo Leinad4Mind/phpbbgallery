@@ -2,7 +2,9 @@
 	--gallery-featured-accent: #0875b4;
 	--gallery-featured-background: #f5f7fa;
 	--gallery-featured-border: #ccd5df;
+	--gallery-featured-gap: 12px;
 	--gallery-featured-heading: #105289;
+	--gallery-featured-visible: 4;
 	background: var(--gallery-featured-background);
 	border: 1px solid var(--gallery-featured-border);
 	border-radius: 6px;
@@ -22,51 +24,65 @@
 	margin: 0;
 }
 .gallery-featured-stage {
-	min-height: clamp(340px, 52vh, 560px);
 	padding: 12px;
 	position: relative;
 }
-.gallery-featured-slide {
-	align-items: stretch;
+.gallery-featured-track {
 	display: grid;
-	gap: 12px;
-	grid-template-columns: minmax(0, 2.2fr) minmax(240px, .8fr);
-	min-height: clamp(316px, 49vh, 536px);
+	gap: var(--gallery-featured-gap);
+	grid-template-columns: repeat(var(--gallery-featured-visible), minmax(0, 1fr));
 }
-.gallery-featured-slide[hidden] { display: none; }
+.gallery-featured.is-enhanced .gallery-featured-stage { overflow: hidden; }
+.gallery-featured.is-enhanced .gallery-featured-track {
+	display: flex;
+	transition: transform .35s ease;
+	will-change: transform;
+}
+.gallery-featured-slide {
+	background: #fff;
+	border: 1px solid var(--gallery-featured-border);
+	border-radius: 4px;
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	overflow: hidden;
+}
+.gallery-featured.is-enhanced .gallery-featured-slide {
+	flex: 0 0 auto;
+}
 .gallery-featured-image-link {
 	align-items: center;
 	background-color: #edf1f4;
 	background-image: linear-gradient(45deg, rgba(255, 255, 255, .7) 25%, transparent 25%), linear-gradient(-45deg, rgba(255, 255, 255, .7) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, rgba(255, 255, 255, .7) 75%), linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, .7) 75%);
 	background-position: 0 0, 0 8px, 8px -8px, -8px 0;
 	background-size: 16px 16px;
-	border: 1px solid rgba(103, 126, 145, .24);
-	border-radius: 4px;
 	display: flex;
+	height: clamp(210px, 22vw, 300px);
 	justify-content: center;
-	min-height: 280px;
-	padding: 12px;
+	padding: 8px;
 }
 .gallery-featured-image-link img {
 	box-shadow: 0 2px 8px rgba(18, 38, 55, .16);
 	height: auto;
-	max-height: 510px;
+	max-height: 100%;
 	max-width: 100%;
 	object-fit: contain;
 }
 .gallery-featured-caption {
-	align-self: center;
+	align-self: stretch;
 	background: #fff;
-	border: 1px solid var(--gallery-featured-border);
-	border-radius: 4px;
-	box-shadow: 0 1px 3px rgba(18, 38, 55, .08);
-	padding: 18px;
+	border-top: 1px solid var(--gallery-featured-border);
+	flex: 1;
+	padding: 12px;
 }
 .gallery-featured-caption h3 {
 	border-bottom: 1px solid #d9e0e6;
-	font-size: 1.25em;
+	display: -webkit-box;
+	font-size: 1.08em;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
 	margin: 0 0 10px;
-	overflow-wrap: anywhere;
+	overflow: hidden;
 	padding-bottom: 10px;
 }
 .gallery-featured-caption h3 a { color: var(--gallery-featured-heading); }
@@ -75,11 +91,13 @@
 	align-items: center;
 	background: linear-gradient(180deg, rgba(255, 255, 255, .98), rgba(235, 241, 245, .98));
 	border-top: 1px solid var(--gallery-featured-border);
-	display: flex;
+	display: none;
 	gap: 9px;
 	justify-content: center;
 	padding: 8px 10px;
 }
+.gallery-featured.is-enhanced .gallery-featured-controls { display: flex; }
+.gallery-featured.is-enhanced .gallery-featured-controls[hidden] { display: none; }
 .gallery-featured-control {
 	align-items: center;
 	background: #fff;
@@ -144,12 +162,21 @@
 	text-transform: uppercase;
 }
 .gallery-featured--flatboots .gallery-featured-control:hover { color: #2c3e50; }
+@media (max-width: 1000px) {
+	.gallery-featured { --gallery-featured-visible: 3; }
+}
+@media (max-width: 760px) {
+	.gallery-featured { --gallery-featured-visible: 2; }
+}
 @media (max-width: 700px) {
 	.gallery-featured-header { padding: 9px 11px; }
 	.gallery-featured-stage { min-height: 0; padding: 8px; }
-	.gallery-featured-slide { grid-template-columns: 1fr; }
-	.gallery-featured-image-link { min-height: 220px; padding: 8px; }
+	.gallery-featured-image-link { height: 250px; }
 	.gallery-featured-caption { padding: 13px; }
+}
+@media (max-width: 480px) {
+	.gallery-featured { --gallery-featured-visible: 1; }
+	.gallery-featured-image-link { height: min(72vw, 330px); }
 }
 @media (prefers-reduced-motion: reduce) {
 	.gallery-featured * { scroll-behavior: auto !important; transition: none !important; }

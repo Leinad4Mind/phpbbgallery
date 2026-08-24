@@ -56,8 +56,9 @@ class featured_workflow extends \phpbbgallery\core\tests\functional\addon_workfl
 		$this->assertSame(1, $crawler->filter('[data-gallery-featured]')->count());
 		$this->assertSame('0', $crawler->filter('[data-gallery-featured]')->attr('data-autoplay'));
 		$this->assertSame('6000', $crawler->filter('[data-gallery-featured]')->attr('data-interval'));
+		$this->assertSame(1, $crawler->filter('[data-gallery-featured-track]')->count());
 		$this->assertSame(2, $crawler->filter('[data-gallery-featured-slide]')->count());
-		$this->assertSame(1, $crawler->filter('[data-gallery-featured-slide][hidden]')->count());
+		$this->assertSame(0, $crawler->filter('[data-gallery-featured-slide][hidden]')->count());
 		$this->assertSame(2, $crawler->filter('[data-gallery-featured-go]')->count());
 		$this->assertSame(1, $crawler->filter('[data-gallery-featured-previous]')->count());
 		$this->assertSame(1, $crawler->filter('[data-gallery-featured-next]')->count());
