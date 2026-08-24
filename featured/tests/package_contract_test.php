@@ -49,6 +49,9 @@ class package_contract_test extends TestCase
 		$this->assertStringContainsString('label.textContent = playing', $script);
 		$this->assertStringContainsString('payload.S_CONFIRM_ACTION', $script);
 		$this->assertStringNotContainsString('The request could not be completed.', $script);
+		$this->assertStringContainsString('class="icon fa fa-chevron-left', $template);
+		$this->assertStringContainsString('class="icon fa fa-chevron-right', $template);
+		$this->assertStringContainsString('gallery-featured-control gallery-featured-play', $template);
 	}
 
 	public function test_every_style_exposes_the_block_and_moderation_action(): void
@@ -59,10 +62,21 @@ class package_contract_test extends TestCase
 			$index = (string) file_get_contents($events . 'phpbbgallery_core_index_featured_before.html');
 			$action = (string) file_get_contents($events . 'phpbbgallery_core_viewimage_actions.html');
 			$this->assertStringContainsString("{% include '@phpbbgallery_featured/featured_slideshow.html' %}", $index, $style);
+			$this->assertStringContainsString("featured_style = '" . strtolower($style) . "'", $index, $style);
 			$this->assertStringContainsString('data-gallery-featured-toggle', $action, $style);
 			$this->assertStringContainsString('FEATURE_IMAGE_LABEL', $action, $style);
 			$this->assertStringContainsString('S_IMAGE_FEATURED', $action, $style);
 		}
+	}
+
+	public function test_slideshow_has_distinct_theme_variants(): void
+	{
+		$template = (string) file_get_contents($this->root . '/styles/all/template/featured_slideshow.html');
+		$css = (string) file_get_contents($this->root . '/styles/all/theme/featured.css');
+		$this->assertStringContainsString("gallery-featured--{{ featured_style|default('prosilver') }}", $template);
+		$this->assertStringContainsString('.gallery-featured--prosilver', $css);
+		$this->assertStringContainsString('.gallery-featured--bboots', $css);
+		$this->assertStringContainsString('.gallery-featured--flatboots', $css);
 	}
 
 	public function test_bundled_translations_are_not_english_copies(): void
