@@ -4,6 +4,10 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ## [4.2.0] Unreleased
 
+### Added
+
+- Added private Microsoft OneDrive storage restricted to the application's `approot`, using delegated `Files.ReadWrite.AppFolder` access, refresh-token authentication, resumable Microsoft Graph upload sessions and verified private downloads.
+
 ## [4.1.0] - 2026-08-24
 
 ### Added

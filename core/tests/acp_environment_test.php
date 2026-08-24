@@ -124,7 +124,7 @@ final class acp_environment_test extends TestCase
 			array_column($checks, 'tier')
 		);
 		$this->assertSame(
-			['1.4.0', '1.4.0', '1.0.0', '1.4.0', '1.0.0', '1.0.0', '1.0.0', '1.0.0', '1.0.0', '1.0.0', '1.0.0', '1.0.0', '1.0.0'],
+			['1.4.0', '1.4.0', '1.0.0', '1.4.0', '1.0.0', '1.0.0', '1.0.0', '1.0.0', '1.0.0', '1.0.0', '1.0.0', '1.0.0', '1.1.0'],
 			array_column($checks, 'version')
 		);
 		$this->assertSame('phpBB Gallery Add-on: ACP Cleanup', $checks[0]['name']);
