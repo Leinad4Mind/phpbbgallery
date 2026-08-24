@@ -252,7 +252,25 @@
 .gallery-featured--flatboots .gallery-featured-control:hover { color: #2c3e50; }
 .gallery-featured--flatboots.gallery-featured--layout-classic { --gallery-featured-header-background: #c8cdd8; }
 .gallery-featured--flatboots.gallery-featured--layout-futuristic {
-	background: linear-gradient(135deg, rgba(229, 170, 23, .12), #ecf0f1 58%);
+	--gallery-featured-accent: #daa520;
+	--gallery-featured-border: rgba(137, 113, 56, .24);
+	--gallery-featured-heading: #9e7233;
+	background: linear-gradient(135deg, rgba(218, 165, 32, .14), #ecf0f1 58%);
+	border-radius: 6px;
+}
+.gallery-featured--flatboots.gallery-featured--layout-futuristic .gallery-featured-header {
+	background: linear-gradient(90deg, rgba(158, 114, 51, .17), rgba(255, 255, 255, .78) 62%);
+	border-bottom: 1px solid rgba(137, 113, 56, .24);
+	border-left: 4px solid #daa520;
+	padding-left: 12px;
+}
+.gallery-featured--flatboots.gallery-featured--layout-futuristic .gallery-featured-header h2 {
+	color: #9e7233;
+	text-shadow: none;
+}
+.gallery-featured--flatboots.gallery-featured--layout-futuristic .gallery-featured-slide {
+	border-color: rgba(137, 113, 56, .24);
+	border-top-color: #daa520;
 }
 @media (max-width: 1000px) {
 	.gallery-featured--count-many { --gallery-featured-visible: 3; }

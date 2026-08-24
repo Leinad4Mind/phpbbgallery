@@ -101,6 +101,14 @@ class package_contract_test extends TestCase
 			'/\.gallery-featured--prosilver\.gallery-featured--layout-classic\s*\{[^}]*background-color:\s*#0076b1;[^}]*border:\s*0;[^}]*border-radius:\s*7px;[^}]*padding:\s*5px;/s',
 			$css
 		);
+		$this->assertMatchesRegularExpression(
+			'/\.gallery-featured--flatboots\.gallery-featured--layout-futuristic \.gallery-featured-header\s*\{[^}]*border-bottom:\s*1px solid rgba\(137, 113, 56, \.24\);[^}]*border-left:\s*4px solid #daa520;/s',
+			$css
+		);
+		$this->assertMatchesRegularExpression(
+			'/\.gallery-featured--flatboots\.gallery-featured--layout-futuristic \.gallery-featured-header h2\s*\{[^}]*color:\s*#9e7233;[^}]*text-shadow:\s*none;/s',
+			$css
+		);
 	}
 
 	public function test_bundled_translations_are_not_english_copies(): void
