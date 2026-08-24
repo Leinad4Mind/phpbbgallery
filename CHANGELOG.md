@@ -11,6 +11,10 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added a Core boundary for curator-supplied image sets that reapplies album permissions, ignored-user exclusions, approved status and optional visibility policies, preserves portable ordering and exposes a dedicated Gallery-index presentation event without coupling Core to a particular add-on.
 - Added a generic HTTPS WebDAV provider for services such as Nextcloud and QNAP, with custom-port support, strict same-origin RFC 4918 metadata validation, conditional streamed writes and verified private downloads; Koofr now reuses the same hardened engine through its fixed official endpoint.
 
+### Changed
+
+- Kept the released Core 4.1.0 and Remote Storage 1.0.0 in the stable version-check channel while exposing the 4.2.0 and 1.1.0 development lines, plus the unreleased Featured Images add-on, only through phpBB's opt-in unstable channel.
+
 ## [4.1.0] - 2026-08-24
 
 ### Added

@@ -31,6 +31,13 @@ final class version_check_metadata_test extends TestCase
 		'tiff' => 'gallery-tiff.json',
 	];
 
+	/** @var array<string, string|null> */
+	private const UNRELEASED = [
+		'core' => '4.1.0',
+		'featured' => null,
+		'remotestorage' => '1.0.0',
+	];
+
 	public function test_every_component_exposes_a_phpbb_version_check(): void
 	{
 		$extension_root = dirname(__DIR__, 2);
@@ -62,20 +69,38 @@ final class version_check_metadata_test extends TestCase
 			$composer = $this->decode_json($extension_root . '/' . $component . '/composer.json');
 			$metadata = $this->decode_json($extension_root . '/' . $filename);
 
+			if (array_key_exists($component, self::UNRELEASED))
+			{
+				$stable_version = self::UNRELEASED[$component];
+				$this->assertSame(
+					$stable_version === null ? ['unstable'] : ['stable', 'unstable'],
+					array_keys($metadata),
+					$filename . ' has unexpected development channels.'
+				);
+				if ($stable_version !== null)
+				{
+					$this->assert_version_entry($metadata['stable'], $stable_version, $filename);
+				}
+				$this->assert_version_entry($metadata['unstable'], $composer['version'], $filename);
+				continue;
+			}
+
 			$this->assertSame(['stable'], array_keys($metadata), $filename . ' has unexpected release channels.');
-			$this->assertSame(['3.3'], array_keys($metadata['stable']), $filename . ' has unexpected phpBB branches.');
-			$this->assertSame(
-				[
-					'current' => $composer['version'],
-					'download' => 'https://github.com/satanasov/phpbbgallery',
-					'announcement' => 'https://www.phpbb.com/customise/db/extension/phpbb_gallery',
-					'eol' => null,
-					'security' => false,
-				],
-				$metadata['stable']['3.3'],
-				$filename . ' does not match its component manifest.'
-			);
+			$this->assert_version_entry($metadata['stable'], $composer['version'], $filename);
 		}
+	}
+
+	/** @param array<string, mixed> $channel */
+	private function assert_version_entry(array $channel, string $version, string $filename): void
+	{
+		$this->assertSame(['3.3'], array_keys($channel), $filename . ' has unexpected phpBB branches.');
+		$this->assertSame([
+			'current' => $version,
+			'download' => 'https://github.com/satanasov/phpbbgallery',
+			'announcement' => 'https://www.phpbb.com/customise/db/extension/phpbb_gallery',
+			'eol' => null,
+			'security' => false,
+		], $channel['3.3'], $filename . ' has invalid release metadata.');
 	}
 
 	public function test_no_component_version_file_is_left_untracked(): void

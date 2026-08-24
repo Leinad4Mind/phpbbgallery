@@ -1,6 +1,15 @@
 {
 	"stable": {
 		"3.3": {
+			"current": "4.1.0",
+			"download": "https://github.com/satanasov/phpbbgallery",
+			"announcement": "https://www.phpbb.com/customise/db/extension/phpbb_gallery",
+			"eol": null,
+			"security": false
+		}
+	},
+	"unstable": {
+		"3.3": {
 			"current": "4.2.0",
 			"download": "https://github.com/satanasov/phpbbgallery",
 			"announcement": "https://www.phpbb.com/customise/db/extension/phpbb_gallery",
