@@ -24,6 +24,7 @@ final class package_builder
 		'exif',
 		'export',
 		'favorite',
+		'featured',
 		'feed',
 		'imagefields',
 		'imagerevisions',
