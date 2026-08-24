@@ -26,7 +26,7 @@
 		}
 		function schedule() {
 			window.clearInterval(timer);
-			if (playing) { timer = window.setInterval(function () { show(index + 1); }, interval); }
+			if (playing && !document.hidden) { timer = window.setInterval(function () { show(index + 1); }, interval); }
 		}
 		function setPlaying(value) {
 			playing = value && !reduced;
@@ -34,6 +34,8 @@
 				play.setAttribute('aria-pressed', playing ? 'true' : 'false');
 				var icon = play.querySelector('.icon');
 				if (icon) { icon.classList.toggle('fa-pause', playing); icon.classList.toggle('fa-play', !playing); }
+				var label = play.querySelector('.sr-only');
+				if (label) { label.textContent = playing ? play.getAttribute('data-pause-label') : play.getAttribute('data-play-label'); }
 			}
 			schedule();
 		}
@@ -50,6 +52,7 @@
 			if (event.key === 'ArrowLeft') { show(index - 1); }
 			if (event.key === 'ArrowRight') { show(index + 1); }
 		});
+		document.addEventListener('visibilitychange', schedule);
 		root.addEventListener('touchstart', function (event) { touchStart = event.changedTouches[0].clientX; }, { passive: true });
 		root.addEventListener('touchend', function (event) {
 			if (touchStart === null) { return; }

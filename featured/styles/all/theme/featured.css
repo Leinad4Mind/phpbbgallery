@@ -18,6 +18,7 @@
 .gallery-featured-indicators { display: flex; flex-wrap: wrap; gap: 7px; justify-content: center; }
 .gallery-featured-indicators button { background: #a8b3bd; border: 0; border-radius: 50%; cursor: pointer; height: 10px; padding: 0; width: 10px; }
 .gallery-featured-indicators button.is-active { background: #0875b4; transform: scale(1.25); }
+.gallery-featured-controls button:focus-visible, [data-gallery-featured-toggle]:focus-visible { outline: 2px solid #0875b4; outline-offset: 2px; }
 [data-gallery-featured-toggle][data-featured="1"] { color: #7c3aed; }
 @media (max-width: 700px) {
 	.gallery-featured-stage, .gallery-featured-slide { min-height: 0; }

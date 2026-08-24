@@ -37,11 +37,29 @@ class package_contract_test extends TestCase
 		$template = (string) file_get_contents($this->root . '/styles/all/template/featured_slideshow.html');
 		$script = (string) file_get_contents($this->root . '/styles/all/template/featured.js');
 		$this->assertStringContainsString('aria-roledescription="carousel"', $template);
+		$this->assertStringContainsString('data-play-label=', $template);
+		$this->assertStringContainsString('data-pause-label=', $template);
 		$this->assertStringContainsString('prefers-reduced-motion', $script);
 		$this->assertStringContainsString("event.key === 'ArrowLeft'", $script);
 		$this->assertStringContainsString('touchstart', $script);
+		$this->assertStringContainsString("document.addEventListener('visibilitychange'", $script);
+		$this->assertStringContainsString('label.textContent = playing', $script);
 		$this->assertStringContainsString('payload.S_CONFIRM_ACTION', $script);
 		$this->assertStringNotContainsString('The request could not be completed.', $script);
+	}
+
+	public function test_every_style_exposes_the_block_and_moderation_action(): void
+	{
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$events = $this->root . '/styles/' . $style . '/template/event/';
+			$index = (string) file_get_contents($events . 'phpbbgallery_core_index_featured_before.html');
+			$action = (string) file_get_contents($events . 'phpbbgallery_core_viewimage_actions.html');
+			$this->assertStringContainsString("{% include '@phpbbgallery_featured/featured_slideshow.html' %}", $index, $style);
+			$this->assertStringContainsString('data-gallery-featured-toggle', $action, $style);
+			$this->assertStringContainsString('FEATURE_IMAGE_LABEL', $action, $style);
+			$this->assertStringContainsString('S_IMAGE_FEATURED', $action, $style);
+		}
 	}
 
 	public function test_bundled_translations_are_not_english_copies(): void

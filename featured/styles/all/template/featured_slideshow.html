@@ -23,7 +23,7 @@
 		{% for image in block.image %}<button type="button" data-gallery-featured-go="{{ loop.index0 }}" class="{% if loop.first %}is-active{% endif %}" aria-label="{{ lang('FEATURED_GO_TO', loop.index) }}" aria-current="{% if loop.first %}true{% else %}false{% endif %}"></button>{% endfor %}
 		</div>
 		<button type="button" class="button2" data-gallery-featured-next aria-label="{{ lang('FEATURED_NEXT') }}"><i class="icon fa-chevron-right fa-fw" aria-hidden="true"></i></button>
-		<button type="button" class="button2 gallery-featured-play" data-gallery-featured-play aria-pressed="{% if S_FEATURED_AUTOPLAY %}true{% else %}false{% endif %}"><i class="icon {% if S_FEATURED_AUTOPLAY %}fa-pause{% else %}fa-play{% endif %} fa-fw" aria-hidden="true"></i><span class="sr-only">{% if S_FEATURED_AUTOPLAY %}{{ lang('FEATURED_PAUSE') }}{% else %}{{ lang('FEATURED_PLAY') }}{% endif %}</span></button>
+		<button type="button" class="button2 gallery-featured-play" data-gallery-featured-play data-play-label="{{ lang('FEATURED_PLAY') }}" data-pause-label="{{ lang('FEATURED_PAUSE') }}" aria-pressed="{% if S_FEATURED_AUTOPLAY %}true{% else %}false{% endif %}"><i class="icon {% if S_FEATURED_AUTOPLAY %}fa-pause{% else %}fa-play{% endif %} fa-fw" aria-hidden="true"></i><span class="sr-only">{% if S_FEATURED_AUTOPLAY %}{{ lang('FEATURED_PAUSE') }}{% else %}{{ lang('FEATURED_PLAY') }}{% endif %}</span></button>
 	</nav>
 	{% endif %}
 </section>
