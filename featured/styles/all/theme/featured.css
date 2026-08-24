@@ -157,19 +157,26 @@
 .gallery-featured--layout-classic {
 	--gallery-featured-card-radius: 0;
 	--gallery-featured-card-shadow: none;
-	border-radius: 0;
+	border: 1px solid var(--gallery-featured-border);
+	border-radius: 3px;
 	box-shadow: none;
 }
 .gallery-featured--layout-classic .gallery-featured-header h2 {
 	font-size: 1.2em;
+	font-weight: 700;
 	text-transform: uppercase;
 }
+.gallery-featured--layout-classic .gallery-featured-caption h3 { font-weight: 700; }
 .gallery-featured--layout-classic .gallery-featured-stage { padding: 8px; }
 .gallery-featured--layout-classic .gallery-featured-caption { padding: 9px; }
 .gallery-featured--layout-classic .gallery-featured-caption h3 {
 	font-size: 1em;
 	margin-bottom: 7px;
 	padding-bottom: 7px;
+}
+.gallery-featured--layout-classic.gallery-featured--count-one .gallery-featured-caption h3 {
+	font-size: clamp(1.35em, 2.2vw, 1.8em);
+	line-height: 1.25;
 }
 .gallery-featured--layout-modern {
 	--gallery-featured-card-radius: 3px;
@@ -203,8 +210,21 @@
 	border-radius: 4px;
 }
 .gallery-featured--prosilver { --gallery-featured-header-background: linear-gradient(180deg, #eaf3f9, #dbe9f2); }
-.gallery-featured--prosilver.gallery-featured--layout-classic { --gallery-featured-header-background: linear-gradient(180deg, #12a3eb, #0875b4); }
+.gallery-featured--prosilver.gallery-featured--layout-classic {
+	--gallery-featured-header-background: transparent;
+	background-color: #0076b1;
+	background-image: linear-gradient(to bottom, #6aceff 0%, #12a3eb 2px, #0076b1 92px, #0076b1 100%);
+	background-repeat: repeat-x;
+	border: 0;
+	border-radius: 7px;
+	padding: 5px;
+}
 .gallery-featured--prosilver.gallery-featured--layout-classic .gallery-featured-header h2 { color: #fff; }
+.gallery-featured--prosilver.gallery-featured--layout-classic .gallery-featured-header {
+	border-bottom: 0;
+	padding: 6px 10px;
+}
+.gallery-featured--prosilver.gallery-featured--layout-classic .gallery-featured-stage { background: #fff; }
 .gallery-featured--bboots {
 	--gallery-featured-accent: #3498db;
 	--gallery-featured-background: #ecf0f1;

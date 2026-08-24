@@ -95,6 +95,12 @@ class package_contract_test extends TestCase
 		$this->assertStringContainsString('grid-template-columns: minmax(0, 1.7fr) minmax(220px, .7fr)', $css);
 		$this->assertStringContainsString('.gallery-featured--count-two { --gallery-featured-visible: 2; }', $css);
 		$this->assertStringContainsString('.gallery-featured--count-three { --gallery-featured-visible: 3; }', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-featured--layout-classic \.gallery-featured-header h2\s*\{[^}]*font-weight:\s*700;/s', $css);
+		$this->assertStringContainsString('.gallery-featured--layout-classic.gallery-featured--count-one .gallery-featured-caption h3', $css);
+		$this->assertMatchesRegularExpression(
+			'/\.gallery-featured--prosilver\.gallery-featured--layout-classic\s*\{[^}]*background-color:\s*#0076b1;[^}]*border:\s*0;[^}]*border-radius:\s*7px;[^}]*padding:\s*5px;/s',
+			$css
+		);
 	}
 
 	public function test_bundled_translations_are_not_english_copies(): void

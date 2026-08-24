@@ -24,6 +24,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 ### Fixed
 
 - Fixed the Featured Images add-on rendering a duplicate empty ACP fieldset before its configuration group.
+- Matched the Featured Images Classic presentation to the native Classic Gallery container border and bold heading instead of retaining the generic carousel panel treatment.
 
 ## [4.1.0] - 2026-08-24
 
