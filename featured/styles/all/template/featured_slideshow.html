@@ -1,6 +1,16 @@
 {% if S_FEATURED_SLIDESHOW %}
 {% for block in featuredslide %}
-<section class="gallery-featured gallery-featured--{{ featured_style|default('prosilver') }}" data-gallery-featured data-autoplay="{% if S_FEATURED_AUTOPLAY %}1{% else %}0{% endif %}" data-interval="{{ FEATURED_INTERVAL_MS }}" aria-roledescription="carousel" aria-label="{{ block.BLOCK_NAME }}">
+{% set featured_count = block.image|length %}
+{% if featured_count == 1 %}
+	{% set featured_count_class = 'one' %}
+{% elseif featured_count == 2 %}
+	{% set featured_count_class = 'two' %}
+{% elseif featured_count == 3 %}
+	{% set featured_count_class = 'three' %}
+{% else %}
+	{% set featured_count_class = 'many' %}
+{% endif %}
+<section class="gallery-featured gallery-featured--{{ featured_style|default('prosilver') }} gallery-featured--layout-{{ GALLERY_INDEX_ALBUM_LAYOUT|default('cards') }} gallery-featured--count-{{ featured_count_class }}" data-gallery-featured data-featured-count="{{ featured_count }}" data-autoplay="{% if S_FEATURED_AUTOPLAY %}1{% else %}0{% endif %}" data-interval="{{ FEATURED_INTERVAL_MS }}" aria-roledescription="carousel" aria-label="{{ block.BLOCK_NAME }}">
 	<header class="gallery-featured-header"><h2>{{ block.BLOCK_NAME }}</h2></header>
 	<div class="gallery-featured-stage" aria-live="polite">
 		<div class="gallery-featured-track" data-gallery-featured-track>

@@ -82,6 +82,19 @@ class package_contract_test extends TestCase
 		$this->assertStringContainsString('.gallery-featured--prosilver', $css);
 		$this->assertStringContainsString('.gallery-featured--bboots', $css);
 		$this->assertStringContainsString('.gallery-featured--flatboots', $css);
+		foreach (['classic', 'modern', 'cards', 'futuristic'] as $layout)
+		{
+			$this->assertStringContainsString('gallery-featured--layout-' . $layout, $css);
+		}
+		foreach (['one', 'two', 'three', 'many'] as $count)
+		{
+			$this->assertStringContainsString('gallery-featured--count-' . $count, $template . $css);
+		}
+		$this->assertStringContainsString("GALLERY_INDEX_ALBUM_LAYOUT|default('cards')", $template);
+		$this->assertStringContainsString('data-featured-count="{{ featured_count }}"', $template);
+		$this->assertStringContainsString('grid-template-columns: minmax(0, 1.7fr) minmax(220px, .7fr)', $css);
+		$this->assertStringContainsString('.gallery-featured--count-two { --gallery-featured-visible: 2; }', $css);
+		$this->assertStringContainsString('.gallery-featured--count-three { --gallery-featured-visible: 3; }', $css);
 	}
 
 	public function test_bundled_translations_are_not_english_copies(): void

@@ -19,6 +19,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Expanded Featured Images integration coverage across slideshow and card presentation, anonymous permission filtering and all three bundled styles; autoplay now pauses while the page is hidden and its accessible play/pause name stays synchronized with the visible state.
 - Refined the Featured Images slideshow for PROSILVER, BBOOTS and FLATBOOTS with theme-specific panels, a neutral transparency-safe image stage, balanced captions and fully visible Font Awesome controls.
 - Changed the Featured Images slideshow into a responsive multi-card carousel showing four images on desktop, three on intermediate screens, two on tablets and one on mobile, while retaining autoplay, keyboard, touch and no-JavaScript fallback behaviour.
+- Adapted Featured Images to the active Classic, Modern List, Modern Cards or Futuristic Gallery presentation, with a single-image hero, balanced two- and three-image arrangements and a four-card desktop carousel for larger selections across PROSILVER, BBOOTS and FLATBOOTS.
 
 ### Fixed
 
