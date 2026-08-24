@@ -206,10 +206,9 @@ class index
 			'S_HAS_PUBLIC_ALBUMS' => $public_has_rows || $public_visible_total > 0,
 			'S_HAS_PERSONAL_ALBUMS' => $personal_total > 0,
 		]);
-		if ($this->gallery_config->get('rrc_gindex_mode'))
+		$config_value = (int) $this->gallery_config->get('rrc_gindex_mode');
+		if ($config_value)
 		{
-			$config_value = $this->gallery_config->get('rrc_gindex_mode');
-
 			$recent_comments = ($config_value & self::RRC_MODE_RECENT_COMMENTS) !== 0;
 			$random_images   = ($config_value & self::RRC_MODE_RANDOM_IMAGES) !== 0;
 			$recent_images   = ($config_value & self::RRC_MODE_RECENT_IMAGES) !== 0;
@@ -259,19 +258,22 @@ class index
 				$this->gallery_search->recent_comments($this->gallery_config->get('items_per_page'), 0, false);
 			}
 
-			/**
-			 * Allow add-ons to render additional permission-filtered image blocks.
-			 *
-			 * @event phpbbgallery.core.index.image_blocks
-			 * @var int config_value Selected Gallery-index mode bitmask
-			 * @since 4.1.0
-			 */
-			$vars = ['config_value'];
-			extract($this->dispatcher->trigger_event(
-				'phpbbgallery.core.index.image_blocks',
-				compact($vars)
-			));
 		}
+
+		/**
+		 * Allow add-ons to render additional permission-filtered image blocks.
+		 * This event also runs when every built-in Gallery-index block is disabled.
+		 *
+		 * @event phpbbgallery.core.index.image_blocks
+		 * @var int config_value Selected Gallery-index mode bitmask
+		 * @since 4.1.0
+		 * @changed 4.2.0 Always dispatched
+		 */
+		$vars = ['config_value'];
+		extract($this->dispatcher->trigger_event(
+			'phpbbgallery.core.index.image_blocks',
+			compact($vars)
+		));
 		$this->display_legend();
 		$this->display_birthdays();
 		$this->assign_dropdown_links('phpbbgallery_core_index', $show_personal_albums);

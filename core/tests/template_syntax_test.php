@@ -102,6 +102,20 @@ final class template_syntax_test extends TestCase
 		}
 	}
 
+	public function test_gallery_index_exposes_the_featured_block_event_in_every_style(): void
+	{
+		$core_root = dirname(__DIR__);
+		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		{
+			$source = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/index_body.html');
+			$this->assertSame(
+				1,
+				substr_count($source, '{% EVENT phpbbgallery_core_index_featured_before %}'),
+				$style
+			);
+		}
+	}
+
 	public function test_flatboots_image_actions_match_the_viewtopic_button_size(): void
 	{
 		$source = (string) file_get_contents(\gallery_test_existing_file(

@@ -211,6 +211,7 @@ function toggleElement(oElement)
 	</div>
 {% endif %}
 
+{% EVENT phpbbgallery_core_index_featured_before %}
 {% if imageblock|length %}
 	{% include '@phpbbgallery_core/gallery/imageblock_layout.html' %}
 {% endif %}

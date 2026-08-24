@@ -1399,6 +1399,7 @@ class image
 		$template_vars = [
 			'IMAGE_ID'		=> $image_data['image_id'],
 			'U_IMAGE'		=> $show_imagename ? $action_image : false,
+			'U_MEDIUM_IMAGE'	=> $this->helper->route('phpbbgallery_core_image_file_medium', ['image_id' => (int) $image_data['image_id']]),
 			'UC_IMAGE_NAME'	=> $show_imagename ? $image_data['image_name'] : false,
 			'U_ALBUM'	=> $show_album ? $this->helper->route('phpbbgallery_core_album', ['album_id' => (int) $image_data['album_id']]) : false,
 			'ALBUM_NAME'	=> $show_album ? $image_data['album_name'] : false,

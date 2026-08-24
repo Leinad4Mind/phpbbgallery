@@ -851,6 +851,109 @@ class search
 	}
 
 	/**
+	 * Render a curator-supplied image set after applying the current viewer's
+	 * Gallery permissions and optional visibility policies.
+	 *
+	 * The order of the supplied identifiers is preserved without relying on a
+	 * database-specific ordering expression. Only approved images are exposed;
+	 * moderation-only states must never become public through an add-on block.
+	 *
+	 * @param array        $image_ids        Ordered image identifiers
+	 * @param string       $block_name       Translated block heading
+	 * @param string|false $block_url        Optional heading destination
+	 * @param int          $limit            Maximum number of rendered images
+	 * @param bool|null    $include_personal Override the Gallery-index personal-album setting
+	 * @param bool         $slideshow        Assign to the dedicated slideshow block
+	 * @param bool         $show_empty       Whether to render an empty block
+	 * @return int Number of visible images assigned
+	 */
+	public function curated(array $image_ids, string $block_name, string|false $block_url = false, int $limit = 10, ?bool $include_personal = null, bool $slideshow = false, bool $show_empty = false): int
+	{
+		$limit = max(0, min(50, $limit));
+		$image_ids = array_values(array_unique(array_filter(array_map('intval', $image_ids), static fn(int $image_id): bool => $image_id > 0)));
+		$image_ids = array_slice($image_ids, 0, $limit);
+		if ($limit === 0 || !$image_ids)
+		{
+			return 0;
+		}
+
+		$this->gallery_auth->load_user_permissions((int) $this->user->data['user_id']);
+		$include_personal ??= (bool) $this->gallery_config->get('rrc_gindex_pegas');
+		$exclude_albums = $this->gallery_auth->get_exclude_zebra();
+		if (!$include_personal)
+		{
+			$sql = 'SELECT album_id
+				FROM ' . $this->albums_table . '
+				WHERE album_user_id > 0';
+			$result = $this->db->sql_query($sql);
+			while ($row = $this->db->sql_fetchrow($result))
+			{
+				$exclude_albums[] = (int) $row['album_id'];
+			}
+			$this->db->sql_freeresult($result);
+		}
+
+		$view_albums = array_diff($this->gallery_auth->acl_album_ids('i_view'), $exclude_albums);
+		$moderated_albums = array_diff($this->gallery_auth->acl_album_ids('m_status'), $exclude_albums);
+		$where = $this->db->sql_in_set('i.image_id', $image_ids) . '
+			AND i.image_status = ' . (int) \phpbbgallery\core\block::STATUS_APPROVED . '
+			AND ' . $this->db->sql_in_set('i.image_album_id', array_unique(array_merge($view_albums, $moderated_albums)), false, true) . '
+			AND ' . $this->image_visibility->get_visibility_sql_for_results('i', $moderated_albums);
+		$sql_array = [
+			'SELECT' => 'i.*, a.album_name, a.album_status, a.album_user_id, a.album_id',
+			'FROM' => [$this->images_table => 'i'],
+			'LEFT_JOIN' => [[
+				'FROM' => [$this->albums_table => 'a'],
+				'ON' => 'a.album_id = i.image_album_id',
+			]],
+			'WHERE' => $where,
+		];
+		$result = $this->db->sql_query($this->db->sql_build_query('SELECT', $sql_array));
+		$rows_by_id = [];
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$rows_by_id[(int) $row['image_id']] = $row;
+		}
+		$this->db->sql_freeresult($result);
+
+		$rows = [];
+		foreach ($image_ids as $image_id)
+		{
+			if (isset($rows_by_id[$image_id]))
+			{
+				$rows[] = $rows_by_id[$image_id];
+			}
+		}
+		if (!$rows && !$show_empty)
+		{
+			return 0;
+		}
+
+		$root_block = $slideshow ? 'featuredslide' : 'imageblock';
+		$this->template->assign_block_vars($root_block, [
+			'BLOCK_NAME' => $block_name,
+			'U_BLOCK' => $block_url,
+		]);
+		if (!$rows)
+		{
+			$this->template->assign_block_vars($root_block, [
+				'ERROR' => $this->language->lang('NO_SEARCH_RESULTS'),
+			]);
+			return 0;
+		}
+
+		$this->assign_image_rows(
+			$rows,
+			(int) $this->gallery_config->get('rrc_gindex_display'),
+			(string) $this->gallery_config->get('link_thumbnail'),
+			(string) $this->gallery_config->get('link_image_name'),
+			$root_block . '.image'
+		);
+
+		return count($rows);
+	}
+
+	/**
 	 * Assign a bounded image result set after optional add-ons enrich its cards.
 	 *
 	 * @param array  $images         Image and album rows
@@ -859,7 +962,7 @@ class search
 	 * @param string $imagename_link Image-name destination mode
 	 * @return void
 	 */
-	private function assign_image_rows(array $images, int $show_options, string $thumbnail_link, string $imagename_link): void
+	private function assign_image_rows(array $images, int $show_options, string $thumbnail_link, string $imagename_link, string $template_block = 'imageblock.image'): void
 	{
 		$image_template_vars = $this->image->enrich_block_template_vars($images, $show_options);
 
@@ -869,7 +972,7 @@ class search
 			$additional_vars = isset($image_template_vars[$image_id]) && is_array($image_template_vars[$image_id])
 				? $image_template_vars[$image_id]
 				: [];
-			$this->image->assign_block('imageblock.image', $row, $show_options, $thumbnail_link, $imagename_link, $additional_vars);
+			$this->image->assign_block($template_block, $row, $show_options, $thumbnail_link, $imagename_link, $additional_vars);
 		}
 	}
 

@@ -53,6 +53,7 @@ final class domain_search_types_test extends TestCase
 		$this->assertNull($search->random(0));
 		$this->assertNull($search->recent(0));
 		$this->assertNull($search->featured(0, 'most_viewed'));
+		$this->assertSame(0, $search->curated([1, 2], 'Featured', false, 0));
 	}
 
 	public function test_count_and_rendering_contracts_are_explicit(): void
@@ -60,6 +61,7 @@ final class domain_search_types_test extends TestCase
 		$this->assertSame('int', (string) (new \ReflectionMethod(search::class, 'recent_count'))->getReturnType());
 		$this->assertSame('int', (string) (new \ReflectionMethod(search::class, 'user_image_count'))->getReturnType());
 		$this->assertSame('array', (string) (new \ReflectionMethod(search::class, 'user_image_counts'))->getReturnType());
+		$this->assertSame('int', (string) (new \ReflectionMethod(search::class, 'curated'))->getReturnType());
 
 		foreach (['random', 'recent_comments', 'recent', 'recent_personal', 'featured', 'rating'] as $method_name)
 		{
@@ -93,6 +95,31 @@ final class domain_search_types_test extends TestCase
 
 		$this->assertSame(['U_FAVORITE_IMAGE' => '/favorite/7'], $assignments[0][5]);
 		$this->assertSame([], $assignments[1][5]);
+	}
+
+	public function test_image_rows_can_be_assigned_to_an_add_on_owned_block(): void
+	{
+		$images = [['image_id' => 7, 'image_album_id' => 2]];
+		$image = $this->createMock(\phpbbgallery\core\image\image::class);
+		$image->expects($this->once())
+			->method('enrich_block_template_vars')
+			->with($images, 5, '')
+			->willReturn([]);
+		$image->expects($this->once())
+			->method('assign_block')
+			->with('featuredslide.image', $images[0], 5, 'image_page', 'image_page', []);
+
+		$reflection = new \ReflectionClass(search::class);
+		$search = $reflection->newInstanceWithoutConstructor();
+		$reflection->getProperty('image')->setValue($search, $image);
+		$reflection->getMethod('assign_image_rows')->invoke(
+			$search,
+			$images,
+			5,
+			'image_page',
+			'image_page',
+			'featuredslide.image'
+		);
 	}
 
 	public function test_image_service_exposes_the_neutral_bulk_enrichment_event(): void
@@ -203,6 +230,21 @@ final class domain_search_types_test extends TestCase
 		$this->assertGreaterThanOrEqual(3, substr_count($source, '$this->image_visibility->get_visibility_sql_for_private_data('));
 		$this->assertGreaterThanOrEqual(3, substr_count($source, '$this->image_visibility->get_visibility_sql_for_results('));
 		$this->assertStringNotContainsString('core\\contest::', $source);
+	}
+
+	public function test_curated_blocks_reapply_permissions_status_and_visibility(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/search.php');
+		$start = strpos($source, 'public function curated(');
+		$end = strpos($source, 'private function assign_image_rows(', $start ?: 0);
+		$curated = substr($source, $start, $end - $start);
+
+		$this->assertStringContainsString("acl_album_ids('i_view')", $curated);
+		$this->assertStringContainsString("acl_album_ids('m_status')", $curated);
+		$this->assertStringContainsString('STATUS_APPROVED', $curated);
+		$this->assertStringContainsString('get_exclude_zebra()', $curated);
+		$this->assertStringContainsString('get_visibility_sql_for_results', $curated);
+		$this->assertStringNotContainsString('FIELD(', $curated);
 	}
 
 	public function test_random_results_require_image_view_or_moderator_permission(): void
