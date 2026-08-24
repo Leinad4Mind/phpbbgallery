@@ -112,7 +112,6 @@ class main_listener implements EventSubscriberInterface
 		$this->language->add_lang('featured', 'phpbbgallery/featured');
 		$addon = ['id' => 'featured', 'name' => 'FEATURED_IMAGES', 'accent' => '#7c3aed'];
 		$return_ary['vars']['FEATURED_SETTINGS'] = [
-			'legend' => 'FEATURED_SETTINGS',
 			'featured_enable' => ['lang' => 'FEATURED_ENABLE', 'explain' => true, 'validate' => 'bool', 'type' => 'radio:yes_no', 'addon' => $addon],
 			'featured_count' => ['lang' => 'FEATURED_COUNT', 'explain' => true, 'validate' => 'int:1:20', 'type' => 'number:1:20', 'addon' => $addon],
 			'featured_slideshow' => ['lang' => 'FEATURED_SLIDESHOW', 'explain' => true, 'validate' => 'bool', 'type' => 'radio:yes_no', 'addon' => $addon],

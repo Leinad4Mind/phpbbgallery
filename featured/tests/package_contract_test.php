@@ -20,6 +20,9 @@ class package_contract_test extends TestCase
 		$this->assertSame('1.0.0', $composer['version']);
 		$this->assertSame('>=4.2.0,<5.0.0@dev', $composer['extra']['soft-require']['phpbbgallery/core']);
 		$this->assertStringContainsString('gallery_featured', (string) file_get_contents($this->root . '/migrations/m1_init.php'));
+		$listener = (string) file_get_contents($this->root . '/event/main_listener.php');
+		$this->assertStringNotContainsString("'legend' => 'FEATURED_SETTINGS'", $listener);
+		$this->assertStringContainsString("['vars']['FEATURED_SETTINGS'] = [", $listener);
 	}
 
 	public function test_permission_and_visibility_boundaries_are_present(): void

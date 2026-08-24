@@ -18,6 +18,10 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Translated every Featured Images control, setting, result and dependency message across all eleven bundled Gallery languages, with regression protection against untranslated English catalogue copies.
 - Expanded Featured Images integration coverage across slideshow and card presentation, anonymous permission filtering and all three bundled styles; autoplay now pauses while the page is hidden and its accessible play/pause name stays synchronized with the visible state.
 
+### Fixed
+
+- Fixed the Featured Images add-on rendering a duplicate empty ACP fieldset before its configuration group.
+
 ## [4.1.0] - 2026-08-24
 
 ### Added
