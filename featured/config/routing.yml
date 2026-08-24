@@ -1,0 +1,11 @@
+phpbbgallery_featured_add:
+    path: /gallery/image/{image_id}/feature
+    defaults: { _controller: phpbbgallery.featured.controller:add }
+    requirements:
+        image_id: \d+
+
+phpbbgallery_featured_remove:
+    path: /gallery/image/{image_id}/unfeature
+    defaults: { _controller: phpbbgallery.featured.controller:remove }
+    requirements:
+        image_id: \d+

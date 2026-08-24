@@ -88,6 +88,7 @@ $lang = array_merge($lang, [
 	'GALLERY_ADDON_EXIF_EXPLAIN'        => 'Zeigt die in hochgeladenen Bildern gespeicherten fotografischen Metadaten an.',
 	'GALLERY_ADDON_EXPORT_EXPLAIN'      => 'Fasst die Galeriebilder in einem ZIP-Archiv zusammen, benannt so, wie das Forum sie anzeigt.',
 	'GALLERY_ADDON_FAVORITE_EXPLAIN'    => 'Ermöglicht Mitgliedern, Bilder als Favorit zu speichern und sie über das Persönliche Profil wiederzufinden.',
+	'GALLERY_ADDON_FEATURED_EXPLAIN'    => 'Ermöglicht Moderatoren, freigegebene Bilder für einen berechtigungsgefilterten Kartenblock oder eine barrierearme Diashow auszuwählen.',
 	'GALLERY_ADDON_FEED_EXPLAIN'        => 'Veröffentlicht die neuesten Bilder als ATOM-Feed, den man abonnieren kann.',
 	'GALLERY_ADDON_IMAGE_FIELDS_EXPLAIN' => 'Ergänzt übersetzte, administrativ definierte Metadatenfelder mit Albumbereichen, Validierung, Suche, Import und Export.',
 	'ACP_GALLERY_OVERVIEW'              => 'phpBB Galerie',

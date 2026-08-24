@@ -870,8 +870,9 @@ class search
 	public function curated(array $image_ids, string $block_name, string|false $block_url = false, int $limit = 10, ?bool $include_personal = null, bool $slideshow = false, bool $show_empty = false): int
 	{
 		$limit = max(0, min(50, $limit));
+		$candidate_limit = min(500, max($limit, $limit * 10));
 		$image_ids = array_values(array_unique(array_filter(array_map('intval', $image_ids), static fn(int $image_id): bool => $image_id > 0)));
-		$image_ids = array_slice($image_ids, 0, $limit);
+		$image_ids = array_slice($image_ids, 0, $candidate_limit);
 		if ($limit === 0 || !$image_ids)
 		{
 			return 0;
@@ -923,6 +924,10 @@ class search
 			{
 				$rows[] = $rows_by_id[$image_id];
 			}
+			if (count($rows) >= $limit)
+			{
+				break;
+			}
 		}
 		if (!$rows && !$show_empty)
 		{
@@ -942,9 +947,14 @@ class search
 			return 0;
 		}
 
+		$show_options = (int) $this->gallery_config->get('rrc_gindex_display');
+		if ($slideshow)
+		{
+			$show_options |= \phpbbgallery\core\image\image::IMAGE_SHOW_IMAGENAME | \phpbbgallery\core\image\image::IMAGE_SHOW_ALBUM | \phpbbgallery\core\image\image::IMAGE_SHOW_SUBTITLE;
+		}
 		$this->assign_image_rows(
 			$rows,
-			(int) $this->gallery_config->get('rrc_gindex_display'),
+			$show_options,
 			(string) $this->gallery_config->get('link_thumbnail'),
 			(string) $this->gallery_config->get('link_image_name'),
 			$root_block . '.image'
@@ -960,6 +970,7 @@ class search
 	 * @param int    $show_options   Bitmask of image details to display
 	 * @param string $thumbnail_link Thumbnail destination mode
 	 * @param string $imagename_link Image-name destination mode
+	 * @param string $template_block Target Twig block
 	 * @return void
 	 */
 	private function assign_image_rows(array $images, int $show_options, string $thumbnail_link, string $imagename_link, string $template_block = 'imageblock.image'): void

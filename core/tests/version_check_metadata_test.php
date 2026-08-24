@@ -23,6 +23,7 @@ final class version_check_metadata_test extends TestCase
 		'exif' => 'gallery-exif.json',
 		'export' => 'gallery-export.json',
 		'favorite' => 'gallery-favorite.json',
+		'featured' => 'gallery-featured.json',
 		'feed' => 'gallery-feed.json',
 		'imagefields' => 'gallery-imagefields.json',
 		'imagerevisions' => 'gallery-imagerevisions.json',

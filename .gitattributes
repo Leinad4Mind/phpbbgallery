@@ -20,6 +20,9 @@
 /favorite/phpunit.xml.dist export-ignore
 /favorite/tests export-ignore
 /favorite/tests/** export-ignore
+/featured/phpunit.xml.dist export-ignore
+/featured/tests export-ignore
+/featured/tests/** export-ignore
 /feed/phpunit.xml.dist export-ignore
 /feed/tests export-ignore
 /feed/tests/** export-ignore

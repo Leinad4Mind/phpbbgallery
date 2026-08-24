@@ -6,6 +6,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Added
 
+- Added the free Featured Images add-on, allowing album moderators to curate approved images into a permission-filtered Gallery-index block, with either the configured card layout or a responsive accessible slideshow supporting keyboard navigation, touch gestures, reduced motion and optional autoplay.
 - Added private Microsoft OneDrive storage restricted to the application's `approot`, using delegated `Files.ReadWrite.AppFolder` access, refresh-token authentication, resumable Microsoft Graph upload sessions and verified private downloads.
 - Added a Core boundary for curator-supplied image sets that reapplies album permissions, ignored-user exclusions, approved status and optional visibility policies, preserves portable ordering and exposes a dedicated Gallery-index presentation event without coupling Core to a particular add-on.
 - Added a generic HTTPS WebDAV provider for services such as Nextcloud and QNAP, with custom-port support, strict same-origin RFC 4918 metadata validation, conditional streamed writes and verified private downloads; Koofr now reuses the same hardened engine through its fixed official endpoint.

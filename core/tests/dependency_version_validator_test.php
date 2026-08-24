@@ -59,15 +59,16 @@ final class dependency_version_validator_test extends TestCase
 			}
 
 			$composer = json_decode((string) file_get_contents($manifest), true, 512, JSON_THROW_ON_ERROR);
+			$minimum = $component === 'featured' ? '4.2.0' : '4.1.0';
 			$this->assertSame(
-				'>=4.1.0,<5.0.0@dev',
+				'>=' . $minimum . ',<5.0.0@dev',
 				$composer['extra']['soft-require']['phpbbgallery/core'] ?? null,
 				$component
 			);
 
 			$extension = (string) file_get_contents(dirname($manifest) . '/ext.php');
 			$this->assertStringContainsString('version_validator::validate(', $extension, $component);
-			$this->assertStringContainsString("'phpbbgallery/core' => ['4.1.0', '5.0.0']", $extension, $component);
+			$this->assertStringContainsString("'phpbbgallery/core' => ['" . $minimum . "', '5.0.0']", $extension, $component);
 		}
 	}
 

@@ -245,6 +245,8 @@ final class domain_search_types_test extends TestCase
 		$this->assertStringContainsString('get_exclude_zebra()', $curated);
 		$this->assertStringContainsString('get_visibility_sql_for_results', $curated);
 		$this->assertStringNotContainsString('FIELD(', $curated);
+		$this->assertStringContainsString('$candidate_limit', $curated);
+		$this->assertStringContainsString('if (count($rows) >= $limit)', $curated);
 	}
 
 	public function test_random_results_require_image_view_or_moderator_permission(): void

@@ -104,6 +104,7 @@ $lang = array_merge($lang, [
 	'GALLERY_ADDON_EXIF_EXPLAIN'             => 'Affiche les métadonnées photographiques stockées dans les images téléversées.',
 	'GALLERY_ADDON_EXPORT_EXPLAIN'           => 'Réunit les images de la galerie dans une archive ZIP portant les noms affichés par le forum.',
 	'GALLERY_ADDON_FAVORITE_EXPLAIN'         => 'Permet aux membres de mettre des images en favori et de les retrouver depuis leur panneau de l’utilisateur.',
+	'GALLERY_ADDON_FEATURED_EXPLAIN'         => 'Permet aux modérateurs de sélectionner des images approuvées pour un bloc de cartes ou un diaporama accessible filtré par permissions.',
 	'GALLERY_ADDON_FEED_EXPLAIN'             => 'Publie les images les plus récentes dans un flux ATOM auquel il est possible de s’abonner.',
 	'GALLERY_ADDON_IMAGE_FIELDS_EXPLAIN'     => 'Ajoute des champs de métadonnées traduits et définis par l’administrateur, avec portée par album, validation, recherche, importation et exportation.',
 	'ACP_GALLERY_OVERVIEW'         => 'Galerie phpBB',

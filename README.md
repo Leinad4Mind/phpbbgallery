@@ -19,6 +19,7 @@ add-ons use sibling directories under `ext/phpbbgallery/`.
 | Contests | 1.0.0 | Adds contest phases, anonymous entries, voting and winner publication. |
 | Exif | 1.4.0 | Displays photographic metadata stored in uploaded images. |
 | Favorite | 1.0.0 | Lets members bookmark images and manage them in the UCP. |
+| Featured Images | 1.0.0 | Lets moderators curate an accessible featured-image block or slideshow. |
 | Feed | 1.0.0 | Publishes recent Gallery images as an ATOM feed. |
 | TIFF | 1.0.0 | Accepts verified TIFF originals through Imagick and creates browser-safe WebP variants. |
 
@@ -57,5 +58,5 @@ php _forum/ext/phpbbgallery/build_release_packages.php --output=build/phpbbgalle
 ```
 
 When this directory is the repository root, use `php build_release_packages.php`
-instead. Uncommitted changes are intentionally excluded. The output contains 14
+instead. Uncommitted changes are intentionally excluded. The output contains 15
 versioned ZIP files, `SHA256SUMS` and a deterministic `release-manifest.json`.
