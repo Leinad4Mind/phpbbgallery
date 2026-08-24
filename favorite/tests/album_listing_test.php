@@ -53,7 +53,7 @@ final class album_listing_test extends TestCase
 		$method = strstr($method, '/**', true);
 
 		$this->assertStringContainsString('phpbbgallery.core.imageblock.image_template_vars', $core_image);
-		$this->assertSame(4, substr_count($core_search, '$this->assign_image_rows('));
+		$this->assertSame(5, substr_count($core_search, '$this->assign_image_rows('));
 		$this->assertStringContainsString('$this->enrich_listing($event, (array) $event[' . "'images']", $method);
 		$this->assertSame(1, substr_count($method, 'enrich_listing('));
 	}
