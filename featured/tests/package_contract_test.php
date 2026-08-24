@@ -8,6 +8,7 @@ class package_contract_test extends TestCase
 {
 	private string $root;
 
+	// phpcs:ignore PhpbbCodingStandard.NamingConventions.LowercaseUnderscoredFunctions.NotAllowed -- PHPUnit lifecycle API.
 	protected function setUp(): void
 	{
 		$this->root = dirname(__DIR__);
@@ -27,7 +28,7 @@ class package_contract_test extends TestCase
 		$listener = (string) file_get_contents($this->root . '/event/main_listener.php');
 		$this->assertStringContainsString("acl_check('m_edit'", $controller);
 		$this->assertStringContainsString('STATUS_APPROVED', $controller);
-		$this->assertStringContainsString("phpbbgallery.core.index.image_blocks", $listener);
+		$this->assertStringContainsString('phpbbgallery.core.index.image_blocks', $listener);
 		$this->assertStringContainsString('->curated(', $listener);
 	}
 
@@ -38,8 +39,25 @@ class package_contract_test extends TestCase
 		$this->assertStringContainsString('aria-roledescription="carousel"', $template);
 		$this->assertStringContainsString('prefers-reduced-motion', $script);
 		$this->assertStringContainsString("event.key === 'ArrowLeft'", $script);
-		$this->assertStringContainsString("touchstart", $script);
+		$this->assertStringContainsString('touchstart', $script);
 		$this->assertStringContainsString('payload.S_CONFIRM_ACTION', $script);
 		$this->assertStringNotContainsString('The request could not be completed.', $script);
+	}
+
+	public function test_bundled_translations_are_not_english_copies(): void
+	{
+		$english = hash_file('sha256', $this->root . '/language/en/featured.php');
+		$languages = glob($this->root . '/language/*', GLOB_ONLYDIR) ?: [];
+		$this->assertCount(11, $languages);
+
+		foreach ($languages as $language)
+		{
+			if (basename($language) === 'en')
+			{
+				continue;
+			}
+
+			$this->assertNotSame($english, hash_file('sha256', $language . '/featured.php'), basename($language));
+		}
 	}
 }

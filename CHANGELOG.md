@@ -14,6 +14,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 ### Changed
 
 - Kept the released Core 4.1.0 and Remote Storage 1.0.0 in the stable version-check channel while exposing the 4.2.0 and 1.1.0 development lines, plus the unreleased Featured Images add-on, only through phpBB's opt-in unstable channel.
+- Translated every Featured Images control, setting, result and dependency message across all eleven bundled Gallery languages, with regression protection against untranslated English catalogue copies.
 
 ## [4.1.0] - 2026-08-24
 
