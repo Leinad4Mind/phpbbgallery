@@ -165,6 +165,7 @@ class package_contract_test extends TestCase
 			'/\.gallery-featured--flatboots\.gallery-featured--layout-futuristic \.gallery-featured-header h2\s*\{[^}]*color:\s*#7f8c8d;[^}]*text-shadow:\s*none;/s',
 			$css
 		);
+		$this->assertMatchesRegularExpression('/\.gallery-featured-slide\s*\{[^}]*box-sizing:\s*border-box;/s', $css);
 		$this->assertStringNotContainsString('border-left: 4px solid #daa520;', $css);
 	}
 

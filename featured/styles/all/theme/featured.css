@@ -51,6 +51,7 @@
 	will-change: transform;
 }
 .gallery-featured-slide {
+	box-sizing: border-box;
 	background: #fff;
 	border: 1px solid var(--gallery-featured-border);
 	border-radius: var(--gallery-featured-card-radius);
