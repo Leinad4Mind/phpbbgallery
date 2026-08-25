@@ -20,6 +20,9 @@ class package_contract_test extends TestCase
 		$this->assertSame('1.0.0', $composer['version']);
 		$this->assertSame('>=4.2.0,<5.0.0@dev', $composer['extra']['soft-require']['phpbbgallery/core']);
 		$this->assertStringContainsString('gallery_featured', (string) file_get_contents($this->root . '/migrations/m1_init.php'));
+		$display_migration = (string) file_get_contents($this->root . '/migrations/m2_display_controls.php');
+		$this->assertStringContainsString('phpbb_gallery_featured_location', $display_migration);
+		$this->assertStringContainsString('inherit_enabled_state', $display_migration);
 		$listener = (string) file_get_contents($this->root . '/event/main_listener.php');
 		$this->assertStringNotContainsString("'legend' => 'FEATURED_SETTINGS'", $listener);
 		$this->assertStringContainsString("['vars']['FEATURED_SETTINGS'] = [", $listener);
@@ -32,7 +35,12 @@ class package_contract_test extends TestCase
 		$this->assertStringContainsString("acl_check('m_edit'", $controller);
 		$this->assertStringContainsString('STATUS_APPROVED', $controller);
 		$this->assertStringContainsString('phpbbgallery.core.index.image_blocks', $listener);
+		$this->assertStringContainsString('core.index_modify_page_title', $listener);
 		$this->assertStringContainsString('->curated(', $listener);
+		$this->assertStringContainsString("'featuredslide'", $listener);
+		$this->assertStringContainsString('S_FEATURED_', $listener);
+		$this->assertStringContainsString('featured_location', $listener);
+		$this->assertStringContainsString('featured_position', $listener);
 	}
 
 	public function test_slideshow_is_accessible_and_has_progressive_fallback(): void
@@ -63,15 +71,42 @@ class package_contract_test extends TestCase
 	{
 		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
 		{
+			$core_index = (string) file_get_contents(dirname($this->root) . '/core/styles/' . $style . '/template/gallery/index_body.html');
 			$events = $this->root . '/styles/' . $style . '/template/event/';
-			$index = (string) file_get_contents($events . 'phpbbgallery_core_index_featured_before.html');
+			$gallery_top = (string) file_get_contents($events . 'phpbbgallery_core_index_featured_top.html');
+			$gallery_bottom = (string) file_get_contents($events . 'phpbbgallery_core_index_featured_bottom.html');
+			$forum_top_name = $style === 'prosilver' ? 'index_body_markforums_before.html' : 'index_body_forumlist_body_before.html';
+			$forum_top = (string) file_get_contents($events . $forum_top_name);
+			$forum_bottom = (string) file_get_contents($events . 'index_body_stat_blocks_before.html');
 			$action = (string) file_get_contents($events . 'phpbbgallery_core_viewimage_actions.html');
-			$this->assertStringContainsString("{% include '@phpbbgallery_featured/featured_slideshow.html' %}", $index, $style);
-			$this->assertStringContainsString("featured_style = '" . strtolower($style) . "'", $index, $style);
+			$this->assertStringContainsString('phpbbgallery_core_index_featured_top', $core_index, $style);
+			$this->assertStringContainsString('phpbbgallery_core_index_featured_bottom', $core_index, $style);
+			foreach ([$gallery_top, $gallery_bottom, $forum_top, $forum_bottom] as $placement)
+			{
+				$this->assertStringContainsString("{% include '@phpbbgallery_featured/featured_slideshow.html' %}", $placement, $style);
+				$this->assertStringContainsString("featured_style = '" . strtolower($style) . "'", $placement, $style);
+			}
+			$this->assertStringContainsString('S_FEATURED_GALLERY_INDEX_TOP', $gallery_top, $style);
+			$this->assertStringContainsString('S_FEATURED_GALLERY_INDEX_BOTTOM', $gallery_bottom, $style);
+			$this->assertStringContainsString('S_FEATURED_FORUM_INDEX_TOP', $forum_top, $style);
+			$this->assertStringContainsString('S_FEATURED_FORUM_INDEX_BOTTOM', $forum_bottom, $style);
 			$this->assertStringContainsString('data-gallery-featured-toggle', $action, $style);
 			$this->assertStringContainsString('FEATURE_IMAGE_LABEL', $action, $style);
 			$this->assertStringContainsString('S_IMAGE_FEATURED', $action, $style);
 		}
+	}
+
+	public function test_acp_hides_position_only_when_neither_index_is_selected(): void
+	{
+		$script = (string) file_get_contents($this->root . '/adm/style/featured_acp.js');
+		$this->assertStringContainsString("location.value === '0'", $script);
+		$this->assertStringContainsString('row.hidden = hidden', $script);
+		$this->assertStringContainsString("location.addEventListener('change'", $script);
+		$this->assertStringContainsString("document.getElementById('featured_position')", $script);
+
+		$template = (string) file_get_contents($this->root . '/styles/all/template/featured_slideshow.html');
+		$this->assertStringContainsString('S_FEATURED_IMAGES', $template);
+		$this->assertStringContainsString('with { imageblock: featuredslide }', $template);
 	}
 
 	public function test_slideshow_has_distinct_theme_variants(): void

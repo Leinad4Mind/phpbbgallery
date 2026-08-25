@@ -1,3 +1,4 @@
+{% if S_FEATURED_IMAGES %}
 {% if S_FEATURED_SLIDESHOW %}
 {% for block in featuredslide %}
 {% set featured_count = block.image|length %}
@@ -40,4 +41,7 @@
 	{% endif %}
 </section>
 {% endfor %}
+{% else %}
+	{% include '@phpbbgallery_core/gallery/imageblock_layout.html' with { imageblock: featuredslide } %}
+{% endif %}
 {% endif %}

@@ -865,9 +865,10 @@ class search
 	 * @param bool|null    $include_personal Override the Gallery-index personal-album setting
 	 * @param bool         $slideshow        Assign to the dedicated slideshow block
 	 * @param bool         $show_empty       Whether to render an empty block
+	 * @param string|null  $template_block   Optional dedicated Twig block name
 	 * @return int Number of visible images assigned
 	 */
-	public function curated(array $image_ids, string $block_name, string|false $block_url = false, int $limit = 10, ?bool $include_personal = null, bool $slideshow = false, bool $show_empty = false): int
+	public function curated(array $image_ids, string $block_name, string|false $block_url = false, int $limit = 10, ?bool $include_personal = null, bool $slideshow = false, bool $show_empty = false, ?string $template_block = null): int
 	{
 		$limit = max(0, min(50, $limit));
 		$candidate_limit = min(500, max($limit, $limit * 10));
@@ -934,7 +935,7 @@ class search
 			return 0;
 		}
 
-		$root_block = $slideshow ? 'featuredslide' : 'imageblock';
+		$root_block = $template_block ?: ($slideshow ? 'featuredslide' : 'imageblock');
 		$this->template->assign_block_vars($root_block, [
 			'BLOCK_NAME' => $block_name,
 			'U_BLOCK' => $block_url,

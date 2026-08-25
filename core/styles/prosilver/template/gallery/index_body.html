@@ -127,6 +127,7 @@ function toggleElement(oElement)
 	</div>
 {% endif %}
 
+{% EVENT phpbbgallery_core_index_featured_top %}
 {% include '@phpbbgallery_core/gallery/albumlist_index_sections.html' with { GALLERY_FUTURISTIC_VARIANT: 'prosilver' } %}
 
 <br />
@@ -261,6 +262,8 @@ function toggleElement(oElement)
 	</div>
 	{% endif %}
 {% endif %}
+
+{% EVENT phpbbgallery_core_index_featured_bottom %}
 
 
 {% if not S_USER_LOGGED_IN and not S_IS_BOT and S_DISP_LOGIN %}

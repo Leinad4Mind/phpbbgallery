@@ -11,6 +11,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 - Added a Core boundary for curator-supplied image sets that reapplies album permissions, ignored-user exclusions, approved status and optional visibility policies, preserves portable ordering and exposes a dedicated Gallery-index presentation event without coupling Core to a particular add-on.
 - Added a generic HTTPS WebDAV provider for services such as Nextcloud and QNAP, with custom-port support, strict same-origin RFC 4918 metadata validation, conditional streamed writes and verified private downloads; Koofr now reuses the same hardened engine through its fixed official endpoint.
 - Added opt-in live provider contracts for Microsoft OneDrive and generic WebDAV, covering conditional writes, metadata, checksums, private reads, listings, replacements and cleanup without storing credentials in the repository or test output.
+- Added independent Featured Images placement controls for the Gallery index, forum index, both or neither, plus top or bottom positioning; the unused position setting is hidden automatically when neither index is selected.
 
 ### Changed
 

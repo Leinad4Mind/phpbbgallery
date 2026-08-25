@@ -113,6 +113,16 @@ final class template_syntax_test extends TestCase
 				substr_count($source, '{% EVENT phpbbgallery_core_index_featured_before %}'),
 				$style
 			);
+			$this->assertSame(
+				1,
+				substr_count($source, '{% EVENT phpbbgallery_core_index_featured_top %}'),
+				$style
+			);
+			$this->assertSame(
+				1,
+				substr_count($source, '{% EVENT phpbbgallery_core_index_featured_bottom %}'),
+				$style
+			);
 		}
 	}
 
