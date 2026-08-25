@@ -137,13 +137,22 @@ class package_contract_test extends TestCase
 			$css
 		);
 		$this->assertMatchesRegularExpression(
-			'/\.gallery-featured--flatboots\.gallery-featured--layout-futuristic \.gallery-featured-header\s*\{[^}]*border-bottom:\s*1px solid rgba\(137, 113, 56, \.24\);[^}]*border-left:\s*4px solid #daa520;/s',
+			'/\.gallery-featured--flatboots\.gallery-featured--layout-futuristic\s*\{[^}]*border-top:\s*0;[^}]*position:\s*relative;/s',
 			$css
 		);
 		$this->assertMatchesRegularExpression(
-			'/\.gallery-featured--flatboots\.gallery-featured--layout-futuristic \.gallery-featured-header h2\s*\{[^}]*color:\s*#9e7233;[^}]*text-shadow:\s*none;/s',
+			'/\.gallery-featured--flatboots\.gallery-featured--layout-futuristic::before\s*\{[^}]*background:\s*linear-gradient\(90deg, #9e7233, #daa520\);[^}]*height:\s*3px;/s',
 			$css
 		);
+		$this->assertMatchesRegularExpression(
+			'/\.gallery-featured--flatboots\.gallery-featured--layout-futuristic \.gallery-featured-header\s*\{[^}]*background:\s*rgba\(255, 255, 255, \.78\);[^}]*border-bottom:\s*1px solid rgba\(137, 113, 56, \.24\);/s',
+			$css
+		);
+		$this->assertMatchesRegularExpression(
+			'/\.gallery-featured--flatboots\.gallery-featured--layout-futuristic \.gallery-featured-header h2\s*\{[^}]*color:\s*#7f8c8d;[^}]*text-shadow:\s*none;/s',
+			$css
+		);
+		$this->assertStringNotContainsString('border-left: 4px solid #daa520;', $css);
 	}
 
 	public function test_bundled_translations_are_not_english_copies(): void

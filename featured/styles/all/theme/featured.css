@@ -254,18 +254,26 @@
 .gallery-featured--flatboots.gallery-featured--layout-futuristic {
 	--gallery-featured-accent: #daa520;
 	--gallery-featured-border: rgba(137, 113, 56, .24);
-	--gallery-featured-heading: #9e7233;
+	--gallery-featured-heading: #7f8c8d;
 	background: linear-gradient(135deg, rgba(218, 165, 32, .14), #ecf0f1 58%);
+	border-top: 0;
 	border-radius: 6px;
+	position: relative;
+}
+.gallery-featured--flatboots.gallery-featured--layout-futuristic::before {
+	background: linear-gradient(90deg, #9e7233, #daa520);
+	content: "";
+	height: 3px;
+	inset: 0 0 auto;
+	position: absolute;
+	z-index: 2;
 }
 .gallery-featured--flatboots.gallery-featured--layout-futuristic .gallery-featured-header {
-	background: linear-gradient(90deg, rgba(158, 114, 51, .17), rgba(255, 255, 255, .78) 62%);
+	background: rgba(255, 255, 255, .78);
 	border-bottom: 1px solid rgba(137, 113, 56, .24);
-	border-left: 4px solid #daa520;
-	padding-left: 12px;
 }
 .gallery-featured--flatboots.gallery-featured--layout-futuristic .gallery-featured-header h2 {
-	color: #9e7233;
+	color: #7f8c8d;
 	text-shadow: none;
 }
 .gallery-featured--flatboots.gallery-featured--layout-futuristic .gallery-featured-slide {
