@@ -226,6 +226,7 @@
 .gallery-featured--layout-futuristic .gallery-featured-slide { border-top: 3px solid var(--gallery-featured-accent); }
 .gallery-featured--layout-futuristic .gallery-featured-header { background: rgba(255, 255, 255, .78); }
 .gallery-featured--layout-futuristic .gallery-featured-stage { padding: 16px; }
+.gallery-featured--prosilver.gallery-featured--layout-futuristic .gallery-featured-header h2 { font-weight: 700; }
 .gallery-featured--prosilver {
 	--gallery-featured-accent: #12a3eb;
 	--gallery-featured-background: #eef3f7;
