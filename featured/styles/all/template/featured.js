@@ -116,7 +116,9 @@
 				link.setAttribute('data-toggle-url', oldUrl);
 				link.title = link.getAttribute('data-toggle-text');
 				link.setAttribute('data-toggle-text', oldText);
-				link.setAttribute('data-featured', link.getAttribute('data-featured') === '1' ? '0' : '1');
+				var featured = link.getAttribute('data-featured') !== '1';
+				link.setAttribute('data-featured', featured ? '1' : '0');
+				link.classList.toggle('active', featured);
 			})
 			.catch(function () { window.location.assign(link.href); })
 			.then(function () { link.removeAttribute('aria-busy'); });

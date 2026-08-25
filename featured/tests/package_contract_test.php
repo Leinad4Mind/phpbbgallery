@@ -61,6 +61,7 @@ class package_contract_test extends TestCase
 		$this->assertStringContainsString("slide.style.flexBasis = width + 'px'", $script);
 		$this->assertStringContainsString('data-gallery-featured-track', $template);
 		$this->assertStringContainsString('payload.S_CONFIRM_ACTION', $script);
+		$this->assertStringContainsString("classList.toggle('active', featured)", $script);
 		$this->assertStringNotContainsString('The request could not be completed.', $script);
 		$this->assertStringContainsString('class="icon fa fa-chevron-left', $template);
 		$this->assertStringContainsString('class="icon fa fa-chevron-right', $template);
@@ -97,6 +98,11 @@ class package_contract_test extends TestCase
 			$this->assertStringContainsString('data-gallery-featured-toggle', $action, $style);
 			$this->assertStringContainsString('FEATURE_IMAGE_LABEL', $action, $style);
 			$this->assertStringContainsString('S_IMAGE_FEATURED', $action, $style);
+			if ($style === 'prosilver')
+			{
+				$this->assertStringContainsString('gallery-featured-toggle--prosilver', $action);
+				$this->assertStringContainsString('{% if S_IMAGE_FEATURED %} active{% endif %}', $action);
+			}
 		}
 	}
 
@@ -131,8 +137,9 @@ class package_contract_test extends TestCase
 		}
 		$this->assertStringContainsString("GALLERY_INDEX_ALBUM_LAYOUT|default('cards')", $template);
 		$this->assertStringContainsString('data-featured-count="{{ featured_count }}"', $template);
-		$this->assertStringContainsString('fa fa-list gallery-featured-heading-icon', $template);
+		$this->assertStringContainsString('fa fa-star gallery-featured-heading-icon', $template);
 		$this->assertMatchesRegularExpression('/\.gallery-featured--flatboots\.gallery-featured--layout-classic \.gallery-featured-heading-icon\s*\{[^}]*display:\s*inline-block;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-featured-toggle--prosilver\[data-featured="1"\][^{]*\{[^}]*background-image:\s*linear-gradient\(to bottom, #12a3eb 0%, #0076b1 100%\);[^}]*color:\s*#fff;/s', $css);
 		$this->assertStringContainsString('grid-template-columns: minmax(0, 1.7fr) minmax(220px, .7fr)', $css);
 		$this->assertStringContainsString('.gallery-featured--count-two { --gallery-featured-visible: 2; }', $css);
 		$this->assertStringContainsString('.gallery-featured--count-three { --gallery-featured-visible: 3; }', $css);

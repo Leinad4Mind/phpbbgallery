@@ -158,6 +158,24 @@
 .gallery-featured-indicators button.is-active { background: var(--gallery-featured-accent); transform: scale(1.25); }
 .gallery-featured-controls button:focus-visible, [data-gallery-featured-toggle]:focus-visible { outline: 2px solid var(--gallery-featured-accent); outline-offset: 2px; }
 [data-gallery-featured-toggle][data-featured="1"] { color: #7c3aed; }
+.gallery-featured-toggle--prosilver[data-featured="1"],
+.gallery-featured-toggle--prosilver.active {
+	background-color: #0a8ed0;
+	background-image: linear-gradient(to bottom, #12a3eb 0%, #0076b1 100%);
+	border-color: #0076b1;
+	box-shadow: 0 0 0 1px rgba(255, 255, 255, .25) inset;
+	color: #fff;
+	text-shadow: none;
+}
+.gallery-featured-toggle--prosilver[data-featured="1"] .icon,
+.gallery-featured-toggle--prosilver.active .icon {
+	color: #fff;
+}
+.gallery-featured-toggle--prosilver[data-featured="1"]:hover,
+.gallery-featured-toggle--prosilver.active:hover {
+	background-image: linear-gradient(to bottom, #2eb2f1 0%, #0a8ed0 100%);
+	border-color: #0a8ed0;
+}
 .gallery-featured--layout-classic {
 	--gallery-featured-card-radius: 0;
 	--gallery-featured-card-shadow: none;
