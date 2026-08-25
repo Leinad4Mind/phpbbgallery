@@ -23,18 +23,12 @@
 			return;
 		}
 
-		if (icon.classList.contains('fa-heart') || icon.classList.contains('fa-heart-o')) {
-			icon.classList.toggle('fa-heart', favorited);
-			icon.classList.toggle('fa-heart-o', !favorited);
-			var action = toggle.parentNode;
-			if (action && action.classList.contains('gallery-favorite-action')) {
-				action.classList.toggle('is-favorited', favorited);
-			}
-			return;
+		icon.classList.toggle('fa-heart', favorited);
+		icon.classList.toggle('fa-heart-o', !favorited);
+		var action = toggle.parentNode;
+		if (action && action.classList.contains('gallery-favorite-action')) {
+			action.classList.toggle('is-favorited', favorited);
 		}
-
-		icon.classList.toggle('fa-star', favorited);
-		icon.classList.toggle('fa-star-o', !favorited);
 	}
 
 	function updateToggle(toggle) {

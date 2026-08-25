@@ -44,6 +44,9 @@ final class lifecycle_test extends TestCase
 			$this->assertStringContainsString('data-favorited="', $template, $style);
 			$this->assertStringContainsString('data-toggle-url="{{ U_FAVORITE_IMAGE_TOGGLE }}"', $template, $style);
 			$this->assertStringContainsString('class="icon ', $template, $style);
+			$this->assertStringContainsString('fa-heart', $template, $style);
+			$this->assertStringContainsString('fa-heart-o', $template, $style);
+			$this->assertStringNotContainsString('fa-star', $template, $style);
 			$this->assertStringContainsString('class="sr-only"', $template, $style);
 		}
 
@@ -53,6 +56,7 @@ final class lifecycle_test extends TestCase
 		$this->assertStringContainsString('request.withCredentials = true', $javascript);
 		$this->assertStringContainsString("toggle.getAttribute('aria-busy') === 'true'", $javascript);
 		$this->assertStringContainsString("icon.classList.toggle('fa-heart', favorited)", $javascript);
-		$this->assertStringContainsString("icon.classList.toggle('fa-star', favorited)", $javascript);
+		$this->assertStringContainsString("icon.classList.toggle('fa-heart-o', !favorited)", $javascript);
+		$this->assertStringNotContainsString("icon.classList.toggle('fa-star'", $javascript);
 	}
 }
