@@ -131,7 +131,7 @@ final class template_syntax_test extends TestCase
 		}
 
 		$this->assertLessThan(
-			strpos($recent, '<p class="separator gallery-sep text-center">'),
+			strpos($recent, '<p class="separator gallery-sep gallery-sep--flatboots text-center">'),
 			strpos($recent, '{% EVENT phpbbgallery_core_index_featured_bottom %}'),
 			'FLATBOOTS must render the bottom Featured block before the closing Gallery separator.'
 		);
@@ -512,6 +512,10 @@ final class template_syntax_test extends TestCase
 			$stylesheet
 		);
 		$this->assertStringContainsString('.gallery-sep .fa', $stylesheet);
+		$this->assertMatchesRegularExpression(
+			'/\.gallery-sep--flatboots \.fa\s*\{[^}]*background-color:\s*#ecf0f1;/s',
+			$stylesheet
+		);
 		$this->assertMatchesRegularExpression(
 			'/\.gallery-sep\s*\{[^}]*margin-top:\s*24px;[^}]*margin-bottom:\s*24px;/s',
 			$stylesheet

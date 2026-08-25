@@ -3156,6 +3156,11 @@ p.gallery-image-card-approval.post-notice
 	padding-right: 16px;
 }
 
+.gallery-sep--flatboots .fa
+{
+	background-color: #ecf0f1;
+}
+
 .gallery-sep
 {
 	margin-top: 24px;
