@@ -108,6 +108,11 @@ final class template_syntax_test extends TestCase
 		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
 		{
 			$source = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/index_body.html');
+			if ($style === 'FLATBOOTS')
+			{
+				$recent = (string) file_get_contents($core_root . '/styles/FLATBOOTS/template/gallery/recent_body.html');
+				$source .= $recent;
+			}
 			$this->assertSame(
 				1,
 				substr_count($source, '{% EVENT phpbbgallery_core_index_featured_before %}'),
@@ -124,6 +129,12 @@ final class template_syntax_test extends TestCase
 				$style
 			);
 		}
+
+		$this->assertLessThan(
+			strpos($recent, '<p class="separator gallery-sep text-center">'),
+			strpos($recent, '{% EVENT phpbbgallery_core_index_featured_bottom %}'),
+			'FLATBOOTS must render the bottom Featured block before the closing Gallery separator.'
+		);
 	}
 
 	public function test_flatboots_image_actions_match_the_viewtopic_button_size(): void

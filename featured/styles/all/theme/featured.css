@@ -31,6 +31,10 @@
 	line-height: 1.2;
 	margin: 0;
 }
+.gallery-featured-heading-icon {
+	display: none;
+	margin-right: 5px;
+}
 .gallery-featured-stage {
 	padding: 12px;
 	position: relative;
@@ -251,6 +255,9 @@
 }
 .gallery-featured--flatboots .gallery-featured-control:hover { color: #2c3e50; }
 .gallery-featured--flatboots.gallery-featured--layout-classic { --gallery-featured-header-background: #c8cdd8; }
+.gallery-featured--flatboots.gallery-featured--layout-classic .gallery-featured-heading-icon {
+	display: inline-block;
+}
 .gallery-featured--flatboots.gallery-featured--layout-futuristic {
 	--gallery-featured-accent: #daa520;
 	--gallery-featured-border: rgba(137, 113, 56, .24);

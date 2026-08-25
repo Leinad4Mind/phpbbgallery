@@ -72,6 +72,10 @@ class package_contract_test extends TestCase
 		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
 		{
 			$core_index = (string) file_get_contents(dirname($this->root) . '/core/styles/' . $style . '/template/gallery/index_body.html');
+			if ($style === 'FLATBOOTS')
+			{
+				$core_index .= (string) file_get_contents(dirname($this->root) . '/core/styles/FLATBOOTS/template/gallery/recent_body.html');
+			}
 			$events = $this->root . '/styles/' . $style . '/template/event/';
 			$gallery_top = (string) file_get_contents($events . 'phpbbgallery_core_index_featured_top.html');
 			$gallery_bottom = (string) file_get_contents($events . 'phpbbgallery_core_index_featured_bottom.html');
@@ -127,6 +131,8 @@ class package_contract_test extends TestCase
 		}
 		$this->assertStringContainsString("GALLERY_INDEX_ALBUM_LAYOUT|default('cards')", $template);
 		$this->assertStringContainsString('data-featured-count="{{ featured_count }}"', $template);
+		$this->assertStringContainsString('fa fa-list gallery-featured-heading-icon', $template);
+		$this->assertMatchesRegularExpression('/\.gallery-featured--flatboots\.gallery-featured--layout-classic \.gallery-featured-heading-icon\s*\{[^}]*display:\s*inline-block;/s', $css);
 		$this->assertStringContainsString('grid-template-columns: minmax(0, 1.7fr) minmax(220px, .7fr)', $css);
 		$this->assertStringContainsString('.gallery-featured--count-two { --gallery-featured-visible: 2; }', $css);
 		$this->assertStringContainsString('.gallery-featured--count-three { --gallery-featured-visible: 3; }', $css);
