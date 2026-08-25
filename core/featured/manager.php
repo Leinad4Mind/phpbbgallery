@@ -2,12 +2,12 @@
 /**
  * phpBB Gallery - Featured Images manager.
  *
- * @package   phpbbgallery/featured
+ * @package   phpbbgallery/core
  * @copyright 2026 Leinad4Mind
  * @license   GPL-2.0-only
  */
 
-namespace phpbbgallery\featured;
+namespace phpbbgallery\core\featured;
 
 class manager
 {

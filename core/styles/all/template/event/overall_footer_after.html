@@ -4,6 +4,7 @@
 {% INCLUDEJS '@phpbbgallery_core/js/album_embed.js' %}
 {% INCLUDEJS '@phpbbgallery_core/js/image_bbcode_copy.js' %}
 {% INCLUDEJS '@phpbbgallery_core/js/image_card_title.js' %}
+{% INCLUDEJS '@phpbbgallery_core/js/featured.js' %}
 {% if S_GALLERY_SELECTOR %}
 <dialog id="phpbbgallery-selector-dialog" class="phpbbgallery-selector-dialog" data-endpoint="{{ U_GALLERY_SELECTOR }}" data-bbcode-tag="{{ GALLERY_BBCODE_TAG|default('image') }}" data-all-label="{{ lang('ALL') }}" data-loading-label="{{ lang('LOADING') }}" data-error-label="{{ lang('GENERAL_ERROR') }}" data-empty-label="{{ lang('NO_IMAGES_LONG') }}" data-insert-label="{{ lang('INSERT_IMAGE_POST') }}" data-inserted-label="{{ lang('IMAGE_INSERTED') }}" aria-labelledby="phpbbgallery-selector-title" aria-modal="true" hidden>
 	<div class="phpbbgallery-selector-panel">

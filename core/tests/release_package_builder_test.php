@@ -48,8 +48,8 @@ final class release_package_builder_test extends TestCase
 
 		$this->assertMatchesRegularExpression('/^[a-f0-9]{40}$/D', $first['commit']);
 		$this->assertSame($first['commit'], $second['commit']);
-		$this->assertCount(15, $first['packages']);
-		$this->assertContains('featured', package_builder::COMPONENTS);
+		$this->assertCount(14, $first['packages']);
+		$this->assertNotContains('featured', package_builder::COMPONENTS);
 		$this->assertSame(package_builder::COMPONENTS, array_column($first['packages'], 'component'));
 
 		$first_hashes = array_column($first['packages'], 'sha256', 'filename');

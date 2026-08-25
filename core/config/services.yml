@@ -6,6 +6,27 @@ imports:
 
 
 services:
+    phpbbgallery.core.featured.manager:
+        class: phpbbgallery\core\featured\manager
+        arguments:
+            - '@dbal.conn'
+            - '%phpbbgallery.tables.gallery_featured%'
+            - '%phpbbgallery.tables.gallery_images%'
+
+    phpbbgallery.core.featured.listener:
+        class: phpbbgallery\core\event\featured_listener
+        arguments:
+            - '@controller.helper'
+            - '@language'
+            - '@template'
+            - '@user'
+            - '@phpbbgallery.core.auth'
+            - '@phpbbgallery.core.config'
+            - '@phpbbgallery.core.search'
+            - '@phpbbgallery.core.featured.manager'
+        tags:
+            - { name: event.listener }
+
     phpbbgallery.core.pagination:
         class: phpbbgallery\core\pagination
         arguments:

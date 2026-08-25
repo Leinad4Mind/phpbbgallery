@@ -2,16 +2,16 @@
 /**
  * phpBB Gallery - Featured Images controller.
  *
- * @package   phpbbgallery/featured
+ * @package   phpbbgallery/core
  * @copyright 2026 Leinad4Mind
  * @license   GPL-2.0-only
  */
 
-namespace phpbbgallery\featured\controller;
+namespace phpbbgallery\core\controller;
 
 use Symfony\Component\HttpFoundation\Response;
 
-class main
+class featured
 {
 	public function __construct(
 		protected \phpbb\controller\helper $helper,
@@ -21,7 +21,7 @@ class main
 		protected \phpbbgallery\core\auth\auth $gallery_auth,
 		protected \phpbbgallery\core\image\image $image,
 		protected \phpbbgallery\core\album\album $album,
-		protected \phpbbgallery\featured\manager $manager
+		protected \phpbbgallery\core\featured\manager $manager
 	)
 	{
 	}
@@ -39,7 +39,7 @@ class main
 	private function toggle(int $image_id, bool $featured): Response
 	{
 		$this->language->add_lang(['gallery'], 'phpbbgallery/core');
-		$this->language->add_lang('featured', 'phpbbgallery/featured');
+		$this->language->add_lang('featured', 'phpbbgallery/core');
 		$user_id = (int) $this->user->data['user_id'];
 		if ($user_id === ANONYMOUS)
 		{

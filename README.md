@@ -8,7 +8,7 @@ add-ons use sibling directories under `ext/phpbbgallery/`.
 
 | Component | Version | Description |
 | --- | --- | --- |
-| phpBB Gallery | 4.2.0 | Albums, images, comments, ratings, moderation, search and personal galleries. |
+| phpBB Gallery | 4.2.0 | Albums, images, comments, ratings, moderation, search, personal galleries and curated featured images. |
 
 ## Free add-ons
 
@@ -19,7 +19,6 @@ add-ons use sibling directories under `ext/phpbbgallery/`.
 | Contests | 1.0.0 | Adds contest phases, anonymous entries, voting and winner publication. |
 | Exif | 1.4.0 | Displays photographic metadata stored in uploaded images. |
 | Favorite | 1.0.0 | Lets members bookmark images and manage them in the UCP. |
-| Featured Images | 1.0.0 | Lets moderators curate an accessible featured-image block or slideshow. |
 | Feed | 1.0.0 | Publishes recent Gallery images as an ATOM feed. |
 | TIFF | 1.0.0 | Accepts verified TIFF originals through Imagick and creates browser-safe WebP variants. |
 

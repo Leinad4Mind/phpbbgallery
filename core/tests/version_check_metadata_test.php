@@ -23,7 +23,6 @@ final class version_check_metadata_test extends TestCase
 		'exif' => 'gallery-exif.json',
 		'export' => 'gallery-export.json',
 		'favorite' => 'gallery-favorite.json',
-		'featured' => 'gallery-featured.json',
 		'feed' => 'gallery-feed.json',
 		'imagefields' => 'gallery-imagefields.json',
 		'imagerevisions' => 'gallery-imagerevisions.json',
@@ -34,7 +33,6 @@ final class version_check_metadata_test extends TestCase
 	/** @var array<string, string|null> */
 	private const UNRELEASED = [
 		'core' => '4.1.0',
-		'featured' => null,
 		'remotestorage' => '1.0.0',
 	];
 

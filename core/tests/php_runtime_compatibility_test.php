@@ -23,7 +23,6 @@ final class php_runtime_compatibility_test extends TestCase
 		'exif',
 		'export',
 		'favorite',
-		'featured',
 		'feed',
 		'imagerevisions',
 		'remotestorage',

@@ -112,7 +112,7 @@ final class workflow_regression_test extends TestCase
 		$workflow = (string) file_get_contents(dirname(__DIR__, 5) . '/.github/workflows/phpbbgallery.yml');
 
 		foreach (['acpcleanup', 'acpimport', 'bbpointsimages', 'bbtagsimages', 'contest', 'exif', 'export',
-			'favorite', 'featured', 'feed', 'imagefields', 'imagerevisions', 'remotestorage', 'tiff'] as $component)
+			'favorite', 'feed', 'imagefields', 'imagerevisions', 'remotestorage', 'tiff'] as $component)
 		{
 			$this->assertStringContainsString($component . '/', $workflow, $component);
 		}

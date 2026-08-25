@@ -2,6 +2,18 @@
 #### Define controllers #####
 #############################
 services:
+    phpbbgallery.core.controller.featured:
+        class: phpbbgallery\core\controller\featured
+        arguments:
+            - '@controller.helper'
+            - '@language'
+            - '@request'
+            - '@user'
+            - '@phpbbgallery.core.auth'
+            - '@phpbbgallery.core.image'
+            - '@phpbbgallery.core.album'
+            - '@phpbbgallery.core.featured.manager'
+
     phpbbgallery.core.controller.editor:
         class: phpbbgallery\core\controller\editor
         arguments:

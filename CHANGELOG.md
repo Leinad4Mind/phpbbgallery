@@ -6,16 +6,16 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Added
 
-- Added the free Featured Images add-on, allowing album moderators to curate approved images into a permission-filtered Gallery-index block, with either the configured card layout or a responsive accessible slideshow supporting keyboard navigation, touch gestures, reduced motion and optional autoplay.
+- Added Featured Images directly to Gallery Core, allowing album moderators to curate approved images into permission-filtered Gallery-index and forum-index blocks, with either the configured card layout or a responsive accessible slideshow supporting keyboard navigation, touch gestures, reduced motion and optional autoplay.
 - Added private Microsoft OneDrive storage restricted to the application's `approot`, using delegated `Files.ReadWrite.AppFolder` access, refresh-token authentication, resumable Microsoft Graph upload sessions and verified private downloads.
-- Added a Core boundary for curator-supplied image sets that reapplies album permissions, ignored-user exclusions, approved status and optional visibility policies, preserves portable ordering and exposes a dedicated Gallery-index presentation event without coupling Core to a particular add-on.
+- Added a reusable Core boundary for curator-supplied image sets that reapplies album permissions, ignored-user exclusions, approved status and optional visibility policies while preserving portable ordering.
 - Added a generic HTTPS WebDAV provider for services such as Nextcloud and QNAP, with custom-port support, strict same-origin RFC 4918 metadata validation, conditional streamed writes and verified private downloads; Koofr now reuses the same hardened engine through its fixed official endpoint.
 - Added opt-in live provider contracts for Microsoft OneDrive and generic WebDAV, covering conditional writes, metadata, checksums, private reads, listings, replacements and cleanup without storing credentials in the repository or test output.
 - Added independent Featured Images placement controls for the Gallery index, forum index, both or neither, plus top or bottom positioning; the unused position setting is hidden automatically when neither index is selected.
 
 ### Changed
 
-- Kept the released Core 4.1.0 and Remote Storage 1.0.0 in the stable version-check channel while exposing the 4.2.0 and 1.1.0 development lines, plus the unreleased Featured Images add-on, only through phpBB's opt-in unstable channel.
+- Kept the released Core 4.1.0 and Remote Storage 1.0.0 in the stable version-check channel while exposing the 4.2.0 and 1.1.0 development lines only through phpBB's opt-in unstable channel.
 - Translated every Featured Images control, setting, result and dependency message across all eleven bundled Gallery languages, with regression protection against untranslated English catalogue copies.
 - Expanded Featured Images integration coverage across slideshow and card presentation, anonymous permission filtering and all three bundled styles; autoplay now pauses while the page is hidden and its accessible play/pause name stays synchronized with the visible state.
 - Refined the Featured Images slideshow for PROSILVER, BBOOTS and FLATBOOTS with theme-specific panels, a neutral transparency-safe image stage, balanced captions and fully visible Font Awesome controls.
@@ -24,7 +24,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
-- Fixed the Featured Images add-on rendering a duplicate empty ACP fieldset before its configuration group.
+- Fixed Featured Images rendering a duplicate empty ACP fieldset before its configuration group.
 - Matched the Featured Images Classic presentation to the native Classic Gallery container border and bold heading instead of retaining the generic carousel panel treatment.
 - Fixed the FLATBOOTS Futuristic Featured Images heading inheriting unreadable white text on a light header and aligned the panel with the layout's native brown-and-gold accents.
 

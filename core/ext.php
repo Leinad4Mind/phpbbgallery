@@ -34,7 +34,6 @@ class ext extends \phpbb\extension\base
 		'phpbbgallery/exif',
 		'phpbbgallery/export',
 		'phpbbgallery/favorite',
-		'phpbbgallery/featured',
 		'phpbbgallery/feed',
 		'phpbbgallery/imagefields',
 		'phpbbgallery/imagerevisions',

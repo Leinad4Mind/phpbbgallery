@@ -1,2 +1,0 @@
-parameters:
-    phpbbgallery.featured.tables.featured: '%core.table_prefix%gallery_featured'

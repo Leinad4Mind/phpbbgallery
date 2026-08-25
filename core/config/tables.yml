@@ -21,3 +21,4 @@ parameters:
     phpbbgallery.tables.gallery_log: '%core.table_prefix%gallery_log'
     phpbbgallery.tables.gallery_watch: '%core.table_prefix%gallery_watch'
     phpbbgallery.tables.gallery_statistics: '%core.table_prefix%gallery_statistics'
+    phpbbgallery.tables.gallery_featured: '%core.table_prefix%gallery_featured'

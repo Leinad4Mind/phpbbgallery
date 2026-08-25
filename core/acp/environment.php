@@ -30,7 +30,6 @@ final class environment
 		'phpbbgallery/acpimport' => ['ACP Import', '1.4.0', 'free', 'GALLERY_ADDON_IMPORT_EXPLAIN'],
 		'phpbbgallery/contest' => ['Contests', '1.0.0', 'free', 'GALLERY_ADDON_CONTEST_EXPLAIN'],
 		'phpbbgallery/exif' => ['Exif', '1.4.0', 'free', 'GALLERY_ADDON_EXIF_EXPLAIN'],
-		'phpbbgallery/featured' => ['Featured Images', '1.0.0', 'free', 'GALLERY_ADDON_FEATURED_EXPLAIN'],
 		'phpbbgallery/favorite' => ['Favorite', '1.0.0', 'free', 'GALLERY_ADDON_FAVORITE_EXPLAIN'],
 		'phpbbgallery/feed' => ['Feed', '1.0.0', 'free', 'GALLERY_ADDON_FEED_EXPLAIN'],
 		'phpbbgallery/tiff' => ['TIFF', '1.0.0', 'free', 'GALLERY_ADDON_TIFF_EXPLAIN'],

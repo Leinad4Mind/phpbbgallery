@@ -111,6 +111,13 @@ final class acp_addon_identity_test extends TestCase
 			'index_album_layout',
 			'pegas_index_viewed_count',
 			'pegas_index_rated_count',
+			'featured_location',
+			'featured_position',
+			'featured_count',
+			'featured_slideshow',
+			'featured_autoplay',
+			'featured_interval',
+			'featured_include_personal',
 		], $new_core_settings);
 	}
 

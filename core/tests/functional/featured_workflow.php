@@ -3,25 +3,25 @@
 /**
  * phpBB Gallery Featured Images functional tests.
  *
- * @package   phpbbgallery/featured
+ * @package   phpbbgallery/core
  * @copyright 2026 Leinad4Mind
  * @license   GPL-2.0-only
  */
 
-namespace phpbbgallery\featured\tests\functional;
+namespace phpbbgallery\core\tests\functional;
 
-require_once dirname(__DIR__, 3) . '/core/tests/functional/addon_workflow_test_case.php';
+require_once __DIR__ . '/addon_workflow_test_case.php';
 
 class featured_workflow extends \phpbbgallery\core\tests\functional\addon_workflow_test_case
 {
 	protected static function setup_extensions(): array
 	{
-		return ['phpbbgallery/core', 'phpbbgallery/featured'];
+		return ['phpbbgallery/core'];
 	}
 
 	public function test_moderator_can_feature_render_and_unfeature_an_approved_image(): void
 	{
-		$this->add_lang_ext('phpbbgallery/featured', 'featured');
+		$this->add_lang_ext('phpbbgallery/core', 'featured');
 
 		$album_id = $this->insert_album('Featured functional album');
 		$this->grant_admin_album_permissions($album_id);

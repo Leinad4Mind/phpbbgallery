@@ -2,12 +2,12 @@
 /**
  * phpBB Gallery - Featured Images event listener.
  *
- * @package   phpbbgallery/featured
+ * @package   phpbbgallery/core
  * @copyright 2026 Leinad4Mind
  * @license   GPL-2.0-only
  */
 
-namespace phpbbgallery\featured\event;
+namespace phpbbgallery\core\event;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -16,10 +16,10 @@ function featured_location_options(string $value, string $key): string
 	global $phpbb_container;
 	$language = $phpbb_container->get('language');
 	$options = [
-		main_listener::LOCATION_NONE => 'FEATURED_LOCATION_NONE',
-		main_listener::LOCATION_GALLERY => 'FEATURED_LOCATION_GALLERY',
-		main_listener::LOCATION_FORUM => 'FEATURED_LOCATION_FORUM',
-		main_listener::LOCATION_BOTH => 'FEATURED_LOCATION_BOTH',
+		featured_listener::LOCATION_NONE => 'FEATURED_LOCATION_NONE',
+		featured_listener::LOCATION_GALLERY => 'FEATURED_LOCATION_GALLERY',
+		featured_listener::LOCATION_FORUM => 'FEATURED_LOCATION_FORUM',
+		featured_listener::LOCATION_BOTH => 'FEATURED_LOCATION_BOTH',
 	];
 	return featured_select_options($options, (int) $value, $language);
 }
@@ -29,8 +29,8 @@ function featured_position_options(string $value, string $key): string
 	global $phpbb_container;
 	$language = $phpbb_container->get('language');
 	return featured_select_options([
-		main_listener::POSITION_TOP => 'FEATURED_POSITION_TOP',
-		main_listener::POSITION_BOTTOM => 'FEATURED_POSITION_BOTTOM',
+		featured_listener::POSITION_TOP => 'FEATURED_POSITION_TOP',
+		featured_listener::POSITION_BOTTOM => 'FEATURED_POSITION_BOTTOM',
 	], (int) $value, $language);
 }
 
@@ -44,7 +44,7 @@ function featured_select_options(array $options, int $selected, \phpbb\language\
 	return $html;
 }
 
-class main_listener implements EventSubscriberInterface
+class featured_listener implements EventSubscriberInterface
 {
 	public const LOCATION_NONE = 0;
 	public const LOCATION_GALLERY = 1;
@@ -61,7 +61,7 @@ class main_listener implements EventSubscriberInterface
 		protected \phpbbgallery\core\auth\auth $gallery_auth,
 		protected \phpbbgallery\core\config $gallery_config,
 		protected \phpbbgallery\core\search $search,
-		protected \phpbbgallery\featured\manager $manager
+		protected \phpbbgallery\core\featured\manager $manager
 	)
 	{
 	}
@@ -98,7 +98,7 @@ class main_listener implements EventSubscriberInterface
 
 	private function render_index_block(string $context): void
 	{
-		$this->language->add_lang('featured', 'phpbbgallery/featured');
+		$this->language->add_lang('featured', 'phpbbgallery/core');
 		$count = max(1, min(20, (int) $this->gallery_config->get('featured_count')));
 		$slideshow = (bool) $this->gallery_config->get('featured_slideshow');
 		$rendered = $this->search->curated(
@@ -146,7 +146,7 @@ class main_listener implements EventSubscriberInterface
 		{
 			return;
 		}
-		$this->language->add_lang('featured', 'phpbbgallery/featured');
+		$this->language->add_lang('featured', 'phpbbgallery/core');
 		$image_id = (int) $event['image_id'];
 		$featured = $this->manager->is_featured($image_id);
 		$this->template->assign_vars([
@@ -181,16 +181,16 @@ class main_listener implements EventSubscriberInterface
 			return;
 		}
 		$return_ary = (array) $event['return_ary'];
-		$this->language->add_lang('featured', 'phpbbgallery/featured');
-		$addon = ['id' => 'featured', 'name' => 'FEATURED_IMAGES', 'accent' => '#7c3aed'];
+		$this->language->add_lang('featured', 'phpbbgallery/core');
+		$this->template->assign_var('S_GALLERY_ACP_FEATURED_SETTINGS', true);
 		$return_ary['vars']['FEATURED_SETTINGS'] = [
-			'featured_location' => ['lang' => 'FEATURED_LOCATION', 'explain' => true, 'validate' => 'int:0:3', 'type' => 'select', 'function' => __NAMESPACE__ . '\\featured_location_options', 'addon' => $addon],
-			'featured_position' => ['lang' => 'FEATURED_POSITION', 'explain' => true, 'validate' => 'int:0:1', 'type' => 'select', 'function' => __NAMESPACE__ . '\\featured_position_options', 'addon' => $addon],
-			'featured_count' => ['lang' => 'FEATURED_COUNT', 'explain' => true, 'validate' => 'int:1:20', 'type' => 'number:1:20', 'addon' => $addon],
-			'featured_slideshow' => ['lang' => 'FEATURED_SLIDESHOW', 'explain' => true, 'validate' => 'bool', 'type' => 'radio:yes_no', 'addon' => $addon],
-			'featured_autoplay' => ['lang' => 'FEATURED_AUTOPLAY', 'explain' => true, 'validate' => 'bool', 'type' => 'radio:yes_no', 'addon' => $addon],
-			'featured_interval' => ['lang' => 'FEATURED_INTERVAL', 'explain' => true, 'validate' => 'int:3:30', 'type' => 'number:3:30', 'append' => ' ' . $this->language->lang('SECONDS'), 'addon' => $addon],
-			'featured_include_personal' => ['lang' => 'FEATURED_INCLUDE_PERSONAL', 'explain' => true, 'validate' => 'bool', 'type' => 'radio:yes_no', 'addon' => $addon],
+			'featured_location' => ['lang' => 'FEATURED_LOCATION', 'explain' => true, 'validate' => 'int:0:3', 'type' => 'select', 'function' => __NAMESPACE__ . '\\featured_location_options'],
+			'featured_position' => ['lang' => 'FEATURED_POSITION', 'explain' => true, 'validate' => 'int:0:1', 'type' => 'select', 'function' => __NAMESPACE__ . '\\featured_position_options'],
+			'featured_count' => ['lang' => 'FEATURED_COUNT', 'explain' => true, 'validate' => 'int:1:20', 'type' => 'number:1:20'],
+			'featured_slideshow' => ['lang' => 'FEATURED_SLIDESHOW', 'explain' => true, 'validate' => 'bool', 'type' => 'radio:yes_no'],
+			'featured_autoplay' => ['lang' => 'FEATURED_AUTOPLAY', 'explain' => true, 'validate' => 'bool', 'type' => 'radio:yes_no'],
+			'featured_interval' => ['lang' => 'FEATURED_INTERVAL', 'explain' => true, 'validate' => 'int:3:30', 'type' => 'number:3:30', 'append' => ' ' . $this->language->lang('SECONDS')],
+			'featured_include_personal' => ['lang' => 'FEATURED_INCLUDE_PERSONAL', 'explain' => true, 'validate' => 'bool', 'type' => 'radio:yes_no'],
 		];
 		$event['return_ary'] = $return_ary;
 	}

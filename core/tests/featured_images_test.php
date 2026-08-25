@@ -1,10 +1,10 @@
 <?php
 
-namespace phpbbgallery\featured\tests;
+namespace phpbbgallery\core\tests;
 
 use PHPUnit\Framework\TestCase;
 
-class package_contract_test extends TestCase
+class featured_images_test extends TestCase
 {
 	private string $root;
 
@@ -14,24 +14,24 @@ class package_contract_test extends TestCase
 		$this->root = dirname(__DIR__);
 	}
 
-	public function test_package_requires_core_42_and_owns_its_table(): void
+	public function test_core_owns_featured_images_and_preserves_legacy_data_contract(): void
 	{
 		$composer = json_decode((string) file_get_contents($this->root . '/composer.json'), true, 512, JSON_THROW_ON_ERROR);
-		$this->assertSame('1.0.0', $composer['version']);
-		$this->assertSame('>=4.2.0,<5.0.0@dev', $composer['extra']['soft-require']['phpbbgallery/core']);
-		$this->assertStringContainsString('gallery_featured', (string) file_get_contents($this->root . '/migrations/m1_init.php'));
-		$display_migration = (string) file_get_contents($this->root . '/migrations/m2_display_controls.php');
-		$this->assertStringContainsString('phpbb_gallery_featured_location', $display_migration);
-		$this->assertStringContainsString('inherit_enabled_state', $display_migration);
-		$listener = (string) file_get_contents($this->root . '/event/main_listener.php');
+		$this->assertSame('phpbbgallery/core', $composer['name']);
+		$migration = (string) file_get_contents($this->root . '/migrations/featured_images.php');
+		$this->assertStringContainsString('gallery_featured', $migration);
+		$this->assertStringContainsString('phpbb_gallery_featured_location', $migration);
+		$this->assertStringContainsString('ensure_featured_location', $migration);
+		$this->assertStringContainsString('sql_table_exists', $migration);
+		$listener = (string) file_get_contents($this->root . '/event/featured_listener.php');
 		$this->assertStringNotContainsString("'legend' => 'FEATURED_SETTINGS'", $listener);
 		$this->assertStringContainsString("['vars']['FEATURED_SETTINGS'] = [", $listener);
 	}
 
 	public function test_permission_and_visibility_boundaries_are_present(): void
 	{
-		$controller = (string) file_get_contents($this->root . '/controller/main.php');
-		$listener = (string) file_get_contents($this->root . '/event/main_listener.php');
+		$controller = (string) file_get_contents($this->root . '/controller/featured.php');
+		$listener = (string) file_get_contents($this->root . '/event/featured_listener.php');
 		$this->assertStringContainsString("acl_check('m_edit'", $controller);
 		$this->assertStringContainsString('STATUS_APPROVED', $controller);
 		$this->assertStringContainsString('phpbbgallery.core.index.image_blocks', $listener);
@@ -45,8 +45,8 @@ class package_contract_test extends TestCase
 
 	public function test_slideshow_is_accessible_and_has_progressive_fallback(): void
 	{
-		$template = (string) file_get_contents($this->root . '/styles/all/template/featured_slideshow.html');
-		$script = (string) file_get_contents($this->root . '/styles/all/template/featured.js');
+		$template = (string) file_get_contents($this->root . '/styles/all/template/gallery/featured_slideshow.html');
+		$script = (string) file_get_contents($this->root . '/styles/all/template/js/featured.js');
 		$this->assertStringContainsString('aria-roledescription="carousel"', $template);
 		$this->assertStringContainsString('data-play-label=', $template);
 		$this->assertStringContainsString('data-pause-label=', $template);
@@ -72,10 +72,10 @@ class package_contract_test extends TestCase
 	{
 		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
 		{
-			$core_index = (string) file_get_contents(dirname($this->root) . '/core/styles/' . $style . '/template/gallery/index_body.html');
+			$core_index = (string) file_get_contents($this->root . '/styles/' . $style . '/template/gallery/index_body.html');
 			if ($style === 'FLATBOOTS')
 			{
-				$core_index .= (string) file_get_contents(dirname($this->root) . '/core/styles/FLATBOOTS/template/gallery/recent_body.html');
+				$core_index .= (string) file_get_contents($this->root . '/styles/FLATBOOTS/template/gallery/recent_body.html');
 			}
 			$events = $this->root . '/styles/' . $style . '/template/event/';
 			$gallery_top = (string) file_get_contents($events . 'phpbbgallery_core_index_featured_top.html');
@@ -88,7 +88,7 @@ class package_contract_test extends TestCase
 			$this->assertStringContainsString('phpbbgallery_core_index_featured_bottom', $core_index, $style);
 			foreach ([$gallery_top, $gallery_bottom, $forum_top, $forum_bottom] as $placement)
 			{
-				$this->assertStringContainsString("{% include '@phpbbgallery_featured/featured_slideshow.html' %}", $placement, $style);
+				$this->assertStringContainsString("{% include '@phpbbgallery_core/gallery/featured_slideshow.html' %}", $placement, $style);
 				$this->assertStringContainsString("featured_style = '" . strtolower($style) . "'", $placement, $style);
 			}
 			$this->assertStringContainsString('S_FEATURED_GALLERY_INDEX_TOP', $gallery_top, $style);
@@ -114,14 +114,14 @@ class package_contract_test extends TestCase
 		$this->assertStringContainsString("location.addEventListener('change'", $script);
 		$this->assertStringContainsString("document.getElementById('featured_position')", $script);
 
-		$template = (string) file_get_contents($this->root . '/styles/all/template/featured_slideshow.html');
+		$template = (string) file_get_contents($this->root . '/styles/all/template/gallery/featured_slideshow.html');
 		$this->assertStringContainsString('S_FEATURED_IMAGES', $template);
 		$this->assertStringContainsString('with { imageblock: featuredslide }', $template);
 	}
 
 	public function test_slideshow_has_distinct_theme_variants(): void
 	{
-		$template = (string) file_get_contents($this->root . '/styles/all/template/featured_slideshow.html');
+		$template = (string) file_get_contents($this->root . '/styles/all/template/gallery/featured_slideshow.html');
 		$css = (string) file_get_contents($this->root . '/styles/all/theme/featured.css');
 		$this->assertStringContainsString("gallery-featured--{{ featured_style|default('prosilver') }}", $template);
 		$this->assertStringContainsString('.gallery-featured--prosilver', $css);
