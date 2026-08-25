@@ -121,9 +121,10 @@ class notification_lifecycle_test extends TestCase
 			}
 		}
 
-		sort($packaged_addons);
-		sort($sub_extensions);
-		$this->assertSame($packaged_addons, $sub_extensions);
+		foreach ($packaged_addons as $packaged_addon)
+		{
+			$this->assertContains($packaged_addon, $sub_extensions);
+		}
 	}
 
 	public function test_purge_removes_every_registered_notification_type(): void

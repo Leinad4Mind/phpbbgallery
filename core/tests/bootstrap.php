@@ -258,9 +258,6 @@ namespace
 	require_once dirname(__DIR__, 2) . '/acpcleanup/ext.php';
 	require_once dirname(__DIR__, 2) . '/acpimport/ext.php';
 	require_once dirname(__DIR__, 2) . '/exif/ext.php';
-	require_once dirname(__DIR__, 2) . '/imagerevisions/ext.php';
-	require_once dirname(__DIR__, 2) . '/imagefields/ext.php';
-	require_once dirname(__DIR__, 2) . '/remotestorage/ext.php';
 	require_once dirname(__DIR__, 2) . '/tiff/processor.php';
 	require_once dirname(__DIR__, 2) . '/tiff/ext.php';
 	require_once dirname(__DIR__, 2) . '/contest/ext.php';

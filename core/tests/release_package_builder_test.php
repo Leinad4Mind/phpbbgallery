@@ -45,12 +45,16 @@ final class release_package_builder_test extends TestCase
 
 		$first = $builder->build($first_output);
 		$second = $builder->build($second_output);
+		$expected_components = array_values(array_filter(
+			package_builder::COMPONENTS,
+			static fn(string $component): bool => is_file($suite_root . '/' . $component . '/composer.json')
+		));
 
 		$this->assertMatchesRegularExpression('/^[a-f0-9]{40}$/D', $first['commit']);
 		$this->assertSame($first['commit'], $second['commit']);
-		$this->assertCount(14, $first['packages']);
+		$this->assertCount(count($expected_components), $first['packages']);
 		$this->assertNotContains('featured', package_builder::COMPONENTS);
-		$this->assertSame(package_builder::COMPONENTS, array_column($first['packages'], 'component'));
+		$this->assertSame($expected_components, array_column($first['packages'], 'component'));
 
 		$first_hashes = array_column($first['packages'], 'sha256', 'filename');
 		$second_hashes = array_column($second['packages'], 'sha256', 'filename');

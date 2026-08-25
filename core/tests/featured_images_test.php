@@ -70,7 +70,7 @@ class featured_images_test extends TestCase
 
 	public function test_every_style_exposes_the_block_and_moderation_action(): void
 	{
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		foreach (\gallery_test_existing_styles($this->root) as $style)
 		{
 			$core_index = (string) file_get_contents($this->root . '/styles/' . $style . '/template/gallery/index_body.html');
 			if ($style === 'FLATBOOTS')

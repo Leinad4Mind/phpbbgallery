@@ -56,6 +56,12 @@ class package_hygiene_test extends TestCase
 
 		foreach ($iterator as $file)
 		{
+			$relative_path = str_replace('\\', '/', substr($file->getPathname(), strlen($this->extension_root) + 1));
+			if (str_starts_with($relative_path, '.'))
+			{
+				continue;
+			}
+
 			if (!in_array(strtolower($file->getExtension()), $text_extensions, true))
 			{
 				continue;
@@ -358,6 +364,11 @@ class package_hygiene_test extends TestCase
 			'tiff',
 		] as $extension)
 		{
+			if (!is_dir($this->extension_root . '/' . $extension))
+			{
+				continue;
+			}
+
 			$license_path = $this->extension_root . '/' . $extension . '/license.txt';
 			$this->assertFileExists($license_path, $extension);
 			$this->assertSame($declared_license, file_get_contents($license_path), $extension);

@@ -36,6 +36,11 @@ final class php_runtime_compatibility_test extends TestCase
 		foreach (self::COMPONENTS as $component)
 		{
 			$composer_file = $extension_root . '/' . $component . '/composer.json';
+			if (!is_file($composer_file))
+			{
+				continue;
+			}
+
 			$composer = json_decode((string) file_get_contents($composer_file), true, 512, JSON_THROW_ON_ERROR);
 
 			$this->assertSame('>=8.1', $composer['require']['php'], $component . ' has an unexpected PHP requirement.');

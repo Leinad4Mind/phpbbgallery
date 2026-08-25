@@ -73,7 +73,17 @@ final class dependency_version_validator_test extends TestCase
 
 	public function test_sitesplat_integrations_validate_their_host_extensions(): void
 	{
-		foreach (['bbpointsimages' => 'bbpoints', 'bbtagsimages' => 'bbtags'] as $component => $dependency)
+		$integrations = array_filter(
+			['bbpointsimages' => 'bbpoints', 'bbtagsimages' => 'bbtags'],
+			static fn(string $dependency, string $component): bool => is_file(dirname(__DIR__, 2) . '/' . $component . '/composer.json'),
+			ARRAY_FILTER_USE_BOTH
+		);
+		if ($integrations === [])
+		{
+			$this->markTestSkipped('SiteSplat integration add-ons are not distributed in the public repository.');
+		}
+
+		foreach ($integrations as $component => $dependency)
 		{
 			$root = dirname(__DIR__, 2) . '/' . $component;
 			$composer = json_decode((string) file_get_contents($root . '/composer.json'), true, 512, JSON_THROW_ON_ERROR);

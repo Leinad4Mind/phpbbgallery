@@ -398,7 +398,6 @@ final class controller_album_types_test extends TestCase
 		$this->assertStringContainsString('{% for information in gallery_album_information|default([]) %}', $prosilver);
 		$this->assertStringContainsString('{{ information.TITLE }}', $prosilver);
 	}
-}
 
 	public function test_album_editor_uses_the_context_specific_permission_copy_explanation(): void
 	{
@@ -410,3 +409,4 @@ final class controller_album_types_test extends TestCase
 		$this->assertStringContainsString("'L_COPY_PERMISSIONS_EXPLAIN'", $controller);
 		$this->assertStringContainsString("'COPY_PERMISSIONS_' . strtoupper(\$action) . '_EXPLAIN'", $controller);
 	}
+}

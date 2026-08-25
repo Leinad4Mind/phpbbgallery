@@ -105,7 +105,8 @@ final class template_syntax_test extends TestCase
 	public function test_gallery_index_exposes_the_featured_block_event_in_every_style(): void
 	{
 		$core_root = dirname(__DIR__);
-		foreach (['prosilver', 'BBOOTS', 'FLATBOOTS'] as $style)
+		$recent = null;
+		foreach (\gallery_test_existing_styles($core_root) as $style)
 		{
 			$source = (string) file_get_contents($core_root . '/styles/' . $style . '/template/gallery/index_body.html');
 			if ($style === 'FLATBOOTS')
@@ -130,11 +131,14 @@ final class template_syntax_test extends TestCase
 			);
 		}
 
-		$this->assertLessThan(
-			strpos($recent, '<p class="separator gallery-sep gallery-sep--flatboots text-center">'),
-			strpos($recent, '{% EVENT phpbbgallery_core_index_featured_bottom %}'),
-			'FLATBOOTS must render the bottom Featured block before the closing Gallery separator.'
-		);
+		if ($recent !== null)
+		{
+			$this->assertLessThan(
+				strpos($recent, '<p class="separator gallery-sep gallery-sep--flatboots text-center">'),
+				strpos($recent, '{% EVENT phpbbgallery_core_index_featured_bottom %}'),
+				'FLATBOOTS must render the bottom Featured block before the closing Gallery separator.'
+			);
+		}
 	}
 
 	public function test_flatboots_image_actions_match_the_viewtopic_button_size(): void

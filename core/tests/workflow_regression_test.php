@@ -94,7 +94,13 @@ final class workflow_regression_test extends TestCase
 
 	public function test_functional_ci_covers_sqlite_mysql_and_mariadb(): void
 	{
-		$workflow = (string) file_get_contents(dirname(__DIR__, 5) . '/.github/workflows/phpbbgallery.yml');
+		$workflow_file = dirname(__DIR__, 5) . '/.github/workflows/phpbbgallery.yml';
+		if (!is_file($workflow_file))
+		{
+			$this->markTestSkipped('The public package does not include the monorepo workflow.');
+		}
+
+		$workflow = (string) file_get_contents($workflow_file);
 
 		foreach (['database: sqlite3', 'database: mysql', 'database: mariadb'] as $database)
 		{
@@ -109,11 +115,22 @@ final class workflow_regression_test extends TestCase
 
 	public function test_functional_ci_covers_every_gallery_component(): void
 	{
-		$workflow = (string) file_get_contents(dirname(__DIR__, 5) . '/.github/workflows/phpbbgallery.yml');
+		$workflow_file = dirname(__DIR__, 5) . '/.github/workflows/phpbbgallery.yml';
+		if (!is_file($workflow_file))
+		{
+			$this->markTestSkipped('The public package does not include the monorepo workflow.');
+		}
+
+		$workflow = (string) file_get_contents($workflow_file);
+		$gallery_root = dirname(__DIR__, 2);
 
 		foreach (['acpcleanup', 'acpimport', 'bbpointsimages', 'bbtagsimages', 'contest', 'exif', 'export',
 			'favorite', 'feed', 'imagefields', 'imagerevisions', 'remotestorage', 'tiff'] as $component)
 		{
+			if (!is_dir($gallery_root . '/' . $component))
+			{
+				continue;
+			}
 			$this->assertStringContainsString($component . '/', $workflow, $component);
 		}
 	}

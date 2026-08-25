@@ -84,6 +84,11 @@ final class package_builder
 			$packages = [];
 			foreach (self::COMPONENTS as $component)
 			{
+				if (!is_file($source_root . DIRECTORY_SEPARATOR . $component . DIRECTORY_SEPARATOR . 'composer.json'))
+				{
+					continue;
+				}
+
 				$packages[] = $this->build_component($source_root, $output_directory, $component, $timestamp);
 			}
 

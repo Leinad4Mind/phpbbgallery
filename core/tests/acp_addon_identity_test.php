@@ -173,7 +173,13 @@ final class acp_addon_identity_test extends TestCase
 
 		foreach ($tiers as $path => $tier)
 		{
-			$template = (string) file_get_contents($core_root . '/' . $path);
+			$template_path = $core_root . '/' . $path;
+			if (!is_file($template_path))
+			{
+				continue;
+			}
+
+			$template = (string) file_get_contents($template_path);
 			$this->assertStringContainsString('data-gallery-setting-kind=', $template, $path);
 			$tier_attribute = strstr($template, 'data-gallery-setting-tier=');
 			$this->assertIsString($tier_attribute, $path);

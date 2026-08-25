@@ -42,6 +42,11 @@ final class version_check_metadata_test extends TestCase
 
 		foreach (self::COMPONENTS as $component => $filename)
 		{
+			if (!is_file($extension_root . '/' . $component . '/composer.json'))
+			{
+				continue;
+			}
+
 			$composer = $this->decode_json($extension_root . '/' . $component . '/composer.json');
 
 			$this->assertArrayNotHasKey('version-check', $composer, $component . ' has a version-check block outside extra.');
@@ -64,6 +69,11 @@ final class version_check_metadata_test extends TestCase
 
 		foreach (self::COMPONENTS as $component => $filename)
 		{
+			if (!is_file($extension_root . '/' . $component . '/composer.json'))
+			{
+				continue;
+			}
+
 			$composer = $this->decode_json($extension_root . '/' . $component . '/composer.json');
 			$metadata = $this->decode_json($extension_root . '/' . $filename);
 
