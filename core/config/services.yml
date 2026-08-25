@@ -412,6 +412,21 @@ services:
             - '%phpbbgallery.tables.gallery_images%'
             - '%core.root_path%'
             - '%core.php_ext%'
+    phpbbgallery.core.integration.image_importer:
+        class: phpbbgallery\core\integration\image_importer
+        public: true
+        arguments:
+            - '@dbal.conn'
+            - '@user'
+            - '@dispatcher'
+            - '@phpbbgallery.core.auth'
+            - '@phpbbgallery.core.album'
+            - '@phpbbgallery.core.policy.album_operation'
+            - '@phpbbgallery.core.config'
+            - '@phpbbgallery.core.upload'
+            - '@phpbbgallery.core.image'
+            - '%phpbbgallery.tables.gallery_images%'
+            - '%tables.users%'
     phpbbgallery.core.zip.extractor:
         class: phpbbgallery\core\zip\extractor
         arguments:

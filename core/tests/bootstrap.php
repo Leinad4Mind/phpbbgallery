@@ -245,6 +245,11 @@ namespace
 	require_once dirname(__DIR__) . '/zip/extractor.php';
 	require_once dirname(__DIR__) . '/icon/manager.php';
 	require_once dirname(__DIR__) . '/upload.php';
+	require_once dirname(__DIR__) . '/integration/image_import_request.php';
+	require_once dirname(__DIR__) . '/integration/image_import_result.php';
+	require_once dirname(__DIR__) . '/integration/image_import_exception.php';
+	require_once dirname(__DIR__) . '/integration/image_importer_interface.php';
+	require_once dirname(__DIR__) . '/integration/image_importer.php';
 	require_once dirname(__DIR__) . '/auth/image_authorization.php';
 	require_once dirname(__DIR__) . '/auth/auth.php';
 	require_once dirname(__DIR__) . '/auth/permission_trace.php';

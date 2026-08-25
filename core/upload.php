@@ -155,6 +155,8 @@ class upload
 	private array $file_orientations = [];
 	private array $zip_file_data = [];
 	private bool $allow_zip = true;
+	private string $operation_origin = 'interactive_upload';
+	private array $operation_context = [];
 
 	public int $min_width = 0;
 	public int $min_height = 0;
@@ -246,6 +248,57 @@ class upload
 	}
 
 	/**
+	 * Reset mutable state before a standalone programmatic upload operation.
+	 *
+	 * The interactive upload controller intentionally reuses state while a batch
+	 * is reviewed. Integrations need an explicit boundary so one import cannot
+	 * inherit images, errors or metadata from a previous call in the same worker.
+	 */
+	public function reset_operation(): void
+	{
+		$this->remove_staged_source();
+		$this->file = null;
+		$this->zip_file = null;
+		$this->loaded_files = 0;
+		$this->uploaded_files = 0;
+		$this->errors = [];
+		$this->images = [];
+		$this->image_data = [];
+		$this->array_id2row = [];
+		$this->file_count = 0;
+		$this->image_num = 0;
+		$this->sent_quota_error = false;
+		$this->author_user_id = 0;
+		$this->author_username = '';
+		$this->author_user_colour = '';
+		$this->file_descriptions = [];
+		$this->file_names = [];
+		$this->file_subtitles = [];
+		$this->file_rotating = [];
+		$this->file_orientations = [];
+		$this->zip_file_data = [];
+		$this->operation_origin = 'interactive_upload';
+		$this->operation_context = [];
+	}
+
+	/**
+	 * Identify a non-interactive upload to lifecycle listeners.
+	 *
+	 * Context is transient and must not contain credentials or other secrets.
+	 */
+	public function set_operation_context(string $origin, array $context = []): void
+	{
+		$origin = trim($origin);
+		if (!preg_match('#^[a-z][a-z0-9_.-]*$#D', $origin))
+		{
+			throw new \InvalidArgumentException('Gallery upload origin identifiers must be lowercase machine names.');
+		}
+
+		$this->operation_origin = $origin;
+		$this->operation_context = $context;
+	}
+
+	/**
 	 * Return the largest source file accepted by the upload handler.
 	 */
 	public function get_source_filesize_limit(): int
@@ -314,6 +367,55 @@ class upload
 		}
 
 		return true;
+	}
+
+	/**
+	 * Import one server-side temporary file through the normal Gallery validator.
+	 *
+	 * This method is intentionally local-file only. A caller which obtains a
+	 * remote asset remains responsible for SSRF-safe fetching into a private
+	 * temporary file before transferring ownership of that file to Gallery.
+	 *
+	 * @param string $source_path      Readable local temporary file
+	 * @param string $original_filename Original untrusted filename, without a path
+	 * @param int    $file_count       Zero-based metadata position
+	 * @return int|false Created orphan image ID, or false on validation failure
+	 */
+	public function upload_local_file(string $source_path, string $original_filename, int $file_count = 0): int|false
+	{
+		if ($this->file_limit && ($this->uploaded_files >= $this->file_limit))
+		{
+			$this->quota_error();
+			return false;
+		}
+
+		$original_filename = basename(str_replace('\\', '/', trim($original_filename)));
+		$source_size = ($source_path !== '' && is_file($source_path) && is_readable($source_path))
+			? @filesize($source_path)
+			: false;
+		if ($original_filename === '' || $source_size === false)
+		{
+			$this->new_error($this->language->lang('GENERAL_UPLOAD_ERROR', $original_filename));
+			return false;
+		}
+
+		$this->file_count = max(0, $file_count);
+		$this->file = $this->file_upload->handle_upload('files.types.local', $source_path, [
+			'type'     => $this->tools->mimetype_by_filename($original_filename),
+			'size'     => (int) $source_size,
+			'realname' => $original_filename,
+		]);
+		$image_id = $this->prepare_file();
+		if (!$image_id)
+		{
+			return false;
+		}
+
+		$this->uploaded_files++;
+		$this->images[] = (int) $image_id;
+		$this->array_id2row[(int) $image_id] = $this->file_count;
+
+		return (int) $image_id;
 	}
 
 	/**
@@ -725,11 +827,24 @@ class upload
 		 * @var array image_data  Updated image database row
 		 * @var array sql_ary     Values persisted by this finalization
 		 * @var string file_link  Absolute original-image path
+		 * @var string operation_origin Interactive or programmatic operation source
+		 * @var array operation_context Transient caller-owned correlation data
 		 * @since 3.4.0
+		 * @changed 4.2.0 Added operation_origin and operation_context
 		 */
+		$operation_origin = $this->operation_origin;
+		$operation_context = $this->operation_context;
 		$vars = ['image_id', 'image_index', 'image_data', 'sql_ary', 'file_link'];
-		extract($this->phpbb_dispatcher->trigger_event('phpbbgallery.core.upload.update_image_after', compact($vars)));
-		$source_object->release();
+		$vars[] = 'operation_origin';
+		$vars[] = 'operation_context';
+		try
+		{
+			extract($this->phpbb_dispatcher->trigger_event('phpbbgallery.core.upload.update_image_after', compact($vars)));
+		}
+		finally
+		{
+			$source_object->release();
+		}
 
 		return true;
 	}
@@ -813,9 +928,14 @@ class upload
 		* @event phpbbgallery.core.upload.prepare_file_before
 		* @var	array	additional_sql_data		array of additional settings
 		* @var	array	file					File object
+		* @var	string	operation_origin		Interactive or programmatic operation source
+		* @var	array	operation_context		Transient caller-owned correlation data
 		* @since 1.2.0
+		* @changed 4.2.0 Added operation_origin and operation_context
 		*/
-		$vars = ['additional_sql_data', 'file'];
+		$operation_origin = $this->operation_origin;
+		$operation_context = $this->operation_context;
+		$vars = ['additional_sql_data', 'file', 'operation_origin', 'operation_context'];
 		extract($this->phpbb_dispatcher->trigger_event('phpbbgallery.core.upload.prepare_file_before', compact($vars)));
 
 		$source_filesize = (int) $this->file->get('filesize');
