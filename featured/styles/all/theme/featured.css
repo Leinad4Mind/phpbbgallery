@@ -154,6 +154,7 @@
 	color: #fff;
 }
 .gallery-featured-control .icon { color: inherit; font-size: 13px; line-height: 1; margin: 0; }
+.gallery-featured-control .icon::before { padding-right: 0; }
 .gallery-featured-indicators { display: flex; flex-wrap: wrap; gap: 7px; justify-content: center; }
 .gallery-featured-indicators button { background: #a8b3bd; border: 0; border-radius: 50%; cursor: pointer; height: 9px; padding: 0; width: 9px; }
 .gallery-featured-indicators button.is-active { background: var(--gallery-featured-accent); transform: scale(1.25); }

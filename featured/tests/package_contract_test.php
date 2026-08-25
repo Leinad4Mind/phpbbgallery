@@ -166,6 +166,7 @@ class package_contract_test extends TestCase
 			$css
 		);
 		$this->assertMatchesRegularExpression('/\.gallery-featured-slide\s*\{[^}]*box-sizing:\s*border-box;/s', $css);
+		$this->assertStringContainsString('.gallery-featured-control .icon::before { padding-right: 0; }', $css);
 		$this->assertStringNotContainsString('border-left: 4px solid #daa520;', $css);
 	}
 
