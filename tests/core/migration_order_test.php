@@ -9,6 +9,12 @@
 
 namespace phpbbgallery\tests\core;
 
+require_once __DIR__ . '/../../core/migrations/release_1_2_0.php';
+require_once __DIR__ . '/../../core/migrations/release_1_2_0_db_create.php';
+require_once __DIR__ . '/../../core/migrations/release_1_2_0_add_bbcode.php';
+require_once __DIR__ . '/../../core/migrations/release_1_2_0_create_filesystem.php';
+require_once __DIR__ . '/../../core/migrations/split_ucp_module_settings.php';
+require_once __DIR__ . '/../../core/migrations/release_3_2_1_0.php';
 require_once __DIR__ . '/../../core/migrations/release_3_2_1_1.php';
 require_once __DIR__ . '/../../core/migrations/release_3_3_0.php';
 require_once __DIR__ . '/../../core/migrations/release_3_4_0.php';
@@ -16,13 +22,30 @@ require_once __DIR__ . '/../../core/migrations/remove_gallery_version.php';
 
 class migration_order_test extends \phpbb_test_case
 {
-	public function test_version_migrations_are_ordered_before_version_removal()
+	public function test_upgrade_migrations_form_a_linear_chain()
 	{
 		$this->assertSame(
-			array(
-				'\phpbbgallery\core\migrations\release_1_2_0_db_create',
-				'\phpbbgallery\core\migrations\release_3_2_1_0',
-			),
+			array('\phpbbgallery\core\migrations\release_1_2_0'),
+			\phpbbgallery\core\migrations\release_1_2_0_db_create::depends_on()
+		);
+		$this->assertSame(
+			array('\phpbbgallery\core\migrations\release_1_2_0_db_create'),
+			\phpbbgallery\core\migrations\release_1_2_0_add_bbcode::depends_on()
+		);
+		$this->assertSame(
+			array('\phpbbgallery\core\migrations\release_1_2_0_add_bbcode'),
+			\phpbbgallery\core\migrations\release_1_2_0_create_filesystem::depends_on()
+		);
+		$this->assertSame(
+			array('\phpbbgallery\core\migrations\release_1_2_0_create_filesystem'),
+			\phpbbgallery\core\migrations\split_ucp_module_settings::depends_on()
+		);
+		$this->assertSame(
+			array('\phpbbgallery\core\migrations\split_ucp_module_settings'),
+			\phpbbgallery\core\migrations\release_3_2_1_0::depends_on()
+		);
+		$this->assertSame(
+			array('\phpbbgallery\core\migrations\release_3_2_1_0'),
 			\phpbbgallery\core\migrations\release_3_2_1_1::depends_on()
 		);
 		$this->assertSame(
@@ -37,5 +60,11 @@ class migration_order_test extends \phpbb_test_case
 			array('\phpbbgallery\core\migrations\release_3_4_0'),
 			\phpbbgallery\core\migrations\remove_gallery_version::depends_on()
 		);
+	}
+
+	public function test_upgrade_migration_persists_webp_default()
+	{
+		$this->assertArrayHasKey('allow_webp', \phpbbgallery\core\migrations\release_3_2_1_0::$configs);
+		$this->assertTrue(\phpbbgallery\core\migrations\release_3_2_1_0::$configs['allow_webp']);
 	}
 }
