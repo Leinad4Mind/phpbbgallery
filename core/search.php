@@ -149,6 +149,10 @@ class search
 				$sql_order = 'NEWID()';
 			break;
 
+			case 'oracle':
+				$sql_order = 'DBMS_RANDOM.VALUE';
+			break;
+
 			default:
 				$sql_order = 'RAND()';
 			break;

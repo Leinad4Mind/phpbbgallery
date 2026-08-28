@@ -1116,7 +1116,7 @@ class image
 		}
 		else
 		{
-			if (isset($_POST['cancel']))
+			if ($this->request->is_set_post('cancel'))
 			{
 				$message = $this->language->lang('DELETED_IMAGE_NOT') . '<br />';
 				$message .= '<br />' . sprintf($this->language->lang('CLICK_RETURN_IMAGE'), '<a href="' . $image_backlink . '">', '</a>');

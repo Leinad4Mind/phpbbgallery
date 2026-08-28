@@ -441,7 +441,7 @@ class upload
 			$this->new_error($this->language->lang('UPLOAD_ERROR', $this->file->get('uploadname'), implode('<br />&raquo; ', $this->file->error)));
 			return false;
 		}
-		@chmod($this->file->get('destination_file'), 0655);
+		@chmod($this->file->get('destination_file'), 0644);
 		$additional_sql_data = array();
 		$file = $this->file;
 
@@ -541,7 +541,7 @@ class upload
 	 */
 	public function file_to_database($additional_sql_ary)
 	{
-		$image_name = str_replace("_", "_", utf8_substr($this->file->get('uploadname'), 0, utf8_strrpos($this->file->get('uploadname'), '.')));
+		$image_name = utf8_htmlspecialchars(utf8_substr($this->file->get('uploadname'), 0, utf8_strrpos($this->file->get('uploadname'), '.')));
 
 		$sql_ary = array_merge(array(
 			'image_name'			=> $image_name,

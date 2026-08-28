@@ -64,7 +64,7 @@ class main_module
 
 		$mode = $request->variable('mode', 'manage_albums');
 		$action = $request->variable('action', '');
-		$cancel = (isset($_POST['cancel'])) ? true : false;
+		$cancel = $request->is_set_post('cancel');
 		$phpbb_ext_gallery_core_auth->load_user_permissions($user->data['user_id']);
 		if ($cancel)
 		{
@@ -328,7 +328,7 @@ class main_module
 			trigger_error('NO_MORE_SUBALBUMS_ALLOWED');
 		}
 
-		$submit = (isset($_POST['submit'])) ? true : false;
+		$submit = $request->is_set_post('submit');
 		$redirect = $request->variable('redirect', '');
 
 		if (!$submit)
@@ -459,7 +459,7 @@ class main_module
 		$album_id = $request->variable('album_id', 0);
 		$phpbb_ext_gallery_core_album->check_user($album_id);
 
-		$submit = (isset($_POST['submit'])) ? true : false;
+		$submit = $request->is_set_post('submit');
 		$redirect = $request->variable('redirect', '');
 		if (!$submit)
 		{
