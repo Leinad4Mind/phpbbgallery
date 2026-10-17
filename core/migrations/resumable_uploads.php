@@ -16,7 +16,7 @@ class resumable_uploads extends migration
 	public static function depends_on(): array
 	{
 		return [
-			'\phpbbgallery\core\migrations\release_3_4_0',
+			'\phpbbgallery\core\migrations\remove_gallery_version',
 			'\phpbbgallery\core\migrations\release_1_2_0_db_create',
 		];
 	}

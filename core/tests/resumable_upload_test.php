@@ -320,7 +320,7 @@ class resumable_upload_test extends TestCase
 			$schema['add_index']['phpbb_gallery_images']['draft_owner']
 		);
 		$this->assertSame([
-			'\phpbbgallery\core\migrations\release_3_4_0',
+			'\phpbbgallery\core\migrations\remove_gallery_version',
 			'\phpbbgallery\core\migrations\release_1_2_0_db_create',
 		], $migration::depends_on());
 	}

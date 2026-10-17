@@ -18,6 +18,7 @@ use phpbbgallery\core\migrations\release_3_2_1_0;
 use phpbbgallery\core\migrations\release_3_2_1_1;
 use phpbbgallery\core\migrations\release_3_3_0;
 use phpbbgallery\core\migrations\release_3_4_0;
+use phpbbgallery\core\migrations\remove_gallery_version;
 use phpbbgallery\core\migrations\release_4_0_0;
 use phpbbgallery\core\migrations\release_4_1_0;
 use phpbbgallery\core\migrations\remove_legacy_version_config;
@@ -81,6 +82,7 @@ class migration_integrity_test extends TestCase
 		release_3_2_1_1::class,
 		release_3_3_0::class,
 		release_3_4_0::class,
+		remove_gallery_version::class,
 		resumable_uploads::class,
 		performance_indexes::class,
 		protect_personal_album_profile_field::class,
@@ -170,6 +172,17 @@ class migration_integrity_test extends TestCase
 		$this->assertSame(
 			['\phpbbgallery\core\migrations\release_3_2_1_0'],
 			release_3_2_1_1::depends_on()
+		);
+		$this->assertSame(
+			['\phpbbgallery\core\migrations\release_3_4_0'],
+			remove_gallery_version::depends_on()
+		);
+		$this->assertSame(
+			[
+				'\phpbbgallery\core\migrations\remove_gallery_version',
+				'\phpbbgallery\core\migrations\release_1_2_0_db_create',
+			],
+			resumable_uploads::depends_on()
 		);
 		$this->assertSame(
 			['\phpbbgallery\core\migrations\resumable_uploads'],
@@ -318,13 +331,28 @@ class migration_integrity_test extends TestCase
 		], $migration->revert_data());
 	}
 
-	public function test_release_4_0_0_updates_the_installed_version(): void
+	public function test_the_version_config_is_removed_with_the_3_4_chain_and_never_updated_later(): void
 	{
-		$migration = (new \ReflectionClass(release_4_0_0::class))->newInstanceWithoutConstructor();
-
+		// Same name and step as on the 3.4 line, so boards upgrading from 3.4 already have it
+		$remove = (new \ReflectionClass(remove_gallery_version::class))->newInstanceWithoutConstructor();
 		$this->assertSame([
-			['config.update', ['phpbb_gallery_version', '4.0.0']],
-		], $migration->update_data());
+			['config.remove', ['phpbb_gallery_version']],
+		], $remove->update_data());
+
+		$release = (new \ReflectionClass(release_4_0_0::class))->newInstanceWithoutConstructor();
+		$this->assertSame([], $release->update_data());
+
+		$graph = $this->migration_graph();
+		foreach (self::MIGRATIONS as $migration)
+		{
+			if ($migration === remove_gallery_version::class || !$this->depends_on($migration, remove_gallery_version::class, $graph))
+			{
+				continue;
+			}
+
+			$source = (string) file_get_contents((string) (new \ReflectionClass($migration))->getFileName());
+			$this->assertDoesNotMatchRegularExpression("#config\\.update(_if_equals)?'\\s*,\\s*(\\[|array\\()\\s*'phpbb_gallery_version'#", $source, $migration);
+		}
 	}
 
 	public function test_release_4_1_0_closes_the_complete_post_4_0_feature_chain(): void
@@ -1380,6 +1408,7 @@ class migration_integrity_test extends TestCase
 			'release_3_2_1_1.php',
 			'release_3_3_0.php',
 			'release_3_4_0.php',
+			'remove_gallery_version.php',
 			'resumable_uploads.php',
 			'performance_indexes.php',
 			'protect_personal_album_profile_field.php',

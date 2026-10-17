@@ -13,6 +13,9 @@ use phpbb\db\migration\migration;
 
 /**
  * Mark the completed 4.0.0 migration chain.
+ *
+ * The version configuration is already gone at this point (remove_gallery_version),
+ * so this marker must not touch it.
  */
 class release_4_0_0 extends migration
 {
@@ -23,8 +26,6 @@ class release_4_0_0 extends migration
 
 	public function update_data(): array
 	{
-		return [
-			['config.update', ['phpbb_gallery_version', '4.0.0']],
-		];
+		return [];
 	}
 }
