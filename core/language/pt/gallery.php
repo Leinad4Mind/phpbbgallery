@@ -126,6 +126,7 @@ $lang = array_merge($lang, [
 	'FULL_EDITOR_GALLERY'          => 'Editor completo',
 	'GALLERY_IMAGE'                => 'Imagem',
 	'GALLERY_IMAGES'               => 'Imagens',
+	'GALLERY_TOOLS'                => 'Ferramentas da galeria',
 	'GALLERY_STATISTICS'           => 'Estatísticas da Galeria',
 	'GALLERY_STATISTICS_EXPLAIN'   => 'Classificações globais e anuais das imagens e álbuns que tens permissão para ver.',
 	'STATISTICS_PERIOD'            => 'Período',

@@ -133,6 +133,7 @@ $lang = array_merge($lang, [
 
 	'GALLERY_IMAGE'  => 'Image',
 	'GALLERY_IMAGES' => 'Images',
+	'GALLERY_TOOLS' => 'Gallery tools',
 	'GALLERY_STATISTICS' => 'Gallery statistics',
 	'GALLERY_STATISTICS_EXPLAIN' => 'Lifetime and annual rankings for images and albums you are allowed to view.',
 	'STATISTICS_PERIOD' => 'Period',

@@ -131,6 +131,7 @@ $lang = array_merge($lang, [
 
 	'GALLERY_IMAGE'  => 'Afbeelding',
 	'GALLERY_IMAGES' => 'Afbeeldingen',
+	'GALLERY_TOOLS' => 'Galerijhulpmiddelen',
 	'GALLERY_STATISTICS' => 'Galerijstatistieken',
 	'GALLERY_STATISTICS_EXPLAIN' => 'Algemene en jaarlijkse ranglijsten voor afbeeldingen en albums die je mag bekijken.',
 	'STATISTICS_PERIOD' => 'Periode',

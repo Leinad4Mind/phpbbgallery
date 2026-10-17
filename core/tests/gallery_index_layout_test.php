@@ -49,6 +49,17 @@ final class gallery_index_layout_test extends TestCase
 		}
 	}
 
+	public function test_index_tools_dropdown_has_a_translated_gallery_tooltip(): void
+	{
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
+		{
+			$index = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/index_body.html');
+
+			$this->assertStringNotContainsString('Topic tools', $index, $style);
+			$this->assertStringContainsString("title=\"{{ lang('GALLERY_TOOLS') }}\"", $index, $style);
+		}
+	}
+
 	public function test_modern_layout_is_responsive_and_preserves_album_information(): void
 	{
 		$core_root = dirname(__DIR__);
