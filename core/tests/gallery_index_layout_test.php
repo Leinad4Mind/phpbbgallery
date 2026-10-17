@@ -35,6 +35,20 @@ final class gallery_index_layout_test extends TestCase
 		}
 	}
 
+	public function test_mark_albums_read_is_a_visible_link_above_the_album_list_like_the_board(): void
+	{
+		foreach (\gallery_test_existing_styles(dirname(__DIR__)) as $style)
+		{
+			$index = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/index_body.html');
+			$dropdown = strstr((string) strstr($index, '<ul class="dropdown-contents">'), '</ul>', true);
+			$link = strpos($index, '<li class="rightside"><a href="{{ U_MARK_ALBUMS }}" accesskey="m">');
+
+			$this->assertStringNotContainsString('U_MARK_ALBUMS', (string) $dropdown, $style);
+			$this->assertNotFalse($link, $style);
+			$this->assertLessThan(strpos($index, 'albumlist_index_sections.html'), $link, $style);
+		}
+	}
+
 	public function test_modern_layout_is_responsive_and_preserves_album_information(): void
 	{
 		$core_root = dirname(__DIR__);
