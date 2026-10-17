@@ -65,7 +65,7 @@ class unread_counter
 		}
 
 		$viewer_id = (int) $this->gallery_user->user_id;
-		$global_mark_time = max(0, (int) $this->gallery_user->get_data('user_lastmark'));
+		$global_mark_time = $this->global_mark_time();
 		$sql = 'SELECT i.image_id
 			FROM ' . $this->images_table . ' i
 			LEFT JOIN ' . $this->tracking_table . ' t
@@ -116,7 +116,7 @@ class unread_counter
 
 		$moderated_album_ids = array_values(array_intersect($album_ids, $access['moderated']));
 		$viewer_id = (int) $this->gallery_user->user_id;
-		$global_mark_time = max(0, (int) $this->gallery_user->get_data('user_lastmark'));
+		$global_mark_time = $this->global_mark_time();
 		$sql = 'SELECT DISTINCT i.image_album_id
 			FROM ' . $this->images_table . ' i
 			LEFT JOIN ' . $this->tracking_table . ' t
@@ -230,5 +230,16 @@ class unread_counter
 
 		$this->db->sql_query('DELETE FROM ' . $this->image_tracking_table . '
 			WHERE ' . $this->db->sql_in_set('image_id', $image_ids));
+	}
+
+	/**
+	 * Images older than the gallery read marker count as read.
+	 *
+	 * Like phpBB's own lastmark, the marker never predates registration, so a new
+	 * member does not start with every image ever uploaded marked as unread.
+	 */
+	private function global_mark_time(): int
+	{
+		return max(0, (int) $this->gallery_user->get_data('user_lastmark'), (int) ($this->user->data['user_regdate'] ?? 0));
 	}
 }

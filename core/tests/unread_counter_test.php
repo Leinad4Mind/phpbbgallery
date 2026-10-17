@@ -157,6 +157,38 @@ class unread_counter_test extends TestCase
 		], $gallery_user, $visibility)->count(500));
 	}
 
+	public function test_images_uploaded_before_registration_are_read(): void
+	{
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->method('sql_in_set')->willReturn('1 = 1');
+		$db->expects($this->once())
+			->method('sql_query_limit')
+			->with($this->callback(static function (string $sql): bool
+			{
+				TestCase::assertStringContainsString('i.image_time > 5000', $sql);
+				TestCase::assertStringNotContainsString('i.image_time > 0', $sql);
+				return true;
+			}), 100)
+			->willReturn('result');
+		$db->method('sql_fetchrow')->willReturn(false);
+
+		$access = $this->createMock(album_access::class);
+		$access->method('resolve')->willReturn(['viewable' => [2], 'moderated' => [], 'visible' => [2]]);
+		// A new member has no gallery row yet, so the stored marker is the default 0
+		$gallery_user = $this->createMock(\phpbbgallery\core\user::class);
+		$gallery_user->user_id = 2;
+		$gallery_user->method('get_data')->with('user_lastmark')->willReturn(0);
+		$visibility = $this->createMock(image_visibility::class);
+		$visibility->method('get_visibility_sql_for_results')->willReturn('1 = 1');
+
+		$this->assertSame(0, $this->counter($db, $access, [
+			'user_id' => 2,
+			'user_regdate' => 5000,
+			'is_registered' => true,
+			'is_bot' => false,
+		], $gallery_user, $visibility)->count());
+	}
+
 	public function test_album_ids_returns_only_requested_visible_albums_with_unread_images(): void
 	{
 		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
