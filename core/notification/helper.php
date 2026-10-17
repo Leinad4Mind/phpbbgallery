@@ -147,6 +147,7 @@ class helper
 					'user_ids' => $targets,
 					'album_id' => $target['album_id'],
 					'album_name' => $album_data['album_name'],
+					'image_name' => $this->get_image_name((int) $target['last_image']),
 					'last_image_id'	=> $target['last_image'],
 					'album_url'	=> $this->url->get_uri($this->helper->route('phpbbgallery_core_album', ['album_id' => $target['album_id']])),
 				];
@@ -160,6 +161,7 @@ class helper
 				$notification_data = [
 					'user_ids'	=> $this->notification_targets($targets, [$target['poster_id']]),
 					'image_id'	=> $target['image_id'],
+					'image_name'	=> $this->get_image_name((int) $target['image_id']),
 					'comment_id'	=> $target['comment_id'],
 					'poster'	=> $target['poster_id'],
 					'url'		=> $this->url->get_uri($this->helper->route('phpbbgallery_core_image', ['image_id' => $target['image_id']])),
@@ -512,5 +514,18 @@ class helper
 	public function set_image(\phpbbgallery\core\image\image $image): void
 	{
 		$this->image = $image;
+	}
+
+	/**
+	 * Name of an image for notification emails, empty when the image no longer exists.
+	 *
+	 * @param int $image_id
+	 * @return string
+	 */
+	private function get_image_name(int $image_id): string
+	{
+		$image_data = $this->image->get_image_data($image_id);
+
+		return ($image_data === false) ? '' : (string) $image_data['image_name'];
 	}
 }

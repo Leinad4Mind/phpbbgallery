@@ -59,17 +59,28 @@ final class notification_event_types_test extends TestCase
 		],
 		phpbbgallery_new_comment::class => [
 			'type' => 'phpbbgallery.core.notification.new_comment',
-			'data' => ['image_id' => '31', 'comment_id' => '41', 'poster' => 9, 'url' => '/image/31'],
+			'data' => ['image_id' => '31', 'image_name' => 'Comment &amp; image', 'comment_id' => '41', 'poster' => 9, 'url' => '/image/31'],
 			'item_id' => 41,
 			'parent_id' => 31,
-			'stored' => ['image_id' => '31', 'comment_id' => '41', 'poster_id' => 9, 'url' => '/image/31'],
+			'stored' => ['image_id' => '31', 'comment_id' => '41', 'poster_id' => 9, 'url' => '/image/31', 'image_name' => 'Comment &amp; image'],
+			'email' => '@phpbbgallery_core/newcomment_notify',
+			'email_variables' => [
+				'IMAGE_NAME' => 'Comment & image',
+				'U_IMAGE' => 'https://example.test/forum/app.php/gallery/image/31',
+			],
 		],
 		phpbbgallery_new_image::class => [
 			'type' => 'phpbbgallery.core.notification.new_image',
-			'data' => ['last_image_id' => '24', 'album_id' => '7', 'album_name' => 'New', 'album_url' => '/album/7'],
+			'data' => ['last_image_id' => '24', 'album_id' => '7', 'album_name' => 'New', 'image_name' => 'Sunset', 'album_url' => '/album/7'],
 			'item_id' => 24,
 			'parent_id' => 7,
-			'stored' => ['album_name' => 'New', 'album_url' => '/album/7', 'album_id' => '7'],
+			'stored' => ['album_name' => 'New', 'album_url' => '/album/7', 'album_id' => '7', 'image_name' => 'Sunset'],
+			'email' => '@phpbbgallery_core/newimage_notify',
+			'email_variables' => [
+				'ALBUM_NAME' => 'New',
+				'IMAGE_NAME' => 'Sunset',
+				'U_ALBUM' => 'https://example.test/forum/app.php/gallery/album/7',
+			],
 		],
 		phpbbgallery_new_report::class => [
 			'type' => 'phpbbgallery.core.notification.new_report',
@@ -138,8 +149,7 @@ final class notification_event_types_test extends TestCase
 			$this->assertSame($expected['item_id'], $class_name::get_item_id($expected['data']));
 			$this->assertSame($expected['parent_id'], $class_name::get_item_parent_id($expected['data']));
 			$this->assertTrue($notification->is_available());
-			$this->assertFalse($notification->get_email_template());
-			$this->assertSame([], $notification->get_email_template_variables());
+			$this->assertSame($expected['email'] ?? false, $notification->get_email_template());
 			$this->assertSame([], $notification->users_to_query());
 
 			$notification->create_insert_array($expected['data']);
@@ -147,6 +157,10 @@ final class notification_event_types_test extends TestCase
 			$this->assertSame($expected['item_id'], $insert['item_id']);
 			$this->assertSame($expected['parent_id'], $insert['item_parent_id']);
 			$this->assertSame($expected['stored'], unserialize($insert['notification_data']));
+
+			$reflection->getProperty('php_ext')->setValue($notification, 'php');
+			$notification->set_initial_data(['notification_data' => $insert['notification_data']]);
+			$this->assertSame($expected['email_variables'] ?? [], $notification->get_email_template_variables());
 		}
 	}
 

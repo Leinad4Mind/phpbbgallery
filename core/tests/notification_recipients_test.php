@@ -83,6 +83,7 @@ final class notification_recipients_test extends TestCase
 		]);
 
 		$this->assertSame([6, 8, 9], $manager->calls[0]['data']['user_ids']);
+		$this->assertSame('Image', $manager->calls[0]['data']['image_name']);
 	}
 
 	public function test_direct_and_moderated_publication_do_not_duplicate_status_notifications(): void
@@ -171,6 +172,8 @@ final class notification_recipients_test extends TestCase
 		$controller_helper->method('route')->willReturn('/gallery/album/10');
 		$url = $this->createMock(\phpbbgallery\core\url::class);
 		$url->method('get_uri')->willReturnArgument(0);
+		$image = $this->createMock(\phpbbgallery\core\image\image::class);
+		$image->method('get_image_data')->willReturn(['image_name' => 'Image']);
 
 		$user = new \phpbb\user();
 		$user->data['user_id'] = 5;
@@ -194,6 +197,7 @@ final class notification_recipients_test extends TestCase
 			'album_load' => $album_loader,
 			'helper' => $controller_helper,
 			'url' => $url,
+			'image' => $image,
 			'phpbb_container' => $container,
 			'watch_table' => 'gallery_watch',
 		] as $property => $value)
