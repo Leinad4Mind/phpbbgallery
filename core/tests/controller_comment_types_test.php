@@ -69,6 +69,20 @@ final class controller_comment_types_test extends TestCase
 		$this->assertStringNotContainsString('\$_POST', $source);
 	}
 
+	public function test_every_comment_mutation_checks_the_comment_ability(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/comment.php');
+
+		foreach (['add', 'edit', 'delete'] as $action)
+		{
+			$start = strpos($source, 'public function ' . $action . '(');
+			$this->assertNotFalse($start, $action);
+			$end = strpos($source, "\n\tpublic function ", $start + 1);
+			$method = substr($source, $start, ($end === false) ? null : $end - $start);
+			$this->assertMatchesRegularExpression('#if \([^{]*!\$this->comment->is_able\(\$album_data, \$image_data\)[^{]*\)\s*\{\s*\$this->misc->not_authorised\(#', $method, $action);
+		}
+	}
+
 	public function test_pending_deletion_freezes_comment_mutations(): void
 	{
 		$reflection = new \ReflectionClass(comment::class);
