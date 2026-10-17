@@ -202,6 +202,38 @@ class upload_zip_test extends TestCase
 		$this->assertSame([], $this->get_upload_property($subject, 'zip_file_data'));
 	}
 
+	public function test_creates_a_missing_import_directory(): void
+	{
+		$archive = $this->create_archive(['photo.png' => $this->png_image()]);
+		$subject = $this->new_upload(upload_test_subject::class);
+		$import_directory = $this->temporary_directory . 'files/phpbbgallery/import/';
+		$this->set_upload_property($subject, 'gallery_url', new upload_test_url($import_directory));
+		$this->set_upload_property($subject, 'zip_file', new upload_test_zip_file($archive));
+		$subject->temporary_directory_path = $import_directory . 'tmp_missing-import/';
+
+		$this->assertTrue($subject->upload_zip());
+		$this->assertTrue(is_dir($import_directory));
+		$this->assertSame(['image_0.png'], $subject->read_files);
+	}
+
+	public function test_failed_archive_move_is_reported_without_extracting(): void
+	{
+		$archive = $this->create_archive(['photo.png' => $this->png_image()]);
+		$subject = $this->new_upload(upload_test_subject::class);
+		$zip_file = new upload_test_zip_file($archive);
+		$zip_file->move_result = false;
+		$this->set_upload_property($subject, 'zip_file', $zip_file);
+		$temporary_path = $this->temporary_directory . 'tmp_failed-move/';
+		$subject->temporary_directory_path = $temporary_path;
+
+		$this->assertFalse($subject->upload_zip());
+		$this->assertFalse($subject->read_directory_existed);
+		$this->assertFalse(file_exists($temporary_path));
+		$this->assertSame(1, $zip_file->remove_calls);
+		$this->assert_has_error($subject, 'UPLOAD_ERROR');
+		$this->assertStringContainsString('ZIP_EXTRACTION_FAILED', implode(', ', $subject->errors));
+	}
+
 	public function test_temporary_directory_names_use_random_tokens(): void
 	{
 		$upload = $this->new_upload();
@@ -453,6 +485,9 @@ class upload_test_zip_file
 	/** @var int */
 	public $remove_calls = 0;
 
+	/** @var bool */
+	public $move_result = true;
+
 	/** @var string */
 	private $path;
 
@@ -465,8 +500,9 @@ class upload_test_zip_file
 	{
 	}
 
-	public function move_file(string $destination, bool $overwrite, bool $skip_image_check, int $chmod): void
+	public function move_file(string $destination, bool $overwrite, bool $skip_image_check, int $chmod): bool
 	{
+		return $this->move_result;
 	}
 
 	public function get(string $name)

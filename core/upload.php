@@ -427,17 +427,25 @@ class upload
 
 		$tmp_dir = $this->create_zip_temp_directory_path();
 
+		// The import directory may be missing on boards that never installed the import add-on
+		$import_dir = $this->gallery_url->path('import');
+		if (!is_dir($import_dir))
+		{
+			@mkdir($import_dir, 0755, true);
+		}
+
 		$this->zip_file->clean_filename('unique_ext');
-		$this->zip_file->move_file(
+		$moved = $this->zip_file->move_file(
 			substr($this->gallery_url->path('import_noroot'), 0, -1),
 			false,
 			false,
 			\phpbb\filesystem\filesystem_interface::CHMOD_READ | \phpbb\filesystem\filesystem_interface::CHMOD_WRITE
 		);
-		if (!empty($this->zip_file->error))
+		if (!$moved || !empty($this->zip_file->error))
 		{
+			$zip_errors = (!empty($this->zip_file->error)) ? $this->zip_file->error : [$this->language->lang('ZIP_EXTRACTION_FAILED')];
 			$this->zip_file->remove();
-			$this->new_error($this->language->lang('UPLOAD_ERROR', $this->zip_file->get('uploadname'), implode('<br />&raquo; ', $this->zip_file->error)));
+			$this->new_error($this->language->lang('UPLOAD_ERROR', $this->zip_file->get('uploadname'), implode('<br />&raquo; ', $zip_errors)));
 			return false;
 		}
 

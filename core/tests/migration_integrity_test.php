@@ -27,6 +27,7 @@ use phpbbgallery\core\migrations\remove_gdlib_version;
 use phpbbgallery\core\migrations\webp_quality;
 use phpbbgallery\core\migrations\album_list_pagination;
 use phpbbgallery\core\migrations\featured_images;
+use phpbbgallery\core\migrations\create_import_dir;
 use phpbbgallery\core\migrations\variant_storage_providers;
 use phpbbgallery\core\migrations\resumable_uploads;
 use phpbbgallery\core\migrations\performance_indexes;
@@ -128,6 +129,7 @@ class migration_integrity_test extends TestCase
 		album_list_pagination::class,
 		release_4_1_0::class,
 		featured_images::class,
+		create_import_dir::class,
 	];
 
 	private array $temp_directories = [];
@@ -1084,13 +1086,13 @@ class migration_integrity_test extends TestCase
 		$this->assertSame([], $remaining);
 	}
 
-	public function test_featured_images_is_the_terminal_core_migration(): void
+	public function test_create_import_dir_is_the_terminal_core_migration(): void
 	{
 		$graph = $this->migration_graph();
 		foreach (self::MIGRATIONS as $migration)
 		{
 			$this->assertTrue(
-				$this->depends_on(featured_images::class, $migration, $graph),
+				$this->depends_on(create_import_dir::class, $migration, $graph),
 				$migration . ' is outside the terminal migration chain.'
 			);
 		}
@@ -1426,6 +1428,7 @@ class migration_integrity_test extends TestCase
 			'album_list_pagination.php',
 			'release_4_1_0.php',
 			'featured_images.php',
+			'create_import_dir.php',
 		] as $migration)
 		{
 			require_once dirname(__DIR__) . '/migrations/' . $migration;
