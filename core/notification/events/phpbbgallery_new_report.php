@@ -155,7 +155,7 @@ class phpbbgallery_new_report extends \phpbb\notification\type\base
 	 */
 	public function get_url(): string
 	{
-		return (string) ($this->get_data('reported_image_id') ? append_sid($this->phpbb_root_path . 'gallery/moderate/image/' . $this->get_data('reported_image_id')) : $this->get_data('url'));
+		return (string) ($this->get_data('reported_image_id') ? append_sid($this->phpbb_root_path . 'app.' . $this->php_ext . '/gallery/moderate/image/' . (int) $this->get_data('reported_image_id')) : $this->get_data('url'));
 	}
 
 	/**

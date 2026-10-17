@@ -136,7 +136,7 @@ class phpbbgallery_image_not_approved extends \phpbb\notification\type\base
 	 */
 	public function get_url(): string
 	{
-		return (string) ($this->get_data('album_id') ? append_sid($this->phpbb_root_path . 'gallery/album/' . $this->get_data('album_id')) : $this->get_data('album_url'));
+		return (string) ($this->get_data('album_id') ? append_sid($this->phpbb_root_path . 'app.' . $this->php_ext . '/gallery/album/' . (int) $this->get_data('album_id')) : $this->get_data('album_url'));
 	}
 
 	/**

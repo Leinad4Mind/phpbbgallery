@@ -94,6 +94,24 @@ namespace phpbbgallery\core
 	}
 }
 
+namespace phpbbgallery\core\notification\events
+{
+	function append_sid(string $url, string|array|bool $params = false): string
+	{
+		return $url;
+	}
+
+	function generate_board_url(bool $without_script_path = false): string
+	{
+		return 'https://example.test/forum';
+	}
+
+	function censor_text(string $text): string
+	{
+		return $text;
+	}
+}
+
 namespace
 {
 	require_once __DIR__ . '/style_matrix.php';

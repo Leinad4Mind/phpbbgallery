@@ -185,4 +185,27 @@ final class notification_event_types_test extends TestCase
 			$this->assertSame(reset($data), $notification->get_url());
 		}
 	}
+
+	public function test_urls_go_through_the_front_controller(): void
+	{
+		$urls = [
+			phpbbgallery_image_approved::class => [['album_id' => 4], './app.php/gallery/album/4'],
+			phpbbgallery_image_for_approval::class => [['album_id' => 5], './app.php/gallery/album/5'],
+			phpbbgallery_image_not_approved::class => [['album_id' => 6], './app.php/gallery/album/6'],
+			phpbbgallery_image_moderated::class => [['album_id' => 8], './app.php/gallery/album/8'],
+			phpbbgallery_new_comment::class => [['image_id' => 31], './app.php/gallery/image/31'],
+			phpbbgallery_new_image::class => [['album_id' => 7], './app.php/gallery/album/7'],
+			phpbbgallery_new_report::class => [['reported_image_id' => 32], './app.php/gallery/moderate/image/32'],
+		];
+
+		foreach ($urls as $class_name => [$data, $expected])
+		{
+			$reflection = new \ReflectionClass($class_name);
+			$notification = $reflection->newInstanceWithoutConstructor();
+			$reflection->getProperty('phpbb_root_path')->setValue($notification, './');
+			$reflection->getProperty('php_ext')->setValue($notification, 'php');
+			$notification->set_initial_data(['notification_data' => serialize($data)]);
+			$this->assertSame($expected, $notification->get_url(), $class_name);
+		}
+	}
 }
