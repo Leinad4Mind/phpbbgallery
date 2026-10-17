@@ -1453,7 +1453,7 @@ class image
 			$image_desc = $this->request->variable('message', [''], true);
 			$image_desc = $image_desc[0];
 			$image_name = $this->request->variable('image_name', [''], true);
-			$image_name = $image_name[0];
+			$image_name = utf8_normalize_nfc($image_name[0]);
 			$image_subtitle = $this->request->variable('image_subtitle', [''], true);
 			$image_subtitle = trim(utf8_normalize_nfc((string) $image_subtitle[0]));
 			if (utf8_strlen($image_desc) > $this->gallery_config->get('description_length'))
@@ -1477,9 +1477,9 @@ class image
 			}
 
 			$sql_ary = [
-				'image_name'           => $image_name,
-				'image_name_clean'     => utf8_clean_string($image_name),
-				'image_subtitle'       => $image_subtitle,
+				'image_name'           => utf8_encode_ucr($image_name),
+				'image_name_clean'     => utf8_clean_string(utf8_encode_ucr($image_name)),
+				'image_subtitle'       => utf8_encode_ucr($image_subtitle),
 				'image_desc'           => $message_parser->message,
 				'image_desc_uid'       => $message_parser->bbcode_uid,
 				'image_desc_bitfield'  => $message_parser->bbcode_bitfield,

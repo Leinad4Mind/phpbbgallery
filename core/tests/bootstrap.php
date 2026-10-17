@@ -130,6 +130,14 @@ namespace
 		}
 	}
 
+	if (!function_exists('utf8_encode_ucr'))
+	{
+		function utf8_encode_ucr(string $value): string
+		{
+			return preg_replace_callback('#[\\xF0-\\xF4][\\x80-\\xBF]{3}#', static fn (array $m): string => '&#' . mb_ord($m[0], 'UTF-8') . ';', $value);
+		}
+	}
+
 	if (!defined('IN_PHPBB'))
 	{
 		define('IN_PHPBB', true);

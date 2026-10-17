@@ -282,7 +282,7 @@ class comment
 			}
 
 			$comment_plain = $this->request->variable('message', '', true);
-			$comment_username = $this->request->variable('username', '', true);
+			$comment_username = utf8_normalize_nfc($this->request->variable('username', '', true));
 
 			if ($comment_username_req)
 			{
@@ -544,7 +544,7 @@ class comment
 
 			if ($comment_username_req)
 			{
-				$comment_username = $this->request->variable('username', '');
+				$comment_username = utf8_normalize_nfc($this->request->variable('username', '', true));
 				if ($comment_username == '')
 				{
 					$error .= (($error) ? '<br />' : '') . $this->language->lang('MISSING_USERNAME');
@@ -557,7 +557,7 @@ class comment
 				}
 
 				$sql_ary = [
-					'comment_username'	=> $comment_username,
+					'comment_username'	=> utf8_encode_ucr($comment_username),
 				];
 			}
 

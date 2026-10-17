@@ -714,13 +714,13 @@ class upload
 			'image_status'				=> ($needs_approval) ? $this->block->get_image_status_unapproved() : $this->block->get_image_status_approved(),
 			'image_upload_session_hash'	=> '',
 			'image_allow_comments'		=> $this->allow_comments,
-			'image_subtitle'			=> $this->get_subtitle(),
+			'image_subtitle'			=> utf8_encode_ucr($this->get_subtitle()),
 			'image_desc'				=> $message_parser->message,
 			'image_desc_uid'			=> $message_parser->bbcode_uid,
 			'image_desc_bitfield'		=> $message_parser->bbcode_bitfield,
 			'image_time'				=> time() + $this->file_count,
 		];
-		$new_image_name = $this->get_name();
+		$new_image_name = utf8_encode_ucr($this->get_name());
 		if (($new_image_name != '') && ($new_image_name != $this->image_data[$image_id]['image_name']))
 		{
 			$sql_ary = array_merge($sql_ary, [
@@ -1207,7 +1207,7 @@ class upload
 	 */
 	public function file_to_database(array $additional_sql_ary): int
 	{
-		$image_name = utf8_substr($this->file->get('uploadname'), 0, utf8_strrpos($this->file->get('uploadname'), '.'));
+		$image_name = utf8_encode_ucr(utf8_substr($this->file->get('uploadname'), 0, utf8_strrpos($this->file->get('uploadname'), '.')));
 		$stored_filesize = @filesize($this->file->get('destination_file'));
 		$storage_key = (string) $this->file->get('realname');
 		$dimensions = $this->image_dimensions?->inspect_file(

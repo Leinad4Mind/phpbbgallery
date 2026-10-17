@@ -311,9 +311,9 @@ class image
 				throw new \InvalidArgumentException('Invalid image update.');
 			}
 			$normalized_updates[$image_id] = [
-				'image_name'          => $image_name,
-				'image_name_clean'    => utf8_clean_string($image_name),
-				'image_subtitle'      => $image_subtitle,
+				'image_name'          => utf8_encode_ucr($image_name),
+				'image_name_clean'    => utf8_clean_string(utf8_encode_ucr($image_name)),
+				'image_subtitle'      => utf8_encode_ucr($image_subtitle),
 				'image_desc'          => (string) $image_update['image_desc'],
 				'image_desc_uid'      => (string) $image_update['image_desc_uid'],
 				'image_desc_bitfield' => (string) $image_update['image_desc_bitfield'],

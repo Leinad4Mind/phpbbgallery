@@ -99,6 +99,31 @@ final class batch_image_edit_test extends TestCase
 		$this->assertSame(['begin', 'commit'], $database_state->transactions);
 	}
 
+	public function test_batch_edit_encodes_four_byte_characters(): void
+	{
+		$queries = [];
+		[$db] = $this->database([
+			['image_id' => 5, 'image_album_id' => 2, 'image_name' => 'Old', 'image_status' => 1],
+		], $queries);
+		$dispatcher = $this->createMock(\phpbb\event\dispatcher_interface::class);
+		$dispatcher->method('trigger_event')->willReturnArgument(1);
+		$image = $this->image_service($db, $this->createMock(log::class), $this->createMock(cache::class), $dispatcher);
+
+		$this->assertSame(1, $image->edit_images([
+			5 => [
+				'image_name' => "Photo \u{1F600}",
+				'image_subtitle' => "Smile \u{1F600}",
+				'image_desc' => '',
+				'image_desc_uid' => '',
+				'image_desc_bitfield' => '',
+			],
+		]));
+		$sql = implode("\n", $queries);
+		$this->assertStringContainsString("image_name = 'Photo &#128512;'", $sql);
+		$this->assertStringContainsString("image_subtitle = 'Smile &#128512;'", $sql);
+		$this->assertStringNotContainsString("\u{1F600}", $sql);
+	}
+
 	public function test_batch_edit_rejects_incomplete_and_oversized_values_before_querying(): void
 	{
 		$image = (new \ReflectionClass(image::class))->newInstanceWithoutConstructor();

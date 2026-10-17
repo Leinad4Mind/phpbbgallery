@@ -378,7 +378,7 @@ class main_module
 
 			// Create the subalbum
 			$album_data = [
-				'album_name'					=> $request->variable('album_name', '', true),
+				'album_name'					=> utf8_encode_ucr(utf8_normalize_nfc($request->variable('album_name', '', true))),
 				'parent_id'						=> $request->variable('parent_id', 0),
 				'album_parents'					=> '',
 				'album_type'					=> (int) \phpbbgallery\core\block::TYPE_UPLOAD,
@@ -532,7 +532,7 @@ class main_module
 			}
 
 			$album_data = [
-				'album_name'					=> ($album_id == $phpbb_ext_gallery_user->get_data('personal_album_id')) ? $user->data['username'] : $request->variable('album_name', '', true),
+				'album_name'					=> ($album_id == $phpbb_ext_gallery_user->get_data('personal_album_id')) ? $user->data['username'] : utf8_encode_ucr(utf8_normalize_nfc($request->variable('album_name', '', true))),
 				'parent_id'						=> $request->variable('parent_id', (($album_id == $phpbb_ext_gallery_user->get_data('personal_album_id')) ? 0 : $phpbb_ext_gallery_user->get_data('personal_album_id'))),
 				//left_id and right_id are created some lines later
 				'album_parents'					=> '',
