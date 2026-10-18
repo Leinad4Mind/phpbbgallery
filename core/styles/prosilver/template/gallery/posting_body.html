@@ -70,7 +70,7 @@
 				<dd>{{ lang('MAX_FILE_SIZE') }}{{ lang('COLON') }} {{ S_SOURCE_MAX_FILESIZE }}</dd>
 				{% endif %}
 				<dd>{{ lang('UPLOAD_EFFECTIVE_LIMIT', S_UPLOAD_LIMIT) }}</dd>
-				{% if S_GALLERY_UPLOAD_ADMIN_INFO and S_RESIZE_LARGE_FILES %}
+				{% if S_GALLERY_UPLOAD_ADMIN_INFO and S_RESIZE_ENABLED %}
 				<dd class="gallery-upload-admin-info" role="note">
 					<i class="icon fa fa-info-circle fa-fw" aria-hidden="true"></i>
 					<span><strong>{{ lang('UPLOAD_ADMIN_INFORMATION') }}</strong><br />{{ lang('RESIZE_SOURCE_FILESIZE_EXPLAIN', S_CONFIGURED_SOURCE_MAX_FILESIZE, S_STORED_MAX_FILESIZE, S_SOURCE_MAX_FILESIZE, S_PHP_UPLOAD_MAX_FILESIZE, S_PHP_POST_MAX_SIZE) }}</span>

@@ -158,6 +158,14 @@ final class controller_upload_types_test extends TestCase
 			'S_SOURCE_MAX_FILESIZE\' => get_formatted_filesize($source_filesize_limit)',
 			$source
 		);
+		$this->assertStringContainsString(
+			'$source_filesize_limit > $stored_filesize_limit',
+			$source
+		);
+		$this->assertStringContainsString(
+			'S_RESIZE_ENABLED\'     => $resize_enabled',
+			$source
+		);
 
 		$method = (new \ReflectionClass(upload::class))->getMethod('http_upload_filesize_limit');
 

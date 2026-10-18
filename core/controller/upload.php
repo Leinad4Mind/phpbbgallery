@@ -466,6 +466,10 @@ class upload
 					$php_post_filesize_limit
 				);
 				$stored_filesize_limit = (int) $this->gallery_config->get('max_filesize');
+				$resize_enabled = (bool) $this->gallery_config->get('allow_resize')
+					&& $configured_source_filesize_limit > $stored_filesize_limit;
+				$can_accept_larger_sources = $resize_enabled
+					&& $source_filesize_limit > $stored_filesize_limit;
 				$this->template->assign_vars([
 					'ERROR'               => $error,
 					'S_MAX_FILESIZE'      => get_formatted_filesize($stored_filesize_limit),
@@ -474,7 +478,8 @@ class upload
 					'S_STORED_MAX_FILESIZE' => get_formatted_filesize($stored_filesize_limit),
 					'S_PHP_UPLOAD_MAX_FILESIZE' => get_formatted_filesize($php_upload_filesize_limit),
 					'S_PHP_POST_MAX_SIZE' => get_formatted_filesize($php_post_filesize_limit),
-					'S_RESIZE_LARGE_FILES' => (bool) $this->gallery_config->get('allow_resize') && $configured_source_filesize_limit > $stored_filesize_limit,
+					'S_RESIZE_ENABLED'     => $resize_enabled,
+					'S_RESIZE_LARGE_FILES' => $can_accept_larger_sources,
 					'S_GALLERY_UPLOAD_ADMIN_INFO' => $this->phpbb_container->get('auth')->acl_get('a_'),
 					'S_MAX_WIDTH'         => $this->gallery_config->get('max_width'),
 					'S_MAX_HEIGHT'        => $this->gallery_config->get('max_height'),
