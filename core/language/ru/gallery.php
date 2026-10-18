@@ -183,6 +183,7 @@ $lang = array_merge($lang, [
 	'MAX_DIMENSIONS'               => 'Максимальное разрешение',
 	'MAX_FILE_SIZE'                => 'Максимальный размер файла (байт)',
 	'RESIZE_SOURCE_FILESIZE_EXPLAIN' => 'Настроенный в Gallery предел исходного файла при изменении размера — %1$s, а предел сохранённого изображения — %2$s. Эффективный предел загрузки, показываемый пользователям, — %3$s (<code>upload_max_filesize</code>: %4$s; <code>post_max_size</code>: %5$s).',
+	'UPLOAD_ADMIN_INFORMATION'       => 'Информация для администраторов',
 	'MAX_HEIGHT'                   => 'Максимальная высота (точек)',
 	'MAX_WIDTH'                    => 'Максимальная ширина (точек)',
 	'MISSING_COMMENT'              => 'Не введено сообщение',

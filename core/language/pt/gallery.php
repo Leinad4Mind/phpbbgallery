@@ -184,6 +184,7 @@ $lang = array_merge($lang, [
 	'MAX_DIMENSIONS'               => 'Dimensões Máximas',
 	'MAX_FILE_SIZE'                => 'Tamanho máximo do ficheiro',
 	'RESIZE_SOURCE_FILESIZE_EXPLAIN' => 'O limite configurado pela Gallery para o original com redimensionamento é %1$s e o limite da imagem guardada é %2$s. O limite efetivo de upload mostrado aos utilizadores é %3$s (<code>upload_max_filesize</code>: %4$s; <code>post_max_size</code>: %5$s).',
+	'UPLOAD_ADMIN_INFORMATION'       => 'Informação para administradores',
 	'MAX_HEIGHT'                   => 'Altura Máxima',
 	'MAX_WIDTH'                    => 'Largura Máxima',
 	'MISSING_COMMENT'              => 'Por favor, escreva uma mensagem a comentar esta imagem.',

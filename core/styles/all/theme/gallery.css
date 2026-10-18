@@ -182,6 +182,28 @@
 	grid-template-columns: repeat(4, minmax(0, 1fr));
 	margin-bottom: 14px;
 }
+.gallery-upload-admin-info
+{
+	align-items: flex-start;
+	background: #e9f4fb;
+	border: 1px solid #b7d8eb;
+	border-radius: 4px;
+	color: #36586c;
+	display: flex;
+	gap: 9px;
+	line-height: 1.45;
+	margin: 8px 0 12px;
+	padding: 10px 12px;
+}
+
+.gallery-upload-admin-info > .fa,
+.gallery-upload-admin-info > .icon
+{
+	color: #2585b5;
+	font-size: 16px;
+	margin-top: 2px;
+}
+
 
 .gallery-statistic-card,
 .gallery-statistics-panel,

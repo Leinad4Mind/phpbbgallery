@@ -192,6 +192,7 @@ $lang = array_merge($lang, [
 	'MAX_DIMENSIONS'           => 'Maximale Größe',
 	'MAX_FILE_SIZE'            => 'Maximale Dateigröße',
 	'RESIZE_SOURCE_FILESIZE_EXPLAIN' => 'Das konfigurierte Quelllimit der Gallery bei Größenanpassung beträgt %1$s, das Limit des gespeicherten Bildes %2$s. Das Benutzern angezeigte effektive Upload-Limit beträgt %3$s (<code>upload_max_filesize</code>: %4$s; <code>post_max_size</code>: %5$s).',
+	'UPLOAD_ADMIN_INFORMATION'       => 'Informationen für Administratoren',
 	'MAX_HEIGHT'               => 'Maximale Bildhöhe',
 	'MAX_WIDTH'                => 'Maximale Bildbreite',
 	'MISSING_COMMENT'          => 'Keinen Text eingegeben',

@@ -194,6 +194,7 @@ $lang = array_merge($lang, [
 	'MAX_DIMENSIONS'           => 'Maximum dimensions',
 	'MAX_FILE_SIZE'            => 'Maximum file size',
 	'RESIZE_SOURCE_FILESIZE_EXPLAIN' => 'Gallery’s configured source limit with resizing is %1$s and the stored image limit is %2$s. The effective upload limit shown to users is %3$s (<code>upload_max_filesize</code>: %4$s; <code>post_max_size</code>: %5$s).',
+	'UPLOAD_ADMIN_INFORMATION'       => 'Information for administrators',
 	'MAX_HEIGHT'               => 'Maximum image height',
 	'MAX_WIDTH'                => 'Maximum image width',
 	'MISSING_COMMENT'          => 'No Message entered',

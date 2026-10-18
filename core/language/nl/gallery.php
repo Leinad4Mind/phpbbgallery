@@ -192,6 +192,7 @@ $lang = array_merge($lang, [
 	'MAX_DIMENSIONS'           => 'Maximale afmetingen',
 	'MAX_FILE_SIZE'            => 'Maximale bestandsgrootte (bytes)',
 	'RESIZE_SOURCE_FILESIZE_EXPLAIN' => 'De ingestelde bronlimiet van Gallery bij formaatwijziging is %1$s en de limiet voor de opgeslagen afbeelding is %2$s. De effectieve uploadlimiet die gebruikers zien is %3$s (<code>upload_max_filesize</code>: %4$s; <code>post_max_size</code>: %5$s).',
+	'UPLOAD_ADMIN_INFORMATION'       => 'Informatie voor beheerders',
 	'MAX_HEIGHT'               => 'Maximale afbeeldinghoogte (beeldpunten)',
 	'MAX_WIDTH'                => 'Maximale afbeeldingbreedte (beeldpunten)',
 	'MISSING_COMMENT'          => 'Geen bericht ingevoerd',
