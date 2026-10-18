@@ -66,7 +66,7 @@ $lang = array_merge($lang, [
 	'ALBUM_VIEW_CANNOT'    => 'Du <strong>darfst keine</strong> Bilder in diesem Album ansehen',
 
 	'BAD_UPLOAD_FILE_SIZE'  => 'Deine hochgeladene Datei ist entweder zu gross oder defekt',
-	'PHP_SIZE_OVERRUN'      => 'Der Server hat dieses Bild abgelehnt, weil seine Dateigröße das PHP-Upload-Limit von %1$d %2$s überschreitet. Der Serveradministrator sollte <code>upload_max_filesize</code> und bei Bedarf <code>post_max_size</code> in der <code>php.ini</code> erhöhen.',
+	'PHP_SIZE_OVERRUN'      => 'Dieses Bild ist größer als das erlaubte Limit von %1$d %2$s. Bitte wählen Sie ein kleineres Bild und versuchen Sie es erneut.',
 	'BBCODES'               => 'BBCodes',
 	'BROWSING_ALBUM'        => 'Mitglieder in diesem Album: %1$s',
 	'BROWSING_ALBUM_GUEST'  => 'Mitglieder in diesem Album: %1$s und %2$d Gast',
@@ -340,7 +340,7 @@ $lang = array_merge($lang, [
 	'UNWATCHED_IMAGE'           => 'Du wirst nicht mehr über Kommentare zu diesem Bild benachrichtigt.',
 	'UNWATCHED_IMAGES'          => 'Du wirst nicht mehr über Kommentare zu diesen Bildern benachrichtigt.',
 	'UNWATCHED_PEGAS'           => 'Du beobachtest neue persönliche Alben nicht mehr automatisch.',
-	'UPLOAD_ERROR'              => 'Wärend dem Hochladen von „%1$s“ ist der folgende Fehler aufgetreten:<br />&raquo; %2$s',
+	'UPLOAD_ERROR'              => '„%1$s“ konnte nicht hochgeladen werden:<br />%2$s',
 	'UPLOAD_IMAGE'              => 'Bild hochladen',
 	'UPLOAD_IMAGE_SIZE_TOO_BIG' => 'Die Dimension Deines Bildes ist zu groß',
 	'UPLOAD_NO_FILE'            => 'Du musst deinen Pfad und Dateinamen eingeben',

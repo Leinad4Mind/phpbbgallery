@@ -82,7 +82,7 @@ $lang = array_merge($lang, [
 	'ALBUM_VIEW_CANNOT'    => 'Vous <strong>ne pouvez pas</strong> voir les images de cet album.',
 
 	'BAD_UPLOAD_FILE_SIZE'  => 'Le fichier envoyé est trop grand.',
-	'PHP_SIZE_OVERRUN'      => 'Le serveur a refusé cette image car la taille du fichier dépasse la limite de téléversement PHP de %1$d %2$s. L’administrateur du serveur doit augmenter <code>upload_max_filesize</code> et, si nécessaire, <code>post_max_size</code> dans <code>php.ini</code>.',
+	'PHP_SIZE_OVERRUN'      => 'Cette image dépasse la limite autorisée de %1$d %2$s. Choisissez une image plus petite et réessayez.',
 	'BBCODES'               => 'BBCodes',
 	'BROWSING_ALBUM'        => 'Utilisateurs parcourant cet album : %1$s',
 	'BROWSING_ALBUM_GUEST'  => 'Utilisateurs parcourant cet album : %1$s and %2$d guest',
@@ -353,7 +353,7 @@ $lang = array_merge($lang, [
 	'UNWATCHED_IMAGE'           => 'Vous ne serez plus informé des nouveaux commentaires de cette image.',
 	'UNWATCHED_IMAGES'          => 'Vous ne serez plus informé des nouveaux commentaires de ces images.',
 	'UNWATCHED_PEGAS'           => 'Vous n’êtes plus abonné automatiquement aux nouvelles galeries personnelles.',
-	'UPLOAD_ERROR'              => 'Pendant le chargement du fichier « %1$s », l’erreur suivante est survenue :<br />» %2$s',
+	'UPLOAD_ERROR'              => '« %1$s » n’a pas pu être téléversé :<br />%2$s',
 	'UPLOAD_IMAGE'              => 'Charger une image',
 	'UPLOAD_IMAGE_SIZE_TOO_BIG' => 'Les dimensions de votre image sont trop grandes.',
 	'UPLOAD_NO_FILE'            => 'Vous devez saisir le chemin et le nom du fichier.',

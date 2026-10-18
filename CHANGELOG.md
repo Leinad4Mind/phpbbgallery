@@ -25,6 +25,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Replaced the developer-oriented PHP upload-limit failure shown to members with a concise message that states the allowed size and asks them to choose a smaller image; technical PHP configuration guidance remains confined to the ACP.
 - Fixed the PROSILVER album search form remaining centred away from the available action buttons; it now follows the last visible Upload or Subscribe button in the same responsive action flow.
 - Fixed quick uploads reporting a misleading green 100% result after failures: complete batches are now green, partially successful batches are amber and fully failed batches are red, while every file card reports its own successful or specific validation, server or network result.
 - Fixed Featured Images rendering a duplicate empty ACP fieldset before its configuration group.

@@ -65,7 +65,7 @@ $lang = array_merge($lang, [
 	'ALBUM_VIEW_CANNOT'    => 'You <strong>cannot</strong> view images in this album',
 
 	'BAD_UPLOAD_FILE_SIZE'  => 'Your uploaded file is too large',
-	'PHP_SIZE_OVERRUN'      => 'The server rejected this image because its file size exceeds the PHP upload limit of %1$d %2$s. The server administrator should increase <code>upload_max_filesize</code> and, if necessary, <code>post_max_size</code> in <code>php.ini</code>.',
+	'PHP_SIZE_OVERRUN'      => 'This image is larger than the allowed limit of %1$d %2$s. Please choose a smaller image and try again.',
 	'BBCODES'               => 'BBCodes',
 	'BROWSING_ALBUM'        => 'Users browsing this album: %1$s',
 	'BROWSING_ALBUM_GUEST'  => 'Users browsing this album: %1$s and %2$d guest',
@@ -347,7 +347,7 @@ $lang = array_merge($lang, [
 	'UNWATCHED_IMAGE'           => 'You are no longer informed about new comments on this image.',
 	'UNWATCHED_IMAGES'          => 'You are no longer informed about new comments on these images.',
 	'UNWATCHED_PEGAS'           => 'You are no longer automatically subscribed to new personal galleries.',
-	'UPLOAD_ERROR'              => 'While uploading “%1$s“ the following error occurred:<br />&raquo; %2$s',
+	'UPLOAD_ERROR'              => '“%1$s” could not be uploaded:<br />%2$s',
 	'UPLOAD_IMAGE'              => 'Upload Image',
 	'UPLOAD_IMAGE_SIZE_TOO_BIG' => 'Your image dimension size is too large',
 	'UPLOAD_NO_FILE'            => 'You must enter your path and filename',

@@ -302,9 +302,14 @@ class language_catalog_test extends TestCase
 			$language = $this->load_language($catalog);
 			$this->assertArrayHasKey('PHP_SIZE_OVERRUN', $language, basename($directory));
 			$this->assertSame(1, substr_count(file_get_contents($catalog), 'PHP_SIZE_OVERRUN'), basename($directory));
-			$this->assertStringContainsString('upload_max_filesize', $language['PHP_SIZE_OVERRUN'], basename($directory));
-			$this->assertStringContainsString('post_max_size', $language['PHP_SIZE_OVERRUN'], basename($directory));
+			$this->assertStringNotContainsString('upload_max_filesize', $language['PHP_SIZE_OVERRUN'], basename($directory));
+			$this->assertStringNotContainsString('post_max_size', $language['PHP_SIZE_OVERRUN'], basename($directory));
+			$this->assertStringNotContainsString('php.ini', $language['PHP_SIZE_OVERRUN'], basename($directory));
 			$this->assertSame(['d', 's'], $this->placeholder_shape($language['PHP_SIZE_OVERRUN']), basename($directory));
+
+			$this->assertArrayHasKey('UPLOAD_ERROR', $language, basename($directory));
+			$this->assertStringNotContainsString('&raquo;', $language['UPLOAD_ERROR'], basename($directory));
+			$this->assertSame(['s', 's'], $this->placeholder_shape($language['UPLOAD_ERROR']), basename($directory));
 
 			$this->assertArrayHasKey('RESIZE_SOURCE_FILESIZE_EXPLAIN', $language, basename($directory));
 			$this->assertSame(1, substr_count(file_get_contents($catalog), 'RESIZE_SOURCE_FILESIZE_EXPLAIN'), basename($directory));

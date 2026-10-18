@@ -66,7 +66,7 @@ $lang = array_merge($lang, [
 	'ALBUM_VIEW_CANNOT'    => 'Je kan de afbeeldingen uit dit album <strong>niet</strong> zien',
 
 	'BAD_UPLOAD_FILE_SIZE'  => 'Je geüploade bestand is te groot',
-	'PHP_SIZE_OVERRUN'      => 'De server heeft deze afbeelding geweigerd omdat het bestand groter is dan de PHP-uploadlimiet van %1$d %2$s. De serverbeheerder moet <code>upload_max_filesize</code> en indien nodig <code>post_max_size</code> in <code>php.ini</code> verhogen.',
+	'PHP_SIZE_OVERRUN'      => 'Deze afbeelding is groter dan de toegestane limiet van %1$d %2$s. Kies een kleinere afbeelding en probeer het opnieuw.',
 	'BBCODES'               => 'BBCodes',
 	'BROWSING_ALBUM'        => 'Gebruikers die dit album bekijken: %1$s',
 	'BROWSING_ALBUM_GUEST'  => 'Gebruikers die dit album bekijken: %1$s en %2$d gast',
@@ -337,7 +337,7 @@ $lang = array_merge($lang, [
 	'UNWATCHED_IMAGE'           => 'Je bent niet langer geabonneerd op updates over nieuwe reacties op deze afbeelding.',
 	'UNWATCHED_IMAGES'          => 'Je bent niet langer geabonneerd op updates over nieuwe reacties op deze afbeeldingen.',
 	'UNWATCHED_PEGAS'           => 'Je bent niet langer geabonneerd op updates over nieuwe persoonlijke galerijen.',
-	'UPLOAD_ERROR'              => 'Tijdens het uploaden van “%1$s“ is de volgende fout opgetreden:<br />&raquo; %2$s',
+	'UPLOAD_ERROR'              => '“%1$s” kon niet worden geüpload:<br />%2$s',
 	'UPLOAD_IMAGE'              => 'Afbeelding uploaden',
 	'UPLOAD_IMAGE_SIZE_TOO_BIG' => 'De afmetingen van je afbeelding zijn te groot',
 	'UPLOAD_NO_FILE'            => 'Je moet het pad en bestandsnaam invullen',

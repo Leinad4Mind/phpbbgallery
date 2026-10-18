@@ -66,7 +66,7 @@ $lang = array_merge($lang, [
 	'ALBUM_VIEW_CANNOT'    => '<strong>No puedes</strong> ver imágenes en este álbum',
 
 	'BAD_UPLOAD_FILE_SIZE'  => 'Tu archivo subido es demasiado grande',
-	'PHP_SIZE_OVERRUN'      => 'El servidor rechazó esta imagen porque el tamaño del archivo supera el límite de carga de PHP de %1$d %2$s. El administrador del servidor debe aumentar <code>upload_max_filesize</code> y, si es necesario, <code>post_max_size</code> en <code>php.ini</code>.',
+	'PHP_SIZE_OVERRUN'      => 'Esta imagen supera el límite permitido de %1$d %2$s. Elige una imagen más pequeña e inténtalo de nuevo.',
 	'BBCODES'               => 'BBCodes',
 	'BROWSING_ALBUM'        => 'Usuarios navegando por este álbum: %1$s',
 	'BROWSING_ALBUM_GUEST'  => 'Usuarios navegando por este álbum: %1$s y %2$d invitado',
@@ -338,7 +338,7 @@ $lang = array_merge($lang, [
 	'UNWATCHED_IMAGE'           => 'Ya no eres avisado acerca de los nuevos comentarios sobre esta imagen.',
 	'UNWATCHED_IMAGES'          => 'Ya no estás informado sobre nuevos comentarios sobre estas imágenes.',
 	'UNWATCHED_PEGAS'           => 'Ya no estás suscrito automáticamente a nuevas galerías personales.',
-	'UPLOAD_ERROR'              => 'Al cargar “%1$s“ se produjo el siguiente error:<br />&raquo; %2$s',
+	'UPLOAD_ERROR'              => 'No se pudo subir “%1$s”:<br />%2$s',
 	'UPLOAD_IMAGE'              => 'Subir imagen',
 	'UPLOAD_IMAGE_SIZE_TOO_BIG' => 'El tamaño de la dimensión de la imagen es demasiado grande',
 	'UPLOAD_NO_FILE'            => 'Debe introducir su ruta de acceso y nombre de archivo',
