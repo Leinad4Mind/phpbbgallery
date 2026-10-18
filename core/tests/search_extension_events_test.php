@@ -34,7 +34,7 @@ final class search_extension_events_test extends TestCase
 	{
 		$controller = (string) file_get_contents(dirname(__DIR__) . '/controller/search.php');
 		$event = strpos($controller, "trigger_event('phpbbgallery.core.search.configure'");
-		$album_boundary = strpos($controller, "sql_in_set('i.image_album_id', \$search_album)", $event ?: 0);
+		$album_boundary = strpos($controller, "sql_in_set('i.image_album_id', \$search_album_ids)", $event ?: 0);
 		$visibility_boundary = strpos($controller, 'get_image_visibility_sql()', $album_boundary ?: 0);
 		$addon_merge = strpos($controller, 'array_filter($additional_search_where', $visibility_boundary ?: 0);
 

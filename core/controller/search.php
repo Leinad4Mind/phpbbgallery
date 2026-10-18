@@ -360,12 +360,12 @@ class search
 			}
 			$sql_where[] = $search_query;
 
-			$search_album = $this->get_search_album_ids($search_album);
-			if (!$search_album)
+			$search_album_ids = $this->get_search_album_ids($search_album, $search_child);
+			if (!$search_album_ids)
 			{
 				trigger_error('NO_SEARCH_RESULTS');
 			}
-			$sql_where[] = $this->db->sql_in_set('i.image_album_id', $search_album);
+			$sql_where[] = $this->db->sql_in_set('i.image_album_id', $search_album_ids);
 			$sql_where[] = $this->get_image_visibility_sql();
 			$sql_where = array_merge($sql_where, array_filter($additional_search_where, 'is_string'));
 			$sql_array['WHERE'] = implode(' and ', array_filter($sql_where));
@@ -745,21 +745,44 @@ class search
 	}
 
 	/**
-	 * Restrict a submitted album filter to albums the current user can view.
+	 * Restrict an album filter to visible albums and, when requested, descendants.
 	 *
 	 * @param array $requested_album_ids Submitted album identifiers
+	 * @param bool  $include_children    Include visible descendants of submitted albums
 	 * @return array Allowed album identifiers
 	 */
-	protected function get_search_album_ids(array $requested_album_ids): array
+	protected function get_search_album_ids(array $requested_album_ids, bool $include_children = false): array
 	{
 		$viewable_album_ids = $this->normalize_id_filter((array) $this->gallery_auth->acl_album_ids('i_view'));
+		$requested_album_ids = $this->normalize_id_filter($requested_album_ids);
 
 		if (!$requested_album_ids)
 		{
 			return $viewable_album_ids;
 		}
 
-		return array_values(array_intersect($requested_album_ids, $viewable_album_ids));
+		$allowed_requested_ids = array_values(array_intersect($requested_album_ids, $viewable_album_ids));
+		if (!$include_children || !$allowed_requested_ids)
+		{
+			return $allowed_requested_ids;
+		}
+
+		$sql = 'SELECT child.album_id
+			FROM ' . $this->albums_table . ' root, ' . $this->albums_table . ' child
+			WHERE ' . $this->db->sql_in_set('root.album_id', $allowed_requested_ids) . '
+				AND child.album_user_id = root.album_user_id
+				AND child.left_id >= root.left_id
+				AND child.right_id <= root.right_id
+				AND ' . $this->db->sql_in_set('child.album_id', $viewable_album_ids);
+		$result = $this->db->sql_query($sql);
+		$album_ids = [];
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$album_ids[] = (int) $row['album_id'];
+		}
+		$this->db->sql_freeresult($result);
+
+		return $this->normalize_id_filter($album_ids);
 	}
 
 	/**

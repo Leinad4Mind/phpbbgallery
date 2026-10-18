@@ -99,6 +99,53 @@ final class controller_search_types_test extends TestCase
 		$this->assertSame([2, 4, 7], $restrict->invoke($controller, []));
 	}
 
+	public function test_subalbum_search_includes_only_visible_descendants_from_the_same_owner_tree(): void
+	{
+		$gallery_auth = $this->getMockBuilder(\phpbbgallery\core\auth\auth::class)
+			->disableOriginalConstructor()
+			->onlyMethods(['acl_album_ids'])
+			->getMock();
+		$gallery_auth->expects($this->once())
+			->method('acl_album_ids')
+			->with('i_view')
+			->willReturn([4, 5, 7, 12]);
+
+		$db = $this->createMock(\phpbb\db\driver\driver_interface::class);
+		$db->expects($this->exactly(2))
+			->method('sql_in_set')
+			->willReturnMap([
+				['root.album_id', [4], false, false, 'root.album_id IN (4)'],
+				['child.album_id', [4, 5, 7, 12], false, false, 'child.album_id IN (4, 5, 7, 12)'],
+			]);
+		$db->expects($this->once())
+			->method('sql_query')
+			->with($this->callback(static function (string $sql): bool {
+				return str_contains($sql, 'child.album_user_id = root.album_user_id')
+					&& str_contains($sql, 'child.left_id >= root.left_id')
+					&& str_contains($sql, 'child.right_id <= root.right_id');
+			}))
+			->willReturn('descendants');
+		$db->expects($this->exactly(4))
+			->method('sql_fetchrow')
+			->with('descendants')
+			->willReturnOnConsecutiveCalls(
+				['album_id' => 4],
+				['album_id' => 5],
+				['album_id' => 5],
+				false
+			);
+		$db->expects($this->once())->method('sql_freeresult')->with('descendants');
+
+		$controller = (new \ReflectionClass(search::class))->newInstanceWithoutConstructor();
+		$this->set_controller_property($controller, 'gallery_auth', $gallery_auth);
+		$this->set_controller_property($controller, 'db', $db);
+		$albums_table = new \ReflectionProperty(search::class, 'albums_table');
+		$albums_table->setValue($controller, 'phpbb_gallery_albums');
+
+		$restrict = new \ReflectionMethod(search::class, 'get_search_album_ids');
+		$this->assertSame([4, 5], $restrict->invoke($controller, [4], true));
+	}
+
 	public function test_search_stops_before_building_an_empty_album_in_clause(): void
 	{
 		$gallery_auth = $this->getMockBuilder(\phpbbgallery\core\auth\auth::class)
@@ -117,8 +164,8 @@ final class controller_search_types_test extends TestCase
 		$this->assertSame([], $restrict->invoke($controller, []));
 
 		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/search.php');
-		$empty_guard = strpos($source, 'if (!$search_album)');
-		$album_clause = strpos($source, 'sql_in_set(\'i.image_album_id\', $search_album)');
+		$empty_guard = strpos($source, 'if (!$search_album_ids)');
+		$album_clause = strpos($source, 'sql_in_set(\'i.image_album_id\', $search_album_ids)');
 
 		$this->assertNotFalse($empty_guard);
 		$this->assertNotFalse($album_clause);
