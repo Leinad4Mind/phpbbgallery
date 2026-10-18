@@ -98,6 +98,7 @@ class config_module
 
 		$phpbb_gallery_url = $phpbb_container->get('phpbbgallery.core.url');
 		$file_tool = $phpbb_container->get('phpbbgallery.core.file.tool');
+		$php_ini = $phpbb_container->get('php_ini');
 		$this->language = $phpbb_container->get('language');
 		$this->language->add_lang(['gallery', 'gallery_acp', 'gallery_title'], 'phpbbgallery/core');
 
@@ -319,6 +320,14 @@ class config_module
 					}
 				}
 			}
+			if ($config_key === 'max_filesize')
+			{
+				$l_explain = $this->language->lang(
+					'MAX_FILE_SIZE_EXPLAIN',
+					get_formatted_filesize((int) $php_ini->getBytes('upload_max_filesize')),
+					get_formatted_filesize((int) $php_ini->getBytes('post_max_size'))
+				);
+			}
 
 			$content = build_cfg_template($type, $config_key, $this->new_config, $config_key, $vars);
 
@@ -515,7 +524,7 @@ class config_module
 
 				'IMAGE_SETTINGS'	=> [
 					'num_uploads'			=> ['lang' => 'UPLOAD_IMAGES',			'validate' => 'int',	'type' => 'text:7:2',		'explain' => true],
-					'max_filesize'			=> ['lang' => 'MAX_FILE_SIZE',			'validate' => 'int',	'type' => 'text:12:9',		'append' => 'BYTES'],
+					'max_filesize'			=> ['lang' => 'MAX_FILE_SIZE',			'validate' => 'int',	'type' => 'text:12:9',		'append' => 'BYTES',	'explain' => true],
 					'max_width'				=> ['lang' => 'MAX_WIDTH',				'validate' => 'int',	'type' => 'text:7:5',		'append' => 'PIXELS'],
 					'max_height'			=> ['lang' => 'MAX_HEIGHT',			'validate' => 'int',	'type' => 'text:7:5',		'append' => 'PIXELS'],
 					'allow_resize'			=> ['lang' => 'RESIZE_IMAGES',			'validate' => 'bool',	'type' => 'radio:yes_no',		'explain' => true],

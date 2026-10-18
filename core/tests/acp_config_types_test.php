@@ -90,6 +90,7 @@ final class acp_config_types_test extends TestCase
 		$this->assertSame('UPLOAD_IMAGES', $display['vars']['num_uploads']['lang']);
 		$this->assertTrue($display['vars']['num_uploads']['explain']);
 		$this->assertSame('int', $display['vars']['num_uploads']['validate']);
+		$this->assertTrue($display['vars']['max_filesize']['explain']);
 		$this->assertArrayHasKey('allow_resize', $display['vars']);
 		$this->assertSame('RESIZE_IMAGES', $display['vars']['allow_resize']['lang']);
 		$this->assertTrue($display['vars']['allow_resize']['explain']);

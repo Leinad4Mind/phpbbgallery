@@ -315,7 +315,14 @@ class language_catalog_test extends TestCase
 			$this->assertSame(1, substr_count(file_get_contents($catalog), 'RESIZE_SOURCE_FILESIZE_EXPLAIN'), basename($directory));
 			$this->assertStringContainsString('upload_max_filesize', $language['RESIZE_SOURCE_FILESIZE_EXPLAIN'], basename($directory));
 			$this->assertStringContainsString('post_max_size', $language['RESIZE_SOURCE_FILESIZE_EXPLAIN'], basename($directory));
-			$this->assertSame(['s', 's'], $this->placeholder_shape($language['RESIZE_SOURCE_FILESIZE_EXPLAIN']), basename($directory));
+			$this->assertSame(['s', 's', 's', 's', 's'], $this->placeholder_shape($language['RESIZE_SOURCE_FILESIZE_EXPLAIN']), basename($directory));
+
+			$acp_catalog = $directory . '/gallery_acp.php';
+			$acp_language = $this->load_language($acp_catalog);
+			$this->assertArrayHasKey('MAX_FILE_SIZE_EXPLAIN', $acp_language, basename($directory));
+			$this->assertStringContainsString('upload_max_filesize', $acp_language['MAX_FILE_SIZE_EXPLAIN'], basename($directory));
+			$this->assertStringContainsString('post_max_size', $acp_language['MAX_FILE_SIZE_EXPLAIN'], basename($directory));
+			$this->assertSame(['s', 's'], $this->placeholder_shape($acp_language['MAX_FILE_SIZE_EXPLAIN']), basename($directory));
 
 			$this->assertArrayHasKey('UPLOAD_EFFECTIVE_LIMIT', $language, basename($directory));
 			$this->assertSame(1, substr_count(file_get_contents($catalog), 'UPLOAD_EFFECTIVE_LIMIT'), basename($directory));

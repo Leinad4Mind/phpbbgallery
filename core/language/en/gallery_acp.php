@@ -374,6 +374,7 @@ $lang = array_merge($lang, [
 	'RESET_RATING_CONFIRM'       => 'Do you really want to delete all ratings on the images of the album “%s“?',
 	'RESET_RATING_EXPLAIN'       => 'Deletes all ratings on images in the specific album.',
 	'RESIZE_IMAGES'              => 'Resize bigger images',
+	'MAX_FILE_SIZE_EXPLAIN'      => 'Maximum size of the image stored by Gallery after processing. Current PHP request limits: <code>upload_max_filesize</code> is %1$s and <code>post_max_size</code> is %2$s.',
 	'RESIZE_IMAGES_EXPLAIN'      => 'Automatically reduces supported uploaded images whose dimensions exceed the configured maximum width or height, preserving their aspect ratio. Gallery may reduce them further so the stored file meets the maximum file size. This cannot bypass PHP’s <code>upload_max_filesize</code> or <code>post_max_size</code> limits or image-decoding safety limits.',
 	'RESYNC_IMAGECOUNTS'         => 'Resynchronise image counts',
 	'RESYNC_IMAGECOUNTS_CONFIRM' => 'Are you sure you wish to resynchronise image counts?',

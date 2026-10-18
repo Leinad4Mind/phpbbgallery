@@ -171,4 +171,22 @@ final class controller_upload_types_test extends TestCase
 		$upload_service = strstr($upload_service, 'phpbbgallery.core.controller.author_autocomplete:', true);
 		$this->assertStringContainsString("- '@php_ini'", $upload_service);
 	}
+
+	public function test_upload_controller_receives_phpbb_auth_for_admin_only_diagnostics(): void
+	{
+		$reflection = new \ReflectionClass(upload::class);
+		$parameters = $reflection->getConstructor()->getParameters();
+		$phpbb_auth = array_values(array_filter($parameters, static fn(\ReflectionParameter $parameter): bool => $parameter->getName() === 'phpbb_auth'));
+
+		$this->assertCount(1, $phpbb_auth);
+		$this->assertSame('phpbb\\auth\\auth', (string) $phpbb_auth[0]->getType());
+
+		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/upload.php');
+		$this->assertStringContainsString("'S_GALLERY_UPLOAD_ADMIN_INFO' => \$this->phpbb_auth->acl_get('a_')", $source);
+
+		$services = (string) file_get_contents(dirname(__DIR__) . '/config/services_controller.yml');
+		$upload_service = strstr($services, 'phpbbgallery.core.controller.upload:');
+		$upload_service = strstr($upload_service, 'phpbbgallery.core.controller.author_autocomplete:', true);
+		$this->assertStringContainsString("- '@auth'", $upload_service);
+	}
 }
