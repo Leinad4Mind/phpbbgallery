@@ -361,7 +361,8 @@ final class controller_album_types_test extends TestCase
 
 		$css = (string) file_get_contents(dirname(__DIR__) . '/styles/all/theme/gallery.css');
 		$this->assertMatchesRegularExpression('/\.gallery-album-prosilver-actions\s*\{[^}]*display:\s*flex;[^}]*gap:\s*5px;/s', $css);
-		$this->assertMatchesRegularExpression('/\.gallery-album-prosilver-actions > \.gallery-album-inline-search\s*\{[^}]*flex:\s*1 1 320px;[^}]*position:\s*static;[^}]*transform:\s*none;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-album-prosilver-actions > \.gallery-album-inline-search\s*\{[^}]*flex:\s*1 1 320px;[^}]*margin:\s*0;[^}]*position:\s*static;[^}]*transform:\s*none;/s', $css);
+		$this->assertDoesNotMatchRegularExpression('/\.gallery-album-prosilver-actions > \.gallery-album-inline-search\s*\{[^}]*margin:\s*0 auto;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-album-bootstrap-actions\s*\{[^}]*display:\s*flex;[^}]*gap:\s*10px;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-album-bootstrap-actions > \.gallery-album-inline-search\s*\{[^}]*flex:\s*1 1 50%;[^}]*max-width:\s*50%;[^}]*min-width:\s*0;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-album-bootstrap-actions > \.pull-right\s*\{[^}]*margin-left:\s*auto;/s', $css);

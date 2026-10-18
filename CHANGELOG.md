@@ -25,6 +25,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Fixed the PROSILVER album search form remaining centred away from the available action buttons; it now follows the last visible Upload or Subscribe button in the same responsive action flow.
 - Fixed quick uploads reporting a misleading green 100% result after failures: complete batches are now green, partially successful batches are amber and fully failed batches are red, while every file card reports its own successful or specific validation, server or network result.
 - Fixed Featured Images rendering a duplicate empty ACP fieldset before its configuration group.
 - Matched the Featured Images Classic presentation to the native Classic Gallery container border and bold heading instead of retaining the generic carousel panel treatment.
