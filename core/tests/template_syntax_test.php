@@ -624,6 +624,8 @@ final class template_syntax_test extends TestCase
 			$this->assertStringContainsString('data-error-file-size="{{ lang(\'QUICK_UPLOAD_ERROR_FILE_SIZE\', S_SOURCE_MAX_FILESIZE) }}"', $posting, $style);
 			$this->assertStringContainsString('{% if S_GALLERY_UPLOAD_ADMIN_INFO and S_RESIZE_LARGE_FILES %}', $posting, $style);
 			$this->assertStringContainsString("lang('RESIZE_SOURCE_FILESIZE_EXPLAIN', S_CONFIGURED_SOURCE_MAX_FILESIZE, S_STORED_MAX_FILESIZE, S_SOURCE_MAX_FILESIZE, S_PHP_UPLOAD_MAX_FILESIZE, S_PHP_POST_MAX_SIZE)", $posting, $style);
+			$this->assertStringContainsString("S_MAX_WIDTH }} {{ lang('PIXEL') }}", $posting, $style);
+			$this->assertStringContainsString("S_MAX_HEIGHT }} {{ lang('PIXEL') }}", $posting, $style);
 			$this->assertStringContainsString('data-error-file-type="{{ lang(\'QUICK_UPLOAD_ERROR_FILE_TYPE\', S_ALLOWED_FILETYPES) }}"', $posting, $style);
 			$this->assertStringContainsString('data-error-network="{{ lang(\'QUICK_UPLOAD_ERROR_NETWORK\') }}"', $posting, $style);
 			$this->assertStringContainsString('id="outputTarget"', $posting, $style);
