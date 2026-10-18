@@ -29,6 +29,7 @@ use phpbbgallery\core\migrations\webp_quality;
 use phpbbgallery\core\migrations\album_list_pagination;
 use phpbbgallery\core\migrations\featured_images;
 use phpbbgallery\core\migrations\create_import_dir;
+use phpbbgallery\core\migrations\release_4_2_0;
 use phpbbgallery\core\migrations\variant_storage_providers;
 use phpbbgallery\core\migrations\resumable_uploads;
 use phpbbgallery\core\migrations\performance_indexes;
@@ -132,6 +133,7 @@ class migration_integrity_test extends TestCase
 		release_4_1_0::class,
 		featured_images::class,
 		create_import_dir::class,
+		release_4_2_0::class,
 	];
 
 	private array $temp_directories = [];
@@ -362,6 +364,16 @@ class migration_integrity_test extends TestCase
 		$this->assertSame([
 			'\\phpbbgallery\\core\\migrations\\album_list_pagination',
 		], release_4_1_0::depends_on());
+		$this->assertSame([], $migration->update_data());
+	}
+
+	public function test_release_4_2_0_closes_the_complete_post_4_1_feature_chain(): void
+	{
+		$migration = (new \ReflectionClass(release_4_2_0::class))->newInstanceWithoutConstructor();
+
+		$this->assertSame([
+			'\phpbbgallery\core\migrations\create_import_dir',
+		], release_4_2_0::depends_on());
 		$this->assertSame([], $migration->update_data());
 	}
 
@@ -1114,13 +1126,13 @@ class migration_integrity_test extends TestCase
 		$this->assertSame([], $remaining);
 	}
 
-	public function test_create_import_dir_is_the_terminal_core_migration(): void
+	public function test_release_4_2_0_is_the_terminal_core_migration(): void
 	{
 		$graph = $this->migration_graph();
 		foreach (self::MIGRATIONS as $migration)
 		{
 			$this->assertTrue(
-				$this->depends_on(create_import_dir::class, $migration, $graph),
+				$this->depends_on(release_4_2_0::class, $migration, $graph),
 				$migration . ' is outside the terminal migration chain.'
 			);
 		}
@@ -1458,6 +1470,7 @@ class migration_integrity_test extends TestCase
 			'release_4_1_0.php',
 			'featured_images.php',
 			'create_import_dir.php',
+			'release_4_2_0.php',
 		] as $migration)
 		{
 			require_once dirname(__DIR__) . '/migrations/' . $migration;
