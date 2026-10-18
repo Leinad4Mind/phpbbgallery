@@ -7,6 +7,9 @@
 	--gallery-featured-card-shadow: none;
 	--gallery-featured-header-background: linear-gradient(180deg, #fff 0%, #edf2f6 100%);
 	--gallery-featured-heading: #105289;
+	--gallery-featured-surface: #fff;
+	--gallery-featured-surface-strong: #fff;
+	--gallery-featured-controls-background: linear-gradient(180deg, rgba(255, 255, 255, .98), rgba(235, 241, 245, .98));
 	--gallery-featured-image-height: clamp(210px, 22vw, 300px);
 	--gallery-featured-visible: 4;
 	background: var(--gallery-featured-background);
@@ -51,7 +54,7 @@
 }
 .gallery-featured-slide {
 	box-sizing: border-box;
-	background: #fff;
+	background: var(--gallery-featured-surface);
 	border: 1px solid var(--gallery-featured-border);
 	border-radius: var(--gallery-featured-card-radius);
 	box-shadow: var(--gallery-featured-card-shadow);
@@ -80,7 +83,7 @@
 }
 .gallery-featured-caption {
 	align-self: stretch;
-	background: #fff;
+	background: var(--gallery-featured-surface);
 	border-top: 1px solid var(--gallery-featured-border);
 	flex: 1;
 	padding: 12px;
@@ -118,7 +121,7 @@
 .gallery-featured--count-three { --gallery-featured-image-height: clamp(230px, 25vw, 340px); }
 .gallery-featured-controls {
 	align-items: center;
-	background: linear-gradient(180deg, rgba(255, 255, 255, .98), rgba(235, 241, 245, .98));
+	background: var(--gallery-featured-controls-background);
 	border-top: 1px solid var(--gallery-featured-border);
 	display: none;
 	gap: 9px;
@@ -129,8 +132,8 @@
 .gallery-featured.is-enhanced .gallery-featured-controls[hidden] { display: none; }
 .gallery-featured-control {
 	align-items: center;
-	background: #fff;
-	border: 1px solid #aebdca;
+	background: var(--gallery-featured-surface-strong);
+	border: 1px solid var(--gallery-featured-border);
 	border-radius: 50%;
 	box-shadow: none;
 	color: var(--gallery-featured-heading);
@@ -215,22 +218,26 @@
 	--gallery-featured-card-radius: 9px;
 	--gallery-featured-card-shadow: 0 10px 24px rgba(22, 49, 68, .14);
 	--gallery-featured-gap: 14px;
-	background: linear-gradient(135deg, color-mix(in srgb, var(--gallery-featured-accent) 8%, #fff), var(--gallery-featured-background) 58%);
+	background: linear-gradient(135deg, color-mix(in srgb, var(--gallery-featured-accent) 8%, var(--gallery-featured-surface)), var(--gallery-featured-background) 58%);
 	border-top: 4px solid var(--gallery-featured-accent);
 	border-radius: 10px;
 }
 .gallery-featured--layout-futuristic .gallery-featured-slide { border-top: 3px solid var(--gallery-featured-accent); }
-.gallery-featured--layout-futuristic .gallery-featured-header { background: rgba(255, 255, 255, .78); }
+.gallery-featured--layout-futuristic .gallery-featured-header { background: var(--gallery-featured-header-background); }
 .gallery-featured--layout-futuristic .gallery-featured-stage { padding: 16px; }
 .gallery-featured--prosilver.gallery-featured--layout-futuristic .gallery-featured-header h2 { font-weight: 700; }
 .gallery-featured--prosilver {
 	--gallery-featured-accent: #12a3eb;
-	--gallery-featured-background: #eef3f7;
-	--gallery-featured-border: #b8c9d6;
-	--gallery-featured-heading: #105289;
+	--gallery-featured-background: rgba(255, 255, 255, .04);
+	--gallery-featured-border: rgba(127, 127, 127, .32);
+	--gallery-featured-controls-background: linear-gradient(180deg, rgba(255, 255, 255, .12), rgba(255, 255, 255, .06));
+	--gallery-featured-header-background: linear-gradient(180deg, rgba(255, 255, 255, .12), rgba(18, 163, 235, .08));
+	--gallery-featured-heading: currentColor;
+	--gallery-featured-surface: rgba(255, 255, 255, .06);
+	--gallery-featured-surface-strong: rgba(255, 255, 255, .12);
 	border-radius: 4px;
+	color: inherit;
 }
-.gallery-featured--prosilver { --gallery-featured-header-background: linear-gradient(180deg, #eaf3f9, #dbe9f2); }
 .gallery-featured--prosilver.gallery-featured--layout-classic {
 	--gallery-featured-header-background: transparent;
 	background-color: #0076b1;

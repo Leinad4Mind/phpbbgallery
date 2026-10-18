@@ -125,6 +125,12 @@ class featured_images_test extends TestCase
 		$css = (string) file_get_contents($this->root . '/styles/all/theme/featured.css');
 		$this->assertStringContainsString("gallery-featured--{{ featured_style|default('prosilver') }}", $template);
 		$this->assertStringContainsString('.gallery-featured--prosilver', $css);
+		$this->assertMatchesRegularExpression(
+			'/\.gallery-featured--prosilver\s*\{[^}]*--gallery-featured-background:\s*rgba\(255, 255, 255, \.04\);[^}]*--gallery-featured-heading:\s*currentColor;[^}]*--gallery-featured-surface:\s*rgba\(255, 255, 255, \.06\);[^}]*color:\s*inherit;/s',
+			$css
+		);
+		$this->assertMatchesRegularExpression('/\.gallery-featured-slide\s*\{[^}]*background:\s*var\(--gallery-featured-surface\);/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-featured-controls\s*\{[^}]*background:\s*var\(--gallery-featured-controls-background\);/s', $css);
 		$this->assertStringContainsString('.gallery-featured--bboots', $css);
 		$this->assertStringContainsString('.gallery-featured--flatboots', $css);
 		foreach (['classic', 'modern', 'cards', 'futuristic'] as $layout)

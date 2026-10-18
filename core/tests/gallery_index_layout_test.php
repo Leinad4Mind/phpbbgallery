@@ -318,6 +318,10 @@ final class gallery_index_layout_test extends TestCase
 			$css
 		);
 		$this->assertMatchesRegularExpression(
+			'/\.gallery-futuristic\s*\{[^}]*--gallery-futuristic-border:\s*rgba\(127, 127, 127, \.28\);[^}]*--gallery-futuristic-muted:\s*currentColor;[^}]*--gallery-futuristic-surface:\s*rgba\(255, 255, 255, \.04\);[^}]*--gallery-futuristic-surface-strong:\s*rgba\(255, 255, 255, \.09\);[^}]*color:\s*inherit;/s',
+			$css
+		);
+		$this->assertMatchesRegularExpression(
 			'/\.gallery-futuristic--flatboots\s*\{[^}]*--gallery-futuristic-accent:\s*#9e7233;[^}]*--gallery-futuristic-accent-soft:\s*rgba\(158, 114, 51, \.17\);[^}]*--gallery-futuristic-secondary:\s*#daa520;[^}]*--gallery-futuristic-secondary-soft:\s*rgba\(218, 165, 32, \.14\);/s',
 			$css
 		);

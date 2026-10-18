@@ -1148,14 +1148,14 @@ input.autowidth-gallery {
 	--gallery-futuristic-accent-soft: rgba(37, 135, 200, .16);
 	--gallery-futuristic-secondary: #6e63d9;
 	--gallery-futuristic-secondary-soft: rgba(110, 99, 217, .13);
-	--gallery-futuristic-border: rgba(57, 92, 119, .24);
-	--gallery-futuristic-muted: #667887;
-	--gallery-futuristic-surface: rgba(255, 255, 255, .9);
-	--gallery-futuristic-surface-strong: #fff;
+	--gallery-futuristic-border: rgba(127, 127, 127, .28);
+	--gallery-futuristic-muted: currentColor;
+	--gallery-futuristic-surface: rgba(255, 255, 255, .04);
+	--gallery-futuristic-surface-strong: rgba(255, 255, 255, .09);
 	--gallery-futuristic-shadow: 0 10px 26px rgba(32, 61, 82, .11);
 	--gallery-futuristic-radius: 10px;
 	clear: both;
-	color: #35404a;
+	color: inherit;
 }
 
 .gallery-futuristic--prosilver
@@ -1164,7 +1164,7 @@ input.autowidth-gallery {
 	--gallery-futuristic-accent-soft: rgba(21, 150, 200, .16);
 	--gallery-futuristic-secondary: #078bc3;
 	--gallery-futuristic-secondary-soft: rgba(7, 139, 195, .13);
-	--gallery-futuristic-border: rgba(17, 132, 180, .24);
+	--gallery-futuristic-border: rgba(127, 127, 127, .28);
 	--gallery-futuristic-radius: 8px;
 }
 
