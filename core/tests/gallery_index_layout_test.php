@@ -119,9 +119,22 @@ final class gallery_index_layout_test extends TestCase
 		}
 
 		$summary = (string) file_get_contents($core_root . '/styles/all/template/gallery/personal_album_summary.html');
+		$prosilver_cards = (string) file_get_contents($core_root . '/styles/prosilver/template/gallery/albumlist_polaroid.html');
+		$css = (string) file_get_contents($core_root . '/styles/all/theme/gallery.css');
 		$this->assertStringContainsString('S_PERSONAL_ALBUM_SUMMARY', $summary);
 		$this->assertStringContainsString("lang('NEWEST_PERSONAL_ALBUM')", $summary);
 		$this->assertStringContainsString("lang('YOUR_PERSONAL_ALBUM')", $summary);
+		$this->assertTrue(
+			strpos($prosilver_cards, 'personal_album_summary.html') < strpos($prosilver_cards, '<div class="gallery-root-album-card-grid">')
+		);
+		$this->assertMatchesRegularExpression(
+			'/\\.gallery-personal-album-summary\\s*\\{[^}]*display:\\s*grid;[^}]*grid-template-columns:\\s*repeat\\(auto-fit, minmax\\(220px, 1fr\\)\\);/s',
+			$css
+		);
+		$this->assertMatchesRegularExpression(
+			'/\\.gallery-personal-album-summary-item\\s*\\{[^}]*display:\\s*flex;[^}]*min-height:\\s*48px;/s',
+			$css
+		);
 	}
 
 	public function test_classic_layout_controls_image_grids_without_duplicating_style_markup(): void
@@ -534,6 +547,18 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertStringContainsString('.gallery-image-block-title', $css);
 		$this->assertMatchesRegularExpression(
 			'/\\.gallery-album-section-title,[^{]+\\.gallery-image-block-title\\s*\\{[^}]*color:\\s*#2880b2;[^}]*font-size:\\s*20px;/s',
+			$css
+		);
+	}
+
+	public function test_prosilver_modern_card_section_heading_is_blue_and_bold(): void
+	{
+		$template = (string) file_get_contents(dirname(__DIR__) . '/styles/prosilver/template/gallery/albumlist_polaroid.html');
+		$css = (string) file_get_contents(dirname(__DIR__) . '/styles/all/theme/gallery.css');
+
+		$this->assertStringContainsString('gallery-album-section-title--prosilver-cards', $template);
+		$this->assertMatchesRegularExpression(
+			'/\\.gallery-album-section-title--prosilver-cards\\s*\\{[^}]*color:\\s*#105289;[^}]*font-weight:\\s*700;/s',
 			$css
 		);
 	}

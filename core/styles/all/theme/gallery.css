@@ -678,6 +678,12 @@ input.autowidth-gallery {
 	color: inherit;
 }
 
+.gallery-album-section-title--prosilver-cards
+{
+	color: #105289;
+	font-weight: 700;
+}
+
 .gallery-album-section-title-sitesplat,
 .gallery-album-section-title-sitesplat h3
 {
@@ -4206,18 +4212,38 @@ fieldset dl.gallery-autocomplete-row-open
 
 .gallery-personal-album-summary
 {
-	align-items: center;
-	background: rgba(255, 255, 255, .72);
-	border: 1px solid rgba(125, 145, 160, .28);
-	border-left: 3px solid #12a3eb;
-	display: flex;
-	flex-wrap: wrap;
-	gap: 6px 24px;
-	margin: 0 0 12px;
-	padding: 9px 12px;
+	box-sizing: border-box;
+	display: grid;
+	flex: 0 0 100%;
+	gap: 10px;
+	grid-column: 1 / -1;
+	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+	margin: 0 0 16px;
+	width: 100%;
 }
 
 .gallery-personal-album-summary-item
 {
+	align-items: center;
+	background: rgba(127, 127, 127, .08);
+	border: 1px solid rgba(127, 127, 127, .28);
+	border-top: 3px solid #12a3eb;
+	border-radius: 4px;
+	box-sizing: border-box;
+	display: flex;
+	gap: 4px;
+	justify-content: center;
+	min-height: 48px;
 	min-width: 0;
+	padding: 9px 12px;
+	text-align: center;
+	word-break: break-word;
+}
+
+@media (max-width: 700px)
+{
+	.gallery-personal-album-summary
+	{
+		grid-template-columns: minmax(0, 1fr);
+	}
 }
