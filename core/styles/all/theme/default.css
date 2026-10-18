@@ -62,16 +62,28 @@
 
 .uploadImage .preview {
 	align-items: center;
+	box-sizing: border-box;
 	display: flex;
 	justify-content: center;
 	min-height: 80px;
+	overflow: hidden;
 	padding: 3%;
+	width: 100%;
+}
+
+.uploadImage .preview a {
+	display: block;
+	max-width: 100%;
 }
 
 .uploadImage .preview img {
 	margin: auto;
+	display: block;
+	height: auto;
 	max-height: 200px;
-	max-width: 200px;
+	max-width: 100%;
+	object-fit: contain;
+	width: auto;
 }
 
 .uploadImage .info {

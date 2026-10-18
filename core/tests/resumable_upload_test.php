@@ -181,6 +181,16 @@ class resumable_upload_test extends TestCase
 		$this->assertStringContainsString('.gallery-quick-upload-success', $stylesheet);
 	}
 
+	public function test_quick_upload_previews_remain_inside_their_cards(): void
+	{
+		$stylesheet = (string) file_get_contents(dirname(__DIR__) . '/styles/all/theme/default.css');
+
+		$this->assertMatchesRegularExpression('/\.uploadImage \.preview \{[^}]*overflow:\s*hidden;[^}]*width:\s*100%;/s', $stylesheet);
+		$this->assertMatchesRegularExpression('/\.uploadImage \.preview a \{[^}]*max-width:\s*100%;/s', $stylesheet);
+		$this->assertMatchesRegularExpression('/\.uploadImage \.preview img \{[^}]*max-width:\s*100%;[^}]*object-fit:\s*contain;/s', $stylesheet);
+		$this->assertStringNotContainsString('max-width: 200px;', $stylesheet);
+	}
+
 	public function test_quick_upload_reset_clears_the_client_and_server_draft(): void
 	{
 		$javascript = (string) file_get_contents(dirname(__DIR__) . '/styles/all/template/js/quick_upload.js');
