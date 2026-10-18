@@ -45,7 +45,6 @@ final class acp_confirmation_action_test extends TestCase
 			['core/acp/albums_module.php', 1],
 			['core/acp/gallery_logs_module.php', 1],
 			['core/acp/permissions_module.php', 1],
-			['core/acp/personal_albums_module.php', 1],
 			['acpcleanup/acp/main_module.php', 2],
 		];
 	}
@@ -80,7 +79,6 @@ final class acp_confirmation_action_test extends TestCase
 	{
 		return [
 			['core/acp/albums_module.php'],
-			['core/acp/personal_albums_module.php'],
 		];
 	}
 

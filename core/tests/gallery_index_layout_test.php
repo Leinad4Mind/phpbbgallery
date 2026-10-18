@@ -100,13 +100,12 @@ final class gallery_index_layout_test extends TestCase
 		$layouts = [
 			'/styles/all/template/gallery/albumlist_modern.html',
 			'/styles/all/template/gallery/albumlist_futuristic.html',
-			'/styles/prosilver/template/gallery/albumlist_body.html',
-			'/styles/prosilver/template/gallery/albumlist_polaroid.html',
-			'/styles/BBOOTS/template/gallery/albumlist_body.html',
-			'/styles/BBOOTS/template/gallery/albumlist_polaroid.html',
-			'/styles/FLATBOOTS/template/gallery/albumlist_body.html',
-			'/styles/FLATBOOTS/template/gallery/albumlist_polaroid.html',
 		];
+		foreach (\gallery_test_existing_styles($core_root) as $style)
+		{
+			$layouts[] = '/styles/' . $style . '/template/gallery/albumlist_body.html';
+			$layouts[] = '/styles/' . $style . '/template/gallery/albumlist_polaroid.html';
+		}
 
 		foreach ($layouts as $layout)
 		{
