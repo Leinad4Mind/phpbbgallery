@@ -311,10 +311,9 @@ class language_catalog_test extends TestCase
 			$this->assertStringNotContainsString('&raquo;', $language['UPLOAD_ERROR'], basename($directory));
 			$this->assertSame(['s', 's'], $this->placeholder_shape($language['UPLOAD_ERROR']), basename($directory));
 
-			$this->assertArrayHasKey('STORED_IMAGE_FILE_SIZE', $language, basename($directory));
-			$this->assertArrayHasKey('SOURCE_IMAGE_FILE_SIZE_BEFORE_RESIZE', $language, basename($directory));
-			$this->assertSame(1, substr_count(file_get_contents($catalog), 'STORED_IMAGE_FILE_SIZE'), basename($directory));
-			$this->assertSame(1, substr_count(file_get_contents($catalog), 'SOURCE_IMAGE_FILE_SIZE_BEFORE_RESIZE'), basename($directory));
+			$this->assertArrayHasKey('RESIZED_IMAGE_FILE_SIZE_LIMIT', $language, basename($directory));
+			$this->assertSame(1, substr_count(file_get_contents($catalog), 'RESIZED_IMAGE_FILE_SIZE_LIMIT'), basename($directory));
+			$this->assertSame(['s', 's'], $this->placeholder_shape($language['RESIZED_IMAGE_FILE_SIZE_LIMIT']), basename($directory));
 
 			$this->assertArrayHasKey('RESIZE_SOURCE_FILESIZE_EXPLAIN', $language, basename($directory));
 			$this->assertSame(1, substr_count(file_get_contents($catalog), 'RESIZE_SOURCE_FILESIZE_EXPLAIN'), basename($directory));

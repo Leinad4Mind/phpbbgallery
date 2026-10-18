@@ -134,8 +134,7 @@ $lang = array_merge($lang, [
 
 	'FILE'                       => 'Fichier',
 	'FILE_SIZE'                  => 'Taille du fichier',
-	'STORED_IMAGE_FILE_SIZE'     => 'Taille maximale de l’image enregistrée',
-	'SOURCE_IMAGE_FILE_SIZE_BEFORE_RESIZE' => 'Taille maximale du fichier source avant redimensionnement',
+	'RESIZED_IMAGE_FILE_SIZE_LIMIT' => 'Taille maximale de l’image finale : %1$s (vous pouvez téléverser jusqu’à %2$s ; Gallery tentera de la redimensionner pour respecter cette limite).',
 	'FILETYPE_MIMETYPE_MISMATCH' => 'Le type de fichier « <strong>%1$s</strong> » ne correspond pas au mime-type (%2$s).',
 	'FILETYPES_GIF'              => 'gif',
 	'FILETYPES_JPG'              => 'jpg',

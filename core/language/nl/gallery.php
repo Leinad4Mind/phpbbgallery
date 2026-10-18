@@ -118,8 +118,7 @@ $lang = array_merge($lang, [
 
 	'FILE'                       => 'Bestand',
 	'FILE_SIZE'                  => 'Bestandsgrootte',
-	'STORED_IMAGE_FILE_SIZE'     => 'Maximale grootte van de opgeslagen afbeelding',
-	'SOURCE_IMAGE_FILE_SIZE_BEFORE_RESIZE' => 'Maximale grootte van het bronbestand vóór formaatwijziging',
+	'RESIZED_IMAGE_FILE_SIZE_LIMIT' => 'Maximale grootte van de uiteindelijke afbeelding: %1$s (je kunt maximaal %2$s uploaden; Gallery probeert de afbeelding te verkleinen om aan deze limiet te voldoen).',
 	'FILETYPE_MIMETYPE_MISMATCH' => 'Het bestandstype van “<strong>%1$s</strong>“ sluit niet aan bij het mime-type (%2$s).',
 	'FILETYPES_GIF'              => 'gif',
 	'FILETYPES_JPG'              => 'jpg',

@@ -112,8 +112,7 @@ $lang = array_merge($lang, [
 
 	'FILE'                       => 'Файл',
 	'FILE_SIZE'                  => 'Размер файла',
-	'STORED_IMAGE_FILE_SIZE'     => 'Максимальный размер сохранённого изображения',
-	'SOURCE_IMAGE_FILE_SIZE_BEFORE_RESIZE' => 'Максимальный размер исходного файла до изменения размера',
+	'RESIZED_IMAGE_FILE_SIZE_LIMIT' => 'Максимальный размер итогового изображения: %1$s (можно загрузить до %2$s; Gallery попытается изменить размер изображения, чтобы соблюсти этот лимит).',
 	'FILETYPE_MIMETYPE_MISMATCH' => 'Тип файла «<strong>%1$s</strong>» не соответствует mime-типу (%2$s).',
 	'FILETYPES_GIF'              => 'gif',
 	'FILETYPES_JPG'              => 'jpg',
