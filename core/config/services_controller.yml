@@ -33,6 +33,7 @@ services:
             - '@template'
             - '@config'
             - '@service_container'
+            - '@php_ini'
             - '@phpbbgallery.core.album'
             - '@phpbbgallery.core.misc'
             - '@phpbbgallery.core.auth'

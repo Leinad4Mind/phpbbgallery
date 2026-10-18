@@ -12,11 +12,15 @@
 
 namespace phpbbgallery\core\controller;
 
+use bantu\IniGetWrapper\IniGetWrapper;
 use phpbb\request\request_interface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class upload
 {
+	/** Reserve space for the quick-upload multipart fields and boundaries. */
+	private const MULTIPART_POST_OVERHEAD = 65536;
+
 	/** @var request_interface */
 	protected request_interface $request;
 
@@ -44,6 +48,9 @@ class upload
 
 	/** @var ContainerInterface  */
 	protected ContainerInterface $phpbb_container;
+
+	/** @var IniGetWrapper */
+	protected IniGetWrapper $php_ini;
 
 	/** @var \phpbbgallery\core\misc */
 	protected \phpbbgallery\core\misc $misc;
@@ -104,6 +111,7 @@ class upload
 	 * @param \phpbb\template\template               $template
 	 * @param \phpbb\config\config                   $config
 	 * @param Container|ContainerInterface           $phpbb_container
+	 * @param IniGetWrapper                          $php_ini
 	 * @param \phpbbgallery\core\album\album         $album   Album class
 	 * @param \phpbbgallery\core\misc                $misc    Misc class
 	 * @param \phpbbgallery\core\auth\auth           $auth
@@ -123,6 +131,7 @@ class upload
 
 	public function __construct(request_interface $request, \phpbb\db\driver\driver_interface $db, \phpbb\event\dispatcher_interface $dispatcher, \phpbb\user $user,
 		\phpbb\language\language $language, \phpbb\template\template $template, \phpbb\config\config $config, ContainerInterface $phpbb_container,
+		IniGetWrapper $php_ini,
 		\phpbbgallery\core\album\album $album, \phpbbgallery\core\misc $misc, \phpbbgallery\core\auth\auth $auth, \phpbbgallery\core\album\display $display,
 		\phpbb\controller\helper $helper, \phpbbgallery\core\config $gallery_config, \phpbbgallery\core\user $gallery_user,
 		\phpbbgallery\core\image\image $image, \phpbbgallery\core\notification $gallery_notification,
@@ -138,6 +147,7 @@ class upload
 		$this->template = $template;
 		$this->config = $config;
 		$this->phpbb_container = $phpbb_container;
+		$this->php_ini = $php_ini;
 		$this->album = $album;
 		$this->misc = $misc;
 		$this->auth = $auth;
@@ -453,11 +463,16 @@ class upload
 			if ($mode == 'upload')
 			{
 				$allowed_extensions = $process->get_allowed_types();
+				$source_filesize_limit = self::http_upload_filesize_limit(
+					$process->get_source_filesize_limit(),
+					$this->php_ini->getBytes('upload_max_filesize'),
+					$this->php_ini->getBytes('post_max_size')
+				);
 				$this->template->assign_vars([
 					'ERROR'               => $error,
 					'S_MAX_FILESIZE'      => get_formatted_filesize($this->gallery_config->get('max_filesize')),
-					'S_SOURCE_MAX_FILESIZE' => get_formatted_filesize($process->get_source_filesize_limit()),
-					'S_RESIZE_LARGE_FILES' => (bool) $this->gallery_config->get('allow_resize') && $process->get_source_filesize_limit() > $this->gallery_config->get('max_filesize'),
+					'S_SOURCE_MAX_FILESIZE' => get_formatted_filesize($source_filesize_limit),
+					'S_RESIZE_LARGE_FILES' => (bool) $this->gallery_config->get('allow_resize') && $source_filesize_limit > $this->gallery_config->get('max_filesize'),
 					'S_MAX_WIDTH'         => $this->gallery_config->get('max_width'),
 					'S_MAX_HEIGHT'        => $this->gallery_config->get('max_height'),
 					'S_ALLOWED_FILETYPES' => implode(', ', $process->get_allowed_types(true)),
@@ -474,7 +489,7 @@ class upload
 				{
 					$this->template->assign_vars([
 						'S_GALLERY_QUICK_UPLOAD' => true,
-						'S_QUICK_MAX_FILESIZE'   => $process->get_source_filesize_limit(),
+						'S_QUICK_MAX_FILESIZE'   => $source_filesize_limit,
 					]);
 				}
 			}
@@ -781,6 +796,34 @@ class upload
 		if (!$user_unlimited)
 		{
 			$limits[] = max(0, $user_limit - max(0, $user_image_count) - $pending_count);
+		}
+
+		return min($limits);
+	}
+
+	/**
+	 * Limit browser uploads to what PHP can receive before Gallery processing.
+	 *
+	 * Each quick-upload request carries one file and a small multipart form. A
+	 * fixed allowance prevents the file itself from consuming the complete POST
+	 * budget and being discarded by PHP before Gallery can return a JSON error.
+	 * Zero, negative and unknown PHP limits mean that the respective constraint
+	 * is not active.
+	 */
+	private static function http_upload_filesize_limit(
+		int $gallery_limit,
+		int|float|null $php_upload_limit,
+		int|float|null $php_post_limit
+	): int
+	{
+		$limits = [max(1, $gallery_limit)];
+		if ($php_upload_limit !== null && $php_upload_limit > 0)
+		{
+			$limits[] = max(1, (int) $php_upload_limit);
+		}
+		if ($php_post_limit !== null && $php_post_limit > 0)
+		{
+			$limits[] = max(1, (int) $php_post_limit - self::MULTIPART_POST_OVERHEAD);
 		}
 
 		return min($limits);

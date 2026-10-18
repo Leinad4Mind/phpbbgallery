@@ -146,4 +146,29 @@ final class controller_upload_types_test extends TestCase
 		);
 		$this->assertStringContainsString('if (!$process->uploaded_files && !$process->errors)', $source);
 	}
+
+	public function test_quick_upload_limit_respects_php_runtime_constraints(): void
+	{
+		$method = (new \ReflectionClass(upload::class))->getMethod('http_upload_filesize_limit');
+
+		$this->assertSame(2097152, $method->invoke(null, 67108864, 2097152, 8388608));
+		$this->assertSame(8323072, $method->invoke(null, 67108864, 67108864, 8388608));
+		$this->assertSame(1048576, $method->invoke(null, 1048576, 2097152, 8388608));
+		$this->assertSame(67108864, $method->invoke(null, 67108864, 0, null));
+	}
+
+	public function test_upload_controller_receives_the_php_ini_service(): void
+	{
+		$reflection = new \ReflectionClass(upload::class);
+		$parameters = $reflection->getConstructor()->getParameters();
+		$php_ini = array_values(array_filter($parameters, static fn(\ReflectionParameter $parameter): bool => $parameter->getName() === 'php_ini'));
+
+		$this->assertCount(1, $php_ini);
+		$this->assertSame('bantu\\IniGetWrapper\\IniGetWrapper', (string) $php_ini[0]->getType());
+
+		$services = (string) file_get_contents(dirname(__DIR__) . '/config/services_controller.yml');
+		$upload_service = strstr($services, 'phpbbgallery.core.controller.upload:');
+		$upload_service = strstr($upload_service, 'phpbbgallery.core.controller.author_autocomplete:', true);
+		$this->assertStringContainsString("- '@php_ini'", $upload_service);
+	}
 }
