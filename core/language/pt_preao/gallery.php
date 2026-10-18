@@ -205,6 +205,7 @@ $lang = array_merge($lang, [
 		2 => '%d imagens novas',
 	],
 	'NEWEST_PGALLERY'              => 'O álbum pessoal mais recente criado é o de %s.',
+	'NEWEST_PERSONAL_ALBUM'        => 'Álbum pessoal mais recente',
 	'NO_ALBUMS'                    => 'Não existem álbuns na galeria.',
 	'NO_COMMENTS'                  => 'Não existem comentários ainda.',
 	'NO_IMAGES'                    => 'Nenhuma imagem',

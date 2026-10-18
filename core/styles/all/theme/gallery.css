@@ -4203,3 +4203,21 @@ fieldset dl.gallery-autocomplete-row-open
 	opacity: 0.55;
 	pointer-events: none;
 }
+
+.gallery-personal-album-summary
+{
+	align-items: center;
+	background: rgba(255, 255, 255, .72);
+	border: 1px solid rgba(125, 145, 160, .28);
+	border-left: 3px solid #12a3eb;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px 24px;
+	margin: 0 0 12px;
+	padding: 9px 12px;
+}
+
+.gallery-personal-album-summary-item
+{
+	min-width: 0;
+}

@@ -214,6 +214,7 @@ $lang = array_merge($lang, [
 		2 => '%d nieuwe afbeeldingen',
 	],
 	'NEWEST_PGALLERY'       => 'Het nieuwste persoonlijke album %s',
+	'NEWEST_PERSONAL_ALBUM' => 'Nieuwste persoonlijke album',
 	'NO_ALBUMS'             => 'Er zijn geen albums in deze galerij.',
 	'NO_COMMENTS'           => 'Nog geen reacties',
 	'NO_IMAGES'             => 'Geen afbeeldingen',

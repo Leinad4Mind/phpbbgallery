@@ -94,6 +94,36 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertStringContainsString('@media (max-width: 700px)', $css);
 	}
 
+	public function test_personal_album_summary_is_available_in_every_album_layout(): void
+	{
+		$core_root = dirname(__DIR__);
+		$layouts = [
+			'/styles/all/template/gallery/albumlist_modern.html',
+			'/styles/all/template/gallery/albumlist_futuristic.html',
+			'/styles/prosilver/template/gallery/albumlist_body.html',
+			'/styles/prosilver/template/gallery/albumlist_polaroid.html',
+			'/styles/BBOOTS/template/gallery/albumlist_body.html',
+			'/styles/BBOOTS/template/gallery/albumlist_polaroid.html',
+			'/styles/FLATBOOTS/template/gallery/albumlist_body.html',
+			'/styles/FLATBOOTS/template/gallery/albumlist_polaroid.html',
+		];
+
+		foreach ($layouts as $layout)
+		{
+			$template = (string) file_get_contents($core_root . $layout);
+			$this->assertSame(
+				1,
+				substr_count($template, '@phpbbgallery_core/gallery/personal_album_summary.html'),
+				$layout
+			);
+		}
+
+		$summary = (string) file_get_contents($core_root . '/styles/all/template/gallery/personal_album_summary.html');
+		$this->assertStringContainsString('S_PERSONAL_ALBUM_SUMMARY', $summary);
+		$this->assertStringContainsString("lang('NEWEST_PERSONAL_ALBUM')", $summary);
+		$this->assertStringContainsString("lang('YOUR_PERSONAL_ALBUM')", $summary);
+	}
+
 	public function test_classic_layout_controls_image_grids_without_duplicating_style_markup(): void
 	{
 		$core_root = dirname(__DIR__);

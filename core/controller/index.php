@@ -186,6 +186,7 @@ class index
 			$this->display->album_limit = $album_limit;
 			$this->display->display_albums('personal', $this->config['load_moderators'], false, 'personal_albumrow');
 			$personal_total = $this->display->albums_total;
+			$this->assign_personal_album_summary($this->display->visible_root_album_rows, $personal_total);
 			$personal_pagination_params = $public_pagination_params;
 			unset($personal_pagination_params['personal_page']);
 			if ($public_page > 1)
@@ -285,6 +286,60 @@ class index
 		]);
 
 		return $this->helper->render('gallery/index_body.html', $this->gallery_config->get_title($this->language), 200, $this->gallery_config->get('disp_whoisonline'));
+	}
+
+	/**
+	 * Present the personal-album summary using only albums which passed the
+	 * current viewer's permission, friendship and ignored-user filters.
+	 *
+	 * @param array<int, array<string, mixed>> $visible_albums Visible root albums
+	 * @param int                              $visible_total  Total before pagination
+	 */
+	protected function assign_personal_album_summary(array $visible_albums, int $visible_total): void
+	{
+		$configured_newest_id = (int) $this->gallery_config->get('newest_pega_album_id');
+		$newest_album = null;
+		$fallback_newest_album = null;
+		$own_album = null;
+		$user_id = (int) ($this->user->data['user_id'] ?? 0);
+
+		foreach ($visible_albums as $album)
+		{
+			$album_id = (int) ($album['album_id'] ?? 0);
+			if ($album_id <= 0 || (int) ($album['album_type'] ?? 1) === 0)
+			{
+				continue;
+			}
+
+			if ($fallback_newest_album === null || $album_id > (int) $fallback_newest_album['album_id'])
+			{
+				$fallback_newest_album = $album;
+			}
+			if ($album_id === $configured_newest_id)
+			{
+				$newest_album = $album;
+			}
+			if (!empty($this->user->data['is_registered']) && (int) ($album['album_user_id'] ?? 0) === $user_id)
+			{
+				$own_album = $album;
+			}
+		}
+
+		$newest_album ??= $fallback_newest_album;
+		$this->template->assign_vars([
+			'S_PERSONAL_ALBUM_SUMMARY' => $visible_total > 0,
+			'PERSONAL_ALBUM_SUMMARY_TOTAL' => $this->language->lang('TOTAL_PEGAS_SPRINTF', $visible_total),
+			'U_NEWEST_PERSONAL_ALBUM' => $newest_album !== null
+				? $this->helper->route('phpbbgallery_core_album', ['album_id' => (int) $newest_album['album_id']])
+				: '',
+			'NEWEST_PERSONAL_ALBUM_USER' => (string) ($newest_album['owner_username'] ?? $newest_album['album_name'] ?? ''),
+			'NEWEST_PERSONAL_ALBUM_COLOR' => (string) ($newest_album['owner_user_colour'] ?? ''),
+			'U_OWN_PERSONAL_ALBUM' => $own_album !== null
+				? $this->helper->route('phpbbgallery_core_album', ['album_id' => (int) $own_album['album_id']])
+				: '',
+			'OWN_PERSONAL_ALBUM_USER' => (string) ($own_album['owner_username'] ?? $own_album['album_name'] ?? ''),
+			'OWN_PERSONAL_ALBUM_COLOR' => (string) ($own_album['owner_user_colour'] ?? ''),
+		]);
 	}
 
 	/**

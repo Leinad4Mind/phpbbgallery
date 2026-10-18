@@ -204,6 +204,7 @@ $lang = array_merge($lang, [
 		2 => '%d новых изображения',
 	],
 	'NEWEST_PGALLERY'              => 'Последний личный альбом: %s',
+	'NEWEST_PERSONAL_ALBUM'        => 'Последний личный альбом',
 	'NO_ALBUMS'                    => 'Нет альбомов',
 	'NO_COMMENTS'                  => 'пока нет',
 	'NO_IMAGES'                    => 'Нет фотографий',

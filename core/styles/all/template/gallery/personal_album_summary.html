@@ -1,0 +1,17 @@
+{% if S_PERSONAL_ALBUM_SUMMARY %}
+	<div class="gallery-personal-album-summary">
+		<span class='gallery-personal-album-summary-item'>{{ PERSONAL_ALBUM_SUMMARY_TOTAL }}</span>
+		{% if U_NEWEST_PERSONAL_ALBUM %}
+			<span class='gallery-personal-album-summary-item'>
+				<strong>{{ lang('NEWEST_PERSONAL_ALBUM') }}{{ lang('COLON') }}</strong>
+				<a href='{{ U_NEWEST_PERSONAL_ALBUM }}'{% if NEWEST_PERSONAL_ALBUM_COLOR %} class='username-coloured' style='color: #{{ NEWEST_PERSONAL_ALBUM_COLOR }};'{% else %} class='username'{% endif %}>{{ NEWEST_PERSONAL_ALBUM_USER }}</a>
+			</span>
+		{% endif %}
+		{% if U_OWN_PERSONAL_ALBUM %}
+			<span class='gallery-personal-album-summary-item'>
+				<strong>{{ lang('YOUR_PERSONAL_ALBUM') }}{{ lang('COLON') }}</strong>
+				<a href='{{ U_OWN_PERSONAL_ALBUM }}'{% if OWN_PERSONAL_ALBUM_COLOR %} class='username-coloured' style='color: #{{ OWN_PERSONAL_ALBUM_COLOR }};'{% else %} class='username'{% endif %}>{{ OWN_PERSONAL_ALBUM_USER }}</a>
+			</span>
+		{% endif %}
+	</div>
+{% endif %}

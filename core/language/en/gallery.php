@@ -216,6 +216,7 @@ $lang = array_merge($lang, [
 		2 => '%d new images',
 	],
 	'NEWEST_PGALLERY'       => 'Our newest personal gallery: %s',
+	'NEWEST_PERSONAL_ALBUM' => 'Newest personal album',
 	'NO_ALBUMS'             => 'There are no shared/public albums in this gallery.',
 	'NO_COMMENTS'           => 'No comments yet',
 	'NO_IMAGES'             => 'No images',

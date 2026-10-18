@@ -61,6 +61,9 @@ class display
 	/** Whether the last display operation found any visible album or category row. */
 	public bool $has_album_rows = false;
 
+	/** @var array<int, array<string, mixed>> Visible direct album rows before pagination. */
+	public array $visible_root_album_rows = [];
+
 	/** Enable independent pagination for every direct category on the Gallery index. */
 	protected bool $paginate_categories = false;
 
@@ -431,6 +434,7 @@ class display
 	 */
 	public function display_albums(array|string|false $root_data = '', bool $display_moderators = true, bool $return_moderators = false, string $block_name = 'albumrow'): array
 	{
+		$this->visible_root_album_rows = [];
 		$album_rows = $subalbums = $album_ids = $album_ids_moderator = $album_moderators = $active_album_ary = [];
 		$visible_albums = 0;
 		$mode = $this->album_mode;
@@ -523,6 +527,7 @@ class display
 
 		if (isset($mode_personal))
 		{
+			$sql_array['SELECT'] .= ', u.username AS owner_username, u.user_colour AS owner_user_colour';
 			$sql_array['LEFT_JOIN'][] = [
 				'FROM'	=> [USERS_TABLE => 'u'],
 				'ON'	=> 'u.user_id = a.album_user_id',
@@ -655,6 +660,7 @@ class display
 			$album_moderators = $this->get_moderators($album_ids_moderator);
 		}
 		$this->has_album_rows = !empty($album_rows);
+		$this->visible_root_album_rows = array_values($album_rows);
 		$album_group_totals = $this->album_group_totals($album_rows, (int) $root_data['album_id']);
 		$section_has_categories = count($album_group_totals) > 1;
 		[$album_rows, $visible_albums] = $this->paginate_album_rows($album_rows, (int) $root_data['album_id']);

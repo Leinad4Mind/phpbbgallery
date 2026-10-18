@@ -12,6 +12,7 @@
 		<h2 class="gallery-album-section-title"><i class="icon fa {% if albumrow.S_PERSONAL_SECTION_START %}fa-user{% else %}fa-folder-open{% endif %} fa-fw" aria-hidden="true"></i> {% if albumrow.S_PERSONAL_SECTION_START %}{{ lang('PERSONAL_ALBUMS') }}{% else %}{{ GALLERY_PUBLIC_ALBUMS_LABEL }}{% endif %}</h2>
 		<div class="gallery-root-album-card-grid">
 		{% set polaroid_grid_open = true %}
+		{% if albumrow.S_PERSONAL_SECTION_START %}{% include '@phpbbgallery_core/gallery/personal_album_summary.html' %}{% endif %}
 	{% endif %}
 	{% if (albumrow.S_IS_CAT and not albumrow.S_FIRST_ROW) or albumrow.S_NO_CAT %}
 		<span class="clear"></span>

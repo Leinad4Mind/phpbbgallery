@@ -127,6 +127,72 @@ final class controller_index_types_test extends TestCase
 		$this->assertStringNotContainsString("'U_G_SEARCH_CONTESTS'", $source);
 	}
 
+	public function test_personal_summary_uses_only_visibility_filtered_album_rows(): void
+	{
+		$reflection = new \ReflectionClass(index::class);
+		$controller = $reflection->newInstanceWithoutConstructor();
+		$gallery_config = $this->createStub(\phpbbgallery\core\config::class);
+		$gallery_config->method('get')->with('newest_pega_album_id')->willReturn(99);
+		$helper = $this->createStub(\phpbb\controller\helper::class);
+		$helper->method('route')->willReturnCallback(static function (string $route, array $parameters): string
+		{
+			TestCase::assertSame('phpbbgallery_core_album', $route);
+			return 'album:' . $parameters['album_id'];
+		});
+		$language = $this->createStub(\phpbb\language\language::class);
+		$language->method('lang')->willReturnCallback(static function (string $key, mixed ...$arguments): string
+		{
+			return $key === 'TOTAL_PEGAS_SPRINTF' ? $arguments[0] . ' visible albums' : $key;
+		});
+		$template = $this->createMock(\phpbb\template\template::class);
+		$assigned = [];
+		$template->expects($this->once())->method('assign_vars')
+			->willReturnCallback(static function (array $variables) use (&$assigned): void
+			{
+				$assigned = $variables;
+			});
+		$user = new \phpbb\user();
+		$user->data = ['user_id' => 10, 'is_registered' => true];
+
+		$reflection->getProperty('gallery_config')->setValue($controller, $gallery_config);
+		$reflection->getProperty('helper')->setValue($controller, $helper);
+		$reflection->getProperty('language')->setValue($controller, $language);
+		$reflection->getProperty('template')->setValue($controller, $template);
+		$reflection->getProperty('user')->setValue($controller, $user);
+
+		$reflection->getMethod('assign_personal_album_summary')->invoke($controller, [
+			[
+				'album_id' => 7,
+				'album_type' => 1,
+				'album_user_id' => 10,
+				'owner_username' => 'Alice',
+				'owner_user_colour' => 'AA0000',
+			],
+			[
+				'album_id' => 12,
+				'album_type' => 1,
+				'album_user_id' => 20,
+				'owner_username' => 'Bob',
+				'owner_user_colour' => '00AA00',
+			],
+			[
+				'album_id' => 50,
+				'album_type' => 0,
+				'album_user_id' => 30,
+				'owner_username' => 'Category',
+			],
+		], 2);
+
+		$this->assertTrue($assigned['S_PERSONAL_ALBUM_SUMMARY']);
+		$this->assertSame('2 visible albums', $assigned['PERSONAL_ALBUM_SUMMARY_TOTAL']);
+		$this->assertSame('album:12', $assigned['U_NEWEST_PERSONAL_ALBUM']);
+		$this->assertSame('Bob', $assigned['NEWEST_PERSONAL_ALBUM_USER']);
+		$this->assertSame('00AA00', $assigned['NEWEST_PERSONAL_ALBUM_COLOR']);
+		$this->assertSame('album:7', $assigned['U_OWN_PERSONAL_ALBUM']);
+		$this->assertSame('Alice', $assigned['OWN_PERSONAL_ALBUM_USER']);
+		$this->assertSame('AA0000', $assigned['OWN_PERSONAL_ALBUM_COLOR']);
+	}
+
 	public function test_statistics_summary_and_link_require_view_and_statistics_permissions(): void
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/index.php');

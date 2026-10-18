@@ -12,6 +12,7 @@
 			<span class="gallery-futuristic-section-icon" aria-hidden="true"><i class="icon fa {% if albumrow.S_PERSONAL_SECTION_START %}fa-user{% else %}fa-folder-open{% endif %} fa-fw"></i></span>
 			{% if albumrow.S_PERSONAL_SECTION_START %}{{ lang('PERSONAL_ALBUMS') }}{% else %}{{ GALLERY_PUBLIC_ALBUMS_LABEL }}{% endif %}
 		</h2>
+		{% if albumrow.S_PERSONAL_SECTION_START %}{% include '@phpbbgallery_core/gallery/personal_album_summary.html' %}{% endif %}
 		{% if albumrow.S_PUBLIC_SECTION_START %}{% set public_album_title_shown = true %}{% endif %}
 	{% endif %}
 	{% if albumrow.S_NO_CAT and not albumrow.S_PERSONAL_ALBUM and not public_album_title_shown %}
