@@ -45,6 +45,8 @@ class albums_module
 		$albums_table = $table_prefix . 'gallery_albums';
 		// Init ext gallery
 		$this->language->add_lang(['gallery_acp', 'gallery'], 'phpbbgallery/core');
+		// generate_text_for_storage() parses in 'post' mode, whose warnings live in posting.php
+		$this->language->add_lang('posting');
 
 		$gallery_user = $phpbb_container->get('phpbbgallery.core.user');
 		$phpbb_ext_gallery_core_auth = $phpbb_container->get('phpbbgallery.core.auth');

@@ -62,6 +62,28 @@ final class acp_confirmation_action_test extends TestCase
 		);
 	}
 
+	/**
+	 * Album descriptions are stored through generate_text_for_storage(), which
+	 * parses in "post" mode and reports its length warnings from posting.php.
+	 *
+	 * @dataProvider acp_description_module_provider
+	 */
+	public function test_acp_album_descriptions_load_the_posting_language_file(string $relative_file): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__, 2) . '/' . $relative_file);
+
+		$this->assertStringContainsString('generate_text_for_storage(', $source);
+		$this->assertStringContainsString("add_lang('posting')", $source);
+	}
+
+	public static function acp_description_module_provider(): array
+	{
+		return [
+			['core/acp/albums_module.php'],
+			['core/acp/personal_albums_module.php'],
+		];
+	}
+
 	public function test_log_confirmation_does_not_submit_a_url_as_an_action_command(): void
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/acp/gallery_logs_module.php');
