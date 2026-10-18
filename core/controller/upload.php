@@ -468,7 +468,7 @@ class upload
 				$stored_filesize_limit = (int) $this->gallery_config->get('max_filesize');
 				$this->template->assign_vars([
 					'ERROR'               => $error,
-					'S_MAX_FILESIZE'      => get_formatted_filesize($source_filesize_limit),
+					'S_MAX_FILESIZE'      => get_formatted_filesize($stored_filesize_limit),
 					'S_SOURCE_MAX_FILESIZE' => get_formatted_filesize($source_filesize_limit),
 					'S_CONFIGURED_SOURCE_MAX_FILESIZE' => get_formatted_filesize($configured_source_filesize_limit),
 					'S_STORED_MAX_FILESIZE' => get_formatted_filesize($stored_filesize_limit),

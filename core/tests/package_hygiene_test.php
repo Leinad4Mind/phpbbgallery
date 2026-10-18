@@ -157,6 +157,14 @@ class package_hygiene_test extends TestCase
 
 		$theme_directory = $this->core_root . '/styles/all/theme';
 		$stylesheet = file_get_contents($theme_directory . '/gallery.css');
+		$this->assertMatchesRegularExpression(
+			'/\\.gallery-album-card-category--prosilver\\s*\\{[^}]*background:\\s*transparent;/s',
+			$stylesheet
+		);
+		$this->assertMatchesRegularExpression(
+			'/\\.gallery-album-polaroid-card\\s*\\{[^}]*background:\\s*transparent;/s',
+			$stylesheet
+		);
 		$this->assertStringNotContainsString('clip-path: url(#left_arrow)', $stylesheet);
 		$this->assertStringNotContainsString('clip-path: url(#right_arrow)', $stylesheet);
 		preg_match_all(

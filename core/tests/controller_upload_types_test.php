@@ -149,6 +149,16 @@ final class controller_upload_types_test extends TestCase
 
 	public function test_quick_upload_limit_respects_php_runtime_constraints(): void
 	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/upload.php');
+		$this->assertStringContainsString(
+			'S_MAX_FILESIZE\'      => get_formatted_filesize($stored_filesize_limit)',
+			$source
+		);
+		$this->assertStringContainsString(
+			'S_SOURCE_MAX_FILESIZE\' => get_formatted_filesize($source_filesize_limit)',
+			$source
+		);
+
 		$method = (new \ReflectionClass(upload::class))->getMethod('http_upload_filesize_limit');
 
 		$this->assertSame(2097152, $method->invoke(null, 67108864, 2097152, 8388608));

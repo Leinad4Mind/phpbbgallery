@@ -623,8 +623,8 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertMatchesRegularExpression('/\.gallery-album-card-grid\s*\{[^}]*display:\s*flex;[^}]*flex-wrap:\s*wrap;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-album-card-column\s*\{[^}]*display:\s*flex;[^}]*float:\s*none;/s', $css);
 		$this->assertStringContainsString('.gallery-album-card-category--prosilver', $css);
-		$this->assertMatchesRegularExpression('/\.gallery-album-polaroid-card\s*\{[^}]*background:\s*#fff;/s', $css);
-		$this->assertMatchesRegularExpression('/\.gallery-album-card-category--prosilver \.polaroid\s*\{[^}]*background:\s*#fff;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-album-polaroid-card\s*\{[^}]*background:\s*transparent;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-album-card-category--prosilver \.polaroid\s*\{[^}]*background:\s*transparent;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-album-card-category--prosilver \.gallery-album-category-title\s*\{[^}]*padding:\s*0 9px 7px;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-album-card-category--prosilver \.gallery-album-category-description\s*\{[^}]*padding:\s*0 9px;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-root-album-card-grid,\s*\.gallery-album-card-category--prosilver \.gallery-album-category-card-grid\s*\{[^}]*display:\s*grid;[^}]*gap:\s*18px;[^}]*grid-template-columns:\s*repeat\(4, minmax\(0, 1fr\)\);/s', $css);

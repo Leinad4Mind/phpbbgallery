@@ -725,7 +725,7 @@ input.autowidth-gallery {
 
 .gallery-album-card-category--prosilver
 {
-	background: #f5f7fa;
+	background: transparent;
 	border: 1px solid #cadceb;
 	border-radius: 4px;
 	margin: 12px 0 22px;
@@ -735,13 +735,13 @@ input.autowidth-gallery {
 
 .gallery-album-polaroid-card
 {
-	background: #fff;
+	background: transparent;
 }
 
 /* Also cover a previously compiled template without the explicit card marker. */
 .gallery-album-card-category--prosilver .polaroid
 {
-	background: #fff;
+	background: transparent;
 }
 
 .gallery-album-card-category--bboots,
