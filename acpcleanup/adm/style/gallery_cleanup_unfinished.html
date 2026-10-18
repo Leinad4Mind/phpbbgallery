@@ -1,0 +1,53 @@
+<fieldset>
+	<legend>{{ lang('MANAGE_UNFINISHED_UPLOADS') }}</legend>
+	<p>{{ lang('UNFINISHED_UPLOADS_EXPLAIN') }}</p>
+	{% if not unfinishedrow|length %}
+		<p>{{ lang('UNFINISHED_UPLOADS_NONE') }}</p>
+	{% else %}
+		<p>{{ lang('UNFINISHED_UPLOADS_SUMMARY', TOTAL_UNFINISHED_UPLOADS) }}</p>
+		<table class='table1 zebra-table'>
+			<thead>
+				<tr>
+					<th>{{ lang('SELECT') }}</th>
+					<th>{{ lang('IMAGE') }}</th>
+					<th>{{ lang('UNFINISHED_UPLOAD_CONTEXT') }}</th>
+					<th>{{ lang('UNFINISHED_UPLOAD_CREATED') }}</th>
+					<th>{{ lang('UNFINISHED_UPLOAD_FILES') }}</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for unfinishedrow in unfinishedrow %}
+					<tr>
+						<td><input id='unfinished_{{ unfinishedrow.IMAGE_ID }}' name='unfinished_upload[]' type='checkbox' value='{{ unfinishedrow.IMAGE_ID }}' /></td>
+						<td><label for='unfinished_{{ unfinishedrow.IMAGE_ID }}'><strong>#{{ unfinishedrow.IMAGE_ID }} - {{ unfinishedrow.IMAGE_NAME }}</strong></label></td>
+						<td>{{ lang('ALBUM') }}{{ lang('COLON') }} {{ unfinishedrow.ALBUM_NAME }}<br />{{ lang('AUTHOR') }}{{ lang('COLON') }} {{ unfinishedrow.AUTHOR_NAME }}</td>
+						<td>{{ unfinishedrow.CREATED }}</td>
+						<td>
+							{{ lang('UNFINISHED_UPLOAD_SOURCE') }}{{ lang('COLON') }} {% if unfinishedrow.S_SOURCE_EXISTS %}{{ lang('YES') }}{% else %}{{ lang('NO') }}{% endif %}<br />
+							{{ lang('MISSING_SOURCE_MEDIUM') }}{{ lang('COLON') }} {% if unfinishedrow.S_MEDIUM_EXISTS %}{{ lang('YES') }}{% else %}{{ lang('NO') }}{% endif %}<br />
+							{{ lang('MISSING_SOURCE_MINI') }}{{ lang('COLON') }} {% if unfinishedrow.S_MINI_EXISTS %}{{ lang('YES') }}{% else %}{{ lang('NO') }}{% endif %}
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		{% if unfinished_pagination|length %}
+			<div class='pagination'>
+				<ul>
+					{% for page in unfinished_pagination %}
+						{% if page.S_IS_PREV %}<li><a href='{{ page.PAGE_URL }}'>{{ lang('PREVIOUS') }}</a></li>
+						{% elseif page.S_IS_CURRENT %}<li class='active'><span>{{ page.PAGE_NUMBER }}</span></li>
+						{% elseif page.S_IS_ELLIPSIS %}<li class='ellipsis'><span>{{ lang('ELLIPSIS') }}</span></li>
+						{% elseif page.S_IS_NEXT %}<li><a href='{{ page.PAGE_URL }}'>{{ lang('NEXT') }}</a></li>
+						{% else %}<li><a href='{{ page.PAGE_URL }}'>{{ page.PAGE_NUMBER }}</a></li>
+						{% endif %}
+					{% endfor %}
+				</ul>
+			</div>
+			<div class='clearfix'></div>
+		{% endif %}
+		<p class="submit-buttons">
+			<input class="button1" type="submit" name="delete" value="{{ lang('DELETE_UNFINISHED_UPLOADS') }}" />
+		</p>
+	{% endif %}
+</fieldset>

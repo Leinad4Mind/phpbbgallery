@@ -138,6 +138,7 @@ class main_module
 		$prune_rating_avg_check = $request->is_set_post('prune_rating_avg_check');
 
 		$missing_sources = $request->variable('source', [0]);
+		$unfinished_uploads = $request->variable('unfinished_upload', [0]);
 		$missing_entries = array_values(array_filter(
 			$request->variable('entry', [''], true),
 			static fn (mixed $entry): bool => is_string($entry) && $entry !== '' && strpos($entry, chr(0)) === false
@@ -213,6 +214,7 @@ class main_module
 
 		$s_hidden_fields = build_hidden_fields([
 			'source'		=> $missing_sources,
+			'unfinished_upload' => $unfinished_uploads,
 			'entry'			=> $missing_entries,
 			'author'		=> $missing_authors,
 			'comment'		=> $missing_comments,
@@ -303,6 +305,10 @@ class main_module
 			{
 				$message[] = $core_cleanup->delete_images($missing_sources);
 			}
+			if ($unfinished_uploads)
+			{
+				$message[] = $core_cleanup->delete_unfinished_uploads($unfinished_uploads);
+			}
 			if ($missing_authors)
 			{
 				$message[] = $core_cleanup->delete_author_images($missing_authors);
@@ -380,6 +386,10 @@ class main_module
 				if ($missing_sources)
 				{
 					$clean_gallery_confirm = $user->lang['CONFIRM_CLEAN_SOURCES'] . '<br />' . $clean_gallery_confirm;
+				}
+				if ($unfinished_uploads)
+				{
+					$clean_gallery_confirm = $user->lang('CONFIRM_CLEAN_UNFINISHED_UPLOADS', count($unfinished_uploads)) . '<br />' . $clean_gallery_confirm;
 				}
 				if ($missing_entries)
 				{
@@ -551,6 +561,60 @@ class main_module
 			}
 		}
 
+		$sql = 'SELECT COUNT(image_id) AS total_unfinished
+			FROM ' . $table_prefix . 'gallery_images
+			WHERE image_status = ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN;
+		$result = $db->sql_query($sql);
+		$total_unfinished_uploads = (int) $db->sql_fetchfield('total_unfinished');
+		$db->sql_freeresult($result);
+
+		$unfinished_per_page = 25;
+		$unfinished_start = max(0, $request->variable('unfinished_start', 0));
+		if ($unfinished_start >= $total_unfinished_uploads && $total_unfinished_uploads > 0)
+		{
+			$unfinished_start = (int) (floor(($total_unfinished_uploads - 1) / $unfinished_per_page) * $unfinished_per_page);
+		}
+		$sql_array = [
+			'SELECT' => 'i.image_id, i.image_name, i.image_filename, i.image_username, i.image_time, a.album_name',
+			'FROM' => [$table_prefix . 'gallery_images' => 'i'],
+			'LEFT_JOIN' => [
+				[
+					'FROM' => [$table_prefix . 'gallery_albums' => 'a'],
+					'ON' => 'a.album_id = i.image_album_id',
+				],
+			],
+			'WHERE' => 'i.image_status = ' . (int) \phpbbgallery\core\block::STATUS_ORPHAN,
+			'ORDER_BY' => 'i.image_time ASC, i.image_id ASC',
+		];
+		$result = $db->sql_query_limit($db->sql_build_query('SELECT', $sql_array), $unfinished_per_page, $unfinished_start);
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$key = (string) $row['image_filename'];
+			$has_key = $key !== '';
+			$template->assign_block_vars('unfinishedrow', [
+				'IMAGE_ID' => (int) $row['image_id'],
+				'IMAGE_NAME' => (string) $row['image_name'],
+				'ALBUM_NAME' => (string) ($row['album_name'] ?? ''),
+				'AUTHOR_NAME' => (string) $row['image_username'],
+				'CREATED' => $user->format_date((int) $row['image_time']),
+				'S_SOURCE_EXISTS' => $has_key && $storage_workspace->exists(\phpbbgallery\core\storage\provider_interface::SOURCE, $key),
+				'S_MEDIUM_EXISTS' => $has_key && $storage_workspace->exists(\phpbbgallery\core\storage\provider_interface::MEDIUM, $key),
+				'S_MINI_EXISTS' => $has_key && $storage_workspace->exists(\phpbbgallery\core\storage\provider_interface::MINI, $key),
+			]);
+		}
+		$db->sql_freeresult($result);
+		if ($total_unfinished_uploads > $unfinished_per_page)
+		{
+			$phpbb_container->get('pagination')->generate_template_pagination(
+				$this->u_action,
+				'unfinished_pagination',
+				'unfinished_start',
+				$total_unfinished_uploads,
+				$unfinished_per_page,
+				$unfinished_start
+			);
+		}
+
 		$sql_array = [
 			'SELECT'		=> 'c.comment_id, c.comment_image_id, c.comment_username, u.user_id',
 			'FROM'			=> [$table_prefix . 'gallery_comments' => 'c'],
@@ -657,6 +721,7 @@ class main_module
 			'SOURCE_MISSING' => $source_missing_count,
 			'SOURCE_PROVIDER' => $phpbb_container->get('phpbbgallery.core.storage.active')->get_id(),
 			'TOTAL_MISSING_SOURCES' => $total_missing_sources,
+			'TOTAL_UNFINISHED_UPLOADS' => $total_unfinished_uploads,
 
 			'U_FIND_USERNAME'		=> $gallery_url->append_sid('phpbb', 'memberlist', 'mode=searchuser&amp;form=acp_gallery&amp;field=prune_usernames'),
 			'S_SELECT_ALBUM'		=> $gallery_album->get_albumbox(false, '', false, false, false, (int) \phpbbgallery\core\block::PUBLIC_ALBUM, (int) \phpbbgallery\core\block::TYPE_UPLOAD),

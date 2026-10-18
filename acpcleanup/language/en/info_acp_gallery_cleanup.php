@@ -87,6 +87,19 @@ $lang = array_merge($lang, [
 	'PRUNE_USERNAME'         => 'Uploaded by',
 	'PRUNE_USERNAME_EXP'     => 'Only prune images from certain users. To prune images from “guests“ select the checkbox beyond the username-box.',
 
+	'MANAGE_UNFINISHED_UPLOADS' => 'Unfinished uploads',
+	'UNFINISHED_UPLOADS_EXPLAIN' => 'These records are resumable upload drafts, not published images. Their owners can resume them for seven days by returning to the same album upload page; a daily Gallery task removes older drafts automatically. Review the creation time before deleting a recent draft. Deletion removes its database record and all source, medium and mini files and cannot be undone.',
+	'UNFINISHED_UPLOADS_NONE' => 'There are no unfinished uploads.',
+	'UNFINISHED_UPLOADS_SUMMARY' => '%d unfinished upload drafts were found.',
+	'UNFINISHED_UPLOAD_CONTEXT' => 'Album and author',
+	'UNFINISHED_UPLOAD_CREATED' => 'Created',
+	'UNFINISHED_UPLOAD_FILES' => 'Existing files',
+	'UNFINISHED_UPLOAD_SOURCE' => 'Source',
+	'DELETE_UNFINISHED_UPLOADS' => 'Delete unfinished uploads',
+	'CONFIRM_CLEAN_UNFINISHED_UPLOADS' => 'Permanently delete the %d selected unfinished upload drafts? A draft that is still being reviewed by its owner will no longer be resumable.',
+	'CLEAN_UNFINISHED_UPLOADS_DONE' => 'The selected records that were still unfinished have been deleted.',
+	'LOG_CLEANUP_DELETE_UNFINISHED' => '%s unfinished upload drafts were deleted.',
+
 	//Log
 	'LOG_CLEANUP_DELETE_FILES'             => '%s images without DB entries were deleted.',
 	'LOG_CLEANUP_DELETE_ENTRIES'           => '%s images without files were deleted.',

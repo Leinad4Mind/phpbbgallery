@@ -88,6 +88,19 @@ $lang = array_merge($lang, [
 	'PRUNE_USERNAME'         => 'Caricate da',
 	'PRUNE_USERNAME_EXP'     => 'Cancella automaticamente soltanto le immagini da certi utenti. Per cancellare automaticamente le immagini degli "ospiti" seleziona la spunta oltre il box del nome utente.',
 
+	'MANAGE_UNFINISHED_UPLOADS' => 'Caricamenti incompleti',
+	'UNFINISHED_UPLOADS_EXPLAIN' => 'Questi record sono bozze di caricamento recuperabili, non immagini pubblicate. I proprietari possono riprenderli per sette giorni tornando alla pagina di caricamento dello stesso album; un processo giornaliero di Gallery rimuove automaticamente le bozze più vecchie. Controlla la data di creazione prima di eliminare una bozza recente. La rimozione elimina il record e tutti i file sorgente, medi e mini e non può essere annullata.',
+	'UNFINISHED_UPLOADS_NONE' => 'Non sono presenti caricamenti incompleti.',
+	'UNFINISHED_UPLOADS_SUMMARY' => 'Sono state trovate %d bozze di caricamento incomplete.',
+	'UNFINISHED_UPLOAD_CONTEXT' => 'Album e autore',
+	'UNFINISHED_UPLOAD_CREATED' => 'Creato',
+	'UNFINISHED_UPLOAD_FILES' => 'File esistenti',
+	'UNFINISHED_UPLOAD_SOURCE' => 'Sorgente',
+	'DELETE_UNFINISHED_UPLOADS' => 'Elimina caricamenti incompleti',
+	'CONFIRM_CLEAN_UNFINISHED_UPLOADS' => 'Eliminare definitivamente le %d bozze di caricamento incomplete selezionate? Una bozza ancora in revisione dal proprietario non potrà più essere ripresa.',
+	'CLEAN_UNFINISHED_UPLOADS_DONE' => 'I record selezionati che erano ancora incompleti sono stati eliminati.',
+	'LOG_CLEANUP_DELETE_UNFINISHED' => 'Sono state eliminate %s bozze di caricamento incomplete.',
+
 	//Log
 	'LOG_CLEANUP_DELETE_FILES'             => 'Cancellate %s immagini senza voci nel DB.',
 	'LOG_CLEANUP_DELETE_ENTRIES'           => 'Cancellate %s immagini senza file.',

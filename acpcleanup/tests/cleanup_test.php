@@ -28,6 +28,7 @@ final class cleanup_test extends TestCase
 			'gallery_config' => 'phpbbgallery\\core\\config',
 			'log' => 'phpbbgallery\\core\\log',
 			'moderate' => 'phpbbgallery\\core\\moderate',
+			'image' => 'phpbbgallery\\core\\image\\image',
 			'gallery_user' => 'phpbbgallery\\core\\user',
 			'albums_table' => 'string',
 			'images_table' => 'string',
@@ -42,6 +43,7 @@ final class cleanup_test extends TestCase
 		$expected_returns = [
 			'delete_files' => 'string',
 			'delete_images' => 'string',
+			'delete_unfinished_uploads' => 'string',
 			'delete_author_images' => 'string',
 			'delete_author_comments' => 'string',
 			'delete_pegas' => 'array',
@@ -153,6 +155,33 @@ final class cleanup_test extends TestCase
 		$this->assertSame([30, 31], $dependencies['comment']->deleted[0]);
 	}
 
+	public function test_unfinished_upload_cleanup_rechecks_status_in_the_domain_service(): void
+	{
+		$dependencies = $this->create_service();
+		$dependencies['image']->delete_result = 1;
+
+		$this->assertSame('CLEAN_UNFINISHED_UPLOADS_DONE', $dependencies['service']->delete_unfinished_uploads([12, 13]));
+		$this->assertSame([
+			[[12, 13], \phpbbgallery\core\block::STATUS_ORPHAN, [], false, false],
+		], $dependencies['image']->status_deletions);
+		$this->assertSame([
+			'admin',
+			'clean_deleteunfinished',
+			0,
+			0,
+			['LOG_CLEANUP_DELETE_UNFINISHED', 1],
+		], $dependencies['log']->entries[0]);
+	}
+
+	public function test_cleanup_form_exposes_unfinished_upload_diagnostics(): void
+	{
+		$template = (string) file_get_contents(dirname(__DIR__) . '/adm/style/gallery_cleanup_unfinished.html');
+
+		$this->assertStringContainsString('name=\'unfinished_upload[]\'', $template);
+		$this->assertStringContainsString('lang(\'UNFINISHED_UPLOADS_EXPLAIN\')', $template);
+		$this->assertStringContainsString('lang(\'DELETE_UNFINISHED_UPLOADS\')', $template);
+	}
+
 	public function test_personal_gallery_cleanup_updates_image_counts_and_album_links(): void
 	{
 		$db = new fake_db([
@@ -244,15 +273,17 @@ final class cleanup_test extends TestCase
 		$config = new \phpbbgallery\core\config();
 		$log = new \phpbbgallery\core\log();
 		$moderate = new \phpbbgallery\core\moderate();
+		$image = new \phpbbgallery\core\image\image();
 		$gallery_user = new \phpbbgallery\core\user();
 
 		return [
-			'service' => new cleanup($db, $tool, $user, $language, $block, $album, $comment, $config, $log, $moderate, $gallery_user, 'gallery_albums', 'gallery_images'),
+			'service' => new cleanup($db, $tool, $user, $language, $block, $album, $comment, $config, $log, $moderate, $image, $gallery_user, 'gallery_albums', 'gallery_images'),
 			'tool' => $tool,
 			'comment' => $comment,
 			'config' => $config,
 			'log' => $log,
 			'moderate' => $moderate,
+			'image' => $image,
 			'gallery_user' => $gallery_user,
 		];
 	}

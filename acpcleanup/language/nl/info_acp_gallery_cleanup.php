@@ -87,6 +87,19 @@ $lang = array_merge($lang, [
 	'PRUNE_USERNAME'         => 'Geüpload door',
 	'PRUNE_USERNAME_EXP'     => 'Alleen afbeeldingen van bepaalde gebruikers verwijderen. Schakel het selectievakje naast het gebruikersnaamveld in om afbeeldingen van gasten mee te nemen.',
 
+	'MANAGE_UNFINISHED_UPLOADS' => 'Onvoltooide uploads',
+	'UNFINISHED_UPLOADS_EXPLAIN' => 'Deze records zijn hervatbare uploadconcepten en geen gepubliceerde afbeeldingen. De eigenaars kunnen ze gedurende zeven dagen hervatten door terug te keren naar de uploadpagina van hetzelfde album; een dagelijkse Gallery-taak verwijdert oudere concepten automatisch. Controleer de aanmaakdatum voordat je een recent concept verwijdert. Verwijderen wist de databaserecord en alle bron-, medium- en minibestanden en kan niet ongedaan worden gemaakt.',
+	'UNFINISHED_UPLOADS_NONE' => 'Er zijn geen onvoltooide uploads.',
+	'UNFINISHED_UPLOADS_SUMMARY' => '%d onvoltooide uploadconcepten gevonden.',
+	'UNFINISHED_UPLOAD_CONTEXT' => 'Album en auteur',
+	'UNFINISHED_UPLOAD_CREATED' => 'Aangemaakt',
+	'UNFINISHED_UPLOAD_FILES' => 'Bestaande bestanden',
+	'UNFINISHED_UPLOAD_SOURCE' => 'Bron',
+	'DELETE_UNFINISHED_UPLOADS' => 'Onvoltooide uploads verwijderen',
+	'CONFIRM_CLEAN_UNFINISHED_UPLOADS' => 'De %d geselecteerde onvoltooide uploadconcepten definitief verwijderen? Een concept dat nog door de eigenaar wordt bekeken, kan daarna niet meer worden hervat.',
+	'CLEAN_UNFINISHED_UPLOADS_DONE' => 'De geselecteerde records die nog onvoltooid waren, zijn verwijderd.',
+	'LOG_CLEANUP_DELETE_UNFINISHED' => '%s onvoltooide uploadconcepten zijn verwijderd.',
+
 	// Logboek
 	'LOG_CLEANUP_DELETE_FILES'             => '%s afbeeldingen zonder databasevermelding zijn verwijderd.',
 	'LOG_CLEANUP_DELETE_ENTRIES'           => '%s afbeeldingen zonder bestand zijn verwijderd.',

@@ -88,6 +88,19 @@ $lang = array_merge($lang, [
 	'PRUNE_USERNAME'         => 'Chargées par',
 	'PRUNE_USERNAME_EXP'     => 'Délester seulement les images de certains utilisateurs. Pour délester les images des « invités », cochez la case en-dessous de la zone de saisie.',
 
+	'MANAGE_UNFINISHED_UPLOADS' => 'Téléversements inachevés',
+	'UNFINISHED_UPLOADS_EXPLAIN' => 'Ces enregistrements sont des brouillons de téléversement récupérables et non des images publiées. Leurs propriétaires peuvent les reprendre pendant sept jours en retournant sur la page de téléversement du même album ; une tâche quotidienne de Gallery supprime automatiquement les brouillons plus anciens. Vérifiez la date de création avant de supprimer un brouillon récent. La suppression efface son enregistrement ainsi que tous les fichiers source, intermédiaires et miniatures et ne peut pas être annulée.',
+	'UNFINISHED_UPLOADS_NONE' => 'Aucun téléversement inachevé.',
+	'UNFINISHED_UPLOADS_SUMMARY' => '%d brouillons de téléversement inachevés ont été trouvés.',
+	'UNFINISHED_UPLOAD_CONTEXT' => 'Album et auteur',
+	'UNFINISHED_UPLOAD_CREATED' => 'Créé',
+	'UNFINISHED_UPLOAD_FILES' => 'Fichiers existants',
+	'UNFINISHED_UPLOAD_SOURCE' => 'Source',
+	'DELETE_UNFINISHED_UPLOADS' => 'Supprimer les téléversements inachevés',
+	'CONFIRM_CLEAN_UNFINISHED_UPLOADS' => 'Supprimer définitivement les %d brouillons de téléversement inachevés sélectionnés ? Un brouillon encore examiné par son propriétaire ne pourra plus être repris.',
+	'CLEAN_UNFINISHED_UPLOADS_DONE' => 'Les enregistrements sélectionnés qui étaient encore inachevés ont été supprimés.',
+	'LOG_CLEANUP_DELETE_UNFINISHED' => '%s brouillons de téléversement inachevés ont été supprimés.',
+
 	//Log
 	'LOG_CLEANUP_DELETE_FILES'             => '%s images sans entrées de la base de données ont été effacées.',
 	'LOG_CLEANUP_DELETE_ENTRIES'           => '%s images sans fichiers ont été effacées.',

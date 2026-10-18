@@ -25,6 +25,7 @@ class cleanup
 	protected \phpbbgallery\core\config $gallery_config;
 	protected \phpbbgallery\core\log $log;
 	protected \phpbbgallery\core\moderate $moderate;
+	protected \phpbbgallery\core\image\image $image;
 	protected \phpbbgallery\core\user $gallery_user;
 	protected string $albums_table;
 	protected string $images_table;
@@ -43,6 +44,7 @@ class cleanup
 	 * @param \phpbbgallery\core\config         $gallery_config
 	 * @param \phpbbgallery\core\log            $log
 	 * @param \phpbbgallery\core\moderate       $moderate
+	 * @param \phpbbgallery\core\image\image    $image
 	 * @param \phpbbgallery\core\user           $gallery_user
 	 * @param string                            $albums_table
 	 * @param string                            $images_table
@@ -50,7 +52,7 @@ class cleanup
 	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbbgallery\core\file\file $tool, \phpbb\user $user, \phpbb\language\language $language,
 		\phpbbgallery\core\block $block, \phpbbgallery\core\album\album $album, \phpbbgallery\core\comment $comment,
 		\phpbbgallery\core\config $gallery_config, \phpbbgallery\core\log $log, \phpbbgallery\core\moderate $moderate,
-		\phpbbgallery\core\user $gallery_user, string $albums_table, string $images_table)
+		\phpbbgallery\core\image\image $image, \phpbbgallery\core\user $gallery_user, string $albums_table, string $images_table)
 	{
 		$this->db = $db;
 		$this->tool = $tool;
@@ -62,6 +64,7 @@ class cleanup
 		$this->gallery_config = $gallery_config;
 		$this->log = $log;
 		$this->moderate = $moderate;
+		$this->image = $image;
 		$this->gallery_user = $gallery_user;
 		$this->albums_table = $albums_table;
 		$this->images_table = $images_table;
@@ -96,6 +99,30 @@ class cleanup
 		$this->moderate->delete_images($image_ids, false);
 
 		return 'CLEAN_SOURCES_DONE';
+	}
+
+	/**
+	 * Delete resumable uploads that are still unfinished when deletion occurs.
+	 *
+	 * Rechecking the status inside the image domain service prevents an ACP
+	 * cleanup request from deleting a draft that its owner finalized after the
+	 * confirmation page was opened.
+	 *
+	 * @param array $image_ids Candidate image IDs
+	 * @return string Language key for the success message
+	 */
+	public function delete_unfinished_uploads(array $image_ids): string
+	{
+		$deleted = $this->image->delete_images_matching_status(
+			$image_ids,
+			\phpbbgallery\core\block::STATUS_ORPHAN,
+			[],
+			false
+		);
+
+		$this->log->add_log('admin', 'clean_deleteunfinished', 0, 0, ['LOG_CLEANUP_DELETE_UNFINISHED', $deleted]);
+
+		return 'CLEAN_UNFINISHED_UPLOADS_DONE';
 	}
 
 	/**

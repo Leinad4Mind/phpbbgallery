@@ -75,6 +75,22 @@ namespace phpbbgallery\core\album
 	}
 }
 
+namespace phpbbgallery\core\image
+{
+	class image
+	{
+		public array $status_deletions = [];
+		public int $delete_result = 0;
+
+		public function delete_images_matching_status(array $image_ids, int $required_status, array $files = [], bool $resync_albums = true, bool $skip_files = false): int
+		{
+			$this->status_deletions[] = [$image_ids, $required_status, $files, $resync_albums, $skip_files];
+
+			return $this->delete_result;
+		}
+	}
+}
+
 namespace phpbbgallery\core
 {
 	class block
