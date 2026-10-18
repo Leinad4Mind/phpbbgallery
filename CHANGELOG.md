@@ -26,6 +26,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 ### Fixed
 
 - Fixed Gallery ACP confirmations posting above the board root, which sent personal sub-album deletions, log pruning, permission copies, album re-synchronisation and cleanup runs to the wrong page and silently discarded the confirmed operation.
+- Fixed the PHP warning raised while saving a public or personal album with an empty description, caused by the ACP parsing descriptions in posting mode without loading phpBB's `posting` language file.
 - Replaced the developer-oriented PHP upload-limit failure shown to members with a concise message that states the allowed size and asks them to choose a smaller image; technical PHP configuration guidance remains confined to the ACP.
 - Fixed the PROSILVER album search form remaining centred away from the available action buttons; it now follows the last visible Upload or Subscribe button in the same responsive action flow.
 - Fixed quick uploads reporting a misleading green 100% result after failures: complete batches are now green, partially successful batches are amber and fully failed batches are red, while every file card reports its own successful or specific validation, server or network result.
