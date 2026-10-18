@@ -143,6 +143,8 @@ class featured_images_test extends TestCase
 		$this->assertStringContainsString('grid-template-columns: minmax(0, 1.7fr) minmax(220px, .7fr)', $css);
 		$this->assertStringContainsString('.gallery-featured--count-two { --gallery-featured-visible: 2; }', $css);
 		$this->assertStringContainsString('.gallery-featured--count-three { --gallery-featured-visible: 3; }', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-featured-image-link\s*\{[^}]*background:\s*transparent;/s', $css);
+		$this->assertStringNotContainsString('background-image: linear-gradient(45deg', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-featured--layout-classic \.gallery-featured-header h2\s*\{[^}]*font-weight:\s*700;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-featured--prosilver\.gallery-featured--layout-futuristic \.gallery-featured-header h2\s*\{[^}]*font-weight:\s*700;/s', $css);
 		$this->assertStringContainsString('.gallery-featured--layout-classic.gallery-featured--count-one .gallery-featured-caption h3', $css);
