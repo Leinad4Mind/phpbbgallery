@@ -205,6 +205,11 @@
 }
 
 
+fieldset.fields1 dd.gallery-upload-admin-info
+{
+	border-left-width: 1px;
+}
+
 .gallery-statistic-card,
 .gallery-statistics-panel,
 .gallery-statistics-notice
