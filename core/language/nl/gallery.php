@@ -118,6 +118,8 @@ $lang = array_merge($lang, [
 
 	'FILE'                       => 'Bestand',
 	'FILE_SIZE'                  => 'Bestandsgrootte',
+	'STORED_IMAGE_FILE_SIZE'     => 'Maximale grootte van de opgeslagen afbeelding',
+	'SOURCE_IMAGE_FILE_SIZE_BEFORE_RESIZE' => 'Maximale grootte van het bronbestand vóór formaatwijziging',
 	'FILETYPE_MIMETYPE_MISMATCH' => 'Het bestandstype van “<strong>%1$s</strong>“ sluit niet aan bij het mime-type (%2$s).',
 	'FILETYPES_GIF'              => 'gif',
 	'FILETYPES_JPG'              => 'jpg',

@@ -120,6 +120,8 @@ $lang = array_merge($lang, [
 
 	'FILE'                       => 'File',
 	'FILE_SIZE'                  => 'File size',
+	'STORED_IMAGE_FILE_SIZE'     => 'Maximum stored image size',
+	'SOURCE_IMAGE_FILE_SIZE_BEFORE_RESIZE' => 'Maximum source file size before resizing',
 	'FILETYPE_MIMETYPE_MISMATCH' => 'The file-type of “<strong>%1$s</strong>“ does not match the mime-type (%2$s).',
 	'FILETYPES_GIF'              => 'gif',
 	'FILETYPES_JPG'              => 'jpg',
