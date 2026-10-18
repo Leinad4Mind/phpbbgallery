@@ -23,7 +23,7 @@ class gallery_logs_module
 	public function main(string $id, string $mode): void
 	{
 		global $auth, $template, $user, $request;
-		global $phpbb_container;
+		global $phpbb_container, $phpbb_root_path;
 
 		$this->language = $phpbb_container->get('language');
 		$this->language->add_lang(['info_acp_gallery_logs'], 'phpbbgallery/core');
@@ -82,7 +82,7 @@ class gallery_logs_module
 					'sd'		=> $sort_dir,
 					'i'			=> $id,
 					'mode'		=> $mode,
-				]), 'confirm_body.html', $this->u_action);
+				]), 'confirm_body.html', \phpbbgallery\core\url::acp_confirm_action($this->u_action, $phpbb_root_path));
 			}
 		}
 

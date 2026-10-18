@@ -223,6 +223,29 @@ class url
 	}
 
 	/**
+	 * Turn an ACP module action into an action confirm_box() can post to.
+	 *
+	 * confirm_box() runs its action through \phpbb\path_helper::get_valid_page(),
+	 * which prefixes the board root path. ACP module actions are already built from
+	 * the board root ($phpbb_admin_path is $phpbb_root_path . $phpbb_adm_relative_path),
+	 * so handing one over unchanged prefixes the root path twice and the confirmation
+	 * posts to a page above the board instead of back into the module.
+	 *
+	 * @param string $u_action        ACP module action, e.g. "./../adm/index.php?i=..."
+	 * @param string $phpbb_root_path Board root path of the running request
+	 * @return string Board root relative action, e.g. "adm/index.php?i=..."
+	 */
+	public static function acp_confirm_action(string $u_action, string $phpbb_root_path): string
+	{
+		if ($phpbb_root_path !== '' && str_starts_with($u_action, $phpbb_root_path))
+		{
+			return substr($u_action, strlen($phpbb_root_path));
+		}
+
+		return $u_action;
+	}
+
+	/**
 	* Creates beautiful relative path from ugly relative path
 	* Resolves .. (up directory)
 	*

@@ -350,7 +350,7 @@ class albums_module
 						'a'			=> $album_id,
 						'action'	=> $action,
 						'parent_id'	=> $this->parent_id,
-					]), 'confirm_body.html', $this->u_action);
+					]), 'confirm_body.html', \phpbbgallery\core\url::acp_confirm_action($this->u_action, $phpbb_root_path));
 				}
 
 				$sql = 'SELECT album_name, album_type

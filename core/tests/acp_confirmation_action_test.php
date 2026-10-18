@@ -9,11 +9,16 @@
 
 namespace phpbbgallery\core\tests;
 
+use phpbbgallery\core\url;
 use PHPUnit\Framework\TestCase;
 
 final class acp_confirmation_action_test extends TestCase
 {
 	/**
+	 * confirm_box() prefixes its action with the board root path, while an ACP
+	 * module action is already built from the board root. Every Gallery ACP
+	 * confirmation therefore has to hand its action over board root relative.
+	 *
 	 * @dataProvider acp_module_provider
 	 */
 	public function test_gallery_acp_confirmations_use_the_canonical_module_action(string $relative_file, int $expected_confirmations): void
@@ -27,7 +32,9 @@ final class acp_confirmation_action_test extends TestCase
 		$this->assertCount($expected_confirmations, $confirmation_calls);
 		foreach ($confirmation_calls as $confirmation_call)
 		{
-			$this->assertStringContainsString("'confirm_body.html', \$this->u_action)", $confirmation_call);
+			$this->assertStringContainsString("'confirm_body.html', ", $confirmation_call);
+			$this->assertStringContainsString('url::acp_confirm_action(', $confirmation_call);
+			$this->assertStringContainsString('$phpbb_root_path))', $confirmation_call);
 		}
 	}
 
@@ -38,8 +45,21 @@ final class acp_confirmation_action_test extends TestCase
 			['core/acp/albums_module.php', 1],
 			['core/acp/gallery_logs_module.php', 1],
 			['core/acp/permissions_module.php', 1],
+			['core/acp/personal_albums_module.php', 1],
 			['acpcleanup/acp/main_module.php', 2],
 		];
+	}
+
+	public function test_acp_confirm_action_strips_the_board_root_path(): void
+	{
+		$this->assertSame(
+			'adm/index.php?i=-phpbbgallery-core-acp-personal_albums_module',
+			url::acp_confirm_action('./../adm/index.php?i=-phpbbgallery-core-acp-personal_albums_module', './../')
+		);
+		$this->assertSame(
+			'https://example.com/adm/index.php',
+			url::acp_confirm_action('https://example.com/adm/index.php', './../')
+		);
 	}
 
 	public function test_log_confirmation_does_not_submit_a_url_as_an_action_command(): void
