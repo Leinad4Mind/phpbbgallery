@@ -38,8 +38,8 @@
 				</dl>
 			{% endif %}
 			<dl>
-				<dt><label for="album_desc">{{ lang('ALBUM_DESC') }}{{ lang('COLON') }}</label></dt>
-				<dd><textarea class="inputbox" id="album_desc" name="album_desc" rows="5" cols="45">{{ ALBUM_DESC }}</textarea></dd>
+				<dt><label for="album_desc">{{ lang('ALBUM_DESCRIPTION') }}{{ lang('COLON') }}</label></dt>
+				<dd><textarea class="inputbox" id="album_desc" name="album_desc" rows="5" cols="45">{{ ALBUM_DESCRIPTION_TEXT }}</textarea></dd>
 				<dd><label><input type="checkbox" class="radio" name="desc_parse_bbcode"{% if S_DESC_BBCODE_CHECKED %} checked="checked"{% endif %} /> {{ lang('PARSE_BBCODE') }}</label>
 					<label><input type="checkbox" class="radio" name="desc_parse_smilies"{% if S_DESC_SMILIES_CHECKED %} checked="checked"{% endif %} /> {{ lang('PARSE_SMILIES') }}</label>
 					<label><input type="checkbox" class="radio" name="desc_parse_urls"{% if S_DESC_URLS_CHECKED %} checked="checked"{% endif %} /> {{ lang('PARSE_URLS') }}</label></dd>
@@ -105,7 +105,7 @@
 							<div class="list-inner" style="margin-right: 0;">
 								{% if album_row.FORUM_IMAGE %}<div style="float: {{ S_CONTENT_FLOW_BEGIN }}; margin-right: 5px;">{{ album_row.FORUM_IMAGE }}</div>{% endif %}
 								{{ lang('SUBALBUM') }}{{ lang('COLON') }} <a href="{{ album_row.U_ALBUM }}" class="topictitle">{{ album_row.ALBUM_NAME }}</a>
-								{% if album_row.ALBUM_DESCRIPTION %}<br /><label for="album_desc">{{ lang('ALBUM_DESC') }}{{ lang('COLON') }}</label>{{ album_row.ALBUM_DESCRIPTION }}{% endif %}
+								{% if album_row.ALBUM_DESCRIPTION_HTML %}<br /><span class="label">{{ lang('ALBUM_DESCRIPTION') }}{{ lang('COLON') }}</span>{{ album_row.ALBUM_DESCRIPTION_HTML }}{% endif %}
 							</div>
 						</dt>
 					</dl>

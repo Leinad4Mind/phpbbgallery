@@ -32,7 +32,6 @@ $lang = array_merge($lang, [
 	'ALBUMS'                         => 'Албуми',
 	'ALBUM_ACCESS'                   => 'Позволи достъп на',
 	'ALBUM_ACCESS_EXPLAIN'           => 'Може да изпозлзвате списък с %1$sПриятели и Врагове%2$s за да контролирате достъпа до този албум. <strong>Модеараторите</strong> могат <strong>винаги</strong> да достъпят албума.',
-	'ALBUM_DESC'                     => 'Описание на албума',
 	'ALBUM_NAME'                     => 'Име на албума',
 	'ALBUM_PARENT'                   => 'Старши албум',
 	'ATTACHED_SUBALBUMS'             => 'Прикачени албуми',

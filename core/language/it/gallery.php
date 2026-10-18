@@ -27,7 +27,6 @@ $lang = array_merge($lang, [
 	'ADD_UPLOAD_FIELD'                 => 'Aggiungi altri campi di caricamento',
 	'ALBUM'                            => 'Album',
 	'ALBUMS'                           => 'Album',
-	'ALBUM_DESC'                       => 'Descrizione dell’album',
 	'ALBUM_DESCRIPTION'                => 'Descrizione dell’album',
 	'ALBUM_IS_CATEGORY'                => 'L’album che hai selezionato è un album-categoria.<br />Non puoi caricare sulle categorie.',
 	'ALBUM_LOCKED'                     => 'Bloccato',

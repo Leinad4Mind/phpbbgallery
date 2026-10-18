@@ -283,7 +283,7 @@ class main_module
 				'U_ALBUM'				=> $this->u_action . '&amp;action=manage&amp;parent_id=' . $album[$i]['album_id'],
 				'ALBUM_ID'				=> (int) $album[$i]['album_id'],
 				'ALBUM_NAME'			=> $album[$i]['album_name'],
-				'ALBUM_DESCRIPTION'		=> generate_text_for_display($album[$i]['album_desc'], $album[$i]['album_desc_uid'], $album[$i]['album_desc_bitfield'], $album[$i]['album_desc_options']),
+				'ALBUM_DESCRIPTION_HTML'	=> generate_text_for_display($album[$i]['album_desc'], $album[$i]['album_desc_uid'], $album[$i]['album_desc_bitfield'], $album[$i]['album_desc_options']),
 				'U_EDIT'				=> $this->u_action . '&amp;action=edit&amp;album_id=' . $album[$i]['album_id'],
 				'U_DELETE'				=> $this->u_action . '&amp;action=delete&amp;album_id=' . $album[$i]['album_id'],
 			]);
@@ -514,7 +514,7 @@ class main_module
 				'S_PARENT_OPTIONS'			=> '<option value="' . $phpbb_ext_gallery_user->get_data('personal_album_id') . '">' . $this->language->lang('NO_PARENT_ALBUM') . '</option>' . $parents_list,
 
 				'ALBUM_NAME' 				=> $album_data['album_name'],
-				'ALBUM_DESC'				=> $album_desc_data['text'],
+				'ALBUM_DESCRIPTION_TEXT'	=> $album_desc_data['text'],
 				'ALBUM_TYPE'				=> $album_data['album_type'],
 				'S_DESC_BBCODE_CHECKED'		=> ($album_desc_data['allow_bbcode']) ? true : false,
 				'S_DESC_SMILIES_CHECKED'	=> ($album_desc_data['allow_smilies']) ? true : false,
@@ -1030,7 +1030,7 @@ class main_module
 				'ALBUM_ID'			=> $row['album_id'],
 				'ALBUM_NAME'		=> $row['album_name'],
 				'U_VIEW_ALBUM'		=> $phpbb_gallery_url->show_album($row['album_id']),
-				'ALBUM_DESC'		=> generate_text_for_display($row['album_desc'], $row['album_desc_uid'], $row['album_desc_bitfield'], $row['album_desc_options']),
+				'ALBUM_DESCRIPTION_HTML'	=> generate_text_for_display($row['album_desc'], $row['album_desc_uid'], $row['album_desc_bitfield'], $row['album_desc_options']),
 
 				'UC_IMAGE_NAME'		=> $phpbb_ext_gallery_core_image->generate_link('image_name', $phpbb_ext_gallery_config->get('link_image_name'), $row['album_last_image_id'], $row['album_last_image_name'], $row['album_id']),
 				'UC_FAKE_THUMBNAIL'	=> $phpbb_ext_gallery_core_image->generate_link('fake_thumbnail', $phpbb_ext_gallery_config->get('link_thumbnail'), $row['album_last_image_id'], $row['album_last_image_name'], $row['album_id']),

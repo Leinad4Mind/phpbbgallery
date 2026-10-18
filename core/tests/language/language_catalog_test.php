@@ -198,22 +198,28 @@ class language_catalog_test extends TestCase
 			$locale = basename($directory);
 			$language = $this->load_language($directory . '/gallery_acp.php');
 
-			$this->assertArrayHasKey('ALBUM_DESC_EXPLAIN', $language, $locale);
-			$this->assertStringContainsString('BBCode', $language['ALBUM_DESC_EXPLAIN'], $locale);
-			$this->assertStringNotContainsString('HTML', $language['ALBUM_DESC_EXPLAIN'], $locale);
+			$this->assertArrayHasKey('ALBUM_DESCRIPTION_EXPLAIN', $language, $locale);
+			$this->assertStringContainsString('BBCode', $language['ALBUM_DESCRIPTION_EXPLAIN'], $locale);
+			$this->assertStringNotContainsString('HTML', $language['ALBUM_DESCRIPTION_EXPLAIN'], $locale);
 		}
 	}
 
-	public function test_album_description_alias_supports_inherited_legacy_templates(): void
+	public function test_album_description_contract_uses_unambiguous_language_keys(): void
 	{
 		$language_root = $this->extension_root . '/core/language';
 		foreach ($this->language_directories($language_root) as $directory)
 		{
 			$locale = basename($directory);
-			$language = $this->load_language($directory . '/gallery.php');
+			$gallery = $this->load_language($directory . '/gallery.php');
+			$acp = $this->load_language($directory . '/gallery_acp.php');
+			$ucp = $this->load_language($directory . '/gallery_ucp.php');
 
-			$this->assertArrayHasKey('ALBUM_DESCRIPTION', $language, $locale);
-			$this->assertSame($language['ALBUM_DESC'], $language['ALBUM_DESCRIPTION'], $locale);
+			$this->assertArrayHasKey('ALBUM_DESCRIPTION', $gallery, $locale);
+			$this->assertArrayHasKey('ALBUM_DESCRIPTION_EXPLAIN', $acp, $locale);
+			$this->assertArrayHasKey('ALBUM_DESCRIPTION_TOO_LONG', $acp, $locale);
+			$this->assertArrayNotHasKey('ALBUM_DESC', $gallery, $locale);
+			$this->assertArrayNotHasKey('ALBUM_DESC', $acp, $locale);
+			$this->assertArrayNotHasKey('ALBUM_DESC', $ucp, $locale);
 		}
 	}
 

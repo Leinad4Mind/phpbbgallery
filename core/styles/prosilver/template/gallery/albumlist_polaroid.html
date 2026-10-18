@@ -21,7 +21,7 @@
 		{% if albumrow.S_IS_CAT %}<section class="gallery-album-card-category gallery-album-card-category--prosilver">{% endif %}
 		<span class="clear"></span>
 		<h2 class="{% if albumrow.S_IS_CAT %}gallery-album-category-title{% else %}gallery-root-album-title{% endif %}">{% if albumrow.S_IS_CAT %}<a href="{{ albumrow.U_VIEWALBUM }}">{{ albumrow.ALBUM_NAME }}</a>{% else %}{{ lang('ALBUM') }}{% endif %}</h2>
-		{% if albumrow.S_IS_CAT and albumrow.ALBUM_DESC %}<div class="gallery-album-category-description">{{ albumrow.ALBUM_DESC }}</div>{% endif %}
+		{% if albumrow.S_IS_CAT and albumrow.ALBUM_DESCRIPTION_HTML %}<div class="gallery-album-category-description">{{ albumrow.ALBUM_DESCRIPTION_HTML }}</div>{% endif %}
 		{% if albumrow.S_IS_CAT %}
 			<div class="gallery-album-category-card-grid">
 		{% else %}

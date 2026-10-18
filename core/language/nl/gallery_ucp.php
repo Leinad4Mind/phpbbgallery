@@ -32,7 +32,6 @@ $lang = array_merge($lang, [
 	'ALBUMS'                         => 'Albums',
 	'ALBUM_ACCESS'                   => 'Sta toegang toe voor',
 	'ALBUM_ACCESS_EXPLAIN'           => 'Je kan je %1$sVrienden en Vijanden lijst%2$s gebruiken om de toegang tot je album te regelen. Echter, <strong>moderators</strong> hebben <strong>altijd/strong> toegang tot je album.',
-	'ALBUM_DESC'                     => 'Album Beschrijving',
 	'ALBUM_NAME'                     => 'Album Naam',
 	'ALBUM_PARENT'                   => 'Hoofd Album',
 	'ATTACHED_SUBALBUMS'             => 'Bijgevoegde subalbums',

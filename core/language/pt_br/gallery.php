@@ -27,7 +27,6 @@ $lang = array_merge($lang, [
 	'ADD_UPLOAD_FIELD'                 => 'Adicionar mais campos de envio',
 	'ALBUM'                            => 'Álbum',
 	'ALBUMS'                           => 'Álbuns',
-	'ALBUM_DESC'                       => 'Descrição do Álbum',
 	'ALBUM_DESCRIPTION'                => 'Descrição do Álbum',
 	'ALBUM_IS_CATEGORY'                => 'O álbum selecionado é uma categoria.<br />Não é possível enviar imagens para categorias.',
 	'ALBUM_LOCKED'                     => 'Bloqueado',

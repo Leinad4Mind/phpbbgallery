@@ -69,7 +69,8 @@ final class gallery_index_layout_test extends TestCase
 		$this->assertStringContainsString('gallery-modern-album-list', $template);
 		$this->assertStringContainsString('albumrow.S_UNREAD_ALBUM', $template);
 		$this->assertStringContainsString('albumrow.S_LOCKED_ALBUM', $template);
-		$this->assertStringContainsString('albumrow.ALBUM_DESC', $template);
+		$this->assertStringContainsString('albumrow.ALBUM_DESCRIPTION_HTML', $template);
+		$this->assertDoesNotMatchRegularExpression('/albumrow\.ALBUM_DESC(?!RIPTION)/', $template);
 		$this->assertStringContainsString('albumrow.MODERATORS', $template);
 		$this->assertStringContainsString("{% include '@phpbbgallery_core/gallery/subalbum_links.html' %}", $template);
 		$this->assertStringContainsString('albumrow.UNAPPROVED_IMAGES', $template);

@@ -5,9 +5,9 @@
 	{% if not S_IN_GALLERY_POPUP and ALBUM_TOTAL_IMAGES %}<small class="gallery-album-branch-total">{{ ALBUM_TOTAL_IMAGES }} ({{ lang('INCLUDING_SUBALBUMS') }})</small>{% endif %}
 </h2>
 
-{% if not S_IN_GALLERY_POPUP and ALBUM_DESC or MODERATORS or U_MCP or S_ALBUM_TYPE_DETAILS %}
+{% if not S_IN_GALLERY_POPUP and ALBUM_DESCRIPTION_HTML or MODERATORS or U_MCP or S_ALBUM_TYPE_DETAILS %}
 <div>
-	{% if ALBUM_DESC %}<div id="description" class="panel" style="font-size: 1.2em;"><h3>{{ lang('ALBUM_DESC') }}</h3>{{ ALBUM_DESC }}<br /></div>{% endif %}
+	{% if ALBUM_DESCRIPTION_HTML %}<div id="description" class="panel" style="font-size: 1.2em;"><h3>{{ lang('ALBUM_DESCRIPTION') }}</h3>{{ ALBUM_DESCRIPTION_HTML }}<br /></div>{% endif %}
 	{% EVENT phpbbgallery_core_album_type_details %}
 	{% if MODERATORS %}<strong>{{ lang('MODERATORS') }}{{ lang('COLON') }}</strong> {{ MODERATORS }}<br />{% endif %}
 	{% if U_EDIT_ALBUM %}<br /><strong><a href="{{ U_EDIT_ALBUM }}">{{ lang('EDIT_ALBUM') }}</a></strong>{% endif %}

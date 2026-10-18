@@ -652,7 +652,7 @@ class albums_module
 					'S_ALBUM_PASSWORD_SET'		=> (empty($album_data['album_password'])) ? false : true,
 					*/
 
-					'ALBUM_DESC'				=> $album_desc_data['text'],
+					'ALBUM_DESCRIPTION_TEXT'	=> $album_desc_data['text'],
 					'S_DESC_BBCODE_CHECKED'		=> ($album_desc_data['allow_bbcode']) ? true : false,
 					'S_DESC_SMILIES_CHECKED'	=> ($album_desc_data['allow_smilies']) ? true : false,
 					'S_DESC_URLS_CHECKED'		=> ($album_desc_data['allow_urls']) ? true : false,
@@ -861,7 +861,7 @@ class albums_module
 					'FOLDER_IMAGE'		=> $folder_image,
 					'ALBUM_IMAGE_SRC'	=> ($row['album_image']) ? $phpbb_ext_gallery_core_url->path('phpbb') . $row['album_image'] : '',
 					'ALBUM_NAME'		=> $row['album_name'],
-					'ALBUM_DESCRIPTION'	=> generate_text_for_display($row['album_desc'], $row['album_desc_uid'], $row['album_desc_bitfield'], $row['album_desc_options']),
+					'ALBUM_DESCRIPTION_HTML'	=> generate_text_for_display($row['album_desc'], $row['album_desc_uid'], $row['album_desc_bitfield'], $row['album_desc_options']),
 					'ALBUM_IMAGES'		=> $row['album_images'],
 
 					'S_ALBUM_POST'		=> ($album_type != (int) \phpbbgallery\core\block::TYPE_CAT) ? true : false,

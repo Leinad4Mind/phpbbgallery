@@ -32,7 +32,6 @@ $lang = array_merge($lang, [
 	'ALBUMS'                         => 'Alben',
 	'ALBUM_ACCESS'                   => 'Zugriff erlauben für',
 	'ALBUM_ACCESS_EXPLAIN'           => 'Du kannst deine %1$sListen der Freunde und ignorierten Mitglieder%2$s benutzen, um den Zugriff einzuschränken. <strong>Moderatoren</strong> können jedoch <strong>immer</strong> auf das Album zugreifen.',
-	'ALBUM_DESC'                     => 'Albumbeschreibung',
 	'ALBUM_NAME'                     => 'Name',
 	'ALBUM_PARENT'                   => 'Übergeordnetes Album',
 	'ATTACHED_SUBALBUMS'             => 'Verknüpfte Subalben',

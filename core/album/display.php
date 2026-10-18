@@ -261,7 +261,7 @@ class display
 		$template_vars = [
 			'ALBUM_ID' 		=> $album_data['album_id'],
 			'ALBUM_NAME'	=> $album_data['album_name'],
-			'ALBUM_DESC'	=> generate_text_for_display($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_bitfield'], $album_data['album_desc_options']),
+			'ALBUM_DESCRIPTION_HTML'	=> generate_text_for_display($album_data['album_desc'], $album_data['album_desc_uid'], $album_data['album_desc_bitfield'], $album_data['album_desc_options']),
 			'U_VIEW_ALBUM'	=> $this->helper->route('phpbbgallery_core_album', ['album_id' => (int) $album_data['album_id']]),
 		];
 		$this->template->assign_vars($this->data_enricher->enrich_template_vars(
@@ -695,7 +695,7 @@ class display
 					'ALBUM_GROUP_LABEL'		=> $this->language->lang($album_group_total === 1 ? 'ALBUM' : 'ALBUMS'),
 					'ALBUM_ID'				=> $row['album_id'],
 					'ALBUM_NAME'			=> $row['album_name'],
-					'ALBUM_DESC'			=> generate_text_for_display($row['album_desc'], $row['album_desc_uid'], $row['album_desc_bitfield'], $row['album_desc_options']),
+					'ALBUM_DESCRIPTION_HTML'	=> generate_text_for_display($row['album_desc'], $row['album_desc_uid'], $row['album_desc_bitfield'], $row['album_desc_options']),
 					'ALBUM_FOLDER_IMG'		=> '',
 					'ALBUM_FOLDER_IMG_SRC'	=> '',
 					'ALBUM_IMAGE'			=> $album_image,
@@ -851,7 +851,7 @@ class display
 
 				'ALBUM_ID'				=> (int) $row['album_id'],
 				'ALBUM_NAME'			=> $row['album_name'],
-				'ALBUM_DESC'			=> generate_text_for_display($row['album_desc'], $row['album_desc_uid'], $row['album_desc_bitfield'], $row['album_desc_options']),
+				'ALBUM_DESCRIPTION_HTML'	=> generate_text_for_display($row['album_desc'], $row['album_desc_uid'], $row['album_desc_bitfield'], $row['album_desc_options']),
 				'IMAGES'				=> (int) $row['album_images'],
 				'UNAPPROVED_IMAGES'		=> ($this->gallery_auth->acl_check('m_status', $album_id, $row['album_user_id'])) ? ($row['album_images_real'] - $row['album_images']) : 0,
 				'ALBUM_IMG_STYLE'		=> $folder_image,

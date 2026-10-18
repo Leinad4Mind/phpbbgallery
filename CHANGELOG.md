@@ -15,6 +15,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Changed
 
+- Replaced the ambiguous album-description language and template contract with explicit responsibilities: `ALBUM_DESCRIPTION` is now only the translated label, `ALBUM_DESCRIPTION_TEXT` contains editable source text and `ALBUM_DESCRIPTION_HTML` contains rendered display content; the obsolete duplicate `ALBUM_DESC` key was removed from every language catalogue.
 - Kept the released Core 4.1.0 and Remote Storage 1.0.0 in the stable version-check channel while exposing the 4.2.0 and 1.1.0 development lines only through phpBB's opt-in unstable channel.
 - Translated every Featured Images control, setting, result and dependency message across all eleven bundled Gallery languages, with regression protection against untranslated English catalogue copies.
 - Expanded Featured Images integration coverage across slideshow and card presentation, anonymous permission filtering and all three bundled styles; autoplay now pauses while the page is hidden and its accessible play/pause name stays synchronized with the visible state.

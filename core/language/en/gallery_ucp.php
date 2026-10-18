@@ -31,7 +31,6 @@ $lang = array_merge($lang, [
 	'ALBUMS'                         => 'Albums',
 	'ALBUM_ACCESS'                   => 'Allow access for',
 	'ALBUM_ACCESS_EXPLAIN'           => 'You can use your %1$sFriends and Foes lists%2$s to control access to the album. However <strong>moderators</strong> can <strong>always</strong> access the album.',
-	'ALBUM_DESC'                     => 'Album Description',
 	'ALBUM_NAME'                     => 'Album Name',
 	'ALBUM_PARENT'                   => 'Parent Album',
 	'ATTACHED_SUBALBUMS'             => 'Attached subalbums',

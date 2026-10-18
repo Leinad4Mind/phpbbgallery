@@ -194,7 +194,7 @@ class manage
 
 		if (utf8_strlen($album_data['album_desc']) > 4000)
 		{
-			$errors[] = $this->language->lang('ALBUM_DESC_TOO_LONG');
+			$errors[] = $this->language->lang('ALBUM_DESCRIPTION_TOO_LONG');
 		}
 
 		/**

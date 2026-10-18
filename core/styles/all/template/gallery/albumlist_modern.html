@@ -12,7 +12,7 @@
 	{% if albumrow.S_IS_CAT %}
 		<section class="gallery-modern-category">
 			<h3><i class="icon fa fa-folder-open fa-fw" aria-hidden="true"></i> <a href="{{ albumrow.U_VIEWALBUM }}">{{ albumrow.ALBUM_NAME }}</a></h3>
-			{% if albumrow.ALBUM_DESC %}<div class="gallery-modern-category-description">{{ albumrow.ALBUM_DESC }}</div>{% endif %}
+			{% if albumrow.ALBUM_DESCRIPTION_HTML %}<div class="gallery-modern-category-description">{{ albumrow.ALBUM_DESCRIPTION_HTML }}</div>{% endif %}
 		</section>
 		{% set category_pagination_row = albumrow %}
 	{% else %}
@@ -27,7 +27,7 @@
 				{% endif %}
 				<div class="gallery-modern-album-content">
 					<a href="{{ albumrow.U_VIEWALBUM }}" class="gallery-modern-album-title"{% if S_PERSONAL_GALLERY and albumrow.ALBUM_COLOUR %} style="color: {{ albumrow.ALBUM_COLOUR }};"{% endif %}>{% if albumrow.S_LOCKED_ALBUM %}<i class="icon fa fa-lock fa-fw" aria-hidden="true"></i> {% endif %}{{ albumrow.ALBUM_NAME }}</a>
-					{% if albumrow.ALBUM_DESC %}<div class="gallery-modern-album-description">{{ albumrow.ALBUM_DESC }}</div>{% endif %}
+					{% if albumrow.ALBUM_DESCRIPTION_HTML %}<div class="gallery-modern-album-description">{{ albumrow.ALBUM_DESCRIPTION_HTML }}</div>{% endif %}
 					{% if albumrow.MODERATORS %}
 						<div class="gallery-modern-album-details"><span><i class="icon fa fa-user fa-fw" aria-hidden="true"></i> <strong>{{ albumrow.L_MODERATOR_STR }}{{ lang('COLON') }}</strong> {{ albumrow.MODERATORS }}</span></div>
 					{% endif %}
