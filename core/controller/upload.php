@@ -12,7 +12,6 @@
 
 namespace phpbbgallery\core\controller;
 
-use bantu\IniGetWrapper\IniGetWrapper;
 use phpbb\request\request_interface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -46,14 +45,8 @@ class upload
 	/** @var \phpbb\config\config  */
 	protected \phpbb\config\config $config;
 
-	/** @var \phpbb\auth\auth */
-	protected \phpbb\auth\auth $phpbb_auth;
-
 	/** @var ContainerInterface  */
 	protected ContainerInterface $phpbb_container;
-
-	/** @var IniGetWrapper */
-	protected IniGetWrapper $php_ini;
 
 	/** @var \phpbbgallery\core\misc */
 	protected \phpbbgallery\core\misc $misc;
@@ -113,9 +106,7 @@ class upload
 	 * @param \phpbb\language\language               $language
 	 * @param \phpbb\template\template               $template
 	 * @param \phpbb\config\config                   $config
-	 * @param \phpbb\auth\auth                      $phpbb_auth
 	 * @param Container|ContainerInterface           $phpbb_container
-	 * @param IniGetWrapper                          $php_ini
 	 * @param \phpbbgallery\core\album\album         $album   Album class
 	 * @param \phpbbgallery\core\misc                $misc    Misc class
 	 * @param \phpbbgallery\core\auth\auth           $auth
@@ -134,9 +125,7 @@ class upload
 	 */
 
 	public function __construct(request_interface $request, \phpbb\db\driver\driver_interface $db, \phpbb\event\dispatcher_interface $dispatcher, \phpbb\user $user,
-		\phpbb\language\language $language, \phpbb\template\template $template, \phpbb\config\config $config, \phpbb\auth\auth $phpbb_auth,
-		ContainerInterface $phpbb_container,
-		IniGetWrapper $php_ini,
+		\phpbb\language\language $language, \phpbb\template\template $template, \phpbb\config\config $config, ContainerInterface $phpbb_container,
 		\phpbbgallery\core\album\album $album, \phpbbgallery\core\misc $misc, \phpbbgallery\core\auth\auth $auth, \phpbbgallery\core\album\display $display,
 		\phpbb\controller\helper $helper, \phpbbgallery\core\config $gallery_config, \phpbbgallery\core\user $gallery_user,
 		\phpbbgallery\core\image\image $image, \phpbbgallery\core\notification $gallery_notification,
@@ -151,9 +140,7 @@ class upload
 		$this->language = $language;
 		$this->template = $template;
 		$this->config = $config;
-		$this->phpbb_auth = $phpbb_auth;
 		$this->phpbb_container = $phpbb_container;
-		$this->php_ini = $php_ini;
 		$this->album = $album;
 		$this->misc = $misc;
 		$this->auth = $auth;
@@ -470,8 +457,9 @@ class upload
 			{
 				$allowed_extensions = $process->get_allowed_types();
 				$configured_source_filesize_limit = $process->get_source_filesize_limit();
-				$php_upload_filesize_limit = (int) $this->php_ini->getBytes('upload_max_filesize');
-				$php_post_filesize_limit = (int) $this->php_ini->getBytes('post_max_size');
+				$php_ini = $this->phpbb_container->get('php_ini');
+				$php_upload_filesize_limit = (int) $php_ini->getBytes('upload_max_filesize');
+				$php_post_filesize_limit = (int) $php_ini->getBytes('post_max_size');
 				$source_filesize_limit = self::http_upload_filesize_limit(
 					$configured_source_filesize_limit,
 					$php_upload_filesize_limit,
@@ -487,7 +475,7 @@ class upload
 					'S_PHP_UPLOAD_MAX_FILESIZE' => get_formatted_filesize($php_upload_filesize_limit),
 					'S_PHP_POST_MAX_SIZE' => get_formatted_filesize($php_post_filesize_limit),
 					'S_RESIZE_LARGE_FILES' => (bool) $this->gallery_config->get('allow_resize') && $configured_source_filesize_limit > $stored_filesize_limit,
-					'S_GALLERY_UPLOAD_ADMIN_INFO' => $this->phpbb_auth->acl_get('a_'),
+					'S_GALLERY_UPLOAD_ADMIN_INFO' => $this->phpbb_container->get('auth')->acl_get('a_'),
 					'S_MAX_WIDTH'         => $this->gallery_config->get('max_width'),
 					'S_MAX_HEIGHT'        => $this->gallery_config->get('max_height'),
 					'S_ALLOWED_FILETYPES' => implode(', ', $process->get_allowed_types(true)),

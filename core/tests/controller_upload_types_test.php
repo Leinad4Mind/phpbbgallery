@@ -157,36 +157,23 @@ final class controller_upload_types_test extends TestCase
 		$this->assertSame(67108864, $method->invoke(null, 67108864, 0, null));
 	}
 
-	public function test_upload_controller_receives_the_php_ini_service(): void
+	public function test_upload_controller_uses_existing_container_for_runtime_services(): void
 	{
 		$reflection = new \ReflectionClass(upload::class);
 		$parameters = $reflection->getConstructor()->getParameters();
-		$php_ini = array_values(array_filter($parameters, static fn(\ReflectionParameter $parameter): bool => $parameter->getName() === 'php_ini'));
+		$container = array_values(array_filter($parameters, static fn(\ReflectionParameter $parameter): bool => $parameter->getName() === 'phpbb_container'));
 
-		$this->assertCount(1, $php_ini);
-		$this->assertSame('bantu\\IniGetWrapper\\IniGetWrapper', (string) $php_ini[0]->getType());
-
-		$services = (string) file_get_contents(dirname(__DIR__) . '/config/services_controller.yml');
-		$upload_service = strstr($services, 'phpbbgallery.core.controller.upload:');
-		$upload_service = strstr($upload_service, 'phpbbgallery.core.controller.author_autocomplete:', true);
-		$this->assertStringContainsString("- '@php_ini'", $upload_service);
-	}
-
-	public function test_upload_controller_receives_phpbb_auth_for_admin_only_diagnostics(): void
-	{
-		$reflection = new \ReflectionClass(upload::class);
-		$parameters = $reflection->getConstructor()->getParameters();
-		$phpbb_auth = array_values(array_filter($parameters, static fn(\ReflectionParameter $parameter): bool => $parameter->getName() === 'phpbb_auth'));
-
-		$this->assertCount(1, $phpbb_auth);
-		$this->assertSame('phpbb\\auth\\auth', (string) $phpbb_auth[0]->getType());
+		$this->assertCount(1, $container);
+		$this->assertSame('Symfony\\Component\\DependencyInjection\\ContainerInterface', (string) $container[0]->getType());
 
 		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/upload.php');
-		$this->assertStringContainsString("'S_GALLERY_UPLOAD_ADMIN_INFO' => \$this->phpbb_auth->acl_get('a_')", $source);
+		$this->assertStringContainsString("\$this->phpbb_container->get('php_ini')", $source);
+		$this->assertStringContainsString("\$this->phpbb_container->get('auth')->acl_get('a_')", $source);
 
 		$services = (string) file_get_contents(dirname(__DIR__) . '/config/services_controller.yml');
 		$upload_service = strstr($services, 'phpbbgallery.core.controller.upload:');
 		$upload_service = strstr($upload_service, 'phpbbgallery.core.controller.author_autocomplete:', true);
-		$this->assertStringContainsString("- '@auth'", $upload_service);
+		$this->assertStringContainsString("- '@service_container'", $upload_service);
+		$this->assertStringNotContainsString("- '@php_ini'", $upload_service);
 	}
 }
