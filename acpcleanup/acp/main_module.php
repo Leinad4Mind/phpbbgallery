@@ -20,7 +20,7 @@ class main_module
 
 	public function main(string $id, string $mode): void
 	{
-		global $auth, $cache, $config, $db, $template, $request, $user, $phpbb_root_path, $phpbb_ext_gallery;
+		global $auth, $cache, $config, $db, $template, $request, $user, $phpbb_ext_gallery;
 
 		$user->add_lang_ext('phpbbgallery/core', ['gallery_acp', 'gallery']);
 		$user->add_lang_ext('phpbbgallery/acpcleanup', 'info_acp_gallery_cleanup');
@@ -49,7 +49,7 @@ class main_module
 	 */
 	public function cleanup(bool $submit = false): void
 	{
-		global $auth, $cache, $db, $template, $user, $phpbb_ext_gallery, $table_prefix, $phpbb_container, $request, $phpbb_root_path;
+		global $auth, $cache, $db, $template, $user, $phpbb_ext_gallery, $table_prefix, $phpbb_container, $request;
 		$gallery_config = $phpbb_container->get('phpbbgallery.core.config');
 		$action = $request->variable('action', '');
 		if ($action === 'migrate_legacy_bbcodes')
@@ -123,7 +123,7 @@ class main_module
 				'action' => $action,
 				'legacy_remaining' => $remaining,
 				'legacy_total' => $remaining,
-			]), 'confirm_body.html', \phpbbgallery\core\url::acp_confirm_action($this->u_action, $phpbb_root_path));
+			]));
 			return;
 		}
 
@@ -440,7 +440,7 @@ class main_module
 				{
 					$clean_gallery_confirm = $user->lang('CONFIRM_PRUNE', $core_cleanup->lang_prune_pattern($prune_pattern)) . '<br />' . $clean_gallery_confirm;
 				}
-				confirm_box(false, $clean_gallery_confirm, $s_hidden_fields, 'confirm_body.html', \phpbbgallery\core\url::acp_confirm_action($this->u_action, $phpbb_root_path));
+				confirm_box(false, $clean_gallery_confirm, $s_hidden_fields);
 			}
 		}
 

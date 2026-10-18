@@ -342,7 +342,7 @@ class main_module
 					'mode'		=> $mode,
 					'action'	=> $action,
 					'reset_album_id'	=> $album_id,
-				]), 'confirm_body.html', \phpbbgallery\core\url::acp_confirm_action($this->u_action, $phpbb_root_path));
+				]));
 			}
 		}
 		else

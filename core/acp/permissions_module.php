@@ -1360,7 +1360,7 @@ class permissions_module
 	private function copy_album_permissions(): void
 	{
 		global $cache, $db, $template, $user, $table_prefix, $phpbb_dispatcher, $table_name, $users_table, $phpbb_container;
-		global $request, $phpbb_root_path;
+		global $request;
 
 		$albums_table = $table_prefix . 'gallery_albums';
 		$roles_table = $table_prefix . 'gallery_roles';
@@ -1466,7 +1466,7 @@ class permissions_module
 
 				$s_hidden_fields = build_hidden_fields($s_hidden_fields);
 
-				confirm_box(false, $this->language->lang('COPY_PERMISSIONS_CONFIRM'), $s_hidden_fields, 'confirm_body.html', \phpbbgallery\core\url::acp_confirm_action($this->u_action, $phpbb_root_path));
+				confirm_box(false, $this->language->lang('COPY_PERMISSIONS_CONFIRM'), $s_hidden_fields);
 			}
 		}
 
