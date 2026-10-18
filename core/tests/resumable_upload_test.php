@@ -164,6 +164,23 @@ class resumable_upload_test extends TestCase
 		$this->assertStringContainsString("task.status === 'failed'", $javascript);
 	}
 
+	public function test_quick_upload_distinguishes_complete_partial_and_failed_batches(): void
+	{
+		$javascript = (string) file_get_contents(dirname(__DIR__) . '/styles/all/template/js/quick_upload.js');
+		$stylesheet = (string) file_get_contents(dirname(__DIR__) . '/styles/all/theme/default.css');
+
+		$this->assertStringContainsString("state = 'partial';", $javascript);
+		$this->assertStringContainsString('status = labels.partial;', $javascript);
+		$this->assertStringContainsString("state = 'failed';", $javascript);
+		$this->assertStringContainsString('status = labels.failed;', $javascript);
+		$this->assertStringContainsString('elements.error.textContent = labels.fileComplete;', $javascript);
+		$this->assertStringContainsString('setError(task, labels.network);', $javascript);
+		$this->assertStringContainsString('return labels.response;', $javascript);
+		$this->assertStringContainsString('.gallery-quick-upload-state-partial .meter > span', $stylesheet);
+		$this->assertStringContainsString('.gallery-quick-upload-state-failed .meter > span', $stylesheet);
+		$this->assertStringContainsString('.gallery-quick-upload-success', $stylesheet);
+	}
+
 	public function test_quick_upload_reset_clears_the_client_and_server_draft(): void
 	{
 		$javascript = (string) file_get_contents(dirname(__DIR__) . '/styles/all/template/js/quick_upload.js');

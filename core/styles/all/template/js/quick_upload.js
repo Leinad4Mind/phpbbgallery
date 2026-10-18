@@ -29,9 +29,16 @@
 			cancel: dropZone.getAttribute('data-label-cancel') || 'Cancel',
 			error: dropZone.getAttribute('data-label-error') || 'Error',
 			imageName: dropZone.getAttribute('data-label-image-name') || 'Image name',
+			processing: dropZone.getAttribute('data-label-processing') || 'Upload received. Processing...',
+			complete: dropZone.getAttribute('data-label-complete') || 'Upload complete',
+			partial: dropZone.getAttribute('data-label-partial') || 'Upload completed with errors',
+			failed: dropZone.getAttribute('data-label-failed') || 'Upload error',
+			fileComplete: dropZone.getAttribute('data-label-file-complete') || 'Uploaded successfully.',
 			invalidType: dropZone.getAttribute('data-error-file-type') || 'File type is not allowed',
 			invalidSize: dropZone.getAttribute('data-error-file-size') || 'File is too large',
-			tooMany: dropZone.getAttribute('data-error-upload-limit') || 'Upload limit reached'
+			tooMany: dropZone.getAttribute('data-error-upload-limit') || 'Upload limit reached',
+			network: dropZone.getAttribute('data-error-network') || 'The upload failed because of a network or connection error.',
+			response: dropZone.getAttribute('data-error-response') || 'The server rejected the file without providing a specific reason.'
 		};
 		var queue = [];
 		var tasks = [];
@@ -70,6 +77,7 @@
 			var cancel = createElement('button', 'button2 btn btn-default btn-sm gallery-quick-upload-cancel', labels.cancel);
 
 			cancel.type = 'button';
+			error.setAttribute('role', 'alert');
 			nameLabel.appendChild(name);
 			information.appendChild(nameLabel);
 			information.appendChild(error);
@@ -148,13 +156,46 @@
 				return sum + Math.min(task.loaded, task.file.size);
 			}, 0);
 			var percent = total ? Math.round(loaded / total * 100) : 0;
+			var failed = tasks.filter(function (task) {
+				return task.status === 'failed';
+			}).length;
+			var completed = tasks.filter(function (task) {
+				return task.status === 'complete';
+			}).length;
+			var hasPending = tasks.some(function (task) {
+				return task.status === 'queued' || task.status === 'uploading';
+			});
+			var state = 'idle';
+			var status = percent + '%';
+
+			if (!hasPending && failed && completed) {
+				state = 'partial';
+				status = labels.partial;
+				percent = 100;
+			} else if (!hasPending && failed) {
+				state = 'failed';
+				status = labels.failed;
+				percent = 100;
+			} else if (!hasPending && completed && completed === tasks.length) {
+				state = 'complete';
+				status = labels.complete;
+			} else if (hasPending && total > 0 && loaded >= total) {
+				state = 'processing';
+				status = labels.processing;
+			} else if (hasPending) {
+				state = 'uploading';
+			}
+
+			['idle', 'uploading', 'processing', 'complete', 'partial', 'failed'].forEach(function (progressState) {
+				output.classList.toggle('gallery-quick-upload-state-' + progressState, progressState === state);
+			});
 
 			if (progressBar) {
 				progressBar.style.width = percent + '%';
 				progressBar.setAttribute('aria-valuenow', String(percent));
 			}
 			if (progressLabel) {
-				progressLabel.textContent = percent + '%';
+				progressLabel.textContent = status;
 			}
 		}
 
@@ -169,13 +210,13 @@
 
 		function responseError(response) {
 			if (!response || !Array.isArray(response.files) || !response.files.length) {
-				return labels.error;
+				return labels.response;
 			}
 			for (var index = 0; index < response.files.length; index++) {
 				if (response.files[index] && response.files[index].error) {
 					var parser = new DOMParser();
 					var documentFragment = parser.parseFromString(String(response.files[index].error), 'text/html');
-					return documentFragment.body.textContent || labels.error;
+					return documentFragment.body.textContent || labels.response;
 				}
 			}
 			return '';
@@ -209,6 +250,8 @@
 			response.files.forEach(function (uploadedFile, index) {
 				var elements = index === 0 ? task.elements : createRow({name: uploadedFile.name || task.file.name, type: '', size: 0});
 				renderUploadedFile(elements, uploadedFile);
+				elements.error.textContent = labels.fileComplete;
+				elements.error.classList.add('gallery-quick-upload-success');
 				elements.cancel.hidden = true;
 				elements.row.classList.add('gallery-quick-upload-complete');
 			});
@@ -270,7 +313,7 @@
 				}
 			});
 			request.addEventListener('error', function () {
-				setError(task, labels.error);
+				setError(task, labels.network);
 			});
 			request.addEventListener('abort', function () {
 				removeTask(task);

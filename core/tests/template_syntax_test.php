@@ -619,6 +619,11 @@ final class template_syntax_test extends TestCase
 			$this->assertStringContainsString('data-allowed-extensions="{{ S_ALLOWED_FILETYPES_ACCEPT }}"', $posting, $style);
 			$this->assertStringContainsString('data-max-file-size="{{ S_QUICK_MAX_FILESIZE }}"', $posting, $style);
 			$this->assertStringContainsString('data-upload-limit="{{ S_UPLOAD_LIMIT }}"', $posting, $style);
+			$this->assertStringContainsString('data-label-partial="{{ lang(\'QUICK_UPLOAD_STATUS_PARTIAL\') }}"', $posting, $style);
+			$this->assertStringContainsString('data-label-file-complete="{{ lang(\'QUICK_UPLOAD_FILE_COMPLETE\') }}"', $posting, $style);
+			$this->assertStringContainsString('data-error-file-size="{{ lang(\'QUICK_UPLOAD_ERROR_FILE_SIZE\', S_SOURCE_MAX_FILESIZE) }}"', $posting, $style);
+			$this->assertStringContainsString('data-error-file-type="{{ lang(\'QUICK_UPLOAD_ERROR_FILE_TYPE\', S_ALLOWED_FILETYPES) }}"', $posting, $style);
+			$this->assertStringContainsString('data-error-network="{{ lang(\'QUICK_UPLOAD_ERROR_NETWORK\') }}"', $posting, $style);
 			$this->assertStringContainsString('id="outputTarget"', $posting, $style);
 		}
 
