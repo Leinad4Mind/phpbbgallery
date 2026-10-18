@@ -20,6 +20,7 @@ final class album_polaroid_title_test extends TestCase
 			$template = (string) file_get_contents(dirname(__DIR__) . '/styles/' . $style . '/template/gallery/albumlist_polaroid.html');
 
 			$this->assertStringContainsString('<p class="gallery-album-title">', $template, $style);
+			$this->assertStringContainsString('title="{{ albumrow.ALBUM_NAME }}"', $template, $style);
 			$this->assertStringNotContainsString('font-size: 1.2em', $template, $style);
 		}
 	}
@@ -33,6 +34,10 @@ final class album_polaroid_title_test extends TestCase
 			$css
 		);
 		$this->assertStringContainsString('text-overflow: ellipsis;', $css);
+		$this->assertMatchesRegularExpression(
+			'/\\.gallery-album-title\\s*>\\s*a\\s*\\{[^}]*display:\\s*block;[^}]*min-width:\\s*0;[^}]*overflow:\\s*hidden;[^}]*text-overflow:\\s*ellipsis;/s',
+			$css
+		);
 	}
 
 	public function test_gallery_index_separates_public_and_personal_albums(): void

@@ -62,21 +62,25 @@ class gallery_logs_module
 		// Delete entries if requested and able
 		if ($deletemark && $auth->acl_get('a_clearlogs') && !empty($marked))
 		{
-			if (!check_form_key('acp_logs'))
-			{
-				trigger_error($this->language->lang('FORM_INVALID'));
-			}
-
 			if (confirm_box(true))
 			{
 				$log->delete_logs($marked);
 			}
 			else
 			{
+				// Validate the originating list form before issuing phpBB's
+				// one-time confirmation token. The confirmation form does not
+				// carry the acp_logs token and is protected by confirm_box().
+				if (!check_form_key('acp_logs'))
+				{
+					trigger_error($this->language->lang('FORM_INVALID'));
+				}
+
 				confirm_box(false, $this->language->lang('CONFIRM_OPERATION'), build_hidden_fields([
 					'page'		=> $page,
 					'delmarked'	=> $deletemark,
 					'mark'		=> $marked,
+					'lf'		=> $filter_log,
 					'st'		=> $sort_days,
 					'sk'		=> $sort_key,
 					'sd'		=> $sort_dir,

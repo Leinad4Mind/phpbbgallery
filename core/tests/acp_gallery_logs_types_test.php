@@ -46,13 +46,17 @@ final class acp_gallery_logs_types_test extends TestCase
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/acp/gallery_logs_module.php');
 		$post_check = strpos($source, '$request->is_set_post(\'delmarked\')');
+		$confirm_check = strpos($source, 'confirm_box(true)');
 		$form_check = strpos($source, 'check_form_key(\'acp_logs\')');
 		$delete = strpos($source, '$log->delete_logs($marked)');
 
 		$this->assertNotFalse($post_check);
+		$this->assertNotFalse($confirm_check);
 		$this->assertNotFalse($form_check);
 		$this->assertNotFalse($delete);
-		$this->assertLessThan($form_check, $post_check);
-		$this->assertLessThan($delete, $form_check);
+		$this->assertLessThan($confirm_check, $post_check);
+		$this->assertLessThan($delete, $confirm_check);
+		$this->assertLessThan($form_check, $delete);
+		$this->assertStringContainsString("'lf'\t\t=> \$filter_log", $source);
 	}
 }

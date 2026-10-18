@@ -621,13 +621,24 @@ input.autowidth-gallery {
 }
 
 .gallery-album-title {
+	align-items: center;
+	display: flex;
 	font-size: 1.2em;
 	font-weight: bold;
+	justify-content: center;
 	line-height: 1.4;
 	margin: 0 0 .5em;
+	min-width: 0;
 	overflow: hidden;
 	padding-bottom: .1em;
 	text-align: center;
+	white-space: nowrap;
+}
+
+.gallery-album-title > a {
+	display: block;
+	min-width: 0;
+	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
