@@ -379,6 +379,7 @@ $lang = array_merge($lang, [
 	'PERMISSIONS_COPY'         => 'Kopieer album permissies',
 	'PERMISSIONS_COPY_EXPLAIN' => 'Hier kan je albumpermissies kopiëren van één album naar één of meerdere andere albums.',
 	'PERMISSIONS_EXPLAIN'      => 'Hier kan je veranderen welke groepen en gebruikers er toegang hebben tot welke albums.',
+	'ACP_VIEW_GALLERY_PERMISSIONS'       => 'Gallery-permissies bekijken',
 	'ACP_VIEW_GALLERY_PERMISSIONS_EXPLAIN' => 'Bekijk de effectieve Gallery-permissies van een gebruiker voor een of meer openbare albums of persoonlijke albums. Deze alleen-lezenpagina gebruikt het ingebouwde Ja/Nooit-masker; gebruik het traceerpictogram om de groepen en directe gebruikersinstellingen achter elk booleaans resultaat te bekijken.',
 	'GALLERY_PERMISSION_MASK_USER' => 'Gebruiker selecteren',
 	'GALLERY_PERMISSION_MASK_USER_EXPLAIN' => 'Voer één geregistreerde gebruikersnaam in of selecteer de anonieme gebruiker.',

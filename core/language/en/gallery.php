@@ -27,6 +27,7 @@ $lang = array_merge($lang, [
 	'ALBUM'                            => 'Album',
 	'ALBUMS'                           => 'Albums',
 	'ALBUM_DESC'                       => 'Album description',
+	'ALBUM_DESCRIPTION'                => 'Album description',
 	'ALBUM_IS_CATEGORY'                => 'The album you cheated to, is a category-album.<br />You can’t upload to categories.',
 	'ALBUM_LOCKED'                     => 'Locked',
 	'ALBUM_NAME'                       => 'Album name',

@@ -28,6 +28,7 @@ $lang = array_merge($lang, [
 	'ALBUM'                            => 'Албум',
 	'ALBUMS'                           => 'Албуми',
 	'ALBUM_DESC'                       => 'Описание на албума',
+	'ALBUM_DESCRIPTION'                => 'Описание на албума',
 	'ALBUM_IS_CATEGORY'                => 'Албума до който излъгахте е Албум категория.<br />Не можете да качвате в категория.',
 	'ALBUM_LOCKED'                     => 'Заключен',
 	'ALBUM_NAME'                       => 'Име на албум',

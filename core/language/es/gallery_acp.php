@@ -379,6 +379,7 @@ $lang = array_merge($lang, [
 	'PERMISSIONS_COPY'         => 'Copiar permisos del álbum',
 	'PERMISSIONS_COPY_EXPLAIN' => 'Aquí puede copiar los permisos del álbum de un álbum a uno o más álbumes.',
 	'PERMISSIONS_EXPLAIN'      => 'Aquí puede modificar qué usuarios y grupos pueden acceder a qué álbumes.',
+	'ACP_VIEW_GALLERY_PERMISSIONS'       => 'Ver permisos de la Galería',
 	'ACP_VIEW_GALLERY_PERMISSIONS_EXPLAIN' => 'Consulte los permisos efectivos de la Galería asignados a un usuario en uno o varios álbumes públicos o en el ámbito de los álbumes personales. Esta página es de solo lectura y usa la máscara nativa Sí/Nunca; use el icono de rastreo para revisar los grupos y ajustes directos que produjeron cada resultado booleano.',
 	'GALLERY_PERMISSION_MASK_USER' => 'Seleccionar usuario',
 	'GALLERY_PERMISSION_MASK_USER_EXPLAIN' => 'Introduzca un nombre de usuario registrado o seleccione el usuario anónimo.',

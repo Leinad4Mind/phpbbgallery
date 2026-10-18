@@ -321,6 +321,7 @@ $lang = array_merge($lang, [
 	'PERMISSIONS_COPY'         => 'Copy album permissions',
 	'PERMISSIONS_COPY_EXPLAIN' => 'Here you can copy album permissions from one album to one or more other albums.',
 	'PERMISSIONS_EXPLAIN'      => 'Here you can alter which users and groups can access which albums.',
+	'ACP_VIEW_GALLERY_PERMISSIONS'       => 'View Gallery permissions',
 	'ACP_VIEW_GALLERY_PERMISSIONS_EXPLAIN' => 'View the effective Gallery permissions assigned to a user across one or more public albums or a personal-album scope. This read-only page uses the native Yes/Never mask; use the trace icon to inspect the groups and direct user settings behind each boolean result.',
 	'GALLERY_PERMISSION_MASK_USER' => 'Select user',
 	'GALLERY_PERMISSION_MASK_USER_EXPLAIN' => 'Enter one registered username or select the anonymous user.',

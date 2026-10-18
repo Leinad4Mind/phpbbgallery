@@ -28,6 +28,7 @@ $lang = array_merge($lang, [
 	'ALBUM'                            => 'Album',
 	'ALBUMS'                           => 'Alben',
 	'ALBUM_DESC'                       => 'Albumbeschreibung',
+	'ALBUM_DESCRIPTION'                => 'Albumbeschreibung',
 	'ALBUM_IS_CATEGORY'                => 'Das Album, in welches du dich gemogelt hast, ist eine Kategorie.<br />In Kategorien können keine Bilder hochgeladen werden.',
 	'ALBUM_LOCKED'                     => 'Gesperrt',
 	'ALBUM_NAME'                       => 'Name des Albums',

@@ -28,6 +28,7 @@ $lang = array_merge($lang, [
 	'ALBUM'                            => 'Album',
 	'ALBUMS'                           => 'Albums',
 	'ALBUM_DESC'                       => 'Albumbeschrijving',
+	'ALBUM_DESCRIPTION'                => 'Albumbeschrijving',
 	'ALBUM_IS_CATEGORY'                => 'Het album waar je heen gegaan bent is een categoriealbum..<br />Je kan niet uploaden naar categorieën.',
 	'ALBUM_LOCKED'                     => 'Gesloten',
 	'ALBUM_NAME'                       => 'Albumnaam',

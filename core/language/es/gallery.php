@@ -28,6 +28,7 @@ $lang = array_merge($lang, [
 	'ALBUM'                            => 'Álbum',
 	'ALBUMS'                           => 'Álbumes',
 	'ALBUM_DESC'                       => 'Descripción del álbum',
+	'ALBUM_DESCRIPTION'                => 'Descripción del álbum',
 	'ALBUM_IS_CATEGORY'                => 'El álbum en el que hiciste trampa, es un álbum de categoría.<br />No puedes subir a categorías.',
 	'ALBUM_LOCKED'                     => 'Bloqueado',
 	'ALBUM_NAME'                       => 'Nombre del álbum',

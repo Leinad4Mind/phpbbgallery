@@ -28,6 +28,7 @@ $lang = array_merge($lang, [
 	'ALBUM'                            => 'Álbum',
 	'ALBUMS'                           => 'Álbuns',
 	'ALBUM_DESC'                       => 'Descrição do Álbum',
+	'ALBUM_DESCRIPTION'                => 'Descrição do Álbum',
 	'ALBUM_IS_CATEGORY'                => 'O álbum para o qual mudou é um álbum de categoria.<br />Não podes fazer upload para categorias.',
 	'ALBUM_LOCKED'                     => 'Bloqueado',
 	'ALBUM_NAME'                       => 'Nome do Álbum',

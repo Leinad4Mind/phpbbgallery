@@ -204,6 +204,33 @@ class language_catalog_test extends TestCase
 		}
 	}
 
+	public function test_album_description_alias_supports_inherited_legacy_templates(): void
+	{
+		$language_root = $this->extension_root . '/core/language';
+		foreach ($this->language_directories($language_root) as $directory)
+		{
+			$locale = basename($directory);
+			$language = $this->load_language($directory . '/gallery.php');
+
+			$this->assertArrayHasKey('ALBUM_DESCRIPTION', $language, $locale);
+			$this->assertSame($language['ALBUM_DESC'], $language['ALBUM_DESCRIPTION'], $locale);
+		}
+	}
+
+	public function test_permission_mask_title_is_available_to_runtime_acp_logs(): void
+	{
+		$language_root = $this->extension_root . '/core/language';
+		foreach ($this->language_directories($language_root) as $directory)
+		{
+			$locale = basename($directory);
+			$runtime = $this->load_language($directory . '/gallery_acp.php');
+			$module = $this->load_language($directory . '/info_acp_gallery.php');
+
+			$this->assertArrayHasKey('ACP_VIEW_GALLERY_PERMISSIONS', $runtime, $locale);
+			$this->assertSame($module['ACP_VIEW_GALLERY_PERMISSIONS'], $runtime['ACP_VIEW_GALLERY_PERMISSIONS'], $locale);
+		}
+	}
+
 	public function test_image_permissions_distinguish_previews_from_original_sources(): void
 	{
 		$language_root = $this->extension_root . '/core/language';

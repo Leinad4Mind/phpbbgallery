@@ -3492,6 +3492,32 @@ fieldset dl.gallery-autocomplete-row-open
 	position: relative;
 }
 
+.gallery-album-prosilver-actions
+{
+	align-items: flex-start;
+	display: flex;
+	gap: 5px;
+}
+
+.gallery-album-prosilver-actions::before,
+.gallery-album-prosilver-actions::after
+{
+	display: none;
+}
+
+.gallery-album-prosilver-actions > .button
+{
+	flex: 0 0 auto;
+	margin-right: 0;
+}
+
+.gallery-album-prosilver-actions > .pagination
+{
+	flex: 0 0 auto;
+	float: none;
+	margin-left: auto;
+}
+
 .gallery-album-bootstrap-actions
 {
 	align-items: flex-start;
@@ -3534,6 +3560,18 @@ fieldset dl.gallery-autocomplete-row-open
 	width: 50%;
 }
 
+.gallery-album-prosilver-actions > .gallery-album-inline-search
+{
+	flex: 1 1 320px;
+	left: auto;
+	margin: 0 auto;
+	max-width: 50%;
+	min-width: 160px;
+	position: static;
+	transform: none;
+	width: auto;
+}
+
 .gallery-album-inline-search form,
 .gallery-album-inline-search fieldset,
 .gallery-album-inline-search .input-group
@@ -3556,6 +3594,20 @@ fieldset dl.gallery-autocomplete-row-open
 
 @media (max-width: 700px)
 {
+	.gallery-album-prosilver-actions
+	{
+		flex-wrap: wrap;
+	}
+
+	.gallery-album-prosilver-actions > .gallery-album-inline-search
+	{
+		flex: 0 0 100%;
+		margin: 0;
+		max-width: none;
+		order: 10;
+		width: 100%;
+	}
+
 	.gallery-album-bootstrap-actions
 	{
 		flex-wrap: wrap;

@@ -353,12 +353,15 @@ final class controller_album_types_test extends TestCase
 		}
 
 		$prosilver = (string) file_get_contents(dirname(__DIR__) . '/styles/prosilver/template/gallery/album_body.html');
+		$this->assertStringContainsString('gallery-album-prosilver-actions', $prosilver);
 		$this->assertStringContainsString('class="search-box gallery-album-inline-search" role="search"', $prosilver);
 		$this->assertDoesNotMatchRegularExpression('/gallery-album-top-actions[^>]*><br \/>/', $prosilver);
 		$this->assertStringContainsString('class="button button-search"', $prosilver);
 		$this->assertStringContainsString('class="button button-search-end"', $prosilver);
 
 		$css = (string) file_get_contents(dirname(__DIR__) . '/styles/all/theme/gallery.css');
+		$this->assertMatchesRegularExpression('/\.gallery-album-prosilver-actions\s*\{[^}]*display:\s*flex;[^}]*gap:\s*5px;/s', $css);
+		$this->assertMatchesRegularExpression('/\.gallery-album-prosilver-actions > \.gallery-album-inline-search\s*\{[^}]*flex:\s*1 1 320px;[^}]*position:\s*static;[^}]*transform:\s*none;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-album-bootstrap-actions\s*\{[^}]*display:\s*flex;[^}]*gap:\s*10px;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-album-bootstrap-actions > \.gallery-album-inline-search\s*\{[^}]*flex:\s*1 1 50%;[^}]*max-width:\s*50%;[^}]*min-width:\s*0;/s', $css);
 		$this->assertMatchesRegularExpression('/\.gallery-album-bootstrap-actions > \.pull-right\s*\{[^}]*margin-left:\s*auto;/s', $css);

@@ -379,6 +379,7 @@ $lang = array_merge($lang, [
 	'PERMISSIONS_COPY'         => 'Albenrechte kopieren',
 	'PERMISSIONS_COPY_EXPLAIN' => 'Hier kannst du die Berechtigungen von einem Album zu einem oder mehreren anderen Alben kopieren.',
 	'PERMISSIONS_EXPLAIN'      => 'Hier kannst du festlegen, welche Benutzer und Gruppen Zugriff auf welches Album haben.',
+	'ACP_VIEW_GALLERY_PERMISSIONS'       => 'Galerie-Berechtigungen anzeigen',
 	'ACP_VIEW_GALLERY_PERMISSIONS_EXPLAIN' => 'Zeigt die effektiven Galerie-Berechtigungen eines Benutzers für ein oder mehrere öffentliche Alben oder persönliche Alben. Diese schreibgeschützte Seite verwendet die native Ja/Nie-Maske; über das Ablaufverfolgungssymbol lassen sich die beteiligten Gruppen und direkten Benutzereinstellungen anzeigen.',
 	'GALLERY_PERMISSION_MASK_USER' => 'Benutzer auswählen',
 	'GALLERY_PERMISSION_MASK_USER_EXPLAIN' => 'Gib einen registrierten Benutzernamen ein oder wähle den anonymen Benutzer.',
