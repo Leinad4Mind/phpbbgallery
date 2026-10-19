@@ -78,6 +78,32 @@ class individual_move_security_test extends TestCase
 		$this->assertStringContainsString("'S_QM_MOVE'    => \$s_allowed_move", $controller);
 	}
 
+	public function test_moves_never_grant_a_delete_right_missing_in_the_source_album(): void
+	{
+		$controller = (string) file_get_contents(dirname(__DIR__) . '/controller/moderate.php');
+		$method = $this->move_method();
+		$helper = $this->extract_section($controller, 'private function can_delete_image_in(', 'private function move_grants_deletion(');
+		$bulk_move = $this->extract_section($controller, "if (\$action == 'move' && \$moving_target)", '// The move flow has its own two-step UI');
+
+		$this->assertStringContainsString("acl_check('m_delete'", $helper);
+		$this->assertStringContainsString("acl_check('i_delete'", $helper);
+		$this->assertStringContainsString("\$image_data['image_user_id']", $helper);
+		$this->assertStringContainsString('!$this->can_delete_image_in($image_data, $source_album)', $controller);
+
+		$single_check = strpos($method, '!$this->move_grants_deletion($image_data, $album_data, $target_album)');
+		$this->assertNotFalse($single_check);
+		$this->assertLessThan(strpos($method, 'image->move_image('), $single_check);
+		$this->assertStringContainsString("\$this->move_grants_deletion(\$authorized_image['image'], \$authorized_image['album'], \$target_album)", $bulk_move);
+	}
+
+	public function test_image_edit_no_longer_moves_images_into_personal_albums(): void
+	{
+		$controller = (string) file_get_contents(dirname(__DIR__) . '/controller/image.php');
+
+		$this->assertStringNotContainsString('move_to_personal', $controller);
+		$this->assertStringNotContainsString('generate_personal_album(', $controller);
+	}
+
 	public function test_every_move_form_submits_a_phpbb_form_token(): void
 	{
 		$templates = glob(dirname(__DIR__) . '/styles/*/template/gallery/mcp_body.html');

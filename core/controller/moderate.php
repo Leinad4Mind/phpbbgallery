@@ -605,6 +605,17 @@ class moderate
 				$moving_target = (int) $moving_target;
 				$target_album = $moving_target > 0 ? $this->album->get_info($moving_target) : [];
 				$has_target_permission = $moving_target > 0 && $this->gallery_auth->acl_check('m_move', $moving_target, isset($target_album['album_user_id']) ? $target_album['album_user_id'] : -1);
+				if ($has_target_permission)
+				{
+					foreach ($authorized_action['images'] as $authorized_image)
+					{
+						if ($this->move_grants_deletion($authorized_image['image'], $authorized_image['album'], $target_album))
+						{
+							$has_target_permission = false;
+							break;
+						}
+					}
+				}
 				if (!$this->image_authorization->can_moderate_album($target_album, $moving_target, $has_target_permission))
 				{
 					$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
@@ -999,6 +1010,7 @@ class moderate
 		}
 
 		$images_by_album = [];
+		$images = [];
 		foreach ($image_ids as $image_id)
 		{
 			$image_data = $this->image->get_image_data($image_id);
@@ -1020,12 +1032,40 @@ class moderate
 			}
 
 			$images_by_album[$image_album_id][] = $image_id;
+			$images[$image_id] = ['image' => $image_data, 'album' => $album_data];
 		}
 
 		return [
 			'image_ids' => $image_ids,
 			'images_by_album' => $images_by_album,
+			'images' => $images,
 		];
+	}
+
+	/**
+	 * Whether the current user could delete the image if it were in the given album.
+	 */
+	private function can_delete_image_in(array $image_data, array $album_data): bool
+	{
+		$album_id = (int) ($album_data['album_id'] ?? 0);
+		$album_user_id = (int) ($album_data['album_user_id'] ?? 0);
+		if ($this->gallery_auth->acl_check('m_delete', $album_id, $album_user_id))
+		{
+			return true;
+		}
+
+		return (int) ($image_data['image_user_id'] ?? 0) === (int) $this->user->data['user_id']
+			&& $this->gallery_auth->acl_check('i_delete', $album_id, $album_user_id);
+	}
+
+	/**
+	 * A move must not hand the mover a delete right they lack in the source album,
+	 * otherwise an image could be deleted by first moving it into such an album.
+	 */
+	private function move_grants_deletion(array $image_data, array $source_album, array $target_album): bool
+	{
+		return !$this->can_delete_image_in($image_data, $source_album)
+			&& $this->can_delete_image_in($image_data, $target_album);
 	}
 
 	/**
@@ -1348,7 +1388,8 @@ class moderate
 					|| ($has_owner_source_permission
 						&& isset($target_album['album_status'])
 						&& (int) $target_album['album_status'] !== (int) \phpbbgallery\core\block::ALBUM_LOCKED
-						&& $this->gallery_auth->acl_check('i_upload', $moving_target, $target_album['album_user_id'])));
+						&& $this->gallery_auth->acl_check('i_upload', $moving_target, $target_album['album_user_id'])))
+				&& !$this->move_grants_deletion($image_data, $album_data, $target_album);
 			if (!$this->image_authorization->can_moderate_album($target_album, $moving_target, $has_target_permission))
 			{
 				$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');

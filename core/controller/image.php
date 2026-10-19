@@ -1531,37 +1531,6 @@ class image
 				}
 			}
 
-			$move_to_personal = $this->request->variable('move_to_personal', 0);
-			if ($move_to_personal)
-			{
-				$personal_album_id = 0;
-				if ($this->user->data['user_id'] != $image_data['image_user_id'])
-				{
-					$image_user = $this->gallery_user;
-					$image_user->set_user_id($image_data['image_user_id']);
-					$personal_album_id = $image_user->get_data('personal_album_id');
-
-					// The User has no personal album, moderators can created that without the need of permissions
-					if (!$personal_album_id)
-					{
-						$personal_album_id = $this->album->generate_personal_album($image_data['image_username'], $image_data['image_user_id'], $image_data['image_user_colour'], $image_user);
-					}
-				}
-				else
-				{
-					$personal_album_id = $this->gallery_user->get_data('personal_album_id');
-					if (!$personal_album_id && $this->gallery_auth->acl_check('i_upload', $this->gallery_auth->get_own_album()))
-					{
-						$personal_album_id = $this->album->generate_personal_album($image_data['image_username'], $image_data['image_user_id'], $image_data['image_user_colour'], $this->gallery_user);
-					}
-				}
-
-				if ($personal_album_id)
-				{
-					$sql_ary['image_album_id'] = $personal_album_id;
-				}
-			}
-
 			$orientations = $this->request->variable('orientation', []);
 			if ($orientations)
 			{
@@ -1640,10 +1609,6 @@ class image
 				extract($this->dispatcher->trigger_event('phpbbgallery.core.image_edit_after', compact($vars)));
 
 				$this->album->update_info($album_data['album_id']);
-				if ($move_to_personal && $personal_album_id)
-				{
-					$this->album->update_info($personal_album_id);
-				}
 
 				if ($change_image_count)
 				{
@@ -1727,7 +1692,6 @@ class image
 
 			'NUM_IMAGES'       => 1,
 			'S_ALLOW_ROTATE'   => ($this->gallery_config->get('allow_rotate') && function_exists('imagerotate') && function_exists('imageflip')),
-			//'S_MOVE_PERSONAL'	=> (($this->galley_auth->acl_check('i_upload', $this->galley_auth::OWN_ALBUM) || phpbb_gallery::$user->get_data('personal_album_id')) || ($user->data['user_id'] != $image_data['image_user_id'])) ? true : false,
 			'S_MOVE_MODERATOR' => ($this->user->data['user_id'] != $image_data['image_user_id']) ? true : false,
 		]);
 
