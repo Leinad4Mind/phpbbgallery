@@ -269,8 +269,8 @@ class album
 			));
 		}
 
-		if ((!$album_data['album_user_id'] || $album_data['album_user_id'] == $this->user->data['user_id'])
-			&& ($this->user->data['user_id'] == ANONYMOUS || $this->auth->acl_check('i_upload', $album_id, $album_data['album_user_id']))
+		// Guests are invited to log in on public albums only; personal albums of other users follow i_upload.
+		if ((($this->user->data['user_id'] == ANONYMOUS && !$album_data['album_user_id']) || $this->auth->acl_check('i_upload', $album_id, $album_data['album_user_id']))
 			&& $this->album_operation->allows('upload', $album_data))
 		{
 			$this->template->assign_var('U_UPLOAD_IMAGE', $this->helper->route(

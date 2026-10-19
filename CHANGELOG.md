@@ -25,6 +25,7 @@ All notable changes to the phpBB Gallery extension suite are documented in this 
 
 ### Fixed
 
+- Fixed members with the upload permission for personal albums never seeing the Upload image button in another member's personal album. The "Personal albums" permission set now also offers the upload quota, unlimited uploads, upload without approval and editing or deleting the member's own images, with the same meaning as in public albums; existing settings keep these permissions disabled until they are changed. The explanations of both personal album permission sets describe the rights of uploaders and album owners.
 - Fixed long album and personal-album names collapsing to only an ellipsis in PROSILVER card layouts; truncation now occurs on the text link itself and the complete name remains available on hover.
 - Fixed selected Gallery log entries surviving the ACP confirmation step because the originating form token was incorrectly validated again after phpBB replaced it with its one-time confirmation token; the active log filter is now preserved as well.
 - Fixed Gallery ACP confirmations posting above the board root, which sent personal sub-album deletions, log pruning, permission copies, album re-synchronisation and cleanup runs to the wrong page and silently discarded the confirmed operation.

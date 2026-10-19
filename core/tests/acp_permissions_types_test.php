@@ -235,6 +235,22 @@ final class acp_permissions_types_test extends TestCase
 		$this->assertStringContainsString("lang('COPY_PERMISSIONS_SETTING_HELP')", $template);
 	}
 
+	public function test_personal_albums_of_other_users_expose_upload_quota_approval_and_own_image_rights(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/acp/permissions_module.php');
+		$set = (string) strstr((string) strstr($source, '$permissions->cats[$gallery_auth::PERSONAL_ALBUM] = ['), '];', true);
+		$set = (string) preg_replace('#/\*.*?\*/#s', '', $set);
+
+		foreach (['i_upload', 'i_approve', 'i_edit', 'i_delete', 'i_count', 'i_unlimited'] as $permission)
+		{
+			$this->assertStringContainsString("'" . $permission . "'", $set, $permission);
+		}
+		$this->assertStringContainsString(
+			"\$permissions->p_masks_anti[\$gallery_auth::PERSONAL_ALBUM] = ['a_count', 'a_unlimited', 'a_restrict'];",
+			$source
+		);
+	}
+
 	public function test_standalone_permission_masks_are_read_only_and_reuse_trace_links(): void
 	{
 		$source = (string) file_get_contents(dirname(__DIR__) . '/acp/permissions_module.php');

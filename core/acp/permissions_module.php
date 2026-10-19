@@ -81,15 +81,16 @@ class permissions_module
 		$permissions->p_masks_anti[$gallery_auth::OWN_ALBUM] = [];// Note: we set i_view to 1 as default, so it is not needed in the anti list ['i_view'].
 
 		// Permissions for personal albums of other users
-		// Note: Do !NOT! hide the i_upload. It's used for the moving-permissions
+		// Note: i_upload allows uploading and moving images into albums of other users,
+		// limited by i_count/i_unlimited like in public albums.
 		$permissions->cats[$gallery_auth::PERSONAL_ALBUM] = [
-			'i'		=> array_merge(['i_view', 'i_download', 'i_download_free', 'i_statistics', 'i_watermark', 'i_upload', /*'i_approve', 'i_edit', 'i_delete', */'i_report', 'i_rate', 'i_move'], $favorite_permission),
+			'i'		=> array_merge(['i_view', 'i_download', 'i_download_free', 'i_statistics', 'i_watermark', 'i_upload', 'i_approve', 'i_edit', 'i_delete', 'i_report', 'i_rate', 'i_move'], $favorite_permission),
 			'c'		=> ['c_read', 'c_post', 'c_edit', 'c_delete'],
 			'm'		=> ['m_comments', 'm_delete', 'm_edit', 'm_move', 'm_report', 'm_status'],
-			'misc'	=> ['a_list'/*, 'i_count', 'i_unlimited', 'a_count', 'a_unlimited', 'a_restrict'*/],
+			'misc'	=> ['a_list', 'i_count', 'i_unlimited'/*, 'a_count', 'a_unlimited', 'a_restrict'*/],
 		];
 		$permissions->p_masks[$gallery_auth::PERSONAL_ALBUM] = array_merge($permissions->cats[$gallery_auth::PERSONAL_ALBUM]['i'], $permissions->cats[$gallery_auth::PERSONAL_ALBUM]['c'], $permissions->cats[$gallery_auth::PERSONAL_ALBUM]['m'], $permissions->cats[$gallery_auth::PERSONAL_ALBUM]['misc']);
-		$permissions->p_masks_anti[$gallery_auth::PERSONAL_ALBUM] = ['i_approve', 'i_edit', 'i_delete', 'i_count', 'i_unlimited', 'a_count', 'a_unlimited', 'a_restrict'];
+		$permissions->p_masks_anti[$gallery_auth::PERSONAL_ALBUM] = ['a_count', 'a_unlimited', 'a_restrict'];
 
 		switch ($mode)
 		{

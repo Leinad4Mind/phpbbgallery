@@ -221,6 +221,17 @@ final class controller_album_types_test extends TestCase
 		);
 	}
 
+	public function test_upload_link_follows_i_upload_in_personal_albums_of_other_users(): void
+	{
+		$source = (string) file_get_contents(dirname(__DIR__) . '/controller/album.php');
+		$condition = (string) strstr((string) strstr($source, "// Guests are invited to log in on public albums only"), "'U_UPLOAD_IMAGE'", true);
+
+		$this->assertStringNotContainsString("\$album_data['album_user_id'] == \$this->user->data['user_id']", $condition);
+		$this->assertStringContainsString("(\$this->user->data['user_id'] == ANONYMOUS && !\$album_data['album_user_id'])", $condition);
+		$this->assertStringContainsString("\$this->auth->acl_check('i_upload', \$album_id, \$album_data['album_user_id'])", $condition);
+		$this->assertStringContainsString("\$this->album_operation->allows('upload', \$album_data)", $condition);
+	}
+
 	public function test_album_pages_are_clamped_to_the_first_page(): void
 	{
 		$reflection = new \ReflectionClass(album::class);

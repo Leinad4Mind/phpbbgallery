@@ -271,8 +271,8 @@ $lang = array_merge($lang, [
 	'NUMBER_PERSONALS'        => 'Number of personal albums',
 
 	'OWN_PERSONAL_ALBUMS'         => 'Own personal albums',
-	'OWN_PERSONAL_ALBUMS_EXPLAIN' => 'These permissions are used, when User A visits one of his own personal albums. <strong>If your users can not create a personal album, you need to edit these permissions.</strong>',
-	'PERSONAL_ALBUMS_EXPLAIN'     => 'These permissions are used, when User A visits a personal album of User B. <strong>If your moderators can not moderate images in personal albums, you need to edit these permissions.</strong>',
+	'OWN_PERSONAL_ALBUMS_EXPLAIN' => 'These permissions are used, when User A visits one of his own personal albums. <strong>If your users can not create a personal album, you need to edit these permissions.</strong> The moderator permissions define what the owner can do with images other members upload to their albums.',
+	'PERSONAL_ALBUMS_EXPLAIN'     => 'These permissions are used, when User A visits a personal album of User B. <strong>If your moderators can not moderate images in personal albums, you need to edit these permissions.</strong> They also define whether User A can upload images to the album of User B, the upload quota, whether those images need approval and whether User A can edit or delete the images they uploaded.',
 
 	'PERMISSION'         => 'Permission',
 	'PERMISSION_NEVER'   => 'Never',

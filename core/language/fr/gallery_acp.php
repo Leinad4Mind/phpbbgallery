@@ -345,8 +345,8 @@ $lang = array_merge($lang, [
 	'NUMBER_PERSONALS'        => 'Nombre d’albums personnels',
 
 	'OWN_PERSONAL_ALBUMS'         => 'Propriétaires des albums personnels',
-	'OWN_PERSONAL_ALBUMS_EXPLAIN' => 'Ces permissions sont utilisées, lorsque l’utilisateur A consulte l’un de ses propres albums personnels. <strong>Si vos utilisateurs ne peuvent pas créer un album personnel, vous devrez modifier ces permissions.</strong>',
-	'PERSONAL_ALBUMS_EXPLAIN'     => 'Ces permissions sont utilisées, lorsque l’utilisateur A se rend dans l’album personnel de l’utilisateur B. <strong>Si vos modérateurs ne peuvent pas modérer les images dans les albums personnels, vous devrez modifier ces permissions.</strong>',
+	'OWN_PERSONAL_ALBUMS_EXPLAIN' => 'Ces permissions sont utilisées, lorsque l’utilisateur A consulte l’un de ses propres albums personnels. <strong>Si vos utilisateurs ne peuvent pas créer un album personnel, vous devrez modifier ces permissions.</strong> Les permissions de modération définissent ce que le propriétaire peut faire des images que d’autres membres envoient dans ses albums.',
+	'PERSONAL_ALBUMS_EXPLAIN'     => 'Ces permissions sont utilisées, lorsque l’utilisateur A se rend dans l’album personnel de l’utilisateur B. <strong>Si vos modérateurs ne peuvent pas modérer les images dans les albums personnels, vous devrez modifier ces permissions.</strong> Elles définissent aussi si l’utilisateur A peut envoyer des images dans l’album de l’utilisateur B, son quota d’envoi, si les images doivent être approuvées et s’il peut modifier ou supprimer les images qu’il a envoyées.',
 
 	'PERMISSION'                  => 'Permissions',
 	'PERMISSION_NEVER'            => 'Jamais',

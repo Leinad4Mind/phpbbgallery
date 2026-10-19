@@ -329,8 +329,8 @@ $lang = array_merge($lang, [
 	'NUMBER_PERSONALS'        => 'Número de álbumes personales',
 
 	'OWN_PERSONAL_ALBUMS'         => 'Álbumes personales',
-	'OWN_PERSONAL_ALBUMS_EXPLAIN' => 'Estos permisos se utilizan cuando el usuario A visita uno de sus propios álbumes personales. <strong>Si tus usuarios no pueden crear un álbum personal, debes editar estos permisos.</strong>',
-	'PERSONAL_ALBUMS_EXPLAIN'     => ' Estos permisos se utilizan cuando el usuario A visita un álbum personal del usuario B. <strong>Si los moderadores no pueden moderar las imágenes en los álbumes personales, debe editar estos permisos.</strong>',
+	'OWN_PERSONAL_ALBUMS_EXPLAIN' => 'Estos permisos se utilizan cuando el usuario A visita uno de sus propios álbumes personales. <strong>Si tus usuarios no pueden crear un álbum personal, debes editar estos permisos.</strong> Los permisos de moderación definen lo que el propietario puede hacer con las imágenes que otros miembros suben a sus álbumes.',
+	'PERSONAL_ALBUMS_EXPLAIN'     => ' Estos permisos se utilizan cuando el usuario A visita un álbum personal del usuario B. <strong>Si los moderadores no pueden moderar las imágenes en los álbumes personales, debe editar estos permisos.</strong> Aquí también defines si el usuario A puede subir imágenes al álbum del usuario B, su cuota de subida, si las imágenes necesitan aprobación y si puede editar o borrar las imágenes que subió.',
 
 	'PERMISSION'         => 'Permiso',
 	'PERMISSION_NEVER'   => 'Nunca',

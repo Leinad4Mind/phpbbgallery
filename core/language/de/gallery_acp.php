@@ -329,8 +329,8 @@ $lang = array_merge($lang, [
 	'NUMBER_PERSONALS'        => 'Anzahl von Persönlichen Alben',
 
 	'OWN_PERSONAL_ALBUMS'         => 'Eigene persönliche Alben',
-	'OWN_PERSONAL_ALBUMS_EXPLAIN' => 'Diese Berechtigungen werden verwendet, wenn Benutzer A eines seiner eigenen Alben betrachtet. <strong>Wenn deine Benutzer keine persönlichen Alben erstellen können, musst du diese Berechtigungen bearbeiten.</strong>',
-	'PERSONAL_ALBUMS_EXPLAIN'     => 'Diese Berechtigungen werden verwendet, wenn Benutzer A ein persönliches Album von Benutzer B betrachtet. <strong>Wenn deine Moderatoren keine Bilder in den persönlichen Alben bearbeiten können, musst du diese Berechtigungen bearbeiten.</strong>',
+	'OWN_PERSONAL_ALBUMS_EXPLAIN' => 'Diese Berechtigungen werden verwendet, wenn Benutzer A eines seiner eigenen Alben betrachtet. <strong>Wenn deine Benutzer keine persönlichen Alben erstellen können, musst du diese Berechtigungen bearbeiten.</strong> Die Moderationsberechtigungen legen fest, was der Besitzer mit Bildern machen darf, die andere Mitglieder in seine Alben hochladen.',
+	'PERSONAL_ALBUMS_EXPLAIN'     => 'Diese Berechtigungen werden verwendet, wenn Benutzer A ein persönliches Album von Benutzer B betrachtet. <strong>Wenn deine Moderatoren keine Bilder in den persönlichen Alben bearbeiten können, musst du diese Berechtigungen bearbeiten.</strong> Hier legst du außerdem fest, ob Benutzer A Bilder in das Album von Benutzer B hochladen darf, wie viele, ob sie freigegeben werden müssen und ob Benutzer A seine hochgeladenen Bilder bearbeiten oder löschen darf.',
 
 	'PERMISSION'         => 'Berechtigung',
 	'PERMISSION_NEVER'   => 'Nie',

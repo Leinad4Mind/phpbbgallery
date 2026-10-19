@@ -329,8 +329,8 @@ $lang = array_merge($lang, [
 	'NUMBER_PERSONALS'        => 'Aantal persoonlijke albums',
 
 	'OWN_PERSONAL_ALBUMS'         => 'Je eigen persoonlijke albums',
-	'OWN_PERSONAL_ALBUMS_EXPLAIN' => 'Deze permissies worden gebruikt,als een gebruiker één van zijn eigen persoonlijke albums bezoekt. <strong>Als je gebruikers geen persoonlijk album kunnen creëren, dan moet je deze permissies aanpassen.</strong>',
-	'PERSONAL_ALBUMS_EXPLAIN'     => 'Deze permissies worden gebruikt, als een gebruiker een persoonlijk album van een ander bezoekt. <strong>Als je moderators geen afbeeldingen in persoonlijke albums kunnen modereren, dan moet je deze permissies aanpassen.</strong>',
+	'OWN_PERSONAL_ALBUMS_EXPLAIN' => 'Deze permissies worden gebruikt,als een gebruiker één van zijn eigen persoonlijke albums bezoekt. <strong>Als je gebruikers geen persoonlijk album kunnen creëren, dan moet je deze permissies aanpassen.</strong> De moderatorpermissies bepalen wat de eigenaar mag doen met afbeeldingen die andere leden naar zijn albums uploaden.',
+	'PERSONAL_ALBUMS_EXPLAIN'     => 'Deze permissies worden gebruikt, als een gebruiker een persoonlijk album van een ander bezoekt. <strong>Als je moderators geen afbeeldingen in persoonlijke albums kunnen modereren, dan moet je deze permissies aanpassen.</strong> Hier bepaal je ook of de gebruiker afbeeldingen mag uploaden naar het album van de ander, het uploadquotum, of de afbeeldingen goedkeuring nodig hebben en of de gebruiker zijn geüploade afbeeldingen mag bewerken of verwijderen.',
 
 	'PERMISSION'         => 'Permissie',
 	'PERMISSION_NEVER'   => 'Nooit',
