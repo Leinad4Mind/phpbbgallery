@@ -96,6 +96,21 @@ class individual_move_security_test extends TestCase
 		$this->assertStringContainsString("\$this->move_grants_deletion(\$authorized_image['image'], \$authorized_image['album'], \$target_album)", $bulk_move);
 	}
 
+	public function test_author_changes_are_checked_for_a_gained_delete_right_before_saving(): void
+	{
+		$image = (string) file_get_contents(dirname(__DIR__) . '/controller/image.php');
+		$moderate = (string) file_get_contents(dirname(__DIR__) . '/controller/moderate.php');
+
+		$edit_check = strpos($image, 'image_authorization->author_change_grants_deletion(');
+		$this->assertNotFalse($edit_check);
+		$this->assertLessThan(strpos($image, "'image_user_id'        => \$user_data['user_id']"), $edit_check);
+
+		$bulk_check = strpos($moderate, 'image_authorization->author_change_grants_deletion(');
+		$this->assertNotFalse($bulk_check);
+		$this->assertLessThan(strpos($moderate, 'image->change_author($actions_array, $new_author)'), $bulk_check);
+		$this->assertGreaterThan(strpos($moderate, 'get_new_author_info($change_author)'), $bulk_check);
+	}
+
 	public function test_image_edit_no_longer_moves_images_into_personal_albums(): void
 	{
 		$controller = (string) file_get_contents(dirname(__DIR__) . '/controller/image.php');

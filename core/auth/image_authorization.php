@@ -23,6 +23,17 @@ class image_authorization
 	}
 
 	/**
+	 * Whether making the user the author of an image would let them delete it through
+	 * the "delete own images" permission while they lack the moderator delete permission.
+	 */
+	public function author_change_grants_deletion(int $user_id, array $image_data, int $new_author_id, bool $has_own_delete, bool $has_moderator_delete): bool
+	{
+		$is_already_author = isset($image_data['image_user_id']) && (int) $image_data['image_user_id'] === $user_id;
+
+		return $new_author_id === $user_id && !$is_already_author && $has_own_delete && !$has_moderator_delete;
+	}
+
+	/**
 	 * @return array|false
 	 */
 	public function normalize_image_ids(array $image_ids): array|false

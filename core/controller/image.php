@@ -1511,7 +1511,17 @@ class image
 			if ($this->gallery_auth->acl_check('m_edit', $album_id, $album_data['album_user_id']))
 			{
 				$user_data = $this->image->get_new_author_info($this->request->variable('change_author', '', true));
-				if ($user_data)
+				if ($user_data && $this->image_authorization->author_change_grants_deletion(
+					(int) $this->user->data['user_id'],
+					$image_data,
+					(int) $user_data['user_id'],
+					(bool) $this->gallery_auth->acl_check('i_delete', $album_id, $album_data['album_user_id']),
+					(bool) $this->gallery_auth->acl_check('m_delete', $album_id, $album_data['album_user_id'])
+				))
+				{
+					$errors[] = $this->language->lang('NOT_AUTHORISED');
+				}
+				else if ($user_data)
 				{
 					$sql_ary = array_merge($sql_ary, [
 						'image_user_id'        => $user_data['user_id'],

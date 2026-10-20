@@ -599,6 +599,21 @@ class moderate
 				{
 					trigger_error('INVALID_USERNAME');
 				}
+				foreach ($authorized_action['images'] as $authorized_image)
+				{
+					$image_album = $authorized_image['album'];
+					if ($this->image_authorization->author_change_grants_deletion(
+						(int) $this->user->data['user_id'],
+						$authorized_image['image'],
+						(int) $new_author['user_id'],
+						(bool) $this->gallery_auth->acl_check('i_delete', (int) $image_album['album_id'], $image_album['album_user_id']),
+						(bool) $this->gallery_auth->acl_check('m_delete', (int) $image_album['album_id'], $image_album['album_user_id'])
+					))
+					{
+						$this->misc->not_authorised($album_backlink, $album_loginlink, 'LOGIN_EXPLAIN_UPLOAD');
+						return null;
+					}
+				}
 			}
 			if ($action == 'move' && $moving_target)
 			{

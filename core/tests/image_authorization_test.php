@@ -61,6 +61,22 @@ class image_authorization_test extends TestCase
 		$this->assertTrue($this->authorization->can_manage_image(11, $image, false, true, true));
 	}
 
+	public function test_taking_over_authorship_must_not_grant_the_delete_right(): void
+	{
+		$image = ['image_user_id' => 10];
+
+		// Becoming the author with only "delete own images" would allow deleting it.
+		$this->assertTrue($this->authorization->author_change_grants_deletion(11, $image, 11, true, false));
+		// Moderators who may already delete gain nothing.
+		$this->assertFalse($this->authorization->author_change_grants_deletion(11, $image, 11, true, true));
+		// Handing the image to a third member is unaffected.
+		$this->assertFalse($this->authorization->author_change_grants_deletion(11, $image, 12, true, false));
+		// The current author keeps the rights they already had.
+		$this->assertFalse($this->authorization->author_change_grants_deletion(10, $image, 10, true, false));
+		// Without "delete own images" there is nothing to gain.
+		$this->assertFalse($this->authorization->author_change_grants_deletion(11, $image, 11, false, false));
+	}
+
 	public function test_normalizes_unique_positive_integer_image_ids(): void
 	{
 		$this->assertSame([3, 7], $this->authorization->normalize_image_ids([3, 7, 3]));
