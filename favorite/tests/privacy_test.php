@@ -62,8 +62,9 @@ final class privacy_test extends TestCase
 		$root = dirname(__DIR__) . '/styles/';
 		$prosilver = (string) file_get_contents($root . 'prosilver/template/gallery/ucp_gallery_favorite.html');
 		$this->assertStringContainsString('GALLERY_BOOTSTRAP_PAGINATION: false', $prosilver);
-		$this->assertStringContainsString('<dl class="row-item">', $prosilver);
-		$this->assertStringContainsString('class="list-inner gallery-favorite-ucp-row"', $prosilver);
+		$this->assertStringContainsString('<ul class="topiclist cplist two-columns">', $prosilver);
+		$this->assertStringNotContainsString('row-item', $prosilver);
+		$this->assertStringContainsString('class="list-inner with-mark gallery-favorite-ucp-row"', $prosilver);
 
 		foreach (\gallery_test_existing_styles(dirname(__DIR__), ['BBOOTS', 'FLATBOOTS'], $this) as $style)
 		{
