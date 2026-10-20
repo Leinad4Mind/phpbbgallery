@@ -9,20 +9,20 @@
 		<p>{{ L_TITLE_EXPLAIN }}</p>
 
 		{% if image_row is not empty %}
-		<ul class="topiclist missing-column">
+		<ul class="topiclist two-columns">
 			<li class="header">
-				<dl class="row-item">
+				<dl>
 					<dt><div class="list-inner">{{ TOTAL_IMAGES }}</div></dt>
 					<dd class="mark">{{ lang('MARK') }}</dd>
 				</dl>
 			</li>
 		</ul>
-		<ul class="topiclist cplist missing-column">
+		<ul class="topiclist cplist two-columns">
 			{% for image_row in image_row %}
 			<li class="row{% if loop.index is odd %} bg1{% else %} bg2{% endif %}">
-				<dl class="row-item">
+				<dl>
 					<dt>
-						<div class="list-inner gallery-favorite-ucp-row">
+						<div class="list-inner with-mark gallery-favorite-ucp-row">
 							{% if image_row.UC_FAKE_THUMBNAIL %}<span class="gallery-favorite-ucp-thumbnail">{{ image_row.UC_FAKE_THUMBNAIL }}</span>{% endif %}
 							<div class="gallery-favorite-ucp-details">
 								<div><dfn>{{ lang('IMAGE_NAME') }}{{ lang('COLON') }}</dfn> {{ image_row.UC_IMAGE_NAME }}</div>

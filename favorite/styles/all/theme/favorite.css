@@ -127,11 +127,16 @@
 	text-align: center;
 }
 
+.gallery-favorite-ucp-thumbnail a
+{
+	display: block !important;
+}
+
 .gallery-favorite-ucp-thumbnail img
 {
 	display: block;
 	height: auto;
-	max-width: 100%;
+	max-width: 100% !important;
 }
 
 .gallery-favorite-ucp-details
