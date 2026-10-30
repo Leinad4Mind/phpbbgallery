@@ -70,63 +70,89 @@ class main_module
 		{
 			$action = '';
 		}
-		switch ($mode)
+		try
 		{
-			case 'manage_albums':
-				switch ($action)
-				{
-					case 'manage':
-						$title = 'MANAGE_SUBALBUMS';
-						$this->page_title = $this->language->lang($title);
-						$this->manage_albums();
-					break;
-
-					case 'create':
-						$title = 'CREATE_SUBALBUM';
-						$this->page_title = $this->language->lang($title);
-						$this->create_album();
-					break;
-
-					case 'edit':
-						$title = 'EDIT_SUBALBUM';
-						$this->page_title = $this->language->lang($title);
-						$this->edit_album();
-					break;
-
-					case 'delete':
-						$title = 'DELETE_ALBUM';
-						$this->page_title = $this->language->lang($title);
-						$this->delete_album();
-					break;
-
-					case 'move':
-						$this->move_album();
-					break;
-
-					case 'initialise':
-						$this->initialise_album();
-					break;
-
-					default:
-						$title = 'UCP_GALLERY_PERSONAL_ALBUMS';
-						$this->page_title = $this->language->lang($title);
-						if (!$phpbb_ext_gallery_user->get_data('personal_album_id'))
-						{
-							$this->info();
-						}
-						else
-						{
+			switch ($mode)
+			{
+				case 'manage_albums':
+					$this->repair_personal_album_id();
+					switch ($action)
+					{
+						case 'manage':
+							$title = 'MANAGE_SUBALBUMS';
+							$this->page_title = $this->language->lang($title);
 							$this->manage_albums();
-						}
-					break;
-				}
-			break;
+						break;
 
-			case 'manage_subscriptions':
-				$title = 'UCP_GALLERY_WATCH';
-				$this->page_title = $this->language->lang($title);
-				$this->manage_subscriptions();
-			break;
+						case 'create':
+							$title = 'CREATE_SUBALBUM';
+							$this->page_title = $this->language->lang($title);
+							$this->create_album();
+						break;
+
+						case 'edit':
+							$title = 'EDIT_SUBALBUM';
+							$this->page_title = $this->language->lang($title);
+							$this->edit_album();
+						break;
+
+						case 'delete':
+							$title = 'DELETE_ALBUM';
+							$this->page_title = $this->language->lang($title);
+							$this->delete_album();
+						break;
+
+						case 'move':
+							$this->move_album();
+						break;
+
+						case 'initialise':
+							$this->initialise_album();
+						break;
+
+						default:
+							$title = 'UCP_GALLERY_PERSONAL_ALBUMS';
+							$this->page_title = $this->language->lang($title);
+							if (!$phpbb_ext_gallery_user->get_data('personal_album_id'))
+							{
+								$this->info();
+							}
+							else
+							{
+								$this->manage_albums();
+							}
+						break;
+					}
+				break;
+
+				case 'manage_subscriptions':
+					$title = 'UCP_GALLERY_WATCH';
+					$this->page_title = $this->language->lang($title);
+					$this->manage_subscriptions();
+				break;
+			}
+		}
+		catch (\phpbb\exception\http_exception $e)
+		{
+			// UCP modules run outside the HTTP kernel, which would turn the exception into a fatal error.
+			trigger_error(call_user_func_array(array($this->language, 'lang'), array_merge(array($e->getMessage()), $e->get_parameters())), E_USER_WARNING);
+		}
+	}
+
+	/**
+	 * Repair a stored personal album id that no longer points at the member's own root album
+	 */
+	protected function repair_personal_album_id()
+	{
+		global $cache, $user, $phpbb_ext_gallery_core_album, $phpbb_ext_gallery_user, $users_table;
+
+		$user_id = (int) $user->data['user_id'];
+		$phpbb_ext_gallery_user->set_user_id($user_id);
+		$stored_id = (int) $phpbb_ext_gallery_user->get_data('personal_album_id');
+
+		if ($phpbb_ext_gallery_core_album->repair_personal_album_id($phpbb_ext_gallery_user, $user_id) !== $stored_id)
+		{
+			$cache->destroy('sql', $users_table);
 		}
 	}
 
