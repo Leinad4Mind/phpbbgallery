@@ -497,7 +497,7 @@ class image
 		}
 		$this->db->sql_freeresult($result);
 
-		return $scoped_ids;
+		return array_values(array_intersect($image_ids, $scoped_ids));
 	}
 
 	/**

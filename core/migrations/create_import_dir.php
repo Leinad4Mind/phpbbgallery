@@ -22,7 +22,7 @@ class create_import_dir extends migration
 	public function update_data()
 	{
 		return array(
-			array('custom', array(array(&$this, 'create_import_dir'))),
+			array('custom', array(array(&$this, 'create_import_directory'))),
 		);
 	}
 
@@ -31,7 +31,7 @@ class create_import_dir extends migration
 	 * only created by the acpimport extension.
 	 * It is removed together with files/phpbbgallery when the core is purged.
 	 */
-	public function create_import_dir()
+	public function create_import_directory()
 	{
 		global $phpbb_root_path;
 
