@@ -7,5 +7,14 @@
 			"eol": null,
 			"security": false
 		}
+	},
+	"unstable": {
+		"3.3": {
+			"current": "4.3.0",
+			"download": "https://www.phpbb.com/customise/db/extension/phpbb_gallery",
+			"announcement": "https://www.phpbb.com/customise/db/extension/phpbb_gallery",
+			"eol": null,
+			"security": false
+		}
 	}
 }
